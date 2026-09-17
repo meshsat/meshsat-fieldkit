@@ -7,7 +7,7 @@ Every rule this project holds a board to, with its authority, its applicability,
 its verification is currently worth. Generated from the registry: the registry is the authority and this page
 is its rendering.
 
-Registry version **2026-09-16.1**, fingerprint **8087c341773d75a1**, 57 rules over 34 domains.
+Registry version **2026-09-16.1**, fingerprint **f8db9f9b0747ca1b**, 57 rules over 34 domains.
 
 ## How to read a rule
 
@@ -1374,7 +1374,7 @@ the signal.
 | | |
 |---|---|
 | classification | PHYSICS_PRINCIPLE |
-| applies | conditional; boards a, b, c, e, p |
+| applies | conditional; boards a, b, c, d, e, p |
 | release effect | **BLOCKER** |
 | risk | SAFETY, RELIABILITY, ELECTRICAL_FUNCTION |
 | verified by | MANUAL_REVIEW, SCRIPT at SCHEMATIC (partially automatable) |

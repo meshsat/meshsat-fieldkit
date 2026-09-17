@@ -33,3 +33,44 @@ def t_a_coverage_map_that_will_not_parse_is_an_error_and_not_an_empty_map():
     r3 = subprocess.run([sys.executable, os.path.join(d, "rules_lib.py"), "validate"],
                         capture_output=True, text=True)
     assert "does not parse" not in r3.stdout, "an absent coverage map is now refused, which breaks a new tree"
+
+
+# ---------------------------------------------------------------------------------------------------------
+# THE BOARD THAT DECLARES A CONDUCTOR LEAVING THE CASE IS IN SCOPE FOR THE RULE ABOUT IT (17 September 2026).
+#
+# TRN-001's applicability was a list of interfaces and board properties and it missed board D, which carries
+# two headset jacks on the face, a VHF antenna SMA and a 30 W power amplifier output. Its own gate had been
+# measuring them all along and REFUSED board D's deliverable this morning for seven conductors reaching a
+# semiconductor with nothing between, while the readiness carried no TRN-001 row for board D at all: the gate
+# and the registry disagreed about whether the rule applies, and a board was blocked by a rule the status page
+# said was not about it.
+
+def t_every_board_s_external_port_fact_is_its_own_declaration():
+    """The fact is not typed: it says what `boards/<letter>.json` declares, so the scope of the rule and the
+    thing the gate reads cannot drift apart again."""
+    import os, json, sys
+    TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, TOOLS)
+    import rules_lib as R
+    f = R.facts()
+    for letter, fact in sorted(f.items()):
+        if not isinstance(fact, dict) or str(letter).startswith("_"): continue
+        p = os.path.join(TOOLS, "boards", "%s.json" % letter)
+        declared = bool((json.load(open(p, encoding="utf-8")) or {}).get("external_ports")) if os.path.exists(p) else False
+        assert bool(fact.get("external_ports")) == declared, \
+            ("board %s declares external_ports=%s and pcb_board_facts.yaml says %s"
+             % (letter, declared, fact.get("external_ports")))
+
+
+def t_a_board_with_a_declared_external_port_is_in_scope_for_the_port_rule():
+    import os, sys
+    TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, TOOLS)
+    import rules_lib as R
+    reg, f = R.load(), R.facts()
+    for letter, fact in sorted(f.items()):
+        if not isinstance(fact, dict) or str(letter).startswith("_"): continue
+        if not fact.get("external_ports"): continue
+        ids = {r["id"] for r, _why in R.rules_for(letter, reg, f)}
+        assert "TRN-001" in ids, ("board %s declares a conductor that leaves the case and TRN-001 does not "
+                                 "apply to it" % letter)
