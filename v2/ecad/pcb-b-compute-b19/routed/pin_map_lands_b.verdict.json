@@ -2,34 +2,22 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "failures": 11,
+  "failures": 0,
   "judged": 930,
   "merged_pad_pins": 0,
   "unreadable": 0
  },
  "denominator": 930,
- "evidence": [
-  "J_FAN1 on Connector_JST:JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical: pad MP carries no node and pad MP is the land's largest (2.16 mm2), the tab of a power part",
-  "J_FAN2 on Connector_JST:JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical: pad MP carries no node and pad MP is the land's largest (2.16 mm2), the tab of a power part",
-  "J_FAN3 on Connector_JST:JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical: pad MP carries no node and pad MP is the land's largest (2.16 mm2), the tab of a power part",
-  "J_M2C1 on meshsat:M2_E-Key_Socket_2230: pads M1, S1, S2 carry no node and pad M1 is the land's largest (25.00 mm2), the tab of a power part",
-  "J_M2C2 on meshsat:M2_B-Key_Socket_3052: pads M1, S1, S2 carry no node and pad M1 is the land's largest (25.00 mm2), the tab of a power part",
-  "J_M2C3 on meshsat:M2_E-Key_Socket_2230: pads M1, S1, S2 carry no node and pad M1 is the land's largest (25.00 mm2), the tab of a power part",
-  "J_M2N1 on meshsat:M2_M-Key_Socket_2242: pads M1, S1, S2 carry no node and pad M1 is the land's largest (25.00 mm2), the tab of a power part",
-  "J_M2N2 on meshsat:M2_M-Key_Socket_2242: pads M1, S1, S2 carry no node and pad M1 is the land's largest (25.00 mm2), the tab of a power part",
-  "J_M2N3 on meshsat:M2_M-Key_Socket_2242: pads M1, S1, S2 carry no node and pad M1 is the land's largest (25.00 mm2), the tab of a power part",
-  "U10 on Package_SON:WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm: pad 7 carries no node and pad 7 is the land's largest (1.60 mm2), the tab of a power part",
-  "U306 on Package_TO_SOT_SMD:SOT-583-8: pad 1 carries no node and pad 1 is the land's largest (0.20 mm2), the tab of a power part"
- ],
+ "evidence": [],
  "inputs": {
   "board": "b",
   "netlist": {
    "path": "out/pcb-b-compute.net",
-   "sha256_16": "66bc968130289480"
+   "sha256_16": "78a7b872d61d2e70"
   }
  },
  "missing_input": null,
- "note": "11 part(s) whose map leaves the land's tab floating or puts a net on no pad at all",
+ "note": "every part's map names every pad of its land",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -43,9 +31,9 @@
  "tool": "pin_map_lands_b",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "20c8b4b5590f3198"
+  "tools_tree_sha": "f2c67e0684159747"
  },
- "ts": "2026-09-17T20:35:17Z",
- "verdict": "FAIL",
+ "ts": "2026-09-17T22:32:42Z",
+ "verdict": "PASS",
  "version": "unknown"
 }

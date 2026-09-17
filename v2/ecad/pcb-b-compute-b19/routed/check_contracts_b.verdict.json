@@ -3,39 +3,22 @@
  "applicable": true,
  "counts": {
   "fail": 0,
-  "pass": 0,
-  "unjudged": 24
+  "pass": 42,
+  "unjudged": 0
  },
- "denominator": 24,
- "evidence": [
-  "unjudged, the other board is absent: J_PANEL 2x13 map identical on B and C",
-  "unjudged, the other board is absent: transmit inhibit present on B (J_PANEL)",
-  "unjudged, the other board is absent: rail +5V_S1 leaves A on J_5V_S1 and enters B on J_5V_S1",
-  "unjudged, the other board is absent: rail +5V_S2 leaves A on J_5V_S2 and enters B on J_5V_S2",
-  "unjudged, the other board is absent: rail +5V_S3 leaves A on J_5V_S3 and enters B on J_5V_S3",
-  "unjudged, the other board is absent: rail +5V_DEV leaves A on J_5V_DEV and enters B on J_5V_DEV",
-  "unjudged, the other board is absent: ribbon net PI_SHDN_REQ exists on A and B",
-  "unjudged, the other board is absent: ribbon net PI_KILL exists on A and B",
-  "unjudged, the other board is absent: J_AB1 2x13 map identical on A and B",
-  "unjudged, the other board is absent: J_AB2 2x5 map identical on A and B",
-  "unjudged, the other board is absent: J_AB2 carries the wall pair on its END row (pins 1 and 2)",
-  "unjudged, the other board is absent: D8 USB pair USB_D8_P: B16 J_AB1 -> A22 J_AB1/J_MEZZ1 -> D8 J_HARN1",
-  "unjudged, the other board is absent: D8 USB pair USB_D8_N: B16 J_AB1 -> A22 J_AB1/J_MEZZ1 -> D8 J_HARN1",
-  "unjudged, the other board is absent: wall-port pair USB_WALL_P: B16 slot hub -> J_AB2 -> A22 J_USBW",
-  "unjudged, the other board is absent: wall-port pair USB_WALL_N: B16 slot hub -> J_AB2 -> A22 J_USBW",
-  "unjudged, the other board is absent: panel controller USB pair USB_PNL_P on B16 and C7 J_PANEL",
-  "unjudged, the other board is absent: panel controller USB pair USB_PNL_N on B16 and C7 J_PANEL",
-  "unjudged, the other board is absent: B: no device drives TX_INHIBIT_n, the panel toggle is its only source",
-  "unjudged, the other board is absent: B: TX_INHIBIT_n is pulled DOWN on this board, so a missing panel inhibits",
-  "unjudged, the other board is absent: rail +54V_POE: the shares sum to 2.0% within the 2.0% the rail declares"
- ],
+ "denominator": 42,
+ "evidence": [],
  "inputs": {
   "boards": "A,B,C,D,E,P"
  },
  "missing_input": null,
- "note": "this board's netlist is absent from this tree",
+ "note": "the contracts that name this board; the set's own verdict is check_contracts",
  "policy": {
   "hard_types": 15,
+  "rule_fingerprints": {
+   "RF-002": "b4c62839dd113ee3",
+   "SCH-003": "ddf200a8e65c127b"
+  },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
@@ -45,9 +28,9 @@
  "tool": "check_contracts_b",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "f2c67e0684159747"
  },
- "ts": "2026-09-17T20:42:28Z",
- "verdict": "INCONCLUSIVE",
+ "ts": "2026-09-17T22:33:32Z",
+ "verdict": "PASS",
  "version": "unknown"
 }

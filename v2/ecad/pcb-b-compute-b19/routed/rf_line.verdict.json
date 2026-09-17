@@ -1,30 +1,35 @@
 {
  "advisory": false,
  "applicable": true,
- "counts": {},
+ "counts": {
+  "judged": 0
+ },
  "denominator": 0,
  "evidence": [],
  "inputs": {
-  "board": "b"
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "2e64b5bf2d9cd3bc"
+  }
  },
  "missing_input": null,
- "note": "this board declares no sensitive-node list",
+ "note": "no single-ended controlled line was found to judge, and this board does not declare that it has none",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
-   "ANA-001": "1b5e5e32b5e446db"
+   "RF-001": "02283178003e5772"
   },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
-  "ANA-001"
+  "RF-001"
  ],
- "tool": "sensitive_nodes",
+ "tool": "rf_line",
  "tools": {
   "git_head": "",
   "tools_tree_sha": "f2c67e0684159747"
  },
- "ts": "2026-09-17T22:32:38Z",
+ "ts": "2026-09-17T22:32:40Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

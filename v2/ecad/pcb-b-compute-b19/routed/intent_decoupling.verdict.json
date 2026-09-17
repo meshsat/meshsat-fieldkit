@@ -3,34 +3,34 @@
  "applicable": true,
  "counts": {
   "fail": 0,
-  "pass": 7,
-  "unjudged": 0
+  "pass": 30
  },
- "denominator": 7,
+ "denominator": 30,
  "evidence": [],
  "inputs": {
-  "boards": "A,B,C,D,E,P"
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "2e64b5bf2d9cd3bc"
+  }
  },
  "missing_input": null,
- "note": "the contracts that name this board; the set's own verdict is check_contracts",
+ "note": "the loop from a decoupling capacitor to the pin it serves",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
-   "RF-002": "b4c62839dd113ee3",
-   "SCH-003": "ddf200a8e65c127b"
+   "DEC-001": "c4c7b77158f31d92"
   },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
-  "RF-002",
-  "SCH-003"
+  "DEC-001"
  ],
- "tool": "check_contracts_c",
+ "tool": "intent_decoupling",
  "tools": {
   "git_head": "",
   "tools_tree_sha": "f2c67e0684159747"
  },
- "ts": "2026-09-17T22:33:32Z",
+ "ts": "2026-09-17T22:31:36Z",
  "verdict": "PASS",
  "version": "unknown"
 }

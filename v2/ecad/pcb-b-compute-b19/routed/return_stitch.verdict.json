@@ -1,30 +1,36 @@
 {
  "advisory": false,
  "applicable": true,
- "counts": {},
+ "counts": {
+  "plane_change_to_power": 0,
+  "slow": 685
+ },
  "denominator": 0,
  "evidence": [],
  "inputs": {
-  "board": "b"
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "2e64b5bf2d9cd3bc"
+  }
  },
  "missing_input": null,
- "note": "this board declares no sensitive-node list",
+ "note": "this board has no transition between two different reference nets, so RET-003 has nothing on it to judge",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
-   "ANA-001": "1b5e5e32b5e446db"
+   "RET-003": "829568c8874fe7b6"
   },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
-  "ANA-001"
+  "RET-003"
  ],
- "tool": "sensitive_nodes",
+ "tool": "return_stitch",
  "tools": {
   "git_head": "",
   "tools_tree_sha": "f2c67e0684159747"
  },
- "ts": "2026-09-17T22:32:38Z",
+ "ts": "2026-09-17T22:32:24Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

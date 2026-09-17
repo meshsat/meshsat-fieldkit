@@ -1,0 +1,48 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "exempt": 586,
+  "judged": 12,
+  "lacking": 8,
+  "same_plane": 687,
+  "slow": 512
+ },
+ "denominator": 12,
+ "evidence": [
+  "SEL2_O1 at (0.57, 144.25)",
+  "SEL2_O1 at (1.40, 147.50)",
+  "HUBRST2_AB at (3.72, 139.94)",
+  "HUBRST2_A at (3.72, 141.24)",
+  "SEL3_AB at (3.72, 148.15)",
+  "SDA at (11.07, 27.54)",
+  "HUBRST1_VOTE at (13.55, 146.20)",
+  "WSEC_C at (28.02, 141.24)"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "2e64b5bf2d9cd3bc"
+  }
+ },
+ "missing_input": null,
+ "note": "",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "RET-004": "b6b1e4f327ce2d08"
+  },
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+ },
+ "rules": [
+  "RET-004"
+ ],
+ "tool": "return_via",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "f2c67e0684159747"
+ },
+ "ts": "2026-09-17T22:32:09Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

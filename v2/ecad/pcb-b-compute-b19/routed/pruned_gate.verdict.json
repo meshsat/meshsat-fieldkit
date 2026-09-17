@@ -1,30 +1,35 @@
 {
  "advisory": false,
  "applicable": true,
- "counts": {},
+ "counts": {
+  "reached": 0
+ },
  "denominator": 0,
  "evidence": [],
  "inputs": {
-  "board": "b"
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "2e64b5bf2d9cd3bc"
+  }
  },
  "missing_input": null,
- "note": "this board declares no sensitive-node list",
+ "note": "no pruned list at /root/sweep26/v2/ecad/pcb-b-compute-b19/out/sweep/pcb-b-compute-pruned.txt, and board B declares the prune stage",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
-   "ANA-001": "1b5e5e32b5e446db"
+   "RTE-002": "66d69a0c02e07594"
   },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
-  "ANA-001"
+  "RTE-002"
  ],
- "tool": "sensitive_nodes",
+ "tool": "pruned_gate",
  "tools": {
   "git_head": "",
   "tools_tree_sha": "f2c67e0684159747"
  },
- "ts": "2026-09-17T22:32:38Z",
+ "ts": "2026-09-17T22:32:09Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

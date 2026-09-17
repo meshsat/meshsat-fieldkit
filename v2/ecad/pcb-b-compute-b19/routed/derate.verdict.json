@@ -2,31 +2,30 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "judged": 143,
-  "undeclared_nets": 15,
+  "by_vendor_reference": 0,
+  "judged": 162,
+  "undeclared_nets": 0,
   "under_rated": 0,
-  "unrated_parts": 394
+  "unrated_parts": 319
  },
- "denominator": 143,
- "evidence": [
-  "no declared voltage: LED_5V_A1",
-  "no declared voltage: LED_5V_A2",
-  "no declared voltage: LED_5V_A3",
-  "no declared voltage: PCIE1_RXSW_N",
-  "no declared voltage: PCIE1_RXSW_P",
-  "no declared voltage: PCIE1_RX_N"
- ],
+ "denominator": 162,
+ "evidence": [],
  "inputs": {
+  "board": "b",
   "margin": 0.2,
   "netlist": {
    "path": "out/pcb-b-compute.net",
-   "sha256_16": "dca20fe595d55628"
+   "sha256_16": "78a7b872d61d2e70"
   }
  },
+ "missing_input": null,
  "note": "a part's rating against the declared voltage of the rail it is soldered to; DC-bias capacitance derating is NOT checked here and is an open gap",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_fingerprints": {
+   "CMP-001": "117de3adbf51c9c8"
+  },
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
   "CMP-001"
@@ -34,9 +33,9 @@
  "tool": "derate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9f654e75fee0f986"
+  "tools_tree_sha": "f2c67e0684159747"
  },
- "ts": "2026-09-16T04:35:23Z",
+ "ts": "2026-09-17T22:32:32Z",
  "verdict": "PASS",
  "version": "unknown"
 }

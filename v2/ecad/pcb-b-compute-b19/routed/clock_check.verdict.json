@@ -3,20 +3,26 @@
  "applicable": true,
  "counts": {
   "bad": 0,
-  "crystals": 7
+  "crystals": 7,
+  "undeclared": 0
  },
  "denominator": 7,
  "evidence": [],
  "inputs": {
+  "board": "b",
   "netlist": {
    "path": "out/pcb-b-compute.net",
-   "sha256_16": "dca20fe595d55628"
+   "sha256_16": "78a7b872d61d2e70"
   }
  },
- "note": "every crystal has two matched load capacitors to ground and its own IC alone on its nets; the VALUE against each part's own C_L is not judged here",
+ "missing_input": null,
+ "note": "every crystal has two matched load capacitors to ground, its own IC alone on its nets, and a network that presents what the part's own datasheet asks for within 20 percent",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "8087c341773d75a1"
+  "rule_fingerprints": {
+   "CLK-001": "87aa8102f151ef26"
+  },
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
   "CLK-001"
@@ -24,9 +30,9 @@
  "tool": "clock_check",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9f654e75fee0f986"
+  "tools_tree_sha": "f2c67e0684159747"
  },
- "ts": "2026-09-16T04:35:23Z",
+ "ts": "2026-09-17T22:32:33Z",
  "verdict": "PASS",
  "version": "unknown"
 }

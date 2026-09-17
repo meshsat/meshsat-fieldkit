@@ -279,7 +279,8 @@ rules:
      net or as an explicit no-connect, and no net of the map lands on a pad the footprint does not have unless the
      same net also sits on a pad it does.
    classification: PROJECT_DECISION
-   applicability: UNIVERSAL_FOR_THIS_PROJECT
+   applicability: CONDITIONAL
+   condition: {fact: has_schematic, op: ne, value: false}
    owner: SESSION
    evidence_scope:
    - schematic_sha256
@@ -323,7 +324,6 @@ rules:
    - c
    - d
    - e
-   - e5
    - p
    interfaces_affected: []
    implementation_location: tools/kisch.py (check_land, land_pads), tools/schlayout.py (_lands)

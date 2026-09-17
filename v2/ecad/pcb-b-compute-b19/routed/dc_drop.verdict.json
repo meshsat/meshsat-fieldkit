@@ -1,0 +1,44 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "density_missed": 9,
+  "met": 31,
+  "missed": 5,
+  "undeclared": 0
+ },
+ "denominator": 36,
+ "evidence": [
+  "MISSED +1V0_S1 on the voltage drop: 6.89% of 1.0 V",
+  "MISSED +3V3_S3A on the voltage drop: 10.09% of 3.3 V",
+  "MISSED +3V3_S3B on the voltage drop: 10.28% of 3.3 V",
+  "MISSED +5V_LIME on the voltage drop: 12.35% of 5.0 V",
+  "MISSED +5V_RB on the voltage drop: 3.03% of 5.0 V"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "2e64b5bf2d9cd3bc"
+  }
+ },
+ "missing_input": null,
+ "note": "the voltage drop against each rail's budget (cell 0.50 mm, default 2%); the current capacity is judged separately in dc_density.verdict.json, where 9 rail(s) missed",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "PI-002": "ec24beac692a01be"
+  },
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+ },
+ "rules": [
+  "PI-002"
+ ],
+ "tool": "dc_drop",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "f2c67e0684159747"
+ },
+ "ts": "2026-09-17T22:31:59Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

@@ -1,0 +1,52 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "by_type": {},
+  "hard": 0,
+  "report": {
+   "silk_edge_clearance": 9,
+   "silk_over_copper": 47,
+   "silk_overlap": 69,
+   "track_dangling": 166,
+   "via_dangling": 55
+  },
+  "stage": "post",
+  "types_checked": 15,
+  "unrouted": 416
+ },
+ "denominator": 15,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-b-compute.kicad_pcb",
+   "sha256_16": "2e64b5bf2d9cd3bc"
+  },
+  "drc": {
+   "path": "out/pcb-b-compute-drc.json",
+   "sha256_16": "1524d6e20321d658"
+  }
+ },
+ "missing_input": null,
+ "note": "routed-board gate (routed board: hard and unrouted must both be zero) (exit code stays the reader contract of --score and --counts)",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "RTE-001": "e5ef726cf2ea32dc",
+   "RTE-002": "66d69a0c02e07594"
+  },
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+ },
+ "rules": [
+  "RTE-001",
+  "RTE-002"
+ ],
+ "tool": "hardset-routed-board-gate",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "f2c67e0684159747"
+ },
+ "ts": "2026-09-17T22:28:37Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

@@ -2,10 +2,13 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "fail": 0,
-  "pass": 37
+  "below_floor": 0,
+  "below_ring": 0,
+  "plated_holes": 189,
+  "via_in_pad": 62,
+  "vias": 3221
  },
- "denominator": 37,
+ "denominator": 3221,
  "evidence": [],
  "inputs": {
   "board": {
@@ -14,23 +17,23 @@
   }
  },
  "missing_input": null,
- "note": "every power-symbol net declared with its loads",
+ "note": "every via at or above the board's own minimum diameter and drill; the annular ring is judged separately in via_annular.verdict.json, and 0 hole(s) are under a floor",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
-   "PWR-001": "6e91133d2ef9dee3"
+   "VIA-001": "e30d2ff6d03fdb93"
   },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
-  "PWR-001"
+  "VIA-001"
  ],
- "tool": "intent_rails",
+ "tool": "via_audit",
  "tools": {
   "git_head": "",
   "tools_tree_sha": "f2c67e0684159747"
  },
- "ts": "2026-09-17T22:31:36Z",
+ "ts": "2026-09-17T22:32:16Z",
  "verdict": "PASS",
  "version": "unknown"
 }

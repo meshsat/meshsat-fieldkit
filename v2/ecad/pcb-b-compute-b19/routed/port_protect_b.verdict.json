@@ -2,15 +2,23 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "declared": 2
+  "behind_an_active_part": 0,
+  "declared": 2,
+  "not_on_netlist": 0,
+  "ports": 2,
+  "unprotected": 0
  },
- "denominator": 0,
+ "denominator": 11,
  "evidence": [],
  "inputs": {
-  "board": "b"
+  "board": "b",
+  "netlist": {
+   "path": "out/pcb-b-compute.net",
+   "sha256_16": "78a7b872d61d2e70"
+  }
  },
- "missing_input": "this board declares items of this kind and has no netlist to judge them on",
- "note": "declared, and not judgeable without a netlist",
+ "missing_input": null,
+ "note": "every declared external conductor meets a protection part before a chip",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -24,9 +32,9 @@
  "tool": "port_protect_b",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "f2c67e0684159747"
  },
- "ts": "2026-09-17T20:41:46Z",
- "verdict": "INCONCLUSIVE",
+ "ts": "2026-09-17T22:32:41Z",
+ "verdict": "PASS",
  "version": "unknown"
 }

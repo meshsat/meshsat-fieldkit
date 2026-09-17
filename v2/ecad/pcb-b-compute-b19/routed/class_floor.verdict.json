@@ -2,35 +2,39 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "fail": 0,
-  "pass": 37
+  "below_floor": 0,
+  "classes": 5
  },
- "denominator": 37,
+ "denominator": 20,
  "evidence": [],
  "inputs": {
   "board": {
    "path": "pcb-b-compute.kicad_pcb",
    "sha256_16": "2e64b5bf2d9cd3bc"
+  },
+  "project": {
+   "path": "pcb-b-compute.kicad_pro",
+   "sha256_16": "c2c6e771722d9f53"
   }
  },
  "missing_input": null,
- "note": "every power-symbol net declared with its loads",
+ "note": "every class at or above the board's minimums",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
-   "PWR-001": "6e91133d2ef9dee3"
+   "IMP-002": "6ff7fffb9afe15d7"
   },
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
  "rules": [
-  "PWR-001"
+  "IMP-002"
  ],
- "tool": "intent_rails",
+ "tool": "class_floor",
  "tools": {
   "git_head": "",
   "tools_tree_sha": "f2c67e0684159747"
  },
- "ts": "2026-09-17T22:31:36Z",
+ "ts": "2026-09-17T22:32:06Z",
  "verdict": "PASS",
  "version": "unknown"
 }
