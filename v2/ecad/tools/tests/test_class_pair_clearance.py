@@ -21,7 +21,9 @@ FIXTURE = """(pcb fixture
   (network
     (net POE_CS (pins U16-16))
     (class SENSE POE_CS (rule (width 250) (clearance 180)))
+    (class SENSE,Default B33_FB (rule (width 250) (clearance 127)))
     (class SW POE_SW2 (rule (width 500) (clearance 127)))
+    (class SW,Default B33_SW (rule (width 500) (clearance 127)))
   )
   (wiring)
 )
@@ -40,9 +42,12 @@ def _edit(spec):
 
 def t_a_class_pair_rule_lands_inside_the_structure_section():
     out, dsn = _edit("SENSE:SW:0.5")
-    assert "1 rule(s) written" in out, out
+    assert "4 rule(s) written" in out, out
     st = dsn[dsn.index("(structure"):dsn.index("(placement")]
     assert "(class_class (classes SENSE SW) (rule (clearance 0.5000)))" in st, "the rule is not inside the structure section:\n" + dsn
+    # KiCad 9 joins a net's class assignments with commas, so the SENSE nets arrive as "SENSE,Default" too; every
+    # DSN class whose members include the named class takes the rule (E12's first DSN reached nothing, 17 Sep 2026)
+    assert "(class_class (classes SENSE,Default SW,Default) (rule (clearance 0.5000)))" in st, "a composite class was not covered:\n" + st
 
 
 def t_a_class_the_dsn_does_not_carry_is_named_and_skipped():
