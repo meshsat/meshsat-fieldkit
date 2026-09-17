@@ -167,7 +167,13 @@ run "cross-board contracts" python3 $T/check_contracts.py "$E"
 # schematic: its every net is board A's, read off A's board file by position under each spring pin. It is the
 # one blind-mate interface in the kit, so a target on the wrong net is invisible until the pack current is on
 # it, and until now nothing checked it at all.
-[ "$L" = "e5" ] && run "dock block against board A" python3 $T/block_contract.py $N.kicad_pcb
+# BOARD A'S PATH IS GIVEN, because every gate here runs in a COPY under out/sweep/ and the block's own tool
+# would look for board A beside that copy and find nothing (17 September 2026).
+if [ "$L" = "e5" ]; then
+  A_BOARD=$(ls -d "$E"/pcb-a-power-*/pcb-a-power.kicad_pcb 2>/dev/null | sort | tail -1)
+  [ -z "$A_BOARD" ] && A_BOARD=$(ls -d "$E"/pcb-a-power/pcb-a-power.kicad_pcb 2>/dev/null | head -1)
+  run "dock block against board A" python3 $T/block_contract.py $N.kicad_pcb "$A_BOARD"
+fi
 # EVERY INTERFACE AGAINST THE SPECIFICATION OF THE PART THAT DEFINES IT (16 September 2026, rule INT-001).
 # Set-level like the contracts above and for the same reason: it reads every board's classes and the parts'
 # own requirements out of pcb_interfaces.yaml, and one board's answer is not separable from the set's.

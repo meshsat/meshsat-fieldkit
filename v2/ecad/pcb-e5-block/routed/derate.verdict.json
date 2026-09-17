@@ -9,7 +9,7 @@
  "evidence": [],
  "inputs": {
   "board": {
-   "path": "pcb-e5-block/pcb-e5-block.kicad_pcb",
+   "path": "pcb-e5-block.kicad_pcb",
    "sha256_16": "686b29a734c55b9a"
   }
  },
@@ -23,10 +23,10 @@
  ],
  "tool": "derate",
  "tools": {
-  "git_head": "17c391d34c8d",
-  "tools_tree_sha": "eaae61b8a1a97981"
+  "git_head": "",
+  "tools_tree_sha": "64929b69a44633d2"
  },
- "ts": "2026-09-17T00:50:52Z",
+ "ts": "2026-09-17T01:24:03Z",
  "verdict": "PASS",
- "version": "17c391d34c8d+dirty"
+ "version": "unknown"
 }
