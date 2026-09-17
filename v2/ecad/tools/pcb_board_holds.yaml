@@ -58,9 +58,12 @@ holds:
    ELECTRICAL_PROTECTION_STATUS: BLOCKED_DECISION_31
    FAB_READINESS: NOT_READY
    PUBLICATION_STATUS: HELD
-   why: "rule TRN-001 is a BLOCKER and reads FAIL on board E: four exposed ports have a clamp that sits
-     BEHIND an active part, so the transient reaches the active part first and the clamp protects what is
-     already damaged. The fix is a schematic change, which a route cannot make, and which of the options is
+   why: "rule TRN-001 is a BLOCKER and reads FAIL on board E, and the reading was corrected on the evening of
+     17 September: ONE conductor has a clamp behind an active part, the shore inlet, whose path is the fuse F1,
+     the ideal-diode FET Q1 and then the SMCJ40A, and THREE reach a semiconductor with nothing between them at
+     all, the sensor pod's 3.3 V feed and its two I2C lines. Until that evening the pod's three read as clamped
+     by the shore inlet's own part, which the chain reached by crossing the RP2040 and a ground: a clamp on the
+     other side of the board is not this conductor's. The fix is a schematic change, which a route cannot make, and which of the options is
      taken is the owner's to rule because it trades parts, board area and the operating envelope against each
      other. The envelope itself is decision 34, which is why 31 cannot be ruled before it"
    permitted: "a review package clearly quarantined as NOT_FOR_FAB may be generated, so the board can be read
