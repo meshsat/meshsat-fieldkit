@@ -174,6 +174,16 @@ IPC-2152. What each model asks for at 10 K: 10 A needs 0.65 mm2 (IPC-2221A), 0.9
 
 **The question:** this project's 1.00 mm, or each interface's own number from its host's datasheet
 
+**Measured:** BOARD A'S THREE PAIRS ARE MEASURED AND THE RULING IS NEARLY FREE ON IT (17 September 2026, read
+off both A40 and A41, which give IDENTICAL numbers because the pre-router lays a pair from the PLACEMENT and
+the route does not touch it): USB_D8 P 139.47 mm against N 139.75, mismatch 0.29 mm; USB_E6 0.12 mm; USB_WALL
+0.01 mm. The compute module's own datasheet asks 0.15 mm of this interface, so ONE of board A's three pairs
+is outside it and two are comfortably inside. Closing it is 0.14 mm of length added to the short leg, which
+`meander.py` does and `pair_match.sh` already runs three rounds of in every finish. Board B's number needs
+its routed board and B21 is mid-route. So on the evidence that exists, ruling the interface's own number
+costs one small meander on one pair of one board, and ruling this project's 1.00 mm leaves a pair at twice
+the budget its host states.
+
 | rule | | boards | result today |
 |---|---|---|---|
 | INT-001 | each interface is designed to its own specification | A, B | FAIL |
