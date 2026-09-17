@@ -5,13 +5,12 @@
   "declared": 15,
   "fail": 0,
   "in_finish": 15,
-  "uncovered_classes": 1
+  "uncovered_classes": 0
  },
  "denominator": 15,
- "evidence": [
-  "uncovered: pour_stitch.py on board C: a pour island with no via of its own net, which carries noth (prevented by declaring gnd_grid, which this board does not)"
- ],
+ "evidence": [],
  "inputs": {
+  "board": "c",
   "closers": "pcb_closers.yaml"
  },
  "missing_input": null,
@@ -25,10 +24,10 @@
  ],
  "tool": "closer_audit",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "eaafe91e15b758ce"
+  "git_head": "2653208dec7e",
+  "tools_tree_sha": "9d07bb63ea4db024"
  },
- "ts": "2026-09-17T05:34:40Z",
- "verdict": "FAIL",
- "version": "unknown"
+ "ts": "2026-09-17T07:43:53Z",
+ "verdict": "PASS",
+ "version": "2653208dec7e+dirty"
 }

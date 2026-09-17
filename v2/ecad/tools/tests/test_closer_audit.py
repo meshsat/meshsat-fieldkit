@@ -75,11 +75,17 @@ def t_the_grid_class_is_covered_where_the_grid_is_declared_and_not_where_it_is_n
 
     17 September 2026: board P left this list without declaring anything. It MEASURED the grid on its own
     copper, 21 open connections against 0 without it, and refused it with those numbers in its board file,
-    which is the rule's second half answered rather than ignored. A and C have not measured it and are still
-    named."""
-    for letter in ("d", "e", "p"):
+    which is the rule's second half answered rather than ignored.
+
+    17 September 2026, later: BOARD C JOINED IT, by the same route and with its own numbers. C24 without the
+    grid routed 0 hard and 0 unrouted of 133 nets in 1 h 21 min; C25 with a 2.1 mm grid ran its full 6 h cap to
+    21 unrouted, closed none of them in a further hour of stub routing, and made the very thing the grid is
+    supposed to prevent worse (2 islands stitched and 5 left, against 1 and 2 on the control). Board A has the
+    measurement as of tonight as well and has not written it down yet, because its arms are still running: it
+    is the one board still named here."""
+    for letter in ("c", "d", "e", "p"):
         assert not C.judge(letter=letter)["uncovered"], letter
-    for letter in ("a", "c"):
+    for letter in ("a",):
         u = C.judge(letter=letter)["uncovered"]
         assert len(u) == 1, (letter, u)
         assert "pour_stitch" in u[0] and "gnd_grid" in u[0], u

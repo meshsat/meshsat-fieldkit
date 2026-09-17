@@ -181,6 +181,19 @@ def _with_board(inputs):
                 if _l:
                     inputs["board"] = _l
                     break
+        # AND A GATE THAT TAKES THE BOARD AS A LETTER (17 September 2026). `--board` is overloaded here: hardset
+        # takes a board FILE and `closer_audit` takes a letter, and the letter form left `inputs.board` empty,
+        # so a run of it in the set-level directory would have answered PLC-002 for all seven boards with one
+        # board's reading. That rule is per board: it fails on A and C and passes on D, E and P.
+        if "board" not in inputs and "--board" in sys.argv:
+            _i = sys.argv.index("--board")
+            if _i + 1 < len(sys.argv):
+                _v = str(sys.argv[_i + 1]).strip().lower()
+                if _v and not os.sep in _v and not _v.endswith((".kicad_pcb", ".net")):
+                    import boardtable as _bt
+                    if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(_bt.__file__)),
+                                                   "boards", "%s.json" % _v)) or _v in ("e5",):
+                        inputs["board"] = _v
     except BaseException:
         pass                                   # a verdict is never lost because its identity could not be read
     return inputs
