@@ -21,9 +21,9 @@ Measured on board E11 (pcb-e1-dock-e7, 5fc1ffce0dc5ab1c), declares E11.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 27 | 56.2 |
+| PASS | 28 | 58.3 |
 | FAIL | 6 | 12.5 |
-| INCONCLUSIVE | 15 | 31.2 |
+| INCONCLUSIVE | 14 | 29.2 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **48** | 100.0 |
 
@@ -58,7 +58,7 @@ Measured on board E11 (pcb-e1-dock-e7, 5fc1ffce0dc5ab1c), declares E11.
 | TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **FAIL** | port_protect FAIL: {'behind_an_active_part': 4, 'declared': 3, 'not_on_netlist': 0, 'ports': 3, 'unprotected': 0} |
 | ISO-001 creepage and clearance | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: it is MEASURED now, per board, which it never was. A net class is an instruction to the router and not a |
 | THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, |
-| PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | taken under rule set 8087c341773d75a1, current is f8db9f9b0747ca1b |
+| PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **PASS** | hardset-placed PASS of 15 |
 | PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | closer_audit PASS of 15 |
 | RTE-001 geometry a fabricator will build | BLOCKER | ROUTED_BOARD | **PASS** | hardset-routed-board-gate PASS of 15 |
 | RTE-002 nothing unrouted, nothing shorted | BLOCKER | ROUTED_BOARD | **PASS** | hardset-routed-board-gate PASS of 15 |

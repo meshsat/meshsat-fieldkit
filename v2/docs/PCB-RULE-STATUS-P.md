@@ -11,9 +11,9 @@ Measured on board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P5: THIS TREE H
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 25 | 59.5 |
+| PASS | 26 | 61.9 |
 | FAIL | 6 | 14.3 |
-| INCONCLUSIVE | 11 | 26.2 |
+| INCONCLUSIVE | 10 | 23.8 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **42** | 100.0 |
 
@@ -41,7 +41,7 @@ Measured on board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P5: THIS TREE H
 | ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **PASS** | sensitive_nodes PASS of 7 |
 | TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **PASS** | port_protect PASS of 0 |
 | THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, |
-| PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | taken under rule set 8087c341773d75a1, current is f8db9f9b0747ca1b |
+| PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **PASS** | hardset-placed PASS of 15 |
 | PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | closer_audit PASS of 15 |
 | RTE-001 geometry a fabricator will build | BLOCKER | ROUTED_BOARD | **FAIL** | fab_limits FAIL: {'classes': 4, 'under_capability': 5} |
 | RTE-002 nothing unrouted, nothing shorted | BLOCKER | ROUTED_BOARD | **PASS** | hardset-routed-board-gate PASS of 15 |
