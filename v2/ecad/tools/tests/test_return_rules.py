@@ -185,3 +185,19 @@ def t_a_check_belongs_to_exactly_one_rule_and_a_quotation_cannot_move_it():
     for msg, want in cases.items():
         owners = [n for n, keys in BUCKETS if any(k in head(msg) for k in keys)]
         assert owners == [want], (msg[:60], owners)
+
+
+def t_the_gap_report_judges_by_the_same_bar_as_the_gate():
+    """A diagnostic that disagrees with the gate sends a reader to fix copper the gate does not refuse.
+
+    `return_gaps.py` opens by saying its totals agree with the gate's line, and since 16 September they did
+    not: the gate asks each net the question its spectral class deserves and the report kept the one uniform
+    limit the gate had before that. On board C it named 87 nets of 127 where the gate fails 18, and it was
+    failing slow nets for a gap when the question asked of a slow net is whether a reference exists at all.
+    """
+    import os
+    src = open(os.path.join(TOOLS, "return_gaps.py"), encoding="utf-8").read()
+    assert "import signal_class" in src or ", signal_class" in src, "the report does not read the spectral class"
+    assert "signal_class.limit(" in src, "the report computes its own limit instead of the gate's"
+    assert 'q == "EXISTS"' in src, "a slow net is still failed for a gap rather than for having no reference"
+    assert "as the gate judges them" in src, "the report does not say which bar it used"
