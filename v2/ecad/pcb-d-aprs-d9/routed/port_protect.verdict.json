@@ -17,8 +17,8 @@
  "inputs": {
   "board": "d",
   "netlist": {
-   "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
-   "sha256_16": "f0bb3465dd42d878"
+   "path": "out/pcb-d-aprs.net",
+   "sha256_16": "5cdc4d1612229df7"
   }
  },
  "missing_input": null,
@@ -30,10 +30,10 @@
  "rules": [],
  "tool": "port_protect",
  "tools": {
-  "git_head": "a4515e9d8bb7",
-  "tools_tree_sha": "d84cbe39b50a5620"
+  "git_head": "",
+  "tools_tree_sha": "7ccbc7e584865cf1"
  },
- "ts": "2026-09-17T13:45:11Z",
+ "ts": "2026-09-17T15:46:20Z",
  "verdict": "FAIL",
- "version": "a4515e9d8bb7+dirty"
+ "version": "unknown"
 }

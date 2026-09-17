@@ -15,7 +15,7 @@
   "margin": 0.2,
   "netlist": {
    "path": "out/pcb-a-power.net",
-   "sha256_16": "b79c3efc6897efdc"
+   "sha256_16": "27b76023da3fcee3"
   }
  },
  "missing_input": null,
@@ -30,9 +30,9 @@
  "tool": "derate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "5b334fc24ecbc81d"
+  "tools_tree_sha": "7ccbc7e584865cf1"
  },
- "ts": "2026-09-17T12:12:27Z",
+ "ts": "2026-09-17T15:42:16Z",
  "verdict": "PASS",
  "version": "unknown"
 }

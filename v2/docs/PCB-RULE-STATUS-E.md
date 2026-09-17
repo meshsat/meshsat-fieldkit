@@ -57,7 +57,7 @@ Measured on board E11 (pcb-e1-dock-e7, 5fc1ffce0dc5ab1c), declares E11.
 | CLK-001 oscillators, straps and boot pins | BLOCKER | SCHEMATIC | **PASS** | clock_check PASS of 1 |
 | ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **FAIL** | sensitive_nodes FAIL: {'declared': 2, 'fail': 2, 'measured': 2} |
 | INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **PASS** | interfaces_e PASS of 1 |
-| TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **FAIL** | port_protect_e FAIL: {'behind_an_active_part': 4, 'declared': 3, 'not_on_netlist': 0, 'ports': 3, 'unprotected': 0} |
+| TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **FAIL** | port_protect_e FAIL: {'behind_an_active_part': 1, 'declared': 3, 'not_on_netlist': 0, 'ports': 3, 'unprotected': 3} |
 | ISO-001 creepage and clearance | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: it is MEASURED now, per board, which it never was. A net class is an instruction to the router and not a |
 | THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, |
 | PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **PASS** | hardset-placed PASS of 15 |

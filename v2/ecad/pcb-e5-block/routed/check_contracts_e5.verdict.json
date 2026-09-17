@@ -18,7 +18,7 @@
    "sha256_16": "686b29a734c55b9a"
   },
   "board_a": {
-   "path": "/root/sweep20/v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb",
+   "path": "/root/sweep21/v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb",
    "sha256_16": "58e26c67987b1daa"
   }
  },
@@ -35,9 +35,9 @@
  "tool": "check_contracts_e5",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "5b334fc24ecbc81d"
+  "tools_tree_sha": "7ccbc7e584865cf1"
  },
- "ts": "2026-09-17T12:17:40Z",
+ "ts": "2026-09-17T15:47:33Z",
  "verdict": "PASS",
  "version": "unknown"
 }

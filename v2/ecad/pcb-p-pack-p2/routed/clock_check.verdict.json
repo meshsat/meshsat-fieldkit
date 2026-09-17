@@ -8,7 +8,7 @@
   "board": "p",
   "netlist": {
    "path": "out/pcb-p-pack.net",
-   "sha256_16": "cb10e7aa66650aaa"
+   "sha256_16": "6df4e1bda5a3aaa3"
   }
  },
  "missing_input": null,
@@ -23,9 +23,9 @@
  "tool": "clock_check",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "5b334fc24ecbc81d"
+  "tools_tree_sha": "7ccbc7e584865cf1"
  },
- "ts": "2026-09-17T12:17:19Z",
+ "ts": "2026-09-17T15:47:12Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

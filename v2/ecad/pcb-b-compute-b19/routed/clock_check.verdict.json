@@ -12,7 +12,7 @@
   "board": "b",
   "netlist": {
    "path": "out/pcb-b-compute.net",
-   "sha256_16": "a668690697edaa3e"
+   "sha256_16": "5969b335cc3f0bbc"
   }
  },
  "missing_input": null,
@@ -27,9 +27,9 @@
  "tool": "clock_check",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "5b334fc24ecbc81d"
+  "tools_tree_sha": "7ccbc7e584865cf1"
  },
- "ts": "2026-09-17T12:14:13Z",
+ "ts": "2026-09-17T15:44:03Z",
  "verdict": "PASS",
  "version": "unknown"
 }

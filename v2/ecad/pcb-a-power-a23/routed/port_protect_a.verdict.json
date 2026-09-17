@@ -10,13 +10,13 @@
  },
  "denominator": 21,
  "evidence": [
-  "J_USBC_OUT (the USB-C outlet on the connector plate, out of the case): 2 conductor(s) whose clamp is behind an active part: J_USBC_OUT.2 on PD_CC1: ACTIVE U18 on PD_CC1 (TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)) sees the transient; CLAMP D4 on PD_VBUS (SMBJ18A (VBUS clamp at the outlet)) is behind it; J_USBC_OUT.3 on PD_CC2: ACTIVE U18 on PD_CC2 (TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)) sees the transient; CLAMP D4 on PD_VBUS (SMBJ18A (VBUS clamp at the outlet)) is behind it"
+  "J_USBC_OUT (the USB-C outlet on the connector plate, out of the case): 2 conductor(s) whose clamp is behind an active part: J_USBC_OUT.2 on PD_CC1: ACTIVE U18 on PD_CC1 (TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)) sees the transient; CLAMP D4 on PD_VBUS (SMBJ18A (VBUS clamp at the outlet)) is behind it [PD_CC1 | U18 -> PD_VBUS | D4 on PD_VBUS]; J_USBC_OUT.3 on PD_CC2: ACTIVE U18 on PD_CC2 (TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)) sees the transient; CLAMP D4 on PD_VBUS (SMBJ18A (VBUS clamp at the outlet)) is behind it [PD_CC2 | U18 -> PD_VBUS | D4 on PD_VBUS]"
  ],
  "inputs": {
   "board": "a",
   "netlist": {
-   "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256_16": "c6fd1f8cdfb52241"
+   "path": "out/pcb-a-power.net",
+   "sha256_16": "27b76023da3fcee3"
   }
  },
  "missing_input": null,
@@ -30,10 +30,10 @@
  ],
  "tool": "port_protect_a",
  "tools": {
-  "git_head": "a4515e9d8bb7",
-  "tools_tree_sha": "d84cbe39b50a5620"
+  "git_head": "",
+  "tools_tree_sha": "7ccbc7e584865cf1"
  },
- "ts": "2026-09-17T13:45:10Z",
+ "ts": "2026-09-17T15:42:22Z",
  "verdict": "FAIL",
- "version": "a4515e9d8bb7+dirty"
+ "version": "unknown"
 }

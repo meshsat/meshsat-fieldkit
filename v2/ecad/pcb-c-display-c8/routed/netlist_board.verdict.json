@@ -18,7 +18,7 @@
   },
   "netlist": {
    "path": "out/pcb-c-display.net",
-   "sha256_16": "206a8204e3518738"
+   "sha256_16": "11a05415ee3839c4"
   }
  },
  "missing_input": null,
@@ -33,9 +33,9 @@
  "tool": "netlist_board",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "5b334fc24ecbc81d"
+  "tools_tree_sha": "7ccbc7e584865cf1"
  },
- "ts": "2026-09-17T12:15:29Z",
+ "ts": "2026-09-17T15:45:20Z",
  "verdict": "PASS",
  "version": "unknown"
 }
