@@ -33,7 +33,13 @@ Prototype design. This plan is written before the build and run on the built pro
 | M3 | CS114, bulk cable injection on the antenna and power cables, 10 kHz to 200 MHz | laboratory | no upset; the arrestors and filters carry the fix |
 | M4 | RE102, radiated emissions, 10 kHz to 18 GHz, deployed with the radios receiving and then transmitting on each bearer in turn | laboratory; in-house first look with the LimeSDR at 3 m | under the limit line outside the intentional transmissions |
 | M5 | RS103, radiated susceptibility, 2 MHz to 18 GHz at 50 V/m | laboratory | no upset, no reset, the touchscreen and the panel keep working |
+| M7 | Electrostatic discharge to every touchable surface and every exposed conductor, at the level decision 34 rules (the proposal is IEC 61000-4-2 level 4, 8 kV contact and 15 kV air) | laboratory (ESD gun); the kit powered from its pack with every bearer up | no upset, no reset, no loss of a bearer, no lost secure-element key, no damage |
 | M6 | Self-compatibility: every transmitter keyed in turn at full power with every receiver listening (the SDR limiter, the GNSS, the LoRa, the 5G, the WiFi) | in-house | no receiver damaged, no false trigger of EMCON, ZEROIZE or the sensors, the GNSS keeps its fix or recovers within 10 s |
+
+**M7 was added on 17 September 2026** and the plan approved on 6 September did not have it: owner decision 31
+asks whether every conductor that leaves the case meets a protection device, ten of them do not, and the level
+such a part is chosen against was written in no document of this tree. The level itself is decision 34's to
+rule; the method is here so that the ruling has a test to point at.
 
 ## 4. Functional check (run before and after every test)
 
