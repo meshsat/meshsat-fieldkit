@@ -65,5 +65,5 @@ Measured on board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12.
 | DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate_d FAIL: {'folder': 1, 'held': 0, 'quote': 0, 'stale': 1} |
 | DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **FAIL** | doc_provenance FAIL: {'documents': 7, 'folders': 7, 'untraceable': 7} |
 | OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 1, 'claims_rc': 0, 'contracts_rc': 3, 'fail': 3, 'held': 1, 'missing': 0, 'pass': 2, 'quote': 2} |
-| SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 48 |
+| SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 301 |
 | SGN-002 a prototype-only unknown is named | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | PCB-PROTOTYPE-UNKNOWNS.md is current with the registry |
