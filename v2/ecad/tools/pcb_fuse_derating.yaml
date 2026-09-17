@@ -1,0 +1,49 @@
+# THE FUSE MAKER'S OWN DERATING TABLE, as data (rule PWR-003, MESHSAT-862, 17 September 2026).
+#
+# WHY THIS FILE EXISTS. ECSS-Q-ST-30-11C Rev.2 Table 6-17 gives 65 percent for a fuse, and its own clause
+# 6.17.1a says that table is stated for Cermet and that the application and derating of ANOTHER TECHNOLOGY
+# shall be justified. Every fuse in this kit is an automotive blade fuse to ISO 8820-3, which is a different
+# technology with a published derating of its own, in a datasheet this project already holds. Judging a blade
+# fuse against the Cermet row is judging it against a number nobody wrote for it; judging it against nothing
+# is worse. This is the number that was written for it.
+#
+# HOW IT IS READ. The allowed load is taken at the NEXT HIGHER published ambient, never interpolated: the
+# columns are the maker's and a value between them would be ours, so the conservative neighbour is used and
+# the reading says which column it came from.
+#
+# HOW IT GOT HERE. Extracted from the PDF by pattern, not typed: the first draft of this file was typed by eye
+# and nine of its thirteen rows were shifted by one column, which reads a 15 A fuse's 20 degree figure as its
+# 65 degree one. tests/test_energy_chain.py re-extracts the table from the datasheet in the tree and fails if
+# one number here differs, so the transcription cannot drift from the document it claims to come from.
+#
+# WHAT IT IS NOT. It does not replace the ECSS clauses about the CIRCUIT (6.17.3 b and c, the largest rating
+# the source can blow and the three-times rule): those hold whatever the element is made of and are enforced
+# separately. It replaces one number, the percentage of its rating a fuse of THIS technology may carry.
+
+tables:
+  atof287:
+    what: "Littelfuse ATOF blade fuses rated 32 V, series 0287"
+    source: "v2/vendor/battery/littelfuse-287-atof.pdf"
+    sha256_16: "c02ee0e20cdd5fb0"
+    revision: "datasheet revised 18 August 2022, page 3, Temperature Table: max. allowed current load [A] at
+      ambient temperature (typical derating)"
+    complies_with: "SAE J1284, ISO 8820-3 (the datasheet's own specification block)"
+    margin_note: "the table's own heading states that the temperature security margin is 20 percent, so these
+      numbers carry it already; the time-current table on the same page adds that at 110 percent of rating a
+      1 A to 30 A fuse opens in 360,000 s to never, which is what says the element is not near its limit at 100"
+    ambients_c: [-40, 0, 20, 65, 85, 110, 125]
+    # rating (A) -> max allowed continuous load (A) at each ambient above
+    ratings:
+      1:     [1, 1, 1, 1, 1, 1, 1]
+      2:     [2, 2, 2, 2, 2, 1, 1]
+      3:     [3, 3, 3, 3, 2, 2, 2]
+      4:     [4, 4, 4, 3, 3, 3, 2]
+      5:     [5, 5, 5, 4, 4, 3, 3]
+      7.5:   [8, 7, 7, 6, 5, 5, 4]
+      10:    [10, 10, 10, 8, 7, 6, 5]
+      15:    [15, 15, 14, 12, 11, 9, 8]
+      20:    [20, 19, 18, 15, 14, 12, 10]
+      25:    [25, 25, 23, 19, 18, 15, 13]
+      30:    [30, 29, 27, 23, 21, 18, 15]
+      35:    [35, 35, 35, 29, 27, 22, 19]
+      40:    [40, 39, 37, 31, 28, 24, 20]

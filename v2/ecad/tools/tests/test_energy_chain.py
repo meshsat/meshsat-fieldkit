@@ -189,3 +189,86 @@ def t_the_authority_is_in_the_tree_and_the_gate_names_it():
     assert os.path.exists(doc), "the transcribed clauses are not in the tree: %s" % doc
     t = open(doc, encoding="utf-8").read()
     assert "65 %" in t and "6.17.3" in t and "sha256" in t, "the transcription is missing its number or its provenance"
+
+
+# ---------------------------------------------------------------------------------------------------------
+# THE FUSE MAKER'S OWN DERATING (rule PWR-003, 17 September 2026).
+#
+# ECSS-Q-ST-30-11C Rev.2 Table 6-17 gives 65 percent for a fuse and its own 6.17.1a says that row is stated
+# for Cermet and that another technology's derating shall be JUSTIFIED. Board E's shore inlet carries 8 A of a
+# 10 A automotive blade fuse, which is 80 percent, and it read FAIL against a number nobody wrote for a blade
+# fuse. The justification is published in the datasheet this tree already holds, as a table of allowed load
+# against ambient, and it is read here instead of being paraphrased.
+
+def t_the_table_is_read_at_the_next_higher_published_column():
+    import energy_chain as E
+    t = E.derating_tables()["atof287"]
+    assert E.allowed_load(t, 10.0, 20) == (10.0, 20.0), E.allowed_load(t, 10.0, 20)
+    assert E.allowed_load(t, 10.0, 56) == (8.0, 65.0), "56 C must be read at the 65 C column, never interpolated"
+    assert E.allowed_load(t, 10.0, 65) == (8.0, 65.0)
+    assert E.allowed_load(t, 10.0, 66) == (7.0, 85.0)
+
+
+def t_an_ambient_past_the_last_column_has_no_answer():
+    """A fuse judged against a number nobody published is what this file exists to stop."""
+    import energy_chain as E
+    t = E.derating_tables()["atof287"]
+    assert E.allowed_load(t, 10.0, 130) == (None, None)
+    assert E.allowed_load(t, 12.0, 20) == (None, None), "a rating the maker does not publish has no figure"
+
+
+def t_the_transcribed_table_still_matches_the_datasheet_in_this_tree():
+    """THE TRANSCRIPTION GUARD. The first draft of pcb_fuse_derating.yaml was typed by eye and nine of its
+    thirteen rows were shifted one column, which reads a 15 A fuse's 20 degree figure as its 65 degree one.
+    The table is re-extracted from the PDF here, so a typed number cannot drift from the document."""
+    import subprocess, re, os, energy_chain as E
+    pdf = os.path.join(os.path.dirname(os.path.dirname(TOOLS)), "vendor", "battery", "littelfuse-287-atof.pdf")
+    if not os.path.isfile(pdf): raise AssertionError("the ATOF datasheet is not in the tree: %s" % pdf)
+    try:
+        txt = subprocess.run(["pdftotext", "-layout", pdf, "-"], capture_output=True, text=True).stdout
+    except FileNotFoundError:
+        return                                  # no pdftotext on this host: the other rules still hold
+    pat = re.compile(r"(?<![\d.])(1|2|3|4|5|7\.5|10|15|20|25|30|35|40)A\s+((?:\d+\s+){6}\d+)(?!\d)")
+    got = {float(m.group(1)): [int(x) for x in m.group(2).split()] for m in pat.finditer(txt)}
+    assert len(got) == 13, "the datasheet's own table did not read back: %d row(s)" % len(got)
+    have = (E.derating_tables()["atof287"].get("ratings") or {})
+    for rating, row in got.items():
+        mine = have.get(rating) or have.get(int(rating) if rating == int(rating) else rating)
+        assert mine == row, "the %s A row here is %s and the datasheet says %s" % (rating, mine, row)
+
+
+def t_a_stage_naming_a_table_and_no_ambient_is_refused():
+    """The table is a function of ambient; naming it without one would be an exemption wearing a citation."""
+    r = _run(FUSED.replace("continuous_a: 10.0",
+                           "continuous_a: 20.0\n   derating: {table: atof287}"))
+    assert any("no ambient" in f for f in r["derate_fails"]), r["derate_fails"]
+
+
+def t_a_stage_naming_a_table_nobody_publishes_is_refused():
+    r = _run(FUSED.replace("continuous_a: 10.0",
+                           "continuous_a: 20.0\n   derating: {table: madeup99, ambient_c: 40}"))
+    assert any("no such table" in f for f in r["derate_fails"]), r["derate_fails"]
+
+
+def t_the_makers_table_decides_where_it_exists_and_refuses_an_overload():
+    """25 A fuse, 20 A continuous: 80 percent, which the ECSS Cermet row refuses. The maker's own 25 A row is
+    23 A at its 20 C column and 19 A at its 65 C column, so the SAME load is a pass in a cool place and a
+    failure in a warm one, which is the whole point of reading the table rather than a percentage."""
+    ok = _run(FUSED.replace("continuous_a: 10.0",
+                            "continuous_a: 20.0\n   derating: {table: atof287, ambient_c: 18}"))
+    assert not ok["derate_fails"], ok["derate_fails"]
+    assert any("allows 23.0 A at its 20 C column" in n for n in ok["notes"]), ok["notes"]
+    bad = _run(FUSED.replace("continuous_a: 10.0",
+                             "continuous_a: 20.0\n   derating: {table: atof287, ambient_c: 60}"))
+    assert any("allows 19.0 A at its 65 C column" in f for f in bad["derate_fails"]), bad["derate_fails"]
+
+
+def t_the_shore_inlet_passes_on_the_maker_s_figure_and_says_it_has_no_margin():
+    """The acceptable fixture AND the honest reading: 8.0 A against the 8.0 A the maker allows at 65 C is a
+    pass with nothing left, and it must not read like a pass at 40 percent."""
+    import subprocess, sys, os
+    r = subprocess.run([sys.executable, os.path.join(TOOLS, "energy_chain.py")],
+                       capture_output=True, text=True, cwd=TOOLS)
+    out = r.stdout
+    assert "SHORE_INPUT: F1 carries 8.0 A where atof287 allows 8.0 A at its 65 C column" in out, out[-1500:]
+    assert "no margin against the maker's own figure" in out, out[-1500:]

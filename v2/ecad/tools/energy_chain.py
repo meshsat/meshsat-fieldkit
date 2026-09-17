@@ -57,6 +57,35 @@ def netlist_refs(stem, ecad=None):
 # to 50 percent at 110 C; this project's fuses sit in a sealed case whose inside temperature is owner decision
 # 34, so the screen is the 85 C figure and the envelope decides whether it should be the other one.
 FUSE_SCREEN = 0.65
+FUSE_TABLES = os.path.join(HERE, "pcb_fuse_derating.yaml")
+
+
+def derating_tables(path=None):
+    """The fuse makers' own derating tables, or {} when the file is absent (never an exception in a gate)."""
+    try:
+        import yaml
+        return (yaml.safe_load(open(path or FUSE_TABLES, encoding="utf-8")) or {}).get("tables") or {}
+    except Exception:
+        return {}
+
+
+def allowed_load(table, rating_a, ambient_c):
+    """(amps, column_c) the maker allows at this ambient for this rating, at the NEXT HIGHER published column.
+
+    Never interpolated: the columns are the maker's numbers and anything between them would be ours. A rating
+    the table does not carry, or an ambient past its last column, returns (None, None) and the caller says so
+    rather than guessing, because a fuse judged against a number nobody published is what this file exists to
+    stop."""
+    if not table: return (None, None)
+    amb = table.get("ambients_c") or []
+    row = (table.get("ratings") or {}).get(rating_a)
+    if row is None:
+        row = (table.get("ratings") or {}).get(int(rating_a) if float(rating_a) == int(rating_a) else rating_a)
+    if not row or len(row) != len(amb): return (None, None)
+    for i, a in enumerate(amb):
+        if float(ambient_c) <= float(a) + 1e-9: return (float(row[i]), float(a))
+    return (None, None)
+
 
 
 def check(chain=None, ecad=None, vendor=None):
@@ -74,6 +103,7 @@ def check(chain=None, ecad=None, vendor=None):
     # bounded END TO END; a fuse at 80 percent of its rating is a coordination finding about one stage, and
     # counting it in the set verdict failed four boards for something that is one board's (17 September 2026).
     derate_fails = []
+    _TABLES = derating_tables()          # the fuse makers' own tables, read once
     vdir = vendor or VENDOR
     have_vendor = os.path.isdir(vdir)
     unjudged_citations = 0
@@ -164,7 +194,45 @@ def check(chain=None, ecad=None, vendor=None):
                                     "derating criterion" % sid)
             else:
                 ratio = float(cont) / float(r)
-                if ratio <= FUSE_SCREEN + 1e-9:
+                # THE MAKER'S OWN TABLE DECIDES FIRST (17 September 2026). ECSS 6.17.1a asks for another
+                # technology's derating to be justified, and for an automotive blade fuse the justification is
+                # published: Littelfuse's ATOF datasheet carries a max allowed continuous load per ambient,
+                # with a 20 percent temperature security margin in it already. A stage says which table and at
+                # what ambient, and the ambient is the one the ENVELOPE gives, never a comfortable number.
+                _dr = s.get("derating") or {}
+                _tbl = (_TABLES.get(_dr.get("table")) or {}) if _dr.get("table") else {}
+                _amb = _dr.get("ambient_c")
+                _allow, _col = allowed_load(_tbl, r, _amb) if (_tbl and _amb is not None) else (None, None)
+                if _dr.get("table") and not _tbl:
+                    derate_fails.append("%s: the stage names derating table %r and no such table is published "
+                                        "here" % (sid, _dr.get("table")))
+                elif _tbl and _amb is None:
+                    derate_fails.append("%s: the stage names a derating table and no ambient to read it at, and "
+                                        "the table is a function of ambient" % sid)
+                elif _allow is not None:
+                    checked += 1
+                    if float(cont) <= _allow + 1e-9:
+                        # A PASS AT THE LIMIT IS NOT THE SAME AS A PASS WITH ROOM, and it should not read the
+                        # same. The shore inlet sits exactly on the maker's 65 C figure: one column further up
+                        # the table and it is over. That is a fact about this design, not a failure, and it is
+                        # said where a reader will see it.
+                        _margin = "" if float(cont) < _allow * 0.95 else (
+                            ", which is the WHOLE of what that column allows: this stage has no margin against "
+                            "the maker's own figure and a warmer envelope moves it")
+                        notes.append("%s: %s carries %.1f A where %s allows %.1f A at its %.0f C column (the "
+                                     "stage is judged at %.0f C, %s)%s"
+                                     % (sid, prot.get("ref", "the fuse"), float(cont), _dr.get("table"), _allow,
+                                        _col, float(_amb), _tbl.get("revision", "")[:70], _margin))
+                    else:
+                        derate_fails.append("%s: %s carries %.1f A and %s allows %.1f A at its %.0f C column, "
+                                            "read at the stage's own %.0f C ambient"
+                                            % (sid, prot.get("ref", "the fuse"), float(cont), _dr.get("table"),
+                                               _allow, _col, float(_amb)))
+                elif _tbl and _amb is not None:
+                    derate_fails.append("%s: %s is rated %.1f A at %.0f C and %s publishes no figure for that "
+                                        "rating or that ambient" % (sid, prot.get("ref", "the fuse"), float(r),
+                                                                    float(_amb), _dr.get("table")))
+                elif ratio <= FUSE_SCREEN + 1e-9:
                     notes.append("%s: %s carries %.1f A of its %.1f A rating (%.0f percent), inside the 65 percent "
                                  "ECSS-Q-ST-30-11C Rev.2 Table 6-17 sets for a fuse at or below 85 C"
                                  % (sid, prot.get("ref", "the fuse"), float(cont), float(r), 100 * ratio))
