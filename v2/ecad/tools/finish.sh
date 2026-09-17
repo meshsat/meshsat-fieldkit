@@ -286,6 +286,13 @@ if [ -s out/$N.net ]; then
   python3 $T/port_protect.py out/$N.net > out/port_protect-finish.log 2>&1; PPF=$?
   grep -aE 'port_protect:|FAIL' out/port_protect-finish.log | head -6
   [ "$PPF" -eq 1 ] && stop "PORTS a conductor leaves the case and meets a chip with nothing between (rule TRN-001)" "out/port_protect-finish.log"
+  # RULE SCH-004 BLOCKS THE DELIVERABLE FOR THE SAME REASON (17 September 2026): a line whose assertion inhibits
+  # a hazard has to hold its safe state with this board's own copper, it is decided on the netlist, and a board
+  # that reaches a deliverable without its pull-down would ship an inhibit that depends on a cable being there.
+  # The pre-route chain runs it too, and a board cut by a re-finish never goes through that chain.
+  python3 $T/safe_lines.py out/$N.net > out/safe_lines-finish.log 2>&1; SLF=$?
+  grep -aE 'safe_lines:|FAIL' out/safe_lines-finish.log | head -6
+  [ "$SLF" -eq 1 ] && stop "SAFETY a declared safety line does not hold its safe state on this board (rule SCH-004)" "out/safe_lines-finish.log"
 fi
 for _iv in intent_return_path intent_return_via intent_decoupling intent_rails intent_other; do
   [ -f "out/$_iv.verdict.json" ] || continue
