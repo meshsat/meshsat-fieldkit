@@ -59,6 +59,21 @@ def _copper(board, netname):
     return out
 
 
+def inside_any(pt, boxes):
+    """Is this point inside any of these axis-aligned boxes (x0, y0, x1, y1), in mm?
+
+    The boxes are the COURTYARDS of the parts that carry both nets. A courtyard is the part's own published
+    area, not a number this project invented, which is what makes it usable as the line between geometry and
+    a routing decision."""
+    x, y = pt
+    for box in boxes:
+        if not box: continue                      # a part that draws no courtyard and has no pads to fall back on
+        x0, y0, x1, y1 = box
+        if min(x0, x1) - 1e-9 <= x <= max(x0, x1) + 1e-9 and min(y0, y1) - 1e-9 <= y <= max(y0, y1) + 1e-9:
+            return True
+    return False
+
+
 def _seg_distance(s1, s2):
     """Centreline distance between two segments, minus half of each width: the copper-to-copper gap."""
     import math
@@ -73,6 +88,32 @@ def _seg_distance(s1, s2):
 
     d0 = min(pt_seg(a, c, d), pt_seg(b, c, d), pt_seg(c, a, b), pt_seg(d, a, b))
     return d0 - (w1 + w2) / 2.0
+
+
+def _courtyard_box(fp):
+    """(x0, y0, x1, y1) in mm of a footprint's own courtyard, or its pad bounding box when it draws none.
+
+    KiCad keeps the courtyard as a polygon set per side; its bounding box is the part's area for this purpose
+    and is exact for the rectangular packages these sense lines leave (SOT, QFN, 0603). A part with no
+    courtyard falls back to its pads, which is smaller and therefore never the generous choice."""
+    try:
+        import pcbnew
+        for side in (pcbnew.F_CrtYd, pcbnew.B_CrtYd):
+            try: poly = fp.GetCourtyard(side)
+            except Exception: poly = None
+            if poly is not None and poly.OutlineCount():
+                bb = poly.BBox()
+                return (bb.GetLeft() / 1e6, bb.GetTop() / 1e6, bb.GetRight() / 1e6, bb.GetBottom() / 1e6)
+    except Exception:
+        pass
+    xs, ys = [], []
+    try:
+        for pd in fp.Pads():
+            p = pd.GetPosition(); xs.append(p.x / 1e6); ys.append(p.y / 1e6)
+    except Exception:
+        return None
+    if not xs: return None
+    return (min(xs), min(ys), max(xs), max(ys))
 
 
 def judge(board_path=None, letter=None, sens=None):
@@ -143,14 +184,15 @@ def judge(board_path=None, letter=None, sens=None):
         # length over which the two run inside the limit. A gap at the shared part's own pins is geometry; a
         # long parallel run is a routing decision, and only the second is something to fix on this board.
         _keep = None if n.get("keep_mm") is None else float(n["keep_mm"])
-        _at_part, _run_mm = None, 0.0
+        _at_part, _run_mm, _run_in, _run_out = None, 0.0, 0.0, 0.0
         if _keep is not None and best < _keep - 1e-9:
-            _shared = []
+            _shared, _areas = [], []
             for fp in board.GetFootprints():
                 _pn = {str(pd.GetNetname()).lstrip("/") for pd in fp.Pads()}
                 if net in _pn and who in _pn:
                     for pd in fp.Pads():
                         _p = pd.GetPosition(); _shared.append((_p.x / 1e6, _p.y / 1e6))
+                    _areas.append(_courtyard_box(fp))
             for m in mine:
                 for o in sw_copper.get(who, []):
                     if not (m[3] is None or o[3] is None or m[3] == o[3]): continue
@@ -160,18 +202,35 @@ def judge(board_path=None, letter=None, sens=None):
                                math.hypot(o[1][0] - o[0][0], o[1][1] - o[0][1]))
                     _run_mm += _len
                     _mid = ((m[0][0] + m[1][0]) / 2.0, (m[0][1] + m[1][1]) / 2.0)
+                    # INSIDE THE SHARED PART'S OWN COURTYARD OR OUTSIDE IT (17 September 2026). A sense line
+                    # and the switching node it measures are adjacent BY CONSTRUCTION at the part that makes
+                    # both: the FET's source is CS and its drain is SW, and no router can separate two pins of
+                    # one package. What the rule is about is the copper OUTSIDE that part, which is a routing
+                    # decision. Board A's four short approaches are all inside a courtyard; its POE_CS runs
+                    # 10.79 mm and board E's WATER_SENSE 20.49 mm, and those are the two kinds this splits.
+                    if inside_any(_mid, [a for a in _areas if a]): _run_in += _len
+                    else: _run_out += _len
                     for _sp in _shared:
                         _dd = math.hypot(_mid[0] - _sp[0], _mid[1] - _sp[1])
                         if _at_part is None or _dd < _at_part: _at_part = _dd
         measured.append(dict(net=net, nearest_switch=who, gap_mm=round(best, 3), keep_mm=n.get("keep_mm"),
                              run_within_limit_mm=round(_run_mm, 2),
+                             run_inside_the_shared_part_mm=round(_run_in, 2),
+                             run_outside_it_mm=round(_run_out, 2),
                              mm_from_the_part_that_joins_them=None if _at_part is None else round(_at_part, 2)))
         if _keep is not None and best < _keep - 1e-9:
             _where = ("%.2f mm from the pads of the part that carries both nets" % _at_part
                       if _at_part is not None else "with no part carrying both nets on this board")
-            fails.append("%s runs %.3f mm from %s and its own list asks for %.2f; the two are inside that "
-                         "limit over %.2f mm of copper, %s"
-                         % (net, best, who, _keep, _run_mm, _where))
+            if _run_out > 1e-9:
+                fails.append("%s runs %.3f mm from %s and its own list asks for %.2f; they are inside that "
+                             "limit over %.2f mm of copper, %.2f mm of it OUTSIDE the courtyard of the part "
+                             "that carries both nets, %s"
+                             % (net, best, who, _keep, _run_mm, _run_out, _where))
+            else:
+                notes.append("%s comes within %.3f mm of %s against its own %.2f, and every millimetre of it "
+                             "(%.2f mm) is inside the courtyard of the part that carries both nets: two pins "
+                             "of one package cannot be separated by routing, so this is geometry rather than a "
+                             "routing decision" % (net, best, who, _keep, _run_in))
     return dict(declared=len(nodes), fails=fails, notes=notes, measured=measured, applicable=True)
 
 

@@ -62,7 +62,13 @@ input pair for a 47 to 200 ns time constant, section 10.2.2.2; a 10 Ohm contact 
 the charge sense resistor, pin 19), warning that without it the ringing 'overwhelms converter sensed inductor
 current information' and can push the average-current loop into oscillation. Six parts were added at the
 source. The clearances themselves are this project's own numbers and no source in this tree sets them, which
-is why the measured distance travels in the verdict beside them.  
+is why the measured distance travels in the verdict beside them. 17 SEPTEMBER 2026, WHERE THE APPROACH
+HAPPENS DECIDES WHAT IT IS: a sense line and the switching node it measures are adjacent by construction at
+the part that makes both, two pins of one package, and this gate reported the smallest gap and failed board A
+on six nodes of which four were that geometry. The run inside the limit is split at the shared part's own
+COURTYARD, which is published geometry rather than a number of ours: copper inside it is the package and is
+reported as a note, copper outside it is a routing decision and fails. Board A keeps POE_CS at 10.79 mm and
+B33_FB at 8.47 mm, and board E keeps both of its own, one of which runs 20.49 mm with no shared part at all.  
 *Close it by* The declarations and the check are DONE (17 September 2026): every board that has a sensitive node declares it with the clearance it asks for, and sensitive_nodes.py measures it. What remains is COPPER and rides with those boards' next route: board A has ten clearances under their own asked-for distance, four of which are the charger filter nets its committed board does not yet carry, and board E has two. Owner **SESSION**. Effort P50 2h, P80 6h.
 
 **BAT-001 the cell block is protected in hardware** (BLOCKER, GENERATED_ONLY)  
