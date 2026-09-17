@@ -166,3 +166,16 @@ def t_the_fallback_is_carried_under_the_name_the_rule_asks_by():
     named = [x.strip() for x in cov["verification"]["verdict"].split(",")]
     assert "hardset-pre-route-drc" not in named, "the fallback is named as a rule verdict again: %s" % named
     assert named == ["hardset-placed", "place_audit"], named
+
+
+def t_a_swap_carries_the_geometry_and_not_the_escape_fan_predictor():
+    """THE CORRECTION, made the same night by a measurement (17 September 2026). A seat exchange between two
+    parts of the same land moves no courtyard, hole or clearance, so the hard set and the region fit are
+    unchanged. The escape-fan predictor is not: it reads the NETS at each seat. Board D's placed board predicts
+    no collision and the board that shipped, with R20 and R21 exchanged, predicts one. Carrying place_audit
+    across the swap would have answered the registry with the arrangement that did not ship."""
+    assert C.CARRY_SWAPPED == ("hardset-placed", "regionfit"), C.CARRY_SWAPPED
+    assert "place_audit" in C.CARRY and "place_audit" not in C.CARRY_SWAPPED
+    import inspect
+    src = inspect.getsource(C.main)
+    assert "CARRY_SWAPPED" in src and "swapped = swaps(" in src, "the swap no longer narrows what is carried"

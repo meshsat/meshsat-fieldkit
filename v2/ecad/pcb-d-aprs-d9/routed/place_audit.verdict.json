@@ -1,32 +1,23 @@
 {
  "advisory": false,
  "applicable": true,
- "carried": {
-  "by": "carry_placed.py",
-  "footprints_compared": 211,
-  "from": "placed",
-  "moved": 0,
-  "to": "routed"
- },
  "counts": {
-  "collisions": 0,
+  "collisions": 1,
   "fine_pitch": 6,
   "footprints": 211,
   "measured": 6
  },
  "denominator": 6,
- "evidence": [],
+ "evidence": [
+  "FAIL  2 plane pad(s) with no path to their plane before the route (no via within 1.5 mm, not in their own fill, no locked copper, and no free via site within 1.5 mm or a track keep-out over the pad): U6.2 (+5V_D8, no via site), C3.1 (+5V_D8, no via site)"
+ ],
  "inputs": {
   "board": {
    "path": "pcb-d-aprs.kicad_pcb",
    "sha256_16": "929bf82d2bf6eed4"
-  },
-  "measured_board": {
-   "sha256_16": "0976658aa0fd851d",
-   "stage": "placed"
   }
  },
- "note": "carried to the routed board from the placed board after comparing all 211 footprint positions, orientations and sides: none moved, so the placement measured is the placement that shipped",
+ "note": "",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "8087c341773d75a1"
@@ -37,9 +28,9 @@
  "tool": "place_audit",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "7f15cb4b9c402c97"
+  "tools_tree_sha": "c063f36cc529b4dc"
  },
- "ts": "2026-09-17T03:12:48Z",
- "verdict": "PASS",
+ "ts": "2026-09-17T03:27:25Z",
+ "verdict": "FAIL",
  "version": "unknown"
 }
