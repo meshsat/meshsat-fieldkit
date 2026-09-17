@@ -36,9 +36,19 @@ def netlist_path(stem):
         try:
             _b = _json.load(open(os.path.join(here, "boards", _letter.lower() + ".json")))
             _phase = (_b.get("phase") or "").lower()
-            for _pf in _glob.glob(os.path.join(here, "routeflow", "*.json")):
+            # ONE PROFILE PER LETTER SINCE 15 SEPTEMBER, AND THIS COMPARISON STOPPED BEING TRUE THAT DAY
+            # (17 September 2026). Each `routeflow/<letter>.json` now carries the literal phase placeholder
+            # `<PHASE>`, which a run fills in from --phase or the board file, so `phase != declared` was true
+            # of every profile and the loop selected nothing: `netlist_path` has been falling through to the
+            # newest directory by mtime ever since, which is the 14 September defect this function exists to
+            # prevent and it bites where it hurts, on a box carrying forty-one arm directories for one board.
+            # The profile is identified by the BOARD it routes, which is unique per letter; a profile that
+            # still names a real phase is held to it.
+            for _pf in sorted(_glob.glob(os.path.join(here, "routeflow", "*.json"))):
                 _p = _json.load(open(_pf))
-                if (_p.get("phase") or "").lower() != _phase or _p.get("board") != stem: continue
+                if _p.get("board") != stem: continue
+                _ph = str(_p.get("phase") or "")
+                if _ph and not _ph.startswith("<") and _ph.lower() != _phase: continue
                 _d = os.path.join(ECAD, os.path.basename(_p.get("project", "")), "out", stem + ".net")
                 if os.path.isfile(_d): return _d
         except Exception: pass

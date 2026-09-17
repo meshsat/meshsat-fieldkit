@@ -7,6 +7,8 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 
 **Readiness: NOT_READY**
 
+Measured on board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24.
+
 | result | rules | percent |
 |---|---|---|
 | PASS | 30 | 71.4 |

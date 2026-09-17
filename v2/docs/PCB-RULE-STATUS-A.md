@@ -7,6 +7,8 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 
 **Readiness: NOT_READY**
 
+Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A36: THIS TREE HOLDS NO BOARD AT THE DECLARED PHASE.
+
 | result | rules | percent |
 |---|---|---|
 | PASS | 28 | 56.0 |
