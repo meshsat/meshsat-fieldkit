@@ -1,0 +1,41 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "by_type": {},
+  "hard": 0,
+  "report": {
+   "silk_edge_clearance": 9,
+   "silk_over_copper": 47,
+   "silk_overlap": 69,
+   "track_dangling": 166,
+   "via_dangling": 55
+  },
+  "stage": "post",
+  "types_checked": 15,
+  "unrouted": 416
+ },
+ "denominator": 15,
+ "evidence": [],
+ "inputs": {
+  "drc": {
+   "path": "out/quality/cand-drc.json",
+   "sha256_16": "badb24be0878fd2a"
+  }
+ },
+ "missing_input": null,
+ "note": " (routed board: hard and unrouted must both be zero) (exit code stays the reader contract of --score and --counts)",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+ },
+ "rules": [],
+ "tool": "hardset",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "db432d5bae6d7094"
+ },
+ "ts": "2026-09-17T21:57:24Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

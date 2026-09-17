@@ -1,0 +1,31 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "regions": 0
+ },
+ "denominator": 0,
+ "evidence": [
+  "no region table at /root/biso21/v2/ecad/pcb-b-compute-b19/out/out/pcb-b-compute-placed-regions.json: run the placement generator first"
+ ],
+ "inputs": {
+  "board": {
+   "path": "out/pcb-b-compute-placed.kicad_pcb",
+   "sha256_16": "72c0f472ce2da345"
+  }
+ },
+ "note": "the room around a region cannot be measured without the region table",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [],
+ "tool": "region_room",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "9f654e75fee0f986"
+ },
+ "ts": "2026-09-17T15:06:50Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown"
+}

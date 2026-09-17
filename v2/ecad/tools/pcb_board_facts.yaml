@@ -62,7 +62,7 @@ a:
 b:
   title: PCB-B COMPUTE
   project: pcb-b-compute
-  phase_declared: B19
+  phase_declared: B21
   outline_mm: [330, 200]
   layers: 6
   thickness_mm: 1.6

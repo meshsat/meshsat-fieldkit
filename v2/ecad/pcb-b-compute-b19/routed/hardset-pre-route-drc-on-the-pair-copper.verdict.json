@@ -1,0 +1,49 @@
+{
+ "advisory": true,
+ "applicable": true,
+ "counts": {
+  "by_type": {
+   "clearance": 22
+  },
+  "hard": 22,
+  "report": {
+   "silk_edge_clearance": 9,
+   "silk_over_copper": 47,
+   "silk_overlap": 69,
+   "track_dangling": 19,
+   "via_dangling": 199
+  },
+  "stage": "pre",
+  "types_checked": 15,
+  "unrouted": 499
+ },
+ "denominator": 15,
+ "evidence": [
+  "   clearance | Track [/PCIE1_TX_N] on B.Cu, length 0.3354 mm / Track [/PCIE1_TX_P] on B.Cu, length 19.4583 mm",
+  "   clearance | Track [/BANK3_UPRX_N] on F.Cu, length 0.1414 mm / Track [/BANK3_UPRX_P] on F.Cu, length 6.6040 mm",
+  "   clearance | Via [/ETH3_P1_N] on F.Cu - B.Cu / Track [/ETH3_P1_P] on F.Cu, length 1.3038 mm",
+  "   clearance | Track [/PCIE2_TX_P] on F.Cu, length 1.3924 mm / Track [/PCIE2_TX_N] on F.Cu, length 0.5524 mm",
+  "   clearance | Track [/HOST3_1TX_P] on B.Cu, length 7.8006 mm / Track [/HOST3_1TX_N] on B.Cu, length 2.4348 mm",
+  "   clearance | Track [/HOST3_1TX_N] on B.Cu, length 2.4348 mm / Track [/HOST3_1TX_P] on B.Cu, length 1.9908 mm"
+ ],
+ "inputs": {
+  "drc": {
+   "path": "out/pcb-b-compute-pairs-drc.json",
+   "sha256_16": "5d7a45d9c6f2b8c0"
+  }
+ },
+ "note": "pre-route DRC on the pair copper (pre-route: only the hard set decides, an unrouted board is the expected input) (exit code stays the reader contract of --score and --counts)",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [],
+ "tool": "hardset-pre-route-drc-on-the-pair-copper",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "9f654e75fee0f986"
+ },
+ "ts": "2026-09-16T04:48:33Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

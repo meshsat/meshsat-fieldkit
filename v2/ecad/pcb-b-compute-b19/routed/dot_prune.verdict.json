@@ -2,32 +2,31 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "fail": 0,
-  "zones": 6
+  "dots": 294,
+  "kept_as_bridge": 294,
+  "removed": 0
  },
- "denominator": 6,
+ "denominator": 16822,
  "evidence": [],
  "inputs": {
   "board": {
    "path": "pcb-b-compute.kicad_pcb",
-   "sha256_16": "47262c82041bf4e2"
+   "sha256_16": "f9bd574d16dd2d19"
   }
  },
  "missing_input": null,
- "note": "",
+ "note": "a track shorter than the process can draw is an island, not a conductor",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "a2d08c6e5224a5a4"
  },
- "rules": [
-  "PLN-001"
- ],
- "tool": "check_zone_nets",
+ "rules": [],
+ "tool": "dot_prune",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "50a906a771c0ec02"
+  "tools_tree_sha": "db432d5bae6d7094"
  },
- "ts": "2026-09-17T20:41:29Z",
+ "ts": "2026-09-17T21:55:35Z",
  "verdict": "PASS",
  "version": "unknown"
 }

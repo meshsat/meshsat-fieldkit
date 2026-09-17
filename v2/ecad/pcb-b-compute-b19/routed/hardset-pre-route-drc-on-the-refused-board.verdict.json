@@ -1,0 +1,40 @@
+{
+ "advisory": true,
+ "applicable": true,
+ "counts": {
+  "by_type": {},
+  "hard": 0,
+  "report": {
+   "silk_edge_clearance": 9,
+   "silk_over_copper": 47,
+   "silk_overlap": 69,
+   "track_dangling": 8,
+   "via_dangling": 199
+  },
+  "stage": "pre",
+  "types_checked": 15,
+  "unrouted": 499
+ },
+ "denominator": 15,
+ "evidence": [],
+ "inputs": {
+  "drc": {
+   "path": "out/pcb-b-compute-preroute-drc.json",
+   "sha256_16": "d4f809dcf40f0a7d"
+  }
+ },
+ "note": "pre-route DRC on the refused board (pre-route: only the hard set decides, an unrouted board is the expected input) (exit code stays the reader contract of --score and --counts)",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "8087c341773d75a1"
+ },
+ "rules": [],
+ "tool": "hardset-pre-route-drc-on-the-refused-board",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "9f654e75fee0f986"
+ },
+ "ts": "2026-09-16T04:48:39Z",
+ "verdict": "PASS",
+ "version": "unknown"
+}
