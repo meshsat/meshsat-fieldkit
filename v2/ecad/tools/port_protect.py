@@ -184,6 +184,33 @@ def _write_both(letter, result, **kw):
 def main(argv):
     if not argv: print(__doc__); return 2
     path = argv[0]
+    # A BOARD WITH NO NETLIST STILL HAS AN ANSWER IF IT DECLARES ONE (17 September 2026). Board E5 is generated
+    # from board A's board file and has no schematic and no netlist, so every netlist rule read "no verdict for
+    # this board" and counted as nobody having looked. It is a bare contact interposer: the question this rule
+    # asks is answerable from its own declaration, and a declared zero with its reason is an answer here as it
+    # is everywhere else in this registry. The board is named with --board, there being no netlist to name it.
+    if path == "--board":
+        letter = (argv[1] if len(argv) > 1 else "").lower()
+        t = _bt.table(letter) or {}
+        why = str(t.get("_external_ports_why") or "").strip()
+        items = t.get("external_ports")
+        out_dir = os.environ.get("VERDICT_DIR") or "out"
+        if items:
+            print("port_protect: board %s declares %d item(s) and has no netlist to judge them on" % (letter.upper(), len(items)))
+            return _write_both(letter, _v.INCONCLUSIVE, counts={"declared": len(items)}, denominator=0,
+                               inputs={"board": letter}, rules=["TRN-001"], out_dir=out_dir,
+                               missing_input="this board declares items of this kind and has no netlist to judge them on",
+                               note="declared, and not judgeable without a netlist")
+        if ("external_ports" in t) and why:
+            print("port_protect: board %s declares none, with its reason" % letter.upper())
+            return _write_both(letter, _v.PASS, counts={"declared": 0}, denominator=0, evidence=[why],
+                               inputs={"board": letter}, rules=["TRN-001"], out_dir=out_dir,
+                               note="this board declares that it has none, with its reason, and it has no netlist")
+        print("port_protect: board %s declares nothing and has no netlist" % letter.upper())
+        return _write_both(letter, _v.INCONCLUSIVE, counts={"declared": 0}, denominator=0,
+                           inputs={"board": letter}, rules=["TRN-001"], out_dir=out_dir,
+                           missing_input="this board has no netlist and no declaration, so nobody has looked",
+                           note="no netlist and no declaration")
     letter = _bt.letter_for(path.replace("/out/", "/").replace(".net", ".kicad_pcb"))
     if not letter:
         stem = os.path.basename(path).replace(".net", "")

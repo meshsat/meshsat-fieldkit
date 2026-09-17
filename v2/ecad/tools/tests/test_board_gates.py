@@ -358,17 +358,23 @@ def t_a_board_that_controls_no_impedance_and_says_so_is_a_declared_zero():
     INCONCLUSIVE, which held rule STK-001 open on a board where the question cannot arise. A zero the project
     declares is an answer; a zero nobody declared is not.
 
-    The letter has to come from the facts' own `project` field and not from the board table: E5 has no
-    boards/e5.json because it has no chain to drive, so `letter_for` answers '' for it and the one board this
-    branch exists for fell straight through on the first attempt."""
+    The letter has to come from the facts' own `project` field and not from the board table: when this was
+    written E5 had no boards/e5.json at all, so `letter_for` answered '' for it and the one board this branch
+    exists for fell straight through on the first attempt. It HAS a table since 17 September, declaring
+    `chain: false` and the answers to the rules that ask a board a question, so the lookup would work either
+    way now; the facts stay the source, because they are where a board's properties live and the table is where
+    its declarations do."""
     import os, sys
     tools = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     sys.path.insert(0, tools)
     import rules_lib, boardtable
     facts = rules_lib.board_facts() or {}
     assert facts.get("e5", {}).get("impedance_controlled") is False, "board E5's facts no longer declare it"
-    assert boardtable.letter_for("pcb-e5-block.kicad_pcb") == "", \
-        "board E5 has a board table entry now; the fallback in impedance_check can be simplified"
+    import json as _json
+    _e5 = os.path.join(tools, "boards", "e5.json")
+    if os.path.exists(_e5):
+        assert _json.load(open(_e5, encoding="utf-8")).get("chain") is False, \
+            "board E5's table no longer declares that it has no chain, and the tests that skip it read that key"
     stem = "pcb-e5-block"
     letter = next((k for k, v in facts.items() if (v or {}).get("project") == stem), "")
     assert letter == "e5", "the facts no longer resolve %s to a letter" % stem

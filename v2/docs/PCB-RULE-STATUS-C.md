@@ -21,7 +21,7 @@ Measured on board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24.
 |---|---|---|---|---|
 | ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: a DRAFT envelope exists for the first time (v2/docs/OPERATING-ENVELOPE.md), written from the parts own d |
 | ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 24 |
-| SCH-001 ERC clean or explained | BLOCKER | SCHEMATIC | **PASS** | erc_gate PASS of 283 |
+| SCH-001 ERC clean or explained | BLOCKER | SCHEMATIC | **PASS** | erc_gate PASS of 308 |
 | SCH-002 board matches its netlist | BLOCKER | PLACED_BOARD | **PASS** | netlist_board PASS of 868 |
 | SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_c PASS of 7 |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 16 |

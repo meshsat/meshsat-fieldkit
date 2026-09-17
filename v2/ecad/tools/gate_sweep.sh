@@ -158,8 +158,16 @@ run "rf lines" python3 $T/rf_line.py $N.kicad_pcb
 # THE ROTATIONS (rule DFA-001). Every polarised footprint the boards place, against the table the ordering
 # session keeps and the date each row was compared with the assembler's own preview.
 run "assembly set" python3 $T/assembly_set.py --ecad "$E" --board $L
-[ -s out/$N.net ] && run "exposed ports" python3 $T/port_protect.py out/$N.net
-[ -s out/$N.net ] && run "safety lines" python3 $T/safe_lines.py out/$N.net
+if [ -s out/$N.net ]; then
+  run "exposed ports" python3 $T/port_protect.py out/$N.net
+  run "safety lines"  python3 $T/safe_lines.py out/$N.net
+else
+  # A BOARD WITH NO NETLIST STILL HAS AN ANSWER IF IT DECLARES ONE (17 September 2026): board E5 is generated
+  # from board A's board file and has no schematic, so both rules read "no verdict for this board" and counted
+  # as nobody having looked. Its declarations are in boards/e5.json with their reasons.
+  run "exposed ports (declared)" python3 $T/port_protect.py --board $L
+  run "safety lines (declared)"  python3 $T/safe_lines.py --board $L
+fi
 run "placement predictor" python3 $T/place_audit.py $N.kicad_pcb
 # THE CROSS-BOARD CONTRACTS, which nothing was re-judging (16 September 2026). SCH-003 and RF-002 read
 # INCONCLUSIVE on all seven boards for one reason: their evidence was taken under an older rule set and no

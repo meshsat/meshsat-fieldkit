@@ -1,0 +1,34 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "declared": 0
+ },
+ "denominator": 0,
+ "evidence": [
+  "No conductor of this board leaves the enclosure. Every target on its face mates with a spring pin of board A a few millimetres above it, inside the sealed case, and the pack pair arrives on plated wire lands underneath from the battery module, also inside the case. The conductors that DO leave the case are board E's, at the wall receptacle, and board E declares them."
+ ],
+ "inputs": {
+  "board": "e5"
+ },
+ "missing_input": null,
+ "note": "this board declares that it has none, with its reason, and it has no netlist",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "TRN-001": "5d38bd6db7d4e11f"
+  },
+  "rule_set_fingerprint": "4a03222f910fe5f5"
+ },
+ "rules": [
+  "TRN-001"
+ ],
+ "tool": "port_protect_e5",
+ "tools": {
+  "git_head": "7c9ae77cdd66",
+  "tools_tree_sha": "24e940af9fefc359"
+ },
+ "ts": "2026-09-17T17:56:20Z",
+ "verdict": "PASS",
+ "version": "7c9ae77cdd66+dirty"
+}

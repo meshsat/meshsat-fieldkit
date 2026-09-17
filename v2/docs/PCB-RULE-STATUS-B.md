@@ -21,7 +21,7 @@ Measured on board B19 (pcb-b-compute-b19, 47262c82041bf4e2), declares B19.
 |---|---|---|---|---|
 | ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: a DRAFT envelope exists for the first time (v2/docs/OPERATING-ENVELOPE.md), written from the parts own d |
 | ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 24 |
-| SCH-001 ERC clean or explained | BLOCKER | SCHEMATIC | **PASS** | erc_gate PASS of 1973 |
+| SCH-001 ERC clean or explained | BLOCKER | SCHEMATIC | **PASS** | erc_gate PASS of 2077 |
 | SCH-002 board matches its netlist | BLOCKER | PLACED_BOARD | **FAIL** | netlist_board FAIL: {'agree': 6722, 'aliased_pins': 0, 'board_footprints': 951, 'board_only_inert': 0, 'fail': 12, 'netlist_refs': 931} |
 | SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 499 unrouted connection(s)), so a rule verified on a routed  |
 | SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **PASS** | safe_lines_b PASS of 5 |

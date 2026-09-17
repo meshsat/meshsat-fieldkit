@@ -1,0 +1,34 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "declared": 0
+ },
+ "denominator": 0,
+ "evidence": [
+  "This board carries no active part of any kind: it is copper targets, plated wire lands and mounting holes. Nothing on it can assert or read a line, so no line whose assertion inhibits a hazard lives here; SHORE_INHIBIT crosses the dock as a conductor of boards A and E and is judged on those two."
+ ],
+ "inputs": {
+  "board": "e5"
+ },
+ "missing_input": null,
+ "note": "this board declares that it has none, with its reason, and it has no netlist",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "SCH-004": "0d3209a18476cc88"
+  },
+  "rule_set_fingerprint": "4a03222f910fe5f5"
+ },
+ "rules": [
+  "SCH-004"
+ ],
+ "tool": "safe_lines_e5",
+ "tools": {
+  "git_head": "7c9ae77cdd66",
+  "tools_tree_sha": "24e940af9fefc359"
+ },
+ "ts": "2026-09-17T17:56:20Z",
+ "verdict": "PASS",
+ "version": "7c9ae77cdd66+dirty"
+}

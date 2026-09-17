@@ -31,7 +31,7 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 |---|---|---|---|---|
 | ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: a DRAFT envelope exists for the first time (v2/docs/OPERATING-ENVELOPE.md), written from the parts own d |
 | ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 24 |
-| SCH-001 ERC clean or explained | BLOCKER | SCHEMATIC | **PASS** | erc_gate PASS of 768 |
+| SCH-001 ERC clean or explained | BLOCKER | SCHEMATIC | **PASS** | erc_gate PASS of 1238 |
 | SCH-002 board matches its netlist | BLOCKER | PLACED_BOARD | **FAIL** | netlist_board FAIL: {'agree': 2000, 'aliased_pins': 0, 'board_footprints': 400, 'board_only_inert': 0, 'fail': 10, 'netlist_refs': 398} |
 | SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_a PASS of 31 |
 | SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **PASS** | safe_lines_a PASS of 6 |

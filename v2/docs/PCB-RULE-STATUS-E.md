@@ -31,7 +31,7 @@ Measured on board E11 (pcb-e1-dock-e7, 5fc1ffce0dc5ab1c), declares E11.
 |---|---|---|---|---|
 | ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: a DRAFT envelope exists for the first time (v2/docs/OPERATING-ENVELOPE.md), written from the parts own d |
 | ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 24 |
-| SCH-001 ERC clean or explained | BLOCKER | SCHEMATIC | **PASS** | erc_gate PASS of 272 |
+| SCH-001 ERC clean or explained | BLOCKER | SCHEMATIC | **PASS** | erc_gate PASS of 340 |
 | SCH-002 board matches its netlist | BLOCKER | PLACED_BOARD | **PASS** | netlist_board PASS of 816 |
 | SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_e PASS of 8 |
 | SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **PASS** | safe_lines_e PASS of 1 |

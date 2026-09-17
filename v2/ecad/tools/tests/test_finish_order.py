@@ -85,6 +85,10 @@ def t_every_board_has_a_finish_block_with_every_key():
     need = {"stub_layers", "pour_nets", "pair_match", "pair_audit_nets", "post_fix", "pruned_gate", "gate_grep"}
     for p in sorted(glob.glob(os.path.join(TOOLS, "boards", "*.json"))):
         d = json.load(open(p))
+        # A TABLE THAT DECLARES NO CHAIN IS NOT A CHAIN DEFECT (17 September 2026). Board E5 is generated from
+        # board A's board file by build_e5.sh: no schematic, no netlist, no route and no finish. It has a table
+        # so that the rules which ask a BOARD a question have somewhere to read its answer.
+        if d.get("chain") is False: continue
         assert "finish" in d, "%s has no finish block" % os.path.basename(p)
         missing = need - set(d["finish"])
         assert not missing, "%s finish block lacks %s" % (os.path.basename(p), sorted(missing))
@@ -94,14 +98,18 @@ def t_a_board_that_matches_pairs_names_the_pairs_it_audits():
     """The audit images are what a stopped chain is read from; a board that gates on pairs and names none would
     stop with nothing to look at."""
     for p in sorted(glob.glob(os.path.join(TOOLS, "boards", "*.json"))):
-        f = json.load(open(p))["finish"]
+        _d = json.load(open(p))
+        if _d.get("chain") is False: continue
+        f = _d["finish"]
         if f["pair_match"]:
             assert f["pair_audit_nets"], "%s gates on pairs and names no audit net" % os.path.basename(p)
 
 
 def t_a_declared_post_fix_exists():
     for p in sorted(glob.glob(os.path.join(TOOLS, "boards", "*.json"))):
-        pf = json.load(open(p))["finish"]["post_fix"]
+        _d = json.load(open(p))
+        if _d.get("chain") is False: continue
+        pf = _d["finish"]["post_fix"]
         if pf and pf != "-":
             assert os.path.exists(os.path.join(TOOLS, pf)), "%s names a post fix that is not in the tree: %s" % (os.path.basename(p), pf)
 
@@ -168,7 +176,9 @@ def t_the_stitch_pruner_is_off_unless_a_board_asks_for_it_with_its_number():
     t = open(FINISH, errors="replace").read()
     assert 'if [ -n "$(cfg x stitch_prune)" ]' in t, "the pruner runs on every board rather than on request"
     for p in sorted(glob.glob(os.path.join(TOOLS, "boards", "*.json"))):
-        f = json.load(open(p))["finish"]
+        _d = json.load(open(p))
+        if _d.get("chain") is False: continue
+        f = _d["finish"]
         if not f.get("stitch_prune"): continue
         why = f.get("_stitch_prune_why", "")
         assert len(why) > 200 and re.search(r"\d+ locked via", why) and "unrouted" in why, \
@@ -233,7 +243,9 @@ def t_a_pass_that_lays_copper_after_the_router_is_declared_with_its_number():
     for key in ("stitch_prune", "direct_close"):
         assert 'cfg x %s' % key in t, "%s is not declared per board in the finish" % key
     for p in sorted(glob.glob(os.path.join(TOOLS, "boards", "*.json"))):
-        f = json.load(open(p))["finish"]
+        _d = json.load(open(p))
+        if _d.get("chain") is False: continue
+        f = _d["finish"]
         for key in ("stitch_prune", "direct_close"):
             if not f.get(key): continue
             why = f.get("_%s_why" % key, "")
@@ -252,6 +264,7 @@ def t_every_board_declares_the_phase_its_profile_cuts():
     profiles = sorted(os.path.basename(f) for f in glob.glob(os.path.join(TOOLS, "routeflow", "*.json")))
     for bf in sorted(glob.glob(os.path.join(TOOLS, "boards", "*.json"))):
         L = os.path.basename(bf)[:-5]; d = json.load(open(bf))
+        if d.get("chain") is False: continue
         assert re.match(r"^[A-Z]+[0-9]+$", str(d.get("phase", ""))), "%s declares no phase" % os.path.basename(bf)
         assert "%s.json" % L in profiles, "no letter profile routeflow/%s.json" % L
         t = open(os.path.join(TOOLS, "routeflow", "%s.json" % L)).read()
