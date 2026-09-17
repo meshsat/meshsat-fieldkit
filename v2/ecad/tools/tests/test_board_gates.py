@@ -639,3 +639,70 @@ def t_the_same_plane_pad_with_free_via_sites_passes_the_placement_gate():
     _pcbnew()
     verdict, out = _place_audit("free")
     assert verdict == "PASS", "a plane pad with free via sites failed the placement gate: %s" % out[-300:]
+
+
+# ---------------------------------------------------------------- intent_checks' decoupling item (its declared fixture debt, 18 September 2026)
+
+_INTENT_FIXTURE = r"""
+import os, sys, json, tempfile, subprocess
+sys.path.insert(0, TOOLS)
+import pcbnew
+
+def board(w=40.0, h=30.0):
+    b = pcbnew.BOARD(); b.SetCopperLayerCount(2)
+    for (x1, y1, x2, y2) in ((0, 0, w, 0), (w, 0, w, h), (w, h, 0, h), (0, h, 0, 0)):
+        sh = pcbnew.PCB_SHAPE(b); sh.SetShape(pcbnew.SHAPE_T_SEGMENT); sh.SetLayer(pcbnew.Edge_Cuts)
+        sh.SetStart(pcbnew.VECTOR2I(pcbnew.FromMM(x1), pcbnew.FromMM(y1))); sh.SetEnd(pcbnew.VECTOR2I(pcbnew.FromMM(x2), pcbnew.FromMM(y2)))
+        sh.SetWidth(pcbnew.FromMM(0.1)); b.Add(sh)
+    return b
+
+def part(b, ref, x, y, nets, code, value=""):
+    fp = pcbnew.FOOTPRINT(b); fp.SetReference(ref); fp.SetValue(value); fp.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(x), pcbnew.FromMM(y)))
+    pads = []
+    for i, n in enumerate(nets):
+        p = pcbnew.PAD(fp); p.SetNumber(str(i + 1)); p.SetAttribute(pcbnew.PAD_ATTRIB_SMD); p.SetShape(pcbnew.PAD_SHAPE_RECT)
+        p.SetSize(pcbnew.VECTOR2I(pcbnew.FromMM(0.8), pcbnew.FromMM(0.8))); p.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(x + 1.0 * i), pcbnew.FromMM(y)))
+        p.SetLayerSet(pcbnew.LSET.FrontMask()); fp.Add(p); pads.append((p, n))
+    b.Add(fp)
+    for p, n in pads: p.SetNetCode(code[n])
+    return fp
+
+FAR = sys.argv[1] == "far"
+b = board()
+for n in ("+3V3", "GND"): b.Add(pcbnew.NETINFO_ITEM(b, n))
+b.BuildListOfNets(); keep = [b.FindNet("+3V3"), b.FindNet("GND")]; code = {n: b.FindNet(n).GetNetCode() for n in ("+3V3", "GND")}
+part(b, "U1", 10.0, 10.0, ["+3V3", "GND"], code, "the part")
+part(b, "C1", 20.0 if FAR else 11.5, 10.0, ["+3V3", "GND"], code, "100n")
+d = tempfile.mkdtemp(prefix="intent-fixture-"); os.makedirs(os.path.join(d, "out")); path = os.path.join(d, "fixture.kicad_pcb"); b.Save(path)
+json.dump({"bypass": [{"cap": "C1", "part": "U1", "pin": "1", "net": "+3V3"}], "rails": {}, "nodes": {}, "pair_classes": {}},
+          open(os.path.join(d, "out", "fixture-intent.json"), "w"))
+r = subprocess.run([sys.executable, os.path.join(TOOLS, "intent_checks.py"), path], cwd=d, capture_output=True, text=True)
+v = json.load(open(os.path.join(d, "out", "intent_decoupling.verdict.json")))
+print("ANSWER", v["verdict"], json.dumps(v.get("counts")))
+print("LINES", [l for l in (r.stdout + r.stderr).split("\n") if "bypass C1" in l][:1])
+"""
+
+
+def _intent(which):
+    src = "TOOLS = %r\n" % TOOLS + _INTENT_FIXTURE
+    r = subprocess.run([sys.executable, "-c", src, which], capture_output=True, text=True)
+    assert r.returncode == 0, "the %s fixture did not build:\n%s" % (which, (r.stdout + r.stderr)[-900:])
+    ans = [l for l in r.stdout.split("\n") if l.startswith("ANSWER ")]
+    assert ans, "no answer:\n" + r.stdout[-400:]
+    return ans[0].split()[1], r.stdout
+
+
+def t_a_declared_decoupling_capacitor_ten_millimetres_from_its_pin_fails_the_loop_rule():
+    """THE DEFECTIVE FIXTURE for intent_checks' decoupling item (its fixture debt since 11 September): C1 is declared
+    as U1 pin 1's bypass and sits 10 mm away against the 3 mm loop of a 100 nF part."""
+    _pcbnew()
+    verdict, out = _intent("far")
+    assert verdict == "FAIL", "a capacitor 10 mm from its pin passed the decoupling rule: %s" % out[-300:]
+    assert "bypass C1" in out, "the failure does not name the capacitor: %s" % out[-300:]
+
+
+def t_the_same_capacitor_within_three_millimetres_passes_the_loop_rule():
+    """THE ACCEPTABLE FIXTURE: the same declaration with C1 1.5 mm from the pin."""
+    _pcbnew()
+    verdict, out = _intent("near")
+    assert verdict == "PASS", "a capacitor 1.5 mm from its pin failed the decoupling rule: %s" % out[-300:]
