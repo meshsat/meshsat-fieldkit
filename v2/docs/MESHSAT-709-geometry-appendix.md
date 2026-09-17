@@ -8653,3 +8653,17 @@ it. **The numbers are therefore: board E one net over its limit to NONE (266.8 m
 unchanged at zero (440.5 mm), board C 18 to 16 (497.6 mm) and board P 6 to 5 (17.6 mm).** The finding that
 made it worth doing survives the tightening, which is the only test of it that matters: board E's single
 failing net was its own via holes and nothing else.
+
+**BOARD B'S RETURN PATH, MEASURED ON A FILLED COPY OF THE BOARD IT WILL BE (17 September 2026).** The 214 nets
+of 566 that the placed board reads are the fill's absence, not the design's: with its zones filled and the
+per-class bar the gate uses, the same board reads **2 of 566 over their limit**, and neither is what that
+number suggested.
+
+| net | class | uncovered | of | what it is |
+|---|---|---|---:|---|
+| `HOST3_1TX_P` | HIGH_SPEED_DIGITAL | 10.6 mm | 137.7 | **0.6 mm over**, and its runs are its own vias' anti-pads plus one 3.0 mm stretch at an In4 fill edge |
+| `WIFI_PRI` | LOW_SPEED_OR_DC | 0.9 mm | 0.9 | a 0.9 mm stub with **no reference under any of it**, which is the EXISTS question failing on a net that is 0.9 mm long |
+
+So board B's return path is not the wall its placed-board reading implied, and the two items it does have are
+one meander's worth and one stub. The number to hold it to is the one taken after its finish fills the board,
+which is what the routed-board rule reads and what B21 will produce.
