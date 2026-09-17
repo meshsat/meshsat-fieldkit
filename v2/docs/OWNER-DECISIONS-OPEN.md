@@ -7,7 +7,7 @@ One line per decision that is still open, what it holds up, and where its eviden
 v2/docs/OWNER-DECISIONS-2026-09-11.md and this page is generated from the same registry the readiness table
 is, so the pair counts below are the ones the gates use.
 
-**13 decisions are open and they hold 68 rule-board pairs of the 335 the set is judged on.** A pair held by a
+**13 decisions are open and they hold 68 rule-board pairs of the 334 the set is judged on.** A pair held by a
 decision is not a defect in the board: it is a question nobody has answered, and until it is answered the
 rule can be neither passed nor failed.
 
@@ -43,7 +43,7 @@ the longest is 172.9 mm of SCL
 | rule | | boards | result today |
 |---|---|---|---|
 | RET-001 | a continuous adjacent return path | C | INCONCLUSIVE |
-| RET-002 | plane-adjacency screen | C | INCONCLUSIVE |
+| RET-002 | plane-adjacency screen | C | FAIL |
 
 
 ### Decision 28: board P cannot hold the return-path rule on two layers and the ruled P5 does not route
@@ -59,8 +59,8 @@ build, which is what STK-001 fails on.
 
 | rule | | boards | result today |
 |---|---|---|---|
-| RET-002 | plane-adjacency screen | P | INCONCLUSIVE |
-| STK-001 | the stackup is declared, feasible and in the board | P | INCONCLUSIVE |
+| RET-002 | plane-adjacency screen | P | FAIL |
+| STK-001 | the stackup is declared, feasible and in the board | P | FAIL |
 
 
 ### Decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked
@@ -137,7 +137,7 @@ the ask has to settle.
 
 | rule | | boards | result today |
 |---|---|---|---|
-| SCH-004 | a safety line fails safe | A, B, C, D, E, P | PASS, not computed |
+| SCH-004 | a safety line fails safe | A, B, C, D, E, P | INCONCLUSIVE, PASS, not computed |
 
 
 ### Decision 31: conductors leave the case and meet a chip with nothing in between, or only through an active part
@@ -220,7 +220,7 @@ RULING on that first row, not a gap.
 
 | rule | | boards | result today |
 |---|---|---|---|
-| TRN-001 | every exposed port is protected | A, D, E | INCONCLUSIVE |
+| TRN-001 | every exposed port is protected | A, D, E | FAIL |
 
 
 ### Decision 32: board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper
@@ -248,7 +248,7 @@ one left for it.
 
 | rule | | boards | result today |
 |---|---|---|---|
-| RET-004 | ground-via proximity screen | C, D, E | INCONCLUSIVE |
+| RET-004 | ground-via proximity screen | C, D, E | FAIL |
 
 
 ### Decision 33: the mezzanine 5 V rail is losing nearly five percent and two of its three numbers were never anybody's requirement
@@ -339,7 +339,7 @@ IPC-2152. What each model asks for at 10 K: 10 A needs 0.65 mm2 (IPC-2221A), 0.9
 
 | rule | | boards | result today |
 |---|---|---|---|
-| PI-001 | conductor current capacity | A, E | INCONCLUSIVE |
+| PI-001 | conductor current capacity | A, E | FAIL |
 
 
 ### Decision 36: the intra-pair tolerance a differential pair is judged against
@@ -367,7 +367,7 @@ which is one 0.14 mm meander today, and not whether a board would work.
 
 | rule | | boards | result today |
 |---|---|---|---|
-| INT-001 | each interface is designed to its own specification | A, B | INCONCLUSIVE |
+| INT-001 | each interface is designed to its own specification | A, B | FAIL |
 
 
 ### Decision 37: board D asks for two crystals that do not exist and the part it was certified against is four times the frequency
@@ -426,7 +426,7 @@ was taken from, which is the one geometry on this board that three compute modul
 
 | rule | | boards | result today |
 |---|---|---|---|
-| IMP-002 | a class clearance is never below the board minimum | B | INCONCLUSIVE |
+| IMP-002 | a class clearance is never below the board minimum | B | FAIL |
 
 
 ### Decision 39: the criterion a break in a signal's reference is judged against
