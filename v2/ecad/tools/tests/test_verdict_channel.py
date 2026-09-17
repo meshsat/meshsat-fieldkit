@@ -581,3 +581,31 @@ def t_the_two_tools_that_can_run_without_their_input_declare_it():
         src = open(os.path.join(TOOLS, name), encoding="utf-8").read()
         assert "missing_input=" in src, "%s does not declare an absent input" % name
         assert word in src, "%s does not say which input was absent" % name
+
+
+def t_a_gate_given_a_netlist_names_the_board_whose_netlist_it_is():
+    """derate, clock_check and power_sequence judge the netlist and never the board file, so argv carries no
+    .kicad_pcb and twenty-three verdicts on this disk name no board at all. One of them sits in the set-level
+    out/ that every board reads, taken on board A's netlist, and only a timestamp keeps it from answering for
+    another board."""
+    import subprocess, sys, os, json, tempfile
+    with tempfile.TemporaryDirectory() as d:
+        n = os.path.join(d, "pcb-a-power.net"); open(n, "w").write("(export)\n")
+        prog = ("import sys; sys.path.insert(0, %r); import verdict;"
+                "sys.exit(verdict.write('probe', verdict.PASS, denominator=1, inputs={'netlist': 'x'}))" % TOOLS)
+        r = subprocess.run([sys.executable, "-c", prog, n], cwd=d, capture_output=True, text=True)
+        assert r.returncode == 0, r.stderr
+        assert json.load(open(os.path.join(d, "out", "probe.verdict.json")))["inputs"]["board"] == "a"
+
+
+def t_a_netlist_no_board_table_names_leaves_the_board_unnamed():
+    """The letter comes from the board tables, never from the file name's shape: an unknown stem names no
+    board rather than inventing one."""
+    import subprocess, sys, os, json, tempfile
+    with tempfile.TemporaryDirectory() as d:
+        n = os.path.join(d, "something-else.net"); open(n, "w").write("(export)\n")
+        prog = ("import sys; sys.path.insert(0, %r); import verdict;"
+                "sys.exit(verdict.write('probe', verdict.PASS, denominator=1, inputs={'netlist': 'x'}))" % TOOLS)
+        r = subprocess.run([sys.executable, "-c", prog, n], cwd=d, capture_output=True, text=True)
+        assert r.returncode == 0, r.stderr
+        assert "board" not in json.load(open(os.path.join(d, "out", "probe.verdict.json")))["inputs"]

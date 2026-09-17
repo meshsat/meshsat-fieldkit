@@ -165,6 +165,22 @@ def _with_board(inputs):
                 for b in iter(lambda: f.read(1 << 20), b""): h.update(b)
             inputs["board"] = {"path": os.path.basename(a), "sha256_16": h.hexdigest()[:16], "from": "argv"}
             break
+        # A GATE GIVEN A BOARD'S NETLIST WAS GIVEN THAT BOARD (17 September 2026). Three gates judge the
+        # netlist and never the board file (derate, clock_check, power_sequence: twenty-three verdicts on this
+        # disk), so argv carries no .kicad_pcb and they named no board at all. One of them is sitting in the
+        # SET-LEVEL out/ that every board reads, taken on board A's netlist and saying "this board carries no
+        # crystal": today it decides nothing because each board has a newer reading of its own, and the only
+        # thing standing between it and answering for board D is a timestamp. The netlist's stem is the
+        # board's name, which is exactly what `boardtable.letter_for` resolves, so the letter is recorded and
+        # `rules_status` can refuse it for another board the way it refuses a board file's sha.
+        if "board" not in inputs:
+            for a in sys.argv[1:]:
+                if not isinstance(a, str) or not a.endswith(".net") or not os.path.isfile(a): continue
+                import boardtable as _bt
+                _l = _bt.letter_for(a)
+                if _l:
+                    inputs["board"] = _l
+                    break
     except BaseException:
         pass                                   # a verdict is never lost because its identity could not be read
     return inputs
