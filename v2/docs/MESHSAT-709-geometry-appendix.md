@@ -9149,3 +9149,13 @@ regenerated on the hub with today's tools: gate ALL PASS on all three, the assig
 holds every board that declares a sensitive net to it. **A44 and A45 route on the hub since 21:31 UTC** (A44 the
 drops and the SENSE class, A45 the same plus the two class-pair rules, which its DSN carries), 250 passes and the
 10 hour cap of A43, which is their control; each wrote its first session inside three minutes.
+
+**And the DSN's class names are lists (21:52 UTC).** E12, the same instrument on the regenerated E design
+(`FR_CLASS_CLEAR=SENSE:SW:1.0`), wrote NO rule on its first launch: KiCad 9 joins a net's class assignments with
+commas, so board E's sense nets arrive in the DSN as `SENSE,Default` and `PWR,SENSE` and the switching nodes as
+`SW,Default`, and a rule naming `SENSE` reached nothing. Board A's DSN carries plain names, so A45's two rules were
+complete; the launcher now matches every DSN class whose members include the named class and writes the cross
+product, the fixture carries a composite class, and E12 was stopped by PID and relaunched. Its first launch had
+blocked at `place_audit` for a different reason worth one sentence: the scratch tree had been staged without the
+board's `bypass-allow.txt`, so fourteen declared decoupling distances read as failures. An allow file is part of
+the board's declaration and travels with its phase directory.
