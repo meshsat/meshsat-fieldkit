@@ -469,3 +469,99 @@ def t_a_pour_born_with_no_via_of_its_own_net_is_predicted_before_the_route():
     n2 = [l for l in out2.splitlines() if "pour island(s) already carry no via" in l]
     assert n1 and n2 and int(n1[0].split("WARN  ")[1].split(" ")[0]) < int(n2[0].split("WARN  ")[1].split(" ")[0]), \
         "the via inside the first pour changed nothing, so the prediction is not reading the vias:\n%s\n%s" % (n1, n2)
+
+
+_SITE_FIXTURE = r"""
+import os, sys, tempfile
+sys.path.insert(0, TOOLS)
+import pcbnew, return_via
+
+def board(w=40.0, h=30.0):
+    b = pcbnew.BOARD(); b.SetCopperLayerCount(2)
+    for (x1, y1, x2, y2) in ((0, 0, w, 0), (w, 0, w, h), (w, h, 0, h), (0, h, 0, 0)):
+        sh = pcbnew.PCB_SHAPE(b); sh.SetShape(pcbnew.SHAPE_T_SEGMENT); sh.SetLayer(pcbnew.Edge_Cuts)
+        sh.SetStart(pcbnew.VECTOR2I(pcbnew.FromMM(x1), pcbnew.FromMM(y1)))
+        sh.SetEnd(pcbnew.VECTOR2I(pcbnew.FromMM(x2), pcbnew.FromMM(y2)))
+        sh.SetWidth(pcbnew.FromMM(0.1)); b.Add(sh)
+    return b
+
+def aperture(fp, x, y, size=0.6):
+    # What KiCad draws over an exposed pad: unnumbered, on F.Paste alone, no net, no copper.
+    p = pcbnew.PAD(fp); p.SetNumber(""); p.SetAttribute(pcbnew.PAD_ATTRIB_SMD)
+    p.SetShape(pcbnew.PAD_SHAPE_RECT)
+    p.SetSize(pcbnew.VECTOR2I(pcbnew.FromMM(size), pcbnew.FromMM(size)))
+    p.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(x), pcbnew.FromMM(y)))
+    ls = pcbnew.LSET.FrontMask(); ls.ClearCopperLayers(); p.SetLayerSet(ls)   # LSET(layer) is not offered here
+    assert not p.IsOnCopperLayer(), "the aperture ended up on copper, which is not what KiCad draws"
+    fp.Add(p); return p
+
+def smd(b, ref, x, y, number, size, net, code):
+    # NEVER REBUILD THE NET LIST HERE: a rebuild prunes a net that has no item on it yet, so the second
+    # pad's own net vanished the moment it was asked for and the pad came back on ''. The codes are taken
+    # once, after the nets are added, and a pad takes its code directly.
+    fp = pcbnew.FOOTPRINT(b); fp.SetReference(ref)
+    fp.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(x), pcbnew.FromMM(y)))
+    p = pcbnew.PAD(fp); p.SetNumber(number); p.SetAttribute(pcbnew.PAD_ATTRIB_SMD)
+    p.SetShape(pcbnew.PAD_SHAPE_RECT)
+    p.SetSize(pcbnew.VECTOR2I(pcbnew.FromMM(size[0]), pcbnew.FromMM(size[1])))
+    p.SetPosition(fp.GetPosition()); p.SetLayerSet(pcbnew.LSET.FrontMask())
+    fp.Add(p); b.Add(fp); p.SetNetCode(code)
+    assert p.GetNetname() == net, "%s.%s is on %r, not on %s" % (ref, number, p.GetNetname(), net)
+    return fp, p
+
+tmp = tempfile.mkdtemp(prefix="site-free-")
+
+def build(name, neighbour):
+    # EACH FIXTURE IS ITS OWN BOARD. Saving a board prunes the nets nothing sits on and rebuilds the list, so
+    # a second pad added to the same board afterwards came back on '' whatever code it was given.
+    b = board()
+    b.Add(pcbnew.NETINFO_ITEM(b, "GND")); b.Add(pcbnew.NETINFO_ITEM(b, "/OTHER")); b.BuildListOfNets()
+    keep = [b.FindNet("GND"), b.FindNet("/OTHER")]             # the proxies stay alive for the board's lifetime
+    code = {n: b.FindNet(n).GetNetCode() for n in ("GND", "/OTHER")}
+    fp, ep = smd(b, "U1", 20.0, 15.0, "9", (2.29, 3.00), "GND", code["GND"])
+    # THE NEIGHBOUR GOES ON BEFORE THE APERTURES. Adding a pad rebuilds the net list, which drops a net that
+    # still has no item on it, so the nine unnumbered apertures took /OTHER off the board and the blocking
+    # pad then came back on '' with a code that named nothing.
+    if neighbour: smd(b, "U2", 20.0 + 0.11 + 0.5 / 2, 15.0, "1", (0.5, 0.5), "/OTHER", code["/OTHER"])
+    for dx in (-0.7, 0.0, 0.7):
+        for dy in (-1.0, 0.0, 1.0): aperture(fp, 20.0 + dx, 15.0 + dy)
+    assert len([p for p in fp.Pads() if p.GetNumber() == ""]) == 9, "the fixture did not get its apertures"
+    path = os.path.join(tmp, name + ".kicad_pcb"); b.Save(path)
+    return path
+
+# ONE BOARD PER PROCESS. A second BOARD built in the same interpreter after the first was saved came back
+# with its pads on no net at all, whatever code they were given, so each fixture gets its own run.
+#   argv[1] "plain"     = THE DEFECTIVE FIXTURE: a 2.29 x 3.00 mm ground pad under nine paste apertures,
+#                         where the answer must be that a via fits.
+#   argv[1] "neighbour" = THE ACCEPTABLE FIXTURE: the same pad with a real copper pad of another net at the
+#                         same distance, where the answer must still be no.
+WANT = sys.argv[1]
+path = build(WANT, WANT == "neighbour")
+print("ANSWER", return_via._site_free(pcbnew.LoadBoard(path), 20.0, 15.0, 0.45, 0.127, "GND"))
+"""
+
+
+def t_a_via_site_inside_an_exposed_pad_is_free_and_one_under_another_nets_copper_is_not():
+    """PLC-001, RET-004 and PLC-002 all ask `return_via._site_free` whether a via fits somewhere, and it
+    took every pad of every footprint as an obstacle unless the pad carried its own net. A solder paste
+    aperture carries no net and sits inside the pad it belongs to, so every exposed pad on every board
+    read as fully blocked: board A's three TPS2596 eFuses read `no via site` for their own thermal pads
+    over a ground plane that is directly underneath them (17 September 2026, and the same lesson as
+    appendix 32.151 in a second tool).
+
+    The defective fixture is that pad, where the answer must be that a via fits. The acceptable fixture is
+    what the filter must not free: a real copper pad of ANOTHER net at the same distance, where the answer
+    must still be no. IT RUNS IN ITS OWN PROCESS, because a board built in python and left in python took
+    the two DRC fixtures of this same file down with it: they read empty reports after it ran."""
+    pcbnew = _pcbnew()
+    src = "TOOLS = %r\n" % TOOLS + _SITE_FIXTURE
+    def _answer(which):
+        r = subprocess.run([sys.executable, "-c", src, which], capture_output=True, text=True)
+        assert r.returncode == 0, "the %s fixture did not build:\n%s" % (which, (r.stdout + r.stderr)[-900:])
+        line = [l for l in r.stdout.split("\n") if l.startswith("ANSWER ")]
+        assert line, "the %s fixture printed no answer:\n%s" % (which, r.stdout[-400:])
+        return line[0].split()[1]
+    assert _answer("plain") == "True", \
+        "a via does not fit in the middle of its own 2.29 x 3.00 mm ground pad: the paste apertures block it"
+    assert _answer("neighbour") == "False", \
+        "a real copper pad of another net 0.11 mm away no longer blocks the site: the filter freed copper"

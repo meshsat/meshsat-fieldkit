@@ -56,3 +56,18 @@ def t_a_via_is_alive_only_where_both_of_its_ends_are():
     assert "ends_on(pos, net, layer=L)" in s, "the track test is not per layer"
     assert "def pad_at(pt, net, layer=None)" in s, \
         "the pad test is not per layer, so a pad on one side declares the other side live"
+
+
+def t_the_via_site_search_also_knows_that_paste_is_not_copper():
+    """THE SAME DEFECT IN A SECOND TOOL, five days later (17 September 2026). `return_via._site_free` is
+    the one site test behind three rules: PLC-001 through `place_audit` (has this plane pad anywhere to
+    go), RET-004 through `return_via` itself, and PLC-002 through `gnd_grid`. It walked every pad of
+    every footprint and skipped only pads of its OWN net, and an aperture carries no net at all, so one
+    sitting 0.11 mm from the middle of the pad it belongs to refused the site. Board A's three TPS2596
+    eFuses read `no via site` for their own thermal pads on a board whose ground plane is directly
+    underneath them, which is a PLC-001 failure about the tool rather than about the board."""
+    s = _src("return_via.py")
+    body = s.split("def _site_free")[1].split("\ndef ")[0]
+    assert "IsOnCopperLayer" in body, \
+        "_site_free takes every pad again, paste apertures included, so no exposed pad can hold a via"
+    assert 'GetNumber() == ""' in body, "the unnumbered aperture is not named as what it is"
