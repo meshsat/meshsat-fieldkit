@@ -121,7 +121,26 @@ decisions:
     title: "board D asks for two crystals that do not exist and the part it was certified against is four times the frequency"
     asked: 2026-09-16
     status: open
-    ask: "change the frequency, change the land, or hand-fit the crystals"
+    ask: "a bigger land for a passive 6 MHz crystal, or an active oscillator and the loss of USB suspend and resume"
+    recommendation: "the HC-49S-SMD land with a passive crystal, and Rd re-chosen for the part's own ESR: it is the
+      one package where 6 MHz exists at this project's temperature range with stock, and it keeps the suspend
+      and resume behaviour the hub's own datasheet says a passive crystal is required for"
+    evidence: "MEASURED against JLCPCB's catalogue on 17 September 2026, and the premise is now exact rather than
+      a claim. EVERY 6 MHz part JLCPCB lists in a SMD3225-4P land is an ACTIVE OSCILLATOR (a supply voltage, a
+      CMOS output and a supply current: C2901554, C7431330, C7434923, C557218 and five more), and not one is a
+      passive crystal, which is a property of the blank rather than of the catalogue: a 3.2 x 2.5 mm blank does
+      not resonate at 6 MHz in fundamental mode. Passive 6 MHz crystals at the design's own CL of 20 pF exist in
+      quantity one package up: HC-49S-SMD C252308 (stock 379) and C518119 (239) at -40 to +85 C, C240973 (1188)
+      and C5346078 (2279) at -20 to +70, and one part listed as SMD7050-4P, C5181484, stock 306, whose own
+      datasheet contradicts its title by calling the package 3225 in its table, so its land is NOT established.
+      THE HOST'S OWN DATASHEET decides the rest (TI SLLS413, TUSB2046B, clause 8.3.2 and figure 6): the
+      reference circuit is a CL 20 pF crystal with C0 at most 7 pF and ESR AT MOST 50 OHM, with C1 = C2 = 27 pF
+      and Rd 1.5 kOhm, which is exactly what board D draws; and the same page says a 6 MHz oscillator may drive
+      XTAL1 with XTAL2 left open, but that IF LOW-POWER SUSPEND AND RESUME ARE DESIRED A PASSIVE CRYSTAL OR
+      RESONATOR MUST BE USED. Of the passive candidates only C279600 publishes an ESR inside TI's 50 Ohm (and
+      it is a -20 to +70 part with 52 in stock); the wide-temperature ones read 80 Ohm, so Rd is re-chosen for
+      the part that is bought and the negative-resistance margin is a bench measurement, which is the same shape
+      as the 24 MHz load-capacitance correction of 16 September."
     blocks:
       CMP-002: [d]
       SUP-001: [d]
