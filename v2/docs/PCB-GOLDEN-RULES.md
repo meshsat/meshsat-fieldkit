@@ -1502,7 +1502,12 @@ read. A cheap gate belongs in front of an expensive stage.
 
 **If violated** Hours of routing on a board that was never buildable.
 
-**Today** the cheap gate runs before the expensive stage and blocks above a declared allowance
+**Today** the cheap gate runs before the expensive stage and blocks above a declared allowance. The measurement can
+only be taken on the PLACED board, in a route tree that is later thrown away, so it is carried into the
+board's routed snapshot: 17 September 2026 the carry is PROVED rather than copied (carry_placed.py compares
+every footprint position, orientation and side between the placed snapshot and the board being cut, and a
+part that moved refuses it), and hardset names the board it read, so a carried verdict can be compared with
+the board it is evidence for instead of trusted for sitting in the right directory
 
 ### PLC-002  prevention before repair
 

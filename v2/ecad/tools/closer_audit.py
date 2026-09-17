@@ -37,7 +37,11 @@ READERS = {"drc.sh", "guarded.sh", "hardset.py", "verdict.py", "via_audit.py", "
            "return_gaps.py", "fab_limits.py", "via_current.py", "thermal.py", "spacing.py", "edge_length.py",
            "ref_change.py", "signalnets.py", "intent_checks.py", "check_zone_nets.py", "lcsc_fill.py",
            "verify_deliverable.py", "export_jlc.sh", "build_pcb.sh", "finish_board.sh", "energy_chain.py",
-           "power_sequence.py", "ground_system.py", "emc_sheet.py", "closer_audit.py"}
+           "power_sequence.py", "ground_system.py", "emc_sheet.py", "closer_audit.py",
+           # carry_placed.py reads the placed snapshot and the board being cut and writes verdicts; it never
+           # opens either for writing, which is the property that lets it decide whether the placement
+           # measurement belongs to this board (17 September 2026).
+           "carry_placed.py"}
 
 
 def finish_stages(path=None):
