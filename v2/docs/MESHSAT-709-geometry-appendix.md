@@ -9308,3 +9308,20 @@ them, so its six `pin_map_lands` readings carried SCH-005's previous digest and 
 the current registry from the committed netlists alone (no board needed): A 397 of 397, B 930, C 193, D 206, E 160
 (18 pins on merged pads, declared), P 55, **0 failures on every board**. Every SCH-005 failure of 32.219 is answered
 at the source.
+
+**Addendum, 01:14 CEST: PI-003 has a fixer, `via_parallel.py`, and it is a finish stage on every board.** A barrel
+the solved mesh puts over IPC-2221's rating for its wall gets more of the same barrel beside it (ceil(current /
+rating) - 1, the board's smallest via as the fallback size with its count from the wall-conductance ratio), each
+joined to the original by a locked link on every copper layer the net touches at that barrel, a site refused when
+the link would cross another net's copper on its layer or the site sits outside the net's own fill; `drc.sh` and
+`hardset` before and after, any new piece in a hard violation comes off, HURT reverts all; then the mesh is
+re-solved and the judge re-run, up to five rounds, because a chain of barrels moves the worst one along. Its
+fixture (a 2 A rail through two lone 0.3 mm barrels: via_current FAIL before, six or more barrels and PASS after)
+runs on the hub. Dry runs on the committed boards, nothing applied: **D12** answers one of its two +5V_SA barrels
+(1.10 A against 0.90) and finds no site within 3 mm for the other even at 0.45 mm, which is a placement item for
+D13; **E11** lays ten barrels in five rounds and takes CELL_F's worst from 1.93 A against 0.74 (ratio 2.63) to 1.14
+(1.54), while VIN_RAW's 0.80 A barrel at (73.1, 183.4) has no site. So the fixer halves the worst case and does not
+close it on its own, which is honest: the rest is the generator's (a wider class via, or a via field under the
+rail's transition as `power_copper` lays for board A). Declared `finish.via_parallel` on A, B, C, D, E and P; it
+runs before the ground vias in `finish.sh`, and the running trees (A44, A45, E12, B22, A43) carry it for their
+finishes.

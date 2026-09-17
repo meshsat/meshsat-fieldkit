@@ -115,7 +115,9 @@
     "why": "the same reading: 0.500 mm on In2.Cu at (68.1, 81.2), 13.3 mm long, 0.66 A against 0.40 A"
    }
   ],
-  "_widen_why": "16 September 2026. These are conductors the ROUTER laid, on a rail whose own copper is drawn by power_copper.py, and they carry real current in the solved mesh rather than being the parallel decoration rail_prune takes off. Widening the tracks that are already there changes no topology: same path, same vias, same pads, more copper, kept only if the hard and unrouted counts do not rise. The inner layers are 0.5 oz, which is why 0.5 mm carries 0.40 A there and 1.23 A on an outer layer."
+  "_widen_why": "16 September 2026. These are conductors the ROUTER laid, on a rail whose own copper is drawn by power_copper.py, and they carry real current in the solved mesh rather than being the parallel decoration rail_prune takes off. Widening the tracks that are already there changes no topology: same path, same vias, same pads, more copper, kept only if the hard and unrouted counts do not rise. The inner layers are 0.5 oz, which is why 0.5 mm carries 0.40 A there and 1.23 A on an outer layer.",
+  "via_parallel": true,
+  "_via_parallel_why": "18 September 2026 (rule PI-003): after every copper-editing stage and before the ground vias, via_parallel lays parallel barrels beside any via dc_drop's solved mesh puts over IPC-2221's rating for its wall (the fabricator's 18 um plating), joined on every layer the net touches there, DRC-guarded, then re-solves and re-judges. On the committed board: A32 fails five rails (VBUS20 3.40 A through a 0.90 A barrel)"
  },
  "pair_order": [
   "USB_WALL"
