@@ -30,7 +30,7 @@
   },
   "drc": {
    "path": "out/pcb-p-pack-placed-drc.json",
-   "sha256_16": "f3c95ed23be9e675"
+   "sha256_16": "c831937ef413da06"
   },
   "measured_board": {
    "sha256_16": "e6b8561e84d932bb",
@@ -49,9 +49,9 @@
  "tool": "hardset-placed",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "92144c55e415e97b"
+  "tools_tree_sha": "c2e405a768df182f"
  },
- "ts": "2026-09-17T19:59:08Z",
+ "ts": "2026-09-17T20:15:33Z",
  "verdict": "PASS",
  "version": "unknown"
 }

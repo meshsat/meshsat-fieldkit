@@ -29,7 +29,7 @@
   },
   "drc": {
    "path": "out/pcb-e1-dock-placed-drc.json",
-   "sha256_16": "20b39642f5ccc327"
+   "sha256_16": "e3fe068b99373e0f"
   },
   "measured_board": {
    "sha256_16": "a332944753c20b8b",
@@ -48,9 +48,9 @@
  "tool": "hardset-placed",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "92144c55e415e97b"
+  "tools_tree_sha": "c2e405a768df182f"
  },
- "ts": "2026-09-17T19:59:05Z",
+ "ts": "2026-09-17T20:15:29Z",
  "verdict": "PASS",
  "version": "unknown"
 }

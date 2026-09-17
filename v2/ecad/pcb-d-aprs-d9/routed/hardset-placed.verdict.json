@@ -29,7 +29,7 @@
   },
   "drc": {
    "path": "out/pcb-d-aprs-placed-drc.json",
-   "sha256_16": "4b2c5283d7e677b2"
+   "sha256_16": "656dbeef70778bd2"
   },
   "measured_board": {
    "sha256_16": "6712b33528025417",
@@ -48,9 +48,9 @@
  "tool": "hardset-placed",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "92144c55e415e97b"
+  "tools_tree_sha": "c2e405a768df182f"
  },
- "ts": "2026-09-17T19:59:02Z",
+ "ts": "2026-09-17T20:15:26Z",
  "verdict": "PASS",
  "version": "unknown"
 }
