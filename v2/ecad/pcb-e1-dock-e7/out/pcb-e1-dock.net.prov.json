@@ -1,0 +1,13 @@
+{
+ "what": "the generator that wrote this netlist, by content",
+ "letter": "e",
+ "netlist": "pcb-e1-dock.net",
+ "generator_sha": "7bf7afa442e9a6a7",
+ "generator_files": [
+  "gen_sch_e.py",
+  "kisch.py",
+  "intent.py"
+ ],
+ "schematic_sha256": "76415643f898188889ba2f305c6c7d9b",
+ "taken": "2026-09-17T20:54:53+00:00"
+}
