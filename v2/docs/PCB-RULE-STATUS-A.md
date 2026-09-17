@@ -11,9 +11,9 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A36: THIS TR
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 25 | 50.0 |
+| PASS | 26 | 52.0 |
 | FAIL | 10 | 20.0 |
-| INCONCLUSIVE | 15 | 30.0 |
+| INCONCLUSIVE | 14 | 28.0 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **50** | 100.0 |
 
@@ -50,7 +50,7 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A36: THIS TR
 | TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **FAIL** | port_protect FAIL: {'behind_an_active_part': 2, 'declared': 3, 'not_on_netlist': 0, 'ports': 3, 'unprotected': 0} |
 | ISO-001 creepage and clearance | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: it is MEASURED now, per board, which it never was. A net class is an instruction to the router and not a |
 | THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, |
-| PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no hardset-placed verdict for this board |
+| PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **PASS** | hardset-placed PASS of 15 |
 | PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | closer_audit FAIL: {'declared': 15, 'fail': 0, 'in_finish': 15, 'uncovered_classes': 1} |
 | RTE-001 geometry a fabricator will build | BLOCKER | ROUTED_BOARD | **PASS** | hardset-routed-board-gate PASS of 15 |
 | RTE-002 nothing unrouted, nothing shorted | BLOCKER | ROUTED_BOARD | **PASS** | hardset-routed-board-gate PASS of 15 |
