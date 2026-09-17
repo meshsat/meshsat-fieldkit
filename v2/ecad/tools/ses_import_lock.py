@@ -10,6 +10,7 @@ nets = set(n for g in groups for n in part["groups"].get(g, []))
 b = pcbnew.LoadBoard(board)
 before = len(b.Tracks())
 ok = pcbnew.ImportSpecctraSES(b, ses)
+import ses_via_drill; ses_via_drill.restore_board(b, ses)   # drills from the session's padstack names (18 September 2026)
 locked = 0; removed = 0
 for t in list(b.Tracks()):
     if t.IsLocked(): continue

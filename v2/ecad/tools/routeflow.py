@@ -937,7 +937,7 @@ def experiment(exp_fn, budget_hours, use_services, parallel=1):
             jar_path, jar_sha, ckey = ident(cfg); k = "exp-" + cfg["name"]; w = os.path.join(project, "out", "par", k); ses = os.path.join(w, name + ".ses"); board = os.path.join(w, name + ".kicad_pcb"); flog = os.path.join(w, "finish.log")
             if not os.path.exists(ses) or os.path.getsize(ses) == 0: return None
             shutil.copy(pre, board); shutil.copy(os.path.join(project, name + ".kicad_pro"), os.path.join(w, name + ".kicad_pro"))
-            sh(["python3", "-c", "import sys, pcbnew; b = pcbnew.LoadBoard(sys.argv[1]); ok = pcbnew.ImportSpecctraSES(b, sys.argv[2]); pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(sys.argv[1], b); print('SES import:', ok)", board, ses], project, flog)
+            sh(["python3", "-c", "import sys, os, pcbnew; b = pcbnew.LoadBoard(sys.argv[1]); ok = pcbnew.ImportSpecctraSES(b, sys.argv[2]); sys.path.insert(0, os.path.dirname(os.path.abspath(sys.argv[3]))); import ses_via_drill; ses_via_drill.restore_board(b, sys.argv[2]); pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(sys.argv[1], b); print('SES import:', ok)", board, ses, os.path.join(TOOLS, 'ses_via_drill.py')], project, flog)
             sh(["python3", os.path.join(tools, "net_tie.py"), board], project, flog)
             row = dict(old); row.update(ts=now(), finish_version=FINISH_VERSION, refinished=True, host=os.uname().nodename)
             finish(row, cfg, w, board, ses, flog); return row

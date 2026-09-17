@@ -254,6 +254,9 @@ python3 - "$W/$N.kicad_pcb" "$W/$N.ses" <<'PY'
 import sys, os, pcbnew
 b = pcbnew.LoadBoard(sys.argv[1]); ok = os.path.exists(sys.argv[2]) and pcbnew.ImportSpecctraSES(b, sys.argv[2]); print("SES import:", ok)
 if not ok: sys.exit(4)
+# every via's drill from the session's own padstack names: the importer leaves them UNDEFINED, which KiCad resolves
+# to the net class's drill, and E12 came back with ten vias 0.6 wide and 0.6 drilled (18 September 2026)
+sys.path.insert(0, "../tools"); import ses_via_drill; ses_via_drill.restore_board(b, sys.argv[2])
 pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(sys.argv[1], b)
 print("tracks:", len([t for t in b.GetTracks() if t.GetClass() == "PCB_TRACK"]), "vias:", len([t for t in b.GetTracks() if t.GetClass() == "PCB_VIA"]))
 PY
