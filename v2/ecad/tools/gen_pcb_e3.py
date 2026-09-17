@@ -242,10 +242,23 @@ def cls(nc, clr, tw, vd, vdr):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr))
 cls(ns.GetDefaultNetclass(), 0.127, 0.25, 0.6, 0.3)   # 0.127: the 0.4 mm escape rows of the RP2040 (E6 round 4)
 PATTERNS = [("DC_*", "PWR"), ("HS_S", "PWR"), ("GND", "PWR"), ("GND_V", "PWR"), ("VIN_RAW", "PWR"), ("PV_*", "PWR"), ("TRK_OUT", "PWR"), ("TRK_SW*", "PWR"), ("TRK_LSENSE", "PWR"), ("+5V_E6", "PWR"), ("E6_SW", "PWR"), ("CELL+", "BANK"), ("CELL_F", "BANK"), ("USB_E6_*", "USB")]
+# SENSE: every net pcb_sensitive.yaml declares for this board, in a class of its own with the default geometry, listed ahead
+# of the table so a sensitive net wins over the power pattern that also names it (TRK_LSENSE sat in PWR beside TRK_SW2, the net
+# ANA-001 asks it to keep 0.50 mm from, and a class cannot be kept away from itself). The DSN class-pair clearance of
+# route_one.sh (FR_CLASS_CLEAR, appendix 32.222) is what reads it (17 September 2026).
+try:
+    import yaml as _yaml, os as _os
+    _sens = ((_yaml.safe_load(open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "pcb_sensitive.yaml"))) or {}).get("boards") or {}).get("e") or {}
+    _sens_nets = [n["net"] for n in (_sens.get("nodes") if isinstance(_sens, dict) else _sens) or []]
+except BaseException as _e:
+    _sens_nets = []; print("SENSE class: pcb_sensitive.yaml not read (%s), no sensitive net moves class" % type(_e).__name__)
+PATTERNS = [(n, "SENSE") for n in _sens_nets] + PATTERNS
+print("SENSE class: %d declared sensitive net(s) take it" % len(_sens_nets))
 PATTERNS += [("/" + pat, cls) for pat, cls in PATTERNS if not pat.startswith("/")]   # 5 Sep 2026 (gateway finding, MESHSAT-802): root-sheet labels are "/NAME" on the board and KiCad's pattern matcher does not strip the slash, so every label pattern is emitted in both forms; power symbols (GND, +3V3) have no slash
 try:
     nc = pcbnew.NETCLASS("PWR"); cls(nc, 0.15, 0.8, 0.8, 0.4); ns.SetNetclass("PWR", nc)
     nb = pcbnew.NETCLASS("BANK"); cls(nb, 0.3, 3.0, 1.2, 0.6); ns.SetNetclass("BANK", nb)
+    nse = pcbnew.NETCLASS("SENSE"); cls(nse, 0.127, 0.25, 0.6, 0.3); ns.SetNetclass("SENSE", nse)
     nu = pcbnew.NETCLASS("USB"); cls(nu, 0.127, 0.3, 0.6, 0.3); nu.SetDiffPairWidth(FromMM(0.3)); nu.SetDiffPairGap(FromMM(0.2)); ns.SetNetclass("USB", nu)   # 8 Sep 2026 (32.71): 0.30/0.20 on the 7628 outer layer computes 89 ohm; the USB pairs stay on F.Cu over the In1 ground
     for pat, name in PATTERNS: ns.SetNetclassPatternAssignment(pat, name)
 except Exception as e: print("note: net class API:", e)
