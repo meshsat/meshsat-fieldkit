@@ -105,13 +105,26 @@ def never_invoked(here=None):
     return out
 
 
+# What a board has said about a prevention it could adopt. A DECLARED ZERO IS AN ANSWER AND AN UNDECLARED ZERO
+# IS NOT, which is this project's rule everywhere else and was not applied here (17 September 2026): board P
+# measured the ground-via grid on its own copper, 21 open connections against 0 without it, wrote that down and
+# declared none, and this gate still read it as a class nobody had covered. A board that measured a prevention
+# and refused it HAS answered the rule's second half; a board that has not measured it has not.
+DECLARED, REFUSED, SILENT = "declared", "refused", "silent"
+NOT_MEASURED = "NOT MEASURED"
+
+
 def board_declares(letter, key):
-    """Does this board declare the thing that prevents a class? The declaration is the board's own."""
+    """DECLARED, REFUSED (measured and written down) or SILENT for this board and this prevention."""
     import json
     p = os.path.join(HERE, "boards", "%s.json" % (letter or "").lower())
-    if not os.path.exists(p): return False
-    try: return bool(json.load(open(p, encoding="utf-8")).get(key))
-    except Exception: return False
+    if not os.path.exists(p): return SILENT
+    try: d = json.load(open(p, encoding="utf-8"))
+    except Exception: return SILENT
+    if d.get(key): return DECLARED
+    why = str(d.get("_%s_why" % key) or d.get("%s_why" % key) or "").strip()
+    if why and NOT_MEASURED not in why.upper(): return REFUSED
+    return SILENT
 
 
 def judge(closers=None, finish=None, letter=None):
@@ -162,8 +175,14 @@ def judge(closers=None, finish=None, letter=None):
             # free: board P measured it at 21 open connections against 0 without. So the class is covered on a
             # board that declares the grid and uncovered on one that does not, and this gate says which.
             if key and letter:
-                if board_declares(letter, key):
+                said = board_declares(letter, key)
+                if said == DECLARED:
                     notes.append("%s: covered on board %s by its own %s declaration" % (t, letter.upper(), key))
+                    continue
+                if said == REFUSED:
+                    notes.append("%s: covered on board %s by a MEASURED refusal of %s, written down with its "
+                                 "numbers; the repair stays and the board says why the prevention is not free"
+                                 % (t, letter.upper(), key))
                     continue
                 uncovered.append("%s on board %s: %s (prevented by declaring %s, which this board does not)"
                                  % (t, letter.upper(), str(c.get("defect_class", ""))[:60], key))

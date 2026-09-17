@@ -47,7 +47,7 @@ Manifest **2026-09-16.1**, rule set **8087c341773d75a1**, evidence epoch **2026-
 | INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **PASS** | interfaces_d PASS of 1 |
 | THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, |
 | PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **FAIL** | place_audit FAIL: {'collisions': 1, 'fine_pitch': 6, 'footprints': 211, 'measured': 6} |
-| PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | closer_audit PASS of 14 |
+| PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | closer_audit PASS of 15 |
 | RTE-001 geometry a fabricator will build | BLOCKER | ROUTED_BOARD | **PASS** | hardset-routed-board-gate PASS of 15 |
 | RTE-002 nothing unrouted, nothing shorted | BLOCKER | ROUTED_BOARD | **PASS** | hardset-routed-board-gate PASS of 15 |
 | VIA-002 the annular ring is one the fabricator makes | BLOCKER | ROUTED_BOARD | **PASS** | via_annular PASS of 1771 |

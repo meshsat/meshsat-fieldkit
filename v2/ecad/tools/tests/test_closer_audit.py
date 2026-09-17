@@ -71,10 +71,15 @@ def t_the_grid_class_is_covered_where_the_grid_is_declared_and_not_where_it_is_n
     three were measured that evening and have a prevention that does not depend on a grid at all (prefanout
     lays the plane-pad vias, and the refill plus the band keep-outs stop a pour retreating from its own stitch
     via). What is left is the one that is honestly unprevented: a pour island with no via of its own net,
-    which fires on every board and every round. D and E declare the grid and are covered; A, C and P do not."""
-    for letter in ("d", "e"):
+    which fires on every board and every round. D and E declare the grid and are covered.
+
+    17 September 2026: board P left this list without declaring anything. It MEASURED the grid on its own
+    copper, 21 open connections against 0 without it, and refused it with those numbers in its board file,
+    which is the rule's second half answered rather than ignored. A and C have not measured it and are still
+    named."""
+    for letter in ("d", "e", "p"):
         assert not C.judge(letter=letter)["uncovered"], letter
-    for letter in ("a", "c", "p"):
+    for letter in ("a", "c"):
         u = C.judge(letter=letter)["uncovered"]
         assert len(u) == 1, (letter, u)
         assert "pour_stitch" in u[0] and "gnd_grid" in u[0], u
@@ -127,3 +132,46 @@ def t_the_mark_the_owner_ruled_is_drawn_by_a_stage_and_placed_by_a_declaration()
     a = json.load(open(os.path.join(TOOLS, "boards", "a.json"), encoding="utf-8"))
     assert a.get("logo", {}).get("width_mm"), "board A declares no position for the mark"
     assert a["logo"].get("why"), "the position is declared with no reason"
+
+
+def t_a_prevention_measured_and_refused_is_an_answer():
+    """Board P, 17 September 2026. A DECLARED ZERO IS AN ANSWER AND AN UNDECLARED ZERO IS NOT is this
+    project's rule everywhere else and this gate did not apply it: board P measured the ground-via grid on its
+    own copper, 21 open connections against 0 without it, wrote the numbers into `boards/p.json` and declared
+    none, and PLC-002 still read the island class as one nobody had covered. Measuring a prevention and
+    refusing it with evidence IS the second half of the rule; not having measured it is not.
+
+    The distinction is the basis: a board whose reason still says NOT MEASURED has not answered."""
+    import json, tempfile, os as _o
+    sys.path.insert(0, TOOLS)
+    import closer_audit as ca
+    d = tempfile.mkdtemp(); b = _o.path.join(d, "boards"); _o.makedirs(b)
+    def write(letter, obj):
+        json.dump(obj, open(_o.path.join(b, "%s.json" % letter), "w"))
+    write("x", {"gnd_grid": {"pitch": 2.1}})
+    write("y", {"_gnd_grid_why": "measured on this board: 21 open with it against 0 without"})
+    write("z", {"_gnd_grid_why": "NOT MEASURED ON THIS BOARD YET"})
+    write("w", {})
+    old = ca.HERE
+    try:
+        ca.HERE = d
+        assert ca.board_declares("x", "gnd_grid") == ca.DECLARED
+        assert ca.board_declares("y", "gnd_grid") == ca.REFUSED, "a measured refusal is not read as an answer"
+        assert ca.board_declares("z", "gnd_grid") == ca.SILENT, "'not measured yet' counts as an answer"
+        assert ca.board_declares("w", "gnd_grid") == ca.SILENT
+    finally:
+        ca.HERE = old
+
+
+def t_the_boards_that_have_not_measured_it_are_still_uncovered():
+    """Executed on the real tree: the gate must still name a board that has said nothing."""
+    sys.path.insert(0, TOOLS)
+    import closer_audit as ca
+    said = {L: ca.board_declares(L, "gnd_grid") for L in ("a", "c", "d", "e", "p")}
+    assert said["d"] == ca.DECLARED and said["e"] == ca.DECLARED, said
+    assert said["p"] == ca.REFUSED, "board P's measured refusal is not in its board file any more: %s" % said["p"]
+    for L in ("a", "c"):
+        if said[L] == ca.SILENT:
+            r = ca.judge(letter=L)
+            assert any("pour_stitch" in u for u in r["uncovered"]), \
+                "board %s has not measured the grid and the class reads as covered" % L.upper()
