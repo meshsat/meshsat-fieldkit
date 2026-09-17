@@ -492,3 +492,17 @@ def t_a_gate_with_no_board_on_its_command_line_names_none():
         r = subprocess.run([sys.executable, "-c", prog, "--json"], cwd=d, capture_output=True, text=True)
         assert r.returncode == 0, r.stderr
         assert "board" not in json.load(open(os.path.join(d, "out", "probe.verdict.json")))["inputs"]
+
+
+def t_a_gate_that_judges_a_pair_of_boards_names_neither_as_the_board():
+    """board_diff compares two boards. Recording its first argument as "the board" would attribute a
+    comparison to half of what it judged, so it says `board: None` and the command line is not read."""
+    import subprocess, sys, os, json, tempfile
+    with tempfile.TemporaryDirectory() as d:
+        b = os.path.join(d, "pcb-x.kicad_pcb"); open(b, "wb").write(b"(kicad_pcb)\n")
+        prog = ("import sys, os; sys.path.insert(0, %r); import verdict;"
+                "sys.exit(verdict.write('probe', verdict.PASS, denominator=1, inputs={'a': 'x', 'board': None}))" % TOOLS)
+        r = subprocess.run([sys.executable, "-c", prog, b], cwd=d, capture_output=True, text=True)
+        assert r.returncode == 0, r.stderr
+        ins = json.load(open(os.path.join(d, "out", "probe.verdict.json")))["inputs"]
+        assert ins["board"] is None, ins

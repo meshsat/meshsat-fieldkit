@@ -154,7 +154,7 @@ def _with_board(inputs):
     process was actually given, with its sha256 and the fact that it was read off the command line, so a
     verdict is attributable without every gate having to learn a new argument. A gate that names its board
     itself is left exactly as it wrote it."""
-    if inputs.get("board") is not None: return inputs
+    if "board" in inputs: return inputs      # the gate said which board, or said explicitly that it judges none
     try:
         import hashlib
         for a in sys.argv[1:]:
