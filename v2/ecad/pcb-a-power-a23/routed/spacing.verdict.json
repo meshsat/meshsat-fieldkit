@@ -4,31 +4,31 @@
  "counts": {
   "below_limit": 0,
   "closest_mm": 0.1287,
-  "hv_nets": 2,
-  "pairs_measured": 4628
+  "hv_nets": 3,
+  "pairs_measured": 6739
  },
- "denominator": 4628,
+ "denominator": 6739,
  "evidence": [
   "0.129 mm VBUS20 to FE_FB on F.Cu at (45.8, 69.3)",
   "0.129 mm VBUS20 to FE_FB on F.Cu at (46.5, 68.6)",
   "0.129 mm VBUS20 to FE_PGOOD on F.Cu at (36.2, 78.5)",
   "0.129 mm VBUS20 to FE_PGOOD on F.Cu at (36.2, 78.5)",
   "0.129 mm VBUS20 to FE_PGOOD on F.Cu at (37.1, 79.5)",
+  "0.129 mm VIN_RAW to FE_LDRV1 on B.Cu at (50.7, 51.1)",
+  "0.129 mm VIN_RAW to FE_SW1 on F.Cu at (43.4, 42.9)",
   "0.130 mm VBUS20 to FE_EN on F.Cu at (38.4, 77.2)",
   "0.130 mm VBUS20 to FE_BOOT1 on F.Cu at (68.2, 68.5)",
   "0.139 mm VBUS20 to FE_COMP on B.Cu at (50.7, 57.6)",
+  "0.144 mm VIN_RAW to GND on F.Cu at (32.4, 49.3)",
   "0.145 mm VBUS20 to FE_FB on F.Cu at (45.8, 69.8)",
   "0.148 mm VBUS20 to FE_COMP on F.Cu at (62.4, 68.5)",
   "0.154 mm VBUS20 to FE_PGOOD on F.Cu at (37.1, 79.5)",
   "0.154 mm VBUS20 to FE_PGOOD on F.Cu at (37.9, 79.5)",
   "0.154 mm VBUS20 to FE_PGOOD on F.Cu at (38.4, 79.0)",
+  "0.158 mm VIN_RAW to GND on F.Cu at (32.4, 49.8)",
+  "0.158 mm VIN_RAW to FE_LDRV1 on B.Cu at (50.7, 51.1)",
   "0.162 mm VBUS20 to CH_ACN on F.Cu at (50.5, 96.8)",
-  "0.162 mm VBUS20 to CH_ACN on F.Cu at (50.5, 96.8)",
-  "0.163 mm VBUS20 to INA_ALERT on In2.Cu at (50.8, 95.1)",
-  "0.164 mm VBUS20 to FE_PGOOD on F.Cu at (36.2, 78.5)",
-  "0.164 mm VBUS20 to FE_PGOOD on F.Cu at (37.1, 79.5)",
-  "0.164 mm VBUS20 to FE_PGOOD on F.Cu at (37.9, 79.5)",
-  "0.164 mm VBUS20 to CH_SW2 on F.Cu at (68.5, 83.6)"
+  "0.162 mm VBUS20 to CH_ACN on F.Cu at (50.5, 96.8)"
  ],
  "inputs": {
   "board": {
@@ -50,9 +50,9 @@
  "tool": "spacing",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "7ccbc7e584865cf1"
+  "tools_tree_sha": "0b86b1eeaa5d3af9"
  },
- "ts": "2026-09-17T15:42:15Z",
+ "ts": "2026-09-17T16:31:15Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

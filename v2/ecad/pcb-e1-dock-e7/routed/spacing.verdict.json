@@ -1,17 +1,45 @@
 {
  "advisory": false,
- "applicable": false,
- "counts": {},
- "denominator": 0,
- "evidence": [],
+ "applicable": true,
+ "counts": {
+  "below_limit": 0,
+  "closest_mm": 0.1283,
+  "hv_nets": 1,
+  "pairs_measured": 2860
+ },
+ "denominator": 2860,
+ "evidence": [
+  "0.128 mm VIN_RAW to GND on B.Cu at (190.2, 179.3)",
+  "0.129 mm VIN_RAW to GND on B.Cu at (190.2, 179.3)",
+  "0.129 mm VIN_RAW to GND on B.Cu at (190.2, 179.3)",
+  "0.129 mm VIN_RAW to GND on B.Cu at (190.2, 179.3)",
+  "0.129 mm VIN_RAW to CELL_MON on B.Cu at (99.8, 191.0)",
+  "0.129 mm VIN_RAW to GND on B.Cu at (190.2, 179.3)",
+  "0.129 mm VIN_RAW to BLK_SPARE on B.Cu at (77.5, 187.8)",
+  "0.129 mm VIN_RAW to BLK_SPARE on B.Cu at (84.9, 187.8)",
+  "0.129 mm VIN_RAW to BLK_SPARE on B.Cu at (88.1, 191.0)",
+  "0.129 mm VIN_RAW to BLK_SPARE on B.Cu at (115.1, 211.4)",
+  "0.129 mm VIN_RAW to BLK_SPARE on B.Cu at (117.8, 211.4)",
+  "0.129 mm VIN_RAW to BLK_SPARE on B.Cu at (118.5, 210.7)",
+  "0.129 mm VIN_RAW to GND on B.Cu at (156.7, 185.1)",
+  "0.129 mm VIN_RAW to GND on B.Cu at (156.7, 185.1)",
+  "0.129 mm VIN_RAW to GND on B.Cu at (190.2, 179.3)",
+  "0.129 mm VIN_RAW to TRK_OUT on B.Cu at (213.6, 195.4)",
+  "0.129 mm VIN_RAW to DC_HS on B.Cu at (104.1, 195.0)",
+  "0.129 mm VIN_RAW to DC_HS on B.Cu at (104.1, 195.0)",
+  "0.129 mm VIN_RAW to DC_HS on B.Cu at (104.1, 195.0)",
+  "0.131 mm VIN_RAW to WATER_A on B.Cu at (73.1, 183.4)"
+ ],
  "inputs": {
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
    "sha256_16": "5fc1ffce0dc5ab1c"
-  }
+  },
+  "hv_spacing_mm": null,
+  "volts": 20.0
  },
  "missing_input": null,
- "note": "no rail on this board reaches 20 V",
+ "note": "measured, not judged: this board declares no hv_spacing_mm, and creepage and clearance come from a standard's table for a working voltage, a pollution degree and a material group, which this tree does not hold",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "f8db9f9b0747ca1b"
@@ -22,9 +50,9 @@
  "tool": "spacing",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "7ccbc7e584865cf1"
+  "tools_tree_sha": "0b86b1eeaa5d3af9"
  },
- "ts": "2026-09-17T15:46:45Z",
+ "ts": "2026-09-17T16:31:16Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }
