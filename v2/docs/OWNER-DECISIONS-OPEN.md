@@ -117,7 +117,14 @@ end to end on a 330 x 200 mm board. That is inside one PCB, which is the clause'
 enough that the loss budget is worth stating whichever way this is ruled. ONE CONDITION IS NOT COPPER AND IS
 IN NO CONTRACT YET: the same clause requires auto-negotiation to stay enabled when the link runs at 1000M.
 Nothing in this tree's software contract records that, so a bridge that ever forces a fixed-speed link on
-ports 1 to 3 would break a transformer-less link and nothing would say why.
+ports 1 to 3 would break a transformer-less link and nothing would say why. AND ONE MORE THING ABOUT THESE
+FOUR PAIRS, found while measuring decision 36 on the adopted B21 board (18 September 2026): their intra-pair
+tolerance is not declared anywhere. Every other interface on this board carries a number from its host's
+datasheet in pcb_interfaces.yaml (0.10 mm for the module's USB 3 and PCIe, 0.15 for its USB 2 and Ethernet,
+0.70 for the M.2 modules); the MDI pairs, which are these links, carry none, and on B21 they read 2.74 to
+14.68 mm of mismatch. Whichever way this decision goes, those four need a budget from the same clause it
+turns on, because a capacitively coupled link with no magnetics has less margin for skew than one with them,
+not more.
 
 | rule | | boards | result today |
 |---|---|---|---|
