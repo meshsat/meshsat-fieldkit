@@ -316,7 +316,20 @@ coverage:
    remediation: {action: "find a published figure for how far a plane-stitching capacitor may sit from the transition it serves, or measure one", owner: SESSION, execution: VENDOR_OR_STANDARD_WAIT, depends_on: [RET-001], p50_h: 3, p80_h: 12}}
 
  RET-004: {implementation: "gnd_grid.py, return_via.py fixer",
-   verification: {tool: return_via.py, verdict: return_via, fixtures: "tests/test_board_gates.py, tests/test_signal_class.py"},
+   verification: {tool: return_via.py, verdict: return_via, fixtures: "tests/test_board_gates.py, tests/test_signal_class.py", examination: ref_change.py},
+   _examination_why: "18 September 2026: this rule is a SCREEN for RET-003 in its own requirement, which
+     says in as many words that a via beyond the screening distance is EXAMINED against that rule rather
+     than failed outright, and its failure-mode line says that used as a law it demands vias where the
+     reference never changed. That is what it was doing: five boards failed on the screen's own count with
+     nobody looking at one flagged transition. `ref_change.py` already classifies every signal via (the
+     reference kept, moved between two GROUND planes, or moved to another NET) and now writes that per via
+     beside the board, the way dc_drop writes the barrel currents it had solved and thrown away. The screen
+     reads it: a via whose reference never changes and a via that changes to another net are not this
+     screen's to fail (the second is return_stitch's, where only a capacitor between the two planes can
+     help), a via the examination could not classify stands because an unexamined via is not an examined
+     one, and with no reading beside the board at all the screen declares its missing input, which is
+     INCONCLUSIVE and never a pass. The sweep runs the examination BEFORE the screen and a rule holds that
+     order.",
    maturity: ENFORCED, gap_category: NONE,
    note: "16 September 2026: it reads the SAME spectral-content class rule 1 reads, so a net cannot be slow for one rule
      and fast for the other. A return via exists so the return current can follow its signal through a reference change;

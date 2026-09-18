@@ -324,16 +324,78 @@ def fix(path, dry=False, radius=RETURN_MM):
     return 0
 
 
+def examine(path, r):
+    """THE SECOND HALF OF RULE RET-004, which nothing had ever done (18 September 2026).
+
+    The rule's own requirement is "as a screening test for RET-003, every signal via outside a fine-pitch escape
+    fan is measured for the distance to the nearest ground via, and a via beyond the screening distance is
+    EXAMINED AGAINST RET-003 rather than failed outright", and its failure mode section says in as many words
+    that used as a law it demands vias where the reference never changed. The gate did exactly that: five boards
+    failed on the screen's own count with nobody looking at one of the flagged transitions. The examination is
+    `ref_change.py`'s per-via classification, which this reads beside the board:
+
+      * `same`: the via references the same conductor before and after, so there is no loop to close and a
+        ground via beside it would answer nothing.
+      * `to_power`: the reference changes between two DIFFERENT nets, where a ground via cannot help at all;
+        that transition is judged by `return_stitch`, which asks for a capacitor between those two planes.
+      * `other_gnd`: the reference moves between two ground planes, which is precisely what a ground via beside
+        the transition is for. Those stand, and they are what this screen exists to find.
+
+    A via the examination could not classify stands as well, because an unexamined via is not an examined one.
+    Returns (still lacking, the buckets, the missing input or None)."""
+    import json as _j
+    p = os.path.join(os.path.dirname(os.path.abspath(path)), "out",
+                     os.path.splitext(os.path.basename(path))[0] + "-ref-change.json")
+    buckets = {"same_reference": [], "to_power": [], "unclassified": []}
+    if not os.path.exists(p):
+        return list(r["lacking"]), buckets, (
+            "no per-via reference reading beside this board (out/%s): ref_change.py determines what each "
+            "transition references and without it nothing can tell a via that changes reference from one that "
+            "does not, which is the examination this rule asks for before a via is failed" % os.path.basename(p))
+    try:
+        cases = {}
+        for v in (_j.load(open(p, encoding="utf-8")).get("vias") or []):
+            cases[(round(float(v["x"]), 2), round(float(v["y"]), 2), str(v.get("net") or "").lstrip("/"))] = v.get("case")
+    except Exception as e:
+        return list(r["lacking"]), buckets, "the per-via reference reading beside this board could not be read (%s)" % e
+    still = []
+    for text, (t, pt) in zip(r["lacking"], r["positions"]):
+        c = cases.get((round(pt[0], 2), round(pt[1], 2), t.GetNetname().lstrip("/")))
+        if c == "same": buckets["same_reference"].append(text)
+        elif c == "to_power": buckets["to_power"].append(text)
+        else:
+            if c is None: buckets["unclassified"].append(text)
+            still.append(text)
+    return still, buckets, None
+
+
 def check(path, radius=RETURN_MM):
     import verdict
     b = pcbnew.LoadBoard(path); r = judge(b, path, radius)
     n_tracks = sum(1 for t in b.GetTracks() if t.GetClass() == "PCB_TRACK")
-    res = verdict.INCONCLUSIVE if (n_tracks and not r["judged"] and not r["exempt"]) else (verdict.PASS if not r["lacking"] else verdict.FAIL)
+    still, buckets, missing = examine(path, r)
+    res = verdict.INCONCLUSIVE if (n_tracks and not r["judged"] and not r["exempt"]) else (verdict.PASS if not still else verdict.FAIL)
     print("return_via: %d signal vias judged, %d exempt in fine-pitch fans, %d on one reference plane, %d on a net with no edge to return, %d without a ground via within %.1f mm" % (r["judged"], r["exempt"], r["same_plane"], r.get("slow", 0), len(r["lacking"]), radius))
     for l in r["lacking"][:20]: print("return_via:   " + l)
-    return verdict.write("return_via", res, counts={"judged": r["judged"], "exempt": r["exempt"], "same_plane": r["same_plane"], "slow": r.get("slow", 0), "lacking": len(r["lacking"])}, denominator=r["judged"],
-                         evidence=r["lacking"][:200], inputs={"board": path},
-                         note="" if res != verdict.INCONCLUSIVE else "the board has tracks and no signal via at all: the scope filter is suspect",
+    if not missing and r["lacking"]:
+        print("return_via: of the %d flagged, %d reference the same conductor before and after (RET-003 has "
+              "nothing to close there), %d change between two DIFFERENT reference nets (a ground via cannot "
+              "close those: return_stitch judges them), %d could not be classified, and %d stand as this "
+              "screen's own case, a move between two ground planes"
+              % (len(r["lacking"]), len(buckets["same_reference"]), len(buckets["to_power"]),
+                 len(buckets["unclassified"]), len(still) - len(buckets["unclassified"])))
+    return verdict.write("return_via", res, counts={"judged": r["judged"], "exempt": r["exempt"], "same_plane": r["same_plane"], "slow": r.get("slow", 0), "lacking": len(r["lacking"]),
+                                                    "examined_same_reference": len(buckets["same_reference"]), "examined_to_power": len(buckets["to_power"]),
+                                                    "unclassified": len(buckets["unclassified"]), "standing": len(still)}, denominator=r["judged"],
+                         evidence=still[:200], inputs={"board": path}, missing_input=missing,
+                         note=("the board has tracks and no signal via at all: the scope filter is suspect"
+                               if (n_tracks and not r["judged"] and not r["exempt"]) else
+                               "the screen measures every signal via outside a fine-pitch fan against the "
+                               "declared %.1f mm and then EXAMINES each one it flags against RET-003, which is "
+                               "what this rule's own requirement asks for: a via whose reference never changes "
+                               "and a via whose reference changes to another NET are not this screen's to fail, "
+                               "and what stands is a move between two ground planes with no ground via beside "
+                               "it" % radius),
                          out_dir=os.path.join(os.path.dirname(os.path.abspath(path)), "out"))
 
 

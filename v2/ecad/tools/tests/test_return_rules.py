@@ -275,3 +275,27 @@ def t_an_unclassified_run_says_so_instead_of_reporting_a_measured_zero():
     src = _rv_src()
     assert "NO SIGNAL CLASSIFICATION" in src, "the empty classification is silent again"
     assert '"classified": bool(_cls)' in src, "the reading does not say whether it was classified"
+
+
+def t_the_examination_runs_before_the_screen_that_reads_it():
+    """18 September 2026. RET-004's requirement makes it a SCREEN for RET-003: a via beyond the screening
+    distance is examined against that rule rather than failed outright, and the examination is `ref_change`'s
+    per-via reading of what each transition references. The sweep ran the screen at line 92 and the examination
+    twenty-six lines later, so the file never existed when it was wanted; with the order the wrong way round the
+    screen declares its missing input and the reading is INCONCLUSIVE, which is honest and is not a reading."""
+    t = _code("gate_sweep.sh")
+    i_ref = t.index("ref_change.py"); i_rv = t.index("return_via.py")
+    assert i_ref < i_rv, "gate_sweep runs return_via before ref_change, so the screen has nothing to examine with"
+
+
+def t_the_screen_names_what_it_examined_and_what_still_stands():
+    """A count of flagged vias is not a diagnosis, which is the lesson of 12 September in a third place. The
+    verdict carries the two buckets the examination removes (a reference that never changes, and a change to
+    another NET where only a capacitor can help) and the vias that stand as this screen's own case, so the
+    reader can tell a board that needs ground vias from a board that needs `return_stitch`."""
+    s = _src("return_via.py")
+    for k in ("examined_same_reference", "examined_to_power", "unclassified", "standing"):
+        assert '"%s"' % k in s, "the return-via verdict does not count %s" % k
+    assert "missing_input=missing" in s, \
+        "the screen does not declare the examination as a missing input, so a reading taken without it could " \
+        "displace one taken with it"

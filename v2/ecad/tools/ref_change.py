@@ -111,15 +111,23 @@ def main(a):
         if t.GetClass() != "PCB_TRACK": continue
         for e in (t.GetStart(), t.GetEnd()):
             ends.setdefault((t.GetNetname(), round(mm(e.x), 2), round(mm(e.y), 2)), set()).add(t.GetLayer())
-    same = other_gnd = to_power = unknown = slow = 0; examples = []; power_vias = []
+    # AND THE PER-VIA ANSWER IS WRITTEN BESIDE THE BOARD (18 September 2026). RET-004 is a SCREEN for this rule
+    # in its own words, "a via beyond the screening distance is examined against RET-003 rather than failed
+    # outright", and nothing examined anything: `return_via` failed five boards on the screen's own count. The
+    # examination is exactly the classification below, so it stops being a printed summary and becomes a file,
+    # the way dc_drop writes the barrel currents it already solved. Each via with the reference it keeps or
+    # moves between; the reader decides what that costs.
+    same = other_gnd = to_power = unknown = slow = 0; examples = []; power_vias = []; perv = []
     for t in b.GetTracks():
         if t.GetClass() != "PCB_VIA": continue
         net = t.GetNetname()
         if not signalnets.is_signal(net, signals): continue
-        if (_cls.get(net) or ("UNKNOWN", ""))[0] == "LOW_SPEED_OR_DC": slow += 1; continue
         p = (round(mm(t.GetPosition().x), 2), round(mm(t.GetPosition().y), 2))
+        if (_cls.get(net) or ("UNKNOWN", ""))[0] == "LOW_SPEED_OR_DC":
+            slow += 1; perv.append(dict(x=p[0], y=p[1], net=net.lstrip("/"), case="slow")); continue
         attached = ends.get((net, p[0], p[1]), set())
-        if len(attached) < 2: unknown += 1; continue
+        if len(attached) < 2:
+            unknown += 1; perv.append(dict(x=p[0], y=p[1], net=net.lstrip("/"), case="unknown")); continue
         refs = [nearest(L, cu, pl) for L in attached]
         # the reference is the pour UNDER THIS VIA, not every pour that shares the layer with it
         nets = []
@@ -129,12 +137,19 @@ def main(a):
                 nm = net_at(pl, L, p[0], p[1])
                 if nm: found.add(nm)
             nets.append(frozenset(found))
-        if not all(nets): unknown += 1; continue
-        if len(set(nets)) == 1 and len(set(frozenset(r) for r in refs)) == 1: same += 1; continue
+        if not all(nets):
+            unknown += 1; perv.append(dict(x=p[0], y=p[1], net=net.lstrip("/"), case="unknown")); continue
+        if len(set(nets)) == 1 and len(set(frozenset(r) for r in refs)) == 1:
+            same += 1; perv.append(dict(x=p[0], y=p[1], net=net.lstrip("/"), case="same",
+                                        reference="/".join(sorted(set().union(*nets))))); continue
         allnets = set().union(*nets)
-        if allnets == {"GND"}: other_gnd += 1
+        if allnets == {"GND"}:
+            other_gnd += 1; perv.append(dict(x=p[0], y=p[1], net=net.lstrip("/"), case="other_gnd",
+                                             reference="GND"))
         else:
             to_power += 1
+            perv.append(dict(x=p[0], y=p[1], net=net.lstrip("/"), case="to_power",
+                             reference="/".join(sorted(allnets))))
             power_vias.append((p[0], p[1], frozenset(allnets), net.lstrip("/")))
             if len(examples) < 10:
                 examples.append("%s at (%.1f, %.1f): %s" % (net.lstrip("/"), p[0], p[1],
@@ -145,6 +160,16 @@ def main(a):
           "loop, by the same declaration rules RET-001 and RET-004 read)"
           % (same, other_gnd, to_power, unknown, slow))
     for e in examples: print("  %s" % e)
+    _out = os.path.join(os.path.dirname(os.path.abspath(path)), "out")
+    try:
+        import json as _j
+        os.makedirs(_out, exist_ok=True)
+        _pv = os.path.join(_out, os.path.splitext(os.path.basename(path))[0] + "-ref-change.json")
+        _j.dump({"board": os.path.basename(path), "frac": frac, "vias": perv}, open(_pv, "w", encoding="utf-8"), indent=1)
+        print("ref_change: %d signal via(s) with the reference they keep or move between written to %s"
+              % (len(perv), os.path.basename(_pv)))
+    except Exception as _e:
+        print("ref_change: the per-via reference reading could not be written (%s)" % _e)
     if "--check" not in a: return 0
 
     # THE GATE, for the third case only. The other two are RET-004's and are gated there.
