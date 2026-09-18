@@ -24,7 +24,6 @@ TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Gates whose fixtures are owed, each with what it needs. A line here is a declaration, not an excuse: it is
 # read by the rule below and printed, so the debt is visible in every test run rather than remembered.
 FIXTURE_DEBT = {
-    "copper_checks.py": "a library called with the caller's check(), exercised through the board gates",
 }
 
 # Gates with fixtures elsewhere, so that this file's rule sees the whole catalogue.
