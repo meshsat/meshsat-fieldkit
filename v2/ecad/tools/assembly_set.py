@@ -176,6 +176,10 @@ def judge(ecad=None, only=None, rot=None):
     return out
 
 
+DEFAULT_CHECKLIST = os.path.normpath(os.path.join(
+    os.path.dirname(os.path.dirname(HERE)), "release", "revA", "order", "ROTATION-CHECKLIST.md"))
+
+
 def checklist(r, path):
     """The ordering session's work list, generated (17 September 2026).
 
@@ -218,8 +222,18 @@ def main(argv):
     rot = argv[argv.index("--rot") + 1] if "--rot" in argv else None
     r = judge(ecad, only, rot)
     if "--checklist" in argv:
-        _p = argv[argv.index("--checklist") + 1]
-        print("assembly_set: %d footprint(s) written to %s" % (checklist(r, _p), _p))
+        # THE PATH IS OPTIONAL AND THE DEFAULT IS THE ONE PLACE THE ORDERING SESSION LOOKS (18 September 2026).
+        # `--checklist` with nothing after it raised IndexError and the crash guard turned that into an
+        # INCONCLUSIVE verdict about the gate rather than about the boards, which is the shape this project
+        # keeps finding: an argument error dressed as a measurement. A missing argument is answered, not raised.
+        _i = argv.index("--checklist")
+        _p = argv[_i + 1] if len(argv) > _i + 1 and not argv[_i + 1].startswith("--") else DEFAULT_CHECKLIST
+        _d = os.path.dirname(os.path.abspath(_p))
+        if not os.path.isdir(_d):
+            print("assembly_set: no directory for the checklist at %s, so it was not written "
+                  "(the ordering session's folder is not in this tree)" % _d)
+        else:
+            print("assembly_set: %d footprint(s) written to %s" % (checklist(r, _p), _p))
     fails = [f for v in r.values() for f in v["fails"]]
     nch = sorted({x for v in r.values() for x in v["unchecked"]})
     for letter, v in sorted(r.items()):
