@@ -23,11 +23,17 @@ GUARD = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file
 
 
 def t_the_search_can_be_restricted_to_named_nets():
+    """A FIXED BYTE WINDOW IS NOT A RULE ABOUT THE CODE, it is a rule about how much prose sits between two
+    lines (18 September 2026, the second time in one evening: `test_stub_zone_obstacle` failed the same way when
+    a comment pushed `zpoly(via` past its 2,500-character slice, and this one failed when the pour-obstacle and
+    lock flags landed between the declaration and the filter). What the rule means is that the filter is read
+    where the pairs are chosen and AFTER the set is built, so it asks for the order of the two lines and for
+    nothing about their distance."""
     assert 'os").environ.get("STUB_NETS"' in SR, "there is no net filter, so a placed board would be routed whole"
     i = SR.find("_WANT = ")
-    body = SR[i:i + 700]
-    assert "if _WANT and netname(its[0][\"net\"]) not in _WANT: continue" in body, (
-        "the filter does not actually skip the pairs of other nets")
+    j = SR.find("if _WANT and netname(its[0][\"net\"]) not in _WANT: continue")
+    assert j > 0, "the filter does not actually skip the pairs of other nets"
+    assert i > 0 and i < j, "the filter reads a set that is not built yet"
 
 
 def t_the_stage_is_declared_per_board_and_off_by_default():
