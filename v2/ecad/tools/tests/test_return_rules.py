@@ -324,3 +324,21 @@ def t_a_pour_is_an_obstacle_to_a_closure_and_not_to_a_pre_lay():
     assert "STUB_POUR_OBSTACLE" in t[max(0, j - 400):j], "the pre-lay stage does not turn the pour obstacle off"
     fin = _code("finish.sh")
     assert "STUB_POUR_OBSTACLE" not in fin, "the finish turns the pour obstacle off, which is what shorted board A"
+
+
+def t_a_pre_lay_lays_locked_copper_and_a_closure_does_not():
+    """E20, 19:27 UTC on 18 September 2026, and it is the defect behind the one fixed an hour earlier. With the
+    pours out of its obstacle map the pre-lay closed **39 of 39** pairs of `/LTG_IRQ` and `/+3V3_E6` and the
+    board stayed hard 0 (229 unrouted to 192). The route then never started: `place_audit` declined with "this
+    is a ROUTED board (330 of 633 track segments unlocked, laid by the router)" and the pre-route gate blocked.
+    Nothing had routed; the stub router simply does not lock what it lays, which is right for a CLOSURE (the
+    last copper on a finished board) and wrong for a PRE-LAY twice over: Freerouting keeps what KiCad exports as
+    `(type fix)` and rips up the rest, so unlocked copper buys nothing, and a board with unlocked segments is
+    not a placed board to the predictor. `STUB_LOCK` defaults to 0 and the pre-lay stage sets it."""
+    s = _src("stub_router.py")
+    assert 'STUB_LOCK", "0"' in s.replace('__import__("os").', "os."), "the lock is not a flag, or it defaults ON"
+    assert s.count("if _LOCK:") >= 2, "the lock reaches fewer than both of the things this tool lays (tracks and vias)"
+    t = _code("full.sh")
+    j = t.index('STUB_NETS="$GNETS"')
+    assert "STUB_LOCK" in t[max(0, j - 400):j], "the pre-lay stage does not lock what it lays"
+    assert "STUB_LOCK" not in _code("finish.sh"), "a closure is being locked, which is not what a closure is"
