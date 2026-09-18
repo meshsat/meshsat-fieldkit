@@ -10494,3 +10494,21 @@ charger pulling down a PoE source, and the fix is a land at the shunt rather tha
 `kelvin_check.py` and the pad potentials existed, so its first pass printed an empty section. That is D16's
 lesson in miniature, three hours after writing it down, and the `--requires` gate added tonight would have
 refused the run had the driver declared what it needed. The reading above is the re-take on staged tools.
+
+**Addendum, 01:20 CEST (19 September): a pre-lay's unit is a NET, and a net's size is counted on the board the
+pre-lay runs on.** A48 was launched with the eight nets of A47's sixteen remaining opens and stopped twenty
+minutes later, before its router started. **The pre-lay runs on the PLACED board, where those nets have all
+their connections open rather than the one that survived a ten-hour route**: on A48's placed board `+3V3` has
+**40** open pairs, `/+5V_S2` nine, and the stage was laying sixty-nine in total, `+3V3` alone at thirty-eight,
+when it was stopped. That is E20's failure mode at scale, and ten hours of a rented box would have proved it
+again. Stopping it in GENERATING cost nothing and routeflow's SIGTERM handler took its child with it, which is
+the 17 September fix working (`routeflow: signal 15, the running stage was stopped with it`).
+
+**The relaunched arm names the six nets that are small where it matters**: `CH_ACN_F` 2 pairs, `CH_SRN_F` 2,
+`HF_CS` 3, `CHG_ILIM` 3, `EMCON_HW` 4, `CH_SRP` 6, twenty against sixty-nine, all in the charger and sense
+cluster where A46's closures were refused for mask bridges. The two poured rails are deliberately out.
+
+**So the rule of the 02:50 addendum needs its second half.** "Pre-lay a short gap and never a long run" is
+about the GAP; the instrument takes a NET, and a net that contains one short gap can contain forty others. The
+count to take before launching an arm is the named net's open-pair count **on the placed board's own DRC**, and
+board D's `/PCM_VDD` is three, which is why it paid.
