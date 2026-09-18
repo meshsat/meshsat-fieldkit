@@ -10104,3 +10104,30 @@ fill between the anti-pads below the zone's own minimum width, so the fill vanis
 perforated board passes with its millimetres counted, and the same board with the plane stopped half way still
 fails. Board P is the control that says this is not a loosening: two layers, no inner plane, nothing under the
 run at all, and its five failing nets are unchanged.
+
+**Addendum, 21:20 CEST: E18's best round bought one connection and gave back the rule the arm existed for, and
+a pre-lay had been searching a board that was 99.4 percent solid.** Two findings, both about a tool choosing
+for a reason that is not the question.
+
+**(1) A round is chosen by its connectivity count and a rule cannot be seen from there.** E18 landed at 19:07
+UTC with three finished rounds: round 1 at FIVE open, round 2 at FOUR, round 3 worse; routeflow restored round
+2. Round 2 reads **ANA-001 FAIL on all three of board E's declared sense nodes** (TRK_CSP 0.158 mm from
+TRK_SW2 over 7.83 mm, TRK_CSN 0.152 from TRK_LSENSE, WATER_SENSE 0.433 from TRK_SW1, every one outside the
+shared courtyard) where round 1 reads **PASS 3 of 3** at 6.179 and 6.507 mm. E18 was the arm whose ONE variable
+was the Kelvin filter that answers ANA-001. A remedy round regenerates the placement, the seats are fixed in
+the generator, and the routed distance from the switching copper is controlled by nothing Freerouting obeys
+(the DSN class-pair clearance was measured and refused this morning), so the clearance scatters between rounds
+exactly as the opens do. Neither round is adoptable and E17 stays board E's phase. The landing driver measures
+ANA-001 on EVERY finished round from now on, because the choice by connectivity cannot see a rule.
+
+**(2) The pre-lay stage has been laying nothing on three boards, and the reason is that a pour is not an
+obstacle to it.** `stub_router`'s obstacle map has carried every filled pour since 16 September, and in a
+FINISH it must: a piece laid through a plane is measured against a fill that has not moved, and board A's
+closures shorted its ground that way. At PRE-LAY time none of that is true: nothing is routed, the stage
+re-fills before anything judges the board, and KiCad's fill retreats around a locked track exactly as it does
+around the router's own, which is why the ROUTER may cross a plane and this tool may not. Measured on board
+D's own pre-lay: with the pours in the map, **5,140 free cells of 834,561** and `/PCM_VDD` FAILED pad to pad
+three times in 833 s; with `STUB_POUR_OBSTACLE=0`, **1,324,904 free cells and 3 of 3 closed** (8, 6 and 10
+tracks), and the board after its own refill reads **hard 0 of the fifteen types**. The flag defaults to ON so
+no finish changes; the pre-lay stage is the one caller that turns it off. Boards C, D and E have all read "the
+pre-lay laid nothing" and this is why.
