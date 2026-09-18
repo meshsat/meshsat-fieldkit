@@ -10131,3 +10131,32 @@ three times in 833 s; with `STUB_POUR_OBSTACLE=0`, **1,324,904 free cells and 3 
 tracks), and the board after its own refill reads **hard 0 of the fifteen types**. The flag defaults to ON so
 no finish changes; the pre-lay stage is the one caller that turns it off. Boards C, D and E have all read "the
 pre-lay laid nothing" and this is why.
+
+**Addendum, 21:40 CEST: PI-003's cheap half, asked on the finished placement before anything is routed.**
+Every PI-003 failure this project has found is one shape, a rail crossing layers through ONE barrel, and until
+tonight the only instrument that could see it was `via_current` on the SOLVED mesh, which needs a routed board.
+`rail_crossings.py` asks the arithmetic half before the route: at the pad of a rail's declared SOURCE the whole
+rail current changes layer, at a declared LOAD's pad that load's share does, and `via_current.barrels_for` says
+how many barrels each needs on the fabricator's own 18 um plating. It REPORTS and lays nothing, because where
+to put more copper is a placement question whose shape differs per board. **Board B reads 199 crossings of its
+36 declared rails carrying the barrels their current needs and SIX that do not**: `+5V_LIME` at J_LIME pad 1
+(3.00 A on one 0.40 mm barrel, which needs four), `+5V_RB` at U24 pad 5 (2.00 A, three), `+3V3_S2B` at L202 pad
+2 (1.80 A, three), `+5V_DEV` at U23 pad 4 (1.20 A on a 0.25 mm barrel, two), `+5V_LORA` at U21 pad 1 (0.70 A,
+two) and one more.
+
+**The pre-route arithmetic and the post-route mesh find the same shape, which is the argument for asking
+first.** `barrel_sites.py` on the same board names `+5V_LIME` at 3.00 A and `+5V_RB` at 2.00 A among the 34
+over-rated barrels the solved reading finds, so the six named here are not a different population; they are the
+subset a generator can still answer for free. The answer is B24's and it is points added to the calls that
+place those vias, never a hand-drawn cluster: every named site is the generator's own locked fanout via.
+
+**Two lessons are inside the tool and both cost a version.** (1) **A part's current is split across the pads it
+takes it on.** With the whole load current at every pad the same tool reads **102 short crossings of 103** on
+board B, which is the attribution error this project made once already in the hand-over report of 16 September,
+where the rail's whole current was divided by one barrel at every site and 29 of board A's 31 sites read short.
+A compute module takes its core rail on five pads and each carries about a fifth. With the split it reads six.
+(2) **It runs on the FINISHED placement and not inside the fanout.** The first version printed its answer at the
+end of `prefanout.py` and named SEVEN crossings on board E's E20 generation, every one of which the stages that
+follow had already answered: the ground grid alone lays 1,829 vias after the fanout, and the escapes lay more.
+A report that names sites somebody else fixes ten seconds later is noise, and the next person stops reading it.
+It is called from `full.sh` immediately before `place_audit.py`, on the board the route is about to be given.
