@@ -322,6 +322,15 @@ coverage:
      verdict, not a silent one, and a net nobody classified is judged as though it were fast"}
 
  IMP-001: {implementation: "gen_pcb_*3.py net classes", verification: {tool: impedance_check.py, verdict: impedance_check, second_opinion: impedance_2d.py},
+   _solver_why: "WHERE THE NUMBERS COME FROM, 18 September 2026. This rule's gap was never only the standard: it
+     was that most of the millimetres judged came from a measured BIAS applied to a closed form rather than from a
+     solve, and the run said how many but not WHICH cross-section. It names them now, longest first, with the
+     command that solves each. Six were solved that day: the two outer geometries boards A and B actually route
+     (the solver reads 0.978 of the closed form, the same bias the first four measured), two inner striplines of
+     the 3313 stack, and the two inner cross-sections board B's router makes where only one side has a plane.
+     Board A is 338 mm of 338 solved and board B 5,970 of 6,684, the rest being legs metres apart that are not
+     pairs. What is still missing, and is why this rule's maturity does not move: the closed form's own standard
+     is not in this tree, and no fabricator has confirmed a stack and no coupon has been measured.",
    _shared_verdict_why: "SHARED WITH PAIR-001 (18 September 2026). One pass over the routed board writes one
      verdict with both readings in it: per CLASS, the target, the tolerance, the geometry as built and the
      impedance that geometry makes on the board's own stackup, which is this rule; and per PAIR, the coupled
