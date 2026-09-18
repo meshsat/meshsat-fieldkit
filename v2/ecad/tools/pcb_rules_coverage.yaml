@@ -441,8 +441,18 @@ coverage:
    remediation: {action: "ALL THREE CLAUSES ARE ANSWERED (17 September 2026). The declarations were done; the two measurements are done, boards A and C having measured the ground-via grid against their own controls (board A: 4,000 locked ground vias take RET-004 from 46 lacking of 58 judged to 33 of 52 and cost the route nothing, 23 open against 25; board C: the grid costs 21 open connections against zero and makes the island count worse), and both refuse it with those numbers in their board files, which is the rule's second half answered rather than ignored; and place_audit PREDICTS the pour-island class now, as far as a placed board can. It reads the fill the board already carries, names every filled island of 1 mm2 or more that reaches no via and no plated pad of its own net with its area, its net and its layer, and says in as many words that the islands a ROUTER cuts out of a pour cannot be predicted from a placed board and are the other half of the class. It costs 1.9 s on board C and nothing measurable on board B, it never refuses a board (a WARN, because the repair stage exists and works), and it never takes a chain down: the geometry calls are guarded and a reading it cannot take is reported as a reading it cannot take. WHAT REMAINS IS ONE BOARD, not a tool: board B has never measured the grid on its own copper, which is a route of its own and waits for B21", owner: SESSION, execution: PARALLEL_AGENT, depends_on: [], p50_h: 1, p80_h: 3}}
 
  RTE-001: {implementation: "gen_pcb_*.py design rules",
-   verification: {tool: "drc.sh, fab_limits.py", verdict: "hardset-routed-board-gate, fab_limits", fixtures: tests/test_fab_limits.py},
+   verification: {tool: "drc.sh, fab_limits.py", verdict: "fab_limits", fixtures: "tests/test_fab_limits.py, tests/test_rule_gate_mapping.py"},
    maturity: ENFORCED, gap_category: NONE,
+   _verdict_why: "fab_limits ALONE, and the correction is worth the sentence (18 September 2026). This entry also named
+     hardset-routed-board-gate, whose own note says what it measures: the routed board's hard and unrouted counts, both
+     zero, which is RTE-002's acceptance criteria word for word and not this rule's. Where a rule names several verdicts
+     the worst decides, so board B read RTE-001 FAIL while its own fab_limits verdict read PASS on 24 checks with the
+     note 'every rule this board is designed to is inside the fabricator's capability for its own copper weight': what
+     had failed was the route, hard 0 and 416 unrouted, on a board mid-campaign. A board recorded as designed to rules
+     the fabricator cannot make, because its router had not finished. The second half of this rule's criteria, that the
+     DRC runs with the board's own rules, is carried by drc.sh's own contract, which refuses a board whose project file
+     is not beside it under its own stem (12 September 2026) and is held by a rule of its own. Board P is the control:
+     its RTE-001 failure is fab_limits' five classes under capability and it is untouched by this.",
    note: "16 September 2026. The DRC enforces the board's own rules and nothing had ever asked whether THOSE RULES are
      inside what the process makes at the board's own copper weight. fab_limits.py asks, against the fabricator's
      capability document now in the tree, with the copper weight read from the board's own stackup rather than from a

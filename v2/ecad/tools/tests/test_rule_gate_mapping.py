@@ -240,3 +240,29 @@ def t_a_remediation_that_is_done_carries_no_gap():
         if act.upper().startswith("DONE") and (e or {}).get("gap_category") not in (None, "NONE"):
             bad.append("%s: its remediation says DONE and its gap category is %s" % (rid, e.get("gap_category")))
     assert not bad, "the register counts finished work:\n  " + "\n  ".join(bad)
+
+
+def t_the_routed_board_gate_decides_the_route_and_nothing_else():
+    """A composite verdict decides every rule the coverage map points at it, so it must measure all of them.
+
+    18 September 2026. `hardset-routed-board-gate` says one thing, in its own note: "routed board: hard and
+    unrouted must both be zero". That is RTE-002's acceptance criteria word for word. RTE-001 is a different
+    question, whether the board's design rules are inside a dated capability record from the fabricator, and
+    `fab_limits.py` was written for exactly that; but the coverage map named BOTH verdicts for RTE-001 and the
+    worst of the two decides, so on board B, whose `fab_limits` reads PASS on 24 checks with the note "every
+    rule this board is designed to is inside the fabricator's capability for its own copper weight", RTE-001
+    read FAIL. What failed was the route: hard 0, unrouted 416. Board B was recorded as designed to rules the
+    fabricator cannot make because its router had not finished, which is the composite-verdict defect of 16
+    September in a third place, and it is the reason this rule is mechanical rather than remembered.
+
+    Board P is the control: its RTE-001 failure is `fab_limits` FAIL with 5 classes under capability, on a
+    board whose routed-board gate reads hard 0 and unrouted 0, and it stays a failure after this correction.
+    """
+    cov = S.coverage()
+    named = sorted(rid for rid, c in cov.items()
+                   if S.ROUTE_GATE in [n.strip() for n in
+                                       str(((c.get("verification") or {}).get("verdict")) or "").split(",") if n.strip()])
+    assert named == ["RTE-002"], (
+        "%s decides %s. It measures the ROUTE (hard and unrouted on the filled routed board), which is "
+        "RTE-002's criteria; every other rule it is named for inherits a failure about something it does not "
+        "ask. Give that rule its own instrument." % (S.ROUTE_GATE, named))
