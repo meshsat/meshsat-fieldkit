@@ -2,13 +2,16 @@
 # part_stage2.sh <project dir> <name> <passes> <timeout s> <group list>: after the GLOBAL job: import its session and lock its nets, export the DSN
 # again (planes and power layers as the route scripts do), re-partition, route every listed group concurrently, wait, merge, DRC, report.
 # Env: FR_PLANE_NETS (csv) and FR_POWER_LAYERS as for route_one.sh. Marker STAGE2-DONE.
+# PART_REGIONS: the region spec for dsn_partition (NAME:xmax,...,LAST), the SAME the caller's stage 1 used. Without it the
+# re-partition took board B's default regions (DEVW, S1, S2, S3, DEVE), so board A's groups WEST, MID and EAST matched no
+# net and every region job auto-routed nothing in half a second (A46, 18 September 2026).
 set -uo pipefail
 cd "$1"; N="$2"; P="$3"; T="$4"; PARTS="$5"; W=$PWD/out/part; PJ=$W/part.json
 echo "stage2: groups [$PARTS] passes $P timeout $T"; cp $N.kicad_pro out/$N-preroute.kicad_pro 2>/dev/null   # every board KiCad loads or checks needs the project file beside it (net classes, via sizes), or the DRC reports the default class
 python3 ../tools/ses_import_lock.py out/$N-preroute.kicad_pcb $W/GLOBAL/route.ses $PJ GLOBAL $W/stage1.kicad_pcb 2>&1 | grep -v -E "Debug|leak"
 cp $N.kicad_pro $W/stage1.kicad_pro
 bash ../tools/dsn_export.sh $W/stage1.kicad_pcb $W/stage2-raw.dsn "${FR_PLANE_NETS:-}" "${FR_POWER_LAYERS:-}" 2>&1 | grep -v -E "Debug|leak"
-python3 ../tools/dsn_partition.py $W/stage1.kicad_pcb $W/stage2-raw.dsn $W/stage2.dsn $W/part2.json 2>&1 | grep -v -E "Debug|leak" | grep -v "^partition [A-Z]"
+python3 ../tools/dsn_partition.py $W/stage1.kicad_pcb $W/stage2-raw.dsn $W/stage2.dsn $W/part2.json ${PART_REGIONS:+--regions=$PART_REGIONS} 2>&1 | grep -v -E "Debug|leak" | grep -v "^partition [A-Z]"
 # 16 September 2026: THE DEFAULT IS THE MODE THAT WORKS. This read `${PART_SEQ:-0}`, so a launcher that said
 # nothing got the CONCURRENT mode, which the paragraph below has said since 10 September cannot work, and
 # tonight three board B partition arms spent about three hours of a rented box each reproducing exactly the
@@ -29,7 +32,7 @@ if [ "${PART_SEQ:-1}" = 1 ]; then
     [ -s $W/$G/route.ses ] || { echo "stage2: $G wrote no session, stopping the chain here"; break; }
     python3 ../tools/ses_import_lock.py $W/stage1.kicad_pcb $W/$G/route.ses $W/part2.json $G $W/stage1.kicad_pcb 2>&1 | grep -v -E "Debug|leak"
     bash ../tools/dsn_export.sh $W/stage1.kicad_pcb $W/stage2-raw.dsn "${FR_PLANE_NETS:-}" "${FR_POWER_LAYERS:-}" 2>&1 | tail -1
-    python3 ../tools/dsn_partition.py $W/stage1.kicad_pcb $W/stage2-raw.dsn $W/stage2.dsn $W/part2.json 2>&1 | tail -1
+    python3 ../tools/dsn_partition.py $W/stage1.kicad_pcb $W/stage2-raw.dsn $W/stage2.dsn $W/part2.json ${PART_REGIONS:+--regions=$PART_REGIONS} 2>&1 | tail -1
   done
 else
   for G in $PARTS; do bash ../tools/route_part.sh $W $W/stage2.dsn $G $P $T $W/part2.json > $W/route-$G.log 2>&1 & done
