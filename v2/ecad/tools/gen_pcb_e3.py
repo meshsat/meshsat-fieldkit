@@ -60,6 +60,14 @@ for ref in comps:                                                   # the holes 
 FIXED = {"J_BLK": (-80, -76.5, 0, False), "P_CP": (-104, -108, 0, False), "P_CN": (-94, -108, 0, False), "PAD_W1": (-84, -108, 0, False), "PAD_W2": (-74, -108, 0, False), "J_BATT": (-138, -108, 0, False), "F3": (-120, -108, 0, False),
          "J_DCIN": (-64, -108, 0, False), "F1": (-48, -108, 0, False), "J_SOLAR": (-22, -108, 0, False), "F2": (-6, -108, 0, False),
          "U5": (32.8, -91, 0, False), "L1": (46, -103, 0, False), "U10": (86, -94, 0, False),
+         # THE KELVIN RESISTORS SIT AT THE SHUNT (18 September 2026, rule ANA-001). On E17 the packer put R6 and
+         # R7 at x 21.0 and 25.2 while the shunt R5 is at 2.46 and the controller at 32.99, so the FILTERED pair
+         # ran 11 to 15 mm through the switching neighbourhood and read 0.142 and 0.276 mm from TRK_SW1 and
+         # TRK_SW2. A series resistor attenuates line pickup only at the SOURCE end, which is the shunt, and the
+         # capacitor belongs at the amplifier (C16 is declared as U5 pin 3's decoupling, so the bypass pass seats
+         # it there). These two seats are the same row as R5, three millimetres apart, clear of C17 and C18 at
+         # y -101.3 and of Q6 at (14.8, -91.4).
+         "R6": (6.0, -97.38, 0, False), "R7": (9.0, -97.38, 0, False),
          "J_SMB": (-144, -62, 0, False), "J_POD": (-138, -62, 0, False), "J_LTG": (-132, -62, 0, False), "J_GEIGER": (-126, -62, 0, False), "J_DCF": (-144, -49.3, 0, False), "J_FAN1": (-138, -49.3, 0, False), "J_FAN2": (-132, -49.3, 0, False)}
 for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot, back)
 text("PACK", -138, -112.2, pcbnew.F_SilkS, 1.2, 0.2); text("F3 25A", -120, -112.2, pcbnew.F_SilkS, 1.2, 0.2); text("DC IN", -64, -112.2, pcbnew.F_SilkS, 1.2, 0.2); text("F1 10A", -48, -112.2, pcbnew.F_SilkS, 1.2, 0.2); text("PV", -22, -112.2, pcbnew.F_SilkS, 1.2, 0.2); text("F2 10A", -6, -112.2, pcbnew.F_SilkS, 1.2, 0.2)
@@ -72,7 +80,7 @@ REGIONS = [
  ("ENTRYA", (-76, -103, -44, -87), ["U3", "Q1", "C4", "R1", "D1", "C2", "TP1", "TP2", "Q8", "R26"], False),
  ("ENTRYB", (-44, -103, -26, -81), ["L2", "C6", "C7", "R27", "LED1", "TP3"], False),
  ("TRKIN",  (-26, -103, -2, -81), ["D4", "C11", "C12", "C13", "C14", "C15", "TP5"], False),
- ("TRKW",   (-2, -103, 28, -81), ["Q3", "Q4", "Q5", "Q6", "R5", "R6", "R7", "C16", "C17", "C18", "D5", "D6"], False),
+ ("TRKW",   (-2, -103, 28, -81), ["Q3", "Q4", "Q5", "Q6", "R5", "C16", "C17", "C18", "D5", "D6"], False),   # R6 and R7 left this list for fixed seats at the shunt (18 September 2026)
  ("TRKS",   (39.5, -95.5, 56, -80), ["C19", "C20", "C21", "C22", "C23", "R8", "R9", "R10", "R11", "R12", "R13", "R14", "R15", "R16", "R17"], False),
  ("TRKOUT", (56, -112, 78, -81), ["C24", "C25", "C26", "C27", "U4", "Q2", "C28", "R18", "TP6"], False),
  ("SENS",   (40, -78, 52, -46), ["U14", "C48", "U15", "R51", "C49", "C50", "R38", "R39", "C51", "R40", "R41"], False),
