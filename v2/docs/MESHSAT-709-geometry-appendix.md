@@ -9999,3 +9999,52 @@ dead in every sweep since. It is the fallback nested inside the try of the thing
 second place. The rule that holds it reads every tool that guards its main and requires the writer to be
 imported at column zero, and the first version of that rule allowed leading whitespace and passed on the very
 file it was written for.
+
+**Addendum, 20:20 CEST: the pack's protection thresholds existed nowhere, and now they are written down and
+judged against the cell maker's own numbers.** BAT-001 is a BLOCKER on board P, the one rule in this registry
+whose failure mode is a fire, and its coverage note read *"the protection is designed and its thresholds are
+configured in software; no check compares a threshold against the cell's own limits"*. That is exactly the
+state: board P carries a BQ4050 whose protection subsystem is configured in data flash, and **a data-flash
+configuration that exists nowhere is not a design, it is an intention**. `pcb_pack_protection.yaml` is that
+configuration, function by function, and `pack_protection.py` makes **45 checks** over it.
+
+The authority turned out to be better than a limits list. The INR18650-35E specification in this tree carries a
+**Pack Design Guideline (for electrical design)**, which is the cell maker telling a pack designer what to set,
+by application column and by chemistry row: standard charging voltage 4.20 V, re-charge 4.10 V, NCA/NCM minimum
+voltage of terminate discharging 2.50 V and of over-discharging protection 2.30 V, BMS shut-down 2.00 V, a
+pre-charge window of 1.0 to 3.0 V at 0.1C to 0.5C, and do not charge below 1.0 V. The kit is the guideline's
+Portable IT column, which is also its strictest for over-discharge. Nine functions are declared with the device
+that implements them, the threshold and delay, the limit each is derived from, and **the test that will
+demonstrate it on the prototype**, which is this rule's acceptance criteria word for word.
+
+**Every current is judged at the pack's WORST parallel count**, three cells and not four, because a threshold
+that passes at 4P and fails at 3P is not a threshold this pack meets: 20 A against the cells' 24 A continuous,
+30 A against their 39 A pulse, 5 A against their 6 A charge limit, the short-circuit trip at 60 A below the
+240 A floor of the prospective fault this node can deliver. Over-voltage sits 0.05 V ABOVE the cell's own
+charging voltage with that allowance declared and reasoned, because a trip at or below 4.20 V would call a
+correct CC-CV charge a fault. Every quoted limit is re-read from the cell's own PDF by the gate, which is the
+fuse table's lesson of 17 September, and every device named is checked against board P's netlist by reference.
+
+**It fails on the other half of the requirement, and that is the finding**: *in hardware, independent of any
+software*. All nine functions are the BQ4050's, whose thresholds live in data flash and whose protection
+subsystem is firmware; there is no second protector IC, no chemical fuse (`gen_sch_p.py` says it in as many
+words, the 25 A mini blade is the fuse) and the PTC input is tied off. So the only protective element on board P
+that needs no firmware is a 25 A blade fuse, which does not protect a cell from over-voltage, from
+over-discharge or from heat. That is **owner decision 40**, with its parts already in the tree (ABLIC S-8261,
+TI bq2970, both filed on 4 September for this question) and the recommendation to add one: it is the difference
+between a pack whose safety depends on a data-flash image being right and a pack that is safe with the gauge
+unprogrammed.
+
+**Addendum, 20:35 CEST: a fixture had been writing its answer into the set's own evidence, and rule OUT-001 was
+reading it.** Found while asking why the readiness moved: `out/final_gate.verdict.json` read **PASS of 2** with
+a timestamp from the middle of a test run. `verdict.write` defaults to `out` relative to the CURRENT DIRECTORY,
+and two fixtures hand `final_gate.main` a synthetic boards directory (two folders, E and E5) and call it from
+`v2/ecad`, so their answer landed on top of the set's own. **OUT-001, the order paperwork, is verified by that
+verdict on all seven boards**, so the set's paperwork rule was reading a pass taken over two folders while five
+of the seven are stale or held. It is the third appearance of one shape: a reading about a smaller question
+standing in for the bigger one (the scoped `rules_status` run of 17 September, the incidental `final_gate` run
+that destroyed board C's contract PASS on the same day, and now a fixture). The manifest and the evidence travel
+together now: `final_gate.main` takes an `out_dir`, derives it from the manifest it was given when a caller
+supplies one, and every one of its six writes carries it. The rule that holds it runs the gate exactly as the
+offending fixture did and requires this tree's own verdict not to move; on the tool as it stood this morning it
+overwrites a sentinel in the current directory, which is the proof.

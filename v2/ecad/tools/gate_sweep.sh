@@ -120,6 +120,10 @@ run "via table"         python3 $T/via_audit.py $N.kicad_pcb
 run "fabricator limits" python3 $T/fab_limits.py $N.kicad_pcb
 run "stackup"           python3 $T/stackup_gate.py $N.kicad_pcb --board $L
 run "via current"        python3 $T/via_current.py $N.kicad_pcb
+# The pack's protection is a property of the DESIGN and not of this board file (18 September 2026): its
+# inputs are the threshold table, the cell maker's own specification and board P's netlist, so it runs
+# for board P alone and its verdict lands beside that board's others.
+[ "$L" = p ] && run "pack protection" python3 $T/pack_protection.py --netlist out/$N.net --check
 run "thermal"            python3 $T/thermal.py $N.kicad_pcb
 run "hv spacing"         python3 $T/spacing.py $N.kicad_pcb
 run "electrical length"  python3 $T/edge_length.py $N.kicad_pcb

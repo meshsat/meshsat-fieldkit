@@ -162,3 +162,42 @@ def t_the_set_verdict_does_not_decide_every_board_s_own_paperwork():
     cov = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "pcb_rules_coverage.yaml"),
                encoding="utf-8").read()
     assert "final_gate_<letter>" in cov, "the coverage map still reads only the set verdict for DOC-001 and OUT-001"
+
+
+def t_a_run_against_another_manifest_writes_nothing_into_this_trees_evidence():
+    """THE INCIDENT, 18 September 2026, and it is the third time this shape has cost a reading.
+
+    `verdict.write` defaults to `out` relative to the CURRENT DIRECTORY. A fixture that hands this gate a
+    synthetic boards directory and calls it from `v2/ecad` therefore wrote its two-folder answer straight over
+    the set's own: `final_gate PASS of 2` sat in `v2/ecad/out/` and rule OUT-001, the order paperwork, read it
+    as a PASS on all seven boards while five of the seven folders are stale or held. The manifest and the
+    evidence travel together now: a caller that supplies its own manifest gets its own out directory, and this
+    rule runs the gate the way the fixture did and requires the tree's own verdict not to move."""
+    import json as _j, importlib, shutil, tempfile, os
+    fg = importlib.import_module("final_gate")
+    ecad = os.path.dirname(TOOLS)
+    live = os.path.join(ecad, "out", "final_gate.verdict.json")
+    before = open(live, encoding="utf-8").read() if os.path.isfile(live) else None
+
+    def fake_run(cmd):
+        who = os.path.basename(cmd[1])
+        if who == "verify_deliverable.py": return 0, "verify_deliverable: ALL PASS (21 of 21 properties)\n"
+        if who == "check_contracts.py": return 0, "contracts ALL PASS\n"
+        if who == "jlc_certify.py": return 0, "jlc_certify: 1 components, CERTIFIED 1\n"
+        return 0, "claims_check: 0 without a qualifier\n"
+
+    d = tempfile.mkdtemp(prefix="final-gate-elsewhere-")
+    boards = os.path.join(d, "boards"); os.makedirs(boards)
+    _j.dump({"name": "pcb-e1-dock", "phase": "E9"}, open(os.path.join(boards, "e.json"), "w"))
+    folders = os.path.join(d, "release", "revA", "boards")
+    os.makedirs(os.path.join(folders, "meshsat-pcb-e-revA-E9")); os.makedirs(os.path.join(folders, "meshsat-pcb-e5-revA-E5"))
+    keep, cwd = fg.BOARDS, os.getcwd()
+    try:
+        fg.BOARDS = folders; os.chdir(ecad)          # exactly what the offending fixture did
+        fg.main(["--json", os.path.join(d, "out.json")], run=fake_run, boards_dir=boards)
+        after = open(live, encoding="utf-8").read() if os.path.isfile(live) else None
+        assert after == before, "a run against another manifest overwrote this tree's own final_gate verdict"
+        assert os.path.isfile(os.path.join(d, "out", "final_gate.verdict.json")), \
+            "the run wrote its verdict neither here nor beside the manifest it was given"
+    finally:
+        fg.BOARDS = keep; os.chdir(cwd); shutil.rmtree(d, ignore_errors=True)

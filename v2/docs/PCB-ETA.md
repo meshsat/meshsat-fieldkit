@@ -61,7 +61,7 @@ time and are listed separately below.
 
 | rule | what it needs | owner |
 |---|---|---|
-| BAT-001 | the cell's datasheet on file, the threshold table derived from it, and the prototype prote | OWNER |
+| BAT-001 | DONE 18 September 2026 for the derivation half: the cell's specification is in the tree, t | OWNER |
 | CLK-001 | decision 37 (board D's two clocks: the land cannot hold the part it draws), then the strap | OWNER |
 | DFA-001 | the assembler's own preview of each polarised footprint, which is the artefact the accepta | OWNER |
 | ENV-001 | rule decision 34: the envelope of section 4, the part swaps of option 2, or the narrow env | OWNER |

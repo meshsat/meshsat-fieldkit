@@ -7,7 +7,7 @@ One line per decision that is still open, what it holds up, and where its eviden
 v2/docs/OWNER-DECISIONS-2026-09-11.md and this page is generated from the same registry the readiness table
 is, so the pair counts below are the ones the gates use.
 
-**12 decisions are open and they hold 67 rule-board pairs of the 333 the set is judged on.** A pair held by a
+**13 decisions are open and they hold 68 rule-board pairs of the 333 the set is judged on.** A pair held by a
 decision is not a defect in the board: it is a question nobody has answered, and until it is answered the
 rule can be neither passed nor failed.
 
@@ -25,6 +25,7 @@ rule can be neither passed nor failed.
 | **36** | the intra-pair tolerance a differential pair is judged against | INT-001 | A, B | 2026-09-16 |
 | **37** | board D asks for two crystals that do not exist and the part it was certified against is four times the frequency | CMP-002, SUP-001 | D | 2026-09-16 |
 | **39** | the criterion a break in a signal's reference is judged against | RET-001, RET-003, SI-001 | A, B, C, D, E, P | 2026-09-17 |
+| **40** | the pack's cell-level protection is one firmware-configured device, and the rule asks for hardware independent of any software | BAT-001 | P | 2026-09-18 |
 
 ## Each one, with what it holds
 
@@ -455,6 +456,42 @@ SOURCE_UNVERIFIED for exactly that reason.
 | RET-001 | a continuous adjacent return path | A, B, C, D, E, P | INCONCLUSIVE |
 | RET-003 | return transition at a reference change | A, B, C, D, E, P | INCONCLUSIVE, not computed |
 | SI-001 | transmission-line classification | A, B, C, D, E, P | INCONCLUSIVE |
+
+
+### Decision 40: the pack's cell-level protection is one firmware-configured device, and the rule asks for hardware independent of any software
+
+**The question:** add a protector that needs no firmware (a dedicated cell protector IC on the taps, or the
+gauge's chemical-fuse output with a fuse that has one), or accept the BQ4050 alone with that written down
+against the rule
+
+**Recommended:** add the second protector. It is one small part, its datasheets are already in this tree, and
+it is the difference between a pack whose safety depends on a data-flash image being right and a pack that is
+safe with the gauge unprogrammed, unpowered or crashed. The cheapest shape is a dedicated cell protector
+across the four taps driving a separate FET, or the BQ4050's own chemical-fuse output with a fuse that has
+one, which costs a part and a board change on board P alone and no re-route of any other board
+
+**Measured:** MEASURED, 18 September 2026, by the instrument rule BAT-001 never had.
+`pcb_pack_protection.yaml` writes the intended BQ4050 configuration down function by function and
+`pack_protection.py` makes 45 checks over it: every protection the requirement names is present, every
+threshold is inside the cell maker's own limit at the pack's WORST parallel count (over-voltage 4.25 V
+against a 4.20 V charging voltage with a declared 0.05 V allowance, under-voltage 2.50 V against the
+guideline's 2.30 V over-discharge protection, 20 A against 24, 30 A against 39, 5 A against 6, the charge
+window 0 to 45 C and the discharge window -10 to 60 C), every quoted limit is re-read from the Samsung
+INR18650-35E specification in this tree, and every device is on board P's netlist. ONE check fails and it is
+the requirement's own words: `in hardware, INDEPENDENT OF ANY SOFTWARE`. All nine functions are the BQ4050's,
+a device whose thresholds live in data flash and whose protection subsystem is firmware; board P carries no
+second protector IC, no chemical fuse (gen_sch_p.py says so in as many words: the 25 A mini blade is the
+fuse) and its PTC input is tied off. So the only protective element on the board that needs no firmware is a
+25 A blade fuse, which is a gross-fault device: it does not protect a cell from over-voltage, from
+over-discharge or from heat. The parts are documented here already, ABLIC S-8261
+(v2/vendor/battery/ablic-s8261.pdf) and TI bq2970 (ti-bq2970.pdf), both filed on 4 September for this
+question. What the decision costs is a part, a schematic change and a re-route of board P, which is 0/0 today
+and the smallest board of the set; what it buys is that the 200 Wh block in this case is protected by
+something that cannot be mis-programmed.
+
+| rule | | boards | result today |
+|---|---|---|---|
+| BAT-001 | the cell block is protected in hardware | P | INCONCLUSIVE |
 
 
 ## Closed, for the record

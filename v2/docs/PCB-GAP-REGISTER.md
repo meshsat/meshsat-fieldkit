@@ -7,7 +7,7 @@ Every applicable rule this project does not yet verify, by the category of the g
 needs, who decides and the effort estimate. A gap is not a failure of the board: it is a question nobody has
 answered yet, made visible so it cannot be forgotten.
 
-**20 of 58 rules carry a gap.**
+**19 of 58 rules carry a gap.**
 
 ## absent (1)
 
@@ -23,7 +23,7 @@ user touches most. What it does NOT do is test anything: this rule is verified a
 been built, and the dock block's contact targets carry the open item the mate-cycle test exists for.  
 *Close it by* The SHEET is DONE (17 September 2026): every board carries its wear-out and environment classes with the parts each covers and reliability.py checks the coverage, seven boards passing. The TEST PLAN for the prototype is the laboratory stage and belongs with it. Owner **OWNER**, after ENV-001. Effort P50 0h, P80 0h.
 
-## generated only (3)
+## generated only (2)
 
 **ANA-001 sensitive analogue nodes** (MUST_JUSTIFY, ENFORCED)  
 the shunt's Kelvin connection and the microphone filtering are designed; no check identifies sensitive nodes
@@ -46,11 +46,6 @@ COURTYARD, which is published geometry rather than a number of ours: copper insi
 reported as a note, copper outside it is a routing decision and fails. Board A keeps POE_CS at 10.79 mm and
 B33_FB at 8.47 mm, and board E keeps both of its own, one of which runs 20.49 mm with no shared part at all.  
 *Close it by* The declarations and the check are DONE (17 September 2026): every board that has a sensitive node declares it with the clearance it asks for, and sensitive_nodes.py measures it. What remains is COPPER and rides with those boards' next route: board A has ten clearances under their own asked-for distance, four of which are the charger filter nets its committed board does not yet carry, and board E has two. Owner **SESSION**. Effort P50 2h, P80 6h.
-
-**BAT-001 the cell block is protected in hardware** (BLOCKER, GENERATED_ONLY)  
-the protection is designed and its thresholds are configured in software; no check compares a threshold
-against the cell's own limits, and the cell is not chosen  
-*Close it by* the cell's datasheet on file, the threshold table derived from it, and the prototype protection test. Owner **OWNER**, after ENV-001. Effort P50 6h, P80 20h.
 
 **RF-001 RF paths are designed as RF** (BLOCKER, ENFORCED)  
 the D gate checks the RF chain's net continuity and the module keep-outs; no line impedance is computed, no
@@ -276,10 +271,11 @@ stated for 1 oz only, and they stay INCONCLUSIVE rather than being judged agains
 process  
 *Close it by* ask the fabricator for the annular ring rows AT 2 oz, which its published page does not state, so boards E5 and P can be judged rather than left inconclusive. Owner **VENDOR**. Effort P50 2h, P80 48h.
 
-## covered (38)
+## covered (39)
 
-These rules have an executable gate, a machine-readable verdict and behavioural fixtures: BAT-002, CLK-001,
-CMP-001, CMP-002, DFM-001, DOC-001, DOC-002, ENV-002, GND-001, IMP-002, INT-001, MEC-001, PI-001, PI-002,
-PI-003, PLC-001, PLC-002, PLN-001, PWR-001, PWR-002, PWR-003, RET-002, RET-004, RF-002, RTE-001, RTE-002,
-SCH-001, SCH-002, SCH-003, SCH-004, SCH-005, SGN-001, SGN-002, STK-001, SUP-001, TRN-001, TST-001, VIA-001
+These rules have an executable gate, a machine-readable verdict and behavioural fixtures: BAT-001, BAT-002,
+CLK-001, CMP-001, CMP-002, DFM-001, DOC-001, DOC-002, ENV-002, GND-001, IMP-002, INT-001, MEC-001, PI-001,
+PI-002, PI-003, PLC-001, PLC-002, PLN-001, PWR-001, PWR-002, PWR-003, RET-002, RET-004, RF-002, RTE-001,
+RTE-002, SCH-001, SCH-002, SCH-003, SCH-004, SCH-005, SGN-001, SGN-002, STK-001, SUP-001, TRN-001, TST-001,
+VIA-001
 
