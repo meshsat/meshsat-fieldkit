@@ -90,3 +90,43 @@ def t_a_generated_document_whose_inputs_are_absent_is_not_rewritten_empty():
                 assert "intent" in str(e), str(e)
         finally:
             RR.HERE = real
+
+
+# The unguarded reads of a flag's value on the tree this rule was written against, 18 September 2026.
+FLAG_READS = 101
+_FLAG = re.compile(r"(?:argv|a)\[(?:argv|a)\.index\(")
+
+
+def _flag_reads():
+    n, where = 0, {}
+    here = os.path.dirname(HERE)
+    for f in sorted(os.listdir(here)):
+        if not f.endswith(".py"): continue
+        hits = [l for l in open(os.path.join(here, f), encoding="utf-8").read().splitlines()
+                if _FLAG.search(l) and "+ 1]" in l and "len(" not in l]
+        if hits: n += len(hits); where[f] = len(hits)
+    return n, where
+
+
+def t_the_number_of_unguarded_flag_reads_never_rises():
+    """A flag given no value must be answered, not raised (`verdict.opt`).
+
+    `assembly_set.py --checklist` with nothing after it raised IndexError, the crash guard wrote an
+    INCONCLUSIVE verdict naming the exception, and rule DFA-001 read as though seven boards had been judged.
+    A gate that cannot tell a missing argument from a finding is worse than one that refuses to start. This
+    does not convert the hundred that exist; it stops the number growing and names the helper."""
+    n, where = _flag_reads()
+    assert n <= FLAG_READS, (
+        "unguarded reads of a flag's value: %d against the declared %d. Use verdict.opt(argv, flag, default), "
+        "which also refuses to take the next flag as a value. Worst files: %s"
+        % (n, FLAG_READS, sorted(where.items(), key=lambda kv: -kv[1])[:5]))
+
+
+def t_the_helper_exists_and_answers_all_three_shapes():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("v_opt", os.path.join(os.path.dirname(HERE), "verdict.py"))
+    v = importlib.util.module_from_spec(spec); spec.loader.exec_module(v)
+    assert v.opt(["x", "--a", "1"], "--a") == "1", "the value is not read"
+    assert v.opt(["x", "--a"], "--a", "D") == "D", "a flag at the end of the line still raises or returns wrong"
+    assert v.opt(["x", "--a", "--b"], "--a", "D") == "D", "the next flag is taken as the value"
+    assert v.opt(["x"], "--a", "D") == "D", "an absent flag does not fall back"
