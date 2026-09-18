@@ -10324,3 +10324,30 @@ same question is open on board E's tracker and on board A's five LM5176 stages.
 "is owed" shape, and the other two, the ripple and loop-margin measurement owed before the order and board C's
 RP2040 supply pins without their own capacitor, are both already in this record. This was the only one that
 was not.
+
+**Addendum, 00:10 CEST (19 September): the test set was writing into the tree it judges, and only a box could
+see it.** Running the suite on the hub in an exact checkout at tonight's tools reads **1,078 passed, 4 failed**,
+and the fourth failure is not a rule at all: it is `tests/run.py`'s own guard, *THIS RUN CHANGED THIS TREE'S OWN
+EVIDENCE*, naming `out/rule-audit/rules_status.verdict.json`.
+
+**What it caught.** The completeness test runs a full `rules_status.py --out-dir <temp>` to read SGN-001 back.
+`--out-dir` redirected the board pages and the audit summary and **not the two set-level verdicts**, so the run
+wrote `rules_complete` and the readiness verdict into the tree regardless. On the runner nothing shows, because
+the tree has all its evidence and the numbers come out the same; **on a checkout without the untracked
+per-board verdicts it replaced 211 PASS with 188** and left that behind as the set's readiness. A reading taken
+with less input replacing one taken with more is the one thing this project's verdicts are not allowed to do,
+and here the test set was doing it on every run. `--out-dir` writes all of it there now, the test reads the
+verdict from the directory it asked for, and a rule watches the tree's own files by mtime across such a run.
+
+**The other three failures are the tree's state and not the tools'**: `test_netlist_provenance` reads the git
+index, which in a staged tree is the clone's; `routeflow validate` reads phase directories a checkout without
+`out/` does not carry; and `PCB-BRING-UP.md` is the generated document of the 23:00 addendum. **Two real finds
+in one evening from one action that had not been taken for a day**, which is the argument for taking it
+nightly: `$SP/suite_tree_stage.sh` puts exactly the tracked files of a stated commit on the hub and the suite
+runs there.
+
+**And the mesh keeps what it solves, for the second time.** `dc_drop` now writes `<stem>-pad-potentials.json`
+beside the board: the solved drop from the rail's source at every pad of every judged rail. It is the same
+correction the barrel currents got on 16 September, made for the same reason, and it is what the Kelvin
+question of the 23:55 addendum needs: the drop between two pads of one net is now a subtraction rather than an
+unanswerable question.
