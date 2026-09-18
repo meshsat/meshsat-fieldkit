@@ -33,7 +33,17 @@ boards:
      is contact resistance and current, which MEC-001 and PI-001 judge."
 
  a:
-   switch_nets: ["*_SW", "*_SW1", "*_SW2", "B33_SW", "FE_CS", "PA_CS", "HF_CS", "PD_CS", "POE_CS"]   # the five raw CS nodes are the low-side FETs' common source: switching conductors, not sense lines (18 September 2026)
+   switch_nets: ["*_SW", "*_SW1", "*_SW2", "B33_SW", "FE_CS", "PA_CS", "HF_CS", "PD_CS", "POE_CS"]
+   # WHERE A CURRENT SENSE MEETS ITS SHUNT (18 September 2026, read by kelvin_check.py, which is a REPORT and
+   # decides nothing). A sense is a measurement only if both taps meet the shunt AT the shunt; a tap that lands
+   # on a pour carrying the same current adds that copper's own drop to the signal. `element` is the pad that
+   # defines the true node and `tap` is where the sense line actually connects, both on `rail`, because the
+   # error is the drop in that rail's copper between them. The numbers come from dc_drop's solved mesh.
+   kelvin:
+    - {sense: CH_ACP_F, rail: VBUS20, element: "R16.1", tap: "R147.1", full_scale_mv: 60.0,
+       why: "the BQ25731's input-current sense across R16, a 10 mOhm shunt carrying the rail's 6.0 A: 60 mV of
+         full scale. The high side taps VBUS20 through R147 rather than R16's own pad, so this is the one the
+         generator comment of 16 September called owed; boards/a.json carries it as _charger_acp_kelvin_why"}   # the five raw CS nodes are the low-side FETs' common source: switching conductors, not sense lines (18 September 2026)
    nodes:
     - {net: CH_SRP_F, what: "the charger's charge-current sense, positive half of the pair across R17",
        filter: "10 R into the pin and 100 nF across the pair, which is what the BQ25731's own pin table asks
