@@ -9433,3 +9433,15 @@ box carries today's tools for a re-import if the gate reads annular items). Boar
 after closers), A41 23, A42 15, A43 19, with A44 (RF drops, SENSE class) and A45 (A44 plus the class-pair rule) due
 about 07:30 UTC; whatever they read, board A's route is not a pass-count problem either, which is the B21 lesson in
 a second place, and its next lever is the partition or the placement, decided when the two arms land.
+
+**Addendum, 05:57 CEST: A43's finish reads 0 hard and 15 open, and the ANA-001 control number is taken.** The stub
+router closed none of the 19 in its hour, `stitch_prune` was put back for opening one, `direct_close` closed four
+(15), the four widen trials were kept, `via_parallel` (its first form, on this box) fought the DRC over 36 barrels and
+kept three, and the routed-board gate refused the 15. routeflow's remedy round runs on the second box with passes
+plus thirty percent; the record's rule is that it rarely beats round one and it is left to measure itself. Because a
+refused gate stops the finish before the instrument, `sensitive_nodes` and `rf_line` were run on the finished board
+by hand: **ANA-001 on A43 reads 6 of 19 inside their limit** (FE_CS 0.419 mm from FE_SW2 over 13.44 mm, PA_CS 0.129
+over 6.51, PD_CS 0.184 over 2.16, POE_CS 0.336 over 1.50, PD_FB 0.492 over 0.44, POE_FB 0.182 over 0.32, every
+millimetre outside the shared part's courtyard), which is the control for A44 (drops, SENSE class) and A45 (A44
+plus the class-pair rule); **RF-001 reads 11 of 11 missed**, as expected without the drops. `$SP/arm_readings.sh
+<box> <tree> <project dir> <stem>` takes those two readings on any arm's finished board.
