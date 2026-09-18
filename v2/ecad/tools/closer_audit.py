@@ -42,6 +42,13 @@ READERS = {"drc.sh", "guarded.sh", "hardset.py", "verdict.py", "via_audit.py", "
            # opens either for writing, which is the property that lets it decide whether the placement
            # measurement belongs to this board (17 September 2026).
            "carry_placed.py",
+           # kelvin_check.py reads dc_drop's solved pad potentials and the board's own declaration and writes an
+           # advisory verdict: how much of a current-sense signal is the copper's own drop between the shunt's
+           # pad and the sense tap. It opens no board for writing and it stops nothing (18 September 2026).
+           "kelvin_check.py",
+           # rail_crossings.py reads the finished placement and the intent and prints the barrels each declared
+           # rail's own crossing needs. It lays nothing, which is the whole reason it is a file of its own.
+           "rail_crossings.py",
            # safe_lines.py reads the netlist and the board's declaration and writes a verdict: rule SCH-004
            # blocks the deliverable the way TRN-001 does beside it, and neither touches copper (17 Sep 2026).
            "safe_lines.py"}
