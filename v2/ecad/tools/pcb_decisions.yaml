@@ -52,7 +52,13 @@ decisions:
       STK-001: [p]
     evidence: "P6, the first route at the fabricator's own 0.16 mm floor, ended 0 hard and 43 unrouted. The
       committed P4 board still reads 0 unrouted because it was routed at the 0.127 mm rules the fabricator
-      does not build, which is what STK-001 fails on."
+      does not build, which is what STK-001 fails on. THIRD READING, 18 September 2026: P7, the same board
+      regenerated at 0.16 with today's tools and class table, routed 0 hard and 47 unrouted of 35 nets in 22
+      minutes with 12 vias. So two layers at 2 oz leave 43, 45 and 47 open across three independent runs while
+      four layers routed 0 and 0. The fabricator's own table closes the escape route: 2 oz two-layer is
+      0.16/0.16 and 2 oz multilayer 0.15/0.15, while 0.10/0.10 needs 1 oz, which ruling 7 refused for this
+      board because its FUSED rail measures 193.5 A/mm2 against IPC-2221's 82.7 at 1 oz. The choice is four
+      layers at 2 oz, or a copper weight this pack board's own current density has already refused."
   - n: 29
     title: "board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked"
     asked: 2026-09-16
