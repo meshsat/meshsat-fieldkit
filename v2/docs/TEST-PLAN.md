@@ -45,6 +45,37 @@ rule; the method is here so that the ruling has a test to point at.
 
 Power on from the pack; the panel controller reports; every bearer comes up and passes traffic (Iridium message, 5G data, WiFi link to a second kit or a laptop, LoRa mesh packet, Zigbee and Thread join, APRS beacon heard by a receiver, HF CAT and audio, SDR capture, GNSS fix with time pulse); the display, touch, e-paper, LEDs, sounder, headset audio and PTT, camera; the sensors report; the seal check (inside against outside pressure after the valve settles) passes; EMCON silences every transmitter (measured with the SDR); blackout darkens the kit; ZEROIZE wipes the secure element (verified by a failed key operation afterwards); the tamper switch logs the lid; shore, solar and vehicle inputs charge the pack; the PoE and USB-C outlets deliver; the log holds every step.
 
-## 5. Records
+## 5. Pack protection (rule BAT-001), function by function
+
+Prototype design. **Nothing below has been run**, and none of it can be until a pack is built. These are
+the tests the protection thresholds are derived FOR: `v2/ecad/tools/pcb_pack_protection.yaml` carries the
+intended BQ4050RSMR configuration, every threshold inside the Samsung INR18650-35E's own limit at the pack's worst
+parallel count (4S3P, the Pack Design Guideline's Portable IT column), and `pack_protection.py` judges that table
+against the cell maker's own specification on every run. A test here is what turns a configured number
+into a measured one.
+
+Run them on a block that can be replaced, behind a current-limited supply and a fire blanket, with the
+cell taps on a datalogger. Record every trip level AND its delay: a threshold that trips at the right
+level and the wrong time is not the protection this rule asks for.
+
+| # | function | threshold (device U1 unless stated) | the cell limit it comes from | the test |
+|---|---|---|---|---|
+| 1 | **cell over voltage**: a cell is charged above its own charging voltage | 4.25 V, 2 s | 4.20 V, 3.2 Charging Voltage | charge one cell block from a bench supply through the pack's own charge path with the gauge live, raise the supply until the gauge opens Q1, and read the cell voltage at the trip on the tap it measures: 4.25 V +- 0.05 V, and the FET must open within 2 s of the threshold being crossed |
+| 2 | **cell under voltage**: a cell is discharged below the voltage the cell maker sets for over-discharge protection | 2.5 V, 4 s | 2.30 V, Pack Design Guideline, NCA/NCM min. voltage of over-discha | discharge the block at 1 A until the gauge opens Q2; read the lowest cell tap at the trip (2.50 V +0.05/-0.00) and confirm the pack terminal falls to zero and the gauge stays awake |
+| 3 | **pack over current discharge**: the pack delivers more than the cells are rated for, continuously | 20 A, 2 s | 8.0 A per cell (24 A at 3P), 3.8 Max. Discharge Current | an electronic load stepped to 20 A on the pack terminal with the gauge live: Q2 opens within 2 s, and the same load at the declared 10 A continuous runs for an hour without tripping |
+| 4 | **pack over current discharge 2**: the pack delivers more than the cells' pulse rating | 30 A, 0.02 s | 13.0 A per cell (39 A at 3P), 3.8 Max. Discharge Current | a 30 A pulse of 100 ms into the load: Q2 opens within 20 ms, and an 18 A pulse of the same length (the chain's declared peak) does not open it |
+| 5 | **pack short circuit discharge**: a short across the pack terminal | 60 A, 0.0002 s | 13.0 A per cell (39 A at 3P), 3.8 Max. Discharge Current | a bolted short through a 1 mOhm shunt with a scope on the gate of Q2: the gate collapses within 200 us and F1 does not blow, which is what tells the gauge protected the pack rather than the fuse |
+| 6 | **pack over current charge**: the pack is charged above the cells' own charge-current limit | 5 A, 2 s | 2.0 A per cell (6 A at 3P), 3.7 Max. Charge Current | the charger set to 5 A into a half-charged block: Q1 opens within 2 s; at the design's 4 A it does not |
+| 7 | **charge temperature window**: the cells are charged outside the temperature window the cell maker allows | 0 to 45 C | 0.0 to 45.0 C, 3.12 Operating Temperature | the block in a chamber at -5 C and at +50 C with the charger live: Q1 stays open at both, and closes between 5 C and 40 C; the thermistors read the CELL SURFACE, so the sensor's own position is part of the test |
+| 8 | **discharge temperature window**: the cells are discharged outside the temperature window the cell maker allows | -10 to 60 C | -10.0 to 60.0 C, 3.12 Operating Temperature | the block in a chamber at -15 C and at +65 C under a 2 A load: Q2 opens at both and closes inside the window |
+| 9 | **precharge window**: a deeply discharged cell is charged at full current, or a dead cell is charged at all | 1 to 3 V | 1.00 to 3.00 V, Pack Design Guideline, pre-charging voltage range | a block brought to 2.5 V per cell: the gauge pre-charges at about 1 A and does not raise the current until every cell is above 3.00 V; a block below 1.00 V per cell is not charged at all and the gauge says so |
+
+**And the one this table cannot test.** BAT-001 asks for protection in hardware INDEPENDENT OF ANY
+SOFTWARE. Every function above is the gauge's, whose thresholds live in data flash; board P carries no
+second protector, no chemical fuse and its PTC input is tied off, so the only element that needs no
+firmware is the 25 A ATOF blade, which is a gross-fault device. No bench test changes that: it is **owner
+decision 40**.
+
+## 6. Records
 
 Each test writes a dated section into `MESHSAT-709-geometry-appendix.md` with the method, the setup, the measured numbers, the pass or fail, and the fix folded into the generators or the CAD; a failed test reruns after the fix. The summary table of results lives in `V2-SPEC.md` under Qualification once the campaign has run.

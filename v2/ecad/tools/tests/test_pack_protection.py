@@ -91,3 +91,16 @@ def t_a_device_the_board_does_not_carry_is_not_a_protection():
     t["devices"]["U9"] = {"part": "a part nobody placed", "what": "a fixture", "software": False}
     r = P.judge(t, P.NETLIST)
     assert any("board P's netlist has no such reference" in f for f in r["fails"]), r["fails"]
+
+
+def t_every_protection_function_is_in_the_test_plan():
+    """Half of this rule's acceptance criteria is the test that will demonstrate the threshold on the prototype,
+    and a test that lives only in a YAML file is not a test plan: `v2/docs/TEST-PLAN.md` is the document a person
+    reads before the bench, so every function in the table is in it by name. The two cannot drift without this
+    rule failing, which is the same shape as the rotation table and its own CSV."""
+    doc = os.path.join(os.path.dirname(os.path.dirname(TOOLS)), "docs", "TEST-PLAN.md")
+    txt = open(doc, encoding="utf-8").read().lower()
+    for f in P.load()["functions"]:
+        name = f["id"].replace("_", " ").lower()
+        assert name in txt, "the test plan does not carry %s, so its prototype test is written down in one place only" % f["id"]
+    assert "decision 40" in txt, "the test plan does not say which half of BAT-001 no bench test can answer"
