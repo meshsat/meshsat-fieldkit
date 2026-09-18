@@ -49,8 +49,8 @@ the longest is 172.9 mm of SCL
 
 **The question:** two layers or four for board P
 
-**Recommended:** four layers: measured at 0 hard and 0 unrouted where two layers leave 43 open at the
-corrected 0.16 mm rules
+**Recommended:** four layers: 0 hard and 0 unrouted at the fabricator's own 0.16 mm floor (P8, 18 September
+2026), where two layers leave 43, 45 and 47 open across three runs at the same floor
 
 **Measured:** P6, the first route at the fabricator's own 0.16 mm floor, ended 0 hard and 43 unrouted. The
 committed P4 board still reads 0 unrouted because it was routed at the 0.127 mm rules the fabricator does not
@@ -60,7 +60,11 @@ So two layers at 2 oz leave 43, 45 and 47 open across three independent runs whi
 0. The fabricator's own table closes the escape route: 2 oz two-layer is 0.16/0.16 and 2 oz multilayer
 0.15/0.15, while 0.10/0.10 needs 1 oz, which ruling 7 refused for this board because its FUSED rail measures
 193.5 A/mm2 against IPC-2221's 82.7 at 1 oz. The choice is four layers at 2 oz, or a copper weight this pack
-board's own current density has already refused.
+board's own current density has already refused. AND THE OTHER HALF IS MEASURED THE SAME DAY, at rules the
+fabricator builds: P8, four layers with In1 and In2 as ground planes and the same 0.16 mm floor, routed 0
+hard and 0 unrouted of 35 nets with 98 vias in six minutes (the four-layer arm of 15 September had reached 0
+and 0 at 0.127 mm, which is the very defect that makes P4's own 0/0 worthless). So both options now carry a
+number taken at a rule set the fabricator offers: two layers 43 to 47 open, four layers 0 and 0.
 
 | rule | | boards | result today |
 |---|---|---|---|
