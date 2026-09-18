@@ -10351,3 +10351,15 @@ beside the board: the solved drop from the rail's source at every pad of every j
 correction the barrel currents got on 16 September, made for the same reason, and it is what the Kelvin
 question of the 23:55 addendum needs: the drop between two pads of one net is now a subtraction rather than an
 unanswerable question.
+
+**Addendum, 00:35 CEST (19 September): the Kelvin question has its instrument, and it decides nothing.**
+`kelvin_check.py` reads `dc_drop`'s solved pad potentials and reports, for each declared sense tap, the drop in
+the copper between the shunt's own pad and the point the sense line actually taps, in millivolts and as a share
+of the sensed full scale. Board A declares the one that is known: `CH_ACP_F` on `VBUS20`, element `R16.1`, tap
+`R147.1`, 60.0 mV of full scale. **It writes an ADVISORY verdict because no rule in this registry asks this
+question yet**: ANA-001 asks how far a sense line runs from switching copper, which is a different failure of
+the same circuit. A measurement without a rule is worth having so that the rule, when it is written, is written
+against a number rather than against a fear. Six fixtures, on a synthetic potentials file so the arithmetic is
+held where KiCad is not: a tap 0.1 mV from its shunt passes, a tap 3 mV away fails at 5.0 percent of the
+reading, a pad the mesh did not solve is said so rather than guessed, and a board with no solved mesh reads
+INCONCLUSIVE naming the file it could not read.
