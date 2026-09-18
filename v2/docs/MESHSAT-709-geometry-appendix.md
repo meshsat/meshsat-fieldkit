@@ -9719,3 +9719,14 @@ regions that route better apart than together, and what the reconcile has to rip
 partition buys. **Board A's remaining lever is the placement**, which is what A47 carries, and not another routing
 scheme. The finish was refused by TRN-001, as every board A finish is until decision 31 is ruled.
 
+**Addendum, 15:10 CEST: board C's return vias are not a fixer question, measured.** Board C's RET-004 reading (32 of
+85 judged signal vias with no ground via within 1.5 mm) was taken by a finish that ran before the paste-aperture fix of
+17 September, which is the defect that made every exposed pad read as blocked, so the obvious question was how many of
+the 32 today's `return_via` can close. The answer is none. Re-finished in a scratch tree with today's tools and no
+route: the fixer placed **eighteen more ground vias** (259 to 277) over three rounds, and **the distribution of every
+signal via's nearest ground via is identical before and after** (117 within 1.5 mm, 49 between 1.5 and 2.0, 89 between
+2.0 and 3.0, 251 beyond 3.0, of 506), so not one of the eighteen became the nearest for a via that lacked one. The
+neighbourhoods of those 32 carry no free site at all, which leaves the ground-via grid this board already measured and
+refused (21 open connections) or the layer count, decision 27. Nothing was adopted: the committed C24 board is
+untouched and the re-finish lives in its own tree.
+
