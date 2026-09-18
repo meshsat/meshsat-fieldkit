@@ -5,6 +5,8 @@ The board-level fixtures (a track with and without a plane under it, a via with 
 test_board_gates.py, where pcbnew is."""
 import os, re, json, glob
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+import sys as _sys; _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from harness import rest
 
 
 def _src(name): return open(os.path.join(TOOLS, name), errors="replace").read()
@@ -318,7 +320,7 @@ def t_a_pour_is_an_obstacle_to_a_closure_and_not_to_a_pre_lay():
     assert 'os.environ.get("STUB_POUR_OBSTACLE", "1")' in s.replace("__import__(\"os\").", "os."), \
         "the pour obstacle is not a flag, or its default is not ON"
     i = s.index("_POUR_OBSTACLE == 0")
-    assert "z.GetFilledArea()" in s[i:i + 300], "the flag does not guard the FILLED-POUR branch of the map"
+    assert "z.GetFilledArea()" in rest(s, i), "the flag does not guard the FILLED-POUR branch of the map"
     t = _code("full.sh")
     j = t.index("STUB_NETS=\"$GNETS\"")
     assert "STUB_POUR_OBSTACLE" in t[max(0, j - 400):j], "the pre-lay stage does not turn the pour obstacle off"

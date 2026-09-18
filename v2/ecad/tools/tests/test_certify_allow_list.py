@@ -12,6 +12,8 @@ read as bench parts, which is a worse answer than the one it replaced. The purch
 import os, re
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+import sys as _sys; _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from harness import rest
 SRC = open(os.path.join(TOOLS, "jlc_certify.py")).read()
 
 
@@ -29,7 +31,7 @@ def t_the_purchase_route_is_asked_first():
 def t_an_allowed_row_carries_the_file_and_the_reason():
     i = SRC.find("declared in %s/lcsc-allow.txt")
     assert i > 0, "an allowed row does not say where it was declared"
-    assert "why" in SRC[i:i + 200], "the reason from the allow line is dropped"
+    assert "why" in rest(SRC, i), "the reason from the allow line is dropped"
 
 
 def t_only_a_row_with_no_code_can_be_allowed():

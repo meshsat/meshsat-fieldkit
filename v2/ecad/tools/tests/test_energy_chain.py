@@ -15,6 +15,8 @@ import os, sys, tempfile, textwrap
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, TOOLS)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from harness import rest
 import energy_chain as E
 
 GOOD = """
@@ -309,7 +311,7 @@ def t_a_branch_declares_what_feeds_it_rather_than_being_known_by_name():
     assert 'o == "SHORE_INPUT"' not in src, "the connectivity rule still knows one branch by its name"
     assert 'fed_by' in src, "a stage cannot say what feeds it"
     i = src.index("orphan = [")
-    assert "s.get(\"fed_by\")" in src[i:i + 300], "the orphan test does not read the declaration"
+    assert "s.get(\"fed_by\")" in rest(src, i), "the orphan test does not read the declaration"
     import yaml
     chain = yaml.safe_load(open(os.path.join(TOOLS, "pcb_energy_chain.yaml"), encoding="utf-8"))
     ids = {s["id"] for s in chain["stages"]}

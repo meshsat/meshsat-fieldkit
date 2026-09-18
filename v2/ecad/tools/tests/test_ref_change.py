@@ -12,6 +12,8 @@ themselves and they live in the sweep."""
 import os, json
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+import sys as _sys; _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from harness import rest
 SRC = open(os.path.join(TOOLS, "ref_change.py"), encoding="utf-8").read()
 
 
@@ -52,7 +54,7 @@ def t_a_slow_net_owes_no_stitching_capacitor():
     declaration and a net nobody classified is judged as though it were fast."""
     assert "LOW_SPEED_OR_DC" in SRC, "the gate judges every signal via whatever its spectral content"
     i = SRC.index("LOW_SPEED_OR_DC")
-    assert "slow += 1" in SRC[i:i + 200], "a slow net is skipped without being counted, so the denominator lies"
+    assert "slow += 1" in rest(SRC, i), "a slow net is skipped without being counted, so the denominator lies"
 
 
 def t_the_refusal_says_how_far_the_nearest_capacitor_is():

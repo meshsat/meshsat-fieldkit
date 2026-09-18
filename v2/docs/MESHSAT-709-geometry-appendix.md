@@ -10238,3 +10238,33 @@ ignores the DSN class-pair clearance (measured this morning), and a class-wide 0
 pitch for board A's reason. What does reach the board is a KiCad custom rule, which the post-route DRC
 enforces and which would make ANA-001 a hard item rather than a reported verdict, or locked copper laid before
 the route by the pre-lay that was proved to work tonight. `boards/e.json` carries the numbers.
+
+**Addendum, 23:00 CEST: the suite runs where KiCad is again, and the first thing it found is a committed
+document that a fresh checkout would quietly empty.** Forty of this suite's rules skip on the runner for want
+of `pcbnew`, and the record already carries what that hides: the eleven board fixtures had never run where
+KiCad is and were covering five defects when they finally did. Run tonight on the hub in an exact checkout of
+the runner's HEAD (`$SP/suite_tree_stage.sh`, 4,016 tracked files, today's tools), the set reads **1,071
+passed, 3 failed, 2 skipped** against 1,033 / 0 / 43 on the runner.
+
+**Getting it to start at all took two repairs, both of the same shape.** Run from `/root/localtools`, which is
+the tools directory and nothing else, four rules in `test_assembly_set` CRASHED rather than skipping:
+`A.rotations()` returns None where there is no `v2/release`, and `{p: int(o) for p, o, _v in None}` is a
+TypeError. The TOOL has been right about this since 17 September (an absent rotation table is MISSING_INPUT and
+never a finding); its rules were not, and `need` is the suite's own answer. Then the box clone is four days
+behind the runner, so a tree assembled from it reports the clone's age as the tools' failures: the tree has to
+be the tracked files of a stated commit, which is what the driver now stages.
+
+**The finding: `PCB-BRING-UP.md` is generated from each board's `out/<stem>-intent.json`, and `out/` is
+untracked.** On the runner those files exist and the page renders with every rail of every board; on a fresh
+checkout there are none and the same renderer produces **six empty sections**. A plain `rules_render` run there
+would have written that over the committed procedure and **left the suite green**, because the empty page is
+what the registry renders on that host. The bring-up sheet is the sequence a person follows the first time
+current goes through a board that has never been powered, and TST-001 is verified by it. The renderer refuses
+the document now and names the input it could not read (`MissingInput`), the file map leaves it alone, and
+`rules_status` reports it as unreadable rather than as a pass, because absence is never a pass and it is not a
+rewrite either. Two fixtures: this tree renders it, a tree with no intent file refuses.
+
+**The other two failures are the same class and are not defects in the tools**: `test_netlist_provenance` reads
+the GIT INDEX, which in a staged tree is the clone's, and `routeflow validate` reads phase directories that a
+checkout without `out/` does not carry. A rule whose subject is the repository's own state belongs to the host
+that has the repository.
