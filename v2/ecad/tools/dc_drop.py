@@ -94,6 +94,7 @@ def main(a):
     nx, ny = int(W / cell) + 2, int(H / cell) + 2
     fps = list(b.GetFootprints()); results = []; miss = 0
     _via_amps = {}          # {net: [{x, y, drill_mm, wall_mm2, amps, limit_a}]}, written beside the board below
+    _pad_v = {}             # {net: [{ref, pad, x, y, drop_v}]}, the solved drop from the source at every pad
     for net, r in rails.items():
         netnames = {net, "/" + net.lstrip("/")}
         # occupancy per layer
@@ -270,6 +271,23 @@ def main(a):
         except ImportError:
             results.append((net, "UNRESOLVED", "scipy missing on this host (apt-get install python3-scipy)", 0, 0, 0, {})); miss += 1; continue
         drop = -v.min() if v.min() < 0 else v.max(); drop = abs(v).max()
+        # THE SOLVED DROP AT EVERY PAD OF THIS RAIL, WRITTEN OUT (18 September 2026), for the same reason the
+        # barrel currents were on the 16th: this pass already computes it on its way to one number and throws
+        # the rest away, and the question it answers cannot be asked any other way. `v` is the potential
+        # relative to the source, so the drop BETWEEN two pads of one net is a subtraction.
+        #
+        # WHAT IT IS FOR. Board A's charger senses its input current across R16, a 10 mOhm shunt, and the
+        # high side taps the VBUS20 POUR rather than R16's own pad, so whatever copper drop lies between them
+        # is added to a 60 mV full-scale signal and read as current. The same shape is open on board E's
+        # tracker and on board A's five LM5176 stages. A `kelvin_check` over the declared sense pairs is two
+        # subtractions once these numbers exist, and it could not be written at all while they did not.
+        for _f, _p in pads:
+            _ns = pad_nodes(_f, _p)
+            if not _ns: continue
+            _pp = _p.GetPosition()
+            _pad_v.setdefault(net, []).append({"ref": _f.GetReference(), "pad": _p.GetNumber(),
+                                               "x": round(_pp.x / 1e6, 3), "y": round(_pp.y / 1e6, 3),
+                                               "drop_v": round(float(max(abs(v[_n]) for _n in _ns)), 6)})
         # branch currents and density
         worst_j = 0.0; worst = None; worst_l = None; share = {}
         zone_j = 0.0; zone_at = None; zone_l = None      # the cell measure restricted to copper that is NOT a track
@@ -609,6 +627,11 @@ def main(a):
         json.dump({"board": os.path.basename(a[0]), "rise_k": dT, "nets": _via_amps}, open(_vp, "w"), indent=1)
         print("dc_drop: %d barrel current(s) over %d net(s) written to %s"
               % (sum(len(x) for x in _via_amps.values()), len(_via_amps), os.path.basename(_vp)))
+        _pp2 = _vp.replace("-via-currents.json", "-pad-potentials.json")
+        json.dump({"board": os.path.basename(a[0]), "note": "drop from the rail's source at each pad, volts",
+                   "nets": _pad_v}, open(_pp2, "w"), indent=1)
+        print("dc_drop: %d pad potential(s) over %d net(s) written to %s"
+              % (sum(len(x) for x in _pad_v.values()), len(_pad_v), os.path.basename(_pp2)))
     except Exception as _e:
         print("dc_drop: could not write the barrel currents (%s)" % _e)
 
