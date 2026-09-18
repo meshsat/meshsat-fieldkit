@@ -140,3 +140,20 @@ def t_the_ordering_session_gets_its_work_list_as_a_document():
     assert "D3" in body and "C24" in body, "the checklist gives no designator to look the part up by"
     assert "SOT-23 (matched by SOT)" in body, "a row that exists with no date is not listed for checking"
     assert "GENERATED" in body.splitlines()[0], "the document does not say it is generated"
+
+
+def t_the_checklist_flag_answers_a_missing_path_instead_of_raising():
+    """18 September 2026: `assembly_set.py --checklist` with nothing after it raised IndexError, the crash guard
+    turned that into an INCONCLUSIVE verdict, and DFA-001 then read as though the boards had been judged and
+    found wanting when what had happened was an argument error. A gate that cannot tell a missing argument from
+    a finding is the shape this project keeps meeting; the flag has the one default the ordering session looks
+    in, and a tree without that folder is told so rather than raised at."""
+    import subprocess, sys, tempfile
+    src = open(os.path.join(TOOLS, "assembly_set.py"), encoding="utf-8").read()
+    assert "DEFAULT_CHECKLIST" in src, "the flag has no default, so the documented invocation raises"
+    assert "argv[_i + 1].startswith(\"--\")" in src, "a following flag would be taken as the path"
+    with tempfile.TemporaryDirectory() as d:
+        p = subprocess.run([sys.executable, os.path.join(TOOLS, "assembly_set.py"), "--checklist"],
+                           cwd=d, capture_output=True, text=True, timeout=600,
+                           env=dict(os.environ, VERDICT_DIR=d))
+        assert "IndexError" not in (p.stdout + p.stderr), (p.stdout + p.stderr)[-300:]
