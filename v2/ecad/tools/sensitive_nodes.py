@@ -150,6 +150,27 @@ def judge(board_path=None, letter=None, sens=None):
     for n in nodes:
         if str(n.get("net")) not in names:
             fails.append("%s is declared sensitive and the board has no such net" % n.get("net"))
+    # A DECLARATION THAT NAMES A POWER TERMINAL IS A DECLARATION ABOUT THE WRONG SIDE OF THE FILTER
+    # (18 September 2026). Board E declared TRK_LSENSE, which is the inductor's second pad and 5 mOhm from
+    # TRK_SW2, and board A declared the five `<stage>_CS` nodes, which are the low-side FETs' common source:
+    # both swing with the converter every cycle, so asking them to keep 0.50 mm from switching copper asks
+    # them to keep away from the pads they are bonded to, and the failure that comes back is about the
+    # declaration rather than the routing. The sensitive node is what the controller's amplifier sees, behind
+    # the filter the part's own datasheet asks for. A transistor or an inductor pad on a declared net is that
+    # mistake, and it is named here rather than measured.
+    _power = {}
+    for fp in board.GetFootprints():
+        ref = fp.GetReference()
+        if not (ref[:1] in ("Q", "L") and ref[1:2].isdigit()): continue
+        for pd in fp.Pads():
+            nm = pd.GetNetname().lstrip("/")
+            if nm: _power.setdefault(nm, set()).add("%s.%s" % (ref, pd.GetNumber()))
+    for n in nodes:
+        net = str(n.get("net"))
+        if net in _power:
+            fails.append("%s is declared sensitive and it is a POWER TERMINAL: %s sit on it, so it is a conductor of "
+                         "the switching loop rather than a node behind a filter; declare the controller's own filtered "
+                         "input instead" % (net, ", ".join(sorted(_power[net])[:4])))
     pats = b.get("switch_nets") or []
     sw = sorted({x for x in names if any(fnmatch.fnmatchcase(x, p) for p in pats)})
     if not sw:
