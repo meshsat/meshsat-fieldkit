@@ -9391,3 +9391,16 @@ would have been built and never registered, the 5 September shape (32.195) once 
 `test_swallowed_code` refused it in the next full run and the note sits after the registration now. D13 launched
 before that edit and carries the unswallowed line. Rule kept: never append a comment to a generator line without
 reading what follows on it.
+
+**Addendum, 02:24 CEST: E12 re-imported reads 0 hard and 3 open, and the parallel-barrel fixer learnt to stop.** The
+re-import with the drill restore reads hard 0, unrouted 6 (267 of 282 session drills restored); the closers took it
+to 3 (0 hard), the CELL_F widen trial was kept, and the routed-board gate refused the three opens, so E12 is a
+measurement and E11 stays the board. In that finish `via_parallel` ran five rounds and laid 39 barrels in VIN_RAW's
+transition field, each round chasing the barrel the mesh moved its current to, and the rail ended WORSE (a barrel at
+4.86 A against 1.05 where the head had started at 3.36 against 0.65): a fixer that keeps every round the DRC allows
+is not measuring the thing it exists to move. Two rules now: a round is a trial against the judge's own number (the
+set's worst barrel ratio after re-solving; a round that raises it is put back and the pass stops), and a barrel that
+already sits in a field of six or more vias of its net within 2 mm is refused (one more moves the worst along; a
+wider via or a generator field answers it). E11 dry run: worst 2.61 to 2.28 to 1.76 to 1.31 over three rounds, the
+fourth put back at 1.33, eight barrels kept; the residue (VIN_RAW's 0.80 A barrel with no site, CELL_F's field) is
+the generator's, as 32.224 said. The fixed fixer is in D13's, B22's and the A arms' trees ahead of their finishes.
