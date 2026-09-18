@@ -35,6 +35,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import pcbnew
 import intent, signalnets
+import verdict as _v   # at MODULE level: the __main__ guard below is the first thing that runs and it is what leaves a reading when this tool raises
 
 
 def planes(b, frac):
@@ -173,7 +174,7 @@ def main(a):
     if "--check" not in a: return 0
 
     # THE GATE, for the third case only. The other two are RET-004's and are gated there.
-    import verdict as _v, boardtable as _bt
+    import boardtable as _bt
     letter = _bt.letter_for(path)
     r = _bt.value(letter, "stitch_cap_mm")
     out_dir = os.path.join(os.path.dirname(os.path.abspath(path)), "out")

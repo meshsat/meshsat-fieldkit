@@ -635,3 +635,24 @@ def t_a_word_that_is_not_a_board_stem_names_no_board():
                            capture_output=True, text=True)
         assert r.returncode == 0, r.stderr
         assert "board" not in json.load(open(os.path.join(d, "out", "probe.verdict.json")))["inputs"]
+
+
+def t_a_tool_whose_main_is_guarded_imports_the_writer_where_main_can_see_it():
+    """THE GUARD THAT COULD NOT RUN (18 September 2026, found by running the tool rather than by reading it).
+
+    This morning's change wrapped twenty deciding gates as `sys.exit(_v.guard("<tool>", main, sys.argv[1:]))`, so
+    that a gate which raises leaves INCONCLUSIVE naming the exception instead of no verdict at all. In
+    `ref_change.py` the writer was imported INSIDE main, in the branch that writes the verdict, so the guard line
+    itself raised `NameError: name '_v' is not defined` before main was ever called: the one tool of the twenty
+    that could not start, and the thing meant to leave a reading when a tool fails left none when it was the one
+    failing. Rule RET-003's gate had been dead in every sweep since. It is the same shape as the fallback nested
+    inside the try of the thing it guards (13 September): a guard that depends on the code it is guarding."""
+    for name in sorted(os.path.basename(p) for p in glob.glob(os.path.join(TOOLS, "*.py"))):
+        src = open(os.path.join(TOOLS, name), errors="replace").read()
+        if "_v.guard(" not in src: continue
+        head = src.split('if __name__ ==')[0]
+        # ANCHORED AT COLUMN ZERO, because the defect IS an indented import: the first version of this rule
+        # allowed leading whitespace and passed on the very file it was written for, where the writer is
+        # imported inside main. A rule that passes on the tree it was written against is worse than none.
+        assert re.search(r"^import verdict as _v", head, re.M), \
+            "%s guards its main with _v.guard and imports the writer somewhere main cannot be reached from" % name
