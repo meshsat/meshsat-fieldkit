@@ -9509,3 +9509,10 @@ re-imported reads hard 0, unrouted 26, and its finish runs; A45's follows. Their
 A43's 6 of 19, RF-001 against 11 of 11) are taken on the finished boards by `$SP/arm_readings.sh` when the finishes
 end. Board A's ladder stands at A42 15, A43 19 (15 after closers), A44 23, A45 26: nothing the arms changed about
 the route moved it in the right direction, and the next lever is the partition or the placement, as 32.224 said.
+
+**Addendum, 09:53 CEST: E16's pre-lay laid 0 of 6.** The board-wide stub router on the empty placed board closes none
+of the four cross-strip nets' six legs, so the pre-lay is not board E's instrument (it was board C's, for a 249 mm bus
+on a panel with lanes): E16 is E14 regenerated a third time and its route runs on the placement's own scatter. What
+that scatter is worth is the measurement E14, E15 and E16 make together (one, two and n opens on a design the
+generator does not change between them); the floor plan (the sensor controller at the east end, its sensors at the
+west) is what the generator would change next.
