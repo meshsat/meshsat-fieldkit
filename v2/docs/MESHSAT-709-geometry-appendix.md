@@ -9481,3 +9481,12 @@ return_via laid what they lay. E13 ended at 0 hard and 2 open (round three worse
 via_costs round runs, and **E15** runs beside it in `/root/erf15`: E14 with `prelay_nets` `USB_E6_P,USB_E6_N` on
 F.Cu and B.Cu, the board-wide stub router laying the pair on the empty placed board before the route, the one
 variable board C's bus was measured with (32.188). Its waiter reads the pre-lay's own line and the gate.
+
+**Addendum, 08:52 CEST: E15's pre-lay laid nothing and its router landed the USB leg anyway.** The board-wide stub
+router on the empty placed board reads FAILED pad to pad for both USB_E6 legs in 414 s (the block's lands are walled
+for it at that class), so E15 is E14 regenerated with one more null stage; E14's round two read worse and round three
+runs. E15's router: 0 hard, 3 open of 94, 202 vias, and **`/USB_E6_N` is routed**: the three are `/CELL_MON` and
+`/LTG_IRQ`, each two F.Cu pieces a millimetre or two apart, and the GND stub at U13 pin 2, the closers' kind. The
+pre-route chain is not deterministic (32.101), and on this board the difference between a placement that routes its
+long USB leg and one that does not is inside that scatter, which is the B19 lesson about a knob measured on one
+placement. If the closers take E15's three, board E has its first 0/0 board with Q7 right and DC_HS in copper.
