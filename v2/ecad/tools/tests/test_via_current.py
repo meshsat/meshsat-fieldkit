@@ -126,3 +126,21 @@ def t_a_site_that_already_has_the_barrels_is_a_sharing_problem_and_says_so():
     rep = src[src.index("if _VIA_SHORT:"):src.index("elif _VIA_MEASURED:")]
     assert "do not SHARE" in rep, "a site with barrels enough is still reported as wanting more"
     assert "the site carries" in rep, "the report does not say what the site carries"
+
+
+def t_every_barrel_over_its_rating_is_named_not_only_its_rails_worst():
+    """The counts are per rail; the EVIDENCE has to be per barrel (18 September 2026).
+
+    `via_current` takes each rail's worst barrel and reports that one, which is right for the count and the
+    denominator ("4 rails judged, 1 over their weakest transition"). It is wrong for the reader, who is the
+    person about to draw copper at the site: board D's +5V_SA crosses layers TWICE and each crossing is a
+    single 0.40 mm barrel carrying the whole 1.10 A of the solved mesh, at (71.4, 74.2) and at (68.9, 82.0).
+    The record said "one barrel" for a day, D15's locked copper was drawn for the first, and the second was
+    found only when `barrel_sites.py` listed them all. The verdict carries `over_barrels` beside `over` now and
+    its evidence names each one; measured on board D: over 1, over_barrels 2.
+    """
+    import os
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "via_current.py"), encoding="utf-8").read()
+    assert "bad_sites" in src, "via_current no longer collects the over-rated barrels beside the per-rail worst"
+    assert '"over_barrels": len(bad_sites)' in src, "the barrel count is not in the verdict's counts"
+    assert "evidence=(bad + bad_sites)" in src, "the evidence is the per-rail list alone, so a second over-rated site is invisible"
