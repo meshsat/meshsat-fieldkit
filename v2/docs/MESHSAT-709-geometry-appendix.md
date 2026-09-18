@@ -9473,3 +9473,11 @@ in 23 minutes, 208 vias, and **DC_HS is not among the three**: the band carries 
 F.Cu pieces a millimetre apart), `/USB_E6_N` (J_BLK pin 10 to R30, the dock block's USB leg) and a GND stub at U13
 pin 2; the finish's closers run on them. The first A43 and A44/A45 waiters ended on a dropped ssh probe (A43's
 remedy round is alive at 325 passes to about 14:00 UTC); the re-armed waiters need three consecutive readings.
+
+**Addendum, 07:24 CEST: E14 is ONE connection short and it is E7's hard net; E15 pre-lays it.** E14's first finish
+took its three opens to one, `/USB_E6_N` from J_BLK pin 10 to R30 pad 2, 173 mm across the strip (E7's `/USB_E6_P`
+ran 196 mm on the same strip, 32.118); DC_HS stays closed by its band, the CELL_F widen was kept and via_parallel and
+return_via laid what they lay. E13 ended at 0 hard and 2 open (round three worse, round one restored). E14's
+via_costs round runs, and **E15** runs beside it in `/root/erf15`: E14 with `prelay_nets` `USB_E6_P,USB_E6_N` on
+F.Cu and B.Cu, the board-wide stub router laying the pair on the empty placed board before the route, the one
+variable board C's bus was measured with (32.188). Its waiter reads the pre-lay's own line and the gate.
