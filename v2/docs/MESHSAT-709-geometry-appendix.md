@@ -10048,3 +10048,33 @@ together now: `final_gate.main` takes an `out_dir`, derives it from the manifest
 supplies one, and every one of its six writes carries it. The rule that holds it runs the gate exactly as the
 offending fixture did and requires this tree's own verdict not to move; on the tool as it stood this morning it
 overwrites a sentinel in the current directory, which is the proof.
+
+**Addendum, 20:50 CEST: D15 answers PI-003 on board D and costs one connection, and board E's four opens are
+two closures and two routes.** D15 landed (three rounds; rounds 2 and 3 came back 4 open and worse, routeflow
+restored round 1). On the frozen board `via_current` reads **0 rails and 0 barrels over their rating of four
+measured rails**, where D12 reads one rail over at two barrels: PI-003 is answered on board D by copper the
+generator laid, two 0.5 mm spines and a three-point stitch placed from the current rather than counted by hand.
+ANA-001 PASS of 6, `check_pcb_d` ALL PASS, hard 0 of the fifteen types. **The cost is one connection**:
+`/PCM_VDD`, 10.72 mm between R28 pad 2 and a 2.75 mm track of its own net, which the continuation pass (80
+passes) and the stub router both refuse. Board D had never declared the direct closer because D12 was 0/0; it
+does now, at 12.0 mm on its two routing layers, and the frozen board is being re-finished with it in a copy
+tree. D12 stays declared until a D phase closes it: a phase that answers one rule by costing a connection is
+not an improvement.
+
+**Board E's E18 ended at four open (round 2, restored over round 3) and `direct_close` named every one of them
+with its distance instead of closing any**: `/HS_GATE` 13.05 mm from a track end to Q7 pad 4, `/HS_S` 8.48 mm to
+U6 pad 1, `/+3V3_E6` 127.73 mm to C50 pad 1, `/LTG_IRQ` 207.54 mm from U10 pad 17. **Two of the four are
+closures refused by the reach alone** (board E declared 4.0 mm when its opens were short ones; board A carries
+12.0), so board E's closer reaches 14.0 mm from now, each run still judged by the DRC and reverted by `guarded`
+if it costs anything. **The other two are not closures and must not be treated as such**: 127 mm and 207 mm are
+connections the router never made, and the 207 mm one is this afternoon's floor-plan finding, the sensor
+controller sitting about 230 mm from the 26 nets it serves, which is E20's placement work. Note that round 1's
+five opens and round 2's four are DIFFERENT nets, so this is congestion rather than a structural wall.
+
+**And decision 39's own number changed when board B entered the set.** Its recommendation rested on a
+measurement of 17 September: of the 32 nets failing the return-path screen, exactly one sat inside a factor of
+1.1 of its limit, so the criterion decided almost nothing. Re-measured today with B21 adopted, the set still
+has 32 failing nets and **two are inside 1.1, fourteen inside 1.5 and twenty-one inside 2.0**, because board B's
+eleven failures are all marginal (USB_E6_N 10.5 mm against a 10.0 mm limit, six USB nets between 11.4 and 13.9).
+A criterion 50 percent looser than today's would clear fourteen of the thirty-two. The decision's evidence
+carries both readings and the recommendation now says which one it rests on.
