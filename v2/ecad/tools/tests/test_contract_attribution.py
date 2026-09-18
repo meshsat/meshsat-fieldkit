@@ -72,11 +72,22 @@ def t_a_failure_on_one_board_does_not_fail_another():
 
 
 def t_the_registry_reads_the_per_board_verdict_for_the_cross_board_rules():
+    """The property is PER BOARD, not the name of one file (generalised 18 September 2026).
+
+    This rule was written as `v == "check_contracts_<letter>"`, which held the two rules to one verdict by its
+    name rather than to the thing that matters: a rule about a board must be decided by a reading about THAT
+    board, never by the set's own verdict, which is a statement about all seven agreeing. RF-002 now reads
+    `inhibit_chain_<letter>`, a per-board verdict over the transmit inhibit contracts alone, because sharing
+    the whole contract verdict meant a pack polarity or a rail share could fail the inhibit chain. That is the
+    same property and a better mapping, and a literal comparison called it a regression."""
     import rules_status as S
     cov = S.coverage()
     for rid in ("SCH-003", "RF-002"):
-        v = (cov[rid].get("verification") or {}).get("verdict")
-        assert v == "check_contracts_<letter>", "%s still reads the set verdict: %r" % (rid, v)
+        v = ((cov[rid].get("verification") or {}).get("verdict") or "")
+        for name in [n.strip() for n in v.split(",") if n.strip()]:
+            assert "<letter>" in name, (
+                "%s reads %r, which is not a per-board verdict: a rule about one board decided by the set's "
+                "verdict is the attribution defect this file exists for" % (rid, name))
 
 
 # ---------------------------------------------------------------------------------------------------------

@@ -153,7 +153,14 @@ def same(a, b):
 fails = []; checked = []
 per_board = collections.defaultdict(lambda: {"pass": 0, "fail": [], "unjudged": []})
 unjudged = []
-def check(ok, text, detail="", boards=None):
+def check(ok, text, detail="", boards=None, group=None):
+    """`group` names a SUBSET of the contracts that answers a rule of its own (18 September 2026).
+
+    RF-002 (the transmit inhibit chain is traced, its driver count is one, its sense is verified and it fails
+    safe) and SCH-003 (every declared contract passes) were both decided by this file's one verdict, so a
+    failure of ANY contract, a pack polarity or a rail share, would have failed RF-002 as well. One verdict per
+    question: the contracts tagged `inhibit` write `inhibit_chain_<letter>` beside the board's own
+    `check_contracts_<letter>`, and RF-002 reads that one."""
     if not boards: raise AssertionError("contract %r declares no board: say which boards it is about" % text[:70])
     # A CONTRACT THAT NAMES AN ABSENT BOARD IS UNJUDGED, NOT FAILED (17 September 2026). A contract is an
     # agreement between two boards' netlists, so with one of them missing from this tree the comparison was
@@ -166,7 +173,9 @@ def check(ok, text, detail="", boards=None):
     if _absent:
         print("UNJUDGED  " + text + "   (%s absent from this tree)" % ", ".join(_absent))
         unjudged.append(text)
-        for _b in boards: per_board[_b]["unjudged"].append(text)
+        for _b in boards:
+            per_board[_b]["unjudged"].append(text)
+            if group: per_board[_b].setdefault("groups", {}).setdefault(group, {"pass": 0, "fail": []}).setdefault("unjudged", []).append(text)
         return
     print(("PASS  " if ok else "FAIL  ") + text + (("   " + detail) if detail and not ok else ""))
     checked.append(text)
@@ -174,6 +183,10 @@ def check(ok, text, detail="", boards=None):
     for _b in boards:
         if ok: per_board[_b]["pass"] += 1
         else: per_board[_b]["fail"].append(text)
+        if group:
+            g = per_board[_b].setdefault("groups", {}).setdefault(group, {"pass": 0, "fail": []})
+            if ok: g["pass"] += 1
+            else: g["fail"].append(text)
 
 def pinmap(board, ref, pins):
     """net name per pin of one connector, '' where the pin is absent."""
@@ -197,7 +210,7 @@ check(bool(_empty) or (mb and all(mb.values()) and not diff), "J_PANEL 2x13 map 
 # 2. transmit inhibit: the panel toggle drives it on C, it crosses B and A, and on D it reaches Q3 alone
 for k, ref in (("C", "SW_EMCON"), ("B", "J_PANEL"), ("A", "J_AB1"), ("D", "J_HARN1")):
     names = [n for n in B[k][0] if "INHIBIT" in n or "EMCON" in n]
-    check(bool(names), "transmit inhibit present on %s (%s)" % (k, ref), "no EMCON or INHIBIT net", boards={k})
+    check(bool(names), "transmit inhibit present on %s (%s)" % (k, ref), "no EMCON or INHIBIT net", boards={k}, group="inhibit")
 def reaches(board, netname, target):
     """The net itself, plus one hop through any series or pull resistor on it."""
     nodes = B[board][0].get(netname, set()); seen = set(r for r, _ in nodes)
@@ -210,8 +223,8 @@ d_inh = [n for n in B["D"][0] if "INHIBIT" in n]
 if d_inh:
     nodes = B["D"][0][d_inh[0]]
     ok, seen = reaches("D", d_inh[0], "U12")
-    check(ok, "D: %s reaches the KEY gate U12 (D8: KEY = PTT_ANY AND TX_INHIBIT_n)" % d_inh[0], str(sorted(seen)), boards={"D"})
-    check(all(r in ("J_HARN1", "U12") or r.startswith(("R", "TP")) for r, _ in nodes), "D: nothing but the harness, its pull-down, a test point and the KEY gate touches %s" % d_inh[0], str(sorted(nodes)), boards={"D"})
+    check(ok, "D: %s reaches the KEY gate U12 (D8: KEY = PTT_ANY AND TX_INHIBIT_n)" % d_inh[0], str(sorted(seen)), boards={"D"}, group="inhibit")
+    check(all(r in ("J_HARN1", "U12") or r.startswith(("R", "TP")) for r, _ in nodes), "D: nothing but the harness, its pull-down, a test point and the KEY gate touches %s" % d_inh[0], str(sorted(nodes)), boards={"D"}, group="inhibit")
 
 # 3. four 5 V rails from A22 to B16 (VH pairs, same net names on both boards; 32.56)
 for rail, ja, jb in (("+5V_S1", "J_5V_S1", "J_5V_S1"), ("+5V_S2", "J_5V_S2", "J_5V_S2"), ("+5V_S3", "J_5V_S3", "J_5V_S3"), ("+5V_DEV", "J_5V_DEV", "J_5V_DEV")):
@@ -283,8 +296,8 @@ for k, ref in (("A", "J_MEZZ1"), ("D", "J_HARN1")):
 for net in ("USB_PNL_P", "USB_PNL_N"):
     check(any(r == "J_PANEL" for r, _ in B["B"][0].get(net, set())) and any(r == "J_PANEL" for r, _ in B["C"][0].get(net, set())), "panel controller USB pair %s on B16 and C7 J_PANEL" % net, boards={"B", "C"})
 # 12. the hardware EMCON line: C7's toggle makes TX_INHIBIT_n and EMCON_HW, both cross to B16; TX_INHIBIT_n reaches D8's KEY gate, EMCON_HW the radio disable stages on B16
-check(any(r == "SW_EMCON" for r, _ in B["C"][0].get("TX_INHIBIT_n", set())) and any(r == "J_PANEL" for r, _ in B["C"][0].get("EMCON_HW", set())), "C7: SW_EMCON drives TX_INHIBIT_n, EMCON_HW leaves on J_PANEL", boards={"C"})
-check(any(r == "J_HARN1" for r, _ in B["D"][0].get("TX_INHIBIT_n", set())) and any(r.startswith("U") for r, _ in B["D"][0].get("TX_INHIBIT_n", set())), "D8: TX_INHIBIT_n from J_HARN1 into the KEY gate", boards={"D"})
+check(any(r == "SW_EMCON" for r, _ in B["C"][0].get("TX_INHIBIT_n", set())) and any(r == "J_PANEL" for r, _ in B["C"][0].get("EMCON_HW", set())), "C7: SW_EMCON drives TX_INHIBIT_n, EMCON_HW leaves on J_PANEL", boards={"C"}, group="inhibit")
+check(any(r == "J_HARN1" for r, _ in B["D"][0].get("TX_INHIBIT_n", set())) and any(r.startswith("U") for r, _ in B["D"][0].get("TX_INHIBIT_n", set())), "D8: TX_INHIBIT_n from J_HARN1 into the KEY gate", boards={"D"}, group="inhibit")
 
 # 13 to 15: the safety lines, added 9 September 2026 after a red team found that check 12 passes on a design that does the OPPOSITE of what
 # it says (appendix 32.81). Check 12 asks whether the nets exist. These ask who drives them, in which sense, and what happens when the panel
@@ -327,19 +340,19 @@ for _s in (1, 2, 3):
 # 13. one driver: the inhibit line is made by the panel toggle and read everywhere else. No gate output may sit on it.
 for _bd, _stem in (("A", "pcb-a-power"), ("B", "pcb-b-compute")):
     _u = sorted({r for r, _ in B[_bd][0].get("TX_INHIBIT_n", set()) if r.startswith("U")})
-    check(not _u, "%s: no device drives TX_INHIBIT_n, the panel toggle is its only source" % _bd, "found %s" % _u, boards={_bd})
+    check(not _u, "%s: no device drives TX_INHIBIT_n, the panel toggle is its only source" % _bd, "found %s" % _u, boards={_bd}, group="inhibit")
 _u26 = sorted({pin for r, pin in B["A"][0].get("EMCON_HW", set()) if r == "U26"})
-check(set(_u26) <= {"1", "4"}, "A22: EMCON_HW reaches only the AND gates' inputs 1A and 2A, never an output", "U26 pins %s" % _u26, boards={"A"})
+check(set(_u26) <= {"1", "4"}, "A22: EMCON_HW reaches only the AND gates' inputs 1A and 2A, never an output", "U26 pins %s" % _u26, boards={"A"}, group="inhibit")
 
 # 14. fail safe: with the panel ribbon out, every consumer must read the inhibit line LOW, so each holds it down itself.
 for _bd in ("A", "B", "D"):
     _gnd = {r for r, _ in B[_bd][0].get("GND", set())}
     _pull = sorted({r for r, _ in B[_bd][0].get("TX_INHIBIT_n", set()) if r.startswith("R") and r in _gnd})
-    check(bool(_pull), "%s: TX_INHIBIT_n is pulled DOWN on this board, so a missing panel inhibits" % _bd, "pull-downs %s" % _pull, boards={_bd})
+    check(bool(_pull), "%s: TX_INHIBIT_n is pulled DOWN on this board, so a missing panel inhibits" % _bd, "pull-downs %s" % _pull, boards={_bd}, group="inhibit")
 
 # 15. the sense: C7 buffers the toggle into EMCON_HW, it does not invert it (both consumer boards silence on LOW).
 _u9 = _value_of("pcb-c-display", "U9")
-check("1G04" not in _u9 and ("1G34" in _u9 or "buffer" in _u9.lower()), "C7: U9 buffers TX_INHIBIT_n into EMCON_HW rather than inverting it", _u9 or "no value read", boards={"C"})
+check("1G04" not in _u9 and ("1G34" in _u9 or "buffer" in _u9.lower()), "C7: U9 buffers TX_INHIBIT_n into EMCON_HW rather than inverting it", _u9 or "no value read", boards={"C"}, group="inhibit")
 
 
 # 15b. THE PACK'S TWO WIRES ARE A CONNECTOR (16 September 2026). Board P's pack leads are solder lands and
@@ -506,6 +519,28 @@ for _bd in sorted(set(list(per_board) + list(B))):
                                      "%d contract(s) that name an absent board" % _u))
         continue
     _n = _r["pass"] + len(_r["fail"])
+    # THE INHIBIT CHAIN IS ITS OWN QUESTION AND GETS ITS OWN VERDICT (18 September 2026). RF-002 asks about the
+    # transmit inhibit line and nothing else: that it is present on every board that carries it, that it reaches
+    # the keying gate, that the panel toggle is its only driver, that its sense is a buffer rather than an
+    # inverter, and that every consumer pulls it down so a missing panel inhibits. Until today it read this
+    # file's whole verdict, so a pack polarity or a rail share could have failed it. The same guards apply: a
+    # board whose netlist is absent, or whose contract names an absent board, writes nothing here either.
+    _g = (_r.get("groups") or {}).get("inhibit")
+    if _g is not None:
+        _gu = len(_g.get("unjudged") or [])
+        _gn = _g["pass"] + len(_g["fail"])
+        if not ((_bd in MISSING or _gu) and _richer_on_disk("inhibit_chain_%s" % _bd.lower())):
+            _v.write("inhibit_chain_%s" % _bd.lower(),
+                     _v.INCONCLUSIVE if (not _gn or _bd in MISSING or _gu) else (_v.PASS if not _g["fail"] else _v.FAIL),
+                     counts={"fail": len(_g["fail"]), "pass": _g["pass"], "unjudged": _gu},
+                     denominator=_gn + _gu,
+                     evidence=(_g["fail"] + ["unjudged, the other board is absent: " + t for t in (_g.get("unjudged") or [])])[:20],
+                     inputs={"boards": ",".join(sorted(B))},
+                     note=("this board's netlist is absent from this tree" if _bd in MISSING else
+                           "the transmit inhibit chain on this board: it is present, it reaches the gate it keys, "
+                           "the panel toggle is its only driver, its sense is a buffer and it is pulled down so a "
+                           "missing panel inhibits"),
+                     quiet=True)
     _v.write("check_contracts_%s" % _bd.lower(),
              _v.INCONCLUSIVE if (not _n or _bd in MISSING or _u) else (_v.PASS if not _r["fail"] else _v.FAIL),
              counts={"fail": len(_r["fail"]), "pass": _r["pass"], "unjudged": _u}, denominator=_n + _u,
