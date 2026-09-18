@@ -18,7 +18,13 @@
 
 schema_version: "1.0.0"
 generated: "2026-09-16"
-rule_set_fingerprint: "88f207606ad2945a"
+# THE FINGERPRINT OF THE REGISTRY THIS MAP WAS WRITTEN AGAINST. It is documentation: nothing reads it, the
+# tools compute the fingerprint from pcb_rules.yaml itself. It had been "88f207606ad2945a" since the file
+# was written while the registry computed ff8151db3576437b, which is a number in a file a person reads
+# describing something else, the class this project keeps finding. A rule holds the two together now
+# (test_rule_gate_mapping), and it only has to be touched when a rule's DEMANDS change, which is rare and
+# deliberate: writing down a source or a rationale does not move it.
+rule_set_fingerprint: "ff8151db3576437b"
 
 coverage:
 
