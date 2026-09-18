@@ -10384,3 +10384,26 @@ the one place the assembler's 2D preview exists; `ROTATION-CHECKLIST.md` is gene
 polarised footprints are waiting for an offset and a date. So of the 122 pairs that are not PASS, the
 engineering that this project can do unaided tonight is the 43 failures, of which board B's route and board A's
 are most of the count.
+
+**Addendum, 02:20 CEST (19 September): A47's hard set was one knot, and board A's closers cannot reach its
+opens.** A47 is the first board A carrying the LM5176 current-sense filters with Kelvin CSG, the eleven RF
+drops at 0.14 mm and the SENSE class. Its router ran ten hours to its cap at pass 152 of 250 and came back
+**hard 16 of the fifteen types (clearance 4, shorting_items 12) and 18 unrouted of 264 nets, 320 vias**.
+
+**The 16 are one knot.** Every one of them is between `/D8_FLT` and `/EXP2_SP8`, on B.Cu, in pieces of 0.01 to
+0.32 mm: the signature `routeflow.signature()` was written for, and the thing A22's 33 hard turned out to be in
+July. `unknot` removed **28 tracks at 3 spots** and the board reads **hard 0 and 20 open**, so the knot cost two
+connections to untie and the design is not illegal. Board A's ladder is now A42 15, A43 19, **A47 20**, A44 23,
+A45 26, A46's partition 28: **the filters, the RF drops and the SENSE class cost this board nothing** on the
+axis that was in doubt.
+
+**And its closers cannot reach.** The first stub router pass ran its full hour and closed NONE of the twenty,
+which is the C10 shape word for word: these are connections the router never made rather than closures it
+stopped short of. A46 already said what happens when `direct_close` does try on this board: 13 of 28 pairs
+attempted, ONE closed, every refusal a `solder_mask_bridge` against the charger filter's own pads (`CH_ACN_F`,
+`CH_ACP_F`, `CH_ACN` at U3, R146 and R147), with both L shapes, the direct run and the dives to In2 and In3
+refused alike, because a via's mask opening bridges as readily as a track's. **That is board D's `/PCM_VDD`
+word for word**, and board D's answer landed tonight: `/PCM_VDD` is closed on D17 by pre-laying it on the empty
+placed board, where the corridor that is full after a route is still empty. `$SP/a48_box.sh` is written and NOT
+launched; the landing notes say to read D17's cost first, because board A's own four pre-laid nets cost it ten
+connections in A40 and that is the counter-evidence.
