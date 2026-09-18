@@ -144,3 +144,34 @@ def t_every_barrel_over_its_rating_is_named_not_only_its_rails_worst():
     assert "bad_sites" in src, "via_current no longer collects the over-rated barrels beside the per-rail worst"
     assert '"over_barrels": len(bad_sites)' in src, "the barrel count is not in the verdict's counts"
     assert "evidence=(bad + bad_sites)" in src, "the evidence is the per-rail list alone, so a second over-rated site is invisible"
+
+
+def t_the_barrel_count_a_current_needs_is_arithmetic_the_generator_can_ask():
+    """The rule's failure has one shape and the generator could always have avoided it (18 September 2026).
+
+    Every PI-003 failure measured today is a layer transition given ONE barrel where the solved mesh puts more
+    current through it than one barrel's wall carries: board D 1.22, board E 1.48 at the fuse and 1.32 at the
+    dock block, board A as far as 3.77 over thirty-two sites on five rails. The generator knows the point, the
+    drill and the rail's declared current, so the count is arithmetic, and `power_copper.stitch(..., amps=)`
+    refuses a stitch that is short rather than leaving it for `via_current` to find after the route.
+
+    The numbers below are this project's own curve at a 10 K rise and the fabricator's plating: a 0.40 mm barrel
+    carries 0.90 A, a 0.30 mm 0.74, a 0.50 mm 1.05. Ceil, never round."""
+    import os, sys
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    import via_current as vc
+    assert vc.barrels_for(3.396, 0.40) == 4, "board A's worst VBUS20 transition needs four 0.40 mm barrels"
+    assert vc.barrels_for(1.091, 0.30) == 2, "board E's fuse transition needs two 0.30 mm barrels"
+    assert vc.barrels_for(1.387, 0.50) == 2, "board E's dock-block barrel needs a second at 0.50 mm"
+    assert vc.barrels_for(0.5, 0.40) == 1, "a current inside one barrel's rating asks for one"
+    assert vc.barrels_for(0.91, 0.40) == 2, "a current one percent over a barrel's rating asks for two, not one"
+
+
+def t_a_stitch_that_is_short_of_barrels_refuses_the_board():
+    """The check is at generation time, where it is still free to answer."""
+    import os
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "power_copper.py"),
+               encoding="utf-8").read()
+    assert "def stitch(self, net, pts, drill=0.4, width=0.8, amps=None)" in src, "stitch takes no current"
+    assert "need = self.barrels_for(amps, drill)" in src, "stitch does not ask how many barrels the current needs"
+    assert "raise SystemExit" in src.split("def stitch")[1][:1200], "a short stitch does not refuse the board"

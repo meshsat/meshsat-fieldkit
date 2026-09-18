@@ -9866,3 +9866,24 @@ to 200, 25 in 240 to 260). That is a placement campaign of board B's kind and it
 board E and a phase today: E17 is 0 and 0 with ANA-001 failing, E18 answers ANA-001 and is a few connections
 short, and rounds on E18's placement are the cheap way to have both.
 
+**Addendum, 18:25 CEST: the power rule fails in ONE shape on every board, and the generator can ask the question
+itself.** `via_parallel` reported it could lay nothing on board E's finished copper, which is what board D said a
+week ago, so `barrel_sites.py` was pointed at all three boards. The shape is the same everywhere: **a layer
+transition the generator gave ONE barrel, carrying more current than one barrel's wall holds.** Board D 1.22 at
+one crossing, board E **1.48** at the fuse (a 0.30 mm barrel with 1.091 A where the rail's other seventeen
+barrels carry half an amp and less) and 1.32 at the dock block, and board A **thirty-two barrels over their own
+wall on five rails**, worst 3.77 (VBUS20, 3.396 A through a 0.40 mm barrel), which the rule had been reporting
+as "five rails over their weakest transition" because it names each rail's worst.
+
+Board E's two are drawn: two more barrels beside the fuse crossing, where `barrel_sites` reports **no pad of any
+other net within 6 mm**, and the dock block's eight barrels go from a 0.5 mm hole to 0.7 (about 1.47 A each
+against 1.39 measured) because its second pin row leaves no space for a third via row. Board A's thirty-two are
+not drawn: at that count the answer is a rule rather than a table of coordinates, and it goes on A47's own map
+rather than on A32's, which is five phases old.
+
+**The arithmetic is in the tools now** (`via_current.barrels_for`): a 0.40 mm barrel carries 0.90 A at a 10 K
+rise on the fabricator's plating, a 0.30 mm 0.74, a 0.50 mm 1.05, so 3.4 A wants four barrels and not one.
+`power_copper.stitch(..., amps=)` takes the current the points share and **refuses the board when the stitch is
+short**, naming the number, which is the judgement `via_current` makes after the route moved to where it is
+still free to answer. Board D's three barrels and board E's two declare their current and check themselves.
+

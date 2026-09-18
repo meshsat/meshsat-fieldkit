@@ -267,7 +267,7 @@ if _osx.environ.get("PLACE_VIN_VIAS", "1") not in ("0", ""):
 # 1.09 A over three barrels is about 0.36 A apiece. If the fill does not reach one of them the pre-route DRC says so
 # and the reading moves it; that is cheaper than leaving a 1.48 ratio on the rail that carries the pack.
 if _osx.environ.get("PLACE_CELLF_VIAS", "1") not in ("0", ""):
-    _pcmod.PowerCopper(board, net_for, P).stitch("CELL_F", [(-114.3, -104.11), (-112.5, -104.11)], drill=0.5, width=0.9)
+    _pcmod.PowerCopper(board, net_for, P).stitch("CELL_F", [(-114.3, -104.11), (-112.5, -104.11)], drill=0.5, width=0.9, amps=1.091)
     print("power copper: 2 CELL_F barrels beside the fuse transition that reads 1.48 of its rating on E18")
 
 # ---------------------------------------------------------------- the hot-swap output, in locked copper (E14, 18 September 2026)

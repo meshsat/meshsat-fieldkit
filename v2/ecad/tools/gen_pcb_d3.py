@@ -269,7 +269,7 @@ _pc.stitch("+5V_D8", [(-31.4, 22.15), (-34.9, 22.15), (-35.46, 20.1)])    # one 
 _pc.spine("+5V_SA", -28.21, 22.33, -28.21, 25.40, 0.5, pcbnew.F_Cu)     # north out of FB1 pad 2, between C5's two pads
 _pc.spine("+5V_SA", -28.21, 25.40, -29.60, 25.40, 0.5, pcbnew.F_Cu)     # west into C5 pad 1, clear of R3's ground pad by 0.60 mm
 _pc.spine("+5V_SA", -28.21, 23.60, -28.21, 25.20, 0.5, pcbnew.B_Cu)     # the other side of the three barrels
-_pc.stitch("+5V_SA", [(-28.21, 23.60), (-28.21, 24.40), (-28.21, 25.20)])   # 0.8 mm apart: 0.4 mm hole to hole against the 0.3 floor
+_pc.stitch("+5V_SA", [(-28.21, 23.60), (-28.21, 24.40), (-28.21, 25.20)], amps=1.10)   # 0.8 mm apart: 0.4 mm hole to hole against the 0.3 floor; amps= makes the count self-checking (1.10 A of solved mesh needs two 0.40 mm barrels, three are laid)
 print("D11 power copper: the +5V_D8 trunk and west branch on In2, %d zone(s) and keep-out(s)" % len(_pc.made))
 for L in (pcbnew.In2_Cu, pcbnew.F_Cu, pcbnew.B_Cu): pour(L, "GND", "GND pour %s" % board.GetLayerName(L), (-50, -40, 50, 40), priority=0)
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings

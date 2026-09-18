@@ -48,6 +48,19 @@ def ampacity(drill_mm, rise_k, plating_um=PLATING_UM):
     return K_INTERNAL * (rise_k ** 0.44) * ((area_mm2 * MM2_TO_MIL2) ** 0.725), area_mm2
 
 
+
+def barrels_for(amps, drill_mm, rise_k=10.0, plating_um=PLATING_UM):
+    """How many barrels of this drill a current needs (18 September 2026).
+
+    This rule fails in one shape on every board measured today: a layer transition the generator gave ONE barrel
+    where the solved mesh puts more current through it than one barrel's wall carries (board D 1.22, board E
+    1.48, board A as far as 3.77 across thirty-two sites). The arithmetic was always available to the generator,
+    which knows the point, the drill and the rail's declared current, and it simply was not asked; `power_copper`
+    asks it now and refuses a stitch that is short. Ceil, never round: half a barrel carries nothing."""
+    import math
+    lim = ampacity(drill_mm, rise_k, plating_um)[0]
+    return max(1, int(math.ceil(float(amps) / lim))) if lim > 0 else 1
+
 def sites(pts, reach):
     """Single-link clusters of via positions: a transition is a group of barrels that sit together."""
     out = []
