@@ -144,9 +144,9 @@ def run(b, check, path=None):
         for k in range(n + 1):
             u = k / n; p = pcbnew.VECTOR2I(int(tr.GetStart().x + u * (tr.GetEnd().x - tr.GetStart().x)), int(tr.GetStart().y + u * (tr.GetEnd().y - tr.GetStart().y)))
             if not any(pl.Contains(p) for Ln in neighbours(L) for pl in planes.get(Ln, [])):
-                _w = _hole(net, p, neighbours(L))
-                if _w == "own": anti[net] = anti.get(net, 0.0) + length / (n + 1)
-                elif _w == "other": anti_other[net] = anti_other.get(net, 0.0) + length / (n + 1)
+                _whose_hole = _hole(net, p, neighbours(L))   # not `_w`: that name is a via WIDTH ten lines up
+                if _whose_hole == "own": anti[net] = anti.get(net, 0.0) + length / (n + 1)
+                elif _whose_hole == "other": anti_other[net] = anti_other.get(net, 0.0) + length / (n + 1)
                 else: gaps[net] = gaps.get(net, 0.0) + length / (n + 1)
     if n_tracks and not total: check(False, "return path: the board has %d tracks and not one signal net was found to judge (signalnets.classify excluded every net: %s)" % (n_tracks, ", ".join(sorted(set(_why.values())))))
     if not n_tracks: check(True, "return path: 0 of 0 signal nets, the board has no tracks")
