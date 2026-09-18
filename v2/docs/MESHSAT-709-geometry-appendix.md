@@ -10407,3 +10407,30 @@ word for word**, and board D's answer landed tonight: `/PCM_VDD` is closed on D1
 placed board, where the corridor that is full after a route is still empty. `$SP/a48_box.sh` is written and NOT
 launched; the landing notes say to read D17's cost first, because board A's own four pre-laid nets cost it ten
 connections in A40 and that is the counter-evidence.
+
+**Addendum, 02:35 CEST (19 September): the pre-lay closed the connection nothing else could, the obvious
+cheaper answer was tried and refused, and board D's last two opens have the same shape.** D17 is D15's design
+with `/PCM_VDD` pre-laid before the router and nothing else. It landed **hard 0, TWO unrouted, `via_current` 0
+rails and 0 barrels over their weakest transition, `check_pcb_d` ALL PASS**, and **`/PCM_VDD` is not among the
+two**. That connection is the one every instrument had refused on the finished board (the continuation pass
+over 80 passes, the stub router, and `direct_close` at the 12 mm this board declares, which TRIED it and had
+every shape refused for a `solder_mask_bridge` against R34's pads); laid on the placed board, where that
+corridor is still empty, it closed.
+
+**The attribution is not resolved and the record says so**: D17 ran all 200 attempts in 82 minutes where D15's
+cap cut it at 80 passes, so "2 open against D15's 4 at the router" is not by itself the pre-lay's doing. What
+IS the pre-lay's doing is the net no number of passes had ever closed.
+
+**The cheaper answer was tried first.** D17's two remaining opens are `/LED_REC_K` at 14.051 mm and
+`/PCM_VCCR` at 16.722 mm, both printed as *"beyond --max=12.0, left to the router"*, so the closer had never
+attempted them; board E's reaches 14 for exactly this reason. The frozen board was re-finished in a copy tree
+with `direct_close.max` at 17.5 (`$SP/d17_refinish_box.sh`, adopting nothing): the continuation pass read 2
+before and 2 after, the stub router closed 0 of 2, and **the closer tried both and closed NEITHER**, every
+shape a `solder_mask_bridge` against Y2 pad 3, U6 pad 20 and R36 pad 1. **The reach was never the problem.**
+Board D's declaration stays at 12.0 mm and raising it is refused with its number.
+
+**So the two go into the pre-lay with the first.** D18 is D17 plus those two nets and nothing else, running on
+the place box since 22:29 UTC: its pre-lay closed **5 of 5** pad-to-pad pairs over the three nets and its
+pre-route gate passed 18 of 18. The counter-evidence is written down in advance: board A's A40 carried four
+pre-laid nets and cost ten connections against A42's fifteen, so more pre-laid copper can come back worse, the
+guard keeps the board only if the hard count does not rise, and D18's open count is read against D17's two.
