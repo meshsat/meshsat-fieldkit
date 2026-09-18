@@ -21,3 +21,30 @@ def need(path, why):
     import os
     if not os.path.exists(path): raise Skip("%s: %s" % (why, path))
     return path
+
+
+def block(src, anchor, stops=("\ndef ", "\nclass ")):
+    """The source from `anchor` to the end of the top-level construct holding it, for a rule about TWO LINES.
+
+    A rule written as `src[src.find(anchor):][:700]` is not a rule about the code, it is a rule about how much
+    prose sits between two lines: add a comment and it fails, remove code and it can start finding its literal
+    inside a different function and pass for the wrong reason. It broke twice on 18 September 2026, in
+    `test_stub_zone_obstacle` (a comment pushed `zpoly(via` past a 2,500-character slice) and in `test_prelay`
+    (the pour-obstacle and lock flags landed between a set's declaration and the line that reads it), and 87
+    slices of this shape were still in the suite when this was written.
+
+    `stops` is the Python default; pass a shell's own boundary for a shell source. An anchor that is not there
+    returns the empty string, so a rule keeps failing rather than passing on a slice it never found."""
+    i = src.find(anchor)
+    if i < 0: return ""
+    return rest(src, i, stops, skip=len(anchor))
+
+
+def rest(src, i, stops=("\ndef ", "\nclass "), skip=0):
+    """`block` for a caller that already has the index, so an existing `i = src.find(...)` line stays as it is."""
+    if i is None or i < 0: return ""
+    j = len(src)
+    for st in stops:
+        k = src.find(st, i + skip)
+        if k >= 0: j = min(j, k)
+    return src[i:j]

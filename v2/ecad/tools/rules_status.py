@@ -303,7 +303,11 @@ def _document_current(rel):
             out = ((True, "%s is current with the registry" % name) if want == have
                    else (False, "%s differs from the registry it is generated from: regenerate it" % name))
     except Exception as e:
-        out = (False, "%s could not be checked (%s)" % (name, type(e).__name__))
+        # A DOCUMENT THAT REFUSES TO RENDER HERE NAMES ITS MISSING INPUT rather than hiding behind a type name:
+        # `PCB-BRING-UP.md` is generated from each board's untracked intent file and cannot be rebuilt on a host
+        # that has none. It is not a pass either way, which is the point (18 September 2026).
+        out = (False, "%s could not be checked (%s%s)" % (name, type(e).__name__,
+                                                          ": " + str(e) if type(e).__name__ == "MissingInput" else ""))
     _DOC_CACHE[rel] = out
     return out
 

@@ -196,6 +196,18 @@ def prototype_doc(reg, cov):
     return "\n".join(L) + "\n"
 
 
+class MissingInput(Exception):
+    """A document whose own inputs are not in this tree. It is not rendered and it is not compared.
+
+    18 September 2026: `PCB-BRING-UP.md` is generated from each board's `out/<stem>-intent.json`, and `out/` is
+    UNTRACKED. On the runner those files exist and the page renders with every rail; on a fresh checkout there
+    are none, the page renders as six empty sections, and a plain `rules_render` run would have written that
+    over the committed procedure and left the suite green, because the empty page is what the registry renders
+    THERE. The bring-up sheet is the sequence a person follows the first time current goes through a board that
+    has never been powered, so losing it quietly is the expensive kind of loss. Absence is never a pass, and it
+    is not a rewrite either: the renderer refuses the document and names the input it could not read."""
+
+
 def bringup_doc(reg, cov):
     """TST-001: how each board is brought up the first time, generated from what the boards themselves declare.
 
@@ -293,6 +305,9 @@ def bringup_doc(reg, cov):
     L += ["", _wrap("%d board(s) have an intent file in this tree and are listed. Every number here is a DESIGN "
                     "figure from the board's own declaration and not a measurement: there is nothing to measure "
                     "yet." % n_boards), ""]
+    if not n_boards:
+        raise MissingInput("PCB-BRING-UP.md is generated from each board's out/<stem>-intent.json and this tree "
+                           "has none: the page would be six empty sections and would replace the procedure")
     return "\n".join(L) + "\n"
 
 
@@ -382,7 +397,11 @@ def render(out_dir=None, board_docs=True, generated=True):
              os.path.join(docs, "PCB-GAP-REGISTER.md"): gap_register(reg, cov),
              os.path.join(docs, "PCB-ETA.md"): eta_doc(),
              os.path.join(docs, "PCB-PROTOTYPE-UNKNOWNS.md"): prototype_doc(reg, cov),
-             os.path.join(docs, "PCB-BRING-UP.md"): bringup_doc(reg, cov)}
+             }
+    # A DOCUMENT WHOSE OWN INPUTS ARE ABSENT IS LEFT ALONE, never rewritten empty (18 September 2026).
+    if generated:
+        try: files[os.path.join(docs, "PCB-BRING-UP.md")] = bringup_doc(reg, cov)
+        except MissingInput as e: print("rules_render: PCB-BRING-UP.md NOT RENDERED here: %s" % e)
     audit = os.path.join(os.path.dirname(HERE), "out", "rule-audit")
     for f in (sorted(glob.glob(os.path.join(audit, "*.json"))) if board_docs else []):
         letter = os.path.basename(f)[:-5]

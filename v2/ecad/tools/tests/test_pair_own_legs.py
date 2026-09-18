@@ -22,6 +22,8 @@ The rules read the source: the defect leaves no exception and no log line, only 
 import math, os, re
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+import sys as _sys; _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from harness import rest
 SRC = os.environ.get("PAIR_OWN_SRC", "")   # empty: the pre-router package (tools/pair_router) since 15 Sep 2026
 
 
@@ -60,7 +62,7 @@ def t_the_sub_cell_stub_shortcut_asks_too():
     b = _body("stub")
     i = b.find("1.5 * gr.G")
     assert i >= 0, "the stub shortcut is gone; this rule needs rewriting against what replaced it"
-    assert "own_clear" in b[i:i + 400], "the stub's straight shortcut still lays copper without asking about the partner"
+    assert "own_clear" in rest(b, i), "the stub's straight shortcut still lays copper without asking about the partner"
 
 
 def t_a_laid_pair_is_judged_against_its_own_partner_before_it_is_kept():
@@ -69,7 +71,7 @@ def t_a_laid_pair_is_judged_against_its_own_partner_before_it_is_kept():
     assert "_near" in s and "_seg_gap(" in s, "no gap test between the two legs of a laid pair"
     i = s.find("if _near and not _cross:")
     assert i >= 0, "a pair whose own legs breach the clearance is not rolled back"
-    assert "rollback()" in s[i:i + 300], "the near-miss verdict does not roll the pair back"
+    assert "rollback()" in rest(s, i), "the near-miss verdict does not roll the pair back"
 
 
 def t_the_geometry_helpers_are_right():

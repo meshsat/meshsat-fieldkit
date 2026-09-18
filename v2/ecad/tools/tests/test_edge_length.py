@@ -9,6 +9,8 @@ import os, sys, math
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, TOOLS)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from harness import rest
 import edge_length as E
 SRC = open(os.path.join(TOOLS, "edge_length.py"), encoding="utf-8").read()
 
@@ -32,7 +34,7 @@ def t_a_net_with_no_declared_edge_is_named_and_never_estimated():
     assert "undeclared.append" in SRC, "a net with no declared edge is silently skipped"
     assert "no_declared_edge" in SRC, "the verdict does not carry how many nets have no edge"
     i = SRC.index("tr, _why = rise_for")
-    assert "if not tr:" in SRC[i:i + 200], "a missing rise time falls through to a default"
+    assert "if not tr:" in rest(SRC, i), "a missing rise time falls through to a default"
 
 
 def t_the_rise_time_comes_from_the_declaration_beside_the_class_entry():
