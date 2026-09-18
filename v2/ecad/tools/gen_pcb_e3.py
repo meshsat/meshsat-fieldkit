@@ -237,6 +237,27 @@ if _osx.environ.get("PLACE_VIN_VIAS", "1") not in ("0", ""):
     _pcmod.PowerCopper(board, net_for, P).stitch("VIN_RAW", VIN_VIAS, drill=0.5, width=0.9)
     print("power copper: %d VIN_RAW power via(s) at the source pad and the block lands" % len(VIN_VIAS))
 
+# ---------------------------------------------------------------- the hot-swap output, in locked copper (E14, 18 September 2026)
+# DC_HS is the LM5069's output: Q7's three source pads at the west edge of HOTSW to L2 pin 1 and C6 in ENTRYB, 64 mm
+# east, and it carries the shore and vehicle current (8 A typical, 10 peak, the same conductor VIN_RAW is on the far
+# side of the choke). E11 routed it on Q7's WRONG pins (32.219); with the source pads carrying it E12 and E13 left it
+# open (E13: 0 hard, this one connection), the board-wide stub router finds no lane for a 0.8 mm conductor across the
+# strip at all, and 0.8 mm is under the density bar for that current anyway. So it is the generator's, the way board
+# A's rails are: a B.Cu band (5.5 mm, IPC-2221's 5.3 at 8 A and 10 K, 1 oz) east along y -97 under the HS_S tab and
+# R19, north at x -60 through ENTRYA, and east at y -86 into L2 pin 1, 4.5 mm there because VIN_RAW's ten source
+# vias sit 3 mm south of that pad and a wider band would put them inside it. Every band is a wire keep-out on B.Cu,
+# so the parts above it lose B.Cu via sites under the band; the route says what that costs. Three stitch vias at
+# each end; the Q7 end's vias land on the source pads themselves.
+if _osx.environ.get("PLACE_DCHS_BAND", "1") not in ("0", ""):
+    _pc = _pcmod.PowerCopper(board, net_for, P)
+    # no end vias from rail_run (a corner via at x -60 could land on a top part's pad of another net); the vias are
+    # placed where the copper is this net's own: one in each of Q7's three source pads, three inside L2 pin 1
+    _pc.rail_run("DC_HS", "DC_HS band B.Cu, HOTSW east", (-104.1, -97.0), (-60.0, -97.0), 5.5, vias_per_end=0)
+    _pc.rail_run("DC_HS", "DC_HS band B.Cu, north through ENTRYA", (-60.0, -97.0), (-60.0, -86.0), 5.5, vias_per_end=0)
+    _pc.rail_run("DC_HS", "DC_HS band B.Cu, into L2 pin 1", (-60.0, -86.0), (-40.5, -86.0), 4.5, vias_per_end=0)
+    _pc.stitch("DC_HS", [(-104.1, -95.42), (-104.1, -96.69), (-104.1, -97.96), (-41.5, -86.0), (-40.5, -86.0), (-39.5, -86.0)])
+    print("power copper: DC_HS in three locked B.Cu bands from Q7's source pads to L2 pin 1")
+
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr))
