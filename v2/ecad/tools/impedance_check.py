@@ -285,9 +285,12 @@ def main(a):
                      "   <- solve this one: impedance_2d.py --mode %s --w %.3f --s %.3f --h %.4f --er %.2f"
                      % (m, w, sp_, h, er) if how != "solver" else ""))
     if CAL_USED["stripline factor (four solved points, 0.74 to 0.87)"] > 0:
-        print("impedance: NOTE %.0f mm (%.0f%%) judged with the stripline correction, which rests on two solved geometries (the solver reads"
-              " 0.74 and 0.80 of IPC-2141 there). Solve that cross-section with impedance_2d.py before the number is quoted outside this project."
-              % (CAL_USED["stripline factor (four solved points, 0.74 to 0.87)"], 100.0 * CAL_USED["stripline factor (four solved points, 0.74 to 0.87)"] / tot_mm))
+        _sl = len([c for c in CAL if c[0] == "stripline"])
+        _mm = CAL_USED["stripline factor (four solved points, 0.74 to 0.87)"]
+        print("impedance: NOTE %.0f mm (%.0f%%) judged with the stripline correction, which rests on %d solved "
+              "geometries (the solver reads 0.74 to 0.87 of IPC-2141 across them). Solve that cross-section with "
+              "impedance_2d.py before the number is quoted outside this project."
+              % (_mm, 100.0 * _mm / tot_mm, _sl))
     if any(er is None for _, k, _, er in stack if k != "copper"):
         print("impedance: FAIL a dielectric without epsilon_r in the stackup")
         return _v.write("impedance_check", _v.INCONCLUSIVE, counts={"pairs": len(pairs)}, denominator=checked,
