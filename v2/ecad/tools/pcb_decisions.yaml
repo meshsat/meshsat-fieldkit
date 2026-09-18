@@ -433,11 +433,19 @@ decisions:
     asked: 2026-09-17
     status: open
     ask: "rule this project's own per-class tolerances, derive them per net from a declared edge rate, or hold the rule until a standard publishes a number"
-    recommendation: "rule the project's criterion: of the 32 nets failing today exactly one is inside a factor of 1.1 of its limit, so the number decides almost nothing"
-    evidence: "THE MEASUREMENT IS WHY THE RECOMMENDATION IS CHEAP, and it belongs in its own field rather than
-      inside the recommendation (17 September 2026). Across the set 32 signal nets fail this rule and exactly
-      ONE sits inside a factor of 1.1 of its limit: every other failure is over by a margin no plausible
-      criterion moves. So the choice between this project's own per-class tolerances, a per-net figure derived
+    recommendation: "rule the project's criterion, and read the re-measurement below before deciding how loose: of the 32 nets failing today TWO are inside a factor of 1.1 of their limit and FOURTEEN are inside 1.5, so the number decides about half of them (the earlier reading, one net inside 1.1, was taken before board B was adopted)"
+    evidence: "RE-MEASURED 18 September 2026 WITH BOARD B IN THE SET, AND THE ANSWER CHANGED. The 17 September
+      reading below was taken before B21 was adopted, and board B's eleven failures are all marginal: of the 32
+      failing nets across the set, TWO are inside a factor of 1.1 of their own limit, FOURTEEN are inside 1.5,
+      TWENTY-ONE are inside 2.0, and seven are over 3.0. The tight end is board B's controlled-impedance pairs
+      (USB_E6_N 10.5 mm of uncovered run against a 10.0 mm limit, HDMI2_D1_N 10.9, SWP3_C_N 14.0 against 12.7,
+      six USB nets between 11.4 and 13.9) and board C's EPD_CS at 66.1 against 58.5; the loose end is board C's
+      panel USB pair at 5.4 times its limit and board P's SMBus at 3.4. So the criterion is no longer a number
+      that decides almost nothing: a criterion 50 percent looser than today's clears fourteen of the
+      thirty-two, and one 10 percent looser clears two. What has not changed is that the rule needs an
+      authority at all, which is what this decision is about. THE 17 SEPTEMBER READING, kept because it is the
+      one the recommendation was written against: across the set 32 signal nets fail this rule and exactly
+      ONE sits inside a factor of 1.1 of its limit. So the choice between this project's own per-class tolerances, a per-net figure derived
       from a declared edge rate, and holding the rule until a standard publishes a number, changes the verdict
       on ONE net of thirty-two. What it does change is whether the rule has an authority behind it at all, which
       is why it is asked: RET-001, RET-003 and SI-001 are the three rules this decision holds and all three
