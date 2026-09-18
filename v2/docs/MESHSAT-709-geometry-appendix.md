@@ -9852,3 +9852,17 @@ is a bare board of copper, holes and targets, "a declared zero, not an absence",
 September when the same question was asked of the same board. So the machinery was right everywhere it had been
 asked, and STK-001 was wrong because nobody had asked it there.
 
+**Addendum, 18:05 CEST: board E's sensor controller is 230 mm from the 26 nets it serves.** Measured on E18's
+placed board: the strip is 267 x 68 mm, U10 (the QFN-56 sensor controller) sits at x 236, and **26 of its signal
+nets have a partner more than 40 mm west while not one has a far partner east** (SDA0, SDA1, SCL1 and the
++3V3_E6 pins reach x 5 to 6). The four long nets E18 left open are exactly that crossing, 182 to 227 mm each.
+**This is not the cause of the opens and E17 is the counter-example**: the same U10 seat, three parts different,
+0 hard and 0 unrouted after its closers. A deterministic router on a floor plan at the edge of what it can close
+resamples with any small change, so E14 to E18 land anywhere between 0 and 5 open on what is essentially one
+design. The opens are scatter on a hard floor plan, which is why each remedy round keeps buying one (five to
+four). The durable answer is a redistribution, the controller west into its sensors or the headers east, and the
+occupancy says it costs somebody else's seat rather than filling an empty band (28 parts in x 0 to 20, 25 in 180
+to 200, 25 in 240 to 260). That is a placement campaign of board B's kind and it is not what stands between
+board E and a phase today: E17 is 0 and 0 with ANA-001 failing, E18 answers ANA-001 and is a few connections
+short, and rounds on E18's placement are the cheap way to have both.
+
