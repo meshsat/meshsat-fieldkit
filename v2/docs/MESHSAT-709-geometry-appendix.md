@@ -10295,3 +10295,32 @@ project directory, so the name needs no letter. The four that write one file in 
 `final_gate` (OUT-001, ruled set-level on 16 September), `rules_complete` (SGN-001, the set's completeness by
 definition), `claims_check` (ENV-002, whose subject is the documents) and `layer_judge` (STK-002, INCONCLUSIVE
 on every board for one honest reason, the layer decision being open). **There is no fifth instance.**
+
+**Addendum, 23:55 CEST: a design item that lived only in a generator comment, found while asking whether a
+remedy round is safe for board A.** The question was narrow: E18 showed that a remedy round REGENERATES the
+placement, and board E survives that only because its two Kelvin seats are FIXED in the generator, so the same
+had to be true of board A's six new charger-filter parts before A47's later rounds could be compared with its
+first. They are fixed (`R146` at (-101.0, 13.6), `R147` (-101.0, 11.8), `C121` (-103.6, 12.7), `R148`
+(-91.2, 11.0), `R149` (-91.2, 12.8), `C122` (-88.6, 11.9), each placed rather than packed, the generator having
+refused the board when they had no seat). **Four lines below that table sat an unclosed design item that no
+register could see.**
+
+**The charger's input-current sense is not a Kelvin connection on its high side.** R16 is a 10 mOhm 2512 shunt
+between `VBUS20` and `CH_ACN`, and the BQ25731 senses across it through today's filter, R146 from `CH_ACN` and
+R147 from `VBUS20`. At the rail's 6.0 A the shunt develops **60 mV, which is the whole signal**. The ACN side
+taps the shunt's own node; the ACP side taps `VBUS20`, which is a POUR carrying that 6 A, so the IR drop in the
+copper between R16's own pad and R147's tap is added to the 60 mV and read as input current. The size is
+unmeasured and the bound is uncomfortable: `dc_drop` judges VBUS20 against a 2 percent budget, 400 mV at 20 V,
+and a few millivolts of that is several percent of the sensed current. It matters because the input-current
+limit is what stops the charger pulling down a PoE source. The fix is a land and a copper change at the shunt,
+board A's next generation's and not A47's; `boards/a.json` carries it as `_charger_acp_kelvin_why`.
+
+**The instrument it names is worth more than the one item**: a `kelvin_check` that reports, for every declared
+sense pair, the solved potential difference between the sense tap and the element it senses as a fraction of
+the sensed signal. `dc_drop`'s mesh already computes those node potentials and does not expose them, and the
+same question is open on board E's tracker and on board A's five LM5176 stages.
+
+**And the class was swept rather than left to chance**: the generators carry three comments of the "OPEN" or
+"is owed" shape, and the other two, the ripple and loop-margin measurement owed before the order and board C's
+RP2040 supply pins without their own capacitor, are both already in this record. This was the only one that
+was not.
