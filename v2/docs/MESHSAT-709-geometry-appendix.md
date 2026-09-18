@@ -9608,3 +9608,16 @@ reading on E17 says the DSN class-pair rule cannot add to it. Board A's sense li
 as board E's is. A45's readings (the class-pair arm) follow; the ladder at the router stays A42 15, A43 19, A44 23,
 A45 26.
 
+**Addendum, 11:45 CEST: A45's readings correct the 11:35 one, and board A's ANA-001 ladder is monotone in the
+instrument.** A45 (A44 plus `FR_CLASS_CLEAR=SENSE:SW:0.5,SENSE:HV:0.5`) finished at 22 open after the closers and
+reads **ANA-001 2 of 19** against A44's 4 and A43's 6, with RF-001 passing 11 of 11 on both A arms. The three arms
+differ in one variable each and the ladder runs 6, 4, 2 failures for 15, 19, 22 open connections, so **the DSN
+class-pair clearance biases the router without binding it**: E17's single surviving `/TRK_LSENSE` run at 0.171 mm
+proves it is not a constraint the router honours absolutely, and board A's three arms prove it is not a no-op
+either. The 11:35 wording ("measured and refused") is corrected in `boards/e.json` and `boards/a.json`: the rule
+stays, it is not sufficient alone, and ANA-001's last two failures on board A (POE_CS 0.229 mm from POE_SW1 over
+8.0 mm, PD_CS 0.265 from PD_SW2 over 9.0 mm) are the placement and pre-lay items the record has named since 17
+September. What board A pays for those four answered nodes is seven connections against A43, which is the trade
+the next A phase has to weigh: the partition (A46, merged at 0 hard and 28 unrouted, in its reconcile) is the arm
+that could pay it back.
+
