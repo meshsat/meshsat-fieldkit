@@ -1336,11 +1336,20 @@ rules:
    risk_class: [ELECTRICAL_FUNCTION, SIGNAL_INTEGRITY]
    release_effect: MUST_JUSTIFY
    source_status: SOURCE_UNVERIFIED
-   sources: []
+   sources:
+    - {title: 'LM5176 four-switch buck-boost controller, pin table and layout section',
+       where: 'v2/vendor/ti/lm5176-datasheet.pdf, pin 15 CSG and section 9.1',
+       says: 'Connect CSG directly to the low-side (ground) of the current sense resistor; use Kelvin connections to RSENSE and run the lines in parallel to the IC pins; avoid crossing SW1 and SW2; place the filter capacitor as close to the IC pins as possible; section 8.2.2.7 permits a filter network whose resistance may not exceed 100 Ohm'}
+    - {title: 'LT8705A buck-boost controller, current sense',
+       where: 'v2/vendor/power/lt8705a.pdf',
+       says: 'the inductor current is sensed differentially across a shunt into CSP and CSN, which is the pair this rule protects on board E rather than the shunt terminals themselves'}
    acceptance_criteria: >
      A list per board of the sensitive nodes (microphone inputs, current-shunt sense pairs, cell taps,
      thermistors, reference inputs) with, for each, its reference, its filter and its clearance from switching
-     nodes, and Kelvin connections where the measurement demands them.
+     nodes, and Kelvin connections where the measurement demands them. A declared node is the node the
+     amplifier sees, BEHIND its filter: a net carrying a transistor or inductor terminal is a conductor of the
+     switching loop and naming it here is a declaration about the wrong side of the filter (18 September 2026,
+     board E's TRK_LSENSE and board A's five raw CS nodes).
    rationale: >
      A 2 milliohm shunt measured 100 millimetres from its sense amplifier through shared copper measures the
      copper as much as the current.

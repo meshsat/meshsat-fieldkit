@@ -20,9 +20,9 @@
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
-   "ANA-001": "1b5e5e32b5e446db"
+   "ANA-001": "efb6e1511c4ca89f"
   },
-  "rule_set_fingerprint": "4bc0aa24d836788d"
+  "rule_set_fingerprint": "82885961768537e2"
  },
  "rules": [
   "ANA-001"
@@ -30,9 +30,9 @@
  "tool": "sensitive_nodes",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "014593f72fcc4baf"
+  "tools_tree_sha": "ef4c8edcfb9cdcbc"
  },
- "ts": "2026-09-18T11:04:49Z",
+ "ts": "2026-09-18T11:13:47Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

@@ -7,7 +7,7 @@ Every rule this project holds a board to, with its authority, its applicability,
 its verification is currently worth. Generated from the registry: the registry is the authority and this page
 is its rendering.
 
-Registry version **2026-09-16.1**, fingerprint **4bc0aa24d836788d**, 58 rules over 34 domains.
+Registry version **2026-09-16.1**, fingerprint **82885961768537e2**, 58 rules over 34 domains.
 
 ## How to read a rule
 
@@ -1225,6 +1225,8 @@ reference, its filtering and its distance from switching copper are decided rath
 | risk | ELECTRICAL_FUNCTION, SIGNAL_INTEGRITY |
 | verified by | MANUAL_REVIEW, SCRIPT at PLACED_BOARD (partially automatable) |
 | source | SOURCE_UNVERIFIED |
+| | LM5176 four-switch buck-boost controller, pin table and layout section,  --  |
+| | LT8705A buck-boost controller, current sense,  --  |
 | implementation | pcb_sensitive.yaml, the nodes and their filters |
 | maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
@@ -1232,7 +1234,10 @@ reference, its filtering and its distance from switching copper are decided rath
 
 **Accept when** A list per board of the sensitive nodes (microphone inputs, current-shunt sense pairs, cell taps,
 thermistors, reference inputs) with, for each, its reference, its filter and its clearance from switching
-nodes, and Kelvin connections where the measurement demands them.
+nodes, and Kelvin connections where the measurement demands them. A declared node is the node the amplifier
+sees, BEHIND its filter: a net carrying a transistor or inductor terminal is a conductor of the switching
+loop and naming it here is a declaration about the wrong side of the filter (18 September 2026, board E's
+TRK_LSENSE and board A's five raw CS nodes).
 
 **Why** A 2 milliohm shunt measured 100 millimetres from its sense amplifier through shared copper measures the
 copper as much as the current.
