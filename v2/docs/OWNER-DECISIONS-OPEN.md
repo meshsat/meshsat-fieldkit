@@ -64,7 +64,12 @@ board's own current density has already refused. AND THE OTHER HALF IS MEASURED 
 fabricator builds: P8, four layers with In1 and In2 as ground planes and the same 0.16 mm floor, routed 0
 hard and 0 unrouted of 35 nets with 98 vias in six minutes (the four-layer arm of 15 September had reached 0
 and 0 at 0.127 mm, which is the very defect that makes P4's own 0/0 worthless). So both options now carry a
-number taken at a rule set the fabricator offers: two layers 43 to 47 open, four layers 0 and 0.
+number taken at a rule set the fabricator offers: two layers 43 to 47 open, four layers 0 and 0. P8's own
+gates read routed-board PASS, check_pcb_p 51 of 51, via_audit 279 with nothing under either floor, dc_drop 3
+of 3 and fab_limits PASS of 20. The one thing the ruling still carries with it: that arm generated the
+four-layer 1 oz stackup, and ruling 7 orders this board at 2 oz, whose multilayer floor is 0.15 mm; the
+board's 0.16 clears it, so the copper weight changes the stackup line and the density judgement rather than
+the routing answer.
 
 | rule | | boards | result today |
 |---|---|---|---|
