@@ -9528,3 +9528,16 @@ cross-strip nets pre-laid, which laid nothing) routed 0 hard and 4 open of 94 by
 this time, and its finish runs. E14 (round 3) and E15 (round 2) route on; B22 is in stage 2 group S3 of five; A44's
 and A45's re-imported finishes are in their closers.
 
+**Addendum, 10:28 CEST: E16 closes to three, and the net that stays open on board E is a bootstrap capacitor 17.6 mm
+from its pin.** E16's closers took its four router opens to three (the stub router closed one GND stub, `direct_close`
+none: `/E6_BST` 17.6 mm from U12 pin 6 to C30, `/HS_UVLO` 24.4 mm to R20, a 1.4 mm GND stub at U14 with no shape the DRC
+accepts), against E14's one and E15's two on the same design, which is the placement's scatter measured three times.
+`/E6_BST` is the AP63205's BST to SW bootstrap net: it was E7's hard net (closed by the stub router then), E14's and E16's
+open, and its capacitor C30 sits in the PACK region's packer rows 17.6 mm from the pin the datasheet puts it at. That is
+a decoupling declaration the generator lacked (`_intent.bypass("C30", "U12", "6", "E6_BST")`, the same answer the
+buck's input capacitor C31 already has): the slot is reserved beside the pin before the packer runs. **E17** is that one
+variable on the E14 design with no pre-lay (E15's and E16's laid nothing), launched 08:26 UTC in `/root/erf17`. The
+last declared fixture debt is paid: `copper_checks` has its pair (a ground pour with nothing of its net in it is a
+loose piece and fails; the same pour anchored by a via of its net passes), both proved where KiCad is. B22's group S3
+wrote its session at 08:23 UTC; DEVE follows, then the reconcile.
+
