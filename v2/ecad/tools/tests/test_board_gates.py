@@ -1127,7 +1127,9 @@ def _fanout_board(pcbnew, tmp, amps):
 
 
 def t_a_rail_crossing_with_fewer_barrels_than_its_current_needs_is_named_at_generation_time():
-    """THE DEFECTIVE FIXTURE (18 September 2026). Every PI-003 failure this project has found has one shape: a
+    """THE DEFECTIVE FIXTURE (18 September 2026; the reading moved out of the fanout stage into
+    `rail_crossings.py` the same evening, because printed there it named seven crossings on board E that the
+    ground grid and the escapes answered ten seconds later). Every PI-003 failure this project has found has one shape: a
     rail crosses layers through ONE barrel. Board B is three slot rails at 2.20 A through a single 0.25 mm
     barrel sitting inside that slot's bulk capacitor pad, which is this very stage's via-in-pad. The solved mesh
     finds them after a route; at the pad of a rail's declared SOURCE the whole rail current crosses, so the
@@ -1135,9 +1137,9 @@ def t_a_rail_crossing_with_fewer_barrels_than_its_current_needs_is_named_at_gene
     p = _pcbnew()
     with tempfile.TemporaryDirectory() as tmp:
         path = _fanout_board(p, tmp, 2.2)
-        r = subprocess.run([sys.executable, os.path.join(TOOLS, "prefanout.py"), path, "+5V_X"],
+        r = subprocess.run([sys.executable, os.path.join(TOOLS, "rail_crossings.py"), path],
                            capture_output=True, text=True)
-        assert "fanout:   +5V_X at U1 pad 1" in r.stdout, \
+        assert "rail_crossings:   +5V_X at U1 pad 1" in r.stdout, \
             "the detail line does not carry the tool's name, so the chain's own grep drops it: %s" % r.stdout[-600:]
         assert "which needs 4 at a 10 K rise" in r.stdout, r.stdout[-600:]
 
@@ -1149,10 +1151,10 @@ def t_a_crossing_that_carries_what_it_should_says_nothing_about_being_short():
     p = _pcbnew()
     with tempfile.TemporaryDirectory() as tmp:
         path = _fanout_board(p, tmp, 0.30)
-        r = subprocess.run([sys.executable, os.path.join(TOOLS, "prefanout.py"), path, "+5V_X"],
+        r = subprocess.run([sys.executable, os.path.join(TOOLS, "rail_crossings.py"), path],
                            capture_output=True, text=True)
-        assert "fewer barrels" not in r.stdout, r.stdout[-600:]
-        assert "carry the barrels their current needs" in r.stdout, r.stdout[-600:]
+        assert "1 do not" not in r.stdout and "2 do not" not in r.stdout, r.stdout[-600:]
+        assert "carry the barrels their current needs, 0 do not" in r.stdout, r.stdout[-600:]
 
 
 def _perforated_board(pcbnew, tmp, name, holes=15, plane_to_mm=79.0):
