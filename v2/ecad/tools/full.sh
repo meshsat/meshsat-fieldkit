@@ -318,6 +318,10 @@ if [ -n "$PRELAY" ]; then
 fi
 
 PAOFF=""; { [ "${PLACE_AUDIT_GATE:-1}" = 0 ] || [ -n "$(cfg place_audit_gate_off)" ]; } && PAOFF="VERDICT_ADVISORY=1"   # a declared report writes an advisory verdict, so the supervisor reads what the chain reads
+# EVERY DECLARED RAIL'S OWN CROSSING, ON THE FINISHED PLACEMENT (18 September 2026, rule PI-003's cheap
+# half): at the pad of a rail's SOURCE the whole rail current changes layer, so the barrels it needs are
+# arithmetic and a site that is short says so here instead of after a route. A report: it lays nothing.
+python3 ../tools/rail_crossings.py $N.kicad_pcb 2>&1 | grep -aE 'rail_crossings' || true
 env $PAOFF $ESCENV python3 ../tools/place_audit.py $N.kicad_pcb --png out/place_audit.png > out/place_audit.log 2>&1; PA=$?
 grep -E "FAIL|predicted|decoupling" out/place_audit.log | tail -8
 # 15 September 2026: a board may declare the predictor's verdict as a report rather than a block (B19: its nine predicted
