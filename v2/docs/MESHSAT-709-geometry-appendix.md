@@ -10160,3 +10160,27 @@ end of `prefanout.py` and named SEVEN crossings on board E's E20 generation, eve
 follow had already answered: the ground grid alone lays 1,829 vias after the fanout, and the escapes lay more.
 A report that names sites somebody else fixes ten seconds later is noise, and the next person stops reading it.
 It is called from `full.sh` immediately before `place_audit.py`, on the board the route is about to be given.
+
+**Addendum, 21:50 CEST: a pre-lay must lay LOCKED copper, and the gate that said so was testing for something
+else entirely.** The pour-obstacle fix of the 21:20 addendum let the pre-lay find its paths; it did not let a
+board carry them. **E20's first launch closed 39 of 39 lanes and then blocked at `place_audit`**, which
+declined with *"INCONCLUSIVE this is a ROUTED board (330 of 633 track segments unlocked, laid by the router):
+the placement predictor is judged on the placed snapshot, not here"*. That guard exists because the placement
+predictor must never be run on a routed board, and it tells the two apart by counting unlocked track segments
+(over a hundred of them and over a fifth of the board). **A pre-lay that lays UNLOCKED copper makes a placed
+board answer that test as a routed one**, so the stage that exists to help the router was making the board
+unjudgeable before the router ever saw it.
+
+The copper has to be locked for a second and independent reason: **KiCad exports a locked track as `(type
+fix)` and Freerouting keeps only those**, which is the 5 September rule about fine-pitch escapes. Unlocked
+pre-laid copper is copper the router rips up, so it was never going to survive the route either. One flag
+answers both (`STUB_LOCK`, default off, set by the pre-lay stage alone, so no finish changes). **Relaunched at
+19:40 UTC, board E's E20 reads `stub_router: closed 39 of 39`, `place_audit` "every plane pad reaches its
+plane before the route (a via, its own fill, or locked copper)" with 2,736 locked pieces on the board, 17 gate
+verdicts all PASS, and its route is running.** The pre-lay mechanism is proved end to end for the first time
+since it was written on 15 September: it finds the lanes, the board keeps them, and the gate accepts them.
+
+**And E19, the arm that carries PI-003's copper without the pre-lay, landed while this was written: 0 hard and
+ONE unrouted of 94 nets, 211 vias, 45 minutes**, against E18's five and four and E17's zero-after-the-closers.
+Its finish is running and board E's direct closer reaches 14 mm. E17 stays board E's declared phase until a
+round lands at 0 open with ANA-001 still PASS on all three nodes, which is the bar written in advance.
