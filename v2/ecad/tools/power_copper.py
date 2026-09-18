@@ -85,6 +85,22 @@ class PowerCopper:
         It is the same judgement `via_current` makes after the route, moved to where it can still be answered for
         free: before the board exists. Leave it out where one call places several unrelated clusters, because
         then the current is not one number and the check would be about nothing."""
+        # THE HOLE-TO-HOLE FLOOR, checked here because the tool knows both numbers (18 September 2026). Raising
+        # board E's block vias from 0.5 to 0.7 mm put its OTHER cluster, ten barrels on a 0.8 mm pitch, at 0.10 mm
+        # hole to hole against the 0.2995 the board's own rules ask, and the placed board came back with eight
+        # hole_to_hole violations. The DRC caught it, which is the point of the DRC, but a stitch call knows its
+        # own pitch and its own drill and can say so before a board exists. Points from DIFFERENT calls are not
+        # compared: a call is one cluster, and two clusters far apart are the normal case.
+        _floor = drill + 0.2995
+        for _i in range(len(pts)):
+            for _j in range(_i + 1, len(pts)):
+                _d = math.hypot(pts[_i][0] - pts[_j][0], pts[_i][1] - pts[_j][1])
+                if _d < _floor - 1e-9:
+                    raise SystemExit(
+                        "power copper: %s stitches two %.2f mm barrels %.2f mm apart at (%.2f, %.2f) and "
+                        "(%.2f, %.2f), which is %.2f mm hole to hole against the 0.2995 mm this project's "
+                        "boards ask: widen the pitch or narrow the hole"
+                        % (net, drill, _d, pts[_i][0], pts[_i][1], pts[_j][0], pts[_j][1], _d - drill))
         if amps is not None:
             need = self.barrels_for(amps, drill)
             if len(pts) < need:
