@@ -290,7 +290,12 @@ while IFS=$'\t' read -r GNETS GLAYERS; do
   T=../tools; . ../tools/guarded.sh
   gstage () {
     ../tools/drc.sh $N.kicad_pcb out/$N-prelay-in.json
-    env STUB_NETS="$GNETS" STUB_LAYERS="$GLAYERS" STUB_GRID="${PRELAY_GRID:-0.1}" STUB_WIN_SCALE="${PRELAY_WIN:-25}" \
+    # THE POURS ARE NOT OBSTACLES TO A PRE-LAY (18 September 2026): nothing is routed yet, this stage re-fills
+    # before anything judges the board, and KiCad's fill retreats around a locked track the way it does around
+    # the router's own. With them in the map board D's pre-lay had 5,140 free cells of 834,561 and laid nothing,
+    # which is what boards C, D and E have all read. The finish keeps them (STUB_POUR_OBSTACLE defaults to 1).
+    env STUB_POUR_OBSTACLE="${PRELAY_POUR_OBSTACLE:-0}" \
+        STUB_NETS="$GNETS" STUB_LAYERS="$GLAYERS" STUB_GRID="${PRELAY_GRID:-0.1}" STUB_WIN_SCALE="${PRELAY_WIN:-25}" \
         STUB_MAXN="${PRELAY_MAXN:-200000000}" timeout "${PRELAY_TIMEOUT_S:-3600}" nice -n 10 \
         python3 -u ../tools/stub_router.py $N.kicad_pcb out/$N-prelay-in.json > out/$N-prelay-group.log 2>&1
     grep -aE "stub_router:|closed |FAILED|NOT CLOSED" out/$N-prelay-group.log | tail -6
