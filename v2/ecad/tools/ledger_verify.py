@@ -98,4 +98,9 @@ def main(a):
                          note="every chain re-walked, every row re-hashed, every witness beside one checked")
 
 
-if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
+if __name__ == "__main__":
+    # EVERY GATE LEAVES A READING WHEN IT RAISES (18 September 2026). The thirteen one-line entries of this
+    # morning were the gates a crash had already cost a verdict; these are the rest of the deciding gates in
+    # the coverage map, guarded the same way, so a rule whose tool raised reads INCONCLUSIVE naming the
+    # exception rather than 'no verdict', which the registry reads as nobody having looked.
+    sys.exit(verdict.guard("ledger_verify", main, sys.argv[1:]))
