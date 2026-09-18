@@ -3,6 +3,8 @@
 A pour whose net name missed the netlist gets a phantom net and becomes dead copper that DRC only reports as isolated
 islands (A19 and B12 rail planes, 4 Sep 2026, appendix 32.33). Usage: check_zone_nets.py <board.kicad_pcb>; exits 1 on FAIL."""
 import sys, collections, pcbnew
+import os as _bo; sys.path.insert(0, _bo.path.dirname(_bo.path.abspath(__file__)))
+import verdict as _vh; _vh.crash_hook("check_zone_nets", sys.argv[1:])   # a crash in this module body writes INCONCLUSIVE, never nothing (18 Sep 2026)
 b = pcbnew.LoadBoard(sys.argv[1]); fails = []
 pads = collections.Counter(p.GetNetname() for f in b.GetFootprints() for p in f.Pads())
 seen = collections.defaultdict(list)

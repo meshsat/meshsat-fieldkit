@@ -433,3 +433,30 @@ def guard(tool, fn, argv, rules=None):
             pass
         print("%s: CRASHED before deciding: %s" % (tool, tb))
         return 3
+
+
+def crash_hook(tool, argv, rules=None):
+    """The same guard for a gate that runs at MODULE level and has no main to wrap (the six check_pcb_* gates,
+    check_contracts, check_zone_nets, lcsc_fill): install a sys.excepthook that writes INCONCLUSIVE naming the
+    exception and exits 3. Installed at the top of the file, before pcbnew loads the board, so a crash anywhere
+    in the module body is a reading. SystemExit never reaches an excepthook, so a gate's own verdict exit is
+    untouched; KeyboardInterrupt is left to the default hook."""
+    import sys as _s
+    prev = _s.excepthook
+
+    def hook(et, ev, tb):
+        if issubclass(et, KeyboardInterrupt):
+            return prev(et, ev, tb)
+        import traceback
+        last = "".join(traceback.format_exception_only(et, ev)).strip().split("\n")[-1][:200]
+        try:
+            board = argv[0] if argv and str(argv[0]).endswith(".kicad_pcb") else None
+            write(tool, INCONCLUSIVE, denominator=0, inputs={"board": board} if board else {}, rules=rules,
+                  note="the gate raised before it decided: %s (%s)" % (et.__name__, last),
+                  missing_input="a decision: the gate crashed with %s" % et.__name__)
+        except BaseException:
+            pass
+        print("%s: CRASHED before deciding: %s" % (tool, last))
+        _s.stdout.flush()
+        _s.exit(3)
+    _s.excepthook = hook

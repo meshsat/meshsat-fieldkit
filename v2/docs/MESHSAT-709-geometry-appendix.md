@@ -9516,3 +9516,15 @@ on a panel with lanes): E16 is E14 regenerated a third time and its route runs o
 that scatter is worth is the measurement E14, E15 and E16 make together (one, two and n opens on a design the
 generator does not change between them); the floor plan (the sensor controller at the east end, its sensors at the
 west) is what the generator would change next.
+
+**Addendum, 10:20 CEST: the nine module-level gates carry the crash guard too, and E16 routed to four short opens.**
+The 08:00 guard wrapped a one-line `main`; the six `check_pcb_*` gates, `check_contracts`, `check_zone_nets` and
+`lcsc_fill` run at module level and had no door to wrap, so `verdict.crash_hook(tool, argv)` installs a
+`sys.excepthook` in their first lines, before `pcbnew` loads the board: an exception anywhere in the module body writes
+INCONCLUSIVE naming it and exits 3, a `SystemExit` from the gate's own writer never reaches it, and a fixture runs both
+cases in a subprocess. Every gate in the coverage map now leaves a reading when it crashes. **E16** (E15 with the four
+cross-strip nets pre-laid, which laid nothing) routed 0 hard and 4 open of 94 by the router, all short and local
+(`/E6_BST` 1.5 mm at C30, `/HS_UVLO` U6 pin 3 to R20, two GND stubs at U13 and U14): the cross-strip signals routed
+this time, and its finish runs. E14 (round 3) and E15 (round 2) route on; B22 is in stage 2 group S3 of five; A44's
+and A45's re-imported finishes are in their closers.
+
