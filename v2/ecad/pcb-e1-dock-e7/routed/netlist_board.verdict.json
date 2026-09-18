@@ -2,28 +2,23 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "agree": 814,
+  "agree": 818,
   "aliased_pins": 18,
   "board_footprints": 189,
   "board_only_inert": 0,
-  "fail": 4,
+  "fail": 0,
   "netlist_refs": 161
  },
  "denominator": 818,
- "evidence": [
-  "Q7.1 is HS_GATE on the board and DC_HS in the netlist",
-  "Q7.2 is HS_S on the board and DC_HS in the netlist",
-  "Q7.4 is on net HS_GATE in the netlist and has no net on the board",
-  "Q7.5 is on net HS_S in the netlist and has no net on the board"
- ],
+ "evidence": [],
  "inputs": {
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
-   "sha256_16": "5fc1ffce0dc5ab1c"
+   "sha256_16": "a462ac2620b9b8d3"
   },
   "netlist": {
    "path": "out/pcb-e1-dock.net",
-   "sha256_16": "c7caf897b20ccedf"
+   "sha256_16": "2dc453575d108b74"
   }
  },
  "missing_input": null,
@@ -33,7 +28,7 @@
   "rule_fingerprints": {
    "SCH-002": "a7f873603faeb223"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "4bc0aa24d836788d"
  },
  "rules": [
   "SCH-002"
@@ -41,9 +36,9 @@
  "tool": "netlist_board",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "6f7ef144f21449b3"
  },
- "ts": "2026-09-17T22:48:00Z",
- "verdict": "FAIL",
+ "ts": "2026-09-18T08:56:18Z",
+ "verdict": "PASS",
  "version": "unknown"
 }

@@ -12,7 +12,7 @@
   "board": "e",
   "netlist": {
    "path": "out/pcb-e1-dock.net",
-   "sha256_16": "c7caf897b20ccedf"
+   "sha256_16": "2dc453575d108b74"
   }
  },
  "missing_input": null,
@@ -22,7 +22,7 @@
   "rule_fingerprints": {
    "CLK-001": "87aa8102f151ef26"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "4bc0aa24d836788d"
  },
  "rules": [
   "CLK-001"
@@ -30,9 +30,9 @@
  "tool": "clock_check",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "6f7ef144f21449b3"
  },
- "ts": "2026-09-17T22:48:09Z",
+ "ts": "2026-09-18T08:56:28Z",
  "verdict": "PASS",
  "version": "unknown"
 }

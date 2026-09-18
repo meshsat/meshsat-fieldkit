@@ -3,14 +3,14 @@
  "applicable": true,
  "counts": {
   "plane_change_to_power": 0,
-  "slow": 98
+  "slow": 116
  },
  "denominator": 0,
  "evidence": [],
  "inputs": {
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
-   "sha256_16": "5fc1ffce0dc5ab1c"
+   "sha256_16": "a462ac2620b9b8d3"
   }
  },
  "missing_input": null,
@@ -20,7 +20,7 @@
   "rule_fingerprints": {
    "RET-003": "829568c8874fe7b6"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "4bc0aa24d836788d"
  },
  "rules": [
   "RET-003"
@@ -28,9 +28,9 @@
  "tool": "return_stitch",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "6f7ef144f21449b3"
  },
- "ts": "2026-09-17T22:48:06Z",
+ "ts": "2026-09-18T08:56:24Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

@@ -306,6 +306,42 @@
         "via_diameter": 0.6,
         "via_drill": 0.3,
         "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.127,
+        "diff_pair_gap": 0.2,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.3,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "SENSE",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 3,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.25,
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
+        "clearance": 0.127,
+        "diff_pair_gap": 0.2,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.3,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "SW",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 4,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.25,
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
+        "wire_width": 6
       }
     ],
     "meta": {
@@ -335,7 +371,7 @@
         "PWR"
       ],
       "/E6_SW": [
-        "PWR"
+        "SW"
       ],
       "/GND_V": [
         "PWR"
@@ -350,16 +386,16 @@
         "PWR"
       ],
       "/TRK_LSENSE": [
-        "PWR"
+        "SENSE"
       ],
       "/TRK_OUT": [
         "PWR"
       ],
       "/TRK_SW1": [
-        "PWR"
+        "SW"
       ],
       "/TRK_SW2": [
-        "PWR"
+        "SW"
       ],
       "/USB_E6_N": [
         "USB"
@@ -370,11 +406,22 @@
       "/VIN_RAW": [
         "PWR"
       ],
+      "/WATER_SENSE": [
+        "SENSE"
+      ],
       "GND": [
         "PWR"
       ]
     },
     "netclass_patterns": [
+      {
+        "netclass": "SENSE",
+        "pattern": "TRK_LSENSE"
+      },
+      {
+        "netclass": "SENSE",
+        "pattern": "WATER_SENSE"
+      },
       {
         "netclass": "PWR",
         "pattern": "DC_*"
@@ -404,7 +451,7 @@
         "pattern": "TRK_OUT"
       },
       {
-        "netclass": "PWR",
+        "netclass": "SW",
         "pattern": "TRK_SW*"
       },
       {
@@ -416,7 +463,7 @@
         "pattern": "+5V_E6"
       },
       {
-        "netclass": "PWR",
+        "netclass": "SW",
         "pattern": "E6_SW"
       },
       {
@@ -430,6 +477,14 @@
       {
         "netclass": "USB",
         "pattern": "USB_E6_*"
+      },
+      {
+        "netclass": "SENSE",
+        "pattern": "/TRK_LSENSE"
+      },
+      {
+        "netclass": "SENSE",
+        "pattern": "/WATER_SENSE"
       },
       {
         "netclass": "PWR",
@@ -460,7 +515,7 @@
         "pattern": "/TRK_OUT"
       },
       {
-        "netclass": "PWR",
+        "netclass": "SW",
         "pattern": "/TRK_SW*"
       },
       {
@@ -472,7 +527,7 @@
         "pattern": "/+5V_E6"
       },
       {
-        "netclass": "PWR",
+        "netclass": "SW",
         "pattern": "/E6_SW"
       },
       {

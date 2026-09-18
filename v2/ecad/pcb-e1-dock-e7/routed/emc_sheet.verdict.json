@@ -20,7 +20,7 @@
   "rule_fingerprints": {
    "EMC-001": "c866a74c3041e5e4"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "4bc0aa24d836788d"
  },
  "rules": [
   "EMC-001"
@@ -28,9 +28,9 @@
  "tool": "emc_sheet",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "6f7ef144f21449b3"
  },
- "ts": "2026-09-17T22:48:10Z",
+ "ts": "2026-09-18T08:56:29Z",
  "verdict": "PASS",
  "version": "unknown"
 }

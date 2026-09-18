@@ -9566,3 +9566,23 @@ Two short lists off the live container, then save, load, fill, save; stage 2 rel
 session. **E17 routed to 0 hard and ONE open of 94 in 19.8 minutes** (E14 1, E15 3, E16 4 by the router); its finish
 runs.
 
+**Addendum, 11:15 CEST: E17 IS ADOPTED, board E's first adopted phase since E11 (0 hard, 0 unrouted; readiness 62.8
+percent of 333, board E 34 of 54).** E17's router landed one open of 94 in 19.8 minutes and `direct_close` closed it;
+the routed-board gate reads hard 0 unrouted 0, `check_pcb_e` 69 of 69, `via_parallel` laid its barrels, and the finish
+was refused by rule TRN-001 alone (decision 31: the pod's three conductors and the DC inlet's clamp behind Q1), which
+no route changes. Two things had to be put right to adopt it. **First, routeflow read the ROUTER's count and not the
+finish's**: `sig` carried ROUTED_OPEN from the router, the not-a-route classifier was consulted only on CLEAN, and the
+supervisor started a via-cost round on finished copper, regenerating the placement and rewriting fourteen pre-route
+verdicts in the live tree about a board that was not E17's. The finish's own gate line decides now
+(`finish_gate_clean`, three selftest predicates, 57 of 57). E17's evidence was taken as ONE set instead: the finished
+board frozen in `/root/erf17k` (sha a462ac26), the placed snapshot synthesised from it by removing its unlocked copper
+(the escapes and pre-laid pairs are locked, so that is the placed board), `gate_sweep` read-only over it, 63 verdicts,
+board unchanged. **Second, E17's project file named SENSE and SW in its assignments and defined neither** (the 10:50
+finding on the generator it was placed with), so the router and the DRC used the Default geometry under those names;
+the committed file now defines both WITH the Default geometry, which is what E17 was routed and judged at, and nothing
+the DRC enforces moved. What E17 carries against E11: Q7's PowerPAK map (SCH-005 and SCH-002 PASS), the DC_HS band,
+thermal vias in every exposed pad, C30 at U12 pin 6, and ANA-001 at one failure of two (the 20.5 mm run with no shared
+part) instead of two. Not a deliverable; promotion frozen. Also this hour: **D14** runs in `/root/drf14`, the first D
+route whose project file carries PWR 1.2/0.6 and SENSE 0.7/0.3 (D13's never did); **A46**'s stage 2 routes WEST, MID
+and EAST on the repaired import.
+

@@ -21,7 +21,7 @@
   "rule_fingerprints": {
    "DFA-001": "143ef1ed2ab833e9"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "4bc0aa24d836788d"
  },
  "rules": [
   "DFA-001"
@@ -29,9 +29,9 @@
  "tool": "assembly_set",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "6f7ef144f21449b3"
  },
- "ts": "2026-09-17T22:48:16Z",
+ "ts": "2026-09-18T08:56:35Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

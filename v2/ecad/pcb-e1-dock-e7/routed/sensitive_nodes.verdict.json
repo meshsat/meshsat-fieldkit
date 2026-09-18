@@ -3,13 +3,12 @@
  "applicable": true,
  "counts": {
   "declared": 2,
-  "fail": 2,
+  "fail": 1,
   "measured": 2
  },
  "denominator": 2,
  "evidence": [
-  "TRK_LSENSE runs 0.209 mm from TRK_SW2 and its own list asks for 0.50; they are inside that limit over 2.71 mm of copper, 2.71 mm of it OUTSIDE the courtyard of the part that carries both nets, 12.90 mm from the pads of the part that carries both nets",
-  "WATER_SENSE runs 0.556 mm from TRK_SW1 and its own list asks for 1.00; they are inside that limit over 20.49 mm of copper, 20.49 mm of it OUTSIDE the courtyard of the part that carries both nets, with no part carrying both nets on this board"
+  "TRK_LSENSE runs 0.171 mm from TRK_SW1 and its own list asks for 0.50; they are inside that limit over 6.36 mm of copper, 6.36 mm of it OUTSIDE the courtyard of the part that carries both nets, 5.74 mm from the pads of the part that carries both nets"
  ],
  "inputs": {
   "board": "e",
@@ -22,7 +21,7 @@
   "rule_fingerprints": {
    "ANA-001": "1b5e5e32b5e446db"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "4bc0aa24d836788d"
  },
  "rules": [
   "ANA-001"
@@ -30,9 +29,9 @@
  "tool": "sensitive_nodes",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "6f7ef144f21449b3"
  },
- "ts": "2026-09-17T22:48:15Z",
+ "ts": "2026-09-18T08:56:34Z",
  "verdict": "FAIL",
  "version": "unknown"
 }
