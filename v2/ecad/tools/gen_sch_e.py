@@ -284,6 +284,11 @@ _intent.bypass("C44", "U11", "8", "+3V3_E6")     # the QSPI flash's VCC
 _intent.bypass("C45", "U10", "23", "E6_DVDD"); _intent.bypass("C46", "U10", "50", "E6_DVDD")
 _intent.bypass("C47", "U10", "44", "+3V3_E6")    # VREG_VIN
 _intent.bypass("C31", "U12", "2", "CELL_F")      # the 5 V buck's input capacitor, the loop that matters on a switcher
+# THE BOOTSTRAP CAPACITOR IS A DECOUPLING CAPACITOR OF ITS OWN PIN (18 September 2026, E16). The AP63205's BST to SW
+# capacitor C30 sat 17.6 mm from pin 6 in the PACK region's packer rows, and /E6_BST is the net that stayed open on E7
+# (closed by the stub router then), E14 and E16 (17.6 mm apart after the closers). The datasheet puts it at the pin; a
+# declared slot puts it there before the packer runs, which is the same answer the input capacitor C31 already has.
+_intent.bypass("C30", "U12", "6", "E6_BST")
 _intent.bypass("C34", "U13", "1", "+5V_E6"); _intent.bypass("C35", "U13", "5", "+3V3_E6")   # the LDO's input and output
 _intent.bypass("C48", "U14", "8", "+3V3_E6")     # BME688 VDD
 _intent.bypass("C49", "U15", "8", "+3V3_E6"); _intent.bypass("C50", "U15", "5", "+3V3_E6")  # BMI270 VDD and VDDIO
