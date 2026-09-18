@@ -10460,3 +10460,37 @@ nothing; a long one is a wall across the board that everything else has to go ro
 10.72 mm; board E's are 127 and 207 mm. That is the rule to carry, and it decides board A's next arm: A47's
 opens are refused at U3's own filter pads, pad to pad, which is board D's case and not board E's, so
 `$SP/a48_box.sh` pre-lays THOSE and nothing long.
+
+**Addendum, 03:05 CEST (19 September): A47's round one, read, and the charger's sense error has a number.**
+The finish ended at **hard 0 and 16 unrouted of 264 nets**, `check_pcb_a` **PASS of 842** on 421 footprints,
+refused only by TRN-001, which is decision 31. Board A's ladder after the closers is A42 15, A43 15, **A47
+16**, A45 22, A44 23, A46 27, and A47 is the only one of them carrying the current-sense filters, the eleven RF
+drops and the SENSE class. **It is not adoptable**: A32 is 0 hard and 0 unrouted and the bar is the bar.
+
+**What the arm bought, measured on the frozen board** (sha d15e230498e0c0fd, every reading read-only):
+
+* **RF-001 goes from 11 of 11 MISSED to PASS of 11.** The eleven blind-mate paths are laid by the generator on
+  the outer layer at 0.14 mm, which is 50 ohm on this stackup; on A32 they ran 10.0 mm on In2 at 0.35, a 26 ohm
+  stripline.
+* **SCH-002 goes from ten disagreements to `netlist_board` PASS of 2088** (413 references, 421 footprints).
+  Board A's board IS its schematic for the first time since the charger filter parts were added on 16 September.
+* **ANA-001 goes from 15 failures of 24 declared with only 10 measured, to 7 of 24 measured.** The ten "no such
+  net" failures are gone because the board now carries the filtered nets. The seven that remain are real and
+  each is named with its distance and its length outside the shared part's courtyard: PA_CSF 0.129 mm from
+  PA_SW1, HF_CSF 0.130 from HF_SW2 over 9.61 mm, POE_CSF 0.201, POE_FB 0.202, PA_CSGF 0.409, FE_FB 0.450,
+  POE_CSGF 0.486 over 11.90 mm.
+* **PI-003 on the solved board: 5 rails over their weakest transition**, worst VBAT 2.21 A against 0.65 (ratio
+  3.39), +13V8_PA 2.01 against 0.90, and `via_parallel` laid parallel barrels at several VBAT sites in the
+  finish, which is the first time that fixer has found room on board A. `rail_crossings` on the finished board
+  names **9 short crossings of 21**, one more than the pre-route reading: `+5V_DEV` at R43 pad 2 carries 6.00 A
+  through ONE 0.25 mm barrel and needs ten.
+
+**And the charger's input-current sense is 2.0 percent copper.** `kelvin_check`, written four hours ago and run
+here for the first time, reads **1.170 mV** of drop between R16 pad 1 and R147 pad 1 against the shunt's 60 mV
+full scale. At the 8 A the BQ25731 is set to, that is 160 mA of error in the limit that exists to stop the
+charger pulling down a PoE source, and the fix is a land at the shunt rather than a compromise.
+
+**One process note against myself**: the driver that took this solved reading ran from tools staged before
+`kelvin_check.py` and the pad potentials existed, so its first pass printed an empty section. That is D16's
+lesson in miniature, three hours after writing it down, and the `--requires` gate added tonight would have
+refused the run had the driver declared what it needed. The reading above is the re-take on staged tools.
