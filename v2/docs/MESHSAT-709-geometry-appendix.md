@@ -9586,3 +9586,15 @@ part) instead of two. Not a deliverable; promotion frozen. Also this hour: **D14
 route whose project file carries PWR 1.2/0.6 and SENSE 0.7/0.3 (D13's never did); **A46**'s stage 2 routes WEST, MID
 and EAST on the repaired import.
 
+**Addendum, 11:35 CEST: the DSN class-pair clearance is measured and refused, and A46's second run partitioned board
+A with board B's regions.** E17's DSN carried `(class_class (classes SENSE,Default SW,Default) (rule (clearance
+1.0000)))` and the router laid `/TRK_LSENSE`, an unlocked 16.9 mm F.Cu run, 0.171 mm from `/TRK_SW1` over 6.36 mm
+outside the shared part's courtyard (ANA-001's one failure on E17): Freerouting 1.9.0 does not hold two classes apart
+by a `class_class` rule, so the 32.222 instrument (`FR_CLASS_CLEAR`) reached the DSN and moved nothing, and A45's 26
+open against A44's 23 reads the same way. ANA-001's answer is placement, a pre-laid locked run, or a KiCad custom rule
+the DRC enforces after the route. **A46's stage 2 re-partitioned with `dsn_partition`'s default regions** (board B's
+DEVW, S1, S2, S3, DEVE: `part_stage2.sh` never took the caller's spec), so WEST, MID and EAST matched no net, each
+region job auto-routed nothing in half a second and reported PART-DONE, and the merged board read 417 open; the driver
+and its reconcile were stopped, `PART_REGIONS` travels to both partition calls now (rule in `test_driver_hygiene`),
+and stage 2 is relaunched on the same GLOBAL session.
+

@@ -1142,3 +1142,12 @@ def t_a_supervisor_killed_by_its_own_cap_takes_its_router_with_it():
         alive = subprocess.run(["ps", "-o", "pid=", "-p", child], capture_output=True, text=True).stdout.strip()
         assert not alive, "the stage outlived the supervisor, which is the defect this rule exists for"
         assert p.returncode in (143, 130, -15), p.returncode
+
+
+def t_the_partition_stage_two_repartitions_with_the_callers_regions():
+    """A46 (18 September 2026): part_stage2.sh re-partitioned with dsn_partition's DEFAULT regions (board B's), so
+    board A's WEST, MID and EAST groups matched no net and every region job routed nothing in half a second while the
+    driver reported PART-DONE for each. The caller's region spec travels in PART_REGIONS."""
+    s = open(os.path.join(TOOLS, "part_stage2.sh"), encoding="utf-8").read()
+    i = s.find("dsn_partition.py"); assert i > 0
+    assert "PART_REGIONS" in s[i:i + 300], "part_stage2.sh re-partitions without the caller's --regions"
