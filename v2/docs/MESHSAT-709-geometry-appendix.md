@@ -9730,3 +9730,13 @@ neighbourhoods of those 32 carry no free site at all, which leaves the ground-vi
 refused (21 open connections) or the layer count, decision 27. Nothing was adopted: the committed C24 board is
 untouched and the re-finish lives in its own tree.
 
+**Addendum, 16:55 CEST: board E's sense pair is answered by where three parts sit.** E18 is E17 with one variable, the
+tracker's Kelvin filter placed as every current-sense clause asks: the two 100 R resistors on the shunt's own row and
+the 1 nF at the controller's pin, against E17's packer-chosen seats 18 to 23 mm from the shunt with the capacitor AT
+the shunt. **ANA-001 reads PASS 3 of 3 on E18** (TRK_CSP 6.179 mm and TRK_CSN 6.507 mm from the nearest switching
+copper against the 0.50 mm asked) where E17 read FAIL with 0.276 and 0.142 mm over 5.5 and 9.3 mm of copper. The cost
+is measured too: E18 routed 0 hard and **five open of 94** where E17 routed one and closed it, and neither the stub
+router nor `direct_close` could take any of the five. So the rule is not a routing problem on this board and never
+was: it is three parts in the wrong seats, and the answer costs five connections that the next E phase has to route
+out with the effort E17 was given. E17 stays board E's adopted phase until that lands.
+
