@@ -10078,3 +10078,29 @@ has 32 failing nets and **two are inside 1.1, fourteen inside 1.5 and twenty-one
 eleven failures are all marginal (USB_E6_N 10.5 mm against a 10.0 mm limit, six USB nets between 11.4 and 13.9).
 A criterion 50 percent looser than today's would clear fourteen of the thirty-two. The decision's evidence
 carries both readings and the recommendation now says which one it rests on.
+
+**Addendum, 21:00 CEST: board B's missing reference is a via field, measured run by run.** RET-002 is a
+SCREENING test whose own registry entry says what it is for and what it is not: *"a net above the screening
+threshold is examined against RET-001 rather than failed outright"*, classification HEURISTIC, failure mode
+*"used as a law it refuses good boards (false positives at every via)"*. It was failing boards B, C and P on
+its own count. `return_gaps.py` prints every uncovered run with what sits on the neighbouring layers at its
+midpoint, so the question is answerable rather than arguable: **board B's 675.2 mm of uncovered signal run over
+937 runs is 884 runs and 601.3 mm of ANOTHER conductor's via anti-pad (89 percent), 39 runs and 60.0 mm of no
+reference at all, and 14 runs and 13.9 mm of a pad.** The runs are 0.7 mm at the median, 1.0 at the ninetieth
+percentile and 3.0 mm at the longest. A six-layer board carrying three compute modules has a via field, and
+this screen was measuring it.
+
+**A hole in a reference is not an absent reference.** The return current goes around a 0.7 mm anti-pad; it does
+not lose its reference. The screen already separated the net's OWN via anti-pads, which are RET-003's and
+RET-004's question (a transition needs a return via); it now separates ANY conductor's, counts the millimetres
+in their own bucket, prints them per net and board-wide, and judges what is left. What is left is a slot, a
+pad, another net's copper or the fill's own edge, which is the thing the rule is about. **How perforated a
+reference may be at all is RET-001's question and its criterion is owner decision 39**, so the number is
+reported and handed over rather than dropped.
+
+Two fixtures hold it, and the first one taught something in passing: a via field at a 1.8 mm pitch left the
+fill between the anti-pads below the zone's own minimum width, so the fill vanished and the fixture's
+"perforated" reference really was absent. At 4 mm the fill plainly resumes and the pair reads as intended: the
+perforated board passes with its millimetres counted, and the same board with the plane stopped half way still
+fails. Board P is the control that says this is not a loosening: two layers, no inner plane, nothing under the
+run at all, and its five failing nets are unchanged.
