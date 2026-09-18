@@ -19,11 +19,18 @@ SRC = open(os.path.join(TOOLS, "stub_router.py"), encoding="utf-8").read()
 
 
 def t_a_filled_pour_of_another_net_is_in_the_obstacle_map():
+    """...BY DEFAULT, which is the half that matters (18 September 2026). The pour branch grew a flag so the
+    PRE-LAY stage can take the pours out of the map (nothing is routed yet and the chain re-fills before it
+    judges anything); a finish must never do that, because it is what shorted board A's ground. So the rule
+    reads the whole zone block, not a fixed number of characters of it - the first version sliced 2,500 and the
+    comment explaining the flag pushed the assertion out of its own window - and it requires the default to be
+    ON."""
     assert "GetFilledPolysList" in SRC, "no filled zone reaches the stub router's obstacle map"
     i = SRC.index("for z in b.Zones():")
-    seg = SRC[i:i + 2500]
+    seg = SRC[i:SRC.index("for d in b.GetDrawings():", i)]
     assert "GetFilledArea()" in seg, "the zone loop does not look at the fill"
     assert "zpoly(trk[" in seg and "zpoly(via" in seg, "a pour blocks neither tracks nor vias"
+    assert 'STUB_POUR_OBSTACLE", "1"' in SRC, "the pour obstacle can be turned off and its default is not ON"
 
 
 def t_the_boards_own_net_is_a_target_and_never_an_obstacle():
