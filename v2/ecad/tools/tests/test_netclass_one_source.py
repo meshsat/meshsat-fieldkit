@@ -55,3 +55,15 @@ def t_the_rule_fails_on_the_shape_it_was_written_against():
     fixture = 'nc = pcbnew.NETCLASS("PWR"); cls(nc, 0.127, 0.5, 1.2, 0.6); ns.SetNetclass("PWR", nc)\n' \
               'd.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.127, 0.25, 0.6, 0.3), C("PWR", 0, 0.127, 0.5, 0.8, 0.4)]\n'
     assert re.search(r'\bCc?\("(?!Default")([A-Z0-9_]+)",\s*\d', fixture) and re.search(r'pcbnew\.NETCLASS\("([A-Za-z0-9_]+)"\)', fixture)
+
+
+def t_the_default_row_is_the_same_tuple_in_both_places():
+    """`cls(ns.GetDefaultNetclass(), 0.127, ...)` beside `C("Default", 2147483647, 0.127, ...)` is the same two-copy shape
+    for the Default class; both read one DEFAULT tuple."""
+    bad = []
+    for g in GENS:
+        s = _src(g)
+        if re.search(r'GetDefaultNetclass\(\),\s*[0-9.]', s): bad.append((g, "API default class set from literals"))
+        if re.search(r'Cc?\("Default",\s*\d+,\s*[0-9.]', s): bad.append((g, "project Default row written from literals"))
+        if "DEFAULT = (" not in s: bad.append((g, "no DEFAULT tuple"))
+    assert not bad, bad

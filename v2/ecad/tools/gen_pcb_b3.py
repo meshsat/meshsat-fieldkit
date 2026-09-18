@@ -557,7 +557,7 @@ print("track keep-outs over the whole board on In1 and In4 (planes); In2 and In3
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr, dpw, dpg):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr)); nc.SetDiffPairWidth(FromMM(dpw)); nc.SetDiffPairGap(FromMM(dpg)); nc.SetDiffPairViaGap(FromMM(0.25))
-cls(ns.GetDefaultNetclass(), 0.127, 0.25, 0.7, 0.3, 0.2, 0.15)
+DEFAULT = (0.127, 0.25, 0.7, 0.3, 0.2, 0.15); cls(ns.GetDefaultNetclass(), *DEFAULT)
 CLASSES = {"USB": (0.127, 0.127, 0.7, 0.3, 0.127, 0.13), "DIFF100": (0.127, 0.127, 0.7, 0.3, 0.127, 0.20),   # 8 Sep 2026 (32.71): on the 3313 outer layers 0.127/0.127 computes 94 ohm and 0.127/0.20 computes 101 ohm; the pairs run on F.Cu and B.Cu over the In1 and In4 grounds
             "PWR": (0.127, 0.4, 0.8, 0.4, 0.4, 0.25), "HV": (0.18, 0.5, 0.8, 0.4, 0.5, 0.5),
             # PANEL: the panel ribbon's 5 V alone, at 0.8 mm (17 September 2026, rule PWR-003, appendix 32.214). F1 is a
@@ -604,7 +604,7 @@ if os.path.exists(pro):
     # EVERY class of the table, in the table's order (18 September 2026): this loop named four classes by hand and the
     # table had grown PANEL, RF and SENSE since, so B22's project file, the DSN and every gate read those three at the
     # Default geometry (PANEL's 0.8 mm for the polyfuse never reached B22's copper). The order is the priority.
-    _cls = [Cc("Default", 2147483647, 0.127, 0.25, 0.7, 0.3, 0.2, 0.15)]
+    _cls = [Cc("Default", 2147483647, *DEFAULT)]   # the same tuple the API default class was set from
     for _i, _n in enumerate(CLASSES):
         _c = CLASSES[_n]; _cls.append(Cc(_n, _i, _c[0], _c[1], _c[2], _c[3], _c[4], _c[5]))
     d.setdefault("net_settings", {})["classes"] = _cls

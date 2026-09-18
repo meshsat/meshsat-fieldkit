@@ -746,7 +746,7 @@ print("RF drops: %d of 11 laid on F.Cu at 0.14 mm (50 ohm on this stackup), lock
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr, dpw, dpg):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr)); nc.SetDiffPairWidth(FromMM(dpw)); nc.SetDiffPairGap(FromMM(dpg)); nc.SetDiffPairViaGap(FromMM(0.25))
-cls(ns.GetDefaultNetclass(), 0.127, 0.25, 0.7, 0.3, 0.2, 0.15)
+DEFAULT = (0.127, 0.25, 0.7, 0.3, 0.2, 0.15); cls(ns.GetDefaultNetclass(), *DEFAULT)   # one tuple for the API call and the project file's Default row (18 September 2026)
 # clearances at the board minimum (7 Sep 2026: with the explicit net-class assignments the DRC enforces them, and a class clearance above a fine-pitch pad gap of 0.2 fails inside the LM5176 and TPS23861 pads); HV 0.18 for the 54 V nodes
 CLASSES = {"USB": (0.127, 0.127, 0.7, 0.3, 0.127, 0.13),   # 8 Sep 2026 (32.71): 0.127/0.127 on the 3313 outer layer computes 94 ohm; the pairs run on F.Cu and B.Cu over the In1 and In4 grounds; clearance 0.10 so the gap keeps a margin
             "PWR": (0.127, 0.4, 0.8, 0.4, 0.4, 0.25), "NODE": (0.127, 0.5, 0.8, 0.4, 0.5, 0.25), "SW": (0.127, 0.5, 1.0, 0.5, 0.8, 0.3), "RAIL": (0.127, 0.4, 1.0, 0.5, 0.5, 0.3), "RF": (0.18, 0.14, 0.7, 0.3, 0.2, 0.15), "HV": (0.18, 0.4, 0.8, 0.4, 0.4, 0.25),
@@ -805,7 +805,7 @@ if os.path.exists(pro):
     d = json.load(open(pro))
     base = dict(bus_width=12, line_style=0, microvia_diameter=0.3, microvia_drill=0.1, pcb_color="rgba(0, 0, 0, 0.000)", schematic_color="rgba(0, 0, 0, 0.000)", wire_width=6, diff_pair_via_gap=0.25)
     def C(name, prio, clr, tw, vd, vdr, dpw, dpg): return dict(base, name=name, priority=prio, clearance=clr, track_width=tw, via_diameter=vd, via_drill=vdr, diff_pair_width=dpw, diff_pair_gap=dpg)
-    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.127, 0.25, 0.7, 0.3, 0.2, 0.15)] + [C(nm, i, *v) for i, (nm, v) in enumerate(CLASSES.items())]
+    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, *DEFAULT)] + [C(nm, i, *v) for i, (nm, v) in enumerate(CLASSES.items())]
     d["net_settings"]["netclass_patterns"] = [{"netclass": n, "pattern": p} for p, n in PATTERNS]
     # 7 Sep 2026 (A22 round 1 on the box, KiCad 9.0.9): the router's DSN carried every "/NAME" net in kicad_default because the pattern matcher resolved neither
     # "NAME" nor "/NAME" for root-sheet labels; explicit per-net assignments in the project are honoured, so every net gets one from the first matching pattern
