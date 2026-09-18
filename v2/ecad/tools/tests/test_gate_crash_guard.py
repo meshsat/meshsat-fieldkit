@@ -85,3 +85,15 @@ def t_the_crash_hook_writes_inconclusive_and_exits_3_and_leaves_a_verdict_exit_a
              "sys.exit(v.write('hook_fixture2', v.PASS, denominator=1, inputs={}, rules=None))\n") % TOOLS
     r2 = subprocess.run([sys.executable, "-c", prog2], cwd=d, capture_output=True, text=True)
     assert r2.returncode == 0, (r2.returncode, r2.stdout, r2.stderr)
+
+
+def t_hardset_is_guarded_under_the_name_its_label_makes():
+    """hardset writes `hardset-<label>` because one finish makes four judgements with it, so the guard has to be
+    given that name or a crash's INCONCLUSIVE lands where nothing reads it (18 September 2026: it was the last
+    gate in the coverage map with no guard at all)."""
+    src = open(os.path.join(TOOLS, "hardset.py"), encoding="utf-8").read()
+    i = src.find('if __name__ == "__main__"')
+    assert i > 0
+    blk = src[i:]
+    assert "verdict.guard(_vname(" in blk, "hardset's entry point is not guarded under its label's name"
+    assert "--label" in blk, "the guard is given a name that does not come from the label"

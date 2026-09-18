@@ -169,4 +169,12 @@ def main(a):
         return verdict.CODE[verdict.FAIL if bad else verdict.PASS]
     return 0
 
-if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
+if __name__ == "__main__":
+    # THE LAST GATE WITHOUT THE CRASH GUARD, and it needed the label to get one (18 September 2026). Every other
+    # gate writes its verdict under its own name, so `verdict.guard` knows where to put the INCONCLUSIVE a crash
+    # earns; this one writes under `hardset-<label>` because a single finish makes four judgements with it, and
+    # that is exactly the name the guard has to use or the reading lands under a name nothing reads.
+    _lab = None
+    for _i, _a in enumerate(sys.argv[1:]):
+        if _a == "--label" and _i + 2 < len(sys.argv): _lab = sys.argv[_i + 2]
+    sys.exit(verdict.guard(_vname(_lab), main, sys.argv[1:]))
