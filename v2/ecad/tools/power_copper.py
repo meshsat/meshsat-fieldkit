@@ -97,6 +97,27 @@ class PowerCopper:
             v = pcbnew.PCB_VIA(self.b); v.SetPosition(self.P(x, y)); v.SetDrill(FromMM(drill)); v.SetWidth(FromMM(width)); v.SetViaType(pcbnew.VIATYPE_THROUGH)
             v.SetNet(self.net_for(net, create=False)); v.SetLocked(True); self.b.Add(v)
         return self
+    def cluster(self, net, at, amps, drill=0.4, width=0.8, pitch=None, axis="x"):
+        """The barrels one layer transition needs, placed for it (18 September 2026).
+
+        `stitch(..., amps=)` refuses a transition that is short; this is the other half, for the case where the
+        count is the only thing in question and the room is known to be there. The caller gives the point and
+        the axis it may spread along, which it knows from `barrel_sites.py` (that report names every pad within
+        reach of the site, its own net's and everyone else's); the count comes from the current and the drill.
+        Centred on the point, so a site that already has one barrel there keeps the copper it has.
+
+        Board A is why this exists: thirty-two sites over five rails, each a transition with one barrel where
+        the mesh puts up to 3.4 A, and typing three coordinates apiece is how a table of ninety-six numbers gets
+        one wrong. `pitch` defaults to the drill plus 0.4 mm, which keeps the 0.3 mm hole-to-hole floor of this
+        project's own rule at every drill it uses."""
+        n = self.barrels_for(amps, drill)
+        pitch = pitch if pitch is not None else (drill + 0.4)
+        x, y = at
+        span = (n - 1) * pitch
+        pts = [((x - span / 2.0 + i * pitch, y) if axis == "x" else (x, y - span / 2.0 + i * pitch)) for i in range(n)]
+        self.stitch(net, pts, drill=drill, width=width)
+        return pts
+
     def rail_run(self, net, name, a, b, width, layers=(pcbnew.B_Cu,), vias_per_end=3, priority=2, stitch_pitch=1.5):
         """A straight band along x or y from point a to point b (case frame), width mm, with stitch vias across the band at both ends."""
         (ax, ay), (bx, by) = a, b; h = width / 2

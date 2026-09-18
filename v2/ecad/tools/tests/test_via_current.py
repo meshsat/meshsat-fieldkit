@@ -175,3 +175,20 @@ def t_a_stitch_that_is_short_of_barrels_refuses_the_board():
     assert "def stitch(self, net, pts, drill=0.4, width=0.8, amps=None)" in src, "stitch takes no current"
     assert "need = self.barrels_for(amps, drill)" in src, "stitch does not ask how many barrels the current needs"
     assert "raise SystemExit" in src.split("def stitch")[1][:1200], "a short stitch does not refuse the board"
+
+
+def t_a_cluster_places_the_barrels_the_current_needs_and_keeps_the_hole_to_hole_floor():
+    """The other half of the count rule (18 September 2026): where the room is known, the tool places them.
+
+    Board A has thirty-two transitions to answer and typing three coordinates apiece is how a table of ninety-six
+    numbers gets one wrong. `power_copper.cluster` takes the point, the axis the site may spread along (which
+    `barrel_sites.py` reports, pad by pad) and the current, and places the count `via_current.barrels_for` gives,
+    centred so a barrel already there keeps its copper. The default pitch is the drill plus 0.4 mm, which holds
+    this project's own 0.30 mm hole-to-hole floor at every drill it uses."""
+    import os, re
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "power_copper.py"),
+               encoding="utf-8").read()
+    body = src[src.index("    def cluster("):src.index("    def rail_run(")]
+    assert "n = self.barrels_for(amps, drill)" in body, "the count does not come from the current"
+    assert "(drill + 0.4)" in body, "the default pitch does not keep the hole-to-hole floor"
+    assert "span / 2.0" in body, "the cluster is not centred on the site, so an existing barrel loses its place"
