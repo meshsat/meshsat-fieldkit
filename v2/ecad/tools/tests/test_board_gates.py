@@ -1105,3 +1105,50 @@ def t_a_via_that_moves_between_two_ground_planes_stands_and_so_does_one_nobody_c
         still, buckets, missing = return_via.examine(path, r)
         assert missing and "ref_change" in missing, missing
         assert still == r["lacking"], "a screen with no examination beside it quietly dropped a via"
+
+
+def _fanout_board(pcbnew, tmp, amps):
+    """A board with one rail pad, one via on it, and an intent file declaring what the rail carries."""
+    b = _board(pcbnew, 20.0, 20.0)
+    net = pcbnew.NETINFO_ITEM(b, "/+5V_X"); b.Add(net)
+    fp = pcbnew.FOOTPRINT(b); fp.SetReference("U1")
+    fp.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(10), pcbnew.FromMM(10)))
+    pad = pcbnew.PAD(fp); pad.SetSize(pcbnew.VECTOR2I(pcbnew.FromMM(1.2), pcbnew.FromMM(1.2)))
+    pad.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(10), pcbnew.FromMM(10)))
+    pad.SetAttribute(pcbnew.PAD_ATTRIB_SMD); pad.SetLayerSet(pcbnew.LSET.FrontMask()); pad.SetNumber("1")   # LSET(layer) is not offered by this build (KiCad 9.0.9)
+    pad.SetNet(net); fp.Add(pad); b.Add(fp)
+    v = pcbnew.PCB_VIA(b); v.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(10), pcbnew.FromMM(10)))
+    v.SetDrill(pcbnew.FromMM(0.25)); v.SetWidth(pcbnew.FromMM(0.45)); v.SetNet(net); v.SetLocked(True); b.Add(v)
+    path = os.path.join(tmp, "fan.kicad_pcb"); pcbnew.SaveBoard(path, b)
+    os.makedirs(os.path.join(tmp, "out"), exist_ok=True)
+    json.dump({"rails": {"/+5V_X": {"volts": 5.0, "amps_peak": amps, "source": "U1", "loads": {}}}},
+              open(os.path.join(tmp, "out", "fan-intent.json"), "w"))
+    return path
+
+
+def t_a_rail_crossing_with_fewer_barrels_than_its_current_needs_is_named_at_generation_time():
+    """THE DEFECTIVE FIXTURE (18 September 2026). Every PI-003 failure this project has found has one shape: a
+    rail crosses layers through ONE barrel. Board B is three slot rails at 2.20 A through a single 0.25 mm
+    barrel sitting inside that slot's bulk capacitor pad, which is this very stage's via-in-pad. The solved mesh
+    finds them after a route; at the pad of a rail's declared SOURCE the whole rail current crosses, so the
+    barrels it needs are arithmetic and the fanout can say so before anything is routed."""
+    p = _pcbnew()
+    with tempfile.TemporaryDirectory() as tmp:
+        path = _fanout_board(p, tmp, 2.2)
+        r = subprocess.run([sys.executable, os.path.join(TOOLS, "prefanout.py"), path, "+5V_X"],
+                           capture_output=True, text=True)
+        assert "+5V_X at U1 pad 1" in r.stdout, r.stdout[-600:]
+        assert "which needs 4 at a 10 K rise" in r.stdout, r.stdout[-600:]
+
+
+def t_a_crossing_that_carries_what_it_should_says_nothing_about_being_short():
+    """THE ACCEPTABLE FIXTURE. The same board and the same one barrel, with the rail declaring 0.30 A: a 0.25 mm
+    barrel is rated 0.65 A at a 10 K rise, so one is enough and the stage says the crossings are carried. A
+    report that fires on every board would be noise and the next person would stop reading it."""
+    p = _pcbnew()
+    with tempfile.TemporaryDirectory() as tmp:
+        path = _fanout_board(p, tmp, 0.30)
+        r = subprocess.run([sys.executable, os.path.join(TOOLS, "prefanout.py"), path, "+5V_X"],
+                           capture_output=True, text=True)
+        assert "fewer barrels" not in r.stdout, r.stdout[-600:]
+        assert "carry the barrels their current needs" in r.stdout, r.stdout[-600:]
