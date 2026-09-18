@@ -10363,3 +10363,24 @@ against a number rather than against a fear. Six fixtures, on a synthetic potent
 held where KiCad is not: a tap 0.1 mV from its shunt passes, a tap 3 mV away fails at 5.0 percent of the
 reading, a pad the mesh did not solve is said so rather than guessed, and a board with no solved mesh reads
 INCONCLUSIVE naming the file it could not read.
+
+**Addendum, 01:10 CEST (19 September): what the 79 unanswered pairs wait on, counted again after today's
+corrections** (the 17:50 reading counted 76; the set is 43 FAIL, 79 INCONCLUSIVE, 211 PASS of 333). They fall
+over **eighteen rules**, and the shape is worth reading because it is not eighteen problems:
+
+| waiting on | pairs | rules |
+|---|---:|---|
+| a folder cut at the board's own declared phase | **22** | DOC-002 6, CMP-002 4, SUP-001 4, DFM-001 4, DOC-001 4 |
+| an owner decision by name | **21** | ENV-001 7 (the envelope, decision 34), STK-002 7 (the layer count), RET-003 5, INT-002 1, plus RET-001's share |
+| an authority this project does not have | **20** | RET-001 6, SI-001 6, GND-002 4, IMP-001 3, VIA-002 1 |
+| the assembler's own 2D preview | **7** | DFA-001 on every board |
+| a thermal number nobody has measured | **6** | THM-001 |
+| a board a phase behind its generator | **2** | RF-001 on B, ISO-001's board B share |
+
+**Twenty-two of the seventy-nine are ONE action**, cutting the deliverable and order folders for A, B, D and E
+at the phases those boards declare, and that action is blocked twice over: promotion is frozen, and three of
+those four boards are held by decision 31. **Seven more can only be closed by the ordering session**, which is
+the one place the assembler's 2D preview exists; `ROTATION-CHECKLIST.md` is generated for it and its 42
+polarised footprints are waiting for an offset and a date. So of the 122 pairs that are not PASS, the
+engineering that this project can do unaided tonight is the 43 failures, of which board B's route and board A's
+are most of the count.
