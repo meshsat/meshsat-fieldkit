@@ -9404,3 +9404,10 @@ already sits in a field of six or more vias of its net within 2 mm is refused (o
 wider via or a generator field answers it). E11 dry run: worst 2.61 to 2.28 to 1.76 to 1.31 over three rounds, the
 fourth put back at 1.33, eight barrels kept; the residue (VIN_RAW's 0.80 A barrel with no site, CELL_F's field) is
 the generator's, as 32.224 said. The fixed fixer is in D13's, B22's and the A arms' trees ahead of their finishes.
+
+**Addendum, 03:03 CEST: D13's first round answers PI-003 at the source.** D13 routed 200 passes to 0 hard and 2 open of
+133 nets with 327 vias (D12 closed at 0/0 with one hand closure, 32.133); its finish's `via_parallel` stage read
+*every solved barrel is inside its rating at 10 K; nothing to lay*, so the 1.2/0.6 power-class via alone answers
+the two +5V_SA barrels D12 failed on, which is the generator's answer and not the fixer's. The closers did not take
+the two opens and routeflow's remedy round (via_costs 100, 200 passes) runs to about 02:00 UTC with round one's
+board kept as the best; the record's rule that a remedy round rarely beats round one stands until it is measured.
