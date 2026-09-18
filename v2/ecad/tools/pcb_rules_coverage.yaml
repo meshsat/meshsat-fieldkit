@@ -44,10 +44,10 @@ coverage:
    maturity: ENFORCED, gap_category: NONE, note: "three comparisons with denominators; runs on the placed and on the routed board"}
 
  SCH-003: {implementation: "gen_sch_*.py, gen_pcb_e5.py", verification: {tool: "check_contracts.py, block_contract.py", verdict: "check_contracts_<letter>", fixtures: "tests/test_gate_fixtures.py, tests/test_block_contract.py"},
-   _shared_verdict_why: "SHARED WITH RF-002 (18 September 2026). This rule is the whole of what check_contracts
-     measures, every declared contract on the netlists of the boards in the manifest, plus block_contract for the
-     one interface with no netlist at either end. RF-002 reads the same verdict for three contracts inside it; see
-     its entry for the caveat that a failure anywhere fails both.",
+   _verdict_why: "The whole of what check_contracts measures: every declared contract on the netlists of the
+     boards in the manifest, plus block_contract for the one interface with no netlist at either end. It was
+     shared with RF-002 until 18 September 2026, when the transmit inhibit contracts were given their own verdict
+     (`inhibit_chain_<letter>`), because a failure anywhere in this set was failing that rule as well.",
    maturity: ENFORCED, gap_category: NONE,
    note: "INCONCLUSIVE when a sibling netlist is absent, which is correct; the contracts themselves are a hand-written list and their completeness is not itself checked. 17 September 2026: board E5 is judged now. It has no schematic and no netlist, so its contract is between two BOARDS: gen_pcb_e5.py reads board A's board file and puts a target under each spring pin carrying that pin's net, and block_contract.py re-derives that match by position and compares it, 33 checks on the current A. It is the one blind-mate interface in the kit, where a target on the wrong net is invisible until the pack current is on it, and until today nothing checked it at all"}
 
@@ -391,15 +391,14 @@ coverage:
    note: "the D gate checks the RF chain's net continuity and the module keep-outs; no line impedance is computed, no filter is verified, and the LPF values are flagged for a simulation that has not run. This entry NAMES NO VERDICT on purpose (16 September 2026): it named check_pcb_d, board D's own gate, while the rule applies to B as well, so the day it was promoted board B would have read a PASS off a gate that looks at no RF line. Nothing verifies this rule on either board, and the coverage map says so rather than pointing at the nearest gate 16 September 2026, evening: THE FIRST HALF IS MEASURED NOW AND IT FOUND ELEVEN LINES. Every board declares an RF class with a 50 ohm single-ended target (intent.Z_DEFAULT) and impedance_check judges PAIRS: the string z_se does not appear in it, so the target was declared on every board and read by nothing. rf_line.py computes each such net from the width it was ROUTED at on each layer against the board own stackup, by the closed form alone because this project two-dimensional solver calibration was measured on differential geometries. Board A: all eleven blind-mate RF paths sit on In2.Cu at 0.350 mm, which is 25.5 ohm on that stack against the 50 their class asks for. The width is right for the OUTER layer the class was drawn for and the router put the lines inside, which is the shape of defect this rule exists to catch. What is still not judged is the ground clearance of a coplanar line, the via fence, the launch and the filter, so the rule stays GENERATED_ONLY in its gap category while its verdict is now real",
    remediation: {action: "board A's eleven RF paths take an outer layer at the class width (the A40 placement), then the LPF simulation and the coplanar clearance and via fence", owner: SESSION, execution: PARALLEL_BOX, depends_on: [IMP-001], p50_h: 6, p80_h: 18}}
 
- RF-002: {implementation: "gen_sch_c.py, gen_sch_d.py, gen_sch_a.py", verification: {tool: check_contracts.py, verdict: "check_contracts_<letter>", fixtures: tests/test_gate_fixtures.py},
-   _shared_verdict_why: "SHARED WITH SCH-003 (18 September 2026). check_contracts runs every declared cross-board
-     contract on the netlists and writes one verdict. For SCH-003 that verdict IS the rule. For RF-002 it is the
-     three inhibit-chain contracts inside the same run: the EMCON line's driver count is one, its sense is the one
-     the receiving board acts on, and its pull is fail-safe (added 9 September 2026 after the line was found wired
-     as a ring oscillator with its polarity inverted between boards). THE CAVEAT, stated because the worst reading
-     decides: a failure of ANY contract fails both rules, so an RF-002 row must be read against the name of the
-     failing contract before it is believed. Today every contract passes (72 of 72) so the two agree. A second
-     verdict over the inhibit contracts alone is owed and is cheap; it is not written while nothing fails.",
+ RF-002: {implementation: "gen_sch_c.py, gen_sch_d.py, gen_sch_a.py", verification: {tool: check_contracts.py, verdict: "inhibit_chain_<letter>", fixtures: tests/test_gate_fixtures.py},
+   _verdict_why: "ITS OWN VERDICT SINCE 18 SEPTEMBER 2026. This rule and SCH-003 both read check_contracts'
+     single verdict, so a failure of ANY contract, a pack polarity or a rail share, failed the transmit inhibit
+     chain too. The contracts that answer THIS rule are tagged `inhibit` in check_contracts.py and write
+     `inhibit_chain_<letter>` beside the board's own contract verdict: the line is present on the board, it
+     reaches the gate it keys, the panel toggle is its only driver, its sense is a buffer and not an inverter,
+     and every consumer pulls it down so a missing panel inhibits. First run: A 4 of 4, B 3 of 3, C 3 of 3,
+     D 5 of 5, all PASS, with the set's own contract verdict still PASS of 72.",
    maturity: ENFORCED, gap_category: NONE, note: "driver count, sense and fail-safe pull are checked across three boards"}
 
  INT-001: {implementation: "gen_sch_*.py, with the PCIe clauses of the module datasheet held by check_contracts.py",

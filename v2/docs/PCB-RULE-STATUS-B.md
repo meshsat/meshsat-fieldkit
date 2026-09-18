@@ -50,7 +50,7 @@ Measured on board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21.
 | SI-001 transmission-line classification | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | the authority behind this rule's limit is not established: 16 September 2026: half of this note was already wrong and the other half is now addressed. |
 | CLK-001 oscillators, straps and boot pins | BLOCKER | SCHEMATIC | **PASS** | clock_check PASS of 7 |
 | RF-001 RF paths are designed as RF | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | rf_line INCONCLUSIVE |
-| RF-002 transmit inhibit is hardware | BLOCKER | SCHEMATIC | **PASS** | check_contracts_b PASS of 42 |
+| RF-002 transmit inhibit is hardware | BLOCKER | SCHEMATIC | **PASS** | inhibit_chain_b PASS of 3 |
 | INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **FAIL** | interfaces_b FAIL: {'assignments': 7, 'disagreements': 7} |
 | INT-002 a transformerless Ethernet link is verified at both ends | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | an owner decision is open: BOTH ends read on 16 September 2026, and they do not close the question. The switch vendor PERMITS this exact topology and  |
 | TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **PASS** | port_protect_b PASS of 11 |

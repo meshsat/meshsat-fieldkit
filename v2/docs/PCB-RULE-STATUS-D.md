@@ -58,7 +58,7 @@ Measured on board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12.
 | CLK-001 oscillators, straps and boot pins | BLOCKER | SCHEMATIC | **PASS** | clock_check PASS of 2 |
 | ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **PASS** | sensitive_nodes PASS of 6 |
 | RF-001 RF paths are designed as RF | BLOCKER | ROUTED_BOARD | **PASS** | rf_line PASS of 12 |
-| RF-002 transmit inhibit is hardware | BLOCKER | SCHEMATIC | **PASS** | check_contracts_d PASS of 11 |
+| RF-002 transmit inhibit is hardware | BLOCKER | SCHEMATIC | **PASS** | inhibit_chain_d PASS of 5 |
 | INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **PASS** | interfaces_d PASS of 1 |
 | TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **FAIL** | port_protect_d FAIL: {'behind_an_active_part': 0, 'declared': 4, 'not_on_netlist': 0, 'ports': 4, 'unprotected': 7} |
 | THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, |

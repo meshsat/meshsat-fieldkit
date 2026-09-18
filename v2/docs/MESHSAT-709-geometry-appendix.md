@@ -9818,3 +9818,25 @@ drift: 42 polarised footprints, each with the boards that place it and one desig
 for the offset and the date. An offset of zero is a real answer recorded the same way; what the rule refuses is
 the blank.
 
+**Addendum, 18:00 CEST: the transmit inhibit chain has its own verdict, and the shape behind today's rule
+defects is mechanical now.** Two rules were being decided by a verdict about another question (RTE-001 by the
+route, STK-001 by a pair measurement of zero pairs), and the general form of that error is a verdict named by
+more than one rule. There are five such verdicts left and a rule now refuses any of them whose rules do not each
+say, in the coverage map, what that one tool measures for IT. Writing those eight sentences found a pair the
+enumeration had missed (IMP-001 and PAIR-001 share `impedance_check`) and forced one caveat into the open: **a
+failure of ANY cross-board contract, a pack polarity or a rail share, was failing RF-002, the transmit inhibit
+chain.** That one is now fixed rather than documented. The contracts that answer RF-002 are tagged `inhibit` in
+`check_contracts.py` and write `inhibit_chain_<letter>` beside each board's own contract verdict: the line is
+present on the board, it reaches the gate it keys, the panel toggle is its only driver, its sense is a buffer
+and not an inverter, and every consumer pulls it down so a missing panel inhibits. First run: **A 4 of 4, B 3 of
+3, C 3 of 3, D 5 of 5, all PASS**, with the set's own contract verdict still PASS of 72. The attribution rule
+that held those two rules to the literal name `check_contracts_<letter>` was generalised to the property it
+actually defends, that a rule about one board is decided by a reading about that board.
+
+**And the two routes of the afternoon landed their first numbers.** D15, board D's PI-003 answer in locked
+copper, routed **0 hard and ONE open of 133 nets** in 27.7 minutes with 333 vias, against D12's 0 and 0: so the
+three parallel barrels cost this board one connection at the router, where the 1.2/0.6 class via cost nine. E18
+round 2, the via-cost remedy on the Kelvin placement, routed **0 hard and four open of 94** with 148 vias
+against round 1's five and 181. Both finishes are in their closers and both have a landing driver waiting on the
+supervisor; neither is adopted.
+
