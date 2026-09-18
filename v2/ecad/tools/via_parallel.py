@@ -38,6 +38,7 @@ import boardtable as _bt
 RINGS = (0.9, 1.1, 1.3, 1.6, 2.0, 2.5, 3.0)
 ROUNDS = 5             # solve, lay, judge, and again on what is still over: a chain of barrels moves the worst one along
 DIRS = 16
+FIELD = 6              # a barrel with this many vias of its net within 2 mm sits in a field: adding one more moves the worst along (E12, 39 vias in five rounds)
 HOLE_TO_HOLE = 0.30      # centre to centre room this project's finish keeps between drilled holes (stub router's own rule)
 mm = lambda v: v / 1e6
 
@@ -128,6 +129,23 @@ def _in_own_fill(b, net, x, y, layer):
     return False
 
 
+def _worst(cur, rise, plating):
+    """The worst barrel ratio over every solved rail, and the net it is on: the number a round must not raise."""
+    w = (0.0, None)
+    for net, rows in (cur or {}).items():
+        for r in rows:
+            drill = float(r.get("drill_mm") or 0); amps = float(r.get("amps") or 0)
+            lim = _vc.ampacity(drill, rise, plating)[0] if drill > 0 else 0.0
+            if lim > 0 and amps / lim > w[0]: w = (amps / lim, net)
+    return w
+
+
+def _field(b, net, x, y, reach=2.0):
+    """How many vias of the net already sit within reach of the barrel: a field is the generator's answer, not this one's."""
+    return sum(1 for t in b.GetTracks() if t.GetClass() == "PCB_VIA" and t.GetNetname() == net
+               and math.hypot(mm(t.GetPosition().x) - x, mm(t.GetPosition().y) - y) <= reach)
+
+
 def _inside(b, x, y, margin):
     bb = b.GetBoardEdgesBoundingBox()
     X, Y, M = x * 1e6, y * 1e6, margin * 1e6
@@ -162,11 +180,16 @@ def main(a):
     clr = max(mm(ds.m_MinClearance), 0.20)   # 0.20: room for the solder-mask web too, which the first D12 dry run bridged three times
     cu = list(b.GetEnabledLayers().CuStack())
     refused_sites = set(); total_kept = 0; rounds_run = 0
+    worst_before = _worst(cur, rise, plating)
     for rnd in range(1, ROUNDS + 1):
         rounds_run = rnd
         if rnd > 1:
-            _resolve(path); cur = _currents(path) or {}
             b = pcbnew.LoadBoard(path)
+        # THE ROUND IS A TRIAL AGAINST THE JUDGE'S OWN NUMBER (18 September 2026, E12): five rounds laid 39 vias in
+        # VIN_RAW's transition field, each round chasing the barrel the mesh moved its current to, and the rail
+        # ended with 4.86 A through one barrel where it began with 3.36. A round that raises the set's worst ratio
+        # is put back and the pass stops there.
+        round_bak = path + ".via_parallel.round"; shutil.copy(path, round_bak)
         # the barrels over their rating, and how many more each wants
         todo = []
         for net, rows in cur.items():
@@ -199,6 +222,9 @@ def main(a):
                     orig = t; break
             if orig is None:
                 refused.append("%s at (%.1f, %.1f): no via of that net there any more" % (net, bx, by)); continue
+            _nf = _field(b, netname, bx, by)
+            if _nf >= FIELD:
+                refused.append("%s at (%.1f, %.1f): already in a field of %d vias of its net within 2 mm; one more moves the worst along, a wider via or a generator field answers it" % (net, bx, by, _nf)); continue
             vd0 = mm(_kc.via_width(orig)); vdr0 = mm(orig.GetDrill())
             # THE SAME BARREL FIRST, THE BOARD'S SMALLEST SECOND (18 September 2026): D12's second +5V_SA barrel is a
             # 0.80 mm via with no free site for another within 3 mm, where a 0.40/0.20 via fits. A smaller barrel
@@ -260,6 +286,7 @@ def main(a):
                   % (net, bx, by, amps, lim, len(sites), extra, ", ".join(b.GetLayerName(L) for L in sorted(layers))))
         if not laid:
             for r in refused[:12]: print("via_parallel:   %s" % r)
+            if os.path.exists(round_bak): os.remove(round_bak)
             if rnd == 1: os.remove(keep); print("via_parallel: nothing laid"); return 0
             break
         pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(path, b)
@@ -301,16 +328,29 @@ def main(a):
             h, u, d = _measure(path)
         if h > h0 or u > u0:
             print("via_parallel: HURT (hard %d -> %d, unrouted %d -> %d): reverting every via and link" % (h0, h, u0, u))
-            shutil.copy(keep, path); os.remove(keep); return 1
-        kept = sum(len([c for c in ps if c not in bad]) for _, _, ps, _ in laid); total_kept += kept
-        print("via_parallel: round %d: kept %d parallel via(s) at %d barrel(s) (hard %d -> %d, unrouted %d -> %d)" % (rnd, kept, len(laid), h0, h, u0, u))
+            shutil.copy(keep, path); os.remove(keep)
+            if os.path.exists(round_bak): os.remove(round_bak)
+            return 1
+        kept = sum(len([c for c in ps if c not in bad]) for _, _, ps, _ in laid)
         for r in refused[:12]: print("via_parallel:   %s" % r)
-        if kept == 0: break
+        if kept == 0:
+            if os.path.exists(round_bak): os.remove(round_bak)
+            print("via_parallel: round %d: nothing kept" % rnd); break
+        _resolve(path); cur = _currents(path) or {}
+        worst_after = _worst(cur, rise, plating)
+        if worst_after[0] > worst_before[0] + 1e-6:
+            shutil.copy(round_bak, path); os.remove(round_bak)
+            print("via_parallel: round %d: %d via(s) laid and the worst barrel went %.2f (%s) -> %.2f (%s): the round is put back and the pass stops"
+                  % (rnd, kept, worst_before[0], worst_before[1], worst_after[0], worst_after[1]))
+            _resolve(path); break
+        os.remove(round_bak); total_kept += kept
+        print("via_parallel: round %d: kept %d parallel via(s) at %d barrel(s) (hard %d -> %d, unrouted %d -> %d), worst barrel %.2f -> %.2f"
+              % (rnd, kept, len(laid), h0, h, u0, u, worst_before[0], worst_after[0]))
+        worst_before = worst_after
     if os.path.exists(path + ".via_parallel.bak"): os.remove(path + ".via_parallel.bak")
     print("via_parallel: %d parallel via(s) kept over %d round(s)" % (total_kept, rounds_run))
 
     if "--no-resolve" not in a:
-        _resolve(path)
         r = subprocess.run([sys.executable, os.path.join(TOOLS, "via_current.py"), path, "--rise-k", str(rise)],
                            capture_output=True, text=True, cwd=os.path.dirname(os.path.abspath(path)))
         for l in (r.stdout + r.stderr).split("\n"):
