@@ -77,9 +77,16 @@ def _holds(path=None):
                    "board is held" % (type(e).__name__, e)
 
 
-def main(argv, run=None, boards_dir=None, holds_path=None):
+def main(argv, run=None, boards_dir=None, holds_path=None, out_dir=None):
     run = run or globals()["run"]
     only = set(argv[argv.index("--boards") + 1].split(",")) if "--boards" in argv else None
+    # A RUN AGAINST SOMEBODY ELSE'S MANIFEST DOES NOT WRITE INTO THIS TREE'S EVIDENCE (18 September 2026).
+    # `verdict.write` defaults to "out" relative to the CURRENT DIRECTORY, so a fixture that hands this
+    # function a synthetic boards directory and calls it from v2/ecad wrote its two-folder answer straight
+    # over the set's own: `final_gate PASS of 2` stood in out/ and rule OUT-001 read it as a pass on all
+    # seven boards. The manifest and the evidence travel together now, and a caller may say where.
+    OUT = out_dir or os.environ.get("VERDICT_DIR") or (
+        os.path.join(os.path.dirname(os.path.abspath(boards_dir)), "out") if boards_dir else None)
     held_boards, holds_unreadable = _holds(holds_path)
     required = required_letters(boards_dir)
     found = newest_folders(only)
@@ -194,14 +201,14 @@ def main(argv, run=None, boards_dir=None, holds_path=None):
                      evidence=[r["summary"][:160]],
                      missing_input=("the folder judged here is %s and this board declares %s, so its properties "
                                     "are a reading of a board this set is not building"
-                                    % (r["folder"], r.get("declared") or "nothing")))
+                                    % (r["folder"], r.get("declared") or "nothing")), out_dir=OUT)
             continue
         _v.write("verify_deliverable_%s" % _l,
                  _v.PASS if r.get("vd_rc") == 0 else (_v.INCONCLUSIVE if r.get("vd_rc") == 3 else _v.FAIL),
                  counts={"folder": 1, "quote": int(bool(r["quote"]))}, denominator=1, quiet=True,
                  inputs={"folder": r["folder"]},
                  evidence=[r.get("vd_summary", "")[:160]] if r.get("vd_summary") else [],
-                 note="this board's own deliverable folder, read by verify_deliverable in this run")
+                 note="this board's own deliverable folder, read by verify_deliverable in this run", out_dir=OUT)
     # A PER-BOARD VERDICT AS WELL AS THE SET'S (16 September 2026). DOC-001 and OUT-001 are verified by this
     # gate, and this gate judges the SET, so every board inherited the set's failure: board E5's own folder is
     # the one folder that passes and it was reading FAIL on both rules because six other folders are stale.
@@ -216,13 +223,14 @@ def main(argv, run=None, boards_dir=None, holds_path=None):
                  inputs={"folder": r["folder"]}, quiet=True,
                  note=("this board is HELD by an open owner decision, so its paperwork is not current and "
                        "cannot be made current while the hold stands" if r.get("held") else
-                       "this board's own deliverable folder, judged on its own; the set's verdict is final_gate"))
+                       "this board's own deliverable folder, judged on its own; the set's verdict is final_gate"),
+                 out_dir=OUT)
     for l in missing:
         _v.write("verify_deliverable_%s" % l.lower(), _v.INCONCLUSIVE, counts={"folder": 0}, denominator=0,
-                 quiet=True, missing_input="this board has no deliverable folder at all, so nothing was read")
+                 quiet=True, missing_input="this board has no deliverable folder at all, so nothing was read", out_dir=OUT)
         _v.write("final_gate_%s" % l.lower(), _v.FAIL, counts={"folder": 0}, denominator=1, quiet=True,
                  evidence=["a required board with no deliverable folder"],
-                 note="this board has no deliverable folder at all")
+                 note="this board has no deliverable folder at all", out_dir=OUT)
     return _v.write("final_gate", res,
                     counts={"pass": len(rows) - len(bad) - len(held), "fail": len(bad), "quote": len(held),
                             "held": len([r for r in rows if r.get("held")]), "missing": len(missing),
@@ -230,7 +238,8 @@ def main(argv, run=None, boards_dir=None, holds_path=None):
                     denominator=len(want),
                     evidence=evidence,
                     note="deliverable folders re-read today; contracts %s; parts %s; claims %s; %s"
-                         % (c_word, j_word, "PASS" if rc_m == 0 else "OPEN", certify.strip()[:80]))
+                         % (c_word, j_word, "PASS" if rc_m == 0 else "OPEN", certify.strip()[:80]),
+                    out_dir=OUT)
 
 
 if __name__ == "__main__":

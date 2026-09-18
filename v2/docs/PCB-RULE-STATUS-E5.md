@@ -3,7 +3,7 @@
 
 # Rule status: board E5
 
-Manifest **2026-09-16.1**, rule set **82885961768537e2**, evidence epoch **2026-09-16T00:35:00+02:00**.
+Manifest **2026-09-16.1**, rule set **ff8151db3576437b**, evidence epoch **2026-09-16T00:35:00+02:00**.
 
 **Readiness: NOT_READY**
 
@@ -11,8 +11,8 @@ Measured on board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 20 | 80.0 |
-| FAIL | 2 | 8.0 |
+| PASS | 19 | 76.0 |
+| FAIL | 3 | 12.0 |
 | INCONCLUSIVE | 3 | 12.0 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **25** | 100.0 |
@@ -41,6 +41,6 @@ Measured on board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5.
 | BAT-002 the energy chain is bounded end to end | BLOCKER | SCHEMATIC | **PASS** | energy_chain PASS of 98 |
 | DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **PASS** | final_gate_e5 PASS of 1 |
 | DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **FAIL** | doc_provenance FAIL: {'documents': 7, 'folders': 7, 'untraceable': 7} |
-| OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **PASS** | final_gate PASS of 2 |
+| OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 334 |
 | SGN-002 a prototype-only unknown is named | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | PCB-PROTOTYPE-UNKNOWNS.md is current with the registry |

@@ -7,7 +7,7 @@ Every rule this project holds a board to, with its authority, its applicability,
 its verification is currently worth. Generated from the registry: the registry is the authority and this page
 is its rendering.
 
-Registry version **2026-09-16.1**, fingerprint **82885961768537e2**, 58 rules over 34 domains.
+Registry version **2026-09-16.1**, fingerprint **ff8151db3576437b**, 58 rules over 34 domains.
 
 ## How to read a rule
 
@@ -2029,10 +2029,12 @@ in hardware, independent of any software, with the trip points set from the cell
 | applies | conditional; boards p |
 | release effect | **BLOCKER** |
 | risk | SAFETY |
-| verified by | MANUAL_REVIEW, PROTOTYPE_MEASUREMENT, VENDOR_CONFIRMATION at SCHEMATIC (partially automatable) |
-| source | SOURCE_UNVERIFIED |
-| implementation | gen_sch_p.py BQ4050 and protection FETs |
-| maturity | **GENERATED_ONLY** |  (at writing: SOURCE_UNVERIFIED)
+| verified by | SCRIPT, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT, VENDOR_CONFIRMATION at SCHEMATIC (partially automatable) |
+| source | PARTIALLY_VERIFIED |
+| | Specification of product for lithium-ion rechargeable cell, model INR18650-35E, Samsung SDI Co., Ltd., Section 3 nominal specifications (3.2 charging voltage 4.2 V, 3.7 max. charge current 2,000 mA, 3.8 max. discharge current 8,000 mA continuous and 13,000 mA not continuous, 3.9 discharge cut-off 2.65 V, 3.12 operating temperature charge 0 to 45 C and discharge -10 to 60 C) AND the Pack Design Guideline (for electrical design), which is the cell maker telling a pack designer what to set: standard charging voltage, voltage of re-charging, NCA/NCM minimum voltage of terminate discharging and of over-discharging protection, BMS shut down voltage, the pre-charging window and its current range, and do not charge below 1.0 V.
+ -- v2/vendor/battery/samsung-35e-orbtronic.pdf |
+| implementation | gen_sch_p.py BQ4050 and protection FETs, pcb_pack_protection.yaml |
+| maturity | **ENFORCED** |  (at writing: ENFORCED)
 | owner | OWNER |
 | waiver | not waivable |
 
@@ -2044,7 +2046,24 @@ limit it is derived from, and the test that will demonstrate it on the prototype
 **If violated** Thermal runaway from an over-charge, a deep discharge, or an external short.
 
 **Today** the protection is designed and its thresholds are configured in software; no check compares a threshold
-against the cell's own limits, and the cell is not chosen
+against the cell's own limits, and the cell is not chosen 18 September 2026: THE THRESHOLDS EXIST NOW AND
+THEY ARE JUDGED. A data-flash configuration that exists nowhere is not a design, it is an intention, so
+`pcb_pack_protection.yaml` writes the intended BQ4050 configuration down function by function: nine
+functions, each naming the device that implements it, its threshold and delay, the cell limit it is derived
+from and the test that will demonstrate it on the prototype, which is this rule's acceptance criteria word
+for word. `pack_protection.py` makes 45 checks over it: every protection the requirement names is present,
+every threshold is inside its limit IN ITS OWN DIRECTION at the pack's WORST parallel count (3P, not 4P: 20 A
+against 24, 30 A against 39, 5 A against 6), every quoted limit is re-read from the cell maker's own
+specification so a number typed from memory cannot survive, and every device named is in board P's netlist by
+reference. The limits come from the INR18650-35E specification's own Pack Design Guideline for electrical
+design, which is the manufacturer telling a pack designer what to set: 4.20 V charging, 4.10 V re-charge,
+NCA/NCM terminate discharging 2.50 V and over-discharge protection 2.30 V, BMS shutdown 2.00 V, pre-charge
+between 1.00 and 3.00 V at 0.1C to 0.5C, and do not charge below 1.00 V. IT FAILS ON THE OTHER HALF OF THE
+REQUIREMENT: `in hardware, independent of any software`. All nine functions are the BQ4050's, whose
+thresholds live in data flash and whose protection subsystem is firmware; there is no second protector IC, no
+chemical fuse (gen_sch_p.py: the 25 A mini blade is the fuse) and the PTC input is tied off, so the only
+element on the board that needs no firmware is a 25 A blade fuse, which does not protect a cell from
+over-voltage, over-discharge or heat. The remedy is a part and a board change and is owner DECISION 40.
 
 ### BAT-002  the energy chain is bounded end to end
 

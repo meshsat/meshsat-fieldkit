@@ -2174,23 +2174,55 @@ rules:
    condition: {fact: energy_source, op: truthy}
    risk_class: [SAFETY]
    release_effect: BLOCKER
-   source_status: SOURCE_UNVERIFIED
-   sources: []
+   source_status: PARTIALLY_VERIFIED
+   sources:
+     - title: "Specification of product for lithium-ion rechargeable cell, model INR18650-35E"
+       issuer: "Samsung SDI Co., Ltd."
+       revision: "Ver. 1.1, 9 July 2015"
+       clause: >
+         Section 3 nominal specifications (3.2 charging voltage 4.2 V, 3.7 max. charge current 2,000 mA,
+         3.8 max. discharge current 8,000 mA continuous and 13,000 mA not continuous, 3.9 discharge cut-off
+         2.65 V, 3.12 operating temperature charge 0 to 45 C and discharge -10 to 60 C) AND the Pack Design
+         Guideline (for electrical design), which is the cell maker telling a pack designer what to set:
+         standard charging voltage, voltage of re-charging, NCA/NCM minimum voltage of terminate discharging
+         and of over-discharging protection, BMS shut down voltage, the pre-charging window and its current
+         range, and do not charge below 1.0 V.
+       url_or_path: v2/vendor/battery/samsung-35e-orbtronic.pdf
+       accessed: "2026-09-04"
+       note: >
+         18 September 2026: this is the authority for the TRIP POINTS, which is what the requirement's last
+         clause asks for, and the guideline table is stronger than a limits list because the numbers in it are
+         written for exactly this decision. Every limit is quoted in pcb_pack_protection.yaml and re-read from
+         this file by the gate. What it does NOT source is the requirement's other clause, that the protection
+         be in hardware independent of any software: no standard in this tree says that, it is this project's
+         own requirement, and it is what the gate's one failure is about. Hence PARTIALLY_VERIFIED.
    acceptance_criteria: >
      Each protection function names the device that implements it, its configured threshold, the cell
      datasheet limit it is derived from, and the test that will demonstrate it on the prototype.
    rationale: "A 200 Wh lithium block is the one part of this kit that can hurt somebody."
    failure_mode: "Thermal runaway from an over-charge, a deep discharge, or an external short."
-   verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT, VENDOR_CONFIRMATION]
+   false_positive_analysis: >
+     Three shapes of wrong refusal, and each has something that stops it. (1) A THRESHOLD REFUSED FOR BEING
+     ABOVE A LIMIT IT MUST BE ABOVE: an over-voltage trip has to sit above the cell's own charging voltage or a
+     correct CC-CV charge terminates as a fault, so the comparison is per function by a declared direction and
+     the one direction that allows it also demands the allowance carry a reason. (2) A LIMIT REFUSED BECAUSE
+     THE HOST CANNOT READ A PDF: the quote check is skipped with a note where no extractor exists rather than
+     failing the board on the reader's absence, which is the trap `doc_provenance` fell into on 17 September.
+     (3) A PACK JUDGED AT THE WRONG SIZE: the currents are computed at the WORST parallel count the pack may be
+     built in, so a 4P pack is never refused for a 3P limit, and the note prints which count decided. The
+     software-independence check refuses nothing numerical at all: it reads a declaration the pack itself
+     carries, and a pack that declares a protector independent of the gauge passes it (both halves have
+     fixtures).
+   verification_method: [SCRIPT, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT, VENDOR_CONFIRMATION]
    verification_phase: SCHEMATIC
    automation_feasibility: PARTIALLY_AUTOMATABLE
    boards_affected: [p]
    interfaces_affected: [SMBUS]
-   implementation_location: NONE_YET
-   evidence_scope: [schematic_sha256, cell_datasheet_revision]
+   implementation_location: "tools/pcb_pack_protection.yaml, tools/pack_protection.py, gen_sch_p.py"
+   evidence_scope: [schematic_sha256, cell_datasheet_revision, pack_parallel_count]
    owner: OWNER
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity_at_writing: SOURCE_UNVERIFIED
+   maturity_at_writing: ENFORCED
 
  - id: BAT-002
    domain: ENERGY_STORAGE

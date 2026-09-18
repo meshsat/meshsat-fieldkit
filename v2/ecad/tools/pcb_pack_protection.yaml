@@ -1,0 +1,169 @@
+# THE PACK'S PROTECTION, FUNCTION BY FUNCTION, AGAINST THE CELL MAKER'S OWN NUMBERS (rule BAT-001, MESHSAT-862,
+# 18 September 2026).
+#
+# BAT-001 asks that the cell block have over-voltage, under-voltage, over-current, short-circuit and
+# over-temperature protection IN HARDWARE, INDEPENDENT OF ANY SOFTWARE, with the trip points set from the cell
+# manufacturer's own limits, and that each function name the device that implements it, its configured
+# threshold, the cell limit it is derived from and the test that will demonstrate it on the prototype. Until
+# today nothing in this tree said what any of those thresholds are: the design carries a BQ4050 whose
+# protection subsystem is configured in data flash, and a data-flash configuration that exists nowhere is not
+# a design, it is an intention. This file is that configuration, written down before anything is programmed.
+#
+# EVERY LIMIT IS QUOTED FROM THE CELL'S OWN SPECIFICATION AND RE-EXTRACTED BY THE GATE (the rule the fuse
+# derating table taught on 17 September): `quote` is the string as it appears in the PDF's text, and
+# `pack_protection.py` refuses a row whose quote it cannot find in the document named by `spec`. A number typed
+# from memory cannot survive that, which is the point.
+#
+# The 4S3P case is the WORST case for every current limit (three cells in parallel, not four), so the pack
+# limits below are computed at parallel_min and the gate says so.
+schema_version: "1.0.0"
+generated: "2026-09-18"
+board: p
+
+pack:
+  topology: "4S3P or 4S4P, about 200 Wh"        # gen_sch_p.py header
+  series: 4
+  parallel_min: 3
+  parallel_max: 4
+  declared_continuous_a: 10.0                    # pcb_energy_chain.yaml, stage PACK_CELLS
+  declared_peak_a: 18.0
+  prospective_fault_a: {low: 240.0, high: 480.0} # the same file, from the cells' own impedance
+  secondary_protection:
+    present: false
+    why: "gen_sch_p.py: `no chemical fuse (the 25 A mini blade is the fuse)`, PTC and PTCEN tied off, and no
+      second protector IC. Every CELL-LEVEL protection below is the BQ4050's own, which is a device whose
+      thresholds live in data flash and whose protection subsystem is firmware: independent of the HOST, and
+      not independent of software. The only element on this board that needs no firmware at all is F1, the
+      25 A blade fuse, and a 25 A blade does not protect a cell from over-voltage, over-discharge or heat.
+      The remedy is a part and a board change (a dedicated protector such as the ABLIC S-8261 or TI bq2970,
+      both already documented in v2/vendor/battery/, or the BQ4050's own chemical-fuse output with a fuse that
+      has one), so it is owner decision 40 rather than a change made here."
+
+cell:
+  part: "Samsung INR18650-35E"
+  spec: v2/vendor/battery/samsung-35e-orbtronic.pdf
+  revision: "Ver. 1.1, 9 July 2015"
+  chemistry_row: "NCA / NCM (an INR cell is nickel manganese cobalt), the Pack Design Guideline's own row"
+  column: "Portable IT"
+  _column_why: "the kit is a portable communications terminal carried by a person, which is the guideline's
+    Portable IT column; it is also the strictest column for over-discharge on the NCA/NCM rows (terminate 2.50 V
+    against Power-Tool's 2.50 and Medical's 2.50, protection 2.30 against 2.00)."
+  limits:
+    charge_voltage_v:       {value: 4.20,  clause: "3.2 Charging Voltage",                       quote: "4.2V"}
+    guideline_charge_v:     {value: 4.20,  clause: "Pack Design Guideline, standard charging voltage (4.20V cell), Portable IT", quote: "Standard charging voltage (4.20V cell)"}
+    recharge_v:             {value: 4.10,  clause: "Pack Design Guideline, voltage of re-charging (4.20V cell), Portable IT",    quote: "Voltage of Re-charging (4.20V cell)"}
+    terminate_discharge_v:  {value: 2.50,  clause: "Pack Design Guideline, NCA/NCM min. voltage of terminate discharging, Portable IT", quote: "terminate discharging"}
+    overdischarge_protect_v: {value: 2.30,  clause: "Pack Design Guideline, NCA/NCM min. voltage of over-discharging protection, Portable IT", quote: "over-discharging protection"}
+    bms_shutdown_v:         {value: 2.00,  clause: "Pack Design Guideline, BMS shut down voltage",            quote: "BMS Shut Down Voltage"}
+    do_not_charge_below_v:  {value: 1.00,  clause: "Pack Design Guideline, do not charge",                    quote: "Under 1.0V voltage, do not charge the cell"}
+    precharge_window_v:     {low: 1.00, high: 3.00, clause: "Pack Design Guideline, pre-charging voltage range", quote: "1.0V ~ 3.0V"}
+    discharge_cutoff_v:     {value: 2.65,  clause: "3.9 Discharge Cut-off Voltage",               quote: "2.65V"}
+    max_charge_current_ma:  {value: 2000,  clause: "3.7 Max. Charge Current",                     quote: "2,000mA"}
+    max_continuous_discharge_ma: {value: 8000, clause: "3.8 Max. Discharge Current",              quote: "8,000mA"}
+    max_pulse_discharge_ma: {value: 13000, clause: "3.8 Max. Discharge Current",                  quote: "13,000mA"}
+    charge_temp_c:          {low: 0.0, high: 45.0, clause: "3.12 Operating Temperature",          quote: "Charge : 0 to 45"}
+    discharge_temp_c:       {low: -10.0, high: 60.0, clause: "3.12 Operating Temperature",        quote: "Discharge : -10 to 60"}
+
+devices:
+  U1: {part: "BQ4050RSMR", what: "SMBus gas gauge with the primary protection subsystem, 4S",
+       spec: v2/vendor/battery/ti-bq4050.pdf, software: true,
+       why: "its thresholds and delays live in data flash and its protection runs in the gauge's own firmware:
+         independent of the host, not independent of software"}
+  Q1: {part: "CSD17570Q5B", what: "the charge switch the gauge opens", spec: v2/vendor/battery/ti-csd17570q5b.pdf, software: true}
+  Q2: {part: "CSD17570Q5B", what: "the discharge switch the gauge opens", spec: v2/vendor/battery/ti-csd17570q5b.pdf, software: true}
+  F1: {part: "25 A ATOF blade", what: "the pack's fuse, in a Keystone 3568 holder",
+       spec: v2/vendor/battery/littelfuse-287-atof.pdf, software: false,
+       why: "the only protective element on this board that needs no firmware; a gross-fault device, and the
+         last line rather than the cell's protection"}
+  R10: {part: "10k NTC x4", what: "TS1 to TS4, the cell-block thermistors the gauge reads",
+        spec: v2/vendor/battery/murata-nxrt15xh103fa1b.pdf, software: true}
+
+functions:
+
+ - id: CELL_OVER_VOLTAGE
+   what: "a cell is charged above its own charging voltage"
+   device: U1
+   threshold: {value: 4.25, unit: V, per: cell, delay_s: 2.0, recovery: "4.10 V, the guideline's own re-charge voltage"}
+   derived_from: charge_voltage_v
+   direction: above_limit_by_at_most
+   allowance: {value: 0.05, unit: V,
+               why: "the trip has to sit ABOVE a healthy CC-CV charge to 4.20 V or a correct charge terminates
+                 as a fault, and as close to it as the measurement allows: the BQ4050's cell-voltage accuracy is
+                 within tens of millivolts, so 50 mV is about two sigma of the measurement and well under the
+                 guideline's own 4.35 V cell class"}
+   test: "charge one cell block from a bench supply through the pack's own charge path with the gauge live,
+     raise the supply until the gauge opens Q1, and read the cell voltage at the trip on the tap it measures:
+     4.25 V +- 0.05 V, and the FET must open within 2 s of the threshold being crossed"
+
+ - id: CELL_UNDER_VOLTAGE
+   what: "a cell is discharged below the voltage the cell maker sets for over-discharge protection"
+   device: U1
+   threshold: {value: 2.50, unit: V, per: cell, delay_s: 4.0, recovery: "3.00 V"}
+   derived_from: overdischarge_protect_v
+   direction: at_or_above_limit
+   test: "discharge the block at 1 A until the gauge opens Q2; read the lowest cell tap at the trip (2.50 V
+     +0.05/-0.00) and confirm the pack terminal falls to zero and the gauge stays awake"
+
+ - id: PACK_OVER_CURRENT_DISCHARGE
+   what: "the pack delivers more than the cells are rated for, continuously"
+   device: U1
+   threshold: {value: 20.0, unit: A, per: pack, delay_s: 2.0}
+   derived_from: max_continuous_discharge_ma
+   direction: at_or_below_pack_limit
+   test: "an electronic load stepped to 20 A on the pack terminal with the gauge live: Q2 opens within 2 s,
+     and the same load at the declared 10 A continuous runs for an hour without tripping"
+
+ - id: PACK_OVER_CURRENT_DISCHARGE_2
+   what: "the pack delivers more than the cells' pulse rating"
+   device: U1
+   threshold: {value: 30.0, unit: A, per: pack, delay_s: 0.02}
+   derived_from: max_pulse_discharge_ma
+   direction: at_or_below_pack_limit
+   test: "a 30 A pulse of 100 ms into the load: Q2 opens within 20 ms, and an 18 A pulse of the same length
+     (the chain's declared peak) does not open it"
+
+ - id: PACK_SHORT_CIRCUIT_DISCHARGE
+   what: "a short across the pack terminal"
+   device: U1
+   threshold: {value: 60.0, unit: A, per: pack, delay_s: 0.0002}
+   derived_from: max_pulse_discharge_ma
+   direction: below_prospective_fault
+   test: "a bolted short through a 1 mOhm shunt with a scope on the gate of Q2: the gate collapses within
+     200 us and F1 does not blow, which is what tells the gauge protected the pack rather than the fuse"
+
+ - id: PACK_OVER_CURRENT_CHARGE
+   what: "the pack is charged above the cells' own charge-current limit"
+   device: U1
+   threshold: {value: 5.0, unit: A, per: pack, delay_s: 2.0}
+   derived_from: max_charge_current_ma
+   direction: at_or_below_pack_limit
+   test: "the charger set to 5 A into a half-charged block: Q1 opens within 2 s; at the design's 4 A it does not"
+
+ - id: CHARGE_TEMPERATURE_WINDOW
+   what: "the cells are charged outside the temperature window the cell maker allows"
+   device: U1
+   threshold: {low: 0.0, high: 45.0, unit: C, per: cell, delay_s: 2.0, sensor: "TS1 to TS4 at the cell surface"}
+   derived_from: charge_temp_c
+   direction: inside_window
+   test: "the block in a chamber at -5 C and at +50 C with the charger live: Q1 stays open at both, and closes
+     between 5 C and 40 C; the thermistors read the CELL SURFACE, so the sensor's own position is part of the test"
+
+ - id: DISCHARGE_TEMPERATURE_WINDOW
+   what: "the cells are discharged outside the temperature window the cell maker allows"
+   device: U1
+   threshold: {low: -10.0, high: 60.0, unit: C, per: cell, delay_s: 2.0, sensor: "TS1 to TS4 at the cell surface"}
+   derived_from: discharge_temp_c
+   direction: inside_window
+   test: "the block in a chamber at -15 C and at +65 C under a 2 A load: Q2 opens at both and closes inside
+     the window"
+
+ - id: PRECHARGE_WINDOW
+   what: "a deeply discharged cell is charged at full current, or a dead cell is charged at all"
+   device: U1
+   threshold: {low: 1.00, high: 3.00, unit: V, per: cell, current_a: 1.0,
+               note: "pre-charge current 1.0 A at the pack, which is 0.1C of a 3P block (3 x 3.45 Ah), the
+                 bottom of the guideline's own 0.1C to 0.5C window"}
+   derived_from: precharge_window_v
+   direction: inside_window
+   test: "a block brought to 2.5 V per cell: the gauge pre-charges at about 1 A and does not raise the current
+     until every cell is above 3.00 V; a block below 1.00 V per cell is not charged at all and the gauge says so"
