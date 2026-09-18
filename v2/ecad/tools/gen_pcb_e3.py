@@ -67,7 +67,10 @@ FIXED = {"J_BLK": (-80, -76.5, 0, False), "P_CP": (-104, -108, 0, False), "P_CN"
          # capacitor belongs at the amplifier (C16 is declared as U5 pin 3's decoupling, so the bypass pass seats
          # it there). These two seats are the same row as R5, three millimetres apart, clear of C17 and C18 at
          # y -101.3 and of Q6 at (14.8, -91.4).
-         "R6": (6.0, -97.38, 0, False), "R7": (9.0, -97.38, 0, False),
+         # FIRST SEATS REFUSED BY THE BOARD (E18, 12:03 UTC): x 6.0 overlapped the shunt's own courtyard, which a
+         # 2512 carries out to about 5.7, and x 9.0 sat on D5 where the packer had put it. The row below is clear:
+         # C18 is at x 0.1 and nothing else stands between there and D5, and R5's courtyard ends about y -99.5.
+         "R6": (3.6, -101.3, 0, False), "R7": (6.6, -101.3, 0, False),
          "J_SMB": (-144, -62, 0, False), "J_POD": (-138, -62, 0, False), "J_LTG": (-132, -62, 0, False), "J_GEIGER": (-126, -62, 0, False), "J_DCF": (-144, -49.3, 0, False), "J_FAN1": (-138, -49.3, 0, False), "J_FAN2": (-132, -49.3, 0, False)}
 for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot, back)
 text("PACK", -138, -112.2, pcbnew.F_SilkS, 1.2, 0.2); text("F3 25A", -120, -112.2, pcbnew.F_SilkS, 1.2, 0.2); text("DC IN", -64, -112.2, pcbnew.F_SilkS, 1.2, 0.2); text("F1 10A", -48, -112.2, pcbnew.F_SilkS, 1.2, 0.2); text("PV", -22, -112.2, pcbnew.F_SilkS, 1.2, 0.2); text("F2 10A", -6, -112.2, pcbnew.F_SilkS, 1.2, 0.2)
