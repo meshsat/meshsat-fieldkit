@@ -70,7 +70,29 @@ class PowerCopper:
         z.SetAssignedPriority(priority); self.b.Add(z); self.made.append(z); return self
     def spine(self, net, x0, y0, x1, y1, w=0.4, layer=pcbnew.F_Cu):
         t = pcbnew.PCB_TRACK(self.b); t.SetStart(self.P(x0, y0)); t.SetEnd(self.P(x1, y1)); t.SetWidth(FromMM(w)); t.SetLayer(layer); t.SetNet(self.net_for(net, create=False)); t.SetLocked(True); self.b.Add(t); return self
-    def stitch(self, net, pts, drill=0.4, width=0.8):
+    def barrels_for(self, amps, drill, rise=10.0, plating=None):
+        """The count that current needs, from the rule that judges it after the route (via_current.barrels_for)."""
+        import sys as _s, os as _o
+        _s.path.insert(0, _o.path.dirname(_o.path.abspath(__file__)))
+        import via_current as _vc
+        return _vc.barrels_for(amps, drill, rise, plating if plating is not None else _vc.PLATING_UM)
+
+    def stitch(self, net, pts, drill=0.4, width=0.8, amps=None):
+        """`amps` is the current these points SHARE, and giving it makes the call self-checking.
+
+        The points of one call are the barrels of one transition, so the count they supply is compared with the
+        count that current needs and the generator REFUSES a board whose transition is short, naming the number.
+        It is the same judgement `via_current` makes after the route, moved to where it can still be answered for
+        free: before the board exists. Leave it out where one call places several unrelated clusters, because
+        then the current is not one number and the check would be about nothing."""
+        if amps is not None:
+            need = self.barrels_for(amps, drill)
+            if len(pts) < need:
+                raise SystemExit(
+                    "power copper: %s is given %d barrel(s) of %.2f mm for %.2f A and needs %d at a 10 K rise "
+                    "(IPC-2221 for the fabricator's own plating, which is what via_current judges after the "
+                    "route): add barrels, widen the hole, or say why in the board's own file"
+                    % (net, len(pts), drill, float(amps), need))
         for x, y in pts:
             v = pcbnew.PCB_VIA(self.b); v.SetPosition(self.P(x, y)); v.SetDrill(FromMM(drill)); v.SetWidth(FromMM(width)); v.SetViaType(pcbnew.VIATYPE_THROUGH)
             v.SetNet(self.net_for(net, create=False)); v.SetLocked(True); self.b.Add(v)
