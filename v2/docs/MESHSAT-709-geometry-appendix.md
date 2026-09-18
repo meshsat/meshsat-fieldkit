@@ -9711,3 +9711,11 @@ is the gate doing its job. The row below is clear and reads hard 0. **A43's seco
 and will import the last session with the drill restore and report one number, because A43 is the design before the
 current-sense filter and nothing about it is adopted.
 
+**Addendum, 14:50 CEST: the partition is refused for board A, measured.** A46 took A44's own placement, cut it into
+GLOBAL plus WEST, MID and EAST, routed each in turn and reconciled: 0 hard and 28 unrouted at the merge, 27 after the
+closers, against the same placement's **23 open plainly and 19 after its closers**. `direct_close` spent 3,816 s of its
+5,400 s budget to close one of thirteen pairs it tried. So board A is not board B: its 254 nets do not divide into
+regions that route better apart than together, and what the reconcile has to rip at the boundaries costs more than the
+partition buys. **Board A's remaining lever is the placement**, which is what A47 carries, and not another routing
+scheme. The finish was refused by TRN-001, as every board A finish is until decision 31 is ruled.
+
