@@ -14,11 +14,30 @@ And there are TWO copies of the rotation table, the CSV the ordering session kee
 make_handoff.py, which is the one that reaches a CPL. That line is on the never-auto floor, so the gate reads
 both and compares rather than editing either.
 """
-import os, sys, tempfile
+import os, sys, glob, tempfile
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, TOOLS)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from harness import Skip, need
 import assembly_set as A
+
+
+def _need_tree():
+    """THESE RULES READ THE REPO AROUND THE TOOLS and four of them CRASHED where it is not there (18 September
+    2026). The rotation table lives under `v2/release` and the footprints come from each board's own netlist
+    under `v2/ecad`; a tools-only staging directory, which is what a rented box carries at `/root/localtools`,
+    has neither. `A.rotations()` returns None there and `{p: int(o) for p, o, _v in None}` is a TypeError, so
+    running the whole suite where KiCad is showed three red rules that were not about the tools at all. The
+    tool itself has been right about this since 17 September (an absent table is MISSING_INPUT and never a
+    finding); its rules were not. `need` is the suite's own answer and it prints the file it could not read.
+
+    It matters because of what the skips hide: the eleven board fixtures had never run where KiCad is and were
+    covering five defects when they finally did, so a suite that cannot be started on a box is a suite whose
+    KiCad-only half is never run."""
+    need(A.ROT, "there is no rotation table in this tree")
+    if not glob.glob(os.path.join(A.ECAD, "*", "out", "*.net")):
+        raise Skip("no board netlist in this tree, so the assembly set has no footprints to judge: %s" % A.ECAD)
 
 
 def t_the_producer_table_parses_past_a_character_class():
@@ -34,6 +53,7 @@ def t_the_producer_table_parses_past_a_character_class():
 def t_the_two_tables_agree():
     """The CSV the ordering session keeps and the literal the producer applies must say the same thing; a
     difference is a silent wrong rotation waiting to happen."""
+    _need_tree()
     csv_rows = {p: int(o) for p, o, _v in A.rotations()}
     prod = dict(A.producer_table())
     assert csv_rows == prod, {k: (csv_rows.get(k), prod.get(k)) for k in set(csv_rows) | set(prod)
@@ -41,6 +61,7 @@ def t_the_two_tables_agree():
 
 
 def t_every_row_carries_the_date_it_was_compared_with_a_preview():
+    _need_tree()
     rows = A.rotations()
     undated = [p for p, _o, v in rows if not v]
     assert not undated, "rows with no verification field at all: %s" % undated
@@ -49,6 +70,7 @@ def t_every_row_carries_the_date_it_was_compared_with_a_preview():
 
 
 def t_an_unverified_row_fails_a_board_that_uses_it():
+    _need_tree()
     d = tempfile.mkdtemp(prefix="dfa-")
     p = os.path.join(d, "rot.csv")
     open(p, "w").write("# x\n^LED_0603,180,UNVERIFIED\n")
@@ -59,6 +81,7 @@ def t_an_unverified_row_fails_a_board_that_uses_it():
 
 def t_a_footprint_with_no_row_is_inconclusive_and_never_a_pass():
     """Zero can be the right offset; what is not acceptable is that nobody looked."""
+    _need_tree()
     r = A.judge()
     unchecked = {x for v in r.values() for x in v["unchecked"]}
     assert unchecked, "every polarised footprint is covered, which would be a first"

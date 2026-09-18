@@ -1163,3 +1163,47 @@ def t_the_partition_stops_when_a_group_does_not_import():
     blk = s[i:i + 700]
     assert "stage1-next.kicad_pcb" in blk, "the import still writes over the board it reads"
     assert "_irc" in blk and "break" in blk, "the import's status is not checked and the loop does not stop on it"
+
+
+def t_an_arm_may_declare_what_it_depends_on_and_the_launcher_proves_it():
+    """D16, 18 September 2026: an arm staged at 18:39 UTC to measure a pre-lay, and the fix that makes a pre-lay
+    work landed at 19:10. Its tree carried the old `stub_router`, its pre-lay closed 0 of 3, and the run
+    measured nothing while looking exactly like a result (0 hard, 9 unrouted). A tree carries the tools it was
+    staged with; an arm can SAY what it needs, and then the launcher answers rather than the operator's memory.
+
+    THE DEFECTIVE FIXTURE is a run whose declaration names a literal the tools do not carry: it must block.
+    THE ACCEPTABLE FIXTURE names one they do: it must not."""
+    import importlib.util, os, tempfile, io, contextlib
+    TOOLSDIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    spec = importlib.util.spec_from_file_location("rf_arm", os.path.join(TOOLSDIR, "routeflow.py"))
+    rf = importlib.util.module_from_spec(spec); spec.loader.exec_module(rf)
+    d = tempfile.mkdtemp(prefix="requires-")
+    t = os.path.join(d, "v2", "ecad", "tools"); os.makedirs(t)
+    open(os.path.join(t, "stub_router.py"), "w").write('X = os.environ.get("STUB_POUR_OBSTACLE", "1")\n')
+
+    def run(reqs):
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = rf.preflight(d, reqs)
+        return rc, buf.getvalue()
+
+    rc_bad, out_bad = run(["STUB_LOCK"])
+    assert rc_bad != 0, "a run whose declared requirement is absent from its own tools started anyway"
+    assert "would measure nothing" in out_bad, out_bad[-300:]
+    _rc_ok, out_ok = run(["STUB_POUR_OBSTACLE"])
+    assert "PASS  requires STUB_POUR_OBSTACLE" in out_ok, out_ok[-300:]
+    # and a run that declares nothing is unchanged: this adds no check to the boards already running
+    _rc_none, out_none = run([])
+    assert "requires " not in out_none, out_none[-200:]
+
+
+def t_the_declaration_travels_from_the_profile():
+    """A requirement nothing reads is the defect this project keeps finding (`budget_rounds` in twelve profiles,
+    `--png` in three usage lines). The call site must pass the profile's own list."""
+    import os
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "routeflow.py"),
+               encoding="utf-8").read()
+    assert 'preflight(repo, list(prof.get("requires") or []) + list(requires or []))' in src, (
+        "the declaration never reaches preflight")
+    assert '"--requires"' in src and "[--requires A,B]" in src, (
+        "an arm cannot declare its requirement without editing the shared profile, which is how it gets forgotten")

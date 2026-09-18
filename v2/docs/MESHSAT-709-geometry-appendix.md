@@ -10208,3 +10208,33 @@ raised to 9,000 s** so the pass count cannot decide the result against its contr
 1,109,361 free cells with the pours out of the map, locked so `place_audit` still reads a placed board, and
 the pre-route gate passed 18 of 18. D15 stays board D's answer until D17 lands at 0 open with `via_current`
 still reading 0 barrels over their rating.
+
+**Addendum, 22:35 CEST: E19 landed its first round, PI-003's ratio fell from 2.53 to 1.03, and ANA-001 gave a
+third different number.** E19 is E18's placement plus the PI-003 copper and nothing else. Its router came back
+**0 hard and ONE open of 94 nets, 211 vias, 45 minutes**, against E18's five and four. The open is not a
+closure: `/FAN2_TACH` is **210.4 mm** from U10 pad 14 to the nearest track end, beyond the 14 mm this board's
+closer declares, so it is left to the router, and U10 is the sensor controller that sits about 230 mm from the
+26 nets it serves. `check_pcb_e` reads ALL PASS on the finished round.
+
+**What the copper bought, measured on the frozen board**: `via_current` reads **two barrels over their wall
+where E17 read five**, and the worst ratio is **1.03** (CELL_F 1.08 A against 1.05) where E17's worst was 2.53
+(CELL_F 1.42 A against 0.56). VIN_RAW is 1.18 (0.77 A against 0.65). Two more barrels at (37.0, 214.1) and
+(73.1, 183.4) close the rule on this board and `barrel_sites --suggest` writes their lines.
+
+**And ANA-001 read a third number on the same design.** Taken read-only on the finished round (sha 520f4ee6
+before and after), TRK_CSP runs 0.242 mm from TRK_SW2 over 4.72 mm and TRK_CSN 0.153 over 8.48, both entirely
+outside the shared part's courtyard. So the three rounds this project has now measured with the Kelvin filter
+correctly seated read **6.179 mm, 0.158 mm and 0.242 mm**: the clearance is scatter while nothing holds it.
+
+**The measurement that says what CAN hold it, and it separates board E from board A.** A keep-away is only
+usable if the declared net can still escape its own pins at that distance, which is what refused the idea on
+board A (POE_CS 0.250 mm at U16 pin 16, B33_FB 0.200 at U12 pin 8: a 0.50 mm class would refuse the escape and
+the route would die at the source). Board E's six sense pads, pad edge to pad edge: **TRK_CSP at R6 pad 2 is
+0.550 mm from R7 pad 1 on TRK_SW2**, TRK_CSN at R7 pad 2 is 0.850 from it, C16's pads are 0.650 apart, and the
+only 0.250 mm gaps are TRK_CSP to TRK_CSN (the pair's own two nets) and TRK_CSN to TRK_SHDN (not switching
+copper). **The tightest sense-to-switching pad gap on board E is 0.550 mm, so a per-pair 0.50 mm keep-away
+costs this board no escape.** What is still missing is an instrument that reaches the router: Freerouting
+ignores the DSN class-pair clearance (measured this morning), and a class-wide 0.50 fails at U5's own pin
+pitch for board A's reason. What does reach the board is a KiCad custom rule, which the post-route DRC
+enforces and which would make ANA-001 a hard item rather than a reported verdict, or locked copper laid before
+the route by the pre-lay that was proved to work tonight. `boards/e.json` carries the numbers.
