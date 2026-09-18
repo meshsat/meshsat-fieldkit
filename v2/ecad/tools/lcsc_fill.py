@@ -2,6 +2,8 @@
 """Fill LCSC part numbers in a JLC BOM csv from a value+footprint map of JLCPCB basic/preferred parts (only entries verified from the AIOC BOM or earlier sessions).
 Usage: lcsc_fill.py <out/jlc/NAME-bom.csv>"""
 import csv, sys, re
+import os as _bo; sys.path.insert(0, _bo.path.dirname(_bo.path.abspath(__file__)))
+import verdict as _vh; _vh.crash_hook("lcsc_fill", sys.argv[1:])   # a crash in this module body writes INCONCLUSIVE, never nothing (18 Sep 2026)
 MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^10k$", "R_0603"): "C25804", (r"^100k$", "R_0603"): "C25803", (r"^1k$", "R_0603"): "C21190", (r"^4\.7k$", "R_0603"): "C23162", (r"^5\.1k$", "R_0603"): "C23186",
  (r"^1\.5k$", "R_0603"): "C22843", (r"^100R$", "R_0603"): "C22775", (r"^22R$", "R_0603"): "C23345", (r"^330R$", "R_0603"): "C23138", (r"^2k$", "R_0603"): "C22975",

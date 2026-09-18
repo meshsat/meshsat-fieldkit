@@ -6,6 +6,8 @@ the panel ribbon map, the transmit inhibit chain, the three 5 V rails, the dock 
 shutdown pair on the A to B ribbon, the 2x9 ribbon map itself, the mezzanine harness map and the I2S and wall-port pairs (32.35). Prints one line per contract and exits non-zero on any FAIL.
 Usage: check_contracts.py [ecad dir]   (default: the directory above this script)"""
 import sys, os, re, collections
+import os as _bo; sys.path.insert(0, _bo.path.dirname(_bo.path.abspath(__file__)))
+import verdict as _vh; _vh.crash_hook("check_contracts", sys.argv[1:])   # a crash in this module body writes INCONCLUSIVE, never nothing (18 Sep 2026)
 
 ECAD = os.path.abspath(sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 # 16 September 2026: BOARD P IS IN THE SET. It was left out because the contracts were written for the five

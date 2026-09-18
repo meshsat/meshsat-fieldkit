@@ -6,6 +6,7 @@ the underside, the e-paper ZIF and the light sensor on the top side, the MIL-STD
 (panel1450.clearance_report) and the backer's parts clear the stack under the strips."""
 import sys, math, os, pcbnew
 import os as _bo, sys as _bs; _bs.path.insert(0, _bo.path.dirname(_bo.path.abspath(__file__)))
+import verdict as _vh; _vh.crash_hook("check_pcb_c", sys.argv[1:])   # a crash in this module body writes INCONCLUSIVE, never nothing (18 Sep 2026)
 import boardtable as _bt   # the copper layer count is a DECLARATION in boards/<letter>.json, never a
                            # literal here: six gates carried one, so a layer decision meant editing a
                            # gate, and two experiments came back with their only failure being the gate

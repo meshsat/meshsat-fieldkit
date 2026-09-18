@@ -253,7 +253,7 @@ if _osx.environ.get("PLACE_DCHS_BAND", "1") not in ("0", ""):
     # no end vias from rail_run (a corner via at x -60 could land on a top part's pad of another net); the vias are
     # placed where the copper is this net's own: one in each of Q7's three source pads, three inside L2 pin 1
     # ONE zone from the three rectangles (E14's first placement read two zones_intersect: three same-net bands at one
-    # priority meeting at their corners, which KiCad refuses; union() is the 8 September answer to exactly that)
+    # priority meeting at their corners, which KiCad refuses, and union() is the 8 September answer to exactly that)
     _pc.union("DC_HS", "DC_HS band B.Cu, Q7 to L2", [(-104.1, -99.75, -60.0, -94.25),     # east along y -97, 5.5 mm
                                                      (-62.75, -97.0, -57.25, -86.0),      # north at x -60, 5.5 mm
                                                      (-60.0, -88.25, -40.5, -83.75)])     # east at y -86 into L2 pin 1, 4.5 mm

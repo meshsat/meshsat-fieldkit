@@ -2,6 +2,7 @@
 """Numeric verification of PCB-E1 DOCK: outline, rod pass-throughs, the target block where PCB-A's J_DOCK lands, nothing on the underside."""
 import sys, pcbnew
 import os as _bo, sys as _bs; _bs.path.insert(0, _bo.path.dirname(_bo.path.abspath(__file__)))
+import verdict as _vh; _vh.crash_hook("check_pcb_e", sys.argv[1:])   # a crash in this module body writes INCONCLUSIVE, never nothing (18 Sep 2026)
 import boardtable as _bt   # the copper layer count is a DECLARATION in boards/<letter>.json, never a
                            # literal here: six gates carried one, so a layer decision meant editing a
                            # gate, and two experiments came back with their only failure being the gate
