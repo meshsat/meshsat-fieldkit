@@ -78,3 +78,31 @@ def t_the_declaration_is_data_and_board_a_carries_the_one_that_is_known():
     for field in ("sense", "rail", "element", "tap", "full_scale_mv", "why"):
         assert k.get(field), "the declaration has no %s, so the reading would be about nothing" % field
     assert k["element"].split(".")[0] != k["tap"].split(".")[0], "the element and the tap are the same part"
+
+
+def t_a_board_that_declares_no_tap_is_not_an_open_question():
+    """A board with no current sense has nothing to measure, which is neither a declared zero (a pass with its
+    reason) nor an undeclared one (inconclusive): the reading says the rule does not arise here. Board C's panel
+    and board E5's contact block are the cases."""
+    import tempfile, json as _j
+    with tempfile.TemporaryDirectory() as d:
+        b = os.path.join(d, "pcb-c-display.kicad_pcb"); open(b, "w").write("(kicad_pcb)")
+        out = os.path.join(d, "out"); os.makedirs(out)
+        env = os.environ.get("VERDICT_DIR"); os.environ["VERDICT_DIR"] = out
+        try: rc = K.main([b, "--board", "c"])
+        finally:
+            if env is None: os.environ.pop("VERDICT_DIR", None)
+            else: os.environ["VERDICT_DIR"] = env
+        assert rc == 0, rc
+        v = _j.load(open(os.path.join(out, "kelvin_check.verdict.json")))
+        assert v["applicable"] is False and v["counts"]["declared"] == 0, v
+
+
+def t_the_finish_takes_the_reading_where_the_mesh_was_just_solved():
+    """It reads dc_drop's output, so it runs after it; and it stops nothing, because a report that blocks a
+    board is a rule nobody wrote."""
+    sh = open(os.path.join(TOOLS, "finish.sh"), encoding="utf-8").read()
+    i, j = sh.find("dc_drop.py"), sh.find("kelvin_check.py")
+    assert 0 < i < j, "the report runs before the mesh it reads"
+    line = sh[sh.rfind("\n", 0, j) + 1: sh.find("\n", j)]
+    assert "stop " not in line, "the report can stop a finish, and no rule asks this question yet"

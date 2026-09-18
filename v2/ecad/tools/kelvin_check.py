@@ -94,6 +94,16 @@ def main(argv):
     for L, blk in sorted(boards.items()):
         if letter and L != letter: continue
         for k in (blk or {}).get("kelvin") or []: decls.append(dict(k, board=L))
+    if not decls:
+        # A BOARD THAT DECLARES NO SENSE TAP IS NOT A BOARD WITH AN UNANSWERED QUESTION. The house law is that a
+        # declared zero is a pass with its reason and an undeclared zero is inconclusive; this is neither, it is
+        # a board the question does not arise on, so the reading says `applicable: false` and the chain carries
+        # on. Board C's panel and board E5's contact block have no current sense at all.
+        print("kelvin_check: board %s declares no current-sense tap, so there is nothing here to measure"
+              % (letter or "?"))
+        return _v.write("kelvin_check", _v.PASS, counts={"declared": 0}, denominator=0, advisory=True,
+                        applicable=False, inputs={"board": os.path.basename(board)},
+                        note="this board declares no current-sense tap in pcb_sensitive.yaml")
     pots, path = _potentials(board)
     if pots is None:
         print("kelvin_check: no solved pad potentials beside this board (%s); run dc_drop first" % path)

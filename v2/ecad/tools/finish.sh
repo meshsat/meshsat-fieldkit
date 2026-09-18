@@ -311,6 +311,10 @@ for _iv in intent_return_path intent_return_via intent_decoupling intent_rails i
 done
 python3 $T/dc_drop.py $N.kicad_pcb --json out/$N-dc_drop.json > out/$N-dc_drop.log 2>&1; DC=$?; grep -E 'dc_drop' out/$N-dc_drop.log | tail -14
 [ "$DC" -eq 0 ] || stop "DC DROP $(python3 $T/verdict.py read out/dc_drop.verdict.json 2>&1 | tail -1)" "out/$N-dc_drop.log"
+# A REPORT, and it runs HERE because it reads what dc_drop just solved: how much of a current-sense signal is
+# the copper's own drop between the shunt's pad and the point the sense line taps. It decides nothing (no rule
+# in the registry asks it yet) and it stops nothing, so its exit code is deliberately not read.
+python3 $T/kelvin_check.py $N.kicad_pcb --board "$L" 2>&1 | grep -aE 'kelvin_check' | head -8 || true
 python3 $T/stackup_write.py $N.kicad_pcb 2>&1 | tail -1
 python3 $T/impedance_check.py $N.kicad_pcb --json out/$N-impedance.json > out/$N-impedance.log 2>&1; IM=$?; grep -E 'impedance' out/$N-impedance.log | tail -14
 [ "$IM" -eq 0 ] || stop "IMPEDANCE $(python3 $T/verdict.py read out/impedance_check.verdict.json 2>&1 | tail -1)" "out/$N-impedance.log"
