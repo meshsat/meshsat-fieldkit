@@ -172,7 +172,7 @@ d:
 e:
   title: PCB-E1 DOCK STRIP
   project: pcb-e1-dock
-  phase_declared: E11
+  phase_declared: E17
   outline_mm: [267, 68]
   layers: 4
   thickness_mm: 1.6

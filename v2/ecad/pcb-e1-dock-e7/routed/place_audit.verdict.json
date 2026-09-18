@@ -19,10 +19,10 @@
  "inputs": {
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
-   "sha256_16": "5fc1ffce0dc5ab1c"
+   "sha256_16": "a462ac2620b9b8d3"
   },
   "measured_board": {
-   "sha256_16": "72f89150e8671436",
+   "sha256_16": "0d1364c849dbb0c3",
    "stage": "placed"
   }
  },
@@ -41,9 +41,9 @@
  "tool": "place_audit",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "6f7ef144f21449b3"
  },
- "ts": "2026-09-17T22:57:42Z",
+ "ts": "2026-09-18T08:56:39Z",
  "verdict": "PASS",
  "version": "unknown"
 }

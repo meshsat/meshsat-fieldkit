@@ -2,7 +2,7 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "density_missed": 1,
+  "density_missed": 0,
   "met": 4,
   "missed": 0,
   "undeclared": 0
@@ -12,17 +12,17 @@
  "inputs": {
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
-   "sha256_16": "5fc1ffce0dc5ab1c"
+   "sha256_16": "a462ac2620b9b8d3"
   }
  },
  "missing_input": null,
- "note": "the voltage drop against each rail's budget (cell 0.50 mm, default 2%); the current capacity is judged separately in dc_density.verdict.json, where 1 rail(s) missed",
+ "note": "the voltage drop against each rail's budget (cell 0.50 mm, default 2%); the current capacity is judged separately in dc_density.verdict.json, where 0 rail(s) missed",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
    "PI-002": "ec24beac692a01be"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "4bc0aa24d836788d"
  },
  "rules": [
   "PI-002"
@@ -30,9 +30,9 @@
  "tool": "dc_drop",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "6f7ef144f21449b3"
  },
- "ts": "2026-09-17T22:47:59Z",
+ "ts": "2026-09-18T08:56:17Z",
  "verdict": "PASS",
  "version": "unknown"
 }

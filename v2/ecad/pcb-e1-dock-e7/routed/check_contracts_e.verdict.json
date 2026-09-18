@@ -3,23 +3,25 @@
  "applicable": true,
  "counts": {
   "fail": 0,
-  "pass": 8,
-  "unjudged": 0
+  "pass": 4,
+  "unjudged": 1
  },
- "denominator": 8,
- "evidence": [],
+ "denominator": 5,
+ "evidence": [
+  "unjudged, the other board is absent: dock 2x6 contact map identical on A (J_DOCK) and E (J_BLK)"
+ ],
  "inputs": {
   "boards": "A,B,C,D,E,P"
  },
  "missing_input": null,
- "note": "the contracts that name this board; the set's own verdict is check_contracts",
+ "note": "1 of this board's contracts name a board absent from this tree and were not judged",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
    "RF-002": "b4c62839dd113ee3",
    "SCH-003": "ddf200a8e65c127b"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "4bc0aa24d836788d"
  },
  "rules": [
   "RF-002",
@@ -28,9 +30,9 @@
  "tool": "check_contracts_e",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "6f7ef144f21449b3"
  },
- "ts": "2026-09-17T22:48:19Z",
- "verdict": "PASS",
+ "ts": "2026-09-18T08:56:41Z",
+ "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

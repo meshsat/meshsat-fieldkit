@@ -9,13 +9,13 @@
  },
  "denominator": 4,
  "evidence": [
-  "CELL_F: a barrel at (44.3, 221.8) carries 1.93 A of the solved mesh against 0.74 A for its own wall at 10 K (18 um plating), ratio 2.61",
-  "VIN_RAW: a barrel at (73.1, 183.4) carries 0.80 A of the solved mesh against 0.65 A for its own wall at 10 K (18 um plating), ratio 1.22"
+  "CELL_F: a barrel at (44.3, 218.2) carries 1.42 A of the solved mesh against 0.56 A for its own wall at 10 K (18 um plating), ratio 2.53",
+  "VIN_RAW: a barrel at (109.5, 202.7) carries 0.74 A of the solved mesh against 0.65 A for its own wall at 10 K (18 um plating), ratio 1.14"
  ],
  "inputs": {
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
-   "sha256_16": "5fc1ffce0dc5ab1c"
+   "sha256_16": "a462ac2620b9b8d3"
   },
   "plating_um": 18.0,
   "rise_k": 10.0,
@@ -28,7 +28,7 @@
   "rule_fingerprints": {
    "PI-003": "b8238bd8e5613e6c"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "4bc0aa24d836788d"
  },
  "rules": [
   "PI-003"
@@ -36,9 +36,9 @@
  "tool": "via_current",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "6f7ef144f21449b3"
  },
- "ts": "2026-09-17T22:48:05Z",
+ "ts": "2026-09-18T08:56:23Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

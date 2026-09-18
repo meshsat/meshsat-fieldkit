@@ -3,14 +3,14 @@
  "applicable": true,
  "counts": {
   "fail": 0,
-  "zones": 11
+  "zones": 12
  },
- "denominator": 11,
+ "denominator": 12,
  "evidence": [],
  "inputs": {
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
-   "sha256_16": "5fc1ffce0dc5ab1c"
+   "sha256_16": "a462ac2620b9b8d3"
   }
  },
  "missing_input": null,
@@ -20,7 +20,7 @@
   "rule_fingerprints": {
    "PLN-001": "13a9271b6424af72"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "4bc0aa24d836788d"
  },
  "rules": [
   "PLN-001"
@@ -28,9 +28,9 @@
  "tool": "check_zone_nets",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "6f7ef144f21449b3"
  },
- "ts": "2026-09-17T22:47:55Z",
+ "ts": "2026-09-18T08:56:12Z",
  "verdict": "PASS",
  "version": "unknown"
 }

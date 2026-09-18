@@ -3,32 +3,32 @@
  "applicable": true,
  "counts": {
   "fail": 1,
-  "pass": 97,
+  "pass": 100,
   "unclaimed": 0
  },
- "denominator": 98,
+ "denominator": 101,
  "evidence": [
-  "return via: 56 of 60 signal vias have a ground via within 1.5 mm (79 exempt in fine-pitch fans, 0 on one reference plane, 65 on a net whose declared class has no edge to return); without one: E6_BST at (10.67, 195.05); USB_E6_N at (70.45, 187.15); Q1_G at (92.62, 199.50); Q2_G at (224.62, 193.50)"
+  "return via: 52 of 59 signal vias have a ground via within 1.5 mm (80 exempt in fine-pitch fans, 0 on one reference plane, 82 on a net whose declared class has no edge to return); without one: FAN1_PWM at (13.70, 221.83); SCL0 at (211.02, 190.76); SDA0 at (211.99, 190.89); SCL0 at (218.55, 207.76); Q2_G at (218.70, 218.43); SDA0 at (224.57, 190.93); Q2_G at (224.62, 193.50)"
  ],
  "inputs": {
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
-   "sha256_16": "5fc1ffce0dc5ab1c"
+   "sha256_16": "a462ac2620b9b8d3"
   }
  },
  "missing_input": null,
  "note": "the whole file; each rule also has its own verdict (intent_return_path, intent_return_via, intent_decoupling, intent_rails)",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "4bc0aa24d836788d"
  },
  "rules": [],
  "tool": "intent_checks",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "6f7ef144f21449b3"
  },
- "ts": "2026-09-17T22:47:57Z",
+ "ts": "2026-09-18T08:56:15Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

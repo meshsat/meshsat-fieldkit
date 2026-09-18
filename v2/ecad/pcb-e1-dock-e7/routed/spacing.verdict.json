@@ -3,37 +3,37 @@
  "applicable": true,
  "counts": {
   "below_limit": 0,
-  "closest_mm": 0.1283,
+  "closest_mm": 0.1287,
   "hv_nets": 1,
-  "pairs_measured": 2860
+  "pairs_measured": 3254
  },
- "denominator": 2860,
+ "denominator": 3254,
  "evidence": [
-  "0.128 mm VIN_RAW to GND on B.Cu at (190.2, 179.3)",
-  "0.129 mm VIN_RAW to GND on B.Cu at (190.2, 179.3)",
-  "0.129 mm VIN_RAW to GND on B.Cu at (190.2, 179.3)",
-  "0.129 mm VIN_RAW to GND on B.Cu at (190.2, 179.3)",
-  "0.129 mm VIN_RAW to CELL_MON on B.Cu at (99.8, 191.0)",
-  "0.129 mm VIN_RAW to GND on B.Cu at (190.2, 179.3)",
-  "0.129 mm VIN_RAW to BLK_SPARE on B.Cu at (77.5, 187.8)",
-  "0.129 mm VIN_RAW to BLK_SPARE on B.Cu at (84.9, 187.8)",
-  "0.129 mm VIN_RAW to BLK_SPARE on B.Cu at (88.1, 191.0)",
-  "0.129 mm VIN_RAW to BLK_SPARE on B.Cu at (115.1, 211.4)",
-  "0.129 mm VIN_RAW to BLK_SPARE on B.Cu at (117.8, 211.4)",
-  "0.129 mm VIN_RAW to BLK_SPARE on B.Cu at (118.5, 210.7)",
-  "0.129 mm VIN_RAW to GND on B.Cu at (156.7, 185.1)",
-  "0.129 mm VIN_RAW to GND on B.Cu at (156.7, 185.1)",
-  "0.129 mm VIN_RAW to GND on B.Cu at (190.2, 179.3)",
-  "0.129 mm VIN_RAW to TRK_OUT on B.Cu at (213.6, 195.4)",
-  "0.129 mm VIN_RAW to DC_HS on B.Cu at (104.1, 195.0)",
-  "0.129 mm VIN_RAW to DC_HS on B.Cu at (104.1, 195.0)",
-  "0.129 mm VIN_RAW to DC_HS on B.Cu at (104.1, 195.0)",
-  "0.131 mm VIN_RAW to WATER_A on B.Cu at (73.1, 183.4)"
+  "0.129 mm VIN_RAW to GND on B.Cu at (150.4, 185.1)",
+  "0.129 mm VIN_RAW to GND on B.Cu at (150.4, 185.1)",
+  "0.129 mm VIN_RAW to GND on B.Cu at (150.4, 185.7)",
+  "0.129 mm VIN_RAW to GND on B.Cu at (151.9, 187.2)",
+  "0.129 mm VIN_RAW to GND on B.Cu at (203.4, 190.4)",
+  "0.129 mm VIN_RAW to GND on B.Cu at (203.4, 190.4)",
+  "0.129 mm VIN_RAW to GND on B.Cu at (203.4, 190.4)",
+  "0.129 mm VIN_RAW to GND on B.Cu at (203.4, 190.4)",
+  "0.129 mm VIN_RAW to GND on B.Cu at (203.4, 190.4)",
+  "0.129 mm VIN_RAW to SCL0 on B.Cu at (209.6, 191.2)",
+  "0.129 mm VIN_RAW to TRK_OUT on B.Cu at (223.0, 195.4)",
+  "0.129 mm VIN_RAW to U4_VCAP on F.Cu at (212.6, 194.5)",
+  "0.129 mm VIN_RAW to WATER_SENSE on B.Cu at (121.1, 207.0)",
+  "0.129 mm VIN_RAW to WATER_SENSE on B.Cu at (208.9, 190.4)",
+  "0.131 mm VIN_RAW to SHORE_INHIBIT on B.Cu at (113.0, 196.5)",
+  "0.132 mm VIN_RAW to DC_HS on B.Cu at (111.6, 205.2)",
+  "0.132 mm VIN_RAW to DC_HS on B.Cu at (111.6, 205.2)",
+  "0.133 mm VIN_RAW to DC_HS on B.Cu at (113.0, 196.5)",
+  "0.133 mm VIN_RAW to DC_HS on B.Cu at (113.0, 196.5)",
+  "0.133 mm VIN_RAW to DC_HS on B.Cu at (113.0, 196.5)"
  ],
  "inputs": {
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
-   "sha256_16": "5fc1ffce0dc5ab1c"
+   "sha256_16": "a462ac2620b9b8d3"
   },
   "hv_spacing_mm": null,
   "volts": 20.0
@@ -45,7 +45,7 @@
   "rule_fingerprints": {
    "ISO-001": "667f32d6b8d7a34b"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "4bc0aa24d836788d"
  },
  "rules": [
   "ISO-001"
@@ -53,9 +53,9 @@
  "tool": "spacing",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "6f7ef144f21449b3"
  },
- "ts": "2026-09-17T22:48:07Z",
+ "ts": "2026-09-18T08:56:26Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

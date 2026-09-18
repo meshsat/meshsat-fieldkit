@@ -210,6 +210,13 @@ NOT_A_ROUTE = (
 )
 
 
+def finish_gate_clean(flog):
+    """True when the finish's own routed-board gate read hard 0 unrouted 0 on the board it judged: the closers
+    (stub router, direct_close) can close what the router left, and then the router's own count is history."""
+    m = re.search(r"routed-board gate: hard (\d+) unrouted (\d+)", read(flog) or "")
+    return bool(m) and m.group(1) == "0" and m.group(2) == "0"
+
+
 def finish_blocker(flog):
     """The signature for a finish that refused a board the router left clean.
 
@@ -710,6 +717,13 @@ def run(profile_fn, rounds, use_services, dry, phase=None):
                 # about half an hour of a rented box. The reasons a route cannot touch are named here and
                 # stop the run instead, with the rule that refused it in the line.
                 if sig == "CLEAN": sig = finish_blocker(flog)
+                # AND THE SAME WHEN THE CLOSERS, NOT THE ROUTER, LEFT THE BOARD CLEAN (18 September 2026, E17).
+                # The router landed E17 at one open, direct_close closed it, the finish's own routed-board gate
+                # read hard 0 unrouted 0, and the finish was refused by rule TRN-001 (decision 31); but `sig`
+                # still carried the ROUTER's OPEN, this line never asked the finish, and the supervisor started a
+                # via-cost round on a board whose copper was finished, regenerating the placement over the
+                # evidence the finish had just written. The board the finish judged is what decides here.
+                elif finish_gate_clean(flog): sig = finish_blocker(flog)
             def _restore_best_and_finish(status):
                 """The run ends on whatever the last remedy produced, which may be the worst board of the run.
                 Put the best one back, so what is left on disk is the best this run reached, and finish it.
@@ -1058,6 +1072,11 @@ def selftest():
     r, why = remedy("OPEN", prof, set()); chk("opens -> via costs 100 first", r and r.get("via_costs") == 100)
     r, why = remedy("OPEN", {"route": {"attempts": [50], "via_costs": 100}}, {"via_costs"}); chk("opens after via costs -> more passes once", r and r["attempts"] == [65])
     r, why = remedy("OPEN", {"route": {"attempts": [65], "via_costs": 100}}, {"via_costs", "passes"}); chk("opens three times stops", r is None)
+    open(os.path.join(t, "e17.log"), "w").write("routed-board gate: hard 0 unrouted 0 (15 types checked)\nE17 PORTS a conductor leaves the case and meets a chip with nothing between (rule TRN-001)\nFINISH-E17-DONE\n")
+    chk("a finish whose own gate read 0/0 is clean whatever the router counted", finish_gate_clean(os.path.join(t, "e17.log")))
+    chk("and a TRN-001 refusal on it is not a route to remedy", finish_blocker(os.path.join(t, "e17.log")) == "NOT_A_ROUTE:PORTS")
+    open(os.path.join(t, "e16.log"), "w").write("routed-board gate: hard 0 unrouted 3 (15 types checked)\n")
+    chk("a finish whose gate read opens is not clean", not finish_gate_clean(os.path.join(t, "e16.log")))
     chk("missing clean flag refuses", judge_finish(os.path.join(t, "nofinish.log"), os.path.join(t, "noflag"), None, None)[0] == "FINISH_REFUSED")
     open(os.path.join(t, "flag"), "w").write("open\n"); chk("open flag refuses", judge_finish(os.path.join(t, "nofinish.log"), os.path.join(t, "flag"), None, None)[0] == "FINISH_REFUSED")
     open(os.path.join(t, "flag"), "w").write("clean\n"); open(os.path.join(t, "fin.log"), "w").write("routed-board gate: hard 0 unrouted 0\n"); os.makedirs(os.path.join(t, "deliv"))

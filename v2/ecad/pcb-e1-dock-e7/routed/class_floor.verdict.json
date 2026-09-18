@@ -10,11 +10,11 @@
  "inputs": {
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
-   "sha256_16": "5fc1ffce0dc5ab1c"
+   "sha256_16": "a462ac2620b9b8d3"
   },
   "project": {
    "path": "pcb-e1-dock.kicad_pro",
-   "sha256_16": "e1ace50c6f3e2b95"
+   "sha256_16": "7b6285f4b917ee2d"
   }
  },
  "missing_input": null,
@@ -24,7 +24,7 @@
   "rule_fingerprints": {
    "IMP-002": "6ff7fffb9afe15d7"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "4bc0aa24d836788d"
  },
  "rules": [
   "IMP-002"
@@ -32,9 +32,9 @@
  "tool": "class_floor",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "6f7ef144f21449b3"
  },
- "ts": "2026-09-17T22:48:01Z",
+ "ts": "2026-09-18T08:56:19Z",
  "verdict": "PASS",
  "version": "unknown"
 }
