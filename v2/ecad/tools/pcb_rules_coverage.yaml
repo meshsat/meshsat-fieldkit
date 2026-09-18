@@ -44,6 +44,10 @@ coverage:
    maturity: ENFORCED, gap_category: NONE, note: "three comparisons with denominators; runs on the placed and on the routed board"}
 
  SCH-003: {implementation: "gen_sch_*.py, gen_pcb_e5.py", verification: {tool: "check_contracts.py, block_contract.py", verdict: "check_contracts_<letter>", fixtures: "tests/test_gate_fixtures.py, tests/test_block_contract.py"},
+   _shared_verdict_why: "SHARED WITH RF-002 (18 September 2026). This rule is the whole of what check_contracts
+     measures, every declared contract on the netlists of the boards in the manifest, plus block_contract for the
+     one interface with no netlist at either end. RF-002 reads the same verdict for three contracts inside it; see
+     its entry for the caveat that a failure anywhere fails both.",
    maturity: ENFORCED, gap_category: NONE,
    note: "INCONCLUSIVE when a sibling netlist is absent, which is correct; the contracts themselves are a hand-written list and their completeness is not itself checked. 17 September 2026: board E5 is judged now. It has no schematic and no netlist, so its contract is between two BOARDS: gen_pcb_e5.py reads board A's board file and puts a target under each spring pin carrying that pin's net, and block_contract.py re-derives that match by position and compares it, 33 checks on the current A. It is the one blind-mate interface in the kit, where a target on the wrong net is invisible until the pack current is on it, and until today nothing checked it at all"}
 
@@ -109,10 +113,21 @@ coverage:
      owner: SESSION, execution: PARALLEL_AGENT, depends_on: [], p50_h: 6, p80_h: 18}}
 
  CMP-002: {implementation: "lcsc_fill.py", verification: {tool: "jlc_certify.py, lcsc_fill.py", verdict: "jlc_certify_<letter>, lcsc_fill", fixtures: "tests/test_order_codes.py, tests/test_gate_fixtures.py"},
+   _shared_verdict_why: "SHARED WITH SUP-001 (18 September 2026). One query per BOM row answers both, which is why
+     one verdict is honest here: the supplier's record gives the model and the package for the code, and the row is
+     then CERTIFIED with its stock and date or it is not. This rule is the PACKAGE half, the code's package against
+     the footprint the board places. THE ASYMMETRY: a row with no code at all fails SUP-001 and gives CMP-002
+     nothing to check, so a CMP-002 reading is read against the row list before it is believed; lcsc_fill's own
+     verdict is the code-to-land half (a fill rule must name a land this project draws).",
    maturity: ENFORCED, gap_category: NONE, note: "package mismatch is caught against the supplier's own record, with a date"}
 
  SUP-001: {implementation: "lcsc_fill.py, jlc-handfit.txt",
    verification: {tool: "jlc_certify.py, lcsc_fill.py", verdict: "jlc_certify_<letter>, lcsc_fill", fixtures: "tests/test_order_codes.py, tests/test_gate_fixtures.py"},
+   _shared_verdict_why: "SHARED WITH CMP-002 (18 September 2026). The same per-row query answers both: this rule is
+     the BUYABILITY half, every row CERTIFIED against the live catalogue with its stock at a recorded date, or
+     HAND_FIT with a written purchase route, or BENCH_FITTED and excluded from the assembly. A row whose package
+     disagrees fails both, a row with no code fails this one alone, and a board with no deliverable folder at its
+     declared phase makes both INCONCLUSIVE rather than either of them a pass.",
    maturity: ENFORCED, gap_category: NONE, note: "stock is read at a date; the date is the evidence's freshness"}
 
  PWR-001: {implementation: "gen_sch_*.py via intent.rail()", verification: {tool: intent_checks.py, verdict: intent_rails, fixtures: tests/test_rail_loads.py},
@@ -245,6 +260,11 @@ coverage:
    remediation: {action: "quotes from the ordering session for both counts on C and P, then the two rulings", owner: OWNER, execution: OWNER, depends_on: [], p50_h: 2, p80_h: 72}}
 
  RET-001: {implementation: "signal_class.py plus each board's signal_classes table, judged by intent_checks.py",
+   _shared_verdict_why: "SHARED WITH RET-002 (18 September 2026). One pass over the routed board produces both: the
+     net is classified by spectral content, and each class is asked its own question. This rule is the CRITERION,
+     whether the class's adequacy question is the right one and is met; RET-002 is the per-net SCREEN the same pass
+     prints. The sharing is harmless today because this rule's maturity is SOURCE_UNVERIFIED, so its verdict is
+     never read: the per-class numbers are this project's own and no published source backs them.",
    verification: {tool: intent_checks.py, verdict: intent_return_path, fixtures: tests/test_signal_class.py},
    maturity: SOURCE_UNVERIFIED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
    note: "16 September 2026: the principle is implemented and the heuristic is no longer standing in for it. Every net
@@ -262,6 +282,10 @@ coverage:
      owner: SESSION, execution: VENDOR_OR_STANDARD_WAIT, depends_on: [SI-001], p50_h: 8, p80_h: 26}}
 
  RET-002: {implementation: "gen_pcb_*3.py pours", verification: {tool: intent_checks.py, verdict: intent_return_path, fixtures: tests/test_board_gates.py, report: return_gaps.py},
+   _shared_verdict_why: "SHARED WITH RET-001 (18 September 2026). The same pass; this rule is the per-net screen
+     (total length, uncovered length, the runs that make it up and what sits on the neighbouring layers), judged
+     against the class RET-001's criterion assigns. When RET-001 gains an authority and starts being read, the two
+     will need separate counts, because a net can pass the screen under a criterion that is itself wrong.",
    maturity: ENFORCED, gap_category: NONE,
    note: "16 September 2026: it no longer stands in for RET-001. The same measurement runs, and what it is compared
      against now depends on the net's declared spectral class, so the screen is a screen again. It still counts a net's
@@ -293,6 +317,13 @@ coverage:
      verdict, not a silent one, and a net nobody classified is judged as though it were fast"}
 
  IMP-001: {implementation: "gen_pcb_*3.py net classes", verification: {tool: impedance_check.py, verdict: impedance_check, second_opinion: impedance_2d.py},
+   _shared_verdict_why: "SHARED WITH PAIR-001 (18 September 2026). One pass over the routed board writes one
+     verdict with both readings in it: per CLASS, the target, the tolerance, the geometry as built and the
+     impedance that geometry makes on the board's own stackup, which is this rule; and per PAIR, the coupled
+     fraction and the intra-pair difference, which is PAIR-001. The sharing is harmless today because this rule's
+     maturity is SOURCE_UNVERIFIED and its verdict is never read: the closed forms come from a standard this tree
+     does not hold and the field solver has one solved point. When it is read, a pair that misses its target will
+     fail both, and the class question and the pair question will need their own counts.",
    maturity: SOURCE_UNVERIFIED,
    _maturity_why: "16 September 2026: the fabricator's impedance page was fetched and transcribed and carries the two stackups and NO impedance-against-width table and no tolerance, so the confirmation this rule asks for is not on any page: it is a question to the fabricator at order time, or a coupon. That is the ordering session's or the owner's, not a session's, and the remediation says so now.", gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
    note: "closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case with one solved point; no fabricator confirmation and no coupon",
@@ -304,6 +335,11 @@ coverage:
    note: "16 September 2026: board B's project file shipped USB and DIFF100 at 0.10 mm against its own 0.127 mm minimum, a second hand-written copy that had drifted from the generator's table. The project classes come from the table now and full.sh blocks the placed board on class_floor.py"}
 
  PAIR-001: {implementation: "pair_preroute.py, meander.py", verification: {tool: pair_match.sh, verdict: impedance_check, fixtures: tests/test_pair_leg_match.py},
+   _shared_verdict_why: "SHARED WITH IMP-001 (18 September 2026). The same verdict; this rule is the PAIR half,
+     the coupled length as a fraction of the judged length (board B declares 0.80 by owner ruling 24), the
+     intra-pair difference against the interface's skew budget, and the via count. Board B reads FAIL here on
+     seventeen pairs missing their target, which is this rule's own criteria and not IMP-001's, and until
+     18 September that same count was also failing STK-001, a rule about the stackup being present in the board.",
    maturity: ENFORCED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
    note: "coupling and the 1 mm length gate are enforced; the 1 mm is a project number. 17 September 2026: the interface's own budget IS cited beside it now. interfaces.budget_for reads the sheet per net through each board's assignment, and both board gates that print a pair's mismatch print what that pair's own host asks for and the clause it was read from. Which of the two DECIDES is owner decision 36, which now carries the USB 2.0 specification's own 100 ps of allowed cable skew as the scale: this project's 1.00 mm is about 5.5 ps",
    remediation: {action: "The CITATION is done (17 September 2026); the JUDGING is owner decision 36, which now has the numbers on both sides", owner: SESSION, execution: PARALLEL_AGENT, depends_on: [INT-001], p50_h: 1, p80_h: 3}}
@@ -356,6 +392,14 @@ coverage:
    remediation: {action: "board A's eleven RF paths take an outer layer at the class width (the A40 placement), then the LPF simulation and the coplanar clearance and via fence", owner: SESSION, execution: PARALLEL_BOX, depends_on: [IMP-001], p50_h: 6, p80_h: 18}}
 
  RF-002: {implementation: "gen_sch_c.py, gen_sch_d.py, gen_sch_a.py", verification: {tool: check_contracts.py, verdict: "check_contracts_<letter>", fixtures: tests/test_gate_fixtures.py},
+   _shared_verdict_why: "SHARED WITH SCH-003 (18 September 2026). check_contracts runs every declared cross-board
+     contract on the netlists and writes one verdict. For SCH-003 that verdict IS the rule. For RF-002 it is the
+     three inhibit-chain contracts inside the same run: the EMCON line's driver count is one, its sense is the one
+     the receiving board acts on, and its pull is fail-safe (added 9 September 2026 after the line was found wired
+     as a ring oscillator with its polarity inverted between boards). THE CAVEAT, stated because the worst reading
+     decides: a failure of ANY contract fails both rules, so an RF-002 row must be read against the name of the
+     failing contract before it is believed. Today every contract passes (72 of 72) so the two agree. A second
+     verdict over the inhibit contracts alone is owed and is cheap; it is not written while nothing fails.",
    maturity: ENFORCED, gap_category: NONE, note: "driver count, sense and fail-safe pull are checked across three boards"}
 
  INT-001: {implementation: "gen_sch_*.py, with the PCIe clauses of the module datasheet held by check_contracts.py",

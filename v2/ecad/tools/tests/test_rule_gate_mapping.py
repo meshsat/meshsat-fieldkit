@@ -266,3 +266,35 @@ def t_the_routed_board_gate_decides_the_route_and_nothing_else():
         "%s decides %s. It measures the ROUTE (hard and unrouted on the filled routed board), which is "
         "RTE-002's criteria; every other rule it is named for inherits a failure about something it does not "
         "ask. Give that rule its own instrument." % (S.ROUTE_GATE, named))
+
+
+def t_a_verdict_that_decides_several_rules_says_what_it_measures_for_each():
+    """Two of the five shared verdicts were deciding a rule they do not measure (18 September 2026).
+
+    `hardset-routed-board-gate` failed RTE-001 on board B for its 416 unrouted connections, and
+    `impedance_check` passed STK-001 on three boards with a denominator of zero pairs. Both were mappings made
+    in one line with no sentence saying what the tool measures for the second rule, and where a rule names
+    several verdicts the WORST decides, so the error is silent in both directions.
+
+    The general property cannot be checked mechanically: nothing here can read a tool and a criteria sentence
+    and decide whether one measures the other. What CAN be held mechanically is that the question was asked.
+    A verdict named by more than one rule is a claim that one measurement answers both, and every rule making
+    that claim carries `_shared_verdict_why` saying, in its own entry, what that tool measures for IT. The
+    three that remain were each checked against their boards' current readings when this rule was written:
+    `check_contracts_<letter>` (RF-002, SCH-003), `jlc_certify_<letter>` and `lcsc_fill` (CMP-002, SUP-001),
+    and `intent_return_path` (RET-001, RET-002).
+    """
+    cov = S.coverage()
+    by = {}
+    for rid, c in cov.items():
+        for n in [x.strip() for x in str(((c.get("verification") or {}).get("verdict")) or "").split(",") if x.strip()]:
+            by.setdefault(n, []).append(rid)
+    missing = []
+    for verdict, rules in sorted(by.items()):
+        if len(rules) < 2: continue
+        for rid in sorted(rules):
+            if not (cov[rid].get("_shared_verdict_why") or "").strip():
+                missing.append("%s (shares %s with %s)" % (rid, verdict, ", ".join(r for r in sorted(rules) if r != rid)))
+    assert not missing, (
+        "a verdict decides every rule the map points at it, so these rules owe a `_shared_verdict_why` saying "
+        "what that one tool measures for each of them: %s" % "; ".join(missing))
