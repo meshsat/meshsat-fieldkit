@@ -89,6 +89,11 @@ run "dc drop"           python3 $T/dc_drop.py $N.kicad_pcb
 run "impedance"         python3 $T/impedance_check.py $N.kicad_pcb
 run "netlist vs board"  python3 $T/netlist_board.py $N.kicad_pcb out/$N.net
 run "class floor"       python3 $T/class_floor.py $N.kicad_pcb
+# THE EXAMINATION COMES BEFORE THE SCREEN THAT NEEDS IT (18 September 2026). RET-004 is a screening test for
+# RET-003 in its own words and a via it flags is examined against that rule rather than failed outright, so
+# `ref_change` writes what every transition references BEFORE `return_via` judges what it flagged; run the
+# other way round the screen has no examination beside it and says so, which is INCONCLUSIVE and not a pass.
+run "reference change"  python3 $T/ref_change.py $N.kicad_pcb --check
 run "return vias"       python3 $T/return_via.py $N.kicad_pcb --check
 # The SECOND tool of two rules that need both to agree (16 September 2026). place_audit predicts which escape
 # fans will collide, which the DRC on a placed board cannot say; lcsc_fill refuses a BOM line with no order
@@ -115,7 +120,6 @@ run "via table"         python3 $T/via_audit.py $N.kicad_pcb
 run "fabricator limits" python3 $T/fab_limits.py $N.kicad_pcb
 run "stackup"           python3 $T/stackup_gate.py $N.kicad_pcb --board $L
 run "via current"        python3 $T/via_current.py $N.kicad_pcb
-run "reference change"   python3 $T/ref_change.py $N.kicad_pcb --check
 run "thermal"            python3 $T/thermal.py $N.kicad_pcb
 run "hv spacing"         python3 $T/spacing.py $N.kicad_pcb
 run "electrical length"  python3 $T/edge_length.py $N.kicad_pcb

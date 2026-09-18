@@ -1047,3 +1047,61 @@ def t_the_same_node_declared_behind_its_filter_passes():
     path, sens = _sense_board(pcbnew, tmp, "filtered", "CSF")
     r = sensitive_nodes.judge(path, "x", sens)
     assert not any("POWER TERMINAL" in f for f in r["fails"]), r["fails"]
+
+
+def _examine_fixture(tmp, cases):
+    """A board directory carrying `ref_change`'s per-via reading, and the screen's own flagged list beside it."""
+    import json as _j
+    os.makedirs(os.path.join(tmp, "out"), exist_ok=True)
+    path = os.path.join(tmp, "brd.kicad_pcb")
+    if cases is not None:
+        _j.dump({"board": "brd.kicad_pcb", "vias": cases},
+                open(os.path.join(tmp, "out", "brd-ref-change.json"), "w", encoding="utf-8"))
+
+    class _T:
+        def __init__(self, n): self.n = n
+        def GetNetname(self): return self.n
+    r = {"lacking": ["SDA0 at (10.00, 10.00)", "PCIE1_CLK_P at (20.00, 20.00)", "HB2 at (30.00, 30.00)"],
+         "positions": [(_T("/SDA0"), (10.0, 10.0)), (_T("/PCIE1_CLK_P"), (20.0, 20.0)), (_T("/HB2"), (30.0, 30.0))]}
+    return path, r
+
+
+def t_a_flagged_via_whose_reference_never_changes_is_examined_and_not_failed():
+    """THE DEFECTIVE CASE (18 September 2026). Rule RET-004's own requirement is that a via beyond the screening
+    distance is EXAMINED against RET-003 rather than failed outright, and its failure-mode section says that used
+    as a law it demands vias where the reference never changed. The gate failed five boards on the screen's raw
+    count with nothing looking at a single flagged transition. Here two of the three flagged vias reference the
+    same conductor before and after, or change between two different NETS where a ground via cannot help at all,
+    and neither is this screen's to fail."""
+    _pcbnew()
+    import return_via
+    with tempfile.TemporaryDirectory() as tmp:
+        path, r = _examine_fixture(tmp, [dict(x=10.0, y=10.0, net="SDA0", case="same"),
+                                         dict(x=20.0, y=20.0, net="PCIE1_CLK_P", case="to_power"),
+                                         dict(x=30.0, y=30.0, net="HB2", case="other_gnd")])
+        still, buckets, missing = return_via.examine(path, r)
+        assert missing is None, missing
+        assert len(buckets["same_reference"]) == 1 and len(buckets["to_power"]) == 1, buckets
+        assert still == ["HB2 at (30.00, 30.00)"], \
+            "the examination did not take the two vias RET-003 answers out of this screen's failure: %s" % still
+
+
+def t_a_via_that_moves_between_two_ground_planes_stands_and_so_does_one_nobody_classified():
+    """THE ACCEPTABLE CASE, and the half that keeps this from becoming an exemption mechanism. A move between two
+    GROUND planes is exactly what a ground via beside the transition is for, so it stands; and a via the
+    examination could not classify stands too, because an unexamined via is not an examined one. With no reading
+    beside the board at all the screen declares its missing input, which the verdict writer turns into
+    INCONCLUSIVE: failing a via the rule says must be examined first is the defect, not the remedy."""
+    _pcbnew()
+    import return_via
+    with tempfile.TemporaryDirectory() as tmp:
+        path, r = _examine_fixture(tmp, [dict(x=10.0, y=10.0, net="SDA0", case="other_gnd"),
+                                         dict(x=20.0, y=20.0, net="PCIE1_CLK_P", case="unknown")])
+        still, buckets, missing = return_via.examine(path, r)
+        assert missing is None and len(still) == 3, (still, missing)
+        assert len(buckets["unclassified"]) == 1, buckets
+    with tempfile.TemporaryDirectory() as tmp:
+        path, r = _examine_fixture(tmp, None)
+        still, buckets, missing = return_via.examine(path, r)
+        assert missing and "ref_change" in missing, missing
+        assert still == r["lacking"], "a screen with no examination beside it quietly dropped a via"
