@@ -465,9 +465,9 @@ def gate_state(rows, m):
 
 def main(argv):
     reg = R.load(); facts = R.facts(); cov = coverage(); m = manifest(); fp = R.fingerprint(reg)
-    phase = argv[argv.index("--phase") + 1] if "--phase" in argv else None
+    phase = _v.opt(argv, "--phase", None)
     only = [argv[argv.index("--board") + 1]] if "--board" in argv else list(m["boards"])
-    out_dir = argv[argv.index("--out-dir") + 1] if "--out-dir" in argv else os.path.join(ECAD, "out", "rule-audit")
+    out_dir = _v.opt(argv, "--out-dir", os.path.join(ECAD, "out", "rule-audit"))
     os.makedirs(out_dir, exist_ok=True)
     all_rows, per_board = [], {}
     for letter in only:
@@ -533,7 +533,7 @@ def main(argv):
 def _explicit_out(argv):
     """The directory the caller named, or None. A set-level verdict belongs beside the set's own gates; a run
     told to write elsewhere is a run that must leave the tree exactly as it found it."""
-    return argv[argv.index("--out-dir") + 1] if "--out-dir" in argv else None
+    return _v.opt(argv, "--out-dir", None)
 
 
 def _finish(argv, all_rows, per_board, m, fp, phase, out_dir):

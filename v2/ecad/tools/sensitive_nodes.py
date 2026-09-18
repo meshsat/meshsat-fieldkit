@@ -257,8 +257,8 @@ def judge(board_path=None, letter=None, sens=None):
 
 def main(argv):
     board = argv[0] if argv and not argv[0].startswith("--") else None
-    letter = argv[argv.index("--board") + 1] if "--board" in argv else None
-    sens = argv[argv.index("--sensitive") + 1] if "--sensitive" in argv else None
+    letter = _v.opt(argv, "--board", None)
+    sens = _v.opt(argv, "--sensitive", None)
     if not letter and board:
         try:
             import sch_prov

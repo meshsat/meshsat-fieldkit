@@ -306,8 +306,8 @@ def check(chain=None, ecad=None, vendor=None):
 
 
 def main(argv):
-    ch = argv[argv.index("--chain") + 1] if "--chain" in argv else None
-    ec = argv[argv.index("--ecad") + 1] if "--ecad" in argv else None
+    ch = _v.opt(argv, "--chain", None)
+    ec = _v.opt(argv, "--ecad", None)
     try:
         r = check(ch, ec)
     except Exception as e:

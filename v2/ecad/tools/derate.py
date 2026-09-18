@@ -195,7 +195,7 @@ def judge(net_path, intent_path=None, margin=MARGIN):
 def main(argv):
     if not argv: print(__doc__); return 2
     net = argv[0]
-    intent = argv[argv.index("--intent") + 1] if "--intent" in argv else None
+    intent = _v.opt(argv, "--intent", None)
     margin = float(argv[argv.index("--margin") + 1]) if "--margin" in argv else MARGIN
     if "--no-components" in argv:
         # A DECLARED ZERO IS AN ANSWER. Board E5 is the dock block: copper, plated targets, wire lands and four

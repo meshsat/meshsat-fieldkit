@@ -77,7 +77,7 @@ def main(a):
     import verdict as _v
     from impedance_check import read_stackup
     cell = float(a[a.index("--cell") + 1]) if "--cell" in a else 0.5
-    png = a[a.index("--png") + 1] if "--png" in a else None
+    png = _v.opt(a, "--png", None)
     budget = float(a[a.index("--budget") + 1]) if "--budget" in a else 0.02
     b = pcbnew.LoadBoard(a[0]); it = intent.load(a[0])
     if not it:

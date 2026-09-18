@@ -56,7 +56,7 @@ def check(board_path, pro_path=None):
 
 def main(a):
     if not a: print(__doc__); return 2
-    board = a[0]; pro = a[a.index("--pro") + 1] if "--pro" in a else None
+    board = a[0]; pro = _v.opt(a, "--pro", None)
     classes, floors, bad = check(board, pro)
     n = len(classes or [])
     print("class_floor: %d class(es) against the board's own minimums %s" % (n, json.dumps(floors, sort_keys=True)))

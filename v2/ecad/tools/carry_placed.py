@@ -160,7 +160,7 @@ def main(argv):
                    if not _same_seat(P[ref][:4], R[ref][:4], TOL_NM)]
     swapped = swaps(P, R, _moved_refs) if (_moved_refs and not moved) else []
     stage, names_now = "placed", (tuple(n for n in names if n in CARRY_SWAPPED) if swapped else names)
-    pre = argv[argv.index("--preroute") + 1] if "--preroute" in argv else None
+    pre = _v.opt(argv, "--preroute", None)
     if pre is None:
         _guess = os.path.join(os.path.dirname(placed),
                               os.path.basename(placed).replace("-placed.kicad_pcb", "-preroute.kicad_pcb"))

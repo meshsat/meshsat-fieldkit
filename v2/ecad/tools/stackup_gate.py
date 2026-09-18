@@ -149,7 +149,7 @@ def judge(path, letter, root=None, declared=None):
 def main(argv):
     if not argv: print(__doc__); return 2
     path = argv[0]
-    letter = argv[argv.index("--board") + 1] if "--board" in argv else None
+    letter = _v.opt(argv, "--board", None)
     if not letter:
         print("stackup_gate: --board <letter> is required: the named stack is a board fact"); return 2
     r = judge(path, letter)

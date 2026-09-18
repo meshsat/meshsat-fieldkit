@@ -106,8 +106,8 @@ def judge(rel=None, ecad=None, only=None, vendor=None):
 
 
 def main(argv):
-    rel = argv[argv.index("--rel") + 1] if "--rel" in argv else None
-    ecad = argv[argv.index("--ecad") + 1] if "--ecad" in argv else None
+    rel = _v.opt(argv, "--rel", None)
+    ecad = _v.opt(argv, "--ecad", None)
     only = argv[argv.index("--board") + 1].lower() if "--board" in argv else None
     if only and only not in (yaml_boards := set((__import__("yaml").safe_load(open(rel or REL, encoding="utf-8")).get("boards") or {}))):
         print("reliability: board %s declares no reliability list; the boards that do are %s"

@@ -93,7 +93,7 @@ def t_a_generated_document_whose_inputs_are_absent_is_not_rewritten_empty():
 
 
 # The unguarded reads of a flag's value on the tree this rule was written against, 18 September 2026.
-FLAG_READS = 101
+FLAG_READS = 71
 _FLAG = re.compile(r"(?:argv|a)\[(?:argv|a)\.index\(")
 
 

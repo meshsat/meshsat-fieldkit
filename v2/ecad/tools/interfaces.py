@@ -139,7 +139,7 @@ def _glob_intent(ecad, stem):
 
 
 def main(argv):
-    only = argv[argv.index("--board") + 1] if "--board" in argv else None
+    only = _v.opt(argv, "--board", None)
     res = judge(only=only)
     rows = sum(len(v["rows"]) for v in res.values())
     fails = [f for v in res.values() for f in v["fails"]]

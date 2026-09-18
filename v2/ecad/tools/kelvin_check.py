@@ -83,7 +83,7 @@ def judge(decls, pots):
 def main(argv):
     if not argv or argv[0].startswith("--"): print(__doc__); return 2
     board = argv[0]
-    letter = argv[argv.index("--board") + 1] if "--board" in argv else None
+    letter = _v.opt(argv, "--board", None)
     try:
         import yaml
         spec = yaml.safe_load(open(os.path.join(HERE, "pcb_sensitive.yaml"), encoding="utf-8"))

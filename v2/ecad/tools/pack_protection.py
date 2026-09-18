@@ -158,8 +158,8 @@ def judge(t, netlist=None):
 
 
 def main(a):
-    table = a[a.index("--table") + 1] if "--table" in a else TABLE
-    netlist = a[a.index("--netlist") + 1] if "--netlist" in a else NETLIST
+    table = _v.opt(a, "--table", TABLE)
+    netlist = _v.opt(a, "--netlist", NETLIST)
     t = load(table)
     r = judge(t, netlist)
     print("pack_protection: %d function(s) over %d cell limit(s) and %d device(s), %d check(s), %d failure(s)%s"
