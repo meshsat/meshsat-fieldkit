@@ -10512,3 +10512,27 @@ cluster where A46's closures were refused for mask bridges. The two poured rails
 about the GAP; the instrument takes a NET, and a net that contains one short gap can contain forty others. The
 count to take before launching an arm is the named net's open-pair count **on the placed board's own DRC**, and
 board D's `/PCM_VDD` is three, which is why it paid.
+
+**Addendum, 01:45 CEST (19 September): the pre-route barrel reading taken on all six declared boards, and the
+pack rails are where it hurts.** `rail_crossings.py` on each board's own committed phase, read-only in the
+suite tree with each board's own intent file:
+
+| board | crossings carrying what they need | short | the worst |
+|---|---:|---:|---|
+| C24 | 7 | **0** | clean, which agrees with `via_current` PASS |
+| D12 | 8 | **0** | clean |
+| B21 | 199 | 6 | `+5V_LIME` 3.00 A on one 0.40 mm barrel, needs 4 |
+| E17 | 10 | 6 | **`CELL_F` at P_CP pad 1: 9.00 A through nine 0.20 mm barrels, needs 17**; `VIN_RAW` at L2 pad 2, 10.00 A through eleven 0.25 mm, needs 16 |
+| P4 | 0 | **5** | **`CELL4` at W_BP pad 1: 18.00 A through ONE 0.50 mm barrel, needs 18** |
+| A47 | 12 | 9 | `+5V_DEV` 6.00 A through one 0.25 mm barrel, needs 10 |
+
+**Board P's five are the whole board**: not one of its declared crossings carries the barrels its current
+needs, and the pack lead is a single barrel where eighteen are asked. Board E's worst is the same conductor
+one board along, `CELL_F` at the pack entry.
+
+**The caveat travels with the number.** This reading attributes a part's whole current (split across its own
+pads) to the crossing AT that pad, which is the conservative bound; the solved mesh spreads it, and
+`via_current` on the same boards reads five rails over on E and four sites on P rather than every crossing. The
+two agree in SHAPE wherever both have been taken, which is the argument for asking before the route, and they
+disagree in MAGNITUDE by design. What the table is for is the generator: a crossing that is short here is
+short before anything is routed, and `power_copper.cluster` counts the barrels from the current.
