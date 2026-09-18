@@ -6,7 +6,7 @@ one of whose legs had no copper (B21, 416 open) crashed it at the unpack three l
 written, and PAIR-001 and STK-001 read "no impedance_check verdict for this board" through two sweeps. Two rules:
 every `results.append` in that gate carries eleven fields, and the gate's entry point runs under `verdict.guard`,
 which turns an exception into an INCONCLUSIVE verdict naming it."""
-import ast, os, sys, tempfile
+import ast, json, os, sys, tempfile
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, TOOLS)
