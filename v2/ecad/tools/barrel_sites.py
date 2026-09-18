@@ -104,13 +104,28 @@ def main(argv):
         for r in rows:
             if r["ratio"] <= 1.0: continue
             x, y = r["at_origin"] or r["at"]
-            near_x = min([abs(o[4] - r["at"][0]) for o in r["other"]] or [99.0])
-            near_y = min([abs(o[5] - r["at"][1]) for o in r["other"]] or [99.0])
-            axis = "x" if near_x >= near_y else "y"
-            nearest = r["other"][0][0] if r["other"] else None
+            # THE AXIS IS THE ONE THAT KEEPS THE MOST ROOM, computed rather than guessed (18 September 2026).
+            # The first version compared the obstacle's x and y displacement and picked the larger, which spreads
+            # TOWARD the nearest pad: board P's second FUSED site has Q1's gate pad 0.68 mm away in x and 1.27 in
+            # y, and that rule chose y, which walks a barrel to 1.07 mm from it where x keeps 1.29. So both axes
+            # are measured: the barrels a cluster would place are laid out on each, the worst distance to any
+            # other net's pad is taken, and the better axis wins. It is the same arithmetic the tool already does
+            # for the count, applied to the direction.
+            import via_current as _vcx
+            _n = _vcx.barrels_for(r["amps"], r["drill"])
+            _pitch = r["drill"] + 0.4
+            _span = (_n - 1) * _pitch
+            def _worst(ax):
+                pts = [((r["at"][0] - _span / 2.0 + i * _pitch, r["at"][1]) if ax == "x"
+                        else (r["at"][0], r["at"][1] - _span / 2.0 + i * _pitch)) for i in range(_n)]
+                return min([math.hypot(px - o[4], py - o[5]) for px, py in pts for o in r["other"]] or [99.0])
+            _wx, _wy = _worst("x"), _worst("y")
+            axis = "x" if _wx >= _wy else "y"
+            nearest = min(_wx, _wy) if r["other"] else None
             print('    _pc.cluster("%s", (%.2f, %.2f), amps=%.3f, drill=%.2f, axis="%s")   # ratio %.2f, nearest other-net pad %s'
                   % (r["net"], x, y, r["amps"], r["drill"], axis, r["ratio"],
-                     ("%.2f mm" % nearest) if nearest is not None else "none within reach"))
+                     ("%.2f mm to the nearest other-net pad on this axis (%.2f on the other)"
+                      % (max(_wx, _wy), min(_wx, _wy))) if r["other"] else "none within reach"))
     if "--json" in argv: print(json.dumps(rows, indent=1))
     return 0 if not over else 1
 
