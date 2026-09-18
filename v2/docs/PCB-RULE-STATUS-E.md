@@ -21,9 +21,9 @@ Measured on board E17 (pcb-e1-dock-e7, a462ac2620b9b8d3), declares E17.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 35 | 64.8 |
+| PASS | 38 | 70.4 |
 | FAIL | 5 | 9.3 |
-| INCONCLUSIVE | 14 | 25.9 |
+| INCONCLUSIVE | 11 | 20.4 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **54** | 100.0 |
 
@@ -45,7 +45,7 @@ Measured on board E17 (pcb-e1-dock-e7, a462ac2620b9b8d3), declares E17.
 | DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **PASS** | intent_decoupling PASS of 19 |
 | PI-001 conductor current capacity | BLOCKER | ROUTED_BOARD | **PASS** | dc_density PASS of 4 |
 | PI-002 rail voltage drop | BLOCKER | ROUTED_BOARD | **PASS** | dc_drop PASS of 4 |
-| PI-003 via current capacity | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | via_current is advisory: a measurement for the record, not a bar ({'measured_rails': 3, 'no_via': 0, 'over': 2, 'rails': 4}) |
+| PI-003 via current capacity | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | via_current FAIL: {'measured_rails': 3, 'no_via': 0, 'over': 2, 'over_barrels': 5, 'rails': 4} |
 | GND-001 one deliberate ground system | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | ground_system PASS of 5 |
 | GND-002 chassis and cable-shield strategy | MUST_JUSTIFY | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the strategy is WRITTEN, which it was not before, and writing it found the gap. The kit has no single co |
 | STK-001 the stackup is declared, feasible and in the board | BLOCKER | ROUTED_BOARD | **PASS** | stackup_gate PASS of 16 |
@@ -73,13 +73,13 @@ Measured on board E17 (pcb-e1-dock-e7, a462ac2620b9b8d3), declares E17.
 | PLN-001 no orphan copper | BLOCKER | ROUTED_BOARD | **PASS** | check_zone_nets PASS of 12 |
 | EMC-001 source, path, victim | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | emc_sheet PASS of 5 |
 | MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **PASS** | check_pcb_e PASS of 69 |
-| DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | verify_deliverable_e INCONCLUSIVE |
+| DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **PASS** | verify_deliverable_e PASS of 1 |
 | DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | assembly_set INCONCLUSIVE |
 | TST-001 the board can be brought up safely | MUST_JUSTIFY | SCHEMATIC | **PASS** | PCB-BRING-UP.md is current with the registry |
 | REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **PASS** | reliability PASS of 10 |
 | BAT-002 the energy chain is bounded end to end | BLOCKER | SCHEMATIC | **PASS** | energy_chain PASS of 98 |
-| DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | final_gate_e INCONCLUSIVE |
+| DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **PASS** | final_gate_e PASS of 1 |
 | DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **FAIL** | doc_provenance FAIL: {'documents': 7, 'folders': 7, 'untraceable': 7} |
-| OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 0, 'missing': 0, 'pass': 0, 'quote': 1} |
+| OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **PASS** | final_gate PASS of 2 |
 | SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 334 |
 | SGN-002 a prototype-only unknown is named | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | PCB-PROTOTYPE-UNKNOWNS.md is current with the registry |

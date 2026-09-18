@@ -11,9 +11,9 @@ Measured on board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 24 | 43.6 |
+| PASS | 25 | 45.5 |
 | FAIL | 14 | 25.5 |
-| INCONCLUSIVE | 17 | 30.9 |
+| INCONCLUSIVE | 16 | 29.1 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **55** | 100.0 |
 
@@ -35,7 +35,7 @@ Measured on board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21.
 | DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **PASS** | intent_decoupling PASS of 30 |
 | PI-001 conductor current capacity | BLOCKER | ROUTED_BOARD | **FAIL** | dc_density FAIL: {'met': 27, 'missed': 9, 'undeclared': 0} |
 | PI-002 rail voltage drop | BLOCKER | ROUTED_BOARD | **FAIL** | dc_drop FAIL: {'density_missed': 9, 'met': 31, 'missed': 5, 'undeclared': 0} |
-| PI-003 via current capacity | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | via_current is advisory: a measurement for the record, not a bar ({'measured_rails': 19, 'no_via': 3, 'over': 21, 'rails': 33}) |
+| PI-003 via current capacity | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | via_current FAIL: {'measured_rails': 19, 'no_via': 3, 'over': 21, 'over_barrels': 34, 'rails': 33} |
 | GND-001 one deliberate ground system | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | ground_system PASS of 1 |
 | GND-002 chassis and cable-shield strategy | MUST_JUSTIFY | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the strategy is WRITTEN, which it was not before, and writing it found the gap. The kit has no single co |
 | STK-001 the stackup is declared, feasible and in the board | BLOCKER | ROUTED_BOARD | **PASS** | stackup_gate PASS of 24 |
@@ -71,6 +71,6 @@ Measured on board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21.
 | REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **PASS** | reliability PASS of 47 |
 | DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | final_gate_b INCONCLUSIVE |
 | DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **FAIL** | doc_provenance FAIL: {'documents': 7, 'folders': 7, 'untraceable': 7} |
-| OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 0, 'missing': 0, 'pass': 0, 'quote': 1} |
+| OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **PASS** | final_gate PASS of 2 |
 | SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 334 |
 | SGN-002 a prototype-only unknown is named | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | PCB-PROTOTYPE-UNKNOWNS.md is current with the registry |

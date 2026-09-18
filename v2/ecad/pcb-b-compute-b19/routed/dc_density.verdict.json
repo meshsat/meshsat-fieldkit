@@ -31,7 +31,7 @@
   "rule_fingerprints": {
    "PI-001": "c23010065f1f2962"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "82885961768537e2"
  },
  "rules": [
   "PI-001"
@@ -39,9 +39,9 @@
  "tool": "dc_density",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "d6d53e1e2108b7bd"
  },
- "ts": "2026-09-17T22:43:51Z",
+ "ts": "2026-09-18T17:23:59Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

@@ -1,10 +1,11 @@
 {
- "advisory": true,
+ "advisory": false,
  "applicable": true,
  "counts": {
   "measured_rails": 19,
   "no_via": 3,
   "over": 21,
+  "over_barrels": 34,
   "rails": 33
  },
  "denominator": 33,
@@ -28,7 +29,11 @@
   "+5V_RB: a barrel at (247.1, 110.2) carries 2.00 A of the solved mesh against 0.90 A for its own wall at 10 K (18 um plating), ratio 2.22",
   "+5V_S1: a barrel at (80.7, 172.7) carries 2.20 A of the solved mesh against 0.65 A for its own wall at 10 K (18 um plating), ratio 3.38",
   "+5V_S2: a barrel at (131.1, 182.7) carries 2.20 A of the solved mesh against 0.65 A for its own wall at 10 K (18 um plating), ratio 3.38",
-  "+5V_S3: a barrel at (212.7, 172.7) carries 2.20 A of the solved mesh against 0.65 A for its own wall at 10 K (18 um plating), ratio 3.38"
+  "+5V_S3: a barrel at (212.7, 172.7) carries 2.20 A of the solved mesh against 0.65 A for its own wall at 10 K (18 um plating), ratio 3.38",
+  "GND: 21.00 A crosses a transition of 1 via(s) at (131.6, 148.3) rated 0.56 A at 10 K (18 um plating), attributed rather than measured",
+  "+1V0_S1: barrel at (74.8, 147.1), 0.80 A against 0.56 A, ratio 1.43",
+  "+3V3_S3A: barrel at (225.2, 134.3), 1.50 A against 0.90 A, ratio 1.67",
+  "+3V3_S3A: barrel at (237.5, 126.0), 1.50 A against 0.90 A, ratio 1.67"
  ],
  "inputs": {
   "board": {
@@ -40,13 +45,13 @@
   "site_mm": 6.0
  },
  "missing_input": null,
- "note": "every rail's weakest layer transition against IPC-2221's curve (ECSS-Q-ST-70-12C Annex D D.4) for a barrel of the fabricator's own plating thickness. ADVISORY: 14 of 33 judged rail(s) have no solved barrel current beside this board, so for those the rail's WHOLE current is attributed to its weakest cluster of vias, which on these boards is often a lone stitch via carrying almost none",
+ "note": "9 of 19 judged rail(s) are over their own barrels on the current dc_drop's solved mesh put through them, which is a measurement and decides this reading; the 14 rail(s) with no solved current are judged by attributing the whole rail to its weakest cluster of vias, which can only add failures to the ones named here and never remove one (IPC-2221's curve, ECSS-Q-ST-70-12C Annex D D.4, the fabricator's own plating)",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
    "PI-003": "b8238bd8e5613e6c"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "82885961768537e2"
  },
  "rules": [
   "PI-003"
@@ -54,9 +59,9 @@
  "tool": "via_current",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "d6d53e1e2108b7bd"
  },
- "ts": "2026-09-17T22:44:11Z",
+ "ts": "2026-09-18T17:24:02Z",
  "verdict": "FAIL",
  "version": "unknown"
 }
