@@ -247,6 +247,29 @@ _pc.union("+5V_D8", "+5V_D8 trunk In2", [(-43.4, -18.6, -36.4, -16.9),    # east
                                          (-36.3, 19.6, -34.6, 22.4)],      # the stub down to U1's lower pad
           pcbnew.In2_Cu, priority=2, min_width=0.25, clearance=0.15)
 _pc.stitch("+5V_D8", [(-31.4, 22.15), (-34.9, 22.15), (-35.46, 20.1)])    # one via per load pad, beside it and inside the band
+# ---------------------------------------------- PI-003 ON +5V_SA: THREE BARRELS WHERE THE MESH PUTS 1.10 A (18 Sep 2026)
+# The rule's one failure on board D is a LAYER TRANSITION, and it is one barrel, measured rather than assumed. On the
+# committed D12 board `via_current` reads exactly one rail over its weakest transition: a 0.40 mm barrel at case
+# (-28.59, 25.81) carrying 1.10 A of dc_drop's solved mesh against 0.90 A for its own wall at 10 K with the
+# fabricator's 18 um plating, ratio 1.22. Two answers were measured before this one and both are refused: the PWR
+# class via at 1.2/0.6 cost NINE connections of 133 (D14, and its via-cost round came back ten), and `via_parallel`,
+# which lays a parallel barrel in the finish, found no linkable site within 6 mm of it because the neighbourhood is
+# FB1, C5, R3 and LED1 with their ground pads. What is left is the generator, which does not have to search: it knows
+# where the parts are, and the corridor between the ferrite's output pad and its own bulk capacitor is empty.
+#
+# WHAT IS DRAWN, in the board's own coordinates, all of it locked so the router keeps it: FB1 pad 2 (the ferrite's
+# output, x -28.65 to -27.78, y 21.73 to 22.93) is joined to C5 pad 1 (the 47 uF bulk, x -30.28 to -29.13, y 24.68 to
+# 27.38) by a 0.5 mm F.Cu run north then west, THREE through barrels are stitched into that run 0.8 mm apart, and a
+# 0.5 mm B.Cu run joins the three on the other side. Three barrels between the same two nodes are in parallel, so the
+# 1.10 A divides: about 0.37 A each against the 0.90 A one barrel is rated for. 0.5 mm carries 1.1 A with margin on
+# outer copper (IPC-2221 asks 0.35 mm at 10 K), and the clearances were read off the board before the line was drawn:
+# 0.64 mm to C5's ground pad, 0.67 mm to C5 pad 1's east edge, 0.60 mm to R3's ground pad, against the 0.127 mm class.
+# It is not a keep-out and not a band: a locked track adds no rule area, so unlike the 1.2 mm class via this costs the
+# router nothing it can measure. Judged on the routed board by `via_current` (PI-003) with `dc_drop` beside it.
+_pc.spine("+5V_SA", -28.21, 22.33, -28.21, 25.40, 0.5, pcbnew.F_Cu)     # north out of FB1 pad 2, between C5's two pads
+_pc.spine("+5V_SA", -28.21, 25.40, -29.60, 25.40, 0.5, pcbnew.F_Cu)     # west into C5 pad 1, clear of R3's ground pad by 0.60 mm
+_pc.spine("+5V_SA", -28.21, 23.60, -28.21, 25.20, 0.5, pcbnew.B_Cu)     # the other side of the three barrels
+_pc.stitch("+5V_SA", [(-28.21, 23.60), (-28.21, 24.40), (-28.21, 25.20)])   # 0.8 mm apart: 0.4 mm hole to hole against the 0.3 floor
 print("D11 power copper: the +5V_D8 trunk and west branch on In2, %d zone(s) and keep-out(s)" % len(_pc.made))
 for L in (pcbnew.In2_Cu, pcbnew.F_Cu, pcbnew.B_Cu): pour(L, "GND", "GND pour %s" % board.GetLayerName(L), (-50, -40, 50, 40), priority=0)
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
@@ -286,9 +309,9 @@ try:
                # round one's nine stands and the closers took none of them (the stub router closed 0 of 9).
                # PI-003 is ADVISORY (via_current measures and does not bar), and the two barrels it names on
                # +5V_SA carry 1.10 A against 0.90: paying nine connections on a 133-net board to answer an
-               # advisory rule is not a trade. The answer PI-003 actually wants is locked copper at the two
-               # transitions, board D's own +5V_D8 pattern above, laid where the geometry is known; until that is
-               # drawn, via_parallel answers one of the two barrels in the finish and the other is recorded.
+               # advisory rule is not a trade. The answer PI-003 wants is locked copper at the transition, board D's
+               # own +5V_D8 pattern, and it IS DRAWN now: three parallel barrels between FB1 pad 2 and C5 pad 1 (see
+               # the +5V_SA block above), which divides the 1.10 A the mesh measures instead of widening one hole.
                ("PWR", 0.127, 0.5, 0.8, 0.4),
                ("RF", 0.3, 0.35, 0.6, 0.3),
                ("USB", 0.127, 0.3, 0.6, 0.3)]   # ONE table for the board's classes AND the project file's (18 September 2026): a second hand-written copy in the project file had drifted (D's PWR via 1.2/0.6 on the board, 0.8/0.4 in the file the router reads; SENSE absent from the file on D, E and P; SENSE 0.6/0.3 on P), the defect B fixed for itself on 8 September
