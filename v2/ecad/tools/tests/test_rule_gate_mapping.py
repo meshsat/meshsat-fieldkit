@@ -298,3 +298,23 @@ def t_a_verdict_that_decides_several_rules_says_what_it_measures_for_each():
     assert not missing, (
         "a verdict decides every rule the map points at it, so these rules owe a `_shared_verdict_why` saying "
         "what that one tool measures for each of them: %s" % "; ".join(missing))
+
+
+def t_the_coverage_map_names_the_registry_it_was_written_against():
+    """A stamp in a file a person reads must describe the thing beside it (18 September 2026).
+
+    `pcb_rules_coverage.yaml` carried `rule_set_fingerprint: 88f207606ad2945a` from the day it was written,
+    while the registry computed `ff8151db3576437b`. Nothing reads the stamp, so nothing was wrong with any
+    verdict; what was wrong is that a reader comparing the two would conclude the map belongs to a rule set
+    this project does not have. The fingerprint covers the DECIDING fields only, so this asks for an edit
+    exactly when a rule's demands change and never when a source or a rationale is written down."""
+    import os, sys, re
+    TOOLSDIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, TOOLSDIR)
+    import rules_lib as R
+    txt = open(os.path.join(TOOLSDIR, "pcb_rules_coverage.yaml"), encoding="utf-8").read()
+    m = re.search(r'^rule_set_fingerprint:\s*"([0-9a-f]+)"', txt, re.M)
+    assert m, "the coverage map carries no fingerprint stamp at all"
+    assert m.group(1) == R.fingerprint(), (
+        "the coverage map says it was written against rule set %s and the registry computes %s: update the "
+        "stamp in the change that moved the rules" % (m.group(1), R.fingerprint()))
