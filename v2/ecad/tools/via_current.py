@@ -103,7 +103,12 @@ def main(a):
         except Exception as _e:
             print("via_current: the barrel currents beside this board could not be read (%s)" % _e)
 
-    rows, bad, no_via = [], [], []
+    # EVERY BARREL OVER ITS RATING IS NAMED, not only its rail's worst (18 September 2026). The counts below
+    # are per RAIL, which is what the denominator means and what the note says; but the reader of a failure is
+    # the person who has to draw copper at the site, and board D's +5V_SA crosses layers TWICE with a single
+    # barrel at each crossing, both carrying the whole 1.10 A. The record said "one barrel" for a day because
+    # this list held one line per rail. `barrel_sites.py` is the map of what stands around each of them.
+    rows, bad, bad_sites, no_via = [], [], [], []
     for net, r in sorted((it.get("rails") or {}).items()):
         amps = float(r.get("amps_peak") or r.get("amps_typ") or 0)
         if amps <= 0: continue
@@ -129,6 +134,12 @@ def main(a):
                     bad.append("%s: a barrel at (%.1f, %.1f) carries %.2f A of the solved mesh against %.2f A "
                                "for its own wall at %.0f K (%.0f um plating), ratio %.2f"
                                % (net, _x, _y, _cur, _lim, rise, plating, _ratio))
+                for _b in measured[key]:
+                    _l2 = ampacity(float(_b.get("drill_mm") or 0.4), rise, plating)[0]
+                    _c2 = float(_b.get("amps") or 0.0)
+                    if _l2 > 0 and _c2 / _l2 > 1.0:
+                        bad_sites.append("%s: barrel at (%.1f, %.1f), %.2f A against %.2f A, ratio %.2f"
+                                         % (net, float(_b.get("x") or 0), float(_b.get("y") or 0), _c2, _l2, _c2 / _l2))
                 continue
         worst = None
         for g in sites([(v[0], v[1]) for v in vs], reach):
@@ -176,8 +187,8 @@ def main(a):
             % (len(rows) - len(_measured), len(rows)))
     return _v.write("via_current", _v.FAIL if bad else (_v.INCONCLUSIVE if not rows else _v.PASS),
                     counts={"rails": len(rows), "over": len(bad), "no_via": len(no_via),
-                            "measured_rails": len(_measured)},
-                    denominator=len(rows), evidence=bad[:20], advisory=not _all_measured,
+                            "measured_rails": len(_measured), "over_barrels": len(bad_sites)},
+                    denominator=len(rows), evidence=(bad + bad_sites)[:24], advisory=not _all_measured,
                     inputs={"board": path, "rise_k": rise, "plating_um": plating, "site_mm": reach},
                     note=("no declared rail on this board carries a via, so nothing was judged" if not rows
                           else _why),

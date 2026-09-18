@@ -174,7 +174,12 @@ coverage:
    note: "the solver's residual is checked before the number is read. Since 16 September the dc_drop verdict carries the
      VOLTAGE DROP alone, against each rail's own budget, and the current capacity is a separate verdict under PI-001"}
 
- PI-003: {implementation: "prefanout.py, gen_pcb_*3.py stitch vias", verification: {tool: via_current.py, verdict: via_current, fixtures: tests/test_via_current.py},
+ PI-003: {implementation: "prefanout.py, gen_pcb_*3.py stitch vias, gen_pcb_d3.py locked parallel barrels", verification: {tool: via_current.py, verdict: via_current, fixtures: tests/test_via_current.py, report: barrel_sites.py},
+   _report_why: "barrel_sites.py (18 September 2026) is the map this rule's failure hands to whoever draws the
+     copper: every barrel over its rating rather than each rail's worst, the pads of its own net within reach
+     (the anchors a locked run can join) and every other net's pad within reach (what the corridor has to
+     miss). It decides nothing. It was written after board D's answer was drawn by hand from those same four
+     readings, and its first run found that board D has TWO over-rated barrels on +5V_SA and not one.",
    maturity: ENFORCED, gap_category: NONE,
    note: "16 September 2026, SECOND PASS: THE ATTRIBUTION IS A MEASUREMENT AND THE CURVE HAS A DOCUMENT, and
      both halves of the remediation this entry asked for are done. `dc_drop` already solved for the current in
