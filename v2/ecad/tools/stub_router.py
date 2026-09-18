@@ -130,6 +130,13 @@ def netname(n): return n[1:] if n.startswith("/") else n
 # searched instead of typed.
 _WANT = {n.strip().lstrip("/") for n in __import__("os").environ.get("STUB_NETS", "").split(",") if n.strip()}
 _POUR_OBSTACLE = int(__import__("os").environ.get("STUB_POUR_OBSTACLE", "1"))   # see the pour paragraph in the obstacle map
+# WHAT A PRE-LAY LAYS IS LOCKED AND WHAT A CLOSURE LAYS IS NOT (18 September 2026, STUB_LOCK). A closure is the
+# last copper on a finished board and nothing routes after it. A PRE-LAY is copper the router must keep, and
+# Freerouting keeps what KiCad exports as `(type fix)`; unlocked, the router rips it up and the pre-lay has
+# bought nothing. It also decides whether the board still reads as PLACED: `place_audit` calls a board with
+# unlocked segments ROUTED and declines to judge it, which is what blocked E20's pre-route gate at 19:27 UTC
+# after its pre-lay had closed 39 of 39. Default OFF, so a finish is unchanged.
+_LOCK = int(__import__("os").environ.get("STUB_LOCK", "0"))
 for v in drc.get("unconnected_items", []):
     its = [item_of(i) for i in v.get("items", [])]
     if len(its) == 2 and all(its):
@@ -435,13 +442,17 @@ def emit(net_item, path):
     for kind, v in segs:
         if kind == "via":
             L, i, j = v; via = pcbnew.PCB_VIA(b); via.SetPosition(VECTOR2I(FromMM(float(X0 + j * G)), FromMM(float(Y0 + i * G)))); via.SetDrill(FromMM(VIA_DR)); via.SetWidth(FromMM(VIA_D))
-            via.SetViaType(pcbnew.VIATYPE_THROUGH); via.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); via.SetNet(net); b.Add(via); nv += 1
+            via.SetViaType(pcbnew.VIATYPE_THROUGH); via.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); via.SetNet(net)
+            if _LOCK: via.SetLocked(True)
+            b.Add(via); nv += 1
         else:
             for k in range(1, len(v)):
                 a, c = v[k - 1], v[k]
                 if (a[1], a[2]) == (c[1], c[2]): continue
                 t = pcbnew.PCB_TRACK(b); t.SetStart(VECTOR2I(FromMM(float(X0 + a[2] * G)), FromMM(float(Y0 + a[1] * G)))); t.SetEnd(VECTOR2I(FromMM(float(X0 + c[2] * G)), FromMM(float(Y0 + c[1] * G))))
-                t.SetWidth(FromMM(TW)); t.SetLayer(LR[a[0]]); t.SetNet(net); b.Add(t); nt += 1
+                t.SetWidth(FromMM(TW)); t.SetLayer(LR[a[0]]); t.SetNet(net)
+                if _LOCK: t.SetLocked(True)
+                b.Add(t); nt += 1
     return nt, nv
 
 def _nearest_copper(net, L, x, y, reach=1.2):
