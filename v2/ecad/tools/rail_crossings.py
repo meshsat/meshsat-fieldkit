@@ -26,8 +26,12 @@ import os, sys, math, json
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-import pcbnew
 import via_current as _vc
+
+# KiCad IS IMPORTED IN `main` AND NOT HERE, so that `judge` can be exercised where KiCad is not. Everything the
+# judge touches is a method name (`GetClass`, `Pads`, `GetDrill`), never a pcbnew constant, so the split rule
+# that cost this tool a version is provable on the runner instead of skipping there. `test_pair_router_imports`
+# exists because a rule that only runs on the box leaves the runner's suite green while the tool is broken.
 
 
 def judge(b, rails, reach_mm=1.0):
@@ -90,6 +94,7 @@ def main(a):
     if not os.path.exists(ip):
         print("rail_crossings: no intent file at %s, so no rail declares a current here" % ip); return 0
     rails = json.load(open(ip, encoding="utf-8")).get("rails") or {}
+    import pcbnew
     b = pcbnew.LoadBoard(path)
     short, judged = judge(b, rails)
     print("rail_crossings: %d crossing(s) of %d declared rail(s) carry the barrels their current needs, %d do not"
