@@ -9968,3 +9968,34 @@ number and the answer is already drawn in `gen_pcb_e3.py` (the two-stitch split 
 hole-to-hole floor now refuses to get wrong, and the CELL_F cluster), verified at PHASE=E19 with the gate ALL
 PASS and hard 0; it lands with the next adopted E phase. The readiness number moves the way an honest
 correction moves it: two INCONCLUSIVE pairs become failures that name their copper.
+
+**Addendum, 19:45 CEST: rule RET-004 had never done the second half of its own requirement, and the gate that
+was meant to catch a crash could not start.** RET-004 fails five boards, and its requirement reads: *"as a
+screening test for RET-003, every signal via outside a fine-pitch escape fan is measured for the distance to
+the nearest ground via, and a via beyond the screening distance is EXAMINED against RET-003 rather than failed
+outright"*, with a failure-mode line saying that used as a law it demands vias where the reference never
+changed. That is what `return_via --check` was doing: five boards failed on the screen's own count with nobody
+looking at a single flagged transition. The examination already existed as a printed summary. `ref_change.py`
+classifies every signal via into the reference it keeps, a move between two GROUND planes, or a move to another
+NET, and it now writes that per via beside the board, the way `dc_drop` writes the barrel currents it had
+solved and thrown away. The screen reads it: a via whose reference never changes has no loop to close, a via
+whose reference changes to another net cannot be helped by a ground via at all (that is `return_stitch`'s
+question, a capacitor between the two planes), a via the examination could not classify STANDS because an
+unexamined via is not an examined one, and with no reading beside the board the screen declares its missing
+input, which the writer turns into INCONCLUSIVE. The sweep runs the examination before the screen now and a
+rule holds that order, because run the other way round there is nothing to examine with.
+
+**It flatters nothing.** Re-taken on E17 as one set (sha a462ac2620b9b8d3 before and after): all seven of board
+E's flagged vias are this screen's own case, a move between two ground planes with no ground via beside it, so
+board E's RET-004 failure stands exactly as it was, now with each via examined.
+
+**And running the tool found that its crash guard could not run.** This morning's change wrapped twenty
+deciding gates as `sys.exit(_v.guard("<tool>", main, sys.argv[1:]))` so that a gate which raises leaves
+INCONCLUSIVE naming the exception instead of no verdict at all. `ref_change.py` imports the verdict writer
+INSIDE `main`, in the branch that writes the verdict, so the guard line itself raised `NameError: name '_v' is
+not defined` before main was ever called: **of the twenty, the one tool that could not start, and the thing
+meant to leave a reading when a tool fails left none when it was the one failing.** RET-003's gate has been
+dead in every sweep since. It is the fallback nested inside the try of the thing it guards (13 September) in a
+second place. The rule that holds it reads every tool that guards its main and requires the writer to be
+imported at column zero, and the first version of that rule allowed leading whitespace and passed on the very
+file it was written for.

@@ -1,0 +1,1771 @@
+{
+ "board": "pcb-d-aprs.kicad_pcb",
+ "frac": 0.25,
+ "vias": [
+  {
+   "x": 108.18,
+   "y": 63.58,
+   "net": "AB_SPARE",
+   "case": "slow"
+  },
+  {
+   "x": 55.32,
+   "y": 96.02,
+   "net": "AB_SPARE",
+   "case": "slow"
+  },
+  {
+   "x": 108.96,
+   "y": 91.3,
+   "net": "AF_OUT",
+   "case": "slow"
+  },
+  {
+   "x": 98.66,
+   "y": 72.24,
+   "net": "AF_OUT",
+   "case": "slow"
+  },
+  {
+   "x": 122.57,
+   "y": 110.27,
+   "net": "AF_OUT",
+   "case": "slow"
+  },
+  {
+   "x": 96.31,
+   "y": 83.29,
+   "net": "AF_OUT",
+   "case": "slow"
+  },
+  {
+   "x": 96.33,
+   "y": 86.23,
+   "net": "AF_OUT",
+   "case": "slow"
+  },
+  {
+   "x": 95.88,
+   "y": 88.22,
+   "net": "AF_OUT",
+   "case": "slow"
+  },
+  {
+   "x": 119.08,
+   "y": 106.65,
+   "net": "AF_OUT",
+   "case": "slow"
+  },
+  {
+   "x": 129.77,
+   "y": 74.05,
+   "net": "AMP_CPN",
+   "case": "slow"
+  },
+  {
+   "x": 143.46,
+   "y": 86.53,
+   "net": "AMP_CPN",
+   "case": "slow"
+  },
+  {
+   "x": 126.21,
+   "y": 73.81,
+   "net": "AMP_CPN",
+   "case": "slow"
+  },
+  {
+   "x": 142.31,
+   "y": 74.87,
+   "net": "AMP_CPN",
+   "case": "slow"
+  },
+  {
+   "x": 126.71,
+   "y": 74.66,
+   "net": "AMP_CPP",
+   "case": "slow"
+  },
+  {
+   "x": 143.46,
+   "y": 84.12,
+   "net": "AMP_CPP",
+   "case": "slow"
+  },
+  {
+   "x": 115.55,
+   "y": 66.9,
+   "net": "AMP_EN",
+   "case": "slow"
+  },
+  {
+   "x": 90.66,
+   "y": 73.98,
+   "net": "AMP_EN",
+   "case": "slow"
+  },
+  {
+   "x": 141.51,
+   "y": 81.78,
+   "net": "AMP_EN",
+   "case": "slow"
+  },
+  {
+   "x": 143.46,
+   "y": 83.33,
+   "net": "AMP_HPVDD",
+   "case": "slow"
+  },
+  {
+   "x": 131.77,
+   "y": 76.51,
+   "net": "AMP_HPVDD",
+   "case": "slow"
+  },
+  {
+   "x": 141.51,
+   "y": 88.08,
+   "net": "AMP_HPVSS",
+   "case": "slow"
+  },
+  {
+   "x": 134.1,
+   "y": 78.5,
+   "net": "AMP_HPVSS",
+   "case": "slow"
+  },
+  {
+   "x": 108.23,
+   "y": 74.66,
+   "net": "AMP_INL_N",
+   "case": "slow"
+  },
+  {
+   "x": 137.16,
+   "y": 83.72,
+   "net": "AMP_INL_N",
+   "case": "slow"
+  },
+  {
+   "x": 144.45,
+   "y": 93.01,
+   "net": "AMP_INL_P",
+   "case": "slow"
+  },
+  {
+   "x": 140.31,
+   "y": 89.43,
+   "net": "AMP_INL_P",
+   "case": "slow"
+  },
+  {
+   "x": 117.34,
+   "y": 82.04,
+   "net": "AMP_INR_N",
+   "case": "slow"
+  },
+  {
+   "x": 123.23,
+   "y": 88.06,
+   "net": "AMP_INR_N",
+   "case": "slow"
+  },
+  {
+   "x": 124.88,
+   "y": 83.21,
+   "net": "AMP_INR_N",
+   "case": "slow"
+  },
+  {
+   "x": 138.62,
+   "y": 87.43,
+   "net": "AMP_INR_N",
+   "case": "slow"
+  },
+  {
+   "x": 142.94,
+   "y": 87.61,
+   "net": "AMP_INR_P",
+   "case": "slow"
+  },
+  {
+   "x": 147.75,
+   "y": 85.13,
+   "net": "AMP_INR_P",
+   "case": "slow"
+  },
+  {
+   "x": 64.72,
+   "y": 105.7,
+   "net": "EXP_INT",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 75.38,
+   "y": 112.85,
+   "net": "EXP_SPARE1",
+   "case": "slow"
+  },
+  {
+   "x": 57.87,
+   "y": 68.37,
+   "net": "EXP_SPARE1",
+   "case": "slow"
+  },
+  {
+   "x": 55.97,
+   "y": 69.12,
+   "net": "EXP_SPARE3",
+   "case": "slow"
+  },
+  {
+   "x": 75.38,
+   "y": 111.55,
+   "net": "EXP_SPARE3",
+   "case": "slow"
+  },
+  {
+   "x": 74.55,
+   "y": 110.9,
+   "net": "EXP_SPARE4",
+   "case": "slow"
+  },
+  {
+   "x": 64.42,
+   "y": 64.12,
+   "net": "EXP_SPARE4",
+   "case": "slow"
+  },
+  {
+   "x": 75.38,
+   "y": 110.25,
+   "net": "EXP_SPARE5",
+   "case": "slow"
+  },
+  {
+   "x": 79.56,
+   "y": 64.22,
+   "net": "EXP_SPARE6",
+   "case": "slow"
+  },
+  {
+   "x": 60.93,
+   "y": 89.23,
+   "net": "EXP_SPARE6",
+   "case": "slow"
+  },
+  {
+   "x": 101.46,
+   "y": 70.31,
+   "net": "EXP_SPARE7",
+   "case": "slow"
+  },
+  {
+   "x": 99.93,
+   "y": 66.23,
+   "net": "EXP_SPARE7",
+   "case": "slow"
+  },
+  {
+   "x": 102.77,
+   "y": 68.21,
+   "net": "EXP_SPARE7",
+   "case": "slow"
+  },
+  {
+   "x": 75.38,
+   "y": 108.95,
+   "net": "EXP_SPARE7",
+   "case": "slow"
+  },
+  {
+   "x": 93.83,
+   "y": 62.79,
+   "net": "EXP_SPARE7",
+   "case": "slow"
+  },
+  {
+   "x": 88.3,
+   "y": 61.53,
+   "net": "EXP_SPARE7",
+   "case": "slow"
+  },
+  {
+   "x": 66.97,
+   "y": 62.98,
+   "net": "EXP_SPARE8",
+   "case": "slow"
+  },
+  {
+   "x": 70.88,
+   "y": 91.2,
+   "net": "EXP_SPARE8",
+   "case": "slow"
+  },
+  {
+   "x": 60.19,
+   "y": 73.44,
+   "net": "EXP_SPARE8",
+   "case": "slow"
+  },
+  {
+   "x": 86.19,
+   "y": 62.55,
+   "net": "EXP_SPARE8",
+   "case": "slow"
+  },
+  {
+   "x": 74.55,
+   "y": 108.3,
+   "net": "EXP_SPARE8",
+   "case": "slow"
+  },
+  {
+   "x": 89.45,
+   "y": 91.59,
+   "net": "EXP_SPARE8",
+   "case": "slow"
+  },
+  {
+   "x": 62.18,
+   "y": 82.0,
+   "net": "EXP_SPARE8",
+   "case": "slow"
+  },
+  {
+   "x": 70.88,
+   "y": 86.98,
+   "net": "EXP_SPARE8",
+   "case": "slow"
+  },
+  {
+   "x": 116.29,
+   "y": 110.06,
+   "net": "HS1_BIAS_R",
+   "case": "slow"
+  },
+  {
+   "x": 104.85,
+   "y": 117.9,
+   "net": "HS1_MIC",
+   "case": "slow"
+  },
+  {
+   "x": 110.85,
+   "y": 115.87,
+   "net": "HS1_MIC",
+   "case": "slow"
+  },
+  {
+   "x": 139.11,
+   "y": 81.78,
+   "net": "HS1_SPK",
+   "case": "slow"
+  },
+  {
+   "x": 113.07,
+   "y": 117.0,
+   "net": "HS2_BIAS_R",
+   "case": "slow"
+  },
+  {
+   "x": 105.4,
+   "y": 119.4,
+   "net": "HS2_MIC",
+   "case": "slow"
+  },
+  {
+   "x": 116.52,
+   "y": 114.97,
+   "net": "HS2_MIC",
+   "case": "slow"
+  },
+  {
+   "x": 143.76,
+   "y": 120.84,
+   "net": "HS2_MIC",
+   "case": "slow"
+  },
+  {
+   "x": 117.96,
+   "y": 115.9,
+   "net": "HS2_MIC_AC",
+   "case": "slow"
+  },
+  {
+   "x": 115.48,
+   "y": 118.89,
+   "net": "HS2_MIC_AC",
+   "case": "slow"
+  },
+  {
+   "x": 139.11,
+   "y": 88.08,
+   "net": "HS2_SPK",
+   "case": "slow"
+  },
+  {
+   "x": 124.07,
+   "y": 93.99,
+   "net": "HUB_DM2",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 115.32,
+   "y": 94.49,
+   "net": "HUB_DM2",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 121.79,
+   "y": 99.84,
+   "net": "HUB_DM2",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 119.67,
+   "y": 91.79,
+   "net": "HUB_DM2",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 130.01,
+   "y": 87.42,
+   "net": "HUB_DM3",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 124.96,
+   "y": 87.2,
+   "net": "HUB_DM3",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 119.06,
+   "y": 83.2,
+   "net": "HUB_DP0",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 127.33,
+   "y": 89.47,
+   "net": "HUB_DP3",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 130.38,
+   "y": 88.62,
+   "net": "HUB_DP3",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 119.5,
+   "y": 88.16,
+   "net": "HUB_OVRCUR_n",
+   "case": "slow"
+  },
+  {
+   "x": 121.68,
+   "y": 85.58,
+   "net": "HUB_RST_n",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 121.04,
+   "y": 80.34,
+   "net": "HUB_XTAL2",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 122.56,
+   "y": 80.62,
+   "net": "HUB_XTAL2R",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 102.69,
+   "y": 65.61,
+   "net": "KEY",
+   "case": "slow"
+  },
+  {
+   "x": 86.99,
+   "y": 66.4,
+   "net": "KEY",
+   "case": "slow"
+  },
+  {
+   "x": 89.46,
+   "y": 65.86,
+   "net": "KEY",
+   "case": "slow"
+  },
+  {
+   "x": 79.31,
+   "y": 118.26,
+   "net": "KEY",
+   "case": "slow"
+  },
+  {
+   "x": 106.9,
+   "y": 65.48,
+   "net": "KEY",
+   "case": "slow"
+  },
+  {
+   "x": 97.4,
+   "y": 68.53,
+   "net": "KEY",
+   "case": "slow"
+  },
+  {
+   "x": 105.85,
+   "y": 68.66,
+   "net": "KEY",
+   "case": "slow"
+  },
+  {
+   "x": 73.28,
+   "y": 116.5,
+   "net": "KEY",
+   "case": "slow"
+  },
+  {
+   "x": 98.73,
+   "y": 69.16,
+   "net": "KEY",
+   "case": "slow"
+  },
+  {
+   "x": 83.77,
+   "y": 114.07,
+   "net": "LED_PA_A",
+   "case": "slow"
+  },
+  {
+   "x": 121.93,
+   "y": 96.07,
+   "net": "LED_PLAY_K",
+   "case": "slow"
+  },
+  {
+   "x": 132.29,
+   "y": 106.2,
+   "net": "LED_PLAY_K",
+   "case": "slow"
+  },
+  {
+   "x": 132.76,
+   "y": 99.31,
+   "net": "LED_PLAY_K",
+   "case": "slow"
+  },
+  {
+   "x": 131.18,
+   "y": 105.95,
+   "net": "LED_PLAY_K",
+   "case": "slow"
+  },
+  {
+   "x": 139.26,
+   "y": 104.06,
+   "net": "LED_PLAY_K",
+   "case": "slow"
+  },
+  {
+   "x": 140.05,
+   "y": 91.51,
+   "net": "LED_PLAY_K",
+   "case": "slow"
+  },
+  {
+   "x": 75.04,
+   "y": 74.24,
+   "net": "LED_PWR_A",
+   "case": "slow"
+  },
+  {
+   "x": 127.53,
+   "y": 106.17,
+   "net": "LED_REC_K",
+   "case": "slow"
+  },
+  {
+   "x": 127.94,
+   "y": 110.44,
+   "net": "LED_REC_K",
+   "case": "slow"
+  },
+  {
+   "x": 86.0,
+   "y": 117.71,
+   "net": "LED_RX_A",
+   "case": "slow"
+  },
+  {
+   "x": 83.5,
+   "y": 114.84,
+   "net": "LED_TX_A",
+   "case": "slow"
+  },
+  {
+   "x": 120.68,
+   "y": 101.68,
+   "net": "MICAMP_IN_N",
+   "case": "slow"
+  },
+  {
+   "x": 130.38,
+   "y": 102.16,
+   "net": "MICAMP_IN_N",
+   "case": "slow"
+  },
+  {
+   "x": 115.19,
+   "y": 107.18,
+   "net": "MICAMP_IN_N",
+   "case": "slow"
+  },
+  {
+   "x": 137.56,
+   "y": 112.82,
+   "net": "MICAMP_IN_N",
+   "case": "slow"
+  },
+  {
+   "x": 133.37,
+   "y": 100.48,
+   "net": "MICAMP_OUT",
+   "case": "slow"
+  },
+  {
+   "x": 116.88,
+   "y": 90.55,
+   "net": "MICAMP_OUT",
+   "case": "slow"
+  },
+  {
+   "x": 115.13,
+   "y": 93.58,
+   "net": "MICAMP_OUT",
+   "case": "slow"
+  },
+  {
+   "x": 132.21,
+   "y": 107.3,
+   "net": "MICAMP_OUT",
+   "case": "slow"
+  },
+  {
+   "x": 133.48,
+   "y": 112.53,
+   "net": "MICAMP_OUT",
+   "case": "slow"
+  },
+  {
+   "x": 121.66,
+   "y": 107.26,
+   "net": "MICAMP_OUT",
+   "case": "slow"
+  },
+  {
+   "x": 119.46,
+   "y": 110.34,
+   "net": "MICAMP_OUT",
+   "case": "slow"
+  },
+  {
+   "x": 130.38,
+   "y": 101.5,
+   "net": "MICAMP_OUT",
+   "case": "slow"
+  },
+  {
+   "x": 133.65,
+   "y": 103.65,
+   "net": "MIC_IN",
+   "case": "slow"
+  },
+  {
+   "x": 110.79,
+   "y": 87.13,
+   "net": "MIC_IN",
+   "case": "slow"
+  },
+  {
+   "x": 69.89,
+   "y": 101.68,
+   "net": "MIC_IN",
+   "case": "slow"
+  },
+  {
+   "x": 79.22,
+   "y": 79.51,
+   "net": "MIC_IN",
+   "case": "slow"
+  },
+  {
+   "x": 131.92,
+   "y": 113.01,
+   "net": "MIC_IN",
+   "case": "slow"
+  },
+  {
+   "x": 108.02,
+   "y": 87.09,
+   "net": "MIC_IN",
+   "case": "slow"
+  },
+  {
+   "x": 105.47,
+   "y": 78.76,
+   "net": "MIC_IN",
+   "case": "slow"
+  },
+  {
+   "x": 132.84,
+   "y": 118.74,
+   "net": "MIC_SUM",
+   "case": "slow"
+  },
+  {
+   "x": 131.54,
+   "y": 115.91,
+   "net": "MIC_SUM",
+   "case": "slow"
+  },
+  {
+   "x": 111.0,
+   "y": 63.23,
+   "net": "MIC_SUM",
+   "case": "slow"
+  },
+  {
+   "x": 120.8,
+   "y": 107.71,
+   "net": "MMUTE",
+   "case": "slow"
+  },
+  {
+   "x": 81.35,
+   "y": 119.26,
+   "net": "PA_EN",
+   "case": "slow"
+  },
+  {
+   "x": 83.64,
+   "y": 120.49,
+   "net": "PA_EN",
+   "case": "slow"
+  },
+  {
+   "x": 79.12,
+   "y": 68.84,
+   "net": "PA_EN",
+   "case": "slow"
+  },
+  {
+   "x": 121.66,
+   "y": 65.35,
+   "net": "PA_KEY",
+   "case": "slow"
+  },
+  {
+   "x": 144.81,
+   "y": 80.79,
+   "net": "PA_KEY",
+   "case": "slow"
+  },
+  {
+   "x": 90.42,
+   "y": 120.34,
+   "net": "PA_KEY",
+   "case": "slow"
+  },
+  {
+   "x": 77.78,
+   "y": 118.36,
+   "net": "PA_KEY",
+   "case": "slow"
+  },
+  {
+   "x": 78.52,
+   "y": 117.99,
+   "net": "PA_KEY",
+   "case": "slow"
+  },
+  {
+   "x": 98.8,
+   "y": 74.28,
+   "net": "PA_KEY",
+   "case": "slow"
+  },
+  {
+   "x": 100.11,
+   "y": 75.64,
+   "net": "PA_KEY",
+   "case": "slow"
+  },
+  {
+   "x": 92.23,
+   "y": 70.12,
+   "net": "PA_KEY",
+   "case": "slow"
+  },
+  {
+   "x": 88.2,
+   "y": 70.8,
+   "net": "PA_KEY",
+   "case": "slow"
+  },
+  {
+   "x": 108.46,
+   "y": 71.35,
+   "net": "PA_KEY",
+   "case": "slow"
+  },
+  {
+   "x": 89.83,
+   "y": 74.15,
+   "net": "PA_KEY",
+   "case": "slow"
+  },
+  {
+   "x": 108.64,
+   "y": 116.0,
+   "net": "PCM_L_AC",
+   "case": "slow"
+  },
+  {
+   "x": 108.18,
+   "y": 117.17,
+   "net": "PCM_L_AC",
+   "case": "slow"
+  },
+  {
+   "x": 128.81,
+   "y": 114.41,
+   "net": "PCM_R_AC",
+   "case": "slow"
+  },
+  {
+   "x": 128.81,
+   "y": 112.21,
+   "net": "PCM_R_AC",
+   "case": "slow"
+  },
+  {
+   "x": 108.66,
+   "y": 120.48,
+   "net": "PCM_VCCL",
+   "case": "slow"
+  },
+  {
+   "x": 128.25,
+   "y": 118.72,
+   "net": "PCM_VCCL",
+   "case": "slow"
+  },
+  {
+   "x": 100.95,
+   "y": 119.09,
+   "net": "PCM_VCCP",
+   "case": "slow"
+  },
+  {
+   "x": 112.74,
+   "y": 96.04,
+   "net": "PCM_VCCP",
+   "case": "slow"
+  },
+  {
+   "x": 99.49,
+   "y": 108.17,
+   "net": "PCM_VCCP",
+   "case": "slow"
+  },
+  {
+   "x": 123.69,
+   "y": 104.09,
+   "net": "PCM_VCCP",
+   "case": "slow"
+  },
+  {
+   "x": 102.42,
+   "y": 105.25,
+   "net": "PCM_VCCP",
+   "case": "slow"
+  },
+  {
+   "x": 121.12,
+   "y": 119.58,
+   "net": "PCM_VCCP",
+   "case": "slow"
+  },
+  {
+   "x": 112.87,
+   "y": 120.35,
+   "net": "PCM_VCCR",
+   "case": "slow"
+  },
+  {
+   "x": 129.68,
+   "y": 120.62,
+   "net": "PCM_VCCR",
+   "case": "slow"
+  },
+  {
+   "x": 132.84,
+   "y": 108.38,
+   "net": "PCM_VDD",
+   "case": "slow"
+  },
+  {
+   "x": 122.29,
+   "y": 108.13,
+   "net": "PCM_VDD",
+   "case": "slow"
+  },
+  {
+   "x": 119.01,
+   "y": 108.43,
+   "net": "PCM_VDD",
+   "case": "slow"
+  },
+  {
+   "x": 111.45,
+   "y": 106.15,
+   "net": "PCM_VDD",
+   "case": "slow"
+  },
+  {
+   "x": 106.99,
+   "y": 113.87,
+   "net": "PCM_VIN",
+   "case": "slow"
+  },
+  {
+   "x": 104.65,
+   "y": 116.93,
+   "net": "PCM_VIN",
+   "case": "slow"
+  },
+  {
+   "x": 122.8,
+   "y": 116.02,
+   "net": "PCM_VIN",
+   "case": "slow"
+  },
+  {
+   "x": 120.95,
+   "y": 111.85,
+   "net": "PCM_VOUTL",
+   "case": "slow"
+  },
+  {
+   "x": 129.08,
+   "y": 109.77,
+   "net": "PCM_VOUTR",
+   "case": "slow"
+  },
+  {
+   "x": 132.15,
+   "y": 122.36,
+   "net": "PCM_XTI",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 102.65,
+   "y": 114.27,
+   "net": "PCM_XTI",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 108.2,
+   "y": 114.0,
+   "net": "PCM_XTI",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 108.56,
+   "y": 115.1,
+   "net": "PCM_XTI",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 119.39,
+   "y": 103.57,
+   "net": "PCM_XTO",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 113.57,
+   "y": 110.66,
+   "net": "PCM_XTO",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 132.53,
+   "y": 100.72,
+   "net": "PCM_XTO",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 118.05,
+   "y": 105.88,
+   "net": "PCM_XTO",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 135.85,
+   "y": 100.12,
+   "net": "PCM_XTO",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 128.08,
+   "y": 102.17,
+   "net": "PCM_XTO",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 80.0,
+   "y": 114.64,
+   "net": "PTT_ANY",
+   "case": "slow"
+  },
+  {
+   "x": 83.79,
+   "y": 111.05,
+   "net": "PTT_ANY",
+   "case": "slow"
+  },
+  {
+   "x": 78.51,
+   "y": 113.06,
+   "net": "PTT_ANY",
+   "case": "slow"
+  },
+  {
+   "x": 81.01,
+   "y": 114.01,
+   "net": "PTT_ANY",
+   "case": "slow"
+  },
+  {
+   "x": 56.48,
+   "y": 89.64,
+   "net": "PTT_HS1_n",
+   "case": "slow"
+  },
+  {
+   "x": 63.57,
+   "y": 85.88,
+   "net": "PTT_HS1_n",
+   "case": "slow"
+  },
+  {
+   "x": 65.79,
+   "y": 78.99,
+   "net": "PTT_HS1_n",
+   "case": "slow"
+  },
+  {
+   "x": 71.32,
+   "y": 69.08,
+   "net": "PTT_HS1_n",
+   "case": "slow"
+  },
+  {
+   "x": 58.38,
+   "y": 84.12,
+   "net": "PTT_HS1_n",
+   "case": "slow"
+  },
+  {
+   "x": 83.69,
+   "y": 69.06,
+   "net": "PTT_HS1_n",
+   "case": "slow"
+  },
+  {
+   "x": 81.47,
+   "y": 104.14,
+   "net": "PTT_HS2_n",
+   "case": "slow"
+  },
+  {
+   "x": 100.3,
+   "y": 107.03,
+   "net": "PTT_HS2_n",
+   "case": "slow"
+  },
+  {
+   "x": 100.27,
+   "y": 105.59,
+   "net": "PTT_HS2_n",
+   "case": "slow"
+  },
+  {
+   "x": 96.29,
+   "y": 68.25,
+   "net": "PTT_HS2_n",
+   "case": "slow"
+  },
+  {
+   "x": 106.87,
+   "y": 77.87,
+   "net": "PTT_SW_n",
+   "case": "slow"
+  },
+  {
+   "x": 131.75,
+   "y": 81.38,
+   "net": "PTT_SW_n",
+   "case": "slow"
+  },
+  {
+   "x": 88.04,
+   "y": 104.58,
+   "net": "PTT_SW_n",
+   "case": "slow"
+  },
+  {
+   "x": 115.25,
+   "y": 69.0,
+   "net": "PTT_SW_n",
+   "case": "slow"
+  },
+  {
+   "x": 87.61,
+   "y": 107.06,
+   "net": "PTT_SW_n",
+   "case": "slow"
+  },
+  {
+   "x": 102.32,
+   "y": 81.39,
+   "net": "PTT_SW_n",
+   "case": "slow"
+  },
+  {
+   "x": 130.99,
+   "y": 92.85,
+   "net": "PTT_SW_n",
+   "case": "slow"
+  },
+  {
+   "x": 87.29,
+   "y": 127.41,
+   "net": "RF_ANT",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 84.46,
+   "y": 125.19,
+   "net": "RF_RX",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 89.5,
+   "y": 123.48,
+   "net": "RF_RX",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 79.51,
+   "y": 128.27,
+   "net": "RF_SA",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 95.99,
+   "y": 107.03,
+   "net": "RF_SA",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 93.32,
+   "y": 123.03,
+   "net": "RF_SA",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 99.1,
+   "y": 103.94,
+   "net": "RF_SA",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 88.82,
+   "y": 114.63,
+   "net": "RLY_K",
+   "case": "slow"
+  },
+  {
+   "x": 81.72,
+   "y": 108.05,
+   "net": "RLY_K",
+   "case": "slow"
+  },
+  {
+   "x": 88.68,
+   "y": 109.9,
+   "net": "RLY_K",
+   "case": "slow"
+  },
+  {
+   "x": 137.11,
+   "y": 72.23,
+   "net": "RX_MIX",
+   "case": "slow"
+  },
+  {
+   "x": 142.68,
+   "y": 115.55,
+   "net": "RX_MIX",
+   "case": "slow"
+  },
+  {
+   "x": 144.05,
+   "y": 118.94,
+   "net": "RX_MIX",
+   "case": "slow"
+  },
+  {
+   "x": 110.85,
+   "y": 82.04,
+   "net": "SAU_3V3",
+   "case": "slow"
+  },
+  {
+   "x": 126.04,
+   "y": 98.3,
+   "net": "SAU_3V3",
+   "case": "slow"
+  },
+  {
+   "x": 129.34,
+   "y": 101.15,
+   "net": "SAU_RST",
+   "case": "slow"
+  },
+  {
+   "x": 71.36,
+   "y": 85.03,
+   "net": "SA_AUDIO_ON_n",
+   "case": "slow"
+  },
+  {
+   "x": 80.58,
+   "y": 68.05,
+   "net": "SA_AUDIO_ON_n",
+   "case": "slow"
+  },
+  {
+   "x": 62.49,
+   "y": 98.16,
+   "net": "SA_AUDIO_ON_n",
+   "case": "slow"
+  },
+  {
+   "x": 104.93,
+   "y": 87.1,
+   "net": "SA_HL",
+   "case": "slow"
+  },
+  {
+   "x": 87.58,
+   "y": 116.46,
+   "net": "SA_HL",
+   "case": "slow"
+  },
+  {
+   "x": 86.64,
+   "y": 83.05,
+   "net": "SA_PD",
+   "case": "slow"
+  },
+  {
+   "x": 80.63,
+   "y": 74.65,
+   "net": "SA_PD",
+   "case": "slow"
+  },
+  {
+   "x": 88.16,
+   "y": 115.96,
+   "net": "SA_PTT_n",
+   "case": "slow"
+  },
+  {
+   "x": 76.45,
+   "y": 99.58,
+   "net": "SA_PTT_n",
+   "case": "slow"
+  },
+  {
+   "x": 93.83,
+   "y": 99.06,
+   "net": "SA_PTT_n",
+   "case": "slow"
+  },
+  {
+   "x": 87.17,
+   "y": 82.54,
+   "net": "SA_PTT_n",
+   "case": "slow"
+  },
+  {
+   "x": 113.91,
+   "y": 86.94,
+   "net": "SA_RXD",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 129.39,
+   "y": 92.85,
+   "net": "SA_RXD",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 113.22,
+   "y": 68.7,
+   "net": "SA_RXD",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 113.02,
+   "y": 86.9,
+   "net": "SA_TXD",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 111.13,
+   "y": 70.09,
+   "net": "SA_TXD",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 130.19,
+   "y": 92.85,
+   "net": "SA_TXD",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 70.03,
+   "y": 112.45,
+   "net": "SCL",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 63.61,
+   "y": 105.57,
+   "net": "SCL",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 74.55,
+   "y": 107.0,
+   "net": "SCL",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 67.71,
+   "y": 99.51,
+   "net": "SDA",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 91.4,
+   "y": 110.32,
+   "net": "TR_APRS",
+   "case": "slow"
+  },
+  {
+   "x": 87.57,
+   "y": 111.21,
+   "net": "TR_APRS",
+   "case": "slow"
+  },
+  {
+   "x": 87.33,
+   "y": 118.01,
+   "net": "TR_APRS",
+   "case": "slow"
+  },
+  {
+   "x": 87.72,
+   "y": 64.76,
+   "net": "TX_INHIBIT_n",
+   "case": "slow"
+  },
+  {
+   "x": 125.17,
+   "y": 65.01,
+   "net": "TX_INHIBIT_n",
+   "case": "slow"
+  },
+  {
+   "x": 67.06,
+   "y": 71.92,
+   "net": "TX_INHIBIT_n",
+   "case": "slow"
+  },
+  {
+   "x": 109.75,
+   "y": 107.45,
+   "net": "USB1_P",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 109.05,
+   "y": 107.35,
+   "net": "USB1_P",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 143.85,
+   "y": 76.95,
+   "net": "USB3_P",
+   "case": "other_gnd",
+   "reference": "GND"
+  },
+  {
+   "x": 137.38,
+   "y": 95.37,
+   "net": "VGG_CT",
+   "case": "slow"
+  },
+  {
+   "x": 138.86,
+   "y": 103.45,
+   "net": "VREF",
+   "case": "slow"
+  },
+  {
+   "x": 135.44,
+   "y": 119.29,
+   "net": "VREF",
+   "case": "slow"
+  },
+  {
+   "x": 139.74,
+   "y": 110.94,
+   "net": "VREF",
+   "case": "slow"
+  },
+  {
+   "x": 129.12,
+   "y": 119.83,
+   "net": "VREF",
+   "case": "slow"
+  },
+  {
+   "x": 124.37,
+   "y": 118.34,
+   "net": "VREF",
+   "case": "slow"
+  },
+  {
+   "x": 130.13,
+   "y": 118.56,
+   "net": "VREF",
+   "case": "slow"
+  },
+  {
+   "x": 94.68,
+   "y": 72.13,
+   "net": "X_AMP_EN",
+   "case": "slow"
+  },
+  {
+   "x": 65.55,
+   "y": 111.55,
+   "net": "X_AMP_EN",
+   "case": "slow"
+  },
+  {
+   "x": 88.17,
+   "y": 74.35,
+   "net": "X_AMP_EN",
+   "case": "slow"
+  },
+  {
+   "x": 65.55,
+   "y": 107.65,
+   "net": "X_COS_n",
+   "case": "slow"
+  },
+  {
+   "x": 82.99,
+   "y": 75.17,
+   "net": "X_COS_n",
+   "case": "slow"
+  },
+  {
+   "x": 84.85,
+   "y": 84.7,
+   "net": "X_COS_n",
+   "case": "slow"
+  },
+  {
+   "x": 81.44,
+   "y": 75.11,
+   "net": "X_COS_n",
+   "case": "slow"
+  },
+  {
+   "x": 70.7,
+   "y": 93.57,
+   "net": "X_COS_n",
+   "case": "slow"
+  },
+  {
+   "x": 64.86,
+   "y": 100.66,
+   "net": "X_COS_n",
+   "case": "slow"
+  },
+  {
+   "x": 65.79,
+   "y": 96.01,
+   "net": "X_COS_n",
+   "case": "slow"
+  },
+  {
+   "x": 85.76,
+   "y": 68.27,
+   "net": "X_COS_n",
+   "case": "slow"
+  },
+  {
+   "x": 82.31,
+   "y": 68.32,
+   "net": "X_COS_n",
+   "case": "slow"
+  },
+  {
+   "x": 76.27,
+   "y": 89.52,
+   "net": "X_COS_n",
+   "case": "slow"
+  },
+  {
+   "x": 73.43,
+   "y": 92.71,
+   "net": "X_COS_n",
+   "case": "slow"
+  },
+  {
+   "x": 80.49,
+   "y": 89.52,
+   "net": "X_COS_n",
+   "case": "slow"
+  },
+  {
+   "x": 85.93,
+   "y": 81.82,
+   "net": "X_COS_n",
+   "case": "slow"
+  },
+  {
+   "x": 93.83,
+   "y": 88.34,
+   "net": "X_KEY",
+   "case": "slow"
+  },
+  {
+   "x": 98.04,
+   "y": 73.15,
+   "net": "X_KEY",
+   "case": "slow"
+  },
+  {
+   "x": 84.11,
+   "y": 92.01,
+   "net": "X_KEY",
+   "case": "slow"
+  },
+  {
+   "x": 90.58,
+   "y": 70.78,
+   "net": "X_KEY",
+   "case": "slow"
+  },
+  {
+   "x": 64.72,
+   "y": 109.6,
+   "net": "X_KEY",
+   "case": "slow"
+  },
+  {
+   "x": 115.78,
+   "y": 105.83,
+   "net": "X_MMUTE",
+   "case": "slow"
+  },
+  {
+   "x": 75.69,
+   "y": 99.37,
+   "net": "X_MMUTE",
+   "case": "slow"
+  },
+  {
+   "x": 116.53,
+   "y": 104.29,
+   "net": "X_MMUTE",
+   "case": "slow"
+  },
+  {
+   "x": 110.54,
+   "y": 93.81,
+   "net": "X_MMUTE",
+   "case": "slow"
+  },
+  {
+   "x": 68.77,
+   "y": 106.97,
+   "net": "X_MMUTE",
+   "case": "slow"
+  },
+  {
+   "x": 85.1,
+   "y": 74.09,
+   "net": "X_PA_KEY",
+   "case": "slow"
+  },
+  {
+   "x": 98.47,
+   "y": 76.75,
+   "net": "X_PA_KEY",
+   "case": "slow"
+  },
+  {
+   "x": 66.43,
+   "y": 103.99,
+   "net": "X_PA_KEY",
+   "case": "slow"
+  },
+  {
+   "x": 86.37,
+   "y": 76.75,
+   "net": "X_PA_KEY",
+   "case": "slow"
+  },
+  {
+   "x": 65.55,
+   "y": 110.25,
+   "net": "X_PA_KEY",
+   "case": "slow"
+  },
+  {
+   "x": 77.48,
+   "y": 78.15,
+   "net": "X_PA_KEY",
+   "case": "slow"
+  },
+  {
+   "x": 83.79,
+   "y": 70.71,
+   "net": "X_PTT_HS1_n",
+   "case": "slow"
+  },
+  {
+   "x": 81.34,
+   "y": 77.25,
+   "net": "X_PTT_HS1_n",
+   "case": "slow"
+  },
+  {
+   "x": 79.12,
+   "y": 77.3,
+   "net": "X_PTT_HS1_n",
+   "case": "slow"
+  },
+  {
+   "x": 65.14,
+   "y": 102.03,
+   "net": "X_PTT_HS1_n",
+   "case": "slow"
+  },
+  {
+   "x": 88.07,
+   "y": 69.06,
+   "net": "X_PTT_HS1_n",
+   "case": "slow"
+  },
+  {
+   "x": 65.55,
+   "y": 108.95,
+   "net": "X_PTT_HS2_n",
+   "case": "slow"
+  },
+  {
+   "x": 79.11,
+   "y": 74.54,
+   "net": "X_PTT_HS2_n",
+   "case": "slow"
+  },
+  {
+   "x": 85.46,
+   "y": 71.76,
+   "net": "X_SA_PD",
+   "case": "slow"
+  },
+  {
+   "x": 64.72,
+   "y": 110.9,
+   "net": "X_SA_PD",
+   "case": "slow"
+  },
+  {
+   "x": 134.13,
+   "y": 62.87,
+   "net": "ZEROIZE_HW",
+   "case": "slow"
+  }
+ ]
+}

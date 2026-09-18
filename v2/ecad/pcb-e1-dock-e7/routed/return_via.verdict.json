@@ -2,11 +2,15 @@
  "advisory": false,
  "applicable": true,
  "counts": {
+  "examined_same_reference": 0,
+  "examined_to_power": 0,
   "exempt": 80,
   "judged": 59,
   "lacking": 7,
   "same_plane": 0,
-  "slow": 82
+  "slow": 82,
+  "standing": 7,
+  "unclassified": 0
  },
  "denominator": 59,
  "evidence": [
@@ -25,13 +29,13 @@
   }
  },
  "missing_input": null,
- "note": "",
+ "note": "the screen measures every signal via outside a fine-pitch fan against the declared 1.5 mm and then EXAMINES each one it flags against RET-003, which is what this rule's own requirement asks for: a via whose reference never changes and a via whose reference changes to another NET are not this screen's to fail, and what stands is a move between two ground planes with no ground via beside it",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
    "RET-004": "b6b1e4f327ce2d08"
   },
-  "rule_set_fingerprint": "4bc0aa24d836788d"
+  "rule_set_fingerprint": "82885961768537e2"
  },
  "rules": [
   "RET-004"
@@ -39,9 +43,9 @@
  "tool": "return_via",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "6f7ef144f21449b3"
+  "tools_tree_sha": "02f6487e9fd66aa2"
  },
- "ts": "2026-09-18T08:56:20Z",
+ "ts": "2026-09-18T17:40:28Z",
  "verdict": "FAIL",
  "version": "unknown"
 }
