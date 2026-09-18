@@ -60,25 +60,64 @@ CAL = [   # (mode, w, s, h, er, Zdiff from the solver with mask), matched within
     ("microstrip", 0.127, 0.200, 0.0994, 4.10,  99.2),
     ("stripline",  0.127, 0.127, 0.6057, 4.45, 102.0),
     ("stripline",  0.127, 0.200, 0.6057, 4.45, 118.1),
+    # THE GEOMETRIES THE BOARDS ACTUALLY ROUTE, solved 18 September 2026 because they were not being solved:
+    # boards A and B lay their USB pairs at w 0.13 with the legs 0.14 and 0.15 mm apart, and the solved point
+    # above is 0.127/0.127, which is inside 6 percent on the width and 10 to 18 percent out on the GAP, so
+    # 338 mm on board A and 4,674 mm on board B were judged by the microstrip factor rather than by a solve.
+    # atlc 4.6.1 at 200 px/mm, masked (0.01 mm, er 3.5), which is the like-for-like number for an outer layer:
+    ("microstrip", 0.130, 0.140, 0.0994, 4.10,  92.3),   # closed form 94.3, solver reads 0.978 of it
+    ("microstrip", 0.130, 0.150, 0.0994, 4.10,  93.6),   # closed form 95.6, solver reads 0.979 of it
+    # AND THE INNER-LAYER PAIRS BOARD B ACTUALLY ROUTES, solved the same day. These matter more than the outer
+    # ones: the closed form is 30 percent out on this cross-section, so a pair judged by it is judged by nothing.
+    # At 0.13/0.15 the solver reads 107.6 ohm against the 100 the class asks, which is inside its 10 percent;
+    # the closed form says 140.5, which would have refused a pair that is right.
+    ("stripline",  0.130, 0.150, 0.6057, 4.45, 107.6),   # closed form 140.5, solver reads 0.766 of it
+    ("stripline",  0.130, 0.380, 0.6057, 4.45, 139.0),   # closed form 159.6, solver reads 0.871 of it
+    # THE INNER-LAYER RUNS BOARD B MAKES WHERE ONLY ONE SIDE HAS A PLANE (solved 18 September 2026, UNMASKED,
+    # because an inner layer carries no solder mask; the masked column is for outer layers only). These are the
+    # 1,677 mm the run was judging with a factor, and the number they come back with is the finding rather than
+    # the calibration: 0.13 mm of copper 0.55 mm from its reference is about 140 ohm differential, not 100.
+    ("microstrip", 0.130, 0.152, 0.5500, 4.60, 140.5),   # closed form 148.8, solver reads 0.945 of it
+    ("microstrip", 0.127, 0.384, 0.5500, 4.60, 181.5),   # closed form 178.7, solver reads 1.015 of it
 ]
 CAL_TOL = 0.06      # 6 percent on each of w, s, h; er within 0.3
-# Over the four solved microstrips the solver reads 0.94 to 0.99 of the closed form, mean 0.967; over the two solved
-# striplines 0.74 and 0.80, mean 0.77. Both are measured biases rather than guesses, and both are applied to a geometry whose
-# exact cross-section has not been solved, with the run saying how many millimetres were judged which way. The stripline
-# factor rests on two points, so it is printed as a caution every time it is used.
+# Over the six solved microstrips the solver reads 0.94 to 0.99 of the closed form, mean 0.967 over the first
+# Over the six solved microstrips the solver reads 0.94 to 0.99 of the closed form, mean 0.967 over the first four and
+# 0.978 over the two added on 18 September, which is the same bias measured twice. Over the FOUR solved striplines it
+# reads 0.74, 0.766, 0.80 and 0.871, mean 0.794 and a spread of thirteen points, which is the measurement that says a
+# stripline closed form is not a number to judge a pair by: each cross-section is solved or it is judged by a factor
+# that could be a tenth out either way, and the run says how many millimetres were judged which way.
 MICROSTRIP_FACTOR = 0.967
-STRIPLINE_FACTOR = 0.77
-CAL_USED = {"solver": 0.0, "microstrip factor": 0.0, "stripline factor (two solved points)": 0.0}   # millimetres judged each way
+STRIPLINE_FACTOR = 0.794
+CAL_USED = {"solver": 0.0, "microstrip factor": 0.0, "stripline factor (four solved points, 0.74 to 0.87)": 0.0}   # millimetres judged each way
+
+GEOMETRIES = {}   # (mode, w, s, h, er) -> [millimetres, how it was judged]; --geometries prints it
+
+
+def _note(mode, w, s, h, er, length, how):
+    """Every cross-section this run judged, and how (18 September 2026).
+
+    A run that says "4,674 mm judged by the microstrip factor" names a quantity and not a cross-section, so the
+    next thing to solve is a guess. This records the cross-sections themselves, so `--geometries` can say which
+    ones are carrying a factor and how many millimetres ride on each."""
+    k = (mode, round(w, 3), round(s, 3), round(h, 4), round(er, 2))
+    e = GEOMETRIES.setdefault(k, [0.0, how])
+    e[0] += length
+    if e[1] != how: e[1] = "both"
+
 
 def calibrated(mode, w, s, h, er, closed, length=0.0):
     """The best number this project has for this geometry, and which kind it is. Never silent about the difference."""
     for (m, cw, cs, ch, cer, z) in CAL:
         if m != mode: continue
         if abs(w - cw) <= CAL_TOL * cw and abs(s - cs) <= CAL_TOL * cs and abs(h - ch) <= CAL_TOL * ch and abs(er - cer) <= 0.3:
+            _note(mode, w, s, h, er, length, "solver")
             CAL_USED["solver"] += length; return z, "solver"
     if mode == "microstrip":
+        _note(mode, w, s, h, er, length, "microstrip factor")
         CAL_USED["microstrip factor"] += length; return closed * MICROSTRIP_FACTOR, "microstrip factor"
-    CAL_USED["stripline factor (two solved points)"] += length; return closed * STRIPLINE_FACTOR, "stripline factor"
+    _note(mode, w, s, h, er, length, "stripline factor")
+    CAL_USED["stripline factor (four solved points, 0.74 to 0.87)"] += length; return closed * STRIPLINE_FACTOR, "stripline factor"
 
 def read_stackup(path):
     """[(name, kind, thickness_mm, er)] from the (stackup ...) block; copper layers carry kind 'copper'.
@@ -237,10 +276,18 @@ def main(a):
     # differ by 38 percent and a reader must never have to guess which one a verdict rests on (10 September 2026).
     tot_mm = sum(CAL_USED.values()) or 1.0
     print("impedance: where the numbers come from: %s" % "; ".join("%.0f mm %s" % (v, k) for k, v in CAL_USED.items() if v > 0) or "nothing judged")
-    if CAL_USED["stripline factor (two solved points)"] > 0:
+    if "--geometries" in sys.argv:
+        # WHICH CROSS-SECTION IS CARRYING A FACTOR, so the next solve is chosen rather than guessed (18 Sep 2026)
+        print("impedance: the cross-sections this board judged, longest first:")
+        for (m, w, sp_, h, er), (mm, how) in sorted(GEOMETRIES.items(), key=lambda kv: -kv[1][0]):
+            print("impedance:   %-10s w %.3f s %.3f h %.4f er %.2f  %8.1f mm  %s%s"
+                  % (m, w, sp_, h, er, mm, how,
+                     "   <- solve this one: impedance_2d.py --mode %s --w %.3f --s %.3f --h %.4f --er %.2f"
+                     % (m, w, sp_, h, er) if how != "solver" else ""))
+    if CAL_USED["stripline factor (four solved points, 0.74 to 0.87)"] > 0:
         print("impedance: NOTE %.0f mm (%.0f%%) judged with the stripline correction, which rests on two solved geometries (the solver reads"
               " 0.74 and 0.80 of IPC-2141 there). Solve that cross-section with impedance_2d.py before the number is quoted outside this project."
-              % (CAL_USED["stripline factor (two solved points)"], 100.0 * CAL_USED["stripline factor (two solved points)"] / tot_mm))
+              % (CAL_USED["stripline factor (four solved points, 0.74 to 0.87)"], 100.0 * CAL_USED["stripline factor (four solved points, 0.74 to 0.87)"] / tot_mm))
     if any(er is None for _, k, _, er in stack if k != "copper"):
         print("impedance: FAIL a dielectric without epsilon_r in the stackup")
         return _v.write("impedance_check", _v.INCONCLUSIVE, counts={"pairs": len(pairs)}, denominator=checked,

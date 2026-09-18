@@ -9921,3 +9921,28 @@ BOARD from the frozen tree: today's tools on that arm's copper. It is the same s
 follows the public mirror and the experiment that needed its own ECAD directory rather than its own tools
 directory, and it was found by asking what a driver would actually execute rather than by watching it fail.
 
+**Addendum, 19:10 CEST: the impedance gate was judging most of its millimetres by a factor, and solving them found
+a real failure on board B.** The gate calibrates against a field solver where the exact cross-section has been
+solved and falls back to a measured bias otherwise, and it says which; what it did not say was WHICH
+cross-section was carrying the bias, so the next solve was a guess. It lists them now (`--geometries`), longest
+first, with the command that would solve each. Board A read 338 mm on the factor and board B 4,674, and both were
+the same cause: the boards route their USB pairs at w 0.13 with the legs 0.14 to 0.15 mm apart, and the solved
+point was 0.127/0.127, which is inside six percent on the width and ten to eighteen percent out on the GAP.
+
+**Six new solved points** (atlc 4.6.1 at 200 px/mm, outer layers masked, inner unmasked because an inner layer
+carries no mask): the two outer geometries A and B actually route (92.3 and 93.6 ohm, the solver reading 0.978
+of the closed form, the same bias the first four measured); two inner striplines of the 3313 stack (107.6 and
+139.0, ratios 0.766 and 0.871); and the two inner cross-sections board B's router makes where only one side has
+a plane. **Board A is now 338 mm of 338 solved, board B 5,970 of 6,684**, the remainder being pairs whose legs
+are metres apart and are not pairs at all.
+
+**And the finding those solves produced is board B's, not the tool's.** B21 routes 1,677 mm of pair copper 0.55
+mm from its only reference plane, and that cross-section is **140.5 ohm differential against the 100 ohm its
+class asks**. The closed form says 148.8, so this is not a calibration artefact: both are forty percent over.
+The same solver says what would make the target there: 0.30 mm of copper gives 111.6 ohm, **0.40 gives 101.5**,
+0.50 gives 93.7. So the width this stack needs at that distance is about three times the 0.127 mm the class
+carries, and board B's inner-layer pairs are not impedance-correct at any width the class can also use on its
+outer layers. The three ways out and their known costs are in `boards/b.json`; the stripline factor now rests on
+four solved points spread 0.74 to 0.87, which is itself the argument for solving a cross-section rather than
+correcting one.
+
