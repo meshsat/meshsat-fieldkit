@@ -174,7 +174,10 @@ def t_a_stitch_that_is_short_of_barrels_refuses_the_board():
                encoding="utf-8").read()
     assert "def stitch(self, net, pts, drill=0.4, width=0.8, amps=None)" in src, "stitch takes no current"
     assert "need = self.barrels_for(amps, drill)" in src, "stitch does not ask how many barrels the current needs"
-    assert "raise SystemExit" in src.split("def stitch")[1][:1200], "a short stitch does not refuse the board"
+    # the message, not a window of characters: a char window broke the moment the hole-to-hole check was added
+    # above it, which is a rule failing for where code sits rather than for what it does (18 September 2026)
+    body = src[src.index("    def stitch("):src.index("    def rail_run(")]
+    assert "and needs %d at a 10 K rise" in body, "a stitch short of barrels does not refuse the board by name"
 
 
 def t_a_cluster_places_the_barrels_the_current_needs_and_keeps_the_hole_to_hole_floor():
@@ -192,3 +195,20 @@ def t_a_cluster_places_the_barrels_the_current_needs_and_keeps_the_hole_to_hole_
     assert "n = self.barrels_for(amps, drill)" in body, "the count does not come from the current"
     assert "(drill + 0.4)" in body, "the default pitch does not keep the hole-to-hole floor"
     assert "span / 2.0" in body, "the cluster is not centred on the site, so an existing barrel loses its place"
+
+
+def t_a_stitch_that_puts_two_holes_too_close_refuses_the_board():
+    """The tool knows its own pitch and its own drill (18 September 2026).
+
+    Board E's dock-block barrels went from 0.5 to 0.7 mm to carry 1.39 A, and the same call also held the ten
+    barrels at the source pad on a 0.8 mm pitch, which at 0.7 mm of hole is 0.10 mm hole to hole against the
+    0.2995 mm the board's rules ask: eight hole_to_hole violations on the placed board. The DRC caught it, which
+    is what the DRC is for, and a stitch call could have said it before the board existed. Points of DIFFERENT
+    calls are not compared, because a call is one cluster and two clusters far apart are the normal case."""
+    import os
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "power_copper.py"),
+               encoding="utf-8").read()
+    body = src[src.index("    def stitch("):src.index("    def rail_run(")]
+    assert "_floor = drill + 0.2995" in body, "the stitch does not know the hole-to-hole floor"
+    assert "hole to hole against the 0.2995" in body, "the refusal does not say what it measured"
+    assert body.index("_floor = drill") < body.index("for x, y in pts:"), "the check runs after the copper is laid"
