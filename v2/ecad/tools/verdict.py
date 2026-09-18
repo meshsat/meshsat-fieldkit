@@ -229,6 +229,24 @@ def _with_board(inputs):
     return inputs
 
 
+def opt(argv, flag, default=None):
+    """The value after `flag`, or `default`. A FLAG GIVEN NO VALUE IS ANSWERED, NEVER RAISED.
+
+    18 September 2026: `assembly_set.py --checklist` with nothing after it raised IndexError from
+    `argv[argv.index("--checklist") + 1]`, the crash guard turned that into an INCONCLUSIVE verdict naming the
+    exception, and rule DFA-001 then read as though the seven boards had been judged and found wanting when
+    what had happened was an argument error. A gate that cannot tell a missing argument from a finding is the
+    shape this project keeps meeting, and the tools carry about a hundred of these reads.
+
+    It also refuses to take the NEXT FLAG as a value, which is the other half of the same mistake:
+    `--checklist --json` would otherwise write a file called `--json`."""
+    if flag not in argv: return default
+    i = argv.index(flag)
+    if len(argv) <= i + 1: return default
+    v = argv[i + 1]
+    return default if isinstance(v, str) and v.startswith("--") else v
+
+
 def write(tool, result, counts=None, denominator=None, evidence=None, inputs=None, note="", out_dir=None,
           quiet=False, advisory=None, rules=None, applicable=True, missing_input=None):
     """Write out/<tool>.verdict.json and return the exit code that equals the verdict.
