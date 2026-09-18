@@ -252,9 +252,11 @@ if _osx.environ.get("PLACE_DCHS_BAND", "1") not in ("0", ""):
     _pc = _pcmod.PowerCopper(board, net_for, P)
     # no end vias from rail_run (a corner via at x -60 could land on a top part's pad of another net); the vias are
     # placed where the copper is this net's own: one in each of Q7's three source pads, three inside L2 pin 1
-    _pc.rail_run("DC_HS", "DC_HS band B.Cu, HOTSW east", (-104.1, -97.0), (-60.0, -97.0), 5.5, vias_per_end=0)
-    _pc.rail_run("DC_HS", "DC_HS band B.Cu, north through ENTRYA", (-60.0, -97.0), (-60.0, -86.0), 5.5, vias_per_end=0)
-    _pc.rail_run("DC_HS", "DC_HS band B.Cu, into L2 pin 1", (-60.0, -86.0), (-40.5, -86.0), 4.5, vias_per_end=0)
+    # ONE zone from the three rectangles (E14's first placement read two zones_intersect: three same-net bands at one
+    # priority meeting at their corners, which KiCad refuses; union() is the 8 September answer to exactly that)
+    _pc.union("DC_HS", "DC_HS band B.Cu, Q7 to L2", [(-104.1, -99.75, -60.0, -94.25),     # east along y -97, 5.5 mm
+                                                     (-62.75, -97.0, -57.25, -86.0),      # north at x -60, 5.5 mm
+                                                     (-60.0, -88.25, -40.5, -83.75)])     # east at y -86 into L2 pin 1, 4.5 mm
     _pc.stitch("DC_HS", [(-104.1, -95.42), (-104.1, -96.69), (-104.1, -97.96), (-41.5, -86.0), (-40.5, -86.0), (-39.5, -86.0)])
     print("power copper: DC_HS in three locked B.Cu bands from Q7's source pads to L2 pin 1")
 
