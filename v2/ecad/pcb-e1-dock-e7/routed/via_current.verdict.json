@@ -1,16 +1,22 @@
 {
- "advisory": true,
+ "advisory": false,
  "applicable": true,
  "counts": {
   "measured_rails": 3,
   "no_via": 0,
   "over": 2,
+  "over_barrels": 5,
   "rails": 4
  },
  "denominator": 4,
  "evidence": [
   "CELL_F: a barrel at (44.3, 218.2) carries 1.42 A of the solved mesh against 0.56 A for its own wall at 10 K (18 um plating), ratio 2.53",
-  "VIN_RAW: a barrel at (109.5, 202.7) carries 0.74 A of the solved mesh against 0.65 A for its own wall at 10 K (18 um plating), ratio 1.14"
+  "VIN_RAW: a barrel at (109.5, 202.7) carries 0.74 A of the solved mesh against 0.65 A for its own wall at 10 K (18 um plating), ratio 1.14",
+  "CELL_F: barrel at (44.3, 218.2), 1.42 A against 0.56 A, ratio 2.53",
+  "CELL_F: barrel at (43.7, 219.0), 1.01 A against 0.56 A, ratio 1.80",
+  "CELL_F: barrel at (43.4, 218.2), 0.77 A against 0.56 A, ratio 1.37",
+  "VIN_RAW: barrel at (109.5, 202.7), 0.74 A against 0.65 A, ratio 1.14",
+  "VIN_RAW: barrel at (73.1, 183.4), 0.71 A against 0.65 A, ratio 1.09"
  ],
  "inputs": {
   "board": {
@@ -22,13 +28,13 @@
   "site_mm": 6.0
  },
  "missing_input": null,
- "note": "every rail's weakest layer transition against IPC-2221's curve (ECSS-Q-ST-70-12C Annex D D.4) for a barrel of the fabricator's own plating thickness. ADVISORY: 1 of 4 judged rail(s) have no solved barrel current beside this board, so for those the rail's WHOLE current is attributed to its weakest cluster of vias, which on these boards is often a lone stitch via carrying almost none",
+ "note": "2 of 3 judged rail(s) are over their own barrels on the current dc_drop's solved mesh put through them, which is a measurement and decides this reading; the 1 rail(s) with no solved current are judged by attributing the whole rail to its weakest cluster of vias, which can only add failures to the ones named here and never remove one (IPC-2221's curve, ECSS-Q-ST-70-12C Annex D D.4, the fabricator's own plating)",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
    "PI-003": "b8238bd8e5613e6c"
   },
-  "rule_set_fingerprint": "4bc0aa24d836788d"
+  "rule_set_fingerprint": "82885961768537e2"
  },
  "rules": [
   "PI-003"
@@ -36,9 +42,9 @@
  "tool": "via_current",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "6f7ef144f21449b3"
+  "tools_tree_sha": "d6d53e1e2108b7bd"
  },
- "ts": "2026-09-18T08:56:23Z",
+ "ts": "2026-09-18T17:23:03Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

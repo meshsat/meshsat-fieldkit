@@ -655,21 +655,25 @@ rails refused on the attributed reading to FIVE barrels that really do carry mor
 for, the worst a VBUS20 barrel at (68.5, 82.0) carrying 3.40 A against 0.90. Board C PASSES it for the first
 time. The curve is IPC-2221A's internal-conductor model, published with its constants in ECSS-Q-ST-70-12C
 Annex D and transcribed in v2/vendor/standards/; the plating is the fabricator's own 18 um. The verdict is
-ADVISORY exactly when a judged rail still has no solved barrel current and says how many, which today is
-board B, whose committed board is not routed at all, so no load is reachable from any source and the mesh
-finds nothing. Earlier: each declared rail's vias are grouped into SITES, a cluster of that net's barrels
-within 6 mm, which is what a layer transition looks like on these boards, and the rail's peak current is
-compared against the weakest site, because a transition is a series element. The barrel is geometry (an
-annulus of the plating thickness) and the plating thickness is the FABRICATOR'S published 18 um, but the
-curve is IPC-2221's and that document is not in this tree, so the maturity is GENERATED_ONLY and the number
-is a calculation this project made rather than a limit a document gave it. It lands where the trade's own
-rule of thumb lands, one ampere through a 0.3 mm via at 20 K, which is the check that the expression has no
-unit error in it; the record's own '2.5 A per 0.4 mm hole' comment of 5 September is nearly three times the
-computed figure and cites nothing. Its first run on real boards found something on all seven and most of it
-is one false shape: a rail's weakest SITE is often a lone stitch via at the end of a pour carrying almost
-none of the current, while the current travels in a band with a via field under it (board E's CELL_F reads 18
-A through one via). The arithmetic is right and the attribution is not, so the verdict is ADVISORY and the
-rule reads as unverified rather than failed until the per-via current comes from dc_drop's solved mesh
+ADVISORY exactly when a judged rail still has no solved barrel current AND nothing measured is over its
+rating (18 September 2026: board E read INCONCLUSIVE with two barrels over their own wall on rails the mesh
+had solved, because a fourth rail had none: an absence elsewhere on the board was un-failing an established
+measurement, and the attributed branch can only ADD failures to the measured ones, never remove one), and
+says how many, which today is board B, whose committed board is not routed at all, so no load is reachable
+from any source and the mesh finds nothing. Earlier: each declared rail's vias are grouped into SITES, a
+cluster of that net's barrels within 6 mm, which is what a layer transition looks like on these boards, and
+the rail's peak current is compared against the weakest site, because a transition is a series element. The
+barrel is geometry (an annulus of the plating thickness) and the plating thickness is the FABRICATOR'S
+published 18 um, but the curve is IPC-2221's and that document is not in this tree, so the maturity is
+GENERATED_ONLY and the number is a calculation this project made rather than a limit a document gave it. It
+lands where the trade's own rule of thumb lands, one ampere through a 0.3 mm via at 20 K, which is the check
+that the expression has no unit error in it; the record's own '2.5 A per 0.4 mm hole' comment of 5 September
+is nearly three times the computed figure and cites nothing. Its first run on real boards found something on
+all seven and most of it is one false shape: a rail's weakest SITE is often a lone stitch via at the end of a
+pour carrying almost none of the current, while the current travels in a band with a via field under it
+(board E's CELL_F reads 18 A through one via). The arithmetic is right and the attribution is not, so the
+verdict is ADVISORY and the rule reads as unverified rather than failed until the per-via current comes from
+dc_drop's solved mesh
 
 ## Grounding Shielding
 

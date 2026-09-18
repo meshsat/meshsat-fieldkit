@@ -5,14 +5,14 @@
 
 Manifest **2026-09-16.1**, rule set **82885961768537e2**, evidence epoch **2026-09-16T00:35:00+02:00**.
 
-**Readiness: NOT_READY**
+**Readiness: INCONCLUSIVE**
 
 Measured on board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 35 | 74.5 |
-| FAIL | 4 | 8.5 |
+| PASS | 36 | 76.6 |
+| FAIL | 3 | 6.4 |
 | INCONCLUSIVE | 8 | 17.0 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **47** | 100.0 |
@@ -63,6 +63,6 @@ Measured on board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24.
 | REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **PASS** | reliability PASS of 11 |
 | DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **PASS** | final_gate_c PASS of 1 |
 | DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **FAIL** | doc_provenance FAIL: {'documents': 7, 'folders': 7, 'untraceable': 7} |
-| OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 0, 'missing': 0, 'pass': 0, 'quote': 1} |
+| OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **PASS** | final_gate PASS of 2 |
 | SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 334 |
 | SGN-002 a prototype-only unknown is named | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | PCB-PROTOTYPE-UNKNOWNS.md is current with the registry |

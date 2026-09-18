@@ -9946,3 +9946,25 @@ outer layers. The three ways out and their known costs are in `boards/b.json`; t
 four solved points spread 0.74 to 0.87, which is itself the argument for solving a cross-section rather than
 correcting one.
 
+
+**Addendum, 19:20 CEST: an absence on one rail was un-failing the barrels another rail had already been
+measured over.** PI-003 read INCONCLUSIVE on boards B and E and FAIL on A, D and P, from the same tool on the
+same question, and the difference was not in the boards. `via_current` marks its reading ADVISORY whenever a
+judged rail has no solved barrel current, because for such a rail it falls back to attributing the whole rail
+to its weakest cluster of vias, which on these boards is often a lone stitch via at the end of a pour carrying
+almost none of it. That flag was written for the attribution and it was being applied to the whole verdict:
+board E declares four rails, `dc_drop`'s mesh solves three, and TWO of those three carry barrels over their own
+wall, so an absence on the fourth rail was softening a failure that had already been measured on the other
+three. **An attributed reading can only ADD failures to a measured one and can never remove one**, so a
+measured rail over its barrels decides the verdict whatever the rest of the board is missing; the flag stays
+exactly where the reading would otherwise be a pass. `advisory_for(rows)` is that sentence as a pure function
+with a defective and an acceptable fixture, and the defective one fails on the expression it replaces.
+
+Re-taken read-only on E17 (sha a462ac2620b9b8d3 before and after, `dc_drop` and `via_current` run as ONE set in
+one tree so the solved currents belong to the board being judged), **board E's PI-003 reads FAIL with five
+over-rated barrels**: `CELL_F` at (44.3, 218.2) carrying 1.42 A of the solved mesh against 0.56 A for its
+0.30 mm wall at a 10 K rise, ratio 2.53, and `VIN_RAW` at (109.5, 202.7) at 0.74 A against 0.65. That is E17's
+number and the answer is already drawn in `gen_pcb_e3.py` (the two-stitch split of the VIN_RAW field, which the
+hole-to-hole floor now refuses to get wrong, and the CELL_F cluster), verified at PHASE=E19 with the gate ALL
+PASS and hard 0; it lands with the next adopted E phase. The readiness number moves the way an honest
+correction moves it: two INCONCLUSIVE pairs become failures that name their copper.
