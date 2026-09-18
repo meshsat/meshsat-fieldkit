@@ -35,7 +35,7 @@ appears in the gap register.
 | PAIR-001 | DIFFERENTIAL_PAIRS | BLOCKER | pair_preroute.py, meander.py | pair_match.sh -> impedance_check | tests/test_pair_leg_match.py | **ENFORCED** |
 | PI-001 | POWER_INTEGRITY | BLOCKER | power_copper.py, gen_pcb_*3.py bands | dc_drop.py, track_current.py -> dc_density | tests/test_conductor_current.py, tests/test_track_current.py | **ENFORCED** |
 | PI-002 | POWER_INTEGRITY | BLOCKER | power_copper.py | dc_drop.py -> dc_drop | tests/test_conductor_current.py | **ENFORCED** |
-| PI-003 | POWER_INTEGRITY | MUST_JUSTIFY | prefanout.py, gen_pcb_*3.py stitch vias | via_current.py -> via_current | tests/test_via_current.py | **ENFORCED** |
+| PI-003 | POWER_INTEGRITY | MUST_JUSTIFY | prefanout.py, gen_pcb_*3.py stitch vias, gen_pcb_d3.py locked parallel barrels | via_current.py -> via_current | tests/test_via_current.py | **ENFORCED** |
 | PLC-001 | PLACEMENT | BLOCKER | gen_pcb_*3.py, regionfit.py | hardset.py, place_audit.py, carry_placed.py -> hardset-placed, place_audit | tests/test_region_fit.py, tests/test_board_gates.py, tests/test_carry_placed.py | **ENFORCED** |
 | PLC-002 | PLACEMENT | MUST_JUSTIFY | closers declared in pcb_closers.yaml; the pour-island half predicted by place_audit.py | closer_audit.py -> closer_audit | tests/test_closer_audit.py | **ENFORCED** |
 | PLN-001 | PLANES_POURS | BLOCKER | pour_stitch.py, zone_pad_via.py, stitch_prune.py | check_zone_nets.py -> check_zone_nets | tests/test_gate_fixtures.py | **ENFORCED** |
