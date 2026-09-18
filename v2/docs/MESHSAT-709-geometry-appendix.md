@@ -9598,3 +9598,13 @@ region job auto-routed nothing in half a second and reported PART-DONE, and the 
 and its reconcile were stopped, `PART_REGIONS` travels to both partition calls now (rule in `test_driver_hygiene`),
 and stage 2 is relaunched on the same GLOBAL session.
 
+**Addendum, 11:45 CEST: A44's readings.** Re-imported with the drill restore and finished: the closers took it from 26
+to 19 open (`direct_close` seven, the widen stages none). **RF-001 PASS 11 of 11** against A43's 11 of 11 missed: the
+generator's 0.14 mm F.Cu drops from the SMA centre pins to the blind-mate pins (32.221) answer the rule outright, on
+the first board that carries them. **ANA-001 4 of 19** (PD_CS 0.171 mm from PD_SW1 over 27.8 mm, POE_CS 0.347 from
+POE_SW2 over 1.3 mm, PA_FB 0.129 from B33_SW over 19.5 mm, S3_FB 0.177 from S3_SW over 5.7 mm) against A43's 6 of 19
+(POE_CS and B33_FB among them): the SENSE class alone moves which nodes fail rather than how many, and the 11:35
+reading on E17 says the DSN class-pair rule cannot add to it. Board A's sense lines are a placement and pre-lay item,
+as board E's is. A45's readings (the class-pair arm) follow; the ladder at the router stays A42 15, A43 19, A44 23,
+A45 26.
+
