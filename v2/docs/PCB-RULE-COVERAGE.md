@@ -59,7 +59,7 @@ appears in the gap register.
 | SGN-001 | VERIFICATION_SIGNOFF | BLOCKER | rules_status.py, over pcb_rules.yaml and pcb_rules_coverage.yaml | rules_status.py -> rules_complete | tests/test_rules_status.py | **ENFORCED** |
 | SGN-002 | VERIFICATION_SIGNOFF | MUST_JUSTIFY | rules_render.py prototype_doc | rules_render.py | tests/test_rule_gate_mapping.py | **VERIFIED_MANUALLY** |
 | SI-001 | SIGNAL_INTEGRITY | MUST_JUSTIFY | signal_class.py declarations | edge_length.py -> edge_length | tests/test_edge_length.py | **SOURCE_UNVERIFIED** |
-| STK-001 | STACKUP | BLOCKER | stackup_write.py, written LAST in full.sh so it survives the chain | impedance_check.py, fab_limits.py -> impedance_check, fab_limits | tests/test_stackup_reader.py, tests/test_fab_limits.py | **ENFORCED** |
+| STK-001 | STACKUP | BLOCKER | stackup_write.py, written LAST in full.sh so it survives the chain | stackup_gate.py -> stackup_gate | tests/test_stackup_gate.py, tests/test_stackup_reader.py | **ENFORCED** |
 | STK-002 | STACKUP | BLOCKER | NONE_YET | layer_judge.py -> layer_judge |  | **OWNER_DECISION_REQUIRED** |
 | SUP-001 | LIFECYCLE_SUPPLY | BLOCKER | lcsc_fill.py, jlc-handfit.txt | jlc_certify.py, lcsc_fill.py -> jlc_certify_<letter>, lcsc_fill | tests/test_order_codes.py, tests/test_gate_fixtures.py | **ENFORCED** |
 | THM-001 | THERMAL | BLOCKER | gen_pcb_*3.py copper and thermal vias | thermal.py -> thermal | tests/test_thermal.py | **OWNER_DECISION_REQUIRED** |

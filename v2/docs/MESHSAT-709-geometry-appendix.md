@@ -9751,3 +9751,36 @@ its 4 mm reach). The via-cost round routeflow started at 14:49 UTC is the instru
 regenerates the placement, which is safe here only because `gen_pcb_e3.py` FIXES the two Kelvin seats: verified on the
 round-2 placed board at 14:55 UTC, R6 at 153.60 and R7 at 156.60, the seats E18 was measured at.
 
+**Addendum, 17:25 CEST: two blocker rules were being decided by verdicts about other questions, and one of
+them had never been measured at all.** Found by grouping the 47 failing rule-board pairs by rule and reading
+the ones whose numbers did not match their own criteria.
+
+**RTE-001, whether the board is designed to numbers the fabricator makes, was failing board B because of its
+ROUTE.** The coverage map named two verdicts for it, `fab_limits` and the routed-board gate, and where a rule
+names several the worst decides. Board B's own `fab_limits` reads PASS on 24 checks with the note "every rule
+this board is designed to is inside the fabricator's capability for its own copper weight"; the routed-board
+gate reads hard 0 and **416 unrouted**, which is RTE-002's acceptance criteria word for word. So board B stood
+recorded as designed to rules the fabricator cannot make, because its router had not finished. RTE-001 is
+decided by `fab_limits` alone now, the second clause of its criteria (that the DRC runs with the board's own
+rules) being carried by `drc.sh`'s own contract, and a rule holds the routed-board gate to RTE-002 alone.
+Board P is the control and is untouched: its RTE-001 failure is five design classes under capability.
+
+**STK-001, the stackup rule, had no instrument of its own and read PASS on a denominator of zero.** It was
+mapped to `impedance_check` and `fab_limits`, and neither asks what it asks. Boards C, D and E declare no
+controlled pair, so their stackup was credited by `impedance_check PASS of 0`: absence wearing a PASS, on a
+BLOCKER, on three boards. Board B read FAIL for seventeen pairs missing their impedance target and board P for
+its design classes. **No board's stackup had ever been compared with anything.** `stackup_gate.py` reads the
+block out of the board file in both of KiCad's forms and compares the copper layer count, every copper
+thickness, every dielectric thickness, material and dielectric constant against the named record in
+`stackup_write.STACKS`, then checks the order note names the same stack; a board with no stackup, no declared
+stack, or a stack this project holds no record of is INCONCLUSIVE and says which of the three. **It found both
+two-layer boards on its first run: P and E5 carry epsilon_r 4.6 on their core where the fabricator's own
+capability document says 4.5**, from before the 16 September correction that read the number off the
+capability page instead of the impedance page. Nothing computed moves on either board today, which is exactly
+why it needed a gate and not a memory, and it is owed to their next generation. The readings are now A 24 of
+24, B 24, C 16, D 16, E 16, and one disagreement each on E5 and P.
+
+The set total did not move (63.4 percent verified, 13.8 failed, 22.8 inconclusive of 333) and what changed is
+what is behind it: a false PASS on board E5 became a true failure, and a false failure on board B became a
+true pass.
+

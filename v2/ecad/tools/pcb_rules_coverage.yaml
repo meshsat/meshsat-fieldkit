@@ -216,7 +216,19 @@ coverage:
      owner: SESSION, execution: PARALLEL_AGENT, depends_on: [INT-002], p50_h: 4, p80_h: 12}}
 
  STK-001: {implementation: "stackup_write.py, written LAST in full.sh so it survives the chain",
-   verification: {tool: "impedance_check.py, fab_limits.py", verdict: "impedance_check, fab_limits", fixtures: "tests/test_stackup_reader.py, tests/test_fab_limits.py"},
+   verification: {tool: "stackup_gate.py", verdict: "stackup_gate", fixtures: "tests/test_stackup_gate.py, tests/test_stackup_reader.py"},
+   _verdict_why: "ITS OWN INSTRUMENT AT LAST (18 September 2026). This entry named impedance_check and fab_limits, and
+     neither asks what this rule asks. Where a rule names several verdicts the worst decides, so boards C, D and E read
+     STK-001 PASS from 'impedance_check PASS of 0', a pair measurement that judged ZERO pairs on boards that declare no
+     controlled pair: absence wearing a PASS, on a BLOCKER, on three boards. Board B read FAIL because seventeen pairs
+     missed their impedance target (PAIR-001's criteria) and board P read FAIL because five design classes are under the
+     fabricator's capability (RTE-001's). No board's stackup had ever been compared with anything. stackup_gate.py reads
+     the block out of the board file in both of KiCad's forms and compares the copper layer count, every copper
+     thickness, every dielectric thickness, material and dielectric constant against the named record in
+     stackup_write.STACKS, then checks the order note names the same stack; a board with no stackup, no declared stack,
+     or a stack this project holds no record of is INCONCLUSIVE and says which. It found both two-layer boards on its
+     first run: P and E5 carry epsilon_r 4.6 on their core where the capability document says 4.5, from before the
+     16 September correction, and it is owed to their next generation.",
    maturity: ENFORCED, gap_category: NONE,
    note: "16 September 2026, and it took three separate findings to get here. The stackup is DECLARED: it is written
      into the board and the pre-route chain refuses a board whose stackup did not survive, which it had to, because
