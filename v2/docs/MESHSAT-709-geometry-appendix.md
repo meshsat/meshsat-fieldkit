@@ -9411,3 +9411,8 @@ the generator's, as 32.224 said. The fixed fixer is in D13's, B22's and the A ar
 the two +5V_SA barrels D12 failed on, which is the generator's answer and not the fixer's. The closers did not take
 the two opens and routeflow's remedy round (via_costs 100, 200 passes) runs to about 02:00 UTC with round one's
 board kept as the best; the record's rule that a remedy round rarely beats round one stands until it is measured.
+
+**Addendum, 03:22 CEST: E13 routes.** E11's copper is not its schematic (Q7) and E12 stopped three connections short
+with the importer's drills; E13 is the same regenerated design with the SENSE via at 0.7/0.3, the drill restore at
+its import and the fixer that judges its rounds, launched 01:22 UTC in `/root/erf` (`/root/e13.log`, 200 passes,
+3 h cap, `FR_CLASS_CLEAR=SENSE:SW:1.0` as E12 carried). E12's board is kept at `/root/e12_board_keep.kicad_pcb`.
