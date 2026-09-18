@@ -981,3 +981,30 @@ def t_a_barrel_over_its_rating_gets_parallel_barrels_and_the_judge_then_passes()
     assert rc == "0", "via_parallel reverted or refused (rc %s): %s" % (rc, r.stdout[-800:])
     assert int(nv) >= 6, "fewer than six VRAIL vias after the fixer (two transitions, each wanting two more): %s" % r.stdout[-600:]
     assert after == "PASS", "the judge still fails after the parallel barrels: %s" % r.stdout[-800:]
+
+
+# copper_checks: the pour-integrity library every board gate calls. Its fixture debt (declared 8 September 2026 as
+# "exercised through the board gates") is paid here with the two boards the rule asks about: a ground pour with a via
+# of its net in it, and the same pour with nothing of its net touching it, which is an island the fill should have
+# removed and the check must refuse.
+def _copper_fails(pcbnew, b):
+    import copper_checks
+    fails = []
+    def check(ok, msg):
+        if not ok: fails.append(msg)
+    note = copper_checks.run(b, check)
+    return fails, note
+
+
+def t_a_power_pour_with_no_pad_or_via_of_its_net_is_a_loose_piece_and_fails():
+    pcbnew = _pcbnew(); tmp = tempfile.mkdtemp(prefix="copper-")
+    b, p = _signal_board(pcbnew, tmp, "loose", plane=True, gnd_via=False, gnd_complete=False)
+    fails, note = _copper_fails(pcbnew, b)
+    assert any("loose" in f and "GND" in f for f in fails), (fails, note)
+
+
+def t_the_same_pour_anchored_by_a_via_of_its_net_passes_the_copper_checks():
+    pcbnew = _pcbnew(); tmp = tempfile.mkdtemp(prefix="copper-")
+    b, p = _signal_board(pcbnew, tmp, "anchored", plane=True, gnd_via=False, gnd_complete=True)
+    fails, note = _copper_fails(pcbnew, b)
+    assert not fails, (fails, note)
