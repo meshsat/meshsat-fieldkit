@@ -25,7 +25,29 @@ def load(path):
     sys.modules[name] = m; sp.loader.exec_module(m); return m
 
 
+def _evidence():
+    """What this tree's own verdicts SAY, with the timestamp and the tools hash removed.
+
+    A fixture that runs a gate from the wrong directory writes its answer into the evidence the readiness reads:
+    on 18 September 2026 two of them handed `final_gate` a two-folder manifest from `v2/ecad` and left
+    `final_gate PASS of 2` in `out/`, where rule OUT-001 read it as a pass on all seven boards. A test that
+    re-runs a tool on the REAL tree and gets the real answer back is harmless, so the comparison is of the
+    deciding fields and not of the file: same answer, no complaint; different answer, the suite says which."""
+    out = {}
+    d = os.path.join(os.path.dirname(os.path.dirname(HERE)), "out")
+    for p in glob.glob(os.path.join(d, "**", "*.verdict.json"), recursive=True):
+        try:
+            import json as _j
+            r = _j.load(open(p, encoding="utf-8"))
+            out[os.path.relpath(p, d)] = _j.dumps({k: v for k, v in r.items() if k not in ("ts", "tools", "version")},
+                                                  sort_keys=True)
+        except Exception:
+            out[os.path.relpath(p, d)] = "unreadable"
+    return out
+
+
 def main(a):
+    before = _evidence()
     files = sorted(glob.glob(os.path.join(HERE, "test_*.py")))
     ok = fail = skip = 0; bad = []
     for f in files:
@@ -43,6 +65,11 @@ def main(a):
             except Exception as e:
                 fail += 1; bad.append(label); print("tests: %-56s FAIL %s" % (label, e))
                 traceback.print_exc(limit=3)
+    moved = [n for n, v in sorted(_evidence().items()) if before.get(n, v) != v]
+    for n in moved:
+        print("tests: THIS RUN CHANGED THIS TREE'S OWN EVIDENCE: out/%s. A fixture wrote a verdict where the "
+              "readiness reads one; give it its own directory (out_dir or VERDICT_DIR)" % n)
+        fail += 1; bad.append("evidence:" + n)
     print("tests: %d passed, %d failed, %d skipped%s" % (ok, fail, skip, ("; failed: " + ", ".join(bad)) if bad else ""))
     return 1 if fail else 0
 
