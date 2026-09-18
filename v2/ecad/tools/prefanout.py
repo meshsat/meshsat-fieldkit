@@ -116,4 +116,55 @@ for fp in boardorder.footprints(b):   # stage 0b, 11 Sep 2026: this loop LAYS, s
             via.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); via.SetNet(pad.GetNet()); b.Add(via); placed.append(c); placed_nets.append((c, pad.GetNetname())); added += 1; inpad += 1; done = True
         if not done: skipped += 1; print("  no room for a fanout via at %s pad %s (%s)" % (fp.GetReference(), pad.GetNumber(), pad.GetNetname()))
 print("fanout: %d vias added (%d in the pad), %d pads skipped" % (added, inpad, skipped))
+
+# HOW MANY BARRELS THE RAIL'S OWN CROSSINGS NEED, SAID AT GENERATION TIME (18 September 2026, rule PI-003).
+# Every PI-003 failure this project has found has one shape: a rail crosses layers through ONE barrel. Board B
+# is three slot rails at 2.20 A through a single 0.25 mm barrel sitting inside that slot's bulk capacitor pad,
+# which is this stage's own via-in-pad; board E is CELL_F at 1.42 A; board D was two +5V_SA crossings. The
+# solved mesh finds them after a route, and a generator can ask a cheaper question BEFORE one: at the pad of
+# the rail's declared SOURCE the whole rail current crosses, and at a declared LOAD's pad that load's share
+# does, so the barrels those two need are arithmetic (`via_current.barrels_for`, the IPC-2221A internal model
+# of ECSS-Q-ST-70-12C Annex D on the fabricator's own 18 um plating). This REPORTS and lays nothing: where to
+# put more copper is a placement question and the shape differs per board, but a site that is short now says
+# so here instead of after a forty-hour route.
+try:
+    import json as _j
+    import via_current as _vc
+    _ip = os.path.join(os.path.dirname(os.path.abspath(sys.argv[1])), "out",
+                       os.path.splitext(os.path.basename(sys.argv[1]))[0] + "-intent.json")
+    _rails = (_j.load(open(_ip, encoding="utf-8")).get("rails") or {}) if os.path.exists(_ip) else {}
+    _short = []
+    for _net, _r in sorted(_rails.items()):
+        _n = _net.lstrip("/")
+        if _n not in PLANES: continue                     # this stage only lays vias on the nets it was given
+        _amps = float(_r.get("amps_peak") or _r.get("amps_typ") or 0)
+        if _amps <= 0: continue
+        _want = {(_r.get("source") or ""): _amps}
+        for _ref, _a in (_r.get("loads") or {}).items():
+            try: _want[_ref] = max(_want.get(_ref, 0.0), float(_a))
+            except (TypeError, ValueError): pass
+        for _fp in b.GetFootprints():
+            _ref = _fp.GetReference()
+            if _ref not in _want or not _want[_ref]: continue
+            for _pad in _fp.Pads():
+                if (_pad.GetNetname() or "").lstrip("/") != _n: continue
+                _bb = _pad.GetBoundingBox(); _c = _pad.GetPosition()
+                _near = [v for v in b.GetTracks()
+                         if v.GetClass() == "PCB_VIA" and (v.GetNetname() or "").lstrip("/") == _n
+                         and math.hypot(v.GetPosition().x - _c.x, v.GetPosition().y - _c.y) <= max(_bb.GetWidth(), _bb.GetHeight()) / 2 + FromMM(1.0)]
+                if not _near: continue
+                _drill = min(v.GetDrill() for v in _near) / 1e6
+                _need = _vc.barrels_for(_want[_ref], _drill)
+                if len(_near) < _need:
+                    _short.append("%s at %s pad %s: %d barrel(s) of %.2f mm for %.2f A, which needs %d at a 10 K rise"
+                                  % (_n, _ref, _pad.GetNumber(), len(_near), _drill, _want[_ref], _need))
+    if _short:
+        print("fanout: %d rail crossing(s) with fewer barrels than the declared current needs (PI-003, reported "
+              "here and judged on the routed board by via_current):" % len(_short))
+        for _x in _short[:12]: print("  note %s" % _x)
+    elif _rails:
+        print("fanout: every declared rail's own crossings carry the barrels their current needs")
+except Exception as _e:
+    print("fanout: the rail currents could not be read for the barrel count (%s)" % _e)
+
 pcbnew.SaveBoard(sys.argv[1], b)
