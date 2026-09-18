@@ -9644,3 +9644,18 @@ beside it**: each stage's CS shunt sits 5.9 to 17.6 mm from its nearest low-side
 keeps both its shunts in the support region where the other four keep them with the FETs), so the next A placement
 pass owes the five shunts and their filter resistors fixed seats at the FETs.
 
+**Addendum, 13:05 CEST: B22's partition lost a whole region group to the importer defect, and its true number is 597.**
+Stage 2 ran sequentially from 00:24 to 10:25 UTC and every one of the five region jobs exited 124, its own two-hour cap.
+Worse, **S3's session was never imported**: `ses_import_lock` raised on it in the tools of that hour, which is the SWIG
+staleness A46 met at 08:47 and which was fixed at 09:00, so the driver carried on with a board holding no S3 copper,
+DEVE was routed against that board, and the merge read hard 2 with the DRC's unconnected list pinned at its 499 cap.
+Re-merged at 11:01 with the repaired importer and nothing re-routed, every session taken off disk in the order it was
+cut: S3's 1,432 tracks land, the board is 16,422 tracks against 14,990, and **the connectivity's own count, which is
+not capped, reads 597 unconnected items against the pre-route board's 2,889**. B21's forty hours of plain passes left
+416. So on this evidence the partition does not beat B21 and B22 is not adopted; the reconcile is running on the
+re-merged board and its closers are the only thing that could still move it. **What the run measured is the cap, not
+the method**: five region jobs each stopped with passes still improving, the same confound as A42's truncated arm, so
+the next partition arm on this board needs region caps that add up to the order of hours the plain route was given.
+**And the driver lesson is the one the record keeps meeting**: a stage that loses a step to a crash carried on and
+reported PART-DONE for every group, so the number at the end described a board nobody had built.
+
