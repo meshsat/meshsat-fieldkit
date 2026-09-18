@@ -9675,3 +9675,21 @@ own 0.16 mm floor), **D14's** second round with the via-cost remedy after its fi
 on the partition board (0 hard, 28 unrouted at the reconcile), **E15's** second round, and B22's reconcile on the
 re-merged board, which three rip passes leave at hard 44.
 
+**Addendum, 14:00 CEST: decision 28 has both of its numbers at rules the fabricator builds, and board P is the first
+board whose answer is now purely the owner's.** P7 regenerated board P at the 0.16 mm floor its committed P4 has never
+carried and routed 0 hard with **47 open of 35 nets** in 22 minutes: the third independent reading that two layers at
+2 oz cannot hold this board (P6 43, the 15 September arm 45). **P8 then measured the other half at the same floor**:
+four layers, In1 and In2 as ground planes, via minimums 0.45/0.25, and it routed **0 hard and 0 unrouted with 98 vias
+in six minutes**, its gates reading routed-board PASS, `check_pcb_p` 51 of 51, `via_audit` 279 vias with nothing under
+either floor, `dc_drop` 3 of 3 and `fab_limits` PASS of 20. That matters because the four-layer arm the recommendation
+rested on was routed at 0.127 mm, which is the very defect that makes P4's own 0/0 worthless: both options carry a
+number taken at a rule set JLCPCB offers now. The fabricator's table also closes the third way: 0.10/0.10 needs 1 oz,
+and ruling 7 refused 1 oz for this board because its FUSED rail measures 193.5 A/mm2 against IPC's 82.7 there. One
+caveat travels with the ruling: P8 generated the four-layer 1 oz stackup, so a four-layer P at 2 oz declares a
+different stackup line and is judged against 0.15 mm, which its 0.16 clears. Neither board is adopted: the layer count
+is a reserved class. **And the afternoon's generator edits cost the contract gate for an hour**: boards A and E's
+committed netlists named an engine this tree no longer holds, so `check_contracts` refused every contract naming them
+and P8's own finish stopped at CONTRACTS NOT JUDGED. Both are regenerated at their declared phases and committed with
+their sidecars; the gate reads ALL PASS 72 of 72 again. **B23 runs** with the two variables B22's reading asked for:
+the class table that reaches the DSN, and four hours a region group against B22's two.
+
