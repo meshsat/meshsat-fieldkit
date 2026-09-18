@@ -129,6 +129,7 @@ def netname(n): return n[1:] if n.startswith("/") else n
 # something the router then works around, which is the `bus_a21.py` pattern of 5 September with the waypoints
 # searched instead of typed.
 _WANT = {n.strip().lstrip("/") for n in __import__("os").environ.get("STUB_NETS", "").split(",") if n.strip()}
+_POUR_OBSTACLE = int(__import__("os").environ.get("STUB_POUR_OBSTACLE", "1"))   # see the pour paragraph in the obstacle map
 for v in drc.get("unconnected_items", []):
     its = [item_of(i) for i in v.get("items", [])]
     if len(its) == 2 and all(its):
@@ -216,6 +217,17 @@ def build_maps(net):
         # and every piece came back off with "the path reached a goal CELL whose copper it does not touch".
         # The tool had been searching a board it could not see, and its own guard was the only thing standing
         # between that and a shorted board. Twelve of board A's opens sat behind this.
+        # ...AND A POUR IS AN OBSTACLE TO A CLOSURE AND NOT TO A PRE-LAY (18 September 2026, STUB_POUR_OBSTACLE).
+        # The paragraph above is right about the FINISH: there the pours are the board's and a piece laid through
+        # one is measured against a fill that has not moved. At PRE-LAY time nothing has been routed yet, the
+        # chain re-fills before it judges anything, and KiCad's fill retreats around a new track exactly as it
+        # does around the router's own: which is why the ROUTER may cross a plane and this tool may not. With
+        # every pour in the map a poured board has almost nothing free (board D's pre-lay: 5,140 free cells of
+        # 834,561, so `/PCM_VDD` FAILED pad to pad three times in 833 s on an empty board), and the pre-lay stage
+        # has laid NOTHING on boards C, D and E for that reason. The flag is OFF by default, so a finish is
+        # unchanged, and the pre-lay stage turns it on; the stage is guarded either way and the board goes back
+        # if the hard count rises after the refill.
+        if _POUR_OBSTACLE == 0: continue
         if z.GetFilledArea() <= 0 or netname(z.GetNetname()) == netname(net): continue
         _c = clr_to(z.GetNetname())
         for L in LAYERS:

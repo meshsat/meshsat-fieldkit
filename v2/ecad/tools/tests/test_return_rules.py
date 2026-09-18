@@ -299,3 +299,28 @@ def t_the_screen_names_what_it_examined_and_what_still_stands():
     assert "missing_input=missing" in s, \
         "the screen does not declare the examination as a missing input, so a reading taken without it could " \
         "displace one taken with it"
+
+
+def t_a_pour_is_an_obstacle_to_a_closure_and_not_to_a_pre_lay():
+    """MEASURED ON BOARD D, 18 September 2026, after three boards' pre-lays had laid nothing.
+
+    `stub_router`'s obstacle map has carried every filled pour since 16 September, and it must: in the FINISH a
+    piece laid through a plane is measured against a fill that has not moved, and board A's closures shorted its
+    ground that way. At PRE-LAY time none of that is true. Nothing is routed yet, the stage re-fills before
+    anything judges the board, and KiCad's fill retreats around a locked track exactly as it does around the
+    router's own, which is why the ROUTER may cross a plane and this tool may not. With the pours in the map a
+    poured board has almost nothing free: board D's pre-lay reported **5,140 free cells of 834,561** and
+    `/PCM_VDD` FAILED pad to pad three times in 833 s on a board with no routing on it at all. With
+    `STUB_POUR_OBSTACLE=0` the same board, the same net and the same window read **1,324,904 free cells and
+    closed 3 of 3**, and the board after its own refill reads hard 0 of the fifteen types. The flag defaults to
+    ON so a finish is unchanged, and the pre-lay stage is the one caller that turns it off."""
+    s = _src("stub_router.py")
+    assert 'os.environ.get("STUB_POUR_OBSTACLE", "1")' in s.replace("__import__(\"os\").", "os."), \
+        "the pour obstacle is not a flag, or its default is not ON"
+    i = s.index("_POUR_OBSTACLE == 0")
+    assert "z.GetFilledArea()" in s[i:i + 300], "the flag does not guard the FILLED-POUR branch of the map"
+    t = _code("full.sh")
+    j = t.index("STUB_NETS=\"$GNETS\"")
+    assert "STUB_POUR_OBSTACLE" in t[max(0, j - 400):j], "the pre-lay stage does not turn the pour obstacle off"
+    fin = _code("finish.sh")
+    assert "STUB_POUR_OBSTACLE" not in fin, "the finish turns the pour obstacle off, which is what shorted board A"
