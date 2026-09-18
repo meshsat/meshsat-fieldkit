@@ -30,7 +30,18 @@ if [ "${PART_SEQ:-1}" = 1 ]; then
     echo "stage2: sequential group $G"
     bash ../tools/route_part.sh $W $W/stage2.dsn $G $P $T $W/part2.json > $W/route-$G.log 2>&1
     [ -s $W/$G/route.ses ] || { echo "stage2: $G wrote no session, stopping the chain here"; break; }
-    python3 ../tools/ses_import_lock.py $W/stage1.kicad_pcb $W/$G/route.ses $W/part2.json $G $W/stage1.kicad_pcb 2>&1 | grep -v -E "Debug|leak"
+    # THE IMPORT IS CHECKED, AND IT WRITES BESIDE THE BOARD RATHER THAN OVER IT (18 September 2026, B22). This line
+    # read and wrote the same path and its status was thrown away by the pipe, so when `ses_import_lock` raised on
+    # S3's session the loop carried on: DEVE was routed against a board with no S3 copper, every group still printed
+    # PART-DONE, and the merge at the end described a board nobody had built (the true open count was 597 once the
+    # five sessions were re-merged by hand). A step that cannot be skipped silently is a step that stops the chain.
+    python3 ../tools/ses_import_lock.py $W/stage1.kicad_pcb $W/$G/route.ses $W/part2.json $G $W/stage1-next.kicad_pcb > $W/import-$G.log 2>&1
+    _irc=$?; grep -av -E "Debug|leak" $W/import-$G.log | tail -1
+    if [ "$_irc" != 0 ] || [ ! -s $W/stage1-next.kicad_pcb ]; then
+      echo "stage2: $G did not import (exit $_irc), stopping the chain here rather than merging a board without it"
+      tail -4 $W/import-$G.log; break
+    fi
+    mv $W/stage1-next.kicad_pcb $W/stage1.kicad_pcb; cp $N.kicad_pro $W/stage1.kicad_pro 2>/dev/null
     bash ../tools/dsn_export.sh $W/stage1.kicad_pcb $W/stage2-raw.dsn "${FR_PLANE_NETS:-}" "${FR_POWER_LAYERS:-}" 2>&1 | tail -1
     python3 ../tools/dsn_partition.py $W/stage1.kicad_pcb $W/stage2-raw.dsn $W/stage2.dsn $W/part2.json ${PART_REGIONS:+--regions=$PART_REGIONS} 2>&1 | tail -1
   done

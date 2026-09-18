@@ -1151,3 +1151,15 @@ def t_the_partition_stage_two_repartitions_with_the_callers_regions():
     s = open(os.path.join(TOOLS, "part_stage2.sh"), encoding="utf-8").read()
     i = s.find("dsn_partition.py"); assert i > 0
     assert "PART_REGIONS" in s[i:i + 300], "part_stage2.sh re-partitions without the caller's --regions"
+
+
+def t_the_partition_stops_when_a_group_does_not_import():
+    """B22 (18 September 2026): `ses_import_lock` raised on S3's session, the loop threw the status away through a
+    pipe and read and wrote the same board path, so the next group was routed against a board without S3's copper and
+    every group still reported PART-DONE. An import that fails stops the chain, and it writes beside the board."""
+    s = open(os.path.join(TOOLS, "part_stage2.sh"), encoding="utf-8").read()
+    i = s.find("ses_import_lock.py $W/stage1.kicad_pcb")
+    assert i > 0, "the sequential import moved"
+    blk = s[i:i + 700]
+    assert "stage1-next.kicad_pcb" in blk, "the import still writes over the board it reads"
+    assert "_irc" in blk and "break" in blk, "the import's status is not checked and the loop does not stop on it"
