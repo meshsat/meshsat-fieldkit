@@ -643,7 +643,15 @@ coverage:
    maturity: ENFORCED, gap_category: NONE, note: "added 16 September: a folder that is not the declared phase fails the set, with a truth-table fixture"}
 
  DOC-002: {implementation: "ledger.py, provenance.json, make_handoff.py's PROVENANCE block, export_jlc.sh's header",
-   verification: {tool: "doc_provenance.py, ledger_verify.py", verdict: "doc_provenance, ledger_verify", fixtures: "tests/test_doc_provenance.py, tests/test_ledger.py"},
+   verification: {tool: "doc_provenance.py, ledger_verify.py", verdict: "doc_provenance_<letter>, ledger_verify", fixtures: "tests/test_doc_provenance.py, tests/test_ledger.py"},
+   _per_board_why: "ONE VERDICT PER BOARD SINCE 18 September 2026, the fourth rule to need it (DOC-001 was
+     split on the 16th, CMP-002, SUP-001 and DFM-001 on the 17th). One set-level reading was deciding DOC-002
+     on all seven boards, so board C read FAIL because a note describing C7 names no artefact while board C
+     declares C24 and has no order note at all: different states, and only one of them is the board's fault. A
+     board whose order folder is not at its declared phase now reads INCONCLUSIVE carrying the phase it wanted
+     and the phase the set holds, which is what the certification does. It flattered nothing: six boards moved
+     from a failure they did not own to an absent input, and board E5, whose folder IS at its declared phase,
+     is left as the one real FAIL, its note naming no artefact.",
    maturity: ENFORCED, gap_category: NONE,
    note: "16 September 2026: THE DOCUMENT THAT ASSERTS THE NUMBERS IS THE ORDER NOTE, and it named no board.
      The rule asks that each asserted number carry its artefact hash or be marked an estimate, and its phase is
