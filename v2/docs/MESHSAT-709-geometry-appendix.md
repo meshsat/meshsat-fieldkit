@@ -9693,3 +9693,21 @@ and P8's own finish stopped at CONTRACTS NOT JUDGED. Both are regenerated at the
 their sidecars; the gate reads ALL PASS 72 of 72 again. **B23 runs** with the two variables B22's reading asked for:
 the class table that reaches the DSN, and four hours a region group against B22's two.
 
+**Addendum, 14:35 CEST: every deciding gate leaves a reading now, and board E's filter takes its seats at the shunt.**
+The morning's guard covered thirteen one-line entries and the nine module-level gates; the afternoon covered the rest
+of the coverage map, twenty-four more, and the rule that says so **reads the coverage map** rather than a list, so a
+gate added tomorrow is covered by construction (four tools are named with why they are exempt: three parse their own
+argv before deciding, one writes no verdict at all). `sensitive_nodes` also learnt the 17 September rule about input:
+on a host with no `pcbnew` only its netlist half can run, and it was writing PASS with nothing to say it had not
+looked, which is how `doc_provenance`'s sweep reading once stood in front of the runner's real one. It writes
+INCONCLUSIVE naming the missing copper now. **Board E's E18** is the placement answer to its own ANA-001 reading: the
+packer had put the tracker's two Kelvin resistors 18 to 23 mm from the shunt and its filter capacitor AT the shunt,
+which is the wrong end of both, so the filtered pair ran through the switching neighbourhood. The resistors take fixed
+seats on the shunt's own row and the capacitor is declared as the controller's pin decoupling. **The first pair of
+seats was refused by the board in under a minute**: a 2512 shunt carries its courtyard out to about 5.7 mm and the
+packer had already put D5 at 9.9, so the placed board read 6 hard and the chain blocked before routing anything, which
+is the gate doing its job. The row below is clear and reads hard 0. **A43's second round had lost its supervisor**
+(its routeflow took signal 15 and the router carried on, 198 sessions in); the missing half is armed on the place box
+and will import the last session with the drill restore and report one number, because A43 is the design before the
+current-sense filter and nothing about it is adopted.
+
