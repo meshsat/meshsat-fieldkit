@@ -43,13 +43,14 @@
   "return_via": true,
   "_return_via_why": "15 September 2026, owner ruling 20:15 CEST (appendix 32.198): a ground via within 1.5 mm of every signal via, fine-pitch escape fans exempt; the finish places them after the last copper-changing stage and the board gate (intent_checks item 4) refuses a board with a signal via left without one.",
   "direct_close": {
-   "max": 4.0,
+   "max": 14.0,
    "layers": [
     "F.Cu",
     "B.Cu"
-   ]
+   ],
+   "budget_s": 1800
   },
-  "_direct_close_why": "16 September 2026, E11. The board re-finished at hard 0 with ONE connection open: U13 pad 2 (GND) at (5.537, 208.400) and the GND track 1.72 mm west of it at x 3.8125, which the stub router refused as 'pad -> track, no path' at its own grid and clearance. It is a straight run of under two millimetres across free board, which is the case direct_close was written for on A24 and the case the raster search is worst at: every cell beside a target pad lies inside somebody's clearance, while the segment that closes the gap ends ON that pad, where the pad's own clearance does not apply to its own net. The limit is 4 mm rather than A's 12 because E's opens are short by construction: the long ones are the router's and they are closed by routing, not by a bar laid across the board. Outer layers only: E's In1 is a solid ground plane and In2 carries four power pours, so a closure has no business on either.",
+  "_direct_close_why": "BOARD E'S CLOSER REACHES 14.0 mm FROM 18 September 2026, and the number is E18's own (it was {\"max\": 4.0, \"layers\": [\"F.Cu\", \"B.Cu\"]}). E18's round 2 lands 0 hard and FOUR open, and `direct_close` named every one of them with its distance instead of closing any: `/HS_GATE` 13.05 mm from a track end to Q7 pad 4, `/HS_S` 8.48 mm to U6 pad 1, `/+3V3_E6` 127.73 mm to C50 pad 1 and `/LTG_IRQ` 207.54 mm from U10 pad 17. Two of the four are a closure the router stopped short of and were refused by the reach alone, which is a number this board chose when its opens were short ones; board A carries 12.0 mm for the same reason. The other two are not closures at all and must not be treated as such: 127 mm and 207 mm are connections the router never made, and the 207 mm one is the floor-plan finding of this afternoon (the sensor controller sits about 230 mm from the 26 nets it serves), which is E20's placement work and not a closer's. Each proposed run is still judged by the DRC and `guarded` puts the board back if it makes anything worse, so raising the reach can cost nothing but the 1800 s budget.",
   "via_parallel": true,
   "_via_parallel_why": "18 September 2026 (rule PI-003): after every copper-editing stage and before the ground vias, via_parallel lays parallel barrels beside any via dc_drop's solved mesh puts over IPC-2221's rating for its wall (the fabricator's 18 um plating), joined on every layer the net touches there, DRC-guarded, then re-solves and re-judges. On the committed board: E11 fails CELL_F 1.93 A against 0.74 and VIN_RAW 0.80 against 0.65",
   "widen": [
