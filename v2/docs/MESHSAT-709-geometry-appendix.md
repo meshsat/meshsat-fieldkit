@@ -10184,3 +10184,27 @@ since it was written on 15 September: it finds the lanes, the board keeps them, 
 ONE unrouted of 94 nets, 211 vias, 45 minutes**, against E18's five and four and E17's zero-after-the-closers.
 Its finish is running and board E's direct closer reaches 14 mm. E17 stays board E's declared phase until a
 round lands at 0 open with ANA-001 still PASS on all three nodes, which is the bar written in advance.
+
+**Addendum, 22:10 CEST: D16 was launched half an hour before the fix it existed to test, and it measured
+nothing.** Its tree was staged at 18:39 UTC; the pour-obstacle fix landed at 19:10 UTC. So `stub_router` in
+that tree still carried every filled pour in its obstacle map, its pre-lay printed *"closed 0 of 3, the board
+is untouched"*, and the arm's one variable never reached the board. **Proved rather than assumed**: D15's and
+D16's placed boards hold the same **211 footprints in the same seats, none moved**, so D16 is D15's design
+re-generated and re-routed with nothing changed that the router could see.
+
+**And its number is not what it looked like either.** D16 read 0 hard and NINE unrouted where D15 read 0 hard
+and FOUR at the router (its closers then took the four to one). That is not scatter and not a cost: under the
+same 3600 s cap D15 reached **80 passes** and D16 **49**, and Freerouting's open count falls with the passes.
+Two runs of one design at different pass counts are not a measurement of anything, which is worth writing down
+because the temptation was to read the pair as board D's route scatter and it is not evidence of that.
+
+**D17 is the arm, launched 20:01 UTC on the place box**, and three things in it are the lesson made
+mechanical. (1) **The launcher declares the property the arm depends on and refuses a tree without it**: it
+greps the staged tools for `STUB_POUR_OBSTACLE` and `STUB_LOCK` and exits before it stages anything if either
+is missing. A tree carries the tools it was staged with, which the 19:00 addendum records in its other
+direction; this is the same fact biting the arm that was written before the change. (2) **The route cap is
+raised to 9,000 s** so the pass count cannot decide the result against its control: D15's 80 passes is the bar.
+(3) The pre-lay is the one variable and **it laid its lane this time**: `/PCM_VDD` closed **3 of 3** over
+1,109,361 free cells with the pours out of the map, locked so `place_audit` still reads a placed board, and
+the pre-route gate passed 18 of 18. D15 stays board D's answer until D17 lands at 0 open with `via_current`
+still reading 0 barrels over their rating.
