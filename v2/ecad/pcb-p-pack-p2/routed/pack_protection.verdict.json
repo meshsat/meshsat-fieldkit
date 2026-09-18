@@ -1,0 +1,42 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "checks": 45,
+  "devices": 5,
+  "fail": 1,
+  "functions": 9,
+  "limits": 14,
+  "software_only": 9
+ },
+ "denominator": 45,
+ "evidence": [
+  "BAT-001 asks for protection IN HARDWARE, INDEPENDENT OF ANY SOFTWARE, and 9 of 9 functions are implemented by a device whose thresholds live in firmware, with no second protector and no chemical fuse on this board: gen_sch_p.py: `no chemical fuse (the 25 A mini blade is the fuse)`, PTC and PTCEN tied off, and no second protector IC. Every CELL-LEVEL protection below is the"
+ ],
+ "inputs": {
+  "board": "p",
+  "cell_spec": "v2/vendor/battery/samsung-35e-orbtronic.pdf",
+  "netlist": "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net",
+  "table": "v2/ecad/tools/pcb_pack_protection.yaml"
+ },
+ "missing_input": null,
+ "note": "every protection this requirement names, with the device that implements it, its configured threshold, the cell limit it is derived from (quoted and re-read from the cell maker's own specification) and the test that will demonstrate it on the prototype; the currents are judged at the pack's worst parallel count",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "BAT-001": "a52425ef3e75ea0c"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "BAT-001"
+ ],
+ "tool": "pack_protection",
+ "tools": {
+  "git_head": "2d88cb59bb7d",
+  "tools_tree_sha": "77899244a145502b"
+ },
+ "ts": "2026-09-18T17:58:12Z",
+ "verdict": "FAIL",
+ "version": "2d88cb59bb7d+dirty"
+}
