@@ -9499,3 +9499,13 @@ board leaves one or two of them behind (E14 the USB leg, E15 these two). E16 (`/
 `CELL_MON,LTG_IRQ,USB_E6_P,USB_E6_N` on the empty placed board before the route, the one-variable arm; the generator's
 own answer, if the pre-lay cannot, is the floor plan (MCUR beside its sensors, or the cross-strip signals given a
 lane of their own), which is a later phase.
+
+**Addendum, 09:44 CEST: A44 and A45 landed at their ten-hour caps, both worse than A43 by the router's count.** Both
+were cut at pass 229 of 250 at 07:32 UTC: **A44** (RF drops, SENSE class) 23 open of 254 with 348 vias, **A45** (A44
+plus the class-pair rule in the DSN) 26 open with 367 vias, against A43's 19 at pass 250 and A42's 15 at 137. Both
+imports predate the drill restore and read 69 `annular_width` and 10 to 17 `hole_clearance` items, the E12 shape on a
+six-layer board; each is re-imported with the restore in a copy of its tree (`/root/arf44`, `/root/arf45r`): A44
+re-imported reads hard 0, unrouted 26, and its finish runs; A45's follows. Their instrument readings (ANA-001 against
+A43's 6 of 19, RF-001 against 11 of 11) are taken on the finished boards by `$SP/arm_readings.sh` when the finishes
+end. Board A's ladder stands at A42 15, A43 19 (15 after closers), A44 23, A45 26: nothing the arms changed about
+the route moved it in the right direction, and the next lever is the partition or the placement, as 32.224 said.
