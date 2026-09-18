@@ -72,7 +72,7 @@ def t_the_verdict_is_advisory_until_it_knows_which_via_the_current_crosses():
     import os
     src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "via_current.py"),
                encoding="utf-8").read()
-    assert "advisory=not _all_measured" in src, \
+    assert "advisory=advisory_for(rows)" in src, \
         "the advisory flag no longer follows whether the attribution was measured"
     assert "advisory=True" not in src, "the flag is hard-coded on, so a measured board stays advisory for ever"
     assert "-via-currents.json" in src, "via_current does not look for the solved barrel currents"
@@ -212,3 +212,28 @@ def t_a_stitch_that_puts_two_holes_too_close_refuses_the_board():
     assert "_floor = drill + 0.2995" in body, "the stitch does not know the hole-to-hole floor"
     assert "hole to hole against the 0.2995" in body, "the refusal does not say what it measured"
     assert body.index("_floor = drill") < body.index("for x, y in pts:"), "the check runs after the copper is laid"
+
+
+def t_a_barrel_the_mesh_solved_and_found_over_its_rating_decides_this_reading():
+    """THE DEFECTIVE CASE (18 September 2026). Board E read INCONCLUSIVE with TWO barrels over their own wall
+    at 10 K on rails `dc_drop` had solved, because a fourth declared rail carried no solved current at all and
+    the flag was `not _all_measured`. An absence somewhere else on the board was softening a failure that had
+    already been measured, which is the opposite of this project's own rule that absence is never a pass: here
+    absence was being allowed to un-fail a reading. The attributed branch can only ADD failures to the
+    measured ones, so a measured rail over its barrels is a failure whatever the coverage."""
+    rows = [dict(net="CELL_F", measured=True, ok=False),
+            dict(net="VIN_RAW", measured=True, ok=True),
+            dict(net="PV_P", measured=False, ok=True)]
+    assert vc.advisory_for(rows) is False, \
+        "a rail the mesh solved and found over its rating is held back by another rail nobody solved"
+
+
+def t_a_reading_that_would_otherwise_pass_keeps_the_flag_while_a_rail_is_attributed():
+    """THE ACCEPTABLE CASE. Nothing measured is over its rating and one rail still has no solved current, so
+    the reading cannot say the board passes: the attributed rail's own weakest cluster is an assumption about
+    where the current goes, not a measurement, and the flag is what keeps it out of the verdict. Both ends
+    matter, because a flag hard-coded either way expresses neither."""
+    rows = [dict(net="CELL_F", measured=True, ok=True), dict(net="PV_P", measured=False, ok=True)]
+    assert vc.advisory_for(rows) is True, "an attributed rail no longer holds an otherwise passing reading back"
+    assert vc.advisory_for([dict(net="CELL_F", measured=True, ok=True)]) is False, \
+        "a board whose every rail is measured still reads advisory"

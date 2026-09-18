@@ -190,7 +190,11 @@ coverage:
      is rated for, the worst a VBUS20 barrel at (68.5, 82.0) carrying 3.40 A against 0.90. Board C PASSES it
      for the first time. The curve is IPC-2221A's internal-conductor model, published with its constants in
      ECSS-Q-ST-70-12C Annex D and transcribed in v2/vendor/standards/; the plating is the fabricator's own
-     18 um. The verdict is ADVISORY exactly when a judged rail still has no solved barrel current and says how
+     18 um. The verdict is ADVISORY exactly when a judged rail still has no solved barrel current AND
+     nothing measured is over its rating (18 September 2026: board E read INCONCLUSIVE with two barrels
+     over their own wall on rails the mesh had solved, because a fourth rail had none: an absence
+     elsewhere on the board was un-failing an established measurement, and the attributed branch can
+     only ADD failures to the measured ones, never remove one), and says how
      many, which today is board B, whose committed board is not routed at all, so no load is reachable from any
      source and the mesh finds nothing. Earlier: each declared rail's vias are grouped into SITES, a cluster of
      that net's barrels within 6 mm, which is what a layer transition looks like on these boards, and the rail's
