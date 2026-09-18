@@ -253,8 +253,17 @@ if _osx.environ.get("PLACE_VIN_VIAS", "1") not in ("0", ""):
     # at y -77.77 and its 2.0 mm lands reach -76.77, so a row at -76.73 would touch USB_E6_N's pad), so the answer
     # is the barrel and not the count: 0.70 mm of hole is rated about 1.47 A, and 1.1 mm of pad keeps the 0.20 mm
     # ring this board declares. Measured again on the next E board by via_current; barrel_sites.py is the map.
-    _pcmod.PowerCopper(board, net_for, P).stitch("VIN_RAW", VIN_VIAS, drill=0.7, width=1.1)
-    print("power copper: %d VIN_RAW power via(s) at the source pad and the block lands, 0.7 mm drill" % len(VIN_VIAS))
+    # AND THE WIDER HOLE IS THE BLOCK'S ALONE, which the gate said before any router saw it (18 September 2026).
+    # VIN_VIAS is two clusters: ten at the SOURCE pad on a 0.8 mm pitch and eight at the block lands on 2.54 mm.
+    # At 0.5 mm of drill the source cluster sits at 0.30 mm hole to hole, one hundredth above this board's own
+    # 0.2995 floor; at 0.7 mm it is 0.10 and the placed board came back with EIGHT hole_to_hole violations. The
+    # source cluster does not need the wider hole anyway: the solved mesh gives its barrels 0.86 to 0.98 A
+    # against the 1.05 a 0.5 mm barrel carries, and it is the block's eight that read 1.32 of their rating.
+    _pcv = _pcmod.PowerCopper(board, net_for, P)
+    _pcv.stitch("VIN_RAW", VIN_VIAS[:10], drill=0.5, width=0.9)     # the source pad, 0.8 mm pitch: 0.30 mm hole to hole
+    _pcv.stitch("VIN_RAW", VIN_VIAS[10:], drill=0.7, width=1.1)     # the block lands, 2.54 mm pitch: 1.84 mm hole to hole
+    print("power copper: %d VIN_RAW power via(s), 10 at the source pad at 0.5 mm and %d at the block lands at 0.7 mm"
+          % (len(VIN_VIAS), len(VIN_VIAS) - 10))
 
 # ------------------------------------------------- CELL_F's own layer transition, in parallel barrels (18 Sep 2026)
 # The other half of PI-003 on this board, read off E18's finished copper with barrel_sites.py: ONE 0.30 mm barrel at
