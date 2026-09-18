@@ -601,10 +601,12 @@ if os.path.exists(pro):
     # says USB and DIFF100 clear 0.127 mm, the project file said 0.10, and the project file is what the router,
     # the DSN and every gate read. A class clearance below the board's own 0.127 minimum is a lie the router
     # believes, which is the defect that put 25 clearance violations into A23 (appendix 32.79).
-    _PRIO = {"USB": 0, "DIFF100": 1, "PWR": 2, "HV": 3}
+    # EVERY class of the table, in the table's order (18 September 2026): this loop named four classes by hand and the
+    # table had grown PANEL, RF and SENSE since, so B22's project file, the DSN and every gate read those three at the
+    # Default geometry (PANEL's 0.8 mm for the polyfuse never reached B22's copper). The order is the priority.
     _cls = [Cc("Default", 2147483647, 0.127, 0.25, 0.7, 0.3, 0.2, 0.15)]
-    for _n in ("USB", "DIFF100", "PWR", "HV"):
-        _c = CLASSES[_n]; _cls.append(Cc(_n, _PRIO[_n], _c[0], _c[1], _c[2], _c[3], _c[4], _c[5]))
+    for _i, _n in enumerate(CLASSES):
+        _c = CLASSES[_n]; _cls.append(Cc(_n, _i, _c[0], _c[1], _c[2], _c[3], _c[4], _c[5]))
     d.setdefault("net_settings", {})["classes"] = _cls
     d["net_settings"]["netclass_patterns"] = [{"netclass": n, "pattern": p} for p, n in PATTERNS]
     # 7 Sep 2026 (A22 round 1 on the box, KiCad 9.0.9): the router's DSN carried every "/NAME" net in kicad_default because the pattern matcher resolved neither

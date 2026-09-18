@@ -263,7 +263,7 @@ if _osx.environ.get("PLACE_DCHS_BAND", "1") not in ("0", ""):
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr))
-cls(ns.GetDefaultNetclass(), 0.127, 0.25, 0.6, 0.3)   # 0.127: the 0.4 mm escape rows of the RP2040 (E6 round 4)
+DEFAULT = (0.127, 0.25, 0.6, 0.3); cls(ns.GetDefaultNetclass(), *DEFAULT)   # 0.127: the 0.4 mm escape rows of the RP2040 (E6 round 4)
 PATTERNS = [("DC_*", "PWR"), ("HS_S", "PWR"), ("GND", "PWR"), ("GND_V", "PWR"), ("VIN_RAW", "PWR"), ("PV_*", "PWR"), ("TRK_OUT", "PWR"), ("TRK_SW*", "SW"), ("TRK_LSENSE", "PWR"), ("+5V_E6", "PWR"), ("E6_SW", "SW"), ("CELL+", "BANK"), ("CELL_F", "BANK"), ("USB_E6_*", "USB")]
 # SENSE: every net pcb_sensitive.yaml declares for this board, in a class of its own with the default geometry, listed ahead
 # of the table so a sensitive net wins over the power pattern that also names it (TRK_LSENSE sat in PWR beside TRK_SW2, the net
@@ -279,11 +279,15 @@ PATTERNS = [(n, "SENSE") for n in _sens_nets] + PATTERNS
 print("SENSE class: %d declared sensitive net(s) take it" % len(_sens_nets))
 PATTERNS += [("/" + pat, cls) for pat, cls in PATTERNS if not pat.startswith("/")]   # 5 Sep 2026 (gateway finding, MESHSAT-802): root-sheet labels are "/NAME" on the board and KiCad's pattern matcher does not strip the slash, so every label pattern is emitted in both forms; power symbols (GND, +3V3) have no slash
 try:
-    nc = pcbnew.NETCLASS("PWR"); cls(nc, 0.15, 0.8, 0.8, 0.4); ns.SetNetclass("PWR", nc)
-    nb = pcbnew.NETCLASS("BANK"); cls(nb, 0.3, 3.0, 1.2, 0.6); ns.SetNetclass("BANK", nb)
-    nse = pcbnew.NETCLASS("SENSE"); cls(nse, 0.127, 0.25, 0.7, 0.3); ns.SetNetclass("SENSE", nse)   # 0.7/0.3: a 0.20 mm ring, the annular floor this board declares; 0.6/0.3 left E12 with ten annular_width violations (18 September 2026)
-    nsw = pcbnew.NETCLASS("SW"); cls(nsw, 0.15, 0.8, 0.8, 0.4); ns.SetNetclass("SW", nsw)   # the tracker's switching nodes, PWR's geometry in a class of their own so the SENSE class-pair rule names them and not every power net (17 Sep 2026)
-    nu = pcbnew.NETCLASS("USB"); cls(nu, 0.127, 0.3, 0.6, 0.3); nu.SetDiffPairWidth(FromMM(0.3)); nu.SetDiffPairGap(FromMM(0.2)); ns.SetNetclass("USB", nu)   # 8 Sep 2026 (32.71): 0.30/0.20 on the 7628 outer layer computes 89 ohm; the USB pairs stay on F.Cu over the In1 ground
+    CLASSES = [("PWR", 0.15, 0.8, 0.8, 0.4),
+               ("BANK", 0.3, 3.0, 1.2, 0.6),
+               ("SENSE", 0.127, 0.25, 0.7, 0.3),   # 0.7/0.3: a 0.20 mm ring, the annular floor this board declares; 0.6/0.3 left E12 with ten annular_width violations (18 September 2026)
+               ("SW", 0.15, 0.8, 0.8, 0.4),   # the tracker's switching nodes, PWR's geometry in a class of their own so the SENSE class-pair rule names them and not the rail
+               ("USB", 0.127, 0.3, 0.6, 0.3)]   # ONE table for the board's classes AND the project file's (18 September 2026): a second hand-written copy in the project file had drifted (D's PWR via 1.2/0.6 on the board, 0.8/0.4 in the file the router reads; SENSE absent from the file on D, E and P; SENSE 0.6/0.3 on P), the defect B fixed for itself on 8 September
+    for _nm, *_v in CLASSES:
+        _nc = pcbnew.NETCLASS(_nm); cls(_nc, *_v)
+        if _nm == "USB": _nc.SetDiffPairWidth(FromMM(0.3)); _nc.SetDiffPairGap(FromMM(0.2))   # 8 Sep 2026 (32.71): 0.30/0.20 on the 7628 outer layer computes 89 ohm
+        ns.SetNetclass(_nm, _nc)
     for pat, name in PATTERNS: ns.SetNetclassPatternAssignment(pat, name)
 except Exception as e: print("note: net class API:", e)
 pcbnew.SaveBoard(BOARD, board)
@@ -294,7 +298,7 @@ if os.path.exists(pro):
     d = json.load(open(pro))
     base = dict(bus_width=12, line_style=0, microvia_diameter=0.3, microvia_drill=0.1, pcb_color="rgba(0, 0, 0, 0.000)", schematic_color="rgba(0, 0, 0, 0.000)", wire_width=6, diff_pair_via_gap=0.25)
     def C(name, prio, clr, tw, vd, vdr): return dict(base, name=name, priority=prio, clearance=clr, track_width=tw, via_diameter=vd, via_drill=vdr, diff_pair_width=0.3, diff_pair_gap=0.2)
-    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.127, 0.25, 0.6, 0.3), C("PWR", 0, 0.127, 0.8, 0.8, 0.4), C("BANK", 1, 0.3, 3.0, 1.2, 0.6), C("USB", 2, 0.127, 0.3, 0.6, 0.3)]
+    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, *DEFAULT)] + [C(_nm, _i, *_v) for _i, (_nm, *_v) in enumerate(CLASSES)]
     d["net_settings"]["netclass_patterns"] = [{"netclass": n, "pattern": p} for p, n in PATTERNS]
     # 7 Sep 2026 (A22 round 1 on the box, KiCad 9.0.9): the router's DSN carried every "/NAME" net in kicad_default because the pattern matcher resolved neither
     # "NAME" nor "/NAME" for root-sheet labels; explicit per-net assignments in the project are honoured, so every net gets one from the first matching pattern
