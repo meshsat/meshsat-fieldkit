@@ -36,7 +36,7 @@
   "rule_fingerprints": {
    "RET-003": "829568c8874fe7b6"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "82885961768537e2"
  },
  "rules": [
   "RET-003"
@@ -44,9 +44,9 @@
  "tool": "return_stitch",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "7220c1b43176cf2e"
+  "tools_tree_sha": "02f6487e9fd66aa2"
  },
- "ts": "2026-09-17T22:38:46Z",
+ "ts": "2026-09-18T17:40:50Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

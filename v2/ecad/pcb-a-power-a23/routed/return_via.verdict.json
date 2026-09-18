@@ -2,37 +2,31 @@
  "advisory": false,
  "applicable": true,
  "counts": {
+  "examined_same_reference": 0,
+  "examined_to_power": 10,
   "exempt": 54,
   "judged": 40,
   "lacking": 32,
   "same_plane": 27,
-  "slow": 168
+  "slow": 168,
+  "standing": 22,
+  "unclassified": 0
  },
  "denominator": 40,
  "evidence": [
-  "FE_HDRV1 at (39.90, 47.80)",
-  "FE_LDRV2 at (40.81, 60.78)",
-  "FE_HDRV2 at (44.49, 62.30)",
   "CH_LODRV1 at (44.49, 86.25)",
   "PROCHOT at (48.00, 109.84)",
-  "POE_HDRV1 at (48.42, 148.10)",
   "FE_LDRV1 at (49.42, 51.25)",
   "CH_BTST1 at (50.75, 93.25)",
   "CH_BTST1 at (50.82, 103.63)",
-  "FE_HDRV1 at (57.65, 49.95)",
-  "POE_HDRV1 at (59.33, 132.47)",
   "POE_HDRV2 at (59.33, 137.67)",
   "CH_BTST1 at (59.98, 108.44)",
   "CH_BTST2 at (60.26, 106.60)",
   "FE_BOOT1 at (60.50, 51.12)",
   "FE_LDRV1 at (61.33, 51.77)",
-  "FE_HDRV2 at (61.33, 55.67)",
   "FE_BOOT1 at (68.55, 64.68)",
   "PROCHOT at (104.69, 131.93)",
-  "HF_HDRV1 at (105.09, 150.17)",
   "INA_ALERT at (105.52, 128.68)",
-  "PA_HDRV1 at (106.44, 118.62)",
-  "PA_HDRV1 at (111.33, 100.47)",
   "PA_HDRV2 at (111.33, 105.67)",
   "HF_LDRV2 at (118.55, 143.93)",
   "HF_LDRV1 at (118.56, 153.39)",
@@ -50,13 +44,13 @@
   }
  },
  "missing_input": null,
- "note": "",
+ "note": "the screen measures every signal via outside a fine-pitch fan against the declared 1.5 mm and then EXAMINES each one it flags against RET-003, which is what this rule's own requirement asks for: a via whose reference never changes and a via whose reference changes to another NET are not this screen's to fail, and what stands is a move between two ground planes with no ground via beside it",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
    "RET-004": "b6b1e4f327ce2d08"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "82885961768537e2"
  },
  "rules": [
   "RET-004"
@@ -64,9 +58,9 @@
  "tool": "return_via",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "7220c1b43176cf2e"
+  "tools_tree_sha": "02f6487e9fd66aa2"
  },
- "ts": "2026-09-17T22:38:41Z",
+ "ts": "2026-09-18T17:40:51Z",
  "verdict": "FAIL",
  "version": "unknown"
 }
