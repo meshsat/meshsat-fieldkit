@@ -9911,3 +9911,13 @@ PACK_P's measured 1.965. What is left is geometry: vias in the source pads, or a
 layer at the pad. Both are design choices for the next P and both meet decision 28, which decides whether that
 board is two layers or four.
 
+**Addendum, 19:00 CEST: a frozen tree carries the tools its arm was staged with.** The driver that takes the
+power readings on a landed board ran them from the frozen tree's own `tools/`, which is where every other
+reading in this project is taken and which is wrong for exactly this case: a frozen tree is a copy of the ARM's
+tree, and an arm carries the tools it was launched with. Board A's route started at 11:12 UTC, hours before
+`barrel_sites.py` existed, so the reading would have said "no such file" at the one moment it matters. The
+driver takes its tools from the box's `localtools`, which `tools_push.sh` keeps at the runner's commit, and its
+BOARD from the frozen tree: today's tools on that arm's copper. It is the same shape as the box clone that
+follows the public mirror and the experiment that needed its own ECAD directory rather than its own tools
+directory, and it was found by asking what a driver would actually execute rather than by watching it fail.
+
