@@ -4,6 +4,7 @@ Merge the sessions of the partition jobs by net: each session is imported into i
 unlocked tracks), then the tracks and vias of that group's nets are copied into the master, which keeps its own (locked) tracks. Prints counts;
 the caller runs DRC on the result and reconciles the boundary conflicts."""
 import sys, json, os, tempfile, pcbnew
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import ses_via_drill
 master, pj, out = sys.argv[1:4]
 part = json.load(open(pj))
 m = pcbnew.LoadBoard(master)
@@ -12,6 +13,7 @@ for a in sys.argv[4:]:
     g, ses = a.split("=", 1); nets = set(part["groups"].get(g, []))
     c = pcbnew.LoadBoard(master)
     ok = pcbnew.ImportSpecctraSES(c, ses); n = 0
+    ses_via_drill.restore_board(c, ses)   # the importer leaves every via drill undefined (18 September 2026)
     for t in c.Tracks():
         if t.IsLocked() or t.GetNetname() not in nets: continue
         d = t.Duplicate(); d.SetLocked(False); m.Add(d); n += 1

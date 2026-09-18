@@ -36,6 +36,7 @@ tail -3 "out/$N-freerouting.log" | cut -c1-200
 python3 - "$N.kicad_pcb" "out/$N.ses" <<'PY'
 import sys, pcbnew
 b = pcbnew.LoadBoard(sys.argv[1]); ok = pcbnew.ImportSpecctraSES(b, sys.argv[2]); print("SES import:", ok)
+sys.path.insert(0, "../tools"); import ses_via_drill; ses_via_drill.restore_board(b, sys.argv[2])
 f = pcbnew.ZONE_FILLER(b); f.Fill(b.Zones()); pcbnew.SaveBoard(sys.argv[1], b)
 print("tracks:", len([t for t in b.GetTracks() if t.GetClass() == "PCB_TRACK"]), "vias:", len([t for t in b.GetTracks() if t.GetClass() == "PCB_VIA"]))
 PY
