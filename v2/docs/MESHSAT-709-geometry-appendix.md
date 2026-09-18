@@ -9887,3 +9887,27 @@ rise on the fabricator's plating, a 0.30 mm 0.74, a 0.50 mm 1.05, so 3.4 A wants
 short**, naming the number, which is the judgement `via_current` makes after the route moved to where it is
 still free to answer. Board D's three barrels and board E's two declare their current and check themselves.
 
+**Addendum, 18:50 CEST: three corrections to the barrel map, each found by reading its own output on a second
+board.** The report that turns a PI-003 failure into the line a generator would carry was written against board
+A's map and then pointed at board P, which broke it three ways. **(1) The axis was inverted.** It compared the
+nearest obstacle's x and y displacement and spread along the larger, which walks a barrel TOWARD the pad: board
+P's second FUSED site has a gate pad 0.68 mm away in x and 1.27 in y, and that rule chose y, which leaves 1.07
+mm where x leaves 1.29. Both axes are measured now, the barrels laid out on each and the worst distance taken,
+and the better one wins. **(2) Two sites of one net 1.03 mm apart are one transition**, not two clusters: board
+P's two PACK_P barrels emitted separately would have put two holes 0.20 mm apart, which is a hole-to-hole
+violation and which `stitch` refuses since this afternoon. Sites of one net within 2 mm are grouped, their
+currents added, and the count taken from the total. **(3) Whose barrel it is decides the edit.** A cluster
+centres on the site, which is right where the barrel is the ROUTER's (board E: the placement has nothing there)
+and wrong where it is the GENERATOR's own, because the new barrels would land 0.45 mm from a locked via. The
+report checks for a locked via of that net on the site and prints the other instruction instead: add points to
+the call that placed it.
+
+**All four of board P's over-rated barrels are the generator's own, and more barrels is not its answer.** Its
+three source tracks per FET already carry two vias each, six where there were three, and the comment beside them
+records why the earlier attempts failed: every station tried was downstream of the point where the current
+enters. The four still over sit AT the FET's source pads, the tracks are 1.93 mm long so there is no room for a
+third via, and the widest hole the 0.9 mm pitch allows at this project's own floor carries 1.26 A against
+PACK_P's measured 1.965. What is left is geometry: vias in the source pads, or a path that does not change
+layer at the pad. Both are design choices for the next P and both meet decision 28, which decides whether that
+board is two layers or four.
+
