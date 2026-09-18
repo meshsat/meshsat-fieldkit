@@ -9784,3 +9784,37 @@ The set total did not move (63.4 percent verified, 13.8 failed, 22.8 inconclusiv
 what is behind it: a false PASS on board E5 became a true failure, and a false failure on board B became a
 true pass.
 
+**Addendum, 17:45 CEST: what the 76 unanswered rule-board pairs are waiting on, counted rather than asserted.**
+The set reads 63.4 percent verified, 13.8 failed and 22.8 inconclusive of 333, and the middle number has been
+described as "mostly the owner's" since 17 September without the rest being enumerated. It is, by what each pair
+is actually waiting for:
+
+| waiting on | pairs |
+|---|---:|
+| an owner decision by name (ENV-001, GND-002, ISO-001, THM-001, INT-002, STK-002) | 28 |
+| an authority this project does not have (RET-001, RET-003, IMP-001, SI-001) | 20 |
+| a deliverable folder at the board's declared phase (CMP-002, SUP-001, DFM-001, DOC-001 on A, B, D, E) | 16 |
+| the assembler's own 2D preview, which only the ordering session has (DFA-001, all seven boards) | 7 |
+| an advisory measurement that is not a bar (PI-003 on B and E) | 2 |
+| a board a phase behind its generator (RF-001 on B: its four antenna nets take the RF class from B23) | 1 |
+| a fabricator row that does not exist at this copper weight (VIA-002 on P) | 1 |
+| generation intending to comply with nothing verifying it (BAT-001 on P) | 1 |
+
+**Three of those were checked before being filed rather than assumed.** VIA-002 on P and E5: the capability
+document says in its own words that the annular rows are stated for 1 oz and NOT for 2 oz, and the one other
+published authority in this tree, ECSS-Q-ST-70-12C, records that its annular clauses are written for space
+hardware and are explicitly not this project's requirements, so the floor is honestly unestablished and the
+reading is right. RF-001 on board B: `rf_line` judges every net whose CLASS declares a single-ended target, and
+on B21 the four antenna nets are still in the USB class, so "no controlled line found" is the board being a
+phase behind and not a defect. And **board B's parts certification was re-taken today and lost a PASS it should
+never have had**: the reading of 17 September said 187 components CERTIFIED, taken against the B19 quote folder,
+while the tree declares B21; re-run under the current registry it reads NOT CERTIFIED, "no deliverable folder at
+the declared phase", which is the 17 September rule about certifying from the folder a board declares doing its
+work a second time.
+
+**DFA-001 now has its list rather than a count.** `tools/assembly_set.py --checklist` writes
+`v2/release/revA/order/ROTATION-CHECKLIST.md`, generated from the same reading the gate takes so it cannot
+drift: 42 polarised footprints, each with the boards that place it and one designator to look up, and a column
+for the offset and the date. An offset of zero is a real answer recorded the same way; what the rule refuses is
+the blank.
+
