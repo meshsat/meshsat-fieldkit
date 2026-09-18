@@ -64,7 +64,7 @@ pkill -9 -f "^java .*$W/$N\.dsn" 2>/dev/null || true
 [ -s "$W/$N.ses" ] || { echo "cont: no session, board kept"; exit 0; }
 python3 - "$W/$N.kicad_pcb" "$W/$N.ses" <<'PYX'
 import sys, pcbnew
-b = pcbnew.LoadBoard(sys.argv[1]); print("cont: SES import", pcbnew.ImportSpecctraSES(b, sys.argv[2])); pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(sys.argv[1], b)
+b = pcbnew.LoadBoard(sys.argv[1]); print("cont: SES import", pcbnew.ImportSpecctraSES(b, sys.argv[2])); sys.path.insert(0, "../tools"); import ses_via_drill; ses_via_drill.restore_board(b, sys.argv[2]); pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(sys.argv[1], b)
 PYX
 # The one hard set scores the continuation (10 September 2026, round-two red teams C1); it counted six types in a heredoc
 # and it is what decides whether the continuation pass is kept.

@@ -41,7 +41,10 @@ def t_the_session_parser_reads_width_and_drill_at_the_board_position():
 def t_every_session_importer_restores_the_drills_before_it_saves():
     for f, must in (("route_one.sh", "ses_via_drill.restore_board(b, sys.argv[2])"),
                     ("ses_import_lock.py", "ses_via_drill.restore_board(b, ses)"),
-                    ("routeflow.py", "ses_via_drill.restore_board(b, sys.argv[2])")):
+                    ("routeflow.py", "ses_via_drill.restore_board(b, sys.argv[2])"),
+                    ("ses_merge.py", "ses_via_drill.restore_board(c, ses)"),
+                    ("route_pcb.sh", "ses_via_drill.restore_board(b, sys.argv[2])"),
+                    ("cont_route.sh", "ses_via_drill.restore_board(b, sys.argv[2])")):
         s = open(os.path.join(TOOLS, f), encoding="utf-8").read()
         assert "ImportSpecctraSES" in s, f
         i = s.index("ImportSpecctraSES"); j = s.find("SaveBoard", i)
