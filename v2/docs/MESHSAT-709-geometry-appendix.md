@@ -9490,3 +9490,12 @@ runs. E15's router: 0 hard, 3 open of 94, 202 vias, and **`/USB_E6_N` is routed*
 pre-route chain is not deterministic (32.101), and on this board the difference between a placement that routes its
 long USB leg and one that does not is inside that scatter, which is the B19 lesson about a knob measured on one
 placement. If the closers take E15's three, board E has its first 0/0 board with Q7 right and DC_HS in copper.
+
+**Addendum, 09:23 CEST: E15 lands at 0 hard and 2 open, both the length of the strip; E16 pre-lays them.** The
+closers took one of E15's three; the two left are `/CELL_MON` (R43 at the pack, west, to U10 pin 40, 222 mm) and
+`/LTG_IRQ` (U10 pin 17 to R50 in FANS, 208 mm): the sensor controller sits at the east end and its sensors at the
+west, so every run of that kind crosses the whole strip through the tracker's four regions, and each run of this
+board leaves one or two of them behind (E14 the USB leg, E15 these two). E16 (`/root/erf16`, 07:33 UTC) pre-lays
+`CELL_MON,LTG_IRQ,USB_E6_P,USB_E6_N` on the empty placed board before the route, the one-variable arm; the generator's
+own answer, if the pre-lay cannot, is the floor plan (MCUR beside its sensors, or the cross-strip signals given a
+lane of their own), which is a later phase.
