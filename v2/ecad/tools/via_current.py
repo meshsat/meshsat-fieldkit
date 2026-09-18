@@ -61,6 +61,20 @@ def barrels_for(amps, drill_mm, rise_k=10.0, plating_um=PLATING_UM):
     lim = ampacity(drill_mm, rise_k, plating_um)[0]
     return max(1, int(math.ceil(float(amps) / lim))) if lim > 0 else 1
 
+def advisory_for(rows):
+    """Is this reading a measurement for the record rather than a bar?
+
+    The flag is about ATTRIBUTION and nothing else: where a rail has no solved barrel current the whole rail
+    is attributed to its weakest cluster of vias, which on these boards is often a lone stitch via carrying
+    almost none of it, and a failure read that way is an assumption. An attributed reading can only ADD
+    failures to a measured one and never remove one, so a rail the mesh DID solve and found over its own
+    barrels decides this verdict whatever the rest of the board is missing. The flag stays exactly where the
+    reading would otherwise be a pass."""
+    measured = [r for r in rows if r.get("measured")]
+    if bool(rows) and len(measured) == len(rows): return False
+    return not [r for r in measured if not r.get("ok")]
+
+
 def sites(pts, reach):
     """Single-link clusters of via positions: a transition is a group of barrels that sit together."""
     out = []
@@ -186,13 +200,27 @@ def main(a):
     # ATTRIBUTION and nothing else. Where every judged rail's barrels carry the current `dc_drop`'s solved mesh
     # put through them, the attribution is a measurement and the reason to hold the verdict back is gone; where
     # even one rail falls back to the attributed reading, it stays advisory and the note says which.
+    # ...AND A BARREL PROVED OVER ITS RATING IS NOT HELD BACK BY A RAIL NOBODY SOLVED (18 September 2026).
+    # Board E read INCONCLUSIVE with two barrels over their own wall on rails the mesh HAD solved, because a
+    # fourth rail carried no solved current: an established failure softened by an absence somewhere else on
+    # the board. The flag is about ATTRIBUTION and nothing else, and an attributed reading can only ADD
+    # failures to a measured one, never remove one, so where a MEASURED rail is over its rating the verdict is
+    # a failure whatever the coverage. The flag stays exactly where the reading would otherwise be a PASS.
     _measured = [r for r in rows if r.get("measured")]
     _all_measured = bool(rows) and len(_measured) == len(rows)
+    _measured_fail = [r for r in rows if r.get("measured") and not r.get("ok")]
     _why = ("every rail's barrels against IPC-2221's curve for a barrel of the fabricator's own plating "
             "thickness, on the current dc_drop's solved mesh puts through each of them. The curve is the "
             "internal-conductor model published with its constants in ECSS-Q-ST-70-12C Annex D (D.4), "
             "transcribed in v2/vendor/standards/ and implemented in tools/track_current.py"
             if _all_measured else
+            "%d of %d judged rail(s) are over their own barrels on the current dc_drop's solved mesh put "
+            "through them, which is a measurement and decides this reading; the %d rail(s) with no solved "
+            "current are judged by attributing the whole rail to its weakest cluster of vias, which can only "
+            "add failures to the ones named here and never remove one (IPC-2221's curve, ECSS-Q-ST-70-12C "
+            "Annex D D.4, the fabricator's own plating)"
+            % (len(_measured_fail), len(_measured), len(rows) - len(_measured))
+            if _measured_fail else
             "every rail's weakest layer transition against IPC-2221's curve (ECSS-Q-ST-70-12C Annex D D.4) for "
             "a barrel of the fabricator's own plating thickness. ADVISORY: %d of %d judged rail(s) have no "
             "solved barrel current beside this board, so for those the rail's WHOLE current is attributed to "
@@ -201,7 +229,7 @@ def main(a):
     return _v.write("via_current", _v.FAIL if bad else (_v.INCONCLUSIVE if not rows else _v.PASS),
                     counts={"rails": len(rows), "over": len(bad), "no_via": len(no_via),
                             "measured_rails": len(_measured), "over_barrels": len(bad_sites)},
-                    denominator=len(rows), evidence=(bad + bad_sites)[:24], advisory=not _all_measured,
+                    denominator=len(rows), evidence=(bad + bad_sites)[:24], advisory=advisory_for(rows),
                     inputs={"board": path, "rise_k": rise, "plating_um": plating, "site_mm": reach},
                     note=("no declared rail on this board carries a via, so nothing was judged" if not rows
                           else _why),
