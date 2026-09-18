@@ -267,8 +267,11 @@ if _osx.environ.get("PLACE_VIN_VIAS", "1") not in ("0", ""):
 # 1.09 A over three barrels is about 0.36 A apiece. If the fill does not reach one of them the pre-route DRC says so
 # and the reading moves it; that is cheaper than leaving a 1.48 ratio on the rail that carries the pack.
 if _osx.environ.get("PLACE_CELLF_VIAS", "1") not in ("0", ""):
-    _pcmod.PowerCopper(board, net_for, P).stitch("CELL_F", [(-114.3, -104.11), (-112.5, -104.11)], drill=0.5, width=0.9, amps=1.091)
-    print("power copper: 2 CELL_F barrels beside the fuse transition that reads 1.48 of its rating on E18")
+    # the count comes from the current, not from a hand count: cluster() asks via_current what 1.091 A needs at
+    # 0.5 mm (two barrels of 1.05 A) and places them centred on the transition, so the router's own via there
+    # keeps its copper and the spread is along x, which barrel_sites reports as the clear direction.
+    _cf = _pcmod.PowerCopper(board, net_for, P).cluster("CELL_F", (-113.4, -104.11), amps=1.091, drill=0.5, width=0.9, axis="x")
+    print("power copper: %d CELL_F barrel(s) at the fuse transition that reads 1.48 of its rating on E18" % len(_cf))
 
 # ---------------------------------------------------------------- the hot-swap output, in locked copper (E14, 18 September 2026)
 # DC_HS is the LM5069's output: Q7's three source pads at the west edge of HOTSW to L2 pin 1 and C6 in ENTRYB, 64 mm

@@ -18,8 +18,10 @@ every other net's pad within reach with its distance (the obstacles the corridor
 the board file's own millimetres and also relative to the board's aux origin where one is set, because the
 generators draw in that frame.
 
-Usage: barrel_sites.py <board.kicad_pcb> [--rise-k 10] [--reach 6.0] [--all] [--json]
+Usage: barrel_sites.py <board.kicad_pcb> [--rise-k 10] [--reach 6.0] [--all] [--json] [--suggest]
        --all reports every measured barrel, not only the ones over their rating.
+       --suggest prints the power_copper.cluster line each over-rated site would take, with the axis that
+       has more room and the nearest other-net pad beside it. It prints; it never edits a generator.
 """
 import os, sys, json, math
 
@@ -91,6 +93,24 @@ def main(argv):
         for d, ref, num, pnet, px, py, sx, sy in r["other"]:
             print("      %5.2f mm  %-7s pad %-3s %-14s at %8.2f %8.2f" % (d, ref, num, pnet[:14], px, py))
         if not r["other"]: print("      none within reach: the neighbourhood is clear")
+    if "--suggest" in argv:
+        # THE LINES THE GENERATOR WOULD CARRY, suggested and never applied (18 September 2026). Board A has
+        # thirty-two of these sites and hand-typing three coordinates apiece is how a table of ninety-six
+        # numbers gets one wrong; the generator is code a person edits deliberately, so this prints and stops.
+        # The axis is the one with more room in the obstacle list, and the nearest obstacle is printed beside
+        # each line so the reader can veto it: a site whose nearest neighbour is under about 1.5 mm wants the
+        # placement, not another barrel.
+        print("\n=== suggested generator lines (read them, do not paste them blind) ===")
+        for r in rows:
+            if r["ratio"] <= 1.0: continue
+            x, y = r["at_origin"] or r["at"]
+            near_x = min([abs(o[4] - r["at"][0]) for o in r["other"]] or [99.0])
+            near_y = min([abs(o[5] - r["at"][1]) for o in r["other"]] or [99.0])
+            axis = "x" if near_x >= near_y else "y"
+            nearest = r["other"][0][0] if r["other"] else None
+            print('    _pc.cluster("%s", (%.2f, %.2f), amps=%.3f, drill=%.2f, axis="%s")   # ratio %.2f, nearest other-net pad %s'
+                  % (r["net"], x, y, r["amps"], r["drill"], axis, r["ratio"],
+                     ("%.2f mm" % nearest) if nearest is not None else "none within reach"))
     if "--json" in argv: print(json.dumps(rows, indent=1))
     return 0 if not over else 1
 
