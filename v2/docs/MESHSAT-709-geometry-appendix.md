@@ -9445,3 +9445,15 @@ over 6.51, PD_CS 0.184 over 2.16, POE_CS 0.336 over 1.50, PD_FB 0.492 over 0.44,
 millimetre outside the shared part's courtyard), which is the control for A44 (drops, SENSE class) and A45 (A44
 plus the class-pair rule); **RF-001 reads 11 of 11 missed**, as expected without the drops. `$SP/arm_readings.sh
 <box> <tree> <project dir> <stem>` takes those two readings on any arm's finished board.
+
+**Addendum, 06:14 CEST: E13 is one connection short and it is the hot-swap output.** Round one routed in eleven
+minutes to 0 hard and 2 open of 94 (198 vias; the drills restored at the import, so no annular item); the closers
+took one, the CELL_F widen was kept, and the gate refused the last: `/DC_HS`, the LM5069 hot-swap output, from the
+Q7/U6 cluster at x 46 to 55 to the L2/C6 filter at x 107 to 112, a 55 mm run the router never made. Round two
+(via_costs) read 3 and was not finished; round three (260 passes) runs. On a copy of the finished round-one board the
+board-wide stub router (window scale 25, 0.2 mm grid, 80 M nodes) reads 38 source cells, 522 goal cells and 36,052
+free cells in the whole window and FAILS at the class's 0.8 mm: the lanes for a 0.8 mm conductor across this strip
+are not there, and a narrower closure would carry the shore current through copper under its density bar. E11
+routed DC_HS on Q7's WRONG pins (32.219); with the drain tab carrying it, the run from the tab to the filter is the
+generator's to lay as locked copper (the `power_copper` pattern board A uses for its rails, or the filter placed
+at the FET), which is board E's next-phase item and not a pass-count one. An inner-layer attempt runs beside it.
