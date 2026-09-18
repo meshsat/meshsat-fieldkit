@@ -164,14 +164,14 @@ part("Q1", "Transistor_FET", "2N7002", "2N7002: panel controller high = pull KIL
 part("J_MAINSW", "Connector_Generic", "Conn_01x02", "JST-XH 1x2 socket: the MAIN button lead from the panel, PB and GND", "XH2", {"1": "MAIN_PB", "2": "GND"}, "C265283")
 # --- LM5176 four-switch buck-boost stages (lm5176-datasheet.pdf, HTSSOP-28 PWP; Vref 0.8 V; pins: 1 EN/UVLO 2 VIN 3 VISNS 4 MODE 5 DITH 6 RT/SYNC 7 SLOPE 8 SS 9 COMP 10 AGND 11 FB 12 VOSNS
 #     13 ISNS- 14 ISNS+ 15 CSG 16 CS 17 PGOOD 18 SW2 19 HDRV2 20 BOOT2 21 LDRV2 22 PGND 23 VCC 24 BIAS 25 LDRV1 26 BOOT1 27 HDRV1 28 SW1, pad 29)
-def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, isns="10m", rcs="5m", bias=None,
+def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, cs_filter, isns="10m", rcs="5m", bias=None,
            rfb_val="10k 1%", cout="10u 50V X7R 1210", cin="10u 50V X7R 1210"):
     """one stage with prefix p: refs = (Q_bh, Q_bl, Q_bsl, Q_bsh, R_fb_top, R_fb_bot, R_rt, R_slope, R_comp, C_comp, C_comp2, C_ss, C_vcc, C_boot1, C_boot2, R_isns, R_cs, R_pgood, R_en_top, R_en_bot, Cin1, Cin2, Cout1, Cout2, Cout3, R_mode)"""
     qbh, qbl, qsl, qsh, rft, rfb, rrt, rsl, rco, cco, cco2, css, cvcc, cb1, cb2, risns, rcs_, rpg, ret, reb, ci1, ci2, co1, co2, co3, rmd = refs
     N = lambda s: p + "_" + s
     ic(uref, 29, "LM5176PWPR buck-boost controller, %s from %s" % (vout, vin), "HTSSOP28", {
         "1": N("EN"), "2": vin, "3": vin, "4": N("MODE"), "5": "GND", "6": N("RT"), "7": N("SLOPE"), "8": N("SS"), "9": N("COMP"), "10": "GND", "11": N("FB"), "12": vout,
-        "13": vout, "14": N("OUT"), "15": "GND", "16": N("CS"), "17": N("PGOOD"), "18": N("SW2"), "19": N("HDRV2"), "20": N("BOOT2"), "21": N("LDRV2"), "22": "GND", "23": N("VCC"),
+        "13": vout, "14": N("OUT"), "15": N("CSGF"), "16": N("CSF"), "17": N("PGOOD"), "18": N("SW2"), "19": N("HDRV2"), "20": N("BOOT2"), "21": N("LDRV2"), "22": "GND", "23": N("VCC"),
         "24": bias or vout, "25": N("LDRV1"), "26": N("BOOT1"), "27": N("HDRV1"), "28": N("SW1"), "29": "GND"}, "C442493")
     nfet(qbh, fet, N("HDRV1"), vin, N("SW1"), lcsc=fet_lcsc); nfet(qbl, fet, N("LDRV1"), N("SW1"), N("CS"), lcsc=fet_lcsc)
     nfet(qsl, fet, N("LDRV2"), N("SW2"), N("CS"), lcsc=fet_lcsc); nfet(qsh, fet, N("HDRV2"), N("OUT"), N("SW2"), lcsc=fet_lcsc)
@@ -180,6 +180,29 @@ def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, isn
     r(rco, "10k", N("COMP"), N("COMPC")); c(cco, "10n", N("COMPC"), "GND"); c(cco2, "100p", N("COMP"), "GND"); c(css, "47n", N("SS"), "GND"); c(cvcc, "4.7u", N("VCC"), "GND", "C10u", bypass=(uref, "23"))   # the controller's own VCC
     c(cb1, "100n 25V", N("BOOT1"), N("SW1")); c(cb2, "100n 25V", N("BOOT2"), N("SW2"))
     r(risns, isns + "Ohm 1% 2512 (ISNS)", N("OUT"), vout, "RS2512"); r(rcs_, rcs + "Ohm 1% 2512 (CS)", N("CS"), "GND", "RS2512"); r(rpg, "100k", N("PGOOD"), "+3V3")
+    # THE CURRENT-SENSE PAIR IS KELVIN AND FILTERED (18 September 2026, rule ANA-001, lm5176-datasheet.pdf).
+    # Two things this helper did not do, on all five stages, and both are in TI's own layout clause 9.1:
+    # "Use Kelvin connections to RSENSE for the current sense signals CS and CSG and run lines in parallel from
+    # the RSENSE terminals to the IC pins. Avoid crossing noisy areas such as SW1 and SW2 nodes ... Place the
+    # filter capacitor for the current sense signal as close to the IC pins as possible", and the pin table's
+    # own words for pin 15: "CSG ... Connect directly to the low-side (ground) of the current sense resistor".
+    # (1) PIN 15 WAS TIED TO THE GROUND NET, so the sense amplifier's negative input joined the plane wherever
+    # the router chose and every millivolt of plane drop between the shunt's ground pad and that point added to
+    # a sensed voltage whose own limit threshold is 120 to 140 mV (VCS(BUCK), electrical characteristics).
+    # (2) THERE WAS NO FILTER AT ALL, where section 8.2.2.7 says "For some application circuits, it can be
+    # required to add a filter network to attenuate noise in the CS and CSG sense lines ... The filter
+    # resistance should not exceed 100 Ohm". 100 R in each line with 1 nF across the pins is 200 ns
+    # differential, which is the leading-edge spike and not the signal; the error it costs is the offset
+    # current alone (IOFFSET(CS/CSG) 19 uA x 100 R = 1.9 mV, 1.4 percent of the threshold), because the bias
+    # current is common to both lines and the two resistors match. Board E's tracker has carried exactly this
+    # network since E6 (R6, R7, C16 around the LT8705A); nothing held these five stages to it.
+    # The two resistors belong AT the shunt and the capacitor at the IC pins; the placement generator seats
+    # them with the stage's low-side FETs, and the declared sensitive nets are the FILTERED pair, never the
+    # shunt's own terminals, which are the low-side FETs' common source and a switching conductor.
+    _rcsf, _rcsgf, _ccsf = cs_filter
+    r(_rcsf, "100R 1% (CS filter, Kelvin from the shunt's top)", N("CS"), N("CSF"))
+    r(_rcsgf, "100R 1% (CSG filter, Kelvin from the shunt's ground pad)", "GND", N("CSGF"))
+    c(_ccsf, "1n", N("CSF"), N("CSGF"), bypass=(uref, "16"))   # "as close to the IC pins as possible": declared as pin 16's own decoupling so bypass_slots reserves its seat before the packer runs and DEC-001 measures the distance
     r(ret, "62k 1%", en, N("EN")); r(reb, "10k 1%", N("EN"), "GND"); r(rmd, "100k (MODE: CCM)", N("MODE"), N("VCC"))
     # OWNER RULING 12 September 2026, decision 10. These five stages asked for `22u 50V X7R 1210` in all 25
     # positions and NO SUCH PART EXISTS: at a 1210 size and 50 V the ceramic tops out near 10 uF, which three
@@ -214,6 +237,8 @@ def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, isn
     _intent.node(N("OUT"), _vout_v, _why + "the output before the ISNS shunt")
     _intent.node(N("VCC"), _vcc, _why + "the controller's own regulator output, 7.6 V typical")
     _intent.node(N("CS"), 1.0, _why + "the current-sense node: the drop across a %s Ohm shunt, under a volt at any current this stage carries" % rcs)
+    _intent.node(N("CSF"), 1.0, _why + "the filtered current-sense input at pin 16, 100 R from the shunt's top")
+    _intent.node(N("CSGF"), 1.0, _why + "the filtered current-sense ground at pin 15, 100 R from the shunt's ground pad (the Kelvin return TI's pin table asks for)")
 # stage FE: the vehicle and shore input (9 to 36 V after E6's protection and filter) to the 20 V charge bus, 5 A; 60 V FETs
 # THE INPUT CAPACITORS OF THIS STAGE ARE 100 V PARTS AND THE CLAMP STANDS OFF 40 (16 September 2026, CMP-001).
 # VIN_RAW is the vehicle and shore line: 9 to 36 V in service, and its clamp was an SMCJ33A, which stands off
@@ -228,7 +253,7 @@ def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, isn
 # sit on VBAT behind an SMCJ18A that clamps at 29.2 V and keep the 50 V part.
 lm5176("FE", "U2", "VIN_RAW", "VBUS20", "VIN_RAW", "240k", "L1", "10uH XAL1010-103ME (Isat 14 A)", "CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)", "C473333",
        ["Q2", "Q3", "Q4", "Q5", "R6", "R7", "R8", "R9", "R10", "C5", "C6", "C7", "C8", "C9", "C10", "R11", "R12", "R13", "R14", "R15", "C11", "C12", "C13", "C14", "C15", "R119"],
-       cin="10u 100V X7R 1210")
+       cs_filter=("R150", "R151", "C123"), cin="10u 100V X7R 1210")
 part("D2", "Device", "D_TVS", "SMCJ40A (VIN_RAW clamp behind E6's filter: 40 V standoff on a line specified to 36)", "TVSC", {"1": "VIN_RAW", "2": "GND"}, "C224052")
 # --- charger BQ25731 (bq25731-datasheet.pdf, QFN-32 RSN; no BATFET: the battery side IS the system, the pack node CELL+ through RSR): 4S from VBUS20 at up to 8 A, I2C 0x6B on the kit bus,
 #     charge inhibited by pulling ILIM_HIZ low through Q6 (the SHORE_INHIBIT function of PANEL.md section 9 becomes CHG_INHIBIT on the expander); cell count set on CELL_BATPRESZ
@@ -311,16 +336,16 @@ c("C55", "22u 10V X7R 1210", "+3V3", "GND", "C1210"); c("C56", "22u 10V X7R 1210
 part("D3", "Device", "D_TVS", "SMBJ5.0A", "TVS", {"1": "+3V3", "2": "GND"})
 # --- PA rail: LM5176 from VBAT to 13.8 V at 6 A for the RA30H1317M1 on the face plate (32.56), enabled by the hardware EMCON gate AND the software hold (PA_EN from U26); 40 V FETs
 lm5176("PA", "U13", "VBAT", "+13V8_PA", "PA_EN", "162k", "L8", "6.8uH XAL1010-682ME (Isat 17 A)", "CSD18510Q5B 40 V N-FET", "",
-       ["Q11", "Q12", "Q13", "Q14", "R50", "R51", "R52", "R53", "R54", "C57", "C58", "C59", "C60", "C61", "C62", "R55", "R56", "R57", "R58", "R59", "C63", "C64", "C65", "C66", "C67", "R120"], isns="2m")
+       ["Q11", "Q12", "Q13", "Q14", "R50", "R51", "R52", "R53", "R54", "C57", "C58", "C59", "C60", "C61", "C62", "R55", "R56", "R57", "R58", "R59", "C63", "C64", "C65", "C66", "C67", "R120"], cs_filter=("R152", "R153", "C124"), isns="2m")
 ic("U14", 10, "INA226 PA rail monitor (0x46)", "VSSOP10", {"1": "+3V3", "2": "SDA", "3": "INA_ALERT", "4": "SDA", "5": "SCL", "6": "+3V3", "7": "GND", "8": "+13V8_PA", "9": "+13V8_PA", "10": "PA_OUT"}, "C49851")
 vh2("J_PA", "13.8 V to the PA module on the face plate (JST-VH, 16 AWG): + -", "+13V8_PA")
 # --- HF rail: a fourth LM5176 stage from VBAT to 12.0 V at 2 A for the QMX (never 13.8 V), enabled by the EMCON gate AND the software hold; FB 140k/10k
 lm5176("HF", "U15", "VBAT", "+12V_HF", "HF_EN", "140k", "L9", "6.8uH XAL1010-682ME", "CSD18510Q5B 40 V N-FET", "",
-       ["Q15", "Q16", "Q23", "Q24", "R60", "R61", "R62", "R63", "R64", "C68", "C69", "C70", "C71", "C72", "C73", "R65", "R122", "R123", "R124", "R125", "C74", "C108", "C109", "C110", "C111", "R126"], isns="10m")
+       ["Q15", "Q16", "Q23", "Q24", "R60", "R61", "R62", "R63", "R64", "C68", "C69", "C70", "C71", "C72", "C73", "R65", "R122", "R123", "R124", "R125", "C74", "C108", "C109", "C110", "C111", "R126"], cs_filter=("R154", "R155", "C125"), isns="10m")
 vh2("J_HF", "12.0 V to the QMX HF unit in its lid tray (JST-VH, in the lid harness): + -", "+12V_HF")
 # --- PoE rail: LM5176 in boost from VBAT to 54 V at 0.6 A for the TPS23861 PSE on B16 (the port magnetics sit beside the switch chip); 100 V FETs; software enable
 lm5176("POE", "U16", "VBAT", "+54V_POE", "POE_EN", "665k", "L10", "22uH XAL1010-223ME (Isat 9 A)", "CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6)", "C473333",
-       ["Q17", "Q18", "Q19", "Q20", "R66", "R67", "R68", "R69", "R70", "C75", "C76", "C77", "C78", "C79", "C80", "R71", "R72", "R73", "R74", "R75", "C81", "C82", "C83", "C84", "C85", "R121"], isns="20m", rcs="10m", bias="VBAT",
+       ["Q17", "Q18", "Q19", "Q20", "R66", "R67", "R68", "R69", "R70", "C75", "C76", "C77", "C78", "C79", "C80", "R71", "R72", "R73", "R74", "R75", "C81", "C82", "C83", "C84", "C85", "R121"], cs_filter=("R156", "R157", "C126"), isns="20m", rcs="10m", bias="VBAT",
        cout="10u 100V X7R 1210")   # +54V_POE: a 50 V part on a 54 V rail is over its rating (decision 10)
 ic("U17", 10, "INA226 PoE rail monitor (0x47)", "VSSOP10", {"1": "+3V3", "2": "SCL", "3": "INA_ALERT", "4": "SDA", "5": "SCL", "6": "+3V3", "7": "GND", "8": "NC", "9": "+54V_POE", "10": "POE_OUT"}, "C49851")   # VBUS pin open: 54 V exceeds its 36 V range
 vh2("J_54V", "54 V to the PoE injector on B16 (JST-VH): + -", "+54V_POE")
@@ -336,7 +361,7 @@ _intent.node("PD_VPWR", 15.0, "the TPS25740A's highest advertised profile (5, 9 
 _intent.node("PD_SW", 15.0, "the PD supply behind Q27, the VBUS switch: the same 15 V ceiling")
 _intent.node("PD_VBUS", 15.0, "the USB-C outlet itself, behind the ISNS shunt: the same 15 V ceiling")
 lm5176("PD", "U19", "VBAT", "PD_VPWR", "PD_EN", "105k", "L11", "6.8uH XAL1010-682ME", "CSD18510Q5B 40 V N-FET", "",
-       ["Q21", "Q22", "Q25", "Q26", "R76", "R77", "R78", "R79", "R80", "C86", "C87", "C88", "C89", "C90", "C91", "R81", "R127", "R128", "R133", "R134", "C92", "C116", "C117", "C118", "C119", "R135"], isns="10m", rfb_val="20k 1% (R_FBL)")
+       ["Q21", "Q22", "Q25", "Q26", "R76", "R77", "R78", "R79", "R80", "C86", "C87", "C88", "C89", "C90", "C91", "R81", "R127", "R128", "R133", "R134", "C92", "C116", "C117", "C118", "C119", "R135"], cs_filter=("R158", "R159", "C127"), isns="10m", rfb_val="20k 1% (R_FBL)")
 r("R136", "21.0k 1% (R_FBL2: 9 V when CTL2 is low)", "PD_FB", "PD_CTL2"); r("R137", "14.0k 1% (R_FBL1: 15 V when CTL1 is low too)", "PD_FB", "PD_CTL1")
 ic("U18", 25, "TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)", "QFN24", {
  "1": "PD_VTX", "2": "PD_CC1", "3": "PD_CC2", "4": "GND", "5": "PD_DVDD", "6": "PD_CTL1", "7": "PD_CTL2", "8": "PD_DVDD", "9": "GND", "10": "GND", "11": "PD_UFP", "12": "PD_DVDD", "13": "PD_DVDD",

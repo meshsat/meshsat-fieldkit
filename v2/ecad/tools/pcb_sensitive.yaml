@@ -33,7 +33,7 @@ boards:
      is contact resistance and current, which MEC-001 and PI-001 judge."
 
  a:
-   switch_nets: ["*_SW", "*_SW1", "*_SW2", "B33_SW"]
+   switch_nets: ["*_SW", "*_SW1", "*_SW2", "B33_SW", "FE_CS", "PA_CS", "HF_CS", "PD_CS", "POE_CS"]   # the five raw CS nodes are the low-side FETs' common source: switching conductors, not sense lines (18 September 2026)
    nodes:
     - {net: CH_SRP_F, what: "the charger's charge-current sense, positive half of the pair across R17",
        filter: "10 R into the pin and 100 nF across the pair, which is what the BQ25731's own pin table asks
@@ -46,13 +46,34 @@ boards:
          window the datasheet's section 10.2.2.2 asks for", kelvin_with: CH_ACN_F, keep_mm: 0.5}
     - {net: CH_ACN_F, what: "the charger's input-current sense, negative half of the pair across R16",
        filter: "10 R into the pin and 10 nF across the pair (BQ25731 10.2.2.2)", kelvin_with: CH_ACP_F, keep_mm: 0.5}
-    - {net: FE_CS, what: "the front end's current-sense input", filter: "the 5 mOhm CS resistor's own Kelvin pair",
-       kelvin_with: null, keep_mm: 0.5}
-    - {net: PA_CS, what: "the PA stage's current sense", filter: "the CS resistor at the stage's own output",
-       kelvin_with: null, keep_mm: 0.5}
-    - {net: HF_CS, what: "the HF stage's current sense", filter: "the CS resistor", kelvin_with: null, keep_mm: 0.5}
-    - {net: PD_CS, what: "the PD stage's current sense", filter: "the CS resistor", kelvin_with: null, keep_mm: 0.5}
-    - {net: POE_CS, what: "the PoE stage's current sense", filter: "the CS resistor", kelvin_with: null, keep_mm: 0.5}
+    # THE SENSITIVE NET IS THE FILTERED SIDE, NEVER THE SHUNT'S OWN TERMINALS (18 September 2026, appendix
+    # 32.224 addendum). `<stage>_CS` is the node the four low-side FETs' SOURCES sit on: it carries the whole
+    # switched current of the stage, and asking it to keep 0.50 mm from switching copper asks it to keep away
+    # from the pads it is bonded to. It is a switching conductor and is declared as one below. What ANA-001
+    # must protect is the LM5176's own pair of amplifier inputs, which since 18 September sit behind 100 R in
+    # each line with 1 nF across them at the IC (the datasheet's clause 8.2.2.7 and its layout section), the
+    # same shape board A's charger already had in its `_F` nets and board E's tracker in TRK_CSP/TRK_CSN.
+    - {net: FE_CSF, what: "the front end's filtered current-sense input at pin 16", filter: "100 R from the
+        shunt's top with 1 nF across the pins (LM5176 8.2.2.7: the filter resistance may not exceed 100 R)",
+       kelvin_with: FE_CSGF, keep_mm: 0.5}
+    - {net: FE_CSGF, what: "the front end's filtered current-sense ground at pin 15", filter: "100 R from the
+        shunt's ground pad, the Kelvin return the pin table asks for", kelvin_with: FE_CSF, keep_mm: 0.5}
+    - {net: PA_CSF, what: "the PA stage's filtered current-sense input", filter: "100 R and 1 nF at the pins",
+       kelvin_with: PA_CSGF, keep_mm: 0.5}
+    - {net: PA_CSGF, what: "the PA stage's filtered current-sense ground", filter: "100 R from the shunt's ground pad",
+       kelvin_with: PA_CSF, keep_mm: 0.5}
+    - {net: HF_CSF, what: "the HF stage's filtered current-sense input", filter: "100 R and 1 nF at the pins",
+       kelvin_with: HF_CSGF, keep_mm: 0.5}
+    - {net: HF_CSGF, what: "the HF stage's filtered current-sense ground", filter: "100 R from the shunt's ground pad",
+       kelvin_with: HF_CSF, keep_mm: 0.5}
+    - {net: PD_CSF, what: "the PD stage's filtered current-sense input", filter: "100 R and 1 nF at the pins",
+       kelvin_with: PD_CSGF, keep_mm: 0.5}
+    - {net: PD_CSGF, what: "the PD stage's filtered current-sense ground", filter: "100 R from the shunt's ground pad",
+       kelvin_with: PD_CSF, keep_mm: 0.5}
+    - {net: POE_CSF, what: "the PoE stage's filtered current-sense input", filter: "100 R and 1 nF at the pins",
+       kelvin_with: POE_CSGF, keep_mm: 0.5}
+    - {net: POE_CSGF, what: "the PoE stage's filtered current-sense ground", filter: "100 R from the shunt's ground pad",
+       kelvin_with: POE_CSF, keep_mm: 0.5}
     - {net: FE_FB, what: "the front end's feedback divider", filter: "the divider's own top and bottom resistors
         at the controller, with the tap taken at the output island", kelvin_with: null, keep_mm: 0.5}
     - {net: PA_FB, what: "the PA rail's feedback divider", filter: "the divider at the controller", kelvin_with: null, keep_mm: 0.5}
@@ -82,10 +103,18 @@ boards:
         resistor at the jack", kelvin_with: null, keep_mm: 1.0}
 
  e:
-   switch_nets: ["TRK_SW1", "TRK_SW2", "E6_SW", "FAN1_SW", "FAN2_SW"]
+   switch_nets: ["TRK_SW1", "TRK_SW2", "E6_SW", "FAN1_SW", "FAN2_SW", "TRK_LSENSE"]   # TRK_LSENSE is the inductor's second terminal, 5 mOhm from TRK_SW2: a switching conductor (18 September 2026)
    nodes:
-    - {net: TRK_LSENSE, what: "the solar tracker's inductor current sense", filter: "the sense resistor's own
-        pair at the controller", kelvin_with: null, keep_mm: 0.5}
+    # THE FILTERED PAIR, NOT THE SHUNT'S TERMINALS (18 September 2026). TRK_LSENSE was declared as the tracker's
+    # current sense and it is L1 pin 2, one end of the 5 mOhm shunt R5 whose other end IS TRK_SW2: it swings with
+    # the boost half every cycle, so E17's reading of it 0.171 mm from TRK_SW1 measured a power conductor. The
+    # design's own sense pair is behind R6, R7 and C16 (100 R each with 1 nF across, LT8705A), which is what the
+    # controller's CSP and CSN pins see and what ANA-001 has to protect.
+    - {net: TRK_CSP, what: "the tracker's filtered inductor-current sense, positive half across the 5 mOhm shunt",
+       filter: "100 R (R6) from the shunt's inductor end with 1 nF (C16) across the pair at the controller",
+       kelvin_with: TRK_CSN, keep_mm: 0.5}
+    - {net: TRK_CSN, what: "the tracker's filtered inductor-current sense, negative half across the 5 mOhm shunt",
+       filter: "100 R (R7) from the shunt's bridge end with 1 nF (C16) across the pair", kelvin_with: TRK_CSP, keep_mm: 0.5}
     - {net: WATER_SENSE, what: "the floor water sensor input, a high-impedance node on a lead that leaves the
         board", filter: "the pull-up and the 100 nF at the controller", kelvin_with: null, keep_mm: 1.0}
 

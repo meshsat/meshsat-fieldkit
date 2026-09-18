@@ -9621,3 +9621,26 @@ September. What board A pays for those four answered nodes is seven connections 
 the next A phase has to weigh: the partition (A46, merged at 0 hard and 28 unrouted, in its reconcile) is the arm
 that could pay it back.
 
+**Addendum, 12:50 CEST: ANA-001 was being asked about the wrong side of two filters, and board A's five converter
+stages had no current-sense filter at all.** Reading E17's one surviving ANA-001 failure to its source: `TRK_LSENSE`
+is L1 pin 2, five milliohms from `TRK_SW2` through the shunt R5, so it swings with the boost half every cycle. It was
+declared as "the solar tracker's inductor current sense" and it is a power conductor; the design's real sense pair is
+`TRK_CSP`/`TRK_CSN`, behind R6, R7 and C16. The same shape on board A, five times over: `<stage>_CS` is the node the
+four low-side FETs' SOURCES sit on, and it was declared sensitive. **Then the LM5176's own datasheet answered what to
+do about it.** Its pin table says of pin 15: *"CSG ... Connect directly to the low-side (ground) of the current sense
+resistor"*, and the generator tied that pin to the GROUND NET on all five stages, so the sense amplifier's negative
+input joined the plane wherever the router chose and any drop between there and the shunt's ground pad added to a
+reading whose own limit threshold is 120 to 140 mV. Its layout clause asks for Kelvin lines run in parallel from the
+RSENSE terminals and *"the filter capacitor for the current sense signal as close to the IC pins as possible"*, and
+section 8.2.2.7 permits a filter network whose *"filter resistance should not exceed 100 Ohm"*; **there was no filter
+at all**. The generator now lays 100 R in each line with 1 nF across the pins on every stage, the capacitor declared
+as its controller's pin 16 decoupling so the bypass pass seats it at the pin: fifteen parts, R150 to R159 and C123 to
+C127. The declarations follow the copper: the filtered pairs are the sensitive nodes, the five raw CS nodes join the
+switching list, and `sensitive_nodes` REFUSES a declaration whose net carries a transistor or inductor pad, naming it
+(two fixtures on the hub, the detector proved to fail on the tool as it stood). Proved at PHASE=A47 in `/root/acsf`:
+421 footprints against 406, `erc_gate` PASS, `check_pcb_a` ALL PASS, region fit 1.4 mm of the declared 1.5 after PAQ
+grew 3.0 mm east and HFQ 4.0 south, which is all the room `region_room` measures there. **Not answered and measured
+beside it**: each stage's CS shunt sits 5.9 to 17.6 mm from its nearest low-side FET on A32 (and board A's front end
+keeps both its shunts in the support region where the other four keep them with the FETs), so the next A placement
+pass owes the five shunts and their filter resistors fixed seats at the FETs.
+

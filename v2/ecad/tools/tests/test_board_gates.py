@@ -1008,3 +1008,42 @@ def t_the_same_pour_anchored_by_a_via_of_its_net_passes_the_copper_checks():
     b, p = _signal_board(pcbnew, tmp, "anchored", plane=True, gnd_via=False, gnd_complete=True)
     fails, note = _copper_fails(pcbnew, b)
     assert not fails, (fails, note)
+
+
+# ANA-001's subject: a declared sensitive node must be the node the controller's amplifier sees, behind its
+# filter, and never a terminal of the switching loop. Board E declared the inductor's own pad and board A the
+# five low-side FET source nodes (18 September 2026), so both boards read failures that were about the
+# declaration rather than the copper. The fixtures are one board with a transistor pad on the declared net and
+# the same board with the declaration moved behind the filter.
+def _sense_board(pcbnew, tmp, name, declare):
+    """A board with a 'switching' net SW1, a FET Q1 whose source pad is on CS, and a filtered node CSF."""
+    b = _board(pcbnew)
+    for nm in ("SW1", "CS", "CSF"): b.Add(pcbnew.NETINFO_ITEM(b, nm))
+    b.BuildListOfNets()
+    code = {n: b.FindNet(n).GetNetCode() for n in ("SW1", "CS", "CSF")}
+    fq = _pad_footprint(pcbnew, b, "Q1", 10.0, 10.0); fq.Pads()[0].SetNetCode(code["CS"])
+    fr = _pad_footprint(pcbnew, b, "R1", 14.0, 10.0); fr.Pads()[0].SetNetCode(code["CSF"])
+    fs = _pad_footprint(pcbnew, b, "U1", 18.0, 10.0); fs.Pads()[0].SetNetCode(code["SW1"])
+    path = os.path.join(tmp, name + ".kicad_pcb"); b.Save(path)
+    sens = os.path.join(tmp, name + "-sensitive.yaml")
+    json.dump({"boards": {"x": {"switch_nets": ["SW1"],
+                                "nodes": [{"net": declare, "what": "the fixture's sense node",
+                                           "filter": "100 R and 1 nF", "kelvin_with": None, "keep_mm": 0.5}]}}},
+              open(sens, "w"))
+    return path, sens
+
+
+def t_a_sensitive_node_declared_on_a_transistor_pad_is_refused():
+    pcbnew = _pcbnew(); tmp = tempfile.mkdtemp(prefix="ana-")
+    import sensitive_nodes
+    path, sens = _sense_board(pcbnew, tmp, "raw", "CS")
+    r = sensitive_nodes.judge(path, "x", sens)
+    assert any("POWER TERMINAL" in f and "Q1" in f for f in r["fails"]), r["fails"]
+
+
+def t_the_same_node_declared_behind_its_filter_passes():
+    pcbnew = _pcbnew(); tmp = tempfile.mkdtemp(prefix="ana-")
+    import sensitive_nodes
+    path, sens = _sense_board(pcbnew, tmp, "filtered", "CSF")
+    r = sensitive_nodes.judge(path, "x", sens)
+    assert not any("POWER TERMINAL" in f for f in r["fails"]), r["fails"]
