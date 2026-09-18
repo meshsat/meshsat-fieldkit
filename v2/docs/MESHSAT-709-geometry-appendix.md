@@ -9541,3 +9541,28 @@ last declared fixture debt is paid: `copper_checks` has its pair (a ground pour 
 loose piece and fails; the same pour anchored by a via of its net passes), both proved where KiCad is. B22's group S3
 wrote its session at 08:23 UTC; DEVE follows, then the reconcile.
 
+**Addendum, 10:50 CEST: the board's class table and the project file's were TWO tables on five boards, and the
+project file is the one the router reads.** Every placement generator sets its net classes through the API (which
+`SaveBoard` does not keep) and then rewrites the project file's `net_settings.classes`; board B found its second copy
+drifting on 8 September and fixed itself (the USB and DIFF100 clearance), and nothing held the others to it. Found
+today by asking why `via_parallel` still reads D12's `+5V_SA` barrel over its rating: **D13's project file says PWR via
+0.8/0.4 where its generator's API call says 1.2/0.6, its DSN carried `Via[0-3]_800:400_um` for PWR, and its routed
+board holds one 0.8/0.4 via on that net, so D13 never carried the PI-003 answer the record credited it with** (D13's
+two opens are what the route cost for nothing). On D, E and P the SENSE class was absent from the file altogether (its
+nets routed at the Default geometry, so E12 to E17 and A44's SENSE siblings on those boards never had a class of their
+own in the DSN beyond the name), P's file kept the 0.6/0.3 SENSE via the E12 annular finding had moved to 0.7/0.3, and
+B's own loop named four classes by hand while its table had grown PANEL and RF: **B22 routes its polyfuse rail and its
+four antenna paths at 0.25 mm**, so it answers neither PWR-003 nor RF-001 in copper. The generators build the project
+table from their one `CLASSES` table now, in order, with the Default row from the same tuple (`test_netclass_one_source`,
+four rules, the pre-fix D shape as the failing fixture); D's regenerated placement on the hub reads SENSE 0.7/0.3 and
+PWR 1.2/0.6 in its project file. The next phase of each of C, D, E, P and B is the first that carries what its
+generator has said for days. Also today: `via_parallel --reach R` searches beyond 3 mm (D12's barrel at (68.8, 82.0)
+has no linkable site within 6 mm: 198 of 208 candidates within clearance of another net's track, the ten free ones
+with no clean link on either layer), and **A46's first run died in the GLOBAL import**: `ses_import_lock` held every
+track's proxy in one list while it removed the other groups' 132 tracks, KiCad 9's SWIG then handed back a bare object
+for `b.Tracks()` and the fill segfaulted in `Zones()`, so stage 2, the reconcile and the DRC ran on a board that did
+not exist and reported 999999 (B22's GLOBAL session carried no other group's tracks, so its import removed nothing).
+Two short lists off the live container, then save, load, fill, save; stage 2 relaunched 08:47 UTC on the same GLOBAL
+session. **E17 routed to 0 hard and ONE open of 94 in 19.8 minutes** (E14 1, E15 3, E16 4 by the router); its finish
+runs.
+

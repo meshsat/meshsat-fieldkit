@@ -268,7 +268,7 @@ print("ground stitch grid: %d locked vias" % _n)
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr))
-cls(ns.GetDefaultNetclass(), 0.16, 0.25, 0.6, 0.3)
+DEFAULT = (0.16, 0.25, 0.6, 0.3); cls(ns.GetDefaultNetclass(), *DEFAULT)
 # EVERY CLEARANCE ON THIS BOARD IS 0.16 mm, not 0.127: two layers at 2 oz, and the fabricator's own capability
 # for that combination is 0.16 for both track width and spacing (rule RTE-001, 16 September 2026). The widths
 # stay as they are, because every one of them is already above 0.16.
@@ -287,9 +287,11 @@ print("SENSE class: %d declared sensitive net(s) take it" % len(_sens_nets))
 PATTERNS += [("/" + pat, cls) for pat, cls in PATTERNS if not pat.startswith("/")]
 try:
     # (a first SENSE class at 0.25 mm was defined here and overwritten two lines below; removed 18 September 2026)
-    nc = pcbnew.NETCLASS("PWR"); cls(nc, 0.3, 0.5, 0.8, 0.4); ns.SetNetclass("PWR", nc)   # P2 (8 Sep 2026): the current runs in the locked 2 oz bands; the class width is for the sense, gate and test-point links the router lays (1.0 mm left three of them open)
-    nsn = pcbnew.NETCLASS("SENSE"); cls(nsn, 0.16, 0.4, 0.7, 0.3); ns.SetNetclass("SENSE", nsn)   # 0.7/0.3: a 0.20 mm ring, the annular floor this board declares; 0.6/0.3 left E12 with ten annular_width violations (18 September 2026)
-    ng = pcbnew.NETCLASS("GNDC"); cls(ng, 0.16, 0.5, 0.6, 0.3); ns.SetNetclass("GNDC", ng)
+    CLASSES = [("PWR", 0.3, 0.5, 0.8, 0.4),   # P2 (8 Sep 2026): the current runs in the locked 2 oz bands; the class width is for the sense, gate and test-point runs
+               ("SENSE", 0.16, 0.4, 0.7, 0.3),   # 0.7/0.3: a 0.20 mm ring, the annular floor this board declares; 0.6/0.3 left E12 with ten annular_width violations (18 September 2026)
+               ("GNDC", 0.16, 0.5, 0.6, 0.3)]   # ONE table for the board's classes AND the project file's (18 September 2026): a second hand-written copy in the project file had drifted (D's PWR via 1.2/0.6 on the board, 0.8/0.4 in the file the router reads; SENSE absent from the file on D, E and P; SENSE 0.6/0.3 on P), the defect B fixed for itself on 8 September
+    for _nm, *_v in CLASSES:
+        _nc = pcbnew.NETCLASS(_nm); cls(_nc, *_v); ns.SetNetclass(_nm, _nc)
     for pat, name in PATTERNS: ns.SetNetclassPatternAssignment(pat, name)
 except Exception as e: print("note: net class API:", e)
 pcbnew.SaveBoard(BOARD, board)
@@ -300,7 +302,7 @@ if os.path.exists(pro):
     d = json.load(open(pro))
     base = dict(bus_width=12, line_style=0, microvia_diameter=0.3, microvia_drill=0.1, pcb_color="rgba(0, 0, 0, 0.000)", schematic_color="rgba(0, 0, 0, 0.000)", wire_width=6, diff_pair_via_gap=0.25)
     def C(name, prio, clr, tw, vd, vdr): return dict(base, name=name, priority=prio, clearance=clr, track_width=tw, via_diameter=vd, via_drill=vdr, diff_pair_width=0.2, diff_pair_gap=0.15)
-    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.16, 0.25, 0.6, 0.3), C("PWR", 0, 0.3, 0.5, 0.8, 0.4), C("SENSE", 1, 0.16, 0.4, 0.6, 0.3), C("GNDC", 2, 0.16, 0.5, 0.6, 0.3)]
+    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, *DEFAULT)] + [C(_nm, _i, *_v) for _i, (_nm, *_v) in enumerate(CLASSES)]
     d["net_settings"]["netclass_patterns"] = [{"netclass": n, "pattern": p} for p, n in PATTERNS]
     def _class_of(netname):
         bare = netname.lstrip("/")

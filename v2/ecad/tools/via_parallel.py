@@ -25,7 +25,9 @@ generator's), it does not move copper, and it does not touch a barrel whose curr
 (`via_current` stays advisory there and says so). A rail with no declared loads has no solved barrel current and
 is left alone with that reason.
 
-Usage: via_parallel.py <board.kicad_pcb> [--dry] [--rise-k 10] [--max-extra 6] [--no-resolve]
+Usage: via_parallel.py <board.kicad_pcb> [--dry] [--rise-k 10] [--max-extra 6] [--no-resolve] [--reach 3.0]
+  --reach R: search rings out to R mm for a parallel site (default 3.0; D12's +5V_SA barrel at (68.8, 82.0) has no site
+  within 3 mm and a barrel 4 to 6 mm away on the same net, linked on both layers, still shares the transition)
   exit 0 laid or nothing to do, 1 reverted (HURT), 3 no solved currents to work from."""
 import sys, os, math, json, shutil, subprocess
 TOOLS = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, TOOLS)
@@ -157,6 +159,10 @@ def main(a):
     path = a[0]; dry = "--dry" in a
     rise = float(a[a.index("--rise-k") + 1]) if "--rise-k" in a else 10.0
     max_extra = int(a[a.index("--max-extra") + 1]) if "--max-extra" in a else 6
+    if "--reach" in a:
+        global RINGS
+        reach = float(a[a.index("--reach") + 1])
+        RINGS = tuple(list(RINGS) + [x / 10.0 for x in range(35, int(round(reach * 10)) + 1, 5) if x / 10.0 > RINGS[-1]])
     if dry:
         tmp = os.path.splitext(path)[0] + "-via_parallel-dry.kicad_pcb"; shutil.copy(path, tmp)
         for e in (".kicad_pro", ".kicad_prl"):

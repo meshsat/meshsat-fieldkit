@@ -76,7 +76,7 @@ def t_board_a_gives_its_declared_sensitive_nets_a_class_of_their_own_ahead_of_th
 
 def t_board_e_gives_its_declared_sensitive_nets_a_class_of_their_own_too():
     s = open(os.path.join(TOOLS, "gen_pcb_e3.py"), encoding="utf-8").read()
-    assert 'NETCLASS("SENSE")' in s, "gen_pcb_e3.py declares no SENSE class"
+    assert 'NETCLASS("SENSE")' in s or '("SENSE", ' in s, "gen_pcb_e3.py declares no SENSE class (a row in its CLASSES table since 18 September 2026)"
     assert "pcb_sensitive.yaml" in s and 'PATTERNS = [(n, "SENSE") for n in _sens_nets] + PATTERNS' in s, \
         "board E's sensitive nets do not take the SENSE class ahead of the power patterns (TRK_LSENSE would stay in PWR beside TRK_SW2)"
 

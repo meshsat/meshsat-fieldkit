@@ -44,7 +44,11 @@ def t_board_p_is_at_the_fabricators_two_ounce_floor_everywhere():
     value that every gate in this project passed for a month."""
     place = open(os.path.join(TOOLS, "gen_pcb_p3.py"), encoding="utf-8", errors="replace").read()
     assert _num(MIN_CLEAR, place) == 0.16, _num(MIN_CLEAR, place)
-    m = re.search(r"cls\(ns\.GetDefaultNetclass\(\),\s*([0-9.]+)", place)
-    assert m and float(m.group(1)) >= 0.16, "the SWIG default class is %s" % (m.group(1) if m else "absent")
-    for cl in re.finditer(r'C\("(\w+)",\s*\d+,\s*([0-9.]+)', place):
-        assert float(cl.group(2)) >= 0.16, "class %s is written at %s in the project file" % (cl.group(1), cl.group(2))
+    m = re.search(r"DEFAULT = \(([0-9.]+)", place) or re.search(r"cls\(ns\.GetDefaultNetclass\(\),\s*([0-9.]+)", place)
+    assert m and float(m.group(1)) >= 0.16, "the default class is %s" % (m.group(1) if m else "absent")
+    # since 18 September 2026 the classes are ONE table, `CLASSES = [("PWR", clr, tw, vd, vdr), ...]`, and the project
+    # file is written from it; the clearance is the first number after the name
+    rows = re.findall(r'\("(\w+)",\s*([0-9.]+),\s*[0-9.]+,\s*[0-9.]+,\s*[0-9.]+\)', place)
+    assert rows, "no CLASSES table rows found in gen_pcb_p3.py"
+    for name, clr in rows:
+        assert float(clr) >= 0.16, "class %s is written at %s" % (name, clr)

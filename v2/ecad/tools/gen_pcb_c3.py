@@ -204,13 +204,17 @@ pour(pcbnew.In1_Cu, "GND", "GND plane In1", RING)   # the solid In1 ground plane
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr):
     nc.SetClearance(FromMM(clr)); nc.SetTrackWidth(FromMM(tw)); nc.SetViaDiameter(FromMM(vd)); nc.SetViaDrill(FromMM(vdr))
-cls(ns.GetDefaultNetclass(), 0.127, 0.25, 0.6, 0.3)   # 0.127: the RP2040's 0.4 mm escape rows (C7)
+DEFAULT = (0.127, 0.25, 0.6, 0.3); cls(ns.GetDefaultNetclass(), *DEFAULT)   # 0.127: the RP2040's 0.4 mm escape rows (C7)
 PATTERNS = [("+5V", "RAIL"), ("+3V3", "RAIL"), ("LED_RAIL*", "PWR"), ("GND", "PWR"), ("EPD_VCC", "PWR"), ("USB_*", "USB")]   # C8: the two rails 0.5 mm (8 Sep 2026 15:09: 1.0 mm strangled the router, and the intent's per-load currents show 0.5 mm meets the 3 percent budget on every leg)
 PATTERNS += [("/" + pat, cls) for pat, cls in PATTERNS if not pat.startswith("/")]
 try:
-    nc = pcbnew.NETCLASS("PWR"); cls(nc, 0.127, 0.5, 0.8, 0.4); ns.SetNetclass("PWR", nc)
-    nr = pcbnew.NETCLASS("RAIL"); cls(nr, 0.127, 0.5, 0.8, 0.4); ns.SetNetclass("RAIL", nr)
-    nu = pcbnew.NETCLASS("USB"); cls(nu, 0.127, 0.3, 0.6, 0.3); nu.SetDiffPairWidth(FromMM(0.3)); nu.SetDiffPairGap(FromMM(0.2)); ns.SetNetclass("USB", nu)   # 8 Sep 2026 (32.71): 0.30/0.20 on the 7628 outer layer computes 89 ohm; the USB pairs stay on F.Cu over the In1 ground
+    CLASSES = [("PWR", 0.127, 0.5, 0.8, 0.4),
+               ("USB", 0.127, 0.3, 0.6, 0.3),   # 8 Sep 2026 (32.71): 0.30/0.20 on the 7628 outer layer computes 89 ohm
+               ("RAIL", 0.127, 0.5, 0.8, 0.4)]   # ONE table for the board's classes AND the project file's (18 September 2026): a second hand-written copy in the project file had drifted (D's PWR via 1.2/0.6 on the board, 0.8/0.4 in the file the router reads; SENSE absent from the file on D, E and P; SENSE 0.6/0.3 on P), the defect B fixed for itself on 8 September
+    for _nm, *_v in CLASSES:
+        _nc = pcbnew.NETCLASS(_nm); cls(_nc, *_v)
+        if _nm == "USB": _nc.SetDiffPairWidth(FromMM(0.3)); _nc.SetDiffPairGap(FromMM(0.2))
+        ns.SetNetclass(_nm, _nc)
     for pat, name in PATTERNS: ns.SetNetclassPatternAssignment(pat, name)
 except Exception as e: print("note: net class API:", e)
 pcbnew.SaveBoard(BOARD, board)
@@ -221,7 +225,7 @@ if os.path.exists(pro):
     d = json.load(open(pro))
     base = dict(bus_width=12, line_style=0, microvia_diameter=0.3, microvia_drill=0.1, pcb_color="rgba(0, 0, 0, 0.000)", schematic_color="rgba(0, 0, 0, 0.000)", wire_width=6, diff_pair_via_gap=0.25)
     def C(name, prio, clr, tw, vd, vdr): return dict(base, name=name, priority=prio, clearance=clr, track_width=tw, via_diameter=vd, via_drill=vdr, diff_pair_width=0.3, diff_pair_gap=0.2)
-    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, 0.127, 0.25, 0.6, 0.3), C("PWR", 0, 0.127, 0.5, 0.8, 0.4), C("USB", 1, 0.127, 0.3, 0.6, 0.3), C("RAIL", 2, 0.127, 0.5, 0.8, 0.4)]
+    d.setdefault("net_settings", {})["classes"] = [C("Default", 2147483647, *DEFAULT)] + [C(_nm, _i, *_v) for _i, (_nm, *_v) in enumerate(CLASSES)]
     d["net_settings"]["netclass_patterns"] = [{"netclass": n, "pattern": p} for p, n in PATTERNS]
     import fnmatch as _fnm
     def _class_of(netname):
