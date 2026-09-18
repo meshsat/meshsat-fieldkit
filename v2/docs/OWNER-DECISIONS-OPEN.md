@@ -338,7 +338,7 @@ IPC-2152. What each model asks for at 10 K: 10 A needs 0.65 mm2 (IPC-2221A), 0.9
 
 | rule | | boards | result today |
 |---|---|---|---|
-| PI-001 | conductor current capacity | A, E | FAIL |
+| PI-001 | conductor current capacity | A, E | FAIL, PASS |
 
 
 ### Decision 36: the intra-pair tolerance a differential pair is judged against
