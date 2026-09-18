@@ -491,7 +491,7 @@ something that cannot be mis-programmed.
 
 | rule | | boards | result today |
 |---|---|---|---|
-| BAT-001 | the cell block is protected in hardware | P | INCONCLUSIVE |
+| BAT-001 | the cell block is protected in hardware | P | FAIL |
 
 
 ## Closed, for the record

@@ -77,7 +77,12 @@ def t_a_broken_report_is_never_a_pass():
     try:
         hardset.load(empty); raise AssertionError("a JSON with no violations list was accepted")
     except RuntimeError: pass
-    r = subprocess.run([sys.executable, os.path.join(TOOLS, "hardset.py"), bad], capture_output=True, text=True)
+    # ITS VERDICT GOES IN ITS OWN DIRECTORY (18 September 2026). The CLI writes one wherever it is run from,
+    # and run from v2/ecad that is the evidence the readiness reads: this fixture's "unreadable DRC" reading
+    # about a file in /tmp sat in out/hardset.verdict.json until the suite started refusing to move the tree's
+    # own verdicts.
+    env = dict(os.environ, VERDICT_DIR=d)
+    r = subprocess.run([sys.executable, os.path.join(TOOLS, "hardset.py"), bad], capture_output=True, text=True, env=env)
     assert r.returncode == 3, "the CLI must exit 3 on an unreadable report, got %d" % r.returncode
     assert "BLOCK" in r.stdout, r.stdout
 
