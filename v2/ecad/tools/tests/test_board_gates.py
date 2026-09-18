@@ -1152,3 +1152,72 @@ def t_a_crossing_that_carries_what_it_should_says_nothing_about_being_short():
                            capture_output=True, text=True)
         assert "fewer barrels" not in r.stdout, r.stdout[-600:]
         assert "carry the barrels their current needs" in r.stdout, r.stdout[-600:]
+
+
+def _perforated_board(pcbnew, tmp, name, holes=15, plane_to_mm=79.0):
+    """A signal run over a ground plane that ANOTHER net's vias perforate.
+
+    `plane_to_mm` shortens the plane so part of the run has no reference at all, which is the other half of the
+    pair: a hole in a reference and an absent reference must not read the same."""
+    b = _board(pcbnew, 80.0, 30.0)     # long enough that the vias sit 4 mm apart and the fill plainly resumes
+    for n in ("/SIG", "GND", "/OTH"):
+        b.Add(pcbnew.NETINFO_ITEM(b, n))
+    b.BuildListOfNets()
+    code = {n: b.FindNet(n).GetNetCode() for n in ("/SIG", "GND", "/OTH")}
+    def _set(item, n): item.SetNetCode(code[n]); return item
+    t = pcbnew.PCB_TRACK(b)
+    t.SetStart(pcbnew.VECTOR2I(pcbnew.FromMM(5.0), pcbnew.FromMM(15.0)))
+    t.SetEnd(pcbnew.VECTOR2I(pcbnew.FromMM(75.0), pcbnew.FromMM(15.0)))
+    t.SetWidth(pcbnew.FromMM(0.25)); t.SetLayer(pcbnew.F_Cu); _set(t, "/SIG"); b.Add(t)
+    for k in range(holes):
+        # BESIDE the run, never on it (the fixture's own version of the 17 September lesson): a via at the
+        # track's own centre line is joined to it by KiCad's connectivity when the board is loaded, and the
+        # whole fixture then judges ONE net with a via field of its own. At 0.5 mm the via's anti-pad (0.3 mm
+        # of barrel plus the fill's 0.3 mm clearance) still covers the track's centre, which is what perforates
+        # the reference, and its copper stays 0.2 mm clear of the track's edge.
+        v = pcbnew.PCB_VIA(b)
+        v.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(8.0 + 4.0 * k), pcbnew.FromMM(15.5)))
+        v.SetDrill(pcbnew.FromMM(0.3)); v.SetWidth(pcbnew.FromMM(0.6)); _set(v, "/OTH"); b.Add(v)
+    z = pcbnew.ZONE(b); z.SetLayer(pcbnew.B_Cu); _set(z, "GND"); o = z.Outline(); o.NewOutline()
+    for (x, y) in ((1, 1), (plane_to_mm, 1), (plane_to_mm, 29), (1, 29)): o.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))  # plane_to_mm shortens it
+    b.Add(z)
+    path = os.path.join(tmp, name + ".kicad_pcb"); b.Save(path)
+    b = pcbnew.LoadBoard(path); pcbnew.ZONE_FILLER(b).Fill(b.Zones()); b.Save(path)   # never fill a python-built board
+    os.makedirs(os.path.join(tmp, "out"), exist_ok=True)
+    json.dump({"rails": {}, "bypass": [], "pair_classes": {"USB": None}},
+              open(os.path.join(tmp, "out", name + "-intent.json"), "w"))
+    return pcbnew.LoadBoard(path), path
+
+
+def t_a_reference_perforated_by_another_nets_vias_is_not_an_absent_reference():
+    """THE ACCEPTABLE FIXTURE (18 September 2026). Measured on board B run by run: of 675 mm of uncovered signal
+    run over 937 runs, 884 runs and 601 mm are the anti-pad of ANOTHER conductor's via, median 0.7 mm and
+    longest 3.0 mm, while the reference is genuinely absent for 39 runs and 60 mm. A six-layer board with three
+    compute modules has a via field and this screen was measuring it, which is the false positive its own
+    registry entry predicts in as many words. The return current goes around a 0.7 mm hole; it does not lose its
+    reference. The millimetres are still counted and printed, because a share that disappears is a share nobody
+    can argue about."""
+    pcbnew = _pcbnew(); sys.path.insert(0, TOOLS)
+    import intent_checks
+    with tempfile.TemporaryDirectory() as tmp:
+        b, p = _perforated_board(pcbnew, tmp, "perf")
+        fails = []
+        intent_checks.run(b, lambda ok, text: (None if ok else fails.append(text)), p)
+        rp = [f for f in fails if f.startswith("return path")]
+        assert not rp, "a run over a reference perforated by another net's vias was failed as unreferenced: %s" % rp
+        assert intent_checks.LAST.get("antipad_other_mm", 0) > 1.0, \
+            "the other-net anti-pad millimetres are not counted: %s" % intent_checks.LAST
+
+
+def t_an_absent_reference_still_fails_under_the_same_vias():
+    """THE DEFECTIVE FIXTURE, and the half that keeps the change from being a loosening: the same board and the
+    same via field, with the plane stopping at 40 mm so half the run has no reference at all. That
+    is an absent reference, not a hole in one, and the screen must still refuse it."""
+    pcbnew = _pcbnew(); sys.path.insert(0, TOOLS)
+    import intent_checks
+    with tempfile.TemporaryDirectory() as tmp:
+        b, p = _perforated_board(pcbnew, tmp, "gap", plane_to_mm=40.0)
+        fails = []
+        intent_checks.run(b, lambda ok, text: (None if ok else fails.append(text)), p)
+        rp = [f for f in fails if f.startswith("return path")]
+        assert rp, "a run with 35 mm of no reference at all passed: %s" % intent_checks.LAST

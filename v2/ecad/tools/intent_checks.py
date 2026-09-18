@@ -69,22 +69,46 @@ def run(b, check, path=None):
     # The two are separated here: the anti-pad share is measured, reported and handed to the transition rules,
     # and the screen judges what is left, which is a slot, another net's copper, or the fill's own edge.
     _vias = {}
+    _VCELL = 2000000       # a 2 mm spatial hash, because the other-net lookup below asks every sample point
+    _grid = {}
     for _t in b.GetTracks():
         if _t.GetClass() != "PCB_VIA": continue
         # A via's width is per layer in KiCad 9 and the bare call asserts: kicad_compat.via_width.
         _w = _kc.via_width(_t)
-        _vias.setdefault(_t.GetNetname(), []).append((_t.GetPosition(), _w))
+        _p = _t.GetPosition()
+        _vias.setdefault(_t.GetNetname(), []).append((_p, _w))
+        _grid.setdefault((_p.x // _VCELL, _p.y // _VCELL), []).append((_p, _w, _t.GetNetname()))
     _CLEAR = 300000     # 0.3 mm in KiCad units: the fill's own clearance on these boards, and the larger of the
     # two values any of the seven declares, so this never calls a real slot an anti-pad by being generous.
-    def _antipad(net, p, Ls):
-        """Is this uncovered point a hole in a reference, or is there no reference here at all?
+    def _hole(net, p, Ls):
+        """Is this uncovered point a hole in a reference, whose hole is it, or is there no reference at all?
+
+        Returns "own" for a hole around a via of the net being judged, "other" for a hole around ANY other
+        conductor's via, and None where the reference is simply not there. The third bucket was added on 18
+        September 2026 after board B was measured run by run: of its 675 mm of uncovered signal run over 937
+        runs, 884 runs and 601 mm are the anti-pad of ANOTHER net's via, median 0.7 mm and longest 3.0 mm,
+        while the reference is genuinely absent for 39 runs and 60 mm. A six-layer board with three compute
+        modules has a via field, and this screen was measuring it: its own failure-mode line in the registry
+        says so in as many words, "used as a law it refuses good boards (false positives at every via)". The
+        return current goes AROUND a 0.7 mm hole; it does not lose its reference. What decides this screen is
+        the reference being ABSENT, and both anti-pad shares are reported beside it so that nothing is hidden:
+        the own share is RET-003's and RET-004's question, and how perforated a reference may be at all is
+        RET-001's, which is owner decision 39.
 
         An anti-pad is a hole IN a fill. Asking only whether a via of this net is close enough would call
         every point near a via an anti-pad on a board with no pour at all, which is the opposite of the truth
         and would have excused board B's card-slot nets, whose gap is their whole length. So the fill has to
         be there to have a hole in it: the ring just outside the barrel's clearance is sampled, and the point
         counts as an anti-pad only where the reference resumes around it."""
-        for q, w in _vias.get(net, ()):
+        _own = [(q, w) for q, w in _vias.get(net, ())]
+        _near = []
+        _cx, _cy = p.x // _VCELL, p.y // _VCELL
+        for _i in (-1, 0, 1):
+            for _j in (-1, 0, 1):
+                for _q, _w, _n in _grid.get((_cx + _i, _cy + _j), ()):
+                    if _n != net: _near.append((_q, _w))
+        for q, w in [(q, w) for q, w in _own] + _near:
+            _whose = "own" if any(q is _q for _q, _w in _own) else "other"
             r = w / 2 + _CLEAR
             dx = q.x - p.x; dy = q.y - p.y
             if dx * dx + dy * dy > r * r: continue
@@ -109,9 +133,9 @@ def run(b, check, path=None):
                 if all(any(pl.Contains(pcbnew.VECTOR2I(int(q.x + ox), int(q.y + oy)))
                            for Ln in Ls for pl in planes.get(Ln, []))
                        for ox, oy in pair):
-                    return True
-        return False
-    gaps = {}; anti = {}; total = {}; n_nets = 0; n_tracks = 0
+                    return _whose
+        return None
+    gaps = {}; anti = {}; anti_other = {}; total = {}; n_nets = 0; n_tracks = 0
     for tr in b.GetTracks():
         if tr.GetClass() != "PCB_TRACK": continue
         n_tracks += 1; net = tr.GetNetname()
@@ -120,7 +144,9 @@ def run(b, check, path=None):
         for k in range(n + 1):
             u = k / n; p = pcbnew.VECTOR2I(int(tr.GetStart().x + u * (tr.GetEnd().x - tr.GetStart().x)), int(tr.GetStart().y + u * (tr.GetEnd().y - tr.GetStart().y)))
             if not any(pl.Contains(p) for Ln in neighbours(L) for pl in planes.get(Ln, [])):
-                if _antipad(net, p, neighbours(L)): anti[net] = anti.get(net, 0.0) + length / (n + 1)
+                _w = _hole(net, p, neighbours(L))
+                if _w == "own": anti[net] = anti.get(net, 0.0) + length / (n + 1)
+                elif _w == "other": anti_other[net] = anti_other.get(net, 0.0) + length / (n + 1)
                 else: gaps[net] = gaps.get(net, 0.0) + length / (n + 1)
     if n_tracks and not total: check(False, "return path: the board has %d tracks and not one signal net was found to judge (signalnets.classify excluded every net: %s)" % (n_tracks, ", ".join(sorted(set(_why.values())))))
     if not n_tracks: check(True, "return path: 0 of 0 signal nets, the board has no tracks")
@@ -136,7 +162,7 @@ def run(b, check, path=None):
     for x in cls_bad: check(False, "signal class declaration: %s" % x)
     n_over = 0; worst = ("", 0.0); undeclared = []
     for net in sorted(total):
-        n_nets += 1; g = gaps.get(net, 0.0); ap = anti.get(net, 0.0)
+        n_nets += 1; g = gaps.get(net, 0.0); ap = anti.get(net, 0.0); apo = anti_other.get(net, 0.0)
         if g > worst[1]: worst = (net.lstrip("/"), g)
         sc, basis = sig_cls.get(net, ("UNKNOWN", ""))
         if sc == "UNKNOWN":
@@ -157,15 +183,22 @@ def run(b, check, path=None):
             if g > lim: n_over += 1
             check(g <= lim, "return path under %s (%s, %s): %.1f of %.1f mm without a plane on a neighbouring layer (limit %.1f%s) [%s]"
                   % (net.lstrip("/"), cls_of(net), sc, g, total[net], lim,
-                     ("; %.1f mm more is this net's own via anti-pads, which RET-003 judges" % ap) if ap > 0.05 else "",
+                     ((("; %.1f mm more is this net's own via anti-pads, which RET-003 judges" % ap) if ap > 0.05 else "")
+                      + (("; %.1f mm more is another conductor's via anti-pad, a hole the return goes around" % apo) if apo > 0.05 else "")),
                      basis[:70]))
     # An undeclared net is not a failure of the copper and must not be reported as one: it is a gap in what this
     # project has written down about its own design, and it is named here so it can be closed.
     if undeclared:
         print("intent_checks: %d signal net(s) carry no declared signal class and were judged at the strictest bar: %s%s"
               % (len(undeclared), ", ".join(undeclared[:12]), " ..." if len(undeclared) > 12 else ""))
+    if anti_other:
+        print("intent_checks: %.1f mm of signal run across this board sits over ANOTHER conductor's via anti-pad "
+              "(%d net(s)); a hole in the reference is not an absent reference and the return goes around it, so "
+              "this screen does not judge it. How perforated a reference may be is RET-001's question and its "
+              "criterion is owner decision 39" % (sum(anti_other.values()), len(anti_other)))
     LAST.clear(); LAST.update(nets=n_nets, over=n_over, gap_mm=round(sum(gaps.values()), 3),
                               antipad_mm=round(sum(anti.values()), 3),
+                              antipad_other_mm=round(sum(anti_other.values()), 3),
                               worst_net=worst[0], worst_mm=round(worst[1], 3))
     print("intent_checks: return path judged on %d signal nets (%d excluded as ground, rail, zone owner or power class), %d over their limit, worst %s at %.1f mm; %.1f mm across the board is the nets' own via anti-pads and is RET-003's question, not this one" % (n_nets, len(_why), n_over, worst[0] or "none", worst[1], sum(anti.values())))
     # 3b. EVERY POWER-SYMBOL NET IS A DECLARED RAIL (16 September 2026). This project writes a rail as a KiCad
