@@ -278,7 +278,18 @@ try:
     # ONE router via at each of two transitions, 1.10 A of the solved mesh through a 0.4 mm drill rated 0.90 A at
     # 10 K with the fabricator's 18 um plating (via_current, both barrels beside FB1); a 0.6 mm drill is rated
     # 1.19 A, so the class via answers it at the source where via_parallel found a site for only one of the two.
-               ("PWR", 0.127, 0.5, 1.2, 0.6),   # ruling 15: back to 0.5 mm, the rail is in locked inner copper below; the 1.2/0.6 via since D13 (PI-003)
+               # THE POWER VIA IS BACK AT 0.8/0.4 AND HERE IS WHAT THE WIDE ONE COST (18 September 2026, D14).
+               # D13 was credited with answering PI-003 through a 1.2/0.6 class via and never carried it: its
+               # project file still held the hand-typed table, so its DSN exported Via[0-3]_800:400_um. D14 is the
+               # first D route whose DSN really carries 1.2/0.6, and it landed 0 hard with NINE open of 133 nets
+               # where D12 at 0.8/0.4 routed 0 and 0; its second round with the via-cost remedy came back ten, so
+               # round one's nine stands and the closers took none of them (the stub router closed 0 of 9).
+               # PI-003 is ADVISORY (via_current measures and does not bar), and the two barrels it names on
+               # +5V_SA carry 1.10 A against 0.90: paying nine connections on a 133-net board to answer an
+               # advisory rule is not a trade. The answer PI-003 actually wants is locked copper at the two
+               # transitions, board D's own +5V_D8 pattern above, laid where the geometry is known; until that is
+               # drawn, via_parallel answers one of the two barrels in the finish and the other is recorded.
+               ("PWR", 0.127, 0.5, 0.8, 0.4),
                ("RF", 0.3, 0.35, 0.6, 0.3),
                ("USB", 0.127, 0.3, 0.6, 0.3)]   # ONE table for the board's classes AND the project file's (18 September 2026): a second hand-written copy in the project file had drifted (D's PWR via 1.2/0.6 on the board, 0.8/0.4 in the file the router reads; SENSE absent from the file on D, E and P; SENSE 0.6/0.3 on P), the defect B fixed for itself on 8 September
     for _nm, *_v in CLASSES:
