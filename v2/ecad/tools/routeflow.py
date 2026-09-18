@@ -9,7 +9,7 @@ budget, and stops with a named state when the table ends. No model is in the loo
 Usage:
   routeflow.py preflight [--repo DIR]                 host checks (imports, binaries, jar, memory, load, services, git, lock)
   routeflow.py validate <profile.json> [--repo DIR]    the profile against the tree: nothing written, no host touched
-  routeflow.py run <profile.json> [--rounds N] [--no-services] [--dry-run]
+  routeflow.py run <profile.json> [--rounds N] [--no-services] [--dry-run] [--requires A,B]
   routeflow.py status <project dir> [--markdown]      the journal
   routeflow.py selftest                               kill the predicates with empty inputs; every one must block
   routeflow.py experiment <exp.json> [--budget-hours H] [--no-services] [--parallel N]   one route per configuration (rules file knobs, jar) on one pre-route board, measured into bench/results.jsonl; N configurations at once
@@ -531,7 +531,7 @@ def resolve_phase(prof, phase=None):
     return json.loads(text.replace("<PHASE>", ph).replace("<phase>", ph.lower()))
 
 
-def run(profile_fn, rounds, use_services, dry, phase=None):
+def run(profile_fn, rounds, use_services, dry, phase=None, requires=None):
     prof = resolve_phase(json.load(open(profile_fn)), phase); repo = prof.get("repo") or os.getcwd()
     project = os.path.abspath(os.path.join(repo, prof["project"])); ecad = os.path.dirname(project); name = prof["board"]
     one_tree(project, "routed")
@@ -544,7 +544,7 @@ def run(profile_fn, rounds, use_services, dry, phase=None):
     # 10 September 2026 (report 1, P2): preflight existed and was optional exactly where an expensive run begins. It runs here now;
     # ROUTEFLOW_SKIP_PREFLIGHT=1 is for a host that is deliberately not the build host, and it is journalled when it is used.
     if os.environ.get("ROUTEFLOW_SKIP_PREFLIGHT") != "1":
-        prc = preflight(repo)
+        prc = preflight(repo, list(prof.get("requires") or []) + list(requires or []))
         journal(project, dict(run=rid, board=name, phase=prof["phase"], stage="preflight", status="PREFLIGHT_OK" if prc == 0 else "PREFLIGHT_FAIL", note="required checks %s" % ("pass" if prc == 0 else "FAIL, see the lines above")))
         if prc != 0: return 2
     else:
@@ -989,8 +989,29 @@ def status(project, markdown):
         for r in rows: print(r["ts"], r.get("run", "")[:8], r.get("round", ""), r.get("stage", ""), r.get("status", ""), str(r.get("note", ""))[:160])
     print("%d journal lines" % len(rows)); return 0
 
-def preflight(repo):
+def preflight(repo, requires=()):
+    """`requires` is what an ARM depends on, declared by the run and proved in the tree that will run it.
+
+    D16 (18 September 2026) was staged at 18:39 UTC to measure a pre-lay and the fix that makes a pre-lay work
+    landed at 19:10; its tree therefore carried the old `stub_router`, its pre-lay closed 0 of 3 and the arm
+    measured nothing, which is 75 minutes of a rented box and, worse, a number that reads like a result. A tree
+    carries the tools it was staged with; an arm that exists to test a change can say so, and then it is the
+    launcher's business rather than the operator's memory. Each entry is a literal that must appear somewhere
+    in the tools this run will execute: a flag name, a function, a stage. It is a blocking check, because a run
+    that cannot measure its own variable is worse than a run that does not start."""
     checks = []
+    for _req in (requires or ()):
+        _hit = False
+        for _root, _dirs, _files in os.walk(os.path.join(repo, "v2", "ecad", "tools")):
+            _dirs[:] = [d for d in _dirs if d not in ("out", "__pycache__", "tests")]
+            for _f in _files:
+                if not _f.endswith((".py", ".sh")): continue
+                try:
+                    if _req in read(os.path.join(_root, _f)): _hit = True; break
+                except Exception: pass
+            if _hit: break
+        checks.append(("requires %s in the tools that will run" % _req, _hit,
+                       "" if _hit else "this arm declares it and the staged tools do not carry it: it would measure nothing"))
     for mod in ("pcbnew", "numpy", "PIL"):
         try: __import__(mod); checks.append((mod + " importable", True, ""))
         except Exception as e: checks.append((mod + " importable", False, str(e)[:60]))
@@ -1035,7 +1056,7 @@ def preflight(repo):
     ok = sum(1 for c in checks if c[1])
     for name_, good, note in checks: print("%s  %s  %s" % ("PASS" if good else "FAIL", name_, note))
     print("preflight: %d of %d checks pass" % (ok, len(checks)))
-    required = [c for c in checks if not c[1] and c[0].split()[0] in ("pcbnew", "numpy", "kicad-cli", "java", "xvfb-run", "freerouting", "no")]
+    required = [c for c in checks if not c[1] and c[0].split()[0] in ("pcbnew", "numpy", "kicad-cli", "java", "xvfb-run", "freerouting", "no", "requires")]
     return 0 if not required else 2
 
 def selftest():
@@ -1186,6 +1207,7 @@ if __name__ == "__main__":
     if a[0] == "status": sys.exit(status(a[1], "--markdown" in a))
     _ph = a[a.index("--phase") + 1] if "--phase" in a else None
     if a[0] == "validate": sys.exit(validate(a[1], a[a.index("--repo") + 1] if "--repo" in a else None, _ph))
-    if a[0] == "run": sys.exit(run(a[1], int(a[a.index("--rounds") + 1]) if "--rounds" in a else 2, "--no-services" not in a, "--dry-run" in a, _ph))
+    _rq = [x for x in (a[a.index("--requires") + 1] if "--requires" in a else "").split(",") if x]
+    if a[0] == "run": sys.exit(run(a[1], int(a[a.index("--rounds") + 1]) if "--rounds" in a else 2, "--no-services" not in a, "--dry-run" in a, _ph, _rq))
     if a[0] == "experiment": sys.exit(experiment(a[1], float(a[a.index("--budget-hours") + 1]) if "--budget-hours" in a else 6.0, "--no-services" not in a, int(a[a.index("--parallel") + 1]) if "--parallel" in a else 1))
     print(__doc__); sys.exit(2)
