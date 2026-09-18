@@ -2,13 +2,14 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "declared": 2,
-  "fail": 1,
-  "measured": 2
+  "declared": 3,
+  "fail": 2,
+  "measured": 3
  },
- "denominator": 2,
+ "denominator": 3,
  "evidence": [
-  "TRK_LSENSE runs 0.171 mm from TRK_SW1 and its own list asks for 0.50; they are inside that limit over 6.36 mm of copper, 6.36 mm of it OUTSIDE the courtyard of the part that carries both nets, 5.74 mm from the pads of the part that carries both nets"
+  "TRK_CSP runs 0.276 mm from TRK_SW2 and its own list asks for 0.50; they are inside that limit over 5.55 mm of copper, 5.55 mm of it OUTSIDE the courtyard of the part that carries both nets, 7.33 mm from the pads of the part that carries both nets",
+  "TRK_CSN runs 0.142 mm from TRK_SW1 and its own list asks for 0.50; they are inside that limit over 9.33 mm of copper, 9.33 mm of it OUTSIDE the courtyard of the part that carries both nets, 29.71 mm from the pads of the part that carries both nets"
  ],
  "inputs": {
   "board": "e",
@@ -29,9 +30,9 @@
  "tool": "sensitive_nodes",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "6f7ef144f21449b3"
+  "tools_tree_sha": "014593f72fcc4baf"
  },
- "ts": "2026-09-18T08:56:34Z",
+ "ts": "2026-09-18T11:04:49Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

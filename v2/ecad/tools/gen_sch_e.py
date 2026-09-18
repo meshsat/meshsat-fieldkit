@@ -187,7 +187,15 @@ part("Q5", "Transistor_FET", "IRF7404", "BSC028N06NS 60 V N-FET, M3 boost bottom
 part("Q6", "Transistor_FET", "IRF7404", "BSC039N06NS 60 V N-FET, M4 boost top", "TDSON8", {"1": "TRK_SW2", "2": "TRK_SW2", "3": "TRK_SW2", "4": "TRK_TG2", "5": "TRK_OUT", "6": "TRK_OUT", "7": "TRK_OUT", "8": "TRK_OUT"}, "C534330")
 part("L1", "Device", "L", "10uH Coilcraft XAL1510-103MED (Isat 26 A, 10.0 mm tall)", "L1510", {"1": "TRK_SW1", "2": "TRK_LSENSE"}, "C3911782")
 part("R5", "Device", "R", "5 mOhm 1% 3 W 2512 RSENSE (RALEC LR2512-23R005F4)", "RS2512", {"1": "TRK_LSENSE", "2": "TRK_SW2"}, "C154688")
-r("R6", "100R", "TRK_LSENSE", "TRK_CSP"); r("R7", "100R", "TRK_SW2", "TRK_CSN"); c("C16", "1n", "TRK_CSP", "TRK_CSN")
+r("R6", "100R", "TRK_LSENSE", "TRK_CSP"); r("R7", "100R", "TRK_SW2", "TRK_CSN"); c("C16", "1n", "TRK_CSP", "TRK_CSN", bypass=("U5", "3"))
+# THE FILTER CAPACITOR BELONGS AT THE PINS AND THE TWO RESISTORS AT THE SHUNT (18 September 2026, rule ANA-001).
+# R6 and R7 are the Kelvin series resistors of the tracker's current sense and C16 is the pair's filter; on E17 they
+# sit 15 to 20 mm from the shunt R5 and 11 to 15 mm from U5, so the filtered pair itself runs beside the switching
+# nodes (TRK_CSP 0.276 mm from TRK_SW2 over 5.55 mm, TRK_CSN 0.142 from TRK_SW1 over 9.33, both entirely outside the
+# shared part's courtyard). The series resistor attenuates line pickup only when it sits at the SOURCE end and the
+# capacitor at the amplifier, which is what every current-sense layout clause asks for, so C16 is declared as U5 pin
+# 3's own decoupling here (bypass_slots reserves its seat before the packer runs) and the next E placement pass seats
+# R6 and R7 against R5. The pair is then a short tight run and a pre-lay candidate.
 c("C17", "470n 25V", "TRK_BOOST1", "TRK_SW1"); c("C18", "470n 25V", "TRK_BOOST2", "TRK_SW2")
 part("D5", "Device", "D_Schottky", "BAT54 boost diode INTVCC -> BOOST1", "SOD123", {"1": "TRK_BOOST1", "2": "TRK_INTVCC"}); part("D6", "Device", "D_Schottky", "BAT54 boost diode INTVCC -> BOOST2", "SOD123", {"1": "TRK_BOOST2", "2": "TRK_INTVCC"})
 c("C19", "4.7u 25V", "TRK_INTVCC", "GND", "C10u50"); c("C20", "1u", "TRK_LDO33", "GND")
