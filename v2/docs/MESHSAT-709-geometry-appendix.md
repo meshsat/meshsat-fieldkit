@@ -9659,3 +9659,19 @@ the next partition arm on this board needs region caps that add up to the order 
 **And the driver lesson is the one the record keeps meeting**: a stage that loses a step to a crash carried on and
 reported PART-DONE for every group, so the number at the end described a board nobody had built.
 
+**Addendum, 13:45 CEST: what the afternoon put in the register, and what runs.** ANA-001 carries its sources at last,
+which is the first time this rule has cited anything: TI's LM5176 pin table and layout section (pin 15 CSG "connect
+directly to the low-side (ground) of the current sense resistor"; Kelvin lines run in parallel from the RSENSE
+terminals; the filter capacitor at the IC pins; 8.2.2.7's 100 Ohm ceiling on the filter resistance) and the LT8705A's
+differential CSP/CSN pair. Its acceptance criteria now say what the tool enforces, that a declared node is the one the
+amplifier sees behind its filter, so the rule's own digest moved and its readings were re-taken on all four boards that
+declare nodes: **board D PASS 6 of 6 and board P PASS 7 of 7 for the first time**, board E FAIL 2 of 3 (the tracker's
+filtered pair beside the switch nodes), board A FAIL 15 of 24 with ten of them the nets A32 does not carry. Readiness
+62.8 percent verified, 14.1 failed, 23.1 inconclusive of 333. `hardset` carries the crash guard under its label's own
+verdict name, which was the last gate in the coverage map without one, so every gate this project runs now leaves a
+reading when it raises. **Running:** **A47** since 11:11 UTC (`/root/arf47`, 250 passes and a ten-hour cap, 18 of 18
+pre-route gates passing on the placement with the fifteen new parts), **P7** since 10:59 (board P at the fabricator's
+own 0.16 mm floor), **D14's** second round with the via-cost remedy after its first landed nine open, **A46's** finish
+on the partition board (0 hard, 28 unrouted at the reconcile), **E15's** second round, and B22's reconcile on the
+re-merged board, which three rip passes leave at hard 44.
+
