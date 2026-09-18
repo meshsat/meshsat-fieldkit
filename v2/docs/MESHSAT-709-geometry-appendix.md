@@ -9416,3 +9416,11 @@ board kept as the best; the record's rule that a remedy round rarely beats round
 with the importer's drills; E13 is the same regenerated design with the SENSE via at 0.7/0.3, the drill restore at
 its import and the fixer that judges its rounds, launched 01:22 UTC in `/root/erf` (`/root/e13.log`, 200 passes,
 3 h cap, `FR_CLASS_CLEAR=SENSE:SW:1.0` as E12 carried). E12's board is kept at `/root/e12_board_keep.kicad_pcb`.
+
+**Addendum, 04:14 CEST: D13 lands at 0 hard and 2 open; D12 stays.** Round two (via_costs 100) came back worse and
+round one's board was restored and finished again: hard 0, unrouted 2 of 133 (`/PCM_VDD` at R28 pad 2, 13 mm from
+its track's end; `/X_SA_PD` at R77 pad 1 on B.Cu, 0.92 mm from its F.Cu track), refused at the routed-board gate.
+What held on it: check_pcb_d PASS 63, netlist_board PASS 994 of 994, dc_drop and dc_density PASS 4 of 4, place_audit
+PASS 0 of 6, and `via_parallel` with nothing to lay, so **the 1.2/0.6 power-class via answers PI-003 at the source**
+(D12 fails it on +5V_SA). D12 (0 hard, 0 unrouted with one hand closure) stays the board; D13's generator answer
+carries into D's next cut, and both wait on decision 31 for a folder.
