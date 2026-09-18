@@ -10268,3 +10268,30 @@ rewrite either. Two fixtures: this tree renders it, a tree with no intent file r
 the GIT INDEX, which in a staged tree is the clone's, and `routeflow validate` reads phase directories that a
 checkout without `out/` does not carry. A rule whose subject is the repository's own state belongs to the host
 that has the repository.
+
+**Addendum, 23:20 CEST: DOC-002 was the fourth rule decided for every board by one reading, and a mechanical
+sweep says it was the last.** Grouping the 49 failing rule-board pairs by rule, the largest single block was
+DOC-002 failing on **all seven boards with the identical counts** (7 documents, 7 folders, 7 untraceable),
+which is the signature of one set-level verdict answering a per-board question. It is the same defect DOC-001
+was split for on 16 September and CMP-002, SUP-001 and DFM-001 on the 17th.
+
+**What it was really saying.** `doc_provenance` judges the ORDER folders, and the order set in the tree is the
+8 September one: `PCB-A-POWER-A22`, `PCB-B-COMPUTE-B16`, `PCB-C-DISPLAY-C7`, `PCB-D-APRS-D8`,
+`PCB-E1-DOCK-E6`, `PCB-P-PACK-P1`. Board C declares C24. So board C was failing because a note describing a
+board this project is not building names no artefact, while board C has no order note at all. **A document
+that cannot be traced is a failure; a document that does not exist for the board being built is an absent
+input**, and absence is not a pass either, so it reads INCONCLUSIVE now carrying the phase it wanted and the
+phase the set holds, exactly as the certification does.
+
+**It flattered nothing and it uncovered the one real failure the set reading was hiding.** Six boards move from
+a failure they do not own to an absent input; **board E5, whose order folder IS at its declared phase, is left
+FAIL, its note naming no artefact** (the provenance line exists in `make_handoff.py`, so it is the folder's age
+and not the producer). Set: **43 FAIL and 79 INCONCLUSIVE of 333 against 49 and 73**, verified unchanged at
+63.4 percent, which is the right shape for a correction that moves no copper.
+
+**And the class is now closed mechanically rather than by eye.** Of the 39 rules judged on more than one board
+whose coverage names a verdict without `<letter>`, all but four write that verdict inside each board's own
+project directory, so the name needs no letter. The four that write one file in the SET's directory are
+`final_gate` (OUT-001, ruled set-level on 16 September), `rules_complete` (SGN-001, the set's completeness by
+definition), `claims_check` (ENV-002, whose subject is the documents) and `layer_judge` (STK-002, INCONCLUSIVE
+on every board for one honest reason, the layer decision being open). **There is no fifth instance.**
