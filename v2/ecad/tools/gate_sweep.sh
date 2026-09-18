@@ -52,7 +52,7 @@ rm -rf $S; mkdir -p $S/out
 # it", and every other producer's evidence in that directory is left alone.
 for _g in hardset-routed-board-gate check_pcb_$L check_zone_nets intent_checks intent_rails intent_decoupling \
           intent_return_path intent_return_via dc_drop dc_density impedance_check netlist_board class_floor \
-          return_via return_stitch via_audit via_annular fab_limits via_current ref_change thermal spacing \
+          return_via return_stitch via_audit via_annular fab_limits stackup_gate via_current ref_change thermal spacing \
           edge_length derate clock_check port_protect safe_lines safe_lines_$L pin_map_lands_$L erc_gate place_audit check_contracts check_contracts_$L lcsc_fill \
           energy_chain pruned_gate power_sequence ground_system emc_sheet closer_audit reliability interfaces doc_provenance \
           sensitive_nodes assembly_set rf_line ledger_verify; do
@@ -113,6 +113,7 @@ else
 fi
 run "via table"         python3 $T/via_audit.py $N.kicad_pcb
 run "fabricator limits" python3 $T/fab_limits.py $N.kicad_pcb
+run "stackup"           python3 $T/stackup_gate.py $N.kicad_pcb --board $L
 run "via current"        python3 $T/via_current.py $N.kicad_pcb
 run "reference change"   python3 $T/ref_change.py $N.kicad_pcb --check
 run "thermal"            python3 $T/thermal.py $N.kicad_pcb

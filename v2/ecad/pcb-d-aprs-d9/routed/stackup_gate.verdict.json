@@ -1,0 +1,41 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "compared": 16,
+  "copper_layers": 4,
+  "disagreements": 0
+ },
+ "denominator": 16,
+ "evidence": [
+  "PCB-D-APRS-D8: JLC04161H-7628 named"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-d-aprs.kicad_pcb",
+   "sha256_16": "929bf82d2bf6eed4"
+  },
+  "declared": "JLC04161H-7628",
+  "document": "v2/vendor/fabricator/jlcpcb-impedance-stackups-2026-09-16.md"
+ },
+ "missing_input": null,
+ "note": "the board's stackup is the one it declares, property by property, and the order paperwork names it",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "STK-001": "e90a87c776209eb2"
+  },
+  "rule_set_fingerprint": "82885961768537e2"
+ },
+ "rules": [
+  "STK-001"
+ ],
+ "tool": "stackup_gate",
+ "tools": {
+  "git_head": "3dc86a3c28cf",
+  "tools_tree_sha": "b2cb584fa36e53f6"
+ },
+ "ts": "2026-09-18T15:23:08Z",
+ "verdict": "PASS",
+ "version": "3dc86a3c28cf+dirty"
+}

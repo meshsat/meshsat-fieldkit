@@ -1,0 +1,41 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "compared": 24,
+  "copper_layers": 6,
+  "disagreements": 0
+ },
+ "denominator": 24,
+ "evidence": [
+  "PCB-A-POWER-A22: JLC06161H-3313 named"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-a-power.kicad_pcb",
+   "sha256_16": "58e26c67987b1daa"
+  },
+  "declared": "JLC06161H-3313",
+  "document": "v2/vendor/fabricator/jlcpcb-impedance-stackups-2026-09-16.md"
+ },
+ "missing_input": null,
+ "note": "the board's stackup is the one it declares, property by property, and the order paperwork names it",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "STK-001": "e90a87c776209eb2"
+  },
+  "rule_set_fingerprint": "82885961768537e2"
+ },
+ "rules": [
+  "STK-001"
+ ],
+ "tool": "stackup_gate",
+ "tools": {
+  "git_head": "3dc86a3c28cf",
+  "tools_tree_sha": "b2cb584fa36e53f6"
+ },
+ "ts": "2026-09-18T15:23:07Z",
+ "verdict": "PASS",
+ "version": "3dc86a3c28cf+dirty"
+}
