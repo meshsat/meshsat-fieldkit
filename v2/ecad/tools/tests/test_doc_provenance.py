@@ -69,3 +69,54 @@ def t_the_tree_today_is_reported_rather_than_assumed():
         return
     rows, fails, notes = doc_provenance.judge(rel)
     assert rows, "the order folders hold no note, so this rule would read INCONCLUSIVE"
+
+
+def _read(d, letter):
+    import json as _j
+    p = os.path.join(d, "doc_provenance_%s.verdict.json" % letter)
+    return _j.load(open(p, encoding="utf-8")) if os.path.exists(p) else None
+
+
+def t_the_rule_is_judged_per_board_and_a_folder_at_another_phase_is_an_absent_input():
+    """DOC-002 asks about the document that describes THIS board (18 September 2026).
+
+    One set-level reading was deciding it on all seven boards: board C read FAIL because a note describing C7
+    names no artefact, while board C declares C24 and has no order note at all. A document that cannot be traced
+    is a failure; a document that does not exist for the board being built is an absent input, and absence is
+    not a pass, so it is INCONCLUSIVE and names the phase it wanted and the phase it found. DOC-001, CMP-002,
+    SUP-001 and DFM-001 were each split for the same reason on 16 and 17 September.
+
+    THE ACCEPTABLE FIXTURE is board E5, whose order folder IS at its declared phase: it is judged, and on this
+    tree it FAILS, which is the one real failure the set-level reading was hiding among six it did not own.
+    THE DEFECTIVE FIXTURE is every other board, whose folder is a phase the board has left."""
+    import tempfile, json as _j
+    rel = os.path.join(os.path.dirname(TOOLS), "..", "release", "revA")
+    if not os.path.isdir(os.path.join(rel, "order")): return
+    rows, fails, _n = doc_provenance.judge(rel)
+    with tempfile.TemporaryDirectory() as d:
+        old = os.environ.get("VERDICT_DIR")
+        os.environ["VERDICT_DIR"] = d
+        try: doc_provenance.per_board(rel, rows, fails)
+        finally:
+            if old is None: os.environ.pop("VERDICT_DIR", None)
+            else: os.environ["VERDICT_DIR"] = old
+
+        seen = [f for f in os.listdir(d) if f.startswith("doc_provenance_")]
+        assert len(seen) >= 6, "a per-board reading was not written for every board: %s" % sorted(seen)
+
+        stale = _read(d, "c")
+        assert stale and stale["verdict"] == "INCONCLUSIVE", stale and stale["verdict"]
+        assert "declares C24" in (stale.get("missing_input") or ""), stale.get("missing_input")
+        assert "C7" in (stale.get("missing_input") or ""), "the reading does not name the phase the set holds"
+
+        own = _read(d, "e5")
+        assert own and own["verdict"] in ("PASS", "FAIL"), "board E5's own folder was not judged: %s" % own
+        assert own["verdict"] == "FAIL" and own["counts"]["untraceable"] == 1, (
+            "board E5's note names an artefact now, so this fixture needs its number re-read: %s" % own["counts"])
+
+
+def t_a_board_never_reads_clean_from_another_board_s_folder():
+    """The direction that matters: no board may read PASS from a folder that is not its own."""
+    src = open(os.path.join(TOOLS, "doc_provenance.py"), encoding="utf-8").read()
+    assert "at_phase = [" in src and "ph.upper() == str(decl).upper()" in src, (
+        "the per-board reading does not compare the folder's phase with the board's declaration")

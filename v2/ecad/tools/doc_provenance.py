@@ -72,10 +72,75 @@ def judge(release_dir):
     return rows, fails, notes
 
 
+
+def _boards():
+    """(letter, project stem, declared phase) for every board of the manifest, or [] where there is no registry."""
+    try:
+        import rules_lib as _R
+        facts = _R.board_facts() or {}
+    except Exception:
+        return []
+    out = []
+    for letter in sorted(facts):
+        stem = str((facts.get(letter) or {}).get("project") or "")
+        try:
+            decl = (json.load(open(os.path.join(HERE, "boards", "%s.json" % letter), encoding="utf-8")) or {}).get("phase")
+        except Exception:
+            decl = None
+        if stem: out.append((letter, stem, decl))
+    return out
+
+
+def per_board(release_dir, rows, fails):
+    """ONE VERDICT PER BOARD, because DOC-002 asks about the document that describes THIS board.
+
+    18 September 2026, the fourth time this project has met the same defect: one set-level verdict was deciding
+    a per-board rule on all seven boards (DOC-001 was split on 16 September, CMP-002, SUP-001 and DFM-001 on the
+    17th). Here it read FAIL on board C because a note describing C7 names no artefact, while board C declares
+    C24 and HAS no order note at all. Those are different states and only one of them is the board's fault: a
+    document that cannot be traced is a failure, and a document that does not exist for the board being built is
+    an absent input. Absence is not a pass either, so it is INCONCLUSIVE and says which phase it wanted and
+    which it found, exactly as the certification does.
+
+    The order folder is named for the phase it was cut at (`PCB-C-DISPLAY-C7`), so the comparison is the
+    folder's trailing token against the board's own declaration."""
+    by_folder = {}
+    for name, doc in rows: by_folder.setdefault(name, []).append(doc)
+    for letter, stem, decl in _boards():
+        pre = stem.upper() + "-"
+        mine = sorted(n for n in by_folder if n.upper().startswith(pre))
+        phases = [n.rsplit("-", 1)[-1] for n in mine]
+        at_phase = [n for n, ph in zip(mine, phases) if decl and ph.upper() == str(decl).upper()]
+        if not mine:
+            _v.write("doc_provenance_%s" % letter, _v.INCONCLUSIVE, counts={"folders": 0}, denominator=0,
+                     inputs={"release": release_dir, "declares": decl}, quiet=True,
+                     missing_input="board %s has no order folder in this tree, so no document about it was read"
+                                   % letter.upper(),
+                     note="DOC-002 asks about the document that describes THIS board")
+            continue
+        if not at_phase:
+            _v.write("doc_provenance_%s" % letter, _v.INCONCLUSIVE, counts={"folders": len(mine)}, denominator=0,
+                     inputs={"release": release_dir, "declares": decl}, quiet=True,
+                     evidence=["order folder(s) present: %s" % ", ".join(mine)],
+                     missing_input="board %s declares %s and the order set holds %s: the note beside those "
+                                   "folders describes a board this project is not building"
+                                   % (letter.upper(), decl, ", ".join(phases)),
+                     note="DOC-002 asks about the document that describes THIS board")
+            continue
+        mine_fails = [f for f in fails if any(f.startswith(n + "/") for n in at_phase)]
+        _v.write("doc_provenance_%s" % letter, _v.FAIL if mine_fails else _v.PASS,
+                 counts={"folders": len(at_phase), "untraceable": len(mine_fails)},
+                 denominator=sum(len(by_folder[n]) for n in at_phase), evidence=mine_fails[:6], quiet=True,
+                 inputs={"release": release_dir, "declares": decl},
+                 note="every document that asserts hardware numbers about board %s names the artefact it was "
+                      "read from, by sha256" % letter.upper())
+
+
 def main(argv):
     rel = argv[0] if argv and not argv[0].startswith("--") else os.path.join(
         os.path.dirname(os.path.dirname(HERE)), "release", "revA")
     rows, fails, notes = judge(rel)
+    per_board(rel, rows, fails)
     print("doc_provenance: %d document(s) in %d deliverable folder(s) checked against the board beside them; "
           "%d name no artefact or the wrong one" % (len(rows), len({r[0] for r in rows}), len(fails)))
     for f in fails[:20]: print("  FAIL %s" % f)
