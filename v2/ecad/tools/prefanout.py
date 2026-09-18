@@ -161,7 +161,10 @@ try:
     if _short:
         print("fanout: %d rail crossing(s) with fewer barrels than the declared current needs (PI-003, reported "
               "here and judged on the routed board by via_current):" % len(_short))
-        for _x in _short[:12]: print("  note %s" % _x)
+        # EVERY LINE CARRIES THE TOOL'S NAME, because the chain filters this stage through `grep -E 'fanout:'`
+        # and the detail IS the work list: on E20's generation the summary said seven crossings and not one of
+        # them said which (18 September 2026).
+        for _x in _short[:12]: print("fanout:   %s" % _x)
     elif _rails:
         print("fanout: every declared rail's own crossings carry the barrels their current needs")
 except Exception as _e:

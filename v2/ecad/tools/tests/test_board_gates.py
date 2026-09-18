@@ -1137,7 +1137,8 @@ def t_a_rail_crossing_with_fewer_barrels_than_its_current_needs_is_named_at_gene
         path = _fanout_board(p, tmp, 2.2)
         r = subprocess.run([sys.executable, os.path.join(TOOLS, "prefanout.py"), path, "+5V_X"],
                            capture_output=True, text=True)
-        assert "+5V_X at U1 pad 1" in r.stdout, r.stdout[-600:]
+        assert "fanout:   +5V_X at U1 pad 1" in r.stdout, \
+            "the detail line does not carry the tool's name, so the chain's own grep drops it: %s" % r.stdout[-600:]
         assert "which needs 4 at a 10 K rise" in r.stdout, r.stdout[-600:]
 
 
