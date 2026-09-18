@@ -10434,3 +10434,29 @@ the place box since 22:29 UTC: its pre-lay closed **5 of 5** pad-to-pad pairs ov
 pre-route gate passed 18 of 18. The counter-evidence is written down in advance: board A's A40 carried four
 pre-laid nets and cost ten connections against A42's fifteen, so more pre-laid copper can come back worse, the
 guard keeps the board only if the hard count does not rise, and D18's open count is read against D17's two.
+
+**Addendum, 02:50 CEST (19 September): a pre-lay pays for a connection nothing can close and costs for a long
+run, and there are five measurements now.** Two landed within the hour and they point opposite ways.
+
+* **E19's round 2 is worse and the supervisor put it back**: 0 hard and 5 unrouted against round 1's 1, and
+  routeflow kept round 1 ("this round is worse than round 1; the better board is kept"), which is the 11
+  September fix doing its job on a board that would otherwise have lost its best result to a remedy.
+* **E20, the pre-lay arm, came back at EIGHT open against E19's one.** Its pre-lay had worked perfectly: 39 of
+  39 lanes closed and locked, the gate passing 18 of 18. The copper it laid is what cost the router seven
+  connections.
+
+**The five measurements, and the line between them is what the copper IS rather than that it exists**:
+
+| board | pre-laid | result |
+|---|---|---|
+| D17 | `/PCM_VDD`, one short local gap nothing could close | closed it; 2 open where D15 had 4 at the router |
+| A47 | the eleven RF drops, 10 mm each, locked by the generator | RF-001 answered, no route cost this board could see |
+| A40 | `/CH_ACN`, `/CH_SRP`, `/FE_LDRV1`, `/PD_EN` on ALL FOUR layers | 25 open against A42's 15: ten connections |
+| E20 | `/LTG_IRQ` and `/+3V3_E6`, 207 and 127 mm across the strip | 8 open against E19's 1: seven connections |
+| E15/E16 | the same nets before the pour fix | laid nothing, cost nothing, measured nothing |
+
+**A short pre-laid run takes a corridor that is full by the time a closure asks and costs the router almost
+nothing; a long one is a wall across the board that everything else has to go round.** Board D's `/PCM_VDD` is
+10.72 mm; board E's are 127 and 207 mm. That is the rule to carry, and it decides board A's next arm: A47's
+opens are refused at U3's own filter pads, pad to pad, which is board D's case and not board E's, so
+`$SP/a48_box.sh` pre-lays THOSE and nothing long.
