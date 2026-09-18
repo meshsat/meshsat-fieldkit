@@ -9457,3 +9457,11 @@ are not there, and a narrower closure would carry the shore current through copp
 routed DC_HS on Q7's WRONG pins (32.219); with the drain tab carrying it, the run from the tab to the filter is the
 generator's to lay as locked copper (the `power_copper` pattern board A uses for its rails, or the filter placed
 at the FET), which is board E's next-phase item and not a pass-count one. An inner-layer attempt runs beside it.
+
+**Addendum, 06:21 CEST: E14 carries the hot-swap output in locked copper.** `gen_pcb_e3.py` lays DC_HS as three B.Cu
+bands (5.5 mm east along y -97 from Q7's source pads under the HS_S tab and R19, 5.5 mm north at x -60 through
+ENTRYA, 4.5 mm east at y -86 into L2 pin 1, that one narrower because VIN_RAW's ten source vias sit 3 mm south of
+the pad), each a wire keep-out on B.Cu, with the vias where the copper is the net's own: one in each of Q7's three
+source pads and three inside L2 pin 1, and none at the corners where a via could land on a top part's pad. 5.3 mm is
+IPC-2221's width for 8 A at 10 K on 1 oz. E14 launched 04:21 UTC in `/root/erf14`; its pre-route DRC is the first
+judge of whether the bands collide with anything, its route the second.
