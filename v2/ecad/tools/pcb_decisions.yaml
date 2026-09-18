@@ -345,8 +345,19 @@ decisions:
       and the route does not touch it): USB_D8 P 139.47 mm against N 139.75, mismatch 0.29 mm; USB_E6 0.12 mm;
       USB_WALL 0.01 mm. The compute module's own datasheet asks 0.15 mm of this interface, so ONE of board A's
       three pairs is outside it and two are comfortably inside. Closing it is 0.14 mm of length added to the
-      short leg, which `meander.py` does and `pair_match.sh` already runs three rounds of in every finish. Board
-      B's number needs its routed board and B21 is mid-route. So on the evidence that exists, ruling the
+      short leg, which `meander.py` does and `pair_match.sh` already runs three rounds of in every finish.
+      BOARD B'S NUMBER IS MEASURED NOW (18 September 2026, on the adopted B21 board, which this line used to say
+      had to wait for its route). Of its 120 pairs, 21 have one leg routed and one not and 21 more carry a leg
+      under 5 mm, which is the 416 open connections showing through; **63 are real runs, and on those the router
+      lays both legs together**: 55 of the 63 are inside 0.10 mm, the tightest number any of its interfaces asks.
+      Eight exceed this project's 1.00 mm and FOUR exceed their own interface's number, and they are the same
+      four (NVME2_CLK 22.31 mm, NVME3_RX 2.49, ETH3_P0 2.18, CARD3_CLK 1.69), each a routing artefact on a board
+      that is 416 connections short rather than a design choice. **So ruling the interfaces' own numbers costs
+      board B nothing that this project's own 1.00 mm does not already flag.** One thing the measurement found
+      that neither option settles: the four MDI pairs, the transformer-less compute-module Ethernet links of
+      decision 29, have NO declared tolerance at all in pcb_interfaces.yaml and read 2.74 to 14.68 mm of
+      mismatch on this board; whatever is ruled here, those four need a number from the same clause decision 29
+      turns on. So on the evidence that exists, ruling the
       interface's own number costs one small meander on one pair of one board, and ruling this project's 1.00 mm
       leaves a pair at twice the budget its host states.
       AND THE SPECIFICATION'S OWN SCALE IS IN THE TREE, which matters because it says neither option is unsafe:
