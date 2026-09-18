@@ -75,8 +75,16 @@ def main(argv):
                 if d > reach: continue
                 (own if pnet == net else other).append((round(d, 2), ref, num, pnet, round(px, 2), round(py, 2), round(sx, 2), round(sy, 2)))
             own.sort(); other.sort()
+            # WHOSE BARREL IS IT (18 September 2026, found on board P): a locked via at the site is the
+            # GENERATOR's own, and a cluster centred there would sit 0.45 mm from it, which is a hole-to-hole
+            # violation. Where the barrel is the router's, the placement has nothing there and a cluster is
+            # exactly right (board E). So the report says which, because the edit is a different one.
+            mine = any(t.GetClass() == "PCB_VIA" and t.IsLocked()
+                       and t.GetNetname().lstrip("/") == net
+                       and math.hypot(t.GetPosition().x / 1e6 - x, t.GetPosition().y / 1e6 - y) < 0.15
+                       for t in b.GetTracks())
             rows.append(dict(net=net, amps=round(amps, 3), limit=round(lim, 3), ratio=round(ratio, 2),
-                             drill=drill, at=(round(x, 2), round(y, 2)),
+                             drill=drill, at=(round(x, 2), round(y, 2)), locked_here=mine,
                              at_origin=(round(x - ox, 2), round(oy - y, 2)) if (ox or oy) else None,
                              own=own[:8], other=other[:12]))
     print("barrel_sites: %d barrel(s) reported of %d measured net(s), %d over their own rating at %.0f K and "
@@ -101,31 +109,46 @@ def main(argv):
         # each line so the reader can veto it: a site whose nearest neighbour is under about 1.5 mm wants the
         # placement, not another barrel.
         print("\n=== suggested generator lines (read them, do not paste them blind) ===")
-        for r in rows:
-            if r["ratio"] <= 1.0: continue
-            x, y = r["at_origin"] or r["at"]
-            # THE AXIS IS THE ONE THAT KEEPS THE MOST ROOM, computed rather than guessed (18 September 2026).
-            # The first version compared the obstacle's x and y displacement and picked the larger, which spreads
-            # TOWARD the nearest pad: board P's second FUSED site has Q1's gate pad 0.68 mm away in x and 1.27 in
-            # y, and that rule chose y, which walks a barrel to 1.07 mm from it where x keeps 1.29. So both axes
-            # are measured: the barrels a cluster would place are laid out on each, the worst distance to any
-            # other net's pad is taken, and the better axis wins. It is the same arithmetic the tool already does
-            # for the count, applied to the direction.
-            import via_current as _vcx
-            _n = _vcx.barrels_for(r["amps"], r["drill"])
-            _pitch = r["drill"] + 0.4
-            _span = (_n - 1) * _pitch
-            def _worst(ax):
-                pts = [((r["at"][0] - _span / 2.0 + i * _pitch, r["at"][1]) if ax == "x"
-                        else (r["at"][0], r["at"][1] - _span / 2.0 + i * _pitch)) for i in range(_n)]
-                return min([math.hypot(px - o[4], py - o[5]) for px, py in pts for o in r["other"]] or [99.0])
-            _wx, _wy = _worst("x"), _worst("y")
-            axis = "x" if _wx >= _wy else "y"
-            nearest = min(_wx, _wy) if r["other"] else None
-            print('    _pc.cluster("%s", (%.2f, %.2f), amps=%.3f, drill=%.2f, axis="%s")   # ratio %.2f, nearest other-net pad %s'
-                  % (r["net"], x, y, r["amps"], r["drill"], axis, r["ratio"],
-                     ("%.2f mm to the nearest other-net pad on this axis (%.2f on the other)"
-                      % (max(_wx, _wy), min(_wx, _wy))) if r["other"] else "none within reach"))
+        import via_current as _vcx
+        # SITES OF ONE NET THAT SIT ON TOP OF EACH OTHER ARE ONE TRANSITION (18 September 2026, found on board P).
+        # Its two PACK_P sites are 1.03 mm apart and carry 1.965 A and 1.181 A: emitted as two clusters they put
+        # two barrels 0.20 mm apart, which is a hole-to-hole violation and which `stitch` now refuses. They are
+        # two barrels of ONE crossing, so they are grouped, their currents are added, and the count is taken from
+        # the total with the barrels already there subtracted. A group is the sites of one net within 2 mm.
+        groups = []
+        for r in [x for x in rows if x["ratio"] > 1.0]:
+            for g in groups:
+                if g["net"] == r["net"] and min(math.hypot(r["at"][0] - q["at"][0], r["at"][1] - q["at"][1]) for q in g["sites"]) <= 2.0:
+                    g["sites"].append(r); break
+            else:
+                groups.append({"net": r["net"], "sites": [r]})
+        for g in groups:
+            ss = g["sites"]
+            amps = sum(x["amps"] for x in ss)
+            drill = min(x["drill"] for x in ss)
+            cx = sum(x["at"][0] for x in ss) / len(ss); cy = sum(x["at"][1] for x in ss) / len(ss)
+            ox = sum((x["at_origin"] or x["at"])[0] for x in ss) / len(ss)
+            oy = sum((x["at_origin"] or x["at"])[1] for x in ss) / len(ss)
+            other = [o for x in ss for o in x["other"]]
+            n = _vcx.barrels_for(amps, drill)
+            pitch = drill + 0.4
+            span = (n - 1) * pitch
+            def worst(ax):
+                pts = [((cx - span / 2.0 + i * pitch, cy) if ax == "x" else (cx, cy - span / 2.0 + i * pitch)) for i in range(n)]
+                return min([math.hypot(px - o[4], py - o[5]) for px, py in pts for o in other] or [99.0])
+            wx, wy = worst("x"), worst("y")
+            axis = "x" if wx >= wy else "y"
+            room = ("%.2f mm of room on this axis, %.2f on the other" % (max(wx, wy), min(wx, wy))) if other else "nothing else within reach"
+            if any(x.get("locked_here") for x in ss):
+                print('    # %s at (%.2f, %.2f): this barrel is the GENERATOR\'s own (a locked via sits on it), so a'
+                      % (g["net"], ox, oy))
+                print('    # cluster centred here would land 0.%d mm from it. Add %d point(s) to the call that placed it'
+                      % (int(round((drill + 0.4) / 2 * 100)), max(0, n - len(ss))))
+                print('    # instead, %.3f A over %d barrel(s) of %.2f mm, and keep %.4f mm between holes.'
+                      % (amps, n, drill, drill + 0.2995))
+                continue
+            print('    _pc.cluster("%s", (%.2f, %.2f), amps=%.3f, drill=%.2f, axis="%s")   # %d barrel(s) over their rating here, worst %.2f, %s'
+                  % (g["net"], ox, oy, amps, drill, axis, len(ss), max(x["ratio"] for x in ss), room))
     if "--json" in argv: print(json.dumps(rows, indent=1))
     return 0 if not over else 1
 
