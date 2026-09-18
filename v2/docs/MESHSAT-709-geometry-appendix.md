@@ -9424,3 +9424,12 @@ What held on it: check_pcb_d PASS 63, netlist_board PASS 994 of 994, dc_drop and
 PASS 0 of 6, and `via_parallel` with nothing to lay, so **the 1.2/0.6 power-class via answers PI-003 at the source**
 (D12 fails it on +5V_SA). D12 (0 hard, 0 unrouted with one hand closure) stays the board; D13's generator answer
 carries into D's next cut, and both wait on decision 31 for a folder.
+
+**Addendum, 04:28 CEST: A43 routed 250 passes to 0 hard and 19 open of 254.** A42, the same configuration cut at
+pass 137, read 15; A43 ran the full 250 and its last session reads 19, 209 vias, so on this board more passes past
+the first hundred and forty are not fewer opens: the per-pass session is the LAST pass and not the best, and the
+router's late passes trade one open for another. Its finish runs (its import predates the drill restore; the place
+box carries today's tools for a re-import if the gate reads annular items). Board A's ladder now reads A40 25 (20
+after closers), A41 23, A42 15, A43 19, with A44 (RF drops, SENSE class) and A45 (A44 plus the class-pair rule) due
+about 07:30 UTC; whatever they read, board A's route is not a pass-count problem either, which is the B21 lesson in
+a second place, and its next lever is the partition or the placement, decided when the two arms land.
