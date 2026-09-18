@@ -217,9 +217,9 @@ def checklist(r, path):
 
 
 def main(argv):
-    ecad = argv[argv.index("--ecad") + 1] if "--ecad" in argv else None
+    ecad = _v.opt(argv, "--ecad", None)
     only = argv[argv.index("--board") + 1].lower() if "--board" in argv else None
-    rot = argv[argv.index("--rot") + 1] if "--rot" in argv else None
+    rot = _v.opt(argv, "--rot", None)
     r = judge(ecad, only, rot)
     if "--checklist" in argv:
         # THE PATH IS OPTIONAL AND THE DEFAULT IS THE ONE PLACE THE ORDERING SESSION LOOKS (18 September 2026).

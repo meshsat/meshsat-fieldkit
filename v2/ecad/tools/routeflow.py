@@ -1202,12 +1202,12 @@ if __name__ == "__main__":
     a = sys.argv[1:]
     if not a: print(__doc__); sys.exit(2)
     _install_signal_handlers()
-    if a[0] == "preflight": sys.exit(preflight(a[a.index("--repo") + 1] if "--repo" in a else os.getcwd()))
+    if a[0] == "preflight": sys.exit(preflight(verdict.opt(a, "--repo", os.getcwd())))
     if a[0] == "selftest": sys.exit(selftest())
     if a[0] == "status": sys.exit(status(a[1], "--markdown" in a))
-    _ph = a[a.index("--phase") + 1] if "--phase" in a else None
-    if a[0] == "validate": sys.exit(validate(a[1], a[a.index("--repo") + 1] if "--repo" in a else None, _ph))
-    _rq = [x for x in (a[a.index("--requires") + 1] if "--requires" in a else "").split(",") if x]
+    _ph = verdict.opt(a, "--phase", None)
+    if a[0] == "validate": sys.exit(validate(a[1], verdict.opt(a, "--repo", None), _ph))
+    _rq = [x for x in (verdict.opt(a, "--requires", "")).split(",") if x]
     if a[0] == "run": sys.exit(run(a[1], int(a[a.index("--rounds") + 1]) if "--rounds" in a else 2, "--no-services" not in a, "--dry-run" in a, _ph, _rq))
     if a[0] == "experiment": sys.exit(experiment(a[1], float(a[a.index("--budget-hours") + 1]) if "--budget-hours" in a else 6.0, "--no-services" not in a, int(a[a.index("--parallel") + 1]) if "--parallel" in a else 1))
     print(__doc__); sys.exit(2)

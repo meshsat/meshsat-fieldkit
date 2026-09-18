@@ -217,8 +217,8 @@ def judge(closers=None, finish=None, letter=None):
 
 
 def main(argv):
-    cl = argv[argv.index("--closers") + 1] if "--closers" in argv else None
-    fi = argv[argv.index("--finish") + 1] if "--finish" in argv else None
+    cl = _v.opt(argv, "--closers", None)
+    fi = _v.opt(argv, "--finish", None)
     letter = argv[argv.index("--board") + 1].lower() if "--board" in argv else None
     try:
         r = judge(cl, fi, letter)

@@ -159,7 +159,7 @@ def judge(net_path, intent_path=None):
 def main(argv):
     if not argv: print(__doc__); return 2
     net = argv[0]
-    intent = argv[argv.index("--intent") + 1] if "--intent" in argv else None
+    intent = _v.opt(argv, "--intent", None)
     if not os.path.exists(net):
         print("power_sequence: no netlist at %s" % net)
         return _v.write("power_sequence", _v.INCONCLUSIVE, denominator=0, inputs={"netlist": net},

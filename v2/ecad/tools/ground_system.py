@@ -113,8 +113,8 @@ def judge(net_path, letter=None):
 def main(argv):
     if not argv: print(__doc__); return 2
     net = argv[0]
-    letter = argv[argv.index("--board") + 1] if "--board" in argv else \
-        (os.path.basename(net).split("-")[1] if "-" in os.path.basename(net) else "")
+    letter = _v.opt(argv, "--board",
+                    os.path.basename(net).split("-")[1] if "-" in os.path.basename(net) else "")
     if not os.path.exists(net):
         print("ground_system: no netlist at %s" % net)
         return _v.write("ground_system", _v.INCONCLUSIVE, denominator=0, rules=["GND-001"],

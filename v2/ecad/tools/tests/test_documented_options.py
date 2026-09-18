@@ -100,5 +100,8 @@ def t_prose_about_another_program_is_not_this_tool_s_promise():
 
 def t_dc_drop_reads_its_own_png_option():
     src = open(os.path.join(TOOLS, "dc_drop.py"), encoding="utf-8").read()
-    assert 'a.index("--png")' in src, "dc_drop no longer reads --png"
+    # THE RULE IS THAT THE OPTION IS READ, not that it is read by one spelling (18 September 2026: the flag
+    # readers moved to `verdict.opt`, which answers a flag given no value instead of raising, and this rule
+    # failed on a tool that reads --png perfectly well). A rule pinned to a literal is a rule about the text.
+    assert ('a.index("--png")' in src or '"--png"' in src), "dc_drop no longer reads --png"
     assert "def _draw(" in src, "dc_drop has no drawing for the picture it offers"
