@@ -233,4 +233,7 @@ def main(argv, run=None, boards_dir=None, holds_path=None):
                          % (c_word, j_word, "PASS" if rc_m == 0 else "OPEN", certify.strip()[:80]))
 
 
-if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
+if __name__ == "__main__":
+    # the coverage map names this tool as a rule's verification, so a crash here has to leave a reading
+    # too (18 September 2026; the rule that finds this one reads the coverage map rather than a list)
+    sys.exit(_v.guard("final_gate", main, sys.argv[1:]))

@@ -139,4 +139,9 @@ def main(argv):
                          "REL-001 is verified at the prototype and no board has been built")
 
 
-if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
+if __name__ == "__main__":
+    # EVERY GATE LEAVES A READING WHEN IT RAISES (18 September 2026). The thirteen one-line entries of this
+    # morning were the gates a crash had already cost a verdict; these are the rest of the deciding gates in
+    # the coverage map, guarded the same way, so a rule whose tool raised reads INCONCLUSIVE naming the
+    # exception rather than 'no verdict', which the registry reads as nobody having looked.
+    sys.exit(_v.guard("reliability", main, sys.argv[1:]))

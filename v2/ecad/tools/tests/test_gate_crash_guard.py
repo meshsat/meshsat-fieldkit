@@ -49,7 +49,12 @@ def t_the_guard_writes_inconclusive_for_a_crash_and_passes_a_return_through():
 # `verdict.crash_hook` at the top of the file instead (MODULE_GUARDED); hardset writes under a label per call
 # and its guard is the writer's own BaseException handling.
 GUARDED = ("impedance_check", "claims_check", "class_floor", "clock_check", "dc_drop", "derate", "erc_gate", "fab_limits",
-           "place_audit", "port_protect", "pruned_gate", "verify_deliverable", "via_audit")
+           "place_audit", "port_protect", "pruned_gate", "verify_deliverable", "via_audit",
+           # the rest of the coverage map's deciding gates, guarded the same way on 18 September 2026
+           "assembly_set", "block_contract", "closer_audit", "doc_provenance", "edge_length", "emc_sheet",
+           "energy_chain", "ground_system", "interfaces", "ledger_verify", "netlist_board", "pin_map_lands",
+           "power_sequence", "ref_change", "reliability", "rf_line", "sensitive_nodes", "spacing", "thermal",
+           "via_current")
 
 
 def t_every_gate_with_a_one_line_entry_runs_under_the_crash_guard():
@@ -97,3 +102,28 @@ def t_hardset_is_guarded_under_the_name_its_label_makes():
     blk = src[i:]
     assert "verdict.guard(_vname(" in blk, "hardset's entry point is not guarded under its label's name"
     assert "--label" in blk, "the guard is given a name that does not come from the label"
+
+
+def t_every_deciding_gate_in_the_coverage_map_is_guarded_one_way_or_another():
+    """The list above is a list, and a list goes stale. This reads the coverage map instead: every tool it names as
+    a rule's verification, whose entry point is the one-line `sys.exit(main(...))`, must be wrapped (18 September
+    2026). Three gates parse their own argv before main and one writes no verdict; each is named here with why."""
+    import yaml, re
+    cov = yaml.safe_load(open(os.path.join(TOOLS, "pcb_rules_coverage.yaml"), encoding="utf-8"))["coverage"]
+    OWN_ENTRY = {"jlc_certify.py": "its entry is a block that parses --boards before it decides",
+                 "layer_judge.py": "its entry is a block, not a one-line main",
+                 "safe_lines.py": "its entry is a block, not a one-line main",
+                 "track_current.py": "a measurement printer: it writes no verdict"}
+    bad = []
+    for rid, v in cov.items():
+        tool = (v.get("verification") or {}).get("tool") if isinstance(v, dict) else None
+        for f in re.findall(r"([a-z_0-9]+\.py)", str(tool or "")):
+            if f in OWN_ENTRY: continue
+            path = os.path.join(TOOLS, f)
+            if not os.path.exists(path): continue
+            src = open(path, encoding="utf-8", errors="replace").read()
+            i = src.find('if __name__ == "__main__"')
+            if i < 0: continue
+            if not re.search(r"sys\.exit\(main\(sys\.argv\[1:\]\)\)", src[i:i + 400]): continue
+            if "guard(" not in src[i:i + 400] and "crash_hook" not in src[:1600]: bad.append((rid, f))
+    assert not bad, "deciding gates with a one-line entry and no crash guard: %s" % sorted(set(b[1] for b in bad))

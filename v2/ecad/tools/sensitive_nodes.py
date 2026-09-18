@@ -276,7 +276,13 @@ def main(argv):
     for f in r["fails"]: print("  FAIL %s" % f)
     if "--json" in argv: print(json.dumps(r, indent=1))
     res = _v.FAIL if r["fails"] else _v.PASS
-    return _v.write("sensitive_nodes", res, rules=["ANA-001"],
+    # A READING TAKEN WITH LESS INPUT NEVER REPLACES ONE TAKEN WITH MORE (17 September 2026's rule, applied here
+    # on 18 September). Half of this gate is the netlist and half is the copper, and on a host with no pcbnew the
+    # copper half cannot run: the verdict then said PASS with nothing to say it had not looked, which is exactly
+    # how `doc_provenance`'s sweep reading came to stand in front of the runner's real one.
+    _no_copper = any("only the netlist half" in n or "no board file" in n for n in r["notes"])
+    return _v.write("sensitive_nodes", _v.INCONCLUSIVE if (_no_copper and res == _v.PASS) else res, rules=["ANA-001"],
+                    missing_input=("the copper: %s" % [n for n in r["notes"] if "netlist half" in n or "no board file" in n][0]) if _no_copper else None,
                     counts={"declared": r["declared"], "measured": len(r["measured"]), "fail": len(r["fails"])},
                     denominator=max(1, r["declared"]), evidence=r["fails"][:20],
                     inputs={"board": letter, "list": os.path.basename(sens or SENS)},
@@ -286,4 +292,9 @@ def main(argv):
                          "beside the clearance the board asks for. The clearances are this project's own")
 
 
-if __name__ == "__main__": sys.exit(main(sys.argv[1:]))
+if __name__ == "__main__":
+    # EVERY GATE LEAVES A READING WHEN IT RAISES (18 September 2026). The thirteen one-line entries of this
+    # morning were the gates a crash had already cost a verdict; these are the rest of the deciding gates in
+    # the coverage map, guarded the same way, so a rule whose tool raised reads INCONCLUSIVE naming the
+    # exception rather than 'no verdict', which the registry reads as nobody having looked.
+    sys.exit(_v.guard("sensitive_nodes", main, sys.argv[1:]))
