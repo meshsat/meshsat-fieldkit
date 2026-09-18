@@ -19,15 +19,15 @@
  "note": "a ground via at a signal's reference change",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [],
  "tool": "intent_return_via",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "c80454a737a87c01"
  },
- "ts": "2026-09-17T22:43:29Z",
+ "ts": "2026-09-18T18:46:09Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

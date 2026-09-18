@@ -21,7 +21,7 @@
    "RET-001": "75745aa0a4017ff8",
    "RET-002": "9603c9b658cd19c0"
   },
-  "rule_set_fingerprint": "4bc0aa24d836788d"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "RET-001",
@@ -30,9 +30,9 @@
  "tool": "intent_return_path",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "6f7ef144f21449b3"
+  "tools_tree_sha": "c80454a737a87c01"
  },
- "ts": "2026-09-18T08:56:15Z",
+ "ts": "2026-09-18T18:46:38Z",
  "verdict": "PASS",
  "version": "unknown"
 }

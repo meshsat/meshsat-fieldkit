@@ -2,23 +2,13 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "fail": 12,
-  "pass": 714,
+  "fail": 2,
+  "pass": 724,
   "unclaimed": 0
  },
  "denominator": 726,
  "evidence": [
-  "return path under HDMI2_D1_N (DIFF100, CONTROLLED_IMPEDANCE): 10.9 of 118.8 mm without a plane on a neighbouring layer (limit 10.0; 7.8 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]",
-  "return path under HOST1_0TX_P (USB, CONTROLLED_IMPEDANCE): 12.1 of 178.1 mm without a plane on a neighbouring layer (limit 10.0; 6.3 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]",
-  "return path under HOST1_1TX_N (USB, CONTROLLED_IMPEDANCE): 11.7 of 176.9 mm without a plane on a neighbouring layer (limit 10.0; 5.3 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]",
-  "return path under HOST3_0TX_P (USB, CONTROLLED_IMPEDANCE): 13.1 of 157.6 mm without a plane on a neighbouring layer (limit 10.0; 8.9 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]",
-  "return path under HOST3_1RX_N (USB, CONTROLLED_IMPEDANCE): 16.2 of 192.5 mm without a plane on a neighbouring layer (limit 10.0; 8.2 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]",
-  "return path under HUB2_RST_n (USB, CONTROLLED_IMPEDANCE): 13.9 of 189.3 mm without a plane on a neighbouring layer (limit 10.0; 5.9 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]",
-  "return path under PCIE3_RST1_n (USB, CONTROLLED_IMPEDANCE): 12.4 of 76.9 mm without a plane on a neighbouring layer (limit 10.0; 3.9 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]",
-  "return path under QMX_DP (USB, CONTROLLED_IMPEDANCE): 11.4 of 176.5 mm without a plane on a neighbouring layer (limit 10.0; 9.5 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]",
-  "return path under SWP3_C_N (DIFF100, CONTROLLED_IMPEDANCE): 14.0 of 253.9 mm without a plane on a neighbouring layer (limit 12.7; 1.8 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class DIFF100 carries an impedance target]",
-  "return path under USB_E6_N (USB, CONTROLLED_IMPEDANCE): 10.5 of 65.2 mm without a plane on a neighbouring layer (limit 10.0) [the board's own net class USB carries an impedance target]",
-  "return path under USB_OTG_N3 (USB, CONTROLLED_IMPEDANCE): 19.0 of 220.7 mm without a plane on a neighbouring layer (limit 11.0; 16.0 mm more is this net's own via anti-pads, which RET-003 judges) [the board's own net class USB carries an impedance target]",
+  "return path under HOST3_1RX_N (USB, CONTROLLED_IMPEDANCE): 11.0 of 192.5 mm without a plane on a neighbouring layer (limit 10.0; 8.2 mm more is this net's own via anti-pads, which RET-003 judges; 5.2 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]",
   "return via: 4 of 12 signal vias have a ground via within 1.5 mm (586 exempt in fine-pitch fans, 687 on one reference plane, 512 on a net whose declared class has no edge to return); without one: SEL2_O1 at (0.57, 144.25); SEL2_O1 at (1.40, 147.50); HUBRST2_AB at (3.72, 139.94); HUBRST2_A at (3.72, 141.24); SEL3_AB at (3.72, 148.15); SDA at (11.07, 27.54); HUBRST1_VOTE at (13.55, 146.20); WSEC_C at (28.02, 141.24)"
  ],
  "inputs": {
@@ -31,15 +21,15 @@
  "note": "the whole file; each rule also has its own verdict (intent_return_path, intent_return_via, intent_decoupling, intent_rails)",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [],
  "tool": "intent_checks",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "c80454a737a87c01"
  },
- "ts": "2026-09-17T22:43:29Z",
+ "ts": "2026-09-18T18:46:09Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

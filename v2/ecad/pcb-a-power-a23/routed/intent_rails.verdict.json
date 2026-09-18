@@ -20,7 +20,7 @@
   "rule_fingerprints": {
    "PWR-001": "6e91133d2ef9dee3"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "PWR-001"
@@ -28,9 +28,9 @@
  "tool": "intent_rails",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "7220c1b43176cf2e"
+  "tools_tree_sha": "c80454a737a87c01"
  },
- "ts": "2026-09-17T22:38:35Z",
+ "ts": "2026-09-18T18:46:56Z",
  "verdict": "PASS",
  "version": "unknown"
 }
