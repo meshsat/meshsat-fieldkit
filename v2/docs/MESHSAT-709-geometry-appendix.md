@@ -9740,3 +9740,14 @@ router nor `direct_close` could take any of the five. So the rule is not a routi
 was: it is three parts in the wrong seats, and the answer costs five connections that the next E phase has to route
 out with the effort E17 was given. E17 stays board E's adopted phase until that lands.
 
+**Addendum, 17:00 CEST: what E18's five connections actually are.** Read off the finished board's own DRC rather than
+inferred: `/DCF_PULSE`, `/DCIN_PGD`, `/FAN2_PWM`, `/FAN2_TACH` and `/GEIGER_PULSE`, four of them landing on U10, the
+sensor controller, over spans of 167 to 223 mm and the fifth 40 mm. **None of them is the tracker sense pair and none
+is near the Kelvin filter**, so the answer to ANA-001 did not cost the connections in its own neighbourhood: it moved
+three parts, the deterministic router took a different set of long runs across the 278 mm strip, and five of them did
+not close. That is the E14, E15 and E16 family again, board E's opens are always board-crossing signal nets, and it is
+routing work rather than closure work (the stub router closed none of the five and `direct_close` found no pair inside
+its 4 mm reach). The via-cost round routeflow started at 14:49 UTC is the instrument for exactly that, and it
+regenerates the placement, which is safe here only because `gen_pcb_e3.py` FIXES the two Kelvin seats: verified on the
+round-2 placed board at 14:55 UTC, R6 at 153.60 and R7 at 156.60, the seats E18 was measured at.
+
