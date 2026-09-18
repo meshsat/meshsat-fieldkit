@@ -9840,3 +9840,15 @@ round 2, the via-cost remedy on the Kelvin placement, routed **0 hard and four o
 against round 1's five and 181. Both finishes are in their closers and both have a landing driver waiting on the
 supervisor; neither is adopted.
 
+**Addendum, 18:25 CEST: the general form of the stackup defect was checked across the set and STK-001 was the
+only one.** A PASS on a denominator of zero is absence wearing a pass, which is what credited three boards with
+a stackup nobody had compared. Every such verdict on this disk was read: **42 of them in 13 distinct shapes**,
+and each one carries its declared reason in its own note, which is the 11 September rule doing its work ("a
+declared zero is a PASS with its reason and only an undeclared zero is inconclusive"). Board C's impedance
+verdict says the board declares its USB class with no target; board P's and E5's port verdicts say they declare
+no external conductor; board P's safety-line verdict says it declares it has none; board A's pruned-escape
+verdict says the board declares that the pipeline prunes no escape on it; board E5's three part verdicts say it
+is a bare board of copper, holes and targets, "a declared zero, not an absence", in words written on 17
+September when the same question was asked of the same board. So the machinery was right everywhere it had been
+asked, and STK-001 was wrong because nobody had asked it there.
+
