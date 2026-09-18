@@ -3,7 +3,7 @@
 
 # Rule status: board E5
 
-Manifest **2026-09-16.1**, rule set **4bc0aa24d836788d**, evidence epoch **2026-09-16T00:35:00+02:00**.
+Manifest **2026-09-16.1**, rule set **82885961768537e2**, evidence epoch **2026-09-16T00:35:00+02:00**.
 
 **Readiness: NOT_READY**
 
@@ -11,9 +11,9 @@ Measured on board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 20 | 80.0 |
+| PASS | 19 | 76.0 |
 | FAIL | 2 | 8.0 |
-| INCONCLUSIVE | 3 | 12.0 |
+| INCONCLUSIVE | 4 | 16.0 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **25** | 100.0 |
 
@@ -29,7 +29,7 @@ Measured on board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5.
 | PWR-003 protection coordination | BLOCKER | SCHEMATIC | **PASS** | energy_chain_e5 PASS of 1 |
 | STK-001 the stackup is declared, feasible and in the board | BLOCKER | ROUTED_BOARD | **PASS** | impedance_check PASS of 0 |
 | STK-002 a layer count is decided and costed | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against si |
-| ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **PASS** | sensitive_nodes PASS of 1 |
+| ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **INCONCLUSIVE** | taken under a different version of ANA-001 (1b5e5e32b5e446db, current is efb6e1511c4ca89f) |
 | INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **PASS** | interfaces_e5 PASS of 0 |
 | TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **PASS** | port_protect_e5 PASS of 0 |
 | PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | closer_audit PASS of 15 |
