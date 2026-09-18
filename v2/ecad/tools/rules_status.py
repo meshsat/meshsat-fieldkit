@@ -517,9 +517,23 @@ def main(argv):
              inputs={"manifest_version": m.get("manifest_version"), "rule_set_fingerprint": fp},
              note=("every applicable rule reached one of the five results on every board in the manifest"
                    if complete else "a rule that applies reached no result, which is what the registry exists to prevent"),
-             # a SET-LEVEL verdict, so it goes where the set-level gates write and every board can read it
-             out_dir=os.path.join(ECAD, "out"), quiet=True)
+             # A SET-LEVEL verdict, so it goes where the set-level gates write and every board can read it,
+             # UNLESS the caller said where to write (18 September 2026). `--out-dir` redirected the board
+             # pages and the audit but not this one, so a run told to keep its output somewhere else still
+             # wrote into the tree: the suite's own completeness test does exactly that, and on the runner it
+             # is invisible because the numbers match what was there. Run on a box in a checkout without the
+             # untracked evidence it rewrote the tree's readiness with a reading taken with LESS input (188
+             # PASS against 211), which is the one thing this project's verdicts are not allowed to do. The
+             # guard in `tests/run.py` caught it, which is what that guard is for. An option that says where
+             # to write must write all of it there.
+             out_dir=(_explicit_out(argv) or os.path.join(ECAD, "out")), quiet=True)
     return _finish(argv, all_rows, per_board, m, fp, phase, out_dir)
+
+
+def _explicit_out(argv):
+    """The directory the caller named, or None. A set-level verdict belongs beside the set's own gates; a run
+    told to write elsewhere is a run that must leave the tree exactly as it found it."""
+    return argv[argv.index("--out-dir") + 1] if "--out-dir" in argv else None
 
 
 def _finish(argv, all_rows, per_board, m, fp, phase, out_dir):

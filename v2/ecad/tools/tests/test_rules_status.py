@@ -8,6 +8,8 @@ authority is unverified all come out INCONCLUSIVE, and an inconclusive blocker k
 READY_FOR_PROTOTYPE.
 """
 import os, sys, json, copy, tempfile
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from harness import Skip
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import rules_status as S
 import rules_lib as R
@@ -178,7 +180,11 @@ def t_the_completeness_verdict_asks_a_different_question_from_readiness():
     p = subprocess.run([sys.executable, os.path.join(ecad, "tools", "rules_status.py"), "--out-dir", d],
                        cwd=ecad, capture_output=True, text=True, timeout=600)
     assert p.returncode in (0, 1, 3), p.stdout[-400:] + p.stderr[-400:]
-    rec = json.load(open(os.path.join(ecad, "out", "rules_complete.verdict.json")))
+    # FROM THE DIRECTORY THE RUN WAS TOLD TO WRITE TO (18 September 2026). It used to read the TREE's copy,
+    # because `--out-dir` redirected the pages and the audit and not this verdict, so the suite wrote into the
+    # tree it was judging; on a checkout without the untracked evidence that replaced the readiness reading
+    # with a worse one and `tests/run.py`'s evidence guard caught it on the box.
+    rec = json.load(open(os.path.join(d, "rules_complete.verdict.json")))
     assert rec["verdict"] == "PASS", "a rule that applies to a board reached no result: %s" % rec.get("evidence")
     assert rec["denominator"] > 0 and rec["counts"]["unresolved"] == 0, rec
     # and it is NOT the readiness verdict: the set is not ready today, and completeness still passes
@@ -457,3 +463,30 @@ def t_a_gate_that_types_no_rules_still_stamps_the_digests_of_the_rules_the_map_g
     for rid in rids:
         assert fps.get(rid) == R.rule_fingerprints()[rid], \
             "a verdict that took %s from the coverage map carries no digest for it: %s" % (rid, fps)
+
+
+def t_a_run_told_where_to_write_leaves_the_tree_exactly_as_it_found_it():
+    """THE DEFECTIVE FIXTURE is the tool as it stood: `--out-dir` redirected the board pages and the audit and
+    wrote `rules_complete` into the tree anyway. THE ACCEPTABLE FIXTURE is a run whose every output lands in
+    the directory it was given, with the tree's own files untouched to the nanosecond.
+
+    Why it matters more than tidiness: the suite's own completeness test makes that run on every execution, so
+    the set's readiness verdict was being rewritten by the test set. On the runner the numbers match what was
+    there and nothing shows; run on a box in an exact checkout, where the untracked per-board evidence is
+    absent, it replaced 211 PASS with 188."""
+    import subprocess, tempfile, os, sys
+    ecad = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    watched = [os.path.join(ecad, "out", "rules_complete.verdict.json"),
+               os.path.join(ecad, "out", "rule-audit", "rules_status.verdict.json"),
+               os.path.join(ecad, "out", "rule-audit", "summary.json")]
+    watched = [w for w in watched if os.path.exists(w)]
+    if not watched: raise Skip("this tree holds no set-level readiness evidence to protect")
+    before = {w: os.stat(w).st_mtime_ns for w in watched}
+    d = tempfile.mkdtemp(prefix="rules-outdir-")
+    p = subprocess.run([sys.executable, os.path.join(ecad, "tools", "rules_status.py"), "--out-dir", d],
+                       cwd=ecad, capture_output=True, text=True, timeout=900)
+    assert p.returncode in (0, 1, 3), (p.stdout[-300:] + p.stderr[-300:])
+    moved = [os.path.basename(w) for w in watched if os.stat(w).st_mtime_ns != before[w]]
+    assert not moved, "a run told to write elsewhere still wrote into the tree: %s" % moved
+    for name in ("rules_complete.verdict.json", "rules_status.verdict.json", "summary.json"):
+        assert os.path.exists(os.path.join(d, name)), "%s did not reach the directory the run was given" % name
