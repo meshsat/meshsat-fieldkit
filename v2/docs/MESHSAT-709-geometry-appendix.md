@@ -9465,3 +9465,11 @@ the pad), each a wire keep-out on B.Cu, with the vias where the copper is the ne
 source pads and three inside L2 pin 1, and none at the corners where a via could land on a top part's pad. 5.3 mm is
 IPC-2221's width for 8 A at 10 K on 1 oz. E14 launched 04:21 UTC in `/root/erf14`; its pre-route DRC is the first
 judge of whether the bands collide with anything, its route the second.
+
+**Addendum, 06:51 CEST: the band closes the hot-swap output.** E14's placed board reads 0 hard with the DC_HS zone
+(the first placement read two `zones_intersect` from three same-net bands meeting at their corners at one priority;
+`union()` makes them one zone, which is what it was written for on 8 September). Its route: 0 hard, 3 open of 94
+in 23 minutes, 208 vias, and **DC_HS is not among the three**: the band carries it. The three are `/+3V3_E6` (two
+F.Cu pieces a millimetre apart), `/USB_E6_N` (J_BLK pin 10 to R30, the dock block's USB leg) and a GND stub at U13
+pin 2; the finish's closers run on them. The first A43 and A44/A45 waiters ended on a dropped ssh probe (A43's
+remedy round is alive at 325 passes to about 14:00 UTC); the re-armed waiters need three consecutive readings.
