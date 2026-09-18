@@ -245,8 +245,30 @@ if _osx.environ.get("PLACE_VIN_VIAS", "1") not in ("0", ""):
                     _hits.append("via at (%+.2f, %+.2f) touches %s.%s [%s]" % (_vx, _vy, _ref, _pd.GetNumber(), _pd.GetNetname() or "-"))
     if _hits:
         raise SystemExit("power vias: %d of them sit on another net's pad:\n  %s" % (len(_hits), "\n  ".join(_hits[:10])))
-    _pcmod.PowerCopper(board, net_for, P).stitch("VIN_RAW", VIN_VIAS, drill=0.5, width=0.9)
-    print("power copper: %d VIN_RAW power via(s) at the source pad and the block lands" % len(VIN_VIAS))
+    # THE DRILL IS 0.7 AND NOT 0.5 SINCE 18 SEPTEMBER 2026, and the number comes off E18's own finished board.
+    # These eight barrels ARE sharing (dc_drop's solved mesh gives them 0.78 to 1.39 A each, so the parallel path
+    # the comment above intends is real), and each one is still over its own wall: a 0.50 mm barrel of the
+    # fabricator's 18 um plating is rated 1.05 A at a 10 K rise and the worst reads 1.387, ratio 1.32, which is
+    # rule PI-003's failure on this board. There is no room for a third row of vias (J_BLK's second pin row sits
+    # at y -77.77 and its 2.0 mm lands reach -76.77, so a row at -76.73 would touch USB_E6_N's pad), so the answer
+    # is the barrel and not the count: 0.70 mm of hole is rated about 1.47 A, and 1.1 mm of pad keeps the 0.20 mm
+    # ring this board declares. Measured again on the next E board by via_current; barrel_sites.py is the map.
+    _pcmod.PowerCopper(board, net_for, P).stitch("VIN_RAW", VIN_VIAS, drill=0.7, width=1.1)
+    print("power copper: %d VIN_RAW power via(s) at the source pad and the block lands, 0.7 mm drill" % len(VIN_VIAS))
+
+# ------------------------------------------------- CELL_F's own layer transition, in parallel barrels (18 Sep 2026)
+# The other half of PI-003 on this board, read off E18's finished copper with barrel_sites.py: ONE 0.30 mm barrel at
+# case (-113.4, -104.11) carries 1.091 A of the solved mesh against 0.738 A for its own wall, ratio 1.48, while the
+# rest of this rail's eighteen barrels carry 0.5 A and less. It is the pack rail crossing layers at the fuse, and the
+# fixer that lays a parallel barrel after the route found no site for it, which is board D's case exactly (D12, and
+# D15 is the answer): the generator does not have to search, because the neighbourhood is EMPTY. barrel_sites reports
+# no pad of any other net within 6 mm of it, and F3's own pad 2 copper 2.74 mm away. So two more barrels go beside it
+# on this net's own copper, 0.9 mm either side along the land, at the 0.5 mm drill the block vias use (1.05 A each):
+# 1.09 A over three barrels is about 0.36 A apiece. If the fill does not reach one of them the pre-route DRC says so
+# and the reading moves it; that is cheaper than leaving a 1.48 ratio on the rail that carries the pack.
+if _osx.environ.get("PLACE_CELLF_VIAS", "1") not in ("0", ""):
+    _pcmod.PowerCopper(board, net_for, P).stitch("CELL_F", [(-114.3, -104.11), (-112.5, -104.11)], drill=0.5, width=0.9)
+    print("power copper: 2 CELL_F barrels beside the fuse transition that reads 1.48 of its rating on E18")
 
 # ---------------------------------------------------------------- the hot-swap output, in locked copper (E14, 18 September 2026)
 # DC_HS is the LM5069's output: Q7's three source pads at the west edge of HOTSW to L2 pin 1 and C6 in ENTRYB, 64 mm
