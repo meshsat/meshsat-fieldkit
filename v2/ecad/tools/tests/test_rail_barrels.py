@@ -283,3 +283,17 @@ def t_a_candidate_must_pass_the_hole_test_as_well_as_the_copper_test():
     assert "PCB_VIA" in body, "other vias' holes are not counted"
     assert "GetNetname" not in body, "the hole test skips its own net, and a hole does not care whose net it is"
     assert "FLOOR" in body, "the hole test does not use this project's own hole-to-hole floor"
+
+
+def t_the_fixer_never_decides_pi003_and_never_blocks_a_route():
+    """PI-003 is decided after the route by `via_current` on the solved mesh; this tool lays copper and reports
+    what it laid. The first version wrote a deciding verdict on the --apply path and E21's chain was
+    GATE_BLOCKED by it, because board E has two sites the tool declines as busbars and declines CORRECTLY. A
+    fixer that stops a route for a declared placement item is a fixer behaving as a blocker."""
+    body = SRC[SRC.index("def main(argv):"):]
+    segs = body.split("_v.write(")[1:]
+    assert len(segs) >= 4, "fewer verdict paths than this tool has"
+    for seg in segs:
+        head = seg[:seg.index("rules=[")] if "rules=[" in seg else seg[:400]
+        assert ("advisory=True" in head) or ("missing_input=" in head), \
+            "a verdict that is neither advisory nor a declared missing input: %r" % head[:140]
