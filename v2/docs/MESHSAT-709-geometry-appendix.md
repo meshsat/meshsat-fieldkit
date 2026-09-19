@@ -11286,3 +11286,26 @@ with its project file into a scratch directory on the box, DRC'd and read there:
 generating, and the running tree was never touched. The copy is renamed to the project's own stem because
 `drc.sh` refuses a board whose `.kicad_pro` is not beside it under that name, and the board's sha goes into
 the record so the reading can be traced to the artefact.
+
+**Addendum, 13:35 CEST (19 September), BOARD D'S DEFICIT HAS A MECHANISM AND TWO ADDRESSES.** D19 landed at
+hard 0 and two open (4,618 tracks, frozen sha f403085310f48065) and the naming driver written an hour earlier
+gave them on its first real landing: **`/+5V_D8` 4.2 mm** from a track end to R43 pad 2, and **`/PCM_XTI`
+10.9 mm** from U6 pad 8 to a track. Both are inside the twelve millimetres this board declares for its direct
+closer and the closers took neither, which is the shape board E's `/GND_V` (5.4 mm) showed the same morning.
+
+**`/PCM_XTI` is walled in by its own crystal.** Every shape the closer proposes is refused with a name: a
+`solder_mask_bridge` against **Y2 pad 3 (`/PCM_XTO`)** and **Y2 pad 4 (GND)**, against **C24 pad 1
+(`/PCM_VCOM1`)** and **C24 pad 2 (GND)**; a `clearance` against a 1.15 mm GND track; `shorting_items` against
+a GND via and against `/HS2_BIAS_R`. The codec's crystal input has to reach the crystal, and the corridor is
+the crystal's other pad, its ground pad and the decoupling capacitor beside it.
+
+**`/+5V_D8` is not one blocked corridor but a dense neighbourhood:** the closer found **fourteen** pairs of
+the two islands within 14 mm, tried three or four shapes at each from both outer layers, and found **no shape
+the DRC accepts** at any of them, the nearest being 4.588 mm.
+
+**So the deficit is not a reach problem, a pass count, a via cost or which nets are pinned** (three arms and
+two remedies said all four), **it is two crowded neighbourhoods**, and they have addresses: Y2 with C24, and
+R43's island. That is the same sentence D10 received at U4 pad 11 and R13 pad 1 on 11 September, and it is
+what remains after D17. Board D's real trade is now plain: the committed D12 is 0 hard and 0 unrouted with
+PI-003 failing on one barrel, and D15/D17 answer PI-003 for one connection; a board with both needs those two
+sites opened up.
