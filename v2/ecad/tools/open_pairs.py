@@ -164,11 +164,28 @@ def collect(out_dir=None, decisions_path=None):
             c = classify(row, letter, claims, execs)
             if c is None: continue
             c.update(board=letter, rule=row.get("rule"), release_effect=row.get("release_effect"),
-                     result=row.get("result"), phase=row.get("verification_phase"))
+                     result=row.get("result"), phase=row.get("verification_phase"),
+                     evidence=row.get("evidence"))
             pairs.append(c)
+    # ONE SET-LEVEL READING IS NOT SEVEN FAILURES (19 September 2026). OUT-001 and DFA-001 are decided by a
+    # verdict written ONCE for the whole set (`final_gate`, `assembly_set` in v2/ecad/out/), while PI-003 and
+    # the rest read each board's own phase directory. Counting pairs is right, because a pair is what a board
+    # has to satisfy; reporting 43 measured failures without saying that seven of them are one gate's single
+    # answer overstates how many separate things are wrong. The test is the evidence PATH, which the audit
+    # already carries: a path that serves more than one board is one reading.
+    _by_path = {}
+    for p in pairs:
+        if p.get("evidence"): _by_path.setdefault(p["evidence"], set()).add(p["board"])
+    shared = {k for k, v in _by_path.items() if len(v) > 1}
+    for p in pairs:
+        p["set_reading"] = bool(p.get("evidence") in shared)
     counts = {k: sum(1 for p in pairs if p["category"] == k) for k in ORDER}
+    _m = [p for p in pairs if p["measured"]]
     return dict(pairs=pairs, counts=counts, open=len(pairs),
-                measured=sum(1 for p in pairs if p["measured"]),
+                measured=len(_m),
+                measured_distinct=len({p.get("evidence") or (p["rule"], p["board"]) for p in _m}),
+                set_readings=sorted({(p["rule"], len(_by_path[p["evidence"]])) for p in pairs
+                                     if p.get("set_reading")}),
                 measured_claimed=sum(1 for p in pairs if p["measured"] and p["category"] == DECISION),
                 boards=sorted(data), decisions=sorted({p["decision"] for p in pairs if p.get("decision")}))
 
@@ -178,8 +195,11 @@ def main(argv):
     out = os.path.join(os.path.dirname(HERE), "out", "open_pairs.json")
     os.makedirs(os.path.dirname(out), exist_ok=True)
     with open(out, "w") as fh: json.dump(res, fh, indent=1, sort_keys=True)
-    print("open_pairs: %d open pair(s) over %d board(s); %d measured failure(s), %d of them claimed by an open decision"
-          % (res["open"], len(res["boards"]), res["measured"], res["measured_claimed"]))
+    print("open_pairs: %d open pair(s) over %d board(s); %d measured failure(s) which are %d distinct reading(s), "
+          "%d of them claimed by an open decision"
+          % (res["open"], len(res["boards"]), res["measured"], res["measured_distinct"], res["measured_claimed"]))
+    for rid, n in res["set_readings"]:
+        print("  %-9s one set-level reading, counted on %d board(s)" % (rid, n))
     for k in ORDER:
         if res["counts"][k]: print("  %-19s %3d   %s" % (k, res["counts"][k], HEADLINE[k]))
     if "--print" in argv:

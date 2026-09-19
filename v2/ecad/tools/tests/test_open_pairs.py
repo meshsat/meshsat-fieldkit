@@ -128,3 +128,22 @@ def t_the_execution_map_is_read_from_the_coverage_map_and_not_from_a_list():
     if ex:
         assert ex.get("VIA-002") == "VENDOR_OR_STANDARD_WAIT", ex.get("VIA-002")
         assert ex.get("DFA-001") == "OWNER", ex.get("DFA-001")
+
+
+def t_one_set_level_reading_is_not_seven_failures():
+    """OUT-001 and DFA-001 are decided by a verdict written ONCE for the whole set, in v2/ecad/out/, while
+    every per-board rule reads its own phase directory. A pair is what a BOARD must satisfy, so the table
+    counts pairs; reporting 43 measured failures without saying that seven of them are one gate's single
+    answer overstates how many separate things are wrong. The test is the evidence PATH the audit already
+    carries: a path that serves more than one board is one reading."""
+    from harness import Skip
+    res = O.collect()
+    if not res["boards"]: raise Skip("this tree holds no rule audit to classify")
+    assert res["measured_distinct"] <= res["measured"], res
+    shared = {rid for rid, _ in res["set_readings"]}
+    if shared:
+        for p in res["pairs"]:
+            if p["rule"] in shared: assert p["set_reading"], p
+        # a per-board rule is never marked shared
+        for p in res["pairs"]:
+            if p["rule"] == "PI-003": assert not p["set_reading"], p

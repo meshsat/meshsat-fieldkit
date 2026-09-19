@@ -397,13 +397,22 @@ def open_pairs_doc(res):
                "everything else, because the ruling is the action that moves it, and the measurement is "
                "reported beside it rather than lost."), "",
          "**%d open pair(s)** over %d board(s). **%d are measured failures** (a tool looked and the board "
-         "failed), and **%d of those are claimed by an open owner decision**.\n"
-         % (res["open"], len(res["boards"]), res["measured"], res["measured_claimed"]),
+         "failed), which are **%d distinct readings**, and **%d of those are claimed by an open owner "
+         "decision**.\n"
+         % (res["open"], len(res["boards"]), res["measured"], res["measured_distinct"], res["measured_claimed"]),
          "| waiting on | pairs | what it means |", "|---|---:|---|"]
     for k in O.ORDER:
         n = res["counts"].get(k, 0)
         if n: L.append("| `%s` | %d | %s |" % (k, n, O.HEADLINE[k]))
     L.append("")
+    if res.get("set_readings"):
+        L.append(_wrap("A pair is what a BOARD has to satisfy, so the table counts pairs; these rules are "
+                       "decided by a verdict written ONCE for the whole set, so their rows are one reading "
+                       "seen on every board and not that many separate things to fix."))
+        L.append("")
+        for rid, n in res["set_readings"]:
+            L.append("* `%s`: one set-level reading, counted on %d board(s)" % (rid, n))
+        L.append("")
     L.append("## By board\n")
     L.append("| board | open | of which measured | decision-bound | authority | missing input | not judged |")
     L.append("|---|---:|---:|---:|---:|---:|---:|")
