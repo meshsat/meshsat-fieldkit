@@ -214,3 +214,28 @@ def t_an_empty_field_in_a_group_does_not_shift_the_ones_after_it():
         assert nets == g["nets"], (nets, g["nets"])
         assert clr == str(g.get("clearance", "") or ""), ("the clearance field shifted: %r" % line)
         assert re.fullmatch(r"\d+-[A-Za-z0-9_]+", tag), ("the tag is empty or malformed: %r" % line)
+
+
+def t_a_board_that_declares_pre_lay_groups_requires_the_per_group_chain():
+    """E23 AND A49 LOST THEIR PRE-LAY EVIDENCE TO A TREE THAT PREDATED THE PER-GROUP CHAIN (19 September
+    2026). The older loop runs once per group but writes every one of them to the same
+    `out/<N>-prelay-group.log` under the same guard label, so each group overwrites the one before it, and
+    routeflow saved no generator log either: on E23 the only surviving pre-lay output is the LAST group's,
+    and what the six switching nets laid is unrecoverable. The rule above already holds the CURRENT tree to
+    per-group logs and labels; this one makes an ARM prove its own staged tree carries them, through the
+    mechanism that exists for exactly this (`routeflow ... --requires`, or `requires:` in the profile).
+    A board that declares no group needs nothing."""
+    import json, os
+    for letter in sorted(os.path.splitext(f)[0] for f in os.listdir(os.path.join(TOOLS, "boards"))
+                         if f.endswith(".json")):
+        bf = os.path.join(TOOLS, "boards", letter + ".json")
+        try: groups = json.load(open(bf)).get("prelay_groups") or []
+        except Exception: continue
+        if not groups: continue
+        pf = os.path.join(TOOLS, "routeflow", letter + ".json")
+        if not os.path.exists(pf): continue
+        req = json.load(open(pf)).get("requires") or []
+        assert any("prelay-group-$GTAG" in r for r in req), (
+            "board %s declares %d pre-lay group(s) and its profile does not require the per-group chain, so an "
+            "arm staged from an older tree would silently overwrite every group's evidence but the last"
+            % (letter, len(groups)))

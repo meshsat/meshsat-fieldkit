@@ -35,7 +35,7 @@
   "rule_fingerprints": {
    "ANA-001": "efb6e1511c4ca89f"
   },
-  "rule_set_fingerprint": "82885961768537e2"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "ANA-001"
@@ -43,9 +43,9 @@
  "tool": "sensitive_nodes",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "ef4c8edcfb9cdcbc"
+  "tools_tree_sha": "def15c4fa0f2ac65"
  },
- "ts": "2026-09-18T11:13:20Z",
+ "ts": "2026-09-19T20:34:57Z",
  "verdict": "FAIL",
  "version": "unknown"
 }
