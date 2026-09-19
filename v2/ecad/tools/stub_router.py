@@ -422,12 +422,24 @@ def route(net, src, goal_cells, trk, via, window):
         dist[s] = 0.0; heapq.heappush(pq, (0.0, s))
     steps = [(-1, 0, 1.0), (1, 0, 1.0), (0, -1, 1.0), (0, 1, 1.0), (-1, -1, 1.414), (-1, 1, 1.414), (1, -1, 1.414), (1, 1, 1.414)]
     found = None; n = 0
+    # A CAP IN NODES IS NOT A CAP IN TIME (19 September 2026). `STUB_MAXN` is 4,000,000 by default and board
+    # E's grid at the finish's own `STUB_GRID=0.1` is about 6.7 million cells over four layers, so one search
+    # can legitimately walk most of the board: `/FAN1_PWM`, a 224 mm run nothing can close, ate THIRTY MINUTES
+    # in a single pair twice over and the board's other five opens were never reached. The per-net budget
+    # cannot help there because it is checked between pairs. This is the clock inside the search; 0 turns it
+    # off and only the node cap decides, which is how the tool behaved before.
+    _s_budget = float(__import__("os").environ.get("STUB_SEARCH_S", "240") or 0)
+    _s_t0 = __import__("time").time()
+    _maxn = int(__import__("os").environ.get("STUB_MAXN", "4000000"))
     while pq:
         d, s = heapq.heappop(pq)
         if d > dist.get(s, 1e18): continue
         L, i, j = s; n += 1
         if goal[L, i, j]: found = s; break
-        if n > int(__import__("os").environ.get("STUB_MAXN", "4000000")): break
+        if n > _maxn: break
+        if _s_budget > 0 and not (n & 0x3FFF) and __import__("time").time() - _s_t0 > _s_budget:
+            print("  the search gave up after %.0f s and %d expansions (STUB_SEARCH_S)" % (_s_budget, n))
+            break
         for di, dj, c in steps:
             ni, nj = i + di, j + dj
             if not (imin <= ni <= imax and jmin <= nj <= jmax): continue

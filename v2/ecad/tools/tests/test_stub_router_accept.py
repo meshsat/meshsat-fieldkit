@@ -312,3 +312,19 @@ def t_every_open_net_gets_its_turn_at_the_closer():
     i, j = s.index("for it1, it2 in pairs:"), s.index("trk, via = build_maps(net)")
     assert s.index("_NET_BUDGET > 0", i) < j, "the budget is checked after the expensive work rather than before it"
     assert "the rest of this net's pairs are left so the other" in s, "a net that runs out of budget says nothing"
+
+
+def t_a_cap_in_nodes_is_not_a_cap_in_time():
+    """STUB_MAXN is 4,000,000 by default and board E's grid at the finish's own STUB_GRID=0.1 is about 6.7
+    million cells over four layers, so ONE search can legitimately walk most of the board. `/FAN1_PWM`, a
+    224 mm run across the strip that nothing can close, ate thirty minutes inside a single pair twice over
+    and board E's other five opens were never reached; the per-net budget cannot help there because it is
+    checked between pairs. The search carries its own clock now, checked inside the expansion loop, and it
+    says when it gave up, because a search that stopped early and a search that found nothing are different
+    answers (19 September 2026)."""
+    s = _src()
+    assert "STUB_SEARCH_S" in s, "a single search has no clock, so one pair can eat the whole stage"
+    i = s.index("while pq:")
+    j = s.index("for di, dj, c in steps:", i)
+    assert "_s_budget" in s[i:j], "the clock is not checked inside the expansion loop"
+    assert "the search gave up after" in s, "a search that ran out of time is indistinguishable from one that failed"
