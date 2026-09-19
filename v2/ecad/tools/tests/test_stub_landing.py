@@ -67,10 +67,21 @@ def t_the_source_tries_to_land_before_it_gives_the_closure_up():
     assert "_unconnected()" in seg, "the retry must be judged by KiCad's connectivity, never assumed"
 
 
-def t_the_retry_is_kept_only_when_it_connects():
-    """The same law the rest of this pipeline runs on: a change is kept only if the number moves."""
+def t_the_retry_is_kept_only_when_it_proves_it_connected():
+    """The same law the rest of this pipeline runs on, with the second proof it gained on 19 September.
+
+    This rule read `the board-wide unconnected count must FALL` and nothing else, which is the right proof on
+    a net with two clusters and no proof at all on one with twenty: board A's five `*_SW2` nets carry 21 to 23
+    items in as many clusters, all twenty closures were refused at `549 before and 549 after`, and the same
+    tool on the same board closed 9 of 10 on the `*_CSF` nets, which are five and twelve pieces. There are two
+    ways to prove a closure connected now and `keep_closure` is the one place that says so: the count FELL, or
+    the LANDING put both of the path's ends on this net's own copper and the count did not RISE, which keeps
+    every bit of what the count was protecting because cutting a pour or shorting a neighbour raises it."""
     s = open(SRC, encoding="utf-8").read()
-    i = s.find("_U2 = _unconnected() if landed else None")
+    i = s.find("_U2 = _unconnected() if landed else _U1")
     assert i > 0, "the retry does not measure"
-    seg = s[i:i + 400]
-    assert "_U2 < _U" in seg, "the retry is kept without proving it connected"
+    seg = s[i:i + 600]
+    assert "_U2 < _U" in seg, "the first proof is gone: a retry that drops the count is no longer kept for it"
+    assert 'keep_closure(_U, _U2, ends_on == 2)' in seg, \
+        "the second proof is not asked through the one function that decides it"
+    assert "ends_on += 1" in s, "nothing counts how many of the two ends reached the net's copper"

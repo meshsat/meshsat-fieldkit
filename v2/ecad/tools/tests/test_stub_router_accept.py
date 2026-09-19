@@ -12,8 +12,13 @@ time (the pours as obstacles and not, and every layer against the outer two). Th
 in the same run closed 9 of 10 on the five `*_CSF` nets, which carry five and twelve items, so it is the net's
 shape and not the tool.
 
-A closure is kept now when its two ends are ON the net's own existing copper AND the board-wide count did not
-RISE. That keeps the whole of what the count was protecting, because a closure that cuts a pour or shorts a
+CORRECTION, the same hour: the refusal printed `start 0.000 mm and end 0.000 mm` for all twenty and that was
+an artefact of measuring AFTER the pieces were taken back off. Measured before the emit the same ends are
+0.153 to 4.409 mm from their own net's copper, so the search ends at a GOAL CELL and not on the net, and what
+puts an end on the copper is the LANDING, whose reach had been a silent 1.2 mm since it was written.
+
+A closure is kept now when the landing put BOTH of its ends on the net's own copper AND the board-wide count
+did not RISE. That keeps the whole of what the count was protecting, because a closure that cuts a pour or shorts a
 neighbour raises it, and drops only the half of it that was never about this pair. These rules exercise the
 decision as one function, so they need no board and run where KiCad is not.
 """
@@ -23,59 +28,58 @@ TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def _decide():
-    """`keep_closure` and its tolerance, executed exactly as they are written in the tool."""
+    """`keep_closure` and the landing reach, executed exactly as they are written in the tool."""
     src = open(os.path.join(TOOLS, "stub_router.py"), encoding="utf-8").read()
-    i, j = src.index("TOUCH_MM = float("), src.index("closed = 0")
+    i, j = src.index("LAND_REACH_MM = float("), src.index("closed = 0")
     ns = {"os": os}
     exec(compile(src[i:j], "stub_router.py", "exec"), ns)
     return ns["keep_closure"]
 
 
 def t_a_closure_that_drops_the_board_count_is_kept_as_it_always_was():
-    assert _decide()(100, 99, None, None) == "count_fell"
+    assert _decide()(100, 99, False) == "count_fell"
 
 
 def t_a_closure_on_a_many_cluster_net_is_kept_when_both_ends_are_on_its_copper():
-    """THE DEFECTIVE FIXTURE, which is what board A's twenty pairs were: the count does not move and both ends
-    measure 0.000 mm from the net's own copper. Expected verdict: KEPT."""
-    assert _decide()(549, 549, 0.0, 0.0) == "ends_on_copper"
+    """THE DEFECTIVE FIXTURE, which is what board A's twenty pairs were: the count does not move and the
+    landing put both ends on the net's own copper. Expected verdict: KEPT."""
+    assert _decide()(549, 549, True) == "ends_on_copper"
 
 
 def t_a_closure_that_lands_on_nothing_is_still_taken_back_off():
     """THE ACCEPTABLE FIXTURE, the defect of 12 September: a via dropped in a goal cell that touches no copper.
     Expected verdict: REFUSED, whatever the count did."""
     d = _decide()
-    assert d(549, 549, 0.0, 0.42) == "refuse"
-    assert d(549, 549, 0.42, 0.0) == "refuse"
-    assert d(549, 549, None, None) == "refuse"
+    assert d(549, 549, False) == "refuse"
 
 
 def t_a_closure_that_raises_the_board_count_is_refused_even_with_both_ends_on_copper():
     """The protection the count was there for is kept whole: cutting a pour or shorting a neighbour raises it."""
-    assert _decide()(549, 552, 0.0, 0.0) == "refuse"
+    assert _decide()(549, 552, True) == "refuse"
 
 
 def t_an_unreadable_count_is_never_a_pass():
     d = _decide()
-    assert d(None, 549, 0.0, 0.0) == "refuse"
-    assert d(549, None, 0.0, 0.0) == "refuse"
+    assert d(None, 549, True) == "refuse"
+    assert d(549, None, True) == "refuse"
 
 
-def t_the_tolerance_is_float_noise_and_not_a_reach():
-    """0.001 mm is a tolerance against float noise on a cell centre that is ON the copper, never a distance a
-    closure is allowed to jump. A tenth of a millimetre would be a different rule."""
+def t_the_landing_reach_keeps_the_number_it_had_and_is_a_knob_now():
+    """1.2 mm was the landing's silent reach since it was written and it stays the default, so nothing that
+    worked changes; it is readable and settable so a board can be measured at its own distance, which board A
+    needs because its path ends are up to 4.409 mm from their own copper."""
     src = open(os.path.join(TOOLS, "stub_router.py"), encoding="utf-8").read()
-    i = src.index("TOUCH_MM = float(")
+    i = src.index("LAND_REACH_MM = float(")
     line = src[i:src.index("\n", i)]
-    assert '"0.001"' in line, line
-    ns = {"os": os}
-    exec(compile(src[i:src.index("closed = 0")], "x", "exec"), ns)
-    assert ns["keep_closure"](549, 549, 0.0, 0.05) == "refuse", "a 0.05 mm gap is not an end on the copper"
+    assert '"1.2"' in line and "STUB_LAND_REACH" in line, line
+    assert "reach=LAND_REACH_MM" in src, "the landing does not use the knob it declares"
 
 
 def t_the_tool_asks_the_function_rather_than_repeating_its_condition():
     src = open(os.path.join(TOOLS, "stub_router.py"), encoding="utf-8").read()
-    assert 'keep_closure(_U, _U1, _g_start, _g_end) == "ends_on_copper"' in src, \
+    assert 'keep_closure(_U, _U2, ends_on == 2) == "ends_on_copper"' in src, \
         "the acceptance is written out again beside the function that decides it"
     assert "_g_start, _g_end = _gap_pre(path[0]), _gap_pre(path[-1])" in src, \
         "the two end gaps are not measured before the copper is laid, so they would read zero by construction"
+    i, j = src.index("def _gap_pre"), src.index("nt, nv = emit(netobj, path)")
+    assert i < j, "the gaps are measured after the copper is laid, which is how 0.000 mm came to be printed"
