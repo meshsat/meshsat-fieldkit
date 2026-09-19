@@ -10829,7 +10829,19 @@ reason the pre-lay rule now states: these are four SHORT local runs, the sense p
 controller and the switching nodes from the bridge to the inductor. E20 pre-laid two LARGE nets, 39 pad-to-pad
 closures and one path 2,068 cells long, and paid seven.
 
-**What this does not say.** Board E declares six switching nets and two are pinned; the placement reading shows
+**What this does not say, and one thing I got wrong in the first version of this entry.** It does **not** hold
+by construction. The router added copper to all four pinned nets, twenty-seven unlocked segments on
+`TRK_SW2`, twenty-three on `TRK_SW1` and seven and eight on the sense pair, so it had the freedom to come to
+the 0.15 mm the DSN permits between those classes and did not use it. The locked runs SET the minimum; the
+reading says the router's own additions stayed further away than that minimum. That is weaker evidence than
+"the copper cannot move" and the next board may not be so lucky.
+
+**The confound was checked and is cleared.** All three arms carry `FR_CLASS_CLEAR='SENSE:SW:1.0'` and E21's
+DSN does contain `class_class (classes SENSE SW)`, so the DSN class-pair rule is held CONSTANT across E19, E20
+and E21. E19 and E20 carried it and failed. Only E21 has the pre-lay and only E21 passes, which is the third
+measurement saying that instrument does nothing on its own.
+
+**Board E declares six switching nets and two are pinned; the placement reading shows
 the nearest switching copper to each sense node IS `TRK_SW1` and `TRK_SW2`, so the binding constraint is the
 one that was answered, but a placement change could put another one closer. And four open is not zero: **E17
 remains board E's phase** until a round closes with ANA-001 still passing. The finish's closers are running.
