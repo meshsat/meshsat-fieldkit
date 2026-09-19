@@ -10882,3 +10882,43 @@ verified, and every one of the twelve open is an owner decision (four), an autho
 (three: RET-001, RET-003, SI-001), the assembler's own 2D preview (DFA-001), the set's paperwork (OUT-001), or
 a criterion the owner has yet to rule (RET-002 at decision 39, RET-004 at 32). Nothing on board C waits on a
 route or a tool.
+
+**Addendum, 06:35 CEST (19 September): board B's route has now been measured three ways and none of them
+closes it, and the partition's own numbers say why.** B23's sequential partition stopped at 04:22 UTC with
+**two of its six groups never routed**: S3 wrote no session in four hours and `part_stage2.sh` stopped the
+chain rather than merging without it, which is the guard added after B22 lost its own S3 and let DEVE route
+against a board that did not have it.
+
+**Every region was cut, not only the one that failed.** Read off each group's own `fr.log`:
+
+| group | nets | sessions of 20 asked | wall clock | a pass costs |
+|---|---:|---:|---|---|
+| GLOBAL | 186 | 4 | 1 h 44 | ~26 min |
+| DEVW | 116 | **20, complete** | 2 h 28 | ~7.4 min |
+| S1 | 159 | 5 | 4 h 00, cut | ~48 min |
+| S2 | 155 | 6 | 4 h 00, cut | ~40 min |
+| S3 | 144 | **0** | 4 h 00, cut | over 4 h |
+
+**And it is not the group size.** DEVW has 116 nets and S3 has 144, yet DEVW's passes are six times cheaper.
+What separates them is the obstacle field: each group routes against everything locked before it, 10,038
+tracks by DEVW's turn and 14,305 by S3's. The cost is superlinear in the position in the sequence, so
+splitting the groups smaller moves the problem rather than solving it, and the concurrent partition was
+measured on 9 September and produced 1,121 boundary conflicts.
+
+**It was checked that this is a cap and not the modal-dialog stall.** S3's log ends with four
+`The normalization of net ... failed` warnings, the shape that cost board B three hours on 15 September, and
+`route_part.sh` has carried the shared watchdog since 16 September. The watchdog printed nothing for any
+group, and its matcher was tested against a live router on the same box and found it on the first try
+(`pgrep -x java` plus the DSN in the process's own cmdline). A watchdog that can find the process and stays
+silent is watching a process whose CPU time moves: S3's JVM computed for four hours and did not finish a pass.
+
+**So the three measurements, together:** B21's plain route, forty hours, 416 open. B22's partition, every
+region job out of time at two-hour caps. B23's partition, two groups never routed and the survivors served
+five and six passes of twenty. **More time is not the lever.** Board B's placement predictor reads **11
+collisions of 75 fine-pitch parts on B23** against B21's 10, so the floor-plan work of 17 September bought
+escapes and fans and did not buy routability. What the record has named since 10 September is the remaining
+lever and these numbers now support it: **a redistribution, parts leaving the three per-slot pockets for the
+regions that have room** (ETH 49.0 mm south, IOCA 22.0 north, RADE 11.5 south, S1_RAIL 6.0 west), because the
+three `S*_SWIC` pockets have 0.0 mm in every direction and the corridor from each module receptacle to its
+switch and hub is the same copper the fans need. **B23 is not adoptable** and nothing about it should be
+promoted.
