@@ -213,11 +213,42 @@ def t_the_board_is_refilled_before_anything_measures_it():
     first three runs of this tool reverted all seven sites for that and nothing else. The finish learnt this on
     14 September; a tool that adds copper and then reads a DRC has to learn it too."""
     assert "ZONE_FILLER" in SRC, "rail_barrels measures a board it has not refilled"
-    i = SRC.find("def _save_filled")
-    assert i > 0 and "SaveBoard" in SRC[i:i + 900] and "LoadBoard" in SRC[i:i + 900], \
-        "the refill does not save and reload first, which is what stops ZONE_FILLER segfaulting"
+    fn = harness.block(SRC, "def _save_filled")
+    assert fn, "there is no refill helper to read"
+    # THE DOCSTRING IS PROSE, NOT CODE, and it names every one of these three: read the body after it, or the
+    # rule is about the order the explanation happens to be written in.
+    fn = fn[fn.index('"""', fn.index('"""') + 3) + 3:]
+    i_save, i_load, i_fill = fn.find("SaveBoard"), fn.find("LoadBoard"), fn.find("ZONE_FILLER")
+    assert 0 <= i_save < i_load < i_fill, \
+        "the refill does not save, then reload, then fill, which is what stops ZONE_FILLER segfaulting"
     # every measurement of this board goes through it
     assert "pcbnew.SaveBoard(path, b)\n    h, u" not in SRC and "pcbnew.SaveBoard(path, b)\n        h, u" not in SRC
     body = SRC[SRC.index("def main(argv):"):]
     assert body.count("_save_filled(") == 2, "main does not write the board through the refill exactly twice"
     assert "SaveBoard" not in body, "main saves the board without refilling it"
+
+
+def t_the_chain_runs_it_after_the_fanout_and_before_the_pre_lay():
+    """Order matters twice. AFTER the fanout, the ground grid and the escape prune, so `_site_free` sees every
+    via those stages laid; BEFORE the pre-lay, because power copper is not a thing a signal run should have to
+    be moved for. It is declared per board, like `gnd_grid`, so a board that has not been read gets nothing."""
+    full = open(os.path.join(TOOLS, "full.sh"), encoding="utf-8").read()
+    assert "rail_barrels.py" in full, "the chain never lays the barrels a rail's own crossing needs"
+    i_fan = full.index("prefanout.py")
+    i_rb = full.index("rail_barrels.py")
+    i_prelay = full.index("STUB_NETS=\"$GNETS\"")   # the pre-lay stage itself, not the paragraph about it
+    assert i_fan < i_rb < i_prelay, (i_fan, i_rb, i_prelay)
+    assert "'rail_barrels'" in full or '"rail_barrels"' in full, "the stage is not declared per board"
+
+
+def t_every_verdict_names_the_rail_table_it_read_and_when_it_was_written():
+    """The intent file records a project name and a minute, never a board hash, so this tool cannot refuse a
+    mismatched pair. What it must not do is leave a reader guessing: the board, its mtime, the intent path and
+    the intent's own `written` stamp travel in every verdict taken after the table is read. An intent
+    regenerated on another day describes another board's rails, which is the evidence-crossing defect this
+    project has paid for twice."""
+    body = SRC[SRC.index("def main(argv):"):]
+    assert '"intent_written"' in body and '"board_mtime"' in body
+    after = body[body.index("_inputs = {"):]
+    assert after.count("inputs=_inputs") == 3, \
+        "a verdict written after the rail table was read does not name it (%d of 3)" % after.count("inputs=_inputs")

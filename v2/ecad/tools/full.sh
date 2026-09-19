@@ -269,6 +269,14 @@ if [ -n "$EPRUNE" ]; then
   ../tools/drc.sh $N.kicad_pcb out/$N-preroute-drc.json
   python3 ../tools/escape_prune.py $N.kicad_pcb out/$N-preroute-drc.json 2>&1 | grep escape_prune
 fi
+# THE BARRELS A DECLARED RAIL'S OWN CROSSING NEEDS, laid where the room is still empty (19 September 2026,
+# rule PI-003's cheap half). It runs HERE, after the fanout, the grid and the escape prune, so the site test
+# sees every via those stages laid, and BEFORE the pre-lay, because power copper is not something a signal
+# run should have to be moved for. `rail_barrels` in boards/<letter>.json turns it on; an object may give
+# `max_barrels`. It declines a site whose current needs a busbar and says so; read those, they are floor-plan
+# items. `via_parallel` in the finish is the other half, for a board that is already routed.
+RB="$(python3 -c "import json,sys; d=json.load(open(sys.argv[1])).get('rail_barrels'); print('' if not d else (d.get('max_barrels', 8) if isinstance(d, dict) else 8))" "$CFG")"
+[ -n "$RB" ] && { python3 ../tools/rail_barrels.py $N.kicad_pcb --board "$L" --max-barrels "$RB" --apply 2>&1 | grep -E 'rail_barrels:'; }
 # PRE-LAY: a long net the router will not take, laid before the router runs (14 September 2026, board C).
 # `prelay_nets` in boards/<letter>.json names them and `prelay_layers` gives the layers to search. On the
 # ROUTED board there is no lane left for C's `/EPD_SDA`, 249 mm from J_EPD pin 14 to U3 pad 5 across a panel
