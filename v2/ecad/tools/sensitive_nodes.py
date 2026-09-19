@@ -137,14 +137,29 @@ def judge(board_path=None, letter=None, sens=None):
             elif str(other.get("kelvin_with") or "") != str(n.get("net")):
                 fails.append("%s says its Kelvin partner is %s and %s does not say the same: a one-sided "
                              "Kelvin declaration is a note, not a pair" % (n.get("net"), k, k))
+    # AN EMPTY SWITCH LIST IS A QUESTION ABOUT THE DECLARATION, so it is asked HERE and not behind the copper.
+    # A DECLARED ZERO IS A PASS WITH ITS REASON; AN UNDECLARED ZERO IS INCONCLUSIVE (this project's own law of
+    # 11 September). Board P declares seven sensitive nodes and `switch_nets: []`, so nothing is measured
+    # against anything and the verdict read PASS of 7 with 0 measured, which is STK-001's "PASS on a
+    # denominator of zero" of 18 September in another place. A board with no switching copper may well be
+    # telling the truth (board P's only FETs are the pack protection pair, not a converter), and saying so is
+    # one line beside the list. Asked here, the rules about it run where KiCad is not.
+    _undeclared_zero = bool(nodes) and not (b.get("switch_nets") or []) and not (b.get("switch_nets_why") or "").strip()
+    if _undeclared_zero:
+        notes.append("no switching net and NO DECLARED REASON: this board's sensitive nodes were not "
+                     "measured against anything, and an undeclared zero is not a pass")
+    elif bool(nodes) and not (b.get("switch_nets") or []):
+        notes.append("no switching net, declared: %s" % (b.get("switch_nets_why") or "").strip())
     try:
         import pcbnew
     except Exception:
         notes.append("pcbnew is not importable here, so only the netlist half was judged")
-        return dict(declared=len(nodes), fails=fails, notes=notes, measured=[], applicable=True)
+        return dict(declared=len(nodes), fails=fails, notes=notes, measured=[], applicable=True,
+                    no_switch_undeclared=_undeclared_zero)
     if not board_path or not os.path.exists(board_path):
         notes.append("no board file given, so only the netlist half was judged")
-        return dict(declared=len(nodes), fails=fails, notes=notes, measured=[], applicable=True)
+        return dict(declared=len(nodes), fails=fails, notes=notes, measured=[], applicable=True,
+                    no_switch_undeclared=_undeclared_zero)
     board = pcbnew.LoadBoard(board_path)
     names = {n.lstrip("/") for n in _nets_of(board)}
     for n in nodes:
@@ -174,8 +189,11 @@ def judge(board_path=None, letter=None, sens=None):
     pats = b.get("switch_nets") or []
     sw = sorted({x for x in names if any(fnmatch.fnmatchcase(x, p) for p in pats)})
     if not sw:
+        # The declaration-side half of this is asked above, before the copper; here it is the PATTERNS that
+        # matched nothing on this particular board, which is a different thing and keeps its own note.
         notes.append("this board has no switching net matching its own patterns, so only the declaration was judged")
-        return dict(declared=len(nodes), fails=fails, notes=notes, measured=[], applicable=True)
+        return dict(declared=len(nodes), fails=fails, notes=notes, measured=[], applicable=True,
+                    no_switch_undeclared=_undeclared_zero)
     sw_copper = {s: _copper(board, s) for s in sw}
     for n in nodes:
         net = str(n.get("net"))
@@ -281,8 +299,16 @@ def main(argv):
     # copper half cannot run: the verdict then said PASS with nothing to say it had not looked, which is exactly
     # how `doc_provenance`'s sweep reading came to stand in front of the runner's real one.
     _no_copper = any("only the netlist half" in n or "no board file" in n for n in r["notes"])
-    return _v.write("sensitive_nodes", _v.INCONCLUSIVE if (_no_copper and res == _v.PASS) else res, rules=["ANA-001"],
-                    missing_input=("the copper: %s" % [n for n in r["notes"] if "netlist half" in n or "no board file" in n][0]) if _no_copper else None,
+    _no_switch = bool(r.get("no_switch_undeclared"))
+    _missing = None
+    if _no_copper:
+        _missing = "the copper: %s" % [n for n in r["notes"] if "netlist half" in n or "no board file" in n][0]
+    elif _no_switch:
+        _missing = ("the switching copper to measure against: this board declares %d sensitive node(s) and an "
+                    "EMPTY switch_nets with no switch_nets_why beside it" % r["declared"])
+    return _v.write("sensitive_nodes",
+                    _v.INCONCLUSIVE if ((_no_copper or _no_switch) and res == _v.PASS) else res, rules=["ANA-001"],
+                    missing_input=_missing,
                     counts={"declared": r["declared"], "measured": len(r["measured"]), "fail": len(r["fails"])},
                     denominator=max(1, r["declared"]), evidence=r["fails"][:20],
                     inputs={"board": letter, "list": os.path.basename(sens or SENS)},
