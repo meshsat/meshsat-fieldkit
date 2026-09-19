@@ -11076,3 +11076,43 @@ read four pairs waiting on an authority and eight on a decision; computed it is 
 decision 39 claims RET-001, RET-003 and SI-001 on six boards and a hand count had filed them under the
 authority they also lack. The hand classification in `boards/a.json` now points at the generated page for its
 numbers and keeps only what the page cannot know: that six of board A's nine failures are one adoption away.
+
+**Addendum, 10:10 CEST (19 September), ALL SEVEN BOARDS' OPEN FAILURES READ ONE BY ONE, and the set-level
+sentence that falls out of it.** The register of 09:30 counts; this is what the counting cannot do, which is
+opening each of the 43 measured failures and asking whether anybody could sit down and fix it today. Each
+board's answer is written into its own file (`_board_<letter>_state_why`), and the answers agree:
+
+* **A (30 of 54).** Six of its nine failures are measurements of A32, a board four phases behind its own
+  generator: SCH-002's ten disagreements of 2,010 are the six charger filter parts A32 does not carry,
+  ANA-001's ten "no such net" are the filtered charger nets, RF-001's 11 of 11 are ports taken across the
+  board on In2 at 0.350 mm where the generator now lays 0.14 mm drops before the router, PI-003's five rails
+  are what A48's `rail_barrels` stage answers, and PI-001 and RET-004 read the same board. The other three are
+  decisions 36, 31 and the set's.
+* **B (24 of 55).** Five failures ARE the route at 416 unrouted, and MEC-001's twenty-one items of 3,102 are
+  every one of them "pair X has one leg routed and one not". Two are the board being a phase behind its
+  generator, one of them a single pad: `U10.7 is on net GND in the netlist and has no net on the board`, the
+  TMP117's ground and the 17 September SCH-005 finding exactly. Three are a generator answer owed at B24 with
+  every site named. Two are the placement, measured and refused this morning. One is decision 36 and one the
+  set's.
+* **C (35 of 47).** Zero engineering items: all twelve open pairs are outside this session's reach.
+* **D (34 of 51).** One barrel at 1.22 of its wall on the committed D12, answered on D15, which this tree has
+  measured and not adopted; the rest are decisions 32 and 31 and the set's.
+* **E (35 of 54).** Four of five are answered on boards this tree has measured and not adopted: E19 put the
+  two CELL_F barrels and the eight block barrels on the board, and E21 holds ANA-001 PASS 3 of 3 THROUGH a
+  route at 0.500 and 0.518 mm. **Adopting an E2x phase answers both of board E's own measurement failures at
+  once**, which is why E21's landing is the highest-value event pending on the set.
+* **E5 (19 of 25, the highest ratio).** Two of its three failures are one file, `PCB-E5-BLOCK-E5/
+  ORDER-NOTES.txt`, which names no artefact and says "1 oz outer copper" where ruling 7 orders 2 oz and its
+  own assembly block says 2 oz; `make_handoff.py` has written the two provenance lines since 13 September, so
+  the file predates its generator. It is deliberately not rebuilt here: that pass rewrites every board's notes
+  from folders stale on five of seven boards, and it is the one operation in this tree an unattended session
+  should not take on itself.
+* **P (33 of 47).** Three of five failures are decision 28 saying the same thing through three instruments,
+  and one is decision 40. No engineering item at all.
+
+**THE SET-LEVEL SENTENCE: there is not one open failure anywhere in the seven boards that is a defect in the
+current design waiting to be diagnosed.** Every one of the 43 is a route in flight or a measured phase this
+tree has not adopted, a generator answer for a board's next phase, an owner decision, an authority nobody here
+can supply, or paperwork blocked behind those. That is worth stating plainly because it is the honest shape of
+the critical path, and because it is falsifiable: any one of the 43 that somebody can close in this tree today
+refutes it.
