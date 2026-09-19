@@ -11598,3 +11598,23 @@ nets; `TRK_CSN` reads exactly **0.500 mm** from `TRK_SW2`, at the floor by const
 its pre-lay group asked for; `WATER_SENSE` 12.507 mm against the 1.00 it asks. **Pinning two of the six
 declared switching nets moved the violation to a third**, which is the sentence written into `boards/e.json`
 before the run and the reason E23 pins all six. **E17 stays board E's phase.**
+
+**Addendum, 16:25 CEST (19 September), TWO NEGATIVE CONTROLS, AND THE CLOSURE DEFECT IS BOARD A'S ALONE.** A
+fix that only ever helps is one nobody has tried to disprove, so the corrected closer was run read-only on two
+boards whose remaining opens were refused for a DIFFERENT reason, and it was expected to change both by
+nothing.
+
+| board | before | after | kept by the new rule | NOT CLOSED | FAILED, no path |
+|---|---|---|---:|---:|---:|
+| **A**, A48 frozen (sha 97ceae92) | hard 0, **15** | hard 0, **10** | 4 | **0** (its own finish had 4) | 3 |
+| **D**, D19 frozen (sha f4030853) | hard 0, **2** | hard 0, **2** | 0 | 0 | **2** `/+5V_D8`, `/PCM_XTI` |
+| **E**, E22 round 1 (sha c8593639) | hard 0, **2** | hard 0, **2** | 0 | 0 | **2** `/CELL_MON`, `/GND_V` |
+
+Both control boards come back byte for byte unchanged, their source sha printed before and after. **Board D's
+and board E's remaining opens fail for want of any path at all**, which is what their own probes already said
+by name: `/PCM_XTI` walled in by its own crystal's pads and C24, `/+5V_D8` with fourteen candidate pairs and
+no acceptable shape, `/CELL_MON` 224.5 mm across the strip, `/GND_V` 5.4 mm at Q8. **Board A's failed for a
+closure that was found and thrown away.** The difference is the shape of the nets, which the numbers already
+named: board A's switching nets carry 21 to 23 items in as many clusters, board E's and board D's carry a
+handful. **So the defect is board A's, the fix is worth a third of board A's opens and nothing anywhere else,
+and that is now measured in both directions rather than assumed in one.**
