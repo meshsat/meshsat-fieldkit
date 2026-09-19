@@ -697,3 +697,53 @@ def t_a_string_given_as_evidence_is_one_item_and_not_its_characters():
     V.write("t_evidence_list", V.PASS, {"n": 1}, 1, evidence=["one", "two"], out_dir=d, quiet=True)
     got2 = json.load(open(os.path.join(d, "t_evidence_list.verdict.json")))["evidence"]
     assert got2 == ["one", "two"], got2
+
+
+def _shadowed_module_names(src):
+    """Every (function, name, line) where a function CALLS a name as a module and also ASSIGNS that name.
+
+    Python decides a name's scope for the whole function body at compile time, so one assignment anywhere in
+    a function makes every earlier use of that name a local: `verdict.opt(...)` at the top and
+    `verdict = "MET"` four hundred lines below is an UnboundLocalError at the first call, on every board, for
+    ever. The deliberate optional-import idiom is exempt (`try: import x as _x / except: _x = None`, always
+    guarded by `if _x is not None`), which is the only legitimate reason to assign a module's own name.
+    """
+    import ast
+    out = []
+    tree = ast.parse(src)
+    for fn in [n for n in ast.walk(tree) if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))]:
+        imported, assigned, optional, used = set(), set(), set(), []
+        for n in ast.walk(fn):
+            if isinstance(n, ast.Import):
+                for al in n.names: imported.add(al.asname or al.name.split(".")[0])
+            if isinstance(n, ast.ImportFrom) and n.module: imported.add(n.module.split(".")[0])
+            if isinstance(n, ast.Assign) and isinstance(n.value, ast.Constant) and n.value.value is None:
+                for t in n.targets:
+                    if isinstance(t, ast.Name): optional.add(t.id)
+            if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Store): assigned.add(n.id)
+            if isinstance(n, ast.Attribute) and isinstance(n.value, ast.Name): used.append((n.value.id, n.lineno))
+        for name, ln in used:
+            if name in assigned and name in (imported | {"verdict"}) and name not in optional:
+                out.append((fn.name, name, ln))
+    return out
+
+
+def t_no_tool_calls_a_module_by_a_name_it_also_assigns():
+    """THE DEFECTIVE TREE IS THIS ONE AT HEAD AND IT WAS LIVE FOR EIGHT HOURS (19 September 2026).
+    `dc_drop.main` read its flags through `verdict.opt(...)` after the 15:43 conversion and, four hundred
+    lines later, wrote `verdict = "MET" if ... else "MISSED"` for each rail. That single assignment makes
+    `verdict` a LOCAL for the whole function, so the very first line of work raised `UnboundLocalError:
+    cannot access local variable 'verdict'` and `verdict.guard` correctly turned it into an INCONCLUSIVE
+    naming the crash. **PI-001 and PI-002 would have read INCONCLUSIVE on every board of the set**, the two
+    rules that judge whether a rail's copper carries its current, and the only reason nothing noticed is that
+    dc_drop's fixtures need KiCad and the suite had not been run where KiCad is since 00:30 that morning.
+    The rule runs everywhere, because it is a question about the SOURCE and not about a board."""
+    import glob, os
+    bad = []
+    for f in sorted(glob.glob(os.path.join(TOOLS, "*.py"))):
+        try: src = open(f, encoding="utf-8").read()
+        except OSError: continue
+        for fn, name, ln in _shadowed_module_names(src):
+            bad.append("%s:%d  %s() calls `%s` as a module and assigns it in the same function"
+                       % (os.path.basename(f), ln, fn, name))
+    assert not bad, "a module is called by a name its own function assigns:\n  " + "\n  ".join(bad)
