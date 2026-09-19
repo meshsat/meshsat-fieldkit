@@ -313,8 +313,18 @@ _intent.rail("CH_ACN", 20.0, 6.0, 8.0, "R16", loads={"Q7": 6.0}, v_work=20.0, co
                   "other. Declared 20 September 2026 because it had been a `node`, which is documented as a "
                   "net that is not a rail, and the consequence was that nothing solved it: no PI-001, no "
                   "PI-002, and no low-side reading for the Kelvin report")
-_intent.node("CH_SRP", _CELL_MAX, "the charger's output node before the 5 mOhm charge shunt: the pack at its "
-             "4S termination voltage of 4.2 V a cell, not the 14.4 V nominal the rail declares")
+# CH_SRP IS THE SECOND OF THE SIXTEEN (20 September 2026, the appendix addendum of 00:25 CEST). It carries
+# the charger's whole output current from Q10's drain through the three 22 uF input capacitors to the 5 mOhm
+# charge shunt R17, and on to CELL+; the pack's own rail is declared at 10.0 A typical and 18.0 A peak and
+# this copper carries the same. As a node, `dc_drop` solved nothing on it. `v_work` keeps the 4S termination
+# voltage the node declared, and `derate` takes the WORST of everything declared about a net since tonight,
+# so the conversion cannot lower what a part on it is judged against.
+_intent.rail("CH_SRP", 14.4, 10.0, 18.0, "Q10", loads={"R17": 10.0}, v_work=_CELL_MAX, converted=False,
+             note="the charger's output node BEFORE the 5 mOhm charge shunt R17: Q10's drain, the three "
+                  "22 uF input capacitors and the shunt, at the pack's own 10.0 A typical and 18.0 A peak. "
+                  "CELL+ is the rail on the far side of that shunt, so the two are different copper and "
+                  "neither double counts the other. The voltage a part on it can see is the 4S termination "
+                  "of 4.2 V a cell, not the 14.4 V nominal, which is what `v_work` carries")
 _intent.node("CH_SW1", 20.0, "BQ25731 buck-side switching node: it reaches the 20 V input bus", v_min=-1.0)
 _intent.node("CH_SW2", _CELL_MAX, "BQ25731 boost-side switching node: it reaches the pack", v_min=-1.0)
 _intent.node("CH_BTST1", 26.0, "the bootstrap rides on CH_SW1 at REGN, the charger's own 6 V regulator",
