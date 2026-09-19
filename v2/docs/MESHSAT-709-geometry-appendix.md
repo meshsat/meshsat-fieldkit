@@ -11944,3 +11944,32 @@ those drops as locked runs; group 2, the five `*_SW2` switching nets, **`closed 
 so only its sense group survives at `closed 9 of 10`, the same number A50 got. **So the two A arms differ in
 the switching group alone**, which is a cleaner comparison than the record had, and every arm from here must be
 launched from a tree that carries the per-group pre-lay or its evidence goes the way E23's did.
+
+**Addendum, 22:40 CEST (19 September), A GATE RUN BY HAND FROM `v2/ecad` WRITES INTO THIS TREE'S OWN EVIDENCE,
+AND TONIGHT IT CHANGED A READINESS PAGE.** Asked whether board P's amended declaration still parses, the check
+run was `sensitive_nodes.py --board <letter>` from `v2/ecad` for all five declaring boards. On the runner there
+is no pcbnew, so each run wrote `out/sensitive_nodes.verdict.json` with `missing_input: the copper: pcbnew is
+not importable here`, no board, and counts of zero, the last run overwriting the four before it. **Board A's
+ANA-001 then read INCONCLUSIVE on its own page where it had read FAIL 15 of 24, and the generated documents
+were re-rendered from it before the suite's own evidence guard caught the change.** This is the 17 September
+law in a third place: an incidental run of a gate is not a measurement and it must not be allowed to become
+one.
+
+**The tool did the right thing and so did the reader, which is what makes this worth writing down.**
+`sensitive_nodes` declared its missing input exactly as it is supposed to. `rules_status._supersedes` then
+preferred it because of its own stated order, **fingerprint first, then input**: board A's committed reading
+carries rule set `82885961768537e2` and the current set is `ff8151db3576437b`, and a verdict taken under a
+superseded rule set is held to be no evidence at all, so the fresh no-input reading won. **That order is
+inconsistent with the per-rule doctrine adopted on 17 September**, where a verdict carries a digest per rule it
+decides and staleness is asked rule by rule precisely so one correction does not mark three hundred readings
+stale. The global fingerprint is the older mechanism and it is still the thing that decides which of two
+readings wins. **Not changed tonight**: `_supersedes` is called per verdict name and a verdict may decide
+several rules, so making it ask per rule is a real change with the readiness number on the other end of it,
+and it deserves daylight and its own fixtures.
+
+**Repaired properly rather than by deleting the inconvenient file.** The unbound verdicts were moved out of the
+tree and board A's ANA-001 was RE-TAKEN where KiCad is, on its own committed board through `retake_gate.sh`,
+sha `58e26c67987b1daa` identical before and after: **FAIL 15 of 24 with 10 measured**, the same numbers, now
+under the current rule set and with its input. The pages re-render to exactly their committed state and
+readiness is **63.4 percent**, unchanged all day. **The procedure, again: `retake_gate.sh <letter> <phase dir>
+<stem> <tool.py>` or `--out-dir`, never a bare gate run from `v2/ecad`.**
