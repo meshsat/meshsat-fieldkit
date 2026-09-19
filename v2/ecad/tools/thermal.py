@@ -69,7 +69,23 @@ def main(a):
         # its maximum at once. Both are computed now and both are labelled: the typical figure is what the
         # case has to get rid of continuously and the peak figure is the worst case that cannot last.
         i_typ = float(r.get("amps_typ") or 0) or i
-        p_out = v * i; p_out_typ = v * i_typ; total_out += p_out
+        p_out = v * i; p_out_typ = v * i_typ
+        # ONE PATH'S WATTS ARE COUNTED ONCE (20 September 2026). A conductor run is often several nets and
+        # every one of them needs a rail declaration, because a node is judged by no power rule; but the sum
+        # below is over declared rails, so segments would count one path two, three or four times. A rail
+        # that says `series_of` is a segment whose power is counted at the rail it names: it is excluded from
+        # the sum and from the loss questions, and nothing else about it changes, because dc_drop, derate and
+        # via_current judge its own copper exactly as they judge any rail's.
+        _seg = r.get("series_of")
+        if _seg:
+            rows.append(dict(rail=net, volts=v, amps=i, watts_out=round(p_out, 2), watts_lost=0.0,
+                             source=(lambda _s: _s[0] if isinstance(_s, (list, tuple)) and _s else _s)(r.get("source")),
+                             series_of=_seg, converted=r.get("converted"),
+                             why_no_loss=("a series segment of %s: the same watts are counted there, and this "
+                                          "conductor's own loss is the I2R of its copper, which dc_drop "
+                                          "measures" % _seg)))
+            continue
+        total_out += p_out
         eff = r.get("efficiency")
         src = r.get("source"); src = src[0] if isinstance(src, (list, tuple)) and src else src
         # A RAIL WITH NO CONVERTER HAS NO CONVERSION LOSS (16 September 2026). The first reading asked every

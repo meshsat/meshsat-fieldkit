@@ -19,7 +19,7 @@ def bypass(cap_ref, part_ref, pin, net=None):
 
 def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=None, source_ic="", share=None,
          efficiency=None, switch=None, always_on=None, always_on_why="", enable_net=None, v_work=None,
-         converted=None):
+         converted=None, series_of=None):
     """source: the reference the rail enters the board at, or a LIST of them (a ground returns to several).
 
     budget: this rail's own drop budget as a fraction (default the judge's 2 percent; a 3.3 V logic rail at 1 A over long 0.4 mm tracks is fine at 3, 8 Sep 2026).
@@ -54,6 +54,30 @@ def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=No
                              "SENSE pin: dc_drop would take the rail's %.2f A out of it. Name the inductor or the sense "
                              "shunt the current really leaves through, or pass source_ic=\"<why this part's pin is a "
                              "power pin>\"." % (net, _s, amps_typ))
+    # A SEGMENT OF A PATH IS NOT A SECOND POWER SOURCE (20 September 2026, rule THM-001). One conductor run
+    # is often several nets: VBUS20 leaves R11, crosses R16's shunt and continues as CH_ACN to Q7; each LM5176
+    # stage's output leaves the boost-side FET as <p>_OUT and becomes its rail past the ISNS shunt; the USB-C
+    # outlet is PD_OUT, PD_VPWR, PD_SW and PD_VBUS in series. Every one of those segments needs a rail
+    # declaration, because a NODE is judged by no power rule and that is how sixteen DC conductors on this
+    # board came to be measured by nothing. But `thermal.py` sums every declared rail's volts times amps, so
+    # declaring the segments without saying what they are counts one path's watts two, three or four times:
+    # `series_of` says the power is already counted at the named rail, and thermal excludes the segment while
+    # dc_drop, derate, via_current and rail_crossings go on judging its copper exactly as they judge any rail.
+    # It must name a RAIL, never a node, because a node carries no watts and excluding a segment against one
+    # would take the path's power out of the total altogether; and a segment may not declare MORE current than
+    # the path it belongs to, which is the arithmetic that makes the exclusion safe.
+    if series_of is not None:
+        _p = _I["rails"].get(str(series_of).lstrip("/")) or _I["rails"].get("/" + str(series_of).lstrip("/"))
+        if _p is None:
+            raise SystemExit("intent: rail %s says it is a series segment of %s, and %s is not a declared rail. "
+                             "A segment's power is counted at the rail it belongs to, so that rail has to exist "
+                             "and be counted; if this conductor is the one place the path's power is counted, "
+                             "declare it as a plain rail and point the other segments at IT."
+                             % (net, series_of, series_of))
+        if float(amps_peak) > float(_p.get("amps_peak") or 0) + 1e-9:
+            raise SystemExit("intent: rail %s declares %.2f A peak as a series segment of %s, which declares "
+                             "%.2f A. A segment of a path cannot carry more than the path."
+                             % (net, float(amps_peak), series_of, float(_p.get("amps_peak") or 0)))
     if not loads: raise SystemExit("intent: rail %s declares no loads. Name where its current goes: "
                                    "loads={\"<ref>\": <amps>, ...}, summing to at most the rail's %.2f A peak. "
                                    "Undeclared, dc_drop would split %.2f A evenly over every U and J on the net, "
@@ -90,7 +114,8 @@ def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=No
                         # P_out * (1/eff - 1) and a pass element's is I2R in one part, which is the
                         # `dissipators` list's business, so the two cannot share one question (16 September
                         # 2026, rule THM-001).
-                        **({"converted": bool(converted)} if converted is not None else {})}
+                        **({"converted": bool(converted)} if converted is not None else {}),
+                        **({"series_of": str(series_of).lstrip("/")} if series_of is not None else {})}
 
 def node(net, v_max, basis, v_min=0.0, rides_on=None, bias_v=None, vendor_reference=None, v_work=None):
     """A NET THAT IS NOT A RAIL, and the largest voltage a part on it can see (rule CMP-001, 16 September 2026).
@@ -142,6 +167,16 @@ def rail_volts(net, default=None):
         if default is not None: return float(default)
         raise SystemExit("intent: rail_volts(%s): no such declared rail" % net)
     return float(r.get("volts") or 0)
+
+def rail_amps(net):
+    """The declared (typical, peak) current of a rail, for a generator deriving a series segment's own.
+
+    A conductor run is several nets and every segment carries the SAME current: writing that current out by
+    hand at each segment is how a table of numbers gets one wrong, so a segment reads it from the rail it
+    belongs to and the two cannot drift."""
+    r = _I["rails"].get(net.lstrip("/")) or _I["rails"].get("/" + net.lstrip("/"))
+    if r is None: raise SystemExit("intent: rail_amps(%s): no such declared rail" % net)
+    return float(r.get("amps_typ") or 0), float(r.get("amps_peak") or 0)
 
 def net_volts(net, default=None):
     """The declared voltage of a net, rail or node, for a stage that derives its own switching nodes.

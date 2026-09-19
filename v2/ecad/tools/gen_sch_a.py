@@ -165,7 +165,7 @@ part("J_MAINSW", "Connector_Generic", "Conn_01x02", "JST-XH 1x2 socket: the MAIN
 # --- LM5176 four-switch buck-boost stages (lm5176-datasheet.pdf, HTSSOP-28 PWP; Vref 0.8 V; pins: 1 EN/UVLO 2 VIN 3 VISNS 4 MODE 5 DITH 6 RT/SYNC 7 SLOPE 8 SS 9 COMP 10 AGND 11 FB 12 VOSNS
 #     13 ISNS- 14 ISNS+ 15 CSG 16 CS 17 PGOOD 18 SW2 19 HDRV2 20 BOOT2 21 LDRV2 22 PGND 23 VCC 24 BIAS 25 LDRV1 26 BOOT1 27 HDRV1 28 SW1, pad 29)
 def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, cs_filter, isns="10m", rcs="5m", bias=None,
-           rfb_val="10k 1%", cout="10u 50V X7R 1210", cin="10u 50V X7R 1210"):
+           rfb_val="10k 1%", cout="10u 50V X7R 1210", cin="10u 50V X7R 1210", out_budget=None):
     """one stage with prefix p: refs = (Q_bh, Q_bl, Q_bsl, Q_bsh, R_fb_top, R_fb_bot, R_rt, R_slope, R_comp, C_comp, C_comp2, C_ss, C_vcc, C_boot1, C_boot2, R_isns, R_cs, R_pgood, R_en_top, R_en_bot, Cin1, Cin2, Cout1, Cout2, Cout3, R_mode)"""
     qbh, qbl, qsl, qsh, rft, rfb, rrt, rsl, rco, cco, cco2, css, cvcc, cb1, cb2, risns, rcs_, rpg, ret, reb, ci1, ci2, co1, co2, co3, rmd = refs
     N = lambda s: p + "_" + s
@@ -234,7 +234,26 @@ def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, cs_
                  rides_on=N("SW1"), bias_v=_vcc)
     _intent.node(N("BOOT2"), _vout_v + _vcc, _why + "the bootstrap rides on SW2 at the controller's 7.6 V VCC",
                  rides_on=N("SW2"), bias_v=_vcc)
-    _intent.node(N("OUT"), _vout_v, _why + "the output before the ISNS shunt")
+    # <p>_OUT IS A RAIL AND IT WAS A NODE ON ALL FIVE STAGES (20 September 2026, the third to the seventh of
+    # the sixteen). It is the conductor between the boost-side high-side FET's drain and the ISNS shunt, and
+    # it carries the stage's WHOLE output current: 6 A on FE, 5 on PA, 3 on PD, and `node()` says in its own
+    # first line that it describes a net that is NOT a rail, so `dc_drop` solved no potential on any of them
+    # and neither PI-001 nor PI-002 ever looked at this copper. It is the same defect that made CH_ACN and
+    # CH_SRP invisible, repeated five times by one helper, which is why it is fixed HERE and not in five
+    # hand-written lines that could each be wrong in its own way.
+    # The current is READ from the rail on the far side of the shunt rather than typed again: a segment of a
+    # path carries the path's current by construction, and `rail_amps` makes the two impossible to drift.
+    # The source is the FET's own drain tab (a PowerPAK SO-8's pad 5), never the controller, whose pin 14 on
+    # this net is the ISNS sense input: naming it would send the whole current down a sense escape, which is
+    # the 13 September defect that read 3.90 against IPC on copper that was never carrying it.
+    _ot, _op = _intent.rail_amps(vout)
+    _intent.rail(N("OUT"), _vout_v, _ot, _op, qsh,
+                 loads={risns: _ot}, v_work=_vout_v,
+                 **({"budget": out_budget} if out_budget else {}),
+                 series_of=vout, converted=False,
+                 note=_why + "the output conductor between %s's drain tab and the ISNS shunt %s, at the "
+                             "stage's whole output current. It was a node until 20 September 2026, so no "
+                             "power rule had ever looked at it." % (qsh, risns))
     _intent.node(N("VCC"), _vcc, _why + "the controller's own regulator output, 7.6 V typical")
     _intent.node(N("CS"), 1.0, _why + "the current-sense node: the drop across a %s Ohm shunt, under a volt at any current this stage carries" % rcs)
     _intent.node(N("CSF"), 1.0, _why + "the filtered current-sense input at pin 16, 100 R from the shunt's top")
@@ -306,11 +325,13 @@ _CELL_MAX = 16.8
 # input sense either: it reads "the mesh solved no pad of CH_ACN on this board". `derate` reads a rail's
 # voltage in preference to a node's, so CMP-001 keeps the same 20 V it had.
 _intent.rail("CH_ACN", 20.0, 6.0, 8.0, "R16", loads={"Q7": 6.0}, v_work=20.0, converted=False,
+             series_of="VBUS20",
              note="the charger's input node BEHIND the 10 mOhm input shunt R16: the same 20 V charge bus as "
                   "VBUS20 and the same 6.0 A, from the shunt's far pad to the BQ25731's high-side FET Q7 and "
                   "the three input capacitors. VBUS20 is the rail INTO the shunt (source R11, load R16) and "
-                  "this is the rail out of it, so the two are different copper and neither double counts the "
-                  "other. Declared 20 September 2026 because it had been a `node`, which is documented as a "
+                  "this is the rail out of it: DIFFERENT COPPER, which is why both need judging, and the SAME "
+                  "WATTS, which is why this one is declared a series segment of VBUS20 so the board's power "
+                  "total counts the path once. Declared 20 September 2026 because it had been a `node`, which is documented as a "
                   "net that is not a rail, and the consequence was that nothing solved it: no PI-001, no "
                   "PI-002, and no low-side reading for the Kelvin report")
 # CH_SRP IS THE SECOND OF THE SIXTEEN (20 September 2026, the appendix addendum of 00:25 CEST). It carries
@@ -320,10 +341,12 @@ _intent.rail("CH_ACN", 20.0, 6.0, 8.0, "R16", loads={"Q7": 6.0}, v_work=20.0, co
 # voltage the node declared, and `derate` takes the WORST of everything declared about a net since tonight,
 # so the conversion cannot lower what a part on it is judged against.
 _intent.rail("CH_SRP", 14.4, 10.0, 18.0, "Q10", loads={"R17": 10.0}, v_work=_CELL_MAX, converted=False,
+             series_of="CELL+",
              note="the charger's output node BEFORE the 5 mOhm charge shunt R17: Q10's drain, the three "
                   "22 uF input capacitors and the shunt, at the pack's own 10.0 A typical and 18.0 A peak. "
-                  "CELL+ is the rail on the far side of that shunt, so the two are different copper and "
-                  "neither double counts the other. The voltage a part on it can see is the 4S termination "
+                  "CELL+ is the rail on the far side of that shunt: DIFFERENT COPPER, which both rules have "
+                  "to look at, and the SAME PACK NODE, so this is declared a series segment of CELL+ and the "
+                  "board's power total counts that node once. The voltage a part on it can see is the 4S termination "
                   "of 4.2 V a cell, not the 14.4 V nominal, which is what `v_work` carries")
 _intent.node("CH_SW1", 20.0, "BQ25731 buck-side switching node: it reaches the 20 V input bus", v_min=-1.0)
 _intent.node("CH_SW2", _CELL_MAX, "BQ25731 boost-side switching node: it reaches the pack", v_min=-1.0)
@@ -380,12 +403,47 @@ vh2("J_54V", "54 V to the PoE injector on B16 (JST-VH): + -", "+54V_POE")
 # feedback resistors CTL1 and CTL2 switch in, so its ceiling is the 15 V profile and every part on it is judged
 # against that (rule CMP-001, 16 September 2026). PD_SW is the same node behind the VBUS N-FET and PD_VBUS is
 # the outlet itself, at the same ceiling.
-_intent.node("PD_VPWR", 15.0, "the TPS25740A's highest advertised profile (5, 9 and 15 V at 3 A, 45 W): the "
-             "LM5176's feedback divider is switched by CTL1 and CTL2, so 15 V is the stage's ceiling")
-_intent.node("PD_SW", 15.0, "the PD supply behind Q27, the VBUS switch: the same 15 V ceiling")
-_intent.node("PD_VBUS", 15.0, "the USB-C outlet itself, behind the ISNS shunt: the same 15 V ceiling")
+# THE OUTLET'S WHOLE POWER PATH IS FOUR CONDUCTORS AT 3 A AND ALL FOUR WERE NODES (20 September 2026, the
+# eighth to the tenth of the sixteen, with PD_OUT inside the stage helper). The path is Q26's drain tab ->
+# PD_OUT -> the stage's ISNS shunt R81 -> PD_VPWR -> the VBUS switch Q27 -> PD_SW -> the outlet's ISNS shunt
+# R138 -> PD_VBUS -> J_USBC_OUT, and every one of those nets carries the full 3.0 A of a 45 W outlet. As
+# nodes, `dc_drop` solved no potential on any of them and neither PI-001 nor PI-002 looked at 45 W of copper.
+#
+# THE VOLTAGE STAYS 15 V AND THE BUDGET DOES NOT. The 15 V ceiling is what a part on this net can see and it
+# is what CMP-001 must judge against, and it is what the stage's own derivations read to place SW2 and BOOT2;
+# but the drop budget is a FRACTION of that number, and the outlet delivers its 3 A at the 5 V profile too,
+# where the same copper drop costs three times the fraction. A 2 percent budget at 5 V is 100 mV, which is
+# 0.67 percent of 15, so the four conductors declare 0.0067 and are judged at the profile that binds. Taking
+# the ceiling as the denominator would have produced a 300 mV bar on a 5 V outlet: a wrong declaration is
+# worse than a missing one, because it produces a number.
+#
+# PD_VPWR is the one of the four whose watts are COUNTED, which is the same place every other stage counts
+# its own: the rail on the far side of the stage's ISNS shunt. PD_OUT (inside the stage helper), PD_SW and
+# PD_VBUS all say `series_of="PD_VPWR"`, so the board's power total carries this outlet's 45 W once and
+# every rule that looks at copper still looks at all four conductors.
+_PD_A, _PD_V, _PD_BUDGET = 3.0, 15.0, 0.0067
+_intent.rail("PD_VPWR", _PD_V, _PD_A, _PD_A, "R81", loads={"Q27": _PD_A}, v_work=_PD_V, budget=_PD_BUDGET,
+             switch="U19", efficiency=0.93,
+             note="the PD supply between the stage's ISNS shunt R81 and the VBUS switch Q27, at the "
+                  "TPS25740A's highest advertised profile (5, 9 and 15 V at 3 A, 45 W): the LM5176's "
+                  "feedback divider is switched by CTL1 and CTL2, so 15 V is the stage's ceiling and the "
+                  "voltage every part on this net is judged against")
+_intent.rail("PD_SW", _PD_V, _PD_A, _PD_A, "Q27", loads={"R138": _PD_A}, v_work=_PD_V, budget=_PD_BUDGET,
+             converted=False, series_of="PD_VPWR",
+             note="the PD supply behind Q27, the VBUS switch, on its way to the outlet's own 10 mOhm ISNS "
+                  "shunt R138: the same 3 A and the same 15 V ceiling")
+_intent.rail("PD_VBUS", _PD_V, _PD_A, _PD_A, "R138", loads={"J_USBC_OUT": _PD_A}, v_work=_PD_V, budget=_PD_BUDGET,
+             converted=False, series_of="PD_VPWR",
+             note="the USB-C outlet itself, behind the ISNS shunt and out at J_USBC_OUT: the same 3 A and "
+                  "the same 15 V ceiling")
+# The PD stage states its own output current because its downstream net is a SEGMENT of this path and not
+# the rail that counts it: the other four stages read theirs from the rail past their shunt. 0.93 is the
+# efficiency the board's other 40 V LM5176 stages declare, same controller, same CSD18510Q5B FETs, same
+# output current class; it is an assertion of this project's and it is the number the PA and HF stages are
+# already judged on rather than a second figure nobody wrote down.
 lm5176("PD", "U19", "VBAT", "PD_VPWR", "PD_EN", "105k", "L11", "6.8uH XAL1010-682ME", "CSD18510Q5B 40 V N-FET", "",
-       ["Q21", "Q22", "Q25", "Q26", "R76", "R77", "R78", "R79", "R80", "C86", "C87", "C88", "C89", "C90", "C91", "R81", "R127", "R128", "R133", "R134", "C92", "C116", "C117", "C118", "C119", "R135"], cs_filter=("R158", "R159", "C127"), isns="10m", rfb_val="20k 1% (R_FBL)")
+       ["Q21", "Q22", "Q25", "Q26", "R76", "R77", "R78", "R79", "R80", "C86", "C87", "C88", "C89", "C90", "C91", "R81", "R127", "R128", "R133", "R134", "C92", "C116", "C117", "C118", "C119", "R135"], cs_filter=("R158", "R159", "C127"), isns="10m", rfb_val="20k 1% (R_FBL)",
+       out_budget=_PD_BUDGET)
 r("R136", "21.0k 1% (R_FBL2: 9 V when CTL2 is low)", "PD_FB", "PD_CTL2"); r("R137", "14.0k 1% (R_FBL1: 15 V when CTL1 is low too)", "PD_FB", "PD_CTL1")
 ic("U18", 25, "TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)", "QFN24", {
  "1": "PD_VTX", "2": "PD_CC1", "3": "PD_CC2", "4": "GND", "5": "PD_DVDD", "6": "PD_CTL1", "7": "PD_CTL2", "8": "PD_DVDD", "9": "GND", "10": "GND", "11": "PD_UFP", "12": "PD_DVDD", "13": "PD_DVDD",

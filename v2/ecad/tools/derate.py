@@ -231,11 +231,17 @@ def main(argv):
     if not argv: print(__doc__); return 2
     net = argv[0]
     intent = _v.opt(argv, "--intent", None)
-    # A RUN TOLD WHERE TO WRITE LEAVES THE TREE ALONE (20 September 2026). Every other gate took `--out-dir`
-    # after 19 September's incident, where a gate run by hand from `v2/ecad` wrote into this tree's own
-    # evidence and displaced a measured reading on the readiness page. This one never had it, so re-taking
-    # board E5's CMP-001 after a tool change had nowhere to put the answer but beside the board, where the
-    # readiness reads it.
+    # A RUN TOLD WHERE TO WRITE LEAVES THE TREE ALONE (20 September 2026, the sentence corrected the same
+    # night it was written). 19 September's incident was a gate run by hand from `v2/ecad` writing into this
+    # tree's own evidence and displacing a measured reading on the readiness page, and this gate is one of the
+    # few that could not be redirected at all.
+    # HOW REDIRECTION ACTUALLY WORKS HERE, because the first version of this comment said "every other gate
+    # took `--out-dir`" and that is not true: SEVEN files in this tools directory read that flag, and the
+    # mechanism the rest use is that a gate writes its verdict beside THE BOARD IT WAS GIVEN, so pointing it
+    # at a copy of the board redirects it, which is what `retake_gate.sh` does (it stages the board and the
+    # tools in a scratch tree on the box and compares the board's sha before and after). This gate takes a
+    # NETLIST as its first argument on a board with a schematic, so the board's own directory is not where it
+    # would have written, and the flag is the only way to tell it.
     _od = _v.opt(argv, "--out-dir", None)
     _w = (lambda *a, **k: _v.write(*a, **dict(k, out_dir=_od))) if _od else _v.write
     margin = float(argv[argv.index("--margin") + 1]) if "--margin" in argv else MARGIN
