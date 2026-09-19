@@ -156,3 +156,29 @@ def t_the_row_carries_the_ring_already_on_the_site():
     rows, judged = rc.rows(b, rails)
     assert len(rows) == 1, rows
     assert abs(rows[0]["width"] - 0.8) < 1e-9, rows[0]["width"]
+
+
+def t_the_window_covers_the_cluster_the_answer_would_take():
+    """Board P proved this one. The chain laid four barrels at F1 pad 1 on a lattice of pitch drill + 0.4, and
+    this walk, looking 1.0 mm past the pad, saw three of the five and reported the site still short: a judge
+    that cannot see the answer it asked for is a judge nobody can satisfy. The window grows with the count, so
+    the outermost barrel of the cluster is inside it."""
+    pads = [_Pad("/RAIL", "1", 10.0, 10.0, 0.6, 0.6)]
+    # five barrels at 0.9 pitch centred on the pad: the outermost stands 1.8 mm away, well past 1.0 + 0.3
+    vias = [_Via("/RAIL", 10.0 + 0.9 * k, 10.0, 0.5) for k in (-2, -1, 0, 1, 2)]
+    b = _Board(vias, [_FP("U1", pads)])
+    rails = {"/RAIL": {"amps_peak": 5.0, "source": "U1"}}
+    assert vc.barrels_for(5.0, 0.5) == 5, vc.barrels_for(5.0, 0.5)
+    short, judged = rc.judge(b, rails)
+    assert judged == 1 and short == [], (judged, short)
+
+
+def t_the_window_never_shrinks_below_the_one_it_started_with():
+    """The wider window is taken only when it finds MORE, so a site whose cluster is not there reads exactly
+    as it did: this is a widening for counting an answer, never a loosening of the question."""
+    pads = [_Pad("/RAIL", "1", 10.0, 10.0, 0.6, 0.6)]
+    vias = [_Via("/RAIL", 10.0, 10.0, 0.5)]
+    b = _Board(vias, [_FP("U1", pads)])
+    short, judged = rc.judge(b, {"/RAIL": {"amps_peak": 5.0, "source": "U1"}})
+    assert judged == 1 and len(short) == 1, (judged, short)
+    assert "1 barrel(s)" in short[0] and "needs 5" in short[0], short[0]
