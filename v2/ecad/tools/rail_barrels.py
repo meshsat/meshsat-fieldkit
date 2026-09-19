@@ -56,6 +56,23 @@ MAX_BARRELS = 8          # above this a cluster is a busbar: declined, reported,
 FLOOR = 0.2995           # hole to hole, this project's own rule; power_copper.stitch enforces it
 
 
+def _save_filled(pcbnew, b, path):
+    """Save, reload and REFILL before anything measures this board.
+
+    A through via lands in every pour it crosses, and a pour filled before the via existed still has its
+    copper there: the DRC then reads `Clearance violation (zone clearance 0.3000 mm; actual 0.0000 mm)` at
+    every barrel and the whole set is reverted. Board A's first three runs of this tool said exactly that
+    seven times. It is the 14 September defect in another place, where the gate and every rail verdict were
+    read off a fill from four stages earlier and the finish learnt to refill before it judges. The save and
+    reload come first because `ZONE_FILLER` segfaults on a board built in python and fills a saved-then-loaded
+    copy fine (17 September, the board fixtures)."""
+    pcbnew.SaveBoard(path, b)
+    b2 = pcbnew.LoadBoard(path)
+    b2.BuildConnectivity()
+    pcbnew.ZONE_FILLER(b2).Fill(b2.Zones())
+    pcbnew.SaveBoard(path, b2)
+
+
 def _routed(b):
     """True when a router has been over this board (place_audit's own test, 16 September)."""
     segs = [t for t in b.GetTracks() if t.GetClass() == "PCB_TRACK"]
@@ -204,7 +221,7 @@ def main(argv):
         # plan's to keep clear of, which it does before a point is ever offered here.
         pc.stitch(r["net"], pts, drill=r["drill"], width=r["width"])
         laid.append((r, pts))
-    pcbnew.SaveBoard(path, b)
+    _save_filled(pcbnew, b, path)
     h, u, d = _vp._measure(path)
     if h > h0 or u > u0:
         hits = _vp._hit_positions(d)
@@ -238,7 +255,7 @@ def main(argv):
             if n and n not in nets: nets[n] = t.GetNet()
         pc = _pc.PowerCopper(b, lambda n, create=False: nets[n.lstrip("/")], P)
         for r, pts in keep: pc.stitch(r["net"], pts, drill=r["drill"], width=r["width"])
-        pcbnew.SaveBoard(path, b)
+        _save_filled(pcbnew, b, path)
         h, u, _ = _vp._measure(path)
         laid = keep
         if h > h0 or u > u0:
