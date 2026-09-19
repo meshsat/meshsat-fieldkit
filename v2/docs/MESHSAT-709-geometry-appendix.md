@@ -10805,3 +10805,36 @@ makes it a declared zero and a PASS with its reason, and its absence now makes t
 what it could not measure. The question is asked of the DECLARATION, before the copper, so the rules about it
 run where KiCad is not. Board P's next phase owes that line or a switch list; until then its ANA-001 reading is
 honest about having looked at nothing.
+
+**Addendum, 05:45 CEST (19 September): ANA-001 held through a route for the first time.** E21's round 1 landed
+**hard 0 with four open of 94**, all 200 passes in 34.9 minutes, and `sensitive_nodes` on the ROUTED board
+reads **PASS 3 of 3**: `TRK_CSN` **0.500 mm** from `TRK_SW2`, `TRK_CSP` **0.518 mm** from `TRK_SW1`. Those are
+the same two numbers its PLACED board reads. The router moved them by nothing at all.
+
+| arm | what was pinned | placed board | routed board | open |
+|---|---|---|---|---:|
+| E19 | nothing | PASS | **FAIL 2 of 3**, 0.153 and 0.242 mm | 1 |
+| E20 | two ordinary nets | PASS, 6.179 mm | **FAIL 3 of 3** | 8 |
+| **E21** | **the sense pair AND its switching partners** | PASS, 0.500 / 0.518 | **PASS 3 of 3**, 0.500 / 0.518 | **4** |
+
+**Six millimetres of margin is what a router spends when nothing tells it not to** (E20's `TRK_CSP`, 6.179 mm
+on the placement and 0.153 after the route), and every instrument that speaks to Freerouting had already been
+measured and refused: a 0.50 mm class clearance cannot escape the controller's own pins, and a DSN class-pair
+rule sat in E17's DSN while the router laid a run 0.171 mm away. **What holds the rule is copper the router
+cannot move, on BOTH sides of it.** A locked sense run alone would not have done it: the router still lays
+`TRK_SW2` afterwards and the DSN permits 0.15 mm, which is the 0.153 E19 measured.
+
+**The cost is three connections** (4 open against E19's 1) for thirteen pre-laid ones, and it is cheap for the
+reason the pre-lay rule now states: these are four SHORT local runs, the sense pair from its filter to the
+controller and the switching nodes from the bridge to the inductor. E20 pre-laid two LARGE nets, 39 pad-to-pad
+closures and one path 2,068 cells long, and paid seven.
+
+**What this does not say.** Board E declares six switching nets and two are pinned; the placement reading shows
+the nearest switching copper to each sense node IS `TRK_SW1` and `TRK_SW2`, so the binding constraint is the
+one that was answered, but a placement change could put another one closer. And four open is not zero: **E17
+remains board E's phase** until a round closes with ANA-001 still passing. The finish's closers are running.
+
+**Board A is the same problem with the same answer waiting.** Its placement reads `sensitive_nodes` PASS of 24
+with 0.850 mm to spare while its committed board reads FAIL 15 of 24, so A49's arm is the five `*_CSF` and
+their five `*_SW2` partners, written into `boards/a.json` with its cost caveat: A40's four pre-laid nets cost
+board A ten connections, and ten nets is more than four.
