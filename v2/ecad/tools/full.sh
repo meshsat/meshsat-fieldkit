@@ -289,11 +289,15 @@ RB="$(python3 -c "import json,sys; d=json.load(open(sys.argv[1])).get('rail_barr
 # against the 50 its own class declares; on an outer layer the same width is about 50. The other four pre-laid
 # nets are local escapes in the densest corner of the board and need every layer, so one layer set for all of
 # them is the wrong shape: `prelay_groups` is a list of {nets, layers, why} and the flat keys stay as they are.
+# A GROUP MAY ASK FOR MORE ROOM THAN ITS CLASS CARRIES (19 September 2026, `clearance` in the group). Board E's
+# current-sense pair is the case: ANA-001 wants 0.50 mm from switching copper, the SENSE class carries 0.127,
+# a 0.50 class clearance refuses the escape at the controller's own pins, and a DSN class-pair rule does not
+# reach Freerouting. A locked run laid to the number before the router starts is the one instrument left.
 python3 -c "
 import json,sys
 for g in json.load(open(sys.argv[1])).get('prelay_groups') or []:
-    print('%s\t%s' % (g['nets'], g.get('layers','')))" "$CFG" 2>/dev/null |
-while IFS=$'\t' read -r GNETS GLAYERS; do
+    print('%s\t%s\t%s' % (g['nets'], g.get('layers',''), g.get('clearance','')))" "$CFG" 2>/dev/null |
+while IFS=$'\t' read -r GNETS GLAYERS GCLR; do
   [ -n "$GNETS" ] || continue
   T=../tools; . ../tools/guarded.sh
   gstage () {
@@ -302,7 +306,7 @@ while IFS=$'\t' read -r GNETS GLAYERS; do
     # before anything judges the board, and KiCad's fill retreats around a locked track the way it does around
     # the router's own. With them in the map board D's pre-lay had 5,140 free cells of 834,561 and laid nothing,
     # which is what boards C, D and E have all read. The finish keeps them (STUB_POUR_OBSTACLE defaults to 1).
-    env STUB_POUR_OBSTACLE="${PRELAY_POUR_OBSTACLE:-0}" STUB_LOCK="${PRELAY_LOCK:-1}" \
+    env STUB_POUR_OBSTACLE="${PRELAY_POUR_OBSTACLE:-0}" STUB_LOCK="${PRELAY_LOCK:-1}" STUB_NET_CLEAR="${GCLR:-0}" \
         STUB_NETS="$GNETS" STUB_LAYERS="$GLAYERS" STUB_GRID="${PRELAY_GRID:-0.1}" STUB_WIN_SCALE="${PRELAY_WIN:-25}" \
         STUB_MAXN="${PRELAY_MAXN:-200000000}" timeout "${PRELAY_TIMEOUT_S:-3600}" nice -n 10 \
         python3 -u ../tools/stub_router.py $N.kicad_pcb out/$N-prelay-in.json > out/$N-prelay-group.log 2>&1
