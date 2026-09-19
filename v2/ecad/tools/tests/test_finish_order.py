@@ -157,6 +157,20 @@ def t_routeflow_validate_agrees_with_these_rules():
     ecad = os.path.dirname(TOOLS)
     if not glob.glob(os.path.join(ecad, "pcb-*-*")):
         raise Skip("no phase project directories in this checkout; routeflow validate judges profiles against them")
+    # AND A TREE THAT IS NOT THE PINNED REPO CANNOT ANSWER THIS (20 September 2026, found by running the suite
+    # where KiCad is). Every profile pins `repo` at the box clone, and `one_tree` exists to refuse a run whose
+    # tools and board come from different trees, which is the 13 September defect. On the runner that path does
+    # not exist, so `validate` skips the property and reads 20 of 20; in the staged suite tree beside a real box
+    # clone it exists and is a DIFFERENT tree, so every profile fails that one property and the rule reports a
+    # correct guard as a broken profile. The question is about the HOST, not about the profile.
+    import json as _json
+    for _p in sorted(glob.glob(os.path.join(TOOLS, "routeflow", "*.json"))):
+        try: _repo = (_json.load(open(_p, encoding="utf-8")) or {}).get("repo") or ""
+        except ValueError: continue
+        if _repo and os.path.isdir(_repo) and os.path.realpath(_repo) != os.path.realpath(os.path.dirname(ecad) + "/.."):
+            if os.path.realpath(_repo) != os.path.realpath(os.path.join(ecad, "..", "..")):
+                raise Skip("the profiles pin %s, which exists here and is not this tree, so validate's "
+                           "one-tree property is about the host rather than the profile" % _repo)
     for p in sorted(glob.glob(os.path.join(TOOLS, "routeflow", "*.json"))):
         r = subprocess.run([sys.executable, os.path.join(TOOLS, "routeflow.py"), "validate", p],
                            capture_output=True, text=True)
