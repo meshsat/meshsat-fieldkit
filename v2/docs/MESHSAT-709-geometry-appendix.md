@@ -10686,3 +10686,31 @@ layers at 2 oz and its pack current largely does not cross: `via_current` on P's
 upper bound at a source pad**; the cap refuses to draw a busbar there, and the solved mesh decides those two. A
 declined site is a question, not a finding, and that is the caveat that travels with every number in the table
 above. Board P's other five agree with the solved reading exactly, which is the case for asking early.
+
+**Addendum, 04:30 CEST (19 September), a correction to the 03:15 and 03:55 entries: the pre-lay does not
+"cost connections", it MOVES the opens, and on board D it closed exactly the two it was aimed at.** The
+comparison table stands and the numbers in it are right; the sentence attached to them was not.
+
+**D17's two remaining opens are `/LED_REC_K` and `/PCM_VCCR`**, its stub router FAILED pad to pad on both.
+Those are precisely the two nets D18 added to the pre-lay, and D18's pre-lay closed 5 of 5. **D18's three
+opens are `/HS2_BIAS_R`, `/HUB_DM1` and `/HUB_DP1`, a disjoint set.** So the pre-lay did the job it was given
+and the router then left three other nets instead of two; the board went 2 to 3, which is still a loss of one,
+but nothing in it says a pre-laid net is copper wasted.
+
+**The same shape is on board E and it was already in the record without being read.** E18's round 1 and round 2
+left DIFFERENT nets open, which is what "the opens scatter" meant. E19 left one and E20 left eight, and the
+question nobody asked is whether E20's eight include E19's one.
+
+**What this changes for the next person, which is why it is worth a correction rather than a footnote.** Read
+as a cost, the rule is "stop pre-laying" and board D's `/PCM_VDD` closure of D15 was an exception to be
+apologised for. Read as a trade, the rule is: **a pre-lay closes what it targets and hands the congestion to
+its neighbours, so it pays where the nets it targets are ones nothing else can close AND the neighbourhood has
+room.** Board D's `/HUB_DM1` is the counter-example in the same board: it has been a placement item since
+11 September, when D10 needed it closed by hand at U4 pad 11 and R13 pad 1 with 2.82 mm and no lane, and it is
+the first thing to break when anything else takes copper near it. **Board D's last item is that fan**, and no
+arm from D14 to D18 has moved it, because none of them was about it.
+
+**The pre-lay's rule, restated with this in it:** pre-lay a gap no closure can reach, and only where the
+neighbours can afford the copper. Both halves are measurable before the route: the first from the closers'
+own FAILED lines on the previous arm, the second from what the pre-lay's own neighbourhood looks like on the
+placed board.
