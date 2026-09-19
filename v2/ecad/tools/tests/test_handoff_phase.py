@@ -15,8 +15,11 @@ import os, sys, re, shutil, tempfile, subprocess
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-def _tree(phases, notes_phase):
-    """A fixture tree: v2/ecad/tools/make_handoff.py plus v2/release/revA/boards/<folders>."""
+def _tree(phases, notes_phase, options=True):
+    """A fixture tree: v2/ecad/tools/make_handoff.py plus v2/release/revA/boards/<folders>.
+
+    `options=False` is the board with no fabrication-note block at all (E5, the bare dock block): it asserts
+    no phase there, so nothing about it can be stale."""
     d = tempfile.mkdtemp(prefix="handoff-phase-")
     tools = os.path.join(d, "v2", "ecad", "tools"); os.makedirs(tools)
     boards = os.path.join(d, "v2", "release", "revA", "boards"); os.makedirs(boards)
@@ -24,7 +27,9 @@ def _tree(phases, notes_phase):
     # one board in the table, the D row, with its notes written for `notes_phase`
     row = ('BOARDS = [("meshsat-pcb-d-revA-D8", "pcb-d-aprs", "pcb-d-aprs", "PCB-D APRS", "D8",\n'
            '           "%s is the APRS mezzanine; the SA868 is bench-fitted")]\n'
-           'PCB_OPTIONS = {"pcb-d-aprs": ["FABRICATION NOTES (%s, four layers)", ""]}\n' % (notes_phase, notes_phase))
+           'PCB_OPTIONS = %s\n' % (notes_phase,
+                                   ('{"pcb-d-aprs": ["FABRICATION NOTES (%s, four layers)", ""]}' % notes_phase)
+                                   if options else "{}"))
     # cut the real PCB_OPTIONS first, only as far as the resolver: cutting after the row was inserted would
     # delete the fixture's own PCB_OPTIONS, and cutting past the marker would delete the code under test
     src = re.sub(r"^PCB_OPTIONS = \{.*?^# -+ the table against the tree",
@@ -40,8 +45,8 @@ def _tree(phases, notes_phase):
     return d, tools, stub
 
 
-def _run(phases, notes_phase):
-    d, tools, stub = _tree(phases, notes_phase)
+def _run(phases, notes_phase, options=True):
+    d, tools, stub = _tree(phases, notes_phase, options)
     env = dict(os.environ, PYTHONPATH=stub)
     r = subprocess.run([sys.executable, os.path.join(tools, "make_handoff.py")], capture_output=True, text=True, env=env, cwd=d)
     shutil.rmtree(d, ignore_errors=True)
@@ -71,3 +76,37 @@ def t_the_phase_order_is_numeric_not_alphabetic():
 def t_the_table_matching_the_tree_says_nothing():
     rc, out = _run(["D8"], "D8")
     assert "advanced" not in out, out
+    assert "does not describe" not in out, out
+
+
+# ---------------------------------------------------------------- the other face of the same defect (19 Sep 2026)
+# The four rules above all drive the ADVANCE path: the table has fallen behind the tree. The guard's condition
+# made that a hypothesis about how prose goes stale, because `if seen[-1] == phase: return` returned before any
+# prose was read. A board whose table entry already named the tree's newest folder was therefore never asked
+# whether its own notes did, and three of the seven did not: the fabrication section opened `(D10, ...)` above
+# D11 gerbers, `(E7, ...)` above E9 and `(P3, ...)` above P4. These two run the SAME tree with the SAME phase
+# on both sides and differ only in what the prose says, so nothing but the prose can decide them.
+
+def t_a_note_written_for_another_phase_is_refused_when_the_phase_did_not_advance():
+    """THE DEFECTIVE FIXTURE. Table D8, tree D8, notes written for D7: expected verdict FAIL."""
+    rc, out = _run(["D8"], "D7")
+    assert rc != 0, out
+    assert "board D ships D8" in out, out
+    assert "does not describe D8" in out, out
+
+
+def t_a_note_written_for_its_own_phase_is_taken_when_the_phase_did_not_advance():
+    """THE ACCEPTABLE FIXTURE. The same tree with the notes written for D8: expected verdict PASS."""
+    rc, out = _run(["D8"], "D8")
+    assert "ships D8" not in out, out
+    assert "Update" not in out, out
+
+
+def t_a_board_with_no_fabrication_note_block_is_not_refused_for_saying_nothing():
+    """Board E5 is a bare block and has no PCB_OPTIONS entry. A text that does not exist asserts no phase, so
+    it cannot be stale; the hand-fitted list still carries the claim and is still checked."""
+    rc, out = _run(["D8"], "D8", options=False)
+    assert "PCB_OPTIONS" not in out, out
+    rc, out = _run(["D8"], "D7", options=False)
+    assert rc != 0, out
+    assert "the hand-fitted list does not describe D8" in out, out

@@ -11309,3 +11309,77 @@ R43's island. That is the same sentence D10 received at U4 pad 11 and R13 pad 1 
 what remains after D17. Board D's real trade is now plain: the committed D12 is 0 hard and 0 unrouted with
 PI-003 failing on one barrel, and D15/D17 answer PI-003 for one connection; a board with both needs those two
 sites opened up.
+
+**Addendum, 13:55 CEST (19 September), THE GUARD THAT CHECKS THE ORDER NOTE'S PHASE HAD NEVER LOOKED AT FOUR
+OF THE SEVEN BOARDS.** `make_handoff.py` writes ORDER-NOTES.txt, the one artefact of this pipeline that
+travels to the fabricator with the board, and on 11 September it gained a resolver because its table had said
+D8 and P1 while the tree held D9 and P3. The resolver reads the tree, takes the newest deliverable folder per
+board, and refuses when the prose still describes an older phase. **Its condition was a hypothesis about how
+prose goes stale**: `if seen[-1] == phase: return folder, phase` returned before any prose was read, so the
+check ran only on a board whose TABLE had fallen behind. A board whose table entry already named the tree's
+newest folder was never asked whether its own notes did.
+
+**Three of the seven did not.** The fabrication section of the note opened `FABRICATION NOTES (D10, the APRS
+mezzanine ...)` above **D11** gerbers, `(E7, the dock strip ...)` above **E9**, and `(P3, the pack BMS board
+...)` above **P4**. Every technical line under those headers was checked against the folder's own
+README-fab.txt and is correct for the board in the folder (D11 100 x 80 four layers, E9 267 x 68 four layers,
+P4 70 x 44 two layers at 2 oz), so what was wrong is exactly the thing the rule exists to catch and nothing
+else: **the phase token a person reads to know which board the numbers are about.**
+
+**And a fourth board asserted no phase anywhere at all.** Board E5's hand-fitted list began "bare 2 oz board,
+no assembly: ...", so there was no claim for any guard to check; it begins "E5 is the dock block, a bare 2 oz
+board with no assembly" now. The new rule distinguishes the two cases on purpose: **a text that does not exist
+asserts no phase and cannot be stale** (E5 has no fabrication-note block, being a bare board, and demanding a
+phase token of an absent text would refuse it for saying nothing), **while a text that does exist has to be
+about the board being shipped.**
+
+**Board C was the one the resolver would have caught and the only one it stopped.** The table said C17 while
+the tree holds C24, which is the phase `boards/c.json` declares, so the order set has refused to rebuild since
+C24 was cut. Its row and its fabrication note are written for C24 now, with the measured tail read from that
+folder's own verdicts rather than carried over from C17's: board sha256 `2a273803757c68fb`, **0 hard of the
+fifteen types and 0 unrouted**, `check_pcb_c` ALL PASS 303 of 303, `netlist_board` 868 of 868, contracts 72 of
+72, both rails MET on `dc_drop`, `verify_deliverable` 36 of 36, and its only pair (the RP2040's full-speed
+USB) declared with no impedance target, so no impedance control is asked of the fabricator for this board.
+The design description is unchanged because the design did not change; C24 places two more parts on the
+underside than C17 (95 against 93) and the same 47 on top.
+
+**Three rules, two fixtures and both proofs** (`tests/test_handoff_phase.py`, 7 rules now): the defective
+fixture is one board whose table, tree and folder all say D8 while its notes say D7, expected verdict FAIL;
+the acceptable fixture is the same tree with the notes written for D8, expected verdict PASS; and a third
+covers the board with no fabrication-note block, which must not be refused for saying nothing while its
+hand-fitted list is still checked. **Run against the pre-fix file the two new detectors fail** and the four
+rules of 11 September pass, which is the shape of a guard that was never reached rather than one that was
+wrong. Suite 1112, 0 failing.
+
+**What this does NOT do: no order set is rebuilt and nothing is ordered.** Rebuilding `order/` would put a
+gerber zip and a BOM at C24 and P4 where the folders today hold C7 and P1, and that is an orderable
+fabrication package, which is frozen. The prose is now correct for whoever is allowed to run it, which is
+what owner ruling 8 of 13 September asks of this session ("the session drafts, checks and applies the
+per-board notes"), and the remaining half is a decision rather than a defect.
+
+**Addendum, 14:15 CEST (19 September), THREE MEASUREMENTS UNDER ONE LABEL, AND THE CHANNEL KEPT THE LAST.**
+The pre-lay stage runs once per `prelay_groups` entry and every one of them was guarded as `prelay-group`.
+The guard writes `out/guard-<label>.log`, `out/guard-<label>-before.txt`, `out/guard-<label>-after.txt` and
+**`guard-<label>.verdict.json`**, so board E's three groups wrote the same four filenames three times and only
+the third survived, and the stub router's own per-group log `out/<N>-prelay-group.log` went the same way.
+**The verdict is how a reverted group is reported**: a group that raised the hard count and was correctly
+restored writes FAIL, and the next group's PASS overwrites it. The stage carrying board A's eleven RF drops
+and board E's whole ANA-001 answer was reporting one of its three measurements to the channel the supervisor
+and the registry read. Each group is labelled by its index and the first net it names now
+(`prelay-group-1-SHORE_INHIBIT`, `-2-TRK_SW1`, `-3-TRK_CSP`), the net token made safe for a filename where it
+is built, and its own log takes the same suffix.
+
+**Three rules** (`tests/test_prelay.py`, 9 now). Two of them run `guarded` for real in a fixture tree with a
+stub DRC and hard set: **two stages under one label leave one verdict and one log between them** (the
+defective fixture, which is what board E was doing), **two stages under their own labels each leave theirs**
+(the acceptable one). Those two pass before and after, which is the point: the guard was never wrong, the
+chain's use of it was, so the third rule is the one that fails on the pre-fix file and it reads the chain.
+
+**E23's three groups were recovered from the chain's own stdout before the change, and they are the arm's
+instrument.** All three kept at hard 0: `SHORE_INHIBIT` **closed 3 of 3** (unrouted 229 to 226, 82 s), the six
+declared switching nets `TRK_SW1, TRK_SW2, TRK_LSENSE, E6_SW, FAN1_SW, FAN2_SW` **closed 17 of 17** (226 to
+209, 253 s), and the sense pair at its own 0.500 mm floor **closed 4 of 4** (209 to 205, 70 s). **Twenty-four
+pre-laid connections against E21's thirteen**, and every net this board calls switching is locked copper
+before Freerouting starts. That is the whole point of the arm: if ANA-001 still fails on that board the
+violation is against copper board E does not call switching, which is a question about the declaration in
+`pcb_sensitive.yaml` and not about the router.
