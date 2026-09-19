@@ -7,14 +7,14 @@ Every pair that is not a current PASS, classified. Generated from tools/pcb_deci
 map's maturity and each deciding verdict: a decision that claims a pair wins over everything else, because
 the ruling is the action that moves it, and the measurement is reported beside it rather than lost.
 
-**123 open pair(s)** over 7 board(s). **43 are measured failures** (a tool looked and the board failed), and **14 of those are claimed by an open owner decision**.
+**122 open pair(s)** over 7 board(s). **43 are measured failures** (a tool looked and the board failed), and **14 of those are claimed by an open owner decision**.
 
 | waiting on | pairs | what it means |
 |---|---:|---|
 | `DECISION` | 59 | an owner decision by name |
 | `DECISION_UNCLAIMED` | 5 | a rule that says a decision is open while no decision claims it |
 | `AUTHORITY` | 3 | an authority this project does not have |
-| `MISSING_INPUT` | 17 | an input the reading declared absent |
+| `MISSING_INPUT` | 16 | an input the reading declared absent |
 | `MEASURED_FAILURE` | 29 | the tool looked and the board failed |
 | `NOT_JUDGED` | 10 | not judged, for the reason the reading gives |
 
@@ -28,7 +28,7 @@ the ruling is the action that moves it, and the measurement is reported beside i
 | D | 17 | 4 | 11 | 1 | 2 | 1 |
 | E | 19 | 5 | 11 | 0 | 4 | 1 |
 | E5 | 6 | 3 | 2 | 0 | 0 | 1 |
-| P | 14 | 5 | 9 | 0 | 2 | 2 |
+| P | 13 | 5 | 9 | 0 | 1 | 2 |
 
 ## By open decision
 
@@ -131,7 +131,7 @@ holding a number, not a question about a number.
 | `IMP-001` | B | INCONCLUSIVE | the authority behind this rule's limit is not established: closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case with one solved point; no fabricat |
 | `IMP-001` | D | INCONCLUSIVE | the authority behind this rule's limit is not established: closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case with one solved point; no fabricat |
 
-## MISSING_INPUT (17): an input the reading declared absent
+## MISSING_INPUT (16): an input the reading declared absent
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -150,7 +150,6 @@ holding a number, not a question about a number.
 | `SUP-001` | E | INCONCLUSIVE | no deliverable folder at the declared phase E17, so this board's parts were not certified against the board this tree holds (the folders that exist are E4, E6, E7, E9) |
 | `DFM-001` | E | INCONCLUSIVE | the folder judged here is meshsat-pcb-e-revA-E9 and this board declares E17, so its properties are a reading of a board this set is not building |
 | `DOC-002` | E | INCONCLUSIVE | board E declares E17 and the order set holds E6: the note beside those folders describes a board this project is not building |
-| `ANA-001` | P | INCONCLUSIVE | the switching copper to measure against: this board declares 7 sensitive node(s) and an EMPTY switch_nets with no switch_nets_why beside it |
 | `DOC-002` | P | INCONCLUSIVE | board P declares P4 and the order set holds P1: the note beside those folders describes a board this project is not building |
 
 ## MEASURED_FAILURE (29): the tool looked and the board failed

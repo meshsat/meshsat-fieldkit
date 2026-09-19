@@ -21,11 +21,11 @@ boards:
 
  e5:
    switch_nets: []
-   _switch_why: "nothing on this board switches: it is plated contact targets, wire lands and mounting holes,
+   switch_nets_why: "nothing on this board switches: it is plated contact targets, wire lands and mounting holes,
      generated from board A's own board file, and every conductor on it belongs to a circuit that lives on
      another board"
    nodes: []
-   _nodes_why: "THIS BOARD HAS NO ANALOGUE NODE OF ITS OWN, which is a declared zero and not a gap (17
+   nodes_why: "THIS BOARD HAS NO ANALOGUE NODE OF ITS OWN, which is a declared zero and not a gap (17
      September 2026, when ANA-001 reached it because it carries the pack node). The pack node crosses it as
      four targets and four returns; the conductors that SENSE anything, the coulomb counter's Kelvin pair and
      the thermistor, are board P's and are declared there, and the twelve signal targets carry board A's nets
@@ -98,7 +98,7 @@ boards:
 
  d:
    switch_nets: []
-   _switch_why: "this board carries no switching converter; the disturbance here is the 1 W transmitter, and
+   switch_nets_why: "this board carries no switching converter; the disturbance here is the 1 W transmitter, and
      the clearance that matters is from the exciter's own supply and antenna rather than from a switch node"
    nodes:
     - {net: MIC_IN, what: "the microphone summing input, millivolts", filter: "47k/1k divider and the AC
@@ -130,7 +130,7 @@ boards:
 
  p:
    switch_nets: []
-   _switch_why: "the pack board is linear: the only edges on it are the SMBus and the FET gate drive, and the
+   switch_nets_why: "the pack board is linear: the only edges on it are the SMBus and the FET gate drive, and the
      disturbance that matters is the pack's own load current in the copper, which is why every entry below is
      a Kelvin connection rather than a clearance"
    nodes:

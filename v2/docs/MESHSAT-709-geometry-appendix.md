@@ -11116,3 +11116,31 @@ tree has not adopted, a generator answer for a board's next phase, an owner deci
 can supply, or paperwork blocked behind those. That is worth stating plainly because it is the honest shape of
 the critical path, and because it is falsifiable: any one of the 43 that somebody can close in this tree today
 refutes it.
+
+**Addendum, 10:45 CEST (19 September), THREE BOARDS HAD WRITTEN THE REASON AND NO READER COULD SEE IT
+(readiness 63.1 to 63.4 percent verified, 211 of 333; suite 1101).** Board P's ANA-001 read INCONCLUSIVE this
+morning with the missing input named as "an EMPTY switch_nets with no switch_nets_why beside it", and the
+reason was in the file the whole time, three lines below the empty list, under the key `_switch_why`. Every
+reader asks for `switch_nets_why`. **Boards D, E5 and P all carry it under the wrong name, and board E5's
+reason for an empty NODE list is `_nodes_why` where the reader asks for `nodes_why`.** The reasons were
+written, reviewed and invisible.
+
+**What it had already cost.** Board P read INCONCLUSIVE for want of a sentence that was in the file. **Board D
+read PASS of six declared nodes with ZERO measured**, which is "a PASS on a denominator of zero" again, in the
+third place this week: its verdict predates the check that would have refused it, and under today's tool with
+the key still misspelt it would have read INCONCLUSIVE. Board E5 read PASS of an empty node list whether or
+not anybody had said why.
+
+**The rule, and it is general: a declaration nothing reads is not a declaration.** `sensitive_nodes` now
+declares the keys this file may carry (`nodes`, `nodes_why`, `switch_nets`, `switch_nets_why`, `kelvin`, the
+last because `kelvin_check.py` reads it and nothing else in this project reads this file) and REFUSES an entry
+carrying any other key, before any of that entry is believed, because the key that is misspelt may be the one
+that would have failed the board. An empty node list now needs its reason exactly as an empty switch list
+does. Two fixtures, both proved to fail on the tool as it stood.
+
+**Re-taken where KiCad is, read-only, each board's sha identical before and after** (`retake_gate.sh`, the hub):
+board P **PASS of 7** with its declaration read out in the verdict ("the pack board is linear: the only edges
+on it are the SMBus and the FET gate drive, and the disturbance that matters is the pack's own load current in
+the copper, which is why every entry below is a Kelvin connection rather than a clearance"), board D **PASS of
+6** and board E5 **PASS**, all three now standing on a reason a reader can find. **That is one rule-board pair
+closed by making a sentence visible, and the readiness number moved up for a change rather than down.**
