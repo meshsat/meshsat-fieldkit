@@ -32,7 +32,7 @@ Usage: rail_barrels.py <placed board.kicad_pcb> [--intent path] [--apply] [--max
                        [--board <letter>] [--out-dir DIR]
        Reports by default; `--apply` lays the barrels, DRCs, keeps what the DRC accepts and saves.
        exit 0 nothing to do or laid, 1 every site refused by the DRC, 3 no intent file to work from."""
-import sys, os, math, json, shutil
+import sys, os, math, json, shutil, time
 
 TOOLS = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, TOOLS)
 import verdict as _v
@@ -154,7 +154,16 @@ def main(argv):
                  note="no rail declares a current here", out_dir=out_dir, rules=["PI-003"])
         return 3
 
-    rails = json.load(open(ip, encoding="utf-8")).get("rails") or {}
+    _intent = json.load(open(ip, encoding="utf-8"))
+    rails = _intent.get("rails") or {}
+    # THE RAIL TABLE AND THE BOARD MUST COME FROM ONE CHAIN RUN. The intent file records only a project name
+    # and the minute it was written, not a board hash, so this tool cannot REFUSE a mismatched pair; what it
+    # can do is put both stamps in the verdict so a reader is never left guessing which board's rails these
+    # are. An intent regenerated on another day describes another board.
+    _inputs = {"board": path, "intent": ip, "intent_written": _intent.get("written"),
+               "board_mtime": time.strftime("%Y-%m-%d %H:%M", time.gmtime(os.path.getmtime(path)))}
+    print("rail_barrels: board %s (%s), rails from %s (written %s)"
+          % (os.path.basename(path), _inputs["board_mtime"], os.path.basename(ip), _inputs["intent_written"]))
     b = pcbnew.LoadBoard(path)
     if _routed(b):
         # A LOCKED VIA LAID INTO TRAFFIC IS NOT THIS TOOL'S ANSWER (see the header). Saying so is the whole
@@ -171,8 +180,8 @@ def main(argv):
         print("rail_barrels: %d crossing(s) of %d declared rail(s) carry the barrels their current needs, "
               "nothing to lay" % (judged, len(rails)))
         _v.write(tool, "PASS", {"short": 0, "judged": judged}, judged, evidence=path,
-                 note="every declared rail's own crossing already carries the barrels its current needs",
-                 out_dir=out_dir, rules=["PI-003"])
+                 inputs=_inputs, note="every declared rail's own crossing already carries the barrels "
+                 "its current needs", out_dir=out_dir, rules=["PI-003"])
         return 0
 
     ds = b.GetDesignSettings()
@@ -198,7 +207,7 @@ def main(argv):
               % (len(plans), len(declined)))
         _v.write(tool, "FAIL" if rows else "PASS",
                  {"short": len(rows), "planned": len(plans), "declined": len(declined), "judged": judged},
-                 judged, evidence=path, advisory=True,
+                 judged, evidence=path, inputs=_inputs, advisory=True,
                  note="a dry run: %d crossing(s) short, %d answerable beside the pad, %d a placement item"
                       % (len(rows), len(plans), len(declined)), out_dir=out_dir, rules=["PI-003"])
         return 0
@@ -270,7 +279,7 @@ def main(argv):
     _v.write(tool, res,
              {"sites": len(laid), "barrels": sum(len(p) for _, p in laid), "declined": len(declined),
               "refused": len(plans) - len(laid), "short": len(rows), "judged": judged},
-             judged, evidence=path,
+             judged, evidence=path, inputs=_inputs,
              note="%d of %d short crossing(s) answered beside the pad; %d declined as a placement item"
                   % (len(laid), len(rows), len(declined)), out_dir=out_dir, rules=["PI-003"])
     return 0 if laid or not plans else 1
