@@ -82,8 +82,18 @@ def t_a_decision_the_register_calls_open_is_not_one_the_rule_already_passes_ever
 
 
 def t_the_page_is_generated_and_not_hand_maintained():
-    import subprocess
+    """The page says what each open decision HOLDS, and that half is computed from this tree's evidence, so
+    the rule is a question about the evidence as much as about the page. A tree that carries only the
+    committed verdicts renders a different page for a true reason: the set-level readings live in
+    `v2/ecad/out/`, which is gitignored, so a staged tree has 111 inconclusive where this one has 79. Found
+    by running the suite where KiCad is (20 September 2026); a rule that cannot see its input declares that
+    rather than reporting the page as hand-edited, which is the house rule applied to the suite itself."""
+    import subprocess, glob as _glob
     need(os.path.join(D.RR.DOCS, "OWNER-DECISIONS-OPEN.md"), "the page has not been rendered yet")
+    if not _glob.glob(os.path.join(os.path.dirname(TOOLS), "out", "*.verdict.json")):
+        raise __import__("harness").Skip(
+            "this tree carries no set-level verdicts, so the page's 'what it holds' half is computed "
+            "from less evidence than the committed page was")
     p = subprocess.run([sys.executable, os.path.join(TOOLS, "decisions_render.py"), "--check"],
                        capture_output=True, text=True, cwd=os.path.dirname(TOOLS))
     assert p.returncode == 0, (p.stdout + p.stderr)[-500:]
