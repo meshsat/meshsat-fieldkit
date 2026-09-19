@@ -10981,3 +10981,30 @@ to 38 mm away in four named neighbours (`WIFISW` 38.5 mm north, `IOCA` 19.0 nort
 lever board B has left that has never been tried, and it is the same conclusion the route reached from the
 other side: three route methods, none closing it, and a predictor that has not moved off ten collisions since
 B19.
+
+**Addendum, 08:45 CEST (19 September): owner ruling 13's resize carried all the way down, and board B's margin
+comes to rest on one rectangle.** Five placement regenerations, every one at `PLACE_FINE_MARGIN=2.6`, no route,
+nothing adopted, each reported with its overflow before and after as the ruling requires:
+
+| step | the change | what it left over |
+|---|---|---|
+| start | — | four: S1_SWIC 1.7 mm, **S2_SWIC 3.2**, S2_SUP2 0.5, S3_SWIC 1.7 |
+| 1 | the outer SWIC pockets take 1.7 mm of HEIGHT from their own RAIL (south edge -54 to -55.7) | **both outer SWIC clean**; their RAIL takes only **0.7** of the 1.7 |
+| 2 | RAIL widens WEST 0.8 mm into the 6.0 the room map reports | **exactly nothing**, still 0.7 |
+| 3 | RAIL takes its height from the SOUTH instead (floor -74 to -75.7, SUP's ceiling follows) | **RAIL clean**; S1_SUP and S3_SUP 1.5 over |
+| 4 | SUP drops to the board outline (-97 to -98.5, using its 3.0 mm) | **both outer slots CLEAN, to the board edge**; two left, both slot 2 |
+| 5 | slot 2: S2_SUP2's four parts back into S2_RAIL, SUP2 emptied, S2_SWIC north 3.2 mm into it | **S2_SWIC and S2_SUP2 clean; S2_RAIL over by 6.8** |
+
+**Four regions at 3.2 mm worst became one at 6.8**, and board B's whole fine-pitch margin now rests on a single
+rectangle. **Step 2 is the lesson worth more than the millimetres: a row packer that has lost a row does not
+get it back from width.** The room map said 6.0 mm sat west of that pocket and widening into it bought nothing,
+because what had been taken was height.
+
+**And the resize as a lever ends at slot 2.** Its rail pocket is 13.4 mm tall where the outer slots' are 20,
+which is exactly why the generator split those four parts (`U205`, `U206`, `L203`, `L204` and two capacitor
+runs) out of it in the first place, and the room map gives it 2.0 mm west and nothing north, south or east
+(south 0.0 to a fixed M.2 socket, east 0.0 to S3_RAIL). **2.0 against 6.8 is not enough.** Slot 2's four parts
+need a home that is not the front-side rail band, and the candidates change something electrical: `S2_RAILB`
+has 16.0 mm east but is the UNDERSIDE, so a slot's rail regulator and its inductors would change side. **That
+is a judgement and not a rectangle, so this stops here**: the generator is untouched, nothing is applied, and
+the five steps are the evidence whoever makes that call should read first.
