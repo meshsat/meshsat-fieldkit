@@ -132,7 +132,17 @@ boards:
    switch_nets: []
    switch_nets_why: "the pack board is linear: the only edges on it are the SMBus and the FET gate drive, and the
      disturbance that matters is the pack's own load current in the copper, which is why every entry below is
-     a Kelvin connection rather than a clearance"
+     a Kelvin connection rather than a clearance. AND THE ONE CANDIDATE IS NAMED HERE RATHER THAN LEFT OUT
+     (19 September 2026, found by switch_list.py, the report that asks whether this list is complete): /SW
+     carries Q1 pin 5 and Q2 pin 5, the common DRAIN of the pack's back-to-back protection pair, so it is
+     switching shaped and this list does not hold it. It is excluded as a JUDGEMENT, ranked WEAK by the report
+     itself because no inductor sits on it: it moves at a protection event and at a charge or discharge enable,
+     never at a converter's switching frequency, which is the disturbance this rule exists for. THE JUDGEMENT
+     WAS ALSO MEASURED SO IT DOES NOT HAVE TO BE ARGUED: with /SW declared as switching in a throwaway copy,
+     read on board P's own frozen board (sha d79865e7b1aceb95, identical before and after), all seven nodes are
+     measured and all seven PASS, the nearest being SRN_F at 1.717 mm and VC2_F at 2.487 mm against the 0.50
+     they ask and the rest 5.3 to 10.1 mm. So the exclusion costs this reading nothing either way, and that is
+     the reason to believe it rather than the argument above it."
    nodes:
     - {net: SRP_F, what: "the coulomb counter's positive sense, filtered", filter: "100 R and 100 nF",
        kelvin_with: SRN_F, keep_mm: 0.5}
