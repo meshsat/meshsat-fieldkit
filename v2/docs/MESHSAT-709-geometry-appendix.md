@@ -11831,3 +11831,31 @@ them, which is the E19/E20 trade from the other end.
 
 **Consequence for board A, written before A49 and A50 land:** their ANA-001 is read on the round that is
 ADOPTED, never on whichever round reads best. **E17 stays board E's phase.**
+
+**Addendum, 20:25 CEST (19 September), THE CLOSER HAD NO CLOCK BETWEEN A NODE CAP AND THE WHOLE STAGE, SO THE
+ALPHABET DECIDED WHICH OPENS WERE EVEN TRIED.** Found by running board E's margin control and watching one net
+eat the entire measurement, twice.
+
+`stub_router` had exactly two limits: `STUB_MAXN`, four million expansions per search, and whatever wall clock
+the finish gave the stage. Between them, nothing. `STUB_MAXN` is not the bound it looks like: board E's grid at
+the finish's own `STUB_GRID=0.1` is about 6.7 million cells over four layers, so one search can legitimately
+walk most of the board. **`/FAN1_PWM`, a 224 mm run across the strip that nothing can close, spent THIRTY
+MINUTES inside a single pair** and the board's other five opens were never reached.
+
+Two limits now, because they answer different failures. **`STUB_NET_BUDGET_S`** (420 s) is checked before each
+pair and before the expensive map build, so a net with many clusters costs its own budget and nothing else's.
+**`STUB_SEARCH_S`** (240 s) is checked inside the expansion loop every 16,384 nodes, because a per-net budget
+cannot interrupt a single slow pair, which is exactly what board E has. **The search says when it gave up**,
+because a search that stopped early and a search that found nothing are different answers. Zero turns either
+off and the tool behaves as it did.
+
+**AND THE MEASUREMENT THAT PROMPTED IT WAS MIS-SPECIFIED THREE TIMES, which is the lesson worth keeping.** The
+first control ran at the tool's own default grid while `finish.sh` calls the closer with `STUB_GRID=0.1` for
+EVERY board; the second ran at the right grid and still hung; the third was stopped once it was clear that a
+probe which copies a board into a bare directory and runs the closer with no environment **is not the finish**.
+`finish.sh` hands each board its own `stub_layers` and `stub_env`, and without them board E's closer searches
+every layer of a four-layer board with six filled pours. **The answer was in the finish's own log all along**:
+E23 round 2's stub log reads `unconnected pairs: 6` and then `FAILED` on all six by name, which is why every
+board E landing reads "its closers took none". So the wider clearance margin cannot cost board E anything, by
+construction, and one of its six opens is `/TRK_SW2` between two tracks of which one is **0.0007 mm long**, a
+dot rather than a gap.
