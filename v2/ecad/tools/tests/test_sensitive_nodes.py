@@ -132,3 +132,34 @@ def t_the_reported_run_is_split_into_inside_and_outside():
     for key in ("run_inside_the_shared_part_mm", "run_outside_it_mm"):
         assert key in src, "the measurement no longer reports %s" % key
     assert "_run_out > 1e-9" in src, "the failure is no longer decided by the copper outside the part"
+
+
+def t_an_empty_switch_list_with_no_reason_is_not_a_pass():
+    """THE DEFECTIVE FIXTURE. Board P declares seven sensitive nodes and `switch_nets: []`, so nothing is
+    measured against anything and the verdict read PASS of 7 with 0 measured: STK-001's "PASS on a denominator
+    of zero" of 18 September wearing different clothes, and this project's own law says an undeclared zero is
+    INCONCLUSIVE. A board with no switching copper may be telling the truth, and saying so is one line."""
+    body = GOOD.replace('   switch_nets: ["*_SW"]', "   switch_nets: []")
+    r = S.judge(None, "x", _sheet(body))
+    assert r.get("no_switch_undeclared") is True, r
+    assert any("NO DECLARED REASON" in n for n in r["notes"]), r["notes"]
+
+
+def t_an_empty_switch_list_with_its_reason_is_a_pass():
+    """THE ACCEPTABLE FIXTURE, and the whole point: a declared zero is a PASS WITH ITS REASON. One line beside
+    the empty list is all this asks, and it is the same shape board P's ground-via grid already uses."""
+    body = GOOD.replace('   switch_nets: ["*_SW"]',
+                        '   switch_nets: []\n   switch_nets_why: "this board has no converter: its only FETs are the pack protection pair"')
+    r = S.judge(None, "x", _sheet(body))
+    assert not r.get("no_switch_undeclared"), r
+    assert any("no switching net, declared:" in n for n in r["notes"]), r["notes"]
+
+
+def t_the_missing_input_is_named_in_the_verdict_and_not_only_in_a_note():
+    """`rules_status` prefers a reading that HAD its input, and it can only do that if the verdict says so."""
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                            "sensitive_nodes.py"), encoding="utf-8").read()
+    i = src.index("_no_switch = ")
+    j = src.index('_v.write("sensitive_nodes"', i)
+    assert "missing_input" in src[i:j] or "_missing" in src[i:j], "the empty switch list is not a declared missing input"
+    assert "_no_copper or _no_switch" in src, "the empty switch list does not reach the verdict"
