@@ -112,7 +112,13 @@ def main(a):
         verb, a = a[0], a[1:]
     if not a or a[0] in ("-h", "--help"): print(__doc__); return 2
     which = "pre" if "pre" in a[1:2] else "post"
-    def opt(k): return a[a.index(k) + 1] if k in a else None
+    # A FLAG GIVEN NO VALUE IS ANSWERED, NOT RAISED (19 September 2026; `verdict.opt`, and the ratchet in
+    # test_rule_windows that exists to stop the hundred of these growing). `hardset.py <drc> pre --score`
+    # with nothing after it raised IndexError and the crash guard wrote INCONCLUSIVE naming the exception,
+    # which is honest and useless: a gate that cannot tell a missing argument from a finding is worse than
+    # one that refuses to start. It also took the NEXT FLAG as a value, so `--score --counts f` wrote a file
+    # called "--counts". This is the instrument every board gate and every guard reads its counts from.
+    def opt(k): return verdict.opt(a, k)
     try: d = load(a[0])
     except RuntimeError as e:
         print("hardset: BLOCK %s" % e)
@@ -174,7 +180,5 @@ if __name__ == "__main__":
     # gate writes its verdict under its own name, so `verdict.guard` knows where to put the INCONCLUSIVE a crash
     # earns; this one writes under `hardset-<label>` because a single finish makes four judgements with it, and
     # that is exactly the name the guard has to use or the reading lands under a name nothing reads.
-    _lab = None
-    for _i, _a in enumerate(sys.argv[1:]):
-        if _a == "--label" and _i + 2 < len(sys.argv): _lab = sys.argv[_i + 2]
+    _lab = verdict.opt(sys.argv[1:], "--label")
     sys.exit(verdict.guard(_vname(_lab), main, sys.argv[1:]))
