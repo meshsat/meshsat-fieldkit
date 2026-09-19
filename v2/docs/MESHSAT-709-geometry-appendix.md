@@ -11721,3 +11721,35 @@ lays its closures one at a time**: on A44 that is worth sixteen connections inst
 
 **The two runs of the NEW tool on A44 that disagreed (hard 3 against hard 1) are the dot defect above**, not a
 property of the acceptance: the old and the new tool agree exactly when the report they were given agrees.
+
+**Addendum, 17:45 CEST (19 September), THE WHOLE CHAIN MEASURED: THE CLOSER IS DETERMINISTIC, THE BOARD WAS
+NOT, AND A BOARD SHA IS A SERIALISATION AND NOT A BOARD.** Six runs of the closer on A44's frozen board, four
+on the board as it stands and two on the same board with its dots pruned:
+
+| run | board sha | closed | hard / unrouted |
+|---|---|---|---|
+| unpruned, first | `deac8251` | 16 of 19 | **3** / 8 |
+| unpruned, `free1` | `3e0819e2` | 16 of 19 | 1 / 8 |
+| unpruned, `free2` | `f9fabba1` | 16 of 19 | 1 / 8 |
+| unpruned, `PYTHONHASHSEED=0` | `11e914e0` | 16 of 19 | 1 / 8 |
+| unpruned, `PYTHONHASHSEED=0` again | `6d15acff` | 16 of 19 | 1 / 8 |
+| **pruned**, run 1 | `55c49fb1` | 16 of 19 | 1 / 8 |
+| **pruned**, run 2 | `62e48de8` | 16 of 19 | 1 / 8 |
+
+**Seven different board files. Compare the COPPER instead** (every segment's start, end, width, layer and net,
+sorted) and `free1`, `free2`, `seed1` and `seed2` are **identical to one another**, and the two pruned runs are
+**identical to one another**: 3,540 segments and 3,540, 3,370 and 3,370. **The closer is deterministic.** What
+differs between the files is the order the items are written in and a fresh random UUID per new item, which is
+not a difference in the board. **A board sha compares a serialisation**, and this project has leaned on board
+shas as identity since 12 September; they are sound for "is this the artefact I measured" and they are not a
+test of "did this produce the same board".
+
+**The one run that differed in substance is the one that was handed a different question.** The hard-3 run laid
+**six extra segments on net 91**, which is `/HF_SLOPE`, the net whose sub-micrometre dot sits a micrometre from
+U15 pad 7: its DRC report named the DOT where the others named the PAD, so the search aimed at a different
+point, found a different path, and that path clashed twice. **With the dots pruned the two reports are
+byte-identical** (`drc-in e4c8dbe2` both times) where three unpruned runs gave three different ones.
+
+**And `PYTHONHASHSEED` is refuted**: pinning it changes nothing, because there was nothing in the tool to fix.
+The defect was 157 pieces of junk copper on the board and a bridge test that counted touches instead of asking
+whether the things touched were already joined.
