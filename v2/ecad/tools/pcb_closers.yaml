@@ -65,9 +65,12 @@ closers:
  - tool: pour_stitch.py
    changes_copper: true
    defect_class: "a pour island with no via of its own net, which carries nothing"
-   why_prevention_failed: "THIS ONE IS NOT PREVENTED AND SHOULD BE: it runs on every board and finds islands
-     every time, because the placement lays pours and the router then cuts them with tracks. The predictor
-     cannot see it, since the cutting happens after the placement it judges"
+   why_prevention_failed: "THIS ONE IS NOT PREVENTED AND SHOULD BE: the placement lays pours and the router
+     then cuts them with tracks, and the predictor cannot see it, since the cutting happens after the
+     placement it judges. It used to say 'finds islands every time' and that was measured and is not true of
+     every board: on 19 September 2026 `pour_stitch` on the committed B21 found ZERO islands, because board
+     B's six filled pours are each a single outline. B21 is 416 connections short, which is the board least
+     likely to have cut its own pours, so that is a fact about B21 and not about board B"
    repeated: true
    prevented_by: null
    prevented_by_board_declaration: gnd_grid
