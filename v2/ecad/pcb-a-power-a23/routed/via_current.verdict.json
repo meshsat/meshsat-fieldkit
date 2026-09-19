@@ -2,18 +2,38 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "measured_rails": 13,
+  "measured_rails": 23,
   "no_via": 0,
-  "over": 5,
-  "rails": 13
+  "over": 8,
+  "over_barrels": 37,
+  "rails": 23
  },
- "denominator": 13,
+ "denominator": 23,
  "evidence": [
   "+13V8_PA: a barrel at (157.0, 122.6) carries 2.40 A of the solved mesh against 0.90 A for its own wall at 10 K (18 um plating), ratio 2.67",
   "+5V_DEV: a barrel at (144.8, 37.4) carries 1.68 A of the solved mesh against 0.90 A for its own wall at 10 K (18 um plating), ratio 1.87",
+  "CH_SRP: a barrel at (40.2, 93.7) carries 10.00 A of the solved mesh against 0.90 A for its own wall at 10 K (18 um plating), ratio 11.12",
+  "PD_SW: a barrel at (162.2, 41.4) carries 0.75 A of the solved mesh against 0.65 A for its own wall at 10 K (18 um plating), ratio 1.16",
+  "PD_VBUS: a barrel at (178.1, 55.4) carries 3.00 A of the solved mesh against 0.90 A for its own wall at 10 K (18 um plating), ratio 3.33",
   "VBAT: a barrel at (85.0, 62.4) carries 1.79 A of the solved mesh against 0.65 A for its own wall at 10 K (18 um plating), ratio 2.74",
   "VBUS20: a barrel at (68.5, 82.0) carries 3.40 A of the solved mesh against 0.90 A for its own wall at 10 K (18 um plating), ratio 3.77",
-  "VIN_RAW: a barrel at (51.6, 151.4) carries 2.52 A of the solved mesh against 0.90 A for its own wall at 10 K (18 um plating), ratio 2.80"
+  "VIN_RAW: a barrel at (51.6, 151.4) carries 2.52 A of the solved mesh against 0.90 A for its own wall at 10 K (18 um plating), ratio 2.80",
+  "+13V8_PA: barrel at (157.0, 122.6), 2.40 A against 0.90 A, ratio 2.67",
+  "+13V8_PA: barrel at (171.8, 123.4), 1.40 A against 0.90 A, ratio 1.56",
+  "+13V8_PA: barrel at (157.0, 120.4), 2.20 A against 0.90 A, ratio 2.44",
+  "+13V8_PA: barrel at (259.4, 49.8), 4.70 A against 2.51 A, ratio 1.87",
+  "+5V_DEV: barrel at (143.1, 37.4), 1.52 A against 0.90 A, ratio 1.69",
+  "+5V_DEV: barrel at (144.8, 37.4), 1.68 A against 0.90 A, ratio 1.87",
+  "CH_SRP: barrel at (40.2, 93.7), 10.00 A against 0.90 A, ratio 11.12",
+  "CH_SRP: barrel at (60.9, 87.3), 10.00 A against 0.90 A, ratio 11.12",
+  "PD_SW: barrel at (162.2, 41.4), 0.75 A against 0.65 A, ratio 1.16",
+  "PD_SW: barrel at (159.0, 41.4), 0.75 A against 0.65 A, ratio 1.16",
+  "PD_VBUS: barrel at (178.1, 55.4), 3.00 A against 0.90 A, ratio 3.33",
+  "VBAT: barrel at (86.1, 118.4), 1.74 A against 0.90 A, ratio 1.93",
+  "VBAT: barrel at (54.4, 123.5), 1.58 A against 0.90 A, ratio 1.76",
+  "VBAT: barrel at (85.0, 62.4), 1.79 A against 0.65 A, ratio 2.74",
+  "VBAT: barrel at (54.5, 147.3), 1.51 A against 0.65 A, ratio 2.32",
+  "VBAT: barrel at (101.0, 62.4), 0.87 A against 0.65 A, ratio 1.34"
  ],
  "inputs": {
   "board": {
@@ -31,7 +51,7 @@
   "rule_fingerprints": {
    "PI-003": "b8238bd8e5613e6c"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "PI-003"
@@ -39,9 +59,9 @@
  "tool": "via_current",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "7220c1b43176cf2e"
+  "tools_tree_sha": "f68d837d805d656b"
  },
- "ts": "2026-09-17T22:38:44Z",
+ "ts": "2026-09-19T23:44:20Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

@@ -2,16 +2,24 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "met": 9,
-  "missed": 4,
+  "met": 11,
+  "missed": 12,
   "undeclared": 0
  },
- "denominator": 13,
+ "denominator": 23,
  "evidence": [
   "MISSED VBAT on current density: worst conductor or pour cell at 3.69 of its limit (the drop was 0.38% of 14.4 V, which is not what failed)",
   "MISSED VIN_RAW on current density: worst conductor or pour cell at 2.00 of its limit (the drop was 0.86% of 12.0 V, which is not what failed)",
   "MISSED VBUS20 on current density: worst conductor or pour cell at 2.03 of its limit (the drop was 0.18% of 20.0 V, which is not what failed)",
-  "MISSED +13V8_PA on current density: worst conductor or pour cell at 1.53 of its limit (the drop was 0.65% of 13.8 V, which is not what failed)"
+  "MISSED +13V8_PA on current density: worst conductor or pour cell at 1.53 of its limit (the drop was 0.65% of 13.8 V, which is not what failed)",
+  "MISSED FE_OUT on current density: worst conductor or pour cell at 3.13 of its limit (the drop was 0.13% of 20.0 V, which is not what failed)",
+  "MISSED CH_ACN on current density: worst conductor or pour cell at 3.03 of its limit (the drop was 0.68% of 20.0 V, which is not what failed)",
+  "MISSED CH_SRP on current density: worst conductor or pour cell at 15.83 of its limit (the drop was 2.84% of 14.4 V, which is not what failed)",
+  "MISSED PA_OUT on current density: worst conductor or pour cell at 2.44 of its limit (the drop was 0.45% of 13.8 V, which is not what failed)",
+  "MISSED PD_VPWR on current density: worst conductor or pour cell at 2.44 of its limit (the drop was 1.55% of 15.0 V, which is not what failed)",
+  "MISSED PD_SW on current density: worst conductor or pour cell at 1.48 of its limit (the drop was 0.30% of 15.0 V, which is not what failed)",
+  "MISSED PD_VBUS on current density: worst conductor or pour cell at 8.92 of its limit (the drop was 5.58% of 15.0 V, which is not what failed)",
+  "MISSED PD_OUT on current density: worst conductor or pour cell at 1.23 of its limit (the drop was 0.03% of 15.0 V, which is not what failed)"
  ],
  "inputs": {
   "board": {
@@ -26,7 +34,7 @@
   "rule_fingerprints": {
    "PI-001": "c23010065f1f2962"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "PI-001"
@@ -34,9 +42,9 @@
  "tool": "dc_density",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "7220c1b43176cf2e"
+  "tools_tree_sha": "f68d837d805d656b"
  },
- "ts": "2026-09-17T22:38:38Z",
+ "ts": "2026-09-19T23:44:19Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

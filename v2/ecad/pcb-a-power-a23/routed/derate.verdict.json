@@ -3,19 +3,19 @@
  "applicable": true,
  "counts": {
   "by_vendor_reference": 0,
-  "judged": 143,
+  "judged": 144,
   "undeclared_nets": 0,
   "under_rated": 0,
   "unrated_parts": 72
  },
- "denominator": 143,
+ "denominator": 144,
  "evidence": [],
  "inputs": {
   "board": "a",
   "margin": 0.2,
   "netlist": {
    "path": "out/pcb-a-power.net",
-   "sha256_16": "8a74660e90e5616c"
+   "sha256_16": "808c29450c6b89e3"
   }
  },
  "missing_input": null,
@@ -32,10 +32,10 @@
  ],
  "tool": "derate",
  "tools": {
-  "git_head": "190bcc8a4c8b",
-  "tools_tree_sha": "ac75216d6fd7df92"
+  "git_head": "",
+  "tools_tree_sha": "f68d837d805d656b"
  },
- "ts": "2026-09-19T22:38:14Z",
+ "ts": "2026-09-19T23:45:31Z",
  "verdict": "PASS",
- "version": "190bcc8a4c8b+dirty"
+ "version": "unknown"
 }

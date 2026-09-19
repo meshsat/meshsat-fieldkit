@@ -21,8 +21,8 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 30 | 55.6 |
-| FAIL | 9 | 16.7 |
+| PASS | 29 | 53.7 |
+| FAIL | 10 | 18.5 |
 | INCONCLUSIVE | 15 | 27.8 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **54** | 100.0 |
@@ -36,16 +36,16 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 | SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_a PASS of 31 |
 | SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **PASS** | safe_lines_a PASS of 6 |
 | SCH-005 every pad of a part's land carries a net or a declared no-connect | BLOCKER | SCHEMATIC | **PASS** | pin_map_lands_a PASS of 397 |
-| CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 143 |
+| CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 144 |
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_a INCONCLUSIVE: no deliverable folder at the declared phase A32, so this board's parts were not certified against the board this tree hold |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_a INCONCLUSIVE: no deliverable folder at the declared phase A32, so this board's parts were not certified against the board this tree hold |
 | PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **PASS** | intent_rails PASS of 14 |
 | PWR-002 sequencing and inrush | MUST_JUSTIFY | SCHEMATIC | **PASS** | power_sequence PASS of 13 |
 | PWR-003 protection coordination | BLOCKER | SCHEMATIC | **PASS** | energy_chain_a PASS of 4 |
 | DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **PASS** | intent_decoupling PASS of 30 |
-| PI-001 conductor current capacity | BLOCKER | ROUTED_BOARD | **FAIL** | dc_density FAIL: {'met': 9, 'missed': 4, 'undeclared': 0} |
-| PI-002 rail voltage drop | BLOCKER | ROUTED_BOARD | **PASS** | dc_drop PASS of 13 |
-| PI-003 via current capacity | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | via_current FAIL: {'measured_rails': 13, 'no_via': 0, 'over': 5, 'rails': 13} |
+| PI-001 conductor current capacity | BLOCKER | ROUTED_BOARD | **FAIL** | dc_density FAIL: {'met': 11, 'missed': 12, 'undeclared': 0} |
+| PI-002 rail voltage drop | BLOCKER | ROUTED_BOARD | **FAIL** | dc_drop FAIL: {'density_missed': 12, 'met': 20, 'missed': 3, 'undeclared': 0} |
+| PI-003 via current capacity | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | via_current FAIL: {'measured_rails': 23, 'no_via': 0, 'over': 8, 'over_barrels': 37, 'rails': 23} |
 | GND-001 one deliberate ground system | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | ground_system PASS of 1 |
 | GND-002 chassis and cable-shield strategy | MUST_JUSTIFY | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the strategy is WRITTEN, which it was not before, and writing it found the gap. The kit has no single co |
 | STK-001 the stackup is declared, feasible and in the board | BLOCKER | ROUTED_BOARD | **PASS** | stackup_gate PASS of 24 |
