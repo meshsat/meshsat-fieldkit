@@ -542,14 +542,20 @@ def t_the_current_density_decides_the_verdict_alongside_the_drop():
     import ast
     src = open(os.path.join(TOOLS, "dc_drop.py")).read()
     tree = ast.parse(src)
-    verdicts = [n for n in ast.walk(tree)
-                if isinstance(n, ast.Assign) and any(getattr(t, "id", "") == "verdict" for t in n.targets)]
-    assert verdicts, "dc_drop no longer assigns a verdict; this rule is looking at the wrong thing"
+    # A RULE THAT NAMES A VARIABLE IS A RULE ABOUT THE SPELLING (19 September 2026). This asked for an
+    # assignment to a name called `verdict`, and that name had to GO: it shadowed the verdict module inside
+    # the same function and crashed the gate on every board. The rule is about what the per-rail decision
+    # READS, so it looks for the assignment that decides MET or MISSED by its own expression, whatever the
+    # variable is called.
+    decisions = [n for n in ast.walk(tree) if isinstance(n, ast.Assign)
+                 and {"MET", "MISSED"} <= {c.value for c in ast.walk(n.value)
+                                           if isinstance(c, ast.Constant) and isinstance(c.value, str)}]
+    assert decisions, "dc_drop no longer decides MET or MISSED per rail; this rule is looking at the wrong thing"
     names = set()
-    for v in verdicts:
+    for v in decisions:
         names |= {n.id for n in ast.walk(v.value) if isinstance(n, ast.Name)}
-    assert "dens_ok" in names, "the verdict does not consider the current density: %s" % sorted(names)
-    assert "drop_ok" in names, "the verdict no longer considers the drop: %s" % sorted(names)
+    assert "dens_ok" in names, "the per-rail decision does not consider the current density: %s" % sorted(names)
+    assert "drop_ok" in names, "the per-rail decision no longer considers the drop: %s" % sorted(names)
     assert "reported, not gated" not in src, "the report still calls the density ungated"
     assert "density_dT" in src, \
         "a rail cannot declare its own temperature rise, so the only way past the gate would be to ignore it"
