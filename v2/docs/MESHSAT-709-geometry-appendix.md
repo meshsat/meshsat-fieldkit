@@ -11539,3 +11539,26 @@ cannot be landed at all without it. A seventh arm is measuring exactly that, the
 chain's own defaults (pours free, reach 1.2), which is what board A would get with no per-group knob at all.
 **Until it lands, `land_reach: 5.0` stands on the arithmetic and not on a measurement, and the declaration
 says so.**
+
+**Addendum, 16:05 CEST (19 September), AND THE THIRD ARM TAKES THE LAST KNOB OUT TOO: BOARD A NEEDS NEITHER.**
+The seventh arm ran the corrected acceptance at **the chain's own defaults**, pours free and the landing
+reaching 1.2 mm, on the same placed board: **closed 20 of 20, hard 0 before and after, 92 locked pieces**,
+five of the twenty kept by the new rule and fifteen by the old, exactly as in the other two. So the three arms
+read 91, 94 and 92 locked pieces and 20 of 20 every time, and **what unlocked board A's switching pre-lay was
+the closure acceptance and nothing else.** `land_reach` follows `pour_obstacle` back out of that group's
+declaration, and board A declares no per-group knob at all.
+
+**That is three corrections to my own claim in a row, each one narrowing it with a one-variable arm**, and the
+sequence is the point rather than an embarrassment: the first said the ends were on the copper (an artefact of
+where the number was measured), the second credited the pours (three locked pieces of difference), the third
+credited the reach (one locked piece of difference). Each was written down, each was measured against its own
+control on the same board, and each was withdrawn within the hour it was made. **The knobs stay in the chain**
+because board D is a real case for `pour_obstacle` and the reach was genuinely a silent constant; their
+defaults are unchanged, so no board that worked changes, and the rule in `test_prelay` now says in as many
+words that a knob is offered here and never declared on a board without a number that says it matters.
+
+**What A50 therefore is:** A49's design, unchanged, run with the corrected tools. The variable between them is
+the TOOL and not the declaration, and that is a legitimate arm rather than a repeat, because A49 is board A's
+E20-shaped board only by the accident of its closer: with the fix the same design pins both halves of the
+sense pair and becomes the E21-shaped one. Its launcher's refusal to start without `keep_closure` is therefore
+the whole of what makes it a different arm, which is exactly what a `--requires` line is for.
