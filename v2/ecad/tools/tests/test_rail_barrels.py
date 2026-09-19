@@ -176,9 +176,11 @@ def t_it_does_not_carry_its_own_copy_of_the_drc_helpers():
 def t_it_reports_before_it_lays():
     """A dry run is the default: `--apply` is what puts copper on a board."""
     assert 'apply_ = "--apply" in argv' in SRC
-    i = SRC.find('if not apply_:')
-    j = SRC.find('pcbnew.SaveBoard')
-    assert 0 < i < j, "the dry-run return does not come before the first save"
+    body = SRC[SRC.index("def main(argv):"):]
+    i = body.find('if not apply_:')
+    j = body.find('_save_filled(')
+    assert 0 < i < j, "the dry-run return does not come before the first save inside main"
+    assert "SaveBoard" not in body[:i], "main writes the board before it has decided to"
 
 
 def t_a_refused_site_names_the_counterparty_and_not_only_the_type():
@@ -203,3 +205,19 @@ def t_it_is_declared_in_the_coverage_map_as_pi003_s_fixer():
     ent = (cov.get("coverage") or {}).get("PI-003") or {}
     blob = repr(ent)
     assert "rail_barrels" in blob, "PI-003 does not name its pre-route fixer"
+
+
+def t_the_board_is_refilled_before_anything_measures_it():
+    """A through via lands in every pour it crosses. A pour filled before the via existed still has its copper
+    at that point, and the DRC answers `zone clearance 0.3000 mm; actual 0.0000 mm` at every barrel: board A's
+    first three runs of this tool reverted all seven sites for that and nothing else. The finish learnt this on
+    14 September; a tool that adds copper and then reads a DRC has to learn it too."""
+    assert "ZONE_FILLER" in SRC, "rail_barrels measures a board it has not refilled"
+    i = SRC.find("def _save_filled")
+    assert i > 0 and "SaveBoard" in SRC[i:i + 900] and "LoadBoard" in SRC[i:i + 900], \
+        "the refill does not save and reload first, which is what stops ZONE_FILLER segfaulting"
+    # every measurement of this board goes through it
+    assert "pcbnew.SaveBoard(path, b)\n    h, u" not in SRC and "pcbnew.SaveBoard(path, b)\n        h, u" not in SRC
+    body = SRC[SRC.index("def main(argv):"):]
+    assert body.count("_save_filled(") == 2, "main does not write the board through the refill exactly twice"
+    assert "SaveBoard" not in body, "main saves the board without refilling it"
