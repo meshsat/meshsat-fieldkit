@@ -11667,3 +11667,34 @@ field stays an empty field. **The rule runs the real emitter over the real board
 back through a real `read`**, because that is exactly where the defect lived: the python emitted six correct
 fields and the shell read six fields, and both halves were right on their own. It fails on the pre-fix file
 naming the shifted line. A50's launcher refuses to start against a chain that still splits on tabs.
+
+**Addendum, 17:20 CEST (19 September), RUNNING THE SAME MEASUREMENT TWICE FOUND A HUNDRED AND FIFTY-SEVEN
+PIECES OF COPPER THAT SHOULD NOT BE THERE.** Three runs of the closer on the SAME frozen A44 board (source sha
+168094a5 in all three) produced **three different boards** and two different hard counts. Comparing the three
+DRC reports by content, ignoring the date, they differ in exactly ONE of nineteen unconnected items:
+
+> A: `Pad 1 [/HF_SLOPE] of R63` | **`Track [/HF_SLOPE] on F.Cu, length 0.0007 mm @ 111.137,136.722`**
+> B: `Pad 1 [/HF_SLOPE] of R63` | **`Pad 7 [/HF_SLOPE] of U15 on F.Cu @ 111.138,136.722`**
+
+**A seven-tenths of a micrometre track sitting one micrometre from U15's pad 7**, so KiCad names either it or
+the pad as that cluster's representative and the closer aims at whichever the report happened to give. That is
+the whole of the non-determinism, and **it is a board defect and not a tool one.**
+
+**Every board carries them**, counted by a strict parse of the committed files: board A 198 segments under
+5 micrometres of 4,854, board B 294 of 17,361, board C 93, board D 59, board E 57, board P 16. They are half
+micron stubs on 0.4 mm track (`(start 94.863 136.132) (end 94.8625 136.1325)`), a coordinate written at three
+decimals against one on a finer grid.
+
+**`dot_prune.py` has existed since 16 September for exactly this and it removed none of them**, because its
+test for a bridge is a TOUCH COUNT: a dot reaching two items is kept. **A dot is only a bridge if the things
+it touches are not already connected.** Taking copper off can only break connectivity and never make it, so
+the honest test is to take the dot off ALONE, rebuild, and keep it only if the board's unconnected count
+RISES. On A44's frozen board, dry: **158 dots, 157 not a bridge after all, and exactly ONE that is** (a
+0.5 mm wide dot on `/VIN_RAW` at (44.990, 46.961)). The old tool removed none of the 158.
+
+**And the fixture that said this case was covered was not that case.** `t_a_dot_that_bridges_two_tracks_is_kept`
+gave its two tracks a SHARED endpoint at (15, 10), so they were one cluster already and the dot joined nothing:
+the rule passed on a board where removing the dot changes nothing. The tracks end 0.3 mm apart now and the dot
+between them is the only copper spanning the gap. The new rule is the redundant case and **it fails on the
+pre-fix tool naming the survivor** (`the redundant dot survived: [0.0001, 5.0, 5.0]`) while the corrected
+bridge fixture passes on both, so nothing was loosened. All four run where KiCad is.
