@@ -11504,3 +11504,22 @@ since 18 September, laying copper through a pour cuts it and the board-wide coun
 So board A's pre-lay wants the pours as obstacles where board D's wanted them free, and that is a per-board
 knob the groups do not carry yet. Two arms are measuring it now with one variable between them, the corrected
 acceptance in both and the landing reach at 5.0 mm.
+
+**Addendum, 15:20 CEST (19 September), BOARD A'S SWITCHING PRE-LAY GOES FROM 0 OF 20 TO 20 OF 20, AND IT COST
+THE BOARD NOTHING.** With the corrected acceptance, the pours as obstacles and the landing reaching 5.0 mm,
+on A49's own placed board read-only in a copy: **`stub_router: closed 20 of 20`, zero NOT CLOSED, hard 0
+before and hard 0 after, 262 DRC violations before and 262 after and every one of them soft, 91 locked pieces
+added** (1,749 to 1,840). Five of the twenty were kept by the new rule and fifteen by the old one, which is
+the mechanism worth naming: **keeping the first few un-shatters the net**, so the closures after them do move
+the board-wide count and are accepted the way they always were. That is why the old rule read 0 of 20 rather
+than 15 of 20; it was refused at the first pair and never got past it.
+
+**Board A's declaration carries the two numbers now** (`prelay_groups`, the switching group: `pour_obstacle: 1`
+and `land_reach: 5.0`, with the measurement as its reason), and **A50 is written and not launched**: A49 with
+those two keys and nothing else. A49 pins the sense half only, which is E20's shape; A50 pins both, which is
+E21's. **They are to be run BESIDE each other and read side by side**, because that pair is the one-variable
+comparison board A has never had and board E has: E20 pinned one half and read ANA-001 FAIL on all three at
+6.179 mm, E21 pinned both and held 0.500 and 0.518 mm through a route. The place box is free when E23 lands
+and A49 holds the hub until its cap, so that is where A50 goes; its tools must carry the corrected acceptance
+and the per-group knobs, which is a `--requires` line on the run. Read both on ANA-001 **and** on the open
+count and neither alone: A40's four pre-laid nets cost this board ten connections and A50 locks 91 pieces.
