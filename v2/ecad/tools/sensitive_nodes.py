@@ -47,12 +47,19 @@ def _copper(board, netname):
 
     A via spans layers, so it is given the layer `None`, which matches anything: a via of a switch node beside
     a sense track is a real clearance case whatever layer the track is on."""
-    import pcbnew
+    import pcbnew, kicad_compat
     out = []
     for t in board.GetTracks():
         if str(t.GetNetname()).lstrip("/") != netname.lstrip("/"): continue
         if t.Type() == pcbnew.PCB_VIA_T:
-            p = t.GetPosition(); out.append(((p.x / 1e6, p.y / 1e6), (p.x / 1e6, p.y / 1e6), t.GetWidth() / 1e6, None))
+            # A VIA'S WIDTH IS PER LAYER IN KiCad 9 AND THE BARE CALL IS AN ERROR (19 September 2026, the third
+            # tool found with it; `kicad_compat.via_width` has been the one answer since 17 September). It
+            # printed `PCB_VIA::GetWidth called without a layer argument` once per via of the switching net
+            # while this rule measured board P, and the direction of the error is the wrong one: a via read
+            # with no diameter is a point, so a sense node beside a switching VIA reads FURTHER away than it
+            # is, by half the barrel, on a BLOCKER.
+            p = t.GetPosition(); w = kicad_compat.via_width(t) / 1e6
+            out.append(((p.x / 1e6, p.y / 1e6), (p.x / 1e6, p.y / 1e6), w, None))
         else:
             a, b = t.GetStart(), t.GetEnd()
             out.append(((a.x / 1e6, a.y / 1e6), (b.x / 1e6, b.y / 1e6), t.GetWidth() / 1e6, t.GetLayer()))

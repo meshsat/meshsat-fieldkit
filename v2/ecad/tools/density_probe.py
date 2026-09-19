@@ -10,6 +10,7 @@ guessed.
 Usage: density_probe.py <board.kicad_pcb> <net> <x> <y> [radius mm] [layer]
 """
 import sys, math, pcbnew
+import kicad_compat
 
 def mm(v): return v / 1e6
 
@@ -48,7 +49,7 @@ def main(a):
              else seg_dist(x, y, mm(p0.x), mm(p0.y), mm(p1.x), mm(p1.y)))
         if d > r: continue
         if t.GetClass() == "PCB_VIA":
-            vias.append((d, mm(t.GetWidth()), mm(t.GetDrill()), b.GetLayerName(t.TopLayer()), b.GetLayerName(t.BottomLayer()), mm(p0.x), mm(p0.y)))
+            vias.append((d, mm(kicad_compat.via_width(t)), mm(t.GetDrill()), b.GetLayerName(t.TopLayer()), b.GetLayerName(t.BottomLayer()), mm(p0.x), mm(p0.y)))
         else:
             tracks.append((d, mm(t.GetWidth()), b.GetLayerName(t.GetLayer()),
                            math.hypot(mm(p1.x) - mm(p0.x), mm(p1.y) - mm(p0.y)), t.IsLocked()))

@@ -5,6 +5,7 @@ CELL+ : the four 9 A pins (J_CP1..4, underside, X -145..-133, Y -73) -> a 8 mm b
 CELL_N: the four return pins (J_CN1..4, Y -67) -> bar east along Y -64 to the shunt R52 pad 1 (X -130, Y -60); R52 pad 2 is GND (plane + vias).
 Usage: fix_a19_node.py <board.kicad_pcb>"""
 import sys, pcbnew
+import kicad_compat
 from pcbnew import VECTOR2I, FromMM
 OX, OY = 150.0, 110.0
 def P(x, y): return VECTOR2I(FromMM(OX + x), FromMM(OY - y))
@@ -15,7 +16,7 @@ for fp in b.GetFootprints():
 existing = {}; vias = []
 for t in b.GetTracks():
     if t.Type() == pcbnew.PCB_VIA_T:
-        vias.append(((t.GetPosition().x / 1e6 - OX, OY - t.GetPosition().y / 1e6), t.GetNetname(), t.GetWidth() / 1e6)); continue
+        vias.append(((t.GetPosition().x / 1e6 - OX, OY - t.GetPosition().y / 1e6), t.GetNetname(), kicad_compat.via_width(t) / 1e6)); continue
     existing.setdefault(t.GetLayer(), []).append(((t.GetStart().x / 1e6 - OX, OY - t.GetStart().y / 1e6), (t.GetEnd().x / 1e6 - OX, OY - t.GetEnd().y / 1e6), t.GetNetname(), t.GetWidth() / 1e6))
 def segdist(a, b_, c, d):
     import math
