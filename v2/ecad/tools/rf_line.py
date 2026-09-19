@@ -124,6 +124,7 @@ def main(a):
         # facts (`rf_transmit: false` and no RF net in its classes); a board that carries one and has not
         # routed it is a question.
         zero = False
+        f = {}          # the board's own facts, {} when the registry cannot be read: the branch below reads it
         try:
             import rules_lib as _R
             stem = os.path.splitext(os.path.basename(path))[0]
@@ -132,12 +133,28 @@ def main(a):
             zero = f.get("rf_transmit") is False and not any(r.get("state") == "UNROUTED" for r in rows)
         except Exception:
             zero = False
-        return _v.write("rf_line", _v.PASS if zero else _v.INCONCLUSIVE, denominator=0,
+        # AND "NOTHING TO JUDGE" HAS TWO CAUSES THAT ARE NOT THE SAME THING (20 September 2026). The note
+        # below said "this board does not declare that it has none", which on board B is the opposite of the
+        # truth: board B DECLARES `rf_transmit: True` and its four antenna nets are still in the USB class, so
+        # no net of its own asks for a single-ended impedance. A reader was being told a declaration was
+        # missing when the finding is that the class assignment is. The two cases carry their own sentences.
+        _tx = f.get("rf_transmit") if isinstance(f, dict) else None
+        if zero:
+            _res, _note = _v.PASS, ("this board's facts declare it carries no transmitter and no net of its "
+                                    "own asks for a single-ended impedance, so there is nothing of this rule "
+                                    "on it")
+        elif _tx is True:
+            _res, _note = _v.INCONCLUSIVE, ("this board DECLARES it carries a transmitter and yet no net of "
+                                            "its own asks for a single-ended impedance: one of the two is "
+                                            "wrong, and on this set it has been the class assignment rather "
+                                            "than the declaration. Read the board's own net classes before "
+                                            "reading this as a missing declaration")
+        else:
+            _res, _note = _v.INCONCLUSIVE, ("no single-ended controlled line was found to judge, and this "
+                                            "board does not declare whether it carries a transmitter")
+        return _v.write("rf_line", _res, denominator=0,
                         counts={"judged": 0}, inputs={"board": path}, rules=["RF-001"],
-                        note=("this board's facts declare it carries no transmitter and no net of its own asks "
-                              "for a single-ended impedance, so there is nothing of this rule on it" if zero else
-                              "no single-ended controlled line was found to judge, and this board does not "
-                              "declare that it has none"), out_dir=out_dir)
+                        note=_note, out_dir=out_dir)
     return _v.write("rf_line", _v.FAIL if bad else _v.PASS,
                     counts={"judged": len(judged), "missed": len(bad)}, denominator=len(judged),
                     evidence=bad[:20], inputs={"board": path, "tolerance": tol}, rules=["RF-001"],
