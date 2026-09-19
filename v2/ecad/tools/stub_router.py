@@ -48,18 +48,31 @@ def _pad_layer(p):
     return seq[0] if seq else pcbnew.F_Cu
 LI = {L: i for i, L in enumerate(LAYERS)}; LR = {i: L for L, i in LI.items()}
 # ---- rasterisation helpers (grid index j = x, i = y)
+def _put(mask, i0, i1, j0, j1, block):
+    """OR a stamp into a boolean map, COUNT it into an integer one.
+
+    Every helper below computes the same thing, a boolean block of the cells one obstacle covers; what differs
+    is what the caller is accumulating. The obstacle map has always been boolean, and a boolean map has to be
+    rebuilt for every net because the one thing that differs between two nets' maps is which items were left
+    OUT of it. A COUNTED map does not: the whole board is stamped once, the net's own items are stamped into a
+    second map, and a cell is blocked for that net exactly where the two counts differ. That is the pair
+    pre-router's pattern of 11 September and it is what makes the cache below possible; `|=` on an integer
+    array is a bitwise OR and would silently answer a different question, which is why this decision is taken
+    in one place rather than at each of the four call sites."""
+    if mask.dtype == np.bool_: mask[i0:i1 + 1, j0:j1 + 1] |= block
+    else: mask[i0:i1 + 1, j0:j1 + 1] += block
 def disc(mask, cx, cy, r):
     i0, i1 = max(0, int((cy - r - Y0) / G)), min(NY - 1, int((cy + r - Y0) / G) + 1); j0, j1 = max(0, int((cx - r - X0) / G)), min(NX - 1, int((cx + r - X0) / G) + 1)
     if i1 < i0 or j1 < j0: return
     ys = (np.arange(i0, i1 + 1) * G + Y0)[:, None]; xs = (np.arange(j0, j1 + 1) * G + X0)[None, :]
-    mask[i0:i1 + 1, j0:j1 + 1] |= (xs - cx) ** 2 + (ys - cy) ** 2 <= r * r
+    _put(mask, i0, i1, j0, j1, (xs - cx) ** 2 + (ys - cy) ** 2 <= r * r)
 def segment(mask, ax, ay, bx, by, r):
     i0, i1 = max(0, int((min(ay, by) - r - Y0) / G)), min(NY - 1, int((max(ay, by) + r - Y0) / G) + 1); j0, j1 = max(0, int((min(ax, bx) - r - X0) / G)), min(NX - 1, int((max(ax, bx) + r - X0) / G) + 1)
     if i1 < i0 or j1 < j0: return
     ys = (np.arange(i0, i1 + 1) * G + Y0)[:, None]; xs = (np.arange(j0, j1 + 1) * G + X0)[None, :]
     dx, dy = bx - ax, by - ay; L2 = dx * dx + dy * dy
     t = 0 if L2 == 0 else np.clip(((xs - ax) * dx + (ys - ay) * dy) / L2, 0, 1)
-    mask[i0:i1 + 1, j0:j1 + 1] |= (xs - (ax + t * dx)) ** 2 + (ys - (ay + t * dy)) ** 2 <= r * r
+    _put(mask, i0, i1, j0, j1, (xs - (ax + t * dx)) ** 2 + (ys - (ay + t * dy)) ** 2 <= r * r)
 def poly(mask, sps, grow):
     """SHAPE_POLY_SET grown by `grow` mm: rasterise by Contains on a bbox scan (coarse but exact enough at 0.1 mm)."""
     bb = sps.BBox(); r = grow
@@ -76,7 +89,7 @@ def poly(mask, sps, grow):
     for ii in range(inside.shape[0]):
         for jj in range(inside.shape[1]):
             if grown.Contains(VECTOR2I(FromMM(X0 + (j0 + jj) * G), FromMM(Y0 + (i0 + ii) * G))): inside[ii, jj] = True
-    mask[i0:i1 + 1, j0:j1 + 1] |= inside
+    _put(mask, i0, i1, j0, j1, inside)
 def zpoly(mask, sps, grow):
     """A FILLED zone rasterised fast, because a pour is board-sized and `poly` asks Contains per cell.
 
@@ -110,7 +123,7 @@ def zpoly(mask, sps, grow):
             h = g.Hole(oi, hi)
             hv = [(mm(h.CPoint(k).x), mm(h.CPoint(k).y)) for k in range(h.PointCount())]
             if len(hv) >= 3: inside &= ~_Path(hv).contains_points(pts)
-    mask[i0:i1 + 1, j0:j1 + 1] |= inside.reshape(XX.shape)
+    _put(mask, i0, i1, j0, j1, inside.reshape(XX.shape))
 
 
 # ---- parse the unconnected pairs
@@ -199,34 +212,70 @@ def net_clr(n):
         _CLR_CACHE[n] = CLR if v is None else v + CLR_MARGIN
     return _CLR_CACHE[n]
 # ---- build obstacle maps once per net (other-net copper)
-def build_maps(net):
-    trk = {L: np.zeros((NY, NX), dtype=bool) for L in LAYERS}    # track-centre forbidden (inflated by the clearance + w/2)
-    via = np.zeros((NY, NX), dtype=bool)                          # via-centre forbidden (inflated by the clearance + via_r on every layer)
-    w2, vr = TW / 2, VIA_D / 2
-    # A CLEARANCE FLOOR FOR THE NET BEING LAID (19 September 2026, `STUB_NET_CLEAR`, default 0 = off). Board E's
-    # ANA-001 asks 0.50 mm between a current-sense line and switching copper and the SENSE class carries the
-    # board's 0.127: a class cannot hold it (a 0.50 class clearance refuses the escape at the controller's own
-    # pins, measured on board A, 18 September) and neither can a DSN class-pair rule (Freerouting 1.9.0 laid a
-    # run 0.171 mm away with one in its DSN, 18 September 11:40). What the rule CAN have is a locked run laid
-    # to it before the router starts, which is this. It raises only the laid net's own side, so KiCad's rule
-    # that the larger of the two classes decides still holds against every obstacle.
-    _me = max(net_clr(net), float(os.environ.get("STUB_NET_CLEAR", "0") or 0))
-    def clr_to(other): return max(_me, net_clr(other))   # KiCad's own rule: the larger of the two classes decides
-    print("  %s: clearance %.3f mm from its own class%s, and per obstacle the larger of the two"
-          % (net, _me, " (raised by STUB_NET_CLEAR)" if _me > net_clr(net) else ""))
-    for fp in b.GetFootprints():
-        for p in fp.Pads():
-            if p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH):   # hole to hole against drilled pads of any net
-                c = p.GetPosition(); d = p.GetDrillSize(); disc(via, mm(c.x), mm(c.y), mm(max(d.x, d.y)) / 2 + VIA_DR / 2 + 0.30)
-            if p.GetNetname() == net: continue
-            anyL = _pad_layer(p)
-            for L in LAYERS:
-                if p.IsOnLayer(L): poly(trk[L], p.GetEffectivePolygon(L), (HOLE_CLR if p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH) else clr_to(p.GetNetname())) + w2)
-            if p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH) or any(p.IsOnLayer(L) for L in INNER + LAYERS): poly(via, p.GetEffectivePolygon(anyL), clr_to(p.GetNetname()) + vr)
-    for t in b.GetTracks():
-        if t.GetClass() == "PCB_VIA":                                  # hole to hole (0.30 mm) against every via, its own net included (B13, 5 Sep: two SDA vias 0.175 mm apart)
-            c = t.GetPosition(); disc(via, mm(c.x), mm(c.y), mm(t.GetDrillValue()) / 2 + VIA_DR / 2 + 0.30)
-        if t.GetNetname() == net: continue
+# ---- THE OBSTACLE MAP: BUILT ONCE FOR THE BOARD AND TOPPED UP, NOT REBUILT PER NET
+# (19 September 2026, `STUB_MAP_CACHE`, default OFF until a board says otherwise).
+#
+# WHERE THE CLOSING HOUR GOES IS MEASURED AND IT IS THE RASTERISATION, NOT THE SEARCH. A44's arm prints
+# `build_maps`'s own line once for almost every net, no search ever runs out of its 240 s `STUB_SEARCH_S`,
+# and yet a net costs about three minutes: one pass over 240 by 160 mm on four layers at 0.05 mm is 61
+# million cells and it is paid again for every net, because the only thing that differs between two nets'
+# maps is which items were left OUT of it. At three minutes a net a board with twenty opens cannot finish
+# inside `finish.sh`'s hour however good its searches are, which is A48's whole story: three closures, then
+# `exit 124`.
+#
+# The counted map is the answer and it is the pair pre-router's own pattern (11 September): stamp the WHOLE
+# board once into an integer map, stamp the net's own items into a second one, and a cell is blocked for that
+# net exactly where the two counts differ. Everything that is NOT net-dependent (a hole-to-hole disc, which
+# binds against a net's own drills as well as everyone else's; a rule area; the board edge; the margin) is
+# kept in a separate BOOLEAN map and never subtracted, because subtracting it would free copper.
+#
+# WHAT THE MAP DEPENDS ON BESIDES THE NET, and it is three more things, so they are in the key: the laid
+# net's own clearance floor (`STUB_NET_CLEAR` raises it per group), the closure's WIDTH (a narrow track end
+# pulls TW down for that net alone) and the via it will drop (a thin closure takes the board's minimum via).
+# Every radius in the scan is `r + clearance + TW/2` or `+ VIA_D/2`, so two nets share a map only when all
+# four agree. In a normal finish that is one or two buckets for the whole board.
+#
+# INVALIDATION IS BY THE TRACKS' OWN IDENTITY, not by a counter: this tool LAYS copper between nets, and it
+# also takes copper back off when a closure is refused and again in the drop-back. Copper added since the
+# cache was built is stamped into the total (the top-up); copper REMOVED means the total is too high
+# somewhere and cannot be repaired by adding, so that bucket is dropped and rebuilt. Pads and pours do not
+# move during a run (the refill before the hard count runs on a saved COPY in its own process), so only the
+# track list is watched.
+_MAP_CACHE_ON = int(os.environ.get("STUB_MAP_CACHE", "0"))
+_MAP_CHECK = int(os.environ.get("STUB_MAP_CHECK", "0"))   # rebuild the reference map per net and refuse any difference
+_MAP_CACHE = {}
+
+
+def _stamp(trk, via, aly_trk, aly_via, net, mode, clr_to, w2, vr, tracks=None):
+    """Stamp obstacles into `trk`/`via`, and the net-independent ones into `aly_trk`/`aly_via`.
+
+    mode "others" = every item that is not this net's (the reference map; `aly_*` is the same array, so the
+    result is exactly what this tool has always built); "all" = every item whatever its net (the cached
+    total); "own" = only this net's items (the subtraction), where `aly_*` is None because nothing
+    net-independent belongs in it. `tracks` restricts the scan to a list, which is the top-up.
+    """
+    _own = (mode == "own")
+    def _want(raw):
+        if mode == "all": return True
+        return (raw == net) if _own else (raw != net)
+    def _want_zone(zn):
+        if mode == "all": return True
+        return (netname(zn) == netname(net)) if _own else (netname(zn) != netname(net))
+    if tracks is None:
+        for fp in b.GetFootprints():
+            for p in fp.Pads():
+                _pth = p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH)
+                if _pth and aly_via is not None:    # hole to hole against drilled pads of any net, its own included
+                    c = p.GetPosition(); d = p.GetDrillSize(); disc(aly_via, mm(c.x), mm(c.y), mm(max(d.x, d.y)) / 2 + VIA_DR / 2 + 0.30)
+                if not _want(p.GetNetname()): continue
+                anyL = _pad_layer(p)
+                for L in LAYERS:
+                    if p.IsOnLayer(L): poly(trk[L], p.GetEffectivePolygon(L), (HOLE_CLR if _pth else clr_to(p.GetNetname())) + w2)
+                if _pth or any(p.IsOnLayer(L) for L in INNER + LAYERS): poly(via, p.GetEffectivePolygon(anyL), clr_to(p.GetNetname()) + vr)
+    for t in (b.GetTracks() if tracks is None else tracks):
+        if t.GetClass() == "PCB_VIA" and aly_via is not None:          # hole to hole (0.30 mm) against every via, its own net included (B13, 5 Sep: two SDA vias 0.175 mm apart)
+            c = t.GetPosition(); disc(aly_via, mm(c.x), mm(c.y), mm(t.GetDrillValue()) / 2 + VIA_DR / 2 + 0.30)
+        if not _want(t.GetNetname()): continue
         if t.GetClass() == "PCB_VIA":
             c = t.GetPosition(); r = mm(t.GetWidth(pcbnew.F_Cu)) / 2
             _c = clr_to(t.GetNetname())
@@ -237,11 +286,13 @@ def build_maps(net):
             _c = clr_to(t.GetNetname())
             if L in trk: segment(trk[L], mm(a.x), mm(a.y), mm(e.x), mm(e.y), r + _c + w2)
             segment(via, mm(a.x), mm(a.y), mm(e.x), mm(e.y), r + _c + vr)
+    if tracks is not None: return       # the top-up stamps copper only: nothing else moved
     for z in b.Zones():
         if z.GetIsRuleArea():
+            if aly_trk is None: continue
             for L in LAYERS:
-                if z.IsOnLayer(L) and z.GetDoNotAllowTracks(): poly(trk[L], z.Outline(), CLR + w2)   # a rule area binds only on its own layers (the board-wide In1/In4 track keep-outs must not block In2/In3)
-            if z.GetDoNotAllowVias(): poly(via, z.Outline(), CLR + vr)
+                if z.IsOnLayer(L) and z.GetDoNotAllowTracks(): poly(aly_trk[L], z.Outline(), CLR + w2)   # a rule area binds only on its own layers (the board-wide In1/In4 track keep-outs must not block In2/In3)
+            if z.GetDoNotAllowVias(): poly(aly_via, z.Outline(), CLR + vr)
             continue
         # EVERY FILLED POUR OF ANOTHER NET IS AN OBSTACLE, and until 16 September 2026 not one of them was in
         # this map. Only tracks, vias, pads and rule areas were, so a closure was free to run straight through
@@ -262,7 +313,7 @@ def build_maps(net):
         # unchanged, and the pre-lay stage turns it on; the stage is guarded either way and the board goes back
         # if the hard count rises after the refill.
         if _POUR_OBSTACLE == 0: continue
-        if z.GetFilledArea() <= 0 or netname(z.GetNetname()) == netname(net): continue
+        if z.GetFilledArea() <= 0 or not _want_zone(z.GetNetname()): continue
         _c = clr_to(z.GetNetname())
         for L in LAYERS:
             if not z.IsOnLayer(L): continue
@@ -271,14 +322,74 @@ def build_maps(net):
             if fp_ is None or fp_.OutlineCount() == 0: continue
             zpoly(trk[L], fp_, _c + w2)
             zpoly(via, fp_, _c + vr)
+    if aly_trk is None: return
     for d in b.GetDrawings():
         if d.GetLayer() == pcbnew.Edge_Cuts and d.GetShape() == pcbnew.SHAPE_T_CIRCLE:
             c = d.GetCenter(); r = mm(d.GetRadius())
-            for L in LAYERS: disc(trk[L], mm(c.x), mm(c.y), r + 0.5 + w2)
-            disc(via, mm(c.x), mm(c.y), r + 0.5 + vr)
+            for L in LAYERS: disc(aly_trk[L], mm(c.x), mm(c.y), r + 0.5 + w2)
+            disc(aly_via, mm(c.x), mm(c.y), r + 0.5 + vr)
     m = int(0.6 / G) + 12   # board margin (1 mm grid offset + 0.6 mm edge clearance)
-    for M in list(trk.values()) + [via]:
+    for M in list(aly_trk.values()) + [aly_via]:
         M[:m, :] = True; M[-m:, :] = True; M[:, :m] = True; M[:, -m:] = True
+
+
+def _reference_maps(net, clr_to, w2, vr):
+    """The map exactly as this tool has built it since it was written: one scan of the board per net."""
+    trk = {L: np.zeros((NY, NX), dtype=bool) for L in LAYERS}    # track-centre forbidden (inflated by the clearance + w/2)
+    via = np.zeros((NY, NX), dtype=bool)                          # via-centre forbidden (inflated by the clearance + via_r on every layer)
+    _stamp(trk, via, trk, via, net, "others", clr_to, w2, vr)
+    return trk, via
+
+
+def build_maps(net):
+    w2, vr = TW / 2, VIA_D / 2
+    # A CLEARANCE FLOOR FOR THE NET BEING LAID (19 September 2026, `STUB_NET_CLEAR`, default 0 = off). Board E's
+    # ANA-001 asks 0.50 mm between a current-sense line and switching copper and the SENSE class carries the
+    # board's 0.127: a class cannot hold it (a 0.50 class clearance refuses the escape at the controller's own
+    # pins, measured on board A, 18 September) and neither can a DSN class-pair rule (Freerouting 1.9.0 laid a
+    # run 0.171 mm away with one in its DSN, 18 September 11:40). What the rule CAN have is a locked run laid
+    # to it before the router starts, which is this. It raises only the laid net's own side, so KiCad's rule
+    # that the larger of the two classes decides still holds against every obstacle.
+    _me = max(net_clr(net), float(os.environ.get("STUB_NET_CLEAR", "0") or 0))
+    def clr_to(other): return max(_me, net_clr(other))   # KiCad's own rule: the larger of the two classes decides
+    print("  %s: clearance %.3f mm from its own class%s, and per obstacle the larger of the two"
+          % (net, _me, " (raised by STUB_NET_CLEAR)" if _me > net_clr(net) else ""))
+    if not _MAP_CACHE_ON: return _reference_maps(net, clr_to, w2, vr)
+
+    key = (round(_me, 6), round(TW, 6), round(VIA_D, 6), round(VIA_DR, 6))
+    kii = {t.m_Uuid.AsString() for t in b.GetTracks()}
+    ent = _MAP_CACHE.get(key)
+    if ent is not None and not (ent["kiids"] <= kii):
+        print("  map cache: copper was taken off the board, so every bucket is rebuilt")
+        _MAP_CACHE.clear(); ent = None
+    if ent is not None:
+        new = [t for t in b.GetTracks() if t.m_Uuid.AsString() not in ent["kiids"]]
+        if new:
+            _stamp(ent["trk"], ent["via"], ent["aly_trk"], ent["aly_via"], net, "all", clr_to, w2, vr, tracks=new)
+            ent["kiids"] = kii
+            print("  map cache: topped up with %d piece(s) laid since it was built" % len(new))
+    if ent is None:
+        ent = {"trk": {L: np.zeros((NY, NX), dtype=np.int16) for L in LAYERS},
+               "via": np.zeros((NY, NX), dtype=np.int16),
+               "aly_trk": {L: np.zeros((NY, NX), dtype=bool) for L in LAYERS},
+               "aly_via": np.zeros((NY, NX), dtype=bool), "kiids": kii}
+        _stamp(ent["trk"], ent["via"], ent["aly_trk"], ent["aly_via"], net, "all", clr_to, w2, vr)
+        _MAP_CACHE[key] = ent
+        print("  map cache: the whole board stamped once at clearance floor %.3f, width %.2f, via %.2f/%.2f"
+              % key)
+    own_trk = {L: np.zeros((NY, NX), dtype=np.int16) for L in LAYERS}
+    own_via = np.zeros((NY, NX), dtype=np.int16)
+    _stamp(own_trk, own_via, None, None, net, "own", clr_to, w2, vr)
+    trk = {L: (ent["trk"][L] > own_trk[L]) | ent["aly_trk"][L] for L in LAYERS}
+    via = (ent["via"] > own_via) | ent["aly_via"]
+    if _MAP_CHECK:
+        rt, rv = _reference_maps(net, clr_to, w2, vr)
+        bad = [("via", int((rv != via).sum()))] if not np.array_equal(rv, via) else []
+        bad += [(str(L), int((rt[L] != trk[L]).sum())) for L in LAYERS if not np.array_equal(rt[L], trk[L])]
+        if bad:
+            print("  STUB_MAP_CHECK: the cached map differs from the reference on %s" % ", ".join("%s by %d cell(s)" % x for x in bad))
+            raise SystemExit("stub_router: the cached obstacle map is not the map this tool searches; refusing to route on it")
+        print("  STUB_MAP_CHECK: cached map identical to the reference on every layer")
     return trk, via
 def copper_cells(item, net):
     """Cells covered by the item's own copper, per layer."""

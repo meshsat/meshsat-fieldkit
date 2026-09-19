@@ -34,10 +34,22 @@ def t_a_filled_pour_of_another_net_is_in_the_obstacle_map():
 
 
 def t_the_boards_own_net_is_a_target_and_never_an_obstacle():
+    """The pour of the net being closed is the thing the closure is trying to REACH. It moved behind
+    `_want_zone` when the map learnt to count (19 September 2026), so this asks the predicate rather than the
+    line the skip used to be written on; what it has always been about is that the two names are compared
+    NORMALISED, because a pour's net reads `/GND` or `GND` depending on how the zone was made and an unequal
+    comparison would put the net's own copper in its own way."""
     i = SRC.index("GetFilledArea() <= 0")
     seg = SRC[i:i + 200]
-    assert "netname(z.GetNetname()) == netname(net)" in seg, \
+    assert "_want_zone(z.GetNetname())" in seg, \
         "the net being closed would be blocked by its own pour, which is the thing it is trying to reach"
+    import ast
+    fn = next((n for n in ast.walk(ast.parse(SRC))
+               if isinstance(n, ast.FunctionDef) and n.name == "_want_zone"), None)
+    assert fn is not None, "the predicate that decides whether a pour is this net's own is gone"
+    body = ast.get_source_segment(SRC, fn) or ""
+    assert "netname(zn)" in body and "netname(net)" in body, \
+        "a pour's net is compared unnormalised, so `/GND` and `GND` read as two different nets"
 
 
 def t_the_fast_rasteriser_subtracts_its_holes():

@@ -393,3 +393,98 @@ def t_the_drop_back_stands_down_when_the_stage_is_at_its_wall():
         "the closures left behind are not declared unjudged by this tool"
     i, j = s.index("if _stage_over and closed"), s.index("if not _stage_over and closed")
     assert i < j, "the skip notice comes after the block it replaces"
+
+
+def _put_fn():
+    """`_put`, executed exactly as the tool writes it. It needs numpy and nothing else, so it runs here."""
+    import numpy as _np
+    s = _src()
+    i = s.index("def _put(mask,")
+    j = s.index("def disc(mask,")
+    ns = {"np": _np}
+    exec(compile(s[i:j], "stub_router.py", "exec"), ns)
+    return ns["_put"], _np
+
+
+def t_a_stamp_ors_into_a_boolean_map_and_counts_into_an_integer_one():
+    """THE WHOLE CACHE RESTS ON THIS ONE LINE (19 September 2026). A counted map is what lets the board be
+    rasterised once instead of once per net: stamp everything, stamp the net's own items separately, and the
+    cells blocked for that net are where the two counts differ. `|=` on an integer array is a BITWISE OR, so
+    two overlapping obstacles in one cell would read 1, the net's own single item would read 1, and the cell
+    would come out free: a closure laid straight through another net's copper, refused only later by the
+    board-wide guard if it happened to raise the count. The helpers all compute the same boolean block and
+    this is the one place that decides what is done with it."""
+    _put, np = _put_fn()
+    block = np.array([[True, True], [False, True]])
+    m = np.zeros((2, 2), dtype=bool)
+    _put(m, 0, 1, 0, 1, block); _put(m, 0, 1, 0, 1, block)
+    assert m.tolist() == [[True, True], [False, True]], "a boolean map stopped being an OR"
+    c = np.zeros((2, 2), dtype=np.int16)
+    _put(c, 0, 1, 0, 1, block); _put(c, 0, 1, 0, 1, block)
+    assert c.tolist() == [[2, 2], [0, 2]], "an integer map is not counting its stamps, so the cache cannot subtract"
+
+
+def t_every_helper_accumulates_through_that_one_decision():
+    """A helper that writes `mask[...] |= ...` itself is correct today and wrong the moment it is handed a
+    counted map, and nothing about its call site says which kind it will get."""
+    s = _src()
+    i, j = s.index("def disc(mask,"), s.index("# ---- parse the unconnected pairs")
+    body = s[i:j]
+    assert "mask[i0:i1 + 1, j0:j1 + 1] |=" not in body, \
+        "a rasterisation helper accumulates into its mask by itself instead of through _put"
+    assert body.count("_put(mask,") == 4, "not every helper (disc, segment, poly, zpoly) stamps through _put"
+
+
+def t_nothing_net_independent_is_ever_subtracted_from_the_total():
+    """A hole-to-hole disc binds against a net's OWN drills as well as everyone else's, and a rule area, the
+    board edge and the margin belong to no net at all. Counted into the total and then subtracted with the
+    net's own items, every one of them would free copper the board does not have: the subtraction is the one
+    operation in the cache that can only ever make the map emptier. They are kept in a separate BOOLEAN map
+    that is OR'd in afterwards, and the own-map is built with that map absent so it cannot receive them."""
+    s = _src()
+    assert 'if _pth and aly_via is not None:' in s, "the drilled-pad hole-to-hole disc is not kept out of the subtractable total"
+    assert 'if t.GetClass() == "PCB_VIA" and aly_via is not None:' in s, "the via hole-to-hole disc is not kept out of the subtractable total"
+    assert '_stamp(own_trk, own_via, None, None, net, "own"' in s, \
+        "the net's own map is offered the net-independent obstacles, which it would then subtract"
+    assert 'if aly_trk is None: continue' in s and 'if aly_trk is None: return' in s, \
+        "the own pass does not decline the rule areas, the board edge and the margin"
+    assert '| ent["aly_trk"][L]' in s and '| ent["aly_via"]' in s, \
+        "the net-independent map is not put back after the subtraction"
+
+
+def t_copper_taken_off_the_board_rebuilds_the_map_rather_than_topping_it_up():
+    """This tool LAYS copper between nets and takes it back off again: a refused closure is reverted and the
+    drop-back removes whole closures at the end. Copper ADDED can be stamped into the total, which is the
+    top-up and is the point of the cache. Copper REMOVED leaves the total too high somewhere and there is no
+    stamp that lowers it, so the honest answer is to drop the bucket and rebuild. The watch is on the tracks'
+    own identity, because a count of them cannot tell one piece added and one removed from nothing at all."""
+    s = _src()
+    assert 'if ent is not None and not (ent["kiids"] <= kii):' in s, \
+        "a removal is not detected, so the cached map can stand higher than the board"
+    assert "copper was taken off the board, so every bucket is rebuilt" in s, \
+        "a rebuild after a removal says nothing about itself"
+    i, j = s.index('if ent is not None and not (ent["kiids"] <= kii):'), s.index('if ent is not None:\n        new =')
+    assert i < j, "the removal check runs after the top-up, which would stamp into a map that is already wrong"
+
+
+def t_the_cache_key_carries_everything_the_radii_depend_on():
+    """Two nets share a map only when every number in the scan agrees. Three of them are not the net's class:
+    `STUB_NET_CLEAR` raises the laid net's own floor per pre-lay group, a narrow track end pulls TW down for
+    one net alone, and a thin closure takes the board's minimum via instead of its class's. Every radius in
+    the scan is `r + clearance + TW/2` or `+ VIA_D/2`, and VIA_DR sets the hole-to-hole discs, so a key
+    missing any of them hands one net the map of another."""
+    s = _src()
+    assert "key = (round(_me, 6), round(TW, 6), round(VIA_D, 6), round(VIA_DR, 6))" in s, \
+        "the cache key does not carry the clearance floor, the width and the via the map was built for"
+    assert "if not _MAP_CACHE_ON: return _reference_maps(net, clr_to, w2, vr)" in s, \
+        "with the cache off this is no longer the map the tool has always built"
+
+
+def t_a_cached_map_that_differs_from_the_reference_stops_the_run():
+    """The check mode is the proof, so it cannot be a warning: a map that differs from the one this tool has
+    always searched is a board the tool cannot see, which is the 16 September defect exactly."""
+    s = _src()
+    assert "STUB_MAP_CHECK" in s, "there is no way to ask whether the cached map is the reference map"
+    assert "refusing to route on it" in s, "a differing cached map does not stop the run"
+    assert "raise SystemExit" in s[s.index("STUB_MAP_CHECK: the cached map differs"):][:400], \
+        "the check prints its finding and carries on"
