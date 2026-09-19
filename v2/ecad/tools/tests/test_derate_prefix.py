@@ -206,3 +206,46 @@ def t_a_suppressors_standoff_voltage_is_not_a_mechanical_standoff():
     assert reliability.WEAR.search(v), "the word is there, which is why the prefix has to decide"
     assert R.ref_prefix("D2") in reliability.NOT_WEAR_PREFIX, "the diode is still read as a mechanical part"
     assert R.ref_prefix("J_RF1") not in reliability.NOT_WEAR_PREFIX, "a connector must stay a wear item"
+
+
+def t_a_net_is_judged_on_the_worst_of_everything_declared_about_it():
+    """DECLARING A CONDUCTOR AS THE RAIL IT IS MUST NOT LOWER THE VOLTAGE ITS PARTS ARE JUDGED AGAINST
+    (20 September 2026, found before it did any harm).
+
+    This file read `rails.get(net) or nodes_v.get(net)`: the first declaration found, and a rail found first.
+    Board A's `CH_SRP` is declared a NODE at 16.8 V, the pack's 4S termination voltage, and the rail it
+    should carry is the 14.4 V nominal; converting it, which is what sixteen DC conductors across three
+    boards are owed so that PI-001 and PI-002 can look at them at all, would have quietly taken every part on
+    that net from a 16.8 V judgement to a 14.4 V one. A rail also carries `v_work`, the working maximum, and
+    this read that from nowhere.
+
+    THE DEFECTIVE FIXTURE is a 20 V capacitor on a net declared as a 14.4 V rail AND as a 16.8 V node: it
+    must be REFUSED, because the part can see 16.8 V. THE ACCEPTABLE FIXTURE is the same part on the same
+    net declared only at 14.4 V, where 16 V with the margin is its own question and the rule proves nothing
+    if both readings agree."""
+    # 20 V clears 14.4 V at the 20 percent margin (17.3 needed) and does NOT clear 16.8 (20.2 needed), so
+    # the part is the instrument: the two readings must disagree or the rule proves nothing.
+    rows = [("C1", "10u 20V", ["CH_SRP", "GND"])]
+    rails_both = {"CH_SRP": {"volts": 14.4, "amps_typ": 10.0, "amps_peak": 18.0, "source": "Q10",
+                             "loads": {"R17": 10.0}}}
+    nodes_both = {"CH_SRP": {"v_max": 16.8, "basis": "the pack at its 4S termination voltage"},
+                  "GND": {"v_max": 0.0, "basis": "the board's reference"}}
+    d = _tempfile.mkdtemp(prefix="derate-worst-bad-")
+    rc, out = _run_derate(_brd(d, rows, rails=rails_both, nodes=nodes_both), d)
+    assert rc == 1, ("a part was judged against the rail's 14.4 V while a node on the same net declares "
+                     "16.8 V:\n%s" % out[-700:])
+
+    # the acceptable fixture: nothing on this net declares more than 14.4 V, so the same part stands
+    d2 = _tempfile.mkdtemp(prefix="derate-worst-ok-")
+    rc2, out2 = _run_derate(_brd(d2, rows, rails=rails_both,
+                                 nodes={"GND": {"v_max": 0.0, "basis": "the board's reference"}}), d2)
+    assert rc2 == 0, ("a 20 V part on a net nothing declares above 14.4 V was refused, so the rule is not "
+                      "about the worst declaration:\n%s" % out2[-700:])
+
+    # and a rail's own working maximum counts, which nothing read before
+    d3 = _tempfile.mkdtemp(prefix="derate-worst-vwork-")
+    rails_vw = {"CH_SRP": dict(rails_both["CH_SRP"], v_work=16.8)}
+    rc3, out3 = _run_derate(_brd(d3, rows, rails=rails_vw,
+                                 nodes={"GND": {"v_max": 0.0, "basis": "the board's reference"}}), d3)
+    assert rc3 == 1, ("a rail's declared working maximum of 16.8 V was ignored and the part judged against "
+                      "the 14.4 V nominal:\n%s" % out3[-700:])
