@@ -11583,3 +11583,18 @@ its closers, A48 15: every one of those numbers was taken with a closer that ref
 board, and the only one re-measured so far moves by a third. Nothing is adopted and no board's phase moves on
 the strength of it; what it changes is what A50 should be expected to land at, and that the eleven-hour route
 is not the only thing standing between board A and a closed board.
+
+**Addendum, 16:15 CEST (19 September), E22 LANDED AND IT CONFIRMS ITS OWN PREDICTION: THE SAFETY LINE IS
+CLOSED AND THE SENSE VIOLATION MOVED TO THE THIRD SWITCHING NET.** Best round 1, **hard 0 and TWO unconnected
+items**, 4,766 tracks, sha c859363934873bc3. Round 2's `via_costs` remedy came back **ten** open against three
+and was not finished; a third round was announced and the supervisor ended. **`/SHORE_INHIBIT` is not among
+the two**: the line whose open connection refused E21's adoption is closed copper here, laid by the pre-lay,
+which was this arm's whole reason. The two by name are **`/CELL_MON` 224.5 mm apart** at U10 pad 40, the
+sensor controller's own long run that the router never made, and **`/GND_V` 5.4 mm** at Q8 pad 2.
+
+**ANA-001 FAIL 1 of 3, and the failing pair is the one this arm could not pin.** `TRK_CSP` runs **0.266 mm
+from `TRK_LSENSE`** over 3.66 mm of copper, 3.06 mm of it outside the courtyard of the part that carries both
+nets; `TRK_CSN` reads exactly **0.500 mm** from `TRK_SW2`, at the floor by construction because that is what
+its pre-lay group asked for; `WATER_SENSE` 12.507 mm against the 1.00 it asks. **Pinning two of the six
+declared switching nets moved the violation to a third**, which is the sentence written into `boards/e.json`
+before the run and the reason E23 pins all six. **E17 stays board E's phase.**
