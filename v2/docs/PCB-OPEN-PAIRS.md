@@ -16,19 +16,21 @@ the ruling is the action that moves it, and the measurement is reported beside i
 | `AUTHORITY` | 3 | an authority this project does not have |
 | `MISSING_INPUT` | 16 | an input the reading declared absent |
 | `MEASURED_FAILURE` | 29 | the tool looked and the board failed |
-| `NOT_JUDGED` | 10 | not judged, for the reason the reading gives |
+| `VENDOR_WAIT` | 1 | a fabricator or a standards body, and nobody here |
+| `OWNER_WORK` | 7 | work only the owner or the ordering session can do |
+| `NOT_JUDGED` | 2 | not judged, for the reason the reading gives |
 
 ## By board
 
 | board | open | of which measured | decision-bound | authority | missing input | not judged |
 |---|---:|---:|---:|---:|---:|---:|
-| A | 24 | 9 | 12 | 1 | 4 | 1 |
-| B | 31 | 14 | 10 | 1 | 4 | 3 |
-| C | 12 | 3 | 9 | 0 | 1 | 1 |
-| D | 17 | 4 | 11 | 1 | 2 | 1 |
-| E | 19 | 5 | 11 | 0 | 4 | 1 |
-| E5 | 6 | 3 | 2 | 0 | 0 | 1 |
-| P | 13 | 5 | 9 | 0 | 1 | 2 |
+| A | 24 | 9 | 12 | 1 | 4 | 0 |
+| B | 31 | 14 | 10 | 1 | 4 | 2 |
+| C | 12 | 3 | 9 | 0 | 1 | 0 |
+| D | 17 | 4 | 11 | 1 | 2 | 0 |
+| E | 19 | 5 | 11 | 0 | 4 | 0 |
+| E5 | 6 | 3 | 2 | 0 | 0 | 0 |
+| P | 13 | 5 | 9 | 0 | 1 | 0 |
 
 ## By open decision
 
@@ -186,18 +188,28 @@ holding a number, not a question about a number.
 | `OUT-001` | E5 | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `OUT-001` | P | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 
-## NOT_JUDGED (10): not judged, for the reason the reading gives
+## VENDOR_WAIT (1): a fabricator or a standards body, and nobody here
+
+| rule | board | reading | what it waits on |
+|---|---|---|---|
+| `VIA-002` | P | INCONCLUSIVE | via_annular INCONCLUSIVE: this board declares no floor for the via ring and the plated hole ring, so that ring was not judged: a floor asserted without the fabricator's own row would be |
+
+## OWNER_WORK (7): work only the owner or the ordering session can do
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
 | `DFA-001` | A | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
-| `RF-001` | B | INCONCLUSIVE | rf_line INCONCLUSIVE: no single-ended controlled line was found to judge, and this board does not declare that it has none |
 | `DFA-001` | B | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
-| `DOC-001` | B | INCONCLUSIVE | final_gate_b INCONCLUSIVE: this board's own deliverable folder, judged on its own; the set's verdict is final_gate |
 | `DFA-001` | C | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 | `DFA-001` | D | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 | `DFA-001` | E | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 | `DFA-001` | E5 | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
-| `VIA-002` | P | INCONCLUSIVE | via_annular INCONCLUSIVE: this board declares no floor for the via ring and the plated hole ring, so that ring was not judged: a floor asserted without the fabricator's own row would be |
 | `DFA-001` | P | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
+
+## NOT_JUDGED (2): not judged, for the reason the reading gives
+
+| rule | board | reading | what it waits on |
+|---|---|---|---|
+| `RF-001` | B | INCONCLUSIVE | rf_line INCONCLUSIVE: no single-ended controlled line was found to judge, and this board does not declare that it has none |
+| `DOC-001` | B | INCONCLUSIVE | final_gate_b INCONCLUSIVE: this board's own deliverable folder, judged on its own; the set's verdict is final_gate |
 

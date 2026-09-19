@@ -96,3 +96,35 @@ def t_every_open_pair_of_the_tree_gets_exactly_one_category():
     assert sum(res["counts"].values()) == res["open"], res["counts"]
     assert res["measured"] == sum(1 for p in res["pairs"] if p["result"] == "FAIL"), res
     for p in res["pairs"]: assert p["category"] in O.ORDER, p
+
+
+def t_a_vendor_wait_and_the_ordering_session_s_own_work_are_not_unattributed():
+    """THE DEFECTIVE FIXTURE (19 September 2026). Eight pairs sat in "not judged" while the coverage map
+    already recorded who executes their remediation: VIA-002 on board P waits on the fabricator publishing
+    its annular rows at 2 oz, and DFA-001 on every board waits on the assembler's own 2D preview, which is
+    behind a login this repo forbids the runner to use. The ETA has read that field for days. A register whose
+    job is to say what is REACHABLE has to say that neither of those is, and it may only do so for a pair the
+    ladder above has not already claimed: a measured failure stays a measured failure whoever owns its fix."""
+    execs = {"R-1": "VENDOR_OR_STANDARD_WAIT", "R-2": "OWNER", "R-3": "PARALLEL_BOX"}
+    assert O.classify(_row("R-1"), "p", {}, execs)["category"] == O.VENDOR_WAIT
+    assert O.classify(_row("R-2"), "a", {}, execs)["category"] == O.OWNER_WORK
+    assert O.classify(_row("R-3"), "a", {}, execs)["category"] == O.NOT_JUDGED
+
+    # a measured failure keeps its own bucket whoever owns the remediation
+    assert O.classify(_row("R-1", result="FAIL"), "p", {}, execs)["category"] == O.MEASURED_FAILURE
+    # and so does a pair an open decision claims
+    claims = {("R-2", "a"): (34, "the envelope")}
+    assert O.classify(_row("R-2"), "a", claims, execs)["category"] == O.DECISION
+
+
+def t_the_execution_map_is_read_from_the_coverage_map_and_not_from_a_list():
+    """The same law the 18 September rule made for the gate catalogue: the register reads the map, so a rule
+    whose remediation owner changes moves here without anybody remembering to edit a list."""
+    import os
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "open_pairs.py"),
+               encoding="utf-8").read()
+    assert "def executions(" in src and "remediation" in src, "the execution map is not read from the coverage map"
+    ex = O.executions()
+    if ex:
+        assert ex.get("VIA-002") == "VENDOR_OR_STANDARD_WAIT", ex.get("VIA-002")
+        assert ex.get("DFA-001") == "OWNER", ex.get("DFA-001")
