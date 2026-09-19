@@ -180,7 +180,18 @@ coverage:
    note: "the solver's residual is checked before the number is read. Since 16 September the dc_drop verdict carries the
      VOLTAGE DROP alone, against each rail's own budget, and the current capacity is a separate verdict under PI-001"}
 
- PI-003: {implementation: "prefanout.py, gen_pcb_*3.py stitch vias, gen_pcb_d3.py locked parallel barrels", verification: {tool: via_current.py, verdict: via_current, fixtures: tests/test_via_current.py, report: "barrel_sites.py, rail_crossings.py"},
+ PI-003: {implementation: "prefanout.py, gen_pcb_*3.py stitch vias, gen_pcb_d3.py locked parallel barrels, rail_barrels.py (pre-route), via_parallel.py (post-route)", verification: {tool: via_current.py, verdict: via_current, fixtures: tests/test_via_current.py, report: "barrel_sites.py, rail_crossings.py"},
+   _fixer_why: "This rule has TWO fixers and they are not interchangeable (19 September 2026).
+     `rail_barrels.py` runs on the PLACED board, takes its sites from `rail_crossings.rows` and its count
+     from `power_copper`, and lays the barrels a declared rail's own crossing needs while the room beside
+     that pad is still empty; `via_parallel.py` runs on the ROUTED board, where every candidate has to be
+     checked against copper that is already there and each barrel's link back to its net drawn and proved.
+     The pre-route tool REFUSES a routed board and names the other one, because a locked via laid into
+     traffic is the defect the post-route tool's rings and link tests exist to avoid. It also DECLINES a
+     site whose current needs more than eight barrels and reports it as a placement item: board P's CELL4
+     crosses at one 0.50 mm barrel carrying 18.00 A, which is eighteen barrels, and eighteen barrels in a
+     row beside a pad is a busbar and a different pad. Its verdict is advisory on a dry run and a reading
+     on --apply; `via_current` on the solved mesh is still what DECIDES this rule.",
    _report_why: "barrel_sites.py (18 September 2026) is the map this rule's failure hands to whoever draws the
      copper: every barrel over its rating rather than each rail's worst, the pads of its own net within reach
      (the anchors a locked run can join) and every other net's pad within reach (what the corridor has to

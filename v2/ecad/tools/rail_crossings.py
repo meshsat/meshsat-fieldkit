@@ -35,7 +35,18 @@ import via_current as _vc
 
 
 def judge(b, rails, reach_mm=1.0):
-    """(short, judged): the crossings with fewer barrels than the current needs, and how many were asked."""
+    """(short, judged): the crossings with fewer barrels than the current needs, and how many were asked.
+
+    The sentences are formatted from `rows()`, which is the same walk carrying its numbers instead of its
+    prose. `rail_barrels.py`, the fixer, reads THOSE, so the thing that lays copper and the thing that judges
+    it can never drift apart: a fixer with its own idea of which site is short is the 8 September defect about
+    a debug print that does not share the predicate it explains, and this project has paid for it twice."""
+    rows_, judged = rows(b, rails, reach_mm)
+    return [r["why"] for r in rows_], judged
+
+
+def rows(b, rails, reach_mm=1.0):
+    """(short, judged) with each short crossing as a dict: net, ref, pad, at, drill, have, need, amps."""
     vias = [t for t in b.GetTracks() if t.GetClass() == "PCB_VIA"]
     short, judged = [], 0
     for net, r in sorted(rails.items()):
@@ -73,10 +84,14 @@ def judge(b, rails, reach_mm=1.0):
                 drill = min(v.GetDrill() for v in near) / 1e6
                 need = _vc.barrels_for(_share, drill)
                 if len(near) < need:
-                    short.append("%s at %s pad %s (%.2f, %.2f): %d barrel(s) of %.2f mm for %.2f A "
-                                 "(%.2f A over this part's %d pad(s) on the rail), which needs %d at a 10 K rise"
-                                 % (n, ref, pad.GetNumber(), c.x / 1e6, c.y / 1e6, len(near), drill, _share,
-                                    want[ref], len(_pads), need))
+                    short.append({
+                        "net": n, "ref": ref, "pad": pad.GetNumber(), "at": (c.x / 1e6, c.y / 1e6),
+                        "drill": drill, "have": len(near), "need": need, "amps": _share,
+                        "part_amps": want[ref], "pads": len(_pads),
+                        "why": "%s at %s pad %s (%.2f, %.2f): %d barrel(s) of %.2f mm for %.2f A "
+                               "(%.2f A over this part's %d pad(s) on the rail), which needs %d at a 10 K rise"
+                               % (n, ref, pad.GetNumber(), c.x / 1e6, c.y / 1e6, len(near), drill, _share,
+                                  want[ref], len(_pads), need)})
     return short, judged
 
 
