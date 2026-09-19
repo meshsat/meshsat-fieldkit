@@ -73,6 +73,23 @@ def _save_filled(pcbnew, b, path):
     pcbnew.SaveBoard(path, b2)
 
 
+def _hole_free(b, x, y, drill, holes=None):
+    """No drilled hole within (d1 + d2) / 2 + this project's floor of (x, y). Every net's holes count."""
+    X, Y = x * 1e6, y * 1e6
+    for t in b.GetTracks():
+        if t.GetClass() != "PCB_VIA": continue
+        d2 = t.GetDrill() / 1e6
+        p = t.GetPosition()
+        if math.hypot(p.x - X, p.y - Y) / 1e6 < (drill + d2) / 2.0 + FLOOR - 1e-9: return False
+    for fp in b.GetFootprints():
+        for q in fp.Pads():
+            d2 = max(q.GetDrillSize().x, q.GetDrillSize().y) / 1e6
+            if d2 <= 0: continue
+            p = q.GetPosition()
+            if math.hypot(p.x - X, p.y - Y) / 1e6 < (drill + d2) / 2.0 + FLOOR - 1e-9: return False
+    return True
+
+
 def _routed(b):
     """True when a router has been over this board (place_audit's own test, 16 September)."""
     segs = [t for t in b.GetTracks() if t.GetClass() == "PCB_TRACK"]
@@ -191,7 +208,13 @@ def main(argv):
         own = "/" + r["net"] if not r["net"].startswith("/") else r["net"]
         own = own if any((p.GetNetname() or "") == own for fp in b.GetFootprints() for p in fp.Pads()) \
             else r["net"]
-        free = lambda X, Y, _w=r["width"], _o=own: _rv._site_free(b, X, Y, _w, clr, _o)
+        # `_site_free` is a COPPER test: it keeps the ring clear of other nets' pads, tracks and vias. It does
+        # NOT answer hole to hole, which is a different rule with a different number, and on E21's own chain the
+        # DRC refused a barrel at J_BLK pad 1 for exactly that (two 0.25 mm drills need 0.5495 mm between
+        # centres and the copper test is satisfied at 0.362). So the site must pass BOTH, and the hole half
+        # counts every drilled hole on the board, this net's included: a hole does not care whose net it is.
+        free = lambda X, Y, _w=r["width"], _d=r["drill"], _o=own: (
+            _rv._site_free(b, X, Y, _w, clr, _o) and _hole_free(b, X, Y, _d))
         pts, axis, note = plan(r, free, maxb)
         if not pts: declined.append((r, note)); continue
         plans.append((r, pts, axis, note))
