@@ -10956,3 +10956,28 @@ those two connections are a floor-plan item, which is the same sentence board B'
 to, and board E's ANA-001 answer resolves to its opposite: E21 held a rule through a route precisely because
 locked copper is the one thing a router cannot argue with, while these two opens are copper there is nowhere to
 put.
+
+**Addendum, 08:25 CEST (19 September): board B's fine-pitch margin, asked for the first time since the resize,
+and it names four rectangles and their millimetres.** The experiment was blocked on 17 September, when
+`PLACE_FINE_MARGIN=2.6` overflowed NINE regions by up to 8.4 mm and owner ruling 13's resize was the answer.
+That resize has landed and `region_room` on B23 reads every region overflowing by **0.0 mm**, so the question
+is now one placement regeneration and no route. Two arms, ten minutes apart, one variable:
+
+| margin | region fit | predicted escape-fan collisions |
+|---|---|---:|
+| **2.0** (declared) | clean, hard 0 | **10** of 75 fine-pitch parts |
+| **2.6** | **BLOCKED**: `S1_SWIC` over by 1.7 mm, **`S2_SWIC` by 3.2**, `S2_SUP2` by 0.5, `S3_SWIC` by 1.7 | 11, and six parts went unplaced |
+
+**Nine regions at 8.4 mm became four at 3.2, so the resize did most of the work and the last three millimetres
+are not there.** And the two independent measurements name the same rectangles: three of the four that overflow
+are exactly the three per-slot switch and hub pockets that the room map reports with **0.0 mm of room in every
+direction** (`S1_SWIC` and `S2_SWIC` boxed on all four sides; `S3_SWIC` 1.0 mm west and 0.0 elsewhere). The
+margin arm and the room map are two readings of one fact: **those three pockets are board B's binding
+constraint, and the fans cannot have their room while the parts stay in them.**
+
+**So the floor-plan work has its numbers at last.** Four rectangles need between 0.5 and 3.2 mm; the room is 16
+to 38 mm away in four named neighbours (`WIFISW` 38.5 mm north, `IOCA` 19.0 north, `S1_RAILB` 19.0 west,
+`S2_RAILB` 16.0 east). It is a **move of parts between pockets and not a resize of rectangles**, it is the one
+lever board B has left that has never been tried, and it is the same conclusion the route reached from the
+other side: three route methods, none closing it, and a predictor that has not moved off ten collisions since
+B19.
