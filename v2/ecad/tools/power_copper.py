@@ -113,7 +113,7 @@ class PowerCopper:
             v = pcbnew.PCB_VIA(self.b); v.SetPosition(self.P(x, y)); v.SetDrill(FromMM(drill)); v.SetWidth(FromMM(width)); v.SetViaType(pcbnew.VIATYPE_THROUGH)
             v.SetNet(self.net_for(net, create=False)); v.SetLocked(True); self.b.Add(v)
         return self
-    def cluster(self, net, at, amps, drill=0.4, width=0.8, pitch=None, axis="x"):
+    def cluster(self, net, at, amps, drill=0.4, width=0.8, pitch=None, axis="x", skew=1.0):
         """The barrels one layer transition needs, placed for it (18 September 2026).
 
         `stitch(..., amps=)` refuses a transition that is short; this is the other half, for the case where the
@@ -125,8 +125,22 @@ class PowerCopper:
         Board A is why this exists: thirty-two sites over five rails, each a transition with one barrel where
         the mesh puts up to 3.4 A, and typing three coordinates apiece is how a table of ninety-six numbers gets
         one wrong. `pitch` defaults to the drill plus 0.4 mm, which keeps the 0.3 mm hole-to-hole floor of this
-        project's own rule at every drill it uses."""
-        n = self.barrels_for(amps, drill)
+        project's own rule at every drill it uses.
+
+        `skew` IS THE WORST BARREL'S SHARE DIVIDED BY AN EVEN ONE, and it defaults to 1.0, which is this
+        method as it was (19 September 2026). Board E taught why it has to exist: the two barrels this method
+        placed at CELL_F's fuse transition carry 1.198 A and 0.611 A on the solved mesh, so the site passes
+        1.809 A and shares it about two to one, and a count taken from the TOTAL leaves the near barrel over
+        its wall while the arithmetic says the pair is enough. With n barrels the worst one carries
+        `amps * skew / n`, so the count that keeps it under the wall is `barrels_for(amps * skew)`. A caller
+        passes a skew it has MEASURED on that site's own via currents, with the number in the board file
+        beside the call; it is a model (it assumes the skew holds as the count grows) and the next reading on
+        that site either confirms it or moves it. A skew under 1.0 is refused: the worst share cannot be
+        smaller than the even one, so a number below it is a mistake rather than a generous declaration."""
+        if float(skew) < 1.0:
+            raise ValueError("cluster(%s): skew %.3f is below 1.0, and the worst barrel's share cannot be "
+                             "smaller than an even one" % (net, float(skew)))
+        n = self.barrels_for(float(amps) * float(skew), drill)
         pitch = pitch if pitch is not None else (drill + 0.4)
         x, y = at
         span = (n - 1) * pitch

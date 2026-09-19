@@ -192,7 +192,9 @@ def t_a_cluster_places_the_barrels_the_current_needs_and_keeps_the_hole_to_hole_
     src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "power_copper.py"),
                encoding="utf-8").read()
     body = src[src.index("    def cluster("):src.index("    def rail_run(")]
-    assert "n = self.barrels_for(amps, drill)" in body, "the count does not come from the current"
+    # 19 September 2026: the count still comes from the current, now through the site's measured skew, which
+    # defaults to 1.0 and leaves every existing call exactly where it was.
+    assert "n = self.barrels_for(float(amps) * float(skew), drill)" in body, "the count does not come from the current"
     assert "(drill + 0.4)" in body, "the default pitch does not keep the hole-to-hole floor"
     assert "span / 2.0" in body, "the cluster is not centred on the site, so an existing barrel loses its place"
 
@@ -237,3 +239,40 @@ def t_a_reading_that_would_otherwise_pass_keeps_the_flag_while_a_rail_is_attribu
     assert vc.advisory_for(rows) is True, "an attributed rail no longer holds an otherwise passing reading back"
     assert vc.advisory_for([dict(net="CELL_F", measured=True, ok=True)]) is False, \
         "a board whose every rail is measured still reads advisory"
+
+
+def t_a_cluster_sized_on_a_measured_skew_places_the_barrel_an_even_split_would_miss():
+    """THE DEFECTIVE FIXTURE, and it is board E's own numbers (19 September 2026). `cluster` sized CELL_F's
+    fuse transition from the total and placed TWO barrels of 0.50 mm; the solved mesh then put 1.198 A through
+    one of them and 0.611 A through the other, so the site passes 1.809 A and shares it about two to one, and
+    the near barrel is over its 1.05 A wall while the arithmetic says the pair is enough. With n barrels the
+    worst carries amps * skew / n, so the count that keeps it under the wall is barrels_for(amps * skew).
+    The arithmetic is `via_current`'s, which is pure; `power_copper` imports pcbnew and cannot run here, so
+    the wiring is read from its source the way the sibling rule above reads it."""
+    import os
+    assert vc.barrels_for(1.809, 0.5) == 2, vc.barrels_for(1.809, 0.5)
+    assert vc.barrels_for(1.809 * 1.325, 0.5) == 3, vc.barrels_for(1.809 * 1.325, 0.5)
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "power_copper.py"),
+               encoding="utf-8").read()
+    body = src[src.index("    def cluster("):src.index("    def rail_run(")]
+    assert "float(amps) * float(skew)" in body, "the skew does not reach the count"
+
+
+def t_the_default_skew_is_an_even_split_so_no_existing_call_moves():
+    """THE ACCEPTABLE FIXTURE: a caller that has measured nothing gets exactly the count it got yesterday."""
+    import os, re
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "power_copper.py"),
+               encoding="utf-8").read()
+    m = re.search(r"def cluster\(self[^)]*\)", src)
+    assert m and "skew=1.0" in m.group(0), m.group(0) if m else "no cluster signature"
+    assert vc.barrels_for(1.091 * 1.0, 0.5) == vc.barrels_for(1.091, 0.5), "the default moved a count"
+
+
+def t_a_skew_below_an_even_split_is_refused():
+    """A skew is the WORST share over the even one and cannot be less than one; a number below it is a
+    mistake, and a generous mistake in this direction takes barrels off a rail."""
+    import os
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "power_copper.py"),
+               encoding="utf-8").read()
+    body = src[src.index("    def cluster("):src.index("    def rail_run(")]
+    assert "float(skew) < 1.0" in body and "raise ValueError" in body, "a skew below 1.0 is not refused"
