@@ -331,3 +331,25 @@ def t_a_cluster_that_fits_is_still_laid():
     pts, axis, note = rb.plan(r, OPEN)
     assert len(pts) == 1, (pts, note)
     assert math.hypot(pts[0][0] - 10.0, pts[0][1] - 10.0) <= 1.3 + 1e-9
+
+
+def t_the_fixer_names_the_sites_it_declined_in_its_verdict():
+    """A FIXER'S VERDICT CARRIES THE WORK IT COULD NOT DO (19 September 2026). This stage's whole reason for
+    printing a DECLINED line is that a site it cannot answer beside the pad is a floor-plan item somebody has
+    to decide; its verdict passed the BOARD PATH as evidence instead, which `verdict.write` then stored one
+    character at a time. The board is in `inputs` already. The evidence is the declined list, in the words
+    the stage prints."""
+    import os, re
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "rail_barrels.py"),
+               encoding="utf-8").read()
+    assert "def _declined_evidence(" in src, "the declined sites are not gathered for the verdict"
+    for m in re.finditer(r"_v\.write\(tool, res,(?:.|\n)*?rules=\[", src):
+        assert "evidence=_declined_evidence(declined)" in m.group(0), "the deciding verdict does not name what it declined"
+    assert "evidence=path," not in src, "a bare path is still passed as evidence"
+
+    # and the rows it builds are readable: net, part, pad, position, reason
+    ns = {}
+    exec(src[src.index("def _declined_evidence("):src.index("def main(argv):")], ns)
+    rows = ns["_declined_evidence"]([({"net": "/VIN_RAW", "ref": "L2", "pad": "2", "at": (-40.5, -92.72)},
+                                      "9 barrels of 0.25 mm is a busbar")])
+    assert rows == ["/VIN_RAW at L2 pad 2 (-40.50, -92.72): 9 barrels of 0.25 mm is a busbar"], rows

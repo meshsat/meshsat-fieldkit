@@ -11144,3 +11144,32 @@ on it are the SMBus and the FET gate drive, and the disturbance that matters is 
 the copper, which is why every entry below is a Kelvin connection rather than a clearance"), board D **PASS of
 6** and board E5 **PASS**, all three now standing on a reason a reader can find. **That is one rule-board pair
 closed by making a sentence visible, and the readiness number moved up for a change rather than down.**
+
+**Addendum, 11:55 CEST (19 September), A VERDICT'S EVIDENCE WAS SPELLING THE BOARD'S NAME OUT ONE LETTER AT A
+TIME.** Found while asking a narrow question, which of board E's two over-rated barrels is the generator's:
+`rail_barrels_e.verdict.json` on the E22 tree reads `{"sites": 2, "barrels": 2, "declined": 2, "short": 4}`
+with the note "2 declined as a placement item", and its **evidence is `p`, `c`, `b`, `-`, `e`, `1`, `-`, `d`,
+`o`, `c`, `k` ...**, the board's filename one character per row, truncated at fifty. **The two declined sites,
+which are the entire reason this stage prints a DECLINED line, appear nowhere in the reading.**
+
+**The cause is one expression and it is silent.** `verdict.write` stored `list(evidence or [])[:50]`, so a
+caller passing a bare string gets its characters, and the result LOOKS like a populated evidence list.
+`rail_barrels` passed `evidence=path` at five call sites; **a mechanical sweep of every `evidence=` in the
+tools says it is the only tool that ever passed a scalar**, and it is one written yesterday, so nothing older
+was affected. A second sweep over every committed verdict in this tree found **zero** carrying a spelled-out
+string: the defect lives only in the arm trees on the boxes and would have reached the repo with the next
+adoption.
+
+**Two fixes, because one of them is a floor and the other is the actual reading.** `verdict.write` wraps a
+bare string as ONE piece of evidence, which repairs every future caller whether or not anybody notices; and
+`rail_barrels` now passes **the declined sites**, in the words it prints (`/VIN_RAW at L2 pad 2 (-40.50,
+-92.72): ...`), with the board left where it already was, in `inputs`. Two fixtures, both proved to fail on
+the tools as they stood, the verdict one failing with the character list in its own message.
+
+**And the narrow question got its answer on the way**: board E's over-rated `VIN_RAW` barrel at (109.50,
+202.72) is **locked, 0.450/0.250 mm**, so it is not the router's and not one of the generator's ten source
+barrels at 0.5 mm; it is the FANOUT's via at the board's own minimum, carrying 0.658 A against the 0.652 A a
+0.25 mm wall holds, a ratio of 1.01. That is a third kind of site: not a cluster the generator sized, not a
+via the router chose, but the fanout laying one minimum via on a pad whose rail carries current. The fanout
+has reported the count a declared rail's crossing needs since 18 September and does not lay it, which is the
+gap this site falls into.

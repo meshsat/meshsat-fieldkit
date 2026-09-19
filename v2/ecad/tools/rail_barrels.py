@@ -160,6 +160,18 @@ def plan(row, free, max_barrels=MAX_BARRELS):
     return pts, axis, note
 
 
+def _declined_evidence(declined):
+    """The sites this stage could not answer, in the verdict, because that is what a reader needs from it.
+
+    19 September 2026: every deciding call here passed `evidence=path`, a bare string, and `verdict.write`
+    turned it into a list of single characters truncated at fifty. Board E's reading therefore recorded
+    `p`, `c`, `b`, `-`, `e`, `1` ... where its own note says "2 declined as a placement item", and the two
+    sites were nowhere. The board belongs in `inputs`, which already carries it; the evidence is the work
+    list, in the same words the stage prints."""
+    return ["%s at %s pad %s (%.2f, %.2f): %s" % (r["net"], r["ref"], r["pad"], r["at"][0], r["at"][1], note)
+            for r, note in declined][:20]
+
+
 def main(argv):
     if not argv: print(__doc__); return 2
     import pcbnew
@@ -181,7 +193,7 @@ def main(argv):
 
     if not os.path.exists(ip):
         print("rail_barrels: no intent file at %s, so no rail declares a current here" % ip)
-        _v.write(tool, "INCONCLUSIVE", {}, 0, evidence=ip, missing_input="the board's intent file",
+        _v.write(tool, "INCONCLUSIVE", {}, 0, evidence=[ip], missing_input="the board's intent file",
                  note="no rail declares a current here", out_dir=out_dir, rules=["PI-003"])
         return 3
 
@@ -201,7 +213,7 @@ def main(argv):
         # difference between the two halves of PI-003's fix.
         print("rail_barrels: this board is ROUTED; the barrels of a routed board are via_parallel.py's, "
               "which checks every candidate against the copper that is there and proves each link")
-        _v.write(tool, "INCONCLUSIVE", {}, 0, evidence=path, missing_input="an unrouted board",
+        _v.write(tool, "INCONCLUSIVE", {}, 0, evidence=[path], missing_input="an unrouted board",
                  note="a routed board's barrels are via_parallel.py's, not this tool's",
                  out_dir=out_dir, rules=["PI-003"])
         return 3
@@ -210,7 +222,7 @@ def main(argv):
     if not rows:
         print("rail_barrels: %d crossing(s) of %d declared rail(s) carry the barrels their current needs, "
               "nothing to lay" % (judged, len(rails)))
-        _v.write(tool, "PASS", {"short": 0, "judged": judged}, judged, evidence=path,
+        _v.write(tool, "PASS", {"short": 0, "judged": judged}, judged, evidence=[path],
                  inputs=_inputs, advisory=True,
                  note="every declared rail's own crossing already carries the barrels "
                  "its current needs", out_dir=out_dir, rules=["PI-003"])
@@ -245,7 +257,7 @@ def main(argv):
               % (len(plans), len(declined)))
         _v.write(tool, "FAIL" if rows else "PASS",
                  {"short": len(rows), "planned": len(plans), "declined": len(declined), "judged": judged},
-                 judged, evidence=path, inputs=_inputs, advisory=True,
+                 judged, evidence=_declined_evidence(declined), inputs=_inputs, advisory=True,
                  note="a dry run: %d crossing(s) short, %d answerable beside the pad, %d a placement item"
                       % (len(rows), len(plans), len(declined)), out_dir=out_dir, rules=["PI-003"])
         return 0
@@ -326,7 +338,7 @@ def main(argv):
     _v.write(tool, res,
              {"sites": len(laid), "barrels": sum(len(p) for _, p in laid), "declined": len(declined),
               "refused": len(plans) - len(laid), "short": len(rows), "judged": judged},
-             judged, evidence=path, inputs=_inputs, advisory=True,
+             judged, evidence=_declined_evidence(declined), inputs=_inputs, advisory=True,
              note="%d of %d short crossing(s) answered beside the pad; %d declined as a placement item"
                   % (len(laid), len(rows), len(declined)), out_dir=out_dir, rules=["PI-003"])
     return 0 if laid or not plans else 1
