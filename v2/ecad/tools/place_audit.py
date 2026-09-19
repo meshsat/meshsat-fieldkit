@@ -67,8 +67,8 @@ def overlap(a, b): return max(0.0, min(a[2], b[2]) - max(a[0], b[0])), max(0.0, 
 
 def main(a):
     if not a: print(__doc__); return 2
-    near = float(a[a.index("--near") + 1]) if "--near" in a else NEAR; reach = float(a[a.index("--reach") + 1]) if "--reach" in a else REACH
-    skip = set(a[a.index("--skip") + 1].split(",")) if "--skip" in a else set(os.environ.get("ESCAPE_SKIP", "").split(",")) - {""}
+    near = float(verdict.opt(a, "--near", NEAR)); reach = float(verdict.opt(a, "--reach", REACH))
+    skip = (set(str(verdict.opt(a, "--skip", "")).split(",")) - {""}) if "--skip" in a else set(os.environ.get("ESCAPE_SKIP", "").split(",")) - {""}
     b = pcbnew.LoadBoard(a[0]); lines = []; coll = 0
     fps = list(b.GetFootprints()); fine = [f for f in fps if fine_pitch(f)]
     locked = [t for t in b.GetTracks() if t.IsLocked()]
@@ -313,7 +313,8 @@ def main(a):
                 bad = any(l.startswith("FAIL") and (" %s " % r in l or " %s:" % r in l or "%s." % r in l or " %s," % r in l) for l in lines)
                 ax.add_patch(Rectangle((x0, y0), x1 - x0, y1 - y0, fill=False, color="red" if bad else "green", lw=0.8)); ax.text(x0, y0, r, fontsize=5, color="red" if bad else "green")
             ax.set_xlim(ex0 - 5, ex1 + 5); ax.set_ylim(ey1 + 5, ey0 - 5); ax.set_aspect("equal"); ax.set_title("place_audit: %s, %d predicted collisions (red)" % (os.path.basename(a[0]), coll))
-            fig.savefig(a[a.index("--png") + 1], dpi=130); print("place_audit: image", a[a.index("--png") + 1])
+            _png = str(verdict.opt(a, "--png", "place_audit.png"))
+            fig.savefig(_png, dpi=130); print("place_audit: image", _png)
         except ImportError: print("place_audit: no matplotlib, no image")
     # The denominator is the fine-pitch parts the predictor could measure: a board where escape.py placed nothing
     # has zero of them, and "0 predicted collisions" there is the absence of a prediction, not a good placement.
