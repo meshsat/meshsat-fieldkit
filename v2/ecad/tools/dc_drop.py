@@ -76,16 +76,16 @@ def main(a):
     import pcbnew, numpy as np, intent
     import verdict as _v
     from impedance_check import read_stackup
-    cell = float(verdict.opt(a, "--cell", 0.5))
+    cell = float(_v.opt(a, "--cell", 0.5))
     png = _v.opt(a, "--png", None)
-    budget = float(verdict.opt(a, "--budget", 0.02))
+    budget = float(_v.opt(a, "--budget", 0.02))
     b = pcbnew.LoadBoard(a[0]); it = intent.load(a[0])
     if not it:
         print("dc_drop: FAIL no intent file for this board (out/<stem>-intent.json; the schematic generator writes it)")
         return _v.write("dc_drop", _v.INCONCLUSIVE, denominator=0, inputs={"board": a[0]},
                         note="no intent file for this board, so no rail budget was known")
     rails = it["rails"]
-    if "--rails" in a: rails = {k: v for k, v in rails.items() if k in str(verdict.opt(a, "--rails", "")).split(",")}
+    if "--rails" in a: rails = {k: v for k, v in rails.items() if k in str(_v.opt(a, "--rails", "")).split(",")}
     stack = read_stackup(a[0]) or []; thick = {n: th for n, k, th, er in stack if k == "copper"}
     cu_layers = list(b.GetEnabledLayers().CuStack())   # KiCad 9 layer ids are not consecutive; the board's copper stack in order
     lname = {L: b.GetLayerName(L) for L in cu_layers}
@@ -493,7 +493,7 @@ def main(a):
         # 2.5 A per 0.4 mm hole is more than twice that; E7's source pad had one. P3 now has eighteen 0.5 mm
         # barrels at the crossing and E7's pad has ten.
         dens_ok = cond_ratio <= 1.0 and zone_ratio <= ZONE_TOL
-        verdict = "MET" if (drop_ok and dens_ok) else "MISSED"
+        rail_verdict = "MET" if (drop_ok and dens_ok) else "MISSED"
         bad = ([] if drop_ok else ["the drop"]) + ([] if cond_ratio <= 1.0 else ["a track"]) + ([] if zone_ratio <= ZONE_TOL else ["a pour"])
         # WHICH criterion missed travels with the rail. Two rules read this tool: PI-002 is the voltage drop and
         # PI-001 is the conductor's current capacity, and they have different authorities and different
@@ -501,7 +501,7 @@ def main(a):
         # failure and is a density one; a reader cannot act on that, and the rule with no verified source was
         # failing a board through the rule that has one.
         missed_on = {"drop": not drop_ok, "density": not dens_ok}
-        why = "" if verdict == "MET" else " [MISSED on %s]" % " and ".join(bad)
+        why = "" if rail_verdict == "MET" else " [MISSED on %s]" % " and ".join(bad)
         if cond:
             cr, cw, ca, cl, cL, cx, cy, cln = cond[0]
             cond_txt = ("worst CONDUCTOR %.3f mm wide on %s at (%.1f, %.1f), %.1f mm long: %.2f A against IPC's %.2f A "
@@ -557,13 +557,13 @@ def main(a):
                             vzone_at[4][1] if vzone_at[4] else 0.0, vzone_at[3], _vl, (vzone_at[3] / _vl) if _vl else 0.0))
         zone_txt += ("; GATED on the worst pour cell clear of every via, %.1f A/mm2 at %s (%.1f, %.1f), ratio %.2f"
                      % (czone_j, czone_at[0], czone_at[1], czone_at[2], czone_j / jl)) if czone_at else "; no pour cell of this net is clear of a via, so the pour is not gated"
-        if verdict != "MET": miss += 1
+        if rail_verdict != "MET": miss += 1
         _MISSED_ON[net] = missed_on
         # THE BAR IS PRINTED AS IT IS JUDGED (16 September 2026). "%.0f" rounded board A's 1.5 percent share to
         # "budget 2%", which reads as the whole rail's budget and hides the very split the share exists to make;
         # board C's 0.75 would have printed as 1. The value is right and was always right; the line about it was
         # not, and a line nobody can check against the number it claims is how a wrong bar survives.
-        results.append((net, verdict, "raster %s; %.1f A over %d nodes: worst drop %.0f mV (%.2f%% of %.1f V, bar %.3g%%); %s; %s; %s%s; layer share %s"
+        results.append((net, rail_verdict, "raster %s; %.1f A over %d nodes: worst drop %.0f mV (%.2f%% of %.1f V, bar %.3g%%); %s; %s; %s%s; layer share %s"
                         % ("; ".join(raster_note[:4]) or "-", amps, N, drop * 1e3, pct * 100, r["volts"], rb * 100, cond_txt, zone_txt, via_txt, why, share),
                         drop, pct, max(cond_ratio, zone_ratio), share))
         if png:
@@ -571,7 +571,7 @@ def main(a):
             if cond: marks.append(("worst conductor %.2f A in %.3f mm on %s (ratio %.2f)" % (cond[0][2], cond[0][1], cond[0][4], cond[0][0]), cond[0][4], cond[0][5], cond[0][6], "o"))
             if czone_at: marks.append(("worst pour cell clear of a via %.0f A/mm2 (ratio %.2f)" % (czone_j, czone_j / jl), czone_at[0], czone_at[1], czone_at[2], "s"))
             if via_worst: marks.append(("worst via %.2f A of %.2f (ratio %.2f)" % (via_worst[1], via_worst[2], via_worst[0]), None, via_worst[5], via_worst[6], "^"))
-            _draw(png, net, jmap, occ, lname, cu_layers, x0, y0, cell, nx, ny, jl, marks, amps, verdict)
+            _draw(png, net, jmap, occ, lname, cu_layers, x0, y0, cell, nx, ny, jl, marks, amps, rail_verdict)
     if not results:
         print("dc_drop: FAIL no rail to check (the intent file lists none)")
         return _v.write("dc_drop", _v.INCONCLUSIVE, denominator=0, inputs={"board": a[0]},
@@ -583,7 +583,7 @@ def main(a):
           % (len(results) - miss, len(results), cell, budget * 100,
              ("; %d rail(s) NOT JUDGED (a declared load is missing, or the measure returned an impossible current): %s" % (len(undecl), ", ".join(undecl)) if undecl else "")
 ))
-    if "--json" in a: json.dump([dict(net=r[0], verdict=r[1], text=r[2], drop_v=r[3], pct=r[4], j_max=r[5], share=r[6]) for r in results], open(str(verdict.opt(a, "--json", "dc_drop.json")), "w"), indent=1)
+    if "--json" in a: json.dump([dict(net=r[0], verdict=r[1], text=r[2], drop_v=r[3], pct=r[4], j_max=r[5], share=r[6]) for r in results], open(str(_v.opt(a, "--json", "dc_drop.json")), "w"), indent=1)
     # A rail nobody declared a load for is INCONCLUSIVE, never FAIL: the board is not refused for a property of
     # the board, it is refused for a property of the intent file, and the two have different remedies.
     # TWO CRITERIA, TWO VERDICTS. The voltage drop and the conductor's current capacity are different questions
