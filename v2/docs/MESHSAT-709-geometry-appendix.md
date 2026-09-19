@@ -11645,3 +11645,25 @@ pockets: what a router cannot be argued into, the floor plan decides.
 **E17 stays board E's phase** (0 open against 8). What board E has gained is that the rule is answerable here,
 what it costs, and which six connections pay for it. The next E arm gives U5's gate-drive cluster more room,
 or asks for the keep-away locally, around the sense pair, rather than on every switching net the board has.
+
+**Addendum, 16:50 CEST (19 September), A REGRESSION OF MINE, CAUGHT TWELVE MINUTES INTO THE ARM IT WOULD HAVE
+RUINED: TAB IS IFS WHITESPACE.** This afternoon's per-group label change emitted the pre-lay group's fields
+TAB separated, and **bash collapses a run of IFS whitespace**, so a group with no `clearance` emitted two tabs
+in a row, `read` swallowed the empty field, and every field after it shifted left. Board A's RF and switching
+groups took their own TAG as their clearance (`STUB_NET_CLEAR=2-FE_SW2`), lost the tag, and **the switching
+group laid NOTHING and returned in 21 seconds against A49's 577.** Board E's groups were unaffected because
+its third group carries a clearance and its first two were read before the change; A49 and E23 were both
+staged before it.
+
+**A50 was twelve minutes into its route on that chain and has been stopped and relaunched.** Its supervisor
+and its own orphaned router were killed by PID with A49's left untouched and verified alive after each step,
+its routeflow lock cleared, its three landing drivers re-armed on the new supervisor, and the stale
+`LAND-arf50-DONE` the first lander wrote moved aside so the second reading and the naming driver do not fire
+on it. **An arm staged before the fix it exists to test measures nothing and its number still looks like a
+result**, which is D16's lesson word for word and the reason for stopping it rather than letting it run.
+
+The delimiter is a pipe now, which a net name cannot contain and which is not IFS whitespace, so an empty
+field stays an empty field. **The rule runs the real emitter over the real board file and reads the fields
+back through a real `read`**, because that is exactly where the defect lived: the python emitted six correct
+fields and the shell read six fields, and both halves were right on their own. It fails on the pre-fix file
+naming the shifted line. A50's launcher refuses to start against a chain that still splits on tabs.
