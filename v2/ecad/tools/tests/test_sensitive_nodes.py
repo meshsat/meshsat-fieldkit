@@ -162,4 +162,40 @@ def t_the_missing_input_is_named_in_the_verdict_and_not_only_in_a_note():
     i = src.index("_no_switch = ")
     j = src.index('_v.write("sensitive_nodes"', i)
     assert "missing_input" in src[i:j] or "_missing" in src[i:j], "the empty switch list is not a declared missing input"
-    assert "_no_copper or _no_switch" in src, "the empty switch list does not reach the verdict"
+    # 19 September 2026: the condition was `_no_copper or _no_switch` and is now `_missing`, which is the same
+    # rule over every reason a reading can be short of its input, including the two added today (a key no
+    # reader asks for, and an empty node list with no reason). The property under test is unchanged: whatever
+    # the gate declares as missing must be what turns a PASS into INCONCLUSIVE.
+    assert "elif _no_switch:" in src, "the empty switch list no longer sets the missing input"
+    assert "_v.INCONCLUSIVE if (_missing and res == _v.PASS)" in src, "the missing input does not decide the verdict"
+
+
+def t_a_key_no_reader_asks_for_is_refused_before_the_entry_is_believed():
+    """THE DEFECTIVE FIXTURE (19 September 2026, found in the tree and not invented). Three boards declared
+    the reason for an empty switch list as `_switch_why` while every reader asks for `switch_nets_why`, and
+    board E5 wrote `_nodes_why`. The reasons were written, reviewed and INVISIBLE: board P read INCONCLUSIVE
+    for want of a sentence that was in the file, and board D read PASS of six declared nodes with none
+    measured. A declaration nothing reads is not a declaration, and the key that is misspelt may be the one
+    that would have failed the board, so the entry is refused before any of it is believed."""
+    body = GOOD.replace('   switch_nets: ["*_SW"]',
+                        '   switch_nets: []\n   _switch_why: "no converter here"')
+    r = S.judge(None, "x", _sheet(body))
+    assert r.get("unknown_keys") == ["_switch_why"], r
+    assert any("no reader asks for" in n for n in r["notes"]), r["notes"]
+    # and the same sentence under the name a reader asks for is read
+    ok = GOOD.replace('   switch_nets: ["*_SW"]',
+                      '   switch_nets: []\n   switch_nets_why: "no converter here"')
+    r2 = S.judge(None, "x", _sheet(ok))
+    assert not r2.get("unknown_keys"), r2
+    assert any("no switching net, declared:" in n for n in r2["notes"]), r2["notes"]
+
+
+def t_an_empty_node_list_needs_its_reason_like_every_other_declared_zero():
+    """The same law one level up. Board E5 declares no analogue node of its own, which is true and is a
+    declared zero, and it read PASS of 0 whether or not anybody had said why."""
+    import re as _re
+    body = _re.sub(r"(?ms)^   nodes:\n(?:    .*\n|\n)*", "   nodes: []\n", GOOD)
+    r = S.judge(None, "x", _sheet(body))
+    assert r.get("no_nodes_undeclared") is True, r
+    r2 = S.judge(None, "x", _sheet(body.replace("   nodes: []", '   nodes: []\n   nodes_why: "this board carries no analogue node of its own"')))
+    assert not r2.get("no_nodes_undeclared"), r2

@@ -116,6 +116,16 @@ def _courtyard_box(fp):
     return (min(xs), min(ys), max(xs), max(ys))
 
 
+# THE KEYS THIS FILE MAY CARRY, and the rule that an unknown one is an ERROR (19 September 2026). Three
+# boards declared the reason for an empty switch list as `_switch_why` while every reader asks for
+# `switch_nets_why`, and board E5 declared the reason for an empty NODE list as `_nodes_why`: the reasons were
+# written, reviewed and invisible, so board P read INCONCLUSIVE for want of a sentence that was in the file and
+# board D read PASS of six declared nodes with none measured. A declaration nothing reads is not a
+# declaration, and the cheapest way to stop the next one is to refuse a key no reader asks for.
+# `kelvin` is here because `kelvin_check.py` reads it; nothing else in this project reads this file.
+KEYS = ("nodes", "nodes_why", "switch_nets", "switch_nets_why", "kelvin")
+
+
 def judge(board_path=None, letter=None, sens=None):
     import yaml
     doc = yaml.safe_load(open(sens or SENS, encoding="utf-8"))
@@ -123,8 +133,20 @@ def judge(board_path=None, letter=None, sens=None):
     if b is None:
         return dict(declared=0, fails=[], notes=["board %s declares no sensitive node list" % (letter or "?").upper()],
                     measured=[], applicable=False)
+    unknown = [k for k in b if k not in KEYS]
+    if unknown:
+        return dict(declared=0, fails=[], applicable=True, measured=[], unknown_keys=unknown,
+                    notes=["board %s's entry carries %s, which no reader asks for: a declaration nothing "
+                           "reads is not a declaration (allowed: %s)"
+                           % ((letter or "?").upper(), ", ".join(sorted(unknown)), ", ".join(KEYS))])
     nodes = b.get("nodes") or []
     fails, notes, measured = [], [], []
+    # AN EMPTY NODE LIST IS THE SAME QUESTION AS AN EMPTY SWITCH LIST. Board E5 declares no analogue node of
+    # its own, which is true and is a declared zero; it read PASS of 0 whether or not anybody had said why.
+    if not nodes and not str(b.get("nodes_why") or "").strip():
+        return dict(declared=0, fails=[], applicable=True, measured=[], no_nodes_undeclared=True,
+                    notes=["board %s declares an EMPTY node list and no reason beside it: an undeclared zero "
+                           "is not a pass" % (letter or "?").upper()])
     by_net = {str(n.get("net")): n for n in nodes}
     for n in nodes:
         if not str(n.get("filter", "")).strip():
@@ -301,13 +323,21 @@ def main(argv):
     _no_copper = any("only the netlist half" in n or "no board file" in n for n in r["notes"])
     _no_switch = bool(r.get("no_switch_undeclared"))
     _missing = None
-    if _no_copper:
+    if r.get("unknown_keys"):
+        # A DECLARATION NOTHING READS IS NOT A DECLARATION (19 September 2026): the entry is refused before any
+        # of it is believed, because the key that is misspelt may be the one that would have failed the board.
+        _missing = ("a readable declaration: this board's entry carries %s, which no reader asks for"
+                    % ", ".join(sorted(r["unknown_keys"])))
+    elif r.get("no_nodes_undeclared"):
+        _missing = ("a reason for the empty node list: a board with no analogue node of its own says so in "
+                    "`nodes_why`, and an undeclared zero is not a pass")
+    elif _no_copper:
         _missing = "the copper: %s" % [n for n in r["notes"] if "netlist half" in n or "no board file" in n][0]
     elif _no_switch:
         _missing = ("the switching copper to measure against: this board declares %d sensitive node(s) and an "
                     "EMPTY switch_nets with no switch_nets_why beside it" % r["declared"])
     return _v.write("sensitive_nodes",
-                    _v.INCONCLUSIVE if ((_no_copper or _no_switch) and res == _v.PASS) else res, rules=["ANA-001"],
+                    _v.INCONCLUSIVE if (_missing and res == _v.PASS) else res, rules=["ANA-001"],
                     missing_input=_missing,
                     counts={"declared": r["declared"], "measured": len(r["measured"]), "fail": len(r["fails"])},
                     denominator=max(1, r["declared"]), evidence=r["fails"][:20],
