@@ -299,12 +299,20 @@ RB="$(python3 -c "import json,sys; d=json.load(open(sys.argv[1])).get('rail_barr
 # PASS overwrote, and its own `out/<N>-prelay-group.log` went with it. The stage that carries board A's RF
 # drops and board E's whole ANA-001 answer was reporting one of its three measurements. The group's index and
 # the first net it names make the label, so the verdict says which group it is about.
+# AND A GROUP MAY ASK FOR THE POURS AND FOR THE LANDING'S REACH (19 September 2026). Both are per BOARD and
+# the two boards that have measured them want opposite answers. `pour_obstacle`: board D had 5,140 free cells
+# of 834,561 with the pours in the map and laid nothing, which is why the default is 0; board A has 5.7
+# MILLION free cells with them in, and with them out its closures run through a pour, cut it, and raise the
+# board-wide unconnected count from 549 to 575, which the acceptance refuses and should. `land_reach`: the
+# search ends at a goal cell and the landing lays a short segment from each end to the net's own copper, and
+# board A's ends are 0.153 to 4.409 mm from theirs against a reach that had been a silent 1.2 mm.
 python3 -c "
 import json,re,sys
 for i, g in enumerate(json.load(open(sys.argv[1])).get('prelay_groups') or [], 1):
     tag = re.sub(r'[^A-Za-z0-9_]', '_', (g['nets'].split(',')[0] or '').lstrip('/'))[:24]
-    print('%s\t%s\t%s\t%d-%s' % (g['nets'], g.get('layers',''), g.get('clearance',''), i, tag))" "$CFG" 2>/dev/null |
-while IFS=$'\t' read -r GNETS GLAYERS GCLR GTAG; do
+    print('%s\t%s\t%s\t%d-%s\t%s\t%s' % (g['nets'], g.get('layers',''), g.get('clearance',''), i, tag,
+                                           g.get('pour_obstacle',''), g.get('land_reach','')))" "$CFG" 2>/dev/null |
+while IFS=$'\t' read -r GNETS GLAYERS GCLR GTAG GPOUR GREACH; do
   [ -n "$GNETS" ] || continue
   T=../tools; . ../tools/guarded.sh
   gstage () {
@@ -313,13 +321,14 @@ while IFS=$'\t' read -r GNETS GLAYERS GCLR GTAG; do
     # before anything judges the board, and KiCad's fill retreats around a locked track the way it does around
     # the router's own. With them in the map board D's pre-lay had 5,140 free cells of 834,561 and laid nothing,
     # which is what boards C, D and E have all read. The finish keeps them (STUB_POUR_OBSTACLE defaults to 1).
-    env STUB_POUR_OBSTACLE="${PRELAY_POUR_OBSTACLE:-0}" STUB_LOCK="${PRELAY_LOCK:-1}" STUB_NET_CLEAR="${GCLR:-0}" \
+    env STUB_POUR_OBSTACLE="${GPOUR:-${PRELAY_POUR_OBSTACLE:-0}}" STUB_LOCK="${PRELAY_LOCK:-1}" \
+        STUB_NET_CLEAR="${GCLR:-0}" STUB_LAND_REACH="${GREACH:-${PRELAY_LAND_REACH:-1.2}}" \
         STUB_NETS="$GNETS" STUB_LAYERS="$GLAYERS" STUB_GRID="${PRELAY_GRID:-0.1}" STUB_WIN_SCALE="${PRELAY_WIN:-25}" \
         STUB_MAXN="${PRELAY_MAXN:-200000000}" timeout "${PRELAY_TIMEOUT_S:-3600}" nice -n 10 \
         python3 -u ../tools/stub_router.py $N.kicad_pcb out/$N-prelay-in.json > out/$N-prelay-group-$GTAG.log 2>&1
     grep -aE "stub_router:|closed |FAILED|NOT CLOSED" out/$N-prelay-group-$GTAG.log | tail -6
   }
-  echo "prelay group $GTAG: $GNETS on ${GLAYERS:-every layer}"
+  echo "prelay group $GTAG: $GNETS on ${GLAYERS:-every layer}, pours as obstacles ${GPOUR:-${PRELAY_POUR_OBSTACLE:-0}}, landing reach ${GREACH:-${PRELAY_LAND_REACH:-1.2}} mm"
   GUARD_MODE=pre guarded "prelay-group-$GTAG" gstage
 done
 PRELAY="$(cfg prelay_nets)"

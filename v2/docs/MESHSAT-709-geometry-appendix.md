@@ -11476,3 +11476,31 @@ defect must not be counted twice under two authorities.** The item is reported a
 now and kept out of the gate's failures, in board A's gate and board B's; nothing is lost by it, because one
 leg routed and one not implies at least one unmade connection and the routed-board gate refuses any board
 with a non-zero unrouted count.
+
+**Addendum, 15:00 CEST (19 September), CORRECTION TO THE ADDENDUM ABOVE, WITHIN THE HOUR AND BEFORE IT WAS
+ACTED ON: THE 0.000 mm WAS AN ARTEFACT AND THE PATH ENDS ARE UP TO 4.4 mm SHORT.** The entry at 14:45 read the
+refusal's own printed numbers, *"start 0.000 mm and end 0.000 mm from this net's nearest copper"*, and
+concluded that board A's twenty closures touch their own copper at both ends and KiCad simply will not join
+them. **That number is measured AFTER the pieces are taken back off, and it is not the distance it reads as.**
+Measured BEFORE the emit, against the copper that was already there, the same twenty ends are **0.153, 0.221,
+0.230, 0.249, 0.504, 0.505, 0.510, 0.564, 0.724, 2.209 and 4.409 mm** from any copper of their own net. So the
+search is ending at a GOAL CELL, which is the target cluster's copper grown by the margin, and not on the net.
+**This is the 8 September lesson about a debug print that does not share the predicate it explains, and I
+repeated it by trusting the printed number for an hour.**
+
+**What survives the correction, and it is most of it.** The board-wide unconnected count is still not a test of
+one closure on a net of twenty-odd islands: board A's switching nets read `other-cluster items` 12 of 21, 17
+of 22 and 22 of 23, and the refusals sit at `unconnected 549 before and 549 after`. What changes is what
+establishes that a closure reached the net. It is not a printed distance; it is **the LANDING**, the step that
+lays one short segment from each path end to the nearest point of that net's copper, **and its reach had been
+a silent 1.2 mm since the day it was written**, which is less than half of board A's worst end. So
+`keep_closure(u_before, u_after, both_ends_on_copper)` takes the fact the landing can establish, the landing
+counts how many of the two ends it put on copper, and `LAND_REACH_MM` is a knob (`STUB_LAND_REACH`) that keeps
+1.2 mm as its default so nothing that worked changes.
+
+**And the second measurement the correction forces:** with the pours free, which is the pre-lay's own default
+since 18 September, laying copper through a pour cuts it and the board-wide count RISES (549 to 554, 559, 566,
+569, 575), which the acceptance refuses and should. With the pours as obstacles the count stays flat at 549.
+So board A's pre-lay wants the pours as obstacles where board D's wanted them free, and that is a per-board
+knob the groups do not carry yet. Two arms are measuring it now with one variable between them, the corrected
+acceptance in both and the landing reach at 5.0 mm.
