@@ -11266,3 +11266,23 @@ not about the router.
 when the supervisor ends, so round 1's finished board was copied to a scratch directory on the box and read
 there. Nothing in the running tree was touched, the board's own sha is in the record, and the arm's answer was
 in hand before its second round had finished generating.
+
+**Addendum, 13:25 CEST (19 September), TWO LESSONS OF METHOD FROM THE MORNING'S CORRECTIONS.** Both were
+caught within the hour by a measurement and both would otherwise have stood in the record for a day.
+
+**A claim about what a board CARRIES is read from the board, never from the declaration that was supposed to
+put it there.** This record said board E's PI-003 was answered because E19's generator placed the barrels and
+its PLACED gate passed; `via_current` on the routed board still read two barrels over their wall, one at a
+ratio of 1.14. It said A48 could never answer RF-001 because the pre-lay list in its tree's board file lacks
+the RF group; the eleven drops are the GENERATOR's locked runs and the landing read eleven judged and none
+missed. A generator that intends something, and a gate that passes the placement, are evidence about the
+INTENT. The board is the evidence about the board.
+
+**A finished round can be read while the next one routes, and that was worth two and a half hours today.**
+routeflow keeps `out/routeflow/<run>/finished-round<N>.kicad_pcb` and the lander only judges when the
+supervisor ends, so a remedy round hides an answer that is already on disk. E22's round 1 board was copied
+with its project file into a scratch directory on the box, DRC'd and read there: **hard 0, two open,
+`/SHORE_INHIBIT` closed, ANA-001 failing on a third switching net** was in hand before round 2 had finished
+generating, and the running tree was never touched. The copy is renamed to the project's own stem because
+`drc.sh` refuses a board whose `.kicad_pro` is not beside it under that name, and the board's sha goes into
+the record so the reading can be traced to the artefact.
