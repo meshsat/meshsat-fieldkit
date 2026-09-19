@@ -12255,3 +12255,39 @@ Kelvin errors, both datasheet items and part of PI-003's barrel list at R16 and 
 becomes the converter's own topology, input shunt, buck pair, inductor, boost pair, output shunt, with each
 bus's capacitors beside the pair they serve. It is A51's first item, and **it is a floor-plan change rather
 than copper, which is why no copper was written for it tonight.**
+
+**Addendum, 01:15 CEST (20 September), THE CHEAP HALF OF THE CHARGER BLOCK WAS TRIED AND THE GENERATOR
+REFUSED IT, AND AN EMPTY RF READING LEARNT TO SAY WHICH OF ITS TWO CAUSES IT IS (commits 62b4c4f7, c84ee13b,
+42adf09b; readiness 63.4 percent of 333 unchanged; suite 1172, 0 failing).**
+
+**(1) The block's row is packed BY SIZE**, which is why the two 2512 shunts and the four PowerPAK FETs landed
+where they did, so exchanging the two shunts' seats looked like one variable with nothing else moving: R16
+from 35.0 mm to about 0.1 from Q7, R17 from 26.3 to about 8.6 from Q10. It was written and the generator
+**refused the board**: `power copper: the rectangles of VBUS20 under do not form one piece (2 outlines)`.
+The reason is worth more than the change: **VBUS20's In3 union is DERIVED from the placement**, its bar from
+the pads of R11, C13, C14 and C15 and its leg from R16's own x, so moving R16 thirty-five millimetres west
+leaves the leg beyond the bar's west edge. The guard added on 15 September for a different reason caught it
+in forty seconds. **So the reorder is a PLACEMENT AND A COPPER change together** (the row in the converter's
+own order, VBUS20's bar and leg redrawn, and L2 and U3 moving with it because item 6 wants the FETs beside
+the inductor and Q7 and Q8 are 33 mm from L2). It was reverted rather than iterated blind, because each
+attempt is a regeneration and the neighbourhood is not visible from here, and **a floor plan half-moved is
+worse than one not moved**. The finding is written at the CHQ region's own line in `gen_pcb_a3.py` so
+whoever makes the change reads it where the change is made.
+
+**(2) `rf_line` could not tell two different things apart and told board B the wrong one.** With no net
+carrying a single-ended target it wrote one sentence, "no single-ended controlled line was found to judge,
+and this board does not declare that it has none". **Board B DECLARES `rf_transmit: true`** and its four
+antenna nets are still in the USB class, the RF class reaching them at B23, so a reader was told a
+declaration was missing when the finding is that the class assignment is. Three cases with their own
+sentences now: no transmitter declared and nothing judged is a declared zero and passes; a transmitter
+declared and nothing judged is a contradiction that names where this set has found the fault; neither
+declared is the only case where the missing thing really is a declaration. Board B's RF-001 was re-taken on
+its own committed board where KiCad is, sha `2e64b5bf2d9cd3bc` identical before and after, verdict
+INCONCLUSIVE as before, and **the open-pairs register now points at the net classes**.
+
+**(3) And the self-match trap has a third shape, met twice in one night.** A `pgrep` used as an
+already-running GUARD on the same command line as the file it guards always answers "running" and launches
+nothing, silently: it refused to replace a crashing `dc_drop.py` ("REFUSING: dc_drop is running", with none
+running) and left a landing reader unarmed. The bracket protects the pattern from itself and not from the
+path later on the line. **A guard that can match its own command line reports the opposite of the truth and
+says nothing about it.**
