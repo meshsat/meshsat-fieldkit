@@ -11618,3 +11618,30 @@ closure that was found and thrown away.** The difference is the shape of the net
 named: board A's switching nets carry 21 to 23 items in as many clusters, board E's and board D's carry a
 handful. **So the defect is board A's, the fix is worth a third of board A's opens and nothing anywhere else,
 and that is now measured in both directions rather than assumed in one.**
+
+**Addendum, 16:45 CEST (19 September), E23 ANSWERS THE QUESTION: ANA-001 IS CLOSABLE BY CONSTRUCTION ON BOARD
+E, AND THE PRICE IS SIX CONNECTIONS IN THE TRACKER'S OWN GATE DRIVES.** Read on the FROZEN round-1 board (sha
+9300636b300aeabb) read-only in a copy, hours before its lander will fire, because routeflow went straight into
+a round 2. **`sensitive_nodes` PASS 3 of 3**: `TRK_CSP` **0.501 mm** from `TRK_SW2`, `TRK_CSN` **0.525 mm**
+from `TRK_LSENSE`, `WATER_SENSE` **1.104 mm** from `TRK_LSENSE`, against the 0.50, 0.50 and 1.00 the board
+asks. **Every one sits just above its own floor**, which is what a rule held by locked copper looks like: the
+router lays right up to the limit the pre-lay set and no further.
+
+**The ladder is complete and it is one sentence.** E19 pinned nothing and read FAIL at 0.153 and 0.242; E20
+pinned two ordinary nets and read FAIL on all three; E21 pinned the sense pair and two switching nets and read
+PASS at 0.500 and 0.518 but left `/SHORE_INHIBIT` open; E22 added the safety line and read FAIL 1 of 3 because
+the violation moved to `TRK_LSENSE`, the third switching net; **E23 pinned all six and reads PASS**. Five arms,
+one variable at a time, and the rule that had scattered between 0.153 and 6.179 mm for a week is now held.
+
+**The cost is eight connections and it has an address.** By name: `/DC_P` (C2 pad 1 to a B.Cu track),
+`/TRK_BG1` (U5 pad 14 to Q4 pad 4), `/TRK_BG2` (U5 pad 16 to Q5 pad 4), `/TRK_BOOST2` (two F.Cu tracks),
+`/TRK_INTVCC` (U5 pad 15 to a track), `/TRK_OUT` (a track to a via), `/TRK_TG2` (U5 pad 18 to Q6 pad 4) and
+`/USB_E6_P` (J_BLK pad 9 to R29 pad 2). **Six of the eight are U5 and its own FETs**: TRK_BG1, TRK_BG2,
+TRK_TG2, TRK_BOOST2, TRK_INTVCC and TRK_OUT are all LT8705A pins, so **locking every switching net at 0.50 mm
+around the tracker takes the room the tracker's own gate drives need.** That is a placement finding and not a
+router one, and it is the same sentence board D got at Y2 with C24 and board B got at its three per-slot
+pockets: what a router cannot be argued into, the floor plan decides.
+
+**E17 stays board E's phase** (0 open against 8). What board E has gained is that the rule is answerable here,
+what it costs, and which six connections pay for it. The next E arm gives U5's gate-drive cluster more room,
+or asks for the keep-away locally, around the sense pair, rather than on every switching net the board has.
