@@ -11893,3 +11893,24 @@ numbers are the ceiling the closer can reach on these boards, not the promise th
 board A's own configuration is running and is the number A49's and A50's landings will be read against.
 **A49's and A50's trees were given today's closer family at 19:45 CEST, before either finish started**, so
 their landings are the first board A finishes since 15 September whose closers can work at all.
+
+**Addendum, 21:50 CEST (19 September), CORRECTION: THE FIVE-MICROMETRE VIOLATION IS THE PROBE'S GRID, NOT
+BOARD A'S FINISH.** The margin arms of the 19:35 entry ran at `STUB_GRID=0.1 STUB_WIN_SCALE=25
+STUB_MAXN=200000000`, which is the long-connection PROBE setting. `finish.sh` hands board A its own
+`stub_env`, `STUB_WIN_SCALE=6 STUB_MAXN=80000000 STUB_GRID=0.05`, and that comes AFTER finish.sh's own
+`STUB_GRID=0.1`, so **board A closes on a 0.05 mm grid**.
+
+**Re-taken there, on A44's frozen board, with the OLD 0.01 mm margin: closed 16 of 19, hard 0, 8 unrouted.**
+No clearance item, no drop-back, no search out of time. So the `netclass 'SENSE' clearance 0.1270 mm; actual
+0.1219 mm` that the whole drop-back campaign was built around **does not occur at board A's own settings**,
+and on board A the binding fix was the morning's ACCEPTANCE correction rather than the margin.
+
+**The margin change stands on its own argument, which nothing here touches:** a flat 0.01 mm cannot cover a map
+that marks a cell by its CENTRE at any grid, and at 0.05 the worst case is still 25 micrometres. What it costs
+board A at its own settings is the second arm, running beside this one at `STUB_CLR_MARGIN=0.025`.
+
+**And the correction is in board A's favour**: at the finish's own configuration A44 reaches **8 open** where
+the probe's settings reach 10, so board A's real closing stage is stronger than the ladder suggests. The
+ladder's six arms are the comparison BETWEEN arms and are not the finish's own number for any of them. **Fifth
+mis-specified measurement of the day, and the reason each was caught is the same: ask what the production path
+actually passes before believing a probe that reproduces its shape.**
