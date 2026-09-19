@@ -32,11 +32,14 @@ class _BB:
 
 
 class _Via:
-    def __init__(s, net, x, y, drill): s._n, s._p, s._d = net, _P(x, y), int(drill * MM)
+    def __init__(s, net, x, y, drill, width=None):
+        s._n, s._p, s._d = net, _P(x, y), int(drill * MM)
+        s._w = int((width if width is not None else drill + 0.4) * MM)
     def GetClass(s): return "PCB_VIA"
     def GetNetname(s): return s._n
     def GetPosition(s): return s._p
     def GetDrill(s): return s._d
+    def GetWidth(s): return s._w        # the ring `rail_barrels` must reuse, never invent
 
 
 class _Pad:
@@ -142,3 +145,14 @@ def t_it_is_declared_in_the_coverage_map_as_this_rule_s_report():
     rule knows it exists. `barrel_sites.py` is the report from the solved board; this one is from the placed."""
     cov = open(os.path.join(os.path.dirname(HERE), "pcb_rules_coverage.yaml"), encoding="utf-8").read()
     assert "rail_crossings.py" in cov, "rail_crossings.py is in full.sh and in no coverage entry"
+
+
+def t_the_row_carries_the_ring_already_on_the_site():
+    """A barrel added beside one that is there must be the SAME via. Board A declares a 0.20 mm annular floor
+    and `rail_barrels`'s first version chose a 0.70 mm ring on a 0.40 mm drill, which is 0.15: the DRC refused
+    all seven of board A's sites and the tool laid nothing. The ring is the site's own, so the judge carries
+    it."""
+    b, rails = _one_pad_source(1, drill=0.4, amps=3.0)
+    rows, judged = rc.rows(b, rails)
+    assert len(rows) == 1, rows
+    assert abs(rows[0]["width"] - 0.8) < 1e-9, rows[0]["width"]

@@ -38,6 +38,7 @@ TOOLS = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, TOOLS)
 import verdict as _v
 import rail_crossings as _rc
 import via_current as _vc
+import hardset
 
 # KiCad IS IMPORTED IN `main`, and so are the two modules that import it at their own top (`power_copper` and
 # `via_parallel`). `plan`, `_routed` and `_obstacles` touch method names only, never a pcbnew constant, so
@@ -65,12 +66,23 @@ def _routed(b):
 
 
 def _obstacles(b, net, x, y, reach):
-    """Every other net's pad centre within reach of the site, in mm."""
+    """Every other net's COPPER within reach of the site: pad centres, via centres and track ends, in mm.
+
+    The first version read pads only, and on board A's first real run it reported 2.88 to 5.48 mm of room at
+    seven sites and the DRC refused every one. A placed board of this project carries 823 vias and a thousand
+    locked escape tracks before a router has seen it: the pads are the emptiest thing on it. An axis chosen
+    against pads alone is chosen against a tenth of what is there."""
     out = []
     for fp in b.GetFootprints():
         for p in fp.Pads():
             if (p.GetNetname() or "").lstrip("/") == net: continue
             q = p.GetPosition(); px, py = q.x / 1e6, q.y / 1e6
+            if math.hypot(px - x, py - y) <= reach: out.append((px, py))
+    for t in b.GetTracks():
+        if (t.GetNetname() or "").lstrip("/") == net: continue
+        pts = [t.GetPosition()] if t.GetClass() == "PCB_VIA" else [t.GetStart(), t.GetEnd()]
+        for q in pts:
+            px, py = q.x / 1e6, q.y / 1e6
             if math.hypot(px - x, py - y) <= reach: out.append((px, py))
     return out
 
@@ -155,9 +167,9 @@ def main(argv):
         print("rail_barrels: DECLINED %s at %s pad %s (%.2f, %.2f): %s"
               % (r["net"], r["ref"], r["pad"], r["at"][0], r["at"][1], note))
     for r, pts, axis, note in plans:
-        print("rail_barrels: %s at %s pad %s (%.2f, %.2f): %d barrel(s) of %.2f mm for %.2f A, %d there, "
+        print("rail_barrels: %s at %s pad %s (%.2f, %.2f): %d barrel(s) of %.2f/%.2f mm for %.2f A, %d there, "
               "spread on %s, %s" % (r["net"], r["ref"], r["pad"], r["at"][0], r["at"][1], r["need"],
-                                    r["drill"], r["amps"], r["have"], axis, note))
+                                    r.get("width", 0.0), r["drill"], r["amps"], r["have"], axis, note))
     if not apply_:
         print("rail_barrels: %d site(s) planned, %d declined, nothing laid (give --apply)"
               % (len(plans), len(declined)))
@@ -180,17 +192,29 @@ def main(argv):
     for r, pts, axis, note in plans:
         # `stitch` carries the hole-to-hole floor and the count check, so a plan this file got wrong stops here
         # with its number rather than reaching a board.
-        pc.stitch(r["net"], pts, drill=r["drill"], width=max(r["drill"] + 0.3, 0.6))
+        # THE RING IS THE ONE ALREADY ON THIS SITE, never a number this file chose. Board A declares a 0.20 mm
+        # annular floor and the first version's `max(drill + 0.3, 0.6)` is 0.15 mm of ring on a 0.40 mm drill.
+        pc.stitch(r["net"], pts, drill=r["drill"], width=r["width"])
         laid.append((r, pts))
     pcbnew.SaveBoard(path, b)
     h, u, d = _vp._measure(path)
     if h > h0 or u > u0:
         hits = _vp._hit_positions(d)
         keep = []
+        types = {}
+        for v_ in d.get("violations", []):
+            if v_.get("type") not in hardset.HARD_POST: continue
+            for i_ in v_.get("items", []):
+                p_ = i_.get("pos") or {}
+                if "x" in p_ and "y" in p_: types.setdefault((float(p_["x"]), float(p_["y"])), set()).add(v_["type"])
         for r, pts in laid:
-            if any(math.hypot(px - hx, py - hy) < 1.0 for px, py in pts for hx, hy in hits):
-                print("rail_barrels: the DRC refuses %s at %s pad %s: that site is reverted"
-                      % (r["net"], r["ref"], r["pad"]))
+            hit = [t for px, py in pts for (hx, hy), ts in types.items()
+                   if math.hypot(px - hx, py - hy) < 1.0 for t in ts]
+            if hit:
+                # A GATE THAT STRIPS COPPER MUST NAME WHAT IT HIT (8 September 2026, `escape_prune`): a site
+                # reverted with no reason is a site nobody can answer.
+                print("rail_barrels: the DRC refuses %s at %s pad %s (%s): that site is reverted"
+                      % (r["net"], r["ref"], r["pad"], ", ".join(sorted(set(hit)))))
                 continue
             keep.append((r, pts))
         shutil.copy2(bak, path)
@@ -200,7 +224,7 @@ def main(argv):
             n = (t.GetNetname() or "").lstrip("/")
             if n and n not in nets: nets[n] = t.GetNet()
         pc = _pc.PowerCopper(b, lambda n, create=False: nets[n.lstrip("/")], P)
-        for r, pts in keep: pc.stitch(r["net"], pts, drill=r["drill"], width=max(r["drill"] + 0.3, 0.6))
+        for r, pts in keep: pc.stitch(r["net"], pts, drill=r["drill"], width=r["width"])
         pcbnew.SaveBoard(path, b)
         h, u, _ = _vp._measure(path)
         laid = keep

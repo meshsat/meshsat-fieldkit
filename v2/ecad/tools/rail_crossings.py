@@ -34,6 +34,16 @@ import via_current as _vc
 # exists because a rule that only runs on the box leaves the runner's suite green while the tool is broken.
 
 
+def _kc_width(v):
+    """The via's ring diameter. `PCB_VIA::GetWidth()` with no argument is an error in KiCad 9 (17 September),
+    so `kicad_compat.via_width` is the one answer; a fake via in a fixture just answers GetWidth."""
+    try:
+        import kicad_compat as _kc
+        return _kc.via_width(v)
+    except Exception:
+        return v.GetWidth()
+
+
 def judge(b, rails, reach_mm=1.0):
     """(short, judged): the crossings with fewer barrels than the current needs, and how many were asked.
 
@@ -82,11 +92,16 @@ def rows(b, rails, reach_mm=1.0):
                 if not near: continue           # no crossing at this pad: nothing to count
                 judged += 1
                 drill = min(v.GetDrill() for v in near) / 1e6
+                # THE BARREL ALREADY THERE CARRIES THE RING SIZE TOO, and the fixer needs it: a barrel added
+                # beside this one must be the same via, not a via of the fixer's own invention. `rail_barrels`
+                # laid 0.70 mm rings on a 0.40 mm drill on board A's first real run and the DRC refused all
+                # seven sites, because board A declares a 0.20 mm annular floor and that ring is 0.15.
+                width = min(_kc_width(v) for v in near) / 1e6
                 need = _vc.barrels_for(_share, drill)
                 if len(near) < need:
                     short.append({
                         "net": n, "ref": ref, "pad": pad.GetNumber(), "at": (c.x / 1e6, c.y / 1e6),
-                        "drill": drill, "have": len(near), "need": need, "amps": _share,
+                        "drill": drill, "width": width, "have": len(near), "need": need, "amps": _share,
                         "part_amps": want[ref], "pads": len(_pads),
                         "why": "%s at %s pad %s (%.2f, %.2f): %d barrel(s) of %.2f mm for %.2f A "
                                "(%.2f A over this part's %d pad(s) on the rail), which needs %d at a 10 K rise"
