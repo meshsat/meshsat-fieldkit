@@ -548,3 +548,53 @@ def t_a_no_input_reading_that_wins_on_fingerprint_alone_is_announced():
     finally:
         S._DISPLACED[:] = []
         S._FP_NOW[0] = None
+
+
+def t_the_selection_asks_rule_by_rule_where_the_verdict_allows_it():
+    """A MEASUREMENT WHOSE OWN RULES NEVER MOVED IS NOT HISTORY (19 September 2026).
+
+    Freshness has been asked rule by rule since 17 September (`_fresh` prefers a verdict's per-rule digest
+    over the set fingerprint), and the step BEFORE it, which picks one reading per tool out of every project
+    directory, went on asking the SET fingerprint. The set fingerprint moves whenever anything anywhere in the
+    registry does, so a reading that measured a board, under rules that have not changed since, was treated as
+    history at the moment two verdicts were compared, and a newer reading that declares it had no input at all
+    took its place. That is tonight's incident's mechanism and it is live on five of the seven boards, whose
+    `sensitive_nodes` readings carry the CURRENT digest of ANA-001 under a superseded set fingerprint.
+
+    The rule: where BOTH readings name rules the registry still has, the comparison is decided by those rules'
+    digests. A verdict naming no rule the registry knows falls back to the set fingerprint exactly as before,
+    which is every verdict written before 17 September."""
+    S._DISPLACED[:] = []
+    S._FP_NOW[0] = "CURRENT"
+    S._RULE_FPS[0] = {"ANA-001": "DIGEST-NOW"}
+    try:
+        # the measured reading: superseded SET fingerprint, CURRENT digest of the one rule it decides
+        measured = {"name": "t", "ts": "2026-09-18T00:00:00",
+                    "policy": {"rule_set_fingerprint": "OLD", "rule_fingerprints": {"ANA-001": "DIGEST-NOW"}}}
+        noinput = {"name": "t", "ts": "2026-09-19T00:00:00",
+                   "policy": {"rule_set_fingerprint": "CURRENT", "rule_fingerprints": {"ANA-001": "DIGEST-NOW"}},
+                   "missing_input": "the copper: pcbnew is not importable here"}
+        assert S._supersedes(noinput, measured) is False, (
+            "a reading that declares it had no input displaced a measurement whose own rule never moved")
+        assert not S._DISPLACED, "nothing was displaced, so nothing is announced"
+
+        # and the reverse direction is still an ordinary supersede: the measurement wins on input
+        assert S._supersedes(measured, noinput) is True
+
+        # a measurement whose OWN rule did move really is history, and the swap is still announced
+        S._DISPLACED[:] = []
+        stale = dict(measured)
+        stale["policy"] = {"rule_set_fingerprint": "OLD", "rule_fingerprints": {"ANA-001": "DIGEST-THEN"}}
+        assert S._supersedes(noinput, stale) is True, "a reading taken under a different version of its own rule stood"
+        assert S._DISPLACED, "a no-input reading displaced a measured one and said nothing"
+
+        # a verdict naming a rule the registry no longer has falls back to the set fingerprint
+        S._DISPLACED[:] = []
+        gone = {"name": "t", "ts": "2026-09-18T00:00:00",
+                "policy": {"rule_set_fingerprint": "OLD", "rule_fingerprints": {"XXX-999": "DIGEST-NOW"}}}
+        assert S._supersedes(noinput, gone) is True, (
+            "a digest of a rule the registry does not carry was read as evidence about today's rules")
+    finally:
+        S._DISPLACED[:] = []
+        S._FP_NOW[0] = None
+        S._RULE_FPS[0] = None

@@ -85,6 +85,31 @@ def _had_its_input(rec):
     return not (rec.get("missing_input") or "")
 
 
+def _current_reading(rec):
+    """Is this verdict taken under the rule versions this tree carries NOW? True, False, or None when the
+    tree cannot say at all because its own registry will not load.
+
+    ASKED RULE BY RULE WHERE THE VERDICT ALLOWS IT, which is how `_fresh` has judged freshness since 17
+    September and how the selection above it did NOT ask until now (19 September 2026). A verdict names the
+    rules it decides and carries a digest of each of them; the SET fingerprint moves whenever anything
+    anywhere in the registry does, so a measurement whose own rules never changed was reading as history at
+    the moment two verdicts were compared, and could lose its place to a newer reading that declares it had
+    no input at all. That is not a hypothetical: board A's ANA-001 is measured at FAIL 15 of 24 under a
+    superseded SET fingerprint while carrying the CURRENT digest of ANA-001, and five of the seven boards'
+    sensitive-node readings are in exactly that state tonight.
+
+    A verdict with NO per-rule digest is judged by the set fingerprint exactly as before, which is every
+    verdict written before 17 September; so is one whose named rules have all left the registry, because a
+    digest of a rule that no longer exists answers nothing. A verdict is current only if EVERY rule it names
+    is current, because this answer is given once for a reading that several rules will read."""
+    _fp = _fingerprint_now()
+    if not _fp: return None
+    _per = ((rec.get("policy") or {}).get("rule_fingerprints") or {})
+    _asked = [(rid, d) for rid, d in _per.items() if _rule_digest(rid)]
+    if _asked: return all(d == _rule_digest(rid) for rid, d in _asked)
+    return (((rec.get("policy") or {}).get("rule_set_fingerprint")) or "") == _fp
+
+
 def _supersedes(new, old):
     """Does `new` replace `old` as this board's reading of that tool?
 
@@ -104,23 +129,21 @@ def _supersedes(new, old):
     # tree does not hold; the fresh reading says so with `missing_input` and was refused for saying it. A
     # verdict taken under a superseded rule set is not evidence at all (`_fresh` refuses it wherever it is
     # read), so it cannot be the thing that keeps a current reading out. Fingerprint first, then input.
-    _fp = _fingerprint_now()
-    if _fp:
-        _n_ok = ((new.get("policy") or {}).get("rule_set_fingerprint") or "") == _fp
-        _o_ok = ((old.get("policy") or {}).get("rule_set_fingerprint") or "") == _fp
-        if _n_ok != _o_ok:
-            # AND IT SAYS SO WHEN IT DOES THIS, because the page can otherwise change under the reader with
-            # nothing on it to show why (19 September 2026). A gate run by hand on a host without pcbnew wrote
-            # a reading with its missing input declared and the CURRENT fingerprint; board A's measured
-            # ANA-001, taken under a superseded set, lost to it by this branch and the readiness page went
-            # from FAIL 15 of 24 to INCONCLUSIVE with nothing said. The order below is deliberate and is not
-            # changed here (it is also inconsistent with the per-rule digest doctrine of 17 September, which
-            # is an open item of its own): what changes is that the swap is ANNOUNCED.
-            if _n_ok and not _had_its_input(new) and _had_its_input(old):
-                _DISPLACED.append((str(new.get("name") or new.get("tool") or "?"),
-                                   " ".join(str(new.get("missing_input") or "").split())[:120],
-                                   str((old.get("policy") or {}).get("rule_set_fingerprint") or "")[:16]))
-            return _n_ok
+    _n_ok, _o_ok = _current_reading(new), _current_reading(old)
+    if _n_ok is not None and _n_ok != _o_ok:
+        # AND IT SAYS SO WHEN IT DOES THIS, because the page can otherwise change under the reader with
+        # nothing on it to show why (19 September 2026). A gate run by hand on a host without pcbnew wrote a
+        # reading with its missing input declared and the CURRENT fingerprint; board A's measured ANA-001,
+        # taken under a superseded SET fingerprint while carrying the current digest of ANA-001 itself, lost
+        # to it by this branch and the readiness page went from FAIL 15 of 24 to INCONCLUSIVE with nothing
+        # said. The question is asked rule by rule now (`_current_reading`), which is what closes that case;
+        # the announcement stays, because the ladder can still prefer a no-input reading over a measured one
+        # whose own rules really did move, and a reader is owed the sentence when it does.
+        if _n_ok and not _had_its_input(new) and _had_its_input(old):
+            _DISPLACED.append((str(new.get("name") or new.get("tool") or "?"),
+                               " ".join(str(new.get("missing_input") or "").split())[:120],
+                               str((old.get("policy") or {}).get("rule_set_fingerprint") or "")[:16]))
+        return _n_ok
     if _had_its_input(old) and not _had_its_input(new): return False
     if _had_its_input(new) and not _had_its_input(old): return True
     return str(new.get("ts", "")) >= str(old.get("ts", ""))
@@ -585,10 +608,11 @@ def _finish(argv, all_rows, per_board, m, fp, phase, out_dir):
         for _n, _mi, _ofp in _DISPLACED:
             if (_n, _mi, _ofp) in seen: continue
             seen.append((_n, _mi, _ofp))
-        print("\nNOTE: %d reading(s) that declare a MISSING INPUT stand in front of a measured one, because "
-              "their rule-set fingerprint is current and the measured one's is not. Re-take those on the "
-              "board, where the tool has its input (retake_gate.sh), rather than reading the page as an answer:"
-              % len(seen))
+        print("\nNOTE: %d reading(s) that declare a MISSING INPUT stand in front of a measured one, because the "
+              "measured one was taken under a superseded version of the rule it decides (asked rule by rule "
+              "where the verdict carries its digests, and by the set fingerprint where it does not). Re-take "
+              "those on the board, where the tool has its input (retake_gate.sh), rather than reading the "
+              "page as an answer:" % len(seen))
         for _n, _mi, _ofp in seen[:8]:
             print("  %-22s displaces a reading taken under %s; it lacked: %s" % (_n, _ofp or "(no fingerprint)", _mi or "(unsaid)"))
     if "--json" in argv: print(json.dumps(summary, indent=1, sort_keys=True))
