@@ -656,3 +656,24 @@ def t_a_tool_whose_main_is_guarded_imports_the_writer_where_main_can_see_it():
         # imported inside main. A rule that passes on the tree it was written against is worse than none.
         assert re.search(r"^import verdict as _v", head, re.M), \
             "%s guards its main with _v.guard and imports the writer somewhere main cannot be reached from" % name
+
+
+def t_a_guarded_main_is_given_the_function_and_the_argv_and_never_a_lambda():
+    """`verdict.guard` CALLS its function with argv (`return fn(argv)`), so a zero-argument lambda raises the
+    moment the tool runs, and the guard then turns that TypeError into an INCONCLUSIVE verdict about nothing.
+
+    19 September 2026: `rail_barrels.py` shipped as `_v.guard("rail_barrels", lambda: main(sys.argv[1:]),
+    sys.argv[1:])`, compiled, passed thirteen of its own rules on the runner, and crashed on all three boards
+    the first time it met one, writing "the gate raised before it decided: TypeError". The guard behaved
+    correctly and the reading was still worthless. The house form is `_v.guard("<tool>", main, sys.argv[1:])`,
+    which is what the other twenty-odd gates carry, and it is checkable here rather than on a rented box."""
+    import re
+    bad = []
+    for name in sorted(os.listdir(TOOLS)):
+        if not name.endswith(".py"): continue
+        src = open(os.path.join(TOOLS, name), encoding="utf-8").read()
+        for m in re.finditer(r"guard\(\s*(\"[^\"]+\"|'[^']+')\s*,\s*([^,]+),", src):
+            fn = m.group(2).strip()
+            if "lambda" in fn or "(" in fn:
+                bad.append("%s: guard's second argument is %r, not a bare function" % (name, fn[:60]))
+    assert not bad, bad
