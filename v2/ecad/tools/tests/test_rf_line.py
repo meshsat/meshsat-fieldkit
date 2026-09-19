@@ -71,3 +71,28 @@ def t_the_remedy_is_declared_on_the_board_and_not_hidden_in_a_tool():
     j = full.index('STUB_LAYERS="$GLAYERS"')
     assert i < j, "the group's own layers do not reach the search"
     assert full.index('read -r GNETS GLAYERS', i) < j, "the loop does not read the layers before using them"
+
+
+def t_a_board_that_declares_a_transmitter_and_judges_nothing_says_which_of_the_two_is_wrong():
+    """"NOTHING TO JUDGE" HAS TWO CAUSES AND THEY ARE NOT THE SAME THING (20 September 2026).
+
+    With no net carrying a single-ended target the tool wrote one sentence: "no single-ended controlled line
+    was found to judge, and this board does not declare that it has none". **On board B that is the opposite
+    of the truth.** Board B DECLARES `rf_transmit: true` and its four antenna nets are still in the USB class
+    (the RF class reaches them at B23), so a reader was told a declaration was missing when the finding is
+    that the class assignment is. A board that declares no transmitter and judges nothing is a declared zero
+    and passes; a board that declares one and judges nothing is a contradiction and must name it; a board
+    that declares neither is the only case where the missing thing really is the declaration."""
+    body = SRC.split("if not judged:")[1].split("return _v.write(\"rf_line\", _v.FAIL")[0]
+    assert '_tx is True' in body, "the declared-transmitter case is not separated from the undeclared one"
+    assert "DECLARES it carries a transmitter" in body, \
+        "a board that declares a transmitter and judges nothing is still told it declared nothing"
+    assert "the class assignment" in body, "the note does not name where the set has found the fault"
+    assert "does not declare whether it carries a transmitter" in body, \
+        "the genuinely undeclared case lost its own sentence"
+    # and the declared zero is still a PASS, which is the only one of the three that is
+    assert body.count("_v.PASS") == 1 and body.count("_v.INCONCLUSIVE") == 2, \
+        "the three cases no longer map to one PASS and two INCONCLUSIVE"
+    # the facts dict is bound before the try that fills it, or the branch raises where the registry is absent
+    assert "f = {}" in SRC.split("if not judged:")[1].split("try:")[0], \
+        "the board facts are read in a branch that can run before they are bound"
