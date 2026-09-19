@@ -52,6 +52,12 @@ decisions:
       RET-002: [p]
       STK-001: [p]
       STK-002: [p]
+      # 19 September 2026: RTE-001 belongs here for the same reason STK-001 does, and boards/p.json says so
+      # in its own words: the committed P4 is drawn to 0.127 mm track and clearance where the fabricator's
+      # rows read 0.16 for 2 oz on two layers, P7 re-cut at 0.16 routes 47 open, and the only board that
+      # clears the rule and closes is P8, which is four layers. So this rule cannot be answered without
+      # the layer ruling.
+      RTE-001: [p]
     evidence: "P6, the first route at the fabricator's own 0.16 mm floor, ended 0 hard and 43 unrouted. The
       committed P4 board still reads 0 unrouted because it was routed at the 0.127 mm rules the fabricator
       does not build, which is what STK-001 fails on. THIRD READING, 18 September 2026: P7, the same board

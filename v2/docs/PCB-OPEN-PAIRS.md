@@ -7,15 +7,15 @@ Every pair that is not a current PASS, classified. Generated from tools/pcb_deci
 map's maturity and each deciding verdict: a decision that claims a pair wins over everything else, because
 the ruling is the action that moves it, and the measurement is reported beside it rather than lost.
 
-**123 open pair(s)** over 7 board(s). **43 are measured failures** (a tool looked and the board failed), and **13 of those are claimed by an open owner decision**.
+**123 open pair(s)** over 7 board(s). **43 are measured failures** (a tool looked and the board failed), and **14 of those are claimed by an open owner decision**.
 
 | waiting on | pairs | what it means |
 |---|---:|---|
-| `DECISION` | 58 | an owner decision by name |
+| `DECISION` | 59 | an owner decision by name |
 | `DECISION_UNCLAIMED` | 5 | a rule that says a decision is open while no decision claims it |
 | `AUTHORITY` | 3 | an authority this project does not have |
 | `MISSING_INPUT` | 17 | an input the reading declared absent |
-| `MEASURED_FAILURE` | 30 | the tool looked and the board failed |
+| `MEASURED_FAILURE` | 29 | the tool looked and the board failed |
 | `NOT_JUDGED` | 10 | not judged, for the reason the reading gives |
 
 ## By board
@@ -28,7 +28,7 @@ the ruling is the action that moves it, and the measurement is reported beside i
 | D | 17 | 4 | 11 | 1 | 2 | 1 |
 | E | 19 | 5 | 11 | 0 | 4 | 1 |
 | E5 | 6 | 3 | 2 | 0 | 0 | 1 |
-| P | 14 | 5 | 8 | 0 | 2 | 2 |
+| P | 14 | 5 | 9 | 0 | 2 | 2 |
 
 ## By open decision
 
@@ -38,7 +38,7 @@ holding a number, not a question about a number.
 | decision | pairs held | of which measured | rules | boards |
 |---:|---:|---:|---|---|
 | 27 | 3 | 1 | RET-001, RET-002, STK-002 | C |
-| 28 | 3 | 2 | RET-002, STK-001, STK-002 | P |
+| 28 | 4 | 3 | RET-002, RTE-001, STK-001, STK-002 | P |
 | 29 | 5 | 0 | GND-002, INT-002 | A B C E |
 | 31 | 6 | 3 | DOC-001, TRN-001 | A D E |
 | 32 | 3 | 3 | RET-004 | C D E |
@@ -49,7 +49,7 @@ holding a number, not a question about a number.
 | 39 | 16 | 0 | RET-001, RET-003, SI-001 | A B C D E P |
 | 40 | 1 | 1 | BAT-001 | P |
 
-## DECISION (58): an owner decision by name
+## DECISION (59): an owner decision by name
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -110,6 +110,7 @@ holding a number, not a question about a number.
 | `RET-002` | P | FAIL | decision 28: board P cannot hold the return-path rule on two layers and the ruled P5 does not route |
 | `SI-001` | P | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
 | `THM-001` | P | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
+| `RTE-001` | P | FAIL | decision 28: board P cannot hold the return-path rule on two layers and the ruled P5 does not route |
 | `BAT-001` | P | FAIL | decision 40: the pack's cell-level protection is one firmware-configured device, and the rule asks for hardware independent of any software |
 
 ## DECISION_UNCLAIMED (5): a rule that says a decision is open while no decision claims it
@@ -152,7 +153,7 @@ holding a number, not a question about a number.
 | `ANA-001` | P | INCONCLUSIVE | the switching copper to measure against: this board declares 7 sensitive node(s) and an EMPTY switch_nets with no switch_nets_why beside it |
 | `DOC-002` | P | INCONCLUSIVE | board P declares P4 and the order set holds P1: the note beside those folders describes a board this project is not building |
 
-## MEASURED_FAILURE (30): the tool looked and the board failed
+## MEASURED_FAILURE (29): the tool looked and the board failed
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -184,7 +185,6 @@ holding a number, not a question about a number.
 | `STK-001` | E5 | FAIL | stackup_gate FAIL: {'compared': 8, 'copper_layers': 2, 'disagreements': 1} |
 | `DOC-002` | E5 | FAIL | doc_provenance_e5 FAIL: {'folders': 1, 'untraceable': 1} |
 | `OUT-001` | E5 | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
-| `RTE-001` | P | FAIL | fab_limits FAIL: {'classes': 4, 'under_capability': 5} |
 | `OUT-001` | P | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 
 ## NOT_JUDGED (10): not judged, for the reason the reading gives
