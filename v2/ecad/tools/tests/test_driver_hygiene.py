@@ -1207,3 +1207,21 @@ def t_the_declaration_travels_from_the_profile():
         "the declaration never reaches preflight")
     assert '"--requires"' in src and "[--requires A,B]" in src, (
         "an arm cannot declare its requirement without editing the shared profile, which is how it gets forgotten")
+
+
+def t_a_gate_that_dies_on_a_signal_is_tried_once_more_before_it_blocks():
+    """19 September 2026: E21's chain blocked at `place_audit` on a SEGMENTATION FAULT with an empty log and no
+    image, and the same tool on the same board file passed with 0 predicted collisions two minutes later.
+    Blocking on a crash is right (a gate that did not finish is not a pass, board A's `stitch_prune` on
+    17 September wrote PASS having segfaulted before printing a line). Throwing an hour of chain work away for
+    a process that died is not. The retry must be exactly once, must be limited to a SIGNAL exit (128 and
+    above, never an ordinary non-zero verdict, or a real FAIL would be re-rolled until it passed), and the
+    second exit must be the one that decides."""
+    import os
+    T = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    full = open(os.path.join(T, "full.sh"), encoding="utf-8").read()
+    i = full.index("pa_run () {")
+    blk = full[i:full.index("grep -E \"FAIL|predicted|decoupling\"", i)]
+    assert blk.count("pa_run;") == 2, "the gate is not run exactly twice at most"
+    assert '"$PA" -ge 128' in blk, "the retry is not limited to a signal exit"
+    assert "PA=$PA2" in blk, "the second run's exit is not the one that decides"

@@ -162,7 +162,16 @@ def t_the_count_is_the_rule_s_own_and_not_this_file_s():
 def t_the_sites_come_from_the_judge_s_own_walk():
     """`rail_crossings.rows` is the judge carrying numbers instead of prose; this file must read THAT."""
     assert "rail_crossings" in SRC and "_rc.rows(" in SRC
-    assert "GetDrill()" not in SRC, "rail_barrels walks the vias itself instead of asking the judge"
+    # The rule is about where the SITES come from, not about which method names appear: `_hole_free` reads
+    # drills to judge a CANDIDATE, which is geometry and not site discovery. What must not be here is a second
+    # walk that decides which crossings are short.
+    body = SRC[SRC.index("def main(argv):"):]
+    assert "barrels_for(" not in body, "main computes its own barrel count instead of reading the judge's rows"
+    assert body.count("_rc.rows(") == 1, "the sites come from somewhere other than the judge's own walk"
+    assert "rows, judged = _rc.rows(" in body, "the rows are not taken straight from the judge"
+    for r in ("for r in rows", "plans.append", "declined.append"):
+        assert r in body, "the plan is not built from the judge's rows"
+    assert '"need"' not in body.split("for r in rows")[0], "main decides how many barrels a site needs"
 
 
 def t_it_does_not_carry_its_own_copy_of_the_drc_helpers():
@@ -260,3 +269,17 @@ def t_it_leaves_no_backup_behind_in_the_project_directory():
     body = SRC[SRC.index("def main(argv):"):]
     assert "os.remove(bak)" in body, "the backup is never removed"
     assert body.index("shutil.copy2(path, bak)") < body.index("os.remove(bak)")
+
+
+def t_a_candidate_must_pass_the_hole_test_as_well_as_the_copper_test():
+    """`return_via._site_free` keeps a barrel's RING clear of other nets' copper. Hole to hole is a different
+    rule with a different number and it is not in that test: two 0.25 mm drills need 0.5495 mm between centres
+    where the copper test is satisfied at 0.362. E21's own chain proved it, the DRC refusing a barrel at
+    J_BLK pad 1 for `hole_to_hole` alone. Every drilled hole counts, this net's included: a hole does not care
+    whose net it is."""
+    assert "_hole_free(b, X, Y, _d)" in SRC, "the site test does not ask about holes"
+    body = SRC[SRC.index("def _hole_free"):SRC.index("def _routed")]
+    assert "GetDrillSize" in body, "plated component holes are not counted"
+    assert "PCB_VIA" in body, "other vias' holes are not counted"
+    assert "GetNetname" not in body, "the hole test skips its own net, and a hole does not care whose net it is"
+    assert "FLOOR" in body, "the hole test does not use this project's own hole-to-hole floor"

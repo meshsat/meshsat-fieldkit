@@ -334,7 +334,20 @@ PAOFF=""; { [ "${PLACE_AUDIT_GATE:-1}" = 0 ] || [ -n "$(cfg place_audit_gate_off
 # half): at the pad of a rail's SOURCE the whole rail current changes layer, so the barrels it needs are
 # arithmetic and a site that is short says so here instead of after a route. A report: it lays nothing.
 python3 ../tools/rail_crossings.py $N.kicad_pcb 2>&1 | grep -aE 'rail_crossings' || true
-env $PAOFF $ESCENV python3 ../tools/place_audit.py $N.kicad_pcb --png out/place_audit.png > out/place_audit.log 2>&1; PA=$?
+# A CRASH IS NOT A FINDING, SO IT IS TRIED TWICE (19 September 2026). E21's chain blocked here on a
+# SEGMENTATION FAULT with an empty log and no image, and the same tool on the same board file passed with
+# 0 predicted collisions when it was run again two minutes later: KiCad's SWIG and matplotlib in one process
+# die now and then. Blocking on that is right (a gate that did not finish is not a pass, board A's
+# `stitch_prune` of 17 September) and throwing an hour of chain work away for it is not. One retry tells a
+# board that breaks the tool from a process that died; both exits are printed, and a second crash still blocks.
+pa_run () { env $PAOFF $ESCENV python3 ../tools/place_audit.py $N.kicad_pcb --png out/place_audit.png > out/place_audit.log 2>&1; }
+pa_run; PA=$?
+if [ "$PA" -ge 128 ]; then
+  echo "place_audit: exit $PA (a signal, not a verdict): running it once more before this blocks anything"
+  sleep 3; pa_run; PA2=$?
+  echo "place_audit: second run exit $PA2"
+  PA=$PA2
+fi
 grep -E "FAIL|predicted|decoupling" out/place_audit.log | tail -8
 # 15 September 2026: a board may declare the predictor's verdict as a report rather than a block (B19: its nine predicted
 # collisions are the fine-pitch stations of 32.146, the router resolves or leaves them and the routed-board gate decides).
