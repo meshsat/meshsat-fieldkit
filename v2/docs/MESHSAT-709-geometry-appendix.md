@@ -12022,3 +12022,71 @@ board it could not see for four days. On A44's frozen board at the probe configu
 read **four maps identical to the reference, four top-ups, zero differences**. The one-variable speed A/B is
 armed behind it on A48's frozen board at board A's own finish configuration with the wall in place, and the
 default does not move until that number exists.
+
+**Addendum, 00:10 CEST (20 September), RUNNING THE SUITE WHERE KiCAD IS FOUND A GATE THAT HAD BEEN CRASHING
+ON EVERY BOARD FOR EIGHT HOURS (commits 58df3218, 9f770f50, 00ece11a, 0e951eec, 9f27ac79; suite 1167 on the
+runner, 1205 of 1208 where KiCad is with the three remaining explained below; readiness 63.4 percent of 333,
+unchanged).**
+
+**(1) `dc_drop` called the verdict module by a name its own function assigns.** The 15:43 conversion gave its
+flag readers `verdict.opt(...)`; four hundred lines below, per rail, it writes `verdict = "MET" if ... else
+"MISSED"`. Python fixes a name's scope for the whole function body at compile time, so that one assignment
+makes `verdict` a LOCAL everywhere in `main` and the very first line of work raised `UnboundLocalError:
+cannot access local variable 'verdict'`. **`verdict.guard` did exactly its job** and turned the crash into an
+INCONCLUSIVE naming it, which is why nothing crashed, nothing was absent, and nothing was noticed:
+**PI-001 and PI-002, the two rules that judge whether a rail's copper carries its current, would have read
+INCONCLUSIVE on every board of the set.** Three of the four board-gate fixtures that measure them fail on the
+box for this one cause and all three pass with the flags read through `_v.opt` and the per-rail name spelled
+`rail_verdict`. **The rule is mechanical and runs everywhere**, because it is a question about the source: no
+function may call a name as a module and assign that name, with the deliberate optional-import idiom exempt
+(`import x as _x` in a try, `_x = None` in the except, guarded at every use). It names `dc_drop.main` line 79
+on HEAD, passes on the fixed tree, and a sweep of every tool in the directory finds no second instance.
+**The lesson is scheduling, not typing**: dc_drop's fixtures need KiCad, the suite had last run where KiCad
+is at 00:30 that morning, and about a hundred commits landed in between. A crash guard converts a crash into
+a reading, and a reading nobody re-takes is how eight hours pass.
+
+**(2) A rule that names a variable is a rule about the spelling, for the third time today.** Renaming that
+local broke `t_the_current_density_decides_the_verdict_alongside_the_drop`, which looked for an assignment to
+a name spelled `verdict`. It asks what the per-rail decision READS now, found by its own expression
+(`{"MET", "MISSED"}` in the value), whatever the variable is called; mutation proved, drop `dens_ok` from
+that expression and the rule names it.
+
+**(3) Two rules were reporting a staged tree's own limits as the tree's faults, and neither is loosened.**
+`routeflow validate` judges a profile's pinned `repo`, the guard against the 13 September defect where an
+arm's patched tools routed the production board; every profile pins the box clone, so on the runner that path
+does not exist and validate skips the property (20 of 20), while in a suite tree staged BESIDE a real box
+clone it exists and is a different tree and all twelve profiles fail that one property. The question is about
+the host. And the decisions page's "what each decision holds" half is computed from this tree's evidence,
+whose set-level readings live in the gitignored `v2/ecad/out/`, so a tree staged from the git index renders a
+true but different page (111 inconclusive against 79). Each rule declines with its reason where its input is
+absent, which is this project's own house rule applied to its own suite. **The stager was wrong too**: it
+rsynced into a directory that kept a `.git` from an earlier staging, so `git ls-files` answered from a stale
+index and `test_netlist_provenance` reported six committed netlists with no provenance while all six sidecars
+are committed here. The index is rebuilt from exactly the staged list now, 4,034 files against 4,034.
+
+**(4) BOARD A'S PI-003 GENERATOR ANSWER IS APPLIED AND GATED.** `gen_pcb_a3.py` has printed since 16
+September which of its own via hand-overs had a barrel over its rating on the last solved board; it printed a
+COORDINATE, and the answer to every one is points added to the call, which a reader then has to find among
+thirty-two `row(...)` and `col(...)` lines whose arguments are expressions. Two frames up from `_size` is
+that line, so **the report names it**. With A48's solved barrel currents beside a regenerated board it names
+ELEVEN sites, of which eight are a count and three are the other thing the report already separates: the
+barrels are there and do not SHARE, which is copper feeding one of them and a placement question.
+**The rule applied to the eight is one sentence: fill the span the call already claims, down to this
+project's own hole-to-hole floor of drill plus 0.2995 mm, and no further.** Nothing moves and no geometry is
+invented, so a site still short afterwards is a placement question with a number. Six calls changed: R55's
+own pad 2 to 4, Q2's drain tab 2 to 3 a column twice, the fuse's inner lands 2 to 5 and 2 to 4, the VBAT FET
+column 2 to 5, both charger shunts' pads 4 to 5; two sites are met exactly and four are improved and still
+short. **Measured on a clean regeneration where KiCad is: `check_pcb_a` ALL PASS on 511 checks, 421
+footprints, and the PLACED board hard 0 of the fifteen types**, so `stitch` refused none of them and the
+placement pays nothing. **NOT CLAIMED**: PI-003 is judged on a SOLVED board, so whether board A's five
+over-rated rails reach zero is the next A phase's routed reading.
+
+**(5) A48 at board A's own configuration, WITH the wall: the stage banked its work and still bought three
+nets in an hour.** 15 open in, **14 out, hard 0**, `exit 0` where the same settings without `STUB_STAGE_S`
+were killed at 3600 s with `exit 124` and saved nothing. So the wall is worth exactly the closures a run
+would otherwise throw away. **But three of fifteen at G=0.05 against EIGHT of fifteen at the probe
+configuration's G=0.1 is the number that matters**, and it has two possible causes with different answers:
+either 0.05 finds fewer paths than 0.1, or 0.05 is simply slower and the hour ended before the other twelve
+nets were ever offered. The second is what the evidence points at, and **the map cache's A/B on this exact
+board at this exact configuration separates them**: all fifteen offered and eight or more closed means the
+grid was never the problem.
