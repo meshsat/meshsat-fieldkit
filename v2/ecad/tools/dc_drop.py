@@ -76,16 +76,16 @@ def main(a):
     import pcbnew, numpy as np, intent
     import verdict as _v
     from impedance_check import read_stackup
-    cell = float(a[a.index("--cell") + 1]) if "--cell" in a else 0.5
+    cell = float(verdict.opt(a, "--cell", 0.5))
     png = _v.opt(a, "--png", None)
-    budget = float(a[a.index("--budget") + 1]) if "--budget" in a else 0.02
+    budget = float(verdict.opt(a, "--budget", 0.02))
     b = pcbnew.LoadBoard(a[0]); it = intent.load(a[0])
     if not it:
         print("dc_drop: FAIL no intent file for this board (out/<stem>-intent.json; the schematic generator writes it)")
         return _v.write("dc_drop", _v.INCONCLUSIVE, denominator=0, inputs={"board": a[0]},
                         note="no intent file for this board, so no rail budget was known")
     rails = it["rails"]
-    if "--rails" in a: rails = {k: v for k, v in rails.items() if k in a[a.index("--rails") + 1].split(",")}
+    if "--rails" in a: rails = {k: v for k, v in rails.items() if k in str(verdict.opt(a, "--rails", "")).split(",")}
     stack = read_stackup(a[0]) or []; thick = {n: th for n, k, th, er in stack if k == "copper"}
     cu_layers = list(b.GetEnabledLayers().CuStack())   # KiCad 9 layer ids are not consecutive; the board's copper stack in order
     lname = {L: b.GetLayerName(L) for L in cu_layers}
@@ -583,7 +583,7 @@ def main(a):
           % (len(results) - miss, len(results), cell, budget * 100,
              ("; %d rail(s) NOT JUDGED (a declared load is missing, or the measure returned an impossible current): %s" % (len(undecl), ", ".join(undecl)) if undecl else "")
 ))
-    if "--json" in a: json.dump([dict(net=r[0], verdict=r[1], text=r[2], drop_v=r[3], pct=r[4], j_max=r[5], share=r[6]) for r in results], open(a[a.index("--json") + 1], "w"), indent=1)
+    if "--json" in a: json.dump([dict(net=r[0], verdict=r[1], text=r[2], drop_v=r[3], pct=r[4], j_max=r[5], share=r[6]) for r in results], open(str(verdict.opt(a, "--json", "dc_drop.json")), "w"), indent=1)
     # A rail nobody declared a load for is INCONCLUSIVE, never FAIL: the board is not refused for a property of
     # the board, it is refused for a property of the intent file, and the two have different remedies.
     # TWO CRITERIA, TWO VERDICTS. The voltage drop and the conductor's current capacity are different questions
