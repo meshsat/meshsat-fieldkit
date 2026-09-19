@@ -326,6 +326,7 @@ try:
                 for k, v in (_json.load(open(_ip)).get("rails") or {}).items()} if _osx.path.exists(_ip) else {}
 except Exception as _e:
     print("placement: no rail currents for the via sizing (%s)" % _e)
+import sys as _sysx
 _VIA_SHORT = []
 # The barrel currents `dc_drop` solved for the board that came out of the LAST generation of this design, if
 # they are beside the board. In the case frame, so a site written in this file can be compared with them.
@@ -373,7 +374,13 @@ def _size(net, n, drill, where):
     total = sum(b[2] for b in _VIA_MEASURED.get(net.lstrip("/"), [])
                 if math.hypot(b[0] - where[0], b[1] - where[1]) <= 2.0)
     if worst > lim:
-        _VIA_SHORT.append((net, where, n, int(math.ceil(total / max(lim, 1e-6))), worst, drill, total))
+        # AND THE REPORT NAMES THE LINE THAT PLACED IT (20 September 2026). The answer to every one of these
+        # is points added to the call, and a reader given a coordinate has to find that call among thirty-two
+        # `row(...)` and `col(...)` lines whose arguments are expressions. `_size` is called by `row`/`col`,
+        # so two frames up is the generator's own line.
+        try: _ln = _sysx._getframe(2).f_lineno
+        except Exception: _ln = 0
+        _VIA_SHORT.append((net, where, n, int(math.ceil(total / max(lim, 1e-6))), worst, drill, total, _ln))
 
 
 def row(net, x0, x1, y, n=3, drill=0.4):
@@ -429,7 +436,7 @@ PC.union(pa, "PA rail", [(_r55[0] - 1.0, -15.0, 106.25, -8.0), (101.75, -15.0, 1
                          (99.25, -15.0, 101.75, -11.0),
                          (jp[0] - 3.0, yP - 4.5, jp[2] + 0.8, yP + 4.5),
                          (85.0, -22.0, 106.25, -15.0)], pcbnew.B_Cu, priority=2)   # 15 Sep 2026, A33 measured: J_AB2's ten through-hole pins stand IN the east run at x 93 to 96, y -6 to -14, and the run's worst cell (ratio 1.61, unchanged by the foot at the pin) is what they leave of it; the run doubles south of them   # one polygon: east, north, pin, the chamfer on the turn, and a foot at the pin (15 Sep 2026: the run's end at J_PA read ratio 1.61)
-col(pa, (_r55[0] + _r55[2]) / 2, (_r55[1] + _r55[3]) / 2 - 1.1, (_r55[1] + _r55[3]) / 2 + 1.1, 2)   # in the shunt's own pad
+col(pa, (_r55[0] + _r55[2]) / 2, (_r55[1] + _r55[3]) / 2 - 1.1, (_r55[1] + _r55[3]) / 2 + 1.1, 4)   # in the shunt's own pad, FOUR since 20 Sep 2026 (A48 solved: 3.49 A over two barrels, worst 1.86 against 0.90)
 col(pa, pr[2] + 1.3, -13.4, -9.6, 3)                                          # three vias in the head island, in the band: a via mid-run has no F.Cu copper at its other end and cleanup_dangling would take it
 # 3. VIN_RAW: from the dock pins north, west along y -43, north along the west edge into the front end's input FETs and caps
 # THE DIVE'S LAYER FOLLOWS THE BOARD (12 September 2026, owner ruling 2: test board A at four layers against six).
@@ -448,7 +455,7 @@ PC.island(vr, "VIN_RAW head", rect_pts((min(fe[0], -118), fe[1] - 4.0, fe[2], fe
 # 3.9 mm). The west band on B.Cu already runs under the tab, so four vias in the tab hand the current up where it is used
 # and the F.Cu throat carries only what the capacitors take. Growing the island (4.0 mm, A33) moved nothing.
 _q2 = pads_rect(net_pads(vr, ["Q2"]), 0); _q2x, _q2y = (_q2[0] + _q2[2]) / 2, (_q2[1] + _q2[3]) / 2
-col(vr, _q2x - 0.8, _q2y - 0.8, _q2y + 0.8, 2); col(vr, _q2x + 0.8, _q2y - 0.8, _q2y + 0.8, 2)   # in the FET's own drain tab
+col(vr, _q2x - 0.8, _q2y - 0.8, _q2y + 0.8, 3); col(vr, _q2x + 0.8, _q2y - 0.8, _q2y + 0.8, 3)   # in the FET's own drain tab, THREE since 20 Sep 2026 (A48 solved: 5.34 A a column, worst 1.65 against 0.90; six is what it wants and three is what this tab holds at the hole-to-hole floor)
 # the west run crosses the VBAT trunk (x fx0 to fx1): two bands of different nets never cross on one layer (32.39), so VIN_RAW dives to In3 under the trunk on five vias a side;
 # each side of the dive is ONE polygon (the dock riser with the east run, the west run with the west riser): abutting same-net zones with priorities read as separate pieces (32.69)
 f1_ = pads_rect(net_pads(vb, ["F1"]), 0.5); f1c_ = (f1_[0] + f1_[2]) / 2; fx0_, fx1_ = f1c_ - 4.5, f1c_ + 0.5   # the trunk on the west half of F1's pad 2, clear of the dock pins' riser
@@ -473,7 +480,7 @@ PC.union(vr, "VIN_RAW west", [(-118, -46, fx0_ - 0.8, -40), (-118, -46, -112, fe
 PC.union(vr, "VIN_RAW under the trunk", [(fx0_ - 5.0, -46.5, fx1_ + 5.0, -39.5)] + dock, DIVE_CU, priority=2, keepout=False)   # one In3 polygon from the dive to the dock pins (the pins join the layers)
 PC.keepout("keep tracks off VIN_RAW under the trunk", (fx0_ - 5.0, -46.5, fx1_ + 5.0, -39.5), DIVE_CU)
 for _r in dock[:2]: PC.keepout("keep tracks off VIN_RAW east", _r, DIVE_CU)
-col(vr, fx0_ - 3.2, -45.2, -40.8, 3); col(vr, fx0_ - 1.9, -44.6, -41.4, 2); col(vr, fx1_ + 3.2, -45.2, -40.8, 3); col(vr, fx1_ + 1.9, -44.6, -41.4, 2)
+col(vr, fx0_ - 3.2, -45.2, -40.8, 3); col(vr, fx0_ - 1.9, -44.6, -41.4, 5); col(vr, fx1_ + 3.2, -45.2, -40.8, 3); col(vr, fx1_ + 1.9, -44.6, -41.4, 4)   # the two inner columns carry the fuse's own current: A48 solved 6.47 A at fx0_-1.9 (wants 8, the 3.2 mm span holds 5) and 2.95 A at fx1_+1.9 (wants 4)
 # 14 September 2026, MEASURED ON A28: three vias a row is 3.3 A against this rail's 8. The worst via on the
 # board carries 3.25 A through one 0.40 mm barrel at (-113.0, 64.7), which IPC rates at 1.11, and the worst
 # pour cell sits a millimetre from it at 171 A/mm2 against 82.7 (ratio 2.06): a cell at a via is a funnel,
@@ -553,7 +560,7 @@ PC.island(vb, "VBAT PA head", rect_pts((qr[0] - 3.5, min(qr[1], -12.0), qr[2], q
 # ground; a VBAT tongue at a higher priority takes the strip under the PA head, so the rail meets its head on a front.
 if qr[2] > -4.0:
     plane(pcbnew.In2_Cu, "VBAT", "VBAT plane In2 (tongue under the PA head)", rect=(-2.5, min(qr[1], -12.0) - 3.0, qr[2] + 1.0, qr[3] + 3.0), priority=2)
-col(vb, qr[0] - 1.9, -11.6, -8.4, 2)
+col(vb, qr[0] - 1.9, -11.6, -8.4, 5)   # FIVE since 20 Sep 2026 (A48 solved: 4.05 A over two barrels, worst 2.19 against 0.90; five is what it wants and the 3.2 mm span holds exactly five)
 # 5. VBUS20, the 20 V charge bus: IT HAD NO POWER COPPER (13 September 2026, appendix 32.164). The router
 # carried 4.91 A of its 6 on a 0.500 mm F.Cu track for 11.8 mm, ratio 3.39 against IPC, on a dog-leg west to
 # the feedback divider and back. The stage's output is R11's pad 2 (the ISNS shunt, not the controller U2:
@@ -604,8 +611,8 @@ if NL_CU >= 6:
 else:
     print("placement: VBUS20 gets no second layer on a %d layer board (In3 does not exist, In2 is the VBAT plane and B.Cu is VBAT's trunk)" % NL_CU)
 _r11 = pads_rect(net_pads(vbs, ["R11"]), 0)
-col(vbs, (_r11[0] + _r11[2]) / 2, (_r11[1] + _r11[3]) / 2 - 1.65, (_r11[1] + _r11[3]) / 2 + 1.65, 4)   # in the ISNS shunt's own pad (four since 15 Sep 2026: two carried 3.69 A each, ratio 3.07)
-col(vbs, _r16x, (_r16[1] + _r16[3]) / 2 - 1.65, (_r16[1] + _r16[3]) / 2 + 1.65, 4)                      # and in the charger's input shunt
+col(vbs, (_r11[0] + _r11[2]) / 2, (_r11[1] + _r11[3]) / 2 - 1.65, (_r11[1] + _r11[3]) / 2 + 1.65, 5)   # in the ISNS shunt's own pad (four since 15 Sep 2026: two carried 3.69 A each, ratio 3.07)
+col(vbs, _r16x, (_r16[1] + _r16[3]) / 2 - 1.65, (_r16[1] + _r16[3]) / 2 + 1.65, 5)                      # and in the charger's input shunt
 # the keep-out stops 2.5 mm short of R16: the shunt's own sense escapes (/CH_SRP, /CH_SRN) leave its pads along that edge
 # and the placed board carried two `items_not_allowed` on them at the first try (15 Sep 2026)
 _ends = sorted((vbr[1], _r16[1])); _ry = (_r16[1] + _r16[3]) / 2
@@ -786,15 +793,15 @@ except Exception as e:
 # answer. Every site is listed with what it carries and what one barrel of its own drill is rated for.
 if _VIA_SHORT:
     print("placement: %d via hand-over(s) had a barrel over its rating on the last solved board:" % len(_VIA_SHORT))
-    for _n, _w, _have, _need, _a, _d, _tot in sorted(_VIA_SHORT, key=lambda t: -t[4]):
+    for _n, _w, _have, _need, _a, _d, _tot, _ln in sorted(_VIA_SHORT, key=lambda t: -t[4]):
         _lim = barrel_a(_d); _share = _tot / max(_have, 1)
         _why = ("the barrels do not SHARE: %d here would carry %.2f A each if they did, which is inside %.2f A, "
                 "so this is copper feeding one of them and not a shortage of holes"
                 % (_have, _share, _lim)) if _share <= _lim and _have >= _need else \
                ("it wants about %d barrel(s) of this drill for the %.2f A the site carries" % (_need, _tot))
-        print("placement:   %-10s at (%6.1f, %6.1f): %d barrel(s) of %.2f mm, the site carries %.2f A and the "
-              "worst one %.2f A against %.2f A for its wall; %s"
-              % (_n, _w[0], _w[1], _have, _d, _tot, _a, _lim, _why))
+        print("placement:   %-10s at (%6.1f, %6.1f) [gen_pcb_a3.py:%d]: %d barrel(s) of %.2f mm, the site "
+              "carries %.2f A and the worst one %.2f A against %.2f A for its wall; %s"
+              % (_n, _w[0], _w[1], _ln, _have, _d, _tot, _a, _lim, _why))
 elif _VIA_MEASURED:
     print("placement: no via hand-over on the last solved board had a barrel over its rating")
 pcbnew.SaveBoard(BOARD, board)
