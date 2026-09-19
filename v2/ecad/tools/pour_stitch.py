@@ -11,6 +11,7 @@ stub_accept.py keeps the stub router's closures. Islands too small or too crowde
 
 Usage: pour_stitch.py <board.kicad_pcb> [--nets=GND,+3V3] [--min-area=1.0] [--via=0.6/0.3] [--spots=6] [--dry]   (every option takes its value after an `=`)"""
 import sys, os, re, math, json, subprocess, pcbnew
+import kicad_compat
 import os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import boardorder
@@ -58,7 +59,11 @@ def keepaways(net):
     for t in b.GetTracks():
         if t.GetNetname() == net: continue
         if t.GetClass() == "PCB_VIA":
-            c = t.GetPosition(); out.append(("s", mm(c.x), mm(c.y), mm(c.x), mm(c.y), mm(t.GetWidth()) / 2))
+            # A VIA'S WIDTH IS PER LAYER IN KiCad 9 and the bare call asserts (19 September 2026): here it
+            # sizes the OBSTACLE this stitcher must keep away from, so a via read with no diameter is a point
+            # and the keep-away is short by half a barrel on every foreign via on the board.
+            c = t.GetPosition()
+            out.append(("s", mm(c.x), mm(c.y), mm(c.x), mm(c.y), mm(kicad_compat.via_width(t)) / 2))
         else:
             out.append(("s", mm(t.GetStart().x), mm(t.GetStart().y), mm(t.GetEnd().x), mm(t.GetEnd().y), mm(t.GetWidth()) / 2))
     return out

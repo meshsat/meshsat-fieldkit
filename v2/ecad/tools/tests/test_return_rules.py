@@ -235,7 +235,60 @@ def t_no_tool_asks_a_via_for_its_width_without_a_layer():
             # and the blunt case: a via built or fetched on this line and asked for its width
             if re.search(r"PCB_VIA\b", line) and re.search(r"\bv\.GetWidth\(\s*\)", line):
                 bad.append("%s:%d %s" % (fn, i, line.strip()[:90]))
+        # AND A RULE THAT LOOKS AT ONE LINE IS A RULE ABOUT THE LAYOUT OF THE SOURCE (19 September 2026).
+        # Both patterns above want the identification and the bare width on the SAME line and want the
+        # identification spelled `GetClass() == "PCB_VIA"`. `sensitive_nodes.py`, which is ANA-001's own
+        # instrument and a BLOCKER, wrote `if t.Type() == pcbnew.PCB_VIA_T:` on one line and `t.GetWidth()`
+        # on the next, and escaped both for three days while printing the assertion once per via. This pass
+        # reads the syntax instead: inside any branch whose test calls `<x>.Type()` or `<x>.GetClass()` and
+        # mentions a via, `<x>.GetWidth()` with no argument is the same defect however it is laid out.
+        bad.extend(_bare_via_width_by_syntax(fn, src))
     assert not bad, "a via is asked for its width with no layer, which asserts in KiCad 9: %s" % bad
+
+
+def _bare_via_width_by_syntax(fn, src):
+    """Every `<x>.GetWidth()` with no argument inside a branch that has just identified `<x>` as a via."""
+    import ast
+    try: tree = ast.parse(src)
+    except SyntaxError: return []
+    out = []
+
+    def via_subjects(test):
+        """the identifiers this test calls a via: `t.Type() == pcbnew.PCB_VIA_T`, `t.GetClass() == "PCB_VIA"`"""
+        names = set()
+        for n in ast.walk(test):
+            if not isinstance(n, ast.Compare): continue
+            src_txt = ast.dump(n)
+            if "PCB_VIA" not in src_txt: continue
+            left = n.left
+            if (isinstance(left, ast.Call) and isinstance(left.func, ast.Attribute)
+                    and left.func.attr in ("Type", "GetClass") and isinstance(left.func.value, ast.Name)):
+                names.add(left.func.value.id)
+        return names
+
+    # A BARE CALL INSIDE AN `except` IS THE FALLBACK, NOT THE DEFECT (19 September 2026, caught by this very
+    # rule on its first run: `pair_router/occupancy.py` already does the guarded thing, `try: GetWidth(F_Cu)
+    # except: GetWidth()`, which is what `kicad_compat.via_width` does and what the fix looks like everywhere.
+    # A rule that flags the fix is a rule that punishes fixing it.)
+    guarded = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ExceptHandler):
+            for n in ast.walk(node): guarded.add(id(n))
+
+    for node in ast.walk(tree):
+        if not isinstance(node, (ast.If, ast.IfExp)): continue
+        subs = via_subjects(node.test)
+        if not subs: continue
+        body = node.body if isinstance(node.body, list) else [node.body]
+        for stmt in body:
+            for call in ast.walk(stmt):
+                if (isinstance(call, ast.Call) and isinstance(call.func, ast.Attribute)
+                        and call.func.attr == "GetWidth" and not call.args and not call.keywords
+                        and isinstance(call.func.value, ast.Name) and call.func.value.id in subs
+                        and id(call) not in guarded):
+                    out.append("%s:%d a via identified on line %d is asked for a bare width"
+                               % (fn, getattr(call, "lineno", 0), getattr(node, "lineno", 0)))
+    return out
 
 
 # ---------------------------------------------------------------------------------------------------------
