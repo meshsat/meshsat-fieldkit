@@ -40,6 +40,7 @@ decisions:
     blocks:
       RET-002: [c]
       RET-001: [c]
+      STK-002: [c]
     evidence: "C24's eighteen failing nets are all B.Cu runs whose only neighbour is In2, the routing layer; the longest is 172.9 mm of SCL"
   - n: 28
     title: "board P cannot hold the return-path rule on two layers and the ruled P5 does not route"
@@ -50,6 +51,7 @@ decisions:
     blocks:
       RET-002: [p]
       STK-001: [p]
+      STK-002: [p]
     evidence: "P6, the first route at the fabricator's own 0.16 mm floor, ended 0 hard and 43 unrouted. The
       committed P4 board still reads 0 unrouted because it was routed at the 0.127 mm rules the fabricator
       does not build, which is what STK-001 fails on. THIRD READING, 18 September 2026: P7, the same board

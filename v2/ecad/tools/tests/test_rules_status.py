@@ -490,3 +490,26 @@ def t_a_run_told_where_to_write_leaves_the_tree_exactly_as_it_found_it():
     assert not moved, "a run told to write elsewhere still wrote into the tree: %s" % moved
     for name in ("rules_complete.verdict.json", "rules_status.verdict.json", "summary.json"):
         assert os.path.exists(os.path.join(d, name)), "%s did not reach the directory the run was given" % name
+
+
+def t_an_inconclusive_reading_carries_the_reason_the_gate_gave_for_it():
+    """AN INCONCLUSIVE READING EXPLAINS ITSELF AND THE READER MUST NOT THROW THE EXPLANATION AWAY (19
+    September 2026). Thirteen rule-board pairs on the readiness pages read "assembly_set INCONCLUSIVE",
+    which is a tool's name and its verdict and not one word about the cause, while the sentence that
+    explains it sat in the verdict file. Where the gate declared a missing input that wins, because it
+    names what the reading did not have; otherwise the note is carried."""
+    m = _manifest()
+    vs = _verdict("INCONCLUSIVE")
+    vs["gate_x"]["note"] = "no single-ended controlled line was found to judge, and this board does not declare that it has none"
+    r = S.result_for(_rule(), "x", _cov(), vs, m, FP)
+    assert r["result"] == "INCONCLUSIVE", r
+    assert "single-ended controlled line" in r["why"], r["why"]
+
+    vs2 = _verdict("INCONCLUSIVE")
+    vs2["gate_x"]["note"] = "a note about something else"
+    vs2["gate_x"]["missing_input"] = "no deliverable folder at the declared phase"
+    r2 = S.result_for(_rule(), "x", _cov(), vs2, m, FP)
+    assert "no deliverable folder at the declared phase" in r2["why"], r2["why"]
+
+    bare = S.result_for(_rule(), "x", _cov(), _verdict("INCONCLUSIVE"), m, FP)
+    assert bare["why"].strip() == "gate_x INCONCLUSIVE", bare["why"]

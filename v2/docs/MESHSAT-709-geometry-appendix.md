@@ -11026,3 +11026,53 @@ pads are a third un-escaped, and they are the same parts the pair failures die a
 are architectural**: fewer parts in that fabric, or more layers, which is STK-002 and the 11 September P0 that
 found four layers had never been argued or costed and board B is six. Board B's next real measurement is an
 owner decision, not a floor plan.
+
+**Addendum, 09:30 CEST (19 September), THE REGISTER OF WHAT IS OPEN IS COMPUTED NOW, AND IT FOUND TWO THINGS
+IN ITS FIRST RUN.** The readiness number says 63.1 percent of 333 applicable rule-board pairs are verified. It
+has never said what the other 123 are waiting on, and that question was answered BY HAND four times in three
+days (17 September 16:25, 17 September 17:50, 18 September, and board by board this morning). Two of those
+four disagreed with each other about which pairs were engineering, and every one of them went stale the moment
+a route landed. `open_pairs.py` classifies all 123 from data that already exists (the decisions register's
+`blocks` map, the coverage map's maturity, and each deciding verdict's own fields) and `rules_render.py`
+writes `v2/docs/PCB-OPEN-PAIRS.md` from it, so the answer is a rendering of the registry rather than a claim
+about it. Seven rules, each proved to fail on the tree it was written against.
+
+**The ladder, and the one ordering judgement in it.** A pair an OPEN decision claims is the decision's,
+whatever else is true of it, because the ruling is the action that moves it; RET-001 is SOURCE_UNVERIFIED and
+decision 39 claims it on six boards, and both statements are true while only one of them is a thing somebody
+can do today. A measured failure claimed by a decision is reported under that decision AND counted among the
+measured failures, so the number 43 is the same number whichever way the table is read. Below that: the
+authority is not established, nothing verifies it, the reading declared its own input absent, the tool looked
+and the board failed, and last the ones whose reading gives its own reason.
+
+**The set, 19 September 09:30: 123 open pairs. 55 wait on an owner decision by name, 5 on a rule that says a
+decision is open while no decision claims it, 3 on an authority this project does not have, 17 on an input the
+reading declared absent, 30 are measured failures with nothing in front of them, and 13 are not judged for the
+reason the reading gives. 43 of the 123 are measured failures and 13 of those 43 sit behind a decision.** Per
+board, open and of which measured: A 24 and 9, B 31 and 14, C 12 and 3, D 17 and 4, E 19 and 5, E5 6 and 3,
+P 14 and 5.
+
+**FINDING ONE: seven pairs pointed at a decision that does not exist.** STK-002, whether a board's layer count
+is justified, read "an owner decision is open" on all seven boards and NO numbered decision claimed it, so a
+reader following the readiness page could not find out which one. It is decision 2, the 11 September P0, ruled
+on 12 September as "write up all seven from the evidence and TEST BOARD A ONLY", and the index only carries
+decisions from 23 up. The live half is decisions 27 and 28, the layer questions for C and P, and their
+`blocks` maps name STK-002 now, which is what the coverage note already said in prose and nothing read. The
+other five stay deliberately unclaimed and the page prints them under their own heading, because a pair
+waiting on a ruled decision nobody has re-asked is a different thing from a pair waiting on decision 34, and
+putting them in one bucket is how a register stops being worth reading.
+
+**FINDING TWO: an inconclusive reading explains itself and the reader was throwing the explanation away.**
+Thirteen pairs read `assembly_set INCONCLUSIVE`, `final_gate_a INCONCLUSIVE`, `rf_line INCONCLUSIVE`: a tool's
+name and its verdict and not one word about the cause. The sentences were in the verdict files the whole time
+("no single-ended controlled line was found to judge, and this board does not declare that it has none"; "this
+board is HELD by an open owner decision, so its paperwork is not current and cannot be made current while the
+hold stands"). `rules_status` carries the note now, and the declared missing input ahead of it where there is
+one. **A gate that strips copper must name what it hit has been a law here since 16 September; a reader that
+drops the name breaks it just as surely as a gate that never wrote one.**
+
+**And the register immediately disagreed with this morning's hand count, which is the point.** Board A by hand
+read four pairs waiting on an authority and eight on a decision; computed it is one and eleven, because
+decision 39 claims RET-001, RET-003 and SI-001 on six boards and a hand count had filed them under the
+authority they also lack. The hand classification in `boards/a.json` now points at the generated page for its
+numbers and keeps only what the page cannot know: that six of board A's nine failures are one adoption away.

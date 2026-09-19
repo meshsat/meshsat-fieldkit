@@ -15,6 +15,7 @@ Documents:
   v2/docs/PCB-ETA.md               the computed ETA from those remediations and the measured run history
   v2/docs/PCB-PROTOTYPE-UNKNOWNS.md what only hardware can decide, so it never reads as a pass
   v2/docs/PCB-RULE-STATUS-<L>.md   per board, from out/rule-audit/<L>.json when it exists
+  v2/docs/PCB-OPEN-PAIRS.md        what every open rule-board pair is waiting on, from open_pairs.py
 """
 import os, re, sys, json, glob
 
@@ -382,6 +383,70 @@ def eta_doc():
     return "\n".join(L) + "\n"
 
 
+def open_pairs_doc(res):
+    """What every open rule-board pair is waiting on, from `open_pairs.py`.
+
+    The question this answers had been answered by hand four times in three days and two of those hand counts
+    disagreed with each other about which pairs were engineering. The classification is computed from the
+    decisions register, the coverage map's maturity and the verdicts themselves, so it cannot drift from them,
+    and the `measured` count is the same number whichever way the table is read."""
+    import open_pairs as O
+    L = [HEAD, "# What the open rule-board pairs are waiting on\n",
+         _wrap("Every pair that is not a current PASS, classified. Generated from tools/pcb_decisions.yaml, "
+               "the coverage map's maturity and each deciding verdict: a decision that claims a pair wins over "
+               "everything else, because the ruling is the action that moves it, and the measurement is "
+               "reported beside it rather than lost."), "",
+         "**%d open pair(s)** over %d board(s). **%d are measured failures** (a tool looked and the board "
+         "failed), and **%d of those are claimed by an open owner decision**.\n"
+         % (res["open"], len(res["boards"]), res["measured"], res["measured_claimed"]),
+         "| waiting on | pairs | what it means |", "|---|---:|---|"]
+    for k in O.ORDER:
+        n = res["counts"].get(k, 0)
+        if n: L.append("| `%s` | %d | %s |" % (k, n, O.HEADLINE[k]))
+    L.append("")
+    L.append("## By board\n")
+    L.append("| board | open | of which measured | decision-bound | authority | missing input | not judged |")
+    L.append("|---|---:|---:|---:|---:|---:|---:|")
+    for b in res["boards"]:
+        ps = [p for p in res["pairs"] if p["board"] == b]
+        if not ps: continue
+        L.append("| %s | %d | %d | %d | %d | %d | %d |" % (
+            b.upper(), len(ps), sum(1 for p in ps if p["measured"]),
+            sum(1 for p in ps if p["category"] in (O.DECISION, O.DECISION_UNCLAIMED)),
+            sum(1 for p in ps if p["category"] == O.AUTHORITY),
+            sum(1 for p in ps if p["category"] == O.MISSING_INPUT),
+            sum(1 for p in ps if p["category"] in (O.NOT_JUDGED, O.NO_INSTRUMENT))))
+    L.append("")
+    byd = {}
+    for p in res["pairs"]:
+        if p.get("decision"): byd.setdefault(p["decision"], []).append(p)
+    if byd:
+        L.append("## By open decision\n")
+        L.append(_wrap("What each unruled decision holds, counted from the same table. A decision holding a "
+                       "measured failure is holding a number, not a question about a number."))
+        L.append("")
+        L.append("| decision | pairs held | of which measured | rules | boards |")
+        L.append("|---:|---:|---:|---|---|")
+        for n in sorted(byd):
+            ps = byd[n]
+            L.append("| %s | %d | %d | %s | %s |" % (
+                n, len(ps), sum(1 for p in ps if p["measured"]),
+                ", ".join(sorted({p["rule"] for p in ps})),
+                " ".join(sorted({p["board"].upper() for p in ps}))))
+        L.append("")
+    for k in O.ORDER:
+        ps = [p for p in res["pairs"] if p["category"] == k]
+        if not ps: continue
+        L.append("## %s (%d): %s\n" % (k, len(ps), O.HEADLINE[k]))
+        L.append("| rule | board | reading | what it waits on |")
+        L.append("|---|---|---|---|")
+        for p in ps:
+            L.append("| `%s` | %s | %s | %s |" % (p["rule"], p["board"].upper(), p["result"],
+                                                  _wrap(str(p["detail"]), 10**6).replace("|", " ")[:220]))
+        L.append("")
+    return "\n".join(L) + "\n"
+
+
 def render(out_dir=None, board_docs=True, generated=True):
     """The documents, as a path -> body map.
 
@@ -410,6 +475,12 @@ def render(out_dir=None, board_docs=True, generated=True):
         except ValueError: continue
         if "rows" not in st: continue          # summary.json and any other non-board artefact in the audit dir
         files[os.path.join(docs, "PCB-RULE-STATUS-%s.md" % letter.upper())] = board_doc(letter, st, reg, cov)
+    if board_docs:
+        # The open-pairs register reads the same audits the per-board pages do, so it belongs to group two.
+        # With no audit in the tree it is not rendered at all rather than rendered empty (the 18 September rule).
+        import open_pairs as O
+        res = O.collect()
+        if res["boards"]: files[os.path.join(docs, "PCB-OPEN-PAIRS.md")] = open_pairs_doc(res)
     return files
 
 
