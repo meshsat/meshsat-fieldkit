@@ -7,15 +7,15 @@ Every pair that is not a current PASS, classified. Generated from tools/pcb_deci
 map's maturity and each deciding verdict: a decision that claims a pair wins over everything else, because
 the ruling is the action that moves it, and the measurement is reported beside it rather than lost.
 
-**122 open pair(s)** over 7 board(s). **43 are measured failures** (a tool looked and the board failed), which are **37 distinct readings**, and **14 of those are claimed by an open owner decision**.
+**122 open pair(s)** over 7 board(s). **43 are measured failures** (a tool looked and the board failed), which are **37 distinct readings**, and **15 of those are claimed by an open owner decision**.
 
 | waiting on | pairs | what it means |
 |---|---:|---|
-| `DECISION` | 59 | an owner decision by name |
+| `DECISION` | 62 | an owner decision by name |
 | `DECISION_UNCLAIMED` | 5 | a rule that says a decision is open while no decision claims it |
 | `AUTHORITY` | 3 | an authority this project does not have |
-| `MISSING_INPUT` | 16 | an input the reading declared absent |
-| `MEASURED_FAILURE` | 29 | the tool looked and the board failed |
+| `MISSING_INPUT` | 14 | an input the reading declared absent |
+| `MEASURED_FAILURE` | 28 | the tool looked and the board failed |
 | `VENDOR_WAIT` | 1 | a fabricator or a standards body, and nobody here |
 | `OWNER_WORK` | 7 | work only the owner or the ordering session can do |
 | `NOT_JUDGED` | 2 | not judged, for the reason the reading gives |
@@ -33,11 +33,11 @@ things to fix.
 |---|---:|---:|---:|---:|---:|---:|
 | A | 24 | 9 | 12 | 1 | 4 | 0 |
 | B | 31 | 14 | 10 | 1 | 4 | 2 |
-| C | 12 | 3 | 9 | 0 | 1 | 0 |
+| C | 12 | 3 | 10 | 0 | 0 | 0 |
 | D | 17 | 4 | 11 | 1 | 2 | 0 |
 | E | 19 | 5 | 11 | 0 | 4 | 0 |
-| E5 | 6 | 3 | 2 | 0 | 0 | 0 |
-| P | 13 | 5 | 9 | 0 | 1 | 0 |
+| E5 | 6 | 3 | 3 | 0 | 0 | 0 |
+| P | 13 | 5 | 10 | 0 | 0 | 0 |
 
 ## By open decision
 
@@ -57,8 +57,9 @@ holding a number, not a question about a number.
 | 37 | 2 | 0 | CMP-002, SUP-001 | D |
 | 39 | 16 | 0 | RET-001, RET-003, SI-001 | A B C D E P |
 | 40 | 1 | 1 | BAT-001 | P |
+| 41 | 3 | 1 | DOC-002 | C E5 P |
 
-## DECISION (59): an owner decision by name
+## DECISION (62): an owner decision by name
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -91,6 +92,7 @@ holding a number, not a question about a number.
 | `RET-004` | C | FAIL | decision 32: board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper |
 | `SI-001` | C | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
 | `THM-001` | C | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
+| `DOC-002` | C | INCONCLUSIVE | decision 41: the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002 |
 | `ENV-001` | D | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
 | `CMP-002` | D | INCONCLUSIVE | decision 37: board D asks for two crystals that do not exist and the part it was certified against is four times the frequency |
 | `SUP-001` | D | INCONCLUSIVE | decision 37: board D asks for two crystals that do not exist and the part it was certified against is four times the frequency |
@@ -112,6 +114,7 @@ holding a number, not a question about a number.
 | `THM-001` | E | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
 | `DOC-001` | E | INCONCLUSIVE | decision 31: conductors leave the case and meet a chip with nothing in between, or only through an active part |
 | `ENV-001` | E5 | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
+| `DOC-002` | E5 | FAIL | decision 41: the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002 |
 | `ENV-001` | P | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
 | `STK-001` | P | FAIL | decision 28: board P cannot hold the return-path rule on two layers and the ruled P5 does not route |
 | `STK-002` | P | INCONCLUSIVE | decision 28: board P cannot hold the return-path rule on two layers and the ruled P5 does not route |
@@ -121,6 +124,7 @@ holding a number, not a question about a number.
 | `THM-001` | P | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
 | `RTE-001` | P | FAIL | decision 28: board P cannot hold the return-path rule on two layers and the ruled P5 does not route |
 | `BAT-001` | P | FAIL | decision 40: the pack's cell-level protection is one firmware-configured device, and the rule asks for hardware independent of any software |
+| `DOC-002` | P | INCONCLUSIVE | decision 41: the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002 |
 
 ## DECISION_UNCLAIMED (5): a rule that says a decision is open while no decision claims it
 
@@ -140,7 +144,7 @@ holding a number, not a question about a number.
 | `IMP-001` | B | INCONCLUSIVE | the authority behind this rule's limit is not established: closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case with one solved point; no fabricat |
 | `IMP-001` | D | INCONCLUSIVE | the authority behind this rule's limit is not established: closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case with one solved point; no fabricat |
 
-## MISSING_INPUT (16): an input the reading declared absent
+## MISSING_INPUT (14): an input the reading declared absent
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -152,16 +156,14 @@ holding a number, not a question about a number.
 | `SUP-001` | B | INCONCLUSIVE | no deliverable folder at the declared phase B21, so this board's parts were not certified against the board this tree holds (the folders that exist are B12, B13, B14, B15, B19) |
 | `DFM-001` | B | INCONCLUSIVE | the folder judged here is meshsat-pcb-b-revA-B19-quote and this board declares B21, so its properties are a reading of a board this set is not building |
 | `DOC-002` | B | INCONCLUSIVE | board B declares B21 and the order set holds B16: the note beside those folders describes a board this project is not building |
-| `DOC-002` | C | INCONCLUSIVE | board C declares C24 and the order set holds C7: the note beside those folders describes a board this project is not building |
 | `DFM-001` | D | INCONCLUSIVE | the folder judged here is meshsat-pcb-d-revA-D11 and this board declares D12, so its properties are a reading of a board this set is not building |
 | `DOC-002` | D | INCONCLUSIVE | board D declares D12 and the order set holds D8: the note beside those folders describes a board this project is not building |
 | `CMP-002` | E | INCONCLUSIVE | no deliverable folder at the declared phase E17, so this board's parts were not certified against the board this tree holds (the folders that exist are E4, E6, E7, E9) |
 | `SUP-001` | E | INCONCLUSIVE | no deliverable folder at the declared phase E17, so this board's parts were not certified against the board this tree holds (the folders that exist are E4, E6, E7, E9) |
 | `DFM-001` | E | INCONCLUSIVE | the folder judged here is meshsat-pcb-e-revA-E9 and this board declares E17, so its properties are a reading of a board this set is not building |
 | `DOC-002` | E | INCONCLUSIVE | board E declares E17 and the order set holds E6: the note beside those folders describes a board this project is not building |
-| `DOC-002` | P | INCONCLUSIVE | board P declares P4 and the order set holds P1: the note beside those folders describes a board this project is not building |
 
-## MEASURED_FAILURE (29): the tool looked and the board failed
+## MEASURED_FAILURE (28): the tool looked and the board failed
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -191,7 +193,6 @@ holding a number, not a question about a number.
 | `ANA-001` | E | FAIL | sensitive_nodes FAIL: {'declared': 3, 'fail': 2, 'measured': 3} |
 | `OUT-001` | E | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `STK-001` | E5 | FAIL | stackup_gate FAIL: {'compared': 8, 'copper_layers': 2, 'disagreements': 1} |
-| `DOC-002` | E5 | FAIL | doc_provenance_e5 FAIL: {'folders': 1, 'untraceable': 1} |
 | `OUT-001` | E5 | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `OUT-001` | P | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 

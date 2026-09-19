@@ -7,7 +7,7 @@ One line per decision that is still open, what it holds up, and where its eviden
 v2/docs/OWNER-DECISIONS-2026-09-11.md and this page is generated from the same registry the readiness table
 is, so the pair counts below are the ones the gates use.
 
-**13 decisions are open and they hold 74 rule-board pairs of the 333 the set is judged on.** A pair held by a
+**14 decisions are open and they hold 77 rule-board pairs of the 333 the set is judged on.** A pair held by a
 decision is not a defect in the board: it is a question nobody has answered, and until it is answered the
 rule can be neither passed nor failed.
 
@@ -26,6 +26,7 @@ rule can be neither passed nor failed.
 | **37** | board D asks for two crystals that do not exist and the part it was certified against is four times the frequency | CMP-002, SUP-001 | D | 2026-09-16 |
 | **39** | the criterion a break in a signal's reference is judged against | RET-001, RET-003, SI-001 | A, B, C, D, E, P | 2026-09-17 |
 | **40** | the pack's cell-level protection is one firmware-configured device, and the rule asks for hardware independent of any software | BAT-001 | P | 2026-09-18 |
+| **41** | the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002 | DOC-002 | C, E5, P | 2026-09-19 |
 
 ## Each one, with what it holds
 
@@ -506,6 +507,42 @@ something that cannot be mis-programmed.
 | rule | | boards | result today |
 |---|---|---|---|
 | BAT-001 | the cell block is protected in hardware | P | FAIL |
+
+
+### Decision 41: the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002
+
+**The question:** rebuild v2/release/revA/order/ from the deliverable folders that already exist, quarantined
+with each board's own readiness block, or leave it at A22/B16/C7/D8/E6/P1 until the boards are promoted
+
+**Recommended:** rebuild it and quarantine it in the same commit. A stale order set is not a neutral state:
+on 12 September three of its seven folders described boards this project was not building, which is the
+defect DOC-002 exists for, and the order note is the one artefact of this pipeline that travels to the
+fabricator with the board. The cart at JLCPCB has held seven unpaid lines since 3 September, so the set has
+been orderable the whole time and a rebuild changes only whether the paperwork beside those lines is true.
+Have every ORDER-NOTES.txt carry the board's own readiness block at the top (ROUTING_STATUS,
+ELECTRICAL_PROTECTION_STATUS, FAB_READINESS, PUBLICATION_STATUS) so no folder can be read as an approved
+package; nothing is ordered, no cart line is touched, EXCLUDE and JLC_ROT stay reserved, and no board's phase
+declaration moves
+
+**Measured:** COUNTED, 19 September 2026. Every one of the seven order folders is named for an older phase
+than the tree's newest deliverable: A22 against A24, B16 against B19, C7 against C24, D8 against D11, E6
+against E9, P1 against P4, and E5 against E5. DOC-002 asks one thing of each board, whether an order folder
+exists at the phase THAT BOARD declares and whether its note names the gerber zip beside it by sha256. Three
+boards would answer yes after a rebuild and they are exactly the three whose declared phase is already a
+folder in this tree: C (C24), P (P4) and E5. A, B, D and E declare phases no folder holds (A32, B21, D12,
+E17), so they are unaffected by this ruling either way and their answer is a re-cut, which is decision 31 and
+the routes in flight. E5's half needs NO new fabrication artefact: its order folder is already at the phase
+the board declares and what its note lacks is the provenance line make_handoff.py has written since 12
+September. C's and P's halves do create a folder where there is none today, which is why this is asked rather
+than done: owner ruling 8 of 13 September puts the per-board NOTES in this session's hands, and what it does
+not settle is whether the gerber and BOM beside them may be cut while promotion is frozen. The prose itself
+is no longer in the way: the table and the fabrication notes were written for C17, D10, E7 and P3, the guard
+that exists to catch that had never looked at four of the seven boards, and both are fixed with three rules
+and both fixtures (appendix addendum, 19 September 13:55 CEST).
+
+| rule | | boards | result today |
+|---|---|---|---|
+| DOC-002 | provenance for every claim | C, P, E5 | FAIL, INCONCLUSIVE |
 
 
 ## Closed, for the record

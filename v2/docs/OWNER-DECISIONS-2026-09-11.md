@@ -2539,3 +2539,60 @@ it lands with the runs.
 So on board C the two halves of rule RET-004 are now both measured: the repair closes 143 of 207 on the board
 that exists, and the prevention costs eighteen times the router's time. That is the trade the grid declaration
 is, and board C's next phase should carry whichever of the two the C25 run says is cheaper.
+
+---
+
+## Decision 41, 19 September 2026: the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002
+
+**What is being asked.** Rebuild `v2/release/revA/order/` from the deliverable folders that already exist in
+this tree, or leave it where it is until the boards are promoted.
+
+**The state, counted.** The order set holds seven folders and every one of them is named for an older phase
+than the tree's newest deliverable:
+
+| board | order folder today | newest deliverable in the tree | the phase the board declares |
+|---|---|---|---|
+| A | `PCB-A-POWER-A22` | A24 | **A32** |
+| B | `PCB-B-COMPUTE-B16` | B19 (quote) | **B21** |
+| C | `PCB-C-DISPLAY-C7` | **C24** | **C24** |
+| D | `PCB-D-APRS-D8` | D11 | **D12** |
+| E | `PCB-E1-DOCK-E6` | E9 | **E17** |
+| E5 | `PCB-E5-BLOCK-E5` | **E5** | **E5** |
+| P | `PCB-P-PACK-P1` | **P4** | **P4** |
+
+**Rule DOC-002 asks one thing of each board: is there an order folder at the phase this board declares, and
+does the note in it name, by sha256, the gerber zip a fabricator would receive?** Three boards would answer
+yes after a rebuild and four would not, and the three are exactly the boards whose declared phase is already
+a folder in this tree: **C (C24), P (P4) and E5**. A, B, D and E declare phases no folder holds, so they stay
+where they are whatever is decided here; their answer is a re-cut, which is decision 31 and the routes in
+flight. **So the ruling is worth three rule-board pairs of 333, and it is the whole of what is left on board
+C and board P in that rule.**
+
+**E5's half needs no new fabrication artefact at all.** Its order folder is already at the phase the board
+declares; what its note lacks is the provenance line naming the zip beside it, which `make_handoff.py` has
+written since 12 September. C's and P's halves do create a folder where there is none today.
+
+**The argument for rebuilding.** A stale order set is not a neutral state. On 12 September three of the seven
+folders described boards this project was not building, and that is the defect DOC-002 was written for; the
+order note is the one artefact of this pipeline that travels to the fabricator with the board. The cart at
+JLCPCB has held seven unpaid lines since 3 September, so the set has been orderable the whole time: what a
+rebuild changes is whether the paperwork beside those lines is true.
+
+**The argument against.** A current order set is a more convincing orderable package than a stale one, and
+board promotion is frozen. The risk is not that a rebuild makes an order possible, it is that a package which
+looks current is mistaken for one that is approved.
+
+**Recommendation: rebuild it, and quarantine it in the same commit.** Run `make_handoff.py` on a host with
+KiCad, and have every `ORDER-NOTES.txt` carry the board's own readiness block at the top, in the four lines
+board E already carries in the handover (`ROUTING_STATUS`, `ELECTRICAL_PROTECTION_STATUS`, `FAB_READINESS`,
+`PUBLICATION_STATUS`), so no folder can be read as an approved package. Nothing is ordered, no cart line is
+touched, `EXCLUDE` and `JLC_ROT` stay reserved, and the boards' phase declarations do not move. Owner ruling 8
+of 13 September already puts the per-board notes in this session's hands ("the session drafts, checks and
+applies the per-board notes"); what it does not settle is whether the gerber and BOM beside them may be cut
+while promotion is frozen, and that is the word being asked for.
+
+**What the session has already done without it.** The prose is correct now: `make_handoff.py`'s table and its
+fabrication notes were written for C17, D10, E7 and P3 while the tree holds C24, D11, E9 and P4, and the guard
+that exists to catch exactly that had never looked at four of the seven boards (appendix addendum, 19
+September 13:55 CEST). A rebuild would have attached `(D10, ...)` prose to D11 gerbers. That is fixed, with
+three rules and both fixtures, so the tool is now correct for whoever is allowed to run it.
