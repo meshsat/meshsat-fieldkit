@@ -10922,3 +10922,29 @@ regions that have room** (ETH 49.0 mm south, IOCA 22.0 north, RADE 11.5 south, S
 three `S*_SWIC` pockets have 0.0 mm in every direction and the corridor from each module receptacle to its
 switch and hub is the same copper the fans need. **B23 is not adoptable** and nothing about it should be
 promoted.
+
+**Addendum, 07:45 CEST (19 September): board D lands at two open whatever is pinned, and the two are different
+every time.** D19 pre-laid every connection board D's closers have ever reported FAILED pad to pad, closed 8 of
+8 pairs, completed all 200 passes in 2 h 29 and landed **hard 0 with two open**, its continuation and its stub
+router taking neither. Three arms of the same design, one variable each:
+
+| arm | pre-laid | at the router | after the closers | which connections |
+|---|---|---:|---:|---|
+| D17 | one net | 2 | **2** | `/LED_REC_K`, `/PCM_VCCR` |
+| D18 | three nets | 4 | 3 | `/HS2_BIAS_R`, `/HUB_DM1`, `/HUB_DP1` |
+| **D19** | **six nets, all of the above** | 2 | **2** | `/+5V_D8`, `/PCM_XTI` |
+
+**The three sets are pairwise disjoint.** Pin the two D17 leaves and the router leaves three others; pin all six
+and it leaves a power rail and a crystal input that had never been open in any arm. The prediction written into
+`boards/d.json` before D19 ran said that a seventh net opening would mean the shuffling is not the cause, and
+that is what happened: **board D has a fixed deficit of about two connections and pinning decides only where it
+lands.** No amount of pre-laid copper reaches it.
+
+**D17 stays board D's answer**, because it reaches the same two open with ONE net pinned instead of six, and
+the simpler board is the better one when the number is identical. **The remaining work is the placement**, at
+the site the record named on 11 September: the hub's own fan, `/HUB_DM1` between U4 pad 11 and R13 pad 1, 2.82
+mm apart with no lane, which D10 needed closed by hand. Board D is two connections from a finished route and
+those two connections are a floor-plan item, which is the same sentence board B's much larger number resolves
+to, and board E's ANA-001 answer resolves to its opposite: E21 held a rule through a route precisely because
+locked copper is the one thing a router cannot argue with, while these two opens are copper there is nowhere to
+put.
