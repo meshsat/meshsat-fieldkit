@@ -10545,3 +10545,27 @@ in a staged tree is the clone's, and `routeflow validate` reads phase directorie
 not carry. The three real ones this exercise found earlier in the evening are gone: the generated bring-up
 document that a fresh checkout would have emptied, the test set rewriting the readiness it judges, and the four
 assembly-set rules that crashed rather than skipping where the repo is not around the tools.
+
+**Addendum, 03:15 CEST (19 September): the pre-lay's cost measured with the pass counts matched, and three
+nets are worse than one on board D.** D17 and D18 are the same design, the same profile and the same 9,000 s
+cap, both completing all **200 attempts**, differing only in what the pre-lay laid: D17 one net (`/PCM_VDD`,
+3 pad-to-pad pairs, 10.72 mm) and D18 three (those plus `/LED_REC_K` at 14.05 mm and `/PCM_VCCR` at 16.72 mm,
+5 pairs in all, closed 5 of 5).
+
+| arm | pre-laid | passes | at the router | after the closers |
+|---|---|---:|---:|---:|
+| D15 | nothing | 80 (cut) | 4 | 1 |
+| D16 | nothing (its tree predated the fix) | 49 (cut) | 9 | 9 |
+| **D17** | one net, 3 pairs | **200** | **2** | **2** |
+| **D18** | three nets, 5 pairs | **200** | **4** | 3 after the continuation pass, finish running |
+
+**Two more pre-laid connections cost two routed ones**, with every other variable held. This is the sixth
+measurement of the rule and the first where the pass counts match, so it is the one to quote: the pre-lay is
+not free copper, it is copper the router must route around, and its value comes only from closing something no
+closure can reach. `/PCM_VDD` was that; the other two were merely beyond a 12 mm closer, and a wider closer had
+already been tried and refused for mask bridges, which made them look like the same case. They are not: a gap
+a closure cannot reach because the corridor is full of pads is board D's `/PCM_VDD`; a gap a closure cannot
+reach because the declaration says 12.0 is a gap the ROUTER can still have.
+
+**Board D's answer stays D17**, hard 0 with two open, PI-003 answered, `check_pcb_d` ALL PASS, frozen at sha
+3d8c3a49 with its evidence in `pcb-d-aprs-d9/routed`. Its two remaining opens are a placement item.
