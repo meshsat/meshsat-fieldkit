@@ -11859,3 +11859,37 @@ E23 round 2's stub log reads `unconnected pairs: 6` and then `FAILED` on all six
 board E landing reads "its closers took none". So the wider clearance margin cannot cost board E anything, by
 construction, and one of its six opens is `/TRK_SW2` between two tracks of which one is **0.0007 mm long**, a
 dot rather than a gap.
+
+**Addendum, 21:00 CEST (19 September), BOARD A'S LADDER RE-CLOSED WITH BOTH OF TODAY'S FIXES, AND A48's OWN
+FINISH HAD BEEN CLOSING NOTHING.** Six arms, every frozen A board this session can reach, read-only copies,
+drop-back off so the raw stage is what is measured, the acceptance fix and the clearance margin together:
+
+| arm | handed in | closed | after the stage |
+|---|---|---:|---|
+| A44 | hard 0, 19 open | 14 of 19 | **hard 0, 10 open** |
+| A45 | hard 82, 21 open | 16 of 21 | hard 82, **7 open** |
+| A45r | hard 0, 22 open | 16 of 22 | **hard 0, 8 open** |
+| A46 | hard 0, 27 open | 17 of 26 | **hard 0, 16 open** |
+| A47 | hard 0, 16 open | 10 of 16 | **hard 0, 9 open** |
+| A48 | hard 0, 15 open | 8 of 15 | **hard 0, 11 open** |
+
+**Not one arm's hard count moved**, so `guarded` keeps every one of these stages. Board A's best hard-0 board
+is **A45r at 8 open**, then A47 at 9 and A44 at 10.
+
+**What that is measured against is worse than the record had it.** A48's finish log reads `unconnected pairs:
+20` and then `FAILED` or `NOT CLOSED` on every one, with the board leaving the stage at hard 0 and 20 unrouted,
+exactly what it went in with. The refusals carry the signature the morning's correction was written for, `a
+path was found and it did not connect: start 0.000 mm and end 0.000 mm from this net's nearest copper`, which
+is the artefact of measuring the end gaps after the pieces were taken back off, on an acceptance that demanded
+a whole-board unconnected drop that board A's 21-to-23-cluster `*_SW2` nets can never produce. **So board A's
+landings have not been losing closures to the guard, they have been closing nothing at all**, and that has been
+true since 15 September.
+
+**THE CAVEAT, STATED BECAUSE IT WAS NEARLY MISSED.** This ladder ran at `STUB_GRID=0.1 STUB_WIN_SCALE=25
+STUB_MAXN=200000000`, which is the long-connection PROBE setting and NOT what `finish.sh` gives board A: its
+own `stub_env` is `STUB_WIN_SCALE=6 STUB_MAXN=80000000 STUB_GRID=0.05` and it comes AFTER finish.sh's own
+`STUB_GRID=0.1`, so the finish closes at a 0.05 grid where the new margin is 0.025 rather than 0.05. These six
+numbers are the ceiling the closer can reach on these boards, not the promise the finish makes; the A/B at
+board A's own configuration is running and is the number A49's and A50's landings will be read against.
+**A49's and A50's trees were given today's closer family at 19:45 CEST, before either finish started**, so
+their landings are the first board A finishes since 15 September whose closers can work at all.
