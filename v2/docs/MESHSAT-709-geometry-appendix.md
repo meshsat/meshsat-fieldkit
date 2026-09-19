@@ -11238,3 +11238,31 @@ The landing reads eleven judged and none missed. **The eleven blind-mate drops a
 0.14 mm runs and not a pre-lay group at all**; the `prelay_groups` entry written this morning is a second
 mechanism for the same copper, so its absence said nothing about the drops. The inference was from a FILE and
 the measurement is from the BOARD.
+
+**Addendum, 13:05 CEST (19 September), THE SENSE RULE CHASES WHICHEVER SWITCHING NET IS NEAREST, AND THAT IS
+WHY TWO PINNED NETS ARE NOT AN ANSWER.** E22's round 1 was read off its own finished board while round 2
+routed (read-only scratch copy, board sha c859363934873bc3): **hard 0, TWO unconnected items, and
+`/SHORE_INHIBIT` is not one of them.** The arm did exactly what it was for: board E's declared safety line,
+laid before the router as 37 locked tracks over 183.3 mm, survived the route and the closers, and `/USB_E6_P`
+closed as well. The two opens are new nets, `/CELL_MON` over **224.5 mm** (a connection the router never made,
+the sensor controller's floor plan again) and `/GND_V` over **5.4 mm**, which is inside the direct closer's
+declared twelve and was refused anyway.
+
+**And ANA-001 failed, on a third net.** `sensitive_nodes` reads 1 of 3: `TRK_CSN` holds at **exactly 0.500 mm**
+from `TRK_SW2`, the floor the pre-lay set, `WATER_SENSE` at 12.5 mm, and **`TRK_CSP` runs 0.266 mm from
+`TRK_LSENSE`** over 3.66 mm, 3.06 of it outside the shared part's courtyard. `TRK_LSENSE` is on this board's
+own switching list and it was not pinned.
+
+**So E21's PASS of 3 was not the rule being answered, it was that route not bringing a third net close.** The
+rule asks for distance to the NEAREST switching copper, and pinning the two partners a reader thinks of first
+only moves which net is nearest. Board E declares six switching nets and **E23 pins all six**, because chasing
+them one at a time is three more arms of two and a half hours each and the pre-lay is cheap on this board
+(E21 cost one connection, E22 gave one back). That arm answers a question rather than a net: if ANA-001 passes
+with every declared switching net locked, the rule is answerable by construction here; if it still fails, the
+violation is against copper this board does not call switching, which is a question about the DECLARATION and
+not about the router.
+
+**A note on method, because it saved two and a half hours:** round 2 was routing and the lander only judges
+when the supervisor ends, so round 1's finished board was copied to a scratch directory on the box and read
+there. Nothing in the running tree was touched, the board's own sha is in the record, and the arm's answer was
+in hand before its second round had finished generating.
