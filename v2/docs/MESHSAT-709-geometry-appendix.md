@@ -11873,8 +11873,10 @@ drop-back off so the raw stage is what is measured, the acceptance fix and the c
 | A47 | hard 0, 16 open | 10 of 16 | **hard 0, 9 open** |
 | A48 | hard 0, 15 open | 8 of 15 | **hard 0, 11 open** |
 
-**Not one arm's hard count moved**, so `guarded` keeps every one of these stages. Board A's best hard-0 board
-is **A45r at 8 open**, then A47 at 9 and A44 at 10.
+**Each row is the FROZEN board of its arm, not the router's own count**, which is why A48 reads 15 where its
+route landed at 20: `arf48k` is the board after A48's own finish pruned and cleaned, before the gate refused
+it. **Not one arm's hard count moved**, so `guarded` keeps every one of these stages. Board A's best hard-0
+board is **A45r at 8 open**, then A47 at 9 and A44 at 10.
 
 **What that is measured against is worse than the record had it.** A48's finish log reads `unconnected pairs:
 20` and then `FAILED` or `NOT CLOSED` on every one, with the board leaving the stage at hard 0 and 20 unrouted,
