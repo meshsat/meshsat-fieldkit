@@ -677,3 +677,23 @@ def t_a_guarded_main_is_given_the_function_and_the_argv_and_never_a_lambda():
             if "lambda" in fn or "(" in fn:
                 bad.append("%s: guard's second argument is %r, not a bare function" % (name, fn[:60]))
     assert not bad, bad
+
+
+def t_a_string_given_as_evidence_is_one_item_and_not_its_characters():
+    """THE DEFECTIVE FIXTURE, and it is a verdict in this tree (19 September 2026). `verdict.write` stored
+    `list(evidence or [])`, so a caller that passed a bare path wrote one row per CHARACTER, truncated at
+    fifty: board E's `rail_barrels` reading carries `p`, `c`, `b`, `-`, `e`, `1` ... under a note that says
+    "2 declined as a placement item", and the two sites it declined appear nowhere. The failure is silent and
+    looks like a populated evidence list, which is why it lived a day. A bare string is ONE piece of
+    evidence."""
+    import json, tempfile, os
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    import verdict as V
+    d = tempfile.mkdtemp(prefix="verdict-evidence-")
+    V.write("t_evidence_string", V.PASS, {"n": 1}, 1, evidence="pcb-e1-dock.kicad_pcb", out_dir=d, quiet=True)
+    got = json.load(open(os.path.join(d, "t_evidence_string.verdict.json")))["evidence"]
+    assert got == ["pcb-e1-dock.kicad_pcb"], got
+
+    V.write("t_evidence_list", V.PASS, {"n": 1}, 1, evidence=["one", "two"], out_dir=d, quiet=True)
+    got2 = json.load(open(os.path.join(d, "t_evidence_list.verdict.json")))["evidence"]
+    assert got2 == ["one", "two"], got2

@@ -311,7 +311,13 @@ def write(tool, result, counts=None, denominator=None, evidence=None, inputs=Non
         "counts": dict(counts or {}),
         "denominator": denominator,
         "inputs": _with_board(dict(inputs or {})),
-        "evidence": list(evidence or [])[:50],
+        # A BARE STRING IS ONE PIECE OF EVIDENCE, NOT ITS CHARACTERS (19 September 2026). `list("a.kicad_pcb")`
+        # is twelve one-character rows, and that is exactly what `rail_barrels` wrote on board E: a verdict whose
+        # whole job is to name the sites it DECLINED recorded the board's filename spelled out letter by letter,
+        # truncated at fifty. The reader could not have found the declined sites from it. A mechanical sweep says
+        # rail_barrels is the only tool that passed a scalar, and it is fixed at its five call sites too; this is
+        # the floor under the next one, because the failure is silent and looks like a populated evidence list.
+        "evidence": ([str(evidence)] if isinstance(evidence, (str, bytes)) else list(evidence or []))[:50],
         "note": note,
         # The sentence saying the input was not there, or None. A reader prefers a verdict that had
         # its input over one that says it did not, whatever the two timestamps are.
