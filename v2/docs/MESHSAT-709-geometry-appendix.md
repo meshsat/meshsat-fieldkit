@@ -12135,3 +12135,43 @@ with a rule holding them there. **It was found because the suite tree was cleane
 time**: the stager rsynced into a directory it never emptied, so each run answered partly from the previous
 run's own output, and with the index built from exactly the staged list and everything else cleaned away,
 the tree finally said what a fresh clone says.
+
+**Addendum, 00:30 CEST (20 September), AND IT IS NOT ONE NET: SIXTEEN DC CONDUCTORS ACROSS THREE BOARDS ARE
+JUDGED BY NEITHER POWER RULE, AND SEVERAL CARRY TEN AMPS OR MORE.**
+
+CH_ACN was found by asking one question of one net. Asking it of every board's own declaration gives the
+shape of it, and the shape is a whole CLASS of copper. `intent.rail()` describes a supply and `intent.node()`
+describes, in its own words, a net that is NOT a rail; the node declaration exists for rule CMP-001, which
+asks what voltage a part on a net can see, and it was used for every net that has a voltage worth stating.
+`dc_drop` solves rails. So every DC conductor that got a node instead of a rail is copper that **PI-001 (a
+conductor's current capacity) and PI-002 (its voltage drop) have never looked at.**
+
+**Board A: 13 rails judged, and EIGHT more DC conductors declared as nodes**, each carrying the current of
+the rail it feeds: `CH_SRP` (the charger's output to the 5 mOhm charge shunt R17 and on to CELL+, **10 A
+typical and 18 A peak**), `FE_OUT` (to VBUS20, 6 A / 8 A), `PA_OUT` (to +13V8_PA, 5 A / 6 A), `PD_OUT` (to
+PD_VPWR, 3 A), `HF_OUT` (to +12V_HF, 1 A / 2 A), `POE_OUT` (to +54V_POE, 0.3 A), and `PD_SW` and `PD_VBUS`,
+the USB-C outlet's own supply behind the switch and behind its shunt. **Board E: 4 rails judged and SEVEN
+more**, which between them are its entire input side: `DC_IN`, `DC_F`, `DC_HS`, `DC_P` (the vehicle and shore
+entry through the fuse and the hot-swap FET, feeding VIN_RAW at **8 A typical and 10 A peak**), `PV_IN` and
+`PV_P` (the solar entry), and `TRK_OUT` (the tracker's regulated output, feeding CELL_F at **10 A typical and
+18 A peak**). **Board P: 3 rails judged and `PACK_N`, the pack negative one 2 mOhm shunt from ground, which
+carries the pack's whole 10 A typical and 18 A peak.**
+
+**What the one measurement says the others are worth.** CH_ACN, asked for the first time on A48's frozen
+board, read 476 mV of drop (2.38 percent against a 2 percent bar) and **4.81 A in a 0.500 mm inner-layer
+conductor rated 0.40 A**. There is no reason to expect the other fifteen to be better and every reason to
+expect the same: they are the same kind of net, laid by the same router, with the same absence of a
+declaration telling anything to look.
+
+**The distinction the declarations actually need is not node against rail.** A switching node, a bootstrap
+capacitor's top plate, a gate driver's own VCC, a current-sense node and an RF output are genuinely not
+rails: their current is chopped or negligible and a drop budget in percent of a rail voltage means nothing
+on them. What the sixteen above have in common is narrower and mechanical: **each is copper that carries a
+load's DC current from one terminal to another, and lies on the path between a declared rail's source and
+its loads.** That is a testable property of the netlist plus the intent, so it can be a rule rather than a
+reading of a list, and the rule's first job is to refuse a board that leaves such a conductor undeclared.
+
+**NOT APPLIED TONIGHT beyond CH_ACN, and the reason is stated.** Each one needs its source, its loads and
+its budget written down, and a declaration that is wrong is worse than one that is missing, because it
+produces a number. They are written here with their currents so the next generation of each board can carry
+them, and **board A's CH_SRP and board P's PACK_N are the two to do first, because they are the 10 A ones.**
