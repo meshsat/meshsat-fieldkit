@@ -297,3 +297,37 @@ def t_the_fixer_never_decides_pi003_and_never_blocks_a_route():
         head = seg[:seg.index("rules=[")] if "rules=[" in seg else seg[:400]
         assert ("advisory=True" in head) or ("missing_input=" in head), \
             "a verdict that is neither advisory nor a declared missing input: %r" % head[:140]
+
+
+def t_a_cluster_only_part_of_which_fits_is_declined_rather_than_half_laid():
+    """The case that matters, because it is the one that looks like progress. 3.00 A on a 0.40 mm barrel needs
+    four and one is there, so three are owed at a pitch of 0.8 mm: two of them land inside a 1.0 mm window and
+    the outer two do not. Laying the two would put copper on the board and leave the crossing reading exactly
+    as short as before, because the judge counts what is inside its window and nothing else."""
+    r = _row(3.0, drill=0.4, at=(10.0, 10.0), near=[(10.0, 10.0)])
+    r["reach"], r["at_pad"] = 1.0, (10.0, 10.0)
+    assert r["need"] == 4, r["need"]
+    pts, axis, note = rb.plan(r, OPEN)
+    assert pts == [], (pts, note)
+    assert "only 2 of the 3" in note and "placement item" in note, note
+
+
+def t_a_cluster_that_does_not_fit_the_judge_s_window_is_declined_whole():
+    """Half an answer is not an answer: the judge counts barrels within its own window and nothing else, so
+    laying part of a cluster leaves the crossing exactly as short as it was while putting copper on a board.
+    The window travels in the row (`reach`, `at_pad`) so the fixer and the judge cannot disagree about it."""
+    r = _row(6.0, drill=0.5, at=(10.0, 10.0), near=[(10.0, 10.0)])
+    r["reach"], r["at_pad"] = 0.6, (10.0, 10.0)          # a millimetre of room, a cluster of nine
+    pts, axis, note = rb.plan(r, OPEN, max_barrels=16)
+    assert pts == [], (pts, note)
+    assert "judged over" in note and "placement item" in note, note
+
+
+def t_a_cluster_that_fits_is_still_laid():
+    """THE ACCEPTABLE FIXTURE for the same rule: two barrels of 0.40 mm span 0.8 mm and fit a 1.3 mm window."""
+    r = _row(1.4, drill=0.4, at=(10.0, 10.0), near=[(10.0, 10.0)])
+    r["reach"], r["at_pad"] = 1.3, (10.0, 10.0)
+    assert r["need"] == 2, r["need"]
+    pts, axis, note = rb.plan(r, OPEN)
+    assert len(pts) == 1, (pts, note)
+    assert math.hypot(pts[0][0] - 10.0, pts[0][1] - 10.0) <= 1.3 + 1e-9

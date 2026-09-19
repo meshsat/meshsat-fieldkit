@@ -158,19 +158,28 @@ def t_the_row_carries_the_ring_already_on_the_site():
     assert abs(rows[0]["width"] - 0.8) < 1e-9, rows[0]["width"]
 
 
-def t_the_window_covers_the_cluster_the_answer_would_take():
-    """Board P proved this one. The chain laid four barrels at F1 pad 1 on a lattice of pitch drill + 0.4, and
-    this walk, looking 1.0 mm past the pad, saw three of the five and reported the site still short: a judge
-    that cannot see the answer it asked for is a judge nobody can satisfy. The window grows with the count, so
-    the outermost barrel of the cluster is inside it."""
+def t_the_window_does_not_grow_with_the_count_it_asks_for():
+    """A version of this walk grew its window by (need - 1) * pitch / 2 so that it could count the cluster a
+    fixer would lay. It was measured on the same three board files with nothing but the judge changed and it
+    LOOSENED the question: board A read 5 short where it read 8, board B 3 where it read 5, board E 2 where it
+    read 4. A window that wide does not count the answer, it counts the NEIGHBOURHOOD, sweeping up every
+    fanout via of the same rail that happens to be near and is not at this crossing. The window is the pad
+    plus `reach_mm`, and the FIXER is told what it is: a cluster that does not fit is a placement item."""
     pads = [_Pad("/RAIL", "1", 10.0, 10.0, 0.6, 0.6)]
-    # five barrels at 0.9 pitch centred on the pad: the outermost stands 1.8 mm away, well past 1.0 + 0.3
     vias = [_Via("/RAIL", 10.0 + 0.9 * k, 10.0, 0.5) for k in (-2, -1, 0, 1, 2)]
     b = _Board(vias, [_FP("U1", pads)])
-    rails = {"/RAIL": {"amps_peak": 5.0, "source": "U1"}}
-    assert vc.barrels_for(5.0, 0.5) == 5, vc.barrels_for(5.0, 0.5)
-    short, judged = rc.judge(b, rails)
-    assert judged == 1 and short == [], (judged, short)
+    short, judged = rc.judge(b, {"/RAIL": {"amps_peak": 5.0, "source": "U1"}})
+    assert judged == 1 and len(short) == 1, (judged, short)
+    assert "3 barrel(s)" in short[0], ("the two barrels 1.8 mm out were counted", short[0])
+
+
+def t_the_row_carries_the_window_the_fixer_must_fit_inside():
+    """The fixer places barrels the judge will count, or none: `reach` and the pad centre travel in the row so
+    the two cannot disagree about where the window is."""
+    b, rails = _one_pad_source(1, drill=0.4, amps=3.0)
+    rows, judged = rc.rows(b, rails)
+    assert rows and "reach" in rows[0] and "at_pad" in rows[0], rows[0].keys()
+    assert rows[0]["reach"] > 0
 
 
 def t_the_window_never_shrinks_below_the_one_it_started_with():
