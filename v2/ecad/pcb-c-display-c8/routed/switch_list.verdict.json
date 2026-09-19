@@ -1,0 +1,48 @@
+{
+ "advisory": true,
+ "applicable": true,
+ "counts": {
+  "declared": 0,
+  "excluded_by_intent": 3,
+  "nets": 144,
+  "poured": 1,
+  "shaped": 2,
+  "strong": 2,
+  "undeclared": 2
+ },
+ "denominator": 2,
+ "evidence": [
+  "STRONG EPD_SW: Q6 with L1",
+  "STRONG EPD_VCC: Q5 with L1"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-c-display-c8/pcb-c-display.kicad_pcb",
+   "sha256_16": "2a273803757c68fb"
+  },
+  "declares": null,
+  "intent": {
+   "path": "pcb-c-display-c8/out/pcb-c-display-intent.json",
+   "sha256_16": "541ec4863d3e6683"
+  },
+  "netlist": {
+   "path": "pcb-c-display-c8/out/pcb-c-display.net",
+   "sha256_16": "8e62e0a7a9c2f6f2"
+  }
+ },
+ "missing_input": null,
+ "note": "a net carrying a transistor's drain or source pad with an inductor's pad, or two transistors', and not matched by this board's own switch_nets patterns; a REPORT, because whether such a node is switching for ANA-001 is a judgement and not a measurement",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [],
+ "tool": "switch_list",
+ "tools": {
+  "git_head": "65e63b90c506",
+  "tools_tree_sha": "5c52e37dbea106fb"
+ },
+ "ts": "2026-09-19T12:40:18Z",
+ "verdict": "FAIL",
+ "version": "65e63b90c506"
+}
