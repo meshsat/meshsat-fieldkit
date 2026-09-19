@@ -54,7 +54,7 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 | RET-002 plane-adjacency screen | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | intent_return_path PASS of 197 |
 | RET-003 return transition at a reference change | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: 16 September 2026: the reference conductor is determined now, per via, by sampling the fill |
 | RET-004 ground-via proximity screen | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | return_via FAIL: {'examined_same_reference': 0, 'examined_to_power': 10, 'exempt': 54, 'judged': 40, 'lacking': 32, 'same_plane': 27, 'sl |
-| IMP-001 an impedance target is feasible and asked for | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the  |
+| IMP-001 an impedance target is feasible and asked for | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: closed forms from a standard not in the tree; no fabricator confirmation and no coupon. 19  |
 | IMP-002 a class clearance is never below the board minimum | BLOCKER | PLACED_BOARD | **PASS** | class_floor PASS of 32 |
 | PAIR-001 a pair is coupled and matched | BLOCKER | ROUTED_BOARD | **PASS** | impedance_check PASS of 3 |
 | SI-001 transmission-line classification | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | the authority behind this rule's limit is not established: 16 September 2026: half of this note was already wrong and the other half is now addressed. |

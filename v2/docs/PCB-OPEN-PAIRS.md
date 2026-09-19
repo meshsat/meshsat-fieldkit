@@ -140,9 +140,9 @@ holding a number, not a question about a number.
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
-| `IMP-001` | A | INCONCLUSIVE | the authority behind this rule's limit is not established: closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case with one solved point; no fabricat |
-| `IMP-001` | B | INCONCLUSIVE | the authority behind this rule's limit is not established: closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case with one solved point; no fabricat |
-| `IMP-001` | D | INCONCLUSIVE | the authority behind this rule's limit is not established: closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case with one solved point; no fabricat |
+| `IMP-001` | A | INCONCLUSIVE | the authority behind this rule's limit is not established: closed forms from a standard not in the tree; no fabricator confirmation and no coupon. 19 SEPTEMBER 2026, THE NOTE WAS A DAY OUT OF DATE AN |
+| `IMP-001` | B | INCONCLUSIVE | the authority behind this rule's limit is not established: closed forms from a standard not in the tree; no fabricator confirmation and no coupon. 19 SEPTEMBER 2026, THE NOTE WAS A DAY OUT OF DATE AN |
+| `IMP-001` | D | INCONCLUSIVE | the authority behind this rule's limit is not established: closed forms from a standard not in the tree; no fabricator confirmation and no coupon. 19 SEPTEMBER 2026, THE NOTE WAS A DAY OUT OF DATE AN |
 
 ## MISSING_INPUT (14): an input the reading declared absent
 
