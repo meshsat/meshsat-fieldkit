@@ -97,11 +97,16 @@ def rows(b, rails, reach_mm=1.0):
                 # laid 0.70 mm rings on a 0.40 mm drill on board A's first real run and the DRC refused all
                 # seven sites, because board A declares a 0.20 mm annular floor and that ring is 0.15.
                 width = min(_kc_width(v) for v in near) / 1e6
+                # THE BARRELS ALREADY THERE, by position, because the fixer adds to this cluster rather than
+                # beside it: a lattice centred on the pad puts its own holes half a pitch from the barrel that
+                # is already on the site, which is board A's seven `hole_to_hole` refusals of this morning.
+                at_near = [(v.GetPosition().x / 1e6, v.GetPosition().y / 1e6) for v in near]
                 need = _vc.barrels_for(_share, drill)
                 if len(near) < need:
                     short.append({
                         "net": n, "ref": ref, "pad": pad.GetNumber(), "at": (c.x / 1e6, c.y / 1e6),
-                        "drill": drill, "width": width, "have": len(near), "need": need, "amps": _share,
+                        "drill": drill, "width": width, "near": at_near, "have": len(near), "need": need,
+                        "amps": _share,
                         "part_amps": want[ref], "pads": len(_pads),
                         "why": "%s at %s pad %s (%.2f, %.2f): %d barrel(s) of %.2f mm for %.2f A "
                                "(%.2f A over this part's %d pad(s) on the rail), which needs %d at a 10 K rise"

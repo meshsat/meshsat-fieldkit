@@ -18,17 +18,24 @@ import via_current as vc
 SRC = open(os.path.join(TOOLS, "rail_barrels.py"), encoding="utf-8").read()
 
 
-def _row(amps, drill=0.4, at=(10.0, 10.0), have=1):
+def _row(amps, drill=0.4, at=(10.0, 10.0), have=1, near=None, width=None):
     return {"net": "RAIL", "ref": "U1", "pad": "1", "at": at, "drill": drill,
+            "width": width if width is not None else drill + 0.4,
+            "near": near if near is not None else [at] * have,
             "have": have, "need": vc.barrels_for(amps, drill), "amps": amps,
             "part_amps": amps, "pads": 1, "why": ""}
 
 
+OPEN = lambda x, y: True            # every site free
+SHUT = lambda x, y: False           # no site free
+
+
 def t_a_site_a_cluster_can_answer_is_planned():
-    """THE ACCEPTABLE FIXTURE. 3.00 A on a 0.40 mm barrel needs four, which is a cluster beside the pad."""
+    """THE ACCEPTABLE FIXTURE. 3.00 A on a 0.40 mm barrel needs four and one is there, so THREE are owed."""
     r = _row(3.0)
-    pts, axis, note = rb.plan(r, [])
-    assert len(pts) == 4, (len(pts), note)
+    pts, axis, note = rb.plan(r, OPEN)
+    assert r["need"] == 4, r["need"]
+    assert len(pts) == 3, (len(pts), note)
 
 
 def t_a_site_that_needs_more_barrels_than_a_cluster_holds_is_declined():
@@ -39,7 +46,7 @@ def t_a_site_that_needs_more_barrels_than_a_cluster_holds_is_declined():
     answers any number turns a measured refusal into copper nobody chose."""
     r = _row(18.0, drill=0.5)
     assert r["need"] > rb.MAX_BARRELS, r["need"]
-    pts, axis, note = rb.plan(r, [])
+    pts, axis, note = rb.plan(r, OPEN)
     assert pts == [], pts
     assert "busbar" in note and "placement item" in note, note
 
@@ -47,16 +54,57 @@ def t_a_site_that_needs_more_barrels_than_a_cluster_holds_is_declined():
 def t_the_cap_is_a_number_a_caller_can_move_and_not_a_silence():
     """The same site with the cap raised is planned, so the refusal is the CAP's and not a failure to try."""
     r = _row(18.0, drill=0.5)
-    pts, axis, note = rb.plan(r, [], max_barrels=32)
-    assert len(pts) == r["need"] == 18, (len(pts), r["need"])
+    pts, axis, note = rb.plan(r, OPEN, max_barrels=32)
+    assert r["need"] == 18 and len(pts) == 17, (len(pts), r["need"])
 
 
-def t_the_barrels_are_centred_on_the_site_so_the_one_there_keeps_its_copper():
-    """A site with a barrel already on it is the normal case: the fanout's own via. Centre on it."""
-    r = _row(3.0, at=(10.0, 20.0))
-    pts, axis, note = rb.plan(r, [])
-    cx = sum(p[0] for p in pts) / len(pts); cy = sum(p[1] for p in pts) / len(pts)
-    assert abs(cx - 10.0) < 1e-9 and abs(cy - 20.0) < 1e-9, (cx, cy)
+def t_the_lattice_is_anchored_on_the_barrel_already_there_and_never_collides_with_it():
+    """The defect that made board A's first real run lay nothing: `need` points centred on the PAD put two
+    new holes half a pitch from the barrel standing in the middle, and the DRC answered `hole_to_hole` at
+    every one of seven sites. The new barrels grow out of the one that is there."""
+    # The fanout's via sits BESIDE the pad, not on it, which is what makes the anchor visible: a lattice on
+    # the pad centre and a lattice on the barrel are different lattices, and only one of them misses the
+    # barrel. This fixture is 0.55 mm off the pad, which is where `prefanout` puts a via on a 1 mm land.
+    r = _row(3.0, at=(10.0, 20.0), near=[(10.55, 20.0)])
+    pts, axis, note = rb.plan(r, OPEN)
+    floor = r["drill"] + rb.FLOOR
+    for px, py in pts:
+        assert math.hypot(px - 10.55, py - 20.0) >= floor - 1e-9, ("collides with the barrel there", px, py)
+    on_lattice = [p for p in pts if abs(math.hypot(p[0] - 10.55, p[1] - 20.0) - (r["drill"] + 0.4)) < 1e-9]
+    assert on_lattice, ("no barrel sits one pitch from the one already there", pts)
+
+
+def t_a_barrel_already_there_that_is_off_the_lattice_is_still_kept_clear_of():
+    """Two barrels 0.50 mm apart on a 0.40 mm drill: the lattice anchored on the first puts its next point
+    0.80 mm along, which is 0.30 mm from the second, under this project's 0.6995 mm hole-to-hole floor. The
+    plan must step past it rather than lay a hole the DRC will answer `hole_to_hole` for."""
+    r = _row(3.0, at=(10.0, 20.0), have=2, near=[(10.0, 20.0), (10.80, 20.30)])
+    pts, axis, note = rb.plan(r, OPEN)
+    floor = r["drill"] + rb.FLOOR
+    for px, py in pts:
+        for qx, qy in r["near"]:
+            assert math.hypot(px - qx, py - qy) >= floor - 1e-9, ((px, py), (qx, qy))
+
+
+def t_only_the_barrels_still_owed_are_laid():
+    """A site with three of the four it needs is owed ONE, not four."""
+    r = _row(3.0, have=3, near=[(10.0, 10.0), (10.8, 10.0), (11.6, 10.0)])
+    pts, axis, note = rb.plan(r, OPEN)
+    assert len(pts) == 1, (len(pts), note)
+
+
+def t_a_site_with_nowhere_free_to_stand_is_declined_and_not_forced():
+    """`return_via._site_free` is the board's answer; when it refuses everywhere the site is a placement item
+    and the tool says so rather than laying copper the DRC will strip."""
+    r = _row(3.0)
+    pts, axis, note = rb.plan(r, SHUT)
+    assert pts == [] and "nowhere to stand" in note, note
+
+
+def t_a_site_that_already_carries_what_it_needs_is_not_touched():
+    r = _row(0.5, have=4, near=[(10.0, 10.0)] * 4)
+    pts, axis, note = rb.plan(r, OPEN)
+    assert pts == [] and "already carries" in note, note
 
 
 def t_the_pitch_keeps_this_project_s_hole_to_hole_floor():
@@ -64,20 +112,30 @@ def t_the_pitch_keeps_this_project_s_hole_to_hole_floor():
     eight hole_to_hole violations. The plan may never produce that, at any drill this project uses."""
     for drill in (0.2, 0.25, 0.3, 0.4, 0.5, 0.7):
         r = _row(6.0, drill=drill)
-        pts, axis, note = rb.plan(r, [], max_barrels=64)
-        for i in range(len(pts)):
-            for j in range(i + 1, len(pts)):
-                d = math.hypot(pts[i][0] - pts[j][0], pts[i][1] - pts[j][1])
+        pts, axis, note = rb.plan(r, OPEN, max_barrels=64)
+        allp = pts + list(r["near"])
+        for i in range(len(allp)):
+            for j in range(i + 1, len(allp)):
+                d = math.hypot(allp[i][0] - allp[j][0], allp[i][1] - allp[j][1])
+                if d == 0: continue        # two recorded barrels at one point is the fixture, not a plan
                 assert d - drill >= rb.FLOOR - 1e-9, (drill, d, d - drill)
 
 
-def t_the_axis_chosen_is_the_one_that_keeps_furthest_from_another_net_s_pad():
-    """A neighbour due east must push the cluster onto y, and a neighbour due north onto x."""
+def t_the_axis_chosen_is_the_one_the_board_leaves_room_on():
+    """A wall of refused sites due east and west must push the cluster onto y, and the other way round."""
     r = _row(3.0)
-    pts, axis, _ = rb.plan(r, [(10.9, 10.0)])
-    assert axis == "y", (axis, pts)
-    pts, axis, _ = rb.plan(r, [(10.0, 10.9)])
-    assert axis == "x", (axis, pts)
+    pts, axis, _ = rb.plan(r, lambda x, y: abs(y - 10.0) > 1e-9)      # only off-axis in y is free
+    assert axis == "y" and len(pts) == 3, (axis, pts)
+    pts, axis, _ = rb.plan(r, lambda x, y: abs(x - 10.0) > 1e-9)
+    assert axis == "x" and len(pts) == 3, (axis, pts)
+
+
+def t_the_board_s_own_site_test_is_the_one_used_and_not_a_second_copy():
+    """`return_via._site_free` knows about every other net's pads, tracks and vias on every layer, and it
+    carries the paste-aperture fix of 17 September. A second geometry test here would be the third tool with
+    that defect."""
+    assert "_rv._site_free(" in SRC
+    assert "GetBoundingBox()" not in SRC and "IsOnCopperLayer" not in SRC
 
 
 def t_a_routed_board_is_this_tool_s_refusal_and_not_its_work():

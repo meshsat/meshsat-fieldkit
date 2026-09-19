@@ -28,7 +28,7 @@ is the rule that judges this after the route; the sites are `rail_crossings.rows
 carrying its numbers instead of its prose. Nothing here has its own opinion about which site is short or how
 many barrels it needs.
 
-Usage: rail_barrels.py <placed board.kicad_pcb> [--intent path] [--apply] [--max-barrels 8] [--reach 6.0]
+Usage: rail_barrels.py <placed board.kicad_pcb> [--intent path] [--apply] [--max-barrels 8]
                        [--board <letter>] [--out-dir DIR]
        Reports by default; `--apply` lays the barrels, DRCs, keeps what the DRC accepts and saves.
        exit 0 nothing to do or laid, 1 every site refused by the DRC, 3 no intent file to work from."""
@@ -41,7 +41,7 @@ import via_current as _vc
 import hardset
 
 # KiCad IS IMPORTED IN `main`, and so are the two modules that import it at their own top (`power_copper` and
-# `via_parallel`). `plan`, `_routed` and `_obstacles` touch method names only, never a pcbnew constant, so
+# `via_parallel`). `plan` is a function of numbers and a callable, and `_routed` touches method names only, so
 # every rule about where a barrel goes, when a site is declined and what counts as a routed board runs on the
 # runner instead of skipping there. This is the same split `rail_crossings.judge` carries and the reason
 # `test_pair_router_imports` exists: a tool whose rules only run where KiCad is leaves the suite green while
@@ -53,7 +53,6 @@ import hardset
 # refuses a private copy of either in this file.
 
 MAX_BARRELS = 8          # above this a cluster is a busbar: declined, reported, and left to the placement
-REACH = 6.0              # how far to look for another net's pad when choosing the axis (barrel_sites' own number)
 FLOOR = 0.2995           # hole to hole, this project's own rule; power_copper.stitch enforces it
 
 
@@ -65,50 +64,52 @@ def _routed(b):
     return unlocked > 100 and unlocked > 0.20 * len(segs)
 
 
-def _obstacles(b, net, x, y, reach):
-    """Every other net's COPPER within reach of the site: pad centres, via centres and track ends, in mm.
+def plan(row, free, max_barrels=MAX_BARRELS):
+    """(pts, axis, note): where the barrels this crossing still needs go, or ([], axis, why not).
 
-    The first version read pads only, and on board A's first real run it reported 2.88 to 5.48 mm of room at
-    seven sites and the DRC refused every one. A placed board of this project carries 823 vias and a thousand
-    locked escape tracks before a router has seen it: the pads are the emptiest thing on it. An axis chosen
-    against pads alone is chosen against a tenth of what is there."""
-    out = []
-    for fp in b.GetFootprints():
-        for p in fp.Pads():
-            if (p.GetNetname() or "").lstrip("/") == net: continue
-            q = p.GetPosition(); px, py = q.x / 1e6, q.y / 1e6
-            if math.hypot(px - x, py - y) <= reach: out.append((px, py))
-    for t in b.GetTracks():
-        if (t.GetNetname() or "").lstrip("/") == net: continue
-        pts = [t.GetPosition()] if t.GetClass() == "PCB_VIA" else [t.GetStart(), t.GetEnd()]
-        for q in pts:
-            px, py = q.x / 1e6, q.y / 1e6
-            if math.hypot(px - x, py - y) <= reach: out.append((px, py))
-    return out
+    `free(x, y)` answers whether a barrel may stand at (x, y): on a board it is `return_via._site_free`, this
+    project's ONE site test, which knows about every other net's pads, tracks and vias on every layer and has
+    the paste-aperture fix of 17 September in it. Here it is a callable so that every rule about the LATTICE
+    runs where KiCad is not.
 
-
-def plan(row, others, max_barrels=MAX_BARRELS):
-    """(pts, axis, note): where the barrels of one short crossing go, or ([], axis, why not).
-
-    Pure arithmetic over numbers, so it is exercised where KiCad is not. The count and the pitch come from
-    `power_copper`; the axis is the one whose points stay furthest from another net's pad, which is
-    `barrel_sites --suggest`'s own choice made by the thing that lays them."""
-    x, y = row["at"]; drill = row["drill"]; need = int(row["need"])
+    THE LATTICE IS ANCHORED ON THE BARREL ALREADY THERE, not on the pad centre. The first version centred
+    `need` points on the pad, which on a site with one barrel in the middle puts two new holes half a pitch
+    from it: board A's seven sites came back `clearance, hole_clearance, hole_to_hole` and every one was
+    reverted. The site already has `have` barrels; what is owed is `need - have`, laid on the same lattice,
+    growing outward from the ones that are there and skipping any position that is occupied or refused."""
+    x, y = row["at"]; drill = row["drill"]; need = int(row["need"]); have = int(row["have"])
+    near = list(row.get("near") or [])
     if need > max_barrels:
         return [], "x", ("%d barrels of %.2f mm for %.2f A is a busbar and not a cluster: this site is a "
                          "placement item, not copper to add beside the pad" % (need, drill, row["amps"]))
+    if need <= have:
+        return [], "x", "this site already carries the barrels its current needs"
     pitch = drill + 0.4
-    span = (need - 1) * pitch
-    def pts_for(ax):
-        return [((x - span / 2.0 + i * pitch, y) if ax == "x" else (x, y - span / 2.0 + i * pitch))
-                for i in range(need)]
-    def worst(ax):
-        return min([math.hypot(px - ox, py - oy) for px, py in pts_for(ax) for ox, oy in others] or [99.0])
-    wx, wy = worst("x"), worst("y")
-    axis = "x" if wx >= wy else "y"
-    room = ("%.2f mm to another net's pad on this axis, %.2f on the other" % (max(wx, wy), min(wx, wy))) \
-        if others else "nothing else within %.1f mm" % REACH
-    return pts_for(axis), axis, room
+    floor = drill + FLOOR
+    # The anchor is the existing barrel nearest the pad, so the new copper grows out of the copper that is
+    # there; with no barrel recorded the pad itself is the anchor.
+    ax, ay = min(near, key=lambda q: math.hypot(q[0] - x, q[1] - y)) if near else (x, y)
+    owed = need - have          # ONE place holds this number: written twice, a mutation of either survived
+    best = None
+    for axis in ("x", "y"):
+        pts, k = [], 1
+        while len(pts) < owed and k <= 4 * need:
+            for sgn in (1, -1):
+                if len(pts) >= owed: break
+                cx = ax + (k * pitch if axis == "x" else 0.0) * sgn
+                cy = ay + (k * pitch if axis == "y" else 0.0) * sgn
+                if any(math.hypot(cx - qx, cy - qy) < floor - 1e-9 for qx, qy in near + pts): continue
+                if not free(cx, cy): continue
+                pts.append((cx, cy))
+            k += 1
+        if best is None or len(pts) > len(best[0]): best = (pts, axis)
+    pts, axis = best
+    if not pts:
+        return [], axis, ("no free site on either axis at this pitch: the %d barrel(s) this crossing needs "
+                          "have nowhere to stand, which is a placement item" % need)
+    note = ("%d of the %d still owed" % (len(pts), owed)) if len(pts) < owed \
+        else "every barrel still owed has a free site"
+    return pts, axis, note
 
 
 def main(argv):
@@ -116,10 +117,10 @@ def main(argv):
     import pcbnew
     import power_copper as _pc
     import via_parallel as _vp
+    import return_via as _rv
     path = argv[0]
     apply_ = "--apply" in argv
     maxb = int(_v.opt(argv, "--max-barrels", MAX_BARRELS))
-    reach = float(_v.opt(argv, "--reach", REACH))
     letter = _v.opt(argv, "--board", None)
     out_dir = _v.opt(argv, "--out-dir", None)
     stem = os.path.splitext(os.path.basename(path))[0]
@@ -157,18 +158,23 @@ def main(argv):
                  out_dir=out_dir, rules=["PI-003"])
         return 0
 
+    ds = b.GetDesignSettings()
+    clr = max(pcbnew.ToMM(ds.m_MinClearance), 0.127)     # return_via's own floor, and its reason
     plans, declined = [], []
     for r in rows:
-        others = _obstacles(b, r["net"], r["at"][0], r["at"][1], reach)
-        pts, axis, note = plan(r, others, maxb)
+        own = "/" + r["net"] if not r["net"].startswith("/") else r["net"]
+        own = own if any((p.GetNetname() or "") == own for fp in b.GetFootprints() for p in fp.Pads()) \
+            else r["net"]
+        free = lambda X, Y, _w=r["width"], _o=own: _rv._site_free(b, X, Y, _w, clr, _o)
+        pts, axis, note = plan(r, free, maxb)
         if not pts: declined.append((r, note)); continue
         plans.append((r, pts, axis, note))
     for r, note in declined:
         print("rail_barrels: DECLINED %s at %s pad %s (%.2f, %.2f): %s"
               % (r["net"], r["ref"], r["pad"], r["at"][0], r["at"][1], note))
     for r, pts, axis, note in plans:
-        print("rail_barrels: %s at %s pad %s (%.2f, %.2f): %d barrel(s) of %.2f/%.2f mm for %.2f A, %d there, "
-              "spread on %s, %s" % (r["net"], r["ref"], r["pad"], r["at"][0], r["at"][1], r["need"],
+        print("rail_barrels: %s at %s pad %s (%.2f, %.2f): +%d barrel(s) of %.2f/%.2f mm for %.2f A, %d there, "
+              "spread on %s, %s" % (r["net"], r["ref"], r["pad"], r["at"][0], r["at"][1], len(pts),
                                     r.get("width", 0.0), r["drill"], r["amps"], r["have"], axis, note))
     if not apply_:
         print("rail_barrels: %d site(s) planned, %d declined, nothing laid (give --apply)"
@@ -194,6 +200,8 @@ def main(argv):
         # with its number rather than reaching a board.
         # THE RING IS THE ONE ALREADY ON THIS SITE, never a number this file chose. Board A declares a 0.20 mm
         # annular floor and the first version's `max(drill + 0.3, 0.6)` is 0.15 mm of ring on a 0.40 mm drill.
+        # `stitch` checks the floor WITHIN this call; the barrels already on the site are the
+        # plan's to keep clear of, which it does before a point is ever offered here.
         pc.stitch(r["net"], pts, drill=r["drill"], width=r["width"])
         laid.append((r, pts))
     pcbnew.SaveBoard(path, b)
