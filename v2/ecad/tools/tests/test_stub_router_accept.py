@@ -480,6 +480,24 @@ def t_the_cache_key_carries_everything_the_radii_depend_on():
         "with the cache off this is no longer the map the tool has always built"
 
 
+def t_the_cache_is_on_by_default_and_the_default_carries_its_measurement():
+    """A default that moves is a claim about every board, so the number that moved it lives beside it.
+
+    It was OFF from the day it was written, deliberately, "until a board says otherwise". A48's frozen board
+    said so on 20 September: one variable, board A's own finish configuration with the wall, cache off 55
+    minutes and 15 open to 14, cache on 48 minutes and 15 open to 11, with STUB_MAP_CHECK's nineteen of
+    nineteen identical maps behind it. The off switch has to keep working, because it is how the next
+    equivalence check is taken.
+    """
+    s = _src()
+    assert 'os.environ.get("STUB_MAP_CACHE", "1")' in s, \
+        "the map cache is not on by default, or its default cannot be read"
+    assert "0 hard 15 open -> 0 hard 11 open" in s, \
+        "the default moved without the measurement that moved it written beside it"
+    assert "`STUB_MAP_CACHE=0` restores the per-net rebuild" in s, \
+        "there is no documented way back to the map this tool has always built"
+
+
 def t_a_cached_map_that_differs_from_the_reference_stops_the_run():
     """The check mode is the proof, so it cannot be a warning: a map that differs from the one this tool has
     always searched is a board the tool cannot see, which is the 16 September defect exactly."""

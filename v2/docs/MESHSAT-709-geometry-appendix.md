@@ -12291,3 +12291,119 @@ nothing, silently: it refused to replace a crashing `dc_drop.py` ("REFUSING: dc_
 running) and left a landing reader unarmed. The bracket protects the pattern from itself and not from the
 path later on the line. **A guard that can match its own command line reports the opposite of the truth and
 says nothing about it.**
+
+### 32.230 addendum, 20 September 2026 01:20 CEST: the map cache is 2.5 times the throughput and the closed count does not move
+
+Read at the half-way mark of the one-variable A/B on A48's frozen board, board A's own
+finish configuration with the wall (`STUB_STAGE_S=3300`, `timeout 3600`, `STUB_DRC=0`),
+the two arms differing in `STUB_MAP_CACHE` alone:
+
+| | nets offered to the search | closed | failed | wall |
+|---|---:|---:|---:|---|
+| cache OFF (whole run) | 4 | 3 | 1 | 55 min, cut at the stage wall |
+| cache ON (29.5 min in) | **10** | **3** | 6 | running |
+
+**The three closures are identical net for net, track for track, via for via and cell
+for cell**: `/+5V_DEV` 10 tracks 1 via 228 cells, `/+5V_S1` 14 tracks 1 via 581 cells,
+`/+5V_S3` 8 tracks 1 via 146 cells. That is the equivalence proof of `STUB_MAP_CHECK`
+(19 of 19 maps identical to the reference) carried into the speed arm: the cache changes
+how many nets reach the search and not what the search answers.
+
+**Board A's written prediction is half right and the half that fails is the informative
+half.** `boards/a.json` `_a_closer_map_cache_prediction` said all fifteen opens offered
+inside the hour and the closed count rising from 3 towards 8 of 15, and that if the
+closed count does not move then the rasterisation was not the thing in the way and the
+next suspect is the search at 0.05 mm. Six more nets reached the search and **every one
+of the six was refused**: `/+5V_S2` track to track, `/CHG_ILIM` and `/CH_ACN_F` pad to
+track, `/CH_SRP_F`, `/CH_SW2` and `/HF_SLOPE` pad to pad. None of the six ran out of
+clock; each ended with no path at the grid it was given.
+
+So the rasterisation was the wall on the OFFERING RATE and it is not what board A's
+remaining opens are about. The probe configuration's 8 of 15 was taken at `STUB_GRID=0.1`
+and board A's own `stub_env` declares 0.05, so **the next one-variable arm is the grid**,
+and the four pad-to-pad refusals say where to look: a pad walled in at 0.05 mm is walled
+in at 0.1 mm too unless the coarser cell centres happen to fall inside the lane, which is
+the 16 September lesson about a map that marks a cell by its centre.
+
+The default does not move on a half-way reading; it moves when the arm lands.
+
+### 32.230 addendum CORRECTED, 20 September 2026 01:35 CEST: the closed count does move, and reading an arm at its half-way mark is why I said otherwise
+
+The entry above was written at the cached arm's half-way mark and its second half is WRONG. Twenty-five
+minutes later the same arm reads **fourteen nets offered and SIX closed** against the reference arm's four
+and three. The closed count has doubled, which is board A's written prediction (`_a_closer_map_cache_prediction`:
+"the closed count rising from 3 towards 8 of 15") doing exactly what it said, and the sentence "the
+rasterisation was not the thing in the way" does not follow from the evidence.
+
+What the half-way reading actually showed was the first ten nets of a run whose later nets close: the six
+extra failures I read at 29 minutes were real refusals, and three of the four nets offered after them closed.
+**A stage with a wall offers its nets in one order and a snapshot of the first two thirds is not a sample of
+the whole.** The lesson is the one the record already carries about remedy rounds and landing drivers, in a
+new place: read an arm when it lands.
+
+The half-way numbers stand as numbers and the inference drawn from them does not. What the arm is measuring
+is unchanged: the cache is proved equivalent net for net, track for track, via for via and cell for cell on
+its three shared closures, and it offers nets at about two and a half times the rate. The grid arm armed
+behind it is still the right next one-variable measurement, but it is now an open question rather than the
+answer to a refuted prediction, and the prediction's own floor (eight of fifteen at `STUB_GRID=0.1`) is what
+it is measured against.
+
+### 32.231, 20 September 2026 01:40 CEST: A49's re-close is not the one-variable pair it was armed as, and what it does prove is about the clock
+
+`/root/a49_reclose.sh` re-closed A49's frozen board (sha `f9e3f33048b30436`, 16 open) twice, and the two
+readings are:
+
+| configuration | exit | closed | board after |
+|---|---|---:|---|
+| `finishcfg` = board A's own declared `stub_env` | **124** | nothing saved | 0 hard, 16 open |
+| `probecfg` | 0 | **11 of 16** | 0 hard, **11 open** |
+
+**The first arm did not refuse anything: it was KILLED.** `exit 124` is `timeout 3600` firing, and the fill
+and the save are the last thing `stub_router` does, so every closure it had made went in the bin. That is
+19 September's finding word for word ("a closing stage cut at its wall saved nothing"), in the one place it
+was expected to be: the driver passes `STUB_STAGE_S=3300` but **A49's staged tools predate that knob**, which
+is why the wall was armed behind a comment saying exactly that. So `finishcfg` is INCONCLUSIVE, not zero.
+
+**And the pair is four variables, not one.** `finishcfg` is
+`STUB_LAYERS=F.Cu,In2.Cu,In3.Cu,B.Cu STUB_WIN_SCALE=6 STUB_MAXN=80000000 STUB_GRID=0.05` and `probecfg` is
+`STUB_GRID=0.1 STUB_WIN_SCALE=25 STUB_MAXN=200000000` with **no layer list at all**, so it searches the
+default layer set. Grid, window, node cap and layers all differ. Reading "the grid closes 11 more" off this
+pair would be the 12 September error again, where a width change and a router change travelled together.
+
+**What it does prove, and it is worth having:** board A's own declared closer configuration does not finish
+this board's sixteen closures inside the hour the finish gives it, and a coarser, wider, more generous search
+does, with eleven closures and the board at eleven open. That is a statement about the budget, not about
+whether a path exists.
+
+**The hypothesis it hands to the arm already running** is sharper than the one board A wrote down. A48's
+cached arm at the SAME 0.05 mm grid closed six of fifteen inside its wall, and it had `STUB_MAP_CACHE=1`;
+A49's 0.05 arm had the old tool and no cache at all and never reached its save. So the cache may be exactly
+what makes 0.05 mm affordable, and the grid may be buying nothing once the rasterisation is paid once. The
+one-variable grid arm armed at 01:25 (`/root/grid_ab.sh`, cache ON in both, only `STUB_GRID` different,
+window, node cap and layers held) is what separates them, and it is read on the REFUSED nets by name, because
+a refusal is load-independent where a count taken under a wall is not.
+
+### 32.232, 20 September 2026 01:45 CEST: the map cache lands, and `STUB_MAP_CACHE` is ON by default
+
+The one-variable A/B on A48's frozen board, board A's own finish configuration with the wall, the two arms
+differing in that flag alone:
+
+| | wall | board in | board out | nets offered | closed |
+|---|---|---|---|---:|---:|
+| cache OFF | 55 min, cut at the wall | 0 hard, 15 open | 0 hard, **14** open | 4 | 3 |
+| cache ON | **48 min**, finished early | 0 hard, 15 open | 0 hard, **11** open | **14** | **6** |
+
+Three and a half times the nets reached the search, twice the closures, **three more connections off the
+board**, and it finished seven minutes inside a wall that cut the reference arm. The equivalence is not
+inferred from any of that: `STUB_MAP_CHECK` rebuilds the reference map per net and refuses the run on any
+difference, and it read **nineteen of nineteen nets identical on every layer** before this arm was allowed to
+start; the three closures the two arms share are identical net for net, track for track, via for via and cell
+for cell. The cache changes how many nets reach the search and not what the search answers.
+
+**Board A's prediction, written before the run, is correct on both halves once the arm is read at its
+landing rather than at its half-way mark**: the opens are offered inside the hour (14 of 15) and the closed
+count rises from 3 towards 8 (it reaches 6). The 01:20 entry above, which said the closed count was not
+moving, was a snapshot of the first two thirds of the run and is corrected at 01:35.
+
+`STUB_MAP_CACHE=0` restores the per-net rebuild and is how the next equivalence check is taken; the default
+carries the numbers above in the source beside it and a rule refuses a default that moves without them.
