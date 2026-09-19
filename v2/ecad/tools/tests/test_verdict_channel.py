@@ -747,3 +747,33 @@ def t_no_tool_calls_a_module_by_a_name_it_also_assigns():
             bad.append("%s:%d  %s() calls `%s` as a module and assigns it in the same function"
                        % (os.path.basename(f), ln, fn, name))
     assert not bad, "a module is called by a name its own function assigns:\n  " + "\n  ".join(bad)
+
+
+def t_a_crash_verdict_goes_where_the_caller_said_to_write():
+    """A RUN TOLD WHERE TO WRITE LEAVES THE TREE ALONE, AND THE GUARD HAD NEVER HEARD OF IT (20 September
+    2026). `verdict.guard` turns a crash into an INCONCLUSIVE naming it, which is right; it wrote that
+    reading with no `out_dir`, so a gate redirected with `--out-dir` put its CRASH in the tree's own
+    evidence. Re-taking board E5's CMP-001 after a tool change did exactly that: the tool raised on a path
+    defect and the crash verdict landed beside the board, where the readiness page reads it. The property
+    settled for the gates themselves on 19 September never reached their guard."""
+    import json, os, sys, tempfile
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    import verdict as V
+    d = tempfile.mkdtemp(prefix="guard-outdir-")
+    here = tempfile.mkdtemp(prefix="guard-default-")
+    cwd = os.getcwd()
+    try:
+        os.chdir(here)
+        def boom(argv): raise ValueError("the gate could not decide")
+        V.guard("t_guard_outdir", boom, ["board.kicad_pcb", "--out-dir", d])
+        assert os.path.exists(os.path.join(d, "t_guard_outdir.verdict.json")), \
+            "the crash verdict did not go where the caller said to write"
+        rec = json.load(open(os.path.join(d, "t_guard_outdir.verdict.json")))
+        assert rec["verdict"] == V.INCONCLUSIVE and "ValueError" in (rec.get("missing_input") or "")
+        stray = [p for p in os.listdir(here) if p.endswith(".verdict.json")] + \
+                [p for p in os.listdir(os.path.join(here, "out")) if p.endswith(".verdict.json")] \
+                if os.path.isdir(os.path.join(here, "out")) else \
+                [p for p in os.listdir(here) if p.endswith(".verdict.json")]
+        assert not stray, "the crash verdict was ALSO written beside the run: %s" % stray
+    finally:
+        os.chdir(cwd)

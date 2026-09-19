@@ -121,9 +121,16 @@ def _worst_declared(*entries):
 
 def judge(net_path, intent_path=None, margin=MARGIN):
     by_net, values = netlist(net_path)
-    intent_path = intent_path or os.path.join(os.path.dirname(net_path),
-                                              os.path.basename(net_path).replace(".net", "-intent.json"))
-    it = json.load(open(intent_path)) if os.path.exists(intent_path) else {}
+    # A REPLACE THAT DOES NOT MATCH LEAVES THE PATH IT WAS GIVEN, AND THAT PATH EXISTS (20 September 2026).
+    # This read `basename.replace(".net", "-intent.json")`, so a caller handing it a BOARD, which is the
+    # documented way to judge a board with no schematic, got `pcb-e5-block.kicad_pcb` back unchanged and the
+    # next line json-parsed the board file: `JSONDecodeError`, the crash guard wrote INCONCLUSIVE, and board
+    # E5's declared zero could not be re-taken at all. The stem is taken by splitting the extension, and the
+    # intent is never read from the file this was given.
+    _stem = os.path.splitext(os.path.basename(net_path))[0]
+    intent_path = intent_path or os.path.join(os.path.dirname(net_path), _stem + "-intent.json")
+    _same = os.path.abspath(intent_path) == os.path.abspath(net_path)
+    it = json.load(open(intent_path)) if (os.path.exists(intent_path) and not _same) else {}
     rails = {k.lstrip("/"): v for k, v in (it.get("rails") or {}).items()}
     # A NET THAT IS NOT A RAIL STILL HAS A VOLTAGE (16 September 2026). A switching node, a bootstrap
     # capacitor's top plate, a charge pump's output and a power amplifier's drain are where a part meets the
@@ -224,6 +231,13 @@ def main(argv):
     if not argv: print(__doc__); return 2
     net = argv[0]
     intent = _v.opt(argv, "--intent", None)
+    # A RUN TOLD WHERE TO WRITE LEAVES THE TREE ALONE (20 September 2026). Every other gate took `--out-dir`
+    # after 19 September's incident, where a gate run by hand from `v2/ecad` wrote into this tree's own
+    # evidence and displaced a measured reading on the readiness page. This one never had it, so re-taking
+    # board E5's CMP-001 after a tool change had nowhere to put the answer but beside the board, where the
+    # readiness reads it.
+    _od = _v.opt(argv, "--out-dir", None)
+    _w = (lambda *a, **k: _v.write(*a, **dict(k, out_dir=_od))) if _od else _v.write
     margin = float(argv[argv.index("--margin") + 1]) if "--margin" in argv else MARGIN
     if "--no-components" in argv:
         # A DECLARED ZERO IS AN ANSWER. Board E5 is the dock block: copper, plated targets, wire lands and four
@@ -232,12 +246,12 @@ def main(argv):
         # set and called it E5's evidence (17 September 2026). A board that carries no rated part says so.
         why = argv[argv.index("--no-components") + 1] if len(argv) > argv.index("--no-components") + 1 else ""
         print("derate: this board carries no part with a rating: %s" % (why or "declared by the caller"))
-        return _v.write("derate", _v.PASS, denominator=0, counts={"judged": 0, "rated_parts": 0},
+        return _w("derate", _v.PASS, denominator=0, counts={"judged": 0, "rated_parts": 0},
                         inputs={"board": net}, note="this board carries no rated part to judge: %s. A declared "
                                                     "zero, not an absence" % (why or "declared by the caller"))
     if not os.path.exists(net):
         print("derate: no netlist at %s" % net)
-        return _v.write("derate", _v.INCONCLUSIVE, denominator=0, inputs={"netlist": net},
+        return _w("derate", _v.INCONCLUSIVE, denominator=0, inputs={"netlist": net},
                         note="no netlist: the rating of a part cannot be compared with a rail that is not there")
     r = judge(net, intent, margin)
     print("derate: %d rated part-on-net pair(s) judged at a %.0f%% margin over %d declared rail(s) and %d declared "
@@ -256,7 +270,7 @@ def main(argv):
     # had just been compared. What makes the answer absent is that neither kind of declaration exists.
     _declared = r["rails"] + r.get("nodes", 0)
     res = _v.INCONCLUSIVE if not _declared else (_v.FAIL if r["bad"] else _v.PASS)
-    return _v.write("derate", res,
+    return _w("derate", res,
                     counts={"judged": r["judged"], "under_rated": len(r["bad"]), "unrated_parts": len(r["unrated"]),
                             "undeclared_nets": len(r["undeclared"]),
                             "by_vendor_reference": len(r.get("vendor") or [])},

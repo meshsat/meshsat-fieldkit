@@ -249,3 +249,33 @@ def t_a_net_is_judged_on_the_worst_of_everything_declared_about_it():
                                  nodes={"GND": {"v_max": 0.0, "basis": "the board's reference"}}), d3)
     assert rc3 == 1, ("a rail's declared working maximum of 16.8 V was ignored and the part judged against "
                       "the 14.4 V nominal:\n%s" % out3[-700:])
+
+
+def t_the_intent_is_never_read_from_the_file_derate_was_given():
+    """A REPLACE THAT DOES NOT MATCH LEAVES THE PATH IT WAS GIVEN, AND THAT PATH EXISTS (20 September 2026).
+
+    The intent path was `basename.replace(".net", "-intent.json")`. Handed a BOARD, which is the documented
+    way to judge a board with no schematic, the replace matched nothing, the name came back unchanged, and
+    the next line json-parsed the board file: `JSONDecodeError`. The crash guard wrote INCONCLUSIVE and board
+    E5's declared zero could not be re-taken at all. The stem is taken by splitting the extension now, and
+    the intent is never read from the file this was given.
+
+    THE DEFECTIVE FIXTURE is a board file whose name contains no `.net`; the acceptable one is an ordinary
+    netlist beside its own intent, which must still be found."""
+    import os as _o
+    d = _tempfile.mkdtemp(prefix="derate-intent-path-")
+    brd = _o.path.join(d, "pcb-x-block.kicad_pcb")
+    open(brd, "w").write("(kicad_pcb (version 20240108))\n")   # not JSON, and it exists
+    rc, out = _run_derate(brd, d)
+    assert "JSONDecode" not in out and "CRASHED" not in out, \
+        "derate read its intent from the board it was given:\n%s" % out[-500:]
+
+    # the acceptable case: the netlist's own intent is still found and used
+    d2 = _tempfile.mkdtemp(prefix="derate-intent-ok-")
+    rows = [("C1", "10u 20V", ["CH_SRP", "GND"])]
+    p = _brd(d2, rows, rails={"CH_SRP": {"volts": 14.4, "amps_typ": 10.0, "amps_peak": 18.0, "source": "Q10",
+                                         "loads": {"R17": 10.0}, "v_work": 16.8}},
+             nodes={"GND": {"v_max": 0.0, "basis": "the board's reference"}})
+    rc2, out2 = _run_derate(p, d2)
+    assert rc2 == 1, ("the netlist's own intent was not read, so the 16.8 V working maximum decided "
+                      "nothing:\n%s" % out2[-500:])
