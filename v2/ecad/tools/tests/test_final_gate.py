@@ -155,10 +155,20 @@ def t_the_set_verdict_does_not_decide_every_board_s_own_paperwork():
     src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "final_gate.py"),
                encoding="utf-8").read()
     assert '_v.write("final_gate_%s"' in src, "the gate writes no per-board verdict"
-    i = src.index('_v.write("final_gate_%s"')
-    seg = src[i:i + 700]
+    # 19 September 2026: this was two fixed byte windows (700 and 1,400) and the second broke the moment the
+    # per-board write grew a missing-input line. A rule about two lines uses the construct that holds them.
+    from harness import block
+    seg = block(src, '    for r in rows:\n        _v.write("final_gate_%s"')
+    assert seg, "the per-board loop is not where this rule looks for it"
     assert "quiet=True" in seg, "the per-board verdicts drown the set's own line"
-    assert 'for l in missing' in src[i:i + 1400], "a required board with no folder gets no verdict of its own"
+    assert 'for l in missing' in src[src.index('_v.write("final_gate_%s"'):], "a required board with no folder gets no verdict of its own"
+
+    # AND THE READING SAYS WHY IT COULD NOT ANSWER (19 September 2026). Board B's DOC-001 row read
+    # "final_gate_b INCONCLUSIVE" and nothing else, while this verdict's own evidence already said the tree
+    # declares B21 and the only folder is a quote. A quote folder is a reading taken with less input.
+    assert "missing_input=" in seg, "a quote folder does not declare the input it lacks"
+    assert 'r["quote"]' in seg and "declared" in seg, "the missing input does not name the phase the folder cannot answer for"
+    assert 'r["stale"]' in seg, "a stale folder still gets a note true of every board"
     cov = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "pcb_rules_coverage.yaml"),
                encoding="utf-8").read()
     assert "final_gate_<letter>" in cov, "the coverage map still reads only the set verdict for DOC-001 and OUT-001"

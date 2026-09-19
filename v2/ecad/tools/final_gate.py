@@ -221,9 +221,23 @@ def main(argv, run=None, boards_dir=None, holds_path=None, out_dir=None):
                          "held": int(bool(r.get("held")))},
                  denominator=1, evidence=[r["summary"][:160]] if r["summary"] else [],
                  inputs={"folder": r["folder"]}, quiet=True,
+                 # A READING SAYS WHY IT COULD NOT ANSWER, AND THIS ONE SAID NOTHING (19 September 2026). Board
+                 # B's DOC-001 row read "final_gate_b INCONCLUSIVE" and stopped there, while the cause sat in
+                 # this verdict's own evidence: the tree declares B21 and the only folder is a quote, so the
+                 # folder cannot answer for the board being built. A quote folder is exactly the shape of
+                 # "a reading taken with less input", so it declares that input the way `verify_deliverable`
+                 # already does, and the row carries it. A STALE folder keeps its FAIL, because describing
+                 # another phase is an answer about the paperwork and not an absence of it; what it gains is a
+                 # note that names the two phases instead of a sentence true of every board.
+                 missing_input=(("a deliverable folder at the declared phase %s: the only folder is %s, a quote, "
+                                 "and a folder is judged against itself" % (r.get("declared") or "?", r["folder"]))
+                                if r["quote"] else None),
                  note=("this board is HELD by an open owner decision, so its paperwork is not current and "
                        "cannot be made current while the hold stands" if r.get("held") else
-                       "this board's own deliverable folder, judged on its own; the set's verdict is final_gate"),
+                       ("the folder read here is %s and this board declares %s, so this paperwork describes a "
+                        "board this tree is not building" % (r["folder"], r.get("declared") or "?")
+                        if r["stale"] else
+                        "this board's own deliverable folder, judged on its own; the set's verdict is final_gate")),
                  out_dir=OUT)
     for l in missing:
         _v.write("verify_deliverable_%s" % l.lower(), _v.INCONCLUSIVE, counts={"folder": 0}, denominator=0,
