@@ -167,12 +167,17 @@ def t_a_group_may_ask_for_the_pours_and_for_the_landing_reach():
     """Both are per BOARD and the two boards that have measured them want opposite answers (19 September 2026).
 
     `pour_obstacle`: board D had 5,140 free cells of 834,561 with the pours in the obstacle map and laid
-    nothing, which is why the stage's default is 0; board A has 5.7 MILLION free cells with them in, and with
-    them OUT its closures run through a pour, cut it, and take the board-wide unconnected count from 549 to
-    575, which the acceptance refuses and should. `land_reach`: the search ends at a goal cell and the landing
-    lays a short segment from each path end to the net's own copper, and board A's ends are 0.153 to 4.409 mm
-    from theirs against a reach that had been a silent 1.2 mm since the day it was written. Neither default
-    moves, so no board that worked changes."""
+    nothing, which is why the stage's default is 0. `land_reach`: the search ends at a goal cell and the
+    landing lays a short segment from each path end to the net's own copper, and board A's ends are 0.153 to
+    4.409 mm from theirs against a reach that had been a silent 1.2 mm since the day it was written.
+
+    NEITHER DEFAULT MOVES, so no board that worked changes, and board A DECLARES NEITHER. Both were written
+    into its switching group during the afternoon of 19 September and both came back out when their own arm
+    refused them: three arms one variable apart, on the same placed board, all closed 20 of 20 at hard 0, with
+    the pours as obstacles at a 5.0 mm reach (91 locked pieces), the pours free at 5.0 (94) and the pours free
+    at the default 1.2 (92). What unlocked that board was the closure acceptance and nothing else. The knobs
+    stay because board D is a real case for the first; a knob is offered here, never declared on a board
+    without a number that says it matters."""
     assert "g.get('pour_obstacle','')" in FULL, "a pre-lay group cannot declare the pours"
     assert "g.get('land_reach','')" in FULL, "a pre-lay group cannot declare the landing's reach"
     assert 'STUB_POUR_OBSTACLE="${GPOUR:-${PRELAY_POUR_OBSTACLE:-0}}"' in FULL, \
