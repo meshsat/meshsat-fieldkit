@@ -161,6 +161,13 @@ decisions:
       envelope states, which is why the envelope comes first
     blocks:
       TRN-001: [a, d, e]
+      # 19 September 2026: the hold's downstream half, which the per-board set gate has been writing in its
+      # own words the whole time ("this board is HELD by an open owner decision, so its paperwork is not
+      # current and cannot be made current while the hold stands") while the register said this decision held
+      # three pairs. A folder cannot be cut for a held board, so DOC-001 on those three boards is this
+      # decision's too. OUT-001 is NOT added: the set gate names three causes today, this hold, board B's
+      # quote folder and a certification that could not ask, so attributing it here would be an over-claim.
+      DOC-001: [a, d, e]
     evidence: "BOARD D IS IN THIS DECISION TOO, AND ITS GATE HAD BEEN SAYING SO WHILE THE REGISTRY SAID THE RULE
       DID NOT APPLY TO IT (17 September 2026). Board D declares four connectors whose conductors leave the case
       and `port_protect` reads SEVEN of its SEVEN judged conductors reaching a semiconductor with nothing
