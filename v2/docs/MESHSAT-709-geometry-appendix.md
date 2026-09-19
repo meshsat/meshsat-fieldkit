@@ -12444,3 +12444,44 @@ worst-declaration rule guarantees: a conversion can only ever make CMP-001 stric
 **Readiness 63.4 to 63.1 percent verified, 12.9 to 13.2 failed, 23.7 inconclusive unchanged, of 333.** One
 pair moved: board A's **PI-002, rail voltage drop, PASS to FAIL**. The record said in advance that this number
 would go down when these conductors were measured and that it would be true. It went down and it is true.
+
+### 32.234, 20 September 2026 01:50 CEST: every one of the ten conductors is narrower than IPC asks, and the pattern is the layer
+
+With all ten of board A's newly declared conductors measured on real copper, the table is one finding rather
+than ten. `power_copper.width_for` is IPC-2221 solved for the width, and it is the project's own arithmetic:
+
+| net | current | conductor it has | layer | IPC asks | short by |
+|---|---:|---:|---|---:|---:|
+| `PD_VBUS` | 3.00 A | 0.400 mm | In2.Cu | 7.11 mm | **17.8x** |
+| `PD_VPWR` | 2.12 A | 0.400 mm | In3.Cu | 4.41 mm | 11.0x |
+| `PD_SW` | 2.14 A | 0.500 mm | In2.Cu | 4.46 mm | 8.9x |
+| `PD_OUT` | 1.52 A | 0.400 mm | F.Cu | 0.54 mm | 1.3x |
+| `FE_OUT` | 3.80 A | 0.500 mm | F.Cu | 1.89 mm | 3.8x |
+| `PA_OUT` | 3.54 A | 0.500 mm | F.Cu | 1.72 mm | 3.4x |
+| `CH_ACN` | 4.81 A | 0.500 mm | In2.Cu | 13.64 mm | 27.3x |
+| `CH_SRP` | 10.00 A | 0.200 mm | F.Cu | 7.19 mm | 36.0x |
+
+**THE LAYER IS THE PATTERN.** An inner conductor on this stackup is 0.5 oz and IPC's constant is half the
+outer one, so the same current needs about FIVE times the width inside: 3 A wants 1.37 mm outside and
+**7.11 mm inside**. Every ratio above 8 is an inner-layer conductor and every ratio under 4 is an outer one.
+The router puts current on the inner layers because that is where the room is, and it has no instrument
+telling it that inner copper is half as thick. This is board A's own lesson of 5 September written down again
+in a new place: **a current path above a few amps is OUTER-layer copper laid by the generator, never an inner
+router track**, which is what the A21 rail islands and bands exist for.
+
+**The PD outlet also has a placement cause, and it is the charger's cause exactly.** Measured on the A51
+placed board: `Q26` (the stage's output FET) at (210.8, 55.4), `R81` (the stage shunt) 8.7 mm away at
+(219.4, 54.6), then **`Q27` the VBUS switch 64.9 mm WEST at (154.6, 51.4)**, `R138` the outlet shunt 17.2 mm
+back east at (171.8, 50.6), and **`J_USBC_OUT` 89.6 mm further east at (254.9, 84.0)**. The 3 A path is about
+172 mm long and doubles back on itself, and the reason is visible in one coordinate: `U18`, the TPS25740A, is
+at (160.2, 45.0), so **the shunt was placed at its CONTROLLER and not in its power path**, which is what
+00:25 found at the charger's two shunts. The answer is the same as the charger's and as the five LM5176
+stages' of 18 September: the shunt belongs in the power path and the controller reaches it with a Kelvin
+pair, which is what the datasheet asks for in any case.
+
+**What the fix costs, computed rather than argued.** On the 83 mm run from the outlet shunt to the connector,
+outer 1 oz copper at 0.49 mOhm a square: 0.4 mm is 101.7 mOhm and **305 mV at 3 A**; 1.0 mm is 122 mV;
+**1.4 mm is 29.1 mOhm and 87 mV**, inside the 100 mV the 5 V profile allows, and 1.37 mm is also what IPC's
+density asks. So **one 1.4 mm outer band answers both criteria on that segment** if a corridor for it exists,
+and whether it does is the placement question above. Nothing is applied: a floor plan half-moved is worse
+than one not moved, and this is board A's next phase with its numbers written down first.
