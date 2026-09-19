@@ -1,12 +1,18 @@
 {
  "board": "pcb-a-power",
- "written": "2026-09-17 11:59",
+ "written": "2026-09-19 23:44",
  "bypass": [
   {
    "cap": "C8",
    "part": "U2",
    "pin": "23",
    "net": "FE_VCC"
+  },
+  {
+   "cap": "C123",
+   "part": "U2",
+   "pin": "16",
+   "net": "FE_CSF"
   },
   {
    "cap": "C11",
@@ -75,6 +81,12 @@
    "net": "PA_VCC"
   },
   {
+   "cap": "C124",
+   "part": "U13",
+   "pin": "16",
+   "net": "PA_CSF"
+  },
+  {
    "cap": "C63",
    "part": "U13",
    "pin": "2",
@@ -91,6 +103,12 @@
    "part": "U15",
    "pin": "23",
    "net": "HF_VCC"
+  },
+  {
+   "cap": "C125",
+   "part": "U15",
+   "pin": "16",
+   "net": "HF_CSF"
   },
   {
    "cap": "C74",
@@ -111,6 +129,12 @@
    "net": "POE_VCC"
   },
   {
+   "cap": "C126",
+   "part": "U16",
+   "pin": "16",
+   "net": "POE_CSF"
+  },
+  {
    "cap": "C81",
    "part": "U16",
    "pin": "2",
@@ -127,6 +151,12 @@
    "part": "U19",
    "pin": "23",
    "net": "PD_VCC"
+  },
+  {
+   "cap": "C127",
+   "part": "U19",
+   "pin": "16",
+   "net": "PD_CSF"
   },
   {
    "cap": "C92",
@@ -378,6 +408,140 @@
    "budget": 0.06,
    "share": 0.04,
    "converted": false
+  },
+  "FE_OUT": {
+   "volts": 20.0,
+   "amps_typ": 6.0,
+   "amps_peak": 8.0,
+   "source": "Q5",
+   "loads": {
+    "R11": 6.0
+   },
+   "note": "LM5176 stage FE, VIN_RAW to VBUS20: the output conductor between Q5's drain tab and the ISNS shunt R11, at the stage's whole output current. It was a node until 20 September 2026, so no power rule had ever looked at it.",
+   "v_work": 20.0,
+   "converted": false,
+   "series_of": "VBUS20"
+  },
+  "CH_ACN": {
+   "volts": 20.0,
+   "amps_typ": 6.0,
+   "amps_peak": 8.0,
+   "source": "R16",
+   "loads": {
+    "Q7": 6.0
+   },
+   "note": "the charger's input node BEHIND the 10 mOhm input shunt R16: the same 20 V charge bus as VBUS20 and the same 6.0 A, from the shunt's far pad to the BQ25731's high-side FET Q7 and the three input capacitors. VBUS20 is the rail INTO the shunt (source R11, load R16) and this is the rail out of it: DIFFERENT COPPER, which is why both need judging, and the SAME WATTS, which is why this one is declared a series segment of VBUS20 so the board's power total counts the path once. Declared 20 September 2026 because it had been a `node`, which is documented as a net that is not a rail, and the consequence was that nothing solved it: no PI-001, no PI-002, and no low-side reading for the Kelvin report",
+   "v_work": 20.0,
+   "converted": false,
+   "series_of": "VBUS20"
+  },
+  "CH_SRP": {
+   "volts": 14.4,
+   "amps_typ": 10.0,
+   "amps_peak": 18.0,
+   "source": "Q10",
+   "loads": {
+    "R17": 10.0
+   },
+   "note": "the charger's output node BEFORE the 5 mOhm charge shunt R17: Q10's drain, the three 22 uF input capacitors and the shunt, at the pack's own 10.0 A typical and 18.0 A peak. CELL+ is the rail on the far side of that shunt: DIFFERENT COPPER, which both rules have to look at, and the SAME PACK NODE, so this is declared a series segment of CELL+ and the board's power total counts that node once. The voltage a part on it can see is the 4S termination of 4.2 V a cell, not the 14.4 V nominal, which is what `v_work` carries",
+   "v_work": 16.8,
+   "converted": false,
+   "series_of": "CELL+"
+  },
+  "PA_OUT": {
+   "volts": 13.8,
+   "amps_typ": 5.0,
+   "amps_peak": 6.0,
+   "source": "Q14",
+   "loads": {
+    "R55": 5.0
+   },
+   "note": "LM5176 stage PA, VBAT to +13V8_PA: the output conductor between Q14's drain tab and the ISNS shunt R55, at the stage's whole output current. It was a node until 20 September 2026, so no power rule had ever looked at it.",
+   "v_work": 13.8,
+   "converted": false,
+   "series_of": "+13V8_PA"
+  },
+  "HF_OUT": {
+   "volts": 12.0,
+   "amps_typ": 1.0,
+   "amps_peak": 2.0,
+   "source": "Q24",
+   "loads": {
+    "R65": 1.0
+   },
+   "note": "LM5176 stage HF, VBAT to +12V_HF: the output conductor between Q24's drain tab and the ISNS shunt R65, at the stage's whole output current. It was a node until 20 September 2026, so no power rule had ever looked at it.",
+   "v_work": 12.0,
+   "converted": false,
+   "series_of": "+12V_HF"
+  },
+  "POE_OUT": {
+   "volts": 54.0,
+   "amps_typ": 0.3,
+   "amps_peak": 0.6,
+   "source": "Q20",
+   "loads": {
+    "R71": 0.3
+   },
+   "note": "LM5176 stage POE, VBAT to +54V_POE: the output conductor between Q20's drain tab and the ISNS shunt R71, at the stage's whole output current. It was a node until 20 September 2026, so no power rule had ever looked at it.",
+   "v_work": 54.0,
+   "converted": false,
+   "series_of": "+54V_POE"
+  },
+  "PD_VPWR": {
+   "volts": 15.0,
+   "amps_typ": 3.0,
+   "amps_peak": 3.0,
+   "source": "R81",
+   "loads": {
+    "Q27": 3.0
+   },
+   "note": "the PD supply between the stage's ISNS shunt R81 and the VBUS switch Q27, at the TPS25740A's highest advertised profile (5, 9 and 15 V at 3 A, 45 W): the LM5176's feedback divider is switched by CTL1 and CTL2, so 15 V is the stage's ceiling and the voltage every part on this net is judged against",
+   "budget": 0.0067,
+   "switch": "U19",
+   "efficiency": 0.93,
+   "v_work": 15.0
+  },
+  "PD_SW": {
+   "volts": 15.0,
+   "amps_typ": 3.0,
+   "amps_peak": 3.0,
+   "source": "Q27",
+   "loads": {
+    "R138": 3.0
+   },
+   "note": "the PD supply behind Q27, the VBUS switch, on its way to the outlet's own 10 mOhm ISNS shunt R138: the same 3 A and the same 15 V ceiling",
+   "budget": 0.0067,
+   "v_work": 15.0,
+   "converted": false,
+   "series_of": "PD_VPWR"
+  },
+  "PD_VBUS": {
+   "volts": 15.0,
+   "amps_typ": 3.0,
+   "amps_peak": 3.0,
+   "source": "R138",
+   "loads": {
+    "J_USBC_OUT": 3.0
+   },
+   "note": "the USB-C outlet itself, behind the ISNS shunt and out at J_USBC_OUT: the same 3 A and the same 15 V ceiling",
+   "budget": 0.0067,
+   "v_work": 15.0,
+   "converted": false,
+   "series_of": "PD_VPWR"
+  },
+  "PD_OUT": {
+   "volts": 15.0,
+   "amps_typ": 3.0,
+   "amps_peak": 3.0,
+   "source": "Q26",
+   "loads": {
+    "R81": 3.0
+   },
+   "note": "LM5176 stage PD, VBAT to PD_VPWR: the output conductor between Q26's drain tab and the ISNS shunt R81, at the stage's whole output current. It was a node until 20 September 2026, so no power rule had ever looked at it.",
+   "budget": 0.0067,
+   "v_work": 15.0,
+   "converted": false,
+   "series_of": "PD_VPWR"
   }
  },
  "nodes": {
@@ -405,11 +569,6 @@
    "rides_on": "FE_SW2",
    "bias_v": 7.6
   },
-  "FE_OUT": {
-   "v_max": 20.0,
-   "v_min": 0.0,
-   "basis": "LM5176 stage FE, VIN_RAW to VBUS20: the output before the ISNS shunt"
-  },
   "FE_VCC": {
    "v_max": 7.6,
    "v_min": 0.0,
@@ -420,15 +579,15 @@
    "v_min": 0.0,
    "basis": "LM5176 stage FE, VIN_RAW to VBUS20: the current-sense node: the drop across a 5m Ohm shunt, under a volt at any current this stage carries"
   },
-  "CH_ACN": {
-   "v_max": 20.0,
+  "FE_CSF": {
+   "v_max": 1.0,
    "v_min": 0.0,
-   "basis": "the charger's input node behind the 10 mOhm input shunt: the 20 V charge bus"
+   "basis": "LM5176 stage FE, VIN_RAW to VBUS20: the filtered current-sense input at pin 16, 100 R from the shunt's top"
   },
-  "CH_SRP": {
-   "v_max": 16.8,
+  "FE_CSGF": {
+   "v_max": 1.0,
    "v_min": 0.0,
-   "basis": "the charger's output node before the 5 mOhm charge shunt: the pack at its 4S termination voltage of 4.2 V a cell, not the 14.4 V nominal the rail declares"
+   "basis": "LM5176 stage FE, VIN_RAW to VBUS20: the filtered current-sense ground at pin 15, 100 R from the shunt's ground pad (the Kelvin return TI's pin table asks for)"
   },
   "CH_SW1": {
    "v_max": 20.0,
@@ -493,11 +652,6 @@
    "rides_on": "PA_SW2",
    "bias_v": 7.6
   },
-  "PA_OUT": {
-   "v_max": 13.8,
-   "v_min": 0.0,
-   "basis": "LM5176 stage PA, VBAT to +13V8_PA: the output before the ISNS shunt"
-  },
   "PA_VCC": {
    "v_max": 7.6,
    "v_min": 0.0,
@@ -507,6 +661,16 @@
    "v_max": 1.0,
    "v_min": 0.0,
    "basis": "LM5176 stage PA, VBAT to +13V8_PA: the current-sense node: the drop across a 5m Ohm shunt, under a volt at any current this stage carries"
+  },
+  "PA_CSF": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage PA, VBAT to +13V8_PA: the filtered current-sense input at pin 16, 100 R from the shunt's top"
+  },
+  "PA_CSGF": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage PA, VBAT to +13V8_PA: the filtered current-sense ground at pin 15, 100 R from the shunt's ground pad (the Kelvin return TI's pin table asks for)"
   },
   "HF_SW1": {
    "v_max": 14.4,
@@ -532,11 +696,6 @@
    "rides_on": "HF_SW2",
    "bias_v": 7.6
   },
-  "HF_OUT": {
-   "v_max": 12.0,
-   "v_min": 0.0,
-   "basis": "LM5176 stage HF, VBAT to +12V_HF: the output before the ISNS shunt"
-  },
   "HF_VCC": {
    "v_max": 7.6,
    "v_min": 0.0,
@@ -546,6 +705,16 @@
    "v_max": 1.0,
    "v_min": 0.0,
    "basis": "LM5176 stage HF, VBAT to +12V_HF: the current-sense node: the drop across a 5m Ohm shunt, under a volt at any current this stage carries"
+  },
+  "HF_CSF": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage HF, VBAT to +12V_HF: the filtered current-sense input at pin 16, 100 R from the shunt's top"
+  },
+  "HF_CSGF": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage HF, VBAT to +12V_HF: the filtered current-sense ground at pin 15, 100 R from the shunt's ground pad (the Kelvin return TI's pin table asks for)"
   },
   "POE_SW1": {
    "v_max": 14.4,
@@ -571,11 +740,6 @@
    "rides_on": "POE_SW2",
    "bias_v": 7.6
   },
-  "POE_OUT": {
-   "v_max": 54.0,
-   "v_min": 0.0,
-   "basis": "LM5176 stage POE, VBAT to +54V_POE: the output before the ISNS shunt"
-  },
   "POE_VCC": {
    "v_max": 7.6,
    "v_min": 0.0,
@@ -586,20 +750,15 @@
    "v_min": 0.0,
    "basis": "LM5176 stage POE, VBAT to +54V_POE: the current-sense node: the drop across a 10m Ohm shunt, under a volt at any current this stage carries"
   },
-  "PD_VPWR": {
-   "v_max": 15.0,
+  "POE_CSF": {
+   "v_max": 1.0,
    "v_min": 0.0,
-   "basis": "the TPS25740A's highest advertised profile (5, 9 and 15 V at 3 A, 45 W): the LM5176's feedback divider is switched by CTL1 and CTL2, so 15 V is the stage's ceiling"
+   "basis": "LM5176 stage POE, VBAT to +54V_POE: the filtered current-sense input at pin 16, 100 R from the shunt's top"
   },
-  "PD_SW": {
-   "v_max": 15.0,
+  "POE_CSGF": {
+   "v_max": 1.0,
    "v_min": 0.0,
-   "basis": "the PD supply behind Q27, the VBUS switch: the same 15 V ceiling"
-  },
-  "PD_VBUS": {
-   "v_max": 15.0,
-   "v_min": 0.0,
-   "basis": "the USB-C outlet itself, behind the ISNS shunt: the same 15 V ceiling"
+   "basis": "LM5176 stage POE, VBAT to +54V_POE: the filtered current-sense ground at pin 15, 100 R from the shunt's ground pad (the Kelvin return TI's pin table asks for)"
   },
   "PD_SW1": {
    "v_max": 14.4,
@@ -625,11 +784,6 @@
    "rides_on": "PD_SW2",
    "bias_v": 7.6
   },
-  "PD_OUT": {
-   "v_max": 15.0,
-   "v_min": 0.0,
-   "basis": "LM5176 stage PD, VBAT to PD_VPWR: the output before the ISNS shunt"
-  },
   "PD_VCC": {
    "v_max": 7.6,
    "v_min": 0.0,
@@ -639,6 +793,16 @@
    "v_max": 1.0,
    "v_min": 0.0,
    "basis": "LM5176 stage PD, VBAT to PD_VPWR: the current-sense node: the drop across a 5m Ohm shunt, under a volt at any current this stage carries"
+  },
+  "PD_CSF": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage PD, VBAT to PD_VPWR: the filtered current-sense input at pin 16, 100 R from the shunt's top"
+  },
+  "PD_CSGF": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage PD, VBAT to PD_VPWR: the filtered current-sense ground at pin 15, 100 R from the shunt's ground pad (the Kelvin return TI's pin table asks for)"
   }
  },
  "pair_classes": {

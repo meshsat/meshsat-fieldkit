@@ -7,7 +7,7 @@ Every pair that is not a current PASS, classified. Generated from tools/pcb_deci
 map's maturity and each deciding verdict: a decision that claims a pair wins over everything else, because
 the ruling is the action that moves it, and the measurement is reported beside it rather than lost.
 
-**122 open pair(s)** over 7 board(s). **43 are measured failures** (a tool looked and the board failed), which are **37 distinct readings**, and **15 of those are claimed by an open owner decision**.
+**123 open pair(s)** over 7 board(s). **44 are measured failures** (a tool looked and the board failed), which are **38 distinct readings**, and **15 of those are claimed by an open owner decision**.
 
 | waiting on | pairs | what it means |
 |---|---:|---|
@@ -15,7 +15,7 @@ the ruling is the action that moves it, and the measurement is reported beside i
 | `DECISION_UNCLAIMED` | 5 | a rule that says a decision is open while no decision claims it |
 | `AUTHORITY` | 3 | an authority this project does not have |
 | `MISSING_INPUT` | 14 | an input the reading declared absent |
-| `MEASURED_FAILURE` | 28 | the tool looked and the board failed |
+| `MEASURED_FAILURE` | 29 | the tool looked and the board failed |
 | `VENDOR_WAIT` | 1 | a fabricator or a standards body, and nobody here |
 | `OWNER_WORK` | 7 | work only the owner or the ordering session can do |
 | `NOT_JUDGED` | 2 | not judged, for the reason the reading gives |
@@ -31,7 +31,7 @@ things to fix.
 
 | board | open | of which measured | decision-bound | authority | missing input | not judged |
 |---|---:|---:|---:|---:|---:|---:|
-| A | 24 | 9 | 12 | 1 | 4 | 0 |
+| A | 25 | 10 | 12 | 1 | 4 | 0 |
 | B | 31 | 14 | 10 | 1 | 4 | 2 |
 | C | 12 | 3 | 10 | 0 | 0 | 0 |
 | D | 17 | 4 | 11 | 1 | 2 | 0 |
@@ -163,12 +163,13 @@ holding a number, not a question about a number.
 | `DFM-001` | E | INCONCLUSIVE | the folder judged here is meshsat-pcb-e-revA-E9 and this board declares E17, so its properties are a reading of a board this set is not building |
 | `DOC-002` | E | INCONCLUSIVE | board E declares E17 and the order set holds E6: the note beside those folders describes a board this project is not building |
 
-## MEASURED_FAILURE (28): the tool looked and the board failed
+## MEASURED_FAILURE (29): the tool looked and the board failed
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
 | `SCH-002` | A | FAIL | netlist_board FAIL: {'agree': 2000, 'aliased_pins': 0, 'board_footprints': 400, 'board_only_inert': 0, 'fail': 10, 'netlist_refs': 398} |
-| `PI-003` | A | FAIL | via_current FAIL: {'measured_rails': 13, 'no_via': 0, 'over': 5, 'rails': 13} |
+| `PI-002` | A | FAIL | dc_drop FAIL: {'density_missed': 12, 'met': 20, 'missed': 3, 'undeclared': 0} |
+| `PI-003` | A | FAIL | via_current FAIL: {'measured_rails': 23, 'no_via': 0, 'over': 8, 'over_barrels': 37, 'rails': 23} |
 | `RET-004` | A | FAIL | return_via FAIL: {'examined_same_reference': 0, 'examined_to_power': 10, 'exempt': 54, 'judged': 40, 'lacking': 32, 'same_plane': 27, 'sl |
 | `ANA-001` | A | FAIL | sensitive_nodes FAIL: {'declared': 24, 'fail': 15, 'measured': 10} |
 | `RF-001` | A | FAIL | rf_line FAIL: {'judged': 11, 'missed': 11} |

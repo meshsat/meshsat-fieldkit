@@ -5,12 +5,12 @@
   "declared_dissipators": 0,
   "efficiency_undeclared": 0,
   "no_thermal_path": 0,
-  "rails": 13,
-  "watts_lost_all_peaks_at_once": 36.6,
-  "watts_lost_typical": 23.8,
-  "watts_peak_sum_not_simultaneous": 1056.1
+  "rails": 23,
+  "watts_lost_all_peaks_at_once": 40.0,
+  "watts_lost_typical": 27.2,
+  "watts_peak_sum_not_simultaneous": 1101.1
  },
- "denominator": 13,
+ "denominator": 23,
  "evidence": [],
  "inputs": {
   "board": {
@@ -25,7 +25,7 @@
   "rule_fingerprints": {
    "THM-001": "c2ee6d9135d5bf83"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "THM-001"
@@ -33,9 +33,9 @@
  "tool": "thermal",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "7220c1b43176cf2e"
+  "tools_tree_sha": "f68d837d805d656b"
  },
- "ts": "2026-09-17T22:38:47Z",
+ "ts": "2026-09-19T23:44:21Z",
  "verdict": "PASS",
  "version": "unknown"
 }

@@ -36,9 +36,19 @@ fault from one that reads low.
 | 4 | +5V_S2 | 5.10 V (4.84 to 5.35) | R35 | J_5V_S2 |
 | 5 | +5V_S3 | 5.10 V (4.84 to 5.35) | R39 | J_5V_S3 |
 | 6 | +12V_HF | 12.00 V (11.40 to 12.60) | R65 | J_HF |
-| 7 | +13V8_PA | 13.80 V (13.11 to 14.49) | R55 | J_PA |
-| 8 | VBUS20 | 20.00 V (19.00 to 21.00) | R11 | R16 |
-| 9 | +54V_POE | 54.00 V (51.30 to 56.70) | R71 | J_54V |
+| 7 | HF_OUT | 12.00 V (11.40 to 12.60) | Q24 | R65 |
+| 8 | +13V8_PA | 13.80 V (13.11 to 14.49) | R55 | J_PA |
+| 9 | PA_OUT | 13.80 V (13.11 to 14.49) | Q14 | R55 |
+| 10 | CH_SRP | 14.40 V (13.68 to 15.12) | Q10 | R17 |
+| 11 | PD_VPWR | 15.00 V (14.25 to 15.75) | R81 | Q27 |
+| 12 | PD_SW | 15.00 V (14.25 to 15.75) | Q27 | R138 |
+| 13 | PD_VBUS | 15.00 V (14.25 to 15.75) | R138 | J_USBC_OUT |
+| 14 | PD_OUT | 15.00 V (14.25 to 15.75) | Q26 | R81 |
+| 15 | VBUS20 | 20.00 V (19.00 to 21.00) | R11 | R16 |
+| 16 | FE_OUT | 20.00 V (19.00 to 21.00) | Q5 | R11 |
+| 17 | CH_ACN | 20.00 V (19.00 to 21.00) | R16 | Q7 |
+| 18 | +54V_POE | 54.00 V (51.30 to 56.70) | R71 | J_54V |
+| 19 | POE_OUT | 54.00 V (51.30 to 56.70) | Q20 | R71 |
 
 **Decide before powering: the declared source is an inductor or a ferrite, which is a filter on an incoming feed on some boards and a converter's output on others.**
 
