@@ -7,7 +7,7 @@ Every pair that is not a current PASS, classified. Generated from tools/pcb_deci
 map's maturity and each deciding verdict: a decision that claims a pair wins over everything else, because
 the ruling is the action that moves it, and the measurement is reported beside it rather than lost.
 
-**122 open pair(s)** over 7 board(s). **43 are measured failures** (a tool looked and the board failed), and **14 of those are claimed by an open owner decision**.
+**122 open pair(s)** over 7 board(s). **43 are measured failures** (a tool looked and the board failed), which are **37 distinct readings**, and **14 of those are claimed by an open owner decision**.
 
 | waiting on | pairs | what it means |
 |---|---:|---|
@@ -19,6 +19,13 @@ the ruling is the action that moves it, and the measurement is reported beside i
 | `VENDOR_WAIT` | 1 | a fabricator or a standards body, and nobody here |
 | `OWNER_WORK` | 7 | work only the owner or the ordering session can do |
 | `NOT_JUDGED` | 2 | not judged, for the reason the reading gives |
+
+A pair is what a BOARD has to satisfy, so the table counts pairs; these rules are decided by a verdict
+written ONCE for the whole set, so their rows are one reading seen on every board and not that many separate
+things to fix.
+
+* `DFA-001`: one set-level reading, counted on 7 board(s)
+* `OUT-001`: one set-level reading, counted on 7 board(s)
 
 ## By board
 
