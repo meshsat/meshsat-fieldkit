@@ -90,3 +90,74 @@ def t_a_pre_lay_group_may_ask_for_more_room_than_its_class_carries():
     assert i < j, "the floor is applied after the comparison that uses it"
     assert 'STUB_NET_CLEAR' in src[i:j], "the floor does not read the knob"
     assert "max(_me, net_clr(other))" in src, "the floor replaced KiCad's larger-of-the-two rule instead of feeding it"
+
+
+# --------------------------------------------------------- every group keeps its own reading (19 September 2026)
+# Board E declares THREE pre-lay groups and all three ran under the one guard label `prelay-group`, so the guard
+# wrote `guard-prelay-group.verdict.json` three times and only the last survived. That is not a logging nicety:
+# the guard's verdict is how a reverted group is reported, so a group that RAISED the hard count and was
+# correctly restored left a FAIL that the next group's PASS overwrote, and the stage that carries board A's
+# eleven RF drops and board E's whole ANA-001 answer reported one of its three measurements. These two rules
+# are a real run of `guarded` in a fixture tree, one with two distinct labels and one with the same label twice.
+
+def _guard_tree():
+    """A directory `guarded` can run in: stub drc.sh and hardset.py, the real verdict writer."""
+    import tempfile, shutil, os
+    d = tempfile.mkdtemp(prefix="guard-label-")
+    t = os.path.join(d, "tools"); os.makedirs(t)
+    prj = os.path.join(d, "prj"); os.makedirs(os.path.join(prj, "out"))
+    shutil.copy(os.path.join(TOOLS, "guarded.sh"), t)
+    shutil.copy(os.path.join(TOOLS, "verdict.py"), t)
+    open(os.path.join(t, "drc.sh"), "w").write('#!/bin/bash\nprintf "{}" > "$2"\n')
+    os.chmod(os.path.join(t, "drc.sh"), 0o755)
+    # the stub hard set: whatever the label, hard 0 and unrouted 0, so the guard keeps every stage
+    open(os.path.join(t, "hardset.py"), "w").write(
+        "import sys\n"
+        "a = sys.argv\n"
+        "p = a[a.index('--counts') + 1]\n"
+        "open(p, 'w').write('0 0\\n')\n")
+    open(os.path.join(prj, "b.kicad_pcb"), "w").write("(kicad_pcb)\n")
+    return d, t, prj
+
+
+def _run_guard(labels):
+    """Run `guarded` once per label in one project directory; return the verdict files left behind."""
+    import subprocess, shutil, os, sys, glob
+    d, t, prj = _guard_tree()
+    script = ("set -e\ncd '%s'\nN=b\nT='%s'\n. \"$T/guarded.sh\"\nstage () { echo ran \"$1\"; }\n" % (prj, t)
+              + "".join('GUARD_MODE=pre guarded "%s" stage "%s"\n' % (l, l) for l in labels))
+    r = subprocess.run(["bash", "-c", script], capture_output=True, text=True,
+                       env=dict(os.environ, VERDICT_DIR=os.path.join(prj, "out")))
+    left = sorted(os.path.basename(p) for p in glob.glob(os.path.join(prj, "out", "guard-*.verdict.json")))
+    logs = sorted(os.path.basename(p) for p in glob.glob(os.path.join(prj, "out", "guard-*.log")))
+    shutil.rmtree(d, ignore_errors=True)
+    return r.returncode, r.stdout + r.stderr, left, logs
+
+
+def t_two_guarded_stages_under_one_label_keep_one_verdict_between_them():
+    """THE DEFECTIVE FIXTURE, which is what board E's three pre-lay groups were doing: expected verdict FAIL,
+    two stages ran and the evidence channel holds one reading."""
+    rc, out, left, logs = _run_guard(["prelay-group", "prelay-group"])
+    assert rc == 0, out
+    assert left == ["guard-prelay-group.verdict.json"], (left, out)
+    assert logs == ["guard-prelay-group.log"], (logs, out)
+
+
+def t_two_guarded_stages_under_their_own_labels_each_keep_theirs():
+    """THE ACCEPTABLE FIXTURE: expected verdict PASS, two stages and two readings."""
+    rc, out, left, logs = _run_guard(["prelay-group-1-SHORE_INHIBIT", "prelay-group-2-TRK_SW1"])
+    assert rc == 0, out
+    assert left == ["guard-prelay-group-1-SHORE_INHIBIT.verdict.json",
+                    "guard-prelay-group-2-TRK_SW1.verdict.json"], (left, out)
+    assert len(logs) == 2, (logs, out)
+
+
+def t_the_chain_labels_every_pre_lay_group_with_its_own_index_and_net():
+    """And the chain uses that: the label and the group's own log both carry the index and the first net it
+    names, so a reader can tell which declaration a verdict is about without counting groups by hand."""
+    assert 'guarded "prelay-group-$GTAG" gstage' in FULL, "the pre-lay groups still share one guard label"
+    assert "out/$N-prelay-group-$GTAG.log" in FULL, "the pre-lay groups still share one log file"
+    assert "for i, g in enumerate(json.load(open(sys.argv[1])).get('prelay_groups') or [], 1)" in FULL, \
+        "the group index is not computed where the groups are read"
+    i, j = FULL.index("get('prelay_groups')"), FULL.index('guarded "prelay-group-$GTAG"')
+    assert "[^A-Za-z0-9_]" in FULL[i:j], "the label is built from a net name without making it a safe filename"
