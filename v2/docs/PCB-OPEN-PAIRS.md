@@ -11,22 +11,22 @@ the ruling is the action that moves it, and the measurement is reported beside i
 
 | waiting on | pairs | what it means |
 |---|---:|---|
-| `DECISION` | 55 | an owner decision by name |
+| `DECISION` | 58 | an owner decision by name |
 | `DECISION_UNCLAIMED` | 5 | a rule that says a decision is open while no decision claims it |
 | `AUTHORITY` | 3 | an authority this project does not have |
 | `MISSING_INPUT` | 17 | an input the reading declared absent |
 | `MEASURED_FAILURE` | 30 | the tool looked and the board failed |
-| `NOT_JUDGED` | 13 | not judged, for the reason the reading gives |
+| `NOT_JUDGED` | 10 | not judged, for the reason the reading gives |
 
 ## By board
 
 | board | open | of which measured | decision-bound | authority | missing input | not judged |
 |---|---:|---:|---:|---:|---:|---:|
-| A | 24 | 9 | 11 | 1 | 4 | 2 |
+| A | 24 | 9 | 12 | 1 | 4 | 1 |
 | B | 31 | 14 | 10 | 1 | 4 | 3 |
 | C | 12 | 3 | 9 | 0 | 1 | 1 |
-| D | 17 | 4 | 10 | 1 | 2 | 2 |
-| E | 19 | 5 | 10 | 0 | 4 | 2 |
+| D | 17 | 4 | 11 | 1 | 2 | 1 |
+| E | 19 | 5 | 11 | 0 | 4 | 1 |
 | E5 | 6 | 3 | 2 | 0 | 0 | 1 |
 | P | 14 | 5 | 8 | 0 | 2 | 2 |
 
@@ -40,7 +40,7 @@ holding a number, not a question about a number.
 | 27 | 3 | 1 | RET-001, RET-002, STK-002 | C |
 | 28 | 3 | 2 | RET-002, STK-001, STK-002 | P |
 | 29 | 5 | 0 | GND-002, INT-002 | A B C E |
-| 31 | 3 | 3 | TRN-001 | A D E |
+| 31 | 6 | 3 | DOC-001, TRN-001 | A D E |
 | 32 | 3 | 3 | RET-004 | C D E |
 | 34 | 16 | 0 | ENV-001, ISO-001, THM-001 | A B C D E E5 P |
 | 35 | 1 | 1 | PI-001 | A |
@@ -49,7 +49,7 @@ holding a number, not a question about a number.
 | 39 | 16 | 0 | RET-001, RET-003, SI-001 | A B C D E P |
 | 40 | 1 | 1 | BAT-001 | P |
 
-## DECISION (55): an owner decision by name
+## DECISION (58): an owner decision by name
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -63,6 +63,7 @@ holding a number, not a question about a number.
 | `TRN-001` | A | FAIL | decision 31: conductors leave the case and meet a chip with nothing in between, or only through an active part |
 | `ISO-001` | A | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
 | `THM-001` | A | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
+| `DOC-001` | A | INCONCLUSIVE | decision 31: conductors leave the case and meet a chip with nothing in between, or only through an active part |
 | `ENV-001` | B | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
 | `GND-002` | B | INCONCLUSIVE | decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked |
 | `RET-001` | B | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
@@ -90,6 +91,7 @@ holding a number, not a question about a number.
 | `SI-001` | D | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
 | `TRN-001` | D | FAIL | decision 31: conductors leave the case and meet a chip with nothing in between, or only through an active part |
 | `THM-001` | D | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
+| `DOC-001` | D | INCONCLUSIVE | decision 31: conductors leave the case and meet a chip with nothing in between, or only through an active part |
 | `ENV-001` | E | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
 | `GND-002` | E | INCONCLUSIVE | decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked |
 | `RET-001` | E | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
@@ -99,6 +101,7 @@ holding a number, not a question about a number.
 | `TRN-001` | E | FAIL | decision 31: conductors leave the case and meet a chip with nothing in between, or only through an active part |
 | `ISO-001` | E | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
 | `THM-001` | E | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
+| `DOC-001` | E | INCONCLUSIVE | decision 31: conductors leave the case and meet a chip with nothing in between, or only through an active part |
 | `ENV-001` | E5 | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
 | `ENV-001` | P | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
 | `STK-001` | P | FAIL | decision 28: board P cannot hold the return-path rule on two layers and the ruled P5 does not route |
@@ -184,20 +187,17 @@ holding a number, not a question about a number.
 | `RTE-001` | P | FAIL | fab_limits FAIL: {'classes': 4, 'under_capability': 5} |
 | `OUT-001` | P | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 
-## NOT_JUDGED (13): not judged, for the reason the reading gives
+## NOT_JUDGED (10): not judged, for the reason the reading gives
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
 | `DFA-001` | A | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
-| `DOC-001` | A | INCONCLUSIVE | final_gate_a INCONCLUSIVE: this board is HELD by an open owner decision, so its paperwork is not current and cannot be made current while the hold stands |
 | `RF-001` | B | INCONCLUSIVE | rf_line INCONCLUSIVE: no single-ended controlled line was found to judge, and this board does not declare that it has none |
 | `DFA-001` | B | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 | `DOC-001` | B | INCONCLUSIVE | final_gate_b INCONCLUSIVE: this board's own deliverable folder, judged on its own; the set's verdict is final_gate |
 | `DFA-001` | C | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 | `DFA-001` | D | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
-| `DOC-001` | D | INCONCLUSIVE | final_gate_d INCONCLUSIVE: this board is HELD by an open owner decision, so its paperwork is not current and cannot be made current while the hold stands |
 | `DFA-001` | E | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
-| `DOC-001` | E | INCONCLUSIVE | final_gate_e INCONCLUSIVE: this board is HELD by an open owner decision, so its paperwork is not current and cannot be made current while the hold stands |
 | `DFA-001` | E5 | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 | `VIA-002` | P | INCONCLUSIVE | via_annular INCONCLUSIVE: this board declares no floor for the via ring and the plated hole ring, so that ring was not judged: a floor asserted without the fabricator's own row would be |
 | `DFA-001` | P | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
