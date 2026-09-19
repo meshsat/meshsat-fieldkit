@@ -729,7 +729,7 @@ if NL_CU >= 6:
     # crossing on a 0.400 mm In2 router track, ratio 2.10. Two vias inside the shunt's own output pad put the
     # current on the band where it is made, which is the answer the record already reached for VBUS20's shunts.
     _r65 = pads_rect(net_pads(hf, ["R65"]), 0)
-    col(hf, (_r65[0] + _r65[2]) / 2, (_r65[1] + _r65[3]) / 2 - 1.1, (_r65[1] + _r65[3]) / 2 + 1.1, 2)
+    col(hf, (_r65[0] + _r65[2]) / 2, (_r65[1] + _r65[3]) / 2 - 1.1, (_r65[1] + _r65[3]) / 2 + 1.1, 4)   # FOUR since 20 Sep 2026: the PRE-ROUTE reading (`rail_crossings`, declared currents) asks three for 2.00 A here where the SOLVED list never named it, and the 2.2 mm span holds four at the hole-to-hole floor
     # NO stitch vias at J_HF: it is a JST-VH, its pins are through-hole and already join every layer, and a
     # via placed inside its land is `hole_to_hole` against those pins (four of them, first attempt).
 else:
