@@ -10536,3 +10536,12 @@ pads) to the crossing AT that pad, which is the conservative bound; the solved m
 two agree in SHAPE wherever both have been taken, which is the argument for asking before the route, and they
 disagree in MAGNITUDE by design. What the table is for is the generator: a crossing that is short here is
 short before anything is routed, and `power_copper.cluster` counts the barrels from the current.
+
+**Addendum, 02:10 CEST (19 September): the evening's tools verified where KiCad is.** The suite run in an exact
+checkout of tonight's HEAD on the hub reads **1,092 passed, 2 failed, 2 skipped**, against 1,053 / 0 / 43 on
+the runner: thirty-nine rules that cannot run here ran there and passed. **The two failures are the two whose
+subject is the repository's own state** and not the tools: `test_netlist_provenance` reads the git index, which
+in a staged tree is the clone's, and `routeflow validate` reads phase directories a tracked-files checkout does
+not carry. The three real ones this exercise found earlier in the evening are gone: the generated bring-up
+document that a fresh checkout would have emptied, the test set rewriting the readiness it judges, and the four
+assembly-set rules that crashed rather than skipping where the repo is not around the tools.
