@@ -6,7 +6,7 @@
   "judged": 143,
   "undeclared_nets": 0,
   "under_rated": 0,
-  "unrated_parts": 67
+  "unrated_parts": 72
  },
  "denominator": 143,
  "evidence": [],
@@ -15,7 +15,7 @@
   "margin": 0.2,
   "netlist": {
    "path": "out/pcb-a-power.net",
-   "sha256_16": "733d89dc62a1b783"
+   "sha256_16": "8a74660e90e5616c"
   }
  },
  "missing_input": null,
@@ -25,17 +25,17 @@
   "rule_fingerprints": {
    "CMP-001": "117de3adbf51c9c8"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "CMP-001"
  ],
  "tool": "derate",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "7220c1b43176cf2e"
+  "git_head": "190bcc8a4c8b",
+  "tools_tree_sha": "ac75216d6fd7df92"
  },
- "ts": "2026-09-17T22:38:49Z",
+ "ts": "2026-09-19T22:38:14Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "190bcc8a4c8b+dirty"
 }

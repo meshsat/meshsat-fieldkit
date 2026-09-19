@@ -450,9 +450,16 @@ def guard(tool, fn, argv, rules=None):
         tb = traceback.format_exc().strip().split("\n")[-1][:200]
         try:
             board = argv[0] if argv and str(argv[0]).endswith(".kicad_pcb") else None
+            # AND IT GOES WHERE THE CALLER SAID TO WRITE (20 September 2026). This wrote with no `out_dir`,
+            # so a gate that was told to put its reading somewhere else put its CRASH in the tree's own
+            # evidence instead: re-taking board E5's CMP-001 with `--out-dir routed` landed an INCONCLUSIVE
+            # beside the board because the tool raised. A run told where to write leaves the tree alone,
+            # which was settled for the gates themselves on 19 September and never reached their guard.
+            _od = opt(argv, "--out-dir", None)
             write(tool, INCONCLUSIVE, denominator=0, inputs={"board": board} if board else {}, rules=rules,
                   note="the gate raised before it decided: %s (%s)" % (type(e).__name__, tb),
-                  missing_input="a decision: the gate crashed with %s" % type(e).__name__)
+                  missing_input="a decision: the gate crashed with %s" % type(e).__name__,
+                  **({"out_dir": _od} if _od else {}))
         except BaseException:
             pass
         print("%s: CRASHED before deciding: %s" % (tool, tb))
