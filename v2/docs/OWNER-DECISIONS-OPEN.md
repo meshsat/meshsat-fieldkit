@@ -7,14 +7,14 @@ One line per decision that is still open, what it holds up, and where its eviden
 v2/docs/OWNER-DECISIONS-2026-09-11.md and this page is generated from the same registry the readiness table
 is, so the pair counts below are the ones the gates use.
 
-**13 decisions are open and they hold 68 rule-board pairs of the 333 the set is judged on.** A pair held by a
+**13 decisions are open and they hold 70 rule-board pairs of the 333 the set is judged on.** A pair held by a
 decision is not a defect in the board: it is a question nobody has answered, and until it is answered the
 rule can be neither passed nor failed.
 
 | # | what is being decided | holds | boards | asked |
 |---|---|---|---|---|
-| **27** | the four-layer boards cannot carry a plane under their back-side signals as built | RET-001, RET-002 | C | 2026-09-15 |
-| **28** | board P cannot hold the return-path rule on two layers and the ruled P5 does not route | RET-002, STK-001 | P | 2026-09-15 |
+| **27** | the four-layer boards cannot carry a plane under their back-side signals as built | RET-001, RET-002, STK-002 | C | 2026-09-15 |
+| **28** | board P cannot hold the return-path rule on two layers and the ruled P5 does not route | RET-002, STK-001, STK-002 | P | 2026-09-15 |
 | **29** | board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked | GND-002, INT-002 | A, B, C, D, E, P | 2026-09-16 |
 | **30** | ZEROIZE is a switch wired to nothing that can act on it | SCH-004 | A, B, C, D, E, P | 2026-09-16 |
 | **31** | conductors leave the case and meet a chip with nothing in between, or only through an active part | TRN-001 | A, D, E | 2026-09-16 |
@@ -44,6 +44,7 @@ the longest is 172.9 mm of SCL
 |---|---|---|---|
 | RET-001 | a continuous adjacent return path | C | INCONCLUSIVE |
 | RET-002 | plane-adjacency screen | C | FAIL |
+| STK-002 | a layer count is decided and costed | C | INCONCLUSIVE |
 
 
 ### Decision 28: board P cannot hold the return-path rule on two layers and the ruled P5 does not route
@@ -76,6 +77,7 @@ the routing answer.
 |---|---|---|---|
 | RET-002 | plane-adjacency screen | P | FAIL |
 | STK-001 | the stackup is declared, feasible and in the board | P | FAIL |
+| STK-002 | a layer count is decided and costed | P | INCONCLUSIVE |
 
 
 ### Decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked

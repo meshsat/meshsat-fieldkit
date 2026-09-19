@@ -412,7 +412,18 @@ def result_for(rule, letter, cov, vs, m, fingerprint, phase=None, identities=Non
                              % (name, str(rec.get("counts"))[:90]), evidence=rec.get("_path"))
                 elif res == "PASS": r = dict(result=PASS, why="%s PASS of %s" % (name, rec.get("denominator")), evidence=rec.get("_path"))
                 elif res == "FAIL": r = dict(result=FAIL, why="%s FAIL: %s" % (name, str(rec.get("counts"))[:120]), evidence=rec.get("_path"))
-                else: r = dict(result=INCONCLUSIVE, why="%s %s" % (name, res), evidence=rec.get("_path"))
+                else:
+                    # AN INCONCLUSIVE READING EXPLAINS ITSELF AND THIS READER THREW THE EXPLANATION AWAY (19
+                    # September 2026). Every gate writes a note saying WHY it could not judge, and thirteen
+                    # rule-board pairs on the readiness pages read "assembly_set INCONCLUSIVE", which is the
+                    # tool's name and its verdict and not one word about the cause; the sentence "no
+                    # single-ended controlled line was found to judge, and this board does not declare that it
+                    # has none" was sitting in the verdict file the whole time. A gate that names what it hit
+                    # is a law here (16 September) and a reader that drops the name breaks it just as surely.
+                    note = " ".join(str(rec.get("note") or "").split())
+                    mi = " ".join(str(rec.get("missing_input") or "").split())
+                    tail = (": " + (mi or note)[:160]) if (mi or note) else ""
+                    r = dict(result=INCONCLUSIVE, why="%s %s%s" % (name, res, tail), evidence=rec.get("_path"))
         order = {FAIL: 0, INCONCLUSIVE: 1, PASS: 2}
         if worst is None or order[r["result"]] < order[worst["result"]]: worst = r
     return worst

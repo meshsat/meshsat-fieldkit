@@ -244,7 +244,14 @@ failure it is a stated distance away from.
 
 **STK-002 a layer count is decided and costed** (BLOCKER, OWNER_DECISION_REQUIRED)  
 layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for
-four against six layers exists for any board, which decision 2 left open and decisions 27 and 28 now need  
+four against six layers exists for any board, which decision 2 left open and decisions 27 and 28 now need. 19
+September 2026, from the open-pairs register: this rule read AN OWNER DECISION IS OPEN on all seven boards
+while NO numbered decision claimed it, so a reader who followed the readiness page could not find out which
+one. Decisions 27 and 28 name STK-002 on C and P now, which is what the sentence above already said in prose.
+The other five boards stay deliberately unclaimed: their layer question IS decision 2, the P0 of 11
+September, ruled on 12 September as write up all seven and TEST BOARD A ONLY, and the index only carries
+decisions from 23 up. So five pairs point at a ruled decision whose per-board half was never asked again, and
+the page says so under DECISION_UNCLAIMED rather than hiding them among the pairs that have a number.  
 *Close it by* quotes from the ordering session for both counts on C and P, then the two rulings. Owner **OWNER**. Effort P50 2h, P80 72h.
 
 **THM-001 every dissipating part has a path** (BLOCKER, OWNER_DECISION_REQUIRED)  
