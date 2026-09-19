@@ -11435,3 +11435,44 @@ believed KiCad was present** and ran against the stub: three rules that had skip
 (`test_netlist_board`, `test_pair_maps`, and the flag ratchet). The import is stripped from the slice, which
 needs no module at all, and the process is left as it was found. The ratchet then caught a second one in the
 new tool itself, `argv[argv.index("--board") + 1]`, which is the unguarded flag read `verdict.opt` exists for.
+
+**Addendum, 14:45 CEST (19 September), A BOARD-WIDE COUNT IS NOT A TEST OF ONE CLOSURE, AND BOARD A'S
+SWITCHING PRE-LAY WAS BEING REFUSED BY IT.** A49's own chain laid its three pre-lay groups and the middle one
+did nothing: the five `*_SW2` nets carry TWENTY unconnected pairs on the placed board and `closed 0 of 20`
+after 577 seconds, every refusal reading *"a path was found and it did not connect: start 0.000 mm and end
+0.000 mm from this net's nearest copper on their own layers"*. **Three arms, one variable each, on a copy of
+that same placed board, and all three closed 0 of 20 with twenty NOT CLOSED and zero FAILED**: the pours as
+obstacles (`STUB_POUR_OBSTACLE=1`), the pours free, and every layer available instead of the outer two. So it
+is not the obstacle map, not the layer set and not the search, which finds a path every single time.
+
+**The cause is in the acceptance and the numbers name it.** Since 12 September a closure is kept only when
+KiCad's WHOLE-BOARD unconnected count DROPS, which was the right answer to A24's `/+3V3` reporting success
+twice while connecting nothing. Board A's switching nets report `other-cluster items: 12 of 21`, `17 of 22`,
+`22 of 23`: **the generator lays an escape stub per pad and nothing else, so each of these nets is twenty-odd
+islands**, and joining two of twenty-three moves no board-wide number. The refusals read `unconnected 549
+before and 549 after`. **The same tool, on the same board, in the same run, closed 9 of 10 on the five
+`*_CSF` nets**, which carry five and twelve items, so it is the net's shape and not the tool.
+
+**`keep_closure(u_before, u_after, g_start, g_end)`** is that decision as one function a test can exercise
+without a board. `count_fell` is the rule of 12 September, unchanged. `ends_on_copper` is new: the closure is
+kept when **both of its ends are ON the net's own existing copper and the board-wide count did not RISE**. The
+two end gaps are measured BEFORE the copper is laid, against the copper that was already there, because
+afterwards the answer is zero by construction. **It keeps the whole of what the count was protecting** (a
+closure that cuts a pour or shorts a neighbour raises it) **and drops only the half of it that was never about
+this pair.** The tolerance is 0.001 mm, float noise on a cell centre that is on the copper, and a rule holds it
+there: a 0.05 mm gap is refused. What the new rule can still buy is a redundant join inside one cluster,
+locked copper on the target net that was not needed, which costs copper and never correctness, and a pre-lay
+is where that is cheapest. Seven rules, both fixtures, all seven failing on the pre-fix file and the
+thirty-five existing stub rules passing unchanged. **The patched tool is staged in `/root/swtools` and NOT in
+`/root/localtools`, because three routes are in flight and their finishes read localtools.**
+
+**Also: the MECHANICAL rule was failing board B on its ROUTE.** MEC-001 is read from `check_pcb_<letter>` and
+asks whether the board fits what it is fitted to, outline, mounting holes, keep-outs, connector positions,
+part heights. Board B's gate failed on 21 items and **all 21 were `pair X has one leg routed and one not`**,
+which is B21 being 416 connections short and is already reported by PAIR-001's `impedance_check` as UNROUTED
+36 and by RTE-002's routed-board gate. That is the defect the intent items were split out for on 16 September,
+in the same file, one class over, and the comment that split them states the rule in its own words: **the same
+defect must not be counted twice under two authorities.** The item is reported and counted in the denominator
+now and kept out of the gate's failures, in board A's gate and board B's; nothing is lost by it, because one
+leg routed and one not implies at least one unmade connection and the routed-board gate refuses any board
+with a non-zero unrouted count.
