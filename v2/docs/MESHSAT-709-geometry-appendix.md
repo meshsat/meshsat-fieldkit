@@ -10573,3 +10573,62 @@ and the stub router says FAILED pad to pad on all three, which is the same sente
 11 September: U4 pad 11 and R13 pad 1 with 2.82 mm between them and no lane, closed by hand that day. So board
 D's remaining opens are one placement item in the hub's own fan, not closure work and not a pre-lay question,
 and no arm of D14 to D18 has moved them.
+
+**Addendum, 03:55 CEST (19 September): PI-003's cheap half is answerable at generation, and board A goes from
+eight short crossings to one in four minutes.** `rail_crossings.py` has named the sites since 18 September and
+laid nothing, on the argument that where to put copper is a placement question. That was right while the sites
+were unknown; they are not. On every board of this set a short crossing has ONE shape: the site is a pad of the
+rail's own part, the single barrel there is the fanout's own locked via, and the room beside it is EMPTY because
+nothing is routed yet. **`rail_barrels.py`** is that answer: it takes its sites from `rail_crossings.rows` (the
+judge's own walk carrying numbers instead of prose, so the fixer and the judge cannot drift apart), its count
+from `via_current` through `power_copper`, the RING from the barrel already standing on the site, and the free
+space from `return_via._site_free`, this project's one site test. It refuses a routed board and names
+`via_parallel.py` for that case, because a locked via laid into traffic is what that tool's rings and link
+proofs exist to avoid.
+
+**Measured on A48's own placed board, read-only in a copy, source sha `ad546719` before and after:**
+
+| | crossings judged | short | answered | barrels laid | hard | unrouted |
+|---|---:|---:|---:|---:|---:|---:|
+| before | 19 | **8** | | | 0 | 499 |
+| after | 19 | **1** | **7 of 8** | **13** | 0 | 499 |
+
+**Four defects of my own stood between the first run and that table, and each is a rule now.** (1) The guard was
+given a zero-argument lambda where `verdict.guard` calls `fn(argv)`, so the tool crashed on all three boards it
+met and the guard wrote "the gate raised before it decided: TypeError" three times: correct behaviour, worthless
+reading, and checkable on the runner now. (2) It chose its own ring, `max(drill + 0.3, 0.6)`, which on a 0.40 mm
+drill is 0.15 mm of annular against board A's declared 0.20 floor; the ring is the site's own. (3) It centred
+`need` points on the PAD, which puts two new holes half a pitch from the barrel standing in the middle: seven
+sites came back `hole_to_hole` and every one was reverted. The lattice is anchored on the barrel that is there
+and grows outward. (4) **A through barrel lands in every pour it crosses**, and a pour filled before the via
+existed still has its copper at that point: the DRC read `zone clearance 0.3000 mm; actual 0.0000 mm` at every
+barrel and reverted the whole set three runs running. That is the 14 September defect in another place, where
+the gate and every rail verdict were read off a fill four stages old. The board is saved, reloaded and refilled
+before anything measures it.
+
+**What it declines is as useful as what it lays.** A site whose current needs more than eight barrels is refused
+with its number and reported as a placement item, because eight barrels in a row beside a pad is a busbar and a
+different pad. Three sites in the set hit that cap and all three are real: board A's `VBUS20` at R11 pad 2
+(8.00 A, nine barrels of 0.40 mm, and a wider hole barely helps, 0.80 mm still asks six), board E's `CELL_F` at
+P_CP pad 1 (9.00 A through 0.25 mm barrels, fourteen) and its `VIN_RAW` at L2 pad 2 (10.00 A, sixteen). Board
+A's is A49's floor plan, the A21 rail pattern of 8 September, an island with its own stitch field rather than a
+row of holes. Board E's two are E21's and they are a HOLE size, not a count: at 0.70 mm CELL_F's nine amps is
+seven barrels and VIN_RAW's ten is eight, which is what E19 already did for the fuse crossing and the dock
+block.
+
+**The set's work list, taken read-only inside each live tree** (the board and its rail table must come from one
+chain run; an intent file regenerated on another day describes another board's rails):
+
+| board | tree | judged | short | answerable beside the pad | declined |
+|---|---|---:|---:|---:|---:|
+| A (A48) | `arf48` | 19 | 8 | 7 | 1 |
+| B (B23) | `biso23` | 231 | 5 | 5 | 0 |
+| E (E20) | `erf20` | 15 | 4 | 2 | 2 |
+
+**A48 does not answer PI-003 and its work list is A47's pad for pad**: A48 is the pre-lay arm and nothing in its
+generation touched a barrel count. **B23's placement answered three of board B's six by itself** (`+5V_LIME` at
+J_LIME, `+5V_RB` at U24, `+3V3_S2B` at L202 are gone from the list), and of the five it still reads, three are
+GROUND returns through one 0.30 mm barrel at U25, U103 and U303. Those are not the plane's problem: the barrel
+IS the path from that pad to the plane, and a part's share is split across the ground pads it takes it on before
+the count is asked. Nothing was laid on any of the three: all three boards are routing, and a placement that
+changes under its own route makes that route a route of a superseded design.
