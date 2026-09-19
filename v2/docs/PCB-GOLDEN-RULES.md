@@ -634,7 +634,7 @@ rail's peak current within the same temperature rise the conductor rule allows.
 | source | PARTIALLY_VERIFIED |
 | | ECSS-Q-ST-70-12C, Design rules for printed circuit boards, Annex D (D.1.2 the formula, D.4 the IPC-2221A internal-conductor fit), ECSS Secretariat, ESA-ESTEC Requirements and Standards Division, Annex D -- v2/vendor/standards/ecss-q-st-70-12c-2014-07-14.md |
 | | the fabricator's published average hole plating thickness, 18 um, the selected fabricator, Holes and vias -- v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md |
-| implementation | prefanout.py, gen_pcb_*3.py stitch vias, gen_pcb_d3.py locked parallel barrels |
+| implementation | prefanout.py, gen_pcb_*3.py stitch vias, gen_pcb_d3.py locked parallel barrels, rail_barrels.py (pre-route), via_parallel.py (post-route) |
 | maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one transition, expires the next route |
