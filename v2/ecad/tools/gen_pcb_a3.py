@@ -147,7 +147,20 @@ REGIONS = [
  # and the packer duly put the charger's CSD18510Q5B FETs (a 7.19 x 5.59 mm courtyard) under the front end's resistor row:
  # four `courtyards_overlap` on the PLACED board, before the pre-router touched it, and no gate read them until the
  # pre-route DRC (appendix 32.135). The region moves down into free board (CHS ends at y 6, PAS starts at x -66).
- ("CHQ",   (-118, 18.5, -70, 30), ["Q7", "Q8", "Q9", "Q10", "R16", "R17", "C20", "C21", "C22", "C23"]),   # C24 and C25 are FIXED at L2
+ # THE CHQ ROW IS PACKED BY SIZE AND THE TOPOLOGY DOES NOT SURVIVE IT (20 September 2026, measured, and the
+# exchange was TRIED and refused by this file's own guard). The packer put R17, the CHARGE shunt on CH_SRP,
+# at the far west beside Q7 whose drain is CH_ACN, and R16, the INPUT shunt that feeds CH_ACN, at the far
+# east: **R16 is 35.0 mm from Q7 and R17 26.3 mm from Q10**, so both 6 to 10 A buses cross the whole
+# forty-millimetre block and interleave. That is the cause of CH_ACN's 476 mV and 4.81 A in a 0.500 mm
+# conductor, CH_SRP's 409 mV and 6.26 A on the committed board, and the Kelvin taps reading 2.0 to 45.6
+# percent of full scale as copper drop. EXCHANGING THE TWO SEATS ALONE DOES NOT WORK: VBUS20's In3 union is
+# drawn from the pads of R11, C13, C14 and C15 with a leg down to R16's own x, so moving R16 west leaves
+# `the rectangles of VBUS20 under do not form one piece (2 outlines)` and this file refuses the board, which
+# is the guard doing its job. **The block's reorder is a PLACEMENT AND COPPER change together**: the row in
+# the converter's own order (input shunt, buck pair, inductor, boost pair, output shunt) with VBUS20's bar
+# and leg redrawn to the new seat, and L2 and U3 moving with it because TI's layout item 6 wants the FETs
+# beside the inductor and Q7/Q8 are 33 mm from L2. It is A51's first item and it is not a seat swap.
+("CHQ",   (-118, 18.5, -70, 30), ["Q7", "Q8", "Q9", "Q10", "R16", "R17", "C20", "C21", "C22", "C23"]),   # C24 and C25 are FIXED at L2
  ("CHS",   (-115, -6, -70, 6), ["C16", "C17", "C18", "R18", "C19", "R19", "R20", "Q6", "R21", "R22", "R23", "R24", "R25", "C26", "C27", "R26", "R27", "TP19", "TP20", "TP22"]),
  # 12 September 2026: POQ started at x -118 and ran under NODE (-118, -68, -106, -44), a 12 x 4 mm overlap the
  # packer never happened to fill. It starts clear of the pack node's column now; 58 x 16 mm still holds its eleven parts.
