@@ -11383,3 +11383,55 @@ pre-laid connections against E21's thirteen**, and every net this board calls sw
 before Freerouting starts. That is the whole point of the arm: if ANA-001 still fails on that board the
 violation is against copper board E does not call switching, which is a question about the declaration in
 `pcb_sensitive.yaml` and not about the router.
+
+**Addendum, 14:25 CEST (19 September), THE RULE MEASURES AGAINST A LIST AND NOTHING ASKED WHETHER THE LIST IS
+COMPLETE.** ANA-001 measures each sensitive node's clearance from the nearest SWITCHING copper, and which
+copper is switching is a DECLARATION, `pcb_sensitive.yaml`'s `switch_nets` patterns for that board.
+`sensitive_nodes.py` has refused the mirror image since 18 September, a SENSITIVE net that carries a
+transistor or inductor pad and is therefore a power conductor, and nothing has ever asked the other half:
+**a switching net nobody declared is copper the reading never looks at, and the PASS that comes back is taken
+against an incomplete list**, which is a pass on a short denominator in its fourth shape this week.
+
+**`switch_list.py`**, declared in the coverage map as ANA-001's second report beside `kelvin_check`. It reads
+the NETLIST, the board file's own text and the intent, never pcbnew, so it runs where KiCad is not, which is
+where a question about a declaration belongs. **The predicate is stated so it can be argued with, and ranked
+because it knows more about one half than the other**: a net carrying a transistor's drain or source pad is
+**STRONG** when an inductor's pad is on it too (the node between a switching device and its energy store,
+which is what this rule is about) and **WEAK** when two different transistors' pads are on it and no inductor
+is, because that is the shape of a half bridge and equally the shape of an open-drain logic bus. Three
+exclusions, each from evidence rather than from a name: a gate by its PIN FUNCTION; the board's own POURED
+nets, because a plane is a rail by construction and every converter's output pour carries the pad that feeds
+it; and any net the INTENT declares a rail or declares at 0 V at both ends, because a return is a return and a
+rule that called a board's own reference switching copper would be unsatisfiable by construction.
+
+**It is a REPORT and writes an ADVISORY verdict.** Whether a given power node is switching for this rule is a
+judgement, not a measurement: a synchronous converter's midpoint certainly is, a hot-swap pass element that
+switches once at power-up arguably is not, and a tool that turned its heuristic into a verdict would be
+asserting that judgement over the person writing the declaration.
+
+**Its first run, on all six boards, and it settles the one that is in flight.** **Board A's list is CONFIRMED
+COMPLETE** (23 declared, 17 switching shaped, 0 missing) and **so is board E's** (6 declared, 2 shaped, 0
+missing): board E's two shaped nets are both excluded for a stated reason, `DC_HS` because it is one of that
+board's six poured nets and **`GND_V` because the intent declares it at 0.0 V**, "the vehicle-side return",
+carrying a 2N7002's SOURCE and the second winding of the SRF1260 choke, which reads exactly like a switch node
+and is the vehicle-side ground. **That changes what E23's landing will mean and it is written before the
+landing:** board E's arm was launched with the line that a surviving ANA-001 failure would be a question about
+the DECLARATION, and there is now no undeclared switching copper for it to be about, so a failure is against
+one of the six declared nets, every one of them locked before the router started, which is the pre-lay's own
+geometry and the placement behind it. **Board D's declared ZERO is confirmed against its own netlist**, the
+first time a declared zero in this project has been checked against the design rather than believed. **Board
+P keeps its declared zero with one weak candidate named**, `SW`, the protection pair's common drain (Q1, Q2,
+no inductor). **Boards B and C declare no `switch_nets` at all**, and board C has two STRONG candidates,
+`EPD_SW` and `EPD_VCC`, the e-paper boost's switching node and its output, each carrying a FET with L1.
+**Board C is not a gap and the distinction matters**: this rule's applicability is a board FACT, an audio
+interface or an energy source or the pack node, and board C has none of the three, so it is out of scope by
+the registry's own condition rather than by anything it declares or omits. Its two candidates are recorded
+for the day a sensitive node is added there.
+
+**Seven rules with both fixtures, and a test defect of my own caught within the hour.** The first version of
+the real-table rule for `make_handoff` put a stub `pcbnew` into `sys.modules` so a slice of that file would
+import, and **every later test in the same process that decides to SKIP by trying `import pcbnew` then
+believed KiCad was present** and ran against the stub: three rules that had skipped all week failed instead
+(`test_netlist_board`, `test_pair_maps`, and the flag ratchet). The import is stripped from the slice, which
+needs no module at all, and the process is left as it was found. The ratchet then caught a second one in the
+new tool itself, `argv[argv.index("--board") + 1]`, which is the unguarded flag read `verdict.opt` exists for.

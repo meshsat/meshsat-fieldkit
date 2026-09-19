@@ -118,9 +118,18 @@ def t_every_committed_board_row_resolves_against_this_tree():
     C's row said C17 while the tree held C24 from the day C24 was cut, so the order set has refused to rebuild
     since, and nobody would have known until somebody ran it. It reads the declarations and the resolver out of
     the real file with `pcbnew` stubbed, because the resolver needs no board."""
-    import types, harness
+    import harness
     src = open(os.path.join(TOOLS, "make_handoff.py"), encoding="utf-8").read()
-    sys.modules.setdefault("pcbnew", types.ModuleType("pcbnew"))
+    # NEVER PUT A STUB IN sys.modules FROM A TEST (19 September 2026, caught within the hour): the first
+    # version of this rule installed a fake `pcbnew` so the slice would import, and every later test in the
+    # same process that decides to SKIP by trying `import pcbnew` then believed KiCad was present and ran
+    # against the stub. Three rules that had skipped all week failed instead. The import is removed from the
+    # slice, which needs no module at all, and the process is left as it was found.
+    lines = src.splitlines(True)
+    hit = [i for i, l in enumerate(lines) if l.startswith("import ") and "pcbnew" in l]
+    assert hit, "make_handoff no longer imports pcbnew on an import line; this rule strips it from the slice"
+    lines[hit[0]] = lines[hit[0]].replace(", pcbnew", "").replace("import pcbnew\n", "\n")
+    src = "".join(lines)
     ns = {"__name__": "mh_probe", "__file__": os.path.join(TOOLS, "make_handoff.py")}
     exec(compile(src[:src.index("def _rows(rows):")], "make_handoff.py", "exec"), ns)
     if not os.path.isdir(ns["DL"]): raise harness.Skip("no deliverable folders in this tree")
