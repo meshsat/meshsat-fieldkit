@@ -12,11 +12,24 @@ import boardtable as _bt   # the copper layer count is a DECLARATION in boards/<
 from pcbnew import FromMM
 OX, OY = 150.0, 110.0
 def case(v): return (round(v.x / 1e6 - OX, 3), round(OY - v.y / 1e6, 3))
-b = pcbnew.LoadBoard(sys.argv[1]); fails = []; checked = []; _intent_reported = []
+b = pcbnew.LoadBoard(sys.argv[1]); fails = []; checked = []; _intent_reported = []; _route_reported = []
 def check(c, m):
     print(("PASS " if c else "FAIL ") + m)
     checked.append(m)
     if not c: fails.append(m)
+# A PAIR WITH ONE LEG ROUTED IS THE ROUTE'S PROPERTY AND NOT THE MECHANICAL RULE'S (19 September 2026, the
+# same defect the intent items were split out for on 16 September and its own comment's rule: THE SAME DEFECT
+# MUST NOT BE COUNTED TWICE UNDER TWO AUTHORITIES). This gate is the verdict rule MEC-001 is read from, which
+# asks whether the board fits what it is fitted to: outline, mounting holes, keep-outs, connector positions,
+# part heights. Board B's gate failed it on 21 items and every one of the 21 was `pair X has one leg routed
+# and one not`, which is B21 being 416 connections short and is already reported by PAIR-001's own
+# impedance_check as UNROUTED 36 and by RTE-002's routed-board gate as a non-zero unrouted count. It is
+# REPORTED here, counted in the denominator, and kept out of this gate's failures. Nothing is lost by it: one
+# leg routed and one not implies at least one unmade connection, and the routed-board gate refuses any board
+# with a non-zero unrouted count, so no board can reach a deliverable through this door.
+def route_item(c, m):
+    print(("PASS " if c else "FAIL ") + m)
+    checked.append(m); _route_reported.append(m)
 segs = [(case(d.GetStart()), case(d.GetEnd())) for d in b.GetDrawings() if d.GetLayer() == pcbnew.Edge_Cuts and d.GetShape() == pcbnew.SHAPE_T_SEGMENT]
 pts = [p for s in segs for p in s]
 x0, x1 = min(p[0] for p in pts), max(p[0] for p in pts); y0, y1 = min(p[1] for p in pts), max(p[1] for p in pts)
@@ -131,7 +144,7 @@ if placed:
     pairs = sorted(set(n[:-2] for n in names_all if n.endswith(("_P", "_N")) and (n[:-2] + "_P") in names_all and (n[:-2] + "_N") in names_all))
     for pair in pairs:
         lp, ln = tl.get(pair + "_P", 0.0), tl.get(pair + "_N", 0.0)
-        if (lp > 0) != (ln > 0): check(False, "pair %s has one leg routed and one not (P %.2f mm, N %.2f mm)" % (pair, lp, ln)); continue
+        if (lp > 0) != (ln > 0): route_item(False, "pair %s has one leg routed and one not (P %.2f mm, N %.2f mm)" % (pair, lp, ln)); continue
         # THE INTERFACE'S OWN BUDGET IS CITED BESIDE THE PROJECT'S (rule PAIR-001, 17 September 2026). The
         # 1.00 mm this gate refuses at is a project decision and no interface's requirement; board B is where
         # that matters most, because its pairs are PCIe, HDMI and Ethernet and their hosts ask 0.10 and 0.15.
@@ -297,7 +310,8 @@ _nfp = len(list(b.GetFootprints()))
 _sysv.exit(_v.write("check_pcb_b",
                     _v.INCONCLUSIVE if not _nfp else (_v.PASS if not fails else _v.FAIL),
                     counts={"fail": len(fails), "pass": len(checked) - len(fails), "footprints": _nfp,
-                            "intent_items_reported": len(_intent_reported)},
+                            "intent_items_reported": len(_intent_reported),
+                            "route_items_reported": len(_route_reported)},
                     denominator=len(checked),
                     evidence=fails,
                     inputs={"board": sys.argv[1]},

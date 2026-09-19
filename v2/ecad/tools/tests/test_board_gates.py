@@ -1224,3 +1224,58 @@ def t_an_absent_reference_still_fails_under_the_same_vias():
         intent_checks.run(b, lambda ok, text: (None if ok else fails.append(text)), p)
         rp = [f for f in fails if f.startswith("return path")]
         assert rp, "a run with 35 mm of no reference at all passed: %s" % intent_checks.LAST
+
+
+# ---------------------------------------------- the mechanical rule is not the route's (19 September 2026)
+# MEC-001 is read from `check_pcb_<letter>` and asks whether the board fits what it is fitted to: outline,
+# mounting holes, keep-outs, connector positions, part heights. Board B's gate failed it on 21 items and all
+# 21 were `pair X has one leg routed and one not`, which is B21 being 416 connections short and is already
+# reported by PAIR-001's impedance_check (UNROUTED 36) and by RTE-002's routed-board gate. That is the defect
+# the intent items were split out for on 16 September, in the same file, one class over, and the comment that
+# split them states the rule: the same defect must not be counted twice under two authorities.
+
+def _gate_helpers(name):
+    """The gate's own `check` and `route_item` definitions, executed as they are written."""
+    src = open(os.path.join(TOOLS, name), encoding="utf-8").read()
+    i = src.index("def check(c, m):")
+    j = src.index("\n", src.index("checked.append(m); _route_reported.append(m)"))
+    ns = {"fails": [], "checked": [], "_route_reported": []}
+    exec(compile(src[i:j], name, "exec"), ns)
+    return ns
+
+
+def t_a_route_item_is_reported_and_is_not_a_mechanical_failure():
+    """THE ACCEPTABLE FIXTURE: the item is printed, counted in the denominator and recorded, and the gate's
+    own failure list does not grow, so MEC-001 reads the board's mechanics and not its route."""
+    for name in ("check_pcb_a.py", "check_pcb_b.py"):
+        ns = _gate_helpers(name)
+        ns["route_item"](False, "pair X has one leg routed and one not (P 0.00 mm, N 13.19 mm)")
+        assert ns["fails"] == [], (name, ns["fails"])
+        assert len(ns["checked"]) == 1 and len(ns["_route_reported"]) == 1, (name, ns)
+
+
+def t_an_ordinary_failed_check_still_fails_the_gate():
+    """THE DEFECTIVE FIXTURE: the split must not have loosened the gate for anything else."""
+    for name in ("check_pcb_a.py", "check_pcb_b.py"):
+        ns = _gate_helpers(name)
+        ns["check"](False, "a mounting hole is not where the case says")
+        assert len(ns["fails"]) == 1, (name, ns["fails"])
+
+
+def t_the_one_leg_item_goes_through_the_reporter_in_every_gate_that_has_it():
+    """A mechanical sweep, because the same class of defect has now appeared twice in these files: any gate
+    that grows this check must report it rather than fail on it."""
+    import glob
+    bad = []
+    for p in sorted(glob.glob(os.path.join(TOOLS, "check_pcb_*.py"))):
+        src = open(p, encoding="utf-8").read()
+        if "one leg routed and one not" not in src: continue
+        if 'route_item(False, "pair %s has one leg routed and one not' not in src:
+            bad.append(os.path.basename(p))
+    assert not bad, ("these gates still fail the MECHANICAL rule on a route item: %s" % bad)
+
+
+def t_the_count_says_how_many_were_reported():
+    for name in ("check_pcb_a.py", "check_pcb_b.py"):
+        src = open(os.path.join(TOOLS, name), encoding="utf-8").read()
+        assert '"route_items_reported": len(_route_reported)' in src, name

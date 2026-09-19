@@ -497,6 +497,30 @@ def _nearest_copper(net, L, x, y, reach=1.2):
             if d <= reach and (best is None or d < best[0]): best = (d, px, py)
     return None if best is None else (best[1], best[2])
 
+# A PATH END IS ON THE COPPER WHEN IT IS THIS CLOSE TO IT (19 September 2026). The path's ends are grid
+# cell centres and the rasterisers sample a centre against the shape's own half width, so an end that
+# is on the copper measures 0.000 mm; this is a tolerance against float noise and nothing else.
+TOUCH_MM = float(os.environ.get("STUB_TOUCH_MM", "0.001"))
+
+
+def keep_closure(u_before, u_after, g_start, g_end, touch=None):
+    """Why a closure is kept or taken back off, as one function a test can exercise without a board.
+
+    `count_fell` is the rule of 12 September: KiCad's whole-board unconnected count dropped, so the closure
+    demonstrably connected something. `ends_on_copper` is the rule of 19 September and exists because the
+    first one is not a test of THIS closure on a net with many clusters: board A's five `*_SW2` nets carry
+    21 to 23 items in as many clusters and joining two of them moves no board-wide number, so all twenty
+    pairs were refused with both ends measured at 0.000 mm from their own copper. It keeps the whole of what
+    the count was protecting, because a closure that cuts a pour or shorts a neighbour RAISES it, and drops
+    only the part of it that was never about this pair."""
+    t = TOUCH_MM if touch is None else touch
+    if u_before is None or u_after is None: return "refuse"
+    if u_after < u_before: return "count_fell"
+    if (u_after <= u_before and g_start is not None and g_end is not None
+            and max(g_start, g_end) <= t): return "ends_on_copper"
+    return "refuse"
+
+
 closed = 0
 # 12 September 2026 (MESHSAT-862): a closure that does not close is worse than a refusal, because the finish and
 # the record both read the count. A24's /+3V3 was reported "closed: 0 tracks, 1 vias, path 1 cells" TWICE, in two
@@ -599,6 +623,15 @@ for it1, it2 in pairs:
         continue
     if _U is None: _U = _unconnected()
     _n_before = len(list(b.GetTracks()))
+    # THE TWO ENDS, MEASURED AGAINST THE COPPER THAT IS ALREADY THERE (19 September 2026). Taken BEFORE the
+    # emit, because afterwards the answer is trivially zero: it is the distance from each end of the path to
+    # this net's nearest existing copper on that end's own layer, which is the question "does this closure
+    # start and finish ON the net".
+    def _gap_pre(pt):
+        Lp, ip, jp = pt; ex, ey = float(X0 + jp * G), float(Y0 + ip * G)
+        near = _nearest_copper(net, LR[Lp], ex, ey, reach=5.0)
+        return None if near is None else math.hypot(near[0] - ex, near[1] - ey)
+    _g_start, _g_end = _gap_pre(path[0]), _gap_pre(path[-1])
     nt, nv = emit(netobj, path)
     L_end, i_end, j_end = path[-1]
     end_is_inner = c.get("inner") and INNER_GOAL is not None and INNER_GOAL[i_end, j_end]
@@ -626,6 +659,25 @@ for it1, it2 in pairs:
         if _U2 is not None and _U is not None and _U2 < _U:
             nt += landed; _U1 = _U2
             print("  landed on the copper: %s  %d short segment(s) from the goal cell centre to the net's own edge" % (net, landed))
+        elif keep_closure(_U, _U1, _g_start, _g_end) == "ends_on_copper":
+            # A BOARD-WIDE COUNT IS NOT A TEST OF THIS CLOSURE ON A SHATTERED NET (19 September 2026, board A).
+            # The acceptance above asks KiCad's whole-board unconnected count to DROP, which is right when the
+            # net has two clusters and the closure joins them. Board A's five `*_SW2` nets carry 21, 22 and 23
+            # items in as many clusters apiece, because the generator lays an escape stub per pad and nothing
+            # else, and joining two of twenty-three does not move a board-wide number: all twenty pairs were
+            # refused with `a path was found and it did not connect: start 0.000 mm and end 0.000 mm`, in three
+            # configurations measured one variable at a time (the pours as obstacles and not, and every layer
+            # against the outer two). The same tool on the same board in the same run closed 9 of 10 on the
+            # five `*_CSF` nets, which have five and twelve items, so it is the net's shape and not the tool.
+            # The closure is KEPT when its two ends are ON the net's own existing copper and the board-wide
+            # count did not RISE, which keeps the whole of the protection that count was there for (a closure
+            # that cuts a pour or shorts a neighbour raises it) and drops only the part of it that was never a
+            # test of this closure. What it can still buy is a redundant join inside one cluster: locked copper
+            # on the target net that was not needed, which costs copper and never correctness, and the pre-lay
+            # is where that is cheapest.
+            nt += landed
+            print("  closed on a many-cluster net: %s  both ends on its own copper (%.3f and %.3f mm) and the "
+                  "board's unconnected count did not rise (%s -> %s)" % (net, _g_start, _g_end, _U, _U1))
         else:
             for t in list(b.GetTracks())[_n_before:]: b.Remove(t)
             b.BuildConnectivity()
@@ -634,14 +686,11 @@ for it1, it2 in pairs:
             # the shape's own half width, so the centre is on the copper and a 0.20 mm closure ending there
             # overlaps a 0.10 mm track. Rather than name a cause nothing measured, the refusal carries the two
             # end distances and the counts, and the next board that hits it says why (16 September 2026).
-            def _gap(pt):
-                Lp, ip, jp = pt; ex, ey = float(X0 + jp * G), float(Y0 + ip * G)
-                near = _nearest_copper(net, LR[Lp], ex, ey, reach=5.0)
-                return -1.0 if near is None else math.hypot(near[0] - ex, near[1] - ey)
             print("  NOT CLOSED: %s  %s -> %s (a path was found and it did not connect: start %.3f mm and "
                   "end %.3f mm from this net's nearest copper on their own layers, unconnected %s before and "
                   "%s after; %d piece(s) taken back off)"
-                  % (net, a.get("kind"), c.get("kind"), _gap(path[0]), _gap(path[-1]),
+                  % (net, a.get("kind"), c.get("kind"),
+                     -1.0 if _g_start is None else _g_start, -1.0 if _g_end is None else _g_end,
                      _U, _U1, nt + nv + landed))
             continue
     _U = _U1 if _U1 is not None else _U
