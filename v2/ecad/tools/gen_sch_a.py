@@ -298,7 +298,21 @@ r("R26", "60.4k 1% (CELL_BATPRESZ: 4S per Table, from VDDA)", "CH_VDDA", "CH_CEL
 # declares: VBAT is declared at its NOMINAL voltage, which is the right number for a drop budget and the wrong
 # one for a part's rating, and 4S lithium ion terminates at 4.2 V a cell.
 _CELL_MAX = 16.8
-_intent.node("CH_ACN", 20.0, "the charger's input node behind the 10 mOhm input shunt: the 20 V charge bus")
+# CH_ACN IS A SUPPLY AND WAS DECLARED AS A NODE, SO NOTHING SOLVED IT (20 September 2026). `node()` says in
+# its own first line that it describes a net that is NOT a rail; this one has a voltage, a current, a source
+# and a load, and it carries the charger's whole 6.0 A from R16's far pad to the buck-boost's high-side FET.
+# Declared as a node, `dc_drop` solved no potential on it at all, so **a 6 A conductor on this board was
+# judged by neither PI-001 nor PI-002**, and `kelvin_check` could not measure the LOW half of the charger's
+# input sense either: it reads "the mesh solved no pad of CH_ACN on this board". `derate` reads a rail's
+# voltage in preference to a node's, so CMP-001 keeps the same 20 V it had.
+_intent.rail("CH_ACN", 20.0, 6.0, 8.0, "R16", loads={"Q7": 6.0}, v_work=20.0, converted=False,
+             note="the charger's input node BEHIND the 10 mOhm input shunt R16: the same 20 V charge bus as "
+                  "VBUS20 and the same 6.0 A, from the shunt's far pad to the BQ25731's high-side FET Q7 and "
+                  "the three input capacitors. VBUS20 is the rail INTO the shunt (source R11, load R16) and "
+                  "this is the rail out of it, so the two are different copper and neither double counts the "
+                  "other. Declared 20 September 2026 because it had been a `node`, which is documented as a "
+                  "net that is not a rail, and the consequence was that nothing solved it: no PI-001, no "
+                  "PI-002, and no low-side reading for the Kelvin report")
 _intent.node("CH_SRP", _CELL_MAX, "the charger's output node before the 5 mOhm charge shunt: the pack at its "
              "4S termination voltage of 4.2 V a cell, not the 14.4 V nominal the rail declares")
 _intent.node("CH_SW1", 20.0, "BQ25731 buck-side switching node: it reaches the 20 V input bus", v_min=-1.0)
