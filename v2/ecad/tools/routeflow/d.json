@@ -62,5 +62,8 @@
  "notes": "One profile per letter (15 September 2026, red team round four H1): the phase comes from boards/d.json, --phase or ROUTEFLOW_PHASE; every phase note since d12 is in v2/docs/ROUTEFLOW-PHASES.md. The pass ceiling is the timeout: the per-pass jar keeps the best pass of a cut run, so the attempt count no longer protects anything and is set high.",
  "baseline_key": "D7",
  "clean_flag": "out/<phase>-clean.txt",
- "_in2_plane_why": "15 September 2026 (decision 27, appendix 32.199 and 32.200): D's back-side tracks referenced In2, a routing layer, and rule 1 read 27 of 127 nets over; with In2 a ground plane (the zone exists on the board) D routes 0 hard 0 unrouted with two routing layers and what remains under rule 1 is the via-transition class. In2 is a power layer in the DSN with GND as its plane."
+ "_in2_plane_why": "15 September 2026 (decision 27, appendix 32.199 and 32.200): D's back-side tracks referenced In2, a routing layer, and rule 1 read 27 of 127 nets over; with In2 a ground plane (the zone exists on the board) D routes 0 hard 0 unrouted with two routing layers and what remains under rule 1 is the via-transition class. In2 is a power layer in the DSN with GND as its plane.",
+ "requires": [
+  "prelay-group-$GTAG"
+ ]
 }
