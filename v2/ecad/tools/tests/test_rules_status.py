@@ -513,3 +513,38 @@ def t_an_inconclusive_reading_carries_the_reason_the_gate_gave_for_it():
 
     bare = S.result_for(_rule(), "x", _cov(), _verdict("INCONCLUSIVE"), m, FP)
     assert bare["why"].strip() == "gate_x INCONCLUSIVE", bare["why"]
+
+
+def t_a_no_input_reading_that_wins_on_fingerprint_alone_is_announced():
+    """A PAGE MUST NOT CHANGE UNDER THE READER WITH NOTHING ON IT TO SHOW WHY (19 September 2026). A gate run
+    by hand on a host without pcbnew wrote a reading with its missing input declared and the CURRENT rule-set
+    fingerprint; board A's measured ANA-001, taken under a superseded set, lost to it by `_supersedes`'s
+    stated order (fingerprint first, then input) and the readiness page went from FAIL 15 of 24 to
+    INCONCLUSIVE in silence. The order is deliberate and is NOT changed by this rule; what it requires is
+    that the swap be recorded, so a run says which rows are a fresher reading that lacked its input standing
+    in front of a measured one. It decides nothing: the same verdicts, the same percentages."""
+    S._DISPLACED[:] = []
+    S._FP_NOW[0] = "CURRENT"
+    old = {"name": "t", "ts": "2026-09-18T00:00:00", "policy": {"rule_set_fingerprint": "OLD"}}
+    new = {"name": "t", "ts": "2026-09-19T00:00:00", "policy": {"rule_set_fingerprint": "CURRENT"},
+           "missing_input": "the copper: pcbnew is not importable here"}
+    try:
+        assert S._supersedes(new, old) is True, "a current-fingerprint reading no longer wins, which is a change of judgement"
+        assert S._DISPLACED, "the swap was not recorded, so the page can change in silence"
+        name, missing, oldfp = S._DISPLACED[0]
+        assert name == "t" and "pcbnew" in missing and oldfp == "OLD"
+
+        # and it is NOT recorded when the fresher reading had its input: that is an ordinary supersede
+        S._DISPLACED[:] = []
+        new2 = dict(new); new2.pop("missing_input")
+        assert S._supersedes(new2, old) is True
+        assert not S._DISPLACED, "an ordinary supersede is reported as a displacement"
+
+        # nor when the OLD one also lacked its input: nothing measured is being displaced
+        S._DISPLACED[:] = []
+        old2 = dict(old); old2["missing_input"] = "no folder"
+        assert S._supersedes(new, old2) is True
+        assert not S._DISPLACED, "a swap between two readings that both lacked their input is reported"
+    finally:
+        S._DISPLACED[:] = []
+        S._FP_NOW[0] = None
