@@ -213,7 +213,23 @@ def net_clr(n):
     return _CLR_CACHE[n]
 # ---- build obstacle maps once per net (other-net copper)
 # ---- THE OBSTACLE MAP: BUILT ONCE FOR THE BOARD AND TOPPED UP, NOT REBUILT PER NET
-# (19 September 2026, `STUB_MAP_CACHE`, default OFF until a board says otherwise).
+# (19 September 2026, `STUB_MAP_CACHE`; DEFAULT ON since 20 September 2026 01:45 CEST, on the number below).
+#
+# THE ONE-VARIABLE A/B, A48's frozen board, board A's own finish configuration with the wall, the two arms
+# differing in this flag alone:
+#
+#   cache OFF  exit 0  wall 55 min  board 0 hard 15 open -> 0 hard 14 open;  4 nets offered, 3 closed
+#   cache ON   exit 0  wall 48 min  board 0 hard 15 open -> 0 hard 11 open; 14 nets offered, 6 closed
+#
+# Three and a half times the nets reached the search, twice the closures, THREE more connections off the
+# board, and it finished seven minutes inside a wall the reference arm was cut by. The equivalence is not
+# inferred from that: `STUB_MAP_CHECK` rebuilds the reference map per net and refuses the run on any
+# difference, and it read nineteen of nineteen nets identical on every layer before this arm was allowed to
+# start; the three closures the two arms share are identical net for net, track for track, via for via and
+# cell for cell (`/+5V_DEV` 10 tracks 1 via 228 cells, `/+5V_S1` 14/1/581, `/+5V_S3` 8/1/146). The cache
+# changes how many nets reach the search and not what the search answers.
+#
+# `STUB_MAP_CACHE=0` restores the per-net rebuild and is how the next equivalence check is taken.
 #
 # WHERE THE CLOSING HOUR GOES IS MEASURED AND IT IS THE RASTERISATION, NOT THE SEARCH. A44's arm prints
 # `build_maps`'s own line once for almost every net, no search ever runs out of its 240 s `STUB_SEARCH_S`,
@@ -241,7 +257,7 @@ def net_clr(n):
 # somewhere and cannot be repaired by adding, so that bucket is dropped and rebuilt. Pads and pours do not
 # move during a run (the refill before the hard count runs on a saved COPY in its own process), so only the
 # track list is watched.
-_MAP_CACHE_ON = int(os.environ.get("STUB_MAP_CACHE", "0"))
+_MAP_CACHE_ON = int(os.environ.get("STUB_MAP_CACHE", "1"))
 _MAP_CHECK = int(os.environ.get("STUB_MAP_CHECK", "0"))   # rebuild the reference map per net and refuse any difference
 _MAP_CACHE = {}
 
