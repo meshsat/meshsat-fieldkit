@@ -293,11 +293,18 @@ RB="$(python3 -c "import json,sys; d=json.load(open(sys.argv[1])).get('rail_barr
 # current-sense pair is the case: ANA-001 wants 0.50 mm from switching copper, the SENSE class carries 0.127,
 # a 0.50 class clearance refuses the escape at the controller's own pins, and a DSN class-pair rule does not
 # reach Freerouting. A locked run laid to the number before the router starts is the one instrument left.
+# EVERY GROUP KEEPS ITS OWN READING (19 September 2026). All three of board E's groups were guarded under the
+# one label `prelay-group`, so the guard wrote `guard-prelay-group.verdict.json` three times and only the last
+# survived: a group that RAISED the hard count and was correctly reverted left a FAIL that the next group's
+# PASS overwrote, and its own `out/<N>-prelay-group.log` went with it. The stage that carries board A's RF
+# drops and board E's whole ANA-001 answer was reporting one of its three measurements. The group's index and
+# the first net it names make the label, so the verdict says which group it is about.
 python3 -c "
-import json,sys
-for g in json.load(open(sys.argv[1])).get('prelay_groups') or []:
-    print('%s\t%s\t%s' % (g['nets'], g.get('layers',''), g.get('clearance','')))" "$CFG" 2>/dev/null |
-while IFS=$'\t' read -r GNETS GLAYERS GCLR; do
+import json,re,sys
+for i, g in enumerate(json.load(open(sys.argv[1])).get('prelay_groups') or [], 1):
+    tag = re.sub(r'[^A-Za-z0-9_]', '_', (g['nets'].split(',')[0] or '').lstrip('/'))[:24]
+    print('%s\t%s\t%s\t%d-%s' % (g['nets'], g.get('layers',''), g.get('clearance',''), i, tag))" "$CFG" 2>/dev/null |
+while IFS=$'\t' read -r GNETS GLAYERS GCLR GTAG; do
   [ -n "$GNETS" ] || continue
   T=../tools; . ../tools/guarded.sh
   gstage () {
@@ -309,11 +316,11 @@ while IFS=$'\t' read -r GNETS GLAYERS GCLR; do
     env STUB_POUR_OBSTACLE="${PRELAY_POUR_OBSTACLE:-0}" STUB_LOCK="${PRELAY_LOCK:-1}" STUB_NET_CLEAR="${GCLR:-0}" \
         STUB_NETS="$GNETS" STUB_LAYERS="$GLAYERS" STUB_GRID="${PRELAY_GRID:-0.1}" STUB_WIN_SCALE="${PRELAY_WIN:-25}" \
         STUB_MAXN="${PRELAY_MAXN:-200000000}" timeout "${PRELAY_TIMEOUT_S:-3600}" nice -n 10 \
-        python3 -u ../tools/stub_router.py $N.kicad_pcb out/$N-prelay-in.json > out/$N-prelay-group.log 2>&1
-    grep -aE "stub_router:|closed |FAILED|NOT CLOSED" out/$N-prelay-group.log | tail -6
+        python3 -u ../tools/stub_router.py $N.kicad_pcb out/$N-prelay-in.json > out/$N-prelay-group-$GTAG.log 2>&1
+    grep -aE "stub_router:|closed |FAILED|NOT CLOSED" out/$N-prelay-group-$GTAG.log | tail -6
   }
-  echo "prelay group: $GNETS on ${GLAYERS:-every layer}"
-  GUARD_MODE=pre guarded "prelay-group" gstage
+  echo "prelay group $GTAG: $GNETS on ${GLAYERS:-every layer}"
+  GUARD_MODE=pre guarded "prelay-group-$GTAG" gstage
 done
 PRELAY="$(cfg prelay_nets)"
 if [ -n "$PRELAY" ]; then
