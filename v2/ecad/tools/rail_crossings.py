@@ -86,9 +86,11 @@ def rows(b, rails, reach_mm=1.0):
             _share = want[ref] / float(len(_pads))
             for pad in _pads:
                 bb = pad.GetBoundingBox(); c = pad.GetPosition()
-                near = [v for v in vias if (v.GetNetname() or "").lstrip("/") == n
-                        and math.hypot(v.GetPosition().x - c.x, v.GetPosition().y - c.y)
-                        <= max(bb.GetWidth(), bb.GetHeight()) / 2 + reach_mm * 1e6]
+                def _within(r):
+                    return [v for v in vias if (v.GetNetname() or "").lstrip("/") == n
+                            and math.hypot(v.GetPosition().x - c.x, v.GetPosition().y - c.y) <= r]
+                r0 = max(bb.GetWidth(), bb.GetHeight()) / 2 + reach_mm * 1e6
+                near = _within(r0)
                 if not near: continue           # no crossing at this pad: nothing to count
                 judged += 1
                 drill = min(v.GetDrill() for v in near) / 1e6
@@ -100,8 +102,21 @@ def rows(b, rails, reach_mm=1.0):
                 # THE BARRELS ALREADY THERE, by position, because the fixer adds to this cluster rather than
                 # beside it: a lattice centred on the pad puts its own holes half a pitch from the barrel that
                 # is already on the site, which is board A's seven `hole_to_hole` refusals of this morning.
-                at_near = [(v.GetPosition().x / 1e6, v.GetPosition().y / 1e6) for v in near]
                 need = _vc.barrels_for(_share, drill)
+                # THE WINDOW MUST COVER THE CLUSTER THE ANSWER TAKES (19 September 2026). A fixer answering
+                # this site lays `need` barrels on a lattice of pitch drill + 0.4 centred on the barrel that is
+                # there, so the outermost stands (need - 1) * (drill + 0.4) / 2 away. Board P proved it: the
+                # chain laid four barrels at F1 pad 1 and this walk, looking 1.0 mm past the pad, saw three of
+                # the five and reported the site still short. A judge that cannot see the answer it asked for
+                # is a judge nobody can satisfy. CAVEAT, and it is the honest limit of a distance test: a
+                # barrel counted here must be JOINED to the pad by copper, which before a route is the net's
+                # own filled pour, and PLN-001 (`check_zone_nets`) is what gates that every pour reaches its
+                # pads. A barrel with neither a pour nor a track carries nothing and this walk cannot tell.
+                span = (need - 1) * (drill + 0.4) / 2.0
+                if span > 0:
+                    wider = _within(r0 + span * 1e6)
+                    if len(wider) > len(near): near = wider
+                at_near = [(v.GetPosition().x / 1e6, v.GetPosition().y / 1e6) for v in near]
                 if len(near) < need:
                     short.append({
                         "net": n, "ref": ref, "pad": pad.GetNumber(), "at": (c.x / 1e6, c.y / 1e6),
