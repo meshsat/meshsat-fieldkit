@@ -11,6 +11,14 @@ WIN_SCALE = float(__import__("os").environ.get("STUB_WIN_SCALE", "1.0"))   # 7 S
 CLR = 0.16                   # the fallback clearance to other copper, mm (board rule 0.15); the real bar is per pair of nets, below
 HOLE_CLR = 0.30              # clearance to a drilled pad or a mounting hole: the board's hole clearance rule is 0.25, and the 0.1 mm grid needs a margin over it (B12, 4 Sep: six 0.24 mm misses against two NPTH holes)
 b = pcbnew.LoadBoard(BOARD); drc = json.load(open(DRC))
+# THE HARD SET OF THE BOARD AS IT WAS HANDED IN, read from the report this tool was given rather than
+# measured again (19 September 2026). It is the bar the drop-back at the end compares against: a stage
+# may leave the board no worse than it found it, never better-connected and more violated.
+try:
+    import hardset as _hs0
+    _HARD0 = _hs0.counts(drc)["hard"]
+except Exception:
+    _HARD0 = None
 # 12 September 2026 (MESHSAT-862): PLANES WAS A HARD-CODED STRING, "GND,+5V,+3V3,CELL+", and a net in it takes a
 # different branch below: its goal becomes ANY cell a via may stand in, on the assumption that the plane carries
 # the rest of the connection. A24 has no +3V3 pour. So for /+3V3 the router never searched for the other cluster
@@ -525,6 +533,7 @@ def keep_closure(u_before, u_after, both_ends_on_copper):
 
 
 closed = 0
+laid = []          # (net, [tracks]) per kept closure, newest last: what the hard-set drop-back walks
 # 12 September 2026 (MESHSAT-862): a closure that does not close is worse than a refusal, because the finish and
 # the record both read the count. A24's /+3V3 was reported "closed: 0 tracks, 1 vias, path 1 cells" TWICE, in two
 # separate runs, and the DRC named the same open pair afterwards both times: the search reached a GOAL CELL, which
@@ -702,11 +711,53 @@ for it1, it2 in pairs:
                      _U, _U1, nt + nv + landed))
             continue
     _U = _U1 if _U1 is not None else _U
+    laid.append((net, list(b.GetTracks())[_n_before:]))   # what THIS closure put on the board, for the drop-back below
     closed += 1; print("  closed %s: %d tracks, %d vias, path %d cells" % (net, nt, nv, len(path)))
 # A PASS THAT CLOSED NOTHING WRITES NOTHING (16 September 2026, A35's round two: both candidate closures were
 # taken back off, and the fill-and-save of the unchanged board then segfaulted in KiCad's filler, exit 139, which
 # the finish correctly refused as a tool crash. The board was identical to the input, so the whole write was a
 # risk taken for no change. Filling and saving are the two most expensive and least safe things this tool does.)
+# A CLOSURE THAT COSTS THE BOARD A HARD VIOLATION IS NOT A CLOSURE (19 September 2026). This stage judges each
+# closure by CONNECTIVITY and the stage as a whole is judged by `guarded`, which reverts EVERYTHING when the
+# hard count rises: on board A's A44 that throws away sixteen good closures for one bad one, and the same is
+# true of the old acceptance, so it is the stage's oldest shape and not today's change. Measured across board
+# A's five arms: two of the five pick up one to three `clearance` items, a closure's own via against another
+# net's pad. The board is judged here now, and the closures are dropped back one at a time, newest first,
+# until the hard count is no worse than it was handed. Each step costs one DRC and only a stage that already
+# hurt pays for any of them. STUB_DRC=0 turns it off; the tool then behaves exactly as it did.
+if closed and os.environ.get("STUB_DRC", "1") != "0" and _HARD0 is not None:
+    import subprocess as _sp, tempfile as _tf
+    _here = os.path.dirname(os.path.abspath(__file__))
+    def _hard_now():
+        _t = _tf.NamedTemporaryFile(suffix=".kicad_pcb", delete=False).name
+        _r = _tf.NamedTemporaryFile(suffix=".json", delete=False).name
+        try:
+            pcbnew.SaveBoard(_t, b)
+            if _sp.run([os.path.join(_here, "drc.sh"), _t, _r], capture_output=True, text=True).returncode: return None
+            import hardset as _hs
+            return _hs.counts(_hs.load(_r))["hard"]
+        except Exception:
+            return None
+        finally:
+            for _f in (_t, _r):
+                try: os.unlink(_f)
+                except OSError: pass
+    _h = _hard_now()
+    if _h is not None and _h > _HARD0:
+        print("stub_router: the closures took the hard set %d -> %d; dropping them back, newest first, until "
+              "the board is no worse than it was handed" % (_HARD0, _h))
+        while laid and _h is not None and _h > _HARD0:
+            _net, _tracks = laid.pop()
+            for _t2 in _tracks:
+                try: b.Remove(_t2)
+                except Exception: pass
+            b.BuildConnectivity(); closed -= 1
+            _h2 = _hard_now()
+            print("  dropped the closure on %s: hard %s -> %s" % (_net, _h, _h2))
+            _h = _h2
+        if _h is not None and _h > _HARD0:
+            print("stub_router: the hard set is still %d against the %d it was handed with every closure "
+                  "dropped, so it was not the closures" % (_h, _HARD0))
 if closed == 0:
     print("stub_router: closed 0 of %d, the board is untouched (nothing to fill and nothing to save)" % len(pairs))
 else:

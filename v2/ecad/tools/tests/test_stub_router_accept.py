@@ -83,3 +83,54 @@ def t_the_tool_asks_the_function_rather_than_repeating_its_condition():
         "the two end gaps are not measured before the copper is laid, so they would read zero by construction"
     i, j = src.index("def _gap_pre"), src.index("nt, nv = emit(netobj, path)")
     assert i < j, "the gaps are measured after the copper is laid, which is how 0.000 mm came to be printed"
+
+
+# ------------------------------- a closure that costs a hard violation is not a closure (19 September 2026)
+# This stage judges each closure by CONNECTIVITY and the stage as a whole is judged by `guarded`, which
+# reverts EVERYTHING when the hard count rises. On board A's A44 that throws away sixteen good closures for
+# one bad one, and the OLD acceptance does the same on the same board, so it is the stage's oldest shape and
+# not today's change: two of board A's five arms pick up one to three `clearance` items, a closure's own via
+# against another net's pad. The board is judged here now and the closures are dropped back one at a time,
+# newest first, until the hard count is no worse than it was handed.
+
+def _src():
+    return open(os.path.join(TOOLS, "stub_router.py"), encoding="utf-8").read()
+
+
+def t_the_bar_is_the_report_the_tool_was_handed():
+    """Not a count measured again, and never zero: a stage may leave the board no worse than it found it."""
+    s = _src()
+    assert '_HARD0 = _hs0.counts(drc)["hard"]' in s, "the bar is not read from the report this tool was given"
+    i, j = s.index("_HARD0 = _hs0.counts"), s.index("for it1, it2 in pairs:")
+    assert i < j, "the bar is read after the closures have started"
+
+
+def t_the_drop_back_walks_newest_first_and_stops_at_the_bar():
+    s = _src()
+    assert "_net, _tracks = laid.pop()" in s, "the drop-back does not take the NEWEST closure first"
+    assert "while laid and _h is not None and _h > _HARD0:" in s, "the drop-back does not stop at the bar"
+    assert "laid.append((net, list(b.GetTracks())[_n_before:]))" in s, \
+        "nothing records what each closure laid, so there is nothing to drop back"
+
+
+def t_it_is_on_by_default_and_can_be_turned_off():
+    """On, because a stage that leaves the board worse is exactly what `guarded` throws away whole; off by an
+    env var, because a measurement may want the stage's raw behaviour."""
+    s = _src()
+    assert 'os.environ.get("STUB_DRC", "1") != "0"' in s, "the drop-back is off by default or cannot be disabled"
+
+
+def t_only_a_stage_that_already_hurt_pays_for_a_drc():
+    """The first DRC is taken once, after the closures, and the per-closure ones only if that one is worse."""
+    s = _src()
+    i = s.index("_h = _hard_now()")
+    j = s.index("while laid and _h is not None")
+    assert s.count("_h = _hard_now()", 0, j) == 1, "more than one DRC is taken before the board is known to hurt"
+    assert i < j
+
+
+def t_the_drop_back_says_what_it_dropped_and_what_it_bought():
+    s = _src()
+    assert 'print("  dropped the closure on %s: hard %s -> %s"' in s, "a closure is dropped without saying so"
+    assert "so it was not the closures" in s, \
+        "a board still over the bar with every closure dropped does not say that it was not the closures"
