@@ -11204,3 +11204,37 @@ evidence PATH, so a path that serves more than one board is one reading and the 
 is still what a BOARD has to satisfy, so the table keeps counting pairs and the readiness denominator does not
 move; what changes is that nobody reads "seven boards fail their order paperwork" as seven things to fix when
 it is one gate's single answer about a set whose folders are frozen.
+
+**Addendum, 12:40 CEST (19 September), TWO ARMS LANDED WITHIN THE HOUR AND THEY SETTLE WHAT A PRE-LAY COSTS.**
+The record has carried five readings of pre-laid copper and they looked contradictory: A40's four nets cost
+board A **ten** connections, E20's two nets cost board E **seven**, D18's three cost board D **one**, E21's
+four cost **one**, A48's six cost **minus one**. Today's two landings make the shape plain.
+
+**A48: fifteen unconnected items against A47's sixteen.** Its six pre-laid nets (`CH_ACN_F`, `CH_SRN_F`,
+`CH_SRP`, `HF_CS`, `CHG_ILIM`, `EMCON_HW`) are short local runs the closers had been failing on, its stub
+router closed seventeen of twenty pairs on them, and the router then did BETTER than the arm without them.
+**E22: three open at the router against E21's four**, with `/SHORE_INHIBIT` already on the board as
+**37 locked tracks and 183.3 mm** of the longest declared conductor board E has. Two boards, two arms, the
+same direction.
+
+**So the rule is not about how much copper is pre-laid, it is about WHICH NET.** A pre-lay pays on a net
+nothing else can close (a long run the router never makes, a conductor whose being open is a safety property,
+a pad pair the closers refuse) and costs on a net the router would have closed anyway, because locked copper
+in a lane the router wanted is an obstacle it has to go round. E20 is the costly case read correctly: its two
+nets were ordinary, its pre-lay closed 39 of 39 pad pairs and handed the congestion to seven other nets, four
+of them power. A count of nets predicts nothing; the question to ask of each candidate is whether anything
+else in the chain can close it.
+
+**What A48 answers, on its frozen board: RF-001 PASS with eleven judged and none missed** (the committed A32
+reads eleven of eleven MISSED), **SCH-002** with `netlist_board` agreeing on 2,088 comparisons, and
+**PLC-001** with `place_audit` predicting zero collisions of nineteen fine-pitch parts. What it does not
+answer is ANA-001 (seven of twenty-four, the same seven A47 reads, because the six nets pinned here are not
+the sense pairs) and PI-003 (five rails, thirty-five over-rated barrels, because `rail_barrels` is declared
+for A49). **A48 is not adoptable at fifteen open and it is board A's best board.**
+
+**A correction inside the same entry, made an hour after the claim and before anything rested on it.** This
+record said at 11:00 that A48 could never answer RF-001 because its tree's pre-lay list lacks the RF group.
+The landing reads eleven judged and none missed. **The eleven blind-mate drops are the GENERATOR's locked
+0.14 mm runs and not a pre-lay group at all**; the `prelay_groups` entry written this morning is a second
+mechanism for the same copper, so its absence said nothing about the drops. The inference was from a FILE and
+the measurement is from the BOARD.
