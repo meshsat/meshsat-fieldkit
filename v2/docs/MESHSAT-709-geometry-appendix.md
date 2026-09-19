@@ -12348,7 +12348,7 @@ behind it is still the right next one-variable measurement, but it is now an ope
 answer to a refuted prediction, and the prediction's own floor (eight of fifteen at `STUB_GRID=0.1`) is what
 it is measured against.
 
-### 32.231, 20 September 2026 01:40 CEST: A49's re-close is not the one-variable pair it was armed as, and what it does prove is about the clock
+### 32.231, 20 September 2026 01:38 CEST: A49's re-close is not the one-variable pair it was armed as, and what it does prove is about the clock
 
 `/root/a49_reclose.sh` re-closed A49's frozen board (sha `f9e3f33048b30436`, 16 open) twice, and the two
 readings are:
@@ -12383,7 +12383,7 @@ one-variable grid arm armed at 01:25 (`/root/grid_ab.sh`, cache ON in both, only
 window, node cap and layers held) is what separates them, and it is read on the REFUSED nets by name, because
 a refusal is load-independent where a count taken under a wall is not.
 
-### 32.232, 20 September 2026 01:45 CEST: the map cache lands, and `STUB_MAP_CACHE` is ON by default
+### 32.232, 20 September 2026 01:42 CEST: the map cache lands, and `STUB_MAP_CACHE` is ON by default
 
 The one-variable A/B on A48's frozen board, board A's own finish configuration with the wall, the two arms
 differing in that flag alone:
@@ -12407,3 +12407,40 @@ moving, was a snapshot of the first two thirds of the run and is corrected at 01
 
 `STUB_MAP_CACHE=0` restores the per-net rebuild and is how the next equivalence check is taken; the default
 carries the numbers above in the source beside it and a rule refuses a default that moves without them.
+
+### 32.233, 20 September 2026 01:47 CEST: board A's power readings re-taken, and PI-002 goes to FAIL
+
+A tool change stales every reading it decides, and so does a DECLARATION change. Eight conductors that were
+nodes are rails now, so five tools judge a different set, and leaving the old readings on the page would have
+been the number moving for a reason that is not the boards.
+
+Re-taken on the COMMITTED board A32, read-only, sha `58e26c67987b1daa` identical before and after, with the
+schematic regenerated at the declared phase and its netlist re-exported first. **The netlist body is identical
+over 8,617 lines** (only the source path and the dates differ), so the declaration changed and the design did
+not, which is the thing a re-take has to prove before its numbers mean anything.
+
+| | before (13 rails) | after (23 rails) |
+|---|---|---|
+| `dc_drop` | 0 missed, 4 density missed | **3 missed, 12 density missed** |
+| `dc_density` | 9 met, 4 missed | 11 met, **12 missed** |
+| `via_current` | 13 rails, 5 over | 23 rails, **8 over, 37 over-rated barrels** |
+| `derate` | 143 judged, 0 under-rated | 144 judged, **0 under-rated, 0 undeclared nets** |
+| `thermal` | 13 rails, 1056.1 W peak sum | 23 rails, **1101.1 W** peak sum |
+
+**The thermal number is the proof that `series_of` works.** Eight new rails and the peak sum rises by exactly
+45.0 W, which is the USB-C outlet's own 45 W counted once. Without the field it would have risen by about a
+kilowatt of watts that were already on the page under other names.
+
+**The worst of the three drop misses is the outlet.** `PD_VBUS` reads **837 mV, 5.58 percent of the 15 V
+profile and 16.7 percent of the 5 V one**, and its worst conductor is 0.400 mm wide on In2.Cu, **54.9 mm
+long, carrying 3.00 A**; `via_current` then finds a barrel on it passing 3.00 A against 0.90 A for its own
+wall. That is board A's next-generation work list growing by one item that is larger than the barrel counts:
+the outlet needs copper of its own from the stage's shunt to the connector, on the same argument the charger's
+input bus got at 00:25.
+
+**`derate` still PASSES at 144 judged pairs with nothing under-rated**, which is what last night's
+worst-declaration rule guarantees: a conversion can only ever make CMP-001 stricter.
+
+**Readiness 63.4 to 63.1 percent verified, 12.9 to 13.2 failed, 23.7 inconclusive unchanged, of 333.** One
+pair moved: board A's **PI-002, rail voltage drop, PASS to FAIL**. The record said in advance that this number
+would go down when these conductors were measured and that it would be true. It went down and it is true.
