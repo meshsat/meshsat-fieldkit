@@ -11698,3 +11698,26 @@ the rule passed on a board where removing the dot changes nothing. The tracks en
 between them is the only copper spanning the gap. The new rule is the redundant case and **it fails on the
 pre-fix tool naming the survivor** (`the redundant dot survived: [0.0001, 5.0, 5.0]`) while the corrected
 bridge fixture passes on both, so nothing was loosened. All four run where KiCad is.
+
+**Addendum, 17:30 CEST (19 September), BOARD A'S LADDER READ AGAIN WITH A WORKING CLOSER, ALL FIVE ARMS.**
+Each frozen board re-closed read-only in its own copy, adopting nothing, source sha printed before and after:
+
+| arm | before | after | closed | kept by the new rule | FAILED, no path |
+|---|---|---|---|---:|---:|
+| A44 | hard 0, **19** open | hard 3, **8** | 16 of 19 | 5 | 3 |
+| A45r | hard 0, **22** | hard 1, **6** | 18 of 22 | 2 | 3 |
+| A46 | hard 0, **27** | hard 1, **12** | 21 of 26 | 6 | 5 |
+| A47 | hard 0, **16** | hard 0, **7** | 12 of 16 | 3 | 3 |
+| A48 | hard 0, **15** | hard 0, **10** | 9 of 15 | 4 | 3 |
+
+**Every arm loses between 44 and 63 percent of its opens**, and **not one `NOT CLOSED` survives anywhere**,
+against the 52 that the old closer produced across these same trees. Two of the five pick up one to three
+`clearance` violations, a closure's own via against another net's pad, **and the old closer does the same**:
+run on A44's identical board it also closed 16 of 19 and also took hard from 0 to 1. So raising the hard count
+is this stage's long-standing behaviour and not something the acceptance change introduced; what the change
+did was stop the stage refusing good closures. In a real finish `guarded` reverts the whole stage when hard
+rises, which is the backstop working and is also why **the next piece of work on this stage is a fallback that
+lays its closures one at a time**: on A44 that is worth sixteen connections instead of none.
+
+**The two runs of the NEW tool on A44 that disagreed (hard 3 against hard 1) are the dot defect above**, not a
+property of the acceptance: the old and the new tool agree exactly when the report they were given agrees.
