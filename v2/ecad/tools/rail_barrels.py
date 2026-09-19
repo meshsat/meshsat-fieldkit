@@ -113,6 +113,8 @@ def plan(row, free, max_barrels=MAX_BARRELS):
     growing outward from the ones that are there and skipping any position that is occupied or refused."""
     x, y = row["at"]; drill = row["drill"]; need = int(row["need"]); have = int(row["have"])
     near = list(row.get("near") or [])
+    reach = float(row.get("reach") or 0.0)      # the judge's own window, from its row
+    px, py = row.get("at_pad") or (x, y)
     if need > max_barrels:
         return [], "x", ("%d barrels of %.2f mm for %.2f A is a busbar and not a cluster: this site is a "
                          "placement item, not copper to add beside the pad" % (need, drill, row["amps"]))
@@ -132,6 +134,11 @@ def plan(row, free, max_barrels=MAX_BARRELS):
                 if len(pts) >= owed: break
                 cx = ax + (k * pitch if axis == "x" else 0.0) * sgn
                 cy = ay + (k * pitch if axis == "y" else 0.0) * sgn
+                # INSIDE THE JUDGE'S OWN WINDOW. A barrel it cannot count is copper that answers nothing:
+                # the judge looks `reach` from the pad centre and the widening of that window was measured and
+                # refused (it counted the neighbourhood, not the answer). A cluster that does not fit is a
+                # site where the copper has to be designed, and it is declined below with its number.
+                if reach and math.hypot(cx - px, cy - py) > reach + 1e-9: continue
                 if any(math.hypot(cx - qx, cy - qy) < floor - 1e-9 for qx, qy in near + pts): continue
                 if not free(cx, cy): continue
                 pts.append((cx, cy))
@@ -139,10 +146,17 @@ def plan(row, free, max_barrels=MAX_BARRELS):
         if best is None or len(pts) > len(best[0]): best = (pts, axis)
     pts, axis = best
     if not pts:
-        return [], axis, ("no free site on either axis at this pitch: the %d barrel(s) this crossing needs "
-                          "have nowhere to stand, which is a placement item" % need)
-    note = ("%d of the %d still owed" % (len(pts), owed)) if len(pts) < owed \
-        else "every barrel still owed has a free site"
+        return [], axis, ("no free site on either axis at this pitch within the %.2f mm this crossing is "
+                          "judged over: the %d barrel(s) it needs have nowhere to stand, which is a "
+                          "placement item" % (reach, need))
+    if len(pts) < owed:
+        # HALF AN ANSWER IS NOT AN ANSWER HERE. The judge counts barrels within its window and nothing else,
+        # so laying some of a cluster leaves the crossing exactly as short as it was while putting copper on
+        # the board. Decline it whole and say how many fitted.
+        return [], axis, ("only %d of the %d barrel(s) still owed fit within the %.2f mm this crossing is "
+                          "judged over, so the cluster does not answer it: a placement item"
+                          % (len(pts), owed, reach))
+    note = "every barrel still owed has a free site"
     return pts, axis, note
 
 

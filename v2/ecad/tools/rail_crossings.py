@@ -103,25 +103,23 @@ def rows(b, rails, reach_mm=1.0):
                 # beside it: a lattice centred on the pad puts its own holes half a pitch from the barrel that
                 # is already on the site, which is board A's seven `hole_to_hole` refusals of this morning.
                 need = _vc.barrels_for(_share, drill)
-                # THE WINDOW MUST COVER THE CLUSTER THE ANSWER TAKES (19 September 2026). A fixer answering
-                # this site lays `need` barrels on a lattice of pitch drill + 0.4 centred on the barrel that is
-                # there, so the outermost stands (need - 1) * (drill + 0.4) / 2 away. Board P proved it: the
-                # chain laid four barrels at F1 pad 1 and this walk, looking 1.0 mm past the pad, saw three of
-                # the five and reported the site still short. A judge that cannot see the answer it asked for
-                # is a judge nobody can satisfy. CAVEAT, and it is the honest limit of a distance test: a
-                # barrel counted here must be JOINED to the pad by copper, which before a route is the net's
-                # own filled pour, and PLN-001 (`check_zone_nets`) is what gates that every pour reaches its
-                # pads. A barrel with neither a pour nor a track carries nothing and this walk cannot tell.
-                span = (need - 1) * (drill + 0.4) / 2.0
-                if span > 0:
-                    wider = _within(r0 + span * 1e6)
-                    if len(wider) > len(near): near = wider
+                # THE WINDOW DOES NOT GROW, AND THE FIXER FITS INSIDE IT (19 September 2026, after a version
+                # that got this the wrong way round). Widening the window to cover the cluster an answer would
+                # take was tried for one commit and it LOOSENED the question: re-taken on the same three board
+                # files with nothing but the judge changed, board A read 5 short where it read 8, board B 3
+                # where it read 5 and board E 2 where it read 4. A window grown by (need - 1) * pitch / 2 does
+                # not count the answer, it counts the NEIGHBOURHOOD: on a site needing seven barrels it reaches
+                # 2.4 mm and sweeps up every fanout via of the same rail that happens to be near, none of which
+                # is at this crossing. So the window stays at the pad plus `reach_mm`, and the fixer is told
+                # what it is: a crossing whose cluster does not fit within a millimetre of its own pad is a
+                # site where the copper has to be DESIGNED, and `rail_barrels` declines it as a placement item
+                # rather than half-answering it. `reach` travels in the row so the two cannot disagree.
                 at_near = [(v.GetPosition().x / 1e6, v.GetPosition().y / 1e6) for v in near]
                 if len(near) < need:
                     short.append({
                         "net": n, "ref": ref, "pad": pad.GetNumber(), "at": (c.x / 1e6, c.y / 1e6),
                         "drill": drill, "width": width, "near": at_near, "have": len(near), "need": need,
-                        "amps": _share,
+                        "reach": r0 / 1e6, "at_pad": (c.x / 1e6, c.y / 1e6), "amps": _share,
                         "part_amps": want[ref], "pads": len(_pads),
                         "why": "%s at %s pad %s (%.2f, %.2f): %d barrel(s) of %.2f mm for %.2f A "
                                "(%.2f A over this part's %d pad(s) on the rail), which needs %d at a 10 K rise"
