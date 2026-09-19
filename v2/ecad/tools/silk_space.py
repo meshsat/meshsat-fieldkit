@@ -13,6 +13,7 @@ asks for that. Silk over copper is legal and ugly; silk over a PAD is refused by
 Usage: silk_space.py <board.kicad_pcb> [--aspect 2.58] [--min-width 25] [--layer F.SilkS] [--json]
 """
 import os, sys, json
+import verdict          # the guarded flag reader (19 September 2026)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -25,9 +26,9 @@ def main(argv):
     if not argv: print(__doc__); return 2
     import pcbnew
     path = argv[0]
-    aspect = float(argv[argv.index("--aspect") + 1]) if "--aspect" in argv else 80.0 / 31.0
-    minw = float(argv[argv.index("--min-width") + 1]) if "--min-width" in argv else 25.0
-    lname = argv[argv.index("--layer") + 1] if "--layer" in argv else "F.SilkS"
+    aspect = float(verdict.opt(argv, "--aspect", 80.0 / 31.0))
+    minw = float(verdict.opt(argv, "--min-width", 25.0))
+    lname = str(verdict.opt(argv, "--layer", "F.SilkS"))
     b = pcbnew.LoadBoard(path)
     mm = lambda v: v / 1e6
     box = b.GetBoardEdgesBoundingBox()

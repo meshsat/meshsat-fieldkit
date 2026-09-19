@@ -34,6 +34,7 @@ The two methods agree within 0.6 to 5.5 percent, which confirms `impedance_check
 both of its substantive findings: the geometry shipped on D8 really is about 101 ohm against a 90 ohm claim, and the
 0.30/0.20 replacement really does hit the target. Inner-layer striplines are NOT confirmed: see the note in CASES."""
 import sys, os, subprocess, tempfile, math
+import verdict          # the guarded flag reader (19 September 2026)
 
 LIVE, GND, NEG, WHITE, DIEL, MASK = (255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 255), (192, 192, 192), (160, 160, 160)
 CUTOFF = "0.01"   # the solver's convergence criterion; 0.001 moved a square-coax result by 0.03 percent and cost ten times the run
@@ -100,7 +101,7 @@ CASES = [
 
 def main(a):
     if "--selftest" in a:
-        ppmm = int(a[a.index("--ppmm") + 1]) if "--ppmm" in a else 200
+        ppmm = int(verdict.opt(a, "--ppmm", 200))
         print("impedance_2d: atlc 2D field solver against the closed forms of impedance_check.py (%d px/mm)" % ppmm)
         worst = 0.0
         import importlib.util as _iu, os as _os
@@ -115,10 +116,10 @@ def main(a):
         print("impedance_2d: worst difference between the masked solver and the closed form %.1f%%" % worst)
         return 0 if worst <= 10.0 else 1
     def f(k, d=None):
-        return float(a[a.index(k) + 1]) if k in a else d
+        return float(verdict.opt(a, k, d))
     w, s, t, h, er = f("--w"), f("--s"), f("--t", 0.035), f("--h"), f("--er", 4.4)
     if None in (w, s, h): print(__doc__); return 2
-    mode = a[a.index("--mode") + 1] if "--mode" in a else "microstrip"
+    mode = str(verdict.opt(a, "--mode", "microstrip"))
     zo, ze, zd, bmp = solve(w, s, t, h, er, mode, f("--h2"), int(f("--ppmm", 200)))
     print("impedance_2d: %s w %.3f s %.3f t %.3f h %.4f er %.2f -> Zodd %.1f, Zeven %.1f, Zdiff %.1f ohm" % (mode, w, s, t, h, er, zo, ze, zd))
     return 0

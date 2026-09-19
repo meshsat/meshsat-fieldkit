@@ -35,6 +35,7 @@ yet, because nothing has been ordered.
 Usage: rules_eta.py [--json] [--hours-per-day 6] [--agents N] [--boxes N]
 """
 import os, sys, json, glob
+import verdict          # the guarded flag reader (19 September 2026)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -282,9 +283,9 @@ def model(hours_per_day=6.0, agents=1, boxes=2):
 
 
 def main(argv):
-    hpd = float(argv[argv.index("--hours-per-day") + 1]) if "--hours-per-day" in argv else 6.0
-    agents = int(argv[argv.index("--agents") + 1]) if "--agents" in argv else 1
-    boxes = int(argv[argv.index("--boxes") + 1]) if "--boxes" in argv else 2
+    hpd = float(verdict.opt(argv, "--hours-per-day", 6.0))
+    agents = int(verdict.opt(argv, "--agents", 1))
+    boxes = int(verdict.opt(argv, "--boxes", 2))
     m = model(hpd, agents, boxes)
     if "--json" in argv: print(json.dumps(m, indent=1, sort_keys=True)); return 0
     print("rules_eta: %d open item(s): %d work, %d owner or vendor waits"
