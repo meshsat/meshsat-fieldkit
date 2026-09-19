@@ -175,8 +175,19 @@ try:
         if _c.get("name") and _c.get("clearance") is not None: _PRO_CLASSES[_c["name"]] = float(_c["clearance"])
 except Exception: pass
 _CLR_CACHE = {}
+# THE MARGIN OVER THE CLASS HAS TO COVER THE RASTER, AND A FIXED HUNDREDTH DOES NOT (19 September 2026).
+# A44's closers cost the board ONE clearance item and the guard threw away sixteen closures for it; the item
+# reads `netclass 'SENSE' clearance 0.1270 mm; actual 0.1219 mm`, which misses by **5.1 micrometres**. The
+# margin here was a flat 0.01 mm, written when the grid was 0.05, while long closures run at `STUB_GRID=0.1`:
+# an obstacle map that marks a cell by its CENTRE can under-represent the real copper by up to half a cell, so
+# at 0.1 mm the sampling error is 50 micrometres and a 10 micrometre margin cannot cover it. It is half a cell
+# now, with the old hundredth as the floor, which is the pair pre-router's own lesson about a corridor that
+# did not cover its own legs. `STUB_CLR_MARGIN` sets it explicitly so the trade can be measured: a wider
+# margin refuses paths a narrower one finds, and the number that decides is closures kept against hard items.
+CLR_MARGIN = float(os.environ.get("STUB_CLR_MARGIN", "0") or 0) or max(0.01, G / 2.0)
+
 def net_clr(n):
-    """the class clearance of one net plus the grid's margin; CLR when no class resolves"""
+    """the class clearance of one net plus the grid's own margin; CLR when no class resolves"""
     n = netname(n or "")
     if n not in _CLR_CACHE:
         v = None
@@ -185,7 +196,7 @@ def net_clr(n):
             if cl and cl in _PRO_CLASSES: v = _PRO_CLASSES[cl]
         except Exception: v = None
         if v is None: v = _PRO_CLASSES.get("Default")
-        _CLR_CACHE[n] = CLR if v is None else v + 0.01
+        _CLR_CACHE[n] = CLR if v is None else v + CLR_MARGIN
     return _CLR_CACHE[n]
 # ---- build obstacle maps once per net (other-net copper)
 def build_maps(net):
@@ -711,7 +722,23 @@ for it1, it2 in pairs:
                      _U, _U1, nt + nv + landed))
             continue
     _U = _U1 if _U1 is not None else _U
-    laid.append((net, list(b.GetTracks())[_n_before:]))   # what THIS closure put on the board, for the drop-back below
+    # BY UUID, NEVER BY PROXY (19 September 2026, the drop-back SEGFAULTED on its second measurement).
+    # `cleanup_dangling` has carried the law in its own docstring since it was written: a SWIG proxy dies
+    # after `Remove`, and the drop-back removes AND saves, so a held proxy is a freed object by the time the
+    # next `SaveBoard` walks the list. The identity that survives both is the item's own KIID.
+    _new = list(b.GetTracks())[_n_before:]
+    # AND WHERE IT IS, because a drop-back that walks newest-first is a search and not a diagnosis
+    # (19 September 2026, A44: nine closures dropped in order and the hard count never moved off 1,
+    # because the violation belonged to a closure laid earlier). The DRC names the position of every
+    # item it reports, so the closure that owns a violation can be picked out instead of guessed at.
+    _pts = []
+    for _t in _new:
+        try:
+            _pts.append((_t.GetStart().x / 1e6, _t.GetStart().y / 1e6))
+            _pts.append((_t.GetEnd().x / 1e6, _t.GetEnd().y / 1e6))
+        except Exception:
+            _p0 = _t.GetPosition(); _pts.append((_p0.x / 1e6, _p0.y / 1e6))
+    laid.append((net, [t.m_Uuid.AsString() for t in _new], _pts))
     closed += 1; print("  closed %s: %d tracks, %d vias, path %d cells" % (net, nt, nv, len(path)))
 # A PASS THAT CLOSED NOTHING WRITES NOTHING (16 September 2026, A35's round two: both candidate closures were
 # taken back off, and the fill-and-save of the unchanged board then segfaulted in KiCad's filler, exit 139, which
@@ -742,35 +769,169 @@ if closed and os.environ.get("STUB_DRC", "1") != "0" and _HARD0 is not None:
             pcbnew.SaveBoard(_t, b)
             if os.path.exists(_pro): _sh.copy(_pro, os.path.join(_d, _stem + ".kicad_pro"))
             else: return None
-            if _sp.run([os.path.join(_here, "drc.sh"), _t, _r], capture_output=True, text=True).returncode: return None
+            # AND THE FILL IS THE BOARD'S OWN, NOT THE ONE IT WAS HANDED (19 September 2026, the first live
+            # reading this block ever took: hard 0 -> 97 on a board a driver's own DRC read at hard 1 one
+            # minute earlier). Every closure is laid INTO a poured board, and the pour retreats around new
+            # copper only when it is refilled; judged against the fill from before the stage, each closure
+            # reads as copper standing inside a pour it is not part of. That is the 14 September defect and
+            # this morning's barrel defect in a third place, and it made the drop-back's own number useless:
+            # it dropped a closure, saw 97 -> 97 because the other fifteen were still under the stale fill,
+            # and would have dropped every good closure for it. The fill runs on the SAVED-THEN-LOADED copy,
+            # which is also the only shape KiCad 9 does not segfault on and leaves `b` untouched.
+            # AND IN A SUBPROCESS, because KiCad's state does not survive being loaded and filled over and
+            # over inside one interpreter: the ninth such cycle in a single run SEGFAULTED the tool (19
+            # September 2026, exit 139 after nine honest measurements). A child process cannot take the
+            # parent with it, and it costs one interpreter start per measurement, which a stage that already
+            # hurt can afford.
+            _f = _sp.run([sys.executable, "-c",
+                          "import sys, pcbnew; _b = pcbnew.LoadBoard(sys.argv[1]);"
+                          " pcbnew.ZONE_FILLER(_b).Fill(_b.Zones()); pcbnew.SaveBoard(sys.argv[1], _b)", _t],
+                         capture_output=True, text=True)
+            if _f.returncode:
+                print("  drop-back: the refill of the copy failed (exit %d): %s"
+                      % (_f.returncode, " ".join((_f.stdout + _f.stderr).split())[-160:]))
+                return None
+            _p = _sp.run([os.path.join(_here, "drc.sh"), _t, _r], capture_output=True, text=True)
+            if _p.returncode:
+                print("  drop-back: the DRC refused the board it was given (exit %d): %s"
+                      % (_p.returncode, " ".join((_p.stdout + _p.stderr).split())[-160:]))
+                return None
             import hardset as _hs
-            return _hs.counts(_hs.load(_r))["hard"]
-        except Exception:
+            _dj = _hs.load(_r)
+            _n = _hs.counts(_dj)["hard"]
+            # WHERE the violations are, so the drop-back can aim: every non-exempt hard item's own position.
+            _at = []
+            for _v in _dj.get("violations", []):
+                if _v.get("type") not in _hs.HARD_POST or _hs.exempt(_v): continue
+                for _it in _v.get("items", []):
+                    _pp = _it.get("pos") or {}
+                    # AND THE NET IT NAMES, which is the cheapest identification there is: the DRC writes
+                    # `Via [/HF_FB] on F.Cu - B.Cu`, and a closure is a net (19 September 2026, A44: the one
+                    # hard item was a closure's own via against Q23's pad, and the report said so in words
+                    # before any second DRC was taken).
+                    _nm = re.search(r"\[(/[^\]]+)\]", _it.get("description", "") or "")
+                    _at.append((float(_pp["x"]) if "x" in _pp else None,
+                                float(_pp["y"]) if "y" in _pp else None,
+                                _nm.group(1) if _nm else None))
+            return (_n, _at)
+        except Exception as _e:
+            # A SILENT `except` IS HOW A GUARD STOPS GUARDING (19 September 2026, the third time in one
+            # afternoon in my own code). Whatever went wrong here, the reader is told which line of the block
+            # it was, because "the drop-back judged nothing" and "the drop-back found nothing wrong" look
+            # identical from outside.
+            print("  drop-back: %s while reading the hard set: %s" % (type(_e).__name__, str(_e)[:140]))
             return None
         finally:
             _sh.rmtree(_d, ignore_errors=True)
-    _h = _hard_now()
+    _r0 = _hard_now()
+    _h, _at = (None, []) if _r0 is None else _r0
     # A GUARD THAT COULD NOT JUDGE ITSELF SAYS SO (19 September 2026, caught on the first live run of this very
     # block: `_hard_now` returned None because the temp board had no project file beside it, the drop-back was
     # skipped, and the only sign was a stage that behaved exactly as it had before. Absence is never a pass.)
     if _h is None:
         print("stub_router: the drop-back could not read a hard set for the board it just laid, so it judged "
               "NOTHING; the stage's own guard is the only thing standing behind these closures")
+
+    def _owns(_net, _pts, _spots, _r=1.5):
+        """is this closure the one the DRC is complaining about, by the net it names or by where it stands?"""
+        for _u, _v2, _nm in _spots:
+            if _nm and _nm.lstrip("/") == str(_net).lstrip("/"): return "the DRC names its net"
+            if _u is None or _v2 is None: continue
+            for _x, _y in _pts:
+                if abs(_x - _u) <= _r and abs(_y - _v2) <= _r: return "it stands at the violation"
+        return None
+
+    def _spots_text(_spots):
+        return "; ".join("%s%s" % (_nm or "?",
+                                   "" if _u is None else " at (%.3f, %.3f)" % (_u, _v2))
+                         for _u, _v2, _nm in _spots[:4]) or "nowhere it would say"
+
     if _h is not None and _h > _HARD0:
-        print("stub_router: the closures took the hard set %d -> %d; dropping them back, newest first, until "
-              "the board is no worse than it was handed" % (_HARD0, _h))
-        while laid and _h is not None and _h > _HARD0:
-            _net, _tracks = laid.pop()
-            for _t2 in _tracks:
-                try: b.Remove(_t2)
-                except Exception: pass
-            b.BuildConnectivity(); closed -= 1
-            _h2 = _hard_now()
-            print("  dropped the closure on %s: hard %s -> %s" % (_net, _h, _h2))
-            _h = _h2
-        if _h is not None and _h > _HARD0:
+        # AIM, THEN WALK (19 September 2026, measured on A44 before it was written twice over). Newest-first
+        # is an ORDERING, not a diagnosis: nine closures came off in order and the hard count never moved off
+        # 1, because the violation belonged to a closure laid earlier, and on a sixteen-closure stage that is
+        # sixteen DRCs to find one culprit with fifteen good closures thrown away on the way, which is the
+        # very thing this block exists to stop. **The report already says who it is.** A44's one hard item
+        # reads `Clearance violation (netclass 'SENSE' clearance 0.1270 mm; actual 0.1219 mm)` between
+        # `Pad 3 [/HF_CS] of Q23` and `Via [/HF_FB] on F.Cu - B.Cu`, and `/HF_FB` is one of the sixteen
+        # closures by name. So the suspects are read off the first reading, dropped TOGETHER, and ONE
+        # measurement says whether that was it. Two DRCs instead of sixteen, and it also keeps the number of
+        # refills down, which matters because KiCad's filler is the part of this that crashes.
+        _closed0 = closed
+        _why = {}
+        for _i, (_n2, _u2, _p2) in enumerate(laid):
+            _w = _owns(_n2, _p2, _at)
+            if _w: _why[_i] = _w
+        _suspect = sorted(_why)
+        print("stub_router: the closures took the hard set %d -> %d; the DRC is complaining about %s"
+              % (_HARD0, _h, _spots_text(_at)))
+        print("stub_router: %s"
+              % (("%d of the %d closures answer to that, so they come off together: %s"
+                  % (len(_suspect), len(laid),
+                     ", ".join("%s (%s)" % (laid[_i][0], _why[_i]) for _i in _suspect)))
+                 if _suspect else "no closure answers to that, so they come off newest first"))
+
+        _taken = []          # (net, [the pieces themselves]) so an innocent closure can be put back
+
+        def _drop(_i):
+            _net, _uuids, _p2 = laid.pop(_i)
+            _want = set(_uuids)
+            _gone = []
+            for _t2 in [_x for _x in b.GetTracks() if _x.m_Uuid.AsString() in _want]:
+                try: b.Remove(_t2); _gone.append(_t2)
+                except Exception as _e2: print("  drop-back: could not remove a piece of %s: %s" % (_net, _e2))
+            b.BuildConnectivity()
+            _taken.append((_net, _gone))
+            return _net
+
+        _gave_up = False
+        if _suspect:
+            _names = [_drop(_i) for _i in sorted(_suspect, reverse=True)]
+            closed -= len(_names)
+            _r2 = _hard_now(); _h2, _at2 = (None, _at) if _r2 is None else _r2
+            print("  dropped %s together: hard %s -> %s%s"
+                  % (", ".join(reversed(_names)), _h, _h2,
+                     "" if _h2 is None or _h2 <= _HARD0 else "; now complaining about %s" % _spots_text(_at2)))
+            if _h2 is None: _gave_up = True
+            else: _h, _at = _h2, _at2
+        while not _gave_up and laid and _h is not None and _h > _HARD0:
+            _net = _drop(len(laid) - 1); closed -= 1
+            _r2 = _hard_now(); _h2, _at2 = (None, _at) if _r2 is None else _r2
+            # AND WHAT IT IS COMPLAINING ABOUT NOW (19 September 2026): A44 held at hard 1 through ten
+            # drops, which reads as "no closure owns it" and can equally be a DIFFERENT near-threshold pair
+            # surfacing at each step, the same shape as the dots that made the DRC name either a track or
+            # the pad it stands on. A count that does not move says nothing about identity.
+            print("  dropped the closure on %s: hard %s -> %s%s"
+                  % (_net, _h, _h2,
+                     "" if _h2 is None or _h2 <= _HARD0 else "; now complaining about %s" % _spots_text(_at2)))
+            if _h2 is None: _gave_up = True; break
+            _h, _at = _h2, _at2
+        # A WALK THAT LOST ITS INSTRUMENT SAYS SO AND STOPS (19 September 2026: a refill segfaulted mid-walk,
+        # `_hard_now` returned None, the `while` condition quietly went false and the tool SAVED a board it
+        # had just been told was over the bar, with nothing in the log about why it stopped.)
+        if _gave_up:
+            print("stub_router: the drop-back lost its instrument part way through and STOPPED; the board it "
+                  "is about to write is NOT known to be back at hard %d, and the stage's own guard is the "
+                  "only thing standing behind it" % _HARD0)
+        elif _h is not None and _h <= _HARD0:
+            print("stub_router: the board is back at hard %d with %d of the %d closures kept"
+                  % (_h, closed, _closed0))
+        elif _h is not None and _h > _HARD0:
+            # AND IF IT WAS NOT THE CLOSURES, THE CLOSURES GO BACK ON (19 September 2026, A44: the walk ran
+            # to the end, the hard count never moved off 1, the tool announced that it was not the closures
+            # and then wrote `closed 0 of 19`, so it had thrown away all sixteen AND spent sixteen DRCs to
+            # decide they were innocent, which is strictly worse than the behaviour it replaced. Taking
+            # copper off can only break connectivity, never make it, so putting an innocent closure back is
+            # safe by the same argument `dot_prune`'s rescue loop rests on.)
             print("stub_router: the hard set is still %d against the %d it was handed with every closure "
-                  "dropped, so it was not the closures" % (_h, _HARD0))
+                  "dropped, so it was NOT the closures; putting all %d back" % (_h, _HARD0, len(_taken)))
+            for _net, _gone in _taken:
+                for _t2 in _gone:
+                    try: b.Add(_t2)
+                    except Exception as _e2: print("  drop-back: could not put a piece of %s back: %s" % (_net, _e2))
+            b.BuildConnectivity(); closed = _closed0
+            print("stub_router: %d closure(s) restored; the stage's own guard decides this board, as it did "
+                  "before the drop-back existed" % closed)
 if closed == 0:
     print("stub_router: closed 0 of %d, the board is untouched (nothing to fill and nothing to save)" % len(pairs))
 else:

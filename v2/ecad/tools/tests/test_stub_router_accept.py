@@ -107,9 +107,15 @@ def t_the_bar_is_the_report_the_tool_was_handed():
 
 def t_the_drop_back_walks_newest_first_and_stops_at_the_bar():
     s = _src()
-    assert "_net, _tracks = laid.pop()" in s, "the drop-back does not take the NEWEST closure first"
-    assert "while laid and _h is not None and _h > _HARD0:" in s, "the drop-back does not stop at the bar"
-    assert "laid.append((net, list(b.GetTracks())[_n_before:]))" in s, \
+    # A RULE THAT NAMES A VARIABLE IS A RULE ABOUT THE SPELLING (19 September 2026): this line read
+    # `_net, _tracks = laid.pop()` and broke when the closure stopped being recorded as track proxies
+    # and became a list of KIIDs, which is a change the rule has no opinion about. What it is about is
+    # that the walk takes the NEWEST closure first, which is `pop()` from the end and never `pop(0)`.
+    assert "_drop(len(laid) - 1)" in s, "the drop-back's fallback walk does not take the NEWEST closure first"
+    assert "laid.pop(0)" not in s, "the drop-back takes the OLDEST closure first"
+    assert "while not _gave_up and laid and _h is not None and _h > _HARD0:" in s, \
+        "the drop-back does not stop at the bar"
+    assert "laid.append(" in s and "_n_before:" in s, \
         "nothing records what each closure laid, so there is nothing to drop back"
 
 
@@ -123,16 +129,16 @@ def t_it_is_on_by_default_and_can_be_turned_off():
 def t_only_a_stage_that_already_hurt_pays_for_a_drc():
     """The first DRC is taken once, after the closures, and the per-closure ones only if that one is worse."""
     s = _src()
-    i = s.index("_h = _hard_now()")
-    j = s.index("while laid and _h is not None")
-    assert s.count("_h = _hard_now()", 0, j) == 1, "more than one DRC is taken before the board is known to hurt"
+    i = s.index("_r0 = _hard_now()")
+    j = s.index("if _h is not None and _h > _HARD0:")
+    assert s.count("_hard_now()", 0, j) == 2, "more than one DRC is taken before the board is known to hurt"
     assert i < j
 
 
 def t_the_drop_back_says_what_it_dropped_and_what_it_bought():
     s = _src()
-    assert 'print("  dropped the closure on %s: hard %s -> %s"' in s, "a closure is dropped without saying so"
-    assert "so it was not the closures" in s, \
+    assert '  dropped the closure on %s: hard %s -> %s' in s, "a closure is dropped without saying so"
+    assert "so it was NOT the closures" in s, \
         "a board still over the bar with every closure dropped does not say that it was not the closures"
 
 
@@ -154,6 +160,138 @@ def t_a_drop_back_that_could_not_judge_says_so():
     stage behaving exactly as it had before (19 September 2026)."""
     s = _src()
     assert "the drop-back could not read a hard set" in s, "a drop-back that judged nothing does not say so"
-    i = s.index("_h = _hard_now()")
+    i = s.index("_r0 = _hard_now()")
     j = s.index("if _h is None:")
     assert i < j < s.index("if _h is not None and _h > _HARD0:"), "the silence check is not on the first reading"
+
+
+def t_the_drop_back_names_what_went_wrong_rather_than_swallowing_it():
+    """A silent `except` is how a guard stops guarding, and this block had two of them: the DRC's own refusal
+    and any exception while reading the hard set both returned None with nothing said, so 'the drop-back
+    judged nothing' and 'the drop-back found nothing wrong' looked identical from outside (19 September
+    2026, the third time in one afternoon in my own code)."""
+    s = _src()
+    assert "drop-back: the DRC refused the board it was given" in s, "a refused DRC is swallowed"
+    assert 'print("  drop-back: %s while reading the hard set' in s, "an exception in the reader is swallowed"
+    assert "except Exception as _e:" in s, "the exception is not named"
+
+
+def t_the_drop_back_judges_a_board_whose_pours_match_its_copper():
+    """THE FIRST LIVE READING THIS BLOCK EVER TOOK WAS 97, on a board a driver's own DRC read at hard 1 one
+    minute earlier (19 September 2026, A44). Every closure is laid INTO a poured board and the pour retreats
+    around new copper only when it is refilled, so judged against the fill from before the stage each closure
+    reads as copper standing inside a pour it is not part of. The drop-back then dropped one closure, saw
+    97 -> 97 because the other fifteen were still under the same stale fill, and would have thrown away every
+    good closure to buy nothing. It is the 14 September defect and this morning's barrel defect in a third
+    place, which is why the rule is about the ORDER and not about the number: the fill happens on the copy
+    before the DRC is asked, and it happens on the saved-then-loaded copy, which is the only shape KiCad 9
+    does not segfault on and the only one that leaves the board being edited alone."""
+    s = _src()
+    i = s.index("def _hard_now():")
+    j = s.index("_r0 = _hard_now()")
+    body = s[i:j]
+    assert "ZONE_FILLER" in body, "the drop-back judges a board it never refilled"
+    a = body.index("pcbnew.LoadBoard(sys.argv[1])")
+    f = body.index("ZONE_FILLER")
+    d = body.index('os.path.join(_here, "drc.sh")')
+    assert a < f < d, "the fill is not taken on a loaded copy before the DRC"
+    assert "ZONE_FILLER(_b)" in body and "ZONE_FILLER(b)" not in body, \
+        "the fill runs on the board being edited rather than on the copy"
+
+
+def t_the_drop_back_holds_a_uuid_and_never_a_proxy():
+    """A SWIG PROXY DIES AFTER `Remove`, which `cleanup_dangling` has carried in its own docstring since it
+    was written; the drop-back removes AND saves, so a proxy held from before the save is a freed object by
+    the time the next `SaveBoard` walks the list. On A44 that was a SEGFAULT (exit 139) on the drop-back's
+    second measurement, after it had already printed its first (19 September 2026). The identity that
+    survives a save is the item's own KIID, and the pieces are looked up fresh against the live board."""
+    s = _src()
+    i = s.index("laid.append(")
+    assert "m_Uuid.AsString()" in s[i:i + 400], "a closure is recorded as a track proxy rather than by KIID"
+    assert "list(b.GetTracks())[_n_before:]))" not in s[i:i + 200], "the raw proxy list is still appended"
+    k = s.index("_net, _uuids, _p2 = laid.pop(_i)")
+    assert "m_Uuid.AsString() in _want" in s[k:k + 400], \
+        "the drop does not look the pieces up against the live board"
+
+
+def t_the_drop_back_aims_at_the_violation_before_it_walks():
+    """NEWEST-FIRST IS AN ORDERING, NOT A DIAGNOSIS (19 September 2026, measured on A44 before it was written:
+    the drop-back took nine closures off in order and the hard count never moved off 1, because the violation
+    belonged to a closure laid earlier). On a sixteen-closure stage that costs sixteen DRCs to find one
+    culprit and throws away fifteen good closures on the way, which is the very thing this block exists to
+    stop. The DRC names the POSITION of every item it reports, so the closures standing at those positions go
+    first and the newest-first walk is the fallback for a violation none of this copper owns."""
+    s = _src()
+    assert '_it.get("pos")' in s, "the drop-back does not read where the DRC says the violation is"
+    assert "def _owns(" in s, "nothing asks whether a closure is the one the DRC is complaining about"
+    assert "the DRC names its net" in s, "the suspect test does not use the net the report already names"
+    assert "_suspect = sorted(_why)" in s, "the closures the DRC names are not picked out"
+    i, j = s.index("_suspect = sorted(_why)"), s.index("while not _gave_up and laid and _h is not None")
+    assert i < j, "the newest-first walk runs before the aimed drop rather than as its fallback"
+    assert "it stands at the violation" in s, "an aimed drop does not say that it was aimed"
+    assert "dropped %s together" in s, "the suspects are not dropped together, so one culprit costs many DRCs"
+
+
+def t_the_refill_the_drop_back_needs_runs_in_its_own_process():
+    """KiCad's state does not survive being loaded and filled over and over inside one interpreter: the ninth
+    such cycle in a single run SEGFAULTED the tool (19 September 2026, exit 139 on A44 after nine honest
+    measurements, which is a crash that eats the measurement AND the stage). A child process cannot take the
+    parent with it, and it costs one interpreter start per measurement, which a stage that already hurt can
+    afford. The rule is about the isolation, not about the command line."""
+    s = _src()
+    i = s.index("def _hard_now():"); j = s.index("_r0 = _hard_now()")
+    body = s[i:j]
+    assert "sys.executable" in body, "the refill does not run in its own interpreter"
+    assert "ZONE_FILLER" in body and "_sp.run([sys.executable" in body, \
+        "the fill is not the thing that was moved out of process"
+    assert "the refill of the copy failed" in body, "a failed refill is swallowed"
+
+
+def t_a_drop_back_that_loses_its_instrument_stops_and_says_so():
+    """A refill SEGFAULTED mid-walk on A44 (19 September 2026, exit -11 from the fill's own child process on
+    the second drop). `_hard_now` returned None, the `while` condition quietly went false, and the tool then
+    SAVED a board it had just been told was over the bar with nothing in the log about why it stopped: the
+    board came out at hard 1 with 14 closures kept and the only sign was the count. Absence is never a pass
+    and it is not a completion either."""
+    s = _src()
+    assert "_gave_up" in s, "the walk cannot tell a finished drop-back from one that lost its instrument"
+    assert "lost its instrument part way through and STOPPED" in s, "a drop-back that gave up does not say so"
+    assert "is NOT known to be back at hard" in s, \
+        "the board it is about to write is not declared unproven"
+    i = s.index("if _gave_up:")
+    j = s.index('elif _h is not None and _h <= _HARD0:')
+    assert i < j, "the give-up case is reported after the success case, so a failure can read as a success"
+
+
+def t_the_clearance_margin_covers_the_grid_rather_than_a_fixed_hundredth():
+    """A44'S CLOSERS COST ONE CLEARANCE ITEM AND IT MISSES BY FIVE MICROMETRES (19 September 2026):
+    `netclass 'SENSE' clearance 0.1270 mm; actual 0.1219 mm`, and the stage's guard threw away sixteen good
+    closures for it. The margin over the class was a flat 0.01 mm, written when the grid was 0.05, while long
+    closures run at `STUB_GRID=0.1`: an obstacle map that marks a cell by its CENTRE can under-represent the
+    real copper by up to half a cell, so at 0.1 mm the sampling error is fifty micrometres and a ten
+    micrometre margin cannot cover it. It is half a cell now with the hundredth as the floor, which is the
+    pair pre-router's own lesson about a corridor that did not cover its own legs, and it is a KNOB so the
+    trade can be measured rather than asserted: a wider margin refuses paths a narrower one finds."""
+    s = _src()
+    assert "CLR_MARGIN" in s, "the margin is not named, so it cannot be measured"
+    assert "max(0.01, G / 2.0)" in s, "the margin does not scale with the grid"
+    assert 'os.environ.get("STUB_CLR_MARGIN"' in s, "the margin cannot be set for an arm"
+    assert "v + 0.01" not in s, "the fixed hundredth is still the margin somewhere"
+    assert "v + CLR_MARGIN" in s, "the class clearance does not take the margin"
+
+
+def t_a_closure_the_walk_proved_innocent_goes_back_on():
+    """A44 RAN THE WALK TO THE END AND THE TOOL THREW AWAY WHAT IT HAD JUST CLEARED (19 September 2026): the
+    hard count never moved off 1 through all sixteen drops, the tool printed that it was not the closures,
+    and then wrote `closed 0 of 19`. So it had spent sixteen DRCs to prove them innocent and lost all sixteen
+    anyway, which is strictly worse than the behaviour it replaced. Taking copper off can only break
+    connectivity and never make it, which is the argument `dot_prune`'s rescue loop already rests on, so a
+    closure the walk cleared is safe to put back."""
+    s = _src()
+    assert "_taken.append((_net, _gone))" in s, "the dropped pieces are not kept, so nothing can be restored"
+    assert "it was NOT the closures; putting all %d back" in s, "an innocent set is not put back"
+    assert "closed = _closed0" in s, "the kept count is not restored with the copper"
+    # NO FIXED WINDOW (the ratchet in test_rule_windows exists because a slice of N characters breaks when a
+    # comment is added and passes wrongly when code is removed): the rule asks for the ORDER instead.
+    assert s.index("it was NOT the closures") < s.index("b.Add(_t2)") < s.index("closure(s) restored"), \
+        "the restore does not add the pieces back after the walk cleared them"

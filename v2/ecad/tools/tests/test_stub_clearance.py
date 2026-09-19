@@ -49,7 +49,10 @@ def t_the_number_is_printed():
 
 def t_the_literal_survives_as_the_fallback():
     assert "CLR = 0.16" in SR, "a net whose class cannot be resolved has no answer at all"
-    assert "_CLR_CACHE[n] = CLR if v is None else v + 0.01" in SR, "the fallback is not the literal"
+    # THE MARGIN IS A VARIABLE SINCE 19 SEPTEMBER 2026 (it has to cover the grid, and a flat hundredth
+    # does not at STUB_GRID=0.1), so this rule asks for the FALLBACK, which is what it is about, and
+    # not for the margin's spelling.
+    assert "_CLR_CACHE[n] = CLR if v is None else v + CLR_MARGIN" in SR, "the fallback is not the literal"
 
 
 def t_a_track_goal_is_the_tracks_copper_and_not_a_disc_around_a_point():
