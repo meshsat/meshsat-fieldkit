@@ -1,0 +1,47 @@
+{
+ "advisory": true,
+ "applicable": true,
+ "counts": {
+  "declared": 0,
+  "excluded_by_intent": 4,
+  "nets": 39,
+  "poured": 1,
+  "shaped": 1,
+  "strong": 0,
+  "undeclared": 1
+ },
+ "denominator": 1,
+ "evidence": [
+  "WEAK SW: Q1,Q2"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-p-pack-p2/pcb-p-pack.kicad_pcb",
+   "sha256_16": "d79865e7b1aceb95"
+  },
+  "declares": [],
+  "intent": {
+   "path": "pcb-p-pack-p2/out/pcb-p-pack-intent.json",
+   "sha256_16": "852495a623209098"
+  },
+  "netlist": {
+   "path": "pcb-p-pack-p2/out/pcb-p-pack.net",
+   "sha256_16": "eb3206d8b551a900"
+  }
+ },
+ "missing_input": null,
+ "note": "a net carrying a transistor's drain or source pad with an inductor's pad, or two transistors', and not matched by this board's own switch_nets patterns; a REPORT, because whether such a node is switching for ANA-001 is a judgement and not a measurement",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [],
+ "tool": "switch_list",
+ "tools": {
+  "git_head": "65e63b90c506",
+  "tools_tree_sha": "5c52e37dbea106fb"
+ },
+ "ts": "2026-09-19T12:40:19Z",
+ "verdict": "FAIL",
+ "version": "65e63b90c506"
+}
