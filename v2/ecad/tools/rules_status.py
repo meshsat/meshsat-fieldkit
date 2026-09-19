@@ -74,6 +74,11 @@ def _fingerprint_now():
     return _FP_NOW[0]
 
 
+# Every time a reading that declares a missing input is preferred over one that HAD its input, because its
+# rule-set fingerprint is current and the other's is not. Reported at the end of a run; it decides nothing.
+_DISPLACED = []
+
+
 def _had_its_input(rec):
     """Did this verdict have the thing it judges? `verdict.write(missing_input=...)` is a tool saying it did
     not: no rotation table in this tree, no order folder, no netlist."""
@@ -103,7 +108,19 @@ def _supersedes(new, old):
     if _fp:
         _n_ok = ((new.get("policy") or {}).get("rule_set_fingerprint") or "") == _fp
         _o_ok = ((old.get("policy") or {}).get("rule_set_fingerprint") or "") == _fp
-        if _n_ok != _o_ok: return _n_ok
+        if _n_ok != _o_ok:
+            # AND IT SAYS SO WHEN IT DOES THIS, because the page can otherwise change under the reader with
+            # nothing on it to show why (19 September 2026). A gate run by hand on a host without pcbnew wrote
+            # a reading with its missing input declared and the CURRENT fingerprint; board A's measured
+            # ANA-001, taken under a superseded set, lost to it by this branch and the readiness page went
+            # from FAIL 15 of 24 to INCONCLUSIVE with nothing said. The order below is deliberate and is not
+            # changed here (it is also inconsistent with the per-rule digest doctrine of 17 September, which
+            # is an open item of its own): what changes is that the swap is ANNOUNCED.
+            if _n_ok and not _had_its_input(new) and _had_its_input(old):
+                _DISPLACED.append((str(new.get("name") or new.get("tool") or "?"),
+                                   " ".join(str(new.get("missing_input") or "").split())[:120],
+                                   str((old.get("policy") or {}).get("rule_set_fingerprint") or "")[:16]))
+            return _n_ok
     if _had_its_input(old) and not _had_its_input(new): return False
     if _had_its_input(new) and not _had_its_input(old): return True
     return str(new.get("ts", "")) >= str(old.get("ts", ""))
@@ -560,6 +577,20 @@ def _finish(argv, all_rows, per_board, m, fp, phase, out_dir):
           ", promotion frozen" if m.get("promotion", {}).get("frozen") else ""))
     print("verified %.1f%%  waived %.1f%%  failed %.1f%%  inconclusive %.1f%%  of %d applicable required rule-board pair(s)"
           % (agg["pass_percent"], agg["waived_percent"], agg["fail_percent"], agg["inconclusive_percent"], agg["denominator"]))
+    if _DISPLACED:
+        # A reading that declares it lacked its input stood in front of one that had it, because its rule-set
+        # fingerprint is current and the other's is not. It is legal by the order in `_supersedes` and it is
+        # exactly how a page can change under the reader with nothing on it to show why (19 September 2026).
+        seen = []
+        for _n, _mi, _ofp in _DISPLACED:
+            if (_n, _mi, _ofp) in seen: continue
+            seen.append((_n, _mi, _ofp))
+        print("\nNOTE: %d reading(s) that declare a MISSING INPUT stand in front of a measured one, because "
+              "their rule-set fingerprint is current and the measured one's is not. Re-take those on the "
+              "board, where the tool has its input (retake_gate.sh), rather than reading the page as an answer:"
+              % len(seen))
+        for _n, _mi, _ofp in seen[:8]:
+            print("  %-22s displaces a reading taken under %s; it lacked: %s" % (_n, _ofp or "(no fingerprint)", _mi or "(unsaid)"))
     if "--json" in argv: print(json.dumps(summary, indent=1, sort_keys=True))
     res = _v.PASS if state.startswith("READY") else (_v.FAIL if state.startswith("NOT_READY") else _v.INCONCLUSIVE)
     return _v.write("rules_status", res, counts=agg, denominator=agg["denominator"],
