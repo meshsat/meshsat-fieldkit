@@ -57,16 +57,19 @@ def t_a_lone_dot_goes_and_a_real_track_stays():
     assert rc == 0, rc
 
 
-def t_a_dot_that_bridges_two_tracks_is_kept():
+def t_a_dot_that_really_bridges_two_tracks_is_kept():
     """A zero-length track still has a WIDTH, so it renders as a copper dot that can genuinely join two things
-    that both reach it. That case is the reason this tool counts before it cuts."""
+    that both reach it. **The two tracks have to be apart for that to mean anything**: this fixture used to
+    give them a SHARED endpoint at (15, 10), so they were already one cluster and the dot joined nothing, and
+    the rule passed on a board where removing the dot changes nothing at all (19 September 2026). They end
+    0.3 mm apart now and the 0.4 mm wide dot between them is the only copper that spans the gap."""
     pcbnew = _pcbnew()
     import importlib
     dp = importlib.import_module("dot_prune")
     b = _board(pcbnew)
     net = pcbnew.NETINFO_ITEM(b, "BRIDGED"); b.Add(net)
-    for t in (_track(pcbnew, b, 10.0, 10.0, 15.0, 10.0), _track(pcbnew, b, 15.0, 10.0, 20.0, 10.0),
-              _track(pcbnew, b, 15.0, 10.0, 15.0001, 10.0)):
+    for t in (_track(pcbnew, b, 10.0, 10.0, 15.0, 10.0), _track(pcbnew, b, 15.3, 10.0, 20.0, 10.0),
+              _track(pcbnew, b, 15.15, 10.0, 15.1501, 10.0)):
         t.SetNet(net)
     tmp = tempfile.mkdtemp(prefix="dot-bridge-test-")
     p = os.path.join(tmp, "bridge.kicad_pcb"); b.Save(p)
@@ -74,6 +77,30 @@ def t_a_dot_that_bridges_two_tracks_is_kept():
     b2 = pcbnew.LoadBoard(p)
     n = sum(1 for t in b2.GetTracks() if t.GetClass() == "PCB_TRACK")
     assert n == 3, "the bridging dot was removed: %d track(s) left" % n
+
+
+def t_a_dot_between_two_things_that_already_touch_is_not_a_bridge():
+    """THE DEFECTIVE FIXTURE, and it is what board A carries 198 of (19 September 2026). The touch count says
+    a dot reaching two items is a bridge, and it is only a bridge if those items are not already connected.
+    One of board A's sits ON U15 pad 7, a micrometre from the pad's own centre, and KiCad's DRC then names
+    EITHER the dot or the pad as that cluster's representative: three runs of the same closer on the same
+    frozen board read three different boards and two different hard counts. Taking copper off can only break
+    connectivity, never make it, so the honest test is to take the dot off ALONE and look."""
+    pcbnew = _pcbnew()
+    import importlib
+    dp = importlib.import_module("dot_prune")
+    b = _board(pcbnew)
+    net = pcbnew.NETINFO_ITEM(b, "TOUCHING"); b.Add(net)
+    for t in (_track(pcbnew, b, 10.0, 10.0, 15.0, 10.0), _track(pcbnew, b, 15.0, 10.0, 20.0, 10.0),
+              _track(pcbnew, b, 15.0, 10.0, 15.0001, 10.0)):
+        t.SetNet(net)
+    tmp = tempfile.mkdtemp(prefix="dot-touching-test-")
+    p = os.path.join(tmp, "touching.kicad_pcb"); b.Save(p)
+    dp.main([p])
+    b2 = pcbnew.LoadBoard(p)
+    lens = sorted(round(((t.GetStart().x - t.GetEnd().x) ** 2 + (t.GetStart().y - t.GetEnd().y) ** 2) ** 0.5 / 1e6, 4)
+                  for t in b2.GetTracks() if t.GetClass() == "PCB_TRACK")
+    assert lens == [5.0, 5.0], ("the redundant dot survived: %s" % lens)
 
 
 def t_the_finish_runs_it_under_a_guard():

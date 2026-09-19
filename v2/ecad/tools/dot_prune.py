@@ -73,11 +73,34 @@ def main(a):
         pads = [p for fp in b.GetFootprints() for p in fp.Pads() if p.GetNetname() == net
                 and p.HitTest(t.GetStart())]
         if n_touch + len(pads) >= 2:
-            keep.append("%s at (%.3f, %.3f): a dot of %.3f mm width touching %d item(s), which makes it a bridge"
-                        % (net, mm(t.GetStart().x), mm(t.GetStart().y), mm(t.GetWidth()), n_touch + len(pads)))
+            keep.append((t, "%s at (%.3f, %.3f): a dot of %.3f mm width touching %d item(s), which makes it a "
+                            "bridge" % (net, mm(t.GetStart().x), mm(t.GetStart().y), mm(t.GetWidth()),
+                                        n_touch + len(pads))))
         else:
             take.append(t)
 
+    b.BuildConnectivity(); u0 = b.GetConnectivity().GetUnconnectedCount(False)
+    # A DOT THAT TOUCHES TWO THINGS IS ONLY A BRIDGE IF THEY ARE NOT ALREADY CONNECTED (19 September 2026,
+    # found by running the same measurement twice). Board A's A44 carries 198 tracks under five micrometres
+    # and the touch count above keeps every one of them; one sits ON U15 pad 7 on `/HF_SLOPE`, a micrometre
+    # from the pad's own centre, and KiCad's DRC then names EITHER the dot or the pad as that cluster's
+    # representative. Three runs of the same closer on the same frozen board read three different boards and
+    # two different hard counts, because each closure aims at whichever the report happened to name.
+    # **Taking copper off can only ever break connectivity, never make it**, so the honest test for a bridge
+    # is to take the dot off and look: it is a bridge only if the board's unconnected count RISES without it.
+    # Each candidate is tried ALONE and put straight back, because a group answers a different question.
+    rescued = []
+    for t, msg in list(keep):
+        b.Remove(t); b.BuildConnectivity()
+        worse = b.GetConnectivity().GetUnconnectedCount(False) > u0
+        b.Add(t); b.BuildConnectivity()
+        if not worse:
+            take.append(t); rescued.append((t, msg))
+    if rescued:
+        keep = [(t, m) for t, m in keep if not any(t is r for r, _ in rescued)]
+        print("dot_prune: %d dot(s) the touch count called a bridge are not one: the board is no worse without "
+              "them, one at a time" % len(rescued))
+        for _, m in rescued[:6]: print("  not a bridge: %s" % m)
     b.BuildConnectivity(); u0 = b.GetConnectivity().GetUnconnectedCount(False)
     names = ["%s at (%.4f, %.4f), %.6f mm long" % (t.GetNetname(), mm(t.GetStart().x), mm(t.GetStart().y),
              ((mm(t.GetStart().x) - mm(t.GetEnd().x)) ** 2 + (mm(t.GetStart().y) - mm(t.GetEnd().y)) ** 2) ** 0.5)
@@ -87,7 +110,7 @@ def main(a):
     print("dot_prune: %d track(s) under %.4f mm; %d removable, %d kept as a bridge; unconnected %d -> %d"
           % (len(dots), lim, len(take), len(keep), u0, u1))
     for n in names[:10]: print("  removed %s" % n)
-    for k in keep[:10]: print("  kept    %s" % k)
+    for _, k in keep[:10]: print("  kept    %s" % k)
     if u1 > u0:
         print("dot_prune: removing them OPENED the board (%d -> %d): nothing written" % (u0, u1))
         return verdict.write("dot_prune", verdict.FAIL, counts={"dots": len(dots), "removed": 0},
@@ -97,7 +120,8 @@ def main(a):
     if take and not dry:
         pcbnew.SaveBoard(path, b)
     return verdict.write("dot_prune", verdict.PASS,
-                         counts={"dots": len(dots), "removed": 0 if dry else len(take), "kept_as_bridge": len(keep)},
+                         counts={"dots": len(dots), "removed": 0 if dry else len(take), "kept_as_bridge": len(keep),
+                                 "not_a_bridge_after_all": len(rescued)},
                          denominator=len(tracks), evidence=names[:20], inputs={"board": path},
                          note="a track shorter than the process can draw is an island, not a conductor",
                          out_dir=os.path.join(os.path.dirname(os.path.abspath(path)), "out"))
