@@ -10557,7 +10557,7 @@ cap, both completing all **200 attempts**, differing only in what the pre-lay la
 | D15 | nothing | 80 (cut) | 4 | 1 |
 | D16 | nothing (its tree predated the fix) | 49 (cut) | 9 | 9 |
 | **D17** | one net, 3 pairs | **200** | **2** | **2** |
-| **D18** | three nets, 5 pairs | **200** | **4** | 3 after the continuation pass, finish running |
+| **D18** | three nets, 5 pairs | **200** | **4** | **3** (the continuation took one; the stub router closed 0 of 3) |
 
 **Two more pre-laid connections cost two routed ones**, with every other variable held. This is the sixth
 measurement of the rule and the first where the pass counts match, so it is the one to quote: the pre-lay is
@@ -10568,4 +10568,8 @@ a closure cannot reach because the corridor is full of pads is board D's `/PCM_V
 reach because the declaration says 12.0 is a gap the ROUTER can still have.
 
 **Board D's answer stays D17**, hard 0 with two open, PI-003 answered, `check_pcb_d` ALL PASS, frozen at sha
-3d8c3a49 with its evidence in `pcb-d-aprs-d9/routed`. Its two remaining opens are a placement item.
+3d8c3a49 with its evidence in `pcb-d-aprs-d9/routed`. D18's three are `/HS2_BIAS_R`, `/HUB_DM1` and `/HUB_DP1`,
+and the stub router says FAILED pad to pad on all three, which is the same sentence D10 got at `/HUB_DM1` on
+11 September: U4 pad 11 and R13 pad 1 with 2.82 mm between them and no lane, closed by hand that day. So board
+D's remaining opens are one placement item in the hub's own fan, not closure work and not a pre-lay question,
+and no arm of D14 to D18 has moved them.
