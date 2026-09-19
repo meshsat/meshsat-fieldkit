@@ -558,8 +558,28 @@ def _unconnected():
 _U = None   # taken lazily, just before the first closure: BuildConnectivity on a board with nothing to close is
             # work nobody asked for, and the finish that found this crashed inside the stub router with an empty
             # log on a board that had zero opens (12 September 2026)
+# A PER-NET BUDGET, BECAUSE WITHOUT ONE THE ALPHABET DECIDES WHICH OPENS ARE EVEN TRIED (19 September 2026).
+# There is only a node cap here (`STUB_MAXN`, per search) and the stage's own wall clock, so a net with many
+# clusters spends search after search and the run ends before the later nets are reached. Board E's E23 round
+# 2 has six opens and its first one alphabetically, `/FAN1_PWM`, is a 224 mm run across the strip that no
+# closer can make: at the finish's own `STUB_GRID=0.1` it ate THIRTY MINUTES on its own, so the other five
+# were never offered to the closer at all, which is why board E's closers keep reading "took none". The
+# budget is per NET and checked before each pair, so an unclosable net costs its own budget and nothing
+# else's; 0 turns it off and the tool behaves exactly as it did.
+_NET_BUDGET = float(os.environ.get("STUB_NET_BUDGET_S", "420") or 0)
+_net_t0, _net_of = {}, None
+import time as _time
 for it1, it2 in pairs:
     net = it1["net"]; netobj = b.FindNet(net)
+    if _NET_BUDGET > 0:
+        _k = netname(it1["net"] or "")
+        _net_t0.setdefault(_k, _time.time())
+        if _time.time() - _net_t0[_k] > _NET_BUDGET:
+            if _net_of != _k:
+                print("  %s: over its own %.0f s budget, the rest of this net's pairs are left so the other "
+                      "nets get their turn (STUB_NET_BUDGET_S)" % (_k, _NET_BUDGET))
+                _net_of = _k
+            continue
     if netobj is None or netobj.GetNetCode() <= 0: net = netname(net); netobj = b.FindNet(net)
     if netobj is None or netobj.GetNetCode() <= 0: print("  skip: net not found", it1["net"]); continue
     net = netobj.GetNetname()

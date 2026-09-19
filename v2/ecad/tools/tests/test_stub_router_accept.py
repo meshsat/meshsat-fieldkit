@@ -295,3 +295,20 @@ def t_a_closure_the_walk_proved_innocent_goes_back_on():
     # comment is added and passes wrongly when code is removed): the rule asks for the ORDER instead.
     assert s.index("it was NOT the closures") < s.index("b.Add(_t2)") < s.index("closure(s) restored"), \
         "the restore does not add the pieces back after the walk cleared them"
+
+
+def t_every_open_net_gets_its_turn_at_the_closer():
+    """WITHOUT A PER-NET BUDGET THE ALPHABET DECIDES WHICH OPENS ARE EVEN TRIED (19 September 2026). The tool
+    had a node cap per search and the stage's own wall clock and nothing in between, so a net with many
+    clusters spends search after search and the run ends before the later nets are reached. Board E's E23
+    round 2 has six opens and its first alphabetically, `/FAN1_PWM`, is a 224 mm run across the strip that no
+    closer can make: at the finish's own STUB_GRID=0.1 it ate thirty minutes on its own and the other five
+    were never offered to the closer at all, which is why board E's closers keep reading "took none". The
+    budget is per NET and checked before each pair, so an unclosable net costs its own budget and nothing
+    else's, and zero turns it off."""
+    s = _src()
+    assert "STUB_NET_BUDGET_S" in s, "there is no per-net budget, so one net can eat the whole stage"
+    assert "_net_t0" in s and "_NET_BUDGET" in s, "the budget is not measured per net"
+    i, j = s.index("for it1, it2 in pairs:"), s.index("trk, via = build_maps(net)")
+    assert s.index("_NET_BUDGET > 0", i) < j, "the budget is checked after the expensive work rather than before it"
+    assert "the rest of this net's pairs are left so the other" in s, "a net that runs out of budget says nothing"
