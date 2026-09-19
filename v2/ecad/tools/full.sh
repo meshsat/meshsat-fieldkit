@@ -306,13 +306,19 @@ RB="$(python3 -c "import json,sys; d=json.load(open(sys.argv[1])).get('rail_barr
 # board-wide unconnected count from 549 to 575, which the acceptance refuses and should. `land_reach`: the
 # search ends at a goal cell and the landing lays a short segment from each end to the net's own copper, and
 # board A's ends are 0.153 to 4.409 mm from theirs against a reach that had been a silent 1.2 mm.
+# THE DELIMITER IS A PIPE AND NOT A TAB (19 September 2026, caught on A50 twelve minutes after it launched).
+# TAB IS AN IFS WHITESPACE CHARACTER, so bash COLLAPSES a run of them: a group with no `clearance` emitted
+# two tabs in a row, `read` swallowed the empty field, and every field after it shifted left. Board A's RF and
+# switching groups took their own TAG as their clearance (`STUB_NET_CLEAR=2-FE_SW2`) and lost the tag, and the
+# switching group then laid nothing and returned in 21 seconds against A49's 577. A net name cannot contain a
+# pipe, and a pipe is not IFS whitespace, so an empty field stays an empty field.
 python3 -c "
 import json,re,sys
 for i, g in enumerate(json.load(open(sys.argv[1])).get('prelay_groups') or [], 1):
     tag = re.sub(r'[^A-Za-z0-9_]', '_', (g['nets'].split(',')[0] or '').lstrip('/'))[:24]
-    print('%s\t%s\t%s\t%d-%s\t%s\t%s' % (g['nets'], g.get('layers',''), g.get('clearance',''), i, tag,
-                                           g.get('pour_obstacle',''), g.get('land_reach','')))" "$CFG" 2>/dev/null |
-while IFS=$'\t' read -r GNETS GLAYERS GCLR GTAG GPOUR GREACH; do
+    print('%s|%s|%s|%d-%s|%s|%s' % (g['nets'], g.get('layers',''), g.get('clearance',''), i, tag,
+                                    g.get('pour_obstacle',''), g.get('land_reach','')))" "$CFG" 2>/dev/null |
+while IFS='|' read -r GNETS GLAYERS GCLR GTAG GPOUR GREACH; do
   [ -n "$GNETS" ] || continue
   T=../tools; . ../tools/guarded.sh
   gstage () {

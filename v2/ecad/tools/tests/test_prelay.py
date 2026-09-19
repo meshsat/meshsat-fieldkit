@@ -187,3 +187,30 @@ def t_a_group_may_ask_for_the_pours_and_for_the_landing_reach():
     src = open(os.path.join(TOOLS, "stub_router.py"), encoding="utf-8").read()
     assert 'os.environ.get("STUB_LAND_REACH", "1.2")' in src, "the tool does not read it, or its default moved"
     assert "reach=LAND_REACH_MM" in src, "the landing does not use the knob"
+
+
+def t_an_empty_field_in_a_group_does_not_shift_the_ones_after_it():
+    """TAB IS IFS WHITESPACE AND BASH COLLAPSES A RUN OF IT (19 September 2026, caught on A50 twelve minutes
+    after it launched). The per-group fields were tab separated, a group with no `clearance` emitted two tabs
+    in a row, `read` swallowed the empty field, and every field after it shifted left: board A's RF and
+    switching groups took their own TAG as their clearance (`STUB_NET_CLEAR=2-FE_SW2`), lost the tag, and the
+    switching group laid NOTHING and returned in 21 seconds against A49's 577. This rule runs the real
+    emitter over the real board file and reads the fields back through a real `read`, because that is where
+    the defect lived: both halves were correct on their own."""
+    import json, re, subprocess, sys
+    cfg = os.path.join(TOOLS, "boards", "a.json")
+    groups = json.load(open(cfg, encoding="utf-8")).get("prelay_groups") or []
+    assert any(not g.get("clearance") for g in groups), "board A no longer has a group without a clearance"
+    emit = re.search(r"python3 -c \"\nimport json,re,sys\n(.*?)\" \"\$CFG\"", FULL, re.S)
+    assert emit, "the group emitter moved; this rule reads it out of full.sh"
+    script = "import json,re,sys\n" + emit.group(1)
+    out = subprocess.run([sys.executable, "-c", script, cfg], capture_output=True, text=True).stdout
+    sh = ("while IFS='|' read -r GNETS GLAYERS GCLR GTAG GPOUR GREACH; do "
+          "printf '%s;%s;%s\\n' \"$GNETS\" \"$GCLR\" \"$GTAG\"; done")
+    back = subprocess.run(["bash", "-c", sh], input=out, capture_output=True, text=True).stdout.strip().splitlines()
+    assert len(back) == len(groups), (back, out)
+    for line, g in zip(back, groups):
+        nets, clr, tag = line.split(";")
+        assert nets == g["nets"], (nets, g["nets"])
+        assert clr == str(g.get("clearance", "") or ""), ("the clearance field shifted: %r" % line)
+        assert re.fullmatch(r"\d+-[A-Za-z0-9_]+", tag), ("the tag is empty or malformed: %r" % line)
