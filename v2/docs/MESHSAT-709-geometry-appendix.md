@@ -10714,3 +10714,40 @@ arm from D14 to D18 has moved it, because none of them was about it.
 neighbours can afford the copper. Both halves are measurable before the route: the first from the closers'
 own FAILED lines on the previous arm, the second from what the pre-lay's own neighbourhood looks like on the
 placed board.
+
+**Addendum, 04:40 CEST (19 September): E21, and the instrument board E's ANA-001 has left.** E19 fails the rule
+on `TRK_CSN` (0.153 mm from `TRK_SW2` over 8.48 mm) and `TRK_CSP` (0.242 over 4.72), both entirely outside the
+courtyard of the part that carries both nets and nine and twenty-three millimetres from its pads; `WATER_SENSE`
+passes at 1.223 against the 1.00 it asks. E18's round 1 read PASS 3 of 3 on the same design, so **the placement
+makes the clearance possible and the router decides whether it happens**, which is why it scatters between
+rounds.
+
+**Everything that speaks to Freerouting has now been tried and refused.** A 0.50 mm SENSE class clearance
+cannot escape the controller's own pins (board A, 18 September). A DSN class-pair rule sat in E17's DSN while
+the router laid a run 0.171 mm away (18 September). What is left is copper the router cannot move, and **a
+locked sense run alone is not enough either**: the router still lays `TRK_SW2` afterwards and the DSN lets it
+come to 0.15 mm, which is the 0.153 E19 measured. So E21 pins **both** halves, the switching nodes first and
+the sense pair second at 0.50 mm.
+
+**The number the pre-lay needs is not in any class, so a group carries its own.** `clearance` in a
+`prelay_groups` entry becomes `STUB_NET_CLEAR`, a floor on the LAID net's own side that leaves KiCad's
+larger-of-the-two rule intact against every obstacle. On E21's chain it reads
+`/TRK_CSN: clearance 0.500 mm from its own class (raised by STUB_NET_CLEAR)`, and **it lays**: 4 of 4 closed
+across the sense pair, 9 connections on the switching pair before it, both groups kept at hard 0, unrouted
+229 to 220 to 216. **Thirteen pre-laid connections against E20's thirty-nine**, which is the difference
+between pinning two short local runs and pre-laying two large nets.
+
+**Two things the first E21 chain found, neither of them about board E.** (1) `place_audit` **segfaulted**, left
+an empty log and no image, and the chain blocked: correct, because a gate that did not finish is not a pass
+(board A's `stitch_prune` wrote PASS having segfaulted before printing a line, 17 September). The same tool on
+the same board file then passed with 0 predicted collisions two minutes later. A crash is not a finding, so the
+stage is run **once more** when it dies on a SIGNAL, both exits are printed, and a second crash still blocks;
+the retry is limited to signal exits, or a real FAIL would be re-rolled until it passed. (2) `rail_barrels`
+had a site refused for `hole_to_hole` alone: `return_via._site_free` is a COPPER test and hole to hole is a
+different rule with a different number, satisfied at 0.362 mm where two 0.25 mm drills need 0.5495. A candidate
+passes both now, and the hole half counts every drilled hole on the board including its own net's, because a
+hole does not care whose net it is.
+
+**Read E21 on both numbers.** A PASS on ANA-001 that lands at ten open answers nothing, and the four other
+switch nets are not pinned, so a PASS means the tracker's own pair is answered and not that the rule is
+structurally safe. `land_box3.sh` measures ANA-001 on every finished round.
