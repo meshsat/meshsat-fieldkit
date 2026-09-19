@@ -800,7 +800,16 @@ for it1, it2 in pairs:
 # net's pad. The board is judged here now, and the closures are dropped back one at a time, newest first,
 # until the hard count is no worse than it was handed. Each step costs one DRC and only a stage that already
 # hurt pays for any of them. STUB_DRC=0 turns it off; the tool then behaves exactly as it did.
-if closed and os.environ.get("STUB_DRC", "1") != "0" and _HARD0 is not None:
+# AND NOT WHEN THE STAGE IS ALREADY AT ITS WALL (19 September 2026). The drop-back costs a DRC and a refill
+# per measurement and it runs BEFORE the fill and the save; `finish.sh` leaves five minutes between
+# `STUB_STAGE_S` and its `timeout`, which is the fill and the save and nothing else. Running the drop-back
+# there is how a stage that stopped laying in order to bank its work gets killed banking it. The stage's
+# own guard is what stands behind the closures in that case, which is what it stood behind before the
+# drop-back existed, and the tool says so rather than leaving it to be inferred.
+if _stage_over and closed and os.environ.get("STUB_DRC", "1") != "0" and _HARD0 is not None:
+    print("stub_router: the stage hit its wall, so the drop-back is SKIPPED: what time is left is the fill "
+          "and the save. These %d closure(s) are judged by the stage's own guard and by nothing here." % closed)
+if not _stage_over and closed and os.environ.get("STUB_DRC", "1") != "0" and _HARD0 is not None:
     import subprocess as _sp, tempfile as _tf
     _here = os.path.dirname(os.path.abspath(__file__))
     import shutil as _sh

@@ -376,3 +376,20 @@ def t_the_finish_passes_the_wall_it_imposes():
     i, j = fin.index("STUB_STAGE_S=\"$(python3"), fin.index("STUB_STAGE_S=$STUB_STAGE_S")
     assert i < j, "the wall is computed after it is passed"
     assert 'timeout "$STUB_T"' in fin, "the timeout is no longer the backstop"
+
+
+def t_the_drop_back_stands_down_when_the_stage_is_at_its_wall():
+    """The drop-back costs a DRC and a refill per measurement and it runs BEFORE the fill and the save.
+    `finish.sh` leaves five minutes between `STUB_STAGE_S` and its `timeout`, and that five minutes is the
+    fill and the save and nothing else. Running the drop-back there is how a stage that stopped laying IN
+    ORDER to bank its work gets killed banking it, which would undo the whole point of the wall (19 September
+    2026). The stage's own guard is what stands behind those closures in that case, exactly as it did before
+    the drop-back existed, and the tool says so rather than leaving it to be inferred."""
+    s = _src()
+    assert "if not _stage_over and closed and os.environ.get(\"STUB_DRC\"" in s, \
+        "the drop-back still runs after the stage has hit its wall"
+    assert "the drop-back is SKIPPED" in s, "a skipped drop-back says nothing about itself"
+    assert "judged by the stage's own guard and by nothing here" in s, \
+        "the closures left behind are not declared unjudged by this tool"
+    i, j = s.index("if _stage_over and closed"), s.index("if not _stage_over and closed")
+    assert i < j, "the skip notice comes after the block it replaces"
