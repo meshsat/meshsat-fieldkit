@@ -349,3 +349,30 @@ def t_the_drop_back_is_bounded_so_a_stage_is_not_killed_inside_it():
     j = s.index("_net = _drop(len(laid) - 1)", i)
     assert s.index("_out_of_time()", i) < j, "the budget is checked after the drop rather than before it"
     assert "still on the board" in s, "a walk that ran out of budget does not say what it left behind"
+
+
+def t_a_stage_cut_at_its_wall_would_save_nothing_so_the_tool_is_told_the_wall():
+    """THE FILL AND THE SAVE ARE THE LAST THING THIS TOOL DOES, so a stage cut by `finish.sh`'s `timeout`
+    throws away every closure it made. A49's finish closed its first net TWENTY MINUTES into a 3600 s cap
+    with twenty opens to go, and all of it would have gone at the wall for no reason (19 September 2026).
+    `STUB_STAGE_S` is the caller telling the tool how long it has: it stops LAYING before that and spends
+    what is left filling and saving what it has, and it says so. The `timeout` stays as the backstop. Zero is
+    off and the tool behaves exactly as it did, which is also what happens when nobody passes it."""
+    s = _src()
+    assert "STUB_STAGE_S" in s, "the tool cannot know its own wall, so a cut stage saves nothing"
+    assert "_STAGE_T0" in s, "the wall is not measured from the tool's own start"
+    i = s.index("for it1, it2 in pairs:")
+    j = s.index("trk, via = build_maps(net)", i)
+    assert s.index("_STAGE_S > 0", i) < j, "the wall is checked after the expensive work rather than before it"
+    assert "it stops laying now and spends what is left filling and saving them" in s, \
+        "a stage that hit its wall does not say what it did about it"
+
+
+def t_the_finish_passes_the_wall_it_imposes():
+    """A limit the caller enforces and does not tell the tool about is how a stage loses an hour's work."""
+    import os
+    fin = open(os.path.join(TOOLS, "finish.sh"), encoding="utf-8").read()
+    assert "STUB_STAGE_S=$STUB_STAGE_S" in fin, "the finish does not tell the stub router its wall"
+    i, j = fin.index("STUB_STAGE_S=\"$(python3"), fin.index("STUB_STAGE_S=$STUB_STAGE_S")
+    assert i < j, "the wall is computed after it is passed"
+    assert 'timeout "$STUB_T"' in fin, "the timeout is no longer the backstop"

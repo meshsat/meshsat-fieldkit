@@ -578,11 +578,27 @@ _U = None   # taken lazily, just before the first closure: BuildConnectivity on 
 # were never offered to the closer at all, which is why board E's closers keep reading "took none". The
 # budget is per NET and checked before each pair, so an unclosable net costs its own budget and nothing
 # else's; 0 turns it off and the tool behaves exactly as it did.
+# AND THE STAGE'S OWN WALL, BECAUSE A STAGE KILLED AT IT SAVES NOTHING (19 September 2026). The fill and the
+# save are the LAST thing this tool does, so when `finish.sh`'s `timeout` fires every closure the stage made
+# is thrown away: A49's finish closed its first net twenty minutes in with twenty to go against a 3600 s cap,
+# which is a whole stage's work lost at the wall for no reason. `STUB_STAGE_S` is the caller telling the tool
+# how long it has; the tool stops LAYING before that and spends what is left filling and saving what it has.
+# 0 is off and the tool behaves as it did, which is also what it does when nobody passes it.
+_STAGE_S = float(os.environ.get("STUB_STAGE_S", "0") or 0)
+_STAGE_T0 = __import__("time").time()
 _NET_BUDGET = float(os.environ.get("STUB_NET_BUDGET_S", "420") or 0)
 _net_t0, _net_of = {}, None
 import time as _time
+_stage_over = False
 for it1, it2 in pairs:
     net = it1["net"]; netobj = b.FindNet(net)
+    if _STAGE_S > 0 and _time.time() - _STAGE_T0 > _STAGE_S:
+        if not _stage_over:
+            print("stub_router: the stage's own wall (%.0f s, STUB_STAGE_S) is here with %d closure(s) made; "
+                  "it stops laying now and spends what is left filling and saving them, because a stage killed "
+                  "at the wall saves nothing at all" % (_STAGE_S, closed))
+            _stage_over = True
+        continue
     if _NET_BUDGET > 0:
         _k = netname(it1["net"] or "")
         _net_t0.setdefault(_k, _time.time())

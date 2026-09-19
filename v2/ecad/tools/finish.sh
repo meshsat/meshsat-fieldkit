@@ -101,7 +101,14 @@ stub_stage () {
   # connection and not (A24, 12 September 2026: the 0.1 mm grid refused both of its last two, the 0.05 mm grid with
   # a six-fold window closed both), and it is also the difference between ten minutes and an afternoon. A cut run
   # leaves the board as it was, which is the same outcome as a run that closes nothing, so the finish goes on.
-  env STUB_LAYERS=$STUB_L STUB_GRID=0.1 $STUB_ENV timeout "${STUB_TIMEOUT_S:-$(cfg x stub_timeout_s)}" nice -n 10 python3 -u $T/stub_router.py $N.kicad_pcb out/$N-drc.json > out/$N-stub.log 2>&1; SR=$?
+  # AND THE TOOL IS TOLD HOW LONG IT HAS, so it can stop laying and SAVE (19 September 2026). The fill and the
+  # save are the last thing the stub router does, so a stage cut by the `timeout` below throws away every
+  # closure it made: A49's finish closed its first net twenty minutes into a 3600 s cap with twenty to go, and
+  # all of it would have gone at the wall. `STUB_STAGE_S` is the same limit minus five minutes for the fill and
+  # the save; the `timeout` stays as the backstop it has always been.
+  STUB_T="${STUB_TIMEOUT_S:-$(cfg x stub_timeout_s)}"
+  STUB_STAGE_S="$(python3 -c "import sys; t=float(sys.argv[1] or 0); print(int(t-300) if t>600 else 0)" "$STUB_T")"
+  env STUB_LAYERS=$STUB_L STUB_GRID=0.1 STUB_STAGE_S=$STUB_STAGE_S $STUB_ENV timeout "$STUB_T" nice -n 10 python3 -u $T/stub_router.py $N.kicad_pcb out/$N-drc.json > out/$N-stub.log 2>&1; SR=$?
   [ "$SR" -eq 124 ] && echo "stub router: cut at its time limit, the board is as it was"
   [ "$SR" -eq 0 ] || [ "$SR" -eq 124 ] || stop "stub router CRASHED, exit $SR (out/$N-stub.log)" "out/$N-stub.log"
   grep -E 'closed|FAILED|stub_router|Error' out/$N-stub.log | head -12
