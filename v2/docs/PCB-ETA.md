@@ -74,7 +74,7 @@ time and are listed separately below.
 | RET-003 | find a published figure for how far a plane-stitching capacitor may sit from the transitio | SESSION |
 | SCH-004 | owner decision 30: the supervisors execute the wipe, power removal only, or accept the sof | OWNER |
 | SI-001 | the criterion and the USB edges are declared; what is left is an edge rate for the classes | VENDOR |
-| STK-002 | quotes from the ordering session for both counts on C and P, then the two rulings | OWNER |
+| STK-002 | quotes from the ordering session for both counts on C and P, then the rulings. 19 Septembe | OWNER |
 | VIA-002 | ask the fabricator for the annular ring rows AT 2 oz, which its published page does not st | VENDOR |
 
 ## Measured route history
