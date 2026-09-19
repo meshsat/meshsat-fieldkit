@@ -328,3 +328,19 @@ def t_a_cap_in_nodes_is_not_a_cap_in_time():
     j = s.index("for di, dj, c in steps:", i)
     assert "_s_budget" in s[i:j], "the clock is not checked inside the expansion loop"
     assert "the search gave up after" in s, "a search that ran out of time is indistinguishable from one that failed"
+
+
+def t_the_drop_back_is_bounded_so_a_stage_is_not_killed_inside_it():
+    """The drop-back runs INSIDE the stage, before the fill and save, and the stage is under the finish's own
+    `stub_timeout_s`. Board A's closing stage already takes most of its hour at the board's own `stub_env`,
+    so an unbounded walk of one DRC-and-refill per drop can push the whole stage past its timeout, and a
+    stage killed there saves nothing and loses every closure it made. The walk stops on its own budget
+    through the same honest path as a lost instrument, which says the board is NOT known to be back at the
+    bar rather than pretending it is (19 September 2026)."""
+    s = _src()
+    assert "STUB_DROP_BUDGET_S" in s, "the drop-back can run for as long as it likes inside a timed stage"
+    assert "def _out_of_time():" in s, "the budget is not a test the walk can ask"
+    i = s.index("while not _gave_up and laid and _h is not None")
+    j = s.index("_net = _drop(len(laid) - 1)", i)
+    assert s.index("_out_of_time()", i) < j, "the budget is checked after the drop rather than before it"
+    assert "still on the board" in s, "a walk that ran out of budget does not say what it left behind"
