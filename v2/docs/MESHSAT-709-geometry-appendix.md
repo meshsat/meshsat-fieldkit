@@ -11523,3 +11523,19 @@ comparison board A has never had and board E has: E20 pinned one half and read A
 and A49 holds the hub until its cap, so that is where A50 goes; its tools must carry the corrected acceptance
 and the per-group knobs, which is a `--requires` line on the run. Read both on ANA-001 **and** on the open
 count and neither alone: A40's four pre-laid nets cost this board ten connections and A50 locks 91 pieces.
+
+**Addendum, 15:50 CEST (19 September), AND THE POUR SETTING IS MEASURED NOT TO MATTER, WHICH RETIRES HALF OF
+WHAT WAS JUST DECLARED.** The entry above credited the 20 of 20 to the corrected acceptance, the pours as
+obstacles and the 5.0 mm landing reach together. The second arm of that pair has landed and it separates them:
+**pours as obstacles closed 20 of 20 with 91 locked pieces added, pours FREE closed 20 of 20 with 94**, both
+at hard 0 before and after, both with five of the twenty kept by the new rule and fifteen by the old. **Three
+locked pieces is the whole difference**, so `pour_obstacle` is not what unlocked board A and it is coming back
+out of that group's declaration: a knob declared without a number that says it matters is the thing this
+record keeps refusing elsewhere, and it would be an untested variable in A50.
+
+What is left unseparated is the landing's REACH, and it is the one that should matter on the arithmetic: board
+A's path ends are 0.153 to 4.409 mm from their own copper and the default reach is 1.2 mm, so the far ends
+cannot be landed at all without it. A seventh arm is measuring exactly that, the corrected acceptance at the
+chain's own defaults (pours free, reach 1.2), which is what board A would get with no per-group knob at all.
+**Until it lands, `land_reach: 5.0` stands on the arithmetic and not on a measurement, and the declaration
+says so.**
