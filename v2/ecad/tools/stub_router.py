@@ -916,6 +916,19 @@ if closed and os.environ.get("STUB_DRC", "1") != "0" and _HARD0 is not None:
             _taken.append((_net, _gone))
             return _net
 
+        # AND THE DROP-BACK GETS A CLOCK OF ITS OWN, for the same reason the search and the net did (19
+        # September 2026). It runs INSIDE the stage, before the fill and save, and the stage is under the
+        # finish's own `stub_timeout_s`: board A's closing stage already takes most of its hour at the
+        # board's own `stub_env`, so an unbounded walk of one DRC-and-refill per drop can push the whole
+        # stage past its timeout, and a stage killed there saves nothing and loses every closure. The walk
+        # stops on its budget through the same honest path as a lost instrument, which says the board is NOT
+        # known to be back at the bar rather than pretending it is.
+        _drop_budget = float(os.environ.get("STUB_DROP_BUDGET_S", "900") or 0)
+        _drop_t0 = _time.time()
+
+        def _out_of_time():
+            return _drop_budget > 0 and _time.time() - _drop_t0 > _drop_budget
+
         _gave_up = False
         if _suspect:
             _names = [_drop(_i) for _i in sorted(_suspect, reverse=True)]
@@ -927,6 +940,10 @@ if closed and os.environ.get("STUB_DRC", "1") != "0" and _HARD0 is not None:
             if _h2 is None: _gave_up = True
             else: _h, _at = _h2, _at2
         while not _gave_up and laid and _h is not None and _h > _HARD0:
+            if _out_of_time():
+                print("  drop-back: out of its own %.0f s budget (STUB_DROP_BUDGET_S) with %d closure(s) "
+                      "still on the board" % (_drop_budget, len(laid)))
+                _gave_up = True; break
             _net = _drop(len(laid) - 1); closed -= 1
             _r2 = _hard_now(); _h2, _at2 = (None, _at) if _r2 is None else _r2
             # AND WHAT IT IS COMPLAINING ABOUT NOW (19 September 2026): A44 held at hard 1 through ten
