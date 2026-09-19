@@ -223,4 +223,4 @@ def main(argv):
 
 
 if __name__ == "__main__":
-    sys.exit(_v.guard("rail_barrels", lambda: main(sys.argv[1:]), sys.argv[1:], rules=["PI-003"]))
+    sys.exit(_v.guard("rail_barrels", main, sys.argv[1:], rules=["PI-003"]))
