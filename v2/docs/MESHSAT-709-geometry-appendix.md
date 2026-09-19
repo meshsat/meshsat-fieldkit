@@ -10815,7 +10815,7 @@ the same two numbers its PLACED board reads. The router moved them by nothing at
 |---|---|---|---|---:|
 | E19 | nothing | PASS | **FAIL 2 of 3**, 0.153 and 0.242 mm | 1 |
 | E20 | two ordinary nets | PASS, 6.179 mm | **FAIL 3 of 3** | 8 |
-| **E21** | **the sense pair AND its switching partners** | PASS, 0.500 / 0.518 | **PASS 3 of 3**, 0.500 / 0.518 | **4** |
+| **E21** | **the sense pair AND its switching partners** | PASS, 0.500 / 0.518 | **PASS 3 of 3**, 0.500 / 0.518 | **2** |
 
 **Six millimetres of margin is what a router spends when nothing tells it not to** (E20's `TRK_CSP`, 6.179 mm
 on the placement and 0.153 after the route), and every instrument that speaks to Freerouting had already been
@@ -10824,8 +10824,11 @@ rule sat in E17's DSN while the router laid a run 0.171 mm away. **What holds th
 cannot move, on BOTH sides of it.** A locked sense run alone would not have done it: the router still lays
 `TRK_SW2` afterwards and the DSN permits 0.15 mm, which is the 0.153 E19 measured.
 
-**The cost is three connections** (4 open against E19's 1) for thirteen pre-laid ones, and it is cheap for the
-reason the pre-lay rule now states: these are four SHORT local runs, the sense pair from its filter to the
+**The cost is ONE connection.** The router left four and the continuation pass took two, so round 1 lands at
+hard 0 and **two open** against E19's one, `check_pcb_e` ALL PASS, and the routed-board gate refusing on those
+two and nothing else: `/SHORE_INHIBIT` track to track and `/USB_E6_P` pad to pad, both refused by the stub
+router and the second a net board E has left open before. One connection for thirteen pre-laid ones, and it is
+cheap for the reason the pre-lay rule now states: these are four SHORT local runs, the sense pair from its filter to the
 controller and the switching nodes from the bridge to the inductor. E20 pre-laid two LARGE nets, 39 pad-to-pad
 closures and one path 2,068 cells long, and paid seven.
 
