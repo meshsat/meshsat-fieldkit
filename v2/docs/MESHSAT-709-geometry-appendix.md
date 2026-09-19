@@ -11195,3 +11195,12 @@ absent, 29 measured failures, 1 a vendor wait, 7 the ordering session's own work
 reasons.** Twenty-nine of a hundred and twenty-two: that is the whole engineering backlog of the seven boards,
 and thirteen of those twenty-nine are board B's route and placement. Every other open pair is waiting on
 somebody who is not at this keyboard.
+
+**Addendum, 12:30 CEST (19 September), AND SEVEN OF THE FORTY-THREE FAILURES ARE ONE READING.** `OUT-001` and
+`DFA-001` are decided by a verdict written ONCE for the whole set (`final_gate` and `assembly_set` in
+`v2/ecad/out/`), while every per-board rule reads its own phase directory; the audit already carries the
+evidence PATH, so a path that serves more than one board is one reading and the register says so now.
+**The 43 measured failures are 37 distinct readings**, and the 29 with nothing in front of them are 23. A pair
+is still what a BOARD has to satisfy, so the table keeps counting pairs and the readiness denominator does not
+move; what changes is that nobody reads "seven boards fail their order paperwork" as seven things to fix when
+it is one gate's single answer about a set whose folders are frozen.
