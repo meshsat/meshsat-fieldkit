@@ -12023,7 +12023,7 @@ read **four maps identical to the reference, four top-ups, zero differences**. T
 armed behind it on A48's frozen board at board A's own finish configuration with the wall in place, and the
 default does not move until that number exists.
 
-**Addendum, 00:10 CEST (20 September), RUNNING THE SUITE WHERE KiCAD IS FOUND A GATE THAT HAD BEEN CRASHING
+**Addendum, 00:05 CEST (20 September), RUNNING THE SUITE WHERE KiCAD IS FOUND A GATE THAT HAD BEEN CRASHING
 ON EVERY BOARD FOR EIGHT HOURS (commits 58df3218, 9f770f50, 00ece11a, 0e951eec, 9f27ac79; suite 1167 on the
 runner, 1205 of 1208 where KiCad is with the three remaining explained below; readiness 63.4 percent of 333,
 unchanged).**
