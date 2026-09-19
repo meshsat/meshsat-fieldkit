@@ -10844,6 +10844,14 @@ DSN does contain `class_class (classes SENSE SW)`, so the DSN class-pair rule is
 and E21. E19 and E20 carried it and failed. Only E21 has the pre-lay and only E21 passes, which is the third
 measurement saying that instrument does nothing on its own.
 
+**AND IT IS ROBUST ACROSS PLACEMENTS, which is the test that rules out luck.** E21's round 2 is a via_costs
+remedy, so routeflow regenerated the placement and ran the chain again: a different placed board and a
+different route, **hard 0 with nine open** against round 1's four, worse, so its finish was skipped and round 1
+kept. On that second, independently generated board `sensitive_nodes` reads **PASS 3 of 3 with `TRK_CSN` at
+0.500 mm and `TRK_CSP` at 0.518** — the same two numbers to three decimals. Without the pinning the same rule
+scatters: E18's round 1 read PASS 3 of 3 and its round 2 FAIL on all three. Two placements, two routes, one
+reading. Two rounds is still two and not a distribution, and four of board E's six switch nets remain unpinned.
+
 **Board E declares six switching nets and two are pinned; the placement reading shows
 the nearest switching copper to each sense node IS `TRK_SW1` and `TRK_SW2`, so the binding constraint is the
 one that was answered, but a placement change could put another one closer. And four open is not zero: **E17
