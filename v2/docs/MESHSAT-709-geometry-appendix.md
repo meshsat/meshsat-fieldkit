@@ -11975,3 +11975,50 @@ sha `58e26c67987b1daa` identical before and after: **FAIL 15 of 24 with 10 measu
 under the current rule set and with its input. The pages re-render to exactly their committed state and
 readiness is **63.4 percent**, unchanged all day. **The procedure, again: `retake_gate.sh <letter> <phase dir>
 <stem> <tool.py>` or `--out-dir`, never a bare gate run from `v2/ecad`.**
+
+**Addendum, 23:40 CEST (19 September), THE SELECTION LADDER ASKS RULE BY RULE AT LAST, AND THE CLOSER'S HOUR
+IS ATTACKED WHERE IT IS SPENT (commits `cd3e1b70`, `dd77f965`; readiness 63.4 percent of 333 before and
+after, pages byte for byte; suite 1166, 0 failing).**
+
+**(1) The open item left at midnight was closed at midnight.** `_fresh` has preferred a verdict's own
+per-rule digest over the set fingerprint since 17 September; the step IN FRONT of it, which picks one reading
+per tool out of every project directory a board owns, went on asking the SET fingerprint. That fingerprint
+moves whenever anything anywhere in the registry does, so a measurement whose own rules never changed read as
+history at the moment two verdicts were compared and could lose its place to a newer reading that declares it
+had no input at all. It is not a hypothesis: **five of the seven boards' `sensitive_nodes` readings carry the
+CURRENT digest of ANA-001 under a superseded SET fingerprint tonight** (A, D, E, E5, P at `efb6e1511c4ca89f`;
+B and C carry the older `1b5e5e32b5e446db` and really are stale for that rule), which is exactly the shape
+that took board A's measured ANA-001 off the readiness page this evening. `_current_reading` asks the
+question rule by rule where the verdict carries its digests and by the set fingerprint where it does not,
+which is every verdict written before 17 September, and a digest of a rule the registry no longer has answers
+nothing. **Board B's two announced displacements stand, correctly**: `jlc_certify_b` and
+`verify_deliverable_b` carry no per-rule digest at all, so the set fingerprint is still the only thing that
+can be asked of them. **Readiness 63.4 percent before and after and the pages re-render byte for byte, which
+is the proof the reader decided nothing**; what changed is that the same incident cannot happen again by that
+route.
+
+**(2) Board A's cheapest remaining closer item is built, and it is OFF until a board says otherwise.** Where
+the closing hour goes was measured yesterday and it is the RASTERISATION: A44's arm prints `build_maps`'s own
+line once for almost every net, no search ever exhausts its 240 s `STUB_SEARCH_S`, and a net still costs about
+three minutes, because one pass over 240 by 160 mm on four layers at 0.05 mm is **61 million cells** and it
+was paid again for every net. The only thing that differs between two nets' maps is which items were left OUT
+of it, so a COUNTED map does not need rebuilding: the whole board is stamped once into an integer map, the
+net's own items into a second one, and a cell is blocked for that net exactly where the two counts differ.
+That is the pair pre-router's own pattern of 11 September, arriving in the closer eight days later.
+
+Three things had to be got right and each has its rule. **Nothing net-independent may be subtracted**: a
+hole-to-hole disc binds against a net's OWN drills as well as everyone else's, and a rule area, the board edge
+and the margin belong to no net, so they are kept in a separate BOOLEAN map and OR'd back afterwards, the
+subtraction being the one operation here that can only ever free copper. **The key carries everything the
+radii depend on**, which is three things besides the net's class: the floor `STUB_NET_CLEAR` raises per
+pre-lay group, the width a narrow track end pulls down for one net alone, and the via a thin closure takes
+instead of its class's. **Invalidation is by the tracks' own identity**: this tool lays copper between nets
+and takes it back off again, so copper added since is stamped in (the top-up) and copper REMOVED drops the
+bucket, because no stamp lowers a count.
+
+**`STUB_MAP_CHECK` rebuilds the reference map for every net and REFUSES the run on any difference**, which is
+the only acceptable proof for a change of this kind after the 16 September defect, where the tool searched a
+board it could not see for four days. On A44's frozen board at the probe configuration the first four nets
+read **four maps identical to the reference, four top-ups, zero differences**. The one-variable speed A/B is
+armed behind it on A48's frozen board at board A's own finish configuration with the wall in place, and the
+default does not move until that number exists.
