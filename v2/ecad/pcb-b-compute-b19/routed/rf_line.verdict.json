@@ -13,13 +13,13 @@
   }
  },
  "missing_input": null,
- "note": "no single-ended controlled line was found to judge, and this board does not declare that it has none",
+ "note": "this board DECLARES it carries a transmitter and yet no net of its own asks for a single-ended impedance: one of the two is wrong, and on this set it has been the class assignment rather than the declaration. Read the board's own net classes before reading this as a missing declaration",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
    "RF-001": "02283178003e5772"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "RF-001"
@@ -27,9 +27,9 @@
  "tool": "rf_line",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "5258d15102c7cb48"
  },
- "ts": "2026-09-17T22:44:33Z",
+ "ts": "2026-09-19T23:09:02Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown"
 }

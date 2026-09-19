@@ -218,6 +218,6 @@ holding a number, not a question about a number.
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
-| `RF-001` | B | INCONCLUSIVE | rf_line INCONCLUSIVE: no single-ended controlled line was found to judge, and this board does not declare that it has none |
+| `RF-001` | B | INCONCLUSIVE | rf_line INCONCLUSIVE: this board DECLARES it carries a transmitter and yet no net of its own asks for a single-ended impedance: one of the two is wrong, and on this set it has been t |
 | `DOC-001` | B | INCONCLUSIVE | final_gate_b INCONCLUSIVE: this board's own deliverable folder, judged on its own; the set's verdict is final_gate |
 
