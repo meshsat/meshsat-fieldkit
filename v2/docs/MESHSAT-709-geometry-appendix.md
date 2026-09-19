@@ -11008,3 +11008,21 @@ need a home that is not the front-side rail band, and the candidates change some
 has 16.0 mm east but is the UNDERSIDE, so a slot's rail regulator and its inductors would change side. **That
 is a judgement and not a rectangle, so this stops here**: the generator is untouched, nothing is applied, and
 the five steps are the evidence whoever makes that call should read first.
+
+**Addendum, 08:55 CEST (19 September), the end of that thread: the fine-pitch margin is measured and refused.**
+With every rectangle accommodated and the one remaining overflow declared in a throwaway tree so the placement
+could proceed, `PLACE_FINE_MARGIN=2.6` predicts **twelve escape-fan collisions of 75 fine-pitch parts against
+2.0's ten**. More room around each fine-pitch part makes the prediction WORSE, because the parts spread and
+their fans reach further into one another.
+
+**The whole five-step resize chain existed to make that number readable, and the number says the thing it was
+clearing the way for does not work.** That is the value of it: nobody now has to move a slot's rail regulator
+and its inductors to the underside to find out, which is what step five's dead end was asking for.
+
+**So board B's predicted collisions have not moved off about ten under any lever this project has tried:** the
+sixteen-rectangle resize (10 to 11), the fine-pitch margin (10 to 12), three route methods and forty hours of
+router. The ten sit at the CM5 receptacles' own fine-pitch fabric, the three PCIe switches and three hubs whose
+pads are a third un-escaped, and they are the same parts the pair failures die at. **The levers not yet tried
+are architectural**: fewer parts in that fabric, or more layers, which is STK-002 and the 11 September P0 that
+found four layers had never been argued or costed and board B is six. Board B's next real measurement is an
+owner decision, not a floor plan.
