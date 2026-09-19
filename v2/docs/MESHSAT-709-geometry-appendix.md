@@ -12226,7 +12226,7 @@ FET's drain and a band to the shunt, the treatment every declared rail on this b
 **Declaring five more failures without the pass that answers them buys a longer failure list and not a
 better board.**
 
-**Addendum, 01:05 CEST (20 September), EVERY CHARGER FINDING OF THE NIGHT HAS ONE CAUSE AND IT IS THE FLOOR
+**Addendum, 01:00 CEST (20 September), EVERY CHARGER FINDING OF THE NIGHT HAS ONE CAUSE AND IT IS THE FLOOR
 PLAN (commit 9bbe1434).**
 
 The night's charger findings arrived separately: a sense error of 2.0 percent on one phase and 45.6 on the
