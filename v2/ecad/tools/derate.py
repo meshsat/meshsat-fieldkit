@@ -98,6 +98,27 @@ def rating(value):
     return min(v) if v else None
 
 
+def _worst_declared(*entries):
+    """One entry carrying the WORST of everything declared about a net: the highest of `volts`, `v_max` and
+    `v_work`, and the lowest `v_min`. A net may carry a rail entry and a node entry, and a rail may declare a
+    working maximum above its nominal; a part on it can see all of them, so the judgement takes the worst.
+    Returns {} when nothing is declared, which is what `undeclared` means everywhere else in this file."""
+    hi, lo = None, None
+    for d in entries:
+        if not d: continue
+        for k in ("volts", "v_max", "v_work"):
+            v = d.get(k)
+            if v is None: continue
+            hi = float(v) if hi is None else max(hi, float(v))
+        v = d.get("v_min")
+        if v is not None: lo = float(v) if lo is None else min(lo, float(v))
+    if hi is None and lo is None: return {}
+    out = {}
+    if hi is not None: out["volts"] = hi
+    if lo is not None: out["v_min"] = lo
+    return out
+
+
 def judge(net_path, intent_path=None, margin=MARGIN):
     by_net, values = netlist(net_path)
     intent_path = intent_path or os.path.join(os.path.dirname(net_path),
@@ -123,7 +144,14 @@ def judge(net_path, intent_path=None, margin=MARGIN):
         and ground sees the net. A part between two declared nets that do not ride together sees the worst
         pair of their excursions, which is the conservative reading and is named as such."""
         others = on.get(ref, set()) - {net}
-        here = rails.get(net) or nodes_v.get(net) or {}
+        # THE WORST OF EVERYTHING DECLARED ABOUT THE NET, never the first declaration found (20 September
+        # 2026). This read `rails.get(net) or nodes_v.get(net)`, so a net that gained a rail entry lost
+        # whatever its node entry said: board A's CH_SRP is declared a node at 16.8 V, the pack's 4S
+        # termination, and its rail would be declared at the 14.4 V nominal, so DECLARING A CONDUCTOR AS THE
+        # RAIL IT IS WOULD HAVE QUIETLY LOWERED THE VOLTAGE EVERY PART ON IT IS JUDGED AGAINST. A rail also
+        # carries `v_work`, the working maximum, which this never read at all. Found while converting the
+        # sixteen DC conductors that no power rule looks at; the trap is closed before any of them moves.
+        here = _worst_declared(rails.get(net), nodes_v.get(net))
         peak = lambda d: max(abs(float(d.get("volts") or d.get("v_max") or 0.0) if (d.get("volts") is not None or d.get("v_max") is not None) else 0.0),
                              abs(float(d.get("v_min") or 0)))
         for o in others:
@@ -132,8 +160,8 @@ def judge(net_path, intent_path=None, margin=MARGIN):
             if b.get("rides_on") == net: return float(b["bias_v"]), "the declared bias across %s and %s" % (o, net)
         v = peak(here)
         for o in others:
-            od = rails.get(o) or nodes_v.get(o)
-            if od is None: continue
+            od = _worst_declared(rails.get(o), nodes_v.get(o))
+            if not od: continue
             lo_a = float(here.get("v_min") or 0); hi_a = float(here.get("volts") or here.get("v_max") or 0)
             lo_b = float(od.get("v_min") or 0); hi_b = float(od.get("volts") or od.get("v_max") or 0)
             v = max(v, abs(hi_a - lo_b), abs(hi_b - lo_a))
