@@ -728,21 +728,34 @@ for it1, it2 in pairs:
 if closed and os.environ.get("STUB_DRC", "1") != "0" and _HARD0 is not None:
     import subprocess as _sp, tempfile as _tf
     _here = os.path.dirname(os.path.abspath(__file__))
+    import shutil as _sh
+    _stem = os.path.splitext(os.path.basename(BOARD))[0]
+    _pro = os.path.join(os.path.dirname(os.path.abspath(BOARD)), _stem + ".kicad_pro")
     def _hard_now():
-        _t = _tf.NamedTemporaryFile(suffix=".kicad_pcb", delete=False).name
-        _r = _tf.NamedTemporaryFile(suffix=".json", delete=False).name
+        # THE PROJECT FILE TRAVELS WITH THE BOARD, under its own stem (12 September 2026: a board without it is
+        # judged against the DEFAULT class and reports hundreds of false clearance and via violations, and
+        # `drc.sh` refuses such a board outright). `SaveBoard` writes a project file beside the board it saves,
+        # and that one is not this board's, so the real one is copied over it before the DRC runs.
+        _d = _tf.mkdtemp(prefix="stubdrc-")
+        _t = os.path.join(_d, _stem + ".kicad_pcb"); _r = os.path.join(_d, "drc.json")
         try:
             pcbnew.SaveBoard(_t, b)
+            if os.path.exists(_pro): _sh.copy(_pro, os.path.join(_d, _stem + ".kicad_pro"))
+            else: return None
             if _sp.run([os.path.join(_here, "drc.sh"), _t, _r], capture_output=True, text=True).returncode: return None
             import hardset as _hs
             return _hs.counts(_hs.load(_r))["hard"]
         except Exception:
             return None
         finally:
-            for _f in (_t, _r):
-                try: os.unlink(_f)
-                except OSError: pass
+            _sh.rmtree(_d, ignore_errors=True)
     _h = _hard_now()
+    # A GUARD THAT COULD NOT JUDGE ITSELF SAYS SO (19 September 2026, caught on the first live run of this very
+    # block: `_hard_now` returned None because the temp board had no project file beside it, the drop-back was
+    # skipped, and the only sign was a stage that behaved exactly as it had before. Absence is never a pass.)
+    if _h is None:
+        print("stub_router: the drop-back could not read a hard set for the board it just laid, so it judged "
+              "NOTHING; the stage's own guard is the only thing standing behind these closures")
     if _h is not None and _h > _HARD0:
         print("stub_router: the closures took the hard set %d -> %d; dropping them back, newest first, until "
               "the board is no worse than it was handed" % (_HARD0, _h))

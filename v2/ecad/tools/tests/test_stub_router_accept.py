@@ -134,3 +134,26 @@ def t_the_drop_back_says_what_it_dropped_and_what_it_bought():
     assert 'print("  dropped the closure on %s: hard %s -> %s"' in s, "a closure is dropped without saying so"
     assert "so it was not the closures" in s, \
         "a board still over the bar with every closure dropped does not say that it was not the closures"
+
+
+def t_the_drop_backs_own_drc_gets_the_boards_project_file():
+    """A board without its `.kicad_pro` beside it under its own stem is judged against the DEFAULT class and
+    reports hundreds of false clearance and via violations, and `drc.sh` refuses it outright (12 September
+    2026). `SaveBoard` writes a project file beside whatever it saves and that one is not this board's, so the
+    real one is copied over it. Caught by reading the code back before the measurement returned."""
+    s = _src()
+    assert '_stem + ".kicad_pcb"' in s and '_stem + ".kicad_pro"' in s, \
+        "the temp board and its project file do not share a stem"
+    i, j = s.index("_sh.copy(_pro"), s.index('os.path.join(_here, "drc.sh")')
+    assert i < j, "the DRC runs before the board's own project file is put beside it"
+
+
+def t_a_drop_back_that_could_not_judge_says_so():
+    """Absence is never a pass, and this one was silent on its first live run: the DRC refused the temp board
+    for want of a project file, `_hard_now` returned None, the drop-back was skipped, and the only sign was a
+    stage behaving exactly as it had before (19 September 2026)."""
+    s = _src()
+    assert "the drop-back could not read a hard set" in s, "a drop-back that judged nothing does not say so"
+    i = s.index("_h = _hard_now()")
+    j = s.index("if _h is None:")
+    assert i < j < s.index("if _h is not None and _h > _HARD0:"), "the silence check is not on the first reading"
