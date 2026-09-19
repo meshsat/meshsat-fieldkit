@@ -197,7 +197,8 @@ def main(argv):
         print("rail_barrels: %d crossing(s) of %d declared rail(s) carry the barrels their current needs, "
               "nothing to lay" % (judged, len(rails)))
         _v.write(tool, "PASS", {"short": 0, "judged": judged}, judged, evidence=path,
-                 inputs=_inputs, note="every declared rail's own crossing already carries the barrels "
+                 inputs=_inputs, advisory=True,
+                 note="every declared rail's own crossing already carries the barrels "
                  "its current needs", out_dir=out_dir, rules=["PI-003"])
         return 0
 
@@ -302,11 +303,16 @@ def main(argv):
     print("rail_barrels: %d site(s) answered with %d barrel(s), %d refused by the DRC, %d declined "
           "(hard %d -> %d, unrouted %d -> %d)"
           % (len(laid), sum(len(p) for _, p in laid), len(plans) - len(laid), len(declined), h0, h, u0, u))
-    res = "PASS" if (laid and not declined and len(laid) == len(plans)) else ("FAIL" if declined or not laid else "FAIL")
+    res = "PASS" if (laid and not declined and len(laid) == len(plans)) else "FAIL"
+    # ADVISORY ON EVERY PATH, INCLUDING --apply. This is a FIXER and PI-003 is decided after the route by
+    # `via_current` on the solved mesh, which is what the coverage map says. The first version wrote a
+    # deciding verdict here and E21's chain was GATE_BLOCKED by it: board E has two sites this tool declines
+    # as busbars, correctly, and a fixer that stops a route because it could not answer a declared placement
+    # item is a fixer behaving as a blocker. What it lays is a measurement; what the board is, the mesh says.
     _v.write(tool, res,
              {"sites": len(laid), "barrels": sum(len(p) for _, p in laid), "declined": len(declined),
               "refused": len(plans) - len(laid), "short": len(rows), "judged": judged},
-             judged, evidence=path, inputs=_inputs,
+             judged, evidence=path, inputs=_inputs, advisory=True,
              note="%d of %d short crossing(s) answered beside the pad; %d declined as a placement item"
                   % (len(laid), len(rows), len(declined)), out_dir=out_dir, rules=["PI-003"])
     return 0 if laid or not plans else 1
