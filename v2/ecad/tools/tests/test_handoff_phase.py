@@ -110,3 +110,24 @@ def t_a_board_with_no_fabrication_note_block_is_not_refused_for_saying_nothing()
     rc, out = _run(["D8"], "D7", options=False)
     assert rc != 0, out
     assert "the hand-fitted list does not describe D8" in out, out
+
+
+def t_every_committed_board_row_resolves_against_this_tree():
+    """THE RULE ON THE REAL TABLE, not on a fixture. The two rules above prove the guard fires; this one asks
+    whether it fires TODAY, on the seven rows and the seven deliverable folders this repo actually holds. Board
+    C's row said C17 while the tree held C24 from the day C24 was cut, so the order set has refused to rebuild
+    since, and nobody would have known until somebody ran it. It reads the declarations and the resolver out of
+    the real file with `pcbnew` stubbed, because the resolver needs no board."""
+    import types, harness
+    src = open(os.path.join(TOOLS, "make_handoff.py"), encoding="utf-8").read()
+    sys.modules.setdefault("pcbnew", types.ModuleType("pcbnew"))
+    ns = {"__name__": "mh_probe", "__file__": os.path.join(TOOLS, "make_handoff.py")}
+    exec(compile(src[:src.index("def _rows(rows):")], "make_handoff.py", "exec"), ns)
+    if not os.path.isdir(ns["DL"]): raise harness.Skip("no deliverable folders in this tree")
+    bad = []
+    for f, stem, prj, title, ph, hand in ns["BOARDS"]:
+        try:
+            ns["_resolve"](f, prj, ph, hand)
+        except SystemExit as e:
+            bad.append(str(e).splitlines()[0])
+    assert not bad, ("the order set cannot be rebuilt from this tree: %s" % " | ".join(bad))
