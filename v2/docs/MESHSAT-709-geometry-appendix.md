@@ -12225,3 +12225,33 @@ that these conductors have no copper of their own, and the copper is ONE generat
 FET's drain and a band to the shunt, the treatment every declared rail on this board already has).
 **Declaring five more failures without the pass that answers them buys a longer failure list and not a
 better board.**
+
+**Addendum, 01:05 CEST (20 September), EVERY CHARGER FINDING OF THE NIGHT HAS ONE CAUSE AND IT IS THE FLOOR
+PLAN (commit 9bbe1434).**
+
+The night's charger findings arrived separately: a sense error of 2.0 percent on one phase and 45.6 on the
+next; a low-side tap at 792 percent of full scale; 4.81 A in a 0.500 mm inner conductor on CH_ACN; 6.26 A in
+another on the committed board and 10.00 A in a 0.200 mm track on A48 for CH_SRP. **Measured on the A51
+placed board they are one thing.** The charger block west to east, in the case frame: **R17** (the 5 mOhm
+CHARGE shunt, on CH_SRP) at x -113.55, **Q7** (the FET whose drain is CH_ACN) at -113.44, C20 -106.17, Q8
+-104.69, R11 (VBUS20's ISNS shunt) -102.45, C21 -100.32, Q9 -95.96, U3 -95.81, C22 -94.47, C23 -88.62,
+**Q10** (the FET whose drain is CH_SRP) at -87.22, C24 -82.80, **L2**, the inductor, at -80.00, **R16** (the
+10 mOhm INPUT shunt, which feeds CH_ACN) at -78.59, C25 -76.90.
+
+**Each shunt sits at the opposite end of the block from the FET whose drain its own net feeds**: R16 is
+**35.0 mm** from Q7 and R17 is **26.3 mm** from Q10. Both 6 to 10 A buses therefore traverse the whole
+forty-millimetre block, and they interleave: CH_ACN's pads span 39.6 by 9.4 mm and CH_SRP's 39.3 by 9.8, the
+two rectangles almost coincident, each containing the other bus's pads, all four switching FETs and six
+capacitors. **That is why neither bus can be given the island and band every passing rail on this board
+already has**, which was tried on the geometry before it was written down: any rectangle over one covers the
+other and every switching node between them. And it is why the router used half-millimetre tracks: it was
+given two long buses through a crowded band and that is what was left.
+
+**TI's own layout table fails twice here, not once** (`v2/vendor/ti/bq25731-datasheet.pdf`): item 6 asks that
+the power-stage FETs and the inductor be placed next to each other, and Q7 and Q8 are **33 mm** from L2; item
+7 asks for Kelvin sensing with the sense traces leaving the pad centres as differential pairs, and both taps
+are 26 mm of pour away. **ONE PLACEMENT PASS AT THIS BLOCK** closes PI-001 and PI-002 on both buses, the two
+Kelvin errors, both datasheet items and part of PI-003's barrel list at R16 and R11: the order along the band
+becomes the converter's own topology, input shunt, buck pair, inductor, boost pair, output shunt, with each
+bus's capacitors beside the pair they serve. It is A51's first item, and **it is a floor-plan change rather
+than copper, which is why no copper was written for it tonight.**
