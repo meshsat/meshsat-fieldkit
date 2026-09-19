@@ -10751,3 +10751,28 @@ hole does not care whose net it is.
 **Read E21 on both numbers.** A PASS on ANA-001 that lands at ten open answers nothing, and the four other
 switch nets are not pinned, so a PASS means the tracker's own pair is answered and not that the rule is
 structurally safe. `land_box3.sh` measures ANA-001 on every finished round.
+
+**Addendum, 05:00 CEST (19 September): a widening of my own, measured and refused inside the hour, and what it
+leaves behind.** `rail_crossings` counts the barrels within a millimetre of a rail's own pad. Board P showed
+the fixer laying four barrels at F1 pad 1 on a lattice of pitch drill plus 0.4 and the judge, looking one
+millimetre out, seeing three of the five and calling the site still short: **a judge that cannot see the answer
+it asked for is a judge nobody can satisfy**. The obvious repair is to grow the window by the cluster's own
+span, and it was written, tested, proved by mutation and committed.
+
+**Then it was re-taken on the same three board files with nothing but the judge changed, and it loosened the
+question**: board A read **5** short where it read 8, board B **3** where it read 5, board E **2** where it
+read 4. A window grown by `(need - 1) * pitch / 2` reaches 2.4 mm on a site needing seven barrels and sweeps up
+every fanout via of the same rail that happens to be near, none of which is at that crossing. Ten rule-board
+pairs' worth of reading moved for a change that was supposed to move none. It is reverted.
+
+**The repair that survives runs the other way: the window stays, and the FIXER is told what it is.** `reach`
+and the pad centre travel in the judge's row, `rail_barrels` refuses a lattice point outside them, and a
+cluster that does not fit is **declined whole** rather than half laid, because laying part of a cluster puts
+copper on a board and leaves the crossing reading exactly as short as before. That turns a class of site into
+what it always was: **a crossing whose barrels do not fit within a millimetre of its own pad is a site where
+the copper has to be designed**, and it belongs with board A's `VBUS20` at R11 pad 2 and board P's two wire
+lands rather than in a fixer's output.
+
+The method note is worth more than the change. The 18 September RET-002 repair was accepted because re-taking
+it moved no board's state; this one was refused because re-taking it moved three. **The re-take is the test, not
+the mutation suite**: every rule of the widened version passed, including two written specifically for it.
