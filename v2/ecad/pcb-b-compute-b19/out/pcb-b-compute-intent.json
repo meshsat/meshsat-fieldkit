@@ -1,0 +1,882 @@
+{
+ "board": "pcb-b-compute",
+ "written": "2026-09-17 22:20",
+ "bypass": [
+  {
+   "cap": "C112",
+   "part": "U103",
+   "pin": "2",
+   "net": "+5V_S1"
+  },
+  {
+   "cap": "C113",
+   "part": "U103",
+   "pin": "2",
+   "net": "+5V_S1"
+  },
+  {
+   "cap": "C119",
+   "part": "U104",
+   "pin": "2",
+   "net": "+5V_S1"
+  },
+  {
+   "cap": "C120",
+   "part": "U104",
+   "pin": "2",
+   "net": "+5V_S1"
+  },
+  {
+   "cap": "C125",
+   "part": "U105",
+   "pin": "3",
+   "net": "+5V_S1"
+  },
+  {
+   "cap": "C130",
+   "part": "U106",
+   "pin": "3",
+   "net": "+5V_DEV"
+  },
+  {
+   "cap": "C212",
+   "part": "U203",
+   "pin": "2",
+   "net": "+5V_S2"
+  },
+  {
+   "cap": "C213",
+   "part": "U203",
+   "pin": "2",
+   "net": "+5V_S2"
+  },
+  {
+   "cap": "C219",
+   "part": "U204",
+   "pin": "2",
+   "net": "+5V_S2"
+  },
+  {
+   "cap": "C220",
+   "part": "U204",
+   "pin": "2",
+   "net": "+5V_S2"
+  },
+  {
+   "cap": "C225",
+   "part": "U205",
+   "pin": "3",
+   "net": "+5V_S2"
+  },
+  {
+   "cap": "C230",
+   "part": "U206",
+   "pin": "3",
+   "net": "+5V_DEV"
+  },
+  {
+   "cap": "C312",
+   "part": "U303",
+   "pin": "2",
+   "net": "+5V_S3"
+  },
+  {
+   "cap": "C313",
+   "part": "U303",
+   "pin": "2",
+   "net": "+5V_S3"
+  },
+  {
+   "cap": "C319",
+   "part": "U304",
+   "pin": "2",
+   "net": "+5V_S3"
+  },
+  {
+   "cap": "C320",
+   "part": "U304",
+   "pin": "2",
+   "net": "+5V_S3"
+  },
+  {
+   "cap": "C325",
+   "part": "U305",
+   "pin": "3",
+   "net": "+5V_S3"
+  },
+  {
+   "cap": "C330",
+   "part": "U306",
+   "pin": "3",
+   "net": "+5V_DEV"
+  },
+  {
+   "cap": "C7",
+   "part": "U26",
+   "pin": "3",
+   "net": "+5V_DEV"
+  },
+  {
+   "cap": "C4",
+   "part": "U25",
+   "pin": "2",
+   "net": "+5V_DEV"
+  },
+  {
+   "cap": "C5",
+   "part": "U25",
+   "pin": "1",
+   "net": "+3V3_DEV"
+  },
+  {
+   "cap": "C6",
+   "part": "U25",
+   "pin": "1",
+   "net": "+3V3_DEV"
+  },
+  {
+   "cap": "C12",
+   "part": "U27",
+   "pin": "5",
+   "net": "+2V5_KSZ"
+  },
+  {
+   "cap": "C13",
+   "part": "U27",
+   "pin": "1",
+   "net": "+3V3_DEV"
+  },
+  {
+   "cap": "C36",
+   "part": "U5",
+   "pin": "1",
+   "net": "+3V3_DEV"
+  },
+  {
+   "cap": "C37",
+   "part": "U5",
+   "pin": "1",
+   "net": "+3V3_DEV"
+  },
+  {
+   "cap": "C38",
+   "part": "U5",
+   "pin": "1",
+   "net": "+3V3_DEV"
+  },
+  {
+   "cap": "C69",
+   "part": "U8",
+   "pin": "8",
+   "net": "+3V3_DEV"
+  },
+  {
+   "cap": "C70",
+   "part": "U9",
+   "pin": "2",
+   "net": "+3V3_DEV"
+  },
+  {
+   "cap": "C71",
+   "part": "U9",
+   "pin": "2",
+   "net": "+3V3_DEV"
+  }
+ ],
+ "rails": {
+  "+5V_S1": {
+   "volts": 5.1,
+   "amps_typ": 2.5,
+   "amps_peak": 5.0,
+   "source": "J_5V_S1",
+   "loads": {
+    "U30A": 1.6,
+    "U103": 2.2,
+    "U104": 0.7,
+    "U105": 0.15,
+    "J_FAN1": 0.1
+   },
+   "note": "slot rail from A22 (JST-VH): the module, the two 3.3 V bucks, the 1.0 V switch core and the fan. THIS BOARD'S SHARE is 1.5 of the rail's 2 percent (16 September 2026): board A regulates it and measures 0.07 percent from its shunt to the header, and the long copper is this side, from the VH header across the board to a module receptacle carrying 2.5 A",
+   "budget": 0.02,
+   "share": 0.015,
+   "always_on": true,
+   "always_on_why": "it arrives from board A over the JST-VH lead; board A switches it and this board consumes it",
+   "converted": false
+  },
+  "+5V_S2": {
+   "volts": 5.1,
+   "amps_typ": 2.5,
+   "amps_peak": 5.0,
+   "source": "J_5V_S2",
+   "loads": {
+    "U31A": 1.6,
+    "U203": 2.2,
+    "U204": 0.7,
+    "U205": 0.15,
+    "J_FAN2": 0.1
+   },
+   "note": "slot rail from A22 (JST-VH): the module, the two 3.3 V bucks, the 1.0 V switch core and the fan. THIS BOARD'S SHARE is 1.5 of the rail's 2 percent (16 September 2026): board A regulates it and measures 0.07 percent from its shunt to the header, and the long copper is this side, from the VH header across the board to a module receptacle carrying 2.5 A",
+   "budget": 0.02,
+   "share": 0.015,
+   "always_on": true,
+   "always_on_why": "it arrives from board A over the JST-VH lead; board A switches it and this board consumes it",
+   "converted": false
+  },
+  "+5V_S3": {
+   "volts": 5.1,
+   "amps_typ": 2.5,
+   "amps_peak": 5.0,
+   "source": "J_5V_S3",
+   "loads": {
+    "U32A": 1.6,
+    "U303": 2.2,
+    "U304": 0.7,
+    "U305": 0.15,
+    "J_FAN3": 0.1
+   },
+   "note": "slot rail from A22 (JST-VH): the module, the two 3.3 V bucks, the 1.0 V switch core and the fan. THIS BOARD'S SHARE is 1.5 of the rail's 2 percent (16 September 2026): board A regulates it and measures 0.07 percent from its shunt to the header, and the long copper is this side, from the VH header across the board to a module receptacle carrying 2.5 A",
+   "budget": 0.02,
+   "share": 0.015,
+   "always_on": true,
+   "always_on_why": "it arrives from board A over the JST-VH lead; board A switches it and this board consumes it",
+   "converted": false
+  },
+  "+5V_DEV": {
+   "volts": 5.0,
+   "amps_typ": 3.8,
+   "amps_peak": 6.0,
+   "source": "J_5V_DEV",
+   "loads": {
+    "U23": 1.2,
+    "U25": 0.9,
+    "U21": 0.6,
+    "F1": 0.6,
+    "U24": 0.45,
+    "F3": 0.3,
+    "U28": 0.25,
+    "F2": 0.2,
+    "U26": 0.15,
+    "U106": 0.1,
+    "U206": 0.1,
+    "U306": 0.1,
+    "U40": 0.05,
+    "U50": 0.05,
+    "U60": 0.05,
+    "U15": 0.02,
+    "U16": 0.02,
+    "U17": 0.02,
+    "U18": 0.02
+   },
+   "note": "the device rail from A22; +0.8 A since the three hubs and their cores moved off the slot rails (ARCH-PCB-B-IOHA)",
+   "budget": 0.02,
+   "share": 0.015,
+   "always_on": true,
+   "always_on_why": "it arrives from board A over the JST-VH lead; board A switches it and this board consumes it",
+   "converted": false
+  },
+  "+3V3_DEV": {
+   "volts": 3.3,
+   "amps_typ": 1.2,
+   "amps_peak": 2.0,
+   "source": "L1",
+   "loads": {
+    "U1": 0.25,
+    "U22": 0.25,
+    "U27": 0.15,
+    "U11": 0.05,
+    "U5": 0.02,
+    "U6": 0.01,
+    "U7": 0.01,
+    "U3": 0.01,
+    "U4": 0.01,
+    "U19": 0.01,
+    "U20": 0.01,
+    "U80": 0.01,
+    "U8": 0.005,
+    "U9": 0.005,
+    "U10": 0.005,
+    "U102": 0.1,
+    "U109": 0.05,
+    "U110": 0.01,
+    "U202": 0.1,
+    "U209": 0.05,
+    "U210": 0.01,
+    "U302": 0.1,
+    "U309": 0.05,
+    "U310": 0.01,
+    "U70": 0.01,
+    "U71": 0.01,
+    "U72": 0.01,
+    "U73": 0.01,
+    "U74": 0.01,
+    "U75": 0.01,
+    "U76": 0.01,
+    "U77": 0.01,
+    "U78": 0.01,
+    "U79": 0.01
+   },
+   "note": "shared logic, the KSZ IO, the three hub VDD33 (99 mA each), the muxes, the three supervisor LDOs; U25 is a 2 A part and that is this rail's peak",
+   "always_on": true,
+   "always_on_why": "U25 is an AP63203 whose EN pin is tied to its own input, so the shared logic rail follows the device rail: the hubs and bridges on it must outlive any one module",
+   "efficiency": 0.88,
+   "converted": true
+  },
+  "+3V3_S1A": {
+   "volts": 3.3,
+   "amps_typ": 0.5,
+   "amps_peak": 1.5,
+   "source": "L101",
+   "loads": {
+    "J_M2C1": 1.5
+   },
+   "note": "slot 1's card-socket 3.3 V from the AP63203 buck U103 through L101: an M.2 A/E-key radio card, 3 A at its own connector's rating and 1.5 A for the AW7915-AED",
+   "switch": "U103",
+   "efficiency": 0.88,
+   "converted": true
+  },
+  "+3V3_S1B": {
+   "volts": 3.3,
+   "amps_typ": 0.9,
+   "amps_peak": 1.8,
+   "source": "L102",
+   "loads": {
+    "J_M2N1": 1.2,
+    "U101": 0.55
+   },
+   "note": "slot 1's NVMe socket and the PCIe switch's own 3.3 V from U104 through L102",
+   "switch": "U104",
+   "efficiency": 0.88,
+   "converted": true
+  },
+  "+1V0_S1": {
+   "volts": 1.0,
+   "amps_typ": 0.8,
+   "amps_peak": 1.2,
+   "source": "L103",
+   "loads": {
+    "U101": 0.8
+   },
+   "note": "slot 1's PCIe switch core from the AP63200 buck U105 through L103",
+   "switch": "U105",
+   "efficiency": 0.85,
+   "converted": true
+  },
+  "+1V1_S1": {
+   "volts": 1.1,
+   "amps_typ": 0.4,
+   "amps_peak": 0.7,
+   "source": "L104",
+   "loads": {
+    "U102": 0.4
+   },
+   "note": "slot 1's USB hub core from U106 through L104, on the DEVICE rail and always on: the bank outlives the module it is failing away from",
+   "always_on": true,
+   "always_on_why": "U106's EN pin is tied to the device rail on purpose: the hub core must outlive the module whose bank it serves, which is the whole point of the I/O high-availability layer",
+   "efficiency": 0.85,
+   "converted": true
+  },
+  "+3V3_CM1": {
+   "volts": 3.3,
+   "amps_typ": 0.1,
+   "amps_peak": 0.2,
+   "source": "U30A",
+   "loads": {
+    "U30A": 0.1
+   },
+   "note": "slot 1's module-supplied 3.3 V. This board only decouples it and level-shifts against it; nothing on the carrier draws from it beyond its own bypass network",
+   "always_on": true,
+   "always_on_why": "the module's OWN 3.3 V output on its receptacle: this board consumes it and cannot switch it",
+   "converted": false
+  },
+  "+1V8_CM1": {
+   "volts": 1.8,
+   "amps_typ": 0.02,
+   "amps_peak": 0.05,
+   "source": "U30A",
+   "loads": {
+    "U30A": 0.02
+   },
+   "note": "slot 1's module-supplied 1.8 V, a reference for its GPIO bank and nothing else here",
+   "always_on": true,
+   "always_on_why": "the module's OWN 1.8 V output on its receptacle",
+   "converted": false
+  },
+  "+3V3_S2A": {
+   "volts": 3.3,
+   "amps_typ": 0.5,
+   "amps_peak": 1.5,
+   "source": "L201",
+   "loads": {
+    "J_M2C2": 1.5
+   },
+   "note": "slot 2's card-socket 3.3 V from the AP63203 buck U203 through L201: an M.2 A/E-key radio card, 3 A at its own connector's rating and 1.5 A for the AW7915-AED",
+   "switch": "U203",
+   "efficiency": 0.88,
+   "converted": true
+  },
+  "+3V3_S2B": {
+   "volts": 3.3,
+   "amps_typ": 0.9,
+   "amps_peak": 1.8,
+   "source": "L202",
+   "loads": {
+    "J_M2N2": 1.2,
+    "U201": 0.55
+   },
+   "note": "slot 2's NVMe socket and the PCIe switch's own 3.3 V from U204 through L202",
+   "switch": "U204",
+   "efficiency": 0.88,
+   "converted": true
+  },
+  "+1V0_S2": {
+   "volts": 1.0,
+   "amps_typ": 0.8,
+   "amps_peak": 1.2,
+   "source": "L203",
+   "loads": {
+    "U201": 0.8
+   },
+   "note": "slot 2's PCIe switch core from the AP63200 buck U205 through L203",
+   "switch": "U205",
+   "efficiency": 0.85,
+   "converted": true
+  },
+  "+1V1_S2": {
+   "volts": 1.1,
+   "amps_typ": 0.4,
+   "amps_peak": 0.7,
+   "source": "L204",
+   "loads": {
+    "U202": 0.4
+   },
+   "note": "slot 2's USB hub core from U206 through L204, on the DEVICE rail and always on: the bank outlives the module it is failing away from",
+   "always_on": true,
+   "always_on_why": "U206's EN pin is tied to the device rail on purpose: the hub core must outlive the module whose bank it serves, which is the whole point of the I/O high-availability layer",
+   "efficiency": 0.85,
+   "converted": true
+  },
+  "+3V3_CM2": {
+   "volts": 3.3,
+   "amps_typ": 0.1,
+   "amps_peak": 0.2,
+   "source": "U31A",
+   "loads": {
+    "U31A": 0.1
+   },
+   "note": "slot 2's module-supplied 3.3 V. This board only decouples it and level-shifts against it; nothing on the carrier draws from it beyond its own bypass network",
+   "always_on": true,
+   "always_on_why": "the module's OWN 3.3 V output on its receptacle: this board consumes it and cannot switch it",
+   "converted": false
+  },
+  "+1V8_CM2": {
+   "volts": 1.8,
+   "amps_typ": 0.02,
+   "amps_peak": 0.05,
+   "source": "U31A",
+   "loads": {
+    "U31A": 0.02
+   },
+   "note": "slot 2's module-supplied 1.8 V, a reference for its GPIO bank and nothing else here",
+   "always_on": true,
+   "always_on_why": "the module's OWN 1.8 V output on its receptacle",
+   "converted": false
+  },
+  "+3V3_S3A": {
+   "volts": 3.3,
+   "amps_typ": 0.5,
+   "amps_peak": 1.5,
+   "source": "L301",
+   "loads": {
+    "J_M2C3": 1.5
+   },
+   "note": "slot 3's card-socket 3.3 V from the AP63203 buck U303 through L301: an M.2 A/E-key radio card, 3 A at its own connector's rating and 1.5 A for the AW7915-AED",
+   "switch": "U303",
+   "efficiency": 0.88,
+   "converted": true
+  },
+  "+3V3_S3B": {
+   "volts": 3.3,
+   "amps_typ": 0.9,
+   "amps_peak": 1.8,
+   "source": "L302",
+   "loads": {
+    "J_M2N3": 1.2,
+    "U301": 0.55
+   },
+   "note": "slot 3's NVMe socket and the PCIe switch's own 3.3 V from U304 through L302",
+   "switch": "U304",
+   "efficiency": 0.88,
+   "converted": true
+  },
+  "+1V0_S3": {
+   "volts": 1.0,
+   "amps_typ": 0.8,
+   "amps_peak": 1.2,
+   "source": "L303",
+   "loads": {
+    "U301": 0.8
+   },
+   "note": "slot 3's PCIe switch core from the AP63200 buck U305 through L303",
+   "switch": "U305",
+   "efficiency": 0.85,
+   "converted": true
+  },
+  "+1V1_S3": {
+   "volts": 1.1,
+   "amps_typ": 0.4,
+   "amps_peak": 0.7,
+   "source": "L304",
+   "loads": {
+    "U302": 0.4
+   },
+   "note": "slot 3's USB hub core from U306 through L304, on the DEVICE rail and always on: the bank outlives the module it is failing away from",
+   "always_on": true,
+   "always_on_why": "U306's EN pin is tied to the device rail on purpose: the hub core must outlive the module whose bank it serves, which is the whole point of the I/O high-availability layer",
+   "efficiency": 0.85,
+   "converted": true
+  },
+  "+3V3_CM3": {
+   "volts": 3.3,
+   "amps_typ": 0.1,
+   "amps_peak": 0.2,
+   "source": "U32A",
+   "loads": {
+    "U32A": 0.1
+   },
+   "note": "slot 3's module-supplied 3.3 V. This board only decouples it and level-shifts against it; nothing on the carrier draws from it beyond its own bypass network",
+   "always_on": true,
+   "always_on_why": "the module's OWN 3.3 V output on its receptacle: this board consumes it and cannot switch it",
+   "converted": false
+  },
+  "+1V8_CM3": {
+   "volts": 1.8,
+   "amps_typ": 0.02,
+   "amps_peak": 0.05,
+   "source": "U32A",
+   "loads": {
+    "U32A": 0.02
+   },
+   "note": "slot 3's module-supplied 1.8 V, a reference for its GPIO bank and nothing else here",
+   "always_on": true,
+   "always_on_why": "the module's OWN 1.8 V output on its receptacle",
+   "converted": false
+  },
+  "+3V3_IOCA": {
+   "volts": 3.3,
+   "amps_typ": 0.12,
+   "amps_peak": 0.25,
+   "source": "U40",
+   "loads": {
+    "U41": 0.06,
+    "U42": 0.02,
+    "U43": 0.02,
+    "U44": 0.02
+   },
+   "note": "controller A's private 3.3 V, its own branch off the device rail so that one controller's fault cannot pull the other two down. Budget 3 percent: logic only",
+   "budget": 0.03,
+   "always_on": true,
+   "always_on_why": "each controller's private LDO has its EN tied to its own input, so it follows the device rail and the controller is up whenever the kit is",
+   "efficiency": 0.66,
+   "converted": true
+  },
+  "+3V3_IOCB": {
+   "volts": 3.3,
+   "amps_typ": 0.12,
+   "amps_peak": 0.25,
+   "source": "U50",
+   "loads": {
+    "U51": 0.06,
+    "U52": 0.02,
+    "U53": 0.02,
+    "U54": 0.02
+   },
+   "note": "controller B's private 3.3 V, its own branch off the device rail so that one controller's fault cannot pull the other two down. Budget 3 percent: logic only",
+   "budget": 0.03,
+   "always_on": true,
+   "always_on_why": "each controller's private LDO has its EN tied to its own input, so it follows the device rail and the controller is up whenever the kit is",
+   "efficiency": 0.66,
+   "converted": true
+  },
+  "+3V3_IOCC": {
+   "volts": 3.3,
+   "amps_typ": 0.12,
+   "amps_peak": 0.25,
+   "source": "U60",
+   "loads": {
+    "U61": 0.06,
+    "U62": 0.02,
+    "U63": 0.02,
+    "U64": 0.02
+   },
+   "note": "controller C's private 3.3 V, its own branch off the device rail so that one controller's fault cannot pull the other two down. Budget 3 percent: logic only",
+   "budget": 0.03,
+   "always_on": true,
+   "always_on_why": "each controller's private LDO has its EN tied to its own input, so it follows the device rail and the controller is up whenever the kit is",
+   "efficiency": 0.66,
+   "converted": true
+  },
+  "+1V2_KSZ": {
+   "volts": 1.2,
+   "amps_typ": 0.5,
+   "amps_peak": 0.8,
+   "source": "L2",
+   "loads": {
+    "U1": 0.5
+   },
+   "note": "the Ethernet switch's core from the AP63200 buck U26 through L2",
+   "always_on": true,
+   "always_on_why": "U26's EN pin is tied to the device rail it runs from, so the Ethernet switch core follows it",
+   "efficiency": 0.85,
+   "converted": true
+  },
+  "+2V5_KSZ": {
+   "volts": 2.5,
+   "amps_typ": 0.15,
+   "amps_peak": 0.25,
+   "source": "U27",
+   "loads": {
+    "U1": 0.15
+   },
+   "note": "the Ethernet switch's analogue 2.5 V. Budget 3 percent: the switch's own range is wider",
+   "budget": 0.03,
+   "always_on": true,
+   "always_on_why": "U27 is an AP2112K whose EN is tied to its own input: the switch's analogue rail comes up with the switch",
+   "efficiency": 0.76,
+   "converted": true
+  },
+  "+3V3_ZB": {
+   "volts": 3.3,
+   "amps_typ": 0.1,
+   "amps_peak": 0.3,
+   "source": "U22",
+   "loads": {
+    "U13": 0.04,
+    "U14": 0.04,
+    "J_ZBDBG1": 0.01,
+    "J_ZBDBG2": 0.01
+   },
+   "note": "the two CC2652P radios behind their load switch, plus the two bench debug headers. 0.3 A peak is both radios transmitting at once, which the fabric never asks for but the copper must carry",
+   "converted": false
+  },
+  "+5V_LORA": {
+   "volts": 5.0,
+   "amps_typ": 0.15,
+   "amps_peak": 0.7,
+   "source": "U21",
+   "loads": {
+    "U12": 0.7
+   },
+   "note": "the 1 W LoRa module behind its load switch: 0.7 A on a transmit burst at 30 dBm, milliamps between",
+   "converted": false
+  },
+  "+5V_LIME": {
+   "volts": 5.0,
+   "amps_typ": 1.2,
+   "amps_peak": 3.0,
+   "source": "U23",
+   "loads": {
+    "J_LIME": 3.0
+   },
+   "note": "the software-defined radio bay behind the eFuse U23 (ILM 301R, 3.0 A): a LimeSDR Mini 2.4 on USB 3 draws about 1.2 A and peaks higher while its FPGA configures",
+   "converted": false
+  },
+  "+5V_RB": {
+   "volts": 5.0,
+   "amps_typ": 0.15,
+   "amps_peak": 2.0,
+   "source": "U24",
+   "loads": {
+    "J_RB9704": 2.0
+   },
+   "note": "the satellite modem behind the eFuse U24 (ILM 301R, 3.0 A): the RockBLOCK 9704's burst current on a transmit attempt is the number the copper has to carry, not its average",
+   "converted": false
+  },
+  "+5V_CAM": {
+   "volts": 5.0,
+   "amps_typ": 0.25,
+   "amps_peak": 0.5,
+   "source": "U28",
+   "loads": {
+    "J_CAM": 0.5
+   },
+   "note": "the camera lead behind its switch, a USB 2.0 device at its port's own 500 mA limit",
+   "converted": false
+  },
+  "+5V_HDMI": {
+   "volts": 5.0,
+   "amps_typ": 0.1,
+   "amps_peak": 0.5,
+   "source": "F2",
+   "loads": {
+    "J_HDMI": 0.5
+   },
+   "note": "the HDMI connector's own 5 V behind the 0.5 A polyfuse F2, which is what the standard asks a source to supply",
+   "always_on": true,
+   "always_on_why": "a polyfuse is protection and not a switch: the connector's 5 V follows the device rail, which is what the standard asks a source to supply",
+   "converted": false
+  },
+  "+54V_POE": {
+   "volts": 54.0,
+   "amps_typ": 0.3,
+   "amps_peak": 0.6,
+   "source": "J_54V",
+   "loads": {
+    "U5": 0.6
+   },
+   "note": "the Power over Ethernet feed arriving from board A's own +54V_POE stage, into the TPS23861 injector U5. It is a rail of board A and a load of this one",
+   "budget": 0.02,
+   "share": 0.015,
+   "always_on": true,
+   "always_on_why": "it arrives from board A over the JST-VH lead; board A switches it and this board consumes it",
+   "converted": false
+  },
+  "GND": {
+   "volts": 0.0,
+   "amps_typ": 10.0,
+   "amps_peak": 21.0,
+   "source": [
+    "J_5V_S1",
+    "J_5V_S2",
+    "J_5V_S3",
+    "J_5V_DEV"
+   ],
+   "loads": {
+    "U23": 1.2,
+    "U25": 0.9,
+    "U21": 0.6,
+    "U24": 0.45,
+    "U28": 0.25,
+    "U26": 0.15,
+    "U106": 0.1,
+    "U206": 0.1,
+    "U306": 0.1,
+    "U40": 0.05,
+    "U50": 0.05,
+    "U60": 0.05,
+    "U15": 0.02,
+    "U16": 0.02,
+    "U17": 0.02,
+    "U18": 0.02,
+    "J_PANEL": 0.6,
+    "J_QMX": 0.3,
+    "U3": 0.1,
+    "U4": 0.1,
+    "U30A": 1.6,
+    "U103": 2.2,
+    "U104": 0.7,
+    "U105": 0.15,
+    "J_FAN1": 0.1,
+    "U31A": 1.6,
+    "U203": 2.2,
+    "U204": 0.7,
+    "U205": 0.15,
+    "J_FAN2": 0.1,
+    "U32A": 1.6,
+    "U303": 2.2,
+    "U304": 0.7,
+    "U305": 0.15,
+    "J_FAN3": 0.1
+   },
+   "note": "the return of every rail: the three slot rails and the device rail, 19.4 A with all four at their declared peak",
+   "always_on": true,
+   "always_on_why": "the return, which nothing switches",
+   "converted": false
+  }
+ },
+ "nodes": {
+  "LED_5V_A1": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "the slot 1 indicator's anode, behind its 1k series resistor from the 5 V rail: it can only reach that rail"
+  },
+  "PCIE1_RXSW_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe receive lane: about 1.2 V peak to peak of differential signal on a common mode the specification holds below 3.6 V, which is what an AC coupling capacitor on it has to stand off"
+  },
+  "PCIE1_RXSW_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe receive lane: about 1.2 V peak to peak of differential signal on a common mode the specification holds below 3.6 V, which is what an AC coupling capacitor on it has to stand off"
+  },
+  "PCIE1_RX_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe receive lane: about 1.2 V peak to peak of differential signal on a common mode the specification holds below 3.6 V, which is what an AC coupling capacitor on it has to stand off"
+  },
+  "PCIE1_RX_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe receive lane: about 1.2 V peak to peak of differential signal on a common mode the specification holds below 3.6 V, which is what an AC coupling capacitor on it has to stand off"
+  },
+  "LED_5V_A2": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "the slot 2 indicator's anode, behind its 1k series resistor from the 5 V rail: it can only reach that rail"
+  },
+  "PCIE2_RXSW_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe receive lane: about 1.2 V peak to peak of differential signal on a common mode the specification holds below 3.6 V, which is what an AC coupling capacitor on it has to stand off"
+  },
+  "PCIE2_RXSW_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe receive lane: about 1.2 V peak to peak of differential signal on a common mode the specification holds below 3.6 V, which is what an AC coupling capacitor on it has to stand off"
+  },
+  "PCIE2_RX_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe receive lane: about 1.2 V peak to peak of differential signal on a common mode the specification holds below 3.6 V, which is what an AC coupling capacitor on it has to stand off"
+  },
+  "PCIE2_RX_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe receive lane: about 1.2 V peak to peak of differential signal on a common mode the specification holds below 3.6 V, which is what an AC coupling capacitor on it has to stand off"
+  },
+  "LED_5V_A3": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "the slot 3 indicator's anode, behind its 1k series resistor from the 5 V rail: it can only reach that rail"
+  },
+  "PCIE3_RXSW_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe receive lane: about 1.2 V peak to peak of differential signal on a common mode the specification holds below 3.6 V, which is what an AC coupling capacitor on it has to stand off"
+  },
+  "PCIE3_RXSW_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe receive lane: about 1.2 V peak to peak of differential signal on a common mode the specification holds below 3.6 V, which is what an AC coupling capacitor on it has to stand off"
+  },
+  "PCIE3_RX_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe receive lane: about 1.2 V peak to peak of differential signal on a common mode the specification holds below 3.6 V, which is what an AC coupling capacitor on it has to stand off"
+  },
+  "PCIE3_RX_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe receive lane: about 1.2 V peak to peak of differential signal on a common mode the specification holds below 3.6 V, which is what an AC coupling capacitor on it has to stand off"
+  }
+ },
+ "pair_classes": {
+  "USB": {
+   "z_diff": 90.0,
+   "z_se": 50.0
+  },
+  "DIFF100": {
+   "z_diff": 100.0,
+   "z_se": 50.0
+  },
+  "PCIE": {
+   "z_diff": 100.0
+  },
+  "HDMI": {
+   "z_diff": 100.0
+  },
+  "RF": {
+   "z_se": 50.0
+  }
+ }
+}

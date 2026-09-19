@@ -1,0 +1,97 @@
+{
+ "board": "pcb-p-pack",
+ "written": "2026-09-17 11:59",
+ "bypass": [
+  {
+   "cap": "C1",
+   "part": "U1",
+   "pin": "1",
+   "net": "PBI"
+  },
+  {
+   "cap": "C6",
+   "part": "U1",
+   "pin": "32",
+   "net": "BAT_F"
+  },
+  {
+   "cap": "C8",
+   "part": "U1",
+   "pin": "26",
+   "net": "VCC_F"
+  }
+ ],
+ "rails": {
+  "PACK_P": {
+   "volts": 14.4,
+   "amps_typ": 10.0,
+   "amps_peak": 18.0,
+   "source": "W_P",
+   "loads": {
+    "Q2": 10.0
+   },
+   "note": "the pack lead. THE SWITCH IS THE GAUGE: Q2 is the discharge FET and the BQ4050 drives its gate on DSG_G, so the pack terminal is live only while the gauge allows it, which is the first stage of the energy chain",
+   "switch": "U1",
+   "enable_net": "DSG_R",
+   "v_work": 16.8,
+   "converted": false
+  },
+  "CELL4": {
+   "volts": 14.4,
+   "amps_typ": 10.0,
+   "amps_peak": 18.0,
+   "source": "W_BP",
+   "loads": {
+    "F1": 10.0
+   },
+   "note": "the top cell node from the block strip",
+   "always_on": true,
+   "always_on_why": "the cell block itself: there is nothing upstream of it to switch, which is why everything downstream is protected rather than enabled",
+   "converted": false
+  },
+  "FUSED": {
+   "volts": 14.4,
+   "amps_typ": 10.0,
+   "amps_peak": 18.0,
+   "source": "F1",
+   "loads": {
+    "Q1": 10.0
+   },
+   "note": "after the blade fuse",
+   "always_on": true,
+   "always_on_why": "the cell node after the 25 A blade: a fuse is protection and not a switch",
+   "converted": false
+  }
+ },
+ "nodes": {
+  "PACK_N": {
+   "v_max": 0.05,
+   "v_min": 0.0,
+   "basis": "the pack negative, one 2 mOhm shunt away from GND: 50 mV at the 25 A the counter is scaled for, which is a reference and not a voltage a part has to withstand"
+  },
+  "GND": {
+   "v_max": 0.0,
+   "v_min": 0.0,
+   "basis": "the board's reference, so a part between a live net and ground is judged against the live net rather than reported as sitting on an undeclared one"
+  }
+ },
+ "pair_classes": {
+  "USB": {
+   "z_diff": 90.0,
+   "z_se": 50.0
+  },
+  "DIFF100": {
+   "z_diff": 100.0,
+   "z_se": 50.0
+  },
+  "PCIE": {
+   "z_diff": 100.0
+  },
+  "HDMI": {
+   "z_diff": 100.0
+  },
+  "RF": {
+   "z_se": 50.0
+  }
+ }
+}
