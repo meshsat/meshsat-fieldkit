@@ -277,10 +277,24 @@ the lower count settles a layer count, and this table runs none.
 **Read against the per-board evidence above, the standing position on 12 September is:** only **B** has
 a measurement behind its count (93 opens at 8 passes with In1 keep-outs). **C** has one (two-layer
 routes left 14 to 35 opens in the driver cluster). **D**'s four layers are defensible on RF grounds and
-that reason was written for the first time in this document. **A's six layers are supported by nothing**:
-the recorded four-layer evidence is 4 to 11 opens in the converter zones, which today's finish closes
-routinely, and the experiment is blocked on one generator line rather than on physics. **E's power
-justification is refuted** and what holds it at four is the routing half and In1.
+that reason was written for the first time in this document. ~~**A's six layers are supported by nothing**~~ **CORRECTED 19 September 2026: A's six layers have the
+measurement the P0 ordered, and it is in this document forty lines above this paragraph.** The sentence
+below was written in the morning of 12 September, when the recorded four-layer evidence was "4 to 11 opens
+in the converter zones" and the experiment was blocked on one generator line; **the arm ran that evening and
+came back 0 hard and 345 UNROUTED against the six-layer A24's 0**, the autoroute completing in 51 minutes
+rather than timing out, so it is a result and not a ceiling. A summary paragraph that contradicts a
+measurement in its own document is how a stale sentence outlives the thing that refuted it, and the
+readiness page's STK-002 row was still reading "no like-for-like price ... which decision 2 left open" as
+though nothing had been measured on board A at all. **E's power justification is refuted** and what holds
+it at four is the routing half and In1.
+
+**SO EVERY BOARD OF THE SEVEN HAS ITS LAYER MEASUREMENT NOW, and the only thing missing for any of them is
+the PRICE** (19 September 2026): A 345 opens at four against 0 at six; B 93 opens at 8 passes with In1
+keep-outs; C 14 to 35 opens in the driver cluster at two layers, and decision 27 for four against six; D
+four layers on the RF ground-plane reason written here; E the routing half and In1, with E's own strip
+carrying no routed track on its inner layers; P 43, 45 and 47 opens at two layers against 0 and 0 at four
+(P7 and P8, 18 September, both at the fabricator's own 0.16 mm floor), which is decision 28; E5 two layers
+with nothing inner to weigh. The cost side below is still the one input nobody here can take.
 
 **And the cost side of P0 is still not taken.** A like-for-like four against six quote per board at the
 real dimensions and quantity 5 does not exist. JLCPCB's public parts API answers; its PCB price path
