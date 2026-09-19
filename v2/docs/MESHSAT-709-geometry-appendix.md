@@ -12175,3 +12175,53 @@ reading of a list, and the rule's first job is to refuse a board that leaves suc
 its budget written down, and a declaration that is wrong is worse than one that is missing, because it
 produces a number. They are written here with their currents so the next generation of each board can carry
 them, and **board A's CH_SRP and board P's PACK_N are the two to do first, because they are the 10 A ones.**
+
+**Addendum, 00:50 CEST (20 September), THE CHARGER'S OUTPUT PUTS TEN AMPS IN A CONDUCTOR RATED UNDER ONE, ON
+THE COMMITTED BOARD, AND THREE TOOL DEFECTS CAME OUT OF ASKING (commits 190bcc8a, 7b98277d, 6b6a9fa4,
+1d236dea, 214b13fb; readiness 63.4 percent of 333 before and after; suite 1171 on the runner, 1204 of 1204
+where KiCad is).**
+
+**(1) `CH_SRP`, the second of the sixteen, is the worst of them.** It carries the charger's whole output from
+Q10's drain through the three 22 uF capacitors to the 5 mOhm charge shunt R17 and on to CELL+, at the pack's
+own 10.0 A typical and 18.0 A peak, and it was declared a NODE. Declared as the rail it is: **on the
+COMMITTED board A32 (sha 58e26c67987b1daa), worst drop 409 mV, 2.84 percent of 14.4 V against a 2 percent
+bar, MISSED, and the worst conductor is 0.500 mm wide on In3.Cu, 5.6 mm long, carrying 6.26 A against IPC's
+0.40 A for its own cross-section.** Fifteen times its rating. On A48's frozen board the same net reads 639 mV
+and **10.00 A in a 0.200 mm F.Cu track 20.1 mm long** against IPC's 0.74 A. **So it is the design's and not a
+route's**: the committed board has the same shape with different numbers, because nothing in the generator
+gives CH_SRP or CH_ACN copper of their own. `dc_drop` on the committed board now reads FAIL of 15 rails, 1
+missed and 6 density missed, where it read PASS of 13 with these two as nodes.
+
+**(2) Three tool defects, each found by doing it and each with its rule.** `derate` read `rails.get(net) or
+nodes_v.get(net)`, the FIRST declaration found and a rail found first, so **declaring a conductor as the rail
+it is would have lowered the voltage its parts are judged against** (CH_SRP's node says 16.8 V, the 4S
+termination; its rail says the 14.4 V nominal). It takes the worst of `volts`, `v_max` and `v_work` across
+every entry now, so a declaration can only make CMP-001 stricter. `derate`'s intent path was
+`basename.replace(".net", "-intent.json")`, so handed a BOARD, which is the documented way to judge a board
+with no schematic, the replace matched nothing, the name came back unchanged and the next line json-parsed
+the board: **board E5's declared zero could not be re-taken at all**. A replace that does not match leaves
+the path it was given, and that path exists. And **`verdict.guard` ignored `--out-dir`**, so a gate told to
+write elsewhere put its CRASH in the tree's own evidence, which is 19 September's incident by another route;
+`derate` had no `--out-dir` at all and has one now. **The seven CMP-001 readings were re-taken in the same
+stretch and readiness is 63.4 percent before and after**: a tool change stales every reading it decides, and
+re-taking them then is the difference between a number that moved for a reason and one that moved for a
+tool.
+
+**(3) Board P's pack return is deliberately NOT declared, and that is a gap in the rule set rather than a
+missing declaration.** `PACK_N` carries the pack's whole 10.0 A typical and 18.0 A peak from the 12 AWG lead
+land to the 2 mOhm coulomb-counting shunt. Declaring it would produce a NONSENSE number, which is worse than
+none: **`dc_drop`'s drop criterion is a percentage of the net's own voltage**, and a return's own voltage is
+50 mV by construction, so a 2 percent budget is a bar of one millivolt that every return on every board
+would fail. Declaring its voltage as the pack's 14.4 to get a sensible 288 mV bar is not available either,
+because `derate` now takes the worst of every declaration and would judge the counter's own filter resistor
+against 14.4 V instead of the 50 mV it sees. **A return conductor's drop is judged against the RAIL IT
+RETURNS**, and neither `intent.rail()` nor `dc_drop` can say that today. The capacity half needs no such bar,
+so PI-001 on it is answerable as soon as the declaration can be written.
+
+**(4) The remaining five of board A's eight are specified and deliberately held**, with their sources, loads,
+voltages and currents, in `boards/a.json` `_the_five_stage_outputs_are_specified_and_not_yet_declared`. The
+reason is not caution about the numbers: CH_ACN and CH_SRP have already shown what the answer is, which is
+that these conductors have no copper of their own, and the copper is ONE generator pass (an island at the
+FET's drain and a band to the shunt, the treatment every declared rail on this board already has).
+**Declaring five more failures without the pass that answers them buys a longer failure list and not a
+better board.**
