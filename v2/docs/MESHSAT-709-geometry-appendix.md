@@ -11753,3 +11753,52 @@ byte-identical** (`drc-in e4c8dbe2` both times) where three unpruned runs gave t
 **And `PYTHONHASHSEED` is refuted**: pinning it changes nothing, because there was nothing in the tool to fix.
 The defect was 157 pieces of junk copper on the board and a bridge test that counted touches instead of asking
 whether the things touched were already joined.
+
+**Addendum, 19:35 CEST (19 September), THE CLOSERS' MARGIN WAS TEN MICROMETRES WHERE THE GRID NEEDS FIFTY, AND
+BOARD A'S A44 GOES FROM NINETEEN OPEN TO TEN.** The drop-back added this morning was written because `guarded`
+reverts the WHOLE stub stage when the hard count rises, and on A44 that throws away sixteen good closures for
+one violation. Seven runs on that board turned into a defect each, and the seventh found the cause underneath
+all of them.
+
+**The violation, named at last:** `Clearance violation (netclass 'SENSE' clearance 0.1270 mm; actual 0.1219
+mm)` between `Via [/HF_FB]` at (122.650, 148.650) and `Pad 3 [/HF_CS] of Q23` at (123.375, 148.010). **It
+misses by 5.1 micrometres.** The stub router's margin over a net's class clearance was a flat 0.01 mm, written
+on 14 September when the grid was 0.05, while long closures run at `STUB_GRID=0.1`; an obstacle map that marks
+a cell by its CENTRE can under-represent the real copper by half a cell, which is 50 micrometres, so the search
+believed it had 0.137 mm of room and the copper landed at 0.1219. It is `max(0.01, G / 2)` now, moving with the
+grid, and a knob (`STUB_CLR_MARGIN`) because a wider margin refuses paths a narrower one finds.
+
+**Two arms on A44's frozen board, one variable, drop-back off in both, read-only copies:**
+
+| margin | closed | refused | after the stage | what `guarded` does with it |
+|---|---:|---:|---|---|
+| 0.01, as it was | **16 of 19** | 3 | hard **1**, unrouted 8 | reverts everything: the board stays at 19 open |
+| 0.05, half a cell | **14 of 19** | 5 | hard **0**, unrouted **10** | keeps it |
+
+**So the fix costs two closures and buys nine connections**, because the alternative was keeping none of them.
+It compounds with this afternoon's acceptance fix (the closure that lands on a many-cluster net), which is
+independent of it, so board A's whole ladder is owed a re-read.
+
+**The five defects the drop-back showed on the way, each its own rule.** (1) **The fill.** Its first live
+reading was hard 0 to 97 on a board a driver's own DRC read at hard 1 a minute earlier: every closure is laid
+INTO a poured board and the pour retreats only when it is refilled, so judged against the fill from before the
+stage each closure reads as copper standing in a pour it is not part of. It dropped one closure, saw 97 to 97
+because the other fifteen were under the same stale fill, and would have thrown away every good closure to buy
+nothing. That is the 14 September defect and this morning's barrel defect in a third place. (2) **The
+proxies.** A SWIG proxy dies after `Remove`, which `cleanup_dangling` has carried in its own docstring since it
+was written; the drop-back removes AND saves, so it segfaulted on its second measurement. Each closure is
+recorded by KIID now and looked up against the live board. (3) **The interpreter.** Nine load-and-fill cycles
+in one process segfaulted the tool after nine honest measurements; the refill runs in its own process and a
+failed refill is named. (4) **The search.** Newest-first is an ordering and not a diagnosis: nine closures came
+off in order and the count never moved, while the report had named the culprit in words all along. The suspects
+are read off the first reading by the net the DRC names and dropped together, which is two DRCs instead of
+sixteen. (5) **The ending.** A refill segfaulted mid-walk, the reading came back None, the `while` condition
+quietly went false and the tool SAVED a board it had just been told was over the bar; and when the walk ran to
+the end and cleared every closure it announced that it was not the closures and then wrote `closed 0 of 19`,
+having spent sixteen DRCs to prove them innocent and lost all sixteen anyway, which is strictly worse than the
+behaviour it replaced. It stops and says so in the first case and **puts the closures back** in the second.
+
+**A bound worth keeping:** with every closure dropped, the tool's own reading still read 1 where `drc.sh` on
+the same file reads 0, and refilling A44's untouched board changes nothing (hard 0 either way, measured). So a
+board that has had copper added and removed in memory is not byte for byte the board that was handed in, and
+the drop-back cannot claim more than it can measure.
