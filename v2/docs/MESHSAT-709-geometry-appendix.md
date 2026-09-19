@@ -11562,3 +11562,24 @@ the TOOL and not the declaration, and that is a legitimate arm rather than a rep
 E20-shaped board only by the accident of its closer: with the fix the same design pins both halves of the
 sense pair and becomes the E21-shaped one. Its launcher's refusal to start without `keep_closure` is therefore
 the whole of what makes it a different arm, which is exactly what a `--requires` line is for.
+
+**Addendum, 16:25 CEST (19 September), AND THE CORRECTED CLOSER TAKES BOARD A'S BEST BOARD FROM 15 OPEN TO 10
+WITHOUT TOUCHING THE DESIGN.** The defect was not board A's switching group alone. Across every board A arm
+since A44 there are **52 refusals reading "a path was found and it did not connect"** (A44 17, A45r 14, A48 4,
+and the rest), and none at all on the E or D trees, which is what a board whose nets are per-pad escape stubs
+looks like. **A48's frozen board, the best board A has ever produced, was re-closed in a COPY with the
+corrected acceptance at the finish's own settings and it adopts nothing**: sha 97ceae921780267b, hard 0 and
+**15 unconnected items before, hard 0 and TEN after**, `stub_router: closed 9 of 15`, and **zero NOT CLOSED**
+where the same board's own finish had four. Four of the nine were kept by the new rule, their ends having
+begun 0.062, 0.200, 0.212, 0.503 and 0.636 mm from their own copper.
+
+**What did not close is now a different kind of answer**: three FAILED for want of any path at all,
+`/CHG_ILIM`, `/CH_ACN_F` and `/CH_SRP_F`, and the last two are the charger's own filtered sense nets, which
+ANA-001 measures. A net with no path is a routing and placement item and it is the honest remainder; a net
+whose closure was found and thrown away was never one.
+
+**Board A's ladder has to be read again with this in it.** A43 15 open, A44 23, A45 26, A46 28, A47 20 before
+its closers, A48 15: every one of those numbers was taken with a closer that refused good closures on this
+board, and the only one re-measured so far moves by a third. Nothing is adopted and no board's phase moves on
+the strength of it; what it changes is what A50 should be expected to land at, and that the eleven-hour route
+is not the only thing standing between board A and a closed board.
