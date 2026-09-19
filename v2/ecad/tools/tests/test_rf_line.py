@@ -64,5 +64,10 @@ def t_the_remedy_is_declared_on_the_board_and_not_hidden_in_a_tool():
     assert "25.5 ohm" in rf[0].get("why", ""), "the declaration does not carry the measurement"
     full = open(os.path.join(TOOLS, "full.sh"), encoding="utf-8").read()
     assert "prelay_groups" in full, "no chain reads the pre-lay groups"
-    i = full.index("prelay_groups")
-    assert "STUB_LAYERS=\"$GLAYERS\"" in full[i:i + 1500], "the group's own layers do not reach the search"
+    # ASK FOR THE TWO LINES AND THEIR ORDER, never for a slice. This rule read 1,500 characters after the
+    # anchor and broke on 19 September when a paragraph about a group's own clearance was written between
+    # them, which is the same failure `test_prelay` had on 18 September and the reason `harness.block` exists.
+    i = full.index("get('prelay_groups')")
+    j = full.index('STUB_LAYERS="$GLAYERS"')
+    assert i < j, "the group's own layers do not reach the search"
+    assert full.index('read -r GNETS GLAYERS', i) < j, "the loop does not read the layers before using them"

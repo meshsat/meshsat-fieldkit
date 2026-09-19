@@ -271,6 +271,10 @@ def main(argv):
             print("rail_barrels: HURT (hard %d -> %d, unrouted %d -> %d): reverting every barrel"
                   % (h0, h, u0, u))
             shutil.copy2(bak, path); laid = []
+    # The backup is this tool's scratch and not the phase directory's business: it is removed once the board
+    # it protects is the board that stands. A `.bak` left in a project directory is the next person's question.
+    try: os.remove(bak)
+    except OSError: pass
     n_vias = sum(len(p) - r["have"] for r, p in laid)
     print("rail_barrels: %d site(s) answered with %d barrel(s), %d refused by the DRC, %d declined "
           "(hard %d -> %d, unrouted %d -> %d)"

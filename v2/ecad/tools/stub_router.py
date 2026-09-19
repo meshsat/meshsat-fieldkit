@@ -184,9 +184,17 @@ def build_maps(net):
     trk = {L: np.zeros((NY, NX), dtype=bool) for L in LAYERS}    # track-centre forbidden (inflated by the clearance + w/2)
     via = np.zeros((NY, NX), dtype=bool)                          # via-centre forbidden (inflated by the clearance + via_r on every layer)
     w2, vr = TW / 2, VIA_D / 2
-    _me = net_clr(net)
+    # A CLEARANCE FLOOR FOR THE NET BEING LAID (19 September 2026, `STUB_NET_CLEAR`, default 0 = off). Board E's
+    # ANA-001 asks 0.50 mm between a current-sense line and switching copper and the SENSE class carries the
+    # board's 0.127: a class cannot hold it (a 0.50 class clearance refuses the escape at the controller's own
+    # pins, measured on board A, 18 September) and neither can a DSN class-pair rule (Freerouting 1.9.0 laid a
+    # run 0.171 mm away with one in its DSN, 18 September 11:40). What the rule CAN have is a locked run laid
+    # to it before the router starts, which is this. It raises only the laid net's own side, so KiCad's rule
+    # that the larger of the two classes decides still holds against every obstacle.
+    _me = max(net_clr(net), float(os.environ.get("STUB_NET_CLEAR", "0") or 0))
     def clr_to(other): return max(_me, net_clr(other))   # KiCad's own rule: the larger of the two classes decides
-    print("  %s: clearance %.3f mm from its own class, and per obstacle the larger of the two" % (net, _me))
+    print("  %s: clearance %.3f mm from its own class%s, and per obstacle the larger of the two"
+          % (net, _me, " (raised by STUB_NET_CLEAR)" if _me > net_clr(net) else ""))
     for fp in b.GetFootprints():
         for p in fp.Pads():
             if p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH):   # hole to hole against drilled pads of any net

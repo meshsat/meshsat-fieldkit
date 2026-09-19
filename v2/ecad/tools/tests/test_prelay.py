@@ -70,3 +70,23 @@ def t_no_board_declares_a_pre_lay_and_c_carries_the_measurement_that_says_why():
     d = json.load(open(os.path.join(TOOLS, "boards", "c.json")))
     assert "C16 MEASURED" in d.get("_prelay_why", "") and "C15" in d.get("_prelay_why", ""), (
         "the declaration was removed without the two measurements that removed it")
+
+
+def t_a_pre_lay_group_may_ask_for_more_room_than_its_class_carries():
+    """Board E's current-sense pair is why. ANA-001 wants 0.50 mm from switching copper; the SENSE class carries
+    the board's 0.127; a 0.50 mm class clearance refuses the escape at the controller's own pins (measured on
+    board A, 18 September); and a DSN class-pair rule does not reach Freerouting (measured on E17, the same
+    day, a run laid 0.171 mm away with the rule in its DSN). A LOCKED run laid to the number before the router
+    starts is the one instrument left, so the group carries its own clearance and the stub router takes it as a
+    floor on the laid net's own side, leaving KiCad's larger-of-the-two rule intact against every obstacle."""
+    import os
+    T = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    full = open(os.path.join(T, "full.sh"), encoding="utf-8").read()
+    assert "g.get('clearance','')" in full, "a pre-lay group cannot declare a clearance"
+    assert 'STUB_NET_CLEAR="${GCLR:-0}"' in full, "the group's clearance does not reach the stub router"
+    src = open(os.path.join(T, "stub_router.py"), encoding="utf-8").read()
+    i = src.index("_me = max(net_clr(net)")
+    j = src.index("def clr_to(other)")
+    assert i < j, "the floor is applied after the comparison that uses it"
+    assert 'STUB_NET_CLEAR' in src[i:j], "the floor does not read the knob"
+    assert "max(_me, net_clr(other))" in src, "the floor replaced KiCad's larger-of-the-two rule instead of feeding it"

@@ -252,3 +252,11 @@ def t_every_verdict_names_the_rail_table_it_read_and_when_it_was_written():
     after = body[body.index("_inputs = {"):]
     assert after.count("inputs=_inputs") == 3, \
         "a verdict written after the rail table was read does not name it (%d of 3)" % after.count("inputs=_inputs")
+
+
+def t_it_leaves_no_backup_behind_in_the_project_directory():
+    """The backup exists so a hurt board can be put back; once the board that stands is chosen it is this
+    tool's scratch, and a stray `.bak` beside a phase board is the next person's question."""
+    body = SRC[SRC.index("def main(argv):"):]
+    assert "os.remove(bak)" in body, "the backup is never removed"
+    assert body.index("shutil.copy2(path, bak)") < body.index("os.remove(bak)")
