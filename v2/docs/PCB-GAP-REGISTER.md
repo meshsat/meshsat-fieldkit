@@ -132,8 +132,17 @@ outside its declared exceptions.
 ## source or applicability unresolved (10)
 
 **IMP-001 an impedance target is feasible and asked for** (BLOCKER, SOURCE_UNVERIFIED)  
-closed forms from a standard not in the tree; the 2D solver disagrees by 38 percent on the stripline case
-with one solved point; no fabricator confirmation and no coupon  
+closed forms from a standard not in the tree; no fabricator confirmation and no coupon. 19 SEPTEMBER 2026,
+THE NOTE WAS A DAY OUT OF DATE AND THE REGISTER WAS PRINTING IT AS WHAT THIS RULE WAITS ON: it said the 2D
+solver has ONE solved point, which was true when it was written and stopped being true on 18 September, when
+six cross-sections were solved in one pass (the two outer geometries boards A and B actually route, two inner
+striplines of the 3313 stack, and the two one-sided inner cross-sections board Bs router makes) and the
+solver read 0.978 of the closed form on the outer pair, the same bias the first four had measured. Board A is
+338 mm of 338 solved and board B 5,970 of 6,684. What is genuinely open is the other two clauses and neither
+is a solve: the closed forms come from a standard this tree does not hold, and the fabricators own impedance
+page carries the two stackups with NO impedance-against-width table and no tolerance, so the confirmation
+this rule asks for is a question at order time or a coupon, which is the ordering sessions or the owners and
+is written into ORDER-SESSION-PROMPT.md on 19 September beside the layer prices  
 *Close it by* solve every geometry, pin the standard, and get the fabricator's written confirmation with a coupon where the tolerance needs it. Owner **OWNER**, after STK-001. Effort P50 8h, P80 24h.
 
 **INT-002 a transformerless Ethernet link is verified at both ends** (BLOCKER, OWNER_DECISION_REQUIRED)  
