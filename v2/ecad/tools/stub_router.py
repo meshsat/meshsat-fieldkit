@@ -930,15 +930,23 @@ if closed and os.environ.get("STUB_DRC", "1") != "0" and _HARD0 is not None:
             return _drop_budget > 0 and _time.time() - _drop_t0 > _drop_budget
 
         _gave_up = False
-        if _suspect:
-            _names = [_drop(_i) for _i in sorted(_suspect, reverse=True)]
-            closed -= len(_names)
+        # ONE AT A TIME, NEWEST FIRST AMONG THE SUSPECTS, stopping the moment the bar is met. Dropping the
+        # whole suspect set together is one DRC instead of several and it OVER-DROPS: a violation usually
+        # names one or two nets, and taking every closure that answers to it throws away the innocent ones
+        # with the guilty. The budget above bounds how long this can go on.
+        for _i in sorted(_suspect, reverse=True):
+            if _gave_up or _h is None or _h <= _HARD0: break
+            if _out_of_time():
+                print("  drop-back: out of its own %.0f s budget (STUB_DROP_BUDGET_S) before the aimed drops "
+                      "were finished" % _drop_budget)
+                _gave_up = True; break
+            _net = _drop(_i); closed -= 1
             _r2 = _hard_now(); _h2, _at2 = (None, _at) if _r2 is None else _r2
-            print("  dropped %s together: hard %s -> %s%s"
-                  % (", ".join(reversed(_names)), _h, _h2,
+            print("  dropped %s (%s): hard %s -> %s%s"
+                  % (_net, _why.get(_i, "aimed"), _h, _h2,
                      "" if _h2 is None or _h2 <= _HARD0 else "; now complaining about %s" % _spots_text(_at2)))
-            if _h2 is None: _gave_up = True
-            else: _h, _at = _h2, _at2
+            if _h2 is None: _gave_up = True; break
+            _h, _at = _h2, _at2
         while not _gave_up and laid and _h is not None and _h > _HARD0:
             if _out_of_time():
                 print("  drop-back: out of its own %.0f s budget (STUB_DROP_BUDGET_S) with %d closure(s) "

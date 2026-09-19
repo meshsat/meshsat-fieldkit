@@ -229,7 +229,12 @@ def t_the_drop_back_aims_at_the_violation_before_it_walks():
     i, j = s.index("_suspect = sorted(_why)"), s.index("while not _gave_up and laid and _h is not None")
     assert i < j, "the newest-first walk runs before the aimed drop rather than as its fallback"
     assert "it stands at the violation" in s, "an aimed drop does not say that it was aimed"
-    assert "dropped %s together" in s, "the suspects are not dropped together, so one culprit costs many DRCs"
+    # 19 September 2026: they go ONE AT A TIME now, newest first among the suspects, stopping the moment
+    # the bar is met. Dropping the whole suspect set together is one DRC instead of several and it
+    # OVER-DROPS: a violation usually names one or two nets, and taking every closure that answers to it
+    # throws away the innocent with the guilty.
+    assert '_why.get(_i, "aimed")' in s, "an aimed drop does not say which suspect it took"
+    assert "dropped %s together" not in s, "the suspects are still dropped as a group, which over-drops"
 
 
 def t_the_refill_the_drop_back_needs_runs_in_its_own_process():
