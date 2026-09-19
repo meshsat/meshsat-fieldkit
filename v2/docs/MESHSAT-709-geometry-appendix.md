@@ -10632,3 +10632,57 @@ GROUND returns through one 0.30 mm barrel at U25, U103 and U303. Those are not t
 IS the path from that pad to the plane, and a part's share is split across the ground pads it takes it on before
 the count is asked. Nothing was laid on any of the three: all three boards are routing, and a placement that
 changes under its own route makes that route a route of a superseded design.
+
+**Addendum, 04:15 CEST (19 September): the pre-lay costs board E seven connections, E19 is refused on its own
+evidence, and the set's barrel work list is complete on all six boards.**
+
+**The pre-lay, seventh measurement and the most expensive yet.** E19 is board E's PI-003 arm (two CELL_F
+barrels beside the fuse crossing, eight 0.7 mm barrels in the dock block) and it routed **hard 0 with ONE open
+of 94**. E20 is E19 with `/LTG_IRQ` and `/+3V3_E6` pre-laid and nothing else, and it routed **hard 0 with
+EIGHT**; its second round came back hard 10 with six shorting items and was skipped, round 1 restored. So two
+pre-laid nets cost board E **seven** connections, against board D's two for two nets and board A's ten for
+four. Every arm of this rule now points the same way: pre-laid copper is copper the router must route around,
+and it pays only where it closes a gap no closure can reach.
+
+| board | pre-laid | at the router | cost |
+|---|---|---:|---:|
+| D17 | one net, 3 pairs | 2 | baseline |
+| D18 | three nets, 5 pairs | 4 | **+2** |
+| A42 -> A40 | four nets | 15 -> 25 | **+10** |
+| **E19 -> E20** | **two nets** | **1 -> 8** | **+7** |
+
+**E19 is not adoptable and the open connection is not why.** Its landing readings on the frozen best board:
+`sensitive_nodes` FAIL **2 of 3** where E18's round 1 read PASS 3 of 3, and `via_current` FAIL with **two**
+barrels still over their wall. ANA-001's clearance scatters between rounds because nothing Freerouting obeys
+holds a sense line away from switching copper, which is the 18 September finding restated by a second board.
+**E17 stays board E's phase.**
+
+**Board E's PI-003 answer is two coordinates and the two instruments agree on the rails.** The solved mesh on
+E19 names `CELL_F` at (37.05, 214.11), 1.078 A against 1.051 for a 0.50 mm barrel (ratio 1.03), with F3 pad 2
+three millimetres away and nothing else within six, and `VIN_RAW` at (73.11, 183.39), 0.769 A against 0.652 for
+a 0.25 mm barrel (ratio 1.18), 2.60 mm from J_BLK pad 4. The pre-route arithmetic on E20's own placement names
+the same two rails at their source pads, `VIN_RAW` at J_BLK pads 1 and 4 one barrel short apiece. From E21 the
+chain lays them.
+
+**The set's work list, with C and P measured on placements regenerated for the purpose** (their committed
+snapshot and the intent beside it are eleven hours and a day of generator changes apart, and a rail table from
+another run describes another board's rails, so each was regenerated at its declared phase with today's tools
+and read with its own intent, written the same minute):
+
+| board | crossings judged | short | answerable beside the pad | declined as a busbar |
+|---|---:|---:|---:|---:|
+| A (A48) | 19 | 8 | 7 | 1 |
+| B (B23) | 231 | 5 | 5 | 0 |
+| **C (C24)** | **8** | **0** | | |
+| D (D17 and D18) | 6 | 1 | 1 | 0 |
+| E (E20) | 15 | 4 | 2 | 2 |
+| P (P4) | 9 | 7 | 5 | 2 |
+
+**And board P shows where this question stops being the right one.** Its two declined sites are `CELL4` at
+W_BP pad 1 and `PACK_P` at W_P pad 1, the 12 AWG solder wire lands, asked for eighteen and twenty-five barrels
+because the tool attributes the WHOLE declared rail current to a crossing at the source pad. Board P is two
+layers at 2 oz and its pack current largely does not cross: `via_current` on P's routed board reads FUSED at
+1.66 and PACK_P at 1.87 times their rating, not eighteen amps through one barrel. **The pre-route reading is an
+upper bound at a source pad**; the cap refuses to draw a busbar there, and the solved mesh decides those two. A
+declined site is a question, not a finding, and that is the caveat that travels with every number in the table
+above. Board P's other five agree with the solved reading exactly, which is the case for asking early.
