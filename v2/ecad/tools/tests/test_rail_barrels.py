@@ -181,6 +181,15 @@ def t_it_reports_before_it_lays():
     assert 0 < i < j, "the dry-run return does not come before the first save"
 
 
+def t_a_refused_site_names_the_counterparty_and_not_only_the_type():
+    """`escape_prune` printed a pad list until 8 September and the placement could not be corrected from it.
+    A type on its own ("clearance") is the same shape: the DRC's description names both items of the pair."""
+    assert 'v_.get("description")' in SRC, "the refusal carries no description"
+    i = SRC.find("that site is reverted")
+    j = SRC.find('print("rail_barrels:     %s" % why)')
+    assert 0 < i < j, "the description is not printed with the refusal"
+
+
 def t_a_site_the_drc_refuses_is_reverted_alone_before_the_whole_set_is():
     """The keep-what-the-DRC-accepts shape of `stub_accept` and `direct_close`, not all or nothing first."""
     assert "that site is reverted" in SRC

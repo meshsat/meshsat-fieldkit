@@ -209,20 +209,25 @@ def main(argv):
     if h > h0 or u > u0:
         hits = _vp._hit_positions(d)
         keep = []
+        # A GATE THAT STRIPS COPPER MUST NAME WHAT IT HIT, and the TYPE alone is not that (8 September 2026,
+        # `escape_prune`, which printed a pad list until the placement could not be corrected from it). The
+        # DRC's own description names both items of the pair, which is the counterparty, so it travels here.
         types = {}
         for v_ in d.get("violations", []):
             if v_.get("type") not in hardset.HARD_POST: continue
             for i_ in v_.get("items", []):
                 p_ = i_.get("pos") or {}
-                if "x" in p_ and "y" in p_: types.setdefault((float(p_["x"]), float(p_["y"])), set()).add(v_["type"])
+                if "x" in p_ and "y" in p_:
+                    types.setdefault((float(p_["x"]), float(p_["y"])), []).append(
+                        (v_["type"], " ".join((v_.get("description") or "").split())[:160]))
         for r, pts in laid:
             hit = [t for px, py in pts for (hx, hy), ts in types.items()
                    if math.hypot(px - hx, py - hy) < 1.0 for t in ts]
             if hit:
-                # A GATE THAT STRIPS COPPER MUST NAME WHAT IT HIT (8 September 2026, `escape_prune`): a site
-                # reverted with no reason is a site nobody can answer.
                 print("rail_barrels: the DRC refuses %s at %s pad %s (%s): that site is reverted"
-                      % (r["net"], r["ref"], r["pad"], ", ".join(sorted(set(hit)))))
+                      % (r["net"], r["ref"], r["pad"], ", ".join(sorted({t for t, _ in hit}))))
+                for why in sorted({w for _, w in hit})[:2]:
+                    print("rail_barrels:     %s" % why)
                 continue
             keep.append((r, pts))
         shutil.copy2(bak, path)
