@@ -10776,3 +10776,32 @@ lands rather than in a fixer's output.
 The method note is worth more than the change. The 18 September RET-002 repair was accepted because re-taking
 it moved no board's state; this one was refused because re-taking it moved three. **The re-take is the test, not
 the mutation suite**: every rule of the widened version passed, including two written specifically for it.
+
+**Addendum, 05:20 CEST (19 September): ANA-001 is a routing-discipline rule on every board that declares it,
+and the placements already pass.** Asked of every live placed board, read-only:
+
+| board | placement reads | tightest | what the ROUTE of the same design reads |
+|---|---|---|---|
+| A (A48) | **PASS of 24**, 0 fail, 19 measured | 0.850 mm at the five `*_CSF` against 0.50 asked | A32 reads FAIL 15 of 24, and four of those nets do not exist on A32 |
+| E (E20) | **PASS of 3** | `TRK_CSP` 6.179 mm, `TRK_CSN` 6.507 | the routed board reads **0.153 and 0.242** |
+| E (E21) | **PASS of 3**, both sides pinned | `TRK_CSN` 0.500, `TRK_CSP` 0.518 | routing |
+| B, C | the rule does not apply: neither declares a sensitive list | | |
+| P | seven declared, **nothing measured** | | see below |
+
+**Board E20 is the measurement that settles the argument**: the same design reads 6.179 mm between a
+current-sense line and a switching node on the placed board and **0.153 mm after the router has been over it**.
+Six millimetres of margin, spent by a router that has no instrument telling it not to. Board A is the same
+shape with 0.850 mm of margin and fifteen failures on its committed board. **So ANA-001 is not twenty-four
+placement problems on board A and three on board E: it is one routing-discipline problem, and the only
+instrument that has ever held it is copper the router cannot move.** E21 is that instrument's first real test
+and its placement reads 0.500 and 0.518, at the limit by construction rather than by luck.
+
+**And board P read PASS of seven with nothing measured.** It declares seven sensitive nodes and
+`switch_nets: []`, so there was no switching copper to measure against and the verdict passed anyway: STK-001's
+"PASS on a denominator of zero" of 18 September in another place, against this project's own law that an
+undeclared zero is INCONCLUSIVE. It may well be true that board P has no switching net (its only FETs are the
+pack protection pair, not a converter) and **saying so is one line**: `switch_nets_why` beside the empty list
+makes it a declared zero and a PASS with its reason, and its absence now makes the verdict INCONCLUSIVE naming
+what it could not measure. The question is asked of the DECLARATION, before the copper, so the rules about it
+run where KiCad is not. Board P's next phase owes that line or a switch list; until then its ANA-001 reading is
+honest about having looked at nothing.
