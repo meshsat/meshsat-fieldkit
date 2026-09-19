@@ -309,7 +309,15 @@ coverage:
      layers, decision 27 for four against six; D four layers on the RF ground-plane reason; E the routing half and
      In1; P 43, 45 and 47 opens at two layers against 0 and 0 at four at the fabricator's own floor, decision 28;
      E5 two layers with nothing inner to weigh. The runner never logs into JLCPCB, so the price comes from the
-     ordering session and from nowhere else", owner: OWNER, execution: OWNER, depends_on: [], p50_h: 2, p80_h: 72}}
+     ordering session and from nowhere else. 19 SEPTEMBER 2026, THE TASK IS WRITTEN WHERE THAT SESSION WILL
+     READ IT: v2/docs/ORDER-SESSION-PROMPT.md carries a section asking for the PCB-only price at quantity 5
+     for each of the seven boards at its own size, thickness, copper weight, finish and mask, TWICE, once at
+     the count it is built at and once at the count below it (and for P and E5 the other direction, because
+     decision 28 asks what four layers cost), with a count the form does not offer written down as an answer
+     too. It is a quote and not an order: nothing is uploaded, no cart line is touched, nothing is paid. The
+     figures land in a LAYER PRICES section of ORDER-LOG.md, and seven BLOCKER pairs of 333 turn on them,
+     which is more than any single engineering item on the set", owner: OWNER, execution: OWNER,
+     depends_on: [], p50_h: 2, p80_h: 72}}
 
  RET-001: {implementation: "signal_class.py plus each board's signal_classes table, judged by intent_checks.py",
    _shared_verdict_why: "SHARED WITH RET-002 (18 September 2026). One pass over the routed board produces both: the
