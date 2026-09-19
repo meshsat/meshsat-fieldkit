@@ -12,7 +12,7 @@
   "board": "p",
   "list": "pcb_sensitive.yaml"
  },
- "missing_input": "the switching copper to measure against: this board declares 7 sensitive node(s) and an EMPTY switch_nets with no switch_nets_why beside it",
+ "missing_input": null,
  "note": "every sensitive node declared with its filter and its Kelvin partner where the measurement is a difference, and, where pcbnew is present, the real distance from each one to the nearest switching copper measured on the routed board and reported beside the clearance the board asks for. The clearances are this project's own",
  "policy": {
   "hard_types": 15,
@@ -27,9 +27,9 @@
  "tool": "sensitive_nodes",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "270df10525e22c89"
+  "tools_tree_sha": "ee08327049db3b40"
  },
- "ts": "2026-09-19T02:58:53Z",
- "verdict": "INCONCLUSIVE",
+ "ts": "2026-09-19T08:14:27Z",
+ "verdict": "PASS",
  "version": "unknown"
 }
