@@ -10853,3 +10853,32 @@ remains board E's phase** until a round closes with ANA-001 still passing. The f
 with 0.850 mm to spare while its committed board reads FAIL 15 of 24, so A49's arm is the five `*_CSF` and
 their five `*_SW2` partners, written into `boards/a.json` with its cost caveat: A40's four pre-laid nets cost
 board A ten connections, and ten nets is more than four.
+
+**Addendum, 06:10 CEST (19 September): what the 43 failures are, read one board at a time.** The readiness line
+says 63.1 percent verified, 12.9 failed, 24.0 inconclusive of 333. The failures were grouped by rule and then
+each board's own list was opened and classified. **Not one of them is an engineering item this session can
+close on its own**, and that is the honest shape of the critical path rather than a claim that the work is
+done.
+
+| kind | roughly | examples, each checked on the board itself |
+|---|---:|---|
+| the SET's order paperwork | 7 | OUT-001 on all seven, behind the folders, behind decisions 31 and 37 |
+| a board behind its own generator, answered by a route in flight | ~14 | board A's SCH-002, PI-003, ANA-001 and RF-001 are all measurements of A32, five phases old; board B's SCH-002 is ONE pin of 6,752 comparisons and B23 already carries the fix; its PWR-003 is answered in B23's project file |
+| an owner decision by name | ~18 | TRN-001 (31) on three boards, RET-004 (32) on five, RET-002 (39) on three, PI-001 (35) on two, INT-001 (36) on two, RTE-001 (28) on P, BAT-001 (40) on P |
+| one line blocked by a folder | 2 | STK-001 on P and E5: `epsilon_r` 4.6 where the record says 4.5, one line, and the folder holds the board byte for byte |
+| a generator answer waiting on a re-cut | 1 | DOC-002 on E5: `make_handoff.py` has written the provenance block since 12 September |
+
+**Four of these were checked individually tonight rather than inferred, and each turned out to be smaller than
+its verdict looked.** Board B's single SCH-002 failure is `U10.7 is on net GND in the netlist and has no net on
+the board`: the TMP117 pin of rule SCH-005, whose netlist was regenerated at B21 and whose BOARD was routed for
+forty hours before the fix existed. Read on both boards today, B21's U10 pin 7 carries no net and B23's carries
+GND. Board B's PWR-003 polyfuse is answered by a PANEL class at 0.8 mm with `PANEL_5V` assigned in both
+spellings. Board P's BAT-001 is nine protection functions on one firmware-configured device with no second
+protector and no chemical fuse, which is decision 40 in the owner's own file. And board A's ANA-001 reads PASS
+of 24 on its own placement.
+
+**Board C is what "as ready as this session can make it" looks like.** Thirty-five of its forty-seven pairs
+verified, and every one of the twelve open is an owner decision (four), an authority this project does not have
+(three: RET-001, RET-003, SI-001), the assembler's own 2D preview (DFA-001), the set's paperwork (OUT-001), or
+a criterion the owner has yet to rule (RET-002 at decision 39, RET-004 at 32). Nothing on board C waits on a
+route or a tool.
