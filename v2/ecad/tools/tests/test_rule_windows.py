@@ -93,7 +93,8 @@ def t_a_generated_document_whose_inputs_are_absent_is_not_rewritten_empty():
 
 
 # The unguarded reads of a flag's value on the tree this rule was written against, 18 September 2026.
-FLAG_READS = 63   # 71 until 19 September 2026: hardset.py first, then dc_drop and place_audit. hardset is
+FLAG_READS = 40   # 71 until 19 September 2026: hardset first, then dc_drop, place_audit, rules_eta,
+                  # pair_report, impedance_2d, silk_space, place_jitter, via_parallel and pair_preroute. hardset is
                   # the instrument every board gate and every guard reads its counts from, and `--score`
                   # with nothing after it raised IndexError inside it; the other two are read by every
                   # finish. The number only ever comes down.

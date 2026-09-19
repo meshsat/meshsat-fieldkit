@@ -18,6 +18,7 @@ turns it off and restores the plain greedy pass; PAIR_RIP_MARGIN, PAIR_RIP_MAX a
 Usage: pair_preroute.py <board.kicad_pcb> [--pairs STEM,STEM] [--layers F.Cu,In2.Cu] [--classes USB,DIFF100] [--test] [--grid 0.1]
   prints one line per pair and `pair_preroute: N of M pairs laid, R rip-up event(s)`, exit 1 when a pair failed."""
 import sys, os, re, math, json, heapq, time, collections
+import verdict          # the guarded flag reader (19 September 2026)
 import netclass
 
 # ---------------------------------------------------------------- the compiled search needs an interpreter that has numba
@@ -68,7 +69,7 @@ def _echo_knobs():
 def main(a):
     if not a: print(__doc__); return 2
     _echo_knobs()
-    board = a[0]; test = "--test" in a; g = float(a[a.index("--grid") + 1]) if "--grid" in a else 0.1
+    board = a[0]; test = "--test" in a; g = float(verdict.opt(a, "--grid", 0.1))
     # The pair classes live in the PROJECT file, not the board. A board without one, or with one that carries no
     # netclass assignments, has no pairs by construction, and this tool then printed "0 of 0 pairs laid" and exited 0.
     # A pre-router that finds no pairs and reports success is the exact shape this pipeline spent two days removing,
@@ -103,18 +104,18 @@ def main(a):
         for _n in {t.GetNetname() for t in b.GetTracks()} | {p.GetNetname() for f_ in b.GetFootprints() for p in f_.Pads()}:
             _cl = classes.get(cls_of(_n), {})
             if "clearance" in _cl: _NET_CLR[_n[1:] if _n.startswith("/") else _n] = float(_cl["clearance"])
-    want_classes = set(a[a.index("--classes") + 1].split(",")) if "--classes" in a else {"USB", "DIFF100", "PCIE", "HDMI"}
-    layers = [_ALL[x] for x in (a[a.index("--layers") + 1].split(",") if "--layers" in a else os.environ.get("PAIR_LAYERS", "F.Cu,B.Cu").split(",")) if x in _ALL]
+    want_classes = (set(str(verdict.opt(a, "--classes", "")).split(",")) - {""}) if "--classes" in a else {"USB", "DIFF100", "PCIE", "HDMI"}
+    layers = [_ALL[x] for x in (str(verdict.opt(a, "--layers", "")).split(",") if "--layers" in a else os.environ.get("PAIR_LAYERS", "F.Cu,B.Cu").split(",")) if x in _ALL]
     # the hop layers carry only the dives and the stubs' hops, never a corridor run: on the 7628 four-layer stack a 0.30/0.20 pair on In2 reads 137 ohm
     # against In1 across the 1.065 mm core (D9's USB_D8 took 42 mm of In2 in its corridor, 8 Sep 2026 14:44); the class geometry holds on the corridor layers only
-    hops = [_ALL[x] for x in (a[a.index("--hop-layers") + 1].split(",") if "--hop-layers" in a else os.environ.get("PAIR_HOP_LAYERS", "").split(",")) if x in _ALL and _ALL[x] not in layers]
+    hops = [_ALL[x] for x in (str(verdict.opt(a, "--hop-layers", "")).split(",") if "--hop-layers" in a else os.environ.get("PAIR_HOP_LAYERS", "").split(",")) if x in _ALL and _ALL[x] not in layers]
     maplayers = layers + hops
     def hop_of(L): return next((L2 for L2 in hops + layers if L2 != L), None)   # a hop layer first, else another corridor layer
     names = {str(n): n for n in b.GetNetInfo().NetsByName().keys()}
     stems = sorted({n[:-2] for n in names if n.endswith("_P") and n[:-2] + "_N" in names})
     suffixed = sorted({n[:-3] for n in names if n.endswith("_PR") and n[:-3] + "_NR" in names})   # USB1_PR / USB1_NR (the codec side of D9's port 1): P and N with a suffix
     pair_names = {st: (st + "_P", st + "_N") for st in stems}; pair_names.update({st + "_R": (st + "_PR", st + "_NR") for st in suffixed}); stems = stems + [st + "_R" for st in suffixed]
-    if "--pairs" in a: stems = [s for s in stems if s.lstrip("/") in set(a[a.index("--pairs") + 1].split(","))]
+    if "--pairs" in a: stems = [s for s in stems if s.lstrip("/") in set(str(verdict.opt(a, "--pairs", "")).split(","))]
     stems = [s for s in stems if cls_of(pair_names.get(s, (s + "_P", s + "_N"))[0]) in want_classes]
     # The long pairs go first (9 September 2026). This tool lays greedily and never rips up, so whichever pair is laid first takes the room
     # and the rest fit around it; alphabetical order decided that, which is no order at all. The span of a pair's own pads is a cheap proxy

@@ -20,10 +20,11 @@ only a log holds, so the profile becomes a file with counts and a denominator, l
 
 Usage: pair_report.py <pair.log> [--top N] [--json out.json]"""
 import sys, re, json, collections
+import verdict          # the guarded flag reader (19 September 2026)
 
 def main(a):
     if not a: print(__doc__); return 2
-    top = int(a[a.index("--top") + 1]) if "--top" in a else 12
+    top = int(verdict.opt(a, "--top", 12))
     txt = open(a[0], errors="replace").read().splitlines()
     laid = [l for l in txt if "LAID  " in l]
     fail = [l for l in txt if "FAIL  " in l]
@@ -72,8 +73,9 @@ def main(a):
                 "by_reason": dict(reasons.most_common(top)),
                 "by_part": dict(parts.most_common(top)),
                 "by_pair": dict(stems.most_common(top))}
-        with open(a[a.index("--json") + 1], "w") as fh: json.dump(prof, fh, indent=1, sort_keys=True)
-        print("pair_report: profile written to %s" % a[a.index("--json") + 1])
+        _jp = str(verdict.opt(a, "--json", "pair_report.json"))
+        with open(_jp, "w") as fh: json.dump(prof, fh, indent=1, sort_keys=True)
+        print("pair_report: profile written to %s" % _jp)
     return 0
 
 if __name__ == "__main__": sys.exit(main(sys.argv[1:]))

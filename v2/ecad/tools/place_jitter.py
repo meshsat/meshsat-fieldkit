@@ -7,13 +7,14 @@ then labels it. The pre-route hash of each sample is its identity in the journal
 
 Usage: place_jitter.py <board.kicad_pcb> <seed> [--dx 1.0] [--swap 15] [--p-swap 0.3] [--fixed REF,REF]   -> writes the board in place, prints the moves."""
 import sys, os, random, re, pcbnew
+import verdict          # the guarded flag reader (19 September 2026)
 
 def main(a):
     if len(a) < 2: print(__doc__); return 2
     b = pcbnew.LoadBoard(a[0]); seed = int(a[1]); rnd = random.Random(seed)
-    dx = float(a[a.index("--dx") + 1]) if "--dx" in a else 0.4; swap = float(a[a.index("--swap") + 1]) if "--swap" in a else 15.0
-    ps = float(a[a.index("--p-swap") + 1]) if "--p-swap" in a else 0.3
-    fixed = set(a[a.index("--fixed") + 1].split(",")) if "--fixed" in a else set()
+    dx = float(verdict.opt(a, "--dx", 0.4)); swap = float(verdict.opt(a, "--swap", 15.0))
+    ps = float(verdict.opt(a, "--p-swap", 0.3))
+    fixed = set(str(verdict.opt(a, "--fixed", "")).split(",")) - {""}
     # only the shelf-packed passives move (C, R, L, D, FB, Q): the board gates check the ICs' and connectors' positions to 0.6 mm, so a moved U or J is refused before it is routed (first campaign, 8 Sep 2026: 20 of 20 D8 samples refused at 1 mm on every part)
     fps = [f for f in b.GetFootprints() if not f.IsLocked() and f.GetReference() not in fixed and re.match(r"^(C|R|L|D|FB|Q)\d", f.GetReference())]
     moved = 0
