@@ -12090,3 +12090,48 @@ either 0.05 finds fewer paths than 0.1, or 0.05 is simply slower and the hour en
 nets were ever offered. The second is what the evidence points at, and **the map cache's A/B on this exact
 board at this exact configuration separates them**: all fifteen offered and eight or more closed means the
 grid was never the problem.
+
+**Addendum, 00:20 CEST (20 September), A 6 A CONDUCTOR NOBODY HAD EVER LOOKED AT, AND A CURRENT SENSE WHOSE
+ERROR THE ROUTER SETS (commits aebbb0e4, 5da7f5c6, 096a46c7).**
+
+**(1) The charger's input-sense error is 2.0 percent on one phase and 45.6 percent on the next.** One
+declaration, one tool, two frozen boards of the same design: A47 round 1 (sha d15e230498e0c0fd) reads
+**1.170 mV between R16 pad 1 and R147 pad 1, 2.0 percent of the 60 mV full scale**; A48 (sha
+97ceae921780267b) reads **27.369 mV, 45.6 percent**. Twenty-three times, on two routes of one placement.
+**So the error is not a property of the design, it is a property of what the ROUTER did with a tap that sits
+on a pour**, which is worse than a large error: it is an UNBOUNDED one that changes every time the board is
+routed, so no number measured on one round says anything about the next. At the 8 A the BQ25731's input
+limit is set to, 45.6 percent is 3.6 A of error in the limit that protects a PoE source. **The authority is
+TI's own layout table and it is in this tree** (`v2/vendor/ti/bq25731-datasheet.pdf`, layout guidelines,
+item 7, RAC and RSR): *"Use Kelvin-sensing technique for RAC and RSR current sense resistors. Connect the
+current sense traces to the center of the pads, and run current sense traces as differential pairs."* It
+binds both shunts and both sides of each, where this board has a Kelvin tap on neither. The filter stays at
+the pins where the BQ25731's pin table puts it: the tap and the filter position are different requirements
+and both are satisfiable.
+
+**(2) And asking the low side found the real defect. `CH_ACN` was declared a NODE, so nothing solved it.**
+`intent.node()` says in its own first line that it describes a net that is NOT a rail; CH_ACN has a voltage,
+a current, a source and a load, and carries the charger's whole 6.0 A from R16's far pad to the high-side
+FET and the three input capacitors. Declared as a node, **`dc_drop` solved no potential on it at all**, so a
+6 A conductor on board A was judged by neither PI-001 nor PI-002 and the low-side Kelvin reading was
+unaskable. Measured on A48's frozen board with that ONE variable changed: **6.0 A over 605 nodes, worst drop
+476 mV, 2.38 percent of 20 V against a 2 percent bar, MISSED, and the worst conductor is 0.500 mm wide on
+In2.Cu, 7.9 mm long, carrying 4.81 A against IPC's 0.40 A for its own cross-section.** Twelve times its
+rating on an inner 0.5 oz track. **VBUS20 is the same shape on the other side of the shunt**: it meets the
+drop at 27 mV (0.14 percent) and misses the DENSITY on a 0.500 mm In2.Cu conductor carrying 6.9 A. So the
+router put both halves of this 6 A bus through half-millimetre inner tracks, and **that is board A's real
+power-integrity item, larger than the barrel counts**: the barrels are the layer transitions and this is the
+copper between them. With the mesh solving it, the low-side Kelvin reads **475.207 mV, 792 percent of full
+scale**, so the two findings are one: the charger's input bus has no copper of its own. The next generation
+owes CH_ACN an island and a band with their own stitch, the way every other rail on this board has one.
+**Readiness will go DOWN when board A's dc_drop is re-taken and it will be true**: PI-002 reads PASS today
+because nothing was looking at this net.
+
+**(3) The six intent declarations were never committed.** `out/<stem>-intent.json` is what every one of those
+gates reads, `out/` is gitignored, and a fresh clone of this repo had six netlists, six provenance sidecars
+and NO declaration: every gate would declare its input absent there and `PCB-BRING-UP.md` renders as six
+empty sections. Sixty-eight kilobytes, force-added for the same reason the sidecars were on 17 September,
+with a rule holding them there. **It was found because the suite tree was cleaned properly for the first
+time**: the stager rsynced into a directory it never emptied, so each run answered partly from the previous
+run's own output, and with the index built from exactly the staged list and everything else cleaned away,
+the tree finally said what a fresh clone says.
