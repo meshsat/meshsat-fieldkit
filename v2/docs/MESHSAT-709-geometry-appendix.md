@@ -11914,3 +11914,33 @@ the probe's settings reach 10, so board A's real closing stage is stronger than 
 ladder's six arms are the comparison BETWEEN arms and are not the finish's own number for any of them. **Fifth
 mis-specified measurement of the day, and the reason each was caught is the same: ask what the production path
 actually passes before believing a probe that reproduces its shape.**
+
+**Addendum, 22:25 CEST (19 September), THE PRE-LAY'S OWN EVIDENCE WAS OVERWRITING ITSELF GROUP BY GROUP, AND
+E23's "ALL SIX PINNED" IS NOT SUPPORTED BY ITS OWN TREE.** The per-group pre-lay landed today (each group its
+own tag, its own log, its own guard label) and the trees staged before it carry the older loop, which runs once
+per group but writes every one of them to the same `out/<N>-prelay-group.log` under the same guard label
+`prelay-group`. Each group therefore overwrites the one before it, and routeflow's line for that stage reads
+`0 generator logs saved`, so the chain's own per-group echo is gone too.
+
+**On E23 the only surviving pre-lay output is the LAST group's**: `unconnected pairs: 4`, `closed /TRK_CSN`
+twice, `closed /TRK_CSP` twice, `stub_router: closed 4 of 4`, which is the sense pair. There is no log and no
+verdict for group 1 (`SHORE_INHIBIT`) or group 2 (the six switching nets). **What they laid is unknown and
+cannot be recovered.** The ANA-001 readings are unaffected, because they are measurements of real boards; what
+does not survive is the sentence built on them, that pinning all six holds the rule on the placement it was
+laid for. **Without that premise the scatter is the simpler thing it always looked like:** the switching copper
+is the router's, so ANA-001 moves between rounds as it did in E18, E19 and E20 before any pinning.
+
+**A weaker reading, with its caveat, because it is what sent the question back to the logs:** on E23's landed
+round-2 board `TRK_LSENSE` carries ZERO locked pieces of 27, `TRK_SW2` 7 of 37 and `TRK_SW1` 8 of 50, while
+`TRK_CSP` carries 2 of 25 and `TRK_CSN` 2 of 22 **although the pre-lay laid 102 tracks on those two**. So the
+lock flag does not survive the route and re-import faithfully and a locked-piece count is NOT a measurement of
+what was pinned.
+
+**The same check on board A came out the other way, which is the argument for the fix.** A50's tree carries the
+per-group logs and all three survive: group 1, the eleven blind-mate RF drops, `unconnected pairs: 0` and
+`closed 0 of 0 (nothing to close, the board is untouched)`, which is right because the generator already lays
+those drops as locked runs; group 2, the five `*_SW2` switching nets, **`closed 20 of 20`**; group 3, the five
+`*_CSF` sense nets, `closed 9 of 10` with `/POE_CSF` pad to via refused. **A49's tree carries the old loop**,
+so only its sense group survives at `closed 9 of 10`, the same number A50 got. **So the two A arms differ in
+the switching group alone**, which is a cleaner comparison than the record had, and every arm from here must be
+launched from a tree that carries the per-group pre-lay or its evidence goes the way E23's did.
