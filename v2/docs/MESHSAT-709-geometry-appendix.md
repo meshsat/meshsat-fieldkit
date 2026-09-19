@@ -12136,7 +12136,7 @@ time**: the stager rsynced into a directory it never emptied, so each run answer
 run's own output, and with the index built from exactly the staged list and everything else cleaned away,
 the tree finally said what a fresh clone says.
 
-**Addendum, 00:30 CEST (20 September), AND IT IS NOT ONE NET: SIXTEEN DC CONDUCTORS ACROSS THREE BOARDS ARE
+**Addendum, 00:25 CEST (20 September), AND IT IS NOT ONE NET: SIXTEEN DC CONDUCTORS ACROSS THREE BOARDS ARE
 JUDGED BY NEITHER POWER RULE, AND SEVERAL CARRY TEN AMPS OR MORE.**
 
 CH_ACN was found by asking one question of one net. Asking it of every board's own declaration gives the
