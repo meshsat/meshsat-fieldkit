@@ -279,7 +279,13 @@ if _osx.environ.get("PLACE_CELLF_VIAS", "1") not in ("0", ""):
     # the count comes from the current, not from a hand count: cluster() asks via_current what 1.091 A needs at
     # 0.5 mm (two barrels of 1.05 A) and places them centred on the transition, so the router's own via there
     # keeps its copper and the spread is along x, which barrel_sites reports as the clear direction.
-    _cf = _pcmod.PowerCopper(board, net_for, P).cluster("CELL_F", (-113.4, -104.11), amps=1.091, drill=0.5, width=0.9, axis="x")
+    # 19 September 2026, MEASURED ON E21's ROUTED BOARD and corrected here: `amps=1.091` was E18's WORST
+    # BARREL, used as the SITE's total, which is the attribution mistake of 16 September in a new place. The
+    # solved mesh on E21 puts 1.198 A and 0.611 A through the two barrels this call placed, so the site passes
+    # 1.809 A and shares it about two to one (skew 1.325 against an even split). Sized on those two numbers the
+    # count is THREE, and `cluster(skew=)` is where the second one goes; `boards/e.json`
+    # `_cellf_cluster_measured` carries the reading and states the model's assumption.
+    _cf = _pcmod.PowerCopper(board, net_for, P).cluster("CELL_F", (-113.4, -104.11), amps=1.809, skew=1.325, drill=0.5, width=0.9, axis="x")
     print("power copper: %d CELL_F barrel(s) at the fuse transition that reads 1.48 of its rating on E18" % len(_cf))
 
 # ---------------------------------------------------------------- the hot-swap output, in locked copper (E14, 18 September 2026)
