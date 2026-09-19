@@ -41,9 +41,12 @@ DECISION_UNCLAIMED = "DECISION_UNCLAIMED"
 NO_INSTRUMENT = "NO_INSTRUMENT"
 MISSING_INPUT = "MISSING_INPUT"
 MEASURED_FAILURE = "MEASURED_FAILURE"
+VENDOR_WAIT = "VENDOR_WAIT"
+OWNER_WORK = "OWNER_WORK"
 NOT_JUDGED = "NOT_JUDGED"
 
-ORDER = (DECISION, DECISION_UNCLAIMED, AUTHORITY, NO_INSTRUMENT, MISSING_INPUT, MEASURED_FAILURE, NOT_JUDGED)
+ORDER = (DECISION, DECISION_UNCLAIMED, AUTHORITY, NO_INSTRUMENT, MISSING_INPUT, MEASURED_FAILURE,
+         VENDOR_WAIT, OWNER_WORK, NOT_JUDGED)
 
 # A decision that has been ruled or closed claims nothing: its blocks map is history. Only these count.
 OPEN_STATUS = ("open", "asked", "reopened")
@@ -55,6 +58,8 @@ HEADLINE = {
     NO_INSTRUMENT: "nothing verifies it",
     MISSING_INPUT: "an input the reading declared absent",
     MEASURED_FAILURE: "the tool looked and the board failed",
+    VENDOR_WAIT: "a fabricator or a standards body, and nobody here",
+    OWNER_WORK: "work only the owner or the ordering session can do",
     NOT_JUDGED: "not judged, for the reason the reading gives",
 }
 
@@ -74,6 +79,23 @@ def decisions(path=None):
     return out
 
 
+def executions(cov=None):
+    """{rule: who EXECUTES its remediation}, from the coverage map (19 September 2026).
+
+    The ladder above answers from the registry's maturity and the verdict's own fields, and it left two kinds
+    of pair in the "not judged" bucket that are not unattributed at all: VIA-002 on board P waits on the
+    fabricator publishing its annular rows at 2 oz, and DFA-001 on every board waits on the assembler's own
+    2D preview, which lives behind a login this repo forbids the runner to use. Both are recorded in the
+    coverage map already, as `remediation.execution`, and the ETA has been reading them for days. A register
+    whose job is to say what is REACHABLE must say that neither is."""
+    import rules_status as S
+    cov = cov if cov is not None else S.coverage()
+    out = {}
+    for rid, e in (cov or {}).items():
+        out[rid] = ((e or {}).get("remediation") or {}).get("execution")
+    return out
+
+
 def _missing_input(row):
     """What the deciding verdict said it was missing, or None. The row carries the verdict's path as evidence."""
     p = row.get("evidence")
@@ -87,7 +109,7 @@ def _missing_input(row):
     return str(mi)
 
 
-def classify(row, letter, claims):
+def classify(row, letter, claims, execs=None):
     """One open pair. Returns {category, detail, measured}; a PASS or NOT_APPLICABLE row returns None."""
     if row.get("result") not in ("FAIL", "INCONCLUSIVE"): return None
     rid = row.get("rule"); maturity = row.get("maturity")
@@ -107,6 +129,11 @@ def classify(row, letter, claims):
         return dict(category=MISSING_INPUT, detail=mi, measured=False, decision=None)
     if measured:
         return dict(category=MEASURED_FAILURE, detail=row.get("why", ""), measured=True, decision=None)
+    ex = (execs or {}).get(rid)
+    if ex == "VENDOR_OR_STANDARD_WAIT":
+        return dict(category=VENDOR_WAIT, detail=row.get("why", ""), measured=False, decision=None)
+    if ex == "OWNER":
+        return dict(category=OWNER_WORK, detail=row.get("why", ""), measured=False, decision=None)
     return dict(category=NOT_JUDGED, detail=row.get("why", ""), measured=False, decision=None)
 
 
@@ -129,11 +156,12 @@ def audits(out_dir=None):
 
 def collect(out_dir=None, decisions_path=None):
     claims = decisions(decisions_path)
+    execs = executions()
     data = audits(out_dir)
     pairs = []
     for letter in sorted(data):
         for row in data[letter]["rows"]:
-            c = classify(row, letter, claims)
+            c = classify(row, letter, claims, execs)
             if c is None: continue
             c.update(board=letter, rule=row.get("rule"), release_effect=row.get("release_effect"),
                      result=row.get("result"), phase=row.get("verification_phase"))

@@ -11173,3 +11173,25 @@ barrels at 0.5 mm; it is the FANOUT's via at the board's own minimum, carrying 0
 via the router chose, but the fanout laying one minimum via on a pad whose rail carries current. The fanout
 has reported the count a declared rail's crossing needs since 18 September and does not lay it, which is the
 gap this site falls into.
+
+**Addendum, 12:15 CEST (19 September), THE REGISTER NOW SAYS WHO CAN MOVE EACH OPEN PAIR, AND EIGHT OF THEM
+WERE NOT UNATTRIBUTED AT ALL.** The ladder of 09:30 answered from the registry's maturity and each verdict's
+own fields, and it left ten pairs in "not judged for the reason the reading gives". Two of those are genuinely
+that (board B's DOC-001 and RF-001, both explained by their own readings). **The other eight had an owner
+recorded in the coverage map all along, in `remediation.execution`, which the ETA has been reading for days**:
+`VIA-002` on board P waits on the fabricator publishing its annular ring rows AT 2 oz, which its capability
+page does not state, and **`DFA-001` on all seven boards waits on the assembler's own 2D preview, which is
+behind a login this repo forbids the runner to use** and therefore belongs to the ordering session on the
+laptop. A register whose job is to say what is REACHABLE has to say that neither is.
+
+Two categories, read from the map rather than from a list, and applied only to a pair the ladder above has not
+already claimed, so a measured failure stays a measured failure whoever owns its fix: **`VENDOR_WAIT`** (a
+fabricator or a standards body, and nobody here) and **`OWNER_WORK`** (work only the owner or the ordering
+session can do). Two fixtures, both proved to fail on the tool as it stood.
+
+**The set now reads, of 122 open pairs: 59 an owner decision by name, 5 a rule that says a decision is open
+while no decision claims it, 3 an authority this project does not have, 16 an input the reading declared
+absent, 29 measured failures, 1 a vendor wait, 7 the ordering session's own work, 2 not judged with their
+reasons.** Twenty-nine of a hundred and twenty-two: that is the whole engineering backlog of the seven boards,
+and thirteen of those twenty-nine are board B's route and placement. Every other open pair is waiting on
+somebody who is not at this keyboard.
