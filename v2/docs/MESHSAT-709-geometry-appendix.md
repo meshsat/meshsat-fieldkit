@@ -15252,3 +15252,36 @@ measured outside every courtyard, region rectangle, escape fan, part-forbidding 
 each held as it is handed out, and **every number on the placed board is the baseline's** while the total
 decoupling distance is nearly halved. `C11`, `C12` and `C63` keep their own fixed seats, which belong to the
 PA stage's power path; `C108`, `C64`, `C36` and `C42` have no such seat within 12 mm and stay where they are.
+
+### 32.312, 20 September 2026 15:05 CEST: the seat measurement is a tool now, and the set's work list is forty-eight capacitors
+
+**`bypass_seats.py`**: where each declared decoupling capacitor COULD sit, measured on the board its own
+generator makes, outside every other courtyard, every escape fan (`bypass_slots`'s own `_needs_fan` and
+`_fan_box`), every part-forbidding rule area, **every packer region rectangle** read from the
+`out/<stem>-regions.json` that `regionfit` already writes beside the board, inside the board edge, and clear
+of every seat the run has already handed out. It **prints seat lines and changes nothing**, because a seat is
+a generator's decision; and it **holds a capacitor that already carries a fixed seat**, read from the
+generator's FIXED table by parsing it, because such a seat is a decision with its own measurement.
+
+**Two traps it is written around, both met today.** A probe written for board A and pointed at board C prints
+board A's case frame, (150, 110) against (297, 210), which is perfectly precise arithmetic for a board nobody
+is building: the frame is READ from `gen_pcb_<letter>3.py` and the tool says where it got it. And a board
+whose intent file it cannot find must not read as a board with nothing to declare: that is INCONCLUSIVE with
+the path it wanted, never a pass on a denominator of zero.
+
+**The set, each board asked on its own placed board:**
+
+| board | declared | within 3 mm | held by a fixed seat | **seatable** | no seat |
+|---|---:|---:|---:|---:|---:|
+| A | 40 | 9 | 28 | **3** | 0 |
+| B | 30 | 4 | 0 | **7** | 19 |
+| C | 18 | 1 | 0 | **13** | 4 |
+| D | 22 | 4 | 0 | **14** | 4 |
+| E | 18 | 2 | 0 | **14** | 2 |
+| P | 3 | 0 | 0 | **3** | 0 |
+
+**Forty-eight capacitors on five boards have a seat beside the pin they serve and are not in it**, and board
+A's A82 arm is what taking them is worth: every number on the placed board the baseline's, and the total
+distance from capacitor to pin nearly halved. **Board B is the one that cannot be fixed this way**: 19 of its
+30 have no seat within 12 mm, which is its floor plan and an owner decision, exactly where its escape fans
+and its pair corridors already point.
