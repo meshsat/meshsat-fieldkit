@@ -516,6 +516,17 @@ for n, xL, Lr, Rr, Jr, out in SLOT:
     PC.island(out, "%s rail" % out, rect_pts(orr), pcbnew.F_Cu, priority=3)
     PC.band(out, "%s rail" % out, orr, (pcbnew.B_Cu,), priority=2)
     row(out, xL + 3.1, xL + 6.5, 72.6, 3)                                    # under the connector body, 2.4 mm from its pins
+    if n == "D":
+        # THE DEVICE RAIL TAKES ITS In3 RUN EAST, WHERE THE ROOM IS (20 September 2026, proved by A91
+        # at PREROUTE-DONE OK). The three slot rails take 9.5 mm each on a 16 mm column pitch and
+        # +5V_DEV carries 6.00 A, which on half-ounce inner copper wants about fifteen millimetres.
+        # Measured on A88's own placed board: NOTHING claims In3 east of case x -12.5 in the y 41 to
+        # 73.5 band, because the device column is the last one, so the width comes from the east and
+        # costs no neighbour anything. It reaches the same two ends as the others: the three stitch
+        # vias under its connector at y 72.6 and its own load bank at y 41.8.
+        PC.island(out, "%s load bank" % out, rect_pts((xL - 3.5, 40.3, xL + 5.5, 43.3)), pcbnew.F_Cu, priority=3)
+        PC.union(out, "%s under the block" % out, [(xL - 2.5, 41.0, xL + 12.5, 73.5)], pcbnew.In3_Cu, priority=2)
+        col(out, xL + 1.0, 41.3, 42.8, 2)
     if n != "D":
         # THE RAIL REACHES ITS OWN LOAD BANK PAST ITS CONVERTER BLOCK (20 September 2026, appendix
         # 32.328 and 32.329, proved by A88 at PREROUTE-DONE OK). Each slot rail's four load parts sit

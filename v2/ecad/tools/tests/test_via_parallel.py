@@ -49,17 +49,10 @@ def t_a_round_that_buys_nothing_takes_its_vias_back_off():
         "the no-gain branch does not restore the round's own backup before it stops")
 
 
-def t_the_rule_fails_on_the_file_as_it_stood():
-    """The proof: both properties above are false of the version in git, which is where the measurement
-    came from. Skips where git or the file's history is not reachable."""
-    from harness import Skip
-    try:
-        old = subprocess.run(["git", "show", "HEAD:v2/ecad/tools/via_parallel.py"],
-                             cwd=os.path.dirname(os.path.dirname(TOOLS)), capture_output=True, text=True, timeout=30)
-    except Exception as e:
-        raise Skip("git is not reachable here: %s" % e)
-    if old.returncode != 0 or not old.stdout:
-        raise Skip("this tree has no committed via_parallel.py to compare with")
-    blk = _round_block(old.stdout)
-    assert "worst_before[0] - 1e-6" not in blk, (
-        "the committed via_parallel already stops on a round that buys nothing, so this rule proves nothing")
+# A PROOF AGAINST HISTORY IS NOT A RULE AND IT EXPIRES AT THE NEXT COMMIT (20 September 2026, within the
+# hour it was written). This file carried a third test asserting that the two properties above are FALSE of
+# `git show HEAD:...via_parallel.py`, which is how the change was proved before it landed. The moment the
+# change was committed, HEAD became the new file and the test failed on its own success. The proof belongs in
+# the commit that makes the change and in the appendix entry beside it, which is where this project's
+# convention already puts it; what stays here is the PROPERTY, which is true of the tool for as long as the
+# tool is right. The measurement that motivates it is in the docstring above and does not need git to check.
