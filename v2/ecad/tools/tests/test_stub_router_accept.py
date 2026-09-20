@@ -394,10 +394,13 @@ def t_the_margin_covers_a_search_that_started_before_the_wall():
     assert "STUB_STAGE_MARGIN_S" in fin, "the margin is still a literal, so it cannot cover a search"
     assert "${STUB_SEARCH_S:-240}" in fin, \
         "the margin does not read the search clock, so the two can drift apart and nobody will see it"
-    i = fin.index("STUB_STAGE_MARGIN_S=")
-    j = fin.index("STUB_STAGE_S=\"$(python3")
-    assert i < j, "the margin is computed after the wall that uses it"
-    assert "$STUB_STAGE_MARGIN_S" in fin[j:j + 400], "the wall does not use the margin beside it"
+    lines = fin.splitlines()
+    mar = [k for k, L in enumerate(lines) if "STUB_STAGE_MARGIN_S=" in L and "$((" in L]
+    wall = [k for k, L in enumerate(lines) if L.strip().startswith("STUB_STAGE_S=\"$(python3")]
+    assert mar and wall, "the margin or the wall is no longer computed on a line of its own"
+    assert mar[0] < wall[0], "the margin is computed after the wall that uses it"
+    assert "$STUB_STAGE_MARGIN_S" in lines[wall[0]], \
+        "the line that computes the wall does not read the margin, so the margin decides nothing"
 
     # the arithmetic itself, on the two cases that matter
     def wall(t, m):
