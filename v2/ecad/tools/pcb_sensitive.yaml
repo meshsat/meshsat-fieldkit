@@ -53,6 +53,21 @@ boards:
          and run current sense traces as differential pairs.' A pair sensed at one end and not the other is
          not a differential measurement, and the two errors do not cancel: they are drops in different
          conductors between different pads. Read the two rows together"}
+    - {sense: CH_SRP_F, rail: CH_SRP, element: "R17.1", tap: "R149.1", full_scale_mv: 50.0,
+       why: "THE CHARGE SHUNT WAS NEVER DECLARED AT ALL (20 September 2026). The kelvin block held two rows
+         and both were the INPUT shunt's, so kelvin_check has been reading one shunt of the charger's two
+         since it was written, and the one it never looked at is the larger current: RSR is R17, 5 mOhm
+         between CH_SRP and CELL+, carrying the pack's 10.0 A typical and 18.0 A peak, so 50.0 mV of full
+         scale at the typical against the input side's 60.0. The positive half taps CH_SRP through R149
+         rather than R17's own pad. A measurement whose denominator is a DECLARATION reads only what it was
+         told about, which is 32.222's sentence about ANA-001 arriving in a second place"}
+    - {sense: CH_SRN_F, rail: CELL+, element: "R17.2", tap: "R148.1", full_scale_mv: 50.0,
+       why: "the other half of the charge pair, and the same argument as the input pair's low side: a pair
+         sensed at one end and not the other is not a differential measurement. The negative half taps CELL+,
+         the pack node itself, through R148, and CELL+ is the conductor this set measures at 10.0 A typical
+         and 18.0 A peak across two boards, so the copper between R17.2 and R148.1 is the one place where the
+         pack's own drop can be read straight into the charger's current loop. TI's item 7 asks for Kelvin
+         sensing on BOTH of RAC and RSR; with these two rows the report finally asks about both"}
    nodes:
     - {net: CH_SRP_F, what: "the charger's charge-current sense, positive half of the pair across R17",
        filter: "10 R into the pin and 100 nF across the pair, which is what the BQ25731's own pin table asks

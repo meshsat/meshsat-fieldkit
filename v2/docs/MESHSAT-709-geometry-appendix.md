@@ -13961,3 +13961,27 @@ the closers ran, which is the question a route answers. Both name the charger, a
 
 **What the arms have to beat**: any of the six closing on A54, A59 or A60 is the first movement in this set
 since 15 September, and all six closing is what the escape-row fix was for.
+
+### 32.280, 20 September 2026 07:38 CEST: the charger's other shunt was never declared, and the report has been measuring half of it
+
+**Found while proving the landing driver, not by looking for it.** `kelvin_check` on A48's frozen board
+prints `1 declared sense tap(s), 1 measured`, and the whole record's Kelvin numbers, **1.170 mV on A47 and
+27.369 mV on A48**, are that one tap.
+
+**The declaration held two rows and both were the INPUT shunt's.** The charger has two shunts and four taps,
+and the one never declared carries the larger current: **RSR is `R17`, 5 mOhm between `CH_SRP` and `CELL+`,
+at the pack's 10.0 A typical and 18.0 A peak**, so **50.0 mV of full scale** against the input side's 60.0.
+So a report quoted all week as "the charger's sense error" has been measuring half the charger.
+
+Both halves are declared now: `CH_SRP_F` taps `CH_SRP` through `R149` off `R17.1`, and `CH_SRN_F` taps
+`CELL+` through `R148` off `R17.2`. The next chain asks about four taps where it asked about one. Suite 1202.
+
+**A measurement whose denominator is a DECLARATION reads only what it was told about**, which is 32.232's
+sentence about ANA-001's switch list arriving in a second place, and 32.244's about a rail that was a node.
+The shape repeats because the declaration is where the cheapness is: nothing about the board changed, and
+the report went from asking one question to asking four.
+
+**NOT CLAIMED**: what the charge side reads. It has never been measured, and the four arms in flight will
+say; `CELL+` is also the conductor this set measures at 10.0 A across two boards, so the copper between
+`R17.2` and `R148.1` is the one place the pack's own drop can be read straight into the charger's current
+loop.
