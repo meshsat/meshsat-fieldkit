@@ -263,7 +263,7 @@ def main(a):
     # is reported as a reading it cannot take: the KiCad 9 geometry calls below are the ones that differ most
     # between builds, and a gate that raises here would refuse a board for a reason that has nothing to do with
     # the board.
-    _isl, _unfilled, _zones = [], 0, 0
+    _isl, _padonly, _unfilled, _zones = [], [], 0, 0
     try:
       for z in b.Zones():
          if z.GetIsRuleArea(): continue
@@ -278,20 +278,42 @@ def main(a):
                    if t.GetClass() == "PCB_VIA" and t.GetNetname().lstrip("/") == _net]
          _sites += [pad.GetPosition() for f in fps for pad in f.Pads()
                     if pad.GetNetname().lstrip("/") == _net and pad.GetDrillSizeX() > 0]
+         # A SITE ON THE ISLAND'S OWN BOUNDARY IS ON THE ISLAND (21 September 2026, D31). One run of board D's chain
+         # was refused here for a 1 mm2 piece of the F.Cu ground pour between R15 and R13 whose one connection is
+         # R15's ground pad with the fanout's via IN it, both at (118.4, 92.875), which is the island's top edge to
+         # the micrometre: PointInside answers False for a point exactly on the outline, KiCad's own fill had
+         # already answered IsIsland False for the same polygon, and the run before had passed on the same seat
+         # because its fanout (not deterministic) had drawn the piece a hair differently. A via or a pad centre
+         # within 0.1 mm of the outline counts as on it; KiCad's PointInside takes that as its accuracy argument.
+         # AND AN ISLAND WHOSE ONLY SITE IS A SURFACE PAD OF ITS OWN NET IS REPORTED, NOT REFUSED: the pad is the
+         # router's to connect (a fanout-skipped pad, which pruned_gate reads after the route), so the copper is
+         # reached by whatever reaches the pad. Board A's six F.Cu load bank islands of A87 to A92 read that way
+         # (their vias had been renamed, their rail pads had not), and the refusal there is the VBAT In2 piece and
+         # the In3 runs, which carry NO pad of their net; power_copper's pad guard now refuses the rename at the
+         # stitch, so this judge is the second line and not the first.
+         _smd = [pad.GetPosition() for f in fps for pad in f.Pads()
+                 if pad.GetNetname().lstrip("/") == _net and pad.GetDrillSizeX() == 0 and pad.IsOnLayer(_lay)]
+         _ON = 100000                                   # 0.1 mm: a site on the outline is on the island
          for _i in range(_polys.OutlineCount()):
              _o = _polys.Outline(_i)
              _a = abs(_o.Area()) / 1e12
              if _a < 1.0: continue                     # under a square millimetre is not a pour, it is a sliver
-             if any(_o.PointInside(pcbnew.VECTOR2I(int(pt.x), int(pt.y))) for pt in _sites): continue
+             if any(_o.PointInside(pcbnew.VECTOR2I(int(pt.x), int(pt.y)), _ON) for pt in _sites): continue
              _c = _o.BBox().Centre()
-             _isl.append("%s on %s, %.0f mm2 at (%.1f, %.1f)"
-                         % (_net or "no net", b.GetLayerName(_lay), _a, _c.x / 1e6, _c.y / 1e6))
+             _line = "%s on %s, %.0f mm2 at (%.1f, %.1f)" % (_net or "no net", b.GetLayerName(_lay), _a, _c.x / 1e6, _c.y / 1e6)
+             if any(_o.PointInside(pcbnew.VECTOR2I(int(pt.x), int(pt.y)), _ON) for pt in _smd):
+                 _padonly.append(_line); continue
+             _isl.append(_line)
     except BaseException as _e:
         lines.append("INFO  the pour-island prediction could not be taken on this board (%s: %s); nothing is "
                      "claimed about that class here" % (type(_e).__name__, str(_e)[:80]))
     if _unfilled:
         lines.append("INFO  %d of %d zone(s) carry no fill on this board, so the pour-island class was not "
                      "predicted for them (fill the board before this stage to have it read)" % (_unfilled, _zones))
+    if _padonly:
+        lines.append("WARN  %d pour island(s) reach only a surface pad of their own net and no via or plated pad, "
+                     "which is a pad the fanout skipped and the router has to connect (read by pruned_gate after "
+                     "the route): %s" % (len(_padonly), "; ".join(_padonly[:6]) + (" ..." if len(_padonly) > 6 else "")))
     if _isl:
         # A POUR BORN WITHOUT A VIA IS COPPER THE GENERATOR MEANT TO CONNECT AND DID NOT, AND IT REFUSES THE
         # BOARD NOW (21 September 2026). This line was a WARN, and it named board A's defect on every chain from
@@ -301,7 +323,9 @@ def main(a):
         # the arms routed for a night with no variable in them. Measured across the set before the bar moved:
         # the count is ZERO on every clean chain (A85, A86, A93, B23, C24, D27, D30, E30, P9) and 6 to 9 on
         # exactly the defective arms, with one VBAT In2 piece on A69 and A70, so a refusal fires on the defect
-        # and on nothing else. The allow idiom of erc-allow.txt applies: `pour-island-allow.txt` beside the
+        # and on nothing else. Re-measured with the boundary accuracy and the surface-pad class above (21
+        # September, 01:45): A89's pre-route board reads its six load bank islands as WARN and ONE refusal, the
+        # 131 mm2 VBAT In2 piece; D31's chain-end board, refused before, reads no refusal. The allow idiom of erc-allow.txt applies: `pour-island-allow.txt` beside the
         # board names a NET whose islanded pour is known and says why, and such an island is reported ALLOW and
         # still counted in the report. The islands a ROUTER cuts out of a pour are the other half of this class
         # and stay pour_stitch's, because they do not exist yet on a placed board.
@@ -319,7 +343,7 @@ def main(a):
                          "with its reason or connect it: %s"
                          % (len(_refused), "; ".join(_refused[:6]) + (" ..." if len(_refused) > 6 else "")))
             coll += 1
-    elif _zones and not _unfilled:
+    elif _zones and not _unfilled and not _padonly:
         lines.append("INFO  every filled pour on this board reaches a via or a plated pad of its own net; the "
                      "islands a ROUTER cuts out of a pour cannot be predicted from a placed board and are the "
                      "other half of this class")

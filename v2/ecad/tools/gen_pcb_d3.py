@@ -80,7 +80,12 @@ FIXED = {"J_HARN1": (-42, 8, 0, False), "J_PWR1": (-42, -16, 90, False), "J_HS1"
          # through the crystal and port-4 copper around it, which left HUB_DM4 the one open net of two rounds. They sit north-east of U4 on the FRONT, the
          # pins' own layer, because the gap between U4's courtyard (to x 127.22) and the pull-down column (from x 128.97) is 1.75 mm, too narrow for an 0603
          "R25": (28.3, 20.6, 0, False), "R24": (31.6, 20.6, 0, False),
-         "R14": (23.2, 6.3, 90, False), "R15": (18.4, 6.3, 90, False), "R18": (23.5, -0.5, 0, False), "R19": (23.5, -2.1, 0, False), "R22": (30.5, 15.8, 0, False), "R23": (30.5, 10.0, 0, False), "R28": (11.5, -5.8, 180, False)}   # R28 north of R27, pad 1 east toward the codec leg (its slot south overlapped the crystal Y2 courtyard, 12:59 CEST)
+         "R14": (23.2, 6.3, 90, False), "R15": (18.4, 6.3, 90, False), "R18": (23.5, -0.5, 0, False), "R19": (23.5, -2.1, 0, False), "R22": (30.5, 15.8, 0, False), "R23": (30.5, 10.0, 0, False), "R28": (11.5, -5.8, 180, False),   # R28 north of R27, pad 1 east toward the codec leg (its slot south overlapped the crystal Y2 courtyard, 12:59 CEST)
+         # D31 (21 September 2026, 01:40 CEST): the codec's PCM_VCCP decoupling C23 takes a FIXED seat beside U6 pin 26 (case (24.0, -5.34)), east of the
+         # pull-up column R18/R19 at x 23.5. D30 round 1 landed hard 0 and ONE open, /PCM_VCCP over 16.1 mm from C23 pad 1 to U6 pad 26, with the capacitor
+         # packed in the rows and bypass_place reading it STUCK (no free spot within 3.0 mm); the seat was measured first through FIXED_OVERRIDE on the hub:
+         # PREROUTE-DONE OK, hard 0, escapes 68/7 and fanout 92/13 identical to the baseline, place_audit 0 collisions, C23 no longer STUCK.
+         "C23": (26.5, -1.6, 0, False)}
 # 9 Sep 2026 (D10, appendix 32.83): a placement candidate can be swept from the environment instead of edited into the file.
 # The D pre-route chain runs in 47 seconds, so where a part goes is a question to MEASURE (pairs laid, pre-route hard),
 # not to argue on paper. FIXED_OVERRIDE="R20=35.0,19.5,0;R21=35.0,17.9,0" moves those parts for one run only.
