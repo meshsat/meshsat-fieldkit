@@ -33,6 +33,20 @@ def main(a):
     ip = os.path.join(os.path.dirname(os.path.abspath(bp)) or ".", "out", os.path.splitext(os.path.basename(bp))[0] + "-intent.json")
     if not os.path.exists(ip): print("bypass_place: no intent file at %s, nothing declared" % ip); return 0
     entries = json.load(open(ip)).get("bypass", [])
+    # A CAPACITOR THE GENERATOR SEATED IS NOT MOVED. `bypass_slots` writes the list beside the board when it
+    # finds a capacitor already placed from the FIXED table; those seats were measured against the region
+    # rectangles, the escape fans and the copper already laid, and this pass checks none of those, so moving
+    # one is undoing a decision with a worse test. Board D's seat arm came back `hard 30` three times for
+    # exactly that reason.
+    sp = os.path.join(os.path.dirname(ip), os.path.splitext(os.path.basename(bp))[0] + "-seated.json")
+    seated = set()
+    if os.path.exists(sp):
+        try: seated = set(json.load(open(sp)).get("seated", []))
+        except Exception: seated = set()
+    if seated:
+        before = len(entries)
+        entries = [e for e in entries if e.get("cap") not in seated]
+        print("bypass_place: %d capacitor(s) carry a seat the generator chose and are left alone" % (before - len(entries)))
     if not entries: print("bypass_place: 0 bypass entries declared, nothing to place"); return 0
     # A PASS GIVEN A BOARD ITS PARTS ARE NOT ON HAS MEASURED NOTHING (20 September 2026). Boards A and B
     # declared this pass at `mechanical`, which in full.sh is AFTER the outline generator and BEFORE the

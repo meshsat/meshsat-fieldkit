@@ -17,7 +17,7 @@ Call it from a placement generator between the FIXED placement and the region lo
 `place(ref, x, y, rot, back)` is the generator's own placer in case-frame mm; `to_case(vec)` converts a board
 VECTOR2I to case-frame mm. A capacitor with no free spot within the limit is left for the packer and reported, so the
 gate still sees it as far away rather than the tool pretending it fitted."""
-import math, pcbnew
+import json, math, pcbnew
 
 LIMIT = 3.0
 _DETACHED = []   # KiCad 9: a footprint removed from the board must stay referenced in Python or the next FootprintLoad dies inside the IO plugin
@@ -117,4 +117,22 @@ def reserve(board, place, to_case, entries, limit=LIMIT, quiet=False, fan=2.2):
         for cap, ref, pin, d in already:
             print("bypass_slots:   ALREADY SEATED %-6s beside %s.%-3s at %.1f mm, left where the generator put it"
                   % (cap, ref, pin, d))
+    # AND THE CAPACITORS THE GENERATOR SEATED ARE WRITTEN DOWN, because the pass that runs later does not
+    # know a seat from an accident (20 September 2026). `bypass_place` moves any declared capacitor further
+    # than 3 mm from its pin to the first free spot it can find, and a seat chosen outside every region
+    # rectangle, escape fan and piece of laid copper is typically 3 to 8 mm out: board D's seat arms came
+    # back `hard 33`, then 30, then 30 again, and the collisions are capacitors moved off their seats into
+    # spots `bypass_place` does not check the same way. A fixed seat is a decision; this is how the later
+    # pass learns which ones they are.
+    try:
+        if already:
+            import os as _os
+            d = _os.path.dirname(_os.path.abspath(board.GetFileName() or "")) or "."
+            stem = _os.path.splitext(_os.path.basename(board.GetFileName() or "board"))[0]
+            outd = d if _os.path.basename(d) == "out" else _os.path.join(d, "out")
+            _os.makedirs(outd, exist_ok=True)
+            with open(_os.path.join(outd, stem + "-seated.json"), "w", encoding="utf-8") as fh:
+                json.dump({"seated": sorted({c for c, _r, _p, _d in already})}, fh, indent=1)
+    except Exception as e:
+        print("bypass_slots: could not write the seated list (%s)" % e)
     return done

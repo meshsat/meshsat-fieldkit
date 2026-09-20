@@ -15357,3 +15357,40 @@ it.
 D owes one more iteration at `hard 30`, and board B is its floor plan. **Every board's gate, gate by gate,
 has caught the thing the map did not know**: board P's duplicate guard, board C's ring rule, board D's own
 hard set, which is what those gates are for.
+
+### 32.315, 20 September 2026 15:25 CEST: a staged file sat two hours stale and a board refused itself over a declaration nobody had changed
+
+**Board D's seat arm blocked at `safe_lines` with `this board declares that it only CARRIES the line and
+U12.2 reads it`, which is a rule about a declaration, and nothing had touched board D's declaration.** The
+run before it, twenty minutes earlier, had passed the same gate. The difference was in the tools: the
+staged `/root/rdtools/boards/d.json` on the hub held **one safety line with role `carries`** where the tree
+holds **two, the first with role `listens`**, and it had been that way since 13:21, through four separate
+pushes.
+
+**The cause is the staging, and it is the oldest trap in this business**: `rsync -a` decides by SIZE AND
+MTIME, and a file whose mtime does not move is a file rsync does not send. `tools_push.sh` and every staging
+line here carry `--checksum` now, so content is what is compared; one `--checksum` run brought the file
+across immediately and board D's own declaration reads two lines again.
+
+**What it cost and what it did not.** It cost one arm, which is how it was found: the arm that blocked is the
+arm that named it. It did NOT touch any measurement of this session other than board D's last two seat arms,
+because every other file on the hub was byte for byte the tree's when compared today, hash by hash, and the
+two board D arms in question blocked rather than producing a number. **A measurement taken with a staged
+tool is a measurement about the staging as much as about the board**, which is the 17 September lesson in
+another costume, and this is why the staging is now content-addressed rather than time-addressed.
+
+**32.315 addendum, 15:30 CEST: board D is closed with three causes tested and refused.** Its seat arm was
+run six times. **Three hypotheses were tested one at a time and each is refused with its number**: the
+declared 0.5 mm region overflow (hard 33 to 30, so not the cause), a clearance margin around every other
+part's courtyard instead of a bare touch (30, unchanged), and `bypass_place` moving a seated capacitor off
+its seat with a weaker test than the one that chose it (30, unchanged, though the fix stands on its own and
+`bypass_slots` writes the seated list for it now). **The placement is not the variable either**: all four
+baselines read `68 escapes, 7 pads skipped` exactly, so board D's chain is repeatable and the collisions are
+the seats' own.
+
+**What is left is the board.** Board D is 80 by 62 mm with **sixteen region rectangles and 22 declared
+capacitors**: "outside every rectangle, every fan, every piece of copper and inside the outline" leaves
+almost nothing, and what it does leave is where the packer's own parts land once twelve capacitors leave its
+lists. **So board D's decoupling is a floor-plan question like board B's**, not a seat nobody took, and its
+rectangles are on the never-auto floor. Its numbers stay in the register: 22 declared, 4 within 3 mm, worst
+31.2 mm.
