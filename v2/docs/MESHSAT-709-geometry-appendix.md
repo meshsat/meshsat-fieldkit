@@ -16626,3 +16626,21 @@ where A89 read FOUR, and the two that went are the 25.2 mm run from the load cap
 and the island-to-island split. What is left per rail is a 3.5 mm gap from the second capacitor row (C33, C39,
 C45) to the island and a 3.6 mm gap from the shunt to that row; if the router leaves those, the island grows one
 row south at generation. The device rail lost its 25.3 mm pair the same way.
+
+### 32.342
+
+**The warning that named the defect on every chain, promoted to a refusal on a measurement (21 September 2026,
+00:55 CEST).** `place_audit` has printed, since 15 September, *N pour island(s) already carry no via or plated pad
+of their own net BEFORE any route, which is the class pour_stitch repairs afterwards*, as a WARN. On A87 to A92 it
+read 6 to 9, and the six were the load bank islands of 32.341, each one the end of an In3 run that reached
+nothing. Nobody read it, because a warning in a chain log is not a bar.
+
+**Measured across the set before the bar moved**, from each tree's own placement audit on both boxes: **zero** on
+A85, A86, A93, B23 (and B22), C24 (and every C chain), D27, D30, E30 and P9; **6 to 9** on exactly the six
+defective arms A87 to A92; and **one** on A69 and A70, a 128 mm2 VBAT piece on In2 with no via, dead copper the
+generator had cut off from its plane. So the line fires on the defect and on nothing else, and a rail run that
+ends in an islanded pour has reached nothing by construction. **It is a FAIL now and counts in the verdict**, with
+the `erc-allow.txt` idiom beside it: `pour-island-allow.txt` beside the board names a net whose islanded pour is
+known and says why, and such an island is reported ALLOW and still counted. No board of the set declares one and
+a rule refuses a silent allow file. The islands a ROUTER cuts out of a pour do not exist on a placed board and
+stay `pour_stitch`'s. Two rules, the first failing on the tool as it stood.
