@@ -193,6 +193,56 @@ boards:
     - {net: S3_FB, what: "slot rail 3's feedback divider", filter: "31.6k/10k at the buck", kelvin_with: null, keep_mm: 0.5}
     - {net: SD_FB, what: "the device rail's feedback divider", filter: "31.6k/10k at the buck", kelvin_with: null, keep_mm: 0.5}
     - {net: B33_FB, what: "the 3.3 V logic buck's feedback", filter: "the divider at U12", kelvin_with: null, keep_mm: 0.5}
+    - {net: FE_ISNS_P, what: "the FE stage's average-current sense, positive half of the pair across its ISNS shunt",
+       filter: "100 R into the pin with 1 nF across the pair, the network the LM5176 datasheet's section
+         7.3.6 describes for these two pins; fitted 20 September 2026, before which the pins sat DIRECTLY on
+         the two power rails the shunt separates, so there was no sense net on this board to declare",
+       kelvin_with: FE_ISNS_N, keep_mm: 0.5}
+    - {net: FE_ISNS_N, what: "the FE stage's average-current sense, negative half of the pair across its ISNS shunt",
+       filter: "100 R into the pin with 1 nF across the pair, the network the LM5176 datasheet's section
+         7.3.6 describes for these two pins; fitted 20 September 2026, before which the pins sat DIRECTLY on
+         the two power rails the shunt separates, so there was no sense net on this board to declare",
+       kelvin_with: FE_ISNS_P, keep_mm: 0.5}
+    - {net: PA_ISNS_P, what: "the PA stage's average-current sense, positive half of the pair across its ISNS shunt",
+       filter: "100 R into the pin with 1 nF across the pair, the network the LM5176 datasheet's section
+         7.3.6 describes for these two pins; fitted 20 September 2026, before which the pins sat DIRECTLY on
+         the two power rails the shunt separates, so there was no sense net on this board to declare",
+       kelvin_with: PA_ISNS_N, keep_mm: 0.5}
+    - {net: PA_ISNS_N, what: "the PA stage's average-current sense, negative half of the pair across its ISNS shunt",
+       filter: "100 R into the pin with 1 nF across the pair, the network the LM5176 datasheet's section
+         7.3.6 describes for these two pins; fitted 20 September 2026, before which the pins sat DIRECTLY on
+         the two power rails the shunt separates, so there was no sense net on this board to declare",
+       kelvin_with: PA_ISNS_P, keep_mm: 0.5}
+    - {net: HF_ISNS_P, what: "the HF stage's average-current sense, positive half of the pair across its ISNS shunt",
+       filter: "100 R into the pin with 1 nF across the pair, the network the LM5176 datasheet's section
+         7.3.6 describes for these two pins; fitted 20 September 2026, before which the pins sat DIRECTLY on
+         the two power rails the shunt separates, so there was no sense net on this board to declare",
+       kelvin_with: HF_ISNS_N, keep_mm: 0.5}
+    - {net: HF_ISNS_N, what: "the HF stage's average-current sense, negative half of the pair across its ISNS shunt",
+       filter: "100 R into the pin with 1 nF across the pair, the network the LM5176 datasheet's section
+         7.3.6 describes for these two pins; fitted 20 September 2026, before which the pins sat DIRECTLY on
+         the two power rails the shunt separates, so there was no sense net on this board to declare",
+       kelvin_with: HF_ISNS_P, keep_mm: 0.5}
+    - {net: POE_ISNS_P, what: "the POE stage's average-current sense, positive half of the pair across its ISNS shunt",
+       filter: "100 R into the pin with 1 nF across the pair, the network the LM5176 datasheet's section
+         7.3.6 describes for these two pins; fitted 20 September 2026, before which the pins sat DIRECTLY on
+         the two power rails the shunt separates, so there was no sense net on this board to declare",
+       kelvin_with: POE_ISNS_N, keep_mm: 0.5}
+    - {net: POE_ISNS_N, what: "the POE stage's average-current sense, negative half of the pair across its ISNS shunt",
+       filter: "100 R into the pin with 1 nF across the pair, the network the LM5176 datasheet's section
+         7.3.6 describes for these two pins; fitted 20 September 2026, before which the pins sat DIRECTLY on
+         the two power rails the shunt separates, so there was no sense net on this board to declare",
+       kelvin_with: POE_ISNS_P, keep_mm: 0.5}
+    - {net: PD_ISNS_P, what: "the PD stage's average-current sense, positive half of the pair across its ISNS shunt",
+       filter: "100 R into the pin with 1 nF across the pair, the network the LM5176 datasheet's section
+         7.3.6 describes for these two pins; fitted 20 September 2026, before which the pins sat DIRECTLY on
+         the two power rails the shunt separates, so there was no sense net on this board to declare",
+       kelvin_with: PD_ISNS_N, keep_mm: 0.5}
+    - {net: PD_ISNS_N, what: "the PD stage's average-current sense, negative half of the pair across its ISNS shunt",
+       filter: "100 R into the pin with 1 nF across the pair, the network the LM5176 datasheet's section
+         7.3.6 describes for these two pins; fitted 20 September 2026, before which the pins sat DIRECTLY on
+         the two power rails the shunt separates, so there was no sense net on this board to declare",
+       kelvin_with: PD_ISNS_P, keep_mm: 0.5}
 
  d:
    switch_nets: []
