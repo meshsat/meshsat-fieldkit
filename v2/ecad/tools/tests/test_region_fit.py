@@ -65,3 +65,32 @@ def t_a_region_rectangle_is_the_owners_not_only_the_tables_first_line():
                  '            ("IOCB", (-52.0, 32.0, -23.0, 88.0), _ioc(1), True),'):
         hits = reserved._matches("gen_pcb_b3.py", line, classes)
         assert any("region" in n for n, _ in hits), "not reserved and must be: %s" % line.strip()[:60]
+
+
+def t_the_room_report_names_the_board_the_tree_names():
+    """THE DEFECTIVE FIXTURE (20 September 2026). `region_room` took the SECOND FIELD of the stem as the
+    board letter, so `pcb-e1-dock` gave "e1" and it went looking for `gen_pcb_e13.py`, which does not exist:
+    it CRASHED on board E rather than measuring it, and `pcb-c-ring` is the same shape. The tree has one
+    answer to "which board is this file", `boardtable.letter_for`, and every power tool already uses it."""
+    import os, sys
+    here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, here)
+    import region_room as rr
+    assert rr._letter_of("pcb-e1-dock") == "e", rr._letter_of("pcb-e1-dock")
+    assert rr._letter_of("pcb-b-compute") == "b"
+    assert rr._letter_of("pcb-a-power") == "a"
+    assert rr._letter_of("pcb-p-pack") == "p"
+
+
+def t_every_letter_it_returns_names_a_generator_this_tree_holds():
+    """THE ACCEPTABLE FIXTURE, and it is the property that actually matters: the letter is used to BUILD a
+    path, so a letter that names no generator is a crash waiting for the next board. A stem the table does
+    not know keeps the old split as its fallback, which is why this asks about the stems the set really has."""
+    import os, sys
+    here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, here)
+    import region_room as rr
+    for stem in ("pcb-a-power", "pcb-b-compute", "pcb-c-display", "pcb-c-ring", "pcb-d-aprs", "pcb-e1-dock"):
+        letter = rr._letter_of(stem)
+        gen = os.path.join(here, "gen_pcb_%s3.py" % letter)
+        assert os.path.exists(gen), "%s gives letter %r and no %s in this tree" % (stem, letter, os.path.basename(gen))
