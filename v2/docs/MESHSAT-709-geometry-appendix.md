@@ -14429,3 +14429,36 @@ reads PASS of 24. **The cause was one rsync line**: `rsync` will not create an i
 `mkdir /root/sweepNN/v2/vendor/fabricator failed: No such file or directory` went into a log nobody read and
 five boards' stackup readings declared their input absent for two sweeps. Sweep 31 creates the directory
 first and carries the documents; it is running.
+
+### 32.291, 20 September 2026 09:16 CEST: the three clear Kelvin runs were clear of every net but each other
+
+32.289's three runs (`FE ISNS+`, `FE ISNS-`, `HF ISNS+`) were written into `gen_pcb_a3.py` as locked 0.2 mm
+F.Cu tracks from each shunt pad to its sense pin, and **A61 put them through the whole chain**, which is what
+the generator at HEAD owes before such a line is committed.
+
+**It ended `placed board: hard 4 of the fifteen types, allowance 0`, and the change was reverted**, the rule
+being that the generator at HEAD must never be left producing a board its own chain refuses.
+
+**The four, named from the board**: one `solder_mask_bridge`, two `tracks_crossing`, and one
+`shorting_items` **between `/VBUS20` and `/FE_OUT`**. That last is the whole story and it is geometry rather
+than a wrong number: `R11` is the shunt **between** `FE_OUT` and `VBUS20`, `U2`'s ISNS+ and ISNS- are pins 14
+and 13 side by side, and the pad order and the pin order run **opposite** ways, so the two straight lines
+from `R11.1` to `U2.14` and from `R11.2` to `U2.13` **must** cross. The mask bridge is the same event at the
+shunt's own pads.
+
+**AND THE PROBE COULD NOT HAVE SEEN IT, which is the lesson and it is this morning's twice over.** It sampled
+every 0.2 mm along each line against other nets' pads, their pours and every rule area, on both outer layers,
+and each line really is clear of all of that. **It never asked whether the runs cross each other**, because
+it judged them one at a time. That is `prefanout`'s 06:35 defect in a new place — a test that asks about the
+board and not about what the same pass is laying — and my own 08:16 defect in a new place, a rule that checks
+the pads are on the net and never that the net is one anything solves. **A probe that judges candidates one
+at a time is not a clearance test for a set of them.**
+
+**What it means for the work**: a straight line is not the shape. The pair pre-router already knows this
+problem by name — it is the **twist** it detects between two stations whose terminal orders disagree — and
+the answer is the same, one of the two runs takes a jog so the pair leaves the shunt in the pin order. So
+board A's fourteen Kelvin runs are fourteen **paths**, not fourteen lines, and the three that looked free are
+two paths and one line.
+
+**Not re-attempted in this stretch**: it wants the pre-router's own emitter rather than a hand-drawn jog, and
+four board A arms are in flight.
