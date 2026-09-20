@@ -39,14 +39,10 @@ things to fix.
 
 ## Readings owed
 
-Of the 84 open pairs with a reading beside them, **3 are decided by a reading taken under a tool that has
+Of the 84 open pairs with a reading beside them, **0 are decided by a reading taken under a tool that has
 CHANGED since**. A tool change moves no rule-set fingerprint and no per-rule digest, so nothing else on these
 pages can say it. It is an upper bound, because a tool file moves for a comment as readily as for a
 criterion, and it decides nothing: it says the reading is owed. Re-take with retake_gate.sh or a sweep.
-
-| rule | boards |
-|---|---|
-| `PI-003` | A, D, E |
 
 ## By open decision
 
@@ -197,7 +193,7 @@ holding a number, not a question about a number.
 |---|---|---|---|
 | `SCH-002` | A | FAIL | netlist_board FAIL: {'agree': 1980, 'aliased_pins': 0, 'board_footprints': 400, 'board_only_inert': 0, 'fail': 60, 'netlist_refs': 428} |
 | `PI-002` | A | FAIL | dc_drop FAIL: {'density_missed': 13, 'met': 24, 'missed': 3, 'undeclared': 0} |
-| `PI-003` | A | FAIL | via_current FAIL: {'measured_rails': 27, 'no_via': 0, 'over': 8, 'over_barrels': 37, 'rails': 27} |
+| `PI-003` | A | FAIL | via_current FAIL: {'measured_rails': 27, 'no_layer_change': 0, 'no_via': 0, 'over': 8, 'over_barrels': 37, 'rails': 27} |
 | `RET-004` | A | FAIL | return_via FAIL: {'examined_same_reference': 0, 'examined_to_power': 10, 'exempt': 54, 'judged': 40, 'lacking': 32, 'same_plane': 27, 'sl |
 | `ANA-001` | A | FAIL | sensitive_nodes FAIL: {'declared': 34, 'fail': 25, 'measured': 10} |
 | `RF-001` | A | FAIL | rf_line FAIL: {'judged': 11, 'missed': 11} |
@@ -208,9 +204,9 @@ holding a number, not a question about a number.
 | `RTE-002` | B | FAIL | hardset-routed-board-gate FAIL: {'by_type': {}, 'hard': 0, 'report': {'silk_edge_clearance': 9, 'silk_over_copper': 47, 'silk_overlap': 69, 'track_dangl |
 | `OUT-001` | B | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `OUT-001` | C | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
-| `PI-003` | D | FAIL | via_current FAIL: {'measured_rails': 4, 'no_via': 0, 'over': 1, 'over_barrels': 2, 'rails': 4} |
+| `PI-003` | D | FAIL | via_current FAIL: {'measured_rails': 4, 'no_layer_change': 0, 'no_via': 0, 'over': 1, 'over_barrels': 2, 'rails': 4} |
 | `OUT-001` | D | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
-| `PI-003` | E | FAIL | via_current FAIL: {'measured_rails': 9, 'no_via': 2, 'over': 9, 'over_barrels': 30, 'rails': 11} |
+| `PI-003` | E | FAIL | via_current FAIL: {'measured_rails': 9, 'no_layer_change': 1, 'no_via': 3, 'over': 8, 'over_barrels': 30, 'rails': 11} |
 | `ANA-001` | E | FAIL | sensitive_nodes FAIL: {'declared': 3, 'fail': 2, 'measured': 3} |
 | `OUT-001` | E | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `STK-001` | E5 | FAIL | stackup_gate FAIL: {'compared': 8, 'copper_layers': 2, 'disagreements': 1} |

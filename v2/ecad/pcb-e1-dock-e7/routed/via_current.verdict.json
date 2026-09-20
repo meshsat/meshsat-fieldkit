@@ -3,8 +3,9 @@
  "applicable": true,
  "counts": {
   "measured_rails": 9,
-  "no_via": 2,
-  "over": 9,
+  "no_layer_change": 1,
+  "no_via": 3,
+  "over": 8,
   "over_barrels": 30,
   "rails": 11
  },
@@ -15,7 +16,6 @@
   "DC_HS: a barrel at (109.5, 196.0) carries 3.49 A of the solved mesh against 0.90 A for its own wall at 10 K (18 um plating), ratio 3.88",
   "DC_IN: a barrel at (97.0, 216.3) carries 3.00 A of the solved mesh against 2.59 A for its own wall at 10 K (18 um plating), ratio 1.16",
   "DC_P: a barrel at (65.7, 202.6) carries 8.00 A of the solved mesh against 0.90 A for its own wall at 10 K (18 um plating), ratio 8.89",
-  "HS_S: 10.00 A crosses a transition of 1 via(s) at (45.0, 196.8) rated 0.65 A at 10 K (18 um plating), attributed rather than measured",
   "PV_P: a barrel at (183.5, 196.8) carries 3.29 A of the solved mesh against 0.56 A for its own wall at 10 K (18 um plating), ratio 5.86",
   "TRK_OUT: a barrel at (177.4, 198.7) carries 6.16 A of the solved mesh against 0.90 A for its own wall at 10 K (18 um plating), ratio 6.85",
   "VIN_RAW: a barrel at (109.5, 202.7) carries 0.74 A of the solved mesh against 0.65 A for its own wall at 10 K (18 um plating), ratio 1.14",
@@ -33,7 +33,8 @@
   "DC_HS: barrel at (109.5, 196.0), 3.49 A against 0.90 A, ratio 3.88",
   "DC_IN: barrel at (97.0, 216.3), 3.00 A against 2.59 A, ratio 1.16",
   "DC_IN: barrel at (97.0, 219.7), 3.00 A against 2.59 A, ratio 1.16",
-  "DC_P: barrel at (65.7, 202.6), 8.00 A against 0.90 A, ratio 8.89"
+  "DC_P: barrel at (65.7, 202.6), 8.00 A against 0.90 A, ratio 8.89",
+  "DC_P: barrel at (55.7, 203.5), 8.00 A against 0.90 A, ratio 8.89"
  ],
  "inputs": {
   "board": {
@@ -59,13 +60,13 @@
  "tool": "via_current",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "4d83fe3b9dfc62e2"
+  "tools_tree_sha": "bdca249b1fd124a9"
  },
- "ts": "2026-09-20T14:48:46Z",
+ "ts": "2026-09-20T19:28:15Z",
  "verdict": "FAIL",
  "version": "unknown",
  "writer": {
   "file": "via_current.py",
-  "sha16": "ef29c5ca53e28b51"
+  "sha16": "210bd22e928bb96b"
  }
 }

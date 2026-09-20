@@ -43,7 +43,7 @@ Measured on board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12.
 | DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **PASS** | intent_decoupling PASS of 27 |
 | PI-001 conductor current capacity | BLOCKER | ROUTED_BOARD | **PASS** | dc_density PASS of 4 |
 | PI-002 rail voltage drop | BLOCKER | ROUTED_BOARD | **PASS** | dc_drop PASS of 4 |
-| PI-003 via current capacity | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | via_current FAIL: {'measured_rails': 4, 'no_via': 0, 'over': 1, 'over_barrels': 2, 'rails': 4} |
+| PI-003 via current capacity | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | via_current FAIL: {'measured_rails': 4, 'no_layer_change': 0, 'no_via': 0, 'over': 1, 'over_barrels': 2, 'rails': 4} |
 | GND-001 one deliberate ground system | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | ground_system PASS of 1 |
 | STK-001 the stackup is declared, feasible and in the board | BLOCKER | ROUTED_BOARD | **PASS** | stackup_gate PASS of 16 |
 | STK-002 a layer count is decided and costed | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against si |
