@@ -1,7 +1,7 @@
 (export (version "E")
   (design
-    (source "/root/regen7/v2/ecad/pcb-e1-dock-e7/pcb-e1-dock.kicad_sch")
-    (date "2026-09-20T06:47:05+0000")
+    (source "/root/regen8/v2/ecad/pcb-e1-dock-e7/pcb-e1-dock.kicad_sch")
+    (date "2026-09-20T14:42:34+0000")
     (tool "Eeschema 9.0.9-9.0.9~ubuntu24.04.1")
     (sheet (number "1") (name "/") (tstamps "/")
       (title_block

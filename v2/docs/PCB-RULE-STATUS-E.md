@@ -21,9 +21,9 @@ Measured on board E17 (pcb-e1-dock-e7, a462ac2620b9b8d3), declares E17.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 33 | 61.1 |
+| PASS | 34 | 63.0 |
 | FAIL | 6 | 11.1 |
-| INCONCLUSIVE | 15 | 27.8 |
+| INCONCLUSIVE | 14 | 25.9 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **54** | 100.0 |
 
@@ -40,7 +40,7 @@ Measured on board E17 (pcb-e1-dock-e7, a462ac2620b9b8d3), declares E17.
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_e INCONCLUSIVE: no deliverable folder at the declared phase E17, so this board's parts were not certified against the board this tree hold |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_e INCONCLUSIVE: no deliverable folder at the declared phase E17, so this board's parts were not certified against the board this tree hold |
 | PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **PASS** | intent_rails PASS of 14 |
-| PWR-002 sequencing and inrush | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | power_sequence INCONCLUSIVE: each rail's enable derived from the netlist and the part that drives it named; a rail whose enable is driven only by a de |
+| PWR-002 sequencing and inrush | MUST_JUSTIFY | SCHEMATIC | **PASS** | power_sequence PASS of 13 |
 | PWR-003 protection coordination | BLOCKER | SCHEMATIC | **PASS** | energy_chain_e PASS of 3 |
 | DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **PASS** | intent_decoupling PASS of 20 |
 | PI-001 conductor current capacity | BLOCKER | ROUTED_BOARD | **FAIL** | dc_density FAIL: {'met': 6, 'missed': 7, 'undeclared': 0} |

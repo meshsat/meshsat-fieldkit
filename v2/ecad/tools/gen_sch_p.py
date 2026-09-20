@@ -131,8 +131,18 @@ r("R8", "100R", "GND", "SRP_F"); r("R9", "100R", "PACK_N", "SRN_F"); c("C9", "10
 # sees. `returns` closes that gap: the net keeps its own 50 mV, which is what CMP-001 uses, and the DROP is
 # judged against the rail it returns, which is what PI-002 needs. The capacity half needed no bar at all and
 # is measured on the copper either way.
+# PWR-002 ASKED WHAT SWITCHES THIS AND THE ANSWER IS NOTHING, BY DESIGN (20 September 2026). Both
+# protection FETs are in the POSITIVE path (Q1 the charge switch on FUSED, Q2 the discharge switch on
+# PACK_P, their common drain SW), so the pack's NEGATIVE runs straight from the 12 AWG lead land through
+# the coulomb-counting shunt to the board's ground with nothing in it: C11, C12, D1, R9, TP8 and R10 and
+# not one switching part. High-side protection means the return is permanently connected, which is a
+# property of this pack worth writing down rather than a gap in the declaration.
 _intent.rail("PACK_N", 0.05, 10.0, 18.0, "W_N", loads={"R10": 10.0}, returns="PACK_P", converted=False,
-             v_work=0.05,
+             v_work=0.05, always_on=True,
+             always_on_why="both protection FETs are in the positive path (Q1 on FUSED, Q2 on PACK_P), so "
+                           "nothing on this board is in series with the pack's negative: it runs from the "
+                           "lead land W_N through the 2 mOhm shunt R10 to ground with no switching part in "
+                           "it, which is what high-side protection means",
              note="the pack negative from the 12 AWG lead land W_N to the 2 mOhm coulomb-counting shunt R10, "
                   "at the pack's own 10.0 A typical and 18.0 A peak. Its own potential is 50 mV at 25 A, "
                   "which is what a part on it is judged against; its DROP is judged against PACK_P, the rail "

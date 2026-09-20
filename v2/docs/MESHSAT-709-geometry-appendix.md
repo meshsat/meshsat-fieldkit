@@ -15711,3 +15711,32 @@ Nothing here separates that from the fanout's three vias.
 **What board D owes is a cap that lets the arm finish**, on a host whose load is recorded with it, and then
 the comparison is one variable again. Round 2 with `via_costs 100` is running and the record already expects a
 remedy round to be worse; **D17 stays board D's answer** and nothing is adopted.
+
+**ADDENDUM, 16:50 CEST: boards E and P's two declarations are written and PWR-002 passes on all six.** Both
+are one field, both needed a regeneration, and one of them is a finding about a SYMBOL.
+
+**Board E's `TRK_OUT` could not be resolved because the LT8705A is drawn as a generic 40-pin connector.**
+`gen_sch_e.py` declares it `part("U5", "Connector_Generic", "Conn_02x20_Odd_Even", ...)` with a complete
+pin map by NUMBER, and pin 1 is `TRK_SHDN`; but KiCad names a connector's pins `Pin_1` to `Pin_40`, so
+**every `pinfunction` U5 writes into the netlist is `Pin_NN`** and no pattern over pin names can find the
+controller's shutdown. Board E has exactly three parts with six or more pins whose functions are all generic
+and the other two are connectors (`J_BLK`, `J_SMB`); **U5 is the only IC of the set in that state.** The
+consequence is general and is written down here rather than fixed: **no rule that reads a pin FUNCTION can
+see this part**, which is why SCH-005 passes it (that rule judges every copper pad as a net or NC, by number,
+which the map does satisfy). The rail names its enable net instead, which is the mechanism the tool already
+documents for board P's BQ4050 and its `DSG_G`.
+
+**Board E's `PV_P` and board P's `PACK_N` are always on and each says why.** A photovoltaic panel produces
+whenever there is light and nothing on board E stands between the connector and the fuse. Board P's is the
+sharper one: **both protection FETs are in the POSITIVE path** (Q1 the charge switch on `FUSED`, Q2 the
+discharge switch on `PACK_P`, their common drain `SW`), so the pack's negative runs from the 12 AWG lead land
+through the coulomb-counting shunt to ground with `C11`, `C12`, `D1`, `R9`, `TP8` and `R10` on it and not one
+switching part. **High-side protection means the return is permanently connected**, which is a property of
+this pack worth writing down rather than a gap in a declaration.
+
+**A generator edit owes a regeneration and both were re-cut** (`$SP/regen8.sh`, boards E and P only, since
+only their generators changed): **NETLIST IDENTICAL, 955 connectivity lines on board E and 295 on board P**,
+which is what an intent-only change has to produce, and both `.kicad_sch` came back byte for byte. The
+sidecars and intent files are committed with them and `check_contracts` reads **ALL CONTRACTS PASS 73 of 73**
+after the move. **PWR-002: board E PASS of 13, board P PASS of 4, and all six boards pass it now.**
+**Readiness 59.8 to 60.4 percent of 333** (199 to 201 verified). Suite 1239, 0 failing.

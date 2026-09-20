@@ -2,18 +2,14 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "always_on": 3,
+  "always_on": 4,
   "deadlocks": 0,
   "rails": 13,
   "segments": 7,
-  "unresolved": 3
+  "unresolved": 0
  },
  "denominator": 13,
- "evidence": [
-  "PV_P: its source F2 has no enable pin and the board declares neither a switch nor that the rail is always on",
-  "TRK_OUT: the board declares U5 as its switch and that part has no enable pin in the netlist",
-  "PV_IN: it is a segment of PV_P and PV_P is itself unresolved, so the segment is too"
- ],
+ "evidence": [],
  "inputs": {
   "board": "e",
   "netlist": "pcb-e1-dock.net"
@@ -32,12 +28,12 @@
  ],
  "tool": "power_sequence",
  "tools": {
-  "git_head": "2ae49ff7c52a",
-  "tools_tree_sha": "4d83fe3b9dfc62e2"
+  "git_head": "52927139ecbf",
+  "tools_tree_sha": "09731de0e4d60901"
  },
- "ts": "2026-09-20T14:27:26Z",
- "verdict": "INCONCLUSIVE",
- "version": "2ae49ff7c52a+dirty",
+ "ts": "2026-09-20T14:45:23Z",
+ "verdict": "PASS",
+ "version": "52927139ecbf+dirty",
  "writer": {
   "file": "power_sequence.py",
   "sha16": "58920d0bf59c3fbb"
