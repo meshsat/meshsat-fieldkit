@@ -11,8 +11,8 @@ Measured on board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 24 | 43.6 |
-| FAIL | 14 | 25.5 |
+| PASS | 25 | 45.5 |
+| FAIL | 13 | 23.6 |
 | INCONCLUSIVE | 17 | 30.9 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **55** | 100.0 |
@@ -64,7 +64,7 @@ Measured on board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21.
 | VIA-001 every via is a via the process makes | BLOCKER | ROUTED_BOARD | **PASS** | via_audit PASS of 3221 |
 | PLN-001 no orphan copper | BLOCKER | ROUTED_BOARD | **PASS** | check_zone_nets PASS of 6 |
 | EMC-001 source, path, victim | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | emc_sheet PASS of 20 |
-| MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **FAIL** | check_pcb_b FAIL: {'fail': 21, 'footprints': 957, 'intent_items_reported': 726, 'pass': 3081} |
+| MEC-001 the board fits what it is fitted to | BLOCKER | PLACED_BOARD | **PASS** | check_pcb_b PASS of 3102 |
 | DFM-001 the fabrication set is complete and consistent | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | verify_deliverable_b INCONCLUSIVE: the folder judged here is meshsat-pcb-b-revA-B19-quote and this board declares B21, so its properties are a reading |
 | DFA-001 the assembly set is buildable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was |
 | TST-001 the board can be brought up safely | MUST_JUSTIFY | SCHEMATIC | **PASS** | PCB-BRING-UP.md is current with the registry |
