@@ -44,6 +44,10 @@ NETS = {
     "FE_COMP": [("U2", "9"), ("R92", "1")],
     "FE_RT":   [("U2", "6"), ("R93", "1")],
 }
+# Every net of the fixture declared, so a test about ONE property does not also trip the undeclared branch.
+_ALL = {n: dict(v_max=20.0, v_min=0.0, basis="declared so the fixture says one thing") for n in NETS}
+_ALL["GND"] = dict(v_max=0.0, v_min=0.0, basis="the board's reference")
+
 RAIL = dict(volts=20.0, amps_typ=6.0, amps_peak=8.0, source="R11", loads={"R16": 6.0, "U2": 0.3})
 
 
@@ -67,9 +71,14 @@ def t_a_segment_declared_as_a_node_is_found_at_both_ends_of_its_rail():
 
 
 def t_the_same_conductors_declared_as_rails_are_not_flagged():
-    """ACCEPTABLE: board A's own state after 20 September, and it must read clean."""
+    """ACCEPTABLE: board A's own state after 20 September, and it must read clean.
+
+    Every other net of the fixture is declared too, because since the undeclared branch landed an
+    UNDECLARED net on a power path is the worse finding rather than an exempt one, and a fixture that
+    leaves its own ground undeclared is testing the wrong thing.
+    """
     seg = dict(volts=20.0, amps_typ=6.0, amps_peak=8.0, source="R11", loads={"Q7": 6.0}, series_of="VBUS20")
-    intent = dict(rails={"VBUS20": RAIL, "FE_OUT": seg, "CH_ACN": seg}, nodes={})
+    intent = dict(rails={"VBUS20": RAIL, "FE_OUT": seg, "CH_ACN": seg}, nodes=dict(_ALL))
     assert _run(intent) == [], _run(intent)
 
 
@@ -78,8 +87,9 @@ def t_a_controllers_other_pins_are_not_segments_of_its_rail():
     current to an arbitrary pin. The first version walked out of U2's pin 16 and called the stage's own
     current-sense filter a segment of a 6 A path. The test is how many nets the part touches, not its name."""
     intent = dict(rails={"VBUS20": RAIL},
-                  nodes={"FE_CSF": dict(v_max=1.0, v_min=0.0, basis="the filtered current-sense input")})
-    assert _run(intent) == [], _run(intent)
+                  nodes=dict(_ALL, FE_CSF=dict(v_max=1.0, v_min=0.0, basis="the filtered current-sense input")))
+    # the OTHER conductors on this rail's path are findings and stay findings; this rule is about FE_CSF.
+    assert "FE_CSF" not in _run(intent), _run(intent)
 
 
 def t_a_ground_a_return_and_a_switching_node_are_never_segments():
@@ -88,9 +98,9 @@ def t_a_ground_a_return_and_a_switching_node_are_never_segments():
     node, which the intent marks by a negative v_min or by naming what it rides on."""
     nets = dict(NETS); nets["FE_SW2"] = [("R11", "1"), ("Q5", "5")]
     intent = dict(rails={"VBUS20": RAIL},
-                  nodes={"GND": dict(v_max=0.0, v_min=0.0, basis="the board's reference"),
-                         "FE_SW2": dict(v_max=20.0, v_min=-1.0, basis="the boost-side switching node")})
-    assert _run(intent, nets) == [], _run(intent, nets)
+                  nodes=dict(_ALL, FE_SW2=dict(v_max=20.0, v_min=-1.0, basis="the boost-side switching node")))
+    rows = _run(intent, nets)
+    assert "GND" not in rows and "FE_SW2" not in rows, rows
 
 
 def t_a_netlist_it_parsed_nothing_from_is_inconclusive_and_not_a_pass():
@@ -102,3 +112,21 @@ def t_a_netlist_it_parsed_nothing_from_is_inconclusive_and_not_a_pass():
     with tempfile.TemporaryDirectory() as td:
         n = os.path.join(td, "empty.net"); open(n, "w").write("(export (version \"E\"))\n")
         assert power_path.parse_netlist(n)[0] == {}
+
+
+def t_an_undeclared_net_on_a_power_path_is_reported_and_not_skipped():
+    """DEFECTIVE, and it is the worse case rather than the exempt one.
+
+    The first version skipped a net the intent did not mention at all, on the reasoning that an undeclared
+    net is `derate`'s question. It is not: `derate` reports an undeclared net only where a RATED PART sits on
+    it, so a bare conductor between two shunts is seen by nothing. Board E's `CELL+` carries 10.00 A through
+    its input fuse and was declared neither a rail nor a node; board B's fourteen converter switching nodes
+    are the same. Every net on the path between a rail's source and its loads must be declared SOMEHOW, as
+    the rail it is or as a node with its basis.
+    """
+    intent = dict(rails={"VBUS20": RAIL}, nodes={})       # nothing else declared at all
+    rows = _run(intent)
+    assert "CH_ACN" in rows and "FE_OUT" in rows, rows
+    import power_path
+    src = open(os.path.join(TOOLS, "power_path.py"), encoding="utf-8").read()
+    assert 'kind, nd = "undeclared", {}' in src, "an undeclared net on a power path is skipped again"

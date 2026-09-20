@@ -12547,3 +12547,41 @@ and may not also be a `series_of` segment; all three are refused with their reas
 **Readiness 63.1 to 62.8 percent verified, 13.2 to 13.5 failed, 23.7 inconclusive unchanged, of 333.** One
 pair moved and it is board P's PI-001. That is two nights running where the number went down because a
 conductor nobody had measured was measured; both times it was true before and false on the page.
+
+### 32.237, 20 September 2026 02:11 CEST: asked of every board, twenty-four more nets on a power path are declared as nothing at all
+
+`power_path` was written at 02:00 to ask mechanically what board A's sixteen had been found by hand, and its
+first version answered ZERO on all six boards, because it only looked at nets declared as NODES. **An
+UNDECLARED net is the worse case and not an exempt one**: `derate` reports an undeclared net only where a
+RATED PART sits on it, so a bare conductor between two shunts is seen by nothing at all. With that branch
+added and three false-positive classes removed by measurement rather than by naming, the set reads:
+
+| board | nets on a power path declared as nothing | what they are |
+|---|---:|---|
+| A | **5** | `S1_OUT`, `S2_OUT`, `S3_OUT` (2.50 A each), `SD_OUT` (3.80 A), the four TPS56637 stage outputs before their shunts, which is the same defect as the LM5176 helper's in the OTHER stage helper; and `B33_SW`, a switching node |
+| B | **16** | fourteen converter switching nodes (`S1A_SW` to `S3D_SW`, `DEV_SW`, `KSZC_SW`), and **`PANEL_5V` at 0.60 A through the polyfuse F1** and **`VBUS_QMX` at 0.30 A through F3**, which are real conductors |
+| C | **1** | `BZ_K`, the sounder's far terminal, 0.03 A |
+| D | 0 | |
+| E | **2** | `E6_SW`, a switching node, and **`CELL+` carrying CELL\_F's 10.00 A through the input fuse F3** |
+| P | 0 | |
+
+**Board E's `CELL+` is the largest single item**: ten amps typical and eighteen peak arriving from the pack
+lead through this board's input fuse, declared neither a rail nor a node, so `dc_drop` has never solved it
+and neither power rule has looked at it. It is board P's `PACK_N` on the other side of the same wire.
+
+**The three false-positive classes, each removed by a property of the netlist and never by a name.**
+(1) **A gate carries no rail current**, and a PowerPAK's gate is told from its drain by the LAND: on a part
+with more PADS than NETS, a net it touches with one pad while touching another with several is its control
+pin. A two-pad resistor has pads equal to nets, so the test does not apply to it, which is what keeps
+`CH_ACN` through R16 a finding and makes `CH_HIDRV1` through Q7 not one. (2) **A pass-through part is two
+shapes only**: a two-terminal part (a shunt, an inductor, a fuse, a ferrite) or a power transistor with its
+multi-pad lands. A three-pin fan header has three nets and one pad each and its pins 2 and 3 are a tachometer
+and a PWM input, not the other end of pin 1; a SOT-23 FET has the same shape and is excluded with it, which
+is stated rather than hidden. (3) **A load declared at zero amps passes no current**, so nothing downstream
+of it is a power path; board D declares seven logic gates on `+3V3_D8` at 0.00 A and the first sweep walked
+out of all fourteen of their pins.
+
+**Nothing is declared here.** Each of the twenty-four needs its own reading: a switching node is a NODE and
+says why, which is what board A's five LM5176 stages already do and what boards B and E do for none of
+theirs, and a conductor is a rail with its source, its loads and its budget. A wrong declaration is worse
+than a missing one, because it produces a number.
