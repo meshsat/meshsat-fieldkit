@@ -225,6 +225,13 @@ def main(a):
             cands = [f for f, p in pads if f.GetReference() not in srcrefs and f.GetReference()[0] in "UJ" and not f.GetReference().startswith("JP")]
             if not cands: cands = [f for f, p in pads if f.GetReference() not in srcrefs and not f.GetReference().startswith(("TP", "C", "R", "D"))]   # a pack board: the FETs and the leads
             refs = sorted({f.GetReference() for f in cands})
+            # WHICH CURRENT THIS RULE ASKS ABOUT, AND WHY (20 September 2026, appendix 32.245). A
+            # CONDUCTOR is judged at `amps_typ`, because IPC's 10 K rise is a STEADY-STATE thermal limit and
+            # a rail's continuous load is what sets it; a peak is a transient and this rule does not ask
+            # about transients. PI-003's barrel rules (`via_current`, `rail_crossings`) ask `amps_peak` for
+            # the opposite reason, a barrel having almost no thermal mass, so a via on VBAT is judged at 18 A
+            # while the track feeding it is judged at 10, on the same board and from the same declaration.
+            # The two rules' numbers are NOT comparable and that is deliberate.
             loads = {ref: r["amps_typ"] / len(refs) for ref in refs} if refs else {}
             guessed = refs
             # 13 September 2026: A GUESSED LOAD IS NOT A MEASUREMENT, and this fallback was quietly deciding
