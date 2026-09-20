@@ -13,8 +13,6 @@ import kisch
 from kisch import (U, c, emit_part, emit_pwr_flag, ensure, esd, extents, find_sym, flatten, flatten_raw, ic, label, lib_tree, noconn, parse, part, pins_of, place_symbol, q, r, rename_units, ser, text, tps22810, uq, usb_c_recept, wire)
 import intent as _intent
 # Rails of A22 (appendix 32.55; the record's currents, not measurements): the node from the pack, the 20 V charge bus, the slot rails, the device rail, the PA and HF rails, PoE
-_intent.rail("VBAT", 14.4, 10.0, 18.0, "F1", always_on=True, v_work=16.8, converted=False,
-             always_on_why="the fused pack node: nothing on this board switches it. What opens it is the pack's own BQ4050 protection FETs and the 25 A blade F1, which are the first two stages of the energy chain", loads={"U4": 2.0, "U5": 2.0, "U6": 2.0, "U7": 2.0, "Q11": 1.5, "U15": 0.3, "U12": 0.2}, note="the 4S node after the 25 A blade F1; 10 A continuous, 18 A peak by the pack's rating (32.55)")
 # CELL+ CROSSES A AND E AND ITS BUDGET IS SPLIT (20 September 2026). Declaring board E's own CELL+ at 02:16
 # made this a cross-board rail, and `check_contracts` said so within the minute: "rail CELL+ crosses A/E and
 # its end-to-end budget is not split between them". The split is MEASURED and not guessed: board A's CELL+
@@ -25,6 +23,10 @@ _intent.rail("VBAT", 14.4, 10.0, 18.0, "F1", always_on=True, v_work=16.8, conver
 # from a measurement with margin rather than from an opinion.
 _intent.rail("CELL+", 14.4, 10.0, 18.0, "J_CP1", always_on=True, v_work=16.8, converted=False, share=0.005,
              always_on_why="the pack node as it arrives on the dock block contacts; it is switched on board E and in the pack, never here", loads={"F1": 10.0}, note="the pack side of the RSR shunt. The pack current leaves this node through F1, the 25 A blade to VBAT; R17 is the 5 mOhm charge-sense shunt, R1 the 10 R pre-charge trickle, TP14 a test point and U3 pin 19 the BQ25731's CELL+ SENSE input, which draws microamps. Undeclared, dc_drop split the 10 A over every non-passive part on the net and pushed amps through U3 pin 19's 0.20 mm escape on a 0.4 mm pitch, reading 2.21 percent at a 0.5 mm cell and 2.75 at 0.25 against a 2 percent budget: the same correction VIN_RAW carries above, and for the same reason (12 September 2026, A24)")
+# VBAT IS THE PACK NODE PAST THIS BOARD'S OWN 25 A BLADE F1, so it is declared AFTER CELL+: a rail that
+# says what feeds it needs that rail declared first (20 September 2026, `fed_from`, appendix 32.246).
+_intent.rail("VBAT", 14.4, 10.0, 18.0, "F1", always_on=True, v_work=16.8, converted=False, fed_from="CELL+",
+             always_on_why="the fused pack node: nothing on this board switches it. What opens it is the pack's own BQ4050 protection FETs and the 25 A blade F1, which are the first two stages of the energy chain", loads={"U4": 2.0, "U5": 2.0, "U6": 2.0, "U7": 2.0, "Q11": 1.5, "U15": 0.3, "U12": 0.2}, note="the 4S node after the 25 A blade F1; 10 A continuous, 18 A peak by the pack's rating (32.55)")
 _intent.rail("VIN_RAW", 12.0, 8.0, 10.0, "J_DOCK", loads={"Q2": 7.0, "C11": 0.5, "C12": 0.5}, budget=0.02, share=0.015, v_work=36.0, converted=False,
              always_on=True, always_on_why="shore and vehicle input arriving over the dock behind board E's own 10 A blade and ideal diode; this board does not switch it, it consumes it", note="shore and vehicle input from E6 over the dock, 10 A fuse; the current enters the front end at Q2's drain and the input caps (the LM5176 U2 draws only its bias: a load named U2 put 8 A into two QFN pins and read 3.3 percent, 32.69)")
 # LOADS DECLARED 13 September 2026. This rail carried none and dc_drop guessed, putting 6 A into U3, whose
@@ -58,7 +60,7 @@ _intent.rail("VIN_RAW", 12.0, 8.0, 10.0, "J_DOCK", loads={"Q2": 7.0, "C11": 0.5,
 #   light-load discussion is about PFM. 0.88 is below anything it claims.
 # NONE OF THESE IS A MEASUREMENT OF THIS BOARD. They are the parts' published figures used as a floor, and the
 # junction temperature this rule really wants needs the envelope's maximum ambient, which is owner decision 34.
-_intent.rail("VBUS20", 20.0, 6.0, 8.0, "R11", loads={"R16": 6.0}, switch="U2", efficiency=0.93, note="the charge bus, BQ25731 up to 8 A; the stage's output is its ISNS shunt R11, not the controller U2")
+_intent.rail("VBUS20", 20.0, 6.0, 8.0, "R11", loads={"R16": 6.0}, switch="U2", efficiency=0.93, fed_from="VIN_RAW", note="the charge bus, BQ25731 up to 8 A; the stage's output is its ISNS shunt R11, not the controller U2")
 for _n, _sh in (("1", "R31"), ("2", "R35"), ("3", "R39")):
     # THIS BOARD'S SHARE of a rail that crosses to board B (16 September 2026). The cross-board contract
     # asked for a share on seven rails and no board declared one, so each half was judged against the WHOLE
@@ -66,20 +68,20 @@ for _n, _sh in (("1", "R31"), ("2", "R35"), ("3", "R39")):
     # morning, generalised. This board regulates the rail and its copper runs from the INA226 shunt to the
     # VH header, measured at 0.07 percent of 5.1 V; board B carries it across 245 mm to a module receptacle
     # at 2.5 A and takes the other 1.5 points of the 2 percent.
-    _intent.rail("+5V_S%s" % _n, 5.1, 2.5, 5.0, _sh, loads={"J_5V_S%s" % _n: 5.0}, budget=0.02, share=0.005,
+    _intent.rail("+5V_S%s" % _n, 5.1, 2.5, 5.0, _sh, loads={"J_5V_S%s" % _n: 5.0}, budget=0.02, share=0.005, fed_from="VBAT",
                  switch={"1": "U4", "2": "U5", "3": "U6"}[_n], efficiency=0.90,
                  note="one CM5 slot with its cooler fan; 5 A peak at the module; the rail net starts at the "
                       "INA226 shunt. This board's share of the 2 percent is 0.5 point, measured 0.07")
-_intent.rail("+5V_DEV", 5.0, 3.8, 6.0, "R43", loads={"J_5V_DEV": 3.2}, budget=0.02, share=0.005, switch="U7", efficiency=0.90, note="the USB devices, the LimeSDR bay and the RockBLOCK behind their switches; the net starts at the shunt. 9 September 2026 (ARCH-PCB-B-IOHA): +0.8 A because B16's three hub banks had to leave the slot rails, or a bank would die with the module it fails away from. The AP64500 is a 5 A part, so the headroom is there; what this declaration buys is that dc_drop judges the copper at the current it now carries.")
+_intent.rail("+5V_DEV", 5.0, 3.8, 6.0, "R43", loads={"J_5V_DEV": 3.2}, budget=0.02, share=0.005, switch="U7", efficiency=0.90, fed_from="VBAT", note="the USB devices, the LimeSDR bay and the RockBLOCK behind their switches; the net starts at the shunt. 9 September 2026 (ARCH-PCB-B-IOHA): +0.8 A because B16's three hub banks had to leave the slot rails, or a bank would die with the module it fails away from. The AP64500 is a 5 A part, so the headroom is there; what this declaration buys is that dc_drop judges the copper at the current it now carries.")
 # LOADS DECLARED 13 September 2026, apportioning the declared 0.3 A rather than measuring it: this is logic,
 # tens of milliamps a part, and the biggest single draw is the gated 3.3 V leaving on the mezzanine harness.
-_intent.rail("+3V3", 3.3, 0.3, 0.6, "L7", budget=0.03, share=0.015, switch="U12", efficiency=0.88,
+_intent.rail("+3V3", 3.3, 0.3, 0.6, "L7", budget=0.03, share=0.015, switch="U12", efficiency=0.88, fed_from="VBAT",
              loads={"J_MEZZ1": 0.10, "U8": 0.03, "U9": 0.03, "U10": 0.03, "U11": 0.03,
                     "U14": 0.02, "U17": 0.02, "U26": 0.02, "U27": 0.01, "U28": 0.01}, note="this board's logic (two PCA9555, five INA226, the LTC2954, the controllers' VCC pins: tens of mA each; the 1 A of the first intent was a placeholder, 32.69); the net starts at the TPS62933 inductor L7")
-_intent.rail("+13V8_PA", 13.8, 5.0, 6.0, "R55", loads={"J_PA": 6.0}, switch="U13", efficiency=0.93, note="the RA30H1317M1 on the face plate")
-_intent.rail("+12V_HF", 12.0, 1.0, 2.0, "R65", budget=0.03, loads={"J_HF": 1.0}, switch="U15", efficiency=0.93,
+_intent.rail("+13V8_PA", 13.8, 5.0, 6.0, "R55", loads={"J_PA": 6.0}, switch="U13", efficiency=0.93, fed_from="VBAT", note="the RA30H1317M1 on the face plate")
+_intent.rail("+12V_HF", 12.0, 1.0, 2.0, "R65", budget=0.03, loads={"J_HF": 1.0}, switch="U15", efficiency=0.93, fed_from="VBAT",
              note="the QMX")   # the whole rail leaves at J_HF for the HF unit in the lid tray
-_intent.rail("+54V_POE", 54.0, 0.3, 0.6, "R71", loads={"J_54V": 0.3}, budget=0.02, share=0.005, switch="U16", efficiency=0.88,
+_intent.rail("+54V_POE", 54.0, 0.3, 0.6, "R71", loads={"J_54V": 0.3}, budget=0.02, share=0.005, switch="U16", efficiency=0.88, fed_from="VBAT",
              note="the TPS23861 PSE on B16")   # the whole rail leaves at J_54V on the VH lead to B
 SYMDIR = "/usr/share/kicad/symbols/"
 
@@ -453,7 +455,7 @@ vh2("J_54V", "54 V to the PoE injector on B16 (JST-VH): + -", "+54V_POE")
 # every rule that looks at copper still looks at all four conductors.
 _PD_A, _PD_V, _PD_BUDGET = 3.0, 15.0, 0.0067
 _intent.rail("PD_VPWR", _PD_V, _PD_A, _PD_A, "R81", loads={"Q27": _PD_A}, v_work=_PD_V, budget=_PD_BUDGET,
-             switch="U19", efficiency=0.93,
+             switch="U19", efficiency=0.93, fed_from="VBAT",
              note="the PD supply between the stage's ISNS shunt R81 and the VBUS switch Q27, at the "
                   "TPS25740A's highest advertised profile (5, 9 and 15 V at 3 A, 45 W): the LM5176's "
                   "feedback divider is switched by CTL1 and CTL2, so 15 V is the stage's ceiling and the "

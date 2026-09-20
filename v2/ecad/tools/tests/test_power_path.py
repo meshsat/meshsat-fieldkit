@@ -130,3 +130,48 @@ def t_an_undeclared_net_on_a_power_path_is_reported_and_not_skipped():
     import power_path
     src = open(os.path.join(TOOLS, "power_path.py"), encoding="utf-8").read()
     assert 'kind, nd = "undeclared", {}' in src, "an undeclared net on a power path is skipped again"
+
+
+def t_a_rail_is_asked_whether_it_declares_what_its_converters_draw():
+    """DEFECTIVE, and the defect is board A's own: VBAT declares 10.0 A and its nine converters draw 15.18.
+
+    `dc_drop` solves a rail at its DECLARED current, so an understated feeder is judged on copper it does not
+    really have to carry, and board A's VBAT already reads 3.69 times its density limit at the understated
+    figure. Nothing checked it, on any board, until 20 September.
+    """
+    parent = dict(volts=14.4, amps_typ=10.0, amps_peak=18.0, source="F1", loads={"U13": 10.0})
+    child = dict(volts=13.8, amps_typ=5.0, amps_peak=6.0, source="R55", loads={"J": 6.0},
+                 efficiency=0.93, fed_from="VBAT")
+    rows = power_path.feed_sums(dict(rails={"VBAT": parent, "+13V8_PA": child}))
+    assert len(rows) == 1 and rows[0]["rail"] == "VBAT", rows
+    assert abs(rows[0]["draws_typ"] - 5.15) < 0.01, rows      # 13.8 * 5.0 / 0.93 / 14.4
+    assert abs(rows[0]["draws_peak"] - 6.18) < 0.01, rows
+    nine = {"c%d" % i: dict(child) for i in range(9)}
+    rows = power_path.feed_sums(dict(rails=dict(nine, VBAT=parent)))
+    assert rows[0]["draws_typ"] > rows[0]["declared_typ"], rows
+
+
+def t_a_pass_element_moves_the_current_it_is_given():
+    """ACCEPTABLE: a rail with no efficiency is not a converter, so its input equals its output.
+
+    Board A's VBAT is CELL+ past a 25 A blade: the fuse converts nothing and the two declare the same 10 A,
+    which must not read as a shortfall.
+    """
+    cellp = dict(volts=14.4, amps_typ=10.0, amps_peak=18.0, source="J_CP1", loads={"F1": 10.0})
+    vbat = dict(volts=14.4, amps_typ=10.0, amps_peak=18.0, source="F1", loads={"U13": 10.0}, fed_from="CELL+")
+    rows = power_path.feed_sums(dict(rails={"CELL+": cellp, "VBAT": vbat}))
+    assert len(rows) == 1 and rows[0]["rail"] == "CELL+", rows
+    assert abs(rows[0]["draws_typ"] - 10.0) < 1e-6 and rows[0]["draws_typ"] <= rows[0]["declared_typ"], rows
+
+
+def t_fed_from_must_name_a_declared_rail_and_not_itself():
+    """DEFECTIVE both ways: the rail behind a converter is a rail, and nothing feeds itself."""
+    import importlib, intent
+    importlib.reload(intent)
+    intent.rail("VBAT", 14.4, 10.0, 18.0, "F1", loads={"U13": 10.0})
+    for kw, want in (({"fed_from": "NO_SUCH"}, "is not a declared rail"), ({"fed_from": "X"}, "fed from itself")):
+        try:
+            intent.rail("X", 13.8, 5.0, 6.0, "R55", loads={"J": 6.0}, **kw)
+        except SystemExit as e:
+            assert want in str(e), str(e); continue
+        raise AssertionError("accepted %s" % kw)

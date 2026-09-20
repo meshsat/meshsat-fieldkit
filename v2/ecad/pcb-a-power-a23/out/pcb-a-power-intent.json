@@ -1,6 +1,6 @@
 {
  "board": "pcb-a-power",
- "written": "2026-09-20 00:32",
+ "written": "2026-09-20 01:04",
  "bypass": [
   {
    "cap": "C8",
@@ -214,6 +214,21 @@
   }
  ],
  "rails": {
+  "CELL+": {
+   "volts": 14.4,
+   "amps_typ": 10.0,
+   "amps_peak": 18.0,
+   "source": "J_CP1",
+   "loads": {
+    "F1": 10.0
+   },
+   "note": "the pack side of the RSR shunt. The pack current leaves this node through F1, the 25 A blade to VBAT; R17 is the 5 mOhm charge-sense shunt, R1 the 10 R pre-charge trickle, TP14 a test point and U3 pin 19 the BQ25731's CELL+ SENSE input, which draws microamps. Undeclared, dc_drop split the 10 A over every non-passive part on the net and pushed amps through U3 pin 19's 0.20 mm escape on a 0.4 mm pitch, reading 2.21 percent at a 0.5 mm cell and 2.75 at 0.25 against a 2 percent budget: the same correction VIN_RAW carries above, and for the same reason (12 September 2026, A24)",
+   "share": 0.005,
+   "always_on": true,
+   "always_on_why": "the pack node as it arrives on the dock block contacts; it is switched on board E and in the pack, never here",
+   "v_work": 16.8,
+   "converted": false
+  },
   "VBAT": {
    "volts": 14.4,
    "amps_typ": 10.0,
@@ -232,22 +247,8 @@
    "always_on": true,
    "always_on_why": "the fused pack node: nothing on this board switches it. What opens it is the pack's own BQ4050 protection FETs and the 25 A blade F1, which are the first two stages of the energy chain",
    "v_work": 16.8,
-   "converted": false
-  },
-  "CELL+": {
-   "volts": 14.4,
-   "amps_typ": 10.0,
-   "amps_peak": 18.0,
-   "source": "J_CP1",
-   "loads": {
-    "F1": 10.0
-   },
-   "note": "the pack side of the RSR shunt. The pack current leaves this node through F1, the 25 A blade to VBAT; R17 is the 5 mOhm charge-sense shunt, R1 the 10 R pre-charge trickle, TP14 a test point and U3 pin 19 the BQ25731's CELL+ SENSE input, which draws microamps. Undeclared, dc_drop split the 10 A over every non-passive part on the net and pushed amps through U3 pin 19's 0.20 mm escape on a 0.4 mm pitch, reading 2.21 percent at a 0.5 mm cell and 2.75 at 0.25 against a 2 percent budget: the same correction VIN_RAW carries above, and for the same reason (12 September 2026, A24)",
-   "share": 0.005,
-   "always_on": true,
-   "always_on_why": "the pack node as it arrives on the dock block contacts; it is switched on board E and in the pack, never here",
-   "v_work": 16.8,
-   "converted": false
+   "converted": false,
+   "fed_from": "CELL+"
   },
   "VIN_RAW": {
    "volts": 12.0,
@@ -277,7 +278,8 @@
    },
    "note": "the charge bus, BQ25731 up to 8 A; the stage's output is its ISNS shunt R11, not the controller U2",
    "switch": "U2",
-   "efficiency": 0.93
+   "efficiency": 0.93,
+   "fed_from": "VIN_RAW"
   },
   "+5V_S1": {
    "volts": 5.1,
@@ -291,7 +293,8 @@
    "budget": 0.02,
    "share": 0.005,
    "switch": "U4",
-   "efficiency": 0.9
+   "efficiency": 0.9,
+   "fed_from": "VBAT"
   },
   "+5V_S2": {
    "volts": 5.1,
@@ -305,7 +308,8 @@
    "budget": 0.02,
    "share": 0.005,
    "switch": "U5",
-   "efficiency": 0.9
+   "efficiency": 0.9,
+   "fed_from": "VBAT"
   },
   "+5V_S3": {
    "volts": 5.1,
@@ -319,7 +323,8 @@
    "budget": 0.02,
    "share": 0.005,
    "switch": "U6",
-   "efficiency": 0.9
+   "efficiency": 0.9,
+   "fed_from": "VBAT"
   },
   "+5V_DEV": {
    "volts": 5.0,
@@ -333,7 +338,8 @@
    "budget": 0.02,
    "share": 0.005,
    "switch": "U7",
-   "efficiency": 0.9
+   "efficiency": 0.9,
+   "fed_from": "VBAT"
   },
   "+3V3": {
    "volts": 3.3,
@@ -356,7 +362,8 @@
    "budget": 0.03,
    "share": 0.015,
    "switch": "U12",
-   "efficiency": 0.88
+   "efficiency": 0.88,
+   "fed_from": "VBAT"
   },
   "+13V8_PA": {
    "volts": 13.8,
@@ -368,7 +375,8 @@
    },
    "note": "the RA30H1317M1 on the face plate",
    "switch": "U13",
-   "efficiency": 0.93
+   "efficiency": 0.93,
+   "fed_from": "VBAT"
   },
   "+12V_HF": {
    "volts": 12.0,
@@ -381,7 +389,8 @@
    "note": "the QMX",
    "budget": 0.03,
    "switch": "U15",
-   "efficiency": 0.93
+   "efficiency": 0.93,
+   "fed_from": "VBAT"
   },
   "+54V_POE": {
    "volts": 54.0,
@@ -395,7 +404,8 @@
    "budget": 0.02,
    "share": 0.005,
    "switch": "U16",
-   "efficiency": 0.88
+   "efficiency": 0.88,
+   "fed_from": "VBAT"
   },
   "+5V_D8": {
    "volts": 5.0,
@@ -552,7 +562,8 @@
    "budget": 0.0067,
    "switch": "U19",
    "efficiency": 0.93,
-   "v_work": 15.0
+   "v_work": 15.0,
+   "fed_from": "VBAT"
   },
   "PD_SW": {
    "volts": 15.0,

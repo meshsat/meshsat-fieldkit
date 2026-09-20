@@ -172,6 +172,38 @@ def segments(intent, nets):
     return uniq
 
 
+def feed_sums(intent):
+    """Every rail that feeds converters, against the sum of what they draw (20 September 2026, rule PWR-002).
+
+    Board A's `VBAT` is declared 10.0 A typical and the nine converters that say `fed_from="VBAT"` add up to
+    15.18 A from the same file, each one's own volts times amps over its own declared efficiency. Nothing
+    checked that, on any board, and it matters in the worst direction: `dc_drop` solves the rail at the
+    DECLARED current, so an understated pack node is judged on copper it does not really have to carry.
+
+    A rail with no efficiency is not a converter and takes its input current as its output current: a fuse,
+    a ferrite or a pass FET moves the same amps it is given. A rail that declares neither an efficiency nor a
+    `fed_from` is not counted at all, because nothing says where its current comes from.
+    """
+    rails = intent.get("rails") or {}
+    out = []
+    for parent in sorted(rails):
+        kids = [(n, r) for n, r in sorted(rails.items()) if (r.get("fed_from") or "") == parent]
+        if not kids: continue
+        t = p = 0.0
+        rows = []
+        for n, r in kids:
+            v = float(r.get("volts") or 0)
+            eff = float(r.get("efficiency") or 1.0) or 1.0
+            pv = float((rails[parent]).get("volts") or 0) or 1.0
+            it = v * float(r.get("amps_typ") or 0) / eff / pv
+            ip = v * float(r.get("amps_peak") or 0) / eff / pv
+            t += it; p += ip; rows.append((n, round(it, 2), round(ip, 2)))
+        out.append(dict(rail=parent, declared_typ=float(rails[parent].get("amps_typ") or 0),
+                        declared_peak=float(rails[parent].get("amps_peak") or 0),
+                        draws_typ=round(t, 2), draws_peak=round(p, 2), children=rows))
+    return out
+
+
 def main(argv):
     if not argv: raise SystemExit(__doc__)
     net = argv[0]
@@ -196,11 +228,18 @@ def main(argv):
               % (s["node"], s["rail"], s["amps"], s["through"], ",".join(s["pins_on_rail"]), ",".join(s["pins_on_node"]),
                  "NOT DECLARED AT ALL" if s["kind"] == "undeclared" else "declared a NODE at %.1f V" % s["v_max"]))
         if s["basis"]: print("              its basis: %s" % s["basis"])
+    feeds = feed_sums(intent)
+    _short = [f for f in feeds if f["draws_typ"] > f["declared_typ"] + 1e-6]
+    for f in feeds:
+        mark = "  <-- SHORT" if f in _short else ""
+        print("power_path: %-12s declares %5.2f A typ / %5.2f peak and feeds %d converter(s) drawing %5.2f / %5.2f%s"
+              % (f["rail"], f["declared_typ"], f["declared_peak"], len(f["children"]), f["draws_typ"], f["draws_peak"], mark))
     _un = sum(1 for r in rows if r["kind"] == "undeclared")
     print("power_path: %d net(s) carry a declared rail's current through one of its own source or load parts "
           "without being a rail: %d declared a node and %d NOT DECLARED AT ALL, of %d rail(s) and %d node(s)"
           % (len(rows), len(rows) - _un, _un, len(intent.get("rails") or {}), len(intent.get("nodes") or {})))
     return _w("power_path", _v.PASS, counts=dict(segments=len(rows), undeclared=_un,
+                                                 feeds=len(feeds), feeds_short=len(_short),
                                                  rails=len(intent.get("rails") or {}),
                                                  nodes=len(intent.get("nodes") or {})),
               evidence=["%s (%s) carries %s's %.2f A through %s" % (s["node"], s["kind"], s["rail"], s["amps"], s["through"]) for s in rows],
