@@ -12975,3 +12975,33 @@ is armed for it.
 **And it is still not a one-variable pair**, for the reason written down before the run: A49's tree was
 staged before the closure-acceptance fix. Read the pair on ANA-001 and on the open count together, and read
 ANA-001 on whichever round is ADOPTED rather than on whichever reads best.
+
+### 32.249, 20 September 2026 03:12 CEST: `power_path` reads zero on board E and board E's whole input side is still a node
+
+A correction to 32.239's "every board reads zero undeclared", found by checking the tool against a case the
+record already names. Board E's `DC_IN`, `DC_F`, `DC_HS` and `DC_P` are **the vehicle and shore entry through
+the fuse and the hot-swap FET, feeding VIN_RAW at 8 A typical and 10 A peak**, and `PV_IN`, `PV_P` and
+`TRK_OUT` are the solar entry and the tracker's output at 10 A typical and 18 A peak. All seven are declared
+as **NODES**, so `dc_drop` solves none of them and PI-001 and PI-002 have never looked at board E's input
+side either.
+
+**`power_path` does not flag them and the reason is a gap in its pass-through test.** That test admits a part
+with exactly TWO nets or a power transistor with more pads than nets, and board E's `L2` is a **Bourns
+SRF1260 dual-winding choke on a four-pin land**: two windings, four pads, four nets, one package. It is two
+pass-throughs in one part and the rule sees a four-pin connector. So the tool's zero on board E is a FALSE
+NEGATIVE, and "every board reads zero undeclared" is true only of conductors reachable through the two shapes
+it knows.
+
+**The zero on boards A, D and P still stands** (their feeders are shunts, fuses and transistors), and the
+undeclared branch found twenty-four real ones before this, so the tool earned its place. What it needs is
+either a third shape for a multi-winding part or, better, the declaration of board E's seven so the question
+stops depending on the walk at all.
+
+**And the conversion has a trap that the charger's did not**, which is why it is not being done in the same
+breath: those nodes are declared at **53.3 V**, the clamp's standoff, which is what a part on them can see in
+a transient. `rail()` carries `volts` and `v_work` and not `v_max`, and `derate` takes the worst of
+everything declared ABOUT A NET; converting a node to a rail REMOVES the node, so declaring `volts=12` and
+`v_work=36` would leave every part on the vehicle input judged at 36 V where it is judged at 53.3 today.
+**That is a loosening and it is exactly the shape 20 September 00:40 caught in `derate` itself.** The
+conversion has to carry `v_work=53.3` or the clamp's own number some other way, and that is a reading of the
+design rather than a transcription.
