@@ -54,6 +54,27 @@ rule_areas = [z for z in b.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowVias(
 edges = b.GetBoardEdgesBoundingBox()
 placed = [t.GetPosition() for t in b.GetTracks() if t.GetClass() == "PCB_VIA"]; placed_nets = []   # escapes already on the board count as placed vias
 segs = [(t.GetStart(), t.GetEnd(), t.GetWidth() / 2, t.GetNetname()) for t in b.GetTracks() if t.GetClass() == "PCB_TRACK"]   # B16 (7 Sep 2026): escape stubs are obstacles too, a fanout via landed on one
+def _other_net_clear(c, own_net, need):
+    """Is point c at least `need` from every OTHER net's copper? Measured against the pad's POLYGON.
+
+    20 September 2026, board D. The in-pad fallbacks compared CENTRE TO CENTRE against `qr + VIA_D/2 +
+    INPAD_CLR`, where `qr` is `max(size.x, size.y) / 2` used as a CIRCLE radius. A circle of the long
+    half-dimension does not contain a rectangle's corners, so a via approaching a rectangular land ALONG ITS
+    DIAGONAL passes the test while its copper does not: D1's 2.500 x 2.300 SMB land, centre 1.9313 mm from
+    C9 pad 2's centre against a demand of 1.6750, accepted, and the real gap from the via's ring to that
+    pad's copper is 0.1137 mm against the PWR class's 0.1270. That one via blocked board D's whole chain at
+    `PREROUTE-DONE BLOCK 1` and cost two wrong attributions before a per-stage DRC named the stage.
+    The same file's `_crosses` has used the polygon since this morning for the same reason; this is the
+    THIRD guard in it whose question was cheaper than the fact it guards.
+    The cheap circle stays as a PRE-FILTER (`qreach` bounds how far a pad's copper can reach from its
+    centre), so the polygon is asked only of the pads that could possibly be close."""
+    for _q, qp, _qr, qpoly, qreach, qnet in allpads:
+        if qnet == own_net: continue
+        if abs(c.x - qp.x) > qreach + need or abs(c.y - qp.y) > qreach + need: continue
+        if qpoly.Collide(c, int(need)): return False
+    return True
+
+
 def _seg_dist(p, a, c):
     ax, ay, bx, by = a.x, a.y, c.x, c.y; dx, dy = bx - ax, by - ay; L2 = dx * dx + dy * dy
     t = 0.0 if L2 == 0 else max(0.0, min(1.0, ((p.x - ax) * dx + (p.y - ay) * dy) / L2))
@@ -83,7 +104,9 @@ for fp in boardorder.footprints(b):   # stage 0b, 11 Sep 2026: this loop LAYS, s
         if skip_fp and not (pad.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and min(pad.GetSize().x, pad.GetSize().y) >= FromMM(1.5) and pad.GetNetname().lstrip("/") in PLANES): continue   # a fine part's exposed pad still gets its plane via (D8 run 5: the amplifier's pad sat on an island)
         if skip_fp:
             c = pad.GetPosition()
-            if not any(math.hypot(c.x - w.x, c.y - w.y) < VIA_D + FromMM(0.35) for w in placed):
+            if not any(math.hypot(c.x - w.x, c.y - w.y) < VIA_D + FromMM(0.35) for w in placed) \
+               and _other_net_clear(c, pad.GetNetname(), VIA_D / 2 + INPAD_CLR) \
+               and all(_seg_dist(c, a_, e_) >= hw_ + VIA_D / 2 + INPAD_CLR for a_, e_, hw_, n_ in segs if n_ != pad.GetNetname()):   # 20 Sep 2026: this branch asked ONLY whether a via was already here, so a fine part's exposed-pad via was laid with no test against any other net's copper at all
                 via = pcbnew.PCB_VIA(b); via.SetPosition(c); via.SetDrill(VIA_DRILL); via.SetWidth(VIA_D); via.SetViaType(pcbnew.VIATYPE_THROUGH); via.SetLocked(True)
                 via.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); via.SetNet(pad.GetNet()); b.Add(via); placed.append(c); placed_nets.append((c, pad.GetNetname())); added += 1; inpad += 1
             continue
@@ -145,7 +168,7 @@ for fp in boardorder.footprints(b):   # stage 0b, 11 Sep 2026: this loop LAYS, s
                     placed.append(v); placed_nets.append((v, pad.GetNetname())); added += 1; done = True; break
             if done: break
         if not done and min(pad.GetSize().x, pad.GetSize().y) >= VIA_D + FromMM(0.1) and not any(math.hypot(c.x - w.x, c.y - w.y) < VIA_D + FromMM(0.35) for w in placed) \
-           and all(math.hypot(c.x - qp.x, c.y - qp.y) >= qr + VIA_D / 2 + INPAD_CLR for q, qp, qr, _qpoly, _qreach, _qnet in allpads if _qnet != pad.GetNetname()) \
+           and _other_net_clear(c, pad.GetNetname(), VIA_D / 2 + INPAD_CLR) \
            and all(_seg_dist(c, a_, e_) >= hw_ + VIA_D / 2 + INPAD_CLR for a_, e_, hw_, n_ in segs if n_ != pad.GetNetname()):   # 8 Sep 2026: the in-pad fallback tested pads and vias but not TRACKS, so a via in a plane pad landed on a neighbour's locked escape and the escape was pruned for it (B17, 32.77). The via's ring must keep the class clearance from every other-net pad (D8 run 4: a 1210 neighbour 0.72 mm away)
             # 7 Sep 2026 (E6 run 8, D8 run 3): a plane pad with no room around it gets its via in the pad (0.45/0.25 inside a 0603 land), so no pour piece is ever left
             # hanging on a pad without a path to the plane; the count is reported for the order notes (via-in-pad is a prototype allowance)
