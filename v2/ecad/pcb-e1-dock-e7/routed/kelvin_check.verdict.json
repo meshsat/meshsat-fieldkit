@@ -1,0 +1,37 @@
+{
+ "advisory": true,
+ "applicable": true,
+ "counts": {
+  "declared": 2,
+  "measured": 0,
+  "not_kelvin": 0
+ },
+ "denominator": 2,
+ "evidence": [],
+ "inputs": {
+  "board": {
+   "path": "pcb-e1-dock.kicad_pcb",
+   "sha256_16": "a462ac2620b9b8d3"
+  },
+  "tolerance_pct": 1.0
+ },
+ "missing_input": "no declared tap could be measured on this board",
+ "note": "the share of a current-sense signal that is the copper's own drop between the shunt's own pad and the point the sense line taps, from dc_drop's solved mesh; a REPORT, because no rule asks this yet",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [],
+ "tool": "kelvin_check",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "b1abc2abe2326684"
+ },
+ "ts": "2026-09-20T06:14:56Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown",
+ "writer": {
+  "file": "kelvin_check.py",
+  "sha16": "732c8a2fcf2d2120"
+ }
+}
