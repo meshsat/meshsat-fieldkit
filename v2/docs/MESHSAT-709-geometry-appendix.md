@@ -14405,3 +14405,27 @@ way of a straight run and each names it.
 Kelvin sense is not a Kelvin sense, and `U13` sits that far from the shunt it reads.
 
 **NOT STARTED.** Nothing is applied while four board A arms are in flight.
+
+### 32.290, 20 September 2026 09:06 CEST: sweep 30's number, and the backlog it was run to measure
+
+**Readiness 57.7 percent of 333: 192 verified, 37 failed, 104 inconclusive**, from 62.8 / 209 / 45 / 79 this
+morning. **No board changed**: every sha was compared before and after on all three sweeps and no line says
+otherwise.
+
+**The number the sweep was run to move went from 53 of 76 open pairs to 20 of 93** — readings decided by a
+tool that has changed since. The denominator grew because more pairs carry a reading at all now. That is the
+first time this project has measured its own evidence backlog rather than remembered it.
+
+**`NOT_JUDGED` went 36 to 19 and what is left is honest.** Sixteen are board B's routed-board rules on a
+board 416 connections short, which were never failures of its design and are one item; three are `PWR-002` on
+A, E and P, where the tool says in its own words that a rail whose enable is driven only by a device powered
+from that same rail cannot be sequenced by inspection. The cross-board contract gate is judged again on every
+board.
+
+**Five pairs read MISSING_INPUT where they used to read PASS, all of them `stackup_gate`**, and that is this
+morning's fix working rather than a loss: the sweep tree carries no `v2/vendor`, so the transcribed
+fabricator document is not there, and the reading DECLARES that instead of displacing the runner's, which
+reads PASS of 24. **The cause was one rsync line**: `rsync` will not create an intermediate directory, so
+`mkdir /root/sweepNN/v2/vendor/fabricator failed: No such file or directory` went into a log nobody read and
+five boards' stackup readings declared their input absent for two sweeps. Sweep 31 creates the directory
+first and carries the documents; it is running.
