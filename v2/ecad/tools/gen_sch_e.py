@@ -41,7 +41,16 @@ _intent.rail("CELL_F", 14.4, 10.0, 18.0, "F3", always_on=True, v_work=16.8, conv
 # terminals, one of them measured at 02:05 tonight and this one invisible until 02:11.
 # It is a SEGMENT of CELL_F's path, which is the rail the board's power is counted at, so its watts are not
 # counted twice; everything that judges copper judges it exactly as it judges CELL_F's.
+# CELL+ CROSSES A AND E AND ITS BUDGET IS SPLIT (20 September 2026). Declaring board E's own CELL+ at 02:16
+# made this a cross-board rail, and `check_contracts` said so within the minute: "rail CELL+ crosses A/E and
+# its end-to-end budget is not split between them". The split is MEASURED and not guessed: board A's CELL+
+# reads a worst drop of 12 mV, 0.08 percent of 14.4 V, and board E's 24 mV, 0.16 percent, so the two boards
+# together spend a quarter of a percent of the 2 percent the rail allows. Each declares 0.5 percent, which is
+# six times what it measures, and the remaining 1.0 percent (144 mV) belongs to the part nobody has measured:
+# the 12 AWG lead, the dock block contacts and the 25 A blade between them. A share is a BAR, so it is set
+# from a measurement with margin rather than from an opinion.
 _intent.rail("CELL+", 14.4, 10.0, 18.0, "J_BATT", loads={"F3": 10.0}, series_of="CELL_F", v_work=16.8,
+             share=0.005,
              converted=False, always_on=True,
              always_on_why="the pack node BEFORE this board's 25 A blade: nothing on this board can open it, "
                            "which is the same reason CELL_F gives one line up",

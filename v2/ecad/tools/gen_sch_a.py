@@ -15,7 +15,15 @@ import intent as _intent
 # Rails of A22 (appendix 32.55; the record's currents, not measurements): the node from the pack, the 20 V charge bus, the slot rails, the device rail, the PA and HF rails, PoE
 _intent.rail("VBAT", 14.4, 10.0, 18.0, "F1", always_on=True, v_work=16.8, converted=False,
              always_on_why="the fused pack node: nothing on this board switches it. What opens it is the pack's own BQ4050 protection FETs and the 25 A blade F1, which are the first two stages of the energy chain", loads={"U4": 2.0, "U5": 2.0, "U6": 2.0, "U7": 2.0, "Q11": 1.5, "U15": 0.3, "U12": 0.2}, note="the 4S node after the 25 A blade F1; 10 A continuous, 18 A peak by the pack's rating (32.55)")
-_intent.rail("CELL+", 14.4, 10.0, 18.0, "J_CP1", always_on=True, v_work=16.8, converted=False,
+# CELL+ CROSSES A AND E AND ITS BUDGET IS SPLIT (20 September 2026). Declaring board E's own CELL+ at 02:16
+# made this a cross-board rail, and `check_contracts` said so within the minute: "rail CELL+ crosses A/E and
+# its end-to-end budget is not split between them". The split is MEASURED and not guessed: board A's CELL+
+# reads a worst drop of 12 mV, 0.08 percent of 14.4 V, and board E's 24 mV, 0.16 percent, so the two boards
+# together spend a quarter of a percent of the 2 percent the rail allows. Each declares 0.5 percent, which is
+# six times what it measures, and the remaining 1.0 percent (144 mV) belongs to the part nobody has measured:
+# the 12 AWG lead, the dock block contacts and the 25 A blade between them. A share is a BAR, so it is set
+# from a measurement with margin rather than from an opinion.
+_intent.rail("CELL+", 14.4, 10.0, 18.0, "J_CP1", always_on=True, v_work=16.8, converted=False, share=0.005,
              always_on_why="the pack node as it arrives on the dock block contacts; it is switched on board E and in the pack, never here", loads={"F1": 10.0}, note="the pack side of the RSR shunt. The pack current leaves this node through F1, the 25 A blade to VBAT; R17 is the 5 mOhm charge-sense shunt, R1 the 10 R pre-charge trickle, TP14 a test point and U3 pin 19 the BQ25731's CELL+ SENSE input, which draws microamps. Undeclared, dc_drop split the 10 A over every non-passive part on the net and pushed amps through U3 pin 19's 0.20 mm escape on a 0.4 mm pitch, reading 2.21 percent at a 0.5 mm cell and 2.75 at 0.25 against a 2 percent budget: the same correction VIN_RAW carries above, and for the same reason (12 September 2026, A24)")
 _intent.rail("VIN_RAW", 12.0, 8.0, 10.0, "J_DOCK", loads={"Q2": 7.0, "C11": 0.5, "C12": 0.5}, budget=0.02, share=0.015, v_work=36.0, converted=False,
              always_on=True, always_on_why="shore and vehicle input arriving over the dock behind board E's own 10 A blade and ideal diode; this board does not switch it, it consumes it", note="shore and vehicle input from E6 over the dock, 10 A fuse; the current enters the front end at Q2's drain and the input caps (the LM5176 U2 draws only its bias: a load named U2 put 8 A into two QFN pins and read 3.3 percent, 32.69)")

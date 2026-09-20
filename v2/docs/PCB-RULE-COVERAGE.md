@@ -33,8 +33,8 @@ appears in the gap register.
 | MEC-001 | MECHANICAL | BLOCKER | panel1450.py, gen_pcb_*.py | check_pcb_*.py -> check_pcb_<letter> | tests/test_board_gates.py | **ENFORCED** |
 | OUT-001 | MANUFACTURING_OUTPUTS | BLOCKER | make_handoff.py | final_gate.py -> final_gate | tests/test_final_gate.py | **ENFORCED** |
 | PAIR-001 | DIFFERENTIAL_PAIRS | BLOCKER | pair_preroute.py, meander.py | pair_match.sh -> impedance_check | tests/test_pair_leg_match.py | **ENFORCED** |
-| PI-001 | POWER_INTEGRITY | BLOCKER | power_copper.py, gen_pcb_*3.py bands | dc_drop.py, track_current.py -> dc_density | tests/test_conductor_current.py, tests/test_track_current.py | **ENFORCED** |
-| PI-002 | POWER_INTEGRITY | BLOCKER | power_copper.py | dc_drop.py -> dc_drop | tests/test_conductor_current.py | **ENFORCED** |
+| PI-001 | POWER_INTEGRITY | BLOCKER | power_copper.py, gen_pcb_*3.py bands | dc_drop.py, track_current.py, power_path.py (report, in full.sh: every conductor on a power path is declared) -> dc_density | tests/test_conductor_current.py, tests/test_track_current.py, tests/test_power_path.py | **ENFORCED** |
+| PI-002 | POWER_INTEGRITY | BLOCKER | power_copper.py | dc_drop.py, power_path.py (report, in full.sh) -> dc_drop | tests/test_conductor_current.py, tests/test_power_path.py | **ENFORCED** |
 | PI-003 | POWER_INTEGRITY | MUST_JUSTIFY | prefanout.py, gen_pcb_*3.py stitch vias, gen_pcb_d3.py locked parallel barrels, rail_barrels.py (pre-route), via_parallel.py (post-route) | via_current.py -> via_current | tests/test_via_current.py | **ENFORCED** |
 | PLC-001 | PLACEMENT | BLOCKER | gen_pcb_*3.py, regionfit.py | hardset.py, place_audit.py, carry_placed.py -> hardset-placed, place_audit | tests/test_region_fit.py, tests/test_board_gates.py, tests/test_carry_placed.py | **ENFORCED** |
 | PLC-002 | PLACEMENT | MUST_JUSTIFY | closers declared in pcb_closers.yaml; the pour-island half predicted by place_audit.py | closer_audit.py -> closer_audit | tests/test_closer_audit.py | **ENFORCED** |
