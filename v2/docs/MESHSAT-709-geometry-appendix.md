@@ -14524,3 +14524,43 @@ owed went from 53 of 76 open pairs to 20 of 89.**
 
 The two 58.9s are a coincidence of arithmetic and not the same number: the first still carried a stale
 contract PASS and no stackup reading, and the last carries neither.
+
+### 32.294, 20 September 2026 09:48 CEST: board E's PI-003 is ten cluster lines and thirteen raised calls
+
+With the evidence current for the first time today, the open list was read again and board E's `via_current`
+is the one measured failure on it with a generator answer nobody has written. Read off the board sweep 32
+judged (E17, sha `a462ac2620b9b8d3`, read-only), `barrel_sites --suggest` reports **32 barrels over their own
+rating across 11 measured nets** at 10 K and 18 um of plating, and the answer divides exactly as board A's
+did at 00:10.
+
+**Ten are a new cluster**, each printed as the line to add with the room measured on both axes:
+
+```
+_pc.cluster("CELL+",   (-124.96, -106.30), amps=3.750, drill=1.78, axis="x")   # worst 1.45
+_pc.cluster("CELL+",   (-124.96, -109.70), amps=3.750, drill=1.78, axis="x")   # worst 1.45
+_pc.cluster("DC_F",    ( -55.25,  -88.78), amps=8.000, drill=0.40, axis="x")   # worst 8.89
+_pc.cluster("DC_HS",   (-102.75,  -93.51), amps=1.917, drill=0.40, axis="x")   # worst 2.13
+_pc.cluster("DC_IN",   ( -52.96, -106.30), amps=3.000, drill=1.78, axis="x")   # worst 1.16
+_pc.cluster("DC_IN",   ( -52.96, -109.70), amps=3.000, drill=1.78, axis="x")   # worst 1.16
+_pc.cluster("DC_P",    ( -84.29,  -92.64), amps=8.000, drill=0.40, axis="x")   # worst 8.89
+_pc.cluster("DC_P",    ( -94.30,  -93.50), amps=8.000, drill=0.40, axis="x")   # worst 8.89
+_pc.cluster("PV_P",    (   4.65,  -85.16), amps=2.968, drill=0.30, axis="y")   # worst 2.02
+_pc.cluster("TRK_OUT", (  27.44,  -88.74), amps=6.160, drill=0.40, axis="y")   # worst 6.85
+```
+
+**Thirteen are the generator's own locked vias**, where a cluster centred on the site would land 0.30 to
+0.35 mm from a hole that is already there, so the answer is **points added to the call that placed it** and
+the tool prints how many: `PV_P` at (33.99, -86.85) nine more, 5.679 A over 11 barrels of 0.20 mm at
+0.4995 mm hole to hole; `PV_P` at (-7.60, -92.68) four more; `TRK_OUT` at (57.45, -111.34) six more,
+(68.69, -84.45) and (73.88, -82.55) four more each, (16.21, -91.02) two, (65.12, -109.88) one; `VIN_RAW` at
+(-40.50, -92.72) and (-76.89, -73.39) one each.
+
+**The worst are the input side and they are the same conductors 32.249 named.** `DC_F` and `DC_P` each put
+**8.00 A through one 0.40 mm barrel rated 0.90 A**, ratio 8.89, and `TRK_OUT` 6.160 A through one at 6.85.
+`HS_S` is worse again and is reported **attributed rather than measured**, 10.00 A across a single via rated
+0.65 A, because the mesh solves no current on it. So board E's five input rails, four of them too narrow on
+the **conductor** since 03:27, are also its worst **barrels** — one floor-plan item read two ways, exactly as
+board A's PD outlet is.
+
+**NOT APPLIED.** It is a generator change and it owes a full chain before HEAD carries it, which is what A61
+proved this morning by being refused.
