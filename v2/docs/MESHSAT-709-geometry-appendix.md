@@ -16173,3 +16173,32 @@ so the population grows as it works and the COUNT is not a measure of the board 
 `DC_P` site the suggester names with 2.01 mm of room on one axis and 0.00 on the other: a placement item,
 named, with its number. The rounds after the first are worth stopping, which is a `via_parallel` change and
 not a board change.
+
+### 32.332, 20 September 2026 20:00 CEST: a landing driver of mine carried a second hard set and disagreed with the project's own on a real board
+
+Board D's reader fired on D27's finished round 1 and printed **`hard 3 {'solder_mask_bridge': 3}`** on the
+board `a5bfddb70c22bc53`, where the same board read through `hardset.py` twenty minutes earlier printed
+**`hard 0 of 15 types {} ... exempt {'solder_mask_bridge': 3}`**. Same board, same file, two answers.
+
+**The cause is a second definition.** `land_read.sh` carries its own fifteen-type literal inline:
+
+```
+HARD = {"clearance","shorting_items","tracks_crossing", ... ,"solder_mask_bridge", ...}
+rows = [v for v in d.get("violations", []) if v.get("type") in HARD]
+```
+
+and `hardset.py` is more than a list: it exempts an **own-courtyard overlap** and a **same-part solder-mask
+bridge**, which is what board D's three are. 17 September's rule is *one hard set imported everywhere, with a
+grep regression that fails on a second definition*, and that rule guards the TOOLS; this is a driver of mine
+on the box, outside its reach, and it has been reporting a hard count for every arm read today.
+
+**Nothing was decided on it**: every board this session was adopted or refused on its own gate, and D27 was
+refused for being open, not for three mask bridges. What it would have cost is a board called dirty that is
+clean.
+
+**`land_read2.sh` calls `hardset.py` and carries no set of its own.** The running one is NOT edited, because
+five landers are inside it and overwriting a running bash script is this project's own documented trap, met
+again at 13:00 today; the new arms take the new driver and the old ones finish on the old.
+
+**The reading that stands for D27 is `hardset.py`'s: hard 0 of the fifteen types, six unconnected items**,
+which is what 32.322 recorded and why its conclusion does not move.
