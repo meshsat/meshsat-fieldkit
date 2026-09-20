@@ -171,6 +171,7 @@ for _s in (1, 2, 3):
 for _t, _u, _n in (("A", "U40", ("U41", "U42", "U43", "U44")), ("B", "U50", ("U51", "U52", "U53", "U54")),
                    ("C", "U60", ("U61", "U62", "U63", "U64"))):
     _intent.rail("+3V3_IOC%s" % _t, 3.3, 0.12, 0.25, _u, budget=0.03, always_on=True, converted=True, efficiency=0.66,
+                 fed_from="+5V_DEV",   # U40/U50/U60 pins 1 and 3 are both /+5V_DEV in the netlist
                  always_on_why="each controller's private LDO has its EN tied to its own input, so it follows the device rail and the controller is up whenever the kit is",
                  source_ic="%s is an AP2112K-3.3 LDO in SOT-23-5: pin 5 IS its output power pin" % _u,
                  loads=dict([(_n[0], 0.060), (_n[1], 0.020), (_n[2], 0.020), (_n[3], 0.020)]),
@@ -181,34 +182,35 @@ _intent.rail("+1V2_KSZ", 1.2, 0.5, 0.8, "L2", always_on=True, converted=True, ef
              loads={"U1": 0.5},
              note="the Ethernet switch's core from the AP63200 buck U26 through L2")
 _intent.rail("+2V5_KSZ", 2.5, 0.15, 0.25, "U27", budget=0.03, always_on=True, converted=True, efficiency=0.76,
+             fed_from="+3V3_DEV",   # U27 pins 1 and 3 are both /+3V3_DEV in the netlist
              always_on_why="U27 is an AP2112K whose EN is tied to its own input: the switch's analogue rail comes up with the switch",
              source_ic="U27 is an AP2112K-2.5 LDO in SOT-23-5: pin 5 IS its output power pin",
              loads={"U1": 0.15},
              note="the Ethernet switch's analogue 2.5 V. Budget 3 percent: the switch's own range is wider")
-_intent.rail("+3V3_ZB", 3.3, 0.10, 0.30, "U22", converted=False,
+_intent.rail("+3V3_ZB", 3.3, 0.10, 0.30, "U22", converted=False, fed_from="+3V3_DEV",  # U22 pin 6 IN
              source_ic="U22 is a TPS22810 load switch: its OUT pin IS the power path, which is what it is for",
              loads={"U13": 0.04, "U14": 0.04, "J_ZBDBG1": 0.01, "J_ZBDBG2": 0.01},
              note="the two CC2652P radios behind their load switch, plus the two bench debug headers. 0.3 A "
                   "peak is both radios transmitting at once, which the fabric never asks for but the copper must carry")
-_intent.rail("+5V_LORA", 5.0, 0.15, 0.70, "U21", converted=False,
+_intent.rail("+5V_LORA", 5.0, 0.15, 0.70, "U21", converted=False, fed_from="+5V_DEV",  # U21 pin 6 IN
              source_ic="U21 is a TPS22810 load switch: its OUT pin IS the power path",
              loads={"U12": 0.70},
              note="the 1 W LoRa module behind its load switch: 0.7 A on a transmit burst at 30 dBm, milliamps between")
-_intent.rail("+5V_LIME", 5.0, 1.2, 3.0, "U23", converted=False,
+_intent.rail("+5V_LIME", 5.0, 1.2, 3.0, "U23", converted=False, fed_from="+5V_DEV",  # U23 pin 4 IN
              source_ic="U23 is a TPS2596 eFuse: its OUT pin IS the power path, which is what an eFuse is",
              loads={"J_LIME": 3.0},
              note="the software-defined radio bay behind the eFuse U23 (ILM 301R, 3.0 A): a LimeSDR Mini 2.4 "
                   "on USB 3 draws about 1.2 A and peaks higher while its FPGA configures")
-_intent.rail("+5V_RB", 5.0, 0.15, 2.00, "U24", converted=False,
+_intent.rail("+5V_RB", 5.0, 0.15, 2.00, "U24", converted=False, fed_from="+5V_DEV",  # U24 pin 4 IN
              source_ic="U24 is a TPS2596 eFuse: its OUT pin IS the power path",
              loads={"J_RB9704": 2.00},
              note="the satellite modem behind the eFuse U24 (ILM 301R, 3.0 A): the RockBLOCK 9704's burst "
                   "current on a transmit attempt is the number the copper has to carry, not its average")
-_intent.rail("+5V_CAM", 5.0, 0.25, 0.50, "U28", converted=False,
+_intent.rail("+5V_CAM", 5.0, 0.25, 0.50, "U28", converted=False, fed_from="+5V_DEV",  # U28 pin 5 IN
              source_ic="U28 is a TPS2065 switch: its OUT pin IS the power path",
              loads={"J_CAM": 0.50},
              note="the camera lead behind its switch, a USB 2.0 device at its port's own 500 mA limit")
-_intent.rail("+5V_HDMI", 5.0, 0.10, 0.50, "F2", always_on=True, converted=False,
+_intent.rail("+5V_HDMI", 5.0, 0.10, 0.50, "F2", always_on=True, converted=False, fed_from="+5V_DEV",  # F2 pin 1
              always_on_why="a polyfuse is protection and not a switch: the connector's 5 V follows the device rail, which is what the standard asks a source to supply",
              source_ic="F2 is a polyfuse in series with the rail: the part IS the power path",
              loads={"J_HDMI": 0.50},
