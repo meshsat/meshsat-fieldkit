@@ -13474,3 +13474,40 @@ identical seven), so nothing tonight caused it and it has been there since the b
 measurement is `escape.py`'s own reason for skipping those seven**, with the 5 September recipe
 (`ESCAPE_ONLY=U3 DEBUG_REF=U3` on a copy of the pre-route board), because a count of skipped pads is not a
 diagnosis, which this project has written down three times.
+
+### 32.264, 20 September 2026 05:44 CEST: the four unclosable nets are a collision between two rules
+
+**Diagnosed, and it is not a defect in either rule: it is that nobody measured them against each other.**
+
+The chain re-run with `DEBUG_REF=U3` **from the start** names what refused each of U3's seven starved pads:
+
+| pad | net | refused by |
+|---|---|---|
+| 6 | `/CHG_ILIM` | pad **R147.2** |
+| 2 | `/CH_ACN_F` | pad **R146.2** |
+| 23, 22, 20 | `/CH_SW2`, `/CH_SRP`, `/CH_SRP_F` | pad **R149.1** |
+| 19, 18 | `/CH_SRN_F`, `/CH_CELL` | pad **R148.1** |
+
+**R146 to R149 are the charger's sense filters, placed on 16 September to satisfy a DIFFERENT rule**: the
+BQ25731's own pin table asks each filter to sit AT the pin, so `R146/R147/C121` went **3.24 mm** west of U3's
+west pad row and `R148/R149/C122` **2.66 mm** east of its east row (32.218's addendum placed them, because
+the packer would have left them eight millimetres away).
+
+**The 0.4 mm escape scheme puts its via row 0.3 and 1.0 mm PAST the pad tip.** On the east side that wants
+copper out to about **x -92.64**; R148 and R149's courtyards reach **-92.73**. **Nine hundredths of a
+millimetre.** The filters are standing in the escape row.
+
+**The evidence that this is the whole of it**: the seven starved pads are exactly the two filter groups' own
+neighbourhoods (pins 2 and 6 on the west, 18, 19, 20, 22 and 23 on the east), and **the other twenty-five pads
+of the same part all got their escapes**.
+
+**TWO EARLIER ATTEMPTS AT THIS DIAGNOSIS WERE DISCARDED RATHER THAN READ**, and that is the same lesson a
+third time: both ran `escape.py` on a board that already carried its 456 escapes, so every candidate position
+collided with the via already sitting there and the tool reported 30 skipped, 0 added and a `last reject`
+naming the pad's own escape. **A debug print that does not share the predicate it explains** (8 September) is
+worse than none, and the only honest reading of those two runs is that they measured nothing.
+
+**The fix is to move the filters outward and re-measure BOTH rules**, because the filter's reason for sitting
+there is a datasheet clause and not a convenience: 1.5 to 2.0 mm further out clears the via row while leaving
+the filter nearer its pin than any other seat on this board. Neither rule is weakened; the seat is chosen
+against both instead of against one.
