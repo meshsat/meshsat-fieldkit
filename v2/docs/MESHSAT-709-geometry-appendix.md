@@ -13257,3 +13257,35 @@ measures generalisation and not repair; **board E already declares two layers** 
 none of its six opens, which is itself evidence that the layer set is not a universal fix and belongs beside
 the finding; and board B's finish on a board 416 connections short would be an enormous run for a board whose
 problem is its route.
+
+### 32.258, 20 September 2026 04:19 CEST: tonight's widths checked against the project's other current tool, and the outer ones rest on a convention
+
+Every width quoted tonight came from `power_copper.width_for`, IPC-2221's closed form solved for the width.
+This project has a SECOND implementation of the same question, `track_current.py`, which implements ECSS-Q-ST
+-70-12C Annex D's published curve fits and proves itself against the standard's own worked example. They were
+put side by side:
+
+| current | copper | `power_copper.width_for` | `track_current` (ECSS Annex D, IPC-2221A fit) |
+|---|---|---:|---:|
+| 3.0 A | **inner 0.5 oz** | **7.11 mm** | **7.10 mm** |
+| 3.0 A | outer 1 oz | 1.37 mm | 3.55 mm |
+| 6.0 A | outer 1 oz | 3.56 mm | 9.23 mm |
+| 8.0 A | outer 1 oz | 5.29 mm | 13.72 mm |
+| 10.0 A | outer 1 oz | 7.19 mm | 18.66 mm |
+| 18.0 A | outer 1 oz | 16.18 mm | 41.96 mm |
+
+**On the INTERNAL curve the two agree to three decimals**, 7.11 against 7.10, which is the verification worth
+having: every inner-layer figure in tonight's tables is on the published curve and confirmed by a second
+implementation. **On the outer layers they differ by a factor of about 2.6, and the reason is written down
+already**: `power_copper` doubles IPC's constant for an external conductor (k 0.048 against 0.024) and
+**ECSS's Annex D fits no external factor at all**, which the coverage map records as PI-001's own caveat.
+
+**So tonight's outer-layer widths are the OPTIMISTIC convention, and that is decision 35 by name.** If the
+external doubling stands, board A's pack node wants **7.19 mm** at 1 oz; if it does not, it wants **18.66**,
+and 2 oz halves whichever it is. The copper-weight item of 32.241 does not go away under either reading, and
+its size differs by a factor of two and a half: **the decision the register already attributes PI-001 to is
+the one that sets how large board A's copper problem is.**
+
+**Nothing is re-measured on this**, because changing the bar changes MET on boards already cut, which is
+exactly why 13 September left it as a decision rather than a patch. What is added is that the two numbers are
+now written next to each other, so the ruling can be read off a table rather than re-derived.
