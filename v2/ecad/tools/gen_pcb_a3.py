@@ -100,9 +100,9 @@ FIXED = {"J_AB1": (113, -46, 0), "J_MEZZ_PWR1": (-8, -18, 90),
          # STILL OPEN AND DELIBERATELY NOT TAKEN HERE: TI item 6 wants the FETs beside the inductor, and L2
          # cannot move between the pairs without colliding with U3's courtyard, which would move the
          # controller and its six sense-filter parts with it. That is its own change with its own measurement.
-         "Q10": (-113.44, 27.0, 0), "Q9": (-104.70, 27.0, 0), "Q8": (-95.96, 27.0, 0), "Q7": (-87.22, 27.0, 0),   # 20 Sep 2026: TI item 6 was REVERTED at 06:35, see boards/a.json _ti_item_6_costs_four_hard_items_at_the_escape
+         "Q10": (-115.975, 27.0, 0), "Q9": (-108.585, 27.0, 0), "L2": (-101.02, 26.3, 0), "Q8": (-93.845, 27.0, 0), "Q7": (-86.455, 27.0, 0),   # 20 Sep 2026: TI layout item 6, the inductor BETWEEN the power-stage pairs, packed east to west from R16 at 0.20 mm gaps. Reverted at 06:35 for four hard items and back at 06:50 with the fanout fixed: A58 reads PREROUTE-DONE OK through the WHOLE chain
          "R16": (-78.59, 27.44, 0), "R17": (-113.55, 20.69, 0),   # unchanged seats, FIXED so the packer cannot take them back
-         "C24": (-106.5, 21.8, 0), "C25": (-100.5, 21.8, 0), "C23": (-94.5, 21.8, 0),   # CH_SRP, beside Q10 and R17
+         "C24": (-106.5, 20.7, 0), "C25": (-100.5, 20.7, 0), "C23": (-94.5, 20.7, 0),   # CH_SRP, beside Q10 and R17; 1.1 mm lower so L2's own courtyard clears them
          "C20": (-88.0, 21.8, 0), "C21": (-82.0, 21.8, 0), "C22": (-76.0, 21.8, 0),     # CH_ACN, beside Q7 and R16
          # 16 September 2026, THE CHARGER'S SENSE FILTERS (rule ANA-001). The six parts gen_sch_a.py added this
          # morning had no seat: every other passive of the charger block is packed into CHS at (-115, -6) to
@@ -133,7 +133,7 @@ FIXED = {"J_AB1": (113, -46, 0), "J_MEZZ_PWR1": (-8, -18, 90),
          "R146": (-102.5, 13.6, 0), "R147": (-102.5, 11.8, 0), "C121": (-105.1, 12.7, 90),
          "R148": (-89.7, 11.0, 0), "R149": (-89.7, 12.8, 0), "C122": (-87.1, 11.9, 90),
          "J_DOCK": (-76, -70, 0), "J_PRE1": (-103, -70, 0), "F1": (-97, -52, 0), "J_MAINSW": (98, 75, 0),
-         "U2": (-94, 56, 0), "L1": (-78, 58, 0), "U3": (-96, 12, 0), "L2": (-80, 16, 0), "U16": (-96, -26, 0), "L10": (-78, -24, 0),
+         "U2": (-94, 56, 0), "L1": (-78, 58, 0), "U3": (-96, 12, 0), "U16": (-96, -26, 0), "L10": (-78, -24, 0),
          # A23: the converters south of their inductors, the rail column runs north to the connector
          "U4": (-60, 47, 0), "U5": (-44, 47, 0), "U6": (-28, 47, 0), "U7": (-12, 47, 0), "L3": (-58, 54, 0), "L4": (-42, 54, 0), "L5": (-26, 54, 0), "L6": (-10, 54, 0), "U8": (-62, 67, 0), "U9": (-46, 67, 0), "U10": (-30, 67, 0), "U11": (-14, 67, 0), "U14": (20, -4.5, 0),
          "J_5V_S1": (-51, 75, 0), "J_5V_S2": (-35, 75, 0), "J_5V_S3": (-19, 75, 0), "J_5V_DEV": (-3, 75, 0),   # A23: pin 1 (the rail) at x = inductor + 5, over the shunt's column
@@ -195,7 +195,7 @@ REGIONS = [
 # the converter's own order (input shunt, buck pair, inductor, boost pair, output shunt) with VBUS20's bar
 # and leg redrawn to the new seat, and L2 and U3 moving with it because TI's layout item 6 wants the FETs
 # beside the inductor and Q7/Q8 are 33 mm from L2. It is A51's first item and it is not a seat swap.
-("CHQ",   (-118, 18.5, -70, 30), []),   # 20 Sep 2026: every part of this block is FIXED in the converter's order above, because a row packed BY SIZE is what put the shunts at the wrong ends
+("CHQ",   (-119.5, 18.5, -70, 30), []),   # 20 Sep 2026: every part of this block is FIXED in the converter's order above, because a row packed BY SIZE is what put the shunts at the wrong ends
  ("CHS",   (-115, -6, -70, 6), ["C16", "C17", "C18", "R18", "C19", "R19", "R20", "Q6", "R21", "R22", "R23", "R24", "R25", "C26", "C27", "R26", "R27", "TP19", "TP20", "TP22"]),
  # 12 September 2026: POQ started at x -118 and ran under NODE (-118, -68, -106, -44), a 12 x 4 mm overlap the
  # packer never happened to fill. It starts clear of the pack node's column now; 58 x 16 mm still holds its eleven parts.
