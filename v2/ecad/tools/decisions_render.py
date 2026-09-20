@@ -65,12 +65,18 @@ def render():
                    "A pair held by a decision is not a defect in the board: it is a question nobody has answered, "
                    "and until it is answered the rule can be neither passed nor failed."
                    % (len(op), pairs, _den if _den else "applicable pairs")), ""]
-    L += ["| # | what is being decided | holds | boards | asked |", "|---|---|---|---|---|"]
-    for d in op:
+    # RANKED BY HOW MUCH EACH ONE HOLDS, AND THE NUMBER IS IN THE TABLE (20 September 2026). The page said
+    # how many pairs the sixteen hold TOGETHER and then listed them in numerical order, so the one sentence
+    # a reader wants, WHICH RULING BUYS THE MOST, had to be counted by hand off the other page. Today that
+    # is decision 39 and decision 34 at sixteen pairs each and decision 43 at fourteen: forty-six of the
+    # ninety-four in three answers. Numerical order is kept as the second key so the table is stable.
+    L += ["| # | pairs | what is being decided | holds | boards | asked |", "|---|---:|---|---|---|---|"]
+    def _pairs(d): return sum(len(v) for v in (d.get("blocks") or {}).values())
+    for d in sorted(op, key=lambda x: (-_pairs(x), x["n"])):
         b = sorted({x for v in (d.get("blocks") or {}).values() for x in v})
         rules = sorted(d.get("blocks") or {})
-        L.append("| **%d** | %s | %s | %s | %s |"
-                 % (d["n"], d["title"], ", ".join(rules) or "nothing today, see below",
+        L.append("| **%d** | %d | %s | %s | %s | %s |"
+                 % (d["n"], _pairs(d), d["title"], ", ".join(rules) or "nothing today, see below",
                     ", ".join(x.upper() for x in b) or "-", d.get("asked", "")))
     L += ["", "## Each one, with what it holds", ""]
     for d in op:
