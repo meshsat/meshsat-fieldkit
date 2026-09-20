@@ -13106,3 +13106,31 @@ enough.**
 every declared current needs, at a width the arithmetic gives, before the router starts". Both boards have
 the tool for it (`power_copper`), both have the arithmetic (`width_for`), and neither has ever had the
 numbers until tonight.
+
+### 32.253, 20 September 2026 03:28 CEST: the obvious fix for `power_path`'s gap was tried and refused on measurement
+
+32.249 named the gap: `power_path`'s pass-through test knows a two-terminal part and a power transistor, and
+board E's input filter is a dual-winding choke on a four-pin land, two pass-throughs in one package, so the
+walk stopped there and four conductors carrying 8 A stayed invisible.
+
+**The obvious widening is to count only the nets that are NOT declared at zero volts**, since a choke's
+second winding is on the return: that gives the choke two signal nets and admits it. It was implemented and
+swept across all six boards.
+
+**Board C went from 1 flagged net to 11 and board E gained two, and all thirteen are false.**
+
+* An **ESD array** (board C's `U6` to `U11`: six pads, a supply pin, a ground pin and two protected pairs)
+  has MORE PADS THAN NETS and, once ground is dropped, exactly three signal nets, which is the shape of a
+  power transistor. Ten of the eleven are `MAINSW_A2`, `USB_PNL_P`, `SCL`, `TR_APRS` and their partners:
+  signal lines reported as segments of a 0.01 A power path.
+* A **three-pin connector whose third pin is ground** becomes a two-terminal part, which is board E's DCF
+  and Geiger headers reappearing after they were excluded an hour ago for exactly that reason.
+
+**Thirteen false positives to catch four real ones is worse than the gap**, so the widening is reverted and
+the comment in the tool carries the numbers. The gap stands and is documented where the test is made: a
+multi-winding part is not seen by this walk. Board E's five input conductors were declared by hand and the
+solar three are named in 32.251 as still owed.
+
+**The lesson is the one this record keeps making about guards**: a filter is a hypothesis about the data, and
+the way to find out is to run it on every board and read what it names, not to reason about whether it
+should work. Ninety seconds of sweeping refuted it.
