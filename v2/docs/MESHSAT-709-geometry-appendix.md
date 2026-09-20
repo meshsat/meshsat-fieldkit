@@ -13134,3 +13134,38 @@ solar three are named in 32.251 as still owed.
 **The lesson is the one this record keeps making about guards**: a filter is a hypothesis about the data, and
 the way to find out is to run it on every board and read what it names, not to reason about whether it
 should work. Ninety seconds of sweeping refuted it.
+
+### 32.254, 20 September 2026 03:37 CEST: the solar three are declared after all, and their currents were in the design all along
+
+32.251 left `PV_IN`, `PV_P` and `TRK_OUT` as nodes and said their currents were written down nowhere.
+**They are**, in the line that draws the connector: *"a 36-cell 12 V class panel, up to about 22 V open
+circuit, 100 W"*, and the tracker holds its input at the maximum-power point, **17.6 V**, which is what R8
+and R9 set. So
+
+* **`PV_IN` and `PV_P`**: 100 W at 17.6 V is **5.68 A** at the maximum-power point, and a panel of that class
+  delivers about 1.1 times that into a short, **6.25 A**, which is the most the conductor can ever carry and
+  is what `amps_peak` means. The 10 A blade F2 is protection and not a rating.
+* **`TRK_OUT`**: the same 100 W at this board's declared 0.93 over 15.1 V is **6.16 A**, and the peak is the
+  same number because the panel's POWER bounds it, not its short-circuit current: at Isc the panel's voltage
+  collapses and its power with it.
+
+**The voltage keeps both of the node's numbers.** `volts` is the 17.6 V the tracker holds the panel at, which
+is what the drop is judged as a fraction of; `v_max` is the 25 V a cold panel reaches open circuit, which is
+what a part on the net must withstand. Putting the 25 in `volts` would have made the drop bar 40 percent
+looser on a conductor that never runs there, which is the same trap the vehicle input's 53.3 V set an hour
+earlier in the other direction.
+
+**Measured on board E's frozen board**: `PV_P` 5.7 A with 113 mV of drop (0.64 percent) and a 0.800 mm worst
+conductor; `PV_IN` 38 mV and 0.800 mm carrying 3.11 A; **`TRK_OUT` 6.2 A with 214 mV (1.42 percent) and a
+0.250 mm worst conductor on F.Cu**. All three drops pass and all three densities miss, so board E's
+`dc_density` goes from 4 missed to **7**.
+
+**And the derivation checks itself.** `power_path`'s feeder sum reads *"PV_P declares 5.68 A typ / 6.25 peak
+and feeds 1 converter drawing 5.68 / 5.68"*: the tracker's declared output current, its declared efficiency
+and the panel's declared power agree to the second decimal, which is what a number derived from a design
+rather than typed into it looks like. `derate` stays **PASS of 48 with 0 under-rated**.
+
+**Board E declares thirteen conductors where it declared four this morning**, and readiness holds at 62.5
+percent because its PI-001 was already FAIL: three more misses on a rule already failing move no pair. The
+number moves when a rule changes state, not when a failure gets larger, which is worth remembering when
+reading a flat percentage.
