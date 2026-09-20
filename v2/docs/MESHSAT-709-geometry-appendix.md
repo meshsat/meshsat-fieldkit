@@ -14099,3 +14099,58 @@ why 32.280's finding had to be made on an arm rather than on the board this tree
 **NOT CLAIMED: that a route fixes this.** Nothing lays Kelvin copper for these ten taps, so whatever the
 router does with `<stage>_OUT` is what the loop reads. The answer is generator-laid locked copper, the same
 shape as item 7's four runs at the charger's shunts, and it is now **ten more runs on the same board**.
+
+### 32.283, 20 September 2026 08:06 CEST: a rule that had been failing for nineteen hours on a stale reading, and the PD outlet's corridor exists
+
+Both found by taking the open-pairs register's **thirty measured failures** one at a time and asking of each
+whether its reading was taken under the tool that decides it now. That question had not been asked since the
+register was built.
+
+**(1) BOARD B'S MECHANICAL RULE WAS FAILING ON A READING NINETEEN HOURS OLD.** `MEC-001` read FAIL with 21
+failures and **every one of them was "pair X has one leg routed and one not"**, which is 19 September's
+finding word for word: a ROUTE property counted twice under a second authority, which the same file's own
+comment forbids. The tool was corrected that day to REPORT such a pair rather than fail it, and **the reading
+was never re-taken**. Re-taken now where KiCad is, read-only, board sha `2e64b5bf2d9cd3bc` identical before
+and after: **`check_pcb_b` PASS of 3102, fail 0, `route_items_reported` 21, `intent_items_reported` 728.**
+
+So MEC-001 goes FAIL to PASS, board B's measured failures go 14 to 13, and **readiness goes 62.5 to 62.8
+percent of 333 (209 verified, 45 failed, 79 inconclusive) for a reason that is not the board.** The 21 pairs
+are still 21 pairs and still counted, under RTE-002 and PAIR-001, where a route belongs. **The lesson is the
+scheduling one of 00:10 again**: a tool change stales every reading it decides, and a reading nobody re-takes
+is how a day passes with a board looking worse than it is.
+
+**(2) THE USB-C PD OUTLET'S THREE FAILURES ARE ONE PLACEMENT ITEM AND ITS CORRIDOR EXISTS.** Three readings
+say the same thing about one path: PI-002 misses the drop on `PD_VPWR` (1.55 percent of 15 V) and `PD_VBUS`
+(5.58), PI-001 reads `PD_VBUS` at 8.92x its density and `PD_VPWR` at 2.44x, and 32.282's `PD_ISNS_N` reads
+199.3 percent of the stage's own 50 mV full scale. All three are the same copper.
+
+Measured on **A59's placed board, the board the generator now makes**, the path is **180.45 mm and the
+straight line is 46.13**:
+
+| hop | from | to | distance |
+|---|---|---|---:|
+| 1 | `Q26` (60.78, 54.62) | `R81` (69.41, 55.45) | 8.67 mm east |
+| 2 | `R81` | `Q27` (4.56, 58.62) | **64.93 mm WEST** |
+| 3 | `Q27` | `R138` (21.79, 59.45) | 17.24 mm east |
+| 4 | `R138` | `J_USBC_OUT` (104.92, 26.00) | **89.61 mm east** |
+
+The whole westward excursion exists because `Q27`, the VBUS switch, and `R138`, the outlet's own ISNS shunt,
+were placed at **`U18` the controller** (10.19, 65.00) rather than in the power path they carry.
+
+**The corridor for the answer exists, and that is the new fact.** A straight **1.4 mm outer band from `R81`
+to the outlet, 46.13 mm, meets exactly three obstacles**: `H8`, a **mounting hole** at (95.00, 35.00), which
+cannot move and must be gone round, and `R78` and `R79`, two of the PD stage's own small resistors (`PD_RT`
+and `PD_SLOPE`), which can. Taking `Q27`, `R138` and `U18` out of the band changes nothing, because they are
+already west of `R81` and were never in it. At 46 mm of 1.4 mm outer 1 oz at 3.00 A the drop is about **48
+mV** against the 100 mV the 5 V profile allows, where 32.234 costed 83 mm at 87 mV.
+
+**WHAT IS NOT ANSWERED, and it is two things.** **Seats**: 22 footprints already stand in the strip between
+the shunt and the outlet, in the stage's own resistor rows and the block at x 86 to 95, so whether a PowerPAK
+SO-8 (7.19 by 5.59 measured) and a 2512 fit there is the **packer's** question and not a free-space one.
+**The controller travels or its sense pair does**: `U18` reads `R138` through a Kelvin pair, so moving the
+shunt 60 mm east without the controller makes that pair a 60 mm run, which is item 7's problem arriving on
+the PD outlet. Either `U18` moves with its shunt, or the PD controller joins the list of taps that need
+generator-laid locked copper.
+
+**NOTHING APPLIED.** A floor plan half-moved is worse than one not moved, four board A arms are in flight,
+and this gets item 7's treatment of 07:03: mapped, named, not started.

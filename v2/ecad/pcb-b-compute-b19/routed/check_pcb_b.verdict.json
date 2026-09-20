@@ -2,35 +2,14 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "fail": 21,
+  "fail": 0,
   "footprints": 957,
-  "intent_items_reported": 726,
-  "pass": 3081
+  "intent_items_reported": 728,
+  "pass": 3102,
+  "route_items_reported": 21
  },
  "denominator": 3102,
- "evidence": [
-  "pair BANK2_UPTX has one leg routed and one not (P 0.00 mm, N 13.19 mm)",
-  "pair BANK3_UPRX has one leg routed and one not (P 0.00 mm, N 27.99 mm)",
-  "pair CARD2_CLK has one leg routed and one not (P 1.82 mm, N 0.00 mm)",
-  "pair CARD3_RX has one leg routed and one not (P 124.88 mm, N 0.00 mm)",
-  "pair CARD3_TX has one leg routed and one not (P 0.00 mm, N 1.04 mm)",
-  "pair HDMI2_D1 has one leg routed and one not (P 0.00 mm, N 118.76 mm)",
-  "pair HDMI2_D2 has one leg routed and one not (P 124.99 mm, N 0.00 mm)",
-  "pair HDMI3_D2 has one leg routed and one not (P 0.00 mm, N 56.83 mm)",
-  "pair HDMIM_D2 has one leg routed and one not (P 34.57 mm, N 0.00 mm)",
-  "pair HDMIO_CK has one leg routed and one not (P 0.00 mm, N 188.86 mm)",
-  "pair HDMIO_D1 has one leg routed and one not (P 193.76 mm, N 0.00 mm)",
-  "pair HOST2_0TX has one leg routed and one not (P 1.74 mm, N 0.00 mm)",
-  "pair HOST3_1RX has one leg routed and one not (P 0.00 mm, N 192.55 mm)",
-  "pair HOST3_1TX has one leg routed and one not (P 0.00 mm, N 227.83 mm)",
-  "pair HUB1_D1TX has one leg routed and one not (P 31.74 mm, N 0.00 mm)",
-  "pair NVME1_CLK has one leg routed and one not (P 107.93 mm, N 0.00 mm)",
-  "pair PCIE2_RXSW has one leg routed and one not (P 0.00 mm, N 31.90 mm)",
-  "pair PCIE3_RX has one leg routed and one not (P 148.28 mm, N 0.00 mm)",
-  "pair PCIE3_TX has one leg routed and one not (P 0.00 mm, N 157.78 mm)",
-  "pair SWP2_A has one leg routed and one not (P 0.00 mm, N 230.28 mm)",
-  "pair SWP4_B has one leg routed and one not (P 66.92 mm, N 0.00 mm)"
- ],
+ "evidence": [],
  "inputs": {
   "board": {
    "path": "pcb-b-compute.kicad_pcb",
@@ -44,7 +23,7 @@
   "rule_fingerprints": {
    "MEC-001": "b6c4a6962ac81e88"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "MEC-001"
@@ -52,9 +31,9 @@
  "tool": "check_pcb_b",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "edbc664e20226872"
  },
- "ts": "2026-09-17T22:42:19Z",
- "verdict": "FAIL",
+ "ts": "2026-09-20T06:03:12Z",
+ "verdict": "PASS",
  "version": "unknown"
 }
