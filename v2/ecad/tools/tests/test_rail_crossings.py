@@ -233,3 +233,27 @@ def t_both_pre_route_barrel_tools_ask_it():
         calls = [n for n in ast.walk(ast.parse(src))
                  if isinstance(n, ast.Call) and getattr(n.func, "attr", None) == "placed_snapshot_note"]
         assert calls, "%s never asks whether it was given the placed snapshot" % f
+
+
+def t_a_site_of_mixed_drills_is_judged_on_what_its_barrels_carry():
+    """THE DEFECT OF 21 SEPTEMBER 2026: board E's VIN_RAW at L2 pad 2 holds the generator's ten 0.50 mm barrels
+    (10.5 A together) and one 0.25 mm fanout via, and the judge took the smallest hole as the site's drill and
+    asked for sixteen of them for 10 A, a false busbar declined as a placement item for a day. The site carries
+    its current and is not short; the same eleven barrels all at 0.25 mm are."""
+    pads = [_Pad("/RAIL", "1", 10.0, 10.0)]
+    vias = [_Via("/RAIL", 10.0 + 0.1 * i, 10.0, 0.5) for i in range(10)] + [_Via("/RAIL", 11.2, 10.0, 0.25)]
+    b = _Board(vias, [_FP("U1", pads)]); rails = {"/RAIL": {"amps_peak": 10.0, "source": "U1"}}
+    short, judged = rc.judge(b, rails)
+    assert judged == 1 and short == [], "ten 0.50 mm barrels and a 0.25 mm one carry 10 A and were called short: %s" % short
+    small = [_Via("/RAIL", 10.0 + 0.1 * i, 10.0, 0.25) for i in range(11)]
+    short2, _ = rc.judge(_Board(small, [_FP("U1", pads)]), rails)
+    assert len(short2) == 1 and "11 barrel(s) carrying" in short2[0] and "at 0.25 mm" in short2[0], short2
+
+
+def t_a_new_barrel_takes_the_largest_drill_already_on_the_site():
+    """The fixer copies a barrel of the site; it must copy the generator's 0.50 and never the fanout's 0.25."""
+    pads = [_Pad("/RAIL", "1", 10.0, 10.0)]
+    vias = [_Via("/RAIL", 10.0, 10.0, 0.5), _Via("/RAIL", 10.6, 10.0, 0.25)]
+    rows, _ = rc.rows(_Board(vias, [_FP("U1", pads)]), {"/RAIL": {"amps_peak": 6.0, "source": "U1"}})
+    assert rows and abs(rows[0]["drill"] - 0.5) < 1e-9, "the drill for new barrels is not the largest on the site: %s" % rows
+    assert rows[0]["carried"] > 1.0 and rows[0]["need"] > rows[0]["have"], rows[0]

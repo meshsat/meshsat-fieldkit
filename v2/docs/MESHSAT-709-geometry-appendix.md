@@ -16694,3 +16694,29 @@ gate on all seven boards under HEAD's tools, read-only) and the suite.
 
 **Addendum, 01:25 CEST.** The box suite re-run on the same staged tree with the six fixes in place: **1303 passed,
 0 failed, 7 skipped**, the first clean run where KiCad is since 20 September's 1238.
+
+### 32.344
+
+**A crossing of mixed drills was judged at its smallest hole, and board E's two largest declined power-via
+sites were that (21 September 2026, 01:35 CEST).** `rail_crossings` took `min(drill)` over the barrels within
+reach of a pad as the site's drill and asked how many of THOSE the current needs. Board E's VIN_RAW at L2 pad 2
+holds the generator's ten 0.50 mm barrels, 10.5 A between them, and one 0.25 mm fanout via; the judge read the
+0.25 and asked for sixteen, a busbar, declined as a placement item since 20 September on a crossing that
+already carries its 10 A. The same reading made CELL_F at P_CP pad 1 fourteen barrels short and the two J_BLK
+lands four each. **Each barrel is rated at its own drill now and a site is short only when the sum falls below
+its share**; a new barrel takes the largest drill already on the site, because the fixer copies a barrel of
+the site and the generator's 0.50 is the one it meant, never the fanout's minimum via. Two rules, the first
+failing on the tool as it stood.
+
+**Re-read on tonight's regenerated E board, read-only, with the corrected judge**: twelve crossings short,
+four of them busbar-class (DC_P at Q1 pad 5, 2.95 A carried for 10.00; DC_HS at L2 pad 1, 2.70 for 8.00;
+TRK_OUT at Q6 pad 5, 3.60 for 6.16; CELL_F at the fuse, 1.05 for 9.00) and eight within one or two barrels of
+their share, which the barrel stage lays on the next E chain. Board A's A93 pre-route board reads nine short,
+VBUS20 at R11 pad 2 the largest at 4.50 A carried for 8.00.
+
+**Addendum, 01:36 CEST, D30 round 1.** Board D at HEAD routed under a 14400 s cap (205 passes): hard 0, **ONE
+open**, `/PCM_VCCP`, 16.1 mm between C23 pad 1 and U6 pad 26, the codec's supply pin and its own decoupling
+capacitor, which is 15 September's finding that board D's bypass capacitors sit 8 to 32 mm from their pins;
+the closers reach 12. `via_parallel` took the worst barrel 1.22 to 0.81, so PI-003 reads answered on it. Board
+D's best number (D17 and D19 read two) and not adoptable against D12's zero. The last connection is a seat
+for C23 beside U6, by hand in the generator, which `bypass_place` declined at 3.0 mm.

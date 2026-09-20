@@ -100,16 +100,26 @@ def rows(b, rails, reach_mm=1.0):
                 near = _within(r0)
                 if not near: continue           # no crossing at this pad: nothing to count
                 judged += 1
-                drill = min(v.GetDrill() for v in near) / 1e6
+                # A SITE OF MIXED DRILLS IS JUDGED ON WHAT ITS BARRELS CARRY, NOT AT ITS SMALLEST HOLE (21 September
+                # 2026). Board E's largest declined site, VIN_RAW at L2 pad 2, holds the generator's TEN 0.50 mm
+                # barrels (1.05 A each, 10.5 A together) and ONE 0.25 mm fanout via, and this line took the 0.25 as
+                # the site's drill and asked for sixteen of them for 10 A: a false busbar, declined as a placement
+                # item since 20 September on a crossing that already carries its current. Each barrel is rated at
+                # its own drill and the site is short only when the sum falls below the share. The drill and ring
+                # a NEW barrel takes are the LARGEST already there (the fixer copies a barrel of the site, and the
+                # generator's 0.50 is the one it meant), never the fanout's minimum via.
+                carried = sum(_vc.ampacity(v.GetDrill() / 1e6, 10.0)[0] for v in near)
+                _big = max(near, key=lambda v: v.GetDrill())
+                drill = _big.GetDrill() / 1e6
                 # THE BARREL ALREADY THERE CARRIES THE RING SIZE TOO, and the fixer needs it: a barrel added
                 # beside this one must be the same via, not a via of the fixer's own invention. `rail_barrels`
                 # laid 0.70 mm rings on a 0.40 mm drill on board A's first real run and the DRC refused all
                 # seven sites, because board A declares a 0.20 mm annular floor and that ring is 0.15.
-                width = min(_kc_width(v) for v in near) / 1e6
+                width = _kc_width(_big) / 1e6
                 # THE BARRELS ALREADY THERE, by position, because the fixer adds to this cluster rather than
                 # beside it: a lattice centred on the pad puts its own holes half a pitch from the barrel that
                 # is already on the site, which is board A's seven `hole_to_hole` refusals of this morning.
-                need = _vc.barrels_for(_share, drill)
+                need = len(near) + (_vc.barrels_for(_share - carried, drill) if _share > carried else 0)
                 # THE WINDOW DOES NOT GROW, AND THE FIXER FITS INSIDE IT (19 September 2026, after a version
                 # that got this the wrong way round). Widening the window to cover the cluster an answer would
                 # take was tried for one commit and it LOOSENED the question: re-taken on the same three board
@@ -122,16 +132,17 @@ def rows(b, rails, reach_mm=1.0):
                 # site where the copper has to be DESIGNED, and `rail_barrels` declines it as a placement item
                 # rather than half-answering it. `reach` travels in the row so the two cannot disagree.
                 at_near = [(v.GetPosition().x / 1e6, v.GetPosition().y / 1e6) for v in near]
-                if len(near) < need:
+                if _share > carried:
                     short.append({
                         "net": n, "ref": ref, "pad": pad.GetNumber(), "at": (c.x / 1e6, c.y / 1e6),
                         "drill": drill, "width": width, "near": at_near, "have": len(near), "need": need,
+                        "carried": carried,
                         "reach": r0 / 1e6, "at_pad": (c.x / 1e6, c.y / 1e6), "amps": _share,
                         "part_amps": want[ref], "pads": len(_pads),
-                        "why": "%s at %s pad %s (%.2f, %.2f): %d barrel(s) of %.2f mm for %.2f A "
-                               "(%.2f A over this part's %d pad(s) on the rail), which needs %d at a 10 K rise"
-                               % (n, ref, pad.GetNumber(), c.x / 1e6, c.y / 1e6, len(near), drill, _share,
-                                  want[ref], len(_pads), need)})
+                        "why": "%s at %s pad %s (%.2f, %.2f): %d barrel(s) carrying %.2f A at a 10 K rise for %.2f A "
+                               "(%.2f A over this part's %d pad(s) on the rail), which needs %d at %.2f mm"
+                               % (n, ref, pad.GetNumber(), c.x / 1e6, c.y / 1e6, len(near), carried, _share,
+                                  want[ref], len(_pads), need, drill)})
     return short, judged
 
 
