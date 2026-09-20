@@ -5,24 +5,11 @@
   "always_on": 3,
   "deadlocks": 0,
   "rails": 27,
-  "unresolved": 13
+  "segments": 13,
+  "unresolved": 0
  },
  "denominator": 27,
- "evidence": [
-  "CH_ACN: its source R16 has no enable pin and the board declares neither a switch nor that the rail is always on",
-  "CH_SRP: its source Q10 has no enable pin and the board declares neither a switch nor that the rail is always on",
-  "FE_OUT: its source Q5 has no enable pin and the board declares neither a switch nor that the rail is always on",
-  "HF_OUT: its source Q24 has no enable pin and the board declares neither a switch nor that the rail is always on",
-  "PA_OUT: its source Q14 has no enable pin and the board declares neither a switch nor that the rail is always on",
-  "PD_OUT: its source Q26 has no enable pin and the board declares neither a switch nor that the rail is always on",
-  "PD_SW: its source Q27 has no enable pin and the board declares neither a switch nor that the rail is always on",
-  "PD_VBUS: its source R138 has no enable pin and the board declares neither a switch nor that the rail is always on",
-  "POE_OUT: its source Q20 has no enable pin and the board declares neither a switch nor that the rail is always on",
-  "S1_OUT: its source L3 has no enable pin and the board declares neither a switch nor that the rail is always on",
-  "S2_OUT: its source L4 has no enable pin and the board declares neither a switch nor that the rail is always on",
-  "S3_OUT: its source L5 has no enable pin and the board declares neither a switch nor that the rail is always on",
-  "SD_OUT: its source L6 has no enable pin and the board declares neither a switch nor that the rail is always on"
- ],
+ "evidence": [],
  "inputs": {
   "board": "a",
   "netlist": "pcb-a-power.net"
@@ -41,14 +28,14 @@
  ],
  "tool": "power_sequence",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "9bccd1871fd5d8f7"
+  "git_head": "2ae49ff7c52a",
+  "tools_tree_sha": "4d83fe3b9dfc62e2"
  },
- "ts": "2026-09-20T07:32:26Z",
- "verdict": "INCONCLUSIVE",
- "version": "unknown",
+ "ts": "2026-09-20T14:27:25Z",
+ "verdict": "PASS",
+ "version": "2ae49ff7c52a+dirty",
  "writer": {
   "file": "power_sequence.py",
-  "sha16": "fc500cf0801852cb"
+  "sha16": "58920d0bf59c3fbb"
  }
 }

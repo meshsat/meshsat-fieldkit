@@ -114,3 +114,62 @@ def t_a_rail_may_declare_several_sources():
     assert not r["unresolved"] and not r["deadlocks"], r
     row = next(x for x in r["rows"] if x["rail"] == "GND")
     assert row["source"] == ["J1", "J2"], row
+
+
+def t_a_segment_of_a_path_takes_the_enable_of_the_path():
+    """THE ACCEPTABLE FIXTURE (20 September 2026). `series_of` was added on the 20th so a conductor declared
+    as the rail it is does not count its watts twice; thermal, dc_drop, derate, via_current and
+    rail_crossings were each taught to read it and this tool was not, so THIRTEEN of board A's twenty-seven
+    rails read *its source R16 has no enable pin*, a true sentence about a SHUNT that says nothing about the
+    path. A segment is switched by whatever switches the path it belongs to."""
+    d = tempfile.mkdtemp(prefix="seq-seg-")
+    net = _board(d, {"U1": "buck", "Q1": "fet", "R1": "shunt"},
+                 {"VOUT": [("U1", "3", "VOUT"), ("Q1", "1", "D")],
+                  "VOUT_SEG": [("Q1", "2", "S"), ("R1", "1", "")],
+                  "EN1": [("U1", "1", "EN"), ("Q1", "9", "G")],
+                  "VIN": [("U1", "2", "VIN")]},
+                 {"VOUT": {"volts": 5.0, "source": "U1", "switch": "U1"},
+                  "VOUT_SEG": {"volts": 5.0, "source": "R1", "series_of": "VOUT"}})
+    r = P.judge(net)
+    assert not r["unresolved"], r["unresolved"]
+    seg = [row for row in r["rows"] if row["rail"] == "VOUT_SEG"]
+    assert seg and "a segment of VOUT" in (seg[0].get("note") or ""), seg
+    assert r["segments"] == ["VOUT_SEG"], r["segments"]
+
+
+def t_a_segment_whose_path_is_unresolved_is_unresolved_too():
+    """THE DEFECTIVE FIXTURE, and the property that stops the field becoming an exemption. If a segment could
+    resolve itself, declaring `series_of` would be a way to make any rail's sequencing question disappear.
+    It inherits an ANSWER and never the absence of one, so a segment of an unresolved path is unresolved and
+    names the ancestor. Board E reads exactly this today: PV_IN is a segment of PV_P and PV_P's source is a
+    fuse nobody has declared always on."""
+    d = tempfile.mkdtemp(prefix="seq-segbad-")
+    net = _board(d, {"F1": "fuse", "R1": "shunt"},
+                 {"VOUT": [("F1", "2", ""), ("R1", "1", "")], "VIN": [("F1", "1", "")],
+                  "VOUT_SEG": [("R1", "2", "")]},
+                 {"VOUT": {"volts": 14.4, "source": "F1"},
+                  "VOUT_SEG": {"volts": 14.4, "source": "R1", "series_of": "VOUT"}})
+    r = P.judge(net)
+    assert any(u.startswith("VOUT_SEG:") and "itself unresolved" in u for u in r["unresolved"]), r["unresolved"]
+    assert not [row for row in r["rows"] if row["rail"] == "VOUT_SEG"], r["rows"]
+
+
+def t_a_segment_chain_that_returns_to_itself_is_refused():
+    """A cycle is refused rather than resolved: two segments naming each other would otherwise each find an
+    answer in the other and both would read as sequenced."""
+    d = tempfile.mkdtemp(prefix="seq-segloop-")
+    net = _board(d, {"R1": "shunt", "R2": "shunt"},
+                 {"A": [("R1", "1", "")], "B": [("R2", "1", "")]},
+                 {"A": {"volts": 5.0, "source": "R1", "series_of": "B"},
+                  "B": {"volts": 5.0, "source": "R2", "series_of": "A"}})
+    r = P.judge(net)
+    assert len([u for u in r["unresolved"] if "returns to itself" in u]) == 2, r["unresolved"]
+
+
+def t_a_segment_of_a_rail_this_board_does_not_declare_is_named():
+    """A dangling `series_of` is a declaration that points at nothing, which is not a pass either."""
+    d = tempfile.mkdtemp(prefix="seq-segdangle-")
+    net = _board(d, {"R1": "shunt"}, {"A": [("R1", "1", "")]},
+                 {"A": {"volts": 5.0, "source": "R1", "series_of": "NOWHERE"}})
+    r = P.judge(net)
+    assert any("declares no rail of that name" in u for u in r["unresolved"]), r["unresolved"]
