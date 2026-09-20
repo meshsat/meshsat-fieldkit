@@ -15127,3 +15127,21 @@ duplicate reference**, hard 0, 461 escapes, 2 pads skipped, `netlist_board` 2,14
 reading 9 within 3.0 mm and 31 stuck, every one of them the baseline's. `tests/test_bypass_slots_duplicate.py`
 carries the two mechanical rules and **the first fails on the tree it was written against** (the pre-fix
 `reserve` never asks the board for the capacitor: `FindFootprintByReference(cap)` is absent from it).
+
+### 32.308, 20 September 2026 14:45 CEST: board B's own decoupling reading, owed since the pass was corrected
+
+**Board B declared the decoupling pass at `mechanical` too, so its capacitors had never been measured against
+the pins they serve either. A placement-only chain on B21's tree (no route, nothing adopted) takes the
+reading: 30 declared, FOUR within 3.0 mm, median 13.3 mm, worst 251.9.**
+
+The three worst are `C38`, `C37` and `C36` at **251.9, 247.7 and 177.0 mm** from `U5` pin 1, which is most of
+a 245 mm board; after them come the per-slot rails' own capacitors at 32.3, 32.3, 26.7, 26.7 and 24.2 mm
+(`C112`, `C312`, `C113`, `C313`, `C213` against `U103`, `U203` and `U303` pin 2).
+
+**And `bypass_slots` reserved NOT ONE of the thirty**, which is 32.306's conflict at its worst: board B
+carries 75 fine-pitch parts and every spot inside 3 mm of one of their pins touches an escape fan. The placed
+board otherwise reads **hard 0, 1,508 escapes and 262 pads without one**, which is board B's known
+floor-plan problem and an owner decision, not something this reading changes.
+
+**Nothing is applied to board B**: its floor plan is held, and this is the number its next placement has to
+beat.
