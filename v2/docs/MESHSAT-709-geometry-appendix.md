@@ -12735,3 +12735,17 @@ attempt and which the 3.69x says is not enough as built.
 entry in `OWNER-DECISIONS-2026-09-11.md` with its options and its recommendation before it goes in the index,
 and the index has a rule that refuses one without the other. What is written down is the number, so the
 decision can be drafted against measurements rather than against an impression.
+
+**Addendum, 02:38 CEST: the copper-weight finding survives the decision that already holds PI-001.** Board
+A's PI-001 is attributed on the readiness page to **decision 35**, which asks which published current-rating
+model this project's copper is judged against. That decision cannot make the finding above go away, and the
+direction is the useful part: 13 September's measurement says our IPC-2221A bar is **the optimistic one above
+0.268 mm2 at 10 K**, which is every conductor wider than about 3.8 mm at 2 oz, so the alternative models are
+STRICTER for exactly the wide bands this is about. Ruling decision 35 either way leaves `VBAT` needing more
+copper than board A has at 1 oz, not less. **The two questions are independent**: 35 is about the bar and the
+copper weight is about the board, and only the second one can be answered by a stackup.
+
+Also read off the same page while it was open: **PI-001 fails on board B with nine of its thirty-six rails
+missed and on board P with one of four**, and neither is claimed by any decision. Board P's one is `PACK_N`,
+measured at 02:05 tonight. Board B's nine are its own, unread, and they are the next set-level power item
+after board A's.
