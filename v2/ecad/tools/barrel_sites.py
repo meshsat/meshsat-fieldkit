@@ -83,8 +83,19 @@ def main(argv):
                        and t.GetNetname().lstrip("/") == net
                        and math.hypot(t.GetPosition().x / 1e6 - x, t.GetPosition().y / 1e6 - y) < 0.15
                        for t in b.GetTracks())
+            # AND WHETHER IT IS A BARREL AT ALL (20 September 2026). The drill above is the drill of the
+            # thing ALREADY at the site, and at four of board E's ten suggested sites that thing is a
+            # CONNECTOR'S PLATED COMPONENT HOLE, 1.78 mm at the XT60 and the DC inlet. Suggested as a cluster
+            # and applied, E24 came back with EIGHT `annular_width` at -0.4900 mm and SIXTEEN `hole_to_hole`
+            # at 0.0000: a lattice of 1.78 mm vias beside a connector is not a thing, and the four were the
+            # whole of that hard set. A via cluster answers a VIA transition; a component hole that carries
+            # too much current is the LAND's question, which is board P's 12 AWG wire lands by another route.
+            pad_here = next((("%s.%s" % (ref, num), round(sx, 2), round(sy, 2))
+                             for dd, ref, num, pnet, px, py, sx, sy in own
+                             if dd < max(0.15, drill / 2.0)), None)
             rows.append(dict(net=net, amps=round(amps, 3), limit=round(lim, 3), ratio=round(ratio, 2),
                              drill=drill, at=(round(x, 2), round(y, 2)), locked_here=mine,
+                             pad_here=pad_here,
                              at_origin=(round(x - ox, 2), round(oy - y, 2)) if (ox or oy) else None,
                              own=own[:8], other=other[:12]))
     print("barrel_sites: %d barrel(s) reported of %d measured net(s), %d over their own rating at %.0f K and "
@@ -134,11 +145,41 @@ def main(argv):
             pitch = drill + 0.4
             span = (n - 1) * pitch
             def worst(ax):
+                # ROOM IS TO THE PAD'S EDGE AND NOT TO ITS CENTRE (20 September 2026, board E, E25). This
+                # returned the distance to the nearest pad CENTRE, so `DC_F` was reported with "1.34 mm of
+                # room on this axis" while its lattice landed 0.1450 mm from D1 pad 1, a 3.30 by 2.50 land
+                # whose half-width is 1.65: the centre was 1.34 away and the copper was touching. Three
+                # clearance violations and a chain run to find out. The gap is to the RECTANGLE now and the
+                # barrel's own copper comes off it, which took `DC_F` from a reported 1.34 mm to 0.33 and
+                # `DC_P` to 0.00 on its cross axis. IT IS STILL A MODEL AND NOT THE DRC: this walks a SINGLE
+                # ROW of n barrels, and `cluster` may lay more than one row when the span does not fit, so a
+                # site that reads a small number here is a warning and a site that reads a large one is not a
+                # promise. The chain is the evidence, which is why E24, E25 and E26 were run.
                 pts = [((cx - span / 2.0 + i * pitch, cy) if ax == "x" else (cx, cy - span / 2.0 + i * pitch)) for i in range(n)]
-                return min([math.hypot(px - o[4], py - o[5]) for px, py in pts for o in other] or [99.0])
+                rad = drill / 2.0 + 0.1                       # the barrel's copper, annular ring included
+                gaps = []
+                for px, py in pts:
+                    for o in other:
+                        dx = max(0.0, abs(px - o[4]) - o[6] / 2.0)
+                        dy = max(0.0, abs(py - o[5]) - o[7] / 2.0)
+                        gaps.append(max(0.0, math.hypot(dx, dy) - rad))
+                return min(gaps or [99.0])
             wx, wy = worst("x"), worst("y")
             axis = "x" if wx >= wy else "y"
             room = ("%.2f mm of room on this axis, %.2f on the other" % (max(wx, wy), min(wx, wy))) if other else "nothing else within reach"
+            _pad = next((x.get("pad_here") for x in ss if x.get("pad_here")), None)
+            if _pad and drill >= 0.8:
+                # A COMPONENT HOLE IS NOT A BARREL (20 September 2026, board E, E24). Nothing in a generator
+                # can put a via cluster beside a 1.78 mm plated hole: the lattice pitch is the drill plus
+                # 0.4 and the annular ring goes negative before the first point lands. Declined here with the
+                # number, because the site IS over its rating and the answer is the land or the placement.
+                print('    # %s at (%.2f, %.2f): the barrel here is %s, a plated COMPONENT HOLE of %.2f mm, '
+                      'not a via.' % (g["net"], ox, oy, _pad[0], drill))
+                print('    # %.3f A across it wants %d barrel(s) of that size and a via cluster cannot give '
+                      'them: declined,' % (amps, n))
+                print('    # the way board P\'s 12 AWG wire lands are. It is the LAND\'s question or the '
+                      'placement\'s.')
+                continue
             if any(x.get("locked_here") for x in ss):
                 print('    # %s at (%.2f, %.2f): this barrel is the GENERATOR\'s own (a locked via sits on it), so a'
                       % (g["net"], ox, oy))
