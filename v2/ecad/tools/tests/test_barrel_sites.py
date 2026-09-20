@@ -90,3 +90,26 @@ def t_a_locked_via_that_no_power_copper_call_placed_says_so():
     i = src.index("NO POWER-COPPER CALL")
     j = src.index("_placed_by_src(path")
     assert j < i, "the site is declared unplaced before the map is consulted"
+
+
+def t_the_solved_currents_must_be_this_boards_and_say_so_when_they_are_not():
+    """A SOLVED FILE NAMES ITS BOARD BY SHA (MESHSAT-862, 20 September 2026).
+
+    `<stem>-via-currents.json` named its board by FILENAME, and every phase of a board carries the same one.
+    Board E's currents solved on E17 were read beside E29's board, which carries five clusters E17 does not,
+    and every "add N point(s)" that came back was about neither: the classification was sound and the counts
+    were the old board's current at the new board's via. That is 17 September's rule, a verdict names the
+    board it was taken on, owed by the DATA FILE that feeds PI-003 just as much as by a verdict, and it is
+    the third reading taken off the wrong artefact today.
+
+    Proved to fail on the tools as they stood: `dc_drop` wrote no sha and `barrel_sites` compared nothing."""
+    dd = open(os.path.join(TOOLS, "dc_drop.py"), encoding="utf-8").read()
+    assert "board_sha256_16" in dd, "the solved currents still name their board by filename alone"
+    assert dd.count("board_sha256_16") >= 2, "the pad potentials are not stamped as well as the currents"
+    bs = open(os.path.join(TOOLS, "barrel_sites.py"), encoding="utf-8").read()
+    assert "THE SOLVED CURRENTS ARE ANOTHER BOARD'S" in bs, "the reader does not check whose currents it has"
+    assert "name no board sha" in bs, "a file written before the sha existed is not told apart from a match"
+    # and it must DECIDE nothing: this is a sentence, not a refusal, because an older file is not an error
+    i = bs.index("THE SOLVED CURRENTS ARE ANOTHER BOARD'S")
+    seg = bs[max(0, i - 400):i + 400]
+    assert "return 3" not in seg and "raise" not in seg, "the mismatch refuses the run instead of naming it"

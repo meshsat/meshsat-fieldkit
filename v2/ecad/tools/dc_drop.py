@@ -23,6 +23,18 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 RHO = 1.72e-8   # ohm m
 PLATING = 25e-6
 
+def _board_sha16(path):
+    """The first sixteen hex of the board's sha256, so a solved file says which board it is about."""
+    import hashlib as _h
+    try:
+        h = _h.sha256()
+        with open(path, "rb") as f:
+            for chunk in iter(lambda: f.read(1 << 20), b""): h.update(chunk)
+        return h.hexdigest()[:16]
+    except Exception:
+        return ""
+
+
 def sheet(t_mm): return RHO / (t_mm * 1e-3)   # ohm per square
 
 
@@ -640,11 +652,18 @@ def main(a):
         _vp = os.path.join(os.path.dirname(os.path.abspath(a[0])), "out",
                            os.path.splitext(os.path.basename(a[0]))[0] + "-via-currents.json")
         os.makedirs(os.path.dirname(_vp), exist_ok=True)
-        json.dump({"board": os.path.basename(a[0]), "rise_k": dT, "nets": _via_amps}, open(_vp, "w"), indent=1)
+        # AND WHICH BOARD IT WAS SOLVED ON, BY SHA (20 September 2026). `board` was a FILENAME, and every
+        # phase of a board carries the same filename: board E's currents solved on E17 were handed to
+        # `barrel_sites` beside E29's board, which carries five clusters E17 does not, and the counts that
+        # came back were about neither. That is 17 September's rule, a verdict names the board it was taken
+        # on, owed by the DATA FILE that feeds PI-003 just as much as by a verdict.
+        json.dump({"board": os.path.basename(a[0]), "board_sha256_16": _board_sha16(a[0]), "rise_k": dT,
+                   "nets": _via_amps}, open(_vp, "w"), indent=1)
         print("dc_drop: %d barrel current(s) over %d net(s) written to %s"
               % (sum(len(x) for x in _via_amps.values()), len(_via_amps), os.path.basename(_vp)))
         _pp2 = _vp.replace("-via-currents.json", "-pad-potentials.json")
-        json.dump({"board": os.path.basename(a[0]), "note": "drop from the rail's source at each pad, volts",
+        json.dump({"board": os.path.basename(a[0]), "board_sha256_16": _board_sha16(a[0]),
+                   "note": "drop from the rail's source at each pad, volts",
                    "nets": _pad_v}, open(_pp2, "w"), indent=1)
         print("dc_drop: %d pad potential(s) over %d net(s) written to %s"
               % (sum(len(x) for x in _pad_v.values()), len(_pad_v), os.path.basename(_pp2)))

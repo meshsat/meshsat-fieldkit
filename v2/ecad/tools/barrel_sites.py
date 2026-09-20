@@ -81,6 +81,27 @@ def main(argv):
     if not os.path.exists(mp):
         print("barrel_sites: no solved barrel currents beside this board (%s); run dc_drop first" % mp)
         return 3
+    # AND THE CURRENTS MUST BE THIS BOARD'S (20 September 2026). The file names the board by FILENAME, and
+    # every phase of a board carries the same one: board E's currents solved on E17 were read beside E29's
+    # board, which carries five clusters E17 does not, and every count that came back was about neither.
+    # `dc_drop` records the sha now; where it is there and differs this says so and decides nothing, because
+    # a reading taken off the wrong artefact looks exactly like a result (8 September, and twice today).
+    try:
+        import hashlib as _hh
+        _h = _hh.sha256()
+        with open(path, "rb") as _f:
+            for _c in iter(lambda: _f.read(1 << 20), b""): _h.update(_c)
+        _mine = _h.hexdigest()[:16]
+        _theirs = (json.load(open(mp, encoding="utf-8")) or {}).get("board_sha256_16") or ""
+        if _theirs and _theirs != _mine:
+            print("barrel_sites: THE SOLVED CURRENTS ARE ANOTHER BOARD'S. %s was solved on %s and this board "
+                  "is %s, so every count below would be the other board's current at this board's via: "
+                  "re-run dc_drop on this board." % (os.path.basename(mp), _theirs, _mine))
+        elif not _theirs:
+            print("barrel_sites: the solved currents name no board sha (written before 20 September 2026), so "
+                  "whether they are this board's cannot be checked here")
+    except Exception as _e:
+        print("barrel_sites: the solved currents' board could not be compared (%s)" % _e)
     md = json.load(open(mp, encoding="utf-8"))
     plating = float(md.get("plating_um") or 18.0)
     nets = {k.lstrip("/"): v for k, v in (md.get("nets") or {}).items()}
