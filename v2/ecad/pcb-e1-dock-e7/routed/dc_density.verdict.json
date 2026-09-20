@@ -3,15 +3,18 @@
  "applicable": true,
  "counts": {
   "met": 6,
-  "missed": 4,
+  "missed": 7,
   "undeclared": 0
  },
- "denominator": 10,
+ "denominator": 13,
  "evidence": [
   "MISSED DC_IN on current density: worst conductor or pour cell at 1.99 of its limit (the drop was 0.40% of 12.0 V, which is not what failed)",
   "MISSED DC_F on current density: worst conductor or pour cell at 3.04 of its limit (the drop was 1.06% of 12.0 V, which is not what failed)",
   "MISSED DC_P on current density: worst conductor or pour cell at 2.47 of its limit (the drop was 1.02% of 12.0 V, which is not what failed)",
-  "MISSED HS_S on current density: worst conductor or pour cell at 2.06 of its limit (the drop was 0.26% of 12.0 V, which is not what failed)"
+  "MISSED HS_S on current density: worst conductor or pour cell at 2.06 of its limit (the drop was 0.26% of 12.0 V, which is not what failed)",
+  "MISSED PV_P on current density: worst conductor or pour cell at 1.62 of its limit (the drop was 0.64% of 17.6 V, which is not what failed)",
+  "MISSED PV_IN on current density: worst conductor or pour cell at 1.53 of its limit (the drop was 0.22% of 17.6 V, which is not what failed)",
+  "MISSED TRK_OUT on current density: worst conductor or pour cell at 2.26 of its limit (the drop was 1.42% of 15.1 V, which is not what failed)"
  ],
  "inputs": {
   "board": {
@@ -34,9 +37,9 @@
  "tool": "dc_density",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "3403c8ec6d4030c1"
+  "tools_tree_sha": "f099531fc36518e9"
  },
- "ts": "2026-09-20T01:19:38Z",
+ "ts": "2026-09-20T01:36:33Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

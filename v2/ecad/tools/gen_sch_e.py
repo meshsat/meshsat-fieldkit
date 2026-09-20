@@ -228,10 +228,27 @@ part("F2", "Device", "Fuse", "10 A mini blade (Keystone 3568 holder): panel inpu
 # to conduct at 31.1 V, which is BELOW the capacitors' rating. Its clamping voltage at the full 22 A pulse is
 # 45.4 V and no clamp in this class is under 35, so a fast high-current surge still passes the capacitors more
 # than their steady rating for microseconds; what has changed is that a slow over-voltage no longer can.
-for _pvn in ("PV_IN", "PV_P"):
-    _intent.node(_pvn, 25.0, "a 36-cell 12 V class panel: about 22 V open circuit at 25 degC and about 25 V "
-                 "cold. See the note in gen_sch_e.py about the 35 V bulk capacitors behind a 33 V clamp",
-                 v_work=25.0)
+# PV_P FIRST, because PV_IN declares itself a segment of it and a rail that names another needs that one
+# declared (the same ordering CELL+ and VBAT needed on board A at 03:05).
+for _pvn in ("PV_P", "PV_IN"):
+    # THE PANEL ENTRY IS A CONDUCTOR AND ITS CURRENT IS IN THE DESIGN'S OWN WORDS (20 September 2026,
+    # appendix 32.251 named these as owed and said their currents were written down nowhere; they are, in the
+    # line above that draws J_SOLAR). The panel is "a 36-cell 12 V class panel, up to about 22 V open
+    # circuit, 100 W" and the tracker regulates its input at the maximum-power point, 17.6 V (R8 and R9, the
+    # FBIN divider). So the maximum-power current is 100 / 17.6 = 5.68 A and the SHORT-CIRCUIT current of a
+    # panel of that class is about 1.1 times it, 6.25 A, which is the most this conductor can ever carry and
+    # is what `amps_peak` means. The 10 A blade F2 is protection and not a rating.
+    # The VOLTAGE keeps both of the node's numbers: `volts` is the 17.6 V the tracker holds the panel at,
+    # which is what the drop is judged as a fraction of, and `v_max` is the 25 V a cold panel reaches open
+    # circuit, which is what a part on this net has to withstand. Putting the 25 in `volts` would have made
+    # the drop bar 40 percent looser on a conductor that never runs there.
+    _intent.rail(_pvn, 17.6, 5.68, 6.25, "J_SOLAR" if _pvn == "PV_IN" else "F2",
+                 loads={"F2" if _pvn == "PV_IN" else "U5": 5.68}, v_work=25.0, v_max=25.0,
+                 converted=False, **({"series_of": "PV_P"} if _pvn == "PV_IN" else {}),
+                 note="the bare panel entry: a 36-cell 12 V class panel at 100 W, about 22 V open circuit at "
+                      "25 degC and about 25 V cold, held at its 17.6 V maximum-power point by the LT8705A's "
+                      "FBIN divider. 5.68 A at that point and about 6.25 A into a short, which is the most "
+                      "the conductor can carry")
 part("D4", "Device", "D_TVS", "SMCJ28A (panel surge: 28 V standoff, conducting from 31.1 V, below the 35 V bulk capacitors)", "TVS", {"1": "GND", "2": "PV_P"}, "C224047")
 for k in range(1, 3): part("C%d" % (10 + k), "Device", "C_Polarized", "100u 35V Panasonic EEHZK1V101XP hybrid polymer (7.7 mm)", "CPOL63", {"1": "PV_P", "2": "GND"}, "C454360")
 c("C13", "10u 50V", "PV_P", "GND", "C10u50"); c("C14", "10u 50V", "PV_P", "GND", "C10u50"); c("C15", "4.7u 50V", "PV_P", "GND", "C10u50")
@@ -262,7 +279,18 @@ r("R10", "115k 1% (RFBOUT1: 15.1 V)", "TRK_OUT", "TRK_FBOUT"); r("R11", "10.0k 1
 # THE TRACKER'S OWN NETS. An LT8705A is a four-switch buck-boost like the LM5176 stages on board A, and the
 # same reading applies: SW1 is the buck side and reaches the panel, SW2 is the boost side and reaches the
 # regulated output, and each BOOST capacitor rides on its own SW at INTVCC, which is why they are small parts.
-_intent.node("TRK_OUT", 15.1, "the tracker's regulated output, set by R10 and R11 (115k over 10.0k)")
+# TRK_OUT IS THE TRACKER'S OUTPUT CONDUCTOR AND IT WAS A NODE (20 September 2026). It carries the whole of
+# the panel's power into the pack bus through the ideal diode U4, and as a node `dc_drop` solved nothing on
+# it. Its current follows from the panel's own 100 W and this board's declared efficiency: 100 W times 0.93
+# over 15.1 V is 6.16 A, and the peak is the same number because the panel's power is what bounds it, not its
+# short-circuit current (at Isc the panel's voltage collapses and its power with it).
+# 0.93 is the same assertion board A's five LM5176 stages make and is this project's, not a measurement; the
+# LT8705A is working close to unity ratio here (17.6 V in, 15.1 out), which is its best point, so this is the
+# conservative end of what such a stage does.
+_intent.rail("TRK_OUT", 15.1, 6.16, 6.16, "Q6", loads={"U4": 6.16}, fed_from="PV_P", efficiency=0.93,
+             switch="U5", converted=True,
+             note="the LT8705A tracker's regulated output, set by R10 and R11 (115k over 10.0k), carrying "
+                  "the panel's 100 W into the pack bus through the ideal diode U4")
 _intent.node("TRK_SW1", 25.0, "LT8705A buck-side switching node: it reaches the panel", v_min=-1.0)
 _intent.node("TRK_SW2", 15.1, "LT8705A boost-side switching node: it reaches the regulated output", v_min=-1.0)
 _intent.node("TRK_INTVCC", 6.35, "the LT8705A's own INTVCC regulator, which supplies both gate drivers")

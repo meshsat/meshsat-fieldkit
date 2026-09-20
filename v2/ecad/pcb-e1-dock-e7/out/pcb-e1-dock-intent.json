@@ -1,6 +1,6 @@
 {
  "board": "pcb-e1-dock",
- "written": "2026-09-20 01:31",
+ "written": "2026-09-20 01:36",
  "bypass": [
   {
    "cap": "C16",
@@ -266,6 +266,47 @@
    "converted": false,
    "series_of": "VIN_RAW",
    "v_max": 53.3
+  },
+  "PV_P": {
+   "volts": 17.6,
+   "amps_typ": 5.68,
+   "amps_peak": 6.25,
+   "source": "F2",
+   "loads": {
+    "U5": 5.68
+   },
+   "note": "the bare panel entry: a 36-cell 12 V class panel at 100 W, about 22 V open circuit at 25 degC and about 25 V cold, held at its 17.6 V maximum-power point by the LT8705A's FBIN divider. 5.68 A at that point and about 6.25 A into a short, which is the most the conductor can carry",
+   "v_work": 25.0,
+   "converted": false,
+   "v_max": 25.0
+  },
+  "PV_IN": {
+   "volts": 17.6,
+   "amps_typ": 5.68,
+   "amps_peak": 6.25,
+   "source": "J_SOLAR",
+   "loads": {
+    "F2": 5.68
+   },
+   "note": "the bare panel entry: a 36-cell 12 V class panel at 100 W, about 22 V open circuit at 25 degC and about 25 V cold, held at its 17.6 V maximum-power point by the LT8705A's FBIN divider. 5.68 A at that point and about 6.25 A into a short, which is the most the conductor can carry",
+   "v_work": 25.0,
+   "converted": false,
+   "series_of": "PV_P",
+   "v_max": 25.0
+  },
+  "TRK_OUT": {
+   "volts": 15.1,
+   "amps_typ": 6.16,
+   "amps_peak": 6.16,
+   "source": "Q6",
+   "loads": {
+    "U4": 6.16
+   },
+   "note": "the LT8705A tracker's regulated output, set by R10 and R11 (115k over 10.0k), carrying the panel's 100 W into the pack bus through the ideal diode U4",
+   "switch": "U5",
+   "efficiency": 0.93,
+   "converted": true,
+   "fed_from": "PV_P"
   }
  },
  "nodes": {
@@ -285,23 +326,6 @@
    "basis": "LM74700-Q1 VCAP: the internal charge pump sits about 10 V above the anode DC_F",
    "rides_on": "DC_F",
    "bias_v": 10.0
-  },
-  "PV_IN": {
-   "v_max": 25.0,
-   "v_min": 0.0,
-   "basis": "a 36-cell 12 V class panel: about 22 V open circuit at 25 degC and about 25 V cold. See the note in gen_sch_e.py about the 35 V bulk capacitors behind a 33 V clamp",
-   "v_work": 25.0
-  },
-  "PV_P": {
-   "v_max": 25.0,
-   "v_min": 0.0,
-   "basis": "a 36-cell 12 V class panel: about 22 V open circuit at 25 degC and about 25 V cold. See the note in gen_sch_e.py about the 35 V bulk capacitors behind a 33 V clamp",
-   "v_work": 25.0
-  },
-  "TRK_OUT": {
-   "v_max": 15.1,
-   "v_min": 0.0,
-   "basis": "the tracker's regulated output, set by R10 and R11 (115k over 10.0k)"
   },
   "TRK_SW1": {
    "v_max": 25.0,

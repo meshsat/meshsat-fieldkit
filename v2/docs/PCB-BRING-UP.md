@@ -160,6 +160,8 @@ fault from one that reads low.
 | 2 | DC_F | 12.00 V | 8.00 A | F1 | Q1 |
 | 3 | CELL_F | 14.40 V | 10.00 A | F3 | J_FAN1, J_FAN2, P_CP, U12 |
 | 4 | CELL+ | 14.40 V | 10.00 A | J_BATT | F3 |
+| 5 | PV_P | 17.60 V | 5.68 A | F2 | U5 |
+| 6 | PV_IN | 17.60 V | 5.68 A | J_SOLAR | F2 |
 
 **Measured, in this order, after the inputs are up.**
 
@@ -169,6 +171,7 @@ fault from one that reads low.
 | 2 | DC_P | 12.00 V (11.40 to 12.60) | Q1 | R19 |
 | 3 | HS_S | 12.00 V (11.40 to 12.60) | R19 | Q7 |
 | 4 | DC_HS | 12.00 V (11.40 to 12.60) | Q7 | L2 |
+| 5 | TRK_OUT | 15.10 V (14.34 to 15.86) | Q6 | U4 |
 
 **Decide before powering: the declared source is an inductor or a ferrite, which is a filter on an incoming feed on some boards and a converter's output on others.**
 
