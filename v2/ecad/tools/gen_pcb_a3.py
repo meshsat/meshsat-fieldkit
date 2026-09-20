@@ -516,6 +516,22 @@ for n, xL, Lr, Rr, Jr, out in SLOT:
     PC.island(out, "%s rail" % out, rect_pts(orr), pcbnew.F_Cu, priority=3)
     PC.band(out, "%s rail" % out, orr, (pcbnew.B_Cu,), priority=2)
     row(out, xL + 3.1, xL + 6.5, 72.6, 3)                                    # under the connector body, 2.4 mm from its pins
+    if n != "D":
+        # THE RAIL REACHES ITS OWN LOAD BANK PAST ITS CONVERTER BLOCK (20 September 2026, appendix
+        # 32.328 and 32.329, proved by A88 at PREROUTE-DONE OK). Each slot rail's four load parts sit
+        # 21 to 26 mm SOUTH of its copper at the connector row, on the far side of its own inductor,
+        # buck IC and INA226, and a band of the rail's own width has NO clear front-side lane within
+        # fifteen millimetres either side. In3 is free over all four corridors (In1 and In4 are the
+        # ground planes, In2 carries VBAT, F.Cu and B.Cu carry the rail's own copper), and In3 is the
+        # layer VIN_RAW already dives to for exactly this. The pour reaches up to the three stitch
+        # vias the line above already places under the connector, so the north end needs nothing new.
+        # +5V_DEV IS DELIBERATELY NOT HERE: at 6.00 A on half-ounce inner copper it wants about
+        # fifteen millimetres against the five or six a 16 mm column allows, and it also has to reach
+        # the east, so it is decision 35's copper weight and not a layer choice.
+        PC.island(out, "%s load bank" % out, rect_pts((xL - 3.5, 40.3, xL + 5.5, 43.3)), pcbnew.F_Cu, priority=3)
+        PC.union(out, "%s under the block" % out, [(xL - 2.5, 41.0, xL + 7.0, 73.5)], pcbnew.In3_Cu, priority=2)
+        col(out, xL + 1.0, 41.3, 42.8, 2)
+
 # 2. the PA rail: the shunt's pad 2 and the output caps in an island at the head of a 4.5 mm bottom band east along y -11.5, north at x 104, into J_PA's pin 1
 pa = "+13V8_PA"; pr = pads_rect(net_pads(pa, ["R55", "C65", "C66", "C67"]), 1.2, 1.0)
 PC.island(pa, "PA rail head", rect_pts((pr[0], pr[1], pr[2] + 2.5, pr[3])), pcbnew.F_Cu, priority=3)
