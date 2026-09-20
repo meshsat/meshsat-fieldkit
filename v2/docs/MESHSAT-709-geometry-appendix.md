@@ -15173,3 +15173,18 @@ nearly all of them the FIXED ones, and nothing collides.
 **NOT APPLIED, and the next step is named**: the reach is worth having and it is not the piece that is
 missing; the packer stepping around a reserved seat is. Until then board A keeps its 9 of 40 within 3 mm and
 its median of 13.2, with this table as the thing to beat and `BYPASS_REACH` living only in an arm.
+
+**32.309 addendum, 14:50 CEST: the packer's step-around was built and it ends at the rectangles.** A80 is
+A79 plus the obvious next piece, the row packer given the reserved footprints' own courtyards and made to
+step past them. It removes the collisions and **overflows THIRTEEN regions, the worst by 24.6 mm** (`HFQ`),
+against a declared allowance of 1.5, so the chain blocks at the region gate. The reason is the packer's
+shape: it fills each rectangle in shelves, left to right and top to bottom, so an obstacle in the middle of a
+row costs the whole strip beside it, and board A's rectangles are on the never-auto floor of owner ruling
+13, which scoped resizing to board B alone. Decoupling reads the same as A79 (9 within 3 mm, 21 within 5,
+median 5.0) on a board that cannot be cut.
+
+**So the chain of measurements ends where this session cannot go**, and it ends tidily: the four capacitors
+of 32.305 cost nothing precisely because they LEFT their region, while a reservation that seats a capacitor
+INSIDE one leaves the packer a hole it cannot pack around. The next real step is therefore either seats
+chosen outside the rectangles, which is what 32.305 did by hand for four, or a packer that is not a shelf,
+and the one after that is the owner's on the rectangles themselves.
