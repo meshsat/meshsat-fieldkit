@@ -13276,7 +13276,15 @@ put side by side:
 
 **On the INTERNAL curve the two agree to three decimals**, 7.11 against 7.10, which is the verification worth
 having: every inner-layer figure in tonight's tables is on the published curve and confirmed by a second
-implementation. **On the outer layers they differ by a factor of about 2.6, and the reason is written down
+implementation.
+
+**Precisely what the right-hand column is, because the table would mislead without it.** `track_current`
+takes no internal-or-external argument: Annex D publishes ONE curve and the record's own reading is that this
+project's internal bar turns out to BE it. So the right-hand figures are **that single published curve
+applied at outer copper thickness**, and not "what the annex says an external conductor needs", which it
+does not say. Reading an outer conductor against the internal curve is the conservative choice among the
+three models decision 35 names, and it is the one the 13 September measurement said our bar is optimistic
+against above 0.268 mm2. **On the outer layers they differ by a factor of about 2.6, and the reason is written down
 already**: `power_copper` doubles IPC's constant for an external conductor (k 0.048 against 0.024) and
 **ECSS's Annex D fits no external factor at all**, which the coverage map records as PI-001's own caveat.
 
