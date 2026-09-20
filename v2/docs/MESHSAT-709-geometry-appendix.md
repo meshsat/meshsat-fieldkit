@@ -13893,3 +13893,28 @@ the guard asks for `assembly_set` (DFA-001) and `final_gate` (OUT-001), **neithe
 and declines naming whichever is absent. Separation proved against the two trees' real listings before it
 was trusted: **3 verdict files in the staged tree's `out/` against 71 here**, and the old guard passes on
 both where the new one passes here and declines there. Suite 1202 on the runner, 0 failing.
+
+### 32.277, 20 September 2026 07:20 CEST: decision 31's packet re-read off the verdicts, and five of the thirteen are one part
+
+The 17 September packet said thirteen conductors. **Re-read from every board's committed `port_protect`
+verdict rather than trusted, it holds**, and board A's two have names now:
+
+| board | reaching a chip with nothing between | meeting a clamp only past an active part |
+|---|---|---|
+| **A** | — | **`J_USBC_OUT.2` on PD_CC1, `.3` on PD_CC2**, to U18 (TPS25740A, the PD source controller) |
+| **D** | 7: `J_PAOUT.1` on RF_PAOUT, and both headset jacks' speaker, microphone and push-to-talk | — |
+| **E** | 3: `J_POD.1`, `.3`, `.4`, the outside sensor pod's +3V3, SDA1 and SCL1 | 1: `J_DCIN.1` on DC_IN, past Q1 (BSC039N06NS) |
+| B, C, E5, P | — | — |
+
+**Board A's two are the USB-C outlet's configuration channels**, each running from a connector on the
+OUTSIDE of the case to the PD controller with nothing on the line but its own capacitor (`C96`, `C97`). The
+committed A32 verdict files them under "behind an active part" and tonight's regenerated board under
+"nothing between": both are TRN-001 failures and the difference is the walk's classification rather than the
+count, so the packet is thirteen either way.
+
+**And the useful arithmetic**: board E's three are answered by one part this design already buys, the
+**USBLC6-2SC6 (C7519)**, and a two-line USB-C ESD array is exactly what CC1 and CC2 want, so the same part
+answers board A's two. **Five of the thirteen on one part type.**
+
+**NOT A RULING**: decision 31 is the owner's and the part is his to choose. This is the packet's arithmetic,
+checked rather than repeated.
