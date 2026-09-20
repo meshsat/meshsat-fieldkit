@@ -819,7 +819,27 @@ one. Decisions 27 and 28 name STK-002 on C and P now, which is what the sentence
 The other five boards stay deliberately unclaimed: their layer question IS decision 2, the P0 of 11
 September, ruled on 12 September as write up all seven and TEST BOARD A ONLY, and the index only carries
 decisions from 23 up. So five pairs point at a ruled decision whose per-board half was never asked again, and
-the page says so under DECISION_UNCLAIMED rather than hiding them among the pairs that have a number.
+the page says so under DECISION_UNCLAIMED rather than hiding them among the pairs that have a number. 20
+SEPTEMBER 2026, THAT LAST CLAUSE HAS STOPPED BEING TRUE AND THE SENTENCE IS CORRECTED. The per-board half WAS
+asked again and it is answered for all seven boards in v2/docs/LAYER-DECISIONS-2026-09-11.md, each with the
+measurement that forced it: board A six layers, the four-layer arm ROUTED on 12 September with the autoroute
+COMPLETED at 0 hard and 345 unrouted against the six-layer board's 0 (not a pass ceiling and not a timeout,
+which is what settles it); board B six, three CM5 at 0.4 mm receptacle pitch measuring 93 opens at 8 passes
+with In1 keep-outs; board C four, In2 carrying 55 percent of all routing on a board whose middle is a display
+window; board D four, In1 as a solid ground plane under the exciter, the PA stage and the filter, which is an
+RF requirement and the return path for all three and is the sentence the record had never written; board E
+four, refused at two by the ROUTING half alone after the power argument was measured and WITHDRAWN (deleting
+all four In2 pours costs CELL_F 13 mV and VIN_RAW 28 mV, so area is not current); boards P and E5 two, with
+no signal that leaves its own face. SO THE MEASUREMENT HALF OF THIS RULE IS COMPLETE ON ALL SEVEN BOARDS and
+the only outstanding input is the second half of its own acceptance criteria, the fabricator's like-for-like
+price at four layers and at six, one per board at its real outline and quantity five. The runner cannot take
+it: JLCPCB publishes no open PCB pricing endpoint and the standing rule is that the runner never logs in, so
+it is the laptop ordering session's. THE CATEGORY IS DELIBERATELY NOT MOVED HERE. Reclassifying these five
+from DECISION_UNCLAIMED to VENDOR_WAIT means changing this rule's maturity out of OWNER_DECISION_REQUIRED,
+which is a claim that decision 2 is closed, and five BLOCKER pairs would change class for a reason that is
+not the boards. Decision 2 was RULED on 12 September and its ruling has been EXECUTED; recording a ruled
+decision as closed is the owner's, so the page keeps saying DECISION_UNCLAIMED and this note says exactly
+what is left.
 
 ## Return Path
 
