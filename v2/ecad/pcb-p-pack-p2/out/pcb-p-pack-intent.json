@@ -1,6 +1,6 @@
 {
  "board": "pcb-p-pack",
- "written": "2026-09-20 06:47",
+ "written": "2026-09-20 14:42",
  "bypass": [
   {
    "cap": "C1",
@@ -72,6 +72,8 @@
     "R10": 10.0
    },
    "note": "the pack negative from the 12 AWG lead land W_N to the 2 mOhm coulomb-counting shunt R10, at the pack's own 10.0 A typical and 18.0 A peak. Its own potential is 50 mV at 25 A, which is what a part on it is judged against; its DROP is judged against PACK_P, the rail it returns, because a percentage of 50 mV is not a bar anybody could state",
+   "always_on": true,
+   "always_on_why": "both protection FETs are in the positive path (Q1 on FUSED, Q2 on PACK_P), so nothing on this board is in series with the pack's negative: it runs from the lead land W_N through the 2 mOhm shunt R10 to ground with no switching part in it, which is what high-side protection means",
    "v_work": 0.05,
    "converted": false,
    "returns": "PACK_P"

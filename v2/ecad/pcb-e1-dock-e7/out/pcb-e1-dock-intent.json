@@ -1,6 +1,6 @@
 {
  "board": "pcb-e1-dock",
- "written": "2026-09-20 06:47",
+ "written": "2026-09-20 14:42",
  "bypass": [
   {
    "cap": "C16",
@@ -276,6 +276,8 @@
     "U5": 5.68
    },
    "note": "the bare panel entry: a 36-cell 12 V class panel at 100 W, about 22 V open circuit at 25 degC and about 25 V cold, held at its 17.6 V maximum-power point by the LT8705A's FBIN divider. 5.68 A at that point and about 6.25 A into a short, which is the most the conductor can carry",
+   "always_on": true,
+   "always_on_why": "a photovoltaic panel produces whenever there is light on it and nothing on this board is between the connector and the fuse, so there is no part whose enable pin could switch this rail. The tracker downstream decides how much of it is drawn, not whether it is present",
    "v_work": 25.0,
    "converted": false,
    "v_max": 25.0
@@ -304,6 +306,7 @@
    },
    "note": "the LT8705A tracker's regulated output, set by R10 and R11 (115k over 10.0k), carrying the panel's 100 W into the pack bus through the ideal diode U4",
    "switch": "U5",
+   "enable_net": "TRK_SHDN",
    "efficiency": 0.93,
    "converted": true,
    "fed_from": "PV_P"

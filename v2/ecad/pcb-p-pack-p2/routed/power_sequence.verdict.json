@@ -2,16 +2,14 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "always_on": 2,
+  "always_on": 3,
   "deadlocks": 0,
   "rails": 4,
   "segments": 0,
-  "unresolved": 1
+  "unresolved": 0
  },
  "denominator": 4,
- "evidence": [
-  "PACK_N: its source W_N has no enable pin and the board declares neither a switch nor that the rail is always on"
- ],
+ "evidence": [],
  "inputs": {
   "board": "p",
   "netlist": "pcb-p-pack.net"
@@ -30,12 +28,12 @@
  ],
  "tool": "power_sequence",
  "tools": {
-  "git_head": "2ae49ff7c52a",
-  "tools_tree_sha": "4d83fe3b9dfc62e2"
+  "git_head": "52927139ecbf",
+  "tools_tree_sha": "09731de0e4d60901"
  },
- "ts": "2026-09-20T14:27:26Z",
- "verdict": "INCONCLUSIVE",
- "version": "2ae49ff7c52a+dirty",
+ "ts": "2026-09-20T14:45:23Z",
+ "verdict": "PASS",
+ "version": "52927139ecbf+dirty",
  "writer": {
   "file": "power_sequence.py",
   "sha16": "58920d0bf59c3fbb"

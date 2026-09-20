@@ -244,7 +244,13 @@ for _pvn in ("PV_P", "PV_IN"):
     # the drop bar 40 percent looser on a conductor that never runs there.
     _intent.rail(_pvn, 17.6, 5.68, 6.25, "J_SOLAR" if _pvn == "PV_IN" else "F2",
                  loads={"F2" if _pvn == "PV_IN" else "U5": 5.68}, v_work=25.0, v_max=25.0,
-                 converted=False, **({"series_of": "PV_P"} if _pvn == "PV_IN" else {}),
+                 converted=False, **({"series_of": "PV_P"} if _pvn == "PV_IN" else
+                                    {"always_on": True,
+                                     "always_on_why": "a photovoltaic panel produces whenever there is light "
+                                     "on it and nothing on this board is between the connector and the fuse, "
+                                     "so there is no part whose enable pin could switch this rail. The "
+                                     "tracker downstream decides how much of it is drawn, not whether it is "
+                                     "present"}),
                  note="the bare panel entry: a 36-cell 12 V class panel at 100 W, about 22 V open circuit at "
                       "25 degC and about 25 V cold, held at its 17.6 V maximum-power point by the LT8705A's "
                       "FBIN divider. 5.68 A at that point and about 6.25 A into a short, which is the most "
@@ -288,7 +294,13 @@ r("R10", "115k 1% (RFBOUT1: 15.1 V)", "TRK_OUT", "TRK_FBOUT"); r("R11", "10.0k 1
 # LT8705A is working close to unity ratio here (17.6 V in, 15.1 out), which is its best point, so this is the
 # conservative end of what such a stage does.
 _intent.rail("TRK_OUT", 15.1, 6.16, 6.16, "Q6", loads={"U4": 6.16}, fed_from="PV_P", efficiency=0.93,
-             switch="U5", converted=True,
+             # PWR-002 COULD NOT RESOLVE THIS RAIL AND THE REASON IS THE SYMBOL (20 September 2026).
+             # U5 is drawn as a generic 40-pin connector because this library has no LT8705A symbol, so
+             # every pinfunction in the netlist reads `Pin_NN` and no pattern over pin names can find the
+             # controller's shutdown pin. Its pin 1 IS the enable and the net is named: the tool takes a
+             # named enable net ahead of the pattern for exactly this case, as board P's BQ4050 does
+             # through DSG_G. Nothing about the copper changes.
+             switch="U5", enable_net="TRK_SHDN", converted=True,
              note="the LT8705A tracker's regulated output, set by R10 and R11 (115k over 10.0k), carrying "
                   "the panel's 100 W into the pack bus through the ideal diode U4")
 _intent.node("TRK_SW1", 25.0, "LT8705A buck-side switching node: it reaches the panel", v_min=-1.0)
