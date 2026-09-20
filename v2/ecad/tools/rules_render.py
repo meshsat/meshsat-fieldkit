@@ -455,6 +455,29 @@ def open_pairs_doc(res):
             for _r in sorted(_by):
                 L.append("| `%s` | %s |" % (_r, ", ".join(sorted(x.upper() for x in _by[_r]))))
             L.append("")
+    # A BOARD BEHIND ITS OWN GENERATOR, WHICH THE REGISTER CANNOT SEE (20 September 2026). Every gate reads a
+    # net class out of the PROJECT FILE, so a board cut before a class was added is routed at Default geometry
+    # on every net that class governs, and its failure is about the board's AGE and not its design. The page
+    # lists the failure either way, correctly; this says which boards carry that gap, from data rather than
+    # from anyone's memory. It decides nothing.
+    try:
+        import class_table_age as _CTA
+        _ages = [r for r in _CTA.rows(os.path.dirname(HERE)) if r.get("predates")]
+    except Exception:
+        _ages = []
+    if _ages:
+        L.append("## Boards behind their own generator\n")
+        L.append(_wrap("Every gate reads a net class out of the project file, so a board cut before a class "
+                       "was added is routed at DEFAULT geometry on every net that class was meant to govern. "
+                       "A failure on such a board is about its AGE and not about the design, and the register "
+                       "cannot tell the two apart, because it reads a verdict and not a date. What closes "
+                       "these is a re-cut and a route, not a drawing."))
+        L.append("")
+        L.append("| board | classes its generator declares that the board does not carry |")
+        L.append("|---|---|")
+        for _r in _ages:
+            L.append("| %s | %s |" % (_r["board"].upper(), ", ".join("`%s`" % x for x in _r["predates"])))
+        L.append("")
     byd = {}
     for p in res["pairs"]:
         if p.get("decision"): byd.setdefault(p["decision"], []).append(p)

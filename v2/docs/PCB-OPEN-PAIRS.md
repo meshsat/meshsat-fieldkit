@@ -48,6 +48,20 @@ criterion, and it decides nothing: it says the reading is owed. Re-take with ret
 |---|---|
 | `PI-003` | A, D, E |
 
+## Boards behind their own generator
+
+Every gate reads a net class out of the project file, so a board cut before a class was added is routed at
+DEFAULT geometry on every net that class was meant to govern. A failure on such a board is about its AGE and
+not about the design, and the register cannot tell the two apart, because it reads a verdict and not a date.
+What closes these is a re-cut and a route, not a drawing.
+
+| board | classes its generator declares that the board does not carry |
+|---|---|
+| A | `SENSE` |
+| B | `PANEL`, `RF` |
+| D | `SENSE` |
+| P | `PACK` |
+
 ## By open decision
 
 What each unruled decision holds, counted from the same table. A decision holding a measured failure is
