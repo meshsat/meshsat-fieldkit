@@ -288,6 +288,57 @@ if _osx.environ.get("PLACE_CELLF_VIAS", "1") not in ("0", ""):
     _cf = _pcmod.PowerCopper(board, net_for, P).cluster("CELL_F", (-113.4, -104.11), amps=1.809, skew=1.325, drill=0.5, width=0.9, axis="x")
     print("power copper: %d CELL_F barrel(s) at the fuse transition that reads 1.48 of its rating on E18" % len(_cf))
 
+# ---------------------------------------------------------------- PI-003's generator answer, all of it (20 September 2026)
+# `barrel_sites --suggest` on E17, the board sweep 32 judged: THIRTY-TWO barrels over their own rating across
+# eleven measured nets at 10 K and 18 um of plating. TEN of them are a new cluster and these are the ten, each
+# line and each number printed by the tool rather than typed, with the axis it reports as the clear one. The
+# other thirteen are the generator's OWN locked vias, where a cluster centred on the site would land 0.30 to
+# 0.35 mm from a hole that is already there; those are points added to the calls that placed them and are a
+# separate change, listed in `boards/e.json` `_board_es_pi003_work_list_is_ten_cluster_lines_and_thirteen_raised_calls`.
+#
+# THE WORST ARE THE INPUT SIDE AND THEY ARE THE CONDUCTORS 32.249 ALREADY NAMED: `DC_F` and `DC_P` each put
+# 8.00 A through ONE 0.40 mm barrel rated 0.90 A, ratio 8.89, and `TRK_OUT` 6.160 A through one at 6.85. So
+# board E's five input rails are one floor-plan item read two ways, too narrow as conductors and worst as
+# barrels, and this half is the one a generator can answer on its own.
+#
+# A site that cannot be placed says so and the run carries on: `cluster` refuses a lattice that would break
+# hole-to-hole, and a site still short afterwards is a placement question with a number, which is the rule
+# board A's eleven sites were answered under on 20 September at 00:10.
+if _osx.environ.get("PLACE_E_BARRELS", "1") not in ("0", ""):
+    _pcE = _pcmod.PowerCopper(board, net_for, P)
+    _E_SITES = [
+        # FOUR OF THE TEN ARE NOT VIA SITES AT ALL AND E24 PROVED IT (20 September 2026). `CELL+` at
+        # (-124.96, -106.30) and (-124.96, -109.70) and `DC_IN` at (-52.96, -106.30) and (-52.96, -109.70)
+        # were suggested with `drill=1.78`, which is the drill of the barrel ALREADY THERE, and at those four
+        # the barrel is a CONNECTOR'S PLATED COMPONENT HOLE (F3 and the DC inlet), not a via. A cluster of
+        # 1.78 mm vias beside a component hole is not a thing: E24 came back with EIGHT `annular_width` at
+        # -0.4900 mm and sixteen `hole_to_hole` at 0.0000. They are out, and `barrel_sites --suggest` owes the
+        # same distinction board P's 12 AWG lands taught it on 18 September, where it declines a site needing
+        # more than eight barrels but not one whose barrel is a component hole.
+        # AND DC_F IS A PLACEMENT QUESTION WITH A NUMBER, which E25 measured. Its site needs the same
+        # nine barrels `DC_P` gets and cannot hold them: the lattice reaches D1 pad 1 (`/GND_V`,
+        # 3.30 by 2.50, centred (-54.47, -90.97)) and lands 0.1450 mm from it against the PWR class's
+        # 0.1500, three times over. FIVE HUNDREDTHS OF A MILLIMETRE, and the tool reported "1.34 mm of
+        # room on this axis" because it measures room to the nearest PAD CENTRE and not to the
+        # clearance a class asks. The same count at `DC_P` fits, so it is the site and not the
+        # arithmetic. Declined here with its number, which is how board A's VBUS20 busbar site was
+        # answered on 19 September.
+        ("DC_HS",   (-102.75,  -93.51), 1.917, 0.40, "x"),   # worst 2.13, 3.82 mm of room on x
+        ("DC_P",    ( -84.29,  -92.64), 8.000, 0.40, "x"),   # worst 8.89, 2.67 mm of room on x
+        ("DC_P",    ( -94.30,  -93.50), 8.000, 0.40, "x"),   # worst 8.89, 2.23 mm of room on x
+        ("PV_P",    (   4.65,  -85.16), 2.968, 0.30, "y"),   # worst 2.02, 0.41 mm of room on y
+        ("TRK_OUT", (  27.44,  -88.74), 6.160, 0.40, "y"),   # worst 6.85, 3.11 mm of room on y
+    ]
+    _e_laid, _e_refused = 0, []
+    for _n, _at, _a, _d, _ax in _E_SITES:
+        try:
+            _got = _pcE.cluster(_n, _at, amps=_a, drill=_d, axis=_ax)
+        except Exception as _e:
+            _e_refused.append("%s at %s: %s" % (_n, _at, _e)); continue
+        _e_laid += len(_got or [])
+    print("power copper: %d barrel(s) placed over %d PI-003 site(s) on board E%s"
+          % (_e_laid, len(_E_SITES), ("; REFUSED: " + "; ".join(_e_refused)) if _e_refused else ""))
+
 # ---------------------------------------------------------------- the hot-swap output, in locked copper (E14, 18 September 2026)
 # DC_HS is the LM5069's output: Q7's three source pads at the west edge of HOTSW to L2 pin 1 and C6 in ENTRYB, 64 mm
 # east, and it carries the shore and vehicle current (8 A typical, 10 peak, the same conductor VIN_RAW is on the far
