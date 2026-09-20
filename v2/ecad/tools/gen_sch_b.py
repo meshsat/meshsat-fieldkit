@@ -100,7 +100,14 @@ for _n in (1, 2, 3):
 for _v in ("U70", "U71", "U72", "U73", "U74", "U75", "U76", "U77", "U78", "U79"): _3V3_LOADS[_v] = 0.01   # the voted logic
 # The source is L1, the buck's inductor, not U25: the AP63203's pin 1 on this net is its feedback sense, and
 # the current leaves through DEV_SW and the inductor. Naming the chip sends 1.4 A out of a sense pin.
+# WHAT FEEDS EACH OF THESE (20 September 2026, appendix 32.246). The buck calls name their input
+# explicitly: the A, B and C stages of each slot run from that slot's own 5 V rail and the D stage
+# and the Ethernet switch core from the device rail, so `power_path` can add up what each feeder is
+# asked for. Board A's VBAT declared 10 A while its nine converters drew 15.18, and nothing checked
+# that on any board until tonight. The LDOs and load switches on this board are not declared yet:
+# their inputs need reading off the schematic part by part and a wrong `fed_from` makes a wrong sum.
 _intent.rail("+3V3_DEV", 3.3, 1.2, 2.0, "L1", loads=_3V3_LOADS, always_on=True, converted=True, efficiency=0.88,
+             fed_from="+5V_DEV",
              always_on_why="U25 is an AP63203 whose EN pin is tied to its own input, so the shared logic rail follows the device rail: the hubs and bridges on it must outlive any one module",
              note="shared logic, the KSZ IO, the three hub VDD33 (99 mA each), the muxes, the three supervisor LDOs; U25 is a 2 A part and that is this rail's peak")
 # THE GROUND HAS FOUR SOURCES AND THE DECLARATION SAID ONE. Holding only J_5V_S1 at 0 V would have returned
@@ -132,16 +139,20 @@ for _n in (1, 2, 3): _GND_LOADS.update(_SLOT_LOADS(_n))
 # The currents are design estimates of where the current goes, in the same form as the rails above.
 for _s in (1, 2, 3):
     _intent.rail("+3V3_S%dA" % _s, 3.3, 0.5, 1.5, "L%d01" % _s, switch="U%d03" % _s, converted=True, efficiency=0.88,
+                 fed_from="+5V_S%d" % _s,
                  loads={"J_M2C%d" % _s: 1.5},
                  note="slot %d's card-socket 3.3 V from the AP63203 buck U%d03 through L%d01: an M.2 A/E-key "
                       "radio card, 3 A at its own connector's rating and 1.5 A for the AW7915-AED" % (_s, _s, _s))
     _intent.rail("+3V3_S%dB" % _s, 3.3, 0.9, 1.8, "L%d02" % _s, switch="U%d04" % _s, converted=True, efficiency=0.88,
+                 fed_from="+5V_S%d" % _s,
                  loads={"J_M2N%d" % _s: 1.2, "U%d01" % _s: 0.55},
                  note="slot %d's NVMe socket and the PCIe switch's own 3.3 V from U%d04 through L%d02" % (_s, _s, _s))
     _intent.rail("+1V0_S%d" % _s, 1.0, 0.8, 1.2, "L%d03" % _s, switch="U%d05" % _s, converted=True, efficiency=0.85,
+                 fed_from="+5V_S%d" % _s,
                  loads={"U%d01" % _s: 0.8},
                  note="slot %d's PCIe switch core from the AP63200 buck U%d05 through L%d03" % (_s, _s, _s))
     _intent.rail("+1V1_S%d" % _s, 1.1, 0.4, 0.7, "L%d04" % _s, always_on=True, converted=True, efficiency=0.85,
+                 fed_from="+5V_DEV",
                  always_on_why="U%d06's EN pin is tied to the device rail on purpose: the hub core must outlive the module whose bank it serves, which is the whole point of the I/O high-availability layer" % _s,
                  loads={"U%d02" % _s: 0.4},
                  note="slot %d's USB hub core from U%d06 through L%d04, on the DEVICE rail and always on: the "
@@ -165,7 +176,7 @@ for _t, _u, _n in (("A", "U40", ("U41", "U42", "U43", "U44")), ("B", "U50", ("U5
                  loads=dict([(_n[0], 0.060), (_n[1], 0.020), (_n[2], 0.020), (_n[3], 0.020)]),
                  note="controller %s's private 3.3 V, its own branch off the device rail so that one "
                       "controller's fault cannot pull the other two down. Budget 3 percent: logic only" % _t)
-_intent.rail("+1V2_KSZ", 1.2, 0.5, 0.8, "L2", always_on=True, converted=True, efficiency=0.85,
+_intent.rail("+1V2_KSZ", 1.2, 0.5, 0.8, "L2", always_on=True, converted=True, efficiency=0.85, fed_from="+5V_DEV",
              always_on_why="U26's EN pin is tied to the device rail it runs from, so the Ethernet switch core follows it",
              loads={"U1": 0.5},
              note="the Ethernet switch's core from the AP63200 buck U26 through L2")
