@@ -247,6 +247,31 @@ def opt(argv, flag, default=None):
     return default if isinstance(v, str) and v.startswith("--") else v
 
 
+def _writer():
+    """THE FILE THAT WROTE THIS VERDICT, AND ITS CONTENT HASH (20 September 2026).
+
+    `tools` above carries the hash of the WHOLE tools tree, which moves whenever any tool changes, so it
+    cannot tell "the tool that decides this reading has changed" from "something else has". That is 17
+    September's rule-set-fingerprint defect one level along, and it cost nineteen hours: `check_pcb_b` was
+    corrected on 19 September to REPORT a half-routed pair rather than fail it, board B's MEC-001 went on
+    reading FAIL on 21 of them, and nothing on the page could say the reading predated the fix. A reader can
+    ask now, and it ANNOUNCES rather than deciding, because a tool change is not evidence about a board."""
+    import sys as _sys
+    cand = None
+    a0 = (_sys.argv[0] if _sys.argv else "") or ""
+    if a0.endswith(".py") and os.path.exists(a0): cand = os.path.abspath(a0)
+    if cand is None:
+        m = _sys.modules.get("__main__")
+        f = getattr(m, "__file__", None)
+        if f and str(f).endswith(".py") and os.path.exists(f): cand = os.path.abspath(f)
+    if cand is None: return {"file": "", "sha16": ""}
+    try:
+        h = hashlib.sha256(open(cand, "rb").read()).hexdigest()[:16]
+    except Exception:
+        h = ""
+    return {"file": os.path.basename(cand), "sha16": h}
+
+
 def write(tool, result, counts=None, denominator=None, evidence=None, inputs=None, note="", out_dir=None,
           quiet=False, advisory=None, rules=None, applicable=True, missing_input=None):
     """Write out/<tool>.verdict.json and return the exit code that equals the verdict.
@@ -298,6 +323,7 @@ def write(tool, result, counts=None, denominator=None, evidence=None, inputs=Non
         "version": _version(),
         "ts": now(),
         "tools": _tools(),         # the code that judged: git head and the tools tree's content hash (a StageResult field, 15 Sep 2026)
+        "writer": _writer(),       # the FILE that judged and its own content hash, so staleness can be asked of the deciding tool (20 Sep 2026)
         # THE DIGESTS ARE STAMPED FOR THE RULES THE VERDICT DECIDES, NOT ONLY FOR THE ONES THE GATE TYPED (17
         # September 2026, the evening's second registry change). `rules` below falls back to the coverage map when a
         # gate passes none, and most gates pass none; the policy was built from the argument alone, so hardset,
