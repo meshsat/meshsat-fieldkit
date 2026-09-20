@@ -13918,3 +13918,24 @@ answers board A's two. **Five of the thirteen on one part type.**
 
 **NOT A RULING**: decision 31 is the owner's and the part is his to choose. This is the packet's arithmetic,
 checked rather than repeated.
+
+### 32.278, 20 September 2026 07:22 CEST: decision 30's line traced, and the true sentence is narrower and worse
+
+Decision 30 reads *ZEROIZE is a switch wired to nothing that can act on it*. **Traced net by net through the
+four committed netlists that carry it, that is too strong: the line IS read, by exactly one device in the
+kit.**
+
+| board | what sits on `/ZEROIZE_HW` | does anything read it |
+|---|---|---|
+| **C**, the panel | `SW_ZERO.1`, `R10` 10k **pull-up to +3V3**, `C20`, `TP12`, `J_PANEL.10`, **`U3.34` GPIO22** | **yes, the panel's own RP2040** |
+| B | `J_PANEL.10`, `J_AB1.20`, `TP8` | no |
+| A | `J_AB1.20`, `J_MEZZ1.15`, `R117` 10k **pull-up to +3V3** | no |
+| D | `J_HARN1.15`, `TP9` | no |
+
+**So the true sentence is narrower and worse.** The line is read by the panel controller alone and by
+**nothing on the boards that hold what would be zeroized**, so the wipe is necessarily a software action
+carried over the bus from the panel, and no part of it survives that controller being wedged. **Two
+independent 10k pull-ups** hold the line high, so a missing or unpowered panel reads as NOT ASSERTED: the
+fail-safe direction for an accidental wipe and the unsafe one for a wipe that is wanted.
+
+**NOT A RULING**: decision 30 is the owner's. This is its packet, traced rather than asserted.
