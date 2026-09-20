@@ -16691,3 +16691,6 @@ hand edit. All six proved on the hub before the suite was re-run there.
 **Running at 01:20**: A93, A94 and A95 route side by side on the place box (A94 and A95 since 01:19, their
 chains PREROUTE-DONE OK), A92 and D30 beside them; the hub carries A86's remedy round, A89's, sweep 35 (every
 gate on all seven boards under HEAD's tools, read-only) and the suite.
+
+**Addendum, 01:25 CEST.** The box suite re-run on the same staged tree with the six fixes in place: **1303 passed,
+0 failed, 7 skipped**, the first clean run where KiCad is since 20 September's 1238.
