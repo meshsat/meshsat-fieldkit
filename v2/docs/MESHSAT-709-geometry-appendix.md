@@ -13572,3 +13572,40 @@ not routes. The lesson is the scheduling one again in a new place: **a count tak
 board no longer declares is not a reading about the board**, and the cheap guard is to re-take the count in
 the same stretch as the declaration changes, which is what 32.213 says about a tool change and had not been
 extended to a DECLARATION change.
+
+### 32.267, 20 September 2026 06:08 CEST: TI layout item 6 is free, and it was deferred twice on an assumption
+
+**The last item of TI's `bq25731` layout table that board A fails costs nothing, and the reason it was put
+off twice had never been measured.** The record said the inductor could not move between the power-stage FET
+pairs without colliding with U3's courtyard, which would displace the controller and its six sense-filter
+parts. Measured on the A53 placed board: **U3's courtyard spans y 9.355 to 14.645 and the FET row spans
+24.205 to 29.795**, so the controller was never in the way. What is in the way is arithmetic, and it is
+small:
+
+| the question | needs | CHQ offers | |
+|---|---:|---:|---|
+| **one row**, the four FETs and L2 side by side west of R16 | 35.910 mm | 35.535 mm | **short by 0.375** |
+| **two rows**, a FET row and an inductor row stacked | 12.940 mm | 11.500 mm | **short by 1.440** |
+
+Both figures are with every courtyard **touching**, which is legal and is the tightest the block can ever be.
+Nothing stands west of CHQ in the FET row's own y band, and the board's edge is at case x -120.05 against
+CHQ's -118, so the rectangle has **2.05 mm of clear strip** beside it.
+
+**The arm**: CHQ's west edge goes -118 to -119.5, the row is packed east to west from R16 with every
+courtyard 0.20 mm apart (`Q7` -86.455, `Q8` -93.845, **`L2` -101.02 at y 26.3**, `Q9` -108.585, `Q10`
+-115.975), and the three `CH_SRP` capacitors drop 1.1 mm so the inductor's own courtyard clears them.
+`R16`, `R17` and the `CH_ACN` capacitors do not move, so `VBUS20`'s and `CH_ACN`'s copper are untouched.
+
+**Against the A53 control, one variable**: escapes **463 and 463**, pads skipped **0 and 0**, placed board
+**hard 0 and hard 0**, region fit **1.4 mm of 1.5 and 1.4 of 1.5**, `check_pcb_a` **PASS of 511** both,
+`netlist_board` **2088 of 2088** both. It is free.
+
+**What it buys**: `CH_SW1` goes **19.22 mm to 7.40** and `CH_SW2` **26.86 to 7.40**, which is the shortest a
+7.19 mm FET and a 7.15 mm inductor can be from one another, and it is TI's item 6 in as many words.
+
+**NOT CLAIMED**: whether the switching-node copper is measurably better is a ROUTE's answer. **A56 is that
+arm, one variable against A54**, which is routing the same board without the inductor move.
+
+**The lesson is the one this record keeps paying for**: a deferral is a claim about the board and is owed a
+measurement like any other. This one cost two evenings of being written down as impossible and forty seconds
+of a bounding box to refute.
