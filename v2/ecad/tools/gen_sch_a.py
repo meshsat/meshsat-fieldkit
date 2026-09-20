@@ -198,7 +198,11 @@ def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, cs_
     # own words for pin 15: "CSG ... Connect directly to the low-side (ground) of the current sense resistor".
     # (1) PIN 15 WAS TIED TO THE GROUND NET, so the sense amplifier's negative input joined the plane wherever
     # the router chose and every millivolt of plane drop between the shunt's ground pad and that point added to
-    # a sensed voltage whose own limit threshold is 120 to 140 mV (VCS(BUCK), electrical characteristics).
+    # a sensed voltage whose own limit threshold is 66 to 94 mV, 80 typical (VCS(BUCK), electrical
+    # characteristics, the HTSSOP-28 row, which is the package this board buys). CORRECTED 20 September 2026:
+    # this line read "120 to 140 mV (VCS(BUCK))" and those are VCS(BOOST)'s typ and max, a different row of
+    # the same table; the buck VALLEY threshold is the smaller of the two, so the same plane drop is a LARGER
+    # share of the reading than the comment claimed and the correction is in the strict direction.
     # (2) THERE WAS NO FILTER AT ALL, where section 8.2.2.7 says "For some application circuits, it can be
     # required to add a filter network to attenuate noise in the CS and CSG sense lines ... The filter
     # resistance should not exceed 100 Ohm". 100 R in each line with 1 nF across the pins is 200 ns

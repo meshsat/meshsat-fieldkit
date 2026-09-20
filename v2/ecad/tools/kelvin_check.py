@@ -57,6 +57,42 @@ def _pad(rows, ref_pad):
     return None
 
 
+# THE KEYS A DECLARATION MAY CARRY, and it is not a style rule (20 September 2026). `judge` reads
+# `full_scale_mv` to turn an error in millivolts into a SHARE, and a row with no share is never added to
+# `fails`: it prints its millivolts and passes. So a single mistyped key turns a failing tap into a silent
+# one, which is the shape `sensitive_nodes` refuses for its own node entries and this file did not refuse for
+# these. Every key is named and an entry carrying any other, or missing any required one, is refused BEFORE
+# any of it is believed.
+KEYS_REQUIRED = ("sense", "rail", "element", "tap", "full_scale_mv", "why")
+KEYS_OPTIONAL = ("board",)
+
+
+def check_declaration(decls):
+    """The complaints about the declaration itself, before any board is read."""
+    bad = []
+    for k in decls:
+        where = "board %s, %s" % (k.get("board", "?"), k.get("sense", "<no sense>"))
+        for f in KEYS_REQUIRED:
+            if k.get(f) in (None, ""):
+                bad.append("%s: no %s, so the reading would be about nothing" % (where, f))
+        for f in k:
+            if f not in KEYS_REQUIRED and f not in KEYS_OPTIONAL:
+                bad.append("%s: the key %r is not one this file reads, and a mistyped full_scale_mv makes a "
+                           "failing tap a silent one" % (where, f))
+        for f in ("element", "tap"):
+            v = str(k.get(f) or "")
+            if v and ("." not in v or not v.split(".")[1]):
+                bad.append("%s: %s is %r and must be <ref>.<pad>" % (where, f, v))
+        if k.get("element") and k.get("element") == k.get("tap"):
+            bad.append("%s: the element and the tap are the same pad, so the error is zero by construction" % where)
+        try:
+            if k.get("full_scale_mv") is not None and float(k["full_scale_mv"]) <= 0:
+                bad.append("%s: full_scale_mv is not positive, so the share is not a share" % where)
+        except (TypeError, ValueError):
+            bad.append("%s: full_scale_mv is not a number" % where)
+    return bad
+
+
 def judge(decls, pots):
     """(rows, fails): one row per declared sense, the error in mV and as a share of full scale."""
     rows, fails = [], []
@@ -104,6 +140,15 @@ def main(argv):
         return _v.write("kelvin_check", _v.PASS, counts={"declared": 0}, denominator=0, advisory=True,
                         applicable=False, inputs={"board": os.path.basename(board)},
                         note="this board declares no current-sense tap in pcb_sensitive.yaml")
+    bad = check_declaration(decls)
+    if bad:
+        for b in bad: print("kelvin_check: REFUSED %s" % b)
+        return _v.write("kelvin_check", _v.INCONCLUSIVE, counts={"declared": len(decls), "refused": len(bad)},
+                        denominator=len(decls), advisory=True, evidence=bad[:10],
+                        inputs={"board": os.path.basename(board)},
+                        missing_input="the declaration itself is malformed: %s" % bad[0],
+                        note="a declaration is refused before it is believed, because a row with no usable "
+                             "full scale prints millivolts and never fails")
     pots, path = _potentials(board)
     if pots is None:
         print("kelvin_check: no solved pad potentials beside this board (%s); run dc_drop first" % path)

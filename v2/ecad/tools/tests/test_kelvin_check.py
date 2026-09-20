@@ -106,3 +106,65 @@ def t_the_finish_takes_the_reading_where_the_mesh_was_just_solved():
     assert 0 < i < j, "the report runs before the mesh it reads"
     line = sh[sh.rfind("\n", 0, j) + 1: sh.find("\n", j)]
     assert "stop " not in line, "the report can stop a finish, and no rule asks this question yet"
+
+
+def t_a_declaration_key_nobody_reads_is_refused_before_it_is_believed():
+    """THE DEFECTIVE FIXTURE, and the defect is not cosmetic: `judge` turns an error in millivolts into a
+    SHARE with `full_scale_mv`, and a row with no share is never added to `fails`. So one mistyped key makes a
+    failing tap print its millivolts and pass. Proved to fail on the tool as it stood: before the guard,
+    `check_declaration` did not exist and a row carrying `full_scale_MV` was measured and never judged."""
+    bad = K.check_declaration([{"sense": "X", "rail": "R", "element": "R1.1", "tap": "R2.1",
+                                "full_scale_MV": 60.0, "why": "typed the wrong case"}])
+    assert any("full_scale_mv" in b for b in bad), bad
+    assert any("full_scale_MV" in b and "not one this file reads" in b for b in bad), bad
+
+
+def t_an_element_that_is_its_own_tap_measures_zero_by_construction():
+    bad = K.check_declaration([{"sense": "X", "rail": "R", "element": "R1.1", "tap": "R1.1",
+                                "full_scale_mv": 60.0, "why": "both ends the same pad"}])
+    assert any("same pad" in b for b in bad), bad
+
+
+def t_the_real_declaration_passes_its_own_guard():
+    """THE ACCEPTABLE FIXTURE: every row this project ships."""
+    import yaml
+    d = yaml.safe_load(open(os.path.join(TOOLS, "pcb_sensitive.yaml"), encoding="utf-8"))
+    decls = []
+    for L, blk in sorted((d.get("boards") or {}).items()):
+        for k in (blk or {}).get("kelvin") or []: decls.append(dict(k, board=L))
+    assert decls, "the set declares no sense tap at all"
+    assert not K.check_declaration(decls), K.check_declaration(decls)
+
+
+def t_every_declared_pad_is_a_pad_of_its_own_rail_on_that_boards_netlist():
+    """A row whose element or tap is not on its rail can only ever read 'pad X or Y is not on Z', which decides
+    nothing while looking exactly like a declaration that was measured. The committed netlists are the check.
+    Board A's ISNS rows tap an IC PIN rather than a filter resistor, which is what the LM5176 does (pins 13 and
+    14 sit straight on the two nets the shunt separates), so the check is about the NET and never the part."""
+    import re, yaml, glob
+    d = yaml.safe_load(open(os.path.join(TOOLS, "pcb_sensitive.yaml"), encoding="utf-8"))
+    ecad = os.path.dirname(TOOLS)
+    stems = {"a": "pcb-a-power", "b": "pcb-b-compute", "c": "pcb-c-display",
+             "d": "pcb-d-aprs", "e": "pcb-e1-dock", "p": "pcb-p-pack"}
+    checked = 0
+    for L, blk in sorted((d.get("boards") or {}).items()):
+        rows = (blk or {}).get("kelvin") or []
+        if not rows: continue
+        hits = glob.glob(os.path.join(ecad, stems.get(L, "?") + "*", "out", stems.get(L, "?") + ".net"))
+        if not hits:
+            raise __import__("harness").Skip("this tree holds no committed netlist for board %s" % L)
+        nets, cur = {}, None
+        for line in open(hits[0], encoding="utf-8"):
+            m = re.search(r'\(net \(code "?\d+"?\) \(name "([^"]+)"\)', line)
+            if m: cur = m.group(1); nets[cur] = set(); continue
+            m = re.search(r'\(node \(ref "([^"]+)"\) \(pin "([^"]+)"\)', line)
+            if m and cur: nets[cur].add((m.group(1), m.group(2)))
+        for r in rows:
+            members = nets.get(r["rail"]) or nets.get("/" + str(r["rail"])) or set()
+            assert members, "board %s declares a tap on %s and no such net is in its netlist" % (L, r["rail"])
+            for key in ("element", "tap"):
+                ref, _, pad = str(r[key]).partition(".")
+                assert (ref, pad) in members, ("board %s, %s: %s is not a pad of %s, so this row can only ever "
+                                               "report a missing pad" % (L, r["sense"], r[key], r["rail"]))
+                checked += 1
+    assert checked >= 34, "only %d pads checked; the set declares seventeen taps" % checked
