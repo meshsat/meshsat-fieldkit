@@ -14810,3 +14810,31 @@ a 2512's 3.95 mm courtyard and was checked against every front-side courtyard on
 single coordinate was written. Only the five capacitors stay in the regions, where `bypass_slots` reserves
 each a seat at its controller's pin 14. That is the charger's own pattern, where R146 to R149 have had fixed
 seats since 16 September.
+
+**Addendum, 12:26 CEST: the third reason the boxes looked idle, and it is not the hardware either.** Asked why
+two rented boxes were running six threads of ninety-six, the answer has THREE parts and only the first was
+already in the record. **(1)** Freerouting is one thread per job whatever `-mt` says, measured 7 September at
+about 1.2 cores per router. **(2)** The hub's disk was 100 percent full at 184 K free, which killed four
+measurements silently and crashed a five-hour route's finish at its keep step; 36 GB of dead trees are gone
+and a chain tree is 23 to 53 MB instead of 810 because it no longer copies the 636 MB vendor library.
+**(3) `routeflow` takes ONE router lock for the whole host by default**, `/root/.routeflow.lock`, so every
+route waits for the previous one to end; board P's route was refused this morning with
+`no other route running {"board": "pcb-d-aprs", ...}` while ninety threads sat idle. That default exists for
+the VM's 31 GB memory rule of 5 September and is right there and wrong here: this box has 125 GiB and a router
+takes 2 to 4. `ROUTEFLOW_LOCK=/root/.routeflow-<board>.lock` is the per-board path the tool already offers and
+the answer on a box with the memory for it.
+
+**Also measured while the boards ran**: the ISNS filter went into all five LM5176 stages and board A's chain
+takes it at `PREROUTE-DONE OK` with hard 0 and two escape pads as the whole cost (A65), after three refusals
+that each came from the chain within minutes: the packer over four regions by 2.6 mm, then two regions by the
+five capacitors alone, then five `courtyards_overlap` because the seat probe used a 1.5 x 1.1 box where the
+real courtyard is 3.05 x 1.55. **The Kelvin PAIR class was then tried and withdrawn the same hour** (A66 5 of
+8 pairs, A67 the same 5 of 8 at a narrower geometry, because the bar is half the pair's own pitch and narrows
+with it), and reading what it did lay is the finding: with the filter capacitor at the controller's pins the
+pair's two stations are 1.8 mm apart, so the run it lays is not the sixteen millimetres from each filter
+resistor to the controller, which stays single-net because a Kelvin tap wants the two resistors at opposite
+ends of the shunt and a pair station wants them side by side. **And board P's one unblocked measured failure
+is answered**: `PACK_N` takes a class of its own at 0.800 mm, 3.36 A, because the shared class is capped at
+0.600 by the narrowest pad on any of its five nets while this net's own narrowest pad is 0.800. Its chain
+passes at hard 0 end to end and its route is running, because the rule reads copper and a class is only the
+instruction.
