@@ -272,7 +272,7 @@ DEFAULT = (0.16, 0.25, 0.6, 0.3); cls(ns.GetDefaultNetclass(), *DEFAULT)
 # EVERY CLEARANCE ON THIS BOARD IS 0.16 mm, not 0.127: two layers at 2 oz, and the fabricator's own capability
 # for that combination is 0.16 for both track width and spacing (rule RTE-001, 16 September 2026). The widths
 # stay as they are, because every one of them is already above 0.16.
-PATTERNS = [("CELL4", "PWR"), ("FUSED", "PWR"), ("SW", "PWR"), ("PACK_P", "PWR"), ("PACK_N", "PWR"), ("GND", "GNDC"), ("CELL1", "SENSE"), ("CELL2", "SENSE"), ("CELL3", "SENSE")]
+PATTERNS = [("CELL4", "PWR"), ("FUSED", "PWR"), ("SW", "PWR"), ("PACK_P", "PWR"), ("PACK_N", "PACK"), ("GND", "GNDC"), ("CELL1", "SENSE"), ("CELL2", "SENSE"), ("CELL3", "SENSE")]
 # SENSE: every net pcb_sensitive.yaml declares for this board, in a class of its own with the default geometry, listed ahead
 # of the table so a sensitive net wins over a pattern that also names it; the DSN class-pair clearance of route_one.sh
 # (FR_CLASS_CLEAR, appendix 32.222) is what reads it (17 September 2026, rule ANA-001).
@@ -289,6 +289,15 @@ try:
     # (a first SENSE class at 0.25 mm was defined here and overwritten two lines below; removed 18 September 2026)
     CLASSES = [("PWR", 0.3, 0.5, 0.8, 0.4),   # P2 (8 Sep 2026): the current runs in the locked 2 oz bands; the class width is for the sense, gate and test-point runs
                ("SENSE", 0.16, 0.4, 0.7, 0.3),   # 0.7/0.3: a 0.20 mm ring, the annular floor this board declares; 0.6/0.3 left E12 with ten annular_width violations (18 September 2026)
+               # PACK: the pack RETURN alone, and it is board P's one measured failure with nothing in front
+               # of it (20 September 2026, 06:10, PI-001 at 1.03 of its limit). It carries 2.47 A on a
+               # 0.500 mm conductor of outer 2 oz, rated 2.392 A at 10 K where IPC asks 0.523 mm. THE WIDTH
+               # IS BOUND FROM ABOVE BY THE PADS, which is board D's ruling 9 in miniature: the narrowest pad
+               # on ANY net of the shared PWR class is 0.610 mm, so that class cannot go past 0.600 and
+               # 2.73 A without a track spilling past a pad edge, while **PACK_N's OWN narrowest pad is
+               # 0.800 mm**, so a class of its own carries 3.36 A and leaves the other four nets exactly as
+               # they are. The clearance stays this board's 0.16 and the via its 0.8/0.4.
+               ("PACK", 0.16, 0.8, 0.8, 0.4),
                ("GNDC", 0.16, 0.5, 0.6, 0.3)]   # ONE table for the board's classes AND the project file's (18 September 2026): a second hand-written copy in the project file had drifted (D's PWR via 1.2/0.6 on the board, 0.8/0.4 in the file the router reads; SENSE absent from the file on D, E and P; SENSE 0.6/0.3 on P), the defect B fixed for itself on 8 September
     for _nm, *_v in CLASSES:
         _nc = pcbnew.NETCLASS(_nm); cls(_nc, *_v); ns.SetNetclass(_nm, _nc)
