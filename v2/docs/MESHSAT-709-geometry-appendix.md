@@ -15982,3 +15982,25 @@ eleven cluster parts out of that corridor and puts them at the outlet.
 cause, **A86 closes `/VBAT`**, because nothing else in this change touches it. If `/VBAT` is still open on
 A86 the corridor was not the cause and the pack node's gap is about the band itself, which is decision 35's
 copper weight and not a placement item. Either answer is worth having and the arm is already routing.
+
+**ADDENDUM, 19:08 CEST: the corridor for all four rails exists and the only thing in each one is that rail's
+own series part.** Walked on A85's placed board, which is the board the generator now makes, the same way the
+outlet's corridor was walked at 08:06:
+
+| rail | from | climb | width at 10 K on outer 1 oz | what a straight band of that width crosses | nearest clear lane |
+|---|---|---:|---:|---|---:|
+| `+5V_DEV` | C48 (-3.38, 47.57) | 19.43 mm | 3.60 mm at 6.00 A | **R43**, its own 5 mOhm shunt | +13.25 mm |
+| `+5V_S1` | C30 (-64.18, 53.94) | 13.06 mm | 1.10 mm at 2.50 A | **U8**, its own INA226 monitor | -1.75 mm |
+| `+5V_S2` | C36 (-47.08, 60.77) | 6.23 mm | 1.10 mm at 2.50 A | **U9**, its own INA226 monitor | -2.75 mm |
+| `+5V_S3` | C42 (-31.08, 60.77) | 6.23 mm | 1.10 mm at 2.50 A | **U10**, its own INA226 monitor | -2.75 mm |
+
+**Not one of the four corridors contains a foreign part.** Each crosses exactly one courtyard and it is that
+rail's own series element, which a band carrying the rail has to reach anyway, and a lane clear of everything
+sits one and three quarter to two and three quarter millimetres to the side of three of them. The climbs are
+6 to 19 mm, not the 20 to 26 mm the ROUTED gaps measure, because the routed gap is measured between the two
+ends the router left and the corridor is measured from the capacitor.
+
+**So board A's four repeated opens are drawable copper and not a floor-plan problem**, which is the opposite
+of the charger block and of the outlet, and it is the A21 pattern this board already carries on four other
+rails. **NOTHING APPLIED**: the placement under it moves with every arm in flight, and a band drawn against
+one placement is only true of that placement, which is this afternoon's own lesson about C94.
