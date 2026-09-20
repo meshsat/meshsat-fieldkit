@@ -14779,3 +14779,34 @@ sense is **four times worse once a router lays this board's copper**; then CH_SR
 1.2, POE_ISNS_P 1.2, and HF_ISNS_N passes at 0.5. **That ranking is PI-001's ranking**, which is 08:14's
 finding confirmed on routed copper instead of on a placement. Board A's next real piece of layout is
 unchanged and it is TI item 7, the four locked Kelvin runs from each shunt pad's centre to its filter.
+
+**Addendum, 11:56 CEST: the fanout fix on all six boards, one variable each, and board B is where it was
+costing.** Both tools on each board's OWN placed snapshot, which is the only honest comparison, because a
+count taken across two chain runs compares two different boards (board D read 90/5/15 on the staged probe and
+91/11/14 through the whole chain with the same tool).
+
+| board | old: vias (in pad) / skipped / hard | new | what moved |
+|---|---|---|---|
+| A | 259 (11) / 2 / 0 | **261 (13) / 0 / 0** | +2 vias, 2 pads rescued |
+| B | 603 (68) / 114 / **25** | **621 (86) / 93 / 16** | +18 vias, 21 rescued, **9 hard gone** |
+| C | 60 (1) / 4 / 0 | **61 (2) / 3 / 0** | +1 via, 1 rescued |
+| D | 90 (5) / 15 / **3** | **93 (8) / 12 / 2** | +3 vias, 3 rescued, **the blocking clearance gone** |
+| E | 107 (4) / 2 / 0 | **108 (5) / 1 / 0** | +1 via, 1 rescued |
+| P | 17 (1) / 0 / 0 | **17 (1) / 0 / 0** | exactly nothing |
+
+**Board B's nine are the whole point**: two `shorting_items`, two `clearance` and three `hole_clearance` gone,
+with two mask bridges, because a circle of a pad's long half-dimension does not contain its corners and board
+B has the most crowded lands in the set. The caveat travels with it: board B's full chain reads pre-route
+hard 0 either way, so its later stages were already removing some of those; what the table measures is what
+the fanout itself lays. **Every board gains vias and rescues pads, one is exactly neutral, and none loses
+anything**, which is what a guard wrong in BOTH directions looks like once it asks the right question.
+
+**AND BOARD A'S ISNS FILTER WAS REFUSED BY THE PACKER BEFORE IT WAS REFUSED BY ANYTHING ELSE.** Fifteen parts
+into five stage regions overflowed FOUR of them, worst 2.6 mm against board A's declared 1.5 mm allowance,
+which is exactly what the arm's own note predicted. Board A's rectangles are on the never-auto floor (owner
+ruling 13 of 13 September released BOARD B only, and ruling 17 board C), so they were not grown: the ten
+resistors take FIXED seats instead, 2.8 mm from the pad each one taps, which is 0.83 mm of clear space beside
+a 2512's 3.95 mm courtyard and was checked against every front-side courtyard on the placed board before a
+single coordinate was written. Only the five capacitors stay in the regions, where `bypass_slots` reserves
+each a seat at its controller's pin 14. That is the charger's own pattern, where R146 to R149 have had fixed
+seats since 16 September.
