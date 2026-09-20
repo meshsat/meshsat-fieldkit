@@ -276,3 +276,43 @@ def t_a_skew_below_an_even_split_is_refused():
                encoding="utf-8").read()
     body = src[src.index("    def cluster("):src.index("    def rail_run(")]
     assert "float(skew) < 1.0" in body and "raise ValueError" in body, "a skew below 1.0 is not refused"
+
+
+def t_a_net_whose_copper_is_on_one_layer_changes_layer_nowhere():
+    """THE DEFECTIVE FIXTURE (board E's HS_S, 20 September 2026). The attributed reading named the board's
+    worst site, 10.00 A through one via rated 0.65 A, on a net whose every millimetre of copper is on F.Cu
+    with no zone at all: its vias reach bare laminate, because the fanout gives every pad one. A rail that
+    changes layer nowhere has no transition to be over, and the tool's older guard ("a rail with no via")
+    could not see it, because these vias exist."""
+    assert vc.crosses_layers({"F.Cu"}) is False
+    assert vc.crosses_layers(set()) is False
+    assert vc.crosses_layers(None) is False
+
+
+def t_a_net_with_copper_on_two_layers_keeps_its_transition():
+    """THE ACCEPTABLE FIXTURE. The guard must not become an exemption: a rail with copper on two layers
+    crosses between them somewhere, so its weakest cluster is still judged and an attributed failure on it
+    still stands."""
+    assert vc.crosses_layers({"F.Cu", "In2.Cu"}) is True
+    assert vc.crosses_layers({"F.Cu", "B.Cu"}) is True
+    assert vc.crosses_layers({"In1.Cu", "In2.Cu", "B.Cu"}) is True
+
+
+def t_the_layer_guard_is_asked_only_where_the_reading_is_attributed():
+    """A measured barrel is judged on the current the mesh put through it, so a via carrying almost nothing
+    is already judged on almost nothing and needs no guard; the guard exists for the ATTRIBUTED branch, which
+    puts the whole rail on one cluster. This reads the parse tree rather than a byte window: the call must sit
+    after the measured branch has taken its own exit."""
+    import ast
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                            "via_current.py"), encoding="utf-8").read()
+    tree = ast.parse(src)
+    main = [n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == "main"][0]
+    calls = [n for n in ast.walk(main)
+             if isinstance(n, ast.Call) and getattr(n.func, "id", None) == "crosses_layers"]
+    assert len(calls) == 1, "the guard is asked %d time(s) in main, which is not once" % len(calls)
+    subs = [n for n in ast.walk(main)
+            if isinstance(n, ast.Subscript) and getattr(n.value, "id", None) == "measured"]
+    assert subs, "the measured branch is gone, so this rule is about a tool that no longer exists"
+    assert calls[0].lineno > max(s.lineno for s in subs), \
+        "the layer guard runs before the measured branch, so it would decline a site the mesh measured"

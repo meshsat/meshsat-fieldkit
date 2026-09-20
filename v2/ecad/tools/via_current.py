@@ -90,6 +90,29 @@ def sites(pts, reach):
     return out
 
 
+def crosses_layers(copper_layers):
+    """Does this net change layer ANYWHERE, before any via of it is called a transition?
+
+    Board E's HS_S, 20 September 2026. The attributed reading named a site of ONE via carrying the rail's
+    whole 10.00 A peak against 0.65 A, fifteen times over, the worst number on the board. Read off the
+    routed board: all 38.4 mm of that net's copper is on F.Cu, it has no zone anywhere, and its five vias
+    reach bare laminate on B.Cu, because the fanout gives every pad a via whether the net leaves the layer
+    or not. The via the reading named sits at U6 pin 1, the LM5069's current-sense input, which carries
+    microamps. So the rail changes layer NOWHERE and the site is a judgement about a transition that does
+    not exist.
+
+    The tool already declines a rail with NO via at all ("it never changes layer"), and that guard asks a
+    question cheaper than the fact it guards: having a via is not crossing with it. This asks the fact.
+    A net's copper is its tracks, its zones AND its pads, and pads are counted deliberately even though a
+    through-hole pad puts every net that has one on every layer: a plated component hole IS a barrel the
+    current may cross at, so counting it can only keep a failure that would otherwise be dropped. The
+    guard is for the case that is not arguable, a net whose copper lies on one layer.
+
+    It applies to the ATTRIBUTED branch only. Where dc_drop's mesh solved the barrels, the current in each
+    one is measured and a barrel carrying nothing is already judged on the nothing it carries."""
+    return len({l for l in (copper_layers or []) if l}) > 1
+
+
 def main(a):
     if not a: print(__doc__); return _v.USAGE
     path = a[0]
@@ -108,11 +131,24 @@ def main(a):
                         out_dir=out_dir)
     letter = _bt.letter_for(path)
     plating = float(_bt.value(letter, "via_plating_um", PLATING_UM))
-    vias = {}
+    vias, copper = {}, {}
     for t in b.GetTracks():
-        if t.GetClass() != "PCB_VIA": continue
-        vias.setdefault(t.GetNetname().lstrip("/"), []).append(
-            (mm(t.GetPosition().x), mm(t.GetPosition().y), round(mm(t.GetDrill()), 4)))
+        if t.GetClass() == "PCB_VIA":
+            vias.setdefault(t.GetNetname().lstrip("/"), []).append(
+                (mm(t.GetPosition().x), mm(t.GetPosition().y), round(mm(t.GetDrill()), 4)))
+            continue
+        copper.setdefault(t.GetNetname().lstrip("/"), set()).add(b.GetLayerName(t.GetLayer()))
+    # a net's copper is its tracks, its zones and its pads: see crosses_layers() for why the pads count
+    for z in b.Zones():
+        _n = z.GetNetname().lstrip("/")
+        for _l in (list(z.GetLayerSet().Seq()) or [z.GetFirstLayer()]):   # the tree's own idiom (stitch_prune)
+            _ln = b.GetLayerName(_l)
+            if _ln.endswith(".Cu"): copper.setdefault(_n, set()).add(_ln)
+    for _fp in b.GetFootprints():
+        for _pad in _fp.Pads():
+            _n = _pad.GetNetname().lstrip("/")
+            for _l in _pad.GetLayerSet().CuStack():
+                copper.setdefault(_n, set()).add(b.GetLayerName(_l))
     # THE CURRENT EACH BARREL ACTUALLY CARRIES, WHERE THE MESH HAS BEEN SOLVED (16 September 2026).
     # `dc_drop.py` solves a resistive mesh over this board's copper and computes the current in every barrel on
     # the way; it writes them beside the board now. With that file the question stops being "can this rail's
@@ -175,6 +211,14 @@ def main(a):
                         bad_sites.append("%s: barrel at (%.1f, %.1f), %.2f A against %.2f A, ratio %.2f"
                                          % (net, float(_b.get("x") or 0), float(_b.get("y") or 0), _c2, _l2, _c2 / _l2))
                 continue
+        if not crosses_layers(copper.get(key)):
+            no_via.append("%s carries %.2f A through %d via(s) and all of its copper is on one layer (%s): "
+                          "it changes layer nowhere, so those vias are fanout stubs reaching nothing and none "
+                          "of them is a transition to judge"
+                          % (net, amps, len(vs), ", ".join(sorted(copper.get(key) or ["no copper"]))))
+            rows.append(dict(net=net, amps=amps, sites=0, worst_vias=0, measured=False, ok=True,
+                             no_layer_change=True))
+            continue
         worst = None
         for g in sites([(v[0], v[1]) for v in vs], reach):
             cap = sum(ampacity(vs[i][2], rise, plating)[0] for i in g)
@@ -235,7 +279,8 @@ def main(a):
             % (len(rows) - len(_measured), len(rows)))
     return _v.write("via_current", _v.FAIL if bad else (_v.INCONCLUSIVE if not rows else _v.PASS),
                     counts={"rails": len(rows), "over": len(bad), "no_via": len(no_via),
-                            "measured_rails": len(_measured), "over_barrels": len(bad_sites)},
+                            "measured_rails": len(_measured), "over_barrels": len(bad_sites),
+                            "no_layer_change": len([r for r in rows if r.get("no_layer_change")])},
                     denominator=len(rows), evidence=(bad + bad_sites)[:24], advisory=advisory_for(rows),
                     inputs={"board": path, "rise_k": rise, "plating_um": plating, "site_mm": reach},
                     note=("no declared rail on this board carries a via, so nothing was judged" if not rows

@@ -16335,3 +16335,42 @@ adding barrels the next round counts.
 transition of ONE via rated 0.65 A is a factor of fifteen, and it is attributed rather than measured only
 because the mesh solved no barrel current there. **That is board E's largest single power item and this entry
 is the first to say so.**
+
+### 32.336
+
+**Board E's worst power-via site is not a site, and I reported it to the owner as one (20 September 2026,
+21:30 CEST).** `via_current` names `HS_S` as board E's largest PI-003 failure: *10.00 A crosses a transition
+of 1 via(s) at (45.0, 196.8) rated 0.65 A at 10 K*, fifteen times over, larger than the two 8.89 rows beside
+it. It was quoted to the owner in the 20:15 message before it was checked.
+
+**Read off board E's own committed routed board, with no tool in the way:** every millimetre of `HS_S`'s
+copper is on **F.Cu** (31.82 mm at 0.8 mm width, 4.40 at 0.61, 2.19 at 0.2, 38.41 in total), it has **no zone
+on any layer**, and its **five vias reach bare laminate on B.Cu**. Four of them sit inside `Q7`'s own source
+pads, which is the fanout giving every pad a via whether its net leaves the layer or not; the fifth, the one
+the reading named, is the **locked** via at **U6 pin 1, the LM5069's current-sense input**, which carries
+microamps. The geometry says the same thing: `R19` is at (57.195, 206.505), `Q7` at (48.565, 207.325) and
+`U6` at (49.205, 198.400), so the named via is **10.5 mm from the pass FET and 4.5 mm from the controller**.
+**The rail changes layer nowhere**, so there is no transition for a current to be over, and the site does not
+exist.
+
+**The reading is the attributed fallback and it says so in its own words**, *attributed rather than measured*:
+where `dc_drop`'s mesh solved no barrel current for a rail, the tool puts the rail's whole current on its
+weakest cluster of vias. **The other nine rows on this board are measured from the solved mesh and they
+stand**: `DC_F` 8.89, `DC_P` 8.89, `TRK_OUT` 6.85, `PV_P` 5.86, `DC_HS` 3.88, `CELL_F` 2.53, `DC_IN` 1.16,
+`VIN_RAW` 1.14. So **board E's power-via work is four serious sites and one artefact**, not five and a
+monster.
+
+**THE GUARD, AND IT IS THIS WEEK'S DEFECT FAMILY AGAIN.** The tool already declines a rail with **no via at
+all** (*it never changes layer*), and that question is **cheaper than the fact it guards**: having a via is
+not crossing with it. `via_current.crosses_layers()` asks the fact, from the net's tracks, its zones and its
+pads, and it is asked in the **attributed branch only**, because a barrel the mesh solved is already judged on
+the current it actually carries. **Pads count as copper deliberately**, so a net with a plated through-hole
+pad keeps its failure: a component hole is a barrel the current may legitimately cross at, and counting it can
+only keep a failure the guard would otherwise drop. The guard is for the case that is not arguable, a net
+whose copper lies on one layer. Two fixtures and a parse rule that the call sits after the measured branch has
+taken its own exit; all three proved to fail on the tree they were written against (the function did not exist
+and the call was asked zero times). Suite **1247**, 0 failing.
+
+**What it does not change:** PI-003 was already ADVISORY wherever a rail is attributed, so no board's verdict
+moves on this alone; what moves is what the failure list says, and a work list with a fifteen-times row in it
+sends someone to draw copper at a via carrying microamps.
