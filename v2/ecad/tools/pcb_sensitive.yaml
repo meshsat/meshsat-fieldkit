@@ -92,52 +92,52 @@ boards:
     # mesh solved no pad' for ever. Board P's R8 is refused for exactly this reason and so is board E's R19
     # hot-swap sense. SIX SHUNT HALVES ON THREE BOARDS ARE SENSED THROUGH COPPER NO POWER RULE SOLVES, which
     # is a question about the GROUND declaration and not about any one board's layout.
-    - {sense: FE_ISNS_P, rail: FE_OUT, element: "R11.1", tap: "U2.14", full_scale_mv: 50.0,
+    - {sense: FE_ISNS_P, rail: FE_OUT, element: "R11.1", tap: "R160.1", full_scale_mv: 50.0,
        why: "the FE stage's constant-current loop, 10 mOhm across R11, read at ISNS(+) with no filter of any
          kind. This is the SHARP half: FE_OUT is the conductor between the boost-side high-side FET's drain and
          the shunt and it carries the stage's WHOLE current, 3.80 A into the charge bus, so every millivolt of it between R11.1 and
          the pin is current the loop believes is in the inductor and is not"}
-    - {sense: FE_ISNS_N, rail: VBUS20, element: "R11.2", tap: "U2.13", full_scale_mv: 50.0,
+    - {sense: FE_ISNS_N, rail: VBUS20, element: "R11.2", tap: "R161.1", full_scale_mv: 50.0,
        why: "the other side of the same shunt, read at ISNS(-) on the output rail VBUS20. Declared as a pair with
          the row above because the loop regulates the DIFFERENCE to 50 mV: an error on either side is an
          error in the regulated current, and the two do not cancel, being drops in different conductors
          between different pads"}
-    - {sense: PA_ISNS_P, rail: PA_OUT, element: "R55.1", tap: "U13.14", full_scale_mv: 50.0,
+    - {sense: PA_ISNS_P, rail: PA_OUT, element: "R55.1", tap: "R162.1", full_scale_mv: 50.0,
        why: "the PA stage's constant-current loop, 2 mOhm across R55, read at ISNS(+) with no filter of any
          kind. This is the SHARP half: PA_OUT is the conductor between the boost-side high-side FET's drain and
          the shunt and it carries the stage's WHOLE current, 3.54 A into the 30 W PA rail, so every millivolt of it between R55.1 and
          the pin is current the loop believes is in the inductor and is not"}
-    - {sense: PA_ISNS_N, rail: +13V8_PA, element: "R55.2", tap: "U13.13", full_scale_mv: 50.0,
+    - {sense: PA_ISNS_N, rail: +13V8_PA, element: "R55.2", tap: "R163.1", full_scale_mv: 50.0,
        why: "the other side of the same shunt, read at ISNS(-) on the output rail +13V8_PA. Declared as a pair with
          the row above because the loop regulates the DIFFERENCE to 50 mV: an error on either side is an
          error in the regulated current, and the two do not cancel, being drops in different conductors
          between different pads"}
-    - {sense: HF_ISNS_P, rail: HF_OUT, element: "R65.1", tap: "U15.14", full_scale_mv: 50.0,
+    - {sense: HF_ISNS_P, rail: HF_OUT, element: "R65.1", tap: "R164.1", full_scale_mv: 50.0,
        why: "the HF stage's constant-current loop, 10 mOhm across R65, read at ISNS(+) with no filter of any
          kind. This is the SHARP half: HF_OUT is the conductor between the boost-side high-side FET's drain and
          the shunt and it carries the stage's WHOLE current, the HF unit's own rail, so every millivolt of it between R65.1 and
          the pin is current the loop believes is in the inductor and is not"}
-    - {sense: HF_ISNS_N, rail: +12V_HF, element: "R65.2", tap: "U15.13", full_scale_mv: 50.0,
+    - {sense: HF_ISNS_N, rail: +12V_HF, element: "R65.2", tap: "R165.1", full_scale_mv: 50.0,
        why: "the other side of the same shunt, read at ISNS(-) on the output rail +12V_HF. Declared as a pair with
          the row above because the loop regulates the DIFFERENCE to 50 mV: an error on either side is an
          error in the regulated current, and the two do not cancel, being drops in different conductors
          between different pads"}
-    - {sense: POE_ISNS_P, rail: POE_OUT, element: "R71.1", tap: "U16.14", full_scale_mv: 50.0,
+    - {sense: POE_ISNS_P, rail: POE_OUT, element: "R71.1", tap: "R166.1", full_scale_mv: 50.0,
        why: "the POE stage's constant-current loop, 20 mOhm across R71, read at ISNS(+) with no filter of any
          kind. This is the SHARP half: POE_OUT is the conductor between the boost-side high-side FET's drain and
          the shunt and it carries the stage's WHOLE current, the 802.3at port's 54 V supply, so every millivolt of it between R71.1 and
          the pin is current the loop believes is in the inductor and is not"}
-    - {sense: POE_ISNS_N, rail: +54V_POE, element: "R71.2", tap: "U16.13", full_scale_mv: 50.0,
+    - {sense: POE_ISNS_N, rail: +54V_POE, element: "R71.2", tap: "R167.1", full_scale_mv: 50.0,
        why: "the other side of the same shunt, read at ISNS(-) on the output rail +54V_POE. Declared as a pair with
          the row above because the loop regulates the DIFFERENCE to 50 mV: an error on either side is an
          error in the regulated current, and the two do not cancel, being drops in different conductors
          between different pads"}
-    - {sense: PD_ISNS_P, rail: PD_OUT, element: "R81.1", tap: "U19.14", full_scale_mv: 50.0,
+    - {sense: PD_ISNS_P, rail: PD_OUT, element: "R81.1", tap: "R168.1", full_scale_mv: 50.0,
        why: "the PD stage's constant-current loop, 10 mOhm across R81, read at ISNS(+) with no filter of any
          kind. This is the SHARP half: PD_OUT is the conductor between the boost-side high-side FET's drain and
          the shunt and it carries the stage's WHOLE current, the USB-C outlet's 45 W supply, so every millivolt of it between R81.1 and
          the pin is current the loop believes is in the inductor and is not"}
-    - {sense: PD_ISNS_N, rail: PD_VPWR, element: "R81.2", tap: "U19.13", full_scale_mv: 50.0,
+    - {sense: PD_ISNS_N, rail: PD_VPWR, element: "R81.2", tap: "R169.1", full_scale_mv: 50.0,
        why: "the other side of the same shunt, read at ISNS(-) on the output rail PD_VPWR. Declared as a pair with
          the row above because the loop regulates the DIFFERENCE to 50 mV: an error on either side is an
          error in the regulated current, and the two do not cancel, being drops in different conductors

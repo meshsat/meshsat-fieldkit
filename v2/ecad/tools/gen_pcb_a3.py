@@ -130,6 +130,28 @@ FIXED = {"J_AB1": (113, -46, 0), "J_MEZZ_PWR1": (-8, -18, 90),
          # through a QFN-32's own fan field. NEITHER RULE IS WEAKENED: 1.5 mm further out clears the via row
          # and still leaves each filter nearer its pin than any other seat on this board, and the filter's
          # own clause asks for proximity rather than a number. BOTH are re-measured on the placed board.
+         # THE ISNS FILTER RESISTORS SIT AT THEIR OWN SHUNT PAD (20 September 2026). Each is 2.8 mm from
+         # the pad it taps, measured on the placed board: the 2512 shunt's courtyard is 3.95 mm tall, so this
+         # is 0.83 mm of clear space, and every one of the ten seats was checked against every front-side
+         # courtyard before it was written. They are FIXED rather than packed because board A's region
+         # rectangles are on the never-auto floor (owner ruling 13) and three parts in each of five stage
+         # regions overflowed four of them by up to 2.6 mm; only the five capacitors stay in the regions,
+         # where bypass_slots reserves each a seat at its controller's pin 14.
+         # and the five filter capacitors take fixed seats AT their own controller's pin 14, 1.8 mm away,
+         # which is what "as close to the IC pins as possible" means and is closer than the packer put them:
+         # in the regions they overflowed PAQ by 2.2 mm and PDQ by 2.6 against a 1.5 mm allowance, and board
+         # A's rectangles may not be grown by this session.
+         # measured against the capacitor's REAL courtyard, 3.05 x 1.55 mm (C123, the CS filter's own), plus
+         # 0.1 mm: the first attempt used a 1.5 x 1.1 box and all five landed inside their controller's
+         # courtyard, five `courtyards_overlap` on the placed board and the chain blocked, which is the check
+         # doing its job four minutes after the change.
+         "C128": (-96.55, 49.95, 0), "C129": (-46.55, -0.05, 0), "C130": (-38.55, -33.05, 0),
+         "C131": (-101.47, -30.97, 0), "C132": (30.53, 59.03, 0),
+         "R160": (-105.41, 39.14, 0), "R161": (-99.49, 39.14, 0),
+         "R162": (1.04, -14.30, 0), "R163": (6.96, -14.30, 0),
+         "R164": (-35.77, -46.11, 0), "R165": (-29.84, -46.11, 0),
+         "R166": (-67.55, -37.36, 0), "R167": (-61.62, -37.36, 0),
+         "R168": (66.45, 52.65, 0), "R169": (72.38, 52.65, 0),
          "R146": (-102.5, 13.6, 0), "R147": (-102.5, 11.8, 0), "C121": (-105.1, 12.7, 90),
          "R148": (-89.7, 11.0, 0), "R149": (-89.7, 12.8, 0), "C122": (-87.1, 11.9, 90),
          "J_DOCK": (-76, -70, 0), "J_PRE1": (-103, -70, 0), "F1": (-97, -52, 0), "J_MAINSW": (98, 75, 0),
