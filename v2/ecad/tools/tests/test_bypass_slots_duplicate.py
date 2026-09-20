@@ -43,3 +43,26 @@ def t_a_seated_capacitor_is_left_where_the_generator_put_it():
     assert "continue" in seg, ("a capacitor already on the board must be reported and left alone, not moved: "
                                "its seat is a decision with its own measurement")
     assert "SetPosition" not in seg, "the pass moves a capacitor the generator seated deliberately"
+
+def t_the_reservation_writes_down_the_capacitors_the_generator_had_already_seated():
+    """The pass that runs later cannot tell a seat from an accident unless this one says so.
+
+    `bypass_place` moves any declared capacitor further than 3 mm from its pin to the first free spot it can
+    find, and a seat chosen outside every region rectangle, escape fan and piece of laid copper is typically
+    3 to 8 mm out. Board D's seat arms came back hard 33, then 30, then 30, and moving a measured seat with a
+    weaker test is one of the things that can do that. The list is written beside the board so the later pass
+    can leave those alone."""
+    src = open(os.path.join(TOOLS, "bypass_slots.py"), errors="replace").read()
+    body = block(src, "def reserve(")
+    assert "-seated.json" in body, "reserve() does not write the seated list beside the board"
+    assert "already" in body, "the seated list is not built from the capacitors it found already placed"
+
+
+def t_the_later_pass_leaves_a_seated_capacitor_alone():
+    src = open(os.path.join(TOOLS, "bypass_place.py"), errors="replace").read()
+    body = block(src, "def main(")
+    assert "-seated.json" in body, "bypass_place never reads the seated list"
+    i = body.find("-seated.json")
+    seg = body[i:]
+    assert "not in seated" in seg or "seated" in seg.split("entries")[0], \
+        "bypass_place reads the list and does not filter its entries by it"
