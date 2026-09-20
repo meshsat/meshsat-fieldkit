@@ -14695,3 +14695,15 @@ refuses**, before this change and independently of it. That is its own item — 
 candidate site with `return_via._site_free`, a COPPER test, and not against the net **class's** clearance, so
 it can lay a barrel the DRC then refuses while reporting none refused. It is the hole-to-hole lesson of
 19 September in the other direction. Named with its number, not chased here.
+
+**Correction to 32.298, 11:08 CEST**, ten minutes after it was written and before anything was built on it:
+**the block is not `rail_barrels`'.** Its own line reads `hard 1 -> 1` in **both** arms, so the hard count
+was already one when that stage started and it changed nothing, and **both placed boards read `hard 0` with
+zero clearance items**. The violation therefore appears between the placed-board DRC and `rail_barrels`,
+which is the **fanout**, and the item is a GND via **0.1115 mm** from `D1` pad 2 (`/+5V_D8`) against the PWR
+class's 0.1270. So the sentence about `rail_barrels` judging by `_site_free` rather than by the net class is
+about the wrong tool, and it is exonerated by two numbers that were in front of me and went unused. **What
+stands**: board D's generator at HEAD produces a board its own chain refuses, in both arms and independently
+of the cluster; the stage that lays the via is the fanout; and the question to ask of it is whether its
+via-site test uses the net **class's** clearance or the board minimum — this morning's `prefanout` finding in
+the **via** half rather than the stub half.
