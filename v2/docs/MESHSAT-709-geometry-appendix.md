@@ -16644,3 +16644,10 @@ the `erc-allow.txt` idiom beside it: `pour-island-allow.txt` beside the board na
 known and says why, and such an island is reported ALLOW and still counted. No board of the set declares one and
 a rule refuses a silent allow file. The islands a ROUTER cuts out of a pour do not exist on a placed board and
 stay `pour_stitch`'s. Two rules, the first failing on the tool as it stood.
+
+**Addendum, 01:05 CEST, A89 round 1 finished.** Read in a scratch copy on the hub (sha 1b484560b68f1173 before and
+after): the stub router took the router's 19 to 7 in 1028 s and the direct closer 7 to **FOUR**, hard 0:
+`/+5V_DEV`, `/+5V_S2`, `/+5V_S3`, `/PA_ISNS_N`. Against A86 round 1's five it closed `/+5V_S1` and `/EMCON_HW`
+and opened `/+5V_DEV`. Board A's best number anywhere and not adoptable (A32 is 0 and 0). With A89's lanes known
+to dead-end, `/+5V_S1` closing is the closer's work on one placement and not the lane's: the pair says nothing
+about the In3 lane and says the router's scatter on one placement is about two connections. A93 is the arm.
