@@ -12749,3 +12749,35 @@ Also read off the same page while it was open: **PI-001 fails on board B with ni
 missed and on board P with one of four**, and neither is claimed by any decision. Board P's one is `PACK_N`,
 measured at 02:05 tonight. Board B's nine are its own, unread, and they are the next set-level power item
 after board A's.
+
+### 32.242, 20 September 2026 02:41 CEST: board B's power failures read, with the caveat that decides how to read them
+
+Board B fails both power rules and neither failure is claimed by any decision. Read off its committed
+evidence:
+
+| rail | drop | density | what it is |
+|---|---:|---:|---|
+| `+5V_LIME` | **12.35 %** of 5.0 V | **8.92x** | the LimeSDR Mini's supply |
+| `+3V3_S3B` | 10.28 % of 3.3 V | 5.21x | slot 3's B rail |
+| `+3V3_S3A` | 10.09 % of 3.3 V | 4.46x | slot 3's A rail |
+| `+1V0_S1` | 6.89 % of **1.0 V** | 1.26x | slot 1's CM5 core rail, 0.8 A |
+| `+5V_RB` | 3.03 % of 5.0 V | 4.77x | the RockBLOCK's supply |
+| `+5V_S1` | 0.62 % | 1.99x | |
+| `+5V_S2` | 0.51 % | 1.44x | |
+| `+5V_S3` | 0.49 % | 1.43x | |
+| `+54V_POE` | 0.32 % | 1.23x | |
+
+**THE CAVEAT DECIDES HOW TO READ THE TABLE, and it is the whole of it: B21 is 416 connections short.** Its
+route was cut at its 40 hour cap on 17 September at pass 11 of 20, and `dc_drop` solves the copper that
+EXISTS. Adding the missing connections can only add conductors in parallel, so **every drop above is an UPPER
+BOUND** and the completed board reads the same or better. That is the honest direction and it is not a
+dismissal: `+5V_LIME` would have to improve by a factor of SIX to reach its 2 percent bar and the two slot-3
+rails by five, and a rail does not usually find five times its copper in the connections a router failed to
+make. **`+1V0_S1` is the one to look at first whatever the route does**: 69 mV on a 1.0 V core rail feeding a
+compute module is outside any core-rail tolerance a datasheet states, and it fails on the DROP while its
+density is nearly clean at 1.26x, which is the signature of a long thin path rather than a missing band.
+
+**So board B's power work is not the same problem as board A's.** Board A's is copper that was never laid,
+thirteen conductors over their density with drops mostly inside their budgets; board B's is five rails whose
+DROP is the failure, on a board that has not finished routing. Board A's answer is a generator and a stackup;
+board B's first needs a board that routes, which is where its floor plan decision already sits.
