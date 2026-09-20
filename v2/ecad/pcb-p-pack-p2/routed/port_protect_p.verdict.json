@@ -11,7 +11,7 @@
   "board": "p",
   "netlist": {
    "path": "out/pcb-p-pack.net",
-   "sha256_16": "b7b757ea676dfc85"
+   "sha256_16": "d243690f028062d8"
   }
  },
  "missing_input": null,
@@ -29,9 +29,9 @@
  "tool": "port_protect_p",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "4d83fe3b9dfc62e2"
+  "tools_tree_sha": "087fae053129751b"
  },
- "ts": "2026-09-20T14:49:35Z",
+ "ts": "2026-09-20T23:24:51Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {

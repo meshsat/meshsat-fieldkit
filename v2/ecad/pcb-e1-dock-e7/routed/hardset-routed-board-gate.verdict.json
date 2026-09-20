@@ -24,7 +24,7 @@
   },
   "drc": {
    "path": "out/pcb-e1-dock-drc.json",
-   "sha256_16": "56fff532db5a85da"
+   "sha256_16": "63e25f90a82fe04f"
   }
  },
  "missing_input": null,
@@ -42,9 +42,9 @@
  "tool": "hardset-routed-board-gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "4d83fe3b9dfc62e2"
+  "tools_tree_sha": "087fae053129751b"
  },
- "ts": "2026-09-20T14:48:30Z",
+ "ts": "2026-09-20T23:23:49Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {

@@ -15,7 +15,7 @@
   "margin": 0.2,
   "netlist": {
    "path": "out/pcb-e1-dock.net",
-   "sha256_16": "6c72ffbd3fd2b368"
+   "sha256_16": "9eff33a75b335eaa"
   }
  },
  "missing_input": null,
@@ -33,9 +33,9 @@
  "tool": "derate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "4d83fe3b9dfc62e2"
+  "tools_tree_sha": "087fae053129751b"
  },
- "ts": "2026-09-20T14:48:49Z",
+ "ts": "2026-09-20T23:24:07Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {

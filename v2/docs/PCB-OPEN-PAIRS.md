@@ -7,7 +7,7 @@ Every pair that is not a current PASS, classified. Generated from tools/pcb_deci
 map's maturity and each deciding verdict: a decision that claims a pair wins over everything else, because
 the ruling is the action that moves it, and the measurement is reported beside it rather than lost.
 
-**132 open pair(s)** over 7 board(s). **39 are measured failures** (a tool looked and the board failed), which are **33 distinct readings**, and **17 of those are claimed by an open owner decision**.
+**134 open pair(s)** over 7 board(s). **41 are measured failures** (a tool looked and the board failed), which are **35 distinct readings**, and **17 of those are claimed by an open owner decision**.
 
 | waiting on | pairs | what it means |
 |---|---:|---|
@@ -15,7 +15,7 @@ the ruling is the action that moves it, and the measurement is reported beside i
 | `DECISION_UNCLAIMED` | 5 | a rule that says a decision is open while no decision claims it |
 | `AUTHORITY` | 3 | an authority this project does not have |
 | `MISSING_INPUT` | 15 | an input the reading declared absent |
-| `MEASURED_FAILURE` | 22 | the tool looked and the board failed |
+| `MEASURED_FAILURE` | 24 | the tool looked and the board failed |
 | `VENDOR_WAIT` | 2 | a fabricator or a standards body, and nobody here |
 | `OWNER_WORK` | 7 | work only the owner or the ordering session can do |
 
@@ -29,7 +29,7 @@ things to fix.
 
 | board | open | of which measured | decision-bound | authority | missing input | not judged |
 |---|---:|---:|---:|---:|---:|---:|
-| A | 26 | 11 | 13 | 1 | 4 | 0 |
+| A | 28 | 13 | 13 | 1 | 4 | 0 |
 | B | 38 | 6 | 24 | 1 | 5 | 0 |
 | C | 12 | 3 | 10 | 0 | 0 | 0 |
 | D | 17 | 4 | 11 | 1 | 2 | 0 |
@@ -39,14 +39,10 @@ things to fix.
 
 ## Readings owed
 
-Of the 84 open pairs with a reading beside them, **1 are decided by a reading taken under a tool that has
+Of the 86 open pairs with a reading beside them, **0 are decided by a reading taken under a tool that has
 CHANGED since**. A tool change moves no rule-set fingerprint and no per-rule digest, so nothing else on these
 pages can say it. It is an upper bound, because a tool file moves for a comment as readily as for a
 criterion, and it decides nothing: it says the reading is owed. Re-take with retake_gate.sh or a sweep.
-
-| rule | boards |
-|---|---|
-| `PLC-001` | B |
 
 ## Boards behind their own generator
 
@@ -205,7 +201,7 @@ holding a number, not a question about a number.
 | `DFM-001` | E | INCONCLUSIVE | the folder judged here is meshsat-pcb-e-revA-E9 and this board declares E17, so its properties are a reading of a board this set is not building |
 | `DOC-002` | E | INCONCLUSIVE | board E declares E17 and the order set holds E6: the note beside those folders describes a board this project is not building |
 
-## MEASURED_FAILURE (22): the tool looked and the board failed
+## MEASURED_FAILURE (24): the tool looked and the board failed
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -215,6 +211,8 @@ holding a number, not a question about a number.
 | `RET-004` | A | FAIL | return_via FAIL: {'examined_same_reference': 0, 'examined_to_power': 10, 'exempt': 54, 'judged': 40, 'lacking': 32, 'same_plane': 27, 'sl |
 | `ANA-001` | A | FAIL | sensitive_nodes FAIL: {'declared': 34, 'fail': 25, 'measured': 10} |
 | `RF-001` | A | FAIL | rf_line FAIL: {'judged': 11, 'missed': 11} |
+| `PLC-001` | A | FAIL | place_audit FAIL: {'collisions': 1, 'fine_pitch': 19, 'footprints': 400, 'measured': 19} |
+| `MEC-001` | A | FAIL | check_pcb_a FAIL: {'fail': 1, 'footprints': 400, 'intent_items_reported': 266, 'pass': 811, 'route_items_reported': 0} |
 | `OUT-001` | A | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `SCH-002` | B | FAIL | netlist_board FAIL: {'agree': 6752, 'aliased_pins': 0, 'board_footprints': 957, 'board_only_inert': 0, 'fail': 1, 'netlist_refs': 931} |
 | `PWR-003` | B | FAIL | energy_chain_b FAIL: {'fail': 1, 'stages': 3} |

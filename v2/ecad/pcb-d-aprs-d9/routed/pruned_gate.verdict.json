@@ -15,8 +15,8 @@
    "sha256_16": "929bf82d2bf6eed4"
   },
   "board_table": {
-   "path": "/root/sweep34/v2/ecad/tools/boards/d.json",
-   "sha256_16": "42893ad9a2ad8dbd"
+   "path": "/root/sweep35/v2/ecad/tools/boards/d.json",
+   "sha256_16": "762b0193efd407f8"
   }
  },
  "missing_input": null,
@@ -34,9 +34,9 @@
  "tool": "pruned_gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "4d83fe3b9dfc62e2"
+  "tools_tree_sha": "087fae053129751b"
  },
- "ts": "2026-09-20T14:47:58Z",
+ "ts": "2026-09-20T23:23:18Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {
