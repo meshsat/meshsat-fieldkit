@@ -75,7 +75,7 @@ decisions:
       51, via_audit 279 with nothing under either floor, dc_drop 3 of 3 and fab_limits PASS of 20. The one
       thing the ruling still carries with it: that arm generated the four-layer 1 oz stackup, and ruling 7
       orders this board at 2 oz, whose multilayer floor is 0.15 mm; the board's 0.16 clears it, so the copper
-      weight changes the stackup line and the density judgement rather than the routing answer."
+      weight changes the stackup line and the density judgement rather than the routing answer. AND THAT LINE HAS A NAME NOW (20 September 2026, 20:40 CEST): the fabricator DOES build four layers at 2 oz outer, its capability page saying `finished outer copper, multilayer | 1 oz / 2 oz` with a 0.15 / 0.15 mm floor that this boards 0.16 clears, and inner copper up to 2 oz. What is missing is a STACKUP RECORD: `stackup_write.STACKS` holds JLC04161H-7628 (four layers, 1 oz outer, half-ounce inner), JLC06161H-3313, 2L and 2L-2oz, and NO four-layer 2 oz row, because the fabricator publishes its layer-by-layer impedance stackups only at 1 oz (its own page says impedance control is offered on four layers and up). So option 1 and ruling 7 collide on a DOCUMENT this project does not hold rather than on anything the fabricator cannot build, and STK-001 on a four-layer 2 oz board P would read UNKNOWN STACK until that record exists. It is one question to the fabricator, and board P is the only board of the set that would ask it."
   - n: 29
     title: "board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked"
     asked: 2026-09-16
