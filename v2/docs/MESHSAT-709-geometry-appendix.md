@@ -12657,3 +12657,42 @@ lead, board B's two outgoing 5 V conductors, and twenty switching nodes across A
 4.81 A and 6.26 A in conductors IPC rates at 0.40 A; one sags 837 mV on a 5 V outlet; one, board E's, is
 3 mm of copper and passes with room. Three rule-board pairs moved from PASS to FAIL and the readiness number
 fell from 63.4 to 62.8 percent, which is the page catching up with the boards.
+
+### 32.240, 20 September 2026 02:35 CEST: board A's PI-001 is thirteen conductors and here they are in order
+
+With every conductor declared, `dc_density` names its thirteen misses and the ranking is the work list board
+A's next phase needs:
+
+| net | worst cell, times its limit | drop, which is not what failed |
+|---|---:|---:|
+| `CH_SRP` | **15.83** | 2.84 % |
+| `PD_VBUS` | **8.92** | 5.58 % |
+| `VBAT` | 3.69 | 0.38 % |
+| `FE_OUT` | 3.13 | 0.13 % |
+| `CH_ACN` | 3.03 | 0.68 % |
+| `PA_OUT` | 2.44 | 0.45 % |
+| `PD_VPWR` | 2.44 | 1.55 % |
+| `VBUS20` | 2.03 | 0.18 % |
+| `VIN_RAW` | 2.00 | 0.86 % |
+| `+13V8_PA` | 1.53 | 0.65 % |
+| `PD_SW` | 1.48 | 0.30 % |
+| `S1_OUT` | 1.44 | 0.43 % |
+| `PD_OUT` | 1.23 | 0.03 % |
+
+**Four of the thirteen were already failing this morning** (`VBAT`, `VIN_RAW`, `VBUS20`, `+13V8_PA`) and
+tonight's declarations added the other nine. **The four that were already there are the informative ones,
+because they are the rails that DO have generator-laid copper**: islands, bands and risers from
+`power_copper`, and they still read 1.53 to 3.69 times their limit. So the answer for board A is not only
+"the router put current on an inner layer where nobody laid copper", which is what the new nine say; it is
+also that **the bands that exist are undersized**, and that is arithmetic anyone can do before a route.
+
+**The caveat that travels with every one of these numbers** is decision 14's, recorded on 13 September: the
+density bar is IPC's current for ONE raster cell and IPC is sublinear in area, so at a 0.5 mm cell it is
+exact at 0.5 mm of width and **lenient by about 18 percent at 0.4 mm and 64 percent at 3 mm**. A wide pour's
+worst cell is usually a NECK, and a neck at 3.69 times a lenient bar is a real finding while the same number
+on a uniform 3 mm band would not be. The ranking is what to act on; the absolute ratios above about 3 mm of
+width are read with that in hand.
+
+**The two at the top are the two the night already named**: the charger's output, which puts the pack's 10 A
+through 0.200 mm of F.Cu, and the USB-C outlet, which puts 3 A through 0.400 mm of In2 for 54.9 mm. Neither
+is a routing accident; both are conductors nothing was ever told to lay copper for.
