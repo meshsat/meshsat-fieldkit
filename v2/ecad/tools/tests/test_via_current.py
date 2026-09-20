@@ -316,3 +316,61 @@ def t_the_layer_guard_is_asked_only_where_the_reading_is_attributed():
     assert subs, "the measured branch is gone, so this rule is about a tool that no longer exists"
     assert calls[0].lineno > max(s.lineno for s in subs), \
         "the layer guard runs before the measured branch, so it would decline a site the mesh measured"
+
+
+def t_a_stitch_refuses_a_barrel_on_another_nets_pad():
+    """A barrel inside another net's pad becomes that net's, silently (21 September 2026, board A's four rails).
+
+    KiCad's connectivity gives a via the net of the pad whose copper it touches, at the next fill or DRC, with no
+    message. Board A's slot runs each ended in a two-barrel column typed at case xL + 1.0, which on the placed
+    board is 0.4 mm from the load capacitor's GROUND pad centre on all four rails: the generator wrote +5V_S1,
+    the placed snapshot reads GND, the DRC was clean, and the In3 run dead-ended one layer below the parts it was
+    laid to feed, so A89 (the arm "with the three slot runs") had no variable in it at the router. The DRC cannot
+    ask this question, because the renamed via is legal; the tool that places the barrel can. A barrel in a pad
+    of its OWN net is a via in pad and stays allowed."""
+    import os
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "power_copper.py"),
+               encoding="utf-8").read()
+    body = src[src.index("    def stitch("):src.index("    def rail_run(")]
+    assert "_pd.HitTest(_pos, _r)" in body, "the stitch does not ask whether the point is on another net's pad"
+    assert "KiCad gives a via the net of the pad it sits in" in body, "the refusal does not say what would happen"
+    assert body.index("_pd.HitTest(_pos, _r)") < body.index("v = pcbnew.PCB_VIA(self.b)"), "the question is asked after the barrel is placed"
+    # and the fixture, where KiCad is: one part, pad 1 on net A, pad 2 on net B 2.95 mm east (board A's 1210 bank caps)
+    try:
+        import pcbnew
+    except Exception as e:
+        from harness import Skip
+        raise Skip("no pcbnew here (%s)" % type(e).__name__)
+    import power_copper
+    b = pcbnew.BOARD(); b.SetCopperLayerCount(2)
+    nets = {}
+    for n in ("A", "B"):
+        ni = pcbnew.NETINFO_ITEM(b, n); b.Add(ni); nets[n] = ni
+    fp = pcbnew.FOOTPRINT(b); fp.SetReference("C31"); fp.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(11.5), pcbnew.FromMM(10)))
+    for num, x, n in (("1", 10.0, "A"), ("2", 12.95, "B")):
+        p = pcbnew.PAD(fp); p.SetNumber(num); p.SetAttribute(pcbnew.PAD_ATTRIB_SMD); p.SetShape(pcbnew.PAD_SHAPE_RECT)
+        p.SetSize(pcbnew.VECTOR2I(pcbnew.FromMM(1.15), pcbnew.FromMM(2.70)))
+        p.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(x), pcbnew.FromMM(10))); p.SetLayerSet(pcbnew.LSET.FrontMask())   # LSET(layer) is not offered here; FrontMask is F.Cu with its mask and paste
+        p.SetNet(nets[n]); fp.Add(p)
+    b.Add(fp)
+    pc = power_copper.PowerCopper(b, lambda n, create=False: nets[n.lstrip("/")], lambda x, y: pcbnew.VECTOR2I(pcbnew.FromMM(x), pcbnew.FromMM(y)))
+    pc.stitch("A", [(10.0, 10.0)])                     # in its own pad: a via in pad, allowed
+    pc.stitch("A", [(8.7, 10.0), (11.3, 10.0)])        # beside its own pad, clear of pad 2 by 1.075 mm of copper
+    try:
+        pc.stitch("A", [(12.55, 10.0)])                # 0.4 mm from pad 2's centre, where board A's column sat
+    except SystemExit as e:
+        assert "pad 2 of C31" in str(e) and "carries B" in str(e), "the refusal does not name the pad and its net: %s" % e
+    else:
+        raise AssertionError("a barrel of A on a pad of B was placed; KiCad would rename it to B at the next fill")
+
+
+def t_board_as_load_bank_column_comes_from_its_own_pads():
+    """The column that hands each rail's In3 run to its load bank is derived from the bank's pads, never typed
+    (21 September 2026). The typed one sat in the capacitor's ground pad on all four rails, see above."""
+    import os, re
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "gen_pcb_a3.py"),
+               encoding="utf-8").read()
+    assert "def bank_col(net, caps" in src, "board A's generator has no pads-derived bank column"
+    assert src.count("bank = bank_col(out, BANK_CAPS[n])") == 2, "both rail branches must take the column from the pads"
+    assert not re.search(r"\n\s+col\(out, xL \+ 1\.0", src), "the typed column at xL + 1.0 is back"
+    for n in ("1", "2", "3", "D"): assert '"%s": ["C' % n in src[src.index("BANK_CAPS = {"):], "rail %s has no bank capacitors declared" % n

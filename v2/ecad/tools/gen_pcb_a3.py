@@ -501,6 +501,39 @@ def row(net, x0, x1, y, n=3, drill=0.4):
 def col(net, x, y0, y1, n=3, drill=0.4):
     _size(net, n, drill, (round(x, 1), round((y0 + y1) / 2, 1)))
     PC.stitch(net, [(x, y0 + (y1 - y0) * k / (n - 1) if n > 1 else (y0 + y1) / 2) for k in range(n)])
+def bank_col(net, caps, reach=1.3, drill=0.4):
+    """The barrels that hand a rail's In3 run to its load bank, placed BESIDE THE BANK'S OWN PADS, and the island
+    that holds them (21 September 2026, found on A89's placed board and the same on A92's).
+
+    The column used to be TYPED: two barrels at case xL + 1.0, a coordinate chosen by eye against a row the
+    PACKER places. On every one of the four rails that point is 0.4 mm from the load capacitor's GROUND pad
+    centre (C31 pad 2 at case xL + 1.4), and KiCad's connectivity gives a via the net of the pad it sits in: the
+    generator wrote +5V_S1, the placed snapshot reads GND, the DRC was clean, and the run dead-ended one layer
+    below the parts it was laid to feed. The site is taken from the pads now: one barrel `reach` mm either side
+    of each rail pad of the bank, at the pad row's own y, dropped where the other net's pad of the same
+    capacitor is within the barrel's copper plus the class clearance. `power_copper.stitch` refuses a point on
+    another net's pad since the same hour, so a packer that moves this row cannot put the column back into a
+    ground pad without stopping the chain."""
+    bank = net_pads(net, caps)
+    others = [pd for r in caps for pd in placed[r].Pads() if pd.GetNetname() not in (net, "/" + net)]
+    pts = []
+    for pd in bank:
+        cx, cy = pd.GetPosition().x / 1e6 - OX, OY - pd.GetPosition().y / 1e6
+        for sx in (cx - reach, cx + reach):
+            clear = True
+            for od in others:
+                ob = od.GetBoundingBox()
+                ox0, ox1 = ob.GetLeft() / 1e6 - OX, ob.GetRight() / 1e6 - OX
+                oy0, oy1 = OY - ob.GetBottom() / 1e6, OY - ob.GetTop() / 1e6
+                if ox0 - 0.7 <= sx <= ox1 + 0.7 and oy0 - 0.7 <= cy <= oy1 + 0.7: clear = False   # 0.8 mm of copper plus the 0.3 mm class clearance
+            if clear and all(math.hypot(sx - qx, cy - qy) >= drill + 0.2995 for qx, qy in pts): pts.append((round(sx, 2), round(cy, 2)))
+    if len(pts) < 2:
+        raise SystemExit("power copper: %s's load bank offers %d barrel site(s) beside its rail pads on %s, fewer than the two its run needs: the row has moved, read the placed board" % (net, len(pts), caps))
+    _size(net, len(pts), drill, (round(sum(x for x, _ in pts) / len(pts), 1), round(pts[0][1], 1)))
+    PC.stitch(net, pts, drill=drill)
+    r = pads_rect(bank, 0, 0.15)
+    return (min(r[0], min(x for x, _ in pts) - 0.5), r[1], max(r[2], max(x for x, _ in pts) + 0.5), r[3])
+BANK_CAPS = {"1": ["C31", "C32"], "2": ["C37", "C38"], "3": ["C43", "C44"], "D": ["C49", "C50"]}   # the two bulk capacitors of each rail's load bank, the row the island covers
 # 1. the four slot rails: converter output island (inductor OUT pad, output caps, shunt pad 1) with a bottom band; the rail after the shunt (shunt pad 2, connector pin 1) the same
 SLOT_CAPS = {"1": ["C29", "C30"], "2": ["C35", "C36"], "3": ["C41", "C42"], "D": ["C47", "C48"]}
 SLOT = [("1", -58, "L3", "R31", "J_5V_S1", "+5V_S1"), ("2", -42, "L4", "R35", "J_5V_S2", "+5V_S2"), ("3", -26, "L5", "R39", "J_5V_S3", "+5V_S3"), ("D", -10, "L6", "R43", "J_5V_DEV", "+5V_DEV")]
@@ -524,9 +557,9 @@ for n, xL, Lr, Rr, Jr, out in SLOT:
         # 73.5 band, because the device column is the last one, so the width comes from the east and
         # costs no neighbour anything. It reaches the same two ends as the others: the three stitch
         # vias under its connector at y 72.6 and its own load bank at y 41.8.
-        PC.island(out, "%s load bank" % out, rect_pts((xL - 3.5, 40.3, xL + 5.5, 43.3)), pcbnew.F_Cu, priority=3)
-        PC.union(out, "%s under the block" % out, [(xL - 2.5, 41.0, xL + 12.5, 73.5)], pcbnew.In3_Cu, priority=2)
-        col(out, xL + 1.0, 41.3, 42.8, 2)
+        bank = bank_col(out, BANK_CAPS[n])                                   # the barrels beside the bank's own pads, and the island that holds them
+        PC.island(out, "%s load bank" % out, rect_pts(bank), pcbnew.F_Cu, priority=3)
+        PC.union(out, "%s under the block" % out, [(min(xL - 2.5, bank[0]), min(41.0, bank[1]), xL + 12.5, 73.5)], pcbnew.In3_Cu, priority=2)
     if n != "D":
         # THE RAIL REACHES ITS OWN LOAD BANK PAST ITS CONVERTER BLOCK (20 September 2026, appendix
         # 32.328 and 32.329, proved by A88 at PREROUTE-DONE OK). Each slot rail's four load parts sit
@@ -539,9 +572,9 @@ for n, xL, Lr, Rr, Jr, out in SLOT:
         # +5V_DEV IS DELIBERATELY NOT HERE: at 6.00 A on half-ounce inner copper it wants about
         # fifteen millimetres against the five or six a 16 mm column allows, and it also has to reach
         # the east, so it is decision 35's copper weight and not a layer choice.
-        PC.island(out, "%s load bank" % out, rect_pts((xL - 3.5, 40.3, xL + 5.5, 43.3)), pcbnew.F_Cu, priority=3)
-        PC.union(out, "%s under the block" % out, [(xL - 2.5, 41.0, xL + 7.0, 73.5)], pcbnew.In3_Cu, priority=2)
-        col(out, xL + 1.0, 41.3, 42.8, 2)
+        bank = bank_col(out, BANK_CAPS[n])                                   # the barrels beside the bank's own pads, and the island that holds them
+        PC.island(out, "%s load bank" % out, rect_pts(bank), pcbnew.F_Cu, priority=3)
+        PC.union(out, "%s under the block" % out, [(min(xL - 2.5, bank[0]), min(41.0, bank[1]), max(xL + 7.0, bank[2]), 73.5)], pcbnew.In3_Cu, priority=2)
 
 # 2. the PA rail: the shunt's pad 2 and the output caps in an island at the head of a 4.5 mm bottom band east along y -11.5, north at x 104, into J_PA's pin 1
 pa = "+13V8_PA"; pr = pads_rect(net_pads(pa, ["R55", "C65", "C66", "C67"]), 1.2, 1.0)
@@ -617,7 +650,7 @@ PC.union(vr, "VIN_RAW west", [(-118, -46, fx0_ - 0.8, -40), (-118, -46, -112, fe
 PC.union(vr, "VIN_RAW under the trunk", [(fx0_ - 5.0, -46.5, fx1_ + 5.0, -39.5)] + dock, DIVE_CU, priority=2, keepout=False)   # one In3 polygon from the dive to the dock pins (the pins join the layers)
 PC.keepout("keep tracks off VIN_RAW under the trunk", (fx0_ - 5.0, -46.5, fx1_ + 5.0, -39.5), DIVE_CU)
 for _r in dock[:2]: PC.keepout("keep tracks off VIN_RAW east", _r, DIVE_CU)
-col(vr, fx0_ - 3.2, -45.2, -40.8, 3); col(vr, fx0_ - 1.9, -44.6, -41.4, 5); col(vr, fx1_ + 3.2, -45.2, -40.8, 3); col(vr, fx1_ + 1.9, -44.6, -41.4, 4)   # the two inner columns carry the fuse's own current: A48 solved 6.47 A at fx0_-1.9 (wants 8, the 3.2 mm span holds 5) and 2.95 A at fx1_+1.9 (wants 4)
+col(vr, fx0_ - 3.2, -45.2, -43.2, 3); col(vr, fx0_ - 1.9, -44.6, -41.4, 5); col(vr, fx1_ + 3.2, -45.2, -43.2, 3); col(vr, fx1_ + 1.9, -44.6, -41.4, 4)   # 21 Sep 2026: the outer columns stop at -43.2, because the packer puts the PoE stage's C83 and C85 over the dive (POQ spans it) and their GND pads begin at -42.3; the typed -40.8 top barrel sat in that pad on both sides and was renamed GND   # the two inner columns carry the fuse's own current: A48 solved 6.47 A at fx0_-1.9 (wants 8, the 3.2 mm span holds 5) and 2.95 A at fx1_+1.9 (wants 4)
 # 14 September 2026, MEASURED ON A28: three vias a row is 3.3 A against this rail's 8. The worst via on the
 # board carries 3.25 A through one 0.40 mm barrel at (-113.0, 64.7), which IPC rates at 1.11, and the worst
 # pour cell sits a millimetre from it at 171 A/mm2 against 82.7 (ratio 2.06): a cell at a via is a funnel,
@@ -628,7 +661,11 @@ col(vr, fx0_ - 3.2, -45.2, -40.8, 3); col(vr, fx0_ - 1.9, -44.6, -41.4, 5); col(
 # land on In3 or B.Cu, where VIN_RAW's own copper is.
 PC.keepout("keep tracks off the VBAT In2 plane under the VIN_RAW head", (fe[0] - 2.0, fe[1] - 2.0, fe[2] + 2.0, fe[3] + 2.0), pcbnew.In2_Cu)
 row(vr, -117.5, -112.5, fe[1] - 1.3, 6)
-row(vr, -116.0, -110.0, fe[3] - 3.0, 6)                                        # the head's north end, where the cell measure put the neck
+# 21 September 2026: the row's east end was typed at -110.0 and Q2's FE_SW1 source pads begin at -111.1, so its last two barrels
+# sat ON a switching-node pad and KiCad renamed them FE_SW1: four VIN_RAW barrels where the row said six, on every board since A25,
+# and two dead switching-node vias through the head. The end is read from Q2's other-net pads now, 0.7 mm short of them.
+_q2w = min(pd.GetBoundingBox().GetLeft() / 1e6 - OX for pd in placed["Q2"].Pads() if pd.GetNetname() not in (vr, "/" + vr)) - 0.7
+row(vr, -116.0, _q2w, fe[3] - 3.0, 6)                                          # the head's north end, where the cell measure put the neck
 # 4. VBAT: a bottom trunk from F1's pad 2 north to a collector at y 41 under the four slot converters (islands at their VIN pins), and a spur to the PA stage's input FET and caps
 f1 = f1_; fx0, fx1 = fx0_, fx1_
 # 13 September 2026, MEASURED ON A26: THE COMB FILLS IN TWO PIECES AND THE CUT IS A VIA COLUMN. The trunk

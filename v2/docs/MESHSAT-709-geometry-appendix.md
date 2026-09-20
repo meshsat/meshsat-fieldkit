@@ -16561,3 +16561,68 @@ pays on a net nothing else can close, and not another lane.
 same command, and the snapshots were checked for truncation first (both end with the same closing parens),
 so it was KiCad's filler and not a torn copy. **A reader that segfaults is retried and never read as a
 result.**
+
+### 32.341
+
+**A barrel inside another net's pad becomes that net's, silently, and board A's four In3 rail runs never
+reached the parts they were laid for (21 September 2026, 00:35 CEST).** The 00:05 entry said the next
+instrument for the three slot rails was the pre-lay. Before writing it, the pairs those rails still had open on
+A89's own pre-route board were listed with their spans, and the 25.2 mm pair from each rail's load capacitor to
+its converter's stub, the run the In3 lane was laid to close, was there on A89 exactly as on A86, which carries
+no lane at all. **So the arm had no variable in it at the router**, D29's shape a second time in one night.
+
+**The mechanism, read off the placed board.** Each rail's In3 run ends in a two-barrel column the generator
+typed at case xL + 1.0, y 41.3 to 42.8. On the placed board that point is **0.4 mm from the load capacitor's
+GROUND pad centre** (C31 pad 2 at case xL + 1.4 on the S1 rail, 1.15 by 2.70 mm, the same on S2, S3 and,
+on A92's board, the device rail at C49). KiCad's connectivity gives a via the net of the pad whose copper it
+touches, at the next fill or DRC, with no message: the generator wrote `+5V_S1`, the placed snapshot reads
+`GND`, the DRC is clean because a ground via in a ground pad is legal, and `place_audit` had said in passing
+on every one of these chains that the six load bank islands *carry no via or plated pad of their own net
+BEFORE any route*. The In3 pour is joined to the rail at its north end by the three through vias under the
+connector, reaches south under the load bank, and stops one layer below it. The pours are kept off the DSN,
+so the router never saw the lane either. **Proved in a fixture where KiCad is**: on the tool as it stood a
+barrel of net A placed 0.4 mm from a pad of net B is laid without a word and `BuildConnectivity` reads it
+back as B.
+
+**The guard is in the tool that places the barrel**, because the DRC cannot ask this question:
+`power_copper.stitch` refuses a point on another net's copper pad, naming the pad, the part and the net it
+carries; a barrel in a pad of its OWN net stays allowed (the fanout's via-in-pad fallback, listed for the
+assembly note). Two rules, the fixture above and a parse rule on the generator, both failing on the tree they
+were written against. **And a report mode, for a probe only**: the first chain run stopped at the first
+refusal, and a generator with thirty stitch calls is read in one pass with `POWER_COPPER_PAD_GUARD=report`.
+
+**That pass found FIVE sites, not four.** The four rail columns, and **VIN_RAW three times over**: the head
+row `row(vr, -116.0, -110.0, fe[3] - 3.0, 6)` ends 1.1 mm past the west edge of Q2's FE_SW1 source pads, so
+its last two barrels sat on a switching-node pad and were renamed `FE_SW1` (four VIN_RAW barrels where the
+row said six, on every board since A25, and two dead switching-node vias through the head, which is where
+32.164 measured 3.25 A through one barrel); and the two outer dive columns' top barrel at y -40.8 sat in
+the ground pad of C83 and of C85, the PoE stage's capacitors, because the packer's POQ rectangle spans the
+dive. **All five are derived from the pads now**: `gen_pcb_a3.bank_col` places each rail's barrels beside
+the bank's own rail pads (four per rail where the typed column gave two) and returns the island that holds
+them; the head row ends 0.7 mm short of Q2's other-net pads; the outer dive columns stop at y -43.2. A
+regeneration in a scratch copy reads zero refusals, four barrels per rail on their own copper, every island
+one piece. **Boards D and E, the other two generators that lay barrels through this tool, read ZERO sites in the same
+report mode**, so the defect is board A's alone: five typed coordinates against rows the packer places.
+
+**A93 is A92 plus that change and nothing else**, on the place box, its prediction in `/root/a93_box.sh`: on
+the placed board each rail's 25.2 mm pair is closed through the In3 run, so the pre-route DRC reads at most
+three open pairs per slot rail where A89 read four; at the router `/+5V_S1`, `/+5V_S2`, `/+5V_S3` and
+`/+5V_DEV` close and the open set lands under A86's five. If a rail is still open on A93 the lane is not its
+answer and the gap is at the connector row. **The pre-lay is not written**: it would have laid by hand the
+copper the generator was supposed to have laid, and the 00:05 recommendation is withdrawn on this
+measurement. The generator change is committed only once A93's chain ends PREROUTE-DONE OK.
+
+**Addendum, 00:41 CEST.** A89's router was cut at its cap after pass 154: hard 0, **19 unrouted**, the identical
+set the snapshots read at passes 123 and 135 (`/+5V_S1`, `/+5V_S2`, `/+5V_S3` and `/+5V_DEV` among them,
+`/VBAT` closed). With the lanes dead-ended that is the expected reading, not a refutation of the lane: A89 is
+A86 plus nothing at the router, and its 19 against A86's 16 at the cut is one placement's scatter. Its closers
+run; A93 asks the lane question for the first time.
+
+**Addendum, 00:46 CEST, A93's chain.** PREROUTE-DONE OK at the baseline's 461 escapes with two skipped, 26
+barrels at 15 sites with none refused, every pre-lay group kept (the switching group in 158 s where 19
+September's took 577), pre-route DRC hard 0, 27 gate verdicts all PASS; routing since 00:44 CEST, cap 05:44.
+**The first half of the prediction holds exactly**: each slot rail reads TWO open pairs on the pre-route board
+where A89 read FOUR, and the two that went are the 25.2 mm run from the load capacitor to the converter's stub
+and the island-to-island split. What is left per rail is a 3.5 mm gap from the second capacitor row (C33, C39,
+C45) to the island and a 3.6 mm gap from the shunt to that row; if the router leaves those, the island grows one
+row south at generation. The device rail lost its 25.3 mm pair the same way.

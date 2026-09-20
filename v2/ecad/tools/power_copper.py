@@ -145,6 +145,33 @@ class PowerCopper:
                     "(IPC-2221 for the fabricator's own plating, which is what via_current judges after the "
                     "route): add barrels, widen the hole, or say why in the board's own file"
                     % (net, len(pts), drill, float(amps), need))
+        # A BARREL INSIDE ANOTHER NET'S PAD BECOMES THAT NET'S, SILENTLY (21 September 2026, board A's four rails).
+        # KiCad's connectivity gives a via the net of the pad whose copper it touches, at the next fill or DRC,
+        # with no message. Board A's slot runs each ended in a two-barrel column typed at xL + 1.0, which on the
+        # placed board is 0.4 mm from the load capacitor's GROUND pad centre: the generator wrote +5V_S1, the
+        # placed snapshot reads GND, the DRC is clean, place_audit says in passing that the island carries no via,
+        # and the In3 run dead-ends a layer below the parts it was laid to feed. A89 routed that board as an arm
+        # "with the three slot runs" and had no variable in it at the router, exactly D29's shape. So the tool
+        # asks the question the DRC cannot: is this point on another net's copper pad. A barrel in a pad of ITS
+        # OWN net is a via in pad and stays allowed (the fanout's fallback, named for the assembly note).
+        _own = {str(net), "/" + str(net).lstrip("/")}
+        for x, y in pts:
+            _pos = self.P(x, y); _r = int(FromMM(width) / 2)
+            for _fp in self.b.GetFootprints():
+                for _pd in _fp.Pads():
+                    if _pd.GetNetname() in _own or not _pd.IsOnCopperLayer(): continue
+                    if _pd.HitTest(_pos, _r):
+                        import os as _o
+                        if _o.environ.get("POWER_COPPER_PAD_GUARD") == "report":
+                            # A PROBE, NEVER A CHAIN SETTING: the first chain run of this guard stopped at the first
+                            # of five sites, and a generator with thirty stitch calls is read in one pass this way.
+                            print("power copper PAD GUARD (report): %s barrel at (%.2f, %.2f) on pad %s of %s, which carries %s"
+                                  % (net, x, y, _pd.GetNumber(), _fp.GetReference(), _pd.GetNetname() or "no net")); continue
+                        raise SystemExit(
+                            "power copper: %s stitches a barrel at (%.2f, %.2f) on pad %s of %s, which carries %s: "
+                            "KiCad gives a via the net of the pad it sits in, so this barrel would silently become "
+                            "that net's and the run it ends would reach nothing; move the point onto %s's own copper"
+                            % (net, x, y, _pd.GetNumber(), _fp.GetReference(), _pd.GetNetname() or "no net", net))
         # AND EVERY BARREL REMEMBERS THE LINE THAT PLACED IT (20 September 2026). `barrel_sites --suggest`
         # answers a site the generator already owns with "add N points to the call that placed it", and a
         # reader given a coordinate then has to find that call among lines whose arguments are expressions.
