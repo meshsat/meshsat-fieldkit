@@ -16510,3 +16510,16 @@ TRKS 0.0 west, south and east; TRKOUT 0.0 west and east.** The room on that boar
 board letter, so `pcb-e1-dock` gave "e1", it looked for `gen_pcb_e13.py` and crashed; `pcb-c-ring` is the
 same shape. It uses `boardtable.letter_for` now, with a rule that every letter it returns names a generator
 this tree holds.
+
+**32.339 addendum, 23:55 CEST: I ran a gate by hand in the tree again, and it displaced a committed
+reading within the minute.** The rule is written down (*never run a gate from `v2/ecad` to check something:
+`retake_gate.sh` or `--out-dir`*, 19 September) and I broke it twice in five minutes, running
+`closer_audit.py` from `v2/ecad` to see what it said about a new file. It wrote
+`out/closer_audit.verdict.json` with `uncovered_classes: 1` where the committed reading has 0, and
+**board A's PLC-002 went PASS to FAIL and its page re-rendered at 27 PASS where it had 28**. The suite's own
+evidence guard named it on the next run, which is the third time that guard has caught this exact thing.
+**Repaired the way 19 September repairs it**: the unbound verdict moved out of the tree, the pages
+re-rendered **byte for byte back to their committed state**, and readiness read **60.4 percent before and
+after**, which is the proof the removal decided nothing. The hand-run verdict differed from the committed
+one because a gate run from `v2/ecad` sees a different scope from the same gate run in a board's own chain;
+that is the whole reason for the rule.
