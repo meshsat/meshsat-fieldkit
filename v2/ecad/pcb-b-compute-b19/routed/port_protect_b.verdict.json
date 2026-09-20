@@ -14,7 +14,7 @@
   "board": "b",
   "netlist": {
    "path": "out/pcb-b-compute.net",
-   "sha256_16": "c0ca6a5e37fce87f"
+   "sha256_16": "ee6401a3fa57f3c0"
   }
  },
  "missing_input": null,
@@ -32,9 +32,9 @@
  "tool": "port_protect_b",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "b7ecfcffbc2fef22"
+  "tools_tree_sha": "9bccd1871fd5d8f7"
  },
- "ts": "2026-09-20T07:15:53Z",
+ "ts": "2026-09-20T07:38:13Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {

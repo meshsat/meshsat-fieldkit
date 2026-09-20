@@ -7,7 +7,7 @@ Every pair that is not a current PASS, classified. Generated from tools/pcb_deci
 map's maturity and each deciding verdict: a decision that claims a pair wins over everything else, because
 the ruling is the action that moves it, and the measurement is reported beside it rather than lost.
 
-**138 open pair(s)** over 7 board(s). **40 are measured failures** (a tool looked and the board failed), which are **34 distinct readings**, and **16 of those are claimed by an open owner decision**.
+**137 open pair(s)** over 7 board(s). **39 are measured failures** (a tool looked and the board failed), which are **33 distinct readings**, and **16 of those are claimed by an open owner decision**.
 
 | waiting on | pairs | what it means |
 |---|---:|---|
@@ -15,7 +15,7 @@ the ruling is the action that moves it, and the measurement is reported beside i
 | `DECISION_UNCLAIMED` | 5 | a rule that says a decision is open while no decision claims it |
 | `AUTHORITY` | 3 | an authority this project does not have |
 | `MISSING_INPUT` | 14 | an input the reading declared absent |
-| `MEASURED_FAILURE` | 24 | the tool looked and the board failed |
+| `MEASURED_FAILURE` | 23 | the tool looked and the board failed |
 | `VENDOR_WAIT` | 2 | a fabricator or a standards body, and nobody here |
 | `OWNER_WORK` | 8 | work only the owner or the ordering session can do |
 | `NOT_JUDGED` | 19 | not judged, for the reason the reading gives |
@@ -37,11 +37,11 @@ things to fix.
 | D | 17 | 4 | 11 | 1 | 2 | 0 |
 | E | 21 | 6 | 12 | 0 | 4 | 1 |
 | E5 | 6 | 3 | 3 | 0 | 0 | 0 |
-| P | 16 | 7 | 10 | 0 | 0 | 1 |
+| P | 15 | 6 | 10 | 0 | 0 | 1 |
 
 ## Readings owed
 
-Of the 90 open pairs with a reading beside them, **22 are decided by a reading taken under a tool that has
+Of the 89 open pairs with a reading beside them, **20 are decided by a reading taken under a tool that has
 CHANGED since**. A tool change moves no rule-set fingerprint and no per-rule digest, so nothing else on these
 pages can say it. It is an upper bound, because a tool file moves for a comment as readily as for a
 criterion, and it decides nothing: it says the reading is owed. Re-take with retake_gate.sh or a sweep.
@@ -53,7 +53,6 @@ criterion, and it decides nothing: it says the reading is owed. Re-take with ret
 | `DOC-001` | A, B, D, E |
 | `DOC-002` | E5 |
 | `OUT-001` | A, B, C, D, E, E5, P |
-| `PWR-003` | B, P |
 
 ## By open decision
 
@@ -180,7 +179,7 @@ holding a number, not a question about a number.
 | `DFM-001` | E | INCONCLUSIVE | the folder judged here is meshsat-pcb-e-revA-E9 and this board declares E17, so its properties are a reading of a board this set is not building |
 | `DOC-002` | E | INCONCLUSIVE | board E has no order folder in this tree, so no document about it was read |
 
-## MEASURED_FAILURE (24): the tool looked and the board failed
+## MEASURED_FAILURE (23): the tool looked and the board failed
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -193,7 +192,7 @@ holding a number, not a question about a number.
 | `RF-001` | A | FAIL | rf_line FAIL: {'judged': 11, 'missed': 11} |
 | `OUT-001` | A | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `SCH-002` | B | FAIL | netlist_board FAIL: {'agree': 6752, 'aliased_pins': 0, 'board_footprints': 957, 'board_only_inert': 0, 'fail': 1, 'netlist_refs': 931} |
-| `PWR-003` | B | FAIL | energy_chain_b FAIL: {'fail': 7, 'stages': 3} |
+| `PWR-003` | B | FAIL | energy_chain_b FAIL: {'fail': 1, 'stages': 3} |
 | `PLC-001` | B | FAIL | place_audit FAIL: {'collisions': 13, 'fine_pitch': 75, 'footprints': 957, 'measured': 75} |
 | `RTE-002` | B | FAIL | hardset-routed-board-gate FAIL: {'by_type': {}, 'hard': 0, 'report': {'silk_edge_clearance': 9, 'silk_over_copper': 47, 'silk_overlap': 69, 'track_dangl |
 | `OUT-001` | B | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
@@ -205,7 +204,6 @@ holding a number, not a question about a number.
 | `OUT-001` | E | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `STK-001` | E5 | FAIL | stackup_gate FAIL: {'compared': 7, 'copper_layers': 2, 'disagreements': 1} |
 | `OUT-001` | E5 | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
-| `PWR-003` | P | FAIL | energy_chain_p FAIL: {'fail': 5, 'stages': 3} |
 | `PI-001` | P | FAIL | dc_density FAIL: {'met': 3, 'missed': 1, 'undeclared': 0} |
 | `OUT-001` | P | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 

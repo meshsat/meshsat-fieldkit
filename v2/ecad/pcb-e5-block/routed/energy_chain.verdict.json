@@ -3,7 +3,7 @@
  "applicable": true,
  "counts": {
   "checks": 98,
-  "citations_unjudged": 39,
+  "citations_unjudged": 0,
   "coordination_findings": 1,
   "fail": 0,
   "selection_findings": 0,
@@ -29,9 +29,9 @@
  "tool": "energy_chain",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "b7ecfcffbc2fef22"
+  "tools_tree_sha": "9bccd1871fd5d8f7"
  },
- "ts": "2026-09-20T07:05:02Z",
+ "ts": "2026-09-20T07:43:35Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {

@@ -30,9 +30,9 @@
  "tool": "power_sequence",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "b7ecfcffbc2fef22"
+  "tools_tree_sha": "9bccd1871fd5d8f7"
  },
- "ts": "2026-09-20T07:20:41Z",
+ "ts": "2026-09-20T07:43:01Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown",
  "writer": {
