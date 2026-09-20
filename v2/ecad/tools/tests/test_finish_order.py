@@ -415,3 +415,26 @@ def t_the_placed_board_stop_blocks_when_the_predictor_refuses():
         "the placed-board stop does not stop on a refused placement")
     assert "place_audit_gate_off" in seg, (
         "the placed-board stop does not honour a board that declares the predictor a report")
+
+
+def t_the_chain_reports_where_a_decoupling_capacitor_could_go():
+    """DEC-001's verdict counts capacitors within 3 mm and never says WHERE one could sit, and the tool that
+    answers that (20 September 2026) was in no chain, no sweep and no finish: it ran only when somebody typed
+    its name, which is how a tool that found board A's twenty-four seats, board E's fourteen and board C's
+    ten stays unused. It runs on the finished placement beside `rail_crossings`, which asks the same kind of
+    question about barrels, and like it it must NEVER block: a report that can stop a chain is a gate whose
+    criteria nobody agreed."""
+    src = open(os.path.join(TOOLS, "full.sh"), errors="replace").read()
+    # THE LINE, NOT THE WORD: the first mention of either tool is in the comment that explains it, and a
+    # rule that reads a comment is not reading the chain (this test found its own comment first).
+    def _cmd(name):
+        for n, line in enumerate(src.splitlines(), 1):
+            s2 = line.strip()
+            if s2.startswith("#") or name not in s2: continue
+            return n, s2
+        return None, None
+    n_seat, seat = _cmd("bypass_seats.py")
+    assert seat, "the chain does not report where a decoupling capacitor could go"
+    assert "|| true" in seat, "the seat report can stop the chain: %s" % seat[:120]
+    n_rail, rail = _cmd("rail_crossings.py")
+    assert rail and n_rail < n_seat, "the seat report does not run with the other finished-placement reports"
