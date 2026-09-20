@@ -14838,3 +14838,41 @@ is answered**: `PACK_N` takes a class of its own at 0.800 mm, 3.36 A, because th
 0.600 by the narrowest pad on any of its five nets while this net's own narrowest pad is 0.800. Its chain
 passes at hard 0 end to end and its route is running, because the rule reads copper and a class is only the
 instruction.
+
+**Addendum, 13:18 CEST: six arms in flight and three answers already in.** With the disk freed, the trees lean
+and each route on its own lock, the hub carries **six routers at a load of 9.8 of 96 threads** where it
+carried one and a full disk this morning.
+
+**(1) TI LAYOUT ITEM 6 IS A NULL ON BOARD A, and it is the pair this board never had.** A54 (no item 6) and
+A59 (item 6) differ in the inductor sitting between the power-stage FET pairs and in nothing else. Router:
+**0 hard and 20 unrouted both**, 317 vias against 325. Finished: **0 hard and FIVE open both**, every one a
+power rail, three of the five the same net. **All four charger nets closed on both.** ANA-001 **8 of 24 on
+both**; dc_drop **FAIL of 27 on both**, 24 met, 3 missed, 11 densities missed. So the seats cost nothing and
+buy nothing, and what bought board A its best board was the freed escape row alone. A59 solves one Kelvin tap
+more than A54 and it is a second above full scale: **`PA_ISNS_P` 64.59 mV of 50.0, 129.2 percent**, beside
+`PD_ISNS_N` at 211.395 and 422.8 (A54 read 215.585 and 431.2 on that tap, so the two boards agree).
+
+**(2) BOARD P'S ONE UNBLOCKED MEASURED FAILURE IS CLOSED ON A ROUTED BOARD.** `PACK_N` takes a class of its
+own at **0.800 mm**, because the shared PWR class caps at 0.600 on the narrowest pad of any of its five nets
+while this net's own narrowest pad is 0.800; at that width IPC gives it **3.36 A** against the 2.392 it had.
+On P9's routed board `dc_drop` reads **PASS of 4 rails, 0 missed, 0 density missed**, with the widest laid
+piece **0.800 mm carrying 2.93 A, ratio 0.87**, where the committed board reads FAIL at 1.03. The caveat is
+the tool's own: no track of that net is long enough for the conductor test, so the pour cells carry the
+verdict at 0.63. **And it is free at the router**: rounds of **44 and 39 open** against this board's three
+earlier arms at 44, 48 and 47, so 39 is its best two-layer number. Not adopted: closing board P is decision
+28's layer question.
+
+**(3) BOARD D'S PI-003 ANSWER IS ON A BOARD WHOSE CHAIN PASSES.** D21 blocked with its cluster on and D22,
+the control with the cluster off, blocked identically, which is how the via was traced to `prefanout` rather
+than to the cluster; with the via-site test measuring copper, **D25 and D28 both end PREROUTE-DONE OK at hard
+0** and D28 carries **six locked 0.80 mm barrels on `+5V_SA`**. The rule judges a SOLVED board, so the reading
+is owed from D27, running at D19's own length after **D26 was cut at an hour, left 14 open and closed 0 of
+13**, which is a truncation and not a result.
+
+**(4) AND BOARD A'S LAST FIVE OPENS ARE PRE-LAID FOR THE FIRST TIME.** A70 is A69 plus one group: the six
+rails that are the whole of A54's and A59's remaining opens, every one refused by both closers, which is this
+record's own condition for when a pre-lay pays. **Counted before the arm ran** (19 September's rule, after
+A48 was stopped mid-generation for naming a net with forty open pairs on the placed board): the six carry
+**43 pads**, and VBAT is deliberately left out at **68** because it already carries generator-laid bands.
+**The group closed 27 of 27**, with the switching group at 19 of 20 and the sense group at 7 of 10 in the
+same run. Whether it buys the five opens is a route's answer and none exists yet.
