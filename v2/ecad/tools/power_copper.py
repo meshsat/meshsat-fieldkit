@@ -23,7 +23,12 @@ def width_for(amps, oz=1.0, dT=10.0, internal=False):
     return a_mm2 / (0.035 * oz)
 
 class PowerCopper:
+    placed_by = []          # every barrel this RUN placed, with the line that placed it (class-wide, see __init__)
     def __init__(self, board, net_for, P):
+        # `placed_by` IS THE CLASS'S AND NOT THE INSTANCE'S, because a generator builds several PowerCopper
+        # objects in one run (board E makes one for its CELL_F cluster and another for the PI-003 sites) and
+        # the sidecar is one file about one board. A per-instance list would record whichever object the
+        # writer happened to be called on, which is the shape of half the defects in this record.
         self.b, self.net_for, self.P = board, net_for, P; self.made = []
     def _rect_outline(self, o, rect):
         x0, y0, x1, y1 = rect
@@ -77,6 +82,31 @@ class PowerCopper:
         import via_current as _vc
         return _vc.barrels_for(amps, drill, rise, plating if plating is not None else _vc.PLATING_UM)
 
+    def write_provenance(self, board_path):
+        """`out/<stem>-barrel-provenance.json` beside the board: every barrel this generator placed, with the
+        line that placed it (20 September 2026).
+
+        `barrel_sites --suggest` runs on a BOARD, long after the generator is gone, and its answer for a site
+        the generator already owns is "add N points to the call that placed it". Without this it can only give
+        a coordinate, and board E's thirteen such sites are a coordinate hunt through calls whose arguments are
+        expressions. It is a SIDECAR and not evidence: nothing judges it, and its absence costs a reader the
+        line and nothing else."""
+        import json as _jsn, os as _osj
+        if not self.placed_by: return None
+        stem = _osj.splitext(_osj.basename(board_path))[0]
+        for suf in ("-placed", "-preroute", "-par-routed", "-cleaned"):
+            if stem.endswith(suf): stem = stem[: -len(suf)]
+        d = _osj.join(_osj.dirname(_osj.abspath(board_path)), "out")
+        try:
+            _osj.makedirs(d, exist_ok=True)
+            p = _osj.join(d, stem + "-barrel-provenance.json")
+            _jsn.dump({"barrels": self.placed_by}, open(p, "w", encoding="utf-8"), indent=1)
+            print("power copper: %d barrel(s) recorded with the line that placed them -> %s"
+                  % (len(self.placed_by), _osj.relpath(p, _osj.dirname(_osj.dirname(p)))))
+            return p
+        except Exception as e:
+            print("power copper: the barrel provenance could not be written (%s)" % e); return None
+
     def stitch(self, net, pts, drill=0.4, width=0.8, amps=None):
         """`amps` is the current these points SHARE, and giving it makes the call self-checking.
 
@@ -109,9 +139,25 @@ class PowerCopper:
                     "(IPC-2221 for the fabricator's own plating, which is what via_current judges after the "
                     "route): add barrels, widen the hole, or say why in the board's own file"
                     % (net, len(pts), drill, float(amps), need))
+        # AND EVERY BARREL REMEMBERS THE LINE THAT PLACED IT (20 September 2026). `barrel_sites --suggest`
+        # answers a site the generator already owns with "add N points to the call that placed it", and a
+        # reader given a coordinate then has to find that call among lines whose arguments are expressions.
+        # Board A's generator grew its own frame walk for this on 19 September and it works there and nowhere
+        # else; board E has thirteen such sites and no equivalent, which is why they are still a coordinate
+        # hunt. The caller is recorded HERE, once, for every board: the first frame outside this file, so a
+        # helper like board A's `row`/`col` reports the generator's line and not its own.
+        try:
+            import sys as _sysp, os as _osp
+            _f, _me = _sysp._getframe(1), _osp.abspath(__file__)
+            while _f is not None and _osp.abspath(_f.f_code.co_filename) == _me: _f = _f.f_back
+            _src = ("%s:%d" % (_osp.basename(_f.f_code.co_filename), _f.f_lineno)) if _f is not None else ""
+        except Exception:
+            _src = ""
         for x, y in pts:
             v = pcbnew.PCB_VIA(self.b); v.SetPosition(self.P(x, y)); v.SetDrill(FromMM(drill)); v.SetWidth(FromMM(width)); v.SetViaType(pcbnew.VIATYPE_THROUGH)
             v.SetNet(self.net_for(net, create=False)); v.SetLocked(True); self.b.Add(v)
+            if _src: self.placed_by.append(dict(net=str(net).lstrip("/"), at=[round(x, 2), round(y, 2)],
+                                                drill=round(float(drill), 3), src=_src))
         return self
     def cluster(self, net, at, amps, drill=0.4, width=0.8, pitch=None, axis="x", skew=1.0):
         """The barrels one layer transition needs, placed for it (18 September 2026).
