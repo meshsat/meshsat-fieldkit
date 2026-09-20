@@ -14,11 +14,11 @@ the ruling is the action that moves it, and the measurement is reported beside i
 | `DECISION` | 63 | an owner decision by name |
 | `DECISION_UNCLAIMED` | 5 | a rule that says a decision is open while no decision claims it |
 | `AUTHORITY` | 3 | an authority this project does not have |
-| `MISSING_INPUT` | 14 | an input the reading declared absent |
+| `MISSING_INPUT` | 15 | an input the reading declared absent |
 | `MEASURED_FAILURE` | 23 | the tool looked and the board failed |
 | `VENDOR_WAIT` | 2 | a fabricator or a standards body, and nobody here |
 | `OWNER_WORK` | 7 | work only the owner or the ordering session can do |
-| `NOT_JUDGED` | 19 | not judged, for the reason the reading gives |
+| `NOT_JUDGED` | 18 | not judged, for the reason the reading gives |
 
 A pair is what a BOARD has to satisfy, so the table counts pairs; these rules are decided by a verdict
 written ONCE for the whole set, so their rows are one reading seen on every board and not that many separate
@@ -31,7 +31,7 @@ things to fix.
 | board | open | of which measured | decision-bound | authority | missing input | not judged |
 |---|---:|---:|---:|---:|---:|---:|
 | A | 27 | 11 | 12 | 1 | 4 | 1 |
-| B | 39 | 6 | 10 | 1 | 4 | 16 |
+| B | 39 | 6 | 10 | 1 | 5 | 15 |
 | C | 12 | 3 | 10 | 0 | 0 | 0 |
 | D | 17 | 4 | 11 | 1 | 2 | 0 |
 | E | 21 | 6 | 12 | 0 | 4 | 1 |
@@ -40,16 +40,10 @@ things to fix.
 
 ## Readings owed
 
-Of the 88 open pairs with a reading beside them, **12 are decided by a reading taken under a tool that has
+Of the 88 open pairs with a reading beside them, **0 are decided by a reading taken under a tool that has
 CHANGED since**. A tool change moves no rule-set fingerprint and no per-rule digest, so nothing else on these
 pages can say it. It is an upper bound, because a tool file moves for a comment as readily as for a
 criterion, and it decides nothing: it says the reading is owed. Re-take with retake_gate.sh or a sweep.
-
-| rule | boards |
-|---|---|
-| `DOC-001` | A, B, D, E |
-| `DOC-002` | E5 |
-| `OUT-001` | A, B, C, D, E, E5, P |
 
 ## By open decision
 
@@ -157,24 +151,25 @@ holding a number, not a question about a number.
 | `IMP-001` | B | INCONCLUSIVE | the authority behind this rule's limit is not established: closed forms from a standard not in the tree; no fabricator confirmation and no coupon. 19 SEPTEMBER 2026, THE NOTE WAS A DAY OUT OF DATE AN |
 | `IMP-001` | D | INCONCLUSIVE | the authority behind this rule's limit is not established: closed forms from a standard not in the tree; no fabricator confirmation and no coupon. 19 SEPTEMBER 2026, THE NOTE WAS A DAY OUT OF DATE AN |
 
-## MISSING_INPUT (14): an input the reading declared absent
+## MISSING_INPUT (15): an input the reading declared absent
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
 | `CMP-002` | A | INCONCLUSIVE | no deliverable folder at the declared phase A32, so this board's parts were not certified against the board this tree holds (the folders that exist are A19, A20, A21, A22, A24) |
 | `SUP-001` | A | INCONCLUSIVE | no deliverable folder at the declared phase A32, so this board's parts were not certified against the board this tree holds (the folders that exist are A19, A20, A21, A22, A24) |
 | `DFM-001` | A | INCONCLUSIVE | the folder judged here is meshsat-pcb-a-revA-A24 and this board declares A32, so its properties are a reading of a board this set is not building |
-| `DOC-002` | A | INCONCLUSIVE | board A has no order folder in this tree, so no document about it was read |
+| `DOC-002` | A | INCONCLUSIVE | board A declares A32 and the order set holds A22: the note beside those folders describes a board this project is not building |
 | `CMP-002` | B | INCONCLUSIVE | no deliverable folder at the declared phase B21, so this board's parts were not certified against the board this tree holds (the folders that exist are B12, B13, B14, B15, B19) |
 | `SUP-001` | B | INCONCLUSIVE | no deliverable folder at the declared phase B21, so this board's parts were not certified against the board this tree holds (the folders that exist are B12, B13, B14, B15, B19) |
 | `DFM-001` | B | INCONCLUSIVE | the folder judged here is meshsat-pcb-b-revA-B19-quote and this board declares B21, so its properties are a reading of a board this set is not building |
-| `DOC-002` | B | INCONCLUSIVE | board B has no order folder in this tree, so no document about it was read |
+| `DOC-001` | B | INCONCLUSIVE | a deliverable folder at the declared phase B21: the only folder is meshsat-pcb-b-revA-B19-quote, a quote, and a folder is judged against itself |
+| `DOC-002` | B | INCONCLUSIVE | board B declares B21 and the order set holds B16: the note beside those folders describes a board this project is not building |
 | `DFM-001` | D | INCONCLUSIVE | the folder judged here is meshsat-pcb-d-revA-D11 and this board declares D12, so its properties are a reading of a board this set is not building |
-| `DOC-002` | D | INCONCLUSIVE | board D has no order folder in this tree, so no document about it was read |
+| `DOC-002` | D | INCONCLUSIVE | board D declares D12 and the order set holds D8: the note beside those folders describes a board this project is not building |
 | `CMP-002` | E | INCONCLUSIVE | no deliverable folder at the declared phase E17, so this board's parts were not certified against the board this tree holds (the folders that exist are E4, E6, E7, E9) |
 | `SUP-001` | E | INCONCLUSIVE | no deliverable folder at the declared phase E17, so this board's parts were not certified against the board this tree holds (the folders that exist are E4, E6, E7, E9) |
 | `DFM-001` | E | INCONCLUSIVE | the folder judged here is meshsat-pcb-e-revA-E9 and this board declares E17, so its properties are a reading of a board this set is not building |
-| `DOC-002` | E | INCONCLUSIVE | board E has no order folder in this tree, so no document about it was read |
+| `DOC-002` | E | INCONCLUSIVE | board E declares E17 and the order set holds E6: the note beside those folders describes a board this project is not building |
 
 ## MEASURED_FAILURE (23): the tool looked and the board failed
 
@@ -223,7 +218,7 @@ holding a number, not a question about a number.
 | `DFA-001` | E | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 | `DFA-001` | P | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 
-## NOT_JUDGED (19): not judged, for the reason the reading gives
+## NOT_JUDGED (18): not judged, for the reason the reading gives
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -243,7 +238,6 @@ holding a number, not a question about a number.
 | `VIA-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 | `PLN-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 | `EMC-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
-| `DOC-001` | B | INCONCLUSIVE | final_gate_b INCONCLUSIVE: this board's own deliverable folder, judged on its own; the set's verdict is final_gate |
 | `PWR-002` | E | INCONCLUSIVE | power_sequence INCONCLUSIVE: each rail's enable derived from the netlist and the part that drives it named; a rail whose enable is driven only by a device powered from that same rail cannot |
 | `PWR-002` | P | INCONCLUSIVE | power_sequence INCONCLUSIVE: each rail's enable derived from the netlist and the part that drives it named; a rail whose enable is driven only by a device powered from that same rail cannot |
 

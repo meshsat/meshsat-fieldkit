@@ -15523,3 +15523,32 @@ reads; the staging script makes the parent every time now. And **`nb2.sh` is `ss
 from `/dev/null`, so piping a script into `cat > /root/x.sh` through it writes an EMPTY file and the launcher
 then reports success on a seventeen-line script that ran nothing. Use `scp` for a file; keep `ssh -n` for a
 command.
+
+**ADDENDUM, 16:20 CEST: the other nineteen were taken too, and the number of readings owed is now ZERO.**
+`final_gate` and `doc_provenance` both read the release tree and the release tree is on the RUNNER, so the
+twelve that remained after DFA-001's seven needed no box at all. Taken read-only with `VERDICT_DIR` outside
+the tree and compared verdict by verdict before anything was carried:
+
+* **`final_gate`, seven of eight identical**, set and per board, including the set's own
+  `pass 3, quote 4, held 3, missing 0, contracts PASS, parts NOT JUDGED`. So the 19 September tool change did
+  not move OUT-001 on any board, which is worth knowing before anyone spends a day on it.
+* **Board B's is the eighth and it DIFFERS, which is the 19 September fix reaching the board it was written
+  for.** Its DOC-001 reading declares a missing input at last: *a deliverable folder at the declared phase
+  B21: the only folder is `meshsat-pcb-b-revA-B19-quote`, a quote, and a folder is judged against itself*.
+  The old reading carried no such declaration and read as an ordinary unjudged row.
+* **`doc_provenance`, all eight identical in counts, and four boards' SENTENCES are new**: *board A declares
+  A32 and the order set holds A22: the note beside those folders describes a board this project is not
+  building*, where the old rows said only *board A has no order folder in this tree*. Same verdict, an
+  address instead of an absence.
+
+**Readings owed 20 to 0**, `MISSING_INPUT` 14 to 15, `NOT_JUDGED` 19 to 18, readiness **59.2 percent of 333**
+before and after this half, so the only pair the whole exercise moved is board E5's DFA-001 and it moved on a
+measurement. **Every open pair carrying a reading is now decided by a reading taken under the tool that
+decides it**, for the first time since the question could be asked.
+
+Also refreshed by the run, deliberately and checked before it was kept: `JLC-CERTIFIED.tsv`, 720 rows before
+and after, **zero state changes and zero code changes**, the same histogram to the row (537 CERTIFIED, 62
+BENCH_FITTED, 57 HAND_FIT, 17 NO_STOCK, 13 WRONG_MODEL, 12 NOT_CHECKED, 10 NOT_AT_JLC, 6 NO_PART_CHOSEN, 5
+PACKAGE_MISMATCH, 1 NOT_IDENTIFIED); what moved is stock, price and the date each row was asked. The table is
+what the ordering session looks a part up in, so a refresh is worth having and a refresh that moved a STATE
+would have been the finding instead.

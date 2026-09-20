@@ -318,3 +318,36 @@ def t_the_coverage_map_names_the_registry_it_was_written_against():
     assert m.group(1) == R.fingerprint(), (
         "the coverage map says it was written against rule set %s and the registry computes %s: update the "
         "stamp in the change that moved the rules" % (m.group(1), R.fingerprint()))
+
+
+def t_a_reading_that_answers_for_every_board_says_why_it_is_the_sets():
+    """THE SIBLING OF `_shared_verdict_why` ON THE OTHER AXIS (20 September 2026). That rule holds one
+    verdict named by several RULES; this one holds one verdict answering for several BOARDS, which is the
+    defect this project has now found five times: DOC-001 split on the 16th, CMP-002, SUP-001 and DFM-001 on
+    the 17th, DOC-002 on the 18th, and **DFA-001 on the 20th**, where one `assembly_set` verdict counting 42
+    unchecked footprints over seven boards was the deciding reading for all seven and hid board E5's own
+    PASS. The 18 September sweep that said there was no fifth instance was looking at the rules whose verdict
+    NAME carries a letter; DFA-001's per-board verdicts are named `assembly_set` and told apart by the
+    directory they sit in, so that sweep could not see it.
+
+    The general property is not mechanical either: nothing here can read a tool and decide whether one
+    measurement is honestly the set's. What IS mechanical is that the question was asked. The open-pairs
+    audit already reports, from the evidence PATHS, every rule whose reading serves more than one board; a
+    rule in that list is a claim that the set has one answer, and it carries `_set_level_why` in its own
+    coverage entry saying why. OUT-001 is the true case: the order set is ONE artefact and a board cannot
+    have its own answer about it.
+    """
+    from harness import Skip
+    sys.path.insert(0, TOOLS)
+    import open_pairs as O
+    res = O.collect()
+    if not res["boards"]: raise Skip("this tree holds no rule audit to classify")
+    cov = S.coverage()
+    missing = []
+    for rid, n in res["set_readings"]:
+        if n < 2: continue
+        if not ((cov.get(rid) or {}).get("_set_level_why") or "").strip():
+            missing.append("%s (one reading counted on %d boards)" % (rid, n))
+    assert not missing, (
+        "a reading that answers for every board is a claim that the set has one answer, so these rules owe a "
+        "`_set_level_why` in the coverage map saying why a board cannot have its own: %s" % "; ".join(missing))
