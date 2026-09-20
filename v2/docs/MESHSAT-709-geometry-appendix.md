@@ -14918,3 +14918,28 @@ morning's fanout fix took. No tool changed; the zero was a property of my questi
 rectangles, not the escape-fan predictor and not a chain, so the seats are a measurement and the next test is
 a generation: the mechanism is the fifteen fixed seats the ISNS filter parts already use in `gen_pcb_a3.py`,
 and whichever branch is taken, board A's next phase carries it with its own pre-route gate.
+
+### 32.301, 20 September 2026 13:50 CEST: the four readings that were owed exactly are re-taken, and all four decided nothing
+
+**`stale_readings.py --open-pairs` was asked of the register rather than of the tree: of the 89 open pairs
+that carry a reading, 24 rest on a reading taken under a tool that has changed since. Twenty of the 24 are
+answered BY PROXY (the tool's last commit date), and four are answered EXACTLY, by the writer's own hash:
+PI-001 and PI-002 on board A, PI-001 on board E and PI-001 on board P, all four of them `dc_drop`, which was
+changed this morning to stamp its solved files with the board's sha.**
+
+**All four are re-taken, read-only, each board's sha printed before and after and identical** (A32
+`58e26c67987b1daa`, E17 `a462ac2620b9b8d3`, P4 `d79865e7b1aceb95`), **and every judging field came back the
+same**: board A FAIL of 27 with 24 met, 3 missed and 13 density missed; board E PASS of 13 with 7 density
+missed; board P PASS of 4 with 1 density missed; each `dc_density` unchanged beside it. The only fields that
+moved in the six verdicts are `ts`, `tools` and `writer`, three lines per file, **which is the proof the
+re-take decided nothing**: the morning's change was provenance and did not touch what these readings measure.
+Readiness cannot move for it, and the four pairs are off the stale list with an exact answer rather than a
+proxy.
+
+**And the re-take was run through a new isolated driver rather than `retake_gate.sh`.** That driver begins
+with `tools_push.sh`, which is `rsync --delete` into `/root/localtools`, and `/root/localtools` is what a
+landing driver reads when it fires: with four routers in the air, each with a lander armed on its own
+supervisor and board E's cap twenty minutes away, a waiter that fired mid-push would have read a tools
+directory that was briefly missing files. `retake_iso.sh` stages the runner's tools straight into its own
+isolated tree and touches no shared staging area. **A staging area is only safe while nothing is waiting on
+it**, and that condition is a property of the hour rather than of the script.
