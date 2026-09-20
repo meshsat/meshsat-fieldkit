@@ -16202,3 +16202,15 @@ again at 13:00 today; the new arms take the new driver and the old ones finish o
 
 **The reading that stands for D27 is `hardset.py`'s: hard 0 of the fifteen types, six unconnected items**,
 which is what 32.322 recorded and why its conclusion does not move.
+
+**ADDENDUM, 20:10 CEST: a proof against history is not a rule, and mine expired within the hour.**
+`test_via_parallel.py` carried a third test asserting that its two properties are FALSE of
+`git show HEAD:v2/ecad/tools/via_parallel.py`, which is how the change was proved before it landed. **The
+moment the change was committed, HEAD became the new file and the test failed on its own success**: the suite
+went 1244 passing to 1243 passing and 1 failed, with the failure being the proof.
+
+The convention this project already has is that **the proof lives in the commit that makes the change and in
+the appendix entry beside it**, which both carry it here; what belongs in the suite is the PROPERTY, true of
+the tool for as long as the tool is right. The third test is removed and the two properties stay. It is the
+same shape as a fixed byte window (`test_prelay` and `test_stub_zone_obstacle`, 18 September): a rule whose
+subject is a particular version of a file rather than a property of it.
