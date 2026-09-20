@@ -386,6 +386,15 @@ PAOFF=""; { [ "${PLACE_AUDIT_GATE:-1}" = 0 ] || [ -n "$(cfg place_audit_gate_off
 # half): at the pad of a rail's SOURCE the whole rail current changes layer, so the barrels it needs are
 # arithmetic and a site that is short says so here instead of after a route. A report: it lays nothing.
 python3 ../tools/rail_crossings.py $N.kicad_pcb 2>&1 | grep -aE 'rail_crossings' || true
+# AND WHERE A DECOUPLING CAPACITOR COULD GO, ON THE SAME FINISHED PLACEMENT (20 September 2026).
+# DEC-001's verdict says how many are within 3 mm and never WHERE one could sit; `bypass_seats.py`
+# answers that against the case frame, the region rectangles grown by their declared overflow, the
+# escape fans, the laid tracks at this board's own clearance, the part-forbidding rule areas, other
+# courtyards with their margin and the real outline, and it holds a capacitor the generator has
+# already seated. It found board A's twenty-four seats, board E's fourteen and board C's ten, all of
+# which cost nothing, and until now it ran only when somebody typed its name. A REPORT: it lays
+# nothing, decides no rule and never blocks, exactly as `rail_crossings` above it.
+python3 ../tools/bypass_seats.py $N.kicad_pcb 2>&1 | grep -aE 'bypass_seats' | tail -12 || true
 # A CRASH IS NOT A FINDING, SO IT IS TRIED TWICE (19 September 2026). E21's chain blocked here on a
 # SEGMENTATION FAULT with an empty log and no image, and the same tool on the same board file passed with
 # 0 predicted collisions when it was run again two minutes later: KiCad's SWIG and matplotlib in one process
