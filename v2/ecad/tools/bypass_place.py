@@ -34,6 +34,21 @@ def main(a):
     if not os.path.exists(ip): print("bypass_place: no intent file at %s, nothing declared" % ip); return 0
     entries = json.load(open(ip)).get("bypass", [])
     if not entries: print("bypass_place: 0 bypass entries declared, nothing to place"); return 0
+    # A PASS GIVEN A BOARD ITS PARTS ARE NOT ON HAS MEASURED NOTHING (20 September 2026). Boards A and B
+    # declared this pass at `mechanical`, which in full.sh is AFTER the outline generator and BEFORE the
+    # placement generator, so it ran on a board with NO FOOTPRINTS and reported every entry as "not on the
+    # board": `0 moved, 0 already within 3.0 mm, 40 stuck of 40 declared`, which is the same summary line a
+    # real run prints. Asked of board A's PLACED board the same pass reads 5 within 3 mm and 35 STUCK at 16.5
+    # to 139.6 mm, so the line was not only useless, it was hiding a real finding. The docstring above has
+    # said "after the placement generator" since the day it was written.
+    on_board = sum(1 for e in entries
+                   if b.FindFootprintByReference(e.get("cap") or "") is not None
+                   and b.FindFootprintByReference(e.get("part") or "") is not None)
+    if not on_board:
+        print("bypass_place: INCONCLUSIVE, not one of the %d declared pairs is on this board, which carries %d "
+              "footprint(s): this pass runs AFTER the placement generator"
+              % (len(entries), len(list(b.GetFootprints()))))
+        return 3
     edge = b.GetBoardEdgesBoundingBox()
     # only a rule area that forbids FOOTPRINTS blocks a placement; the board-wide "no tracks on In1" and edge-band areas cover
     # every spot on the board and are about copper, not parts (8 Sep 2026: testing every rule area made all 16 capacitors "stuck")

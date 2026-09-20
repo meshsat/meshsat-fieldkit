@@ -15007,3 +15007,33 @@ of the 20 mm neighbourhood free against its cluster's 122.5 mm2.
 zero, and the open half is the controller: board A's next phase either carries `U18` and its twelve cluster
 parts to the seat beside the shunt, or accepts a ninety-five millimetre sense pair, and that is a placement
 decision with both numbers now measured rather than a guess with one.
+
+### 32.304, 20 September 2026 14:10 CEST: boards A and B ran the decoupling pass before any part was placed, and the absence was hiding a finding
+
+**`bypass_place.py`'s own docstring has said "It runs after the placement generator and before the escapes"
+since the day it was written. Boards A and B declared `bypass_place_after: mechanical`, and in `full.sh` that
+point is AFTER the outline generator and BEFORE the placement generator, so on every board A and board B
+chain since the stage was wired in the pass ran on a board with NO FOOTPRINTS AT ALL.** Its own output said
+so, one line per entry, `C94 or U18 not on the board`, and then the summary: `0 moved, 0 already within
+3.0 mm, 40 stuck of 40 declared`.
+
+**That summary is the same line a real run prints, which is why nothing caught it.** Found while reading the
+A72 probe's log for another reason, and the moment the same pass was asked of board A's own PLACED board, in
+a copy, read-only, it answered something else entirely: **5 of the 40 within 3.0 mm and 35 STUCK**, each with
+the distance it really sits at, `C94` **16.5 mm** from U18 pin 5, `C92` 18.5 and `C116` 18.7 from U19, `C19`
+19.6 from U3 pin 7, `C89` 27.4, `C127` 35.6, `C54` 44.5, `C4` **109.4 mm** from U1 pin 1, and `C104`, `C106`
+and `C107` **121.9, 126.1 and 139.6 mm** from U26 pin 14. A 100 nF at a hundred millimetres is not
+decoupling; it is an inductor with a capacitor on the end.
+
+**Three things changed and none of them moves a part.** The declaration on both boards is `stackup`, which is
+where the tool's own contract puts it; **the pass now REFUSES a board not one of its declared pairs is on**,
+naming the count of footprints it was given and exiting 3, so an absence can never again be reported in the
+words of a result; and `tests/test_bypass_place.py` carries the defective fixture (a board with the outline
+and no parts, which must be declined), the acceptable fixture (the same board with both parts, which must be
+measured) and the data rule, which **names `a.json` and `b.json` when run against the tree it was written
+against**. Suite 1,227, 0 failing.
+
+**What it does NOT change: any board.** Every one of the 35 reports `no free spot within 3.0 mm`, so with the
+declaration corrected the pass still moves nothing on board A; what it buys is an honest reading and a real
+work item, which is a floor-plan question on the same board the outlet corridor is about. Board B's own
+reading is owed on its next placed board.
