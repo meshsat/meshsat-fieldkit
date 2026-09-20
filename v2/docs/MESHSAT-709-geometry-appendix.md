@@ -13721,3 +13721,55 @@ CHQ; the board has 2.05 mm of clear edge west of the rectangle; and with the row
 a stage with a wall offering its nets in one order. This is the same sentence about STAGES: a chain that is
 stopped early has answered the question its last stage asked and nothing beyond it, and a claim of "free"
 is a claim about every stage.
+
+### 32.271, 20 September 2026 06:50 CEST: the fanout was testing its stubs against tracks and not against copper
+
+**32.270's cause, fixed and measured, and the fix is free and closes four plane pads that had no via.**
+`prefanout.py` tests a stub at its via and at three points along it with the full predicate, then samples
+densely every 0.2 mm **against TRACKS ONLY**, under a note written on 9 September that says in as many
+words: *crossing a laid track is the defect; passing a pad is not*. Passing is not. **Overlapping is a
+short**, and that is how two locked GND stubs clipped their own drain tabs with the via and all three
+sample points clear.
+
+**The track width names the tool rather than an inference**: 0.400 mm is `prefanout`'s own `TRACK_W`, where
+`escape.py` lays 0.127, 0.2 or 0.25 mm by branch, and `escape.py`'s own branches already sample nine or
+eleven points along each stub with the full predicate, so it never had this hole. `zone_pad_via.py` is
+clear for a different reason: it adds its via and leg and then runs the real DRC, keeping the candidate
+only if the hard count does not rise.
+
+**What changed**: the dense sample also refuses another net's own copper at **the board's clearance** and
+never at the 0.5 mm lane, judged against the pad's **polygon** because a circle around a 3.81 by 3.91 mm
+drain tab would refuse every stub that passes beside it. The lane rule still decides at the three sample
+points where 9 September's measurement put it (18 fanout vias, ten driven into the in-pad fallback), so
+that measurement is untouched.
+
+**And the same file is the third tool with the 12 September defect** (32.151 in `escape.py`, 32.218 in
+`return_via._site_free`): its obstacle list took every pad of every footprint with no copper test, so an
+exposed pad's paste grid reads as a crowd of other nets' pads and takes half a millimetre of lane from
+every fanout candidate near it, on every board carrying such a land.
+
+**Measured on board A, one variable, A54's own seats:**
+
+| | escapes | fanout | placed | pre-route | region fit | chain |
+|---|---|---|---|---|---|---|
+| A54, committed tools | 463, 0 skipped | 257 vias (9 in pad), **4 pads skipped** | hard 0 | hard 0 | 1.4 of 1.5 | OK |
+| A57, the fix | 463, 0 skipped | **261 vias (9 in pad), 0 pads skipped** | hard 0 | hard 0 | 1.4 of 1.5 | OK |
+
+**NOT CLAIMED**: a tool that runs on every board is not measured on one, and board E's pair is running for
+exactly that reason.
+
+### 32.272, 20 September 2026 06:50 CEST: board P's width, and why the shared class is the wrong place for it
+
+The three arms landed: **0.5 mm leaves 44 connections open, 0.6 leaves 48, 0.7 leaves 47**, every one at
+hard 0 with 12 vias. **It is not monotonic, so it is not a cost curve**: a class change changes the DSN, the
+three arms are three different routing problems, and a three-to-four connection spread on a board 44 short
+is the greedy pass's own scatter rather than the width's price. The placement is also not board P's own: it
+is the regeneration that fails its predictor (32.269), where the adopted P4 routes 0 hard and 0 unrouted, so
+these numbers bound the cost and do not state it.
+
+**The better answer comes straight out of the pad measurement.** `PWR` carries five nets and its width is
+bound from above by the narrowest pad on **any** of them, 0.610 mm, which caps it at 0.600 and **2.73 A**.
+`PACK_N`'s own narrowest pad is **0.800 mm**, so a class of its own at 0.800 is pad-safe and carries
+**3.36 A** against the 2.47 it needs, 36 percent of margin instead of ten, and the other four nets keep the
+0.500 they never needed widened. Two lines of the generator, in the one `CLASSES` table that feeds both the
+board and the project file. **Residue for the commit that re-cuts a deliverable, which is decision 31.**
