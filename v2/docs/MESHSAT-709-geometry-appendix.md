@@ -15552,3 +15552,44 @@ BENCH_FITTED, 57 HAND_FIT, 17 NO_STOCK, 13 WRONG_MODEL, 12 NOT_CHECKED, 10 NOT_A
 PACKAGE_MISMATCH, 1 NOT_IDENTIFIED); what moved is stock, price and the date each row was asked. The table is
 what the ordering session looks a part up in, so a refresh is worth having and a refresh that moved a STATE
 would have been the finding instead.
+
+### 32.319, 20 September 2026 16:25 CEST: board A's four unclosable charger nets are closed, on the board the generator now makes, and its five remaining opens are five power rails by name
+
+**A59 is the board this generator cuts today**: the charger reorder of 06:10, the freed escape row, the
+fanout fix and TI's item 6 with the inductor between the FET pairs. Its round 1 landed and was read on the
+frozen board, sha `ae4addb73e321627` printed before and after, read-only:
+
+**hard 0 and FIVE unconnected items**, which is board A's best number anywhere (A44 8, A50 8, A48 10, A47 16,
+A46 16, A45 7 at a different configuration). The committed A32 is still the only 0 and 0, so A59 is **not
+adoptable** and the adoption line in `boards/a.json` stands unchanged.
+
+**(1) THE FOUR NETS FIVE READINGS HAVE NAMED ARE CLOSED.** `/CHG_ILIM`, `/CH_ACN_F`, `/CH_SRN_F`, `/CH_SRP_F`
+and `/CH_SW2` all read **closed** on this board. The record's sentence since 03:27 was that three boards,
+three closers and one set of four had produced the same four refusals pad to pad and pad to track, and that
+*no closer configuration will take them; it is the placement pass*. **It was the placement pass, and the
+placement pass has now been run**: the escape-row fix that took board A from 456 escapes with 7 pads skipped
+to 463 with none, plus the reorder that put the charger block in the converter's own topological order, is
+what closed them. This is reported on an arm nobody would adopt, which is what `boards/a.json` said to do
+with it before any of these arms landed.
+
+**(2) AND THE FIVE THAT REMAIN ARE NOT SIGNALS.** By name: `/+5V_DEV`, `/+5V_S1`, `/+5V_S2`, `/+5V_S3` and
+`/VBAT`. Every one is a declared RAIL and four of the five are on PI-001's own ranking. **Board A's last five
+open connections and board A's largest power-integrity item are the same copper**, which says the remaining
+work there is the generator's band and island pass and not the router's: a rail that has no copper of its own
+is a rail the router is still trying to carry in tracks.
+
+**(3) THE OLDER TREE IS THE CORROBORATION AND NOT THE PROOF.** A50's orphaned router, recovered by the armed
+importer and finished today, reads **hard 0 and eight unconnected items** with `check_pcb_a` **RESULT: ALL
+PASS**: its stub router took 28 to 14 and `direct_close` closed six more of ten tried. Its eight are
+`/+5V_S1`, `/+5V_S2`, `/+5V_S3`, `/+13V8_PA`, and **`/CHG_ILIM` and `/CH_ACN_F` still open**. So the two
+charger nets that A59 closes are still open on the older placement, which is the expected direction. **It is
+not a one-variable pair** (A50's tree predates the reorder, the escape row and the fanout fix together), so
+it corroborates and proves nothing on its own.
+
+**(4) WHAT A59 DOES NOT ANSWER.** `dc_drop` **FAIL of 27**, 24 met, 3 missed, **11 density missed**;
+`sensitive_nodes` **FAIL 8 of 24**; `kelvin_check` **12 of 14 taps are not Kelvin connections**, and the
+worst is the USB-C outlet's own: `PD_ISNS_N` between R81.2 and U19.13 carries **211.395 mV of a 50.0 mV full
+scale, 422.8 percent**, against the 99.642 mV and 199.3 percent the same tap read on the committed A32. The
+outlet's 180.45 mm power path is measured, its 54.99 mm answer is proved through a chain at hard 0, and
+**nothing of it is applied**, so the number growing is the expected consequence of leaving it alone rather
+than a new defect.
