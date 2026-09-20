@@ -202,10 +202,17 @@ def t_a_refused_site_names_the_counterparty_and_not_only_the_type():
 
 
 def t_a_site_the_drc_refuses_is_reverted_alone_before_the_whole_set_is():
-    """The keep-what-the-DRC-accepts shape of `stub_accept` and `direct_close`, not all or nothing first."""
+    """The keep-what-the-DRC-accepts shape of `stub_accept` and `direct_close`, not all or nothing first.
+
+    20 September 2026: this rule used to require the words `reverting every barrel` AFTER the per-site DRC
+    revert, which pinned the stage to giving EVERY site back when the batch cost a connection. Board E's
+    PI-003 answer was handed back in full that way, `unrouted 254 -> 259`, five connections somewhere among
+    nineteen sites. The property the rule is about is unchanged and now stronger: a site the DRC refuses goes
+    alone, and a batch that costs the board is followed by laying the sites ONE AT A TIME rather than
+    abandoning all of them."""
     assert "that site is reverted" in SRC
-    assert "reverting every barrel" in SRC
-    assert SRC.find("that site is reverted") < SRC.find("reverting every barrel")
+    assert "laying site by site" in SRC, "a hurting batch is not retried site by site"
+    assert SRC.find("that site is reverted") < SRC.find("laying site by site")
 
 
 def t_it_is_declared_in_the_coverage_map_as_pi003_s_fixer():
@@ -232,8 +239,23 @@ def t_the_board_is_refilled_before_anything_measures_it():
         "the refill does not save, then reload, then fill, which is what stops ZONE_FILLER segfaulting"
     # every measurement of this board goes through it
     assert "pcbnew.SaveBoard(path, b)\n    h, u" not in SRC and "pcbnew.SaveBoard(path, b)\n        h, u" not in SRC
+    # EVERY MEASUREMENT GOES THROUGH THE REFILL, asked as the property and not as a COUNT. This rule read
+    # `body.count("_save_filled(") == 2` until 20 September 2026, when a third, legitimate measurement (the
+    # per-site fallback) broke it: a count is a rule about how many times something is written, and what
+    # matters is that no `_measure` reads a board that has not just been refilled.
     body = SRC[SRC.index("def main(argv):"):]
-    assert body.count("_save_filled(") == 2, "main does not write the board through the refill exactly twice"
+    at, cut = [], 0
+    while True:
+        j = body.find("_vp._measure(path)", cut)
+        if j < 0: break
+        at.append(j); cut = j + 1
+    assert len(at) >= 2, "main no longer measures the board it changes"
+    # The FIRST measurement is the baseline, taken before a barrel exists, on the board the previous stage
+    # already wrote filled. Every one AFTER a change must have a refill between it and the measurement
+    # before it, which is the property; the count of refills is not.
+    for k in range(1, len(at)):
+        assert "_save_filled(" in body[at[k - 1]:at[k]], \
+            "the measurement at offset %d reads a board that was changed and not refilled" % at[k]
     assert "SaveBoard" not in body, "main saves the board without refilling it"
 
 

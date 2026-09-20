@@ -15394,3 +15394,33 @@ almost nothing, and what it does leave is where the packer's own parts land once
 lists. **So board D's decoupling is a floor-plan question like board B's**, not a seat nobody took, and its
 rectangles are on the never-auto floor. Its numbers stay in the register: 22 declared, 4 within 3 mm, worst
 31.2 mm.
+
+### 32.316, 20 September 2026 15:40 CEST: board E's power-via answer was being handed back in full, and one site that hurts no longer reverts the ones that help
+
+**Today's reading said board E has fifty barrels over their rating and that the sites are the fanout's rather
+than any power-copper call. Reading the stage that is supposed to answer them said something better: it had
+already laid them and given every one back.** `rail_barrels` on E30's own chain:
+
+```
+rail_barrels: HURT (hard 0 -> 0, unrouted 254 -> 259): reverting every barrel
+rail_barrels: 0 site(s) answered with 0 barrel(s), 11 refused by the DRC, 8 declined
+```
+
+**That is 19 September's closure lesson in another stage**: a WHOLE-BOARD count is no test of ONE local
+change, and five connections somewhere among nineteen sites took all nineteen with them. `keep_closure` had
+to learn the same thing about the stub router in exactly those words.
+
+**The batch is still tried first**, because it is one DRC and usually right; **when it hurts, the sites are
+laid one at a time on the board that stands and each is kept only if the board is no worse for it.** Measured
+on board E's own chain, one variable: **7 of 19 short crossings answered with 11 barrels**, against 0 and 0,
+with 4 refused by the DRC and 8 declined as placement items, each declined site naming its number (`CELL_F`
+at P_CP pad 1 wants **14 barrels of 0.25 mm for 9.00 A**, which is a busbar; `DC_P` at Q1 pad 5 wants 14 of
+0.30 for 10.00 A; `TRK_OUT` at U4 pads 3 and 6 fit only 3 of the 4 they owe within the 1.66 mm the crossing
+is judged over).
+
+**Two of this project's own rules refused the change and both were worth the argument.** One required the
+words *reverting every barrel* after the per-site DRC revert, which pinned the stage to the behaviour being
+fixed; the other asserted `main` writes the board through the refill **exactly twice**, which is a rule about
+a COUNT and broke the moment a third, legitimate measurement appeared. Both ask the property now, the second
+walking every `_measure` in `main` and requiring a refill between it and the one before, and both still fail
+on a tree where the property is broken.
