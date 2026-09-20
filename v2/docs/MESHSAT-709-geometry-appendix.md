@@ -14609,3 +14609,34 @@ generator's own locked via already sits, so the answer is points added to the ca
 E's calls each cover several sites (`VIN_RAW`'s eighteen power vias in two groups, `DC_HS`'s three banded
 stitch rows, `CELL_F`'s cluster). Board A got a short-site report naming the LINE for exactly this on
 19 September; board E's generator has no equivalent, so this one is a coordinate hunt until it does.
+
+### 32.296, 20 September 2026 10:35 CEST: every barrel remembers the line that placed it, and three of my own slips were one slip
+
+`barrel_sites --suggest` answers a site the generator already owns with *"add N points to the call that
+placed it"*, and it could only give a coordinate. Board E has **thirteen** such sites and each call's
+arguments are expressions, so finding them is a hunt; board A's generator grew its own frame walk for this on
+19 September and it works there and nowhere else.
+
+**`power_copper.stitch` records the first frame OUTSIDE `power_copper.py` for every barrel it places**, so a
+helper like board A's `row`/`col` reports the generator's line and not its own, and `write_provenance` puts
+the map beside the board as `out/<stem>-barrel-provenance.json`. The list is the **class's** and not the
+instance's, because a generator builds several `PowerCopper` objects in one run and the sidecar is one file
+about one board. It is a **sidecar and not evidence**: nothing is judged by it, and a board generated before
+it existed simply has none.
+
+**Proved end to end on board E (E29)**: 60 barrels from five call sites — `gen_pcb_e3.py:335` for the 33
+PI-003 barrels, `:263` and `:264` for `VIN_RAW`'s ten and eight, `:362` for `DC_HS`'s six, `:288` for
+`CELL_F`'s three — with the board still at `hard 0` of the fifteen types and `PREROUTE-DONE OK`.
+
+**AND IT TOOK TWO CHAIN RUNS TO GET THERE FOR ONE REASON, REPEATED THREE TIMES.** A local `import os as _x`
+followed by `_x.abspath`, `_x.splitext`, `_x.basename`: those live in `os.path`, every one raises
+`AttributeError` the moment that branch runs, and **the first sat inside a bare `except Exception` that set
+an empty string**. The run then recorded nothing and looked exactly like a generator that had placed no
+barrels. **What found it was making the except say why**, which is permanent now: the handler names the
+exception once per run, and `write_provenance` says so when it has nothing to write rather than returning in
+silence.
+
+**A rule, because a manual sweep missed one of the three**: no tool may call a path function on the `os`
+module itself. It **parses rather than greps** — its first version matched the examples in its own docstring
+and failed on itself, which is the `pkill -f` self-match in another costume — and on its first real run it
+named the instance the sweep had missed, `power_copper.py` line 105. Suite **1219, 0 failing**.
