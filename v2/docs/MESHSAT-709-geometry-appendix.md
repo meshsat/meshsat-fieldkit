@@ -16651,3 +16651,15 @@ after): the stub router took the router's 19 to 7 in 1028 s and the direct close
 and opened `/+5V_DEV`. Board A's best number anywhere and not adoptable (A32 is 0 and 0). With A89's lanes known
 to dead-end, `/+5V_S1` closing is the closer's work on one placement and not the lane's: the pair says nothing
 about the In3 lane and says the router's scatter on one placement is about two connections. A93 is the arm.
+
+**Addendum, 01:10 CEST, the two island probes, and why they route beside A93 rather than after it.** The owner
+asked why two rented boxes with 224 threads between them sat at a load of two and five. The answer: Freerouting is
+one thread per job and every arm this week was launched only when the previous one had answered, so the campaign's
+serial scheduling and not the boxes was the limit. Two placements were already proved and waiting: the **A94
+probe** (the second capacitor row joins each load bank island: escapes 461 with two skipped, hard 0, the same
+pre-lay counts, six barrels a rail, ONE open pair per slot rail where A93 reads two) and the **A95 probe** (the
+load resistor joins too: the same numbers, seven barrels a rail, and **the three slot rails read ZERO open pairs
+on the pre-route board**, the whole run being generator copper). Both are route arms now on the place box beside
+A93, one island change apart each, read on their round-1 boards against A93's. The hub runs the suite where KiCad
+is meanwhile. Prediction for A95, written before it routes: the three slot rails closed at the router because
+nothing of them is left to route, and its open set A93's minus those.
