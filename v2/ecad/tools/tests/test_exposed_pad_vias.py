@@ -73,6 +73,37 @@ def t_the_via_site_search_also_knows_that_paste_is_not_copper():
     assert 'GetNumber() == ""' in body, "the unnumbered aperture is not named as what it is"
 
 
+def t_the_fanout_also_knows_that_paste_is_not_copper():
+    """THE SAME DEFECT IN A THIRD TOOL, eight days later (20 September 2026). `prefanout.py` builds its
+    obstacle list from every pad of every footprint with no copper test at all, so an exposed pad's paste
+    grid reads as a crowd of OTHER-net pads and each one takes 0.5 mm of lane away from every fanout
+    candidate near it. It is the same sentence as 32.151 and 32.218 and it is worth stating once more:
+    a pad that exists on no copper layer is not an obstacle to anything."""
+    s = _src("prefanout.py")
+    m = re.search(r"allpads = \[(.*?)\]\n", s, re.S)
+    assert m, "prefanout.py no longer builds an allpads list"
+    assert "if _is_copper(p)" in m.group(1), \
+        "the fanout's obstacle list takes every pad again, paste apertures included"
+    assert "IsCopperLayer" in s, "the copper test is not asked of the layer set"
+
+
+def t_a_fanout_stub_may_not_cross_another_nets_copper():
+    """20 September 2026, appendix 32.270, and it cost a placement change that read free. The dense sample
+    along a fanout stub tested TRACKS only, on the reasoning that `crossing a laid track is the defect;
+    passing a pad is not`. Passing is not, OVERLAPPING is: two locked GND stubs left their own FET's
+    ground pad at forty-five degrees and clipped their own part's drain tab by sixty-five micrometres,
+    with the via and all three sample points clear, and board A's whole chain blocked on four hard items.
+    The lane rule of 9 September is untouched and still decides at the three sample points; what is added
+    is the board's own clearance against another net's POLYGON, because a circle around a 3.81 by 3.91 mm
+    drain tab would refuse every stub that passes beside it."""
+    s = _src("prefanout.py")
+    body = s.split("def _crosses")[1].split("\n                if clear(")[0]
+    assert "Collide" in body, "the dense sample still tests tracks only, so a stub may cross a pad"
+    assert "INPAD_CLR" in body, "the dense pad test is not at the board's own clearance"
+    assert "FromMM(0.5)" not in body, \
+        "the dense sample took the LANE rule with it, which 9 September measured at 18 fanout vias"
+
+
 def t_the_thermal_vias_are_asked_of_every_footprint_and_not_only_the_fine_pitch_ones():
     """The exposed-pad block sat INSIDE the fine-pitch loop (17 September 2026, appendix 32.218), so a PowerPAK
     SO-8, a SOIC-8 with a tab or a WSON-6 was never asked: 32 of board A's 39 exposed pads carried no via on the
