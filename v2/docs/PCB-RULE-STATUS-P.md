@@ -11,9 +11,9 @@ Measured on board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 32 | 68.1 |
-| FAIL | 5 | 10.6 |
-| INCONCLUSIVE | 10 | 21.3 |
+| PASS | 31 | 66.0 |
+| FAIL | 7 | 14.9 |
+| INCONCLUSIVE | 9 | 19.1 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **47** | 100.0 |
 
@@ -31,12 +31,12 @@ Measured on board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4.
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify_p PASS of 19 |
 | PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **PASS** | intent_rails PASS of 5 |
 | PWR-002 sequencing and inrush | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | power_sequence INCONCLUSIVE: each rail's enable derived from the netlist and the part that drives it named; a rail whose enable is driven only by a de |
-| PWR-003 protection coordination | BLOCKER | SCHEMATIC | **PASS** | energy_chain_p PASS of 3 |
+| PWR-003 protection coordination | BLOCKER | SCHEMATIC | **FAIL** | energy_chain_p FAIL: {'fail': 5, 'stages': 3} |
 | DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **PASS** | intent_decoupling PASS of 3 |
 | PI-001 conductor current capacity | BLOCKER | ROUTED_BOARD | **FAIL** | dc_density FAIL: {'met': 3, 'missed': 1, 'undeclared': 0} |
 | PI-002 rail voltage drop | BLOCKER | ROUTED_BOARD | **PASS** | dc_drop PASS of 4 |
 | GND-001 one deliberate ground system | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | ground_system PASS of 1 |
-| STK-001 the stackup is declared, feasible and in the board | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | stackup_gate INCONCLUSIVE: the document the named stack was transcribed from is not in the tree (v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09- |
+| STK-001 the stackup is declared, feasible and in the board | BLOCKER | ROUTED_BOARD | **FAIL** | stackup_gate FAIL: {'compared': 7, 'copper_layers': 2, 'disagreements': 1} |
 | STK-002 a layer count is decided and costed | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against si |
 | RET-001 a continuous adjacent return path | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: 16 September 2026: the principle is implemented and the heuristic is no longer standing in  |
 | RET-002 plane-adjacency screen | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | intent_return_path FAIL: {'fail': 5, 'pass': 24} |

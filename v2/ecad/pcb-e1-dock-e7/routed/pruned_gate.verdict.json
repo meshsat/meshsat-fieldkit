@@ -15,7 +15,7 @@
    "sha256_16": "a462ac2620b9b8d3"
   },
   "board_table": {
-   "path": "/root/sweep30/v2/ecad/tools/boards/e.json",
+   "path": "/root/sweep31/v2/ecad/tools/boards/e.json",
    "sha256_16": "5a7eecf1c8256053"
   }
  },
@@ -36,7 +36,7 @@
   "git_head": "",
   "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-20T07:03:46Z",
+ "ts": "2026-09-20T07:19:58Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {

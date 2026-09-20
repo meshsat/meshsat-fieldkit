@@ -18,7 +18,7 @@
   },
   "netlist": {
    "path": "out/pcb-d-aprs.net",
-   "sha256_16": "c8d2911c1028cefa"
+   "sha256_16": "174f7d7669bbb9f3"
   }
  },
  "missing_input": null,
@@ -38,7 +38,7 @@
   "git_head": "",
   "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-20T07:03:00Z",
+ "ts": "2026-09-20T07:19:13Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {

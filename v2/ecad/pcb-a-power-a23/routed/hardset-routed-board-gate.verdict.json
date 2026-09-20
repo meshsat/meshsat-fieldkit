@@ -24,7 +24,7 @@
   },
   "drc": {
    "path": "out/pcb-a-power-drc.json",
-   "sha256_16": "a07de05016764bf6"
+   "sha256_16": "5f041855c733a275"
   }
  },
  "missing_input": null,
@@ -44,7 +44,7 @@
   "git_head": "",
   "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-20T06:53:20Z",
+ "ts": "2026-09-20T07:09:31Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {

@@ -15,7 +15,7 @@
   "margin": 0.2,
   "netlist": {
    "path": "out/pcb-b-compute.net",
-   "sha256_16": "874a729a5f076ae7"
+   "sha256_16": "c0ca6a5e37fce87f"
   }
  },
  "missing_input": null,
@@ -35,7 +35,7 @@
   "git_head": "",
   "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-20T06:59:31Z",
+ "ts": "2026-09-20T07:15:43Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {

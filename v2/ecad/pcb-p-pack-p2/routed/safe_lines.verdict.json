@@ -15,7 +15,7 @@
   "board": "p",
   "netlist": {
    "path": "out/pcb-p-pack.net",
-   "sha256_16": "c737cda57bb379ea"
+   "sha256_16": "8c2ffd259666b3a3"
   }
  },
  "missing_input": null,
@@ -35,7 +35,7 @@
   "git_head": "",
   "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-20T07:04:36Z",
+ "ts": "2026-09-20T07:20:49Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {

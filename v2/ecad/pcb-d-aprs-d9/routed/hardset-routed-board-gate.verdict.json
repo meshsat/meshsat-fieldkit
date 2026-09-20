@@ -24,7 +24,7 @@
   },
   "drc": {
    "path": "out/pcb-d-aprs-drc.json",
-   "sha256_16": "39757466cb726f87"
+   "sha256_16": "3cab7cc06e0aa7ec"
   }
  },
  "missing_input": null,
@@ -44,7 +44,7 @@
   "git_head": "",
   "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-20T07:02:41Z",
+ "ts": "2026-09-20T07:18:54Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {

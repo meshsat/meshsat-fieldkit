@@ -27,11 +27,11 @@
   ],
   "intent": {
    "path": "out/pcb-e1-dock-intent.json",
-   "sha256_16": "f56e4552bf933fc5"
+   "sha256_16": "fee1175144cbe13e"
   },
   "netlist": {
    "path": "out/pcb-e1-dock.net",
-   "sha256_16": "750167c99f344bdb"
+   "sha256_16": "f2a2fcf0f1f6f0d3"
   }
  },
  "missing_input": null,
@@ -46,7 +46,7 @@
   "git_head": "",
   "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-20T07:03:59Z",
+ "ts": "2026-09-20T07:20:12Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {
