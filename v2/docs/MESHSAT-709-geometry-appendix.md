@@ -13005,3 +13005,34 @@ everything declared ABOUT A NET; converting a node to a rail REMOVES the node, s
 **That is a loosening and it is exactly the shape 20 September 00:40 caught in `derate` itself.** The
 conversion has to carry `v_work=53.3` or the clamp's own number some other way, and that is a reading of the
 design rather than a transcription.
+
+### 32.250, 20 September 2026 03:15 CEST: the layer set was the whole of it, and board A's closer declares two layers now
+
+The last of A49 `probecfg`'s four differences, measured one variable at a time on A48's frozen board, map
+cache on in both, same grid, window, node cap and wall:
+
+| | wall | offered | closed | refused | board in | board out |
+|---|---|---:|---:|---:|---|---|
+| **four layers** (F.Cu, In2, In3, B.Cu), what board A declared | 48 min | 14 of 15 | 6 | 8 | 0 hard, 15 open | 0 hard, 11 open |
+| **two layers** (F.Cu, B.Cu), the tool's own default | **14 min** | **15 of 15** | **8** | **4** | 0 hard, 15 open | 0 hard, 11 open |
+
+**A quarter of the time, every net reached the search, two more closures and half the refusals.** And it is
+not only speed: the two-layer arm **closed `/HF_SLOPE` and `/MAIN_PB`, both of which the four-layer arm
+refused PAD TO PAD**. A four-layer map at 0.05 mm is twice the cells and the search is twice as deep, so
+`STUB_MAXN`'s 80,000,000 nodes bite sooner; at four layers those two searches hit the cap and at two they
+finished. A refusal under a node cap looks exactly like a refusal for want of a path, which is why the
+"pad to pad" reading of 32.247 was too strong and is corrected here.
+
+**This explains A49's `probecfg` entirely.** It closed 11 of 16 where board A's own configuration reached its
+`timeout` with nothing saved, and it names no `STUB_LAYERS` at all, so it searched the default two. Of the
+four differences between the two configurations, the grid bought nothing, the window bought nothing, and the
+layer set was the whole of it. The node cap was never tested alone and no longer needs to be: two layers
+under the same cap offers every net and closes eight.
+
+**`boards/a.json` declares `F.Cu,B.Cu` now**, with the numbers beside it. Boards C and D declare three layers
+and board E and P already declare two and one; whether C and D would gain the same is a measurement they have
+not had, and neither is short of connections, so it is not urgent.
+
+**The hard core is four nets and every one of them is the charger's**: `/CHG_ILIM` and `/CH_SRP_F` pad to
+track, `/CH_ACN_F` and `/CH_SW2` pad to pad. That is the same block of copper the night's power findings keep
+returning to, and it is now the only part of board A's board that no closer configuration has reached.
