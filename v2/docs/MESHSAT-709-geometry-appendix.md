@@ -13772,7 +13772,20 @@ bound from above by the narrowest pad on **any** of them, 0.610 mm, which caps i
 `PACK_N`'s own narrowest pad is **0.800 mm**, so a class of its own at 0.800 is pad-safe and carries
 **3.36 A** against the 2.47 it needs, 36 percent of margin instead of ten, and the other four nets keep the
 0.500 they never needed widened. Two lines of the generator, in the one `CLASSES` table that feeds both the
-board and the project file. **Residue for the commit that re-cuts a deliverable, which is decision 31.**
+board and the project file.
+
+**And its own arm landed: hard 0 with 47 connections open**, which puts all four options inside one band:
+
+| | open | capacity of the conductor that fails |
+|---|---:|---|
+| `PWR` 0.5, as it stands | **44** | 2.39 A against the 2.47 it carries |
+| `PWR` 0.6 | 48 | 2.73 A |
+| `PWR` 0.7 (past the 0.610 mm pads) | 47 | 3.04 A |
+| **`PACK_N` alone at 0.8** | **47** | **3.36 A**, and the other four nets untouched |
+
+**A three-to-four connection band that is not monotonic is the greedy pass's scatter, so the cost does not
+separate them and the capacity does.** Best capacity at equal measured cost. **Residue for the commit that
+re-cuts a deliverable, which is decision 31.**
 
 ### 32.273, 20 September 2026 06:50 CEST: item 6 is free once the tool is right, and the fix costs a second board nothing
 
