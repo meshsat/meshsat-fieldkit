@@ -33,10 +33,14 @@
  ],
  "tool": "pack_protection",
  "tools": {
-  "git_head": "2d88cb59bb7d",
-  "tools_tree_sha": "77899244a145502b"
+  "git_head": "dff6c090a7c7",
+  "tools_tree_sha": "46bc14f518f58f9d"
  },
- "ts": "2026-09-18T17:58:12Z",
+ "ts": "2026-09-20T13:49:58Z",
  "verdict": "FAIL",
- "version": "2d88cb59bb7d+dirty"
+ "version": "dff6c090a7c7",
+ "writer": {
+  "file": "pack_protection.py",
+  "sha16": "5d2a35979cb151ac"
+ }
 }
