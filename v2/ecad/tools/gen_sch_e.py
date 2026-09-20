@@ -203,6 +203,13 @@ r("R19", "10mOhm 1% 2512 (hot-swap sense)", "DC_P", "HS_S", "RS2512"); nfet("Q7"
 r("R20", "100k 1%", "DC_P", "HS_UVLO"); r("R21", "38.3k 1% (UVLO: 9 V)", "HS_UVLO", "GND_V"); r("R22", "100k 1%", "DC_P", "HS_OVLO"); r("R23", "6.65k 1% (OVLO: 40 V)", "HS_OVLO", "GND_V")
 c("C5", "100n (TIMER)", "HS_TIMER", "GND_V"); r("R24", "20k (PWR: power limit)", "HS_PWR", "GND_V"); r("R25", "10k", "DCIN_PGD", "+3V3_E6")
 part("Q8", "Transistor_FET", "2N7002", "2N7002: SHORE_INHIBIT high pulls UVLO low = input off (1 G, 2 S, 3 D)", "SOT23", {"1": "SHORE_INHIBIT", "2": "GND_V", "3": "HS_UVLO"}); r("R26", "100k", "SHORE_INHIBIT", "GND")
+# L2 IS A PASS-THROUGH AND NO SHAPE TEST CAN SEE IT (20 September 2026, appendix 32.253). Four pads, four
+# nets, two windings: the line and the return. `power_path` knows a two-terminal part and a power transistor
+# and reads this as a four-pin connector, which is why board E's whole input side was invisible to it while
+# carrying 8 A. The heuristic widening was swept across six boards and refused, so the generator says it.
+_intent.pass_through("L2", "the SRF1260 dual-winding choke: winding 1 (pins 1-2) carries the positive line "
+                     "from DC_HS to VIN_RAW and winding 2 (pins 3-4) the return, so it is two pass-throughs "
+                     "in one four-pin package and no shape test can tell it from a connector")
 part("L2", "Connector_Generic", "Conn_01x04", "Bourns SRF1260-4R7Y dual-winding choke (7.2 A per winding at 4.7 uH): winding 1 pins 1-2 on the positive line, winding 2 pins 3-4 on the return (pin map per the Bourns drawing, verified 7 Sep 2026)", "CMC", {"1": "DC_HS", "2": "VIN_RAW", "3": "GND_V", "4": "GND"})
 c("C6", "1u 100V 1210 (X, input side)", "DC_HS", "GND_V", "C1210"); c("C7", "1u 100V 1210 (X, bus side)", "VIN_RAW", "GND", "C1210"); c("C8", "10u 100V X7R 1210", "VIN_RAW", "GND", "C1210")
 part("D2", "Device", "D_TVS", "SMCJ40A (bus clamp: 40 V standoff on the 9 to 36 V bus)", "TVS", {"1": "GND", "2": "VIN_RAW"}, "C224052")

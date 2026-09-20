@@ -175,3 +175,39 @@ def t_fed_from_must_name_a_declared_rail_and_not_itself():
         except SystemExit as e:
             assert want in str(e), str(e); continue
         raise AssertionError("accepted %s" % kw)
+
+
+def t_a_declared_pass_through_is_walked_whatever_its_land_looks_like():
+    """DEFECTIVE: board E's dual-winding choke, and the reason the declaration exists.
+
+    Four pads, four nets, two windings: the line and the return. The shape test knows a two-terminal part and
+    a power transistor and reads this as a four-pin connector, so the conductors either side of it were
+    invisible while carrying 8 A. The heuristic widening (count only the non-ground nets) was swept across
+    six boards and refused: board C went from 1 flagged net to 11 and every new one was false, because an ESD
+    array has the transistor's shape once its ground pin is dropped. So the generator declares it.
+    """
+    nets = {"VIN_RAW": [("L2", "2"), ("U12", "2")],
+            "DC_HS":   [("Q7", "1"), ("L2", "1")],
+            "GND_V":   [("L2", "3"), ("Q7", "4")],
+            "GND":     [("L2", "4"), ("U12", "4")]}
+    rail = dict(volts=12.0, amps_typ=8.0, amps_peak=10.0, source="L2", loads={"U12": 8.0})
+    nodes = {"DC_HS": dict(v_max=53.3, v_min=0.0, basis="the vehicle input"),
+             "GND_V": dict(v_max=0.0, v_min=0.0, basis="the vehicle return"),
+             "GND": dict(v_max=0.0, v_min=0.0, basis="the reference")}
+    undeclared = dict(rails={"VIN_RAW": rail}, nodes=nodes)
+    assert _run(undeclared, nets) == [], "the choke was walked without being declared, so the rule proves nothing"
+    declared = dict(undeclared, pass_through={"L2": "the SRF1260 dual-winding choke"})
+    assert _run(declared, nets) == ["DC_HS"], _run(declared, nets)
+
+
+def t_a_declared_pass_through_needs_its_reason():
+    """A part declared a conductor without a reason is what this rule exists to stop."""
+    import importlib, intent
+    importlib.reload(intent)
+    intent.pass_through("L2", "the SRF1260 dual-winding choke")
+    assert intent._I["pass_through"]["L2"]
+    try:
+        intent.pass_through("L3", "   ")
+    except SystemExit as e:
+        assert "declares no basis" in str(e), str(e); return
+    raise AssertionError("a pass-through was declared with no basis")

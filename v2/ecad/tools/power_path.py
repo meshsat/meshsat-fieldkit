@@ -95,6 +95,7 @@ def segments(intent, nets):
     # two-terminal part, which is board E's DCF and Geiger headers. **Thirteen false positives to catch four
     # real ones is worse than the gap**, so the widening is reverted and the gap is documented instead: a
     # multi-winding part is not seen by this walk, and board E's five input conductors were declared by hand.
+    _declared_pt = set((intent.get("pass_through") or {}))
     part_nets, part_pads = {}, {}
     for netname, nodelist in nets.items():
         for ref, pin in nodelist:
@@ -170,7 +171,9 @@ def segments(intent, nets):
                 # (such a part carries at most a couple of hundred milliamps anywhere on these boards).
                 _pads = part_pads.get(load, {})
                 _multi = sum(len(v) for v in _pads.values()) > len(_pads)
-                if not (len(_pads) == 2 or (_multi and len(_pads) <= 3)): continue
+                # A part the INTENT declares a pass-through is one whatever its land looks like: that is how
+                # a multi-winding choke is admitted, the heuristic having been swept and refused (32.253).
+                if load not in _declared_pt and not (len(_pads) == 2 or (_multi and len(_pads) <= 3)): continue
                 if _control_pin(load, other): continue         # a gate carries no rail current: see _control_pin
                 out.append(dict(node=other, kind=kind, rail=rn, through=load, amps=float(amps or 0),
                                 pins_on_rail=on_rail, pins_on_node=mine,

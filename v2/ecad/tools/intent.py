@@ -12,7 +12,30 @@ import re as _re
 
 Z_DEFAULT = {"USB": {"z_diff": 90.0, "z_se": 50.0}, "DIFF100": {"z_diff": 100.0, "z_se": 50.0}, "PCIE": {"z_diff": 100.0}, "HDMI": {"z_diff": 100.0}, "RF": {"z_se": 50.0}}
 
-_I = {"bypass": [], "rails": {}, "nodes": {}, "pair_classes": dict(Z_DEFAULT)}
+_I = {"bypass": [], "rails": {}, "nodes": {}, "pair_classes": dict(Z_DEFAULT), "pass_through": {}}
+
+def pass_through(ref, basis):
+    """A part current passes THROUGH that no shape test can recognise (20 September 2026, appendix 32.253).
+
+    `power_path` walks a rail out through the parts on its source and its loads, and it knows two shapes:
+    a two-terminal part (a shunt, an inductor, a fuse, a ferrite) and a power transistor, whose drain and
+    source are multi-pad lands so it has more PADS than NETS. Board E's input filter is a Bourns SRF1260
+    DUAL-WINDING choke on a four-pin land, winding 1 on the line and winding 2 on the return: four pads, four
+    nets, two pass-throughs in one package, and the shape test sees a four-pin connector. Four conductors
+    carrying 8 A were invisible because of it.
+
+    The obvious widening, counting only the nets that are not declared at zero, was swept across six boards
+    and refused: it took board C from one flagged net to eleven and every new one was false, because an ESD
+    array has the transistor's shape once its ground pin is dropped. So the answer here is the one this
+    project uses everywhere else: a DECLARATION rather than a heuristic. The generator knows what it drew.
+
+    `basis` says why, in words, because a part declared a conductor without a reason is the thing this rule
+    exists to stop.
+    """
+    if not str(basis).strip():
+        raise SystemExit("intent: pass_through %s declares no basis" % ref)
+    _I["pass_through"][str(ref)] = str(basis)
+
 
 def bypass(cap_ref, part_ref, pin, net=None):
     _I["bypass"].append({"cap": cap_ref, "part": part_ref, "pin": str(pin), "net": net})

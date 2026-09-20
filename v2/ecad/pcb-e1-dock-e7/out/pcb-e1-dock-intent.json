@@ -1,6 +1,6 @@
 {
  "board": "pcb-e1-dock",
- "written": "2026-09-20 01:19",
+ "written": "2026-09-20 01:31",
  "bypass": [
   {
    "cap": "C16",
@@ -360,5 +360,8 @@
   "RF": {
    "z_se": 50.0
   }
+ },
+ "pass_through": {
+  "L2": "the SRF1260 dual-winding choke: winding 1 (pins 1-2) carries the positive line from DC_HS to VIN_RAW and winding 2 (pins 3-4) the return, so it is two pass-throughs in one four-pin package and no shape test can tell it from a connector"
  }
 }
