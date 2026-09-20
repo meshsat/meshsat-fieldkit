@@ -80,7 +80,30 @@ FIXED = {"J_AB1": (113, -46, 0), "J_MEZZ_PWR1": (-8, -18, 90),
          # 12 September 2026: L2's box runs to y 19.7 and CHQ's floor is 18.5, so the packer, filling from the floor,
          # put the charger's two switching-node capacitors on the inductor (two courtyard overlaps that survived every
          # region move). They are L2's own capacitors: they are placed at it, 0.45 mm clear of its courtyard.
-         "C24": (-82.8, 21.8, 0), "C25": (-76.9, 21.8, 0),
+         # SUPERSEDED 20 September 2026 05:37 CEST by the seats below: C24 and C25 are CH_SRP's output
+         # capacitors by NET and were at L2 only because the packer had put them ON it. With the row in the
+         # converter's order they belong beside the pair they serve, which is now at the west end.
+         # THE CHARGER BLOCK IN THE CONVERTER'S OWN ORDER (20 September 2026, appendix 32.263). The block's
+         # fault and its answer are 32.230's: the row is packed BY SIZE, so each shunt sat at the opposite
+         # end from the FET whose drain its own net feeds, R16 35.0 mm from Q7 and R17 26.3 from Q10, and
+         # both 6 to 10 A buses crossed the whole block and interleaved. The seat EXCHANGE of the two shunts
+         # was tried on 20 September 01:15 and this file refused it, correctly: VBUS20's In3 union is derived
+         # from R16's own x, so moving R16 leaves `the rectangles of VBUS20 under do not form one piece`.
+         # MEASURED ON THE BOARD RATHER THAN REASONED FROM THE RECORD (`/root/chq_geom.sh`, A50's board):
+         # the four FETs are ALREADY in their converter order west to east, Q7 Q8 Q9 Q10 at an 8.74 mm pitch,
+         # and it is only the two shunts that are at the wrong ends. So the chain is reversed instead, EAST
+         # to west, by exchanging four IDENTICAL parts of one footprint: R16 and R17 do not move, VBUS20's
+         # island and its In3 union are untouched, and the thing that refused the change does not arise.
+         # R16 -> Q7 goes 34.85 mm to 8.63 and R17 -> Q10 26.33 to 0.11, checked against every courtyard the
+         # board really carries (FET 7.19 x 5.59, 2512 7.75 x 3.95, 1210 4.69 x 3.29, XAL6060 7.15 x 7.35):
+         # zero courtyard overlaps and every seat inside CHQ's own rectangle.
+         # STILL OPEN AND DELIBERATELY NOT TAKEN HERE: TI item 6 wants the FETs beside the inductor, and L2
+         # cannot move between the pairs without colliding with U3's courtyard, which would move the
+         # controller and its six sense-filter parts with it. That is its own change with its own measurement.
+         "Q10": (-113.44, 27.0, 0), "Q9": (-104.70, 27.0, 0), "Q8": (-95.96, 27.0, 0), "Q7": (-87.22, 27.0, 0),
+         "R16": (-78.59, 27.44, 0), "R17": (-113.55, 20.69, 0),   # unchanged seats, FIXED so the packer cannot take them back
+         "C24": (-106.5, 21.8, 0), "C25": (-100.5, 21.8, 0), "C23": (-94.5, 21.8, 0),   # CH_SRP, beside Q10 and R17
+         "C20": (-88.0, 21.8, 0), "C21": (-82.0, 21.8, 0), "C22": (-76.0, 21.8, 0),     # CH_ACN, beside Q7 and R16
          # 16 September 2026, THE CHARGER'S SENSE FILTERS (rule ANA-001). The six parts gen_sch_a.py added this
          # morning had no seat: every other passive of the charger block is packed into CHS at (-115, -6) to
          # (-70, 6), the packer fills a region from its floor by size, and a filter the BQ25731's own pin table
@@ -160,7 +183,7 @@ REGIONS = [
 # the converter's own order (input shunt, buck pair, inductor, boost pair, output shunt) with VBUS20's bar
 # and leg redrawn to the new seat, and L2 and U3 moving with it because TI's layout item 6 wants the FETs
 # beside the inductor and Q7/Q8 are 33 mm from L2. It is A51's first item and it is not a seat swap.
-("CHQ",   (-118, 18.5, -70, 30), ["Q7", "Q8", "Q9", "Q10", "R16", "R17", "C20", "C21", "C22", "C23"]),   # C24 and C25 are FIXED at L2
+("CHQ",   (-118, 18.5, -70, 30), []),   # 20 Sep 2026: every part of this block is FIXED in the converter's order above, because a row packed BY SIZE is what put the shunts at the wrong ends
  ("CHS",   (-115, -6, -70, 6), ["C16", "C17", "C18", "R18", "C19", "R19", "R20", "Q6", "R21", "R22", "R23", "R24", "R25", "C26", "C27", "R26", "R27", "TP19", "TP20", "TP22"]),
  # 12 September 2026: POQ started at x -118 and ran under NODE (-118, -68, -106, -44), a 12 x 4 mm overlap the
  # packer never happened to fill. It starts clear of the pack node's column now; 58 x 16 mm still holds its eleven parts.
