@@ -20,7 +20,7 @@
   },
   "drc": {
    "path": "out/pcb-e5-block-drc.json",
-   "sha256_16": "a7e643f66189f73a"
+   "sha256_16": "55f3012048573d22"
   }
  },
  "missing_input": null,
@@ -40,7 +40,7 @@
   "git_head": "",
   "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-20T07:04:43Z",
+ "ts": "2026-09-20T07:20:56Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {

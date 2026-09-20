@@ -8,7 +8,7 @@
   "board": "a",
   "netlist": {
    "path": "out/pcb-a-power.net",
-   "sha256_16": "5b6c57bc930bcdde"
+   "sha256_16": "4fee164ed5d1ab82"
   }
  },
  "missing_input": null,
@@ -28,7 +28,7 @@
   "git_head": "",
   "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-20T06:53:52Z",
+ "ts": "2026-09-20T07:10:03Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown",
  "writer": {

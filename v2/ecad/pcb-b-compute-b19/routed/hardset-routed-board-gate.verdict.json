@@ -24,7 +24,7 @@
   },
   "drc": {
    "path": "out/pcb-b-compute-drc.json",
-   "sha256_16": "f4f59bf63c882f49"
+   "sha256_16": "bc8d404f4681f9ff"
   }
  },
  "missing_input": null,
@@ -44,7 +44,7 @@
   "git_head": "",
   "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-20T06:55:32Z",
+ "ts": "2026-09-20T07:11:43Z",
  "verdict": "FAIL",
  "version": "unknown",
  "writer": {
