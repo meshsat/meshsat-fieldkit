@@ -168,8 +168,8 @@ holding a number, not a question about a number.
 | rule | board | reading | what it waits on |
 |---|---|---|---|
 | `SCH-002` | A | FAIL | netlist_board FAIL: {'agree': 2000, 'aliased_pins': 0, 'board_footprints': 400, 'board_only_inert': 0, 'fail': 10, 'netlist_refs': 398} |
-| `PI-002` | A | FAIL | dc_drop FAIL: {'density_missed': 12, 'met': 20, 'missed': 3, 'undeclared': 0} |
-| `PI-003` | A | FAIL | via_current FAIL: {'measured_rails': 23, 'no_via': 0, 'over': 8, 'over_barrels': 37, 'rails': 23} |
+| `PI-002` | A | FAIL | dc_drop FAIL: {'density_missed': 13, 'met': 24, 'missed': 3, 'undeclared': 0} |
+| `PI-003` | A | FAIL | via_current FAIL: {'measured_rails': 27, 'no_via': 0, 'over': 8, 'over_barrels': 37, 'rails': 27} |
 | `RET-004` | A | FAIL | return_via FAIL: {'examined_same_reference': 0, 'examined_to_power': 10, 'exempt': 54, 'judged': 40, 'lacking': 32, 'same_plane': 27, 'sl |
 | `ANA-001` | A | FAIL | sensitive_nodes FAIL: {'declared': 24, 'fail': 15, 'measured': 10} |
 | `RF-001` | A | FAIL | rf_line FAIL: {'judged': 11, 'missed': 11} |
@@ -190,7 +190,7 @@ holding a number, not a question about a number.
 | `OUT-001` | C | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `PI-003` | D | FAIL | via_current FAIL: {'measured_rails': 4, 'no_via': 0, 'over': 1, 'rails': 4} |
 | `OUT-001` | D | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
-| `PI-003` | E | FAIL | via_current FAIL: {'measured_rails': 3, 'no_via': 0, 'over': 2, 'over_barrels': 5, 'rails': 4} |
+| `PI-003` | E | FAIL | via_current FAIL: {'measured_rails': 3, 'no_via': 1, 'over': 2, 'over_barrels': 5, 'rails': 4} |
 | `ANA-001` | E | FAIL | sensitive_nodes FAIL: {'declared': 3, 'fail': 2, 'measured': 3} |
 | `OUT-001` | E | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `STK-001` | E5 | FAIL | stackup_gate FAIL: {'compared': 8, 'copper_layers': 2, 'disagreements': 1} |

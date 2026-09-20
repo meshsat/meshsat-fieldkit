@@ -3,7 +3,7 @@
  "applicable": true,
  "counts": {
   "measured_rails": 3,
-  "no_via": 0,
+  "no_via": 1,
   "over": 2,
   "over_barrels": 5,
   "rails": 4
@@ -34,7 +34,7 @@
   "rule_fingerprints": {
    "PI-003": "b8238bd8e5613e6c"
   },
-  "rule_set_fingerprint": "82885961768537e2"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "PI-003"
@@ -42,9 +42,9 @@
  "tool": "via_current",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "d6d53e1e2108b7bd"
+  "tools_tree_sha": "eb0c531120e97e4b"
  },
- "ts": "2026-09-18T17:23:03Z",
+ "ts": "2026-09-20T00:14:07Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

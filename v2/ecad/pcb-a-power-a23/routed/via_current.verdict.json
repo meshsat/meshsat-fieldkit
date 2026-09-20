@@ -2,13 +2,13 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "measured_rails": 23,
+  "measured_rails": 27,
   "no_via": 0,
   "over": 8,
   "over_barrels": 37,
-  "rails": 23
+  "rails": 27
  },
- "denominator": 23,
+ "denominator": 27,
  "evidence": [
   "+13V8_PA: a barrel at (157.0, 122.6) carries 2.40 A of the solved mesh against 0.90 A for its own wall at 10 K (18 um plating), ratio 2.67",
   "+5V_DEV: a barrel at (144.8, 37.4) carries 1.68 A of the solved mesh against 0.90 A for its own wall at 10 K (18 um plating), ratio 1.87",
@@ -59,9 +59,9 @@
  "tool": "via_current",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "f68d837d805d656b"
+  "tools_tree_sha": "57234e5aaa9e72b6"
  },
- "ts": "2026-09-19T23:44:20Z",
+ "ts": "2026-09-20T00:14:35Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

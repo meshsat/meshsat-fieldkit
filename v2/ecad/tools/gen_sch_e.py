@@ -33,6 +33,21 @@ _intent.rail("CELL_F", 14.4, 10.0, 18.0, "F3", always_on=True, v_work=16.8, conv
              always_on_why="the pack node after this board's 25 A blade: a fuse is protection and not a switch, and what opens this node is the pack's own gauge two stages upstream",
              loads={"P_CP": 9.0, "U12": 0.8, "J_FAN1": 0.1, "J_FAN2": 0.1},
              note="the pack node after the 25 A blade F3, to the block pads")
+# CELL+ IS THE OTHER SIDE OF THE SAME FUSE AND IT WAS DECLARED AS NOTHING AT ALL (20 September 2026, found
+# by `power_path` asking every board mechanically; appendix 32.237). It is the conductor from the XT60
+# J_BATT pin 2 to the blade F3, carrying the pack's whole 10.0 A typical and 18.0 A peak into this board,
+# and it was neither a rail nor a node, so `dc_drop` solved nothing on it and neither PI-001 nor PI-002 had
+# looked at ten amps of copper. It is board P's `PACK_N` on the other side of the same wire: the pack's two
+# terminals, one of them measured at 02:05 tonight and this one invisible until 02:11.
+# It is a SEGMENT of CELL_F's path, which is the rail the board's power is counted at, so its watts are not
+# counted twice; everything that judges copper judges it exactly as it judges CELL_F's.
+_intent.rail("CELL+", 14.4, 10.0, 18.0, "J_BATT", loads={"F3": 10.0}, series_of="CELL_F", v_work=16.8,
+             converted=False, always_on=True,
+             always_on_why="the pack node BEFORE this board's 25 A blade: nothing on this board can open it, "
+                           "which is the same reason CELL_F gives one line up",
+             note="the pack lead from the XT60 J_BATT pin 2 to the blade F3, at the pack's own 10.0 A "
+                  "typical and 18.0 A peak. Declared 20 September 2026: it had been declared as nothing at "
+                  "all, so no power rule had ever looked at it")
 # LOADS DECLARED 13 September 2026. The guess for this one was J_BLK and U4 at 4 A each, and U4 is the ideal
 # diode that ORs the tracker output INTO this bus: it is a SOURCE, so half the rail's current was being pulled
 # backwards through it. The whole of this bus leaves through the block lands J_BLK pins 1 to 4 for board A's
@@ -223,6 +238,12 @@ part("J_BLK", "Connector_Generic", "Conn_01x12", "solder lands for the 12 signal
      {"1": "VIN_RAW", "2": "VIN_RAW", "3": "VIN_RAW", "4": "VIN_RAW", "5": "GND", "6": "GND", "7": "GND", "8": "SHORE_INHIBIT", "9": "USB_E6_P", "10": "USB_E6_N", "11": "GND", "12": "BLK_SPARE"})
 # --- controller power: AP63205 5 V 2 A buck from the pack node (diodes/diodes-ap63205.pdf, TSOT-26: 1 FB 2 EN 3 VIN 4 GND 5 SW 6 BST; fixed 5 V, FB is the output sense), TLV75533 3.3 V LDO (SOT-23-5: 1 IN 2 GND 3 EN 4 NC 5 OUT)
 ic("U12", 6, "AP63205WU-7 5 V 2 A buck for the controller, the Geiger module and the fans' logic", "TSOT6", {"1": "+5V_E6", "2": "CELL_F", "3": "CELL_F", "4": "GND", "5": "E6_SW", "6": "E6_BST"}, "C2071056")
+# E6_SW IS A SWITCHING NODE AND IT SAID NOTHING (20 September 2026, the same sweep). A node is not a rail and
+# a drop budget in percent means nothing on it, but it must be DECLARED, because CMP-001 asks what voltage a
+# part on a net can see and this one swings from about a diode drop below ground to the pack node that feeds
+# the AP63205. Board A's five LM5176 stages have declared theirs since 16 September; this board declared none.
+_intent.node("E6_SW", 16.8, "the AP63205's switching node: it swings to CELL_F, which is the pack at its 4S "
+             "termination of 16.8 V, and a diode drop below ground on the other half of the cycle", v_min=-1.0)
 part("L3", "Device", "L", "4.7uH XAL4030-472ME", "L4020", {"1": "E6_SW", "2": "+5V_E6"}); c("C30", "100n", "E6_BST", "E6_SW"); c("C31", "10u 25V 1210", "CELL_F", "GND", "C1210"); c("C32", "22u 10V X7R 1210", "+5V_E6", "GND", "C1210"); c("C33", "22u 10V X7R 1210", "+5V_E6", "GND", "C1210")
 ic("U13", 5, "TLV75533PDBVR 3.3 V LDO", "SOT235", {"1": "+5V_E6", "2": "GND", "3": "+5V_E6", "4": "NC", "5": "+3V3_E6"}, "C404027"); c("C34", "1u", "+5V_E6", "GND"); c("C35", "1u", "+3V3_E6", "GND")
 # --- RP2040 (rp2040/rpi-rp2040-datasheet.pdf, QFN-56; the minimal design of the hardware design guide: 12 MHz crystal with 15 pF loads and a 1k series on XOUT, W25Q16 QSPI flash, 27 Ohm USB series,

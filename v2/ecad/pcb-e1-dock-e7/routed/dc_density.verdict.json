@@ -2,11 +2,11 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "met": 4,
+  "met": 5,
   "missed": 0,
   "undeclared": 0
  },
- "denominator": 4,
+ "denominator": 5,
  "evidence": [],
  "inputs": {
   "board": {
@@ -21,7 +21,7 @@
   "rule_fingerprints": {
    "PI-001": "c23010065f1f2962"
   },
-  "rule_set_fingerprint": "82885961768537e2"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "PI-001"
@@ -29,9 +29,9 @@
  "tool": "dc_density",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "d6d53e1e2108b7bd"
+  "tools_tree_sha": "eb0c531120e97e4b"
  },
- "ts": "2026-09-18T17:23:02Z",
+ "ts": "2026-09-20T00:14:06Z",
  "verdict": "PASS",
  "version": "unknown"
 }

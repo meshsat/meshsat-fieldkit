@@ -1,6 +1,6 @@
 {
  "board": "pcb-a-power",
- "written": "2026-09-19 23:44",
+ "written": "2026-09-20 00:14",
  "bypass": [
   {
    "cap": "C8",
@@ -448,6 +448,58 @@
    "converted": false,
    "series_of": "CELL+"
   },
+  "S1_OUT": {
+   "volts": 5.1,
+   "amps_typ": 2.5,
+   "amps_peak": 5.0,
+   "source": "L3",
+   "loads": {
+    "R31": 2.5
+   },
+   "note": "the AP64500 stage's output between the inductor L3 and the 5 mOhm shunt R31, at the whole of the rail's own current. Declared 20 September 2026: it had been declared as nothing at all",
+   "v_work": 5.1,
+   "converted": false,
+   "series_of": "+5V_S1"
+  },
+  "S2_OUT": {
+   "volts": 5.1,
+   "amps_typ": 2.5,
+   "amps_peak": 5.0,
+   "source": "L4",
+   "loads": {
+    "R35": 2.5
+   },
+   "note": "the AP64500 stage's output between the inductor L4 and the 5 mOhm shunt R35, at the whole of the rail's own current. Declared 20 September 2026: it had been declared as nothing at all",
+   "v_work": 5.1,
+   "converted": false,
+   "series_of": "+5V_S2"
+  },
+  "S3_OUT": {
+   "volts": 5.1,
+   "amps_typ": 2.5,
+   "amps_peak": 5.0,
+   "source": "L5",
+   "loads": {
+    "R39": 2.5
+   },
+   "note": "the AP64500 stage's output between the inductor L5 and the 5 mOhm shunt R39, at the whole of the rail's own current. Declared 20 September 2026: it had been declared as nothing at all",
+   "v_work": 5.1,
+   "converted": false,
+   "series_of": "+5V_S3"
+  },
+  "SD_OUT": {
+   "volts": 5.0,
+   "amps_typ": 3.8,
+   "amps_peak": 6.0,
+   "source": "L6",
+   "loads": {
+    "R43": 3.8
+   },
+   "note": "the AP64500 stage's output between the inductor L6 and the 5 mOhm shunt R43, at the whole of the rail's own current. Declared 20 September 2026: it had been declared as nothing at all",
+   "v_work": 5.0,
+   "converted": false,
+   "series_of": "+5V_DEV"
+  },
   "PA_OUT": {
    "volts": 13.8,
    "amps_typ": 5.0,
@@ -627,6 +679,31 @@
    "v_max": 0.0,
    "v_min": 0.0,
    "basis": "the board's reference. It is declared so that a part between a live net and ground is judged against the live net rather than reported as sitting on an undeclared one"
+  },
+  "S1_SW": {
+   "v_max": 14.4,
+   "v_min": -1.0,
+   "basis": "the AP64500's switching node on the +5V_S1 stage: it swings to VBAT, the pack node that feeds the buck, and a diode drop below ground on the other half of the cycle"
+  },
+  "S2_SW": {
+   "v_max": 14.4,
+   "v_min": -1.0,
+   "basis": "the AP64500's switching node on the +5V_S2 stage: it swings to VBAT, the pack node that feeds the buck, and a diode drop below ground on the other half of the cycle"
+  },
+  "S3_SW": {
+   "v_max": 14.4,
+   "v_min": -1.0,
+   "basis": "the AP64500's switching node on the +5V_S3 stage: it swings to VBAT, the pack node that feeds the buck, and a diode drop below ground on the other half of the cycle"
+  },
+  "SD_SW": {
+   "v_max": 14.4,
+   "v_min": -1.0,
+   "basis": "the AP64500's switching node on the +5V_DEV stage: it swings to VBAT, the pack node that feeds the buck, and a diode drop below ground on the other half of the cycle"
+  },
+  "B33_SW": {
+   "v_max": 14.4,
+   "v_min": -1.0,
+   "basis": "the TPS62933's switching node: it swings to VBAT, the pack node that feeds the 3.3 V buck, and a diode drop below ground on the other half of the cycle"
   },
   "PA_SW1": {
    "v_max": 14.4,

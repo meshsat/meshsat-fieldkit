@@ -306,6 +306,16 @@ def buck33(uref, tag, vin, en, out, refs):
     """AP64500SP-13 5 A buck (A22 buck5 recipe) set to 3.32 V: 31.6k/10k on the 0.8 V reference, 3.3 uH XAL6060, 500 kHz."""
     L, cb, ci1, ci2, co1, co2, co3, rt, rb, rrt, rco, cco = refs
     ic(uref, 9, "AP64500SP-13 5 A buck, 3.3 V rail %s" % out, "SO8EP", {"1": tag + "_BOOT", "2": vin, "3": en, "4": tag + "_RT", "5": tag + "_FB", "6": tag + "_COMP", "7": "GND", "8": tag + "_SW", "9": "GND"}, "C2070920")
+    # A SWITCHING NODE MUST BE DECLARED, AND THIS BOARD DECLARED NONE (20 September 2026, found by
+    # `power_path` asking every board mechanically; appendix 32.237). It is not a rail and a drop budget in
+    # percent means nothing on it, but CMP-001 asks what voltage a part on a net can see, and a buck's
+    # switching node swings to its INPUT rail and a diode drop below ground on the other half of the cycle.
+    # Fourteen of them on this board said nothing at all, where board A's five LM5176 stages have declared
+    # theirs since 16 September. The input's own declared voltage is what it swings to, read from the intent
+    # rather than typed, so the two cannot drift.
+    _intent.node(tag + "_SW", _intent.net_volts(vin),
+                 "the %s buck's switching node: it swings to %s, the rail that feeds it, and a diode drop "
+                 "below ground on the other half of the cycle" % (out, vin), v_min=-1.0)
     part(L, "Device", "L", "3.3uH XAL6030-332ME", "L6060", {"1": tag + "_SW", "2": out}); c(cb, "100n", tag + "_BOOT", tag + "_SW")
     c(ci1, "22u 10V X7R 1210", vin, "GND", "C1210", bypass=(uref, "2")); c(ci2, "22u 10V X7R 1210", vin, "GND", "C1210", bypass=(uref, "2"))   # the buck's VIN pin
     for cr in (co1, co2, co3): c(cr, "22u 10V X7R 1210", out, "GND", "C1210")
@@ -314,6 +324,16 @@ def buck_small(uref, tag, vin, en, out, refs, rb_val, note):
     """TPS62933 3 A buck (SOT-583: 1 RT 2 EN 3 VIN 4 GND 5 SW 6 BST 7 SS/PG 8 FB; 0.8 V reference, RT floating = 500 kHz): 10k top, rb_val bottom."""
     L, ci, co1, co2, cb, css, rt, rb = refs
     ic(uref, 8, "TPS62933DRLR buck %s" % note, "SOT583", {"1": "NC", "2": en, "3": vin, "4": "GND", "5": tag + "_SW", "6": tag + "_BST", "7": tag + "_SS", "8": tag + "_FB"}, "C3200405")   # the code A22 already buys this part with
+    # A SWITCHING NODE MUST BE DECLARED, AND THIS BOARD DECLARED NONE (20 September 2026, found by
+    # `power_path` asking every board mechanically; appendix 32.237). It is not a rail and a drop budget in
+    # percent means nothing on it, but CMP-001 asks what voltage a part on a net can see, and a buck's
+    # switching node swings to its INPUT rail and a diode drop below ground on the other half of the cycle.
+    # Fourteen of them on this board said nothing at all, where board A's five LM5176 stages have declared
+    # theirs since 16 September. The input's own declared voltage is what it swings to, read from the intent
+    # rather than typed, so the two cannot drift.
+    _intent.node(tag + "_SW", _intent.net_volts(vin),
+                 "the %s buck's switching node: it swings to %s, the rail that feeds it, and a diode drop "
+                 "below ground on the other half of the cycle" % (out, vin), v_min=-1.0)
     part(L, "Device", "L", "2.2uH XAL4020-222ME", "L4020", {"1": tag + "_SW", "2": out}); c(ci, "10u", vin, "GND", "C10u", bypass=(uref, "3")); c(co1, "22u 6.3V", out, "GND", "C10u"); c(co2, "22u 6.3V", out, "GND", "C10u")
     c(cb, "100n", tag + "_BST", tag + "_SW"); c(css, "10n", tag + "_SS", "GND"); r(rt, "10k 1%", out, tag + "_FB"); r(rb, rb_val, tag + "_FB", "GND")
 def cp2102(uref, tag, vusb, dp, dm, txd, rxd, rts="NC", dtr="NC", refs=()):
@@ -553,6 +573,11 @@ _SEC_MARKS.append(('SHARED: POWER', len(P)))
 part("J_5V_DEV", "Connector_Generic", "Conn_01x02", "JST-VH socket, 10 A: USB device rail from A22 J_5V_DEV: + -", "VH2", {"1": "+5V_DEV", "2": "GND"}, "C274411")
 part("D1", "Device", "D_TVS", "SMBJ5.0A", "TVS", {"1": "+5V_DEV", "2": "GND"}); c("C1", "100u 10V", "+5V_DEV", "GND", "C100u"); c("C2", "100u 10V", "+5V_DEV", "GND", "C100u")
 ic("U25", 6, "AP63203WU-7 3.3 V 2 A buck: the shared logic (+3V3_DEV)", "TSOT6", {"1": "+3V3_DEV", "2": "+5V_DEV", "3": "+5V_DEV", "4": "GND", "5": "DEV_SW", "6": "DEV_BST"}, "C780769")   # TSOT-23-6, 12,477 in stock
+# DEV_SW is the one buck on this board written out rather than through a helper, so it gets its line here
+# (20 September 2026, the same sweep): the AP63203 runs the shared logic rail off +5V_DEV.
+_intent.node("DEV_SW", _intent.net_volts("+5V_DEV"),
+             "the AP63203's switching node for +3V3_DEV: it swings to +5V_DEV, the rail that feeds it, and a "
+             "diode drop below ground on the other half of the cycle", v_min=-1.0)
 part("L1", "Device", "L", "4.7uH XAL4030-472ME", "L4020", {"1": "DEV_SW", "2": "+3V3_DEV"}); c("C3", "100n", "DEV_BST", "DEV_SW"); c("C4", "10u", "+5V_DEV", "GND", "C10u"); c("C5", "22u 6.3V", "+3V3_DEV", "GND", "C10u"); c("C6", "22u 6.3V", "+3V3_DEV", "GND", "C10u")
 buck_small("U26", "KSZC", "+5V_DEV", "+5V_DEV", "+1V2_KSZ", ["L2", "C7", "C8", "C9", "C10", "C11", "R1", "R2"], "20.0k 1%", "1.2 V Ethernet switch core")
 # U27's code is the Diodes part itself (2.5 V 600 mA, 2,997 in stock); the only other hit for it is a
