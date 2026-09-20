@@ -17,6 +17,18 @@ _I = {"bypass": [], "rails": {}, "nodes": {}, "pair_classes": dict(Z_DEFAULT)}
 def bypass(cap_ref, part_ref, pin, net=None):
     _I["bypass"].append({"cap": cap_ref, "part": part_ref, "pin": str(pin), "net": net})
 
+# WHAT amps_typ AND amps_peak MEAN TO THE RULES THAT READ THEM (20 September 2026, appendix 32.245).
+# They are not two decorations of one number: the two halves of the power rule set read DIFFERENT ones.
+#   amps_typ   the rail's continuous load. `dc_drop` solves the mesh at this and judges both the voltage
+#              drop (PI-002) and the conductor's current density (PI-001) from it, because IPC's 10 K rise
+#              is a STEADY-STATE thermal limit and a transient does not set it.
+#   amps_peak  the worst the rail ever carries. `via_current` and `rail_crossings` judge every BARREL at
+#              this (PI-003), because a barrel has almost no thermal mass and a far higher current density
+#              than the conductor feeding it, so its worst case is the one that decides it.
+# So a via on VBAT is judged at 18 A while the track feeding it is judged at 10, on the same board and from
+# this same declaration, and the two rules' numbers are not comparable. Declaring a peak that is really a
+# FAULT current therefore makes PI-003 pessimistic without making PI-001 stricter, and declaring a service
+# current as a peak does the reverse: whichever one it is belongs in the rail's `note`.
 def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=None, source_ic="", share=None,
          efficiency=None, switch=None, always_on=None, always_on_why="", enable_net=None, v_work=None,
          converted=None, series_of=None, returns=None):

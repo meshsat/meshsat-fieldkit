@@ -137,6 +137,13 @@ def main(a):
     # this list held one line per rail. `barrel_sites.py` is the map of what stands around each of them.
     rows, bad, bad_sites, no_via = [], [], [], []
     for net, r in sorted((it.get("rails") or {}).items()):
+        # WHICH CURRENT THIS RULE ASKS ABOUT, AND WHY (20 September 2026, appendix 32.245). A BARREL is judged
+        # at the PEAK. It has almost no thermal mass and a far higher current density than the conductor
+        # feeding it, so the case that decides it is the worst the rail ever carries, not its continuous
+        # load. The conductor rules PI-001 and PI-002 ask `amps_typ` for the opposite reason: IPC's 10 K rise
+        # is a STEADY-STATE limit. So a via on VBAT is judged at 18 A while the track feeding it is judged at
+        # 10, on the same board and from the same declaration, and the two rules' numbers are NOT comparable.
+        # That is deliberate physics and it was undocumented until it was found by reading all four tools.
         amps = float(r.get("amps_peak") or r.get("amps_typ") or 0)
         if amps <= 0: continue
         key = net.lstrip("/")
