@@ -13609,3 +13609,41 @@ arm, one variable against A54**, which is routing the same board without the ind
 **The lesson is the one this record keeps paying for**: a deferral is a claim about the board and is owed a
 measurement like any other. This one cost two evenings of being written down as impossible and forty seconds
 of a bounding box to refute.
+
+### 32.268, 20 September 2026 06:18 CEST: the controller is already facing the right way, and item 7 is a net question
+
+**Third hypothesis about the charger block tonight and the one that was wrong, refused by its own
+measurement in a quarter of an hour.** Each sense filter sits beside the OTHER shunt: `R146`/`R147` carry
+the INPUT sense (`CH_ACN` and `VBUS20`, from `R16` at case x -81.6) and sit at x -103.3, **26.81 mm** away;
+`R148`/`R149` carry the CHARGE sense (`CELL+` and `CH_SRP`, from `R17` at x -116.5) and sit at x -89.0,
+**22.28 and 27.16 mm** away. That reads exactly like 32.257's finding about the shunts themselves, so U3's
+own rotation was the obvious suspect and a QFN rotation costs nothing to try.
+
+**Measured instead of tried**: for each of U3's 27 pins that has a partner pad, the distance to the nearest
+pad of its own net, summed, at each of the four rotations, with U3's pads turned about its own centre and
+nothing else moved.
+
+| rotation | sum over 27 pins | against the seat as placed | the four sense pins |
+|---|---:|---:|---|
+| **0, as placed** | **329.3 mm** | — | 3.96, 3.99, 5.00, 5.09 mm |
+| 270 | 358.6 | +29.3 | 5.55 to 6.99 |
+| 90 | 363.8 | +34.5 | 6.81 to 7.65 |
+| 180 | 387.7 | +58.5 | 7.82 to 9.03 |
+
+**The seat as placed is the best of the four, and it is best for the sense pins as well.** So the filters are
+not beside the wrong shunt: they are beside their own U3 pins, which is where the BQ25731's 10.2.2.2 asks
+for them, and the long run to the shunt is inherent to a forty-millimetre block with the controller beneath
+it.
+
+**What item 7 actually needs is not a move at all.** The sense nets ARE the power nets (`R147` taps
+`/VBUS20`, `R146` `/CH_ACN`, `R149` `/CH_SRP`, `R148` `/CELL+`), so a pour reaches each filter's input pad
+wherever that pad sits and **the Kelvin tap is unenforceable by the netlist**. That is exactly what
+`kelvin_check` has been measuring: 1.170 mV of the 60 mV full scale on A47 and 27.369 mV on A48, the pour's
+own drop at whatever point it happened to touch, which is why the same declaration on the same design reads
+2.0 percent one round and 45.6 the next. The answer is geometric: **a rule area holding each power pour off
+the sense corridor, plus the two pairs pre-laid from the shunt pad centres**, which is board E's E23 shape
+and makes the only copper path the laid one.
+
+**NOT STARTED**: that is A57's change and it is not begun with three routes in flight. **NOT CLAIMED**: that
+the rule area can be drawn without cutting `VBUS20`'s or `CH_SRP`'s own pour, which is 32.160's lesson about
+a keep-out over pads and is the first thing that arm has to measure.
