@@ -13541,3 +13541,34 @@ core is explained rather than closed.
 **Three attempts stand behind this and only the third measured anything**, which is worth as much as the fix:
 a debug output read off the wrong input twice said the same plausible thing both times, and it took running
 the tool at the moment it was deciding to get an answer that was about the board.
+
+### 32.266, 20 September 2026 06:05 CEST: the A49 against A50 comparison reverses when its closers are re-taken
+
+**The open-count half of 32.259 was measured at a closer setting that closes nothing on board A, and it is
+corrected here in the direction that makes the arm look worse rather than better.** Both finishes were
+launched before board A declared two layers (32.261), so both counts came from four-layer closers. Each
+frozen board was re-closed from its own finish on the freed place box, one variable, at the declaration the
+board now carries.
+
+| arm | what it pins | four layers | two layers |
+|---|---|---|---|
+| **A49** | the five `*_CSF` only, E20's shape | 16 open in, **16 out**, the closer took nothing | 16 offered, **12 closed**, 16 -> **10**, exit 0, 17 min |
+| **A50** | both halves, 20 of 20 switching connections pre-laid, E21's shape | 17 open | 17 offered, **10 closed**, 17 -> **9**, exit 0, 22 min |
+
+**A49 was one connection better and is now one worse**, from the same router result on both arms (0 hard and
+21 unrouted of 264 each, 307 vias against 315). So the sentence that survives BOTH readings is the one whose
+truth does not depend on the direction: **on board A the switching pre-lay neither costs nor buys
+connections**, which is exactly what 32.246 read from the two routers alone, and the sign of a
+one-connection difference is not stable across closer configurations, so it was never a result about the
+arms. A49 no longer stays board A's better arm on the open count.
+
+**Nothing about ANA-001 moves.** Both boards still FAIL it, the pre-lay still MOVES the violation rather
+than removing it (A49 fails on `FE_FB` at 0.450 mm, A50 on `HF_CSF` at 0.258), and board A's own pins refuse
+a 0.50 mm class in two places, so that half is still a placement question. **The four charger nets are among
+the refusals on both**, the fifth independent reading to name them.
+
+**NOT CLAIMED**: neither board is adoptable at 9 or 10 open, and these are closers' answers on frozen boards,
+not routes. The lesson is the scheduling one again in a new place: **a count taken under a configuration the
+board no longer declares is not a reading about the board**, and the cheap guard is to re-take the count in
+the same stretch as the declaration changes, which is what 32.213 says about a tool change and had not been
+extended to a DECLARATION change.
