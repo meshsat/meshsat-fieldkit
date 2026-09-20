@@ -15913,3 +15913,39 @@ rating** with 2.01 mm of room on one axis and **0.00 on the other**, which is a 
 **E17 stays board E's phase**: the committed board is 0 hard and 0 unrouted and this is seven. What E30 buys
 is the measurement, and the measurement is that PI-003 on board E now belongs to the fanout, which lays one
 minimum via per pad and reports the count a declared rail's crossing needs without laying it.
+
+### 32.327, 20 September 2026 18:55 CEST: the six-rail pre-lay buys six connections at the router and none after the closers, and a reading of mine was judged against the wrong project file
+
+A70 is A69 plus a pre-lay of the six rails that are board A's whole remaining open set, one variable, and its
+question is whether pre-laying a net both closers have refused pays. It does at the router and it does not at
+the end.
+
+| | router | after the closers |
+|---|---:|---:|
+| A59 (no rail pre-lay) | hard 0, **20** unrouted | hard 0, **5** open |
+| A69 (the filter, no rail pre-lay) | hard 0, **20** unrouted | hard 0, **7** open |
+| **A70 (six rails pre-laid)** | hard 0, **14** unrouted | hard 0, **5** open |
+
+**Six connections at the router and zero at the end**, and the open sets say why. A59 ends open on
+`/+5V_DEV`, `/+5V_S1`, `/+5V_S2`, `/+5V_S3` and `/VBAT`; **A70 ends open on `/+5V_DEV`, `/VBAT`,
+`/PA_ISNS_N` and `/S2_OUT`**. The three slot rails the pre-lay targeted are CLOSED on A70 and two nets that
+were closed on A59 are open instead. **The pre-lay closed what it targeted and handed the congestion to its
+neighbours**, which is 19 September's rule word for word, and the board-wide number did not move.
+
+So board A's floor is five open connections on three separate arms with three different instruments, and the
+five are not the same five. That is a statement about the board rather than about any of the three: **board A
+has a fixed deficit of about five connections in the east and pinning decides only where it lands**, which is
+board D's sentence of 19 September arriving on board A.
+
+`kelvin_check` reads exactly A69's table (9 of 14 not Kelvin, `PD_ISNS_N` 8.0 percent), which it should: A70
+carries A69's filter unchanged. `sensitive_nodes` FAIL 12 of 34 against A69's 11 of 34.
+
+**AND A READING OF MINE WAS JUDGED AGAINST THE WRONG PROJECT FILE, caught by disbelieving it.** The first
+read of A70's finished board came back **hard 585, every one `clearance`**, on a board routeflow had just
+kept at hard 0. The cause is the documented trap in a new costume: **the project file was THERE and it was
+the wrong one.** `routeflow`'s remedy round had started at 16:48:16 and its placement generator had already
+rewritten `pcb-a-power.kicad_pro` in the tree; copied at 16:48 it carried **one class and zero net-class
+assignments**, so every net was judged against Default. routeflow saves the round's own project file as
+`best-round1.kicad_pro` beside the board, and that is the one the board was routed under: with it the same
+board reads **hard 0**. The reader asserts the class table now and REFUSES rather than reporting, because a
+number that large is only obviously wrong when the board is known to be good.
