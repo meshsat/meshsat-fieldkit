@@ -371,9 +371,15 @@ def eta_doc():
     for w in m["owner_waits"]:
         L.append("| %s | %s | %s |" % (w["rule"], w["action"], next((i["owner"] for i in items if i["rule"] == w["rule"]), "")))
     L += ["", "## Measured route history\n",
-          _wrap("Route durations this tree has recorded, in minutes per attempt: median %s, worst %s, over %d board(s). "
-                "A board's re-route is elapsed time, not engineering time, and several run at once on the rented box."
-                % (m["route_history"]["median_minutes"], m["route_history"]["worst_minutes"], len(m["route_history"]["boards"]))), "",
+          # A staged tree carries no routeflow journal (they are gitignored), and this line rendered "median None,
+          # worst None, over 0 board(s)" there, an absence printed as a number, and the page then failed its
+          # own generated-not-hand-maintained rule on every box run (21 September 2026). The absence is a sentence.
+          _wrap(("Route durations this tree has recorded, in minutes per attempt: median %s, worst %s, over %d board(s). "
+                 % (m["route_history"]["median_minutes"], m["route_history"]["worst_minutes"], len(m["route_history"]["boards"])))
+                if m["route_history"]["boards"] else
+                "This tree holds no routeflow journal, so no route duration is recorded here (the journals are gitignored "
+                "and live beside the boards that were routed). ") + \
+          _wrap("A board's re-route is elapsed time, not engineering time, and several run at once on the rented box."), "",
           "## Assumptions\n"]
     for a in m["assumptions"]: L.append("- " + a)
     L += ["", _wrap("This estimate covers making every applicable rule verified. It does not cover prototype "

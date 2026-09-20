@@ -16663,3 +16663,31 @@ on the pre-route board**, the whole run being generator copper). Both are route 
 A93, one island change apart each, read on their round-1 boards against A93's. The hub runs the suite where KiCad
 is meanwhile. Prediction for A95, written before it routes: the three slot rails closed at the router because
 nothing of them is left to route, and its open set A93's minus those.
+
+### 32.343
+
+**The suite ran where KiCad is, for the first time since the morning's tool work, and six rules failed, two of
+them on the change of the hour and four that had been failing unseen (21 September 2026, 01:20 CEST).** The
+box carried the whole suite on the staged tree at d94ff953: 1295 passed, 6 failed, 9 skipped.
+
+**Two were 32.342's own.** The island rule parsed the WARN line the tool no longer prints, and the acceptable
+plane-pad fixture, a board whose B.Cu ground plane carried no via anywhere, was refused for exactly the reason
+32.342 gives: a plane with no via of its own net is dead copper. The rule parses the FAIL line now and the
+fixture's plane carries one via 25 mm from the pad it is about, which is what a real plane always has; the
+fixture's own question, whether the pad has a free via site, is untouched.
+
+**Four had been failing on every box run since 20 September and nobody had run one.** (1) `bypass_place`'s
+refusal says *AFTER the placement generator* in capitals since 4dfa9d18 and its rule asked for the lower-case
+sentence, a rule broken by emphasis. (2) `bypass_seats`'s defective fixture asked for no seat within 3.0 mm of
+a fine-pitch pin; with the escape-fan box built from the courtyard edges (c18d936b) a legal seat exists 2.98 mm
+from the pin OUTSIDE the fan, which is decision 42's own arithmetic, so the fixture had stopped being defective;
+it asks at 2.5 mm now, where the fan alone forbids every seat. (3) and (4) both `rules_render` rules failed on
+`PCB-ETA.md`: the page carries the route durations read from the routeflow journals, which are gitignored, so
+the staged tree rendered *median None, worst None, over 0 board(s)*, an absence printed as a number. The
+absence is a sentence now, and both rules decline on a tree with no journal the way the decisions-page rule
+declines without its set-level readings, because a page computed from data the tree does not hold is not a
+hand edit. All six proved on the hub before the suite was re-run there.
+
+**Running at 01:20**: A93, A94 and A95 route side by side on the place box (A94 and A95 since 01:19, their
+chains PREROUTE-DONE OK), A92 and D30 beside them; the hub carries A86's remedy round, A89's, sweep 35 (every
+gate on all seven boards under HEAD's tools, read-only) and the suite.
