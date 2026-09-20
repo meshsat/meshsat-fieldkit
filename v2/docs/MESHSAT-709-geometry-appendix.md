@@ -13297,3 +13297,51 @@ the one that sets how large board A's copper problem is.**
 **Nothing is re-measured on this**, because changing the bar changes MET on boards already cut, which is
 exactly why 13 September left it as a decision rather than a patch. What is added is that the two numbers are
 now written next to each other, so the ruling can be read off a table rather than re-derived.
+
+### 32.259, 20 September 2026 05:04 CEST: A49 and A50 read side by side, and the pre-lay MOVES the violation
+
+A50's finish was REFUSED for an open board, routeflow kept round 1 and started a remedy round that
+regenerates the placement, so the lander will not judge anything for hours. The answer was already on disk:
+19 September's procedure is to read the kept `finished-round1.kicad_pcb` in a scratch copy while the next
+round routes, and that is what was done, read-only, on both arms.
+
+| | **A49** (the sense half pinned, E20's shape) | **A50** (both halves pinned, E21's shape) |
+|---|---|---|
+| board | `f9e3f33048b30436` | `068645d4b5685300` |
+| after the closers | 0 hard, **16 open** | 0 hard, **17 open** |
+| pre-lay | 0 of 20 switching connections | **20 of 20** |
+
+**ANA-001 on the five nets A50 PINNED, A49 against A50:**
+
+| net | A49 | A50 |
+|---|---:|---:|
+| `PA_CSF` | 0.222 mm | **0.500** |
+| `POE_CSF` | 0.201 | **0.615** |
+| `FE_CSF` | 0.444 | 0.444 |
+| `PD_CSF` | 0.262 | 0.262 |
+| `HF_CSF` | (above 0.643) | **0.258** |
+
+**ANA-001 on three nets A50 did NOT pin:**
+
+| net | A49 | A50 |
+|---|---:|---:|
+| `HF_FB` | 0.631 mm | **0.141** |
+| `PD_CSGF` | 0.627 | **0.154** |
+| `FE_FB` | 0.450 | **0.192** |
+
+**So the pre-lay does what it is asked and the violation moves.** Two of the five pinned nets went from about
+0.21 mm to 0.50 and 0.615, which is the instrument working: `PA_CSF` sits at **exactly 0.500**, the floor, by
+construction. And three unpinned nets fell from about 0.6 mm to 0.14 to 0.19. **Both boards FAIL ANA-001**,
+A49 on `FE_FB` at 0.450 over 8.84 mm and A50 on `HF_CSF` at 0.258 over 1.05 mm.
+
+**This is board E's E22 result on board A, word for word**: pinning two of six moved the violation to a third,
+and pinning ten of twenty-four moves it to the fourteen. **The answer is not more copper on the same ten.**
+Board E's E23 pinned ALL SIX of its declared switching nets and read PASS 3 of 3, so the analogous move here
+is board A's whole declared set. **The caveat is already in the record and it is a hard one**: a 0.50 mm class
+cannot escape board A's own pins (0.250 mm at U16 pin 16, 0.200 at U12 pin 8), so pinning every net is not
+obviously available and the rest is a placement question.
+
+**On the open count the arm is a wash**: 16 against 17, one connection, on boards whose closers ran different
+configurations. **A49 stays board A's better arm** and neither is adoptable. The four charger nets refuse on
+both (`/CHG_ILIM`, `/CH_ACN_F`, `/CH_SRN_F`, `/CH_SW2`), which is the third independent place tonight that
+the charger block is named.
