@@ -29,7 +29,27 @@ if b.GetCopperLayerCount() == 2: VIA_D, VIA_DRILL = max(VIA_D, FromMM(0.5)), max
 # board (appendix 32.149).
 _DS = b.GetDesignSettings()
 INPAD_CLR = max(_DS.m_HoleClearance, _DS.m_MinClearance, FromMM(0.15))
-allpads = [(p, p.GetPosition(), max(p.GetSize().x, p.GetSize().y) / 2) for fp in b.GetFootprints() for p in fp.Pads()]
+def _is_copper(p):
+    """A pad on no copper layer is not an obstacle to anything. THIRD TOOL WITH THE 12 SEPTEMBER DEFECT
+    (32.151 in escape.py, 32.218 in return_via._site_free, here on 20 September 2026): KiCad draws a modern
+    exposed pad as one copper pad plus a grid of F.Paste apertures, and an aperture is a pad too, with no
+    number and no net, so it reads as ANOTHER net's pad and takes 0.5 mm of lane away from every fanout
+    candidate near an exposed pad."""
+    return any(pcbnew.IsCopperLayer(L) for L in p.GetLayerSet().Seq())
+
+
+def _pad_poly(p):
+    L = next((l for l in (pcbnew.F_Cu, pcbnew.B_Cu, pcbnew.In1_Cu) if p.IsOnLayer(l)), pcbnew.F_Cu)
+    return p.GetEffectivePolygon(L)
+
+
+# the pad's own half extent travels with it, because a nearness window is measured from the pad CENTRE and
+# a big land is nowhere near its own centre (escape.py carries the same note for the same reason)
+# the net name is carried rather than asked: the dense sample below runs per candidate and a SWIG call per
+# pad per candidate is millions of them on a board with a plane net
+allpads = [(p, p.GetPosition(), max(p.GetSize().x, p.GetSize().y) / 2, _pad_poly(p),
+            max(p.GetSize().x, p.GetSize().y) / 2 + p.GetBoundingBox().GetWidth() / 2, p.GetNetname())
+           for fp in b.GetFootprints() for p in fp.Pads() if _is_copper(p)]
 rule_areas = [z for z in b.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowVias()] + [z for fp in b.GetFootprints() for z in fp.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowVias()]   # A19: inner-layer track bans allow vias and must not block escapes or fanout; B13: footprint keep-outs (the E72 antenna) count too
 edges = b.GetBoardEdgesBoundingBox()
 placed = [t.GetPosition() for t in b.GetTracks() if t.GetClass() == "PCB_VIA"]; placed_nets = []   # escapes already on the board count as placed vias
@@ -42,9 +62,9 @@ def clear(v, me, r=None):
     r = VIA_D / 2 if r is None else r
     mp = me.GetPosition()
     if not (edges.GetLeft() + FromMM(1.5) < v.x < edges.GetRight() - FromMM(1.5) and edges.GetTop() + FromMM(1.5) < v.y < edges.GetBottom() - FromMM(1.5)): return False
-    for q, qp, qr in allpads:
+    for q, qp, qr, _qpoly, _qreach, _qnet in allpads:
         if qp.x == mp.x and qp.y == mp.y: continue            # the pad itself (wrapper objects differ, compare by position)
-        gap = FromMM(0.35) if q.GetNetname() == me.GetNetname() else FromMM(0.5)   # keep other-net pads' exit lanes open for the router (0.75 until 7 Sep 2026: half the ground pads of a packed region got no via and the router left islands)
+        gap = FromMM(0.35) if _qnet == me.GetNetname() else FromMM(0.5)   # keep other-net pads' exit lanes open for the router (0.75 until 7 Sep 2026: half the ground pads of a packed region got no via and the router left islands)
         if math.hypot(v.x - qp.x, v.y - qp.y) < qr + r + gap: return False
     for w in placed:
         if math.hypot(v.x - w.x, v.y - w.y) < VIA_D + FromMM(0.35): return False
@@ -93,12 +113,29 @@ for fp in boardorder.footprints(b):   # stage 0b, 11 Sep 2026: this loop LAYS, s
                 # other-net PAD rule (0.5 mm of lane each side), which cost 18 fanout vias and drove ten of them into the
                 # in-pad fallback on the same run. Crossing a laid track is the defect; passing a pad is not.
                 def _crosses(a_, b_):
+                    # 20 September 2026 (A56, appendix 32.270): "crossing a laid track is the defect; passing a
+                    # pad is not" was half right and the half that was wrong cost four hard items. PASSING a pad
+                    # at less than its lane is a routability question and is judged at the three sample points
+                    # below, where the 9 September measurement set it; OVERLAPPING another net's copper is a
+                    # SHORT and is judged here, densely, at the board's own clearance and never at the lane. Two
+                    # locked GND stubs left their own FET's ground pad at forty-five degrees and clipped their
+                    # own part's drain tab by sixty-five micrometres, with the via and all three samples clear.
+                    # The pad's POLYGON decides, not a circle: a 3.81 x 3.91 mm drain tab has a 2.73 mm bounding
+                    # radius and a circle would refuse every stub that passes beside it.
+                    lo_x, hi_x = min(a_.x, b_.x), max(a_.x, b_.x)
+                    lo_y, hi_y = min(a_.y, b_.y), max(a_.y, b_.y)
+                    near = [qpoly_ for _q, qp_, _qr, qpoly_, qreach_, qnet_ in allpads
+                            if qnet_ != pad.GetNetname()
+                            and lo_x - qreach_ <= qp_.x <= hi_x + qreach_
+                            and lo_y - qreach_ <= qp_.y <= hi_y + qreach_]
                     n_ = max(4, int(math.hypot(b_.x - a_.x, b_.y - a_.y) / FromMM(0.2)))
                     for k in range(0, n_ + 1):
                         q = VECTOR2I(int(a_.x + (b_.x - a_.x) * k / n_), int(a_.y + (b_.y - a_.y) * k / n_))
                         for s_, e_, hw_, n2_ in segs:
                             if n2_ == pad.GetNetname(): continue
                             if _seg_dist(q, s_, e_) < hw_ + TRACK_W / 2 + FromMM(0.15): return True
+                        for qpoly_ in near:
+                            if qpoly_.Collide(q, int(TRACK_W / 2 + INPAD_CLR)): return True
                     return False
                 if clear(v, pad) and clear(mid, pad, TRACK_W / 2) and clear(q3, pad, TRACK_W / 2) and not _crosses(c, v):
                     layer = pcbnew.F_Cu if pad.IsOnLayer(pcbnew.F_Cu) else pcbnew.B_Cu
@@ -108,7 +145,7 @@ for fp in boardorder.footprints(b):   # stage 0b, 11 Sep 2026: this loop LAYS, s
                     placed.append(v); placed_nets.append((v, pad.GetNetname())); added += 1; done = True; break
             if done: break
         if not done and min(pad.GetSize().x, pad.GetSize().y) >= VIA_D + FromMM(0.1) and not any(math.hypot(c.x - w.x, c.y - w.y) < VIA_D + FromMM(0.35) for w in placed) \
-           and all(math.hypot(c.x - qp.x, c.y - qp.y) >= qr + VIA_D / 2 + INPAD_CLR for q, qp, qr in allpads if q.GetNetname() != pad.GetNetname()) \
+           and all(math.hypot(c.x - qp.x, c.y - qp.y) >= qr + VIA_D / 2 + INPAD_CLR for q, qp, qr, _qpoly, _qreach, _qnet in allpads if _qnet != pad.GetNetname()) \
            and all(_seg_dist(c, a_, e_) >= hw_ + VIA_D / 2 + INPAD_CLR for a_, e_, hw_, n_ in segs if n_ != pad.GetNetname()):   # 8 Sep 2026: the in-pad fallback tested pads and vias but not TRACKS, so a via in a plane pad landed on a neighbour's locked escape and the escape was pruned for it (B17, 32.77). The via's ring must keep the class clearance from every other-net pad (D8 run 4: a 1210 neighbour 0.72 mm away)
             # 7 Sep 2026 (E6 run 8, D8 run 3): a plane pad with no room around it gets its via in the pad (0.45/0.25 inside a 0603 land), so no pour piece is ever left
             # hanging on a pad without a path to the plane; the count is reported for the order notes (via-in-pad is a prototype allowance)
