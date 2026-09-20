@@ -12696,3 +12696,42 @@ width are read with that in hand.
 **The two at the top are the two the night already named**: the charger's output, which puts the pack's 10 A
 through 0.200 mm of F.Cu, and the USB-C outlet, which puts 3 A through 0.400 mm of In2 for 54.9 mm. Neither
 is a routing accident; both are conductors nothing was ever told to lay copper for.
+
+### 32.241, 20 September 2026 02:36 CEST: board A's pack node needs sixteen millimetres of copper, and that is a stackup question
+
+The four rails that already have generator-laid copper and still miss PI-001 were asked what width IPC-2221
+actually wants of them, with `power_copper.width_for`, at 10 K on board A's own stackup (JLC06161H-3313:
+outer 0.035 mm, which is 1 oz, inner 0.0152 mm, which is under half an ounce):
+
+| rail | peak | outer 1 oz needs | inner 0.43 oz needs | reads now |
+|---|---:|---:|---:|---:|
+| `VBAT` | 18.0 A | **16.18 mm** | 84.20 mm | 3.69x over |
+| `VIN_RAW` | 10.0 A | 7.19 mm | 37.43 mm | 2.00x over |
+| `VBUS20` | 8.0 A | 5.29 mm | 27.51 mm | 2.03x over |
+| `+13V8_PA` | 6.0 A | 3.56 mm | 18.50 mm | 1.53x over |
+
+**A sixteen millimetre band is a busbar, not a track.** On a 240 mm board that is a tenth of the width for one
+net, and the inner-layer figure of 84 mm is arithmetic saying the pack node cannot be carried on an inner
+layer of this stack at all. This is not a routing problem and it is not a placement problem: at 1 oz there is
+no floor plan that makes 18 A fit in the copper board A has.
+
+**The lever that has not been asked is the COPPER WEIGHT**, and this project has already used it once: owner
+ruling 7 of 12 September put boards P and E5 at 2 oz, and P carries the same pack node. Two ounces halves
+every width above: VBAT 8.09 mm, VIN_RAW 3.60, VBUS20 2.65, +13V8_PA 1.78, which are bands a floor plan can
+actually hold. **Board A carries the highest current in the set and is the one board of the seven that has
+never had its copper weight asked.**
+
+**The options, costed as far as this session can cost them.** (1) **2 oz outer on board A**: every width above
+halves and the four become drawable; the cost is the fabricator's price step and a re-check of every
+clearance against the 2 oz rows of the capability document, which is exactly the check that found board P
+built to 0.127 mm where its own board says 0.16 (16 September). (2) **Keep 1 oz and derate the declaration**:
+if the pack node's 18 A peak is a fault current rather than a service current, the density bar should be
+asked at the service current and the peak handled as a transient, which is a different rule and not this one;
+that is a reading of the design, and nobody has written down which of the two the 18 A is. (3) **Keep 1 oz
+and spread the node over several layers in parallel**, which is what the existing bands and risers already
+attempt and which the 3.69x says is not enough as built.
+
+**This is an owner decision and it is not written into the register tonight**, because a decision needs its
+entry in `OWNER-DECISIONS-2026-09-11.md` with its options and its recommendation before it goes in the index,
+and the index has a rule that refuses one without the other. What is written down is the number, so the
+decision can be drafted against measurements rather than against an impression.
