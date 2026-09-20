@@ -13647,3 +13647,42 @@ and makes the only copper path the laid one.
 **NOT STARTED**: that is A57's change and it is not begun with three routes in flight. **NOT CLAIMED**: that
 the rule area can be drawn without cutting `VBUS20`'s or `CH_SRP`'s own pour, which is 32.160's lesson about
 a keep-out over pads and is the first thing that arm has to measure.
+
+### 32.269, 20 September 2026 06:20 CEST: board P was the quiet board, and running its own chain gave it two items
+
+**(1) Its one remaining measured failure is three percent, and the width that fixes it is bound from above
+by its own pads.** `dc_density` reads MISSED on `PACK_N` at **1.03 of its limit**: the pack return carries
+**2.47 A** and its worst conductor is **0.500 mm of outer 2 oz**, which IPC-2221 rates at **2.392 A** at
+10 K. The width the rule asks for is **0.523 mm**. The verdict's own note settles that this is the strict
+side of the model and not the lenient one: the optimistic reading applies above 0.268 mm2 of copper and this
+conductor is 0.035.
+
+The class is where it lives, and `PWR`'s own comment says so (the current runs in the locked 2 oz bands, the
+class width is for the stubs). **But a class is bound by the narrowest pad it lands on**, which is board D's
+ruling 9 in miniature: measured on the placed board, the narrowest pad on any `PWR` net is **0.610 mm**
+(`Q1.1` on `FUSED`, `Q1.5` on `SW`; `PACK_N`'s own narrowest is 0.800 at `R9.1`). So **0.600 mm is the only
+width that is both enough and pad-safe**: 2.73 A at the same bar, ten percent of margin, ten micrometres
+under the narrowest pad. Three arms one variable apart (0.5, 0.6, 0.7) place identically where it counts,
+**46 escapes and 0 pads skipped in every one**.
+
+**(2) And board P's placement refuses under today's tools, for a reason that has nothing to do with any
+width.** Regenerated from its own generators at HEAD, `place_audit` FAILS with **3 predicted escape-fan
+collisions** among its two fine-pitch parts of 60, where the committed board reads **0 of 2** and PLC-001
+passes. On top of that, all three declared decoupling capacitors sit **11.0, 11.4 and 15.0 mm** from the gas
+gauge's own supply pins (`C1` to `U1.1` PBI, `C6` to `U1.32` BAT, `C8` to `U1.26` VCC) against the 3 mm
+rule, **and both passes that exist for it decline with their own sentence**:
+
+* `bypass_slots`: *LEFT TO THE PACKER ... its part is not placed yet*, on all three, because `U1` is PACKED
+  and not FIXED, and no slot can be reserved beside a pin that has no position yet.
+* `bypass_place`, which runs after the packer: *STUCK ... no free spot within 3.0 mm*, on all three, because
+  since 32.79 both passes treat an escaped fine-pitch part's own fan as CLOSED (courtyard grown 2.2 mm), and
+  a QFN-32 leaves no seat inside three millimetres of a pin.
+
+**So the reservation mechanism cannot fire for a packed part by construction**, which is exactly why board A,
+whose regulators are FIXED, has no such failure and passes PLC-001. Two answers, **neither taken tonight**:
+give `U1` a fixed seat so the reservation runs before the packer, or put the three capacitors on the
+UNDERSIDE beneath their own pins, which is how a two-layer board with a QFN gas gauge is usually built.
+
+**RESIDUE, not a patch**: board P's committed board is held byte for byte by its own deliverable folder, so
+both land in the commit that re-cuts one, which is decision 31. **NOT CLAIMED**: which of the two decoupling
+answers is cheaper, and whether the three predicted collisions share that cause or are a second one.
