@@ -13800,3 +13800,28 @@ and it has cost this record two readings in one night already.
 escape row free, the fanout unable to cross copper, the inductor between the pairs), and it is the only
 thing that can answer whether the four charger nets close. **A54 keeps routing as the older control**, and
 the two are NOT one variable apart: neither is presented as if they were.
+
+### 32.274, 20 September 2026 06:57 CEST: item 7 measured rather than reasoned about, and it is cheaper than I wrote
+
+**32.268 said the answer to TI's item 7 was geometric, a rule area holding each power pour off the sense
+corridor plus the pairs pre-laid. Measured on A58's placed board, the pour is not in the way at all**: no
+filled zone of its own net covers ANY of the four filter input pads, and only one of the four shunt pads
+sits under a pour (`R16.1` on `VBUS20`). So the unbounded Kelvin error `kelvin_check` reads, 1.170 mV of
+the 60 mV full scale on A47 and 27.369 on A48 from one design, is the ROUTER's copper and nothing else,
+which is what 32.246 said and what the placement now confirms.
+
+**And the two cheap instruments both fail for one reason.** The sense tap is the SAME NET as the conductor
+it taps (`R147` taps `/VBUS20`, `R146` `/CH_ACN`, `R149` `/CH_SRP`, `R148` `/CELL+`), so:
+
+* `prelay_groups` closes unconnected pairs of a **named net**, and naming `VBUS20` lays the whole of
+  `VBUS20`, not the one run that matters;
+* a net class cannot separate a net from itself, so no width, clearance or class-pair rule reaches it.
+
+**The instrument is the one this generator already uses for the eleven blind-mate RF drops**: locked copper
+the generator lays itself, four runs as two differential pairs from each shunt pad's CENTRE to its filter
+pad, **26.81, 26.81, 27.16 and 22.28 mm**, taken around the block rather than through the FET row, `L2` and
+the two capacitor rows. Once those pads are connected the router adds no second path to them, because a
+router connects a pair once.
+
+**NOT STARTED**: four hand-chosen runs through a forty-millimetre block is the next real piece of board A
+layout and not a knob, and nothing is half-moved while three routes are in flight.
