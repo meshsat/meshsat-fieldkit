@@ -213,7 +213,20 @@ def main(argv):
 
 def _letter_of(stem):
     """`pcb-b-compute` is board b. The board's own generator holds its frame and its fixed parts, and reading
-    another board's was fine only while this tool served one board (13 September 2026)."""
+    another board's was fine only while this tool served one board (13 September 2026).
+
+    AND THE SECOND FIELD IS NOT THE LETTER ON EVERY BOARD (20 September 2026). `pcb-e1-dock` gave "e1" and
+    the tool went looking for `gen_pcb_e13.py`, which does not exist, so it CRASHED on board E rather than
+    measuring it; `pcb-c-ring` is the same shape. The tree has one answer to "which board is this file",
+    `boardtable.letter_for`, which every power tool already uses, and it is used here first: the split stays
+    as the fallback for a stem the table does not know, because a report that cannot name its board should
+    still say something rather than raise."""
+    try:
+        import boardtable as _bt
+        _l = _bt.letter_for(stem)
+        if _l: return _l
+    except Exception:
+        pass
     parts = stem.split("-")
     return parts[1] if len(parts) > 1 else "b"
 
