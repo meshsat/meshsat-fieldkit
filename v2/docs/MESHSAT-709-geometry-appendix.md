@@ -15285,3 +15285,19 @@ A's A82 arm is what taking them is worth: every number on the placed board the b
 distance from capacitor to pin nearly halved. **Board B is the one that cannot be fixed this way**: 19 of its
 30 have no seat within 12 mm, which is its floor plan and an owner decision, exactly where its escape fans
 and its pair corridors already point.
+
+**32.312 addendum, 15:05 CEST: board P is measured and refused, and its two refusals taught the map.** Its
+three capacitors were run through the seat arm three times. **The first two blocked and both were the arm's
+fault**: board P's FIXED table takes `(x, y, rot, back)` where board A's takes `(x, y, rot)`, so a
+three-field line stopped its generator at the first item; and two of the three are named by a COMPREHENSION,
+`["U1"] + ["C%d" % k for k in range(2, 11)]`, which no text edit can see, so they ended up in the FIXED table
+and in a region list at once and **board P's own duplicate guard refused the board by name**. The arm reads
+the table's arity now and filters the region lists rather than editing their text.
+**The third came back `hard 2`, both a capacitor's GND pad against a locked track** (`/CELL4` and `/FUSED`),
+which is the seat map's blind spot: a placed board is not empty, the generator lays power bands before
+anything is packed. `bypass_seats` carries every laid track at the board's own clearance now.
+**And with that the answer is that board P has nothing to gain**: two seats are offered, the board comes back
+hard 0 with 46 escapes and `netlist_board` 241 of 241, both the baseline's, and the distances move
+**11.0, 11.4, 15.0 mm to 11.0, 11.3, 11.3**. Eleven millimetres is the nearest legal spot outside the gas
+gauge's own escape fan on a board this size, so **board P's decoupling is a package and floor-plan fact
+rather than a seat that was never taken**, and nothing is applied to it.
