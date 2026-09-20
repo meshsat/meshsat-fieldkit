@@ -15841,3 +15841,44 @@ when a fine-pitch part has pads without escapes and another fine-pitch part is w
 converter, is; so A84's fan-clear seat is a seat the predictor accepts and A83's is one it refuses. **The
 measurement and the gate agree**, which is the thing worth knowing: nothing about the seat search's answer
 needed to be discovered by hand.
+
+### 32.325, 20 September 2026 18:30 CEST: the current-sense filter works, and the two taps that were larger than their own signal are now under ten percent
+
+A69 is board A routed on the ISNS filter, which is the reading the filter owes and the only thing that can
+say whether it works: the LM5176 reads each shunt with **no filter at all** on the boards before it, pins 13
+and 14 straight on the two nets the shunt separates, so the tap was the power rail itself. With a 100 R in
+each line and 1 nF across the pins, `kelvin_check` measures the copper between each shunt pad and the filter
+resistor 2.8 mm away instead of sixteen millimetres of rail.
+
+**Its round 1 was finished, refused for being open and KEPT, and read in a scratch copy while round 2 routes**
+(the 19 September procedure), sha `b2a073d7cd35ac69` before and after: **hard 0 and SEVEN unconnected items**,
+open on `/+5V_DEV`, the three slot rails, `/VBAT`, `/FE_COMP` and `/PA_ISNS_N`.
+
+**The table, against A59, which is the same generator WITHOUT the filter:**
+
+| tap | A59 | **A69** |
+|---|---:|---:|
+| `PD_ISNS_N` | 211.395 mV, **422.8 %** | **3.979 mV, 8.0 %** |
+| `PA_ISNS_P` | 64.59 mV, **129.2 %** | **1.06 mV, 2.1 %** |
+| `PD_ISNS_P` | 5.200 mV, 10.4 % | 4.738 mV, 9.5 % |
+| `HF_ISNS_N` | 0.257 mV, 0.5 % | 0.198 mV, 0.4 % |
+| `POE_ISNS_P` | 4.143 mV, 8.3 % | **0.379 mV, 0.8 %** |
+| `POE_ISNS_N` | 4.544 mV, 9.1 % | **0.232 mV, 0.5 %** |
+| taps that are NOT Kelvin connections | **12 of 14** | **9 of 14** |
+
+**Two taps that were larger than the whole signal they carry are now under ten percent**, and the worst of
+them fell by a factor of fifty. Five of the fourteen are now genuine Kelvin connections under one percent,
+where A59 has one.
+
+**THE CHARGER'S FOUR BARELY MOVE AND THAT IS THE EXPECTED ANSWER, NOT A DISAPPOINTMENT**: `CH_ACP_F` 42.1 to
+32.7 percent, `CH_ACN_F` 59.9 to 55.6, `CH_SRP_F` 76.2 to 67.1. The charger's filter resistors R146 to R149
+have been at their pins since 16 September, so this arm changes nothing for them; their error is the RAIL
+COPPER between the shunt and the filter, which is 32.230's placement item and 32.253's `CH_ACN` busbar, not
+the filter's absence. **The filter answers the five LM5176 stages and says nothing about the charger**, which
+is exactly the split the record predicted.
+
+**`sensitive_nodes` reads FAIL 11 of 34 where A59 reads 8 of 24**, and the denominator is the point: A69
+declares the ten newly sensitive nets the filter creates, so the two counts are not comparable and the arm's
+own note said to read it against thirty-four. **Not adopted**: board A's line is zero unrouted and this is
+seven. Read the scoping caveat with it: this run was not given `--board a`, so three rows about board E's
+and board P's own declarations appear in its output and are not board A's.
