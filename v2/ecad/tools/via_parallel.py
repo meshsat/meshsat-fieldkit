@@ -345,6 +345,21 @@ def main(a):
             print("via_parallel: round %d: nothing kept" % rnd); break
         _resolve(path); cur = _currents(path) or {}
         worst_after = _worst(cur, rise, plating)
+        # A ROUND THAT DOES NOT IMPROVE THE WORST RATIO IS ALSO PUT BACK (20 September 2026, measured on
+        # board E's E30). The rule above stopped a round that made the set WORSE and let a round that changed
+        # nothing stand, and on E30 that is three rounds of exactly nothing: round 1 took the worst barrel
+        # 10.84 -> 8.89 and rounds 2, 3 and 4 each read 8.89 -> 8.89 while laying 18, 8 and 2 vias and having
+        # a third of what they tried refused by the DRC and taken back off with its links. Drilled holes that
+        # buy no ratio are cost, and the count of over-rated barrels GROWS as the pass works because every
+        # via it lays is itself a barrel the next round judges, which is how E30 came to read 58 over in
+        # round 2 where round 1 saw 36. The worst ratio is the number this pass is about, so a round that
+        # does not move it ends the pass and its vias come back off.
+        if worst_after[0] > worst_before[0] - 1e-6:
+            shutil.copy(round_bak, path)
+            print("via_parallel: round %d: %d via(s) laid and the worst barrel did not improve (%.2f -> %.2f): "
+                  "the round is put back and the pass stops"
+                  % (rnd, kept, worst_before[0], worst_after[0]))
+            break
         if worst_after[0] > worst_before[0] + 1e-6:
             shutil.copy(round_bak, path); os.remove(round_bak)
             print("via_parallel: round %d: %d via(s) laid and the worst barrel went %.2f (%s) -> %.2f (%s): the round is put back and the pass stops"
