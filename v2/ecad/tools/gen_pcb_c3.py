@@ -87,6 +87,23 @@ FIXED["Q4"] = (_sx + 18.6, _sy - 7.0, 0, True)
 _q4g = [r for r, pin in (nets.get("Q4_G") or nets.get("/Q4_G") or []) if r.startswith("R")]
 for _i, _r in enumerate(sorted(_q4g)[:2]): FIXED[_r] = (_sx + 18.6, _sy - 11.0 - 4.0 * _i, 0, True)
 
+# TEN DECOUPLING CAPACITORS AT THE PINS THEY SERVE (20 September 2026, appendix 32.312 to 32.314).
+# Board C's eighteen declared capacitors were wherever the packer had room, median 22.1 mm from their
+# pin and the worst 47.2, because `bypass_slots` has never reserved a slot on any board of the set.
+# Each seat was measured by `bypass_seats.py` on the board this generator makes, outside every
+# courtyard, escape fan, part-forbidding rule area, region rectangle, piece of laid copper and the
+# board's REAL outline, which for this board is a U around the display window: the first thirteen
+# seats were refused by this board's own gate (`every part on the ring, nothing over the window`)
+# because the map was using the bounding box. Proved through the chain: RESULT ALL PASS, placed board
+# hard 0, 165 escapes and 3 pads skipped, every number the baseline's, and the distances median 22.1
+# to 10.6 mm and total 424 to 247.
+FIXED.update({
+    "C7": (123.89, -54.95, 0, False), "C8": (127.94, -54.94, 0, False), "C9": (131.52, -54.77, 0, False),
+    "C10": (129.96, -52.69, 0, False), "C13": (166.85, -54.75, 0, False), "C14": (126.14, -52.85, 0, False),
+    "C17": (144.20, -53.35, 0, False), "C18": (157.92, -53.35, 0, False), "C29": (-71.32, 99.53, 0, False),
+    "C28": (-67.12, 99.76, 0, False),
+})
+
 PANEL_MOUNT = {"SW_MAIN", "SW_PI", "SW_TEST", "SW_LIGHT", "SW_SOS", "SW_EMCON", "SW_ZERO", "BZ1", "J_HSJ1", "J_HSJ2", "CAM_H1", "CAM_H2"}
 # 15 September 2026 (MESHSAT-862, decision 26's second kind): THE TEST POINTS SIT BESIDE THE NETS THEY TAP. The
 # forty of them were packed as a row in CLUSTER2 on the underside of the bottom strip, and the nets they tap
@@ -112,6 +129,9 @@ SPREAD = lambda r: r.startswith(("TP", "JP", "FB")) or r == "D17"
 REGIONS = [("CLUSTER3", L.CLUSTER3, [r for r in EPD_PARTS if r in comps], False),
            ("CLUSTER2", L.CLUSTER2, [r for r in comps if r not in placed and not r.startswith("H") and SPREAD(r) and r not in EPD_PARTS], True),   # TP26/TP27 belong to the boost cluster
            ("CLUSTER", L.CLUSTER, [r for r in comps if r not in placed and not r.startswith("H") and not SPREAD(r) and r not in EPD_PARTS], True)]
+
+_SEATED = {"C10", "C13", "C14", "C17", "C18", "C28", "C29", "C7", "C8", "C9"}   # the ten above are placed by hand and must not also be packed
+REGIONS = [tuple([_r[0], _r[1], [_x for _x in _r[2] if _x not in _SEATED]] + list(_r[3:])) for _r in REGIONS]
 GAP = 1.2; FINE_MARGIN = 2.2
 def is_fine(fp):
     if re.search(r"SOT-23-[68]", fp.GetFPIDAsString()): return True

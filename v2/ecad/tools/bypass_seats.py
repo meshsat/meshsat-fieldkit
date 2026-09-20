@@ -110,6 +110,14 @@ def seats(board_path, letter, limit=LIMIT, reach=REACH, frame=None):
     if allow:
         rects = [(n, [r[0] - allow, r[1] - allow, r[2] + allow, r[3] + allow]) for n, r in rects]
     OX, OY, how = _frame(letter, frame)
+    clr = 0.2
+    try:
+        pro = os.path.splitext(board_path)[0] + ".kicad_pro"
+        if os.path.exists(pro):
+            clr = float(json.load(open(pro)).get("board", {}).get("design_settings", {}).get("rules", {})
+                        .get("min_clearance", clr)) or clr
+    except Exception:
+        pass
     fps = {f.GetReference(): f for f in b.GetFootprints()}
     moving = {e.get("cap") for e in entries}
     boxes = [(f.GetReference(), *_cbox(f), f.GetLayer()) for f in b.GetFootprints()]
@@ -129,14 +137,6 @@ def seats(board_path, letter, limit=LIMIT, reach=REACH, frame=None):
     # courtyard can still sit on one. Board P's first seat arm came back `hard 2`, both of them a
     # capacitor's GND pad against a locked track (/CELL4 and /FUSED), which is this map's blind spot rather
     # than the board's fault. Each track is taken with its own box and the board's own clearance.
-    clr = 0.2
-    try:
-        pro = os.path.splitext(board_path)[0] + ".kicad_pro"
-        if os.path.exists(pro):
-            clr = float(json.load(open(pro)).get("board", {}).get("design_settings", {}).get("rules", {})
-                        .get("min_clearance", clr)) or clr
-    except Exception:
-        pass
     tracks = []
     for t in b.GetTracks():
         if t.GetClass() == "PCB_VIA": continue
@@ -145,11 +145,25 @@ def seats(board_path, letter, limit=LIMIT, reach=REACH, frame=None):
                        bb.GetRight() / MM + clr, bb.GetBottom() / MM + clr))
     edge = b.GetBoardEdgesBoundingBox()
     EL, ET, ER, EB = edge.GetLeft() / MM, edge.GetTop() / MM, edge.GetRight() / MM, edge.GetBottom() / MM
+    # THE BOARD IS ITS OUTLINE, NOT ITS BOUNDING BOX. Board C is a U around a display window and its own gate
+    # says so in as many words, `every part on the ring, nothing over the window`: it refused five of the
+    # thirteen seats this tool offered, which were inside the box and outside the board. The real outline
+    # with its holes is asked for here, and a seat must lie wholly inside it.
+    poly = pcbnew.SHAPE_POLY_SET()
+    try:
+        b.GetBoardPolygonOutlines(poly)
+        if poly.OutlineCount() < 1: poly = None
+    except Exception:
+        poly = None
     taken = []
     def case(x, y): return (x - OX, OY - y)
     def refuse(x, y, w, h, side):
         l, t, r_, bo = x - w / 2, y - h / 2, x + w / 2, y + h / 2
         if l < EL + 0.5 or r_ > ER - 0.5 or t < ET + 0.5 or bo > EB - 0.5: return "the board edge"
+        if poly is not None:
+            for (cx_, cy_) in ((l, t), (r_, t), (l, bo), (r_, bo), ((l + r_) / 2.0, (t + bo) / 2.0)):
+                if not poly.Collide(pcbnew.VECTOR2I(int(cx_ * MM), int(cy_ * MM)), 0):
+                    return "outside the board outline"
         cl, cb = case(l, bo); cr, ct = case(r_, t)
         for name, (rx0, ry0, rx1, ry1) in rects:
             if min(rx0, rx1) < cr and max(rx0, rx1) > cl and min(ry0, ry1) < ct and max(ry0, ry1) > cb:
@@ -160,7 +174,11 @@ def seats(board_path, letter, limit=LIMIT, reach=REACH, frame=None):
             if L < r_ and R > l and T < bo and B > t: return name
         for ref, L, T, R, B, ly in boxes:
             if ly != side or ref in moving: continue
-            if L < r_ and R > l and T < bo and B > t: return ref
+            # A courtyard is a keep-out for a BODY and the DRC judges PADS: two courtyards that merely touch
+            # can still bridge their masks. Board D's seat arm came back with seven C15-against-R6 items and
+            # five C16-against-U5 on courtyards this map called free, so every other part is taken with a
+            # margin, the board's own clearance by default.
+            if L - clr < r_ and R + clr > l and T - clr < bo and B + clr > t: return ref
         for ly, L, T, R, B in tracks:
             if ly != side: continue
             if L < r_ and R > l and T < bo and B > t: return COPPER

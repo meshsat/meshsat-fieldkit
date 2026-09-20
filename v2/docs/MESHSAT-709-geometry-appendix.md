@@ -15338,3 +15338,22 @@ was not the cause, and board D's remaining collisions are with parts placed by m
 model, its hand-seated USB cluster among them. **Board D and board C keep their numbers and their places in
 the work list.** Board A and board E are taken and verified, board P is refused on measurement, and board B
 is its floor plan.
+
+### 32.314, 20 September 2026 15:20 CEST: board C's own gate refused the seats, and the reason was that the board is a U
+
+**Board C's first thirteen seats were written and its gate refused them in one line**: *every part on the
+ring (left, bottom, right or top strip), nothing over the window*, naming `C7`, `C8`, `C12`, `C15` and
+`C25`. **The seat map was using the board's BOUNDING BOX**, and board C is a U around the display window, so
+five perfectly free rectangles of nothing were offered as seats. `bypass_seats` asks for the board's real
+outline now (`GetBoardPolygonOutlines`) and a seat must lie wholly inside it, corners and centre.
+
+**With that the answer is ten seats and they cost nothing**: `RESULT: ALL PASS`, placed board **hard 0**,
+**165 escapes and 3 pads skipped**, `netlist_board` 868 of 868, every number the baseline's, verified twice,
+once on the arm and once on the committed generator. **The distances go median 22.1 to 10.6 mm and the total
+424 to 247**, with the worst unchanged at 42.6 because that capacitor's own part is across the window from
+it.
+
+**Three of the six boards are now taken** (A 24 seats, E 14, C 10), board P is refused on measurement, board
+D owes one more iteration at `hard 30`, and board B is its floor plan. **Every board's gate, gate by gate,
+has caught the thing the map did not know**: board P's duplicate guard, board C's ring rule, board D's own
+hard set, which is what those gates are for.
