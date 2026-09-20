@@ -15037,3 +15037,34 @@ against**. Suite 1,227, 0 failing.
 declaration corrected the pass still moves nothing on board A; what it buys is an honest reading and a real
 work item, which is a floor-plan question on the same board the outlet corridor is about. Board B's own
 reading is owed on its next placed board.
+
+### 32.305, 20 September 2026 14:25 CEST: four of board A's decoupling capacitors were in a region at the other end of the board, and two of them were declared against a part they do not serve
+
+**The pass corrected in 32.304 immediately paid for itself.** With `bypass_place` reading board A's own placed
+board, 35 of the 40 declared capacitors are further than 3 mm from the pin they serve, and the four worst are
+not a floor-plan fine point: **`C4` 109.4 mm from `U1` pin 1, `C104` 139.6 mm from `U26` pin 14, `C106`
+114.6 mm from `U27` pin 24 and `C107` 130.7 mm from `U28` pin 24.**
+
+**The cause is one region list.** `U1`, `U26`, `U27` and `U28` are FIXED at case x -49 to -62; their four
+100 nF capacitors are named in region **CTL**, whose rectangle is case (52, -38, 90, -24), at the other end
+of a 240 mm board. The schematic generator's own page groups each capacitor with its IC; the placement
+generator's region list puts the logic's passives together with the pull-downs, and a pull-down may sit
+anywhere while a decoupling capacitor may not.
+
+**Seats measured on A70's placed board put all four within 1.70 to 1.90 mm of their own supply pins with
+nothing else moved, and the chain proves them.** A74, the seats plus CTL shortened to its pull-downs:
+**placed board hard 0, 461 escapes and 2 pads skipped, both the baseline's**, `check_pcb_a` ALL PASS,
+`netlist_board` 2,148 of 2,148, and the decoupling reading **5 within 3.0 mm to 7**.
+
+**Seven and not nine, which found the second defect.** `C106` and `C107` are the two PCA9555 expanders' own
+decoupling, written in `gen_sch_a.py` on the line under their `part()` calls, and **both were declared
+against `U26` pin 14**, the AND gate three parts earlier. On A74's board they sit **1.70 mm** from `U27` pin
+24 and `U28` pin 24 and the declaration measured them at 14.7 and 13.0 mm from a pin neither serves. With the
+declaration corrected the chain at HEAD reads **0 moved, 9 already within 3.0 mm, 31 stuck of 40**, with
+`RESULT: ALL PASS`, `netlist_board` 2,148 of 2,148, 461 escapes, 2 pads skipped and hard 0: **the same board,
+four capacitors where they belong and two rows that now measure what they claim to.**
+
+**The generator edit owes a regeneration** and board A's schematic, netlist, provenance sidecar and intent
+file are rebuilt at its own phase and committed with the change, which is the rule this project paid for on
+17 September. **The 31 that remain are a work list, not a defect**: each has its distance beside it now, and
+the next four to ask about are `C54` at 44.5 mm, `C127` at 35.6, `C89` at 27.4 and `C19` at 19.6.
