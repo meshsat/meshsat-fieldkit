@@ -15212,3 +15212,43 @@ own, a locked via sits on it, and **no power-copper call placed it**, so the ans
 cluster call. **It is the FANOUT's via COUNT at a pad that carries rail current**, which is a different edit
 in a different tool. That is what the question was parked on and it is now a work item with a mechanism.
 **E17 stays board E's phase**: E30 is seven connections open and its remedy round regenerates the placement.
+
+### 32.311, 20 September 2026 15:00 CEST: the reservation has never reserved a slot on any board of the set, and board A's answer is twenty-four seats that cost nothing
+
+**The set-level shape of 32.306, read off four boards' own chain logs:**
+
+| board | declared | reserved by `bypass_slots` | within 3.0 mm after the packer |
+|---|---:|---:|---:|
+| A | 40 | **0** | 0 before today, 9 after 32.305 |
+| B | 30 | **0** | 4 |
+| C | 18 | **0** | 1 |
+| D | 22 | **0** | 2 (`bypass_place` moved 2 more) |
+| E | 18 | **0** | 0 (`bypass_place` moved 2) |
+| P | 3 | **0** | 0 |
+
+**One hundred and thirty-one declared decoupling capacitors across the set and not one reserved slot.** The
+pass exists to put every one of them beside its pin before the packer runs, and on five of the six boards the
+3 mm limit meets the 2.2 mm fan exclusion at every fine-pitch pin, so it hands the whole list back. **Board P
+fails for a second reason worth its own line**: all three of its entries read *its part is not placed yet*,
+because the gas gauge they serve is packed into a region AFTER the reservation runs, so there is no pin to
+measure from. That is why the distances across the set are what they are.
+
+**Board A's answer is measured and it is free.** Three arms, one variable each, all on the board this
+generator makes:
+
+| | HEAD | A81, seats outside the rectangles | **A82, outside the rectangles AND the fans** |
+|---|---|---|---|
+| placed board | hard 0 | hard 0 | **hard 0** |
+| escapes | 461, 2 pads skipped | 412, **51 pads skipped** | **461, 2 pads skipped** |
+| `netlist_board` | 2,148 of 2,148 | 2,148 | **2,148** |
+| within 3.0 mm | 9 of 40 | 16 | 9 |
+| median distance | 13.2 mm | 3.1 mm | **5.7 mm** |
+| worst | 44.5 mm | 18.9 mm | **25.8 mm** |
+| total | about 530 mm | 184 mm | **293 mm** |
+
+**A81 is the tempting one and it costs 49 escapes**, which is 9 September's lesson exactly: a capacitor
+parked in a QFN's fan takes that part's escapes. **A82 is the one that is taken**: twenty-four seats, each
+measured outside every courtyard, region rectangle, escape fan, part-forbidding rule area and the board edge,
+each held as it is handed out, and **every number on the placed board is the baseline's** while the total
+decoupling distance is nearly halved. `C11`, `C12` and `C63` keep their own fixed seats, which belong to the
+PA stage's power path; `C108`, `C64`, `C36` and `C42` have no such seat within 12 mm and stay where they are.

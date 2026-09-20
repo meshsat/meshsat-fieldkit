@@ -160,6 +160,24 @@ FIXED = {"J_AB1": (113, -46, 0), "J_MEZZ_PWR1": (-8, -18, 90),
          # A70's own placed board and proved through the chain at A74: hard 0, 461 escapes and 2 pads
          # skipped, both the baseline's, and every one of the four lands 1.70 to 1.90 mm from its pin.
          "C4": (-50.14, -25.30, 0), "C104": (-55.47, -24.26, 0),
+         # AND TWENTY-FOUR MORE AT SEATS OUTSIDE EVERY REGION RECTANGLE AND EVERY ESCAPE FAN
+         # (20 September 2026, appendix 32.311). The reservation pass has never reserved a slot on any
+         # board of the set, because the 3 mm limit and the 2.2 mm fan exclusion cannot both be met at a
+         # fine-pitch pin, so these capacitors were left to the packer and sat 13.2 to 44.5 mm from the
+         # pins they serve. Each seat here was measured on the placed board this generator makes,
+         # outside every courtyard, every region rectangle, every escape fan, every part-forbidding rule
+         # area and the board edge, and each is held as it is handed out. Proved through the chain at
+         # A82: hard 0, 461 escapes and 2 pads skipped, netlist_board 2,148 of 2,148, every number the
+         # baseline's, and the decoupling distance median 13.2 to 5.7 mm, worst 44.5 to 25.8, total 530
+         # to 293. Seats that also cleared the fans cost 49 escapes (A81) and are not taken.
+         # C11, C12 and C63 keep their own fixed seats, which are the PA stage's; C108, C64, C36 and C42
+         # have no seat outside a rectangle and a fan within 12 mm and stay where the packer puts them.
+         "C54": (-70.22, 9.68, 0), "C127": (43.96, 60.38, 0), "C125": (-28.07, -19.75, 0), "C89": (44.16, 64.93, 0),
+         "C71": (-33.81, -18.40, 0), "C8": (-85.84, 56.93, 0), "C74": (-39.36, -17.79, 0), "C60": (-35.84, 6.93, 0),
+         "C123": (-91.14, 47.58, 0), "C19": (-102.50, 9.73, 0), "C78": (-87.84, -25.07, 0), "C116": (27.26, 66.36, 0),
+         "C81": (-104.74, -22.99, 0), "C92": (32.64, 73.21, 0), "C82": (-104.76, -27.25, 0), "C126": (-88.04, -29.62, 0),
+         "C94": (3.56, 63.84, 0), "C124": (-36.04, 2.38, 0), "C30": (-64.18, 53.94, 0), "C48": (-3.38, 47.57, 0),
+         "C29": (-68.55, 47.04, 0), "C35": (-48.18, 53.94, 0), "C41": (-32.18, 53.94, 0), "C47": (-16.18, 53.94, 0),
          "C106": (-47.25, -13.75, 0), "C107": (-59.25, -13.75, 0),
          "R146": (-102.5, 13.6, 0), "R147": (-102.5, 11.8, 0), "C121": (-105.1, 12.7, 90),
          "R148": (-89.7, 11.0, 0), "R149": (-89.7, 12.8, 0), "C122": (-87.1, 11.9, 90),
@@ -208,7 +226,7 @@ REGIONS = [
  # 12 September 2026: FES moves UP rather than CHQ moving down. Taking 1.5 mm off CHQ's height instead pushed its
  # output capacitors onto the FIXED inductor L2 (box y 12.3 to 19.7), which is the packer filling a shorter region
  # from its floor: two courtyard overlaps, two mask bridges and two shorting items, all of them mine.
- ("FES",   (-118, 31.5, -66, 44.5), ["R6", "R7", "R8", "R9", "R10", "C5", "C6", "C7", "C8", "C9", "C10", "R13", "R14", "R15", "R119", "C13", "C14", "C15", "TP12", "TP13", "R11", "R12", "D2", "R150", "R151", "C123"]),   # R150, R151, C123: the CS filter pair and its capacitor (18 September 2026, the datasheet's Kelvin clause); the two resistors sit with the shunt R12 and the capacitor is declared as U2 pin 16's decoupling
+ ("FES",   (-118, 31.5, -66, 44.5), ["R6", "R7", "R8", "R9", "R10", "C5", "C6", "C7", "C9", "C10", "R13", "R14", "R15", "R119", "C13", "C14", "C15", "TP12", "TP13", "R11", "R12", "D2", "R150", "R151"]),   # R150, R151, C123: the CS filter pair and its capacitor (18 September 2026, the datasheet's Kelvin clause); the two resistors sit with the shunt R12 and the capacitor is declared as U2 pin 16's decoupling
  # 12 September 2026: CHQ ended at y 30.5 and FES begins at 30, so the two rectangles OVERLAPPED by half a millimetre
  # and the packer duly put the charger's CSD18510Q5B FETs (a 7.19 x 5.59 mm courtyard) under the front end's resistor row:
  # four `courtyards_overlap` on the PLACED board, before the pre-router touched it, and no gate read them until the
@@ -227,25 +245,25 @@ REGIONS = [
 # and leg redrawn to the new seat, and L2 and U3 moving with it because TI's layout item 6 wants the FETs
 # beside the inductor and Q7/Q8 are 33 mm from L2. It is A51's first item and it is not a seat swap.
 ("CHQ",   (-119.5, 18.5, -70, 30), []),   # 20 Sep 2026: every part of this block is FIXED in the converter's order above, because a row packed BY SIZE is what put the shunts at the wrong ends
- ("CHS",   (-115, -6, -70, 6), ["C16", "C17", "C18", "R18", "C19", "R19", "R20", "Q6", "R21", "R22", "R23", "R24", "R25", "C26", "C27", "R26", "R27", "TP19", "TP20", "TP22"]),
+ ("CHS",   (-115, -6, -70, 6), ["C16", "C17", "C18", "R18", "R19", "R20", "Q6", "R21", "R22", "R23", "R24", "R25", "C26", "C27", "R26", "R27", "TP19", "TP20", "TP22"]),
  # 12 September 2026: POQ started at x -118 and ran under NODE (-118, -68, -106, -44), a 12 x 4 mm overlap the
  # packer never happened to fill. It starts clear of the pack node's column now; 58 x 16 mm still holds its eleven parts.
- ("POQ",   (-104, -48, -46, -32), ["Q17", "Q18", "Q19", "Q20", "R71", "R72", "C81", "C82", "C83", "C84", "C85", "R156", "R157"]),
- ("POS",   (-115, -17, -70, -6), ["R66", "R67", "R68", "R69", "R70", "C75", "C76", "C77", "C78", "C79", "C80", "R73", "R74", "R75", "R121", "U17", "C126"]),
+ ("POQ",   (-104, -48, -46, -32), ["Q17", "Q18", "Q19", "Q20", "R71", "R72", "C83", "C84", "C85", "R156", "R157"]),
+ ("POS",   (-115, -17, -70, -6), ["R66", "R67", "R68", "R69", "R70", "C75", "C76", "C77", "C79", "C80", "R73", "R74", "R75", "R121", "U17"]),
  ("R1S",   (-61, 24, -49, 44), ["C28", "C31", "C32", "C33", "R28", "R29", "R30", "R45", "R129", "C112"]),
- ("VC1",   (-66, 58, -54, 63), ["C29", "C30"]), ("VC2", (-50, 58, -38, 63), ["C35", "C36"]), ("VC3", (-34, 58, -22, 63), ["C41", "C42"]), ("VC4", (-18, 58, -6, 63), ["C47", "C48"]),
+ ("VC1",   (-66, 58, -54, 63), []), ("VC2", (-50, 58, -38, 63), ["C36"]), ("VC3", (-34, 58, -22, 63), ["C42"]), ("VC4", (-18, 58, -6, 63), []),
  ("R2S",   (-45, 24, -33, 44), ["C34", "C37", "C38", "C39", "R32", "R33", "R34", "R46", "R130", "C113"]),
  ("R3S",   (-29, 24, -17, 44), ["C40", "C43", "C44", "C45", "R36", "R37", "R38", "R47", "R131", "C114"]),
  ("RDS",   (-13, 24, -1, 44), ["C46", "C49", "C50", "C51", "R40", "R41", "R42", "R44", "R115", "R132", "C115"]),
- ("PAQ",   (-46, -15, -13, -2), ["Q12", "Q13", "Q14", "R56", "C54", "D3", "R152", "R153"]),   # +3.0 mm east for the CS filter pair, which is all the room region_room measures there (J_MEZZ1 stops it); 18 September 2026   # A23: Q11, C63, C64 at the VBAT spur, C65 to C67 at the PA band
- ("PAS",   (-66, 13, -16, 20), ["R50", "R51", "R52", "R53", "R54", "C57", "C58", "C59", "C60", "C61", "C62", "R57", "R58", "R59", "R120", "C124"]),
+ ("PAQ",   (-46, -15, -13, -2), ["Q12", "Q13", "Q14", "R56", "D3", "R152", "R153"]),   # +3.0 mm east for the CS filter pair, which is all the room region_room measures there (J_MEZZ1 stops it); 18 September 2026   # A23: Q11, C63, C64 at the VBAT spur, C65 to C67 at the PA band
+ ("PAS",   (-66, 13, -16, 20), ["R50", "R51", "R52", "R53", "R54", "C57", "C58", "C59", "C61", "C62", "R57", "R58", "R59", "R120"]),
  ("HFQ",   (-46, -52, -16, -34), ["Q15", "Q16", "Q23", "Q24", "R65", "R122", "R154", "R155"]),   # +4.0 mm south for the CS filter pair (POQ west, HFS east, a through-hole part 4.0 mm south); 18 September 2026
- ("HFS",   (-16, -50, -2, -23), ["R60", "R61", "R62", "R63", "R64", "C68", "C69", "C70", "C71", "C72", "C73", "R123", "R124", "R125", "R126", "C74", "C108", "C109", "C110", "C111", "C125"]),
+ ("HFS",   (-16, -50, -2, -23), ["R60", "R61", "R62", "R63", "R64", "C68", "C69", "C70", "C72", "C73", "R123", "R124", "R125", "R126", "C108", "C109", "C110", "C111"]),
  ("B33",   (-66, -2, -48, 8), ["C52", "C53", "C55", "C56", "R48", "R49"]),
  ("CTL",   (52, -38, 90, -24), ["R2", "R3", "R4", "Q1", "R5", "R102", "R103", "R104", "R145", "R110", "R111", "R112", "R113", "R114"]),
  ("TPS",   (10, -39, 52, -23), ["TP%d" % k for k in range(3, 9)] + ["TP10", "TP11", "TP15", "TP16", "TP17", "TP18", "TP21", "TP23", "TP24", "TP25", "TP26", "TP27", "R116", "R117", "R118"]),   # U29 is FIXED beside J_USBW since 12 September 2026   # TP27: the spare ribbon line, which lost its seat on J_AB1 when the pairs took their columns (10 Sep 2026)
- ("PDS",   (0, 44, 30, 62), ["C93", "C94", "C95", "C96", "C97", "C120", "D4", "R136", "R137", "R138", "R139", "R140", "R141", "R142", "R143", "Q27", "C127"]),
- ("PDQ",   (30, 44, 84, 58), ["Q21", "Q22", "Q25", "Q26", "R81", "R127", "C92", "C116", "C117", "C118", "C119", "R76", "R77", "R78", "R79", "R80", "C86", "C87", "C88", "C89", "C90", "C91", "R128", "R133", "R134", "R135", "R158", "R159"]),
+ ("PDS",   (0, 44, 30, 62), ["C93", "C95", "C96", "C97", "C120", "D4", "R136", "R137", "R138", "R139", "R140", "R141", "R142", "R143", "Q27"]),
+ ("PDQ",   (30, 44, 84, 58), ["Q21", "Q22", "Q25", "Q26", "R81", "R127", "C117", "C118", "C119", "R76", "R77", "R78", "R79", "R80", "C86", "C87", "C88", "C90", "C91", "R128", "R133", "R134", "R135", "R158", "R159"]),
  ("EFS",   (84, 44, 100, 62), ["C98", "R90", "R91", "R92", "R93", "C99", "C100", "R94", "R95", "R96", "R97", "C101", "C102", "R98", "R99", "R100", "R101", "C103"]),
 ]
 GAP = 1.2                      # between any two packed parts (was 0.7: fine-pitch ICs ended wall to wall with passives)
