@@ -13858,10 +13858,18 @@ lines go through U3 itself, and one of them has **no layer free** along its whol
 
 **And that is the finding.** TI's two clauses are in tension on this floor plan: the filter AT the pins
 (10.2.2.2) and a Kelvin trace from the pad CENTRES (item 7), because the pins are 22 to 31 mm from the pads
-and the room between them is spoken for. The cheap alternative is the one the geometry keeps pointing at,
-**the filters moving toward their own shunts with the sense pins reaching them instead**, which is 32.257's
-floor-plan answer again and is not a seat change on its own, since U3's rotation is already the best of four
-(32.268).
+and the room between them is spoken for.
+
+**And the obvious escape does not escape, which is worth writing down before anyone tries it.** The standard
+arrangement is to split the RC, the series resistor AT the shunt so the tap is a true Kelvin tap and the
+capacitor at the pin, and it looks as though it removes the problem because the long run then carries a
+filtered, high-impedance signal instead of a raw tap. **It does not: the two endpoints are the same two
+pads, so the corridor is the same corridor** and all that changes is which net is on it, from `VBUS20` and
+`CH_ACN` to `CH_ACP_F` and `CH_ACN_F`, which are the nets ANA-001 already judges and which would then run
+22 to 31 mm across a block full of switching copper. **Something has to make that run whichever end the
+resistor sits at**, so item 7 resolves either by threading four runs through a full block or by the block's
+own floor plan bringing the controller and the shunts closer, which is 32.257's answer arriving from a
+third direction. U3's rotation is not the lever: it is already the best of four (32.268).
 
 **NOT STARTED, deliberately**: a floor plan half-moved is worse than one not moved, and three routes are in
 flight on this board.
