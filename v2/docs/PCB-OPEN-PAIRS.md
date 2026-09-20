@@ -11,14 +11,13 @@ the ruling is the action that moves it, and the measurement is reported beside i
 
 | waiting on | pairs | what it means |
 |---|---:|---|
-| `DECISION` | 64 | an owner decision by name |
+| `DECISION` | 78 | an owner decision by name |
 | `DECISION_UNCLAIMED` | 5 | a rule that says a decision is open while no decision claims it |
 | `AUTHORITY` | 3 | an authority this project does not have |
 | `MISSING_INPUT` | 15 | an input the reading declared absent |
 | `MEASURED_FAILURE` | 22 | the tool looked and the board failed |
 | `VENDOR_WAIT` | 2 | a fabricator or a standards body, and nobody here |
 | `OWNER_WORK` | 7 | work only the owner or the ordering session can do |
-| `NOT_JUDGED` | 14 | not judged, for the reason the reading gives |
 
 A pair is what a BOARD has to satisfy, so the table counts pairs; these rules are decided by a verdict
 written ONCE for the whole set, so their rows are one reading seen on every board and not that many separate
@@ -31,7 +30,7 @@ things to fix.
 | board | open | of which measured | decision-bound | authority | missing input | not judged |
 |---|---:|---:|---:|---:|---:|---:|
 | A | 26 | 11 | 13 | 1 | 4 | 0 |
-| B | 38 | 6 | 10 | 1 | 5 | 14 |
+| B | 38 | 6 | 24 | 1 | 5 | 0 |
 | C | 12 | 3 | 10 | 0 | 0 | 0 |
 | D | 17 | 4 | 11 | 1 | 2 | 0 |
 | E | 20 | 6 | 12 | 0 | 4 | 0 |
@@ -65,8 +64,9 @@ holding a number, not a question about a number.
 | 40 | 1 | 1 | BAT-001 | P |
 | 41 | 3 | 1 | DOC-002 | C E5 P |
 | 42 | 1 | 1 | DEC-001 | A |
+| 43 | 14 | 0 | EMC-001, GND-001, PAIR-001, PI-002, PI-003, PLC-002, PLN-001, RET-002, RET-004, RF-001, RTE-001, SCH-003, STK-001, VIA-001 | B |
 
-## DECISION (64): an owner decision by name
+## DECISION (78): an owner decision by name
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -83,14 +83,28 @@ holding a number, not a question about a number.
 | `THM-001` | A | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
 | `DOC-001` | A | INCONCLUSIVE | decision 31: conductors leave the case and meet a chip with nothing in between, or only through an active part |
 | `ENV-001` | B | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
+| `SCH-003` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
+| `PI-002` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
+| `PI-003` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
+| `GND-001` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `GND-002` | B | INCONCLUSIVE | decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked |
+| `STK-001` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `RET-001` | B | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
+| `RET-002` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `RET-003` | B | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
+| `RET-004` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
+| `PAIR-001` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `SI-001` | B | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
+| `RF-001` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `INT-001` | B | FAIL | decision 36: the intra-pair tolerance a differential pair is judged against |
 | `INT-002` | B | INCONCLUSIVE | decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked |
 | `ISO-001` | B | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
 | `THM-001` | B | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
+| `PLC-002` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
+| `RTE-001` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
+| `VIA-001` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
+| `PLN-001` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
+| `EMC-001` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `ENV-001` | C | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
 | `GND-002` | C | INCONCLUSIVE | decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked |
 | `STK-002` | C | INCONCLUSIVE | decision 27: the four-layer boards cannot carry a plane under their back-side signals as built |
@@ -218,23 +232,4 @@ holding a number, not a question about a number.
 | `DFA-001` | D | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 | `DFA-001` | E | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 | `DFA-001` | P | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
-
-## NOT_JUDGED (14): not judged, for the reason the reading gives
-
-| rule | board | reading | what it waits on |
-|---|---|---|---|
-| `SCH-003` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
-| `PI-002` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
-| `PI-003` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
-| `GND-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
-| `STK-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
-| `RET-002` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
-| `RET-004` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
-| `PAIR-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
-| `RF-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
-| `PLC-002` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
-| `RTE-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
-| `VIA-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
-| `PLN-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
-| `EMC-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 
