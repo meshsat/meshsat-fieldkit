@@ -13169,3 +13169,34 @@ rather than typed into it looks like. `derate` stays **PASS of 48 with 0 under-r
 percent because its PI-001 was already FAIL: three more misses on a rule already failing move no pair. The
 number moves when a rule changes state, not when a failure gets larger, which is worth remembering when
 reading a flat percentage.
+
+### 32.255, 20 September 2026 03:50 CEST: the feeder check divides by the NOMINAL voltage, and the worst case is at the minimum
+
+`power_path`'s feeder sum said board A's `VIN_RAW` declares 8.00 A typical and its one converter draws
+**10.75 A**. That 10.75 is computed at `VIN_RAW`'s declared `volts`, which is 12.0, the NOMINAL. The input is
+specified **9 to 36 V**, and a buck-boost delivering fixed output power draws its maximum current at its
+MINIMUM input:
+
+| input voltage | draws at the rail's typical | at the rail's peak |
+|---|---:|---:|
+| 36.0 V, top of range | 3.58 A | 4.78 A |
+| **12.0 V, the declared nominal** | **10.75 A** | 14.34 A |
+| **9.0 V, bottom of range** | **14.34 A** | **19.12 A** |
+
+**`VIN_RAW` is declared 8.00 A typical and 10.00 A peak, on board A and on board E.** So the conductor that
+carries the vehicle and shore input into board A's front end is declared at 8 A, draws 10.75 at nominal and
+**19.12 at the bottom of its own specified range**: a factor of 2.4 between the declaration and the worst
+case the design permits.
+
+**Three things this is and is not.** It is NOT a new failure on the page, because `dc_drop` solves at the
+declared current and the declaration has not moved. It IS a statement about every number measured on that
+chain tonight: board E's five input conductors were solved at 8 A and read 2.66 to 5.03 A in their worst
+cells, and at 14.34 A those cells read 1.8 times worse. And it is a design question rather than a
+transcription: **whether the front end must deliver full output at 9 V input is not written down anywhere**,
+and if it must, `VIN_RAW` and board E's whole input chain want a declaration near 14 A and copper to match.
+
+**The tool's own limit is now written down too**: `feed_sums` divides by the parent's `volts`, which is the
+optimistic end of a range. A rail has `v_work` for its maximum and nothing for its minimum, so the tool
+cannot see the 9 V. That is the next field this family wants, and it is deliberately not added at four in
+the morning on top of `v_max`, `series_of`, `returns`, `fed_from` and `pass_through`, all of which landed
+tonight and all of which need the set re-generated once more before any of them is trusted further.
