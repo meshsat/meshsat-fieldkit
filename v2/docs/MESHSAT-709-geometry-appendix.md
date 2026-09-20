@@ -14496,3 +14496,31 @@ first sweep that can check a citation rather than skip it.
 **The lesson is the one I keep being handed today**: a guard whose question is cheaper than the fact it
 guards will answer confidently about the wrong thing, and the way to find out is to let the project's own
 rules argue with the change rather than to reason about it.
+
+### 32.293, 20 September 2026 09:45 CEST: sweep 32 and the morning's number
+
+**Readiness 58.9 percent of 333: 196 verified, 39 failed, 98 inconclusive.** No board changed on any of the
+five sweeps of the morning; every sha was compared before and after and no line says otherwise.
+
+Sweep 32 is the first carrying the **whole** vendor library, 305 documents copied in locally from the staged
+`/root/vendor`, so the four rules that cite a datasheet per number could **check** them instead of skipping
+them: `energy_chain` reads **PASS of 98 with `citations_unjudged` 0**. **Not one verdict in the tree now
+fails only because a document is absent**, which was forty of them an hour before.
+
+**The morning in one line**: 62.8 percent rested on readings up to nine days older than the tools deciding
+them, and **58.9 is what the same seven boards read when asked again today** with their netlists regenerated,
+the contract gate judgeable, the stackup gate able to read its record and every citation resolved. **Readings
+owed went from 53 of 76 open pairs to 20 of 89.**
+
+| sweep | what it added | readiness |
+|---|---|---:|
+| — | the morning's starting page | 62.8 % |
+| 28 | every gate re-taken under today's tools | 54.1 %, of which 84 verdicts were the sweep's own tree |
+| — | those restored | 58.9 % |
+| 30 | the six netlists regenerated, contract gate judgeable | 57.7 % |
+| 31 | the fabricator record present | 55.3 %, of which 40 verdicts were one mkdir |
+| — | those restored | 58.6 % |
+| **32** | **the whole library, every citation resolved** | **58.9 %** |
+
+The two 58.9s are a coincidence of arithmetic and not the same number: the first still carried a stale
+contract PASS and no stackup reading, and the last carries neither.
