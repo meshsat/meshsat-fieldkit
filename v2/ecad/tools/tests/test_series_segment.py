@@ -75,6 +75,60 @@ def t_a_node_is_not_something_a_segment_may_point_at():
     raise AssertionError("a segment pointed at a node and the declaration was accepted")
 
 
+def t_a_return_is_judged_against_the_rail_it_returns():
+    """DEFECTIVE, and the defect is a NUMBER rather than a crash: board P's PACK_N.
+
+    It carries the pack's 18 A peak from the lead land to the coulomb-counting shunt, and it was a node, so
+    no power rule looked at the biggest current on any board of this set. Declared as an ordinary rail it
+    produces nonsense: `dc_drop` judges a drop as a percentage of the net's OWN voltage, and a return's own
+    voltage is 50 mV by construction, so a 2 percent budget is a bar of one millivolt. `returns` names the
+    rail whose voltage the loop is judged against while the net keeps its own 50 mV for CMP-001.
+    """
+    i = _fresh()
+    i.rail("PACK_P", 14.4, 10.0, 18.0, "W_P", loads={"Q2": 10.0})
+    i.rail("PACK_N", 0.05, 10.0, 18.0, "W_N", loads={"R10": 10.0}, returns="PACK_P")
+    r = i._I["rails"]["PACK_N"]
+    assert r["returns"] == "PACK_P" and abs(r["volts"] - 0.05) < 1e-9, r
+    # the bar the two choices give, stated as numbers so the reason is not an opinion
+    assert abs(0.02 * r["volts"] * 1e3 - 1.0) < 1e-6          # 1 mV: the bar a return's own voltage gives
+    assert abs(0.02 * 14.4 * 1e3 - 288.0) < 1e-6              # 288 mV: the bar the rail it returns gives
+
+
+def t_a_return_must_name_a_rail_and_cannot_carry_more_than_it():
+    """DEFECTIVE both ways, and a conductor is a segment or a return and never both."""
+    i = _fresh()
+    i.rail("PACK_P", 14.4, 10.0, 18.0, "W_P", loads={"Q2": 10.0})
+    for kw, want in (({"returns": "NO_SUCH"}, "is not a declared rail"),
+                     ({"returns": "PACK_P", "series_of": "PACK_P"}, "a segment of a path or the return of one")):
+        try:
+            i.rail("X", 0.05, 10.0, 18.0, "W_N", loads={"R10": 10.0}, **kw)
+        except SystemExit as e:
+            assert want in str(e), str(e); continue
+        raise AssertionError("accepted %s" % kw)
+    try:
+        i.rail("Y", 0.05, 10.0, 99.0, "W_N", loads={"R10": 10.0}, returns="PACK_P")
+    except SystemExit as e:
+        assert "no more" in str(e), str(e); return
+    raise AssertionError("a return declared more current than the rail it returns")
+
+
+def t_dc_drop_uses_the_returned_rails_voltage_as_the_denominator():
+    """The tool has to DO it, not just carry the field: a rule that reads the declaration and not the code
+    would pass on a tool that ignored it."""
+    src = open(os.path.join(TOOLS, "dc_drop.py"), encoding="utf-8").read()
+    assert '_ret = r.get("returns")' in src, "dc_drop does not know what a return is"
+    assert "pct = drop / _den if _den else 0.0" in src, \
+        "dc_drop still divides the drop by the net's own voltage whatever it returns"
+    assert 'rails.get(_ret)' in src, "dc_drop does not read the returned rail's voltage"
+
+
+def t_a_return_carries_no_watts_of_its_own():
+    """A return is the other half of one loop, so thermal excludes it exactly as it excludes a segment."""
+    src = open(os.path.join(TOOLS, "thermal.py"), encoding="utf-8").read()
+    assert 'r.get("series_of") or r.get("returns")' in src, \
+        "thermal counts a return's volts times amps as a second source of power"
+
+
 def _thermal_rows(rails):
     """thermal.py's own accounting, run on a rail table with no board (the rows and the sum are pure)."""
     import thermal

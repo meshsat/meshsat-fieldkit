@@ -1,6 +1,6 @@
 {
  "board": "pcb-p-pack",
- "written": "2026-09-17 11:59",
+ "written": "2026-09-20 00:04",
  "bypass": [
   {
    "cap": "C1",
@@ -61,14 +61,22 @@
    "always_on": true,
    "always_on_why": "the cell node after the 25 A blade: a fuse is protection and not a switch",
    "converted": false
+  },
+  "PACK_N": {
+   "volts": 0.05,
+   "amps_typ": 10.0,
+   "amps_peak": 18.0,
+   "source": "W_N",
+   "loads": {
+    "R10": 10.0
+   },
+   "note": "the pack negative from the 12 AWG lead land W_N to the 2 mOhm coulomb-counting shunt R10, at the pack's own 10.0 A typical and 18.0 A peak. Its own potential is 50 mV at 25 A, which is what a part on it is judged against; its DROP is judged against PACK_P, the rail it returns, because a percentage of 50 mV is not a bar anybody could state",
+   "v_work": 0.05,
+   "converted": false,
+   "returns": "PACK_P"
   }
  },
  "nodes": {
-  "PACK_N": {
-   "v_max": 0.05,
-   "v_min": 0.0,
-   "basis": "the pack negative, one 2 mOhm shunt away from GND: 50 mV at the 25 A the counter is scaled for, which is a reference and not a voltage a part has to withstand"
-  },
   "GND": {
    "v_max": 0.0,
    "v_min": 0.0,

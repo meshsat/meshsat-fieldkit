@@ -3,19 +3,19 @@
  "applicable": true,
  "counts": {
   "by_vendor_reference": 0,
-  "judged": 5,
+  "judged": 6,
   "undeclared_nets": 0,
   "under_rated": 0,
-  "unrated_parts": 13
+  "unrated_parts": 12
  },
- "denominator": 5,
+ "denominator": 6,
  "evidence": [],
  "inputs": {
   "board": "p",
   "margin": 0.2,
   "netlist": {
    "path": "out/pcb-p-pack.net",
-   "sha256_16": "eb3206d8b551a900"
+   "sha256_16": "3d117af93faa7a6e"
   }
  },
  "missing_input": null,
@@ -32,10 +32,10 @@
  ],
  "tool": "derate",
  "tools": {
-  "git_head": "190bcc8a4c8b",
-  "tools_tree_sha": "ac75216d6fd7df92"
+  "git_head": "",
+  "tools_tree_sha": "0e1ce7104d273d07"
  },
- "ts": "2026-09-19T22:38:16Z",
+ "ts": "2026-09-20T00:04:28Z",
  "verdict": "PASS",
- "version": "190bcc8a4c8b+dirty"
+ "version": "unknown"
 }

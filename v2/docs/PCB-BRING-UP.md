@@ -182,8 +182,9 @@ missing, not because the board has no rails.
 
 | step | rail | expect | at | what it feeds |
 |---|---|---|---|---|
-| 1 | PACK_P | 14.40 V (13.68 to 15.12) | W_P | Q2 |
-| 2 | CELL4 | 14.40 V (13.68 to 15.12) | W_BP | F1 |
+| 1 | PACK_N | 0.05 V (0.05 to 0.05) | W_N | R10 |
+| 2 | PACK_P | 14.40 V (13.68 to 15.12) | W_P | Q2 |
+| 3 | CELL4 | 14.40 V (13.68 to 15.12) | W_BP | F1 |
 
 
 6 board(s) have an intent file in this tree and are listed. Every number here is a DESIGN figure from the

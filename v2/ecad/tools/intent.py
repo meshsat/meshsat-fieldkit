@@ -19,7 +19,7 @@ def bypass(cap_ref, part_ref, pin, net=None):
 
 def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=None, source_ic="", share=None,
          efficiency=None, switch=None, always_on=None, always_on_why="", enable_net=None, v_work=None,
-         converted=None, series_of=None):
+         converted=None, series_of=None, returns=None):
     """source: the reference the rail enters the board at, or a LIST of them (a ground returns to several).
 
     budget: this rail's own drop budget as a fraction (default the judge's 2 percent; a 3.3 V logic rail at 1 A over long 0.4 mm tracks is fine at 3, 8 Sep 2026).
@@ -78,6 +78,35 @@ def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=No
             raise SystemExit("intent: rail %s declares %.2f A peak as a series segment of %s, which declares "
                              "%.2f A. A segment of a path cannot carry more than the path."
                              % (net, float(amps_peak), series_of, float(_p.get("amps_peak") or 0)))
+    # A RETURN'S DROP IS JUDGED AGAINST THE RAIL IT RETURNS, NOT AGAINST ITS OWN POTENTIAL (20 September 2026,
+    # rule PI-002; board P's `PACK_N`, the third of the sixteen and the biggest current in the kit).
+    #
+    # `PACK_N` runs from the 12 AWG lead land to the 2 mOhm coulomb-counting shunt at the pack's whole 10.0 A
+    # typical and 18.0 A peak, and it was a node, so no power rule had looked at it. Declaring it as an
+    # ordinary rail produces a NONSENSE NUMBER, which is worse than no number: `dc_drop` judges the drop as a
+    # PERCENTAGE OF THE NET'S OWN VOLTAGE, and a return's own voltage is 50 mV by construction, so a 2 percent
+    # budget is a bar of one millivolt and every return on every board fails it. Declaring `volts` as the
+    # pack's 14.4 to get a sensible bar is not available either, because `derate` takes the WORST of everything
+    # declared about a net and would judge the 100 R sense resistor sitting on this net against 14.4 V instead
+    # of the 50 mV it really sees.
+    #
+    # So the net keeps its own `volts` (50 mV, which is what a part on it sees and what CMP-001 must use) and
+    # `returns` names the rail whose voltage and budget the DROP is judged against. It also carries the
+    # thermal exclusion `series_of` carries, for the same reason and more obviously: a return is the other
+    # half of one loop and its watts are that loop's watts.
+    if returns is not None:
+        if series_of is not None:
+            raise SystemExit("intent: rail %s declares both series_of and returns; a conductor is a segment of "
+                             "a path or the return of one, and the two are judged differently" % net)
+        _rp = _I["rails"].get(str(returns).lstrip("/")) or _I["rails"].get("/" + str(returns).lstrip("/"))
+        if _rp is None:
+            raise SystemExit("intent: rail %s says it returns %s, and %s is not a declared rail. A return's "
+                             "drop is judged against the rail it returns, so that rail has to be declared "
+                             "first." % (net, returns, returns))
+        if float(amps_peak) > float(_rp.get("amps_peak") or 0) + 1e-9:
+            raise SystemExit("intent: rail %s returns %.2f A peak where %s carries %.2f A. A return carries "
+                             "the current of the rail it returns and no more."
+                             % (net, float(amps_peak), returns, float(_rp.get("amps_peak") or 0)))
     if not loads: raise SystemExit("intent: rail %s declares no loads. Name where its current goes: "
                                    "loads={\"<ref>\": <amps>, ...}, summing to at most the rail's %.2f A peak. "
                                    "Undeclared, dc_drop would split %.2f A evenly over every U and J on the net, "
@@ -115,7 +144,8 @@ def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=No
                         # `dissipators` list's business, so the two cannot share one question (16 September
                         # 2026, rule THM-001).
                         **({"converted": bool(converted)} if converted is not None else {}),
-                        **({"series_of": str(series_of).lstrip("/")} if series_of is not None else {})}
+                        **({"series_of": str(series_of).lstrip("/")} if series_of is not None else {}),
+                        **({"returns": str(returns).lstrip("/")} if returns is not None else {})}
 
 def node(net, v_max, basis, v_min=0.0, rides_on=None, bias_v=None, vendor_reference=None, v_work=None):
     """A NET THAT IS NOT A RAIL, and the largest voltage a part on it can see (rule CMP-001, 16 September 2026).

@@ -403,7 +403,16 @@ def main(a):
             if lim <= 0: continue
             if via_worst is None or cur / lim > via_worst[0]: via_worst = (cur / lim, cur, lim, vd, vwall, vx, vy)
         tot = sum(share.values()) or 1.0; share = {k: round(x / tot, 2) for k, x in share.items()}
-        amps = sum(sinks.values()); pct = drop / r["volts"] if r["volts"] else 0.0
+        amps = sum(sinks.values())
+        # A RETURN IS JUDGED AGAINST THE RAIL IT RETURNS (20 September 2026, rule PI-002). A return conductor's
+        # own potential is a few tens of millivolts by construction, so a percentage of it is a bar of about a
+        # millivolt and every return on every board would fail it. `returns` names the rail whose voltage the
+        # loop is judged against; the net keeps its own `volts` for CMP-001, which is the voltage a part on it
+        # really sees. Board P's PACK_N is 50 mV of its own and returns a 14.4 V pack.
+        _ret = r.get("returns")
+        _den = float((rails.get(_ret) or {}).get("volts") or 0) if _ret else float(r["volts"] or 0)
+        if _ret and _den <= 0: _den = float(r["volts"] or 0)
+        pct = drop / _den if _den else 0.0
         # FAIL CLOSED ON AN IMPOSSIBLE NUMBER. A series conductor cannot carry more current than the rail has:
         # if this pass says it does, the pass is wrong and the rail has not been measured. It is NOT judged,
         # the way a rail with no declared loads is not judged, because a verdict read off an impossible number
@@ -564,7 +573,7 @@ def main(a):
         # board C's 0.75 would have printed as 1. The value is right and was always right; the line about it was
         # not, and a line nobody can check against the number it claims is how a wrong bar survives.
         results.append((net, rail_verdict, "raster %s; %.1f A over %d nodes: worst drop %.0f mV (%.2f%% of %.1f V, bar %.3g%%); %s; %s; %s%s; layer share %s"
-                        % ("; ".join(raster_note[:4]) or "-", amps, N, drop * 1e3, pct * 100, r["volts"], rb * 100, cond_txt, zone_txt, via_txt, why, share),
+                        % ("; ".join(raster_note[:4]) or "-", amps, N, drop * 1e3, pct * 100, _den, rb * 100, cond_txt, zone_txt, via_txt, why, share),
                         drop, pct, max(cond_ratio, zone_ratio), share))
         if png:
             marks = []
