@@ -50,3 +50,25 @@ def t_room_is_measured_to_the_pads_edge_and_says_it_is_a_model():
     body = "\n".join(body_lines)
     assert "o[6] / 2.0" in body and "o[7] / 2.0" in body, "room is still measured to the pad centre"
     assert "STILL A MODEL" in body, "the estimate does not say it is one"
+
+
+def t_a_barrel_remembers_the_line_that_placed_it():
+    """THE ANSWER TO A SITE THE GENERATOR OWNS IS "ADD POINTS TO THE CALL", SO NAME THE CALL (20 September
+    2026). `barrel_sites --suggest` gave a coordinate, and board E has thirteen such sites whose calls take
+    arguments that are expressions: finding each one is a hunt. Board A's generator grew its own frame walk
+    for this on 19 September and it works there and nowhere else. `power_copper.stitch` records the first
+    frame OUTSIDE power_copper.py for every barrel it places, so a helper like board A's `row`/`col` reports
+    the generator's line and not its own, and `write_provenance` puts the map beside the board.
+
+    Proved to fail on the tool as it stood: `PowerCopper` had no `placed_by` and `stitch` walked no frame."""
+    src = open(os.path.join(TOOLS, "power_copper.py"), encoding="utf-8").read()
+    assert "placed_by" in src and "_getframe" in src, "stitch does not record its caller"
+    assert "def write_provenance" in src, "the map is never written beside the board"
+    # the list is the CLASS's: a generator builds several PowerCopper objects in one run and the sidecar is
+    # one file about one board, so a per-instance list would record whichever object the writer was called on
+    i = src.index("class PowerCopper:")
+    head = src[i:src.index("def __init__", i)]
+    assert "placed_by" in head, "placed_by is per instance, so a run with two PowerCopper objects loses half"
+    rd = open(os.path.join(TOOLS, "barrel_sites.py"), encoding="utf-8").read()
+    assert "_placed_by_src" in rd, "the suggester cannot name the call"
+    assert "SIDECAR AND NOT EVIDENCE" in rd, "the reader does not say the map judges nothing"

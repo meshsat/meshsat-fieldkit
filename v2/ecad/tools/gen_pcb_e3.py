@@ -392,6 +392,11 @@ try:
         ns.SetNetclass(_nm, _nc)
     for pat, name in PATTERNS: ns.SetNetclassPatternAssignment(pat, name)
 except Exception as e: print("note: net class API:", e)
+# THE BARRELS REMEMBER THE LINE THAT PLACED THEM (20 September 2026). `barrel_sites --suggest` answers a
+# site the generator already owns with "add N points to the call that placed it", and without this it can
+# only give a coordinate: board E has THIRTEEN such sites and each call's arguments are expressions. The map
+# is a sidecar beside the board, judged by nothing, and its absence costs a reader the line and nothing else.
+_pcmod.PowerCopper(board, net_for, P).write_provenance(BOARD)
 pcbnew.SaveBoard(BOARD, board)
 print("saved", BOARD, "footprints:", len(list(board.GetFootprints())), "nets:", board.GetNetCount())
 import json

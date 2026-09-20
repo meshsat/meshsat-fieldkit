@@ -29,6 +29,32 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
 
+def _placed_by_src(board_path, net, x, y, tol=0.6):
+    """The generator line that placed the barrel at this site, from the sidecar, or None.
+
+    A SIDECAR AND NOT EVIDENCE: nothing is judged by it, its absence costs the reader a line and nothing
+    else, and a board generated before `power_copper.write_provenance` existed simply has none."""
+    import json as _j, os as _o
+    try:
+        stem = _o.path.splitext(_o.path.basename(board_path))[0]
+        for suf in ("-placed", "-preroute", "-par-routed", "-cleaned"):
+            if stem.endswith(suf): stem = stem[: -len(suf)]
+        d = _o.path.dirname(_o.path.abspath(board_path))
+        p = _o.path.join(d, "out", stem + "-barrel-provenance.json")
+        if not _o.path.isfile(p): p = _o.path.join(d, stem + "-barrel-provenance.json")
+        if not _o.path.isfile(p): return None
+        rows = (_j.load(open(p, encoding="utf-8")) or {}).get("barrels") or []
+    except Exception:
+        return None
+    best, bd = None, tol
+    for r in rows:
+        if str(r.get("net", "")).lstrip("/") != str(net).lstrip("/"): continue
+        at = r.get("at") or [0, 0]
+        d = math.hypot(float(at[0]) - x, float(at[1]) - y)
+        if d <= bd: best, bd = r.get("src"), d
+    return best
+
+
 def main(argv):
     if not argv: print(__doc__); return 2
     import pcbnew, intent
@@ -183,8 +209,15 @@ def main(argv):
             if any(x.get("locked_here") for x in ss):
                 print('    # %s at (%.2f, %.2f): this barrel is the GENERATOR\'s own (a locked via sits on it), so a'
                       % (g["net"], ox, oy))
-                print('    # cluster centred here would land 0.%d mm from it. Add %d point(s) to the call that placed it'
-                      % (int(round((drill + 0.4) / 2 * 100)), max(0, n - len(ss))))
+                # AND THE LINE, WHERE THE GENERATOR LEFT ONE (20 September 2026). `power_copper.stitch`
+                # records the caller of every barrel it places and `write_provenance` puts the map beside the
+                # board, so this can name the call instead of a coordinate. Board E has thirteen of these
+                # sites and finding each call among arguments that are expressions is the hunt this removes.
+                # Absent sidecar, absent line, and the sentence is what it was.
+                _src = _placed_by_src(path, g["net"], ox, oy)
+                print('    # cluster centred here would land 0.%d mm from it. Add %d point(s) to %s'
+                      % (int(round((drill + 0.4) / 2 * 100)), max(0, n - len(ss)),
+                         ("the call at " + _src) if _src else "the call that placed it"))
                 print('    # instead, %.3f A over %d barrel(s) of %.2f mm, and keep %.4f mm between holes.'
                       % (amps, n, drill, drill + 0.2995))
                 continue
