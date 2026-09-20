@@ -22,7 +22,7 @@
   "margin": 0.2,
   "netlist": {
    "path": "out/pcb-c-display.net",
-   "sha256_16": "8e62e0a7a9c2f6f2"
+   "sha256_16": "3dd62bd5f7756f5c"
   }
  },
  "missing_input": null,
@@ -39,10 +39,10 @@
  ],
  "tool": "derate",
  "tools": {
-  "git_head": "190bcc8a4c8b",
-  "tools_tree_sha": "ac75216d6fd7df92"
+  "git_head": "",
+  "tools_tree_sha": "798fff6646b0d2ca"
  },
- "ts": "2026-09-19T22:38:15Z",
+ "ts": "2026-09-20T00:19:54Z",
  "verdict": "PASS",
- "version": "190bcc8a4c8b+dirty"
+ "version": "unknown"
 }

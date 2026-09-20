@@ -694,6 +694,12 @@ _SEC_MARKS.append(('CAMERA, QMX AND SPARE USB HEADERS, THE WALL USB PAIR (BANK 3
 tps2065("U28", "+5V_DEV", "CAM_EN", "+5V_CAM", "CAM_FLT"); r("R47", "10k", "CAM_FLT", "+3V3_DEV"); r("R48", "100k", "CAM_EN", "GND"); c("C64", "10u", "+5V_CAM", "GND", "C10u")
 part("J_CAM", "Connector_Generic", "Conn_01x04", "camera lead (USB 2.0, bank 1 hub, port 3): 5V D- D+ GND", "PH1x4", {"1": "+5V_CAM", "2": "CAM_DM", "3": "CAM_DP", "4": "GND"}); esd("U34", "CAM_DP", "CAM_DM", "+5V_CAM")
 part("F3", "Device", "Polyfuse", "0.5A hold 1812", "F1812", {"1": "+5V_DEV", "2": "VBUS_QMX"})
+# VBUS_QMX IS A CONDUCTOR AND IT WAS DECLARED AS NOTHING AT ALL (20 September 2026; appendix 32.237). It is
+# the 5 V that leaves this board for the HF unit in the lid tray, behind its own 0.5 A polyfuse, and +5V_DEV
+# already declares F3 as a 0.30 A load, so this is the same 0.30 A on the other side of the fuse: a SERIES
+# SEGMENT of +5V_DEV, whose watts are counted there and whose copper every rule judges here.
+_intent.rail("VBUS_QMX", 5.0, 0.30, 0.30, "F3", loads={"J_QMX": 0.30}, series_of="+5V_DEV", converted=False,
+             note="the QMX unit's 5 V behind the 0.5 A polyfuse F3, out at the J_QMX pigtail")
 part("J_QMX", "Connector_Generic", "Conn_01x04", "QMX USB lead (bank 2 hub, port 4): VBUS D- D+ GND; pigtail to the unit's USB-C", "PH1x4", {"1": "VBUS_QMX", "2": "QMX_DM", "3": "QMX_DP", "4": "GND"}); esd("U35", "QMX_DP", "QMX_DM", "VBUS_QMX")
 # the QMX 12 V lead runs from A22's J_HF straight to the unit's DC jack (no B16 part)
 # 9 September 2026 (ARCH-PCB-B-IOHA): the spare USB header and its fuse are withdrawn. Bank 3's port 4 now carries the 5G
@@ -736,6 +742,13 @@ ic("U10", 7, "TMP117AIDRVR board temperature under the coolers (I2C 0x49; WSON-6
 # ================================================================= the panel ribbon J_PANEL (2x13) to C7's controller and the A22 ribbon J_AB1 (2x13, underside)
 _SEC_MARKS.append(("THE PANEL RIBBON J_PANEL (2X13) TO C7'S CONTROLLER AND THE A22 RIBBON J_AB1 (2X13,..", len(P)))
 part("F1", "Device", "Polyfuse", "2A hold 1812", "F1812", {"1": "+5V_DEV", "2": "PANEL_5V"})
+# PANEL_5V IS THE SAME SHAPE AND IT IS THE ONE PWR-003 IS ABOUT (20 September 2026). It is the 5 V that
+# leaves over the panel ribbon for board C, behind a 2.0 A hold, 3.5 A trip polyfuse; +5V_DEV declares F1 as
+# a 0.60 A load, so this is that 0.60 A past the fuse. It carries its own 0.8 mm PANEL class because a 0.4 mm
+# track is rated 1.23 A at 10 K and the fuse does not trip until 3.5, which is the 17 September finding.
+_intent.rail("PANEL_5V", 5.0, 0.60, 0.60, "F1", loads={"J_PANEL": 0.60}, series_of="+5V_DEV", converted=False,
+             note="the panel's 5 V behind the 2 A polyfuse F1, out over the panel ribbon at J_PANEL pins 1 "
+                  "and 2 to board C")
 part("J_PANEL", "Connector_Generic", "Conn_02x13_Odd_Even", "panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMCON/ZEROIZE/TX_INHIBIT, HDMI selects, heartbeats, slot enables, power control lines", "IDC26", {
  "1": "PANEL_5V", "2": "PANEL_5V", "3": "GND", "4": "SDA", "5": "SCL", "6": "EXP_INT", "7": "TR_APRS", "8": "EMCON_HW", "9": "GND", "10": "ZEROIZE_HW", "11": "TX_INHIBIT_n", "12": "HDMI_SEL1", "13": "HDMI_SEL2",
  "14": "GND", "15": "USB_PNL_P", "16": "USB_PNL_N", "17": "GND", "18": "HB1", "19": "HB2", "20": "HB3", "21": "SLOT_EN1", "22": "SLOT_EN2", "23": "SLOT_EN3", "24": "PI_SHDN_REQ", "25": "PI_KILL", "26": "SHORE_INHIBIT"})

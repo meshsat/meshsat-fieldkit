@@ -1,6 +1,6 @@
 {
  "board": "pcb-b-compute",
- "written": "2026-09-17 22:20",
+ "written": "2026-09-20 00:18",
  "bypass": [
   {
    "cap": "C112",
@@ -781,6 +781,30 @@
    "always_on": true,
    "always_on_why": "the return, which nothing switches",
    "converted": false
+  },
+  "VBUS_QMX": {
+   "volts": 5.0,
+   "amps_typ": 0.3,
+   "amps_peak": 0.3,
+   "source": "F3",
+   "loads": {
+    "J_QMX": 0.3
+   },
+   "note": "the QMX unit's 5 V behind the 0.5 A polyfuse F3, out at the J_QMX pigtail",
+   "converted": false,
+   "series_of": "+5V_DEV"
+  },
+  "PANEL_5V": {
+   "volts": 5.0,
+   "amps_typ": 0.6,
+   "amps_peak": 0.6,
+   "source": "F1",
+   "loads": {
+    "J_PANEL": 0.6
+   },
+   "note": "the panel's 5 V behind the 2 A polyfuse F1, out over the panel ribbon at J_PANEL pins 1 and 2 to board C",
+   "converted": false,
+   "series_of": "+5V_DEV"
   }
  },
  "nodes": {
@@ -788,6 +812,26 @@
    "v_max": 5.0,
    "v_min": 0.0,
    "basis": "the slot 1 indicator's anode, behind its 1k series resistor from the 5 V rail: it can only reach that rail"
+  },
+  "S1A_SW": {
+   "v_max": 5.1,
+   "v_min": -1.0,
+   "basis": "the +3V3_S1A buck's switching node: it swings to +5V_S1, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
+  },
+  "S1B_SW": {
+   "v_max": 5.1,
+   "v_min": -1.0,
+   "basis": "the +3V3_S1B buck's switching node: it swings to +5V_S1, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
+  },
+  "S1C_SW": {
+   "v_max": 5.1,
+   "v_min": -1.0,
+   "basis": "the +1V0_S1 buck's switching node: it swings to +5V_S1, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
+  },
+  "S1D_SW": {
+   "v_max": 5.0,
+   "v_min": -1.0,
+   "basis": "the +1V1_S1 buck's switching node: it swings to +5V_DEV, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
   },
   "PCIE1_RXSW_P": {
    "v_max": 3.6,
@@ -814,6 +858,26 @@
    "v_min": 0.0,
    "basis": "the slot 2 indicator's anode, behind its 1k series resistor from the 5 V rail: it can only reach that rail"
   },
+  "S2A_SW": {
+   "v_max": 5.1,
+   "v_min": -1.0,
+   "basis": "the +3V3_S2A buck's switching node: it swings to +5V_S2, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
+  },
+  "S2B_SW": {
+   "v_max": 5.1,
+   "v_min": -1.0,
+   "basis": "the +3V3_S2B buck's switching node: it swings to +5V_S2, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
+  },
+  "S2C_SW": {
+   "v_max": 5.1,
+   "v_min": -1.0,
+   "basis": "the +1V0_S2 buck's switching node: it swings to +5V_S2, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
+  },
+  "S2D_SW": {
+   "v_max": 5.0,
+   "v_min": -1.0,
+   "basis": "the +1V1_S2 buck's switching node: it swings to +5V_DEV, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
+  },
   "PCIE2_RXSW_P": {
    "v_max": 3.6,
    "v_min": 0.0,
@@ -839,6 +903,26 @@
    "v_min": 0.0,
    "basis": "the slot 3 indicator's anode, behind its 1k series resistor from the 5 V rail: it can only reach that rail"
   },
+  "S3A_SW": {
+   "v_max": 5.1,
+   "v_min": -1.0,
+   "basis": "the +3V3_S3A buck's switching node: it swings to +5V_S3, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
+  },
+  "S3B_SW": {
+   "v_max": 5.1,
+   "v_min": -1.0,
+   "basis": "the +3V3_S3B buck's switching node: it swings to +5V_S3, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
+  },
+  "S3C_SW": {
+   "v_max": 5.1,
+   "v_min": -1.0,
+   "basis": "the +1V0_S3 buck's switching node: it swings to +5V_S3, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
+  },
+  "S3D_SW": {
+   "v_max": 5.0,
+   "v_min": -1.0,
+   "basis": "the +1V1_S3 buck's switching node: it swings to +5V_DEV, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
+  },
   "PCIE3_RXSW_P": {
    "v_max": 3.6,
    "v_min": 0.0,
@@ -858,6 +942,16 @@
    "v_max": 3.6,
    "v_min": 0.0,
    "basis": "a PCIe receive lane: about 1.2 V peak to peak of differential signal on a common mode the specification holds below 3.6 V, which is what an AC coupling capacitor on it has to stand off"
+  },
+  "DEV_SW": {
+   "v_max": 5.0,
+   "v_min": -1.0,
+   "basis": "the AP63203's switching node for +3V3_DEV: it swings to +5V_DEV, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
+  },
+  "KSZC_SW": {
+   "v_max": 5.0,
+   "v_min": -1.0,
+   "basis": "the +1V2_KSZ buck's switching node: it swings to +5V_DEV, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
   }
  },
  "pair_classes": {

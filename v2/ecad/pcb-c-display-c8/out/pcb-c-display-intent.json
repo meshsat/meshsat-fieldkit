@@ -1,6 +1,6 @@
 {
  "board": "pcb-c-display",
- "written": "2026-09-17 11:59",
+ "written": "2026-09-20 00:19",
  "bypass": [
   {
    "cap": "C7",
@@ -212,6 +212,11 @@
    "v_max": 0.0,
    "v_min": 0.0,
    "basis": "the board's reference, so a part between a live net and ground is judged against the live net rather than reported as sitting on an undeclared one"
+  },
+  "BZ_K": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "the sounder's low side between BZ1 and Q4's drain: it sits at the +5V rail while the FET is off and at its on-state drop while it conducts"
   }
  },
  "pair_classes": {

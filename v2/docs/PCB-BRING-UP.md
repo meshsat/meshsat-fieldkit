@@ -68,10 +68,12 @@ fault from one that reads low.
 |---|---|---|---|---|---|
 | 1 | +5V_DEV | 5.00 V | 3.80 A | J_5V_DEV | F1, F2, F3, U106, U15, U16 |
 | 2 | +5V_HDMI | 5.00 V | 0.10 A | F2 | J_HDMI |
-| 3 | +5V_S1 | 5.10 V | 2.50 A | J_5V_S1 | J_FAN1, U103, U104, U105, U30A |
-| 4 | +5V_S2 | 5.10 V | 2.50 A | J_5V_S2 | J_FAN2, U203, U204, U205, U31A |
-| 5 | +5V_S3 | 5.10 V | 2.50 A | J_5V_S3 | J_FAN3, U303, U304, U305, U32A |
-| 6 | +54V_POE | 54.00 V | 0.30 A | J_54V | U5 |
+| 3 | VBUS_QMX | 5.00 V | 0.30 A | F3 | J_QMX |
+| 4 | PANEL_5V | 5.00 V | 0.60 A | F1 | J_PANEL |
+| 5 | +5V_S1 | 5.10 V | 2.50 A | J_5V_S1 | J_FAN1, U103, U104, U105, U30A |
+| 6 | +5V_S2 | 5.10 V | 2.50 A | J_5V_S2 | J_FAN2, U203, U204, U205, U31A |
+| 7 | +5V_S3 | 5.10 V | 2.50 A | J_5V_S3 | J_FAN3, U303, U304, U305, U32A |
+| 8 | +54V_POE | 54.00 V | 0.30 A | J_54V | U5 |
 
 **Measured, in this order, after the inputs are up.**
 
