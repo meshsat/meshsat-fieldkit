@@ -39,14 +39,14 @@ things to fix.
 
 ## Readings owed
 
-Of the 84 open pairs with a reading beside them, **3 are decided by a reading taken under a tool that has
+Of the 84 open pairs with a reading beside them, **1 are decided by a reading taken under a tool that has
 CHANGED since**. A tool change moves no rule-set fingerprint and no per-rule digest, so nothing else on these
 pages can say it. It is an upper bound, because a tool file moves for a comment as readily as for a
 criterion, and it decides nothing: it says the reading is owed. Re-take with retake_gate.sh or a sweep.
 
 | rule | boards |
 |---|---|
-| `PI-003` | A, D, E |
+| `PLC-001` | B |
 
 ## Boards behind their own generator
 
