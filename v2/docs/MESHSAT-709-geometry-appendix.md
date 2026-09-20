@@ -16078,3 +16078,32 @@ five or six a 16 mm column allows, where a slot rail's 2.50 A wants about six an
 the EAST (U18, C103, R100 at x +85 to +104), which today's commit moved further east still. **So three of
 the four are a generator job on In3 and the fourth is the copper-weight question**, which is the same
 sentence board A's VBAT and VIN_RAW already carry.
+
+### 32.329, 20 September 2026 19:20 CEST: the three slot rails reach their load banks on In3 and the placement takes it for nothing
+
+A87 draws, per slot, an F.Cu island over the rail's own four-part load bank, **one In3 pour from that bank up
+to the three stitch vias the generator already places under the connector** (`row(out, xL+3.1, xL+6.5, 72.6,
+3)`), and a stitch column at the south end. **`+5V_DEV` is deliberately left out**: at 6.00 A on half-ounce
+inner copper it wants about fifteen millimetres against the five or six a 16 mm column allows, and it also
+has to reach the east, so it is decision 35's and not this arm's.
+
+**The placed board, against A85's own numbers with one variable:**
+
+| | A85 (no inner runs) | **A87 (three inner runs)** |
+|---|---:|---:|
+| escapes / pads skipped | 461 / 2 | **461 / 2** |
+| `check_pcb_a` | PASS of 511 | **PASS of 511** |
+| `netlist_board` | 2,148 of 2,148 | **2,148 of 2,148** |
+| placed board hard | 0 | **0** |
+| region fit | 1.4 of 1.5 | 1.4 of 1.5 |
+| `place_audit` | (not run: the stop was above it) | **0 predicted collisions of 19 fine-pitch parts, ALL PASS** |
+
+**The last row is this afternoon's chain fix paying for itself within the hour.** A87 stopped at the placed
+board and the predictor ran there because commit 32c62145 moved it above the stop; A83 stopped in the same
+place four hours earlier and the predictor never ran, which cost an hour of hand measurement. Here it came
+for nothing and says the placement is clean.
+
+**NOT APPLIED.** A85 is the precedent from ninety minutes ago and A56 from this morning: a placed board is
+not a pre-route, and new copper bites at the fanout, the barrel stage and the pre-route DRC rather than at
+the placement. **A88 is A87 through every stage** and the generator is not touched until it ends
+`PREROUTE-DONE OK`.
