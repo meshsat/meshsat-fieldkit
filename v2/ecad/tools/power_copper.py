@@ -92,17 +92,23 @@ class PowerCopper:
         expressions. It is a SIDECAR and not evidence: nothing judges it, and its absence costs a reader the
         line and nothing else."""
         import json as _jsn, os as _osj
-        if not self.placed_by: return None
-        stem = _osj.splitext(_osj.basename(board_path))[0]
+        # A TOOL THAT FINDS NOTHING SAYS SO. This returned None in silence and board E's first run then
+        # looked exactly like a generator that had placed no barrels, which it had not: the only way to tell
+        # the two apart was to add this line (20 September 2026).
+        if not self.placed_by:
+            print("power copper: no barrel was recorded with a source line, so no provenance is written "
+                  "(stitch() places every barrel and records its caller; a run that placed none is normal)")
+            return None
+        stem = _osj.path.splitext(_osj.path.basename(board_path))[0]
         for suf in ("-placed", "-preroute", "-par-routed", "-cleaned"):
             if stem.endswith(suf): stem = stem[: -len(suf)]
-        d = _osj.join(_osj.dirname(_osj.abspath(board_path)), "out")
+        d = _osj.path.join(_osj.path.dirname(_osj.path.abspath(board_path)), "out")
         try:
             _osj.makedirs(d, exist_ok=True)
-            p = _osj.join(d, stem + "-barrel-provenance.json")
+            p = _osj.path.join(d, stem + "-barrel-provenance.json")
             _jsn.dump({"barrels": self.placed_by}, open(p, "w", encoding="utf-8"), indent=1)
             print("power copper: %d barrel(s) recorded with the line that placed them -> %s"
-                  % (len(self.placed_by), _osj.relpath(p, _osj.dirname(_osj.dirname(p)))))
+                  % (len(self.placed_by), _osj.path.relpath(p, _osj.path.dirname(_osj.path.dirname(p)))))
             return p
         except Exception as e:
             print("power copper: the barrel provenance could not be written (%s)" % e); return None
@@ -148,11 +154,17 @@ class PowerCopper:
         # helper like board A's `row`/`col` reports the generator's line and not its own.
         try:
             import sys as _sysp, os as _osp
-            _f, _me = _sysp._getframe(1), _osp.abspath(__file__)
-            while _f is not None and _osp.abspath(_f.f_code.co_filename) == _me: _f = _f.f_back
-            _src = ("%s:%d" % (_osp.basename(_f.f_code.co_filename), _f.f_lineno)) if _f is not None else ""
-        except Exception:
+            _f, _me = _sysp._getframe(1), _osp.path.abspath(__file__)
+            while _f is not None and _osp.path.abspath(_f.f_code.co_filename) == _me: _f = _f.f_back
+            _src = ("%s:%d" % (_osp.path.basename(_f.f_code.co_filename), _f.f_lineno)) if _f is not None else ""
+        except Exception as _e:
+            # A SILENT EXCEPT IS HOW A DAY PASSES. The first run of this recorded nothing and looked exactly
+            # like a generator that had placed no barrels; the only way to tell was to say why (20 Sep 2026).
             _src = ""
+            if not getattr(PowerCopper, "_src_warned", False):
+                PowerCopper._src_warned = True
+                print("power copper: the line that placed a barrel could not be read (%s), so the provenance "
+                      "sidecar will be empty" % _e)
         for x, y in pts:
             v = pcbnew.PCB_VIA(self.b); v.SetPosition(self.P(x, y)); v.SetDrill(FromMM(drill)); v.SetWidth(FromMM(width)); v.SetViaType(pcbnew.VIATYPE_THROUGH)
             v.SetNet(self.net_for(net, create=False)); v.SetLocked(True); self.b.Add(v)

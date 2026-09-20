@@ -1225,3 +1225,36 @@ def t_a_gate_that_dies_on_a_signal_is_tried_once_more_before_it_blocks():
     assert blk.count("pa_run;") == 2, "the gate is not run exactly twice at most"
     assert '"$PA" -ge 128' in blk, "the retry is not limited to a signal exit"
     assert "PA=$PA2" in blk, "the second run's exit is not the one that decides"
+
+
+def t_no_tool_calls_a_path_function_on_the_os_module_itself():
+    """`os.abspath` DOES NOT EXIST AND THE ERROR IS INVISIBLE (MESHSAT-862, 20 September 2026).
+
+    Three times in one hour, in two tools, a local alias of `os` was followed by a function that lives in
+    `os.path`. Every one raises AttributeError, and the first was inside a bare `except Exception` that set
+    an empty string, so the barrel provenance recorded nothing and looked exactly like a generator that had
+    placed no barrels. It cost two chain runs, and what found it was making the except say why.
+
+    THE RULE PARSES RATHER THAN GREPS, and its first version did not: written as a regular expression it
+    matched the examples in its own docstring and failed on itself, which is the `pkill -f` self-match in
+    another costume. An AST walk sees attribute accesses and never sees a string."""
+    import ast as _ast, glob as _g
+    PATHFN = {"abspath", "basename", "dirname", "join", "splitext", "relpath",
+              "isfile", "isdir", "exists", "normpath", "realpath"}
+    bad = []
+    for f in sorted(_g.glob(os.path.join(TOOLS, "*.py"))) + sorted(_g.glob(os.path.join(TOOLS, "tests", "*.py"))):
+        try: tree = _ast.parse(open(f, encoding="utf-8").read())
+        except SyntaxError: continue
+        aliases = {"os"}
+        for n in _ast.walk(tree):
+            if isinstance(n, _ast.Import):
+                for a in n.names:
+                    if a.name == "os" and a.asname: aliases.add(a.asname)
+        for n in _ast.walk(tree):
+            if not isinstance(n, _ast.Call): continue
+            fn = n.func
+            if (isinstance(fn, _ast.Attribute) and fn.attr in PATHFN
+                    and isinstance(fn.value, _ast.Name) and fn.value.id in aliases):
+                bad.append("%s:%d  %s.%s(" % (os.path.basename(f), fn.lineno, fn.value.id, fn.attr))
+    assert not bad, ("a path function is called on the os module itself, which raises AttributeError the "
+                     "moment that branch runs:\n  " + "\n  ".join(sorted(set(bad))[:12]))
