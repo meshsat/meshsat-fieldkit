@@ -86,6 +86,18 @@ python3 ../tools/erc_gate.py . $N > out/erc_gate.log 2>&1; ERCG=$?; tail -6 out/
 # intent that the board gates read from the intent file; what it is for is the class of mistake no numeric gate looks for.
 python3 ../tools/review_nets.py out/$N.net 2>&1 | grep -E "^(==|I2C|issues|  )" | tail -12
 
+# EVERY CONDUCTOR ON A POWER PATH IS DECLARED, ASKED AT GENERATION (20 September 2026, rules PI-001, PI-002).
+# Board A had sixteen DC conductors declared as `node`s and the set had twenty-four more declared as NOTHING
+# AT ALL, and every one was found by reading a generator by hand; two of them carry 4.81 A and 6.26 A in
+# conductors IPC rates at 0.40 A and one sags 837 mV on a 5 V outlet. `dc_drop` solves RAILS, so a conductor
+# declared otherwise is copper no power rule looks at, and `derate` reports an undeclared net only where a
+# RATED PART sits on it. This asks from the netlist and the intent beside it, at the moment a generator
+# changes, which is the only time the answer is cheap.
+# It REPORTS and never blocks: some of what it names is genuinely a node and the declaration is where a
+# person writes down which, with its basis. The number to watch is the UNDECLARED count, zero on all six
+# boards since 20 September.
+python3 ../tools/power_path.py out/$N.net 2>&1 | grep -E "^power_path:" | tail -8
+
 python3 ../tools/gen_pcb_$L.py $N.kicad_pcb > out/gen_pcb_$L.log 2>&1; grep -E 'saved|WARN|Trace|Error|note|not found' out/gen_pcb_$L.log
 grep -q saved out/gen_pcb_$L.log || block "mechanical generator (out/gen_pcb_$L.log)" out/gen_pcb_$L.log
 # Phase two of the decoupling placement (owner ruling 9 Sep 2026, 32.74 option 3). The A and B lineages run it before the
