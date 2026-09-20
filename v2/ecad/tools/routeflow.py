@@ -1021,6 +1021,20 @@ def preflight(repo, requires=()):
         mem = {l.split(":")[0]: int(l.split()[1]) // 1024 for l in open("/proc/meminfo") if l.startswith(("MemTotal", "MemAvailable"))}
         checks.append(("memory available >= 8 GB", mem["MemAvailable"] >= 8192, "%d of %d MB free" % (mem["MemAvailable"], mem["MemTotal"])))
     except Exception as e: checks.append(("memory", False, str(e)[:60]))
+    # A ROUTE THAT CANNOT WRITE ITS RESULT IS FIVE HOURS SPENT FOR NOTHING (20 September 2026). The hub filled
+    # to 100 percent with 184 K free while four boards routed: A54's router finished at hard 0 and 20 unrouted,
+    # its finish ran every closer, and routeflow then ended TOOL_CRASH on `[Errno 28] No space left on device`
+    # at the moment it tried to KEEP its own board. Nothing warned, because the free space was spent by dead
+    # arm trees elsewhere on the disk and not by this run. Measured, a route's whole `out/` is 93 MB on board A
+    # and 22 on board E, so the bar is not about this run's appetite; it is headroom for the keep, the frozen
+    # tree a lander makes and whatever else shares the box. 2 GB is twenty times the largest measured run.
+    try:
+        _st = os.statvfs(repo if os.path.isdir(repo) else ".")
+        _free_mb = (_st.f_bavail * _st.f_frsize) // (1024 * 1024)
+        checks.append(("disk free >= 2 GB where the run writes", _free_mb >= 2048,
+                       "%d MB free" % _free_mb if _free_mb >= 2048 else
+                       "%d MB free: a finish that cannot keep its board ends TOOL_CRASH and the route is lost" % _free_mb))
+    except Exception as e: checks.append(("disk free", False, str(e)[:60]))
     try: load = os.getloadavg()[0]; checks.append(("load average under 8", load < 8, "%.1f" % load))
     except Exception: pass
     svc = os.path.expanduser("~/meshsat-services.sh"); checks.append(("service group script", os.path.exists(svc), svc + (" (stop it before a route)" if os.path.exists(svc) else " absent: not the build host")))

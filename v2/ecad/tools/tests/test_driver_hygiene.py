@@ -1258,3 +1258,26 @@ def t_no_tool_calls_a_path_function_on_the_os_module_itself():
                 bad.append("%s:%d  %s.%s(" % (os.path.basename(f), fn.lineno, fn.value.id, fn.attr))
     assert not bad, ("a path function is called on the os module itself, which raises AttributeError the "
                      "moment that branch runs:\n  " + "\n  ".join(sorted(set(bad))[:12]))
+
+
+def t_a_run_refuses_to_start_without_room_to_write_its_result():
+    """A ROUTE THAT CANNOT WRITE ITS RESULT IS FIVE HOURS SPENT FOR NOTHING (MESHSAT-862, 20 September 2026).
+
+    The hub filled to 100 percent with 184 K free while four boards routed. A54's router finished at hard 0
+    and 20 unrouted of 264, its finish ran every closer it has (stub, dots, direct_close, the pair round,
+    stitch_prune), and routeflow then ended `TOOL_CRASH` on `[Errno 28] No space left on device` at the
+    moment it tried to KEEP its own board. Its landing driver found no frozen tree and said so, correctly.
+    Nothing was lost only because the closers' board was still on disk and could be read where it stood.
+
+    Preflight already asks about memory and load and knew nothing about disk, and the space was spent by
+    dead arm trees elsewhere rather than by the run itself, which is why no stage could see it coming.
+    Measured before the bar was chosen: a route's whole `out/` is 93 MB on board A and 22 MB on board E, so
+    the number is headroom for the keep, the frozen tree a lander makes and whatever else shares the box,
+    not an estimate of this run's appetite."""
+    s = open(os.path.join(TOOLS, "routeflow.py"), encoding="utf-8").read()
+    assert "statvfs" in s, "routeflow's preflight never asks how much room the run has to write its result"
+    i = s.find("def preflight(")
+    assert 0 < i < s.find("statvfs"), "the disk check is not inside preflight, so a run does not refuse on it"
+    assert "disk free >= 2 GB" in s, "the disk check has no stated bar"
+    assert "TOOL_CRASH" in s.split("statvfs")[0][-900:], \
+        "the disk check does not carry the measurement that set it, so the next reader cannot judge the bar"
