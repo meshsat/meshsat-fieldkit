@@ -143,6 +143,7 @@ def main(a):
     _stem = os.path.splitext(os.path.basename(path))[0]
     for _suf in ("-placed", "-preroute", "-par-routed", "-cleaned"):
         if _stem.endswith(_suf): _stem = _stem[: -len(_suf)]
+    _vc.placed_snapshot_note("rail_crossings", path)
     _dir = os.path.dirname(os.path.abspath(path))
     if os.path.basename(_dir) == "out": _dir = os.path.dirname(_dir)
     ip = a[a.index("--intent") + 1] if "--intent" in a else os.path.join(_dir, "out", _stem + "-intent.json")

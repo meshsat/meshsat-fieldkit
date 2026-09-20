@@ -49,6 +49,27 @@ def ampacity(drill_mm, rise_k, plating_um=PLATING_UM):
 
 
 
+def placed_snapshot_note(tool, path):
+    """Say so when the board handed to a pre-route barrel tool is the PLACED SNAPSHOT (20 September 2026).
+
+    `full.sh` copies `out/<N>-placed.kicad_pcb` at line 170 and takes the PREROUTE_STOP_AFTER_PLACE exit at
+    212, while `rail_barrels --apply`, the stage that fills a short crossing, runs at 309. So that snapshot
+    is a board written BEFORE the stage that answers this question, and reading a shortfall off it reports
+    something the chain fills forty lines later. It cost a wrong sentence to the owner about board D, whose
+    chain at HEAD lays the missing barrel by itself and then reads 6 of 6 crossings carrying what they need.
+
+    Both tools deliberately ACCEPT a snapshot (they strip the suffix to find the intent beside it), so this
+    is not a refusal: it is the tool saying which board it was given. A reading nobody can place is how a
+    number about an old artefact becomes a finding, which is this week's defect three times over."""
+    import os as _o
+    if _o.path.splitext(_o.path.basename(path))[0].endswith("-placed"):
+        print("%s: THIS IS THE PLACED SNAPSHOT, which the chain writes BEFORE the stage that fills a short "
+              "crossing (rail_barrels --apply), so a shortfall read here is not the chain's answer: read the "
+              "project's own board after the chain has run" % tool)
+        return True
+    return False
+
+
 def barrels_for(amps, drill_mm, rise_k=10.0, plating_um=PLATING_UM):
     """How many barrels of this drill a current needs (18 September 2026).
 

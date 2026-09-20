@@ -174,6 +174,8 @@ def _declined_evidence(declined):
 
 def main(argv):
     if not argv: print(__doc__); return 2
+    import via_current as _vcn
+    _vcn.placed_snapshot_note("rail_barrels", argv[0])
     import pcbnew
     import power_copper as _pc
     import via_parallel as _vp

@@ -16383,3 +16383,38 @@ to five layers of copper** (`+3V3_DEV` has 383.8 mm on B.Cu, 491.4 on F.Cu, 420.
 `+5V_DEV` adds an In4 zone; `GND` has its In1 plane), so every one of them crosses layers somewhere and keeps
 its reading. **Boards C, P and E5 carry no attributed row at all.** The guard changes one row on one board,
 which is what it was written for, and the sweep is the evidence that it changed nothing else.
+
+### 32.337
+
+**Board D's power-via failure is a board a phase behind its generator, and my first reading of it was taken
+off the wrong artefact (20 September 2026, 21:50 CEST).** The open-pairs register carries PI-003 FAIL on
+board D: `+5V_SA`, two barrels each carrying the rail's whole 1.10 A against 0.90 A, on the committed board.
+It has stood as board D's one open engineering item, filed as a trade, because the 18 September answer cost a
+connection.
+
+**Measured tonight in a staged tree, read-only about the repo.** Board D's placement regenerates clean (68
+escapes added and 7 pads skipped, hard 0 of the fifteen types, `place_audit` **0 predicted collisions** among
+6 fine-pitch parts of 211). `rail_barrels` finds **one** short crossing, `+5V_SA` at **FB1 pad 2 (71.79,
+77.67)**, one 0.40 mm barrel carrying 1.10 A where two are owed, and lays the second beside it: **hard 0 to 0,
+unrouted 284 to 284**, nothing moved, nothing refused by the DRC. `rail_crossings` then reads **six crossings
+of four declared rails carrying the barrels their current needs and zero short**, and the chain ends
+`PREROUTE-DONE OK`. **So it costs nothing, needs no placement change, and is already in the generator**; what
+board D needs is a route of the board its generator makes, which is **D28**, running on the place box with its
+reader armed on the supervisor's own pid and its prediction written first (D12 routed 0/0 and is the declared
+phase; D17 and D19 landed 0 hard and two open on regenerated placements at two crowded neighbourhoods with
+addresses, and this board differs from those by one locked barrel, which touches no lane).
+
+**AND THE FIRST READING WAS OFF THE WRONG COPY OF THE BOARD, the fifth of that family this week and the first
+in this place.** `full.sh` copies `out/<N>-placed.kicad_pcb` at line 170 and takes the
+`PREROUTE_STOP_AFTER_PLACE` exit at 212, while `rail_barrels --apply` runs at **309**. I ran `rail_crossings`
+on that snapshot, which is a board written **before the stage that fills the gap**, and it reported a
+shortfall the chain closes forty lines later; the sentence reached an owner message before it was checked and
+was corrected nine minutes later, publicly. It is the 8 September trap with its sign reversed: not a board
+that already carries its escapes, a board that does not yet carry its barrels.
+
+**THE GUARD IS A SENTENCE, NOT A REFUSAL.** Both tools deliberately accept a snapshot (each strips the suffix
+to find the intent beside it), and that accommodation is right. `via_current.placed_snapshot_note()` prints
+which board the tool was given and why a shortfall read there is not the chain's answer; **a parse rule holds
+BOTH callers to asking it**, because a note only one of the two carries is a note the next hand probe walks
+past. Two fixtures (it fires on `-placed`, it is silent on the project's own board) and the caller rule, all
+three proved to fail on the tree they were written against. Suite **1250**, 0 failing.
