@@ -31,7 +31,7 @@ def bypass(cap_ref, part_ref, pin, net=None):
 # current as a peak does the reverse: whichever one it is belongs in the rail's `note`.
 def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=None, source_ic="", share=None,
          efficiency=None, switch=None, always_on=None, always_on_why="", enable_net=None, v_work=None,
-         converted=None, series_of=None, returns=None, fed_from=None):
+         converted=None, series_of=None, returns=None, fed_from=None, v_max=None):
     """source: the reference the rail enters the board at, or a LIST of them (a ground returns to several).
 
     budget: this rail's own drop budget as a fraction (default the judge's 2 percent; a 3.3 V logic rail at 1 A over long 0.4 mm tracks is fine at 3, 8 Sep 2026).
@@ -177,7 +177,19 @@ def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=No
                         **({"converted": bool(converted)} if converted is not None else {}),
                         **({"series_of": str(series_of).lstrip("/")} if series_of is not None else {}),
                         **({"returns": str(returns).lstrip("/")} if returns is not None else {}),
-                        **({"fed_from": str(fed_from).lstrip("/")} if fed_from is not None else {})}
+                        **({"fed_from": str(fed_from).lstrip("/")} if fed_from is not None else {}),
+                        # v_max: THE PEAK A PART ON THIS RAIL CAN SEE, which is not `v_work` and not `volts`
+                        # (20 September 2026). `node()` has carried this since 16 September and `rail()` had
+                        # not, and the gap bit within minutes of using it: board E's vehicle input is 9 to
+                        # 36 V in service and its SMCJ40A clamps a transient at about 64.5 V at peak pulse
+                        # current, so a part on it must be rated for the clamp's let-through while the
+                        # PROTECTOR itself is judged against the service maximum. Declaring 53.3 as `v_work`
+                        # to keep the derating strict made `derate` refuse the SMCJ40A for standing off 40 V
+                        # on a line it was told runs to 53.3 in normal service, which is a true sentence
+                        # about a false input. `derate` takes the worst of `volts`, `v_max` and `v_work` for
+                        # a part's rating and reads `v_work` alone for the standoff rule, so the two numbers
+                        # belong in the two fields and the conversion of a node to a rail keeps both.
+                        **({"v_max": float(v_max)} if v_max is not None else {})}
 
 def node(net, v_max, basis, v_min=0.0, rides_on=None, bias_v=None, vendor_reference=None, v_work=None):
     """A NET THAT IS NOT A RAIL, and the largest voltage a part on it can see (rule CMP-001, 16 September 2026).

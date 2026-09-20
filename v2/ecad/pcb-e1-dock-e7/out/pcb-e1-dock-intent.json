@@ -1,6 +1,6 @@
 {
  "board": "pcb-e1-dock",
- "written": "2026-09-20 00:32",
+ "written": "2026-09-20 01:19",
  "bypass": [
   {
    "cap": "C16",
@@ -196,33 +196,79 @@
    "always_on_why": "U12 is an AP63205 whose EN pin is tied to CELL_F, the pack node it runs from, so this rail follows the pack and has no switch of its own",
    "efficiency": 0.88,
    "converted": true
+  },
+  "DC_IN": {
+   "volts": 12.0,
+   "amps_typ": 8.0,
+   "amps_peak": 10.0,
+   "source": "J_DCIN",
+   "loads": {
+    "F1": 8.0
+   },
+   "note": "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at 40 V, and the SMCJ40A clamping a transient at about 64.5 V at its peak pulse current, which is why the parts on this line are 100 V ceramics and why `v_work` is 53.3 and not the 36 V service maximum. It carries VIN_RAW's own current, this being one conductor run in five pieces",
+   "v_work": 36.0,
+   "converted": false,
+   "series_of": "VIN_RAW",
+   "v_max": 53.3
+  },
+  "DC_F": {
+   "volts": 12.0,
+   "amps_typ": 8.0,
+   "amps_peak": 10.0,
+   "source": "F1",
+   "loads": {
+    "Q1": 8.0
+   },
+   "note": "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at 40 V, and the SMCJ40A clamping a transient at about 64.5 V at its peak pulse current, which is why the parts on this line are 100 V ceramics and why `v_work` is 53.3 and not the 36 V service maximum. It carries VIN_RAW's own current, this being one conductor run in five pieces",
+   "v_work": 36.0,
+   "converted": false,
+   "series_of": "VIN_RAW",
+   "v_max": 53.3
+  },
+  "DC_P": {
+   "volts": 12.0,
+   "amps_typ": 8.0,
+   "amps_peak": 10.0,
+   "source": "Q1",
+   "loads": {
+    "R19": 8.0
+   },
+   "note": "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at 40 V, and the SMCJ40A clamping a transient at about 64.5 V at its peak pulse current, which is why the parts on this line are 100 V ceramics and why `v_work` is 53.3 and not the 36 V service maximum. It carries VIN_RAW's own current, this being one conductor run in five pieces",
+   "v_work": 36.0,
+   "converted": false,
+   "series_of": "VIN_RAW",
+   "v_max": 53.3
+  },
+  "HS_S": {
+   "volts": 12.0,
+   "amps_typ": 8.0,
+   "amps_peak": 10.0,
+   "source": "R19",
+   "loads": {
+    "Q7": 8.0
+   },
+   "note": "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at 40 V, and the SMCJ40A clamping a transient at about 64.5 V at its peak pulse current, which is why the parts on this line are 100 V ceramics and why `v_work` is 53.3 and not the 36 V service maximum. It carries VIN_RAW's own current, this being one conductor run in five pieces",
+   "v_work": 36.0,
+   "converted": false,
+   "series_of": "VIN_RAW",
+   "v_max": 53.3
+  },
+  "DC_HS": {
+   "volts": 12.0,
+   "amps_typ": 8.0,
+   "amps_peak": 10.0,
+   "source": "Q7",
+   "loads": {
+    "L2": 8.0
+   },
+   "note": "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at 40 V, and the SMCJ40A clamping a transient at about 64.5 V at its peak pulse current, which is why the parts on this line are 100 V ceramics and why `v_work` is 53.3 and not the 36 V service maximum. It carries VIN_RAW's own current, this being one conductor run in five pieces",
+   "v_work": 36.0,
+   "converted": false,
+   "series_of": "VIN_RAW",
+   "v_max": 53.3
   }
  },
  "nodes": {
-  "DC_IN": {
-   "v_max": 53.3,
-   "v_min": 0.0,
-   "basis": "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at 40 V, and the SMCJ40A clamping a transient at about 64.5 V at its peak pulse current. The parts on this line are 100 V ceramics for that reason",
-   "v_work": 36.0
-  },
-  "DC_F": {
-   "v_max": 53.3,
-   "v_min": 0.0,
-   "basis": "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at 40 V, and the SMCJ40A clamping a transient at about 64.5 V at its peak pulse current. The parts on this line are 100 V ceramics for that reason",
-   "v_work": 36.0
-  },
-  "DC_P": {
-   "v_max": 53.3,
-   "v_min": 0.0,
-   "basis": "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at 40 V, and the SMCJ40A clamping a transient at about 64.5 V at its peak pulse current. The parts on this line are 100 V ceramics for that reason",
-   "v_work": 36.0
-  },
-  "DC_HS": {
-   "v_max": 53.3,
-   "v_min": 0.0,
-   "basis": "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at 40 V, and the SMCJ40A clamping a transient at about 64.5 V at its peak pulse current. The parts on this line are 100 V ceramics for that reason",
-   "v_work": 36.0
-  },
   "GND_V": {
    "v_max": 0.0,
    "v_min": 0.0,
@@ -234,7 +280,7 @@
    "basis": "the board's reference, so a part between a live net and ground is judged against the live net rather than reported as sitting on an undeclared one"
   },
   "U3_VCAP": {
-   "v_max": 63.3,
+   "v_max": 22.0,
    "v_min": 0.0,
    "basis": "LM74700-Q1 VCAP: the internal charge pump sits about 10 V above the anode DC_F",
    "rides_on": "DC_F",

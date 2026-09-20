@@ -7,11 +7,11 @@ Every pair that is not a current PASS, classified. Generated from tools/pcb_deci
 map's maturity and each deciding verdict: a decision that claims a pair wins over everything else, because
 the ruling is the action that moves it, and the measurement is reported beside it rather than lost.
 
-**124 open pair(s)** over 7 board(s). **45 are measured failures** (a tool looked and the board failed), which are **39 distinct readings**, and **15 of those are claimed by an open owner decision**.
+**125 open pair(s)** over 7 board(s). **46 are measured failures** (a tool looked and the board failed), which are **40 distinct readings**, and **16 of those are claimed by an open owner decision**.
 
 | waiting on | pairs | what it means |
 |---|---:|---|
-| `DECISION` | 62 | an owner decision by name |
+| `DECISION` | 63 | an owner decision by name |
 | `DECISION_UNCLAIMED` | 5 | a rule that says a decision is open while no decision claims it |
 | `AUTHORITY` | 3 | an authority this project does not have |
 | `MISSING_INPUT` | 14 | an input the reading declared absent |
@@ -35,7 +35,7 @@ things to fix.
 | B | 31 | 14 | 10 | 1 | 4 | 2 |
 | C | 12 | 3 | 10 | 0 | 0 | 0 |
 | D | 17 | 4 | 11 | 1 | 2 | 0 |
-| E | 19 | 5 | 11 | 0 | 4 | 0 |
+| E | 20 | 6 | 12 | 0 | 4 | 0 |
 | E5 | 6 | 3 | 3 | 0 | 0 | 0 |
 | P | 14 | 6 | 10 | 0 | 0 | 0 |
 
@@ -52,14 +52,14 @@ holding a number, not a question about a number.
 | 31 | 6 | 3 | DOC-001, TRN-001 | A D E |
 | 32 | 3 | 3 | RET-004 | C D E |
 | 34 | 16 | 0 | ENV-001, ISO-001, THM-001 | A B C D E E5 P |
-| 35 | 1 | 1 | PI-001 | A |
+| 35 | 2 | 2 | PI-001 | A E |
 | 36 | 2 | 2 | INT-001 | A B |
 | 37 | 2 | 0 | CMP-002, SUP-001 | D |
 | 39 | 16 | 0 | RET-001, RET-003, SI-001 | A B C D E P |
 | 40 | 1 | 1 | BAT-001 | P |
 | 41 | 3 | 1 | DOC-002 | C E5 P |
 
-## DECISION (62): an owner decision by name
+## DECISION (63): an owner decision by name
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -104,6 +104,7 @@ holding a number, not a question about a number.
 | `THM-001` | D | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
 | `DOC-001` | D | INCONCLUSIVE | decision 31: conductors leave the case and meet a chip with nothing in between, or only through an active part |
 | `ENV-001` | E | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
+| `PI-001` | E | FAIL | decision 35: which published current-rating model this project's copper is judged against |
 | `GND-002` | E | INCONCLUSIVE | decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked |
 | `RET-001` | E | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
 | `RET-003` | E | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
@@ -190,7 +191,7 @@ holding a number, not a question about a number.
 | `OUT-001` | C | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `PI-003` | D | FAIL | via_current FAIL: {'measured_rails': 4, 'no_via': 0, 'over': 1, 'rails': 4} |
 | `OUT-001` | D | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
-| `PI-003` | E | FAIL | via_current FAIL: {'measured_rails': 3, 'no_via': 1, 'over': 2, 'over_barrels': 5, 'rails': 4} |
+| `PI-003` | E | FAIL | via_current FAIL: {'measured_rails': 7, 'no_via': 1, 'over': 7, 'over_barrels': 18, 'rails': 9} |
 | `ANA-001` | E | FAIL | sensitive_nodes FAIL: {'declared': 3, 'fail': 2, 'measured': 3} |
 | `OUT-001` | E | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `STK-001` | E5 | FAIL | stackup_gate FAIL: {'compared': 8, 'copper_layers': 2, 'disagreements': 1} |

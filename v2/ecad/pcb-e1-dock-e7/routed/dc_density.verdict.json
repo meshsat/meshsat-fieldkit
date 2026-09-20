@@ -2,12 +2,17 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "met": 5,
-  "missed": 0,
+  "met": 6,
+  "missed": 4,
   "undeclared": 0
  },
- "denominator": 5,
- "evidence": [],
+ "denominator": 10,
+ "evidence": [
+  "MISSED DC_IN on current density: worst conductor or pour cell at 1.99 of its limit (the drop was 0.40% of 12.0 V, which is not what failed)",
+  "MISSED DC_F on current density: worst conductor or pour cell at 3.04 of its limit (the drop was 1.06% of 12.0 V, which is not what failed)",
+  "MISSED DC_P on current density: worst conductor or pour cell at 2.47 of its limit (the drop was 1.02% of 12.0 V, which is not what failed)",
+  "MISSED HS_S on current density: worst conductor or pour cell at 2.06 of its limit (the drop was 0.26% of 12.0 V, which is not what failed)"
+ ],
  "inputs": {
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
@@ -29,9 +34,9 @@
  "tool": "dc_density",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "a1600dd77a88a3de"
+  "tools_tree_sha": "3403c8ec6d4030c1"
  },
- "ts": "2026-09-20T00:33:18Z",
- "verdict": "PASS",
+ "ts": "2026-09-20T01:19:38Z",
+ "verdict": "FAIL",
  "version": "unknown"
 }

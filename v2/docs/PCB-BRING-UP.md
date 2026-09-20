@@ -23,8 +23,8 @@ fault from one that reads low.
 | step | rail | apply | current limit | at | what it feeds |
 |---|---|---|---|---|---|
 | 1 | VIN_RAW | 12.00 V | 8.00 A | J_DOCK | C11, C12, Q2 |
-| 2 | VBAT | 14.40 V | 10.00 A | F1 | Q11, U12, U15, U4, U5, U6 |
-| 3 | CELL+ | 14.40 V | 10.00 A | J_CP1 | F1 |
+| 2 | CELL+ | 14.40 V | 10.00 A | J_CP1 | F1 |
+| 3 | VBAT | 14.40 V | 10.00 A | F1 | Q11, U12, U15, U4, U5, U6 |
 
 **Measured, in this order, after the inputs are up.**
 
@@ -156,14 +156,19 @@ fault from one that reads low.
 
 | step | rail | apply | current limit | at | what it feeds |
 |---|---|---|---|---|---|
-| 1 | CELL_F | 14.40 V | 10.00 A | F3 | J_FAN1, J_FAN2, P_CP, U12 |
-| 2 | CELL+ | 14.40 V | 10.00 A | J_BATT | F3 |
+| 1 | DC_IN | 12.00 V | 8.00 A | J_DCIN | F1 |
+| 2 | DC_F | 12.00 V | 8.00 A | F1 | Q1 |
+| 3 | CELL_F | 14.40 V | 10.00 A | F3 | J_FAN1, J_FAN2, P_CP, U12 |
+| 4 | CELL+ | 14.40 V | 10.00 A | J_BATT | F3 |
 
 **Measured, in this order, after the inputs are up.**
 
 | step | rail | expect | at | what it feeds |
 |---|---|---|---|---|
 | 1 | +3V3_E6 | 3.30 V (3.13 to 3.46) | U13 | J_DCF, J_LTG, J_POD, U10, U11, U14 |
+| 2 | DC_P | 12.00 V (11.40 to 12.60) | Q1 | R19 |
+| 3 | HS_S | 12.00 V (11.40 to 12.60) | R19 | Q7 |
+| 4 | DC_HS | 12.00 V (11.40 to 12.60) | Q7 | L2 |
 
 **Decide before powering: the declared source is an inductor or a ferrite, which is a filter on an incoming feed on some boards and a converter's output on others.**
 

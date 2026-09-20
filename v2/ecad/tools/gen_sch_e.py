@@ -148,10 +148,37 @@ part("F1", "Device", "Fuse", "10 A mini blade (Keystone 3568 holder): vehicle in
 # same part sat on VIN_RAW here and on board A, three places and one defect. The replacement is the next
 # standard standoff in the same land (Littelfuse SMCJ40A, C224052, stock 3,987), and it clamps 11 V higher, so
 # this board's 50 V bus capacitor C8 moves to the 100 V part the set already buys (C5156756).
-for _dcn in ("DC_IN", "DC_F", "DC_P", "DC_HS"):
-    _intent.node(_dcn, 53.3, "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage "
-                 "lockout off at 40 V, and the SMCJ40A clamping a transient at about 64.5 V at its peak pulse "
-                 "current. The parts on this line are 100 V ceramics for that reason", v_work=36.0)
+# THE VEHICLE AND SHORE ENTRY IS FIVE CONDUCTORS IN SERIES AT 8 A AND ALL FIVE WERE NODES (20 September 2026,
+# appendix 32.249 and 32.251). The chain is J_DCIN -> DC_IN -> the 10 A blade F1 -> DC_F -> the LM74700 ideal
+# diode Q1 -> DC_P -> the 10 mOhm hot-swap sense R19 -> HS_S -> the pass FET Q7 -> DC_HS -> the SRF1260
+# choke L2 -> VIN_RAW, and every one of them carries VIN_RAW's own 8.0 A typical and 10.0 A peak. `HS_S` was
+# not declared at all; the other four were `node`s, so `dc_drop` solved none of them and PI-001 and PI-002
+# had never looked at this board's input side. `power_path` did not find them either, because L2 is a
+# DUAL-WINDING choke on a four-pin land and its pass-through test knows a two-terminal part and a transistor.
+#
+# THE VOLTAGE IS THE PART THAT NEEDED CARE AND IT IS WHY THIS WAS NOT DONE IN THE SAME BREATH AS THE CHARGER'S.
+# The node declared 53.3 V, which is the SMCJ40A clamping a transient at about 64.5 V at its peak pulse
+# current, and `derate` judges a part against the WORST of everything declared about its net. Converting a
+# node to a rail REMOVES the node, so declaring `volts=12.0` with `v_work=36.0`, the service maximum, would
+# have left every 100 V ceramic on this line judged against 36 V where it is judged against 53.3 today: a
+# LOOSENING, which is the shape 20 September 00:40 caught inside `derate` itself. THE FIRST VERSION OF THIS
+# PUT THE CLAMP'S 53.3 IN `v_work` AND `derate` REFUSED THE SMCJ40A WITHIN MINUTES, for standing off 40 V on
+# a line it had just been told runs to 53.3 V in normal service: a true sentence about a false input. The two
+# numbers are two different facts and they go in two fields, which is why `rail()` gained `v_max`: `v_work`
+# is the 36 V SERVICE maximum, which is what the protector is judged against, and `v_max` is the clamp's
+# let-through, which is what every other part on the line is rated for. `derate` takes the worst of `volts`,
+# `v_max` and `v_work` for a rating and reads `v_work` alone for the standoff rule.
+#
+# They are SEGMENTS of VIN_RAW's path, so the board's power total counts this input once.
+_DC_V, _DC_T, _DC_P_, _DC_VW, _DC_VMAX = 12.0, 8.0, 10.0, 36.0, 53.3
+_DC_NOTE = ("the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at "
+            "40 V, and the SMCJ40A clamping a transient at about 64.5 V at its peak pulse current, which is "
+            "why the parts on this line are 100 V ceramics and why `v_work` is 53.3 and not the 36 V service "
+            "maximum. It carries VIN_RAW's own current, this being one conductor run in five pieces")
+for _dcn, _src, _load in (("DC_IN", "J_DCIN", "F1"), ("DC_F", "F1", "Q1"), ("DC_P", "Q1", "R19"),
+                          ("HS_S", "R19", "Q7"), ("DC_HS", "Q7", "L2")):
+    _intent.rail(_dcn, _DC_V, _DC_T, _DC_P_, _src, loads={_load: _DC_T}, v_work=_DC_VW, v_max=_DC_VMAX,
+                 series_of="VIN_RAW", converted=False, note=_DC_NOTE)
 _intent.node("GND_V", 0.0, "the vehicle-side return. It joins the kit ground through the choke's second "
              "winding and is NOT an isolation barrier, which is what boards/e.json declares to the ground "
              "system gate; it is a reference, and it is declared so a part across it is judged")
