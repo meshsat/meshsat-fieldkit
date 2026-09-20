@@ -15301,3 +15301,29 @@ hard 0 with 46 escapes and `netlist_board` 241 of 241, both the baseline's, and 
 **11.0, 11.4, 15.0 mm to 11.0, 11.3, 11.3**. Eleven millimetres is the nearest legal spot outside the gas
 gauge's own escape fan on a board this size, so **board P's decoupling is a package and floor-plan fact
 rather than a seat that was never taken**, and nothing is applied to it.
+
+### 32.313, 20 September 2026 15:15 CEST: board E takes its fourteen seats for nothing, and boards C and D refuse theirs with numbers
+
+**Four boards were run through the seat arm, each a chain to the placed board and no further.**
+
+| board | seats | placed board | escapes | decoupling distance |
+|---|---:|---|---|---|
+| **E** | **14** | **hard 0**, the baseline's | **174, 5 skipped, both the baseline's** | median **11.8 to 6.4 mm**, worst **28.4 to 9.6**, total **239 to 110** |
+| P | 2 | hard 0 | 46, 0 skipped | 11.0, 11.4, 15.0 to 11.0, 11.3, 11.3: nothing to gain |
+| D | 14 | **hard 33** | 69, 6 skipped | refused |
+| C | 13 | blocked in the generator | | refused |
+
+**Board E is taken and verified at HEAD**: the chain on the committed generator reads `RESULT: ALL PASS`,
+`netlist_board` 818 of 818, 174 escapes with 5 pads skipped and **hard 0**, every number the baseline's, so
+the fourteen seats cost this board nothing at all and halve the distance from its capacitors to their pins.
+
+**Board D refuses with 33 hard**, 14 `solder_mask_bridge`, 11 `shorting_items`, 8 `courtyards_overlap` and 2
+`clearance`, naming the seated `C15`, `C16` and `C18` against `R6`, `U2`, `U5`, `C51` and `J_PAIN`: parts
+packed AFTER the seats were chosen, which on board A was solved by the seats being outside every rectangle
+and here is not, because **board D declares a 0.5 mm region overflow allowance**, so its packer legitimately
+puts parts outside the rectangles the seat map trusts. The map owes that margin.
+
+**Board C blocks in its own generator** with `not enough values to unpack (expected 4, got 3)`: its FIXED
+table takes four fields and the arm read three, because the arity is taken from the first value of the dict
+and board C's first value is not a tuple of the same shape. **Both are one iteration each, both are written
+down with their numbers, and neither board is touched.**
