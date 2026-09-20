@@ -16214,3 +16214,36 @@ the appendix entry beside it**, which both carry it here; what belongs in the su
 the tool for as long as the tool is right. The third test is removed and the two properties stay. It is the
 same shape as a fixed byte window (`test_prelay` and `test_stub_zone_obstacle`, 18 September): a rule whose
 subject is a particular version of a file rather than a property of it.
+
+### 32.333, 20 September 2026 20:30 CEST: board P's placement regenerates cleanly now, so what holds board P has moved from a refusal to a ruling
+
+On 20 September at 06:10 board P's placement **refused under the tools of the time**: three predicted
+escape-fan collisions where the committed board reads zero, and all three declared decoupling capacitors
+11.0, 11.4 and 15.0 mm from the gas gauge's supply pins with both passes declining in their own words. The
+bypass family has changed four times since. **Asked again, read-only, chain to the placed board and no
+further:**
+
+```
+RESULT: ALL PASS
+escape: 46 escapes added, 0 pads skipped, 0 thermal via(s) refused
+placed board: hard 0 of the fifteen types, allowance 0
+place_audit: 0 predicted collision(s) among 2 fine-pitch parts of 60; ALL PASS
+PREROUTE-DONE PLACED
+```
+
+**The three predicted collisions are gone.** The three capacitors are still stuck at 11.0, 11.4 and 15.0 mm,
+reported and declared in `bypass-allow.txt` so they block nothing, and they are decision 42's residue on this
+board.
+
+**AND BOARD P'S PI-001 ANSWER IS ALREADY IN THE GENERATOR.** `gen_pcb_p3.py` carries `("PACK", 0.16, 0.8,
+0.8, 0.4)` with `PACK_N` assigned to it by `PATTERNS`, written when the measurement was made: the narrowest
+pad on any net of the shared PWR class is 0.610 mm so that class caps at 0.600 and 2.73 A, while `PACK_N`'s
+own narrowest pad is 0.800 mm, so a class of its own carries 3.36 A against the 2.47 A the return draws and
+leaves the other four nets untouched.
+
+**So what holds board P is no longer a refusal it could not get past.** The generator is ready and the
+placement is clean; what is missing is a ROUTE, and board P's route is decision 28 (two layers against four:
+two-layer P has landed 43, 44, 45 and 47 open on four separate attempts while four-layer P routed 0 hard and
+0 unrouted in six minutes) plus the promotion freeze on cutting the folder afterwards. **Nothing is routed
+here and nothing is adopted**: the value of this is that board P's own note stops saying its placement
+refuses, because it does not.
