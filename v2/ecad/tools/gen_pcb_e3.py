@@ -72,6 +72,22 @@ FIXED = {"J_BLK": (-80, -76.5, 0, False), "P_CP": (-104, -108, 0, False), "P_CN"
          # C18 is at x 0.1 and nothing else stands between there and D5, and R5's courtyard ends about y -99.5.
          "R6": (3.6, -101.3, 0, False), "R7": (6.6, -101.3, 0, False),
          "J_SMB": (-144, -62, 0, False), "J_POD": (-138, -62, 0, False), "J_LTG": (-132, -62, 0, False), "J_GEIGER": (-126, -62, 0, False), "J_DCF": (-144, -49.3, 0, False), "J_FAN1": (-138, -49.3, 0, False), "J_FAN2": (-132, -49.3, 0, False)}
+
+# FOURTEEN DECOUPLING CAPACITORS AT THE PINS THEY SERVE (20 September 2026, appendix 32.312 and 32.313).
+# `bypass_slots` has never reserved a slot on any board of the set, because the 3 mm limit meets the
+# 2.2 mm escape-fan exclusion at every fine-pitch pin, so board E's eighteen declared capacitors were
+# wherever the packer had room: median 11.8 mm from their pin and the worst 28.4. Each seat below was
+# measured by `bypass_seats.py` on the board this generator makes, outside every courtyard, escape fan,
+# part-forbidding rule area, packer region rectangle, piece of laid copper and the board edge, and held
+# as it was handed out. Proved through the chain: placed board hard 0, 174 escapes and 5 pads skipped,
+# `netlist_board` 818 of 818, every number the baseline's, and the distances median 11.8 to 6.4 mm,
+# worst 28.4 to 9.6, total 239 to 110.
+FIXED.update({
+    "C16": (30.05, -83.57, 0, False), "C38": (82.75, -86.60, 0, False), "C39": (82.75, -101.40, 0, False), "C40": (86.74, -101.42, 0, False),
+    "C41": (88.88, -86.53, 0, False), "C42": (88.39, -84.41, 0, False), "C43": (84.76, -84.48, 0, False), "C44": (96.25, -78.85, 0, False),
+    "C45": (87.32, -103.51, 0, False), "C46": (80.91, -84.51, 0, False), "C47": (87.66, -82.29, 0, False), "C48": (37.58, -51.05, 0, False),
+    "C49": (38.12, -48.59, 0, False), "C50": (37.45, -46.53, 0, False),
+})
 for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot, back)
 text("PACK", -138, -112.2, pcbnew.F_SilkS, 1.2, 0.2); text("F3 25A", -120, -112.2, pcbnew.F_SilkS, 1.2, 0.2); text("DC IN", -64, -112.2, pcbnew.F_SilkS, 1.2, 0.2); text("F1 10A", -48, -112.2, pcbnew.F_SilkS, 1.2, 0.2); text("PV", -22, -112.2, pcbnew.F_SilkS, 1.2, 0.2); text("F2 10A", -6, -112.2, pcbnew.F_SilkS, 1.2, 0.2)
 # ---------------------------------------------------------------- SMD cluster on the underside (packer from gen_pcb_b3, loosened)
@@ -89,6 +105,9 @@ REGIONS = [
  ("SENS",   (40, -78, 52, -46), ["U14", "C48", "U15", "R51", "C49", "C50", "R38", "R39", "C51", "R40", "R41"], False),
  ("TPS",    (78, -112, 118, -107), ["TP4", "TP7"], False),
 ]
+
+_SEATED = {"C16", "C38", "C39", "C40", "C41", "C42", "C43", "C44", "C45", "C46", "C47", "C48", "C49", "C50"}   # the fourteen above are placed by hand and must not also be packed
+REGIONS = [tuple([_r[0], _r[1], [_x for _x in _r[2] if _x not in _SEATED]] + list(_r[3:])) for _r in REGIONS]
 rest = [r for r in comps if r not in placed and not r.startswith("H") and not any(r in refs for _, _, refs, _ in REGIONS)]
 if rest: REGIONS.append(("REST", (78, -98, 118, -82), rest, False))
 GAP = 1.2; FINE_MARGIN = 2.2   # E6 round 4: 1.4 left R14 inside the tracker's escape row and four pads of U5 without escapes
