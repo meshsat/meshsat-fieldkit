@@ -67,7 +67,7 @@ def t_a_board_none_of_the_declared_parts_is_on_is_refused():
     with tempfile.TemporaryDirectory() as tmp:
         rc, out = _run(_fixture(tmp, with_parts=False))
         assert "INCONCLUSIVE" in out, out[-400:]
-        assert "after the placement generator" in out, out[-400:]
+        assert "after the placement generator" in out.lower(), out[-400:]   # the tool says AFTER, in capitals, since 4dfa9d18; the sentence is what the rule holds
         assert rc == 3, "a pass that measured nothing must not exit 0 (got %d)" % rc
         assert "stuck of" not in out, "it must not report an absence as a result: %s" % out[-300:]
 

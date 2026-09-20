@@ -510,7 +510,8 @@ def t_a_pour_born_with_no_via_of_its_own_net_is_predicted_before_the_route():
                           env=dict(os.environ, VERDICT_DIR=tmp)).stdout
     n1 = [l for l in out.splitlines() if "pour island(s) already carry no via" in l]
     n2 = [l for l in out2.splitlines() if "pour island(s) already carry no via" in l]
-    assert n1 and n2 and int(n1[0].split("WARN  ")[1].split(" ")[0]) < int(n2[0].split("WARN  ")[1].split(" ")[0]), \
+    # 21 September 2026: the line is a FAIL now (appendix 32.342), the prose after the count is unchanged
+    assert n1 and n2 and int(n1[0].split("FAIL  ")[1].split(" ")[0]) < int(n2[0].split("FAIL  ")[1].split(" ")[0]), \
         "the via inside the first pour changed nothing, so the prediction is not reading the vias:\n%s\n%s" % (n1, n2)
 
 
@@ -646,6 +647,11 @@ pg = pad(fq, "1", 30.0, 20.0, 1.0, 1.0); b.Add(fq); pg.SetNetCode(code["GND"])
 z = pcbnew.ZONE(b); z.SetLayer(pcbnew.B_Cu); z.SetNetCode(code["GND"]); o = z.Outline(); o.NewOutline()
 for x, y in ((1, 1), (39, 1), (39, 29), (1, 29)): o.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
 b.Add(z)
+# 21 September 2026: a plane with no via of its own net anywhere is dead copper and place_audit refuses it now
+# (appendix 32.342); this fixture is about the PAD's site, so its plane gets one via far from the pad, which is
+# what a real plane always has. "no via anywhere NEAR the pad" still holds: 25 mm away.
+gv = pcbnew.PCB_VIA(b); gv.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(5.0), pcbnew.FromMM(25.0))); gv.SetDrill(pcbnew.FromMM(0.3))
+gv.SetWidth(pcbnew.FromMM(0.6)); gv.SetViaType(pcbnew.VIATYPE_THROUGH); gv.SetNetCode(code["GND"]); b.Add(gv)
 if KEEPOUT:
     k = pcbnew.ZONE(b); k.SetIsRuleArea(True); k.SetDoNotAllowTracks(True); k.SetDoNotAllowVias(False); k.SetLayer(pcbnew.F_Cu)
     ko = k.Outline(); ko.NewOutline()

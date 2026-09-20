@@ -73,7 +73,10 @@ def _run(path, extra=()):
 def t_a_seat_inside_an_escape_fan_is_not_offered():
     """THE DEFECTIVE FIXTURE: the only room near the pin belongs to the part's own fan."""
     with tempfile.TemporaryDirectory() as tmp:
-        rc, out = _run(_fixture(tmp, fine=True), ("--reach", "3.0"))
+        # 21 September 2026: at a 3.0 mm reach the corrected fan box (c18d936b, built from the courtyard edges) leaves
+        # a legal seat 2.98 mm from the pin OUTSIDE the fan, which is decision 42's own arithmetic, so the fixture
+        # was no longer defective and the box suite said so; at 2.5 mm the fan alone forbids every seat.
+        rc, out = _run(_fixture(tmp, fine=True), ("--reach", "2.5"))
         assert "1 declared" in out, out[-400:]
         assert "no seat within" in out, "a seat inside the fan was offered: %s" % out[-400:]
         assert "0 seat(s) offered" in out, out[-300:]

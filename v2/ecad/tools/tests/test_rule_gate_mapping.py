@@ -80,9 +80,21 @@ def t_a_verdict_names_the_rules_it_decides_and_the_rule_set_it_was_taken_under()
     assert rec["policy"].get("rule_set_fingerprint") == R.fingerprint(), "the verdict does not name the current rule set"
 
 
+def _journals_present():
+    """The ETA page carries the route durations read from the routeflow journals, which are gitignored, so a
+    tree staged from the tracked files renders that page differently from the tree that routed (21 September
+    2026, found by the box suite: "median None" on the hub against "median 6.8" here). A page computed from
+    data the tree does not hold is not a hand edit; the rule declines there, the way the decisions page rule
+    declines without its set-level readings."""
+    import glob
+    if not glob.glob(os.path.join(os.path.dirname(TOOLS), "pcb-*", "out", "routeflow", "journal.jsonl")):
+        raise __import__("harness").Skip("no routeflow journal in this tree, so the ETA page cannot render as committed")
+
+
 def t_the_documents_are_generated_and_not_hand_maintained():
     """rules_render --check regenerates every document into memory and refuses one that differs on disk."""
     need(os.path.join(DOCS, "PCB-GOLDEN-RULES.md"), "the rulebook has not been rendered yet")
+    _journals_present()
     p = subprocess.run([sys.executable, os.path.join(TOOLS, "rules_render.py"), "--check"],
                        capture_output=True, text=True, cwd=os.path.dirname(TOOLS))
     assert p.returncode == 0, "a generated document differs from the registry:\n%s" % (p.stdout + p.stderr)[-800:]
@@ -199,6 +211,7 @@ def t_one_render_converges_when_a_rule_judges_a_page_the_same_run_writes():
     bring = os.path.join(DOCS, "PCB-BRING-UP.md")
     audit = os.path.join(TOOLS, "out", "rule-audit")
     need(bring, "the bring-up page has not been rendered yet")
+    _journals_present()
     keep = tempfile.mkdtemp()
     shutil.copy(bring, os.path.join(keep, "bring.md"))
     # Only the page this rule damages is restored. The status pages the run rewrites are left as written,
