@@ -13200,3 +13200,35 @@ optimistic end of a range. A rail has `v_work` for its maximum and nothing for i
 cannot see the 9 V. That is the next field this family wants, and it is deliberately not added at four in
 the morning on top of `v_max`, `series_of`, `returns`, `fed_from` and `pass_through`, all of which landed
 tonight and all of which need the set re-generated once more before any of them is trusted further.
+
+### 32.256, 20 September 2026 03:55 CEST: tonight's thirty declarations moved not one net, proved on every board
+
+A declaration change is a change to what is JUDGED and never to what is BUILT, and tonight moved about thirty
+of them across six generators. The check is the one board A got at 01:47, run on all six: regenerate each
+netlist and diff its body against the committed one with the header stripped (the source path and the dates
+differ by construction).
+
+| board | result |
+|---|---|
+| A | IDENTICAL body, 8,617 lines (proved at 01:47) |
+| C | IDENTICAL body, 4,075 lines |
+| D | IDENTICAL body, 4,372 lines |
+| E | IDENTICAL body, 3,540 lines |
+| P | IDENTICAL body, 1,209 lines |
+| **B** | **804 lines differ, and every one of them is a net header's CLASS** |
+
+**Board B's difference is not tonight's and is worth restating because it is larger than it looks.** Every
+changed line is `(net (code N) (name "/X") (class ...))` and nothing else moved: **the committed netlist has
+all 1,852 nets in `Default`**, where the current generator assigns DIFF100 to 96, USB to 237, PWR to 55 and
+HV to 14. That is the 18 September finding, that the project file's class table was a second copy on five
+boards and the next phase of each is the first to carry its generator's own; C, D, E and P have been
+regenerated since and carry theirs, and **B21 is from 17 September and carries none at all.**
+
+**What that means for reading board B's evidence**: anything judged from its netlist's classes is reading
+`Default` for every net on the committed board. The impedance work, the pair classes and the RF class arrive
+with B23, which is why the record says B23's adoption closes PWR-003 and RF-001 without further work. It
+does not touch tonight's power numbers, which come from the intent and the copper rather than from a class.
+
+**So the verification stands**: five boards byte-identical in their net bodies, the sixth differing only in
+an attribute nobody changed tonight. The five new declaration fields describe the same six designs they
+described this morning.
