@@ -16107,3 +16107,13 @@ for nothing and says the placement is clean.
 not a pre-route, and new copper bites at the fanout, the barrel stage and the pre-route DRC rather than at
 the placement. **A88 is A87 through every stage** and the generator is not touched until it ends
 `PREROUTE-DONE OK`.
+
+**ADDENDUM, 19:30 CEST: A88 ends `PREROUTE-DONE OK` and the three inner runs are APPLIED.** Every stage after
+the placement ran: the fanout, the barrel stage (**15 sites answered with 26 barrels, 0 refused by the DRC,
+3 declined, hard 0 to 0, unrouted 499 to 499**), the three pre-lay groups (RF nothing to close, switching 19
+of 20, sense 8 of 10 against A85's 9 of 10, which is the one number that moved), `place_audit` **0 predicted
+collisions, ALL PASS**, and the **pre-route DRC hard 0 of the fifteen types**, its report identical to A85's
+line for line. Applied to `gen_pcb_a3.py` and proved to be the same thing that ran: with comments stripped
+the file hashes **a1445ddc8ec5a118** here and on A88. Suite 1241, 0 failing.
+
+**So board A's four repeated opens are three answered in the generator and one put back to decision 35.**
