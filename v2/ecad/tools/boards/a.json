@@ -16,7 +16,7 @@
  "fanout_nets": "GND,VBAT,CELL+",
  "escape_prune_before_audit": false,
  "finish": {
-  "stub_layers": "F.Cu,In2.Cu,In3.Cu,B.Cu",
+  "stub_layers": "F.Cu,B.Cu",
   "pour_nets": "GND",
   "pair_match": true,
   "pair_audit_nets": [
@@ -117,7 +117,8 @@
   ],
   "_widen_why": "16 September 2026. These are conductors the ROUTER laid, on a rail whose own copper is drawn by power_copper.py, and they carry real current in the solved mesh rather than being the parallel decoration rail_prune takes off. Widening the tracks that are already there changes no topology: same path, same vias, same pads, more copper, kept only if the hard and unrouted counts do not rise. The inner layers are 0.5 oz, which is why 0.5 mm carries 0.40 A there and 1.23 A on an outer layer.",
   "via_parallel": true,
-  "_via_parallel_why": "18 September 2026 (rule PI-003): after every copper-editing stage and before the ground vias, via_parallel lays parallel barrels beside any via dc_drop's solved mesh puts over IPC-2221's rating for its wall (the fabricator's 18 um plating), joined on every layer the net touches there, DRC-guarded, then re-solves and re-judges. On the committed board: A32 fails five rails (VBUS20 3.40 A through a 0.90 A barrel)"
+  "_via_parallel_why": "18 September 2026 (rule PI-003): after every copper-editing stage and before the ground vias, via_parallel lays parallel barrels beside any via dc_drop's solved mesh puts over IPC-2221's rating for its wall (the fabricator's 18 um plating), joined on every layer the net touches there, DRC-guarded, then re-solves and re-judges. On the committed board: A32 fails five rails (VBUS20 3.40 A through a 0.90 A barrel)",
+  "_stub_layers_why": "TWO LAYERS, NOT FOUR, ON A ONE-VARIABLE MEASUREMENT (20 September 2026 03:15 CEST, appendix 32.250). A48's frozen board, map cache on, same grid, window, node cap and wall, STUB_LAYERS alone different. FOUR LAYERS (F.Cu,In2,In3,B.Cu, what this board declared until now): 48 min, 14 of 15 nets offered, 6 closed, 8 refused, board 15 open to 11. TWO LAYERS (F.Cu,B.Cu, the tool's own default): 14 MIN, ALL 15 OFFERED, 8 CLOSED, 4 REFUSED, board 15 open to 11. A quarter of the time, every net reached the search, two more closures and HALF the refusals. AND IT IS NOT ONLY SPEED: the two-layer arm CLOSED /HF_SLOPE and /MAIN_PB, both of which the four-layer arm refused PAD TO PAD. A four-layer map at 0.05 mm is twice the cells and the search is twice as deep, so STUB_MAXN's 80,000,000 nodes bite sooner: at four layers those searches hit the cap, at two they finished. THIS ALSO EXPLAINS A49's probecfg ENTIRELY, which closed 11 of 16 where this board's own configuration saved nothing: probecfg names no STUB_LAYERS, so it searched the default TWO. The hard core is now FOUR nets and every one is the charger's: /CHG_ILIM and /CH_SRP_F pad to track, /CH_ACN_F and /CH_SW2 pad to pad."
  },
  "pair_order": [
   "USB_WALL"
