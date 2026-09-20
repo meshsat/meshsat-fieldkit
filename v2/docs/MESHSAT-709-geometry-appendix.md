@@ -14564,3 +14564,32 @@ board A's PD outlet is.
 
 **NOT APPLIED.** It is a generator change and it owes a full chain before HEAD carries it, which is what A61
 proved this morning by being refused.
+
+### 32.295, 20 September 2026 09:59 CEST: board E's PI-003 answer is five sites, and the other five each have a reason
+
+32.294's ten cluster lines were applied and put through the **whole chain three times** rather than trusted
+once, which is the rule A61 had re-established three quarters of an hour earlier by being refused.
+
+**E24, all ten: `placed board: hard 27`** — sixteen `hole_to_hole` at **0.0000 mm** and eight
+`annular_width` at **-0.4900 mm**. **Four of the ten are not via sites at all.** `barrel_sites --suggest`
+takes its drill from the barrel **already at the site**, and at `CELL+` (-124.96, -106.30) and
+(-124.96, -109.70) and `DC_IN` (-52.96, -106.30) and (-52.96, -109.70) that barrel is a **connector's plated
+component hole at 1.78 mm**, so the suggestion is a lattice of 1.78 mm vias beside a connector, which is not
+a thing. The tool owes the distinction board P's 12 AWG lands taught it on 18 September, where it declines a
+site needing more than eight barrels but not one whose barrel is a component hole.
+
+**E25, the six via sites: `hard 3`, all three the same item.** `DC_F`'s cluster reaches `D1` pad 1
+(`/GND_V`, 3.30 by 2.50, centred (-54.47, -90.97)) and lands **0.1450 mm** from it against the PWR class's
+**0.1500**. Five hundredths of a millimetre, three times over. The tool reported *"1.34 mm of room on this
+axis"* because it measures room to the nearest pad **centre** and not to the clearance a class asks, which is
+the second thing `--suggest` owes. **The same nine barrels fit at `DC_P`**, so it is the site and not the
+arithmetic, and `DC_F` is declined with its number exactly as board A's `VBUS20` busbar site was on
+19 September.
+
+**E26, the five that remain: `RESULT: ALL PASS`, `placed board: hard 0 of the fifteen types`,
+`PREROUTE-DONE OK`** — and escapes **174 with 5 pads skipped** against E25's 172 and 7, so dropping `DC_F`'s
+lattice gave two pads back their escape. Committed on that evidence.
+
+**Still open and named**: `DC_F`'s site, which is **the worst on the board at 8.89 of its rating**; the four
+component-hole sites; and the thirteen that are the generator's own locked vias and want points added to the
+calls that placed them.
