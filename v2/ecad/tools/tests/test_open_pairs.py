@@ -131,11 +131,18 @@ def t_the_execution_map_is_read_from_the_coverage_map_and_not_from_a_list():
 
 
 def t_one_set_level_reading_is_not_seven_failures():
-    """OUT-001 and DFA-001 are decided by a verdict written ONCE for the whole set, in v2/ecad/out/, while
+    """OUT-001 is decided by a verdict written ONCE for the whole set, in v2/ecad/out/, while
     every per-board rule reads its own phase directory. A pair is what a BOARD must satisfy, so the table
     counts pairs; reporting 43 measured failures without saying that seven of them are one gate's single
     answer overstates how many separate things are wrong. The test is the evidence PATH the audit already
-    carries: a path that serves more than one board is one reading."""
+    carries: a path that serves more than one board is one reading.
+
+    DFA-001 WAS THE SECOND SUCH RULE AND IS NOT ANY MORE (20 September 2026): one `assembly_set` verdict
+    counting 42 unchecked footprints over seven boards was the deciding reading for all seven and hid board
+    E5's own PASS, so it is taken per board now and OUT-001 is the only one left. Whether a rule may answer
+    for the whole set is held mechanically by
+    `test_rule_gate_mapping.t_a_reading_that_answers_for_every_board_says_why_it_is_the_sets`, which requires
+    a `_set_level_why` in the coverage entry of every rule this audit still reports that way."""
     from harness import Skip
     res = O.collect()
     if not res["boards"]: raise Skip("this tree holds no rule audit to classify")
