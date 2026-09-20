@@ -2,12 +2,12 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "density_missed": 12,
-  "met": 20,
+  "density_missed": 13,
+  "met": 24,
   "missed": 3,
   "undeclared": 0
  },
- "denominator": 23,
+ "denominator": 27,
  "evidence": [
   "MISSED CH_SRP on the voltage drop: 2.84% of 14.4 V",
   "MISSED PD_VPWR on the voltage drop: 1.55% of 15.0 V",
@@ -20,7 +20,7 @@
   }
  },
  "missing_input": null,
- "note": "the voltage drop against each rail's budget (cell 0.50 mm, default 2%); the current capacity is judged separately in dc_density.verdict.json, where 12 rail(s) missed",
+ "note": "the voltage drop against each rail's budget (cell 0.50 mm, default 2%); the current capacity is judged separately in dc_density.verdict.json, where 13 rail(s) missed",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -34,9 +34,9 @@
  "tool": "dc_drop",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "f68d837d805d656b"
+  "tools_tree_sha": "57234e5aaa9e72b6"
  },
- "ts": "2026-09-19T23:44:19Z",
+ "ts": "2026-09-20T00:14:35Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

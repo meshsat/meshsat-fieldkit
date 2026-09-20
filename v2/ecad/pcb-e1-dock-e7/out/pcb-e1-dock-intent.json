@@ -1,7 +1,13 @@
 {
  "board": "pcb-e1-dock",
- "written": "2026-09-18 08:53",
+ "written": "2026-09-20 00:14",
  "bypass": [
+  {
+   "cap": "C16",
+   "part": "U5",
+   "pin": "3",
+   "net": "TRK_CSP"
+  },
   {
    "cap": "C38",
    "part": "U10",
@@ -122,6 +128,21 @@
    "always_on_why": "the pack node after this board's 25 A blade: a fuse is protection and not a switch, and what opens this node is the pack's own gauge two stages upstream",
    "v_work": 16.8,
    "converted": false
+  },
+  "CELL+": {
+   "volts": 14.4,
+   "amps_typ": 10.0,
+   "amps_peak": 18.0,
+   "source": "J_BATT",
+   "loads": {
+    "F3": 10.0
+   },
+   "note": "the pack lead from the XT60 J_BATT pin 2 to the blade F3, at the pack's own 10.0 A typical and 18.0 A peak. Declared 20 September 2026: it had been declared as nothing at all, so no power rule had ever looked at it",
+   "always_on": true,
+   "always_on_why": "the pack node BEFORE this board's 25 A blade: nothing on this board can open it, which is the same reason CELL_F gives one line up",
+   "v_work": 16.8,
+   "converted": false,
+   "series_of": "CELL_F"
   },
   "VIN_RAW": {
    "volts": 12.0,
@@ -270,6 +291,11 @@
    "basis": "LM74700-Q1 VCAP: the internal charge pump sits about 10 V above the anode TRK_OUT",
    "rides_on": "TRK_OUT",
    "bias_v": 10.0
+  },
+  "E6_SW": {
+   "v_max": 16.8,
+   "v_min": -1.0,
+   "basis": "the AP63205's switching node: it swings to CELL_F, which is the pack at its 4S termination of 16.8 V, and a diode drop below ground on the other half of the cycle"
   }
  },
  "pair_classes": {

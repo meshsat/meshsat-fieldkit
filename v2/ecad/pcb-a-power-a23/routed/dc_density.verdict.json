@@ -2,11 +2,11 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "met": 11,
-  "missed": 12,
+  "met": 14,
+  "missed": 13,
   "undeclared": 0
  },
- "denominator": 23,
+ "denominator": 27,
  "evidence": [
   "MISSED VBAT on current density: worst conductor or pour cell at 3.69 of its limit (the drop was 0.38% of 14.4 V, which is not what failed)",
   "MISSED VIN_RAW on current density: worst conductor or pour cell at 2.00 of its limit (the drop was 0.86% of 12.0 V, which is not what failed)",
@@ -15,6 +15,7 @@
   "MISSED FE_OUT on current density: worst conductor or pour cell at 3.13 of its limit (the drop was 0.13% of 20.0 V, which is not what failed)",
   "MISSED CH_ACN on current density: worst conductor or pour cell at 3.03 of its limit (the drop was 0.68% of 20.0 V, which is not what failed)",
   "MISSED CH_SRP on current density: worst conductor or pour cell at 15.83 of its limit (the drop was 2.84% of 14.4 V, which is not what failed)",
+  "MISSED S1_OUT on current density: worst conductor or pour cell at 1.44 of its limit (the drop was 0.43% of 5.1 V, which is not what failed)",
   "MISSED PA_OUT on current density: worst conductor or pour cell at 2.44 of its limit (the drop was 0.45% of 13.8 V, which is not what failed)",
   "MISSED PD_VPWR on current density: worst conductor or pour cell at 2.44 of its limit (the drop was 1.55% of 15.0 V, which is not what failed)",
   "MISSED PD_SW on current density: worst conductor or pour cell at 1.48 of its limit (the drop was 0.30% of 15.0 V, which is not what failed)",
@@ -42,9 +43,9 @@
  "tool": "dc_density",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "f68d837d805d656b"
+  "tools_tree_sha": "57234e5aaa9e72b6"
  },
- "ts": "2026-09-19T23:44:19Z",
+ "ts": "2026-09-20T00:14:34Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

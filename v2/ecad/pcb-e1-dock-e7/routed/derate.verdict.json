@@ -33,9 +33,9 @@
  "tool": "derate",
  "tools": {
   "git_head": "190bcc8a4c8b",
-  "tools_tree_sha": "ac75216d6fd7df92"
+  "tools_tree_sha": "a93713bab971a798"
  },
- "ts": "2026-09-19T22:38:16Z",
+ "ts": "2026-09-19T22:36:09Z",
  "verdict": "PASS",
- "version": "190bcc8a4c8b+dirty"
+ "version": "190bcc8a4c8b"
 }

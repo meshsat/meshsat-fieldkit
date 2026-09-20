@@ -55,6 +55,10 @@ fault from one that reads low.
 | rail | volts | current | source | what it feeds |
 |---|---|---|---|---|
 | +3V3 | 3.30 V | 0.30 A | L7 | J_MEZZ1, U10, U11, U14, U17, U26 |
+| SD_OUT | 5.00 V | 3.80 A | L6 | R43 |
+| S1_OUT | 5.10 V | 2.50 A | L3 | R31 |
+| S2_OUT | 5.10 V | 2.50 A | L4 | R35 |
+| S3_OUT | 5.10 V | 2.50 A | L5 | R39 |
 
 ## Board B
 
@@ -151,6 +155,7 @@ fault from one that reads low.
 | step | rail | apply | current limit | at | what it feeds |
 |---|---|---|---|---|---|
 | 1 | CELL_F | 14.40 V | 10.00 A | F3 | J_FAN1, J_FAN2, P_CP, U12 |
+| 2 | CELL+ | 14.40 V | 10.00 A | J_BATT | F3 |
 
 **Measured, in this order, after the inputs are up.**
 

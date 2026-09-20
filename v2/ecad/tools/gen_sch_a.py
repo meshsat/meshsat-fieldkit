@@ -369,6 +369,23 @@ def buck5(n, uref, en, out, refs, ina, a1, a0):
     r(rt, "53.6k 1%", out, "S%s_FB" % n); r(rb, "10k 1%", "S%s_FB" % n, "GND"); r(rrt, "68k (RT: 500 kHz)", "S%s_RT" % n, "GND"); r(rco, "22k", "S%s_COMP" % n, "S%s_COMPC" % n); c(cco, "3.3n", "S%s_COMPC" % n, "GND")
     r(rsh, "5mOhm 1% 2512 (shunt)", "S%s_OUT" % n, out, "RS2512"); r(rpg, "100k", en, "GND")   # a slot with no controller line stays off
     ic(ina, 10, "INA226 rail monitor %s" % out, "VSSOP10", {"1": a1, "2": a0, "3": "INA_ALERT", "4": "SDA", "5": "SCL", "6": "+3V3", "7": "GND", "8": out, "9": out, "10": "S%s_OUT" % n}, "C49851")
+    # THE FOUR BUCK5 OUTPUTS ARE THE LM5176 HELPER'S DEFECT IN THE OTHER HELPER (20 September 2026, found by
+    # `power_path` asking every board mechanically rather than by reading a generator; appendix 32.237).
+    # `S<n>_OUT` is the conductor between the inductor and the 5 mOhm shunt, carrying the whole of this
+    # stage's 2.50 A (3.80 on the device rail), and it was declared as NOTHING AT ALL, so `dc_drop` solved
+    # nothing on it and neither PI-001 nor PI-002 had looked at it. The source is the INDUCTOR, which is where
+    # the current really leaves, never the controller, whose pin on this net is a feedback tap.
+    # The switching node is declared too, as the node it is: a drop budget in percent means nothing on it,
+    # but CMP-001 asks what voltage a part on a net can see and it swings to VBAT.
+    _t, _p = _intent.rail_amps(out)
+    _intent.rail("S%s_OUT" % n, _intent.rail_volts(out), _t, _p, L, loads={rsh: _t}, series_of=out,
+                 converted=False, v_work=_intent.rail_volts(out),
+                 note="the AP64500 stage's output between the inductor %s and the 5 mOhm shunt %s, at the "
+                      "whole of the rail's own current. Declared 20 September 2026: it had been declared as "
+                      "nothing at all" % (L, rsh))
+    _intent.node("S%s_SW" % n, _intent.rail_volts("VBAT"),
+                 "the AP64500's switching node on the %s stage: it swings to VBAT, the pack node that feeds "
+                 "the buck, and a diode drop below ground on the other half of the cycle" % out, v_min=-1.0)
 buck5("1", "U4", "SLOT_EN1", "+5V_S1", ["L3", "C28", "C29", "C30", "C31", "C32", "C33", "R28", "R29", "R30", "R31", "R45", "R129", "C112"], "U8", "GND", "GND")        # 0x40
 buck5("2", "U5", "SLOT_EN2", "+5V_S2", ["L4", "C34", "C35", "C36", "C37", "C38", "C39", "R32", "R33", "R34", "R35", "R46", "R130", "C113"], "U9", "GND", "+3V3")       # 0x41
 buck5("3", "U6", "SLOT_EN3", "+5V_S3", ["L5", "C40", "C41", "C42", "C43", "C44", "C45", "R36", "R37", "R38", "R39", "R47", "R131", "C114"], "U10", "+3V3", "GND")      # 0x44
@@ -378,6 +395,11 @@ vh2("J_5V_DEV", "USB device rail to B16 (JST-VH): + -", "+5V_DEV")
 r("R44", "10k", "INA_ALERT", "+3V3")
 # --- 3.3 V logic: TPS62933DRLR (ti-tps62933.pdf, SOT-583; pins 1 RT 2 EN 3 VIN 4 GND 5 SW 6 BST 7 SS 8 FB; Vref 0.8 V, 3.3 V from 31.6k/10k)
 ic("U12", 8, "TPS62933DRLR 3 A buck, 3.3 V logic", "SOT583", {"1": "NC", "2": "RAIL_EN", "3": "VBAT", "4": "GND", "5": "B33_SW", "6": "B33_BST", "7": "B33_SS", "8": "B33_FB"}, "C3200405")
+# B33_SW IS A SWITCHING NODE AND IT SAID NOTHING (20 September 2026, the same sweep). The TPS62933 feeds the
+# 3.3 V logic rail straight off VBAT, so its switching node swings to the pack.
+_intent.node("B33_SW", _intent.rail_volts("VBAT"),
+             "the TPS62933's switching node: it swings to VBAT, the pack node that feeds the 3.3 V buck, and "
+             "a diode drop below ground on the other half of the cycle", v_min=-1.0)
 part("L7", "Device", "L", "4.7uH XAL4030-472ME", "L4030", {"1": "B33_SW", "2": "+3V3"}); c("C52", "100n", "B33_BST", "B33_SW"); c("C53", "10n", "B33_SS", "GND"); c("C54", "10u 25V 1210", "VBAT", "GND", "C1210")
 c("C55", "22u 10V X7R 1210", "+3V3", "GND", "C1210"); c("C56", "22u 10V X7R 1210", "+3V3", "GND", "C1210"); r("R48", "31.6k 1%", "+3V3", "B33_FB"); r("R49", "10k 1%", "B33_FB", "GND")
 part("D3", "Device", "D_TVS", "SMBJ5.0A", "TVS", {"1": "+3V3", "2": "GND"})

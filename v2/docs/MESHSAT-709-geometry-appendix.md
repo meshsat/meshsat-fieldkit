@@ -12585,3 +12585,41 @@ out of all fourteen of their pins.
 says why, which is what board A's five LM5176 stages already do and what boards B and E do for none of
 theirs, and a conductor is a rail with its source, its loads and its budget. A wrong declaration is worse
 than a missing one, because it produces a number.
+
+### 32.238, 20 September 2026 02:16 CEST: nine of the twenty-four declared, and board E's ten amps is built properly
+
+Acted on the sweep of 32.237, in the order of current.
+
+**Board E's `CELL+`, the largest, is MET and that is the first good news of the night.** It is the conductor
+from the XT60 `J_BATT` pin 2 to the 25 A blade F3, carrying the pack's whole 10.0 A typical and 18.0 A peak,
+and it was declared as nothing at all. Measured on board E's own frozen board (sha `a462ac2620b9b8d3`,
+identical before and after): **10.0 A over 793 nodes, worst drop 24 mV, 0.16 percent of 14.4 V against a
+2 percent bar, and the worst conductor is 3.000 mm wide on B.Cu**, 7.7 mm long, carrying 3.51 A. `via_current`
+adds a note worth keeping: *"CELL+ carries 18.00 A and has no via: it never changes layer"*. This is what a
+10 A conductor laid by a generator looks like, against the 0.200 mm F.Cu track board A's `CH_SRP` uses for
+the same current.
+
+**Board A's four `S<n>_OUT`**, the AP64500 stages' outputs between their inductors and their 5 mOhm shunts, at
+2.50 A each and 3.80 on the device rail: **`S1_OUT` MISSES on density** (0.400 mm) and S2, S3 and SD are MET
+on both criteria, with drops of 3 to 22 mV. They have real copper (`S1 output F.Cu 146 of 125 mm2`), which is
+why they read so much better than the LM5176 stages' outputs measured at 01:47. Board A now declares
+**27 rails and 52 nodes** where it declared 13 and 47 this morning; `derate` stays PASS of 144 with 0
+undeclared nets and `via_current` is unchanged at 8 rails over and 37 over-rated barrels.
+
+**Four switching nodes declared as the nodes they are**: board A's `B33_SW` and the four `S<n>_SW` from the
+buck5 helper, board E's `E6_SW`, and board B's fourteen through both of its buck helpers plus `DEV_SW`. None
+of them is a rail and a drop budget in percent means nothing on one, but CMP-001 asks what voltage a part on
+a net can see, and a buck's switching node swings to the rail that feeds it. Board A's five LM5176 stages
+have declared theirs since 16 September and no other board declared one.
+
+**`power_path` now reads 0 on boards A, D, E and P**, and the one-hop behaviour did what its docstring said:
+declaring board E's `CELL+` did not expose a next link, because its own source is a connector and a connector
+is not a pass-through part.
+
+**Readiness 62.8 percent of 333, unchanged**: board A's PI-001 was already FAIL and board E's power rules
+already passed, so nine new declarations moved no pair. That is the right outcome for a night's work that
+found nothing new to fail; the number moves when a measurement says something the page did not.
+
+**Still open of the twenty-four**: board B's `PANEL_5V` (0.60 A through the polyfuse F1) and `VBUS_QMX`
+(0.30 A through F3), and board C's `BZ_K` (0.03 A). Each needs its source, its loads and its budget read off
+the design rather than guessed.
