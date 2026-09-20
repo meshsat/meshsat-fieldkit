@@ -15882,3 +15882,34 @@ declares the ten newly sensitive nets the filter creates, so the two counts are 
 own note said to read it against thirty-four. **Not adopted**: board A's line is zero unrouted and this is
 seven. Read the scoping caveat with it: this run was not given `--board a`, so three rows about board E's
 and board P's own declarations appear in its output and are not board A's.
+
+### 32.326, 20 September 2026 18:40 CEST: board E's arm gives ANA-001 back and leaves PI-003 where the fanout owns it
+
+E30 round 2 ended `STOPPED_NEEDS_GENERATOR` on hard violations of mixed kind and routeflow **restored round
+1** over it, which is the supervisor doing what it was fixed to do. Round 1 stands at **hard 0 and SEVEN
+unconnected items**, 4,927 tracks, 189 footprints, and its closers took none of the seven.
+
+**Read on the frozen board, sha `344b151149cd0686` printed before and after:**
+
+* **`sensitive_nodes` PASS 3 of 3**, where board E's committed E17 reads **FAIL 2 of 3**. ANA-001 is back on
+  this board.
+* **`dc_drop` PASS of 13**, 13 met, 0 missed, 7 density missed.
+* **`via_current` FAIL of 10**: 8 of 8 judged rails over their weakest transition, **50 over-rated barrels**,
+  3 rails carrying no via at all.
+
+**THE FIFTY IS NOT A REGRESSION AGAINST E17'S THIRTY AND MUST NOT BE READ AS ONE.** They are different
+routes with different via populations: this board's mesh solved **197 barrel currents over 11 nets** where
+E17's solved fewer, so more barrels were judged at all. What is comparable is that both FAIL, and the
+per-site report says the same thing on both.
+
+**AND THE SITES SAY WHO OWNS THEM.** The suggester's output on this board is dominated by one sentence, *a
+cluster centred here would land 0.30 mm from it, and **NO POWER-COPPER CALL PLACED IT***, eleven times. That
+is 32.310's third kind of site: the via is the ESCAPE FAN's, laid at the board's own minimum because that is
+what the fanout gives every pad, so advice to add points to a power-copper call is advice about a call that
+does not exist. **The barrel stage answered the sites that are a call's** (seven sites, eleven barrels, for
+nothing, 32.317) and it does not own the rest. The one it names with a number is `DC_P` at **8.89 times its
+rating** with 2.01 mm of room on one axis and **0.00 on the other**, which is a placement item and says so.
+
+**E17 stays board E's phase**: the committed board is 0 hard and 0 unrouted and this is seven. What E30 buys
+is the measurement, and the measurement is that PI-003 on board E now belongs to the fanout, which lays one
+minimum via per pad and reports the count a declared rail's crossing needs without laying it.
