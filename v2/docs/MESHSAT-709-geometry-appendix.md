@@ -16247,3 +16247,13 @@ two-layer P has landed 43, 44, 45 and 47 open on four separate attempts while fo
 0 unrouted in six minutes) plus the promotion freeze on cutting the folder afterwards. **Nothing is routed
 here and nothing is adopted**: the value of this is that board P's own note stops saying its placement
 refuses, because it does not.
+
+**ADDENDUM, 20:40 CEST: the corrected reader was tested rather than assumed, and its first version was
+broken in the same way.** `land_read2.sh`'s replacement called
+`os.environ.get("ECAD","..") + "/tools/hardset.py"`, and `ECAD` is not exported into that heredoc while the
+driver's working directory is the ECAD directory itself, so the path resolved one level too high and the
+line would have printed **`hard set (hardset.py): unreadable`** on the next landing: a silent failure of the
+shape it was written to remove. Corrected to `tools/hardset.py`, which is what the `tools/drc.sh` call three
+lines above already uses, and run against a real board's DRC report it prints
+`land-test: hard 0 unrouted 499 (15 types checked)`. **A driver that replaces a wrong number with no number
+is not a fix**, and the only way to tell them apart is to run it.
