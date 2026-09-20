@@ -95,6 +95,20 @@ def seats(board_path, letter, limit=LIMIT, reach=REACH, frame=None):
     rects = []
     if os.path.exists(rp):
         rects = [(r["name"], r["rect"]) for r in json.load(open(rp)).get("regions", [])]
+    # A REGION RECTANGLE IS NOT WHERE ITS PARTS STOP. A board may declare an overflow it has measured
+    # (`region_overflow_allow_mm`), and the packer then legitimately puts parts outside the rectangle: board
+    # D declares 0.5 mm and its seat arm came back `hard 33`, naming seated capacitors against parts packed
+    # after them. Each rectangle is grown by that allowance here, so a seat is refused where a part may yet
+    # land. A board that declares nothing grows by nothing.
+    allow = 0.0
+    if letter:
+        try:
+            with open(os.path.join(HERE, "boards", "%s.json" % letter), encoding="utf-8") as fh:
+                allow = float(json.load(fh).get("region_overflow_allow_mm", 0.0))
+        except Exception:
+            allow = 0.0
+    if allow:
+        rects = [(n, [r[0] - allow, r[1] - allow, r[2] + allow, r[3] + allow]) for n, r in rects]
     OX, OY, how = _frame(letter, frame)
     fps = {f.GetReference(): f for f in b.GetFootprints()}
     moving = {e.get("cap") for e in entries}
@@ -178,7 +192,7 @@ def seats(board_path, letter, limit=LIMIT, reach=REACH, frame=None):
         taken.append((cap, x - w / 2, y - h / 2, x + w / 2, y + h / 2))
         found.append((cap, part, pin, dd, case(x, y), was))
     return {"near": near, "found": found, "none": none, "held": held, "frame": (OX, OY, how), "intent": ip,
-            "regions": len(rects), "fans": len(fans), "tracks": len(tracks), "declared": len(entries), "limit": limit, "reach": reach}
+            "regions": len(rects), "allow": allow, "fans": len(fans), "tracks": len(tracks), "declared": len(entries), "limit": limit, "reach": reach}
 
 
 def main(argv):
@@ -197,8 +211,8 @@ def main(argv):
                         missing_input="the intent file beside the board (%s)" % r["intent"],
                         note="no declared decoupling capacitor to seat, which is a missing input and not a pass")
     print("bypass_seats: %d declared, %d already within %.1f mm; the frame is (%.1f, %.1f) from %s, "
-          "%d region rectangle(s), %d escape fan(s) and %d piece(s) of laid copper in the map"
-          % (r["declared"], len(r["near"]), limit, OX, OY, how, r["regions"], r["fans"], r["tracks"]))
+          "%d region rectangle(s) grown by the board's declared %.1f mm, %d escape fan(s) and %d piece(s) of laid copper in the map"
+          % (r["declared"], len(r["near"]), limit, OX, OY, how, r["regions"], r["allow"], r["fans"], r["tracks"]))
     if "--json" in argv:
         print(json.dumps(r, indent=1, default=list))
     else:
