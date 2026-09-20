@@ -16523,3 +16523,41 @@ re-rendered **byte for byte back to their committed state**, and readiness read 
 after**, which is the proof the removal decided nothing. The hand-run verdict differed from the committed
 one because a gate run from `v2/ecad` sees a different scope from the same gate run in a board's own chain;
 that is the whole reason for the rule.
+
+### 32.340
+
+**Reading a route at a known pass, and what the readings say (21 September 2026, 00:05 CEST).** The router
+writes ONE session file and overwrites it every pass, so a route's board at pass N is not recoverable after
+the fact; the only history is a copy taken while it ran. `/root/snap/` holds those copies, each taken with
+the pass number read from the router's own log **in the same command**, and `tools/ses_apply.py` turns one
+into a board: the two steps `route_one.sh` runs, `ImportSpecctraSES` and then the drill restore, because the
+importer leaves every via's drill UNDEFINED. It is declared in `pcb_closers.yaml`'s idle tools with the
+mistake it prevents as its reason.
+
+**The readings, all at hard 0 and all at the ROUTER, never a finished board:**
+
+| arm | pass | unrouted | `/VBAT` | the three slot rails |
+|---|---:|---:|---|---|
+| A86 (outlet, no runs) | ~100, its cut | 16 | closed | open |
+| A86 after its closers | landing | **5** | closed | open |
+| A89 (outlet + 3 slot runs) | 123 | 19 | closed | open |
+| A89 | 135 | **19, the identical set** | closed | open |
+| A92 (outlet + 4 runs) | 69 | 13 | closed | open |
+| A92 | 84 | 16 | closed | open |
+
+**Three things follow.** `/VBAT` is closed in every reading, which is the outlet answer confirmed five times
+over on three arms. **A89 has plateaued**: twelve passes bought nothing, net for net, so its remaining opens
+are not a question of more passes and the pass-count confound is settled in the direction that matters.
+**A mid-flight count is a SAMPLE and not a trend**: A92 went 13 to 16 over fifteen passes and its open set
+changed, which a router does routinely; two samples of one arm say whether it is still moving, one says
+nothing.
+
+**So the three In3 slot runs have not closed the slot rails at the router**, which is A89's own question
+answered in the negative, subject to its closers, and A86's closers did not take those three either. If the
+landing confirms it, the next instrument for those rails is the PRE-LAY, on the 19 September rule that it
+pays on a net nothing else can close, and not another lane.
+
+**One operational note**: the import segfaulted once and succeeded on the retry with the same file and the
+same command, and the snapshots were checked for truncation first (both end with the same closing parens),
+so it was KiCad's filler and not a torn copy. **A reader that segfaults is retried and never read as a
+result.**
