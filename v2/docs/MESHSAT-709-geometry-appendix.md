@@ -16308,3 +16308,30 @@ synthetic item its fixture passes has no open pair, so it was skipped before it 
 1242 passing with 1 failed. **A filter that runs before a guard turns a malformed entry into a silent
 omission**, which is this project's own recurring shape. The order is validate first, filter second, and all
 ten rules of `test_eta_execution` pass. Suite 1243, 0 failing.
+
+**CORRECTION, 21:10 CEST, to 32.331: board E's remaining PI-003 is FIVE serious sites, not one.** That entry
+said *board E's PI-003 is one site at 8.89 times its rating*, which took the fixer's `worst barrel` figure
+for a count. Read off the verdict's own evidence on the frozen E30 board, the eight rails over their weakest
+transition are:
+
+| rail | the barrel | carries | its wall | ratio |
+|---|---|---:|---:|---:|
+| `DC_F` | (97.8, 204.5) | 8.00 A | 0.90 A | **8.89** |
+| `DC_P` | (58.9, 203.5) | 8.00 A | 0.90 A | **8.89** |
+| `TRK_OUT` | (190.2, 205.1) | 5.02 A | 0.90 A | **5.58** |
+| `PV_P` | (199.2, 193.8) | 3.59 A | 0.65 A | **5.51** |
+| `DC_HS` | (109.5, 196.0) | 4.08 A | 0.90 A | **4.53** |
+| `CELL_F` | (42.3, 214.5) | 0.94 A | 0.56 A | 1.68 |
+| `VIN_RAW` | (73.1, 183.4) | 0.70 A | 0.65 A | 1.08 |
+| `HS_S` | (45.0, 196.8) | 10.00 A over ONE via | 0.65 A | attributed, not measured |
+
+**Two sites at 8.89 and three more between 4.5 and 5.6.** The worst ratio is what the FIXER is judged on,
+because a round that does not move it has bought nothing; it is not what the BOARD is judged on, and reading
+one for the other is the same mistake as reading a cap for a denominator. What survives of 32.331 is the
+fixer's behaviour, which is measured and unaffected: one useful round, then three that change nothing while
+adding barrels the next round counts.
+
+**And `HS_S` is the sharpest of the eight even though it is marked attributed**: ten amps crossing a
+transition of ONE via rated 0.65 A is a factor of fifteen, and it is attributed rather than measured only
+because the mesh solved no barrel current there. **That is board E's largest single power item and this entry
+is the first to say so.**
