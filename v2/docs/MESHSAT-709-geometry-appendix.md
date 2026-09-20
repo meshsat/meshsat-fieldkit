@@ -15949,3 +15949,36 @@ assignments**, so every net was judged against Default. routeflow saves the roun
 `best-round1.kicad_pro` beside the board, and that is the one the board was routed under: with it the same
 board reads **hard 0**. The reader asserts the class table now and REFUSES rather than reporting, because a
 number that large is only obviously wrong when the board is known to be good.
+
+### 32.328, 20 September 2026 19:05 CEST: board A's last opens have addresses, four of them are one pattern repeated four times, and one of them is the seat today's commit moved
+
+Board D's last two connections were settled by asking what stands around them; asked of board A's, on A69's
+frozen finished board, read-only:
+
+**FOUR OF THE SEVEN ARE ONE PATTERN REPEATED FOUR TIMES.** `/+5V_DEV`, `/+5V_S1`, `/+5V_S2` and `/+5V_S3`
+are each a connection from a 0.7 mm stub or a via **in the RAILS band at case y +67** down to an inner-layer
+track **at y +41 to +46**, 20.67, 26.14, 21.80 and 21.74 mm apart. At every one of the four midpoints stands
+**that rail's own buck inductor** (L6, L3, L4, L5, all XAL6060) at **0.1 to 2.9 mm**, with its 10 uF 1210
+output capacitor beside it, and the straight line crosses GND five to seven times, `+3V3` three to five, and
+the stage's own `S*_SW`, `S*_OUT` and `VBAT` two to five times each.
+
+**So each slot rail has to climb twenty-odd millimetres from the converter row to the band that distributes
+it, through the converter's own switching copper.** That is a generator pattern repeated four times, which is
+board B's three identical hubs in another place, and it is the same sentence as board A's PI-001: the rails
+that fail are the ones a router laid a track for. **The answer is the A21 pattern this board already uses
+elsewhere** (an island at the converter output, a band, and a riser per rail), applied to the four device and
+slot rails rather than to the four that already have it.
+
+**`/PA_ISNS_N` is the filter's own price**: 55.42 mm from C129 to R163, crossing `PA_OUT` sixteen times and
+`PA_SW2` thirteen, because the sense line now has to reach a filter resistor placed at the controller.
+
+**AND `/VBAT` IS THE SEAT TODAY'S COMMIT MOVED.** Its 44.26 mm gap runs between two F.Cu tracks with **U18
+1.6 mm from the midpoint**, and the straight line crosses `PD_DVDD` ten times, `PD_VAUX` seven, `PD_CTL1`
+five, `PD_GD` five, `PD_CC1` four, `PD_ISNS_N` four and `PD_SW` four: **the pack node's last gap runs
+straight through the USB-C controller's own cluster at U18's old seat.** Commit 9aeaf102 takes U18 and its
+eleven cluster parts out of that corridor and puts them at the outlet.
+
+**THE PREDICTION, WRITTEN BEFORE A86 LANDS** (`boards/a.json` carries it verbatim): if the corridor was the
+cause, **A86 closes `/VBAT`**, because nothing else in this change touches it. If `/VBAT` is still open on
+A86 the corridor was not the cause and the pack node's gap is about the band itself, which is decision 35's
+copper weight and not a placement item. Either answer is worth having and the arm is already routing.
