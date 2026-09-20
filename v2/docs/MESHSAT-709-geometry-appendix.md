@@ -12882,3 +12882,42 @@ pessimistic by the ratio of 18 to 10 and some of board A's 37 over-rated barrels
 if it is a service current then PI-001 is judging their tracks too leniently. **One unwritten fact is
 deciding two rules in opposite directions**, which is the best argument for settling it that this record has
 produced.
+
+### 32.246, 20 September 2026 02:58 CEST: board A's pack node is declared at ten amps and its own loads add up to fifteen
+
+Asked of board A's own intent file, with nothing but arithmetic: every rail whose converter draws from
+`VBAT`, its declared voltage and current, and its own declared efficiency, turned into the current that
+converter takes out of the pack node.
+
+| rail | V | A typ | A peak | draws at typ | draws at peak |
+|---|---:|---:|---:|---:|---:|
+| `+13V8_PA` | 13.8 | 5.00 | 6.00 | 5.15 A | 6.18 A |
+| `+12V_HF` | 12.0 | 1.00 | 2.00 | 0.90 | 1.79 |
+| `+54V_POE` | 54.0 | 0.30 | 0.60 | 1.28 | 2.56 |
+| `PD_VPWR` | 15.0 | 3.00 | 3.00 | 3.36 | 3.36 |
+| `+5V_S1` | 5.1 | 2.50 | 5.00 | 0.98 | 1.97 |
+| `+5V_S2` | 5.1 | 2.50 | 5.00 | 0.98 | 1.97 |
+| `+5V_S3` | 5.1 | 2.50 | 5.00 | 0.98 | 1.97 |
+| `+5V_DEV` | 5.0 | 3.80 | 6.00 | 1.47 | 2.31 |
+| `+3V3` | 3.3 | 0.30 | 0.60 | 0.08 | 0.16 |
+| **total** | | | | **15.18 A** | **22.27 A** |
+
+**`VBAT` is declared 10.0 A typical and 18.0 A peak.** Its own loads, from the same file, add up to **15.18 A
+typical and 22.27 A peak**: the declaration understates what this board asks of the pack by **52 percent at
+typical and 24 percent at peak**.
+
+**The peak column has an honest defence and the typical column does not.** Peaks do not coincide, which is
+why `thermal.py` labels its own sum `watts_peak_sum_not_simultaneous`, so 22.27 A is an upper bound nobody
+should expect to see. But the TYPICAL column is a sum of typical loads, and a typical load is what a rail
+carries in service. Either `VBAT`'s 10.0 A is wrong, or several of these rails' "typical" means "when that
+subsystem is switched on" rather than "in normal service", and **nothing in the declaration says which**.
+
+**It matters directly and in the direction that makes the night's other findings worse.** `dc_drop` solves
+`VBAT` at its declared 10.0 A and already reads **3.69 times its density limit**; at 15.18 A the same copper
+reads worse, and the width it wants goes from 7.19 mm to about 9.7 at 1 oz. So board A's largest conductor
+question is understated by its own declaration.
+
+**And it is a rule, not an observation.** A rail that feeds converters must declare at least the sum of their
+input currents, and that sum is computable from the intent alone: every rail with an `efficiency` names its
+converter, the netlist says which net that converter's input pins sit on, and the arithmetic is volts times
+amps over efficiency. Nothing checks it today, on any board.
