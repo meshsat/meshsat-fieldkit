@@ -33,6 +33,7 @@ import pcbnew
 import bypass_slots as _bs
 
 MM = 1e6
+COPPER = "copper already laid"
 LIMIT = 3.0
 REACH = 12.0
 
@@ -109,6 +110,25 @@ def seats(board_path, letter, limit=LIMIT, reach=REACH, frame=None):
         if not (z.GetDoNotAllowPads() or (hasattr(z, "GetDoNotAllowFootprints") and z.GetDoNotAllowFootprints())): continue
         bb = z.GetBoundingBox()
         ras.append((z.GetZoneName() or "rule area", bb.GetLeft() / MM, bb.GetTop() / MM, bb.GetRight() / MM, bb.GetBottom() / MM))
+    # AND THE COPPER ALREADY ON THE BOARD (20 September 2026). A placed board is not empty: the generator
+    # lays locked power bands and escape stubs before anything is packed, and a seat that clears every
+    # courtyard can still sit on one. Board P's first seat arm came back `hard 2`, both of them a
+    # capacitor's GND pad against a locked track (/CELL4 and /FUSED), which is this map's blind spot rather
+    # than the board's fault. Each track is taken with its own box and the board's own clearance.
+    clr = 0.2
+    try:
+        pro = os.path.splitext(board_path)[0] + ".kicad_pro"
+        if os.path.exists(pro):
+            clr = float(json.load(open(pro)).get("board", {}).get("design_settings", {}).get("rules", {})
+                        .get("min_clearance", clr)) or clr
+    except Exception:
+        pass
+    tracks = []
+    for t in b.GetTracks():
+        if t.GetClass() == "PCB_VIA": continue
+        bb = t.GetBoundingBox()
+        tracks.append((t.GetLayer(), bb.GetLeft() / MM - clr, bb.GetTop() / MM - clr,
+                       bb.GetRight() / MM + clr, bb.GetBottom() / MM + clr))
     edge = b.GetBoardEdgesBoundingBox()
     EL, ET, ER, EB = edge.GetLeft() / MM, edge.GetTop() / MM, edge.GetRight() / MM, edge.GetBottom() / MM
     taken = []
@@ -127,6 +147,9 @@ def seats(board_path, letter, limit=LIMIT, reach=REACH, frame=None):
         for ref, L, T, R, B, ly in boxes:
             if ly != side or ref in moving: continue
             if L < r_ and R > l and T < bo and B > t: return ref
+        for ly, L, T, R, B in tracks:
+            if ly != side: continue
+            if L < r_ and R > l and T < bo and B > t: return COPPER
         for ref, L, T, R, B in taken:
             if L < r_ and R > l and T < bo and B > t: return ref
         return None
@@ -155,7 +178,7 @@ def seats(board_path, letter, limit=LIMIT, reach=REACH, frame=None):
         taken.append((cap, x - w / 2, y - h / 2, x + w / 2, y + h / 2))
         found.append((cap, part, pin, dd, case(x, y), was))
     return {"near": near, "found": found, "none": none, "held": held, "frame": (OX, OY, how), "intent": ip,
-            "regions": len(rects), "fans": len(fans), "declared": len(entries), "limit": limit, "reach": reach}
+            "regions": len(rects), "fans": len(fans), "tracks": len(tracks), "declared": len(entries), "limit": limit, "reach": reach}
 
 
 def main(argv):
@@ -174,8 +197,8 @@ def main(argv):
                         missing_input="the intent file beside the board (%s)" % r["intent"],
                         note="no declared decoupling capacitor to seat, which is a missing input and not a pass")
     print("bypass_seats: %d declared, %d already within %.1f mm; the frame is (%.1f, %.1f) from %s, "
-          "%d region rectangle(s) and %d escape fan(s) in the map"
-          % (r["declared"], len(r["near"]), limit, OX, OY, how, r["regions"], r["fans"]))
+          "%d region rectangle(s), %d escape fan(s) and %d piece(s) of laid copper in the map"
+          % (r["declared"], len(r["near"]), limit, OX, OY, how, r["regions"], r["fans"], r["tracks"]))
     if "--json" in argv:
         print(json.dumps(r, indent=1, default=list))
     else:
