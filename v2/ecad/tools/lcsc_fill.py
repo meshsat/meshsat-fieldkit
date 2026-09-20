@@ -6,7 +6,14 @@ import os as _bo; sys.path.insert(0, _bo.path.dirname(_bo.path.abspath(__file__)
 import verdict as _vh; _vh.crash_hook("lcsc_fill", sys.argv[1:])   # a crash in this module body writes INCONCLUSIVE, never nothing (18 Sep 2026)
 MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^10k$", "R_0603"): "C25804", (r"^100k$", "R_0603"): "C25803", (r"^1k$", "R_0603"): "C21190", (r"^4\.7k$", "R_0603"): "C23162", (r"^5\.1k$", "R_0603"): "C23186",
- (r"^1\.5k$", "R_0603"): "C22843", (r"^100R$", "R_0603"): "C22775", (r"^22R$", "R_0603"): "C23345", (r"^330R$", "R_0603"): "C23138", (r"^2k$", "R_0603"): "C22975",
+ (r"^1\.5k$", "R_0603"): "C22843", (r"^100R$", "R_0603"): "C22775",
+    # A VALUE THAT CARRIES ITS OWN REASON STILL HAS TO BE BUYABLE (20 September 2026). `re.match` anchors at
+    # the start and these keys anchor the end too, so `100R 1% (CS filter, Kelvin from the shunt's top)`
+    # matches `^100R$` nowhere: the ten CS and CSG filter resistors added on 18 September have had NO
+    # purchase route since, in neither this table nor `lcsc-allow.txt` nor the certified table, and nobody
+    # met it because board A has not been re-cut since. The five LM5176 stages' ISNS filter would have
+    # inherited it today. Same part, same land, same code as the plain value above.
+    (r"^100R 1%", "R_0603"): "C22775", (r"^22R$", "R_0603"): "C23345", (r"^330R$", "R_0603"): "C23138", (r"^2k$", "R_0603"): "C22975",
  (r"^100n", "C_0603"): "C14663", (r"^22p", "C_0603"): "C1653", (r"^4\.7u$", "C_0603"): "C19666", (r"^4\.7n", "C_0603"): "C53987", (r"^1u$", "C_0603"): "C15849",
  (r"^10u$", "C_0805"): "C15850",
  # BOARD B'S LANDS, 13 September 2026 (MESHSAT-862). B lays its logic decoupling on 0402 and its bulk on

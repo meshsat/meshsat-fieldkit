@@ -1,6 +1,6 @@
 {
  "board": "pcb-a-power",
- "written": "2026-09-20 06:45",
+ "written": "2026-09-20 09:59",
  "bypass": [
   {
    "cap": "C8",
@@ -13,6 +13,12 @@
    "part": "U2",
    "pin": "16",
    "net": "FE_CSF"
+  },
+  {
+   "cap": "C128",
+   "part": "U2",
+   "pin": "14",
+   "net": "FE_ISNS_P"
   },
   {
    "cap": "C11",
@@ -87,6 +93,12 @@
    "net": "PA_CSF"
   },
   {
+   "cap": "C129",
+   "part": "U13",
+   "pin": "14",
+   "net": "PA_ISNS_P"
+  },
+  {
    "cap": "C63",
    "part": "U13",
    "pin": "2",
@@ -109,6 +121,12 @@
    "part": "U15",
    "pin": "16",
    "net": "HF_CSF"
+  },
+  {
+   "cap": "C130",
+   "part": "U15",
+   "pin": "14",
+   "net": "HF_ISNS_P"
   },
   {
    "cap": "C74",
@@ -135,6 +153,12 @@
    "net": "POE_CSF"
   },
   {
+   "cap": "C131",
+   "part": "U16",
+   "pin": "14",
+   "net": "POE_ISNS_P"
+  },
+  {
    "cap": "C81",
    "part": "U16",
    "pin": "2",
@@ -157,6 +181,12 @@
    "part": "U19",
    "pin": "16",
    "net": "PD_CSF"
+  },
+  {
+   "cap": "C132",
+   "part": "U19",
+   "pin": "14",
+   "net": "PD_ISNS_P"
   },
   {
    "cap": "C92",
