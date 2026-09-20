@@ -104,6 +104,20 @@ def t_a_fanout_stub_may_not_cross_another_nets_copper():
         "the dense sample took the LANE rule with it, which 9 September measured at 18 fanout vias"
 
 
+def t_a_refused_thermal_site_says_what_is_already_on_the_pad():
+    """20 September 2026, board A's Q2. All four of its thermal sites read `via(/VIN_RAW)`, which is the
+    0.3 mm hole-to-hole rule against a via of the pad's OWN net, and the line said `got 0 thermal via(s)
+    of 4` for a tab that already carried SIX vias inside it and two more touching. A count is not a
+    diagnosis and a refusal by the pad's own copper is not a gap: the refusals still travel, and the
+    number already there travels beside them, because that is what separates a stitched pad from a bare
+    one. The `NO VIA AT ALL` marker belongs only to a pad that has none either way."""
+    s = _src("escape.py")
+    assert "already on the pad" in s, "the thermal report no longer says what is on the pad"
+    tail = s.split("for ref, num, net, laid, want, why")[1]
+    assert "laid or have" in tail, \
+        "the NO VIA AT ALL marker is printed for a pad that is already stitched by its own net"
+
+
 def t_the_thermal_vias_are_asked_of_every_footprint_and_not_only_the_fine_pitch_ones():
     """The exposed-pad block sat INSIDE the fine-pitch loop (17 September 2026, appendix 32.218), so a PowerPAK
     SO-8, a SOIC-8 with a tab or a WSON-6 was never asked: 32 of board A's 39 exposed pads carried no via on the
