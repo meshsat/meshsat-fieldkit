@@ -201,7 +201,25 @@ else
   block "the placed-board DRC report is empty: the board's legality is UNMEASURED and nothing below it is a measurement"
 fi
 
-[ "${PREROUTE_STOP_AFTER_PLACE:-0}" = 1 ] && { echo "PREROUTE-DONE PLACED (out/$N-placed.kicad_pcb)"; exit 0; }
+# THE FLAG THAT MAKES A PLACEMENT MEASUREMENT CHEAP WAS STOPPING BEFORE THE PLACEMENT'S OWN JUDGE
+# (20 September 2026). `place_audit` runs two hundred lines below this, so every arm that stopped here
+# printed PREROUTE-DONE PLACED and never asked the one gate that judges a placement. A83 is the measured
+# case: it stopped here looking like a pass, and the same predictor run by hand on the same board file half
+# an hour later reads `FAIL U18: 8 of 25 fine-pitch pads without an escape ... the fan could not be placed`,
+# which is exactly what the arm was run to find out and what the hand measurement then spent an hour on.
+# The predictor needs the escapes and they are laid above, so it can answer here; a board that declares the
+# predictor as a report still gets its advisory verdict and still stops at the placed board.
+if [ "${PREROUTE_STOP_AFTER_PLACE:-0}" = 1 ]; then
+  _PAOFF=""; { [ "${PLACE_AUDIT_GATE:-1}" = 0 ] || [ -n "$(cfg place_audit_gate_off)" ]; } && _PAOFF="VERDICT_ADVISORY=1"
+  env $_PAOFF $ESCENV python3 ../tools/place_audit.py $N.kicad_pcb > out/place_audit.log 2>&1; _PA=$?
+  grep -E "FAIL|predicted|decoupling" out/place_audit.log | tail -8
+  if [ "$_PA" -ne 0 ] && [ "${PLACE_AUDIT_GATE:-1}" != 0 ] && [ -z "$(cfg place_audit_gate_off)" ]; then
+    echo "PREROUTE-DONE PLACED BLOCK (the placement predictor refuses this placement: out/place_audit.log)"
+    exit 1
+  fi
+  echo "PREROUTE-DONE PLACED (out/$N-placed.kicad_pcb)"
+  exit 0
+fi
 
 if [ -n "$PCLS" ] || [ -n "$PPASSES" ]; then
   # THE PAIRS CLAIM THEIR COPPER BEFORE THE FANOUT (9 Sep 2026, D10, appendix 32.83): prefanout reads laid copper as an
