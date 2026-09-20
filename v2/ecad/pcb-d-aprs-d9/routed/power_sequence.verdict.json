@@ -5,6 +5,7 @@
   "always_on": 4,
   "deadlocks": 0,
   "rails": 4,
+  "segments": 0,
   "unresolved": 0
  },
  "denominator": 4,
@@ -27,14 +28,14 @@
  ],
  "tool": "power_sequence",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "9bccd1871fd5d8f7"
+  "git_head": "2ae49ff7c52a",
+  "tools_tree_sha": "4d83fe3b9dfc62e2"
  },
- "ts": "2026-09-20T07:41:43Z",
+ "ts": "2026-09-20T14:27:27Z",
  "verdict": "PASS",
- "version": "unknown",
+ "version": "2ae49ff7c52a+dirty",
  "writer": {
   "file": "power_sequence.py",
-  "sha16": "fc500cf0801852cb"
+  "sha16": "58920d0bf59c3fbb"
  }
 }

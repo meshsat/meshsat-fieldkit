@@ -2,21 +2,17 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "always_on": 4,
+  "always_on": 3,
   "deadlocks": 0,
   "rails": 13,
-  "unresolved": 8
+  "segments": 7,
+  "unresolved": 3
  },
  "denominator": 13,
  "evidence": [
-  "DC_F: its source F1 has no enable pin and the board declares neither a switch nor that the rail is always on",
-  "DC_HS: its source Q7 has no enable pin and the board declares neither a switch nor that the rail is always on",
-  "DC_IN: its source J_DCIN has no enable pin and the board declares neither a switch nor that the rail is always on",
-  "DC_P: its source Q1 has no enable pin and the board declares neither a switch nor that the rail is always on",
-  "HS_S: its source R19 has no enable pin and the board declares neither a switch nor that the rail is always on",
-  "PV_IN: its source J_SOLAR has no enable pin and the board declares neither a switch nor that the rail is always on",
   "PV_P: its source F2 has no enable pin and the board declares neither a switch nor that the rail is always on",
-  "TRK_OUT: the board declares U5 as its switch and that part has no enable pin in the netlist"
+  "TRK_OUT: the board declares U5 as its switch and that part has no enable pin in the netlist",
+  "PV_IN: it is a segment of PV_P and PV_P is itself unresolved, so the segment is too"
  ],
  "inputs": {
   "board": "e",
@@ -36,14 +32,14 @@
  ],
  "tool": "power_sequence",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "9bccd1871fd5d8f7"
+  "git_head": "2ae49ff7c52a",
+  "tools_tree_sha": "4d83fe3b9dfc62e2"
  },
- "ts": "2026-09-20T07:42:26Z",
+ "ts": "2026-09-20T14:27:26Z",
  "verdict": "INCONCLUSIVE",
- "version": "unknown",
+ "version": "2ae49ff7c52a+dirty",
  "writer": {
   "file": "power_sequence.py",
-  "sha16": "fc500cf0801852cb"
+  "sha16": "58920d0bf59c3fbb"
  }
 }

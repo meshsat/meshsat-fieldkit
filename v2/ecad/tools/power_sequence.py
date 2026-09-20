@@ -63,7 +63,18 @@ def judge(net_path, intent_path=None):
         for ref, _pin, _fn in rows: on_rail.setdefault(ref, set()).add(rail)
 
     rows, unresolved, deadlocks, always_on = [], [], [], []
+    # A SEGMENT OF A PATH HAS NO ENABLE OF ITS OWN (20 September 2026). `series_of` was added on the
+    # 20th so a conductor declared as the rail it is does not count its watts twice, and thermal,
+    # dc_drop, derate, via_current and rail_crossings were each taught to read it. THIS TOOL WAS NOT,
+    # so thirteen of board A's twenty-seven rails read *its source R16 has no enable pin*, which is a
+    # true sentence about a SHUNT and says nothing about the path. A segment is switched by whatever
+    # switches the path it belongs to, so it takes the parent's answer and never invents one.
+    segments = {}
+    for _rail, _r in rails.items():
+        _p = _r.get('series_of')
+        if isinstance(_p, str) and _p.strip(): segments[_rail] = _p.strip().lstrip('/')
     for rail, r in sorted(rails.items()):
+        if rail in segments: continue   # judged below, from the path it belongs to
         # THE BOARD'S OWN DECLARATION IS READ FIRST (16 September 2026). The enable-pin search used to run
         # before it, so a rail declared always-on whose source part happens to carry an enable pin for ANOTHER
         # rail was judged as switched by it, and the fixture that proves a good board passes failed for that
@@ -152,8 +163,33 @@ def judge(net_path, intent_path=None):
                 if only_self:
                     deadlocks.append("%s: its enable %s is driven only by %s, which is powered from %s itself"
                                      % (rail, en, ", ".join(sorted(only_self)), rail))
+    # THE SEGMENTS, RESOLVED FROM THE PATH THEY BELONG TO, AND THE DECLARATION IS NOT AN EXEMPTION.
+    # A segment whose ancestor is itself unresolved is unresolved too and says which ancestor; a chain that
+    # returns to itself is refused rather than resolved; and a `series_of` naming a rail this board does not
+    # declare is a dangling declaration, not a pass. Only a segment whose path has a real answer gets one.
+    _unres_rails = {u.split(":", 1)[0] for u in unresolved}
+    _has_row = {row["rail"] for row in rows}
+    for rail in sorted(segments):
+        cur, seen = segments[rail], {rail}
+        while cur in segments and cur not in seen:
+            seen.add(cur); cur = segments[cur]
+        _src = rails[rail].get("source") or rails[rail].get("source_ref") or "?"
+        _srcs = [str(x) for x in (_src if isinstance(_src, list) else [_src])]
+        if cur in seen:
+            unresolved.append("%s: it declares series_of %s and that chain returns to itself, so nothing in it "
+                              "says what switches the path" % (rail, segments[rail]))
+        elif cur not in rails:
+            unresolved.append("%s: it declares series_of %s and this board declares no rail of that name, so "
+                              "the path it is a segment of is not here" % (rail, cur))
+        elif cur in _unres_rails or cur not in _has_row:
+            unresolved.append("%s: it is a segment of %s and %s is itself unresolved, so the segment is too"
+                              % (rail, cur, cur))
+        else:
+            _en = next((row.get("enable") for row in rows if row["rail"] == cur and row.get("enable")), None)
+            rows.append(dict(rail=rail, source=_srcs, enable=_en, drivers=[], supplies={},
+                             note="a segment of %s: switched by whatever switches %s" % (cur, cur)))
     return dict(rails=len(rails), rows=rows, unresolved=unresolved, deadlocks=deadlocks,
-                always_on=sorted(always_on))
+                segments=sorted(segments), always_on=sorted(always_on))
 
 
 def main(argv):
@@ -183,6 +219,7 @@ def main(argv):
     res = _v.FAIL if r["deadlocks"] else (_v.INCONCLUSIVE if r["unresolved"] else _v.PASS)
     return _v.write("power_sequence", res,
                     counts={"rails": r["rails"], "always_on": len(r["always_on"]),
+                            "segments": len(r.get("segments") or []),
                             "deadlocks": len(r["deadlocks"]), "unresolved": len(r["unresolved"])},
                     denominator=r["rails"], evidence=(r["deadlocks"] + r["unresolved"])[:20],
                     inputs={"netlist": os.path.basename(net)}, rules=["PWR-002"],

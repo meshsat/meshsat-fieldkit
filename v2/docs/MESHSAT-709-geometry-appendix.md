@@ -15593,3 +15593,45 @@ scale, 422.8 percent**, against the 99.642 mV and 199.3 percent the same tap rea
 outlet's 180.45 mm power path is measured, its 54.99 mm answer is proved through a chain at hard 0, and
 **nothing of it is applied**, so the number growing is the expected consequence of leaving it alone rather
 than a new defect.
+
+### 32.320, 20 September 2026 16:35 CEST: a segment of a path has no enable of its own, and PWR-002 had been unjudgeable on two boards for it
+
+Of the eighteen pairs the register reports as NOT_JUDGED, fifteen are board B's routed-board rules on a board
+416 connections short, which is its floor plan and an owner decision. **The other three are PWR-002 on A, E
+and P**, and opening them one at a time found a tool that had missed a field the rest of the set was taught.
+
+**`series_of` landed at 01:47 on 20 September** so a conductor declared as the rail it is does not count its
+watts twice, and `thermal`, `dc_drop`, `derate`, `via_current` and `rail_crossings` were each taught to read
+it in that stretch. **`power_sequence` was not.** So **thirteen of board A's twenty-seven rails** read *its
+source R16 has no enable pin and the board declares neither a switch nor that the rail is always on*, which
+is a TRUE sentence about a shunt and says nothing about the path: `CH_ACN` is a segment of VBUS20, `CH_SRP`
+of CELL+, `FE_OUT` of VBUS20, `PD_SW`, `PD_VBUS` and `PD_OUT` of PD_VPWR, the four `S*_OUT` of their own slot
+rails, and so on. Every one of the thirteen declares `series_of`.
+
+**A segment is switched by whatever switches the path it belongs to**, so it takes the parent's answer and
+never invents one. Re-taken on all six boards, read-only:
+
+| board | before | after |
+|---|---|---|
+| A | INCONCLUSIVE, 13 unresolved of 27 | **PASS of 27**, 13 segments, 0 unresolved |
+| B | INCONCLUSIVE, 2 unresolved of 38 | **PASS of 38**, 2 segments, 0 unresolved |
+| C, D | PASS | PASS, unchanged |
+| E | INCONCLUSIVE | INCONCLUSIVE, **7 segments resolved, 3 real lines left** |
+| P | INCONCLUSIVE | INCONCLUSIVE, **1 real line left** |
+
+**Readiness 59.2 to 59.8 percent of 333** (197 to 199 verified).
+
+**THE DECLARATION IS NOT AN EXEMPTION, and three properties hold that**, each with a fixture that fails on the
+tool as it stood: a segment whose ancestor is unresolved is **unresolved too and names the ancestor**, so
+`series_of` cannot make a sequencing question disappear; a chain that returns to itself is **refused** rather
+than letting two segments each find their answer in the other; and a `series_of` naming a rail the board does
+not declare is a **dangling declaration**, not a pass. Board E reads the first of those today in its own
+words: *PV_IN: it is a segment of PV_P and PV_P is itself unresolved, so the segment is too*.
+
+**What boards E and P still owe is a DECLARATION and each is one line.** Board E's `PV_P` is the solar input
+behind fuse F2 and a panel is on whenever there is light, so it wants `always_on` with that reason; its
+`TRK_OUT` declares U5 as its switch and *that part has no enable pin in the netlist*, which is a question
+about the LT8705A's pin map rather than about the rail; board P's `PACK_N` is the pack return at a wire land.
+**None is applied here**: a generator edit owes a regeneration, and board E's and board P's netlists would
+each be re-cut for it, so it is written down as the next generator item for those two boards rather than
+slipped in beside a tool fix.

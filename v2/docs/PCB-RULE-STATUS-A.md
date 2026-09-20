@@ -21,9 +21,9 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 27 | 50.0 |
+| PASS | 28 | 51.9 |
 | FAIL | 11 | 20.4 |
-| INCONCLUSIVE | 16 | 29.6 |
+| INCONCLUSIVE | 15 | 27.8 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **54** | 100.0 |
 
@@ -40,7 +40,7 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_a INCONCLUSIVE: no deliverable folder at the declared phase A32, so this board's parts were not certified against the board this tree hold |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_a INCONCLUSIVE: no deliverable folder at the declared phase A32, so this board's parts were not certified against the board this tree hold |
 | PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **PASS** | intent_rails PASS of 28 |
-| PWR-002 sequencing and inrush | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | power_sequence INCONCLUSIVE: each rail's enable derived from the netlist and the part that drives it named; a rail whose enable is driven only by a de |
+| PWR-002 sequencing and inrush | MUST_JUSTIFY | SCHEMATIC | **PASS** | power_sequence PASS of 27 |
 | PWR-003 protection coordination | BLOCKER | SCHEMATIC | **PASS** | energy_chain_a PASS of 4 |
 | DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **FAIL** | intent_decoupling FAIL: {'fail': 5, 'pass': 30} |
 | PI-001 conductor current capacity | BLOCKER | ROUTED_BOARD | **FAIL** | dc_density FAIL: {'met': 14, 'missed': 13, 'undeclared': 0} |

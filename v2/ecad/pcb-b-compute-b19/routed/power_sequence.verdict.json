@@ -5,13 +5,11 @@
   "always_on": 22,
   "deadlocks": 0,
   "rails": 38,
-  "unresolved": 2
+  "segments": 2,
+  "unresolved": 0
  },
  "denominator": 38,
- "evidence": [
-  "PANEL_5V: its source F1 has no enable pin and the board declares neither a switch nor that the rail is always on",
-  "VBUS_QMX: its source F3 has no enable pin and the board declares neither a switch nor that the rail is always on"
- ],
+ "evidence": [],
  "inputs": {
   "board": "b",
   "netlist": "pcb-b-compute.net"
@@ -30,14 +28,14 @@
  ],
  "tool": "power_sequence",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "9bccd1871fd5d8f7"
+  "git_head": "2ae49ff7c52a",
+  "tools_tree_sha": "4d83fe3b9dfc62e2"
  },
- "ts": "2026-09-20T07:38:05Z",
- "verdict": "INCONCLUSIVE",
- "version": "unknown",
+ "ts": "2026-09-20T14:27:26Z",
+ "verdict": "PASS",
+ "version": "2ae49ff7c52a+dirty",
  "writer": {
   "file": "power_sequence.py",
-  "sha16": "fc500cf0801852cb"
+  "sha16": "58920d0bf59c3fbb"
  }
 }
