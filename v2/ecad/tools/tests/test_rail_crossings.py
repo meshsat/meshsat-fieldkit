@@ -191,3 +191,45 @@ def t_the_window_never_shrinks_below_the_one_it_started_with():
     short, judged = rc.judge(b, {"/RAIL": {"amps_peak": 5.0, "source": "U1"}})
     assert judged == 1 and len(short) == 1, (judged, short)
     assert "1 barrel(s)" in short[0] and "needs 5" in short[0], short[0]
+
+
+def t_a_pre_route_barrel_tool_says_when_it_is_given_the_placed_snapshot():
+    """THE DEFECTIVE FIXTURE, and it is an artefact question rather than a copper one (20 September 2026).
+
+    full.sh copies out/<N>-placed.kicad_pcb at line 170 and takes the PREROUTE_STOP_AFTER_PLACE exit at 212,
+    while rail_barrels --apply, the stage that fills a short crossing, runs at 309. A shortfall read off that
+    snapshot is one the chain fills forty lines later, and it cost a wrong sentence about board D. Both tools
+    deliberately ACCEPT a snapshot, so the answer is not a refusal: the tool says which board it was given."""
+    import io, contextlib, os, sys
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    import via_current as vc
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        said = vc.placed_snapshot_note("rail_crossings", "/tmp/nowhere/pcb-d-aprs-placed.kicad_pcb")
+    out = buf.getvalue()
+    assert said is True, "the note did not fire on a -placed board"
+    assert "PLACED SNAPSHOT" in out and "rail_barrels --apply" in out, out
+
+
+def t_the_same_tool_says_nothing_about_a_board_the_chain_really_makes():
+    """THE ACCEPTABLE FIXTURE: the note must not become noise on every run. The chain reads rail_crossings on
+    the project's own board, and that board carries the barrels the stage laid."""
+    import io, contextlib, os, sys
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    import via_current as vc
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        said = vc.placed_snapshot_note("rail_crossings", "/tmp/nowhere/pcb-d-aprs.kicad_pcb")
+    assert said is False and buf.getvalue() == "", buf.getvalue()
+
+
+def t_both_pre_route_barrel_tools_ask_it():
+    """A rule about the CALLERS, parsed rather than grepped: a note only one of the two tools carries is a
+    note the next hand probe walks past."""
+    import ast, os
+    here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    for f in ("rail_crossings.py", "rail_barrels.py"):
+        src = open(os.path.join(here, f), encoding="utf-8").read()
+        calls = [n for n in ast.walk(ast.parse(src))
+                 if isinstance(n, ast.Call) and getattr(n.func, "attr", None) == "placed_snapshot_note"]
+        assert calls, "%s never asks whether it was given the placed snapshot" % f
