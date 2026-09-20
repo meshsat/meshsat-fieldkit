@@ -222,6 +222,13 @@ _intent.node("GND", 0.0, "the board's reference, so a part between a live net an
              "the live net rather than reported as sitting on an undeclared one")
 # --- sounder: IP67 panel-mount part in its own sealed hole on the face, driven on +5V through Q4 from the controller's PWM1; ACK mutes in firmware
 part("BZ1", "Device", "Buzzer", "IP67 panel-mount sounder, 5 V DC continuous, bezel gasket on the face, two flying leads (Floyd Bell MC-09-530-Q class)", "BZ", {"1": "BZ_K", "2": "+5V"})
+# BZ_K IS A SWITCHED NODE AND IT WAS DECLARED AS NOTHING AT ALL (20 September 2026; appendix 32.237). It is
+# the sounder's low side between BZ1 and Q4's drain, so it sits at the 5 V rail while the FET is off and at
+# the FET's own on-state drop while it conducts. It is not a rail (a drop budget in percent means nothing on
+# a switched leg) and it is not nothing: CMP-001 asks what voltage a part on a net can see, and this one sees
+# the panel's 5 V.
+_intent.node("BZ_K", 5.0, "the sounder's low side between BZ1 and Q4's drain: it sits at the +5V rail while "
+             "the FET is off and at its on-state drop while it conducts")
 nfet("Q4", "Q4_G", "GND", "BZ_K"); r("R%d" % rn, "100R", "PWM1", "Q4_G", "R", "C22775"); rn += 1; r("R%d" % rn, "100k", "Q4_G", "GND", "R", "C25803"); rn += 1
 # --- ambient light sensor (right strip, top side, under its own Mentor light guide) and the camera module's mount (its USB lead goes to B16's J_CAM)
 ic("U_LIGHT", 4, "Vishay VEML7700 ambient light sensor (1 SCL 2 VDD 3 GND 4 SDA), I2C 0x10", "VEML", {"1": "SCL", "2": "+3V3", "3": "GND", "4": "SDA"}, "C504893"); c("C38", "100n", "+3V3", "GND")

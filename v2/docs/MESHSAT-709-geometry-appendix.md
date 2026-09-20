@@ -12623,3 +12623,37 @@ found nothing new to fail; the number moves when a measurement says something th
 **Still open of the twenty-four**: board B's `PANEL_5V` (0.60 A through the polyfuse F1) and `VBUS_QMX`
 (0.30 A through F3), and board C's `BZ_K` (0.03 A). Each needs its source, its loads and its budget read off
 the design rather than guessed.
+
+### 32.239, 20 September 2026 02:20 CEST: all twenty-four declared, and every board reads zero undeclared
+
+The last three of the twenty-four, and they close the sweep:
+
+* **board B's `PANEL_5V`**, the panel's 5 V past the 2.0 A hold, 3.5 A trip polyfuse F1, out over the ribbon
+  to board C at 0.60 A. `+5V_DEV` already declared F1 as a 0.60 A load, so this is the same current on the
+  other side of the fuse: a series segment, and it is the conductor PWR-003 is about (a 0.4 mm track is rated
+  1.23 A at 10 K and the fuse does not trip until 3.5, the 17 September finding, which is why it carries its
+  own 0.8 mm PANEL class);
+* **board B's `VBUS_QMX`**, the HF unit's 5 V past a 0.5 A polyfuse at 0.30 A, the same shape;
+* **board C's `BZ_K`**, the sounder's low side between BZ1 and Q4's drain, declared a NODE at 5.0 V, because
+  it sits at the panel's rail while the FET is off and at its on-state drop while it conducts. A drop budget
+  in percent means nothing on a switched leg, and CMP-001 still has to know what a part on it can see.
+
+**`power_path` now reads ZERO UNDECLARED on all six boards.** Board B declares 38 rails and 29 nodes where it
+declared 36 and 15 this morning; board C 2 and 11 where it declared 2 and 10; board A 27 and 52 where it
+declared 13 and 47. `derate` passes on both with **0 undeclared nets**, at 162 judged pairs on B and 16 on C.
+
+**The count to watch is `undeclared` and not `segments`.** Board C's `BZ_K` still appears as a row, correctly:
+a declared node on a power path is a candidate somebody has READ and written a basis for, and the tool
+reports rather than decides. A row with no declaration at all is the one nothing in this project is looking
+at, and there are none left.
+
+**Readiness 62.8 percent of 333, unchanged by all three.** These are declarations of low-current conductors
+and none of them changed a measurement, which is what should happen.
+
+**What the night's power work adds up to.** Twenty-six conductors that no power rule had ever looked at are
+now declared and, where they carry current, measured: board A's ten (the charger's two, the five LM5176 stage
+outputs and the USB-C outlet's three), board A's four AP64500 outputs, board P's pack return, board E's pack
+lead, board B's two outgoing 5 V conductors, and twenty switching nodes across A, B and E. Two of them read
+4.81 A and 6.26 A in conductors IPC rates at 0.40 A; one sags 837 mV on a 5 V outlet; one, board E's, is
+3 mm of copper and passes with room. Three rule-board pairs moved from PASS to FAIL and the readiness number
+fell from 63.4 to 62.8 percent, which is the page catching up with the boards.
