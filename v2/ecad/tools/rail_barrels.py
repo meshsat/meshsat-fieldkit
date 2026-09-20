@@ -318,9 +318,38 @@ def main(argv):
         h, u, _ = _vp._measure(path)
         laid = keep
         if h > h0 or u > u0:
-            print("rail_barrels: HURT (hard %d -> %d, unrouted %d -> %d): reverting every barrel"
+            # ONE SITE THAT HURTS USED TO REVERT EVERY SITE (20 September 2026). This is 19 September's
+            # closure lesson in another stage: a WHOLE-BOARD count is no test of ONE site, and board E's
+            # PI-003 answer was being given back in full because the batch read `unrouted 254 -> 259`,
+            # which is five connections somewhere among nineteen sites. The batch is still tried first,
+            # because it is one DRC and usually right; when it hurts, the sites are laid ONE AT A TIME on
+            # the board that stands and each is kept only if the board is no worse for it.
+            print("rail_barrels: the batch HURT (hard %d -> %d, unrouted %d -> %d): laying site by site"
                   % (h0, h, u0, u))
-            shutil.copy2(bak, path); laid = []
+            shutil.copy2(bak, path)
+            laid = []
+            for r, pts in keep:
+                shutil.copy2(path, bak + ".site")
+                b = pcbnew.LoadBoard(path)
+                nets = {}
+                for t in list(b.GetTracks()) + [q for fp in b.GetFootprints() for q in fp.Pads()]:
+                    n = (t.GetNetname() or "").lstrip("/")
+                    if n and n not in nets: nets[n] = t.GetNet()
+                pc = _pc.PowerCopper(b, lambda n, create=False: nets[n.lstrip("/")], P)
+                pc.stitch(r["net"], pts, drill=r["drill"], width=r["width"])
+                _save_filled(pcbnew, b, path)
+                hs, us, _ = _vp._measure(path)
+                if hs > h0 or us > u0:
+                    print("rail_barrels:   %s at %s pad %s costs the board (hard %d, unrouted %d): reverted"
+                          % (r["net"], r["ref"], r["pad"], hs, us))
+                    shutil.copy2(bak + ".site", path)
+                else:
+                    print("rail_barrels:   %s at %s pad %s kept (hard %d, unrouted %d)"
+                          % (r["net"], r["ref"], r["pad"], hs, us))
+                    laid.append((r, pts))
+                    h0, u0 = hs, us
+                try: os.remove(bak + ".site")
+                except OSError: pass
     # The backup is this tool's scratch and not the phase directory's business: it is removed once the board
     # it protects is the board that stands. A `.bak` left in a project directory is the next person's question.
     try: os.remove(bak)

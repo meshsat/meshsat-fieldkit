@@ -113,3 +113,26 @@ def t_the_solved_currents_must_be_this_boards_and_say_so_when_they_are_not():
     i = bs.index("THE SOLVED CURRENTS ARE ANOTHER BOARD'S")
     seg = bs[max(0, i - 400):i + 400]
     assert "return 3" not in seg and "raise" not in seg, "the mismatch refuses the run instead of naming it"
+
+
+def t_a_site_that_hurts_does_not_revert_the_sites_that_help():
+    """One site that costs a connection used to give back every site (20 September 2026).
+
+    `rail_barrels` lays every answerable site, measures the WHOLE BOARD, and reverted all of them when the
+    unrouted count rose: board E's PI-003 answer was handed back in full because the batch read
+    `unrouted 254 -> 259`, which is five connections somewhere among nineteen sites. That is 19 September's
+    closure lesson in another stage, where `keep_closure` had to learn the same thing.
+
+    The batch stays, because it is one DRC and usually right; what this rule holds is that a hurting batch
+    is followed by laying the sites ONE AT A TIME, each kept only if the board is no worse for it."""
+    import os
+    src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "rail_barrels.py"),
+               errors="replace").read()
+    i = src.find("the batch HURT")
+    assert i > 0, "rail_barrels no longer reports a hurting batch in those words"
+    seg = src[i:]
+    end = seg.find("\n    # The backup is this tool")
+    seg = seg[:end] if end > 0 else seg
+    assert "for r, pts in keep:" in seg, "a hurting batch is not retried site by site"
+    assert "reverted" in seg and "kept" in seg, "the per-site pass does not say which sites it kept"
+    assert seg.count("_vp._measure") >= 1, "the per-site pass never measures the board it changed"
