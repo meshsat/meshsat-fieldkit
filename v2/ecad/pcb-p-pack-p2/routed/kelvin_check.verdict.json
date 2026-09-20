@@ -1,0 +1,39 @@
+{
+ "advisory": true,
+ "applicable": true,
+ "counts": {
+  "declared": 1,
+  "measured": 1,
+  "not_kelvin": 1
+ },
+ "denominator": 1,
+ "evidence": [
+  "SRN_F: the copper between R10.2 and R9.1 carries 5.16 mV of the 50.0 mV full scale, 10.3% of the reading, so the tap is not a Kelvin connection"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-p-pack.kicad_pcb",
+   "sha256_16": "d79865e7b1aceb95"
+  },
+  "tolerance_pct": 1.0
+ },
+ "missing_input": null,
+ "note": "the share of a current-sense signal that is the copper's own drop between the shunt's own pad and the point the sense line taps, from dc_drop's solved mesh; a REPORT, because no rule asks this yet",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [],
+ "tool": "kelvin_check",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "b1abc2abe2326684"
+ },
+ "ts": "2026-09-20T06:15:06Z",
+ "verdict": "FAIL",
+ "version": "unknown",
+ "writer": {
+  "file": "kelvin_check.py",
+  "sha16": "732c8a2fcf2d2120"
+ }
+}
