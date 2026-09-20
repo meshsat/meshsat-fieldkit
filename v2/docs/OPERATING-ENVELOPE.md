@@ -35,10 +35,21 @@ that replaces it. No number in this document was chosen to make a limit come out
 | Ebyte E72-2G4M20S1E | inside | -40 to +85 C | `zigbee/ebyte-e72-2g4m20s1e-user-manual.pdf` |
 | Quectel LG290P GNSS | inside | -40 to +85 C | `quectel/lg290p03-hardware-design-v1.1.pdf` |
 | Amphenol M.2 B-key socket | inside | -40 to +80 C | `m2/amphenol-mdt420b01001-m2-b-key.pdf` |
+| NiceRF SA868 VHF module | inside | **-30 to +70 C** | `nicerf/nicerf-sa868-datasheet-v1.3.pdf`, working temperature range, -30 / 25 / 70 |
+| the pack's protection board | east pocket | **-40 to +85 C** (storage -40 to +125) | `battery/batteryspace-prod-spec-274.pdf` |
 
-**Owed, and they can only narrow this table:** the LimeSDR Mini 2.4, the RockBLOCK 9704, the QMX HF unit,
-the SA868 and the 30 W PA stage, the five fans, and the 4S pack's own cell sheet are all owed a range. Each is a document
-to fetch, not a measurement to take, and `kb_parts.py` names the ones this tree does not hold.
+**TWO OF THE SEVEN OWED RANGES WERE IN THE TREE ALL ALONG (20 September 2026).** The SA868's own datasheet
+states its working range in a table and the pack's protection board states both of its ranges; neither
+needed a measurement or a letter. **The pack's CELLS are still owed a sheet** and the protection board's
+range is not theirs: the cell limits in this table are the Li-ion class ones and stay until that sheet
+exists.
+
+**Still owed, and now named as documents this tree does NOT hold rather than as open questions:** the
+LimeSDR Mini 2.4 (the tree holds its drawings and STEP, not a datasheet), the RockBLOCK 9704 (its datasheet
+here is three and a half thousand characters and states no temperature at all), the QMX HF unit (the tree
+holds its operating and CAT manuals, neither of which states one), the 30 W PA stage, the five fans and the
+4S pack's cell sheet. Each is a document to fetch, not a measurement to take, and they can only NARROW this
+table.
 
 ## 3. The inside is not the outside
 
