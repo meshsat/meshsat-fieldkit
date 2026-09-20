@@ -16257,3 +16257,26 @@ shape it was written to remove. Corrected to `tools/hardset.py`, which is what t
 lines above already uses, and run against a real board's DRC report it prints
 `land-test: hard 0 unrouted 499 (15 types checked)`. **A driver that replaces a wrong number with no number
 is not a fix**, and the only way to tell them apart is to run it.
+
+### 32.334, 20 September 2026 20:40 CEST: the decisions page ranks by what each decision holds, and three answers release fifty-two of ninety-four
+
+`OWNER-DECISIONS-OPEN.md` said *sixteen decisions are open and they hold 94 rule-board pairs of the 333* and
+then listed them **in numerical order**, so the one sentence a reader of that page wants, WHICH RULING BUYS
+THE MOST, had to be counted by hand off a different page. The table carries the count per decision now and is
+sorted by it, with the number as the second key so it is stable:
+
+| # | pairs | what is being decided |
+|---:|---:|---|
+| **34** | **20** | the kit has never had a written operating envelope and four rules resolve against nothing |
+| **39** | **18** | the criterion a break in a signal's reference is judged against |
+| **43** | **14** | board B's route has resisted every lever this project can apply |
+| 29 | 7 | board B's three module Ethernet links have no magnetics |
+| 30 | 6 | ZEROIZE is a switch wired to nothing that can act on it |
+
+**Fifty-two of the ninety-four in three answers**, and none of the three is a board defect: two are criteria
+this project cannot set for itself and the third is an architecture choice.
+
+**Board C was opened item by item at the same time and has nothing that is engineering**: all twelve of its
+open pairs are decisions 34, 29, 27, 39, 32 and 41, plus `OUT-001`, which is the set's paperwork, and
+`DFA-001`, which is the assembler's own preview. That is 19 September's sentence about board C holding
+exactly, four days later and with a different set of tools.

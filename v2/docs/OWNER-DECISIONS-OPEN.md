@@ -11,24 +11,24 @@ is, so the pair counts below are the ones the gates use.
 decision is not a defect in the board: it is a question nobody has answered, and until it is answered the
 rule can be neither passed nor failed.
 
-| # | what is being decided | holds | boards | asked |
-|---|---|---|---|---|
-| **27** | the four-layer boards cannot carry a plane under their back-side signals as built | RET-001, RET-002, STK-002 | C | 2026-09-15 |
-| **28** | board P cannot hold the return-path rule on two layers and the ruled P5 does not route | RET-002, RTE-001, STK-001, STK-002 | P | 2026-09-15 |
-| **29** | board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked | GND-002, INT-002 | A, B, C, D, E, P | 2026-09-16 |
-| **30** | ZEROIZE is a switch wired to nothing that can act on it | SCH-004 | A, B, C, D, E, P | 2026-09-16 |
-| **31** | conductors leave the case and meet a chip with nothing in between, or only through an active part | DOC-001, TRN-001 | A, D, E | 2026-09-16 |
-| **32** | board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper | RET-004 | C, D, E | 2026-09-16 |
-| **33** | the mezzanine 5 V rail is losing nearly five percent and two of its three numbers were never anybody's requirement | nothing today, see below | - | 2026-09-16 |
-| **34** | the kit has never had a written operating envelope and four rules resolve against nothing | ENV-001, ISO-001, THM-001 | A, B, C, D, E, E5, P | 2026-09-16 |
-| **35** | which published current-rating model this project's copper is judged against | PI-001 | A, E | 2026-09-16 |
-| **36** | the intra-pair tolerance a differential pair is judged against | INT-001 | A, B | 2026-09-16 |
-| **37** | board D asks for two crystals that do not exist and the part it was certified against is four times the frequency | CMP-002, SUP-001 | D | 2026-09-16 |
-| **39** | the criterion a break in a signal's reference is judged against | RET-001, RET-003, SI-001 | A, B, C, D, E, P | 2026-09-17 |
-| **40** | the pack's cell-level protection is one firmware-configured device, and the rule asks for hardware independent of any software | BAT-001 | P | 2026-09-18 |
-| **41** | the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002 | DOC-002 | C, E5, P | 2026-09-19 |
-| **42** | a decoupling capacitor cannot be both within 3 mm of a fine-pitch pin and outside that part's escape fan | DEC-001 | A, B, P | 2026-09-20 |
-| **43** | board B's route has resisted every lever this project can apply and the two that remain are architectural | EMC-001, GND-001, PAIR-001, PI-002, PI-003, PLC-002, PLN-001, RET-002, RET-004, RF-001, RTE-001, SCH-003, STK-001, VIA-001 | B | 2026-09-20 |
+| # | pairs | what is being decided | holds | boards | asked |
+|---|---:|---|---|---|---|
+| **34** | 20 | the kit has never had a written operating envelope and four rules resolve against nothing | ENV-001, ISO-001, THM-001 | A, B, C, D, E, E5, P | 2026-09-16 |
+| **39** | 18 | the criterion a break in a signal's reference is judged against | RET-001, RET-003, SI-001 | A, B, C, D, E, P | 2026-09-17 |
+| **43** | 14 | board B's route has resisted every lever this project can apply and the two that remain are architectural | EMC-001, GND-001, PAIR-001, PI-002, PI-003, PLC-002, PLN-001, RET-002, RET-004, RF-001, RTE-001, SCH-003, STK-001, VIA-001 | B | 2026-09-20 |
+| **29** | 7 | board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked | GND-002, INT-002 | A, B, C, D, E, P | 2026-09-16 |
+| **30** | 6 | ZEROIZE is a switch wired to nothing that can act on it | SCH-004 | A, B, C, D, E, P | 2026-09-16 |
+| **31** | 6 | conductors leave the case and meet a chip with nothing in between, or only through an active part | DOC-001, TRN-001 | A, D, E | 2026-09-16 |
+| **28** | 4 | board P cannot hold the return-path rule on two layers and the ruled P5 does not route | RET-002, RTE-001, STK-001, STK-002 | P | 2026-09-15 |
+| **27** | 3 | the four-layer boards cannot carry a plane under their back-side signals as built | RET-001, RET-002, STK-002 | C | 2026-09-15 |
+| **32** | 3 | board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper | RET-004 | C, D, E | 2026-09-16 |
+| **41** | 3 | the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002 | DOC-002 | C, E5, P | 2026-09-19 |
+| **42** | 3 | a decoupling capacitor cannot be both within 3 mm of a fine-pitch pin and outside that part's escape fan | DEC-001 | A, B, P | 2026-09-20 |
+| **35** | 2 | which published current-rating model this project's copper is judged against | PI-001 | A, E | 2026-09-16 |
+| **36** | 2 | the intra-pair tolerance a differential pair is judged against | INT-001 | A, B | 2026-09-16 |
+| **37** | 2 | board D asks for two crystals that do not exist and the part it was certified against is four times the frequency | CMP-002, SUP-001 | D | 2026-09-16 |
+| **40** | 1 | the pack's cell-level protection is one firmware-configured device, and the rule asks for hardware independent of any software | BAT-001 | P | 2026-09-18 |
+| **33** | 0 | the mezzanine 5 V rail is losing nearly five percent and two of its three numbers were never anybody's requirement | nothing today, see below | - | 2026-09-16 |
 
 ## Each one, with what it holds
 
