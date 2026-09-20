@@ -13439,3 +13439,38 @@ finding and not a failure. **Two children carry it**: `+5V_LIME` at 3.00 A, the 
 eFuse, and `+5V_RB` at 2.00 A, the satellite modem's transmit burst. Whether those two may burst together is a
 question about the fabric and not about the copper, and it belongs beside board B's floor plan rather than in
 front of it.
+
+### 32.263, 20 September 2026 05:40 CEST: A51's first item, and the first explanation of board A's hard core
+
+**THE CHARGER BLOCK IS SEATED IN THE CONVERTER'S OWN ORDER, and the change is far smaller than the record
+expected because the block was MEASURED rather than reasoned from the record.** `/root/chq_geom.sh` read
+every courtyard and seat off A50's own board: **the four FETs are ALREADY in their converter order**, west to
+east at an 8.74 mm pitch, and **only the two shunts are at the wrong ends**. So the chain is reversed EAST to
+west by exchanging four **identical parts of one footprint** (Q7 with Q10, Q8 with Q9), with the charger's
+capacitors regrouped beside the pair each one's net serves.
+
+**R16 and R17 do not move**, so VBUS20's island and its In3 union are untouched and *the thing that refused
+the seat exchange at 01:15 does not arise at all*. `R16 -> Q7` goes **34.85 mm to 8.63** and `R17 -> Q10`
+**26.33 to 0.11**.
+
+**Placed and gated where KiCad is** (`/root/a52ecad`, PHASE=A52): `RESULT: ALL PASS`, `check_pcb_a` PASS of
+511 on 421 footprints, `netlist_board` 2088 of 2088, **placed board hard 0 of the fifteen types**. **NOT
+ROUTED**: whether it improves the route is a route's answer and this is the placement's.
+
+**AND A CONTROL SAYS IT IS FREE.** The same tree and the same chain with the COMMITTED generator, one
+variable: **the identical 456 escapes, the identical 7 skipped pads, the identical hard 0.** The exchange
+costs the board nothing.
+
+**THE CONTROL ALSO GAVE THE FIRST EXPLANATION ANYONE HAS HAD FOR BOARD A'S HARD CORE.** Both runs report
+**seven pads of U3 with no escape via**: pad 6 `/CHG_ILIM`, pad 2 `/CH_ACN_F`, pad 23 `/CH_SW2`, pad 22
+`/CH_SRP`, pad 20 `/CH_SRP_F`, pad 19 `/CH_SRN_F`, pad 18 `/CH_CELL`. **All four nets that every closer on
+every board has refused are in that list**, and the closers' own words for those refusals are *pad to track*
+and *pad to pad*. **A pad with no escape via can be reached only on F.Cu, at the pad, through a QFN-32's own
+0.4 mm fan field**, which is precisely what a two-layer search finds nothing in.
+
+**It is a mechanism and not yet a proof**, and the difference matters: three of the seven are NOT among the
+refusals, so a missing escape is not automatically fatal. **It is also pre-existing** (the control carries the
+identical seven), so nothing tonight caused it and it has been there since the block was drawn. **The next
+measurement is `escape.py`'s own reason for skipping those seven**, with the 5 September recipe
+(`ESCAPE_ONLY=U3 DEBUG_REF=U3` on a copy of the pre-route board), because a count of skipped pads is not a
+diagnosis, which this project has written down three times.
