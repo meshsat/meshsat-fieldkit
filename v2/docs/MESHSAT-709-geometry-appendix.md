@@ -13402,3 +13402,40 @@ a placement item and no closer configuration is going to take it.
 
 What two layers DID take on A47, by name: `+5V_S2` twice, `+5V_S3`, `CH_SRP`, `D8_FLT`, `EMCON_HW`,
 `EXP2_SP8`, `HF_CS`, `PA_VCC`, `PD_GDNG`, from a single via to 841 cells of path.
+
+### 32.262, 20 September 2026 05:25 CEST: board B's last ten feeders, and an LDO's efficiency is not a guess
+
+Board B's ten remaining converters now declare what feeds them. **Every one is read from board B's own
+netlist, pin by pin**, and the pin is named in the generator beside the declaration: U27 pins 1 and 3
+`/+3V3_DEV`; U22 pin 6 `/+3V3_DEV`; U21 pin 6, U23 pin 4, U24 pin 4, U28 pin 5 and F2 pin 1 all `/+5V_DEV`;
+U40, U50 and U60 pins 1 and 3 `/+5V_DEV`. The record left these undeclared on 20 September because "a wrong
+`fed_from` makes a wrong sum", and reading them was the whole of the work.
+
+**AN LDO'S EFFICIENCY IS ITS OUTPUT VOLTAGE OVER ITS INPUT, AND THAT IS WHY THE FOUR LINEAR REGULATORS WERE
+ALREADY RIGHT.** `feed_sums` computes a child's input current as `v * amps / eff / v_parent`, so a part
+declared with no efficiency passes its current and a part declared as a converter passes its POWER. **A linear
+regulator does neither of those by choice: it passes its output current and burns the difference**, and the
+efficiency that makes the arithmetic true, `Vout/Vin`, is the same number that is physically true. Board B's
+declarations already carried **0.76** for 2.5 V from 3.3 and **0.66** for 3.3 V from 5.0. Declaring an LDO as a
+switching converter with a guessed efficiency would have understated its feeder in the worst direction.
+
+**The compute modules' own output rails are deliberately NOT declared** (`+1V8_CM1..3`, `+3V3_CM1..3`, six
+rails): the module PRODUCES them, and the module's own draw is already a load on its slot rail (`U30A 1.60 A`
+on `+5V_S1`). A `fed_from` there would count the same amps twice, which is the defect this check exists to
+find rather than to create.
+
+**What it finds** (arithmetic on the declaration; `feed_sums` is a pure function of the intent, so this is
+exact and the next regeneration confirms it rather than discovering it):
+
+| rail | declared typ | children draw | declared peak | children draw |
+|---|---:|---:|---:|---:|
+| `+5V_DEV` | 3.80 | **3.56** (13 children) | 6.00 | **9.72** |
+| `+3V3_DEV` | 1.20 | 0.25 | 2.00 | 0.55 |
+| `+5V_S1/2/3` | 2.50 | 1.21 each | 5.00 | 2.70 each |
+
+**Board B's device rail passes at typical with six percent of margin and is 62 percent over at peak.** The
+peak column has the standing defence that peaks do not coincide and the typical column has none, so this is a
+finding and not a failure. **Two children carry it**: `+5V_LIME` at 3.00 A, the software radio bay behind its
+eFuse, and `+5V_RB` at 2.00 A, the satellite modem's transmit burst. Whether those two may burst together is a
+question about the fabric and not about the copper, and it belongs beside board B's floor plan rather than in
+front of it.
