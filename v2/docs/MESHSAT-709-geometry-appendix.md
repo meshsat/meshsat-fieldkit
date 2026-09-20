@@ -15145,3 +15145,31 @@ floor-plan problem and an owner decision, not something this reading changes.
 
 **Nothing is applied to board B**: its floor plan is held, and this is the number its next placement has to
 beat.
+
+### 32.309, 20 September 2026 14:45 CEST: the second reach, asked again with the duplicate closed, buys the distribution and costs thirty-four hard violations
+
+**With 32.307's fix in, the question of 32.306 could be asked honestly, and the answer is a trade with both
+halves measured.** A79 is board A's chain with the reach patched into its own tools copy at 6.0 mm:
+
+| | HEAD | reach 6.0 |
+|---|---|---|
+| duplicate references | none | **none** (32.307 holds) |
+| `netlist_board` | 2,148 of 2,148 | **2,148 of 2,148** (the block of 32.306 is gone) |
+| within 3.0 mm | 9 of 40 | 9 of 40 |
+| within 5.0 mm | 11 | **21** |
+| median distance | 13.2 mm | **5.0 mm** |
+| worst | 44.5 mm | **25.8 mm** |
+| escapes | 461, 2 pads skipped | 459, 2 pads skipped |
+| placed board | hard 0 | **hard 34** |
+
+**So the reach halves the median and takes the worst down by nineteen millimetres, and the chain blocks.**
+The 34 are 13 `solder_mask_bridge`, 13 `shorting_items` and 8 `courtyards_overlap`, and they name the
+capacitors the reach seated against the parts placed after them: `C81`, `C127`, `C125`, `C126`, `C54` and
+`C55` against `Q16`, `Q18`, `Q21`, `Q22`, `R74` and `R75`. **The cause is the region packer**, which fills
+its rectangles knowing which references are already placed and not where they sit, so the more seats the
+reservation hands out inside a rectangle, the more the packer walks over them. At HEAD it reserves thirteen,
+nearly all of them the FIXED ones, and nothing collides.
+
+**NOT APPLIED, and the next step is named**: the reach is worth having and it is not the piece that is
+missing; the packer stepping around a reserved seat is. Until then board A keeps its 9 of 40 within 3 mm and
+its median of 13.2, with this table as the thing to beat and `BYPASS_REACH` living only in an arm.
