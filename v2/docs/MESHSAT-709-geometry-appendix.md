@@ -12809,3 +12809,44 @@ was never laid: thirteen conductors over their density with their drops mostly i
 routes to zero unconnected. Board B's is five rails whose DROP is the failure, on a board 416 connections
 short of a finished route. Board A's answer is a generator and a stackup and can start now; board B's needs a
 board that routes, which is its floor plan, which is an owner decision already asked.
+
+### 32.244, 20 September 2026 02:48 CEST: the full width table, and a correction to 32.241's headline number
+
+**The correction first, because 32.241 put a PEAK width next to a ratio measured at TYPICAL current.**
+`dc_drop` solves each rail at its `amps_typ` (board A's VBAT evidence says so in its own words, "10.0 A over
+3,203 nodes"), so the 3.69x that fails is measured at **10 A and not at 18**. What VBAT's failure actually
+demands is **7.19 mm of outer 1 oz copper**, not 16.18. The 16.18 mm is the PEAK figure and **nothing in this
+project judges the peak today**, which is itself worth knowing. The finding stands and its size is smaller
+than the headline said: a 7 mm band is still large and the board has under two millimetres of effective
+copper at that neck, but it is not a tenth of the board.
+
+**The full table board A's next phase needs**, every one of the thirteen, at 10 K, with what each would take
+at 1 oz and at 2 oz of outer copper:
+
+| rail | typ | peak | 1 oz at typ | 2 oz at typ | 1 oz at peak | reads |
+|---|---:|---:|---:|---:|---:|---:|
+| `CH_SRP` | 10.00 A | 18.00 A | **7.19 mm** | 3.60 mm | 16.18 mm | 15.83x |
+| `PD_VBUS` | 3.00 | 3.00 | 1.37 | 0.68 | 1.37 | 8.92x |
+| `VBAT` | 10.00 | 18.00 | **7.19** | 3.60 | 16.18 | 3.69x |
+| `FE_OUT` | 6.00 | 8.00 | 3.56 | 1.78 | 5.29 | 3.13x |
+| `CH_ACN` | 6.00 | 8.00 | 3.56 | 1.78 | 5.29 | 3.03x |
+| `PA_OUT` | 5.00 | 6.00 | 2.77 | 1.38 | 3.56 | 2.44x |
+| `PD_VPWR` | 3.00 | 3.00 | 1.37 | 0.68 | 1.37 | 2.44x |
+| `VBUS20` | 6.00 | 8.00 | 3.56 | 1.78 | 5.29 | 2.03x |
+| `VIN_RAW` | 8.00 | 10.00 | 5.29 | 2.64 | 7.19 | 2.00x |
+| `+13V8_PA` | 5.00 | 6.00 | 2.77 | 1.38 | 3.56 | 1.53x |
+| `PD_SW` | 3.00 | 3.00 | 1.37 | 0.68 | 1.37 | 1.48x |
+| `S1_OUT` | 2.50 | 5.00 | 1.06 | 0.53 | 2.77 | 1.44x |
+| `PD_OUT` | 3.00 | 3.00 | 1.37 | 0.68 | 1.37 | 1.23x |
+
+**Read at typical current the problem is tractable and the copper-weight decision is smaller than it looked.**
+Nine of the thirteen need **under 4 mm at 1 oz** and every one is under 4 mm at 2 oz. The two that are large
+are the pack node in both of its halves, `VBAT` and `CH_SRP`, at 7.19 mm each, and `VIN_RAW` at 5.29. So a
+2 oz board would make all thirteen ordinary bands; a 1 oz board makes ten of them ordinary and three of them
+wide.
+
+**And the sharper question the table asks is the one option 2 of 32.241 already named**: nothing judges the
+peak, so whether the pack node's 18 A is a service current or a fault current is not academic. If it is a
+service current the rule should be asking about it and the answer is a 16 mm band or 2 oz; if it is a fault
+current the density bar belongs at 10 A, which is what is being measured today and what these numbers are.
+**Nobody has written down which, and that is the cheapest thing on this list to settle.**
