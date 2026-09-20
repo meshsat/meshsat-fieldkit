@@ -12850,3 +12850,35 @@ peak, so whether the pack node's 18 A is a service current or a fault current is
 service current the rule should be asking about it and the answer is a 16 mm band or 2 oz; if it is a fault
 current the density bar belongs at 10 A, which is what is being measured today and what these numbers are.
 **Nobody has written down which, and that is the cheapest thing on this list to settle.**
+
+### 32.245, 20 September 2026 02:49 CEST: the same board's copper is judged at TYPICAL current and its barrels at PEAK, and "nothing judges the peak" was wrong
+
+32.244 said nothing in this project judges the peak. **That is wrong and the truth is more interesting**,
+read straight off the four tools:
+
+| tool | rule | current it judges at |
+|---|---|---|
+| `dc_drop` | PI-002, the drop | `amps_typ` |
+| `dc_drop`'s density half | PI-001, the conductor | `amps_typ` |
+| `via_current` | PI-003, the barrel | **`amps_peak`**, falling back to typ |
+| `rail_crossings` | PI-003's pre-route report | **`amps_peak`** |
+
+**So a via on `VBAT` is judged at 18 A while the track feeding it is judged at 10 A**, on the same board, in
+the same sweep, from the same declaration. Nobody wrote that down and it explains a thing the record has
+noticed twice without naming: PI-003's numbers and PI-001's are not comparable, and a site that reads
+comfortable under one can read 1.8 times over under the other.
+
+**It is defensible and that is exactly why it needs writing down rather than fixing at three in the morning.**
+IPC's 10 K rise is a STEADY-STATE thermal limit, so a conductor's continuous rating is a typical-current
+question and its peak is a transient one; a barrel has almost no thermal mass and a much higher current
+density, so the peak is the case that matters there. Two different physical questions, two different inputs,
+one declaration. What is missing is not a fix but a SENTENCE in each rule saying which current it asks about
+and why, and a note in the intent saying what `amps_peak` means on this project's boards.
+
+**And it sharpens 32.244's question rather than replacing it.** Whether the pack node's 18 A is a service
+current or a fault current already decides PI-003 today, because `via_current` is judging every barrel on
+`VBAT` and `CH_SRP` against it. If it is a fault current then PI-003's readings on those two rails are
+pessimistic by the ratio of 18 to 10 and some of board A's 37 over-rated barrels are not over-rated at all;
+if it is a service current then PI-001 is judging their tracks too leniently. **One unwritten fact is
+deciding two rules in opposite directions**, which is the best argument for settling it that this record has
+produced.
