@@ -15635,3 +15635,42 @@ about the LT8705A's pin map rather than about the rail; board P's `PACK_N` is th
 **None is applied here**: a generator edit owes a regeneration, and board E's and board P's netlists would
 each be re-cut for it, so it is written down as the next generator item for those two boards rather than
 slipped in beside a tool fix.
+
+### 32.321, 20 September 2026 16:40 CEST: the outlet's controller travels and both halves close, and the price is thirteen escapes at the seats measured so far
+
+**A72 was blocked by ONE LINE and it was the gate's own.** Its board read `check_pcb_a` 510 of 511 with 436
+footprints and the single failure was `FAIL U18 centred at (10.0, 65.0) (got 100.19, 24.00)`: the gate's
+`EXPECT` table is the record of the seats the generator declares, so a seat that moves deliberately moves in
+the gate in the same breath or the gate is describing a board nobody is making. **A83 is A72 with that line
+changed and nothing else.**
+
+**IT LANDS, AND BOTH HALVES OF THE OUTLET ARE ANSWERED AT ONCE.** `PREROUTE-DONE PLACED`, **placed board hard
+0 of the fifteen types**, and on that board:
+
+* the walked power path **Q26 to R81 to Q27 to R138 to J_USBC_OUT is 54.99 mm**, against 180.45 today;
+* **U18's three sense pins reach R138 in 4.18, 3.59 and 3.22 mm**, against 95.27, 96.19 and 97.11 with the
+  controller where it stands, which is TI item 7 arriving on the outlet and being satisfied rather than
+  named.
+
+**AND IT IS NOT FREE: escapes 447 with SIXTEEN pads skipped**, against A71b's 460 and three and A70's 461 and
+two. **Eleven of the sixteen are U18's own pads** (8, 9, 10, 13, 14, 15, 17, 18, 19, 20) and one is U19 pad
+14. The controller reaches the outlet and then cannot get out of the corner it reached.
+
+**THE CAUSE IS THE SEAT SEARCH'S OWN QUESTION, which is this week's shape for the sixth time.** The search
+that produced these seats asks about COURTYARDS, the four front rule areas that forbid a part and the board
+edge; every seat it returns is legal and none of them was ever asked whether the pads at that seat can escape.
+A legal seat is not an escapable seat, and at a 0.5 mm QFN in a corner already holding the connector, the
+switch, the shunt and eleven small parts, the difference is thirteen pads. **`bypass_seats.py`, written this
+morning, already asks the escape question** (it reads `bypass_slots._needs_fan` and `_fan_box` and holds the
+fan clear), so the instrument exists and the cluster search does not use it.
+
+**A SECOND THING THE ARM FOUND, and it is an interaction between two pieces of today's work.** `C94`, U18's
+own decoupling capacitor, sits at case (3.56, 63.84) on A83's board, **about a hundred millimetres from the
+part it decouples**, because this morning's twenty-four bypass seats gave it a FIXED seat beside U18's OLD
+position and A72's patch was written before those seats existed. A seat that is measured against a placement
+is only true of that placement; the cluster's own capacitors have to travel with it.
+
+**NOTHING IS APPLIED.** What A83 establishes is that the outlet's whole electrical problem is answerable by
+placement and what it costs at the seats measured so far. The next arm owes three things and they are named:
+an escape-aware seat search, `C94` and `C127` travelling with their controller, and the comparison run against
+A71b rather than against A70, because A71b is the board that already carries the switch and the shunt.
