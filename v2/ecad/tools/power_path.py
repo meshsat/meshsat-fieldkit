@@ -84,6 +84,17 @@ def segments(intent, nets):
     # twenty-eight pin controller has twenty-five: a part with more than three distinct nets does not hand its
     # rail current to an arbitrary pin, which is `intent.rail`'s own rule about naming an IC as a source said
     # the other way round. The test is the netlist's, not the reference designator's.
+    # THE GROUND-EXCLUSION WIDENING WAS TRIED AND REFUSED ON MEASUREMENT (20 September 2026 03:30). Board E's
+    # input filter is a dual-winding choke on a four-pin land, two pass-throughs in one package, and this test
+    # sees a four-pin connector, which is why board E's whole input side stayed invisible to it. The obvious
+    # widening is to count only the nets that are NOT declared at zero, giving the choke two. It was
+    # implemented and swept: **board C went from 1 flagged net to 11 and board E gained two**, and all
+    # thirteen are false. An ESD array (board C's U6 to U11: six pads, a supply pin, a ground pin and two
+    # protected pairs) has MORE PADS THAN NETS and three signal nets once ground is dropped, so it reads
+    # exactly like a power transistor; and a three-pin connector whose third pin is ground reads as a
+    # two-terminal part, which is board E's DCF and Geiger headers. **Thirteen false positives to catch four
+    # real ones is worse than the gap**, so the widening is reverted and the gap is documented instead: a
+    # multi-winding part is not seen by this walk, and board E's five input conductors were declared by hand.
     part_nets, part_pads = {}, {}
     for netname, nodelist in nets.items():
         for ref, pin in nodelist:
