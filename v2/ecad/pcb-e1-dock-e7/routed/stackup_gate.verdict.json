@@ -2,12 +2,14 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "compared": 15,
+  "compared": 16,
   "copper_layers": 4,
   "disagreements": 0
  },
- "denominator": 15,
- "evidence": [],
+ "denominator": 16,
+ "evidence": [
+  "PCB-E1-DOCK-E6: JLC04161H-7628 named"
+ ],
  "inputs": {
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
@@ -31,9 +33,9 @@
  "tool": "stackup_gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9bccd1871fd5d8f7"
+  "tools_tree_sha": "4d83fe3b9dfc62e2"
  },
- "ts": "2026-09-20T07:42:21Z",
+ "ts": "2026-09-20T14:48:45Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {

@@ -2,18 +2,20 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "folders": 0
+  "folders": 1
  },
  "denominator": 0,
- "evidence": [],
+ "evidence": [
+  "order folder(s) present: PCB-C-DISPLAY-C7"
+ ],
  "inputs": {
   "declares": "C24",
   "release": {
-   "path": "/root/sweep32/v2/release/revA",
+   "path": "/root/sweep34/v2/release/revA",
    "sha256_16": null
   }
  },
- "missing_input": "board C has no order folder in this tree, so no document about it was read",
+ "missing_input": "board C declares C24 and the order set holds C7: the note beside those folders describes a board this project is not building",
  "note": "DOC-002 asks about the document that describes THIS board",
  "policy": {
   "hard_types": 15,
@@ -28,9 +30,9 @@
  "tool": "doc_provenance_c",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9bccd1871fd5d8f7"
+  "tools_tree_sha": "4d83fe3b9dfc62e2"
  },
- "ts": "2026-09-20T07:43:13Z",
+ "ts": "2026-09-20T14:49:40Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown",
  "writer": {

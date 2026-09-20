@@ -4,7 +4,7 @@
  "counts": {
   "declared": 23,
   "excluded_by_intent": 28,
-  "nets": 272,
+  "nets": 282,
   "poured": 15,
   "shaped": 17,
   "strong": 0,
@@ -30,11 +30,11 @@
   ],
   "intent": {
    "path": "out/pcb-a-power-intent.json",
-   "sha256_16": "c1041930e5db39e3"
+   "sha256_16": "e738cb48d81f3510"
   },
   "netlist": {
    "path": "out/pcb-a-power.net",
-   "sha256_16": "d08fce93cb428f8a"
+   "sha256_16": "487feec036ed2681"
   }
  },
  "missing_input": null,
@@ -47,9 +47,9 @@
  "tool": "switch_list",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9bccd1871fd5d8f7"
+  "tools_tree_sha": "4d83fe3b9dfc62e2"
  },
- "ts": "2026-09-20T07:32:32Z",
+ "ts": "2026-09-20T14:38:38Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {

@@ -2,16 +2,21 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "fail": 5,
+  "fail": 10,
   "pass": 30
  },
- "denominator": 35,
+ "denominator": 40,
  "evidence": [
   "bypass C123 -> U2.16: pads found on the board",
+  "bypass C128 -> U2.14: pads found on the board",
   "bypass C124 -> U13.16: pads found on the board",
+  "bypass C129 -> U13.14: pads found on the board",
   "bypass C125 -> U15.16: pads found on the board",
+  "bypass C130 -> U15.14: pads found on the board",
   "bypass C126 -> U16.16: pads found on the board",
-  "bypass C127 -> U19.16: pads found on the board"
+  "bypass C131 -> U16.14: pads found on the board",
+  "bypass C127 -> U19.16: pads found on the board",
+  "bypass C132 -> U19.14: pads found on the board"
  ],
  "inputs": {
   "board": {
@@ -34,9 +39,9 @@
  "tool": "intent_decoupling",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9bccd1871fd5d8f7"
+  "tools_tree_sha": "4d83fe3b9dfc62e2"
  },
- "ts": "2026-09-20T07:32:10Z",
+ "ts": "2026-09-20T14:38:15Z",
  "verdict": "FAIL",
  "version": "unknown",
  "writer": {

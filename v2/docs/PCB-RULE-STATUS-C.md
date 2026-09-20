@@ -35,7 +35,7 @@ Measured on board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24.
 | PI-003 via current capacity | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | via_current PASS of 2 |
 | GND-001 one deliberate ground system | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | ground_system PASS of 1 |
 | GND-002 chassis and cable-shield strategy | MUST_JUSTIFY | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the strategy is WRITTEN, which it was not before, and writing it found the gap. The kit has no single co |
-| STK-001 the stackup is declared, feasible and in the board | BLOCKER | ROUTED_BOARD | **PASS** | stackup_gate PASS of 15 |
+| STK-001 the stackup is declared, feasible and in the board | BLOCKER | ROUTED_BOARD | **PASS** | stackup_gate PASS of 16 |
 | STK-002 a layer count is decided and costed | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against si |
 | RET-001 a continuous adjacent return path | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: 16 September 2026: the principle is implemented and the heuristic is no longer standing in  |
 | RET-002 plane-adjacency screen | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | intent_return_path FAIL: {'fail': 15, 'pass': 112} |

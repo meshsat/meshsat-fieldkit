@@ -2,20 +2,28 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "documents": 0,
-  "folders": 0,
-  "untraceable": 0
+  "documents": 7,
+  "folders": 7,
+  "untraceable": 7
  },
- "denominator": 0,
- "evidence": [],
+ "denominator": 7,
+ "evidence": [
+  "PCB-A-POWER-A22/ORDER-NOTES.txt asserts hardware numbers and names no artefact: a reader cannot tell which board they are about",
+  "PCB-B-COMPUTE-B16/ORDER-NOTES.txt asserts hardware numbers and names no artefact: a reader cannot tell which board they are about",
+  "PCB-C-DISPLAY-C7/ORDER-NOTES.txt asserts hardware numbers and names no artefact: a reader cannot tell which board they are about",
+  "PCB-D-APRS-D8/ORDER-NOTES.txt asserts hardware numbers and names no artefact: a reader cannot tell which board they are about",
+  "PCB-E1-DOCK-E6/ORDER-NOTES.txt asserts hardware numbers and names no artefact: a reader cannot tell which board they are about",
+  "PCB-E5-BLOCK-E5/ORDER-NOTES.txt asserts hardware numbers and names no artefact: a reader cannot tell which board they are about",
+  "PCB-P-PACK-P1/ORDER-NOTES.txt asserts hardware numbers and names no artefact: a reader cannot tell which board they are about"
+ ],
  "inputs": {
   "release": {
-   "path": "/root/sweep32/v2/release/revA",
+   "path": "/root/sweep34/v2/release/revA",
    "sha256_16": null
   }
  },
- "missing_input": "this tree holds no order folder with a document that asserts hardware numbers, so no document was read: /root/sweep32/v2/release/revA/order",
- "note": "no deliverable folder holds a document that asserts hardware numbers",
+ "missing_input": null,
+ "note": "every document that asserts hardware numbers names the board it was read from, by sha256, and that board is the one in its own folder",
  "policy": {
   "hard_types": 15,
   "rule_set_fingerprint": "ff8151db3576437b"
@@ -24,10 +32,10 @@
  "tool": "doc_provenance",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9bccd1871fd5d8f7"
+  "tools_tree_sha": "4d83fe3b9dfc62e2"
  },
- "ts": "2026-09-20T07:41:56Z",
- "verdict": "INCONCLUSIVE",
+ "ts": "2026-09-20T14:48:19Z",
+ "verdict": "FAIL",
  "version": "unknown",
  "writer": {
   "file": "doc_provenance.py",

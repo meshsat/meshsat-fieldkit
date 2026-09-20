@@ -2,18 +2,23 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "fail": 6,
+  "fail": 11,
   "pass": 255,
   "unclaimed": 0
  },
- "denominator": 261,
+ "denominator": 266,
  "evidence": [
   "return via: 8 of 40 signal vias have a ground via within 1.5 mm (54 exempt in fine-pitch fans, 27 on one reference plane, 168 on a net whose declared class has no edge to return); without one: FE_HDRV1 at (39.90, 47.80); FE_LDRV2 at (40.81, 60.78); FE_HDRV2 at (44.49, 62.30); CH_LODRV1 at (44.49, 86.25); PROCHOT at (48.00, 109.84); POE_HDRV1 at (48.42, 148.10); FE_LDRV1 at (49.42, 51.25); CH_BTST1 at (50.75, 93.25) ...",
   "bypass C123 -> U2.16: pads found on the board",
+  "bypass C128 -> U2.14: pads found on the board",
   "bypass C124 -> U13.16: pads found on the board",
+  "bypass C129 -> U13.14: pads found on the board",
   "bypass C125 -> U15.16: pads found on the board",
+  "bypass C130 -> U15.14: pads found on the board",
   "bypass C126 -> U16.16: pads found on the board",
-  "bypass C127 -> U19.16: pads found on the board"
+  "bypass C131 -> U16.14: pads found on the board",
+  "bypass C127 -> U19.16: pads found on the board",
+  "bypass C132 -> U19.14: pads found on the board"
  ],
  "inputs": {
   "board": {
@@ -31,9 +36,9 @@
  "tool": "intent_checks",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9bccd1871fd5d8f7"
+  "tools_tree_sha": "4d83fe3b9dfc62e2"
  },
- "ts": "2026-09-20T07:32:10Z",
+ "ts": "2026-09-20T14:38:15Z",
  "verdict": "FAIL",
  "version": "unknown",
  "writer": {

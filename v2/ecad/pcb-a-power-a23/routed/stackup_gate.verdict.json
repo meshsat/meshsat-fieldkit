@@ -2,12 +2,14 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "compared": 23,
+  "compared": 24,
   "copper_layers": 6,
   "disagreements": 0
  },
- "denominator": 23,
- "evidence": [],
+ "denominator": 24,
+ "evidence": [
+  "PCB-A-POWER-A22: JLC06161H-3313 named"
+ ],
  "inputs": {
   "board": {
    "path": "pcb-a-power.kicad_pcb",
@@ -31,9 +33,9 @@
  "tool": "stackup_gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9bccd1871fd5d8f7"
+  "tools_tree_sha": "4d83fe3b9dfc62e2"
  },
- "ts": "2026-09-20T07:32:20Z",
+ "ts": "2026-09-20T14:38:26Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {

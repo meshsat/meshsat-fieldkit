@@ -175,12 +175,12 @@ holding a number, not a question about a number.
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
-| `SCH-002` | A | FAIL | netlist_board FAIL: {'agree': 1990, 'aliased_pins': 0, 'board_footprints': 400, 'board_only_inert': 0, 'fail': 35, 'netlist_refs': 413} |
-| `DEC-001` | A | FAIL | intent_decoupling FAIL: {'fail': 5, 'pass': 30} |
+| `SCH-002` | A | FAIL | netlist_board FAIL: {'agree': 1980, 'aliased_pins': 0, 'board_footprints': 400, 'board_only_inert': 0, 'fail': 60, 'netlist_refs': 428} |
+| `DEC-001` | A | FAIL | intent_decoupling FAIL: {'fail': 10, 'pass': 30} |
 | `PI-002` | A | FAIL | dc_drop FAIL: {'density_missed': 13, 'met': 24, 'missed': 3, 'undeclared': 0} |
 | `PI-003` | A | FAIL | via_current FAIL: {'measured_rails': 27, 'no_via': 0, 'over': 8, 'over_barrels': 37, 'rails': 27} |
 | `RET-004` | A | FAIL | return_via FAIL: {'examined_same_reference': 0, 'examined_to_power': 10, 'exempt': 54, 'judged': 40, 'lacking': 32, 'same_plane': 27, 'sl |
-| `ANA-001` | A | FAIL | sensitive_nodes FAIL: {'declared': 24, 'fail': 15, 'measured': 10} |
+| `ANA-001` | A | FAIL | sensitive_nodes FAIL: {'declared': 34, 'fail': 25, 'measured': 10} |
 | `RF-001` | A | FAIL | rf_line FAIL: {'judged': 11, 'missed': 11} |
 | `OUT-001` | A | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `SCH-002` | B | FAIL | netlist_board FAIL: {'agree': 6752, 'aliased_pins': 0, 'board_footprints': 957, 'board_only_inert': 0, 'fail': 1, 'netlist_refs': 931} |
@@ -194,7 +194,7 @@ holding a number, not a question about a number.
 | `PI-003` | E | FAIL | via_current FAIL: {'measured_rails': 9, 'no_via': 2, 'over': 9, 'over_barrels': 30, 'rails': 11} |
 | `ANA-001` | E | FAIL | sensitive_nodes FAIL: {'declared': 3, 'fail': 2, 'measured': 3} |
 | `OUT-001` | E | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
-| `STK-001` | E5 | FAIL | stackup_gate FAIL: {'compared': 7, 'copper_layers': 2, 'disagreements': 1} |
+| `STK-001` | E5 | FAIL | stackup_gate FAIL: {'compared': 8, 'copper_layers': 2, 'disagreements': 1} |
 | `OUT-001` | E5 | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `PI-001` | P | FAIL | dc_density FAIL: {'met': 3, 'missed': 1, 'undeclared': 0} |
 | `OUT-001` | P | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |

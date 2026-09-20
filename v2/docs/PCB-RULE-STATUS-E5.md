@@ -27,7 +27,7 @@ Measured on board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5.
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify_e5 PASS of 0 |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify_e5 PASS of 0 |
 | PWR-003 protection coordination | BLOCKER | SCHEMATIC | **PASS** | energy_chain_e5 PASS of 1 |
-| STK-001 the stackup is declared, feasible and in the board | BLOCKER | ROUTED_BOARD | **FAIL** | stackup_gate FAIL: {'compared': 7, 'copper_layers': 2, 'disagreements': 1} |
+| STK-001 the stackup is declared, feasible and in the board | BLOCKER | ROUTED_BOARD | **FAIL** | stackup_gate FAIL: {'compared': 8, 'copper_layers': 2, 'disagreements': 1} |
 | STK-002 a layer count is decided and costed | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against si |
 | ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **PASS** | sensitive_nodes PASS of 1 |
 | INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **PASS** | interfaces_e5 PASS of 0 |
