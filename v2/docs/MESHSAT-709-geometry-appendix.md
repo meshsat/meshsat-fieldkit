@@ -16117,3 +16117,29 @@ line for line. Applied to `gen_pcb_a3.py` and proved to be the same thing that r
 the file hashes **a1445ddc8ec5a118** here and on A88. Suite 1241, 0 failing.
 
 **So board A's four repeated opens are three answered in the generator and one put back to decision 35.**
+
+### 32.330, 20 September 2026 19:45 CEST: the filter answered TI item 7's Kelvin half and its differential-pair half is still open, and `/PA_ISNS_N` is what that looks like
+
+TI's layout table for the LM5176 asks two things of a current-sense connection: **a Kelvin tap at the pad
+centre**, and **the sense traces run as differential pairs**. Today's filter answers the first and the
+measurement is in 32.325: the taps that were 422.8 and 129.2 percent of their own full scale read 8.0 and
+2.1.
+
+**The second half is undeclared.** Board A's intent declares **zero pairs** (`pair_classes` carries USB,
+DIFF100, PCIE, HDMI and RF, all signal interfaces, and `pairs` is empty), so the ten ISNS nets are ten
+independent nets to every tool that lays copper: the pair pre-router never sees them and the router routes
+each one wherever it fits.
+
+**`/PA_ISNS_N` is what that costs and it is open on both arms that carry the filter.** On A69's finished
+board it is **55.42 mm from C129 pad 2 to R163 pad 2**, crossing `PA_OUT` sixteen times and `PA_SW2`
+thirteen within a millimetre of the straight line, and it is open on A70 as well, which pins six rails and
+not this. A sense line that carries no current does not need a lane of its own for current; it needs to stay
+BESIDE ITS PARTNER, which is exactly what a declared pair buys and what nothing on this board asks for.
+
+**NOT ACTED ON, and the reason is a ruling rather than the work.** Declaring the five ISNS pairs would put
+ten new pairs under the 10 September hold, which says every board is held until the pre-router lays EVERY
+pair; boards C and E were released from it only because their classes declare no impedance target. Whether a
+sense pair with no target is inside that hold is the owner's to say, and the alternative the record already
+names is **locked copper the generator lays itself**, four runs as two differential pairs from each shunt
+pad's centre to its filter at 26.81, 26.81, 27.16 and 22.28 mm, which is the same instrument the eleven
+blind-mate RF drops use and needs no declaration at all.
