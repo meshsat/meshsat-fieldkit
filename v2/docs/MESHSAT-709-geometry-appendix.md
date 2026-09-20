@@ -13773,3 +13773,30 @@ bound from above by the narrowest pad on **any** of them, 0.610 mm, which caps i
 **3.36 A** against the 2.47 it needs, 36 percent of margin instead of ten, and the other four nets keep the
 0.500 they never needed widened. Two lines of the generator, in the one `CLASSES` table that feeds both the
 board and the project file. **Residue for the commit that re-cuts a deliverable, which is decision 31.**
+
+### 32.273, 20 September 2026 06:50 CEST: item 6 is free once the tool is right, and the fix costs a second board nothing
+
+**A58 is 32.267's seats on top of 32.271's fix, through the whole chain, and it lands clean**: 463 escapes
+and 0 pads skipped, placed board hard 0, **pre-route hard 0**, region fit 1.4 of 1.5, `RESULT: ALL PASS`,
+all three pre-lay groups kept at hard 0, `PREROUTE-DONE OK`, where the same seats on the old tool read
+`BLOCK 4`. So **TI's item 6 really is free, and what was never free was a stub that could cross copper.**
+The seats are back in the generator with the chain as the evidence rather than the placement, and
+`CH_SW1` goes 19.22 mm to 7.40 with `CH_SW2` 26.86 to 7.40.
+
+**And the fanout fix has its second board.** Board E carries exposed pads (so the paste filter could only
+free copper) and a dense 278 mm strip (so the new refusal could only cost). Two arms from one tree, the
+tools the only difference:
+
+| board E | escapes | placed | pre-route | fanout's own signature on the finished board | chain |
+|---|---|---|---|---|---|
+| committed tools | 178, 5 skipped | hard 0 | hard 0, 205 unrouted | 103 locked 0.400 mm tracks, 138 locked 0.45 mm vias | OK |
+| the fix | 178, 5 skipped | hard 0 | hard 0, 205 unrouted | **103 and 138** | OK |
+
+**Identical to the track.** The signature is counted off the finished board rather than measured by running
+the tool again, because asking a tool about a board that already carries its output is the 8 September trap
+and it has cost this record two readings in one night already.
+
+**A59 is the route of the board the generator now makes** (the charger block in the converter's order, the
+escape row free, the fanout unable to cross copper, the inductor between the pairs), and it is the only
+thing that can answer whether the four charger nets close. **A54 keeps routing as the older control**, and
+the two are NOT one variable apart: neither is presented as if they were.
