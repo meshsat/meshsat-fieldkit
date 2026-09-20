@@ -321,6 +321,31 @@ try:
         ns.SetNetclass(_nm, _nc)
     for pat, name in PATTERNS: ns.SetNetclassPatternAssignment(pat, name)
 except Exception as e: print("note: net class API:", e)
+# --- PI-003's generator answer for board D (20 September 2026). `barrel_sites --suggest` on the board sweep
+#     32 judged reports the WHOLE of board D's PI-003 as TWO barrels, both `+5V_SA` and both at ratio 1.22:
+#     the rail crosses layers twice and each crossing is a single 0.40 mm barrel carrying 1.10 A against the
+#     0.90 A its own wall holds at 10 K. That is 18 September's finding, where `via_current` reported each
+#     rail's WORST barrel and the record said "one" all day.
+#
+#     Each wants two barrels and the room differs: the site at (-28.59, 25.81) has 0.57 mm to the nearest
+#     pad's COPPER on its clear axis and the one at (-31.15, 17.96) has 1.20. A two-barrel lattice at the
+#     0.80 mm pitch needs about 0.70 from the centre, so the second fits with margin and the first is
+#     MARGINAL BY THE TOOL'S OWN NUMBER. Board E's `DC_F` was refused at exactly this and the chain is what
+#     said so, three runs of it, so both are offered here and the chain decides: a site that comes back with
+#     a clearance item is declined with its number, the way `DC_F` and board A's `VBUS20` busbar site are.
+if os.environ.get("PLACE_D_BARRELS", "1") not in ("0", ""):
+    _d_refused = []
+    # AND THE MARGINAL ONE IS REFUSED, WHICH D20 MEASURED. The site at (-28.59, 25.81) had 0.57 mm to the
+    # nearest pad's copper where a two-barrel lattice at 0.80 mm pitch needs about 0.70, and the chain came
+    # back `hole_to_hole` at 0.0342 mm: the second barrel lands on a hole that is already there. Declined
+    # with its number, which is board E's `DC_F` and board A's `VBUS20` busbar site for the third time, and
+    # the room figure predicted it, which is what that number was corrected for this morning.
+    for _n, _at, _a, _d, _ax in [("+5V_SA", (-31.15, 17.96), 1.100, 0.40, "y")]:
+        try: _pc.cluster(_n, _at, amps=_a, drill=_d, axis=_ax)
+        except Exception as _e: _d_refused.append("%s at %s: %s" % (_n, _at, _e))
+    print("power copper: board D's two +5V_SA layer transitions clustered%s"
+          % ("; REFUSED: " + "; ".join(_d_refused) if _d_refused else ""))
+_pc.write_provenance(BOARD)
 pcbnew.SaveBoard(BOARD, board)
 print("saved", BOARD, "footprints:", len(list(board.GetFootprints())), "nets:", board.GetNetCount())
 import json
