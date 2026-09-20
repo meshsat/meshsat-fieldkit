@@ -152,6 +152,19 @@ FIXED = {"J_AB1": (113, -46, 0), "J_MEZZ_PWR1": (-8, -18, 90),
          "R164": (-35.77, -46.11, 0), "R165": (-29.84, -46.11, 0),
          "R166": (-67.55, -37.36, 0), "R167": (-61.62, -37.36, 0),
          "R168": (66.45, 52.65, 0), "R169": (72.38, 52.65, 0),
+         # THE WHOLE USB-C OUTLET STAGE AT THE OUTLET (20 September 2026, appendix 32.300 to 32.323,
+         # proved by A85 at PREROUTE-DONE OK). The switch and the shunt take the corridor seats and
+         # the controller and its cluster follow them: the walked power path Q26 to R81 to Q27 to
+         # R138 to J_USBC_OUT is 54.99 mm against 180.45 before, and U18's three sense pins reach
+         # R138 in 12.71, 13.70 and 14.69 mm against 95.27, 96.19 and 97.11, which is TI item 7
+         # arriving on the outlet. U18 sits nine millimetres further out than the nearest legal seat
+         # ON PURPOSE: at 5.10 mm its escape FAN is boxed in and the board loses eleven of its pads
+         # (A83, escapes 447 and sixteen skipped); at 14.00 mm the fan is clear and the board reads
+         # 461 escapes with TWO skipped, which is the baseline this change costs nothing against.
+         "Q27": (87.64, 39.04, 0), "R138": (98.86, 29.08, 0),
+         "C93": (100.89, 20.06, 0), "C95": (95.47, 23.43, 0), "C96": (104.98, 22.96, 0), "C97": (95.32, 25.54, 0),
+         "R139": (100.80, 16.78, 0), "R140": (96.61, 20.04, 0), "R141": (105.06, 20.81, 0),
+         "R142": (104.75, 28.85, 0), "R143": (92.90, 20.87, 0), "C120": (92.36, 28.75, 0), "D4": (111.02, 21.34, 0),
          # THE FOUR LOGIC DECOUPLING CAPACITORS AT THE PINS THEY SERVE (20 September 2026, appendix
          # 32.304). C4, C104, C106 and C107 were packed in region CTL at case x 52 to 90 while U1,
          # U26, U27 and U28 are FIXED at x -49 to -62, so each sat 109.4, 139.6, 114.6 and 130.7 mm
@@ -172,11 +185,11 @@ FIXED = {"J_AB1": (113, -46, 0), "J_MEZZ_PWR1": (-8, -18, 90),
          # to 293. Seats that also cleared the fans cost 49 escapes (A81) and are not taken.
          # C11, C12 and C63 keep their own fixed seats, which are the PA stage's; C108, C64, C36 and C42
          # have no seat outside a rectangle and a fan within 12 mm and stay where the packer puts them.
-         "C54": (-70.22, 9.68, 0), "C127": (43.96, 60.38, 0), "C125": (-28.07, -19.75, 0), "C89": (44.16, 64.93, 0),
+         "C54": (-70.22, 9.68, 0), "C127": (84.86, 23.08, 0), "C125": (-28.07, -19.75, 0), "C89": (44.16, 64.93, 0),
          "C71": (-33.81, -18.40, 0), "C8": (-85.84, 56.93, 0), "C74": (-39.36, -17.79, 0), "C60": (-35.84, 6.93, 0),
          "C123": (-91.14, 47.58, 0), "C19": (-102.50, 9.73, 0), "C78": (-87.84, -25.07, 0), "C116": (27.26, 66.36, 0),
          "C81": (-104.74, -22.99, 0), "C92": (32.64, 73.21, 0), "C82": (-104.76, -27.25, 0), "C126": (-88.04, -29.62, 0),
-         "C94": (3.56, 63.84, 0), "C124": (-36.04, 2.38, 0), "C30": (-64.18, 53.94, 0), "C48": (-3.38, 47.57, 0),
+         "C94": (84.86, 35.08, 0), "C124": (-36.04, 2.38, 0), "C30": (-64.18, 53.94, 0), "C48": (-3.38, 47.57, 0),
          "C29": (-68.55, 47.04, 0), "C35": (-48.18, 53.94, 0), "C41": (-32.18, 53.94, 0), "C47": (-16.18, 53.94, 0),
          "C106": (-47.25, -13.75, 0), "C107": (-59.25, -13.75, 0),
          "R146": (-102.5, 13.6, 0), "R147": (-102.5, 11.8, 0), "C121": (-105.1, 12.7, 90),
@@ -192,7 +205,7 @@ FIXED = {"J_AB1": (113, -46, 0), "J_MEZZ_PWR1": (-8, -18, 90),
          "Q11": (-60, -8, 0), "C63": (-54, -8, 90), "C64": (-50.5, -8, 90),   # A23: the PA stage's input FET and caps at the end of the VBAT spur
          "U13": (-44, 6, 0), "L8": (-26, 4, 0), "U15": (-36, -27, 0), "L9": (-22, -27, 0), "U12": (-64, 10.5, 0), "L7": (-58, 10.5, 0), "U1": (-49, -28, 0),
          "U26": (-58, -28, 0), "U27": (-50, -19, 0), "U28": (-62, -19, 0),
-         "U18": (10, 65, 0), "U19": (36, 64, 0), "L11": (56, 65, 0), "U21": (70, 66, 0), "U22": (80, 66, 0), "U23": (90, 66, 0),
+         "U18": (84.86, 29.08, 0), "U19": (36, 64, 0), "L11": (56, 65, 0), "U21": (70, 66, 0), "U22": (80, 66, 0), "U23": (90, 66, 0),
          "J_PA": (110, 62, 90), "J_MON": (110, 50, 90), "J_HEAT": (110, 38, 90), "J_USBC_OUT": (110, 26, 90), "J_HF": (110, 12, 90), "J_54V": (110, 0, 90), "J_USBW": (110, -12, 90)}
 for k in range(4): FIXED["J_CP%d" % (k + 1)] = (-99 + 4 * k, -73, 0); FIXED["J_CN%d" % (k + 1)] = (-99 + 4 * k, -67, 0)
 for k, x in enumerate(RF_X, 1): FIXED["J_BM%d" % k] = (x, -66, 0); FIXED["J_RF%d" % k] = (x, -56, 0)
@@ -262,7 +275,7 @@ REGIONS = [
  ("B33",   (-66, -2, -48, 8), ["C52", "C53", "C55", "C56", "R48", "R49"]),
  ("CTL",   (52, -38, 90, -24), ["R2", "R3", "R4", "Q1", "R5", "R102", "R103", "R104", "R145", "R110", "R111", "R112", "R113", "R114"]),
  ("TPS",   (10, -39, 52, -23), ["TP%d" % k for k in range(3, 9)] + ["TP10", "TP11", "TP15", "TP16", "TP17", "TP18", "TP21", "TP23", "TP24", "TP25", "TP26", "TP27", "R116", "R117", "R118"]),   # U29 is FIXED beside J_USBW since 12 September 2026   # TP27: the spare ribbon line, which lost its seat on J_AB1 when the pairs took their columns (10 Sep 2026)
- ("PDS",   (0, 44, 30, 62), ["C93", "C95", "C96", "C97", "C120", "D4", "R136", "R137", "R138", "R139", "R140", "R141", "R142", "R143", "Q27"]),
+ ("PDS",   (0, 44, 30, 62), ["R136", "R137"]),
  ("PDQ",   (30, 44, 84, 58), ["Q21", "Q22", "Q25", "Q26", "R81", "R127", "C117", "C118", "C119", "R76", "R77", "R78", "R79", "R80", "C86", "C87", "C88", "C90", "C91", "R128", "R133", "R134", "R135", "R158", "R159"]),
  ("EFS",   (84, 44, 100, 62), ["C98", "R90", "R91", "R92", "R93", "C99", "C100", "R94", "R95", "R96", "R97", "C101", "C102", "R98", "R99", "R100", "R101", "C103"]),
 ]

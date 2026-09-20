@@ -15772,3 +15772,39 @@ belongs to the same decision.
 **A84 is that arm** (`$SP/a84_probe.sh`): A83 with U18 at the fan-clear seat, the gate's `EXPECT` following
 it, and C94 and C127 travelling with their controller. **Read it against A83's 447 escapes and sixteen pads
 skipped, not against A70's**, because A83 is the board that already carries everything else.
+
+**ADDENDUM, 17:10 CEST: A84 and A85, and the outlet answer is APPLIED.**
+
+**A84** is A83 with the controller at the fan-clear seat and its two capacitors travelling with it, and it
+costs nothing:
+
+| | A70 (baseline) | A71b (switch and shunt) | A83 (whole stage, nearest seat) | **A84 (fan-clear seat)** |
+|---|---:|---:|---:|---:|
+| escapes | 461 | 460 | 447 | **461** |
+| pads with no escape | 2 | 3 | 16 | **2** |
+| walked power path | 180.45 mm | 54.99 mm | 54.99 mm | **54.99 mm** |
+| U18's sense pins to R138 | 95 to 97 mm | 95 to 97 mm | 3.22 to 4.18 mm | **12.71 to 14.69 mm** |
+| `check_pcb_a` | PASS | PASS | PASS 510 of 511 (the gate's own line) | **PASS of 511** |
+| `netlist_board` | 2,148 | 2,148 | 2,148 | **2,148 of 2,148** |
+| placed board | hard 0 | hard 0 | hard 0 | **hard 0** |
+
+**Nine millimetres of seat is the whole difference between thirteen lost escapes and none**, and it is the
+question the seat search was not asking.
+
+**A85 IS WHY IT COULD BE APPLIED.** A84 stopped at the placed board, and **A56 is the precedent that a placed
+board is not a pre-route**: its item 6 seats passed the placement and the full chain then ended
+`PREROUTE-DONE BLOCK` on two locked ground stubs clipping their own drain tabs. A85 is A84 through every
+stage: escape, fanout, the barrel stage, the three pre-lay groups (**19 of 20 switching and 9 of 10 sense
+closed and kept**), the pre-route DRC at **hard 0 of the fifteen types**, and **`PREROUTE-DONE OK`**.
+`rail_crossings` still names board A's nine short crossings, which this change neither helps nor hurts.
+
+**Applied to `gen_pcb_a3.py` and to `check_pcb_a.py`'s `EXPECT` in the same commit**, and then PROVED to be
+the same thing that ran: with comments stripped, both files hash identical to A85's own copies
+(`b87a78c1dde84079` and `6b74461bc6ff4fd0`). **The generator at HEAD makes the board A85 took to
+`PREROUTE-DONE OK`.** Suite 1239, 0 failing.
+
+**What is still open at the outlet, and it is one sentence.** `TRN-001` reads `FAIL ... J_USBC_OUT.2 on
+PD_CC1, J_USBC_OUT.3 on PD_CC2`, two conductors that reach a chip with nothing between, which is decision 31
+and not this change's; and the DEC-001 conflict stands, with `bypass_place` reading **37 capacitors carrying
+a seat the generator chose and 3 stuck** (C36 at U5, C42 at U6, C108 at U15, each 13 to 26 mm away with no
+free spot inside 3 mm), which is the fine-pitch fan conflict this morning measured across the set.
