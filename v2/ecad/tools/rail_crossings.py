@@ -90,14 +90,29 @@ def rows(b, rails, reach_mm=1.0):
             # report somebody acts on and a report somebody turns off.
             _pads = [q for q in fp.Pads() if (q.GetNetname() or "").lstrip("/") == n]
             if not _pads: continue
-            _share = want[ref] / float(len(_pads))
-            for pad in _pads:
+            # PADS OF ONE NUMBER ARE ONE LAND AND ONE CROSSING (21 September 2026, board E). KiCad draws a PowerPAK
+            # SO-8's drain as FIVE pads numbered 5, the tab and its four leads, joined inside the part; this loop
+            # took each as a pad of its own, split Q7's 8.00 A five ways and judged four crossings of 1.60 A at
+            # leads 1.27 mm apart, so `rail_barrels` answered two of them and the other two read short by 0.12 A
+            # forever, while the tab itself, which carries the whole current, was never asked for 8.00 A. A pad
+            # NUMBER is the unit: the share is the part's current over its distinct numbers on the rail, the
+            # barrels counted are those within reach of ANY instance of the number (each once), and the row is
+            # anchored on the largest instance, which is where the copper is.
+            _groups = {}
+            for q in _pads: _groups.setdefault(str(q.GetNumber()), []).append(q)
+            _share = want[ref] / float(len(_groups))
+            for _num, _inst in sorted(_groups.items()):
+                pad = max(_inst, key=lambda q: q.GetBoundingBox().GetWidth() * q.GetBoundingBox().GetHeight())
                 bb = pad.GetBoundingBox(); c = pad.GetPosition()
-                def _within(r):
-                    return [v for v in vias if (v.GetNetname() or "").lstrip("/") == n
-                            and math.hypot(v.GetPosition().x - c.x, v.GetPosition().y - c.y) <= r]
                 r0 = max(bb.GetWidth(), bb.GetHeight()) / 2 + reach_mm * 1e6
-                near = _within(r0)
+                near, _seen = [], set()
+                for q in _inst:
+                    qb = q.GetBoundingBox(); qc = q.GetPosition()
+                    qr = max(qb.GetWidth(), qb.GetHeight()) / 2 + reach_mm * 1e6
+                    for v in vias:
+                        if id(v) in _seen or (v.GetNetname() or "").lstrip("/") != n: continue
+                        if math.hypot(v.GetPosition().x - qc.x, v.GetPosition().y - qc.y) <= qr:
+                            _seen.add(id(v)); near.append(v)
                 if not near: continue           # no crossing at this pad: nothing to count
                 judged += 1
                 # A SITE OF MIXED DRILLS IS JUDGED ON WHAT ITS BARRELS CARRY, NOT AT ITS SMALLEST HOLE (21 September
@@ -138,11 +153,13 @@ def rows(b, rails, reach_mm=1.0):
                         "drill": drill, "width": width, "near": at_near, "have": len(near), "need": need,
                         "carried": carried,
                         "reach": r0 / 1e6, "at_pad": (c.x / 1e6, c.y / 1e6), "amps": _share,
-                        "part_amps": want[ref], "pads": len(_pads),
+                        "part_amps": want[ref], "pads": len(_groups), "instances": len(_inst),
                         "why": "%s at %s pad %s (%.2f, %.2f): %d barrel(s) carrying %.2f A at a 10 K rise for %.2f A "
-                               "(%.2f A over this part's %d pad(s) on the rail), which needs %d at %.2f mm"
+                               "(%.2f A over this part's %d pad(s) on the rail%s), which needs %d at %.2f mm"
                                % (n, ref, pad.GetNumber(), c.x / 1e6, c.y / 1e6, len(near), carried, _share,
-                                  want[ref], len(_pads), need, drill)})
+                                  want[ref], len(_groups),
+                                  (", pad %s drawn as %d pieces of one land" % (_num, len(_inst))) if len(_inst) > 1 else "",
+                                  need, drill)})
     return short, judged
 
 

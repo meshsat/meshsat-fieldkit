@@ -257,3 +257,28 @@ def t_a_new_barrel_takes_the_largest_drill_already_on_the_site():
     rows, _ = rc.rows(_Board(vias, [_FP("U1", pads)]), {"/RAIL": {"amps_peak": 6.0, "source": "U1"}})
     assert rows and abs(rows[0]["drill"] - 0.5) < 1e-9, "the drill for new barrels is not the largest on the site: %s" % rows
     assert rows[0]["carried"] > 1.0 and rows[0]["need"] > rows[0]["have"], rows[0]
+
+
+def t_pads_of_one_number_are_one_land_and_one_crossing():
+    """THE DEFECTIVE FIXTURE (21 September 2026, board E): KiCad draws a PowerPAK SO-8's drain as five pads numbered
+    5, the tab and four leads joined inside the part. The judge took each as a pad of its own, split Q7's 8.00 A
+    five ways and read four crossings of 1.60 A at leads 1.27 mm apart, two of which stayed short by 0.12 A after
+    the fixer had answered the other two, while the tab carrying the whole current was never asked for 8 A."""
+    # U1 takes 3.0 A on pad "5" drawn as three pieces 3 mm apart, one 0.40 mm barrel on each piece
+    pads = [_Pad("/RAIL", "5", 10.0, 10.0 + 3.0 * i, 0.6, 0.6) for i in range(3)]
+    vias = [_Via("/RAIL", 10.0, 10.0 + 3.0 * i, 0.4) for i in range(3)]
+    rails = {"/RAIL": {"amps_peak": 3.0, "source": "U1"}}
+    short, judged = rc.rows(_Board(vias, [_FP("U1", pads)]), rails)
+    assert judged == 1 and len(short) == 1, (judged, [r["why"] for r in short])
+    r = short[0]
+    assert r["pad"] == "5" and r["pads"] == 1 and r["instances"] == 3, r
+    assert r["have"] == 3, "the barrels of every piece of the land count once each: %s" % r["have"]
+    assert abs(r["amps"] - 3.0) < 1e-9 and r["need"] == 4, (r["amps"], r["need"])   # three 0.40 barrels carry 2.7 A
+    assert "pad 5 drawn as 3 pieces of one land" in r["why"], r["why"]
+    # THE ACCEPTABLE FIXTURE: three DISTINCT numbers are three lands and three crossings of a third each
+    pads = [_Pad("/RAIL", str(i + 1), 10.0, 10.0 + 3.0 * i, 0.6, 0.6) for i in range(3)]
+    short, judged = rc.rows(_Board(vias, [_FP("U1", pads)]), rails)
+    assert judged == 3 and len(short) == 3, (judged, len(short))
+    assert all(abs(r["amps"] - 1.0) < 1e-9 and r["have"] == 1 and r["instances"] == 1 for r in short), short
+    assert not any("pieces of one land" in r["why"] for r in short)
+
