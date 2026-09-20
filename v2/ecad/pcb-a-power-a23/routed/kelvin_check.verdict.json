@@ -1,0 +1,43 @@
+{
+ "advisory": true,
+ "applicable": true,
+ "counts": {
+  "declared": 14,
+  "measured": 10,
+  "not_kelvin": 9
+ },
+ "denominator": 14,
+ "evidence": [
+  "FE_ISNS_P: the copper between R11.1 and U2.14 carries 26.62 mV of the 50.0 mV full scale, 53.2% of the reading, so the tap is not a Kelvin connection",
+  "FE_ISNS_N: the copper between R11.2 and U2.13 carries 2.16 mV of the 50.0 mV full scale, 4.3% of the reading, so the tap is not a Kelvin connection",
+  "PA_ISNS_P: the copper between R55.1 and U13.14 carries 62.40 mV of the 50.0 mV full scale, 124.8% of the reading, so the tap is not a Kelvin connection",
+  "PA_ISNS_N: the copper between R55.2 and U13.13 carries 10.83 mV of the 50.0 mV full scale, 21.7% of the reading, so the tap is not a Kelvin connection",
+  "HF_ISNS_P: the copper between R65.1 and U15.14 carries 1.73 mV of the 50.0 mV full scale, 3.5% of the reading, so the tap is not a Kelvin connection",
+  "HF_ISNS_N: the copper between R65.2 and U15.13 carries 0.50 mV of the 50.0 mV full scale, 1.0% of the reading, so the tap is not a Kelvin connection",
+  "POE_ISNS_N: the copper between R71.2 and U16.13 carries 0.61 mV of the 50.0 mV full scale, 1.2% of the reading, so the tap is not a Kelvin connection",
+  "PD_ISNS_P: the copper between R81.1 and U19.14 carries 4.46 mV of the 50.0 mV full scale, 8.9% of the reading, so the tap is not a Kelvin connection",
+  "PD_ISNS_N: the copper between R81.2 and U19.13 carries 99.64 mV of the 50.0 mV full scale, 199.3% of the reading, so the tap is not a Kelvin connection"
+ ],
+ "inputs": {
+  "board": {
+   "path": "pcb-a-power.kicad_pcb",
+   "sha256_16": "58e26c67987b1daa"
+  },
+  "tolerance_pct": 1.0
+ },
+ "missing_input": null,
+ "note": "the share of a current-sense signal that is the copper's own drop between the shunt's own pad and the point the sense line taps, from dc_drop's solved mesh; a REPORT, because no rule asks this yet",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [],
+ "tool": "kelvin_check",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "cb58607186f3fb15"
+ },
+ "ts": "2026-09-20T05:58:19Z",
+ "verdict": "FAIL",
+ "version": "unknown"
+}

@@ -14054,3 +14054,48 @@ than the comment claimed; the correction runs in the strict direction.
 **NOT CLAIMED**: what any of the thirteen new rows reads. The four board A arms in flight carry the
 declaration and will say; boards E and P have no solved mesh at the moment it was written. Suite 1206, 0
 failing.
+
+### 32.282, 20 September 2026 07:58 CEST: nine of board A's ten measurable current-sense taps are not Kelvin connections, and the list is PI-001's own list
+
+The ten rows declared six minutes earlier were read the moment they existed, because a declaration nothing
+reads is not a declaration. `dc_drop` then `kelvin_check` in one staged tree on the **committed board A32**,
+read-only, **sha `58e26c67987b1daa` identical before and after**; the verdict is in
+`pcb-a-power-a23/routed/kelvin_check.verdict.json` and decides no rule, being advisory.
+
+**Fourteen declared, ten measured, NINE that are not Kelvin connections**, ranked by the share of the 50.0 mV
+the constant-current loop regulates to:
+
+| row | rail | copper drop | share of full scale | PI-001 ratio of that rail |
+|---|---|---:|---:|---:|
+| `PD_ISNS_N` | `PD_VPWR` | 99.642 mV | **199.3 %** | 2.44x |
+| `PA_ISNS_P` | `PA_OUT` | 62.396 mV | **124.8 %** | 2.44x |
+| `FE_ISNS_P` | `FE_OUT` | 26.617 mV | 53.2 % | 3.13x |
+| `PA_ISNS_N` | `+13V8_PA` | 10.833 mV | 21.7 % | 1.53x |
+| `PD_ISNS_P` | `PD_OUT` | 4.461 mV | 8.9 % | 1.23x |
+| `FE_ISNS_N` | `VBUS20` | 2.161 mV | 4.3 % | 2.03x |
+| `HF_ISNS_P` | `HF_OUT` | 1.733 mV | 3.5 % | not named |
+| `POE_ISNS_N` | `+54V_POE` | 0.606 mV | 1.2 % | not named |
+| `HF_ISNS_N` | `+12V_HF` | 0.502 mV | 1.0 % | not named |
+| `POE_ISNS_P` | `POE_OUT` | 0.447 mV | **0.9 %, the one PASS** | not named |
+
+**TWO ARE LARGER THAN THE WHOLE SIGNAL, and that is not a tolerance question.** The loop compares the drop
+across ISNS(+) and ISNS(-) with an internal 50 mV; a rail carrying 100 mV of its own between the shunt's pad
+and the pin **decides** that set point rather than modifying it. On the USB-C PD stage the constant-current
+loop is being told about a current that is mostly the rail's own drop.
+
+**THE ORDER OF THE LIST IS PI-001'S OWN ORDER, and that is the finding rather than the numbers.** Every row
+above 20 percent sits on a conductor board A's PI-001 ranking already names, and every row under 4 percent
+sits on a conductor it does not. It is not a correlation to be careful about: it is the same arithmetic
+twice, because the drop is the current times the resistance and PI-001 is about that resistance. **The
+current-sense error and the current-density failure are one defect read two ways**, so the copper that
+answers 32.264's ranking answers this at the same time, and the one apparent exception, `PD_ISNS_P` on
+PI-001's 1.23x reading a modest 8.9 percent, is the ranking behaving as a ranking.
+
+**The charger's four rows could not be measured here and that is correct**: `R146` to `R149` are the six
+charger filter parts of 16 September and A32 does not carry them, which is SCH-002's ten disagreements by
+name. The charger's Kelvin numbers have only ever come from the A47 and A48 arms for that reason, which is
+why 32.280's finding had to be made on an arm rather than on the board this tree declares.
+
+**NOT CLAIMED: that a route fixes this.** Nothing lays Kelvin copper for these ten taps, so whatever the
+router does with `<stage>_OUT` is what the loop reads. The answer is generator-laid locked copper, the same
+shape as item 7's four runs at the charger's shunts, and it is now **ten more runs on the same board**.
