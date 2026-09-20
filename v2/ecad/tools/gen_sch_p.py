@@ -112,11 +112,28 @@ r("R5", "100R", "CELL4", "BAT_F"); c("C6", "100n", "BAT_F", "GND")              
 r("R6", "1k", "PACK_P", "PACK_F"); c("C7", "100n", "PACK_F", "GND")                                             # PACK sense
 r("R7", "1k", "PACK_P", "VCC_F"); c("C8", "100n", "VCC_F", "GND")                                               # VCC, the secondary supply from the pack terminal (wakes a shut-down pack from the charger)
 r("R8", "100R", "GND", "SRP_F"); r("R9", "100R", "PACK_N", "SRN_F"); c("C9", "100n", "SRP_F", "SRN_F")          # the coulomb counter across the sense resistor
-# PACK_N is the pack's negative terminal, on the far side of the 2 mOhm coulomb-counting shunt from the board's
-# own ground: 25 A through it is 50 mV, so it is a reference and not a live net, and it is declared so that the
-# parts across it are judged rather than reported as sitting on an undeclared net (16 September 2026, CMP-001).
-_intent.node("PACK_N", 0.05, "the pack negative, one 2 mOhm shunt away from GND: 50 mV at the 25 A the "
-             "counter is scaled for, which is a reference and not a voltage a part has to withstand")
+# PACK_N IS THE BIGGEST CURRENT IN THE KIT AND IT WAS A NODE UNTIL 20 SEPTEMBER 2026.
+#
+# It is the pack's negative terminal from the 12 AWG lead land W_N to the 2 mOhm coulomb-counting shunt R10,
+# on the far side of which is the board's own ground. Its own potential is 50 mV at the 25 A the counter is
+# scaled for, which is why it was declared a NODE on 16 September: a reference rather than a voltage a part
+# has to withstand. But it carries the pack's whole 10.0 A typical and 18.0 A peak, and `intent.node()` says
+# in its own first line that it describes a net that is NOT a rail, so `dc_drop` solved nothing on it and
+# neither PI-001 nor PI-002 had ever looked at the largest current on any board of this set.
+#
+# It could not be declared on 20 September at 00:45 and the reason was a gap in the RULE SET rather than a
+# missing line here: `dc_drop` judges a drop as a percentage of the net's own voltage, so a 2 percent budget
+# on 50 mV is a bar of ONE MILLIVOLT, and declaring `volts` as the pack's 14.4 to get a sensible bar would
+# make `derate` judge R9, the 100 R sense resistor sitting on this net, against 14.4 V instead of the 50 mV it
+# sees. `returns` closes that gap: the net keeps its own 50 mV, which is what CMP-001 uses, and the DROP is
+# judged against the rail it returns, which is what PI-002 needs. The capacity half needed no bar at all and
+# is measured on the copper either way.
+_intent.rail("PACK_N", 0.05, 10.0, 18.0, "W_N", loads={"R10": 10.0}, returns="PACK_P", converted=False,
+             v_work=0.05,
+             note="the pack negative from the 12 AWG lead land W_N to the 2 mOhm coulomb-counting shunt R10, "
+                  "at the pack's own 10.0 A typical and 18.0 A peak. Its own potential is 50 mV at 25 A, "
+                  "which is what a part on it is judged against; its DROP is judged against PACK_P, the rail "
+                  "it returns, because a percentage of 50 mV is not a bar anybody could state")
 _intent.node("GND", 0.0, "the board's reference, so a part between a live net and ground is judged against "
              "the live net rather than reported as sitting on an undeclared one")
 r("R10", "2m 2512 2W (sense)", "GND", "PACK_N", "RS2512")                                                       # 25 A gives 50 mV, inside the counter's range

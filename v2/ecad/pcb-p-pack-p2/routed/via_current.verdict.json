@@ -2,15 +2,22 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "measured_rails": 3,
+  "measured_rails": 4,
   "no_via": 0,
-  "over": 2,
-  "rails": 3
+  "over": 3,
+  "over_barrels": 5,
+  "rails": 4
  },
- "denominator": 3,
+ "denominator": 4,
  "evidence": [
   "FUSED: a barrel at (96.8, 85.6) carries 1.74 A of the solved mesh against 1.05 A for its own wall at 10 K (18 um plating), ratio 1.66",
-  "PACK_P: a barrel at (114.8, 85.9) carries 1.96 A of the solved mesh against 1.05 A for its own wall at 10 K (18 um plating), ratio 1.87"
+  "PACK_N: a barrel at (87.6, 114.4) carries 1.86 A of the solved mesh against 1.05 A for its own wall at 10 K (18 um plating), ratio 1.77",
+  "PACK_P: a barrel at (114.8, 85.9) carries 1.96 A of the solved mesh against 1.05 A for its own wall at 10 K (18 um plating), ratio 1.87",
+  "FUSED: barrel at (92.8, 83.9), 1.48 A against 1.05 A, ratio 1.41",
+  "FUSED: barrel at (96.8, 85.6), 1.74 A against 1.05 A, ratio 1.66",
+  "PACK_N: barrel at (87.6, 114.4), 1.86 A against 1.05 A, ratio 1.77",
+  "PACK_P: barrel at (114.8, 85.9), 1.96 A against 1.05 A, ratio 1.87",
+  "PACK_P: barrel at (115.8, 86.1), 1.18 A against 1.05 A, ratio 1.12"
  ],
  "inputs": {
   "board": {
@@ -28,7 +35,7 @@
   "rule_fingerprints": {
    "PI-003": "b8238bd8e5613e6c"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "PI-003"
@@ -36,9 +43,9 @@
  "tool": "via_current",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "0e1ce7104d273d07"
  },
- "ts": "2026-09-17T22:48:36Z",
+ "ts": "2026-09-20T00:04:28Z",
  "verdict": "FAIL",
  "version": "unknown"
 }

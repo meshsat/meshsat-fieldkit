@@ -12515,3 +12515,35 @@ cap and the layer list, one at a time.
 six are pad to pad, which is a pad with no lane out of it at any resolution, and that is a placement question
 and not a closer's. Read the window arm on whether it closes any of these six by name, because a count taken
 under a wall depends on what else the box is doing and a refusal does not.
+
+### 32.236, 20 September 2026 02:05 CEST: the biggest current in the kit is measured, and a return's drop has a bar at last
+
+`PACK_N` was the third of the sixteen and it was deliberately left as a node at 00:45, because declaring it
+would have produced a nonsense number rather than a missing one: it runs from board P's 12 AWG lead land to
+the 2 mOhm coulomb-counting shunt at the pack's whole **10.0 A typical and 18.0 A peak**, and its own
+potential is 50 mV by construction, so `dc_drop`'s percentage criterion gives it a bar of **one millivolt**.
+Declaring `volts` as the pack's 14.4 to get a sensible bar was not available either, because `derate` takes
+the worst of everything declared about a net and would then judge R9, the 100 R sense resistor sitting on
+this net, against 14.4 V instead of the 50 mV it sees.
+
+**`returns` closes it.** A rail may name the rail it is the return of: the net keeps its own `volts`, which
+is what CMP-001 uses, and its DROP is judged against the named rail's voltage and budget, which is what
+PI-002 needs. `thermal` excludes it the way it excludes a series segment, for the more obvious reason that a
+return is the other half of one loop. A return must name a declared rail, may not carry more current than it,
+and may not also be a `series_of` segment; all three are refused with their reason and all three have a rule.
+
+**Measured on board P's committed P4 (sha `d79865e7b1aceb95`, identical before and after):**
+
+* the **drop passes**: 10.0 A over 622 nodes, worst drop **6 mV, 0.04 percent of 14.4 V against a 2 percent
+  bar**. The two candidate bars, stated so the choice is not an opinion: 2 percent of the net's own 50 mV is
+  **1 mV** and 2 percent of the rail it returns is **288 mV**.
+* the **capacity does not**: the worst conductor is 0.500 mm wide on F.Cu, 1.2 mm long, carrying **2.47 A**,
+  so `dc_density` MISSES and board P's **PI-001 goes PASS to FAIL**.
+* `via_current` finds a new site: a barrel at (87.6, 114.4) on `PACK_N` carrying **1.86 A against 1.05 A** for
+  its own wall, ratio 1.77, which joins board P's PI-003 work list beside FUSED's 1.66 and PACK_P's 1.87.
+* `derate` reads **PASS of 6 with 0 undeclared nets**, which is the proof the split works: the part on the
+  net is still judged against 50 mV while the conductor is judged against the loop.
+
+**Readiness 63.1 to 62.8 percent verified, 13.2 to 13.5 failed, 23.7 inconclusive unchanged, of 333.** One
+pair moved and it is board P's PI-001. That is two nights running where the number went down because a
+conductor nobody had measured was measured; both times it was true before and false on the page.

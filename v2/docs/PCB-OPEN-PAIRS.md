@@ -7,7 +7,7 @@ Every pair that is not a current PASS, classified. Generated from tools/pcb_deci
 map's maturity and each deciding verdict: a decision that claims a pair wins over everything else, because
 the ruling is the action that moves it, and the measurement is reported beside it rather than lost.
 
-**123 open pair(s)** over 7 board(s). **44 are measured failures** (a tool looked and the board failed), which are **38 distinct readings**, and **15 of those are claimed by an open owner decision**.
+**124 open pair(s)** over 7 board(s). **45 are measured failures** (a tool looked and the board failed), which are **39 distinct readings**, and **15 of those are claimed by an open owner decision**.
 
 | waiting on | pairs | what it means |
 |---|---:|---|
@@ -15,7 +15,7 @@ the ruling is the action that moves it, and the measurement is reported beside i
 | `DECISION_UNCLAIMED` | 5 | a rule that says a decision is open while no decision claims it |
 | `AUTHORITY` | 3 | an authority this project does not have |
 | `MISSING_INPUT` | 14 | an input the reading declared absent |
-| `MEASURED_FAILURE` | 29 | the tool looked and the board failed |
+| `MEASURED_FAILURE` | 30 | the tool looked and the board failed |
 | `VENDOR_WAIT` | 1 | a fabricator or a standards body, and nobody here |
 | `OWNER_WORK` | 7 | work only the owner or the ordering session can do |
 | `NOT_JUDGED` | 2 | not judged, for the reason the reading gives |
@@ -37,7 +37,7 @@ things to fix.
 | D | 17 | 4 | 11 | 1 | 2 | 0 |
 | E | 19 | 5 | 11 | 0 | 4 | 0 |
 | E5 | 6 | 3 | 3 | 0 | 0 | 0 |
-| P | 13 | 5 | 10 | 0 | 0 | 0 |
+| P | 14 | 6 | 10 | 0 | 0 | 0 |
 
 ## By open decision
 
@@ -163,7 +163,7 @@ holding a number, not a question about a number.
 | `DFM-001` | E | INCONCLUSIVE | the folder judged here is meshsat-pcb-e-revA-E9 and this board declares E17, so its properties are a reading of a board this set is not building |
 | `DOC-002` | E | INCONCLUSIVE | board E declares E17 and the order set holds E6: the note beside those folders describes a board this project is not building |
 
-## MEASURED_FAILURE (29): the tool looked and the board failed
+## MEASURED_FAILURE (30): the tool looked and the board failed
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -195,6 +195,7 @@ holding a number, not a question about a number.
 | `OUT-001` | E | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `STK-001` | E5 | FAIL | stackup_gate FAIL: {'compared': 8, 'copper_layers': 2, 'disagreements': 1} |
 | `OUT-001` | E5 | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
+| `PI-001` | P | FAIL | dc_density FAIL: {'met': 3, 'missed': 1, 'undeclared': 0} |
 | `OUT-001` | P | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 
 ## VENDOR_WAIT (1): a fabricator or a standards body, and nobody here
