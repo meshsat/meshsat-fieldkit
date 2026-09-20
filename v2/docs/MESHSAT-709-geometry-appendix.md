@@ -14593,3 +14593,19 @@ lattice gave two pads back their escape. Committed on that evidence.
 **Still open and named**: `DC_F`'s site, which is **the worst on the board at 8.89 of its rating**; the four
 component-hole sites; and the thirteen that are the generator's own locked vias and want points added to the
 calls that placed them.
+
+**Addendum to 32.295, 10:08 CEST**: the generator's own line for the change reads **"power copper: 33
+barrel(s) placed over 5 PI-003 site(s) on board E"**, so the five sites cost thirty-three barrels, and the
+board still reads `hard 0` of the fifteen types with them on it. **And the suggester was taught both things
+it owed** (`barrel_sites.py`, two rules, both proved on the tool as it stood): a site whose barrel is a
+plated **component hole** is declined with the part, the drill and the reason, which is what E24's twenty-four
+violations were; and room is measured to a neighbouring pad's **copper** rather than its centre, which took
+`DC_F` from a reported 1.34 mm to 0.33 and `DC_P` to 0.00 on its cross axis. The estimate still says in its
+own comment that it walks a single row while `cluster` may lay more, so a small number is a warning and a
+large one is not a promise.
+
+**The thirteen raised calls are the remaining half and they are a different edit**: each is a site where the
+generator's own locked via already sits, so the answer is points added to the call that placed it, and board
+E's calls each cover several sites (`VIN_RAW`'s eighteen power vias in two groups, `DC_HS`'s three banded
+stitch rows, `CELL_F`'s cluster). Board A got a short-site report naming the LINE for exactly this on
+19 September; board E's generator has no equivalent, so this one is a coordinate hunt until it does.
