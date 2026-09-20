@@ -168,3 +168,24 @@ def t_every_declared_pad_is_a_pad_of_its_own_rail_on_that_boards_netlist():
                                                "report a missing pad" % (L, r["sense"], r[key], r["rail"]))
                 checked += 1
     assert checked >= 34, "only %d pads checked; the set declares seventeen taps" % checked
+
+
+def t_a_tap_on_a_conductor_nothing_solves_is_a_declaration_question_and_says_so():
+    """THE DEFECTIVE FIXTURE, and it is a mistake of mine from this morning. dc_drop solves a potential only
+    on a declared RAIL, so a tap whose reference conductor is declared a NODE can never be measured however
+    good the mesh is. Board E's tracker pair references TRK_LSENSE and TRK_SW2, which board E declares as
+    switching NODES, and the two rows written at 07:52 read back as 'the mesh solved no pad', which points at
+    the tool when the answer is in the declaration. Proved to fail on the tool as it stood: `judge` took two
+    arguments and had no way to tell the two silences apart."""
+    d = [{"sense": "TRK_CSP", "rail": "TRK_LSENSE", "element": "R5.1", "tap": "R6.1", "full_scale_mv": 30.8}]
+    rows, fails = K.judge(d, {"nets": {}}, {"rails": {}, "nodes": {"TRK_LSENSE": {}}})
+    assert not fails, fails
+    assert rows[0][1] is None and "declared a NODE" in rows[0][2] and "DECLARATION question" in rows[0][2], rows[0]
+
+
+def t_a_rail_the_mesh_simply_missed_still_says_that():
+    """THE ACCEPTABLE FIXTURE: a rail that IS declared and has no solved pad is the tool's silence, not the
+    declaration's, and the two sentences must not merge."""
+    d = [{"sense": "X", "rail": "VBUS20", "element": "R1.1", "tap": "R2.1", "full_scale_mv": 60.0}]
+    rows, fails = K.judge(d, {"nets": {}}, {"rails": {"VBUS20": {}}, "nodes": {}})
+    assert rows[0][1] is None and "the mesh solved no pad" in rows[0][2], rows[0]

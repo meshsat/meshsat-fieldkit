@@ -93,15 +93,34 @@ def check_declaration(decls):
     return bad
 
 
-def judge(decls, pots):
-    """(rows, fails): one row per declared sense, the error in mV and as a share of full scale."""
+def judge(decls, pots, intent=None):
+    """(rows, fails): one row per declared sense, the error in mV and as a share of full scale.
+
+    `intent` is the board's own declaration, and it is here to tell two silences apart (20 September 2026).
+    `dc_drop` solves a potential only on a declared RAIL, so a tap whose reference conductor is declared a
+    NODE, or not declared at all, can never be measured however good the mesh is, and saying "the mesh solved
+    no pad" about it points at the wrong thing. Board E's tracker pair is the case that produced this: both
+    its taps reference TRK_LSENSE and TRK_SW2, which board E declares as SWITCHING NODES, so the two rows
+    written this morning read as a tool problem when they are a declaration problem. Board P's R8 and board
+    A's five CS shunts are refused for the same reason on the ground side, which makes it EIGHT shunt halves
+    on three boards sensed through copper no power rule solves: the question is about the declaration and not
+    about any board's layout."""
     rows, fails = [], []
     nets = (pots or {}).get("nets") or {}
+    rails = set((intent or {}).get("rails") or {})
+    nodes = set((intent or {}).get("nodes") or {})
     for k in decls:
         rail = k.get("rail")
         got = nets.get(rail) or nets.get("/" + str(rail)) or []
         if not got:
-            rows.append((k, None, "the mesh solved no pad of %s on this board" % rail)); continue
+            if intent is not None and rail not in rails:
+                why = ("%s is declared a NODE on this board, so dc_drop solves no potential on it and this "
+                       "tap can never be measured: a DECLARATION question" % rail if rail in nodes else
+                       "%s is declared neither a rail nor a node on this board, so nothing solves it: a "
+                       "DECLARATION question" % rail)
+            else:
+                why = "the mesh solved no pad of %s on this board" % rail
+            rows.append((k, None, why)); continue
         a, b = _pad(got, k.get("element")), _pad(got, k.get("tap"))
         if a is None or b is None:
             rows.append((k, None, "pad %s or %s is not on %s" % (k.get("element"), k.get("tap"), rail))); continue
@@ -156,7 +175,12 @@ def main(argv):
                         advisory=True, inputs={"board": os.path.basename(board)},
                         missing_input="the solved pad potentials are not beside this board: %s" % path,
                         note="the share of a current-sense signal that is the copper's own drop")
-    rows, fails = judge(decls, pots)
+    try:
+        sys.path.insert(0, HERE); import intent as _intent
+        _decl = _intent.load(board)
+    except Exception:
+        _decl = None
+    rows, fails = judge(decls, pots, _decl)
     judged = [r for r in rows if r[1] is not None]
     print("kelvin_check: %d declared sense tap(s), %d measured, %d that are not Kelvin connections"
           % (len(decls), len(judged), len(fails)))
