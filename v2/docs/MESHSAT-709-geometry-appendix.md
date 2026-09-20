@@ -15327,3 +15327,14 @@ puts parts outside the rectangles the seat map trusts. The map owes that margin.
 table takes four fields and the arm read three, because the arity is taken from the first value of the dict
 and board C's first value is not a tuple of the same shape. **Both are one iteration each, both are written
 down with their numbers, and neither board is touched.**
+
+**32.313 addendum, 15:20 CEST: both iterations were made and neither board is taken.** The map now grows
+every region rectangle by the board's own declared `region_overflow_allow_mm`, because a board that has
+measured an overflow lets its packer put parts outside the rectangle; and the arm takes the FIXED table's
+arity from **the loop that consumes it** rather than from the table, because board C's is `FIXED = {}` filled
+by five loops afterwards and the literal says nothing. **Board C then wrote its thirteen seats**, and **board
+D came back `hard 30` against its first arm's 33**, which is the honest answer: the declared half millimetre
+was not the cause, and board D's remaining collisions are with parts placed by mechanisms this map does not
+model, its hand-seated USB cluster among them. **Board D and board C keep their numbers and their places in
+the work list.** Board A and board E are taken and verified, board P is refused on measurement, and board B
+is its floor plan.
