@@ -60,7 +60,7 @@ def reserve(board, place, to_case, entries, limit=LIMIT, quiet=False, fan=2.2):
     for g in board.GetFootprints():
         if _needs_fan(g):
             fans.append((g.GetReference(), _fan_box(g, fan)))
-    done, stuck, report = set(), [], []
+    done, stuck, report, already = set(), [], [], []
     for e in entries:
         cap, ref, pin = e.get("cap"), e.get("part"), str(e.get("pin"))
         if not cap or cap in done: continue
@@ -70,6 +70,19 @@ def reserve(board, place, to_case, entries, limit=LIMIT, quiet=False, fan=2.2):
         if pad is None: stuck.append((cap, ref, pin, "no such pin")); continue
         pc = pad.GetPosition(); side = p.GetLayer(); pcy = _courtyard(p)
         cx, cy = to_case(pc)
+        # A CAPACITOR THAT IS ALREADY ON THE BOARD HAS A SEAT, AND THIS PASS MUST NOT GIVE IT A SECOND
+        # (20 September 2026). `place()` CREATES a footprint, so calling it for a capacitor the generator's
+        # own FIXED table has already placed adds a second one with the same reference: the net assignment
+        # walks `placed` and reaches only the first, and the duplicate's pads land on the board with no net.
+        # At HEAD this is invisible because every such capacitor fails the 3 mm search and is removed again,
+        # which takes the duplicate with it; an arm that let the search reach further turned it into ELEVEN
+        # duplicate references (C4, C11, C63, C64, C106, C107 and the five ISNS filter capacitors) and
+        # `netlist_board` blocked the chain at 2,134 of 2,148. A fixed seat is also a DECISION, chosen with
+        # its own measurement, so this pass leaves it where it is and says so.
+        seated = board.FindFootprintByReference(cap)
+        if seated is not None:
+            d = math.hypot(seated.GetPosition().x - pc.x, seated.GetPosition().y - pc.y) / 1e6
+            done.add(cap); already.append((cap, ref, pin, d)); continue
         fp = place(cap, cx, cy, 0.0, side != pcbnew.F_Cu)   # on the part's own side, then walked out to a free spot
         cyd = _courtyard(fp); w, h = cyd.GetWidth(), cyd.GetHeight()
         def free(at):
@@ -101,4 +114,7 @@ def reserve(board, place, to_case, entries, limit=LIMIT, quiet=False, fan=2.2):
         print("bypass_slots: %d of %d declared capacitors reserved a slot within %.1f mm of their pin" % (len(done), len({e.get("cap") for e in entries}), limit))
         for cap, ref, pin, d in report[:6]: print("bypass_slots:   %-6s beside %s.%-3s at %.1f mm" % (cap, ref, pin, d))
         for cap, ref, pin, why in stuck: print("bypass_slots:   LEFT TO THE PACKER %-6s for %s.%-3s: %s" % (cap, ref, pin, why))
+        for cap, ref, pin, d in already:
+            print("bypass_slots:   ALREADY SEATED %-6s beside %s.%-3s at %.1f mm, left where the generator put it"
+                  % (cap, ref, pin, d))
     return done

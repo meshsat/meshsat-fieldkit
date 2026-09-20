@@ -15098,3 +15098,32 @@ handed to the net assignment, which is one reading of `gen_pcb_a3.py`'s `placed`
 **The number to beat, recorded so the next attempt is measured against it**: at HEAD board A reads **9 of 40
 within 3.0 mm**, median 13.2 mm, worst 44.5; the census says a correct reservation would read 9 inside 3 mm
 and 22 more between 3 and 5.
+
+### 32.307, 20 September 2026 14:40 CEST: the reservation was making a second footprint for a capacitor the generator had already seated
+
+**Chasing 32.306's block rather than guessing at it found the cause, and it is a trap rather than an
+accident.** `bypass_slots.reserve` walks the declared capacitors and calls the generator's own `place()` for
+each, and **`place()` CREATES a footprint**. A capacitor the generator has already seated from its FIXED
+table is then on the board **twice under one reference**: the net assignment walks the generator's `placed`
+map and reaches only the first, so the duplicate's pads are saved with no net at all.
+
+**Why nothing had ever seen it.** At HEAD every such capacitor fails the 3 mm search, because the pin of a
+fine-pitch part sits on the edge of the escape fan the pass refuses, and the failure path REMOVES the
+footprint it created, which takes the duplicate away with it. The arm of 32.306 let the search reach 6 mm,
+eleven of them succeeded, and **board A's board carried eleven duplicate references** (`C4`, `C11`, `C63`,
+`C64`, `C106`, `C107` and the five ISNS filter capacitors) with `netlist_board` blocking the chain at 2,134
+of 2,148. **So the flag did not cause the defect, it revealed it**, and the defect has been one successful
+reservation away since the FIXED seats and the declarations first overlapped.
+
+**The fix is that the pass asks the board before it makes anything, and a seat the generator chose is left
+alone**, because a fixed seat is a decision with its own measurement behind it (the five ISNS filter
+capacitors are at 1.8 to 2.7 mm by hand). The report names them now: **13 ALREADY SEATED on board A**, each
+with its real distance, `C128` 1.8 mm beside U2 pin 14, `C104` 1.9 beside U26 pin 14, `C106` 1.7 beside U27
+pin 24, and beside them `C11` 18.8, `C12` 18.1, `C63` 18.9 and `C64` 17.3, which are seats chosen for the PA
+stage's own power path and measured here against a logic pin, a declaration worth re-reading later.
+
+**Proved on a chain, one variable, and the board does not move**: A78 at HEAD reads **436 footprints and no
+duplicate reference**, hard 0, 461 escapes, 2 pads skipped, `netlist_board` 2,148 of 2,148 and the decoupling
+reading 9 within 3.0 mm and 31 stuck, every one of them the baseline's. `tests/test_bypass_slots_duplicate.py`
+carries the two mechanical rules and **the first fails on the tree it was written against** (the pre-fix
+`reserve` never asks the board for the capacitor: `FindFootprintByReference(cap)` is absent from it).
