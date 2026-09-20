@@ -15674,3 +15674,40 @@ is only true of that placement; the cluster's own capacitors have to travel with
 placement and what it costs at the seats measured so far. The next arm owes three things and they are named:
 an escape-aware seat search, `C94` and `C127` travelling with their controller, and the comparison run against
 A71b rather than against A70, because A71b is the board that already carries the switch and the shunt.
+
+### 32.322, 20 September 2026 16:45 CEST: board D's arm lands at six and answers nothing, because it is not the one-variable pair it was launched as
+
+D27 was launched as *the same board at D19's own length (10,800 s) on its own router lock*, with its
+prediction written in `boards/d.json` before it ran: **two or three open**, and *if it lands materially worse,
+the three plane vias the fanout fix gains on this board are in the way somewhere and that is a finding about
+the fix rather than about board D*.
+
+**Round 1 landed and was read in a scratch copy while round 2 routes** (the 19 September procedure), sha
+`a5bfddb70c22bc53` printed before and after: **hard 0 of the fifteen types and SIX unconnected items**, its
+closers taking none, against D19's TWO. By name: **`/+5V_D8` in three pairs at U6, R43 and R44, and
+`/PCM_VCCA`, `/PCM_VCCP` and `/PCM_VCOM1`, each a decoupling capacitor to its own U6 pin** (C20 to pad 15,
+C23 to pad 26, C24 to pad 11).
+
+**AND THE PREDICTION'S ESCAPE CLAUSE DOES NOT APPLY, because the arm is not comparable.** It differs from D19
+in three ways at once and the prediction anticipated one:
+
+1. **It was CUT AT ITS CAP.** The route ran 11:00:52 to 14:01:04, which is 10,812 s against a 10,800 s
+   timeout; D19 completed **all 200 passes in 2 h 29**, which is 8,940 s. So D27 did FEWER passes than D19
+   and the two open counts are not a measurement of the same thing. This is the A42 caveat of 17 September
+   word for word: a truncation is a confound and is reported as one rather than as a result.
+2. **It ran on a different host under different load.** D19 ran on the place box; D27 ran on the hub beside
+   five other routers. Each carries its own routeflow lock, which serialises nothing between them.
+3. **It carries the fanout fix**, which is the one variable the arm was for.
+
+**So D27 answers nothing about its own question**, and saying otherwise would be reading a cut route as a
+result. What it does say is smaller and worth keeping: on this board and this host, D19's design plus the
+fanout fix does NOT finish 200 passes in three hours where D19's did it in two and a half.
+
+**The three new opens are consistent with the truncation rather than with the fix.** All three are a
+capacitor to the pin it decouples, and board D's own predictor reads **5 of 22 bypass capacitors within 3 mm**
+on this placement, so they are long local runs of exactly the kind a route cut at its cap leaves behind.
+Nothing here separates that from the fanout's three vias.
+
+**What board D owes is a cap that lets the arm finish**, on a host whose load is recorded with it, and then
+the comparison is one variable again. Round 2 with `via_costs 100` is running and the record already expects a
+remedy round to be worse; **D17 stays board D's answer** and nothing is adopted.
