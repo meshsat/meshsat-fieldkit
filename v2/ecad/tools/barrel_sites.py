@@ -29,6 +29,17 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
 
+def _prov_seen(board_path):
+    """Is there a barrel-provenance map beside this board at all? Absent, nothing can be told apart."""
+    import os as _o
+    stem = _o.path.splitext(_o.path.basename(board_path))[0]
+    for suf in ("-placed", "-preroute", "-par-routed", "-cleaned"):
+        if stem.endswith(suf): stem = stem[: -len(suf)]
+    d = _o.path.dirname(_o.path.abspath(board_path))
+    return any(_o.path.isfile(q) for q in (_o.path.join(d, "out", stem + "-barrel-provenance.json"),
+                                           _o.path.join(d, stem + "-barrel-provenance.json")))
+
+
 def _placed_by_src(board_path, net, x, y, tol=0.6):
     """The generator line that placed the barrel at this site, from the sidecar, or None.
 
@@ -215,9 +226,22 @@ def main(argv):
                 # sites and finding each call among arguments that are expressions is the hunt this removes.
                 # Absent sidecar, absent line, and the sentence is what it was.
                 _src = _placed_by_src(path, g["net"], ox, oy)
-                print('    # cluster centred here would land 0.%d mm from it. Add %d point(s) to %s'
-                      % (int(round((drill + 0.4) / 2 * 100)), max(0, n - len(ss)),
-                         ("the call at " + _src) if _src else "the call that placed it"))
+                if _src:
+                    print('    # cluster centred here would land 0.%d mm from it. Add %d point(s) to the call '
+                          'at %s' % (int(round((drill + 0.4) / 2 * 100)), max(0, n - len(ss)), _src))
+                else:
+                    # A LOCKED VIA IS NOT ALWAYS power_copper's (20 September 2026). `locked_here` asks only
+                    # whether a LOCKED via sits at the site, and `escape.py` locks every escape stub's via
+                    # and the pre-lay locks its own: seven of board E's thirteen such sites have no entry in
+                    # the barrel provenance at all, so "add points to the call that placed it" is advice
+                    # about a call that does not exist. Where the map is there and the site is not in it, the
+                    # via belongs to the escape fan or the pre-lay and the answer is a different one.
+                    print('    # cluster centred here would land 0.%d mm from it, and NO POWER-COPPER CALL '
+                          'PLACED IT:' % int(round((drill + 0.4) / 2 * 100)))
+                    print('    # the locked via here is the escape fan\'s or the pre-lay\'s%s, so the answer '
+                          'is not points on a' % ("" if _prov_seen(path) else " (and this board carries no "
+                                                 "barrel-provenance map, so it could not be checked)"))
+                    print('    # call: it is the FANOUT\'s via count at that pad, which is a different edit.')
                 print('    # instead, %.3f A over %d barrel(s) of %.2f mm, and keep %.4f mm between holes.'
                       % (amps, n, drill, drill + 0.2995))
                 continue

@@ -72,3 +72,21 @@ def t_a_barrel_remembers_the_line_that_placed_it():
     rd = open(os.path.join(TOOLS, "barrel_sites.py"), encoding="utf-8").read()
     assert "_placed_by_src" in rd, "the suggester cannot name the call"
     assert "SIDECAR AND NOT EVIDENCE" in rd, "the reader does not say the map judges nothing"
+
+
+def t_a_locked_via_that_no_power_copper_call_placed_says_so():
+    """A LOCKED VIA IS NOT ALWAYS THE GENERATOR'S BARREL (MESHSAT-862, 20 September 2026).
+
+    `locked_here` asks only whether a LOCKED via sits at the site, and `escape.py` locks every escape stub's
+    via while the pre-lay locks its own. Seven of board E's thirteen such sites have no entry in the barrel
+    provenance at all, so "add N points to the call that placed it" was advice about a call that does not
+    exist. With the map beside the board the two can be told apart, and where the site is not in it the
+    answer is the fanout's via count at that pad, which is a different edit.
+
+    Proved to fail on the tool as it stood: it printed the same sentence for every locked site."""
+    src = open(os.path.join(TOOLS, "barrel_sites.py"), encoding="utf-8").read()
+    assert "NO POWER-COPPER CALL" in src, "every locked site still gets the same advice"
+    assert "_prov_seen" in src, "the reader cannot say whether the map was there to be checked"
+    i = src.index("NO POWER-COPPER CALL")
+    j = src.index("_placed_by_src(path")
+    assert j < i, "the site is declared unplaced before the map is consulted"
