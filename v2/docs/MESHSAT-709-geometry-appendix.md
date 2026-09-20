@@ -14668,3 +14668,30 @@ taken for a match, and a comparison that cannot be made says why. That is 17 Sep
 names the board it was taken on — owed by the **data file** that feeds PI-003 just as much as by a verdict,
 and it is the **third reading taken off the wrong artefact today** after `land_box5` and the sweep's own
 tree. Suite **1221, 0 failing**.
+
+### 32.298, 20 September 2026 11:02 CEST: board D's whole PI-003 is two barrels, and its chain was already blocking
+
+`barrel_sites --suggest` on the board sweep 32 judged reports **board D's entire PI-003 as two barrels**,
+both `+5V_SA` and both at ratio 1.22: the rail crosses layers twice and each crossing is a single 0.40 mm
+barrel carrying 1.10 A against the 0.90 its own wall holds. That is 18 September's finding, where
+`via_current` reported each rail's **worst** barrel and the record said "one" all day.
+
+**Each wants two barrels and only one site has room.** `(-31.15, 17.96)` has **1.20 mm** to the nearest pad's
+copper and takes the cluster with the placed board still clean; `(-28.59, 25.81)` has **0.57 mm** where a
+two-barrel lattice at the 0.80 mm pitch needs about 0.70, and D20's chain came back `hole_to_hole` at
+**0.0342 mm**, the second barrel landing on a hole already there. Declined with its number — board E's
+`DC_F` and board A's `VBUS20` busbar site for the third time — **and the room figure predicted it**, which is
+the first time that number has paid for itself since it was corrected this morning to measure a pad's copper
+rather than its centre.
+
+**AND THE CHAIN BLOCKS FOR A REASON THAT IS NOT THIS, WHICH A CONTROL PROVES.** D21 ends
+`PREROUTE-DONE BLOCK 1` on a `clearance` of **0.1115 mm against the PWR class's 0.1270** between `D1` pad 2
+(`/+5V_D8`) and a **GND via** — not the cluster's barrel at all, but `rail_barrels`' own, laid at the
+pre-route stage, while its own log reads *"0 refused by the DRC"*. **D22 is the one-variable control**, the
+same tree and tools with `PLACE_D_BARRELS=0`, and it ends `BLOCK 1` on the same clearance.
+
+**So the block is pre-existing: board D's generator at HEAD was already producing a board its own chain
+refuses**, before this change and independently of it. That is its own item — `rail_barrels` judges a
+candidate site with `return_via._site_free`, a COPPER test, and not against the net **class's** clearance, so
+it can lay a barrel the DRC then refuses while reporting none refused. It is the hole-to-hole lesson of
+19 September in the other direction. Named with its number, not chased here.
