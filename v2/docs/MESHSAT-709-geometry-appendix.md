@@ -16418,3 +16418,36 @@ which board the tool was given and why a shortfall read there is not the chain's
 BOTH callers to asking it**, because a note only one of the two carries is a note the next hand probe walks
 past. Two fixtures (it fires on `-placed`, it is silent on the project's own board) and the caller rule, all
 three proved to fail on the tree they were written against. Suite **1250**, 0 failing.
+
+### 32.338
+
+**Three of the seven boards have the same shape tonight: the failure on the page is a board older than the
+design that answers it (20 September 2026, 22:30 CEST).** It is worth naming as a class, because it is the
+cheapest kind of gap in this set and it is closed by ROUTING, not by drawing.
+
+**Board D, PI-003.** The chain at HEAD lays the one missing barrel by itself; `rail_crossings` then reads six
+crossings of six carrying what they need (32.337). **D28** is routing that board.
+
+**Board P, PI-001.** Its one measured failure with nothing in front of it is the pack return `PACK_N` at
+**1.03 of its limit**, 2.47 A on a 0.500 mm conductor of outer 2 oz rated 2.392 A at 10 K. The answer went
+into `gen_pcb_p3.py` this morning: a **PACK class of its own at 0.80 mm**, which `PACK_N`'s own narrowest pad
+(0.800 mm) allows and the shared PWR class cannot take, its narrowest pad on any net being 0.610 mm so that
+class caps at 0.600 and 2.73 A. **Read from the committed project file: `pcb-p-pack.kicad_pro` carries
+Default, GNDC, PWR and SENSE, and no PACK.** So that board predates the answer. **P10** is routing it, at
+**two layers, which are not touched here**: decision 28 is the owner's and this arm says nothing about it.
+Prediction written first: the conductor goes 2.392 A to 3.36 A and PI-001 passes; if it still fails, the width
+was not what was binding and the failure is about the band rather than the class.
+
+**Board A, ANA-001, and this one is a counting result rather than a fix.** It reads FAIL with **declared 34,
+MEASURED 10, fail 25** on the committed A32, and **twenty of the twenty-five evidence rows are the same
+sentence**, *"X is declared sensitive and the board has no such net"*: the charger's filtered nets and the five
+stages' own filter nets, which entered the generator between 16 and 20 September while A32 was cut on the 15th.
+**So at most five of the twenty-five are measurements of copper**, exactly as RF-001 reads 11 of 11 MISSED on
+A32 and PASS of 11 on A47, and SCH-002 reads 60 disagreements on A32 and 2,148 of 2,148 on A59. A declaration
+naming nothing stays a failure, which is right for the reason `lcsc_fill` gives about a stale allow line; what
+it is not is a finding about this design. **And the real reading cannot be taken from that board at all**, because
+only ten of thirty-four declared lines exist on it: A86, A89 and A92 are the first boards that can answer it.
+
+**The rule this makes explicit: a measured failure on a board older than the generator is evidence about the
+ADOPTION GAP and not about the design**, and the register cannot tell the two apart because it reads a verdict
+and not a date. Every such row in this set is now named in its own board file with the phase that closes it.
