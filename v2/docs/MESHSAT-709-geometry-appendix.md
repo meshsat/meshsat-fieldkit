@@ -13345,3 +13345,31 @@ obviously available and the rest is a placement question.
 configurations. **A49 stays board A's better arm** and neither is adoptable. The four charger nets refuse on
 both (`/CHG_ILIM`, `/CH_ACN_F`, `/CH_SRN_F`, `/CH_SW2`), which is the third independent place tonight that
 the charger block is named.
+
+### 32.260, 20 September 2026 05:15 CEST: the stage's wall was smaller than one search, and A47 proved it by being cut
+
+**A47's four-layer arm came back `exit 124`, `in 0 16 -> out 0 16`**: board A's own closer configuration at a
+3600 s cap with the wall at 3300, killed at the backstop with nothing saved. **It cost nothing THAT time
+because it had closed nothing**, and that is exactly the luck a rule exists to stop relying on: the same cut
+on a run that had made closures throws every one of them away, which is the 19 September defect the wall was
+written to prevent.
+
+**The reason is arithmetic and it was wrong from the day the wall was written.** The stage tests its own clock
+**before it takes the next pair**, so a pair already in flight runs the whole of `STUB_SEARCH_S` (240 s) PAST
+the wall, and only when that returns does the fill and the save begin. `finish.sh` left a flat **300 s**, so
+after one overrunning search there were **sixty seconds** left to refill six layers of zones and write 5.8 MB
+of board. **The margin was smaller than the search alone.**
+
+**The margin is one search plus the fill now** (`STUB_STAGE_MARGIN_S`, default `STUB_SEARCH_S + 300` = 540),
+read from the search clock so the two cannot drift apart unseen, and a cap too short to hold two margins sets
+no wall at all rather than leaving no laying time. On board A's 3600 s cap the wall moves 3300 to **3060**,
+which costs four minutes of laying and buys the save it was always supposed to buy.
+
+Both fixtures proved against the tree: the flat 300 mm margin put back is REFUSED (*the margin is still a
+literal, so it cannot cover a search*), the tree as it stands passes, and the arithmetic itself is checked on
+the two cases that matter (3600 leaves a search and a fill inside the cap; 900 sets no wall).
+
+**And the arm's own number stands whatever the cut**: at four layers A47 offered **two** connections in
+fifty-five minutes and closed **none**, where the two-layer arm on the same frozen board had offered four and
+closed one inside eight. **Board A's declaration change now rests on two phases**, A48's clean one-variable
+answer and A47's, rather than on one.

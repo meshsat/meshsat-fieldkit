@@ -104,10 +104,19 @@ stub_stage () {
   # AND THE TOOL IS TOLD HOW LONG IT HAS, so it can stop laying and SAVE (19 September 2026). The fill and the
   # save are the last thing the stub router does, so a stage cut by the `timeout` below throws away every
   # closure it made: A49's finish closed its first net twenty minutes into a 3600 s cap with twenty to go, and
-  # all of it would have gone at the wall. `STUB_STAGE_S` is the same limit minus five minutes for the fill and
-  # the save; the `timeout` stays as the backstop it has always been.
+  # all of it would have gone at the wall. `STUB_STAGE_S` is the same limit minus a margin, and the `timeout`
+  # stays as the backstop it has always been.
+  # AND FIVE MINUTES WAS NOT ENOUGH, MEASURED (20 September 2026, A47's layer arm). That arm ran board A's own
+  # configuration at a 3600 s cap with the wall at 3300 and came back `exit 124`, in 0 16 -> out 0 16: cut at
+  # the backstop with nothing saved. It cost nothing there because it had closed nothing, and on a run that
+  # HAD closed something it would have thrown it away, which is the whole defect this wall exists to stop.
+  # THE REASON IS ARITHMETIC AND IT WAS WRONG FROM THE DAY IT WAS WRITTEN: the wall is checked BEFORE each
+  # pair, so one pair's search can run the whole of `STUB_SEARCH_S` (240 s) PAST it, and only then does the
+  # fill and the save begin. A flat 300 s margin is 60 s of fill on a board whose zones take minutes.
+  # The margin is one search plus the fill, so the wall is a wall and not a wish.
   STUB_T="${STUB_TIMEOUT_S:-$(cfg x stub_timeout_s)}"
-  STUB_STAGE_S="$(python3 -c "import sys; t=float(sys.argv[1] or 0); print(int(t-300) if t>600 else 0)" "$STUB_T")"
+  STUB_STAGE_MARGIN_S="${STUB_STAGE_MARGIN_S:-$(( ${STUB_SEARCH_S:-240} + 300 ))}"
+  STUB_STAGE_S="$(python3 -c "import sys; t=float(sys.argv[1] or 0); m=float(sys.argv[2]); print(int(t-m) if t>2*m else 0)" "$STUB_T" "$STUB_STAGE_MARGIN_S")"
   env STUB_LAYERS=$STUB_L STUB_GRID=0.1 STUB_STAGE_S=$STUB_STAGE_S $STUB_ENV timeout "$STUB_T" nice -n 10 python3 -u $T/stub_router.py $N.kicad_pcb out/$N-drc.json > out/$N-stub.log 2>&1; SR=$?
   [ "$SR" -eq 124 ] && echo "stub router: cut at its time limit, the board is as it was"
   [ "$SR" -eq 0 ] || [ "$SR" -eq 124 ] || stop "stub router CRASHED, exit $SR (out/$N-stub.log)" "out/$N-stub.log"

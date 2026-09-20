@@ -378,10 +378,41 @@ def t_the_finish_passes_the_wall_it_imposes():
     assert 'timeout "$STUB_T"' in fin, "the timeout is no longer the backstop"
 
 
+def t_the_margin_covers_a_search_that_started_before_the_wall():
+    """A WALL CHECKED BEFORE EACH PAIR IS NOT A WALL AT THE MOMENT IT IS REACHED (20 September 2026).
+    The stage tests its own clock BEFORE it takes the next pair, so a pair already in flight runs the whole
+    of `STUB_SEARCH_S` past it, and only when that returns does the fill and the save begin. The margin the
+    finish leaves therefore has to cover ONE SEARCH PLUS THE FILL, and the flat five minutes it left was
+    smaller than the search alone.
+
+    It was measured rather than reasoned: A47's layer arm ran board A's own configuration at a 3600 s cap
+    with the wall at 3300 and came back `exit 124`, in 0 16 -> out 0 16, cut at the backstop with nothing
+    saved. It cost nothing that time because it had closed nothing, which is exactly the kind of luck a rule
+    exists to stop relying on."""
+    import os
+    fin = open(os.path.join(TOOLS, "finish.sh"), encoding="utf-8").read()
+    assert "STUB_STAGE_MARGIN_S" in fin, "the margin is still a literal, so it cannot cover a search"
+    assert "${STUB_SEARCH_S:-240}" in fin, \
+        "the margin does not read the search clock, so the two can drift apart and nobody will see it"
+    i = fin.index("STUB_STAGE_MARGIN_S=")
+    j = fin.index("STUB_STAGE_S=\"$(python3")
+    assert i < j, "the margin is computed after the wall that uses it"
+    assert "$STUB_STAGE_MARGIN_S" in fin[j:j + 400], "the wall does not use the margin beside it"
+
+    # the arithmetic itself, on the two cases that matter
+    def wall(t, m):
+        return int(t - m) if t > 2 * m else 0
+    margin = 240 + 300
+    assert wall(3600.0, margin) == 3060, "board A's own 3600 s cap does not leave a search plus a fill"
+    assert wall(3600.0, margin) + 240 + 300 <= 3600, "the wall plus a search plus the fill overruns the cap"
+    assert wall(900.0, margin) == 0, \
+        "a cap too short to hold two margins still sets a wall, which would leave no laying time at all"
+
+
 def t_the_drop_back_stands_down_when_the_stage_is_at_its_wall():
     """The drop-back costs a DRC and a refill per measurement and it runs BEFORE the fill and the save.
-    `finish.sh` leaves five minutes between `STUB_STAGE_S` and its `timeout`, and that five minutes is the
-    fill and the save and nothing else. Running the drop-back there is how a stage that stopped laying IN
+    `finish.sh` leaves a margin between `STUB_STAGE_S` and its `timeout`, and that margin is one pair's
+    search plus the fill and the save and nothing else. Running the drop-back there is how a stage that stopped laying IN
     ORDER to bank its work gets killed banking it, which would undo the whole point of the wall (19 September
     2026). The stage's own guard is what stands behind those closures in that case, exactly as it did before
     the drop-back existed, and the tool says so rather than leaving it to be inferred."""
