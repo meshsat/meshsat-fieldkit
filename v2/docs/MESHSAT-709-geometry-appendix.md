@@ -12485,3 +12485,33 @@ outer 1 oz copper at 0.49 mOhm a square: 0.4 mm is 101.7 mOhm and **305 mV at 3 
 density asks. So **one 1.4 mm outer band answers both criteria on that segment** if a corridor for it exists,
 and whether it does is the placement question above. Nothing is applied: a floor plan half-moved is worse
 than one not moved, and this is board A's next phase with its numbers written down first.
+
+### 32.235, 20 September 2026 02:00 CEST: the grid buys nothing, and A49's eleven closures were not the grid's
+
+The one-variable grid arm landed. A48's frozen board, map cache ON in both, same wall, same node cap, same
+layer list, `STUB_GRID` alone different:
+
+| | wall | board in | board out | offered | closed |
+|---|---|---|---|---:|---:|
+| **0.05 mm**, board A's own | 48 min | 0 hard, 15 open | 0 hard, **11** open | 14 | 6 |
+| **0.10 mm**, the probe's | **14 min** | 0 hard, 15 open | 0 hard, **12** open | 15 | 6 |
+
+**The same number of closures and a different SET of them.** Both close `/+5V_DEV`, `/+5V_S1`, `/+5V_S3`,
+`/PA_EN` and `/REGN`; the fine grid closes `/VBUS20` and the coarse one closes `/MAIN_PB` instead. The coarse
+grid leaves the board **one connection worse** and takes a third of the time.
+
+**So board A's declared `STUB_GRID=0.05` is right, and the map cache is what made it affordable** (48 minutes
+inside a one-hour wall, where the same grid without the cache reached its save on neither this board's arm nor
+A49's). The coarse grid's only advantage was speed and the cache has already bought that.
+
+**And it settles what A49's re-close did not.** `probecfg` closed 11 of 16 there, and it differed from board
+A's own configuration in FOUR things: grid, window, node cap and the layer list. The grid is now excluded, so
+the eleven came from one of the other three. **The window arm is armed behind this one**
+(`/root/win_ab.sh`, `STUB_WIN_SCALE` 6 against the probe's 25, everything else held), and after it the node
+cap and the layer list, one at a time.
+
+**Six nets are refused at BOTH grids and they are the hard core**: `/+5V_S2` (track to track), `/CHG_ILIM`
+(pad to track), `/CH_ACN_F` and `/CH_SW2` and `/HF_SLOPE` (pad to pad), and `GND` (track to via). Three of the
+six are pad to pad, which is a pad with no lane out of it at any resolution, and that is a placement question
+and not a closer's. Read the window arm on whether it closes any of these six by name, because a count taken
+under a wall depends on what else the box is doing and a refusal does not.
