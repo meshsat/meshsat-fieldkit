@@ -14195,3 +14195,43 @@ before this change `verdict.write` recorded no writer at all, so the detector co
 
 **A note on running the suite**: three concurrent runs make the evidence guard report each other's writes as
 this run's, which is the guard of 00:30 working exactly as written. Run it once. Suite **1212, 0 failing**.
+
+### 32.285, 20 September 2026 08:16 CEST: board P's coulomb counter reads ten percent of copper, and two rows I wrote this morning cannot be measured at all
+
+The declarations of 32.281 were read on each board's own committed board, read-only, every sha identical
+before and after (board E `a462ac2620b9b8d3`, board P `d79865e7b1aceb95`).
+
+**BOARD P: `SRN_F` reads 5.160 mV of copper drop between `R10.2` and `R9.1`, 10.3 percent of the 50.0 mV full
+scale, so the tap is not a Kelvin connection.** On a gauge whose full scale is the pack's 25 A that is about
+**2.5 A of reading that is copper and not current**, and it is systematic: always the same sign, rising with
+the current being measured, which is the worst shape for a coulomb counter because it **integrates**. And it
+is the same conductor as the board's one PI-001 failure: `PACK_N` is 1.03 of its own density limit at 2.47 A
+on 0.500 mm. **So 32.282's sentence arrives on a second board**: the copper that fails the density rule is
+the copper that spoils the measurement. The answer is the same on both, the width, and it is **not
+sufficient**: 10.3 percent at 0.500 mm is about 6.5 at the measured 0.800 mm option on resistance alone,
+still six times the 1 percent bar, so the tap has to move to the shunt's own pad as well.
+
+**BOARD E: BOTH ROWS READ INCONCLUSIVE AND THE CAUSE IS THE DECLARATION, WHICH IS MY MISTAKE.**
+`kelvin_check` said *"the mesh solved no pad of `TRK_LSENSE`"* and *"...of `TRK_SW2`"*, and the reason is
+that **`dc_drop` solves a potential only on a declared RAIL and board E declares both of those conductors as
+switching NODES** — correctly, they are the inductor's two terminals. I wrote two rows whose reference
+conductor nothing solves, **six minutes after writing down that this is exactly why board P's `R8` and board
+A's five CS shunts are not declarable.**
+
+**THE RULE I WROTE AT 07:52 DID NOT CATCH IT EITHER, AND THAT IS THE USEFUL HALF.** It checks that the
+element and the tap are pads of the named net **on the committed netlist**, which they are; it never asked
+whether that net is one the solver looks at. A row can therefore be perfectly well formed, name real pads on
+a real net, and still be unable to produce a number for ever.
+
+**SO THE COUNT GOES FROM SIX HALVES TO EIGHT, and the pattern is sharper than it was**: every shunt whose
+reference side is a **switching node** or a **pour** is invisible to this report, on every board. That is one
+question about the DECLARATION, not eight about layouts, and it now covers board A's five CS shunts (both
+halves), board E's sense pair (both halves), board E's `R19` hot-swap sense and board P's `R8`.
+
+**The rows stay**, because they record the real circuit, and the tool now tells the two silences apart:
+*"declared a NODE on this board, so `dc_drop` solves no potential on it and this tap can never be measured: a
+DECLARATION question"* against *"the mesh solved no pad"*, with a fixture for each and the detector proved to
+fail on the tool as it stood, where `judge` took two arguments and had no way to know.
+
+**NOT MEASURED, and it cannot be until the declaration changes**: what board E's sense pair reads. That
+belongs with the ground question rather than with this report.
