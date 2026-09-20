@@ -619,8 +619,12 @@ _intent.bypass("C19", "U3", "7", "CH_VDDA")
 _intent.bypass("C54", "U12", "3", "VBAT")
 _intent.bypass("C94", "U18", "5", "PD_DVDD")
 _intent.bypass("C104", "U26", "14", "+3V3")
-_intent.bypass("C106", "U26", "14", "+3V3")
-_intent.bypass("C107", "U26", "14", "+3V3")
+# 20 September 2026: C106 and C107 are the two PCA9555 expanders' own decoupling, written on the line
+# below their part() calls, and both were declared against U26 pin 14, the AND gate three parts earlier.
+# Measured on A74's placed board: C106 sits 1.70 mm from U27 pin 24 and C107 1.70 mm from U28 pin 24,
+# while the old declaration read them at 14.7 and 13.0 mm from a pin neither serves.
+_intent.bypass("C106", "U27", "24", "+3V3")
+_intent.bypass("C107", "U28", "24", "+3V3")
 import schlayout, time as _time
 PAPER, NPAGES, NCOLS, NROWS = schlayout.run(P, SECTIONS, POWER, _intent._I["bypass"], {"date": _time.strftime("%Y-%m-%d")}, os.environ.get("PHASE", ""), 'PCB-A POWER + I/O')   # 15 Sep 2026: one A3 page per block, real wiring (32.196)
 out = kisch.out

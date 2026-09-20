@@ -152,6 +152,15 @@ FIXED = {"J_AB1": (113, -46, 0), "J_MEZZ_PWR1": (-8, -18, 90),
          "R164": (-35.77, -46.11, 0), "R165": (-29.84, -46.11, 0),
          "R166": (-67.55, -37.36, 0), "R167": (-61.62, -37.36, 0),
          "R168": (66.45, 52.65, 0), "R169": (72.38, 52.65, 0),
+         # THE FOUR LOGIC DECOUPLING CAPACITORS AT THE PINS THEY SERVE (20 September 2026, appendix
+         # 32.304). C4, C104, C106 and C107 were packed in region CTL at case x 52 to 90 while U1,
+         # U26, U27 and U28 are FIXED at x -49 to -62, so each sat 109.4, 139.6, 114.6 and 130.7 mm
+         # from the pin it decouples, which is an inductor with a capacitor on the end. The pass that
+         # would have said so was running before any part was placed. These seats were measured on
+         # A70's own placed board and proved through the chain at A74: hard 0, 461 escapes and 2 pads
+         # skipped, both the baseline's, and every one of the four lands 1.70 to 1.90 mm from its pin.
+         "C4": (-50.14, -25.30, 0), "C104": (-55.47, -24.26, 0),
+         "C106": (-47.25, -13.75, 0), "C107": (-59.25, -13.75, 0),
          "R146": (-102.5, 13.6, 0), "R147": (-102.5, 11.8, 0), "C121": (-105.1, 12.7, 90),
          "R148": (-89.7, 11.0, 0), "R149": (-89.7, 12.8, 0), "C122": (-87.1, 11.9, 90),
          "J_DOCK": (-76, -70, 0), "J_PRE1": (-103, -70, 0), "F1": (-97, -52, 0), "J_MAINSW": (98, 75, 0),
@@ -233,7 +242,7 @@ REGIONS = [
  ("HFQ",   (-46, -52, -16, -34), ["Q15", "Q16", "Q23", "Q24", "R65", "R122", "R154", "R155"]),   # +4.0 mm south for the CS filter pair (POQ west, HFS east, a through-hole part 4.0 mm south); 18 September 2026
  ("HFS",   (-16, -50, -2, -23), ["R60", "R61", "R62", "R63", "R64", "C68", "C69", "C70", "C71", "C72", "C73", "R123", "R124", "R125", "R126", "C74", "C108", "C109", "C110", "C111", "C125"]),
  ("B33",   (-66, -2, -48, 8), ["C52", "C53", "C55", "C56", "R48", "R49"]),
- ("CTL",   (52, -38, 90, -24), ["C4", "R2", "R3", "R4", "Q1", "R5", "R102", "C104", "R103", "R104", "R145", "C106", "C107", "R110", "R111", "R112", "R113", "R114"]),
+ ("CTL",   (52, -38, 90, -24), ["R2", "R3", "R4", "Q1", "R5", "R102", "R103", "R104", "R145", "R110", "R111", "R112", "R113", "R114"]),
  ("TPS",   (10, -39, 52, -23), ["TP%d" % k for k in range(3, 9)] + ["TP10", "TP11", "TP15", "TP16", "TP17", "TP18", "TP21", "TP23", "TP24", "TP25", "TP26", "TP27", "R116", "R117", "R118"]),   # U29 is FIXED beside J_USBW since 12 September 2026   # TP27: the spare ribbon line, which lost its seat on J_AB1 when the pairs took their columns (10 Sep 2026)
  ("PDS",   (0, 44, 30, 62), ["C93", "C94", "C95", "C96", "C97", "C120", "D4", "R136", "R137", "R138", "R139", "R140", "R141", "R142", "R143", "Q27", "C127"]),
  ("PDQ",   (30, 44, 84, 58), ["Q21", "Q22", "Q25", "Q26", "R81", "R127", "C92", "C116", "C117", "C118", "C119", "R76", "R77", "R78", "R79", "R80", "C86", "C87", "C88", "C89", "C90", "C91", "R128", "R133", "R134", "R135", "R158", "R159"]),
