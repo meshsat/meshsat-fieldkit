@@ -31,7 +31,7 @@ def bypass(cap_ref, part_ref, pin, net=None):
 # current as a peak does the reverse: whichever one it is belongs in the rail's `note`.
 def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=None, source_ic="", share=None,
          efficiency=None, switch=None, always_on=None, always_on_why="", enable_net=None, v_work=None,
-         converted=None, series_of=None, returns=None):
+         converted=None, series_of=None, returns=None, fed_from=None):
     """source: the reference the rail enters the board at, or a LIST of them (a ground returns to several).
 
     budget: this rail's own drop budget as a fraction (default the judge's 2 percent; a 3.3 V logic rail at 1 A over long 0.4 mm tracks is fine at 3, 8 Sep 2026).
@@ -119,6 +119,25 @@ def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=No
             raise SystemExit("intent: rail %s returns %.2f A peak where %s carries %.2f A. A return carries "
                              "the current of the rail it returns and no more."
                              % (net, float(amps_peak), returns, float(_rp.get("amps_peak") or 0)))
+    # WHAT A RAIL TAKES OUT OF THE RAIL BEHIND IT (20 September 2026, appendix 32.246). Board A's `VBAT` is
+    # declared 10.0 A typical, and the nine converters that draw from it add up to 15.18 A from this same
+    # file, using each one's own declared voltage, current and efficiency: the pack node's declaration
+    # understates its own loads by 52 percent, and nothing checked it, on any board. `dc_drop` then solves
+    # VBAT at the declared 10.0 and already reads 3.69 times its density limit, so the board's largest
+    # conductor question is understated by its own intent.
+    # `fed_from` names the rail a converter's input sits on, which the generator knows at the moment it
+    # writes the stage (`lm5176`'s own `vin` argument, `buck5`'s VBAT), so the arithmetic needs no guessing
+    # about which pins of a controller are its inputs. `power_path` adds them up and reports a rail that
+    # declares less than its children draw.
+    if fed_from is not None:
+        # the self-reference first, because a rail that names ITSELF is also not yet in the table and the
+        # existence check would answer it with the wrong sentence.
+        if str(fed_from).lstrip("/") == net.lstrip("/"):
+            raise SystemExit("intent: rail %s says it is fed from itself" % net)
+        _ff = _I["rails"].get(str(fed_from).lstrip("/")) or _I["rails"].get("/" + str(fed_from).lstrip("/"))
+        if _ff is None:
+            raise SystemExit("intent: rail %s says it is fed from %s, and %s is not a declared rail. The rail "
+                             "behind a converter is a rail: declare it first." % (net, fed_from, fed_from))
     if not loads: raise SystemExit("intent: rail %s declares no loads. Name where its current goes: "
                                    "loads={\"<ref>\": <amps>, ...}, summing to at most the rail's %.2f A peak. "
                                    "Undeclared, dc_drop would split %.2f A evenly over every U and J on the net, "
@@ -157,7 +176,8 @@ def rail(net, volts, amps_typ, amps_peak, source, loads=None, note="", budget=No
                         # 2026, rule THM-001).
                         **({"converted": bool(converted)} if converted is not None else {}),
                         **({"series_of": str(series_of).lstrip("/")} if series_of is not None else {}),
-                        **({"returns": str(returns).lstrip("/")} if returns is not None else {})}
+                        **({"returns": str(returns).lstrip("/")} if returns is not None else {}),
+                        **({"fed_from": str(fed_from).lstrip("/")} if fed_from is not None else {})}
 
 def node(net, v_max, basis, v_min=0.0, rides_on=None, bias_v=None, vendor_reference=None, v_work=None):
     """A NET THAT IS NOT A RAIL, and the largest voltage a part on it can see (rule CMP-001, 16 September 2026).
