@@ -13686,3 +13686,38 @@ UNDERSIDE beneath their own pins, which is how a two-layer board with a QFN gas 
 **RESIDUE, not a patch**: board P's committed board is held byte for byte by its own deliverable folder, so
 both land in the commit that re-cuts one, which is decision 31. **NOT CLAIMED**: which of the two decoupling
 answers is cheaper, and whether the three predicted collisions share that cause or are a second one.
+
+### 32.270, 20 September 2026 06:35 CEST: 32.267 was wrong about the cost, and the whole chain says so
+
+**A correction of my own, half an hour after the claim, in the direction that makes it worse.** 32.267 said
+TI's item 6 was free. The arm behind that ran with `PREROUTE_STOP_AFTER_PLACE=1`, so it stopped **before**
+the fanout, the barrel pass and the pre-lay, and the cost is two stages later.
+
+**A56, the same seats through the whole chain, ends `PREROUTE-DONE BLOCK 4` where A54, the same board
+without the move, ends `PREROUTE-DONE OK`**: hard 4 of the fifteen types, `solder_mask_bridge` 2 and
+`shorting_items` 2. The hard count is **already 4 when `rail_barrels` takes its own before-reading**, so it
+is not the barrels and not the pre-lay: it is the escape.
+
+**Named from the board, not inferred.** Two locked 0.400 mm GND escape stubs, each 3.535 mm long, each
+leaving its own FET's ground pad 2 at forty-five degrees to the north-east, `Q8`'s from (-96.320, 27.635)
+and `Q9`'s from (-111.060, 27.635), **each clipping its own part's drain tab by about sixty-five
+micrometres**: `Q8.5` spans y 25.045 to 28.955 and the stub's edge reaches 28.89 where it crosses x -94.865.
+
+**The cause is the inductor's arrival and not the seats.** The escape picks a direction with room; `L2` takes
+the room on the west of `Q8` and the east of `Q9`, and both stubs turn into their own tabs. The seats are
+**reverted rather than iterated blind**, which is 32.257's own rule applied to my own change, and it matters
+that the generator at HEAD must never be left producing a board its chain refuses.
+
+**The fix is named and it is a TOOL fix rather than a seat**: an escape stub must never cross another pad of
+its own part. That is true of every board and is wrong today on this one; the seats come back in the commit
+that carries it, with the **whole chain** as the measurement and never the placement alone.
+
+**What stands from 32.267**, because it is measurement and did not move: `U3` is fifteen millimetres clear of
+the FET row and was never the obstacle; the block is short by 0.375 mm of row and 1.440 mm of height inside
+CHQ; the board has 2.05 mm of clear edge west of the rectangle; and with the row packed `CH_SW1` goes
+19.22 mm to 7.40 and `CH_SW2` 26.86 to 7.40.
+
+**The lesson, and it is one this record already had in another form**: *read an arm when it lands* was about
+a stage with a wall offering its nets in one order. This is the same sentence about STAGES: a chain that is
+stopped early has answered the question its last stage asked and nothing beyond it, and a claim of "free"
+is a claim about every stage.
