@@ -14,7 +14,7 @@ SRC = open(os.path.join(os.path.dirname(HERE), "place_audit.py"), encoding="utf-
 
 
 def t_an_islanded_pour_before_the_route_is_a_refusal_and_not_a_warning():
-    body = SRC[SRC.index("    if _isl:"):SRC.index("    elif _zones and not _unfilled:")]
+    body = SRC[SRC.index("    if _isl:"):SRC.index("    elif _zones and not _unfilled")]
     assert "WARN  %d pour island(s) already carry no via" not in body, "the islanded pour is still a warning nobody reads"
     assert 'lines.append("FAIL  %d pour island(s) already carry no via or plated pad of their own net BEFORE any' in body, \
         "the islanded pour does not fail the placement"
@@ -22,7 +22,7 @@ def t_an_islanded_pour_before_the_route_is_a_refusal_and_not_a_warning():
 
 
 def t_a_known_island_is_declared_beside_the_board_and_still_counted():
-    body = SRC[SRC.index("    if _isl:"):SRC.index("    elif _zones and not _unfilled:")]
+    body = SRC[SRC.index("    if _isl:"):SRC.index("    elif _zones and not _unfilled")]
     assert 'pour-island-allow.txt' in body, "there is no way to declare a known islanded pour"
     assert 'lines.append("ALLOW %d pour island(s)' in body, "an allowed island is not reported"
     # the allow line names the NET, matched against the island's own "<net> on <layer>" prose, never a substring of a reason
@@ -32,3 +32,31 @@ def t_a_known_island_is_declared_beside_the_board_and_still_counted():
         for d in os.listdir(os.path.join(os.path.dirname(HERE), "..")):
             if d.startswith("pcb-") and os.path.isfile(os.path.join(os.path.dirname(HERE), "..", d, "pour-island-allow.txt")):
                 raise AssertionError("%s declares an islanded pour; the set read zero when the bar moved, so say why in the file and here" % d)
+
+
+def t_a_site_on_the_islands_own_boundary_is_on_the_island():
+    """21 September 2026, D31: a 1 mm2 piece of board D's F.Cu ground pour between R15 and R13 was refused as copper
+    nothing reaches while its one connection, R15's ground pad with the fanout's via in it, sat on the island's top
+    edge to the micrometre; PointInside answers False on the outline itself and KiCad's own fill had marked the
+    polygon connected. A via or pad centre within 0.1 mm of the outline is on the island."""
+    body = SRC[SRC.index("    _isl, _padonly, _unfilled, _zones"):SRC.index("    n_esc = sum(")]
+    assert "_ON = 100000" in body, "no accuracy for a site on the outline"
+    assert body.count("PointInside(pcbnew.VECTOR2I(int(pt.x), int(pt.y)), _ON)") == 2, \
+        "the via/plated-pad test and the surface-pad test do not both take the outline accuracy"
+    assert "PointInside(pcbnew.VECTOR2I(int(pt.x), int(pt.y)))" not in body, "a site test still asks the outline with no accuracy"
+
+
+def t_an_island_that_carries_a_surface_pad_of_its_own_net_is_reported_and_not_refused():
+    """21 September 2026: an island whose only site is a surface pad of its own net is reached by whatever reaches the
+    pad (the router's job on a fanout-skipped pad, read by pruned_gate after the route), so it is reported; board A's
+    six F.Cu load bank islands of A87 to A92 read that way, and the refusal there is the VBAT In2 piece and the In3
+    runs, which carry no pad of their net at all."""
+    body = SRC[SRC.index("    _isl, _padonly, _unfilled, _zones"):SRC.index("    n_esc = sum(")]
+    assert 'pad.GetDrillSizeX() == 0 and pad.IsOnLayer(_lay)' in body, "the surface pads of the island's own net are not collected"
+    assert "_padonly.append(_line); continue" in body, "an island on a surface pad of its net is not set apart"
+    assert 'lines.append("WARN  %d pour island(s) reach only a surface pad of their own net and no via or plated pad' in body, \
+        "the pad-only island is not reported"
+    # and it is set apart BEFORE the refusal list, so it can never count as a collision
+    assert body.index("_padonly.append(_line); continue") < body.index("_isl.append(_line)")
+    assert "if _refused:" in body and "coll += 1" in body[body.index("if _refused:"):]
+

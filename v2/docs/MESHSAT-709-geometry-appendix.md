@@ -16720,3 +16720,49 @@ capacitor, which is 15 September's finding that board D's bypass capacitors sit 
 the closers reach 12. `via_parallel` took the worst barrel 1.22 to 0.81, so PI-003 reads answered on it. Board
 D's best number (D17 and D19 read two) and not adoptable against D12's zero. The last connection is a seat
 for C23 beside U6, by hand in the generator, which `bypass_place` declined at 3.0 mm.
+
+### 32.345
+
+**Board D's last connection is given its seat, measured before it was written (21 September 2026, 01:45
+CEST).** D30 round 1 (32.344, addendum) left `/PCM_VCCP` open over 16.1 mm between C23 pad 1 and U6 pad 26:
+the codec's supply pin and the 1 uF declared as that pin's decoupling, packed by the rows because `bypass_place`
+finds no free spot within 3.0 mm of a fine-pitch pin on this board (decision 42's shape; board D reads 5 of 22
+within 3 mm with 17 allowed). The generator's `FIXED_OVERRIDE`, written on 9 September for exactly this, put C23
+at case (26.5, -1.6), beside pin 26 at (24.0, -5.34) and east of the R18/R19 pull-up column at x 23.5, through the
+whole pre-route chain on the hub, one variable against D30's own chain: **PREROUTE-DONE OK, placed hard 0, escapes
+68 added and 7 skipped, fanout 92 with 13 skipped, both identical to D30's; `rail_barrels` one barrel at FB1 pad 2
+as before; the PCM_VDD pre-lay kept (285 to 277 unrouted); `rail_crossings` 6 of 6; `place_audit` 0 predicted
+collisions of 6 fine-pitch parts; and C23 is no longer among the STUCK.** The seat is one line of `gen_pcb_d3.py`'s
+FIXED table with the reason beside it, and **D31 routes on it on the hub** at D30's 14400 s cap. Prediction,
+written before it lands: `/PCM_VCCP` closes at the router and D31 lands at hard 0 and ZERO open, which closes
+PI-003 and RTE-002 on board D together; one open on a different net means the seat traded one crowded
+neighbourhood for another; `/PCM_VCCP` still open means the distance was not the cause.
+
+**Board E's chain under the corrected judge, first half.** With every barrel rated at its own drill,
+`rail_barrels` on tonight's regenerated E board declines SEVEN sites (CELL_F at F3 pad 2 and P_CP pad 1, DC_HS at
+L2 pad 1, DC_P at Q1 pad 5, TRK_OUT at Q6 pad 5 as busbars; TRK_OUT at U4 pads 3 and 6 because only three of the
+four barrels owed fit within the 1.66 mm the crossing is judged over) and answers five sites with nine barrels
+(DC_HS at Q7 pads 1 to 3, HS_S at Q7 pad 5 twice), the four it refused being the ones that cost the board a
+connection when laid (DC_F at Q1 pad 2, PV_P at U5 pads 32 to 34: unrouted 254 to 255 or 256 each), which is 20
+September's site-by-site reading repeated on a new placement. **And the switching pre-lay group HURT on this
+chain where E23 kept it**: the TRK_SW1 group closed 17 of 17 and the refilled board read hard 1 at `/E6_SW` and
+`/E6_BST` (11.65, 194.75), the AP63205's own switching node and bootstrap beside U12, with the hard item STILL
+THERE after every closure was dropped, so the stage restored the board as handed in and the chain carries no
+switching pre-lay. A hard item that is not the closures' and appears only on the refill is the 14 September
+shape; it is board E's next thing to read on this tree and it is not read tonight.
+
+**Addendum, 01:47 CEST: the island judge refused D31 for a site on its own outline.** D31's first chain, the
+seat above through routeflow, ended `PREROUTE-DONE BLOCK` at `place_audit` on ONE pour island: `GND on F.Cu,
+1 mm2 at (119.3, 93.5)`, the ground pour between R15 and R13 in the USB series row, where the probe two runs
+earlier had read none. Asked what touches it: R15's ground pad and the fanout's via in that pad, both at (118.4,
+92.875), which is the island's top edge to the micrometre. `PointInside` answers False for a point on the outline
+and KiCad's own fill had already marked the polygon connected (`IsIsland` False), so the judge written at 00:45
+to catch board A's In3 runs refused a connected piece of ground for the fanout drawing it a hair differently
+(the fanout is not deterministic: 91 vias with 11 in the pad against the probe's 92 with 8). **A via or pad
+centre within 0.1 mm of the outline is on the island now** (KiCad's accuracy argument), and an island whose only
+site is a SURFACE pad of its own net is reported and not refused, because the router reaches it through the pad.
+Proved on three boards read-only: D31's refused board reads no refusal; the probe's placed board one WARN (a 3 mm2
+ground piece on a pad the fanout skipped); **A89's pre-route board, the defective arm, still FAILS**, on the 131
+mm2 VBAT In2 piece, with its six F.Cu load bank islands read as the WARN they are (their vias renamed, their rail
+pads not). D31 relaunched on the corrected judge at 01:47.
+
