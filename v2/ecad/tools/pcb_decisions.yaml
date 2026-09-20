@@ -570,3 +570,50 @@ decisions:
       not this session's to choose."
     blocks:
       DEC-001: [a, b, p]
+
+  - n: 43
+    title: board B's route has resisted every lever this project can apply and the two that remain are architectural
+    asked: 2026-09-20
+    status: open
+    ask: fewer parts in the module receptacles' own fine-pitch fabric, or more layers for board B, or board B stays a
+      quote-only board in this revision
+    recommendation: "measure the LAYER option first, because it is the only one with a measurement already pointing at it (three CM5 receptacles at 0.4 mm pitch measurably need two inner signal layers, a board-wide In1 keep-out left 93 connections open at eight passes) and because STK-002 is open on all seven boards under the 11 September layer P0 anyway, so board B's answer would be taken inside a review that has to happen. It is one placement regeneration and one route, and it is the only lever this project has not tried on this board. Fewer parts in that fabric is an architecture change to the I/O high-availability design ruled on 9 September and is not a layout question."
+    evidence: "BOARD B'S NUMBER HAS NOT MOVED UNDER ANY LEVER AND THE LADDER IS THE WHOLE ARGUMENT (17 to 19 September
+      2026, `boards/b.json`). The placement predictor reads about TEN escape-fan collisions of 75 fine-pitch parts and
+      has read about ten through every change tried: the sixteen-rectangle resize of owner ruling 13 took it 10 to 11,
+      the fine-pitch margin 10 to 12 (MORE room per part makes it WORSE, because the parts spread and their fans reach
+      further into one another, which cost five placement regenerations to learn), three route methods and forty hours of
+      router moved it not at all. The route is the same story: B21 forty hours to 416 open, B22 every region out of time
+      at two-hour caps, B23 two of six groups never routed at four-hour caps, and a pass costs 7.4 minutes in the first
+      region and over four hours in the last because each group routes against everything locked before it.
+      THE RESIZE IS NOT THE ANSWER AND THAT IS MEASURED, NOT ASSUMED: `region_room` on B23 reads EVERY region overflowing
+      by 0.0 mm, so the floor plan is legal and still crowded. The three per-slot switch pockets have 0.0 mm of room in
+      every direction, boxed north by a FIXED M.2 socket, west by a fixed hole, east by their own SWE and south by their
+      RAIL, and the parts in them are the slot's own switch fabric which belongs beside its receptacle. THE ROOM ON THIS
+      BOARD IS ELSEWHERE (WIFISW 38.5 mm north, IOCA 19.0 north, S1_RAILB 19.0 west, S2_RAILB 16.0 east) AND IT IS NOT
+      WHERE THE PROBLEM IS.
+      WHAT THE TEN COLLISIONS AND THE PAIR FAILURES SHARE: four parts are in both lists (U301, U302, U209, U102, the
+      slot-3 and slot-2 PCIe switches and hubs) and the rest sit at the CM5 receptacles' own high-speed halves. The
+      corridor from a module receptacle to its switch is the thing the floor plan has to serve and it is the same copper
+      the fans need, which is why the two knobs do not compose.
+      WITHDRAWN, so nobody re-asks it: moving a slot's rail regulator and its inductors to the UNDERSIDE was step five of
+      the resize chain and it was asked only to make the 2.6 mm margin reachable. The margin itself was then measured and
+      REFUSED, so that move buys nothing and is not part of this decision.
+      WHAT IT HOLDS: board B carries 38 open pairs, of which FOURTEEN read `the board this tree holds for this phase is
+      not routed (416 unrouted)`, which is every routed-board rule it has. None of them is a failure of board B's design
+      and none can be judged until a board B routes."
+    blocks:
+      SCH-003: [b]
+      PI-002: [b]
+      PI-003: [b]
+      GND-001: [b]
+      STK-001: [b]
+      RET-002: [b]
+      RET-004: [b]
+      PAIR-001: [b]
+      RF-001: [b]
+      PLC-002: [b]
+      RTE-001: [b]
+      VIA-001: [b]
+      PLN-001: [b]
+      EMC-001: [b]

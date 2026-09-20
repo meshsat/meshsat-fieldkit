@@ -7,7 +7,7 @@ One line per decision that is still open, what it holds up, and where its eviden
 v2/docs/OWNER-DECISIONS-2026-09-11.md and this page is generated from the same registry the readiness table
 is, so the pair counts below are the ones the gates use.
 
-**15 decisions are open and they hold 80 rule-board pairs of the 333 the set is judged on.** A pair held by a
+**16 decisions are open and they hold 94 rule-board pairs of the 333 the set is judged on.** A pair held by a
 decision is not a defect in the board: it is a question nobody has answered, and until it is answered the
 rule can be neither passed nor failed.
 
@@ -28,6 +28,7 @@ rule can be neither passed nor failed.
 | **40** | the pack's cell-level protection is one firmware-configured device, and the rule asks for hardware independent of any software | BAT-001 | P | 2026-09-18 |
 | **41** | the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002 | DOC-002 | C, E5, P | 2026-09-19 |
 | **42** | a decoupling capacitor cannot be both within 3 mm of a fine-pitch pin and outside that part's escape fan | DEC-001 | A, B, P | 2026-09-20 |
+| **43** | board B's route has resisted every lever this project can apply and the two that remain are architectural | EMC-001, GND-001, PAIR-001, PI-002, PI-003, PLC-002, PLN-001, RET-002, RET-004, RF-001, RTE-001, SCH-003, STK-001, VIA-001 | B | 2026-09-20 |
 
 ## Each one, with what it holds
 
@@ -583,6 +584,61 @@ rules on the front side of a QFN, so one of them has to give and which one is no
 | rule | | boards | result today |
 |---|---|---|---|
 | DEC-001 | decoupling loop area | A, B, P | FAIL, PASS |
+
+
+### Decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural
+
+**The question:** fewer parts in the module receptacles' own fine-pitch fabric, or more layers for board B,
+or board B stays a quote-only board in this revision
+
+**Recommended:** measure the LAYER option first, because it is the only one with a measurement already
+pointing at it (three CM5 receptacles at 0.4 mm pitch measurably need two inner signal layers, a board-wide
+In1 keep-out left 93 connections open at eight passes) and because STK-002 is open on all seven boards under
+the 11 September layer P0 anyway, so board B's answer would be taken inside a review that has to happen. It
+is one placement regeneration and one route, and it is the only lever this project has not tried on this
+board. Fewer parts in that fabric is an architecture change to the I/O high-availability design ruled on 9
+September and is not a layout question.
+
+**Measured:** BOARD B'S NUMBER HAS NOT MOVED UNDER ANY LEVER AND THE LADDER IS THE WHOLE ARGUMENT (17 to 19
+September 2026, `boards/b.json`). The placement predictor reads about TEN escape-fan collisions of 75
+fine-pitch parts and has read about ten through every change tried: the sixteen-rectangle resize of owner
+ruling 13 took it 10 to 11, the fine-pitch margin 10 to 12 (MORE room per part makes it WORSE, because the
+parts spread and their fans reach further into one another, which cost five placement regenerations to
+learn), three route methods and forty hours of router moved it not at all. The route is the same story: B21
+forty hours to 416 open, B22 every region out of time at two-hour caps, B23 two of six groups never routed at
+four-hour caps, and a pass costs 7.4 minutes in the first region and over four hours in the last because each
+group routes against everything locked before it. THE RESIZE IS NOT THE ANSWER AND THAT IS MEASURED, NOT
+ASSUMED: `region_room` on B23 reads EVERY region overflowing by 0.0 mm, so the floor plan is legal and still
+crowded. The three per-slot switch pockets have 0.0 mm of room in every direction, boxed north by a FIXED M.2
+socket, west by a fixed hole, east by their own SWE and south by their RAIL, and the parts in them are the
+slot's own switch fabric which belongs beside its receptacle. THE ROOM ON THIS BOARD IS ELSEWHERE (WIFISW
+38.5 mm north, IOCA 19.0 north, S1_RAILB 19.0 west, S2_RAILB 16.0 east) AND IT IS NOT WHERE THE PROBLEM IS.
+WHAT THE TEN COLLISIONS AND THE PAIR FAILURES SHARE: four parts are in both lists (U301, U302, U209, U102,
+the slot-3 and slot-2 PCIe switches and hubs) and the rest sit at the CM5 receptacles' own high-speed halves.
+The corridor from a module receptacle to its switch is the thing the floor plan has to serve and it is the
+same copper the fans need, which is why the two knobs do not compose. WITHDRAWN, so nobody re-asks it: moving
+a slot's rail regulator and its inductors to the UNDERSIDE was step five of the resize chain and it was asked
+only to make the 2.6 mm margin reachable. The margin itself was then measured and REFUSED, so that move buys
+nothing and is not part of this decision. WHAT IT HOLDS: board B carries 38 open pairs, of which FOURTEEN
+read `the board this tree holds for this phase is not routed (416 unrouted)`, which is every routed-board
+rule it has. None of them is a failure of board B's design and none can be judged until a board B routes.
+
+| rule | | boards | result today |
+|---|---|---|---|
+| EMC-001 | source, path, victim | B | INCONCLUSIVE |
+| GND-001 | one deliberate ground system | B | INCONCLUSIVE |
+| PAIR-001 | a pair is coupled and matched | B | INCONCLUSIVE |
+| PI-002 | rail voltage drop | B | INCONCLUSIVE |
+| PI-003 | via current capacity | B | INCONCLUSIVE |
+| PLC-002 | prevention before repair | B | INCONCLUSIVE |
+| PLN-001 | no orphan copper | B | INCONCLUSIVE |
+| RET-002 | plane-adjacency screen | B | INCONCLUSIVE |
+| RET-004 | ground-via proximity screen | B | INCONCLUSIVE |
+| RF-001 | RF paths are designed as RF | B | INCONCLUSIVE |
+| RTE-001 | geometry a fabricator will build | B | INCONCLUSIVE |
+| SCH-003 | cross-board contracts | B | INCONCLUSIVE |
+| STK-001 | the stackup is declared, feasible and in the board | B | INCONCLUSIVE |
+| VIA-001 | every via is a via the process makes | B | INCONCLUSIVE |
 
 
 ## Closed, for the record
