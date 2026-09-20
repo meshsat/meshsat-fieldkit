@@ -16451,3 +16451,62 @@ only ten of thirty-four declared lines exist on it: A86, A89 and A92 are the fir
 **The rule this makes explicit: a measured failure on a board older than the generator is evidence about the
 ADOPTION GAP and not about the design**, and the register cannot tell the two apart because it reads a verdict
 and not a date. Every such row in this set is now named in its own board file with the phase that closes it.
+
+### 32.339
+
+**A86 answers the question the evening was built around, and /VBAT closes (20 September 2026, 23:35 CEST).**
+Read on A86's kept round-1 board (sha256 **e830cdd58169b1b2**) in a scratch copy while its remedy round
+routes, which is 19 September's procedure. The prediction was written into `boards/a.json` before the run:
+*if the corridor was the cause, A86 CLOSES /VBAT, because nothing else in that change touches it.*
+
+**A86 round 1: hard 0 of the fifteen types, FIVE unconnected items, and the open nets are `/+5V_S1`,
+`/+5V_S2`, `/+5V_S3`, `/EMCON_HW`, `/PA_ISNS_N`.** `/VBAT` is closed. So moving the whole USB-C outlet stage
+to the outlet freed the corridor the pack node needed, and **that gap was a placement item, not decision 35's
+copper weight**. Against A59 round 1, also hard 0 and five, whose set was `/+5V_DEV`, `/+5V_S1..S3`, `/VBAT`:
+**the same count and a different set**, which is why an open count is never read alone.
+
+**And `/+5V_DEV` closed on a board carrying NO In3 rail run at all**, so **A92 has become a test of whether
+the device rail's run COSTS anything rather than whether it buys anything**. The three slot rails are still
+open, which is exactly what A89 targets, so that arm's question is unchanged. It is also the first board A
+route judged with the SENSE class present.
+
+**READ THE TRIO ON THEIR ROUND-1 BOARDS.** A remedy round REGENERATES THE PLACEMENT, so round 2 of one arm
+against round 1 of another is two placements and the pair stops being one variable.
+`$SP/read_round1.sh <hub|place> <tree>` does it in a copy and prints the board's own sha before and after.
+
+**A KNOB ACCEPTED AND IGNORED, AND THE ARM IT INVALIDATED.** `ROUTEFLOW_TIMEOUT_SCALE` was read in
+routeflow's `experiment` alone while its own line calls it *every route timeout*. **D29, launched at 4x to
+answer whether D28's fifteen opens were the clock, routed at the profile's own 3600 s**: an arm with no
+variable in it, whose number would have looked like a result. Found by reading the line where the route
+states its own cap rather than the exit status; stopped by pid two minutes in, cleanly, no orphaned router.
+`run` computes `FR_TIMEOUT` from the scale now and **prints the old cap and the new one**, so the log carries
+the proof the knob arrived: D30's reads *ROUTEFLOW_TIMEOUT_SCALE=4 stretches this route's 3600s cap to
+14400s* followed by `timeout 14400`. **D28 itself was CUT** at pass 45 of 200 with hard 0 and fifteen open,
+where D19 ran all 200 in 2 h 29 and landed at two; reported as a cut, never as a result.
+
+**BOARD P: PI-001 PASSES, PI-003 IS TWO BARRELS, TWO LAYERS STILL DOES NOT CLOSE.** P10 ended
+STOPPED_BUDGET at **41 open after the closers** (kept board f097ca49e42550f0), which is decision 28's fourth
+independent reading after 44, 43/45 and 47. On that board the reader took the whole set: **`dc_drop` PASS of
+4 with `dc_density` 0 missed, so PI-001 passes** with the PACK class at 0.80 mm the generator already
+declared (PACK_N reads 0.11 A against IPC's 3.36 A where the committed board reads 2.47 against 2.392);
+`sensitive_nodes` PASS of 7; **`via_current` FAIL with 2 rails and 2 barrels over**, one a 0.50 mm drill at
+(87.6, 114.4) at ratio 1.05. Every number carries the open board's standing caveat.
+
+**`class_table_age.py`, a report, and it explains a large share of the register in one line.** Every gate
+reads a net class out of the PROJECT FILE, so a board cut before a class was added is routed at Default
+geometry on every net that class governs. **Four of the six boards are behind their own generator, and in
+three the missing class is the one whose rule fails**: A predates `SENSE` and ANA-001 is judged on it, B
+predates `PANEL` and `RF` which are PWR-003's and RF-001's answers, P predates `PACK` which is PI-001's, and
+D predates `SENSE` latently. C and E match. The open-pairs page carries the table now, from data rather than
+from memory, and readiness did not move, which is the proof it decided nothing.
+
+**BOARD E'S ANA-001 IS A REDISTRIBUTION AND THE ROOM MAP SAYS SO.** E23 pinned all six switching nets and
+read PASS 3 of 3 at a cost of eight connections, six of them U5's own gate drives. `region_room` on the
+regenerated placement: twelve regions, zero overflowing, and the tracker's four pockets are boxed in.
+**TRKW has 1.0 mm east to the fixed U5, 1.0 south to the fixed F2 and 0.0 west; TRKIN 0.0 on three sides;
+TRKS 0.0 west, south and east; TRKOUT 0.0 west and east.** The room on that board is HOTSW and PACK's shared
+12.5 mm and FANS' 4.0 mm to the outline, forty millimetres away. Board B's sentence in miniature.
+**That map could not be read at all until tonight**: `region_room` took the second field of the stem as the
+board letter, so `pcb-e1-dock` gave "e1", it looked for `gen_pcb_e13.py` and crashed; `pcb-c-ring` is the
+same shape. It uses `boardtable.letter_for` now, with a rule that every letter it returns names a generator
+this tree holds.
