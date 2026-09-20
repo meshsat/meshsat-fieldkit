@@ -13838,3 +13838,30 @@ router connects a pair once.
 
 **NOT STARTED**: four hand-chosen runs through a forty-millimetre block is the next real piece of board A
 layout and not a knob, and nothing is half-moved while three routes are in flight.
+
+### 32.275, 20 September 2026 07:03 CEST: item 7's corridor, mapped before a millimetre is drawn
+
+Each straight line from a shunt pad to its filter pad, sampled every 0.25 mm at a 0.2 mm track with the
+board's own clearance, with every other-net pad and filled pour it touches named:
+
+| run | length | other-net pads in the way | pours in the way |
+|---|---:|---|---|
+| `VBUS20` high side, `R16.1` to `R147.1` | 26.81 mm | C20.1, C23.2, Q7.5, R146.2 | VBAT on B.Cu and In2, GND on In1 and In4 |
+| `CH_ACN` low side, `R16.2` to `R146.1` | 30.96 mm | C20.2, R146.2 | **every layer**, including VBUS20's own on F.Cu and In3 |
+| `CH_SRP` high side, `R17.1` to `R149.1` | 27.16 mm | **U3 pins 24 to 30** | VBAT on B.Cu and In2, VIN_RAW on B.Cu, GND on In1 and In4 |
+| `CELL+` low side, `R17.2` to `R148.1` | 22.28 mm | **U3 pins 21 to 33** | VBAT on B.Cu and In2, GND on In1 and In4 |
+
+**So item 7 is a routing problem inside a block that is already full**: four runs that must detour around
+the controller and the two capacitor rows and change layer to dodge four pours, inside a 48 by 11.5 mm
+rectangle already holding four FETs, an inductor, two shunts and six capacitors. Two of the four straight
+lines go through U3 itself, and one of them has **no layer free** along its whole length.
+
+**And that is the finding.** TI's two clauses are in tension on this floor plan: the filter AT the pins
+(10.2.2.2) and a Kelvin trace from the pad CENTRES (item 7), because the pins are 22 to 31 mm from the pads
+and the room between them is spoken for. The cheap alternative is the one the geometry keeps pointing at,
+**the filters moving toward their own shunts with the sense pins reaching them instead**, which is 32.257's
+floor-plan answer again and is not a seat change on its own, since U3's rotation is already the best of four
+(32.268).
+
+**NOT STARTED, deliberately**: a floor plan half-moved is worse than one not moved, and three routes are in
+flight on this board.
