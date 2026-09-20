@@ -7,7 +7,7 @@ One line per decision that is still open, what it holds up, and where its eviden
 v2/docs/OWNER-DECISIONS-2026-09-11.md and this page is generated from the same registry the readiness table
 is, so the pair counts below are the ones the gates use.
 
-**14 decisions are open and they hold 77 rule-board pairs of the 333 the set is judged on.** A pair held by a
+**15 decisions are open and they hold 80 rule-board pairs of the 333 the set is judged on.** A pair held by a
 decision is not a defect in the board: it is a question nobody has answered, and until it is answered the
 rule can be neither passed nor failed.
 
@@ -27,6 +27,7 @@ rule can be neither passed nor failed.
 | **39** | the criterion a break in a signal's reference is judged against | RET-001, RET-003, SI-001 | A, B, C, D, E, P | 2026-09-17 |
 | **40** | the pack's cell-level protection is one firmware-configured device, and the rule asks for hardware independent of any software | BAT-001 | P | 2026-09-18 |
 | **41** | the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002 | DOC-002 | C, E5, P | 2026-09-19 |
+| **42** | a decoupling capacitor cannot be both within 3 mm of a fine-pitch pin and outside that part's escape fan | DEC-001 | A, B, P | 2026-09-20 |
 
 ## Each one, with what it holds
 
@@ -543,6 +544,45 @@ and both fixtures (appendix addendum, 19 September 13:55 CEST).
 | rule | | boards | result today |
 |---|---|---|---|
 | DOC-002 | provenance for every claim | C, P, E5 | FAIL, INCONCLUSIVE |
+
+
+### Decision 42: a decoupling capacitor cannot be both within 3 mm of a fine-pitch pin and outside that part's escape fan
+
+**The question:** put the capacitors a fine-pitch part cannot hold on the UNDERSIDE, accept them inside the
+fan and pay the escapes, or declare a limit larger than 3 mm with the basis that number would need
+
+**Recommended:** measure the underside on board A's three before ruling anything, because it is the only
+option that keeps BOTH rules, and take the second option only where the underside is unavailable and report
+the escapes it costs per part. The third is refused unless somebody can cite the loop inductance a given
+distance buys at the part's own switching edge, which this project does not have a source for, and a limit
+moved to make a rule pass is an exemption wearing a number.
+
+**Measured:** THE TWO RULES ARE GEOMETRICALLY INCOMPATIBLE ON A QFN AND THE NUMBERS SAY SO BY HUNDREDTHS OF A
+MILLIMETRE (20 September 2026, appendix 32.311 to 32.323). `bypass_place`'s limit is 3.0 mm from the PIN to
+the capacitor's CENTRE. A fine-pitch part's escape fan is its courtyard grown by 2.2 mm, which is the number
+the placement pass has used since 9 September and which exists because capacitors 1.9 to 2.6 mm from a 0.8 mm
+TQFP's pins cost the part beside them six of seventeen escapes on D10 and C9. On a QFN THE PINS SIT ON THE
+COURTYARD EDGE, so the fan reaches 2.2 mm past the pin, and an 0603's own courtyard is about 3.05 by 1.55 mm,
+so its centre cannot come closer than about 2.98 mm to the courtyard edge without entering the fan. The
+window between 2.98 and 3.00 is the whole of what the two rules leave, which is why `bypass_slots.reserve`
+has RESERVED NOT ONE SLOT for any of the 131 capacitors the set declares, on any board, since it was written.
+WHAT IS ALREADY ANSWERED WITHOUT THIS RULING, and it is most of it: boards A, E and C seat 24, 14 and 10
+capacitors apiece in their generators for nothing, measured, and board A's placement pass now reads 37
+capacitors carrying a seat the generator chose. WHAT IS LEFT IS THE RESIDUE THIS DECISION IS ABOUT: board A's
+THREE (C36 at U5 pin 2 and C42 at U6 pin 2, each 13.2 mm away, C108 at U15 pin 3 at 25.8 mm), board P's
+three, which the front side cannot hold at all and whose own measurement named the underside, and board B's
+NINETEEN OF THIRTY, which is a floor-plan question and decision 13's territory rather than this one's. THE
+UNDERSIDE IS NOT FREE EITHER AND THE PROJECT'S OWN RULE SAYS WHY: board B is assembled on both sides with
+underside decoupling and its rule is `never under fine-pitch or through-hole parts`, because that is exactly
+where the escape vias and the thermal vias are. So the underside answer for a QFN's own decoupling has to be
+measured against the fan it would sit in from below, and boards A, C, D, E and P are single-sided assemblies
+today, so it adds a reflow step and a CPL side to each of them. NOT CLAIMED: that 3 mm is the right number,
+or that any capacitor now seated is close enough. What IS measured is that no arrangement satisfies both
+rules on the front side of a QFN, so one of them has to give and which one is not this session's to choose.
+
+| rule | | boards | result today |
+|---|---|---|---|
+| DEC-001 | decoupling loop area | A, B, P | FAIL, PASS |
 
 
 ## Closed, for the record

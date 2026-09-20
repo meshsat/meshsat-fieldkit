@@ -7,15 +7,15 @@ Every pair that is not a current PASS, classified. Generated from tools/pcb_deci
 map's maturity and each deciding verdict: a decision that claims a pair wins over everything else, because
 the ruling is the action that moves it, and the measurement is reported beside it rather than lost.
 
-**132 open pair(s)** over 7 board(s). **39 are measured failures** (a tool looked and the board failed), which are **33 distinct readings**, and **16 of those are claimed by an open owner decision**.
+**132 open pair(s)** over 7 board(s). **39 are measured failures** (a tool looked and the board failed), which are **33 distinct readings**, and **17 of those are claimed by an open owner decision**.
 
 | waiting on | pairs | what it means |
 |---|---:|---|
-| `DECISION` | 63 | an owner decision by name |
+| `DECISION` | 64 | an owner decision by name |
 | `DECISION_UNCLAIMED` | 5 | a rule that says a decision is open while no decision claims it |
 | `AUTHORITY` | 3 | an authority this project does not have |
 | `MISSING_INPUT` | 15 | an input the reading declared absent |
-| `MEASURED_FAILURE` | 23 | the tool looked and the board failed |
+| `MEASURED_FAILURE` | 22 | the tool looked and the board failed |
 | `VENDOR_WAIT` | 2 | a fabricator or a standards body, and nobody here |
 | `OWNER_WORK` | 7 | work only the owner or the ordering session can do |
 | `NOT_JUDGED` | 14 | not judged, for the reason the reading gives |
@@ -30,7 +30,7 @@ things to fix.
 
 | board | open | of which measured | decision-bound | authority | missing input | not judged |
 |---|---:|---:|---:|---:|---:|---:|
-| A | 26 | 11 | 12 | 1 | 4 | 0 |
+| A | 26 | 11 | 13 | 1 | 4 | 0 |
 | B | 38 | 6 | 10 | 1 | 5 | 14 |
 | C | 12 | 3 | 10 | 0 | 0 | 0 |
 | D | 17 | 4 | 11 | 1 | 2 | 0 |
@@ -64,12 +64,14 @@ holding a number, not a question about a number.
 | 39 | 16 | 0 | RET-001, RET-003, SI-001 | A B C D E P |
 | 40 | 1 | 1 | BAT-001 | P |
 | 41 | 3 | 1 | DOC-002 | C E5 P |
+| 42 | 1 | 1 | DEC-001 | A |
 
-## DECISION (63): an owner decision by name
+## DECISION (64): an owner decision by name
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
 | `ENV-001` | A | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
+| `DEC-001` | A | FAIL | decision 42: a decoupling capacitor cannot be both within 3 mm of a fine-pitch pin and outside that part's escape fan |
 | `PI-001` | A | FAIL | decision 35: which published current-rating model this project's copper is judged against |
 | `GND-002` | A | INCONCLUSIVE | decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked |
 | `RET-001` | A | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
@@ -171,12 +173,11 @@ holding a number, not a question about a number.
 | `DFM-001` | E | INCONCLUSIVE | the folder judged here is meshsat-pcb-e-revA-E9 and this board declares E17, so its properties are a reading of a board this set is not building |
 | `DOC-002` | E | INCONCLUSIVE | board E declares E17 and the order set holds E6: the note beside those folders describes a board this project is not building |
 
-## MEASURED_FAILURE (23): the tool looked and the board failed
+## MEASURED_FAILURE (22): the tool looked and the board failed
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
 | `SCH-002` | A | FAIL | netlist_board FAIL: {'agree': 1980, 'aliased_pins': 0, 'board_footprints': 400, 'board_only_inert': 0, 'fail': 60, 'netlist_refs': 428} |
-| `DEC-001` | A | FAIL | intent_decoupling FAIL: {'fail': 10, 'pass': 30} |
 | `PI-002` | A | FAIL | dc_drop FAIL: {'density_missed': 13, 'met': 24, 'missed': 3, 'undeclared': 0} |
 | `PI-003` | A | FAIL | via_current FAIL: {'measured_rails': 27, 'no_via': 0, 'over': 8, 'over_barrels': 37, 'rails': 27} |
 | `RET-004` | A | FAIL | return_via FAIL: {'examined_same_reference': 0, 'examined_to_power': 10, 'exempt': 54, 'judged': 40, 'lacking': 32, 'same_plane': 27, 'sl |
