@@ -15068,3 +15068,33 @@ four capacitors where they belong and two rows that now measure what they claim 
 file are rebuilt at its own phase and committed with the change, which is the rule this project paid for on
 17 September. **The 31 that remain are a work list, not a defect**: each has its distance beside it now, and
 the next four to ask about are `C54` at 44.5 mm, `C127` at 35.6, `C89` at 27.4 and `C19` at 19.6.
+
+### 32.306, 20 September 2026 14:35 CEST: the three millimetre rule and the escape fan cannot both be met at a fine-pitch part, and the obvious way round it was measured and refused
+
+**Why 31 of board A's 40 declared decoupling capacitors still sit 13.2 to 44.5 mm from their pins after
+32.305, and it is not neglect.** `bypass_slots.reserve` walks out from the pin to the declared 3.0 mm limit
+and refuses any spot that touches an escaped IC's fan box, which is its courtyard grown by 2.2 mm. **At a
+fine-pitch part the pin is ON the courtyard edge, so nothing inside 3 mm is ever free**, the capacitor is
+handed back to the packer, and the packer puts it wherever its region has room. The fan rule is not
+negotiable: it was measured on 9 September, when capacitors parked 1 to 3 mm from QFN and ZIF pins cost D10's
+`U7` six escapes of seventeen and C9's `U3` twenty-three of fifty-seven.
+
+**The census says every one of the 31 has a seat just outside the fan.** Asked of board A's own placed board,
+holding each seat as it is handed out: **31 of 31 seatable within 8 mm, at 2.5 to 4.9 mm**, worst first `C54`
+at 3.3 mm where it sits 44.5 today, `C127` 2.9 against 35.6, `C125` 2.6 against 33.0, `C108` 3.7 against
+31.7, `C89` 3.1 against 27.4. **Nine of the 31 would land inside the 3 mm rule and the other 22 just outside
+it**, which is a real improvement in loop area whatever the rule says.
+
+**SO A SECOND REACH WAS BUILT AND IT IS REFUSED ON MEASUREMENT.** `BYPASS_REACH`, defaulting to the limit so
+no board could move by it, let a capacitor that cannot sit inside 3 mm take the nearest free spot out to a
+declared distance. Board A's chain at `BYPASS_REACH=6.0`: **the placement gate still reads ALL PASS, and then
+`netlist_board` BLOCKS the chain at 2,134 of 2,148** with fourteen pads of seven capacitors, `C63` and `C64`
+among them, **on a net in the netlist and with no net on the board**. The reservation hands a part back
+through `placed` and the net assignment walks `placed`, so the more parts the reservation keeps, the more
+this shows; at HEAD it reserves nine and the chain reads 2,148 of 2,148. **The flag is reverted**, HEAD is
+untouched, and what is left behind is the question rather than a guess: how a reserved footprint's pads are
+handed to the net assignment, which is one reading of `gen_pcb_a3.py`'s `placed` map away.
+
+**The number to beat, recorded so the next attempt is measured against it**: at HEAD board A reads **9 of 40
+within 3.0 mm**, median 13.2 mm, worst 44.5; the census says a correct reservation would read 9 inside 3 mm
+and 22 more between 3 and 5.
