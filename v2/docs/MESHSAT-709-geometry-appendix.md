@@ -14462,3 +14462,37 @@ two paths and one line.
 
 **Not re-attempted in this stretch**: it wants the pre-router's own emitter rather than a hand-drawn jog, and
 four board A arms are in flight.
+
+### 32.292, 20 September 2026 09:28 CEST: one mkdir turned forty readings into board failures, and my first two fixes for it were both wrong
+
+Sweep 31 created `v2/vendor/fabricator` inside an otherwise empty `v2/vendor` so `stackup_gate` could read
+its transcribed record. It worked: **STK-001 recovers on A, C, D and E**, and reads FAIL on E5 and P, which
+is the `epsilon_r` 4.6 against the capability document's 4.5 that has been residue for their next generation
+since 18 September. **And that single mkdir cost forty other readings.**
+
+`emc_sheet`, `energy_chain` and `reliability` each guard their citation checks with `have_vendor`, which asks
+whether `v2/vendor` is a **directory**. With two of its subfolders present it answers yes, so every citation
+naming a file the sweep did not carry became a **FAIL**, its every finding reading *"which is not in this
+tree"*: forty verdicts across four tools, about four boards that had not changed, and the set's number read
+**55.3 percent** for a reason that was not the boards. Unlike an INCONCLUSIVE with a declared missing input,
+**a FAIL is protected by nothing**, so they displaced the good readings outright. Restored, and the number is
+**58.6 percent of 333** (195 verified, 40 failed, 98 inconclusive).
+
+**MY FIRST TWO FIXES WERE BOTH WRONG AND THE PROJECT'S OWN RULES SAID SO WITHIN THE MINUTE.**
+
+1. I made the three tools report an absent document as a NOTE instead of a failure. `test_energy_chain`
+   answered immediately: *"a rating whose basis file is not here is not a rating, it is a claim"*. Withdrawn.
+2. I then made `have_vendor` ask for the library's own index (`PARTS.md`) so a partial tree reads as an
+   absent one. The next rule answered: *"a folder that EXISTS and does not hold the file is a citation that
+   does not resolve, which is the thing the check is for. Only the absence of the library itself is
+   unjudgeable."* That is a deliberate decision, not an oversight. Withdrawn.
+
+**So no tool changes at all, and the whole fault is the sweep's**: it must never create a partial
+`v2/vendor`. It carries the **whole** library or none of it. `vendor_push.sh` stages all 305 documents once at
+`/root/vendor` on the box, the way `/root/localtools` and `/root/pml` are staged, and the sweep copies them in
+locally instead of carrying 448 MB over the link each time. **Sweep 32 is running on that footing** and is the
+first sweep that can check a citation rather than skip it.
+
+**The lesson is the one I keep being handed today**: a guard whose question is cheaper than the fact it
+guards will answer confidently about the wrong thing, and the way to find out is to let the project's own
+rules argue with the change rather than to reason about it.
