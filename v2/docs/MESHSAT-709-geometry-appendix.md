@@ -16057,3 +16057,24 @@ its own track keep-out over it the way VIN_RAW's has, plus the stitch each end n
 wants 1.10 mm of OUTER copper and In3 is half-ounce, so the inner width is the one to size from
 `track_current`, which is the same arithmetic decision 35 governs. **NOTHING APPLIED and deliberately so**:
 the placement under it moves with every arm in flight, and A86 is routing.
+
+**AND THE TWO ENDS ARE FOUR PADS APIECE, WHICH SIZES THE RUN (19:18 CEST).** Each slot rail has exactly four
+pads south of the converter row and they are a column directly under the rail's own island:
+
+| rail | the four southern pads, case |
+|---|---|
+| `+5V_S1` | R28 (-59.7, 33.7), C33 (-59.5, 37.3), C31 (-59.5, 41.8), C32 (-53.7, 41.8) |
+| `+5V_S2` | R32 (-43.7, 33.7), C39 (-43.5, 37.3), C37 (-43.5, 41.8), C38 (-37.7, 41.8) |
+| `+5V_S3` | R36 (-27.7, 33.7), C45 (-27.5, 37.3), C43 (-27.5, 41.8), C44 (-21.7, 41.8) |
+| `+5V_DEV` | R40 (-11.7, 33.7), C51 (-11.6, 37.3), C49 (-11.6, 41.8), C50 (-5.7, 41.8), **and U18 at (87.0, 29.8)**, C103, R100, U29 |
+
+**So each slot's run is one In3 polygon of about 22 mm from under its rail island down to its own capacitor
+bank**, on a column pitch of 16 mm, with its own track keep-out and a stitch at each end: the
+`VIN_RAW under the trunk` pattern four times.
+
+**AND THE DEVICE RAIL DOES NOT FIT THE SAME WAY, WHICH IS DECISION 35 ARRIVING HERE.** `+5V_DEV` carries
+6.00 A and In3 is half-ounce: IPC's inner curve wants about fifteen millimetres for that current, against the
+five or six a 16 mm column allows, where a slot rail's 2.50 A wants about six and fits. It also has to reach
+the EAST (U18, C103, R100 at x +85 to +104), which today's commit moved further east still. **So three of
+the four are a generator job on In3 and the fourth is the copper-weight question**, which is the same
+sentence board A's VBAT and VIN_RAW already carry.
