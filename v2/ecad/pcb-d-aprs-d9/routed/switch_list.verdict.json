@@ -14,17 +14,17 @@
  "evidence": [],
  "inputs": {
   "board": {
-   "path": "pcb-d-aprs-d9/pcb-d-aprs.kicad_pcb",
+   "path": "pcb-d-aprs.kicad_pcb",
    "sha256_16": "929bf82d2bf6eed4"
   },
   "declares": [],
   "intent": {
-   "path": "pcb-d-aprs-d9/out/pcb-d-aprs-intent.json",
-   "sha256_16": "37426cc3d42b504d"
+   "path": "out/pcb-d-aprs-intent.json",
+   "sha256_16": "629a166ea5d995e8"
   },
   "netlist": {
-   "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
-   "sha256_16": "7fb660a265937b5d"
+   "path": "out/pcb-d-aprs.net",
+   "sha256_16": "c8d2911c1028cefa"
   }
  },
  "missing_input": null,
@@ -36,10 +36,14 @@
  "rules": [],
  "tool": "switch_list",
  "tools": {
-  "git_head": "65e63b90c506",
-  "tools_tree_sha": "5c52e37dbea106fb"
+  "git_head": "",
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-19T12:40:18Z",
+ "ts": "2026-09-20T07:03:16Z",
  "verdict": "PASS",
- "version": "65e63b90c506"
+ "version": "unknown",
+ "writer": {
+  "file": "switch_list.py",
+  "sha16": "35a209116b20db97"
+ }
 }

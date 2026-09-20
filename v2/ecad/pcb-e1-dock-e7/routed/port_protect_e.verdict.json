@@ -2,32 +2,33 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "behind_an_active_part": 1,
+  "behind_an_active_part": 0,
   "declared": 3,
   "not_on_netlist": 0,
   "ports": 3,
-  "unprotected": 3
+  "unprotected": 5
  },
  "denominator": 8,
  "evidence": [
-  "J_DCIN (shore and vehicle DC entry from the MIL-DTL-38999 wall recep): 1 conductor(s) whose clamp is behind an active part: J_DCIN.1 on DC_IN: ACTIVE Q1 on DC_F (BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8 D)) sees the transient; CLAMP D1 on DC_P (SMCJ40A (input surge: 40 V standoff on a line specified to 36 V, clamping 64.5 V)) is behind it [DC_IN | F1 -> DC_F | Q1 -> DC_P | D1 on DC_P]",
+  "J_DCIN (shore and vehicle DC entry from the MIL-DTL-38999 wall recep): 1 conductor(s) reach a chip with nothing between: J_DCIN.1 on DC_IN",
+  "J_SOLAR (the solar input, a long outdoor lead by definition): 1 conductor(s) reach a chip with nothing between: J_SOLAR.1 on PV_IN",
   "J_POD (the outside climate and ultraviolet sensor pod, through an M): 3 conductor(s) reach a chip with nothing between: J_POD.1 on +3V3_E6, J_POD.3 on SDA1, J_POD.4 on SCL1"
  ],
  "inputs": {
   "board": "e",
   "netlist": {
    "path": "out/pcb-e1-dock.net",
-   "sha256_16": "2dc453575d108b74"
+   "sha256_16": "750167c99f344bdb"
   }
  },
  "missing_input": null,
- "note": "3 conductor(s) reach a semiconductor with nothing between, and 1 meet their clamp only through an active part, which therefore sees the transient itself",
+ "note": "5 conductor(s) reach a semiconductor with nothing between, and 0 meet their clamp only through an active part, which therefore sees the transient itself",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
    "TRN-001": "5d38bd6db7d4e11f"
   },
-  "rule_set_fingerprint": "4bc0aa24d836788d"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "TRN-001"
@@ -35,9 +36,13 @@
  "tool": "port_protect_e",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "6f7ef144f21449b3"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-18T08:56:35Z",
+ "ts": "2026-09-20T07:04:01Z",
  "verdict": "FAIL",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "port_protect.py",
+  "sha16": "4cd61075adea9def"
+ }
 }

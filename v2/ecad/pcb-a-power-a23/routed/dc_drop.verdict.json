@@ -34,9 +34,13 @@
  "tool": "dc_drop",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "269417e981c2b1e1"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-20T00:33:17Z",
+ "ts": "2026-09-20T06:53:40Z",
  "verdict": "FAIL",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "dc_drop.py",
+  "sha16": "47449c7dea27e3bd"
+ }
 }

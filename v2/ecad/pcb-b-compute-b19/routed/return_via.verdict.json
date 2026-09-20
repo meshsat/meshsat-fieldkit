@@ -36,7 +36,7 @@
   "rule_fingerprints": {
    "RET-004": "b6b1e4f327ce2d08"
   },
-  "rule_set_fingerprint": "82885961768537e2"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "RET-004"
@@ -44,9 +44,13 @@
  "tool": "return_via",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "02f6487e9fd66aa2"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-18T17:41:40Z",
+ "ts": "2026-09-20T06:59:11Z",
  "verdict": "FAIL",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "return_via.py",
+  "sha16": "d32e465cef7c5146"
+ }
 }

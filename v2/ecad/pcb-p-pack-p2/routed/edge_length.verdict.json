@@ -19,7 +19,7 @@
   "rule_fingerprints": {
    "SI-001": "e67c393563c5d8ce"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "SI-001"
@@ -27,9 +27,13 @@
  "tool": "edge_length",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:48:39Z",
+ "ts": "2026-09-20T07:04:27Z",
  "verdict": "INCONCLUSIVE",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "edge_length.py",
+  "sha16": "b07b7902c8edd4cf"
+ }
 }

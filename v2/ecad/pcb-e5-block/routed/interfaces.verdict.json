@@ -24,15 +24,19 @@
  "note": "every interface's impedance target and matching tolerance against the specification of the part that defines it, from pcb_interfaces.yaml; the sources are the hosts' and the modules' own datasheets; each board also carries its own interfaces_<letter> verdict, because a set-level result deciding every board's own is a defect this project has already met once",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [],
  "tool": "interfaces",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:49:10Z",
+ "ts": "2026-09-20T07:05:01Z",
  "verdict": "FAIL",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "interfaces.py",
+  "sha16": "3b33f2c1c6cba4f0"
+ }
 }

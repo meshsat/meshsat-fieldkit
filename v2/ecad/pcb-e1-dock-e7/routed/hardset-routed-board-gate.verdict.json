@@ -24,7 +24,7 @@
   },
   "drc": {
    "path": "out/pcb-e1-dock-drc.json",
-   "sha256_16": "a5612822cff2b847"
+   "sha256_16": "0f5b04d8bdfe93c7"
   }
  },
  "missing_input": null,
@@ -32,21 +32,23 @@
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
-   "RTE-001": "e5ef726cf2ea32dc",
    "RTE-002": "66d69a0c02e07594"
   },
-  "rule_set_fingerprint": "4bc0aa24d836788d"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
-  "RTE-001",
   "RTE-002"
  ],
  "tool": "hardset-routed-board-gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "6f7ef144f21449b3"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-18T08:56:09Z",
+ "ts": "2026-09-20T07:03:34Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "hardset.py",
+  "sha16": "af5a0e35d8ecd656"
+ }
 }

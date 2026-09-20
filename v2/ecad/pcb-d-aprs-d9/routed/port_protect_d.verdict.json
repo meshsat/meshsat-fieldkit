@@ -18,7 +18,7 @@
   "board": "d",
   "netlist": {
    "path": "out/pcb-d-aprs.net",
-   "sha256_16": "e76cb5c80970a6c4"
+   "sha256_16": "c8d2911c1028cefa"
   }
  },
  "missing_input": null,
@@ -28,7 +28,7 @@
   "rule_fingerprints": {
    "TRN-001": "5d38bd6db7d4e11f"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "TRN-001"
@@ -36,9 +36,13 @@
  "tool": "port_protect_d",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:47:38Z",
+ "ts": "2026-09-20T07:03:17Z",
  "verdict": "FAIL",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "port_protect.py",
+  "sha16": "4cd61075adea9def"
+ }
 }

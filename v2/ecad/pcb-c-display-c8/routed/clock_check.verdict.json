@@ -12,7 +12,7 @@
   "board": "c",
   "netlist": {
    "path": "out/pcb-c-display.net",
-   "sha256_16": "a2d7576d7df04c7c"
+   "sha256_16": "affdddbb550740b5"
   }
  },
  "missing_input": null,
@@ -22,7 +22,7 @@
   "rule_fingerprints": {
    "CLK-001": "87aa8102f151ef26"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "CLK-001"
@@ -30,9 +30,13 @@
  "tool": "clock_check",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:46:37Z",
+ "ts": "2026-09-20T07:02:11Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "clock_check.py",
+  "sha16": "cb891bbd50472f07"
+ }
 }

@@ -27,9 +27,13 @@
  "tool": "sensitive_nodes",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "ee08327049db3b40"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-19T08:14:27Z",
+ "ts": "2026-09-20T07:04:34Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "sensitive_nodes.py",
+  "sha16": "f52a2a103672601a"
+ }
 }

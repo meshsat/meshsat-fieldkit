@@ -5,6 +5,7 @@
   "measured_rails": 2,
   "no_via": 0,
   "over": 0,
+  "over_barrels": 0,
   "rails": 2
  },
  "denominator": 2,
@@ -25,7 +26,7 @@
   "rule_fingerprints": {
    "PI-003": "b8238bd8e5613e6c"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "PI-003"
@@ -33,9 +34,13 @@
  "tool": "via_current",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:46:32Z",
+ "ts": "2026-09-20T07:02:08Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "via_current.py",
+  "sha16": "ef29c5ca53e28b51"
+ }
 }

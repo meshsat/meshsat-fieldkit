@@ -3,9 +3,9 @@
  "applicable": true,
  "counts": {
   "below_floor": 0,
-  "classes": 4
+  "classes": 6
  },
- "denominator": 16,
+ "denominator": 24,
  "evidence": [],
  "inputs": {
   "board": {
@@ -14,7 +14,7 @@
   },
   "project": {
    "path": "pcb-e1-dock.kicad_pro",
-   "sha256_16": "7b6285f4b917ee2d"
+   "sha256_16": "9f3d11f497873838"
   }
  },
  "missing_input": null,
@@ -24,7 +24,7 @@
   "rule_fingerprints": {
    "IMP-002": "6ff7fffb9afe15d7"
   },
-  "rule_set_fingerprint": "4bc0aa24d836788d"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "IMP-002"
@@ -32,9 +32,13 @@
  "tool": "class_floor",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "6f7ef144f21449b3"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-18T08:56:19Z",
+ "ts": "2026-09-20T07:03:43Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "class_floor.py",
+  "sha16": "c803025504a041b9"
+ }
 }

@@ -3,9 +3,9 @@
  "applicable": true,
  "counts": {
   "fail": 0,
-  "pass": 4
+  "pass": 5
  },
- "denominator": 4,
+ "denominator": 5,
  "evidence": [],
  "inputs": {
   "board": {
@@ -28,9 +28,13 @@
  "tool": "intent_rails",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c80454a737a87c01"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-18T18:44:42Z",
+ "ts": "2026-09-20T07:04:18Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "intent_checks.py",
+  "sha16": "41cd5935c5f46f0b"
+ }
 }

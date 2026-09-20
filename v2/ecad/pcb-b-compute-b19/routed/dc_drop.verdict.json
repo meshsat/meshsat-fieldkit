@@ -2,12 +2,12 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "density_missed": 9,
-  "met": 31,
+  "density_missed": 10,
+  "met": 33,
   "missed": 5,
   "undeclared": 0
  },
- "denominator": 36,
+ "denominator": 38,
  "evidence": [
   "MISSED +1V0_S1 on the voltage drop: 6.89% of 1.0 V",
   "MISSED +3V3_S3A on the voltage drop: 10.09% of 3.3 V",
@@ -22,13 +22,13 @@
   }
  },
  "missing_input": null,
- "note": "the voltage drop against each rail's budget (cell 0.50 mm, default 2%); the current capacity is judged separately in dc_density.verdict.json, where 9 rail(s) missed",
+ "note": "the voltage drop against each rail's budget (cell 0.50 mm, default 2%); the current capacity is judged separately in dc_density.verdict.json, where 10 rail(s) missed",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
    "PI-002": "ec24beac692a01be"
   },
-  "rule_set_fingerprint": "82885961768537e2"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "PI-002"
@@ -36,9 +36,13 @@
  "tool": "dc_drop",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "d6d53e1e2108b7bd"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-18T17:24:00Z",
+ "ts": "2026-09-20T06:58:56Z",
  "verdict": "FAIL",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "dc_drop.py",
+  "sha16": "47449c7dea27e3bd"
+ }
 }

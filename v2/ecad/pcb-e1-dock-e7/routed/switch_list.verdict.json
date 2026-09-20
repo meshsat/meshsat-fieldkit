@@ -3,7 +3,7 @@
  "applicable": true,
  "counts": {
   "declared": 6,
-  "excluded_by_intent": 6,
+  "excluded_by_intent": 15,
   "nets": 118,
   "poured": 6,
   "shaped": 2,
@@ -14,7 +14,7 @@
  "evidence": [],
  "inputs": {
   "board": {
-   "path": "pcb-e1-dock-e7/pcb-e1-dock.kicad_pcb",
+   "path": "pcb-e1-dock.kicad_pcb",
    "sha256_16": "a462ac2620b9b8d3"
   },
   "declares": [
@@ -26,12 +26,12 @@
    "TRK_LSENSE"
   ],
   "intent": {
-   "path": "pcb-e1-dock-e7/out/pcb-e1-dock-intent.json",
-   "sha256_16": "7fc90f451c1f9a98"
+   "path": "out/pcb-e1-dock-intent.json",
+   "sha256_16": "f56e4552bf933fc5"
   },
   "netlist": {
-   "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
-   "sha256_16": "80e7bab1841dea83"
+   "path": "out/pcb-e1-dock.net",
+   "sha256_16": "750167c99f344bdb"
   }
  },
  "missing_input": null,
@@ -43,10 +43,14 @@
  "rules": [],
  "tool": "switch_list",
  "tools": {
-  "git_head": "65e63b90c506",
-  "tools_tree_sha": "5c52e37dbea106fb"
+  "git_head": "",
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-19T12:40:18Z",
+ "ts": "2026-09-20T07:03:59Z",
  "verdict": "PASS",
- "version": "65e63b90c506"
+ "version": "unknown",
+ "writer": {
+  "file": "switch_list.py",
+  "sha16": "35a209116b20db97"
+ }
 }

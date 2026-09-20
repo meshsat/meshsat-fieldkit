@@ -17,17 +17,17 @@
  ],
  "inputs": {
   "board": {
-   "path": "pcb-c-display-c8/pcb-c-display.kicad_pcb",
+   "path": "pcb-c-display.kicad_pcb",
    "sha256_16": "2a273803757c68fb"
   },
   "declares": null,
   "intent": {
-   "path": "pcb-c-display-c8/out/pcb-c-display-intent.json",
-   "sha256_16": "541ec4863d3e6683"
+   "path": "out/pcb-c-display-intent.json",
+   "sha256_16": "3a4c82b18c1c123d"
   },
   "netlist": {
-   "path": "pcb-c-display-c8/out/pcb-c-display.net",
-   "sha256_16": "8e62e0a7a9c2f6f2"
+   "path": "out/pcb-c-display.net",
+   "sha256_16": "affdddbb550740b5"
   }
  },
  "missing_input": null,
@@ -39,10 +39,14 @@
  "rules": [],
  "tool": "switch_list",
  "tools": {
-  "git_head": "65e63b90c506",
-  "tools_tree_sha": "5c52e37dbea106fb"
+  "git_head": "",
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-19T12:40:18Z",
+ "ts": "2026-09-20T07:02:18Z",
  "verdict": "FAIL",
- "version": "65e63b90c506"
+ "version": "unknown",
+ "writer": {
+  "file": "switch_list.py",
+  "sha16": "35a209116b20db97"
+ }
 }

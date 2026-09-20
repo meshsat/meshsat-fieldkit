@@ -24,7 +24,7 @@
   "rule_fingerprints": {
    "IMP-002": "6ff7fffb9afe15d7"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "IMP-002"
@@ -32,9 +32,13 @@
  "tool": "class_floor",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:48:34Z",
+ "ts": "2026-09-20T07:04:21Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "class_floor.py",
+  "sha16": "c803025504a041b9"
+ }
 }

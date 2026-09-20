@@ -43,9 +43,13 @@
  "tool": "via_current",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "0e1ce7104d273d07"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-20T00:04:28Z",
+ "ts": "2026-09-20T07:04:25Z",
  "verdict": "FAIL",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "via_current.py",
+  "sha16": "ef29c5ca53e28b51"
+ }
 }

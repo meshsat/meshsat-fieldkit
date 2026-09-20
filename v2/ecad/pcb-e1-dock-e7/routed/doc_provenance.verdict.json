@@ -9,26 +9,28 @@
  "denominator": 0,
  "evidence": [],
  "inputs": {
-  "release": "/root/erf17k/v2/release/revA"
+  "release": {
+   "path": "/root/sweep30/v2/release/revA",
+   "sha256_16": null
+  }
  },
- "missing_input": "this tree holds no order folder with a document that asserts hardware numbers, so no document was read: /root/erf17k/v2/release/revA/order",
+ "missing_input": "this tree holds no order folder with a document that asserts hardware numbers, so no document was read: /root/sweep30/v2/release/revA/order",
  "note": "no deliverable folder holds a document that asserts hardware numbers",
  "policy": {
   "hard_types": 15,
-  "rule_fingerprints": {
-   "DOC-002": "ccf98f30a38361f7"
-  },
-  "rule_set_fingerprint": "4bc0aa24d836788d"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
- "rules": [
-  "DOC-002"
- ],
+ "rules": [],
  "tool": "doc_provenance",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "6f7ef144f21449b3"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-18T08:56:41Z",
+ "ts": "2026-09-20T07:04:07Z",
  "verdict": "INCONCLUSIVE",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "doc_provenance.py",
+  "sha16": "f2e2ea02b8039562"
+ }
 }

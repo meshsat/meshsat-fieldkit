@@ -14,22 +14,26 @@
   "board": "b",
   "netlist": {
    "path": "out/pcb-b-compute.net",
-   "sha256_16": "69e013811add8b86"
+   "sha256_16": "874a729a5f076ae7"
   }
  },
  "missing_input": null,
  "note": "every declared external conductor meets a protection part before a chip",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [],
  "tool": "port_protect",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:44:34Z",
+ "ts": "2026-09-20T06:59:41Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "port_protect.py",
+  "sha16": "4cd61075adea9def"
+ }
 }

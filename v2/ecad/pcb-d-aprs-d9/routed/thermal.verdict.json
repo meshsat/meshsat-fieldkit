@@ -25,7 +25,7 @@
   "rule_fingerprints": {
    "THM-001": "c2ee6d9135d5bf83"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "THM-001"
@@ -33,9 +33,13 @@
  "tool": "thermal",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:47:28Z",
+ "ts": "2026-09-20T07:03:07Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "thermal.py",
+  "sha16": "5b8aade8ce28be00"
+ }
 }

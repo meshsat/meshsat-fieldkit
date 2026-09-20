@@ -4,25 +4,17 @@
  "counts": {
   "assignments": 12,
   "boards": 7,
-  "disagreements": 16
+  "disagreements": 8
  },
  "denominator": 12,
  "evidence": [
-  "A USB2_CM5: the class USB carries no impedance target and USB2_CM5 asks for 90 ohm",
   "A USB2_CM5: this project judges intra-pair mismatch at 1.00 mm and USB2_CM5 asks for 0.15 mm, which is 6.7 times tighter",
-  "B PCIE_CM5: the class USB carries no impedance target and PCIE_CM5 asks for 90 ohm",
   "B PCIE_CM5: this project judges intra-pair mismatch at 1.00 mm and PCIE_CM5 asks for 0.10 mm, which is 10.0 times tighter",
-  "B PCIE_M2_MODULE: the class USB carries no impedance target and PCIE_M2_MODULE asks for 85 ohm",
   "B PCIE_M2_MODULE: this project judges intra-pair mismatch at 1.00 mm and PCIE_M2_MODULE asks for 0.70 mm, which is 1.4 times tighter",
-  "B PCIE_M2_MODULE: the class USB carries no impedance target and PCIE_M2_MODULE asks for 85 ohm",
   "B PCIE_M2_MODULE: this project judges intra-pair mismatch at 1.00 mm and PCIE_M2_MODULE asks for 0.70 mm, which is 1.4 times tighter",
-  "B USB3_CM5: the class USB carries no impedance target and USB3_CM5 asks for 90 ohm",
   "B USB3_CM5: this project judges intra-pair mismatch at 1.00 mm and USB3_CM5 asks for 0.10 mm, which is 10.0 times tighter",
-  "B USB2_CM5: the class USB carries no impedance target and USB2_CM5 asks for 90 ohm",
   "B USB2_CM5: this project judges intra-pair mismatch at 1.00 mm and USB2_CM5 asks for 0.15 mm, which is 6.7 times tighter",
-  "B ETHERNET_CM5: the class DIFF100 carries no impedance target and ETHERNET_CM5 asks for 100 ohm",
   "B ETHERNET_CM5: this project judges intra-pair mismatch at 1.00 mm and ETHERNET_CM5 asks for 0.15 mm, which is 6.7 times tighter",
-  "B HDMI_CM5: the class DIFF100 carries no impedance target and HDMI_CM5 asks for 100 ohm",
   "B HDMI_CM5: this project judges intra-pair mismatch at 1.00 mm and HDMI_CM5 asks for 0.15 mm, which is 6.7 times tighter"
  ],
  "inputs": {
@@ -32,15 +24,19 @@
  "note": "every interface's impedance target and matching tolerance against the specification of the part that defines it, from pcb_interfaces.yaml; the sources are the hosts' and the modules' own datasheets; each board also carries its own interfaces_<letter> verdict, because a set-level result deciding every board's own is a defect this project has already met once",
  "policy": {
   "hard_types": 15,
-  "rule_set_fingerprint": "4bc0aa24d836788d"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [],
  "tool": "interfaces",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "6f7ef144f21449b3"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-18T08:56:41Z",
+ "ts": "2026-09-20T07:04:07Z",
  "verdict": "FAIL",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "interfaces.py",
+  "sha16": "3b33f2c1c6cba4f0"
+ }
 }

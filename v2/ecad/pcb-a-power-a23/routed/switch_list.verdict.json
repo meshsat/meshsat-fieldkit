@@ -3,7 +3,7 @@
  "applicable": true,
  "counts": {
   "declared": 23,
-  "excluded_by_intent": 14,
+  "excluded_by_intent": 28,
   "nets": 272,
   "poured": 15,
   "shaped": 17,
@@ -14,7 +14,7 @@
  "evidence": [],
  "inputs": {
   "board": {
-   "path": "pcb-a-power-a23/pcb-a-power.kicad_pcb",
+   "path": "pcb-a-power.kicad_pcb",
    "sha256_16": "58e26c67987b1daa"
   },
   "declares": [
@@ -29,12 +29,12 @@
    "POE_CS"
   ],
   "intent": {
-   "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
-   "sha256_16": "baeb3184f1886070"
+   "path": "out/pcb-a-power-intent.json",
+   "sha256_16": "166601a47b0f59e0"
   },
   "netlist": {
-   "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256_16": "8a74660e90e5616c"
+   "path": "out/pcb-a-power.net",
+   "sha256_16": "5b6c57bc930bcdde"
   }
  },
  "missing_input": null,
@@ -46,10 +46,14 @@
  "rules": [],
  "tool": "switch_list",
  "tools": {
-  "git_head": "65e63b90c506",
-  "tools_tree_sha": "5c52e37dbea106fb"
+  "git_head": "",
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-19T12:40:17Z",
+ "ts": "2026-09-20T06:53:59Z",
  "verdict": "PASS",
- "version": "65e63b90c506"
+ "version": "unknown",
+ "writer": {
+  "file": "switch_list.py",
+  "sha16": "35a209116b20db97"
+ }
 }

@@ -13,7 +13,7 @@
   "board": "b",
   "netlist": {
    "path": "out/pcb-b-compute.net",
-   "sha256_16": "5786542894bd67a5"
+   "sha256_16": "874a729a5f076ae7"
   }
  },
  "missing_input": null,
@@ -23,7 +23,7 @@
   "rule_fingerprints": {
    "SCH-005": "9993ce195b935d6d"
   },
-  "rule_set_fingerprint": "4bc0aa24d836788d"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "SCH-005"
@@ -31,9 +31,13 @@
  "tool": "pin_map_lands_b",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T23:01:05Z",
+ "ts": "2026-09-20T06:59:41Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "pin_map_lands.py",
+  "sha16": "a3de0a4c771355e0"
+ }
 }

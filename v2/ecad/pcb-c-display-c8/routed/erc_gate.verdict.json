@@ -22,7 +22,7 @@
   "rule_fingerprints": {
    "SCH-001": "64784cfeedc67195"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "SCH-001"
@@ -30,9 +30,13 @@
  "tool": "erc_gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:46:11Z",
+ "ts": "2026-09-20T07:01:45Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "erc_gate.py",
+  "sha16": "e7a0ae08368bb403"
+ }
 }

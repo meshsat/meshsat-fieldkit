@@ -1,41 +1,40 @@
 {
  "advisory": false,
  "applicable": true,
- "counts": {
-  "compared": 16,
-  "copper_layers": 4,
-  "disagreements": 0
- },
- "denominator": 16,
+ "counts": {},
+ "denominator": 0,
  "evidence": [
-  "PCB-E1-DOCK-E6: JLC04161H-7628 named"
+  "the document the named stack was transcribed from is not in the tree (v2/vendor/fabricator/jlcpcb-impedance-stackups-2026-09-16.md)"
  ],
  "inputs": {
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
    "sha256_16": "a462ac2620b9b8d3"
   },
-  "declared": "JLC04161H-7628",
-  "document": "v2/vendor/fabricator/jlcpcb-impedance-stackups-2026-09-16.md"
+  "declared": "JLC04161H-7628"
  },
- "missing_input": null,
- "note": "the board's stackup is the one it declares, property by property, and the order paperwork names it",
+ "missing_input": "the document the named stack was transcribed from is not in the tree (v2/vendor/fabricator/jlcpcb-impedance-stackups-2026-09-16.md)",
+ "note": "the document the named stack was transcribed from is not in the tree (v2/vendor/fabricator/jlcpcb-impedance-stackups-2026-09-16.md)",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
    "STK-001": "e90a87c776209eb2"
   },
-  "rule_set_fingerprint": "82885961768537e2"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "STK-001"
  ],
  "tool": "stackup_gate",
  "tools": {
-  "git_head": "3dc86a3c28cf",
-  "tools_tree_sha": "b2cb584fa36e53f6"
+  "git_head": "",
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-18T15:23:09Z",
- "verdict": "PASS",
- "version": "3dc86a3c28cf+dirty"
+ "ts": "2026-09-20T07:03:48Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown",
+ "writer": {
+  "file": "stackup_gate.py",
+  "sha16": "b1b00043dbffcd6b"
+ }
 }

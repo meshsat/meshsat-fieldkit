@@ -20,7 +20,7 @@
   "rule_fingerprints": {
    "RET-003": "829568c8874fe7b6"
   },
-  "rule_set_fingerprint": "82885961768537e2"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "RET-003"
@@ -28,9 +28,13 @@
  "tool": "return_stitch",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "02f6487e9fd66aa2"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-18T17:41:37Z",
+ "ts": "2026-09-20T06:59:08Z",
  "verdict": "INCONCLUSIVE",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "ref_change.py",
+  "sha16": "09262699e6f3c692"
+ }
 }

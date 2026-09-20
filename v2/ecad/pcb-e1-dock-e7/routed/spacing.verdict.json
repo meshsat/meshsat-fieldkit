@@ -4,11 +4,22 @@
  "counts": {
   "below_limit": 0,
   "closest_mm": 0.1287,
-  "hv_nets": 1,
-  "pairs_measured": 3254
+  "hv_nets": 8,
+  "pairs_measured": 10759
  },
- "denominator": 3254,
+ "denominator": 10759,
  "evidence": [
+  "0.129 mm DC_HS to GND_V on B.Cu at (45.9, 205.4)",
+  "0.129 mm DC_HS to GND_V on B.Cu at (45.9, 206.7)",
+  "0.129 mm DC_HS to GND_V on B.Cu at (45.9, 208.0)",
+  "0.129 mm DC_P to U3_VCAP on F.Cu at (100.1, 203.2)",
+  "0.129 mm DC_P to U3_VCAP on F.Cu at (102.3, 201.0)",
+  "0.129 mm DC_P to U3_VCAP on F.Cu at (102.3, 201.0)",
+  "0.129 mm PV_P to GND on B.Cu at (137.3, 201.9)",
+  "0.129 mm PV_P to GND on B.Cu at (197.0, 196.6)",
+  "0.129 mm PV_P to TRK_FBOUT on B.Cu at (192.1, 194.7)",
+  "0.129 mm PV_P to TRK_SW1 on B.Cu at (147.8, 198.6)",
+  "0.129 mm PV_P to TRK_VC on B.Cu at (177.6, 194.7)",
   "0.129 mm VIN_RAW to GND on B.Cu at (150.4, 185.1)",
   "0.129 mm VIN_RAW to GND on B.Cu at (150.4, 185.1)",
   "0.129 mm VIN_RAW to GND on B.Cu at (150.4, 185.7)",
@@ -17,18 +28,7 @@
   "0.129 mm VIN_RAW to GND on B.Cu at (203.4, 190.4)",
   "0.129 mm VIN_RAW to GND on B.Cu at (203.4, 190.4)",
   "0.129 mm VIN_RAW to GND on B.Cu at (203.4, 190.4)",
-  "0.129 mm VIN_RAW to GND on B.Cu at (203.4, 190.4)",
-  "0.129 mm VIN_RAW to SCL0 on B.Cu at (209.6, 191.2)",
-  "0.129 mm VIN_RAW to TRK_OUT on B.Cu at (223.0, 195.4)",
-  "0.129 mm VIN_RAW to U4_VCAP on F.Cu at (212.6, 194.5)",
-  "0.129 mm VIN_RAW to WATER_SENSE on B.Cu at (121.1, 207.0)",
-  "0.129 mm VIN_RAW to WATER_SENSE on B.Cu at (208.9, 190.4)",
-  "0.131 mm VIN_RAW to SHORE_INHIBIT on B.Cu at (113.0, 196.5)",
-  "0.132 mm VIN_RAW to DC_HS on B.Cu at (111.6, 205.2)",
-  "0.132 mm VIN_RAW to DC_HS on B.Cu at (111.6, 205.2)",
-  "0.133 mm VIN_RAW to DC_HS on B.Cu at (113.0, 196.5)",
-  "0.133 mm VIN_RAW to DC_HS on B.Cu at (113.0, 196.5)",
-  "0.133 mm VIN_RAW to DC_HS on B.Cu at (113.0, 196.5)"
+  "0.129 mm VIN_RAW to GND on B.Cu at (203.4, 190.4)"
  ],
  "inputs": {
   "board": {
@@ -45,7 +45,7 @@
   "rule_fingerprints": {
    "ISO-001": "667f32d6b8d7a34b"
   },
-  "rule_set_fingerprint": "4bc0aa24d836788d"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "ISO-001"
@@ -53,9 +53,13 @@
  "tool": "spacing",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "6f7ef144f21449b3"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-18T08:56:26Z",
+ "ts": "2026-09-20T07:03:51Z",
  "verdict": "INCONCLUSIVE",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "spacing.py",
+  "sha16": "d58ce94c56df4d68"
+ }
 }

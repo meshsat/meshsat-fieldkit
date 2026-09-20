@@ -1,0 +1,40 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "folders": 0
+ },
+ "denominator": 0,
+ "evidence": [],
+ "inputs": {
+  "declares": "A32",
+  "release": {
+   "path": "/root/sweep30/v2/release/revA",
+   "sha256_16": null
+  }
+ },
+ "missing_input": "board A has no order folder in this tree, so no document about it was read",
+ "note": "DOC-002 asks about the document that describes THIS board",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "DOC-002": "ccf98f30a38361f7"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "DOC-002"
+ ],
+ "tool": "doc_provenance_a",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "b7ecfcffbc2fef22"
+ },
+ "ts": "2026-09-20T06:54:07Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown",
+ "writer": {
+  "file": "doc_provenance.py",
+  "sha16": "f2e2ea02b8039562"
+ }
+}

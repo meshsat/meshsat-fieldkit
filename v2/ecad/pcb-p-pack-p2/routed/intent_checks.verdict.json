@@ -3,10 +3,10 @@
  "applicable": true,
  "counts": {
   "fail": 6,
-  "pass": 31,
+  "pass": 32,
   "unclaimed": 0
  },
- "denominator": 37,
+ "denominator": 38,
  "evidence": [
   "return path under FUSE (Default, UNDECLARED so judged at the strictest bar): 11.1 of 17.6 mm without a plane on a neighbouring layer (limit 10.0)",
   "return path under PACK_F (Default, UNDECLARED so judged at the strictest bar): 33.1 of 34.5 mm without a plane on a neighbouring layer (limit 10.0)",
@@ -31,9 +31,13 @@
  "tool": "intent_checks",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c80454a737a87c01"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-18T18:44:42Z",
+ "ts": "2026-09-20T07:04:18Z",
  "verdict": "FAIL",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "intent_checks.py",
+  "sha16": "41cd5935c5f46f0b"
+ }
 }

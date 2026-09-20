@@ -3,9 +3,9 @@
  "applicable": true,
  "counts": {
   "fail": 0,
-  "pass": 19
+  "pass": 20
  },
- "denominator": 19,
+ "denominator": 20,
  "evidence": [],
  "inputs": {
   "board": {
@@ -28,9 +28,13 @@
  "tool": "intent_decoupling",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c80454a737a87c01"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-18T18:46:38Z",
+ "ts": "2026-09-20T07:03:40Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "intent_checks.py",
+  "sha16": "41cd5935c5f46f0b"
+ }
 }

@@ -21,7 +21,7 @@
   "rule_fingerprints": {
    "MEC-001": "b6c4a6962ac81e88"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "MEC-001"
@@ -29,9 +29,13 @@
  "tool": "check_pcb_e5",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:48:54Z",
+ "ts": "2026-09-20T07:04:44Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "check_pcb_e5.py",
+  "sha16": "b6a78f8871e67d66"
+ }
 }

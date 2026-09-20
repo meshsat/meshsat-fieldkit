@@ -18,7 +18,7 @@
   "rule_fingerprints": {
    "PWR-003": "797d38a9e68a76ac"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "PWR-003"
@@ -26,9 +26,13 @@
  "tool": "energy_chain_e",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:47:42Z",
+ "ts": "2026-09-20T07:03:24Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "energy_chain.py",
+  "sha16": "73b908eb6b002690"
+ }
 }

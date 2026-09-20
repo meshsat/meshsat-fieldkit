@@ -19,7 +19,7 @@
   "rule_fingerprints": {
    "RF-001": "02283178003e5772"
   },
-  "rule_set_fingerprint": "4bc0aa24d836788d"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "RF-001"
@@ -27,9 +27,13 @@
  "tool": "rf_line",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "6f7ef144f21449b3"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-18T08:56:35Z",
+ "ts": "2026-09-20T07:04:00Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "rf_line.py",
+  "sha16": "31c2940b4455c9da"
+ }
 }

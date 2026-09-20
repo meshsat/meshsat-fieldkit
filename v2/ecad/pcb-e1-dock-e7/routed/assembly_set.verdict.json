@@ -21,7 +21,7 @@
   "rule_fingerprints": {
    "DFA-001": "143ef1ed2ab833e9"
   },
-  "rule_set_fingerprint": "4bc0aa24d836788d"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "DFA-001"
@@ -29,9 +29,13 @@
  "tool": "assembly_set",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "6f7ef144f21449b3"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-18T08:56:35Z",
+ "ts": "2026-09-20T07:04:00Z",
  "verdict": "INCONCLUSIVE",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "assembly_set.py",
+  "sha16": "03299094353eb15f"
+ }
 }

@@ -20,7 +20,7 @@
   },
   "netlist": {
    "path": "out/pcb-b-compute.net",
-   "sha256_16": "69e013811add8b86"
+   "sha256_16": "874a729a5f076ae7"
   }
  },
  "missing_input": null,
@@ -30,7 +30,7 @@
   "rule_fingerprints": {
    "SCH-002": "a7f873603faeb223"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "SCH-002"
@@ -38,9 +38,13 @@
  "tool": "netlist_board",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:43:56Z",
+ "ts": "2026-09-20T06:59:01Z",
  "verdict": "FAIL",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "netlist_board.py",
+  "sha16": "309086c5bd63d252"
+ }
 }
