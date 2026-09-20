@@ -14707,3 +14707,75 @@ stands**: board D's generator at HEAD produces a board its own chain refuses, in
 of the cluster; the stage that lays the via is the fanout; and the question to ask of it is whether its
 via-site test uses the net **class's** clearance or the board minimum — this morning's `prefanout` finding in
 the **via** half rather than the stub half.
+
+### 32.299
+
+**20 September 2026, 11:40 CEST. A GUARD THAT ASKED A CIRCLE WHERE THE FACT IS A POLYGON, A DISK THAT FILLED
+AND TOOK A FIVE-HOUR ROUTE'S FINISH WITH IT, AND BOARD A'S BEST BOARD.**
+
+**(1) 32.298's LAST QUESTION IS ANSWERED AND MY OWN HAND-OFF HAD REGRESSED FROM IT.** That section ended by
+naming the FANOUT as the stage that lays board D's blocking via and asking whether its via-site test uses the
+net class's clearance or the board minimum. An hour later I wrote a hand-off into `boards/d.json` saying the
+via is the GROUND GRID's, established by counting: the placed board carries 74 vias, the pre-lay snapshot
+1,452, and the 1,378 between are the grid's. **That count has TWO WRITERS inside its window.** Board D
+declares `fanout_nets = "GND"`, so `prefanout` lays a via per ground pad in the same stretch, and attributing
+the whole window to one of them is the same defect this record already carries twice for board D. The
+appendix was right and the newer note was wrong.
+
+**THE METHOD THAT SETTLED IT IN THREE MINUTES: run the stages one at a time with a DRC after each.** On board
+D's own placed board: placed **hard 2** (two same-part mask items, 85 vias), prefanout **hard 3** with the
+clearance (175 vias), gnd_grid **hard 4** with 1,312 placed and 31 removed by its own DRC and **the clearance
+UNCHANGED**, rail_barrels nothing. So both of gnd_grid's guards behaved correctly and `_own_hard` was right
+not to offer a via it never placed; the three candidates the hand-off named were three candidates too many.
+
+**THE CAUSE.** Both of `prefanout`'s in-pad fallbacks measured CENTRE TO CENTRE against `qr + VIA_D/2 +
+INPAD_CLR`, with `qr = max(size.x, size.y) / 2` used as a CIRCLE radius. A circle of a rectangle's long
+half-dimension does not contain its corners and overhangs its short sides, so it is **too lenient on the
+diagonal and too strict on the short axis**. D1 is a 2.500 x 2.300 SMB land; the via sits at the centre of C9
+pad 2, **1.9313 mm away on the diagonal against a demand of 1.6750**, accepted, and the real gap from the
+ring to that copper is **0.1137 mm** against the PWR class's 0.1270, which KiCad reports as 0.1115. The same
+file's `_crosses` has judged against the pad's POLYGON since this morning, for this reason, on the other half
+of the same tool. The second fallback had no other-net test of any kind: it asked only whether a via was
+already within `VIA_D + 0.35`, so a fine part's exposed-pad via was laid against no pads, no tracks, no rule
+areas and no board edge.
+
+**MEASURED, ONE VARIABLE, THE SAME PLACED BOARD, PER BOARD.** Board D **90 vias (5 in the pad) and 15 pads
+skipped becomes 93 (8) and 12**, hard **3 {solder_mask_bridge 2, clearance 1} becomes 2 {solder_mask_bridge
+2}**; board C **60 (1) and 4 becomes 61 (2) and 3**, hard 0 both; board P **17 (1) and 0 both ways**, hard 0
+both, so it is free there and changes nothing. Boards A and B are running. **The fix GAINS vias because the
+circle was wrong in both directions**, and board D's whole chain goes from `PREROUTE-DONE BLOCK 1` to
+**`PREROUTE-DONE OK`** at hard 0. `tests/test_fanout_in_pad.py` carries four rules and the first fails on the
+tree it was written against. **Fifth instance this week of one shape: a guard whose question is cheaper than
+the fact it guards.**
+
+**(2) THE HUB'S DISK WAS 100 PERCENT FULL AND THAT IS WHY THE BOXES LOOK IDLE.** Asked why two rented boxes
+were not running more in parallel, the measurement is `60G used, 184K free`, with load **6.00 of 96 threads**
+and 106 GiB of memory free: the cores were never the limit and neither was memory. Four board measurements
+died on `No space left on device` and printed nothing, because a driver that greps its chain into a `tail`
+shows nothing until the pipe closes, and **A54's finish crashed at its KEEP step** after running every closer
+(`[Errno 28] ... out/routeflow/...`), which ended routeflow `TOOL_CRASH` and left its landing driver correctly
+reporting no frozen tree. Nothing was lost: the closers' own board was on disk and was read where it stood.
+**Thirty-six gigabytes of dead campaign trees were removed** after checking that no live process named any of
+them, and the structural half is that **an arm tree was a whole-repo copy at 810 MB of which 636 MB is
+`v2/vendor`**, the 305-document library a chain never opens. `stage_chain.sh` builds a chain tree from the
+tools, the footprint library, one project directory and the sibling netlists the contract gate needs: **23 to
+53 MB**, so where one arm fitted, ten fit. A SWEEP still takes the whole library, because sweep 31's own
+lesson is that it carries all of it or none.
+
+**(3) A54 IS BOARD A'S BEST BOARD AND THE FOUR CHARGER NETS ARE CLOSED.** Finished board sha256
+`a05dc4ebeaf89ff5`: **hard 0 and FIVE open connections**, against A48's fifteen, A47's and A49's sixteen and
+A50's seventeen, from a router that left twenty. **`/CHG_ILIM`, `/CH_ACN_F`, `/CH_SRN_F` and `/CH_SW2` are all
+closed**, where three frozen boards and every closer configuration this project has tried left them open, and
+the adoption line written before the arm landed said in advance that this would be the escape-row fix
+answering. The five that remain are all power rails (`/+5V_DEV`, `/+5V_S1`, `/+5V_S2`, `/S1_OUT`, `/S3_OUT`).
+**It is NOT adopted**: A32 is 0 and 0 and the line says zero unrouted or nothing.
+
+**AND IT BUYS NOTHING FOR THE SENSE, which is the sharper half.** ANA-001 reads **FAIL 8 of 24** against
+A47's seven. Read with today's fourteen-row declaration rather than the arm tree's four, **eleven of thirteen
+measurable Kelvin taps are not Kelvin connections**: `PD_ISNS_N` **215.585 mV of a 50.0 mV full scale, 431.2
+percent**, where the same tap on the committed A32 reads 99.642 mV and 199.3, so the USB-C outlet's low-side
+sense is **four times worse once a router lays this board's copper**; then CH_SRP_F 69.5 percent, CH_ACN_F
+57.9, FE_ISNS_P 50.5, CH_ACP_F 47.2, PD_ISNS_P 10.4, POE_ISNS_N 9.4, HF_ISNS_P 3.7, FE_ISNS_N 2.6, PA_ISNS_N
+1.2, POE_ISNS_P 1.2, and HF_ISNS_N passes at 0.5. **That ranking is PI-001's ranking**, which is 08:14's
+finding confirmed on routed copper instead of on a placement. Board A's next real piece of layout is
+unchanged and it is TI item 7, the four locked Kelvin runs from each shunt pad's centre to its filter.
