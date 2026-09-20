@@ -13373,3 +13373,32 @@ the two cases that matter (3600 leaves a search and a fill inside the cap; 900 s
 fifty-five minutes and closed **none**, where the two-layer arm on the same frozen board had offered four and
 closed one inside eight. **Board A's declaration change now rests on two phases**, A48's clean one-variable
 answer and A47's, rather than on one.
+
+### 32.261, 20 September 2026 05:19 CEST: the layer finding on a second phase, and it is larger there
+
+A47's frozen board (`d15e230498e0c0fd`, sixteen open), one variable, board A's own finish configuration, the
+map cache on in both:
+
+| | **four layers** | **TWO layers** |
+|---|---|---|
+| exit | **124**, cut at the backstop | **0** |
+| wall | 60 min | **13 min** |
+| nets offered | **2** | **16, all of them** |
+| closed | **0** | **10** |
+| refused | 0 | 4 |
+| board | 16 open in, **16 out** | 16 in, **8 OUT** |
+
+**On this phase the four-layer configuration achieved nothing at all and two layers halved the open count in a
+fifth of the time.** A48's arm read 6 closures against 8 and could be argued about; this one reads **0 against
+10**. **Board A's declaration change rests on two phases now**, which is what it was owed: a board-wide
+declaration had been changed on one board's measurement.
+
+**AND THE FOUR REFUSALS ARE THE SAME FOUR CHARGER NETS, BY NAME, ON EVERY READING THIS SET HAS**: `/CHG_ILIM`,
+`/CH_ACN_F`, `/CH_SRN_F`, `/CH_SW2`, each one pad to track. A48's two-layer arm refused four and named these;
+A50's direct closer tried each of them among its nine and took none; A47 refuses the same four. **Three
+independent boards, three independent closers, one set of four connections, and every one of them is the
+charger's** (32.230: the shunts sit at the opposite end of the block from the FETs their own nets feed). It is
+a placement item and no closer configuration is going to take it.
+
+What two layers DID take on A47, by name: `+5V_S2` twice, `+5V_S3`, `CH_SRP`, `D8_FLT`, `EMCON_HW`,
+`EXP2_SP8`, `HF_CS`, `PA_VCC`, `PD_GDNG`, from a single via to 841 cells of path.
