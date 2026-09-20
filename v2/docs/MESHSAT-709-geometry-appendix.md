@@ -15808,3 +15808,36 @@ PD_CC1, J_USBC_OUT.3 on PD_CC2`, two conductors that reach a chip with nothing b
 and not this change's; and the DEC-001 conflict stands, with `bypass_place` reading **37 capacitors carrying
 a seat the generator chose and 3 stuck** (C36 at U5, C42 at U6, C108 at U15, each 13 to 26 mm away with no
 free spot inside 3 mm), which is the fine-pitch fan conflict this morning measured across the set.
+
+### 32.324, 20 September 2026 17:30 CEST: the flag that makes a placement measurement cheap was stopping before the placement's own judge
+
+`PREROUTE_STOP_AFTER_PLACE=1` exists so a placement can be measured without paying for a route, and it sits
+at line 204 of `full.sh` while **`place_audit.py` runs at line 377**. So every arm that used it printed
+`PREROUTE-DONE PLACED` and **never asked the one gate whose whole subject is a placement**. The flag has been
+in use since 11 September and this went unnoticed because the arms that used it were about seats and
+distances, which the arm measured itself.
+
+**A83 is the measured case and it cost an hour.** It stopped there reading `PREROUTE-DONE PLACED` with
+`placed board: hard 0 of the fifteen types`, which is a pass by every line the arm printed. Its escape stage
+had quietly said `447 escapes added, 16 pads skipped` and nothing judged it. The same predictor, run BY HAND
+on that same board file half an hour later, says:
+
+```
+place_audit: FAIL  U18: 8 of 25 fine-pitch pads without an escape (pads 5,8,11,14,15,17,19,20):
+                   the fan could not be placed
+```
+
+which is exactly what the arm was launched to find out, named part and pin. **The hour that followed was a
+hand measurement of a fact the gate had ready in one line.**
+
+The predictor needs the escapes and they are laid above the stop, so it can answer there. It runs at the stop
+now, prints its FAIL lines, and **exits non-zero on a refusal** unless the board declares the predictor a
+report, which is the escape hatch board B already uses; running it and then exiting 0 would tell the caller
+the placement passed, which is the 8 September defect about a debug print that does not share the predicate
+it explains. **Two rules hold both halves and both fail on `full.sh` as it stood.** Suite 1241, 0 failing.
+
+**It also settles that the predictor would have caught it by the right criterion.** Its FAIL branch fires
+when a fine-pitch part has pads without escapes and another fine-pitch part is within reach, and U19, the PD
+converter, is; so A84's fan-clear seat is a seat the predictor accepts and A83's is one it refuses. **The
+measurement and the gate agree**, which is the thing worth knowing: nothing about the seat search's answer
+needed to be discovered by hand.

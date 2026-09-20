@@ -376,3 +376,42 @@ def t_routeflow_hands_the_phase_to_the_chain():
     phase is refused at its last step (15 September 2026)."""
     src = open(os.path.join(TOOLS, "routeflow.py"), errors="replace").read()
     assert 'env={"PHASE": prof["phase"]}' in src, "routeflow runs the chain without handing it the phase"
+
+
+def t_the_placed_board_stop_runs_the_placements_own_judge():
+    """A FLAG THAT MAKES A MEASUREMENT CHEAP MUST NOT SKIP THE THING THE MEASUREMENT IS FOR (20 September
+    2026). `PREROUTE_STOP_AFTER_PLACE=1` exists so a placement can be judged without paying for a route, and
+    it was stopping two hundred lines ABOVE `place_audit.py`, the one gate whose whole subject is a
+    placement. Every arm that used it printed PREROUTE-DONE PLACED and never asked.
+
+    A83 is the measured case and it cost an hour: it stopped there looking like a pass with its escape stage
+    quietly reporting 447 escapes and sixteen pads skipped, and the same predictor, run BY HAND on the same
+    board file half an hour later, reads `FAIL U18: 8 of 25 fine-pitch pads without an escape (pads
+    5,8,11,14,15,17,19,20): the fan could not be placed`. That is exactly what the arm was launched to find
+    out.
+
+    The property is mechanical: between the line that tests the flag and the `exit 0` that reports a placed
+    board there must be a call to `place_audit.py`. It fails on the file as it stood.
+    """
+    src = open(os.path.join(TOOLS, "full.sh"), errors="replace").read()
+    i = src.find('"${PREROUTE_STOP_AFTER_PLACE:-0}" = 1')
+    assert i >= 0, "full.sh no longer tests PREROUTE_STOP_AFTER_PLACE"
+    j = src.find("PREROUTE-DONE PLACED (out/", i)
+    assert j > i, "full.sh no longer reports a placed board at that stop"
+    assert "place_audit.py" in src[i:j], (
+        "the placed-board stop reports PREROUTE-DONE PLACED without running place_audit.py, so an arm that "
+        "stops at the placement never asks the gate whose subject IS the placement")
+
+
+def t_the_placed_board_stop_blocks_when_the_predictor_refuses():
+    """And running it is not enough: an arm that prints the predictor's FAIL and then exits 0 has told the
+    caller the placement passed. The stop exits non-zero on a refusal unless the board declares the
+    predictor a report, which is the same escape hatch the full chain honours for board B."""
+    src = open(os.path.join(TOOLS, "full.sh"), errors="replace").read()
+    i = src.find('"${PREROUTE_STOP_AFTER_PLACE:-0}" = 1')
+    j = src.find("PREROUTE-DONE PLACED (out/", i)
+    seg = src[i:j]
+    assert "PREROUTE-DONE PLACED BLOCK" in seg and "exit 1" in seg, (
+        "the placed-board stop does not stop on a refused placement")
+    assert "place_audit_gate_off" in seg, (
+        "the placed-board stop does not honour a board that declares the predictor a report")
