@@ -1,6 +1,6 @@
 {
  "board": "pcb-a-power",
- "written": "2026-09-20 00:14",
+ "written": "2026-09-20 00:32",
  "bypass": [
   {
    "cap": "C8",
@@ -243,6 +243,7 @@
     "F1": 10.0
    },
    "note": "the pack side of the RSR shunt. The pack current leaves this node through F1, the 25 A blade to VBAT; R17 is the 5 mOhm charge-sense shunt, R1 the 10 R pre-charge trickle, TP14 a test point and U3 pin 19 the BQ25731's CELL+ SENSE input, which draws microamps. Undeclared, dc_drop split the 10 A over every non-passive part on the net and pushed amps through U3 pin 19's 0.20 mm escape on a 0.4 mm pitch, reading 2.21 percent at a 0.5 mm cell and 2.75 at 0.25 against a 2 percent budget: the same correction VIN_RAW carries above, and for the same reason (12 September 2026, A24)",
+   "share": 0.005,
    "always_on": true,
    "always_on_why": "the pack node as it arrives on the dock block contacts; it is switched on board E and in the pack, never here",
    "v_work": 16.8,

@@ -1,6 +1,6 @@
 {
  "board": "pcb-e1-dock",
- "written": "2026-09-20 00:14",
+ "written": "2026-09-20 00:32",
  "bypass": [
   {
    "cap": "C16",
@@ -138,6 +138,7 @@
     "F3": 10.0
    },
    "note": "the pack lead from the XT60 J_BATT pin 2 to the blade F3, at the pack's own 10.0 A typical and 18.0 A peak. Declared 20 September 2026: it had been declared as nothing at all, so no power rule had ever looked at it",
+   "share": 0.005,
    "always_on": true,
    "always_on_why": "the pack node BEFORE this board's 25 A blade: nothing on this board can open it, which is the same reason CELL_F gives one line up",
    "v_work": 16.8,
