@@ -13939,3 +13939,25 @@ independent 10k pull-ups** hold the line high, so a missing or unpowered panel r
 fail-safe direction for an accidental wipe and the unsafe one for a wipe that is wanted.
 
 **NOT A RULING**: decision 30 is the owner's. This is its packet, traced rather than asserted.
+
+### 32.279, 20 September 2026 07:32 CEST: the landing driver proved on a real board, and the baseline that fell out of it
+
+**A driver that has never been run is a claim**, so `land_box6.sh`'s charger section was run against three
+frozen boards that already exist before it was left to fire on four arms. It parses, it reads the frozen
+tree's own `routed/*-drc.json`, it prints the file it read, and it gives this:
+
+| frozen board | unconnected items | `CHG_ILIM` | `CH_ACN_F` | `CH_SRN_F` | `CH_SW2` | `CH_SRP_F` | `CH_ACP_F` |
+|---|---:|---|---|---|---|---|---|
+| **A47** | 16 | open | open | open | open | closed | closed |
+| **A48** | 15 | open | open | closed | open | **open** | closed |
+| **A49** | 16 | open | open | open | open | closed | closed |
+
+**Three are constant across all three boards** (`CHG_ILIM`, `CH_ACN_F`, `CH_SW2`) and the fourth alternates
+between the two filtered charge-sense nets, `CH_SRN_F` on A47 and A49 and `CH_SRP_F` on A48.
+
+**This is a different reading from the one the record already carries and the two must not be conflated**:
+32.261's four are the nets the CLOSER refused, and these are the nets still OPEN on the frozen board after
+the closers ran, which is the question a route answers. Both name the charger, and that is the point.
+
+**What the arms have to beat**: any of the six closing on A54, A59 or A60 is the first movement in this set
+since 15 September, and all six closing is what the escape-row fix was for.
