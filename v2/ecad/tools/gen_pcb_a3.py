@@ -118,8 +118,20 @@ FIXED = {"J_AB1": (113, -46, 0), "J_MEZZ_PWR1": (-8, -18, 90),
          # OPEN, and not this change's to close: the ACP tap is a point on the VBUS20 island rather than a
          # Kelvin pad at R16, so the 6 A rail's own drop across that copper is inside the sensed 60 mV. A
          # Kelvin pad is a land and a copper change at the shunt, measured against dc_drop, and it is owed.
-         "R146": (-101.0, 13.6, 0), "R147": (-101.0, 11.8, 0), "C121": (-103.6, 12.7, 90),
-         "R148": (-91.2, 11.0, 0), "R149": (-91.2, 12.8, 0), "C122": (-88.6, 11.9, 90),
+         # 20 September 2026 05:45 CEST, MOVED 1.5 mm FURTHER OUT, AND IT IS A COLLISION BETWEEN TWO RULES
+         # (appendix 32.264). These six seats satisfied the BQ25731's pin table and were never measured
+         # against the OTHER rule that wants the same millimetre: the 0.4 mm escape scheme puts U3's via row
+         # 0.3 and 1.0 mm PAST the pad tip, which on the east side is x -92.64, and R148/R149's courtyards
+         # reached -92.73. NINE HUNDREDTHS OF A MILLIMETRE, and seven of U3's pads lost their escapes for it:
+         # pins 2 and 6 west, 18, 19, 20, 22 and 23 east, exactly the two filter groups' neighbourhoods,
+         # while the other twenty-five pads of the same part all got theirs. FOUR OF THE SEVEN ARE THE NETS
+         # EVERY CLOSER ON EVERY BOARD HAS REFUSED (/CHG_ILIM, /CH_ACN_F, /CH_SRN_F, /CH_SW2), which is why
+         # they refuse `pad to track` and `pad to pad`: with no escape the only way in is F.Cu at the pad,
+         # through a QFN-32's own fan field. NEITHER RULE IS WEAKENED: 1.5 mm further out clears the via row
+         # and still leaves each filter nearer its pin than any other seat on this board, and the filter's
+         # own clause asks for proximity rather than a number. BOTH are re-measured on the placed board.
+         "R146": (-102.5, 13.6, 0), "R147": (-102.5, 11.8, 0), "C121": (-105.1, 12.7, 90),
+         "R148": (-89.7, 11.0, 0), "R149": (-89.7, 12.8, 0), "C122": (-87.1, 11.9, 90),
          "J_DOCK": (-76, -70, 0), "J_PRE1": (-103, -70, 0), "F1": (-97, -52, 0), "J_MAINSW": (98, 75, 0),
          "U2": (-94, 56, 0), "L1": (-78, 58, 0), "U3": (-96, 12, 0), "L2": (-80, 16, 0), "U16": (-96, -26, 0), "L10": (-78, -24, 0),
          # A23: the converters south of their inductors, the rail column runs north to the connector
