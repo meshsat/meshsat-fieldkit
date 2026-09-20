@@ -328,6 +328,7 @@ def main(argv):
                   % (h0, h, u0, u))
             shutil.copy2(bak, path)
             laid = []
+            h_end, u_end = h0, u0        # the board that stands, updated as sites are kept
             for r, pts in keep:
                 shutil.copy2(path, bak + ".site")
                 b = pcbnew.LoadBoard(path)
@@ -348,12 +349,17 @@ def main(argv):
                           % (r["net"], r["ref"], r["pad"], hs, us))
                     laid.append((r, pts))
                     h0, u0 = hs, us
+                h_end, u_end = h0, u0
                 try: os.remove(bak + ".site")
                 except OSError: pass
     # The backup is this tool's scratch and not the phase directory's business: it is removed once the board
     # it protects is the board that stands. A `.bak` left in a project directory is the next person's question.
     try: os.remove(bak)
     except OSError: pass
+    # The summary reports the board that STANDS. After a per-site pass the batch's own numbers describe a
+    # board that was undone, and a summary line is what a reader believes.
+    try: h, u = h_end, u_end
+    except NameError: pass
     n_vias = sum(len(p) - r["have"] for r, p in laid)
     print("rail_barrels: %d site(s) answered with %d barrel(s), %d refused by the DRC, %d declined "
           "(hard %d -> %d, unrouted %d -> %d)"
