@@ -1,6 +1,6 @@
 {
  "board": "pcb-c-display",
- "written": "2026-09-20 00:19",
+ "written": "2026-09-20 01:43",
  "bypass": [
   {
    "cap": "C7",
@@ -150,7 +150,8 @@
    "budget": 0.03,
    "share": 0.0075,
    "always_on": true,
-   "always_on_why": "U5 is a TLV75533 whose EN pin is tied to its own input, so this rail follows the 5 V that arrives on the ribbon and has no switch of its own"
+   "always_on_why": "U5 is a TLV75533 whose EN pin is tied to its own input, so this rail follows the 5 V that arrives on the ribbon and has no switch of its own",
+   "fed_from": "+5V"
   }
  },
  "nodes": {
@@ -234,5 +235,6 @@
   "RF": {
    "z_se": 50.0
   }
- }
+ },
+ "pass_through": {}
 }
