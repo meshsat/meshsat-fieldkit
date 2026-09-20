@@ -2,17 +2,11 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "fail": 5,
+  "fail": 0,
   "stages": 3
  },
  "denominator": 3,
- "evidence": [
-  "PACK_CELLS: the protection names v2/vendor/battery/littelfuse-287-atof.pdf, which is not in this tree",
-  "PACK_FETS: the conductor names v2/vendor/battery/ti-csd17570q5b.pdf, which is not in this tree",
-  "PACK_FETS: the protection names v2/vendor/battery/ti-bq4050.pdf, which is not in this tree",
-  "PACK_LEAD: the connector names v2/vendor/battery/amass-xt60-spec-tme.pdf, which is not in this tree",
-  "PACK_LEAD: the protection names v2/vendor/battery/littelfuse-287-atof.pdf, which is not in this tree"
- ],
+ "evidence": [],
  "inputs": {
   "chain": "pcb_energy_chain.yaml",
   "stages": "PACK_CELLS,PACK_FETS,PACK_LEAD"
@@ -32,10 +26,10 @@
  "tool": "energy_chain_p",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "b7ecfcffbc2fef22"
+  "tools_tree_sha": "9bccd1871fd5d8f7"
  },
- "ts": "2026-09-20T07:20:54Z",
- "verdict": "FAIL",
+ "ts": "2026-09-20T07:43:14Z",
+ "verdict": "PASS",
  "version": "unknown",
  "writer": {
   "file": "energy_chain.py",

@@ -15,7 +15,7 @@
   "margin": 0.2,
   "netlist": {
    "path": "out/pcb-b-compute.net",
-   "sha256_16": "c0ca6a5e37fce87f"
+   "sha256_16": "ee6401a3fa57f3c0"
   }
  },
  "missing_input": null,
@@ -33,9 +33,9 @@
  "tool": "derate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "b7ecfcffbc2fef22"
+  "tools_tree_sha": "9bccd1871fd5d8f7"
  },
- "ts": "2026-09-20T07:15:43Z",
+ "ts": "2026-09-20T07:38:04Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {

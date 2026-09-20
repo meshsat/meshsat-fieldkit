@@ -24,7 +24,7 @@
   },
   "drc": {
    "path": "out/pcb-b-compute-drc.json",
-   "sha256_16": "bc8d404f4681f9ff"
+   "sha256_16": "538ac0d8ffe5e400"
   }
  },
  "missing_input": null,
@@ -42,9 +42,9 @@
  "tool": "hardset-routed-board-gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "b7ecfcffbc2fef22"
+  "tools_tree_sha": "9bccd1871fd5d8f7"
  },
- "ts": "2026-09-20T07:11:43Z",
+ "ts": "2026-09-20T07:34:04Z",
  "verdict": "FAIL",
  "version": "unknown",
  "writer": {

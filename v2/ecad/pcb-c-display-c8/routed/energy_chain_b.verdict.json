@@ -2,17 +2,11 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "fail": 7,
+  "fail": 1,
   "stages": 3
  },
  "denominator": 3,
  "evidence": [
-  "B_PANEL_5V: the protection names v2/vendor/power/bourns-mf-msmf-pptc.pdf, which is not in this tree",
-  "B_PANEL_5V: the prospective fault names v2/vendor/diodes/diodes-ap64500.pdf, which is not in this tree",
-  "B_HDMI_5V: the protection names v2/vendor/power/bourns-mf-msmf-pptc.pdf, which is not in this tree",
-  "B_HDMI_5V: the prospective fault names v2/vendor/diodes/diodes-ap64500.pdf, which is not in this tree",
-  "B_QMX_5V: the protection names v2/vendor/power/bourns-mf-msmf-pptc.pdf, which is not in this tree",
-  "B_QMX_5V: the prospective fault names v2/vendor/diodes/diodes-ap64500.pdf, which is not in this tree",
   "B_PANEL_5V: the protection is rated 2.0 A and the conductor only 1.2 A, so the conductor is the fuse"
  ],
  "inputs": {
@@ -34,9 +28,9 @@
  "tool": "energy_chain_b",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "b7ecfcffbc2fef22"
+  "tools_tree_sha": "9bccd1871fd5d8f7"
  },
- "ts": "2026-09-20T07:18:39Z",
+ "ts": "2026-09-20T07:41:00Z",
  "verdict": "FAIL",
  "version": "unknown",
  "writer": {

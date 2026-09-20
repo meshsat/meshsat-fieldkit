@@ -26,9 +26,9 @@
  "tool": "inhibit_chain_d",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "b7ecfcffbc2fef22"
+  "tools_tree_sha": "9bccd1871fd5d8f7"
  },
- "ts": "2026-09-20T07:21:13Z",
+ "ts": "2026-09-20T07:43:33Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {
