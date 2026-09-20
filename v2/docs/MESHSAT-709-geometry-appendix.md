@@ -16143,3 +16143,33 @@ sense pair with no target is inside that hold is the owner's to say, and the alt
 names is **locked copper the generator lays itself**, four runs as two differential pairs from each shunt
 pad's centre to its filter at 26.81, 26.81, 27.16 and 22.28 mm, which is the same instrument the eleven
 blind-mate RF drops use and needs no declaration at all.
+
+### 32.331, 20 September 2026 19:52 CEST: the post-route barrel fixer buys one round and then nothing, and its own work is why the count grows
+
+E30's finish ran `via_parallel`, the fixer that lays parallel barrels beside a via the solved mesh puts over
+its rating, and its four rounds are on the board:
+
+| round | barrels over their rating | new vias refused by the DRC | kept | worst barrel |
+|---:|---:|---:|---:|---:|
+| 1 | 36 | 12 | 33 vias at 16 barrels | **10.84 to 8.89** |
+| 2 | **58** | 12 | 18 vias at 17 barrels | 8.89 to 8.89 |
+| 3 | 57 | 11 | 8 vias at 11 barrels | 8.89 to 8.89 |
+| 4 | 54 | 11 | 2 vias at 5 barrels | 8.89 to 8.89 |
+
+**Two things, and the second answers a question 32.326 had to leave open.**
+
+**It buys ONE round.** The worst barrel falls 10.84 to 8.89 in round 1 and does not move again in three more
+rounds, while a third of everything it tries each round sits in a hard violation and comes back off with its
+links. Board E's hard count and open count never move (0 and 7 throughout), so the rounds cost nothing but
+time; they also buy nothing after the first.
+
+**AND THE COUNT GROWS BECAUSE THE FIXER IS ADDING BARRELS.** Round 1 sees 36 over their rating and round 2
+sees 58, after 33 vias were laid. Every parallel via it lays is itself a barrel that the next round judges,
+so the population grows as it works and the COUNT is not a measure of the board getting worse. That resolves
+32.326's caveat properly: **E30's fifty over-rated barrels against E17's thirty is partly the fixer's own
+33 plus 18 plus 8 plus 2**, and the number that means something is the WORST RATIO, which is 8.89 and stuck.
+
+**So board E's PI-003 is one site at 8.89 times its rating that nothing downstream can fix**, and it is the
+`DC_P` site the suggester names with 2.01 mm of room on one axis and 0.00 on the other: a placement item,
+named, with its number. The rounds after the first are worth stopping, which is a `via_parallel` change and
+not a board change.
