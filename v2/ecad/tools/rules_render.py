@@ -426,6 +426,35 @@ def open_pairs_doc(res):
             sum(1 for p in ps if p["category"] == O.MISSING_INPUT),
             sum(1 for p in ps if p["category"] in (O.NOT_JUDGED, O.NO_INSTRUMENT))))
     L.append("")
+    # HOW MANY OF THESE READINGS ARE OWED (20 September 2026). Staleness is asked rule by rule from the
+    # per-rule digests, and a TOOL change moves no fingerprint, so a pair can read FAIL under a tool that
+    # stopped failing it. Board B's MEC-001 did exactly that for nineteen hours. The count belongs on the
+    # page a reader opens to find work, and it DECIDES nothing: it says a reading is owed, not that it would
+    # come out differently.
+    try:
+        import stale_readings as _SR
+        _rows = _SR.open_pair_rows(res) or []
+    except Exception:
+        _rows = []
+    if _rows:
+        _stale = [r for r in _rows if r[4] == "STALE"]
+        L.append("## Readings owed\n")
+        L.append(_wrap("Of the %d open pairs with a reading beside them, **%d are decided by a reading taken "
+                       "under a tool that has CHANGED since**. A tool change moves no rule-set fingerprint and "
+                       "no per-rule digest, so nothing else on these pages can say it. It is an upper bound, "
+                       "because a tool file moves for a comment as readily as for a criterion, and it decides "
+                       "nothing: it says the reading is owed. Re-take with retake_gate.sh or a sweep."
+                       % (len(_rows), len(_stale))))
+        L.append("")
+        if _stale:
+            _by = {}
+            for _b, _r, _res2, _c, _st, _said, _ev in _stale:
+                _by.setdefault(_r, []).append(_b)
+            L.append("| rule | boards |")
+            L.append("|---|---|")
+            for _r in sorted(_by):
+                L.append("| `%s` | %s |" % (_r, ", ".join(sorted(x.upper() for x in _by[_r]))))
+            L.append("")
     byd = {}
     for p in res["pairs"]:
         if p.get("decision"): byd.setdefault(p["decision"], []).append(p)

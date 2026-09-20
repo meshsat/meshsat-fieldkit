@@ -103,7 +103,7 @@ def scan(dirs):
     return rows
 
 
-def open_pair_rows():
+def open_pair_rows(res=None):
     """THE QUESTION THAT FOUND THE NINETEEN-HOUR READING, asked mechanically (20 September 2026).
 
     535 readings taken under a changed tool is a list, not a work item, and the proxy over-counts anyway: a
@@ -112,11 +112,12 @@ def open_pair_rows():
     So the register is asked of itself: of the pairs still open, which are decided by a reading taken under a
     tool that has changed since. That is the question that was asked by hand at 08:04 and found board B's
     MEC-001 nineteen hours out of date."""
-    try:
-        import open_pairs
-        res = open_pairs.collect()
-    except Exception as e:
-        print("stale_readings: the open-pair register could not be read (%s)" % e); return None
+    if res is None:
+        try:
+            import open_pairs
+            res = open_pairs.collect()
+        except Exception as e:
+            print("stale_readings: the open-pair register could not be read (%s)" % e); return None
     seen, rows = {}, []
     for pr in res.get("pairs") or []:
         ev = pr.get("evidence")

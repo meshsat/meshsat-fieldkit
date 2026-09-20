@@ -1,6 +1,6 @@
 {
  "board": "pcb-b-compute",
- "written": "2026-09-20 01:45",
+ "written": "2026-09-20 06:45",
  "bypass": [
   {
    "cap": "C112",
@@ -590,7 +590,8 @@
    "always_on": true,
    "always_on_why": "each controller's private LDO has its EN tied to its own input, so it follows the device rail and the controller is up whenever the kit is",
    "efficiency": 0.66,
-   "converted": true
+   "converted": true,
+   "fed_from": "+5V_DEV"
   },
   "+3V3_IOCB": {
    "volts": 3.3,
@@ -608,7 +609,8 @@
    "always_on": true,
    "always_on_why": "each controller's private LDO has its EN tied to its own input, so it follows the device rail and the controller is up whenever the kit is",
    "efficiency": 0.66,
-   "converted": true
+   "converted": true,
+   "fed_from": "+5V_DEV"
   },
   "+3V3_IOCC": {
    "volts": 3.3,
@@ -626,7 +628,8 @@
    "always_on": true,
    "always_on_why": "each controller's private LDO has its EN tied to its own input, so it follows the device rail and the controller is up whenever the kit is",
    "efficiency": 0.66,
-   "converted": true
+   "converted": true,
+   "fed_from": "+5V_DEV"
   },
   "+1V2_KSZ": {
    "volts": 1.2,
@@ -656,7 +659,8 @@
    "always_on": true,
    "always_on_why": "U27 is an AP2112K whose EN is tied to its own input: the switch's analogue rail comes up with the switch",
    "efficiency": 0.76,
-   "converted": true
+   "converted": true,
+   "fed_from": "+3V3_DEV"
   },
   "+3V3_ZB": {
    "volts": 3.3,
@@ -670,7 +674,8 @@
     "J_ZBDBG2": 0.01
    },
    "note": "the two CC2652P radios behind their load switch, plus the two bench debug headers. 0.3 A peak is both radios transmitting at once, which the fabric never asks for but the copper must carry",
-   "converted": false
+   "converted": false,
+   "fed_from": "+3V3_DEV"
   },
   "+5V_LORA": {
    "volts": 5.0,
@@ -681,7 +686,8 @@
     "U12": 0.7
    },
    "note": "the 1 W LoRa module behind its load switch: 0.7 A on a transmit burst at 30 dBm, milliamps between",
-   "converted": false
+   "converted": false,
+   "fed_from": "+5V_DEV"
   },
   "+5V_LIME": {
    "volts": 5.0,
@@ -692,7 +698,8 @@
     "J_LIME": 3.0
    },
    "note": "the software-defined radio bay behind the eFuse U23 (ILM 301R, 3.0 A): a LimeSDR Mini 2.4 on USB 3 draws about 1.2 A and peaks higher while its FPGA configures",
-   "converted": false
+   "converted": false,
+   "fed_from": "+5V_DEV"
   },
   "+5V_RB": {
    "volts": 5.0,
@@ -703,7 +710,8 @@
     "J_RB9704": 2.0
    },
    "note": "the satellite modem behind the eFuse U24 (ILM 301R, 3.0 A): the RockBLOCK 9704's burst current on a transmit attempt is the number the copper has to carry, not its average",
-   "converted": false
+   "converted": false,
+   "fed_from": "+5V_DEV"
   },
   "+5V_CAM": {
    "volts": 5.0,
@@ -714,7 +722,8 @@
     "J_CAM": 0.5
    },
    "note": "the camera lead behind its switch, a USB 2.0 device at its port's own 500 mA limit",
-   "converted": false
+   "converted": false,
+   "fed_from": "+5V_DEV"
   },
   "+5V_HDMI": {
    "volts": 5.0,
@@ -727,7 +736,8 @@
    "note": "the HDMI connector's own 5 V behind the 0.5 A polyfuse F2, which is what the standard asks a source to supply",
    "always_on": true,
    "always_on_why": "a polyfuse is protection and not a switch: the connector's 5 V follows the device rail, which is what the standard asks a source to supply",
-   "converted": false
+   "converted": false,
+   "fed_from": "+5V_DEV"
   },
   "+54V_POE": {
    "volts": 54.0,
