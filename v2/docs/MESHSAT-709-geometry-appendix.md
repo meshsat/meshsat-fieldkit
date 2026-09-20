@@ -13232,3 +13232,28 @@ does not touch tonight's power numbers, which come from the intent and the coppe
 **So the verification stands**: five boards byte-identical in their net bodies, the sixth differing only in
 an attribute nobody changed tonight. The five new declaration fields describe the same six designs they
 described this morning.
+
+### 32.257, 20 September 2026 04:07 CEST: the layer finding gets a second board A phase, on the box that was idle
+
+**I changed board A's declared closer configuration on ONE board's measurement.** A48's frozen board gave a
+clean one-variable answer at 03:15 and `boards/a.json` now declares two search layers instead of four, which
+applies to every phase of board A and to every finish that runs from here. A second phase is owed before it
+is leaned on further, and that is ordinary diligence rather than doubt about the number.
+
+**And the second box had been idle.** Credit 94.62 USD, two boxes at 0.48 USD an hour, about two hundred
+hours of runway, and the place box sitting at a load average of 0.01 with nothing running. Money is not the
+constraint here and never has been since ruling 7 September ("box money is now upgraded ... make FULL use of
+it"), so an idle box is waste of the kind that ruling exists to prevent. It holds board D's frozen trees and
+a working KiCad 9.0.9.
+
+**A47's frozen board** (sha `d15e230498e0c0fd`, sixteen unconnected items when it landed on 19 September)
+was copied to it with `maptools`, and both layer settings are running there one variable apart, at board A's
+own finish configuration with the map cache on. If two layers wins again the declaration rests on two
+phases; if it does not, the change rests on one board and says so.
+
+**What was considered and not run on that box, with the reason**, because an idle box is not an argument for
+running anything: boards C and D pass every rule and are short of no connections, so the same arm on them
+measures generalisation and not repair; **board E already declares two layers** and its closers still take
+none of its six opens, which is itself evidence that the layer set is not a universal fix and belongs beside
+the finding; and board B's finish on a board 416 connections short would be an enormous run for a board whose
+problem is its route.
