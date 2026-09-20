@@ -12952,3 +12952,26 @@ is a pad with no lane out of it at any resolution, in any window, on the layers 
 arm closes any of the eight the layer set is the thing; if it closes the same six faster, then board A's
 declared four layers cost time and buy nothing, and its remaining opens are a placement item and not a
 closer's at all.
+
+### 32.248, 20 September 2026 03:09 CEST: A50's router lands at exactly A49's open count, and twenty pinned connections bought nothing
+
+A50's route ended at its 10 h cap: **hard 0 of the fifteen types, 21 unrouted of 264 nets, 315 vias.** A49's
+router ended at **hard 0, 21 unrouted of 264 nets, 307 vias.** Its finish is in the closers as this is
+written.
+
+**The two are the same number and that is the arm's answer at the router.** A49 pins the sense half only,
+which is E20's shape; A50 pins both halves, which is E21's, and A50's pre-lay laid **20 of 20 switching
+connections** where A49's laid **0 of 20** (its tree predates the closure-acceptance fix, which is the caveat
+written into `boards/a.json` before either landed). So board A got twenty more pre-laid connections and its
+router came out at the identical open count, eight vias apart.
+
+**What that does and does not settle.** It settles that on this board the switching pre-lay is not paid for
+in connections, in either direction: it costs nothing and it buys nothing, where board E's E19/E20 pair cost
+seven and A40's four nets cost ten. It does NOT settle the arm's real question, which is ANA-001: the pre-lay
+exists to hold a sense line away from switching copper, and the only instrument that has ever done that is
+locked copper on BOTH sides. That reading comes from the finished boards and `/root/a49_a50_side_by_side.sh`
+is armed for it.
+
+**And it is still not a one-variable pair**, for the reason written down before the run: A49's tree was
+staged before the closure-acceptance fix. Read the pair on ANA-001 and on the open count together, and read
+ANA-001 on whichever round is ADOPTED rather than on whichever reads best.
