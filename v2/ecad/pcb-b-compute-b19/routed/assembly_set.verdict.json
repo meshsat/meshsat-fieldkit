@@ -4,17 +4,40 @@
  "counts": {
   "boards": 1,
   "fail": 0,
-  "table_present": false,
-  "unchecked_footprints": 0,
+  "table_present": true,
+  "unchecked_footprints": 19,
   "unverified_rows": 0
  },
- "denominator": 1,
- "evidence": [],
+ "denominator": 19,
+ "evidence": [
+  "not compared with a preview: BatteryHolder_Keystone_3034_1x20mm",
+  "not compared with a preview: Crystal_SMD_3225-4Pin_3.2x2.5mm",
+  "not compared with a preview: D_SMB",
+  "not compared with a preview: JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical",
+  "not compared with a preview: JST_VH_B2P-VH_1x02_P3.96mm_Vertical",
+  "not compared with a preview: LQFP-100_14x14mm_P0.5mm",
+  "not compared with a preview: LQFP-128_14x14mm_P0.4mm_EP6.0",
+  "not compared with a preview: PinHeader_1x02_P2.54mm_Vertical",
+  "not compared with a preview: PinHeader_1x03_P2.54mm_Vertical",
+  "not compared with a preview: PinHeader_1x04_P2.54mm_Vertical",
+  "not compared with a preview: PinHeader_1x05_P2.54mm_Vertical",
+  "not compared with a preview: PinHeader_1x05_P2.54mm_Vertical_SMD_Pin1Left",
+  "not compared with a preview: PinHeader_2x05_P2.54mm_Vertical",
+  "not compared with a preview: QFN-28-1EP_5x5mm_P0.5mm_EP3.35x3.35mm",
+  "not compared with a preview: QFN-64-1EP_9x9mm_P0.5mm_EP4.7x4.7mm",
+  "not compared with a preview: SOT-583-8",
+  "not compared with a preview: TSSOP-14_4.4x5mm_P0.65mm",
+  "not compared with a preview: TSSOP-28_4.4x9.7mm_P0.65mm",
+  "not compared with a preview: USB3_A_Receptacle_Wuerth_692122030100"
+ ],
  "inputs": {
   "board": "b",
-  "rotations": "../release/revA/order/jlc-rotations.csv"
+  "rotations": {
+   "path": "../release/revA/order/jlc-rotations.csv",
+   "sha256_16": "cfa3b889641e4066"
+  }
  },
- "missing_input": "there is no rotation table at ../release/revA/order/jlc-rotations.csv in this tree, so no rotation was compared",
+ "missing_input": null,
  "note": "every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own preview. A footprint with no row goes to the assembler with KiCad's rotation unchanged, which is an assumption rather than a verification, and the list is the checklist for the session that has the preview",
  "policy": {
   "hard_types": 15,
@@ -28,12 +51,12 @@
  ],
  "tool": "assembly_set",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "9bccd1871fd5d8f7"
+  "git_head": "4da871109141",
+  "tools_tree_sha": "46bc14f518f58f9d"
  },
- "ts": "2026-09-20T07:38:13Z",
+ "ts": "2026-09-20T14:02:12Z",
  "verdict": "INCONCLUSIVE",
- "version": "unknown",
+ "version": "4da871109141",
  "writer": {
   "file": "assembly_set.py",
   "sha16": "03299094353eb15f"

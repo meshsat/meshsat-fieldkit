@@ -15458,3 +15458,68 @@ hands on, and they are a question about two neighbourhoods rather than about pow
 staged before the summary fix, so its last line still reports the BATCH's `254 -> 259` while the board it
 saved sits at 254. **In any tree older than today's fix the per-site lines are the board's state and the
 summary line is the batch's**; in a current tree they agree, which is what the fix is.
+
+### 32.318, 20 September 2026 16:05 CEST: the assembly rule was judged per board by the registry and answered by one verdict for the set, and board E5's own answer is a PASS
+
+`stale_readings --open-pairs` says twenty of the eighty-nine open pairs carrying a reading are decided by a
+reading taken under a tool that has changed since, and **seven of the twenty are DFA-001 on all seven
+boards**. Opening them one at a time, the way the thirty measured failures were opened on 20 September, found
+two separate things and the second is the larger.
+
+**(1) Board P's BAT-001 was owed and comes out unchanged.** `pack_protection.py` changed at 23:51 on 18
+September and the deciding reading was taken at 17:58 the same evening; that verdict carries no `writer`
+field, so the register could only flag it by the tool's last commit date, which is the proxy the 20 September
+staleness work declares as a proxy. Re-taken read-only on the committed netlist with `VERDICT_DIR` pointed
+outside the tree: **45 checks, 5 devices, 9 functions, 14 cell limits, 1 failure**, note for note and
+evidence row for evidence row identical. Carried with its writer hash, so the question is asked of the FILE
+from here. Readings owed 20 to 19, readiness 58.9 percent before and after, which is the proof it decided
+nothing.
+
+**(2) DFA-001 is a PER-BOARD rule and one set-level verdict was answering it for all seven, which is the
+fourth instance of that family this week.** The deciding reading was `out/assembly_set.verdict.json` of 18
+September, **boards 7, 42 unchecked footprints, one verdict**, and the readiness page said so in its own
+words: *`DFA-001`: one set-level reading, counted on 7 board(s)*. Sweep 32 DID run `assembly_set --board <L>`
+in each board's own directory and every one of those seven readings declares a missing input, *there is no
+rotation table at `../release/revA/order/jlc-rotations.csv` in this tree*, so the 17 September rule correctly
+kept the older reading in front of them and nothing could ever close the pair.
+
+**The tool needs no KiCad**: it reads each board's NETLIST and the rotation table, both of which are here.
+Taken per board on the runner, read-only, the seven answers are their own:
+
+| board | polarised footprints with no rotation row | verdict |
+|---|---:|---|
+| A | 11 | INCONCLUSIVE |
+| B | 19 | INCONCLUSIVE |
+| C | 6 | INCONCLUSIVE |
+| D | 11 | INCONCLUSIVE |
+| E | 13 | INCONCLUSIVE |
+| **E5** | **0** | **PASS** |
+| P | 6 | INCONCLUSIVE |
+
+**Board E5's one polarised footprint has a verified rotation row, so its DFA-001 is a PASS**, and the
+set-level reading had been hiding it behind six other boards' unchecked lists. **Readiness 58.9 to 59.2
+percent of 333** (196 to 197 verified), open pairs 137 to 136, `OWNER_WORK` 8 to 7.
+
+**The two counts reconcile and neither is wrong**: 42 is the number of DISTINCT polarised footprint types
+across the set, 66 is the sum of the per-board counts, because a footprint type placed by three boards is one
+row in the ordering session's checklist and three board-instances in the register. The checklist is still
+built over the set; the VERDICT is per board.
+
+**(3) The cause behind the other nineteen is that the measurement tree carries part of the release and not
+all of it, which is this week's cause for the third time.** `/root/sweep32/v2/release` holds **three
+deliverable folders** (C24, E5, P4, the boards whose declared phase has one) and **no order directory at
+all**. Three gates read that tree: `assembly_set` wants `order/jlc-rotations.csv`, `final_gate` wants every
+folder under `boards/`, and `doc_provenance` globs `order/*` as well as `boards/*`. Each of them declares its
+missing input and is correctly refused, which is the vendor library of this morning wearing different
+clothes. **`$SP/release_push.sh <hub|place>` stages `v2/release/revA` once at `/root/release`** the way
+`/root/vendor` is staged, 223 MB, `--checksum` everywhere. Proved on a probe tree that is sweep 32's `v2/ecad`
+beside the full release: `assembly_set` reads `table_present: true` and gives the seven answers above,
+identical to the runner's to the footprint, and **`doc_provenance` reads 7 documents of 7 folders with 7
+untraceable where the sweep tree read 0 of 0**.
+
+**Two traps, both old ones met again in one hour.** `rsync` will not create an intermediate directory, so
+`/root/release/revA` had to exist before the stage would write a byte, and the failure goes to a log nobody
+reads; the staging script makes the parent every time now. And **`nb2.sh` is `ssh -n`**, which takes stdin
+from `/dev/null`, so piping a script into `cat > /root/x.sh` through it writes an EMPTY file and the launcher
+then reports success on a seventeen-line script that ran nothing. Use `scp` for a file; keep `ssh -n` for a
+command.

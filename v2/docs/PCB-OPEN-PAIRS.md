@@ -7,7 +7,7 @@ Every pair that is not a current PASS, classified. Generated from tools/pcb_deci
 map's maturity and each deciding verdict: a decision that claims a pair wins over everything else, because
 the ruling is the action that moves it, and the measurement is reported beside it rather than lost.
 
-**137 open pair(s)** over 7 board(s). **39 are measured failures** (a tool looked and the board failed), which are **33 distinct readings**, and **16 of those are claimed by an open owner decision**.
+**136 open pair(s)** over 7 board(s). **39 are measured failures** (a tool looked and the board failed), which are **33 distinct readings**, and **16 of those are claimed by an open owner decision**.
 
 | waiting on | pairs | what it means |
 |---|---:|---|
@@ -17,14 +17,13 @@ the ruling is the action that moves it, and the measurement is reported beside i
 | `MISSING_INPUT` | 14 | an input the reading declared absent |
 | `MEASURED_FAILURE` | 23 | the tool looked and the board failed |
 | `VENDOR_WAIT` | 2 | a fabricator or a standards body, and nobody here |
-| `OWNER_WORK` | 8 | work only the owner or the ordering session can do |
+| `OWNER_WORK` | 7 | work only the owner or the ordering session can do |
 | `NOT_JUDGED` | 19 | not judged, for the reason the reading gives |
 
 A pair is what a BOARD has to satisfy, so the table counts pairs; these rules are decided by a verdict
 written ONCE for the whole set, so their rows are one reading seen on every board and not that many separate
 things to fix.
 
-* `DFA-001`: one set-level reading, counted on 7 board(s)
 * `OUT-001`: one set-level reading, counted on 7 board(s)
 
 ## By board
@@ -36,19 +35,18 @@ things to fix.
 | C | 12 | 3 | 10 | 0 | 0 | 0 |
 | D | 17 | 4 | 11 | 1 | 2 | 0 |
 | E | 21 | 6 | 12 | 0 | 4 | 1 |
-| E5 | 6 | 3 | 3 | 0 | 0 | 0 |
+| E5 | 5 | 3 | 3 | 0 | 0 | 0 |
 | P | 15 | 6 | 10 | 0 | 0 | 1 |
 
 ## Readings owed
 
-Of the 89 open pairs with a reading beside them, **19 are decided by a reading taken under a tool that has
+Of the 88 open pairs with a reading beside them, **12 are decided by a reading taken under a tool that has
 CHANGED since**. A tool change moves no rule-set fingerprint and no per-rule digest, so nothing else on these
 pages can say it. It is an upper bound, because a tool file moves for a comment as readily as for a
 criterion, and it decides nothing: it says the reading is owed. Re-take with retake_gate.sh or a sweep.
 
 | rule | boards |
 |---|---|
-| `DFA-001` | A, B, C, D, E, E5, P |
 | `DOC-001` | A, B, D, E |
 | `DOC-002` | E5 |
 | `OUT-001` | A, B, C, D, E, E5, P |
@@ -213,7 +211,7 @@ holding a number, not a question about a number.
 | `VIA-002` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 | `VIA-002` | P | INCONCLUSIVE | via_annular INCONCLUSIVE: this board declares no floor for the via ring and the plated hole ring, so that ring was not judged: a floor asserted without the fabricator's own row would be |
 
-## OWNER_WORK (8): work only the owner or the ordering session can do
+## OWNER_WORK (7): work only the owner or the ordering session can do
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -223,7 +221,6 @@ holding a number, not a question about a number.
 | `DFA-001` | C | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 | `DFA-001` | D | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 | `DFA-001` | E | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
-| `DFA-001` | E5 | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 | `DFA-001` | P | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 
 ## NOT_JUDGED (19): not judged, for the reason the reading gives
