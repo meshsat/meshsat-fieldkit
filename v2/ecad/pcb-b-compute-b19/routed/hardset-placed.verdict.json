@@ -12,9 +12,9 @@
   "by_type": {},
   "hard": 0,
   "report": {
-   "silk_edge_clearance": 9,
+   "silk_edge_clearance": 8,
    "silk_over_copper": 47,
-   "silk_overlap": 69,
+   "silk_overlap": 70,
    "via_dangling": 199
   },
   "stage": "pre",
@@ -30,10 +30,10 @@
   },
   "drc": {
    "path": "out/placed-drc.json",
-   "sha256_16": "6e04421e82cc70d9"
+   "sha256_16": "53250f1359b0a351"
   },
   "measured_board": {
-   "sha256_16": "72c0f472ce2da345",
+   "sha256_16": "62c895bf5a7bda30",
    "stage": "placed"
   }
  },
@@ -44,7 +44,7 @@
   "rule_fingerprints": {
    "PLC-001": "51588472a4c8e371"
   },
-  "rule_set_fingerprint": "4bc0aa24d836788d"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "PLC-001"
@@ -52,9 +52,13 @@
  "tool": "hardset-placed",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "087fae053129751b"
  },
- "ts": "2026-09-17T22:56:10Z",
+ "ts": "2026-09-20T22:56:27Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "hardset.py",
+  "sha16": "af5a0e35d8ecd656"
+ }
 }
