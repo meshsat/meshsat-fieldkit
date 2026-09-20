@@ -108,7 +108,7 @@ def clear(v, r, me, me_ref, net, lane=0.75):
         if o.Contains(VECTOR2I(int(v.x), int(v.y))) or o.Contains(VECTOR2I(int(v.x + r), int(v.y))) or o.Contains(VECTOR2I(int(v.x - r), int(v.y))) or o.Contains(VECTOR2I(int(v.x), int(v.y + r))) or o.Contains(VECTOR2I(int(v.x), int(v.y - r))): LAST[0] = "rule-area"; return False
     return True
 added = skipped = ep_skipped = 0
-ep_pads = []   # (ref, pad number, net, laid, wanted, refusal reasons) for every exposed pad that lost a via
+ep_pads = []   # (ref, pad number, net, laid, wanted, refusal reasons, vias of its own net already on the pad)
 def thermal_vias(fp):
     """An exposed pad gets vias of its own net when the footprint carries none (KiCad's plain lands never do).
 
@@ -159,8 +159,18 @@ def thermal_vias(fp):
         # ended with ONE via of the four it asks for, the router then ran three BAT_F segments 0.51 mm
         # from it on B.Cu, the ground fill retreated, and the gas gauge's exposed pad finished with no
         # ground connection to the bottom layer at all. Every refusal names its spot and what it hit.
+        # A REFUSAL BY THE PAD'S OWN NET IS NOT A GAP (20 September 2026, board A's Q2). Every one of its four
+        # sites read `via(/VIN_RAW)`, which is the 0.3 mm hole-to-hole rule against a via of the pad's OWN net,
+        # and the pad already carried SIX vias inside it and two more touching: the tab is stitched and the line
+        # said "got 0 thermal via(s) of 4" for a pad with nothing wrong with it. The refusal still travels, so
+        # nothing is hidden, and the count of what is already there travels beside it, which is what a reader
+        # needs to tell a stitched pad from a bare one.
         if ep_why:
-            ep_pads.append((fp.GetReference(), pad.GetNumber(), pad.GetNetname(), ep_laid, len(spots), list(ep_why)))
+            _poly = pad_poly(pad); _have = 0
+            for _vp, _vr, _vnet in vias:
+                if _vnet == pad.GetNetname() and _poly.Collide(_vp, int(_vr)): _have += 1
+            ep_pads.append((fp.GetReference(), pad.GetNumber(), pad.GetNetname(), ep_laid, len(spots),
+                            list(ep_why), _have))
 
 for fp in boardorder.footprints(b):   # stage 0b, 11 Sep 2026: this loop LAYS, so its order decides what fits; board order follows a random uuid
     if not is_fine(fp) or (fp.GetReference().startswith("J") and min_pitch(fp) > FromMM(0.6)): continue      # coarse connectors route fine without escapes; a 0.5 mm M.2 socket (B14 J_WIFI1) does not (5 Sep: the router thrashed 75 min on its 67 bare pads)
@@ -290,7 +300,8 @@ for fp in boardorder.footprints(b):
     if ONLY and fp.GetReference() not in ONLY: continue
     thermal_vias(fp)
 print("escape: %d escapes added, %d pads skipped, %d thermal via(s) refused for what is on the other side" % (added, skipped, ep_skipped))
-for ref, num, net, laid, want, why in ep_pads:
-    print("escape: exposed pad %s.%s (%s) got %d thermal via(s) of %d: %s%s"
-          % (ref, num, net, laid, want, "; ".join(why[:4]), "" if laid else "   <-- NO VIA AT ALL"))
+for ref, num, net, laid, want, why, have in ep_pads:
+    print("escape: exposed pad %s.%s (%s) got %d thermal via(s) of %d, %d via(s) of its own net already on the pad: %s%s"
+          % (ref, num, net, laid, want, have, "; ".join(why[:4]),
+             "" if laid or have else "   <-- NO VIA AT ALL"))
 pcbnew.SaveBoard(sys.argv[1], b)
