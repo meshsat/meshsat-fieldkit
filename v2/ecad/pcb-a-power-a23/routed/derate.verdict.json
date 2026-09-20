@@ -6,7 +6,7 @@
   "judged": 144,
   "undeclared_nets": 0,
   "under_rated": 0,
-  "unrated_parts": 72
+  "unrated_parts": 77
  },
  "denominator": 144,
  "evidence": [],
@@ -15,7 +15,7 @@
   "margin": 0.2,
   "netlist": {
    "path": "out/pcb-a-power.net",
-   "sha256_16": "d08fce93cb428f8a"
+   "sha256_16": "487feec036ed2681"
   }
  },
  "missing_input": null,
@@ -33,9 +33,9 @@
  "tool": "derate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9bccd1871fd5d8f7"
+  "tools_tree_sha": "4d83fe3b9dfc62e2"
  },
- "ts": "2026-09-20T07:32:25Z",
+ "ts": "2026-09-20T14:38:31Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {

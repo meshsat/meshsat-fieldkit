@@ -26,10 +26,7 @@
  ],
  "inputs": {
   "board": "e",
-  "rotations": {
-   "path": "../release/revA/order/jlc-rotations.csv",
-   "sha256_16": "cfa3b889641e4066"
-  }
+  "rotations": "../release/revA/order/jlc-rotations.csv"
  },
  "missing_input": null,
  "note": "every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own preview. A footprint with no row goes to the assembler with KiCad's rotation unchanged, which is an assumption rather than a verification, and the list is the checklist for the session that has the preview",
@@ -45,12 +42,12 @@
  ],
  "tool": "assembly_set",
  "tools": {
-  "git_head": "4da871109141",
-  "tools_tree_sha": "46bc14f518f58f9d"
+  "git_head": "",
+  "tools_tree_sha": "4d83fe3b9dfc62e2"
  },
- "ts": "2026-09-20T14:02:12Z",
+ "ts": "2026-09-20T14:48:58Z",
  "verdict": "INCONCLUSIVE",
- "version": "4da871109141",
+ "version": "unknown",
  "writer": {
   "file": "assembly_set.py",
   "sha16": "03299094353eb15f"

@@ -2,14 +2,14 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "agree": 1990,
+  "agree": 1980,
   "aliased_pins": 0,
   "board_footprints": 400,
   "board_only_inert": 0,
-  "fail": 35,
-  "netlist_refs": 413
+  "fail": 60,
+  "netlist_refs": 428
  },
- "denominator": 2025,
+ "denominator": 2040,
  "evidence": [
   "C121 is in the netlist and not on the board",
   "C122 is in the netlist and not on the board",
@@ -18,6 +18,11 @@
   "C125 is in the netlist and not on the board",
   "C126 is in the netlist and not on the board",
   "C127 is in the netlist and not on the board",
+  "C128 is in the netlist and not on the board",
+  "C129 is in the netlist and not on the board",
+  "C130 is in the netlist and not on the board",
+  "C131 is in the netlist and not on the board",
+  "C132 is in the netlist and not on the board",
   "R146 is in the netlist and not on the board",
   "R147 is in the netlist and not on the board",
   "R148 is in the netlist and not on the board",
@@ -32,20 +37,30 @@
   "R157 is in the netlist and not on the board",
   "R158 is in the netlist and not on the board",
   "R159 is in the netlist and not on the board",
+  "R160 is in the netlist and not on the board",
+  "R161 is in the netlist and not on the board",
+  "R162 is in the netlist and not on the board",
+  "R163 is in the netlist and not on the board",
+  "R164 is in the netlist and not on the board",
+  "R165 is in the netlist and not on the board",
+  "R166 is in the netlist and not on the board",
+  "R167 is in the netlist and not on the board",
+  "R168 is in the netlist and not on the board",
+  "R169 is in the netlist and not on the board",
+  "U13.13 is +13V8_PA on the board and PA_ISNS_N in the netlist",
+  "U13.14 is PA_OUT on the board and PA_ISNS_P in the netlist",
   "U13.15 is GND on the board and PA_CSGF in the netlist",
   "U13.16 is PA_CS on the board and PA_CSF in the netlist",
+  "U15.13 is +12V_HF on the board and HF_ISNS_N in the netlist",
+  "U15.14 is HF_OUT on the board and HF_ISNS_P in the netlist",
   "U15.15 is GND on the board and HF_CSGF in the netlist",
   "U15.16 is HF_CS on the board and HF_CSF in the netlist",
+  "U16.13 is +54V_POE on the board and POE_ISNS_N in the netlist",
+  "U16.14 is POE_OUT on the board and POE_ISNS_P in the netlist",
   "U16.15 is GND on the board and POE_CSGF in the netlist",
   "U16.16 is POE_CS on the board and POE_CSF in the netlist",
-  "U19.15 is GND on the board and PD_CSGF in the netlist",
-  "U19.16 is PD_CS on the board and PD_CSF in the netlist",
-  "U2.15 is GND on the board and FE_CSGF in the netlist",
-  "U2.16 is FE_CS on the board and FE_CSF in the netlist",
-  "U3.19 is CELL+ on the board and CH_SRN_F in the netlist",
-  "U3.2 is CH_ACN on the board and CH_ACN_F in the netlist",
-  "U3.20 is CH_SRP on the board and CH_SRP_F in the netlist",
-  "U3.3 is VBUS20 on the board and CH_ACP_F in the netlist"
+  "U19.13 is PD_VPWR on the board and PD_ISNS_N in the netlist",
+  "U19.14 is PD_OUT on the board and PD_ISNS_P in the netlist"
  ],
  "inputs": {
   "board": {
@@ -54,7 +69,7 @@
   },
   "netlist": {
    "path": "out/pcb-a-power.net",
-   "sha256_16": "d08fce93cb428f8a"
+   "sha256_16": "487feec036ed2681"
   }
  },
  "missing_input": null,
@@ -72,9 +87,9 @@
  "tool": "netlist_board",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9bccd1871fd5d8f7"
+  "tools_tree_sha": "4d83fe3b9dfc62e2"
  },
- "ts": "2026-09-20T07:32:14Z",
+ "ts": "2026-09-20T14:38:20Z",
  "verdict": "FAIL",
  "version": "unknown",
  "writer": {

@@ -2,11 +2,11 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "declared": 24,
-  "fail": 15,
+  "declared": 34,
+  "fail": 25,
   "measured": 10
  },
- "denominator": 24,
+ "denominator": 34,
  "evidence": [
   "CH_SRP_F is declared sensitive and the board has no such net",
   "CH_SRN_F is declared sensitive and the board has no such net",
@@ -22,7 +22,12 @@
   "PD_CSGF is declared sensitive and the board has no such net",
   "POE_CSF is declared sensitive and the board has no such net",
   "POE_CSGF is declared sensitive and the board has no such net",
-  "B33_FB runs 0.350 mm from B33_SW and its own list asks for 0.50; they are inside that limit over 8.47 mm of copper, 8.47 mm of it OUTSIDE the courtyard of the part that carries both nets, 9.31 mm from the pads of the part that carries both nets"
+  "FE_ISNS_P is declared sensitive and the board has no such net",
+  "FE_ISNS_N is declared sensitive and the board has no such net",
+  "PA_ISNS_P is declared sensitive and the board has no such net",
+  "PA_ISNS_N is declared sensitive and the board has no such net",
+  "HF_ISNS_P is declared sensitive and the board has no such net",
+  "HF_ISNS_N is declared sensitive and the board has no such net"
  ],
  "inputs": {
   "board": "a",
@@ -43,9 +48,9 @@
  "tool": "sensitive_nodes",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9bccd1871fd5d8f7"
+  "tools_tree_sha": "4d83fe3b9dfc62e2"
  },
- "ts": "2026-09-20T07:32:32Z",
+ "ts": "2026-09-20T14:38:38Z",
  "verdict": "FAIL",
  "version": "unknown",
  "writer": {

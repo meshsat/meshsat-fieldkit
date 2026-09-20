@@ -2,19 +2,22 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "folders": 0
+  "folders": 1,
+  "untraceable": 1
  },
- "denominator": 0,
- "evidence": [],
+ "denominator": 1,
+ "evidence": [
+  "PCB-E5-BLOCK-E5/ORDER-NOTES.txt asserts hardware numbers and names no artefact: a reader cannot tell which board they are about"
+ ],
  "inputs": {
   "declares": "E5",
   "release": {
-   "path": "/root/sweep32/v2/release/revA",
+   "path": "/root/sweep34/v2/release/revA",
    "sha256_16": null
   }
  },
- "missing_input": "board E5 has no order folder in this tree, so no document about it was read",
- "note": "DOC-002 asks about the document that describes THIS board",
+ "missing_input": null,
+ "note": "every document that asserts hardware numbers about board E5 names the artefact it was read from, by sha256",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -28,10 +31,10 @@
  "tool": "doc_provenance_e5",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9bccd1871fd5d8f7"
+  "tools_tree_sha": "4d83fe3b9dfc62e2"
  },
- "ts": "2026-09-20T07:43:35Z",
- "verdict": "INCONCLUSIVE",
+ "ts": "2026-09-20T14:50:02Z",
+ "verdict": "FAIL",
  "version": "unknown",
  "writer": {
   "file": "doc_provenance.py",

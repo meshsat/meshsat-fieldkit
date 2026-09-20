@@ -2,11 +2,11 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "compared": 7,
+  "compared": 8,
   "copper_layers": 2,
   "disagreements": 1
  },
- "denominator": 7,
+ "denominator": 8,
  "evidence": [
   "dielectric 1 (FR4 core) dielectric constant is 4.6000 in the board and 4.5000 in 2L-2oz"
  ],
@@ -33,9 +33,9 @@
  "tool": "stackup_gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9bccd1871fd5d8f7"
+  "tools_tree_sha": "4d83fe3b9dfc62e2"
  },
- "ts": "2026-09-20T07:43:24Z",
+ "ts": "2026-09-20T14:49:51Z",
  "verdict": "FAIL",
  "version": "unknown",
  "writer": {

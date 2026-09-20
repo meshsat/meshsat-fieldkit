@@ -2,18 +2,20 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "folders": 0
+  "folders": 1
  },
  "denominator": 0,
- "evidence": [],
+ "evidence": [
+  "order folder(s) present: PCB-E1-DOCK-E6"
+ ],
  "inputs": {
   "declares": "E17",
   "release": {
-   "path": "/root/sweep32/v2/release/revA",
+   "path": "/root/sweep34/v2/release/revA",
    "sha256_16": null
   }
  },
- "missing_input": "board E has no order folder in this tree, so no document about it was read",
+ "missing_input": "board E declares E17 and the order set holds E6: the note beside those folders describes a board this project is not building",
  "note": "DOC-002 asks about the document that describes THIS board",
  "policy": {
   "hard_types": 15,
@@ -28,9 +30,9 @@
  "tool": "doc_provenance_e",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "9bccd1871fd5d8f7"
+  "tools_tree_sha": "4d83fe3b9dfc62e2"
  },
- "ts": "2026-09-20T07:41:56Z",
+ "ts": "2026-09-20T14:48:19Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown",
  "writer": {

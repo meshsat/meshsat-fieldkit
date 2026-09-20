@@ -28,12 +28,12 @@
  ],
  "tool": "power_sequence",
  "tools": {
-  "git_head": "52927139ecbf",
+  "git_head": "a0b707f96efc",
   "tools_tree_sha": "09731de0e4d60901"
  },
- "ts": "2026-09-20T14:45:23Z",
+ "ts": "2026-09-20T14:51:52Z",
  "verdict": "PASS",
- "version": "52927139ecbf+dirty",
+ "version": "a0b707f96efc",
  "writer": {
   "file": "power_sequence.py",
   "sha16": "58920d0bf59c3fbb"
