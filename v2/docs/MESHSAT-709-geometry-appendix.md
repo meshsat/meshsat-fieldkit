@@ -15740,3 +15740,35 @@ which is what an intent-only change has to produce, and both `.kicad_sch` came b
 sidecars and intent files are committed with them and `check_contracts` reads **ALL CONTRACTS PASS 73 of 73**
 after the move. **PWR-002: board E PASS of 13, board P PASS of 4, and all six boards pass it now.**
 **Readiness 59.8 to 60.4 percent of 333** (199 to 201 verified). Suite 1239, 0 failing.
+
+### 32.323, 20 September 2026 16:55 CEST: the outlet corner does have room for the controller's escape fan, at fourteen millimetres instead of five
+
+A83's thirteen lost escapes are a seat search that asks the wrong question. **Asked directly, on A83's own
+placed board, against every other front courtyard, the front rule areas that forbid a part and the board
+edge**, with `bypass_slots._fan_box(f, 2.2)`'s own test, which is what the placement pass has used since 9
+September:
+
+| within 30 mm of R138, on a 0.5 mm grid | seats |
+|---|---:|
+| courtyard clear | **4,561** |
+| courtyard **and fan** clear | **3,235** |
+| nearest courtyard-clear | **5.10 mm** from the shunt, case (99.86, 24.08), which is where A83 put it |
+| nearest **FAN-clear** | **14.00 mm** from the shunt, case (84.86, 29.08) |
+
+**So the room exists and it is nine millimetres further out.** What stands closest to that fan is `C120` at
+0.31 mm, then H8 the mounting hole at 1.80, `Q27` at 2.32 and `R143` at 2.59. The controller's three sense
+pins would reach the shunt in about fourteen millimetres rather than the 3.22 to 4.18 mm A83 achieves, and
+against the **95.27, 96.19 and 97.11 mm they run today** that is the same answer with a different margin: TI
+item 7 arrives on the outlet either way.
+
+**And the controller's two capacitors have seats outside its fan at 6.00 mm each**, `C94` at case (84.86,
+35.08) and `C127` at (84.86, 23.08), which stops C94 sitting a hundred millimetres from the part it
+decouples. **The conflict underneath that is this morning's 131-capacitor finding and it is NOT resolved
+here**: a decoupling capacitor wants to be within 3 mm of its pin and a fine-pitch part's fan is 2.2 mm
+outside its courtyard, so on a QFN whose pins sit ON the courtyard edge nothing inside 3 mm is ever outside
+the fan. Six millimetres is what the geometry allows on the front side; the underside is the other answer and
+belongs to the same decision.
+
+**A84 is that arm** (`$SP/a84_probe.sh`): A83 with U18 at the fan-clear seat, the gate's `EXPECT` following
+it, and C94 and C127 travelling with their controller. **Read it against A83's 447 escapes and sixteen pads
+skipped, not against A70's**, because A83 is the board that already carries everything else.
