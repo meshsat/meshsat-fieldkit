@@ -1,6 +1,6 @@
 {
  "board": "pcb-b-compute",
- "written": "2026-09-20 00:18",
+ "written": "2026-09-20 01:45",
  "bypass": [
   {
    "cap": "C112",
@@ -319,7 +319,8 @@
    "always_on": true,
    "always_on_why": "U25 is an AP63203 whose EN pin is tied to its own input, so the shared logic rail follows the device rail: the hubs and bridges on it must outlive any one module",
    "efficiency": 0.88,
-   "converted": true
+   "converted": true,
+   "fed_from": "+5V_DEV"
   },
   "+3V3_S1A": {
    "volts": 3.3,
@@ -332,7 +333,8 @@
    "note": "slot 1's card-socket 3.3 V from the AP63203 buck U103 through L101: an M.2 A/E-key radio card, 3 A at its own connector's rating and 1.5 A for the AW7915-AED",
    "switch": "U103",
    "efficiency": 0.88,
-   "converted": true
+   "converted": true,
+   "fed_from": "+5V_S1"
   },
   "+3V3_S1B": {
    "volts": 3.3,
@@ -346,7 +348,8 @@
    "note": "slot 1's NVMe socket and the PCIe switch's own 3.3 V from U104 through L102",
    "switch": "U104",
    "efficiency": 0.88,
-   "converted": true
+   "converted": true,
+   "fed_from": "+5V_S1"
   },
   "+1V0_S1": {
    "volts": 1.0,
@@ -359,7 +362,8 @@
    "note": "slot 1's PCIe switch core from the AP63200 buck U105 through L103",
    "switch": "U105",
    "efficiency": 0.85,
-   "converted": true
+   "converted": true,
+   "fed_from": "+5V_S1"
   },
   "+1V1_S1": {
    "volts": 1.1,
@@ -373,7 +377,8 @@
    "always_on": true,
    "always_on_why": "U106's EN pin is tied to the device rail on purpose: the hub core must outlive the module whose bank it serves, which is the whole point of the I/O high-availability layer",
    "efficiency": 0.85,
-   "converted": true
+   "converted": true,
+   "fed_from": "+5V_DEV"
   },
   "+3V3_CM1": {
    "volts": 3.3,
@@ -412,7 +417,8 @@
    "note": "slot 2's card-socket 3.3 V from the AP63203 buck U203 through L201: an M.2 A/E-key radio card, 3 A at its own connector's rating and 1.5 A for the AW7915-AED",
    "switch": "U203",
    "efficiency": 0.88,
-   "converted": true
+   "converted": true,
+   "fed_from": "+5V_S2"
   },
   "+3V3_S2B": {
    "volts": 3.3,
@@ -426,7 +432,8 @@
    "note": "slot 2's NVMe socket and the PCIe switch's own 3.3 V from U204 through L202",
    "switch": "U204",
    "efficiency": 0.88,
-   "converted": true
+   "converted": true,
+   "fed_from": "+5V_S2"
   },
   "+1V0_S2": {
    "volts": 1.0,
@@ -439,7 +446,8 @@
    "note": "slot 2's PCIe switch core from the AP63200 buck U205 through L203",
    "switch": "U205",
    "efficiency": 0.85,
-   "converted": true
+   "converted": true,
+   "fed_from": "+5V_S2"
   },
   "+1V1_S2": {
    "volts": 1.1,
@@ -453,7 +461,8 @@
    "always_on": true,
    "always_on_why": "U206's EN pin is tied to the device rail on purpose: the hub core must outlive the module whose bank it serves, which is the whole point of the I/O high-availability layer",
    "efficiency": 0.85,
-   "converted": true
+   "converted": true,
+   "fed_from": "+5V_DEV"
   },
   "+3V3_CM2": {
    "volts": 3.3,
@@ -492,7 +501,8 @@
    "note": "slot 3's card-socket 3.3 V from the AP63203 buck U303 through L301: an M.2 A/E-key radio card, 3 A at its own connector's rating and 1.5 A for the AW7915-AED",
    "switch": "U303",
    "efficiency": 0.88,
-   "converted": true
+   "converted": true,
+   "fed_from": "+5V_S3"
   },
   "+3V3_S3B": {
    "volts": 3.3,
@@ -506,7 +516,8 @@
    "note": "slot 3's NVMe socket and the PCIe switch's own 3.3 V from U304 through L302",
    "switch": "U304",
    "efficiency": 0.88,
-   "converted": true
+   "converted": true,
+   "fed_from": "+5V_S3"
   },
   "+1V0_S3": {
    "volts": 1.0,
@@ -519,7 +530,8 @@
    "note": "slot 3's PCIe switch core from the AP63200 buck U305 through L303",
    "switch": "U305",
    "efficiency": 0.85,
-   "converted": true
+   "converted": true,
+   "fed_from": "+5V_S3"
   },
   "+1V1_S3": {
    "volts": 1.1,
@@ -533,7 +545,8 @@
    "always_on": true,
    "always_on_why": "U306's EN pin is tied to the device rail on purpose: the hub core must outlive the module whose bank it serves, which is the whole point of the I/O high-availability layer",
    "efficiency": 0.85,
-   "converted": true
+   "converted": true,
+   "fed_from": "+5V_DEV"
   },
   "+3V3_CM3": {
    "volts": 3.3,
@@ -627,7 +640,8 @@
    "always_on": true,
    "always_on_why": "U26's EN pin is tied to the device rail it runs from, so the Ethernet switch core follows it",
    "efficiency": 0.85,
-   "converted": true
+   "converted": true,
+   "fed_from": "+5V_DEV"
   },
   "+2V5_KSZ": {
    "volts": 2.5,
@@ -972,5 +986,6 @@
   "RF": {
    "z_se": 50.0
   }
- }
+ },
+ "pass_through": {}
 }
