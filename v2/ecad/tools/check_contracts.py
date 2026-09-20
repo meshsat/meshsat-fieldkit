@@ -540,6 +540,14 @@ for _bd in sorted(set(list(per_board) + list(B))):
                            "the transmit inhibit chain on this board: it is present, it reaches the gate it keys, "
                            "the panel toggle is its only driver, its sense is a buffer and it is pulled down so a "
                            "missing panel inhibits"),
+                     # A SENTENCE IN THE NOTE IS NOT THE FIELD (20 September 2026). `_richer_on_disk` protects
+                     # a better reading in THIS tree and can know nothing about another host's; the only
+                     # mechanism that crosses trees is `missing_input`, which `rules_status` honours whatever
+                     # the timestamps say. Sweep 28 was run in a tree without the sibling netlists and these
+                     # readings, saying so in prose and declaring nothing, displaced readings taken where they
+                     # exist: 84 verdicts, twelve shapes, and about thirteen passes off the set's number.
+                     missing_input=("this board's netlist is absent from this tree, so no contract that names "
+                                    "it could be judged" if _bd in MISSING else None),
                      quiet=True)
     _v.write("check_contracts_%s" % _bd.lower(),
              _v.INCONCLUSIVE if (not _n or _bd in MISSING or _u) else (_v.PASS if not _r["fail"] else _v.FAIL),
@@ -551,6 +559,8 @@ for _bd in sorted(set(list(per_board) + list(B))):
                    "%d of this board's contracts name a board absent from this tree and were not judged" % _u
                    if _u else
                    "the contracts that name this board; the set's own verdict is check_contracts"),
+             missing_input=("this board's netlist is absent from this tree" if _bd in MISSING else
+                            "%d of this board's contracts name a board absent from this tree" % _u if _u else None),
              quiet=True)
 if (not checked or MISSING or _NO_INTENT) and _richer_on_disk("check_contracts", len(MISSING) + len(_NO_INTENT)):
     # The same rule for the SET verdict, and it is stricter, because of what this verdict MEANS: the seven
@@ -575,6 +585,9 @@ sys.exit(_v.write("check_contracts",
                   evidence=(["netlist absent: " + k for k in MISSING] + ["rail unsplit: " + u for u in UNSPLIT]
                             + fails + ["unjudged, a board it names is absent: " + t for t in unjudged[:8]]),
                   inputs={"boards": ",".join(sorted(B))},
+                  missing_input=(("%d of the set's contracts name a board absent from this tree and none "
+                                  "could be evaluated" % len(unjudged)) if not checked else
+                                 ("%s absent from this tree" % ", ".join(MISSING)) if MISSING else None),
                   note=("no contract was evaluated (%d of the set's contracts name a board absent from this "
                         "tree)" % len(unjudged) if not checked else
                         ("%s absent from this tree, so nothing that names them was judged" % ", ".join(MISSING)) if MISSING else

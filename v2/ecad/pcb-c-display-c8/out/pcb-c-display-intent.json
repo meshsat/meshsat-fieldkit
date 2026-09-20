@@ -1,6 +1,6 @@
 {
  "board": "pcb-c-display",
- "written": "2026-09-20 01:43",
+ "written": "2026-09-20 06:46",
  "bypass": [
   {
    "cap": "C7",

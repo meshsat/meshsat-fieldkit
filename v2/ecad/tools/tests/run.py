@@ -26,7 +26,12 @@ def load(path):
 
 
 def _evidence():
-    """What this tree's own verdicts SAY, with the timestamp and the tools hash removed.
+    """What this tree's own verdicts SAY, with the timestamp, the tools hash and the writer removed.
+
+    `writer` joined that list on 20 September 2026, the day it was added to every verdict: it is PROVENANCE,
+    the file that judged and its own hash, and a verdict carrying it beside one written an hour earlier that
+    does not is the same answer written twice. Left in the comparison it made the guard fire on every tree
+    holding both, which is a fact about the record's age and not about what any gate decided.
 
     A fixture that runs a gate from the wrong directory writes its answer into the evidence the readiness reads:
     on 18 September 2026 two of them handed `final_gate` a two-folder manifest from `v2/ecad` and left
@@ -39,7 +44,7 @@ def _evidence():
         try:
             import json as _j
             r = _j.load(open(p, encoding="utf-8"))
-            out[os.path.relpath(p, d)] = _j.dumps({k: v for k, v in r.items() if k not in ("ts", "tools", "version")},
+            out[os.path.relpath(p, d)] = _j.dumps({k: v for k, v in r.items() if k not in ("ts", "tools", "version", "writer")},
                                                   sort_keys=True)
         except Exception:
             out[os.path.relpath(p, d)] = "unreadable"

@@ -14235,3 +14235,123 @@ fail on the tool as it stood, where `judge` took two arguments and had no way to
 
 **NOT MEASURED, and it cannot be until the declaration changes**: what board E's sense pair reads. That
 belongs with the ground question rather than with this report.
+
+**Addendum to 32.282, 08:24 CEST**: the claim above was checked against `dc_density`'s own thirteen rows
+rather than against 32.264's prose. They are `VBAT` 3.69, `VIN_RAW` 2.00, `VBUS20` 2.03, `+13V8_PA` 1.53,
+`FE_OUT` 3.13, `CH_ACN` 3.03, `CH_SRP` 15.83, `S1_OUT` 1.44, `PA_OUT` 2.44, `PD_VPWR` 2.44, `PD_SW` 1.48,
+`PD_VBUS` 8.92, `PD_OUT` 1.23, and the claim holds exactly: all four rows above 20 percent sit on four of
+them and all four rows under 4 percent sit on conductors it does not name. **The refinement worth carrying is
+that the ratio is WIDTH and the error is WIDTH TIMES LENGTH.** `FE_ISNS_N` sits on `VBUS20`, a named
+conductor at 2.03x, and reads only 4.3 percent, because the LM5176's ISNS- pin sits close to the shunt on
+that rail. So the correlation is to be read as *the same copper*, never as *the ratio predicts the
+percentage*.
+
+### 32.286, 20 September 2026 08:32 CEST: the sweep landed, the number fell, and most of the fall was the sweep's own tree
+
+**Sweep 28 re-took every gate on all seven boards, read-only, and not one board changed** (every sha printed
+before and after, no `CHANGED during` line). The set's readiness went **62.8 to 54.1 percent of 333**, which
+is a large move, and reading it before reporting it is what this entry is.
+
+**MOST OF THE FALL WAS THE SWEEP'S OWN TREE AND NOT THE BOARDS.** Of the 36 pairs that came back NOT JUDGED,
+two classes were about the run rather than the design: `check_contracts_<L>` and `inhibit_chain_<L>` saying
+*"this board's netlist is absent from this tree"*, because a cross-board contract is a claim about two
+netlists and the sweep staged each board's into its own directory only; and `stackup_gate` on five boards
+saying *"the document the named stack was transcribed from is not in the tree"*, because the sweep tree
+carries no `v2/vendor/` at all and that gate gained the document check after sweep 27.
+
+**AND THEY DISPLACED THE READINGS TAKEN WHERE THOSE INPUTS EXIST, WHICH IS THE FINDING.** This project's own
+rule since 17 September is that **a reading taken with less input never replaces one taken with more**, and
+the only mechanism that carries it across hosts is the verdict's `missing_input` FIELD, which `rules_status`
+honours whatever the timestamps say. **Eighty-four verdicts in twelve shapes said their input was absent in
+the NOTE and declared nothing in the field.** `check_contracts` even carries a `_richer_on_disk` guard for
+exactly this, and it cannot help: it protects a better reading in THIS tree and can know nothing about
+another host's.
+
+**The 83 that were on disk were restored or removed** (56 restored from HEAD, 27 removed as files the sweep
+created where the tree already held better), and the number settles at **58.9 percent of 333: 196 verified,
+39 failed, 98 inconclusive**, from 62.8 / 209 / 45 / 79.
+
+**THE REMAINING FALL IS REAL AND IT IS MORE HONEST THAN WHAT IT REPLACED.** Sixteen of it is board B, whose
+routed-board rules moved from FAIL to INCONCLUSIVE with the sentence *"the board this tree holds for this
+phase is not routed (416 unrouted connections), so a rule verified on a routed board has nothing current to
+be judged against"*. Those were never failures of board B's design; they were failures of a board that has
+not been routed, and board B's measured failures go **13 to 6** accordingly. Three more are `PWR-002` on A, E
+and P, where the tool now says in its own words that a rail whose enable is driven only by a device powered
+from that same rail cannot be sequenced by inspection.
+
+**Three things changed so it cannot recur.** `check_contracts` (per board, per inhibit chain and set-level)
+and `stackup_gate` declare `missing_input` for every reason they cannot judge. A rule reads the tree's own
+committed verdicts and refuses any that says its input was absent in the note while declaring no
+`missing_input` — it is a data rule because no source-level check could have seen this, and run against the
+sweep's output before the restore it names all 84. And **sweep 29 stages `v2/vendor/` and every board's
+netlist into every board's directory**, so the gates can simply be taken rather than protected.
+
+**The honest summary of the morning's number**: 62.8 percent rested on readings up to nine days older than
+the tools deciding them; 58.9 is what the same boards read when asked again today.
+
+### 32.287, 20 September 2026 08:44 CEST: CORRECTION to 32.286, half of what I called the sweep's tree is the tree's, on every host
+
+32.286 said the netlist half of sweep 28's fall was *"about the run rather than the design"*, because the
+sweep staged each board's netlist into its own directory only. **That is wrong and the diagnosis was made by
+inference rather than by asking.** Asked directly, `check_contracts` prints the reason in its own words, on
+the box and **on the runner, identically**:
+
+```
+UNKNOWN GENERATOR for pcb-a-power: pcb-a-power.net was written by generator 4278a893998a2948
+and this tree's generator is dbd709db901ce878: the two describe different designs
+MISSING netlist for A (pcb-a-power), run its chain first
+```
+
+and the same for all six. **The six committed netlists were written by generators this tree no longer has.**
+The generator identity is `gen_sch_<L>.py` plus `kisch.py` plus `intent.py`, **by content**; `intent.py` has
+changed four times since the netlists were last regenerated (`ee79bddb`, 18 September), for `series_of`,
+`returns`, `fed_from`, `v_max` and `pass_through`. So `check_contracts` has refused to judge on every host
+since, **SCH-003 on six boards and INT-001 on seven have been INCONCLUSIVE for two days**, and the readiness
+page carried the 18 September PASS because nobody re-took it.
+
+**That is board B's MEC-001 again, in the largest cross-board gate, and it is exactly what
+`stale_readings --open-pairs` was built to name** — `check_contracts` is on the list it printed at 08:14.
+
+**So the restore of 32.286 was half right.** `stackup_gate` really was a staging gap: the transcribed
+fabricator document is in the tree on the runner and the gate reads **PASS of 24** here, so restoring those
+seven readings was correct. The `check_contracts` and `inhibit_chain` readings are **not** the sweep's fault
+and restoring them restored a stale PASS; the sweep's own INCONCLUSIVE, which now declares its missing input,
+is the truthful reading and it stands.
+
+**The fix is a regeneration and not a re-take**: the six schematics are regenerated at their declared phases
+(A32, B21, C24, D12, E17, P4) with today's engine and each netlist compared with the one committed beside it,
+connectivity line by connectivity line, so a regeneration that CHANGES a design is seen rather than adopted
+silently. That is the 17 September procedure and it has a driver.
+
+**And the property worth carrying**: the generator identity is a hash of the FILES, so **a comment in
+`intent.py` stales every netlist every generator wrote**. That is correct, because a reader cannot know a
+comment from a criterion, and it means a generator edit owes a regeneration before the contract gate means
+anything again.
+
+### 32.288, 20 September 2026 08:50 CEST: the six netlists regenerated, and the three files have to move as one
+
+Regen 7, on the hub, at each board's declared phase (A32, B21, C24, D12, E17, P4), with every netlist
+compared against the one committed beside it connectivity line by connectivity line:
+
+| board | lines | result |
+|---|---:|---|
+| A | 2,386 | **identical** |
+| C | 1,067 | **identical** |
+| D | 1,193 | **identical** |
+| E | 955 | **identical** |
+| P | 295 | **identical** |
+| B | — | **804 lines differ, and every one of them is a net CLASS** |
+
+**So the `intent.py` changes of the past two days were declarations and checks, not drawings**: five of the
+six designs are unchanged to the connection. Board B's 804 are the defect named on 20 September at 05:26 and
+never fixed, its committed netlist holding all its nets in `Default` while its generator assigns four real
+classes; the regeneration is what fixes it, and it is a correction rather than a change.
+
+**THE THREE FILES HAVE TO MOVE AS ONE, and fetching two of them was not enough.** With the netlists and their
+sidecars back, `check_contracts` still read `MISSING netlist` for all six, because the sidecar records
+`schematic_sha256` and named the schematic the BOX had just regenerated, which this tree did not hold. With
+the six `.kicad_sch` fetched as well the gate reads **ALL CONTRACTS PASS, 73 of 73**. That is 17 September's
+sentence about adopting a board, its schematic and its netlist together, arriving at the netlist alone.
+
+**Sweep 30 is running**, the first sweep on that footing, so SCH-003 on six boards and INT-001 on seven can
+be taken rather than declared absent.

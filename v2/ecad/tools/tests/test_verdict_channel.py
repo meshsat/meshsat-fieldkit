@@ -777,3 +777,33 @@ def t_a_crash_verdict_goes_where_the_caller_said_to_write():
         assert not stray, "the crash verdict was ALSO written beside the run: %s" % stray
     finally:
         os.chdir(cwd)
+
+
+def t_a_verdict_that_says_its_input_was_absent_declares_it_in_the_field():
+    """A SENTENCE IN THE NOTE IS NOT THE FIELD (MESHSAT-862, 20 September 2026).
+
+    `rules_status` prefers the reading that HAD its input whatever the timestamps say, and the only thing it
+    can read is `missing_input`. A gate that writes INCONCLUSIVE, explains in prose that its input was not
+    there, and leaves the field unset defeats that protection completely: sweep 28 ran in a tree without the
+    sibling netlists and without `v2/vendor`, and 84 such verdicts in TWELVE shapes displaced readings taken
+    where those inputs exist, taking about thirteen passes off the set's number for a reason that was not the
+    boards. This rule reads the tree's own committed verdicts, which is where the defect was visible and
+    where no source-level check could have seen it.
+
+    Proved to fail on the tree it was written against: run against the sweep's output before the readings
+    were restored it named all 84."""
+    import glob as _g, json as _j, re as _re
+    ecad = os.path.dirname(TOOLS)
+    absent = _re.compile(r"absent from this tree|is not in the tree|no contract was evaluated|"
+                         r"could not ask|no deliverable folder", _re.I)
+    bad = []
+    for p in _g.glob(os.path.join(ecad, "pcb-*", "**", "*.verdict.json"), recursive=True) + \
+             _g.glob(os.path.join(ecad, "out", "**", "*.verdict.json"), recursive=True):
+        try: v = _j.load(open(p, encoding="utf-8"))
+        except Exception: continue
+        if v.get("verdict") != "INCONCLUSIVE" or v.get("missing_input"): continue
+        text = (v.get("note") or "") + " " + " ".join(str(e) for e in (v.get("evidence") or [])[:3])
+        if absent.search(text): bad.append("%s: %s" % (os.path.relpath(p, ecad), (v.get("note") or "")[:90]))
+    assert not bad, ("%d verdict(s) say their input was absent in the NOTE and declare no missing_input, so a "
+                     "reading taken with less input can displace one taken with more:\n  %s"
+                     % (len(bad), "\n  ".join(sorted(bad)[:10])))

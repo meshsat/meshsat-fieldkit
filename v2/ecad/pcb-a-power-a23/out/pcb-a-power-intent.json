@@ -1,6 +1,6 @@
 {
  "board": "pcb-a-power",
- "written": "2026-09-20 01:04",
+ "written": "2026-09-20 06:45",
  "bypass": [
   {
    "cap": "C8",
@@ -912,5 +912,6 @@
   "RF": {
    "z_se": 50.0
   }
- }
+ },
+ "pass_through": {}
 }

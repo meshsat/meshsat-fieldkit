@@ -2,12 +2,12 @@
  "what": "the generator that wrote this netlist, by content",
  "letter": "b",
  "netlist": "pcb-b-compute.net",
- "generator_sha": "7047363b775085d0",
+ "generator_sha": "66e68fe66ab81617",
  "generator_files": [
   "gen_sch_b.py",
   "kisch.py",
   "intent.py"
  ],
- "schematic_sha256": "bb8daa8c94d84dc8f525a8d74f5b7881",
- "taken": "2026-09-17T22:21:03+00:00"
+ "schematic_sha256": "eac5845fafe6d3033a97aed91b621594",
+ "taken": "2026-09-20T06:45:50+00:00"
 }

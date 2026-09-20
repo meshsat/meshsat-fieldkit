@@ -162,7 +162,15 @@ def main(argv):
     if not r["compared"]:
         return _v.write("stackup_gate", _v.INCONCLUSIVE, denominator=0,
                         inputs={"board": path, "declared": r.get("declared")},
-                        evidence=r["notes"], missing_input="stackup" if not r["board_copper"] else None,
+                        # EVERY REASON THIS GATE CANNOT COMPARE IS AN ABSENT INPUT (20 September 2026). The
+                        # field was set only for a board file with no stackup block, so a run in a tree
+                        # WITHOUT the transcribed fabricator document wrote INCONCLUSIVE, said so in its note
+                        # alone, and displaced the reading taken where the document exists: five boards of
+                        # sweep 28. `missing_input` is the only thing that crosses trees, so each reason
+                        # declares itself.
+                        evidence=r["notes"],
+                        missing_input=("the board file carries no stackup block" if not r["board_copper"] else
+                                       ("; ".join(r["notes"])[:180] or "nothing could be compared")),
                         note="; ".join(r["notes"])[:200] or "nothing to compare")
     return _v.write("stackup_gate", _v.FAIL if r["bad"] else _v.PASS,
                     counts={"compared": r["compared"], "disagreements": len(r["bad"]), "copper_layers": r["board_copper"]},

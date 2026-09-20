@@ -20,7 +20,14 @@ import os, re, sys, glob
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ECAD = os.path.dirname(TOOLS)
 
-KNOWN = {"pcb-b-compute": "B21 is from 17 September and predates the generator's class table; B23 carries it"}
+# EMPTY SINCE 20 SEPTEMBER 2026, AND THE RULE BELOW IS WHY IT IS EMPTY. Board B was the one entry: its
+# committed netlist held all 1,852 nets in `Default` while its generator assigns four real classes, because
+# the netlist was exported at B19 and never re-exported. Regen 7 rebuilt all six at their declared phases and
+# board B's came back with 804 lines different, EVERY ONE of them a net class (DIFF100, Default, HV, PWR,
+# USB). The entry was removed because the rule refused to let it stand: a name on this list that is no longer
+# in that state is a blanket over a board that has moved on, which is what `t_the_known_list_is_accurate_and_
+# not_a_blanket` exists to catch, and it caught it in the same run that fixed it.
+KNOWN = {}
 
 
 def _classes(path):
