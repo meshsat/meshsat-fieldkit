@@ -16374,3 +16374,12 @@ and the call was asked zero times). Suite **1247**, 0 failing.
 **What it does not change:** PI-003 was already ADVISORY wherever a rail is attributed, so no board's verdict
 moves on this alone; what moves is what the failure list says, and a work list with a fifteen-times row in it
 sends someone to draw copper at a via carrying microamps.
+
+**32.336 addendum, 21:40 CEST: the guard was swept across the set before it was trusted, and it fires
+exactly once.** A guard that removes failures has to be measured where it does NOT fire, or it is a
+loosening nobody counted. Asked of every board carrying a `via_current` verdict, read straight from the
+committed board files with no tool in the way: **board B's twelve attributed rows are all on nets with three
+to five layers of copper** (`+3V3_DEV` has 383.8 mm on B.Cu, 491.4 on F.Cu, 420.4 on In2 and 310.3 on In3;
+`+5V_DEV` adds an In4 zone; `GND` has its In1 plane), so every one of them crosses layers somewhere and keeps
+its reading. **Boards C, P and E5 carry no attributed row at all.** The guard changes one row on one board,
+which is what it was written for, and the sweep is the evidence that it changed nothing else.
