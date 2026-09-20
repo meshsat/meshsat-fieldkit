@@ -231,6 +231,15 @@ idle_tools:
    why: "run by hand, deliberately: it brings a ROUTED board's values and codes up to date with its schematic
      without touching copper (owner ruling 10, the impossible capacitors on A24), and a value swap that runs
      itself inside a chain is how a board's copper and its BOM stop being the same design"
+ - tool: ses_apply.py
+   why: "a READER's helper, run deliberately and never by a chain (20 September 2026): it imports a FROZEN
+     session into a copy of an arm's own placed board so a route can be read at a KNOWN PASS. The router
+     overwrites one session file every pass, so a route's board at pass N is not recoverable after the fact and
+     the only history is a copy taken while it ran. It is the two steps route_one.sh runs on that copy,
+     ImportSpecctraSES and the drill restore, and it changes copper only in the scratch board it is given.
+     It is a tool rather than a scratchpad script because the mistake it prevents cost a reading: the first
+     snapshot was handed to ses_import_lock.py, which is the PARTITION importer and wants five arguments; it
+     raised, imported NOTHING, and left the PLACED board at KiCad's 499 unconnected cap to be read as a result"
  - tool: retitle.py
    why: "superseded by the PHASE argument: silk_fix_all.py stamps the phase from the chain, and the gate in
      verify_deliverable refuses a folder whose legend names a different one"

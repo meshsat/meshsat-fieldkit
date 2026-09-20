@@ -1311,3 +1311,24 @@ def t_the_stretch_says_so_when_it_is_not_one():
     src = open(os.path.join(here, "routeflow.py"), encoding="utf-8").read()
     assert re.search(r"ROUTEFLOW_TIMEOUT_SCALE=%g stretches this route", src), \
         "the run does not say when the stretch applies, so nothing in the log proves the knob arrived"
+
+
+def t_the_session_importer_is_not_the_partition_importer():
+    """20 September 2026. Reading a route's board from a frozen session, the snapshot was handed to
+    `ses_import_lock.py`, which is the PARTITION importer and takes five arguments (board, ses, part.json,
+    groups, out). It raised, NOTHING was imported, and the board then read was the PLACED one at KiCad's 499
+    unconnected cap, which looks exactly like a result. A cap is never a denominator. `ses_apply.py` is the
+    plain operation, the same two steps route_one.sh runs: ImportSpecctraSES and then the drill restore,
+    because the importer leaves every via's drill UNDEFINED."""
+    import ast, os
+    here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    src = open(os.path.join(here, "ses_apply.py"), encoding="utf-8").read()
+    tree = ast.parse(src)
+    names = {n.func.attr for n in ast.walk(tree)
+             if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute)}
+    assert "ImportSpecctraSES" in names, "the session importer does not import a session"
+    assert "restore_board" in names, \
+        "the session importer does not restore the drills, so every via takes its class drill (18 September)"
+    lock = open(os.path.join(here, "ses_import_lock.py"), encoding="utf-8").read()
+    assert "sys.argv[1:6]" in lock, \
+        "ses_import_lock no longer takes five arguments, so this rule is about a tool that changed"
