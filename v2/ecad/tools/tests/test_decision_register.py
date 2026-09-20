@@ -90,10 +90,20 @@ def t_the_page_is_generated_and_not_hand_maintained():
     rather than reporting the page as hand-edited, which is the house rule applied to the suite itself."""
     import subprocess, glob as _glob
     need(os.path.join(D.RR.DOCS, "OWNER-DECISIONS-OPEN.md"), "the page has not been rendered yet")
-    if not _glob.glob(os.path.join(os.path.dirname(TOOLS), "out", "*.verdict.json")):
+    # AND THE GUARD ASKED THE WRONG QUESTION (20 September 2026, found by running the suite where KiCad is).
+    # It declined when `out/` held NO verdict at all, and the suite's own earlier tests write three of them
+    # there, so on a staged tree the guard passed and the rule then reported the page as hand-edited. It is
+    # 32.213's "the test set rewriting the readiness it judges" one level subtler: a guard satisfied by the
+    # run's own output. The question is about the SET-LEVEL readings the page's "what it holds" half is
+    # computed from, and those are named: DFA-001's `assembly_set` and OUT-001's `final_gate`, neither of
+    # which any test writes.
+    _out = os.path.join(os.path.dirname(TOOLS), "out")
+    _need_set = [n for n in ("assembly_set.verdict.json", "final_gate.verdict.json")
+                 if not os.path.exists(os.path.join(_out, n))]
+    if _need_set:
         raise __import__("harness").Skip(
-            "this tree carries no set-level verdicts, so the page's 'what it holds' half is computed "
-            "from less evidence than the committed page was")
+            "this tree carries no %s, so the page's 'what it holds' half is computed from less evidence "
+            "than the committed page was" % " or ".join(n.split(".")[0] for n in _need_set))
     p = subprocess.run([sys.executable, os.path.join(TOOLS, "decisions_render.py"), "--check"],
                        capture_output=True, text=True, cwd=os.path.dirname(TOOLS))
     assert p.returncode == 0, (p.stdout + p.stderr)[-500:]

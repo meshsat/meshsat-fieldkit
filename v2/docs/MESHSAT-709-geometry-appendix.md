@@ -13865,3 +13865,23 @@ floor-plan answer again and is not a seat change on its own, since U3's rotation
 
 **NOT STARTED, deliberately**: a floor plan half-moved is worse than one not moved, and three routes are in
 flight on this board.
+
+### 32.276, 20 September 2026 07:08 CEST: the suite ran where KiCad is, and a guard a run could satisfy by running
+
+**1238 passed, 1 failed, 7 skipped at `3f62afca`**, which is the standing rule after a day of tool work
+(32.213), and the one failure is a rule reporting the staged tree's own limits as a fault.
+
+`test_decision_register.t_the_page_is_generated_and_not_hand_maintained` re-renders
+`OWNER-DECISIONS-OPEN.md` and compares it with the committed one. The page's "what it holds" half is
+computed from **set-level readings that live in the gitignored `v2/ecad/out/`**, so a staged tree renders a
+different page for a true reason, and the rule was written to decline when that directory holds no verdict
+at all. **The suite's own earlier tests write three verdicts there** (`check_zone_nets`, `lcsc_fill`,
+`rules_complete`), so the guard was satisfied by the run's OWN OUTPUT and the rule then accused the page of
+being hand-edited, while the same command on the runner renders it byte for byte.
+
+**That is 32.213's "the test set rewriting the readiness it judges" one level subtler: a guard a run can
+satisfy by running.** The question is about the set-level readings the page needs and those have names, so
+the guard asks for `assembly_set` (DFA-001) and `final_gate` (OUT-001), **neither of which any test writes**,
+and declines naming whichever is absent. Separation proved against the two trees' real listings before it
+was trusted: **3 verdict files in the staged tree's `out/` against 71 here**, and the old guard passes on
+both where the new one passes here and declines there. Suite 1202 on the runner, 0 failing.
