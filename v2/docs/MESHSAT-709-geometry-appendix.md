@@ -14974,3 +14974,36 @@ side. **What this does NOT say** is that any board is wrong: since this morning 
 router lays them, and a router resolves a crossing with a via, which is exactly what A61's pinned straight
 runs could not do. It is a statement about what a PRE-LAY could achieve and about how much work the router is
 being given. A69's routed `kelvin_check` is what decides the five stages, and its reader is armed.
+
+### 32.303, 20 September 2026 14:05 CEST: the outlet's seats are put through the generator, and the first pair blocked on two parts my own probe had called movable
+
+**The corridor measurement of 32.300 was courtyards, rule areas and the board edge, and it said the next test
+was a GENERATION. Two arms were run, each the chain to the placed board and no further, each patching its own
+tools copy and nothing in the repo.**
+
+**A71 took the seats as measured and the placed board came back `hard 14`, so the chain blocked, correctly.**
+Everything else passed on the way: `check_pcb_a` ALL PASS of 511, `netlist_board` 2,148 of 2,148 with 436
+footprints, region fit 1.4 mm of the declared 1.5, and the two parts landed within 0.19 mm of the seats they
+were given, the walked path reading **54.82 mm against the 54.81 the measurement predicted**. **All fourteen
+violations are `Q27` against `R78` or `R79`** (six `solder_mask_bridge`, six `shorting_items`, two
+`courtyards_overlap`), and the cause is mine: the seat search listed those two small resistors as MOVABLE
+because 32.293 had named them as parts that could move, **and no generator moved them**. A part is movable
+only when something moves it, and a seat found by ignoring a part is a seat for a board nobody is building.
+
+**A71b, the same question with nothing else allowed to move, lands `hard 0` and `PREROUTE-DONE PLACED`.** Q27
+at case (87.84, 39.04) and R138 at (98.86, 29.08), both within 0.2 mm of their seats, and the walked path
+`Q26` to `R81` to `Q27` to `R138` to `J_USBC_OUT` is **54.99 mm against today's 180.45**. The corrected search
+still offers **17 seats for Q27 and 32 for R138** within 4 mm of the line, so the corridor is not tight even
+with the whole of the rest of the board held still.
+
+**Its price, stated rather than rounded off**: escapes **460 against the baseline A70's 461**, and **3 pads
+without an escape against 2**, the new one being `U18` pad 9, a GND pad, because the PDS region re-packs once
+its two largest parts leave the list. Thermal vias refused, 4 against 4. **And the controller question is
+unchanged by the new seat**: with `U18` left where it stands its own sense pins run 95.27, 96.19 and 97.11 mm
+to the shunt, while `U18` itself finds a legal seat **5.00 mm** from it at case (100.15, 24.25) with 975 mm2
+of the 20 mm neighbourhood free against its cluster's 122.5 mm2.
+
+**NOTHING IS APPLIED.** What exists is a measured pair of seats that the generator's own gates accept at hard
+zero, and the open half is the controller: board A's next phase either carries `U18` and its twelve cluster
+parts to the seat beside the shunt, or accepts a ninety-five millimetre sense pair, and that is a placement
+decision with both numbers now measured rather than a guess with one.
