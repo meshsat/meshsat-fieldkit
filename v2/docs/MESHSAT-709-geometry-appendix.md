@@ -14876,3 +14876,45 @@ A48 was stopped mid-generation for naming a net with forty open pairs on the pla
 **43 pads**, and VBAT is deliberately left out at **68** because it already carries generator-laid bands.
 **The group closed 27 of 27**, with the switching group at 19 of 20 and the sense group at 7 of 10 in the
 same run. Whether it buys the five opens is a route's answer and none exists yet.
+
+### 32.300, 20 September 2026 13:35 CEST: the USB-C outlet's corridor has seats, its controller travels for five millimetres, and my own first map answered zero
+
+**The two questions 32.293 named about board A's USB-C PD outlet are answered with counts, read-only on the
+board the generator now makes (A70's placed snapshot; every front courtyard, the four front rule areas that
+forbid a PART, and the board edge in the map). NOTHING IS APPLIED.**
+
+**(1) ITS 180.45 mm PATH BECOMES 54.81 mm WITH TWO PARTS MOVED AND NOTHING ELSE TOUCHED.** The corridor from
+`R81`, the stage's own ISNS shunt, to `J_USBC_OUT` is **46.13 mm**. Walking it at half a millimetre and
+asking each station whether the part fits there: **`Q27`, the VBUS switch on a 7.19 by 5.59 mm PowerPAK SO-8
+courtyard, has 24 legal seats within 4 mm of the line**, and **`R138`, the outlet's own 2512 shunt at 7.75 by
+3.95, has 44**. So the question "do a PowerPAK SO-8 and a 2512 have SEATS in a strip that already holds 22
+footprints" is answered yes, with a count. The shortest legal pair is `Q27` at case (77.82, 49.13) and `R138`
+at case (83.97, 44.02), and the walked path `Q26` to `R81` to `Q27` to `R138` to `J_USBC_OUT` is then
+**54.81 mm against today's 180.45**, measured the same way (footprint centres) as the number it replaces.
+
+**(2) THE SECOND QUESTION IS ANSWERED TOO AND THE CHEAP BRANCH IS THE CONTROLLER TRAVELLING WITH ITS SHUNT.**
+`U18` reads the outlet's shunt across its own pins (19 and 23 on `PD_SW`, 21 on `PD_VBUS`), so a shunt that
+travels alone takes those lines with it: from the seat above they run **76.07, 77.02 and 77.98 mm**, which is
+TI layout item 7 arriving on the outlet at seventy-seven millimetres. Asked the other way, **`U18` itself
+(5.29 by 5.29) finds a legal seat 5.00 mm from the shunt** at case (88.95, 43.58), and **862 mm2 of the 20 mm
+neighbourhood is free** against the **122.5 mm2** of courtyard its twelve remaining cluster parts need. The
+controller and its cluster fit beside their shunt with room over, and the long sense pair is the branch that
+costs.
+
+**(3) AND MY OWN FIRST MAP ANSWERED ZERO SEATS, which is this week's defect in a sixth costume.** It took
+every rule area's **BOUNDING BOX** as a refusal, so the two board-wide "no tracks on In1 and In4" areas
+covered all 37,604 mm2 of the board and every "keep tracks off <rail>" area on B.Cu and In3 refused a
+front-side seat; the probe reported **0 seats** on a board that has 68. **A keep-out that forbids TRACKS on
+an INNER layer says nothing about where a PART may sit, and a bounding box is not a polygon.** Board A
+carries thirty rule areas and **not one forbids a footprint or a pad**, so the corrected map is four areas
+and the board edge. **The three seat-choosing tools in the tree were then read rather than assumed**:
+`bypass_slots.py` and `bypass_place.py` both take only `GetDoNotAllowFootprints` (with the 8 September
+comment saying why, in the same words), `place_audit.py` keeps its track keep-outs separate from its part
+tests, `gnd_grid.py` asks for via keep-outs, and **`bypass_place` keeps the bounding box only as a PRE-FILTER
+in front of `HitTestFilledArea`**, which is the shape the probe should have had and the same shape this
+morning's fanout fix took. No tool changed; the zero was a property of my question.
+
+**What is not answered.** These are courtyards, rule areas and the board edge, not the packer's region
+rectangles, not the escape-fan predictor and not a chain, so the seats are a measurement and the next test is
+a generation: the mechanism is the fifteen fixed seats the ISNS filter parts already use in `gen_pcb_a3.py`,
+and whichever branch is taken, board A's next phase carries it with its own pre-route gate.
