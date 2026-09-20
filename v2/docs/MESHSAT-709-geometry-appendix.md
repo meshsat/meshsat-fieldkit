@@ -16004,3 +16004,33 @@ ends the router left and the corridor is measured from the capacitor.
 of the charger block and of the outlet, and it is the A21 pattern this board already carries on four other
 rails. **NOTHING APPLIED**: the placement under it moves with every arm in flight, and a band drawn against
 one placement is only true of that placement, which is this afternoon's own lesson about C94.
+
+**CORRECTION, 19:12 CEST, to the 19:08 addendum: THE GAP RUNS SOUTH, NOT NORTH, AND THE CORRIDOR DOES NOT
+EXIST ON THE FRONT SIDE.** The addendum walked each rail from its output capacitor NORTH to the band at y +67
+and found one obstacle apiece. **That span is already drawn**: `gen_pcb_a3.py` lines 511 to 517 give every
+slot an island and a B.Cu band for `S*_OUT` over y 50.5 to 64.9 AND an island and a band for the `+5V_S*`
+rail from the shunt's pad 2 to the connector pin. Nothing was missing there and the measurement was of copper
+that exists.
+
+**The routed gaps are between the rail's copper at case y +67 and a LOAD south of the converter row at y +41
+to +46**, so the missing run goes SOUTHWARD and **the converter block stands in the middle of it**. Walked on
+the same placed board along the line the DRC's own two ends define:
+
+| rail | gap | a band of its width crosses | a clear vertical lane |
+|---|---:|---|---|
+| `+5V_S1` | 26.15 mm | **L3, U4, C31** | **none within 15 mm either side** |
+| `+5V_S2` | 21.80 mm | **L4, U9** | **none within 15 mm either side** |
+| `+5V_S3` | 21.75 mm | **L5, U10** | **none within 15 mm either side** |
+| `+5V_DEV` | 20.68 mm | **L6, U11, U7** | **none within 15 mm either side** |
+
+**So the four are a floor-plan problem after all, and the shape is the opposite of what the addendum said**:
+each rail has to get PAST its own converter block to reach loads on the other side of it, and on the front
+side there is no lane of even 1.10 mm within fifteen millimetres. The answers this board already uses for
+exactly that are an INNER-layer run under the block, which is what `VIN_RAW under the trunk` does on In3, or
+a band taken round the block, which is what the PA rail does; both are generator work with a placement
+behind them and neither is drawn for these four.
+
+**The addendum's numbers were right and its subject was wrong**: it measured a span that is already copper.
+The tell was there to be read and I did not read it, which is this project's own recurring shape: a
+measurement is only as good as the question, and the question has to be taken from the artefact (the DRC's
+two ends) rather than from the story.
