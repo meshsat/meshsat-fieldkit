@@ -293,9 +293,32 @@ def main(a):
         lines.append("INFO  %d of %d zone(s) carry no fill on this board, so the pour-island class was not "
                      "predicted for them (fill the board before this stage to have it read)" % (_unfilled, _zones))
     if _isl:
-        lines.append("WARN  %d pour island(s) already carry no via or plated pad of their own net BEFORE any "
-                     "route, which is the class pour_stitch repairs afterwards: %s"
-                     % (len(_isl), "; ".join(_isl[:6]) + (" ..." if len(_isl) > 6 else "")))
+        # A POUR BORN WITHOUT A VIA IS COPPER THE GENERATOR MEANT TO CONNECT AND DID NOT, AND IT REFUSES THE
+        # BOARD NOW (21 September 2026). This line was a WARN, and it named board A's defect on every chain from
+        # A87 to A92: each rail's In3 run ended in a column that KiCad had renamed to GND because it sat in the
+        # load capacitor's ground pad, so the six load bank islands carried no via of their own net BEFORE any
+        # route and the run dead-ended a layer below them. The WARN was printed six times, read by nobody, and
+        # the arms routed for a night with no variable in them. Measured across the set before the bar moved:
+        # the count is ZERO on every clean chain (A85, A86, A93, B23, C24, D27, D30, E30, P9) and 6 to 9 on
+        # exactly the defective arms, with one VBAT In2 piece on A69 and A70, so a refusal fires on the defect
+        # and on nothing else. The allow idiom of erc-allow.txt applies: `pour-island-allow.txt` beside the
+        # board names a NET whose islanded pour is known and says why, and such an island is reported ALLOW and
+        # still counted in the report. The islands a ROUTER cuts out of a pour are the other half of this class
+        # and stay pour_stitch's, because they do not exist yet on a placed board.
+        _pallow = os.path.join(os.path.dirname(os.path.abspath(a[0])) or ".", "pour-island-allow.txt")
+        _pal = [l.strip() for l in open(_pallow).read().splitlines() if l.strip() and not l.startswith("#")] if os.path.exists(_pallow) else []
+        _refused = [i for i in _isl if not any(i.split(" on ")[0] == l.split()[0].lstrip("/") for l in _pal)]
+        _allowed = [i for i in _isl if i not in _refused]
+        if _allowed:
+            lines.append("ALLOW %d pour island(s) with no via or plated pad of their own net are declared in "
+                         "pour-island-allow.txt: %s" % (len(_allowed), "; ".join(_allowed[:6])))
+        if _refused:
+            lines.append("FAIL  %d pour island(s) already carry no via or plated pad of their own net BEFORE any "
+                         "route: the generator laid copper nothing reaches, and a rail run that ends in one has "
+                         "reached nothing (board A's In3 runs, A87 to A92); name the net in pour-island-allow.txt "
+                         "with its reason or connect it: %s"
+                         % (len(_refused), "; ".join(_refused[:6]) + (" ..." if len(_refused) > 6 else "")))
+            coll += 1
     elif _zones and not _unfilled:
         lines.append("INFO  every filled pour on this board reaches a via or a plated pad of its own net; the "
                      "islands a ROUTER cuts out of a pour cannot be predicted from a placed board and are the "
