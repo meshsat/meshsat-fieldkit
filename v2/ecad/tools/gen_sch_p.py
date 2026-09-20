@@ -31,7 +31,10 @@ _intent.rail("PACK_P", 14.4, 10.0, 18.0, "W_P", loads={"Q2": 10.0}, switch="U1",
 _intent.rail("CELL4", 14.4, 10.0, 18.0, "W_BP", always_on=True, converted=False, loads={"F1": 10.0},
              always_on_why="the cell block itself: there is nothing upstream of it to switch, which is why everything downstream is protected rather than enabled",
              note="the top cell node from the block strip")
-_intent.rail("FUSED", 14.4, 10.0, 18.0, "F1", loads={"Q1": 10.0}, always_on=True, converted=False,
+# WHAT FEEDS THIS RAIL (20 September 2026, appendix 32.246): `power_path` adds up what a rail's
+# converters draw and refuses to let a feeder declare less than its children take. Board A's VBAT
+# declared 10 A and its nine converters drew 15.18, and nothing checked it on any board until now.
+_intent.rail("FUSED", 14.4, 10.0, 18.0, "F1", loads={"Q1": 10.0}, always_on=True, converted=False, fed_from="CELL4",
              always_on_why="the cell node after the 25 A blade: a fuse is protection and not a switch",
              note="after the blade fuse")
 SYMDIR = "/usr/share/kicad/symbols/"

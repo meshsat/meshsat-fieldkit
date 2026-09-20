@@ -31,7 +31,10 @@ _intent.rail("+5V", 5.0, 0.6, 1.0, "J_PANEL", budget=0.05, loads={"SW_LIGHT": 0.
 # DECLARED 16 September 2026. The panel's own 3.3 V was not in the intent file, so `signalnets` could not know
 # it was a rail and the return-path gate judged it as a SIGNAL NET, while `dc_drop` and `derate` could not see
 # it at all. Every load is named because a rail without loads is not declarable.
-_intent.rail("+3V3", 3.3, 0.12, 0.20, "U5", budget=0.03, share=0.0075, always_on=True,
+# WHAT FEEDS THIS RAIL (20 September 2026, appendix 32.246): `power_path` adds up what a rail's
+# converters draw and refuses to let a feeder declare less than its children take. Board A's VBAT
+# declared 10 A and its nine converters drew 15.18, and nothing checked it on any board until now.
+_intent.rail("+3V3", 3.3, 0.12, 0.20, "U5", budget=0.03, share=0.0075, always_on=True, fed_from="+5V",
              always_on_why="U5 is a TLV75533 whose EN pin is tied to its own input, so this rail follows the 5 V that arrives on the ribbon and has no switch of its own",
              source_ic="U5 is a TLV75533 LDO in SOT-23-5: pin 5 IS its output power pin",
              loads={"U1": 0.040, "U2": 0.010, "U3": 0.010, "U4": 0.015, "U6": 0.005, "U7": 0.005,

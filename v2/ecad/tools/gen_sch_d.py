@@ -44,7 +44,10 @@ _intent.rail("+5V_D8", 5.0, 1.0, 2.0, "J_PWR1", budget=0.06, share=0.02, always_
 # them at all. A rail that is not declared is not excluded: it is silently checked against the wrong question
 # and silently missed by the right one. The currents are design estimates of where the current goes, in the
 # same form as the rails above, and every load is named because a rail without loads is not declarable.
-_intent.rail("+3V3_D8", 3.3, 0.12, 0.25, "U1", budget=0.03, always_on=True, converted=True, efficiency=0.66,
+# WHAT FEEDS THIS RAIL (20 September 2026, appendix 32.246): `power_path` adds up what a rail's
+# converters draw and refuses to let a feeder declare less than its children take. Board A's VBAT
+# declared 10 A and its nine converters drew 15.18, and nothing checked it on any board until now.
+_intent.rail("+3V3_D8", 3.3, 0.12, 0.25, "U1", budget=0.03, always_on=True, converted=True, efficiency=0.66, fed_from="+5V_D8",
              always_on_why="U1 is a TLV75533 whose EN pin is tied to its own input, so this rail follows +5V_D8 and has no switch of its own",
              source_ic="U1 is a TLV75533 LDO in SOT-23-5: pin 5 IS its output power pin",
              # J_HARN1 is NOT on this net: the gated 3.3 V that leaves on the harness is board A's +3V3, and the
@@ -70,7 +73,7 @@ _intent.rail("+3V3_D8", 3.3, 0.12, 0.25, "U1", budget=0.03, always_on=True, conv
 # and the pre-router still lays them as pairs.
 _intent.pair_class("USB")
 
-_intent.rail("+5V_SA", 5.0, 0.35, 1.10, "FB1", budget=0.05, always_on=True, converted=False,
+_intent.rail("+5V_SA", 5.0, 0.35, 1.10, "FB1", budget=0.05, always_on=True, converted=False, fed_from="+5V_D8",
              always_on_why="the exciter's rail behind the ferrite FB1: a ferrite is not a switch, so this rail follows +5V_D8. What gates the transmitter is the PTT chain, not this rail",
              loads={"U2": 1.10},
              note="the exciter's own 5 V behind the 600R ferrite FB1: the SA868 draws about 350 mA receiving "

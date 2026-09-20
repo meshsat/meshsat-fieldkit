@@ -1,6 +1,6 @@
 {
  "board": "pcb-d-aprs",
- "written": "2026-09-17 11:59",
+ "written": "2026-09-20 01:44",
  "bypass": [
   {
    "cap": "C51",
@@ -184,7 +184,8 @@
    "always_on": true,
    "always_on_why": "U1 is a TLV75533 whose EN pin is tied to its own input, so this rail follows +5V_D8 and has no switch of its own",
    "efficiency": 0.66,
-   "converted": true
+   "converted": true,
+   "fed_from": "+5V_D8"
   },
   "+5V_SA": {
    "volts": 5.0,
@@ -198,7 +199,8 @@
    "budget": 0.05,
    "always_on": true,
    "always_on_why": "the exciter's rail behind the ferrite FB1: a ferrite is not a switch, so this rail follows +5V_D8. What gates the transmitter is the PTT chain, not this rail",
-   "converted": false
+   "converted": false,
+   "fed_from": "+5V_D8"
   },
   "+3V3": {
    "volts": 3.3,
@@ -253,5 +255,6 @@
   "RF": {
    "z_se": 50.0
   }
- }
+ },
+ "pass_through": {}
 }

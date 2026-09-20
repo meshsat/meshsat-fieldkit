@@ -1,6 +1,6 @@
 {
  "board": "pcb-p-pack",
- "written": "2026-09-20 00:04",
+ "written": "2026-09-20 01:43",
  "bypass": [
   {
    "cap": "C1",
@@ -60,7 +60,8 @@
    "note": "after the blade fuse",
    "always_on": true,
    "always_on_why": "the cell node after the 25 A blade: a fuse is protection and not a switch",
-   "converted": false
+   "converted": false,
+   "fed_from": "CELL4"
   },
   "PACK_N": {
    "volts": 0.05,
@@ -101,5 +102,6 @@
   "RF": {
    "z_se": 50.0
   }
- }
+ },
+ "pass_through": {}
 }
