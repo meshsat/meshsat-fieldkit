@@ -13036,3 +13036,40 @@ not had, and neither is short of connections, so it is not urgent.
 **The hard core is four nets and every one of them is the charger's**: `/CHG_ILIM` and `/CH_SRP_F` pad to
 track, `/CH_ACN_F` and `/CH_SW2` pad to pad. That is the same block of copper the night's power findings keep
 returning to, and it is now the only part of board A's board that no closer configuration has reached.
+
+### 32.251, 20 September 2026 03:20 CEST: board E's input side is five rails now, four of them too narrow, and a field that was missing
+
+The vehicle and shore entry is one conductor run in five pieces: `J_DCIN` to **`DC_IN`** to the 10 A blade F1
+to **`DC_F`** to the LM74700 ideal diode Q1 to **`DC_P`** to the 10 mOhm hot-swap sense R19 to **`HS_S`** to
+the pass FET Q7 to **`DC_HS`** to the SRF1260 choke L2 to `VIN_RAW`. Every piece carries VIN_RAW's own **8.0 A
+typical and 10.0 A peak**. Four were declared as nodes and `HS_S` was not declared at all, so no power rule
+had ever looked at any of them.
+
+Measured on board E's own frozen board (sha `a462ac2620b9b8d3`, identical before and after):
+
+| net | drop | worst conductor |
+|---|---:|---|
+| `DC_IN` | 48 mV, 0.40 % | 0.800 mm on B.Cu carrying **4.04 A** |
+| `DC_F` | 127 mV, 1.06 % | **0.250 mm** on F.Cu carrying **2.66 A** |
+| `DC_P` | 122 mV, 1.02 % | 0.800 mm on F.Cu carrying **5.03 A** |
+| `HS_S` | 31 mV, 0.26 % | 0.800 mm on F.Cu carrying **4.20 A** |
+| `DC_HS` | 47 mV, 0.39 % | MET: it has a band (`DC_HS band B.Cu`, 380 of 365 mm2) |
+
+**Every drop is inside its budget and four of the five conductors are too narrow.** The one that passes is
+the one with a generator-laid band, which is the same sentence board A's four existing bands gave at 02:35
+from the other direction. Board E's `dc_density` goes from 0 missed to 4 and its **PI-001 moves PASS to
+FAIL**; `via_current` goes from 2 rails over to 7 with 18 over-rated barrels.
+
+**AND A FIELD WAS MISSING FROM `rail()`, WHICH THE TOOL FOUND WITHIN TWO MINUTES.** The node declared 53.3 V,
+the SMCJ40A's let-through at peak pulse current, and 36.0 V as `v_work`. Converting it, I put 53.3 in
+`v_work` to keep the derating strict, and `derate` immediately refused the SMCJ40A itself: *"stands off 40.0 V
+and protects DC_P, which runs to 53.3 V in normal service"*. A true sentence about a false input. **They are
+two different facts**: the protector is judged against the SERVICE maximum and every other part against the
+transient peak, and `node()` has had both since 16 September while `rail()` had only one. `rail()` takes
+`v_max` now, `derate` reads it in its worst-of for a rating and `v_work` alone for the standoff rule, and
+board E's chain declares 36.0 and 53.3 in their own fields. `derate` reads **PASS of 48 with 0 under-rated**.
+
+**Readiness 62.8 to 62.5 percent verified, 13.5 to 13.8 failed, of 333.** The solar three (`PV_IN`, `PV_P`,
+`TRK_OUT`) are still nodes: their currents are not written down anywhere and the tracker's output share of
+CELL_F is a reading of the design rather than a transcription, which is the one thing this record will not do
+at four in the morning.

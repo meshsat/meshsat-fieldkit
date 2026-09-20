@@ -2,12 +2,12 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "density_missed": 0,
-  "met": 5,
+  "density_missed": 4,
+  "met": 10,
   "missed": 0,
   "undeclared": 0
  },
- "denominator": 5,
+ "denominator": 10,
  "evidence": [],
  "inputs": {
   "board": {
@@ -16,7 +16,7 @@
   }
  },
  "missing_input": null,
- "note": "the voltage drop against each rail's budget (cell 0.50 mm, default 2%); the current capacity is judged separately in dc_density.verdict.json, where 0 rail(s) missed",
+ "note": "the voltage drop against each rail's budget (cell 0.50 mm, default 2%); the current capacity is judged separately in dc_density.verdict.json, where 4 rail(s) missed",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -30,9 +30,9 @@
  "tool": "dc_drop",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "a1600dd77a88a3de"
+  "tools_tree_sha": "3403c8ec6d4030c1"
  },
- "ts": "2026-09-20T00:33:18Z",
+ "ts": "2026-09-20T01:19:38Z",
  "verdict": "PASS",
  "version": "unknown"
 }

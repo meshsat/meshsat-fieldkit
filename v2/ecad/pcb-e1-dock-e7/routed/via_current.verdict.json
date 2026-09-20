@@ -2,21 +2,38 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "measured_rails": 3,
+  "measured_rails": 7,
   "no_via": 1,
-  "over": 2,
-  "over_barrels": 5,
-  "rails": 4
+  "over": 7,
+  "over_barrels": 18,
+  "rails": 9
  },
- "denominator": 4,
+ "denominator": 9,
  "evidence": [
   "CELL_F: a barrel at (44.3, 218.2) carries 1.42 A of the solved mesh against 0.56 A for its own wall at 10 K (18 um plating), ratio 2.53",
+  "DC_F: a barrel at (94.7, 198.8) carries 8.00 A of the solved mesh against 0.90 A for its own wall at 10 K (18 um plating), ratio 8.89",
+  "DC_HS: a barrel at (109.5, 196.0) carries 3.49 A of the solved mesh against 0.90 A for its own wall at 10 K (18 um plating), ratio 3.88",
+  "DC_IN: a barrel at (97.0, 216.3) carries 3.00 A of the solved mesh against 2.59 A for its own wall at 10 K (18 um plating), ratio 1.16",
+  "DC_P: a barrel at (65.7, 202.6) carries 8.00 A of the solved mesh against 0.90 A for its own wall at 10 K (18 um plating), ratio 8.89",
+  "HS_S: 10.00 A crosses a transition of 1 via(s) at (45.0, 196.8) rated 0.65 A at 10 K (18 um plating), attributed rather than measured",
   "VIN_RAW: a barrel at (109.5, 202.7) carries 0.74 A of the solved mesh against 0.65 A for its own wall at 10 K (18 um plating), ratio 1.14",
   "CELL_F: barrel at (44.3, 218.2), 1.42 A against 0.56 A, ratio 2.53",
   "CELL_F: barrel at (43.7, 219.0), 1.01 A against 0.56 A, ratio 1.80",
   "CELL_F: barrel at (43.4, 218.2), 0.77 A against 0.56 A, ratio 1.37",
-  "VIN_RAW: barrel at (109.5, 202.7), 0.74 A against 0.65 A, ratio 1.14",
-  "VIN_RAW: barrel at (73.1, 183.4), 0.71 A against 0.65 A, ratio 1.09"
+  "DC_F: barrel at (94.7, 198.8), 8.00 A against 0.90 A, ratio 8.89",
+  "DC_HS: barrel at (45.9, 206.7), 1.91 A against 0.90 A, ratio 2.12",
+  "DC_HS: barrel at (108.5, 196.0), 1.68 A against 0.90 A, ratio 1.87",
+  "DC_HS: barrel at (47.3, 203.5), 1.92 A against 0.90 A, ratio 2.13",
+  "DC_HS: barrel at (53.4, 197.6), 1.92 A against 0.65 A, ratio 2.94",
+  "DC_HS: barrel at (110.5, 196.0), 0.91 A against 0.90 A, ratio 1.01",
+  "DC_HS: barrel at (45.9, 208.0), 2.23 A against 0.90 A, ratio 2.48",
+  "DC_HS: barrel at (45.9, 205.4), 1.94 A against 0.90 A, ratio 2.16",
+  "DC_HS: barrel at (109.5, 196.0), 3.49 A against 0.90 A, ratio 3.88",
+  "DC_IN: barrel at (97.0, 216.3), 3.00 A against 2.59 A, ratio 1.16",
+  "DC_IN: barrel at (97.0, 219.7), 3.00 A against 2.59 A, ratio 1.16",
+  "DC_P: barrel at (65.7, 202.6), 8.00 A against 0.90 A, ratio 8.89",
+  "DC_P: barrel at (55.7, 203.5), 8.00 A against 0.90 A, ratio 8.89",
+  "VIN_RAW: barrel at (109.5, 202.7), 0.74 A against 0.65 A, ratio 1.14"
  ],
  "inputs": {
   "board": {
@@ -28,7 +45,7 @@
   "site_mm": 6.0
  },
  "missing_input": null,
- "note": "2 of 3 judged rail(s) are over their own barrels on the current dc_drop's solved mesh put through them, which is a measurement and decides this reading; the 1 rail(s) with no solved current are judged by attributing the whole rail to its weakest cluster of vias, which can only add failures to the ones named here and never remove one (IPC-2221's curve, ECSS-Q-ST-70-12C Annex D D.4, the fabricator's own plating)",
+ "note": "6 of 7 judged rail(s) are over their own barrels on the current dc_drop's solved mesh put through them, which is a measurement and decides this reading; the 2 rail(s) with no solved current are judged by attributing the whole rail to its weakest cluster of vias, which can only add failures to the ones named here and never remove one (IPC-2221's curve, ECSS-Q-ST-70-12C Annex D D.4, the fabricator's own plating)",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -42,9 +59,9 @@
  "tool": "via_current",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "eb0c531120e97e4b"
+  "tools_tree_sha": "3403c8ec6d4030c1"
  },
- "ts": "2026-09-20T00:14:07Z",
+ "ts": "2026-09-20T01:19:38Z",
  "verdict": "FAIL",
  "version": "unknown"
 }
