@@ -16034,3 +16034,26 @@ behind them and neither is drawn for these four.
 The tell was there to be read and I did not read it, which is this project's own recurring shape: a
 measurement is only as good as the question, and the question has to be taken from the artefact (the DRC's
 two ends) rather than from the story.
+
+**AND THE LAYER THAT HAS ROOM IS In3, ON ALL FOUR (19:15 CEST).** Asked of the same placed board, which
+copper claims each corridor layer by layer:
+
+| layer | over all four corridors |
+|---|---|
+| F.Cu | each rail's own `S*_OUT` and `+5V_*` copper |
+| **In1** | **GND**, a plane |
+| **In2** | **`/VBAT`**, its plane |
+| **In3** | **nothing but the board-wide edge band**, whose polygon is a 0.5 mm ring and whose nearest edge is about twenty millimetres away |
+| **In4** | **GND**, the second plane |
+| B.Cu | each rail's own `S*_OUT` and `+5V_*` copper |
+
+**So In3 is free under every one of the four converter blocks**, and In3 is the layer board A's own
+`VIN_RAW under the trunk` already dives to for exactly this reason. The three In3 track keep-outs that exist
+(`VBUS20 under`, `VIN_RAW under the trunk`, `HF rail`) are all elsewhere on the board.
+
+**That makes the four a generator job with a named layer and a named pattern**, not an open question: an In3
+polygon from the rail's island at the connector row, under its own converter block, to the load side, with
+its own track keep-out over it the way VIN_RAW's has, plus the stitch each end needs. At 2.50 A a slot rail
+wants 1.10 mm of OUTER copper and In3 is half-ounce, so the inner width is the one to size from
+`track_current`, which is the same arithmetic decision 35 governs. **NOTHING APPLIED and deliberately so**:
+the placement under it moves with every arm in flight, and A86 is routing.
