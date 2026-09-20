@@ -12781,3 +12781,31 @@ density is nearly clean at 1.26x, which is the signature of a long thin path rat
 thirteen conductors over their density with drops mostly inside their budgets; board B's is five rails whose
 DROP is the failure, on a board that has not finished routing. Board A's answer is a generator and a stackup;
 board B's first needs a board that routes, which is where its floor plan decision already sits.
+
+### 32.243, 20 September 2026 02:42 CEST: the set's power state in one table, with every conductor declared for the first time
+
+| board | rails | PI-002, the drop | PI-001, the density |
+|---|---:|---|---|
+| **A** | 27 | 24 met, **3 missed** | 14 met, **13 missed** |
+| **B** | 36 | 31 met, **5 missed** | 27 met, **9 missed** |
+| C | 2 | 2 met, 0 | 2 met, 0 |
+| D | 4 | 4 met, 0 | 4 met, 0 |
+| E | 5 | 5 met, 0 | 5 met, 0 |
+| E5 | 0 | no rail to judge | no rail to judge |
+| **P** | 4 | 4 met, 0 | 3 met, **1 missed** |
+
+**Boards C, D and E pass both power rules on every conductor they declare, and board P misses exactly one**,
+which is `PACK_N`, found and measured tonight. **Boards A and B carry the whole of the set's power backlog**:
+eight drop misses and twenty-two density misses between them, against zero on the other four boards that
+have rails at all.
+
+This is the first time the set has had that sentence, because until tonight twenty-six of its conductors were
+declared as nodes or as nothing at all and no power rule looked at them. The number of rails judged went from
+13 to 27 on board A, 36 to 38 on B, 3 to 4 on P and 4 to 5 on E, and the failures that appeared are on the
+two boards that were already the set's hardest.
+
+**And the two are not the same problem, which is what decides the order of work.** Board A's is copper that
+was never laid: thirteen conductors over their density with their drops mostly inside budget, on a board that
+routes to zero unconnected. Board B's is five rails whose DROP is the failure, on a board 416 connections
+short of a finished route. Board A's answer is a generator and a stackup and can start now; board B's needs a
+board that routes, which is its floor plan, which is an owner decision already asked.
