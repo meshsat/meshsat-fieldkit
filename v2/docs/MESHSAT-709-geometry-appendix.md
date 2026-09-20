@@ -14943,3 +14943,34 @@ supervisor and board E's cap twenty minutes away, a waiter that fired mid-push w
 directory that was briefly missing files. `retake_iso.sh` stages the runner's tools straight into its own
 isolated tree and touches no shared staging area. **A staging area is only safe while nothing is waiting on
 it**, and that condition is a property of the hour rather than of the script.
+
+### 32.302, 20 September 2026 13:55 CEST: the ISNS twist is conserved, and four arrangements measured one at a time say so
+
+**A61 refused board A's three clear Kelvin runs on geometry: `R11`'s two shunt pads and `U2`'s ISNS+/ISNS- are
+adjacent pins in the OPPOSITE order, so two straight lines from the shunt to the pins must cross. The filter
+seated this morning gives each stage FOUR runs instead of two, and asked of the board the generator now makes
+(A70's placed snapshot, read-only, straight lines between pad centres) it does not remove the crossing: it
+chooses where the crossing lives.**
+
+| stage | as placed | pair's two seats exchanged | shunt turned 180 | pair carried to the controller side |
+|---|---:|---:|---:|---:|
+| FE  | **1** | 3 | 4 | **1** |
+| PA  | 3 | 5 | 4 | **2** |
+| HF  | **1** | 5 | 4 | 2 |
+| POE | 3 | 5 | 4 | **2** |
+| PD  | 3 | 5 | 4 | **2** |
+
+The Kelvin halves are 2.92 mm on every stage and the sense halves are FE 14.77 and 13.36 mm, HF 15.35 and
+18.35, POE 32.91 and 38.85, PD 34.86 and 40.81, PA 51.30 and 57.14. **Exchanging the pair's two seats, which
+is the one-line change in the seat table, is worse on every stage**, because the twist simply moves from the
+sense half to the Kelvin half; turning the shunt is worse still; **carrying the pair round to the controller
+side of its shunt, which is the arrangement the datasheet draws, is the best of the four for the three long
+stages and no better for the two short ones. Nothing reaches zero in any arrangement.**
+
+**So the twist is CONSERVED**: a two-pad shunt read by two adjacent pins in the opposite sense has an odd
+number of crossings however the parts between them are seated, and the ways out are a layer change on one
+run, a controller whose pin order matches the shunt's, or a shunt land that brings its taps out on the other
+side. **What this does NOT say** is that any board is wrong: since this morning the ten taps are NETS, the
+router lays them, and a router resolves a crossing with a via, which is exactly what A61's pinned straight
+runs could not do. It is a statement about what a PRE-LAY could achieve and about how much work the router is
+being given. A69's routed `kelvin_check` is what decides the five stages, and its reader is armed.
