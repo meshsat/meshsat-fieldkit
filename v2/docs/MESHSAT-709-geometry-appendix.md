@@ -16766,3 +16766,22 @@ ground piece on a pad the fanout skipped); **A89's pre-route board, the defectiv
 mm2 VBAT In2 piece, with its six F.Cu load bank islands read as the WARN they are (their vias renamed, their rail
 pads not). D31 relaunched on the corrected judge at 01:47.
 
+**Addendum, 01:53 CEST: a PowerPAK drain drawn as five pads was five crossings of a fifth.** Reading board E's
+thirteen short crossings, two were `HS_S at Q7 pad 5` at 1.48 A carried of a 1.60 A share, 1.27 mm apart: KiCad
+draws a PowerPAK SO-8's drain as five pads numbered 5, the tab and four leads, one land inside the part, and
+`rail_crossings` took each as a pad of its own, split the FET's current five ways and counted the barrels within
+a millimetre of each piece. **Pads of one number are one land now**: the share is the part's current over its
+distinct pad numbers on the rail, the barrels of every piece count once, and the row sits on the largest piece.
+Re-read on two boards: board E's chain-end board 18 carrying and twelve short, Q7's tab ONE crossing of 8.00 A
+with 8 barrels carrying 5.90 A and 11 needed, the fuse land (two pieces) asked for its whole 18 A; **board A's
+A89 pre-route board goes from 53 judged, 44 carrying and nine short to 23 judged, 16 carrying and SEVEN short,
+and the seven are VBUS20 at R11 and SIX drain tabs asked for their whole current for the first time**: CH_SRP at
+Q10 wants twenty-five 0.30 mm barrels for 18 A (PI-003's worst site on A32 by the solved mesh, 32.256), FE_OUT
+at Q5 eleven, CH_ACN at Q7 and PA_OUT at Q14 nine, the two PD tabs five, two of which the old judge had read as
+carrying. The pre-route half of PI-003 had under-read every FET drain on the set five-fold since 18 September;
+the routed half on the solved mesh never had the defect. The fixer's cap moved with it, from the barrels a site
+NEEDS to the barrels it is OWED (one beside ten the generator laid is not a busbar; eighteen beside one is), so
+the tab clusters under nine are laid at generation and CH_SRP's twenty-five is declined as the busbar it is.
+Two rules on the fake board and one on the fixer, each failing on the tool as it stood. No arm in flight carries
+it; A93, A94 and A95 route on the old judge's barrels and are read as such.
+

@@ -51,6 +51,19 @@ def t_a_site_that_needs_more_barrels_than_a_cluster_holds_is_declined():
     assert "busbar" in note and "placement item" in note, note
 
 
+def t_the_cap_is_on_the_barrels_the_fixer_draws_and_not_on_what_the_site_holds():
+    """21 September 2026, board E: with a part's same-numbered pads judged as one land, Q7's drain tab holds ten
+    0.30 mm barrels carrying 7.4 A of its 8.00 and needs eleven. One barrel beside ten is not a busbar; the cap
+    is on what is OWED, and eighteen owed beside one (the fixture above) is still refused."""
+    r = _row(8.0, drill=0.3, have=10)
+    assert r["need"] == 11, r["need"]
+    pts, axis, note = rb.plan(r, OPEN)
+    assert len(pts) == 1 and "busbar" not in note, (pts, note)
+    r = _row(18.0, drill=0.5)
+    pts, axis, note = rb.plan(r, OPEN)
+    assert pts == [] and "busbar" in note and "17 owed" in note, note
+
+
 def t_the_cap_is_a_number_a_caller_can_move_and_not_a_silence():
     """The same site with the cap raised is planned, so the refusal is the CAP's and not a failure to try."""
     r = _row(18.0, drill=0.5)

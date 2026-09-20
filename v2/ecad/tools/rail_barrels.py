@@ -115,9 +115,14 @@ def plan(row, free, max_barrels=MAX_BARRELS):
     near = list(row.get("near") or [])
     reach = float(row.get("reach") or 0.0)      # the judge's own window, from its row
     px, py = row.get("at_pad") or (x, y)
-    if need > max_barrels:
-        return [], "x", ("%d barrels of %.2f mm for %.2f A is a busbar and not a cluster: this site is a "
-                         "placement item, not copper to add beside the pad" % (need, drill, row["amps"]))
+    # THE CAP IS ON WHAT THE FIXER DRAWS, NOT ON WHAT THE SITE HOLDS (21 September 2026, board E). With a part's
+    # same-numbered pads judged as one land, Q7's drain tab reads ten 0.30 mm barrels carrying 7.4 A of its
+    # 8.00 and needs eleven; one barrel beside ten the generator laid is not a busbar, and declining it as one
+    # would leave a crossing short by 0.6 A for want of a hole. Eighteen owed beside one (board P's CELL4) is.
+    if need - have > max_barrels:
+        return [], "x", ("%d barrels of %.2f mm for %.2f A is a busbar and not a cluster (%d there, %d owed): this "
+                         "site is a placement item, not copper to add beside the pad"
+                         % (need, drill, row["amps"], have, need - have))
     if need <= have:
         return [], "x", "this site already carries the barrels its current needs"
     pitch = drill + 0.4
