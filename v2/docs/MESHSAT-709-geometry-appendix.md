@@ -15188,3 +15188,27 @@ of 32.305 cost nothing precisely because they LEFT their region, while a reserva
 INSIDE one leaves the packer a hole it cannot pack around. The next real step is therefore either seats
 chosen outside the rectangles, which is what 32.305 did by hand for four, or a packer that is not a shelf,
 and the one after that is the owner's on the rectangles themselves.
+
+### 32.310, 20 September 2026 14:55 CEST: board E's parked barrel question is answered, and the answer is the fanout rather than any power-copper call
+
+**E30 landed at hard 0 and SEVEN open and its supervisor immediately began a remedy round, so both readers
+armed behind it would have answered in hours. It was read where it stands instead** (the 19 September
+procedure: the kept `finished-round1.kicad_pcb` copied out, sha `344b151149cd0686` before and after, nothing
+in the running tree touched), **and it is the first E board generated since `write_provenance` exists, which
+is exactly what the question needed.**
+
+**The board**: hard 0, seven open (`/DC_F`, `/TRK_BG1`, `/TRK_BG2`, `/TRK_BOOST2`, `/TRK_INTVCC`, `/TRK_OUT`,
+`/USB_E6_P`), which is E23's gate-drive family again plus the shore entry and one USB leg; `dc_drop` **PASS
+of 13** with 7 density missed; **`sensitive_nodes` PASS 3 of 3**, so ANA-001 holds through this route as it
+did on E23.
+
+**The answer**: `via_current` FAIL, **7 of 8 judged rails over and FIFTY over-rated barrels**, worst `DC_P`
+carrying **8.00 A through one barrel against 0.90** (ratio 8.89), `TRK_OUT` 5.58, `PV_P` 5.51, `DC_HS` 4.53,
+`VIN_RAW` 1.08. **The count grew from E17's two because the QUESTION grew**: board E declares ten rails now
+where it declared four and the mesh solves eight of them.
+
+**And with the map beside the board every named site says the same thing**: the barrel is the generator's
+own, a locked via sits on it, and **no power-copper call placed it**, so the answer is not points on a
+cluster call. **It is the FANOUT's via COUNT at a pad that carries rail current**, which is a different edit
+in a different tool. That is what the question was parked on and it is now a work item with a mechanism.
+**E17 stays board E's phase**: E30 is seven connections open and its remedy round regenerates the placement.
