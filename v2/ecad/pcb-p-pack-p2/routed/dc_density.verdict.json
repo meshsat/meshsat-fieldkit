@@ -31,9 +31,13 @@
  "tool": "dc_density",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "0e1ce7104d273d07"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-20T00:04:27Z",
+ "ts": "2026-09-20T07:04:19Z",
  "verdict": "FAIL",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "dc_drop.py",
+  "sha16": "47449c7dea27e3bd"
+ }
 }

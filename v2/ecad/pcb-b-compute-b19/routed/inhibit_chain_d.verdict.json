@@ -1,0 +1,38 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "fail": 0,
+  "pass": 5,
+  "unjudged": 0
+ },
+ "denominator": 5,
+ "evidence": [],
+ "inputs": {
+  "boards": "A,B,C,D,E,P"
+ },
+ "missing_input": null,
+ "note": "the transmit inhibit chain on this board: it is present, it reaches the gate it keys, the panel toggle is its only driver, its sense is a buffer and it is pulled down so a missing panel inhibits",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "RF-002": "b4c62839dd113ee3"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "RF-002"
+ ],
+ "tool": "inhibit_chain_d",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "b7ecfcffbc2fef22"
+ },
+ "ts": "2026-09-20T07:00:12Z",
+ "verdict": "PASS",
+ "version": "unknown",
+ "writer": {
+  "file": "check_contracts.py",
+  "sha16": "4f4cb3a61d808820"
+ }
+}

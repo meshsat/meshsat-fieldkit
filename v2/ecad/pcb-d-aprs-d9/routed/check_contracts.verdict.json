@@ -5,11 +5,11 @@
   "boards_without_intent": 0,
   "fail": 0,
   "missing_boards": 0,
-  "pass": 72,
+  "pass": 73,
   "rails_unsplit": 0,
   "unjudged": 0
  },
- "denominator": 72,
+ "denominator": 73,
  "evidence": [],
  "inputs": {
   "boards": "A,B,C,D,E,P"
@@ -21,7 +21,7 @@
   "rule_fingerprints": {
    "INT-001": "6c054dd67edd4099"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "INT-001"
@@ -29,9 +29,13 @@
  "tool": "check_contracts",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:47:40Z",
+ "ts": "2026-09-20T07:03:22Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "check_contracts.py",
+  "sha16": "4f4cb3a61d808820"
+ }
 }

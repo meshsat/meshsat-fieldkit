@@ -3,10 +3,10 @@
  "applicable": true,
  "counts": {
   "fail": 2,
-  "pass": 724,
+  "pass": 726,
   "unclaimed": 0
  },
- "denominator": 726,
+ "denominator": 728,
  "evidence": [
   "return path under HOST3_1RX_N (USB, CONTROLLED_IMPEDANCE): 11.0 of 192.5 mm without a plane on a neighbouring layer (limit 10.0; 8.2 mm more is this net's own via anti-pads, which RET-003 judges; 5.2 mm more is another conductor's via anti-pad, a hole the return goes around) [the board's own net class USB carries an impedance target]",
   "return via: 4 of 12 signal vias have a ground via within 1.5 mm (586 exempt in fine-pitch fans, 687 on one reference plane, 512 on a net whose declared class has no edge to return); without one: SEL2_O1 at (0.57, 144.25); SEL2_O1 at (1.40, 147.50); HUBRST2_AB at (3.72, 139.94); HUBRST2_A at (3.72, 141.24); SEL3_AB at (3.72, 148.15); SDA at (11.07, 27.54); HUBRST1_VOTE at (13.55, 146.20); WSEC_C at (28.02, 141.24)"
@@ -27,9 +27,13 @@
  "tool": "intent_checks",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c80454a737a87c01"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-18T18:46:09Z",
+ "ts": "2026-09-20T06:58:33Z",
  "verdict": "FAIL",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "intent_checks.py",
+  "sha16": "41cd5935c5f46f0b"
+ }
 }

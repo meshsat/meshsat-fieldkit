@@ -15,8 +15,8 @@
    "sha256_16": "d79865e7b1aceb95"
   },
   "board_table": {
-   "path": "/root/sweep27/v2/ecad/tools/boards/p.json",
-   "sha256_16": "6570069e9fb9d035"
+   "path": "/root/sweep30/v2/ecad/tools/boards/p.json",
+   "sha256_16": "49673f61c5586efd"
   }
  },
  "missing_input": null,
@@ -26,7 +26,7 @@
   "rule_fingerprints": {
    "RTE-002": "66d69a0c02e07594"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "RTE-002"
@@ -34,9 +34,13 @@
  "tool": "pruned_gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:48:35Z",
+ "ts": "2026-09-20T07:04:22Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "pruned_gate.py",
+  "sha16": "47f4454389a41a2c"
+ }
 }

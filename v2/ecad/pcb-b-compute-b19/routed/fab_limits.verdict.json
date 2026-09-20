@@ -21,21 +21,23 @@
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
-   "RTE-001": "e5ef726cf2ea32dc",
-   "STK-001": "e90a87c776209eb2"
+   "RTE-001": "e5ef726cf2ea32dc"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
-  "RTE-001",
-  "STK-001"
+  "RTE-001"
  ],
  "tool": "fab_limits",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:44:09Z",
+ "ts": "2026-09-20T06:59:19Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "fab_limits.py",
+  "sha16": "04d184797dc0a246"
+ }
 }

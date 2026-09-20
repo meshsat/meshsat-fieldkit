@@ -5,12 +5,12 @@
   "declared_dissipators": 0,
   "efficiency_undeclared": 0,
   "no_thermal_path": 0,
-  "rails": 23,
+  "rails": 27,
   "watts_lost_all_peaks_at_once": 40.0,
   "watts_lost_typical": 27.2,
   "watts_peak_sum_not_simultaneous": 1101.1
  },
- "denominator": 23,
+ "denominator": 27,
  "evidence": [],
  "inputs": {
   "board": {
@@ -33,9 +33,13 @@
  "tool": "thermal",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "f68d837d805d656b"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-19T23:44:21Z",
+ "ts": "2026-09-20T06:53:49Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "thermal.py",
+  "sha16": "5b8aade8ce28be00"
+ }
 }

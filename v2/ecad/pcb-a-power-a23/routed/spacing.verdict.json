@@ -4,11 +4,12 @@
  "counts": {
   "below_limit": 0,
   "closest_mm": 0.1287,
-  "hv_nets": 3,
-  "pairs_measured": 6739
+  "hv_nets": 6,
+  "pairs_measured": 10124
  },
- "denominator": 6739,
+ "denominator": 10124,
  "evidence": [
+  "0.129 mm CH_ACN to CH_SW1 on F.Cu at (39.2, 81.5)",
   "0.129 mm VBUS20 to FE_FB on F.Cu at (45.8, 69.3)",
   "0.129 mm VBUS20 to FE_FB on F.Cu at (46.5, 68.6)",
   "0.129 mm VBUS20 to FE_PGOOD on F.Cu at (36.2, 78.5)",
@@ -18,17 +19,16 @@
   "0.129 mm VIN_RAW to FE_SW1 on F.Cu at (43.4, 42.9)",
   "0.130 mm VBUS20 to FE_EN on F.Cu at (38.4, 77.2)",
   "0.130 mm VBUS20 to FE_BOOT1 on F.Cu at (68.2, 68.5)",
+  "0.135 mm CH_ACN to GND on F.Cu at (49.5, 81.2)",
+  "0.135 mm CH_ACN to GND on F.Cu at (49.5, 81.2)",
+  "0.135 mm CH_ACN to GND on F.Cu at (49.5, 81.2)",
   "0.139 mm VBUS20 to FE_COMP on B.Cu at (50.7, 57.6)",
+  "0.140 mm CH_ACN to GND on F.Cu at (46.5, 87.2)",
+  "0.141 mm CH_ACN to GND on F.Cu at (50.9, 79.8)",
   "0.144 mm VIN_RAW to GND on F.Cu at (32.4, 49.3)",
   "0.145 mm VBUS20 to FE_FB on F.Cu at (45.8, 69.8)",
-  "0.148 mm VBUS20 to FE_COMP on F.Cu at (62.4, 68.5)",
-  "0.154 mm VBUS20 to FE_PGOOD on F.Cu at (37.1, 79.5)",
-  "0.154 mm VBUS20 to FE_PGOOD on F.Cu at (37.9, 79.5)",
-  "0.154 mm VBUS20 to FE_PGOOD on F.Cu at (38.4, 79.0)",
-  "0.158 mm VIN_RAW to GND on F.Cu at (32.4, 49.8)",
-  "0.158 mm VIN_RAW to FE_LDRV1 on B.Cu at (50.7, 51.1)",
-  "0.162 mm VBUS20 to CH_ACN on F.Cu at (50.5, 96.8)",
-  "0.162 mm VBUS20 to CH_ACN on F.Cu at (50.5, 96.8)"
+  "0.147 mm FE_OUT to FE_COMP on B.Cu at (50.2, 59.7)",
+  "0.148 mm VBUS20 to FE_COMP on F.Cu at (62.4, 68.5)"
  ],
  "inputs": {
   "board": {
@@ -45,7 +45,7 @@
   "rule_fingerprints": {
    "ISO-001": "667f32d6b8d7a34b"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "ISO-001"
@@ -53,9 +53,13 @@
  "tool": "spacing",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "7220c1b43176cf2e"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:38:48Z",
+ "ts": "2026-09-20T06:53:50Z",
  "verdict": "INCONCLUSIVE",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "spacing.py",
+  "sha16": "d58ce94c56df4d68"
+ }
 }

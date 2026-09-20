@@ -8,7 +8,7 @@
   "board": "a",
   "netlist": {
    "path": "out/pcb-a-power.net",
-   "sha256_16": "733d89dc62a1b783"
+   "sha256_16": "5b6c57bc930bcdde"
   }
  },
  "missing_input": null,
@@ -18,7 +18,7 @@
   "rule_fingerprints": {
    "CLK-001": "87aa8102f151ef26"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "CLK-001"
@@ -26,9 +26,13 @@
  "tool": "clock_check",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "7220c1b43176cf2e"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:38:50Z",
+ "ts": "2026-09-20T06:53:52Z",
  "verdict": "INCONCLUSIVE",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "clock_check.py",
+  "sha16": "cb891bbd50472f07"
+ }
 }

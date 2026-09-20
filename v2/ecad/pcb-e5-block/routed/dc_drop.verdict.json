@@ -17,7 +17,7 @@
   "rule_fingerprints": {
    "PI-002": "ec24beac692a01be"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "PI-002"
@@ -25,9 +25,13 @@
  "tool": "dc_drop",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:48:55Z",
+ "ts": "2026-09-20T07:04:46Z",
  "verdict": "INCONCLUSIVE",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "dc_drop.py",
+  "sha16": "47449c7dea27e3bd"
+ }
 }

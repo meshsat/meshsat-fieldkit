@@ -21,9 +21,9 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 29 | 53.7 |
-| FAIL | 10 | 18.5 |
-| INCONCLUSIVE | 15 | 27.8 |
+| PASS | 26 | 48.1 |
+| FAIL | 11 | 20.4 |
+| INCONCLUSIVE | 17 | 31.5 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **54** | 100.0 |
 
@@ -31,24 +31,24 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 |---|---|---|---|---|
 | ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: a DRAFT envelope exists for the first time (v2/docs/OPERATING-ENVELOPE.md), written from the parts own d |
 | ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 25 |
-| SCH-001 ERC clean or explained | BLOCKER | SCHEMATIC | **PASS** | erc_gate PASS of 1238 |
-| SCH-002 board matches its netlist | BLOCKER | PLACED_BOARD | **FAIL** | netlist_board FAIL: {'agree': 2000, 'aliased_pins': 0, 'board_footprints': 400, 'board_only_inert': 0, 'fail': 10, 'netlist_refs': 398} |
-| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_a PASS of 31 |
+| SCH-001 ERC clean or explained | BLOCKER | SCHEMATIC | **PASS** | erc_gate PASS of 1265 |
+| SCH-002 board matches its netlist | BLOCKER | PLACED_BOARD | **FAIL** | netlist_board FAIL: {'agree': 1990, 'aliased_pins': 0, 'board_footprints': 400, 'board_only_inert': 0, 'fail': 35, 'netlist_refs': 413} |
+| SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_a PASS of 32 |
 | SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **PASS** | safe_lines_a PASS of 6 |
-| SCH-005 every pad of a part's land carries a net or a declared no-connect | BLOCKER | SCHEMATIC | **PASS** | pin_map_lands_a PASS of 397 |
+| SCH-005 every pad of a part's land carries a net or a declared no-connect | BLOCKER | SCHEMATIC | **PASS** | pin_map_lands_a PASS of 412 |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 144 |
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_a INCONCLUSIVE: no deliverable folder at the declared phase A32, so this board's parts were not certified against the board this tree hold |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_a INCONCLUSIVE: no deliverable folder at the declared phase A32, so this board's parts were not certified against the board this tree hold |
-| PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **PASS** | intent_rails PASS of 14 |
-| PWR-002 sequencing and inrush | MUST_JUSTIFY | SCHEMATIC | **PASS** | power_sequence PASS of 13 |
+| PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **PASS** | intent_rails PASS of 28 |
+| PWR-002 sequencing and inrush | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | power_sequence INCONCLUSIVE: each rail's enable derived from the netlist and the part that drives it named; a rail whose enable is driven only by a de |
 | PWR-003 protection coordination | BLOCKER | SCHEMATIC | **PASS** | energy_chain_a PASS of 4 |
-| DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **PASS** | intent_decoupling PASS of 30 |
+| DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **FAIL** | intent_decoupling FAIL: {'fail': 5, 'pass': 30} |
 | PI-001 conductor current capacity | BLOCKER | ROUTED_BOARD | **FAIL** | dc_density FAIL: {'met': 14, 'missed': 13, 'undeclared': 0} |
 | PI-002 rail voltage drop | BLOCKER | ROUTED_BOARD | **FAIL** | dc_drop FAIL: {'density_missed': 13, 'met': 24, 'missed': 3, 'undeclared': 0} |
 | PI-003 via current capacity | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | via_current FAIL: {'measured_rails': 27, 'no_via': 0, 'over': 8, 'over_barrels': 37, 'rails': 27} |
 | GND-001 one deliberate ground system | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | ground_system PASS of 1 |
 | GND-002 chassis and cable-shield strategy | MUST_JUSTIFY | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the strategy is WRITTEN, which it was not before, and writing it found the gap. The kit has no single co |
-| STK-001 the stackup is declared, feasible and in the board | BLOCKER | ROUTED_BOARD | **PASS** | stackup_gate PASS of 24 |
+| STK-001 the stackup is declared, feasible and in the board | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | stackup_gate INCONCLUSIVE: the document the named stack was transcribed from is not in the tree (v2/vendor/fabricator/jlcpcb-impedance-stackups-2026-0 |
 | STK-002 a layer count is decided and costed | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against si |
 | RET-001 a continuous adjacent return path | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: 16 September 2026: the principle is implemented and the heuristic is no longer standing in  |
 | RET-002 plane-adjacency screen | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | intent_return_path PASS of 197 |
@@ -62,11 +62,11 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 | ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **FAIL** | sensitive_nodes FAIL: {'declared': 24, 'fail': 15, 'measured': 10} |
 | RF-001 RF paths are designed as RF | BLOCKER | ROUTED_BOARD | **FAIL** | rf_line FAIL: {'judged': 11, 'missed': 11} |
 | INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **FAIL** | interfaces_a FAIL: {'assignments': 1, 'disagreements': 1} |
-| TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **FAIL** | port_protect_a FAIL: {'behind_an_active_part': 2, 'declared': 3, 'not_on_netlist': 0, 'ports': 3, 'unprotected': 0} |
+| TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **FAIL** | port_protect_a FAIL: {'behind_an_active_part': 0, 'declared': 3, 'not_on_netlist': 0, 'ports': 3, 'unprotected': 2} |
 | ISO-001 creepage and clearance | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: it is MEASURED now, per board, which it never was. A net class is an instruction to the router and not a |
 | THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, |
 | PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **PASS** | hardset-placed PASS of 15 |
-| PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | closer_audit PASS of 15 |
+| PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | closer_audit PASS of 16 |
 | RTE-001 geometry a fabricator will build | BLOCKER | ROUTED_BOARD | **PASS** | fab_limits PASS of 36 |
 | RTE-002 nothing unrouted, nothing shorted | BLOCKER | ROUTED_BOARD | **PASS** | hardset-routed-board-gate PASS of 15 |
 | VIA-002 the annular ring is one the fabricator makes | BLOCKER | ROUTED_BOARD | **PASS** | via_annular PASS of 1078 |
@@ -80,7 +80,7 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 | REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **PASS** | reliability PASS of 45 |
 | BAT-002 the energy chain is bounded end to end | BLOCKER | SCHEMATIC | **PASS** | energy_chain PASS of 98 |
 | DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | final_gate_a INCONCLUSIVE: this board is HELD by an open owner decision, so its paperwork is not current and cannot be made current while the hold sta |
-| DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **INCONCLUSIVE** | doc_provenance_a INCONCLUSIVE: board A declares A32 and the order set holds A22: the note beside those folders describes a board this project is not b |
+| DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **INCONCLUSIVE** | doc_provenance_a INCONCLUSIVE: board A has no order folder in this tree, so no document about it was read |
 | OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 334 |
 | SGN-002 a prototype-only unknown is named | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | PCB-PROTOTYPE-UNKNOWNS.md is current with the registry |

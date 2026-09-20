@@ -17,7 +17,7 @@
   "rule_fingerprints": {
    "ISO-001": "667f32d6b8d7a34b"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "ISO-001"
@@ -25,9 +25,13 @@
  "tool": "spacing",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:48:38Z",
+ "ts": "2026-09-20T07:04:26Z",
  "verdict": "INCONCLUSIVE",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "spacing.py",
+  "sha16": "d58ce94c56df4d68"
+ }
 }

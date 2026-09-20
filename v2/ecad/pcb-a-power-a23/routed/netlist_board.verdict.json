@@ -2,21 +2,46 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "agree": 2000,
+  "agree": 1990,
   "aliased_pins": 0,
   "board_footprints": 400,
   "board_only_inert": 0,
-  "fail": 10,
-  "netlist_refs": 398
+  "fail": 35,
+  "netlist_refs": 413
  },
- "denominator": 2010,
+ "denominator": 2025,
  "evidence": [
   "C121 is in the netlist and not on the board",
   "C122 is in the netlist and not on the board",
+  "C123 is in the netlist and not on the board",
+  "C124 is in the netlist and not on the board",
+  "C125 is in the netlist and not on the board",
+  "C126 is in the netlist and not on the board",
+  "C127 is in the netlist and not on the board",
   "R146 is in the netlist and not on the board",
   "R147 is in the netlist and not on the board",
   "R148 is in the netlist and not on the board",
   "R149 is in the netlist and not on the board",
+  "R150 is in the netlist and not on the board",
+  "R151 is in the netlist and not on the board",
+  "R152 is in the netlist and not on the board",
+  "R153 is in the netlist and not on the board",
+  "R154 is in the netlist and not on the board",
+  "R155 is in the netlist and not on the board",
+  "R156 is in the netlist and not on the board",
+  "R157 is in the netlist and not on the board",
+  "R158 is in the netlist and not on the board",
+  "R159 is in the netlist and not on the board",
+  "U13.15 is GND on the board and PA_CSGF in the netlist",
+  "U13.16 is PA_CS on the board and PA_CSF in the netlist",
+  "U15.15 is GND on the board and HF_CSGF in the netlist",
+  "U15.16 is HF_CS on the board and HF_CSF in the netlist",
+  "U16.15 is GND on the board and POE_CSGF in the netlist",
+  "U16.16 is POE_CS on the board and POE_CSF in the netlist",
+  "U19.15 is GND on the board and PD_CSGF in the netlist",
+  "U19.16 is PD_CS on the board and PD_CSF in the netlist",
+  "U2.15 is GND on the board and FE_CSGF in the netlist",
+  "U2.16 is FE_CS on the board and FE_CSF in the netlist",
   "U3.19 is CELL+ on the board and CH_SRN_F in the netlist",
   "U3.2 is CH_ACN on the board and CH_ACN_F in the netlist",
   "U3.20 is CH_SRP on the board and CH_SRP_F in the netlist",
@@ -29,7 +54,7 @@
   },
   "netlist": {
    "path": "out/pcb-a-power.net",
-   "sha256_16": "733d89dc62a1b783"
+   "sha256_16": "5b6c57bc930bcdde"
   }
  },
  "missing_input": null,
@@ -39,7 +64,7 @@
   "rule_fingerprints": {
    "SCH-002": "a7f873603faeb223"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "SCH-002"
@@ -47,9 +72,13 @@
  "tool": "netlist_board",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "7220c1b43176cf2e"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:38:39Z",
+ "ts": "2026-09-20T06:53:41Z",
  "verdict": "FAIL",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "netlist_board.py",
+  "sha16": "309086c5bd63d252"
+ }
 }

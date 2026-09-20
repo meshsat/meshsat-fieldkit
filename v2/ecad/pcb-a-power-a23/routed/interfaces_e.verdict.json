@@ -18,7 +18,7 @@
   "rule_fingerprints": {
    "INT-001": "6c054dd67edd4099"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "INT-001"
@@ -26,9 +26,13 @@
  "tool": "interfaces_e",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "7220c1b43176cf2e"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:39:03Z",
+ "ts": "2026-09-20T06:54:07Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "interfaces.py",
+  "sha16": "3b33f2c1c6cba4f0"
+ }
 }

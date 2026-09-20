@@ -4,7 +4,7 @@
  "counts": {
   "fail": 0,
   "footprints": 189,
-  "intent_items_reported": 101,
+  "intent_items_reported": 111,
   "pass": 69
  },
  "denominator": 69,
@@ -22,7 +22,7 @@
   "rule_fingerprints": {
    "MEC-001": "b6c4a6962ac81e88"
   },
-  "rule_set_fingerprint": "4bc0aa24d836788d"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "MEC-001"
@@ -30,9 +30,13 @@
  "tool": "check_pcb_e",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "6f7ef144f21449b3"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-18T08:56:12Z",
+ "ts": "2026-09-20T07:03:36Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "check_pcb_e.py",
+  "sha16": "928c2e173e7afbe9"
+ }
 }

@@ -2,13 +2,13 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "measured_rails": 19,
-  "no_via": 3,
+  "measured_rails": 20,
+  "no_via": 4,
   "over": 21,
   "over_barrels": 34,
-  "rails": 33
+  "rails": 34
  },
- "denominator": 33,
+ "denominator": 34,
  "evidence": [
   "+1V0_S1: a barrel at (74.8, 147.1) carries 0.80 A of the solved mesh against 0.56 A for its own wall at 10 K (18 um plating), ratio 1.43",
   "+1V0_S2: 1.20 A crosses a transition of 1 via(s) at (119.5, 159.6) rated 0.56 A at 10 K (18 um plating), attributed rather than measured",
@@ -45,13 +45,13 @@
   "site_mm": 6.0
  },
  "missing_input": null,
- "note": "9 of 19 judged rail(s) are over their own barrels on the current dc_drop's solved mesh put through them, which is a measurement and decides this reading; the 14 rail(s) with no solved current are judged by attributing the whole rail to its weakest cluster of vias, which can only add failures to the ones named here and never remove one (IPC-2221's curve, ECSS-Q-ST-70-12C Annex D D.4, the fabricator's own plating)",
+ "note": "9 of 20 judged rail(s) are over their own barrels on the current dc_drop's solved mesh put through them, which is a measurement and decides this reading; the 14 rail(s) with no solved current are judged by attributing the whole rail to its weakest cluster of vias, which can only add failures to the ones named here and never remove one (IPC-2221's curve, ECSS-Q-ST-70-12C Annex D D.4, the fabricator's own plating)",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
    "PI-003": "b8238bd8e5613e6c"
   },
-  "rule_set_fingerprint": "82885961768537e2"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "PI-003"
@@ -59,9 +59,13 @@
  "tool": "via_current",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "d6d53e1e2108b7bd"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-18T17:24:02Z",
+ "ts": "2026-09-20T06:59:22Z",
  "verdict": "FAIL",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "via_current.py",
+  "sha16": "ef29c5ca53e28b51"
+ }
 }

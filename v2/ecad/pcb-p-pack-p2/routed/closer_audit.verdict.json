@@ -2,12 +2,12 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "declared": 15,
+  "declared": 16,
   "fail": 0,
-  "in_finish": 15,
+  "in_finish": 16,
   "uncovered_classes": 0
  },
- "denominator": 15,
+ "denominator": 16,
  "evidence": [],
  "inputs": {
   "board": "p",
@@ -20,7 +20,7 @@
   "rule_fingerprints": {
    "PLC-002": "b4c23ff75d81a174"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "PLC-002"
@@ -28,9 +28,13 @@
  "tool": "closer_audit",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:48:44Z",
+ "ts": "2026-09-20T07:04:33Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "closer_audit.py",
+  "sha16": "fd296cc7fbcca99c"
+ }
 }

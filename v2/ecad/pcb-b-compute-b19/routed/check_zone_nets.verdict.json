@@ -20,7 +20,7 @@
   "rule_fingerprints": {
    "PLN-001": "13a9271b6424af72"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "PLN-001"
@@ -28,9 +28,13 @@
  "tool": "check_zone_nets",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:42:21Z",
+ "ts": "2026-09-20T06:57:24Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "check_zone_nets.py",
+  "sha16": "6168cdfbf6ef5446"
+ }
 }

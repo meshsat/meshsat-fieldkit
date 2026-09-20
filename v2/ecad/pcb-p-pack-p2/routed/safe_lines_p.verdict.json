@@ -15,7 +15,7 @@
   "board": "p",
   "netlist": {
    "path": "out/pcb-p-pack.net",
-   "sha256_16": "ac46585819c50c39"
+   "sha256_16": "c737cda57bb379ea"
   }
  },
  "missing_input": null,
@@ -25,7 +25,7 @@
   "rule_fingerprints": {
    "SCH-004": "0d3209a18476cc88"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "SCH-004"
@@ -33,9 +33,13 @@
  "tool": "safe_lines_p",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:48:47Z",
+ "ts": "2026-09-20T07:04:36Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "safe_lines.py",
+  "sha16": "a2c964efb94a892f"
+ }
 }

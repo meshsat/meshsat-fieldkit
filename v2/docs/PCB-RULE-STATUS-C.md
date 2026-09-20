@@ -11,9 +11,9 @@ Measured on board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 35 | 74.5 |
+| PASS | 34 | 72.3 |
 | FAIL | 3 | 6.4 |
-| INCONCLUSIVE | 9 | 19.1 |
+| INCONCLUSIVE | 10 | 21.3 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **47** | 100.0 |
 
@@ -35,7 +35,7 @@ Measured on board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24.
 | PI-003 via current capacity | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | via_current PASS of 2 |
 | GND-001 one deliberate ground system | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | ground_system PASS of 1 |
 | GND-002 chassis and cable-shield strategy | MUST_JUSTIFY | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the strategy is WRITTEN, which it was not before, and writing it found the gap. The kit has no single co |
-| STK-001 the stackup is declared, feasible and in the board | BLOCKER | ROUTED_BOARD | **PASS** | stackup_gate PASS of 16 |
+| STK-001 the stackup is declared, feasible and in the board | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | stackup_gate INCONCLUSIVE: the document the named stack was transcribed from is not in the tree (v2/vendor/fabricator/jlcpcb-impedance-stackups-2026-0 |
 | STK-002 a layer count is decided and costed | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against si |
 | RET-001 a continuous adjacent return path | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: 16 September 2026: the principle is implemented and the heuristic is no longer standing in  |
 | RET-002 plane-adjacency screen | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | intent_return_path FAIL: {'fail': 15, 'pass': 112} |
@@ -49,7 +49,7 @@ Measured on board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24.
 | TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **PASS** | port_protect_c PASS of 4 |
 | THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, |
 | PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **PASS** | hardset-placed PASS of 15 |
-| PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | closer_audit PASS of 15 |
+| PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | closer_audit PASS of 16 |
 | RTE-001 geometry a fabricator will build | BLOCKER | ROUTED_BOARD | **PASS** | fab_limits PASS of 20 |
 | RTE-002 nothing unrouted, nothing shorted | BLOCKER | ROUTED_BOARD | **PASS** | hardset-routed-board-gate PASS of 15 |
 | VIA-002 the annular ring is one the fabricator makes | BLOCKER | ROUTED_BOARD | **PASS** | via_annular PASS of 805 |
@@ -62,7 +62,7 @@ Measured on board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24.
 | TST-001 the board can be brought up safely | MUST_JUSTIFY | SCHEMATIC | **PASS** | PCB-BRING-UP.md is current with the registry |
 | REL-001 the build survives its service life | MUST_JUSTIFY | PROTOTYPE | **PASS** | reliability PASS of 11 |
 | DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **PASS** | final_gate_c PASS of 1 |
-| DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **INCONCLUSIVE** | doc_provenance_c INCONCLUSIVE: board C declares C24 and the order set holds C7: the note beside those folders describes a board this project is not bu |
+| DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **INCONCLUSIVE** | doc_provenance_c INCONCLUSIVE: board C has no order folder in this tree, so no document about it was read |
 | OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 334 |
 | SGN-002 a prototype-only unknown is named | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | PCB-PROTOTYPE-UNKNOWNS.md is current with the registry |

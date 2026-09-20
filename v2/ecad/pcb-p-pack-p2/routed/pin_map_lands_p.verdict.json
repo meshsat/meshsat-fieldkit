@@ -13,7 +13,7 @@
   "board": "p",
   "netlist": {
    "path": "out/pcb-p-pack.net",
-   "sha256_16": "eb3206d8b551a900"
+   "sha256_16": "c737cda57bb379ea"
   }
  },
  "missing_input": null,
@@ -23,7 +23,7 @@
   "rule_fingerprints": {
    "SCH-005": "9993ce195b935d6d"
   },
-  "rule_set_fingerprint": "4bc0aa24d836788d"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "SCH-005"
@@ -31,9 +31,13 @@
  "tool": "pin_map_lands_p",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T23:01:06Z",
+ "ts": "2026-09-20T07:04:36Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "pin_map_lands.py",
+  "sha16": "a3de0a4c771355e0"
+ }
 }

@@ -14355,3 +14355,53 @@ sentence about adopting a board, its schematic and its netlist together, arrivin
 
 **Sweep 30 is running**, the first sweep on that footing, so SCH-003 on six boards and INT-001 on seven can
 be taken rather than declared absent.
+
+**Addendum to 32.288, 08:56 CEST**: board B's 804 differing lines were counted rather than glanced at.
+**8,647 connectivity lines before and 8,647 after**, and every one of the 804 is a **net header's class
+field**: 402 nets that read `Default` now read `USB` (237), `DIFF100` (96), `PWR` (55) or `HV` (14). Not one
+`comp`, `node` or `libsource` line changed. So the regeneration corrected board B's class table and touched
+nothing else, which is what "a correction rather than a change" has to mean to be worth writing down.
+
+### 32.289, 20 September 2026 09:02 CEST: every Kelvin run board A owes, measured, and the error is Ohm's law
+
+Item 7's four runs at the two charger shunts and the ten ISNS taps declared at 07:52 are **one piece of
+work**, and this is all of it, measured on A59's placed board, each from the shunt pad's centre to the pad or
+pin that taps it:
+
+| run | from | to | mm | in a straight 0.2 mm outer run |
+|---|---|---|---:|---|
+| charger input, high | `R16.1` | `R147.1` | 26.81 | C20, C23, Q7, R146 |
+| charger input, low | `R16.2` | `R146.1` | 30.96 | C20 |
+| charger charge, high | `R17.1` | `R149.1` | 27.16 | U3 |
+| charger charge, low | `R17.2` | `R148.1` | 22.28 | C24, U3 |
+| FE ISNS+ | `R11.1` | `U2.14` | 12.99 | **none** |
+| FE ISNS- | `R11.2` | `U2.13` | 10.76 | **none** |
+| PA ISNS+ | `R55.1` | `U13.14` | **49.69** | Q13, Q14 |
+| PA ISNS- | `R55.2` | `U13.13` | **55.59** | Q14 |
+| HF ISNS+ | `R65.1` | `U15.14` | 12.42 | **none** |
+| HF ISNS- | `R65.2` | `U15.13` | 15.56 | Q16 |
+| POE ISNS+ | `R71.1` | `U16.14` | 31.61 | Q19, Q20 |
+| POE ISNS- | `R71.2` | `U16.13` | 37.57 | Q20 |
+| PD ISNS+ | `R81.1` | `U19.14` | 33.59 | Q25, Q26 |
+| PD ISNS- | `R81.2` | `U19.13` | 39.55 | Q26 |
+
+**Fourteen runs, 406.53 mm of locked copper.**
+
+**AND THE LENGTHS EXPLAIN 32.282'S NUMBERS AND CORRECT MY OWN REFINEMENT OF 08:24.** `FE ISNS+` is 12.99 mm
+and reads **53.2 percent**; `FE ISNS-` is 10.76 mm and reads **4.3**. Almost the same length, twelve times
+the error, because ISNS+ runs on `FE_OUT`, a 0.500 mm track at 3.80 A, and ISNS- runs on `VBUS20`, a **pour**.
+`POE ISNS+` is 31.61 mm and is the one row that passes, because `POE_OUT` carries little current. So the
+error is **current times length over cross-section**, which is Ohm's law and not a correlation; *"the ratio
+predicts the percentage"* was the wrong way to put it even after I narrowed it, because the density ratio is
+about width alone and the error needs all three.
+
+**WHAT IT MAKES POSSIBLE.** The generator lays these the way it lays the eleven blind-mate RF drops, as
+locked runs the router cannot move, which is the only instrument that has ever held a sense line in this
+project (E21 to E23 on board E). **Three of the fourteen are clear of everything** (`FE`'s two and
+`HF ISNS+`) and can be laid on the next generation with nothing else decided; eleven have something in the
+way of a straight run and each names it.
+
+**And `PA`'s pair is a placement item before it is a copper one**: 49.69 and 55.59 mm. A fifty-millimetre
+Kelvin sense is not a Kelvin sense, and `U13` sits that far from the shunt it reads.
+
+**NOT STARTED.** Nothing is applied while four board A arms are in flight.

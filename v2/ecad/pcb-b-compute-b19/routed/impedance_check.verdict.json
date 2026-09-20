@@ -78,22 +78,24 @@
   "hard_types": 15,
   "rule_fingerprints": {
    "IMP-001": "b55e6a861a00f8ad",
-   "PAIR-001": "e742b4d58ac642e2",
-   "STK-001": "e90a87c776209eb2"
+   "PAIR-001": "e742b4d58ac642e2"
   },
-  "rule_set_fingerprint": "4bc0aa24d836788d"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "IMP-001",
-  "PAIR-001",
-  "STK-001"
+  "PAIR-001"
  ],
  "tool": "impedance_check",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "0b4e535631b74e6d"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T23:46:28Z",
+ "ts": "2026-09-20T06:58:59Z",
  "verdict": "FAIL",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "impedance_check.py",
+  "sha16": "e2495a04e16fc600"
+ }
 }

@@ -27,10 +27,14 @@
  ],
  "tool": "derate",
  "tools": {
-  "git_head": "190bcc8a4c8b",
-  "tools_tree_sha": "ac75216d6fd7df92"
+  "git_head": "",
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-19T22:38:14Z",
+ "ts": "2026-09-20T07:04:54Z",
  "verdict": "PASS",
- "version": "190bcc8a4c8b+dirty"
+ "version": "unknown",
+ "writer": {
+  "file": "derate.py",
+  "sha16": "129c189f7c7860df"
+ }
 }

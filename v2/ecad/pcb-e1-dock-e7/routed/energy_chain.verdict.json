@@ -21,7 +21,7 @@
   "rule_fingerprints": {
    "BAT-002": "fbf06a73485c1f88"
   },
-  "rule_set_fingerprint": "4bc0aa24d836788d"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "BAT-002"
@@ -29,9 +29,13 @@
  "tool": "energy_chain",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "6f7ef144f21449b3"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-18T08:56:43Z",
+ "ts": "2026-09-20T07:04:08Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "energy_chain.py",
+  "sha16": "73b908eb6b002690"
+ }
 }

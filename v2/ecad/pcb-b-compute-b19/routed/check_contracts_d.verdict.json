@@ -16,21 +16,23 @@
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
-   "RF-002": "b4c62839dd113ee3",
    "SCH-003": "ddf200a8e65c127b"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
-  "RF-002",
   "SCH-003"
  ],
  "tool": "check_contracts_d",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:44:38Z",
+ "ts": "2026-09-20T07:00:12Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "check_contracts.py",
+  "sha16": "4f4cb3a61d808820"
+ }
 }

@@ -20,7 +20,7 @@
   "rule_fingerprints": {
    "INT-001": "6c054dd67edd4099"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "INT-001"
@@ -28,9 +28,13 @@
  "tool": "interfaces_a",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:49:09Z",
+ "ts": "2026-09-20T07:05:00Z",
  "verdict": "FAIL",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "interfaces.py",
+  "sha16": "3b33f2c1c6cba4f0"
+ }
 }

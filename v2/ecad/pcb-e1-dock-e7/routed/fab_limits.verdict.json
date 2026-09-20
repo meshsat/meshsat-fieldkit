@@ -2,10 +2,10 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "classes": 4,
+  "classes": 6,
   "under_capability": 0
  },
- "denominator": 20,
+ "denominator": 28,
  "evidence": [],
  "inputs": {
   "board": {
@@ -21,21 +21,23 @@
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
-   "RTE-001": "e5ef726cf2ea32dc",
-   "STK-001": "e90a87c776209eb2"
+   "RTE-001": "e5ef726cf2ea32dc"
   },
-  "rule_set_fingerprint": "4bc0aa24d836788d"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
-  "RTE-001",
-  "STK-001"
+  "RTE-001"
  ],
  "tool": "fab_limits",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "6f7ef144f21449b3"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-18T08:56:22Z",
+ "ts": "2026-09-20T07:03:47Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "fab_limits.py",
+  "sha16": "04d184797dc0a246"
+ }
 }

@@ -24,7 +24,7 @@
   "rule_fingerprints": {
    "VIA-002": "24583e5707698da0"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "VIA-002"
@@ -32,9 +32,13 @@
  "tool": "via_annular",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:48:35Z",
+ "ts": "2026-09-20T07:04:23Z",
  "verdict": "INCONCLUSIVE",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "via_audit.py",
+  "sha16": "07e650e0efda1dd1"
+ }
 }

@@ -5,11 +5,14 @@
   "measured_rails": 4,
   "no_via": 0,
   "over": 1,
+  "over_barrels": 2,
   "rails": 4
  },
  "denominator": 4,
  "evidence": [
-  "+5V_SA: a barrel at (71.4, 74.2) carries 1.10 A of the solved mesh against 0.90 A for its own wall at 10 K (18 um plating), ratio 1.22"
+  "+5V_SA: a barrel at (71.4, 74.2) carries 1.10 A of the solved mesh against 0.90 A for its own wall at 10 K (18 um plating), ratio 1.22",
+  "+5V_SA: barrel at (71.4, 74.2), 1.10 A against 0.90 A, ratio 1.22",
+  "+5V_SA: barrel at (68.8, 82.0), 1.10 A against 0.90 A, ratio 1.22"
  ],
  "inputs": {
   "board": {
@@ -27,7 +30,7 @@
   "rule_fingerprints": {
    "PI-003": "b8238bd8e5613e6c"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "PI-003"
@@ -35,9 +38,13 @@
  "tool": "via_current",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:47:26Z",
+ "ts": "2026-09-20T07:03:06Z",
  "verdict": "FAIL",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "via_current.py",
+  "sha16": "ef29c5ca53e28b51"
+ }
 }

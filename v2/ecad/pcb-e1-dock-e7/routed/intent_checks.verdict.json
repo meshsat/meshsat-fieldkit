@@ -3,10 +3,10 @@
  "applicable": true,
  "counts": {
   "fail": 1,
-  "pass": 100,
+  "pass": 110,
   "unclaimed": 0
  },
- "denominator": 101,
+ "denominator": 111,
  "evidence": [
   "return via: 52 of 59 signal vias have a ground via within 1.5 mm (80 exempt in fine-pitch fans, 0 on one reference plane, 82 on a net whose declared class has no edge to return); without one: FAN1_PWM at (13.70, 221.83); SCL0 at (211.02, 190.76); SDA0 at (211.99, 190.89); SCL0 at (218.55, 207.76); Q2_G at (218.70, 218.43); SDA0 at (224.57, 190.93); Q2_G at (224.62, 193.50)"
  ],
@@ -26,9 +26,13 @@
  "tool": "intent_checks",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "c80454a737a87c01"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-18T18:46:38Z",
+ "ts": "2026-09-20T07:03:40Z",
  "verdict": "FAIL",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "intent_checks.py",
+  "sha16": "41cd5935c5f46f0b"
+ }
 }

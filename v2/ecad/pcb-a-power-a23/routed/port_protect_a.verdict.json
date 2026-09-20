@@ -2,31 +2,31 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "behind_an_active_part": 2,
+  "behind_an_active_part": 0,
   "declared": 3,
   "not_on_netlist": 0,
   "ports": 3,
-  "unprotected": 0
+  "unprotected": 2
  },
  "denominator": 21,
  "evidence": [
-  "J_USBC_OUT (the USB-C outlet on the connector plate, out of the case): 2 conductor(s) whose clamp is behind an active part: J_USBC_OUT.2 on PD_CC1: ACTIVE U18 on PD_CC1 (TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)) sees the transient; CLAMP D4 on PD_VBUS (SMBJ18A (VBUS clamp at the outlet)) is behind it [PD_CC1 | U18 -> PD_VBUS | D4 on PD_VBUS]; J_USBC_OUT.3 on PD_CC2: ACTIVE U18 on PD_CC2 (TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)) sees the transient; CLAMP D4 on PD_VBUS (SMBJ18A (VBUS clamp at the outlet)) is behind it [PD_CC2 | U18 -> PD_VBUS | D4 on PD_VBUS]"
+  "J_USBC_OUT (the USB-C outlet on the connector plate, out of the case): 2 conductor(s) reach a chip with nothing between: J_USBC_OUT.2 on PD_CC1, J_USBC_OUT.3 on PD_CC2"
  ],
  "inputs": {
   "board": "a",
   "netlist": {
    "path": "out/pcb-a-power.net",
-   "sha256_16": "733d89dc62a1b783"
+   "sha256_16": "5b6c57bc930bcdde"
   }
  },
  "missing_input": null,
- "note": "0 conductor(s) reach a semiconductor with nothing between, and 2 meet their clamp only through an active part, which therefore sees the transient itself",
+ "note": "2 conductor(s) reach a semiconductor with nothing between, and 0 meet their clamp only through an active part, which therefore sees the transient itself",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
    "TRN-001": "5d38bd6db7d4e11f"
   },
-  "rule_set_fingerprint": "a2d08c6e5224a5a4"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "TRN-001"
@@ -34,9 +34,13 @@
  "tool": "port_protect_a",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "7220c1b43176cf2e"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:38:58Z",
+ "ts": "2026-09-20T06:54:01Z",
  "verdict": "FAIL",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "port_protect.py",
+  "sha16": "4cd61075adea9def"
+ }
 }

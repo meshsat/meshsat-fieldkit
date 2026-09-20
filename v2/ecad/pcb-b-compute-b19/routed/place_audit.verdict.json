@@ -47,7 +47,7 @@
   "rule_fingerprints": {
    "PLC-001": "51588472a4c8e371"
   },
-  "rule_set_fingerprint": "4bc0aa24d836788d"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "PLC-001"
@@ -55,9 +55,13 @@
  "tool": "place_audit",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "27827c56e7c57482"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-17T22:56:39Z",
+ "ts": "2026-09-20T07:00:08Z",
  "verdict": "FAIL",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "place_audit.py",
+  "sha16": "424e061a630119c3"
+ }
 }

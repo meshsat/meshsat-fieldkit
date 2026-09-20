@@ -7,18 +7,18 @@ Every pair that is not a current PASS, classified. Generated from tools/pcb_deci
 map's maturity and each deciding verdict: a decision that claims a pair wins over everything else, because
 the ruling is the action that moves it, and the measurement is reported beside it rather than lost.
 
-**124 open pair(s)** over 7 board(s). **45 are measured failures** (a tool looked and the board failed), which are **39 distinct readings**, and **16 of those are claimed by an open owner decision**.
+**141 open pair(s)** over 7 board(s). **37 are measured failures** (a tool looked and the board failed), which are **31 distinct readings**, and **15 of those are claimed by an open owner decision**.
 
 | waiting on | pairs | what it means |
 |---|---:|---|
 | `DECISION` | 63 | an owner decision by name |
 | `DECISION_UNCLAIMED` | 5 | a rule that says a decision is open while no decision claims it |
 | `AUTHORITY` | 3 | an authority this project does not have |
-| `MISSING_INPUT` | 14 | an input the reading declared absent |
-| `MEASURED_FAILURE` | 29 | the tool looked and the board failed |
-| `VENDOR_WAIT` | 1 | a fabricator or a standards body, and nobody here |
-| `OWNER_WORK` | 7 | work only the owner or the ordering session can do |
-| `NOT_JUDGED` | 2 | not judged, for the reason the reading gives |
+| `MISSING_INPUT` | 19 | an input the reading declared absent |
+| `MEASURED_FAILURE` | 22 | the tool looked and the board failed |
+| `VENDOR_WAIT` | 2 | a fabricator or a standards body, and nobody here |
+| `OWNER_WORK` | 8 | work only the owner or the ordering session can do |
+| `NOT_JUDGED` | 19 | not judged, for the reason the reading gives |
 
 A pair is what a BOARD has to satisfy, so the table counts pairs; these rules are decided by a verdict
 written ONCE for the whole set, so their rows are one reading seen on every board and not that many separate
@@ -31,13 +31,28 @@ things to fix.
 
 | board | open | of which measured | decision-bound | authority | missing input | not judged |
 |---|---:|---:|---:|---:|---:|---:|
-| A | 25 | 10 | 12 | 1 | 4 | 0 |
-| B | 30 | 13 | 10 | 1 | 4 | 2 |
-| C | 12 | 3 | 10 | 0 | 0 | 0 |
-| D | 17 | 4 | 11 | 1 | 2 | 0 |
-| E | 20 | 6 | 12 | 0 | 4 | 0 |
-| E5 | 6 | 3 | 3 | 0 | 0 | 0 |
-| P | 14 | 6 | 10 | 0 | 0 | 0 |
+| A | 28 | 11 | 12 | 1 | 5 | 1 |
+| B | 39 | 6 | 10 | 1 | 4 | 16 |
+| C | 13 | 3 | 10 | 0 | 1 | 0 |
+| D | 18 | 4 | 11 | 1 | 3 | 0 |
+| E | 22 | 6 | 12 | 0 | 5 | 1 |
+| E5 | 6 | 2 | 3 | 0 | 1 | 0 |
+| P | 15 | 5 | 10 | 0 | 0 | 1 |
+
+## Readings owed
+
+Of the 93 open pairs with a reading beside them, **20 are decided by a reading taken under a tool that has
+CHANGED since**. A tool change moves no rule-set fingerprint and no per-rule digest, so nothing else on these
+pages can say it. It is an upper bound, because a tool file moves for a comment as readily as for a
+criterion, and it decides nothing: it says the reading is owed. Re-take with retake_gate.sh or a sweep.
+
+| rule | boards |
+|---|---|
+| `BAT-001` | P |
+| `DFA-001` | A, B, C, D, E, E5, P |
+| `DOC-001` | A, B, D, E |
+| `DOC-002` | E5 |
+| `OUT-001` | A, B, C, D, E, E5, P |
 
 ## By open decision
 
@@ -47,7 +62,7 @@ holding a number, not a question about a number.
 | decision | pairs held | of which measured | rules | boards |
 |---:|---:|---:|---|---|
 | 27 | 3 | 1 | RET-001, RET-002, STK-002 | C |
-| 28 | 4 | 3 | RET-002, RTE-001, STK-001, STK-002 | P |
+| 28 | 4 | 2 | RET-002, RTE-001, STK-001, STK-002 | P |
 | 29 | 5 | 0 | GND-002, INT-002 | A B C E |
 | 31 | 6 | 3 | DOC-001, TRN-001 | A D E |
 | 32 | 3 | 3 | RET-004 | C D E |
@@ -117,7 +132,7 @@ holding a number, not a question about a number.
 | `ENV-001` | E5 | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
 | `DOC-002` | E5 | FAIL | decision 41: the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002 |
 | `ENV-001` | P | INCONCLUSIVE | decision 34: the kit has never had a written operating envelope and four rules resolve against nothing |
-| `STK-001` | P | FAIL | decision 28: board P cannot hold the return-path rule on two layers and the ruled P5 does not route |
+| `STK-001` | P | INCONCLUSIVE | decision 28: board P cannot hold the return-path rule on two layers and the ruled P5 does not route |
 | `STK-002` | P | INCONCLUSIVE | decision 28: board P cannot hold the return-path rule on two layers and the ruled P5 does not route |
 | `RET-001` | P | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
 | `RET-002` | P | FAIL | decision 28: board P cannot hold the return-path rule on two layers and the ruled P5 does not route |
@@ -145,30 +160,36 @@ holding a number, not a question about a number.
 | `IMP-001` | B | INCONCLUSIVE | the authority behind this rule's limit is not established: closed forms from a standard not in the tree; no fabricator confirmation and no coupon. 19 SEPTEMBER 2026, THE NOTE WAS A DAY OUT OF DATE AN |
 | `IMP-001` | D | INCONCLUSIVE | the authority behind this rule's limit is not established: closed forms from a standard not in the tree; no fabricator confirmation and no coupon. 19 SEPTEMBER 2026, THE NOTE WAS A DAY OUT OF DATE AN |
 
-## MISSING_INPUT (14): an input the reading declared absent
+## MISSING_INPUT (19): an input the reading declared absent
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
 | `CMP-002` | A | INCONCLUSIVE | no deliverable folder at the declared phase A32, so this board's parts were not certified against the board this tree holds (the folders that exist are A19, A20, A21, A22, A24) |
 | `SUP-001` | A | INCONCLUSIVE | no deliverable folder at the declared phase A32, so this board's parts were not certified against the board this tree holds (the folders that exist are A19, A20, A21, A22, A24) |
+| `STK-001` | A | INCONCLUSIVE | the document the named stack was transcribed from is not in the tree (v2/vendor/fabricator/jlcpcb-impedance-stackups-2026-09-16.md) |
 | `DFM-001` | A | INCONCLUSIVE | the folder judged here is meshsat-pcb-a-revA-A24 and this board declares A32, so its properties are a reading of a board this set is not building |
-| `DOC-002` | A | INCONCLUSIVE | board A declares A32 and the order set holds A22: the note beside those folders describes a board this project is not building |
+| `DOC-002` | A | INCONCLUSIVE | board A has no order folder in this tree, so no document about it was read |
 | `CMP-002` | B | INCONCLUSIVE | no deliverable folder at the declared phase B21, so this board's parts were not certified against the board this tree holds (the folders that exist are B12, B13, B14, B15, B19) |
 | `SUP-001` | B | INCONCLUSIVE | no deliverable folder at the declared phase B21, so this board's parts were not certified against the board this tree holds (the folders that exist are B12, B13, B14, B15, B19) |
 | `DFM-001` | B | INCONCLUSIVE | the folder judged here is meshsat-pcb-b-revA-B19-quote and this board declares B21, so its properties are a reading of a board this set is not building |
-| `DOC-002` | B | INCONCLUSIVE | board B declares B21 and the order set holds B16: the note beside those folders describes a board this project is not building |
+| `DOC-002` | B | INCONCLUSIVE | board B has no order folder in this tree, so no document about it was read |
+| `STK-001` | C | INCONCLUSIVE | the document the named stack was transcribed from is not in the tree (v2/vendor/fabricator/jlcpcb-impedance-stackups-2026-09-16.md) |
+| `STK-001` | D | INCONCLUSIVE | the document the named stack was transcribed from is not in the tree (v2/vendor/fabricator/jlcpcb-impedance-stackups-2026-09-16.md) |
 | `DFM-001` | D | INCONCLUSIVE | the folder judged here is meshsat-pcb-d-revA-D11 and this board declares D12, so its properties are a reading of a board this set is not building |
-| `DOC-002` | D | INCONCLUSIVE | board D declares D12 and the order set holds D8: the note beside those folders describes a board this project is not building |
+| `DOC-002` | D | INCONCLUSIVE | board D has no order folder in this tree, so no document about it was read |
 | `CMP-002` | E | INCONCLUSIVE | no deliverable folder at the declared phase E17, so this board's parts were not certified against the board this tree holds (the folders that exist are E4, E6, E7, E9) |
 | `SUP-001` | E | INCONCLUSIVE | no deliverable folder at the declared phase E17, so this board's parts were not certified against the board this tree holds (the folders that exist are E4, E6, E7, E9) |
+| `STK-001` | E | INCONCLUSIVE | the document the named stack was transcribed from is not in the tree (v2/vendor/fabricator/jlcpcb-impedance-stackups-2026-09-16.md) |
 | `DFM-001` | E | INCONCLUSIVE | the folder judged here is meshsat-pcb-e-revA-E9 and this board declares E17, so its properties are a reading of a board this set is not building |
-| `DOC-002` | E | INCONCLUSIVE | board E declares E17 and the order set holds E6: the note beside those folders describes a board this project is not building |
+| `DOC-002` | E | INCONCLUSIVE | board E has no order folder in this tree, so no document about it was read |
+| `STK-001` | E5 | INCONCLUSIVE | the document the named stack was transcribed from is not in the tree (v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md) |
 
-## MEASURED_FAILURE (29): the tool looked and the board failed
+## MEASURED_FAILURE (22): the tool looked and the board failed
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
-| `SCH-002` | A | FAIL | netlist_board FAIL: {'agree': 2000, 'aliased_pins': 0, 'board_footprints': 400, 'board_only_inert': 0, 'fail': 10, 'netlist_refs': 398} |
+| `SCH-002` | A | FAIL | netlist_board FAIL: {'agree': 1990, 'aliased_pins': 0, 'board_footprints': 400, 'board_only_inert': 0, 'fail': 35, 'netlist_refs': 413} |
+| `DEC-001` | A | FAIL | intent_decoupling FAIL: {'fail': 5, 'pass': 30} |
 | `PI-002` | A | FAIL | dc_drop FAIL: {'density_missed': 13, 'met': 24, 'missed': 3, 'undeclared': 0} |
 | `PI-003` | A | FAIL | via_current FAIL: {'measured_rails': 27, 'no_via': 0, 'over': 8, 'over_barrels': 37, 'rails': 27} |
 | `RET-004` | A | FAIL | return_via FAIL: {'examined_same_reference': 0, 'examined_to_power': 10, 'exempt': 54, 'judged': 40, 'lacking': 32, 'same_plane': 27, 'sl |
@@ -177,38 +198,32 @@ holding a number, not a question about a number.
 | `OUT-001` | A | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `SCH-002` | B | FAIL | netlist_board FAIL: {'agree': 6752, 'aliased_pins': 0, 'board_footprints': 957, 'board_only_inert': 0, 'fail': 1, 'netlist_refs': 931} |
 | `PWR-003` | B | FAIL | energy_chain_b FAIL: {'fail': 1, 'stages': 3} |
-| `PI-001` | B | FAIL | dc_density FAIL: {'met': 27, 'missed': 9, 'undeclared': 0} |
-| `PI-002` | B | FAIL | dc_drop FAIL: {'density_missed': 9, 'met': 31, 'missed': 5, 'undeclared': 0} |
-| `PI-003` | B | FAIL | via_current FAIL: {'measured_rails': 19, 'no_via': 3, 'over': 21, 'over_barrels': 34, 'rails': 33} |
-| `RET-002` | B | FAIL | intent_return_path FAIL: {'fail': 1, 'pass': 657} |
-| `RET-004` | B | FAIL | return_via FAIL: {'examined_same_reference': 0, 'examined_to_power': 0, 'exempt': 586, 'judged': 12, 'lacking': 8, 'same_plane': 687, 'sl |
-| `PAIR-001` | B | FAIL | impedance_check FAIL: {'MET': 18, 'MISSED': 17, 'SHORT': 17, 'UNCOUPLED': 9, 'UNREFERENCED': 19, 'UNROUTED': 36, 'classes_declared': 5, 'met': |
 | `PLC-001` | B | FAIL | place_audit FAIL: {'collisions': 13, 'fine_pitch': 75, 'footprints': 957, 'measured': 75} |
-| `PLC-002` | B | FAIL | closer_audit FAIL: {'declared': 15, 'fail': 0, 'in_finish': 15, 'uncovered_classes': 1} |
 | `RTE-002` | B | FAIL | hardset-routed-board-gate FAIL: {'by_type': {}, 'hard': 0, 'report': {'silk_edge_clearance': 9, 'silk_over_copper': 47, 'silk_overlap': 69, 'track_dangl |
 | `OUT-001` | B | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `OUT-001` | C | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
-| `PI-003` | D | FAIL | via_current FAIL: {'measured_rails': 4, 'no_via': 0, 'over': 1, 'rails': 4} |
+| `PI-003` | D | FAIL | via_current FAIL: {'measured_rails': 4, 'no_via': 0, 'over': 1, 'over_barrels': 2, 'rails': 4} |
 | `OUT-001` | D | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
-| `PI-003` | E | FAIL | via_current FAIL: {'measured_rails': 7, 'no_via': 1, 'over': 7, 'over_barrels': 18, 'rails': 9} |
+| `PI-003` | E | FAIL | via_current FAIL: {'measured_rails': 9, 'no_via': 2, 'over': 9, 'over_barrels': 30, 'rails': 11} |
 | `ANA-001` | E | FAIL | sensitive_nodes FAIL: {'declared': 3, 'fail': 2, 'measured': 3} |
 | `OUT-001` | E | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
-| `STK-001` | E5 | FAIL | stackup_gate FAIL: {'compared': 8, 'copper_layers': 2, 'disagreements': 1} |
 | `OUT-001` | E5 | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `PI-001` | P | FAIL | dc_density FAIL: {'met': 3, 'missed': 1, 'undeclared': 0} |
 | `OUT-001` | P | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 
-## VENDOR_WAIT (1): a fabricator or a standards body, and nobody here
+## VENDOR_WAIT (2): a fabricator or a standards body, and nobody here
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
+| `VIA-002` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 | `VIA-002` | P | INCONCLUSIVE | via_annular INCONCLUSIVE: this board declares no floor for the via ring and the plated hole ring, so that ring was not judged: a floor asserted without the fabricator's own row would be |
 
-## OWNER_WORK (7): work only the owner or the ordering session can do
+## OWNER_WORK (8): work only the owner or the ordering session can do
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
 | `DFA-001` | A | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
+| `PI-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 | `DFA-001` | B | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 | `DFA-001` | C | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 | `DFA-001` | D | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
@@ -216,10 +231,27 @@ holding a number, not a question about a number.
 | `DFA-001` | E5 | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 | `DFA-001` | P | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 
-## NOT_JUDGED (2): not judged, for the reason the reading gives
+## NOT_JUDGED (19): not judged, for the reason the reading gives
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
-| `RF-001` | B | INCONCLUSIVE | rf_line INCONCLUSIVE: this board DECLARES it carries a transmitter and yet no net of its own asks for a single-ended impedance: one of the two is wrong, and on this set it has been t |
+| `PWR-002` | A | INCONCLUSIVE | power_sequence INCONCLUSIVE: each rail's enable derived from the netlist and the part that drives it named; a rail whose enable is driven only by a device powered from that same rail cannot |
+| `SCH-003` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
+| `PWR-002` | B | INCONCLUSIVE | power_sequence INCONCLUSIVE: each rail's enable derived from the netlist and the part that drives it named; a rail whose enable is driven only by a device powered from that same rail cannot |
+| `PI-002` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
+| `PI-003` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
+| `GND-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
+| `STK-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
+| `RET-002` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
+| `RET-004` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
+| `PAIR-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
+| `RF-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
+| `PLC-002` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
+| `RTE-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
+| `VIA-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
+| `PLN-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
+| `EMC-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 | `DOC-001` | B | INCONCLUSIVE | final_gate_b INCONCLUSIVE: this board's own deliverable folder, judged on its own; the set's verdict is final_gate |
+| `PWR-002` | E | INCONCLUSIVE | power_sequence INCONCLUSIVE: each rail's enable derived from the netlist and the part that drives it named; a rail whose enable is driven only by a device powered from that same rail cannot |
+| `PWR-002` | P | INCONCLUSIVE | power_sequence INCONCLUSIVE: each rail's enable derived from the netlist and the part that drives it named; a rail whose enable is driven only by a device powered from that same rail cannot |
 

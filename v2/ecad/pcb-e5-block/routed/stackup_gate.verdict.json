@@ -1,41 +1,40 @@
 {
  "advisory": false,
  "applicable": true,
- "counts": {
-  "compared": 8,
-  "copper_layers": 2,
-  "disagreements": 1
- },
- "denominator": 8,
+ "counts": {},
+ "denominator": 0,
  "evidence": [
-  "dielectric 1 (FR4 core) dielectric constant is 4.6000 in the board and 4.5000 in 2L-2oz"
+  "the document the named stack was transcribed from is not in the tree (v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md)"
  ],
  "inputs": {
   "board": {
    "path": "pcb-e5-block.kicad_pcb",
    "sha256_16": "686b29a734c55b9a"
   },
-  "declared": "2L-2oz",
-  "document": "v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md"
+  "declared": "2L-2oz"
  },
- "missing_input": null,
- "note": "the board's stackup and the named fabricator record disagree",
+ "missing_input": "the document the named stack was transcribed from is not in the tree (v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md)",
+ "note": "the document the named stack was transcribed from is not in the tree (v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md)",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
    "STK-001": "e90a87c776209eb2"
   },
-  "rule_set_fingerprint": "82885961768537e2"
+  "rule_set_fingerprint": "ff8151db3576437b"
  },
  "rules": [
   "STK-001"
  ],
  "tool": "stackup_gate",
  "tools": {
-  "git_head": "3dc86a3c28cf",
-  "tools_tree_sha": "b2cb584fa36e53f6"
+  "git_head": "",
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-18T15:23:09Z",
- "verdict": "FAIL",
- "version": "3dc86a3c28cf+dirty"
+ "ts": "2026-09-20T07:04:51Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown",
+ "writer": {
+  "file": "stackup_gate.py",
+  "sha16": "b1b00043dbffcd6b"
+ }
 }

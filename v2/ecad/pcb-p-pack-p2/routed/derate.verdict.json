@@ -15,7 +15,7 @@
   "margin": 0.2,
   "netlist": {
    "path": "out/pcb-p-pack.net",
-   "sha256_16": "3d117af93faa7a6e"
+   "sha256_16": "c737cda57bb379ea"
   }
  },
  "missing_input": null,
@@ -33,9 +33,13 @@
  "tool": "derate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "0e1ce7104d273d07"
+  "tools_tree_sha": "b7ecfcffbc2fef22"
  },
- "ts": "2026-09-20T00:04:28Z",
+ "ts": "2026-09-20T07:04:27Z",
  "verdict": "PASS",
- "version": "unknown"
+ "version": "unknown",
+ "writer": {
+  "file": "derate.py",
+  "sha16": "129c189f7c7860df"
+ }
 }
