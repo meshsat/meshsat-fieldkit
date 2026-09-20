@@ -13073,3 +13073,36 @@ board E's chain declares 36.0 and 53.3 in their own fields. `derate` reads **PAS
 `TRK_OUT`) are still nodes: their currents are not written down anywhere and the tracker's output share of
 CELL_F is a reading of the design rather than a transcription, which is the one thing this record will not do
 at four in the morning.
+
+### 32.252, 20 September 2026 03:23 CEST: the set's power table, corrected an hour after it was written
+
+32.243's table said boards C, D and E pass both power rules on every conductor they declare. **Board E's half
+of that sentence stopped being true at 03:20**, when its input side was declared and measured. The table as
+it now stands, every conductor on every board declared or named:
+
+| board | rails | PI-002, the drop | PI-001, the density |
+|---|---:|---|---|
+| **A** | 27 | 24 met, **3 missed** | 14 met, **13 missed** |
+| **B** | 38 | 31 met, **5 missed** | 27 met, **9 missed** |
+| C | 2 | 2 met, 0 | 2 met, 0 |
+| D | 4 | 4 met, 0 | 4 met, 0 |
+| **E** | 10 | 10 met, 0 | 6 met, **4 missed** |
+| E5 | 0 | no rail to judge | no rail to judge |
+| **P** | 4 | 4 met, 0 | 3 met, **1 missed** |
+
+**Boards C and D are the two that pass both rules on everything they declare**, and both are small: two rails
+and four. **Every board that carries more than five amps anywhere now fails PI-001**: A on thirteen
+conductors, B on nine, E on four and P on one. That is the honest shape of the set's power state and it took
+declaring twenty-six conductors and five more tonight to see it.
+
+**The pattern across all four is one sentence**: the conductors that pass are the ones a generator laid a
+band for, and the conductors that fail are the ones a router laid a track for. Board E's `DC_HS` passes with
+a 380 mm2 band while the four pieces either side of it, on the same current, are 0.25 to 0.8 mm of router
+track. Board A's four rails with islands and bands read 1.53 to 3.69 times over, which is the same statement
+one step further on: **a band that exists but was never sized is better than no band and is still not
+enough.**
+
+**What that makes the next generation's job**, on A and E at least: not "route it better" but "lay the copper
+every declared current needs, at a width the arithmetic gives, before the router starts". Both boards have
+the tool for it (`power_copper`), both have the arithmetic (`width_for`), and neither has ever had the
+numbers until tonight.
