@@ -16280,3 +16280,31 @@ this project cannot set for itself and the third is an architecture choice.
 open pairs are decisions 34, 29, 27, 39, 32 and 41, plus `OUT-001`, which is the set's paperwork, and
 `DFA-001`, which is the assembler's own preview. That is 19 September's sentence about board C holding
 exactly, four days later and with a different set of tools.
+
+### 32.335, 20 September 2026 20:55 CEST: the estimate was counting six items that are finished, and the correction is in the tool now
+
+`rules_eta.open_items` took **every rule carrying a remediation block**, and its own docstring said *every
+rule with work left*, which is a claim the function never checked. A rule whose pairs have all since passed
+kept contributing its hours for ever. Tonight that is **six items of thirty-three**: `BAT-002`, `CMP-001`,
+`PWR-002`, `CLK-001`, `REL-001` and `SCH-004`, every one of which has **zero open rule-board pairs** on the
+register, and `PWR-002` passed this afternoon.
+
+**The same correction was made BY HAND on 19 September**, five remediations at a time; the register itself
+recorded that *not one of those days came off a board*. Doing it in the tool is what makes it stay made.
+
+| | before | **after** |
+|---|---:|---:|
+| open items | 33 | **27** (15 work, 12 owner or vendor waits) |
+| engineering effort | P50 54 h, P80 164 h | **P50 48 h, P80 146 h** |
+| session pool | P50 7.0 d, P80 21.7 d | **P50 6.0 d, P80 18.7 d** |
+| **DESIGN PACKAGE** | **P50 7.0 d, P80 21.7 d** | **P50 6.0 d, P80 21.0 d** |
+
+**A tree with no audit is not a tree where everything is finished**, so the filter is skipped where
+`open_pairs.collect()` cannot answer, rather than emptying the list.
+
+**AND MY FIRST VERSION OF IT BROKE A GUARD, CAUGHT BY ITS OWN FIXTURE WITHIN THE HOUR.** The filter went in
+ABOVE the check that refuses a remediation with no `execution` class, and that check stopped firing: the
+synthetic item its fixture passes has no open pair, so it was skipped before it was judged and the suite read
+1242 passing with 1 failed. **A filter that runs before a guard turns a malformed entry into a silent
+omission**, which is this project's own recurring shape. The order is validate first, filter second, and all
+ten rules of `test_eta_execution` pass. Suite 1243, 0 failing.

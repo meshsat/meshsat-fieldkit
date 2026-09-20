@@ -59,18 +59,48 @@ SESSION_CLASSES = ("PARALLEL_AGENT", "SEQUENTIAL")
 WAIT_CLASSES = ("OWNER", "VENDOR_OR_STANDARD_WAIT")
 
 
+def _rules_with_an_open_pair():
+    """The rule ids that still have at least one OPEN rule-board pair, from the same register the readiness
+    page uses, or None where this tree carries no audit to ask.
+
+    THE ESTIMATE HAD BEEN COUNTING FINISHED WORK (20 September 2026). `open_items` took every rule carrying a
+    remediation block and its docstring said *every rule with work left*, which is a claim the function never
+    checked: a rule whose pairs have all since passed kept contributing its hours for ever. Tonight that is
+    SIX items of thirty-three, `BAT-002`, `CMP-001`, `PWR-002`, `CLK-001`, `REL-001` and `SCH-004`, every one
+    passing on every board it applies to, and `PWR-002` passed this afternoon. The same correction was made
+    BY HAND on 19 September, five remediations at a time; doing it in the tool is what makes it stay made.
+
+    A tree with no audit is not a tree where everything is finished: it is a tree that cannot answer, and the
+    filter is skipped there rather than emptying the list."""
+    try:
+        import open_pairs as O
+        res = O.collect()
+    except Exception:
+        return None
+    if not res or not res.get("boards"): return None
+    return {p.get("rule") for p in (res.get("pairs") or []) if p.get("rule")}
+
+
 def open_items(cov=None):
-    """[(rule id, owner, p50, p80, depends_on)] for every rule with work left."""
+    """[(rule id, owner, p50, p80, depends_on)] for every rule with work left, which means a rule that still
+    has an open rule-board pair AND carries a remediation."""
     cov = cov if cov is not None else S.coverage()
+    still_open = _rules_with_an_open_pair()
     out = []
     for rid, c in sorted(cov.items()):
         rem = c.get("remediation")
         if not rem: continue
+        # THE MAP IS VALIDATED BEFORE ANYTHING IS FILTERED (20 September 2026, caught by its own fixture
+        # within the hour). The open-pair filter was placed above this check and the rule that refuses a
+        # remediation with no execution class stopped firing, because the synthetic item its fixture passes
+        # has no open pair and was skipped before it was judged. A filter that runs before a guard turns a
+        # malformed entry into a silent omission, which is the shape this project keeps finding.
         ex = rem.get("execution")
         if ex not in EXECUTION:
             raise SystemExit("rules_eta: %s declares execution %r, which is not one of %s. An open item with no "
                              "execution class cannot be scheduled: it would silently join the session's queue."
                              % (rid, ex, ", ".join(sorted(EXECUTION))))
+        if still_open is not None and rid not in still_open: continue
         out.append(dict(rule=rid, owner=rem.get("owner", "SESSION"), p50=float(rem.get("p50_h") or 0),
                         p80=float(rem.get("p80_h") or 0), depends_on=list(rem.get("depends_on") or []),
                         action=rem.get("action", ""), maturity=c.get("maturity"), execution=ex))
