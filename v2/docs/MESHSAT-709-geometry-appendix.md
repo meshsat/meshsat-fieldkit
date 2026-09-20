@@ -14640,3 +14640,31 @@ silence.
 module itself. It **parses rather than greps** — its first version matched the examples in its own docstring
 and failed on itself, which is the `pkill -f` self-match in another costume — and on its first real run it
 named the instance the sweep had missed, `power_copper.py` line 105. Suite **1219, 0 failing**.
+
+### 32.297, 20 September 2026 10:48 CEST: the thirteen are three kinds, and the counts beside them were another board's
+
+With the barrel-provenance map beside the board, board E's thirteen "the generator's own" sites are three
+kinds rather than one sentence:
+
+* **six name a call** — two want four more points at `gen_pcb_e3.py:362`, `DC_HS`'s band stitches, and four
+  point at `:335`, the PI-003 block committed an hour earlier;
+* **four say NO POWER-COPPER CALL PLACED IT** — the locked via there is the **escape fan's** or the pre-lay's,
+  so "add points to the call" is advice about a call that does not exist and the answer is the fanout's via
+  count at that pad;
+* **four are component holes**, `F3.1` at the pack fuse and `F1.1` at the DC inlet, both 1.78 mm, declined by
+  name.
+
+**AND THE COUNTS BESIDE THEM WERE ANOTHER BOARD'S, which I wrote down and corrected within six minutes.**
+The via-currents file was sweep 32's, solved on **E17**, and the board was **E29's**, which carries the five
+clusters E17 does not. So *"four of my own new clusters are already short on the solved mesh"* is not
+supported: the mesh never saw them. **The classification survives**, because it depends only on the board's
+own vias and the provenance map; **every "add N point(s)" number does not**, because N is the current the
+mesh attributes to that site.
+
+**The cause is that `<stem>-via-currents.json` named its board by FILENAME**, and every phase of a board
+carries the same one. `dc_drop` stamps both solved files with the board's **sha256** now, and `barrel_sites`
+compares it: a mismatch is **named and decides nothing**, an older file with no sha says so rather than being
+taken for a match, and a comparison that cannot be made says why. That is 17 September's rule — a verdict
+names the board it was taken on — owed by the **data file** that feeds PI-003 just as much as by a verdict,
+and it is the **third reading taken off the wrong artefact today** after `land_box5` and the sweep's own
+tree. Suite **1221, 0 failing**.
