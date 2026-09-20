@@ -13985,3 +13985,72 @@ the report went from asking one question to asking four.
 say; `CELL+` is also the conductor this set measures at 10.0 A across two boards, so the copper between
 `R17.2` and `R148.1` is the one place the pack's own drop can be read straight into the charger's current
 loop.
+
+### 32.281, 20 September 2026 07:52 CEST: the set declares twenty current-sense shunts and the report had been told about four
+
+07:38's entry said the charger's Kelvin report had been measuring half the charger. **It was the small
+version of the finding.** Asking the same question of the other boards found that **board E declares no
+`kelvin` block at all**, on the one board whose sense pair five arms (E19 to E23) were about, and that
+**board P declares none either while its own `switch_nets_why` reads "every entry below is a Kelvin
+connection rather than a clearance"**. So the question was asked mechanically of the whole set: every
+resistor on all six committed netlists whose value is a milliohm-scale shunt, against every declared row.
+
+**THE SET CARRIES TWENTY CURRENT-SENSE SHUNTS AND `kelvin_check` HAD BEEN READING FOUR.** Board A carries
+seventeen and declared two, both the charger's; boards E and P carry two and one and declared none; boards
+B, C and D carry none at all, which is a declared zero confirmed against the design rather than believed
+(board D's six sensitive nodes are audio, and board C's panel and board E5's contact block have no current
+sense of any kind).
+
+**TEN OF BOARD A'S FIFTEEN UNDECLARED HALVES ARE DECLARABLE TODAY AND ARE DECLARED.** Each LM5176 stage has
+an ISNS shunt in its own output path (FE `R11` 10 mOhm, PA `R55` 2, HF `R65` 10, POE `R71` 20, PD `R81` 10)
+and the controller reads it with **no filter at all**: the stage helper writes pin 13 to the output rail and
+pin 14 to the stage's `OUT` net, so ISNS(-) and ISNS(+) sit straight on the two nets the shunt separates.
+**The tap is therefore the IC pin**, the element is the shunt's own pad, and the error is the drop in that
+rail's copper between them, which is exactly what `kelvin_check` subtracts.
+
+**The full scale is the datasheet's and not an inference.** The constant-current loop regulates the drop
+across ISNS(+) and ISNS(-) to **50 mV** (`lm5176-datasheet.pdf`, electrical characteristics, `VSNS` 43 min /
+50 typ / 57 max; the pin table says it in words at pin 13, *"if the sensed voltage across the ISNS(+) and
+ISNS(-) pins reaches 50 mV, a slow constant current (CC) control loop becomes active"*). Every stage carries
+the same 50.0 mV whatever its shunt value, because **the threshold is the denominator** and the shunt only
+decides which current reaches it. The ISNS+ row is the sharp one on every stage: `<stage>_OUT` is the
+conductor between the boost-side high-side FET's drain and the shunt, it carries the stage's whole current
+(3.80 A on FE, 3.54 on PA), and it is the same conductor 32.271 declared as a segment.
+
+**Boards E and P get their first rows in the same change.** Board E: `TRK_CSP` on `TRK_LSENSE` (`R5.1` to
+`R6.1`) and `TRK_CSN` on `TRK_SW2` (`R5.2` to `R7.1`), **30.8 mV of full scale with its basis stated because
+it is derived**, 5 mOhm at `TRK_OUT`'s declared 6.16 A typical, the nearest declared current to the one this
+shunt carries; the inductor's own current is declared nowhere and in a buck-boost it is not the output
+current. The low half is the sharper one: `TRK_CSN` taps `TRK_SW2`, the boost-side **switching node**, so
+one conductor is both the sense reference and a node that swings every cycle. Board P: `SRN_F` on `PACK_N`
+(`R10.2` to `R9.1`) at 50.0 mV, the BQ4050's coulomb counter across a 2 mOhm shunt at the 25 A the
+generator's own comment names, and `PACK_N` is the conductor measured this morning at **1.03 of its
+current-density limit**, so that copper is both the sense reference and board P's one PI-001 failure.
+
+**WHAT IS STILL NOT DECLARABLE IS ONE SENTENCE IN SIX PLACES.** Each LM5176 stage also has a CS shunt to
+ground carrying a 100 R Kelvin filter on each pad, put there on 18 September for TI's layout clause 9.1, and
+**neither half can be measured**: the high side taps `<stage>_CS`, which is the two low-side FETs' common
+source and is declared a switching NODE, and the low side taps GND, which is a pour and is declared a node
+too. `dc_drop` solves a potential only on a declared RAIL, so a row there would read *"the mesh solved no
+pad"* for ever. Board P's `R8` is refused for exactly this reason and so is board E's `R19` hot-swap sense.
+**Six shunt halves on three boards are sensed through copper no power rule solves**, and that is a question
+about the GROUND declaration rather than about any one board's layout.
+
+**TWO RULES, BOTH PROVED TO FAIL FIRST.** (1) `kelvin_check` ignored an unknown key, and `judge` turns
+millivolts into a SHARE with `full_scale_mv`, so a row with no share is never added to the failures: run on
+the pre-fix tool, **a 3.0 mV error on a 60 mV signal, five percent and a failure by the file's own fixture,
+reads as ZERO failures when that one key is mistyped**. The declaration is refused before it is believed
+now, the way `sensitive_nodes` has refused its node entries since 19 September. (2) **Every declared pad is
+checked against its own rail on that board's committed netlist**, because a row naming a pad that is not on
+its rail can only ever report a missing pad while looking exactly like a measurement; proved by moving one
+tap from pin 14 to pin 15 and watching the rule name it. All 34 pads of the seventeen rows sit on their own
+rails.
+
+**Also corrected**: the stage helper's comment called the current-sense limit threshold *"120 to 140 mV
+(VCS(BUCK))"* and those are `VCS(BOOST)`'s typ and max, a different row of the same table. The buck **valley**
+row on our own HTSSOP-28 is 66 to 94, 80 typical, so the same plane drop is a **larger** share of the reading
+than the comment claimed; the correction runs in the strict direction.
+
+**NOT CLAIMED**: what any of the thirteen new rows reads. The four board A arms in flight carry the
+declaration and will say; boards E and P have no solved mesh at the moment it was written. Suite 1206, 0
+failing.
