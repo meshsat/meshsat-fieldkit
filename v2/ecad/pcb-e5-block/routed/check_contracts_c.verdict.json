@@ -26,9 +26,9 @@
  "tool": "check_contracts_c",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "4d83fe3b9dfc62e2"
+  "tools_tree_sha": "087fae053129751b"
  },
- "ts": "2026-09-20T14:50:00Z",
+ "ts": "2026-09-20T23:25:16Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {

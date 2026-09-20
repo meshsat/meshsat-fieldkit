@@ -22,11 +22,11 @@
   "declares": [],
   "intent": {
    "path": "out/pcb-p-pack-intent.json",
-   "sha256_16": "e60d2cdceb3bfcb2"
+   "sha256_16": "143813f36067c43c"
   },
   "netlist": {
    "path": "out/pcb-p-pack.net",
-   "sha256_16": "b7b757ea676dfc85"
+   "sha256_16": "d243690f028062d8"
   }
  },
  "missing_input": null,
@@ -39,9 +39,9 @@
  "tool": "switch_list",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "4d83fe3b9dfc62e2"
+  "tools_tree_sha": "087fae053129751b"
  },
- "ts": "2026-09-20T14:49:33Z",
+ "ts": "2026-09-20T23:24:50Z",
  "verdict": "FAIL",
  "version": "unknown",
  "writer": {

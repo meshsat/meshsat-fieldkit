@@ -3,6 +3,7 @@
  "applicable": true,
  "counts": {
   "measured_rails": 20,
+  "no_layer_change": 0,
   "no_via": 4,
   "over": 21,
   "over_barrels": 34,
@@ -59,13 +60,13 @@
  "tool": "via_current",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "4d83fe3b9dfc62e2"
+  "tools_tree_sha": "087fae053129751b"
  },
- "ts": "2026-09-20T14:44:11Z",
+ "ts": "2026-09-20T23:19:36Z",
  "verdict": "FAIL",
  "version": "unknown",
  "writer": {
   "file": "via_current.py",
-  "sha16": "ef29c5ca53e28b51"
+  "sha16": "9313a4354608f03a"
  }
 }

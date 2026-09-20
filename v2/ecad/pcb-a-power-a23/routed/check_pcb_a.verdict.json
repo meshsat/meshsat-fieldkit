@@ -2,14 +2,16 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "fail": 0,
+  "fail": 1,
   "footprints": 400,
   "intent_items_reported": 266,
-  "pass": 812,
+  "pass": 811,
   "route_items_reported": 0
  },
  "denominator": 812,
- "evidence": [],
+ "evidence": [
+  "U18 centred at (84.9, 29.1) (got 10.00, 65.00)"
+ ],
  "inputs": {
   "board": {
    "path": "pcb-a-power.kicad_pcb",
@@ -31,13 +33,13 @@
  "tool": "check_pcb_a",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "4d83fe3b9dfc62e2"
+  "tools_tree_sha": "087fae053129751b"
  },
- "ts": "2026-09-20T14:38:08Z",
- "verdict": "PASS",
+ "ts": "2026-09-20T23:13:44Z",
+ "verdict": "FAIL",
  "version": "unknown",
  "writer": {
   "file": "check_pcb_a.py",
-  "sha16": "a8816d00c59602f7"
+  "sha16": "034385afda19a83b"
  }
 }

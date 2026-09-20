@@ -25,11 +25,11 @@
   "declares": null,
   "intent": {
    "path": "out/pcb-b-compute-intent.json",
-   "sha256_16": "c0e11a8b71952188"
+   "sha256_16": "8f697863ce5c2aec"
   },
   "netlist": {
    "path": "out/pcb-b-compute.net",
-   "sha256_16": "9410d021e448668c"
+   "sha256_16": "ad1760a8c39247db"
   }
  },
  "missing_input": null,
@@ -42,9 +42,9 @@
  "tool": "switch_list",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "4d83fe3b9dfc62e2"
+  "tools_tree_sha": "087fae053129751b"
  },
- "ts": "2026-09-20T14:44:27Z",
+ "ts": "2026-09-20T23:19:52Z",
  "verdict": "FAIL",
  "version": "unknown",
  "writer": {
