@@ -12921,3 +12921,34 @@ question is understated by its own declaration.
 input currents, and that sum is computable from the intent alone: every rail with an `efficiency` names its
 converter, the netlist says which net that converter's input pins sit on, and the arithmetic is volts times
 amps over efficiency. Nothing checks it today, on any board.
+
+### 32.247, 20 September 2026 03:00 CEST: the window buys nothing either, and the layer set is the last of the four
+
+The one-variable window arm landed. A48's frozen board, cache ON in both, same grid, node cap, layer list
+and wall, `STUB_WIN_SCALE` alone different:
+
+| | wall | board in | board out | offered | closed |
+|---|---|---|---|---:|---:|
+| **6**, board A's own | 48 min | 0 hard, 15 open | 0 hard, **11** open | 14 | 6 |
+| **25**, the probe's | 59 min | 0 hard, 15 open | 0 hard, **12** open | 14 | 6 |
+
+**The same six nets closed and the same eight refused, by name, not one different**: closed `/+5V_DEV`,
+`/+5V_S1`, `/+5V_S3`, `/PA_EN`, `/REGN`, `/VBUS20`; refused `/+5V_S2`, `/CHG_ILIM`, `/CH_ACN_F`, `/CH_SRP_F`,
+`/CH_SW2`, `/HF_SLOPE`, `/MAIN_PB` and `GND`. The wider window took eleven minutes longer and left the board
+one connection worse. **Board A's declared `STUB_WIN_SCALE=6` stays**, and the second of A49 `probecfg`'s four
+differences is excluded.
+
+**THE LAYER SET IS THE LAST ONE AND IT IS THE OPPOSITE OF WHAT IT LOOKED LIKE.** `STUB_LAYERS` defaults to
+`F.Cu,B.Cu`, the two OUTER layers only, and `probecfg` names no layer list at all, so **it searched TWO
+layers where board A's finish declares FOUR** (F.Cu, In2, In3, B.Cu; In1 and In4 are planes). It closed 11 of
+16 where the four-layer configuration reached its `timeout` with nothing saved. Two layers is half the map to
+stamp and a far smaller search space per net, so the hypothesis is a COST effect and not a reach one: fewer
+layers, more nets offered inside the same wall. The arm is running (`/root/lay_ab.sh`), everything else held.
+
+**And EIGHT nets have now been refused by every configuration tried**, across two grids, two windows and the
+reference: `/+5V_S2` (track to track), `/CHG_ILIM` and `/CH_SRP_F` (pad to track), `/CH_ACN_F`, `/CH_SW2`,
+`/HF_SLOPE` and `/MAIN_PB` (pad to pad), and `GND` (track to via). **Four of the eight are pad to pad**, which
+is a pad with no lane out of it at any resolution, in any window, on the layers searched. If the two-layer
+arm closes any of the eight the layer set is the thing; if it closes the same six faster, then board A's
+declared four layers cost time and buy nothing, and its remaining opens are a placement item and not a
+closer's at all.
