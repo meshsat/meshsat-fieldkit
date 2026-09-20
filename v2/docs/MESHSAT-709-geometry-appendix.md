@@ -14154,3 +14154,44 @@ generator-laid locked copper.
 
 **NOTHING APPLIED.** A floor plan half-moved is worse than one not moved, four board A arms are in flight,
 and this gets item 7's treatment of 07:03: mapped, named, not started.
+
+### 32.284, 20 September 2026 08:14 CEST: staleness is asked of the deciding tool now, and 53 of 76 open pairs rest on a reading older than it
+
+32.283's finding was made by hand, one measured failure at a time, and it found one in the first pass. The
+question it asked is mechanical and was never asked: **is this reading's deciding tool the one that decides
+it now?**
+
+**WHY NOTHING COULD ANSWER IT.** Staleness has been asked rule by rule since 17 September, from the per-rule
+digests a verdict carries, and that catches a change to `pcb_rules.yaml`. **It cannot catch a change to the
+TOOL, because a tool change moves no fingerprint.** Board B's MEC-001 had a current rule-set fingerprint and
+current per-rule digests and was nineteen hours out of date. The verdict did carry `tools`, a hash of the
+whole tools tree, and that is useless for the question: it moves whenever ANY tool changes, so it cannot tell
+the deciding tool apart from any other. **That is 17 September's fingerprint defect one level along**, in the
+same shape, found the same way.
+
+**TWO HALVES.** A verdict now records **`writer`**, the FILE that wrote it and that file's own content hash,
+taken from the script actually running (`sys.argv[0]`, then `__main__.__file__`, and an empty field rather
+than a guess when neither is a file). So from now on the question is an exact comparison.
+**`stale_readings.py`** asks it, exactly where the writer is recorded and **by the tool's last commit date
+where it is not**, which is a **proxy** and says so in its own sentence: right about the order of events,
+silent about whether the change touched what this reading measures.
+
+**ASKED OF THE WHOLE TREE: 713 readings, 535 taken under a tool that has changed since, 118 that cannot be
+asked.** That number is a list and not a work item, and the proxy over-counts: a tool file moves for a
+comment as readily as for a criterion.
+
+**ASKED OF THE OPEN-PAIR REGISTER, which is the question that found board B: of the 76 open pairs carrying a
+reading beside them, FIFTY-THREE are decided by a reading taken under a tool that has changed since.** Every
+board is in it, and the tools named are the ones that have moved most this week: `dc_drop`, `via_current`,
+`rf_line`, `sensitive_nodes`, `return_via`, `place_audit`, `final_gate`, `interfaces`, `derate`, `thermal`.
+It is an upper bound and it is the first number that says the set is owed a sweep rather than someone
+remembering that it might be. **Sweep 28 is running on the hub** because of it, read-only, every board's sha
+compared before and after.
+
+**IT DECIDES NOTHING AND IS ADVISORY BY CONSTRUCTION.** A tool change says a reading is **owed**, not that it
+would come out differently; a gate here would refuse boards for the age of their paperwork, which is the
+opposite of what the finding asks for. Six rules with two fixtures and two proofs, and the proof is flat:
+before this change `verdict.write` recorded no writer at all, so the detector could not exist.
+
+**A note on running the suite**: three concurrent runs make the evidence guard report each other's writes as
+this run's, which is the guard of 00:30 working exactly as written. Run it once. Suite **1212, 0 failing**.
