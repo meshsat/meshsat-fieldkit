@@ -1281,3 +1281,33 @@ def t_a_run_refuses_to_start_without_room_to_write_its_result():
     assert "disk free >= 2 GB" in s, "the disk check has no stated bar"
     assert "TOOL_CRASH" in s.split("statvfs")[0][-900:], \
         "the disk check does not carry the measurement that set it, so the next reader cannot judge the bar"
+
+
+def t_the_slow_host_timeout_stretch_reaches_the_production_run():
+    """THE DEFECTIVE FIXTURE (20 September 2026). `ROUTEFLOW_TIMEOUT_SCALE` was read in `experiment` alone
+    while its own line calls it "every route timeout", so a PRODUCTION run given it accepted the variable and
+    routed at the profile's own cap. Board D's D29 was launched at 4x to answer whether D28's fifteen opens
+    were the clock and its route line printed the same 3600 s: an arm with no variable in it, which is the
+    worst kind, because its number looks like a result. Caught by reading the route line rather than the exit
+    status. This is a parse and not a byte window: `run` must compute its FR_TIMEOUT from the scale."""
+    import ast, os
+    here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    src = open(os.path.join(here, "routeflow.py"), encoding="utf-8").read()
+    tree = ast.parse(src)
+    run = [n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == "run"]
+    assert run, "routeflow.run is gone, so this rule is about a tool that no longer exists"
+    body = ast.dump(run[0])
+    assert "ROUTEFLOW_TIMEOUT_SCALE" in body, \
+        "routeflow.run does not read ROUTEFLOW_TIMEOUT_SCALE, so a production run given it routes at the " \
+        "profile's own cap and the arm has no variable in it"
+
+
+def t_the_stretch_says_so_when_it_is_not_one():
+    """THE ACCEPTABLE FIXTURE'S OTHER HALF: a knob that changes a run silently is a knob whose arrival nothing
+    proves, which is 12 September's defect by name. When the scale is not 1 the run PRINTS the old cap and the
+    new one, so the log itself carries the evidence that the variable arrived."""
+    import os, re
+    here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    src = open(os.path.join(here, "routeflow.py"), encoding="utf-8").read()
+    assert re.search(r"ROUTEFLOW_TIMEOUT_SCALE=%g stretches this route", src), \
+        "the run does not say when the stretch applies, so nothing in the log proves the knob arrived"

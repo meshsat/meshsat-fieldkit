@@ -588,7 +588,20 @@ def run(profile_fn, rounds, use_services, dry, phase=None, requires=None):
                 journal(project, dict(run=rid, round=rnd, board=name, stage="pre", status=vst, note=vnote))
                 if vst != "GATED": st, note = vst, vnote
             if st != "GATED": status = st; break
-            env = {"FR_THREADS": str(route.get("threads", 2)), "FR_TIMEOUT": str(route.get("timeout", 4500))}
+            # THE SLOW-HOST STRETCH APPLIES TO `run` TOO (20 September 2026). `ROUTEFLOW_TIMEOUT_SCALE` was
+            # read in `experiment` alone and its own line calls it "every route timeout", so a production run
+            # given it accepted the variable and routed at the profile's own cap: board D's D29 was launched
+            # at 4x to answer whether D28's fifteen opens were the clock, and its log printed `timeout 3600`,
+            # the same cap, which makes the arm a repeat of D28 with no variable in it. Caught by reading the
+            # route line instead of the exit status, and the arm was stopped by pid before it wasted a core.
+            # The profile's own cap is untouched: a board's cap is its declaration and this stretches it for
+            # a host, which is why the line SAYS so when it is not 1.
+            _tscale = float(os.environ.get("ROUTEFLOW_TIMEOUT_SCALE") or 1)
+            _tout = int(route.get("timeout", 4500) * _tscale)
+            if abs(_tscale - 1.0) > 1e-9:
+                print("routeflow: ROUTEFLOW_TIMEOUT_SCALE=%g stretches this route's %ss cap to %ss"
+                      % (_tscale, route.get("timeout", 4500), _tout))
+            env = {"FR_THREADS": str(route.get("threads", 2)), "FR_TIMEOUT": str(_tout)}
             if route.get("power_layers"): env["FR_POWER_LAYERS"] = " ".join(route["power_layers"])
             if route.get("plane_nets"): env["FR_PLANE_NETS"] = ",".join(route["plane_nets"])   # zones of these nets on the power layers stay in the DSN as planes (6 Sep 2026: GND by vias into In1, not as wires)
             if route.get("rail_planes"): env["FR_RAIL_PLANES"] = "1"   # the rails' locked bands and islands as DSN planes on their own layers (15 Sep 2026, a measurement on A)
