@@ -13511,3 +13511,33 @@ worse than none, and the only honest reading of those two runs is that they meas
 there is a datasheet clause and not a convenience: 1.5 to 2.0 mm further out clears the via row while leaving
 the filter nearer its pin than any other seat on this board. Neither rule is weakened; the seat is chosen
 against both instead of against one.
+
+### 32.265, 20 September 2026 05:47 CEST: the escape row is free and every pad on board A has one
+
+**One variable, the same tree and the same chain as 32.264's diagnosis:**
+
+| | escapes added | pads skipped | U3 starved |
+|---|---:|---:|---|
+| the filters where they were | 456 | **7** | pins 2, 6, 18, 19, 20, 22, 23 |
+| the filters 1.5 mm further out | **463** | **0** | **none** |
+
+**Zero skipped pads on the whole board**, which is every pad of every part. All seven of U3's starved pins get
+their escape vias, and **four of them are the nets every closer on every board has refused since the block was
+drawn**: `/CHG_ILIM`, `/CH_ACN_F`, `/CH_SRN_F`, `/CH_SW2`.
+
+**The board still places clean**: `check_pcb_a` PASS of 511 on 421 footprints, `netlist_board` 2088 of 2088,
+**placed board hard 0 of the fifteen types**, region fit 1.4 mm against its declared 1.5 mm allowance.
+
+**Neither rule is weakened**, which was the whole point of measuring against both: the via row is clear by
+1.99 mm on the west and 1.41 mm on the east, and each filter still sits nearer its own pin than any other seat
+on this board, which is what the BQ25731's clause asks for. A clause asking for proximity is satisfied by the
+nearest seat that does not break something else.
+
+**WHAT IS NOT CLAIMED: whether those four connections now CLOSE is a ROUTE's answer and this is the
+placement's.** An escape is the necessary condition the record could not see was missing; it is not a proof
+that a closer will take them. The next measurement is a route of this board, and until then board A's hard
+core is explained rather than closed.
+
+**Three attempts stand behind this and only the third measured anything**, which is worth as much as the fix:
+a debug output read off the wrong input twice said the same plausible thing both times, and it took running
+the tool at the moment it was deciding to get an answer that was about the board.
