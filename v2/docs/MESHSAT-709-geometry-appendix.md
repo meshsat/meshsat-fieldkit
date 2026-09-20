@@ -15424,3 +15424,37 @@ fixed; the other asserted `main` writes the board through the refill **exactly t
 a COUNT and broke the moment a third, legitimate measurement appeared. Both ask the property now, the second
 walking every `_measure` in `main` and requiring a refill between it and the one before, and both still fail
 on a tree where the property is broken.
+
+### 32.317, 20 September 2026 15:50 CEST: the per-site fallback measured on a live board, and the batch's cost is not the sum of the sites' costs
+
+E30 round 2's own chain is the first board to run the barrel stage with the per-site fallback of 32.316, and
+it settles what the change was worth with numbers rather than with a fixture. The stage judged board E's
+sites, **declined eight as placement items** (six busbars asking 9 to 16 barrels, plus `TRK_OUT` at U4 pads 3
+and 6, where only three of the four barrels still owed fit inside the 1.66 mm the crossing is judged over)
+and laid **eleven**.
+
+**Laid as ONE BATCH the eleven cost the board five connections**: hard 0 to 0, unrouted **254 to 259**. Under
+the all-or-nothing rule that stood until this morning the stage would have printed *reverting every barrel*
+and board E would have carried none of them, which is exactly the behaviour 32.316 was written against.
+
+**Laid SITE BY SITE, each judged on the board the sites before it left standing, seven are free and four are
+not:**
+
+| site | result |
+|---|---|
+| `DC_HS` at Q7 pads 1, 2, 3 | kept, unrouted 254 |
+| `HS_S` at Q7 pad 5 (both crossings) | kept, unrouted 254 |
+| `VIN_RAW` at J_BLK pads 1 and 4 | kept, unrouted 254 |
+| `DC_F` at Q1 pad 2 | costs the board, unrouted 256, reverted |
+| `PV_P` at U5 pad 32 | costs the board, unrouted 256, reverted |
+| `PV_P` at U5 pads 33 and 34 | cost the board, unrouted 255, reverted |
+
+**So the board that stands is hard 0 and unrouted 254 with eleven barrels at seven sites**, and the five
+connections the batch lost belong to four sites that are now named, at two parts, rather than to the eleven.
+`DC_F` at Q1 and the three `PV_P` barrels at the tracker's own pad row are the placement question this stage
+hands on, and they are a question about two neighbourhoods rather than about power copper.
+
+**A caveat about reading that log, and it is the 17 September trap in miniature.** This arm's tools were
+staged before the summary fix, so its last line still reports the BATCH's `254 -> 259` while the board it
+saved sits at 254. **In any tree older than today's fix the per-site lines are the board's state and the
+summary line is the batch's**; in a current tree they agree, which is what the fix is.
