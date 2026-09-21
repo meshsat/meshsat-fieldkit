@@ -199,3 +199,59 @@ def t_every_judgement_on_a_board_this_script_holds_names_that_board():
             if re.search(r"\$N[A-Za-z_-]*drc\.json", line) and "--board" not in line:
                 bad.append("%s: %s" % (os.path.basename(p), line[:110]))
     assert not bad, "a judgement about a board the script holds, that does not name it:\n  " + "\n  ".join(bad)
+
+
+# ---- the cap says it is a cap (21 September 2026) ----
+#
+# KiCad's DRC export lists at most about 499 unconnected items, so a board at that number reports a FLOOR.
+# It cost a day elsewhere: the pre-lay took its work list from that list and two arms of the same tools were
+# handed sixteen pairs and twenty, which is why `prelay_pairs.py` exists. Nothing judged changes here; the
+# reading now says what it is, so no reader takes 499 for a measurement.
+
+def t_a_reading_at_the_cap_says_so_and_one_below_it_does_not():
+    import hardset as h
+    at = h.counts({"violations": [], "unconnected_items": [1] * h.CAP}, "post")
+    assert at["unrouted_at_cap"] is True, "a board at KiCad's own list cap reports its floor as a count"
+    below = h.counts({"violations": [], "unconnected_items": [1] * 17}, "post")
+    assert below["unrouted_at_cap"] is False, "a board of seventeen opens is not at any cap"
+    assert below["unrouted"] == 17, "the count itself must not move"
+
+
+def t_the_printed_line_carries_the_cap_and_only_then():
+    """The rule is about the CALL, not about how many characters follow the anchor.
+
+    Written first as a four-hundred-character slice after the anchor, which is the fixed-window shape the
+    suite's own ratchet refuses (84 against a declared 83, caught before the commit): add a comment inside
+    the call and it fails, delete the line and it can find its literal in the next function. And quoting the
+    refused slice IN THIS DOCSTRING kept the count at 84, because the detector reads the file and not the
+    code, which is 21 September's own lesson about a docstring that quotes the line it replaces.
+    `ast` gives the call itself."""
+    import ast
+    src = open(os.path.join(TOOLS, "hardset.py"), encoding="utf-8").read()
+    assert "AT KiCad's list cap: a floor, not a count" in src, \
+        "the sentence a reader sees is the whole point of the flag"
+    calls = [n for n in ast.walk(ast.parse(src))
+             if isinstance(n, ast.Call) and getattr(n.func, "id", "") == "print"
+             and "hardset: hard" in (ast.get_source_segment(src, n) or "")]
+    assert len(calls) == 1, "expected exactly one summary line, found %d" % len(calls)
+    assert "unrouted_at_cap" in ast.get_source_segment(src, calls[0]), \
+        "the summary line does not ask whether the count is the cap"
+
+
+def t_the_verdict_a_later_reader_opens_carries_the_cap_too():
+    """The printed line is gone by the time anyone reads the verdict, so the flag has to be IN the file.
+
+    Proved to fail on HEAD: `git show HEAD:v2/ecad/tools/hardset.py` writes its counts without it."""
+    import ast
+    src = open(os.path.join(TOOLS, "hardset.py"), encoding="utf-8").read()
+    calls = [n for n in ast.walk(ast.parse(src))
+             if isinstance(n, ast.Call) and "verdict.write" in (ast.get_source_segment(src, n) or "")[:40]]
+    assert calls, "hardset writes no verdict any more, which is a bigger change than this rule"
+    # The INCONCLUSIVE write for an unreadable report carries no counts and owes none: it judged nothing.
+    # Every write that DOES carry counts is a reading, and a reading of 499 has to say what 499 is.
+    judged = [c for c in calls if any(k.arg == "counts" for k in c.keywords)]
+    assert judged, "no hardset verdict carries counts, so nothing carries the reading either"
+    for c in judged:
+        kw = {k.arg: ast.get_source_segment(src, k.value) for k in c.keywords}
+        assert "unrouted_at_cap" in kw["counts"], \
+            "the verdict's counts do not say whether the unrouted number is KiCad's own list cap"

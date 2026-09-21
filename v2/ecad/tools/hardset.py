@@ -80,6 +80,9 @@ def load(path):
     if not isinstance(d, dict) or "violations" not in d: raise RuntimeError("DRC JSON %s has no violations list" % path)
     return d
 
+CAP = 499          # KiCad's own limit on the unconnected list; measured on every placed board of this set
+
+
 def counts(d, which="post"):
     types = HARD_PRE if which == "pre" else HARD_POST
     by = collections.Counter(); rep = collections.Counter(); ex = collections.Counter()
@@ -89,7 +92,14 @@ def counts(d, which="post"):
             if exempt(v): ex[t] += 1
             else: by[t] += 1
         elif t in REPORT: rep[t] += 1
-    return {"hard": sum(by.values()), "by_type": dict(by), "exempt": dict(ex), "types": types, "unrouted": len(d.get("unconnected_items", [])), "report": dict(rep)}
+    unr = len(d.get("unconnected_items", []))
+    # KiCad's DRC export lists at most about 499 unconnected items, so a board at that number is reporting a
+    # FLOOR and not a count (21 September 2026). It cost a day in another place: the pre-lay took its work
+    # list from that list and two arms of the same tools were handed sixteen pairs and twenty, which is how
+    # `prelay_pairs.py` came to exist. Nothing here changes what is judged; the reading says what it is, so
+    # no reader takes 499 for a measurement.
+    return {"hard": sum(by.values()), "by_type": dict(by), "exempt": dict(ex), "types": types,
+            "unrouted": unr, "unrouted_at_cap": unr >= CAP, "report": dict(rep)}
 
 def examples(d, which="post", n=4):
     types = HARD_PRE if which == "pre" else HARD_POST
@@ -137,7 +147,8 @@ def main(a):
                                 "sha256_16": hashlib.sha256(open(_bp, "rb").read()).hexdigest()[:16]}
         except OSError as _e:
             _inputs["board"] = {"path": os.path.basename(_bp), "unreadable": str(_e)[:80]}
-    print("hardset: hard %d of %d types %s unrouted %d | report %s%s" % (c["hard"], len(c["types"]), c["by_type"] or "{}", c["unrouted"], c["report"] or "{}",
+    print("hardset: hard %d of %d types %s unrouted %d%s | report %s%s" % (c["hard"], len(c["types"]), c["by_type"] or "{}", c["unrouted"],
+           " (AT KiCad's list cap: a floor, not a count)" if c["unrouted_at_cap"] else "", c["report"] or "{}",
           (" | exempt %s" % c["exempt"]) if c["exempt"] else ""))
     for line in examples(d, which, n): print(line)
     if opt("--label"): print("%s: hard %d unrouted %d (%d types checked)" % (opt("--label"), c["hard"], c["unrouted"], len(c["types"])))
@@ -159,7 +170,12 @@ def main(a):
     bad = c["hard"] != 0 or (unrouted_counts and c["unrouted"] != 0)
     verdict.write(_vname(opt("--label")),
                   verdict.FAIL if bad else verdict.PASS,
-                  counts={"hard": c["hard"], "unrouted": c["unrouted"], "types_checked": len(c["types"]),
+                  # `unrouted_at_cap` travels INTO the verdict because that file is what a later reader opens:
+                  # the printed line is gone by then, and a reading of 499 that does not say it is KiCad's own
+                  # list cap is read as a count. 21 September 2026, the day a capped report decided which of a
+                  # pre-lay group's pairs got copper (prelay_pairs.py).
+                  counts={"hard": c["hard"], "unrouted": c["unrouted"], "unrouted_at_cap": c["unrouted_at_cap"],
+                          "types_checked": len(c["types"]),
                           "by_type": c["by_type"], "report": c["report"], "stage": which},
                   denominator=len(c["types"]),
                   evidence=examples(d, which, 6),
