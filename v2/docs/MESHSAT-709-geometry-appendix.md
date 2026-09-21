@@ -16834,3 +16834,8 @@ the refilled board reads hard 1 at the same item, the drop-back drops the ONE `/
 reads **hard 1 -> 0**, and keeps 15 of the 16: `closed 15 of 17` where the same tool read `closed 0` after the
 guard an hour earlier. One DRC instead of seventeen, and the pieces that came off were the closure's own.
 
+**Addendum, 02:28 CEST: E33, board E's whole chain at 1c2cd539, KEEPS its switching pre-lay**: the group's guard
+reads hard 0 to 0 and unrouted 251 to 235, sixteen closures on the board where the same generator's two chains
+an hour earlier kept none (the prediction written before it read fifteen and 236). The same board, the same
+generator, one tool line.
+
