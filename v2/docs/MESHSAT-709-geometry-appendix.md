@@ -16785,3 +16785,27 @@ the tab clusters under nine are laid at generation and CH_SRP's twenty-five is d
 Two rules on the fake board and one on the fixer, each failing on the tool as it stood. No arm in flight carries
 it; A93, A94 and A95 route on the old judge's barrels and are read as such.
 
+**Addendum, 02:08 CEST: what the barrel stage lays at the FET tabs, both boards' chains at HEAD (measurements
+only, no route).** Board A (`/root/a96c`, PHASE A96): escapes 461/2 and fanout 261/0, the baseline; `rail_barrels`
+answers ELEVEN sites with 33 barrels: FE_OUT at Q5's tab +7 of 0.30 mm (4 there, 8 A), PA_OUT at Q14's +5, the two
+PD tabs +1 each, the three slot shunts +2 each, SD_OUT +4, VBUS20 at R11 pad 2 +4 (the site declined as a busbar
+under the old judge since 19 September), VIN_RAW at Q2 +2; it DECLINES CH_SRP at Q10's tab (25 barrels for 18 A,
+21 owed) as the busbar it is; and the DRC REFUSES two at once, CH_ACN at Q7's tab and VBUS20 at R16 pad 1, whose
+clusters spread toward each other across the 4.0 mm between the input FET and the input shunt and met
+(`hole_to_hole` 0.1418 against 0.2995, a short between the two nets): the charger block's two busiest crossings
+have no room for each other's barrels. Board E (`/root/erc2`, PHASE E32): four sites with 9 barrels, TRK_OUT at
+Q6's tab +4 for 6.16 A FREE at unrouted 254 where the old judge had declined it, DC_HS at Q7 pads 1 to 3 as
+before; HS_S at Q7's tab +7 for 8 A COSTS three connections (254 to 257) and comes back off; DC_F and the three
+PV_P sites cost one or two each as on 20 September; six declined (CELL_F twice, DC_P at Q1's tab, DC_HS at L2,
+TRK_OUT at U4 twice). So of the set's FET drain tabs the chain now answers four on A and one on E at generation,
+and the ones it cannot are named with their numbers: CH_SRP and DC_P are busbars, HS_S wants room beside the
+entry, CH_ACN and VBUS20 want the charger block's floor plan.
+
+**Both chains ended `PREROUTE-DONE OK` (02:16 CEST).** After the stage, `rail_crossings` reads board A at 20 of 23 carrying and
+THREE short, all in the charger block (CH_ACN at Q7, CH_SRP at Q10, VBUS20 at R16), against nine under the old judge;
+board E at 19 carrying and eleven short. Board E's switching pre-lay HURT on this second tree too, on the same item,
+and the restored board re-read by hand reads hard 0 with and without a refill: the item lives only on the stub
+router's own in-memory board after its drop-back, which is therefore not the board it was handed; a tool question,
+named in `boards/e.json` and not chased tonight. The box suite at this commit read 1303 passed and ONE failed, a
+board fixture asserting the crossing judge's wording from before 87e8f63a; brought to the judge's line.
+
