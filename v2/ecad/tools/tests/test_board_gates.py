@@ -1113,8 +1113,15 @@ def t_a_via_that_moves_between_two_ground_planes_stands_and_so_does_one_nobody_c
         assert still == r["lacking"], "a screen with no examination beside it quietly dropped a via"
 
 
-def _fanout_board(pcbnew, tmp, amps):
-    """A board with one rail pad, one via on it, and an intent file declaring what the rail carries."""
+def _fanout_board(pcbnew, tmp, amps, second_layer=True):
+    """A board with one rail pad, one via on it, and an intent file declaring what the rail carries.
+
+    `second_layer` gives the rail a B.Cu pour, which is what makes the via at its source pad a CROSSING
+    (21 September 2026, 10:20 CEST). Board B's three slot rails, the design this fixture stands for, carry an
+    inner pour up to the bulk capacitor and the via in that pad is where the rail changes layer. Without the
+    pour the net lies on F.Cu alone, the via reaches bare laminate, and since 655dfea3 the judge reports the
+    site and does not judge it: the box suite read this fixture RED the moment that landed, which is the rule
+    working. Pass False to build that other board on purpose."""
     b = _board(pcbnew, 20.0, 20.0)
     net = pcbnew.NETINFO_ITEM(b, "/+5V_X"); b.Add(net)
     fp = pcbnew.FOOTPRINT(b); fp.SetReference("U1")
@@ -1125,6 +1132,11 @@ def _fanout_board(pcbnew, tmp, amps):
     pad.SetNet(net); fp.Add(pad); b.Add(fp)
     v = pcbnew.PCB_VIA(b); v.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(10), pcbnew.FromMM(10)))
     v.SetDrill(pcbnew.FromMM(0.25)); v.SetWidth(pcbnew.FromMM(0.45)); v.SetNet(net); v.SetLocked(True); b.Add(v)
+    if second_layer:
+        z = pcbnew.ZONE(b); z.SetLayer(pcbnew.B_Cu); z.SetNet(net)
+        o = z.Outline(); o.NewOutline()
+        for (x, y) in ((2, 2), (18, 2), (18, 18), (2, 18)): o.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
+        b.Add(z)
     path = os.path.join(tmp, "fan.kicad_pcb"); pcbnew.SaveBoard(path, b)
     os.makedirs(os.path.join(tmp, "out"), exist_ok=True)
     json.dump({"rails": {"/+5V_X": {"volts": 5.0, "amps_peak": amps, "source": "U1", "loads": {}}}},
@@ -1151,6 +1163,8 @@ def t_a_rail_crossing_with_fewer_barrels_than_its_current_needs_is_named_at_gene
         # 87e8f63a rated each barrel at its own drill (21 September 2026); the box suite found the old wording here
         assert "carrying 0.65 A at a 10 K rise for 2.20 A" in r.stdout, r.stdout[-600:]
         assert "which needs 4 at 0.25 mm" in r.stdout, r.stdout[-600:]
+        # and it was JUDGED, not declined: the rail's B.Cu pour is what makes the via a crossing
+        assert "changes layer nowhere" not in r.stdout, r.stdout[-600:]
 
 
 def t_a_crossing_that_carries_what_it_should_says_nothing_about_being_short():
@@ -1164,6 +1178,31 @@ def t_a_crossing_that_carries_what_it_should_says_nothing_about_being_short():
                            capture_output=True, text=True)
         assert "1 do not" not in r.stdout and "2 do not" not in r.stdout, r.stdout[-600:]
         assert "carry the barrels their current needs, 0 do not" in r.stdout, r.stdout[-600:]
+        # A PASS ON A DENOMINATOR OF ZERO IS NOT A PASS (21 September 2026, the fifth instance this month):
+        # before the rail had its pour this read "0 crossing(s) ... 0 do not" and the assertion above held
+        # while nothing had been judged at all. The denominator is asserted.
+        assert "1 crossing(s) of 1 declared rail(s)" in r.stdout, r.stdout[-600:]
+
+
+def t_a_rail_that_changes_layer_nowhere_is_reported_and_not_judged_where_kicad_is():
+    """THE ONE-LAYER FIXTURE ON A REAL BOARD (21 September 2026). `test_rail_crossings` pins this on a fake
+    board of nine methods so it runs where KiCad is not; this is the same property asked of a board KiCad
+    loaded, because the layer walk reads pads, zones and plated holes through the API and a fake board cannot
+    prove the API answers as the walk expects. The same rail, the same single 0.25 mm barrel, the same 2.20 A,
+    and no pour: its copper is one F.Cu pad, the via reaches bare laminate, and a crossing there is the
+    ROUTER'S to make and `via_current`'s to judge on the solved mesh (board A's six FET drain tabs, A97,
+    where the pre-laid clusters turned out to be dead copper)."""
+    p = _pcbnew()
+    with tempfile.TemporaryDirectory() as tmp:
+        path = _fanout_board(p, tmp, 2.2, second_layer=False)
+        r = subprocess.run([sys.executable, os.path.join(TOOLS, "rail_crossings.py"), path],
+                           capture_output=True, text=True)
+        assert "changes layer nowhere at generation and are not judged" in r.stdout, r.stdout[-600:]
+        assert "+5V_X at U1 pad 1 (2.20 A)" in r.stdout, r.stdout[-600:]
+        # it is not judged, so it is neither short nor carrying: the denominator is zero and says so
+        assert "0 crossing(s) of 1 declared rail(s) carry the barrels their current needs, 0 do not" in r.stdout, \
+            r.stdout[-600:]
+        assert "which needs 4 at 0.25 mm" not in r.stdout, r.stdout[-600:]
 
 
 def _perforated_board(pcbnew, tmp, name, holes=15, plane_to_mm=79.0):
