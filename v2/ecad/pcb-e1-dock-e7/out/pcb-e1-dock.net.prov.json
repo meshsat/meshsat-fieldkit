@@ -2,12 +2,12 @@
  "what": "the generator that wrote this netlist, by content",
  "letter": "e",
  "netlist": "pcb-e1-dock.net",
- "generator_sha": "5aab63c8263522b9",
+ "generator_sha": "a10d3dfb50e21b4b",
  "generator_files": [
   "gen_sch_e.py",
   "kisch.py",
   "intent.py"
  ],
- "schematic_sha256": "0505418b24c9b764c54d39d167418fdc",
- "taken": "2026-09-20T14:42:35+00:00"
+ "schematic_sha256": "f036666897c365df5875d3e13c50435c",
+ "taken": "2026-09-21T01:26:24+00:00"
 }
