@@ -217,6 +217,12 @@ fi
 # Set-level like the contracts above and for the same reason: it reads every board's classes and the parts'
 # own requirements out of pcb_interfaces.yaml, and one board's answer is not separable from the set's.
 run "interfaces"        python3 $T/interfaces.py
+# EVERY PART WITH A PUBLISHED OPERATING RANGE AGAINST THE ENVELOPE THIS PROJECT ADOPTED (21 September 2026,
+# rule CMP-001's temperature half). Set-level for the same reason: the envelope is one document and the
+# declaration is one file. ADVISORY while thirty of nearly two thousand part instances carry a range, and it
+# is run rather than written because a report nobody runs is a plan: its first pass named board B's T1, a
+# 0 to +70 C magnetics module on a kit whose ambient floor is -20.
+run "part temperatures" python3 $T/part_temps.py
 # EVERY DOCUMENT THAT ASSERTS A NUMBER ABOUT THE HARDWARE NAMES THE ARTEFACT IT WAS READ FROM (rule DOC-002,
 # 16 September 2026). Set-level: the order notes live under release/revA/order/ and are one document per board.
 run "doc provenance"    python3 $T/doc_provenance.py

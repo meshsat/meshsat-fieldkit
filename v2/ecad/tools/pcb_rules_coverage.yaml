@@ -105,7 +105,17 @@ coverage:
      board still carries the defect: it is a schematic change and board E is held on decision 31, so the correction
      reaches copper with the phase that answers it."}
  CMP-001: {implementation: "gen_sch_*.py value strings, each board's intent rails and its declared nodes",
-   verification: {tool: derate.py, verdict: derate, fixtures: "tests/test_gate_fixtures.py, tests/test_derate_prefix.py"},
+   verification: {tool: derate.py, verdict: derate, fixtures: "tests/test_gate_fixtures.py, tests/test_derate_prefix.py",
+     report: "part_temps.py (tests/test_part_temps.py), advisory"},
+   _report_why: "21 September 2026: this rule is written about ABSOLUTE MAXIMUM RATINGS and `derate.py` reads
+     VOLTAGE alone, so a part operated outside its published TEMPERATURE range is a thing no rule in this
+     project has ever looked at. The envelope was adopted the same day (decision 34) and `pcb_envelope.yaml`
+     carries it as data, so the comparison became possible for the first time; the first pass named board B's
+     T1, a 0 to +70 C magnetics module on a kit whose ambient floor is -20 C, reported board C's e-paper as
+     the carve-out the envelope declares, and counted 1,955 part instances with NO published range in this
+     tree. It is ADVISORY and does not decide this rule: thirty judged instances of nearly two thousand is a
+     beginning, and a rule that failed a board on that denominator would claim more than it knows, which is
+     `via_current`'s lesson of 18 September and STK-001's PASS of zero pairs before it.",
    maturity: ENFORCED, gap_category: NONE,
    note: "16 September 2026, SECOND PASS: THE NETS WHERE THE HIGHEST VOLTAGES LIVE ARE NOT RAILS, and until today
      none of them was declared. A switching node, a bootstrap, a charge pump and a transmitter's output are not
