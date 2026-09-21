@@ -17754,3 +17754,47 @@ cannot simply be multiplied through. And the first half is answered wherever a f
 Probes: `$SP/e39_site_pads.py` and `$SP/e39_site_vias.py`, both staged on the hub's `rdtools`. The second met
 KiCad 9's `PCB_VIA::GetWidth called without a layer argument` assert, which is 17 September's trap;
 `kicad_compat.via_width` is the answer if either is ever committed.
+
+### 32.349 addendum, 17:15 CEST: both fence arms land at a plateau, and the island pair is read at a common pass
+
+**(1) A99 and A99C were CUT at their 18,000 s caps** and are reported as cuts. A99 (fence) at 15:09:44 UTC:
+hard 0 of the fifteen types, **seventeen open of 274 nets**, 332 vias, router board sha `167e25196a498d4a`.
+A99C (control) at 15:11:53 UTC: hard 0, **ten open**, 322 vias, sha `b6c35835f5ed8eb5`. **Three readings now
+agree** (pass 70, pass 100 and the landing all read 17 against 10, the two snapshots identical net for net),
+so the fence's seven connections are a plateau rather than a sample. The two-variable caveat stands on the
+COUNT, both arms having been staged before the capped-denominator fix; ANA-001 on A99's own copper is the
+readable half and its finish is running.
+
+Four opens are common (`/+5V_DEV`, `/PA_ISNS_N`, `/S2_OUT`, `/SD_OUT`). A99 alone carries thirteen
+(`/CH_SRP`, `/EMCON_HW` twice, `/EXP2_SP8`, `/FE_CSGF`, `/FE_HDRV2`, `/FE_LDRV2`, `/FE_VCC`, `/PA_VCC`,
+`/PD_CSGF`, `/PD_ISNS_P`, `/POE_MODE`, `/POE_VCC`) and A99C alone six (`/B33_FB`, `/HF_HDRV2`, `/HF_LDRV1`,
+`/PD_LDRV1`, `/S2_BOOT`, `/S3_OUT`).
+
+**A RISK NAMED BEFORE THE READING IS TAKEN**, because it decides how that reading may be used: **three of the
+thirteen nets the fence leaves open are SENSE nets** (`/FE_CSGF`, `/PD_CSGF`, `/PD_ISNS_P`), and `PD_ISNS_P`
+is the tightest failing row on A98's finished board at 0.132 mm. `sensitive_nodes` measures the distance of
+copper that EXISTS, so a fence that improved the rule by leaving its own sense nets unrouted would be an
+artefact and not an answer. The reading is therefore read beside the **segment count** on each board, which
+`sense_reach` prints in its first line (443 sense and 722 switching segments on A98), and `/root/a_reach2.sh`
+is armed behind both arms to print exactly that.
+
+**(2) The island pair at a common pass 100**, which is the only comparison it supports (A100 was at pass 103
+when A100C was at 165, so their caps cut them at different counts).
+
+| | hard | open | note |
+|---|---|---|---|
+| A100, the outlet island | 0 | **11** | `/+5V_DEV`, `/EMCON_HW`, `/HF_HDRV2`, `/HF_SW_EN`, `/PA_HDRV2`, `/PA_ISNS_N`, `/PA_SW_EN`, `/POE_HDRV1`, `/POE_PGOOD`, `/S2_OUT`, `/SD_OUT` |
+| A100C, control | **9** | 9 | every hard item one knot, `/PD_HDRV1` against `/PD_SW1` on F.Cu |
+| A100C after `unknot` | 0 | **13** | the knot was carrying `/PD_HDRV1`'s three pairs and `/PD_SW1`'s one |
+
+Seven of the control's nine items share a single 0.3138 mm track and the pieces run down to 0.0001 mm, which
+is A47's knot of 19 September with the dot family in it. **A100's pass-70 and pass-100 sessions are
+byte-identical** (md5 `8df41e9082c50e11`), so this arm has plateaued as both fence arms did.
+
+**And the island's own question is answered sharply.** `/+5V_DEV` is open exactly ONCE on **both** boards, so
+the router closes the outlet cluster's local pairs with or without the island; what differs is the shape of
+what remains. On A100 the open pair is **zone to zone**, *Zone +5V_DEV outlet cluster under In3.Cu* to *Zone
++5V_DEV under the block In3.Cu*, **93.86 mm** apart; on A100C it is a 1.1995 mm F.Cu track to a via, 89.84 mm
+apart. Both are decision 35's run to the bank and neither arm claims to close it. **The island's win is at
+generation (five open pre-route pairs to two) and in the copper it lays, which is PI-001's and PI-003's
+subject, and not in the router's open count.**
