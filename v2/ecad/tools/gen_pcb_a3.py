@@ -533,7 +533,11 @@ def bank_col(net, caps, reach=1.3, drill=0.4):
     PC.stitch(net, pts, drill=drill)
     r = pads_rect(bank, 0, 0.15)
     return (min(r[0], min(x for x, _ in pts) - 0.5), r[1], max(r[2], max(x for x, _ in pts) + 0.5), r[3])
-BANK_CAPS = {"1": ["C31", "C32"], "2": ["C37", "C38"], "3": ["C43", "C44"], "D": ["C49", "C50"]}   # the two bulk capacitors of each rail's load bank, the row the island covers
+BANK_CAPS = {"1": ["C31", "C32", "C33", "R28"], "2": ["C37", "C38", "C39", "R32"], "3": ["C43", "C44", "C45", "R36"], "D": ["C49", "C50", "C51", "R40"]}   # A95 (21 September 2026): the WHOLE load bank, both bulk capacitors, the second row and the load resistor, so the island reaches the end of the run.
+# A93 (two bulk capacitors) left each slot rail two open pairs on the pre-route board and the router left all four rails open; A94 (the second row)
+# left one pair of 2.6 mm to the load resistor and the router left all four open; A95 (this line) left ZERO pairs on the three slot rails and the
+# router landed with /+5V_S1, /+5V_S2 and /+5V_S3 CLOSED, the first board A arm on which any of them closed (a.json, 06:23). The device rail's
+# remaining pairs are the outlet cluster's (R100, C103, U23, U29), which this island does not reach, and it stayed open on A95.
 # 1. the four slot rails: converter output island (inductor OUT pad, output caps, shunt pad 1) with a bottom band; the rail after the shunt (shunt pad 2, connector pin 1) the same
 SLOT_CAPS = {"1": ["C29", "C30"], "2": ["C35", "C36"], "3": ["C41", "C42"], "D": ["C47", "C48"]}
 SLOT = [("1", -58, "L3", "R31", "J_5V_S1", "+5V_S1"), ("2", -42, "L4", "R35", "J_5V_S2", "+5V_S2"), ("3", -26, "L5", "R39", "J_5V_S3", "+5V_S3"), ("D", -10, "L6", "R43", "J_5V_DEV", "+5V_DEV")]
