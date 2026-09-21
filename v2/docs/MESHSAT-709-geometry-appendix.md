@@ -17798,3 +17798,33 @@ what remains. On A100 the open pair is **zone to zone**, *Zone +5V_DEV outlet cl
 apart. Both are decision 35's run to the bank and neither arm claims to close it. **The island's win is at
 generation (five open pre-route pairs to two) and in the copper it lays, which is PI-001's and PI-003's
 subject, and not in the router's open count.**
+
+### 32.349 addendum, 17:42 CEST: the island pair lands, A101's chain is proved, and A101 routes against its own control
+
+**(1) Both island arms were cut at their 18,000 s caps.** **A100** (the outlet island) at 15:37:49 UTC: hard
+0 of the fifteen types, **eleven open of 274**, 312 vias, exactly what its pass-100 snapshot read, so this
+arm plateaued like the other three. **A100C** (control) at 15:38:44: **ROUTED_HARD, hard 9**
+(`shorting_items` 8, `clearance` 1) with ten open, and those nine are the **same knot** its pass-100 snapshot
+carried, `/PD_HDRV1` against `/PD_SW1` on F.Cu. **So the control never produced a legal board at the router
+in 174 passes.** `finish.sh` runs `unknot.py` at line 66, so its finished board is the unknotted one, and by
+hand on the pass-100 copy that costs four connections. The honest comparison of this pair stays the
+common-pass one; what the landing adds is that on the same placement, the same tools and one variable, **the
+island arm's router board is legal and its control's is not**.
+
+**(2) A101's chain is proved before the arm is spent** (`/root/a101p`, PHASE=A101P, the chain alone). The
+twelve-net sense group (the ten filtered ISNS nets plus `CH_SRN_F` and `CH_ACN_F`) reads **`closed 24 of
+24`**, and `sense_fence` then reports areas on those nets **for the first time** (`POE_ISNS_P` 7.71 mm2 on
+F.Cu and 16.21 on B.Cu, `POE_ISNS_N` 22.92, `PD_ISNS_P` 1.90 and 24.72, `PD_ISNS_N` 22.10 and so on):
+**201 rule areas against A99's 85**, kept at hard 0 with unrouted 499 before and after. The mechanism was
+checked rather than assumed first: `sense_fence` grows only around a node whose declaration carries
+`keep_mm`, and board A declares all **34** at 0.50 mm, every ISNS net among them, so pre-laying them was the
+only thing missing. The chain ends **PREROUTE-DONE OK** with place_audit 0 predicted collisions among 19
+fine-pitch parts of 436, `rail_crossings` 15 of 27 carrying and **zero short**, and zone nets ALL PASS of 53.
+The switching group reads **18 of 20** now that `prelay_pairs` asks the board instead of the 499-item cap.
+
+**(3) A101 and A99R route since 15:41:05 and 15:41:06 UTC**, both staged from HEAD so they carry
+`prelay_pairs` and the fixed `via_parallel`, which is what makes them one variable apart where A98 could not
+be A99's control. 200 attempts, 18,000 s caps cutting about 20:41 UTC. The pre-lay rule's cost half is the
+open question and only the route answers it: twelve nets is the largest group this board has been given, and
+the rule of 19 September is that a pre-lay pays on a gap nothing else can close and costs on a net the router
+would have closed anyway. Every arm carries `land_read2.sh`, `a_after_finish.sh` and `a_vp_check.sh`.
