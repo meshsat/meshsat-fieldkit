@@ -21,8 +21,8 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 27 | 50.0 |
-| FAIL | 15 | 27.8 |
+| PASS | 28 | 51.9 |
+| FAIL | 14 | 25.9 |
 | INCONCLUSIVE | 12 | 22.2 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **54** | 100.0 |
@@ -62,7 +62,7 @@ Measured on board A32 (pcb-a-power-a23, 58e26c67987b1daa), declares A32.
 | ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **FAIL** | sensitive_nodes FAIL: {'declared': 34, 'fail': 25, 'measured': 10} |
 | RF-001 RF paths are designed as RF | BLOCKER | ROUTED_BOARD | **FAIL** | rf_line FAIL: {'judged': 11, 'missed': 11} |
 | INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **FAIL** | interfaces_a FAIL: {'assignments': 1, 'disagreements': 1} |
-| TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **FAIL** | port_protect_a FAIL: {'behind_an_active_part': 0, 'declared': 3, 'not_on_netlist': 0, 'ports': 3, 'unprotected': 2} |
+| TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **PASS** | port_protect_a PASS of 21 |
 | ISO-001 creepage and clearance | BLOCKER | ROUTED_BOARD | **FAIL** | spacing FAIL: {'below_limit': 5, 'closest_mm': 0.1287, 'hv_nets': 6, 'pairs_measured': 10124} |
 | THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, |
 | PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **FAIL** | place_audit FAIL: {'collisions': 1, 'fine_pitch': 19, 'footprints': 400, 'measured': 19} |

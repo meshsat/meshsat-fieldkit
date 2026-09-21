@@ -18207,3 +18207,10 @@ anything I touched. The check that found it is mechanical and is worth repeating
 that now by counting `full.sh` on the same project first. (4) **A probe killed mid-chain still echoes its own
 DONE marker**, so a waiter on that marker reads a stale one and calls a run finished that never ran; the
 launcher writes its marker only after the chain's own exit status.
+
+**AND THE NUMBER MOVED FOR A REASON THAT IS A BOARD (21 September 2026, 20:58 CEST).** With TRN-001 re-taken
+on all six netlists, **readiness 60.7 to 61.6 percent of 333**: the rule reads **PASS on every board of the
+set** where it read FAIL on A, D and E this morning. Board A's is a citation, board D's and board E's are
+parts their generators now carry. Boards B, C and P were re-taken in the same stretch because the tool
+changed under them, and none of the three moved. The re-take is read-only on a netlist and needs no KiCad,
+which is why it was taken here; every verdict landed in its own board's `routed/`, none in the tree's `out/`.
