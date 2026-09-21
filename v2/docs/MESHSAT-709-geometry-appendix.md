@@ -18505,3 +18505,48 @@ connection*, and missed board C's eight rings entirely, because their footprint 
 document contradicted the measurement and the document was right. **A filter on a name is a hypothesis about
 the data**: the corrected pass takes every footprint that is hole-like by name OR whose reference is `H<n>`,
 and prints the nets it finds rather than a count.
+
+### 32.360, 21 September 2026 23:00 CEST: the envelope becomes data, the first part measured against it is outside it, and board A's sense pre-lay pair lands at two different pass counts
+
+**THE ENVELOPE IS DATA NOW (commit e7a13f0a).** Decision 34 adopted `OPERATING-ENVELOPE.md` section 4 and
+section 6's first row this evening. **Four rules resolve against that envelope** (CMP-001, THM-001, ISO-001,
+REL-001) and until tonight each of them would have had to read prose or pick its own number, so
+`tools/pcb_envelope.yaml` carries the adopted numbers in a form a rule can use: the ambient range in use and
+in storage with its three carve-outs, the inside-air rise estimates with the caveat that nothing has been
+built, and the IEC 61000-4-2 level 4 row. **The danger of a second copy is drift and drift here is
+invisible**, so four fixtures hold it: every number in the file must appear in the document, a number the
+record does not carry is refused, **the document is pinned by the same sha256 the coverage map pins for
+ENV-001** so an edit breaks both in the same commit, and what the record leaves open (the altitude, the
+vibration and shock severities, the service life) may not be invented in the data file. The electrical fast
+transient row is carried as `adopted: false`, because it has no authority behind it.
+
+**AND THE FIRST RULE TO USE IT FOUND SOMETHING ON ITS FIRST PASS (commit 0ec34ce0).** CMP-001 is written
+about ABSOLUTE MAXIMUM ratings and `derate.py` reads VOLTAGE alone, so **a part operated outside its published
+TEMPERATURE range is something no rule in this project had ever looked at**. `tools/part_temps.py` judges the
+cold end against the envelope's ambient minimum, because nothing in the kit warms the air below ambient, and
+the hot end against the worst inside air the envelope's OWN carve-out allows: the reduced mode runs above
++35 C, so the bar is the larger of 40 + 10 and 35 + 16, **51 C**, computed from the data and not carried as a
+literal (a rule refuses the literal). First pass over the seven committed netlists:
+
+* **30 part instances judged of 1,985**;
+* **ONE outside the envelope: board B's `T1`**, the Pulse H5007NL, rated **0 to +70 C** against an ambient
+  floor of **-20**, so outside its own range over the coldest 20 K;
+* **ONE declared carve-out**, reported with the envelope's own words: board C's e-paper below -15 C;
+* **1,955 part instances with no published range in this tree**, counted and named rather than assumed fine.
+
+**It is ADVISORY and decides nothing**, for the reason `via_current` was advisory on 18 September: thirty
+judged instances of nearly two thousand is a beginning, and a rule that failed a board on that denominator
+would claim more than it knows. **The named next move is mechanical**: `jlc_certify` already asks JLCPCB's
+parts API about every coded part on every board, and that API carries an operating range, so the declaration
+can grow from thirteen hand-read sheets to the whole coded BOM without a single number being guessed.
+
+**BOARD A'S SENSE PRE-LAY PAIR LANDED AT TWO DIFFERENT PASS COUNTS, WHICH IS THE READING'S FIRST FACT.**
+A101 (the twelve-net sense pre-lay plus the fence) was **cut at pass 92** with hard 0 and **24 open of 274**,
+318 vias; A99R (its control, the same tools and the same fence without the sense pre-lay) was **cut at pass
+157** with hard 0 and **19 open**, 344 vias. **Both hit their 18,000 s caps**, and the pre-lay's copper makes
+each pass heavier, which is board E's seat arms in board A's geometry (E40 and E41 ran at 2.5 minutes a pass
+against E38's 0.62). **So the OPEN COUNT of this pair is not comparable** and was never going to be: what is
+readable is ANA-001 and `sense_reach` on each board's own copper, and whether `/PA_ISNS_N`, which A101
+pre-lays, closed. Their finishes run as this is written and `a_after_finish2.sh` is armed on both, which it
+was not when they were launched: the two arms carried a lander alone until 22:19, and a lander waits on the
+SUPERVISOR's pid, which routeflow keeps alive through the remedy round.
