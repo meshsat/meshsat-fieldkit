@@ -28,7 +28,9 @@ is left alone with that reason.
 Usage: via_parallel.py <board.kicad_pcb> [--dry] [--rise-k 10] [--max-extra 6] [--no-resolve] [--reach 3.0]
   --reach R: search rings out to R mm for a parallel site (default 3.0; D12's +5V_SA barrel at (68.8, 82.0) has no site
   within 3 mm and a barrel 4 to 6 mm away on the same net, linked on both layers, still shares the transition)
-  exit 0 laid or nothing to do, 1 reverted (HURT), 3 no solved currents to work from."""
+  exit 0 laid or nothing to do, 1 reverted with nothing standing (HURT in the first round), 3 no
+  solved currents to work from. A HURT in a LATER round reverts that round, keeps what the rounds
+  before it proved, and exits 0."""
 import sys, os, math, json, shutil, subprocess
 import verdict          # the guarded flag reader (19 September 2026)
 TOOLS = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, TOOLS)
@@ -334,10 +336,28 @@ def main(a):
             print("via_parallel: round %d: %d new via(s) sat in a hard violation and came off with their links" % (rnd, len(bad)))
             h, u, d = _measure(path)
         if h > h0 or u > u0:
-            print("via_parallel: HURT (hard %d -> %d, unrouted %d -> %d): reverting every via and link" % (h0, h, u0, u))
-            shutil.copy(keep, path); os.remove(keep)
+            # A HURT ROUND PUTS BACK ITS OWN ROUND AND NOT THE WHOLE PASS (21 September 2026, measured on
+            # E37). `keep` is the board as this pass FOUND it and `round_bak` is the board as this round
+            # found it, which is the end of the last round that was measured and kept. Restoring `keep`
+            # threw away every barrel of every earlier round because a LATER round misbehaved: on board E's
+            # E37, round 1 kept 17 parallel barrels and took the worst transition 10.12 -> 8.89 (DC_P 5 of 6
+            # wanted and HS_S 6 of 6, each at a site carrying 8.00 A through one 0.4 mm hole), then round 2
+            # laid into a hard violation and left the board one connection open, and all 17 came off with
+            # it. Proved on the finished board, which carries ONE via at each of those two sites. The round
+            # that hurt is still reverted whole, and the pass still stops here; what stands is the last
+            # state this pass MEASURED as no worse than it found, which for round 1 is hard 0 and unrouted
+            # 4 against the same. If the first round is the one that hurts, its backup IS `keep` and nothing
+            # changes.
+            back = round_bak if os.path.exists(round_bak) else keep
+            print("via_parallel: HURT (hard %d -> %d, unrouted %d -> %d): reverting round %d and stopping; "
+                  "%s"
+                  % (h0, h, u0, u, rnd,
+                     ("the %d via(s) kept by the round(s) before it stand" % total_kept) if total_kept
+                     else "nothing had been kept before it, so the board is as this pass found it"))
+            shutil.copy(back, path)
+            if os.path.exists(keep): os.remove(keep)
             if os.path.exists(round_bak): os.remove(round_bak)
-            return 1
+            return 1 if not total_kept else 0
         kept = sum(len([c for c in ps if c not in bad]) for _, _, ps, _ in laid)
         for r in refused[:12]: print("via_parallel:   %s" % r)
         if kept == 0:

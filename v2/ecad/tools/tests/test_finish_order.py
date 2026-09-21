@@ -438,3 +438,21 @@ def t_the_chain_reports_where_a_decoupling_capacitor_could_go():
     assert "|| true" in seat, "the seat report can stop the chain: %s" % seat[:120]
     n_rail, rail = _cmd("rail_crossings.py")
     assert rail and n_rail < n_seat, "the seat report does not run with the other finished-placement reports"
+
+
+def t_the_via_parallel_stage_shows_its_own_decision_and_not_only_its_first_lines():
+    """A stage's DECISION is its last line, and a bare `head` throws it away (21 September 2026).
+
+    On E37's finish the log carried nine sites being given parallel barrels, one of them 8.00 A through a
+    single 0.4 mm hole, and NOT the sentence saying the whole round was put back; the revert was invisible
+    for a day and cost board E eleven barrels. The stage may elide the middle, and it may not elide the end.
+    Proved to fail on the tree it was written against, where the line is `grep ... | head -10`."""
+    src = open(os.path.join(TOOLS, "finish.sh"), encoding="utf-8").read()
+    i = src.find("guarded via_parallel")
+    assert i > 0, "the finish no longer runs via_parallel"
+    blk = src[i:src.find("\nfi", i)]
+    assert "guard-via_parallel.log" in blk, "the stage no longer reads its own guard log"
+    assert not re.search(r"guard-via_parallel\.log[^\n]*\|\s*head\s+-\d+\s*$", blk, re.M), \
+        "the stage pipes its log through head alone, so its last line, which is its decision, never appears"
+    assert "not shown" in blk or "tail" in blk, \
+        "the stage shows no tail, so a reader cannot see what the round decided"
