@@ -378,8 +378,14 @@ IPC-2152. What each model asks for at 10 K: 10 A needs 0.65 mm2 (IPC-2221A), 0.9
 read off A95): /+5V_DEV, 6.00 A, has its bank at case x -13 and its loads at the USB-C outlet cluster at x
 +85 to +103, on the far side of every converter block, and the router lays nothing across the 91.6 mm; a band
 for it on outer 1 oz copper wants about 2.7 mm at 10 K under IPC-2221A and on the half-ounce inner layer
-about fifteen, and every alternative model asks for more. It is the one open of that rail on the best board A
-arm, and it is copper weight and a corridor, not a route.
+about fifteen, and every alternative model asks for more. It is copper weight and a corridor, not a route.
+CORRECTED 21 September 2026: that run is ONE of the rail's five open pre-route pairs and not all of them. The
+21 September count read the DRC's item list, where a pair is a two-ended item; asked again on A98's own
+pre-route board, /+5V_DEV has five pairs, of which this 99.78 mm run to the bank is the only one this ruling
+holds. The other four are inside the outlet cluster itself, 8.47 to 46.27 mm apart, and they are a generator
+item measured the same day: an In3 island over the cluster fills as one piece holding four of its five sites,
+where an F.Cu one leaves U18 pin 17 outside. So the ruling decides the rail's LONG run and the cluster closes
+itself without it.
 
 | rule | | boards | result today |
 |---|---|---|---|
