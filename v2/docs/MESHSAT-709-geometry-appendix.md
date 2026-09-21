@@ -16857,3 +16857,11 @@ carry `one_layer` and say it; the count is deliberately unchanged tonight becaus
 pre-laid at exactly those tabs and its solved mesh decides whether they pay. Boards P (four wire lands declined
 as before) and C (zero short) re-read at HEAD, both PREROUTE-DONE OK.
 
+**Addendum, 02:52 CEST: A92 lands at the router and the device rail's lane bought nothing.** Cut at its cap after pass 183:
+hard 0, thirteen unrouted of 274 (router board dd2502f04f52ee44, read in a scratch copy while the closers ran). `/VBAT`
+closed; `/+5V_DEV` and the three slot rails OPEN, with `/EMCON_HW`, `/PA_ISNS_N`, `/S2_OUT`, `/S3_OUT`, `/SD_OUT`. The
+prediction that A92 closes the device rail where A89 does not failed, and A86 with no lane closed it: A92's lane column
+was renamed GND at the fill like the slot columns (32.341), so it carried no variable at the router. Thirteen against
+A89's plateau of nineteen is pass count and scatter (two of the six are nets A89 never read open), not the lane. A93 is
+the arm whose lane is connected.
+
