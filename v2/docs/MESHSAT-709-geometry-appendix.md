@@ -16942,3 +16942,13 @@ DC_HS at Q7, TRK_OUT at Q2) take an F.Cu island over pads 1 to 3 and a 0.5 mm co
 first probe measured the judge's window (a second column 2 mm out counted for nothing) and the second probe lays one
 column inside it and leaves the rest to `rail_barrels`. A rule refuses a literal pair in the site list. The probes
 are read before anything is committed.
+
+**Addendum, 06:06 CEST: E36 routes, and A93's closers say what the rails were short of.** The second E36 probe lays one
+column of five 0.5 mm barrels inside the judge's window at each FET source land and leaves the rest to `rail_barrels`,
+whose top-ups are all kept: rail_crossings reads 17 carrying and four short against E35's 14 and 7, the three lands
+answered at generation, place_audit 0 of 8, PREROUTE-DONE OK; committed (27029af8) with a rule that refuses a
+literal pair in the site list, and E36 routes on the hub as E35's one-variable arm. A93's stub router took its ten
+open to seven and closed the three slot rails with ZERO tracks and ONE via each, 0.52 mm from the load resistor's
+rail pad (R28, R32, R36): the router carries each rail to within one via of its load and stops, which is the 2.6 mm
+the A94 probe measured from the island to that pad and the run A95 lays at generation. A closer's via is a route's
+property; the generator's copper is what answers the rails, and A94 and A95 are the arms that say so.
