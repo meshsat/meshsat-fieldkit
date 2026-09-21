@@ -16895,3 +16895,11 @@ rails, `/PA_ISNS_N`, `/S2_OUT`, `/S3_OUT`), which against A89's 4 says the devic
 either. Under the plated-hole judge the chains at HEAD end OK on all three boards: P 6 of 6 and none short, E 20 carrying
 and ten short (the U4 decline gone once the declaration names Q2), A 22 carrying and one short, CH_SRP's one-layer tab.
 
+**Addendum, 03:38 CEST: the barrel fixer lays a second row inside the judge's window.** `rail_barrels` walked one row along
+x or y and declined DC_HS at L2 pad 1 on every board E chain tonight, five of six fitting inside 3.25 mm on a pad with
+sixteen millimetres of free board beside it. A window is a disc: when neither row holds them the fixer lays a lattice
+inside it, all or nothing as before, each site through the board's own site test and the chain's per-site DRC. On the E
+chain at HEAD the site takes its six barrels and is kept at hard 0, board E's crossings read nine short where they read
+ten, and the chain ends OK. Proved to fail on the tool as it stood; suite 1270, the bring-up page re-rendered from the
+corrected E intent.
+

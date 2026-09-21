@@ -150,6 +150,32 @@ def plan(row, free, max_barrels=MAX_BARRELS):
             k += 1
         if best is None or len(pts) > len(best[0]): best = (pts, axis)
     pts, axis = best
+    # A SECOND ROW WHEN ONE ROW DOES NOT HOLD THEM (21 September 2026, 03:29 CEST, board E). DC_HS at L2 pad 1 owes
+    # six 0.40 mm barrels for 8 A on a 4.50 by 2.15 mm pad with sixteen millimetres of free board to its west, and
+    # this stage declined it twice tonight with "only 5 of the 6 fit within the 3.25 mm this crossing is judged
+    # over": a single row along either axis runs out of the judge's window before it runs out of room, while a
+    # second row at the same pitch, half a millimetre away, has every site free. The window is the judge's and
+    # stays; what changes is that the lattice inside it is two-dimensional. Every site is still asked of the
+    # board's own site test and the chain still DRCs each site and reverts it alone, so a lattice under a pad
+    # is legal by the same rule a row is (the pitch keeps the hole-to-hole floor on both axes). Rings by distance
+    # from the anchor, so the copper still grows out of the barrel that is there.
+    if len(pts) < owed:
+        cand = []
+        K = 2 * need + 2
+        for i in range(-K, K + 1):
+            for j in range(-K, K + 1):
+                if i == 0 and j == 0: continue
+                cx, cy = ax + i * pitch, ay + j * pitch
+                if reach and math.hypot(cx - px, cy - py) > reach + 1e-9: continue
+                cand.append((math.hypot(cx - ax, cy - ay), abs(j), cx, cy))
+        lat = []
+        for _d, _j, cx, cy in sorted(cand):
+            if len(lat) >= owed: break
+            if any(math.hypot(cx - qx, cy - qy) < floor - 1e-9 for qx, qy in near + lat): continue
+            if not free(cx, cy): continue
+            lat.append((cx, cy))
+        # all or nothing, by the same rule as the row below: a lattice that holds SOME of them is the decline
+        if len(lat) >= owed: pts, axis = lat, "xy"
     if not pts:
         return [], axis, ("no free site on either axis at this pitch within the %.2f mm this crossing is "
                           "judged over: the %d barrel(s) it needs have nowhere to stand, which is a "
@@ -161,7 +187,7 @@ def plan(row, free, max_barrels=MAX_BARRELS):
         return [], axis, ("only %d of the %d barrel(s) still owed fit within the %.2f mm this crossing is "
                           "judged over, so the cluster does not answer it: a placement item"
                           % (len(pts), owed, reach))
-    note = "every barrel still owed has a free site"
+    note = "every barrel still owed has a free site" + (" (a second row, one row not holding them)" if axis == "xy" else "")
     return pts, axis, note
 
 

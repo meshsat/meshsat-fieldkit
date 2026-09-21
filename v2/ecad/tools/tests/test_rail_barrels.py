@@ -342,7 +342,10 @@ def t_a_cluster_only_part_of_which_fits_is_declined_rather_than_half_laid():
     r = _row(3.0, drill=0.4, at=(10.0, 10.0), near=[(10.0, 10.0)])
     r["reach"], r["at_pad"] = 1.0, (10.0, 10.0)
     assert r["need"] == 4, r["need"]
-    pts, axis, note = rb.plan(r, OPEN)
+    # since 21 September the fixer tries a second row inside the window, so the board here leaves only the one row
+    # free (a lattice that holds all three inside a 1.0 mm disc is a legitimate answer, not a half one)
+    BAND = lambda x, y: abs(y - 10.0) < 1e-9
+    pts, axis, note = rb.plan(r, BAND)
     assert pts == [], (pts, note)
     assert "only 2 of the 3" in note and "placement item" in note, note
 
@@ -388,3 +391,32 @@ def t_the_fixer_names_the_sites_it_declined_in_its_verdict():
     rows = ns["_declined_evidence"]([({"net": "/VIN_RAW", "ref": "L2", "pad": "2", "at": (-40.5, -92.72)},
                                       "9 barrels of 0.25 mm is a busbar")])
     assert rows == ["/VIN_RAW at L2 pad 2 (-40.50, -92.72): 9 barrels of 0.25 mm is a busbar"], rows
+
+
+def t_a_second_row_answers_a_site_one_row_cannot_hold_inside_the_judges_window():
+    """THE DEFECTIVE FIXTURE (21 September 2026, board E): DC_HS at L2 pad 1 owes six 0.40 mm barrels inside a 3.25 mm
+    window with free board on every side, and the fixer declined it because ONE row along either axis holds five inside
+    the window. A window is a disc, not a line: a second row at the same pitch has every site free."""
+    import rail_barrels as rb
+    row = _row(8.0, drill=0.4, have=3, near=[(10.0, 10.0), (10.8, 10.0), (9.2, 10.0)])
+    row["reach"] = 2.0; row["at_pad"] = (10.0, 10.0)      # one row holds two more each way inside 2.0 mm; six are owed
+    owed = row["need"] - row["have"]
+    assert owed >= 6, owed
+    pts, axis, note = rb.plan(row, OPEN)
+    assert len(pts) == owed, (len(pts), owed, note)
+    assert axis == "xy" and "second row" in note, (axis, note)
+    # every site inside the window, off every barrel there by the floor, and on the lattice
+    for cx, cy in pts:
+        assert ((cx - 10.0) ** 2 + (cy - 10.0) ** 2) ** 0.5 <= 2.0 + 1e-9, (cx, cy)
+        assert all(((cx - qx) ** 2 + (cy - qy) ** 2) ** 0.5 >= 0.4 + rb.FLOOR - 1e-9 for qx, qy in row["near"]), (cx, cy)
+    # THE ACCEPTABLE FIXTURE: a site where one row does hold them keeps the row, and one with nowhere free is still declined
+    row2 = _row(3.0, drill=0.4, have=1); row2["reach"] = 3.25; row2["at_pad"] = (10.0, 10.0)   # three owed, one row holds them
+    pts, axis, note = rb.plan(row2, OPEN)
+    assert axis in ("x", "y") and "second row" not in note, (axis, note)
+    pts, axis, note = rb.plan(row, SHUT)
+    assert pts == [] and "placement item" in note, note
+    # and a lattice that holds only SOME of them is the same decline as a row that does (half an answer is none)
+    row3 = dict(row); row3["reach"] = 1.2
+    BAND = lambda x, y: abs(y - 10.0) < 1e-9      # one row free, its two nearest sites taken, the next out of the window
+    pts, axis, note = rb.plan(row3, BAND)
+    assert pts == [] and "placement item" in note, (pts, note)
