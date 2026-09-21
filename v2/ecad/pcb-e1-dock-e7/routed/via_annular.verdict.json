@@ -32,9 +32,9 @@
  "tool": "via_annular",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "df5c920a2abb0560"
+  "tools_tree_sha": "46c7aff86de49a4d"
  },
- "ts": "2026-09-21T00:10:03Z",
+ "ts": "2026-09-21T05:42:20Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {

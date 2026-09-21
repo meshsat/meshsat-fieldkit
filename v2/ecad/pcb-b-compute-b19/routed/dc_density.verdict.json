@@ -8,14 +8,14 @@
  },
  "denominator": 38,
  "evidence": [
-  "MISSED +5V_S1 on current density: worst conductor or pour cell at 1.99 of its limit (the drop was 0.62% of 5.1 V, which is not what failed)",
-  "MISSED +5V_S2 on current density: worst conductor or pour cell at 1.44 of its limit (the drop was 0.51% of 5.1 V, which is not what failed)",
-  "MISSED +5V_S3 on current density: worst conductor or pour cell at 1.43 of its limit (the drop was 0.49% of 5.1 V, which is not what failed)",
-  "MISSED +1V0_S1 on current density: worst conductor or pour cell at 1.26 of its limit (the drop was 6.89% of 1.0 V, which is not what failed)",
-  "MISSED +3V3_S3A on current density: worst conductor or pour cell at 4.46 of its limit (the drop was 10.09% of 3.3 V, which is not what failed)",
-  "MISSED +3V3_S3B on current density: worst conductor or pour cell at 5.21 of its limit (the drop was 10.28% of 3.3 V, which is not what failed)",
-  "MISSED +5V_LIME on current density: worst conductor or pour cell at 8.92 of its limit (the drop was 12.35% of 5.0 V, which is not what failed)",
-  "MISSED +5V_RB on current density: worst conductor or pour cell at 4.77 of its limit (the drop was 3.03% of 5.0 V, which is not what failed)",
+  "MISSED +5V_S1 on current density: worst conductor or pour cell at 1.99 of its limit (the drop was 0.64% of 5.1 V, which is not what failed)",
+  "MISSED +5V_S2 on current density: worst conductor or pour cell at 1.44 of its limit (the drop was 0.52% of 5.1 V, which is not what failed)",
+  "MISSED +5V_S3 on current density: worst conductor or pour cell at 1.44 of its limit (the drop was 0.50% of 5.1 V, which is not what failed)",
+  "MISSED +1V0_S1 on current density: worst conductor or pour cell at 1.26 of its limit (the drop was 6.93% of 1.0 V, which is not what failed)",
+  "MISSED +3V3_S3A on current density: worst conductor or pour cell at 4.46 of its limit (the drop was 10.11% of 3.3 V, which is not what failed)",
+  "MISSED +3V3_S3B on current density: worst conductor or pour cell at 5.21 of its limit (the drop was 10.33% of 3.3 V, which is not what failed)",
+  "MISSED +5V_LIME on current density: worst conductor or pour cell at 8.92 of its limit (the drop was 12.37% of 5.0 V, which is not what failed)",
+  "MISSED +5V_RB on current density: worst conductor or pour cell at 4.77 of its limit (the drop was 3.04% of 5.0 V, which is not what failed)",
   "MISSED +54V_POE on current density: worst conductor or pour cell at 1.23 of its limit (the drop was 0.32% of 54.0 V, which is not what failed)",
   "MISSED PANEL_5V on current density: worst conductor or pour cell at 1.26 of its limit (the drop was 1.77% of 5.0 V, which is not what failed)"
  ],
@@ -40,13 +40,13 @@
  "tool": "dc_density",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "df5c920a2abb0560"
+  "tools_tree_sha": "46c7aff86de49a4d"
  },
- "ts": "2026-09-21T00:05:00Z",
+ "ts": "2026-09-21T05:37:14Z",
  "verdict": "FAIL",
  "version": "unknown",
  "writer": {
   "file": "dc_drop.py",
-  "sha16": "e2ed8aac14e6f3f3"
+  "sha16": "99937ee8deef38d8"
  }
 }

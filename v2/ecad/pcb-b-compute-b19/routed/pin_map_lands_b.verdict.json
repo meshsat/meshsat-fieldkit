@@ -13,7 +13,7 @@
   "board": "b",
   "netlist": {
    "path": "out/pcb-b-compute.net",
-   "sha256_16": "700a268b68be5b3f"
+   "sha256_16": "05478138f0db3e21"
   }
  },
  "missing_input": null,
@@ -31,9 +31,9 @@
  "tool": "pin_map_lands_b",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "df5c920a2abb0560"
+  "tools_tree_sha": "46c7aff86de49a4d"
  },
- "ts": "2026-09-21T00:05:49Z",
+ "ts": "2026-09-21T05:38:03Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {

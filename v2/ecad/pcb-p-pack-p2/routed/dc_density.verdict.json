@@ -8,7 +8,7 @@
  },
  "denominator": 4,
  "evidence": [
-  "MISSED PACK_N on current density: worst conductor or pour cell at 1.03 of its limit (the drop was 0.04% of 0.1 V, which is not what failed)"
+  "MISSED PACK_N on current density: worst conductor or pour cell at 1.02 of its limit (the drop was 0.04% of 0.1 V, which is not what failed)"
  ],
  "inputs": {
   "board": {
@@ -31,13 +31,13 @@
  "tool": "dc_density",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "df5c920a2abb0560"
+  "tools_tree_sha": "46c7aff86de49a4d"
  },
- "ts": "2026-09-21T00:10:36Z",
+ "ts": "2026-09-21T05:42:54Z",
  "verdict": "FAIL",
  "version": "unknown",
  "writer": {
   "file": "dc_drop.py",
-  "sha16": "e2ed8aac14e6f3f3"
+  "sha16": "99937ee8deef38d8"
  }
 }

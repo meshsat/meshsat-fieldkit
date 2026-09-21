@@ -18,7 +18,7 @@
   },
   "netlist": {
    "path": "out/pcb-e1-dock.net",
-   "sha256_16": "fef91d5417827cf8"
+   "sha256_16": "0c368de50a375fd4"
   }
  },
  "missing_input": null,
@@ -36,9 +36,9 @@
  "tool": "netlist_board",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "df5c920a2abb0560"
+  "tools_tree_sha": "46c7aff86de49a4d"
  },
- "ts": "2026-09-21T00:09:59Z",
+ "ts": "2026-09-21T05:42:15Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {
