@@ -75,6 +75,24 @@ def rows(b, rails, reach_mm=1.0):
         # the first board that has one, which is the 13 September lesson about a list used as a key, again.
         _src = r.get("source") or []
         if isinstance(_src, str): _src = [_src]
+        # WHICH LAYERS THIS NET'S OWN COPPER LIES ON AT GENERATION (21 September 2026). via_current declines to
+        # call a via a transition on a net whose copper lies on one layer (its `crosses_layers`); this judge
+        # never asked, so board E's HS_S and board A's six FET drain tabs, every one of them F.Cu-only before the
+        # route (no zone, no band, no plated hole), were counted as short crossings through the FANOUT's own
+        # via, which reaches bare laminate. A one-layer net's crossing exists only if the ROUTER makes one,
+        # which via_current judges on the solved mesh afterwards. The row carries the fact and its line says
+        # it; the count is NOT changed here tonight, because A97 is routing with pre-laid clusters at exactly
+        # those tabs and its solved mesh is the measurement of whether they pay (boards/a.json, A97).
+        _lay = set()
+        for _t in b.GetTracks():
+            if (_t.GetNetname() or "").lstrip("/") == n and _t.GetClass() != "PCB_VIA" and hasattr(_t, "GetLayer"):
+                _lay.add(_t.GetLayer())
+        for _z in (b.Zones() if hasattr(b, "Zones") else []):
+            if (_z.GetNetname() or "").lstrip("/") == n and not _z.GetIsRuleArea(): _lay.add(_z.GetFirstLayer())
+        for _f in b.GetFootprints():
+            for _q in _f.Pads():
+                if (_q.GetNetname() or "").lstrip("/") == n and getattr(_q, "GetDrillSizeX", lambda: 0)() > 0: _lay.add("PTH")
+        _one_layer = len(_lay) <= 1
         want = {str(x): amps for x in _src if x}
         for ref, a in (r.get("loads") or {}).items():
             try: want[ref] = max(want.get(ref, 0.0), float(a))
@@ -153,13 +171,14 @@ def rows(b, rails, reach_mm=1.0):
                         "drill": drill, "width": width, "near": at_near, "have": len(near), "need": need,
                         "carried": carried,
                         "reach": r0 / 1e6, "at_pad": (c.x / 1e6, c.y / 1e6), "amps": _share,
-                        "part_amps": want[ref], "pads": len(_groups), "instances": len(_inst),
+                        "part_amps": want[ref], "pads": len(_groups), "instances": len(_inst), "one_layer": _one_layer,
                         "why": "%s at %s pad %s (%.2f, %.2f): %d barrel(s) carrying %.2f A at a 10 K rise for %.2f A "
-                               "(%.2f A over this part's %d pad(s) on the rail%s), which needs %d at %.2f mm"
+                               "(%.2f A over this part's %d pad(s) on the rail%s), which needs %d at %.2f mm%s"
                                % (n, ref, pad.GetNumber(), c.x / 1e6, c.y / 1e6, len(near), carried, _share,
                                   want[ref], len(_groups),
                                   (", pad %s drawn as %d pieces of one land" % (_num, len(_inst))) if len(_inst) > 1 else "",
-                                  need, drill)})
+                                  need, drill,
+                                  " [the net lies on one layer at generation: a crossing only if the router makes one]" if _one_layer else "")})
     return short, judged
 
 
