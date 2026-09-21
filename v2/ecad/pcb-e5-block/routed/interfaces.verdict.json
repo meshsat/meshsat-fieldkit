@@ -4,19 +4,10 @@
  "counts": {
   "assignments": 12,
   "boards": 7,
-  "disagreements": 8
+  "disagreements": 0
  },
  "denominator": 12,
- "evidence": [
-  "A USB2_CM5: this project judges intra-pair mismatch at 1.00 mm and USB2_CM5 asks for 0.15 mm, which is 6.7 times tighter",
-  "B PCIE_CM5: this project judges intra-pair mismatch at 1.00 mm and PCIE_CM5 asks for 0.10 mm, which is 10.0 times tighter",
-  "B PCIE_M2_MODULE: this project judges intra-pair mismatch at 1.00 mm and PCIE_M2_MODULE asks for 0.70 mm, which is 1.4 times tighter",
-  "B PCIE_M2_MODULE: this project judges intra-pair mismatch at 1.00 mm and PCIE_M2_MODULE asks for 0.70 mm, which is 1.4 times tighter",
-  "B USB3_CM5: this project judges intra-pair mismatch at 1.00 mm and USB3_CM5 asks for 0.10 mm, which is 10.0 times tighter",
-  "B USB2_CM5: this project judges intra-pair mismatch at 1.00 mm and USB2_CM5 asks for 0.15 mm, which is 6.7 times tighter",
-  "B ETHERNET_CM5: this project judges intra-pair mismatch at 1.00 mm and ETHERNET_CM5 asks for 0.15 mm, which is 6.7 times tighter",
-  "B HDMI_CM5: this project judges intra-pair mismatch at 1.00 mm and HDMI_CM5 asks for 0.15 mm, which is 6.7 times tighter"
- ],
+ "evidence": [],
  "inputs": {
   "spec": "pcb_interfaces.yaml"
  },
@@ -29,14 +20,14 @@
  "rules": [],
  "tool": "interfaces",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "git_head": "14a43af795eb",
+  "tools_tree_sha": "66ea9068e975c684"
  },
- "ts": "2026-09-21T12:53:14Z",
- "verdict": "FAIL",
- "version": "unknown",
+ "ts": "2026-09-21T20:17:17Z",
+ "verdict": "PASS",
+ "version": "14a43af795eb+dirty",
  "writer": {
   "file": "interfaces.py",
-  "sha16": "3b33f2c1c6cba4f0"
+  "sha16": "462f21176406879c"
  }
 }

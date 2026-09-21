@@ -18332,3 +18332,103 @@ mm, and the JUDGE reads twenty-one inside 3.0 and eleven past it. Readiness **63
 writes the per-via classification beside the board and `return_via` reads it, so a re-take that ran only the
 second declared its input absent and wrote INCONCLUSIVE. That is the 18 September guard working, and the
 driver runs both now.
+
+### 32.358, 21 September 2026 22:23 CEST: decision 36 is ruled at the tighter of the two numbers, and the whole measured cost is two pairs on two boards
+
+**THE RULING (the session's, authority SESSION, `tools/pcb_decisions.yaml` n 36, ruled 21 September 2026).**
+A differential pair is judged at the number the part at the end of its link asks for, where that part states
+one, and at this project's 1.00 mm where it does not. **The owner's ruling of 5 September 2026 17:00 is not
+reversed and not loosened**: it is the FLOOR under every number the criterion returns, so an interface asking
+for something LOOSER than 1.00 mm does not relax a bar an owner set (none does today, the loosest being the
+M.2 module's 0.70, and the day one does, relaxing it is his to rule). That one-directional shape is the whole
+of why the session could take it: every pair the owner's number refused is still refused, and what changes is
+that a pair its own host asks 0.10 or 0.15 mm of is no longer passed at 1.00.
+
+**WHAT IT COSTS, MEASURED ON THE COMMITTED BOARDS BEFORE IT WAS RULED**, read-only where KiCad is, each
+board's sha printed before and after and identical:
+
+* **board A32 (58e26c67987b1daa) carries three pairs and ONE moves**: `USB_D8` at **0.23 mm** against the
+  compute module's 0.15, which is 0.08 mm of meander on a 139 mm leg; `USB_E6` 0.12 and `USB_WALL` 0.00 both
+  pass. The decision's own 17 September evidence said 0.29 mm and 0.14 mm of copper, read off A40 and A41;
+  this is the COMMITTED board and the number moved because the board did.
+* **board B21 (2e64b5bf2d9cd3bc) carries 35 pairs and EIGHT read WARN, of which SEVEN were already over
+  1.00 mm** and refused before this ruling. **The one this ruling adds is `PCIE2_CLK` at 0.93 mm** against the
+  CM5's 0.10. Six of the eight have one leg between 1.0 and 2.8 mm, which is an UNROUTED leg on a board 416
+  connections short: the route's business and not the tolerance's.
+
+So the whole measured cost of ruling the parts' own numbers is **two pairs on two boards and no board changes
+today**, and `pair_match.sh` has meandered to the tighter number in every finish since 17 September anyway.
+
+**WHAT IT DOES NOT SETTLE, AND A CLAIM THIS PROJECT HAS CARRIED SINCE 18 SEPTEMBER IS WRONG.** The four
+MDI pairs read **2.74 to 14.68 mm** on B21 and are judged by NEITHER number: decision 47 holds the length rule
+to pairs whose class declares an impedance target and their class declares none, so they print as INFO. The
+record then called them *the transformer-less compute-module Ethernet links of decision 29*, in that
+decision's evidence, in decision 36's and in this appendix, **and the netlist says they are not**: `MDI_A` to
+`MDI_D` run between **T1, the Pulse H5007NL magnetics, and J_ETH, the RJ45**, which is the cable side of the
+one port that HAS a transformer, while the capacitively coupled module links are `SWP1_*` to `SWP3_*`, from
+the switch U1 to their own 100 nF capacitors. So the transformer-less links DO carry a declared tolerance,
+ETHERNET_CM5's 0.15 mm from the compute module's own datasheet, and **on B21 every routed one reads 0.00 to
+0.01 mm**. Read off the netlist in four lines, after three days of the sentence being repeated. **What stands
+is the finding about the MDI pairs themselves**: from the magnetics to the connector, no class target, no
+declared tolerance, 2.74 to 14.68 mm of mismatch, and the switch's own checklist (DS00004151A 6.2 to 6.4)
+gives that side magnetics characteristics and a chassis-ground rule and **no intra-pair number**, so a number
+for them would be this project's invention and is deliberately not made tonight. It is board B's next phase's,
+and decisions 29 and 36 both carry the correction.
+
+**ONE PLACE DECIDES IT.** `interfaces.bar_for(letter, net)` returns the bar and the sentence that explains it;
+`check_pcb_a.py` and `check_pcb_b.py` call it and PRINT the number it returned beside each pair with rule
+PAIR-001's citation of the interface's own budget; `pair_match.sh` refuses the finish on that bar rather than
+on a literal. It **fails closed**: where the interface sheet cannot be read the bar is 1.00 mm, which is what
+both gates refused at before. The reversal is one line and is written in the function's own docstring.
+
+**AND INT-001's INTRA-PAIR HALF NOW ASKS THE FUNCTION THE GATES JUDGE WITH, which is what keeps it from
+becoming a tautology.** It used to compare a CONSTANT with the datasheet and fail every high-speed interface
+of boards A and B; it asks `bar_for` now, and it asks it **through the board's own assignment patterns**, so
+an assignment whose nets fall to an EARLIER and looser pattern is named. That is the fixture the re-stated
+rule uses, and it is a real defect shape rather than an invented one.
+
+**TWO RULES, EACH WITH A DEFECTIVE AND AN ACCEPTABLE FIXTURE, BOTH PROVED TO FAIL ON THE TREE THEY WERE
+WRITTEN AGAINST** (run against `git archive HEAD v2/ecad/tools` with the new test file in it):
+`t_a_pair_is_judged_at_the_tighter_of_the_two_numbers` failed with *module 'interfaces' has no attribute
+'bar_for'* and `t_both_board_gates_judge_at_the_bar_and_not_at_a_literal` with *check_pcb_a.py does not ask
+what bar the pair is judged at*; both pass on this tree. The defective fixture is an interface asking 0.15 mm
+(judging its pair at 1.00 is the defect); the acceptable ones are the two cases where the owner's number
+stands, an interface asking 2.00 mm and a net no interface claims.
+
+**AND TWO RULES THAT PINNED THE OLD BEHAVIOUR ARE RE-STATED AS SURVIVING PROPERTIES.**
+`t_the_projects_own_tolerance_is_compared_with_the_parts` asserted that `check_pcb_b.py` holds the literal
+`> 1.0` and that judging the real boards produces a "times tighter" disagreement, and
+`t_the_verdict_is_per_board_and_not_one_for_the_set` asserted that board B's own gap is still reported. All
+three were true only while the decision was OPEN, and closing it would have failed them: **a rule that fails
+when its subject is fixed is a rule about history.** What they assert now is the mechanism, on fixtures, and
+the first still fires on a bar looser than its part asks.
+
+**A DEAD PARAMETER AND A DOCSTRING THAT CLAIMED A MEASUREMENT NOBODY TAKES.** `interfaces.judge` accepted
+`board_file` and used it nowhere, and the module's own first lines said it judges *where a routed board is
+given, the MEASURED mismatch of every pair of that interface, and the routed length against any maximum the
+part states*. It does neither: the mismatch is read off the board by the two gates above, and **nothing in
+this tree reads `max_length_mm`** (board B's M.2 PCIe states 200 mm and its USB 225). The parameter is gone
+and both gaps are named in the docstring and in the coverage note rather than left to be discovered.
+
+**TWO SLIPS OF MINE IN THE SAME EDIT, both caught before the commit and both worth the line.** `_barwhy`,
+the sentence `bar_for` returns, was assigned in both gates and read by nothing, which is the defect this very
+commit names in `judge(board_file=)`; it earns its place in the FAIL-CLOSED case, where there is no citation
+and the line must still say what it was judged at and why. Putting it there then made `_cite` read `_over`
+one line BEFORE `_over` is assigned, so on the first pair of a board it would have raised and on every later
+one it would have used the PREVIOUS pair's answer. Caught by reading the patched block rather than the exit
+status, and the board A reading was re-taken on the corrected tool and is identical line for line.
+
+**AND THE SHEET IS PARSED ONCE PER (path, mtime, size) NOW**, because `bar_for` doubled the number of times a
+board gate asks it a question: board B prints 35 pairs and each one costs a budget AND a bar, which was
+seventy parses of one YAML per run.
+
+**INT-001 goes FAIL to PASS on boards A and B** (8 disagreements to 0, every one of them the same sentence
+about 1.00 mm), **readiness 64.0 to 64.6 percent of 333** (215 verified, 40 failed, 78 inconclusive, and the
+two pairs that moved are exactly those two), and **the rule-set fingerprint is unchanged at
+ff8151db3576437b**, checked rather than assumed: the coverage map is not a deciding field. Local suite 1332
+passed, 0 failed. **The assembly rotation checklist moves in the same commit** and it is decision 37's
+follow-through arriving rather than noise: board D's crystal is an HC49-SD now, so the set's polarised
+footprint list reads 44 over seven boards where it read 43. **And the design package's own estimate moves
+with it**, because INT-001's remediation (per-interface sheets for USB, M.2 and HDMI, 10 h P50 and 34 h P80
+of PARALLEL_AGENT work) leaves the gap register when the rule passes: engineering effort 66 to **56 hours
+P50** and 204 to **170 P80**, one worker.

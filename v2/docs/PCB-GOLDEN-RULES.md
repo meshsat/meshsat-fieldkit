@@ -1421,10 +1421,17 @@ socket's own side, 85 ohm plus or minus 10 percent on PCIe with a 200 mm limit a
 `pcb_interfaces.yaml` holds all of it as data with the clause and the quote each was read from, and
 `interfaces.py` judges every board's classes against it. EVERY IMPEDANCE TARGET ON EVERY BOARD IS CORRECT,
 including the two ends that state different numbers, because 90 ohm is inside the module's 85 plus or minus
-10 percent. What disagrees is one thing, on every high-speed interface of boards A and B: THIS PROJECT JUDGES
+10 percent. What disagrees is one thing, on every high-speed interface of boards A and B: THIS PROJECT JUDGED
 INTRA-PAIR MISMATCH AT 1.0 mm AND THE PARTS ASK FOR 0.1 TO 0.7, six to ten times tighter. The 1 mm is the
-owner ruling of 5 September and tightening it is a decision, so the rule reports the gap with its numbers and
-the decision is filed. Boards C, D and E carry USB only at full speed and declare no target, which their
+owner ruling of 5 September and tightening it was a decision, so the rule reported the gap with its numbers
+and the decision was filed. DECISION 36 IS RULED (the session's, 21 September 2026): a pair is judged at the
+TIGHTER of the two, the owner's 1.00 mm being the floor and never the ceiling, `interfaces.bar_for` is the
+one place that decides it and both board gates print the number it returned. So this rule now asks `bar_for`
+what a net of each interface would be judged at, through the board's OWN assignment patterns, and the eight
+disagreements are closed. WHAT THIS RULE STILL DOES NOT ASK, named rather than implied: the routed LENGTH
+against `max_length_mm` (board B's M.2 PCIe states 200 mm and its USB 225), which nothing in this tree reads
+today; the per-pair mismatch itself is read off the board by `check_pcb_a.py` and `check_pcb_b.py` and
+refused by `pair_match.sh`. Boards C, D and E carry USB only at full speed and declare no target, which their
 parts' datasheets say in as many words: a declared zero with a reason, not a silence
 
 ### INT-002  a transformerless Ethernet link is verified at both ends

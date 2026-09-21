@@ -15,10 +15,16 @@ WHAT IT JUDGES, on the netlist and the board:
     of PCIe and the RM520N-GL asks 85 plus or minus 10 percent, so one class satisfies both, and this says so
     rather than leaving it to be noticed.
   * the INTRA-PAIR matching this project judges the board with, against the number the interface asks for.
-    This is the check the rule exists for: the board gate warns above 1.0 mm and the CM5 asks for 0.1 mm on
-    PCIe and USB 3.0 and 0.15 on HDMI and Ethernet, which is six to ten times tighter.
-  * where a routed board is given, the MEASURED mismatch of every pair of that interface, and the routed
-    length against any maximum the part states.
+    This is the check the rule exists for, and since DECISION 36 (ruled 21 September 2026) the two agree by
+    construction: `bar_for` is the one place that decides what a pair is judged at, the board gates call it,
+    and this asks that function what bar a net of each interface would get. It is not a tautology: the bar is
+    resolved through the board's own assignment patterns, so an assignment whose nets fall to an earlier and
+    looser pattern is named here.
+  * WHAT IT DOES NOT MEASURE, said plainly because this docstring used to claim it. The mismatch of an actual
+    pair and its routed length against `max_length_mm` are read off the BOARD by `check_pcb_a.py` and
+    `check_pcb_b.py`, which print every pair with the bar it was judged at; the `board_file` argument here was
+    accepted and used by nothing, and it is gone. The length half is owed a reader (board B's M.2 PCIe states
+    200 mm and its USB 225) and no line here pretends it has one.
 
 WHAT IT DOES NOT DO. It does not invent a requirement for an interface no part in this tree describes, and it
 does not treat a board that declares NO impedance target as a failure: boards C and D carry USB only at full
@@ -33,7 +39,9 @@ sys.path.insert(0, HERE)
 import verdict as _v
 
 SPEC = os.path.join(HERE, "pcb_interfaces.yaml")
-# The tolerance this project's own board gates warn above, so the two can be compared in one place.
+# The owner's ruling of 5 September 2026 17:00: a pair over this much intra-pair mismatch blocks a chain.
+# DECISION 36 did not move it and could not: it is the number this project refuses at where the part at the
+# end of the link asks for nothing, and the floor under every number `bar_for` returns.
 PROJECT_INTRA_MM = 1.0
 
 
@@ -54,6 +62,26 @@ def _classes(project_file):
     return out, byname
 
 
+_SHEET = {}
+
+
+def _sheet(path):
+    """The interface sheet, parsed once per (path, mtime, size).
+
+    `bar_for` doubled the number of times a board gate asks this file a question: board B prints 35 pairs and
+    each one now costs a budget AND a bar, which was 70 parses of the same YAML per run. The key carries the
+    file's mtime and size so an edited sheet is re-read, and the fixtures each write their own temp path, so
+    a stale answer cannot survive a test."""
+    import yaml, os as _os
+    try: st = _os.stat(path)
+    except Exception: return None
+    k = (path, st.st_mtime, st.st_size)
+    if k not in _SHEET:
+        try: _SHEET[k] = yaml.safe_load(open(path, encoding="utf-8"))
+        except Exception: _SHEET[k] = None
+    return _SHEET[k]
+
+
 def budget_for(letter, net, spec_path=None):
     """(mm, interface, source) for this net on this board, or (None, None, None).
 
@@ -62,9 +90,9 @@ def budget_for(letter, net, spec_path=None):
     interface's requirement, and the rule asks for the interface's own budget to be CITED beside it. This is
     where a printer reads it: the sheet already carries the number and the clause it was read from, per
     interface, and the per-board assignment says which interface a net belongs to."""
-    import fnmatch, yaml
-    try: spec = yaml.safe_load(open(spec_path or SPEC, encoding="utf-8"))
-    except Exception: return (None, None, None)
+    import fnmatch
+    spec = _sheet(spec_path or SPEC)
+    if spec is None: return (None, None, None)
     b = ((spec.get("boards") or {}).get(str(letter).lower()) or {})
     bare = str(net).lstrip("/")
     for a in (b.get("assignments") or []):
@@ -77,7 +105,50 @@ def budget_for(letter, net, spec_path=None):
     return (None, None, None)
 
 
-def judge(spec_path=None, ecad=None, only=None, board_file=None):
+def bar_for(letter, net, spec_path=None):
+    """The intra-pair mismatch a pair of this net is JUDGED at, and why (decision 36, ruled 21 September 2026).
+
+    THE RULING, in one sentence: the tighter of this project's 1.00 mm and the number the part at the end of
+    the link asks for. The owner's ruling of 5 September 2026 17:00 is not reversed and not loosened; what
+    decision 36 adds beneath it is the host's own recommendation, where the host states one, so this function
+    can only ever refuse a pair the old bar passed and never pass one it refused. That is the whole of why the
+    session could take it: a criterion that moves in one direction only accepts no residual risk, and the cost
+    was measured before it was ruled, on the COMMITTED boards where KiCad is: board A32's USB_D8 at 0.23 mm
+    against the compute module's 0.15, which is 0.08 mm of meander that `pair_match.sh` already lays in every
+    finish, and on board B21 one pair, PCIE2_CLK at 0.93 mm, that the owner's 1.00 mm passed.
+
+    WHY THE PROJECT'S NUMBER STAYS THE FLOOR. An interface that asks for something LOOSER than 1.00 mm would,
+    read literally, relax a bar an owner ruled; no interface in this tree does today (the loosest is the M.2
+    module's 0.70), and the day one does, relaxing it is the owner's to rule and not this function's to
+    assume. The `mm >= PROJECT_INTRA_MM` branch below is doing that work and it is deliberate.
+
+    ONE PLACE DECIDES. `check_pcb_a.py` and `check_pcb_b.py` call this and print the number it returns beside
+    each pair; `tests/test_interfaces.py` refuses either gate comparing a mismatch to a literal again.
+
+    REVERSAL: return `PROJECT_INTRA_MM` unconditionally and both gates refuse at 1.00 mm as they did before
+    this commit, which restores the 5 September ruling on its own.
+    """
+    mm, iface, src = budget_for(letter, net, spec_path)
+    if mm is None:
+        return (PROJECT_INTRA_MM,
+                "this project's %.2f mm (owner ruling 5 September 2026): %s"
+                % (PROJECT_INTRA_MM,
+                   "no interface of board %s claims this net" % str(letter).upper() if iface is None
+                   else "%s states no intra-pair number" % iface))
+    mm = float(mm)
+    if mm >= PROJECT_INTRA_MM:
+        return (PROJECT_INTRA_MM,
+                "this project's %.2f mm, which is tighter than %s's own %.2f mm (%s)"
+                % (PROJECT_INTRA_MM, iface, mm, (src or "").strip()))
+    return (mm, "%s asks for %.2f mm (%s)" % (iface, mm, (src or "").strip()))
+
+
+def _probe_net(pattern):
+    """A net name that this assignment's pattern matches, so the bar can be resolved the way a real net is."""
+    return str(pattern).replace("*", "X").replace("?", "X")
+
+
+def judge(spec_path=None, ecad=None, only=None):
     import yaml
     d = yaml.safe_load(open(spec_path or SPEC, encoding="utf-8"))
     ifaces = d["interfaces"]
@@ -120,13 +191,23 @@ def judge(spec_path=None, ecad=None, only=None, board_file=None):
             elif abs(have - want) > want * tol + 1e-9:
                 fails.append("%s %s: the class %s is %.0f ohm and %s asks for %s ohm within %.0f percent"
                              % (letter.upper(), a["interface"], cls, have, a["interface"], want, tol * 100))
-            # THE CHECK THIS RULE EXISTS FOR: what this project judges a pair with, against what the part asks.
+            # THE CHECK THIS RULE EXISTS FOR: what this project judges a pair with, against what the part
+            # asks. Until decision 36 was ruled this compared a CONSTANT with the datasheet and failed every
+            # high-speed interface of boards A and B, which was the gap the decision was filed on. It asks
+            # `bar_for` now, which is the function the board gates judge with, and it asks it through this
+            # assignment's own patterns, so what is checked is the bar a real net of this interface gets.
             need = spec.get("intra_pair_mm")
-            if need is not None and PROJECT_INTRA_MM > float(need) + 1e-9:
-                fails.append("%s %s: this project judges intra-pair mismatch at %.2f mm and %s asks for %.2f mm, "
-                             "which is %.1f times tighter"
-                             % (letter.upper(), a["interface"], PROJECT_INTRA_MM, a["interface"], float(need),
-                                PROJECT_INTRA_MM / float(need)))
+            if need is not None:
+                pats = [p for p in (a.get("patterns") or []) if str(p).strip()]
+                bar, why = (bar_for(letter, _probe_net(pats[0]), spec_path) if pats
+                            else (PROJECT_INTRA_MM, "this assignment names no pattern"))
+                row["intra_bar_mm"] = bar
+                row["intra_bar_why"] = why
+                if bar > float(need) + 1e-9:
+                    fails.append("%s %s: a pair of this interface is judged at %.2f mm and %s asks for "
+                                 "%.2f mm, which is %.1f times tighter (%s)"
+                                 % (letter.upper(), a["interface"], bar, a["interface"], float(need),
+                                    bar / float(need), why))
             rows.append(row)
         out[letter] = dict(rows=rows, fails=fails, notes=notes)
     return out
