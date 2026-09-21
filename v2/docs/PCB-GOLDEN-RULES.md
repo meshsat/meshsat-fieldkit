@@ -1267,7 +1267,7 @@ reference, its filtering and its distance from switching copper are decided rath
 | source | SOURCE_UNVERIFIED |
 | | LM5176 four-switch buck-boost controller, pin table and layout section,  --  |
 | | LT8705A buck-boost controller, current sense,  --  |
-| implementation | pcb_sensitive.yaml, the nodes and their filters |
+| implementation | pcb_sensitive.yaml, the nodes and their filters; sense_fence.py, the keep-out the router obeys |
 | maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one node, expires prototype measurement |

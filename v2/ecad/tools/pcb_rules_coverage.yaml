@@ -486,7 +486,18 @@ coverage:
    remediation: {action: "decision 37 (board D's two clocks: the land cannot hold the part it draws), then the straps half of this rule",
      owner: OWNER, execution: OWNER, depends_on: [], p50_h: 2, p80_h: 6}}
 
- ANA-001: {implementation: "pcb_sensitive.yaml, the nodes and their filters", verification: {tool: sensitive_nodes.py, verdict: sensitive_nodes, fixtures: tests/test_sensitive_nodes.py, report: "kelvin_check.py, switch_list.py"},
+ ANA-001: {implementation: "pcb_sensitive.yaml, the nodes and their filters; sense_fence.py, the keep-out the router obeys", verification: {tool: sensitive_nodes.py, verdict: sensitive_nodes, fixtures: tests/test_sensitive_nodes.py, report: "kelvin_check.py, switch_list.py"},
+   _fixer_why: "sense_fence.py (21 September 2026) is this rules only instrument that reaches the router.
+     A DSN class-pair clearance is ignored by Freerouting 1.9.0 (measured on E17), a KiCad custom rule
+     catches after the route and steers nothing, and a class clearance is refused by the pins of the very
+     class it would protect (board A POE_CS 0.250 mm at U16 pin 16, board E WATER_SENSE 0.200 mm at U10
+     pad 38), so the escape dies at the source. A rule area that forbids tracks leaves KiCads DSN export
+     as a wire_keepout and route_one.sh drops those only on power layers. It runs AFTER the pre-lay,
+     because the copper it fences does not exist until then and a generator-drawn fence is an obstacle to
+     the pre-lay itself, and its shape is an ANNULUS: a rule area that sits on the track it protects is
+     items_not_allowed, which is in the hard set. Boards A and E declare it; both were measured on their
+     own pre-route boards first (A 85 areas over 115 mm2, E 12 over 52 mm2, each hard 0 and unrouted
+     unchanged). It lays no copper and decides no verdict: sensitive_nodes still measures the board.",
    _report_why: "kelvin_check.py (18 September 2026) measures the OTHER way a current sense stops being a
      measurement, and it is a REPORT because no rule in this registry asks it yet. ANA-001 asks how far a
      sense line runs from switching copper; this asks how much of the sensed signal is the copper's own
