@@ -56,3 +56,28 @@ def t_a_round_that_buys_nothing_takes_its_vias_back_off():
 # the commit that makes the change and in the appendix entry beside it, which is where this project's
 # convention already puts it; what stays here is the PROPERTY, which is true of the tool for as long as the
 # tool is right. The measurement that motivates it is in the docstring above and does not need git to check.
+
+
+def t_a_hurt_round_puts_back_its_own_round_and_not_every_round_before_it():
+    """MEASURED ON E37, 21 September 2026, and it is why this rule exists.
+
+    The pass keeps two backups: `keep`, the board as the PASS found it, and `round_bak`, the board as THIS
+    ROUND found it, which is the end of the last round that was measured and kept. A round that leaves the
+    board worse is reverted and the pass stops, which is right; it restored `keep`, which threw away every
+    barrel of every earlier round because a LATER round misbehaved. On E37: round 1 kept 17 parallel barrels
+    and took the worst transition 10.12 -> 8.89, five of them at DC_P and six at HS_S, each a site carrying
+    8.00 A through ONE 0.4 mm hole against a 0.90 A wall; round 2 laid into a hard violation and left the
+    board one connection open; all 17 came off with it. Proved on the finished board, which carries one via
+    at each of those two sites.
+
+    The diagnosis before this one was wrong and was corrected by running the tool rather than reading it: the
+    round's own judgement (`the worst ratio must improve`) was blamed, and round 1's worst DID improve. What
+    hid it was the finish showing this stage's first ten lines while the decision is its last."""
+    src = open(SRC, encoding="utf-8").read()
+    i = src.find("if h > h0 or u > u0:")
+    assert i > 0, "via_parallel no longer measures whether the round hurt the board"
+    blk = src[i:src.find("kept = sum(", i)]
+    assert "round_bak" in blk, "the hurt branch does not look at the round's own backup"
+    assert not re.search(r"^\s*shutil\.copy\(keep, path\)", blk, re.M), \
+        ("the hurt branch restores the board as the PASS found it, so one bad round discards every barrel "
+         "every earlier round proved")

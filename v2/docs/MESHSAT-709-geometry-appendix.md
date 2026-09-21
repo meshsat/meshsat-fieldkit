@@ -17492,3 +17492,36 @@ declaration fails boards on a number nobody has ruled and it belongs beside deci
 consequence for E38 is procedural and immediate: its ANA-001 line is necessary and not sufficient, and the
 segment probe above is the measure to run on its landed board beside the rule. The fence forbids TRACKS
 rather than nets, so it fences the gate drives out whether or not the declaration names them.
+
+**Addendum, 21 September 2026 13:05 CEST: one bad round of the barrel fixer was throwing away every barrel
+the rounds before it had proved, and my first diagnosis of it was wrong.** Reading E37's solved mesh for board
+E's next generator step, `via_current` named `DC_P` and `HS_S` carrying **8.00 A through one 0.4 mm barrel
+each** against a 0.90 A wall, and the finish log showed `via_parallel` giving those very sites five and six
+parallel barrels. The finished board carries ONE via at each. So the pass laid them and something took them
+off, and nothing in the log said what: **the finish showed this stage's first ten lines and the decision is
+its last** (`grep ... | head -10`), which is why it went unseen. That half is fixed first, because without it
+nothing below could have been found: the stage now prints its first ten lines, marks an elision, and always
+prints its last four.
+
+**The first diagnosis was that the round's own criterion was at fault** (a round is credited only if the
+board's WORST ratio improves, and board E's worst is `PV_P` at 10.12 in U5's QFN pin field, a site the pass
+refuses), and it was written, given fixtures and measured on a copy of E37's board. **The measurement
+refuted it**: with the criterion changed the pass STILL ended with one via at each site, because round 1's
+worst does improve, 10.12 to 8.89, and round 1 was kept. That change was reverted whole rather than kept as
+an improvement nobody had a number for.
+
+**The real cause is the HURT branch.** The pass keeps two backups, `keep` (the board as the PASS found it)
+and `round_bak` (the board as THIS ROUND found it, which is the end of the last round that was measured and
+kept). A round that leaves the board worse is reverted and the pass stops, which is right; it restored
+`keep`. On E37, round 1 kept **17 parallel barrels** at twelve sites and took the worst transition 10.12 to
+8.89; round 2 laid into a hard violation and left the board one connection open; **all 17 came off with it**.
+The fix is one line of choice: revert the round, not the pass. Measured on a copy of E37's finished round-1
+board, one variable, the old tool against the new: the old ends byte-identical to its input with one barrel
+at each site, and the new ends at **hard 0 and unrouted 4, the same as its input**, with the 17 barrels
+standing, `HS_S` at five barrels where it had one and `PV_P` at four. `DC_P` keeps its one, because its own
+site was refused for want of 3 mm of room in round 1 and its barrels were round 2's.
+
+**What it says about the readings already taken**: every PI-003 number this project has recorded from a
+finish whose `via_parallel` reported HURT is a number for a board that lost work it had proved, and board E's
+landed boards are the ones to re-read. Nothing is re-judged here: the tool is fixed, and the next finish of
+each board is what re-takes it.

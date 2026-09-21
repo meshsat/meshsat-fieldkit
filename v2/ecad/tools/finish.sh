@@ -230,7 +230,11 @@ fi
 # Declared per board (`via_parallel` in boards/<letter>.json).
 if [ -n "$(cfg x via_parallel)" ]; then
   GUARD_QUIET=1 guarded via_parallel python3 -u $T/via_parallel.py $N.kicad_pcb
-  grep -a "via_parallel" out/guard-via_parallel.log | head -10
+  # THE STAGE'S DECISION IS ITS LAST LINE AND head -10 THREW IT AWAY (21 September 2026). On E37 the finish
+  # log carried nine sites being given parallel barrels, one of them 8.00 A through a single 0.4 mm hole, and
+  # not the sentence saying the whole round was put back: the revert was invisible for a day. The first ten
+  # lines say what it tried, the last four say what stands, and an elision is marked rather than silent.
+  grep -a "via_parallel" out/guard-via_parallel.log | awk 'NR<=10{print} {l[NR]=$0} END{if(NR>14){print "via_parallel: ... " NR-14 " line(s) not shown ..."}; for(i=(NR>14?NR-3:11);i<=NR;i++) if(i>10) print l[i]}'
 fi
 # 6. a ground via beside every signal via (owner ruling 15 September 2026 20:15 CEST, rule 2): after every stage that lays
 # or removes copper and before the final refill and the routed-board gate, which judges the vias it placed like any other
