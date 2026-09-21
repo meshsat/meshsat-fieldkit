@@ -820,7 +820,16 @@ for it1, it2 in pairs:
             print("    " + row)
         continue
     if _U is None: _U = _unconnected()
-    _n_before = len(list(b.GetTracks()))
+    # THE PIECES LAID SINCE ARE THE ONES WHOSE UUID WAS NOT THERE BEFORE, NEVER "THE LAST N OF THE LIST" (21
+    # September 2026, board E's switching pre-lay). `BOARD.Add` puts a new track at the FRONT of the track list
+    # (measured: the added item is at index 0 and not at -1), so `list(b.GetTracks())[_n_before:]` named the
+    # OLDEST n tracks on the board as the closure's own. Every "taken back off" then removed old copper and left
+    # the failed closure's pieces, and every drop-back "dropped" old copper, read the same hard count, announced
+    # that it was NOT the closures and put everything back, after which the stage's guard refused the whole
+    # group: board E lost seventeen switching closures twice tonight for one clearance item one closure owned.
+    _before_ids = {t.m_Uuid.AsString() for t in b.GetTracks()}
+    def _laid_since():
+        return [t for t in b.GetTracks() if t.m_Uuid.AsString() not in _before_ids]
     # THE TWO ENDS, MEASURED AGAINST THE COPPER THAT IS ALREADY THERE (19 September 2026). Taken BEFORE the
     # emit, and that is the whole point: the refusal message used to measure them AFTER the pieces were taken
     # back off and printed 0.000 mm for every one of board A's twenty switching pairs, which read as "the ends
@@ -882,7 +891,7 @@ for it1, it2 in pairs:
                   "%.3f mm from it) and the board's unconnected count did not rise (%s -> %s)"
                   % (net, -1.0 if _g_start is None else _g_start, -1.0 if _g_end is None else _g_end, _U, _U1))
         else:
-            for t in list(b.GetTracks())[_n_before:]: b.Remove(t)
+            for t in _laid_since(): b.Remove(t)
             b.BuildConnectivity()
             # THE MEASUREMENT, not a story. The obvious explanation (the goal cell centre sitting outside the
             # copper it stands for) is not supported by these rasterisers, which sample a cell CENTRE against
@@ -901,7 +910,7 @@ for it1, it2 in pairs:
     # `cleanup_dangling` has carried the law in its own docstring since it was written: a SWIG proxy dies
     # after `Remove`, and the drop-back removes AND saves, so a held proxy is a freed object by the time the
     # next `SaveBoard` walks the list. The identity that survives both is the item's own KIID.
-    _new = list(b.GetTracks())[_n_before:]
+    _new = _laid_since()
     # AND WHERE IT IS, because a drop-back that walks newest-first is a search and not a diagnosis
     # (19 September 2026, A44: nine closures dropped in order and the hard count never moved off 1,
     # because the violation belonged to a closure laid earlier). The DRC names the position of every

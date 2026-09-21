@@ -16809,3 +16809,28 @@ router's own in-memory board after its drop-back, which is therefore not the boa
 named in `boards/e.json` and not chased tonight. The box suite at this commit read 1303 passed and ONE failed, a
 board fixture asserting the crossing judge's wording from before 87e8f63a; brought to the judge's line.
 
+### 32.346
+
+**The stub router's "pieces laid since" were the oldest tracks on the board (21 September 2026, 02:21 CEST).** Board
+E's switching pre-lay group closed 17 of 17 twice tonight and the stage's guard refused it both times: the
+refilled board read hard 1, `clearance | Track [/E6_SW] on F.Cu, length 0.2000 mm / Via [/E6_BST]`, the
+drop-back named the two `/E6_SW` closures, dropped them, read hard 1 -> 1, dropped every other closure to the
+same count, concluded "it was NOT the closures", put all seventeen back, and the guard then reverted the group
+as HURT. Reproduced by hand on a copy of the chain-end board (`/root/pa_probe/g2`, 16 of 17 closed, the same
+walk, the same item), and the board of the drop-back's own DRC copy, read while the walk ran, STILL CARRIED
+eight locked `/E6_SW` pieces at (10.15 to 11.85, 193.75 to 194.95), including the 0.20 mm one the DRC names,
+after both `/E6_SW` closures had been "dropped"; the board it was handed carries none of them. The cause is one
+line: `BOARD.Add` puts a new track at the FRONT of the track list (measured on the box: the added item is at
+index 0 and not at -1), and `list(b.GetTracks())[_n_before:]` therefore named the OLDEST n tracks as the
+closure's own. So a refused closure ("taken back off") removed old copper and left its own pieces, and the
+drop-back dropped old copper, saw the count it would see, and restored everything, which is exactly what the
+19 September A44 walk read as "no closure owns it" ten drops in a row. **The pieces laid since are the tracks
+whose uuid was not there before the emit**, at both sites; one parse rule and the API fact pinned where pcbnew
+is. The drop-back has never once removed a closure since it was written on 19 September, and every group it
+refused as innocent is owed a re-read on the next chain.
+
+**Addendum, 02:22 CEST: measured on the fixed tool, same board, same group** (`/root/pa_probe/g3`): 16 closures laid,
+the refilled board reads hard 1 at the same item, the drop-back drops the ONE `/E6_SW` closure the DRC names,
+reads **hard 1 -> 0**, and keeps 15 of the 16: `closed 15 of 17` where the same tool read `closed 0` after the
+guard an hour earlier. One DRC instead of seventeen, and the pieces that came off were the closure's own.
+
