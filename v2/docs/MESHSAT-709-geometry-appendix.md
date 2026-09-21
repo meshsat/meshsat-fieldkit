@@ -18690,3 +18690,33 @@ charger sense net and it is a generator item for the group, not a fence item.
 
 **Neither board is adopted and neither is adoptable**: A32 is 0 hard and 0 unrouted and both arms are open.
 What A101 proves is its own variable.
+
+### 32.364 addendum, 21 September 2026 23:46 CEST: E39 is read, and board E has no close approach left on its declared list
+
+**E39's finished round-1 board, sha `e0200806837c340b`, read read-only with the sha printed before and after
+while its via_costs round routes.** E39 is **E38 plus the measured PV_P skew and nothing else** (the one line
+of `19ccdcd9`), both ran their full pass budget, so this is a one-variable pair.
+
+| | E37 (no fence) | E38 (fence) | **E39 (fence + measured skew)** |
+|---|---|---|---|
+| hard set | 0 | 0 | **0** |
+| open connections | 4 | 5 | **6** |
+| vias | 230 | 254 | **219** |
+| ANA-001 `sensitive_nodes` | **FAIL** at 0.433 mm | PASS 3 of 3 | **PASS 3 of 3** |
+| `sense_reach`, declared list | 23 pairs inside 0.50 mm | 2 pairs, tightest 0.443 | **ZERO pairs** |
+
+**The fence plus the skew leaves board E with no close approach at all on its declared list**, where the fence
+alone left two. Its six opens are `/DC_P`, `/FAN1_TACH`, `/TRK_BOOST2`, `/TRK_VC`, `/USB_E6_N` and
+`/USB_E6_P`, and **its closers took none of them**, so the router's count and the finished count agree.
+
+**With the gate drives named (decision 45) four pairs remain**, every one `TRK_CSN` against a net the
+declaration does not carry, tightest 0.304 mm, with nothing locked to grow a fence from on that net. That is
+decision 45's question and not ANA-001's, and nothing is changed on it here.
+
+**Named rather than concluded, because it is the next real item:** `via_current` on this board reads FAIL with
+**9 of 10 measured rails over and 55 barrels over**, while `dc_drop` PASSES of 13 with 8 density missed. Two
+of its notes are the `crosses_layers` case working (`CELL+` at 18.00 A and `PV_IN` at 6.25 A each have no via
+because neither ever changes layer, so neither is a site). Board E's next item is that barrel list read site
+by site, not another fence.
+
+**E17 stays board E's phase**: E39 is not adoptable at six open.
