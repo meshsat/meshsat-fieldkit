@@ -171,7 +171,7 @@ fault from one that reads low.
 | 2 | DC_P | 12.00 V (11.40 to 12.60) | Q1 | R19 |
 | 3 | HS_S | 12.00 V (11.40 to 12.60) | R19 | Q7 |
 | 4 | DC_HS | 12.00 V (11.40 to 12.60) | Q7 | L2 |
-| 5 | TRK_OUT | 15.10 V (14.34 to 15.86) | Q6 | U4 |
+| 5 | TRK_OUT | 15.10 V (14.34 to 15.86) | Q6 | Q2 |
 
 **Decide before powering: the declared source is an inductor or a ferrite, which is a filter on an incoming feed on some boards and a converter's output on others.**
 
