@@ -17901,3 +17901,28 @@ pairs and board A's in a fraction**, so the fence on board A can be grown at a f
 free everywhere else. **A101, which pre-lays the twelve sense nets so the fence can be grown at all of them,
 is the arm that tests whether reaching them changes that**, and it routes now against A99R, one variable
 apart and both from HEAD.
+
+### 32.349 addendum, 18:22 CEST: the island pair is answered, and its control is board A's best finished board
+
+| | A100C, no island | A100, outlet island |
+|---|---|---|
+| router, cut at its cap | hard **9** (one knot), 10 open | hard 0, 11 open |
+| after the closers | hard 0, **2 open** (sha `0badef475c591153`) | hard 0, **4 open** (sha `91533df03365e604`) |
+| the two that remain | `/+5V_DEV`, `/PA_ISNS_N` | those two plus `/PA_SW_EN`, `/S2_OUT` |
+| ANA-001 | FAIL **15 of 34** | FAIL **16 of 34** |
+| pairs inside 0.50 mm | 107 | 109 |
+
+**A100C's two open is board A's best finished number anywhere** (A93 and A99C read three), and the two are
+exactly board A's floor: `/+5V_DEV`, which is decision 35's 99.78 mm run, and `/PA_ISNS_N`, item 7's
+undeclared pair at 55.42 mm. **So the island costs two connections through the finish and one ANA-001 row on
+a one-variable pair, and it does not pay at the router or at the finish.** What it buys is at GENERATION and
+in the copper: `/+5V_DEV`'s pre-route pairs go five to two, and the outlet cluster's current runs in an F.Cu
+island and an In3 pour instead of the router's tracks, which is PI-001's and PI-003's subject rather than
+RTE-002's. The device rail is open once on both boards and is decision 35's run either way, zone to zone at
+93.86 mm with the island and track to via at 89.84 without it.
+
+**Both of today's board A pairs together**: the fence costs one connection and moves ANA-001's rows without
+moving its count; the island costs two connections and one row while turning the rail's copper into the shape
+the power rules want. **Neither is adopted** — the committed A32 is 0 hard and 0 unrouted and every one of
+these boards is open — and what stands between board A and a deliverable is those two floor nets, decision 47's
+pair gate, and the decisions the rails are held by.
