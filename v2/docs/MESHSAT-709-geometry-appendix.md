@@ -17315,3 +17315,35 @@ of which is a power layer on either board. Wiring it under A99 would make that a
 variables, which is the defect of 20 September in another costume. It is wired when a one-variable arm can
 measure it, and until then the trap it closes is the FIRST board to fence an inner plane layer, whose failure
 would read as a route that thrashes rather than as a polygon nobody removed.
+
+**Addendum, 21 September 2026 11:44 CEST: A98 read at A95's own pass, and board A's outlet cluster is an
+inner-layer island.** A98 is A95 plus the clamp barrel at D2 and its 18,000 s cap cuts it near pass 110 where
+A95 was cut at 103, so the two landings would differ in pass count as well as in the one variable. A copy of
+A98's session was taken at pass 103, the pass read from the router's own log in the same command and read
+again after the copy, both 103, and imported into a scratch tree: **hard 0, SEVENTEEN open of 274**, board sha
+fa7eaefbeb5c0182, 5,060 tracks, 1,110 vias, `/VBAT` and the three slot rails closed, `/+5V_DEV` open, and
+**`/VIN_RAW` is not among the seventeen** where A95 read it open at that same pass. That is the barrel's own
+net answering, which is what the arm asks. Seventeen against fifteen is NOT read as a cost: a mid-flight count
+is a sample, the two open sets are not the same set, and A92 moved from 13 to 16 between two of its own
+passes. The landing and its closers decide the rest.
+
+**The device rail's open pairs were counted again and there are FIVE of them, not ten**: the 07:08 entry
+counted the DRC's item list where the pairs are two-ended items. Only ONE is decision 35's, R100 pad 1 to the
+bank's own F.Cu zone at 99.78 mm with the mounting hole H7 0.87 mm inside its lane. The other four are local
+to the outlet cluster: U23 pad 4 to R100 pad 1 at 17.08 mm, U18 pad 17's via to R100 pad 1 at 17.16, C103 pad
+1 to R100 pad 1 at 8.47, and a via at (253.09, 123.86) to the rail's own track at 46.27 across the PD stage.
+
+**A band closes none of them and an island is a different question.** Every one of the four lanes carries
+another net's copper inside the straight line, down to five micrometres: the GND tracks, Q27's PD_VPWR pad at
+0.38 mm, the U23_OVLO divider at 0.48. A pour flows around what a band runs into, so the island was laid on a
+COPY and KiCad was asked which filled PIECE holds each site. **On F.Cu over x 232 to 250, y 43 to 88 it fills
+as ONE piece of 493.8 mm2 holding C103 pad 1, R100 pad 1 and U23 pad 4, with U18 pad 17 and its via OUTSIDE
+it**, and a rectangle sixty percent smaller gives the same three sites, so the front side is pinched there
+rather than clipped by the probe. **On In3.Cu the same rectangle fills as ONE piece of 724.7 mm2 holding FOUR
+of the five sites, U18 pad 17 among them.**
+
+So board A's next generator item is an In3 island over the outlet cluster, local copper of about 18 by 45 mm,
+and it is NOT decision 35: the ruling holds the one 83.5 mm run from the cluster to the bank and this closes
+the cluster to itself. It is **not applied and its cost is not measured**: a chain run owes the placed board's
+hard count, whether VBUS20's In3 union is still one piece (the refusal of 20 September), and what the router
+does with it. That is A100, launched after A99, so that each arm keeps one variable.
