@@ -17138,3 +17138,47 @@ the front layer, and held half a millimetre from every other net. In both the st
 pad and lays nothing, so the board is D32's again and the via beside U6 pin 20 was the only closure that run had.
 D34's item is therefore the ground pin's own via before the pre-lay, which is the fanout's refusal to read, or
 C21's seat; neither is applied.
+
+**Addendum, 10:25 CEST: E36 lands at six open with five of the tracker's gate drives closed, and the one
+instrument that reaches the router is refused at three pins.** E36's router ran its round to the end and its
+board is board E's best anywhere at the router: hard 0, SIX open of 94 (sha ff7aac9888cfcafa, read in a scratch
+copy while its remedy round runs), against E34's cut at ten and E35's at eleven. The six are `/CELL_MON`,
+`/DC_P`, `/TRK_BOOST2`, `/U3_VCAP`, `/USB_E6_N`, `/USB_E6_P`; `/VBAT`, `/+5V_DEV` and the three slot rails are
+closed. E34, its one-variable control, left SIX of U5's own gate drives open and E36 leaves one, so the derived
+barrel sites and the three front-side source islands gave the tracker back about five connections, which is
+E23's finding read from the other side: the keep-away took the room around that controller and the islands
+returned it. Part of the difference is pass count, because E34 and E35 were cuts and E36 was not; which nets are
+open is not a pass count, and five named pins closing is a set difference.
+
+**And the board loses ANA-001 by sixty-seven micrometres, with every switching net already pinned.**
+`sensitive_nodes` on that landed board reads FAIL 1 of 3: `TRK_CSP` runs **0.433 mm** from `TRK_SW1` where its
+own list asks 0.50, over 7.68 mm of copper, every millimetre of it outside the courtyard of the part that
+carries both. `TRK_CSN` holds at 0.531 and `WATER_SENSE` at 1.110. Board E pins all six of its declared
+switching nets and the sense pair at a half-millimetre floor, which is E23's configuration exactly, so this is
+not the declaration and not the pre-lay: the pre-lay locks the copper IT lays and the ROUTER then added
+unlocked copper to `TRK_SW1`, a net that is already pinned. E21 wrote that caveat in its own words and this is
+the first arm where the router's additions did not stay behind the locked runs.
+
+**The class clearance was measured before it was proposed and the board refuses it at its own pins.** A DSN
+class-pair rule is ignored by Freerouting 1.9.0 (measured on E17), so the only instrument that reaches the
+router is a CLASS clearance, which is not per-pair: it holds the class away from every other net. Asked of
+board E's placed board, the three SENSE nets' tightest neighbours are their own IC pins: `WATER_SENSE` at
+U10 pad 38 is **0.200 mm** from pad 37, `TRK_CSN` at U5 pad 2 is **0.250 mm** from pad 1, `TRK_CSP` at U5 pad 3
+is 0.250 from pad 4. The 18 September reading that a 0.50 mm keep-away costs this board no escape was measured
+SENSE against SWITCHING, where the tightest gap is 0.550 mm at R6 and R7, and it is true of the per-pair rule
+the router ignores and false of the class the router reads. So board A's refusal at U16 pin 16 is board E's at
+three pins, for the same reason, and no class clearance is written.
+
+What is left is a wire keep-out grown from the locked sense copper's own geometry on the routing layers, which
+Freerouting does obey, built to keep off the pads' own escape fans (5 September: a keep-out over pads whose net
+must leave on another layer leaves that net open, and a keep-out edge touching a pre-placed via does the same).
+That is E38's shape and it is one variable against E36.
+
+**The islands and their barrels on the landed board.** The router slices `VIN_RAW`'s front island (13.16 to
+9.49 mm2 under two foreign tracks) and takes 0.32 mm2 off `DC_HS`'s and 5.2 mm2 off the `CELL_F` pour, while
+`DC_F`'s and `TRK_OUT`'s islands come through untouched at 9.32 mm2, which is what the pass-28 and pass-33
+snapshots said and the landing confirms. Every barrel inside an island reads at or under 1.40 of its wall, the
+worst a 0.5 mm hole at 1.82 A against 1.30. **The sites that are over are the router's own single vias**: three
+0.4 mm barrels carrying 6.16 A each at 5.57 times their wall on `TRK_OUT`, and 0.25 and 0.3 mm router vias at
+1.98 and 2.06. So the E38 fence is not owed by the islands: they hold their current, and what is over is
+`via_parallel`'s case in the finish and `cluster(skew=)`'s at the uneven rows.
