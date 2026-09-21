@@ -7,13 +7,12 @@ One line per decision that is still open, what it holds up, and where its eviden
 v2/docs/OWNER-DECISIONS-2026-09-11.md and this page is generated from the same registry the readiness table
 is, so the pair counts below are the ones the gates use.
 
-**14 decisions are open and they hold 74 rule-board pairs of the 333 the set is judged on.** A pair held by a
+**13 decisions are open and they hold 56 rule-board pairs of the 333 the set is judged on.** A pair held by a
 decision is not a defect in the board: it is a question nobody has answered, and until it is answered the
 rule can be neither passed nor failed.
 
 | # | pairs | what is being decided | holds | boards | asked |
 |---|---:|---|---|---|---|
-| **39** | 18 | the criterion a break in a signal's reference is judged against | RET-001, RET-003, SI-001 | A, B, C, D, E, P | 2026-09-17 |
 | **43** | 14 | board B's route has resisted every lever this project can apply and the two that remain are architectural | EMC-001, GND-001, PAIR-001, PI-002, PI-003, PLC-002, PLN-001, RET-002, RET-004, RF-001, RTE-001, SCH-003, STK-001, VIA-001 | B | 2026-09-20 |
 | **29** | 7 | board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked | GND-002, INT-002 | A, B, C, D, E, P | 2026-09-16 |
 | **30** | 6 | ZEROIZE is a switch wired to nothing that can act on it | SCH-004 | A, B, C, D, E, P | 2026-09-16 |
@@ -43,7 +42,7 @@ the longest is 172.9 mm of SCL
 
 | rule | | boards | result today |
 |---|---|---|---|
-| RET-001 | a continuous adjacent return path | C | INCONCLUSIVE |
+| RET-001 | a continuous adjacent return path | C | FAIL |
 | RET-002 | plane-adjacency screen | C | FAIL |
 | STK-002 | a layer count is decided and costed | C | INCONCLUSIVE |
 
@@ -399,40 +398,6 @@ correction of 16 September.
 | SUP-001 | every placed part is buyable | D | INCONCLUSIVE |
 
 
-### Decision 39: the criterion a break in a signal's reference is judged against
-
-**The question:** rule this project's own per-class tolerances, derive them per net from a declared edge
-rate, or hold the rule until a standard publishes a number
-
-**Recommended:** rule the project's criterion, and read the re-measurement below before deciding how loose:
-of the 32 nets failing today TWO are inside a factor of 1.1 of their limit and FOURTEEN are inside 1.5, so
-the number decides about half of them (the earlier reading, one net inside 1.1, was taken before board B was
-adopted)
-
-**Measured:** RE-MEASURED 18 September 2026 WITH BOARD B IN THE SET, AND THE ANSWER CHANGED. The 17 September
-reading below was taken before B21 was adopted, and board B's eleven failures are all marginal: of the 32
-failing nets across the set, TWO are inside a factor of 1.1 of their own limit, FOURTEEN are inside 1.5,
-TWENTY-ONE are inside 2.0, and seven are over 3.0. The tight end is board B's controlled-impedance pairs
-(USB_E6_N 10.5 mm of uncovered run against a 10.0 mm limit, HDMI2_D1_N 10.9, SWP3_C_N 14.0 against 12.7, six
-USB nets between 11.4 and 13.9) and board C's EPD_CS at 66.1 against 58.5; the loose end is board C's panel
-USB pair at 5.4 times its limit and board P's SMBus at 3.4. So the criterion is no longer a number that
-decides almost nothing: a criterion 50 percent looser than today's clears fourteen of the thirty-two, and one
-10 percent looser clears two. What has not changed is that the rule needs an authority at all, which is what
-this decision is about. THE 17 SEPTEMBER READING, kept because it is the one the recommendation was written
-against: across the set 32 signal nets fail this rule and exactly ONE sits inside a factor of 1.1 of its
-limit. So the choice between this project's own per-class tolerances, a per-net figure derived from a
-declared edge rate, and holding the rule until a standard publishes a number, changes the verdict on ONE net
-of thirty-two. What it does change is whether the rule has an authority behind it at all, which is why it is
-asked: RET-001, RET-003 and SI-001 are the three rules this decision holds and all three carry maturity
-SOURCE_UNVERIFIED for exactly that reason.
-
-| rule | | boards | result today |
-|---|---|---|---|
-| RET-001 | a continuous adjacent return path | A, B, C, D, E, P | INCONCLUSIVE |
-| RET-003 | return transition at a reference change | A, B, C, D, E, P | INCONCLUSIVE, not computed |
-| SI-001 | transmission-line classification | A, B, C, D, E, P | INCONCLUSIVE |
-
-
 ### Decision 40: the pack's cell-level protection is one firmware-configured device, and the rule asks for hardware independent of any software
 
 **The question:** add a protector that needs no firmware (a dedicated cell protector IC on the taps, or the
@@ -610,6 +575,7 @@ rule it has. None of them is a failure of board B's design and none can be judge
 | 33 | the mezzanine 5 V rail is losing nearly five percent and two of its three numbers were never anybody's requirement | LEAVE THE SPLIT AS DECLARED: board A four points of the codec's six percent and board D two. Both boards meet their own share on every run, the cross-board contract adds them up and passes, and the six percent total is not this project's number at all but the PCM2912A's own Recommended Operating Conditions, VBUS 4.35 V minimum. The only thing that would reopen it is a measured drop moving past a board's share on a routed board. |
 | 34 | the kit has never had a written operating envelope and four rules resolve against nothing | ADOPT v2/docs/OPERATING-ENVELOPE.md section 4 AS THE DESIGN ENVELOPE, and section 6's first row as the transient level. In use -20 to +40 C ambient with its three declared carve-outs (the pack warmed below -10 C before charge, the e-paper degraded below -15 C, the reduced mode above +35 C); storage -20 to +45 C for three months and -20 to +25 C for a year at the pack's ex-factory charge; non-condensing, with the closed case Peli's IP67 and the face designed to an IP67-class construction that is never labelled IP68 and carries no rating until the bench procedure of appendix 32.34 has run. Electrostatic discharge is IEC 61000-4-2 level 4, 8 kV contact and 15 kV air, which is the level decision 31 needs to choose a clamp against and is traceable to the USBLC6-2SC6 this design already buys. The electrical fast transient row is recorded as NOT A REQUIREMENT of this project, because nothing in this tree is a source for it. AND ISO-001 IS JUDGED AGAINST ECSS-Q-ST-70-12C TABLE 13-3, per voltage band, per layer, on the column the board's own coating selects: that table is stated for an as-manufactured rigid PCB without an altitude derating and without a pollution degree, so the two numbers ISO-001 was said to be waiting for are not needed to judge it. The altitude, the vibration and shock severities and the service life stay OPEN for the rules that genuinely need them and are not invented here. |
 | 38 | board B's two pair classes are 0.100 mm and its own minimum is 0.127, and the fabricator's floor is 0.09 | answered by the copper before it was ruled (18 September 2026): B21's project file carries every class at or above the board's own 0.127 mm, class_floor reads PASS on 5 classes with none below the floor, and the impedance gate's pair geometry is unchanged, which is the recommendation as it stood; nothing was lowered |
+| 39 | the criterion a break in a signal's reference is judged against | RULE THIS PROJECT'S OWN PER-CLASS CRITERION AS A DECLARED CALIBRATION, WITH THE NUMBERS EXACTLY AS THEY STAND. Not one tolerance is moved by this ruling: a limit moved to make a rule pass is an exemption wearing a number, and a criterion 50 percent looser would clear fourteen of the thirty-two failing nets, which is precisely why it is not touched. What changes is that the rule is allowed to DECIDE: signal_class.py already carries 413 per-net declarations across seven boards, each with its basis, and ECSS-E-HB-20-07A section 6.1.2.5.2 is cited as the qualitative authority for the principle while the numbers are recorded as this project's own calibration and are labelled as such wherever they appear. The readings this releases are already on disk: RET-001 reads PASS on A, D and E, FAIL on B (1 net of 658), C (15 of 127) and P (5 of 29), and has nothing to judge on E5; RET-003 reads FAIL on board A (13 vias changing to a power reference with no capacitor) and has nothing to judge elsewhere; SI-001 stays INCONCLUSIVE and now says why in its own words, 60 nets on board A and 380 on board B carrying no declared edge rate, which is a session item and not a standards wait. |
 | 44 | board D's underside packs nine parts inside the codec's own pin field, and one of its ground pins cannot reach the plane | ACCEPT FOR THIS REVISION AND KEEP D12. The defect costs ONE connection on a candidate board while board D's committed phase is already 0 hard and 0 unrouted, and the fix was built and measured over seven chain runs before being reverted: stepping a back-side region around a front-side fanned IC reads escapes 71/4 against 68/7 and then the region fit refuses the placement, three regions over by up to 9.1 mm and five by up to 29.0 once the FIXED parts inside each rectangle are respected. Board D's rectangles are on the never-auto floor under owner ruling 13, so the alternative is not available to the session in any case. If board D is re-cut for another reason, the rectangle move goes in that commit. |
 | 45 | ANA-001 keeps a sense line away from the nets a board DECLARES as switching, and on both boards that declare any, the tightest approach of all is a gate drive the declaration leaves out | LEAVE ANA-001's DENOMINATOR AS EACH BOARD DECLARES IT AND REPORT THE GATE-DRIVE ROWS BESIDE IT. switch_list.py excludes a gate by PIN FUNCTION because a gate drives the switching node and is not the switching copper, which is the right predicate for the question that tool asks. The clearance this rule asks was chosen for a switching node's dV/dt into a current-sense pair and not for a gate driver's, so widening the denominator would fail boards A and E on placements already cut against a number nobody has set. sense_reach.py measures and prints the rows instead: board A reads 88 close approaches with the gate drives named against 64 on the declaration alone, and board E 23 against nine. |
 | 46 | board A's five converter stages drive their FETs from 13.5 to 28.9 mm away, and no placement lever this project has can shorten them | ACCEPT THE GATE-DRIVE LENGTHS FOR THIS REVISION AND CARRY THE FINDING TO THE NEXT. Every LM5176 stage drives its FETs from 13.5 to 28.9 mm and all three cheap levers were measured and refused: the seats do not exist (U13 and U2 have 0.08 mm to the south), the FETs are already as close as the packing allows (Q5's courtyard is 3.2 mm from U2's and its gate drive is still 17.17 mm, because the path crosses both part bodies), and the rotation is already the best of four (U2 sum 462.4 mm where it sits against 509.8, 512.2 and 475.2). So the length is a property of the packages and the topology, not of the placement. What acceptance means in practice: the opens it causes are NAMED rather than closed, and /POE_LDRV1 at 13.51 mm is one of the four opens on board A's best finished arm. |

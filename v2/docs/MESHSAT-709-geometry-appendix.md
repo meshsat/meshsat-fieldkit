@@ -18033,3 +18033,68 @@ block it. The altitude, the vibration and shock severities and the service life 
 genuinely need them and were not invented here. The remedy is a wider clearance on the 36 V input class and a
 re-route, owned by the session, and the class width is on the never-auto floor, so the EDIT is deliberate
 even though the JUDGEMENT is not the owner's.
+
+### 32.352, 21 September 2026 19:34 CEST: decision 39's follow-through, and what the ruling actually decided
+
+The ruling of 19:18 (decision 39: **rule this project's own per-class return-path criterion as a DECLARED
+CALIBRATION, with the numbers exactly as they stand**) is carried into the three rules it claims. The
+prediction was written before the change and is compared with the measurement afterwards, which is the point
+of writing it first.
+
+**What moved.** In `tools/pcb_rules.yaml`, RET-001, RET-003 and SI-001 gained a `false_positive_analysis`,
+because the registry refuses an ENFORCED BLOCKER without one. In `tools/pcb_rules_coverage.yaml` the three
+went **`maturity: SOURCE_UNVERIFIED` to `ENFORCED`** with **`gap_category: GENERATED_ONLY`**, which is the
+combination ANA-001 and RF-001 already carry: the rule is enforced against a number, and the page keeps
+saying in its own words that the number is OURS and no document states one. Setting the gap to NONE would
+have claimed an authority the ruling does not create. Each entry carries `_maturity_ruled` with its reversal.
+
+**The remediations were re-pointed, which is most of the ruling's value.** RET-001's action was *obtain an
+authoritative basis for the per-class tolerance*, owned by SESSION on a `VENDOR_OR_STANDARD_WAIT` and
+depending on SI-001; the source half is closed by the ruling, so what is left is the DECLARATION of the
+remaining boards' `signal_classes` tables the way board E's is, SEQUENTIAL, depending on nothing. RET-003's
+was *find a published figure for how far a plane-stitching capacitor may sit from the transition it serves*;
+what is left is board A's own thirteen vias. **And SI-001's owner was wrong and the record already carried
+the evidence that it was wrong**: its action waited on VENDOR while its own note records that the RP2040
+datasheet, two vendors' 74LVC datasheets and TI SCAA082A were all read and none publishes an edge rate. The
+documents were the wait and they have been read. It is `owner: LAB, execution: HARDWARE` now, an oscilloscope
+at bring-up, and it leaves the standards-wait pool for the one pool that is honest about when it can start. A
+direct question to a vendor is the only shortcut and nobody has asked one.
+
+**The measured effect, against the prediction.** Readiness **59.8 to 60.7 percent of 333** (199/43/91 to
+202/46/85). Rule-set fingerprint unchanged at `ff8151db3576437b`, checked rather than assumed, so nothing was
+staled and no re-take is owed.
+
+| rule | predicted | measured |
+|---|---|---|
+| RET-001 | PASS on A, D, E; FAIL on B, C, P | PASS on **A** (197), **D** (127), **E** (76); FAIL on **C** (15 of 127) and **P** (5 of 29) |
+| RET-001 on B | FAIL, 1 net of 658 | **INCONCLUSIVE**, and the prediction was wrong |
+| RET-003 | FAIL on A, 13 vias with no capacitor | FAIL on **A**: `plane_change_to_power 14, without_capacitor 13`, the rest INCONCLUSIVE for want of such a transition |
+| SI-001 | stays INCONCLUSIVE and says why in its own words | INCONCLUSIVE on all seven, naming 60 nets on A and 380 on B with no declared edge |
+
+**The one wrong prediction is the informative one.** Board B's RET-001 does not read FAIL on one net of 658:
+that number came from a reading taken on B's own copper, and the rule DECLINES on board B today because the
+board this tree holds for that phase is not routed (416 unrouted). A routed-board rule on an unrouted board
+is INCONCLUSIVE, which is the 20 September correction working; the 1-of-658 number is a measurement of a
+board B that will exist again, not of the one on disk. **So the ruling bought three PASS rows and three FAIL
+rows and it bought no board anything**: what it removed is a source question that had been standing in front
+of six real readings.
+
+**What this does NOT settle, said plainly.** The criterion is still ours. A published figure would still be
+better than a declared calibration, and if one is ever found and disagrees, decision 39 is reopened by
+setting its status to `reopened` and putting the three maturities back to `SOURCE_UNVERIFIED`. What has
+changed is that the absence of that figure no longer hides board A's thirteen uncapacitored transitions and
+board C's and board P's failing nets behind the word INCONCLUSIVE.
+
+**AND THE RULING IMMEDIATELY MADE A SENTENCE IN THE COVERAGE MAP FALSE, which is the useful part.** RET-001's
+`_shared_verdict_why` read *the sharing is harmless today because this rule's maturity is SOURCE_UNVERIFIED,
+so its verdict is never read*. It is read now. RET-001 and RET-002 are decided by ONE verdict,
+`intent_return_path`, so **the three PASS rows this ruling bought are three boards where the readiness page
+carries two PASS rows for one measurement**, and where the verdict declines it declines twice. RET-002's own
+note predicted exactly this in advance: *when RET-001 gains an authority and starts being read, the two will
+need separate counts, because a net can pass the screen under a criterion that is itself wrong.* The sentence
+is corrected rather than left standing, the separation (`intent_checks.py` writing a verdict per rule) is
+RET-001's own remediation item, and the cost is stated on the page instead of being discovered later. **This
+is the percentage measuring the instrument again, and counted rather than asserted**: RET-001 and RET-002
+agree row for row on all six boards that carry them (A PASS, B INCONCLUSIVE, C FAIL, D PASS, E PASS, P FAIL;
+board E5 carries neither), so **six of the 333 pairs, 1.8 percent, are the second reading of one
+measurement**. Saying so is worth more than the percentage it moves.

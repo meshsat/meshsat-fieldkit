@@ -7,18 +7,18 @@ Every pair that is not a current PASS, classified. Generated from tools/pcb_deci
 map's maturity and each deciding verdict: a decision that claims a pair wins over everything else, because
 the ruling is the action that moves it, and the measurement is reported beside it rather than lost.
 
-**134 open pair(s)** over 7 board(s). **43 are measured failures** (a tool looked and the board failed), which are **37 distinct readings**, and **17 of those are claimed by an open owner decision**.
+**131 open pair(s)** over 7 board(s). **46 are measured failures** (a tool looked and the board failed), which are **38 distinct readings**, and **18 of those are claimed by an open owner decision**.
 
 | waiting on | pairs | what it means |
 |---|---:|---|
-| `DECISION` | 62 | an owner decision by name |
+| `DECISION` | 46 | an owner decision by name |
 | `DECISION_UNCLAIMED` | 18 | a rule that says a decision is open while no decision claims it |
 | `AUTHORITY` | 3 | an authority this project does not have |
 | `MISSING_INPUT` | 15 | an input the reading declared absent |
-| `MEASURED_FAILURE` | 26 | the tool looked and the board failed |
+| `MEASURED_FAILURE` | 28 | the tool looked and the board failed |
 | `VENDOR_WAIT` | 2 | a fabricator or a standards body, and nobody here |
 | `OWNER_WORK` | 7 | work only the owner or the ordering session can do |
-| `NOT_JUDGED` | 1 | not judged, for the reason the reading gives |
+| `NOT_JUDGED` | 12 | not judged, for the reason the reading gives |
 
 A pair is what a BOARD has to satisfy, so the table counts pairs; these rules are decided by a verdict
 written ONCE for the whole set, so their rows are one reading seen on every board and not that many separate
@@ -30,17 +30,17 @@ things to fix.
 
 | board | open | of which measured | decision-bound | authority | missing input | not judged |
 |---|---:|---:|---:|---:|---:|---:|
-| A | 28 | 14 | 12 | 1 | 4 | 0 |
-| B | 38 | 6 | 23 | 1 | 5 | 1 |
-| C | 12 | 3 | 10 | 0 | 0 | 0 |
-| D | 17 | 4 | 11 | 1 | 2 | 0 |
-| E | 20 | 7 | 11 | 0 | 4 | 0 |
+| A | 27 | 15 | 9 | 1 | 4 | 1 |
+| B | 38 | 6 | 20 | 1 | 5 | 4 |
+| C | 12 | 4 | 8 | 0 | 0 | 2 |
+| D | 16 | 4 | 8 | 1 | 2 | 2 |
+| E | 19 | 7 | 8 | 0 | 4 | 2 |
 | E5 | 5 | 3 | 3 | 0 | 0 | 0 |
-| P | 14 | 6 | 10 | 0 | 0 | 0 |
+| P | 14 | 7 | 8 | 0 | 0 | 1 |
 
 ## Readings owed
 
-Of the 89 open pairs with a reading beside them, **0 are decided by a reading taken under a tool that has
+Of the 103 open pairs with a reading beside them, **0 are decided by a reading taken under a tool that has
 CHANGED since**. A tool change moves no rule-set fingerprint and no per-rule digest, so nothing else on these
 pages can say it. It is an upper bound, because a tool file moves for a comment as readily as for a
 criterion, and it decides nothing: it says the reading is owed. Re-take with retake_gate.sh or a sweep.
@@ -66,7 +66,7 @@ holding a number, not a question about a number.
 
 | decision | pairs held | of which measured | rules | boards |
 |---:|---:|---:|---|---|
-| 27 | 3 | 1 | RET-001, RET-002, STK-002 | C |
+| 27 | 3 | 2 | RET-001, RET-002, STK-002 | C |
 | 28 | 4 | 3 | RET-002, RTE-001, STK-001, STK-002 | P |
 | 29 | 5 | 0 | GND-002, INT-002 | A B C E |
 | 31 | 6 | 3 | DOC-001, TRN-001 | A D E |
@@ -74,22 +74,18 @@ holding a number, not a question about a number.
 | 35 | 2 | 2 | PI-001 | A E |
 | 36 | 2 | 2 | INT-001 | A B |
 | 37 | 2 | 0 | CMP-002, SUP-001 | D |
-| 39 | 16 | 0 | RET-001, RET-003, SI-001 | A B C D E P |
 | 40 | 1 | 1 | BAT-001 | P |
 | 41 | 3 | 1 | DOC-002 | C E5 P |
 | 42 | 1 | 1 | DEC-001 | A |
 | 43 | 14 | 0 | EMC-001, GND-001, PAIR-001, PI-002, PI-003, PLC-002, PLN-001, RET-002, RET-004, RF-001, RTE-001, SCH-003, STK-001, VIA-001 | B |
 
-## DECISION (62): an owner decision by name
+## DECISION (46): an owner decision by name
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
 | `DEC-001` | A | FAIL | decision 42: a decoupling capacitor cannot be both within 3 mm of a fine-pitch pin and outside that part's escape fan |
 | `PI-001` | A | FAIL | decision 35: which published current-rating model this project's copper is judged against |
 | `GND-002` | A | INCONCLUSIVE | decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked |
-| `RET-001` | A | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
-| `RET-003` | A | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
-| `SI-001` | A | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
 | `INT-001` | A | FAIL | decision 36: the intra-pair tolerance a differential pair is judged against |
 | `TRN-001` | A | FAIL | decision 31: conductors leave the case and meet a chip with nothing in between, or only through an active part |
 | `DOC-001` | A | INCONCLUSIVE | decision 31: conductors leave the case and meet a chip with nothing in between, or only through an active part |
@@ -99,12 +95,9 @@ holding a number, not a question about a number.
 | `GND-001` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `GND-002` | B | INCONCLUSIVE | decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked |
 | `STK-001` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
-| `RET-001` | B | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
 | `RET-002` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
-| `RET-003` | B | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
 | `RET-004` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `PAIR-001` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
-| `SI-001` | B | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
 | `RF-001` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `INT-001` | B | FAIL | decision 36: the intra-pair tolerance a differential pair is judged against |
 | `INT-002` | B | INCONCLUSIVE | decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked |
@@ -115,34 +108,24 @@ holding a number, not a question about a number.
 | `EMC-001` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `GND-002` | C | INCONCLUSIVE | decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked |
 | `STK-002` | C | INCONCLUSIVE | decision 27: the four-layer boards cannot carry a plane under their back-side signals as built |
-| `RET-001` | C | INCONCLUSIVE | decision 27: the four-layer boards cannot carry a plane under their back-side signals as built |
+| `RET-001` | C | FAIL | decision 27: the four-layer boards cannot carry a plane under their back-side signals as built |
 | `RET-002` | C | FAIL | decision 27: the four-layer boards cannot carry a plane under their back-side signals as built |
-| `RET-003` | C | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
 | `RET-004` | C | FAIL | decision 32: board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper |
-| `SI-001` | C | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
 | `DOC-002` | C | INCONCLUSIVE | decision 41: the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002 |
 | `CMP-002` | D | INCONCLUSIVE | decision 37: board D asks for two crystals that do not exist and the part it was certified against is four times the frequency |
 | `SUP-001` | D | INCONCLUSIVE | decision 37: board D asks for two crystals that do not exist and the part it was certified against is four times the frequency |
-| `RET-001` | D | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
-| `RET-003` | D | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
 | `RET-004` | D | FAIL | decision 32: board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper |
-| `SI-001` | D | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
 | `TRN-001` | D | FAIL | decision 31: conductors leave the case and meet a chip with nothing in between, or only through an active part |
 | `DOC-001` | D | INCONCLUSIVE | decision 31: conductors leave the case and meet a chip with nothing in between, or only through an active part |
 | `PI-001` | E | FAIL | decision 35: which published current-rating model this project's copper is judged against |
 | `GND-002` | E | INCONCLUSIVE | decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked |
-| `RET-001` | E | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
-| `RET-003` | E | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
 | `RET-004` | E | FAIL | decision 32: board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper |
-| `SI-001` | E | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
 | `TRN-001` | E | FAIL | decision 31: conductors leave the case and meet a chip with nothing in between, or only through an active part |
 | `DOC-001` | E | INCONCLUSIVE | decision 31: conductors leave the case and meet a chip with nothing in between, or only through an active part |
 | `DOC-002` | E5 | FAIL | decision 41: the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002 |
 | `STK-001` | P | FAIL | decision 28: board P cannot hold the return-path rule on two layers and the ruled P5 does not route |
 | `STK-002` | P | INCONCLUSIVE | decision 28: board P cannot hold the return-path rule on two layers and the ruled P5 does not route |
-| `RET-001` | P | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
 | `RET-002` | P | FAIL | decision 28: board P cannot hold the return-path rule on two layers and the ruled P5 does not route |
-| `SI-001` | P | INCONCLUSIVE | decision 39: the criterion a break in a signal's reference is judged against |
 | `RTE-001` | P | FAIL | decision 28: board P cannot hold the return-path rule on two layers and the ruled P5 does not route |
 | `BAT-001` | P | FAIL | decision 40: the pack's cell-level protection is one firmware-configured device, and the rule asks for hardware independent of any software |
 | `DOC-002` | P | INCONCLUSIVE | decision 41: the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002 |
@@ -198,13 +181,14 @@ holding a number, not a question about a number.
 | `DFM-001` | E | INCONCLUSIVE | the folder judged here is meshsat-pcb-e-revA-E9 and this board declares E17, so its properties are a reading of a board this set is not building |
 | `DOC-002` | E | INCONCLUSIVE | board E declares E17 and the order set holds E6: the note beside those folders describes a board this project is not building |
 
-## MEASURED_FAILURE (26): the tool looked and the board failed
+## MEASURED_FAILURE (28): the tool looked and the board failed
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
 | `SCH-002` | A | FAIL | netlist_board FAIL: {'agree': 1980, 'aliased_pins': 0, 'board_footprints': 400, 'board_only_inert': 0, 'fail': 60, 'netlist_refs': 428} |
 | `PI-002` | A | FAIL | dc_drop FAIL: {'density_missed': 13, 'met': 24, 'missed': 3, 'undeclared': 0} |
 | `PI-003` | A | FAIL | via_current FAIL: {'measured_rails': 27, 'no_layer_change': 0, 'no_via': 0, 'over': 8, 'over_barrels': 37, 'rails': 27} |
+| `RET-003` | A | FAIL | return_stitch FAIL: {'plane_change_to_power': 14, 'slow': 192, 'without_capacitor': 13} |
 | `RET-004` | A | FAIL | return_via FAIL: {'examined_same_reference': 0, 'examined_to_power': 10, 'exempt': 54, 'judged': 40, 'lacking': 32, 'same_plane': 27, 'sl |
 | `ANA-001` | A | FAIL | sensitive_nodes FAIL: {'declared': 34, 'fail': 25, 'measured': 10} |
 | `RF-001` | A | FAIL | rf_line FAIL: {'judged': 11, 'missed': 11} |
@@ -227,6 +211,7 @@ holding a number, not a question about a number.
 | `STK-001` | E5 | FAIL | stackup_gate FAIL: {'compared': 8, 'copper_layers': 2, 'disagreements': 1} |
 | `OUT-001` | E5 | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `PI-001` | P | FAIL | dc_density FAIL: {'met': 3, 'missed': 1, 'undeclared': 0} |
+| `RET-001` | P | FAIL | intent_return_path FAIL: {'fail': 5, 'pass': 24} |
 | `OUT-001` | P | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 
 ## VENDOR_WAIT (2): a fabricator or a standards body, and nobody here
@@ -248,9 +233,20 @@ holding a number, not a question about a number.
 | `DFA-001` | E | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 | `DFA-001` | P | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 
-## NOT_JUDGED (1): not judged, for the reason the reading gives
+## NOT_JUDGED (12): not judged, for the reason the reading gives
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
+| `SI-001` | A | INCONCLUSIVE | edge_length INCONCLUSIVE: every signal net's routed length against the critical length its own class implies, and a net past it is asked whether it is impedance-controlled, series-termin |
+| `RET-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
+| `RET-003` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
+| `SI-001` | B | INCONCLUSIVE | edge_length INCONCLUSIVE: every signal net's routed length against the critical length its own class implies, and a net past it is asked whether it is impedance-controlled, series-termin |
 | `ISO-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
+| `RET-003` | C | INCONCLUSIVE | return_stitch INCONCLUSIVE: this board has no transition between two different reference nets, so RET-003 has nothing on it to judge |
+| `SI-001` | C | INCONCLUSIVE | edge_length INCONCLUSIVE: every signal net's routed length against the critical length its own class implies, and a net past it is asked whether it is impedance-controlled, series-termin |
+| `RET-003` | D | INCONCLUSIVE | return_stitch INCONCLUSIVE: this board has no transition between two different reference nets, so RET-003 has nothing on it to judge |
+| `SI-001` | D | INCONCLUSIVE | edge_length INCONCLUSIVE: every signal net's routed length against the critical length its own class implies, and a net past it is asked whether it is impedance-controlled, series-termin |
+| `RET-003` | E | INCONCLUSIVE | return_stitch INCONCLUSIVE: this board has no transition between two different reference nets, so RET-003 has nothing on it to judge |
+| `SI-001` | E | INCONCLUSIVE | edge_length INCONCLUSIVE: every signal net's routed length against the critical length its own class implies, and a net past it is asked whether it is impedance-controlled, series-termin |
+| `SI-001` | P | INCONCLUSIVE | edge_length INCONCLUSIVE: this board declares no rise_ns anywhere, and an edge nobody wrote down decides nothing |
 

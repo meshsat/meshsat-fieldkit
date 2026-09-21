@@ -861,7 +861,7 @@ discontinuities it crosses and the interface's own requirement, not from a singl
 | | ECSS-E-HB-20-07A, Electromagnetic compatibility handbook, clause 6.1.2.5.2 PCB design techniques: a clock on a layer adjacent to a solid, not split, ground or power plane; a slot or gap in that plane crossed by such a track as a source of common-mode current; and the lateral spread of the return current
 , ECSS Secretariat, ESA-ESTEC Requirements and Standards Division, 6.1.2.5.2 -- v2/vendor/standards/ecss-e-hb-20-07a-2012-09-05.md |
 | implementation | signal_class.py plus each board's signal_classes table, judged by intent_checks.py |
-| maturity | **SOURCE_UNVERIFIED** |  (at writing: OWNER_DECISION_REQUIRED)
+| maturity | **ENFORCED** |  (at writing: OWNER_DECISION_REQUIRED)
 | owner | OWNER |
 | waiver | by OWNER, scope one net class on one board, expires prototype EMC measurement |
 
@@ -959,7 +959,7 @@ stitching capacitor when they are different potentials, or no transition at all.
 | | ECSS-E-HB-20-07A, Electromagnetic compatibility handbook, clause 6.1.2.5.2 PCB design techniques: minimisation of changes of layer for clock tracks, and the reference plane under a fast track being solid and unsplit
 , ECSS Secretariat, ESA-ESTEC Requirements and Standards Division, 6.1.2.5.2 -- v2/vendor/standards/ecss-e-hb-20-07a-2012-09-05.md |
 | implementation | gen_pcb_a3.py In2 pours |
-| maturity | **SOURCE_UNVERIFIED** |  (at writing: OWNER_DECISION_REQUIRED)
+| maturity | **ENFORCED** |  (at writing: OWNER_DECISION_REQUIRED)
 | owner | OWNER |
 | waiver | by OWNER, scope one class of transition on one board, expires prototype EMC measurement |
 
@@ -1151,7 +1151,7 @@ rate or clock frequency.
 | | ECSS-E-HB-20-07A, Electromagnetic compatibility handbook, clauses 6.1.2.2 (the spectrum of a trapezoidal signal and its break points) and 6.1.2.3 (the worked example)
 , ECSS Secretariat, ESA-ESTEC Requirements and Standards Division, 6.1.2.2 and 6.1.2.3 -- v2/vendor/standards/ecss-e-hb-20-07a-2012-09-05.md |
 | implementation | signal_class.py declarations |
-| maturity | **SOURCE_UNVERIFIED** |  (at writing: UNASSESSED)
+| maturity | **ENFORCED** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by SESSION, scope one net class, expires prototype measurement |
 
