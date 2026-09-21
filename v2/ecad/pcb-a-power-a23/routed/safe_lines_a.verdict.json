@@ -20,7 +20,7 @@
   "board": "a",
   "netlist": {
    "path": "out/pcb-a-power.net",
-   "sha256_16": "222f889b8970e868"
+   "sha256_16": "a7d0b599f5912987"
   }
  },
  "missing_input": null,
@@ -38,9 +38,9 @@
  "tool": "safe_lines_a",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "df5c920a2abb0560"
+  "tools_tree_sha": "46c7aff86de49a4d"
  },
- "ts": "2026-09-21T00:00:04Z",
+ "ts": "2026-09-21T05:32:03Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {

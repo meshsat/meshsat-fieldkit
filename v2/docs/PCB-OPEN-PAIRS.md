@@ -222,7 +222,7 @@ holding a number, not a question about a number.
 | `OUT-001` | C | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `PI-003` | D | FAIL | via_current FAIL: {'measured_rails': 4, 'no_layer_change': 0, 'no_via': 0, 'over': 1, 'over_barrels': 2, 'rails': 4} |
 | `OUT-001` | D | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
-| `PI-003` | E | FAIL | via_current FAIL: {'measured_rails': 9, 'no_layer_change': 1, 'no_via': 3, 'over': 8, 'over_barrels': 30, 'rails': 11} |
+| `PI-003` | E | FAIL | via_current FAIL: {'measured_rails': 9, 'no_layer_change': 1, 'no_via': 3, 'over': 8, 'over_barrels': 31, 'rails': 11} |
 | `ANA-001` | E | FAIL | sensitive_nodes FAIL: {'declared': 3, 'fail': 2, 'measured': 3} |
 | `OUT-001` | E | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `STK-001` | E5 | FAIL | stackup_gate FAIL: {'compared': 8, 'copper_layers': 2, 'disagreements': 1} |

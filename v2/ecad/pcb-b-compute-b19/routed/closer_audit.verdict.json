@@ -30,9 +30,9 @@
  "tool": "closer_audit",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "df5c920a2abb0560"
+  "tools_tree_sha": "46c7aff86de49a4d"
  },
- "ts": "2026-09-21T00:05:43Z",
+ "ts": "2026-09-21T05:37:57Z",
  "verdict": "FAIL",
  "version": "unknown",
  "writer": {

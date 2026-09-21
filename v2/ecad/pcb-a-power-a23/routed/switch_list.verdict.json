@@ -30,11 +30,11 @@
   ],
   "intent": {
    "path": "out/pcb-a-power-intent.json",
-   "sha256_16": "b5defde923aed79d"
+   "sha256_16": "48270e4bb0447bb3"
   },
   "netlist": {
    "path": "out/pcb-a-power.net",
-   "sha256_16": "222f889b8970e868"
+   "sha256_16": "a7d0b599f5912987"
   }
  },
  "missing_input": null,
@@ -47,9 +47,9 @@
  "tool": "switch_list",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "df5c920a2abb0560"
+  "tools_tree_sha": "46c7aff86de49a4d"
  },
- "ts": "2026-09-21T00:00:02Z",
+ "ts": "2026-09-21T05:32:01Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {

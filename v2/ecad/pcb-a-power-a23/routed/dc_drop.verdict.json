@@ -9,7 +9,7 @@
  },
  "denominator": 27,
  "evidence": [
-  "MISSED CH_SRP on the voltage drop: 2.84% of 14.4 V",
+  "MISSED CH_SRP on the voltage drop: 2.85% of 14.4 V",
   "MISSED PD_VPWR on the voltage drop: 1.55% of 15.0 V",
   "MISSED PD_VBUS on the voltage drop: 5.58% of 15.0 V"
  ],
@@ -34,13 +34,13 @@
  "tool": "dc_drop",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "df5c920a2abb0560"
+  "tools_tree_sha": "46c7aff86de49a4d"
  },
- "ts": "2026-09-20T23:59:42Z",
+ "ts": "2026-09-21T05:31:40Z",
  "verdict": "FAIL",
  "version": "unknown",
  "writer": {
   "file": "dc_drop.py",
-  "sha16": "e2ed8aac14e6f3f3"
+  "sha16": "99937ee8deef38d8"
  }
 }
