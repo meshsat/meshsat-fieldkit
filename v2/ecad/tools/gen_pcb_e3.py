@@ -331,7 +331,14 @@ if _osx.environ.get("PLACE_CELLF_VIAS", "1") not in ("0", ""):
     # 1.809 A and shares it about two to one (skew 1.325 against an even split). Sized on those two numbers the
     # count is THREE, and `cluster(skew=)` is where the second one goes; `boards/e.json`
     # `_cellf_cluster_measured` carries the reading and states the model's assumption.
-    _cf = _pcmod.PowerCopper(board, net_for, P).cluster("CELL_F", (-113.4, -104.11), amps=1.809, skew=1.325, drill=0.5, width=0.9, axis="x")
+    # 21 September 2026, RE-MEASURED ON E36's LANDED ROUND-1 BOARD, which is what the model asked for: the
+    # three barrels this call now places carry 1.23, 0.62 and 0.29 A of the solved mesh, so the site passes
+    # 2.14 A and its worst share is 1.72 times an even one, where the number above says 1.325. The skew is a
+    # property of the geometry and it moved when the count did, which is the assumption the comment above
+    # states, so the number is the newer measurement's. IT COSTS NOTHING HERE and that is checked rather than
+    # assumed: via_current.barrels_for at 0.5 mm reads THREE barrels for 1.809 * 1.325 = 2.397 A and THREE for
+    # 1.809 * 1.72 = 3.111 A, one barrel carrying 1.051 A at a 10 K rise and 18 um of plating.
+    _cf = _pcmod.PowerCopper(board, net_for, P).cluster("CELL_F", (-113.4, -104.11), amps=1.809, skew=1.72, drill=0.5, width=0.9, axis="x")
     print("power copper: %d CELL_F barrel(s) at the fuse transition that reads 1.48 of its rating on E18" % len(_cf))
 
 # ---------------------------------------------------------------- PI-003's generator answer, all of it (20 September 2026)
