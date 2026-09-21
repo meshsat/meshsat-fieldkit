@@ -361,7 +361,15 @@ decisions:
       the bank is the only one this ruling holds. The other four are inside the outlet cluster itself, 8.47 to
       46.27 mm apart, and they are a generator item measured the same day: an In3 island over the cluster fills
       as one piece holding four of its five sites, where an F.Cu one leaves U18 pin 17 outside. So the ruling
-      decides the rail's LONG run and the cluster closes itself without it."
+      decides the rail's LONG run and the cluster closes itself without it. AND THAT HALF IS NOW BUILT AND
+      MEASURED (21 September 2026): the corrected island is the slot rails' pattern, an F.Cu island holding
+      barrels beside the cluster's own pads with an In3 union under the whole of it, and on its chain the
+      device rail goes from FIVE open pre-route pairs to TWO, the survivors being this ruling's 99.78 mm run
+      to the bank and one 46 mm via in the cluster's south. Its FIRST version, an In3 pour alone, connected
+      NOTHING and its own chain probe said so: an inner pour cannot reach a surface pad without a barrel, and
+      containment is not connection. A100 is routing that island against A100C and will say what it costs at
+      the router. None of it changes what this ruling decides: the long run is still the only pair it holds,
+      and on A98's FINISHED board /+5V_DEV is open across exactly that run, 88.6 mm via to track end."
     blocks:
       PI-001: [a, e]
   - n: 36
