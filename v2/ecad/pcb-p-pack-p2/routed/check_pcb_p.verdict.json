@@ -5,9 +5,9 @@
   "fail": 0,
   "footprints": 60,
   "intent_items_reported": 38,
-  "pass": 139
+  "pass": 46
  },
- "denominator": 139,
+ "denominator": 46,
  "evidence": [],
  "inputs": {
   "board": {
@@ -30,9 +30,9 @@
  "tool": "check_pcb_p",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "tools_tree_sha": "b7ba0f038bed4af7"
  },
- "ts": "2026-09-21T12:52:29Z",
+ "ts": "2026-09-21T16:15:21Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {
