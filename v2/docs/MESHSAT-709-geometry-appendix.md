@@ -16972,7 +16972,7 @@ did not take the 2.6 mm that was left. A95, that row plus the load resistor in e
 open with `/+5V_S1`, `/+5V_S2` and `/+5V_S3` closed, the first board A arm of nine on which any of them has closed at the
 router. A run laid whole at generation, from the connector row to the load resistor, is closed because the router is
 asked nothing on it, which is the sentence A93's closers wrote the other way round at 06:03 (one via each, 0.52 mm from
-the load resistor). `/+5V_DEV` stays open because neither probe touched its bank, and that is the next generator item; a
+the load resistor). `/+5V_DEV` stays open although its bank took R40 as the others did: its remaining pre-route pairs are the outlet cluster's (R100, C103, U23, U29), which the island does not reach, and that is the next generator item; a
 new open on `/VIN_RAW` waits for its span from the reader. Fifteen against A93's ten is three cuts at three pass counts on
 one box and decides nothing by itself. Board D's three remaining typed barrel points (the `+5V_D8` vias beside U1 and FB1
 and the `+5V_SA` column at FB1 pad 2, all beside PACKED parts) are derived from the placed pads now and the probe chain
