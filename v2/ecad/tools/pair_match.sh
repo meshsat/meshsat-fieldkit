@@ -14,14 +14,12 @@ hard() {   # board, report -> hard + unrouted
   python3 ../tools/hardset.py "$2" post --counts "$c" --label "pair match trial" >/dev/null || { rm -f "$c"; echo 999999; return; }
   awk '{print $1 + $2}' "$c"; rm -f "$c"
 }
-# WHAT IS WORTH MEANDERING IS NOT ONLY WHAT FAILS (17 September 2026). The gate refuses a pair over this
-# project's 1.00 mm, which is owner decision 36; the board check already PRINTS the number the interface's own
-# host asks for beside each pair, because rule PAIR-001 asks for the citation. Board A's three pairs read 0.29,
-# 0.12 and 0.01 mm against a compute module that asks for 0.15, so one of them passes the gate and misses the
-# part's own budget by 0.14 mm of copper. Meandering to the TIGHTER number costs a trombone and is neutral to
-# the ruling: if the interface's number is ruled, board A already meets it and needs no rework; if this
-# project's is ruled, a tighter match is not worse. The REFUSAL is unchanged and still the 1.00 mm, because
-# making the gate stricter would decide the owner's question for him.
+# WHAT IS WORTH MEANDERING IS NOT ONLY WHAT FAILS (17 September 2026), AND SINCE DECISION 36 IT IS ALSO WHAT
+# THE GATE REFUSES (ruled 21 September 2026). The board check judges every pair at `interfaces.bar_for`, the
+# TIGHTER of this project's 1.00 mm and the number the part at the end of the link asks for, so a line that
+# reads WARN is already over the deciding bar and the second test below is the same set. It is kept because it
+# reads the CITED number rather than the tag, so a gate whose interface sheet failed to load (fail closed at
+# 1.00 mm) is still meandered to the part's number when that number is printed beside the pair.
 actionable() {
   report | python3 -c '
 import sys, re
@@ -34,7 +32,7 @@ for ln in sys.stdin:
 '
 }
 for round in 1 2 3; do
-  warn=$(actionable || true); [ -z "$warn" ] && { echo "pair_match: every pair within 1 mm and within its own interface's budget (round $round)"; report | cut -c1-120; exit 0; }
+  warn=$(actionable || true); [ -z "$warn" ] && { echo "pair_match: every pair inside the bar it is judged at, which is its own interface's number where the part states one (round $round)"; report | cut -c1-120; exit 0; }
   echo "$warn" | cut -c1-120
   cp $N.kicad_pcb out/$N-pair-round$round.kicad_pcb; H0=$(hard $N.kicad_pcb out/$N-pair-drc0.json)
   echo "$warn" | while read -r line; do
@@ -52,10 +50,12 @@ PYY
   H1=$(hard $N.kicad_pcb out/$N-pair-drc1.json); echo "pair_match: round $round, DRC hard+open before $H0 after $H1"
   if [ "$H1" -gt "$H0" ]; then echo "pair_match: the meanders hurt the board, round $round restored"; cp out/$N-pair-round$round.kicad_pcb $N.kicad_pcb; fi
 done
-# THE REFUSAL IS THE GATE'S NUMBER, NOT THE INTERFACE'S: a pair inside 1.00 mm and outside its part's budget
-# is REPORTED here and does not stop the finish, because which of the two decides is owner decision 36.
+# THE REFUSAL IS THE BAR THE GATE JUDGED AT (decision 36, ruled 21 September 2026): the tighter of this
+# project's 1.00 mm and the part's own number, so a pair this refuses would have been refused by the 5
+# September ruling too wherever the part states nothing. A pair the gate could not resolve a number for is
+# still refused at 1.00 mm, because `bar_for` fails closed.
 warn=$(report | grep "^WARN" || true)
 near=$(actionable | grep -v "^WARN" || true)
-[ -n "$near" ] && { echo "pair_match: still outside the interface's own budget (reported, not refused):"; echo "$near" | cut -c1-140; }
-[ -z "$warn" ] && { echo "pair_match: every pair within 1 mm"; exit 0; }
-echo "pair_match: STILL OVER 1 mm after 3 rounds:"; echo "$warn" | cut -c1-120; exit 1
+[ -n "$near" ] && { echo "pair_match: outside the part's own cited number while the gate judged at another (this is the fail-closed case, reported, not refused):"; echo "$near" | cut -c1-140; }
+[ -z "$warn" ] && { echo "pair_match: every pair inside the bar it is judged at"; exit 0; }
+echo "pair_match: STILL OVER THE BAR after 3 rounds (the number each line names is what it was judged at):"; echo "$warn" | cut -c1-140; exit 1

@@ -7,11 +7,11 @@ Every pair that is not a current PASS, classified. Generated from tools/pcb_deci
 map's maturity and each deciding verdict: a decision that claims a pair wins over everything else, because
 the ruling is the action that moves it, and the measurement is reported beside it rather than lost.
 
-**120 open pair(s)** over 7 board(s). **42 are measured failures** (a tool looked and the board failed), which are **34 distinct readings**, and **12 of those are claimed by an open owner decision**.
+**118 open pair(s)** over 7 board(s). **40 are measured failures** (a tool looked and the board failed), which are **32 distinct readings**, and **10 of those are claimed by an open owner decision**.
 
 | waiting on | pairs | what it means |
 |---|---:|---|
-| `DECISION` | 35 | an owner decision by name |
+| `DECISION` | 33 | an owner decision by name |
 | `DECISION_UNCLAIMED` | 5 | a rule that says a decision is open while no decision claims it |
 | `AUTHORITY` | 3 | an authority this project does not have |
 | `NO_INSTRUMENT` | 6 | nothing verifies it |
@@ -31,8 +31,8 @@ things to fix.
 
 | board | open | of which measured | decision-bound | authority | missing input | not judged |
 |---|---:|---:|---:|---:|---:|---:|
-| A | 25 | 14 | 5 | 1 | 4 | 3 |
-| B | 37 | 6 | 18 | 1 | 5 | 5 |
+| A | 24 | 13 | 4 | 1 | 4 | 3 |
+| B | 36 | 5 | 17 | 1 | 5 | 5 |
 | C | 11 | 4 | 5 | 0 | 0 | 3 |
 | D | 13 | 2 | 1 | 1 | 4 | 4 |
 | E | 17 | 6 | 3 | 0 | 4 | 4 |
@@ -41,13 +41,14 @@ things to fix.
 
 ## Readings owed
 
-Of the 99 open pairs with a reading beside them, **1 are decided by a reading taken under a tool that has
+Of the 97 open pairs with a reading beside them, **2 are decided by a reading taken under a tool that has
 CHANGED since**. A tool change moves no rule-set fingerprint and no per-rule digest, so nothing else on these
 pages can say it. It is an upper bound, because a tool file moves for a comment as readily as for a
 criterion, and it decides nothing: it says the reading is owed. Re-take with retake_gate.sh or a sweep.
 
 | rule | boards |
 |---|---|
+| `MEC-001` | A |
 | `RET-004` | A |
 
 ## Boards behind their own generator
@@ -75,20 +76,18 @@ holding a number, not a question about a number.
 | 28 | 4 | 3 | RET-002, RTE-001, STK-001, STK-002 | P |
 | 29 | 5 | 0 | GND-002, INT-002 | A B C E |
 | 35 | 2 | 2 | PI-001 | A E |
-| 36 | 2 | 2 | INT-001 | A B |
 | 40 | 1 | 1 | BAT-001 | P |
 | 41 | 3 | 1 | DOC-002 | C E5 P |
 | 42 | 1 | 1 | DEC-001 | A |
 | 43 | 14 | 0 | EMC-001, GND-001, PAIR-001, PI-002, PI-003, PLC-002, PLN-001, RET-002, RET-004, RF-001, RTE-001, SCH-003, STK-001, VIA-001 | B |
 
-## DECISION (35): an owner decision by name
+## DECISION (33): an owner decision by name
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
 | `DEC-001` | A | FAIL | decision 42: a decoupling capacitor cannot be both within 3 mm of a fine-pitch pin and outside that part's escape fan |
 | `PI-001` | A | FAIL | decision 35: which published current-rating model this project's copper is judged against |
 | `GND-002` | A | INCONCLUSIVE | decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked |
-| `INT-001` | A | FAIL | decision 36: the intra-pair tolerance a differential pair is judged against |
 | `SCH-003` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `PI-002` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `PI-003` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
@@ -99,7 +98,6 @@ holding a number, not a question about a number.
 | `RET-004` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `PAIR-001` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `RF-001` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
-| `INT-001` | B | FAIL | decision 36: the intra-pair tolerance a differential pair is judged against |
 | `INT-002` | B | INCONCLUSIVE | decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked |
 | `PLC-002` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `RTE-001` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |

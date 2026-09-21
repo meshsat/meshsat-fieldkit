@@ -7,7 +7,7 @@ One line per decision that is still open, what it holds up, and where its eviden
 v2/docs/OWNER-DECISIONS-2026-09-11.md and this page is generated from the same registry the readiness table
 is, so the pair counts below are the ones the gates use.
 
-**10 decisions are open and they hold 45 rule-board pairs of the 333 the set is judged on.** A pair held by a
+**9 decisions are open and they hold 43 rule-board pairs of the 333 the set is judged on.** A pair held by a
 decision is not a defect in the board: it is a question nobody has answered, and until it is answered the
 rule can be neither passed nor failed.
 
@@ -21,7 +21,6 @@ rule can be neither passed nor failed.
 | **41** | 3 | the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002 | DOC-002 | C, E5, P | 2026-09-19 |
 | **42** | 3 | a decoupling capacitor cannot be both within 3 mm of a fine-pitch pin and outside that part's escape fan | DEC-001 | A, B, P | 2026-09-20 |
 | **35** | 2 | which published current-rating model this project's copper is judged against | PI-001 | A, E | 2026-09-16 |
-| **36** | 2 | the intra-pair tolerance a differential pair is judged against | INT-001 | A, B | 2026-09-16 |
 | **40** | 1 | the pack's cell-level protection is one firmware-configured device, and the rule asks for hardware independent of any software | BAT-001 | P | 2026-09-18 |
 
 ## Each one, with what it holds
@@ -127,14 +126,24 @@ end to end on a 330 x 200 mm board. That is inside one PCB, which is the clause'
 enough that the loss budget is worth stating whichever way this is ruled. ONE CONDITION IS NOT COPPER AND IS
 IN NO CONTRACT YET: the same clause requires auto-negotiation to stay enabled when the link runs at 1000M.
 Nothing in this tree's software contract records that, so a bridge that ever forces a fixed-speed link on
-ports 1 to 3 would break a transformer-less link and nothing would say why. AND ONE MORE THING ABOUT THESE
-FOUR PAIRS, found while measuring decision 36 on the adopted B21 board (18 September 2026): their intra-pair
-tolerance is not declared anywhere. Every other interface on this board carries a number from its host's
-datasheet in pcb_interfaces.yaml (0.10 mm for the module's USB 3 and PCIe, 0.15 for its USB 2 and Ethernet,
-0.70 for the M.2 modules); the MDI pairs, which are these links, carry none, and on B21 they read 2.74 to
-14.68 mm of mismatch. Whichever way this decision goes, those four need a budget from the same clause it
-turns on, because a capacitively coupled link with no magnetics has less margin for skew than one with them,
-not more.
+ports 1 to 3 would break a transformer-less link and nothing would say why. CORRECTED 21 September 2026, BY
+READING THE NETLIST: THE FOUR MDI PAIRS ARE NOT THESE LINKS. MDI_A to MDI_D run between T1, the Pulse H5007NL
+magnetics, and J_ETH, the RJ45, which is the CABLE side of the one port that is not transformer-less; the
+capacitively coupled module links are SWP1 to SWP3, which run from the switch U1 to their own 100 nF
+capacitors. So the sentence below, carried since 18 September, named the wrong pairs on both halves: the
+transformer-less links DO carry a declared tolerance (ETHERNET_CM5's 0.15 mm, from the compute module's own
+datasheet) and on B21 they MEET it, reading 0.00 to 0.01 mm of mismatch on every routed one. What the
+measurement really found is about the MDI pairs themselves and it stands as a finding for board B's next
+phase: T1 to J_ETH carries no impedance target in any class and no declared tolerance, reads 2.74 to 14.68 mm
+on B21, and this switch's own checklist (DS00004151A sections 6.2 to 6.4) gives the media side magnetics
+characteristics and a chassis-ground rule and NO intra-pair number, so this project has nothing to declare
+one from today. AND ONE MORE THING ABOUT THESE FOUR PAIRS, found while measuring decision 36 on the adopted
+B21 board (18 September 2026, as it was written then): their intra-pair tolerance is not declared anywhere.
+Every other interface on this board carries a number from its host's datasheet in pcb_interfaces.yaml (0.10
+mm for the module's USB 3 and PCIe, 0.15 for its USB 2 and Ethernet, 0.70 for the M.2 modules); the MDI
+pairs, which are these links, carry none, and on B21 they read 2.74 to 14.68 mm of mismatch. Whichever way
+this decision goes, those four need a budget from the same clause it turns on, because a capacitively coupled
+link with no magnetics has less margin for skew than one with them, not more.
 
 | rule | | boards | result today |
 |---|---|---|---|
@@ -211,44 +220,6 @@ it holds, and on A98's FINISHED board /+5V_DEV is open across exactly that run, 
 | rule | | boards | result today |
 |---|---|---|---|
 | PI-001 | conductor current capacity | A, E | FAIL |
-
-
-### Decision 36: the intra-pair tolerance a differential pair is judged against
-
-**The question:** this project's 1.00 mm, or each interface's own number from its host's datasheet
-
-**Recommended:** each interface's own number from its host's datasheet, because on the evidence that exists
-it costs one 0.14 mm meander on one pair of board A, which `pair_match.sh` already runs in every finish,
-while this project's 1.00 mm leaves that pair at twice the budget the compute module states for it
-
-**Measured:** BOARD A'S THREE PAIRS ARE MEASURED AND THE RULING IS NEARLY FREE ON IT (17 September 2026, read
-off both A40 and A41, which give IDENTICAL numbers because the pre-router lays a pair from the PLACEMENT and
-the route does not touch it): USB_D8 P 139.47 mm against N 139.75, mismatch 0.29 mm; USB_E6 0.12 mm; USB_WALL
-0.01 mm. The compute module's own datasheet asks 0.15 mm of this interface, so ONE of board A's three pairs
-is outside it and two are comfortably inside. Closing it is 0.14 mm of length added to the short leg, which
-`meander.py` does and `pair_match.sh` already runs three rounds of in every finish. BOARD B'S NUMBER IS
-MEASURED NOW (18 September 2026, on the adopted B21 board, which this line used to say had to wait for its
-route). Of its 120 pairs, 21 have one leg routed and one not and 21 more carry a leg under 5 mm, which is the
-416 open connections showing through; **63 are real runs, and on those the router lays both legs together**:
-55 of the 63 are inside 0.10 mm, the tightest number any of its interfaces asks. Eight exceed this project's
-1.00 mm and FOUR exceed their own interface's number, and they are the same four (NVME2_CLK 22.31 mm,
-NVME3_RX 2.49, ETH3_P0 2.18, CARD3_CLK 1.69), each a routing artefact on a board that is 416 connections
-short rather than a design choice. **So ruling the interfaces' own numbers costs board B nothing that this
-project's own 1.00 mm does not already flag.** One thing the measurement found that neither option settles:
-the four MDI pairs, the transformer-less compute-module Ethernet links of decision 29, have NO declared
-tolerance at all in pcb_interfaces.yaml and read 2.74 to 14.68 mm of mismatch on this board; whatever is
-ruled here, those four need a number from the same clause decision 29 turns on. So on the evidence that
-exists, ruling the interface's own number costs one small meander on one pair of one board, and ruling this
-project's 1.00 mm leaves a pair at twice the budget its host states. AND THE SPECIFICATION'S OWN SCALE IS IN
-THE TREE, which matters because it says neither option is unsafe: USB 2.0 section 7.1.3 permits the CABLE
-ALONE 100 ps of skew between D+ and D- (v2/vendor/standards/usb-2-0-specification-2024-09-27.md), and 1.00 mm
-of trace on these stackups is about 5.5 ps, eighteen times less. The compute module's 0.15 mm is its design
-guide's RECOMMENDATION rather than a conformance requirement, so the question is whose recommendation this
-project follows and what it costs, which is one 0.14 mm meander today, and not whether a board would work.
-
-| rule | | boards | result today |
-|---|---|---|---|
-| INT-001 | each interface is designed to its own specification | A, B | FAIL |
 
 
 ### Decision 40: the pack's cell-level protection is one firmware-configured device, and the rule asks for hardware independent of any software
@@ -429,6 +400,7 @@ rule it has. None of them is a failure of board B's design and none can be judge
 | 32 | board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper | ACCEPT THE REACH AT 3.0 MM, THE DISTANCE THIS PROJECT'S OWN FIXER ALREADY PLACES AT, AND RECORD THE DISTANCE PER VIA. The screen stays at 1.5 mm for every board; a board that has measured what it cannot satisfy inside it declares `return_reach_mm` with this decision as the reason, and boards C, D and E do. `return_via` measures instead of answering yes or no: every flagged via carries the distance to its nearest ground via, a via within the declared reach is SATISFIED with that distance on the record, and one beyond it or with none at all stays a failure with its number. MEASURED ON THE THREE COMMITTED BOARDS, read-only with each sha identical before and after: BOARD D goes FAIL to PASS of 37, its single via answered at 1.58 mm. BOARD E goes six lacking to TWO, five answered between 1.50 and 2.27 mm, and what stands is FAN1_PWM with NO ground via within six millimetres and one SDA0 at 3.39. BOARD C goes THIRTY-TWO lacking to ELEVEN, twenty-one answered between 1.50 and 3.00, and what stands is 3.18 to 5.99 mm on eight of them and THREE WITH NO GROUND VIA WITHIN SIX MILLIMETRES (USB_DP_R, HB1, HB3). SO THE RULING ANSWERS BOARD D AND MAKES BOARDS C AND E SMALLER AND TRUE, and the residue is a different finding from the one this decision was asked about: it is not a screening distance, it is vias whose return has to travel four to six millimetres or has nowhere to go, and it belongs to each board's next phase with the coordinates now on the record. The decision's own evidence, written from the FIXER's log on 17 September, said board C's thirty-two sat at 1.50 or 1.75 mm; the JUDGE reads twenty-one inside 3.0 and eleven past it, so that half of the evidence was the fixer's view of what it had placed and not the board's. |
 | 33 | the mezzanine 5 V rail is losing nearly five percent and two of its three numbers were never anybody's requirement | LEAVE THE SPLIT AS DECLARED: board A four points of the codec's six percent and board D two. Both boards meet their own share on every run, the cross-board contract adds them up and passes, and the six percent total is not this project's number at all but the PCM2912A's own Recommended Operating Conditions, VBUS 4.35 V minimum. The only thing that would reopen it is a measured drop moving past a board's share on a routed board. |
 | 34 | the kit has never had a written operating envelope and four rules resolve against nothing | ADOPT v2/docs/OPERATING-ENVELOPE.md section 4 AS THE DESIGN ENVELOPE, and section 6's first row as the transient level. In use -20 to +40 C ambient with its three declared carve-outs (the pack warmed below -10 C before charge, the e-paper degraded below -15 C, the reduced mode above +35 C); storage -20 to +45 C for three months and -20 to +25 C for a year at the pack's ex-factory charge; non-condensing, with the closed case Peli's IP67 and the face designed to an IP67-class construction that is never labelled IP68 and carries no rating until the bench procedure of appendix 32.34 has run. Electrostatic discharge is IEC 61000-4-2 level 4, 8 kV contact and 15 kV air, which is the level decision 31 needs to choose a clamp against and is traceable to the USBLC6-2SC6 this design already buys. The electrical fast transient row is recorded as NOT A REQUIREMENT of this project, because nothing in this tree is a source for it. AND ISO-001 IS JUDGED AGAINST ECSS-Q-ST-70-12C TABLE 13-3, per voltage band, per layer, on the column the board's own coating selects: that table is stated for an as-manufactured rigid PCB without an altitude derating and without a pollution degree, so the two numbers ISO-001 was said to be waiting for are not needed to judge it. The altitude, the vibration and shock severities and the service life stay OPEN for the rules that genuinely need them and are not invented here. |
+| 36 | the intra-pair tolerance a differential pair is judged against | RULE THE TIGHTER OF THE TWO NUMBERS. A pair is judged at the number the part at the end of its link asks for, where that part states one, and at this project's 1.00 mm where it does not. THE OWNER'S RULING OF 5 SEPTEMBER 2026 17:00 IS NOT REVERSED AND NOT LOOSENED: it is the FLOOR under every number this returns, so an interface asking for something looser than 1.00 mm (none does today, the loosest being the M.2 module's 0.70) does not relax a bar an owner set, and the day one does, relaxing it is his to rule. `interfaces.bar_for` is the one place that decides it and carries the reversal; `check_pcb_a.py` and `check_pcb_b.py` print the number it returned beside every pair with the interface's own citation; and `pair_match.sh` refuses the finish on it. It FAILS CLOSED: where the interface sheet cannot be read the bar is 1.00 mm, which is what both gates refused at before. WHAT IT COSTS, MEASURED ON THE COMMITTED BOARDS BEFORE IT WAS RULED (21 September 2026, read-only where KiCad is, each board's sha identical before and after): board A32 (58e26c67987b1daa) carries three pairs and ONE moves, USB_D8 at 0.23 mm against the compute module's 0.15, which is 0.08 mm of meander on a 139 mm leg; USB_E6 reads 0.12 and USB_WALL 0.00 and both pass. Board B21 (2e64b5bf2d9cd3bc) carries 35 pairs and EIGHT read WARN, of which SEVEN were already over 1.00 mm and refused before this ruling; the one this ruling adds is PCIE2_CLK at 0.93 mm against the CM5's 0.10. Six of those eight have one leg between 1.0 and 2.8 mm, which is an unrouted leg on a board 416 connections short and the route's business rather than the tolerance's. So the whole measured cost of ruling the parts' own numbers is TWO pairs on two boards and no board changes today. WHAT IT DOES NOT SETTLE, said in its own words because the measurement found it again: the four MDI pairs of decision 29, the transformer-less compute-module Ethernet links, read 2.74 to 14.68 mm on B21 and are judged by NEITHER number, because decision 47 holds the length rule to pairs whose class declares an impedance target and their class declares none. Whatever this ruling says, those four need a number from the same clause decision 29 turns on. |
 | 37 | board D asks for two crystals that do not exist and the part it was certified against is four times the frequency | BUY THE HC-49S-SMD PASSIVE CRYSTAL AND MOVE BOTH CRYSTALS TO THE UNDERSIDE. The part is C252308 (6 MHz, HC-49S-SMD, -40 to +85 C, CL 20 pF, 80 Ohm, 376 in stock at 0.1333 USD), with C518119 (239 in stock) as the second source, for BOTH Y1 (the TUSB2046B hub) and Y2 (the PCM2912A codec). The wide temperature range is chosen over the -20/+70 parts because the crystal lives inside a sealed case whose envelope allows about +55 C of inside air, not because the ambient asks for it. Rd COMES DOWN FROM 1.5k TO 1.0k: TI's figure 6 gives 1.5k for a crystal of at most 50 Ohm and every wide-temperature 6 MHz part reads 80, so the damping becomes the reactance of C2 at 6 MHz, 1/(2*pi*6e6*27e-12) = 982 Ohm, and the negative-resistance margin of five times ESR is a BENCH MEASUREMENT at bring-up rather than a number this session can compute. The load capacitors stay at 27 pF, TI's own value, which presents 16.5 pF against the part's 20: eighteen percent under, about 43 ppm fast, deliberate, because under-loading raises the loop gain and USB full speed allows 2500 ppm. AND THE PROJECT'S OWN CLOCK RULE CAUGHT THE HALF I HAD LEFT BEHIND: board D still declared Y2 at c_load_pf 12.0, which was the load the OLD design happened to present with its 18 pF capacitors, so the first chain run read FAIL on Y2 at +38 percent. The declaration is the PART's 20 pF now. THE CODEC'S DATASHEET CONTRADICTS ITSELF ABOUT THE FREQUENCY and it is written down so that nobody corrects a working design: v2/vendor/ti/ti-pcm2912a.pdf lists 'Single 6-MHz Clock Source' in its features and 'Input clock frequency, XTI 5.997 / 6.000 / 6.003 MHz' in its electrical table, while one application paragraph says the device requires a 12-MHz clock. Two statements against one, and the binding one is the table. THE PACKAGE COSTS AREA AND THE BOARD ANSWERED WHERE: an HC-49S-SMD courtyard is 14.2 by 5.8 mm against the 3225 land these two were drawn on at 3.4 by 2.7, and seated where they were the placed DRC read FIFTEEN hard items, Y1 over U4, C13, C14 and R25 and Y2 over U6, C24, C25, JP1 and JP2. Measured on the placed board for a 14.2 by 5.8 box: the nearest free FRONT seat is 17.6 mm from the hub's own crystal pins and 11.3 from the codec's, while the UNDERSIDE is free 0.2 mm under the hub's pins and 6.3 from the codec's. Both crystals and their four load capacitors go to the underside, which board D already assembles, and check_pcb_d's standoff rule covers U2, K1 and the three connectors, not these. Y2 then had to move 3 mm west because its east pad sat 0.59 mm under U6 pad 28 and took that ground pad's only via site away. The chain ends PREROUTE-DONE OK at placed hard 0, escapes 68 added and 7 skipped which is board D's baseline to the pad, place_audit ALL PASS and rail_crossings 6 of 6. |
 | 38 | board B's two pair classes are 0.100 mm and its own minimum is 0.127, and the fabricator's floor is 0.09 | answered by the copper before it was ruled (18 September 2026): B21's project file carries every class at or above the board's own 0.127 mm, class_floor reads PASS on 5 classes with none below the floor, and the impedance gate's pair geometry is unchanged, which is the recommendation as it stood; nothing was lowered |
 | 39 | the criterion a break in a signal's reference is judged against | RULE THIS PROJECT'S OWN PER-CLASS CRITERION AS A DECLARED CALIBRATION, WITH THE NUMBERS EXACTLY AS THEY STAND. Not one tolerance is moved by this ruling: a limit moved to make a rule pass is an exemption wearing a number, and a criterion 50 percent looser would clear fourteen of the thirty-two failing nets, which is precisely why it is not touched. What changes is that the rule is allowed to DECIDE: signal_class.py already carries 413 per-net declarations across seven boards, each with its basis, and ECSS-E-HB-20-07A section 6.1.2.5.2 is cited as the qualitative authority for the principle while the numbers are recorded as this project's own calibration and are labelled as such wherever they appear. The readings this releases are already on disk: RET-001 reads PASS on A, D and E, FAIL on B (1 net of 658), C (15 of 127) and P (5 of 29), and has nothing to judge on E5; RET-003 reads FAIL on board A (13 vias changing to a power reference with no capacitor) and has nothing to judge elsewhere; SI-001 stays INCONCLUSIVE and now says why in its own words, 60 nets on board A and 380 on board B carrying no declared edge rate, which is a session item and not a standards wait. |

@@ -117,8 +117,19 @@ decisions:
       ONE CONDITION IS NOT COPPER AND IS IN NO CONTRACT YET: the same clause requires auto-negotiation to stay
       enabled when the link runs at 1000M. Nothing in this tree's software contract records that, so a bridge that
       ever forces a fixed-speed link on ports 1 to 3 would break a transformer-less link and nothing would say why.
+      CORRECTED 21 September 2026, BY READING THE NETLIST: THE FOUR MDI PAIRS ARE NOT THESE LINKS. MDI_A to
+      MDI_D run between T1, the Pulse H5007NL magnetics, and J_ETH, the RJ45, which is the CABLE side of the
+      one port that is not transformer-less; the capacitively coupled module links are SWP1 to SWP3, which run
+      from the switch U1 to their own 100 nF capacitors. So the sentence below, carried since 18 September,
+      named the wrong pairs on both halves: the transformer-less links DO carry a declared tolerance
+      (ETHERNET_CM5's 0.15 mm, from the compute module's own datasheet) and on B21 they MEET it, reading 0.00
+      to 0.01 mm of mismatch on every routed one. What the measurement really found is about the MDI pairs
+      themselves and it stands as a finding for board B's next phase: T1 to J_ETH carries no impedance target
+      in any class and no declared tolerance, reads 2.74 to 14.68 mm on B21, and this switch's own checklist
+      (DS00004151A sections 6.2 to 6.4) gives the media side magnetics characteristics and a chassis-ground
+      rule and NO intra-pair number, so this project has nothing to declare one from today.
       AND ONE MORE THING ABOUT THESE FOUR PAIRS, found while measuring decision 36 on the adopted B21 board
-      (18 September 2026): their intra-pair tolerance is not declared anywhere. Every other interface on this
+      (18 September 2026, as it was written then): their intra-pair tolerance is not declared anywhere. Every other interface on this
       board carries a number from its host's datasheet in pcb_interfaces.yaml (0.10 mm for the module's USB 3
       and PCIe, 0.15 for its USB 2 and Ethernet, 0.70 for the M.2 modules); the MDI pairs, which are these
       links, carry none, and on B21 they read 2.74 to 14.68 mm of mismatch. Whichever way this decision goes,
@@ -501,7 +512,46 @@ decisions:
   - n: 36
     title: "the intra-pair tolerance a differential pair is judged against"
     asked: 2026-09-16
-    status: open
+    status: ruled
+    authority: SESSION
+    authority_why: >-
+      it moves a criterion in ONE DIRECTION ONLY and therefore accepts no residual risk: every pair the
+      owner's 1.00 mm refused is still refused, and what changes is that a pair whose own host asks 0.10 or
+      0.15 mm of it is no longer passed at 1.00. It spends nothing, orders nothing and claims nothing new
+      about the kit, and it changes no line the never-auto floor protects: that floor's pair class covers the
+      impedance TARGET and the width and gap that meet it, and this is the length-match bar, which is neither.
+      Where it bites, the remedy is a trombone `pair_match.sh` already lays three rounds of in every finish.
+      PAIR-001's own waiver policy names SESSION as the authority for a pair's deviation, and decision 47
+      narrowed the same 5 September ruling's SCOPE on the same footing yesterday.
+    ruled_by: SESSION
+    ruled_on: 2026-09-21
+    outcome: >-
+      RULE THE TIGHTER OF THE TWO NUMBERS. A pair is judged at the number the part at the end of its link asks
+      for, where that part states one, and at this project's 1.00 mm where it does not. THE OWNER'S RULING OF
+      5 SEPTEMBER 2026 17:00 IS NOT REVERSED AND NOT LOOSENED: it is the FLOOR under every number this returns,
+      so an interface asking for something looser than 1.00 mm (none does today, the loosest being the M.2
+      module's 0.70) does not relax a bar an owner set, and the day one does, relaxing it is his to rule.
+      `interfaces.bar_for` is the one place that decides it and carries the reversal; `check_pcb_a.py` and
+      `check_pcb_b.py` print the number it returned beside every pair with the interface's own citation; and
+      `pair_match.sh` refuses the finish on it. It FAILS CLOSED: where the interface sheet cannot be read the
+      bar is 1.00 mm, which is what both gates refused at before. WHAT IT COSTS, MEASURED ON THE COMMITTED
+      BOARDS BEFORE IT WAS RULED (21 September 2026, read-only where KiCad is, each board's sha identical
+      before and after): board A32 (58e26c67987b1daa) carries three pairs and ONE moves, USB_D8 at 0.23 mm
+      against the compute module's 0.15, which is 0.08 mm of meander on a 139 mm leg; USB_E6 reads 0.12 and
+      USB_WALL 0.00 and both pass. Board B21 (2e64b5bf2d9cd3bc) carries 35 pairs and EIGHT read WARN, of which
+      SEVEN were already over 1.00 mm and refused before this ruling; the one this ruling adds is PCIE2_CLK at
+      0.93 mm against the CM5's 0.10. Six of those eight have one leg between 1.0 and 2.8 mm, which is an
+      unrouted leg on a board 416 connections short and the route's business rather than the tolerance's. So
+      the whole measured cost of ruling the parts' own numbers is TWO pairs on two boards and no board changes
+      today. WHAT IT DOES NOT SETTLE, said in its own words because the measurement found it again: the four
+      MDI pairs of decision 29, the transformer-less compute-module Ethernet links, read 2.74 to 14.68 mm on
+      B21 and are judged by NEITHER number, because decision 47 holds the length rule to pairs whose class
+      declares an impedance target and their class declares none. Whatever this ruling says, those four need a
+      number from the same clause decision 29 turns on.
+    reversed_by: >-
+      make `interfaces.bar_for` return PROJECT_INTRA_MM unconditionally and both gates judge every pair at
+      1.00 mm again, which is exactly what they did before this commit; nothing else moves, because no board
+      was changed and no copper was laid for this ruling.
     ask: "this project's 1.00 mm, or each interface's own number from its host's datasheet"
     recommendation: >-
       each interface's own number from its host's datasheet, because on the evidence that exists it costs one 0.14
@@ -521,10 +571,15 @@ decisions:
       four (NVME2_CLK 22.31 mm, NVME3_RX 2.49, ETH3_P0 2.18, CARD3_CLK 1.69), each a routing artefact on a board
       that is 416 connections short rather than a design choice. **So ruling the interfaces' own numbers costs
       board B nothing that this project's own 1.00 mm does not already flag.** One thing the measurement found
-      that neither option settles: the four MDI pairs, the transformer-less compute-module Ethernet links of
-      decision 29, have NO declared tolerance at all in pcb_interfaces.yaml and read 2.74 to 14.68 mm of
-      mismatch on this board; whatever is ruled here, those four need a number from the same clause decision 29
-      turns on. So on the evidence that exists, ruling the
+      that neither option settles: the four MDI pairs have NO declared tolerance at all in pcb_interfaces.yaml
+      and read 2.74 to 14.68 mm of mismatch on this board. CORRECTED 21 September 2026 BY READING THE NETLIST:
+      this line called them the transformer-less compute-module Ethernet links of decision 29 and they are
+      not. MDI_A to MDI_D run between T1, the magnetics, and J_ETH, the RJ45, so they are the cable side of the
+      one port that HAS a transformer; the transformer-less links are SWP1 to SWP3, they carry ETHERNET_CM5's
+      0.15 mm from the compute module's own datasheet, and on B21 every routed one reads 0.00 to 0.01 mm. What
+      stands is the finding about the MDI pairs: no class target, no declared tolerance, and the switch's own
+      checklist states no intra-pair number for the media side, so a number for them would be this project's
+      invention and is not made here. So on the evidence that exists, ruling the
       interface's own number costs one small meander on one pair of one board, and ruling this project's 1.00 mm
       leaves a pair at twice the budget its host states.
       AND THE SPECIFICATION'S OWN SCALE IS IN THE TREE, which matters because it says neither option is unsafe:

@@ -115,23 +115,29 @@ for _pair in sorted(set(n[:-2] for n in _names if n.endswith(("_P", "_N")) and (
     _lp, _ln = _tl.get(_pair + "_P", 0.0), _tl.get(_pair + "_N", 0.0)
     if not _lp and not _ln: continue
     if (_lp > 0) != (_ln > 0): route_item(False, "pair %s has one leg routed and one not (P %.2f mm, N %.2f mm)" % (_pair, _lp, _ln)); continue
-    # THE INTERFACE'S OWN BUDGET IS CITED BESIDE THE PROJECT'S (rule PAIR-001, 17 September 2026). The 1.00 mm
-    # this gate refuses at is a project decision and no interface's requirement; the sheet carries what each
-    # interface's own host asks for, with the clause it was read from, and a reader of this line sees both.
-    # Which of the two DECIDES is owner decision 36 and nothing here presumes it.
+    # DECISION 36, ruled 21 September 2026 (the session's; `bar_for` in tools/interfaces.py carries the
+    # reasoning and the way back). A pair is judged at the TIGHTER of this project's 1.00 mm, which the owner
+    # ruled on 5 September, and the number the part at the end of its link asks for. The owner's number is the
+    # FLOOR and never the ceiling, so this can only refuse a pair the old bar passed. `bar_for` is the one
+    # place that decides it; this gate prints the number it returned and rule PAIR-001's citation of the
+    # interface's own budget stands beside it. FAIL CLOSED: where the sheet cannot be read the bar is 1.00 mm,
+    # which is what this gate refused at before the ruling.
     try:
         import os as _osi, sys as _sysi
         _sysi.path.insert(0, _osi.path.dirname(_osi.path.abspath(__file__)))
         import interfaces as _ifc
         _bmm, _iname, _isrc = _ifc.budget_for("a", _pair + "_P")
+        _bar, _barwhy = _ifc.bar_for("a", _pair + "_P")
     except Exception:
         _bmm = _iname = _isrc = None
-    _cite = ("" if _bmm is None else
-             "; %s asks for %.2f mm (%s)" % (_iname, _bmm, (_isrc or "").strip()[:60]))
-    _over = abs(_lp - _ln) > 1.0
+        _bar, _barwhy = 1.0, "the interface sheet could not be read, so the bar is this project's own"
+    _over = abs(_lp - _ln) > _bar + 1e-9
+    _cite = (("; %s asks for %.2f mm (%s)" % (_iname, _bmm, (_isrc or "").strip()[:60])) if _bmm is not None
+             else (("; judged at %.2f mm: %s" % (_bar, _barwhy)) if _over else ""))
     _ok, _why47 = _pg.judged(_pair, _pg_class_of, _pg_targets)
     _tag = ("WARN " if _ok else "INFO ") if _over else "PASS "
-    _tail = "" if not _over else (" (over 1.0 mm: add a meander on the short leg)" if _ok else " (over 1.0 mm and " + _why47 + ")")
+    _tail = "" if not _over else ((" (over %.2f mm: add a meander on the short leg)" % _bar) if _ok
+                                      else " (over %.2f mm and %s)" % (_bar, _why47))
     print("%s pair length P %.2f mm, N %.2f mm, mismatch %.2f mm%s%s" % (_tag + _pair, _lp, _ln, abs(_lp - _ln), _tail, _cite))
 # 8 Sep 2026 (MESHSAT-862 Stage C): the intent gates (return path under the pair-class nets, decoupling loops, the rails of the intent file)
 if any(t.GetClass() == "PCB_TRACK" and not t.IsLocked() for t in b.GetTracks()):

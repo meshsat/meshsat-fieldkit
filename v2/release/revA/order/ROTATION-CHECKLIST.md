@@ -16,7 +16,8 @@ zero is a real answer and is recorded the same way; what the rule refuses is the
 | `BatteryHolder_Keystone_3034_1x20mm` | B | BT1 |  |  |
 | `CP_Elec_6.3x7.7` | E | C11 |  |  |
 | `CP_Elec_8x6.7` | E | C24 |  |  |
-| `Crystal_SMD_3225-4Pin_3.2x2.5mm` | B, C, D, E | Y1 |  |  |
+| `Crystal_SMD_3225-4Pin_3.2x2.5mm` | B, C, E | Y1 |  |  |
+| `Crystal_SMD_HC49-SD` | D | Y1 |  |  |
 | `D_SMB` | A, B, D, E, P | D3 |  |  |
 | `D_SMC` | A, E | D1 |  |  |
 | `D_SOD-123` | C, D, E | D17 |  |  |
@@ -57,4 +58,4 @@ zero is a real answer and is recorded the same way; what the rule refuses is the
 | `VSSOP-10_3x3mm_P0.5mm` | A, E | U10 |  |  |
 | `VSSOP-8_3x3mm_P0.65mm` | D | U8 |  |  |
 
-43 footprint(s) to compare, over 7 board(s).
+44 footprint(s) to compare, over 7 board(s).
