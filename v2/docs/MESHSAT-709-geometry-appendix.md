@@ -17129,3 +17129,12 @@ layer at their tabs (PA_OUT, PD_VPWR, CH_ACN, CH_SRP) read under their barrels, 
 carries the charger's output on a half-millimetre front track (8.35 A, PI-001's worst conductor, the charger block's
 floor plan). The judge counts no one-layer site short from here and the fixer lays no cluster at one; a rail a
 router later takes through another layer is `via_current`'s on the solved mesh.
+
+**Addendum, 07:48 CEST: sweep 37, and two D34 probes that answer no.** The set re-taken under the one-plating
+`dc_drop` reads 59.8 percent before and after (199 verified, 41 failed, 93 inconclusive of 333), every re-taken
+verdict moving only its stamps and the solved files' hashes: the plating moved the barrel currents and decided
+nothing, which is the proof. Two probes on D33's tree, each one variable in the `/PCM_VCCL` pre-lay: confined to
+the front layer, and held half a millimetre from every other net. In both the stub router reports the net pad to
+pad and lays nothing, so the board is D32's again and the via beside U6 pin 20 was the only closure that run had.
+D34's item is therefore the ground pin's own via before the pre-lay, which is the fanout's refusal to read, or
+C21's seat; neither is applied.
