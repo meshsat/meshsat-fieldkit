@@ -17045,3 +17045,16 @@ three, DC_F and TRK_OUT intact at 9.32), measured by a probe that compares each 
 imported board with the placed board's and counts the other nets' segments whose box meets it (`island_probe.py`,
 staged beside the readers). Five passes moved nothing at either island: the slicing was laid early and the optimiser
 routes around it, so the landing will carry it whatever its pass count, and `via_current` on those sites decides E38.
+
+**Addendum, 07:09 CEST: A94's and A95's finished round-1 boards, read in scratch copies while their remedy rounds
+regenerate.** Both finishes ran on the old stub router of their staged trees (the caveat of 02:21 stands: a refused
+closure could drop old copper and a stage could be refused whole). A94, the second capacitor row alone (sha
+ac56e6d55e950ee2): hard 0 and seven open after its closers, from nineteen at the router, and the four rails are all
+among the seven (`/+5V_DEV`, `/+5V_S1`, `/+5V_S2`, `/+5V_S3`, with `/D8_EN`, `/PA_ISNS_N`, `/PD_UFP`): the closers
+took twelve connections and not one rail. A95, that row plus the load resistor (sha dcbba206734797a1): hard 0 and
+FIVE open, from fifteen at the router, `/+5V_DEV`, `/CH_LODRV2`, `/PA_ISNS_N`, `/PD_PGOOD` and `/VIN_RAW`; the three
+slot rails are closed on the finished board as they were at the router. Five is A59's and A86's number and A93's
+finished three stays board A's best; what A95 says that A93 does not is that the slot rails need no closer at all
+when the bank island reaches the load resistor. `/VIN_RAW` is the clamp's 14 mm gap, which A98 carries the
+generator's answer to, and `/+5V_DEV` is the outlet cluster's run, unapplied under decision 35. A94 against A95 is
+one variable at the router and at the finish both.
