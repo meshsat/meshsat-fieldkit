@@ -13,7 +13,8 @@
   },
   "stage": "post",
   "types_checked": 15,
-  "unrouted": 0
+  "unrouted": 0,
+  "unrouted_at_cap": false
  },
  "denominator": 15,
  "evidence": [],
@@ -24,7 +25,7 @@
   },
   "drc": {
    "path": "out/pcb-e1-dock-drc.json",
-   "sha256_16": "4f2526d33805d4d2"
+   "sha256_16": "0683ade943989794"
   }
  },
  "missing_input": null,
@@ -42,13 +43,13 @@
  "tool": "hardset-routed-board-gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "46c7aff86de49a4d"
+  "tools_tree_sha": "994b3d2315bb9859"
  },
- "ts": "2026-09-21T05:42:06Z",
+ "ts": "2026-09-21T12:51:45Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {
   "file": "hardset.py",
-  "sha16": "af5a0e35d8ecd656"
+  "sha16": "be29a44c4a592876"
  }
 }

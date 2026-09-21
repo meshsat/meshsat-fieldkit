@@ -9,7 +9,8 @@
   },
   "stage": "post",
   "types_checked": 15,
-  "unrouted": 0
+  "unrouted": 0,
+  "unrouted_at_cap": false
  },
  "denominator": 15,
  "evidence": [],
@@ -20,7 +21,7 @@
   },
   "drc": {
    "path": "out/pcb-e5-block-drc.json",
-   "sha256_16": "3a5950e1962bf94d"
+   "sha256_16": "39067008b4c3677f"
   }
  },
  "missing_input": null,
@@ -38,13 +39,13 @@
  "tool": "hardset-routed-board-gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "46c7aff86de49a4d"
+  "tools_tree_sha": "994b3d2315bb9859"
  },
- "ts": "2026-09-21T05:43:20Z",
+ "ts": "2026-09-21T12:52:57Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {
   "file": "hardset.py",
-  "sha16": "af5a0e35d8ecd656"
+  "sha16": "be29a44c4a592876"
  }
 }

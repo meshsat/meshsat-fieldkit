@@ -13,7 +13,7 @@
   }
  },
  "missing_input": null,
- "note": "no pruned list at /root/sweep37/v2/ecad/pcb-b-compute-b19/out/sweep/pcb-b-compute-pruned.txt, and board B declares the prune stage",
+ "note": "no pruned list at /root/sweep38/v2/ecad/pcb-b-compute-b19/out/sweep/pcb-b-compute-pruned.txt, and board B declares the prune stage",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -27,9 +27,9 @@
  "tool": "pruned_gate",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "46c7aff86de49a4d"
+  "tools_tree_sha": "994b3d2315bb9859"
  },
- "ts": "2026-09-21T05:37:31Z",
+ "ts": "2026-09-21T12:47:20Z",
  "verdict": "INCONCLUSIVE",
  "version": "unknown",
  "writer": {
