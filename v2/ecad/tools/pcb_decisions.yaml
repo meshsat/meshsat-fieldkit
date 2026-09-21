@@ -510,7 +510,33 @@ decisions:
   - n: 39
     title: "the criterion a break in a signal's reference is judged against"
     asked: 2026-09-17
-    status: open
+    status: ruled
+    authority: SESSION
+    authority_why: >-
+      it changes no line the never-auto floor protects, spends nothing and accepts no residual risk: the numbers
+      are UNCHANGED by this ruling and the boards' readings are already taken, so what moves is whether a
+      measurement is allowed to decide. SI-001's own waiver policy already names SESSION as its authority, and the
+      third option, holding the rule until a standards body publishes a per-class return-path tolerance for a kit
+      like this one, is not an option that anybody is going to close.
+    ruled_by: SESSION
+    ruled_on: 2026-09-21
+    outcome: >-
+      RULE THIS PROJECT'S OWN PER-CLASS CRITERION AS A DECLARED CALIBRATION, WITH THE NUMBERS EXACTLY AS THEY
+      STAND. Not one tolerance is moved by this ruling: a limit moved to make a rule pass is an exemption wearing
+      a number, and a criterion 50 percent looser would clear fourteen of the thirty-two failing nets, which is
+      precisely why it is not touched. What changes is that the rule is allowed to DECIDE: signal_class.py already
+      carries 413 per-net declarations across seven boards, each with its basis, and ECSS-E-HB-20-07A section
+      6.1.2.5.2 is cited as the qualitative authority for the principle while the numbers are recorded as this
+      project's own calibration and are labelled as such wherever they appear. The readings this releases are
+      already on disk: RET-001 reads PASS on A, D and E, FAIL on B (1 net of 658), C (15 of 127) and P (5 of 29),
+      and has nothing to judge on E5; RET-003 reads FAIL on board A (13 vias changing to a power reference with no
+      capacitor) and has nothing to judge elsewhere; SI-001 stays INCONCLUSIVE and now says why in its own words,
+      60 nets on board A and 380 on board B carrying no declared edge rate, which is a session item and not a
+      standards wait.
+    reversed_by: >-
+      set status to reopened and put the three maturities back to SOURCE_UNVERIFIED in
+      tools/pcb_rules_coverage.yaml; every reading stays where it is, because this ruling moved no number and took
+      no measurement away
     ask: "rule this project's own per-class tolerances, derive them per net from a declared edge rate, or hold the rule until a standard publishes a number"
     recommendation: "rule the project's criterion, and read the re-measurement below before deciding how loose: of the 32 nets failing today TWO are inside a factor of 1.1 of their limit and FOURTEEN are inside 1.5, so the number decides about half of them (the earlier reading, one net inside 1.1, was taken before board B was adopted)"
     evidence: "RE-MEASURED 18 September 2026 WITH BOARD B IN THE SET, AND THE ANSWER CHANGED. The 17 September

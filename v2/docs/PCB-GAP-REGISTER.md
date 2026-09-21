@@ -23,7 +23,7 @@ user touches most. What it does NOT do is test anything: this rule is verified a
 been built, and the dock block's contact targets carry the open item the mate-cycle test exists for.  
 *Close it by* The SHEET is DONE (17 September 2026): every board carries its wear-out and environment classes with the parts each covers and reliability.py checks the coverage, seven boards passing. The TEST PLAN for the prototype is the laboratory stage and belongs with it. Owner **OWNER**, after ENV-001. Effort P50 0h, P80 0h.
 
-## generated only (2)
+## generated only (5)
 
 **ANA-001 sensitive analogue nodes** (MUST_JUSTIFY, ENFORCED)  
 the shunt's Kelvin connection and the microphone filtering are designed; no check identifies sensitive nodes
@@ -47,6 +47,40 @@ reported as a note, copper outside it is a routing decision and fails. Board A k
 B33_FB at 8.47 mm, and board E keeps both of its own, one of which runs 20.49 mm with no shared part at all.  
 *Close it by* The declarations and the check are DONE (17 September 2026): every board that has a sensitive node declares it with the clearance it asks for, and sensitive_nodes.py measures it. What remains is COPPER and rides with those boards' next route: board A has ten clearances under their own asked-for distance, four of which are the charger filter nets its committed board does not yet carry, and board E has two. Owner **SESSION**. Effort P50 2h, P80 6h.
 
+**RET-001 a continuous adjacent return path** (BLOCKER, ENFORCED)  
+16 September 2026: the principle is implemented and the heuristic is no longer standing in for it. Every net
+gets a spectral-content class from EVIDENCE (the board's own impedance-targeted net class, or a declaration
+in boards/<letter>.json carrying a written basis naming the part or interface that decides it), and each
+class is asked the question it deserves: a fast net for an ADJACENT reference within a tolerance, a slow one
+for whether a return path EXISTS at all. Four properties keep a relaxation from becoming an exemption
+mechanism, each with a rule: a declaration without a reason is refused, an unclassified net is judged at the
+STRICTEST bar and named, a declaration cannot downgrade a net the board itself calls impedance-targeted, and
+the relaxed class asks a different QUESTION rather than a looser number. It is GENERATED_ONLY and not
+ENFORCED for one reason and it is the honest one: THE PER-CLASS TOLERANCES ARE THIS PROJECT'S OWN NUMBERS,
+not a standard's. The 10 mm or 5 percent of the fast classes is the 15 September ruling's figure calibrated
+on board A's anti-pad rows; the 30 mm or 15 percent of CLOCKED_DIGITAL is a judgement. Until a source backs
+them, they are a written screen and say so 16 September 2026, an authority for the PRINCIPLE and not for the
+numbers: TI SCAA082A section 1.6 (v2/vendor/ti/ti-scaa082a-high-speed-layout-guidelines.pdf) states that at
+high frequency the return current flows along the lowest impedance path, directly beside the signal, and that
+a slot in the reference forces a loop whose area is what radiates. That is what this rule rests on and this
+tree held no source for it until today. It states NO per-class tolerance, so the millimetres here are still
+this project's own and the maturity does not move.  
+*Close it by* decision 39 closed the source half on 21 September 2026: the per-class criterion is ruled as a declared calibration with the numbers exactly as they stand. What is left is the DECLARATION, the remaining boards' signal_classes tables written the way board E's is, AND the separation of this rule's count from RET-002's, which the shared verdict has made live. Owner **SESSION**. Effort P50 8h, P80 24h.
+
+**RET-003 return transition at a reference change** (BLOCKER, ENFORCED)  
+16 September 2026: the reference conductor is determined now, per via, by sampling the fill in a RING around
+the transition (the fill retreats from the via's own barrel, so the centre reads 'no pour' and the first
+version of this measurement came back with every via undetermined on every board). Measured: board A 86 vias
+keep their reference, 131 move between two ground planes, 35 move between GND and VBAT because A's In2
+carries both side by side; C 62 and 166 and none; D 145 and none; E 202 and none. The first two cases are
+RET-004's and are gated there. The third is this rule's and is gated here: a return crossing between two
+DIFFERENT reference nets crosses at a capacitor or it goes the long way round. The distance is declared per
+board (board A: 3 mm, the same number this project already uses for a decoupling capacitor from its pin) and
+it is OURS, so the maturity is GENERATED_ONLY until a document states it 16 September 2026: TI SCAA082A
+section 2.5 asks for ground vias AROUND the signal via and gives no figure for how far away one may sit, so
+the search radius here remains unsourced.  
+*Close it by* decision 39 rules the distance as this project's own declared calibration (21 September 2026). What is left is board A's own reading: the vias that change to a power reference with no capacitor within it, each answered by a capacitor at the transition in gen_pcb_a3.py or declared with its reason. Owner **SESSION**. Effort P50 3h, P80 12h.
+
 **RF-001 RF paths are designed as RF** (BLOCKER, ENFORCED)  
 the D gate checks the RF chain's net continuity and the module keep-outs; no line impedance is computed, no
 filter is verified, and the LPF values are flagged for a simulation that has not run. This entry NAMES NO
@@ -64,6 +98,46 @@ for and the router put the lines inside, which is the shape of defect this rule 
 still not judged is the ground clearance of a coplanar line, the via fence, the launch and the filter, so the
 rule stays GENERATED_ONLY in its gap category while its verdict is now real  
 *Close it by* board A's eleven RF paths take an outer layer at the class width (the A40 placement), then the LPF simulation and the coplanar clearance and via fence. Owner **SESSION**, after IMP-001. Effort P50 6h, P80 18h.
+
+**SI-001 transmission-line classification** (MUST_JUSTIFY, ENFORCED)  
+16 September 2026: half of this note was already wrong and the other half is now addressed. Every net IS
+classified, by spectral content, 413 declarations across the seven boards; what was missing was the
+arithmetic that turns a class into a LENGTH. edge_length.py computes the propagation delay of each layer from
+the board's own stackup (an outer layer is a microstrip and sees about (er+1)/2, an inner one sees er: 5.5
+and 6.9 ps/mm on FR-4), takes the rise time from the DECLARATION beside each class entry, because a rise time
+is a property of the driver and board A's fast nets are gate drives while board B's are a memory bus, and
+compares every signal net's routed length with t_r / (k * t_pd). The criterion k is declared per board with
+its reason and no source in this tree states one, so the rule stays GENERATED_ONLY however carefully it is
+chosen. A net whose class carries no declared edge is COUNTED AND NAMED, never estimated, and the verdict is
+INCONCLUSIVE while any remain: that is the gap made per-net instead of per-project 16 September 2026: TI
+SCAA082A Table 2 gives measured propagation delays on FR-4 at er 4.6, microstrip 171.9 mm/ns and stripline
+139.8 mm/ns (5.82 and 7.15 ps/mm), which is within 6 percent of the 5.5 and 6.9 ps/mm edge_length.py computes
+from the board's own stackup: the arithmetic has a second opinion. The criterion k still has none. 16
+September 2026, evening: BOTH HALVES OF THE INPUT ARE NOW PARTLY SOURCED AND THE REST IS MEASURED WORK, NOT
+SESSION WORK. The criterion is declared 6 on every board and calibrated against a document for the first
+time: ECSS-E-HB-20-07A section 6.1.2.3 (transcribed in v2/vendor/standards/) works a real case where a 35 mm
+clock track with a 200 ps edge failed a radiated emission test, and that track is ONE rise distance long, k =
+1, so k = 6 is a sixth of a known failure. Fifteen entries over five boards now carry a rise time from a
+SPECIFICATION rather than from nobody: USB 2.0 gives 500 ps for high speed (7.1.2.2, THSR/THSF minimum) and 4
+ns for full speed (Table 7-9, TFR/TFF minimum), both 10 to 90 percent, both minimums, which is the worst case
+a board is designed for. What the other classes need was CHECKED before it was called a gap: the RP2040
+datasheet documents a slew-rate control bit and no number, the 74LVC family datasheets from TI and from
+Nexperia specify only the input transition rate they tolerate, and TI SCAA082A gives propagation delay and no
+edge. A rise time those parts do not publish cannot be declared by this session at all: it is an oscilloscope
+at bring-up or a vendor's answer, and putting it in the session queue put work in the critical path that no
+session could start. AND THE RULE NOW ASKS THE RIGHT QUESTION OF A LONG NET: being a transmission line is
+physics, not a defect, so a net past its critical length is asked whether it is impedance-controlled,
+series-terminated (a screen that says so: the board file knows neither which end drives nor what the far end
+is) or declared with a reason, and only what is left is the finding. The first version would have failed
+every net on every board at a sub-nanosecond edge and reported physics. 17 SEPTEMBER 2026, A SECOND ANCHOR
+FOR k, from the same handbook and independent of the first: 6.1.2.3's example track is one rise distance long
+(k = 1) and failed a radiated emission test, and the same clause describes that track as 'approximately
+lambda/6' at F2 = 1/(pi tr). Those two statements are the same length, because lambda/6 at F2 is exactly pi/6
+of v*tr, so the handbook's own radiator sits at k = 6/pi, which is 1.9. This project's k = 6 is 3.1 times
+stricter than the length that failed, by the handbook's own arithmetic rather than by a second opinion about
+it. The criterion is still ours and still without a standard that states one; what it now has is a published
+failure it is a stated distance away from.  
+*Close it by* decision 39 rules the criterion k as a declared calibration (21 September 2026), so the whole of what is left is an edge rate for the classes whose drivers publish none (checked: RP2040, 74LVC from two vendors, SCAA082A: the datasheets carry a slew-rate control bit, an input transition rate and a propagation delay, and no edge). That is an oscilloscope at bring-up, which is why the owner is LAB and the execution HARDWARE rather than a standards wait: the vendors' documents were the wait and they have been read. A direct question to a vendor is the only shortcut and nobody has asked one. Owner **LAB**. Effort P50 8h, P80 24h.
 
 ## prose only (1)
 
@@ -129,7 +203,7 @@ defect of this morning one level down, and it means no board in this set current
 outside its declared exceptions.  
 *Close it by* derive the distance per device class from the current's spectral content; keep the 3 mm as a screen. Owner **SESSION**, after SI-001. Effort P50 6h, P80 16h.
 
-## source or applicability unresolved (9)
+## source or applicability unresolved (6)
 
 **IMP-001 an impedance target is feasible and asked for** (BLOCKER, SOURCE_UNVERIFIED)  
 closed forms from a standard not in the tree; no fabricator confirmation and no coupon. 19 SEPTEMBER 2026,
@@ -164,80 +238,6 @@ board's assignment, and both board gates that print a pair's mismatch print what
 for and the clause it was read from. Which of the two DECIDES is owner decision 36, which now carries the USB
 2.0 specification's own 100 ps of allowed cable skew as the scale: this project's 1.00 mm is about 5.5 ps  
 *Close it by* The CITATION is done (17 September 2026); the JUDGING is owner decision 36, which now has the numbers on both sides. Owner **SESSION**, after INT-001. Effort P50 1h, P80 3h.
-
-**RET-001 a continuous adjacent return path** (BLOCKER, SOURCE_UNVERIFIED)  
-16 September 2026: the principle is implemented and the heuristic is no longer standing in for it. Every net
-gets a spectral-content class from EVIDENCE (the board's own impedance-targeted net class, or a declaration
-in boards/<letter>.json carrying a written basis naming the part or interface that decides it), and each
-class is asked the question it deserves: a fast net for an ADJACENT reference within a tolerance, a slow one
-for whether a return path EXISTS at all. Four properties keep a relaxation from becoming an exemption
-mechanism, each with a rule: a declaration without a reason is refused, an unclassified net is judged at the
-STRICTEST bar and named, a declaration cannot downgrade a net the board itself calls impedance-targeted, and
-the relaxed class asks a different QUESTION rather than a looser number. It is GENERATED_ONLY and not
-ENFORCED for one reason and it is the honest one: THE PER-CLASS TOLERANCES ARE THIS PROJECT'S OWN NUMBERS,
-not a standard's. The 10 mm or 5 percent of the fast classes is the 15 September ruling's figure calibrated
-on board A's anti-pad rows; the 30 mm or 15 percent of CLOCKED_DIGITAL is a judgement. Until a source backs
-them, they are a written screen and say so 16 September 2026, an authority for the PRINCIPLE and not for the
-numbers: TI SCAA082A section 1.6 (v2/vendor/ti/ti-scaa082a-high-speed-layout-guidelines.pdf) states that at
-high frequency the return current flows along the lowest impedance path, directly beside the signal, and that
-a slot in the reference forces a loop whose area is what radiates. That is what this rule rests on and this
-tree held no source for it until today. It states NO per-class tolerance, so the millimetres here are still
-this project's own and the maturity does not move.  
-*Close it by* obtain an authoritative basis for the per-class tolerance (a critical-length criterion from the drivers' own edge rates, or a published guideline), and declare the remaining boards' nets the way E's are. Owner **SESSION**, after SI-001. Effort P50 8h, P80 26h.
-
-**RET-003 return transition at a reference change** (BLOCKER, SOURCE_UNVERIFIED)  
-16 September 2026: the reference conductor is determined now, per via, by sampling the fill in a RING around
-the transition (the fill retreats from the via's own barrel, so the centre reads 'no pour' and the first
-version of this measurement came back with every via undetermined on every board). Measured: board A 86 vias
-keep their reference, 131 move between two ground planes, 35 move between GND and VBAT because A's In2
-carries both side by side; C 62 and 166 and none; D 145 and none; E 202 and none. The first two cases are
-RET-004's and are gated there. The third is this rule's and is gated here: a return crossing between two
-DIFFERENT reference nets crosses at a capacitor or it goes the long way round. The distance is declared per
-board (board A: 3 mm, the same number this project already uses for a decoupling capacitor from its pin) and
-it is OURS, so the maturity is GENERATED_ONLY until a document states it 16 September 2026: TI SCAA082A
-section 2.5 asks for ground vias AROUND the signal via and gives no figure for how far away one may sit, so
-the search radius here remains unsourced.  
-*Close it by* find a published figure for how far a plane-stitching capacitor may sit from the transition it serves, or measure one. Owner **SESSION**, after RET-001. Effort P50 3h, P80 12h.
-
-**SI-001 transmission-line classification** (MUST_JUSTIFY, SOURCE_UNVERIFIED)  
-16 September 2026: half of this note was already wrong and the other half is now addressed. Every net IS
-classified, by spectral content, 413 declarations across the seven boards; what was missing was the
-arithmetic that turns a class into a LENGTH. edge_length.py computes the propagation delay of each layer from
-the board's own stackup (an outer layer is a microstrip and sees about (er+1)/2, an inner one sees er: 5.5
-and 6.9 ps/mm on FR-4), takes the rise time from the DECLARATION beside each class entry, because a rise time
-is a property of the driver and board A's fast nets are gate drives while board B's are a memory bus, and
-compares every signal net's routed length with t_r / (k * t_pd). The criterion k is declared per board with
-its reason and no source in this tree states one, so the rule stays GENERATED_ONLY however carefully it is
-chosen. A net whose class carries no declared edge is COUNTED AND NAMED, never estimated, and the verdict is
-INCONCLUSIVE while any remain: that is the gap made per-net instead of per-project 16 September 2026: TI
-SCAA082A Table 2 gives measured propagation delays on FR-4 at er 4.6, microstrip 171.9 mm/ns and stripline
-139.8 mm/ns (5.82 and 7.15 ps/mm), which is within 6 percent of the 5.5 and 6.9 ps/mm edge_length.py computes
-from the board's own stackup: the arithmetic has a second opinion. The criterion k still has none. 16
-September 2026, evening: BOTH HALVES OF THE INPUT ARE NOW PARTLY SOURCED AND THE REST IS MEASURED WORK, NOT
-SESSION WORK. The criterion is declared 6 on every board and calibrated against a document for the first
-time: ECSS-E-HB-20-07A section 6.1.2.3 (transcribed in v2/vendor/standards/) works a real case where a 35 mm
-clock track with a 200 ps edge failed a radiated emission test, and that track is ONE rise distance long, k =
-1, so k = 6 is a sixth of a known failure. Fifteen entries over five boards now carry a rise time from a
-SPECIFICATION rather than from nobody: USB 2.0 gives 500 ps for high speed (7.1.2.2, THSR/THSF minimum) and 4
-ns for full speed (Table 7-9, TFR/TFF minimum), both 10 to 90 percent, both minimums, which is the worst case
-a board is designed for. What the other classes need was CHECKED before it was called a gap: the RP2040
-datasheet documents a slew-rate control bit and no number, the 74LVC family datasheets from TI and from
-Nexperia specify only the input transition rate they tolerate, and TI SCAA082A gives propagation delay and no
-edge. A rise time those parts do not publish cannot be declared by this session at all: it is an oscilloscope
-at bring-up or a vendor's answer, and putting it in the session queue put work in the critical path that no
-session could start. AND THE RULE NOW ASKS THE RIGHT QUESTION OF A LONG NET: being a transmission line is
-physics, not a defect, so a net past its critical length is asked whether it is impedance-controlled,
-series-terminated (a screen that says so: the board file knows neither which end drives nor what the far end
-is) or declared with a reason, and only what is left is the finding. The first version would have failed
-every net on every board at a sub-nanosecond edge and reported physics. 17 SEPTEMBER 2026, A SECOND ANCHOR
-FOR k, from the same handbook and independent of the first: 6.1.2.3's example track is one rise distance long
-(k = 1) and failed a radiated emission test, and the same clause describes that track as 'approximately
-lambda/6' at F2 = 1/(pi tr). Those two statements are the same length, because lambda/6 at F2 is exactly pi/6
-of v*tr, so the handbook's own radiator sits at k = 6/pi, which is 1.9. This project's k = 6 is 3.1 times
-stricter than the length that failed, by the handbook's own arithmetic rather than by a second opinion about
-it. The criterion is still ours and still without a standard that states one; what it now has is a published
-failure it is a stated distance away from.  
-*Close it by* the criterion and the USB edges are declared; what is left is an edge rate for the classes whose drivers publish none (checked: RP2040, 74LVC from two vendors, SCAA082A), which is a measurement at bring-up or a vendor answer and not session work. Owner **VENDOR**. Effort P50 8h, P80 24h.
 
 **STK-002 a layer count is decided and costed** (BLOCKER, OWNER_DECISION_REQUIRED)  
 layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for

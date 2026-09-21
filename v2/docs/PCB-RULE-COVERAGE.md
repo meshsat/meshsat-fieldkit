@@ -43,9 +43,9 @@ appears in the gap register.
 | PWR-002 | POWER_TREE | MUST_JUSTIFY | the switch and always_on declarations in each gen_sch_*.py rail | power_sequence.py -> power_sequence | tests/test_power_sequence.py | **ENFORCED** |
 | PWR-003 | POWER_TREE | BLOCKER | pcb_energy_chain.yaml, the chain as data | energy_chain.py, pcb_fuse_derating.yaml -> energy_chain_<letter> | tests/test_energy_chain.py | **ENFORCED** |
 | REL-001 | RELIABILITY | MUST_JUSTIFY | NONE_YET | reliability.py -> reliability | tests/test_reliability.py | **ENFORCED** |
-| RET-001 | RETURN_PATH | BLOCKER | signal_class.py plus each board's signal_classes table, judged by intent_checks.py | intent_checks.py -> intent_return_path | tests/test_signal_class.py | **SOURCE_UNVERIFIED** |
+| RET-001 | RETURN_PATH | BLOCKER | signal_class.py plus each board's signal_classes table, judged by intent_checks.py | intent_checks.py -> intent_return_path | tests/test_signal_class.py | **ENFORCED** |
 | RET-002 | RETURN_PATH | MUST_JUSTIFY | gen_pcb_*3.py pours | intent_checks.py -> intent_return_path | tests/test_board_gates.py | **ENFORCED** |
-| RET-003 | RETURN_PATH | BLOCKER | gen_pcb_a3.py In2 pours | ref_change.py -> return_stitch | tests/test_ref_change.py | **SOURCE_UNVERIFIED** |
+| RET-003 | RETURN_PATH | BLOCKER | gen_pcb_a3.py In2 pours | ref_change.py -> return_stitch | tests/test_ref_change.py | **ENFORCED** |
 | RET-004 | RETURN_PATH | MUST_JUSTIFY | gnd_grid.py, return_via.py fixer | return_via.py -> return_via | tests/test_board_gates.py, tests/test_signal_class.py | **ENFORCED** |
 | RF-001 | RF | BLOCKER | gen_pcb_d3.py, gen_pcb_b3.py keep-outs | rf_line.py, check_pcb_d.py -> rf_line | tests/test_rf_line.py | **ENFORCED** |
 | RF-002 | RF | BLOCKER | gen_sch_c.py, gen_sch_d.py, gen_sch_a.py | check_contracts.py -> inhibit_chain_<letter> | tests/test_gate_fixtures.py | **ENFORCED** |
@@ -58,7 +58,7 @@ appears in the gap register.
 | SCH-005 | SCHEMATIC_INTEGRITY | BLOCKER | kisch.py (check_land, land_pads), schlayout.py (_lands), gen_sch_e.py, gen_sch_b.py | kisch.py, pin_map_lands.py -> pin_map_lands_<letter> | tests/test_pin_map_lands.py | **ENFORCED** |
 | SGN-001 | VERIFICATION_SIGNOFF | BLOCKER | rules_status.py, over pcb_rules.yaml and pcb_rules_coverage.yaml | rules_status.py -> rules_complete | tests/test_rules_status.py | **ENFORCED** |
 | SGN-002 | VERIFICATION_SIGNOFF | MUST_JUSTIFY | rules_render.py prototype_doc | rules_render.py | tests/test_rule_gate_mapping.py | **VERIFIED_MANUALLY** |
-| SI-001 | SIGNAL_INTEGRITY | MUST_JUSTIFY | signal_class.py declarations | edge_length.py -> edge_length | tests/test_edge_length.py | **SOURCE_UNVERIFIED** |
+| SI-001 | SIGNAL_INTEGRITY | MUST_JUSTIFY | signal_class.py declarations | edge_length.py -> edge_length | tests/test_edge_length.py | **ENFORCED** |
 | STK-001 | STACKUP | BLOCKER | stackup_write.py, written LAST in full.sh so it survives the chain | stackup_gate.py -> stackup_gate | tests/test_stackup_gate.py, tests/test_stackup_reader.py | **ENFORCED** |
 | STK-002 | STACKUP | BLOCKER | NONE_YET | layer_judge.py -> layer_judge |  | **OWNER_DECISION_REQUIRED** |
 | SUP-001 | LIFECYCLE_SUPPLY | BLOCKER | lcsc_fill.py, jlc-handfit.txt | jlc_certify.py, lcsc_fill.py -> jlc_certify_<letter>, lcsc_fill | tests/test_order_codes.py, tests/test_gate_fixtures.py | **ENFORCED** |
@@ -72,7 +72,7 @@ appears in the gap register.
 
 | maturity | rules |
 |---|---|
-| ENFORCED | 47 |
+| ENFORCED | 50 |
 | VERIFIED_MANUALLY | 2 |
-| SOURCE_UNVERIFIED | 4 |
+| SOURCE_UNVERIFIED | 1 |
 | OWNER_DECISION_REQUIRED | 5 |

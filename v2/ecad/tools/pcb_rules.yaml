@@ -927,6 +927,23 @@ rules:
      Adequacy is judged from edge rate, electrical length, the reference structures the signal actually runs
      over, the discontinuities it crosses and the interface's own requirement, not from a single geometric
      proxy.
+   false_positive_analysis: >
+     A false refusal has three shapes and each has an instrument.
+     ONE, A NET CLASSIFIED FASTER THAN IT IS: the rule is applied per spectral class and the class comes from
+     signal_class.py's per-net declaration, 413 of them across seven boards, each carrying its basis. Four
+     rules stop that declaration becoming an exemption mechanism, and a net with no declaration is not
+     quietly demoted.
+     TWO, A REFERENCE THE TOOL DOES NOT COUNT: the first version read a PREFIX LIST of pour names and missed
+     board E's In2 power pours, so a net with a reference under it read as having none. It counts every
+     filled zone now.
+     THREE, A HOLE IN A REFERENCE READ AS AN ABSENT REFERENCE: of board B's 675.2 mm of uncovered run, 884
+     runs and 601.3 mm were another conductor's via anti-pad, median 0.7 mm. return_gaps separates any
+     conductor's anti-pad, counts the millimetres and reports them, and how perforated a reference may be is
+     RET-003's question rather than this one.
+     AND THE NUMBER ITSELF is this project's calibration and not an authority's, ruled as such by decision 39
+     on 21 September 2026 with ECSS-E-HB-20-07A 6.1.2.5.2 as the qualitative authority. A criterion 50
+     percent looser clears fourteen of the thirty-two nets failing across the set, so the number decides
+     about half of them and is labelled wherever it appears.
    classification: PHYSICS_PRINCIPLE
    applicability: CONDITIONAL
    condition: {fact: has_tracks, op: truthy}
@@ -1025,6 +1042,17 @@ rules:
      Where a signal changes layer and its reference conductor changes with it, a return path for that
      transition exists: a via between the two reference conductors when they are different nets at the same
      potential, a stitching capacitor when they are different potentials, or no transition at all.
+   false_positive_analysis: >
+     A false refusal is a via this screen has no business judging, and the classification is written beside
+     the board rather than inferred here. A via whose reference does not change is not this rule's subject; a
+     via that changes to another NET's reference is RET-004's; an unclassified via stands rather than being
+     assumed innocent. ref_change.py writes that classification and return_via.py reads it, and where the
+     file is absent the screen declares its missing input instead of guessing. The second shape is a via at a
+     plane change to a POWER reference with no capacitor near it: board A's thirteen are real, and a false
+     one would be a change to a plane that is at the same potential as the one it left, which the
+     classification distinguishes by net and not by name.
+     AND THE DISTANCE is this project's calibration, ruled by decision 39 on 21 September 2026 and recorded
+     as such.
    classification: PHYSICS_PRINCIPLE
    applicability: CONDITIONAL
    condition: {all: [{fact: has_tracks, op: truthy}, {fact: layers, op: ge, value: 4}]}
@@ -1241,6 +1269,14 @@ rules:
      Every net is classified by whether it behaves as a transmission line, from its rise time, propagation
      delay and electrical length, and its topology and termination follow from that classification, not from
      its bit rate or clock frequency.
+   false_positive_analysis: >
+     A false refusal is a net judged against an edge rate it does not have. The rule judges only nets whose
+     edge rate is DECLARED, counts the ones that are not (60 on board A, 380 on board B) and says so in its
+     own verdict rather than passing them, so the reading is INCONCLUSIVE with its missing input named until
+     the declarations exist. The second shape is a long net that IS answered: a run over the criterion whose
+     reference is continuous underneath is reported as long_and_answered and is not a refusal.
+     AND THE CRITERION is this project's calibration, ruled by decision 39 on 21 September 2026, with the
+     numbers unchanged by that ruling.
    classification: PHYSICS_PRINCIPLE
    applicability: CONDITIONAL
    condition: {fact: has_tracks, op: truthy}
