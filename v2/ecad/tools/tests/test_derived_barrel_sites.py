@@ -46,3 +46,47 @@ def t_the_rule_names_a_typed_site_and_passes_a_derived_one():
 
 def t_the_generator_still_declares_the_list_the_rule_reads():
     assert "_E_SITES = [" in open(GEN).read(), "the list moved or was renamed: the rule reads nothing"
+
+
+def _skews(src):
+    """Every skew a site in `_E_SITES` declares, read from the STATEMENT rather than from the words."""
+    import ast
+    t = ast.parse(src)
+    out = []
+    for n in ast.walk(t):
+        if isinstance(n, ast.Assign) and any(getattr(x, "id", "") == "_E_SITES" for x in n.targets):
+            for el in getattr(n.value, "elts", []):
+                vals = getattr(el, "elts", [])
+                if len(vals) >= 6 and isinstance(vals[5], ast.Constant):
+                    out.append((getattr(vals[0], "value", "?"), float(vals[5].value)))
+    return out
+
+
+def _unrecorded(src, rec):
+    """The sites whose skew is above an even split and whose number the board file does not carry."""
+    return [(n, sk) for n, sk in _skews(src) if sk > 1.0 and ("%.2f" % sk) not in rec]
+
+
+def t_a_site_that_declares_a_skew_carries_the_reading_that_measured_it():
+    """A SKEW IS A MEASUREMENT AND NEVER A KNOB (21 September 2026, E39).
+
+    `cluster(skew=)` multiplies the current a site is sized for, so a number typed into the generator buys
+    barrels for a reason nobody can check. The project's own rule for that shape is the one every declaration
+    here lives under: a declaration must never become an exemption, so the number has to be findable in the
+    board file beside the reading that produced it. On E37's finished round-1 board PV_P's five barrels pass
+    5.07 A with 1.747 A through one of them, which is the 1.72 the generator now declares.
+
+    The defective fixture is a site declaring a skew the record does not carry; the acceptable one is the
+    tree as it stands."""
+    src = open(os.path.join(TOOLS, "gen_pcb_e3.py"), encoding="utf-8").read()
+    rec = open(os.path.join(TOOLS, "boards", "e.json"), encoding="utf-8").read()
+    assert _skews(src), "no site in _E_SITES carries a skew field, so this rule holds nothing"
+    assert _unrecorded(src, rec) == [], \
+        "sized at a skew boards/e.json carries no reading of: %s" % _unrecorded(src, rec)
+    # THE SENTINEL MUST BE A NUMBER THE RECORD CANNOT CARRY, and the first one was not: 3.14 occurs in
+    # boards/e.json as a real measurement, so the defective fixture read as already recorded and the rule
+    # passed on a fixture that proved nothing. The fixture asserts its own absence now.
+    assert "7.77" not in rec, "the sentinel occurs in the record, so this fixture would prove nothing"
+    bad = "_E_SITES = [\n    ('PV_P', _padc('Q3', '5'), 2.968, 0.30, 'y', 7.77),\n]\n"
+    assert _unrecorded(bad, rec) == [("PV_P", 7.77)], \
+        "the defective fixture was not caught: %s" % _unrecorded(bad, rec)
