@@ -17112,3 +17112,11 @@ pour stitch left the island; the direct closer read the zone's anchor 70 mm away
 finished board, so the pre-lay did its job and took its neighbour's only way out, the D17 against D18 shape one pin
 over. D12 stays. D34's item beside the derived barrels is that pin's ground via before the pre-lay, or the pre-lay's
 via a pitch further off.
+
+**Addendum, 07:38 CEST: A97 lands at its cut with a new class of open.** Twenty open of 274 at hard 0, against
+A93's ten and A95's fifteen at their cuts, and twelve of the twenty are the LM5176 controllers' own pins (bootstrap,
+gate drive, VCC, mode, current sense) on the stages whose FET drain tabs carry the barrel clusters A97 alone
+pre-lays at the one-layer sites. The clusters stand in the controllers' escape lanes and cost the router those
+connections; `/+5V_S1` and `/+5V_S2` closed at the router and `/+5V_S3` did not (this tree carries the four-barrel
+columns, not A95's whole bank). Whether the clusters buy anything is `via_current`'s reading on the solved mesh,
+which the 02:45 entry named as the question, solved beside this entry.
