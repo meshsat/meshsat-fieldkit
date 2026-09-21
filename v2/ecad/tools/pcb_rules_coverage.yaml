@@ -251,7 +251,21 @@ coverage:
 
  GND-002: {implementation: "gen_sch_c.py standoff bond, gen_sch_b.py magnetics termination",
    verification: {tool: "a written strategy and a bench measurement", document: "docs/GROUNDING-AND-SHIELDS.md"},
-   maturity: OWNER_DECISION_REQUIRED, gap_category: PROSE_ONLY,
+   maturity: DOCUMENTED_ONLY, gap_category: PROSE_ONLY,
+   _maturity_ruled: "21 September 2026: DECISION 29 IS RULED (the session's) and this rule stops waiting on it.
+     The strategy's four board changes were held because they touch the Ethernet link's territory; the ruling
+     settles that territory, so they are SESSION WORK NOW and the maturity says what is true, DOCUMENTED_ONLY:
+     the strategy is written and dated, nothing is built to it yet, and a bond is confirmed by a four-wire
+     measurement and an emissions sweep that need hardware. What the ruling also settles is the strategy's own
+     subject: the ONE isolated boundary in this kit is the external Ethernet port through T1, and everything
+     else that leaves the case leaves on a conductor referenced to the kit's own ground. MEASURED ON THE SEVEN
+     COMMITTED BOARDS THE SAME DAY, so the write-up rests on the boards and not on a memory of them: no board
+     declares a chassis, shield or earth net; the only bond between signal ground and metal is board C's eight
+     BackerScrew_M3_GND rings into the face plate's PEM standoffs, which ASSEMBLY.md masks from the conformal
+     coat for that reason; every mounting hole on A, B, D, E, E5 and P carries no net, so the four M3 rods bond
+     nothing and there is no second path; and board B's line-side termination is 75 ohm per centre tap into a
+     1 nF 2 kV capacitor to SIGNAL ground (R9, R10, C33), while the other two centre taps carry the PoE phantom
+     power, which is why only two of the four are terminated.",
    _maturity_why: "16 September 2026, second reading: DOCUMENTED_ONLY said the gap was a missing tool and it is
      not. The strategy names four changes that make it true (a CHASSIS net and a bonding pad on board A, the
      1 nF 2 kV common-node capacitor and the RJ45 shell moved to it on board B) and its own last paragraph says
@@ -268,8 +282,8 @@ coverage:
      three boards and they touch owner decision 29's territory, so they wait on that ruling rather than being made
      piecemeal. It stays DOCUMENTED_ONLY because a bond is confirmed by a four-wire measurement and an emissions sweep,
      neither of which exists until there is hardware",
-   remediation: {action: "make the four changes the strategy names once decision 29 is answered, then the bond resistances and the pre-compliance sweep at the prototype",
-     owner: SESSION, execution: PARALLEL_AGENT, depends_on: [INT-002], p50_h: 4, p80_h: 12}}
+   remediation: {action: "decision 29 is answered (21 September 2026), so the four changes the strategy names are session work now: a CHASSIS net and a bonding pad near the dock on board A, a pad for the connector-plate strap on the same board, and the 1 nF 2 kV common-node capacitor and the RJ45 shell moved from signal ground to that node on board B. Each is a schematic change that owes its regeneration and its contract gate in the same commit. Then the bond resistances and the pre-compliance sweep at the prototype",
+     owner: SESSION, execution: SEQUENTIAL, depends_on: [], p50_h: 4, p80_h: 12}}
 
  STK-001: {implementation: "stackup_write.py, written LAST in full.sh so it survives the chain",
    verification: {tool: "stackup_gate.py", verdict: "stackup_gate", fixtures: "tests/test_stackup_gate.py, tests/test_stackup_reader.py"},
