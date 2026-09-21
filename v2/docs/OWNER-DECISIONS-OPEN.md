@@ -738,14 +738,18 @@ TRK_CSN at 0.204 mm from TRK_TG2 and TRK_CSP at 0.212 from TRK_BG2, and TRK_TG1,
 are the LT8705A's own gate drives, which the declaration does not carry. Of the 23 pairs of segments inside
 0.50 mm on a shared layer, fourteen are against a gate drive. BOARD A, A98, sha 3612b9bfb165ff0d: 88 pairs
 inside 0.50 mm, the tightest being PD_ISNS_P at 0.132 mm from PD_SW1, which IS declared, so on board A the
-declaration is not what is hiding the worst row. THE SAME READING SETTLES A SECOND THING, which is why it was
-taken: the switching side of those pairs is copper the ROUTER laid in every one of board E's 23 and in 82 of
-board A's 88, so the fence sense_fence draws after the pre-lay can move it; and the SENSE side is locked in
-all 23 on board E and in 35 of 88 on board A, so on board A the fence has nothing to grow from at exactly the
-nets that fail hardest. A gate drive's physics is not in dispute: it swings the driver's rail in tens of
-nanoseconds into amps of gate current, and board P's own switch_nets_why already calls a FET gate drive one
-of that board's two edge sources. What is in dispute is the NUMBER it should be held to, which is not this
-rule's 0.50 mm by construction.
+declaration is not what is hiding the worst row. AND BOARD A'S OWN SPLIT IS MEASURED NOW, which makes it
+comparable with board E's fourteen of 23 (21 September 2026, 16:48 CEST, the same board read twice): the
+DECLARED denominator alone gives 64 pairs inside 0.50 mm, with the switching side locked in 6 and the sense
+side in 22, while naming the gate drives on the command line gives 88, so TWENTY-FOUR of board A's 88 close
+approaches are against a net this rule does not count. THE SAME READING SETTLES A SECOND THING, which is why
+it was taken: the switching side of those pairs is copper the ROUTER laid in every one of board E's 23 and in
+82 of board A's 88, so the fence sense_fence draws after the pre-lay can move it; and the SENSE side is
+locked in all 23 on board E and in 35 of 88 on board A, so on board A the fence has nothing to grow from at
+exactly the nets that fail hardest. A gate drive's physics is not in dispute: it swings the driver's rail in
+tens of nanoseconds into amps of gate current, and board P's own switch_nets_why already calls a FET gate
+drive one of that board's two edge sources. What is in dispute is the NUMBER it should be held to, which is
+not this rule's 0.50 mm by construction.
 
 **Holds no rule today:** ANA-001 already FAILS on boards A and E on its declared denominator (board E at
 0.433 mm against 0.50 with every declared switching net pinned, board A at 7 of 24 on its landed arms), so

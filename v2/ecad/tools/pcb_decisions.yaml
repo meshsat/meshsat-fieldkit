@@ -700,7 +700,12 @@ decisions:
       TRK_BG1 and TRK_BG2 are the LT8705A''s own gate drives, which the declaration does not carry. Of the 23
       pairs of segments inside 0.50 mm on a shared layer, fourteen are against a gate drive. BOARD A, A98, sha
       3612b9bfb165ff0d: 88 pairs inside 0.50 mm, the tightest being PD_ISNS_P at 0.132 mm from PD_SW1, which
-      IS declared, so on board A the declaration is not what is hiding the worst row. THE SAME READING SETTLES
+      IS declared, so on board A the declaration is not what is hiding the worst row. AND BOARD A''S OWN
+      SPLIT IS MEASURED NOW, which makes it comparable with board E''s fourteen of 23 (21 September 2026,
+      16:48 CEST, the same board read twice): the DECLARED denominator alone gives 64 pairs inside 0.50 mm,
+      with the switching side locked in 6 and the sense side in 22, while naming the gate drives on the
+      command line gives 88, so TWENTY-FOUR of board A''s 88 close approaches are against a net this rule
+      does not count. THE SAME READING SETTLES
       A SECOND THING, which is why it was taken: the switching side of those pairs is copper the ROUTER laid
       in every one of board E''s 23 and in 82 of board A''s 88, so the fence sense_fence draws after the
       pre-lay can move it; and the SENSE side is locked in all 23 on board E and in 35 of 88 on board A, so on
