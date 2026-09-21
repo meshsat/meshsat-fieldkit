@@ -369,12 +369,27 @@ if _osx.environ.get("PLACE_E_BARRELS", "1") not in ("0", ""):
     # island and barrels are since E35. The FET source lands take islands and clusters below; DC_P reads carrying
     # on E35's judge without a typed site and takes none.
     _E_SITES = [
-        ("PV_P", _padc("Q3", "5"), 2.968, 0.30, "y"),   # the tracker input FET's drain tab; worst 2.02 on E29
+        # E39, 21 September 2026: the skew is MEASURED now rather than assumed even. On E37's finished
+        # round-1 board this cluster's five barrels pass 5.07 A with 1.747 A through ONE of them, a worst
+        # share of 1.72 times an even split, so the count comes from `amps * skew` the way CELL_F's has
+        # since 19 September: 2.968 * 1.72 = 5.10 A is SEVEN barrels at 0.30 mm where an even split asks
+        # five. The model's assumption travels with it: a skew is a property of the geometry and it falls
+        # as barrels are added and spread, so this is re-measured on the arm that carries it and never
+        # treated as a constant of the site. `cluster` refuses a lattice that breaks hole-to-hole and the
+        # run carries on, which is what says whether the room is there.
+        ("PV_P", _padc("Q3", "5"), 2.968, 0.30, "y", 1.72),   # the tracker input FET's drain tab; worst 2.02 on E29
     ]
     _e_laid, _e_refused = 0, []
-    for _n, _at, _a, _d, _ax in _E_SITES:
+    # THE BASIS OF EVERY SKEW BELOW, beside the call that uses it (test_cluster_skew_basis): a skew is a
+    # measurement on ONE routed board and goes stale like a typed coordinate. The only row above an even
+    # split today is PV_P's 1.72, read on E37's FINISHED round-1 board on 21 September 2026 (sha
+    # 246563debc363acd): its five barrels pass 5.07 A with 1.747 A through one of them, so the worst share
+    # is 1.72 times an even one and `barrels_for(2.968 * 1.72)` is seven at 0.30 mm where five were laid.
+    # boards/e.json `_e39_is_one_line_because_the_room_and_not_the_need_sets_the_other_three_counts`
+    # carries the reading and what it does NOT change; re-measure it on the arm that carries it.
+    for _n, _at, _a, _d, _ax, _sk in _E_SITES:
         try:
-            _got = _pcE.cluster(_n, _at, amps=_a, drill=_d, axis=_ax)
+            _got = _pcE.cluster(_n, _at, amps=_a, drill=_d, axis=_ax, skew=_sk)
         except Exception as _e:
             _e_refused.append("%s at %s: %s" % (_n, _at, _e)); continue
         _e_laid += len(_got or [])
