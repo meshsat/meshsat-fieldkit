@@ -359,3 +359,23 @@ def t_a_plated_hole_is_its_own_crossing_and_is_not_asked_for_barrels():
     sentences, judged = rc.judge(_Board(vias, [_FP("W_BP", pads)]), rails)
     assert judged == 1 and len(sentences) == 1
 
+
+def t_adjacent_pads_of_one_net_on_one_part_are_one_land():
+    """THE DEFECTIVE FIXTURE (21 September 2026, board E): a TDSON-8's source is pads 1, 2 and 3 at 1.27 mm, joined inside
+    the package; judged as three crossings of a third, the fixer's barrels at pad 2 were counted inside pads 1's and 3's
+    windows and both read short by two forever. Adjacent pads of one net on one part are one land."""
+    pads = [_Pad("/RAIL", str(i + 1), 10.0, 10.0 + 1.27 * i, 0.6, 0.9) for i in range(3)]
+    vias = [_Via("/RAIL", 10.0 + 0.6 * k, 11.27, 0.20) for k in range(-2, 2)]     # four barrels beside the middle pad
+    rails = {"/RAIL": {"amps_peak": 3.0, "source": "U1"}}
+    short, judged = rc.rows(_Board(vias, [_FP("U1", pads)]), rails)
+    assert judged == 1, (judged, [r["why"] for r in short])
+    if short:
+        r = short[0]
+        assert r["pad"] == "1-3" and abs(r["amps"] - 3.0) < 1e-9 and r["have"] == 4, r
+        assert "pads 1 to 3 drawn as one land" in r["why"], r["why"]
+    # THE ACCEPTABLE FIXTURE: three pads of one net 3 mm apart stay three crossings, and a bare one is named
+    pads = [_Pad("/RAIL", str(i + 1), 10.0, 10.0 + 3.0 * i, 0.6, 0.9) for i in range(3)]
+    vias = [_Via("/RAIL", 10.0, 10.0 + 3.0 * i, 0.4) for i in range(3)]
+    short, judged = rc.rows(_Board(vias, [_FP("U1", pads)]), rails)
+    assert judged == 3 and all(r["pad"] in ("1", "2", "3") for r in short), (judged, short)
+

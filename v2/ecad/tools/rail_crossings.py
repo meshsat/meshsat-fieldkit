@@ -121,6 +121,30 @@ def rows(b, rails, reach_mm=1.0, pin_sites=None):
             # anchored on the largest instance, which is where the copper is.
             _groups = {}
             for q in _pads: _groups.setdefault(str(q.GetNumber()), []).append(q)
+            # ADJACENT PADS OF ONE NET ON ONE PART ARE ONE LAND TOO (21 September 2026, 03:41 CEST, board E). A
+            # TDSON-8's source is pins 1, 2 and 3, three pads at a 1.27 mm pitch joined inside the package and
+            # numbered apart, so the rule above read Q2's source as three crossings of a third: the fixer laid
+            # three barrels at pad 2, the judge then counted them inside pads 1's and 3's windows, and reported
+            # both short by two, forever, because a barrel at pad 2 IS a barrel of that land. Pads of one net on
+            # one part whose centres lie within a pitch and a half of each other are merged into one land
+            # (label "1-3"), sharing the part's current once; pads further apart than that stay separate, so a
+            # module's five core pads spread across its edge are still five crossings and a bare one is named.
+            _MERGE = 1.5e6
+            _names = sorted(_groups)
+            _land = {_nm: _nm for _nm in _names}
+            for i, a_ in enumerate(_names):
+                for b_ in _names[i + 1:]:
+                    if _land[b_] != b_: continue
+                    if any(math.hypot(qa.GetPosition().x - qb.GetPosition().x, qa.GetPosition().y - qb.GetPosition().y) <= _MERGE
+                           for qa in _groups[a_] for qb in _groups[b_]):
+                        _land[b_] = _land[a_]
+            _merged = {}
+            for _nm in _names: _merged.setdefault(_land[_nm], []).extend(_groups[_nm])   # never `n`: that is the rail's net
+            _joined = {}
+            for root, qs in _merged.items():
+                _members = sorted({str(q.GetNumber()) for q in qs}, key=lambda t: (len(t), t))
+                _joined[(_members[0] + "-" + _members[-1]) if len(_members) > 1 else _members[0]] = qs
+            _groups = _joined
             _share = want[ref] / float(len(_groups))
             for _num, _inst in sorted(_groups.items()):
                 pad = max(_inst, key=lambda q: q.GetBoundingBox().GetWidth() * q.GetBoundingBox().GetHeight())
@@ -186,16 +210,16 @@ def rows(b, rails, reach_mm=1.0, pin_sites=None):
                 at_near = [(v.GetPosition().x / 1e6, v.GetPosition().y / 1e6) for v in near]
                 if _share > carried:
                     short.append({
-                        "net": n, "ref": ref, "pad": pad.GetNumber(), "at": (c.x / 1e6, c.y / 1e6),
+                        "net": n, "ref": ref, "pad": _num, "at": (c.x / 1e6, c.y / 1e6),
                         "drill": drill, "width": width, "near": at_near, "have": len(near), "need": need,
                         "carried": carried,
                         "reach": r0 / 1e6, "at_pad": (c.x / 1e6, c.y / 1e6), "amps": _share,
                         "part_amps": want[ref], "pads": len(_groups), "instances": len(_inst), "one_layer": _one_layer,
                         "why": "%s at %s pad %s (%.2f, %.2f): %d barrel(s) carrying %.2f A at a 10 K rise for %.2f A "
                                "(%.2f A over this part's %d pad(s) on the rail%s), which needs %d at %.2f mm%s"
-                               % (n, ref, pad.GetNumber(), c.x / 1e6, c.y / 1e6, len(near), carried, _share,
+                               % (n, ref, _num, c.x / 1e6, c.y / 1e6, len(near), carried, _share,
                                   want[ref], len(_groups),
-                                  (", pad %s drawn as %d pieces of one land" % (_num, len(_inst))) if len(_inst) > 1 else "",
+                                  (", pads %s drawn as one land" % _num.replace("-", " to ")) if "-" in _num else ((", pad %s drawn as %d pieces of one land" % (_num, len(_inst))) if len(_inst) > 1 else ""),
                                   need, drill,
                                   " [the net lies on one layer at generation: a crossing only if the router makes one]" if _one_layer else "")})
     return short, judged
