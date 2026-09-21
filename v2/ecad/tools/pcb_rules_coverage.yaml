@@ -28,7 +28,16 @@ rule_set_fingerprint: "ff8151db3576437b"
 
 coverage:
 
- ENV-001: {implementation: NONE_YET, verification: {tool: none, document: OPERATING-ENVELOPE.md},
+ ENV-001: {implementation: NONE_YET,
+   verification: {tool: none, document: OPERATING-ENVELOPE.md, data: "pcb_envelope.yaml", fixtures: "tests/test_envelope_data.py"},
+   _data_why: "21 September 2026: the record stays the authority and this rule is still verified by reading it,
+     but FOUR rules resolve against the envelope (CMP-001, THM-001, ISO-001, REL-001) and until the decision was
+     ruled each of them would have had to read prose or pick its own number. `tools/pcb_envelope.yaml` carries
+     the adopted numbers in a form a rule can use, and its four fixtures keep it from drifting: every number in
+     it must appear in the document, the document is pinned by the SAME sha256 this entry pins, and what the
+     record leaves open (the altitude, the vibration and shock severities, the service life) may not be invented
+     there. A second copy of a decision is only as good as its pin, and this one breaks in the same commit as
+     the record it quotes.",
    maturity: VERIFIED_MANUALLY, gap_category: NONE,
    _maturity_ruled: "decision 34, ruled by the session on 21 September 2026: v2/docs/OPERATING-ENVELOPE.md section 4 is ADOPTED as the design envelope and section 6's first row as the transient level, IEC 61000-4-2 level 4 at 8 kV contact and 15 kV air. This rule asks for exactly that document, so it is VERIFIED_MANUALLY against a document that is current and dated rather than OWNER_DECISION_REQUIRED against a draft. The altitude, the vibration and shock severities and the service life stay open in the document's own words, and they belong to the rules that genuinely need them; ENV-001 asks that the envelope is written, dated and resolved against, which it now is. Reverse by reopening decision 34, which returns the document to a draft and this rule to OWNER_DECISION_REQUIRED.",
    verified_on: "2026-09-21", verified_by: SESSION, verified_document: "v2/docs/OPERATING-ENVELOPE.md",
