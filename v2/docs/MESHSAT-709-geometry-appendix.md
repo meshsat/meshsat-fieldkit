@@ -16839,3 +16839,10 @@ reads hard 0 to 0 and unrouted 251 to 235, sixteen closures on the board where t
 an hour earlier kept none (the prediction written before it read fifteen and 236). The same board, the same
 generator, one tool line.
 
+**Addendum, 02:31 CEST: A89's pre-closer board re-closed with the old and the fixed stub router, one variable.**
+Old: 17 of 19 closed, two FAILED for want of a path (`/CH_SW2`, `/POE_EN`), hard 0 and nine open. Fixed: 17 of
+19, the same two FAILED, hard 0 and eight open. Neither run fired the drop-back (no closure raised the hard
+count), so on this board at this configuration the defect cost nothing and the one connection between the two
+is the scatter of wall-clock budgets on a loaded box, not the fix. The defect bites where a closure raises the
+hard count: A44 on 19 September, board E's switching group tonight.
+
