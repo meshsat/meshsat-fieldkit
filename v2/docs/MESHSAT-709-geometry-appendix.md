@@ -16979,3 +16979,41 @@ and the `+5V_SA` column at FB1 pad 2, all beside PACKED parts) are derived from 
 lays the same fourteen barrels within three micrometres, escapes 68 with 7 skipped, six of six crossings carrying,
 PREROUTE-DONE OK; board E's CELL_F cluster is placed on the router's transition beside F3 pad 2 (2.74 mm) and is left as
 it is, because its site is a solved barrel and not a pad.
+
+**Addendum, 06:37 CEST: two of A95's opens have addresses.** Read off A95's router board with the DRC's own two ends: the
+`/+5V_DEV` open is the whole run, 91.6 mm from a 3.2 mm In2 track beside U23 at case (87.56, 63.02) to the bank's stitch
+via under its connector at (-3.5, 72.6). The device rail's load bank took its resistor R40 as the slot rails did, and its
+remaining loads are the USB-C outlet cluster's (R100, C103, U23, U29) at case x +85 to +103, on the far side of every
+converter block since A84 seated the outlet stage at the outlet: a 6 A rail asked to cross the board in a router track,
+which is the shape 32.257 named, and its band is decision 35's copper weight by name (the evidence is in the register
+now). The new `/VIN_RAW` open is 14.1 mm from the clamp D2's pad 1 at (-115.83, 40.53) to a 0.5 mm stub in the head
+island: the SMCJ40A's surface pad sits over the west B.Cu band and carries no via of its own, so the pad's connection
+was the router's to lay and on A95 it did not. One barrel derived from the pad, 1.9 mm north of it and inside the band,
+makes the pad the band's before any route; a clamp carries pulse current, so one is the count. It is in the generator
+and its chain runs on the hub before it is committed.
+
+**Addendum, 06:46 CEST: the barrel fixer planned every site against the bare board, and the same chain run twice
+laid thirteen sites once and eleven the next time.** The D2 chain was run twice on the hub with the generator differing
+only at the clamp, a hundred millimetres from the charger. Run one: `rail_barrels` answered thirteen sites with forty
+barrels, none refused. Run two: eleven sites and thirty-three barrels, with CH_ACN at Q7's drain tab and VBUS20 at
+R16's pad, 8.6 mm apart since the charger reorder and both spreading along x toward each other, refused by the batch
+DRC at 0.14 mm hole to hole and shorting the two nets, and both reverted. The cause is the shape of the code: every
+site's plan was computed against the board as it stood before any site was laid, so two plans were each free against
+the board and blind to each other, and which cells each took moved with the pair pre-router's run-to-run scatter. The
+guard worked and the board stood at hard 0; what it cost was two crossings reading short on one run that carried on
+the other, which means board A's pre-route crossing count has been partly the tool's scatter. `rail_barrels.plan_sites`
+plans each site on the board as it will stand after the sites before it, every earlier plan's points counted as holes
+and rings at the larger of the hole-to-hole floor and the copper clearance; a fixture of two overlapping sites clashes
+on the planner as it stood at three points of three and does not on this one, and two distant sites plan exactly as
+each does alone. The bare-via lesson travelled with it: a barrel 1.9 mm from a surface pad is still an open pair, so
+the clamp's barrel carries a locked 0.5 mm run from the pad, which the placed board reads as one piece.
+
+**Addendum, 06:47 CEST: A93's finished board reads three open, board A's best number anywhere.** Its round-one finished
+board, read in a scratch copy while the remedy round regenerates (sha 1bd6c6b7be1359bd): hard 0 and three open of 274,
+`/+5V_DEV`, `/CH_SRN_F` and `/PA_ISNS_N`. The finish took the router's ten to seven in the stub router, held at seven
+through the dot and stitch prunes, and `direct_close` took seven to three in thirty-two minutes, closing `/+5V_S1`,
+`/+5V_S2` and `/+5V_S3` as a via to a track end at 7.7 to 7.9 mm each and `/S2_OUT` at 6.6 mm. So the three slot rails
+are closed on two boards by two different instruments, A93's by the finish on the pad guard's live columns and A95's by
+the router on the generator's whole bank, which is what the pair was for. What remains on A93 is the device rail's
+run to the outlet cluster, the charger's Kelvin filter net that every closer has refused pad to track since A47, and
+the PA sense line that crosses its own power rail sixteen times. Not adoptable against A32's zero.
