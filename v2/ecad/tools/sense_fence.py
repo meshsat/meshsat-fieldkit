@@ -103,13 +103,17 @@ def build(b, nets, grow_nm, layer, keepout_nm):
 
 def main(argv):
     import pcbnew
+    # `verdict.opt`, never argv.index: a flag given no value is answered rather than raised, and the next flag
+    # is never taken as a value (18 September 2026, assembly_set's IndexError read as a finding about seven
+    # boards). The suite's ratchet on unguarded flag reads named this file the moment it was written.
     path = argv[0]
-    letter = argv[argv.index("--board") + 1] if "--board" in argv else None
-    layers = (argv[argv.index("--layers") + 1] if "--layers" in argv else "F.Cu,B.Cu").split(",")
+    letter = _v.opt(argv, "--board", None)
+    layers = (_v.opt(argv, "--layers", "F.Cu,B.Cu") or "F.Cu,B.Cu").split(",")
     apply_ = "--apply" in argv
-    if "--net" in argv:      # NET:KEEP_MM, for a fixture and for asking the question of one net by hand
+    _netspec = _v.opt(argv, "--net", None)
+    if _netspec:             # NET:KEEP_MM, for a fixture and for asking the question of one net by hand
         nodes = []
-        for spec in argv[argv.index("--net") + 1].split(","):
+        for spec in _netspec.split(","):
             _n, _k = spec.split(":"); nodes.append({"net": _n, "keep_mm": float(_k)})
     else:
         import yaml
@@ -154,4 +158,4 @@ def main(argv):
 
 
 if __name__ == "__main__":
-    sys.exit(_v.guard("sense_fence", lambda a: main(a), sys.argv[1:], rules=["ANA-001"]))
+    sys.exit(_v.guard("sense_fence", main, sys.argv[1:], rules=["ANA-001"]))
