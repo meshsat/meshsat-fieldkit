@@ -7,14 +7,13 @@ One line per decision that is still open, what it holds up, and where its eviden
 v2/docs/OWNER-DECISIONS-2026-09-11.md and this page is generated from the same registry the readiness table
 is, so the pair counts below are the ones the gates use.
 
-**9 decisions are open and they hold 43 rule-board pairs of the 333 the set is judged on.** A pair held by a
+**8 decisions are open and they hold 36 rule-board pairs of the 333 the set is judged on.** A pair held by a
 decision is not a defect in the board: it is a question nobody has answered, and until it is answered the
 rule can be neither passed nor failed.
 
 | # | pairs | what is being decided | holds | boards | asked |
 |---|---:|---|---|---|---|
 | **43** | 14 | board B's route has resisted every lever this project can apply and the two that remain are architectural | EMC-001, GND-001, PAIR-001, PI-002, PI-003, PLC-002, PLN-001, RET-002, RET-004, RF-001, RTE-001, SCH-003, STK-001, VIA-001 | B | 2026-09-20 |
-| **29** | 7 | board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked | GND-002, INT-002 | A, B, C, D, E, P | 2026-09-16 |
 | **30** | 6 | ZEROIZE is a switch wired to nothing that can act on it | SCH-004 | A, B, C, D, E, P | 2026-09-16 |
 | **28** | 4 | board P cannot hold the return-path rule on two layers and the ruled P5 does not route | RET-002, RTE-001, STK-001, STK-002 | P | 2026-09-15 |
 | **27** | 3 | the four-layer boards cannot carry a plane under their back-side signals as built | RET-001, RET-002, STK-002 | C | 2026-09-15 |
@@ -84,71 +83,6 @@ it.
 | RTE-001 | geometry a fabricator will build | P | FAIL |
 | STK-001 | the stackup is declared, feasible and in the board | P | FAIL |
 | STK-002 | a layer count is decided and costed | P | INCONCLUSIVE |
-
-
-### Decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked
-
-**The question:** capacitive coupling as the switch vendor's clause 6.6 permits, or magnetics on all three
-links
-
-**Recommended:** ask the module's maker before changing copper; the switch vendor's own clause permits what
-is built
-
-**Measured:** MEASURED ON BOTH SIDES AND ON THE MAKER'S OWN CARRIER (17 September 2026), and the answer is
-that three of the switch vendor's four conditions are met by the copper as built and the fourth cannot be met
-by anyone in this project. THE LINK AS BUILT, from board B's netlist: each of the three module links carries
-eight conductors, and every one of the twenty-four runs from a module receptacle pin (U30A, U31A, U32A) to
-ONE 100 nF 0402 capacitor and on to a KSZ9897RTXI port pin, with no other node on any of those nets. The
-fourth switch port is the one that leaves the case and it is not transformer-less: it goes through T1, a
-Pulse H5007NL 1:1 magnetics module, into the RJ45. THE CLAUSE, quoted from the document in this tree
-(v2/vendor/cluster/ksz989x-hw-design-checklist.pdf, DS00004151A page 12, section 6.6 'Capacitive Coupling
-Option'): the family 'may be used in transformer-less applications where the PHY-to-PHY connection is within
-one PCB or interconnected PCBs, and a cable is not needed', with 'a single DC blocking 0.1 uF capacitor
-placed in series on each of the eight signals' and 'no additional components between the KSZ989x and the
-capacitor'. Both are true of this board, conductor by conductor. The third bullet is the open half and it is
-the vendor pointing away from itself: 'The other device may require termination or other circuitry. Refer to
-Microchip documentation for that device.' The other device is not Microchip's: it is the Broadcom PHY inside
-the compute module, whose datasheet is not published, so the document this clause sends the reader to does
-not exist for this link. WHAT THE MODULE'S OWN MAKER DOES, read today from their design files in this tree
-(v2/vendor/cm5/cm5io-kicad.zip, sheet CM5_GPIO.kicad_sch): the module's TRD0 to TRD3 pairs run straight into
-U3, a TRJG0926HENL MagJack with integrated magnetics, with no series capacitor and no termination network on
-the module side at all. So the maker's own reference is magnetics, and because it is magnetics it says
-nothing about what their PHY needs when the transformer is removed. That is the question to put to them, and
-it is one question: does the CM5's PHY support transformer-less operation, and does it need termination. THE
-COST OF THE FALLBACK, measured rather than estimated: the part is the one this board already carries, Pulse
-H5007NL (C6384935, 1.75 USD, stock 761 at JLCPCB on 17 September 2026), so three more cost 5.26 USD a board
-and 982 mm2 of board area (courtyard 18.6 x 17.6 mm each, 327 mm2), and the twenty-four coupling capacitors
-come off. The checklist itself offers that route in the same clause: 'Another option is to achieve DC
-isolation using single magnetics, with or without Common-mode chokes.' WHAT THE BOARD IS ASKING THESE LINKS
-TO DO, from the placed board: the conductors run 96 to 115 mm from the receptacle to the capacitor and 121 to
-252 mm from the capacitor to the switch, so the longest of the three links is about 345 mm of gigabit copper
-end to end on a 330 x 200 mm board. That is inside one PCB, which is the clause's own case, and it is long
-enough that the loss budget is worth stating whichever way this is ruled. ONE CONDITION IS NOT COPPER AND IS
-IN NO CONTRACT YET: the same clause requires auto-negotiation to stay enabled when the link runs at 1000M.
-Nothing in this tree's software contract records that, so a bridge that ever forces a fixed-speed link on
-ports 1 to 3 would break a transformer-less link and nothing would say why. CORRECTED 21 September 2026, BY
-READING THE NETLIST: THE FOUR MDI PAIRS ARE NOT THESE LINKS. MDI_A to MDI_D run between T1, the Pulse H5007NL
-magnetics, and J_ETH, the RJ45, which is the CABLE side of the one port that is not transformer-less; the
-capacitively coupled module links are SWP1 to SWP3, which run from the switch U1 to their own 100 nF
-capacitors. So the sentence below, carried since 18 September, named the wrong pairs on both halves: the
-transformer-less links DO carry a declared tolerance (ETHERNET_CM5's 0.15 mm, from the compute module's own
-datasheet) and on B21 they MEET it, reading 0.00 to 0.01 mm of mismatch on every routed one. What the
-measurement really found is about the MDI pairs themselves and it stands as a finding for board B's next
-phase: T1 to J_ETH carries no impedance target in any class and no declared tolerance, reads 2.74 to 14.68 mm
-on B21, and this switch's own checklist (DS00004151A sections 6.2 to 6.4) gives the media side magnetics
-characteristics and a chassis-ground rule and NO intra-pair number, so this project has nothing to declare
-one from today. AND ONE MORE THING ABOUT THESE FOUR PAIRS, found while measuring decision 36 on the adopted
-B21 board (18 September 2026, as it was written then): their intra-pair tolerance is not declared anywhere.
-Every other interface on this board carries a number from its host's datasheet in pcb_interfaces.yaml (0.10
-mm for the module's USB 3 and PCIe, 0.15 for its USB 2 and Ethernet, 0.70 for the M.2 modules); the MDI
-pairs, which are these links, carry none, and on B21 they read 2.74 to 14.68 mm of mismatch. Whichever way
-this decision goes, those four need a budget from the same clause it turns on, because a capacitively coupled
-link with no magnetics has less margin for skew than one with them, not more.
-
-| rule | | boards | result today |
-|---|---|---|---|
-| GND-002 | chassis and cable-shield strategy | A, B, C, D, E, P | INCONCLUSIVE, not computed |
-| INT-002 | a transformerless Ethernet link is verified at both ends | B | INCONCLUSIVE |
 
 
 ### Decision 30: ZEROIZE is a switch wired to nothing that can act on it
@@ -396,6 +330,7 @@ rule it has. None of them is a failure of board B's design and none can be judge
 | 24 | board B lays 65 of its 113 pairs and the pair hold releases no board under 113 | owner ruling 15 September 02:40: the decision is the session's; option 2 taken, boards/b.json declares pair_coupled_fraction 0.80 by length |
 | 25 | board A's USB_WALL pair is 1.47 mm apart and nothing in the tree can close it | closed the same day and needs nothing: the pair took a ribbon of its own (J_AB2, end row) |
 | 26 | board C is one connection short and no tool in this tree can close it | closed by the route: six-layer C and then C17 reached 0 hard and 0 unrouted |
+| 29 | board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked | KEEP THE THREE MODULE LINKS CAPACITIVELY COUPLED, AS BUILT, and do not fit magnetics on them. The one document in this tree that describes THIS topology, a PHY-to-PHY gigabit link inside one PCB with no cable, is the switch vendor's own clause 6.6, and it permits exactly what board B has: a single 0.1 uF in series on each of the eight signals with nothing else between. Three of its four conditions are met conductor by conductor; the fourth defers to the other device's documentation, which does not exist publicly. The compute module's own datasheet says of all eight Ethernet pins 'connect to transformer or MagJack' (Table 4, pinout), and that is a description of the cable application it was written for, not a prohibition of the transformer-less one: no conductor of these three links leaves the enclosure, so there is nothing for a transformer to isolate. THE RESIDUAL RISK, named: if the module's PHY needs the centre-tapped transformer for bias or termination, the three inter-module links do not come up. It is discovered by the bring-up test that already exists (each module link up at 1000M), it costs no field failure and no safety margin, and the fallback is the magnetics this ruling declines. AND THE FALLBACK HAS A COST THIS DECISION DID NOT KNOW WHEN IT WAS ASKED: the H5007NL is rated 0 to +70 C by its own datasheet while the adopted envelope is -20 to +40 C, so fitting three more would triple a part that is already outside its own range over the coldest 20 K of the envelope (boards/b.json carries the reading and the HX family's note). Two things travel with this ruling and are not optional. FIRST, the software requirement of the same clause: auto-negotiation must stay enabled on ports 1 to 3 whenever 1000M is used, which is written in v2/docs/ARCH-PCB-B-IOHA.md and binds the bridge, the OS image and any switch configuration; a forced fixed speed there breaks a transformer-less link for a reason no gate here can see. SECOND, GND-002's strategy can now be written, because this ruling settles what is isolated: the external port through T1 and nothing else. |
 | 31 | conductors leave the case and meet a chip with nothing in between, or only through an active part | CLAMP AT THE ENTRY, and ask each conductor what is actually in front of it first, which takes the packet from thirteen failures to six conductors and five placements. ONE, BOARD A IS ANSWERED BY THE PART IT REACHES AND COSTS NOTHING: its two failing conductors are J_USBC_OUT.2 and .3, the CC pair into U18, and TI's own datasheet section 9.1.1 says 'The device has ESD protection built into the CC1 and CC2 pins so that no external protection is necessary' (v2/vendor/ti/ti-tps25740.pdf; absolute maximum on those pins -0.3 to 6 V, and the VBUS path TI's Figure 37 clamps is already D4, an SMBJ18A). Board A needs no part and no copper: it needs a declaration form saying the protection is INSIDE the part the conductor reaches, with its citation, which port_protect.py does not have today. TWO, BOARD D'S J_PAOUT IS NOT AN ENCLOSURE PORT: read off its own netlist the chain is RF_PAOUT to L1 to RF_LPF_M to L2 to RF_LPF_OUT to K1.5, K1.6 to RF_ANT to J_ANT, and J_PAOUT's coax goes to the RA30H1317M1 on the plate INSIDE the case, so every path from outside reaches it through the same PolyPhaser GTH-SFF-AL at the antenna bulkhead that J_ANT already declares, plus the T/R relay contacts and a two-section low-pass filter. It declares that arrestor with its path. No part, no copper. THREE, BOARD D'S TWO HEADSET JACKS ARE THE REAL WORK AND THEY ARE BIDIRECTIONAL BY MEASUREMENT: U7 is a TPA6132A2 DirectPath headphone amplifier with a charge pump (AMP_CPP, AMP_CPN and a negative AMP_HPVSS), so the speaker conductors swing BELOW GROUND; the microphone conductor carries a 5 V electret bias through JP1 and R43 from +5V_D8 when that jumper is closed; PTT is a 3.3 V line pulled up through R68 into U9 and Q4. TWO Nexperia PESD5V0S2BT per jack (C49338, SOT-23, 23,525 in stock at 0.0858 USD): low-capacitance BIDIRECTIONAL double array, VRWM 5 V, Cd 35 pF typical, rated IEC 61000-4-2 contact discharge 30 kV against the 8 kV decision 34 ruled. Four packages, 0.34 USD a board. FOUR, BOARD E'S POD IS ONE PART THIS DESIGN ALREADY BUYS: a USBLC6-2SC6 (C7519) on J_POD.1, .3 and .4, guaranteed to IEC 61000-4-2 level 4 at 8 kV contact and 15 kV air in its own datasheet, which is exactly the ruled level, and no new part number. FIVE, BOARD E'S SHORE INLET IS NOT ACCEPTED AS IT STANDS AND THE FIX IS ONE PART: its netlist reads J_DCIN.1 to F1 to DC_F to Q1 (the BSC039N06NS ideal-diode FET, source pins 1 to 3, drain tab 5 to 8) to DC_P to D1, so the FIRST semiconductor a strike meets is the FET and the clamp sits behind it. Accepting that means accepting the FET's own rating for an 8 kV contact discharge, and a power FET's published ESD figure is a human-body-model handling number, which is a different test: Nexperia's PESD5V0S2BT sheet gives both for ONE part, 30 kV IEC 61000-4-2 contact against 10 kV MIL-STD-883 HBM, so one cannot be read as the other, and Infineon publishes the BSC039N06NS as a scan with no text layer and no ESD row that can be read at all. A SECOND SMCJ40A goes on DC_F, between the fuse and the FET: the part number board E already carries, after the fuse so a sustained overvoltage blows the fuse rather than the clamp, and at the entry, which is where Nexperia's own layout clause 1 and every TVS application note put it. SO THE WHOLE RULING IS FIVE PLACEMENTS OVER TWO BOARDS, ONE NEW PART NUMBER AND ABOUT 0.44 USD A BOARD, plus two declarations that cost nothing. Board E's three pod conductors and board D's six headset conductors are the six that get copper; boards D and E are regenerating anyway. |
 | 32 | board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper | ACCEPT THE REACH AT 3.0 MM, THE DISTANCE THIS PROJECT'S OWN FIXER ALREADY PLACES AT, AND RECORD THE DISTANCE PER VIA. The screen stays at 1.5 mm for every board; a board that has measured what it cannot satisfy inside it declares `return_reach_mm` with this decision as the reason, and boards C, D and E do. `return_via` measures instead of answering yes or no: every flagged via carries the distance to its nearest ground via, a via within the declared reach is SATISFIED with that distance on the record, and one beyond it or with none at all stays a failure with its number. MEASURED ON THE THREE COMMITTED BOARDS, read-only with each sha identical before and after: BOARD D goes FAIL to PASS of 37, its single via answered at 1.58 mm. BOARD E goes six lacking to TWO, five answered between 1.50 and 2.27 mm, and what stands is FAN1_PWM with NO ground via within six millimetres and one SDA0 at 3.39. BOARD C goes THIRTY-TWO lacking to ELEVEN, twenty-one answered between 1.50 and 3.00, and what stands is 3.18 to 5.99 mm on eight of them and THREE WITH NO GROUND VIA WITHIN SIX MILLIMETRES (USB_DP_R, HB1, HB3). SO THE RULING ANSWERS BOARD D AND MAKES BOARDS C AND E SMALLER AND TRUE, and the residue is a different finding from the one this decision was asked about: it is not a screening distance, it is vias whose return has to travel four to six millimetres or has nowhere to go, and it belongs to each board's next phase with the coordinates now on the record. The decision's own evidence, written from the FIXER's log on 17 September, said board C's thirty-two sat at 1.50 or 1.75 mm; the JUDGE reads twenty-one inside 3.0 and eleven past it, so that half of the evidence was the fixer's view of what it had placed and not the board's. |
 | 33 | the mezzanine 5 V rail is losing nearly five percent and two of its three numbers were never anybody's requirement | LEAVE THE SPLIT AS DECLARED: board A four points of the codec's six percent and board D two. Both boards meet their own share on every run, the cross-board contract adds them up and passes, and the six percent total is not this project's number at all but the PCM2912A's own Recommended Operating Conditions, VBUS 4.35 V minimum. The only thing that would reopen it is a measured drop moving past a board's share on a routed board. |

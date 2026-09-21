@@ -618,8 +618,20 @@ coverage:
 
  INT-002: {implementation: "gen_sch_b.py, eight 100 nF series capacitors per module link, no magnetics",
    verification: {tool: "both vendors' documents, read 16 September 2026", document: "docs/OWNER-DECISIONS-2026-09-11.md"},
-   maturity: OWNER_DECISION_REQUIRED, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
-   note: "BOTH ends read on 16 September 2026, and they do not close the question. The switch vendor PERMITS this exact
+   maturity: DOCUMENTED_ONLY, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   note: "DECISION 29 IS RULED (the session's, 21 September 2026): the three links stay capacitively coupled as
+     built and no magnetics are fitted. What decided it, beyond the 16 September reading below: the compute
+     module's own datasheet says of all eight Ethernet pins 'connect to transformer or MagJack' (Table 4), which
+     is the cable application those pins were designed for and not a prohibition of a PHY-to-PHY link inside one
+     board, where nothing leaves the enclosure and there is nothing for a transformer to isolate; the fallback's
+     own part is a 0 to +70 C device against an envelope adopted at -20 to +40, so fitting three more would
+     triple a part already outside its range; and waiting is not available, because Broadcom does not publish
+     the PHY's datasheet to anyone here. THE RULING DOES NOT PRODUCE THE MISSING DOCUMENT and this maturity says
+     so: nothing measured this link, the answer rests on one vendor's clause plus a ruling that accepts a named
+     risk, and the reading that would close it is a bench test (each module link up at 1000M). The 16 September
+     recommendation in the last line below, to fit the magnetics, is SUPERSEDED by that ruling and is left in
+     place so the change of mind is visible. BOTH ends read on 16 September 2026, and they do not close the
+     question. The switch vendor PERMITS this exact
      topology and board B matches its clause word for word (Microchip DS00004151A section 6.6: transformer-less where the
      PHY-to-PHY connection is within one PCB, a single DC blocking 0.1 uF in series on each of the eight signals, no
      additional components between the switch and the capacitor). The module's datasheet describes ONE topology, a 1:1 RJ45
@@ -627,8 +639,8 @@ coverage:
      other device may require termination or other circuitry. The module's PHY is a Broadcom BCM54210PE and Broadcom does
      not publish its datasheet, so this cannot be closed from any document this project can obtain. Owner decision 29, with
      three costed options; the recommendation is to fit the magnetics board B already carries on its wall port",
-   remediation: {action: "owner decision 29: fit magnetics on the three module links, ask the module vendor, or defer to the prototype",
-     owner: OWNER, execution: OWNER, depends_on: [], p50_h: 6, p80_h: 30}}
+   remediation: {action: "the bench test the ruling rests on: each of the three module links brought up at 1000M with auto-negotiation enabled, on the first board B that exists; a link that does not come up is the fallback's trigger and the fallback is three magnetics of an extended-temperature family",
+     owner: LAB, execution: HARDWARE, depends_on: [], p50_h: 2, p80_h: 8}}
 
  TRN-001: {implementation: "gen_sch_*.py protection parts and each board's external_ports declaration",
    verification: {tool: port_protect.py, verdict: port_protect_<letter>, fixtures: tests/test_port_protect.py},

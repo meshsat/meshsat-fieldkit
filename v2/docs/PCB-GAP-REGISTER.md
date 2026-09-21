@@ -219,17 +219,28 @@ this rule asks for is a question at order time or a coupon, which is the orderin
 is written into ORDER-SESSION-PROMPT.md on 19 September beside the layer prices  
 *Close it by* solve every geometry, pin the standard, and get the fabricator's written confirmation with a coupon where the tolerance needs it. Owner **OWNER**, after STK-001. Effort P50 8h, P80 24h.
 
-**INT-002 a transformerless Ethernet link is verified at both ends** (BLOCKER, OWNER_DECISION_REQUIRED)  
-BOTH ends read on 16 September 2026, and they do not close the question. The switch vendor PERMITS this exact
-topology and board B matches its clause word for word (Microchip DS00004151A section 6.6: transformer-less
-where the PHY-to-PHY connection is within one PCB, a single DC blocking 0.1 uF in series on each of the eight
-signals, no additional components between the switch and the capacitor). The module's datasheet describes ONE
-topology, a 1:1 RJ45 MagJack, and never discusses capacitive coupling; and the switch vendor's own clause
-names the gap in a sentence, the other device may require termination or other circuitry. The module's PHY is
-a Broadcom BCM54210PE and Broadcom does not publish its datasheet, so this cannot be closed from any document
-this project can obtain. Owner decision 29, with three costed options; the recommendation is to fit the
-magnetics board B already carries on its wall port  
-*Close it by* owner decision 29: fit magnetics on the three module links, ask the module vendor, or defer to the prototype. Owner **OWNER**. Effort P50 6h, P80 30h.
+**INT-002 a transformerless Ethernet link is verified at both ends** (BLOCKER, DOCUMENTED_ONLY)  
+DECISION 29 IS RULED (the session's, 21 September 2026): the three links stay capacitively coupled as built
+and no magnetics are fitted. What decided it, beyond the 16 September reading below: the compute module's own
+datasheet says of all eight Ethernet pins 'connect to transformer or MagJack' (Table 4), which is the cable
+application those pins were designed for and not a prohibition of a PHY-to-PHY link inside one board, where
+nothing leaves the enclosure and there is nothing for a transformer to isolate; the fallback's own part is a
+0 to +70 C device against an envelope adopted at -20 to +40, so fitting three more would triple a part
+already outside its range; and waiting is not available, because Broadcom does not publish the PHY's
+datasheet to anyone here. THE RULING DOES NOT PRODUCE THE MISSING DOCUMENT and this maturity says so: nothing
+measured this link, the answer rests on one vendor's clause plus a ruling that accepts a named risk, and the
+reading that would close it is a bench test (each module link up at 1000M). The 16 September recommendation
+in the last line below, to fit the magnetics, is SUPERSEDED by that ruling and is left in place so the change
+of mind is visible. BOTH ends read on 16 September 2026, and they do not close the question. The switch
+vendor PERMITS this exact topology and board B matches its clause word for word (Microchip DS00004151A
+section 6.6: transformer-less where the PHY-to-PHY connection is within one PCB, a single DC blocking 0.1 uF
+in series on each of the eight signals, no additional components between the switch and the capacitor). The
+module's datasheet describes ONE topology, a 1:1 RJ45 MagJack, and never discusses capacitive coupling; and
+the switch vendor's own clause names the gap in a sentence, the other device may require termination or other
+circuitry. The module's PHY is a Broadcom BCM54210PE and Broadcom does not publish its datasheet, so this
+cannot be closed from any document this project can obtain. Owner decision 29, with three costed options; the
+recommendation is to fit the magnetics board B already carries on its wall port  
+*Close it by* the bench test the ruling rests on: each of the three module links brought up at 1000M with auto-negotiation enabled, on the first board B that exists; a link that does not come up is the fallback's trigger and the fallback is three magnetics of an extended-temperature family. Owner **LAB**. Effort P50 2h, P80 8h.
 
 **PAIR-001 a pair is coupled and matched** (BLOCKER, ENFORCED)  
 coupling and the 1 mm length gate are enforced; the 1 mm is a project number. 17 September 2026: the

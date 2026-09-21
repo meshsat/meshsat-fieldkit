@@ -25,11 +25,11 @@ figures are below.
 | class | items | P50 | P80 | what it means |
 |---|---|---|---|---|
 | PARALLEL_AGENT | 9 | 26 h | 76 h | session work with no shared file, so several may run at once in their own worktrees |
-| OWNER | 5 | 19 h | 137 h | a ruling. No amount of compute shortens it and it is never in the engineering total |
 | SEQUENTIAL | 5 | 18 h | 60 h | session work that must be serialised: one producer, a shared file, or a never-auto floor |
+| OWNER | 4 | 13 h | 107 h | a ruling. No amount of compute shortens it and it is never in the engineering total |
 | PARALLEL_BOX | 3 | 12 h | 34 h | work whose cost is a route, a sweep or a solve on a rented host, so it runs at the fleet's width |
+| HARDWARE | 2 | 10 h | 32 h | needs built hardware, so it cannot start before the fabrication stage ends |
 | VENDOR_OR_STANDARD_WAIT | 2 | 10 h | 72 h | a third party's answer, or a document that has to be obtained and read |
-| HARDWARE | 1 | 8 h | 24 h | needs built hardware, so it cannot start before the fabrication stage ends |
 
 ## Elapsed, at 1 session worker(s) and 2 rented box(es)
 
@@ -55,7 +55,7 @@ published figure or this session's declared estimate, and NONE of them has been 
 nothing has been ordered. The basis of each is in `v2/ecad/tools/pcb_programme_stages.yaml` beside its
 number.
 
-25 open item(s): 17 are work and 7 are waits on the owner, a vendor or a standard. Waits are not engineering
+25 open item(s): 17 are work and 6 are waits on the owner, a vendor or a standard. Waits are not engineering
 time and are listed separately below.
 
 ## Waits, which no amount of engineering shortens
@@ -65,7 +65,6 @@ time and are listed separately below.
 | BAT-001 | DONE 18 September 2026 for the derivation half: the cell's specification is in the tree, t | OWNER |
 | DFA-001 | the assembler's own preview of each polarised footprint, which is the artefact the accepta | OWNER |
 | IMP-001 | solve every geometry, pin the standard, and get the fabricator's written confirmation with | OWNER |
-| INT-002 | owner decision 29: fit magnetics on the three module links, ask the module vendor, or defe | OWNER |
 | PI-001 | put the crossover to the owner as a decision: keep the IPC-2221A bar, take the most conser | OWNER |
 | STK-002 | quotes from the ordering session for both counts on C and P, then the rulings. 19 Septembe | OWNER |
 | VIA-002 | ask the fabricator for the annular ring rows AT 2 oz, which its published page does not st | VENDOR |

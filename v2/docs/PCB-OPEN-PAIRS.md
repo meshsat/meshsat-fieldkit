@@ -11,10 +11,10 @@ the ruling is the action that moves it, and the measurement is reported beside i
 
 | waiting on | pairs | what it means |
 |---|---:|---|
-| `DECISION` | 33 | an owner decision by name |
-| `DECISION_UNCLAIMED` | 5 | a rule that says a decision is open while no decision claims it |
+| `DECISION` | 28 | an owner decision by name |
+| `DECISION_UNCLAIMED` | 9 | a rule that says a decision is open while no decision claims it |
 | `AUTHORITY` | 3 | an authority this project does not have |
-| `NO_INSTRUMENT` | 6 | nothing verifies it |
+| `NO_INSTRUMENT` | 7 | nothing verifies it |
 | `MISSING_INPUT` | 17 | an input the reading declared absent |
 | `MEASURED_FAILURE` | 30 | the tool looked and the board failed |
 | `VENDOR_WAIT` | 2 | a fabricator or a standards body, and nobody here |
@@ -32,7 +32,7 @@ things to fix.
 | board | open | of which measured | decision-bound | authority | missing input | not judged |
 |---|---:|---:|---:|---:|---:|---:|
 | A | 24 | 13 | 4 | 1 | 4 | 3 |
-| B | 36 | 5 | 17 | 1 | 5 | 5 |
+| B | 36 | 5 | 16 | 1 | 5 | 6 |
 | C | 11 | 4 | 5 | 0 | 0 | 3 |
 | D | 13 | 2 | 1 | 1 | 4 | 4 |
 | E | 17 | 6 | 3 | 0 | 4 | 4 |
@@ -74,43 +74,37 @@ holding a number, not a question about a number.
 |---:|---:|---:|---|---|
 | 27 | 3 | 2 | RET-001, RET-002, STK-002 | C |
 | 28 | 4 | 3 | RET-002, RTE-001, STK-001, STK-002 | P |
-| 29 | 5 | 0 | GND-002, INT-002 | A B C E |
 | 35 | 2 | 2 | PI-001 | A E |
 | 40 | 1 | 1 | BAT-001 | P |
 | 41 | 3 | 1 | DOC-002 | C E5 P |
 | 42 | 1 | 1 | DEC-001 | A |
 | 43 | 14 | 0 | EMC-001, GND-001, PAIR-001, PI-002, PI-003, PLC-002, PLN-001, RET-002, RET-004, RF-001, RTE-001, SCH-003, STK-001, VIA-001 | B |
 
-## DECISION (33): an owner decision by name
+## DECISION (28): an owner decision by name
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
 | `DEC-001` | A | FAIL | decision 42: a decoupling capacitor cannot be both within 3 mm of a fine-pitch pin and outside that part's escape fan |
 | `PI-001` | A | FAIL | decision 35: which published current-rating model this project's copper is judged against |
-| `GND-002` | A | INCONCLUSIVE | decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked |
 | `SCH-003` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `PI-002` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `PI-003` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `GND-001` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
-| `GND-002` | B | INCONCLUSIVE | decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked |
 | `STK-001` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `RET-002` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `RET-004` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `PAIR-001` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `RF-001` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
-| `INT-002` | B | INCONCLUSIVE | decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked |
 | `PLC-002` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `RTE-001` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `VIA-001` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `PLN-001` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
 | `EMC-001` | B | INCONCLUSIVE | decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural |
-| `GND-002` | C | INCONCLUSIVE | decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked |
 | `STK-002` | C | INCONCLUSIVE | decision 27: the four-layer boards cannot carry a plane under their back-side signals as built |
 | `RET-001` | C | FAIL | decision 27: the four-layer boards cannot carry a plane under their back-side signals as built |
 | `RET-002` | C | FAIL | decision 27: the four-layer boards cannot carry a plane under their back-side signals as built |
 | `DOC-002` | C | INCONCLUSIVE | decision 41: the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002 |
 | `PI-001` | E | FAIL | decision 35: which published current-rating model this project's copper is judged against |
-| `GND-002` | E | INCONCLUSIVE | decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked |
 | `DOC-002` | E5 | FAIL | decision 41: the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002 |
 | `STK-001` | P | FAIL | decision 28: board P cannot hold the return-path rule on two layers and the ruled P5 does not route |
 | `STK-002` | P | INCONCLUSIVE | decision 28: board P cannot hold the return-path rule on two layers and the ruled P5 does not route |
@@ -119,13 +113,17 @@ holding a number, not a question about a number.
 | `BAT-001` | P | FAIL | decision 40: the pack's cell-level protection is one firmware-configured device, and the rule asks for hardware independent of any software |
 | `DOC-002` | P | INCONCLUSIVE | decision 41: the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002 |
 
-## DECISION_UNCLAIMED (5): a rule that says a decision is open while no decision claims it
+## DECISION_UNCLAIMED (9): a rule that says a decision is open while no decision claims it
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
+| `GND-002` | A | INCONCLUSIVE | an owner decision is open: 16 September 2026: the strategy is WRITTEN, which it was not before, and writing it found the gap. The kit has no single conductive enclosur |
 | `STK-002` | A | INCONCLUSIVE | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against six layers exists f |
+| `GND-002` | B | INCONCLUSIVE | an owner decision is open: 16 September 2026: the strategy is WRITTEN, which it was not before, and writing it found the gap. The kit has no single conductive enclosur |
 | `STK-002` | B | INCONCLUSIVE | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against six layers exists f |
+| `GND-002` | C | INCONCLUSIVE | an owner decision is open: 16 September 2026: the strategy is WRITTEN, which it was not before, and writing it found the gap. The kit has no single conductive enclosur |
 | `STK-002` | D | INCONCLUSIVE | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against six layers exists f |
+| `GND-002` | E | INCONCLUSIVE | an owner decision is open: 16 September 2026: the strategy is WRITTEN, which it was not before, and writing it found the gap. The kit has no single conductive enclosur |
 | `STK-002` | E | INCONCLUSIVE | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against six layers exists f |
 | `STK-002` | E5 | INCONCLUSIVE | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against six layers exists f |
 
@@ -137,11 +135,12 @@ holding a number, not a question about a number.
 | `IMP-001` | B | INCONCLUSIVE | the authority behind this rule's limit is not established: closed forms from a standard not in the tree; no fabricator confirmation and no coupon. 19 SEPTEMBER 2026, THE NOTE WAS A DAY OUT OF DATE AN |
 | `IMP-001` | D | INCONCLUSIVE | the authority behind this rule's limit is not established: closed forms from a standard not in the tree; no fabricator confirmation and no coupon. 19 SEPTEMBER 2026, THE NOTE WAS A DAY OUT OF DATE AN |
 
-## NO_INSTRUMENT (6): nothing verifies it
+## NO_INSTRUMENT (7): nothing verifies it
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
 | `THM-001` | A | INCONCLUSIVE | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) and from what each |
+| `INT-002` | B | INCONCLUSIVE | no verification: DECISION 29 IS RULED (the session's, 21 September 2026): the three links stay capacitively coupled as built and no magnetics are fitted. What decided it, beyond |
 | `THM-001` | B | INCONCLUSIVE | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) and from what each |
 | `THM-001` | C | INCONCLUSIVE | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) and from what each |
 | `THM-001` | D | INCONCLUSIVE | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) and from what each |
