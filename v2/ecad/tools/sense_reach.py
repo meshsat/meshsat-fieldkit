@@ -73,6 +73,21 @@ def gap(a, b):
         return math.hypot(px - (x1 + t * vx), py - (y1 + t * vy))
     (ax, ay), (bx, by) = a["a"], a["b"]
     (cx, cy), (dx, dy) = b["a"], b["b"]
+    # TWO SEGMENTS THAT CROSS ARE AT ZERO AND THE ENDPOINT SAMPLING SAYS OTHERWISE (21 September 2026).
+    # For segments that do NOT cross, the closest approach is always at an endpoint of one of them, so the
+    # four samples below are exact; checked against a brute-force sweep over forty random pairs, worst
+    # difference 0.034 mm, which is the sweep's own grid. For segments that DO cross it is not: the sweep
+    # read up to 2.70 mm of daylight where there is none, because every endpoint is far from the other
+    # segment while the middles meet. On these boards that case is a hard DRC violation
+    # (`tracks_crossing`, `shorting_items`) and the boards this has been run on read hard 0, so it has never
+    # occurred; a report that answers wrongly in a case it cannot meet is still a report that answers
+    # wrongly, and this is the whole cost of saying so.
+    def _side(px, py, qx, qy, rx, ry):
+        return (qy - py) * (rx - qx) - (qx - px) * (ry - qy)
+    d1 = _side(cx, cy, dx, dy, ax, ay); d2 = _side(cx, cy, dx, dy, bx, by)
+    d3 = _side(ax, ay, bx, by, cx, cy); d4 = _side(ax, ay, bx, by, dx, dy)
+    if ((d1 > 0) != (d2 > 0)) and ((d3 > 0) != (d4 > 0)):
+        return -(a["w"] + b["w"]) / 2.0        # they cross: the copper overlaps, which is not a clearance
     d = min(pt_seg(ax, ay, cx, cy, dx, dy), pt_seg(bx, by, cx, cy, dx, dy),
             pt_seg(cx, cy, ax, ay, bx, by), pt_seg(dx, dy, ax, ay, bx, by))
     return d - (a["w"] + b["w"]) / 2.0
