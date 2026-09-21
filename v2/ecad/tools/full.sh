@@ -389,6 +389,24 @@ if [ -n "$PRELAY" ]; then
   GUARD_MODE=pre guarded prelay prelay_stage
 fi
 
+# THE FENCE ANA-001 NEEDS, DRAWN AFTER THE PRE-LAY AND NEVER BY THE GENERATOR (21 September 2026, E38).
+# E36 is board E's best router board and its round-1 board fails ANA-001 by sixty-seven micrometres, with all
+# six declared switching nets and the sense pair already pinned: the pre-lay locks the copper IT lays and the
+# ROUTER added unlocked copper to a pinned net inside the keep-away. A DSN class-pair rule is ignored by
+# Freerouting, a 0.50 mm SENSE class refuses the escape at three of this board's own pins, and a KiCad custom
+# rule catches after the fact; a rule area that forbids tracks leaves the DSN as `wire_keepout` and the router
+# obeys it. It runs HERE because it fences the pre-lay's own copper, which does not exist until the stage
+# above has run, and a generator-drawn fence is an obstacle to the pre-lay itself.
+SFENCE="$(cfg sense_fence)"
+if [ -n "$SFENCE" ]; then
+  T=../tools; . ../tools/guarded.sh
+  SFLAYERS="$(cfg sense_fence_layers)"; [ -n "$SFLAYERS" ] || SFLAYERS="F.Cu,B.Cu"
+  fence_stage () {
+    python3 ../tools/sense_fence.py $N.kicad_pcb --board "$L" --layers "$SFLAYERS" --apply 2>&1 | grep -aE 'sense_fence' | tail -10
+  }
+  GUARD_MODE=pre guarded sense-fence fence_stage
+fi
+
 PAOFF=""; { [ "${PLACE_AUDIT_GATE:-1}" = 0 ] || [ -n "$(cfg place_audit_gate_off)" ]; } && PAOFF="VERDICT_ADVISORY=1"   # a declared report writes an advisory verdict, so the supervisor reads what the chain reads
 # EVERY DECLARED RAIL'S OWN CROSSING, ON THE FINISHED PLACEMENT (18 September 2026, rule PI-003's cheap
 # half): at the pad of a rail's SOURCE the whole rail current changes layer, so the barrels it needs are
