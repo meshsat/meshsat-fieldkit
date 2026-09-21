@@ -79,7 +79,44 @@ decisions:
   - n: 29
     title: "board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked"
     asked: 2026-09-16
-    status: open
+    status: ruled
+    authority: SESSION
+    authority_why: >-
+      the question was written as a wait on a vendor answer and it cannot be one: the module's PHY is a
+      Broadcom part whose datasheet is not published, so no amount of waiting produces the document, and the
+      owner is not an engineer who can weigh two datasheets against each other. It spends nothing, orders
+      nothing and changes no copper: what it rules is that the design as built stands, so the reversible
+      thing is the RULING and not a board. The residual risk it accepts is named, bounded and discovered at
+      bring-up rather than in the field, and the mitigation is a test that is already in the plan.
+    ruled_by: SESSION
+    ruled_on: 2026-09-21
+    outcome: >-
+      KEEP THE THREE MODULE LINKS CAPACITIVELY COUPLED, AS BUILT, and do not fit magnetics on them. The one
+      document in this tree that describes THIS topology, a PHY-to-PHY gigabit link inside one PCB with no
+      cable, is the switch vendor's own clause 6.6, and it permits exactly what board B has: a single 0.1 uF
+      in series on each of the eight signals with nothing else between. Three of its four conditions are met
+      conductor by conductor; the fourth defers to the other device's documentation, which does not exist
+      publicly. The compute module's own datasheet says of all eight Ethernet pins 'connect to transformer or
+      MagJack' (Table 4, pinout), and that is a description of the cable application it was written for, not a
+      prohibition of the transformer-less one: no conductor of these three links leaves the enclosure, so
+      there is nothing for a transformer to isolate. THE RESIDUAL RISK, named: if the module's PHY needs the
+      centre-tapped transformer for bias or termination, the three inter-module links do not come up. It is
+      discovered by the bring-up test that already exists (each module link up at 1000M), it costs no field
+      failure and no safety margin, and the fallback is the magnetics this ruling declines. AND THE FALLBACK
+      HAS A COST THIS DECISION DID NOT KNOW WHEN IT WAS ASKED: the H5007NL is rated 0 to +70 C by its own
+      datasheet while the adopted envelope is -20 to +40 C, so fitting three more would triple a part that is
+      already outside its own range over the coldest 20 K of the envelope (boards/b.json carries the reading
+      and the HX family's note). Two things travel with this ruling and are not optional. FIRST, the software
+      requirement of the same clause: auto-negotiation must stay enabled on ports 1 to 3 whenever 1000M is
+      used, which is written in v2/docs/ARCH-PCB-B-IOHA.md and binds the bridge, the OS image and any switch
+      configuration; a forced fixed speed there breaks a transformer-less link for a reason no gate here can
+      see. SECOND, GND-002's strategy can now be written, because this ruling settles what is isolated: the
+      external port through T1 and nothing else.
+    reversed_by: >-
+      set status back to open and fit three H5007NL (or an extended-temperature part of the same family) in
+      place of the twenty-four coupling capacitors in gen_sch_b.py; no copper has been laid for this ruling
+      and board B's phase is unchanged by it, so the reversal is a schematic change in the next board B
+      generation and nothing else.
     ask: "capacitive coupling as the switch vendor's clause 6.6 permits, or magnetics on all three links"
     recommendation: "ask the module's maker before changing copper; the switch vendor's own clause permits what is built"
     evidence: "MEASURED ON BOTH SIDES AND ON THE MAKER'S OWN CARRIER (17 September 2026), and the answer is that
@@ -117,6 +154,21 @@ decisions:
       ONE CONDITION IS NOT COPPER AND IS IN NO CONTRACT YET: the same clause requires auto-negotiation to stay
       enabled when the link runs at 1000M. Nothing in this tree's software contract records that, so a bridge that
       ever forces a fixed-speed link on ports 1 to 3 would break a transformer-less link and nothing would say why.
+      AND THE HOST'S OWN DOCUMENT WAS READ ON 21 September 2026, which is what let this be ruled rather than
+      waited on. The compute module's datasheet has one sentence about these pins and it is in the pinout,
+      Table 4: every one of the eight Ethernet pins reads 'connect to transformer or MagJack'. That is the
+      ONLY statement the host makes about them, it is a description of the cable application the module was
+      designed for, and it is not a prohibition of a PHY-to-PHY link inside one board, where nothing leaves
+      the enclosure and there is nothing to isolate. Two more readings of the same hour: the Microchip
+      application note in this tree that DOES permit omitting coupling capacitors on one PCB
+      (v2/vendor/cluster/an6048-daisy-chain-ksz.pdf, '100 nF AC coupling capacitors can be omitted if the
+      switches are on the same PCB') is about SGMII, switch to switch, and must not be cited for this
+      question; and the fallback's own part, the Pulse H5007NL, is rated 0 to +70 C against an adopted
+      envelope of -20 to +40, so fitting three more would triple a part already outside its range over the
+      coldest 20 K (boards/b.json carries the reading, and the sheet's note 1 names the HX extended-temperature
+      family). Board B has room for the fallback in the gross sense, measured on B21's own placed board with
+      freebox.py: 36,115 free 18.6 by 17.6 mm centres on the front side and 124,196 on the back. Where they
+      would go in the corridor between each receptacle and the switch is the floor plan, which is decision 43.
       CORRECTED 21 September 2026, BY READING THE NETLIST: THE FOUR MDI PAIRS ARE NOT THESE LINKS. MDI_A to
       MDI_D run between T1, the Pulse H5007NL magnetics, and J_ETH, the RJ45, which is the CABLE side of the
       one port that is not transformer-less; the capacitively coupled module links are SWP1 to SWP3, which run

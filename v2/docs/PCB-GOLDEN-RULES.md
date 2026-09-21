@@ -1451,7 +1451,7 @@ permit it, and the coupling, termination, common-mode handling and bias are as b
 | | Raspberry Pi Compute Module 5 datasheet, Raspberry Pi Ltd, 2.2.1 connector and design guidance; pin table, Ethernet pairs -- v2/vendor/cm5/cm5-datasheet.pdf |
 | | BCM54210PE datasheet, Broadcom -- NOT IN THIS TREE |
 | implementation | gen_sch_b.py, eight 100 nF series capacitors per module link, no magnetics |
-| maturity | **OWNER_DECISION_REQUIRED** |  (at writing: SOURCE_UNVERIFIED)
+| maturity | **DOCUMENTED_ONLY** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | not waivable |
 
@@ -1462,15 +1462,26 @@ termination compared against both.
 
 **If violated** Link instability, bias fighting between the two PHYs, and emissions from an unbalanced pair.
 
-**Today** BOTH ends read on 16 September 2026, and they do not close the question. The switch vendor PERMITS this exact
-topology and board B matches its clause word for word (Microchip DS00004151A section 6.6: transformer-less
-where the PHY-to-PHY connection is within one PCB, a single DC blocking 0.1 uF in series on each of the eight
-signals, no additional components between the switch and the capacitor). The module's datasheet describes ONE
-topology, a 1:1 RJ45 MagJack, and never discusses capacitive coupling; and the switch vendor's own clause
-names the gap in a sentence, the other device may require termination or other circuitry. The module's PHY is
-a Broadcom BCM54210PE and Broadcom does not publish its datasheet, so this cannot be closed from any document
-this project can obtain. Owner decision 29, with three costed options; the recommendation is to fit the
-magnetics board B already carries on its wall port
+**Today** DECISION 29 IS RULED (the session's, 21 September 2026): the three links stay capacitively coupled as built
+and no magnetics are fitted. What decided it, beyond the 16 September reading below: the compute module's own
+datasheet says of all eight Ethernet pins 'connect to transformer or MagJack' (Table 4), which is the cable
+application those pins were designed for and not a prohibition of a PHY-to-PHY link inside one board, where
+nothing leaves the enclosure and there is nothing for a transformer to isolate; the fallback's own part is a
+0 to +70 C device against an envelope adopted at -20 to +40, so fitting three more would triple a part
+already outside its range; and waiting is not available, because Broadcom does not publish the PHY's
+datasheet to anyone here. THE RULING DOES NOT PRODUCE THE MISSING DOCUMENT and this maturity says so: nothing
+measured this link, the answer rests on one vendor's clause plus a ruling that accepts a named risk, and the
+reading that would close it is a bench test (each module link up at 1000M). The 16 September recommendation
+in the last line below, to fit the magnetics, is SUPERSEDED by that ruling and is left in place so the change
+of mind is visible. BOTH ends read on 16 September 2026, and they do not close the question. The switch
+vendor PERMITS this exact topology and board B matches its clause word for word (Microchip DS00004151A
+section 6.6: transformer-less where the PHY-to-PHY connection is within one PCB, a single DC blocking 0.1 uF
+in series on each of the eight signals, no additional components between the switch and the capacitor). The
+module's datasheet describes ONE topology, a 1:1 RJ45 MagJack, and never discusses capacitive coupling; and
+the switch vendor's own clause names the gap in a sentence, the other device may require termination or other
+circuitry. The module's PHY is a Broadcom BCM54210PE and Broadcom does not publish its datasheet, so this
+cannot be closed from any document this project can obtain. Owner decision 29, with three costed options; the
+recommendation is to fit the magnetics board B already carries on its wall port
 
 ## Transient Protection
 

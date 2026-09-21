@@ -18432,3 +18432,76 @@ footprint list reads 44 over seven boards where it read 43. **And the design pac
 with it**, because INT-001's remediation (per-interface sheets for USB, M.2 and HDMI, 10 h P50 and 34 h P80
 of PARALLEL_AGENT work) leaves the gap register when the rule passes: engineering effort 66 to **56 hours
 P50** and 204 to **170 P80**, one worker.
+
+### 32.359, 21 September 2026 22:41 CEST: decision 29 is ruled from the host's own pinout, and the part the fallback would have tripled is outside this kit's envelope
+
+**THE RULING (the session's, `tools/pcb_decisions.yaml` n 29).** Board B's three compute-module Ethernet links
+**stay capacitively coupled as built and no magnetics are fitted**. The decision had been written as a wait on
+a vendor answer and it could not be one: the module's PHY is a Broadcom BCM54210PE and Broadcom publishes its
+datasheet to nobody here, so no amount of waiting produces the document, and the owner is not an engineer who
+can weigh two datasheets against each other.
+
+**WHAT DECIDED IT, and it is one sentence in the host's own pinout.** The compute module's datasheet says of
+**all eight Ethernet pins**, in Table 4, *connect to transformer or MagJack*. That is the only statement the
+host makes about them, and it is a description of the CABLE application those pins were designed for rather
+than a prohibition: **nothing on these three links leaves the enclosure**, so there is nothing for a
+transformer to isolate, while the one document in this tree that describes THIS topology, a PHY-to-PHY gigabit
+link inside one PCB, is the switch vendor's clause 6.6 and it permits exactly what board B has, a single
+0.1 uF in series on each of the eight signals with nothing else between.
+
+**AND THE FALLBACK HAS A COST THE QUESTION DID NOT KNOW WHEN IT WAS ASKED.** The magnetics this ruling
+declines is the Pulse H5007NL, and its own datasheet rates it **0 to +70 C** (`v2/vendor/pulse/pulse-h5007nl.pdf`,
+Electrical Specifications) against the envelope **adopted five hours earlier at -20 to +40 C** (decision 34).
+So board B's T1, on the external port, is **already outside its own operating range over the coldest 20 K of
+this kit's envelope**, and fitting three more would have tripled it. The same sheet names the remedy in its
+note 1, *HX: Extended temperature version -40 C to +85 C*, and its Mechanicals page groups `H5004, HX5004,
+H5007*` on one outline, so **HX5004NL is the extended-temperature part in this part's own mechanical group**;
+the asterisk on H5007 is unexplained in the text this tree can read, so **pin compatibility is not claimed**
+and is the first thing to check before a swap. `boards/b.json` carries the reading.
+
+**THE WIDER FINDING, which is not board B's and is the more useful half: no rule in this project compares a
+part's OPERATING TEMPERATURE RANGE with the envelope.** CMP-001 is written about absolute maximum ratings and
+`derate.py` reads voltage alone. The envelope was adopted on 21 September, so this is the FIRST DAY the
+comparison could be made at all, and the first part looked at under it failed. That instrument is owed.
+
+**WHAT THE RULING ACCEPTS, named rather than implied**: if the module's PHY needs the centre-tapped
+transformer for bias or termination, the three inter-module links do not come up. It is discovered by the
+bring-up test that already exists, one link at 1000M per module, and INT-002's remediation is that test now
+(LAB, HARDWARE) where it was an owner decision. **Two things travel with the ruling**: the same clause's
+software half, auto-negotiation enabled on ports 1 to 3 whenever 1000M is used, which is written in
+`ARCH-PCB-B-IOHA.md` and binds the bridge and the OS image; and GND-002's strategy, which can be written now
+that what is isolated is settled (the external port through T1 and nothing else).
+
+**A CITATION THAT WOULD HAVE BEEN WRONG, caught while reading**: the Microchip application note in this tree
+that permits omitting coupling capacitors on one PCB (`an6048-daisy-chain-ksz.pdf`, *100 nF AC coupling
+capacitors can be omitted if the switches are on the same PCB*) is about **SGMII, switch to switch**, and is
+not about this question. It is recorded in decision 29's evidence so nobody cites it for the MDI case.
+
+**ROOM FOR THE FALLBACK, measured rather than assumed** (`freebox.py` on B21's own placed board): 36,115 free
+18.6 by 17.6 mm centres on the front side and 124,196 on the back, so area is not what refuses the magnetics;
+**where they would sit, in the corridor between each receptacle and the switch, is the floor plan and that is
+decision 43.**
+
+**READINESS DOES NOT MOVE AND THAT IS THE PROOF.** INT-002's maturity goes OWNER_DECISION_REQUIRED to
+DOCUMENTED_ONLY, which still yields INCONCLUSIVE, because **the ruling does not produce the missing document**:
+nothing measured this link. What changes is that five GND-002 pairs and one INT-002 pair stop waiting on a
+decision nobody could take and start waiting on work this session can do. The rule-set fingerprint is
+unchanged at ff8151db3576437b and readiness reads 64.6 percent of 333 before and after (215 verified, 40
+failed, 78 inconclusive). Local suite 1332 passed, 0 failed.
+
+**AND THE GROUNDING STRATEGY'S FIRST INPUTS ARE MEASURED, because the ruling makes it writable.** Across the
+seven committed boards, **no board declares a chassis, shield or earth net at all**: the kit has ONE ground.
+And the bond to metal is in exactly one place: **board C's eight `BackerScrew_M3_GND` rings are on GND** and
+bond the backer to the 3 mm aluminium face plate through the PEM standoffs ASSEMBLY.md section 2 presses into
+it, while **every mounting hole on A (8), B (20), D (4), E (28), E5 (6, two of them 12 AWG wire lands) and P
+(4) carries no net at all**. So the stack's four M3 rods bond nothing, and the kit as drawn has a SINGLE-POINT
+bond to its chassis at one board. That is a defensible strategy and it has never been written down as one,
+which is what GND-002 asks for.
+
+**MY FIRST VERSION OF THAT MEASUREMENT WAS WRONG AND IT IS THE SAME DEFECT I WROTE INTO MEMORY AN HOUR
+EARLIER.** It counted footprints whose NAME contains `Hole`, reported *not one of the 72 carries a ground
+connection*, and missed board C's eight rings entirely, because their footprint is called
+`BackerScrew_M3_GND`. ASSEMBLY.md says in as many words that those rings bond the backer to the plate, so the
+document contradicted the measurement and the document was right. **A filter on a name is a hypothesis about
+the data**: the corrected pass takes every footprint that is hole-like by name OR whose reference is `H<n>`,
+and prints the nets it finds rather than a count.
