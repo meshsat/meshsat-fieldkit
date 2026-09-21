@@ -18639,3 +18639,54 @@ empty at 23:18, `a_after_finish2.sh` armed). **Its open count is not comparable 
 pass 157 and A101 at pass 92, which is the E36-against-E37 lesson in board A's geometry, so what is readable on
 it is ANA-001, `sense_reach`'s locked-sense count, and whether `/PA_ISNS_N`, which A101 pre-lays and which is
 open on every finished board A has produced, closed.
+
+### 32.363 addendum, 21 September 2026 23:42 CEST: A101 is read, and the sense pre-lay answers ANA-001 on board A for the first time
+
+**A101's finished round-1 board, sha `e703a1672795901f`, read read-only with the sha printed before and after
+(`a_after_finish2.sh`, which takes the project file from the RUN directory: 9 classes, 75 assignments, so the
+17:55 reader defect cannot recur).**
+
+| | A99R, the control | A101, twelve sense nets pre-laid |
+|---|---|---|
+| hard set | 0 of 15 types | 0 of 15 types |
+| open connections | 19 (cut at pass 157) | **6** (cut at pass 92) |
+| open nets | `/+5V_DEV`, `/B33_BST`, `/B33_FB`, `/CH_SRP`, `/FE_COMPC`, **`/FE_CSGF`**, `/FE_PGOOD`, `/HF_LDRV2`, `/MON_FLT` and more | `/+5V_DEV`, `/+13V8_PA`, `/PA_EN`, `/S2_OUT`, `/VBUS20` |
+| `/PA_ISNS_N` | open, as on every finished board A has produced | **CLOSED** |
+| ANA-001 (`sensitive_nodes`) | FAIL **10 of 34** | FAIL **6 of 34** |
+| sense segments on the board | 454 | **610** |
+| `sense_reach` pairs inside 0.50 mm | 29 | 39 |
+| of those, SENSE side locked | **0** | **10** |
+| nets with locked sense copper to grow a fence from | **0 of 11** | **3 of 8** |
+| dc_drop | PASS of 27, 13 density missed | FAIL of 27, 1 missed, 12 density missed |
+| via_current | FAIL, 8 rails over, 36 barrels | FAIL, 9 rails over, 37 barrels |
+
+**The open counts are NOT comparable and are printed for completeness only** (157 passes against 92, which is
+the E36-against-E37 lesson). **What IS comparable is every row measured on the copper that exists**, and three
+of those rows settle the arm.
+
+**1. The prediction written before the run is confirmed.** `/PA_ISNS_N` is the 55.42 mm run that crosses
+`PA_OUT` sixteen times and has been open on A69, A70, A89, A93, A98, A99, A99C, A100, A100C and A99R. A101
+pre-lays it and it closed.
+
+**2. ANA-001 improves and it is not the artefact the 17:20 risk note named.** That note said an improvement
+bought by leaving a sense net unrouted would be an artefact, because `sensitive_nodes` measures copper that
+EXISTS. Read against it: **A101 carries 610 sense segments to the control's 454, a third more**, and **not one
+of A101's five open nets is a sense net**, while the CONTROL leaves `/FE_CSGF`, a declared sensitive net,
+open. So the comparison runs the other way from the risk: the arm has more sense copper on the board and fewer
+violations on it.
+
+**3. The precondition `sense_reach` exists to measure has moved from absent to present.** On the control the
+SENSE side is locked in ZERO of 29 close approaches and the fence has nothing to grow from on any of 11 nets,
+which is why the fence redistributed on board A where it took board E from FAIL to PASS (32.362). On A101 the
+sense side is locked in 10 of 39 and three of eight nets carry locked sense copper, including `PD_ISNS_N`
+(7 of 7 pairs) and `HF_ISNS_P` (2 of 3). **A fence on A101's placement is therefore a different instrument
+from the one A99 measured**, and A99's seven-connection cost is not that instrument's price.
+
+**4. What the pre-lay does NOT fix, named with its number.** `CH_SRP_F` alone carries **22 of A101's 39 close
+approaches at 0.129 mm with ZERO locked sense copper**, against CH_SRP_F's single pair on the control. It is
+not in the twelve-net group, and its aggressors are `CH_SW1` and `CH_SW2`, the charger's own switching nodes,
+both router copper on F.Cu in runs of 0.21 to 2.98 mm. So board A's ANA-001 residue is concentrated on one
+charger sense net and it is a generator item for the group, not a fence item.
+
+**Neither board is adopted and neither is adoptable**: A32 is 0 hard and 0 unrouted and both arms are open.
+What A101 proves is its own variable.
