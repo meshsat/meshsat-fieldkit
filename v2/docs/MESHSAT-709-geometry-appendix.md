@@ -17368,3 +17368,31 @@ A99C is the same tools with `sense_fence` turned off in its own staged board fil
 outlet island's arm against the same control. Each launcher refuses unless its own variable is present, the
 control refuses unless the file it patches declared the fence in the first place, and the trees are staged
 from the runner because a box script cannot stage itself.
+
+**Addendum, 21 September 2026 12:09 CEST: the FET source islands have room for five to twelve more barrels,
+so board E's pre-route shortfall there is answerable in place.** The 11:19 entry left board E's barrel
+question owed a measurement on the placed board, naming three candidates: a second transition site along the
+conductor, a larger drill, or a band that removes the transition. The measurement was taken of the ISLAND
+rather than of the judge's window, because the generator's F.Cu island IS the conductor at a source land.
+Asked of E36's own pre-route board, read-only, how many MORE 0.50 mm barrels fit inside each island's filled
+polygon at ring 0.15 mm, clearance 0.15 and the 0.7995 mm hole-to-hole floor, clear of every other net's
+copper and of every hole already there:
+
+| site | island filled | room for more 0.50 mm barrels |
+|---|---:|---:|
+| DC_F at Q1 | 9.32 mm2 | 11 |
+| TRK_OUT at Q2 | 9.32 mm2 | 12 |
+| DC_HS at Q7 | 7.83 mm2 | 5 |
+
+**And the fixer at HEAD says the same thing from the other side.** A dry run of `rail_barrels` on that board
+plans six sites and reports of every one that each barrel still owed has a free site, two of them adding
+*(a second row, one row not holding them)*: it lays a second row now, where the earlier note described a
+window that allowed one column. The owed counts are small: DC_F +3 of 0.90/0.50 mm for 8.00 A with five
+there, DC_HS at Q7 +2 for 10.00 A with eight, DC_HS at L2 pad 1 +6 for 8.00 A with three, TRK_OUT at Q2 +1
+for 6.16 A with five, TRK_OUT at Q6 pad 5 +5 for 6.16 A with four, CELL_F at U12 +1.
+
+So that part of E39 needs neither a new site nor a bigger drill. **One site still does**: `PV_P` at U5 pads
+32 to 34 is DECLINED, eleven 0.20 mm barrels for 5.68 A being a busbar and not a cluster, which is the QFN
+placement item E34 named. **And none of this speaks to the solved reading**: the post-route question is how
+the mesh SHARES the current between the barrels at a site, measured at 1.47 to 2.77 to one on E36's landed
+board, and a site with room is not a site whose share is even. The two are read apart.
