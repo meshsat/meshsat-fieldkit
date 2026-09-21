@@ -18599,3 +18599,43 @@ model at every area, below the crossover nothing moves, **no tool outside `track
 constants** (the rule PARSES, after its first version fired on this commit's own docstring in `dc_drop`, which
 quotes the formula it replaced so a reader knows what changed), and **the sizer and the judge agree** on every
 current and copper weight, which they had no mechanism to do before.
+
+### 32.362, 21 September 2026 23:19 CEST: the night's five rulings counted, and A99R's finished board says why A101 is the arm that could move ANA-001
+
+**FIVE DECISIONS WERE RULED BY THE SESSION TONIGHT AND THE OPEN LIST WENT TWELVE TO SEVEN**, every one carrying
+`authority: SESSION`, an `authority_why` and a `reversed_by` line, under the owner's ruling of 19:21 that a
+judgement is the session's unless it moves a line `reserved.json` protects, spends money, changes what the kit
+is claimed to be, or accepts a residual risk no measurement in this tree can remove. In order: **36** (a pair
+is judged at the number the part at the end of its link asks for, this project's 1.00 mm being the floor and
+never the ceiling; `168a9dcb`), **29** (board B's three compute-module Ethernet links stay capacitively
+coupled, ruled from the module's own Table 4 rather than from a vendor answer that is published to nobody
+here; `9bd0d629`), **GND-002 unblocked** (its four board changes stop waiting on 29 and become session work;
+`9345b62e`), **the envelope as data** (`pcb_envelope.yaml` pinned by the sha ENV-001 pins, `e7a13f0a`, with
+`part_temps.py` as the first rule to read it, `0ec34ce0`), and **35** (the copper bar is the lowest published
+model at every area, in one place; `06c9eda0`). **Readiness 64.0 to 64.6 percent of 333** (215 verified, 40
+failed, 78 inconclusive), the whole of the move being INT-001 going FAIL to PASS on boards A and B, and
+**seven open decisions now hold 34 rule-board pairs**: 27 (board C's layers, 3), 28 (board P's layers, 4), 30
+(ZEROIZE, 6), 40 (pack protection, 1), 41 (the order paperwork, 3), 42 (decoupling, 3), 43 (board B's
+architecture, 14). The rule-set fingerprint is **ff8151db3576437b** through every one of them, checked and not
+assumed; the local suite reads **1345 passed, 0 failed, 60 skipped**, and both boxes' tools are staged at
+`06c9eda0`.
+
+**A99R IS READ AND IT IS THE CONTROL HALF OF BOARD A'S LAST OUTSTANDING MEASUREMENT** (finished round-1 board,
+sha `14139caa4c9ee112`, read-only, sha identical after). **hard 0, NINETEEN open of 274**; `dc_drop` PASS of 27
+with 13 density missed; `via_current` FAIL, 8 of 22 measured rails over with 36 barrels over; **ANA-001 FAIL 10
+of 34**, its worst rows PD_ISNS_P and POE_ISNS_N at 0.129 mm, CH_SRN_F at 0.137 and CH_SRP_F at 0.142 against
+the 0.50 mm the board asks. **And `sense_reach` says in one line why this board cannot be fenced: 29 pairs sit
+inside the clearance on a shared layer, the SWITCHING side is locked in 2 of them and the SENSE side in ZERO,
+so there is locked sense copper to grow a fence from at 0 of 11 nets.** With the gate drives named (decision
+45) the same board reads 56 pairs and 0 of 16 nets. **That is the prediction of 16:48 measured on its own
+copper**: a fence moves the router's copper and grows only from copper the pre-lay locked, so on a board whose
+sense side is locked nowhere the fence redistributes, which is exactly what A99 against A99C showed at the
+finish (12 of 34 on both, 71 close approaches against 50).
+
+**A101 IS THE ARM THAT CHANGES THAT INPUT AND ITS READING IS NOT IN YET**: its chain pre-laid the twelve-net
+sense group 24 of 24 and `sense_fence` reported **201 rule areas against A99's 85**, the first time board A's
+ISNS nets have carried any, and its finish was still running when this was written (`/root/a101_after.log`
+empty at 23:18, `a_after_finish2.sh` armed). **Its open count is not comparable with A99R's**: A99R was cut at
+pass 157 and A101 at pass 92, which is the E36-against-E37 lesson in board A's geometry, so what is readable on
+it is ANA-001, `sense_reach`'s locked-sense count, and whether `/PA_ISNS_N`, which A101 pre-lays and which is
+open on every finished board A has produced, closed.
