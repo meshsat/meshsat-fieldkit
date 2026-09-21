@@ -16865,3 +16865,14 @@ was renamed GND at the fill like the slot columns (32.341), so it carried no var
 A89's plateau of nineteen is pass count and scatter (two of the six are nets A89 never read open), not the lane. A93 is
 the arm whose lane is connected.
 
+**Addendum, 02:56 CEST: a plated hole is its own crossing, and board P's four declined sites were the judge's.** `rail_crossings`
+counted only the vias near a pad, so a rail entering the board through a 12 AWG wire land (W_BP, 3.0 mm drill) or a
+fuse pin (F1, 1.8 mm) was read as one fanout via carrying 18 A and asked for eighteen to twenty-five barrels, which
+`rail_barrels` declined as busbars since 19 September and the record called the limit of the question. The solder-filled
+hole carries the current into every layer at once; there is no barrel wall to size. A land drilled through is not judged
+and is reported as a pin site. Re-read on the chain-end boards: **board P 6 of 6 carrying, 0 short, five pin sites**
+(clean for the first time); board E 19 carrying and ten short where it read eleven (J_BLK's wire lands out, fifteen pin
+sites), the ten headed by CELL_F at P_CP, 9 A on one 0.25 mm barrel; boards C and A96 unchanged (A96 seventeen pin
+sites, its three short the charger block's). The sixth judge defect of the night, all six of one shape: a rule asking
+its question of the wrong land.
+

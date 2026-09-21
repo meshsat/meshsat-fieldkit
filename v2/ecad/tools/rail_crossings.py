@@ -44,19 +44,22 @@ def _kc_width(v):
         return v.GetWidth()
 
 
-def judge(b, rails, reach_mm=1.0):
+def judge(b, rails, reach_mm=1.0, pin_sites=None):
     """(short, judged): the crossings with fewer barrels than the current needs, and how many were asked.
 
     The sentences are formatted from `rows()`, which is the same walk carrying its numbers instead of its
     prose. `rail_barrels.py`, the fixer, reads THOSE, so the thing that lays copper and the thing that judges
     it can never drift apart: a fixer with its own idea of which site is short is the 8 September defect about
     a debug print that does not share the predicate it explains, and this project has paid for it twice."""
-    rows_, judged = rows(b, rails, reach_mm)
+    rows_, judged = rows(b, rails, reach_mm, pin_sites=pin_sites)
     return [r["why"] for r in rows_], judged
 
 
-def rows(b, rails, reach_mm=1.0):
-    """(short, judged) with each short crossing as a dict: net, ref, pad, at, drill, have, need, amps."""
+def rows(b, rails, reach_mm=1.0, pin_sites=None):
+    """(short, judged) with each short crossing as a dict: net, ref, pad, at, drill, have, need, amps.
+
+    `pin_sites`, when a list is given, collects the sites this walk does NOT judge because the land is a plated
+    hole (see the comment at the test below): one dict each, net, ref, pad, at, drill, amps."""
     vias = [t for t in b.GetTracks() if t.GetClass() == "PCB_VIA"]
     short, judged = [], 0
     for net, r in sorted(rails.items()):
@@ -122,6 +125,22 @@ def rows(b, rails, reach_mm=1.0):
             for _num, _inst in sorted(_groups.items()):
                 pad = max(_inst, key=lambda q: q.GetBoundingBox().GetWidth() * q.GetBoundingBox().GetHeight())
                 bb = pad.GetBoundingBox(); c = pad.GetPosition()
+                # A PLATED HOLE IS ITS OWN CROSSING (21 September 2026, 02:54 CEST). Board P's four "declined" sites
+                # since 19 September are its 12 AWG wire lands and its fuse (W_BP, W_N, W_P, F1: 18 and 25 barrels
+                # asked at the source pad), board E's are J_BLK's wire lands, board A's its blade fuse holders:
+                # every one a pad DRILLED THROUGH, with a wire or a pin soldered into the hole. The current enters
+                # the board on every copper layer at once through the solder-filled hole, so there is no thin
+                # barrel wall to size and no via a fixer could add beside it that carries anything the hole does
+                # not already carry. This walk counted only VIAS near the pad and read the fanout's single via
+                # as the whole crossing; the 19 September note called that "the limit of the question" and it
+                # was the question asked of the wrong land. A site whose land is plated through is not judged
+                # here, and is reported as a pin site so the reader sees the count go down for a reason.
+                if any(getattr(q, "GetDrillSizeX", lambda: 0)() > 0 for q in _inst):
+                    if pin_sites is not None:
+                        _dq = max(_inst, key=lambda q: q.GetDrillSizeX())
+                        pin_sites.append({"net": net, "ref": ref, "pad": _num, "at": (c.x / 1e6, c.y / 1e6),
+                                          "drill": _dq.GetDrillSizeX() / 1e6, "amps": _share})
+                    continue
                 r0 = max(bb.GetWidth(), bb.GetHeight()) / 2 + reach_mm * 1e6
                 near, _seen = [], set()
                 for q in _inst:
@@ -199,9 +218,14 @@ def main(a):
     rails = json.load(open(ip, encoding="utf-8")).get("rails") or {}
     import pcbnew
     b = pcbnew.LoadBoard(path)
-    short, judged = judge(b, rails)
+    _pins = []
+    short, judged = judge(b, rails, pin_sites=_pins)
     print("rail_crossings: %d crossing(s) of %d declared rail(s) carry the barrels their current needs, %d do not"
           % (judged - len(short), len(rails), len(short)))
+    if _pins:
+        print("rail_crossings: %d site(s) are plated holes with a wire or a pin soldered through them, which carry "
+              "their own crossing and are not judged: %s" % (len(_pins), ", ".join(
+                  "%s at %s pad %s (%.1f mm drill, %.2f A)" % (x["net"], x["ref"], x["pad"], x["drill"], x["amps"]) for x in _pins[:12])))
     for s in short[:20]: print("rail_crossings:   %s" % s)
     return 0
 

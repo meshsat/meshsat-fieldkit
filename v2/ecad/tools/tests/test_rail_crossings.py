@@ -333,3 +333,29 @@ def t_a_net_on_one_layer_at_generation_is_named_because_its_crossing_is_the_rout
     short, judged = rc.rows(_Board(vias + tracks, [_FP("U1", pads)], zones=[_Zone("/RAIL", IN2_CU, rule_area=True)]), rails)
     assert short[0]["one_layer"] is True, short[0]
 
+
+def t_a_plated_hole_is_its_own_crossing_and_is_not_asked_for_barrels():
+    """THE DEFECTIVE FIXTURE (21 September 2026, board P): the pack lead W_BP is a 2.3 mm plated hole with a 12 AWG
+    wire soldered through it, carrying CELL4's 18 A into every copper layer at once; the judge counted the ONE
+    fanout via beside it and asked for twenty-five barrels of 0.25 mm at the source pad, which `rail_barrels` then
+    declined as a busbar, and the record carried that as the limit of the question since 19 September. The hole is
+    the crossing. A site whose land is drilled through is not judged, and is reported as a pin site."""
+    pads = [_PTHPad("/CELL4", "1", 10.0, 10.0, 4.6, 4.6)]
+    vias = [_Via("/CELL4", 12.5, 10.0, 0.25)]
+    rails = {"/CELL4": {"amps_peak": 18.0, "source": "W_BP"}}
+    pins = []
+    short, judged = rc.rows(_Board(vias, [_FP("W_BP", pads)]), rails, pin_sites=pins)
+    assert judged == 0 and short == [], (judged, [r["why"] for r in short])
+    assert len(pins) == 1 and pins[0]["ref"] == "W_BP" and abs(pins[0]["drill"] - 0.8) < 1e-9, pins
+    assert abs(pins[0]["amps"] - 18.0) < 1e-9, pins
+    # THE ACCEPTABLE FIXTURE: the same current at a SURFACE pad with one fanout via beside it is still a crossing
+    # that is short, and the pin list stays empty
+    pads = [_Pad("/CELL4", "1", 10.0, 10.0, 4.6, 4.6)]
+    pins = []
+    short, judged = rc.rows(_Board(vias, [_FP("W_BP", pads)]), rails, pin_sites=pins)
+    assert judged == 1 and len(short) == 1 and short[0]["need"] > 1, (judged, short)
+    assert pins == [], pins
+    # and `judge` without a list given behaves as before
+    sentences, judged = rc.judge(_Board(vias, [_FP("W_BP", pads)]), rails)
+    assert judged == 1 and len(sentences) == 1
+
