@@ -12,7 +12,7 @@
  "inputs": {
   "declares": "E5",
   "release": {
-   "path": "/root/sweep37/v2/release/revA",
+   "path": "/root/sweep38/v2/release/revA",
    "sha256_16": null
   }
  },
@@ -31,9 +31,9 @@
  "tool": "doc_provenance_e5",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "46c7aff86de49a4d"
+  "tools_tree_sha": "994b3d2315bb9859"
  },
- "ts": "2026-09-21T05:43:40Z",
+ "ts": "2026-09-21T12:53:15Z",
  "verdict": "FAIL",
  "version": "unknown",
  "writer": {
