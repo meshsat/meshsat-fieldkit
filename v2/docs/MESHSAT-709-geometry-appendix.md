@@ -17218,3 +17218,31 @@ And a part that steps past an obstacle and exhausts its retries is laid ON the o
 C28, which has held a FIXED seat inside AUDB's rectangle since D32, for two shorts, two courtyard overlaps and
 two mask bridges. Board B's packer was taught about the parts already in its rectangle on 12 September; board
 D's never was, and that is the same defect waiting in the same place.
+
+**Addendum, 11:08 CEST: the fence is built, measured and routing, and E36 was a CUT.** Correcting this
+morning's entry in the same breath as the arm that follows it: E36's round 1 started at 04:09:11 UTC and
+ended ROUTED_OPEN at 07:09:26 with seven open at the router, which is its three-hour cap to the second, so it
+was a cut like E34 and E35 and not a round run to the end. Its closers took the seven to six. All three E arms
+are therefore cut at the same clock, which makes the comparison better rather than worse: ten, eleven, seven.
+
+**`sense_fence.py`** turns each declared sensitive node's own copper into a rule area that forbids tracks and
+vias, from the board's own clearance out to the clearance its declaration asks for. It runs after the pre-lay
+and never in the generator, because the copper it fences does not exist until the pre-lay has laid it and a
+generator-drawn fence is an obstacle to that stage. The shape is an ANNULUS and the first version was not: a
+rule area that forbids tracks and sits on the track it protects is `items_not_allowed`, which is in the hard
+set, and it put 84 of them on board E's own pre-route board. Corrected and measured on that same board: 12
+areas, 52.2 mm2 on a 16,680 mm2 board, DRC hard 0 and unrouted 208 before and after.
+
+Three instruments were measured before this one was written. A DSN class-pair clearance is ignored by
+Freerouting 1.9.0 (E17). A KiCad custom rule catches after the route and steers nothing. **A class clearance
+reaches the router and this board refuses it at its own pins**: `WATER_SENSE` at U10 pad 38 is 0.200 mm from
+pad 37, `TRK_CSN` at U5 pad 2 is 0.250 from pad 1, `TRK_CSP` at U5 pad 3 is 0.250 from pad 4, so 0.50 mm
+refuses three escapes and the route dies at the source, which is board A's answer at U16 pin 16 arriving at
+board E. What is left is the keep-out, which KiCad's DSN export writes as `wire_keepout` and which
+`route_one.sh` drops only on power layers.
+
+**E38 routes since 09:07:25 UTC** (the chain PREROUTE-DONE OK, eleven areas over 50.26 mm2 kept at hard 0),
+and its launcher doubles the route cap, which is a second variable against E36's cut. So it is read twice: at
+the three-hour mark on its own session, which is E36's clock exactly, and again at its landing. The prediction
+is in `boards/e.json` and in the launcher: ANA-001 PASS 3 of 3 where E36 read 0.433 mm, and an open count
+within one or two of E36's seven, with the named nets reported if the fence costs more than that.
