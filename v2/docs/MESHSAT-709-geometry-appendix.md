@@ -17182,3 +17182,39 @@ worst a 0.5 mm hole at 1.82 A against 1.30. **The sites that are over are the ro
 0.4 mm barrels carrying 6.16 A each at 5.57 times their wall on `TRK_OUT`, and 0.25 and 0.3 mm router vias at
 1.98 and 2.06. So the E38 fence is not owed by the islands: they hold their current, and what is over is
 `via_parallel`'s case in the finish and `cluster(skew=)`'s at the uneven rows.
+
+**Addendum, 10:49 CEST: board D's last open connection is a floor-plan decision, and the fanout can say why
+now.** `prefanout` had one word for a pad it cannot serve, `no room for a fanout via`, which names the pad and
+not the obstacle; `escape.py` has carried a per-reference debug knob since 5 September and this tool never had
+one. It does now, and the reason is recorded by the predicate that refuses rather than by a second copy of it.
+Asked of board D's own placed board it gives forty refusals at U6 pad 20 and every one is ANOTHER NET'S PAD
+LANE, at the via's own spot or at the stub's midpoint; the in-pad fallback is refused on one of its four
+conditions alone, clear of other nets' pads, and the pad that refuses it is **R36 pad 1, an 0603 land on the
+BACK whose copper reaches 0.07 mm of that pad's centre where a through via wants 0.425**.
+
+R36 is not the item. **Nine back-side parts of the AUDB region sit inside the codec's own box** in a three by
+three grid, because that rectangle spans the part and the row packer fills it from the top left; move one and
+the next part of the same list takes the same slot. The pin is walled in on every other side as well: the
+front pour's nearest filled copper is 1.048 mm away because pins 19 and 21 hold it off at 0.8 mm, the two
+ground planes are directly under the pad and need a via to be reached, and the lane east past the pin tip
+carries pin 21's own locked escape at 0.350 mm, which leaves a tenth of a millimetre for a quarter-millimetre
+spoke against a 0.127 minimum.
+
+**The packer change was built and measured in seven chain runs and board D cannot afford it.** Stepping a
+back-side region around a front-side fanned IC's pads (eight or more surface pads with the closest two a
+millimetre apart or less, the bar the decoupling passes have used since 9 September) reads 71 escapes added
+and 4 pads skipped against 68 and 7, which is five pads better, and then the region fit refuses the placement:
+three regions over by up to 9.1 mm with the IC boxes excluded, five by up to 29.0 mm once the FIXED parts
+inside each rectangle are respected too, against a declared allowance of half a millimetre. Board D's
+rectangles are on the never-auto floor, so the packer walking over what is already there is load-bearing on
+this floor plan. The generator is reverted and HEAD makes the board it always made. **Decision 44 asks it**,
+recommending that it be accepted for this revision: the cost of leaving it is one unconnected ground pin on a
+board phase nobody has adopted, and board D's committed D12 is 0 hard and 0 unrouted.
+
+Two traps on the way, each caught by a gate within a minute of the change that caused it. A row wrap that
+drops the cursor by the part's own height when the row is empty marched the two ICs of a front-side region
+down a column and overflowed it by 9.1 mm, so the wrap stays the original one wherever there are no obstacles.
+And a part that steps past an obstacle and exhausts its retries is laid ON the obstacle: C47 and C48 landed on
+C28, which has held a FIXED seat inside AUDB's rectangle since D32, for two shorts, two courtyard overlaps and
+two mask bridges. Board B's packer was taught about the parts already in its rectangle on 12 September; board
+D's never was, and that is the same defect waiting in the same place.

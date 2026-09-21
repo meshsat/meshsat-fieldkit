@@ -7,7 +7,7 @@ One line per decision that is still open, what it holds up, and where its eviden
 v2/docs/OWNER-DECISIONS-2026-09-11.md and this page is generated from the same registry the readiness table
 is, so the pair counts below are the ones the gates use.
 
-**16 decisions are open and they hold 94 rule-board pairs of the 333 the set is judged on.** A pair held by a
+**17 decisions are open and they hold 94 rule-board pairs of the 333 the set is judged on.** A pair held by a
 decision is not a defect in the board: it is a question nobody has answered, and until it is answered the
 rule can be neither passed nor failed.
 
@@ -29,6 +29,7 @@ rule can be neither passed nor failed.
 | **37** | 2 | board D asks for two crystals that do not exist and the part it was certified against is four times the frequency | CMP-002, SUP-001 | D | 2026-09-16 |
 | **40** | 1 | the pack's cell-level protection is one firmware-configured device, and the rule asks for hardware independent of any software | BAT-001 | P | 2026-09-18 |
 | **33** | 0 | the mezzanine 5 V rail is losing nearly five percent and two of its three numbers were never anybody's requirement | nothing today, see below | - | 2026-09-16 |
+| **44** | 0 | board D's underside packs nine parts inside the codec's own pin field, and one of its ground pins cannot reach the plane | nothing today, see below | - | 2026-09-21 |
 
 ## Each one, with what it holds
 
@@ -653,6 +654,50 @@ rule it has. None of them is a failure of board B's design and none can be judge
 | SCH-003 | cross-board contracts | B | INCONCLUSIVE |
 | STK-001 | the stackup is declared, feasible and in the board | B | INCONCLUSIVE |
 | VIA-001 | every via is a via the process makes | B | INCONCLUSIVE |
+
+
+### Decision 44: board D's underside packs nine parts inside the codec's own pin field, and one of its ground pins cannot reach the plane
+
+**The question:** move board D's AUDB rectangle off the codec's pin field (a region rectangle is the
+owner's), or accept D33's one open ground pad and keep D12, or move the codec itself
+
+**Recommended:** ACCEPT IT FOR THIS REVISION AND KEEP D12. The cost of the defect is ONE connection on a
+candidate board, and board D's committed phase is already 0 hard and 0 unrouted, so nothing is lost by not
+fixing it now; the cost of fixing it inside the packer is measured below and board D does not have the room.
+If board D is ever re-cut for another reason, the rectangle move goes in that same commit.
+
+**Measured:** D33 LANDED HARD 0 WITH ONE OPEN AND THE CONNECTION IS U6 PAD 20, the codec's ground pin, to the
+F.Cu pour (21 September 2026, boards/d.json). Four measurements name the cause and close every cheap answer.
+(1) THE ESCAPE IS NOT MISSING: the chain re-run with the escape stage's own DEBUG_REF names seven skipped
+pads and pad 20 is not one of them. (2) THE FANOUT REFUSES IT AND NOW SAYS WHY: forty candidates, every one
+refused at the via's own spot or the stub's midpoint by ANOTHER NET'S PAD LANE, and the in-pad fallback
+refused on `clear of other nets pads` alone. The pad that refuses it is R36 pad 1 (/PCM_L_AC), an 0603 land
+ON THE BACK whose copper reaches to 0.07 mm of pad 20's centre where a through via wants 0.425. (3) R36 IS
+NOT ALONE AND IT IS NOT THE POINT: NINE back-side parts of the AUDB region (C46, C47, C48, R43, R44, R45,
+R34, R35, R36) sit inside the TQFP-32's own box, because that rectangle spans the codec and the row packer
+fills it from the top left. Moving R36 alone moves the next part of the same list into the same slot, so the
+fix is the rectangle and not the part. (4) THE PAD IS WALLED IN ON EVERY OTHER SIDE TOO: the F.Cu GND pour's
+nearest filled copper is 1.048 mm away (pins 19 and 21 at 0.8 mm hold it off), the In1 and In2 ground planes
+are directly under the pad at 0.000 mm and need a via to be reached, and the lane east past the pin tip is
+blocked by pin 21's own locked escape at 0.350 mm, which leaves 0.100 mm for a 0.25 mm spoke against a 0.127
+minimum. THE PACKER CHANGE WAS BUILT AND MEASURED AND BOARD D CANNOT AFFORD IT: teaching the packer to step a
+back-side region around a front-side fanned IC's pads (eight or more SMD pads, closest two a millimetre apart
+or less, the bar bypass_place has used since 9 September) gives escapes 71 added and 4 skipped against 68 and
+7, and then REFUSES THE PLACEMENT at the region fit: three regions overflow by up to 9.1 mm with the IC boxes
+excluded, five by up to 29.0 mm once the FIXED parts inside each rectangle are respected as well, against a
+declared allowance of 0.5 mm. Board D's rectangles are on the never-auto floor (owner ruling 13 released
+board B's alone), so the packer's walking over what is already there is load-bearing on this floor plan.
+Board B has declared the underlying rule in prose since 9 September, never under fine-pitch or through-hole
+parts, and no packer of this project has ever enforced it. WHAT IT COSTS TO LEAVE: one unconnected ground pin
+of a codec whose other ground pins reach the plane, on a board phase that is not adopted; D12, the committed
+phase, is 0 hard and 0 unrouted and is unaffected.
+
+**Holds no rule today:** board D's committed phase D12 is 0 hard and 0 unrouted and every rule it is judged
+by passes on it, so this decision holds no rule-board pair today. It is asked because it is the one item
+standing between D33 and an adoption, and because the rule it is about (a back-side region packed inside a
+front-side IC's pin field) is board B's declared rule that no packer of this project enforces. If D33 or a
+later D phase is ever put up for adoption, this decision holds RTE-002 on board D at that moment and not
+before.
 
 
 ## Closed, for the record
