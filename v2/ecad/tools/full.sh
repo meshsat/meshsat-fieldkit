@@ -360,7 +360,16 @@ while IFS='|' read -r GNETS GLAYERS GCLR GTAG GPOUR GREACH; do
   [ -n "$GNETS" ] || continue
   T=../tools; . ../tools/guarded.sh
   gstage () {
-    ../tools/drc.sh $N.kicad_pcb out/$N-prelay-in.json
+    # THE GROUP'S PAIRS COME FROM THE BOARD, NOT FROM A CAPPED REPORT (21 September 2026). KiCad's DRC export
+    # lists at most about 499 unconnected items and board A's placed board IS at that cap, so which of a
+    # group's pairs appear was decided by a truncation: A99 and A99C, launched in the same minute from the
+    # same tools with identical placements, closed 16 of 16 and 19 of 20 of the same switching group, and the
+    # four that differ are /POE_SW2's, absent from one run's report and present in the other's. prelay_pairs.py
+    # asks the board instead (every other net set to no net in a copy, so it can raise no item of its own) and
+    # writes a report of the same shape; the full DRC is the fallback, and a fallback that fires says so.
+    python3 ../tools/prelay_pairs.py $N.kicad_pcb out/$N-prelay-in.json "$GNETS" \
+      || { echo "prelay group $GTAG: prelay_pairs refused, falling back to the whole board's capped report"; \
+           ../tools/drc.sh $N.kicad_pcb out/$N-prelay-in.json; }
     # THE POURS ARE NOT OBSTACLES TO A PRE-LAY (18 September 2026): nothing is routed yet, this stage re-fills
     # before anything judges the board, and KiCad's fill retreats around a locked track the way it does around
     # the router's own. With them in the map board D's pre-lay had 5,140 free cells of 834,561 and laid nothing,
@@ -381,7 +390,9 @@ if [ -n "$PRELAY" ]; then
   # pre-route basis (a placed board is not judged on its opens)
   T=../tools; . ../tools/guarded.sh
   prelay_stage () {
-    ../tools/drc.sh $N.kicad_pcb out/$N-prelay-in.json
+    python3 ../tools/prelay_pairs.py $N.kicad_pcb out/$N-prelay-in.json "$PRELAY" \
+      || { echo "prelay: prelay_pairs refused, falling back to the whole board's capped report"; \
+           ../tools/drc.sh $N.kicad_pcb out/$N-prelay-in.json; }
     env STUB_NETS="$PRELAY" STUB_LAYERS="$(cfg prelay_layers)" STUB_GRID="${PRELAY_GRID:-0.1}" STUB_WIN_SCALE="${PRELAY_WIN:-25}" STUB_MAXN="${PRELAY_MAXN:-200000000}" \
       timeout "${PRELAY_TIMEOUT_S:-3600}" nice -n 10 python3 -u ../tools/stub_router.py $N.kicad_pcb out/$N-prelay-in.json > out/$N-prelay.log 2>&1
     grep -aE "stub_router:|closed |FAILED|NOT CLOSED" out/$N-prelay.log | tail -8
