@@ -17017,3 +17017,18 @@ are closed on two boards by two different instruments, A93's by the finish on th
 the router on the generator's whole bank, which is what the pair was for. What remains on A93 is the device rail's
 run to the outlet cluster, the charger's Kelvin filter net that every closer has refused pad to track since A47, and
 the PA sense line that crosses its own power rail sixteen times. Not adoptable against A32's zero.
+
+**Addendum, 06:56 CEST: a router's board mid-flight is its session, and E36's says the islands are being sliced.** A
+correction first: the "pass-12 sample" of E36's islands written at 06:32 read the board in `out/par/1`, which while a
+route runs is the placed board the DSN was exported from, so it said nothing; `read_par1.sh` is right only at the ROUTED
+line, once `route_one.sh` has imported the final session, which is how A94 and A95 were read. The router's state is its
+session file, and the importer that turns a copied session into a board was hard-wired to board A; it takes any board
+now. E36's session at pass 28, applied to a copy of its placed board: hard 0 and ten nets open (`/DCIN_PGD`, `/DC_P`,
+`/FAN1_PWM`, `/FAN2_TACH`, `/SCL0`, `/TRK_BOOST2`, `/U3_VCAP`, `/USB_E6_N`, `/USB_E6_P`, `/XIN`), one of U5's pins where
+E34 left six. The islands: DC_F's at Q1 and TRK_OUT's at Q2 intact at 9.32 mm2 with no foreign track inside; DC_HS's at
+Q7 7.83 to 7.19 mm2 with three foreign F.Cu track ends inside its rectangle; and the VIN_RAW source island at L2 pad 2
+13.16 to 9.49 mm2, twenty-eight percent of its fill gone under two router tracks. That is A34's PA-head shape on the
+two islands that carry the most current, and what `place_audit`'s warning said before the route. Whether the barrels
+lose their copper is `via_current`'s question on the landed board; if they do, E38 fences each island with a track
+keep-out on its layer, the pattern board A's PA head carries, after checking the source pads' own fanout vias inside
+the rectangle. A sample, not the landing.
