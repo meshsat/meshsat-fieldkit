@@ -191,6 +191,32 @@ def plan(row, free, max_barrels=MAX_BARRELS):
     return pts, axis, note
 
 
+
+def plan_sites(rows, free_of, max_barrels=MAX_BARRELS, clr=0.127):
+    """Plan every row on the board AS IT WILL STAND after the rows before it.
+
+    21 September 2026, board A, the same chain run twice: `plan` was called for every site against the board
+    BEFORE any site was laid, so two sites 8.6 mm apart (CH_ACN at Q7's drain tab and VBUS20 at R16, both
+    spreading along x toward each other) each planned onto cells the other's plan had taken, the batch DRC read
+    hole_to_hole 0.14 mm and shorting between the two nets, and BOTH sites were reverted where the previous run
+    had laid both. Each plan's points are holes and rings the next plan keeps clear of now, at the larger of the
+    hole-to-hole floor and the copper clearance between the two rings. `free_of(row)` returns the board's own
+    site test for that row; `clr` is the board's clearance. Returns (plans, declined) in main's shapes."""
+    plans, declined, taken = [], [], []
+    for r in rows:
+        base = free_of(r)
+        def free(X, Y, _r=r, _base=base):
+            if not _base(X, Y): return False
+            for px, py, pd, pw in taken:
+                need = max((_r["drill"] + pd) / 2.0 + FLOOR, (_r.get("width", 0.0) + pw) / 2.0 + clr)
+                if math.hypot(X - px, Y - py) < need - 1e-9: return False
+            return True
+        pts, axis, note = plan(r, free, max_barrels)
+        if not pts: declined.append((r, note)); continue
+        plans.append((r, pts, axis, note))
+        taken += [(x, y, r["drill"], r.get("width", 0.0)) for x, y in pts]
+    return plans, declined
+
 def _declined_evidence(declined):
     """The sites this stage could not answer, in the verdict, because that is what a reader needs from it.
 
@@ -263,8 +289,7 @@ def main(argv):
 
     ds = b.GetDesignSettings()
     clr = max(pcbnew.ToMM(ds.m_MinClearance), 0.127)     # return_via's own floor, and its reason
-    plans, declined = [], []
-    for r in rows:
+    def _free_of(r):
         own = "/" + r["net"] if not r["net"].startswith("/") else r["net"]
         own = own if any((p.GetNetname() or "") == own for fp in b.GetFootprints() for p in fp.Pads()) \
             else r["net"]
@@ -273,11 +298,9 @@ def main(argv):
         # DRC refused a barrel at J_BLK pad 1 for exactly that (two 0.25 mm drills need 0.5495 mm between
         # centres and the copper test is satisfied at 0.362). So the site must pass BOTH, and the hole half
         # counts every drilled hole on the board, this net's included: a hole does not care whose net it is.
-        free = lambda X, Y, _w=r["width"], _d=r["drill"], _o=own: (
+        return lambda X, Y, _w=r["width"], _d=r["drill"], _o=own: (
             _rv._site_free(b, X, Y, _w, clr, _o) and _hole_free(b, X, Y, _d))
-        pts, axis, note = plan(r, free, maxb)
-        if not pts: declined.append((r, note)); continue
-        plans.append((r, pts, axis, note))
+    plans, declined = plan_sites(rows, _free_of, maxb, clr)
     for r, note in declined:
         print("rail_barrels: DECLINED %s at %s pad %s (%.2f, %.2f): %s"
               % (r["net"], r["ref"], r["pad"], r["at"][0], r["at"][1], note))

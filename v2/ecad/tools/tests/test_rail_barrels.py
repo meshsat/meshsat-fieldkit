@@ -6,6 +6,7 @@ worth a rule here is arithmetic over numbers or a property of the file, so all o
 placement itself (`plan`), the cap that refuses a busbar, the axis choice, and the four properties that keep
 this file from having its own opinion about a count, a site, or what the DRC said.
 """
+import math
 import os, sys, math
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -182,9 +183,13 @@ def t_the_sites_come_from_the_judge_s_own_walk():
     assert "barrels_for(" not in body, "main computes its own barrel count instead of reading the judge's rows"
     assert body.count("_rc.rows(") == 1, "the sites come from somewhere other than the judge's own walk"
     assert "rows, judged = _rc.rows(" in body, "the rows are not taken straight from the judge"
+    # Since 21 September 2026 main hands the judge's rows to `plan_sites`, which plans each site on the board
+    # as it stands after the sites before it; the rows still come from the judge and nowhere else.
+    assert "plan_sites(rows, " in body, "the plan is not built from the judge's rows"
+    ps = SRC[SRC.index("def plan_sites("):SRC.index("def main(argv):")]
     for r in ("for r in rows", "plans.append", "declined.append"):
-        assert r in body, "the plan is not built from the judge's rows"
-    assert '"need"' not in body.split("for r in rows")[0], "main decides how many barrels a site needs"
+        assert r in ps, "the plan is not built from the judge's rows"
+    assert '"need"' not in body.split("plan_sites(rows, ")[0], "main decides how many barrels a site needs"
 
 
 def t_it_does_not_carry_its_own_copy_of_the_drc_helpers():
@@ -420,3 +425,34 @@ def t_a_second_row_answers_a_site_one_row_cannot_hold_inside_the_judges_window()
     BAND = lambda x, y: abs(y - 10.0) < 1e-9      # one row free, its two nearest sites taken, the next out of the window
     pts, axis, note = rb.plan(row3, BAND)
     assert pts == [] and "placement item" in note, (pts, note)
+
+
+def t_two_neighbouring_sites_are_planned_on_the_board_as_it_stands_after_the_first():
+    """THE DEFECTIVE FIXTURE (21 September 2026, board A run twice): two sites whose free cells overlap. Planned
+    each against the bare board, the second site takes cells the first already holds and the batch DRC reads two
+    holes 0.14 mm apart between two nets; both sites are then reverted. `plan_sites` feeds each plan's points into
+    the next plan's site test, so no point of the second plan stands within the hole-to-hole floor of a point of
+    the first, and the first plan is what it was alone."""
+    r1 = _row(3.4, drill=0.4, at=(10.0, 10.0)); r1["net"] = "CH_ACN"
+    r2 = _row(3.4, drill=0.4, at=(10.6, 10.0)); r2["net"] = "VBUS20"
+    alone1, _, _ = rb.plan(r1, OPEN)
+    alone2, _, _ = rb.plan(r2, OPEN)
+    assert alone1 and alone2
+    clash = [(x, y) for x, y in alone2 if any(math.hypot(x - px, y - py) < r1["drill"] + rb.FLOOR - 1e-9 for px, py in alone1)]
+    assert clash, "the fixture must clash when each site is planned on the bare board"
+    plans, declined = rb.plan_sites([r1, r2], lambda r: OPEN, clr=0.127)
+    assert not declined, declined
+    assert plans[0][1] == alone1, "the first site's plan is what it was alone"
+    second = plans[1][1]
+    for x, y in second:
+        for px, py in alone1:
+            assert math.hypot(x - px, y - py) >= r1["drill"] + rb.FLOOR - 1e-9, (x, y, px, py)
+
+
+def t_two_distant_sites_are_planned_exactly_as_they_are_alone():
+    """THE ACCEPTABLE FIXTURE: two sites far apart plan exactly as each does alone; planning against the earlier
+    site changes nothing where nothing overlaps."""
+    r1 = _row(3.4, drill=0.4, at=(10.0, 10.0)); r2 = _row(2.0, drill=0.3, at=(40.0, 40.0))
+    plans, declined = rb.plan_sites([r1, r2], lambda r: OPEN)
+    assert not declined
+    assert plans[0][1] == rb.plan(r1, OPEN)[0] and plans[1][1] == rb.plan(r2, OPEN)[0]
