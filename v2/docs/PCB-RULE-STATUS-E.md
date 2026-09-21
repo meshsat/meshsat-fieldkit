@@ -21,8 +21,8 @@ Measured on board E17 (pcb-e1-dock-e7, a462ac2620b9b8d3), declares E17.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 35 | 64.8 |
-| FAIL | 7 | 13.0 |
+| PASS | 36 | 66.7 |
+| FAIL | 6 | 11.1 |
 | INCONCLUSIVE | 12 | 22.2 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **54** | 100.0 |
@@ -61,7 +61,7 @@ Measured on board E17 (pcb-e1-dock-e7, a462ac2620b9b8d3), declares E17.
 | ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **FAIL** | sensitive_nodes FAIL: {'declared': 3, 'fail': 2, 'measured': 3} |
 | RF-001 RF paths are designed as RF | BLOCKER | ROUTED_BOARD | **PASS** | rf_line PASS of 0 |
 | INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **PASS** | interfaces_e PASS of 1 |
-| TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **FAIL** | port_protect_e FAIL: {'behind_an_active_part': 0, 'declared': 3, 'not_on_netlist': 0, 'ports': 3, 'unprotected': 5} |
+| TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **PASS** | port_protect_e PASS of 8 |
 | ISO-001 creepage and clearance | BLOCKER | ROUTED_BOARD | **FAIL** | spacing FAIL: {'below_limit': 92, 'closest_mm': 0.1287, 'hv_nets': 8, 'pairs_measured': 10759} |
 | THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, |
 | PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **PASS** | hardset-placed PASS of 15 |

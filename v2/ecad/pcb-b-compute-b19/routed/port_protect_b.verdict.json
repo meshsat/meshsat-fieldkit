@@ -2,6 +2,7 @@
  "advisory": false,
  "applicable": true,
  "counts": {
+  "answered_in_part": 0,
   "behind_an_active_part": 0,
   "declared": 2,
   "not_on_netlist": 0,
@@ -14,7 +15,7 @@
   "board": "b",
   "netlist": {
    "path": "out/pcb-b-compute.net",
-   "sha256_16": "24a4e4d89b577ae6"
+   "sha256_16": "0e72edb5d755316f"
   }
  },
  "missing_input": null,
@@ -31,14 +32,14 @@
  ],
  "tool": "port_protect_b",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "git_head": "824ec9d4514c",
+  "tools_tree_sha": "7e3938bbaf939c35"
  },
- "ts": "2026-09-21T12:47:49Z",
+ "ts": "2026-09-21T18:58:08Z",
  "verdict": "PASS",
- "version": "unknown",
+ "version": "824ec9d4514c",
  "writer": {
   "file": "port_protect.py",
-  "sha16": "4cd61075adea9def"
+  "sha16": "f99d9cfc6698197a"
  }
 }

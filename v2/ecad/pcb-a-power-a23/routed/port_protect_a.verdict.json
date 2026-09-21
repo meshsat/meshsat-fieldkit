@@ -2,25 +2,24 @@
  "advisory": false,
  "applicable": true,
  "counts": {
+  "answered_in_part": 2,
   "behind_an_active_part": 0,
   "declared": 3,
   "not_on_netlist": 0,
   "ports": 3,
-  "unprotected": 2
+  "unprotected": 0
  },
  "denominator": 21,
- "evidence": [
-  "J_USBC_OUT (the USB-C outlet on the connector plate, out of the case): 2 conductor(s) reach a chip with nothing between: J_USBC_OUT.2 on PD_CC1, J_USBC_OUT.3 on PD_CC2"
- ],
+ "evidence": [],
  "inputs": {
   "board": "a",
   "netlist": {
    "path": "out/pcb-a-power.net",
-   "sha256_16": "3a1b2e4a7684648d"
+   "sha256_16": "aa1372ba3932610f"
   }
  },
  "missing_input": null,
- "note": "2 conductor(s) reach a semiconductor with nothing between, and 0 meet their clamp only through an active part, which therefore sees the transient itself",
+ "note": "every declared external conductor meets a protection part before a chip",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -33,14 +32,14 @@
  ],
  "tool": "port_protect_a",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "git_head": "824ec9d4514c",
+  "tools_tree_sha": "7e3938bbaf939c35"
  },
- "ts": "2026-09-21T12:42:06Z",
- "verdict": "FAIL",
- "version": "unknown",
+ "ts": "2026-09-21T18:58:08Z",
+ "verdict": "PASS",
+ "version": "824ec9d4514c",
  "writer": {
   "file": "port_protect.py",
-  "sha16": "4cd61075adea9def"
+  "sha16": "f99d9cfc6698197a"
  }
 }

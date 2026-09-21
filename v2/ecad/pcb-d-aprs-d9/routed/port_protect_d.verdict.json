@@ -2,27 +2,24 @@
  "advisory": false,
  "applicable": true,
  "counts": {
+  "answered_in_part": 0,
   "behind_an_active_part": 0,
   "declared": 4,
   "not_on_netlist": 0,
   "ports": 4,
-  "unprotected": 7
+  "unprotected": 0
  },
  "denominator": 14,
- "evidence": [
-  "J_PAOUT (the power amplifier output to the antenna path, which reache): 1 conductor(s) reach a chip with nothing between: J_PAOUT.1 on RF_PAOUT",
-  "J_HS1 (a headset jack on the face, which a person plugs a headset i): 3 conductor(s) reach a chip with nothing between: J_HS1.1 on HS1_SPK, J_HS1.3 on HS1_MIC, J_HS1.5 on PTT_HS1_n",
-  "J_HS2 (the second headset jack): 3 conductor(s) reach a chip with nothing between: J_HS2.1 on HS2_SPK, J_HS2.3 on HS2_MIC, J_HS2.5 on PTT_HS2_n"
- ],
+ "evidence": [],
  "inputs": {
   "board": "d",
   "netlist": {
    "path": "out/pcb-d-aprs.net",
-   "sha256_16": "52d6155a8cfd0cc6"
+   "sha256_16": "ad23d6e925d06353"
   }
  },
  "missing_input": null,
- "note": "7 conductor(s) reach a semiconductor with nothing between, and 0 meet their clamp only through an active part, which therefore sees the transient itself",
+ "note": "every declared external conductor meets a protection part before a chip",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -35,14 +32,14 @@
  ],
  "tool": "port_protect_d",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "git_head": "824ec9d4514c",
+  "tools_tree_sha": "7e3938bbaf939c35"
  },
- "ts": "2026-09-21T12:51:29Z",
- "verdict": "FAIL",
- "version": "unknown",
+ "ts": "2026-09-21T18:58:09Z",
+ "verdict": "PASS",
+ "version": "824ec9d4514c",
  "writer": {
   "file": "port_protect.py",
-  "sha16": "4cd61075adea9def"
+  "sha16": "f99d9cfc6698197a"
  }
 }
