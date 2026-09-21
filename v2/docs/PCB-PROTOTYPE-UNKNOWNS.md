@@ -10,7 +10,7 @@ the boards; each one needs hardware that does not exist yet.
 | rule | what is unknown | what decides it | owner |
 |---|---|---|---|
 | RF-001 RF paths are designed as RF | Power reflected into a PA, harmonics outside the licensed band, and desense of the receivers beside it. | board A's eleven RF paths take an outer layer at the class width (the A40 placement), then the LPF simulation  | OWNER |
-| THM-001 every dissipating part has a path | Silent derating, shortened life, and thermal shutdown in the sun. | the efficiencies and the dissipators are DECLARED as of 16 September 2026 and five boards carry a dissipation  | SESSION |
+| THM-001 every dissipating part has a path | Silent derating, shortened life, and thermal shutdown in the sun. | decision 34 is ruled (21 September 2026), so the ambient this rule was missing is stated: +40 C in use and abo | SESSION |
 | EMC-001 source, path, victim | Receiver desense in the kit's own box, and a product that cannot pass an emissions test. | The SHEET and the PLAN are DONE (16 September 2026, verified again on the 17th): pcb_emc.yaml carries every sw | SESSION |
 | REL-001 the build survives its service life | A tall part shears its joints, a connector wears, a coated board traps moisture. | The SHEET is DONE (17 September 2026): every board carries its wear-out and environment classes with the parts | OWNER |
 | BAT-001 the cell block is protected in hardware | Thermal runaway from an over-charge, a deep discharge, or an external short. | DONE 18 September 2026 for the derivation half: the cell's specification is in the tree, the threshold table i | OWNER |

@@ -320,21 +320,40 @@ def _fresh(rec, m, fingerprint, identities=None, rule=None):
 _DOC_CACHE = {}
 
 
-def _document_current(rel):
-    """A generated document is evidence only while it still matches the registry it claims to come from.
+def _document_current(rel, sha=None):
+    """A document is evidence only while it is still the one that was verified.
 
-    The page is rebuilt in memory from the registry and compared with the file. A hand edit, a rule added to
-    the registry after the page was last written, or a deleted row all read as INCONCLUSIVE, because a list of
-    unknowns that has quietly shrunk looks exactly like a list of unknowns that is complete.
+    A GENERATED page is rebuilt in memory from the registry and compared with the file. A hand edit, a rule
+    added to the registry after the page was last written, or a deleted row all read as INCONCLUSIVE, because
+    a list of unknowns that has quietly shrunk looks exactly like a list of unknowns that is complete.
+
+    A HAND-WRITTEN RECORD cannot be rebuilt, and until 21 September 2026 that meant it could never be current:
+    the manual-verification path answered "not a document this tool can rebuild, so it cannot be checked" and
+    ENV-001 stayed INCONCLUSIVE on all seven boards the hour its envelope was adopted, which is a rule refusing
+    the only kind of evidence its own maturity is named for. Such a record is pinned by CONTENT instead: the
+    coverage entry carries `verified_sha`, the sha256 of the file as it was when a person verified it, and any
+    later edit takes the verification away rather than inheriting it. A record with no pin is still not
+    evidence, because "somebody read it once" is not a record.
     """
-    if rel in _DOC_CACHE: return _DOC_CACHE[rel]
+    key = (rel, sha)
+    if key in _DOC_CACHE: return _DOC_CACHE[key]
     name = os.path.basename(rel)
     path = os.path.join(ECAD, "..", "docs", name)
     try:
         import rules_render as RR                       # imported here: rules_render imports this module
         fn = RR.SELF_CONTAINED.get(name)
         if fn is None:
-            out = (False, "%s is not a document this tool can rebuild, so it cannot be checked" % name)
+            if not os.path.exists(path):
+                out = (False, "the record %s does not exist" % name)
+            elif not sha:
+                out = (False, "%s is a hand-written record and the coverage map pins no verified_sha for it, "
+                              "so nothing says WHICH text was verified" % name)
+            else:
+                import hashlib
+                got = hashlib.sha256(open(path, "rb").read()).hexdigest()
+                out = ((True, "%s is the record that was verified (sha %s)" % (name, got[:16])) if got == sha
+                       else (False, "%s has CHANGED since it was verified (pinned %s, now %s): re-verify it or "
+                                    "put the pin back" % (name, str(sha)[:16], got[:16])))
         elif not os.path.exists(path):
             out = (False, "the record %s does not exist" % name)
         else:
@@ -348,7 +367,7 @@ def _document_current(rel):
         # that has none. It is not a pass either way, which is the point (18 September 2026).
         out = (False, "%s could not be checked (%s%s)" % (name, type(e).__name__,
                                                           ": " + str(e) if type(e).__name__ == "MissingInput" else ""))
-    _DOC_CACHE[rel] = out
+    _DOC_CACHE[key] = out
     return out
 
 
@@ -404,7 +423,7 @@ def result_for(rule, letter, cov, vs, m, fingerprint, phase=None, identities=Non
         doc = (c.get("verification") or {}).get("document")
         if not doc:
             return dict(result=INCONCLUSIVE, why="a manual verification with no record is not evidence", evidence=None)
-        ok, why = _document_current(doc)
+        ok, why = _document_current(doc, c.get("verified_sha"))
         return (dict(result=PASS, why=why, evidence=doc) if ok
                 else dict(result=INCONCLUSIVE, why=why, evidence=doc))
     if c.get("maturity") == "GENERATED_ONLY":

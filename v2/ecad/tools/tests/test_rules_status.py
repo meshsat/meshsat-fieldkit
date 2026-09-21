@@ -598,3 +598,27 @@ def t_the_selection_asks_rule_by_rule_where_the_verdict_allows_it():
         S._DISPLACED[:] = []
         S._FP_NOW[0] = None
         S._RULE_FPS[0] = None
+
+
+def t_a_hand_written_record_is_current_evidence_only_while_its_content_is_the_one_that_was_verified():
+    """ACCEPTABLE and DEFECTIVE in one rule (21 September 2026, decision 34's follow-through).
+
+    `_document_current` rebuilds a GENERATED page from the registry and compares, which is the right test for a
+    page this tool writes and no test at all for a record a person writes: OPERATING-ENVELOPE.md came back as
+    'not a document this tool can rebuild, so it cannot be checked' and ENV-001 stayed INCONCLUSIVE on all
+    seven boards the hour its envelope was adopted. A hand-written record is evidence while it is THE ONE that
+    was verified, so the coverage entry pins its sha256 and a later edit takes the verification away. Both
+    halves are asserted here: the pinned content passes, and one byte changed does not."""
+    import hashlib, os, sys
+    sys.path.insert(0, TOOLS) if "TOOLS" in globals() else None
+    import rules_status as S
+    docs = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(S.__file__))), "..", "docs")
+    p = os.path.join(docs, "OPERATING-ENVELOPE.md")
+    sha = hashlib.sha256(open(p, "rb").read()).hexdigest()
+    S._DOC_CACHE.clear()
+    ok, why = S._document_current("OPERATING-ENVELOPE.md", sha)
+    assert ok, "the pinned record is not accepted as current: %s" % why
+    S._DOC_CACHE.clear()
+    ok2, why2 = S._document_current("OPERATING-ENVELOPE.md", "0" * 64)
+    assert not ok2 and "changed" in why2.lower(), "a record that changed since it was verified still passed: %s" % why2
+    S._DOC_CACHE.clear()

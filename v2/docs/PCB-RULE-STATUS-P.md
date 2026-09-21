@@ -11,15 +11,15 @@ Measured on board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 33 | 70.2 |
+| PASS | 34 | 72.3 |
 | FAIL | 7 | 14.9 |
-| INCONCLUSIVE | 7 | 14.9 |
+| INCONCLUSIVE | 6 | 12.8 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **47** | 100.0 |
 
 | rule | effect | phase | result | why |
 |---|---|---|---|---|
-| ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: a DRAFT envelope exists for the first time (v2/docs/OPERATING-ENVELOPE.md), written from the parts own d |
+| ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **PASS** | OPERATING-ENVELOPE.md is the record that was verified (sha cadc28d252f11807) |
 | ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 25 |
 | SCH-001 ERC clean or explained | BLOCKER | SCHEMATIC | **PASS** | erc_gate PASS of 87 |
 | SCH-002 board matches its netlist | BLOCKER | PLACED_BOARD | **PASS** | netlist_board PASS of 241 |
@@ -45,7 +45,7 @@ Measured on board P4 (pcb-p-pack-p2, d79865e7b1aceb95), declares P4.
 | ANA-001 sensitive analogue nodes | MUST_JUSTIFY | PLACED_BOARD | **PASS** | sensitive_nodes PASS of 7 |
 | INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **PASS** | interfaces_p PASS of 1 |
 | TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **PASS** | port_protect_p PASS of 0 |
-| THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, |
+| THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the sourc |
 | PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **PASS** | hardset-placed PASS of 15 |
 | PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | closer_audit PASS of 16 |
 | RTE-001 geometry a fabricator will build | BLOCKER | ROUTED_BOARD | **FAIL** | fab_limits FAIL: {'classes': 4, 'under_capability': 5} |

@@ -7,13 +7,14 @@ Every pair that is not a current PASS, classified. Generated from tools/pcb_deci
 map's maturity and each deciding verdict: a decision that claims a pair wins over everything else, because
 the ruling is the action that moves it, and the measurement is reported beside it rather than lost.
 
-**128 open pair(s)** over 7 board(s). **43 are measured failures** (a tool looked and the board failed), which are **35 distinct readings**, and **15 of those are claimed by an open owner decision**.
+**121 open pair(s)** over 7 board(s). **43 are measured failures** (a tool looked and the board failed), which are **35 distinct readings**, and **15 of those are claimed by an open owner decision**.
 
 | waiting on | pairs | what it means |
 |---|---:|---|
 | `DECISION` | 40 | an owner decision by name |
-| `DECISION_UNCLAIMED` | 18 | a rule that says a decision is open while no decision claims it |
+| `DECISION_UNCLAIMED` | 5 | a rule that says a decision is open while no decision claims it |
 | `AUTHORITY` | 3 | an authority this project does not have |
+| `NO_INSTRUMENT` | 6 | nothing verifies it |
 | `MISSING_INPUT` | 15 | an input the reading declared absent |
 | `MEASURED_FAILURE` | 28 | the tool looked and the board failed |
 | `VENDOR_WAIT` | 2 | a fabricator or a standards body, and nobody here |
@@ -30,13 +31,13 @@ things to fix.
 
 | board | open | of which measured | decision-bound | authority | missing input | not judged |
 |---|---:|---:|---:|---:|---:|---:|
-| A | 26 | 14 | 7 | 1 | 4 | 2 |
-| B | 38 | 6 | 20 | 1 | 5 | 4 |
-| C | 12 | 4 | 8 | 0 | 0 | 2 |
-| D | 15 | 3 | 6 | 1 | 2 | 3 |
-| E | 18 | 6 | 6 | 0 | 4 | 3 |
-| E5 | 5 | 3 | 3 | 0 | 0 | 0 |
-| P | 14 | 7 | 8 | 0 | 0 | 1 |
+| A | 25 | 14 | 5 | 1 | 4 | 3 |
+| B | 37 | 6 | 18 | 1 | 5 | 5 |
+| C | 11 | 4 | 6 | 0 | 0 | 3 |
+| D | 14 | 3 | 4 | 1 | 2 | 4 |
+| E | 17 | 6 | 4 | 0 | 4 | 4 |
+| E5 | 4 | 3 | 2 | 0 | 0 | 0 |
+| P | 13 | 7 | 6 | 0 | 0 | 2 |
 
 ## Readings owed
 
@@ -123,28 +124,15 @@ holding a number, not a question about a number.
 | `BAT-001` | P | FAIL | decision 40: the pack's cell-level protection is one firmware-configured device, and the rule asks for hardware independent of any software |
 | `DOC-002` | P | INCONCLUSIVE | decision 41: the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002 |
 
-## DECISION_UNCLAIMED (18): a rule that says a decision is open while no decision claims it
+## DECISION_UNCLAIMED (5): a rule that says a decision is open while no decision claims it
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
-| `ENV-001` | A | INCONCLUSIVE | an owner decision is open: 16 September 2026: a DRAFT envelope exists for the first time (v2/docs/OPERATING-ENVELOPE.md), written from the parts own datasheets rather |
 | `STK-002` | A | INCONCLUSIVE | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against six layers exists f |
-| `THM-001` | A | INCONCLUSIVE | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) |
-| `ENV-001` | B | INCONCLUSIVE | an owner decision is open: 16 September 2026: a DRAFT envelope exists for the first time (v2/docs/OPERATING-ENVELOPE.md), written from the parts own datasheets rather |
 | `STK-002` | B | INCONCLUSIVE | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against six layers exists f |
-| `THM-001` | B | INCONCLUSIVE | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) |
-| `ENV-001` | C | INCONCLUSIVE | an owner decision is open: 16 September 2026: a DRAFT envelope exists for the first time (v2/docs/OPERATING-ENVELOPE.md), written from the parts own datasheets rather |
-| `THM-001` | C | INCONCLUSIVE | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) |
-| `ENV-001` | D | INCONCLUSIVE | an owner decision is open: 16 September 2026: a DRAFT envelope exists for the first time (v2/docs/OPERATING-ENVELOPE.md), written from the parts own datasheets rather |
 | `STK-002` | D | INCONCLUSIVE | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against six layers exists f |
-| `THM-001` | D | INCONCLUSIVE | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) |
-| `ENV-001` | E | INCONCLUSIVE | an owner decision is open: 16 September 2026: a DRAFT envelope exists for the first time (v2/docs/OPERATING-ENVELOPE.md), written from the parts own datasheets rather |
 | `STK-002` | E | INCONCLUSIVE | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against six layers exists f |
-| `THM-001` | E | INCONCLUSIVE | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) |
-| `ENV-001` | E5 | INCONCLUSIVE | an owner decision is open: 16 September 2026: a DRAFT envelope exists for the first time (v2/docs/OPERATING-ENVELOPE.md), written from the parts own datasheets rather |
 | `STK-002` | E5 | INCONCLUSIVE | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against six layers exists f |
-| `ENV-001` | P | INCONCLUSIVE | an owner decision is open: 16 September 2026: a DRAFT envelope exists for the first time (v2/docs/OPERATING-ENVELOPE.md), written from the parts own datasheets rather |
-| `THM-001` | P | INCONCLUSIVE | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) |
 
 ## AUTHORITY (3): an authority this project does not have
 
@@ -153,6 +141,17 @@ holding a number, not a question about a number.
 | `IMP-001` | A | INCONCLUSIVE | the authority behind this rule's limit is not established: closed forms from a standard not in the tree; no fabricator confirmation and no coupon. 19 SEPTEMBER 2026, THE NOTE WAS A DAY OUT OF DATE AN |
 | `IMP-001` | B | INCONCLUSIVE | the authority behind this rule's limit is not established: closed forms from a standard not in the tree; no fabricator confirmation and no coupon. 19 SEPTEMBER 2026, THE NOTE WAS A DAY OUT OF DATE AN |
 | `IMP-001` | D | INCONCLUSIVE | the authority behind this rule's limit is not established: closed forms from a standard not in the tree; no fabricator confirmation and no coupon. 19 SEPTEMBER 2026, THE NOTE WAS A DAY OUT OF DATE AN |
+
+## NO_INSTRUMENT (6): nothing verifies it
+
+| rule | board | reading | what it waits on |
+|---|---|---|---|
+| `THM-001` | A | INCONCLUSIVE | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) and from what each |
+| `THM-001` | B | INCONCLUSIVE | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) and from what each |
+| `THM-001` | C | INCONCLUSIVE | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) and from what each |
+| `THM-001` | D | INCONCLUSIVE | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) and from what each |
+| `THM-001` | E | INCONCLUSIVE | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) and from what each |
+| `THM-001` | P | INCONCLUSIVE | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) and from what each |
 
 ## MISSING_INPUT (15): an input the reading declared absent
 

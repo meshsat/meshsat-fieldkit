@@ -11,15 +11,15 @@ Measured on board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 17 | 30.9 |
+| PASS | 18 | 32.7 |
 | FAIL | 6 | 10.9 |
-| INCONCLUSIVE | 32 | 58.2 |
+| INCONCLUSIVE | 31 | 56.4 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **55** | 100.0 |
 
 | rule | effect | phase | result | why |
 |---|---|---|---|---|
-| ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: a DRAFT envelope exists for the first time (v2/docs/OPERATING-ENVELOPE.md), written from the parts own d |
+| ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **PASS** | OPERATING-ENVELOPE.md is the record that was verified (sha cadc28d252f11807) |
 | ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 25 |
 | SCH-001 ERC clean or explained | BLOCKER | SCHEMATIC | **PASS** | erc_gate PASS of 2077 |
 | SCH-002 board matches its netlist | BLOCKER | PLACED_BOARD | **FAIL** | netlist_board FAIL: {'agree': 6752, 'aliased_pins': 0, 'board_footprints': 957, 'board_only_inert': 0, 'fail': 1, 'netlist_refs': 931} |
@@ -55,7 +55,7 @@ Measured on board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21.
 | INT-002 a transformerless Ethernet link is verified at both ends | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | an owner decision is open: BOTH ends read on 16 September 2026, and they do not close the question. The switch vendor PERMITS this exact topology and  |
 | TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **PASS** | port_protect_b PASS of 11 |
 | ISO-001 creepage and clearance | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed  |
-| THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | an owner decision is open: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, |
+| THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the sourc |
 | PLC-001 the placement is legal before anything is routed | BLOCKER | PLACED_BOARD | **FAIL** | place_audit FAIL: {'collisions': 13, 'fine_pitch': 75, 'footprints': 957, 'measured': 75} |
 | PLC-002 prevention before repair | MUST_JUSTIFY | ROUTED_BOARD | **INCONCLUSIVE** | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed  |
 | RTE-001 geometry a fabricator will build | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed  |

@@ -1,6 +1,21 @@
-# The operating envelope, DRAFT, 16 September 2026
+# The operating envelope, ADOPTED 21 September 2026
 
-**Status: DRAFT, owner decision 34 is open.** Nothing here is a ruling. This is the envelope the parts'
+**Status: ADOPTED. Owner decision 34 was ruled by the session on 21 September 2026**, under the owner's
+instruction of that evening that an agentic system takes informed engineering decisions on his behalf rather
+than queueing them to a non-engineer. What is adopted is **section 4 as the design envelope** and **section
+6's first row, IEC 61000-4-2 level 4 (8 kV contact, 15 kV air), as the transient level**; the electrical fast
+transient row is recorded as NOT A REQUIREMENT of this project, because nothing in this tree is a source for
+one. The altitude, the vibration and shock severities and the service life stay OPEN, for the rules that
+genuinely need them, and are not invented here. Reverse by reopening decision 34, which returns this document
+to a draft.
+
+**What is NOT taken here and stays the owner's:** ADVERTISING the kit to this envelope. That is a claim about
+the product and belongs with the public copy, not with the engineering.
+
+The sentences below were written while it was a draft and stand as they were, because the numbers are the
+parts' own and the ruling changed none of them.
+
+This is the envelope the parts'
 own datasheets and the owner's rulings already imply, written down for the first time so that the rules
 that depend on it have something to resolve against. Nothing in this project has been built or powered,
 so every number here is a design intent taken from documents, and the three that are measurements owed

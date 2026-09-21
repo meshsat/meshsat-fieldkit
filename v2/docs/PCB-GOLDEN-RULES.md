@@ -33,7 +33,7 @@ numbers against that declaration rather than against an assumption.
 | verified by | MANUAL_REVIEW at SCHEMATIC (partially automatable) |
 | source | NOT_REQUIRED_FOR_PROJECT_DECISION |
 | implementation | NONE_YET |
-| maturity | **OWNER_DECISION_REQUIRED** |  (at writing: UNASSESSED)
+| maturity | **VERIFIED_MANUALLY** |  (at writing: UNASSESSED)
 | owner | OWNER |
 | waiver | not waivable |
 
@@ -1565,7 +1565,7 @@ its junction temperature at the envelope's maximum ambient is estimated and reco
 | verified by | CALCULATION, SIMULATION, PROTOTYPE_MEASUREMENT at PLACED_BOARD (partially automatable) |
 | source | SOURCE_UNVERIFIED |
 | implementation | gen_pcb_*3.py copper and thermal vias |
-| maturity | **OWNER_DECISION_REQUIRED** |  (at writing: SOURCE_UNVERIFIED)
+| maturity | **DOCUMENTED_ONLY** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | by OWNER, scope one part, expires prototype thermal measurement |
 

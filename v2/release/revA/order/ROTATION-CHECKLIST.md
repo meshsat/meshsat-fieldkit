@@ -21,6 +21,7 @@ zero is a real answer and is recorded the same way; what the rule refuses is the
 | `D_SMC` | A, E | D1 |  |  |
 | `D_SOD-123` | C, D, E | D17 |  |  |
 | `D_SOD-123F` | C | D19 |  |  |
+| `D_SOD-323` | D | D10 |  |  |
 | `Fuseholder_Blade_Mini_Keystone_3568` | P | F1 |  |  |
 | `Hirose_FH34SRJ-24S` | C | J_EPD |  |  |
 | `JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical` | D, P | J_VGG |  |  |
@@ -56,4 +57,4 @@ zero is a real answer and is recorded the same way; what the rule refuses is the
 | `VSSOP-10_3x3mm_P0.5mm` | A, E | U10 |  |  |
 | `VSSOP-8_3x3mm_P0.65mm` | D | U8 |  |  |
 
-42 footprint(s) to compare, over 7 board(s).
+43 footprint(s) to compare, over 7 board(s).
