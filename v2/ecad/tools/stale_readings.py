@@ -140,7 +140,7 @@ def main(argv):
         for b, rule, res_, cat, _st, said, ev in sorted(stale):
             print("  %-3s %-9s %-13s %-18s %s" % (b, rule, res_, cat, said[:104]))
         return _v.write("stale_readings", _v.PASS, counts={"pairs": len(rows), "stale": len(stale)},
-                        denominator=len(rows), advisory=True,
+                        denominator=len(rows), advisory=True, out_dir=_v.opt(argv, "--out-dir", None),
                         evidence=["%s %s %s: %s" % (b, r, res_, said[:110]) for b, r, res_, _c, _s, said, _e in stale][:20],
                         note="open pairs whose deciding reading was taken under a tool that has changed since; "
                              "a REPORT, because a tool change says a reading is OWED and not that it would "
@@ -178,8 +178,12 @@ def main(argv):
         print(json.dumps([{"path": p, "state": s, "why": w, "tool": t} for p, s, w, t in rows], indent=1))
     # IT DECIDES NOTHING: the verdict is advisory and PASS whatever it found, because a tool change is not
     # evidence about a board and a gate that refused one for the age of its paperwork would be wrong.
+    # `--out-dir` REACHES THE VERDICT (21 September 2026, 07:15 CEST): run from v2/ecad with --out-dir pointed at
+    # a scratch directory, the report wrote its verdict into the tree's own out/ all the same, which is the 19
+    # September incident's shape (a reading written by hand into this tree's evidence). The flag is honoured now.
     return _v.write("stale_readings", _v.PASS, counts={"readings": len(rows), "stale": len(stale),
                     "not_asked": len(unknown)}, denominator=len(rows), advisory=True,
+                    out_dir=_v.opt(argv, "--out-dir", None),
                     evidence=["%s: %s" % (t or "?", w) for _p, _s, w, t in stale][:20],
                     note="readings taken under a tool that has changed since; a REPORT, because a tool change "
                          "says a reading is OWED and not that it would come out differently")
