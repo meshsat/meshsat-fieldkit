@@ -667,3 +667,44 @@ decisions:
       an adoption, and because the rule it is about (a back-side region packed inside a front-side IC's pin field) is board
       B's declared rule that no packer of this project enforces. If D33 or a later D phase is ever put up for adoption, this
       decision holds RTE-002 on board D at that moment and not before.
+  - n: 45
+    title: ANA-001 keeps a sense line away from the nets a board DECLARES as switching, and on both boards that
+      declare any, the tightest approach of all is a gate drive the declaration leaves out
+    asked: 2026-09-21
+    status: open
+    ask: widen this rule's denominator to include a switching device's GATE DRIVE, or leave it at the switching
+      NODE and record that the gate drives are unjudged
+    recommendation: 'LEAVE THE RULE AS IT IS FOR THIS REVISION AND RECORD THE NUMBERS. The exclusion is not an
+      oversight: switch_list.py excludes a gate by PIN FUNCTION because a gate drives the switching and is not
+      the switching copper, which is the right predicate for the question that tool asks, whether a board has
+      an undeclared switching NODE. Widening the denominator would fail boards A and E on rows nobody has
+      ruled a number for, on placements already cut, and the clearance this rule asks (0.50 mm on board E,
+      0.50 on board A) was chosen for a switching node''s dV/dt into a current-sense pair rather than for a
+      gate driver''s. What is owed instead is that the rows are measured and reported, which sense_reach.py now
+      does on every board, so whoever rules it rules against numbers. If the envelope of decision 34 lands on
+      a level that makes the coupling matter, this is the rule that changes and the same tool says what it
+      would cost.'
+    evidence: 'MEASURED ON BOTH BOARDS THAT DECLARE A SENSITIVE NODE, read-only on their own finished round-1
+      boards with each sha printed before and after (21 September 2026, tools/sense_reach.py). BOARD E, E37,
+      sha 246563debc363acd: sensitive_nodes reports TRK_CSP at 0.433 mm from TRK_SW1 as the failure, because
+      TRK_SW1 is one of the six nets pcb_sensitive.yaml declares for this board; the tightest approaches on
+      the board are TRK_CSN at 0.204 mm from TRK_TG2 and TRK_CSP at 0.212 from TRK_BG2, and TRK_TG1, TRK_TG2,
+      TRK_BG1 and TRK_BG2 are the LT8705A''s own gate drives, which the declaration does not carry. Of the 23
+      pairs of segments inside 0.50 mm on a shared layer, fourteen are against a gate drive. BOARD A, A98, sha
+      3612b9bfb165ff0d: 88 pairs inside 0.50 mm, the tightest being PD_ISNS_P at 0.132 mm from PD_SW1, which
+      IS declared, so on board A the declaration is not what is hiding the worst row. THE SAME READING SETTLES
+      A SECOND THING, which is why it was taken: the switching side of those pairs is copper the ROUTER laid
+      in every one of board E''s 23 and in 82 of board A''s 88, so the fence sense_fence draws after the
+      pre-lay can move it; and the SENSE side is locked in all 23 on board E and in 35 of 88 on board A, so on
+      board A the fence has nothing to grow from at exactly the nets that fail hardest. A gate drive''s
+      physics is not in dispute: it swings the driver''s rail in tens of nanoseconds into amps of gate
+      current, and board P''s own switch_nets_why already calls a FET gate drive one of that board''s two edge
+      sources. What is in dispute is the NUMBER it should be held to, which is not this rule''s 0.50 mm by
+      construction.'
+    blocks: {}
+    holds_nothing_today: ANA-001 already FAILS on boards A and E on its declared denominator (board E at 0.433
+      mm against 0.50 with every declared switching net pinned, board A at 7 of 24 on its landed arms), so
+      this decision holds no rule-board pair and unblocks none. Ruling it either way makes the rule STRICTER
+      or leaves it where it is; it can never make a failing pair pass. It is asked because the boards are
+      being cut now, because a fence arm is in flight on each of them, and because a rule whose denominator is
+      narrower than its subject should be that way on purpose and on the record.
