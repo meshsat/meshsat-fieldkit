@@ -39,10 +39,14 @@ things to fix.
 
 ## Readings owed
 
-Of the 86 open pairs with a reading beside them, **0 are decided by a reading taken under a tool that has
+Of the 86 open pairs with a reading beside them, **1 are decided by a reading taken under a tool that has
 CHANGED since**. A tool change moves no rule-set fingerprint and no per-rule digest, so nothing else on these
 pages can say it. It is an upper bound, because a tool file moves for a comment as readily as for a
 criterion, and it decides nothing: it says the reading is owed. Re-take with retake_gate.sh or a sweep.
+
+| rule | boards |
+|---|---|
+| `MEC-001` | A |
 
 ## Boards behind their own generator
 
@@ -212,7 +216,7 @@ holding a number, not a question about a number.
 | `ANA-001` | A | FAIL | sensitive_nodes FAIL: {'declared': 34, 'fail': 25, 'measured': 10} |
 | `RF-001` | A | FAIL | rf_line FAIL: {'judged': 11, 'missed': 11} |
 | `PLC-001` | A | FAIL | place_audit FAIL: {'collisions': 1, 'fine_pitch': 19, 'footprints': 400, 'measured': 19} |
-| `MEC-001` | A | FAIL | check_pcb_a FAIL: {'fail': 1, 'footprints': 400, 'intent_items_reported': 266, 'pass': 811, 'route_items_reported': 0} |
+| `MEC-001` | A | FAIL | check_pcb_a FAIL: {'fail': 1, 'footprints': 400, 'intent_items_reported': 266, 'pass': 586, 'route_items_reported': 0} |
 | `OUT-001` | A | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `SCH-002` | B | FAIL | netlist_board FAIL: {'agree': 6752, 'aliased_pins': 0, 'board_footprints': 957, 'board_only_inert': 0, 'fail': 1, 'netlist_refs': 931} |
 | `PWR-003` | B | FAIL | energy_chain_b FAIL: {'fail': 1, 'stages': 3} |

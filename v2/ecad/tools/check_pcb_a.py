@@ -101,6 +101,15 @@ import copper_checks as _cc; print(_cc.run(b, check))
 _tl = {}
 for _t in b.GetTracks():
     if _t.GetClass() == "PCB_TRACK": _tl[_t.GetNetname().lstrip("/")] = _tl.get(_t.GetNetname().lstrip("/"), 0.0) + _t.GetLength() / 1e6
+# DECISION 47, ruled 21 September 2026 (the session's, on the evidence in the tree; tools/pair_gate.py
+# carries the reasoning and the way back). The 1.00 mm rule is about a pair whose CLASS declares an impedance
+# target. Board A's ten LM5176 current-sense taps were given _P/_N names when the ISNS filter went in on
+# 18 September, so this gate began holding a KELVIN TAP to a differential pair's rule: PA_ISNS reads a
+# 58.38 mm mismatch by construction, because a Kelvin tap's legs run to opposite ends of its shunt, and every
+# board A finish since has ended PAIRS NOT MATCHED. A pair with no target is MEASURED and REPORTED as INFO.
+# pair_gate fails closed: where the class table or the intent cannot be read, the pair is judged as before.
+import pair_gate as _pg
+_pg_class_of, _pg_targets = _pg.from_board(sys.argv[1])
 _names = {b.GetNetInfo().GetNetItem(k).GetNetname().lstrip("/") for k in range(1, b.GetNetInfo().GetNetCount())}
 for _pair in sorted(set(n[:-2] for n in _names if n.endswith(("_P", "_N")) and (n[:-2] + "_P") in _names and (n[:-2] + "_N") in _names)):   # every pair of the netlist, not only the routed ones (8 Sep 2026)
     _lp, _ln = _tl.get(_pair + "_P", 0.0), _tl.get(_pair + "_N", 0.0)
@@ -119,7 +128,11 @@ for _pair in sorted(set(n[:-2] for n in _names if n.endswith(("_P", "_N")) and (
         _bmm = _iname = _isrc = None
     _cite = ("" if _bmm is None else
              "; %s asks for %.2f mm (%s)" % (_iname, _bmm, (_isrc or "").strip()[:60]))
-    print("%s pair length P %.2f mm, N %.2f mm, mismatch %.2f mm%s%s" % (("WARN " if abs(_lp - _ln) > 1.0 else "PASS ") + _pair, _lp, _ln, abs(_lp - _ln), "" if abs(_lp - _ln) <= 1.0 else " (over 1.0 mm: add a meander on the short leg)", _cite))
+    _over = abs(_lp - _ln) > 1.0
+    _ok, _why47 = _pg.judged(_pair, _pg_class_of, _pg_targets)
+    _tag = ("WARN " if _ok else "INFO ") if _over else "PASS "
+    _tail = "" if not _over else (" (over 1.0 mm: add a meander on the short leg)" if _ok else " (over 1.0 mm and " + _why47 + ")")
+    print("%s pair length P %.2f mm, N %.2f mm, mismatch %.2f mm%s%s" % (_tag + _pair, _lp, _ln, abs(_lp - _ln), _tail, _cite))
 # 8 Sep 2026 (MESHSAT-862 Stage C): the intent gates (return path under the pair-class nets, decoupling loops, the rails of the intent file)
 if any(t.GetClass() == "PCB_TRACK" and not t.IsLocked() for t in b.GetTracks()):
     import os as _os3, sys as _sys3; _sys3.path.insert(0, _os3.path.dirname(_os3.path.abspath(__file__))); import intent_checks as _ic

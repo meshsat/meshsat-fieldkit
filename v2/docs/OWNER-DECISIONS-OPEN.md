@@ -7,7 +7,7 @@ One line per decision that is still open, what it holds up, and where its eviden
 v2/docs/OWNER-DECISIONS-2026-09-11.md and this page is generated from the same registry the readiness table
 is, so the pair counts below are the ones the gates use.
 
-**20 decisions are open and they hold 94 rule-board pairs of the 333 the set is judged on.** A pair held by a
+**15 decisions are open and they hold 94 rule-board pairs of the 333 the set is judged on.** A pair held by a
 decision is not a defect in the board: it is a question nobody has answered, and until it is answered the
 rule can be neither passed nor failed.
 
@@ -28,11 +28,6 @@ rule can be neither passed nor failed.
 | **36** | 2 | the intra-pair tolerance a differential pair is judged against | INT-001 | A, B | 2026-09-16 |
 | **37** | 2 | board D asks for two crystals that do not exist and the part it was certified against is four times the frequency | CMP-002, SUP-001 | D | 2026-09-16 |
 | **40** | 1 | the pack's cell-level protection is one firmware-configured device, and the rule asks for hardware independent of any software | BAT-001 | P | 2026-09-18 |
-| **33** | 0 | the mezzanine 5 V rail is losing nearly five percent and two of its three numbers were never anybody's requirement | nothing today, see below | - | 2026-09-16 |
-| **44** | 0 | board D's underside packs nine parts inside the codec's own pin field, and one of its ground pins cannot reach the plane | nothing today, see below | - | 2026-09-21 |
-| **45** | 0 | ANA-001 keeps a sense line away from the nets a board DECLARES as switching, and on both boards that declare any, the tightest approach of all is a gate drive the declaration leaves out | nothing today, see below | - | 2026-09-21 |
-| **46** | 0 | board A's five converter stages drive their FETs from 13.5 to 28.9 mm away, and no placement lever this project has can shorten them | nothing today, see below | - | 2026-09-21 |
-| **47** | 0 | board A's ten Kelvin current-sense taps are enumerated as differential PAIRS and held to the 1 mm length rule, and every board A finish is refused because the two legs of a Kelvin tap cannot be the same length | nothing today, see below | - | 2026-09-21 |
 
 ## Each one, with what it holds
 
@@ -291,31 +286,6 @@ one left for it.
 | rule | | boards | result today |
 |---|---|---|---|
 | RET-004 | ground-via proximity screen | C, D, E | FAIL |
-
-
-### Decision 33: the mezzanine 5 V rail is losing nearly five percent and two of its three numbers were never anybody's requirement
-
-**The question:** the budget the rail is judged against, and which board pays for the widening
-
-**Recommended:** leave the split as it is declared, A four points and D two of the six the codec's own
-datasheet asks for: both boards pass their own share today, the total is no longer this project's number, and
-the only thing that would reopen it is a measured drop moving
-
-**Measured:** THE ASK IS NARROWER THAN WHEN IT WAS WRITTEN, because one of the three numbers acquired a
-source on 16 September and the intent files carry it (read 17 September). The rail's TOTAL is 6 percent and
-it now comes from the tightest consumer's own datasheet rather than from this project: the PCM2912A USB
-codec's recommended operating VBUS is 4.35 V minimum (v2/vendor/ti/ti-pcm2912a.pdf, Recommended Operating
-Conditions), with the CP2102N next, whose 3.3 V regulator leaves regulation below VREGIN 4.1 V. Both boards'
-intent files carry that sentence and both name the same 6 percent. What is still this project's own is the
-SPLIT: board A declares a 4 percent share and board D 2 percent, summing to exactly the 6, and the
-cross-board contract adds them up on every run and passes. Board A's dc_drop meets the voltage criterion on
-all thirteen of its rails and board D on all four, so nothing is failing on this rail today. The decision
-left is therefore an allocation between two boards, not a requirement, and the cheapest form of it is to rule
-the split rather than the budget.
-
-**Holds no rule today:** PI-002 passes on both boards because each declares a share and the two shares sum
-inside it. What is open is whether those numbers are anybody's requirement: two of the three were this
-project's own defaults. A rule passing against a bar nobody set is not the same as a rule satisfied.
 
 
 ### Decision 34: the kit has never had a written operating envelope and four rules resolve against nothing
@@ -672,176 +642,6 @@ rule it has. None of them is a failure of board B's design and none can be judge
 | VIA-001 | every via is a via the process makes | B | INCONCLUSIVE |
 
 
-### Decision 44: board D's underside packs nine parts inside the codec's own pin field, and one of its ground pins cannot reach the plane
-
-**The question:** move board D's AUDB rectangle off the codec's pin field (a region rectangle is the
-owner's), or accept D33's one open ground pad and keep D12, or move the codec itself
-
-**Recommended:** ACCEPT IT FOR THIS REVISION AND KEEP D12. The cost of the defect is ONE connection on a
-candidate board, and board D's committed phase is already 0 hard and 0 unrouted, so nothing is lost by not
-fixing it now; the cost of fixing it inside the packer is measured below and board D does not have the room.
-If board D is ever re-cut for another reason, the rectangle move goes in that same commit.
-
-**Measured:** D33 LANDED HARD 0 WITH ONE OPEN AND THE CONNECTION IS U6 PAD 20, the codec's ground pin, to the
-F.Cu pour (21 September 2026, boards/d.json). Four measurements name the cause and close every cheap answer.
-(1) THE ESCAPE IS NOT MISSING: the chain re-run with the escape stage's own DEBUG_REF names seven skipped
-pads and pad 20 is not one of them. (2) THE FANOUT REFUSES IT AND NOW SAYS WHY: forty candidates, every one
-refused at the via's own spot or the stub's midpoint by ANOTHER NET'S PAD LANE, and the in-pad fallback
-refused on `clear of other nets pads` alone. The pad that refuses it is R36 pad 1 (/PCM_L_AC), an 0603 land
-ON THE BACK whose copper reaches to 0.07 mm of pad 20's centre where a through via wants 0.425. (3) R36 IS
-NOT ALONE AND IT IS NOT THE POINT: NINE back-side parts of the AUDB region (C46, C47, C48, R43, R44, R45,
-R34, R35, R36) sit inside the TQFP-32's own box, because that rectangle spans the codec and the row packer
-fills it from the top left. Moving R36 alone moves the next part of the same list into the same slot, so the
-fix is the rectangle and not the part. (4) THE PAD IS WALLED IN ON EVERY OTHER SIDE TOO: the F.Cu GND pour's
-nearest filled copper is 1.048 mm away (pins 19 and 21 at 0.8 mm hold it off), the In1 and In2 ground planes
-are directly under the pad at 0.000 mm and need a via to be reached, and the lane east past the pin tip is
-blocked by pin 21's own locked escape at 0.350 mm, which leaves 0.100 mm for a 0.25 mm spoke against a 0.127
-minimum. THE PACKER CHANGE WAS BUILT AND MEASURED AND BOARD D CANNOT AFFORD IT: teaching the packer to step a
-back-side region around a front-side fanned IC's pads (eight or more SMD pads, closest two a millimetre apart
-or less, the bar bypass_place has used since 9 September) gives escapes 71 added and 4 skipped against 68 and
-7, and then REFUSES THE PLACEMENT at the region fit: three regions overflow by up to 9.1 mm with the IC boxes
-excluded, five by up to 29.0 mm once the FIXED parts inside each rectangle are respected as well, against a
-declared allowance of 0.5 mm. Board D's rectangles are on the never-auto floor (owner ruling 13 released
-board B's alone), so the packer's walking over what is already there is load-bearing on this floor plan.
-Board B has declared the underlying rule in prose since 9 September, never under fine-pitch or through-hole
-parts, and no packer of this project has ever enforced it. WHAT IT COSTS TO LEAVE: one unconnected ground pin
-of a codec whose other ground pins reach the plane, on a board phase that is not adopted; D12, the committed
-phase, is 0 hard and 0 unrouted and is unaffected.
-
-**Holds no rule today:** board D's committed phase D12 is 0 hard and 0 unrouted and every rule it is judged
-by passes on it, so this decision holds no rule-board pair today. It is asked because it is the one item
-standing between D33 and an adoption, and because the rule it is about (a back-side region packed inside a
-front-side IC's pin field) is board B's declared rule that no packer of this project enforces. If D33 or a
-later D phase is ever put up for adoption, this decision holds RTE-002 on board D at that moment and not
-before.
-
-
-### Decision 45: ANA-001 keeps a sense line away from the nets a board DECLARES as switching, and on both boards that declare any, the tightest approach of all is a gate drive the declaration leaves out
-
-**The question:** widen this rule's denominator to include a switching device's GATE DRIVE, or leave it at
-the switching NODE and record that the gate drives are unjudged
-
-**Recommended:** LEAVE THE RULE AS IT IS FOR THIS REVISION AND RECORD THE NUMBERS. The exclusion is not an
-oversight: switch_list.py excludes a gate by PIN FUNCTION because a gate drives the switching and is not the
-switching copper, which is the right predicate for the question that tool asks, whether a board has an
-undeclared switching NODE. Widening the denominator would fail boards A and E on rows nobody has ruled a
-number for, on placements already cut, and the clearance this rule asks (0.50 mm on board E, 0.50 on board A)
-was chosen for a switching node's dV/dt into a current-sense pair rather than for a gate driver's. What is
-owed instead is that the rows are measured and reported, which sense_reach.py now does on every board, so
-whoever rules it rules against numbers. If the envelope of decision 34 lands on a level that makes the
-coupling matter, this is the rule that changes and the same tool says what it would cost.
-
-**Measured:** MEASURED ON BOTH BOARDS THAT DECLARE A SENSITIVE NODE, read-only on their own finished round-1
-boards with each sha printed before and after (21 September 2026, tools/sense_reach.py). BOARD E, E37, sha
-246563debc363acd: sensitive_nodes reports TRK_CSP at 0.433 mm from TRK_SW1 as the failure, because TRK_SW1 is
-one of the six nets pcb_sensitive.yaml declares for this board; the tightest approaches on the board are
-TRK_CSN at 0.204 mm from TRK_TG2 and TRK_CSP at 0.212 from TRK_BG2, and TRK_TG1, TRK_TG2, TRK_BG1 and TRK_BG2
-are the LT8705A's own gate drives, which the declaration does not carry. Of the 23 pairs of segments inside
-0.50 mm on a shared layer, fourteen are against a gate drive. BOARD A, A98, sha 3612b9bfb165ff0d: 88 pairs
-inside 0.50 mm, the tightest being PD_ISNS_P at 0.132 mm from PD_SW1, which IS declared, so on board A the
-declaration is not what is hiding the worst row. AND BOARD A'S OWN SPLIT IS MEASURED NOW, which makes it
-comparable with board E's fourteen of 23 (21 September 2026, 16:48 CEST, the same board read twice): the
-DECLARED denominator alone gives 64 pairs inside 0.50 mm, with the switching side locked in 6 and the sense
-side in 22, while naming the gate drives on the command line gives 88, so TWENTY-FOUR of board A's 88 close
-approaches are against a net this rule does not count. THE SAME READING SETTLES A SECOND THING, which is why
-it was taken: the switching side of those pairs is copper the ROUTER laid in every one of board E's 23 and in
-82 of board A's 88, so the fence sense_fence draws after the pre-lay can move it; and the SENSE side is
-locked in all 23 on board E and in 35 of 88 on board A, so on board A the fence has nothing to grow from at
-exactly the nets that fail hardest. A gate drive's physics is not in dispute: it swings the driver's rail in
-tens of nanoseconds into amps of gate current, and board P's own switch_nets_why already calls a FET gate
-drive one of that board's two edge sources. What is in dispute is the NUMBER it should be held to, which is
-not this rule's 0.50 mm by construction.
-
-**Holds no rule today:** ANA-001 already FAILS on boards A and E on its declared denominator (board E at
-0.433 mm against 0.50 with every declared switching net pinned, board A at 7 of 24 on its landed arms), so
-this decision holds no rule-board pair and unblocks none. Ruling it either way makes the rule STRICTER or
-leaves it where it is; it can never make a failing pair pass. It is asked because the boards are being cut
-now, because a fence arm is in flight on each of them, and because a rule whose denominator is narrower than
-its subject should be that way on purpose and on the record.
-
-
-### Decision 46: board A's five converter stages drive their FETs from 13.5 to 28.9 mm away, and no placement lever this project has can shorten them
-
-**The question:** accept the gate-drive lengths for this revision with the numbers on the record, or
-re-arrange the five stages in a next revision (smaller FET packages, or the controller seated between its own
-FET pair)
-
-**Recommended:** ACCEPT FOR THIS REVISION AND RECORD THE NUMBERS. Three placement levers were measured today
-and all three came back no, so accepting costs nothing that could have been had cheaply; and the alternative
-is a package change or a stage re-arrangement, which is a schematic and footprint decision with its own
-bring-up risk, on a board whose committed phase already routes to 0 hard and 0 unrouted. What acceptance
-means in practice is that the gate drives stay 13 to 29 mm on the boards cut from this revision, that the
-opens they cause are named rather than closed (a 13.5 mm gate drive is currently one of the four opens on
-board A's best finished arm), and that the item is carried into the next revision with its measurement rather
-than rediscovered. If the ruling goes the other way, the cheapest shape is the controller seated BETWEEN its
-high-side and low-side FETs, which is what TI's own layout section asks for and what the charger block took
-on 20 September for nothing.
-
-**Measured:** MEASURED ON A98's FINISHED ROUND-1 BOARD, sha 3612b9bfb165ff0d, read-only and unchanged (21
-September 2026). Every gate drive on this board carries 16 to 43 mm of copper (PA_HDRV1 43.5, HF_LDRV1 35.1,
-FE_LDRV2 34.0, PD_HDRV1 30.9, HF_HDRV1 and HF_HDRV2 29.8, POE_HDRV1 27.0, FE_HDRV2 26.7, FE_LDRV1 26.5, down
-to 16.4) and pad to pad each controller's gate pin sits 13.5 to 28.9 mm from the FET it drives: PA_HDRV1
-U13.27 to Q11.4 28.86 mm, FE_LDRV2 U2.21 to Q4.4 25.91, PD_HDRV1 U19.27 to Q21.4 16.36, HF_LDRV1 U15.25 to
-Q16.4 14.68, POE_LDRV1 U16.25 to Q18.4 13.51. An HDRV or LDRV pin carries amps of peak gate current in tens
-of nanoseconds. THREE LEVERS WERE ASKED AND ALL THREE REFUSED. (1) SEATS: the blocks are packed solid, U13
-with 0.08 mm to the south, U2 with 0.08, Q11 0.56 east, Q4 0.78 north, against board E's U5 with 11.40 mm
-clear. (2) DISTANCE: the FETs are ALREADY as close as the packing allows, Q5's courtyard being 3.2 mm from
-U2's while its gate drive is still 17.17 mm, because the path crosses both part BODIES from a pin on U2's far
-side to a pad on Q5's far side; the FEQ region's own comment records that the FETs were moved beside the
-controller in run 11 for exactly this reason. (3) ROTATION: the seat as placed is already the best of the
-four over all 29 partnered pins, U2 summing 462.4 mm where it sits against 509.8, 512.2 and 475.2, and U13
-405.8 against 449.7, 472.7 and 450.8; rotating U2 by 90 buys FE_HDRV2 4.6 mm and costs 47 mm across
-everything else. That is U3's answer of 20 September on two more controllers. IT IS ALREADY COSTING
-CONNECTIONS: gate drives are among the persistent opens of every board-A arm in flight (A99 FE_HDRV2 and
-FE_LDRV2, A99C HF_HDRV2, HF_LDRV1 and PD_LDRV1, A100 HF_HDRV2, PA_HDRV2 and POE_HDRV1), the fence pair
-reading the same seventeen and ten opens at pass 70 and pass 100, net for net, which is a plateau and not a
-sample. And POE_LDRV1, at 13.509 mm, is one of the four opens on A98's finished board: its closer was asked
-at 14.0 mm against the declared 12.0 and every shape was refused by the DRC, bridging the solder mask against
-Q18's own pads, so the reach was never the problem either.
-
-**Holds no rule today:** board A's committed phase A32 is 0 hard and 0 unrouted, so this decision holds no
-rule-board pair today. It is asked because every arm this project has routed since A32 lands with gate drives
-among its open nets, because the three cheap answers were measured and refused today, and because a design
-property that costs connections should be ruled deliberately rather than met again by the next session.
-
-
-### Decision 47: board A's ten Kelvin current-sense taps are enumerated as differential PAIRS and held to the 1 mm length rule, and every board A finish is refused because the two legs of a Kelvin tap cannot be the same length
-
-**The question:** hold the 1 mm length rule to pairs whose CLASS declares an impedance target, or keep it on
-every _P/_N pair in the netlist and accept that board A produces no finished board
-
-**Recommended:** HOLD THE RULE TO PAIRS WITH AN IMPEDANCE TARGET. The ruling of 5 September 17:00 was made
-about differential pairs, whose two legs carry one signal and whose mismatch is a propagation- delay error,
-and it is being asked of copper it was not written for. A Kelvin tap's two legs run to OPPOSITE ENDS of a
-shunt by construction, which is what makes it a Kelvin connection at all, and what it owes electrically is
-common-mode rejection at the amplifier and distance from switching copper, which ANA-001 and kelvin_check
-already measure on this board. Keeping the rule where it belongs costs nothing that is measured anywhere and
-unblocks the whole of board A's finish; equalising the legs would UNDO the Kelvin connection, which is TI's
-own layout item 7 and the reason the ISNS filters went in on 18 September. The residue is named and stays
-under the rule: USB_D8 at 1.81 mm and USB_WALL at 1.54 mm are real differential pairs over the gate on A99's
-board, and the meander fixes both in one pass each.
-
-**Measured:** MEASURED ON TWO FINISHED BOARDS, each read from its own finish log (21 September 2026). A99's
-finish ends A99 PAIRS NOT MATCHED, not finishing, with PA_ISNS P 64.15 mm against N 5.78 (mismatch 58.38 mm),
-PD_ISNS 3.76 and POE_ISNS 12.19, and A98's finish ends the same way, so it is not one arm's accident: no
-board A arm since the ten filtered ISNS nets were declared has produced a board its own finish would sign
-off. meander.py runs three rounds on each and reports could not place the last 58.37 mm on PA_ISNS_N and
-could not place the last 12.19 mm on POE_ISNS_P, while the two USB pairs it CAN fix it fixes in one pass
-each. THE MECHANISM IS ONE LINE: check_pcb_a.py line 105 enumerates every pair of the netlist as any net
-ending _P whose _N partner exists, which was written on 8 September for the three USB pairs and now sweeps in
-the ten ISNS taps the filter created on 18 September; pair_match.sh reads exactly those lines and refuses at
-1.00 mm. WHAT IT COSTS TODAY: the finish is where the closers, the quality pass, dc_drop, via_current, the
-board gate and the deliverable are, so a board that cannot pass the pair gate cannot answer RTE-002 or
-anything behind it, and A98 and A99 are readable at all only because routeflow saves the finished round-1
-board before the refusal. AND THE PHYSICS IS NOT IN DISPUTE: the same record that added these nets says a
-Kelvin tap wants its resistors at opposite ends of the shunt while a pair station wants them side by side,
-which is why the pair pre-router answered 0 of 0 on them and was right.
-
-**Holds no rule today:** board A's committed phase A32 is 0 hard and 0 unrouted and its deliverable predates
-the ISNS filter, so no rule-board pair reads differently today. What it holds is every FUTURE board A arm:
-the finish refuses before it writes a deliverable, so the next adoption of a board A phase needs this ruled.
-
-
 ## Closed, for the record
 
 | # | what it was | how it ended |
@@ -850,5 +650,10 @@ the finish refuses before it writes a deliverable, so the next adoption of a boa
 | 24 | board B lays 65 of its 113 pairs and the pair hold releases no board under 113 | owner ruling 15 September 02:40: the decision is the session's; option 2 taken, boards/b.json declares pair_coupled_fraction 0.80 by length |
 | 25 | board A's USB_WALL pair is 1.47 mm apart and nothing in the tree can close it | closed the same day and needs nothing: the pair took a ribbon of its own (J_AB2, end row) |
 | 26 | board C is one connection short and no tool in this tree can close it | closed by the route: six-layer C and then C17 reached 0 hard and 0 unrouted |
+| 33 | the mezzanine 5 V rail is losing nearly five percent and two of its three numbers were never anybody's requirement | LEAVE THE SPLIT AS DECLARED: board A four points of the codec's six percent and board D two. Both boards meet their own share on every run, the cross-board contract adds them up and passes, and the six percent total is not this project's number at all but the PCM2912A's own Recommended Operating Conditions, VBUS 4.35 V minimum. The only thing that would reopen it is a measured drop moving past a board's share on a routed board. |
 | 38 | board B's two pair classes are 0.100 mm and its own minimum is 0.127, and the fabricator's floor is 0.09 | answered by the copper before it was ruled (18 September 2026): B21's project file carries every class at or above the board's own 0.127 mm, class_floor reads PASS on 5 classes with none below the floor, and the impedance gate's pair geometry is unchanged, which is the recommendation as it stood; nothing was lowered |
+| 44 | board D's underside packs nine parts inside the codec's own pin field, and one of its ground pins cannot reach the plane | ACCEPT FOR THIS REVISION AND KEEP D12. The defect costs ONE connection on a candidate board while board D's committed phase is already 0 hard and 0 unrouted, and the fix was built and measured over seven chain runs before being reverted: stepping a back-side region around a front-side fanned IC reads escapes 71/4 against 68/7 and then the region fit refuses the placement, three regions over by up to 9.1 mm and five by up to 29.0 once the FIXED parts inside each rectangle are respected. Board D's rectangles are on the never-auto floor under owner ruling 13, so the alternative is not available to the session in any case. If board D is re-cut for another reason, the rectangle move goes in that commit. |
+| 45 | ANA-001 keeps a sense line away from the nets a board DECLARES as switching, and on both boards that declare any, the tightest approach of all is a gate drive the declaration leaves out | LEAVE ANA-001's DENOMINATOR AS EACH BOARD DECLARES IT AND REPORT THE GATE-DRIVE ROWS BESIDE IT. switch_list.py excludes a gate by PIN FUNCTION because a gate drives the switching node and is not the switching copper, which is the right predicate for the question that tool asks. The clearance this rule asks was chosen for a switching node's dV/dt into a current-sense pair and not for a gate driver's, so widening the denominator would fail boards A and E on placements already cut against a number nobody has set. sense_reach.py measures and prints the rows instead: board A reads 88 close approaches with the gate drives named against 64 on the declaration alone, and board E 23 against nine. |
+| 46 | board A's five converter stages drive their FETs from 13.5 to 28.9 mm away, and no placement lever this project has can shorten them | ACCEPT THE GATE-DRIVE LENGTHS FOR THIS REVISION AND CARRY THE FINDING TO THE NEXT. Every LM5176 stage drives its FETs from 13.5 to 28.9 mm and all three cheap levers were measured and refused: the seats do not exist (U13 and U2 have 0.08 mm to the south), the FETs are already as close as the packing allows (Q5's courtyard is 3.2 mm from U2's and its gate drive is still 17.17 mm, because the path crosses both part bodies), and the rotation is already the best of four (U2 sum 462.4 mm where it sits against 509.8, 512.2 and 475.2). So the length is a property of the packages and the topology, not of the placement. What acceptance means in practice: the opens it causes are NAMED rather than closed, and /POE_LDRV1 at 13.51 mm is one of the four opens on board A's best finished arm. |
+| 47 | board A's ten Kelvin current-sense taps are enumerated as differential PAIRS and held to the 1 mm length rule, and every board A finish is refused because the two legs of a Kelvin tap cannot be the same length | HOLD THE 1 mm LENGTH RULE TO PAIRS WHOSE CLASS DECLARES AN IMPEDANCE TARGET. A _P/_N name is a naming convention and not a claim about the copper: a Kelvin tap's two legs run to opposite ends of its shunt by construction, so matching their length would mean running the two sense lines together, which is the one thing a Kelvin connection must not do. tools/pair_gate.py is the criterion, both board gates ask it, and a pair with no target is MEASURED and REPORTED as INFO rather than refused. It FAILS CLOSED: where the class table or the intent cannot be read the pair is judged exactly as before, because a declaration that cannot be found must never be the reason a rule stops applying. |
 
