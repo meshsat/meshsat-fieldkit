@@ -1,0 +1,50 @@
+# THE ADOPTED OPERATING ENVELOPE, AS DATA (rule ENV-001, decision 34 ruled 21 September 2026).
+#
+# `v2/docs/OPERATING-ENVELOPE.md` is the record and stays the authority: it carries the reasoning, the
+# carve-outs and the three severities that are deliberately still open. This file is the same numbers in a
+# form a RULE can resolve against, because four rules name the envelope (CMP-001, THM-001, ISO-001, REL-001)
+# and until today each of them would have had to read prose or pick its own number.
+#
+# WHAT A NUMBER HERE IS. It is a quotation, not a decision: every value below appears in the adopted document
+# and `tests/test_envelope_data.py` refuses one that does not. The document's own sha256 is pinned here the
+# way ENV-001 pins it in the coverage map, so an edit to the record takes this file's authority away until
+# someone re-reads it and re-pins it. That is the point: an envelope that quietly changed after the rules
+# resolved against it is the failure the pin exists to catch.
+schema_version: 1
+adopted: "2026-09-21"
+adopted_by: SESSION
+document: "v2/docs/OPERATING-ENVELOPE.md"
+document_sha256: "cadc28d252f11807b8ee0d11341d65d3a22e344e3cd2812dcc9846f3cf4559aa"
+what_is_adopted: >-
+  section 4 as the design envelope and section 6's first row as the transient level. The altitude, the
+  vibration and shock severities and the service life stay OPEN in the document's own words and are NOT
+  invented here; a rule that needs one of them says so rather than reading a number from this file.
+
+ambient_c:
+  in_use: {min: -20, max: 40}
+  storage_3_months: {min: -20, max: 45}
+  storage_1_year: {min: -20, max: 25}
+  carve_outs:
+    - {below_c: -10, what: "the pack is warmed by its heater mat before charge; discharge continues to the cells' own -10 C surface limit"}
+    - {below_c: -15, what: "the e-paper is outside its operating range and updates slowly or not at all, which is a degraded display and not a dead kit"}
+    - {above_c: 35, what: "the kit runs the reduced mode, one module, so the inside air stays under the +55 C the battery-bay sensor and the pack need"}
+
+inside_air_rise_k:
+  one_module_lid_open: 10
+  three_modules_loaded_lid_open: 16
+  note: >-
+    an ESTIMATE from the no-vent ruling of 7 September, not a measurement: nothing has been built or powered.
+    THM-001 resolves against it and must carry that caveat with any number it reports.
+
+transient:
+  esd: {standard: "IEC 61000-4-2", level: 4, contact_kv: 8, air_kv: 15,
+        traceable_to: "the clamp this design already buys: ST's USBLC6-2SC6 sheet in v2/vendor/st/ guarantees that level"}
+  surge: {describes_the_design_rather_than_constraining_it: true,
+          what_is_fitted: "the SMCJ40A on board E's inlet is a 1500 W peak pulse part at 10/1000 us"}
+  eft: {adopted: false,
+        why: "the 2 kV row of the document is the number a reader would expect and it has NO authority behind it, so it is recorded as NOT A REQUIREMENT of this project"}
+
+open_in_the_document:
+  - altitude
+  - "vibration and shock severities"
+  - "service life"

@@ -21,7 +21,7 @@ appears in the gap register.
 | DOC-001 | DOCUMENTATION_CONTROL | BLOCKER | full.sh PHASE, silk_fix_all.py | final_gate.py -> final_gate_<letter> | tests/test_final_gate.py | **ENFORCED** |
 | DOC-002 | DOCUMENTATION_CONTROL | MUST_JUSTIFY | ledger.py, provenance.json, make_handoff.py's PROVENANCE block, export_jlc.sh's header | doc_provenance.py, ledger_verify.py -> doc_provenance_<letter>, ledger_verify | tests/test_doc_provenance.py, tests/test_ledger.py | **ENFORCED** |
 | EMC-001 | EMC | MUST_JUSTIFY | pcb_emc.yaml, the sheet as data | emc_sheet.py -> emc_sheet | tests/test_emc_sheet.py | **ENFORCED** |
-| ENV-001 | PRODUCT_ENVELOPE | BLOCKER | NONE_YET | none |  | **VERIFIED_MANUALLY** |
+| ENV-001 | PRODUCT_ENVELOPE | BLOCKER | NONE_YET | none | tests/test_envelope_data.py | **VERIFIED_MANUALLY** |
 | ENV-002 | PRODUCT_ENVELOPE | BLOCKER | claims_check.py plus claims-allow.txt, one declared exemption per line with its reason | claims_check.py -> claims_check | tests/test_gate_fixtures.py | **ENFORCED** |
 | GND-001 | GROUNDING_SHIELDING | MUST_JUSTIFY | the grounds declaration in boards/<letter>.json plus the pours in gen_pcb_*3.py | ground_system.py -> ground_system | tests/test_ground_system.py | **ENFORCED** |
 | GND-002 | GROUNDING_SHIELDING | MUST_JUSTIFY | gen_sch_c.py standoff bond, gen_sch_b.py magnetics termination | a written strategy and a bench measurement |  | **DOCUMENTED_ONLY** |
