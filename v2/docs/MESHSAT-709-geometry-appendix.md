@@ -17464,3 +17464,31 @@ claim to), `/PA_ISNS_N` 55.4 mm, `/PA_SW_EN` 132.2 mm and `/POE_LDRV1` 13.5 mm, 
 adoptable against the committed A32's 0 and 0. What A98 proves is the variable it was launched for:
 **`/VIN_RAW`, open on A95 at the same pass and at its landing, is closed here and stays closed through the
 finish**, which is the clamp barrel's own net answering.
+
+**Addendum, 21 September 2026 12:48 CEST: the fence can reach every offending segment, and the tightest
+aggressor beside board E's sense pair is not a net ANA-001 looks at.** Two things were settled on the
+CONTROL's board before its arm lands, which is the order that makes a pair readable. (1) **E38's control is
+E37 and not E36**, established by diffing the trees rather than assuming: `gen_pcb_e3.py` is byte-identical
+across e36, e37 and e38; e37 is byte-identical to e36 in `full.sh` and `boards/e.json` as well; and e38
+differs from e37 in `full.sh` by the eighteen-line sense-fence stage alone and in `e.json` by `sense_fence:
+True` with its reason. E36 is a CUT at 10,800 s and E38 carries a stretched cap, so that pair is two
+variables, the fence and the clock, which is the shape that made A98 unusable as A99's control. The cap binds
+on neither of E37 and E38: E37 ran its 200 passes in 8,860 s of a 43,200 s cap and E38 wrote its pass-149
+session 5,816 s in, about 39 s a pass. (2) **The copper that breaks ANA-001 is the ROUTER's in every
+instance**, which is what a fence drawn after the pre-lay is able to move: on E37's finished round-1 board
+(sha 246563debc363acd, read-only, sha identical after) 23 pairs of segments sit inside 0.50 mm of each other
+on a shared layer and **the switching side is LOCKED in none of them**, the sense side being locked in every
+one; E36's landed board reads 17 pairs of the same shape, also none.
+
+**And the rule's denominator is narrower than its subject.** `sensitive_nodes` names TRK_CSP at 0.433 mm from
+TRK_SW1, because TRK_SW1 is on board E's declared `switch_nets`; the probe's tightest rows are TRK_CSN at
+**0.204 mm from TRK_TG2** and TRK_CSP at 0.212 from TRK_BG2 on E37, and 0.204 mm from TRK_TG1 on E36. Those
+four are the LT8705A's own gate drives and the declaration carries none of them, because `switch_list.py`
+excludes a gate BY PIN FUNCTION. That exclusion is right for the question it was written for, whether a
+board has an undeclared switching NODE, and it is not the question ANA-001 asks: a gate drive swings ten
+volts in tens of nanoseconds into amps of gate current, and board P's own `switch_nets_why` already calls a
+FET gate drive one of that board's two edge sources. **Nothing is changed on it here**, because widening a
+declaration fails boards on a number nobody has ruled and it belongs beside decision 34's envelope. The
+consequence for E38 is procedural and immediate: its ANA-001 line is necessary and not sufficient, and the
+segment probe above is the measure to run on its landed board beside the rule. The fence forbids TRACKS
+rather than nets, so it fences the gate drives out whether or not the declaration names them.
