@@ -17649,3 +17649,36 @@ version of this work is NOT a seat move**: `part_room` on A98's board reads U13 
 U2 with 0.08 mm, Q11 with 0.56 mm east and Q4 with 0.78 mm north, against U5's 11.40 mm clear west, so A102
 is a re-order of each stage's region, the charger block's shape of 20 September, which is a placement and
 copper change together because the In3 unions are derived from the placement.
+
+**Addendum, 21 September 2026 14:36 CEST: board A's afternoon, where three cheap answers were asked and all
+three came back no.** They are recorded together because the value is in what they stop.
+
+**(1) The fence pair, read at ONE pass so two cuts cannot decide it.** All four board-A arms are capped at
+18,000 s and run at 1.9 to 2.8 minutes a pass beside each other, so every one lands as a cut at a different
+pass, which is what made E36 unreadable against E37. `snap_at_pass.sh` holds each arm's session at a chosen
+pass, verifying in the same command that the log says the same pass before and after the copy. At **pass 70:
+A99 with the fence is hard 0 and SEVENTEEN open, A99C without it hard 0 and TEN.** The two-variable caveat is
+load-bearing, both trees predating `prelay_pairs` and differing by four pre-laid `/POE_SW2` connections as
+well. The SETS say more than the count: four nets open on both, twelve on A99 alone (`/CH_SRP`, `/EMCON_HW`,
+`/EXP2_SP8`, `/FE_CSGF`, `/FE_HDRV2`, `/FE_LDRV2`, `/FE_VCC`, `/PA_VCC`, `/PD_CSGF`, `/PD_ISNS_P`,
+`/POE_MODE`, `/POE_VCC`) and six on A99C alone. **The fence's extra opens are gate drives, controller supply
+pins and three of the sense nets it exists to protect**: it takes the lanes around the controllers, and on
+this board the controllers are packed to 0.08 mm. That weakens A101's premise, which was to give the fence
+more locked copper at those same controllers to grow from, so **A101 stays prepared and unlaunched**.
+
+**(2) A102, seating each stage's FETs at its controller's gate pins, is refused on measurement.** The seats
+do not exist (U13 0.08 mm south, U2 0.08 mm south, Q11 0.56 east, Q4 0.78 north, against board E's U5 with
+11.40 mm clear). The FETs are already as close as the packing allows: Q5's courtyard is **3.2 mm** from U2's
+and its gate drive is still 17.17 mm, because the path crosses both part BODIES from a pin on U2's far side
+to a pad on Q5's far side, and FEQ's own comment records that the FETs were moved beside the controller in
+run 11 for this reason. And the rotation is already the best of the four, over all 29 partnered pins: **U2
+sums 462.4 mm where it sits against 509.8, 512.2 and 475.2**, and **U13 405.8 against 449.7, 472.7 and
+450.8**, which is U3's answer of 20 September on two more controllers. Rotating U2 by 90 buys `FE_HDRV2`
+4.6 mm and costs 47 across everything else. **So the gate-drive length is a property of the packages and the
+topology, not of the placement.**
+
+**(3) And `/POE_LDRV1`, the cheapest open on A98's finished board at 13.509 mm against a declared 12.0
+reach, is not a reach question.** One variable on a copy of the frozen board, source sha unchanged before and
+after: 12.0 tries nothing, **14.0 tries it and closes nothing**, every shape bridging the solder mask against
+Q18's own pads 2, 3 and 5 and both via-down forms hitting `clearance` and `tracks_crossing` on In2 and In3.
+Board D's answer of 18 September on another board, and **board A's declared 12.0 stands**.
