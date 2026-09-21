@@ -18550,3 +18550,52 @@ readable is ANA-001 and `sense_reach` on each board's own copper, and whether `/
 pre-lays, closed. Their finishes run as this is written and `a_after_finish2.sh` is armed on both, which it
 was not when they were launched: the two arms carried a lander alone until 22:19, and a lander waits on the
 SUPERVISOR's pid, which routeflow keeps alive through the remedy round.
+
+### 32.361, 21 September 2026 23:12 CEST: decision 35 is ruled and it moves not one verdict, because every conductor this project measures is below the crossover
+
+**THE RULING (the session's, `tools/pcb_decisions.yaml` n 35).** This project judges its copper against **the
+most conservative of the three ECSS-Q-ST-70-12C Annex D fits at each area**, in ONE place:
+`track_current.conservative(area, dT)` returns the lowest current any published model allows that
+cross-section and names the model, and **`dc_drop.ipc_limit`, `power_copper.width_for` and
+`via_current.ampacity` all ask it**. Until tonight each of those three had IPC-2221A's constants typed into
+it, which is one decision with three answers in one tree, and is the shape the DRC policy had before the hard
+set was centralised.
+
+**WHAT IT CHANGES, MEASURED BEFORE IT WAS RULED AND THEN ON EVERY BOARD: NOTHING THAT IS MEASURED TODAY.**
+Board A first, because it is the demanding case (27 rails, thirteen density misses): on the committed A32
+(58e26c67987b1daa, read-only where KiCad is, sha identical before and after) `dc_drop` reads FAIL of 27 with
+**24 met, 3 missed and 13 density missed, which is its committed verdict exactly**, and every ratio is
+unchanged to two decimals (VBAT 3.70, VIN_RAW 2.00, VBUS20 2.04, +13V8_PA 1.53, FE_OUT 3.13, CH_ACN 3.03,
+CH_SRP 15.84 against 15.83, S1_OUT 1.44). Then the other five boards that declare a rail, `dc_drop` and
+`via_current` as one set per board, each board's sha identical before and after: **B 33 met / 5 missed / 10
+density missed and 21 rails over with 34 barrels, C PASS of 2, D PASS of 4 with one rail over, E PASS of 13
+with 7 density missed and 8 rails over with 31 barrels, P PASS of 4 with one density missed and 3 rails over
+with 5 barrels. Every count is the committed verdict's, to the number.** Of the fifteen verdict files
+re-taken, fourteen differ only in their stamps and the fifteenth carries **one figure**: board B's `+5V_LIME`
+goes 8.92 to 8.93 of its limit, which is the Annex D fit being stated to four digits where this project typed
+three. **Readiness does not move and that is the proof.**
+
+**THE REASON IS THE CROSSOVER, AND THE NUMBER THAT DECIDES IT IS NOT THE ONE THE DECISION'S OWN EVIDENCE
+QUOTED.** IPC-2221A stops being the LOWEST of the three at **0.1706 mm2 at 10 K**, where CNES crosses it, and
+not at the 0.2677 mm2 where IPC-2152 does (`crossover()` answers that different question and the first draft
+of the ruling quoted it). That is **4.88 mm of outer 1 oz copper**, 9.75 mm of half-ounce inner or 2.44 mm at
+2 oz, and every conductor this project measures is narrower than that, while the pour bar is one 0.5 mm
+raster CELL and a barrel is smaller again (a 0.4 mm hole at 18 um of plating is 0.0236 mm2, and its rating is
+unchanged, checked rather than assumed). **A fixture written for the ruling caught the wrong crossover before
+it reached the record**, which is what the fixtures are for.
+
+**SO WHAT THE RULING DECIDES IS WHAT THE COPPER MUST BECOME, not what today's readings say.** The SIZER moves:
+a band for **18 A on outer 1 oz goes from 16.14 mm to 23.91**, 10 A from 7.18 to 8.15, and 3 A not at all.
+That sharpens board A's copper-weight question rather than answering it (at 2 oz the same 18 A wants 11.96 mm),
+and every board's own next generation is where its copper follows; **no committed board changed when this was
+ruled.** The external factor of 2.0 is NOT what this decision ruled and was not touched: it is IPC-2221's own
+two curves, its figure 6-4 publishing the external chart and derating an internal conductor to about half of
+it, while all three Annex D fits are of the INTERNAL curve. The enclosure question behind it is named where it
+belongs: this kit is a SEALED case with no vent, so the convection an external curve assumes is weaker here
+than in free air, and the instrument for that is THM-001's thermal model and not a bar swap.
+
+**FOUR RULES, ALL PROVED TO FAIL ON THE TREE THEY WERE WRITTEN AGAINST**: the bar is the lowest published
+model at every area, below the crossover nothing moves, **no tool outside `track_current.py` carries the
+constants** (the rule PARSES, after its first version fired on this commit's own docstring in `dc_drop`, which
+quotes the formula it replaced so a reader knows what changed), and **the sizer and the judge agree** on every
+current and copper weight, which they had no mechanism to do before.

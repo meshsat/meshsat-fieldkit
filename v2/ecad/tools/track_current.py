@@ -46,6 +46,64 @@ def area_for(current_a, dT=10.0, model="IPC-2221A"):
     return (1.0 / C1) * (current_a / (k0 * (dT ** k1))) ** (1.0 / (m0 * (dT ** m1)))
 
 
+EXTERNAL_FACTOR = 2.0
+"""IPC-2221's own two curves, not this project's invention: its figure 6-4 publishes an external conductor
+chart and derates an INTERNAL conductor to about half of it, which is the 0.048 against 0.024 every tool in
+this tree has carried since the first board. The Annex D fits above are all of the INTERNAL curve (D.2, D.3
+and D.4 name it), so an external conductor is rated at the fit times this factor. DECISION 35 DID NOT RULE ON
+THIS NUMBER and does not touch it: it is about which of the three fits the copper is judged against. The
+enclosure question that sits behind it is named where it belongs, in the decision's own entry: this kit is a
+SEALED case with no vent (ruling 7 September), so the convection an external conductor's curve assumes is
+weaker here than in free air, and the instrument for that is THM-001's thermal model and not a bar swap."""
+
+
+def conservative(area_mm2, dT=10.0):
+    """The lowest current any published model in Annex D allows this cross-section, and the model's name.
+
+    DECISION 35, ruled by the session on 21 September 2026: this project judges its copper against the most
+    conservative of the three fits at each area, so the bar never reads higher than a published model. Below
+    `crossover_min()`, which is 0.1706 mm2 at 10 K, that is IPC-2221A, which is what every tool here used
+    before, so a small conductor's reading does not move; above it CNES is the lowest and the bar drops. NOTE
+    WHICH CROSSOVER: `crossover()` answers IPC-2221A against IPC-2152 and is 0.2677 mm2, and the first draft of
+    this ruling quoted it; the number that decides what moves is the one against CNES, which is smaller, and
+    a fixture written for the ruling caught the difference before it reached the record.
+
+    REVERSAL: return `rating(area_mm2, dT, "IPC-2221A")` and every tool is back on the single fit it used
+    before this commit."""
+    best = min(MODELS, key=lambda m: rating(area_mm2, dT, m))
+    return rating(area_mm2, dT, best), best
+
+
+def width_for_current(amps, oz=1.0, dT=10.0, internal=False):
+    """The width in mm this current needs at that copper weight, under the model decision 35 ruled.
+
+    The inverse of `conservative()` and the one place a GENERATOR asks how wide to lay a band. It was three
+    places until 21 September (`dc_drop.ipc_limit`, `power_copper.width_for` and `via_current`), each with the
+    IPC-2221A constants typed into it, which is the shape of defect this record keeps meeting: the DRC policy
+    was four different hard sets before it was centralised."""
+    need = None
+    for m in MODELS:
+        a = area_for(amps / (EXTERNAL_FACTOR if not internal else 1.0), dT, m)
+        need = a if need is None else max(need, a)
+    return need / (0.035 * oz)
+
+
+def crossover_min(dT=10.0, lo=1e-5, hi=20.0):
+    """The cross-section at which IPC-2221A stops being the LOWEST of the three Annex D fits.
+
+    `crossover()` below answers a different question, IPC-2221A against IPC-2152 alone, and CNES crosses
+    EARLIER: 0.1706 mm2 at 10 K against 0.2677. Under decision 35 the bar is the minimum of the three, so this
+    is the area above which a reading changes at all, and it is 4.88 mm of outer 1 oz copper, 9.75 mm of
+    half-ounce inner or 2.44 mm at 2 oz."""
+    f = lambda a: rating(a, dT, "IPC-2221A") - min(rating(a, dT, m) for m in MODELS)
+    if f(hi) <= 0: return float("nan")
+    for _ in range(200):
+        mid = (lo + hi) / 2
+        if f(mid) > 0: hi = mid
+        else: lo = mid
+    return (lo + hi) / 2
+
+
 def crossover(dT=10.0, lo=1e-4, hi=10.0):
     """The cross-section in mm2 at which the IPC-2221A fit stops being the conservative one.
 

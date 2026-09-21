@@ -525,7 +525,43 @@ decisions:
   - n: 35
     title: "which published current-rating model this project's copper is judged against"
     asked: 2026-09-16
-    status: open
+    status: ruled
+    authority: SESSION
+    authority_why: >-
+      it moves a bar in ONE DIRECTION ONLY, down: the ruled model never reads higher than any published fit,
+      so no conductor that failed can pass and nothing this project has measured becomes better by it. It
+      spends nothing, orders nothing, changes no committed board and is reversible in one function. It touches
+      no line the never-auto floor protects: that floor covers the fab rules and board minimums and the net
+      class widths, and this is the published current-rating model the judge and the sizer read, which is on
+      no list. And the alternative to ruling it is worse than the ruling: until today THREE files carried the
+      IPC-2221A constants typed into them, so the question had three answers in one tree.
+    ruled_by: SESSION
+    ruled_on: 2026-09-21
+    outcome: >-
+      TAKE THE MOST CONSERVATIVE OF THE THREE ECSS-Q-ST-70-12C ANNEX D FITS AT EACH AREA, in ONE place:
+      `track_current.conservative(area, dT)` returns the lowest current any published model allows that
+      cross-section and names the model, and `dc_drop.ipc_limit`, `power_copper.width_for` and
+      `via_current.ampacity` all ask it. The external factor of 2.0 is NOT what this decision ruled and is not
+      touched: it is IPC-2221's own two curves (its figure 6-4 publishes the external chart and derates an
+      internal conductor to about half of it), and the fits above are all of the INTERNAL curve. WHAT IT
+      CHANGES, MEASURED BEFORE IT WAS RULED: nothing that is measured today. On the committed A32
+      (58e26c67987b1daa, read-only where KiCad is, sha identical before and after) dc_drop reads FAIL of 27
+      with 24 met, 3 missed and 13 density missed, which is its committed verdict exactly, and every ratio is
+      unchanged to two decimals (VBAT 3.70, VIN_RAW 2.00, VBUS20 2.04, +13V8_PA 1.53, FE_OUT 3.13, CH_ACN
+      3.03, CH_SRP 15.84 against 15.83, S1_OUT 1.44). THE REASON IS THE CROSSOVER, AND THE NUMBER THAT DECIDES IT IS NOT THE
+      ONE THIS DECISION'S OWN EVIDENCE QUOTED: IPC-2221A stops being the LOWEST of the three at 0.1706 mm2 at
+      10 K, where CNES crosses it, and not at the 0.2677 mm2 where IPC-2152 does. That is 4.88 mm of outer
+      1 oz copper, 9.75 mm of half-ounce inner or 2.44 mm at 2 oz, and every conductor this project measures
+      is narrower than that while the pour bar is one 0.5 mm raster CELL, an order below it again. A fixture
+      written for this ruling caught the wrong crossover before it reached the record. A barrel is smaller still (a 0.4 mm hole at 18 um of
+      plating is 0.0236 mm2) and its rating is unchanged, which was checked rather than assumed. SO WHAT THE
+      RULING DECIDES IS WHAT THE COPPER MUST BECOME, not what today's readings say: the SIZER moves, and a
+      band for 18 A on outer 1 oz goes from 16.14 mm to 23.91, 10 A from 7.18 to 8.15, and 3 A not at all.
+      That sharpens board A's copper-weight question rather than answering it, and every board's own next
+      generation is where its copper follows; no committed board changed when this was ruled.
+    reversed_by: >-
+      make `track_current.conservative` return `rating(area, dT, "IPC-2221A")` and every tool is back on the
+      single fit it used before this commit; nothing else moves, because no board was regenerated for it.
     ask: "keep the IPC-2221A bar, take the most conservative of the three models, or move to IPC-2152"
     recommendation: "the most conservative at each area: it never reads higher than any published model"
     evidence: "MEASURED FROM THE THREE CURVE FITS ECSS-Q-ST-70-12C ANNEX D PUBLISHES, 17 September 2026, and the

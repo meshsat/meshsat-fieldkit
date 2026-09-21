@@ -15,12 +15,21 @@ dc_drop.py on the filled routed board, and copper_checks.py gates the pieces and
   .width_for(amps, layer_oz=1.0, dT=10)                                     the IPC-2221 outer-layer width in mm for amps at dT (0.5 oz inner: pass 0.5)
 Coordinates: case frame mm (x right, y up), as the generators' FIXED tables; rectangles (x0, y0, x1, y1) with y0 < y1."""
 import math, pcbnew
+import os as _os_pc, sys as _sys_pc
+_sys_pc.path.insert(0, _os_pc.path.dirname(_os_pc.path.abspath(__file__)))
 from pcbnew import VECTOR2I, FromMM
 
 def width_for(amps, oz=1.0, dT=10.0, internal=False):
-    """IPC-2221: I = k dT^0.44 A^0.725 (A in mil2, k 0.048 outer, 0.024 inner) solved for the width at the copper thickness."""
-    k = 0.024 if internal else 0.048; a_mil2 = (amps / (k * dT ** 0.44)) ** (1 / 0.725); a_mm2 = a_mil2 * 0.0254 ** 2
-    return a_mm2 / (0.035 * oz)
+    """The width a band needs at this copper weight, under the model DECISION 35 ruled (21 September 2026).
+
+    THE SIZER AND THE JUDGE NOW ASK THE SAME FUNCTION, which they did not before: this typed IPC-2221A's
+    constants and so did `dc_drop.ipc_limit` and `via_current`, three copies of one decision. Under the ruled
+    model a 3 A outer band is unchanged at 1.37 mm, a 10 A one goes 7.18 to 8.15 mm and an 18 A one 16.14 to
+    23.91, because the bar only moves above the 0.268 mm2 crossover. Every board generated from here lays to
+    that; no committed board changed when the ruling landed, and each board's own next generation is where its
+    copper follows."""
+    import track_current as _tc
+    return _tc.width_for_current(amps, oz=oz, dT=dT, internal=internal)
 
 class PowerCopper:
     placed_by = []          # every barrel this RUN placed, with the line that placed it (class-wide, see __init__)

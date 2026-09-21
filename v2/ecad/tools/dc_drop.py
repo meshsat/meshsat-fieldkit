@@ -54,9 +54,17 @@ def dT_of(rail): return float(rail.get("density_dT", 10.0))   # a rail may decla
 _MISSED_ON = {}
 
 def ipc_limit(area_mm2, dT=10.0, internal=False):
-    """IPC-2221 current for a cross-section (mm2) at dT K; returns amps."""
-    a_mil2 = area_mm2 / (0.0254 ** 2); k = 0.024 if internal else 0.048
-    return k * (dT ** 0.44) * (a_mil2 ** 0.725)
+    """The current this cross-section may carry, under the model DECISION 35 ruled (21 September 2026).
+
+    It was `k * dT**0.44 * A**0.725` with IPC-2221A's own constants typed here, and the same formula was typed
+    into `power_copper.py` and `via_current.py` as well. The ruling is the most conservative of the three
+    ECSS-Q-ST-70-12C Annex D fits at each area, and `track_current.conservative` is the one place that decides
+    it: below the crossover (about 0.268 mm2 at 10 K) that is still IPC-2221A and nothing moves, above it the
+    bar drops, and this project's pours and bands live above it. The external factor is IPC-2221's own two
+    curves and is not what this decision ruled."""
+    import track_current as _tc
+    amps, _model = _tc.conservative(area_mm2, dT)
+    return amps if internal else amps * _tc.EXTERNAL_FACTOR
 
 def _draw(png, net, jmap, occ, lname, cu_layers, x0, y0, cell, nx, ny, jl, marks, amps, verdict):
     """One panel per copper layer: the net's copper in grey, the current density on it, and the three worst

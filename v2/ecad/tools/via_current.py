@@ -42,10 +42,19 @@ MM2_TO_MIL2 = 1550.0031
 
 
 def ampacity(drill_mm, rise_k, plating_um=PLATING_UM):
-    """IPC-2221 for the barrel of a plated hole: I = k * dT^0.44 * A^0.725, A in square mils."""
+    """The current a plated hole's barrel may carry, under the model DECISION 35 ruled (21 September 2026).
+
+    A barrel is an INTERNAL conductor by construction, so no external factor applies, and `K_INTERNAL` above
+    is what this file used to type for itself. `track_current.conservative` is the one place that decides the
+    model now: the most conservative of the three Annex D fits at each area. A barrel's cross-section is small
+    (a 0.4 mm hole at 18 um of plating is 0.0236 mm2, two orders below the 0.268 mm2 crossover), so THIS
+    READING DOES NOT MOVE under the ruling and the check was made rather than assumed: the fits agree below
+    the crossover and IPC-2221A is the lowest there."""
     t = plating_um / 1000.0
     area_mm2 = math.pi * (drill_mm + t) * t
-    return K_INTERNAL * (rise_k ** 0.44) * ((area_mm2 * MM2_TO_MIL2) ** 0.725), area_mm2
+    import track_current as _tc
+    amps, _model = _tc.conservative(area_mm2, rise_k)
+    return amps, area_mm2
 
 
 
