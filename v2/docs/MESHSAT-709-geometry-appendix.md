@@ -17828,3 +17828,50 @@ be A99's control. 200 attempts, 18,000 s caps cutting about 20:41 UTC. The pre-l
 open question and only the route answers it: twelve nets is the largest group this board has been given, and
 the rule of 19 September is that a pre-lay pays on a gap nothing else can close and costs on a net the router
 would have closed anyway. Every arm carries `land_read2.sh`, `a_after_finish.sh` and `a_vp_check.sh`.
+
+### 32.349 addendum, 17:51 CEST: A99's fence clears the rows it can reach, the violation moves to the rows it cannot, and a reading of mine was judged against the wrong project file
+
+**(1) A99's finished round-1 board** (sha `41c9386104d388dc`; closers 17 open to 5 in the stub router over
+1,247 s, then 5 to 4 in `direct_close`): **hard 0 of the fifteen types and four open** (`/+5V_DEV`,
+`/PA_ISNS_N`, `/PD_ISNS_P`, `/S2_OUT`). A98's finished board is also four, and a different set.
+
+**ANA-001 reads FAIL 12 of 34, the same count as A98 and a different set.** Gone from the failing list:
+`PD_CSF` (A98: 0.163 mm from `PD_SW1` over 11.79 mm) and `PA_CSF`, **the two nets the pre-lay locks and the
+fence could therefore be grown from**. Failing instead: `CH_SRP_F` 0.450, `CH_SRN_F` 0.450, `CH_ACN_F` 0.200,
+`FE_CSGF` 0.129, `HF_CSGF` 0.193, `PD_CSGF` 0.129, `B33_FB` 0.491, `HF_ISNS_P` 0.143, `HF_ISNS_N` 0.152,
+`POE_ISNS_P` 0.182, `POE_ISNS_N` 0.130, `PD_ISNS_N` 0.165.
+
+`sense_reach` says it in its own units: **71 pairs inside 0.50 mm against A98's 64**, the switching side
+locked in 5 and **the sense side in ONE against A98's 22**, locked sense copper to grow from at **1 of 13
+nets** against 4 of 15, and `PD_CSF`'s thirteen pairs and `PA_CSF`'s nine are absent from the table
+altogether. **So the fence cleared the rows it could reach and the violation moved to the rows it could not,
+and the count did not move**: board E's E22 result on board A, and the case A101 exists to test.
+
+**The artefact risk named before the reading is partly realised and is reported as such**: `/PD_ISNS_P` is
+one of the four open nets here, so it cannot fail a clearance rule on this board, and it was A98's tightest
+row at 0.132 mm. The whole-board sense copper did not shrink (474 sense segments against 443), so the effect
+is one net rather than the reading. Decision 45's number on this board: **110 pairs with the gate drives
+named against 71 without**, so 39 of 110 are against a net ANA-001 does not carry, the tightest of all being
+`HF_ISNS_P` at 0.141 mm against a gate drive.
+
+**(2) A DEFECT IN THE READER, caught before its number reached the record.** The first reading of that board
+came back **hard 521**, every violation demanding 0.2000 mm against actuals of 0.128 to 0.154, on a board
+whose router reading was hard 0 and whose own finish log says hard 0 at every stage. The board was right (sha
+identical to the run directory's). **The copy was judged against the wrong project file**: the reader took
+`pcb-a-power.kicad_pro` from the PROJECT directory and the remedy round had begun regenerating it forty
+seconds earlier, so the file carried **one class and zero net-class assignments** where the board's own file
+carries nine and 75, and every net fell to the Default 0.2 mm. Proved three ways: the same board in a full
+project directory reads hard 0 with four open; the same board with the run directory's own
+`best-round1.kicad_pro` reads hard 0; and the ROUTER board in the defective setup reads hard 0, because
+Freerouting had laid everything at 0.2 mm or wider and only the closers' copper sits at its own class
+clearance. This is 12 September's *a board without its `.kicad_pro` beside it is checked against the default
+class* with the file **present and wrong**, which is worse, because nothing is missing to notice.
+`a_after_finish2.sh` takes the project file from the run directory, warns when it falls back, and **refuses
+to believe a DRC against a project file carrying no net-class assignment**.
+
+**(3) And every board A finish is refused at the pair gate.** A99's ends *PAIRS NOT MATCHED, not finishing*
+with `PA_ISNS` P 64.15 mm against N 5.78 (mismatch **58.38 mm**), `PD_ISNS` 3.76 and `POE_ISNS` 12.19, and
+**A98's ends the same way**. `meander` cannot place those lengths and says so. A Kelvin sense pair's two legs
+run to opposite ends of a shunt and are not a transmission-line pair, so the 1 mm rule of 5 September is
+being asked of copper it was not written for; that is a question for the owner rather than a defect, and it
+is written up as such.
