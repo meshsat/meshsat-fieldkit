@@ -16952,3 +16952,15 @@ open to seven and closed the three slot rails with ZERO tracks and ONE via each,
 rail pad (R28, R32, R36): the router carries each rail to within one via of its load and stops, which is the 2.6 mm
 the A94 probe measured from the island to that pad and the run A95 lays at generation. A closer's via is a route's
 property; the generator's copper is what answers the rails, and A94 and A95 are the arms that say so.
+
+**Addendum, 06:28 CEST: board E's strip is full, and E37 is E36 at four times the clock.** `region_room` on E36's placed
+board (E35's floor plan) reads thirteen regions, none overflowing, and 0.0 to 3.0 mm on every side of every one: the
+tracker's four pockets sit at 0.0 mm to each other and 1.0 mm to the fixed U5 and F2, and the 12.5 mm of room HOTSW and
+PACK shared at 00:05 went to the RAWC pocket and the re-split entry regions. So the six open gate drives at U5 that E23
+and E34 both left are not a rectangle resize on this floor plan; they are a part move out of the tracker's pockets or a
+longer strip, and neither is copper. E34 was cut at its three-hour cap and E35 sits at pass 58 after an hour and
+three quarters on a hub carrying eight routers, about thirty-four passes an hour, so a three-hour E arm is cut before
+its two hundred passes and answers the clock rather than the board, which is D27's, D28's and D29's lesson in another
+place. E37 is E36 with one variable, `ROUTEFLOW_TIMEOUT_SCALE=4`, staged fresh from the tools at 27029af8 and routing
+since 04:12 UTC; E36 and E37 are the pass-count pair, and E37 stands against E35 as the board pair only if E35's cut
+pass count is within a third of E37's. The box suite at 27029af8 reads 1314 passed, 0 failed, 12 skipped.
