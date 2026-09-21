@@ -7,7 +7,7 @@ Every applicable rule this project does not yet verify, by the category of the g
 needs, who decides and the effort estimate. A gap is not a failure of the board: it is a question nobody has
 answered yet, made visible so it cannot be forgotten.
 
-**18 of 58 rules carry a gap.**
+**17 of 58 rules carry a gap.**
 
 ## absent (1)
 
@@ -271,7 +271,7 @@ decision as closed is the owner's, so the page keeps saying DECISION_UNCLAIMED a
 what is left.  
 *Close it by* quotes from the ordering session for both counts on C and P, then the rulings. 19 September 2026: EVERY BOARD OF THE SEVEN NOW HAS ITS LAYER MEASUREMENT and the only missing input on any row is the PRICE. A 345 unrouted at four layers against 0 at six (12 September, the autoroute COMPLETED in 51 minutes, so it is a result and not a ceiling, and the P0 page's own summary paragraph had gone on saying A was supported by nothing for a week after the arm that refuted it); B 93 opens at 8 passes with In1 keep-outs; C 14 to 35 opens at two layers, decision 27 for four against six; D four layers on the RF ground-plane reason; E the routing half and In1; P 43, 45 and 47 opens at two layers against 0 and 0 at four at the fabricator's own floor, decision 28; E5 two layers with nothing inner to weigh. The runner never logs into JLCPCB, so the price comes from the ordering session and from nowhere else. 19 SEPTEMBER 2026, THE TASK IS WRITTEN WHERE THAT SESSION WILL READ IT: v2/docs/ORDER-SESSION-PROMPT.md carries a section asking for the PCB-only price at quantity 5 for each of the seven boards at its own size, thickness, copper weight, finish and mask, TWICE, once at the count it is built at and once at the count below it (and for P and E5 the other direction, because decision 28 asks what four layers cost), with a count the form does not offer written down as an answer too. It is a quote and not an order: nothing is uploaded, no cart line is touched, nothing is paid. The figures land in a LAYER PRICES section of ORDER-LOG.md, and seven BLOCKER pairs of 333 turn on them, which is more than any single engineering item on the set. Owner **OWNER**. Effort P50 2h, P80 72h.
 
-**THM-001 every dissipating part has a path** (BLOCKER, OWNER_DECISION_REQUIRED)  
+**THM-001 every dissipating part has a path** (BLOCKER, DOCUMENTED_ONLY)  
 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent
 (rails, currents, the source part) and from what each board declares: a converter's loss is P_out *
 (1/efficiency - 1) with the efficiency declared PER RAIL and its basis in the note, and a part that
@@ -283,7 +283,7 @@ ambient, which is ENV-001 and is an owner decision nobody has written, so the ru
 acceptance criteria and says which half is absent rather than inventing it. A rail with no declared
 efficiency is listed as unknown and makes the verdict INCONCLUSIVE, so the table is a floor until every
 converter carries its number  
-*Close it by* the efficiencies and the dissipators are DECLARED as of 16 September 2026 and five boards carry a dissipation table, about 28 W across the set at the typical load; what is left is ENV-001's maximum ambient, which is the only input a junction temperature still needs. Owner **OWNER**, after ENV-001. Effort P50 6h, P80 20h.
+*Close it by* decision 34 is ruled (21 September 2026), so the ambient this rule was missing is stated: +40 C in use and about +55 C of inside air with three modules loaded. What is left is THIS SESSION'S and it is a declaration per dissipating part: the thermal resistance its own datasheet publishes, the path the board gives it, and the junction temperature thermal.py can then compute at that ambient. Six boards read declared_dissipators 0 today, so the table exists and the judgement does not. Owner **SESSION**. Effort P50 10h, P80 30h.
 
 **VIA-002 the annular ring is one the fabricator makes** (BLOCKER, ENFORCED)  
 the floor arrived on 16 September with the fabricator's own capability page, and reading it carefully split
@@ -295,11 +295,11 @@ stated for 1 oz only, and they stay INCONCLUSIVE rather than being judged agains
 process  
 *Close it by* ask the fabricator for the annular ring rows AT 2 oz, which its published page does not state, so boards E5 and P can be judged rather than left inconclusive. Owner **VENDOR**. Effort P50 2h, P80 48h.
 
-## covered (40)
+## covered (41)
 
 These rules have an executable gate, a machine-readable verdict and behavioural fixtures: BAT-001, BAT-002,
-CLK-001, CMP-001, CMP-002, DFM-001, DOC-001, DOC-002, ENV-002, GND-001, IMP-002, INT-001, ISO-001, MEC-001,
-PI-001, PI-002, PI-003, PLC-001, PLC-002, PLN-001, PWR-001, PWR-002, PWR-003, RET-002, RET-004, RF-002,
-RTE-001, RTE-002, SCH-001, SCH-002, SCH-003, SCH-004, SCH-005, SGN-001, SGN-002, STK-001, SUP-001, TRN-001,
-TST-001, VIA-001
+CLK-001, CMP-001, CMP-002, DFM-001, DOC-001, DOC-002, ENV-001, ENV-002, GND-001, IMP-002, INT-001, ISO-001,
+MEC-001, PI-001, PI-002, PI-003, PLC-001, PLC-002, PLN-001, PWR-001, PWR-002, PWR-003, RET-002, RET-004,
+RF-002, RTE-001, RTE-002, SCH-001, SCH-002, SCH-003, SCH-004, SCH-005, SGN-001, SGN-002, STK-001, SUP-001,
+TRN-001, TST-001, VIA-001
 

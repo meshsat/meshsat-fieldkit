@@ -18214,3 +18214,41 @@ set** where it read FAIL on A, D and E this morning. Board A's is a citation, bo
 parts their generators now carry. Boards B, C and P were re-taken in the same stretch because the tool
 changed under them, and none of the three moved. The re-take is read-only on a netlist and needs no KiCad,
 which is why it was taken here; every verdict landed in its own board's `routed/`, none in the tree's `out/`.
+
+### 32.355, 21 September 2026 21:03 CEST: decision 34's follow-through, and a rule that refused the only evidence its own maturity is named for
+
+Thirteen of the eighteen pairs the register filed as *a rule says a decision is open while no decision claims
+it* were **decision 34's unfinished follow-through**: ENV-001 on seven boards and THM-001 on six still read
+*an owner decision is open* hours after the envelope was ruled. The ruling landed in the decisions register
+and nothing carried it into the coverage map, which is the same half-applied shape decision 39 had this
+evening.
+
+**ENV-001 is answered and it is the document itself.** `v2/docs/OPERATING-ENVELOPE.md` says ADOPTED now,
+dated, naming what was taken (section 4, and section 6's first row as the transient level), what was refused
+(the electrical fast transient row, because nothing in this tree is a source for one), what stays open (the
+altitude, the vibration and shock severities, the service life) and **what stays the owner's: advertising the
+kit to this envelope, which is a claim about the product rather than about the engineering.** The rule moves
+`OWNER_DECISION_REQUIRED` to **VERIFIED_MANUALLY**, which is the maturity written for exactly this case.
+
+**AND THAT MATURITY COULD NOT WORK FOR A HAND-WRITTEN RECORD.** `rules_status._document_current` rebuilds a
+GENERATED page from the registry and compares it with the file, which is the right test for a page this tool
+writes and no test at all for one a person writes: it answered *not a document this tool can rebuild, so it
+cannot be checked*, and ENV-001 stayed INCONCLUSIVE on all seven boards **the hour its envelope was adopted**.
+A record that cannot be rebuilt is pinned by CONTENT instead: the coverage entry carries `verified_sha`, the
+sha256 of the file as it was when it was verified, **any later edit takes the verification away**, and a
+record with no pin is still not evidence, because *somebody read it once* is not a record. One rule, both
+halves asserted (the pinned text passes, one byte changed does not), failing on the tree it was written
+against.
+
+**THM-001 is re-pointed rather than passed.** Its remediation waited on *ENV-001's maximum ambient*, which is
+stated now (+40 C in use, about +55 C of inside air with three modules loaded), so the owner is out of it;
+what is left is a declaration per dissipating part, its own datasheet's thermal resistance and the path the
+board gives it, which `thermal.py` needs before it can compute a junction temperature and which it says in
+its own words it does not do. Six boards read `declared_dissipators: 0`, so the table exists and the
+judgement does not: **DOCUMENTED_ONLY**, owner SESSION, and the register files it under *nothing verifies it*
+rather than under *an owner decision is open*.
+
+**The numbers.** Readiness **61.6 to 63.7 percent of 333**, ENV-001 PASS on all seven. Open pairs **128 to
+121**; the bucket *a rule says a decision is open while no decision claims it* goes **18 to 5**, and the five
+that remain are STK-002, the layer question, which is genuinely open and waits on a price. Across tonight the
+decision-bound share has gone from **78 of 134** to **40 of 121**.

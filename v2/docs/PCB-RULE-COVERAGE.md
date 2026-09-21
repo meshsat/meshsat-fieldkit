@@ -21,7 +21,7 @@ appears in the gap register.
 | DOC-001 | DOCUMENTATION_CONTROL | BLOCKER | full.sh PHASE, silk_fix_all.py | final_gate.py -> final_gate_<letter> | tests/test_final_gate.py | **ENFORCED** |
 | DOC-002 | DOCUMENTATION_CONTROL | MUST_JUSTIFY | ledger.py, provenance.json, make_handoff.py's PROVENANCE block, export_jlc.sh's header | doc_provenance.py, ledger_verify.py -> doc_provenance_<letter>, ledger_verify | tests/test_doc_provenance.py, tests/test_ledger.py | **ENFORCED** |
 | EMC-001 | EMC | MUST_JUSTIFY | pcb_emc.yaml, the sheet as data | emc_sheet.py -> emc_sheet | tests/test_emc_sheet.py | **ENFORCED** |
-| ENV-001 | PRODUCT_ENVELOPE | BLOCKER | NONE_YET | none |  | **OWNER_DECISION_REQUIRED** |
+| ENV-001 | PRODUCT_ENVELOPE | BLOCKER | NONE_YET | none |  | **VERIFIED_MANUALLY** |
 | ENV-002 | PRODUCT_ENVELOPE | BLOCKER | claims_check.py plus claims-allow.txt, one declared exemption per line with its reason | claims_check.py -> claims_check | tests/test_gate_fixtures.py | **ENFORCED** |
 | GND-001 | GROUNDING_SHIELDING | MUST_JUSTIFY | the grounds declaration in boards/<letter>.json plus the pours in gen_pcb_*3.py | ground_system.py -> ground_system | tests/test_ground_system.py | **ENFORCED** |
 | GND-002 | GROUNDING_SHIELDING | MUST_JUSTIFY | gen_sch_c.py standoff bond, gen_sch_b.py magnetics termination | a written strategy and a bench measurement |  | **OWNER_DECISION_REQUIRED** |
@@ -62,7 +62,7 @@ appears in the gap register.
 | STK-001 | STACKUP | BLOCKER | stackup_write.py, written LAST in full.sh so it survives the chain | stackup_gate.py -> stackup_gate | tests/test_stackup_gate.py, tests/test_stackup_reader.py | **ENFORCED** |
 | STK-002 | STACKUP | BLOCKER | NONE_YET | layer_judge.py -> layer_judge |  | **OWNER_DECISION_REQUIRED** |
 | SUP-001 | LIFECYCLE_SUPPLY | BLOCKER | lcsc_fill.py, jlc-handfit.txt | jlc_certify.py, lcsc_fill.py -> jlc_certify_<letter>, lcsc_fill | tests/test_order_codes.py, tests/test_gate_fixtures.py | **ENFORCED** |
-| THM-001 | THERMAL | BLOCKER | gen_pcb_*3.py copper and thermal vias | thermal.py -> thermal | tests/test_thermal.py | **OWNER_DECISION_REQUIRED** |
+| THM-001 | THERMAL | BLOCKER | gen_pcb_*3.py copper and thermal vias | thermal.py -> thermal | tests/test_thermal.py | **DOCUMENTED_ONLY** |
 | TRN-001 | TRANSIENT_PROTECTION | BLOCKER | gen_sch_*.py protection parts and each board's external_ports declaration | port_protect.py -> port_protect_<letter> | tests/test_port_protect.py | **ENFORCED** |
 | TST-001 | TEST_BRINGUP | MUST_JUSTIFY | rules_render.py bringup_doc, from each board's own intent file | rules_render.py | tests/test_rules_status.py | **VERIFIED_MANUALLY** |
 | VIA-001 | VIAS | BLOCKER | escape.py, prefanout.py, gen_pcb_*.py minimums | via_audit.py -> via_audit | tests/test_board_gates.py | **ENFORCED** |
@@ -73,6 +73,7 @@ appears in the gap register.
 | maturity | rules |
 |---|---|
 | ENFORCED | 50 |
-| VERIFIED_MANUALLY | 2 |
+| VERIFIED_MANUALLY | 3 |
+| DOCUMENTED_ONLY | 1 |
 | SOURCE_UNVERIFIED | 1 |
-| OWNER_DECISION_REQUIRED | 5 |
+| OWNER_DECISION_REQUIRED | 3 |
