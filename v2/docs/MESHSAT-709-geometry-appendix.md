@@ -16846,3 +16846,14 @@ count), so on this board at this configuration the defect cost nothing and the o
 is the scatter of wall-clock budgets on a loaded box, not the fix. The defect bites where a closure raises the
 hard count: A44 on 19 September, board E's switching group tonight.
 
+**Addendum, 02:45 CEST: the pre-route judge counted one-layer nets' fanout vias as crossings.** Asked of the two
+chain-end boards which layers each short net's own copper lies on at generation: board A's six FET drain tabs
+(CH_ACN, CH_SRP, FE_OUT, PA_OUT, PD_OUT, PD_VPWR) and board E's HS_S and DC_P are on F.Cu ALONE, with no zone,
+band or plated hole on another layer, so the barrels the judge asks there are for crossings only the router can
+make, through the fanout's single via that reaches bare laminate; `via_current` already declines such a site on
+the solved mesh (`crosses_layers`, 20 September) and the pre-route judge never asked. VBUS20 (In3), VIN_RAW,
+DC_HS (a B.Cu band), DC_F, CELL_F, PV_P and TRK_OUT (In2 pours) do change layer and their sites stand. The rows
+carry `one_layer` and say it; the count is deliberately unchanged tonight because A97 routes with clusters
+pre-laid at exactly those tabs and its solved mesh decides whether they pay. Boards P (four wire lands declined
+as before) and C (zero short) re-read at HEAD, both PREROUTE-DONE OK.
+

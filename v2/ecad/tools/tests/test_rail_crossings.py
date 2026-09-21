@@ -56,10 +56,31 @@ class _FP:
     def Pads(s): return s._pads
 
 
+class _Trk:
+    """A track piece of `net` on copper layer `layer` (a KiCad layer id): the fake's one non-via track."""
+    def __init__(s, net, layer): s._n, s._l = net, layer
+    def GetClass(s): return "PCB_TRACK"
+    def GetNetname(s): return s._n
+    def GetLayer(s): return s._l
+
+
+class _Zone:
+    def __init__(s, net, layer, rule_area=False): s._n, s._l, s._r = net, layer, rule_area
+    def GetNetname(s): return s._n
+    def GetFirstLayer(s): return s._l
+    def GetIsRuleArea(s): return s._r
+
+
+class _PTHPad(_Pad):
+    """A plated component hole: copper on every layer of the board by construction."""
+    def GetDrillSizeX(s): return int(0.8 * MM)
+
+
 class _Board:
-    def __init__(s, vias, fps): s._v, s._f = vias, fps
+    def __init__(s, vias, fps, zones=()): s._v, s._f, s._z = vias, fps, list(zones)
     def GetTracks(s): return s._v
     def GetFootprints(s): return s._f
+    def Zones(s): return s._z
 
 
 def _one_pad_source(barrels, drill=0.4, amps=3.0):
@@ -281,4 +302,34 @@ def t_pads_of_one_number_are_one_land_and_one_crossing():
     assert judged == 3 and len(short) == 3, (judged, len(short))
     assert all(abs(r["amps"] - 1.0) < 1e-9 and r["have"] == 1 and r["instances"] == 1 for r in short), short
     assert not any("pieces of one land" in r["why"] for r in short)
+
+
+def t_a_net_on_one_layer_at_generation_is_named_because_its_crossing_is_the_routers_to_make():
+    """THE DEFECTIVE FIXTURE (21 September 2026, appendix 32.346 addendum 02:45): board E's HS_S and board A's six
+    FET drain tabs lie on F.Cu alone before the route (no zone, no band, no plated hole), so the barrel the judge
+    counted at each tab is the FANOUT's own via reaching bare laminate, and the crossing it asks barrels for
+    exists only if the ROUTER makes one. `via_current` already declines such a site on the solved mesh
+    (`crosses_layers`); this judge never asked. The row says so and the line says so; the count is not changed."""
+    F_CU, IN2_CU = 0, 2
+    pads = [_Pad("/RAIL", "5", 10.0, 10.0, 0.6, 0.6)]
+    vias = [_Via("/RAIL", 10.0, 10.0, 0.25)]
+    rails = {"/RAIL": {"amps_peak": 3.0, "source": "U1"}}
+    tracks = [_Trk("/RAIL", F_CU), _Trk("/RAIL", F_CU)]
+    short, judged = rc.rows(_Board(vias + tracks, [_FP("U1", pads)]), rails)
+    assert judged == 1 and len(short) == 1, (judged, short)
+    r = short[0]
+    assert r["one_layer"] is True, r
+    assert "the net lies on one layer at generation" in r["why"], r["why"]
+    assert r["need"] > r["have"], "the count is deliberately unchanged tonight: %s" % r
+    # THE ACCEPTABLE FIXTURES: a zone on a second layer, or a plated hole, is copper the net changes layer to
+    short, judged = rc.rows(_Board(vias + tracks, [_FP("U1", pads)], zones=[_Zone("/RAIL", IN2_CU)]), rails)
+    assert short[0]["one_layer"] is False and "one layer at generation" not in short[0]["why"], short[0]
+    short, judged = rc.rows(_Board(vias + tracks, [_FP("U1", pads + [_PTHPad("/RAIL", "9", 20.0, 10.0)])]), rails)
+    assert short[0]["one_layer"] is False, short[0]
+    # a zone and a track on the SAME layer are still one layer (the first version keyed a zone as a tuple)
+    short, judged = rc.rows(_Board(vias + tracks, [_FP("U1", pads)], zones=[_Zone("/RAIL", F_CU)]), rails)
+    assert short[0]["one_layer"] is True, short[0]
+    # a rule area of the net's name is not copper
+    short, judged = rc.rows(_Board(vias + tracks, [_FP("U1", pads)], zones=[_Zone("/RAIL", IN2_CU, rule_area=True)]), rails)
+    assert short[0]["one_layer"] is True, short[0]
 
