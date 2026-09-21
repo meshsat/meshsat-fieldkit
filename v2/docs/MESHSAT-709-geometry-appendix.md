@@ -17282,3 +17282,36 @@ item and not a fixer item.
 
 **And the fence cost the chain nothing.** E38's `sense-fence` stage is recorded by its own guard: eleven rule
 areas in eight seconds, hard 0 before and after, unrouted 211 before and after, kept.
+
+**Addendum, 21 September 2026 11:37 CEST: the fence reaches the router under a spelling the power-layer drop
+does not read, and four of board E's keep-outs sit on its planes.** E38's read at three hours is worth nothing
+unless the fence is in the router's input, so that was checked before the clock rather than after: its DSN
+carries **34 `(keepout`, 2 `(wire_keepout` and 0 `(via_keepout` against E36's 23, 2 and 0**, eleven more of
+the first kind, and `sense_fence`'s own guard log says eleven rule areas were added, so the fence reached
+Freerouting intact and **E38 is a one-variable arm**. The first count taken was of LINES and read 2 against 2,
+which said the fence had not arrived at all; the occurrences say otherwise, and a count of lines in a file
+whose blocks are not one per line answers nothing.
+
+**What it exposed is in `route_one.sh`.** KiCad exports a rule area that forbids TRACKS as `(wire_keepout`,
+one that forbids VIAS as `(via_keepout`, and one that forbids BOTH as `(keepout`; `sense_fence` sets both, so
+its areas take the third spelling. The `FR_POWER_LAYERS` block, which turns a plane into a power layer and
+removes the board-wide keep-outs there because such a polygon made the router thrash for a whole time limit
+(the B14 In1 test, B15 run 1), searches the text for `(wire_keepout` and for nothing else. **Measured across
+the live DSNs**: board E carries **2 full keep-outs on In1.Cu and 2 on In2.Cu**, which are its power layers,
+and board A carries **10 on In1.Cu and 2 on In4.Cu**, which are its; every one of them reaches the router
+today with the block that exists to remove them looking straight past it.
+
+**The three kinds are not one question, so the answer is not to drop more.** On a power layer Freerouting
+lays no wire at all, so a wire keep-out there is redundant and is dropped, as it has been since 5 September; a
+via keep-out is NOT redundant, because vias cross a power layer, and forbidding one there is an instruction of
+the board's; a keep-out that forbids both is redundant in its wire half and real in its via half, so it is
+REWRITTEN to a via keep-out rather than dropped. `tools/dsn_power_layers.py` is that operation as a tool with
+nine rules over both fixtures, and the block as it stood is kept verbatim inside the fixture and asserted to
+leave the defective input untouched, so the defect is proved here rather than remembered.
+
+**It is committed UNWIRED and deliberately.** Wiring it changes what the router is given on boards A and E,
+twelve polygons and four, and no board in flight needs it: both fencing boards fence F.Cu and B.Cu, neither
+of which is a power layer on either board. Wiring it under A99 would make that arm differ from A98 by two
+variables, which is the defect of 20 September in another costume. It is wired when a one-variable arm can
+measure it, and until then the trap it closes is the FIRST board to fence an inner plane layer, whose failure
+would read as a route that thrashes rather than as a polygon nobody removed.
