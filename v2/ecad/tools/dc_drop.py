@@ -21,7 +21,16 @@ Every number comes from the board and the intent file; a rail without a resolvab
 import sys, os, math, json
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 RHO = 1.72e-8   # ohm m
-PLATING = 25e-6
+# ONE PLATING FOR BOTH BARREL TOOLS (21 September 2026, 07:30 CEST): this file rated and modelled every barrel at
+# 25 um of plating while `via_current` judges the same barrel at the fabricator's published 18 um average, so the
+# `limit_a` this file writes beside each solved barrel current read 1.11 A for a 0.40 mm hole where the judge's
+# wall is 0.90 A, a fifth lenient, and a reader who took the file's limit as the wall (E36's pass-33 snapshot,
+# read for the E38 fence) judged nine sites a class too kindly. The barrel resistance in the mesh moves with it
+# (thinner plating, a higher barrel resistance, a slightly different share between the barrels of a cluster),
+# which is the physical truth of the fabricator's own figure. The constant lives in via_current and is read from
+# there, never typed twice.
+import via_current as _vc
+PLATING = _vc.PLATING_UM * 1e-6
 
 def _board_sha16(path):
     """The first sixteen hex of the board's sha256, so a solved file says which board it is about."""

@@ -34,3 +34,21 @@ def t_the_solved_drop_at_every_pad_is_written_beside_the_board():
     i = src.find("_pad_v.setdefault(net, []).append(")
     j = src.find("drop = abs(v).max()")
     assert 0 < j < i, "the pads are read before the mesh is solved"
+
+
+def t_the_barrel_is_rated_at_one_plating_by_both_tools():
+    """THE DEFECTIVE FIXTURE is the tree as it stood on 21 September 2026 at 07:27: `dc_drop` carried `PLATING = 25e-6`
+    while `via_current` judges every barrel at the fabricator's published 18 um, so the `limit_a` written beside each
+    solved barrel current (1.11 A for a 0.40 mm hole) was a fifth above the wall the judge applies (0.90 A), and a
+    reader who took the file's limit as the wall read nine sites a class too kindly. The acceptable fixture: both
+    tools rate the same drill at the same rise to the same milliamp, and the constant is written once."""
+    import math, re
+    import dc_drop as D, via_current as VC
+    src = open(os.path.join(TOOLS, "dc_drop.py"), encoding="utf-8").read()
+    assert not re.search(r"^PLATING\s*=\s*[0-9]", src, re.M), "dc_drop types its own plating instead of reading via_current's"
+    assert abs(D.PLATING - VC.PLATING_UM * 1e-6) < 1e-12, (D.PLATING, VC.PLATING_UM)
+    for drill in (0.25, 0.30, 0.40, 0.50, 0.70):
+        t = D.PLATING * 1e3
+        ours = D.ipc_limit(math.pi * (drill + t) * t, 10.0, True)
+        theirs = VC.ampacity(drill, 10.0)[0]
+        assert abs(ours - theirs) < 1e-3, (drill, ours, theirs)
