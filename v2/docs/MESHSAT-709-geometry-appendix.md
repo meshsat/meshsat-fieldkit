@@ -18299,3 +18299,36 @@ still inside a comment is still in the text**, so the grep-based check I used an
 reported *dropped: none* while two keys were gone. The check that cannot be fooled parses: `ast.parse` the
 module, compare the call sites' first arguments, and compare the dict literal's keys. Both are in the record
 now, and both were run against this change before it was believed.
+
+### 32.357, 21 September 2026 21:41 CEST: decision 32 is ruled at the number the tool itself already uses, and it turns a count into a measurement
+
+RET-004's screen asks for a ground via within **1.5 mm** and answers yes or no, so a via whose ground via sits
+at 1.75 mm read exactly like one with none at all. **The number the ruling takes is the TOOL'S OWN**:
+`return_via`'s fixer searches outward on rings of 0.75, 1.0, 1.25 and 1.5 mm and then **1.75, 2.0, 2.25, 2.5
+and 3.0**, so 3.0 mm is the distance this project already places a ground via at, and a judge that refuses at
+1.5 what its own fixer places at 3.0 is two rules rather than one.
+
+**The judge measures instead of answering.** Every flagged via now carries the distance to its nearest ground
+via; a via inside the board's declared `return_reach_mm` is satisfied **with that distance on the record**;
+one beyond it, or with none within six millimetres, stays a failure **with its number**. Boards C, D and E
+declare 3.0 mm with the decision as the reason; every other board keeps the screen as written.
+
+**Measured on the three committed boards, read-only, each sha identical before and after:**
+
+| board | judged | reached beyond the screen | still lacking | what stands |
+|---|---:|---:|---:|---|
+| D | 37 | 1, at 1.58 mm | **0, PASS** | nothing |
+| E | 59 | 5, 1.50 to 2.27 mm | **2** | FAN1_PWM with NO ground via within 6 mm, one SDA0 at 3.39 |
+| C | 85 | 21, 1.50 to 3.00 mm | **11** | eight at 3.18 to 5.99 mm and THREE with none within 6 mm (USB_DP_R, HB1, HB3) |
+
+**So the ruling answers board D and makes C and E smaller and true**, and the residue is a different finding
+from the one the decision was asked about: not a screening distance, but vias whose return has to travel four
+to six millimetres or has nowhere to go, with their coordinates now on the record for each board's next phase.
+**And half of the decision's own evidence turned out to be the FIXER's view of what it had placed rather than
+the board's**: written on 17 September from the fixer's log, it said board C's thirty-two sat at 1.50 or 1.75
+mm, and the JUDGE reads twenty-one inside 3.0 and eleven past it. Readiness **63.7 to 64.0 percent of 333**.
+
+**The re-take needed two tools in one tree and the first attempt said so rather than guessing**: `ref_change`
+writes the per-via classification beside the board and `return_via` reads it, so a re-take that ran only the
+second declared its input absent and wrote INCONCLUSIVE. That is the 18 September guard working, and the
+driver runs both now.

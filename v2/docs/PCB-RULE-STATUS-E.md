@@ -53,7 +53,7 @@ Measured on board E17 (pcb-e1-dock-e7, a462ac2620b9b8d3), declares E17.
 | RET-001 a continuous adjacent return path | BLOCKER | ROUTED_BOARD | **PASS** | intent_return_path PASS of 76 |
 | RET-002 plane-adjacency screen | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | intent_return_path PASS of 76 |
 | RET-003 return transition at a reference change | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | return_stitch INCONCLUSIVE: this board has no transition between two different reference nets, so RET-003 has nothing on it to judge |
-| RET-004 ground-via proximity screen | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | return_via FAIL: {'examined_same_reference': 0, 'examined_to_power': 0, 'exempt': 80, 'judged': 59, 'lacking': 7, 'same_plane': 0, 'slow' |
+| RET-004 ground-via proximity screen | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | return_via FAIL: {'examined_same_reference': 0, 'examined_to_power': 0, 'exempt': 80, 'judged': 59, 'lacking': 2, 'reached_beyond_the_scr |
 | IMP-002 a class clearance is never below the board minimum | BLOCKER | PLACED_BOARD | **PASS** | class_floor PASS of 24 |
 | PAIR-001 a pair is coupled and matched | BLOCKER | ROUTED_BOARD | **PASS** | impedance_check PASS of 0 |
 | SI-001 transmission-line classification | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | edge_length INCONCLUSIVE: every signal net's routed length against the critical length its own class implies, and a net past it is asked whether it is |

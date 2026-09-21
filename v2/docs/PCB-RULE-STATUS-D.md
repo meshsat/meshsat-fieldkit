@@ -21,8 +21,8 @@ Measured on board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 37 | 72.5 |
-| FAIL | 3 | 5.9 |
+| PASS | 38 | 74.5 |
+| FAIL | 2 | 3.9 |
 | INCONCLUSIVE | 11 | 21.6 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **51** | 100.0 |
@@ -50,7 +50,7 @@ Measured on board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12.
 | RET-001 a continuous adjacent return path | BLOCKER | ROUTED_BOARD | **PASS** | intent_return_path PASS of 127 |
 | RET-002 plane-adjacency screen | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | intent_return_path PASS of 127 |
 | RET-003 return transition at a reference change | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | return_stitch INCONCLUSIVE: this board has no transition between two different reference nets, so RET-003 has nothing on it to judge |
-| RET-004 ground-via proximity screen | MUST_JUSTIFY | ROUTED_BOARD | **FAIL** | return_via FAIL: {'examined_same_reference': 0, 'examined_to_power': 0, 'exempt': 20, 'judged': 37, 'lacking': 1, 'same_plane': 3, 'slow' |
+| RET-004 ground-via proximity screen | MUST_JUSTIFY | ROUTED_BOARD | **PASS** | return_via PASS of 37 |
 | IMP-001 an impedance target is feasible and asked for | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: closed forms from a standard not in the tree; no fabricator confirmation and no coupon. 19  |
 | IMP-002 a class clearance is never below the board minimum | BLOCKER | PLACED_BOARD | **PASS** | class_floor PASS of 16 |
 | PAIR-001 a pair is coupled and matched | BLOCKER | ROUTED_BOARD | **PASS** | impedance_check PASS of 0 |

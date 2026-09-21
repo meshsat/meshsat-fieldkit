@@ -116,7 +116,14 @@ def t_the_fixer_may_reach_past_the_target_but_the_judge_may_not():
     number, and it is a shorter return loop than no via at all, so the fixer now searches outward and prints
     what it achieved. The thing that must NOT happen is the bar moving with it: the verdict is still taken at
     the declared radius, so a via placed at 2 mm still reads as lacking and reaches the owner as a measured
-    choice rather than disappearing into a pass."""
+    choice rather than disappearing into a pass.
+
+    21 SEPTEMBER 2026, AND THE RULING THIS RULE ASKED FOR HAPPENED: owner decision 32 accepts the reach
+    at 3.0 mm, the fixer's own outermost ring. The guard is not deleted, it is made exact. The bar moves
+    ONLY through a board's declared `return_reach_mm`, which carries its reason; the fixer still judges
+    at the radius it was given; the screen itself stays at 1.5 mm; and a via accepted through the
+    declaration does NOT disappear into a pass, because the judge records the distance it measured for
+    every via it accepts and every via it still refuses. A SILENT widening is what this rule refuses."""
     src = open(os.path.join(TOOLS, "return_via.py"), encoding="utf-8").read()
     assert "OUTER = (" in src, "the outer rings are gone"
     i_outer = src.index("OUTER = (")
@@ -128,6 +135,12 @@ def t_the_fixer_may_reach_past_the_target_but_the_judge_may_not():
         "the judge was widened to match the fixer, which is the bar moving"
     # and a placement beyond the radius is reported rather than silently kept
     assert "BEYOND the declared" in src, "a ground via placed past the target is not reported"
+    # THE ONLY WAY THE BAR MOVES is a board's own declaration, and what it accepts keeps its number
+    assert "return_reach_mm" in src, "the reach is not read from the board's declaration"
+    assert "reach=_reach" in src, "the check does not pass the board's declared reach to the judge"
+    assert "RETURN_MM = 1.5" in src, "the screen itself was widened, which is the bar moving"
+    assert "reached.append" in src and "mm away, beyond the" in src, \
+        "a via accepted beyond the screen does not carry the distance that accepted it"
 
 
 def t_the_check_reads_the_declared_radius_and_says_so():
@@ -308,7 +321,11 @@ def _rv_src():
 
 def t_the_judge_takes_an_identity_that_is_not_the_file_it_was_handed():
     src = _rv_src()
-    assert "def judge(b, path=None, radius=RETURN_MM, identity=None):" in src, "the judge takes no identity"
+    # PINNED AS A PROPERTY, NOT AS A LINE (21 September 2026): the exact signature broke the hour a ruling
+    # gave the judge a `reach`, and what this rule is about is the identity, not the parameter list.
+    i = src.index("def judge(b, path=None")
+    sig = src[i:src.index(")", i)]
+    assert "identity=None" in sig, "the judge takes no identity: %s" % sig
     assert "identity = identity or path" in src
     for call in ("intent.load(identity)", "signalnets.classify(b, identity", "_sc.classify(b, identity"):
         assert call in src, "the classification still keys on the copy's own path: %s" % call

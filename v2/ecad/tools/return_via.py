@@ -107,7 +107,20 @@ def _reference(layer, cu, planes):
     return frozenset(inner or refs)
 
 
-def judge(b, path=None, radius=RETURN_MM, identity=None):
+def _nearest(pt, pts, out_to=6.0):
+    """How far the nearest ground via or plated ground pad actually is, or None past `out_to`.
+
+    `_near` answers yes or no, which is the right shape for a screen and the wrong shape for owner decision 32:
+    that decision accepts a return via BEYOND the declared radius and asks for the distance to be RECORDED per
+    via, because a longer return loop is a shorter one than none and the number is what makes it reviewable."""
+    best = None
+    for px, py in pts:
+        d = math.hypot(px - pt[0], py - pt[1])
+        if d <= out_to and (best is None or d < best): best = d
+    return best
+
+
+def judge(b, path=None, radius=RETURN_MM, identity=None, reach=None):
     """Every signal via is judged unless it sits in a fine-pitch fan (exempt) or every layer its net's tracks attach on
     references the SAME ground plane (same_plane: the return current never leaves that plane, so no ground via is owed;
     a via from F.Cu to In2 on a stack whose In1 is the ground plane is that case). A via whose attached layers reference
@@ -154,7 +167,7 @@ def judge(b, path=None, radius=RETURN_MM, identity=None):
     for t in b.GetTracks():
         if t.GetClass() != "PCB_TRACK": continue
         for e in (t.GetStart(), t.GetEnd()): ends.setdefault((t.GetNetname(), round(mm(e.x), 2), round(mm(e.y), 2)), set()).add(t.GetLayer())
-    judged = exempt = same_plane = slow = 0; lacking = []; positions = []
+    judged = exempt = same_plane = slow = 0; lacking = []; positions = []; reached = []
     for t in boardorder.tracks(b):   # this loop DECIDES which via gets the first candidate site; board order follows a random uuid
         if t.GetClass() != "PCB_VIA": continue
         net = t.GetNetname()
@@ -168,9 +181,22 @@ def judge(b, path=None, radius=RETURN_MM, identity=None):
             if len(refs) == 1 and next(iter(refs)): same_plane += 1; continue
         judged += 1
         if not _near(pt, gnd, radius):
-            lacking.append("%s at (%.2f, %.2f)" % (net.lstrip("/"), pt[0], pt[1])); positions.append((t, pt))
+            # OWNER DECISION 32, RULED BY THE SESSION 21 SEPTEMBER 2026: a via whose ground via sits beyond the
+            # screening radius but within the board's DECLARED REACH is satisfied, and its distance is RECORDED
+            # per via rather than lost in a pass. The alternative was measured and refused on board C, where a
+            # ground-via grid takes this rule from 32 lacking of 85 to 12 of 69 and costs the board its route,
+            # 21 open connections against zero. A longer return loop is a shorter one than none.
+            d = _nearest(pt, gnd)
+            where = "%s at (%.2f, %.2f)" % (net.lstrip("/"), pt[0], pt[1])
+            if reach and d is not None and d <= reach + 1e-6:
+                reached.append("%s: its ground via is %.2f mm away, beyond the %.2f mm screen and within the "
+                               "%.2f mm this board declares (owner decision 32)" % (where, d, radius, reach))
+                continue
+            lacking.append(where + (": nearest ground via %.2f mm" % d if d is not None
+                                    else ": no ground via within 6 mm"))
+            positions.append((t, pt))
     return {"classified": bool(_cls), "judged": judged, "exempt": exempt, "same_plane": same_plane, "slow": slow,
-            "lacking": lacking, "positions": positions, "signals": len(signals)}
+            "lacking": lacking, "reached": reached, "positions": positions, "signals": len(signals)}
 
 
 def _site_free(b, x, y, vd, clr, own):
@@ -371,12 +397,24 @@ def examine(path, r):
 
 def check(path, radius=RETURN_MM):
     import verdict
-    b = pcbnew.LoadBoard(path); r = judge(b, path, radius)
+    # THE BOARD DECLARES ITS ACCEPTED REACH (owner decision 32, ruled 21 September 2026). The screen stays at
+    # RETURN_MM for every board; a board that has MEASURED the vias it cannot satisfy inside it declares how
+    # far their ground vias actually are, with the decision as the reason, and those vias are then satisfied
+    # with their distance on the record. A board that declares nothing keeps the screen as written.
+    _reach = None
+    try:
+        import boardtable as _bt
+        _L = _bt.letter_for(path)
+        if _L: _reach = (_bt.value(_L, "return_reach_mm", None) or None)
+    except Exception:
+        _reach = None
+    b = pcbnew.LoadBoard(path); r = judge(b, path, radius, reach=_reach)
     n_tracks = sum(1 for t in b.GetTracks() if t.GetClass() == "PCB_TRACK")
     still, buckets, missing = examine(path, r)
     res = verdict.INCONCLUSIVE if (n_tracks and not r["judged"] and not r["exempt"]) else (verdict.PASS if not still else verdict.FAIL)
     print("return_via: %d signal vias judged, %d exempt in fine-pitch fans, %d on one reference plane, %d on a net with no edge to return, %d without a ground via within %.1f mm" % (r["judged"], r["exempt"], r["same_plane"], r.get("slow", 0), len(r["lacking"]), radius))
     for l in r["lacking"][:20]: print("return_via:   " + l)
+    for l in (r.get("reached") or [])[:20]: print("return_via:   REACHED " + l)
     if not missing and r["lacking"]:
         print("return_via: of the %d flagged, %d reference the same conductor before and after (RET-003 has "
               "nothing to close there), %d change between two DIFFERENT reference nets (a ground via cannot "
@@ -384,10 +422,12 @@ def check(path, radius=RETURN_MM):
               "screen's own case, a move between two ground planes"
               % (len(r["lacking"]), len(buckets["same_reference"]), len(buckets["to_power"]),
                  len(buckets["unclassified"]), len(still) - len(buckets["unclassified"])))
-    return verdict.write("return_via", res, counts={"judged": r["judged"], "exempt": r["exempt"], "same_plane": r["same_plane"], "slow": r.get("slow", 0), "lacking": len(r["lacking"]),
+    return verdict.write("return_via", res, counts={"judged": r["judged"], "exempt": r["exempt"], "same_plane": r["same_plane"], "slow": r.get("slow", 0),
+                                                    "reached_beyond_the_screen": len(r.get("reached") or []), "lacking": len(r["lacking"]),
                                                     "examined_same_reference": len(buckets["same_reference"]), "examined_to_power": len(buckets["to_power"]),
                                                     "unclassified": len(buckets["unclassified"]), "standing": len(still)}, denominator=r["judged"],
-                         evidence=still[:200], inputs={"board": path}, missing_input=missing,
+                         evidence=(still + ["REACHED " + x for x in (r.get("reached") or [])])[:200],
+                         inputs={"board": path}, missing_input=missing,
                          note=("the board has tracks and no signal via at all: the scope filter is suspect"
                                if (n_tracks and not r["judged"] and not r["exempt"]) else
                                "the screen measures every signal via outside a fine-pitch fan against the "

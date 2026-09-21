@@ -6,21 +6,22 @@
   "examined_to_power": 0,
   "exempt": 80,
   "judged": 59,
-  "lacking": 7,
+  "lacking": 2,
+  "reached_beyond_the_screen": 5,
   "same_plane": 0,
   "slow": 82,
-  "standing": 7,
+  "standing": 2,
   "unclassified": 0
  },
  "denominator": 59,
  "evidence": [
-  "FAN1_PWM at (13.70, 221.83)",
-  "SCL0 at (211.02, 190.76)",
-  "SDA0 at (211.99, 190.89)",
-  "SCL0 at (218.55, 207.76)",
-  "Q2_G at (218.70, 218.43)",
-  "SDA0 at (224.57, 190.93)",
-  "Q2_G at (224.62, 193.50)"
+  "FAN1_PWM at (13.70, 221.83): no ground via within 6 mm",
+  "SDA0 at (211.99, 190.89): nearest ground via 3.39 mm",
+  "REACHED SCL0 at (211.02, 190.76): its ground via is 3.00 mm away, beyond the 1.50 mm screen and within the 3.00 mm this board declares (owner decision 32)",
+  "REACHED SCL0 at (218.55, 207.76): its ground via is 1.50 mm away, beyond the 1.50 mm screen and within the 3.00 mm this board declares (owner decision 32)",
+  "REACHED Q2_G at (218.70, 218.43): its ground via is 1.75 mm away, beyond the 1.50 mm screen and within the 3.00 mm this board declares (owner decision 32)",
+  "REACHED SDA0 at (224.57, 190.93): its ground via is 2.27 mm away, beyond the 1.50 mm screen and within the 3.00 mm this board declares (owner decision 32)",
+  "REACHED Q2_G at (224.62, 193.50): its ground via is 2.10 mm away, beyond the 1.50 mm screen and within the 3.00 mm this board declares (owner decision 32)"
  ],
  "inputs": {
   "board": {
@@ -43,13 +44,13 @@
  "tool": "return_via",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "tools_tree_sha": "2ab44114b37cb60e"
  },
- "ts": "2026-09-21T12:51:57Z",
+ "ts": "2026-09-21T19:40:46Z",
  "verdict": "FAIL",
  "version": "unknown",
  "writer": {
   "file": "return_via.py",
-  "sha16": "d32e465cef7c5146"
+  "sha16": "b61d138e54955dd4"
  }
 }
