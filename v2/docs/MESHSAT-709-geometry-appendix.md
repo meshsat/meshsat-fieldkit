@@ -17720,3 +17720,37 @@ reading nobody took. `subject_missing()` is the one answer to *was this run told
 that case and a board declaring no sensitive node are INCONCLUSIVE now: STK-001's rule of 19 September, a
 declared zero is a pass with its reason and an undeclared zero is not. Commit `b97a481e`, the rule failing
 on the tree it was written against (1310 passed, 1 failed) and both fixtures passing after it.
+
+### 32.349 addendum, 16:56 CEST: E39's first half is via_parallel's, asked of the board rather than inferred
+
+The 12:51 work list split board E's remaining PI-003 into **single barrels carrying a whole rail** and
+**clusters that share unevenly**. The first half was written as a generator item; asked of E37's finished
+round-1 board (sha `246563debc363acd`, read-only, sha identical after) it is not one.
+
+Each of the four sites was resolved to the nearest pad of its own net AND to the nearest via of its own net,
+with the via's LOCKED flag, because a locked via is one this generator placed and an unlocked one is the
+router's:
+
+| site | nearest via of its net | nearest pad of its net | nearest LOCKED via |
+|---|---|---|---|
+| `DC_P` (96.58, 207.51) | **0.004 mm, router** | TP2 pad 1, 2.574 mm | none within 1.6 mm |
+| `DC_P` (97.40, 201.15) | **0.004 mm, router** | Q1 pad 5, 7.047 mm | none within 1.6 mm |
+| `HS_S` (80.00, 206.31) | **0.006 mm, router** | R19 pad 2, 2.583 mm | 8.205 mm away |
+| `DC_F` (104.22, 208.07) | **0.024 mm, router** | C4 pad 2, 1.959 mm | 12.448 mm away |
+
+**Not one of the four has a locked via within 1.6 mm**, so none is a via this generator placed. A generator
+lays copper where it knows something is, a pad or its own band; a cluster centred on one of these would be a
+coordinate **typed off a routed board**, which is this morning's stale-site defect in its worst form, because
+the next route puts that via somewhere else. They are `via_parallel`'s subject word for word, and the fixed
+tool has already been measured on a copy of this same board: **17 parallel barrels at twelve sites, `HS_S`
+going from one barrel to five and `PV_P` to four**.
+
+**So E39 is job two alone**: the declared skew on the clusters that exist (`HS_S` 4.01 measured against the
+1.0 a generator assumes, `TRK_OUT` 1.76, `PV_P` 1.72, `CELL_F` 1.72 already declared), with the generator's
+own cost caveat beside it, that a FET source land lays ONE column of at most five barrels, so a skew of 4.01
+cannot simply be multiplied through. And the first half is answered wherever a finish runs the fixed
+`via_parallel`, which is every arm landing after `03de4566`.
+
+Probes: `$SP/e39_site_pads.py` and `$SP/e39_site_vias.py`, both staged on the hub's `rdtools`. The second met
+KiCad 9's `PCB_VIA::GetWidth called without a layer argument` assert, which is 17 September's trap;
+`kicad_compat.via_width` is the answer if either is ever committed.
