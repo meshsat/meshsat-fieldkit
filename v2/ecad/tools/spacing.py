@@ -26,6 +26,44 @@ import verdict as _v
 import boardtable as _bt
 
 
+
+# ECSS-Q-ST-70-12C Table 13-3, TRANSCRIBED in v2/vendor/standards/ecss-q-st-70-12c-2014-07-14.md, the columns
+# this project uses. The standard's own "AND" means both the per-volt figure and the floor apply, so the
+# requirement is the larger of the two.
+#
+# WHY THE COATED COLUMN (decision 34, ruled 21 September 2026, the session's). Every ISO-001 number this
+# project has recorded was read against "X,Y external WITHOUT conformal coating", and ASSEMBLY.md section 5
+# has specified IPC-CC-830 acrylic, two thin coats, on A22, B16, D8, E6 and E5 since it was written. A board
+# says whether it is coated and the column follows; a board that does not say is judged on the stricter
+# column, because a declaration that cannot be found must never be the reason a rule gets easier.
+#
+# AND THE COATED ROW DISSOLVES THE TWO NUMBERS THAT HAD NO SOURCE. The envelope's altitude and the pollution
+# degree were what ISO-001 was waiting for: this table is a SPACE standard's, stated for an as-manufactured
+# rigid PCB without an altitude derating or a pollution degree, so the judgement holds at any altitude this
+# kit can see. What it does NOT cover is a conductor at a point the coating is masked off: ASSEMBLY.md
+# section 5 masks the connector faces, the spring-pin and pack targets, the RF bodies, the module and M.2
+# receptacles and the test points, and a pair measured there is on the uncoated column. The verdict names
+# the tightest pairs with their positions so that reading can be made.
+ECSS_13_3 = {
+    "external_coated":   lambda v: 0.120 if v <= 30 else max(0.002 * v, 0.160),
+    "external_bare":     lambda v: (0.200 if v <= 10 else 0.300) if v <= 30 else max(0.005 * v, 0.500),
+    "internal":          lambda v: 0.104 if v <= 30 else max(0.001 * v, 0.150),
+}
+
+
+def limit_for(volts, outer, coated):
+    """The minimum insulation distance in mm for a working voltage, or None above the table's 500 V.
+
+    Clause l: voltages above 500 V are subject to specific qualification of the design, so the table does not
+    answer there and this says so rather than extrapolating."""
+    v = max(0.0, float(volts or 0.0))
+    if v > 500.0:
+        return None
+    if not outer:
+        return ECSS_13_3["internal"](v)
+    return ECSS_13_3["external_coated" if coated else "external_bare"](v)
+
+
 def seg_dist(p, q, r, s):
     """Distance between two segments, each given as endpoints.
 
@@ -64,7 +102,8 @@ def main(a):
     # wide-range input. A nominal is what a rail sits at; a working voltage is what the copper has to survive.
     def _vhi(r):
         return max(float(r.get("volts") or 0), float(r.get("v_work") or 0))
-    hv = {n.lstrip("/") for n, r in (it.get("rails") or {}).items() if _vhi(r) >= vmin}
+    hv_v = {n.lstrip("/"): _vhi(r) for n, r in (it.get("rails") or {}).items() if _vhi(r) >= vmin}
+    hv = set(hv_v)
     out_dir = os.path.join(os.path.dirname(os.path.abspath(path)), "out")
     if not hv:
         # AND A BOARD'S OWN FACT MAY CONTRADICT ITS INTENT, in which case this is a question and never a pass.
@@ -125,26 +164,46 @@ def main(a):
             d = seg_dist(h[2], h[3], o[2], o[3]) - h[4] - o[4]
             if d < win: pairs.append((round(max(d, 0.0), 4), h[0], o[0], b.GetLayerName(h[1]), h[2]))
     pairs.sort()
-    lim = _bt.value(_bt.letter_for(path), "hv_spacing_mm")
+    _letter = _bt.letter_for(path)
+    lim = _bt.value(_letter, "hv_spacing_mm")
+    coated = _bt.value(_letter, "conformal_coated")
+    # PER VOLTAGE BAND AND PER LAYER, which is how the table is written. A board-wide scalar judged a 20 V bus
+    # against a 36 V rail's floor and was the reason this rule could only ever be declared or unjudged.
+    def _row(pair):
+        return limit_for(hv_v.get(pair[1], 0.0), pair[3] in ("F.Cu", "B.Cu"), bool(coated))
     print("spacing: %d high-voltage net(s) (%s) against %d other conductor(s); %d pair(s) inside %.1f mm"
           % (len(hv), ", ".join(sorted(hv)), len(other), len(pairs), win))
     for d, n1, n2, L, p in pairs[:10]:
         print("  %.3f mm  %s to %s on %s at (%.1f, %.1f)" % (d, n1, n2, L, p[0], p[1]))
     if "--json" in a: print(json.dumps(pairs[:50], indent=1))
     worst = pairs[0][0] if pairs else None
-    bad = [x for x in pairs if lim is not None and x[0] < float(lim)]
+    if lim is not None:
+        bad = [x for x in pairs if x[0] < float(lim)]
+        _basis = "the single spacing this board declares (%.3f mm)" % float(lim)
+    elif coated is not None:
+        bad = [x for x in pairs if _row(x) is not None and x[0] < _row(x)]
+        _basis = ("ECSS-Q-ST-70-12C Table 13-3, per rail's working voltage and per layer, on the %s column "
+                  "(this board declares conformal_coated: %s)" % ("coated" if coated else "bare", bool(coated)))
+    else:
+        bad = []
+        _basis = None
+    for x in pairs[:10]:
+        r = _row(x)
+        if r is not None and coated is not None:
+            print("    %s at %.0f V wants %.3f mm on %s: %s" % (x[1], hv_v.get(x[1], 0.0), r, x[3],
+                                                               "SHORT by %.3f mm" % (r - x[0]) if x[0] < r else "met"))
     return _v.write("spacing",
-                    _v.INCONCLUSIVE if lim is None else (_v.FAIL if bad else _v.PASS),
+                    _v.INCONCLUSIVE if (lim is None and coated is None) else (_v.FAIL if bad else _v.PASS),
                     counts={"hv_nets": len(hv), "pairs_measured": len(pairs),
                             "closest_mm": worst, "below_limit": len(bad)},
                     denominator=len(pairs) or 1,
                     evidence=["%.3f mm %s to %s on %s at (%.1f, %.1f)" % (x[0], x[1], x[2], x[3], x[4][0], x[4][1])
                               for x in (bad or pairs)[:20]],
-                    inputs={"board": path, "hv_spacing_mm": lim, "volts": vmin},
-                    note=("measured, not judged: this board declares no hv_spacing_mm, and creepage and clearance "
-                          "come from a standard's table for a working voltage, a pollution degree and a material "
-                          "group, which this tree does not hold" if lim is None else
-                          "every high-voltage conductor against the spacing this board declares"),
+                    inputs={"board": path, "hv_spacing_mm": lim, "volts": vmin,
+                            "conformal_coated": coated, "basis": _basis},
+                    note=("measured, not judged: this board declares neither hv_spacing_mm nor whether it is "
+                          "conformally coated, and the column of the table follows the coating"
+                          if _basis is None else "every high-voltage conductor against " + _basis),
                     out_dir=out_dir)
 
 

@@ -2,44 +2,31 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "below_limit": 0,
+  "below_limit": 5,
   "closest_mm": 0.1287,
   "hv_nets": 6,
   "pairs_measured": 10124
  },
  "denominator": 10124,
  "evidence": [
-  "0.129 mm CH_ACN to CH_SW1 on F.Cu at (39.2, 81.5)",
-  "0.129 mm VBUS20 to FE_FB on F.Cu at (45.8, 69.3)",
-  "0.129 mm VBUS20 to FE_FB on F.Cu at (46.5, 68.6)",
-  "0.129 mm VBUS20 to FE_PGOOD on F.Cu at (36.2, 78.5)",
-  "0.129 mm VBUS20 to FE_PGOOD on F.Cu at (36.2, 78.5)",
-  "0.129 mm VBUS20 to FE_PGOOD on F.Cu at (37.1, 79.5)",
   "0.129 mm VIN_RAW to FE_LDRV1 on B.Cu at (50.7, 51.1)",
   "0.129 mm VIN_RAW to FE_SW1 on F.Cu at (43.4, 42.9)",
-  "0.130 mm VBUS20 to FE_EN on F.Cu at (38.4, 77.2)",
-  "0.130 mm VBUS20 to FE_BOOT1 on F.Cu at (68.2, 68.5)",
-  "0.135 mm CH_ACN to GND on F.Cu at (49.5, 81.2)",
-  "0.135 mm CH_ACN to GND on F.Cu at (49.5, 81.2)",
-  "0.135 mm CH_ACN to GND on F.Cu at (49.5, 81.2)",
-  "0.139 mm VBUS20 to FE_COMP on B.Cu at (50.7, 57.6)",
-  "0.140 mm CH_ACN to GND on F.Cu at (46.5, 87.2)",
-  "0.141 mm CH_ACN to GND on F.Cu at (50.9, 79.8)",
   "0.144 mm VIN_RAW to GND on F.Cu at (32.4, 49.3)",
-  "0.145 mm VBUS20 to FE_FB on F.Cu at (45.8, 69.8)",
-  "0.147 mm FE_OUT to FE_COMP on B.Cu at (50.2, 59.7)",
-  "0.148 mm VBUS20 to FE_COMP on F.Cu at (62.4, 68.5)"
+  "0.158 mm VIN_RAW to GND on F.Cu at (32.4, 49.8)",
+  "0.158 mm VIN_RAW to FE_LDRV1 on B.Cu at (50.7, 51.1)"
  ],
  "inputs": {
+  "basis": "ECSS-Q-ST-70-12C Table 13-3, per rail's working voltage and per layer, on the coated column (this board declares conformal_coated: True)",
   "board": {
    "path": "pcb-a-power.kicad_pcb",
    "sha256_16": "58e26c67987b1daa"
   },
+  "conformal_coated": true,
   "hv_spacing_mm": null,
   "volts": 20.0
  },
  "missing_input": null,
- "note": "measured, not judged: this board declares no hv_spacing_mm, and creepage and clearance come from a standard's table for a working voltage, a pollution degree and a material group, which this tree does not hold",
+ "note": "every high-voltage conductor against ECSS-Q-ST-70-12C Table 13-3, per rail's working voltage and per layer, on the coated column (this board declares conformal_coated: True)",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -53,13 +40,13 @@
  "tool": "spacing",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "tools_tree_sha": "17411673c91cc49d"
  },
- "ts": "2026-09-21T12:41:55Z",
- "verdict": "INCONCLUSIVE",
+ "ts": "2026-09-21T17:12:36Z",
+ "verdict": "FAIL",
  "version": "unknown",
  "writer": {
   "file": "spacing.py",
-  "sha16": "d58ce94c56df4d68"
+  "sha16": "ea3c7630a0e22740"
  }
 }

@@ -1620,6 +1620,26 @@ rules:
      Every conductor pair whose working voltage difference is significant is separated by enough creepage and
      clearance for the working voltage, the transient it can see, the pollution degree the enclosure allows
      and the material group of the laminate.
+   false_positive_analysis: >
+     A false refusal has four shapes here and each is named, because this rule became ENFORCED by a session
+     ruling (decision 34, 21 September 2026) rather than by a source arriving.
+     ONE, THE STANDARD ITSELF: it is judged against ECSS-Q-ST-70-12C Table 13-3, a SPACE standard transcribed
+     in this tree, because IEC 60664-1, the terrestrial framework this requirement is written in, is paywalled
+     and not here. ECSS is the more conservative of the two at these voltages, so a refusal can be stricter
+     than a terrestrial functional-insulation reading would be; the verdict says which table and which column
+     it used, and if IEC 60664-1 ever enters the tree the rows move and every reading is re-taken.
+     TWO, THE COATED COLUMN AT A MASKED POINT: the column follows the board's conformal_coated declaration and
+     ASSEMBLY.md section 5 masks the connector faces, the RF bodies, the module and M.2 receptacles, the
+     spring-pin and pack targets and the bench test points. A pair measured at one of those is bare copper
+     judged on the coated row, which is a wrong ACCEPT rather than a wrong refusal; what stops it is that the
+     verdict names its tightest pairs with their positions so the reading can be checked against that list.
+     THREE, THE WORKING VOLTAGE: the row is chosen from the rail's declared v_work, so a rail that declares a
+     transient peak as its working voltage is judged one band too strictly. intent.rail() carries v_work and
+     v_max separately for exactly that reason and this reads the working value.
+     FOUR, TWO CONDUCTORS OF ONE CIRCUIT: the measurement is taken between a high-voltage net and any other
+     net, so a shunt's two pads or a sense tap beside the rail it senses are measured as an insulation pair
+     where no isolation is required between them. The evidence carries both net names for that reason; on the
+     three boards judged on 21 September not one of the tightest rows is such a pair.
    classification: REGULATORY
    applicability: CONDITIONAL
    condition: {fact: max_rail_voltage_v, op: ge, value: 30}

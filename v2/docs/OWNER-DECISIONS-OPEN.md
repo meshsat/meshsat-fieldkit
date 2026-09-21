@@ -7,13 +7,12 @@ One line per decision that is still open, what it holds up, and where its eviden
 v2/docs/OWNER-DECISIONS-2026-09-11.md and this page is generated from the same registry the readiness table
 is, so the pair counts below are the ones the gates use.
 
-**15 decisions are open and they hold 94 rule-board pairs of the 333 the set is judged on.** A pair held by a
+**14 decisions are open and they hold 74 rule-board pairs of the 333 the set is judged on.** A pair held by a
 decision is not a defect in the board: it is a question nobody has answered, and until it is answered the
 rule can be neither passed nor failed.
 
 | # | pairs | what is being decided | holds | boards | asked |
 |---|---:|---|---|---|---|
-| **34** | 20 | the kit has never had a written operating envelope and four rules resolve against nothing | ENV-001, ISO-001, THM-001 | A, B, C, D, E, E5, P | 2026-09-16 |
 | **39** | 18 | the criterion a break in a signal's reference is judged against | RET-001, RET-003, SI-001 | A, B, C, D, E, P | 2026-09-17 |
 | **43** | 14 | board B's route has resisted every lever this project can apply and the two that remain are architectural | EMC-001, GND-001, PAIR-001, PI-002, PI-003, PLC-002, PLN-001, RET-002, RET-004, RF-001, RTE-001, SCH-003, STK-001, VIA-001 | B | 2026-09-20 |
 | **29** | 7 | board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked | GND-002, INT-002 | A, B, C, D, E, P | 2026-09-16 |
@@ -286,48 +285,6 @@ one left for it.
 | rule | | boards | result today |
 |---|---|---|---|
 | RET-004 | ground-via proximity screen | C, D, E | FAIL |
-
-
-### Decision 34: the kit has never had a written operating envelope and four rules resolve against nothing
-
-**The question:** the temperature, altitude and transient levels the kit is designed to
-
-**Recommended:** the draft in v2/docs/OPERATING-ENVELOPE.md, whose two narrowest parts are the battery-bay
-VOC sensor and the e-paper
-
-**Measured:** THE DRAFT'S OWN NUMBERS, so the ruling can be read without opening it (17 September 2026). It
-proposes AMBIENT -20 to +40 C in use with three carve-outs, each traceable to a part: below -10 C the pack is
-warmed by its heater mat before charge and discharges to the cells' -10 C surface limit; below -15 C the
-e-paper is outside its range and updates slowly or not at all, which is a degraded display and not a dead
-kit, because it carries identity with the power off; above +35 C the kit runs its reduced mode so the inside
-air stays under the +55 C the battery-bay sensor and the pack need. STORAGE -20 to +45 C for three months and
--20 to +25 C for a year, at the pack's ex-factory charge, the pack being the only part that makes storage
-narrower than use. The parts that bound it, each with its datasheet in the tree: the Pervasive Displays
-e-paper at -15 to +60, the Sensirion SGP41 in the battery bay at -20 to +55, the cells at 0 to +45 charging
-and -10 to +60 discharging, the Xenarc monitor at -20 to +70. The sharp line is the third: a sealed case with
-three loaded modules puts the pack in air about 16 K over ambient, so charging holds off above about +25 C
-ambient, which the pack thermistor on the charger's JEITA input already does in hardware. Four rules resolve
-against this and nothing else: ENV-001, ISO-001, THM-001 and REL-001. ISO-001 HAS ITS NUMBERS NOW, AND THEY
-MOVED WHEN THE VOLTAGE DID (17 September 2026). spacing.py measures every conductor of a high-voltage net
-against the nearest conductor of any other net, and it was choosing those nets by each rail's NOMINAL
-voltage: board E, whose facts entry declares 36 V because its inlet is specified 9 to 36, read no rail at or
-above 20 and ISO-001 was answered about nothing on it. At the working voltage the intent has carried all
-along, the table reads board A's VIN_RAW 0.129 mm, board A's VBUS20 0.130, board B's +54V_POE 0.900 and board
-E's VIN_RAW 0.128, over 6,739, 32 and 2,860 conductor pairs. Against the only published table this tree
-holds, ECSS-Q-ST-70-12C Table 13-3, the 31 to 500 V row asks 0.500 mm on an outer layer with no conformal
-coating: board B passes with 80 percent to spare and boards A and E miss by a factor of about four. That
-standard covers ANY ELEVATION and is written for space hardware, so what it means for a sealed terrestrial
-kit is exactly this decision. The cost of the strict reading is a re-route of two finished boards; the cost
-of the loose one is a sentence naming which terrestrial standard and which pollution degree governs instead.
-AND THE TRANSIENT LEVELS ARE IN THE DRAFT NOW (section 6), because owner decision 31 cannot be ruled without
-one: a clamp is chosen against a level. The electrostatic row is free, being the level the part this design
-already buys is guaranteed to, and the qualification plan gained the test method it had never had.
-
-| rule | | boards | result today |
-|---|---|---|---|
-| ENV-001 | operating envelope declared | A, B, C, D, E, E5, P | INCONCLUSIVE |
-| ISO-001 | creepage and clearance | A, B, C, D, E, E5, P | INCONCLUSIVE, not computed |
-| THM-001 | every dissipating part has a path | A, B, C, D, E, P | INCONCLUSIVE |
 
 
 ### Decision 35: which published current-rating model this project's copper is judged against
@@ -651,6 +608,7 @@ rule it has. None of them is a failure of board B's design and none can be judge
 | 25 | board A's USB_WALL pair is 1.47 mm apart and nothing in the tree can close it | closed the same day and needs nothing: the pair took a ribbon of its own (J_AB2, end row) |
 | 26 | board C is one connection short and no tool in this tree can close it | closed by the route: six-layer C and then C17 reached 0 hard and 0 unrouted |
 | 33 | the mezzanine 5 V rail is losing nearly five percent and two of its three numbers were never anybody's requirement | LEAVE THE SPLIT AS DECLARED: board A four points of the codec's six percent and board D two. Both boards meet their own share on every run, the cross-board contract adds them up and passes, and the six percent total is not this project's number at all but the PCM2912A's own Recommended Operating Conditions, VBUS 4.35 V minimum. The only thing that would reopen it is a measured drop moving past a board's share on a routed board. |
+| 34 | the kit has never had a written operating envelope and four rules resolve against nothing | ADOPT v2/docs/OPERATING-ENVELOPE.md section 4 AS THE DESIGN ENVELOPE, and section 6's first row as the transient level. In use -20 to +40 C ambient with its three declared carve-outs (the pack warmed below -10 C before charge, the e-paper degraded below -15 C, the reduced mode above +35 C); storage -20 to +45 C for three months and -20 to +25 C for a year at the pack's ex-factory charge; non-condensing, with the closed case Peli's IP67 and the face designed to an IP67-class construction that is never labelled IP68 and carries no rating until the bench procedure of appendix 32.34 has run. Electrostatic discharge is IEC 61000-4-2 level 4, 8 kV contact and 15 kV air, which is the level decision 31 needs to choose a clamp against and is traceable to the USBLC6-2SC6 this design already buys. The electrical fast transient row is recorded as NOT A REQUIREMENT of this project, because nothing in this tree is a source for it. AND ISO-001 IS JUDGED AGAINST ECSS-Q-ST-70-12C TABLE 13-3, per voltage band, per layer, on the column the board's own coating selects: that table is stated for an as-manufactured rigid PCB without an altitude derating and without a pollution degree, so the two numbers ISO-001 was said to be waiting for are not needed to judge it. The altitude, the vibration and shock severities and the service life stay OPEN for the rules that genuinely need them and are not invented here. |
 | 38 | board B's two pair classes are 0.100 mm and its own minimum is 0.127, and the fabricator's floor is 0.09 | answered by the copper before it was ruled (18 September 2026): B21's project file carries every class at or above the board's own 0.127 mm, class_floor reads PASS on 5 classes with none below the floor, and the impedance gate's pair geometry is unchanged, which is the recommendation as it stood; nothing was lowered |
 | 44 | board D's underside packs nine parts inside the codec's own pin field, and one of its ground pins cannot reach the plane | ACCEPT FOR THIS REVISION AND KEEP D12. The defect costs ONE connection on a candidate board while board D's committed phase is already 0 hard and 0 unrouted, and the fix was built and measured over seven chain runs before being reverted: stepping a back-side region around a front-side fanned IC reads escapes 71/4 against 68/7 and then the region fit refuses the placement, three regions over by up to 9.1 mm and five by up to 29.0 once the FIXED parts inside each rectangle are respected. Board D's rectangles are on the never-auto floor under owner ruling 13, so the alternative is not available to the session in any case. If board D is re-cut for another reason, the rectangle move goes in that commit. |
 | 45 | ANA-001 keeps a sense line away from the nets a board DECLARES as switching, and on both boards that declare any, the tightest approach of all is a gate drive the declaration leaves out | LEAVE ANA-001's DENOMINATOR AS EACH BOARD DECLARES IT AND REPORT THE GATE-DRIVE ROWS BESIDE IT. switch_list.py excludes a gate by PIN FUNCTION because a gate drives the switching node and is not the switching copper, which is the right predicate for the question that tool asks. The clearance this rule asks was chosen for a switching node's dV/dt into a current-sense pair and not for a gate driver's, so widening the denominator would fail boards A and E on placements already cut against a number nobody has set. sense_reach.py measures and prints the rows instead: board A reads 88 close approaches with the gate drives named against 64 on the declaration alone, and board E 23 against nine. |

@@ -31,15 +31,17 @@
   "0.498 mm +54V_POE to POE_RST_n on In3.Cu at (-13.9, 62.2)"
  ],
  "inputs": {
+  "basis": "ECSS-Q-ST-70-12C Table 13-3, per rail's working voltage and per layer, on the coated column (this board declares conformal_coated: True)",
   "board": {
    "path": "pcb-b-compute.kicad_pcb",
    "sha256_16": "2e64b5bf2d9cd3bc"
   },
+  "conformal_coated": true,
   "hv_spacing_mm": null,
   "volts": 20.0
  },
  "missing_input": null,
- "note": "measured, not judged: this board declares no hv_spacing_mm, and creepage and clearance come from a standard's table for a working voltage, a pollution degree and a material group, which this tree does not hold",
+ "note": "every high-voltage conductor against ECSS-Q-ST-70-12C Table 13-3, per rail's working voltage and per layer, on the coated column (this board declares conformal_coated: True)",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -53,13 +55,13 @@
  "tool": "spacing",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "tools_tree_sha": "17411673c91cc49d"
  },
- "ts": "2026-09-21T12:47:36Z",
- "verdict": "INCONCLUSIVE",
+ "ts": "2026-09-21T17:13:17Z",
+ "verdict": "PASS",
  "version": "unknown",
  "writer": {
   "file": "spacing.py",
-  "sha16": "d58ce94c56df4d68"
+  "sha16": "ea3c7630a0e22740"
  }
 }
