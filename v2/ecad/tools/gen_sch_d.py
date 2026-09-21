@@ -107,7 +107,7 @@ FP = {
  "R": "Resistor_SMD:R_0603_1608Metric", "R2010": "Resistor_SMD:R_2010_5025Metric", "C": "Capacitor_SMD:C_0603_1608Metric", "C0402": "Capacitor_SMD:C_0402_1005Metric",
  "C10u": "Capacitor_SMD:C_0805_2012Metric", "C1206": "Capacitor_SMD:C_1206_3216Metric", "C1210": "Capacitor_SMD:C_1210_3225Metric", "LED": "LED_SMD:LED_0603_1608Metric",
  "SOT23": "Package_TO_SOT_SMD:SOT-23", "SOT235": "Package_TO_SOT_SMD:SOT-23-5", "SOT236": "Package_TO_SOT_SMD:SOT-23-6", "WSON6": "Package_SON:WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm",
- "XTAL": "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm", "VH2": "Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical", "IDC16": idc("2x08"),
+ "XTAL": "Crystal:Crystal_SMD_HC49-SD", "VH2": "Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical", "IDC16": idc("2x08"),
  "TP": "TestPoint:TestPoint_Pad_D1.5mm", "QFN28": "Package_DFN_QFN:QFN-28-1EP_5x5mm_P0.5mm_EP3.35x3.35mm", "TQFP32": "Package_QFP:TQFP-32_7x7mm_P0.8mm", "LQFP32": "Package_QFP:LQFP-32_7x7mm_P0.8mm",
  "QFN16": "Package_DFN_QFN:QFN-16-1EP_3x3mm_P0.5mm_EP1.75x1.75mm", "VSSOP8": "Package_SO:VSSOP-8_3x3mm_P0.65mm", "TSSOP24": "Package_SO:TSSOP-24_4.4x7.8mm_P0.65mm",
  "SA868": "meshsat:NiceRF_SA868", "RELAY": "Relay_SMD:Relay_DPDT_Omron_G6K-2F-Y", "SMA": "Connector_Coaxial:SMA_Amphenol_132134_Vertical", "UFL": "Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical",
@@ -179,8 +179,23 @@ synth("U4", "TUSB2046B", "TUSB2046BI four-port USB 2.0 full-speed hub (LQFP-32; 
       {1: "HUB_DP0", 2: "HUB_DM0", 3: "+3V3_D8", 25: "+3V3_D8", 4: "HUB_RST_n", 6: "+3V3_D8", 7: "GND", 28: "GND", 8: "GND", 10: "HUB_OVRCUR_n", 14: "HUB_OVRCUR_n", 18: "HUB_OVRCUR_n", 22: "HUB_OVRCUR_n",
        11: "HUB_DM1", 12: "HUB_DP1", 15: "HUB_DM2", 16: "HUB_DP2", 19: "HUB_DM3", 20: "HUB_DP3", 23: "HUB_DM4", 24: "HUB_DP4", 26: "+3V3_D8", 27: "GND", 29: "HUB_XTAL2", 30: "HUB_XTAL1", 31: "GND"})
 r("R9", "10k", "HUB_OVRCUR_n", "+3V3_D8"); r("R10", "10k", "HUB_RST_n", "+3V3_D8"); c("C12", "1u", "HUB_RST_n", "GND")
-part("Y1", "Device", "Crystal_GND24", "6 MHz 3225 (CL 20 pF; C1 = C2 = 27 pF and Rd 1.5k per SLLS413 figure 6)", "XTAL", {"1": "HUB_XTAL1", "3": "HUB_XTAL2R", "2": "GND", "4": "GND"})
-r("R11", "1.5k", "HUB_XTAL2R", "HUB_XTAL2"); c("C13", "27p NP0", "HUB_XTAL1", "GND", "C0402"); c("C14", "27p NP0", "HUB_XTAL2R", "GND", "C0402")
+# OWNER DECISION 37, RULED BY THE SESSION 21 SEPTEMBER 2026: A 6 MHz PASSIVE CRYSTAL EXISTS IN ONE PACKAGE AND
+# IT IS NOT THE ONE THIS BOARD DREW. Measured against JLCPCB's catalogue: every 6 MHz part in a SMD3225-4P land
+# is an ACTIVE OSCILLATOR, which is a property of the blank and not of the catalogue, and the hub's own
+# datasheet (TI SLLS413, TUSB2046B clause 8.3.2) says a passive crystal or resonator MUST be used if low-power
+# suspend and resume are wanted, which this kit wants. The land is HC-49S-SMD, the part is C252308 (-40 to
+# +85 C, CL 20 pF, 80 Ohm, 376 in stock at 0.1333 USD) with C518119 as the second source; the wide-temperature
+# range is chosen over the -20/+70 parts because the crystal lives INSIDE a sealed case whose own envelope
+# (decision 34) allows +55 C of inside air, not because the ambient asks for it.
+# AND Rd IS RE-CHOSEN FOR THE PART THAT IS BOUGHT: TI's figure 6 gives 1.5k for a crystal of at most 50 Ohm and
+# every wide-temperature 6 MHz part reads 80, so the damping comes down to the reactance of C2 at 6 MHz, which
+# is 1/(2*pi*6e6*27e-12) = 982 Ohm, and 1.0k is that value in a standard resistor. The negative-resistance
+# margin (five times ESR, so 400 Ohm) is a BENCH MEASUREMENT at bring-up and is in TEST-PLAN.md, the same shape
+# as the 24 MHz load-capacitance correction of 16 September.
+part("Y1", "Device", "Crystal", "6 MHz HC-49S-SMD passive (CL 20 pF, 80 Ohm; C1 = C2 = 27 pF and Rd 1.0k, SLLS413 figure 6 re-chosen for this part's ESR)", "XTAL", {"1": "HUB_XTAL1", "2": "HUB_XTAL2R"}, "C252308")
+# decision 37: the damping is the reactance of C2 at 6 MHz (982 Ohm), because the part that exists reads
+# 80 Ohm of ESR where TI's figure 6 assumes at most 50.
+r("R11", "1.0k", "HUB_XTAL2R", "HUB_XTAL2"); c("C13", "27p NP0", "HUB_XTAL1", "GND", "C0402"); c("C14", "27p NP0", "HUB_XTAL2R", "GND", "C0402")
 c("C15", "100n", "+3V3_D8", "GND"); c("C16", "100n", "+3V3_D8", "GND"); c("C17", "10u", "+3V3_D8", "GND", "C10u")
 for port, (dp, dm, tp, tm, rs) in {1: ("HUB_DP1", "HUB_DM1", "USB1_P", "USB1_N", 12), 2: ("HUB_DP2", "HUB_DM2", "USB2_P", "USB2_N", 16), 3: ("HUB_DP3", "HUB_DM3", "USB3_P", "USB3_N", 20)}.items():
     r("R%d" % rs, "22", dp, tp); r("R%d" % (rs + 1), "22", dm, tm); r("R%d" % (rs + 2), "15k", tp, "GND"); r("R%d" % (rs + 3), "15k", tm, "GND")
@@ -193,8 +208,16 @@ synth("U6", "PCM2912A", "TI PCM2912A USB audio codec (TQFP-32): mono input from 
        19: "PCM_VCCL", 20: "GND", 21: "PCM_VCCR", 22: "PCM_VOUTR", 23: "GND", 24: "GND", 25: "GND", 26: "PCM_VCCP", 27: "PCM_VDD", 28: "GND", 30: "MMUTE", 31: "LED_REC_K", 32: "LED_PLAY_K"})
 c("C18", "1u", "+5V_D8", "GND"); c("C19", "1u", "PCM_VDD", "GND"); c("C20", "1u", "PCM_VCCA", "GND"); c("C21", "1u", "PCM_VCCL", "GND"); c("C22", "1u", "PCM_VCCR", "GND"); c("C23", "1u", "PCM_VCCP", "GND")
 c("C24", "10u", "PCM_VCOM1", "GND", "C10u"); c("C25", "10u", "PCM_VCOM2", "GND", "C10u")
-part("Y2", "Device", "Crystal_GND24", "6 MHz 3225 (codec clock; 18 pF loads, to confirm on the EVM sheet)", "XTAL", {"1": "PCM_XTI", "3": "PCM_XTO", "2": "GND", "4": "GND"})
-c("C26", "18p NP0", "PCM_XTI", "GND", "C0402"); c("C27", "18p NP0", "PCM_XTO", "GND", "C0402")
+# THE CODEC'S CLOCK IS 6 MHz AND ITS OWN DATASHEET CONTRADICTS ITSELF ABOUT IT (read 21 September 2026,
+# v2/vendor/ti/ti-pcm2912a.pdf): the feature list says "With Single 6-MHz Clock Source" and the ELECTRICAL
+# TABLE says "Input clock frequency, XTI  5.997 / 6.000 / 6.003 MHz", while one application paragraph says the
+# device "requires a 12-MHz clock". Two statements against one, and the binding one is the specification
+# table, so this board's 6 MHz is right and the 12 MHz sentence is left over from a sibling part. It is
+# written down here so that nobody reading section 9 "corrects" a working design.
+# Its loads go 18 pF to 27 pF with the land: 27 pF is 2*(CL - Cstray) for the CL 20 pF part decision 37 rules,
+# which is the same arithmetic TI's own figure 6 does for the hub.
+part("Y2", "Device", "Crystal", "6 MHz HC-49S-SMD passive (codec clock, CL 20 pF; C1 = C2 = 27 pF)", "XTAL", {"1": "PCM_XTI", "2": "PCM_XTO"}, "C252308")
+c("C26", "27p NP0", "PCM_XTI", "GND", "C0402"); c("C27", "27p NP0", "PCM_XTO", "GND", "C0402")   # decision 37: 2*(CL - Cstray) for the CL 20 pF part
 led("LED2", "amber record", "LED_REC_A", "LED_REC_K"); r("R29", "1k", "+3V3_D8", "LED_REC_A"); led("LED3", "green playback", "LED_PLAY_A", "LED_PLAY_K"); r("R30", "1k", "+3V3_D8", "LED_PLAY_A")
 r("R31", "10k", "AF_OUT", "AF_DIV"); r("R32", "10k", "AF_DIV", "GND"); c("C28", "1u", "AF_DIV", "PCM_VIN")   # 700 mV receive audio halved into the ADC
 r("R33", "4.7k", "X_MMUTE", "MMUTE"); r("R34", "100k", "MMUTE", "GND")   # mute only when the expander drives it high (the codec pulls it down itself)

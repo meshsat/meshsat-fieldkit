@@ -11,11 +11,11 @@ the ruling is the action that moves it, and the measurement is reported beside i
 
 | waiting on | pairs | what it means |
 |---|---:|---|
-| `DECISION` | 40 | an owner decision by name |
+| `DECISION` | 38 | an owner decision by name |
 | `DECISION_UNCLAIMED` | 5 | a rule that says a decision is open while no decision claims it |
 | `AUTHORITY` | 3 | an authority this project does not have |
 | `NO_INSTRUMENT` | 6 | nothing verifies it |
-| `MISSING_INPUT` | 15 | an input the reading declared absent |
+| `MISSING_INPUT` | 17 | an input the reading declared absent |
 | `MEASURED_FAILURE` | 28 | the tool looked and the board failed |
 | `VENDOR_WAIT` | 2 | a fabricator or a standards body, and nobody here |
 | `OWNER_WORK` | 7 | work only the owner or the ordering session can do |
@@ -34,7 +34,7 @@ things to fix.
 | A | 25 | 14 | 5 | 1 | 4 | 3 |
 | B | 37 | 6 | 18 | 1 | 5 | 5 |
 | C | 11 | 4 | 6 | 0 | 0 | 3 |
-| D | 14 | 3 | 4 | 1 | 2 | 4 |
+| D | 14 | 3 | 2 | 1 | 4 | 4 |
 | E | 17 | 6 | 4 | 0 | 4 | 4 |
 | E5 | 4 | 3 | 2 | 0 | 0 | 0 |
 | P | 13 | 7 | 6 | 0 | 0 | 2 |
@@ -73,13 +73,12 @@ holding a number, not a question about a number.
 | 32 | 3 | 3 | RET-004 | C D E |
 | 35 | 2 | 2 | PI-001 | A E |
 | 36 | 2 | 2 | INT-001 | A B |
-| 37 | 2 | 0 | CMP-002, SUP-001 | D |
 | 40 | 1 | 1 | BAT-001 | P |
 | 41 | 3 | 1 | DOC-002 | C E5 P |
 | 42 | 1 | 1 | DEC-001 | A |
 | 43 | 14 | 0 | EMC-001, GND-001, PAIR-001, PI-002, PI-003, PLC-002, PLN-001, RET-002, RET-004, RF-001, RTE-001, SCH-003, STK-001, VIA-001 | B |
 
-## DECISION (40): an owner decision by name
+## DECISION (38): an owner decision by name
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -110,8 +109,6 @@ holding a number, not a question about a number.
 | `RET-002` | C | FAIL | decision 27: the four-layer boards cannot carry a plane under their back-side signals as built |
 | `RET-004` | C | FAIL | decision 32: board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper |
 | `DOC-002` | C | INCONCLUSIVE | decision 41: the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002 |
-| `CMP-002` | D | INCONCLUSIVE | decision 37: board D asks for two crystals that do not exist and the part it was certified against is four times the frequency |
-| `SUP-001` | D | INCONCLUSIVE | decision 37: board D asks for two crystals that do not exist and the part it was certified against is four times the frequency |
 | `RET-004` | D | FAIL | decision 32: board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper |
 | `PI-001` | E | FAIL | decision 35: which published current-rating model this project's copper is judged against |
 | `GND-002` | E | INCONCLUSIVE | decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked |
@@ -153,7 +150,7 @@ holding a number, not a question about a number.
 | `THM-001` | E | INCONCLUSIVE | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) and from what each |
 | `THM-001` | P | INCONCLUSIVE | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) and from what each |
 
-## MISSING_INPUT (15): an input the reading declared absent
+## MISSING_INPUT (17): an input the reading declared absent
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -166,6 +163,8 @@ holding a number, not a question about a number.
 | `DFM-001` | B | INCONCLUSIVE | the folder judged here is meshsat-pcb-b-revA-B19-quote and this board declares B21, so its properties are a reading of a board this set is not building |
 | `DOC-001` | B | INCONCLUSIVE | a deliverable folder at the declared phase B21: the only folder is meshsat-pcb-b-revA-B19-quote, a quote, and a folder is judged against itself |
 | `DOC-002` | B | INCONCLUSIVE | board B declares B21 and the order set holds B16: the note beside those folders describes a board this project is not building |
+| `CMP-002` | D | INCONCLUSIVE | no deliverable folder at the declared phase D12, so this board's parts were not certified against the board this tree holds (the folders that exist are D10, D11, D5, D6, D7, D8, D9) |
+| `SUP-001` | D | INCONCLUSIVE | no deliverable folder at the declared phase D12, so this board's parts were not certified against the board this tree holds (the folders that exist are D10, D11, D5, D6, D7, D8, D9) |
 | `DFM-001` | D | INCONCLUSIVE | the folder judged here is meshsat-pcb-d-revA-D11 and this board declares D12, so its properties are a reading of a board this set is not building |
 | `DOC-002` | D | INCONCLUSIVE | board D declares D12 and the order set holds D8: the note beside those folders describes a board this project is not building |
 | `CMP-002` | E | INCONCLUSIVE | no deliverable folder at the declared phase E17, so this board's parts were not certified against the board this tree holds (the folders that exist are E4, E6, E7, E9) |

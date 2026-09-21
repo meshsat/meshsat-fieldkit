@@ -18252,3 +18252,50 @@ rather than under *an owner decision is open*.
 121**; the bucket *a rule says a decision is open while no decision claims it* goes **18 to 5**, and the five
 that remain are STK-002, the layer question, which is genuinely open and waits on a price. Across tonight the
 decision-bound share has gone from **78 of 134** to **40 of 121**.
+
+### 32.356, 21 September 2026 21:26 CEST: decision 37 is ruled, the crystals go under the parts they clock, and the project's own clock rule caught the half I left behind
+
+Board D asked for two 6 MHz crystals in a 3225 land, and **every 6 MHz part JLCPCB lists in that land is an
+ACTIVE OSCILLATOR**, which is a property of the blank rather than of the catalogue. The hub's own datasheet
+(TI SLLS413, TUSB2046B 8.3.2) says a passive crystal or resonator MUST be used if low-power suspend and resume
+are wanted, and this kit wants them, so the ruling is the part that exists: **C252308, 6 MHz passive,
+HC-49S-SMD, -40 to +85 C, CL 20 pF, 80 Ohm, 376 in stock at 0.1333 USD**, with C518119 as the second source,
+for both Y1 and Y2. The wide temperature range is chosen because the crystal lives inside a sealed case whose
+envelope (decision 34, ruled tonight) allows about +55 C of inside air, not because the ambient asks for it.
+
+**Rd comes down from 1.5k to 1.0k** with its arithmetic: TI's figure 6 gives 1.5k for a crystal of at most
+50 Ohm, every wide-temperature 6 MHz part reads 80, and the damping is then the reactance of C2 at 6 MHz,
+1/(2·pi·6e6·27e-12) = 982 Ohm. The negative-resistance margin of five times ESR is a **bench measurement at
+bring-up**, not a number this session can compute. The load capacitors stay at TI's 27 pF, which presents
+16.5 pF against the part's 20: eighteen percent under, about 43 ppm fast, deliberate, because under-loading
+raises the loop gain and USB full speed allows 2500 ppm.
+
+**AND THE PROJECT'S OWN CLOCK RULE CAUGHT THE HALF I HAD LEFT BEHIND.** Board D still declared Y2 at
+`c_load_pf: 12.0`, which was the load the OLD design happened to present with the 18 pF capacitors it drew for
+a part that does not exist, and the first chain run read `FAIL Y2 ... presents 16.5 pF and the part asks for
+12.0, which is +38 percent`. The declaration is the PART's 20 pF now. **The codec's own datasheet contradicts
+itself about the frequency** and that is written into the generator so nobody corrects a working design:
+`ti-pcm2912a.pdf` lists *Single 6-MHz Clock Source* in its features and *Input clock frequency, XTI 5.997 /
+6.000 / 6.003 MHz* in its electrical table, while one application paragraph says the device requires a 12-MHz
+clock. Two statements against one, and the binding one is the table.
+
+**THE PACKAGE COSTS AREA AND THE BOARD ANSWERED WHERE.** An HC-49S-SMD courtyard is **14.2 by 5.8 mm** against
+the 3225's 3.4 by 2.7, and seated where they were the placed DRC read **fifteen hard items** (Y1 over U4, C13,
+C14 and R25; Y2 over U6, C24, C25, JP1 and JP2). Measured for a 14.2 by 5.8 box on the placed board, per side:
+**the nearest free FRONT seat is 17.6 mm from the hub's own crystal pins and 11.3 from the codec's, while the
+UNDERSIDE is free 0.2 mm under the hub's pins and 6.3 from the codec's.** Both crystals and their four load
+capacitors go to the underside, which board D already assembles and which `check_pcb_d`'s standoff rule covers
+only under U2, K1 and the three connectors. Y2 then moved 3 mm west because **its east pad sat 0.59 mm under
+U6 pad 28 and took that ground pad's only via site away**, which is the back-side-pad mechanism decision 31
+met under U7 four hours earlier. The chain ends **PREROUTE-DONE OK**: placed hard 0, escapes 68 added and 7
+skipped which is board D's baseline to the pad, `clock_check` clean, `place_audit` ALL PASS, `rail_crossings`
+6 of 6.
+
+**AND I MET THE COMMENT-SWALLOW TRAP TWICE IN ONE NIGHT, in the same file.** Appending `# owner decision 37`
+to the footprint table's line took `"VH2"` and `"IDC16"` with it, and appending a comment to the R11 line took
+`C13` and `C14`, the hub crystal's own load capacitors. The first cost two chain runs, because the symptom
+named two footprints that have nothing to do with crystals (*IDC16, VH2 could not be read*). **A key that is
+still inside a comment is still in the text**, so the grep-based check I used an hour ago on the FIXED tables
+reported *dropped: none* while two keys were gone. The check that cannot be fooled parses: `ast.parse` the
+module, compare the call sites' first arguments, and compare the dict literal's keys. Both are in the record
+now, and both were run against this change before it was believed.

@@ -150,8 +150,16 @@ def t_board_d_declares_both_of_its_crystals_with_a_source():
     """Board D read INCONCLUSIVE on CLK-001 with two crystals and no declaration until 17 September 2026. The
     hub's number has a real authority (TI SLLS413 figure 6: a 20 pF load, C0 at most 7 pF, ESR at most 50 Ohm,
     and TI's own C1 = C2 = 27 pF for negative-resistance margin, which is why this board presents 16.5 pF on
-    purpose). The codec clock's does NOT, and its declaration says so in its first four words rather than
-    dressing an inference as a datasheet."""
+    purpose). The codec clock's did NOT, and its declaration said so in its first four words rather than
+    dressing an inference as a datasheet.
+
+    21 SEPTEMBER 2026, AND THE RULE OUTLIVED ITS OWN PREMISE BY ONE RULING: decision 37 chose the part, so
+    Y2's load capacitance comes from a datasheet now and the old assertion, that its source begins with NOT A
+    DATASHEET, failed on a declaration that had got BETTER. What the rule is actually for survives the ruling
+    and is what it asserts instead: every crystal carries a load, a stray and a source long enough to be a
+    reason; a number that is not a part's own says so in its own words; and each entry names the decision that
+    chose the part. A test that pins the state of the day it was written is a proof against history, which
+    this project has been bitten by before (20 September, the via_parallel properties)."""
     import json, os
     d = json.load(open(os.path.join(TOOLS, "boards", "d.json")))
     cry = d.get("crystals") or {}
@@ -160,6 +168,10 @@ def t_board_d_declares_both_of_its_crystals_with_a_source():
         assert row.get("c_load_pf") and row.get("stray_pf"), (ref, row)
         assert len(row.get("source", "")) > 60, (ref, row.get("source"))
     assert "SLLS413" in cry["Y1"]["source"], cry["Y1"]["source"][:80]
-    assert cry["Y2"]["source"].startswith("NOT A DATASHEET"), cry["Y2"]["source"][:60]
-    assert "decision 37" in cry["Y1"]["source"] and "decision 37" in cry["Y2"]["source"], \
-        "the part these numbers belong to is an open owner decision and both entries must say so"
+    for ref, row in cry.items():
+        src = row["source"]
+        sourced = any(k in src for k in ("datasheet", "SLLS413", "C252308", "ti-pcm2912a"))
+        assert sourced or src.startswith("NOT A DATASHEET"), \
+            "%s's load capacitance cites no document and does not say so: %s" % (ref, src[:70])
+        assert "decision 37" in src or "DECISION 37" in src, \
+            "%s does not name the decision that chose its part" % ref

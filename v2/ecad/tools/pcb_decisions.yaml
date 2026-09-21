@@ -507,7 +507,48 @@ decisions:
   - n: 37
     title: "board D asks for two crystals that do not exist and the part it was certified against is four times the frequency"
     asked: 2026-09-16
-    status: open
+    status: ruled
+    authority: SESSION
+    authority_why: >-
+      the part is chosen against numbers that are all in documents: JLCPCB's own catalogue for what exists, TI's
+      SLLS413 for the network, the codec's own datasheet for the frequency, and decision 34's envelope for the
+      temperature range. It spends 0.27 USD a board and no owner judgement is standing: the only alternative loses
+      the suspend and resume behaviour the hub's datasheet says a passive crystal is required for, which is a
+      function the kit has. WHAT IS NOT TAKEN: cutting a board D deliverable, which is promotion and stays frozen.
+    ruled_by: SESSION
+    ruled_on: 2026-09-21
+    outcome: >-
+      BUY THE HC-49S-SMD PASSIVE CRYSTAL AND MOVE BOTH CRYSTALS TO THE UNDERSIDE. The part is C252308 (6 MHz,
+      HC-49S-SMD, -40 to +85 C, CL 20 pF, 80 Ohm, 376 in stock at 0.1333 USD), with C518119 (239 in stock) as the
+      second source, for BOTH Y1 (the TUSB2046B hub) and Y2 (the PCM2912A codec). The wide temperature range is
+      chosen over the -20/+70 parts because the crystal lives inside a sealed case whose envelope allows about +55
+      C of inside air, not because the ambient asks for it. Rd COMES DOWN FROM 1.5k TO 1.0k: TI's figure 6 gives
+      1.5k for a crystal of at most 50 Ohm and every wide-temperature 6 MHz part reads 80, so the damping becomes
+      the reactance of C2 at 6 MHz, 1/(2*pi*6e6*27e-12) = 982 Ohm, and the negative-resistance margin of five
+      times ESR is a BENCH MEASUREMENT at bring-up rather than a number this session can compute. The load
+      capacitors stay at 27 pF, TI's own value, which presents 16.5 pF against the part's 20: eighteen percent
+      under, about 43 ppm fast, deliberate, because under-loading raises the loop gain and USB full speed allows
+      2500 ppm. AND THE PROJECT'S OWN CLOCK RULE CAUGHT THE HALF I HAD LEFT BEHIND: board D still declared Y2 at
+      c_load_pf 12.0, which was the load the OLD design happened to present with its 18 pF capacitors, so the
+      first chain run read FAIL on Y2 at +38 percent. The declaration is the PART's 20 pF now. THE CODEC'S
+      DATASHEET CONTRADICTS ITSELF ABOUT THE FREQUENCY and it is written down so that nobody corrects a working
+      design: v2/vendor/ti/ti-pcm2912a.pdf lists 'Single 6-MHz Clock Source' in its features and 'Input clock
+      frequency, XTI 5.997 / 6.000 / 6.003 MHz' in its electrical table, while one application paragraph says the
+      device requires a 12-MHz clock. Two statements against one, and the binding one is the table. THE PACKAGE
+      COSTS AREA AND THE BOARD ANSWERED WHERE: an HC-49S-SMD courtyard is 14.2 by 5.8 mm against the 3225 land
+      these two were drawn on at 3.4 by 2.7, and seated where they were the placed DRC read FIFTEEN hard items, Y1
+      over U4, C13, C14 and R25 and Y2 over U6, C24, C25, JP1 and JP2. Measured on the placed board for a 14.2 by
+      5.8 box: the nearest free FRONT seat is 17.6 mm from the hub's own crystal pins and 11.3 from the codec's,
+      while the UNDERSIDE is free 0.2 mm under the hub's pins and 6.3 from the codec's. Both crystals and their
+      four load capacitors go to the underside, which board D already assembles, and check_pcb_d's standoff rule
+      covers U2, K1 and the three connectors, not these. Y2 then had to move 3 mm west because its east pad sat
+      0.59 mm under U6 pad 28 and took that ground pad's only via site away. The chain ends PREROUTE-DONE OK at
+      placed hard 0, escapes 68 added and 7 skipped which is board D's baseline to the pad, place_audit ALL PASS
+      and rail_crossings 6 of 6.
+    reversed_by: >-
+      set status to reopened and put the 3225 land, the Crystal_GND24 symbol, Rd 1.5k, C26 and C27 at 18 pF and
+      Y2's c_load_pf 12.0 back in gen_sch_d.py and boards/d.json, and the six underside seats out of
+      gen_pcb_d3.py. The board then asks again for a part that does not exist, which is where this started
     ask: "a bigger land for a passive 6 MHz crystal, or an active oscillator and the loss of USB suspend and resume"
     recommendation: "the HC-49S-SMD land with a passive crystal, and Rd re-chosen for the part's own ESR: it is the
       one package where 6 MHz exists at this project's temperature range with stock, and it keeps the suspend

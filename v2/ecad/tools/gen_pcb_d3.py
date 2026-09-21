@@ -100,7 +100,25 @@ FIXED = {"J_HARN1": (-42, 8, 0, False), "J_PWR1": (-42, -16, 90, False), "J_HS1"
          # the upstream pair through the ESD U5 (west) and R6/R7 into pins 1, 2; port 1 (pins 11, 12) through R12/R13 south to the codec U6 with R26/R27 at its pins 3, 4;
          # port 2 (pins 15, 16) through R16/R17 lying in line with the bridge U3's D+/D- pins 3 mm to their east (a straight pair, no corner); port 3 (pins 19, 20) through R20/R21 east to J_USB3.
          # Every pair's two resistors sit side by side, 1.6 mm apart, pads across the pair axis, within 4 mm of the pins (the D8 rows 4.2 mm apart broke the pair pre-router).
-         "U4": (22, 14, 0, False), "U5": (9, 16.2, 0, False), "U3": (30, 3, 0, False), "U6": (22, -9.5, 0, False), "Y1": (21, 21.5, 0, False), "Y2": (13, -13.5, 0, False),
+         "U4": (22, 14, 0, False), "U5": (9, 16.2, 0, False), "U3": (30, 3, 0, False), "U6": (22, -9.5, 0, False), # OWNER DECISION 37, RULED 21 SEPTEMBER 2026: THE CRYSTALS GO TO THE UNDERSIDE, UNDER THE PART THEY CLOCK.
+         # The ruled part is a 6 MHz passive crystal and the only package it exists in is HC-49S-SMD, whose
+         # courtyard is 14.2 by 5.8 mm against the 3225 land these two were drawn on at 3.4 by 2.7. Seated
+         # where they were, the placed DRC reads fifteen hard items: Y1 over U4, C13, C14 and R25, Y2 over U6,
+         # C24, C25, JP1 and JP2. MEASURED on the placed board for a 14.2 by 5.8 box, per side: the nearest
+         # FREE FRONT seat is 17.6 mm from the hub's own crystal pins and 11.3 from the codec's, while the
+         # underside is free 0.2 mm under the hub's pins and 6.3 from the codec's. A crystal under its own
+         # host with two vias is the shorter loop of the two, and board D already assembles on both sides;
+         # check_pcb_d's standoff rule covers U2, K1 and the three connectors, not these.
+         # Y2 moved 3 mm west after the first run: its east pad sat 0.59 mm under U6 pad 28 and took that
+         # ground pad's only via site away (place_audit, "no via site"), which is the same mechanism as a
+         # back-side clamp under an escape fan. At x 14.60 its pads are 10.37 and 18.87, and the nearest of
+         # U6's own pads (29 at x 21.60) is 2.7 mm away, clear of the 1.5 mm the site search wants.
+         "Y1": (21.10, 18.40, 0, True), "Y2": (14.60, -5.60, 0, True),
+         # and each crystal's load capacitors ride with it, clear of its courtyard and of the back-side
+         # region rectangles (HUBB ends at y 16, AUDB at y -8), because a load capacitor that stays on the
+         # other side of the board is a load capacitor at the end of two vias and 20 mm of track
+         "C13": (16.85, 22.30, 0, True), "C14": (25.35, 22.30, 0, True),
+         "C26": (10.37, -1.60, 0, True), "C27": (18.87, -1.60, 0, True),
          "R6": (13.5, 16.8, 0, False), "R7": (13.5, 15.2, 0, False),
          "R12": (21.6, 6.3, 270, False), "R13": (20.0, 6.3, 270, False), "R16": (23.5, 3.25, 0, False), "R17": (23.5, 1.65, 0, False),   # port 2: in line with the bridge U3's D+/D- pins 3 mm east, pad 2 (the pair) east: a straight pair; pad 1 (the hub side) north for port 1
          "R20": (32.0, 13.6, 0, False), "R21": (32.0, 12.0, 0, False), "R26": (11.5, -9.1, 0, False), "R27": (11.5, -7.5, 0, False),   # 4.4 mm from U6 pad tips: the entry runs of both stations need the room (12:19 CEST)
@@ -153,10 +171,10 @@ REGIONS = [
  ("EXPB", (-20, 19, 4, 34), ["R%d" % k for k in range(66, 80)], True),
  ("TPS",  (4, 28.5, 40, 38.5), ["TP%d" % k for k in range(1, 17)], False),
  ("TPS2", (-40, 34.5, 4, 38.5), ["TP%d" % k for k in range(17, 25)], False),
- ("HUB",  (4, 20, 43, 28), ["C10", "C11", "C13", "C14"] + ["C%d" % k for k in range(29, 34)] + ["C35", "C36", "C37", "C38"], False),   # D9: the strip north of the fixed USB cluster
+ ("HUB",  (4, 20, 43, 28), ["C10", "C11"] + ["C%d" % k for k in range(29, 34)] + ["C35", "C36", "C37", "C38"], False),   # D9: the strip north of the fixed USB cluster
  ("HUB2", (35, 0, 43, 20), ["U7", "U15", "C61", "C62"], False),   # D9: east of the bridge   # D9: east of the bridge
  ("HUBB", (4, 0, 43, 16), ["R4"] + ["R%d" % k for k in (8, 9, 10, 11)] + ["C12", "C15", "C16", "C17"], True),
- ("AUD",  (4, -22, 43, -15.2), ["C%d" % k for k in range(19, 28)] + ["C39", "C40", "LED2", "LED3", "R29", "R30", "JP1", "JP2"], False),   # D9: the strip south of the codec
+ ("AUD",  (4, -22, 43, -15.2), ["C%d" % k for k in range(19, 26)] + ["C39", "C40", "LED2", "LED3", "R29", "R30", "JP1", "JP2"], False),   # D9: the strip south of the codec
  ("AUD2", (29, -15, 43, 0), ["U8"], False),
  # C28 left this list for a FIXED seat beside U6 pin 16 at D32 (21 September 2026)
  ("AUDB", (4, -22, 43, -8), ["R%d" % k for k in range(31, 48)] + ["C18", "C34"] + ["C%d" % k for k in range(41, 49)], True),
