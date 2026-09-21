@@ -17032,3 +17032,16 @@ two islands that carry the most current, and what `place_audit`'s warning said b
 lose their copper is `via_current`'s question on the landed board; if they do, E38 fences each island with a track
 keep-out on its layer, the pattern board A's PA head carries, after checking the source pads' own fanout vias inside
 the rectangle. A sample, not the landing.
+
+**Addendum, 07:03 CEST: two more samples, and one of them says the pre-lay's cost was the ladder.** D33's session at
+pass 98 of 200, applied to a copy of its placed board: hard 0 and ONE open pair, a ground pad. `/PCM_VCCL`, the net its
+pre-lay group locked, is still closed, and all six nets the pass-80 sample read open (`/MICAMP_AC`, `/MICAMP_OUT`,
+`/PCM_VIN`, `/PCM_VOUTL`, `/PCM_VOUTR` and a ground) are closed eighteen passes later. So what read at pass 80 as the
+pre-lay moving the opens into the codec's corridor was the router's own order of work, and D33's prediction of zero
+after the closers is one ground pair away with half its passes left. E36's session at pass 33: hard 0 and nine open,
+the pass-28 set less `/USB_E6_P`, still one of U5's pins. Its four source islands and the CELL_F pour read the same
+areas as at pass 28 to two decimals (VIN_RAW 13.16 to 9.49 mm2 under two foreign tracks, DC_HS 7.83 to 7.19 under
+three, DC_F and TRK_OUT intact at 9.32), measured by a probe that compares each F.Cu zone's filled area on the
+imported board with the placed board's and counts the other nets' segments whose box meets it (`island_probe.py`,
+staged beside the readers). Five passes moved nothing at either island: the slicing was laid early and the optimiser
+routes around it, so the landing will carry it whatever its pass count, and `via_current` on those sites decides E38.
