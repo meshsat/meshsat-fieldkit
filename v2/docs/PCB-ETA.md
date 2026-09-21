@@ -24,8 +24,8 @@ figures are below.
 
 | class | items | P50 | P80 | what it means |
 |---|---|---|---|---|
-| PARALLEL_AGENT | 9 | 26 h | 76 h | session work with no shared file, so several may run at once in their own worktrees |
-| SEQUENTIAL | 5 | 18 h | 60 h | session work that must be serialised: one producer, a shared file, or a never-auto floor |
+| PARALLEL_AGENT | 8 | 22 h | 64 h | session work with no shared file, so several may run at once in their own worktrees |
+| SEQUENTIAL | 6 | 22 h | 72 h | session work that must be serialised: one producer, a shared file, or a never-auto floor |
 | OWNER | 4 | 13 h | 107 h | a ruling. No amount of compute shortens it and it is never in the engineering total |
 | PARALLEL_BOX | 3 | 12 h | 34 h | work whose cost is a route, a sweep or a solve on a rented host, so it runs at the fleet's width |
 | HARDWARE | 2 | 10 h | 32 h | needs built hardware, so it cannot start before the fabrication stage ends |

@@ -726,7 +726,7 @@ leaving the kit, is decided once and implemented the same way everywhere.
 | verified by | MANUAL_REVIEW at PLACED_BOARD (human or lab only) |
 | source | SOURCE_UNVERIFIED |
 | implementation | gen_sch_c.py standoff bond, gen_sch_b.py magnetics termination |
-| maturity | **OWNER_DECISION_REQUIRED** |  (at writing: UNASSESSED)
+| maturity | **DOCUMENTED_ONLY** |  (at writing: UNASSESSED)
 | owner | SESSION |
 | waiver | by OWNER, scope the kit, expires pre-compliance testing |
 

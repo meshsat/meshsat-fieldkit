@@ -141,7 +141,7 @@ failure it is a stated distance away from.
 
 ## prose only (1)
 
-**GND-002 chassis and cable-shield strategy** (MUST_JUSTIFY, OWNER_DECISION_REQUIRED)  
+**GND-002 chassis and cable-shield strategy** (MUST_JUSTIFY, DOCUMENTED_ONLY)  
 16 September 2026: the strategy is WRITTEN, which it was not before, and writing it found the gap. The kit
 has no single conductive enclosure: the Peli 1450 is plastic and every piece of metal in it is an island held
 by plastic, so the only thing joining them is whatever this design says joins them. Board B's magnetics
@@ -151,7 +151,7 @@ CHASSIS NET ANYWHERE IN THIS KIT. The four board changes that would make the str
 document; they are schematic changes on three boards and they touch owner decision 29's territory, so they
 wait on that ruling rather than being made piecemeal. It stays DOCUMENTED_ONLY because a bond is confirmed by
 a four-wire measurement and an emissions sweep, neither of which exists until there is hardware  
-*Close it by* make the four changes the strategy names once decision 29 is answered, then the bond resistances and the pre-compliance sweep at the prototype. Owner **SESSION**, after INT-002. Effort P50 4h, P80 12h.
+*Close it by* decision 29 is answered (21 September 2026), so the four changes the strategy names are session work now: a CHASSIS net and a bonding pad near the dock on board A, a pad for the connector-plate strap on the same board, and the 1 nF 2 kV common-node capacitor and the RJ45 shell moved from signal ground to that node on board B. Each is a schematic change that owes its regeneration and its contract gate in the same commit. Then the bond resistances and the pre-compliance sweep at the prototype. Owner **SESSION**. Effort P50 4h, P80 12h.
 
 ## no protocol (2)
 
