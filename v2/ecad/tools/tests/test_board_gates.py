@@ -1147,7 +1147,10 @@ def t_a_rail_crossing_with_fewer_barrels_than_its_current_needs_is_named_at_gene
                            capture_output=True, text=True)
         assert "rail_crossings:   +5V_X at U1 pad 1" in r.stdout, \
             "the detail line does not carry the tool's name, so the chain's own grep drops it: %s" % r.stdout[-600:]
-        assert "which needs 4 at a 10 K rise" in r.stdout, r.stdout[-600:]
+        # the detail line reads "1 barrel(s) carrying 0.65 A at a 10 K rise for 2.20 A (...), which needs 4 at 0.25 mm" since
+        # 87e8f63a rated each barrel at its own drill (21 September 2026); the box suite found the old wording here
+        assert "carrying 0.65 A at a 10 K rise for 2.20 A" in r.stdout, r.stdout[-600:]
+        assert "which needs 4 at 0.25 mm" in r.stdout, r.stdout[-600:]
 
 
 def t_a_crossing_that_carries_what_it_should_says_nothing_about_being_short():
