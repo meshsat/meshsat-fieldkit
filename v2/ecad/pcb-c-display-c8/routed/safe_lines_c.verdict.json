@@ -19,7 +19,7 @@
   "board": "c",
   "netlist": {
    "path": "out/pcb-c-display.net",
-   "sha256_16": "f4d069ba13060f7e"
+   "sha256_16": "b3f0479ef5c74145"
   }
  },
  "missing_input": null,
@@ -37,9 +37,9 @@
  "tool": "safe_lines_c",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "087fae053129751b"
+  "tools_tree_sha": "df5c920a2abb0560"
  },
- "ts": "2026-09-20T23:22:34Z",
+ "ts": "2026-09-21T00:08:33Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {
