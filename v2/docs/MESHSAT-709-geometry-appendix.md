@@ -16930,3 +16930,15 @@ column in each lane bought nothing at the router, as its own pre-route board sai
 second capacitor row); A94 and A95, which lay the rest of the run at generation, are the arms that answer. E34 landed
 at hard 0 and TEN open, six of them the tracker's own pins, which is E23's finding again: the tracker's room is board
 E's placement item ahead of its closers. Records in d.json, a.json and e.json.
+
+**Addendum, 05:59 CEST: D33 routes with /PCM_VCCL pre-laid, and four of board E's typed barrel sites were in empty
+board.** D33's pre-lay group closed /PCM_VCCL 1 of 1 on the placed board (5 tracks, 2 vias, kept at hard 0) and it
+routes on the hub, prediction 0 and 0. Asked of E35's pre-route board which pads lie within 3 mm of each of the E
+generator's five typed barrel sites: four have NONE (DC_HS, both DC_P, TRK_OUT: 3, 7, 7 and 7 barrels), because the
+coordinates were typed on E29's placement and E35 moved the parts. The pad guard refuses a barrel in another net's
+pad and not one in nothing, the judge counts only inside a land's window, so twenty-four barrels of dead copper
+passed every gate. The list is one site derived from Q3's drain tab now, and the FET source lands (DC_F at Q1,
+DC_HS at Q7, TRK_OUT at Q2) take an F.Cu island over pads 1 to 3 and a 0.5 mm column derived from the pads; the
+first probe measured the judge's window (a second column 2 mm out counted for nothing) and the second probe lays one
+column inside it and leaves the rest to `rail_barrels`. A rule refuses a literal pair in the site list. The probes
+are read before anything is committed.

@@ -352,28 +352,17 @@ if _osx.environ.get("PLACE_CELLF_VIAS", "1") not in ("0", ""):
 # board A's eleven sites were answered under on 20 September at 00:10.
 if _osx.environ.get("PLACE_E_BARRELS", "1") not in ("0", ""):
     _pcE = _pcmod.PowerCopper(board, net_for, P)
+    # E36 (21 September 2026, 06:0x CEST): FOUR OF THE FIVE TYPED SITES WERE IN EMPTY BOARD ON E35's FLOOR PLAN.
+    # The five coordinates below were typed from barrel_sites --suggest on E29's placement; E35 re-split the input
+    # side and TRKOUT moved, and on E35's pre-route board (/root/erc18) the DC_HS, both DC_P and the TRK_OUT clusters
+    # (3, 7, 7 and 7 barrels) sat with NO pad of any net within 3 mm: twenty-four barrels of dead copper laid where
+    # the parts used to be, which the pad guard cannot see (it refuses a barrel in ANOTHER net's pad, not one in
+    # nothing) and the judge does not count (they are outside every land's window). A typed coordinate is a claim
+    # about a placement that was true once; every site here is DERIVED from the placed pad now, the way VIN_RAW's
+    # island and barrels are since E35. The FET source lands take islands and clusters below; DC_P reads carrying
+    # on E35's judge without a typed site and takes none.
     _E_SITES = [
-        # FOUR OF THE TEN ARE NOT VIA SITES AT ALL AND E24 PROVED IT (20 September 2026). `CELL+` at
-        # (-124.96, -106.30) and (-124.96, -109.70) and `DC_IN` at (-52.96, -106.30) and (-52.96, -109.70)
-        # were suggested with `drill=1.78`, which is the drill of the barrel ALREADY THERE, and at those four
-        # the barrel is a CONNECTOR'S PLATED COMPONENT HOLE (F3 and the DC inlet), not a via. A cluster of
-        # 1.78 mm vias beside a component hole is not a thing: E24 came back with EIGHT `annular_width` at
-        # -0.4900 mm and sixteen `hole_to_hole` at 0.0000. They are out, and `barrel_sites --suggest` owes the
-        # same distinction board P's 12 AWG lands taught it on 18 September, where it declines a site needing
-        # more than eight barrels but not one whose barrel is a component hole.
-        # AND DC_F IS A PLACEMENT QUESTION WITH A NUMBER, which E25 measured. Its site needs the same
-        # nine barrels `DC_P` gets and cannot hold them: the lattice reaches D1 pad 1 (`/GND_V`,
-        # 3.30 by 2.50, centred (-54.47, -90.97)) and lands 0.1450 mm from it against the PWR class's
-        # 0.1500, three times over. FIVE HUNDREDTHS OF A MILLIMETRE, and the tool reported "1.34 mm of
-        # room on this axis" because it measures room to the nearest PAD CENTRE and not to the
-        # clearance a class asks. The same count at `DC_P` fits, so it is the site and not the
-        # arithmetic. Declined here with its number, which is how board A's VBUS20 busbar site was
-        # answered on 19 September.
-        ("DC_HS",   (-102.75,  -93.51), 1.917, 0.40, "x"),   # worst 2.13, 3.82 mm of room on x
-        ("DC_P",    ( -84.29,  -92.64), 8.000, 0.40, "x"),   # worst 8.89, 2.67 mm of room on x
-        ("DC_P",    ( -94.30,  -93.50), 8.000, 0.40, "x"),   # worst 8.89, 2.23 mm of room on x
-        ("PV_P",    (   4.65,  -85.16), 2.968, 0.30, "y"),   # worst 2.02, 0.41 mm of room on y
-        ("TRK_OUT", (  27.44,  -88.74), 6.160, 0.40, "y"),   # worst 6.85, 3.11 mm of room on y
+        ("PV_P", _padc("Q3", "5"), 2.968, 0.30, "y"),   # the tracker input FET's drain tab; worst 2.02 on E29
     ]
     _e_laid, _e_refused = 0, []
     for _n, _at, _a, _d, _ax in _E_SITES:
@@ -410,6 +399,44 @@ if _osx.environ.get("PLACE_DCHS_BAND", "1") not in ("0", ""):
     _pc.stitch("DC_HS", [_p for _p in _Q7S] + [(_lx - 1.0, _ly), (_lx, _ly), (_lx + 1.0, _ly)])
     print("power copper: DC_HS band from Q7's source pads at (%.1f, %.1f) to L2 pin 1 at (%.1f, %.1f)" % (_qx, _qy, _lx, _ly))
     print("power copper: DC_HS in three locked B.Cu bands from Q7's source pads to L2 pin 1")
+
+# ---------------------------------------------------------------- the FET source lands (E36, 21 September 2026)
+# rail_crossings under the one-land judge (03:50 CEST) declines four sites as busbar-class: six to ten amps enter a
+# FET on three small source pads with ONE 0.20 mm fanout via each (DC_F at Q1, DC_HS at Q7, TRK_OUT at Q2, PV_P at
+# U5), and fifteen barrels of the fanout's drill beside a 0.85 by 0.50 mm pad is a busbar. Board A's rail shape is
+# the answer: an F.Cu ISLAND over the land (so the pad's current has copper beside it, which is what the conductor
+# test judges) and a CLUSTER of the generator's own 0.5 mm drill (1.05 A a barrel at 10 K) in two rows west of the
+# source column, inside the judge's window (half the land plus 1.0 mm from its centre). Q1 and Q2 are TDSON-8s
+# (pads 1 to 3 at 1.27 mm, 0.85 by 0.50, the drain tab 4 mm east) and Q7 a PowerPAK SO-8 (1.27 by 0.61, the
+# band's three 0.4 mm vias already in the pads). U5's PV_P land is pins 32 to 34 of a 0.5 mm QFN inside its
+# own escape fan and its pockets have 0.0 mm of room (region_room, 20 September; E34's six open pins at U5):
+# that site is the placement item E34 named and takes no copper here. Every site goes through stitch's own
+# hole-to-hole and pad guards and a refusal is printed rather than raised, the E_SITES rule.
+if _osx.environ.get("PLACE_FET_SOURCE_LANDS", "1") not in ("0", ""):
+    _pcF = _pcmod.PowerCopper(board, net_for, P)
+    _FET_LANDS = [
+        # ref, net, amps typical/peak the land carries, barrels owed at 0.5 mm (barrels_for is asked below)
+        ("Q1", "DC_F", 8.0), ("Q7", "DC_HS", 10.0), ("Q2", "TRK_OUT", 6.16),
+    ]
+    for _ref, _net, _amps in _FET_LANDS:
+        try:
+            _ps = [_padc(_ref, str(_k)) for _k in (1, 2, 3)]
+            _cx = _ps[0][0]; _my = sum(_q[1] for _q in _ps) / 3.0
+            # ONE column of up to five, 1.15 mm west of the source column at 0.85 mm pitch, which is INSIDE the judge's
+            # window (each pad's half-size plus 1.0 mm from its centre; a second column 2.0 mm out is counted by
+            # nothing, which the first probe measured: 'TRK_OUT at Q2: 3 there' with six laid). What the column
+            # does not hold, rail_barrels lays in its own lattice inside the same window, site by site under the
+            # chain's DRC (it topped Q2 up with three on that probe), so the count here is the room and not the need.
+            _n = min(_pcF.barrels_for(_amps, 0.5), 5)
+            _span = (_n - 1) * 0.85
+            _pts = [(_cx - 1.15, _my - _span / 2.0 + 0.85 * _i) for _i in range(_n)]
+            pour(pcbnew.F_Cu, _net, "%s island F.Cu at %s's source land" % (_net, _ref),
+                 (_cx - 2.7, _my - 1.9, _cx + 0.7, _my + 1.9), priority=1)
+            _pcF.stitch(_net, _pts, drill=0.5, width=0.9)
+            print("power copper: %s island and %d barrel(s) of 0.5 mm at %s's source land (%.2f, %.2f) for %.2f A (%d owed at this drill)"
+                  % (_net, len(_pts), _ref, _cx, _my, _amps, _pcF.barrels_for(_amps, 0.5)))
+        except Exception as _e:
+            print("power copper: %s at %s's source land REFUSED: %s" % (_net, _ref, _e))
 
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
 def cls(nc, clr, tw, vd, vdr):
