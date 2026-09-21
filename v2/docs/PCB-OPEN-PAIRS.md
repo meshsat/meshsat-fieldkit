@@ -7,16 +7,16 @@ Every pair that is not a current PASS, classified. Generated from tools/pcb_deci
 map's maturity and each deciding verdict: a decision that claims a pair wins over everything else, because
 the ruling is the action that moves it, and the measurement is reported beside it rather than lost.
 
-**121 open pair(s)** over 7 board(s). **43 are measured failures** (a tool looked and the board failed), which are **35 distinct readings**, and **15 of those are claimed by an open owner decision**.
+**120 open pair(s)** over 7 board(s). **42 are measured failures** (a tool looked and the board failed), which are **34 distinct readings**, and **12 of those are claimed by an open owner decision**.
 
 | waiting on | pairs | what it means |
 |---|---:|---|
-| `DECISION` | 38 | an owner decision by name |
+| `DECISION` | 35 | an owner decision by name |
 | `DECISION_UNCLAIMED` | 5 | a rule that says a decision is open while no decision claims it |
 | `AUTHORITY` | 3 | an authority this project does not have |
 | `NO_INSTRUMENT` | 6 | nothing verifies it |
 | `MISSING_INPUT` | 17 | an input the reading declared absent |
-| `MEASURED_FAILURE` | 28 | the tool looked and the board failed |
+| `MEASURED_FAILURE` | 30 | the tool looked and the board failed |
 | `VENDOR_WAIT` | 2 | a fabricator or a standards body, and nobody here |
 | `OWNER_WORK` | 7 | work only the owner or the ordering session can do |
 | `NOT_JUDGED` | 15 | not judged, for the reason the reading gives |
@@ -33,18 +33,22 @@ things to fix.
 |---|---:|---:|---:|---:|---:|---:|
 | A | 25 | 14 | 5 | 1 | 4 | 3 |
 | B | 37 | 6 | 18 | 1 | 5 | 5 |
-| C | 11 | 4 | 6 | 0 | 0 | 3 |
-| D | 14 | 3 | 2 | 1 | 4 | 4 |
-| E | 17 | 6 | 4 | 0 | 4 | 4 |
+| C | 11 | 4 | 5 | 0 | 0 | 3 |
+| D | 13 | 2 | 1 | 1 | 4 | 4 |
+| E | 17 | 6 | 3 | 0 | 4 | 4 |
 | E5 | 4 | 3 | 2 | 0 | 0 | 0 |
 | P | 13 | 7 | 6 | 0 | 0 | 2 |
 
 ## Readings owed
 
-Of the 100 open pairs with a reading beside them, **0 are decided by a reading taken under a tool that has
+Of the 99 open pairs with a reading beside them, **1 are decided by a reading taken under a tool that has
 CHANGED since**. A tool change moves no rule-set fingerprint and no per-rule digest, so nothing else on these
 pages can say it. It is an upper bound, because a tool file moves for a comment as readily as for a
 criterion, and it decides nothing: it says the reading is owed. Re-take with retake_gate.sh or a sweep.
+
+| rule | boards |
+|---|---|
+| `RET-004` | A |
 
 ## Boards behind their own generator
 
@@ -70,7 +74,6 @@ holding a number, not a question about a number.
 | 27 | 3 | 2 | RET-001, RET-002, STK-002 | C |
 | 28 | 4 | 3 | RET-002, RTE-001, STK-001, STK-002 | P |
 | 29 | 5 | 0 | GND-002, INT-002 | A B C E |
-| 32 | 3 | 3 | RET-004 | C D E |
 | 35 | 2 | 2 | PI-001 | A E |
 | 36 | 2 | 2 | INT-001 | A B |
 | 40 | 1 | 1 | BAT-001 | P |
@@ -78,7 +81,7 @@ holding a number, not a question about a number.
 | 42 | 1 | 1 | DEC-001 | A |
 | 43 | 14 | 0 | EMC-001, GND-001, PAIR-001, PI-002, PI-003, PLC-002, PLN-001, RET-002, RET-004, RF-001, RTE-001, SCH-003, STK-001, VIA-001 | B |
 
-## DECISION (38): an owner decision by name
+## DECISION (35): an owner decision by name
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -107,12 +110,9 @@ holding a number, not a question about a number.
 | `STK-002` | C | INCONCLUSIVE | decision 27: the four-layer boards cannot carry a plane under their back-side signals as built |
 | `RET-001` | C | FAIL | decision 27: the four-layer boards cannot carry a plane under their back-side signals as built |
 | `RET-002` | C | FAIL | decision 27: the four-layer boards cannot carry a plane under their back-side signals as built |
-| `RET-004` | C | FAIL | decision 32: board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper |
 | `DOC-002` | C | INCONCLUSIVE | decision 41: the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002 |
-| `RET-004` | D | FAIL | decision 32: board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper |
 | `PI-001` | E | FAIL | decision 35: which published current-rating model this project's copper is judged against |
 | `GND-002` | E | INCONCLUSIVE | decision 29: board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked |
-| `RET-004` | E | FAIL | decision 32: board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper |
 | `DOC-002` | E5 | FAIL | decision 41: the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002 |
 | `STK-001` | P | FAIL | decision 28: board P cannot hold the return-path rule on two layers and the ruled P5 does not route |
 | `STK-002` | P | INCONCLUSIVE | decision 28: board P cannot hold the return-path rule on two layers and the ruled P5 does not route |
@@ -172,7 +172,7 @@ holding a number, not a question about a number.
 | `DFM-001` | E | INCONCLUSIVE | the folder judged here is meshsat-pcb-e-revA-E9 and this board declares E17, so its properties are a reading of a board this set is not building |
 | `DOC-002` | E | INCONCLUSIVE | board E declares E17 and the order set holds E6: the note beside those folders describes a board this project is not building |
 
-## MEASURED_FAILURE (28): the tool looked and the board failed
+## MEASURED_FAILURE (30): the tool looked and the board failed
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -192,10 +192,12 @@ holding a number, not a question about a number.
 | `PLC-001` | B | FAIL | place_audit FAIL: {'collisions': 13, 'fine_pitch': 75, 'footprints': 957, 'measured': 75} |
 | `RTE-002` | B | FAIL | hardset-routed-board-gate FAIL: {'by_type': {}, 'hard': 0, 'report': {'silk_edge_clearance': 9, 'silk_over_copper': 47, 'silk_overlap': 69, 'track_dangl |
 | `OUT-001` | B | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
+| `RET-004` | C | FAIL | return_via FAIL: {'examined_same_reference': 0, 'examined_to_power': 0, 'exempt': 61, 'judged': 85, 'lacking': 11, 'reached_beyond_the_sc |
 | `OUT-001` | C | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `PI-003` | D | FAIL | via_current FAIL: {'measured_rails': 4, 'no_layer_change': 0, 'no_via': 0, 'over': 1, 'over_barrels': 2, 'rails': 4} |
 | `OUT-001` | D | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `PI-003` | E | FAIL | via_current FAIL: {'measured_rails': 9, 'no_layer_change': 1, 'no_via': 3, 'over': 8, 'over_barrels': 31, 'rails': 11} |
+| `RET-004` | E | FAIL | return_via FAIL: {'examined_same_reference': 0, 'examined_to_power': 0, 'exempt': 80, 'judged': 59, 'lacking': 2, 'reached_beyond_the_scr |
 | `ANA-001` | E | FAIL | sensitive_nodes FAIL: {'declared': 3, 'fail': 2, 'measured': 3} |
 | `ISO-001` | E | FAIL | spacing FAIL: {'below_limit': 92, 'closest_mm': 0.1287, 'hv_nets': 8, 'pairs_measured': 10759} |
 | `OUT-001` | E | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |

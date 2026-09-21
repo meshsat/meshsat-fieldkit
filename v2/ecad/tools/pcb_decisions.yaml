@@ -298,7 +298,38 @@ decisions:
   - n: 32
     title: "board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper"
     asked: 2026-09-16
-    status: open
+    status: ruled
+    authority: SESSION
+    authority_why: >-
+      the number is the TOOL'S OWN and no owner judgement is standing: return_via's fixer already places a ground
+      via on rings out to 3.0 mm, so a judge that refuses at 1.5 what its own fixer places at 3.0 is two rules
+      rather than one. It spends nothing, moves no copper and accepts no residual risk a measurement here could
+      remove, because every via it accepts now carries its own distance in the verdict. WHAT IS NOT TAKEN: the
+      vias beyond the reach, which stay failures with their numbers.
+    ruled_by: SESSION
+    ruled_on: 2026-09-21
+    outcome: >-
+      ACCEPT THE REACH AT 3.0 MM, THE DISTANCE THIS PROJECT'S OWN FIXER ALREADY PLACES AT, AND RECORD THE DISTANCE
+      PER VIA. The screen stays at 1.5 mm for every board; a board that has measured what it cannot satisfy inside
+      it declares `return_reach_mm` with this decision as the reason, and boards C, D and E do. `return_via`
+      measures instead of answering yes or no: every flagged via carries the distance to its nearest ground via, a
+      via within the declared reach is SATISFIED with that distance on the record, and one beyond it or with none
+      at all stays a failure with its number. MEASURED ON THE THREE COMMITTED BOARDS, read-only with each sha
+      identical before and after: BOARD D goes FAIL to PASS of 37, its single via answered at 1.58 mm. BOARD E
+      goes six lacking to TWO, five answered between 1.50 and 2.27 mm, and what stands is FAN1_PWM with NO ground
+      via within six millimetres and one SDA0 at 3.39. BOARD C goes THIRTY-TWO lacking to ELEVEN, twenty-one
+      answered between 1.50 and 3.00, and what stands is 3.18 to 5.99 mm on eight of them and THREE WITH NO GROUND
+      VIA WITHIN SIX MILLIMETRES (USB_DP_R, HB1, HB3). SO THE RULING ANSWERS BOARD D AND MAKES BOARDS C AND E
+      SMALLER AND TRUE, and the residue is a different finding from the one this decision was asked about: it is
+      not a screening distance, it is vias whose return has to travel four to six millimetres or has nowhere to
+      go, and it belongs to each board's next phase with the coordinates now on the record. The decision's own
+      evidence, written from the FIXER's log on 17 September, said board C's thirty-two sat at 1.50 or 1.75 mm;
+      the JUDGE reads twenty-one inside 3.0 and eleven past it, so that half of the evidence was the fixer's view
+      of what it had placed and not the board's.
+    reversed_by: >-
+      set status to reopened and remove return_reach_mm from tools/boards/c.json, d.json and e.json, which puts
+      all three back to the 1.5 mm screen as written (board D returns to FAIL with one via at 1.58 mm). The
+      per-via distances stay recorded either way: measuring is not the decision
     ask: "accept the reach beyond 1.5 mm where every nearer site is occupied, or move the parts"
     recommendation: >-
       accept the reach beyond 1.5 mm and record the distance per via, because a longer return loop is a shorter

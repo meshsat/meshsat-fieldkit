@@ -123,7 +123,7 @@ def t_a_zone_on_a_real_net_passes():
 
 # ---------------------------------------------------------------- the return-current rules (15 September 2026, appendix 32.198)
 
-def _signal_board(pcbnew, tmp, name, plane=True, gnd_via=False, via=True, gnd_complete=False):
+def _signal_board(pcbnew, tmp, name, plane=True, gnd_via=False, via=True, gnd_complete=False, gnd_via_mm=1.0):
     """A two-layer board with a signal track on F.Cu and a via, over a B.Cu ground pour or not, with a ground via beside it or not."""
     b = _board(pcbnew)
     b.Add(pcbnew.NETINFO_ITEM(b, "/SIG")); b.Add(pcbnew.NETINFO_ITEM(b, "GND"))
@@ -158,7 +158,7 @@ def _signal_board(pcbnew, tmp, name, plane=True, gnd_via=False, via=True, gnd_co
         # board at y 15, so KiCad's connectivity put it on the track's net and the fixture built two SIGNAL
         # vias and no ground via: the rule's own subject, a signal via WITH a return via beside it, had never
         # been built (17 September 2026). It is 1.0 mm away, across the track rather than along it.
-        v = pcbnew.PCB_VIA(b); v.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(20.0), pcbnew.FromMM(16.0))); v.SetDrill(pcbnew.FromMM(0.3)); v.SetWidth(pcbnew.FromMM(0.6)); _set(v, "GND"); b.Add(v)
+        v = pcbnew.PCB_VIA(b); v.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(20.0), pcbnew.FromMM(15.0 + gnd_via_mm))); v.SetDrill(pcbnew.FromMM(0.3)); v.SetWidth(pcbnew.FromMM(0.6)); _set(v, "GND"); b.Add(v)
     if gnd_complete:
         # THE GROUND IS COMPLETE: a via in U3's own pad joins the F.Cu pad to the B.Cu pour, so the ratsnest of
         # GND reads zero before the fixer runs and a ground via it lays inside the pour changes nothing it
@@ -1327,3 +1327,25 @@ def t_the_count_says_how_many_were_reported():
     for name in ("check_pcb_a.py", "check_pcb_b.py"):
         src = open(os.path.join(TOOLS, name), encoding="utf-8").read()
         assert '"route_items_reported": len(_route_reported)' in src, name
+
+
+def t_a_ground_via_beyond_the_screen_is_measured_and_accepted_only_where_the_board_declares_a_reach():
+    """DEFECTIVE and ACCEPTABLE in one rule (owner decision 32, ruled 21 September 2026).
+
+    The screen asks for a ground via within 1.5 mm and answers yes or no, so a via whose ground via sits at
+    1.75 mm read exactly like one with none at all: board C has thirty-two of those, board E four and board D
+    one, and the alternative (a ground-via grid) was measured on board C and costs it its route, 21 open
+    connections against zero. The decision accepts the reach and asks for THE DISTANCE PER VIA, so the judge
+    measures instead of answering: with no declared reach the via is still lacking and its evidence now
+    carries the number, and with a reach that covers it the via is satisfied and the number is on the record.
+    Both halves are asserted here."""
+    pcbnew = _pcbnew(); tmp = tempfile.mkdtemp(prefix="return-reach-")
+    sys.path.insert(0, TOOLS); import return_via
+    b, p = _signal_board(pcbnew, tmp, "far", plane=True, gnd_via=True, gnd_via_mm=2.0)
+    r = return_via.judge(b, p)
+    assert r["judged"] == 1 and len(r["lacking"]) == 1, "a ground via 2.0 mm away must still fail the 1.5 mm screen: %s" % r
+    assert "2.00 mm" in r["lacking"][0], "the evidence does not carry the distance: %s" % r["lacking"][0]
+    r = return_via.judge(b, p, reach=2.25)
+    assert not r["lacking"] and len(r.get("reached") or []) == 1, \
+        "a declared reach of 2.25 mm must accept a ground via 2.0 mm away: %s" % r
+    assert "2.00 mm" in r["reached"][0] and "decision 32" in r["reached"][0], r["reached"][0]

@@ -6,15 +6,16 @@
   "examined_to_power": 0,
   "exempt": 20,
   "judged": 37,
-  "lacking": 1,
+  "lacking": 0,
+  "reached_beyond_the_screen": 1,
   "same_plane": 3,
   "slow": 227,
-  "standing": 1,
+  "standing": 0,
   "unclassified": 0
  },
  "denominator": 37,
  "evidence": [
-  "HUB_DM3 at (130.01, 87.42)"
+  "REACHED HUB_DM3 at (130.01, 87.42): its ground via is 1.58 mm away, beyond the 1.50 mm screen and within the 3.00 mm this board declares (owner decision 32)"
  ],
  "inputs": {
   "board": {
@@ -37,13 +38,13 @@
  "tool": "return_via",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "tools_tree_sha": "2ab44114b37cb60e"
  },
- "ts": "2026-09-21T12:51:13Z",
- "verdict": "FAIL",
+ "ts": "2026-09-21T19:40:57Z",
+ "verdict": "PASS",
  "version": "unknown",
  "writer": {
   "file": "return_via.py",
-  "sha16": "d32e465cef7c5146"
+  "sha16": "b61d138e54955dd4"
  }
 }
