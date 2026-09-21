@@ -336,7 +336,8 @@
   },
   {
    "ref": "J_PAOUT",
-   "why": "the power amplifier output to the antenna path, which reaches the same arrested bulkhead"
+   "why": "the power amplifier output to the antenna path, which reaches the same arrested bulkhead",
+   "off_board": "the same PolyPhaser GTH-SFF-AL SMA surge arrestor at the antenna bulkhead that J_ANT declares (v2/vendor/polyphaser). Owner decision 31, ruled 21 September 2026: J_PAOUT's coax goes to the RA30H1317M1 on the plate INSIDE the case, so no conductor of it leaves the enclosure, and every path from outside reaches it through that arrestor and then A22's J_RF1, this board's J_ANT, the T/R relay K1 and the two-section low-pass filter. Read off this board's own netlist: RF_PAOUT - L1 - RF_LPF_M - L2 - RF_LPF_OUT - K1.5 - K1.6 - RF_ANT - J_ANT."
   },
   {
    "ref": "J_HS1",

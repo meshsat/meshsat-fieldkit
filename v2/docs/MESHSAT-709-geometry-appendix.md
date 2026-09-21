@@ -18098,3 +18098,58 @@ is the percentage measuring the instrument again, and counted rather than assert
 agree row for row on all six boards that carry them (A PASS, B INCONCLUSIVE, C FAIL, D PASS, E PASS, P FAIL;
 board E5 carries neither), so **six of the 333 pairs, 1.8 percent, are the second reading of one
 measurement**. Saying so is worth more than the percentage it moves.
+
+### 32.353, 21 September 2026 19:56 CEST: decision 31 is ruled, and asking each conductor what is in front of it took thirteen failures to nine
+
+The session rules decision 31 (the transient protection packet) now that decision 34 states the level: **IEC
+61000-4-2 level 4, 8 kV contact and 15 kV air**. A clamp is chosen against a level and there was none until
+this evening; there is one now, so the decision is engineering rather than a wait, and the session takes it.
+
+**THE PACKET SHRANK BEFORE ANY PART WAS CHOSEN, because two of its thirteen failures were not failures and a
+third was an instrument.**
+
+**(1) Board A is answered by the part it reaches, and it costs nothing.** Its two failing conductors are
+`J_USBC_OUT.2` and `.3`, which the netlist reads as `PD_CC1` to `U18.2` and `PD_CC2` to `U18.3` with only
+their own CC capacitors between. TI's own datasheet settles them, section 9.1.1: *"The device has ESD
+protection built into the CC1 and CC2 pins so that no external protection is necessary."* Its absolute maximum
+on those pins is -0.3 to 6 V and the VBUS path its Figure 37 clamps is D4, an SMBJ18A this board already
+carries. **`port_protect.py` had no way to record that**, so the declaration gained `protected_in_part`, which
+names the part and QUOTES the document, and the tool believes it only when the netlist agrees: a declaration
+with no citation is refused, and one naming a part that is not on that conductor is refused and says so. Three
+rules, all three proved to fail on the tree they were written against. **Board A's TRN-001 reads PASS of 21.**
+
+**(2) Board D's `J_PAOUT` is not an enclosure port.** Read off its own netlist: `RF_PAOUT` to L1 to
+`RF_LPF_M` to L2 to `RF_LPF_OUT` to K1.5, K1.6 to `RF_ANT` to `J_ANT`, and J_PAOUT's coax goes to the
+RA30H1317M1 **on the plate inside the case**. Every path from outside reaches it through the same PolyPhaser
+GTH-SFF-AL at the antenna bulkhead that J_ANT already declares, and then through the T/R relay contacts and a
+two-section low-pass filter. It declares that arrestor with its path. No part, no copper.
+
+**(3) AND A DECLARATION MADE FOR THE POWER RULES HAD SILENTLY CHANGED THIS RULE'S ANSWER.** Board E's solar
+input read *meets its own clamp before anything else* on 17 September and *reaches a chip with nothing
+between* tonight, with its SMCJ28A untouched one fuse away. Nothing about the board changed: on 20 September
+`PV_P` became a declared RAIL for the power-path work, and `port_protect`'s walk refuses to look at a rail it
+reaches by traversal, a rule written to stop a sensor pod walking out through the whole board. **Connector,
+fuse, clamp is the textbook entry and board E has it twice**, so a rail reached through a fuse, a bead, a
+choke or a series diode FROM THIS PORT'S OWN CONDUCTOR is that conductor's chain now; a rail reached through
+anything else, a pull-up above all, still is not, and the pull-up fixture beside the new one holds that.
+**Board E's `J_SOLAR` is answered** and the set reads A PASS, B PASS, C PASS, P PASS, D six conductors, E
+four.
+
+**WHAT THE RULING BUYS AND WHAT IT COSTS.** Six conductors on board D and four on board E, answered by **five
+placements over two boards and one new part number, about 0.44 USD a board**:
+
+| where | conductors | part | why that part |
+|---|---|---|---|
+| board D, both headset jacks | SPK, MIC, PTT on each | **2 x Nexperia PESD5V0S2BT per jack** (C49338, SOT-23, 23,525 in stock at 0.0858 USD) | U7 is a TPA6132A2 DirectPath amplifier with a charge pump and a negative HPVSS, so the speaker conductors swing BELOW GROUND; the microphone carries a 5 V electret bias through JP1 and R43; PTT is 3.3 V pulled up. Low-capacitance BIDIRECTIONAL double array, VRWM 5 V, rated IEC 61000-4-2 contact 30 kV against the ruled 8 |
+| board E, the sensor pod | +3V3_E6, SDA1, SCL1 | **1 x USBLC6-2SC6** (C7519) | the part this design already buys, five times on board B and once on board P; its own datasheet guarantees IEC 61000-4-2 level 4 at 8 kV contact and 15 kV air, which IS the ruled level. No new part number |
+| board E, the shore inlet | DC_IN | **1 x SMCJ40A on DC_F** | the netlist reads J_DCIN.1 to F1 to DC_F to Q1 to DC_P to D1, so the FIRST semiconductor a strike meets is the ideal-diode FET and the clamp sits behind it. The new one goes AFTER the fuse, so a sustained overvoltage blows the fuse rather than the clamp, and at the entry, where Nexperia's own layout clause 1 puts it. Board E's own part number |
+
+**And accepting the inlet as it stands was refused on a document rather than on taste**: a power FET's
+published ESD figure is a human-body-model handling number and IEC 61000-4-2 is a different test, which one
+part's own table proves by carrying both, Nexperia's PESD5V0S2BT at **30 kV IEC contact against 10 kV
+MIL-STD-883 HBM**. Infineon publishes the BSC039N06NS as a scan with no text layer and no ESD row that can be
+read at all, so there was nothing to accept it on either way.
+
+**The residue, stated rather than buried**: boards D and E are finished copper, so each fix costs a placement,
+a route and a NEW DELIVERABLE FOLDER, and cutting a folder is promotion, which stays frozen and the owner's.
+Both boards are regenerating anyway.
