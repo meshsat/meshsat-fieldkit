@@ -24,6 +24,27 @@ def power_nets(b, extra=()):
         if n.lstrip("/") == "GND" or n.lstrip("/").startswith(("+", "VBAT", "CELL", "VBUS", "PACK", "FUSED", "VIN", "PV_", "TRK_")): names.add(n)
     return names
 
+def covered_on_its_layer(rows):
+    """Which same-net zones a locked via sits in the OUTLINE of while NO fill of that net reaches it there.
+
+    21 September 2026: board A's gate read one FAIL on three finished boards and it was always the same via,
+    `/VBAT` at (145.1, 64.4). The board is fine. Two VBAT zones share In2 there, `VBAT plane In2 (west and
+    middle columns)` at priority 0 and `VBAT plane In2 (tongue under the converter row)` at priority 2, and
+    the TONGUE's fill covers the via while the west plane's legitimately does not: that is what zone priority
+    DOES, the higher-priority zone takes the copper and the lower one's fill has a hole exactly there. The
+    rule asked EVERY containing zone to cover the via, where the question is whether the net's copper reaches
+    it on that layer at all, which is the seventh time this project has caught a rule asking its question of
+    the wrong land.
+
+    `rows` is one tuple per zone of that net on ONE layer: (zone name, inside its outline, inside its fill).
+    The answer is None when the via is carried, and the names of the zones that contain it when none is.
+    """
+    inside = [r for r in rows if r[1]]
+    if not inside or any(r[2] for r in inside):
+        return None
+    return [r[0] for r in inside]
+
+
 def run(b, check, nets=None):
     zones = [z for z in b.Zones() if not z.GetIsRuleArea()]
     routed = any(t.GetClass() == "PCB_TRACK" and not t.IsLocked() for t in b.GetTracks())
@@ -111,10 +132,13 @@ def run(b, check, nets=None):
         if t.Type() != pcbnew.PCB_VIA_T or not t.IsLocked() or t.GetNetname() not in nets: continue
         inside = [z for z in pz if z.GetNetname() == t.GetNetname() and z.Outline().Contains(t.GetPosition())]
         touched = any(tr.GetClass() == "PCB_TRACK" and tr.GetNetname() == t.GetNetname() and (tr.GetStart() == t.GetPosition() or tr.GetEnd() == t.GetPosition()) for tr in b.GetTracks())
-        for z in inside:
-            if t.GetNetname() == "GND" and any(o.GetNetname() == "GND" and o.GetFirstLayer() != z.GetFirstLayer() and o.GetFilledArea() / 1e12 >= 0.8 * outline_area(o) for o in pz): continue   # a ground via reaches the solid plane
-            if not touched and not z.GetFilledPolysList(z.GetFirstLayer()).Contains(t.GetPosition()): print("NOTE stitch via %s at (%.1f, %.1f) outside the fill of '%s' (no track on it: it carries nothing)" % (t.GetNetname(), t.GetPosition().x / 1e6, t.GetPosition().y / 1e6, z.GetZoneName() or "unnamed")); continue   # P2's ground grid where the router's tracks pushed the fill away
-            check(z.GetFilledPolysList(z.GetFirstLayer()).Contains(t.GetPosition()), "locked via %s at (%.1f, %.1f) sits in the fill of '%s' on %s" % (t.GetNetname(), t.GetPosition().x / 1e6, t.GetPosition().y / 1e6, z.GetZoneName() or "unnamed", b.GetLayerName(z.GetFirstLayer()))); n2 += 1
+        for _L in sorted({z.GetFirstLayer() for z in inside}):
+            _zs = [z for z in inside if z.GetFirstLayer() == _L]
+            if t.GetNetname() == "GND" and any(o.GetNetname() == "GND" and o.GetFirstLayer() != _L and o.GetFilledArea() / 1e12 >= 0.8 * outline_area(o) for o in pz): continue   # a ground via reaches the solid plane
+            _bad = covered_on_its_layer([(z.GetZoneName() or "unnamed", True, z.GetFilledPolysList(_L).Contains(t.GetPosition())) for z in _zs])
+            if _bad is None: n2 += 1; continue                                    # some zone of this net covers it on this layer, which is what matters
+            if not touched: print("NOTE stitch via %s at (%.1f, %.1f) outside the fill of %s on %s (no track on it: it carries nothing)" % (t.GetNetname(), t.GetPosition().x / 1e6, t.GetPosition().y / 1e6, ", ".join("'%s'" % x for x in _bad), b.GetLayerName(_L))); continue   # P2's ground grid where the router's tracks pushed the fill away
+            check(False, "locked via %s at (%.1f, %.1f) is inside %s on %s and NO fill of its net reaches it there" % (t.GetNetname(), t.GetPosition().x / 1e6, t.GetPosition().y / 1e6, ", ".join("'%s'" % x for x in _bad), b.GetLayerName(_L))); n2 += 1
     # 13 September 2026 (MESHSAT-862): A BAND DRAWN AS ONE POLYGON THAT FILLS IN TWO IS A CONDUCTOR WITH A GAP
     # IN IT. `power_copper` refuses rectangles that do not form one polygon, and until today nothing asked what
     # the FILL made of them. On A25 five did: VBAT's B.Cu comb in two pieces (VBUS20's own new band sat across
