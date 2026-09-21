@@ -504,7 +504,16 @@
   },
   {
    "ref": "J_USBC_OUT",
-   "why": "the USB-C outlet on the connector plate, out of the case"
+   "why": "the USB-C outlet on the connector plate, out of the case",
+   "protected_in_part": {
+    "pins": [
+     "2",
+     "3"
+    ],
+    "part": "U18",
+    "cite": "TI TPS25740A datasheet, v2/vendor/ti/ti-tps25740.pdf section 9.1.1 System-Level ESD Protection: 'The device has ESD protection built into the CC1 and CC2 pins so that no external protection is necessary.' Its absolute maximum on CC1 and CC2 is -0.3 to 6 V, and the VBUS path its own Figure 37 clamps is D4, an SMBJ18A, which this board already carries. Owner decision 31, ruled by the session on 21 September 2026 against the IEC 61000-4-2 level 4 that decision 34 states."
+   },
+   "_protected_in_part_why": "pins 2 and 3 are PD_CC1 and PD_CC2 and they reach U18 pins 2 and 3 with only their own CC capacitors C96 and C97 between, which is the finding port_protect made; what it could not know is that the pins they arrive at carry the protection themselves, which is the part maker's own sentence and not this project's judgement"
   }
  ],
  "_external_ports_why": "Rule TRN-001, 16 September 2026. A port that leaves the ENCLOSURE is a wire a person will plug something into, in the rain, having walked across a floor. Every one of them reaches a semiconductor, and the only thing between is a suppressor, a choke, a series resistor into a clamp, or nothing. Most connectors on these boards are internal (board-to-board ribbons, module sockets, fan leads inside a sealed case) and treating every J as external would refuse every board for wires that never leave it. The board knows which is which and nothing else does, so each one is named with where it goes.",

@@ -7,7 +7,7 @@ One line per decision that is still open, what it holds up, and where its eviden
 v2/docs/OWNER-DECISIONS-2026-09-11.md and this page is generated from the same registry the readiness table
 is, so the pair counts below are the ones the gates use.
 
-**13 decisions are open and they hold 56 rule-board pairs of the 333 the set is judged on.** A pair held by a
+**12 decisions are open and they hold 50 rule-board pairs of the 333 the set is judged on.** A pair held by a
 decision is not a defect in the board: it is a question nobody has answered, and until it is answered the
 rule can be neither passed nor failed.
 
@@ -16,7 +16,6 @@ rule can be neither passed nor failed.
 | **43** | 14 | board B's route has resisted every lever this project can apply and the two that remain are architectural | EMC-001, GND-001, PAIR-001, PI-002, PI-003, PLC-002, PLN-001, RET-002, RET-004, RF-001, RTE-001, SCH-003, STK-001, VIA-001 | B | 2026-09-20 |
 | **29** | 7 | board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked | GND-002, INT-002 | A, B, C, D, E, P | 2026-09-16 |
 | **30** | 6 | ZEROIZE is a switch wired to nothing that can act on it | SCH-004 | A, B, C, D, E, P | 2026-09-16 |
-| **31** | 6 | conductors leave the case and meet a chip with nothing in between, or only through an active part | DOC-001, TRN-001 | A, D, E | 2026-09-16 |
 | **28** | 4 | board P cannot hold the return-path rule on two layers and the ruled P5 does not route | RET-002, RTE-001, STK-001, STK-002 | P | 2026-09-15 |
 | **27** | 3 | the four-layer boards cannot carry a plane under their back-side signals as built | RET-001, RET-002, STK-002 | C | 2026-09-15 |
 | **32** | 3 | board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper | RET-004 | C, D, E | 2026-09-16 |
@@ -172,90 +171,6 @@ the ask has to settle.
 | rule | | boards | result today |
 |---|---|---|---|
 | SCH-004 | a safety line fails safe | A, B, C, D, E, P | PASS, not computed |
-
-
-### Decision 31: conductors leave the case and meet a chip with nothing in between, or only through an active part
-
-**The question:** clamp every exposed conductor at its entry, or accept the three paths that reach their
-clamp through an active part
-
-**Recommended:** rule decision 34 first, then clamp at the entry every conductor that reaches a semiconductor
-with nothing between it, which is board D's seven and board E's three and is the cheap half: those are parts
-and board area on boards whose copper is finished. The three paths that reach their clamp through an active
-part are the expensive half and are worth accepting only where that active part is itself rated for the level
-the envelope states, which is why the envelope comes first
-
-**Measured:** BOARD D IS IN THIS DECISION TOO, AND ITS GATE HAD BEEN SAYING SO WHILE THE REGISTRY SAID THE
-RULE DID NOT APPLY TO IT (17 September 2026). Board D declares four connectors whose conductors leave the
-case and `port_protect` reads SEVEN of its SEVEN judged conductors reaching a semiconductor with nothing
-between: J_HS1 and J_HS2, the two headset jacks on the face that a person plugs a headset into, three
-conductors each (speaker, microphone, push to talk), and J_PAOUT, the 30 W power amplifier output. Its
-antenna jack J_ANT is the one that is answered: it is protected off board by the PolyPhaser GTH-SFF-AL
-arrestor at the bulkhead. The measurement was taken by cutting board D's deliverable folder, which the gate
-refused at that stage, so this is what stands between board D and the folder DOC-001 asks for. Boards A and E
-carry the rest: three boards, TWENTY-FIVE judged conductors and THIRTEEN of them failing, and boards E and D
-are finished copper held on it. THE WHOLE PACKET, CONDUCTOR BY CONDUCTOR, AND THREE OF ITS ROWS WERE WRONG
-UNTIL THIS EVENING (17 September 2026). The chain that follows a conductor to its clamp could cross a
-semiconductor and keep going, step onto a ground, or leave a rail through a pull-up, and board E's sensor pod
-took the SHORE INLET'S SMCJ40A as its protection three times over: SDA1 crossed the RP2040 onto
-SHORE_INHIBIT, crossed a transistor onto GND_V and read the clamp sitting there, and the pod's 3.3 V feed
-left its own rail through a 10k pull-up onto the hot-swap controller's power-good net and arrived at the same
-part. A clamp more than one hop past the first active part belongs to another circuit; a ground is where the
-search stops whatever the board calls it; a rail continues through a fuse, a bead, a choke or a series diode
-and never through a pull-up. No board's result moves, and the packet does: of TWENTY-FIVE judged conductors
-(board A thirteen, board D seven, board E five) THIRTEEN fail, TEN of them reaching a semiconductor with
-nothing between and THREE meeting their clamp only through an active part. The other twelve are answered
-where they stand, and one of them is the shape the rest should take: board E's solar input meets its own
-clamp before anything else. The three: board A J_USBC_OUT.2 and .3, the USB-C outlet's two CC conductors,
-which reach U18 (TPS25740A PD source controller) and whose clamp D4 (SMBJ18A) sits on PD_VBUS, a different
-conductor of the same connector; and board E J_DCIN.1, the shore inlet, connector to F1 (10 A) to Q1
-(BSC039N06NS ideal-diode FET) to D1 (SMCJ40A on DC_P), which is the textbook shape of this question, the fuse
-and the clamp in the right places with one semiconductor in front of the clamp. The ten: board D J_PAOUT.1
-(the 30 W amplifier output), J_HS1.1, .3, .5 and J_HS2.1, .3, .5 (both headset jacks, speaker, microphone and
-push to talk each), and board E J_POD.1, .3 and .4, the outside sensor pod's 3.3 V feed and its two I2C
-conductors, which run to the RP2040 with nothing in between. Board B's eight Ethernet conductors and board
-C's four switch conductors are answered where they stand, by T1's magnetics and by the optocouplers, and
-board P declares that nothing of its own leaves the case. WHAT THE CHEAP HALF COSTS, AND BOARD E'S THREE ARE
-ONE PART THIS DESIGN ALREADY BUYS (17 September 2026, prices from JLCPCB's own parts API). The pod's 3.3 V
-feed and its two I2C conductors are the shape the USBLC6-2SC6 is drawn for, two lines and their supply rail
-in one SOT-23-6, and this project already uses it through kisch.esd on five USB ports of board B and,
-conductor for conductor the same case, on board P's SMBus pair. It is C7519, 25,352 in stock at about 0.08
-USD, it has its datasheet in the tree (v2/vendor/st/st-usblc6-2-esd-protection.pdf), its footprint is drawn
-and its net-tie pad groups are handled, so board E's whole pod costs ONE part and no new part number. Board
-D's two headset jacks are not that case: each carries a speaker line, a microphone line and a push to talk,
-and an audio output that swings below ground wants a BIDIRECTIONAL clamp rather than the rail-referenced
-array a data line takes. The shape that fits is a four-channel bidirectional array, one per jack, three
-conductors and a spare: the Semtech RClamp0524P is C40960, 153,808 in stock at 0.066 USD, rated plus and
-minus 5 V working, and the alternatives are Littelfuse's SP3012-04UTG (C151304, 10,629 at 0.2368) and ST's
-ESDA6V1W5 (C48677, 20,825 at 0.16). Two parts a board, about 0.66 USD over the owner's five boards. Which of
-them is a circuit question for board D's generation, because it turns on the codec's own output swing and the
-microphone bias, and none of them is a choice until decision 34 states the level. So the parts are pennies
-either way, and the price of the ruling is not the parts: it is that boards D and E are FINISHED COPPER, so
-each one costs a placement, a route and a new folder. Board E's is owed whatever this decision says, since 17
-September evening: its hot-swap pass FET Q7 was written with a three-pin map on a five-pad land, gate and
-drain on two SOURCE pins and the drain tab floating (appendix 32.219, rule SCH-005), so the E11 copper is not
-a candidate for anything and the clamps ride the same regeneration. Board D's J_PAOUT is the one conductor of
-the ten that a clamp on the board cannot answer: it carries 30 W of transmitter output, where a diode array's
-capacitance would spoil the match, and its sibling J_ANT is already answered off board by the PolyPhaser
-GTH-SFF-AL at the bulkhead. Its honest options are a second arrestor of the same kind, declared off board the
-way J_ANT is, or the ruling that it shares J_ANT's. The parts above are candidates with stock and a price,
-not a choice: what clamps at what voltage and what pulse rating is decided by the level in decision 34, which
-is why that one is asked first. And that level had no proposal at all until the evening of 17 September: the
-envelope settled temperature, storage and the carve-outs and said in its own words that it settled no
-transient level, while the approved test plan ran MIL-STD-461's CE102, CS101, CS114, RE102 and RS103 and
-carried no electrostatic discharge method at all, so the one transient a person actually applies to this kit,
-by touching a connector after walking across a floor, was neither specified nor planned for. Section 6 of
-v2/docs/OPERATING-ENVELOPE.md now PROPOSES the levels and TEST-PLAN.md carries M7 as the method, and the
-proposal says which of its three rows has an authority: the electrostatic row is traceable to a part this
-design already buys and is the one this decision needs, the surge row describes what is fitted rather than
-constraining it, and the fast-transient row has no source in this tree and is marked unverified rather than
-required. A clamp is chosen against a level, so what stands between this decision and a part number is a
-RULING on that first row, not a gap.
-
-| rule | | boards | result today |
-|---|---|---|---|
-| DOC-001 | the folder is the board | A, D, E | INCONCLUSIVE |
-| TRN-001 | every exposed port is protected | A, D, E | FAIL |
 
 
 ### Decision 32: board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper
@@ -572,6 +487,7 @@ rule it has. None of them is a failure of board B's design and none can be judge
 | 24 | board B lays 65 of its 113 pairs and the pair hold releases no board under 113 | owner ruling 15 September 02:40: the decision is the session's; option 2 taken, boards/b.json declares pair_coupled_fraction 0.80 by length |
 | 25 | board A's USB_WALL pair is 1.47 mm apart and nothing in the tree can close it | closed the same day and needs nothing: the pair took a ribbon of its own (J_AB2, end row) |
 | 26 | board C is one connection short and no tool in this tree can close it | closed by the route: six-layer C and then C17 reached 0 hard and 0 unrouted |
+| 31 | conductors leave the case and meet a chip with nothing in between, or only through an active part | CLAMP AT THE ENTRY, and ask each conductor what is actually in front of it first, which takes the packet from thirteen failures to six conductors and five placements. ONE, BOARD A IS ANSWERED BY THE PART IT REACHES AND COSTS NOTHING: its two failing conductors are J_USBC_OUT.2 and .3, the CC pair into U18, and TI's own datasheet section 9.1.1 says 'The device has ESD protection built into the CC1 and CC2 pins so that no external protection is necessary' (v2/vendor/ti/ti-tps25740.pdf; absolute maximum on those pins -0.3 to 6 V, and the VBUS path TI's Figure 37 clamps is already D4, an SMBJ18A). Board A needs no part and no copper: it needs a declaration form saying the protection is INSIDE the part the conductor reaches, with its citation, which port_protect.py does not have today. TWO, BOARD D'S J_PAOUT IS NOT AN ENCLOSURE PORT: read off its own netlist the chain is RF_PAOUT to L1 to RF_LPF_M to L2 to RF_LPF_OUT to K1.5, K1.6 to RF_ANT to J_ANT, and J_PAOUT's coax goes to the RA30H1317M1 on the plate INSIDE the case, so every path from outside reaches it through the same PolyPhaser GTH-SFF-AL at the antenna bulkhead that J_ANT already declares, plus the T/R relay contacts and a two-section low-pass filter. It declares that arrestor with its path. No part, no copper. THREE, BOARD D'S TWO HEADSET JACKS ARE THE REAL WORK AND THEY ARE BIDIRECTIONAL BY MEASUREMENT: U7 is a TPA6132A2 DirectPath headphone amplifier with a charge pump (AMP_CPP, AMP_CPN and a negative AMP_HPVSS), so the speaker conductors swing BELOW GROUND; the microphone conductor carries a 5 V electret bias through JP1 and R43 from +5V_D8 when that jumper is closed; PTT is a 3.3 V line pulled up through R68 into U9 and Q4. TWO Nexperia PESD5V0S2BT per jack (C49338, SOT-23, 23,525 in stock at 0.0858 USD): low-capacitance BIDIRECTIONAL double array, VRWM 5 V, Cd 35 pF typical, rated IEC 61000-4-2 contact discharge 30 kV against the 8 kV decision 34 ruled. Four packages, 0.34 USD a board. FOUR, BOARD E'S POD IS ONE PART THIS DESIGN ALREADY BUYS: a USBLC6-2SC6 (C7519) on J_POD.1, .3 and .4, guaranteed to IEC 61000-4-2 level 4 at 8 kV contact and 15 kV air in its own datasheet, which is exactly the ruled level, and no new part number. FIVE, BOARD E'S SHORE INLET IS NOT ACCEPTED AS IT STANDS AND THE FIX IS ONE PART: its netlist reads J_DCIN.1 to F1 to DC_F to Q1 (the BSC039N06NS ideal-diode FET, source pins 1 to 3, drain tab 5 to 8) to DC_P to D1, so the FIRST semiconductor a strike meets is the FET and the clamp sits behind it. Accepting that means accepting the FET's own rating for an 8 kV contact discharge, and a power FET's published ESD figure is a human-body-model handling number, which is a different test: Nexperia's PESD5V0S2BT sheet gives both for ONE part, 30 kV IEC 61000-4-2 contact against 10 kV MIL-STD-883 HBM, so one cannot be read as the other, and Infineon publishes the BSC039N06NS as a scan with no text layer and no ESD row that can be read at all. A SECOND SMCJ40A goes on DC_F, between the fuse and the FET: the part number board E already carries, after the fuse so a sustained overvoltage blows the fuse rather than the clamp, and at the entry, which is where Nexperia's own layout clause 1 and every TVS application note put it. SO THE WHOLE RULING IS FIVE PLACEMENTS OVER TWO BOARDS, ONE NEW PART NUMBER AND ABOUT 0.44 USD A BOARD, plus two declarations that cost nothing. Board E's three pod conductors and board D's six headset conductors are the six that get copper; boards D and E are regenerating anyway. |
 | 33 | the mezzanine 5 V rail is losing nearly five percent and two of its three numbers were never anybody's requirement | LEAVE THE SPLIT AS DECLARED: board A four points of the codec's six percent and board D two. Both boards meet their own share on every run, the cross-board contract adds them up and passes, and the six percent total is not this project's number at all but the PCM2912A's own Recommended Operating Conditions, VBUS 4.35 V minimum. The only thing that would reopen it is a measured drop moving past a board's share on a routed board. |
 | 34 | the kit has never had a written operating envelope and four rules resolve against nothing | ADOPT v2/docs/OPERATING-ENVELOPE.md section 4 AS THE DESIGN ENVELOPE, and section 6's first row as the transient level. In use -20 to +40 C ambient with its three declared carve-outs (the pack warmed below -10 C before charge, the e-paper degraded below -15 C, the reduced mode above +35 C); storage -20 to +45 C for three months and -20 to +25 C for a year at the pack's ex-factory charge; non-condensing, with the closed case Peli's IP67 and the face designed to an IP67-class construction that is never labelled IP68 and carries no rating until the bench procedure of appendix 32.34 has run. Electrostatic discharge is IEC 61000-4-2 level 4, 8 kV contact and 15 kV air, which is the level decision 31 needs to choose a clamp against and is traceable to the USBLC6-2SC6 this design already buys. The electrical fast transient row is recorded as NOT A REQUIREMENT of this project, because nothing in this tree is a source for it. AND ISO-001 IS JUDGED AGAINST ECSS-Q-ST-70-12C TABLE 13-3, per voltage band, per layer, on the column the board's own coating selects: that table is stated for an as-manufactured rigid PCB without an altitude derating and without a pollution degree, so the two numbers ISO-001 was said to be waiting for are not needed to judge it. The altitude, the vibration and shock severities and the service life stay OPEN for the rules that genuinely need them and are not invented here. |
 | 38 | board B's two pair classes are 0.100 mm and its own minimum is 0.127, and the fabricator's floor is 0.09 | answered by the copper before it was ruled (18 September 2026): B21's project file carries every class at or above the board's own 0.127 mm, class_floor reads PASS on 5 classes with none below the floor, and the impedance gate's pair geometry is unchanged, which is the recommendation as it stood; nothing was lowered |

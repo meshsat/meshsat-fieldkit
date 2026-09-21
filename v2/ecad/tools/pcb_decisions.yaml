@@ -157,7 +157,57 @@ decisions:
   - n: 31
     title: "conductors leave the case and meet a chip with nothing in between, or only through an active part"
     asked: 2026-09-16
-    status: open
+    status: ruled
+    authority: SESSION
+    authority_why: >-
+      the engineering here is a part choice against a level that is already ruled, and every input is a document
+      in this tree or on a maker's own server: what is left for the owner is money, and this costs one new part
+      number and about 0.44 USD a board over five boards. The session took it because asking the owner which ESD
+      array to fit is asking a non-engineer a question whose answer is in the datasheets. WHAT IS NOT TAKEN:
+      boards D and E are finished copper, so each fix costs a placement, a route and a NEW DELIVERABLE FOLDER, and
+      cutting a folder is promotion, which stays frozen and the owner's.
+    ruled_by: SESSION
+    ruled_on: 2026-09-21
+    outcome: >-
+      CLAMP AT THE ENTRY, and ask each conductor what is actually in front of it first, which takes the packet
+      from thirteen failures to six conductors and five placements. ONE, BOARD A IS ANSWERED BY THE PART IT
+      REACHES AND COSTS NOTHING: its two failing conductors are J_USBC_OUT.2 and .3, the CC pair into U18, and
+      TI's own datasheet section 9.1.1 says 'The device has ESD protection built into the CC1 and CC2 pins so that
+      no external protection is necessary' (v2/vendor/ti/ti-tps25740.pdf; absolute maximum on those pins -0.3 to 6
+      V, and the VBUS path TI's Figure 37 clamps is already D4, an SMBJ18A). Board A needs no part and no copper:
+      it needs a declaration form saying the protection is INSIDE the part the conductor reaches, with its
+      citation, which port_protect.py does not have today. TWO, BOARD D'S J_PAOUT IS NOT AN ENCLOSURE PORT: read
+      off its own netlist the chain is RF_PAOUT to L1 to RF_LPF_M to L2 to RF_LPF_OUT to K1.5, K1.6 to RF_ANT to
+      J_ANT, and J_PAOUT's coax goes to the RA30H1317M1 on the plate INSIDE the case, so every path from outside
+      reaches it through the same PolyPhaser GTH-SFF-AL at the antenna bulkhead that J_ANT already declares, plus
+      the T/R relay contacts and a two-section low-pass filter. It declares that arrestor with its path. No part,
+      no copper. THREE, BOARD D'S TWO HEADSET JACKS ARE THE REAL WORK AND THEY ARE BIDIRECTIONAL BY MEASUREMENT:
+      U7 is a TPA6132A2 DirectPath headphone amplifier with a charge pump (AMP_CPP, AMP_CPN and a negative
+      AMP_HPVSS), so the speaker conductors swing BELOW GROUND; the microphone conductor carries a 5 V electret
+      bias through JP1 and R43 from +5V_D8 when that jumper is closed; PTT is a 3.3 V line pulled up through R68
+      into U9 and Q4. TWO Nexperia PESD5V0S2BT per jack (C49338, SOT-23, 23,525 in stock at 0.0858 USD):
+      low-capacitance BIDIRECTIONAL double array, VRWM 5 V, Cd 35 pF typical, rated IEC 61000-4-2 contact
+      discharge 30 kV against the 8 kV decision 34 ruled. Four packages, 0.34 USD a board. FOUR, BOARD E'S POD IS
+      ONE PART THIS DESIGN ALREADY BUYS: a USBLC6-2SC6 (C7519) on J_POD.1, .3 and .4, guaranteed to IEC 61000-4-2
+      level 4 at 8 kV contact and 15 kV air in its own datasheet, which is exactly the ruled level, and no new
+      part number. FIVE, BOARD E'S SHORE INLET IS NOT ACCEPTED AS IT STANDS AND THE FIX IS ONE PART: its netlist
+      reads J_DCIN.1 to F1 to DC_F to Q1 (the BSC039N06NS ideal-diode FET, source pins 1 to 3, drain tab 5 to 8)
+      to DC_P to D1, so the FIRST semiconductor a strike meets is the FET and the clamp sits behind it. Accepting
+      that means accepting the FET's own rating for an 8 kV contact discharge, and a power FET's published ESD
+      figure is a human-body-model handling number, which is a different test: Nexperia's PESD5V0S2BT sheet gives
+      both for ONE part, 30 kV IEC 61000-4-2 contact against 10 kV MIL-STD-883 HBM, so one cannot be read as the
+      other, and Infineon publishes the BSC039N06NS as a scan with no text layer and no ESD row that can be read
+      at all. A SECOND SMCJ40A goes on DC_F, between the fuse and the FET: the part number board E already
+      carries, after the fuse so a sustained overvoltage blows the fuse rather than the clamp, and at the entry,
+      which is where Nexperia's own layout clause 1 and every TVS application note put it. SO THE WHOLE RULING IS
+      FIVE PLACEMENTS OVER TWO BOARDS, ONE NEW PART NUMBER AND ABOUT 0.44 USD A BOARD, plus two declarations that
+      cost nothing. Board E's three pod conductors and board D's six headset conductors are the six that get
+      copper; boards D and E are regenerating anyway.
+    reversed_by: >-
+      set status to reopened. The declarations reverse by removing the protected_in_part entry from
+      tools/boards/a.json and the off_board line from board D's J_PAOUT, which puts TRN-001 back to FAIL on A and
+      D; the parts reverse by removing them from gen_sch_d.py and gen_sch_e.py and regenerating, which is a
+      netlist change and moves the schematic, the netlist, the sidecar and the intent with it
     ask: "clamp every exposed conductor at its entry, or accept the three paths that reach their clamp through an active part"
     recommendation: >-
       rule decision 34 first, then clamp at the entry every conductor that reaches a semiconductor with nothing

@@ -102,13 +102,34 @@ def judge(net_path, letter=None):
         ref = entry.get("ref") if isinstance(entry, dict) else str(entry)
         why = (entry.get("why") if isinstance(entry, dict) else "") or ""
         if ref not in by_ref: missing_refs.append(ref); continue
-        unprotected, behind = [], []
+        unprotected, behind, in_part = [], [], []
         pins_wanted = entry.get("pins") if isinstance(entry, dict) else None
         off = (entry.get("off_board") if isinstance(entry, dict) else None)
+        # THE PROTECTION IS SOMETIMES INSIDE THE PART THE CONDUCTOR REACHES (owner decision 31, ruled
+        # 21 September 2026). Board A's two CC conductors run to U18 with no clamp between them and TI's own
+        # datasheet says, in section 9.1.1, that the device has ESD protection built into the CC1 and CC2 pins
+        # so that no external protection is necessary. That is an ANSWER and it is the cheapest kind there is,
+        # so the declaration may carry it; and because it is also the easiest way to write a failure away, the
+        # tool believes it only when the NETLIST agrees. A declaration is refused, and the conductor judged as
+        # if it said nothing, when it carries no citation, or when the part it names is not on that conductor.
+        ip = (entry.get("protected_in_part") if isinstance(entry, dict) else None) or {}
+        ip_pins = [str(x) for x in (ip.get("pins") or [])]
+        ip_part, ip_cite = str(ip.get("part") or "").strip(), str(ip.get("cite") or "").strip()
         for pin, net in sorted(by_ref[ref]):
             if net.upper() in SKIP_NETS or is_ground(net): continue
             if pins_wanted and pin not in [str(x) for x in pins_wanted]: continue
             if off: continue        # protected by a part in the wall, named in the declaration and listed below
+            if pin in ip_pins:
+                on_this_net = ip_part in {r for r, _p in by_net.get(net, ())}
+                if not ip_cite:
+                    bad.append("%s.%s on %s: the declaration says the protection is inside %s and gives no "
+                               "citation, so it is an assertion and is not read" % (ref, pin, net, ip_part or "?"))
+                elif not on_this_net:
+                    bad.append("%s.%s on %s: the declaration says the protection is inside %s and %s is not on "
+                               "that conductor in this netlist" % (ref, pin, net, ip_part, ip_part))
+                else:
+                    in_part.append("%s.%s on %s: protection inside %s, cited: %s" % (ref, pin, net, ip_part, ip_cite))
+                    continue
             # WHICH active part, not whether one was crossed (16 September 2026). This carried
             # `crossed_active` as a boolean, so the evidence could say "the clamp is behind an active part"
             # and never say WHICH part takes the transient. That is the one fact an owner needs to rule on
@@ -116,15 +137,26 @@ def judge(net_path, letter=None):
             # clamp describes two thirds of it. The frontier now carries the first active reference it
             # crossed, and the row names it beside the clamp.
             # (net, the first active part crossed, hops since it, the path, is this the starting net)
-            guards, seen, frontier = [], {net}, [(net, None, 0, [net], True)]
+            guards, seen, frontier = [], {net}, [(net, None, 0, [net], True, False)]
             crossed_active, crossed_path = None, []
             for _hop in range(HOPS + 1):
                 nxt = []
-                for n, was_active, since, path, is_start in frontier:
+                for n, was_active, since, path, is_start, via_power in frontier:
                     # A RAIL REACHED BY TRAVERSAL IS NOT PART OF THIS PORT'S CHAIN. The starting net may be a
                     # rail, because a connector has power pins and a clamp on that rail is the right answer for
                     # them; a rail arrived at through two hops is the whole rest of the board.
-                    if (n in rails or is_ground(n)) and not is_start: continue
+                    # EXCEPT ALONG THE POWER PATH (21 September 2026, found while ruling decision 31). Connector,
+                    # fuse, clamp is the textbook entry and board E has it twice. This rule was written to stop a
+                    # sensor pod walking out through the whole board, and it also refused to look at the segment
+                    # on the other side of a port's OWN fuse: board E's solar input read 'meets its own clamp
+                    # before anything else' until 20 September, when PV_P was declared a rail for the power
+                    # rules, and then read 'reaches a chip with nothing between' with its SMCJ28A untouched two
+                    # millimetres away. A declaration made for one rule had silently changed another rule's
+                    # answer. A rail reached through a fuse, a bead, a choke or a series diode FROM THIS PORT'S
+                    # own conductor is still this conductor's chain; a rail reached through anything else, a
+                    # pull-up above all, is not, and that is what `on_rail` below still refuses to cross.
+                    if is_ground(n) and not is_start: continue
+                    if n in rails and not is_start and not via_power: continue
                     on_rail = n in rails
                     for r, _p in sorted(by_net.get(n, ())):
                         if PROTECT.search(values.get(r, "") or "") or PROTECT.search(r):
@@ -148,7 +180,8 @@ def judge(net_path, letter=None):
                                     seen.add(n2)
                                     nxt.append((n2, was_active or (("%s on %s" % (r, n)) if act else None),
                                                 (since + 1) if (was_active or act) else 0,
-                                                path + ["%s -> %s" % (r, n2)], False))
+                                                path + ["%s -> %s" % (r, n2)], False,
+                                                bool(POWER_SERIES.match(r))))
                 if guards: break
                 frontier = nxt
             if not guards: unprotected.append("%s.%s on %s" % (ref, pin, net))
@@ -158,6 +191,7 @@ def judge(net_path, letter=None):
                               % (ref, pin, net, crossed_active, values.get(crossed_active.split(" on ")[0], "") or "value not in the netlist",
                                  _g, _gv or "value not in the netlist", " | ".join(crossed_path)))
         rows.append(dict(ref=ref, why=why, pins=len(by_ref[ref]), unprotected=unprotected, behind=behind,
+                         in_part=in_part,
                          off_board=(entry.get("off_board") if isinstance(entry, dict) else None)))
         if behind:
             bad.append("%s (%s): %d conductor(s) whose clamp is behind an active part: %s"
@@ -220,8 +254,10 @@ def main(argv):
           % ((letter or "?").upper(), n_declared, len(rows)))
     for r in rows:
         tail = ("protected off board by %s" % r["off_board"]) if r.get("off_board") else \
-               ("%d unprotected, %d behind an active part" % (len(r["unprotected"]), len(r.get("behind") or [])))
+               ("%d unprotected, %d behind an active part, %d answered in the part it reaches"
+                % (len(r["unprotected"]), len(r.get("behind") or []), len(r.get("in_part") or [])))
         print("  %-12s %d pin(s), %s  [%s]" % (r["ref"], r["pins"], tail, r["why"][:64]))
+        for line in (r.get("in_part") or []): print("      ANSWERED %s" % line)
     for b in bad: print("  FAIL %s" % b)
     for m in missing: print("  NOTE declared port %s is not on this netlist" % m)
     if "--json" in argv: print(json.dumps(rows, indent=1))
@@ -257,9 +293,11 @@ def main(argv):
     # as a contradiction by everything downstream, including the person reading the sweep.
     n_behind = sum(len(r.get("behind") or []) for r in rows)
     n_unprot = sum(len(r["unprotected"]) for r in rows)
+    n_in_part = sum(len(r.get("in_part") or []) for r in rows)
     return _write_both(letter, _v.FAIL if bad else _v.PASS,
                     counts={"ports": len(rows), "declared": n_declared, "unprotected": n_unprot,
-                            "behind_an_active_part": n_behind, "not_on_netlist": len(missing)},
+                            "behind_an_active_part": n_behind, "answered_in_part": n_in_part,
+                            "not_on_netlist": len(missing)},
                     denominator=sum(r["pins"] for r in rows) or 1, evidence=bad[:20],
                     inputs={"netlist": path, "board": letter},
                     note=("every declared external conductor meets a protection part before a chip" if not bad else

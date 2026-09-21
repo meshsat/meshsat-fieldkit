@@ -372,3 +372,83 @@ def t_a_rail_conductor_continues_through_a_fuse_and_not_through_a_pull_up():
         assert rc == 0, "a clamp behind the rail's own fuse was refused:\n%s" % out[-500:]
     finally:
         restore()
+
+
+def t_a_conductor_whose_own_part_carries_the_protection_is_answered_with_its_citation():
+    """ACCEPTABLE fixture, expected verdict PASS (decision 31, 21 September 2026).
+
+    Board A's two CC conductors reach U18 with no clamp between, and TI's own datasheet says the part has ESD
+    protection built into those pins so that no external protection is necessary. That is an ANSWER and not an
+    exemption, so the declaration names the part and quotes the document, and the tool checks the named part is
+    actually on that conductor before it believes a word of it."""
+    restore = _with_ports("d", [{"ref": "J_X", "why": "a jack on the face",
+                                 "protected_in_part": {"pins": ["1"], "part": "U1",
+                                                       "cite": "vendor/x.pdf 9.1.1: protection is built into this pin"}}])
+    try:
+        d = tempfile.mkdtemp(prefix="port-inpart-ok-")
+        p = _net(d, {"J_X": "face jack", "U1": "controller"},
+                 {"SIG": [("J_X", "1"), ("U1", "3")], "GND": [("J_X", "2")]})
+        rc, out = _run(p, d)
+        assert rc == 0, "a cited in-part answer did not pass:\n%s" % out[-700:]
+        assert "protection inside U1" in out, out[-700:]
+        v = json.load(open(os.path.join(d, "out", "port_protect_d.verdict.json")))
+        assert v["counts"].get("answered_in_part") == 1, v["counts"]
+    finally:
+        restore()
+
+
+def t_an_in_part_declaration_that_names_a_part_the_conductor_does_not_reach_is_refused():
+    """DEFECTIVE fixture, expected verdict FAIL. The whole risk of this declaration is that it becomes a way to
+    write a failure away, so the tool asks the NETLIST whether the named part is on that conductor. Here it is
+    not, and the conductor must read as what it is: bare."""
+    restore = _with_ports("d", [{"ref": "J_X", "why": "a jack on the face",
+                                 "protected_in_part": {"pins": ["1"], "part": "U9",
+                                                       "cite": "a document that says something about U9"}}])
+    try:
+        d = tempfile.mkdtemp(prefix="port-inpart-bad-")
+        p = _net(d, {"J_X": "face jack", "U1": "controller", "U9": "something else"},
+                 {"SIG": [("J_X", "1"), ("U1", "3")], "OTHER": [("U9", "1")], "GND": [("J_X", "2")]})
+        rc, out = _run(p, d)
+        assert rc == 1, "a declaration naming a part off the conductor passed:\n%s" % out[-700:]
+        assert "is not on" in out, out[-700:]
+    finally:
+        restore()
+
+
+def t_an_in_part_declaration_with_no_citation_is_refused():
+    """DEFECTIVE fixture, expected verdict FAIL. A part name without the document that says so is an assertion,
+    and this rule exists precisely where the evidence is somebody else's datasheet."""
+    restore = _with_ports("d", [{"ref": "J_X", "why": "a jack on the face",
+                                 "protected_in_part": {"pins": ["1"], "part": "U1", "cite": "  "}}])
+    try:
+        d = tempfile.mkdtemp(prefix="port-inpart-nocite-")
+        p = _net(d, {"J_X": "face jack", "U1": "controller"},
+                 {"SIG": [("J_X", "1"), ("U1", "3")], "GND": [("J_X", "2")]})
+        rc, out = _run(p, d)
+        assert rc == 1, "an uncited in-part answer passed:\n%s" % out[-700:]
+        assert "no citation" in out, out[-700:]
+    finally:
+        restore()
+
+
+def t_a_clamp_on_the_next_segment_of_the_power_path_is_this_conductors_clamp():
+    """ACCEPTABLE fixture, expected verdict PASS (21 September 2026, found while ruling decision 31).
+
+    Connector, fuse, clamp is the textbook entry and board E has it twice. The search refused to look at a rail
+    it reached by traversal, which was written to stop a sensor pod walking out through the whole board, and it
+    also blinded the tool to the segment on the OTHER side of a port's own fuse: board E's solar input read
+    'meets its own clamp before anything else' until 20 September, when PV_P was declared a rail for the power
+    rules, and then read 'reaches a chip with nothing between' with its SMCJ28A untouched two millimetres away.
+    A rail reached along the POWER PATH from the port's own conductor is still that conductor's chain. A rail
+    reached through anything else is not, which the pull-up fixture beside this one holds."""
+    restore = _with_ports("d", [{"ref": "J_X", "why": "the solar lead, outdoors by definition"}])
+    try:
+        d = tempfile.mkdtemp(prefix="port-fuse-clamp-")
+        p = _net(d, {"J_X": "panel in", "F2": "10 A mini blade", "D4": "SMCJ28A panel surge", "U5": "controller"},
+                 {"+PV_IN": [("J_X", "1"), ("F2", "1")],
+                  "+PV_P": [("F2", "2"), ("D4", "1"), ("U5", "4")],
+                  "GND": [("J_X", "2"), ("D4", "2")]})
+        rc, out = _run(p, d)
+        assert rc == 0, "a clamp one fuse past the connector was not seen:\n%s" % out[-700:]
+    finally:
+        restore()
