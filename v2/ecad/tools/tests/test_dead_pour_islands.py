@@ -9,6 +9,7 @@ A69 and A70. So the line is a refusal now, with the erc-allow idiom (`pour-islan
 names a net and says why).
 """
 import os
+from harness import Skip
 HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = open(os.path.join(os.path.dirname(HERE), "place_audit.py"), encoding="utf-8").read()
 
@@ -59,4 +60,23 @@ def t_an_island_that_carries_a_surface_pad_of_its_own_net_is_reported_and_not_re
     # and it is set apart BEFORE the refusal list, so it can never count as a collision
     assert body.index("_padonly.append(_line); continue") < body.index("_isl.append(_line)")
     assert "if _refused:" in body and "coll += 1" in body[body.index("if _refused:"):]
+
+
+def t_kicads_point_test_says_outside_on_the_outline_and_inside_with_the_accuracy_the_judge_passes():
+    """THE API FACT THE RULE RESTS ON, pinned where pcbnew is (21 September 2026). `SHAPE_LINE_CHAIN.PointInside`
+    answers False for a point exactly on the outline and True for the same point with the judge's 0.1 mm
+    accuracy; the island judge passes that accuracy at both of its site tests. If a KiCad build ever changes this
+    the rule's proof is gone and this says so before a chain does."""
+    try: import pcbnew
+    except ImportError: raise Skip("pcbnew is not importable here")
+    MM = 1000000
+    o = pcbnew.SHAPE_LINE_CHAIN()
+    for x, y in ((0, 0), (10, 0), (10, 5), (0, 5)): o.Append(pcbnew.VECTOR2I(x * MM, y * MM))
+    o.SetClosed(True)
+    on_edge = pcbnew.VECTOR2I(3 * MM, 0)            # on the bottom edge, as R15's pad centre sat on the island's top edge
+    inside = pcbnew.VECTOR2I(3 * MM, 2 * MM)
+    assert o.PointInside(inside), "a point plainly inside reads outside: the fixture is wrong, not the judge"
+    assert not o.PointInside(on_edge), "PointInside now answers True on the outline: the accuracy argument is no longer needed"
+    assert o.PointInside(on_edge, 100000), "PointInside with the judge's 0.1 mm accuracy does not take a point on the outline"
+    assert not o.PointInside(pcbnew.VECTOR2I(3 * MM, -200000), 100000), "the accuracy reaches 0.2 mm outside: it is too loose"
 
