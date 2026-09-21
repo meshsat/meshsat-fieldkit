@@ -17525,3 +17525,21 @@ site was refused for want of 3 mm of room in round 1 and its barrels were round 
 finish whose `via_parallel` reported HURT is a number for a board that lost work it had proved, and board E's
 landed boards are the ones to re-read. Nothing is re-judged here: the tool is fixed, and the next finish of
 each board is what re-takes it.
+
+**Addendum, 21 September 2026 13:11 CEST: the sense fence costs board E one connection at the router, and it
+moves the opens into the tracker's own pins.** E38 ran all 200 passes in 2 h 03 (09:07:25 to 11:10:07 UTC,
+its 21,600 s cap never reached) and landed at **hard 0, FIVE open of 94, 254 vias**, router board sha
+c8e03a11d54d184b, against its one-variable control E37's **four open and 230 vias**. The two arms differ by
+the eighteen-line fence stage and nothing else, and the cap binds on neither, so that difference is the
+fence's: one connection and twenty-four vias.
+
+**The open sets are almost disjoint, which is the reading worth keeping.** E37's four are `/DC_P`,
+`/TRK_BOOST2`, `/TRK_INTVCC` and `/USB_E6_N`; E38's five are `/DC_P`, `/TRK_BOOST1`, `/TRK_LDO33`,
+`/TRK_SHDN` and `/TRK_TG2`. Only `/DC_P` is in both. The fence CLOSED three of E37's four and opened four
+others, and every one of those four is a pin of U5, the LT8705A itself. That is E23's finding for the third
+time on this board: room taken anywhere near the tracker is paid for by the tracker's own pins, and it is a
+floor-plan statement rather than a routing one. **What it does not yet say is whether the fence bought what
+it was drawn for**: ANA-001 on E38's own round-1 board is the other half, its finish is running, and the
+segment probe is armed behind it, because the rule counts only the declared switching nets while the tightest
+approach measured on E37 was a gate drive at 0.204 mm. A fence that closes the declared pair and leaves the
+gate drives where they were has answered the rule and not the coupling.
