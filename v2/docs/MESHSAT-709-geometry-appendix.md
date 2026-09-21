@@ -16883,3 +16883,9 @@ neither. C21 is the PCM_VCCL bypass; C28 is the audio coupling capacitor into th
 Same shape as C23: a part whose other end is a codec pin sits eighteen millimetres from it and the router leaves the last
 connection, beyond the 12 mm closer. D32 seats C21 and C28 beside their pins as C23 is.
 
+**Addendum, 03:08 CEST: D32 seats C21 and C28, measured three ways first.** C21 takes the free front side 4.8 mm east of U6
+pin 19; C28 keeps the underside it was packed on and sits 4.2 mm south of pin 16, past the escape fan (chain OK, hard 0,
+escapes 68/7 as D31, place_audit 0 of 6); a front-side seat south of the codec collides with R30 four ways and is refused.
+The first run of every probe was refused by the duplicate-reference guard, C28 being FIXED and still in its region list.
+D32 routes on the hub with the prediction that both close and board D lands 0/0.
+
