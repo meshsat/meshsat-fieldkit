@@ -17564,3 +17564,25 @@ SRN_F ones rather than the CSF ones. If the failing SET does not change between 
 the **pre-lay's group list** rather than the fence, and A101's shape is board A's ten filtered ISNS nets with
 `CH_SRN_F` and `CH_ACN_F` added to the pre-lay so the fence has copper to grow from at all. The A99 pair's
 own caveat stands either way: its ANA-001 half is read on its own copper and its open-count half is not.
+
+**Addendum, 21 September 2026 13:43 CEST: board E's tracker block is spread over tens of millimetres, and
+that is one cause behind both of the board's open items.** E38's stub router closed 0 of its 5 and FOUR are
+pad to pad, which this project reads as a placement question, so the placed board was asked where those pins
+go. It is not U5's room: its courtyard is 6.29 by 8.29 mm with **11.40 mm clear west, 2.51 north, 1.87 east
+and clear to the board's edge south**. It is the partners. `TRK_BOOST1` runs U5.23 to C17.1 at **15.69 mm**
+(the top gate driver's own boost capacitor), `TRK_LDO33` U5.4 to C20.1 at **18.18**, `TRK_SHDN` U5.1 to R15.1
+at **11.29**, and `TRK_TG2` U5.18 to Q6.4 at **22.10** (the FET whose gate that pin drives). On the copper
+itself, every gate drive carries **34 to 45 mm** (TG1 40.3, TG2 34.7, BG1 36.8, BG2 44.8) and `TRK_BOOST1`
+**55.4 mm**, against a sense pair at 48.7 and 36.9.
+
+**The two symptoms are one cause.** The four pad-to-pad opens are those parts being eleven to twenty-seven
+millimetres from their pins, because C17 and Q6 are packed into TRKW and C20 and R15 into TRKS, two pockets
+on opposite sides of the tracker, and the packer fills a region from its corner. ANA-001's tightest rows are
+the SAME long gate drives running beside the sense pair, `TRK_CSN` 0.204 mm from `TRK_TG2` and `TRK_CSP`
+0.212 from `TRK_BG2`. A gate drive with two millimetres to travel could not be beside the sense pair at all,
+and a boost capacitor at its own pin raises no pair for the router to fail on. So the fence treats a symptom
+and the seats would remove the cause, which is where board A's charger block arrived on 20 September: one
+placement pass at the block closes several rules at once. E38's fence measured what it was launched to
+measure and its numbers stand; what changes is the ORDER of board E's remaining work. **E40 is the tracker
+block seated in the order the current flows**, one seat probe per part through `FIXED_OVERRIDE` with each
+region's packing list edited in the same commit, which is the D31-to-D32 procedure.
