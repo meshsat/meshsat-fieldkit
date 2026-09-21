@@ -29,6 +29,15 @@ if b.GetCopperLayerCount() == 2: VIA_D, VIA_DRILL = max(VIA_D, FromMM(0.5)), max
 # board (appendix 32.149).
 _DS = b.GetDesignSettings()
 INPAD_CLR = max(_DS.m_HoleClearance, _DS.m_MinClearance, FromMM(0.15))
+# NAME A REFERENCE AND EVERY REFUSAL AT ITS PLANE PADS SAYS WHICH TEST SAID NO (21 September 2026, D34).
+# D33 landed one connection short and the connection is U6 pad 20, a ground pin with no fanout via, and this
+# tool's only word about it was `no room for a fanout via`, which names the pad and not the obstacle. The
+# escape tool has carried DEBUG_REF since 5 September and this one never had it, so the record could say
+# "prefanout has no per-reference debug knob" and stop there. The reason is recorded by the predicate
+# ITSELF (`_WHY`), never by a second copy of it: a guard and a second opinion about the guard is how this
+# project got a lander reporting hard 3 where the hard set reads 0.
+DEBUG_REF = os.environ.get("DEBUG_REF", "")
+_WHY = [""]
 def _is_copper(p):
     """A pad on no copper layer is not an obstacle to anything. THIRD TOOL WITH THE 12 SEPTEMBER DEFECT
     (32.151 in escape.py, 32.218 in return_via._site_free, here on 20 September 2026): KiCad draws a modern
@@ -80,21 +89,34 @@ def _seg_dist(p, a, c):
     t = 0.0 if L2 == 0 else max(0.0, min(1.0, ((p.x - ax) * dx + (p.y - ay) * dy) / L2))
     return math.hypot(p.x - (ax + t * dx), p.y - (ay + t * dy))
 def clear(v, me, r=None):
+    """Is this a legal spot for a via of radius r? On a refusal `_WHY[0]` names the test and its counterparty.
+
+    The reason is written by the predicate that refuses, so there is exactly one copy of each test and the
+    debug print cannot drift from the decision it explains (`DEBUG_REF`, 21 September 2026)."""
     r = VIA_D / 2 if r is None else r
     mp = me.GetPosition()
-    if not (edges.GetLeft() + FromMM(1.5) < v.x < edges.GetRight() - FromMM(1.5) and edges.GetTop() + FromMM(1.5) < v.y < edges.GetBottom() - FromMM(1.5)): return False
+    if not (edges.GetLeft() + FromMM(1.5) < v.x < edges.GetRight() - FromMM(1.5) and edges.GetTop() + FromMM(1.5) < v.y < edges.GetBottom() - FromMM(1.5)):
+        _WHY[0] = "within 1.5 mm of the board edge"; return False
     for q, qp, qr, _qpoly, _qreach, _qnet in allpads:
         if qp.x == mp.x and qp.y == mp.y: continue            # the pad itself (wrapper objects differ, compare by position)
         gap = FromMM(0.35) if _qnet == me.GetNetname() else FromMM(0.5)   # keep other-net pads' exit lanes open for the router (0.75 until 7 Sep 2026: half the ground pads of a packed region got no via and the router left islands)
-        if math.hypot(v.x - qp.x, v.y - qp.y) < qr + r + gap: return False
+        if math.hypot(v.x - qp.x, v.y - qp.y) < qr + r + gap:
+            _WHY[0] = "%.3f mm from a pad of %s, which wants %.3f (its lane)" % (
+                math.hypot(v.x - qp.x, v.y - qp.y) / 1e6, _qnet or "?", (qr + r + gap) / 1e6); return False
     for w in placed:
-        if math.hypot(v.x - w.x, v.y - w.y) < VIA_D + FromMM(0.35): return False
+        if math.hypot(v.x - w.x, v.y - w.y) < VIA_D + FromMM(0.35):
+            _WHY[0] = "%.3f mm from a via this stage already placed, which wants %.3f" % (
+                math.hypot(v.x - w.x, v.y - w.y) / 1e6, (VIA_D + FromMM(0.35)) / 1e6); return False
     for a, c, hw, _n in segs:
-        if _seg_dist(v, a, c) < hw + r + FromMM(0.2): return False
+        if _seg_dist(v, a, c) < hw + r + FromMM(0.2):
+            _WHY[0] = "%.3f mm from a track of %s, which wants %.3f" % (
+                _seg_dist(v, a, c) / 1e6, _n or "?", (hw + r + FromMM(0.2)) / 1e6); return False
     for z in rule_areas:
         o = z.Outline()
         for ddx, ddy in ((0, 0), (r, 0), (-r, 0), (0, r), (0, -r)):
-            if o.Contains(VECTOR2I(int(v.x + ddx * 1.3), int(v.y + ddy * 1.3))): return False
+            if o.Contains(VECTOR2I(int(v.x + ddx * 1.3), int(v.y + ddy * 1.3))):
+                _WHY[0] = "inside a rule area"; return False
+    _WHY[0] = ""
     return True
 added = skipped = inpad = 0
 for fp in boardorder.footprints(b):   # stage 0b, 11 Sep 2026: this loop LAYS, so its order decides what fits; board order follows a random uuid
@@ -160,16 +182,36 @@ for fp in boardorder.footprints(b):   # stage 0b, 11 Sep 2026: this loop LAYS, s
                         for qpoly_ in near:
                             if qpoly_.Collide(q, int(TRACK_W / 2 + INPAD_CLR)): return True
                     return False
-                if clear(v, pad) and clear(mid, pad, TRACK_W / 2) and clear(q3, pad, TRACK_W / 2) and not _crosses(c, v):
+                _ok = clear(v, pad)
+                _stage = "the via's own spot: " + _WHY[0]
+                if _ok:
+                    _ok = clear(mid, pad, TRACK_W / 2); _stage = "the stub's midpoint: " + _WHY[0]
+                if _ok:
+                    _ok = clear(q3, pad, TRACK_W / 2); _stage = "the stub's three-quarter point: " + _WHY[0]
+                if _ok and _crosses(c, v):
+                    _ok = False; _stage = "the stub overlaps another net's copper somewhere along it"
+                if not _ok and DEBUG_REF and fp.GetReference() == DEBUG_REF:
+                    print("  fanout DEBUG %s pad %s (%s): (%.2f, %.2f) at %.2f mm on (%+.2f, %+.2f) refused, %s"
+                          % (fp.GetReference(), pad.GetNumber(), pad.GetNetname(), v.x / 1e6, v.y / 1e6,
+                             off / 1e6, ux, uy, _stage))
+                if _ok:
                     layer = pcbnew.F_Cu if pad.IsOnLayer(pcbnew.F_Cu) else pcbnew.B_Cu
                     via = pcbnew.PCB_VIA(b); via.SetPosition(v); via.SetDrill(VIA_DRILL); via.SetWidth(VIA_D); via.SetViaType(pcbnew.VIATYPE_THROUGH); via.SetLocked(True)   # locked like the escapes (5 Sep 2026): the router keeps the pad-to-pour tie and the width gates skip it
                     via.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); via.SetNet(pad.GetNet()); b.Add(via)
                     t = pcbnew.PCB_TRACK(b); t.SetStart(c); t.SetEnd(v); t.SetWidth(TRACK_W); t.SetLayer(layer); t.SetNet(pad.GetNet()); t.SetLocked(True); b.Add(t)
                     placed.append(v); placed_nets.append((v, pad.GetNetname())); added += 1; done = True; break
             if done: break
-        if not done and min(pad.GetSize().x, pad.GetSize().y) >= VIA_D + FromMM(0.1) and not any(math.hypot(c.x - w.x, c.y - w.y) < VIA_D + FromMM(0.35) for w in placed) \
-           and _other_net_clear(c, pad.GetNetname(), VIA_D / 2 + INPAD_CLR) \
-           and all(_seg_dist(c, a_, e_) >= hw_ + VIA_D / 2 + INPAD_CLR for a_, e_, hw_, n_ in segs if n_ != pad.GetNetname()):   # 8 Sep 2026: the in-pad fallback tested pads and vias but not TRACKS, so a via in a plane pad landed on a neighbour's locked escape and the escape was pruned for it (B17, 32.77). The via's ring must keep the class clearance from every other-net pad (D8 run 4: a 1210 neighbour 0.72 mm away)
+        # THE IN-PAD FALLBACK, with its four conditions computed separately so the debug knob can say which one
+        # refused (21 September 2026). They are pure tests and the result is the same `and` it always was.
+        _f_big = min(pad.GetSize().x, pad.GetSize().y) >= VIA_D + FromMM(0.1)
+        _f_far = not any(math.hypot(c.x - w.x, c.y - w.y) < VIA_D + FromMM(0.35) for w in placed)
+        _f_pad = _other_net_clear(c, pad.GetNetname(), VIA_D / 2 + INPAD_CLR)
+        _f_trk = all(_seg_dist(c, a_, e_) >= hw_ + VIA_D / 2 + INPAD_CLR for a_, e_, hw_, n_ in segs if n_ != pad.GetNetname())
+        if not done and DEBUG_REF and fp.GetReference() == DEBUG_REF and not (_f_big and _f_far and _f_pad and _f_trk):
+            print("  fanout DEBUG %s pad %s (%s): the in-pad via is refused too: pad wide enough %s, clear of "
+                  "this stage's vias %s, clear of other nets' pads %s, clear of other nets' tracks %s"
+                  % (fp.GetReference(), pad.GetNumber(), pad.GetNetname(), _f_big, _f_far, _f_pad, _f_trk))
+        if not done and _f_big and _f_far and _f_pad and _f_trk:   # 8 Sep 2026: the in-pad fallback tested pads and vias but not TRACKS, so a via in a plane pad landed on a neighbour's locked escape and the escape was pruned for it (B17, 32.77). The via's ring must keep the class clearance from every other-net pad (D8 run 4: a 1210 neighbour 0.72 mm away)
             # 7 Sep 2026 (E6 run 8, D8 run 3): a plane pad with no room around it gets its via in the pad (0.45/0.25 inside a 0603 land), so no pour piece is ever left
             # hanging on a pad without a path to the plane; the count is reported for the order notes (via-in-pad is a prototype allowance)
             via = pcbnew.PCB_VIA(b); via.SetPosition(c); via.SetDrill(VIA_DRILL); via.SetWidth(VIA_D); via.SetViaType(pcbnew.VIATYPE_THROUGH); via.SetLocked(True)

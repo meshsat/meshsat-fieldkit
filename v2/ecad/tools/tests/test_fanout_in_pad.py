@@ -30,6 +30,7 @@ import os, re, sys
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, TOOLS)
+from harness import Skip   # one class, shared with the runner (a second copy makes every skip read as a failure)
 
 
 def _src():
@@ -76,3 +77,93 @@ def t_the_measurement_is_recorded_where_the_next_reader_looks():
     d = open(os.path.join(TOOLS, "boards", "d.json"), encoding="utf-8").read()
     assert "90 vias" in d and "93" in d, "board D's file does not carry the fanout count before and after"
     assert "0.1137" in d or "0.1115" in d, "board D's file does not carry the gap that was accepted"
+
+
+# ---------------------------------------------------------------------------------------------------------
+# THE PER-REFERENCE DEBUG KNOB (21 September 2026, D34). D33's finished round-1 board is one connection short
+# and the connection is U6 pad 20, a codec ground pin with no fanout via; this tool's only word about it was
+# `no room for a fanout via at U6 pad 20 (GND)`, which names the pad and not the obstacle, so the record could
+# say no more than "prefanout's refusal to read". `escape.py` has had DEBUG_REF since 5 September. The reason
+# is written by the predicate that refuses, never by a second copy of it.
+
+def _pcbnew():
+    try:
+        import pcbnew; return pcbnew
+    except Exception as e:
+        raise Skip("no pcbnew here (%s)" % type(e).__name__)
+
+
+def _walled_in(pcbnew, tmp):
+    """One ground pad with other nets' pads all around it, close enough that no stub and no in-pad via fits.
+
+    The neighbours are 1.0 mm away edge to edge on a 0.6 mm pad, which is inside the 0.5 mm exit lane `clear`
+    keeps from another net's pad for a 0.45 mm via, and the pad itself is too small to hold one."""
+    import os
+    b = pcbnew.BOARD(); b.SetCopperLayerCount(2)
+    for (x1, y1, x2, y2) in ((0, 0, 20, 0), (20, 0, 20, 20), (20, 20, 0, 20), (0, 20, 0, 0)):
+        s = pcbnew.PCB_SHAPE(b); s.SetShape(pcbnew.SHAPE_T_SEGMENT); s.SetLayer(pcbnew.Edge_Cuts)
+        s.SetStart(pcbnew.VECTOR2I(pcbnew.FromMM(x1), pcbnew.FromMM(y1)))
+        s.SetEnd(pcbnew.VECTOR2I(pcbnew.FromMM(x2), pcbnew.FromMM(y2))); s.SetWidth(pcbnew.FromMM(0.1)); b.Add(s)
+    for n in ("GND", "/OTH"): b.Add(pcbnew.NETINFO_ITEM(b, n))
+    b.BuildListOfNets()
+    def _pad(fp, x, y, net, size=0.6):
+        p = pcbnew.PAD(fp); p.SetSize(pcbnew.VECTOR2I(pcbnew.FromMM(size), pcbnew.FromMM(size)))
+        p.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(x), pcbnew.FromMM(y)))
+        p.SetAttribute(pcbnew.PAD_ATTRIB_SMD); p.SetLayerSet(pcbnew.LSET.FrontMask())
+        p.SetNumber("20" if net == "GND" else "1"); p.SetNet(b.FindNet(net)); fp.Add(p); return p
+    fp = pcbnew.FOOTPRINT(b); fp.SetReference("U6")
+    fp.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(10), pcbnew.FromMM(10)))
+    # 0.45 mm, which is SMALLER than this board's own via plus the tenth of a millimetre the in-pad allowance
+    # asks for (a 2-layer board floors the via at 0.5), so the fallback is refused as well and the pad is
+    # served by nothing: that is the state U6 pad 20 is in on board D and the state this fixture is about.
+    _pad(fp, 10, 10, "GND", size=0.45); b.Add(fp)
+    for k, (dx, dy) in enumerate(((1.0, 0), (-1.0, 0), (0, 1.0), (0, -1.0),
+                                  (0.75, 0.75), (-0.75, 0.75), (0.75, -0.75), (-0.75, -0.75))):
+        g = pcbnew.FOOTPRINT(b); g.SetReference("R%d" % (k + 1))
+        g.SetPosition(pcbnew.VECTOR2I(pcbnew.FromMM(10 + dx), pcbnew.FromMM(10 + dy)))
+        _pad(g, 10 + dx, 10 + dy, "/OTH"); b.Add(g)
+    path = os.path.join(tmp, "walled.kicad_pcb"); pcbnew.SaveBoard(path, b); return path
+
+
+def _run(path, ref=None, tool=None):
+    import subprocess
+    env = dict(os.environ)
+    if ref: env["DEBUG_REF"] = ref
+    else: env.pop("DEBUG_REF", None)
+    return subprocess.run([sys.executable, tool or os.path.join(TOOLS, "prefanout.py"), path, "GND"],
+                          capture_output=True, text=True, env=env).stdout
+
+
+def t_the_debug_knob_names_the_test_that_refused_and_its_counterparty():
+    """THE DEFECTIVE FIXTURE: a pad the tool cannot serve, and the question is WHY.
+
+    Without the knob the tool says `no room for a fanout via at U6 pad 20 (GND)` and stops, which is where
+    D34's item sat for a day. With it every candidate says which test refused it and against what, and the
+    in-pad fallback says which of its four conditions failed. Fails on the tree this rule was written against,
+    where `prefanout.py` reads no DEBUG_REF at all."""
+    import tempfile
+    p = _pcbnew()
+    with tempfile.TemporaryDirectory() as tmp:
+        out = _run(_walled_in(p, tmp), ref="U6")
+        assert "no room for a fanout via at U6 pad 20" in out, out[-800:]
+        assert "fanout DEBUG U6 pad 20" in out, "the knob printed nothing for the reference it was given: %s" % out[-800:]
+        assert "refused," in out, out[-800:]
+        assert "mm from a pad of /OTH" in out, "the refusal does not name the counterparty: %s" % out[-800:]
+        assert "the in-pad via is refused too" in out, out[-800:]
+
+
+def t_the_debug_knob_is_off_unless_a_reference_is_named():
+    """THE ACCEPTABLE FIXTURE: the same board with no DEBUG_REF prints the summary and the pad, and not one
+    candidate line. A probe that is on by default is noise in every chain log on every board, and this project
+    reads those logs with a grep."""
+    import tempfile
+    p = _pcbnew()
+    with tempfile.TemporaryDirectory() as tmp:
+        path = _walled_in(p, tmp)
+        quiet, loud = _run(path), _run(path, ref="U6")
+        assert "fanout DEBUG" not in quiet, quiet[-800:]
+        assert "no room for a fanout via at U6 pad 20" in quiet, quiet[-800:]
+        assert "fanout: 0 vias added (0 in the pad), 1 pads skipped" in quiet, quiet[-800:]
+        # the knob CHANGES NOTHING BUT THE PRINTING: the summary is the same line either way
+        assert [l for l in quiet.splitlines() if l.startswith("fanout:")] == \
+               [l for l in loud.splitlines() if l.startswith("fanout:")], (quiet[-400:], loud[-400:])
