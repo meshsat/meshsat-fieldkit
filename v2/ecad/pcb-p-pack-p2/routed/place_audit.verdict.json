@@ -41,13 +41,13 @@
  "tool": "place_audit",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "087fae053129751b"
+  "tools_tree_sha": "df5c920a2abb0560"
  },
- "ts": "2026-09-20T23:24:53Z",
+ "ts": "2026-09-21T00:10:55Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {
   "file": "place_audit.py",
-  "sha16": "4777b4c37928eab5"
+  "sha16": "6e2f9bf7fe10fb15"
  }
 }

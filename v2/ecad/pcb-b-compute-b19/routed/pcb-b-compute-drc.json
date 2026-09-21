@@ -1,7 +1,7 @@
 {
     "$schema": "https://schemas.kicad.org/drc.v1.json",
     "coordinate_units": "mm",
-    "date": "2026-09-20T23:15:45+0000",
+    "date": "2026-09-21T00:01:34+0000",
     "included_severities": [
         "error",
         "warning",
@@ -1403,12 +1403,12 @@
                     "uuid": "95419f34-b139-4651-b58b-33b912e9b2f0"
                 },
                 {
-                    "description": "Pad 1 [/5G_RESET] of R62 on F.Cu",
+                    "description": "Track [/5G_RESET] on F.Cu, length 0.2038 mm",
                     "pos": {
                         "x": 105.49,
                         "y": 68.18
                     },
-                    "uuid": "866ac2d0-b473-4b08-81d2-938be3612f82"
+                    "uuid": "24f68461-4295-474a-b362-bd1e75877247"
                 }
             ],
             "severity": "error",
@@ -1579,12 +1579,12 @@
             "description": "Missing connection between items",
             "items": [
                 {
-                    "description": "Pad 3 [/BANK1_UPTX_P] of U109 on F.Cu",
+                    "description": "Track [/BANK1_UPTX_P] on F.Cu, length 0.7500 mm",
                     "pos": {
                         "x": 57.26,
                         "y": 155.51
                     },
-                    "uuid": "69b629ab-61c3-4ae5-a19e-75fa4c3f497c"
+                    "uuid": "63ed0b4c-344f-4179-bed1-b1e440a159ef"
                 },
                 {
                     "description": "Pad 58 [/BANK1_UPTX_P] of U102 on F.Cu",
@@ -1694,12 +1694,12 @@
             "description": "Missing connection between items",
             "items": [
                 {
-                    "description": "Pad 4 [/BANK3_UPTX_N] of U309 on F.Cu",
+                    "description": "Track [/BANK3_UPTX_N] on F.Cu, length 0.9000 mm",
                     "pos": {
                         "x": 185.86,
                         "y": 156.01
                     },
-                    "uuid": "71277a58-ca13-4c44-b358-e2e909045e44"
+                    "uuid": "342483fa-eea1-498a-afe8-e295a44d92ae"
                 },
                 {
                     "description": "Pad 59 [/BANK3_UPTX_N] of U302 on F.Cu",
@@ -1886,12 +1886,12 @@
                     "uuid": "f90ec086-e839-4075-817c-cfa33355f5cb"
                 },
                 {
-                    "description": "Track [/CAM_DP] on F.Cu, length 0.7375 mm",
+                    "description": "Pad 17 [/CAM_DP] of U102 on F.Cu",
                     "pos": {
                         "x": 80.1,
                         "y": 141.7375
                     },
-                    "uuid": "57c1f145-f364-4612-b12f-0d22822d41f7"
+                    "uuid": "d72fd537-4068-4b6a-9820-584c94743482"
                 }
             ],
             "severity": "error",
@@ -2438,12 +2438,12 @@
                     "uuid": "af12a719-a1e2-4812-b176-d63580dbf8ce"
                 },
                 {
-                    "description": "Track [/EMCON_HW] on In2.Cu, length 3.7650 mm",
+                    "description": "Track [/EMCON_HW] on In2.Cu, length 5.3770 mm",
                     "pos": {
                         "x": 229.8771,
-                        "y": 144.3664
+                        "y": 140.6014
                     },
-                    "uuid": "cb1b32a9-eb2a-4568-b844-59d78c3ebb03"
+                    "uuid": "ec602ab0-1aa8-4bc5-b5d4-a70c592991ca"
                 }
             ],
             "severity": "error",
@@ -3810,12 +3810,12 @@
             "description": "Missing connection between items",
             "items": [
                 {
-                    "description": "Track [/HOST3_0D_N] on F.Cu, length 0.7250 mm",
+                    "description": "Pad 2 [/HOST3_0D_N] of U310 on F.Cu",
                     "pos": {
                         "x": 193.74,
                         "y": 155.23
                     },
-                    "uuid": "3162b817-16c0-4387-9320-6626339d5632"
+                    "uuid": "5d7f2e87-ad38-4e59-978b-593793bdc6bf"
                 },
                 {
                     "description": "Pad 136 [/HOST3_0D_N] of U32B on F.Cu",
@@ -3833,12 +3833,12 @@
             "description": "Missing connection between items",
             "items": [
                 {
-                    "description": "Track [/HOST3_0D_P] on F.Cu, length 0.5750 mm",
+                    "description": "Pad 1 [/HOST3_0D_P] of U310 on F.Cu",
                     "pos": {
                         "x": 193.74,
                         "y": 154.73
                     },
-                    "uuid": "554310be-d647-45e1-b407-af3683e265ad"
+                    "uuid": "35cb1968-9e3d-4f1c-a659-7cc09b27a70c"
                 },
                 {
                     "description": "Pad 134 [/HOST3_0D_P] of U32B on F.Cu",
@@ -4362,12 +4362,12 @@
             "description": "Missing connection between items",
             "items": [
                 {
-                    "description": "Track [/HUBRST1_B] on In3.Cu, length 2.5938 mm",
+                    "description": "Track [/HUBRST1_B] on In3.Cu, length 1.4943 mm",
                     "pos": {
-                        "x": 5.1245,
+                        "x": 3.6302,
                         "y": 139.2435
                     },
-                    "uuid": "cbe790b1-3871-462c-b5a1-a6f859968de3"
+                    "uuid": "3b18bdf5-440c-4178-b768-6dba13e37bfb"
                 },
                 {
                     "description": "Pad 25 [/HUBRST1_B] of U51 on B.Cu",
@@ -4439,12 +4439,12 @@
                     "uuid": "2de25d6c-8621-44bf-89a7-39f37cb40cd1"
                 },
                 {
-                    "description": "Track [/HUBRST2_C] on F.Cu, length 1.3666 mm",
+                    "description": "Track [/HUBRST2_C] on F.Cu, length 0.3069 mm",
                     "pos": {
-                        "x": 13.0433,
-                        "y": 136.8814
+                        "x": 14.0096,
+                        "y": 137.8477
                     },
-                    "uuid": "c3a53724-4605-4a03-b656-e0a3f9f176da"
+                    "uuid": "209be4a4-43c0-4c50-8088-05448537f6bc"
                 }
             ],
             "severity": "error",
@@ -4577,12 +4577,12 @@
                     "uuid": "75bfd151-1ac3-4a47-9902-9291e7dfe3fc"
                 },
                 {
-                    "description": "Track [/KSZ_RST_n] on In3.Cu, length 0.2258 mm",
+                    "description": "Track [/KSZ_RST_n] on In3.Cu, length 4.8063 mm",
                     "pos": {
-                        "x": 106.2171,
-                        "y": 67.2769
+                        "x": 106.0574,
+                        "y": 67.4366
                     },
-                    "uuid": "1270cc9d-6fea-45bb-bce6-ed48675acf9f"
+                    "uuid": "4b47d16b-428c-460b-b9d4-dc2ecc902184"
                 }
             ],
             "severity": "error",
@@ -8993,12 +8993,12 @@
                     "uuid": "db9556cd-96ae-41c7-93c7-80370cb63ecc"
                 },
                 {
-                    "description": "Track [GND] on F.Cu, length 0.4000 mm",
+                    "description": "Pad 11 [GND] of U301 on F.Cu",
                     "pos": {
                         "x": 186.2125,
-                        "y": 139.075
+                        "y": 138.675
                     },
-                    "uuid": "269e9c83-22fd-4a94-806e-79d79d21a998"
+                    "uuid": "979f2d8f-17e8-4b85-9c0e-6d4190f8eeaf"
                 }
             ],
             "severity": "error",

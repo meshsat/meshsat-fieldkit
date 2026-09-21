@@ -26,9 +26,9 @@
  "tool": "inhibit_chain_b",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "087fae053129751b"
+  "tools_tree_sha": "df5c920a2abb0560"
  },
- "ts": "2026-09-20T23:23:37Z",
+ "ts": "2026-09-21T00:09:37Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {

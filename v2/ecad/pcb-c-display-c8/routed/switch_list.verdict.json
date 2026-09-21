@@ -23,11 +23,11 @@
   "declares": null,
   "intent": {
    "path": "out/pcb-c-display-intent.json",
-   "sha256_16": "fe7bb56dff131960"
+   "sha256_16": "9e65eb659f159aba"
   },
   "netlist": {
    "path": "out/pcb-c-display.net",
-   "sha256_16": "f4d069ba13060f7e"
+   "sha256_16": "b3f0479ef5c74145"
   }
  },
  "missing_input": null,
@@ -40,9 +40,9 @@
  "tool": "switch_list",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "087fae053129751b"
+  "tools_tree_sha": "df5c920a2abb0560"
  },
- "ts": "2026-09-20T23:22:32Z",
+ "ts": "2026-09-21T00:08:31Z",
  "verdict": "FAIL",
  "version": "unknown",
  "writer": {

@@ -28,9 +28,9 @@
  "tool": "check_zone_nets",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "087fae053129751b"
+  "tools_tree_sha": "df5c920a2abb0560"
  },
- "ts": "2026-09-20T23:13:44Z",
+ "ts": "2026-09-20T23:59:33Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {
