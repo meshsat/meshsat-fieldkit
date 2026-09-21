@@ -16876,3 +16876,10 @@ sites), the ten headed by CELL_F at P_CP, 9 A on one 0.25 mm barrel; boards C an
 sites, its three short the charger block's). The sixth judge defect of the night, all six of one shape: a rule asking
 its question of the wrong land.
 
+**Addendum, 03:00 CEST: D31 lands at the router with two open, C21 and C28, both eighteen millimetres from their codec pins.** All 200
+passes in 70 minutes, hard 0, two unrouted of 133 (router board 4211c600023ea994): `/PCM_VCCP` closed as the C23 seat
+predicted, and `/PCM_VCCL` (C21 to U6 pin 19, 19.2 mm) and `/PCM_VIN` (C28 to U6 pin 16, 18.0 mm) are open where D30 read
+neither. C21 is the PCM_VCCL bypass; C28 is the audio coupling capacitor into the ADC input, packed in the audio region.
+Same shape as C23: a part whose other end is a codec pin sits eighteen millimetres from it and the router leaves the last
+connection, beyond the 12 mm closer. D32 seats C21 and C28 beside their pins as C23 is.
+
