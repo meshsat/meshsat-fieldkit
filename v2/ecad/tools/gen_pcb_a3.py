@@ -670,6 +670,14 @@ row(vr, -117.5, -112.5, fe[1] - 1.3, 6)
 # and two dead switching-node vias through the head. The end is read from Q2's other-net pads now, 0.7 mm short of them.
 _q2w = min(pd.GetBoundingBox().GetLeft() / 1e6 - OX for pd in placed["Q2"].Pads() if pd.GetNetname() not in (vr, "/" + vr)) - 0.7
 row(vr, -116.0, _q2w, fe[3] - 3.0, 6)                                          # the head's north end, where the cell measure put the neck
+# 21 September 2026 (A95 read at 06:38): the clamp D2's VIN_RAW pad is a surface pad 11.5 mm SOUTH of the head island, over the
+# west B.Cu band and with no via of its own, so the 14 mm from the pad up to the island was the router's to lay and on A95 it did
+# not (that arm's one new open, pad 1 to a 0.5 mm stub in the island). One barrel derived from the pad, 1.9 mm north of its centre
+# and inside the band, makes the pad the band's before any route; a clamp carries pulse current, so one is the count. If the
+# packer seats a part there the placed DRC says so and the barrel goes south of the pad instead.
+_d2 = pads_rect(net_pads(vr, ["D2"]), 0); _d2c = ((_d2[0] + _d2[2]) / 2, (_d2[1] + _d2[3]) / 2)
+col(vr, _d2c[0], _d2c[1] + 1.9, _d2c[1] + 1.9, 1)                                # the clamp's pad into the west band
+PC.spine(vr, _d2c[0], _d2c[1], _d2c[0], _d2c[1] + 1.9, 0.5, pcbnew.F_Cu)      # and the locked 0.5 mm run from the pad to it, so the pair is closed before any route (a bare via 1.9 mm from a surface pad is still a pair)
 # 4. VBAT: a bottom trunk from F1's pad 2 north to a collector at y 41 under the four slot converters (islands at their VIN pins), and a spur to the PA stage's input FET and caps
 f1 = f1_; fx0, fx1 = fx0_, fx1_
 # 13 September 2026, MEASURED ON A26: THE COMB FILLS IN TWO PIECES AND THE CUT IS A VIA COLUMN. The trunk
