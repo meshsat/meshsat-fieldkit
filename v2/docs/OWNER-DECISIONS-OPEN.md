@@ -7,7 +7,7 @@ One line per decision that is still open, what it holds up, and where its eviden
 v2/docs/OWNER-DECISIONS-2026-09-11.md and this page is generated from the same registry the readiness table
 is, so the pair counts below are the ones the gates use.
 
-**19 decisions are open and they hold 94 rule-board pairs of the 333 the set is judged on.** A pair held by a
+**20 decisions are open and they hold 94 rule-board pairs of the 333 the set is judged on.** A pair held by a
 decision is not a defect in the board: it is a question nobody has answered, and until it is answered the
 rule can be neither passed nor failed.
 
@@ -32,6 +32,7 @@ rule can be neither passed nor failed.
 | **44** | 0 | board D's underside packs nine parts inside the codec's own pin field, and one of its ground pins cannot reach the plane | nothing today, see below | - | 2026-09-21 |
 | **45** | 0 | ANA-001 keeps a sense line away from the nets a board DECLARES as switching, and on both boards that declare any, the tightest approach of all is a gate drive the declaration leaves out | nothing today, see below | - | 2026-09-21 |
 | **46** | 0 | board A's five converter stages drive their FETs from 13.5 to 28.9 mm away, and no placement lever this project has can shorten them | nothing today, see below | - | 2026-09-21 |
+| **47** | 0 | board A's ten Kelvin current-sense taps are enumerated as differential PAIRS and held to the 1 mm length rule, and every board A finish is refused because the two legs of a Kelvin tap cannot be the same length | nothing today, see below | - | 2026-09-21 |
 
 ## Each one, with what it holds
 
@@ -802,6 +803,43 @@ Q18's own pads, so the reach was never the problem either.
 rule-board pair today. It is asked because every arm this project has routed since A32 lands with gate drives
 among its open nets, because the three cheap answers were measured and refused today, and because a design
 property that costs connections should be ruled deliberately rather than met again by the next session.
+
+
+### Decision 47: board A's ten Kelvin current-sense taps are enumerated as differential PAIRS and held to the 1 mm length rule, and every board A finish is refused because the two legs of a Kelvin tap cannot be the same length
+
+**The question:** hold the 1 mm length rule to pairs whose CLASS declares an impedance target, or keep it on
+every _P/_N pair in the netlist and accept that board A produces no finished board
+
+**Recommended:** HOLD THE RULE TO PAIRS WITH AN IMPEDANCE TARGET. The ruling of 5 September 17:00 was made
+about differential pairs, whose two legs carry one signal and whose mismatch is a propagation- delay error,
+and it is being asked of copper it was not written for. A Kelvin tap's two legs run to OPPOSITE ENDS of a
+shunt by construction, which is what makes it a Kelvin connection at all, and what it owes electrically is
+common-mode rejection at the amplifier and distance from switching copper, which ANA-001 and kelvin_check
+already measure on this board. Keeping the rule where it belongs costs nothing that is measured anywhere and
+unblocks the whole of board A's finish; equalising the legs would UNDO the Kelvin connection, which is TI's
+own layout item 7 and the reason the ISNS filters went in on 18 September. The residue is named and stays
+under the rule: USB_D8 at 1.81 mm and USB_WALL at 1.54 mm are real differential pairs over the gate on A99's
+board, and the meander fixes both in one pass each.
+
+**Measured:** MEASURED ON TWO FINISHED BOARDS, each read from its own finish log (21 September 2026). A99's
+finish ends A99 PAIRS NOT MATCHED, not finishing, with PA_ISNS P 64.15 mm against N 5.78 (mismatch 58.38 mm),
+PD_ISNS 3.76 and POE_ISNS 12.19, and A98's finish ends the same way, so it is not one arm's accident: no
+board A arm since the ten filtered ISNS nets were declared has produced a board its own finish would sign
+off. meander.py runs three rounds on each and reports could not place the last 58.37 mm on PA_ISNS_N and
+could not place the last 12.19 mm on POE_ISNS_P, while the two USB pairs it CAN fix it fixes in one pass
+each. THE MECHANISM IS ONE LINE: check_pcb_a.py line 105 enumerates every pair of the netlist as any net
+ending _P whose _N partner exists, which was written on 8 September for the three USB pairs and now sweeps in
+the ten ISNS taps the filter created on 18 September; pair_match.sh reads exactly those lines and refuses at
+1.00 mm. WHAT IT COSTS TODAY: the finish is where the closers, the quality pass, dc_drop, via_current, the
+board gate and the deliverable are, so a board that cannot pass the pair gate cannot answer RTE-002 or
+anything behind it, and A98 and A99 are readable at all only because routeflow saves the finished round-1
+board before the refusal. AND THE PHYSICS IS NOT IN DISPUTE: the same record that added these nets says a
+Kelvin tap wants its resistors at opposite ends of the shunt while a pair station wants them side by side,
+which is why the pair pre-router answered 0 of 0 on them and was right.
+
+**Holds no rule today:** board A's committed phase A32 is 0 hard and 0 unrouted and its deliverable predates
+the ISNS filter, so no rule-board pair reads differently today. What it holds is every FUTURE board A arm:
+the finish refuses before it writes a deliverable, so the next adoption of a board A phase needs this ruled.
 
 
 ## Closed, for the record
