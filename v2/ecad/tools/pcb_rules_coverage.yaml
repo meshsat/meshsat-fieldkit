@@ -486,7 +486,7 @@ coverage:
    remediation: {action: "decision 37 (board D's two clocks: the land cannot hold the part it draws), then the straps half of this rule",
      owner: OWNER, execution: OWNER, depends_on: [], p50_h: 2, p80_h: 6}}
 
- ANA-001: {implementation: "pcb_sensitive.yaml, the nodes and their filters; sense_fence.py, the keep-out the router obeys", verification: {tool: sensitive_nodes.py, verdict: sensitive_nodes, fixtures: tests/test_sensitive_nodes.py, report: "kelvin_check.py, switch_list.py"},
+ ANA-001: {implementation: "pcb_sensitive.yaml, the nodes and their filters; sense_fence.py, the keep-out the router obeys", verification: {tool: sensitive_nodes.py, verdict: sensitive_nodes, fixtures: tests/test_sensitive_nodes.py, report: "kelvin_check.py, switch_list.py, sense_reach.py"},
    _fixer_why: "sense_fence.py (21 September 2026) is this rules only instrument that reaches the router.
      A DSN class-pair clearance is ignored by Freerouting 1.9.0 (measured on E17), a KiCad custom rule
      catches after the route and steers nothing, and a class clearance is refused by the pins of the very
@@ -507,6 +507,20 @@ coverage:
      began writing the solved drop at every pad the same day, so the error is now a subtraction between
      two pads of one net. It writes an ADVISORY verdict and decides nothing; what it is worth is that the
      rule, when it is written, is written against a number.
+
+     sense_reach.py (21 September 2026) asks whether this rule's own INSTRUMENT can reach the violation.
+     sense_fence is grown around the copper the PRE-LAY LOCKED and can move only copper the ROUTER laid, and
+     sensitive_nodes names one clearance per node without saying who laid either side, so a fence arm can be
+     launched against a violation it was never able to answer. Measured the morning it was written: on board
+     E's E37 board 23 pairs of segments sit inside 0.50 mm on a shared layer with the switching side locked
+     in NONE and the sense side in every one, so E38 was a real arm; on board A's A98 board 88 pairs, the
+     switching side locked in 6 and the sense side in 35, and every one of the tightest rows is a net the
+     pre-lay never touched (PD_ISNS_P 0.132 mm from PD_SW1, FE_ISNS_P 0.155, CH_SRN_F 0.155) while the nets
+     that DO carry locked copper read 0.213 and wider, which is a prediction about board A's fence arm and
+     the reason A101 adds those nets to the pre-lay instead. It also counts the aggressors this board's own
+     switch_nets does NOT carry, because a gate drive is excluded from that list by pin function and board
+     E's tightest approach of all is TRK_CSN at 0.204 mm from TRK_TG2. It is ADVISORY and decides nothing:
+     whether a gate drive belongs in this rule's denominator is a judgement that belongs with decision 34.
 
      switch_list.py (19 September 2026) asks whether the DENOMINATOR is complete. This rule measures a
      sensitive node's clearance from the nearest SWITCHING copper and which copper is switching is a
