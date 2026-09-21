@@ -213,6 +213,17 @@ _intent.pass_through("L2", "the SRF1260 dual-winding choke: winding 1 (pins 1-2)
 part("L2", "Connector_Generic", "Conn_01x04", "Bourns SRF1260-4R7Y dual-winding choke (7.2 A per winding at 4.7 uH): winding 1 pins 1-2 on the positive line, winding 2 pins 3-4 on the return (pin map per the Bourns drawing, verified 7 Sep 2026)", "CMC", {"1": "DC_HS", "2": "VIN_RAW", "3": "GND_V", "4": "GND"})
 c("C6", "1u 100V 1210 (X, input side)", "DC_HS", "GND_V", "C1210"); c("C7", "1u 100V 1210 (X, bus side)", "VIN_RAW", "GND", "C1210"); c("C8", "10u 100V X7R 1210", "VIN_RAW", "GND", "C1210")
 part("D2", "Device", "D_TVS", "SMCJ40A (bus clamp: 40 V standoff on the 9 to 36 V bus)", "TVS", {"1": "GND", "2": "VIN_RAW"}, "C224052")
+# OWNER DECISION 31, RULED 21 SEPTEMBER 2026: THE INLET'S CLAMP WAS BEHIND ITS OWN PASS FET. Read off this
+# board's netlist the chain is J_DCIN.1 -> DC_IN -> F1 -> DC_F -> Q1 (the BSC039N06NS ideal diode, source pins
+# 1 to 3, drain tab 5 to 8) -> DC_P -> D1, so the FIRST semiconductor a strike from the wall receptacle meets is
+# the FET and the clamp sits one part behind it. Accepting that means accepting the FET's own rating for an 8 kV
+# contact discharge, and a power FET publishes a human-body-model figure, which is a DIFFERENT TEST: Nexperia's
+# PESD5V0S2BT sheet carries both for one part, 30 kV IEC 61000-4-2 contact against 10 kV MIL-STD-883 HBM, so
+# one cannot be read as the other, and Infineon publishes the BSC039N06NS as a scan with no text layer and no
+# ESD row to read either way. D10 is the same SMCJ40A as D1 and D2, on DC_F: AFTER the fuse, so a sustained
+# overvoltage blows F1 rather than the clamp, and at the entry, which is where this project's own vendor sheets
+# put it (Nexperia layout clause 1: place the device as close to the input terminal or connector as possible).
+part("D10", "Device", "D_TVS", "SMCJ40A (shore inlet clamp at the entry, in front of the ideal-diode FET: 40 V standoff on a line specified to 36 V)", "TVS", {"1": "GND_V", "2": "DC_F"}, "C224052")
 r("R27", "2.2k", "VIN_RAW", "LED_A", "R", "C4190"); part("LED1", "Device", "LED", "green: vehicle input present", "LED", {"2": "LED_A", "1": "GND"})
 # --- panel tracker stage (power/lt8705a.pdf, E4's design kept: LT8705A buck-boost, input regulated at the panel's maximum-power voltage (FBIN 17.6 V), output 15.1 V ORed into the bus; bench-fitted, 32.54)
 part("J_SOLAR", "Connector_Generic", "Conn_01x02", "JST-VH socket, 10 A: bare panel in (lead from the D38999 spare pair; a 36-cell 12 V class panel, up to about 22 V open circuit, 100 W): + -", "VH2", {"1": "PV_IN", "2": "GND"}, "C274411")
@@ -370,6 +381,14 @@ ph("J_GEIGER", 3, "Geiger counter module (RadiationD-v1.1 class): 5 V, GND, puls
 ph("J_DCF", 3, "DCF77 receiver module: 3.3 V, GND, pulse", {"1": "+3V3_E6", "2": "GND", "3": "DCF_PULSE"})
 ph("J_LTG", 5, "AS3935 lightning sensor module (CJMCU-3935 class): 3.3 V, GND, SDA, SCL, IRQ", {"1": "+3V3_E6", "2": "GND", "3": "SDA1", "4": "SCL1", "5": "LTG_IRQ"})
 ph("J_POD", 4, "outside sensor pod on the connector plate (M8 sealed lead): 3.3 V, GND, SDA, SCL", {"1": "+3V3_E6", "2": "GND", "3": "SDA1", "4": "SCL1"})
+# OWNER DECISION 31, RULED BY THE SESSION 21 SEPTEMBER 2026. The pod's three conductors leave the case through
+# an M8 sealed receptacle on the connector plate and reach the RP2040 with nothing between them: port_protect
+# named J_POD.1, .3 and .4 on every reading since the rule was written. Decision 34 states the level, IEC
+# 61000-4-2 level 4 at 8 kV contact and 15 kV air, and the USBLC6-2SC6's own datasheet
+# (v2/vendor/st/st-usblc6-2-esd-protection.pdf) guarantees exactly that level: two data lines clamped to the
+# rail and the rail itself clamped to ground, which is the pod's own shape, in a part this project already buys
+# five times on board B and once on board P. No new part number and no new footprint.
+kisch.esd("D9", "SDA1", "SCL1", "+3V3_E6")
 # 9 Sep 2026 (E7, appendix 32.83): U10 pin 9 was on GEIGER_PULSE, so R48 sat in series with NOTHING: the module's pulse reached the
 # RP2040 pin directly and GEIGER_IN went only to TP13. Pin 9 is GEIGER_IN now and the resistor is in the path it was drawn for.
 # (This comment is on its OWN line: appended to the code line it swallowed tp("TP13") and R49 and R50, the trap CLAUDE.md section 8 names.)
@@ -387,11 +406,11 @@ kisch.configure(power=POWER, stub=STUB, root=ROOT, project=PROJECT, seed=PROJECT
 
 # layout: columns, top-down cursor; group order = list order with section titles
 SECTIONS = [("PACK ENTRY: BB-2590/U CABLE ON XT60, 25 A BLADE, PADS TO THE BLOCK, SMBUS HEADER", ["J_BATT", "F3", "P_CP", "P_CN", "J_SMB", "C1", "D3"]),
-            ("VEHICLE AND SHORE ENTRY 9-36 V: F1, LM74700 IDEAL DIODE, LM5069 HOT-SWAP, SRF1260 FILTER, CLAMPS", ["J_DCIN", "F1", "U3", "Q1", "C4", "R1", "D1", "C2", "U6", "R19", "Q7", "R20", "R21", "R22", "R23", "C5", "R24", "R25", "Q8", "R26", "L2", "C6", "C7", "C8", "D2", "R27", "LED1"]),
+            ("VEHICLE AND SHORE ENTRY 9-36 V: F1, LM74700 IDEAL DIODE, LM5069 HOT-SWAP, SRF1260 FILTER, CLAMPS", ["J_DCIN", "F1", "U3", "Q1", "C4", "R1", "D1", "C2", "U6", "R19", "Q7", "R20", "R21", "R22", "R23", "C5", "R24", "R25", "Q8", "R26", "L2", "D10", "C6", "C7", "C8", "D2", "R27", "LED1"]),
             ("PANEL TRACKER: J_SOLAR, F2, LT8705A BUCK-BOOST (FBIN 17.6 V, FBOUT 15.1 V, 202 kHz), ORed INTO THE RAW BUS", ["J_SOLAR", "F2", "D4", "C11", "C12", "C13", "C14", "C15", "U5", "Q3", "Q4", "Q5", "Q6", "L1", "R5", "R6", "R7", "C16", "C17", "C18", "D5", "D6", "C19", "C20", "R8", "R9", "R10", "R11", "R12", "R13", "C21", "C22", "C23", "R14", "R15", "R16", "R17", "C24", "C25", "C26", "C27", "U4", "Q2", "C28", "R18"]),
             ("BLOCK LANDS (MIRROR OF A22 J_DOCK)", ["J_BLK"]),
             ("SENSOR CONTROLLER: 5 V BUCK, 3.3 V LDO, RP2040, QSPI FLASH, CRYSTAL, USB, BOOTSEL, PULL-UPS", ["U12", "L3", "C30", "C31", "C32", "C33", "U13", "C34", "C35", "U10", "U11", "Y1", "C36", "C37", "R28", "R29", "R30", "R31", "R32", "JP1"] + ["C%d" % k for k in range(38, 48)] + ["TP10", "TP11", "TP12", "R33", "LED2", "R34", "R35", "R36", "R37"]),
-            ("SENSORS, WATER ELECTRODES, MONITORS, FANS, HEADERS", ["U14", "C48", "U15", "R51", "C49", "C50", "PAD_W1", "R38", "PAD_W2", "R39", "C51", "R40", "R41", "R42", "R43", "J_FAN1", "Q9", "R44", "R46", "D7", "J_FAN2", "Q10", "R45", "R47", "D8", "J_GEIGER", "J_DCF", "J_LTG", "J_POD", "R48", "TP13", "R49", "R50"]),
+            ("SENSORS, WATER ELECTRODES, MONITORS, FANS, HEADERS", ["U14", "C48", "U15", "R51", "C49", "C50", "PAD_W1", "R38", "PAD_W2", "R39", "C51", "R40", "R41", "R42", "R43", "D9", "J_FAN1", "Q9", "R44", "R46", "D7", "J_FAN2", "Q10", "R45", "R47", "D8", "J_GEIGER", "J_DCF", "J_LTG", "J_POD", "R48", "TP13", "R49", "R50"]),
             ("TEST POINTS, FLAGS", ["TP%d" % k for k in range(1, 10)] + ["#FLG%02d" % k for k in range(1, 18)])]
 _listed = {r for _, refs in SECTIONS for r in refs}
 _rest = [p["ref"] for p in P if p["ref"] not in _listed]

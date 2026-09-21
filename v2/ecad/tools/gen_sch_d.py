@@ -112,7 +112,7 @@ FP = {
  "QFN16": "Package_DFN_QFN:QFN-16-1EP_3x3mm_P0.5mm_EP1.75x1.75mm", "VSSOP8": "Package_SO:VSSOP-8_3x3mm_P0.65mm", "TSSOP24": "Package_SO:TSSOP-24_4.4x7.8mm_P0.65mm",
  "SA868": "meshsat:NiceRF_SA868", "RELAY": "Relay_SMD:Relay_DPDT_Omron_G6K-2F-Y", "SMA": "Connector_Coaxial:SMA_Amphenol_132134_Vertical", "UFL": "Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical",
  "L1812": "Inductor_SMD:L_1812_4532Metric", "L0805": "Inductor_SMD:L_0805_2012Metric",
- "FB": "Inductor_SMD:L_0805_2012Metric", "SOD123": "Diode_SMD:D_SOD-123", "SMB": "Diode_SMD:D_SMB",
+ "FB": "Inductor_SMD:L_0805_2012Metric", "SOD123": "Diode_SMD:D_SOD-123", "SOD323": "Diode_SMD:D_SOD-323", "SMB": "Diode_SMD:D_SMB",
  "PH2": "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical", "PH4": "Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical", "PH5": "Connector_JST:JST_PH_B5B-PH-K_1x05_P2.00mm_Vertical",
  "JP": "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm",
 }
@@ -218,6 +218,32 @@ c("C46", "1u", "MICAMP_OUT", "MICAMP_AC"); r("R45", "10k", "MICAMP_AC", "MIC_SUM
 part("J_HS1", "Connector_Generic", "Conn_01x05", "JST-PH 1x5 socket: headset 1, SPK GND MIC GND PTT (the lead runs to the face plate U-174/U jack)", "PH5", {"1": "HS1_SPK", "2": "GND", "3": "HS1_MIC", "4": "GND", "5": "PTT_HS1_n"}, "C157993")
 part("J_HS2", "Connector_Generic", "Conn_01x05", "JST-PH 1x5 socket: headset 2, SPK GND MIC GND PTT (the lead runs to the face plate U-174/U jack)", "PH5", {"1": "HS2_SPK", "2": "GND", "3": "HS2_MIC", "4": "GND", "5": "PTT_HS2_n"}, "C157993")
 c("C49", "100n", "PTT_HS1_n", "GND"); c("C50", "100n", "PTT_HS2_n", "GND")
+# OWNER DECISION 31, RULED BY THE SESSION 21 SEPTEMBER 2026: THE SIX HEADSET CONDUCTORS GET BIDIRECTIONAL
+# CLAMPS AT THE JACK. Each jack carries a speaker line, a microphone line and a push to talk out of the case to
+# a U-174/U on the face plate, and a person plugs a headset into it having walked across a floor. port_protect
+# has named all six since the rule was written; decision 34 states the level, IEC 61000-4-2 level 4 at 8 kV
+# contact and 15 kV air.
+# WHY BIDIRECTIONAL, measured on this board rather than assumed: U7 is a TPA6132A2 DirectPath amplifier with a
+# charge pump (C30 across AMP_CPP and AMP_CPN, C29 on the negative AMP_HPVSS), so the speaker conductors are
+# GROUND REFERENCED and swing below ground; the microphone conductor carries a 5 V electret bias through JP1
+# and R43 from +5V_D8 when that jumper is closed; PTT idles at 3.3 V through R68 into U9 and Q4. A rail-
+# referenced array of the USBLC6 kind clamps to its own rail and to ground, so its lower diode would conduct on
+# the speaker's negative half.
+# WHY SIX SINGLES RATHER THAN FOUR DOUBLES, which is where this started: a two-channel SOT-23 array needs
+# 3.4 mm of courtyard and the only ground within five millimetres of these pins is 2.67 mm wide, between U7's
+# escape fan and the jack's own barrels, or 2.67 mm between the barrels and the board edge. Seated in the wider
+# places the arrays cost U7 six escapes of seventeen (D35P, third run) and sat 2.75 to 4.8 mm from their pins.
+# The Nexperia PESD5V0S1BA is the same protection one line at a time in a SOD323 that fits east of the jack's
+# own barrels, on the underside this board already assembles: C19224, 59,375 in stock at 0.0858 USD,
+# assets.nexperia.com/documents/data-sheet/PESD5V0S1BA.pdf, bidirectional, reverse standoff 5 V, diode
+# capacitance 35 pF typical, rated IEC 61000-4-2 contact discharge 30 kV and IEC 61000-4-5 surge 12 A. Six of
+# them put EVERY conductor 2.25 mm from its own clamp and cost U7 nothing.
+part("D9",  "Device", "D_TVS", "PESD5V0S1BA bidirectional ESD clamp at the jack: headset 1 speaker", "SOD323", {"1": "GND", "2": "HS1_SPK"}, "C19224")
+part("D10", "Device", "D_TVS", "PESD5V0S1BA bidirectional ESD clamp at the jack: headset 1 microphone", "SOD323", {"1": "GND", "2": "HS1_MIC"}, "C19224")
+part("D11", "Device", "D_TVS", "PESD5V0S1BA bidirectional ESD clamp at the jack: headset 1 push to talk", "SOD323", {"1": "GND", "2": "PTT_HS1_n"}, "C19224")
+part("D12", "Device", "D_TVS", "PESD5V0S1BA bidirectional ESD clamp at the jack: headset 2 speaker", "SOD323", {"1": "GND", "2": "HS2_SPK"}, "C19224")
+part("D13", "Device", "D_TVS", "PESD5V0S1BA bidirectional ESD clamp at the jack: headset 2 microphone", "SOD323", {"1": "GND", "2": "HS2_MIC"}, "C19224")
+part("D14", "Device", "D_TVS", "PESD5V0S1BA bidirectional ESD clamp at the jack: headset 2 push to talk", "SOD323", {"1": "GND", "2": "PTT_HS2_n"}, "C19224")
 # --- PTT and EMCON logic (74LVC1G, 3.3 V): KEY = (PTT headset 1 OR 2 OR software) AND TX_INHIBIT_n; the exciter keys on KEY; PA_KEY = KEY AND PA_EN drives the relay and the gate bias switch
 ic("U9", 5, "74LVC1G08 AND (1 A 2 B 3 GND 4 Y 5 VCC): both headset PTT lines idle high", "SOT235", {"1": "PTT_HS1_n", "2": "PTT_HS2_n", "3": "GND", "4": "PTT_HS_n", "5": "+3V3_D8"})
 ic("U10", 5, "74LVC1G08 AND: headsets AND software PTT (RTS)", "SOT235", {"1": "PTT_HS_n", "2": "PTT_SW_n", "3": "GND", "4": "PTT_ANY_n", "5": "+3V3_D8"})
@@ -287,7 +313,7 @@ SECTIONS = [("HARNESS, 5 V ENTRY, 3.3 V LDO, EXCITER SUPPLY", ["J_HARN1", "J_PWR
             ("SA868 EXCITER, UART BRIDGE, T/R RELAY, 10 dB PAD, LPF, PA LEADS, GATE BIAS SWITCH", ["U2", "Q1", "U3", "R4", "C10", "C11", "R5", "K1", "Q2", "R52", "R53", "D2", "C57", "R54", "R55", "R56", "J_PAIN", "J_PAOUT", "C58", "L1", "C59", "L2", "C60", "J_ANT", "U15", "C61", "C62", "J_VGG"]),
             ("USB HUB TUSB2046B, PORT TERMINATIONS, SPARE PORT", ["U5", "R6", "R7", "R8", "U4", "R9", "R10", "C12", "Y1", "R11", "C13", "C14", "C15", "C16", "C17"] + ["R%d" % k for k in range(12, 26)] + ["J_USB3"]),
             ("USB AUDIO CODEC PCM2912A, HEADPHONE AMPLIFIER, MIC PREAMP, HEADSET LEADS", ["R26", "R27", "R28", "U6"] + ["C%d" % k for k in range(18, 28)] + ["Y2", "LED2", "R29", "LED3", "R30", "R31", "R32", "C28", "R33", "R34", "U7"] + ["C%d" % k for k in range(29, 34)] +
-             ["R35", "C34", "R36", "R37", "C35", "C36", "C37", "C38", "U8", "C39", "R38", "R39", "C40", "C41", "R40", "C42", "R41", "R42", "C43", "JP1", "R43", "JP2", "R44", "C44", "C45", "C46", "R45", "C47", "R46", "R47", "C48", "J_HS1", "J_HS2", "C49", "C50"])]
+             ["R35", "C34", "R36", "R37", "C35", "C36", "C37", "C38", "U8", "C39", "R38", "R39", "C40", "C41", "R40", "C42", "R41", "R42", "C43", "JP1", "R43", "JP2", "R44", "C44", "C45", "C46", "R45", "C47", "R46", "R47", "C48", "J_HS1", "J_HS2", "C49", "C50", "D9", "D10", "D11", "D12", "D13", "D14"])]
 placed_refs = {r_ for _, rs in SECTIONS for r_ in rs}
 SECTIONS.append(("PTT AND EMCON LOGIC, PTT MIRROR, LEDS, EXPANDER 0x26 WITH LEVEL STAGES, TEST POINTS, FLAGS", [p["ref"] for p in P if p["ref"] not in placed_refs]))
 def layout(page_h):
