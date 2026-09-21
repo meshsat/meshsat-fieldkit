@@ -16919,3 +16919,14 @@ the inlet lands, hot-swap west of it, choke west of that under the block, the ra
 Eight chain runs found the holes, the overflows and the clamp's seat; the last two end OK at hard 0 with E33's escapes
 and zero collisions. E35 routes beside E34, the floor plan its one variable.
 
+
+**Addendum, 05:47 CEST: three routers land and two predictions fail.** D32 (C21 and C28 seated) ran all 200 passes:
+hard 0, ONE open of 133; /PCM_VIN closed on the underside seat and /PCM_VCCL did not, at 4.9 mm now where D31 read
+19.2, because the router laid /PCM_VOUTR and /LED_REC_K through the corridor between pin 19 and its capacitor and every
+closer shape is refused against those two tracks by name. via_current reads 0 rails over on the routed board again.
+Board D's best router board and the pre-lay rule's own case (D17's shape): D33 pre-lays /PCM_VCCL alone, one variable,
+prediction 0 and 0. A93 (the pad guard's arm) landed at hard 0 and TEN open with the four rails still open: a live
+column in each lane bought nothing at the router, as its own pre-route board said (two pairs per slot rail left at the
+second capacitor row); A94 and A95, which lay the rest of the run at generation, are the arms that answer. E34 landed
+at hard 0 and TEN open, six of them the tracker's own pins, which is E23's finding again: the tracker's room is board
+E's placement item ahead of its closers. Records in d.json, a.json and e.json.
