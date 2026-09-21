@@ -85,7 +85,15 @@ FIXED = {"J_HARN1": (-42, 8, 0, False), "J_PWR1": (-42, -16, 90, False), "J_HS1"
          # pull-up column R18/R19 at x 23.5. D30 round 1 landed hard 0 and ONE open, /PCM_VCCP over 16.1 mm from C23 pad 1 to U6 pad 26, with the capacitor
          # packed in the rows and bypass_place reading it STUCK (no free spot within 3.0 mm); the seat was measured first through FIXED_OVERRIDE on the hub:
          # PREROUTE-DONE OK, hard 0, escapes 68/7 and fanout 92/13 identical to the baseline, place_audit 0 collisions, C23 no longer STUCK.
-         "C23": (26.5, -1.6, 0, False)}
+         "C23": (26.5, -1.6, 0, False),
+         # D32 (21 September 2026, 03:05 CEST): D31 ran all 200 passes and landed hard 0 and TWO open of 133, /PCM_VCCL (C21 pad 1 to U6
+         # pin 19, 19.2 mm) and /PCM_VIN (C28 pad 2 to U6 pin 16, 18.0 mm), where /PCM_VCCP closed as C23's seat predicted: the same shape,
+         # next two parts. C21 is the PCM_VCCL bypass (declared at pin 19) and takes the free front side east of U6 4.8 mm from its pin;
+         # C28 is the 1 uF that couples the halved receive audio into the ADC input at pin 16 and was packed in AUDB on the underside
+         # eighteen millimetres west, so it keeps the underside and sits 4.2 mm south of pin 16, past the escape fan. Measured through
+         # FIXED_OVERRIDE on the hub (/root/dseat31.log): PREROUTE-DONE OK, hard 0, escapes 68/7 as D31, place_audit 0 of 6; a front-side
+         # C28 south of the codec (/root/dseat32.log) collides with R30 (courtyards, a mask bridge, a short) and is refused.
+         "C21": (31.0, -10.7, 90, False), "C28": (24.8, -17.9, 0, True)}
 # 9 Sep 2026 (D10, appendix 32.83): a placement candidate can be swept from the environment instead of edited into the file.
 # The D pre-route chain runs in 47 seconds, so where a part goes is a question to MEASURE (pairs laid, pre-route hard),
 # not to argue on paper. FIXED_OVERRIDE="R20=35.0,19.5,0;R21=35.0,17.9,0" moves those parts for one run only.
@@ -120,7 +128,8 @@ REGIONS = [
  ("HUBB", (4, 0, 43, 16), ["R4"] + ["R%d" % k for k in (8, 9, 10, 11)] + ["C12", "C15", "C16", "C17"], True),
  ("AUD",  (4, -22, 43, -15.2), ["C%d" % k for k in range(19, 28)] + ["C39", "C40", "LED2", "LED3", "R29", "R30", "JP1", "JP2"], False),   # D9: the strip south of the codec
  ("AUD2", (29, -15, 43, 0), ["U8"], False),
- ("AUDB", (4, -22, 43, -8), ["R%d" % k for k in range(31, 48)] + ["C18", "C28", "C34"] + ["C%d" % k for k in range(41, 49)], True),
+ # C28 left this list for a FIXED seat beside U6 pin 16 at D32 (21 September 2026)
+ ("AUDB", (4, -22, 43, -8), ["R%d" % k for k in range(31, 48)] + ["C18", "C34"] + ["C%d" % k for k in range(41, 49)], True),
  ("CTRL", (-37, -21.5, -5, -4.5), ["U16", "C63"] + ["U%d" % k for k in range(9, 15)] + ["LED4", "LED5", "LED6", "Q1"], False),
  ("CTRLB", (-24, -21.5, -5, -4.5), ["C%d" % k for k in range(51, 57)] + ["R48", "R49", "R50", "R51", "R5", "D2", "C57"], True),
  ("RLYD", (-26, -37, -8, -31.5), ["Q2", "R52", "R53"], False),
