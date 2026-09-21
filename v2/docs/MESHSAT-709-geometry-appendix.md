@@ -17246,3 +17246,39 @@ and its launcher doubles the route cap, which is a second variable against E36's
 the three-hour mark on its own session, which is E36's clock exactly, and again at its landing. The prediction
 is in `boards/e.json` and in the launcher: ANA-001 PASS 3 of 3 where E36 read 0.433 mm, and an open count
 within one or two of E36's seven, with the named nets reported if the fence costs more than that.
+
+**Addendum, 11:19 CEST: every cluster board E's generator lays shares its current two to one, and the
+post-route fixer has already tried the sites that are over.** Measured on E36's LANDED round-1 board from the
+mesh `dc_drop` solved through it, with the barrels grouped where they sit within 1.6 mm of each other. Each
+row is worst over mean, the number `cluster(skew=)` was written for on 19 September:
+
+| net | barrels | worst | mean | total | skew |
+|---|---:|---:|---:|---:|---:|
+| DC_F | 8 of 0.50 mm | 2.77 A | 1.00 | 8.00 | **2.77** |
+| TRK_OUT | 9 of 0.30 | 1.62 | 0.68 | 6.16 | 2.37 |
+| DC_HS | 10 of 0.50 | 1.26 | 0.55 | 5.50 | 2.28 |
+| HS_S | 6 of 0.30 | 2.85 | 1.33 | 8.00 | 2.14 |
+| PV_P | 5 of 0.30 | 2.16 | 1.14 | 5.68 | 1.90 |
+| CELL_F | 3 of 0.50 | 1.23 | 0.71 | 2.14 | 1.72 |
+| VIN_RAW | 10 of 0.50 | 1.07 | 0.72 | 7.19 | 1.49 |
+
+`CELL_F` is declared at skew 1.325 and measures 1.72 on this board, so even the site that carries a skew
+carries the wrong one. **And the count is not free**: each FET source land lays one column of at most five
+barrels inside the judge's own window, because a second column two millimetres out is counted by nothing, and
+`rail_barrels` tops the site up inside that same window, which is how DC_F came to hold eight. Seventeen
+barrels do not fit there. So what is left for board E's next phase is a second transition site further along
+the conductor where the current has spread, a larger drill, or the band that removes the transition; each is
+a measurement on the placed board and none is applied.
+
+**The post-route fixer has already been to the worst three sites and gave them back.** E36's own finish ran
+`via_parallel`, which found nine sites and could fill almost none of them: `TRK_OUT` at (158.9, 209.0) placed
+ONE parallel via of six wanted, at (157.7, 199.7) one of six, at (161.3, 198.2) three of six, while `PV_P` at
+(157.0, 190.7) took all six. The DRC after laying read eleven clearance, seven hole-clearance and seven
+items-not-allowed; thirteen of the new vias sat in a hard violation and came off with their links, and the
+round then read HURT, hard 0 to 0 and unrouted 6 to SEVEN, because removing a via with its links opened a
+connection, so every via was reverted. That is the fixer's own acceptance rule working, and it says what the
+record did not have: **at those three six-amp sites there is no room for the barrels**, so they are a geometry
+item and not a fixer item.
+
+**And the fence cost the chain nothing.** E38's `sense-fence` stage is recorded by its own guard: eleven rule
+areas in eight seconds, hard 0 before and after, unrouted 211 before and after, kept.
