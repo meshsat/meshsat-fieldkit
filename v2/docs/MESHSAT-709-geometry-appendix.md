@@ -17094,3 +17094,11 @@ the mesh moved with it.
 input-side reorder moved (its gate and its sense), and the strip's long runs to the sensor controller. Eleven against
 ten is two cuts at two pass counts on a loaded hub and decides nothing; the input rails' reading is `dc_drop`'s on
 the round-1 board, solved beside this entry, and E37 answers the clock for the whole E family.
+
+**Addendum, 07:32 CEST: E35's input rails, solved on its round-1 board.** Against E17's reading of the 20th, the
+re-split moved DC_IN off its quarter-millimetre track (0.800 mm at 3.04 A now) and left DC_P and HS_S where they
+were (0.800 mm at 4.85 and 5.05 A), all three still over on density; the 26 mm DC_HS band passes. DC_F is worse: a
+0.127 mm escape stub at Q1's source carries the whole 8 A and its fanout via reads 14.26 times its wall, the board's
+worst site, which is the site E36's island and cluster were written for and which E36's snapshot reads at 2.76.
+Nine of ten judged rails over their barrels, forty over; the prediction's band half holds and its narrow-rails half
+holds for DC_IN alone.
