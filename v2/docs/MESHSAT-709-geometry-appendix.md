@@ -17436,3 +17436,31 @@ no wire, so the wire half of those six is inert, while the via half is preserved
 a polygon the router carries through its search and cannot use, which is what made the B14 In1 test and B15
 run 1 thrash for a whole time limit. It stays unwired until a pair can measure it, because wiring it mid
 campaign would make the next arm differ from its control in two things rather than one.
+
+**Addendum, 21 September 2026 12:43 CEST: E37 says three of E36's seven opens were the CLOCK, and board E's
+best board is four.** E37 is E36 with `ROUTEFLOW_TIMEOUT_SCALE=4` and nothing else. It **ran all 200 passes in
+2 h 27** (04:17:09 to 06:43:52 UTC) and landed at the router on **hard 0 and FOUR open of 94** with 230 vias,
+where E36 was **CUT at exactly 10,800 s with SEVEN**. The stretched cap was never reached, so what E36 lacked
+was not six hours: the same 200 passes cost 8,860 s on a quiet hub and more than 10,800 beside E35, A97 and
+D33. Its closers took **none** of the four (stub router 0 of 4, `direct_close` 0 of 3 tried, `/USB_E6_N`
+173.2 mm beyond the 14 mm reach), so the finished board is four as well, board E's best anywhere: `/DC_P`,
+`/TRK_BOOST2`, `/TRK_INTVCC`, `/USB_E6_N`. Against E36's six after its closers the clock closed `/CELL_MON`,
+`/U3_VCAP` and `/USB_E6_P` and opened `/TRK_INTVCC`, whose every proposed closure is refused by **U5's own
+GND pad 39 and a GND via**, which is E23's tracker-room finding once more. Round 2's `via_costs` remedy read
+ten and round 1 was restored; `RESULT: ALL PASS` on its own gate line, and **not adoptable at four open**.
+
+**The general reading is about the instrument rather than board E.** E34 (cut at 3 h, ten open), E35 (cut at
+3 h, eleven), E36 (cut at 3 h, seven) and E37 (200 passes, four) are four readings of boards one generator
+step apart, and the cap decided three of them. A cut is always reported as a cut here, but a cut is also not
+comparable with a completed round: **read a cut against another cut at the same pass, or stretch the cap.**
+
+**Addendum, 21 September 2026 12:43 CEST: A98's finished board is four open with its own variable closed.**
+Read from its round directory (sha 3612b9bfb165ff0ddb58) while its remedy round regenerates the tree: hard 0
+and **FOUR open of 274**, the closers having taken 17 to 6 (stub router, 1,613 s) and 6 to 4 (`direct_close`,
+which closed `/S2_OUT` and `/S3_OUT` at 6.599 mm each, track end to track end). The four and their spans:
+`/+5V_DEV` 88.6 mm (decision 35's run to the bank, which the outlet island does not reach and A100 does not
+claim to), `/PA_ISNS_N` 55.4 mm, `/PA_SW_EN` 132.2 mm and `/POE_LDRV1` 13.5 mm, every one past the closer's
+12 mm reach and left to the router. A93's three is still board A's best finished number, and neither is
+adoptable against the committed A32's 0 and 0. What A98 proves is the variable it was launched for:
+**`/VIN_RAW`, open on A95 at the same pass and at its landing, is closed here and stays closed through the
+finish**, which is the clamp barrel's own net answering.
