@@ -17069,3 +17069,28 @@ the rail's one open pair (the router closes the cluster's own pads and never the
 half-ounce copper is about four amps at ten kelvin, against the rail's 3.80 A typical and 6.00 A peak, so the
 corridor that exists meets the typical current and not the peak, which is decision 35's question with its number.
 Not applied.
+
+**Addendum, 07:27 CEST: the sliced islands' barrels are under their walls, and the two barrel tools disagreed
+about the plating.** `dc_drop` and then `via_current`, run as one set on E36's pass-33 snapshot in a scratch tree:
+eleven rails judged, nine over, forty-five barrels over, and read barrel by barrel against the island boxes the
+answer to the E38 question is no. The VIN_RAW source island's ten barrels carry 0.45 to 1.07 A each under a 1.05 A
+wall with two foreign tracks through the island; its two over barrels are fanout vias elsewhere. DC_HS's island
+carries under half an amp a barrel; the rail's worst barrel, 3.59 A in one 0.40 mm hole, is the cluster the barrel
+fixer laid in two rows at the choke's pad at the other end of the band, whose three loaded barrels read 1.04, 2.18
+and 3.59 A, so a cluster sized for the mean share is short by the factor the nearest barrel takes, which is the
+`cluster(skew=)` finding of 19 September on a new site. DC_F's island has the same shape (2.90 A in one barrel of
+eight). TRK_OUT's island is under; its three over sites are single router vias each carrying the whole 6.16 A,
+the finish's `via_parallel` case. So the fence is not owed on this reading and E36's remaining barrel work is the
+share inside a cluster and the router's own transitions. The read surfaced a tool discrepancy on the way: `dc_drop`
+modelled and rated every barrel at 25 um of plating while `via_current` judges at the fabricator's published 18 um,
+so the limit written beside each solved current (1.11 A for a 0.40 mm hole) sat a fifth above the judge's wall
+(0.90 A). One constant now, read from `via_current`; the two tools rate every drill to the same milliamp, which a
+rule holds, and every `dc_drop` reading of the set is re-taken in the same stretch because the barrel resistance in
+the mesh moved with it.
+
+**Addendum, 07:28 CEST: E35 lands at its cut.** Cut at three hours on pass 110 of 200: hard 0 and eleven open of 94
+(`/BLK_SPARE`, `/CELL_MON`, `/DCF_PULSE`, `/FAN2_PWM`, `/GEIGER_IN`, `/HS_GATE`, `/HS_S`, `/TRK_BOOST2`, `/TRK_SS`,
+`/USB_E6_N`, `/USB_E6_P`). Two of U5's pins where E34's cut left six, two new opens at the hot-swap FET the
+input-side reorder moved (its gate and its sense), and the strip's long runs to the sensor controller. Eleven against
+ten is two cuts at two pass counts on a loaded hub and decides nothing; the input rails' reading is `dc_drop`'s on
+the round-1 board, solved beside this entry, and E37 answers the clock for the whole E family.
