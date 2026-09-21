@@ -17120,3 +17120,12 @@ pre-lays at the one-layer sites. The clusters stand in the controllers' escape l
 connections; `/+5V_S1` and `/+5V_S2` closed at the router and `/+5V_S3` did not (this tree carries the four-barrel
 columns, not A95's whole bank). Whether the clusters buy anything is `via_current`'s reading on the solved mesh,
 which the 02:45 entry named as the question, solved beside this entry.
+
+**Addendum, 07:41 CEST: the one-layer tab clusters are dead copper.** `dc_drop` and `via_current` on A97's round-1
+board: the judge's own notes read that FE_OUT carries eight amps through eleven vias with all of its copper on one
+layer, and PD_OUT and HF_OUT the same, so the barrel clusters the fixer pre-laid at those drain tabs stand in the
+laminate reaching nothing, and the twelve controller pins A97 left open are their price. The rails that do change
+layer at their tabs (PA_OUT, PD_VPWR, CH_ACN, CH_SRP) read under their barrels, CH_SRP included, because the router
+carries the charger's output on a half-millimetre front track (8.35 A, PI-001's worst conductor, the charger block's
+floor plan). The judge counts no one-layer site short from here and the fixer lays no cluster at one; a rail a
+router later takes through another layer is `via_current`'s on the solved mesh.
