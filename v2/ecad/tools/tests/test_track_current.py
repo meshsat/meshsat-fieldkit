@@ -47,16 +47,27 @@ def t_wrong_constants_fail_that_example():
                                          "nothing about the constants: %.4f A" % (bad, got))
 
 
-def t_this_projects_own_bar_is_the_published_internal_model():
-    """dc_drop's internal-conductor limit against the D.4 constants, over the geometry these boards use."""
-    worst = 0.0
+def t_this_projects_own_bar_is_a_published_model_and_never_above_one():
+    """RE-STATED FOR DECISION 35 (21 September 2026). It used to pin `dc_drop`'s internal bar to the D.4
+    constants alone, which was right while IPC-2221A was the only model in use and became FALSE the moment the
+    ruling took the most conservative of the three: above 0.1706 mm2 at 10 K the bar is CNES's and the old
+    assertion fails on a tool that is doing what it was ruled to do.
+
+    What survives, and is the property worth holding: the bar is one of the PUBLISHED Annex D models at every
+    geometry these boards use, and it is never ABOVE any of them. A bar that reads higher than a published
+    model is the thing decision 35 ruled out, and a bar that is not any model's number at all would be this
+    project inventing one."""
+    worst_above = 0.0
     for w in (0.2, 0.25, 0.4, 0.5, 1.0, 2.0, 3.0, 6.0):
         for t in (0.0152, 0.0175, 0.035, 0.070):
             for dT in (5.0, 10.0, 20.0):
                 a = w * t
-                mine, theirs = dc_drop.ipc_limit(a, dT, internal=True), tc.rating(a, dT, "IPC-2221A")
-                worst = max(worst, abs(mine - theirs) / theirs)
-    assert worst < 0.01, "dc_drop's bar is %.2f percent off the published D.4 model" % (100 * worst)
+                mine = dc_drop.ipc_limit(a, dT, internal=True)
+                published = [tc.rating(a, dT, m) for m in tc.MODELS]
+                assert any(abs(mine - p) / p < 0.01 for p in published), \
+                    "dc_drop's bar at %.4f mm2, %.0f K is no published model's number" % (a, dT)
+                worst_above = max(worst_above, (mine - min(published)) / min(published))
+    assert worst_above < 0.01, "dc_drop's bar reads %.2f percent ABOVE the lowest published model" % (100 * worst_above)
 
 
 def t_the_external_factor_is_not_claimed_to_be_sourced():
