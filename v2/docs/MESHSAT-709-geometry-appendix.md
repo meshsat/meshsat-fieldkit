@@ -17543,3 +17543,24 @@ it was drawn for**: ANA-001 on E38's own round-1 board is the other half, its fi
 segment probe is armed behind it, because the rule counts only the declared switching nets while the tightest
 approach measured on E37 was a gate drive at 0.204 mm. A fence that closes the declared pair and leaves the
 gate drives where they were has answered the rule and not the coupling.
+
+**Addendum, 21 September 2026 13:18 CEST: on board A the fence has nothing to grow from at exactly the nets
+that fail hardest.** The probe that settled board E's question was pointed at board A's own declaration, on
+A98's finished round-1 board (sha 3612b9bfb165ff0d, read-only, sha identical after; the board's nine switch
+patterns expand to 47 nets and the gate drives ANA-001 does not count were added on top). **88 pairs of
+segments sit inside 0.50 mm on a shared layer; the switching side is locked in 6 of them, so 82 are the
+router's and a fence can move them; the SENSE side is locked in 35.** That last number is where the two
+boards part company. `sense_fence` grows its areas around LOCKED sense copper, which is what the pre-lay
+laid, and on board E the sense side is locked in every offending pair because the pre-lay pins the whole
+pair. On board A only the five `*_CSF` nets and two `CSGF` nets carry locked copper, and **every one of the
+tightest rows is a net the pre-lay never touched**: `PD_ISNS_P` 0.132 mm from `PD_SW1`, `FE_ISNS_P` 0.155
+from `FE_CS`, `CH_SRN_F` 0.155 from `CH_SW2`, then `POE_ISNS_N` 0.282, `HF_ISNS_N` 0.294, `POE_CSGF` 0.295,
+`CH_ACN_F` 0.300, `HF_ISNS_P` 0.306, `B33_FB` 0.354, `FE_ISNS_N` 0.354, `PA_CSGF` 0.367, `POE_ISNS_P` 0.421,
+every one with no locked copper at all. The nets that do have it read 0.213 to 0.462.
+
+**The prediction, written before A99 lands**: the fence moves the `*_CSF` rows and leaves `PD_ISNS_P`,
+`FE_ISNS_P` and `CH_SRN_F` where they are, so A99 still fails ANA-001 and its failing nets are the ISNS and
+SRN_F ones rather than the CSF ones. If the failing SET does not change between A99 and A99C, the lever is
+the **pre-lay's group list** rather than the fence, and A101's shape is board A's ten filtered ISNS nets with
+`CH_SRN_F` and `CH_ACN_F` added to the pre-lay so the fence has copper to grow from at all. The A99 pair's
+own caveat stands either way: its ANA-001 half is read on its own copper and its open-count half is not.
