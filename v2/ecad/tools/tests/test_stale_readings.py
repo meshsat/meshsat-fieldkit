@@ -96,3 +96,24 @@ def t_it_decides_nothing():
         assert rc == 0, rc
         v = json.load(open(os.path.join(out, "stale_readings.verdict.json")))
         assert v["verdict"] == "PASS" and v["advisory"] is True, v
+
+
+def t_out_dir_reaches_the_verdict():
+    """THE DEFECTIVE FIXTURE is the tool as it stood at 07:05 on 21 September: run with `--out-dir` pointed at a
+    scratch directory it wrote `stale_readings.verdict.json` into the tree's own out/, the shape of the 19
+    September incident (a reading written by hand into this tree's evidence). Both writers pass the flag now;
+    the acceptable fixture is a run whose verdict lands where the flag says and nowhere else."""
+    src = open(os.path.join(TOOLS, "stale_readings.py"), encoding="utf-8").read()
+    assert src.count('out_dir=_v.opt(argv, "--out-dir", None)') == 2, "a writer in stale_readings ignores --out-dir"
+    with tempfile.TemporaryDirectory() as d:
+        want = os.path.join(d, "elsewhere"); os.makedirs(want)
+        cwd = os.getcwd(); os.chdir(d)
+        env = os.environ.pop("VERDICT_DIR", None)
+        try:
+            rc = S.main([d, "--out-dir", want])
+        finally:
+            os.chdir(cwd)
+            if env is not None: os.environ["VERDICT_DIR"] = env
+        assert rc == 0, rc
+        assert os.path.exists(os.path.join(want, "stale_readings.verdict.json")), os.listdir(want)
+        assert not os.path.exists(os.path.join(d, "out")), "the verdict was written beside the caller, not where --out-dir said"
