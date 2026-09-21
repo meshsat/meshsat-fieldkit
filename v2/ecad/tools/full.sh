@@ -306,7 +306,15 @@ fi
 # `max_barrels`. It declines a site whose current needs a busbar and says so; read those, they are floor-plan
 # items. `via_parallel` in the finish is the other half, for a board that is already routed.
 RB="$(python3 -c "import json,sys; d=json.load(open(sys.argv[1])).get('rail_barrels'); print('' if not d else (d.get('max_barrels', 8) if isinstance(d, dict) else 8))" "$CFG")"
-[ -n "$RB" ] && { python3 ../tools/rail_barrels.py $N.kicad_pcb --board "$L" --max-barrels "$RB" --apply 2>&1 | grep -E 'rail_barrels:'; }
+# A STAGE THAT DOES NOT RUN SAYS SO (21 September 2026, 04:17 CEST): a chain on board E ended PREROUTE-DONE OK with no
+# `rail_barrels:` line at all and no verdict, and the log could not tell a skipped stage from a tool that printed nothing
+# through the grep. The stage prints its own absence now, with the reason it can see.
+if [ -n "$RB" ]; then
+  python3 ../tools/rail_barrels.py $N.kicad_pcb --board "$L" --max-barrels "$RB" --apply 2>&1 | grep -E 'rail_barrels:' \
+    || echo "rail_barrels: the stage printed no rail_barrels: line (exit ${PIPESTATUS[0]}): read out/rail_barrels_$L.verdict.json or the tool crashed before its header"
+else
+  echo "rail_barrels: not declared in boards/$L.json, stage skipped"
+fi
 # PRE-LAY: a long net the router will not take, laid before the router runs (14 September 2026, board C).
 # `prelay_nets` in boards/<letter>.json names them and `prelay_layers` gives the layers to search. On the
 # ROUTED board there is no lane left for C's `/EPD_SDA`, 249 mm from J_EPD pin 14 to U3 pad 5 across a panel
