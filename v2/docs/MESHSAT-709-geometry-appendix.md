@@ -17396,3 +17396,34 @@ So that part of E39 needs neither a new site nor a bigger drill. **One site stil
 placement item E34 named. **And none of this speaks to the solved reading**: the post-route question is how
 the mesh SHARES the current between the barrels at a site, measured at 1.47 to 2.77 to one on E36's landed
 board, and a site with room is not a site whose share is even. The two are read apart.
+
+**Addendum, 21 September 2026 12:26 CEST: the outlet island takes board A's device rail from five open pairs
+to two, and the first version of it connected nothing.** The island was written into `gen_pcb_a3.py` as an In3
+pour over the outlet cluster, on the strength of the 11:44 measurement that an In3 rectangle fills as one
+piece holding four of the cluster's five sites where an F.Cu one holds three. Its chain probe ended
+PREROUTE-DONE OK **with `/+5V_DEV` still reading five open pairs**. R100, C103 and U23 are SURFACE pads on
+F.Cu, and an inner pour cannot reach a surface pad without a barrel: *which filled piece contains this site*
+is a containment test standing in for a connection test, and on In3 four sites are contained and none is
+connected. The probe caught in eleven minutes what an argument would have carried into a five-hour route.
+
+**The corrected island is the slot rails' own pattern**: `bank_col` over R100, C103 and U23 places the
+barrels beside those pads and returns their rectangle, an F.Cu island holds them, and the In3 union under the
+whole cluster is what the barrels reach. Measured in board A's own chain: power copper 43 zones and keep-outs
+against 40, placed board hard 0, `place_audit` 0 predicted collisions of 19 fine-pitch parts of 436,
+`rail_barrels` 8 sites and 21 barrels with none refused, every pre-lay group kept, and **`/+5V_DEV`'s open
+pre-route pairs FIVE to TWO**. The two that remain are named: the cluster's own In3 zone at (246.2, 82.3) to
+the bank's F.Cu zone at (136.5, 76.9), which is decision 35's run and which nothing here touches, and the via
+at (253.1, 123.9) to the rail's track at (237.8, 80.2), the 46 mm southern leg across the PD stage.
+
+**And checking whether A99 and A99C are really one variable apart found a cap being used as a denominator.**
+Their placements are identical (436 footprints at the same positions and orientations, 1,225 tracks,
+`place_audit` 0 of 19 on both) and their DSNs differ by exactly the 85 fence areas, and yet the switching
+pre-lay closed **16 of 16 on A99 and 19 of 20 on A99C**. `full.sh` ran the DRC over the whole placed board and
+handed the report to `stub_router`, which takes its work list from `unconnected_items`; KiCad's export lists
+at most about 499 of them and board A's placed board is AT that cap. Re-running the DRC on both placed boards
+read-only gives 499 entries and sixteen switching pairs on each, `/FE_SW2`, `/HF_SW2`, `/PA_SW2` and
+`/PD_SW2` with four apiece and **`/POE_SW2` absent from both**; `prelay_pairs.py`, which sets every other net
+to no net in a copy so that nothing but the group can raise an item, reports **twenty** on the same board,
+four for each of the five nets. So two arms differ by four pre-laid connections for a reason that is neither
+board's, and every board-A arm compared since the pre-lay groups existed carries it. ANA-001 on A99 is still
+read on its own copper and is unaffected; the open-count half of that pair carries the caveat.

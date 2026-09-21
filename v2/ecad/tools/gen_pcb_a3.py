@@ -564,6 +564,26 @@ for n, xL, Lr, Rr, Jr, out in SLOT:
         bank = bank_col(out, BANK_CAPS[n])                                   # the barrels beside the bank's own pads, and the island that holds them
         PC.island(out, "%s load bank" % out, rect_pts(bank), pcbnew.F_Cu, priority=3)
         PC.union(out, "%s under the block" % out, [(min(xL - 2.5, bank[0]), min(41.0, bank[1]), xL + 12.5, 73.5)], pcbnew.In3_Cu, priority=2)
+        # AND THE OUTLET CLUSTER JOINS ITSELF (21 September 2026, measured on A98's own pre-route board).
+        # The device rail's open pre-route pairs are FIVE, and only ONE is decision 35's 99.78 mm run from
+        # here to the bank; the other four are inside the outlet cluster itself, 8.47 to 46.27 mm apart.
+        # A BAND closes none of them: every straight lane carries another net's copper, down to five
+        # micrometres (the GND tracks, Q27's PD_VPWR pad at 0.38, the U23_OVLO divider at 0.48). A pour
+        # flows around what a band runs into, so an island was laid on a COPY and KiCad asked which filled
+        # PIECE holds each site: on F.Cu one piece of 493.8 mm2 holds C103, R100 and U23 and leaves U18 pin
+        # 17 and its via outside (a rectangle sixty percent smaller gives the same three, so the front is
+        # pinched there); on In3 one piece of 724.7 mm2 covers FOUR, U18 pin 17 among them.
+        # **AND THE FIRST VERSION OF THIS WAS THE In3 POUR ALONE, WHICH CONNECTS NOTHING.** Its chain probe
+        # ended PREROUTE-DONE OK with /+5V_DEV still reading FIVE pairs: R100, C103 and U23 are SURFACE pads
+        # on F.Cu and an inner pour cannot reach a surface pad without a barrel, so "the filled piece holds
+        # this site" was a containment test standing in for a connection test. The island is the slot rails'
+        # own pattern instead: copper on the pads' OWN layer, a pour under it, and the barrels that hand one
+        # to the other, every site derived from the placed pads by `bank_col` (which drops a barrel within
+        # 0.7 mm of another net's pad and refuses the board if fewer than two survive).
+        oc = bank_col(out, ["R100", "C103", "U23"])
+        PC.island(out, "%s outlet cluster" % out, rect_pts(oc), pcbnew.F_Cu, priority=3)
+        PC.union(out, "%s outlet cluster under" % out,
+                 [pads_rect(net_pads(out, ["R100", "C103", "U23", "U18"]), 2.0, 2.0)], pcbnew.In3_Cu, priority=2)
     if n != "D":
         # THE RAIL REACHES ITS OWN LOAD BANK PAST ITS CONVERTER BLOCK (20 September 2026, appendix
         # 32.328 and 32.329, proved by A88 at PREROUTE-DONE OK). Each slot rail's four load parts sit
