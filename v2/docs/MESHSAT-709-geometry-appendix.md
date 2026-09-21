@@ -16964,3 +16964,18 @@ its two hundred passes and answers the clock rather than the board, which is D27
 place. E37 is E36 with one variable, `ROUTEFLOW_TIMEOUT_SCALE=4`, staged fresh from the tools at 27029af8 and routing
 since 04:12 UTC; E36 and E37 are the pass-count pair, and E37 stands against E35 as the board pair only if E35's cut
 pass count is within a third of E37's. The box suite at 27029af8 reads 1314 passed, 0 failed, 12 skipped.
+
+**Addendum, 06:24 CEST: A95 lands with the three slot rails closed at the router.** Both probes were cut at their five-hour
+caps on the place box and read on their own router boards by net name. A94, the second capacitor row in each island, lands
+at hard 0 and nineteen open with all four rails still open: the row halved the gap on the pre-route board and the router
+did not take the 2.6 mm that was left. A95, that row plus the load resistor in each island, lands at hard 0 and fifteen
+open with `/+5V_S1`, `/+5V_S2` and `/+5V_S3` closed, the first board A arm of nine on which any of them has closed at the
+router. A run laid whole at generation, from the connector row to the load resistor, is closed because the router is
+asked nothing on it, which is the sentence A93's closers wrote the other way round at 06:03 (one via each, 0.52 mm from
+the load resistor). `/+5V_DEV` stays open because neither probe touched its bank, and that is the next generator item; a
+new open on `/VIN_RAW` waits for its span from the reader. Fifteen against A93's ten is three cuts at three pass counts on
+one box and decides nothing by itself. Board D's three remaining typed barrel points (the `+5V_D8` vias beside U1 and FB1
+and the `+5V_SA` column at FB1 pad 2, all beside PACKED parts) are derived from the placed pads now and the probe chain
+lays the same fourteen barrels within three micrometres, escapes 68 with 7 skipped, six of six crossings carrying,
+PREROUTE-DONE OK; board E's CELL_F cluster is placed on the router's transition beside F3 pad 2 (2.74 mm) and is left as
+it is, because its site is a solved barrel and not a pad.

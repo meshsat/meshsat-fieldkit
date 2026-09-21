@@ -255,12 +255,26 @@ _pc = _PC(board, net_for, P)
 # the decoupling gate refused the board for it. A pad of the band's own net that the band overlaps is
 # connected to it, so no via is needed at all. C7's GROUND pad ends at x -38.30 and the band starts at
 # -38.10, which is 0.20 mm of clearance against the 0.15 the fill wants.
+# D34 (21 September 2026): U1, FB1 and C5 are PACKED parts, and every barrel and spine of the two rails below was TYPED
+# against the packing D12 happened to produce. E35 moved two of board E's pockets and four typed clusters were left in empty
+# board (e.json, 06:02); board D's points still sit 0.25 to 1.3 mm from their pads on D33's placement, which is the packing
+# not having moved yet, not a property of the copper. Every point is derived from the placed pad it serves now, with the
+# offsets the D12 drawing used, so the copper is the same on this placement and follows the part on the next.
+def _padc(ref, num):
+    """case (x, y) of a placed pad's centre (gen_pcb_e3's helper of E35)"""
+    for _q in placed[ref].Pads():
+        if str(_q.GetNumber()) == str(num):
+            _c = _q.GetPosition(); return (_c.x / 1e6 - OX, OY - _c.y / 1e6)
+    raise SystemExit("no pad %s on %s" % (num, ref))
+_U11 = _padc("U1", "1"); _U13 = _padc("U1", "3")          # the LDO's two +5V_D8 input pads (upper, lower)
+_FB11 = _padc("FB1", "1"); _FB12 = _padc("FB1", "2")      # the ferrite's input (+5V_D8) and output (+5V_SA) pads
+_C51 = _padc("C5", "1")                                   # the 47 uF bulk on +5V_SA
 _pc.union("+5V_D8", "+5V_D8 trunk In2", [(-43.4, -18.6, -36.4, -16.9),    # east from J_PWR1's pad, clear of its GND pin at y -13.8
                                          (-38.1, -18.6, -36.4, 23.9),      # north in the corridor between J_HARN1's pins and C7, 1.7 mm
-                                         (-38.1, 21.4, -29.4, 22.9),       # east to FB1's pad and over U1's upper pad, 1.5 mm
-                                         (-36.3, 19.6, -34.6, 22.4)],      # the stub down to U1's lower pad
+                                         (-38.1, _U11[1] - 0.85, _FB11[0] + 0.94, _U11[1] + 0.65),   # east to FB1's pad and over U1's upper pad, 1.5 mm
+                                         (_U13[0] - 0.84, _U13[1] - 0.75, _U13[0] + 0.86, _U11[1] + 0.15)],   # the stub down to U1's lower pad
           pcbnew.In2_Cu, priority=2, min_width=0.25, clearance=0.15)
-_pc.stitch("+5V_D8", [(-31.4, 22.15), (-34.9, 22.15), (-35.46, 20.1)])    # one via per load pad, beside it and inside the band
+_pc.stitch("+5V_D8", [(_FB11[0] - 1.06, _FB11[1] - 0.175), (_U11[0] + 0.56, _U11[1] - 0.10), (_U13[0], _U13[1] - 0.25)])    # one via per load pad, beside it and inside the band, derived from the pad
 # ---------------------------------------------- PI-003 ON +5V_SA: THREE BARRELS WHERE THE MESH PUTS 1.10 A (18 Sep 2026)
 # The rule's one failure on board D is a LAYER TRANSITION, and it is one barrel, measured rather than assumed. On the
 # committed D12 board `via_current` reads exactly one rail over its weakest transition: a 0.40 mm barrel at case
@@ -280,10 +294,12 @@ _pc.stitch("+5V_D8", [(-31.4, 22.15), (-34.9, 22.15), (-35.46, 20.1)])    # one 
 # 0.64 mm to C5's ground pad, 0.67 mm to C5 pad 1's east edge, 0.60 mm to R3's ground pad, against the 0.127 mm class.
 # It is not a keep-out and not a band: a locked track adds no rule area, so unlike the 1.2 mm class via this costs the
 # router nothing it can measure. Judged on the routed board by `via_current` (PI-003) with `dc_drop` beside it.
-_pc.spine("+5V_SA", -28.21, 22.33, -28.21, 25.40, 0.5, pcbnew.F_Cu)     # north out of FB1 pad 2, between C5's two pads
-_pc.spine("+5V_SA", -28.21, 25.40, -29.60, 25.40, 0.5, pcbnew.F_Cu)     # west into C5 pad 1, clear of R3's ground pad by 0.60 mm
-_pc.spine("+5V_SA", -28.21, 23.60, -28.21, 25.20, 0.5, pcbnew.B_Cu)     # the other side of the three barrels
-_pc.stitch("+5V_SA", [(-28.21, 23.60), (-28.21, 24.40), (-28.21, 25.20)], amps=1.10)   # 0.8 mm apart: 0.4 mm hole to hole against the 0.3 floor; amps= makes the count self-checking (1.10 A of solved mesh needs two 0.40 mm barrels, three are laid)
+_SAX, _SAY = _FB12[0], _FB12[1] + 1.275                              # the barrel column: FB1 pad 2's own x, the first barrel 1.275 mm north of it
+_SAT = _C51[1] - 0.625                                               # the run's top, 0.625 mm short of C5 pad 1's centre
+_pc.spine("+5V_SA", _SAX, _FB12[1], _SAX, _SAT, 0.5, pcbnew.F_Cu)     # north out of FB1 pad 2, between C5's two pads
+_pc.spine("+5V_SA", _SAX, _SAT, _C51[0] + 0.10, _SAT, 0.5, pcbnew.F_Cu)     # west into C5 pad 1, clear of R3's ground pad by 0.60 mm
+_pc.spine("+5V_SA", _SAX, _SAY, _SAX, _SAY + 1.6, 0.5, pcbnew.B_Cu)     # the other side of the three barrels
+_pc.stitch("+5V_SA", [(_SAX, _SAY), (_SAX, _SAY + 0.8), (_SAX, _SAY + 1.6)], amps=1.10)   # 0.8 mm apart: 0.4 mm hole to hole against the 0.3 floor; amps= makes the count self-checking (1.10 A of solved mesh needs two 0.40 mm barrels, three are laid)
 print("D11 power copper: the +5V_D8 trunk and west branch on In2, %d zone(s) and keep-out(s)" % len(_pc.made))
 for L in (pcbnew.In2_Cu, pcbnew.F_Cu, pcbnew.B_Cu): pour(L, "GND", "GND pour %s" % board.GetLayerName(L), (-50, -40, 50, 40), priority=0)
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings
