@@ -63,6 +63,36 @@ for ref in comps:                                                   # the holes 
     if ref in existing: existing[ref].SetValue(comps[ref][0]); placed[ref] = existing[ref]
 # ---------------------------------------------------------------- fixed parts (board mm, rot, back): connectors on the edges, the exciter, the RF chain in signal order
 FIXED = {"J_HARN1": (-42, 8, 0, False), "J_PWR1": (-42, -16, 90, False), "J_HS1": (46.5, 12, 90, False), "J_HS2": (46.5, -12, 90, False), "J_USB3": (46, 24, 90, False),
+         # OWNER DECISION 31, RULED 21 SEPTEMBER 2026: EACH HEADSET JACK'S TWO CLAMPS SIT AT THE JACK.
+         # Their first home was the nearest region rectangle and HUB2 overflowed by 8.5 mm with two more
+         # parts in it (D35P), and a rectangle is on the never-auto floor, so these are fixed seats read
+         # off the board's own PADS: each jack is a 1x05 at x 45.95 with its five pins 2 mm apart, U7's
+         # pads end at x 41.77 and y 16.54, J_USB3 begins at y 21.0 and J_VGG at y -21.95, and the board
+         # edge is x 50. That leaves a free band north and south of each jack about 3.2 mm tall and 7 mm
+         # wide, and NO seat within three millimetres of all three conductors: the lane west of the pins
+         # is 2.85 mm where a SOT-23 needs 3.1, and the strip east of them is 2.67 mm to the edge.
+         # AND THE PADS WERE THE WRONG THING TO MEASURE, AND THEN THE UNDERSIDE WAS REFUSED BY THIS BOARD'S
+         # OWN GATE. A JST PH's courtyard is its HOUSING, x 43.75 to 49.25 against a pin column at 45.95 and
+         # y 5.55 to 18.45 against pins at 8 to 16, so every front-side seat beside a jack is a
+         # courtyards_overlap (D35P second run); the underside beside the pin column is legal by courtyard
+         # and costs U7 six escapes of seventeen, because a back-side pad blocks a via site through the
+         # board (third run); and moving east of U7's fan put the parts under the jacks, where
+         # check_pcb_d refuses any back-side part because THE CASE STANDOFFS PRESS THE BOARD THERE (fourth
+         # run, and the rule is board D's own, written before any of this).
+         # WHAT IS LEFT is the 11 mm band BETWEEN the two jacks, which no region claims east of x 43, and
+         # the measurement that matters is stated rather than buried: the near conductor of each jack sits
+         # 3.8 mm from its clamp, the middle one 7.9 and THE FAR ONE 13.9. A jack whose pin column is 8 mm
+         # long, 4 mm from the board edge, with its own housing 5.5 mm wider than its pins, cannot have all
+         # three conductors clamped at the entry. Board D's next phase fixes that in one of two ways, both
+         # cheap and neither this decision's to take: move the two jacks apart so each gets a row at its
+         # far end, or re-pin the leads so the three signals sit on the three pins nearest the band. A
+         # clamp at 13.9 mm is still a clamp, and it is what this board has room for today.
+         # THE SOD-323 COURTYARD IS 3.2 BY 1.9 MM, read off the placed board rather than assumed at 2.4 by
+         # 1.7: the first row shorted D9's ground pad against D10's signal pad at a 2.7 mm pitch. Two
+         # columns at 44.6 and 47.9 fill the band's 6.5 mm width with 0.1 mm between them and 0.5 to the
+         # board edge; the rows at 4.3 and 2.2 clear each other by 0.2 and the jacks' housings by 0.3.
+         "D9": (47.9, 4.3, 0, False), "D10": (44.6, 4.3, 0, False), "D11": (44.6, 2.2, 0, False),
+         "D12": (44.6, -2.2, 0, False), "D13": (44.6, -4.3, 0, False), "D14": (47.9, -4.3, 0, False),
          "U2": (-15, 8, 0, False),
          "J_ANT": (-31, -33, 0, False), "K1": (-14, -26, 0, False), "R54": (-5, -29, 0, False), "R55": (-1, -34, 270, False), "R56": (3, -29, 0, False), "J_PAIN": (9, -29, 0, False),
          "C60": (13, -34.5, 90, False), "L2": (17, -29, 0, False), "C59": (21, -34.5, 90, False), "L1": (25, -29, 0, False), "C58": (28.5, -35, 90, False), "J_PAOUT": (35, -30, 0, False), "J_VGG": (43.5, -22.5, 0, False),
@@ -124,7 +154,7 @@ REGIONS = [
  ("TPS",  (4, 28.5, 40, 38.5), ["TP%d" % k for k in range(1, 17)], False),
  ("TPS2", (-40, 34.5, 4, 38.5), ["TP%d" % k for k in range(17, 25)], False),
  ("HUB",  (4, 20, 43, 28), ["C10", "C11", "C13", "C14"] + ["C%d" % k for k in range(29, 34)] + ["C35", "C36", "C37", "C38"], False),   # D9: the strip north of the fixed USB cluster
- ("HUB2", (35, 0, 43, 20), ["U7", "U15", "C61", "C62"], False),   # D9: east of the bridge
+ ("HUB2", (35, 0, 43, 20), ["U7", "U15", "C61", "C62"], False),   # D9: east of the bridge   # D9: east of the bridge
  ("HUBB", (4, 0, 43, 16), ["R4"] + ["R%d" % k for k in (8, 9, 10, 11)] + ["C12", "C15", "C16", "C17"], True),
  ("AUD",  (4, -22, 43, -15.2), ["C%d" % k for k in range(19, 28)] + ["C39", "C40", "LED2", "LED3", "R29", "R30", "JP1", "JP2"], False),   # D9: the strip south of the codec
  ("AUD2", (29, -15, 43, 0), ["U8"], False),

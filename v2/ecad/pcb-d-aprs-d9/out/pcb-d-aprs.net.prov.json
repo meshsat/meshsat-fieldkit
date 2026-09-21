@@ -2,12 +2,12 @@
  "what": "the generator that wrote this netlist, by content",
  "letter": "d",
  "netlist": "pcb-d-aprs.net",
- "generator_sha": "22a7a09d8e16f0e3",
+ "generator_sha": "f0c996f6e7c10118",
  "generator_files": [
   "gen_sch_d.py",
   "kisch.py",
   "intent.py"
  ],
- "schematic_sha256": "fe668500c036ded8e3cdf1eec2ceb485",
- "taken": "2026-09-20T06:47:00+00:00"
+ "schematic_sha256": "3ead0d552d56e147ec51016a0aa97289",
+ "taken": "2026-09-21T18:44:47+00:00"
 }

@@ -18153,3 +18153,57 @@ read at all, so there was nothing to accept it on either way.
 **The residue, stated rather than buried**: boards D and E are finished copper, so each fix costs a placement,
 a route and a NEW DELIVERABLE FOLDER, and cutting a folder is promotion, which stays frozen and the owner's.
 Both boards are regenerating anyway.
+
+### 32.354, 21 September 2026 20:52 CEST: decision 31's parts are in the generators, and the board refused five seats before it took one
+
+The ruling of 32.353 is carried into `gen_sch_d.py`, `gen_pcb_d3.py`, `gen_sch_e.py` and `gen_pcb_e3.py`, and
+every seat in it was chosen by a measurement the board made rather than by a number I liked. Each refusal is
+worth more than the seat that followed it.
+
+**BOARD E, two parts and one seat that took three attempts.** D9 is a USBLC6-2SC6 on the pod's SDA1, SCL1 and
++3V3_E6; D10 an SMCJ40A on DC_F, in front of the ideal-diode FET. The clamp's seat was measured from the
+footprint **origins** first, and on a pin header the origin is PIN 1 (the record has said so since 14
+September): D9 landed on J_POD's own pad 4 and the placed DRC named the short. Measured from the PADS, the
+lane between J_POD and J_LTG is 3.7 mm and the only seat within five millimetres of all three conductors; the
+placed DRC then named two `courtyards_overlap`, because **the courtyards leave 2.46 mm there and this part
+needs 3.0**. Board E is a single-sided assembly, so the seat is south of the pod column, in the 4.5 mm band
+between J_POD's courtyard and D7's: **4.0 mm to SCL1, 6.5 to SDA1 and 11.6 to the rail**, which is what the
+row allows and is written into the generator beside the seat.
+
+**BOARD D, six parts and four refusals, and the board's own gate wrote the last one.** Two PESD5V0S2BT arrays
+a jack were the plan; the nearest region rectangle **overflowed by 8.5 mm** with two more parts in it and a
+rectangle is on the never-auto floor. Seats in the bands north and south of each jack came back as
+`courtyards_overlap`, because **a JST PH's courtyard is its HOUSING**: x 43.75 to 49.25 against a pin column
+at 45.95, y 5.55 to 18.45 against pins at 8 to 16. The underside beside the pin column is legal by courtyard
+and **cost U7 six escapes of seventeen**, a back-side pad blocking a via site through the board. Moving east
+of U7's fan put the parts under the jacks, and **`check_pcb_d` refuses any back-side part there because the
+case standoffs press the board at the connectors**, a rule board D wrote for itself long before tonight.
+
+**What the geometry finally allowed, and what it costs, stated rather than buried.** Six Nexperia
+**PESD5V0S1BA** (C19224, SOD-323, 59,375 in stock at 0.0858 USD, bidirectional, VRWM 5 V, rated IEC 61000-4-2
+contact discharge 30 kV against the 8 kV this kit states), one per conductor, in the 11 mm band between the
+two jacks, which no region claims east of x 43. **The near conductor of each jack sits 3.8 mm from its clamp,
+the middle one 7.9 and the far one 13.9.** A jack whose pin column is 8 mm long, 4 mm from the board edge,
+with a housing 5.5 mm wider than its pins, cannot have all three conductors clamped at the entry; board D's
+next phase fixes that by moving the two jacks apart or by re-pinning the leads so the three signals sit
+nearest the band, and neither is this decision's to take. A clamp at 13.9 mm is still a clamp.
+
+**THE CHAINS' OWN NUMBERS, both boards, on clean trees.** Board D: `PREROUTE-DONE OK`, escapes **68 added and
+7 skipped, which is its baseline to the pad**, placed board hard 0, `place_audit` 0 predicted collisions among
+6 fine-pitch parts of 217, `rail_crossings` 6 of 6 carrying what they need, and **TRN-001 reads PASS of 14**.
+Board E: placed hard 0, escapes 174 against the control's 168, the six extra being D9's own pads so **no pad
+lost an escape**, and **TRN-001 reads PASS of 8** with J_DCIN, J_SOLAR and J_POD all answered. With board A's
+citation and board D's arrestor path, **TRN-001 now passes on all seven boards**.
+
+**AND THE TRAPS OF THIS STRETCH, four of them mine.** (1) **A probe re-run in the same tree inherits the
+previous run's board**: the placement generator reuses a footprint that already exists by reference, so a
+second run tested the FIRST run's parts at the FIRST run's seats and only the new refs were placed fresh.
+Re-stage the tree, or the arm measures the arm before it. (2) **A slice edit dropped a fixed seat**:
+replacing a block anchored on one dict entry took `"J_USB3": (46, 24, 90, False),` with it, so a connector
+fell into the catch-all region and overflowed it by 4.2 mm, and the symptom named a region 90 mm from
+anything I touched. The check that found it is mechanical and is worth repeating after every generator edit:
+**parse the FIXED table before and after and diff the reference sets** (dropped: none, added: the six). (3)
+**Two chains ran in one tree, twice**, which interleaves two runs' writes in one `out/`; the launcher refuses
+that now by counting `full.sh` on the same project first. (4) **A probe killed mid-chain still echoes its own
+DONE marker**, so a waiter on that marker reads a stale one and calls a run finished that never ran; the
+launcher writes its marker only after the chain's own exit status.

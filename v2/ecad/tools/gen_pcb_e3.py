@@ -71,7 +71,23 @@ FIXED = {"J_BLK": (-80, -76.5, 0, False), "P_CP": (-104, -108, 0, False), "P_CN"
          # 2512 carries out to about 5.7, and x 9.0 sat on D5 where the packer had put it. The row below is clear:
          # C18 is at x 0.1 and nothing else stands between there and D5, and R5's courtyard ends about y -99.5.
          "R6": (3.6, -101.3, 0, False), "R7": (6.6, -101.3, 0, False),
-         "J_SMB": (-144, -62, 0, False), "J_POD": (-138, -62, 0, False), "J_LTG": (-132, -62, 0, False), "J_GEIGER": (-126, -62, 0, False), "J_DCF": (-144, -49.3, 0, False), "J_FAN1": (-138, -49.3, 0, False), "J_FAN2": (-132, -49.3, 0, False)}
+         "J_SMB": (-144, -62, 0, False), "J_POD": (-138, -62, 0, False), "J_LTG": (-132, -62, 0, False), "J_GEIGER": (-126, -62, 0, False), "J_DCF": (-144, -49.3, 0, False), "J_FAN1": (-138, -49.3, 0, False), "J_FAN2": (-132, -49.3, 0, False),
+         # OWNER DECISION 31, RULED 21 SEPTEMBER 2026: the pod clamp sits AT the pod connector, which is
+         # Nexperia's and ST's own layout clause 1 and the whole point of the part. Measured on the
+         # committed board before the seat was written, and the FIRST seat was wrong because it was
+         # measured from the footprint's ORIGIN, which on one of these headers is PIN 1: D9 landed on
+         # J_POD's own pad 4 and the placed DRC named the short (E42P, 21 September 2026). Read off the
+         # PADS instead: J_POD's four pins run SOUTH from y -58.19 at 2.54 mm, so the column ends at
+         # -65.81; J_LTG's column is 6 mm east at x -132 and J_SMB's 6 mm west; D7 and D8 sit at y -74.4.
+         # THE LANE BETWEEN TWO CONNECTOR COLUMNS WAS MEASURED FROM THE PADS AND IT IS THE COURTYARDS THAT
+         # DECIDE: the pads leave 3.7 mm between J_POD and J_LTG and the courtyards leave 2.46, where this
+         # part needs 3.0, so that seat came back as two courtyards_overlap (E42P, second run). Board E is a
+         # single-sided assembly, so the underside is not available either. The seat is SOUTH of the pod
+         # column, in the 4.5 mm band between J_POD's courtyard (ending y -67.58) and D7's (starting
+         # -72.12): 4.0 mm to pin 4 (SCL1), 6.5 to pin 3 (SDA1) and 11.6 to pin 1 (+3V3_E6), which is the
+         # best this row allows and is recorded rather than glossed. The two conductors that carry the
+         # strike from outside are the near ones; the rail's clamp is the one that sits far.
+         "D9": (-138, -69.8, 0, False)}
 
 # FOURTEEN DECOUPLING CAPACITORS AT THE PINS THEY SERVE (20 September 2026, appendix 32.312 and 32.313).
 # `bypass_slots` has never reserved a slot on any board of the set, because the 3 mm limit meets the
@@ -111,7 +127,7 @@ REGIONS = [
  ("RAWC",   (-118, -102, -100, -88), ["D2", "C8"], False),                                   # the raw bus clamp and its capacitor, west of the choke under H5
  ("ENTRYB", (-99, -105, -80, -82), ["L2", "C6", "C7", "R27", "LED1", "TP3"], False),          # the choke west under J_BLK, east of H5's column
  ("HOTSW",  (-80, -104, -54, -87), ["U6", "R19", "Q7", "R20", "R21", "R22", "R23", "C5", "R24", "R25"], False),   # under H6's keep-out
- ("ENTRYA", (-54, -103, -26, -83), ["U3", "Q1", "C4", "R1", "D1", "C2", "TP1", "TP2", "Q8", "R26"], False),
+ ("ENTRYA", (-54, -103, -26, -83), ["U3", "Q1", "C4", "R1", "D1", "D10", "C2", "TP1", "TP2", "Q8", "R26"], False),   # D10: owner decision 31, the inlet clamp at the entry (its distance to F1 is read off the placed board)
  ("TRKIN",  (-26, -103, -2, -81), ["D4", "C11", "C12", "C13", "C14", "C15", "TP5"], False),
  ("TRKW",   (-2, -103, 28, -81), ["Q3", "Q4", "Q5", "Q6", "R5", "C16", "C17", "C18", "D5", "D6"], False),   # R6 and R7 left this list for fixed seats at the shunt (18 September 2026)
  ("TRKS",   (39.5, -95.5, 56, -80), ["C19", "C20", "C21", "C22", "C23", "R8", "R9", "R10", "R11", "R12", "R13", "R14", "R15", "R16", "R17"], False),
