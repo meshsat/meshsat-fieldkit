@@ -293,7 +293,12 @@ r("R10", "115k 1% (RFBOUT1: 15.1 V)", "TRK_OUT", "TRK_FBOUT"); r("R11", "10.0k 1
 # 0.93 is the same assertion board A's five LM5176 stages make and is this project's, not a measurement; the
 # LT8705A is working close to unity ratio here (17.6 V in, 15.1 out), which is its best point, so this is the
 # conservative end of what such a stage does.
-_intent.rail("TRK_OUT", 15.1, 6.16, 6.16, "Q6", loads={"U4": 6.16}, fed_from="PV_P", efficiency=0.93,
+# THE LOAD IS THE PASS FET, NOT ITS CONTROLLER (21 September 2026, 03:16 CEST). This line declared U4, the LM74700
+# whose pads on TRK_OUT are EN and ANODE, sense pins carrying microamps, so rail_crossings asked five barrels at each
+# of two SOT-23-6 pads for 3.08 A apiece and declined both for want of room, twice a night, and via_current would
+# attribute 6.16 A to a fanout via at a sense pin as it did HS_S at U6 pin 1 on 20 September. Q2, the TDSON-8 whose
+# source pads 1 to 3 are on TRK_OUT and drain pads 5 to 8 on VIN_RAW, is what the current goes through.
+_intent.rail("TRK_OUT", 15.1, 6.16, 6.16, "Q6", loads={"Q2": 6.16}, fed_from="PV_P", efficiency=0.93,
              # PWR-002 COULD NOT RESOLVE THIS RAIL AND THE REASON IS THE SYMBOL (20 September 2026).
              # U5 is drawn as a generic 40-pin connector because this library has no LT8705A symbol, so
              # every pinfunction in the netlist reads `Pin_NN` and no pattern over pin names can find the

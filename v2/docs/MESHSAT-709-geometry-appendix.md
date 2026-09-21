@@ -16889,3 +16889,9 @@ escapes 68/7 as D31, place_audit 0 of 6); a front-side seat south of the codec c
 The first run of every probe was refused by the duplicate-reference guard, C28 being FIXED and still in its region list.
 D32 routes on the hub with the prediction that both close and board D lands 0/0.
 
+**Addendum, 03:26 CEST: the closers of D31 and A92, and the three chains at HEAD.** D31's continuation and stub router took neither
+of its two opens (18 and 19 mm against a 12 mm closer), so D32 stands as the answer. A92's closers took 13 to 7 (the four
+rails, `/PA_ISNS_N`, `/S2_OUT`, `/S3_OUT`), which against A89's 4 says the device lane bought nothing after the closers
+either. Under the plated-hole judge the chains at HEAD end OK on all three boards: P 6 of 6 and none short, E 20 carrying
+and ten short (the U4 decline gone once the declaration names Q2), A 22 carrying and one short, CH_SRP's one-layer tab.
+
