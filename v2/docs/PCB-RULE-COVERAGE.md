@@ -9,7 +9,7 @@ appears in the gap register.
 
 | rule | domain | effect | implementation | verification | fixtures | maturity |
 |---|---|---|---|---|---|---|
-| ANA-001 | ANALOG_MIXED_SIGNAL | MUST_JUSTIFY | pcb_sensitive.yaml, the nodes and their filters | sensitive_nodes.py -> sensitive_nodes | tests/test_sensitive_nodes.py | **ENFORCED** |
+| ANA-001 | ANALOG_MIXED_SIGNAL | MUST_JUSTIFY | pcb_sensitive.yaml, the nodes and their filters; sense_fence.py, the keep-out the router obeys | sensitive_nodes.py -> sensitive_nodes | tests/test_sensitive_nodes.py | **ENFORCED** |
 | BAT-001 | ENERGY_STORAGE | BLOCKER | gen_sch_p.py BQ4050 and protection FETs, pcb_pack_protection.yaml | pack_protection.py -> pack_protection | tests/test_pack_protection.py | **ENFORCED** |
 | BAT-002 | ENERGY_STORAGE | BLOCKER | pcb_energy_chain.yaml, the chain as data | energy_chain.py -> energy_chain | tests/test_energy_chain.py | **ENFORCED** |
 | CLK-001 | CLOCKS_RESET_BOOT | BLOCKER | gen_sch_*.py crystal networks | clock_check.py -> clock_check | tests/test_clock_check.py | **ENFORCED** |
