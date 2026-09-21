@@ -17058,3 +17058,14 @@ finished three stays board A's best; what A95 says that A93 does not is that the
 when the bank island reaches the load resistor. `/VIN_RAW` is the clamp's 14 mm gap, which A98 carries the
 generator's answer to, and `/+5V_DEV` is the outlet cluster's run, unapplied under decision 35. A94 against A95 is
 one variable at the router and at the finish both.
+
+**Addendum, 07:20 CEST: the device rail's corridor is measured and it is eight millimetres wide.** On A98's placed
+board, In3 rasterised at half a millimetre between the bank's pour and the outlet cluster, every zone and rule area
+asked by its outline (the first pass took the edge band's bounding box as a wall and read no corridor at all, which
+is the 20 September lesson repeated and caught within the minute): one band clear across the whole 83.5 mm, y 30.5
+to 38.5, bounded by the edge band and a ground via, then nothing wider than a millimetre through the PD stage's
+fanout until a five millimetre band at the south. A94's and A95's finished boards both leave exactly that run as
+the rail's one open pair (the router closes the cluster's own pads and never the run). Eight millimetres of inner
+half-ounce copper is about four amps at ten kelvin, against the rail's 3.80 A typical and 6.00 A peak, so the
+corridor that exists meets the typical current and not the peak, which is decision 35's question with its number.
+Not applied.
