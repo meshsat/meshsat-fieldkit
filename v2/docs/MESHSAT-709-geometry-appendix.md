@@ -17102,3 +17102,13 @@ were (0.800 mm at 4.85 and 5.05 A), all three still over on density; the 26 mm D
 worst site, which is the site E36's island and cluster were written for and which E36's snapshot reads at 2.76.
 Nine of ten judged rails over their barrels, forty over; the prediction's band half holds and its narrow-rails half
 holds for DC_IN alone.
+
+**Addendum, 07:35 CEST: D33 lands one ground pad short of its prediction.** All 200 passes, the finish refused
+for one open: U6 pad 20, the codec's ground pin between the pre-laid `/PCM_VCCL` at pin 19 and `/PCM_VCCR` at pin 21,
+to the front ground pour. The pad has no fanout via on D33's placed board and had none on D32's, whose router reached
+it with a track; D33's pre-lay put `/PCM_VCCL`'s closing via 1.16 mm from the pad and its locked run 0.96 mm from it,
+in that lane. Every closer looked and none could take it (`zone_pad_via` five candidates, each at a DRC cost; the
+pour stitch left the island; the direct closer read the zone's anchor 70 mm away). The pre-laid net is closed on the
+finished board, so the pre-lay did its job and took its neighbour's only way out, the D17 against D18 shape one pin
+over. D12 stays. D34's item beside the derived barrels is that pin's ground via before the pre-lay, or the pre-lay's
+via a pitch further off.
