@@ -373,7 +373,12 @@ does not change whether these five pass; it changes by how much they fail and wh
 AND THE BAR IN USE IS OUTSIDE ITS OWN STATED VALIDITY: D.4a states the IPC-2221A fit for conductors up to 1.2
 mm2 at a 10 K rise, and this project's rails run to 18 A, which needs 1.47 mm2 under that fit and 2.68 under
 IPC-2152. What each model asks for at 10 K: 10 A needs 0.65 mm2 (IPC-2221A), 0.90 (IPC-2152) or 1.01 (CNES);
-18 A needs 1.47, 2.68 or 2.98.
+18 A needs 1.47, 2.68 or 2.98. AND THE DEVICE RAIL PUTS A NUMBER ON WHAT THE RULING BUYS (21 September 2026,
+read off A95): /+5V_DEV, 6.00 A, has its bank at case x -13 and its loads at the USB-C outlet cluster at x
++85 to +103, on the far side of every converter block, and the router lays nothing across the 91.6 mm; a band
+for it on outer 1 oz copper wants about 2.7 mm at 10 K under IPC-2221A and on the half-ounce inner layer
+about fifteen, and every alternative model asks for more. It is the one open of that rail on the best board A
+arm, and it is copper weight and a corridor, not a route.
 
 | rule | | boards | result today |
 |---|---|---|---|
