@@ -140,6 +140,15 @@ if placed:
         if t.GetClass() == "PCB_TRACK": tl[t.GetNetname().lstrip("/")] = tl.get(t.GetNetname().lstrip("/"), 0.0) + t.GetLength() / 1e6
     if tl:   # 8 Sep 2026 (MESHSAT-862): the +5V pours on In4 and the GND plane get the A21 copper checks; every netlist pair is reported, a one-leg pair is a FAIL
         import sys as _sys, os as _os2; _sys.path.insert(0, _os2.path.dirname(_os2.path.abspath(__file__))); import copper_checks as _cc; print(_cc.run(b, check))
+    # DECISION 47, ruled 21 September 2026 (the session's, on the evidence in the tree; tools/pair_gate.py
+    # carries the reasoning and the way back). The 1.00 mm rule is about a pair whose CLASS declares an impedance
+    # target. Board A's ten LM5176 current-sense taps were given _P/_N names when the ISNS filter went in on
+    # 18 September, so this gate began holding a KELVIN TAP to a differential pair's rule: PA_ISNS reads a
+    # 58.38 mm mismatch by construction, because a Kelvin tap's legs run to opposite ends of its shunt, and every
+    # board A finish since has ended PAIRS NOT MATCHED. A pair with no target is MEASURED and REPORTED as INFO.
+    # pair_gate fails closed: where the class table or the intent cannot be read, the pair is judged as before.
+    import pair_gate as _pg
+    _pg_class_of, _pg_targets = _pg.from_board(sys.argv[1])
     names_all = {b.GetNetInfo().GetNetItem(k).GetNetname().lstrip("/") for k in range(1, b.GetNetInfo().GetNetCount())}
     pairs = sorted(set(n[:-2] for n in names_all if n.endswith(("_P", "_N")) and (n[:-2] + "_P") in names_all and (n[:-2] + "_N") in names_all))
     for pair in pairs:
@@ -157,7 +166,11 @@ if placed:
         except Exception:
             _bmm = _iname = _isrc = None
         _cite = "" if _bmm is None else "; %s asks for %.2f mm (%s)" % (_iname, _bmm, (_isrc or "").strip()[:60])
-        if lp or ln: print("%s pair length P %.2f mm, N %.2f mm, mismatch %.2f mm%s%s" % (("WARN " if abs(lp - ln) > 1.0 else "PASS ") + pair, lp, ln, abs(lp - ln), "" if abs(lp - ln) <= 1.0 else " (over 1.0 mm: add a meander on the short leg)", _cite))
+        _over = abs(lp - ln) > 1.0
+        _ok, _why47 = _pg.judged(pair, _pg_class_of, _pg_targets)
+        _tag = ("WARN " if _ok else "INFO ") if _over else "PASS "
+        _tail = "" if not _over else (" (over 1.0 mm: add a meander on the short leg)" if _ok else " (over 1.0 mm and " + _why47 + ")")
+        if lp or ln: print("%s pair length P %.2f mm, N %.2f mm, mismatch %.2f mm%s%s" % (_tag + pair, lp, ln, abs(lp - ln), _tail, _cite))
 # hole-to-hole webs >= 2 mm between every pair of holes (drill edges), the socket standoffs and the module holes included
 hl = [(v[0], v[1][0], r) for r, v in holes.items()]
 for fp in b.GetFootprints():

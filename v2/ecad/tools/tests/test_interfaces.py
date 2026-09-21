@@ -51,7 +51,10 @@ def t_the_projects_own_tolerance_is_compared_with_the_parts():
     import interfaces
     assert interfaces.PROJECT_INTRA_MM == 1.0, "the project tolerance this compares against has moved"
     gate = open(os.path.join(TOOLS, "check_pcb_b.py"), encoding="utf-8").read()
-    assert "> 1.0 else" in gate, "the board gate's own tolerance is no longer 1.0 mm; update the comparison"
+    # 21 September 2026: this read `"> 1.0 else"`, which pinned the gate's EXPRESSION rather than its number,
+    # and decision 47 broke it by moving the comparison onto its own line (`_over = abs(lp - ln) > 1.0`) so
+    # that a pair with no impedance target can be reported instead of refused. The rule is about the NUMBER.
+    assert "> 1.0" in gate, "the board gate's own tolerance is no longer 1.0 mm; update the comparison"
     res = interfaces.judge()
     fails = [f for v in res.values() for f in v["fails"]]
     assert any("times tighter" in f for f in fails), \
