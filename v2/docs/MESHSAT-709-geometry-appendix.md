@@ -16903,3 +16903,11 @@ chain at HEAD the site takes its six barrels and is kept at hard 0, board E's cr
 ten, and the chain ends OK. Proved to fail on the tool as it stood; suite 1270, the bring-up page re-rendered from the
 corrected E intent.
 
+**Addendum, 03:50 CEST: adjacent pads of one net on one part are one land.** A TDSON-8's source is pins 1 to 3 at 1.27 mm, joined
+inside the package; the judge grouped by pad number and read it as three crossings of a third, the fixer laid its barrels
+at the middle pad, and the two beside it read short by two forever. Pads of one net on one part within 1.5 mm are one
+land now. Board E reads seven short where it read nine and the four FET source lands (DC_F at Q1, DC_HS at Q7, TRK_OUT at
+Q2, PV_P at U5) are declined as the busbar-class sites they are: six to ten amps entering on three small pads with one
+0.20 mm fanout via each is an island and a cluster of the generator's own drill, board A's rail shape, which is the E35
+generator item. Proved to fail on the tool as it stood; suite 1272, box suite 1310 at 88be02b2.
+
