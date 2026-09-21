@@ -44,22 +44,29 @@ def _kc_width(v):
         return v.GetWidth()
 
 
-def judge(b, rails, reach_mm=1.0, pin_sites=None):
+def judge(b, rails, reach_mm=1.0, pin_sites=None, one_layer_sites=None):
     """(short, judged): the crossings with fewer barrels than the current needs, and how many were asked.
 
     The sentences are formatted from `rows()`, which is the same walk carrying its numbers instead of its
     prose. `rail_barrels.py`, the fixer, reads THOSE, so the thing that lays copper and the thing that judges
     it can never drift apart: a fixer with its own idea of which site is short is the 8 September defect about
     a debug print that does not share the predicate it explains, and this project has paid for it twice."""
-    rows_, judged = rows(b, rails, reach_mm, pin_sites=pin_sites)
+    rows_, judged = rows(b, rails, reach_mm, pin_sites=pin_sites, one_layer_sites=one_layer_sites)
     return [r["why"] for r in rows_], judged
 
 
-def rows(b, rails, reach_mm=1.0, pin_sites=None):
+def rows(b, rails, reach_mm=1.0, pin_sites=None, one_layer_sites=None):
     """(short, judged) with each short crossing as a dict: net, ref, pad, at, drill, have, need, amps.
 
     `pin_sites`, when a list is given, collects the sites this walk does NOT judge because the land is a plated
-    hole (see the comment at the test below): one dict each, net, ref, pad, at, drill, amps."""
+    hole (see the comment at the test below): one dict each, net, ref, pad, at, drill, amps.
+    `one_layer_sites`, when a list is given, collects the sites this walk does NOT judge because the net lies on
+    ONE layer at generation (21 September 2026, 07:50 CEST): the 02:45 entry named such a site and left it in the
+    count until A97 answered whether a cluster there pays. A97's solved board answered: FE_OUT carries 8 A through
+    eleven vias with every millimetre of its copper on F.Cu, PD_OUT and HF_OUT the same, so the clusters the fixer
+    pre-laid at those tabs reached nothing, and the twelve controller pins A97 left open beside them were their
+    price. A crossing that exists only if the router makes one is `via_current`'s to judge on the solved mesh
+    (`crosses_layers`), never this walk's to ask barrels for."""
     vias = [t for t in b.GetTracks() if t.GetClass() == "PCB_VIA"]
     short, judged = [], 0
     for net, r in sorted(rails.items()):
@@ -94,7 +101,12 @@ def rows(b, rails, reach_mm=1.0, pin_sites=None):
             if (_z.GetNetname() or "").lstrip("/") == n and not _z.GetIsRuleArea(): _lay.add(_z.GetFirstLayer())
         for _f in b.GetFootprints():
             for _q in _f.Pads():
-                if (_q.GetNetname() or "").lstrip("/") == n and getattr(_q, "GetDrillSizeX", lambda: 0)() > 0: _lay.add("PTH")
+                if (_q.GetNetname() or "").lstrip("/") != n: continue
+                if getattr(_q, "GetDrillSizeX", lambda: 0)() > 0: _lay.add("PTH")
+                # A SURFACE PAD IS COPPER ON ITS LAYER (21 September 2026, 07:57 CEST): the first version read
+                # tracks, zones and plated holes and not the pads themselves, so a rail whose only copper besides
+                # an inner pour was its SMD pads read as one layer; a pad's layer counts like a track's.
+                elif hasattr(_q, "GetLayer"): _lay.add(_q.GetLayer())
         _one_layer = len(_lay) <= 1
         want = {str(x): amps for x in _src if x}
         for ref, a in (r.get("loads") or {}).items():
@@ -175,6 +187,17 @@ def rows(b, rails, reach_mm=1.0, pin_sites=None):
                         if math.hypot(v.GetPosition().x - qc.x, v.GetPosition().y - qc.y) <= qr:
                             _seen.add(id(v)); near.append(v)
                 if not near: continue           # no crossing at this pad: nothing to count
+                if _one_layer:
+                    # NOT A CROSSING: the net changes layer nowhere at generation, so the vias here are the
+                    # fanout's stubs into bare laminate and a barrel count is owed only once a router crosses,
+                    # which is the solved mesh's question. Reported, never counted, never given a cluster.
+                    if one_layer_sites is not None:
+                        one_layer_sites.append({"net": n, "ref": ref, "pad": _num, "at": (c.x / 1e6, c.y / 1e6),
+                                                "have": len(near), "amps": _share, "one_layer": True,
+                                                "why": "%s at %s pad %s lies on one layer at generation: a crossing "
+                                                       "only if the router makes one, which via_current judges on "
+                                                       "the solved mesh" % (n, ref, _num)})
+                    continue
                 judged += 1
                 # A SITE OF MIXED DRILLS IS JUDGED ON WHAT ITS BARRELS CARRY, NOT AT ITS SMALLEST HOLE (21 September
                 # 2026). Board E's largest declined site, VIN_RAW at L2 pad 2, holds the generator's TEN 0.50 mm
@@ -242,10 +265,14 @@ def main(a):
     rails = json.load(open(ip, encoding="utf-8")).get("rails") or {}
     import pcbnew
     b = pcbnew.LoadBoard(path)
-    _pins = []
-    short, judged = judge(b, rails, pin_sites=_pins)
+    _pins, _one = [], []
+    short, judged = judge(b, rails, pin_sites=_pins, one_layer_sites=_one)
     print("rail_crossings: %d crossing(s) of %d declared rail(s) carry the barrels their current needs, %d do not"
           % (judged - len(short), len(rails), len(short)))
+    if _one:
+        print("rail_crossings: %d site(s) lie on a net that changes layer nowhere at generation and are not judged "
+              "(a crossing there is the router's to make and via_current's to judge): %s" % (len(_one), ", ".join(
+                  "%s at %s pad %s (%.2f A)" % (x["net"], x["ref"], x["pad"], x["amps"]) for x in _one[:12])))
     if _pins:
         print("rail_crossings: %d site(s) are plated holes with a wire or a pin soldered through them, which carry "
               "their own crossing and are not judged: %s" % (len(_pins), ", ".join(

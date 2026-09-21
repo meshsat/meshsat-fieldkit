@@ -456,3 +456,28 @@ def t_two_distant_sites_are_planned_exactly_as_they_are_alone():
     plans, declined = rb.plan_sites([r1, r2], lambda r: OPEN)
     assert not declined
     assert plans[0][1] == rb.plan(r1, OPEN)[0] and plans[1][1] == rb.plan(r2, OPEN)[0]
+
+
+def t_no_cluster_is_laid_at_a_one_layer_site():
+    """THE DEFECTIVE FIXTURE (21 September 2026, 07:58 CEST) is A97: the judge named board A's six FET drain tabs as
+    short crossings on nets that lie on F.Cu alone, this fixer laid a cluster at each, the router never crossed
+    there (via_current on A97's solved board: FE_OUT carries 8 A through eleven vias with all of its copper on one
+    layer, PD_OUT and HF_OUT the same), and twelve controller pins beside the clusters were left open for it. The
+    fixer takes its sites from the judge's rows and the judge no longer hands it a one-layer site, so on a board
+    whose rail changes layer nowhere the plan is empty; with a zone on a second layer the same board is a crossing
+    and the plan is not."""
+    import rail_crossings as rc
+    from test_rail_crossings import _Board, _Pad, _Via, _FP, _Trk, _Zone
+    pads = [_Pad("/RAIL", "5", 10.0, 10.0, 0.6, 0.6)]
+    vias = [_Via("/RAIL", 10.0, 10.0, 0.25)]
+    tracks = [_Trk("/RAIL", 0), _Trk("/RAIL", 0)]
+    rails = {"/RAIL": {"amps_peak": 3.0, "source": "U1"}}
+    one = []
+    rows, judged = rc.rows(_Board(vias + tracks, [_FP("U1", pads)], zones=[]), rails, one_layer_sites=one)
+    assert rows == [] and len(one) == 1, (rows, one)
+    plans, declined = rb.plan_sites(rows, lambda r: OPEN)
+    assert plans == [] and declined == [], (plans, declined)
+    rows, judged = rc.rows(_Board(vias + tracks, [_FP("U1", pads)], zones=[_Zone("/RAIL", 2)]), rails)
+    assert len(rows) == 1 and rows[0]["need"] > rows[0]["have"], rows
+    plans, declined = rb.plan_sites(rows, lambda r: OPEN)
+    assert len(plans) + len(declined) == 1, (plans, declined)

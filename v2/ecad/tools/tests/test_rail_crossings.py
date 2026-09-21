@@ -45,6 +45,7 @@ class _Via:
 class _Pad:
     def __init__(s, net, num, x, y, w=1.0, h=1.0): s._n, s._num, s._p, s._b = net, num, _P(x, y), _BB(w, h)
     def GetNetname(s): return s._n
+    def GetLayer(s): return 0          # a surface pad on F.Cu, which is copper on that layer
     def GetNumber(s): return s._num
     def GetPosition(s): return s._p
     def GetBoundingBox(s): return s._b
@@ -77,7 +78,15 @@ class _PTHPad(_Pad):
 
 
 class _Board:
-    def __init__(s, vias, fps, zones=()): s._v, s._f, s._z = vias, fps, list(zones)
+    def __init__(s, vias, fps, zones=None):
+        # A FAKE BOARD IS A CROSSING BY DEFAULT (21 September 2026, 07:55 CEST): since a one-layer net is no longer
+        # judged, a fixture that draws a pad and its vias and nothing else would read as a net that changes layer
+        # nowhere and every rule about the count would test nothing. With `zones` left unsaid the board carries an
+        # In2 zone for every net a pad names, which is the copper a barrel crosses to; a rule about the one-layer
+        # case passes `zones=[]` and means it.
+        if zones is None:
+            zones = [_Zone(n, 2) for n in sorted({p.GetNetname() for f in fps for p in f.Pads()})]
+        s._v, s._f, s._z = vias, fps, list(zones)
     def GetTracks(s): return s._v
     def GetFootprints(s): return s._f
     def Zones(s): return s._z
@@ -304,34 +313,46 @@ def t_pads_of_one_number_are_one_land_and_one_crossing():
     assert not any("pieces of one land" in r["why"] for r in short)
 
 
-def t_a_net_on_one_layer_at_generation_is_named_because_its_crossing_is_the_routers_to_make():
-    """THE DEFECTIVE FIXTURE (21 September 2026, appendix 32.346 addendum 02:45): board E's HS_S and board A's six
-    FET drain tabs lie on F.Cu alone before the route (no zone, no band, no plated hole), so the barrel the judge
-    counted at each tab is the FANOUT's own via reaching bare laminate, and the crossing it asks barrels for
-    exists only if the ROUTER makes one. `via_current` already declines such a site on the solved mesh
-    (`crosses_layers`); this judge never asked. The row says so and the line says so; the count is not changed."""
+def t_a_net_on_one_layer_at_generation_is_reported_and_never_counted():
+    """THE DEFECTIVE FIXTURE (21 September 2026, 07:50 CEST) is the judge as it stood since 02:45: board A's six FET
+    drain tabs lie on F.Cu alone at generation, the barrel it counted at each was the FANOUT's own via reaching bare
+    laminate, and it named the site (`one_layer` in the row) while leaving it IN THE COUNT until A97 could say
+    whether a cluster there pays. A97's solved board said: FE_OUT carries 8 A through eleven vias with all of its
+    copper on F.Cu, PD_OUT and HF_OUT the same, the clusters pre-laid there reached nothing, and twelve controller
+    pins beside them were left open for it. A one-layer site is reported through `one_layer_sites` and is neither
+    short nor judged; the acceptable fixtures are the same site with a zone on a second layer or a plated hole,
+    which is a crossing and stays in the count."""
     F_CU, IN2_CU = 0, 2
     pads = [_Pad("/RAIL", "5", 10.0, 10.0, 0.6, 0.6)]
     vias = [_Via("/RAIL", 10.0, 10.0, 0.25)]
     rails = {"/RAIL": {"amps_peak": 3.0, "source": "U1"}}
     tracks = [_Trk("/RAIL", F_CU), _Trk("/RAIL", F_CU)]
-    short, judged = rc.rows(_Board(vias + tracks, [_FP("U1", pads)]), rails)
-    assert judged == 1 and len(short) == 1, (judged, short)
-    r = short[0]
-    assert r["one_layer"] is True, r
-    assert "the net lies on one layer at generation" in r["why"], r["why"]
-    assert r["need"] > r["have"], "the count is deliberately unchanged tonight: %s" % r
+    one = []
+    short, judged = rc.rows(_Board(vias + tracks, [_FP("U1", pads)], zones=[]), rails, one_layer_sites=one)
+    assert short == [] and judged == 0, (short, judged)
+    assert len(one) == 1 and one[0]["one_layer"] is True and one[0]["ref"] == "U1", one
+    assert "one layer at generation" in one[0]["why"] and "via_current" in one[0]["why"], one[0]["why"]
+    # the same call with no list given still neither counts nor crashes
+    short, judged = rc.rows(_Board(vias + tracks, [_FP("U1", pads)], zones=[]), rails)
+    assert short == [] and judged == 0, (short, judged)
     # THE ACCEPTABLE FIXTURES: a zone on a second layer, or a plated hole, is copper the net changes layer to
     short, judged = rc.rows(_Board(vias + tracks, [_FP("U1", pads)], zones=[_Zone("/RAIL", IN2_CU)]), rails)
-    assert short[0]["one_layer"] is False and "one layer at generation" not in short[0]["why"], short[0]
-    short, judged = rc.rows(_Board(vias + tracks, [_FP("U1", pads + [_PTHPad("/RAIL", "9", 20.0, 10.0)])]), rails)
-    assert short[0]["one_layer"] is False, short[0]
+    assert judged == 1 and len(short) == 1 and short[0]["one_layer"] is False, (judged, short)
+    assert "one layer at generation" not in short[0]["why"], short[0]
+    short, judged = rc.rows(_Board(vias + tracks, [_FP("U1", pads + [_PTHPad("/RAIL", "9", 20.0, 10.0)])], zones=[]), rails)
+    assert judged == 1 and short[0]["one_layer"] is False, short
     # a zone and a track on the SAME layer are still one layer (the first version keyed a zone as a tuple)
-    short, judged = rc.rows(_Board(vias + tracks, [_FP("U1", pads)], zones=[_Zone("/RAIL", F_CU)]), rails)
-    assert short[0]["one_layer"] is True, short[0]
+    one = []
+    short, judged = rc.rows(_Board(vias + tracks, [_FP("U1", pads)], zones=[_Zone("/RAIL", F_CU)]), rails, one_layer_sites=one)
+    assert short == [] and len(one) == 1, (short, one)
     # a rule area of the net's name is not copper
-    short, judged = rc.rows(_Board(vias + tracks, [_FP("U1", pads)], zones=[_Zone("/RAIL", IN2_CU, rule_area=True)]), rails)
-    assert short[0]["one_layer"] is True, short[0]
+    one = []
+    short, judged = rc.rows(_Board(vias + tracks, [_FP("U1", pads)], zones=[_Zone("/RAIL", IN2_CU, rule_area=True)]), rails, one_layer_sites=one)
+    assert short == [] and len(one) == 1, (short, one)
+    # and the judge's main prints them as sites, not as crossings: the sentence is the one the record carries
+    src = open(os.path.join(os.path.dirname(HERE), "rail_crossings.py"), encoding="utf-8").read()
+    assert "changes layer nowhere at generation and are not judged" in src, "main does not report the one-layer sites"
+
 
 
 def t_a_plated_hole_is_its_own_crossing_and_is_not_asked_for_barrels():
