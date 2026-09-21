@@ -16801,7 +16801,7 @@ TRK_OUT at U4 twice). So of the set's FET drain tabs the chain now answers four 
 and the ones it cannot are named with their numbers: CH_SRP and DC_P are busbars, HS_S wants room beside the
 entry, CH_ACN and VBUS20 want the charger block's floor plan.
 
-**Both chains ended `PREROUTE-DONE OK` (02:16 CEST).** After the stage, `rail_crossings` reads board A at 20 of 23 carrying and
+**Both chains ended `PREROUTE-DONE OK` (02:12 CEST).** After the stage, `rail_crossings` reads board A at 20 of 23 carrying and
 THREE short, all in the charger block (CH_ACN at Q7, CH_SRP at Q10, VBUS20 at R16), against nine under the old judge;
 board E at 19 carrying and eleven short. Board E's switching pre-lay HURT on this second tree too, on the same item,
 and the restored board re-read by hand reads hard 0 with and without a refill: the item lives only on the stub
