@@ -17607,3 +17607,25 @@ each time the answer was the same: seat the parts at the pins they serve and sev
 **Neither A102 nor E40 is started or costed**, and the first thing each owes is whether the seats exist at
 all, measured the way the USB-C outlet's were (4,561 courtyard-clear seats within 30 mm, 3,235 of them
 fan-clear), because board A's region rectangles are on the never-auto floor under owner ruling 13.
+
+**Addendum, 21 September 2026 13:50 CEST: the sense fence ANSWERS board E's ANA-001, measured against a
+control that differs from it by that stage alone.** On E38's finished round-1 board (sha 0705be735b02732f,
+read in a scratch copy while its via_costs round routes, sha identical before and after) **`sensitive_nodes`
+reads PASS 3 of 3**: `TRK_CSN` 0.500 mm from `TRK_LSENSE`, `TRK_CSP` 0.531, `WATER_SENSE` 24.247. Its
+control E37 FAILS at `TRK_CSP` 0.433 mm from `TRK_SW1` over 7.68 mm. The 0.500 is at the floor by
+construction, which is what a keep-out drawn at 0.50 produces, and the rule's nearest aggressor moved from
+`TRK_SW1` to `TRK_LSENSE`.
+
+**The measure behind the rule moved the same way, which is what says this is the fence and not scatter.**
+`sense_reach` reads **2 pairs of segments inside 0.50 mm on a shared layer against E37's 23**, tightest
+**0.443 mm against 0.204**, and the sense side is locked in neither of the two, so the fence moved the
+ROUTER's copper out rather than pinning more of its own. Both survivors are against `TRK_BG1` and `TRK_BG2`,
+gate drives this board's `switch_nets` does not carry, which is decision 45's question exactly.
+
+**The cost is one connection and twenty-four vias** (five open of 94 against four, 254 vias against 230), and
+the four opens it moved into are U5's own pins, which is the tracker block's spread measured earlier this
+afternoon rather than the fence's doing. So ANA-001 on board E, a BLOCKER open since E17 and refused by every
+instrument tried before it (a DSN class-pair rule Freerouting ignores, a class clearance the board's own pins
+refuse, a KiCad custom rule that catches after the route), is answered. **E38 is not adoptable at five open
+and E17 stays board E's phase**; what is settled is the instrument, and board A's A99 is the same question
+asked of a board whose sense nets the pre-lay mostly does not touch.
