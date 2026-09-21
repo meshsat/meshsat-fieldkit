@@ -5,10 +5,10 @@
   "fail": 1,
   "footprints": 400,
   "intent_items_reported": 266,
-  "pass": 811,
+  "pass": 586,
   "route_items_reported": 0
  },
- "denominator": 812,
+ "denominator": 587,
  "evidence": [
   "U18 centred at (84.9, 29.1) (got 10.00, 65.00)"
  ],
@@ -33,9 +33,9 @@
  "tool": "check_pcb_a",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "tools_tree_sha": "b7ba0f038bed4af7"
  },
- "ts": "2026-09-21T12:41:35Z",
+ "ts": "2026-09-21T16:12:23Z",
  "verdict": "FAIL",
  "version": "unknown",
  "writer": {

@@ -5,10 +5,10 @@
   "fail": 0,
   "footprints": 957,
   "intent_items_reported": 728,
-  "pass": 3102,
+  "pass": 2169,
   "route_items_reported": 21
  },
- "denominator": 3102,
+ "denominator": 2169,
  "evidence": [],
  "inputs": {
   "board": {
@@ -31,9 +31,9 @@
  "tool": "check_pcb_b",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "tools_tree_sha": "b7ba0f038bed4af7"
  },
- "ts": "2026-09-21T12:45:29Z",
+ "ts": "2026-09-21T16:15:08Z",
  "verdict": "PASS",
  "version": "unknown",
  "writer": {
