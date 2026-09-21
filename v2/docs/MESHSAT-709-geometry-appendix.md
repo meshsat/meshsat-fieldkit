@@ -17682,3 +17682,41 @@ reach, is not a reach question.** One variable on a copy of the frozen board, so
 after: 12.0 tries nothing, **14.0 tries it and closes nothing**, every shape bridging the solder mask against
 Q18's own pads 2, 3 and 5 and both via-down forms hitting `clearance` and `tracks_crossing` on In2 and In3.
 Board D's answer of 18 September on another board, and **board A's declared 12.0 stands**.
+
+### 32.349 addendum, 16:48 CEST: board A's ANA-001 is measured in full for the first time, and the fence cannot be grown where it fails worst
+
+The A99 pair's CONTROL half, taken before A99 lands, on **A98's finished round-1 board** (sha
+`3612b9bfb165ff0d`, read-only in a copy, sha identical after) with the committed `sense_reach.py` rather
+than the scratchpad probe of 13:18.
+
+**(1) ANA-001 itself, on a landed board carrying the whole declaration.** `sensitive_nodes` FAIL with
+**declared 34, measured 34, fail 12**, where the committed A32 reads measured 10 of 34 with twenty rows
+saying *the board has no such net*: that is the adoption gap closing, and it is the first board-A reading of
+this rule whose denominator is the design. The twelve, tightest first: `POE_ISNS_N` 0.129 mm from `POE_CS`,
+`FE_ISNS_N` 0.129 from `FE_CS`, `PD_ISNS_P` 0.132 from `PD_SW1` over 5.62 mm, `HF_ISNS_P` 0.134 from
+`HF_SW1`, `CH_SRN_F` 0.155 from `CH_SW2`, `FE_ISNS_P` 0.155 from `FE_CS`, `PD_CSF` 0.163 from `PD_SW1` over
+11.79 mm, `HF_ISNS_N` 0.163 from `HF_SW2`, `FE_CSGF` 0.177 from `FE_SW2`, `POE_ISNS_P` 0.182 from `POE_SW1`,
+`CH_ACN_F` 0.200 from `CH_SW1`, `POE_CSGF` 0.213 from `POE_SW2`. **Eight of the twelve are ISNS taps**, the
+ten filtered nets declared sensitive on 20 September, each measured against its own stage's switching node.
+
+**(2) What a fence could do about it, which is the arm's question.** 64 pairs of segments sit inside
+0.50 mm of each other on a shared layer; **the switching side is locked in 6 of the 64 and the sense side in
+22**, so a fence drawn after the pre-lay can move the switching side of **58 of 64** and has locked sense
+copper to grow from at **four of fifteen nets**: `PD_CSF` (11 of its 13 pairs), `PA_CSF` (9 of 9),
+`FE_CSGF` (1 of 4), `HF_CSF` (1 of 1). **The three tightest nets carry none of it**: `PD_ISNS_P` at 0.132,
+`FE_ISNS_P` at 0.155 and `CH_SRN_F` at 0.155 are router copper on BOTH sides, and the four nets that do
+carry locked sense copper read 0.213, 0.225, 0.232 and 0.475, the widest rows on the board. **So A99's
+fence protects the rows that were already widest**, which is the 13:18 prediction with its nets named, and
+A101, which puts those nets into the pre-lay instead, is the arm that could move them.
+
+**(3) Decision 45's own number on board A.** The same board reads **88** pairs when the gate drives are
+named on the command line (`*DRV*,*_HO,*_LO`) against **64** on the declaration alone, so **24 of board A's
+88 close approaches are against a gate drive ANA-001 does not count**.
+
+**(4) A tool defect found by taking this reading.** `sense_reach.py` run with no `--board` and no `--sense`
+list measured nothing and wrote **`PASS of 0`**, in the same words a real run prints when a board has no
+pair inside its clearance, so an armed reader that dropped the flag would log a reassuring line over a
+reading nobody took. `subject_missing()` is the one answer to *was this run told what to measure* and both
+that case and a board declaring no sensitive node are INCONCLUSIVE now: STK-001's rule of 19 September, a
+declared zero is a pass with its reason and an undeclared zero is not. Commit `b97a481e`, the rule failing
+on the tree it was written against (1310 passed, 1 failed) and both fixtures passing after it.
