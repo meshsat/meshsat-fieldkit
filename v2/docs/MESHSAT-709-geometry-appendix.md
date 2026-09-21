@@ -17427,3 +17427,12 @@ to no net in a copy so that nothing but the group can raise an item, reports **t
 four for each of the five nets. So two arms differ by four pre-laid connections for a reason that is neither
 board's, and every board-A arm compared since the pre-lay groups existed carries it. ANA-001 on A99 is still
 read on its own copper and is unaffected; the open-count half of that pair carries the caveat.
+
+**Addendum, 21 September 2026 12:33 CEST: what the power-layer rewrite would actually change, measured.**
+`dsn_power_layers.py` was run read-only over board A's own exported DSN (A99C's): **six full keep-outs on
+In1.Cu and In4.Cu would become via keep-outs**, the 46 wire keep-outs elsewhere untouched, and board E's
+count is four. The change is **semantically neutral and not a loosening**: on a power layer Freerouting lays
+no wire, so the wire half of those six is inert, while the via half is preserved exactly. What it removes is
+a polygon the router carries through its search and cannot use, which is what made the B14 In1 test and B15
+run 1 thrash for a whole time limit. It stays unwired until a pair can measure it, because wiring it mid
+campaign would make the next arm differ from its control in two things rather than one.
