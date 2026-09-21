@@ -7,7 +7,7 @@ One line per decision that is still open, what it holds up, and where its eviden
 v2/docs/OWNER-DECISIONS-2026-09-11.md and this page is generated from the same registry the readiness table
 is, so the pair counts below are the ones the gates use.
 
-**18 decisions are open and they hold 94 rule-board pairs of the 333 the set is judged on.** A pair held by a
+**19 decisions are open and they hold 94 rule-board pairs of the 333 the set is judged on.** A pair held by a
 decision is not a defect in the board: it is a question nobody has answered, and until it is answered the
 rule can be neither passed nor failed.
 
@@ -31,6 +31,7 @@ rule can be neither passed nor failed.
 | **33** | 0 | the mezzanine 5 V rail is losing nearly five percent and two of its three numbers were never anybody's requirement | nothing today, see below | - | 2026-09-16 |
 | **44** | 0 | board D's underside packs nine parts inside the codec's own pin field, and one of its ground pins cannot reach the plane | nothing today, see below | - | 2026-09-21 |
 | **45** | 0 | ANA-001 keeps a sense line away from the nets a board DECLARES as switching, and on both boards that declare any, the tightest approach of all is a gate drive the declaration leaves out | nothing today, see below | - | 2026-09-21 |
+| **46** | 0 | board A's five converter stages drive their FETs from 13.5 to 28.9 mm away, and no placement lever this project has can shorten them | nothing today, see below | - | 2026-09-21 |
 
 ## Each one, with what it holds
 
@@ -752,6 +753,51 @@ this decision holds no rule-board pair and unblocks none. Ruling it either way m
 leaves it where it is; it can never make a failing pair pass. It is asked because the boards are being cut
 now, because a fence arm is in flight on each of them, and because a rule whose denominator is narrower than
 its subject should be that way on purpose and on the record.
+
+
+### Decision 46: board A's five converter stages drive their FETs from 13.5 to 28.9 mm away, and no placement lever this project has can shorten them
+
+**The question:** accept the gate-drive lengths for this revision with the numbers on the record, or
+re-arrange the five stages in a next revision (smaller FET packages, or the controller seated between its own
+FET pair)
+
+**Recommended:** ACCEPT FOR THIS REVISION AND RECORD THE NUMBERS. Three placement levers were measured today
+and all three came back no, so accepting costs nothing that could have been had cheaply; and the alternative
+is a package change or a stage re-arrangement, which is a schematic and footprint decision with its own
+bring-up risk, on a board whose committed phase already routes to 0 hard and 0 unrouted. What acceptance
+means in practice is that the gate drives stay 13 to 29 mm on the boards cut from this revision, that the
+opens they cause are named rather than closed (a 13.5 mm gate drive is currently one of the four opens on
+board A's best finished arm), and that the item is carried into the next revision with its measurement rather
+than rediscovered. If the ruling goes the other way, the cheapest shape is the controller seated BETWEEN its
+high-side and low-side FETs, which is what TI's own layout section asks for and what the charger block took
+on 20 September for nothing.
+
+**Measured:** MEASURED ON A98's FINISHED ROUND-1 BOARD, sha 3612b9bfb165ff0d, read-only and unchanged (21
+September 2026). Every gate drive on this board carries 16 to 43 mm of copper (PA_HDRV1 43.5, HF_LDRV1 35.1,
+FE_LDRV2 34.0, PD_HDRV1 30.9, HF_HDRV1 and HF_HDRV2 29.8, POE_HDRV1 27.0, FE_HDRV2 26.7, FE_LDRV1 26.5, down
+to 16.4) and pad to pad each controller's gate pin sits 13.5 to 28.9 mm from the FET it drives: PA_HDRV1
+U13.27 to Q11.4 28.86 mm, FE_LDRV2 U2.21 to Q4.4 25.91, PD_HDRV1 U19.27 to Q21.4 16.36, HF_LDRV1 U15.25 to
+Q16.4 14.68, POE_LDRV1 U16.25 to Q18.4 13.51. An HDRV or LDRV pin carries amps of peak gate current in tens
+of nanoseconds. THREE LEVERS WERE ASKED AND ALL THREE REFUSED. (1) SEATS: the blocks are packed solid, U13
+with 0.08 mm to the south, U2 with 0.08, Q11 0.56 east, Q4 0.78 north, against board E's U5 with 11.40 mm
+clear. (2) DISTANCE: the FETs are ALREADY as close as the packing allows, Q5's courtyard being 3.2 mm from
+U2's while its gate drive is still 17.17 mm, because the path crosses both part BODIES from a pin on U2's far
+side to a pad on Q5's far side; the FEQ region's own comment records that the FETs were moved beside the
+controller in run 11 for exactly this reason. (3) ROTATION: the seat as placed is already the best of the
+four over all 29 partnered pins, U2 summing 462.4 mm where it sits against 509.8, 512.2 and 475.2, and U13
+405.8 against 449.7, 472.7 and 450.8; rotating U2 by 90 buys FE_HDRV2 4.6 mm and costs 47 mm across
+everything else. That is U3's answer of 20 September on two more controllers. IT IS ALREADY COSTING
+CONNECTIONS: gate drives are among the persistent opens of every board-A arm in flight (A99 FE_HDRV2 and
+FE_LDRV2, A99C HF_HDRV2, HF_LDRV1 and PD_LDRV1, A100 HF_HDRV2, PA_HDRV2 and POE_HDRV1), the fence pair
+reading the same seventeen and ten opens at pass 70 and pass 100, net for net, which is a plateau and not a
+sample. And POE_LDRV1, at 13.509 mm, is one of the four opens on A98's finished board: its closer was asked
+at 14.0 mm against the declared 12.0 and every shape was refused by the DRC, bridging the solder mask against
+Q18's own pads, so the reach was never the problem either.
+
+**Holds no rule today:** board A's committed phase A32 is 0 hard and 0 unrouted, so this decision holds no
+rule-board pair today. It is asked because every arm this project has routed since A32 lands with gate drives
+among its open nets, because the three cheap answers were measured and refused today, and because a design
+property that costs connections should be ruled deliberately rather than met again by the next session.
 
 
 ## Closed, for the record
