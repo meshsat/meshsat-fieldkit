@@ -17875,3 +17875,29 @@ with `PA_ISNS` P 64.15 mm against N 5.78 (mismatch **58.38 mm**), `PD_ISNS` 3.76
 run to opposite ends of a shunt and are not a transmission-line pair, so the 1 mm rule of 5 September is
 being asked of copper it was not written for; that is a question for the owner rather than a defect, and it
 is written up as such.
+
+### 32.349 addendum, 17:55 CEST: the fence pair is answered on both finished boards, and on board A the fence redistributes rather than fixes
+
+| | A99C, no fence | A99, fence |
+|---|---|---|
+| router | hard 0, 10 open | hard 0, 17 open |
+| after the closers | hard 0, **3 open** (sha `0fa4011be3361add`) | hard 0, **4 open** (sha `41c9386104d388dc`) |
+| ANA-001 | FAIL **12 of 34** | FAIL **12 of 34** |
+| pairs inside 0.50 mm | **50** | **71** |
+| sense side locked | 12 of 50 | 1 of 71 |
+| sense segments | 483 | 474 |
+
+**So after the closers the fence costs ONE connection, not the seven the router's count showed**, which is
+why a fence arm is read on the finished board; A99C's three ties board A's best finished number. **The rows
+the fence can reach improve markedly**: `CH_SRN_F` goes 0.129 mm to 0.450, `PA_CSF`'s 0.225 row disappears,
+`HF_CSGF` 0.163 to 0.193, and `PA_CSGF`, `POE_CSGF`, `FE_FB` and `FE_ISNS_P` leave the failing list. **What
+replaces them is the copper the router put somewhere else**: `CH_ACN_F` 0.200, `HF_ISNS_N` 0.152,
+`POE_ISNS_N` 0.130, `B33_FB` 0.491 and `CH_SRP_F` 0.450 join it, and `FE_CSGF` gets worse, 0.177 to 0.129.
+
+**And the geometry is worse by the very measure the fence exists for: 71 close approaches against 50.** The
+difference from board E, where the same instrument took 23 pairs to two and ANA-001 FAIL to PASS for one
+connection, is the one `sense_reach` named in advance: **board E's sense side is locked in every one of its
+pairs and board A's in a fraction**, so the fence on board A can be grown at a few nets and the router is
+free everywhere else. **A101, which pre-lays the twelve sense nets so the fence can be grown at all of them,
+is the arm that tests whether reaching them changes that**, and it routes now against A99R, one variable
+apart and both from HEAD.
