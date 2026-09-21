@@ -124,3 +124,32 @@ def t_it_is_a_report_and_never_decides_ana001():
     assert "sense_reach.py" in blk, "the coverage map does not name this report under ANA-001"
     assert "sensitive_nodes.py" in blk and "tool: sensitive_nodes.py" in blk, \
         "ANA-001 is no longer decided by sensitive_nodes, which this report must not replace"
+
+
+def t_two_segments_that_cross_are_not_reported_as_having_daylight():
+    """THE DEFECT, found by checking the arithmetic against a brute-force sweep rather than trusting it
+    (21 September 2026).
+
+    For two segments that do NOT cross, the closest approach is always at an endpoint of one of them, so
+    sampling the four endpoints is exact; over forty random pairs the worst difference from a sweep was
+    0.034 mm, which is the sweep's own grid. For two that DO cross it is not exact at all: every endpoint can
+    be far from the other segment while the middles meet, and the sweep read up to 2.70 mm of daylight where
+    there is none. On these boards that case is a hard DRC violation and the boards this has run on read
+    hard 0, so it has never occurred; a report that answers wrongly in a case it cannot meet is still a
+    report that answers wrongly."""
+    import ast
+    import math
+    src = open(os.path.join(TOOLS, "sense_reach.py"), encoding="utf-8").read()
+    fn = [n for n in ast.parse(src).body if isinstance(n, ast.FunctionDef) and n.name == "gap"]
+    assert fn, "sense_reach no longer carries gap"
+    ns = {"math": math}
+    exec(compile(ast.Module(body=fn, type_ignores=[]), "sense_reach.py", "exec"), ns)
+    gap = ns["gap"]
+    # an X: every endpoint is 7 mm from the other segment's endpoints, and the middles meet at the centre
+    a = {"a": (0.0, 0.0), "b": (10.0, 10.0), "w": 0.25}
+    b = {"a": (0.0, 10.0), "b": (10.0, 0.0), "w": 0.25}
+    assert gap(a, b) <= 0.0, "two segments that cross were reported with daylight between them: %.3f" % gap(a, b)
+    # and the acceptable fixture: two that do not cross keep their real clearance
+    c = {"a": (0.0, 0.0), "b": (10.0, 0.0), "w": 0.25}
+    d = {"a": (0.0, 0.6), "b": (10.0, 0.6), "w": 0.25}
+    assert abs(gap(c, d) - 0.35) < 1e-9, gap(c, d)
