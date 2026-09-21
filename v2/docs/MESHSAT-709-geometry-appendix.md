@@ -17629,3 +17629,23 @@ instrument tried before it (a DSN class-pair rule Freerouting ignores, a class c
 refuse, a KiCad custom rule that catches after the route), is answered. **E38 is not adoptable at five open
 and E17 stays board E's phase**; what is settled is the instrument, and board A's A99 is the same question
 asked of a board whose sense nets the pre-lay mostly does not touch.
+
+**Addendum, 21 September 2026 14:11 CEST: E40 routes the cheap half of the tracker seats, and its probe was
+refused for a number the record already carried.** E40 is E38 plus two FIXED seats and nothing else, so its
+control is E38 by one variable: C20, the LDO's output capacitor on U5.4 and 18.18 mm from that pin, and R15,
+the shutdown divider on U5.1 and 11.29 mm away, both packed into TRKS on the far side of the tracker and both
+now at case (27.5, -90.0) and (27.5, -88.0), each leaving TRKS's packing list in the same edit as the
+duplicate-reference guard requires. The prediction is in `boards/e.json`: `/TRK_LDO33` and `/TRK_SHDN` close,
+about three open against E38's five, ANA-001 still PASS. The named risk is that two parts leaving TRKS
+changes what the packer puts there, so nets with nothing to do with U5 can open; if the count rises, the
+answer is a seat inside TRKS's own edge rather than beside U5.
+
+**Its probe E40P was refused in three minutes on its first run**, `courtyards_overlap` against U5 on both
+parts, because the seats were typed from a 1.6 by 0.8 mm assumption: **an 0603's courtyard on this set is
+3.05 by 1.55 mm**, which this appendix has carried since 20 September, when board A's first ISNS filter seats
+landed inside their own controllers for exactly that reason. Re-typed against the measured box the chain ends
+`PREROUTE-DONE OK` with `place_audit` 0 predicted collisions of 8 fine-pitch parts. **And board A's own
+version of this work is NOT a seat move**: `part_room` on A98's board reads U13 with 0.08 mm to the south,
+U2 with 0.08 mm, Q11 with 0.56 mm east and Q4 with 0.78 mm north, against U5's 11.40 mm clear west, so A102
+is a re-order of each stage's region, the charger block's shape of 20 September, which is a placement and
+copper change together because the In3 unions are derived from the placement.
