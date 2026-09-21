@@ -1526,7 +1526,7 @@ the material group of the laminate.
 | | IEC 60664-1 insulation coordination for equipment within low-voltage systems, IEC, creepage and clearance tables -- NOT IN THIS TREE |
 | | ECSS-Q-ST-70-12C, Design rules for printed circuit boards, clause 13.8.2 and Table 13-3, minimum insulation distance as a function of voltage, ECSS Secretariat, ESA-ESTEC Requirements and Standards Division, 13.8.2, Table 13-3 -- v2/vendor/standards/ecss-q-st-70-12c-2014-07-14.md |
 | implementation | gen_pcb_a3.py HV class, gen_pcb_b3.py HV class |
-| maturity | **OWNER_DECISION_REQUIRED** |  (at writing: SOURCE_UNVERIFIED)
+| maturity | **ENFORCED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | OWNER |
 | waiver | not waivable |
 

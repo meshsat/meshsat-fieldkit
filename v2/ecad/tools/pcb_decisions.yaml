@@ -312,7 +312,37 @@ decisions:
   - n: 34
     title: "the kit has never had a written operating envelope and four rules resolve against nothing"
     asked: 2026-09-16
-    status: open
+    status: ruled
+    authority: SESSION
+    authority_why: >-
+      it changes no line the never-auto floor protects, spends nothing and accepts no residual risk a measurement
+      here could remove: every bound in the envelope is the operating range a part's own maker publishes, read out
+      of a sheet in v2/vendor named beside it, so for each bound only one option is standing. The one number that
+      is this project's own, the inside-air rise, is declared an estimate with TEST-PLAN.md E3 named as the
+      measurement that replaces it. What is NOT taken here and stays the owner's: ADVERTISING the kit to this
+      envelope, which is a claim about the product and belongs with the public copy.
+    ruled_by: SESSION
+    ruled_on: 2026-09-21
+    outcome: >-
+      ADOPT v2/docs/OPERATING-ENVELOPE.md section 4 AS THE DESIGN ENVELOPE, and section 6's first row as the
+      transient level. In use -20 to +40 C ambient with its three declared carve-outs (the pack warmed below -10 C
+      before charge, the e-paper degraded below -15 C, the reduced mode above +35 C); storage -20 to +45 C for
+      three months and -20 to +25 C for a year at the pack's ex-factory charge; non-condensing, with the closed
+      case Peli's IP67 and the face designed to an IP67-class construction that is never labelled IP68 and carries
+      no rating until the bench procedure of appendix 32.34 has run. Electrostatic discharge is IEC 61000-4-2
+      level 4, 8 kV contact and 15 kV air, which is the level decision 31 needs to choose a clamp against and is
+      traceable to the USBLC6-2SC6 this design already buys. The electrical fast transient row is recorded as NOT
+      A REQUIREMENT of this project, because nothing in this tree is a source for it. AND ISO-001 IS JUDGED
+      AGAINST ECSS-Q-ST-70-12C TABLE 13-3, per voltage band, per layer, on the column the board's own coating
+      selects: that table is stated for an as-manufactured rigid PCB without an altitude derating and without a
+      pollution degree, so the two numbers ISO-001 was said to be waiting for are not needed to judge it. The
+      altitude, the vibration and shock severities and the service life stay OPEN for the rules that genuinely
+      need them and are not invented here.
+    reversed_by: >-
+      set status to reopened and the envelope returns to a draft. The ISO-001 half reverses on its own by removing
+      conformal_coated from tools/boards/*.json, which puts every board back on the bare column of Table 13-3 and
+      the rule back to INCONCLUSIVE; the ESD level reverses by removing section 6's first row from the ruling,
+      which re-opens decision 31's choice of clamp
     ask: "the temperature, altitude and transient levels the kit is designed to"
     recommendation: "the draft in v2/docs/OPERATING-ENVELOPE.md, whose two narrowest parts are the battery-bay VOC sensor and the e-paper"
     evidence: "THE DRAFT'S OWN NUMBERS, so the ruling can be read without opening it (17 September 2026). It

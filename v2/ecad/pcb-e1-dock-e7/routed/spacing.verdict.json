@@ -2,7 +2,7 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "below_limit": 0,
+  "below_limit": 92,
   "closest_mm": 0.1287,
   "hv_nets": 8,
   "pairs_measured": 10759
@@ -15,11 +15,6 @@
   "0.129 mm DC_P to U3_VCAP on F.Cu at (100.1, 203.2)",
   "0.129 mm DC_P to U3_VCAP on F.Cu at (102.3, 201.0)",
   "0.129 mm DC_P to U3_VCAP on F.Cu at (102.3, 201.0)",
-  "0.129 mm PV_P to GND on B.Cu at (137.3, 201.9)",
-  "0.129 mm PV_P to GND on B.Cu at (197.0, 196.6)",
-  "0.129 mm PV_P to TRK_FBOUT on B.Cu at (192.1, 194.7)",
-  "0.129 mm PV_P to TRK_SW1 on B.Cu at (147.8, 198.6)",
-  "0.129 mm PV_P to TRK_VC on B.Cu at (177.6, 194.7)",
   "0.129 mm VIN_RAW to GND on B.Cu at (150.4, 185.1)",
   "0.129 mm VIN_RAW to GND on B.Cu at (150.4, 185.1)",
   "0.129 mm VIN_RAW to GND on B.Cu at (150.4, 185.7)",
@@ -28,18 +23,25 @@
   "0.129 mm VIN_RAW to GND on B.Cu at (203.4, 190.4)",
   "0.129 mm VIN_RAW to GND on B.Cu at (203.4, 190.4)",
   "0.129 mm VIN_RAW to GND on B.Cu at (203.4, 190.4)",
-  "0.129 mm VIN_RAW to GND on B.Cu at (203.4, 190.4)"
+  "0.129 mm VIN_RAW to GND on B.Cu at (203.4, 190.4)",
+  "0.129 mm VIN_RAW to SCL0 on B.Cu at (209.6, 191.2)",
+  "0.129 mm VIN_RAW to TRK_OUT on B.Cu at (223.0, 195.4)",
+  "0.129 mm VIN_RAW to U4_VCAP on F.Cu at (212.6, 194.5)",
+  "0.129 mm VIN_RAW to WATER_SENSE on B.Cu at (121.1, 207.0)",
+  "0.129 mm VIN_RAW to WATER_SENSE on B.Cu at (208.9, 190.4)"
  ],
  "inputs": {
+  "basis": "ECSS-Q-ST-70-12C Table 13-3, per rail's working voltage and per layer, on the coated column (this board declares conformal_coated: True)",
   "board": {
    "path": "pcb-e1-dock.kicad_pcb",
    "sha256_16": "a462ac2620b9b8d3"
   },
+  "conformal_coated": true,
   "hv_spacing_mm": null,
   "volts": 20.0
  },
  "missing_input": null,
- "note": "measured, not judged: this board declares no hv_spacing_mm, and creepage and clearance come from a standard's table for a working voltage, a pollution degree and a material group, which this tree does not hold",
+ "note": "every high-voltage conductor against ECSS-Q-ST-70-12C Table 13-3, per rail's working voltage and per layer, on the coated column (this board declares conformal_coated: True)",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -53,13 +55,13 @@
  "tool": "spacing",
  "tools": {
   "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "tools_tree_sha": "17411673c91cc49d"
  },
- "ts": "2026-09-21T12:52:03Z",
- "verdict": "INCONCLUSIVE",
+ "ts": "2026-09-21T17:12:58Z",
+ "verdict": "FAIL",
  "version": "unknown",
  "writer": {
   "file": "spacing.py",
-  "sha16": "d58ce94c56df4d68"
+  "sha16": "ea3c7630a0e22740"
  }
 }

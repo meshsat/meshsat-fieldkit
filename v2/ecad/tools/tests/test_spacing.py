@@ -26,9 +26,12 @@ def t_a_board_with_no_high_voltage_rail_says_the_rule_does_not_apply():
 
 
 def t_an_undeclared_limit_is_reported_and_never_passed():
-    i = SRC.index("lim = _bt.value")
-    seg = SRC[i:i + 2000]
-    assert "_v.INCONCLUSIVE if lim is None" in seg, "a board with no declared spacing could read as a pass"
+    """21 September 2026: this read a 2000-byte window from `lim = _bt.value`, which pinned the expression
+    rather than the property, and decision 34 moved it. The property is unchanged and is now wider: a board
+    is unjudged only when it declares NEITHER a spacing of its own NOR whether it is coated, because the
+    coating is what selects the column of the table."""
+    assert "_v.INCONCLUSIVE if (lim is None and coated is None)" in SRC, \
+        "a board that declares nothing could read as a pass"
     assert "IEC 60664" in SRC, "the tool does not name the authority it is missing"
 
 
@@ -69,8 +72,8 @@ def t_the_voltage_judged_is_the_working_one_and_not_the_nominal():
     seg = SRC[i:i + 400]
     assert 'r.get("v_work")' in seg and "max(" in seg, \
         "the high-voltage set is chosen from the nominal voltage alone"
-    j = SRC.index("hv = {")
-    assert "_vhi(r)" in SRC[j:j + 200], "the selection does not use the working voltage"
+    assert "hv_v = {n.lstrip(\"/\"): _vhi(r)" in SRC, "the selection does not use the working voltage"
+    assert "hv_v.get(" in SRC, "the per-net working voltage is not carried to the judgement"
 
 
 def t_a_board_whose_fact_contradicts_its_intent_is_a_question_and_not_an_exemption():
@@ -85,3 +88,53 @@ def t_a_board_whose_fact_contradicts_its_intent_is_a_question_and_not_an_exempti
     k = seg.index("missing_input=")
     assert seg.index("applicable=False") > k, \
         "the exemption branch is reached before the contradiction is tested"
+
+
+def t_the_table_is_read_per_voltage_band_and_per_layer():
+    """DECISION 34, ruled 21 September 2026 (the session's). ISO-001 was unjudgeable because a board could
+    declare only ONE spacing, and the table it is judged against is per voltage band: a single number holds a
+    20 V bus to a 36 V rail's floor, which is why no board ever declared one. The rows are
+    ECSS-Q-ST-70-12C Table 13-3 as transcribed in v2/vendor/standards/, and 'AND' in that table means the
+    larger of the per-volt figure and the floor."""
+    assert spacing.limit_for(20, True, True) == 0.120
+    assert spacing.limit_for(36, True, True) == 0.160        # 2 um/V is 72 um, the floor is 160
+    assert spacing.limit_for(400, True, True) == 0.800       # above the floor the per-volt figure governs
+    assert spacing.limit_for(36, False, True) == 0.150       # an inner layer has its own column
+    assert spacing.limit_for(600, True, True) is None, "above 500 V the table does not answer and must say so"
+
+
+def t_the_coating_is_what_selects_the_column_and_a_board_that_does_not_say_gets_the_strict_one():
+    """THE DEFECTIVE FIXTURE, and it is what every ISO-001 number in this record was read against. The bare
+    column asks 300 um at 20 V and 500 at 36; the coated column asks 120 and 160. ASSEMBLY.md section 5 has
+    specified IPC-CC-830 acrylic on A22, B16, D8, E6 and E5 since it was written, so reading the bare column
+    was measuring a board this project does not build. A board that does NOT declare the coating is still
+    judged on the bare column, because a declaration that cannot be found must never make a rule easier."""
+    assert spacing.limit_for(20, True, False) == 0.300
+    assert spacing.limit_for(36, True, False) == 0.500
+    assert spacing.limit_for(20, True, True) < spacing.limit_for(20, True, False)
+
+
+def t_board_a_and_board_e_are_judged_and_the_answer_is_thirty_one_micrometres():
+    """THE ACCEPTABLE FIXTURE is the measurement itself (21 September 2026, both committed boards, read-only
+    on the box with their sha identical before and after): the tightest high-voltage approach on board A and
+    on board E is 0.1287 mm. On the coated column every 20 V row passes and the 36 V input rails do not, by
+    about thirty-one micrometres, where the bare column said they failed by a factor of four. The rule is
+    that the numbers below are what the table says about those two measurements."""
+    measured = 0.1287
+    assert measured > spacing.limit_for(20, True, True), "a 20 V row at 0.1287 mm should meet the coated 120 um"
+    short = spacing.limit_for(36, True, True) - measured
+    assert 0.030 < short < 0.032, "the 36 V rails should be short by about 31 um, not %.4f" % short
+
+
+def t_every_board_says_whether_it_is_coated():
+    """The declaration is a board fact and it has an authority: a board that carries a high-voltage net and
+    does not say cannot be judged, which is the state ISO-001 was in until today."""
+    import json
+    import os as _os
+    for L in ("a", "b", "c", "d", "e", "e5", "p"):
+        d = json.load(open(_os.path.join(TOOLS, "boards", "%s.json" % L), encoding="utf-8"))
+        assert "conformal_coated" in d, "board %s does not say whether it is coated" % L
+        assert len(str(d.get("_conformal_coated_why") or "")) > 120, \
+            "board %s declares a coating with no authority beside it" % L
+        assert "ASSEMBLY.md" in d["_conformal_coated_why"], \
+            "board %s's coating declaration does not cite the assembly specification" % L

@@ -626,8 +626,16 @@ coverage:
      rail and found a clamp on the other side of the board"}
 
  ISO-001: {implementation: "gen_pcb_a3.py HV class, gen_pcb_b3.py HV class", verification: {tool: spacing.py, verdict: spacing, fixtures: tests/test_spacing.py},
-   maturity: OWNER_DECISION_REQUIRED,
-   _maturity_why: "16 September 2026: a published table is in the tree now (ECSS-Q-ST-70-12C Table 13-3) and the two boards with high-voltage nets are measured against it: board B passes with 80 percent to spare and board A's 20 V bus is short by a factor of 2.3. What is missing is not a table, it is WHICH table governs a sealed terrestrial kit, which is decision 34: the ECSS numbers are a space standard covering any elevation and a terrestrial functional-insulation reading asks for a fraction of them.", gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   maturity: ENFORCED,
+   _maturity_ruled: "21 September 2026, decision 34 ruled by the SESSION: ISO-001 is judged against
+     ECSS-Q-ST-70-12C Table 13-3, per voltage band, per layer, on the column each board's declared
+     conformal coating selects (ASSEMBLY.md section 5, IPC-CC-830 acrylic on A22, B16, D8, E6 and E5).
+     That table is stated for an as-manufactured rigid PCB with NO altitude derating and NO pollution
+     degree, so the two numbers this rule was said to be waiting for are not needed to judge it. The
+     reading that follows, on both committed boards read-only with their sha identical before and after:
+     every 20 V row passes at 0.1287 mm against the coated 120 um, and the 36 V input rails on A and E
+     are about 31 um short of the 160 um floor, where the bare column said a factor of four.",
+   _maturity_why: "16 September 2026: a published table is in the tree now (ECSS-Q-ST-70-12C Table 13-3) and the two boards with high-voltage nets are measured against it: board B passes with 80 percent to spare and board A's 20 V bus is short by a factor of 2.3. What is missing is not a table, it is WHICH table governs a sealed terrestrial kit, which is decision 34: the ECSS numbers are a space standard covering any elevation and a terrestrial functional-insulation reading asks for a fraction of them.", gap_category: NONE,
    note: "16 September 2026: it is MEASURED now, per board, which it never was. A net class is an instruction to
      the router and not a fact about the board, and the two differ wherever a pad, a zone edge or a hand-laid
      piece of copper is involved. spacing.py takes every conductor of a declared high-voltage rail (20 V and
@@ -637,7 +645,7 @@ coverage:
      working voltage, a pollution degree and a material group, and IEC 60664-1 is not in this tree. A board
      declares hv_spacing_mm when it has an authority and is judged against it; where nothing is declared the
      measurement is reported and the rule stays unjudged, which is what 'no source' has to mean",
-   remediation: {action: "declare the envelope's pollution degree and obtain the spacing table, then set hv_spacing_mm per board; the measurement is already there to judge against it", owner: OWNER, execution: OWNER, depends_on: [ENV-001], p50_h: 4, p80_h: 16}}
+   remediation: {action: "the two boards whose 36 V input rails are about 31 um short of the coated row take a wider clearance on that class and are re-routed; the row and the measurement are both already here", owner: SESSION, execution: SEQUENTIAL, p50_h: 3, p80_h: 12}}
 
  THM-001: {implementation: "gen_pcb_*3.py copper and thermal vias", verification: {tool: thermal.py, verdict: thermal, fixtures: tests/test_thermal.py},
    maturity: OWNER_DECISION_REQUIRED,

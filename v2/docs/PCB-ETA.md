@@ -11,8 +11,8 @@ it.
 
 | | P50 | P80 |
 |---|---|---|
-| engineering effort, one worker | 48 h | 146 h |
-| the same at 6 hours a day | 8.0 days | 24.3 days |
+| engineering effort, one worker | 51 h | 158 h |
+| the same at 6 hours a day | 8.5 days | 26.3 days |
 | critical path through the dependencies | 19 h | 72 h |
 
 Read the table above as WORK REMAINING and never as a delivery date. The two are different questions: a
@@ -26,18 +26,18 @@ figures are below.
 |---|---|---|---|---|
 | PARALLEL_AGENT | 10 | 32 h | 100 h | session work with no shared file, so several may run at once in their own worktrees |
 | VENDOR_OR_STANDARD_WAIT | 5 | 29 h | 134 h | a third party's answer, or a document that has to be obtained and read |
-| OWNER | 7 | 24 h | 157 h | a ruling. No amount of compute shortens it and it is never in the engineering total |
+| OWNER | 6 | 20 h | 141 h | a ruling. No amount of compute shortens it and it is never in the engineering total |
 | PARALLEL_BOX | 3 | 12 h | 34 h | work whose cost is a route, a sweep or a solve on a rented host, so it runs at the fleet's width |
-| SEQUENTIAL | 2 | 4 h | 12 h | session work that must be serialised: one producer, a shared file, or a never-auto floor |
+| SEQUENTIAL | 3 | 7 h | 24 h | session work that must be serialised: one producer, a shared file, or a never-auto floor |
 
 ## Elapsed, at 1 session worker(s) and 2 rented box(es)
 
 | | P50 | P80 |
 |---|---|---|
-| session pool | 6.0 days | 18.7 days |
+| session pool | 6.5 days | 20.7 days |
 | fleet pool | 0.2 days | 0.7 days |
 | longest dependency chain | 3.2 days | 12.0 days |
-| **design package ready for prototype** | **6.0 days** | **21.0 days** |
+| **design package ready for prototype** | **6.5 days** | **21.0 days** |
 
 ## The programme, cumulative elapsed days from the day this page was generated
 
@@ -46,15 +46,15 @@ figures are below.
 | DESIGN_PACKAGE_READY_FOR_PROTOTYPE | 6 days | 21 days | COMPUTED |
 | FABRICATION_AND_ASSEMBLY | 18 days | 51 days | VENDOR_PUBLISHED |
 | BENCH_BRING_UP | 32 days | 96 days | DECLARED_ESTIMATE |
-| LAB_VALIDATION | 53 days | 186 days | DECLARED_ESTIMATE |
-| PRODUCTION_RELEASE_READY | 83 days | 306 days | DECLARED_ESTIMATE |
+| LAB_VALIDATION | 54 days | 186 days | DECLARED_ESTIMATE |
+| PRODUCTION_RELEASE_READY | 84 days | 306 days | DECLARED_ESTIMATE |
 
 Only the first milestone is computed from this project's own register. Every stage after it is a vendor's
 published figure or this session's declared estimate, and NONE of them has been measured here, because
 nothing has been ordered. The basis of each is in `v2/ecad/tools/pcb_programme_stages.yaml` beside its
 number.
 
-27 open item(s): 15 are work and 12 are waits on the owner, a vendor or a standard. Waits are not engineering
+27 open item(s): 16 are work and 11 are waits on the owner, a vendor or a standard. Waits are not engineering
 time and are listed separately below.
 
 ## Waits, which no amount of engineering shortens
@@ -66,7 +66,6 @@ time and are listed separately below.
 | ENV-001 | rule decision 34: the envelope of section 4, the part swaps of option 2, or the narrow env | OWNER |
 | IMP-001 | solve every geometry, pin the standard, and get the fabricator's written confirmation with | OWNER |
 | INT-002 | owner decision 29: fit magnetics on the three module links, ask the module vendor, or defe | OWNER |
-| ISO-001 | declare the envelope's pollution degree and obtain the spacing table, then set hv_spacing_ | OWNER |
 | PI-001 | put the crossover to the owner as a decision: keep the IPC-2221A bar, take the most conser | OWNER |
 | RET-001 | obtain an authoritative basis for the per-class tolerance (a critical-length criterion fro | SESSION |
 | RET-003 | find a published figure for how far a plane-stitching capacitor may sit from the transitio | SESSION |

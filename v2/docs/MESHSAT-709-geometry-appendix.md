@@ -17969,3 +17969,67 @@ and no `no escape for U5 pad 4`), which costs a placement and not a three-hour r
 is five connections better than E41's at the same pass** (nine against fourteen), so freezing all fifteen
 TRKS parts costs connections against letting the packer refill around two fixed seats: a seat is a FIXED
 PART, never a frozen region.
+
+### 32.351, 21 September 2026 19:18 CEST: the session rules six decisions, and ISO-001 is judged for the first time
+
+**THE OWNER'S RULING OF THIS EVENING, and it is a correction to how this project has been run.** He is not a
+PCB engineer, so a register that parks engineering judgement in a queue addressed to him does not protect
+anything: it stops work while looking like progress. Twenty decisions were open and **78 of 134 open
+rule-board pairs were waiting on one**, a number this session had been reporting as a fact about the boards
+when it is a fact about the session. The agentic system exists so that these are taken on evidence and
+recorded. **The rule from here, and it is testable rather than a sentiment**: a judgement goes to the owner
+only if answering it changes a line a class in `reserved.json` protects, OR spends money, changes what the
+kit is claimed to be, or accepts a residual risk no measurement in this tree can remove, AND more than one
+option is still standing after the measurement. Everything else the session rules, records and moves on.
+Three mechanical tests of that rule already exist: `reserved.py` run over the diff the ruling would produce;
+the register's own evidence field (a decision whose measurement refutes every option but one is not a
+decision); and `waiver_policy.authority` in `pcb_rules.yaml`, which **already names SESSION on fourteen
+rules**, five of them the subject of an open decision.
+
+**THE REGISTER CARRIES A SESSION RULING NOW.** `pcb_decisions.yaml` gained `authority`, `authority_why`,
+`ruled_by`, `ruled_on` and `reversed_by` beside the fields it already had, so a ruling reads on the page as
+an owner ruling does and can be withdrawn on new evidence; `status: ruled` was already legal and already used
+by decision 24. Six taken this evening: **47** (the pair rule), **34** (the envelope and the insulation
+table), and **33, 44, 45, 46**, each adopting the recommendation its own entry already carried with the
+measurement behind it. Open decisions 20 to 14.
+
+**DECISION 47 AND THE MECHANISM, because a ruling with no instrument is a sentence.** Both gates that
+enumerate `_P`/`_N` nets held every one of them to the 1.00 mm length rule, so board A's ten LM5176 Kelvin
+taps, named `_P`/`_N` when the ISNS filter went in on 18 September, were being judged as differential pairs:
+`PA_ISNS` reads a **58.38 mm** mismatch by construction, because a Kelvin tap's two legs run to opposite ends
+of its shunt, and `pair_match.sh` refused every board A finish on it. `tools/pair_gate.py` is the criterion
+(a pair is judged when either leg is in a class the intent declares with a `z_diff` or `z_se`), both gates
+ask it, an unjudged pair is printed as INFO and measured rather than refused, and it **fails closed**: where
+the class table or the intent cannot be read the pair is judged exactly as before. Two rules proved to fail
+on the tree they were written against; a third, `test_interfaces`'s, was pinning the gate's EXPRESSION rather
+than its number and now pins the number.
+
+**DECISION 34, AND ISO-001 IS JUDGED ON ALL THREE BOARDS THAT CARRY A HIGH-VOLTAGE NET.** The envelope of
+`OPERATING-ENVELOPE.md` section 4 is adopted as the DESIGN envelope with its three carve-outs, and section
+6's first row with it: electrostatic discharge at IEC 61000-4-2 level 4, which is the level decision 31 needs
+to choose a clamp against. The electrical fast transient row is recorded as NOT a requirement of this
+project, because nothing in this tree is a source for it. **What was NOT taken and stays the owner's:
+advertising the kit to this envelope**, which is a claim about the product.
+
+**AND THE READING THAT FOLLOWS IS THE FINDING.** Every ISO-001 number this project has recorded was read
+against ECSS-Q-ST-70-12C Table 13-3's *X,Y external WITHOUT conformal coating* column, while `ASSEMBLY.md`
+section 5 has specified **IPC-CC-830 acrylic, two thin coats, on A22, B16, D8, E6 and E5** since it was
+written. The boards say whether they are coated now (`conformal_coated` with its authority and the mask list
+beside it), `spacing.py` reads the row per rail's WORKING voltage and per LAYER rather than against one
+board-wide scalar, and the table's own "AND" is taken as the larger of the per-volt figure and the floor.
+**Re-taken read-only on the committed boards, each sha identical before and after:**
+
+| board | verdict | closest | what the row asks | short by |
+|---|---|---|---|---|
+| A32 | **FAIL**, 5 of 10,124 pairs | 0.1287 mm | VIN_RAW at 36 V wants 0.160; every 20 V row wants 0.120 and is met | 0.031 mm |
+| E17 | **FAIL**, 92 of 10,759 | 0.1287 mm | DC_HS, DC_P and the other 36 V input rails want 0.160 | 0.031 mm |
+| B21 | **PASS** of 336 | 0.1828 mm | +54V_POE wants 0.160 | met |
+
+So a rule that had never been judged on any board is judged on three, one passes, and what the other two owe
+is **thirty-one micrometres on one net class**, where the bare column said a factor of four. **And the two
+numbers ISO-001 was said to be waiting for are not needed**: Table 13-3 is stated for an as-manufactured
+rigid PCB with no altitude derating and no pollution degree, so the envelope's open altitude figure does not
+block it. The altitude, the vibration and shock severities and the service life stay open for the rules that
+genuinely need them and were not invented here. The remedy is a wider clearance on the 36 V input class and a
+re-route, owned by the session, and the class width is on the never-auto floor, so the EDIT is deliberate
+even though the JUDGEMENT is not the owner's.
