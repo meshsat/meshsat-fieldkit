@@ -17586,3 +17586,24 @@ placement pass at the block closes several rules at once. E38's fence measured w
 measure and its numbers stand; what changes is the ORDER of board E's remaining work. **E40 is the tracker
 block seated in the order the current flows**, one seat probe per part through `FIXED_OVERRIDE` with each
 region's packing list edited in the same commit, which is the D31-to-D32 procedure.
+
+**Addendum, 21 September 2026 13:45 CEST: the same question, asked of board A, finds the same defect in all
+five of its converter stages.** Board E's last four opens turned out to be the tracker's support parts eleven
+to twenty-seven millimetres from the pins they serve, so A98's finished board was asked the same thing.
+**Every gate drive on board A carries 16 to 43 mm of copper** (PA_HDRV1 43.5, HF_LDRV1 35.1, FE_LDRV2 34.0,
+PD_HDRV1 30.9, HF_HDRV1 and HF_HDRV2 29.8, POE_HDRV1 27.0, FE_HDRV2 26.7, FE_LDRV1 26.5, down to 16.4), and
+pad to pad each controller's gate pin sits **13.5 to 28.9 mm** from the FET it drives: PA_HDRV1 U13.27 to
+Q11.4 28.86 mm, FE_LDRV2 U2.21 to Q4.4 25.91, PD_HDRV1 U19.27 to Q21.4 16.36, HF_LDRV1 U15.25 to Q16.4
+14.68, POE_LDRV1 U16.25 to Q18.4 13.51. An HDRV or LDRV pin carries amps of peak gate current in tens of
+nanoseconds and belongs at the FET.
+
+**It is already costing the router, which is how it surfaced.** `POE_LDRV1` is one of the FOUR opens left on
+A98's finished board, 13.51 mm apart and beyond `direct_close`'s 12 mm reach; it carries 2.5 mm of copper
+because the net is open, not because it is short. So on both boards the switching stages' FETs are not at
+their controllers' gate pins, and it shows up three ways at once: as unclosable opens, as ANA-001 rows where
+the long gate drive runs beside a sense pair, and as a datasheet item. That is the shape this project met at
+board A's charger block on 20 September, at board D's codec capacitors, and at board A's ISNS filters, and
+each time the answer was the same: seat the parts at the pins they serve and several rules close together.
+**Neither A102 nor E40 is started or costed**, and the first thing each owes is whether the seats exist at
+all, measured the way the USB-C outlet's were (4,561 courtyard-clear seats within 30 mm, 3,235 of them
+fan-clear), because board A's region rectangles are on the never-auto floor under owner ruling 13.
