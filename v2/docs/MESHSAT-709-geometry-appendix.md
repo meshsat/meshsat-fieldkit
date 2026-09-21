@@ -17347,3 +17347,24 @@ and it is NOT decision 35: the ruling holds the one 83.5 mm run from the cluster
 the cluster to itself. It is **not applied and its cost is not measured**: a chain run owes the placed board's
 hard count, whether VBUS20's In3 union is still one piece (the refusal of 20 September), and what the router
 does with it. That is A100, launched after A99, so that each arm keeps one variable.
+
+**Addendum, 21 September 2026 12:01 CEST: A98 lands at its cut with seventeen open and its own variable
+closed, and board A's next pair is built fresh because A98 cannot be its control.** A98 was CUT at its
+18,000 s cap after pass 110 of 200: **hard 0 of the fifteen types, SEVENTEEN open of 274 nets, 318 vias**,
+router board sha 2ea76770504fe3b5. **`/VIN_RAW` is closed**, which is the arm's question answered: A95 left
+it open and A98 is A95 plus the clamp D2's barrel. `/VBAT` and the three slot rails are closed and `/+5V_DEV`
+is open on the 99.78 mm run decision 35 holds. The pass-103 copy taken earlier reads the same seventeen with
+`/HF_SLOPE` where the landing reads `/HF_COMP`, so in seven passes the router closed one and opened another
+and the count did not move. Thirteen of the seventeen are controller pins on the FE, HF, PA and POE stages,
+which is A97's finding on a board that still carries the one-layer tab clusters A97 proved to be dead copper.
+
+**And that is why A98 is not the fence arm's control.** A98's tree was staged at 01:37 and carries neither
+the one-layer judge nor the barrel planner. HEAD's `rail_barrels` read over A98's own placed board reports
+**eight short crossings of fifteen judged where A98's own chain read fourteen and laid thirteen**; the six
+that went are board A's one-layer FET drain tabs, and A97 measured what those clusters cost on a routed
+board at about twelve connections. A difference of that size underneath an arm about a 115 mm2 fence would
+decide the reading by itself. So the pair is launched fresh and in the same minute: **A99 carries the fence,
+A99C is the same tools with `sense_fence` turned off in its own staged board file**, and **A100** will be the
+outlet island's arm against the same control. Each launcher refuses unless its own variable is present, the
+control refuses unless the file it patches declared the fence in the first place, and the trees are staged
+from the runner because a box script cannot stage itself.
