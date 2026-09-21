@@ -95,9 +95,23 @@ REGIONS = [
  ("MCUR",   (91, -106, 118, -80), ["U11", "Y1", "C36", "C37", "R28", "R29", "R30", "R31", "R32", "JP1"] + ["C%d" % k for k in range(38, 48)] + ["TP10", "TP11", "TP12", "R33", "LED2", "R34", "R35", "R36", "R37"], False),
  ("PACK",   (-146, -104, -118.5, -83.5), ["C1", "D3", "TP8", "TP9", "C31", "U12", "L3", "U13", "C30", "C32", "C33", "C34", "C35", "R48", "TP13", "R42", "R43"], False),
  ("FANS",   (-145, -83.4, -116, -71.5), ["Q9", "Q10", "R44", "R45", "R46", "R47", "D7", "D8", "R49", "R50"], False),
- ("HOTSW",  (-106, -104, -76, -86), ["U6", "R19", "Q7", "R20", "R21", "R22", "R23", "C5", "R24", "R25", "D2", "C8"], False),
- ("ENTRYA", (-76, -103, -44, -87), ["U3", "Q1", "C4", "R1", "D1", "C2", "TP1", "TP2", "Q8", "R26"], False),
- ("ENTRYB", (-44, -103, -26, -81), ["L2", "C6", "C7", "R27", "LED1", "TP3"], False),
+ # E35 (21 September 2026, 04:17 CEST): THE INPUT SIDE IN THE ORDER THE CURRENT FLOWS. Until E34 the hot-swap block sat WEST of
+ # the entry block and the choke EAST of it, so the shore current went J_DCIN east to F1, west to Q1, west again to R19 and
+ # Q7, then 64 mm east to L2 and 44 mm back west to J_BLK: about 172 mm in six pieces, four of them too narrow at 8 A
+ # (20 September 2026, PI-001), the DC_HS band the longest generator-laid conductor on the board. The three regions are
+ # re-split along the strip so the path runs one way: J_DCIN and F1 on the south row, the entry block above them, the
+ # hot-swap block west of it, the choke west of that under J_BLK, and VIN_RAW's clamp and capacitor in their own pocket
+ # beyond: about 113 mm, the DC_HS band 26 mm. Measured through the whole chain on the hub eight times before this
+ # (/root/erc10 to erc18): the first refusal was the pad guard on VIN_RAW's ten source barrels typed at the choke's OLD
+ # seat, which is why every piece of this side's copper is derived from the placed pads below; then L2's courtyard on H5,
+ # then ENTRYB overflowing by 5.4, 2.7 and 1.7 mm (the choke needs HEIGHT, not width), then D2 on H6 three ways, then
+ # ENTRYB overflowing again with D2 and C8 in it. The last two runs end PREROUTE-DONE OK at hard 0, escapes 174/5 as E33,
+ # place_audit 0 of 8, pre-route hard 0. The mounting holes at y -83 (H5 at x -104, H6 at -66) cap every region that
+ # contains one at y -87; a region between them may reach -82.
+ ("RAWC",   (-118, -102, -100, -88), ["D2", "C8"], False),                                   # the raw bus clamp and its capacitor, west of the choke under H5
+ ("ENTRYB", (-99, -105, -80, -82), ["L2", "C6", "C7", "R27", "LED1", "TP3"], False),          # the choke west under J_BLK, east of H5's column
+ ("HOTSW",  (-80, -104, -54, -87), ["U6", "R19", "Q7", "R20", "R21", "R22", "R23", "C5", "R24", "R25"], False),   # under H6's keep-out
+ ("ENTRYA", (-54, -103, -26, -83), ["U3", "Q1", "C4", "R1", "D1", "C2", "TP1", "TP2", "Q8", "R26"], False),
  ("TRKIN",  (-26, -103, -2, -81), ["D4", "C11", "C12", "C13", "C14", "C15", "TP5"], False),
  ("TRKW",   (-2, -103, 28, -81), ["Q3", "Q4", "Q5", "Q6", "R5", "C16", "C17", "C18", "D5", "D6"], False),   # R6 and R7 left this list for fixed seats at the shunt (18 September 2026)
  ("TRKS",   (39.5, -95.5, 56, -80), ["C19", "C20", "C21", "C22", "C23", "R8", "R9", "R10", "R11", "R12", "R13", "R14", "R15", "R16", "R17"], False),
@@ -207,13 +221,26 @@ board.Add(z)
 # 52.0 (ratio 1.14) a millimetre south-east of them. In2 is EMPTY from y -71 to -74 across this whole span
 # (measured: three of this net's own vias and one GND via in 66 by 4 mm), so the pour takes that room and
 # the current spreads round the via heads instead of squeezing past them.
-pour(pcbnew.In2_Cu, "VIN_RAW", "VIN_RAW pour In2 (filter to the block lands, north to the lands themselves)", (-92, -100, -26, -71), priority=1)
+# E35 (21 September 2026): the input side's copper is DERIVED from the placed pads it serves, so the regions can move. The
+# VIN_RAW island and its ten source barrels sit in L2's pad 2 wherever the packer puts L2, the In2 pour spans from the
+# choke to the block lands, and the DC_HS band runs from Q7's source pads to L2 pin 1 as an L of two rectangles.
+def _padc(ref, num):
+    """case (x, y) of a placed pad's centre"""
+    for _q in placed[ref].Pads():
+        if str(_q.GetNumber()) == str(num):
+            _c = _q.GetPosition(); return (_c.x / 1e6 - OX, OY - _c.y / 1e6)
+    raise SystemExit("no pad %s on %s" % (num, ref))
+_L2S = _padc("L2", "2"); _L2I = _padc("L2", "1")          # the choke's source pad (VIN_RAW) and its input pad (DC_HS)
+_BLKX = [_padc("J_BLK", str(_k))[0] for _k in (1, 2, 3, 4)]
+_Q7S = [_padc("Q7", str(_k)) for _k in (1, 2, 3)]         # the hot-swap FET's three source pads (DC_HS)
+pour(pcbnew.In2_Cu, "VIN_RAW", "VIN_RAW pour In2 (filter to the block lands, north to the lands themselves)",
+     (min(_L2S[0], min(_BLKX)) - 8.0, -100, max(_L2S[0], max(_BLKX)) + 8.0, -71), priority=1)
 # The rail's 8 A leaves L2's pad 2 and 2.23 A of it was measured on the LOCKED 0.400 mm escape stub beside the
 # pad, which IPC gives 1.23 A: the rail has copper on In2 and none on the layer its source pad is on, so that
 # stub is a lone conductor with nothing beside it. A small F.Cu island over the pad and the stub's own run
 # gives the current somewhere to go, and the conductor test then judges the island's cells rather than a
 # 0.4 mm track, which is what the pour bar is for.
-pour(pcbnew.F_Cu, "VIN_RAW", "VIN_RAW island F.Cu at the source pad", (-43.5, -92.0, -37.5, -87.5), priority=1)
+pour(pcbnew.F_Cu, "VIN_RAW", "VIN_RAW island F.Cu at the source pad", (_L2S[0] - 3.0, _L2S[1] - 2.25, _L2S[0] + 3.0, _L2S[1] + 2.25), priority=1)
 pour(pcbnew.In2_Cu, "PV_P", "PV_P pour In2 (panel input)", (-26, -113, -2, -80), priority=1)
 pour(pcbnew.In2_Cu, "TRK_OUT", "TRK_OUT pour In2 (tracker output)", (56, -113, 76, -80), priority=1)
 pour(pcbnew.In2_Cu, "CELL_F", "CELL_F plane In2 (the west end: the pack node to the pack parts, the fans and the monitor divider; a DSN plane on the power layer In2 since E6 round 4)", (-148, -112, -100, -46), priority=1)
@@ -247,8 +274,8 @@ import power_copper as _pcmod
 # to hole is 0.30 mm across the columns and 0.60 between the rows, and each 0.9 mm body sits 0.2 mm inside
 # the pad's own edge. Everything else on that rail is now under its bar: the conductor reads 0.55 and the
 # pour, clear of every via, exactly 1.00.
-VIN_VIAS = [(-42.1, -89.25), (-41.3, -89.25), (-40.5, -89.25), (-39.7, -89.25), (-38.9, -89.25),
-            (-42.1, -90.35), (-41.3, -90.35), (-40.5, -90.35), (-39.7, -90.35), (-38.9, -90.35),
+VIN_VIAS = [(_L2S[0] + 0.8 * _k, _L2S[1] + 0.55) for _k in (-2, -1, 0, 1, 2)] + \
+           [(_L2S[0] + 0.8 * _k, _L2S[1] - 0.55) for _k in (-2, -1, 0, 1, 2)] + [
             (-86.35, -74.73), (-83.81, -74.73), (-81.27, -74.73), (-78.73, -74.73),   # two per J_BLK land,
             (-86.35, -75.73), (-83.81, -75.73), (-81.27, -75.73), (-78.73, -75.73)]   # 1.0 mm apart across it
 if _osx.environ.get("PLACE_VIN_VIAS", "1") not in ("0", ""):
@@ -375,10 +402,13 @@ if _osx.environ.get("PLACE_DCHS_BAND", "1") not in ("0", ""):
     # placed where the copper is this net's own: one in each of Q7's three source pads, three inside L2 pin 1
     # ONE zone from the three rectangles (E14's first placement read two zones_intersect: three same-net bands at one
     # priority meeting at their corners, which KiCad refuses, and union() is the 8 September answer to exactly that)
-    _pc.union("DC_HS", "DC_HS band B.Cu, Q7 to L2", [(-104.1, -99.75, -60.0, -94.25),     # east along y -97, 5.5 mm
-                                                     (-62.75, -97.0, -57.25, -86.0),      # north at x -60, 5.5 mm
-                                                     (-60.0, -88.25, -40.5, -83.75)])     # east at y -86 into L2 pin 1, 4.5 mm
-    _pc.stitch("DC_HS", [(-104.1, -95.42), (-104.1, -96.69), (-104.1, -97.96), (-41.5, -86.0), (-40.5, -86.0), (-39.5, -86.0)])
+    _qx = _Q7S[0][0]; _qy = sum(_p[1] for _p in _Q7S) / 3.0        # the source pads' column and its middle
+    _lx, _ly = _L2I                                                # L2 pin 1
+    _run = (min(_qx, _lx) - 2.75, _qy - 2.75, max(_qx, _lx) + 2.75, _qy + 2.75)      # along the source pads' y, 5.5 mm
+    _leg = (_lx - 2.25, min(_qy, _ly) - 2.25, _lx + 2.25, max(_qy, _ly) + 2.25)      # up L2 pin 1's column, 4.5 mm
+    _pc.union("DC_HS", "DC_HS band B.Cu, Q7 to L2", [_run, _leg])
+    _pc.stitch("DC_HS", [_p for _p in _Q7S] + [(_lx - 1.0, _ly), (_lx, _ly), (_lx + 1.0, _ly)])
+    print("power copper: DC_HS band from Q7's source pads at (%.1f, %.1f) to L2 pin 1 at (%.1f, %.1f)" % (_qx, _qy, _lx, _ly))
     print("power copper: DC_HS in three locked B.Cu bands from Q7's source pads to L2 pin 1")
 
 ds = board.GetDesignSettings(); ns = ds.m_NetSettings

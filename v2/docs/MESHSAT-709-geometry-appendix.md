@@ -16911,3 +16911,11 @@ Q2, PV_P at U5) are declined as the busbar-class sites they are: six to ten amps
 0.20 mm fanout via each is an island and a cluster of the generator's own drill, board A's rail shape, which is the E35
 generator item. Proved to fail on the tool as it stood; suite 1272, box suite 1310 at 88be02b2.
 
+**Addendum, 04:17 CEST: E35 puts board E's input side in the order the current flows.** The hot-swap block sat west of the entry
+and the choke east of it, so the shore current crossed the strip three times, about 172 mm in six pieces with the 64 mm
+DC_HS band the longest generator conductor on the board. The three regions are re-split along the strip (entry above
+the inlet lands, hot-swap west of it, choke west of that under the block, the raw-bus clamp in a pocket beyond): about
+113 mm, the band 26 mm. The side's copper is derived from the placed pads, which the pad guard forced on the first probe.
+Eight chain runs found the holes, the overflows and the clamp's seat; the last two end OK at hard 0 with E33's escapes
+and zero collisions. E35 routes beside E34, the floor plan its one variable.
+
