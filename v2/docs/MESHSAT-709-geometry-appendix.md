@@ -17926,3 +17926,46 @@ moving its count; the island costs two connections and one row while turning the
 the power rules want. **Neither is adopted** — the committed A32 is 0 hard and 0 unrouted and every one of
 these boards is open — and what stands between board A and a deliverable is those two floor nets, decision 47's
 pair gate, and the decisions the rails are held by.
+
+### 32.350, 21 September 2026 18:49 CEST: a seat that brings a part to a fine-pitch pin can take that pin's escape away, and the chain printed the number
+
+**E40 and E41 both seat C20 at U5 pin 4 (`TRK_LDO33`) and R15 at U5 pin 1 (`TRK_SHDN`), and at a common
+pass 100 both arms CLOSE `/TRK_SHDN` and both leave `/TRK_LDO33` OPEN** (`$SP/e_pair_at_pass.sh e40 e41
+100`, `/root/epair_p100.log`, each snapshot's pass read from the router's own log before the copy and after
+it): E40 hard 0 with nine open, E41 hard 0 with fourteen, `/TRK_LDO33` in both sets. So the seats are not
+answered by one number, and **distance was never the cause**: on E38 the two runs are 18.18 mm and 11.29 mm
+pad to pad and after the seats both are about 3.8 mm.
+
+**THE CAUSE IS ON THE PRE-ROUTE BOARDS AND IT IS AN ESCAPE.** On E38's pre-route board `/TRK_LDO33` carries
+a locked 0.127 mm stub from U5 pad 4 to a locked 0.40/0.20 via at (179.112, 199.750), which is `escape.py`'s
+own work. **On E40's and E41's the net carries NO COPPER AT ALL** and pad 4 has nothing of its own within
+1.2 mm, while `TRK_SHDN`'s pin 1 keeps two pieces including its via, which is why that net closes on both
+arms and the other does not. A QFN pin with no escape has to be reached on F.Cu through the pre-lay's locked
+sense copper, and seven locked `TRK_CSP` pieces, a locked `TRK_CSP` via, `TRK_CSN`, `TRK_FBIN` with its via,
+`TRK_FBOUT`, `TRK_IMONO` and `TRK_SHDN` all sit within 1.5 mm of that pad.
+
+**THE CHAIN SAID SO AT THE TIME AND NOBODY READ IT.** E38's own `round1-pre.log` reads `escape: 168 escapes
+added, 11 pads skipped`; E40's and E41's read **`167 escapes added, 12 pads skipped`** with the line
+**`no escape for U5 pad 4 (/TRK_LDO33)`** above it. One escape fewer, one pad more skipped, and the pad
+named, in a log both arms wrote hours before their routes were read. The geometry behind it: C20's own
+GROUND pad (pad 2, 0.90 by 0.95 at (178.275, 200.000)) sits 0.187 mm from where the escape via's copper was
+and its courtyard, x 175.975 to 179.025, covers that via's western edge at 178.912.
+
+**`place_audit` read ALL PASS with 0 predicted collisions on BOTH boards**, 8 of 8 fine-pitch parts measured,
+because it predicts whether a fan can be PLACED and not whether a pin lost an escape it had. The instrument
+that could have caught this is the escape stage's own two numbers, and nothing compares them between a phase
+and its control.
+
+**CAVEAT, the 8 September trap met again and caught before it reached a conclusion**: re-running `escape.py`
+on an arm's PLACED board to ask why a pad was skipped is INVALID, because that board already carries its
+escapes and the tool then names a via of the pad's OWN net as the obstacle (on E38's copy it refuses pad 4
+against `via(/TRK_LDO33)`, which is the escape it laid itself). Every number above comes from the two
+pre-route boards and from the chains' own logs.
+
+**WHAT FOLLOWS, and it is a placement question answered at the placement.** Board E's next phase keeps
+R15's seat, whose pin kept its escape and whose net closed on both arms, and either drops C20's seat or
+moves it clear of pin 4's escape lane; **the check is the chain's own escape line** (168 added, 11 skipped,
+and no `no escape for U5 pad 4`), which costs a placement and not a three-hour route. And **E40's placement
+is five connections better than E41's at the same pass** (nine against fourteen), so freezing all fifteen
+TRKS parts costs connections against letting the packer refill around two fixed seats: a seat is a FIXED
+PART, never a frozen region.
