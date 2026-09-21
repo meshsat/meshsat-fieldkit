@@ -60,6 +60,22 @@ def declared(letter, path=None):
     return nodes, list(b.get("switch_nets") or [])
 
 
+def subject_missing(letter, sense):
+    """Was this run told what to measure? ONE answer, because a run that was not is not a pass.
+
+    Found on 21 September 2026 by running this tool on A98's frozen board and forgetting `--board`: with no
+    letter and no `--sense` list it measured nothing and wrote `PASS of 0`, in the same words a real run
+    prints when a board has no pair inside its clearance, so an armed reader that drops the flag logs a
+    reassuring line over a reading nobody took. The project's own rule for that shape (STK-001, 19 September)
+    is that a DECLARED zero is a pass with its reason and an UNDECLARED zero is INCONCLUSIVE."""
+    if sense:
+        return None
+    if letter:
+        return ("board %s declares no sensitive node, so there is nothing to measure" % letter)
+    return ("no board letter and no --sense list: this run was never told which nets to measure, so its "
+            "zero is an absent subject and not a clean board")
+
+
 def gap(a, b):
     """Edge-to-edge distance in mm between two track segments, which is what a clearance is.
 
@@ -154,16 +170,14 @@ def main(argv):
     board = pcbnew.LoadBoard(path)
     names = sorted({t.GetNetname().lstrip("/") for t in board.GetTracks()})
     extra_pats = [x for x in (_v.opt(argv, "--extra", "") or "").split(",") if x]
-    missing = None
     if letter:
         sense, pats = declared(letter)
         switch = sorted({n for n in names for p in pats if fnmatch.fnmatch(n, p.lstrip("/"))})
-        if not sense:
-            missing = "board %s declares no sensitive node, so there is nothing to measure" % letter
     else:
         sense = [x for x in (_v.opt(argv, "--sense", "") or "").split(",") if x]
         switch = [x for x in (_v.opt(argv, "--switch", "") or "").split(",") if x]
         pats = list(switch)
+    missing = subject_missing(letter, sense)
     declared_switch = set(switch)
     if extra_pats:
         switch = sorted(set(switch) | {n for n in names for p in extra_pats if fnmatch.fnmatch(n, p.lstrip("/"))})

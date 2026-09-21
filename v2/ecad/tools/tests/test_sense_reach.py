@@ -153,3 +153,31 @@ def t_two_segments_that_cross_are_not_reported_as_having_daylight():
     c = {"a": (0.0, 0.0), "b": (10.0, 0.0), "w": 0.25}
     d = {"a": (0.0, 0.6), "b": (10.0, 0.6), "w": 0.25}
     assert abs(gap(c, d) - 0.35) < 1e-9, gap(c, d)
+
+
+def t_a_run_that_was_never_told_what_to_measure_is_not_a_pass():
+    """THE DEFECT, found by running the tool on A98's frozen board and forgetting `--board`
+    (21 September 2026).
+
+    With no board letter and no explicit `--sense` list the tool measured NOTHING and wrote
+    `sense_reach PASS of 0`, in the same words a real run prints when a board has no pair inside its
+    clearance. An armed reader that drops the flag therefore logs a reassuring line and the reading looks
+    taken; it is STK-001's `PASS on a denominator of zero` of 19 September in a third place, and the
+    project's own answer to it is that a DECLARED zero is a pass with its reason while an undeclared zero
+    is INCONCLUSIVE.
+
+    The defective fixture is that run: nothing named on either side. The acceptable one is the same call
+    with a subject, which must stay a pass."""
+    assert hasattr(sr, "subject_missing"), \
+        "sense_reach answers 'was I told what to measure' nowhere, so a run with no subject reads PASS of 0"
+    assert sr.subject_missing(None, []), \
+        "a run with no board letter and no --sense list reported nothing missing"
+    assert sr.subject_missing("a", []), \
+        "a board whose declaration carries no sensitive node reported nothing missing"
+    assert sr.subject_missing(None, ["TRK_CSP"]) is None, \
+        "a run given its nets on the command line was refused"
+    assert sr.subject_missing("e", ["TRK_CSP"]) is None, \
+        "a board that declares its nodes was refused"
+    src = open(os.path.join(TOOLS, "sense_reach.py"), encoding="utf-8").read()
+    assert "missing = subject_missing(" in src, \
+        "main() does not take its missing_input from that one answer"
