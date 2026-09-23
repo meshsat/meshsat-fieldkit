@@ -45,7 +45,7 @@ The node, the inputs, every rail with its part and its EMCON gate: appendix 32.5
 | Zigbee | Ebyte E72-2G4M20S1E (CC2652P) as coordinator, on-board antenna | B16 UART |
 | Thread and Matter | a second E72 as OpenThread radio for a Thread border router and Matter controller | B16 UART |
 | APRS and VHF voice | NiceRF SA868 1 W with a 30 W VHF amplifier stage (RA30H1317M class, T/R relay, low-pass filter; sheet *owed*), Direwolf on the WM8960 codec, hardware PTT inhibit | D8, west jack |
-| HF beyond line of sight | the assembled QRP Labs QMX (5 W, USB CAT and audio) in its lid tray, ARDOP or VARA, Winlink and TAK data; wire antenna kit outside | B16 USB (`J_QMX`), A22's 12 V HF rail, the HF jack |
+| HF beyond line of sight | the assembled QRP Labs QMX (5 W, USB CAT and audio) in its lid tray, Rhizomatica's Mercury modem (open, VARA-compatible, Reticulum over its KISS/TCP broadcast port; ARDOP or VARA as alternatives), Winlink and TAK data; wire antenna kit outside; proven first on the V1 kits (MESHSAT-1318) | B16 USB (`J_QMX`), A22's 12 V HF rail, the HF jack |
 | SDR | LimeSDR Mini 2.4 (10 MHz to 3.5 GHz, transmit and receive) with a receive limiter or relay during PA key-down | B16 USB 3, west jack |
 | GNSS | Quectel LG290P (all six constellations, L1/L2/L5/E6, RTK capable) with the Quectel YEGD006U1A puck or the u-blox ANN-MB2 | B16 UART, west jack |
 | RF protection | gas-discharge arrestors at the bulkheads, a shielded compartment for the PA |
