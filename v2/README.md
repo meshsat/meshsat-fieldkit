@@ -7,12 +7,12 @@ The rulings that bind the design (details in `docs/MESHSAT-709-geometry-appendix
 | Board | Rev | Size (mm) | Layers | Project | Deliverable folder |
 |---|---|---|---|---|---|
 | PCB-A POWER + I/O | A24 | 240 x 160 | 6 | `ecad/pcb-a-power-a23/` | `release/revA/boards/meshsat-pcb-a-revA-A24/` |
-| PCB-B COMPUTE | B19 | 330 x 200 | 6 | `ecad/pcb-b-compute-b19/` | `release/revA/boards/meshsat-pcb-b-revA-B19-quote/` (quote only: placed, not routed) |
-| PCB-C PANEL BACKER | C24 | 344 x 228 ring | 4 | `ecad/pcb-c-display-c8/` | `release/revA/boards/meshsat-pcb-c-revA-C24/` |
+| PCB-B COMPUTE | B19 | 330 x 200 | 6 (8-layer trial ruled 25 Sep 2026) | `ecad/pcb-b-compute-b19/` | `release/revA/boards/meshsat-pcb-b-revA-B19-quote/` (quote only: placed, not routed) |
+| PCB-C PANEL BACKER | C24 | 344 x 228 ring | 4 (6 ruled 25 Sep 2026, not yet regenerated) | `ecad/pcb-c-display-c8/` | `release/revA/boards/meshsat-pcb-c-revA-C24/` |
 | PCB-D VHF APRS | D11 | 100 x 80 | 4 | `ecad/pcb-d-aprs-d9/` | `release/revA/boards/meshsat-pcb-d-revA-D11/` |
 | PCB-E1 DOCK STRIP | E9 | 267 x 68 | 4 | `ecad/pcb-e1-dock-e7/` | `release/revA/boards/meshsat-pcb-e-revA-E9/` |
 | PCB-E5 DOCK BLOCK | E5 | 43 x 26 | 2 | `ecad/pcb-e5-block/` | `release/revA/boards/meshsat-pcb-e5-revA-E5/` |
-| PCB-P PACK BMS | P4 | 70 x 44 | 2 (2 oz) | `ecad/pcb-p-pack-p2/` | `release/revA/boards/meshsat-pcb-p-revA-P4/` |
+| PCB-P PACK BMS | P4 | 70 x 44 | 2 (2 oz; 4 at 2 oz ruled 25 Sep 2026, not yet regenerated) | `ecad/pcb-p-pack-p2/` | `release/revA/boards/meshsat-pcb-p-revA-P4/` |
 
 The previous generation (A21, B15, C6, D7, E4, E5 with a single Compute Module, the Touch Display and a twelve-cell battery module) stays on the `revA` GitHub release and in the git history as the record; its deliverable folders are replaced as the new boards land.
 

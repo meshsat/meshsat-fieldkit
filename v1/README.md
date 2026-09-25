@@ -51,4 +51,4 @@ The kit provisioning lives with the software in the meshsat repository: `scripts
 
 ## What replaces it
 
-The V2 carrier set in `../v2/` replaces the plates, the loose wiring and the USB hub with seven PCBs in a Peli 1520 case. The V1 kits stay as they are until those boards are proven.
+The V2 carrier set in `../v2/` replaces the plates, the loose wiring and the USB hub with seven PCBs in a Peli 1450 case. The V1 kits stay as they are until those boards are proven.
