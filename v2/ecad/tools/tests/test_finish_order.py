@@ -18,7 +18,7 @@ These tests hold the collapse in place: the order, every gate present, and each 
 itself about which phase it cuts (five did not, and one of those would have had the supervisor verify a folder
 the finish never wrote).
 """
-import os, re, sys, json, glob
+import os, re, sys, json, glob, tempfile
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from harness import Skip, need
 
@@ -172,8 +172,12 @@ def t_routeflow_validate_agrees_with_these_rules():
                 raise Skip("the profiles pin %s, which exists here and is not this tree, so validate's "
                            "one-tree property is about the host rather than the profile" % _repo)
     for p in sorted(glob.glob(os.path.join(TOOLS, "routeflow", "*.json"))):
-        r = subprocess.run([sys.executable, os.path.join(TOOLS, "routeflow.py"), "validate", p],
-                           capture_output=True, text=True)
+        # Its verdict goes to a directory of its own (25 September 2026, MESHSAT-1357): `validate` writes
+        # routeflow_validate.verdict.json, and written into v2/ecad/out/ it replaced this tree's own reading with
+        # whatever the host answered (20 of 20 here, 21 of 21 on a box that holds one more pinned directory).
+        with tempfile.TemporaryDirectory() as _vd:
+            r = subprocess.run([sys.executable, os.path.join(TOOLS, "routeflow.py"), "validate", p],
+                               capture_output=True, text=True, env=dict(os.environ, VERDICT_DIR=_vd))
         assert r.returncode == 0, "%s: %s" % (os.path.basename(p), (r.stdout + r.stderr).strip().splitlines()[-1] if (r.stdout + r.stderr).strip() else r.returncode)
 
 
