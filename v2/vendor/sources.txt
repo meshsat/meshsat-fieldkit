@@ -33,7 +33,7 @@ labs           # QRP Labs QMX operating and CAT manuals (the HF module in its ba
 limesdr        # LimeSDR Mini 2.4 drawings and STEP
 lora           # Seeed Wio-SX1262 data sheet, Ebyte E22-900M22S and E22-900M30S manuals, the meshtasticd config.d templates and the Meshtastic Linux hardware pages as text; see `lora/README.md`
 lte            # SIMCom A7672X/A7670X hardware design, A76XX UART application note and A7670G spec, Quectel EG25-G Mini PCIe hardware design and specification, LilyGO T-Call A7670 schematic; see `lte/README.md`
-m2             # M.2 socket drawings: TE 2199230-4 (E-key), TE 1-2199119-5 (key to be read from the drawing), Amphenol MDT420M02001 (M-key) and MDT420B01001 (B-key)
+m2             # M.2 socket documents: TE 2199230-4 (E-key) drawing; TE 1-2199119-5, which TE's customer drawing C-2199119 rev F (sheet 2, read 25 September 2026) gives as KEY M, not B; te-2199119-m2-b-key.pdf is TE's M.2 Quick Reference Guide 1-1773702-1 (01/2014), not a drawing; Amphenol MDT420M02001 (M-key) drawing and an Amphenol M.2 family brochure filed for MDT420B01001 (B-key) that does not print that part number (see SOURCES.yaml, cellular-socket)
 mentor         # Mentor catalogue sheet ll14-14, IP68-proofed front-panel light guides (families 1282, 1292, 1293): the 1282.5004 (2.5 mm shaft in a 2.6 H7 hole, 3.2 mm spherical head, 7.5 mm long) carries the sixteen panel LEDs of the backer boar
 microchip      # USB5744 four-port USB 3.2 Gen 1 hub datasheet (the alternative hub; Microchip's site refused every other download)
 mitsubishi     # Mitsubishi RA30H1317M1 datasheet (30 W VHF amplifier module of D8)
@@ -152,3 +152,16 @@ bulgin/bulgin-px0833-sealed-rj45-coupler.pdf   # https://www.bulgin.com/pdf/pdf.
 bulgin/bulgin-4000-series-sealed-usb-c.pdf   # https://www.bulgin.com/products/pub/media/bulgin/data/4000_series_c_type.pdf
 polyphaser/polyphaser-gth-sff-al-sma-surge-protector.pdf   # https://www.polyphaser.com/Images/Downloadables/Datasheets/GTH-SFF-AL_datasheets_US.pdf
 switches/apem-switch-guards-series.pdf   # https://www.apem.com/storage/datasheets/files/safety_guards_serie_switchguards/media/safety guards-serie-switchguards.pdf
+
+# Added 26 September 2026 (MESHSAT-1357, integration I6 of workstream W6's vendor files of 25 and 26 September).
+# One line per new file: the URL it was fetched from first, then what the copy is. Revision, sha256 and whether the
+# document describes the fitted order code are in SOURCES.yaml beside this file.
+fabricator   # jlcpcb.com's own pages (capability page, impedance page, order form, impedance calculator), read anonymously and TRANSCRIBED in this repository; each transcription names its URLs, the date and time read and the sha256 of its captures
+fabricator/jlcpcb-stackups-2026-09-25.md   # written in this repository: a transcription of https://jlcpcb.com/impedance (4 layers, 2 oz outer selector), https://cart.jlcpcb.com/quote (8 layers, Specify Stackup) and JLC's impedance calculator template endpoint, read 25 September 2026 21:24 to 21:38 UTC
+m2/te-2199119-customer-drawing-revF.pdf   # https://web.archive.org/web/20240629111304id_/https://www.te.com/commerce/DocumentDelivery/DDEController?Action=showdoc&DocId=Customer+Drawing%7F2199119%7FB1%7Fpdf%7FEnglish%7FENG_CD_2199119_B1.pdf%7F1-2199119-5 (the Wayback Machine's copy of TE customer drawing C-2199119 rev F; te.com answered this host with HTTP 403), fetched 25 September 2026
+nexperia/nexperia-pesd5v0s1ba.pdf   # https://assets.nexperia.com/documents/data-sheet/PESD5V0S1BA.pdf, fetched 25 September 2026; byte-identical to LCSC's datasheet for C19224
+power/littelfuse-smcj-series-tvs.pdf   # https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C224052 (LCSC's copy of Littelfuse's SMCJ series sheet, the document attached to the fitted code; LCSC serves the same bytes for C224047 and C374030), fetched 25 September 2026
+st/st-an4938-rev7.pdf   # https://web.archive.org/web/20250726045640id_/https://www.st.com/resource/en/application_note/an4938-getting-started-with-stm32h74xig-and-stm32h75xig-mcu-hardware-development-stmicroelectronics.pdf (the Wayback Machine's copy, because st.com refuses this host; the filed PDF is the decompressed body of the gzip-encoded archived response), fetched 25 September 2026
+ti/ti-slla552-tmuxhs4212-schematic-checklist.pdf   # https://www.ti.com/lit/an/slla552/slla552.pdf, fetched 25 September 2026
+ti/ti-tps2065c-slvsau6i.pdf   # https://www.ti.com/lit/ds/symlink/tps2065c.pdf, fetched 25 September 2026
+SOURCES.yaml   # written in this repository: the identity and source record of the critical parts (MESHSAT-1357, 25 and 26 September 2026)

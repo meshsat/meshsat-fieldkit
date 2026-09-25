@@ -80,6 +80,14 @@ not cover our case, the rule stays unverified rather than borrowing the nearest 
 owner ruling 7, so their annular floor is NOT established by this document and their VIA-002 result stays
 INCONCLUSIVE until it is asked of the fabricator directly.
 
+**CORRECTION, 26 September 2026 (MESHSAT-1357, adjudication A10).** The paragraph above is an omission of this
+transcription, not a gap in the page. The page carries a 2 oz row in both blocks, "2-layer: ... 2 oz: 0.254 mm or
+above" and "Multilayer: ... 2 oz: 0.254 mm or above", in the Wayback Machine's capture of 13 September 2026
+(`https://web.archive.org/web/20260913020451id_/https://jlcpcb.com/capabilities/pcb-capabilities`) and in the
+runner's own reading of 25 September 2026; the row is transcribed in `jlcpcb-stackups-2026-09-25.md`. So the 2 oz
+PTH annular floor is published: 0.254 mm on two-layer and multilayer boards. The boards' declared floors and
+their VIA-002 readings are not changed by this note.
+
 ## Clearances
 
 | item | value |

@@ -61,7 +61,7 @@ Third-party CAD models, drawings and datasheets that the V2 design was measured 
 | `microchip/` (added 7 Sep, through JLCPCB's part records) | KSZ9897R seven-port Gigabit switch datasheet (196 pages) and the ATECC608B summary datasheet | the B16 Ethernet switch and the secure element (32.54); JLCPCB serves the maker's sheet behind every LCSC part (`dataManualFileAccessId`, `https://jlcpcb.com/api/file/downloadByFileSystemAccessId/<id>`) |
 | `adi/` | DS3231M datasheet (the holdover RTC pick, TCXO, +-5 ppm) | S1 and the panel controller (32.54) |
 | `st/` | LIS3MDL magnetometer datasheet (alternative to the BMM150) | sensor board (32.54) |
-| `m2/` | M.2 socket drawings: TE 2199230-4 (E-key), TE 1-2199119-5 (key to be read from the drawing), Amphenol MDT420M02001 (M-key) and MDT420B01001 (B-key) | the B16 card slots (32.54) |
+| `m2/` | M.2 socket documents: TE 2199230-4 (E-key) drawing; TE customer drawing C-2199119 rev F, which gives 1-2199119-5 as key M, not B (read 25 September 2026, see `SOURCES.yaml`); TE's M.2 quick reference guide (filed as `te-2199119-m2-b-key.pdf`, not a drawing); Amphenol MDT420M02001 (M-key) drawing and an Amphenol M.2 family brochure for MDT420B01001 (B-key) | the B16 card slots (32.54) |
 | `connectors/` | Hong Cheng HC-USB3.0-L257-P USB 3.0 A receptacle drawing, SHOU HAN nano SIM holder drawing | the LimeSDR bay and the two SIM holders on B16 |
 | `pulse/` | H5007NL 1000BASE-T magnetics module datasheet | the wall Ethernet port on A22 (32.55) |
 | `wch/` | CH334 and CH335 USB 2.0 four-port hub datasheet V2.7 (Chinese) | the D8 hub alternative to the TUSB2046B (32.54)  **Previous generation, kept for the record: read while choosing B's hub, and no generator instantiates it.** |
