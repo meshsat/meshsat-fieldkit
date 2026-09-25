@@ -18720,3 +18720,17 @@ because neither ever changes layer, so neither is a site). Board E's next item i
 by site, not another fence.
 
 **E17 stays board E's phase**: E39 is not adoptable at six open.
+
+
+### 32.365, 25 September 2026 21:40 CEST: the owner rules decisions 27, 28, 41 and 43, all at the recommendation
+
+Board B is measured on **eight layers** before anything else is tried (43). Board P goes to **four layers at
+2 oz** (28). Board C goes to **six layers** (27). The **order set is rebuilt and quarantined** (41). The record
+is `v2/docs/OWNER-DECISIONS-2026-09-11.md`, last section, and `v2/ecad/tools/pcb_decisions.yaml` carries
+`authority: OWNER`, `ruled_on: 2026-09-25` and a `reversed_by` for each. Open decisions go from seven to three
+(30, 40 and 42, all the session's). No board changes in this entry.
+
+Box housekeeping the same evening: E39, E40 and E41 (run dirs `20260921T155925Z-9df36b11`,
+`20260921T120454Z-f9b8a70c`, `20260921T130912Z-1d918ee3`) were fetched to the runner and checked file by file
+against the box, and the box they ran on (vast.ai 51145697) was destroyed after being idle since 22 September
+02:30. E41's kept board is `finished-round2.kicad_pcb` and has not been read yet.

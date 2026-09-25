@@ -34,7 +34,14 @@ decisions:
   - n: 27
     title: "the four-layer boards cannot carry a plane under their back-side signals as built"
     asked: 2026-09-15
-    status: open
+    status: ruled
+    authority: OWNER
+    ruled_by: OWNER
+    ruled_on: 2026-09-25
+    outcome: >-
+      owner ruling 25 September 2026, asked one decision at a time with the options and the recommendation: six layers for board C. The eighteen B.Cu nets that fail RET-001 and RET-002 get a ground plane beside them by construction. The price of six against four layers is quoted in the ordering session before anything is paid, and the board is regenerated on the six-layer stackup (JLC06161H-3313) as its next phase.
+    reversed_by: >-
+      reopen this decision and regenerate board C on JLC04161H-7628; nothing has been laid for this ruling yet
     ask: "four layers or six for board C, against a like-for-like price the ordering session has not yet given"
     recommendation: "six layers for C if the price is close; the measurement is in the record and the cost side is the only part missing"
     blocks:
@@ -45,7 +52,14 @@ decisions:
   - n: 28
     title: "board P cannot hold the return-path rule on two layers and the ruled P5 does not route"
     asked: 2026-09-15
-    status: open
+    status: ruled
+    authority: OWNER
+    ruled_by: OWNER
+    ruled_on: 2026-09-25
+    outcome: >-
+      owner ruling 25 September 2026, asked one decision at a time with the options and the recommendation: four layers at 2 oz outer copper for board P, the arm P8 measured at 0 hard and 0 unrouted at the fabricator's 0.16 mm floor. Ruling 7's 2 oz stands. The one question still owed is the fabricator's four-layer 2 oz stackup record, which the ordering session asks JLCPCB for; until that row is in stackup_write.STACKS, STK-001 on board P reads UNKNOWN STACK.
+    reversed_by: >-
+      reopen this decision and route board P on two layers again; nothing has been laid for this ruling yet
     ask: "two layers or four for board P"
     recommendation: "four layers: 0 hard and 0 unrouted at the fabricator's own 0.16 mm floor (P8, 18 September 2026), where two layers leave 43, 45 and 47 open across three runs at the same floor"
     blocks:
@@ -858,7 +872,14 @@ decisions:
   - n: 41
     title: "the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002"
     asked: 2026-09-19
-    status: open
+    status: ruled
+    authority: OWNER
+    ruled_by: OWNER
+    ruled_on: 2026-09-25
+    outcome: >-
+      owner ruling 25 September 2026, asked one decision at a time with the options and the recommendation: rebuild v2/release/revA/order/ from the deliverable folders that already exist and quarantine it in the same commit: every ORDER-NOTES.txt carries the board's own readiness block at the top (ROUTING_STATUS, ELECTRICAL_PROTECTION_STATUS, FAB_READINESS, PUBLICATION_STATUS) so no folder reads as an approved package. Nothing is ordered, no cart line is touched, EXCLUDE and JLC_ROT stay reserved and no board's phase declaration moves. Boards C and P will be rebuilt again at their new layer counts (decisions 27 and 28).
+    reversed_by: >-
+      reopen this decision and restore v2/release/revA/order/ from the commit before the rebuild
     ask: "rebuild v2/release/revA/order/ from the deliverable folders that already exist, quarantined with each board's own readiness block, or leave it at A22/B16/C7/D8/E6/P1 until the boards are promoted"
     recommendation: >-
       rebuild it and quarantine it in the same commit. A stale order set is not a neutral state: on 12
@@ -929,7 +950,14 @@ decisions:
   - n: 43
     title: board B's route has resisted every lever this project can apply and the two that remain are architectural
     asked: 2026-09-20
-    status: open
+    status: ruled
+    authority: OWNER
+    ruled_by: OWNER
+    ruled_on: 2026-09-25
+    outcome: >-
+      owner ruling 25 September 2026, asked one decision at a time with the options and the recommendation: measure the LAYER option first: board B is regenerated and routed once on eight layers on a rented box. Fewer parts in the receptacles' fabric and quote-only are not taken now. If eight layers do not route either, this decision comes back to the owner with that number. The eight-layer price goes to the owner before any order.
+    reversed_by: >-
+      reopen this decision; board B stays on its six-layer stackup and no eight-layer copper exists until the measurement is made
     ask: fewer parts in the module receptacles' own fine-pitch fabric, or more layers for board B, or board B stays a
       quote-only board in this revision
     recommendation: "measure the LAYER option first, because it is the only one with a measurement already pointing at it (three CM5 receptacles at 0.4 mm pitch measurably need two inner signal layers, a board-wide In1 keep-out left 93 connections open at eight passes) and because STK-002 is open on all seven boards under the 11 September layer P0 anyway, so board B's answer would be taken inside a review that has to happen. It is one placement regeneration and one route, and it is the only lever this project has not tried on this board. Fewer parts in that fabric is an architecture change to the I/O high-availability design ruled on 9 September and is not a layout question."
