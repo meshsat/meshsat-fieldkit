@@ -493,7 +493,10 @@ def t_a_blocked_code_can_name_the_land_it_is_wrong_on():
     for fp, blocks in (("L_0603_1608Metric", True), ("L_0805_2012Metric", False)):
         d = tempfile.mkdtemp(prefix="blocked-land-")
         p = _bom(d, fp)
-        r = subprocess.run([sys.executable, os.path.join(TOOLS, "lcsc_fill.py"), p], capture_output=True, text=True)
+        # VERDICT_DIR=d (25 September 2026, MESHSAT-1357): lcsc_fill writes lcsc_fill.verdict.json, which rules CMP-002
+        # and SUP-001 read from v2/ecad/out/; run from the suite directory this fixture overwrote that evidence.
+        r = subprocess.run([sys.executable, os.path.join(TOOLS, "lcsc_fill.py"), p], capture_output=True, text=True,
+                           env=dict(os.environ, VERDICT_DIR=d))
         hit = "is blocked" in (r.stdout + r.stderr)
         assert hit == blocks, "on a %s land the block should be %s: %s" % (fp, blocks, (r.stdout + r.stderr)[:200])
 
