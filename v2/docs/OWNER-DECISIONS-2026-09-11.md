@@ -2596,3 +2596,25 @@ fabrication notes were written for C17, D10, E7 and P3 while the tree holds C24,
 that exists to catch exactly that had never looked at four of the seven boards (appendix addendum, 19
 September 13:55 CEST). A rebuild would have attached `(D10, ...)` prose to D11 gerbers. That is fixed, with
 three rules and both fixtures, so the tool is now correct for whoever is allowed to run it.
+
+
+## Decisions 27, 28, 41 and 43 ruled by the owner, 25 September 2026 21:40 CEST
+
+Asked one at a time, each with its options, the reasoning behind each and the recommendation. **All four were
+ruled at the recommendation.**
+
+| # | board | ruling | what it costs next |
+|---|---|---|---|
+| 43 | B | **measure the layer option first**: one placement regeneration and one route on eight layers | box time; the eight-layer price goes to the owner before any order. If eight layers do not route, the decision comes back with that number |
+| 28 | P | **four layers at 2 oz outer copper** (the P8 arm, 0 hard and 0 unrouted at 0.16 mm) | one question to JLCPCB for the four-layer 2 oz stackup record, through the ordering session |
+| 27 | C | **six layers** | the six-layer price, quoted in the ordering session before anything is paid |
+| 41 | order set | **rebuild `v2/release/revA/order/` and quarantine it in the same commit** (readiness block at the top of every ORDER-NOTES.txt) | nothing is ordered and no cart line is touched |
+
+Not taken: fewer parts in board B's receptacle fabric, board B as quote-only, board P on four layers at 1 oz or
+on two layers, board C on four layers with both inner layers as ground or as built, and leaving or deleting
+the stale order set.
+
+**What this does not release yet:** the pairs these decisions held stay FAIL or INCONCLUSIVE until the boards
+are regenerated at their new stackups and routed, because they are measurements of copper that does not yet
+exist. STK-002 stays OWNER_DECISION_REQUIRED on the rule as a whole, since A, D, E and E5 still have no written
+layer decision under the 11 September P0.

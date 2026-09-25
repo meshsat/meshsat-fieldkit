@@ -7,82 +7,17 @@ One line per decision that is still open, what it holds up, and where its eviden
 v2/docs/OWNER-DECISIONS-2026-09-11.md and this page is generated from the same registry the readiness table
 is, so the pair counts below are the ones the gates use.
 
-**7 decisions are open and they hold 34 rule-board pairs of the 333 the set is judged on.** A pair held by a
+**3 decisions are open and they hold 10 rule-board pairs of the 333 the set is judged on.** A pair held by a
 decision is not a defect in the board: it is a question nobody has answered, and until it is answered the
 rule can be neither passed nor failed.
 
 | # | pairs | what is being decided | holds | boards | asked |
 |---|---:|---|---|---|---|
-| **43** | 14 | board B's route has resisted every lever this project can apply and the two that remain are architectural | EMC-001, GND-001, PAIR-001, PI-002, PI-003, PLC-002, PLN-001, RET-002, RET-004, RF-001, RTE-001, SCH-003, STK-001, VIA-001 | B | 2026-09-20 |
 | **30** | 6 | ZEROIZE is a switch wired to nothing that can act on it | SCH-004 | A, B, C, D, E, P | 2026-09-16 |
-| **28** | 4 | board P cannot hold the return-path rule on two layers and the ruled P5 does not route | RET-002, RTE-001, STK-001, STK-002 | P | 2026-09-15 |
-| **27** | 3 | the four-layer boards cannot carry a plane under their back-side signals as built | RET-001, RET-002, STK-002 | C | 2026-09-15 |
-| **41** | 3 | the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002 | DOC-002 | C, E5, P | 2026-09-19 |
 | **42** | 3 | a decoupling capacitor cannot be both within 3 mm of a fine-pitch pin and outside that part's escape fan | DEC-001 | A, B, P | 2026-09-20 |
 | **40** | 1 | the pack's cell-level protection is one firmware-configured device, and the rule asks for hardware independent of any software | BAT-001 | P | 2026-09-18 |
 
 ## Each one, with what it holds
-
-### Decision 27: the four-layer boards cannot carry a plane under their back-side signals as built
-
-**The question:** four layers or six for board C, against a like-for-like price the ordering session has not
-yet given
-
-**Recommended:** six layers for C if the price is close; the measurement is in the record and the cost side
-is the only part missing
-
-**Measured:** C24's eighteen failing nets are all B.Cu runs whose only neighbour is In2, the routing layer;
-the longest is 172.9 mm of SCL
-
-| rule | | boards | result today |
-|---|---|---|---|
-| RET-001 | a continuous adjacent return path | C | FAIL |
-| RET-002 | plane-adjacency screen | C | FAIL |
-| STK-002 | a layer count is decided and costed | C | INCONCLUSIVE |
-
-
-### Decision 28: board P cannot hold the return-path rule on two layers and the ruled P5 does not route
-
-**The question:** two layers or four for board P
-
-**Recommended:** four layers: 0 hard and 0 unrouted at the fabricator's own 0.16 mm floor (P8, 18 September
-2026), where two layers leave 43, 45 and 47 open across three runs at the same floor
-
-**Measured:** P6, the first route at the fabricator's own 0.16 mm floor, ended 0 hard and 43 unrouted. The
-committed P4 board still reads 0 unrouted because it was routed at the 0.127 mm rules the fabricator does not
-build, which is what STK-001 fails on. THIRD READING, 18 September 2026: P7, the same board regenerated at
-0.16 with today's tools and class table, routed 0 hard and 47 unrouted of 35 nets in 22 minutes with 12 vias.
-So two layers at 2 oz leave 43, 45 and 47 open across three independent runs while four layers routed 0 and
-0. The fabricator's own table closes the escape route: 2 oz two-layer is 0.16/0.16 and 2 oz multilayer
-0.15/0.15, while 0.10/0.10 needs 1 oz, which ruling 7 refused for this board because its FUSED rail measures
-193.5 A/mm2 against IPC-2221's 82.7 at 1 oz. The choice is four layers at 2 oz, or a copper weight this pack
-board's own current density has already refused. AND THE OTHER HALF IS MEASURED THE SAME DAY, at rules the
-fabricator builds: P8, four layers with In1 and In2 as ground planes and the same 0.16 mm floor, routed 0
-hard and 0 unrouted of 35 nets with 98 vias in six minutes (the four-layer arm of 15 September had reached 0
-and 0 at 0.127 mm, which is the very defect that makes P4's own 0/0 worthless). So both options now carry a
-number taken at a rule set the fabricator offers: two layers 43 to 47 open, four layers 0 and 0. P8's own
-gates read routed-board PASS, check_pcb_p 51 of 51, via_audit 279 with nothing under either floor, dc_drop 3
-of 3 and fab_limits PASS of 20. The one thing the ruling still carries with it: that arm generated the
-four-layer 1 oz stackup, and ruling 7 orders this board at 2 oz, whose multilayer floor is 0.15 mm; the
-board's 0.16 clears it, so the copper weight changes the stackup line and the density judgement rather than
-the routing answer. AND THAT LINE HAS A NAME NOW (20 September 2026, 20:40 CEST): the fabricator DOES build
-four layers at 2 oz outer, its capability page saying `finished outer copper, multilayer | 1 oz / 2 oz` with
-a 0.15 / 0.15 mm floor that this boards 0.16 clears, and inner copper up to 2 oz. What is missing is a
-STACKUP RECORD: `stackup_write.STACKS` holds JLC04161H-7628 (four layers, 1 oz outer, half-ounce inner),
-JLC06161H-3313, 2L and 2L-2oz, and NO four-layer 2 oz row, because the fabricator publishes its
-layer-by-layer impedance stackups only at 1 oz (its own page says impedance control is offered on four layers
-and up). So option 1 and ruling 7 collide on a DOCUMENT this project does not hold rather than on anything
-the fabricator cannot build, and STK-001 on a four-layer 2 oz board P would read UNKNOWN STACK until that
-record exists. It is one question to the fabricator, and board P is the only board of the set that would ask
-it.
-
-| rule | | boards | result today |
-|---|---|---|---|
-| RET-002 | plane-adjacency screen | P | FAIL |
-| RTE-001 | geometry a fabricator will build | P | FAIL |
-| STK-001 | the stackup is declared, feasible and in the board | P | FAIL |
-| STK-002 | a layer count is decided and costed | P | INCONCLUSIVE |
-
 
 ### Decision 30: ZEROIZE is a switch wired to nothing that can act on it
 
@@ -149,42 +84,6 @@ something that cannot be mis-programmed.
 | BAT-001 | the cell block is protected in hardware | P | FAIL |
 
 
-### Decision 41: the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002
-
-**The question:** rebuild v2/release/revA/order/ from the deliverable folders that already exist, quarantined
-with each board's own readiness block, or leave it at A22/B16/C7/D8/E6/P1 until the boards are promoted
-
-**Recommended:** rebuild it and quarantine it in the same commit. A stale order set is not a neutral state:
-on 12 September three of its seven folders described boards this project was not building, which is the
-defect DOC-002 exists for, and the order note is the one artefact of this pipeline that travels to the
-fabricator with the board. The cart at JLCPCB has held seven unpaid lines since 3 September, so the set has
-been orderable the whole time and a rebuild changes only whether the paperwork beside those lines is true.
-Have every ORDER-NOTES.txt carry the board's own readiness block at the top (ROUTING_STATUS,
-ELECTRICAL_PROTECTION_STATUS, FAB_READINESS, PUBLICATION_STATUS) so no folder can be read as an approved
-package; nothing is ordered, no cart line is touched, EXCLUDE and JLC_ROT stay reserved, and no board's phase
-declaration moves
-
-**Measured:** COUNTED, 19 September 2026. Every one of the seven order folders is named for an older phase
-than the tree's newest deliverable: A22 against A24, B16 against B19, C7 against C24, D8 against D11, E6
-against E9, P1 against P4, and E5 against E5. DOC-002 asks one thing of each board, whether an order folder
-exists at the phase THAT BOARD declares and whether its note names the gerber zip beside it by sha256. Three
-boards would answer yes after a rebuild and they are exactly the three whose declared phase is already a
-folder in this tree: C (C24), P (P4) and E5. A, B, D and E declare phases no folder holds (A32, B21, D12,
-E17), so they are unaffected by this ruling either way and their answer is a re-cut, which is decision 31 and
-the routes in flight. E5's half needs NO new fabrication artefact: its order folder is already at the phase
-the board declares and what its note lacks is the provenance line make_handoff.py has written since 12
-September. C's and P's halves do create a folder where there is none today, which is why this is asked rather
-than done: owner ruling 8 of 13 September puts the per-board NOTES in this session's hands, and what it does
-not settle is whether the gerber and BOM beside them may be cut while promotion is frozen. The prose itself
-is no longer in the way: the table and the fabrication notes were written for C17, D10, E7 and P3, the guard
-that exists to catch that had never looked at four of the seven boards, and both are fixed with three rules
-and both fixtures (appendix addendum, 19 September 13:55 CEST).
-
-| rule | | boards | result today |
-|---|---|---|---|
-| DOC-002 | provenance for every claim | C, P, E5 | FAIL, INCONCLUSIVE |
-
-
 ### Decision 42: a decoupling capacitor cannot be both within 3 mm of a fine-pitch pin and outside that part's escape fan
 
 **The question:** put the capacitors a fine-pitch part cannot hold on the UNDERSIDE, accept them inside the
@@ -224,61 +123,6 @@ rules on the front side of a QFN, so one of them has to give and which one is no
 | DEC-001 | decoupling loop area | A, B, P | FAIL, PASS |
 
 
-### Decision 43: board B's route has resisted every lever this project can apply and the two that remain are architectural
-
-**The question:** fewer parts in the module receptacles' own fine-pitch fabric, or more layers for board B,
-or board B stays a quote-only board in this revision
-
-**Recommended:** measure the LAYER option first, because it is the only one with a measurement already
-pointing at it (three CM5 receptacles at 0.4 mm pitch measurably need two inner signal layers, a board-wide
-In1 keep-out left 93 connections open at eight passes) and because STK-002 is open on all seven boards under
-the 11 September layer P0 anyway, so board B's answer would be taken inside a review that has to happen. It
-is one placement regeneration and one route, and it is the only lever this project has not tried on this
-board. Fewer parts in that fabric is an architecture change to the I/O high-availability design ruled on 9
-September and is not a layout question.
-
-**Measured:** BOARD B'S NUMBER HAS NOT MOVED UNDER ANY LEVER AND THE LADDER IS THE WHOLE ARGUMENT (17 to 19
-September 2026, `boards/b.json`). The placement predictor reads about TEN escape-fan collisions of 75
-fine-pitch parts and has read about ten through every change tried: the sixteen-rectangle resize of owner
-ruling 13 took it 10 to 11, the fine-pitch margin 10 to 12 (MORE room per part makes it WORSE, because the
-parts spread and their fans reach further into one another, which cost five placement regenerations to
-learn), three route methods and forty hours of router moved it not at all. The route is the same story: B21
-forty hours to 416 open, B22 every region out of time at two-hour caps, B23 two of six groups never routed at
-four-hour caps, and a pass costs 7.4 minutes in the first region and over four hours in the last because each
-group routes against everything locked before it. THE RESIZE IS NOT THE ANSWER AND THAT IS MEASURED, NOT
-ASSUMED: `region_room` on B23 reads EVERY region overflowing by 0.0 mm, so the floor plan is legal and still
-crowded. The three per-slot switch pockets have 0.0 mm of room in every direction, boxed north by a FIXED M.2
-socket, west by a fixed hole, east by their own SWE and south by their RAIL, and the parts in them are the
-slot's own switch fabric which belongs beside its receptacle. THE ROOM ON THIS BOARD IS ELSEWHERE (WIFISW
-38.5 mm north, IOCA 19.0 north, S1_RAILB 19.0 west, S2_RAILB 16.0 east) AND IT IS NOT WHERE THE PROBLEM IS.
-WHAT THE TEN COLLISIONS AND THE PAIR FAILURES SHARE: four parts are in both lists (U301, U302, U209, U102,
-the slot-3 and slot-2 PCIe switches and hubs) and the rest sit at the CM5 receptacles' own high-speed halves.
-The corridor from a module receptacle to its switch is the thing the floor plan has to serve and it is the
-same copper the fans need, which is why the two knobs do not compose. WITHDRAWN, so nobody re-asks it: moving
-a slot's rail regulator and its inductors to the UNDERSIDE was step five of the resize chain and it was asked
-only to make the 2.6 mm margin reachable. The margin itself was then measured and REFUSED, so that move buys
-nothing and is not part of this decision. WHAT IT HOLDS: board B carries 38 open pairs, of which FOURTEEN
-read `the board this tree holds for this phase is not routed (416 unrouted)`, which is every routed-board
-rule it has. None of them is a failure of board B's design and none can be judged until a board B routes.
-
-| rule | | boards | result today |
-|---|---|---|---|
-| EMC-001 | source, path, victim | B | INCONCLUSIVE |
-| GND-001 | one deliberate ground system | B | INCONCLUSIVE |
-| PAIR-001 | a pair is coupled and matched | B | INCONCLUSIVE |
-| PI-002 | rail voltage drop | B | INCONCLUSIVE |
-| PI-003 | via current capacity | B | INCONCLUSIVE |
-| PLC-002 | prevention before repair | B | INCONCLUSIVE |
-| PLN-001 | no orphan copper | B | INCONCLUSIVE |
-| RET-002 | plane-adjacency screen | B | INCONCLUSIVE |
-| RET-004 | ground-via proximity screen | B | INCONCLUSIVE |
-| RF-001 | RF paths are designed as RF | B | INCONCLUSIVE |
-| RTE-001 | geometry a fabricator will build | B | INCONCLUSIVE |
-| SCH-003 | cross-board contracts | B | INCONCLUSIVE |
-| STK-001 | the stackup is declared, feasible and in the board | B | INCONCLUSIVE |
-| VIA-001 | every via is a via the process makes | B | INCONCLUSIVE |
-
-
 ## Closed, for the record
 
 | # | what it was | how it ended |
@@ -287,6 +131,8 @@ rule it has. None of them is a failure of board B's design and none can be judge
 | 24 | board B lays 65 of its 113 pairs and the pair hold releases no board under 113 | owner ruling 15 September 02:40: the decision is the session's; option 2 taken, boards/b.json declares pair_coupled_fraction 0.80 by length |
 | 25 | board A's USB_WALL pair is 1.47 mm apart and nothing in the tree can close it | closed the same day and needs nothing: the pair took a ribbon of its own (J_AB2, end row) |
 | 26 | board C is one connection short and no tool in this tree can close it | closed by the route: six-layer C and then C17 reached 0 hard and 0 unrouted |
+| 27 | the four-layer boards cannot carry a plane under their back-side signals as built | owner ruling 25 September 2026, asked one decision at a time with the options and the recommendation: six layers for board C. The eighteen B.Cu nets that fail RET-001 and RET-002 get a ground plane beside them by construction. The price of six against four layers is quoted in the ordering session before anything is paid, and the board is regenerated on the six-layer stackup (JLC06161H-3313) as its next phase. |
+| 28 | board P cannot hold the return-path rule on two layers and the ruled P5 does not route | owner ruling 25 September 2026, asked one decision at a time with the options and the recommendation: four layers at 2 oz outer copper for board P, the arm P8 measured at 0 hard and 0 unrouted at the fabricator's 0.16 mm floor. Ruling 7's 2 oz stands. The one question still owed is the fabricator's four-layer 2 oz stackup record, which the ordering session asks JLCPCB for; until that row is in stackup_write.STACKS, STK-001 on board P reads UNKNOWN STACK. |
 | 29 | board B's three compute-module Ethernet links have no magnetics and one end's maker has never been asked | KEEP THE THREE MODULE LINKS CAPACITIVELY COUPLED, AS BUILT, and do not fit magnetics on them. The one document in this tree that describes THIS topology, a PHY-to-PHY gigabit link inside one PCB with no cable, is the switch vendor's own clause 6.6, and it permits exactly what board B has: a single 0.1 uF in series on each of the eight signals with nothing else between. Three of its four conditions are met conductor by conductor; the fourth defers to the other device's documentation, which does not exist publicly. The compute module's own datasheet says of all eight Ethernet pins 'connect to transformer or MagJack' (Table 4, pinout), and that is a description of the cable application it was written for, not a prohibition of the transformer-less one: no conductor of these three links leaves the enclosure, so there is nothing for a transformer to isolate. THE RESIDUAL RISK, named: if the module's PHY needs the centre-tapped transformer for bias or termination, the three inter-module links do not come up. It is discovered by the bring-up test that already exists (each module link up at 1000M), it costs no field failure and no safety margin, and the fallback is the magnetics this ruling declines. AND THE FALLBACK HAS A COST THIS DECISION DID NOT KNOW WHEN IT WAS ASKED: the H5007NL is rated 0 to +70 C by its own datasheet while the adopted envelope is -20 to +40 C, so fitting three more would triple a part that is already outside its own range over the coldest 20 K of the envelope (boards/b.json carries the reading and the HX family's note). Two things travel with this ruling and are not optional. FIRST, the software requirement of the same clause: auto-negotiation must stay enabled on ports 1 to 3 whenever 1000M is used, which is written in v2/docs/ARCH-PCB-B-IOHA.md and binds the bridge, the OS image and any switch configuration; a forced fixed speed there breaks a transformer-less link for a reason no gate here can see. SECOND, GND-002's strategy can now be written, because this ruling settles what is isolated: the external port through T1 and nothing else. |
 | 31 | conductors leave the case and meet a chip with nothing in between, or only through an active part | CLAMP AT THE ENTRY, and ask each conductor what is actually in front of it first, which takes the packet from thirteen failures to six conductors and five placements. ONE, BOARD A IS ANSWERED BY THE PART IT REACHES AND COSTS NOTHING: its two failing conductors are J_USBC_OUT.2 and .3, the CC pair into U18, and TI's own datasheet section 9.1.1 says 'The device has ESD protection built into the CC1 and CC2 pins so that no external protection is necessary' (v2/vendor/ti/ti-tps25740.pdf; absolute maximum on those pins -0.3 to 6 V, and the VBUS path TI's Figure 37 clamps is already D4, an SMBJ18A). Board A needs no part and no copper: it needs a declaration form saying the protection is INSIDE the part the conductor reaches, with its citation, which port_protect.py does not have today. TWO, BOARD D'S J_PAOUT IS NOT AN ENCLOSURE PORT: read off its own netlist the chain is RF_PAOUT to L1 to RF_LPF_M to L2 to RF_LPF_OUT to K1.5, K1.6 to RF_ANT to J_ANT, and J_PAOUT's coax goes to the RA30H1317M1 on the plate INSIDE the case, so every path from outside reaches it through the same PolyPhaser GTH-SFF-AL at the antenna bulkhead that J_ANT already declares, plus the T/R relay contacts and a two-section low-pass filter. It declares that arrestor with its path. No part, no copper. THREE, BOARD D'S TWO HEADSET JACKS ARE THE REAL WORK AND THEY ARE BIDIRECTIONAL BY MEASUREMENT: U7 is a TPA6132A2 DirectPath headphone amplifier with a charge pump (AMP_CPP, AMP_CPN and a negative AMP_HPVSS), so the speaker conductors swing BELOW GROUND; the microphone conductor carries a 5 V electret bias through JP1 and R43 from +5V_D8 when that jumper is closed; PTT is a 3.3 V line pulled up through R68 into U9 and Q4. TWO Nexperia PESD5V0S2BT per jack (C49338, SOT-23, 23,525 in stock at 0.0858 USD): low-capacitance BIDIRECTIONAL double array, VRWM 5 V, Cd 35 pF typical, rated IEC 61000-4-2 contact discharge 30 kV against the 8 kV decision 34 ruled. Four packages, 0.34 USD a board. FOUR, BOARD E'S POD IS ONE PART THIS DESIGN ALREADY BUYS: a USBLC6-2SC6 (C7519) on J_POD.1, .3 and .4, guaranteed to IEC 61000-4-2 level 4 at 8 kV contact and 15 kV air in its own datasheet, which is exactly the ruled level, and no new part number. FIVE, BOARD E'S SHORE INLET IS NOT ACCEPTED AS IT STANDS AND THE FIX IS ONE PART: its netlist reads J_DCIN.1 to F1 to DC_F to Q1 (the BSC039N06NS ideal-diode FET, source pins 1 to 3, drain tab 5 to 8) to DC_P to D1, so the FIRST semiconductor a strike meets is the FET and the clamp sits behind it. Accepting that means accepting the FET's own rating for an 8 kV contact discharge, and a power FET's published ESD figure is a human-body-model handling number, which is a different test: Nexperia's PESD5V0S2BT sheet gives both for ONE part, 30 kV IEC 61000-4-2 contact against 10 kV MIL-STD-883 HBM, so one cannot be read as the other, and Infineon publishes the BSC039N06NS as a scan with no text layer and no ESD row that can be read at all. A SECOND SMCJ40A goes on DC_F, between the fuse and the FET: the part number board E already carries, after the fuse so a sustained overvoltage blows the fuse rather than the clamp, and at the entry, which is where Nexperia's own layout clause 1 and every TVS application note put it. SO THE WHOLE RULING IS FIVE PLACEMENTS OVER TWO BOARDS, ONE NEW PART NUMBER AND ABOUT 0.44 USD A BOARD, plus two declarations that cost nothing. Board E's three pod conductors and board D's six headset conductors are the six that get copper; boards D and E are regenerating anyway. |
 | 32 | board D's last return via sits at 2.25 mm where every site inside 1.5 mm is another net's copper | ACCEPT THE REACH AT 3.0 MM, THE DISTANCE THIS PROJECT'S OWN FIXER ALREADY PLACES AT, AND RECORD THE DISTANCE PER VIA. The screen stays at 1.5 mm for every board; a board that has measured what it cannot satisfy inside it declares `return_reach_mm` with this decision as the reason, and boards C, D and E do. `return_via` measures instead of answering yes or no: every flagged via carries the distance to its nearest ground via, a via within the declared reach is SATISFIED with that distance on the record, and one beyond it or with none at all stays a failure with its number. MEASURED ON THE THREE COMMITTED BOARDS, read-only with each sha identical before and after: BOARD D goes FAIL to PASS of 37, its single via answered at 1.58 mm. BOARD E goes six lacking to TWO, five answered between 1.50 and 2.27 mm, and what stands is FAN1_PWM with NO ground via within six millimetres and one SDA0 at 3.39. BOARD C goes THIRTY-TWO lacking to ELEVEN, twenty-one answered between 1.50 and 3.00, and what stands is 3.18 to 5.99 mm on eight of them and THREE WITH NO GROUND VIA WITHIN SIX MILLIMETRES (USB_DP_R, HB1, HB3). SO THE RULING ANSWERS BOARD D AND MAKES BOARDS C AND E SMALLER AND TRUE, and the residue is a different finding from the one this decision was asked about: it is not a screening distance, it is vias whose return has to travel four to six millimetres or has nowhere to go, and it belongs to each board's next phase with the coordinates now on the record. The decision's own evidence, written from the FIXER's log on 17 September, said board C's thirty-two sat at 1.50 or 1.75 mm; the JUDGE reads twenty-one inside 3.0 and eleven past it, so that half of the evidence was the fixer's view of what it had placed and not the board's. |
@@ -297,6 +143,8 @@ rule it has. None of them is a failure of board B's design and none can be judge
 | 37 | board D asks for two crystals that do not exist and the part it was certified against is four times the frequency | BUY THE HC-49S-SMD PASSIVE CRYSTAL AND MOVE BOTH CRYSTALS TO THE UNDERSIDE. The part is C252308 (6 MHz, HC-49S-SMD, -40 to +85 C, CL 20 pF, 80 Ohm, 376 in stock at 0.1333 USD), with C518119 (239 in stock) as the second source, for BOTH Y1 (the TUSB2046B hub) and Y2 (the PCM2912A codec). The wide temperature range is chosen over the -20/+70 parts because the crystal lives inside a sealed case whose envelope allows about +55 C of inside air, not because the ambient asks for it. Rd COMES DOWN FROM 1.5k TO 1.0k: TI's figure 6 gives 1.5k for a crystal of at most 50 Ohm and every wide-temperature 6 MHz part reads 80, so the damping becomes the reactance of C2 at 6 MHz, 1/(2*pi*6e6*27e-12) = 982 Ohm, and the negative-resistance margin of five times ESR is a BENCH MEASUREMENT at bring-up rather than a number this session can compute. The load capacitors stay at 27 pF, TI's own value, which presents 16.5 pF against the part's 20: eighteen percent under, about 43 ppm fast, deliberate, because under-loading raises the loop gain and USB full speed allows 2500 ppm. AND THE PROJECT'S OWN CLOCK RULE CAUGHT THE HALF I HAD LEFT BEHIND: board D still declared Y2 at c_load_pf 12.0, which was the load the OLD design happened to present with its 18 pF capacitors, so the first chain run read FAIL on Y2 at +38 percent. The declaration is the PART's 20 pF now. THE CODEC'S DATASHEET CONTRADICTS ITSELF ABOUT THE FREQUENCY and it is written down so that nobody corrects a working design: v2/vendor/ti/ti-pcm2912a.pdf lists 'Single 6-MHz Clock Source' in its features and 'Input clock frequency, XTI 5.997 / 6.000 / 6.003 MHz' in its electrical table, while one application paragraph says the device requires a 12-MHz clock. Two statements against one, and the binding one is the table. THE PACKAGE COSTS AREA AND THE BOARD ANSWERED WHERE: an HC-49S-SMD courtyard is 14.2 by 5.8 mm against the 3225 land these two were drawn on at 3.4 by 2.7, and seated where they were the placed DRC read FIFTEEN hard items, Y1 over U4, C13, C14 and R25 and Y2 over U6, C24, C25, JP1 and JP2. Measured on the placed board for a 14.2 by 5.8 box: the nearest free FRONT seat is 17.6 mm from the hub's own crystal pins and 11.3 from the codec's, while the UNDERSIDE is free 0.2 mm under the hub's pins and 6.3 from the codec's. Both crystals and their four load capacitors go to the underside, which board D already assembles, and check_pcb_d's standoff rule covers U2, K1 and the three connectors, not these. Y2 then had to move 3 mm west because its east pad sat 0.59 mm under U6 pad 28 and took that ground pad's only via site away. The chain ends PREROUTE-DONE OK at placed hard 0, escapes 68 added and 7 skipped which is board D's baseline to the pad, place_audit ALL PASS and rail_crossings 6 of 6. |
 | 38 | board B's two pair classes are 0.100 mm and its own minimum is 0.127, and the fabricator's floor is 0.09 | answered by the copper before it was ruled (18 September 2026): B21's project file carries every class at or above the board's own 0.127 mm, class_floor reads PASS on 5 classes with none below the floor, and the impedance gate's pair geometry is unchanged, which is the recommendation as it stood; nothing was lowered |
 | 39 | the criterion a break in a signal's reference is judged against | RULE THIS PROJECT'S OWN PER-CLASS CRITERION AS A DECLARED CALIBRATION, WITH THE NUMBERS EXACTLY AS THEY STAND. Not one tolerance is moved by this ruling: a limit moved to make a rule pass is an exemption wearing a number, and a criterion 50 percent looser would clear fourteen of the thirty-two failing nets, which is precisely why it is not touched. What changes is that the rule is allowed to DECIDE: signal_class.py already carries 413 per-net declarations across seven boards, each with its basis, and ECSS-E-HB-20-07A section 6.1.2.5.2 is cited as the qualitative authority for the principle while the numbers are recorded as this project's own calibration and are labelled as such wherever they appear. The readings this releases are already on disk: RET-001 reads PASS on A, D and E, FAIL on B (1 net of 658), C (15 of 127) and P (5 of 29), and has nothing to judge on E5; RET-003 reads FAIL on board A (13 vias changing to a power reference with no capacitor) and has nothing to judge elsewhere; SI-001 stays INCONCLUSIVE and now says why in its own words, 60 nets on board A and 380 on board B carrying no declared edge rate, which is a session item and not a standards wait. |
+| 41 | the order set describes boards this project stopped building, and bringing it up to date is the only thing between three boards and rule DOC-002 | owner ruling 25 September 2026, asked one decision at a time with the options and the recommendation: rebuild v2/release/revA/order/ from the deliverable folders that already exist and quarantine it in the same commit: every ORDER-NOTES.txt carries the board's own readiness block at the top (ROUTING_STATUS, ELECTRICAL_PROTECTION_STATUS, FAB_READINESS, PUBLICATION_STATUS) so no folder reads as an approved package. Nothing is ordered, no cart line is touched, EXCLUDE and JLC_ROT stay reserved and no board's phase declaration moves. Boards C and P will be rebuilt again at their new layer counts (decisions 27 and 28). |
+| 43 | board B's route has resisted every lever this project can apply and the two that remain are architectural | owner ruling 25 September 2026, asked one decision at a time with the options and the recommendation: measure the LAYER option first: board B is regenerated and routed once on eight layers on a rented box. Fewer parts in the receptacles' fabric and quote-only are not taken now. If eight layers do not route either, this decision comes back to the owner with that number. The eight-layer price goes to the owner before any order. |
 | 44 | board D's underside packs nine parts inside the codec's own pin field, and one of its ground pins cannot reach the plane | ACCEPT FOR THIS REVISION AND KEEP D12. The defect costs ONE connection on a candidate board while board D's committed phase is already 0 hard and 0 unrouted, and the fix was built and measured over seven chain runs before being reverted: stepping a back-side region around a front-side fanned IC reads escapes 71/4 against 68/7 and then the region fit refuses the placement, three regions over by up to 9.1 mm and five by up to 29.0 once the FIXED parts inside each rectangle are respected. Board D's rectangles are on the never-auto floor under owner ruling 13, so the alternative is not available to the session in any case. If board D is re-cut for another reason, the rectangle move goes in that commit. |
 | 45 | ANA-001 keeps a sense line away from the nets a board DECLARES as switching, and on both boards that declare any, the tightest approach of all is a gate drive the declaration leaves out | LEAVE ANA-001's DENOMINATOR AS EACH BOARD DECLARES IT AND REPORT THE GATE-DRIVE ROWS BESIDE IT. switch_list.py excludes a gate by PIN FUNCTION because a gate drives the switching node and is not the switching copper, which is the right predicate for the question that tool asks. The clearance this rule asks was chosen for a switching node's dV/dt into a current-sense pair and not for a gate driver's, so widening the denominator would fail boards A and E on placements already cut against a number nobody has set. sense_reach.py measures and prints the rows instead: board A reads 88 close approaches with the gate drives named against 64 on the declaration alone, and board E 23 against nine. |
 | 46 | board A's five converter stages drive their FETs from 13.5 to 28.9 mm away, and no placement lever this project has can shorten them | ACCEPT THE GATE-DRIVE LENGTHS FOR THIS REVISION AND CARRY THE FINDING TO THE NEXT. Every LM5176 stage drives its FETs from 13.5 to 28.9 mm and all three cheap levers were measured and refused: the seats do not exist (U13 and U2 have 0.08 mm to the south), the FETs are already as close as the packing allows (Q5's courtyard is 3.2 mm from U2's and its gate drive is still 17.17 mm, because the path crosses both part bodies), and the rotation is already the best of four (U2 sum 462.4 mm where it sits against 509.8, 512.2 and 475.2). So the length is a property of the packages and the topology, not of the placement. What acceptance means in practice: the opens it causes are NAMED rather than closed, and /POE_LDRV1 at 13.51 mm is one of the four opens on board A's best finished arm. |
