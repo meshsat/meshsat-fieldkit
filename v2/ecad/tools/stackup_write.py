@@ -29,6 +29,44 @@ STACKS = {
     # and every current-density check judge against the stackup, so this entry is what makes the ruling real
     # rather than a sentence in a document.
     "2L-2oz": [("F.Cu", 0.070), ("core", "FR4 core", 1.44, 4.5), ("B.Cu", 0.070)],
+    # AUTHORITY: OWNER RULING 25 September 2026, decision 28 (appendix 32.365; pcb_decisions.yaml n 28, authority
+    # OWNER, ruled_on 2026-09-25): board P goes to four layers at 2 oz outer copper. This table is on the never-auto
+    # floor (reserved.json, class "layer count and stackup"), and this row is added under that ruling alone; no
+    # other row was changed with it (26 September 2026, MESHSAT-1357).
+    # SOURCE: JLCPCB's JLC04162H-7628, the default ("No requirement") at 4 layers, 1.6 mm, 2 oz outer, 0.5 oz inner,
+    # read 25 September 2026 from jlcpcb.com/impedance with its 2 oz outer selector and from the order form, and
+    # transcribed in v2/vendor/fabricator/jlcpcb-stackups-2026-09-25.md. Layer sum 1.6562 mm, the fabricator's own
+    # compressionThickness for the code. The dielectric constants are the impedance calculator's for this code
+    # (7628 prepreg 4.4, 1.1 mm core 4.38); the impedance page prints one core figure, 4.6, which is what the older
+    # multilayer rows above carry. Board P carries no impedance target, so no computed number depends on the core
+    # figure. Inner copper 0.5 oz is the fabricator's default for this selector; 1 oz and 2 oz inner codes exist
+    # (JLC041621-*, JLC041622-*) and choosing one is an engineering decision that has not been taken.
+    # A four-layer board written with no name still gets the 1 oz four-layer row from write(), so board P's chain
+    # has to name this row.
+    "JLC04162H-7628": [("F.Cu", 0.070), ("pp", "FR4 prepreg 7628", 0.2104, 4.4), ("In1.Cu", 0.0152), ("core", "FR4 core", 1.065, 4.38), ("In2.Cu", 0.0152), ("pp", "FR4 prepreg 7628", 0.2104, 4.4), ("B.Cu", 0.070)],
+    # AUTHORITY: OWNER RULING 25 September 2026, decision 43 (appendix 32.365; pcb_decisions.yaml n 43, authority
+    # OWNER, ruled_on 2026-09-25): board B is regenerated and routed ONCE on eight layers on a rented box, as a
+    # measurement. That run is EXPERIMENTAL, and this row is the stackup record the measurement needs. It
+    # authorises no board B layout and no order: feasibility is not authorisation (owner condition 7 of
+    # 25 September 2026), and the eight-layer price goes to the owner before any order. Added under that ruling
+    # alone; no other row was changed with it (26 September 2026, MESHSAT-1357).
+    # SOURCE: JLCPCB's JLC08161H-2116, the order form's default ("No requirement", the same layer table as the
+    # code's own entry) at 8 layers, 1.6 mm, 1 oz outer, 0.5 oz inner, read 25 September 2026 from
+    # cart.jlcpcb.com/quote with "Specify Stackup: Yes" (jlcpcb.com/impedance has no eight-layer section), and
+    # transcribed in v2/vendor/fabricator/jlcpcb-stackups-2026-09-25.md. Layer sum 1.5996 mm, the fabricator's own
+    # compressionThickness for the code. Dielectric constants from the impedance calculator for this code (2116
+    # prepreg 4.16, 1080 prepreg 3.91, 0.3 mm core 4.41); the impedance page's single core figure is 4.6, and which
+    # of the two the fabricator designs to is the open question to JLCPCB (adjudication A10; about 2 percent of a
+    # stripline's impedance, INFERRED, not computed).
+    # TWO PLIES, ONE DIELECTRIC: the fabricator lists two 1080 plies (0.0764 mm each, Dk 3.91) between L3 and L4 and
+    # again between L5 and L6. KiCad holds one dielectric per copper gap (a second ply is a sublayer, which block()
+    # does not write and stackup_read does not read), so each pair is written as one prepreg of 0.1528 mm at the
+    # plies' common Dk: the same distance and the same constant impedance_check.geometry() takes between those
+    # copper layers either way. tests/test_stackup_write.py holds each row to the transcription layer by layer.
+    "JLC08161H-2116": [("F.Cu", 0.035), ("pp", "FR4 prepreg 2116", 0.1164, 4.16), ("In1.Cu", 0.0152), ("core", "FR4 core", 0.3, 4.41), ("In2.Cu", 0.0152),
+                       ("pp", "FR4 prepreg 1080 x 2", 0.1528, 3.91), ("In3.Cu", 0.0152), ("core", "FR4 core", 0.3, 4.41), ("In4.Cu", 0.0152),
+                       ("pp", "FR4 prepreg 1080 x 2", 0.1528, 3.91), ("In5.Cu", 0.0152), ("core", "FR4 core", 0.3, 4.41), ("In6.Cu", 0.0152),
+                       ("pp", "FR4 prepreg 2116", 0.1164, 4.16), ("B.Cu", 0.035)],
 }
 LOSS = 0.02
 

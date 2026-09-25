@@ -1,0 +1,870 @@
+# v2/vendor/SOURCES.yaml: identity and source record for the critical parts of the V2 carrier set.
+#
+# Written 25 September 2026 (MESHSAT-1357, foundation re-baseline, workstream W6) and revised the same night
+# after an independent challenge. Published 26 September 2026 by integration I6, which added the owner's rulings
+# of 25 to 26 September 2026 where an entry depends on them (the envelope note below, the supervisor and the
+# secure element) and closed the first owed item. Read against tree 82dd1e4d; the schematic generators, jlc_certify.py,
+# lcsc_fill.py, JLC-CERTIFIED.tsv and v2/vendor/ are byte-identical between e6291404 and 82dd1e4d.
+# Prototype work: nothing here has been built, bought for assembly or field deployed.
+#
+# WHAT THIS FILE IS. For each critical part on the CURRENT schematic generators (v2/ecad/tools/gen_sch_*.py):
+# the part as the schematic names it, the part the purchase code actually resolves to, the package, the
+# LCSC code, and every held document with its revision, source, sha256 and whether it describes the variant
+# that is fitted. It is a document check made inside this project. It is NOT a certification of any kind, and
+# a "match" here means only that the named document describes the named order code.
+#
+# WHAT "CRITICAL" MEANS HERE. A part has an entry when at least one of these holds:
+#   (a) its identity or temperature grade decides safety: the pack, its protection, surge and ESD clamps,
+#       power control, the pack connector;
+#   (b) it is the single part behind a mission function: compute, the switch fabric, a radio, a supervisor;
+#   (c) an internal record labels it CERTIFIED while its identity, grade or land is contested.
+# Deliberately NOT covered yet, with the reason: the regulators and eFuses of board A's power tree
+# (AP64500, TPS62933, LM5176, TPS2596/TPS259631, LM74700-Q1, LM5069) and the PCA9555 expanders. Their held
+# datasheets were read line by line for behaviour on 25 September (MESHSAT-1357), but their
+# order codes were not audited against the documents. Entries for them are owed (see `owed`).
+#
+# WHAT IT IS NOT. It is not a second parts registry: buyability stays in release/revA/order/JLC-CERTIFIED.tsv,
+# written by tools/jlc_certify.py. That tool's "CERTIFIED" label means only "JLCPCB's catalogue answered with a
+# part whose model string passed the tool's comparison". The comparison accepts two part numbers that share
+# six leading characters, retries without trailing grade letters, and compares packages without body size or
+# pitch, so a CERTIFIED row is not evidence of part identity, grade or land (three rows below prove it: the
+# supervisor MCU, the board D hub and the 5G socket). Generated inventory stays in PARTS.md. Folder-level
+# provenance stays in sources.txt.
+#
+# FIELD MEANINGS
+#   schematic_name   the part number as the generator writes it, with file:line
+#   fitted_mpn       the manufacturer order code the LCSC code resolves to (JLCPCB's or LCSC's model string)
+#   identity         MATCH      schematic name and fitted code are the same part (suffixes for packing only)
+#                    MISMATCH   they are different parts, or the fitted part contradicts the design's own
+#                               requirement; a mismatch stays open until compatibility is proven
+#                    NOT_PINNED the schematic names a family or a class and no order code is fixed
+#                    NOT_FITTED the part is not instantiated on any current generator
+#   grade_vs_envelope  INSIDE / OUTSIDE / TBD against v2/ecad/tools/pcb_envelope.yaml (in use -20 to +40 C
+#                    ambient, storage minimum -20 C). OWNER RULING D-02a (25 to 26 September 2026): the envelope
+#                    is -20 to +40 C in use and -20 to +45 C in storage, and TEST-PLAN's +55 C operating, +71 C
+#                    storage and -33 C storage are QUALIFICATION MARGINS over it, with two pass lines: operate to
+#                    specification inside the envelope; survive and recover at the margin. This field judges a
+#                    part against the envelope only. No part here is judged against the margins yet (TBD; effect:
+#                    a part INSIDE the envelope can still fail the survive-and-recover line at -33 C or +71 C).
+#   matches_fitted   does THIS document describe the fitted order code? yes / partial / no, with the reason
+#   status           VERIFIED   the artefact was opened and the cited line, table or page read
+#                    INFERRED   taken from a record, a file name or reasoning, not re-read against the artefact
+#                    PROVISIONAL a verdict that stands on today's evidence but is held open by a named condition
+#   stock readings   dated JLCPCB API readings; a stock figure is true only at its time
+#
+# Every sha256 below was computed on 25 or 26 September 2026 over the file as it sits in this tree.
+
+schema_version: 2
+read_on: "2026-09-25"
+tree: "82dd1e4d"
+owner_workstream: "W6, MESHSAT-1357"
+jlc_readings:
+  endpoint: "POST https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList (the endpoint jlc_certify.py:40 uses)"
+  times_utc: ["2026-09-25T20:44Z", "2026-09-25T21:50Z", "2026-09-25T21:57Z"]
+lcsc_readings:
+  endpoint: "GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=<code>"
+  time_utc: "2026-09-25T21:53Z"
+
+parts:
+
+  - id: cm5-receptacle
+    function: "Compute Module 5 board-to-board receptacles, two per slot, three slots"
+    boards: [B]
+    schematic_name: {text: "Amphenol 10164227-1004A1RLF", where: "v2/ecad/tools/gen_sch_b.py:388-389"}
+    fitted_mpn: "10164227-1004A1RLF"
+    package: "Amphenol BergStak 0.40 mm pitch receptacle, land CM5_Conn_A/B_10164227"
+    lcsc: "C7435219"
+    lcsc_reading: {model: "10164227-1004A1RLF", pkg: "SMD,P=0.4mm", stock: 1383, read: "2026-09-20", source: "release/revA/order/JLC-CERTIFIED.tsv"}
+    identity: MATCH
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/cm5/amphenol-10164227-bergstak-drawing-revC.pdf"
+        doc_id: "Amphenol FCI customer drawing 10164227"
+        revision: "Rev C, status Released, printed 25 Apr 2024 (stamp on every page)"
+        url: TBD
+        url_effect: "provenance of the drawing is not recorded in sources.txt or DOWNLOADS; a re-fetch from amphenol-cs.com (which refuses this host) is owed before a land is re-derived from it"
+        sha256: "0edf3ab9304f0f7ada1f79187e60ea6c6f593dd8ed81827d6e96e9b827e68b02"
+        matches_fitted: "partial: the drawing is a raster; its text layer carries only the revision stamp, so the 1004A1RLF row of its variant table could not be read by text extraction"
+      - path: "v2/vendor/cm5/amphenol-10164227-bergstak-0.40mm-product-sheet.pdf"
+        doc_id: "BergStak 0.40mm Connectors product sheet"
+        revision: "not stated; PDF ModDate 2022-11-03"
+        url: TBD
+        sha256: "825f39e43efc199fbc7346ec45a6dd3623e4ef38255edac8d69d435e854e4997"
+        matches_fitted: "partial: family sheet"
+      - path: "v2/vendor/cm5/cm5-datasheet.pdf"
+        doc_id: "Raspberry Pi Compute Module 5 datasheet"
+        revision: "build date 08/06/2026 (title page)"
+        url: "https://datasheets.raspberrypi.com/cm5/cm5-datasheet.pdf (INFERRED from the folder record, sources.txt line 21)"
+        sha256: "80070fefd8db6e8abc6e146c8b7b5fb318ba129cc1e28826936d547fde79c863"
+        matches_fitted: "yes for the module side: pinout, routing impedances (p.9), USB3 TX AC coupling on the module (p.22); its part-number table (section 6.2) lists CM5108064 = wireless, 8 GB, 64 GB eMMC, the module the generator names at gen_sch_b.py:388"
+
+  - id: pcie-switch
+    function: "PCIe 2.0 packet switch per slot (upstream CM5 lane, NVMe, card socket)"
+    boards: [B]
+    schematic_name: {text: "Diodes PI7C9X2G404SL", where: "v2/ecad/tools/gen_sch_b.py:433"}
+    fitted_mpn: "PI7C9X2G404SLBFDEX"
+    package: "LQFP-128-EP 14 x 14 mm, 0.4 mm pitch (land LQFP-128_14x14mm_P0.4mm_EP6.0)"
+    lcsc: "C500767"
+    lcsc_reading: {model: "PI7C9X2G404SLBFDEX", pkg: "LQFP-128-EP(14x14)", stock: 2772, read: "2026-09-20", source: "JLC-CERTIFIED.tsv"}
+    identity: MATCH
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/diodes/diodes-pi7c9x2g404sl.pdf"
+        doc_id: "Diodes DS40068"
+        revision: "Revision 5, document number DS40068 Rev 5-2 (PDF ModDate 2025-07-10)"
+        url: TBD
+        url_effect: "sources.txt line 25 records the folder, not the file URL"
+        sha256: "675fa7ee40c91ad64db5e25abd75da2bc4c8e8e42f1569079d3b9cf1f2114687"
+        matches_fitted: "yes: the ordering table lists PI7C9X2G404SLBFDEX"
+
+  - id: usb3-hub
+    function: "four-port USB 3.0 hub per slot"
+    boards: [B]
+    schematic_name: {text: "TI TUSB8041IRGCR", where: "v2/ecad/tools/gen_sch_b.py:527"}
+    fitted_mpn: "TUSB8041IRGCR"
+    package: "VQFN-64 (RGC) 9 x 9 mm, 0.5 mm pitch"
+    lcsc: "C544686"
+    lcsc_reading: {model: "TUSB8041IRGCR", pkg: "QFN-64-EP(9x9)", stock: 3438, read: "2026-09-20", source: "JLC-CERTIFIED.tsv"}
+    identity: MATCH
+    grade_vs_envelope: INSIDE
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/ti-tusb8041.pdf"
+        doc_id: "TI SLLSEE4"
+        revision: "Rev. E"
+        url: "https://www.ti.com/lit/ds/symlink/tusb8041.pdf"
+        sha256: "b715bce72e988310d18dbc8eb041a05b5f15e4a0b690843a873abdc373a1ad87"
+        currency: "byte-identical to ti.com on 2026-09-25"
+        matches_fitted: "yes: orderable table lists TUSB8041IRGCR, -40 to 85 C"
+
+  - id: usb3-host-mux
+    function: "SuperSpeed 2:1 host select per bank (IOHA fabric)"
+    boards: [B]
+    schematic_name: {text: "TI TMUXHS4212", where: "v2/ecad/tools/gen_sch_b.py:548"}
+    fitted_mpn: "TMUXHS4212IRKSR"
+    package: "VQFN-20 (RKS) 2.5 x 4.5 mm"
+    lcsc: "C3656912"
+    lcsc_reading: {model: "TMUXHS4212IRKSR", pkg: "VQFN-20(4.5x2.5)", stock: 4361, read: "2026-09-14", source: "JLC-CERTIFIED.tsv"}
+    identity: MATCH
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/ti-tmuxhs4212.pdf"
+        doc_id: "TI SLASEP7"
+        revision: "Rev. A, May 2020, revised May 2022"
+        url: "https://www.ti.com/lit/ds/symlink/tmuxhs4212.pdf"
+        sha256: "34fa7c385e6aa8987e44a346219e15beac36e645e45b01d6542169f5b8e6d729"
+        currency: "byte-identical to ti.com on 2026-09-25"
+        matches_fitted: "yes"
+      - path: "v2/vendor/ti/ti-slla552-tmuxhs4212-schematic-checklist.pdf"
+        doc_id: "TI SLLA552, Schematic Checklist of TMUXHS4212EVM and TMUXHS4412EVM"
+        revision: "original, March 2021 (no revision letter; product page date 2021-03-16)"
+        url: "https://www.ti.com/lit/pdf/SLLA552 (resolved to https://www.ti.com/lit/an/slla552/slla552.pdf)"
+        fetched: "2026-09-25 from ti.com, found on https://www.ti.com/product/TMUXHS4212 technical documents"
+        sha256: "5258cb808aa0d2cfb4579cc91ee3b9a39d4448133e149ce09c06062a40a4182e"
+        matches_fitted: "yes, with one superseded row: the checklist says leave RSVD1 and RSVD2 open; the later datasheet SLASEP7A (p.3, revision history 'Updated the RSVD1 and RSVD2 description') says connect both to VCC, and the generator follows the datasheet (gen_sch_b.py:544)"
+
+  - id: usb2-host-mux
+    function: "USB 2.0 2:1 host select per bank"
+    boards: [B]
+    schematic_name: {text: "TI TS3USB221A", where: "v2/ecad/tools/gen_sch_b.py:553"}
+    fitted_mpn: "TS3USB221ARSER"
+    package: "UQFN-10 (RSE) 1.5 x 2 mm"
+    lcsc: "C128396"
+    lcsc_reading: {model: "TS3USB221ARSER", pkg: "UQFN-10(1.5x2)", stock: 60672, read: "2026-09-14", source: "JLC-CERTIFIED.tsv"}
+    identity: MATCH
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/ti-ts3usb221a.pdf"
+        doc_id: "TI SCDS277"
+        revision: "Rev. C, November 2008, revised October 2024"
+        url: "https://www.ti.com/lit/ds/symlink/ts3usb221a.pdf"
+        sha256: "cccebf8c10df605133d24bd3ab3abeb97a19dbf539d3465b53562fc19f7a242e"
+        currency: "byte-identical to ti.com on 2026-09-25"
+        matches_fitted: "yes"
+      - path: "v2/vendor/cluster/ts3usb221.pdf"
+        doc_id: "TI SCDS220M"
+        revision: "Rev. M"
+        sha256: "037dc670f1762e962bbeed8d7e2cd434b1feb8969a9a1cb748c2c9f850b89e29"
+        matches_fitted: "no: TS3USB221 without the A suffix is a different device; this file must not be cited for the fitted part"
+
+  - id: hdmi-switch
+    function: "display switch, two in cascade to the HDMI receptacle"
+    boards: [B]
+    note: "An earlier brief listed TMDS341A. The current generator fits the TS3DV642 instead (gen_sch_b.py:649-656); the TMDS341A is NOT_FITTED and its sheet is kept as history."
+    schematic_name: {text: "TI TS3DV642A0RUAR", where: "v2/ecad/tools/gen_sch_b.py:656"}
+    fitted_mpn: "TS3DV642A0RUAR"
+    package: "WQFN-42 (RUA) 3.5 x 9 mm, 0.5 mm pitch"
+    lcsc: "C157482"
+    lcsc_reading: {model: "TS3DV642A0RUAR", pkg: "WFQFN-42-EP(3.5x9)", stock: 1257, read: "2026-09-20", source: "JLC-CERTIFIED.tsv"}
+    identity: MATCH
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/ti-ts3dv642.pdf"
+        doc_id: "TI SCDS343"
+        revision: "Rev. F"
+        url: "https://www.ti.com/lit/ds/symlink/ts3dv642.pdf (INFERRED from the ti folder line, sources.txt line 64)"
+        sha256: "31e45a0729bc2e7164293fa902dd6daaa9089d51490518f80513a7bcaaea45d8"
+        matches_fitted: "yes: orderable table lists TS3DV642A0RUAR, -40 to 85 C"
+
+  - id: tmds341a
+    function: "former 3-to-1 DVI/HDMI switch"
+    boards: []
+    identity: NOT_FITTED
+    status: VERIFIED
+    evidence: "no part(), ic() or synth() call names TMDS341 in any gen_sch_*.py on 82dd1e4d"
+    documents:
+      - path: "v2/vendor/ti/ti-tmds341a.pdf"
+        doc_id: "TI SLLS702"
+        revision: "Rev. B"
+        sha256: "d4b5ddfc7a56b285d65a8a3dc7c385733e3aa1220bd2735a1f0fc55f444741da"
+        matches_fitted: "not applicable"
+
+  - id: ethernet-switch
+    function: "seven-port Gigabit switch (three CM5 ports, wall RJ45)"
+    boards: [B]
+    schematic_name: {text: "Microchip KSZ9897RTXI", where: "v2/ecad/tools/gen_sch_b.py:614"}
+    fitted_mpn: "KSZ9897RTXI"
+    package: "TQFP-128-EP 14 x 14 mm (land TQFP-128_14x14mm_P0.4mm_EP10.0)"
+    lcsc: "C638299"
+    lcsc_reading: {model: "KSZ9897RTXI", pkg: "TQFP-128(14x14)", stock: 210, read: "2026-09-20", source: "JLC-CERTIFIED.tsv"}
+    identity: MATCH
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/cluster/ksz9897.pdf"
+        doc_id: "Microchip DS00002330"
+        revision: "E (page footer DS00002330E)"
+        url: TBD
+        sha256: "02aab4c6a8065c497946191af10bc41f7299d9bbd98c8b3b1db5a51407c21bf0"
+        matches_fitted: "yes: product identification system, TX = 128-pin TQFP-EP, I = industrial"
+      - path: "v2/vendor/microchip/microchip-ksz9897-datasheet.pdf"
+        doc_id: "Microchip DS00002330"
+        revision: "D (page footer DS00002330D): OLDER than the cluster/ copy"
+        sha256: "72b89179ed6a42a7bafa737de31a21fc28db6f0852bcc7964546bc99b0c7d064"
+        matches_fitted: "yes but superseded by revision E in this same tree; cite E"
+      - path: "v2/vendor/cluster/ksz989x-hw-design-checklist.pdf"
+        doc_id: "Microchip DS00004151"
+        revision: "A"
+        sha256: "2a9d80931a0bed4b02c951846ab089def68d4f58d321efdd43539e4e12e17d2a"
+        matches_fitted: "yes (family checklist; clause 6.6 is decision 29's basis)"
+
+  - id: ethernet-magnetics
+    function: "1000BASE-T magnetics between switch port 4 and the wall RJ45 (T1)"
+    boards: [B]
+    schematic_name: {text: "Pulse H5007NL", where: "v2/ecad/tools/gen_sch_b.py:624"}
+    fitted_mpn: "H5007NL"
+    package: "SMD 24 pin, 17.5 x 12.2 mm"
+    lcsc: "C6384935"
+    lcsc_reading: {model: "H5007NL", pkg: "SMD-24P,17.5x12.2mm", stock: 392, read: "2026-09-20", source: "JLC-CERTIFIED.tsv:438"}
+    identity: MATCH
+    grade_vs_envelope: OUTSIDE
+    grade_note: "the sheet states 'Operating Temperature 0 C to 70 C' for this table; the envelope's in-use minimum is -20 C (pcb_part_temps.yaml already records the part as outside)"
+    alternatives_in_the_same_sheet: "HX parts are the 'Extended temperature version -40 C to +85 C' (note 1). HX5004NL: the sheet says 'HX5004 and H5004/7 are footprint compatible' but draws it in the H5004/HX5004/H5009 schematic group, not the H5007/H5008/HX5008/H5015 group. HX5008NL shares the H5007 schematic group but uses the H5008/HX5008/H5009 footprint. No part in this sheet is both footprint- and schematic-identical to H5007NL at -40 to +85 C. The pin numbering of the two schematic groups is the same; the internal choke arrangement drawn for each was read only at 60 dpi (INFERRED different)."
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/pulse/pulse-h5007nl.pdf"
+        doc_id: "Pulse 1000BASE-T Magnetics Modules, HC500.O"
+        revision: "HC500.O (6/08)"
+        url: TBD
+        sha256: "76b85b47d0bd9f46cfca2281b5e5e31eba1e82f148ffda680472e5a1995c8d65"
+        matches_fitted: "yes: H5007NL row of the electrical table, H5004/H5007 mechanical drawing, H5007 schematic group"
+
+  - id: io-supervisor-mcu
+    function: "three I/O high-availability supervisors (IOCTRL A, B, C)"
+    boards: [B]
+    schematic_name: {text: "STM32H753VI (symbol), description 'STM32H753VITx'", where: "v2/ecad/tools/gen_sch_b.py:829"}
+    fitted_mpn: "STM32H743VIT6"
+    package: "LQFP-100 14 x 14 mm, 0.5 mm pitch"
+    lcsc: "C114409"
+    lcsc_reading:
+      - {model: "STM32H743VIT6", pkg: "LQFP-100(14x14)", stock: 67, read: "2026-09-14", source: "JLC-CERTIFIED.tsv:482"}
+      - {model: "STM32H743VIT6", pkg: "LQFP-100(14x14)", stock: 4335, read: "2026-09-25T21:57Z", source: "JLCPCB parts API"}
+    alternative_readings:
+      - {lcsc: "C5271084", model: "STM32H743VIT6TR", stock: 897, read: "2026-09-25T21:57Z"}
+      - {lcsc: "C730206", model: "STM32H753VIT6", stock: 0, read: "2026-09-25T21:57Z"}
+      - {lcsc: "C7324976", model: "STM32H753VIT6TR", stock: 0, read: "2026-09-25T21:57Z"}
+    identity: MISMATCH
+    status: PROVISIONAL
+    baseline: "the owner set the baseline at three STM32H753 (v2/docs/research-io-supervisor-2026-09-09.md:3-4); the H743 is a substitution made by the purchase code, recorded only in a code comment at gen_sch_b.py:829"
+    identity_note: >-
+      Open component mismatch under owner condition 1. What was checked: the LQFP-100 pinouts are identical
+      (all 100 pins of the generator's table compared against DS12110 Rev 10 Figure 5 and DS12117 Rev 9 Figure 4,
+      p.55 of each, 0 mismatches, a planted swap caught); FDCAN1 on PD0/PD1 and FDCAN2 on PB12/PB13 in AF9 on the
+      H743 (DS12110 Rev 10 Table 13 p.92 and Table 11 continued p.90); the H753-only capabilities are CRYP and HASH
+      (DS12117 Rev 9 section 3.28 p.41; DS12110 revision history 'Removed CRYP peripheral') and Secure access mode
+      with ST Root Secure Services and secure firmware install (DS12117 section 3.3.2 p.25; DS12110 revision
+      history 'Removed secure firmware upgrade support'). Both parts keep RDP and PCROP (DS12110 p.1 'ROP, PC-ROP,
+      active tamper'). No current requirement, generator line or firmware uses an H753-only capability, and no
+      supervisor firmware exists. PROVISIONAL, and NOT closable. When this entry was written two reopen conditions
+      were live: no secure-boot requirement exists anywhere in the pack (red team finding S2,
+      v2/docs/RED-TEAM-2026-09-09.md:363), and decision 30 (ZEROIZE) was open with an option that routes
+      ZEROIZE_HW into each supervisor. The owner ruled decision 30 on 25 to 26 September 2026 (ruling D-03):
+      crypto-erase through the secure element (drive and eMMC keys wrapped by a key the secure element holds;
+      ZEROIZE destroys that key, then running modules drop their RAM keys, then the slots are cut), triggered only
+      by the covered toggle held 5 s, level-sensitive after power loss, done in firmware and provisioning with no
+      board change. The ruling's text names no H753-only capability: the key it destroys is held by the ATECC608B,
+      not by a supervisor's CRYP or HASH unit (INFERRED from the ruling's wording). Which part the supervisors'
+      firmware plays in that sequence is not written (TBD; effect: a wipe step that needs CRYP, HASH or secure
+      access mode would reopen the mismatch). The secure-boot condition is still live and unruled. The mismatch
+      closes only after the owner has ruled on supervisor secure boot and the ZEROIZE firmware's use of the
+      supervisors is written; the rename of the schematic record follows those, never precedes them.
+    related_defect: "the supervisors' SDA/SCL land on LQFP pins 35/36 = PB1/PB2 (gen_sch_b.py:261, :824), which carry no I2C alternate function on either part (DS12110 Rev 10 Table 11 p.89; DS12117 Rev 9 Table 10, same rows); common to both parts, independent of the mismatch"
+    documents:
+      - path: "v2/vendor/st/st-stm32h743xi-datasheet.pdf"
+        doc_id: "ST DS12110"
+        revision: "Rev 10, March 2023"
+        url: "https://web.archive.org/web/2024id_/https://www.st.com/resource/en/datasheet/stm32h743vi.pdf (Wayback copy; st.com refuses this host)"
+        sha256: "9b27d1d993a8bc5b095125c85dd71b61f8d31f4556d0552623841d529b959f21"
+        currency: "UNCONFIRMED: st.com answered HTTP/2 INTERNAL_ERROR and then a 40 s timeout on 2026-09-25"
+        matches_fitted: "yes: ordering scheme p.348 (V = 100 pins, I = 2 MB, T = LQFP, 6 = -40 to 85 C)"
+      - path: "v2/vendor/st/st-stm32h753xi-datasheet.pdf"
+        doc_id: "ST DS12117"
+        revision: "Rev 9, March 2023"
+        url: "https://web.archive.org/web/2024id_/https://www.st.com/resource/en/datasheet/stm32h753vi.pdf (Wayback copy)"
+        sha256: "3bf346d8a511843ac6f5397a0e1c59d83e7ed70c7835fde72669fa545f4bd9d7"
+        matches_fitted: "no: describes the part the schematic names, not the part the code buys"
+      - path: "v2/vendor/st/st-an4938-rev7.pdf"
+        doc_id: "ST AN4938, Getting started with STM32H74xI/G and STM32H75xI/G MCU hardware development"
+        revision: "Rev 7, 29 October 2024"
+        url: "https://web.archive.org/web/20250726045640id_/https://www.st.com/resource/en/application_note/an4938-getting-started-with-stm32h74xig-and-stm32h75xig-mcu-hardware-development-stmicroelectronics.pdf"
+        fetched: "2026-09-25 through the Wayback Machine with the id_ flag, because st.com refused this host (HTTP/2 stream INTERNAL_ERROR, then timeout on HTTP/1.1). The archive served the stored response gzip-encoded; the filed PDF is the decompressed body (gzip body sha256 50c71d4a1b6dba389ad35f74ecf451af3926da27b8abb7defbab3a4ef9970537)."
+        sha256: "217b5dcbfdd27cec4f6013cf1f51930bf81c338ccbaf7bf8dce3fa69592bb8b3"
+        currency: "newest archived capture is 2025-07-26; whether ST has published a Rev 8 since is UNCONFIRMED"
+        matches_fitted: "yes: covers both the STM32H743 and the STM32H753 lines"
+
+  - id: can-transceiver
+    function: "six CAN FD transceivers, two heartbeat fabrics for the three supervisors"
+    boards: [B]
+    schematic_name: {text: "TCAN334D", where: "v2/ecad/tools/gen_sch_b.py:845"}
+    fitted_mpn: "TCAN334DR"
+    package: "SOIC-8"
+    lcsc: "C2871143"
+    lcsc_reading: {model: "TCAN334DR", pkg: "SOIC-8", stock: 254, read: "2026-09-14", source: "JLC-CERTIFIED.tsv:486-491"}
+    identity: MATCH
+    identity_note: "D is the SOIC package and R the reel; the G variants (TCAN334G) are a different pin function and are not what is named or bought"
+    grade_vs_envelope: INSIDE
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/ti-tcan334-can-fd-transceiver.pdf"
+        doc_id: "TI SLLSEQ7"
+        revision: "Rev. F, December 2015, revised May 2025"
+        url: TBD
+        sha256: "bb89f067e6a7902867bf6b82eaab762167f403ae8464a29ec4f318ab0c71628f"
+        matches_fitted: "yes (family sheet TCAN330/332/334/337 and G variants; -40 C ambient minimum stated on p.1)"
+
+  - id: rp2040
+    function: "panel controller (C) and sensor controller (E)"
+    boards: [C, E]
+    schematic_name: {text: "RP2040", where: "v2/ecad/tools/gen_sch_c.py:110, gen_sch_e.py:352"}
+    fitted_mpn: "RP2040"
+    package: "QFN-56 7 x 7 mm, 0.4 mm pitch"
+    lcsc: "C2040"
+    lcsc_reading: {model: "RP2040", pkg: "LQFN-56(7x7)", stock: 41836, read: "2026-09-20", source: "JLC-CERTIFIED.tsv"}
+    identity: MATCH
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf"
+        doc_id: "RP2040 Datasheet"
+        revision: "build-date 2025-02-20, build-version 3184e62-clean"
+        url: "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf (INFERRED from sources.txt line 53)"
+        sha256: "be56fbb75ba0ae9e26558a73c93ac3e75c2ad4e6878d3b6703de2a76d886ea8c"
+        matches_fitted: "yes"
+      - path: "v2/vendor/rp2040/rpi-rp2040-hardware-design.pdf"
+        doc_id: "Hardware design with RP2040"
+        revision: "not read; PDF ModDate 2026-08-20"
+        sha256: "51c4f430153fcdbf3209d9b3b41662c8527ff0150bc25777e3fcd6f5221a1c19"
+        matches_fitted: "yes"
+
+  - id: pack-cells
+    function: "4S pack cells"
+    boards: [P]
+    schematic_name: {text: "Samsung INR18650-35E (pack build, not a placed part)", where: "v2/ecad/tools/pcb_pack_protection.yaml and pcb_energy_chain.yaml (the pack records); no schematic generator names the cell"}
+    fitted_mpn: "Samsung INR18650-35E"
+    package: "18650 cylindrical cell"
+    lcsc: null
+    purchase_route: "owner-side purchase for the pack build"
+    identity: MATCH
+    grade_vs_envelope: "INSIDE for storage (-20 to 45 C for 3 months) and discharge (-10 to 60 C cell surface); charge is 0 to 45 C, which the envelope handles with the heater-mat carve-out below -10 C"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/battery/samsung-35e-orbtronic.pdf"
+        doc_id: "Samsung SDI specification INR18650-35E"
+        revision: "Ver. 1.1"
+        url: TBD
+        url_effect: "a distributor's copy (the file name records the distributor); the maker's own copy is not held"
+        sha256: "5ec577b952b9dc5106593a4e4c3a6e8cea64f6f72b8faaf1bb512155c29dc516"
+        matches_fitted: "yes: section 3.12 operating temperature (charge 0 to 45 C, discharge -10 to 60 C), 3.13 storage"
+
+  - id: pack-gauge-protection
+    function: "4S pack gas gauge, primary protection and balancing"
+    boards: [P]
+    schematic_name: {text: "BQ4050RSMR", where: "v2/ecad/tools/gen_sch_p.py:109"}
+    fitted_mpn: "BQ4050RSMR"
+    package: "VQFN-32 (RSM0032A) 4.0 x 4.0 mm, 0.4 mm pitch"
+    land_on_board: "Package_DFN_QFN:QFN-32-1EP_5x5mm_P0.5mm_EP3.1x3.1mm (gen_sch_p.py:71): WRONG LAND, a 5 x 5 mm 0.5 mm pitch land under a 4 x 4 mm 0.4 mm pitch part; carried into the P4 BOM line 20, order/PCB-P-PACK-P1 and both P board files. The correct land (TI example layout p.52) has 32 pads of 0.6 x 0.2 mm at 0.4 mm pitch, so 0.20 mm between pads: exactly JLCPCB's published 2 oz solder-mask-bridge minimum and below its 0.25 x 0.25 mm minimum SMD pad."
+    lcsc: "C157570"
+    lcsc_reading:
+      - {model: "BQ4050RSMR", pkg: "VQFN-32-EP(4x4)", stock: 13771, read: "2026-09-20", source: "JLC-CERTIFIED.tsv:368"}
+      - {model: "BQ4050RSMR", pkg: "VQFN-32-EP(4x4)", stock: 15945, read: "2026-09-25T21:57Z", source: "JLCPCB parts API"}
+    identity: MATCH
+    land_identity: MISMATCH
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/battery/ti-bq4050.pdf"
+        doc_id: "TI SLUSC67"
+        revision: "Rev. B, March 2016, revised October 2017"
+        url: "https://www.ti.com/lit/ds/symlink/bq4050.pdf"
+        sha256: "2664e33fe6d6ebed3a0f58153d8ba8ce66cb84f07741f6708ae11a224f443f5e"
+        currency: "byte-identical to ti.com on 2026-09-25"
+        matches_fitted: "yes: orderable addendum lists BQ4050RSMR, VQFN (RSM) 32; package outline RSM0032A p.51, example board layout p.52, stencil p.53"
+
+  - id: pack-fets
+    function: "pack charge and discharge switches (Q1, Q2), high side, common drain"
+    boards: [P]
+    schematic_name: {text: "CSD17570Q5B 30 V N-FET", where: "v2/ecad/tools/gen_sch_p.py:158"}
+    fitted_mpn: "CSD17570Q5B"
+    package: "SON-8 5 x 6 mm"
+    lcsc: "C529279"
+    lcsc_reading: {model: "CSD17570Q5B", pkg: "SON-8(5x6)", stock: 116, read: "2026-09-20", source: "JLC-CERTIFIED.tsv:381"}
+    identity: MATCH
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/battery/ti-csd17570q5b.pdf"
+        doc_id: "TI SLPS471"
+        revision: "Rev. D, February 2014, revised May 2017"
+        url: TBD
+        sha256: "596555c33dce1fcac6de3b6ecc3eeb443f202382b3e2091fd6e1c27d129f2436"
+        matches_fitted: "yes: 30 V VDS, 0.56 mOhm typical at VGS 10 V (p.1)"
+
+  - id: charger
+    function: "1 to 5 cell buck-boost charger, 4S"
+    boards: [A]
+    schematic_name: {text: "BQ25731RSNR", where: "v2/ecad/tools/gen_sch_a.py:316"}
+    fitted_mpn: "BQ25731RSNR"
+    package: "QFN-32 (RSN) 4 x 4 mm, 0.4 mm pitch (land QFN-32-1EP_4x4mm_P0.4mm_EP2.65x2.65mm)"
+    lcsc: "C2871872"
+    lcsc_reading: {model: "BQ25731RSNR", pkg: "QFN-32(4x4)", stock: 1187, read: "2026-09-20", source: "JLC-CERTIFIED.tsv"}
+    identity: MATCH
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/bq25731-datasheet.pdf"
+        doc_id: "TI SLUSE66"
+        revision: "Rev. A"
+        url: "https://www.ti.com/lit/ds/symlink/bq25731.pdf"
+        sha256: "3e5e927fdf63cf6a2397630987c58e947ebc80d5a1cfc93fb1fb58d98bb58973"
+        currency: "byte-identical to ti.com on 2026-09-25"
+        matches_fitted: "yes, with one known internal contradiction: section 9.6.2's prose and the Figure 9-15 caption give ChargeCurrent 0 A at power-on reset, while the 9.6.2 header (0080h), Table 9-11, 9.3.21.1, 9.4.1 and Table 9-8 give 256 mA. TI's applications engineer answered this on E2E thread 1316778 (23 January 2024): the power-on value is 256 mA; the 0 A text is inherited from the BQ25730 sheet. Treat 256 mA as INFERRED until a bench reading on the fitted part. The part has no thermistor, TS or JEITA input and no battery FET (features p.1, device comparison p.4)."
+
+  - id: power-button-controller
+    function: "MAIN push-button on/off controller, drives RAIL_EN"
+    boards: [A]
+    schematic_name: {text: "LTC2954CTS8-1", where: "v2/ecad/tools/gen_sch_a.py:171"}
+    fitted_mpn: "LTC2954CTS8-1#TRPBF"
+    package: "TSOT-23-8"
+    lcsc: "C683782"
+    lcsc_reading:
+      - {model: "LTC2954CTS8-1#TRPBF", pkg: "TSOT-23-8", stock: 2354, read: "2026-09-20", source: "JLC-CERTIFIED.tsv:423"}
+      - {model: "LTC2954CTS8-1#TRPBF", pkg: "TSOT-23-8", stock: 2330, read: "2026-09-25T21:50Z", source: "JLCPCB parts API; LCSC detail gives 0 to +70 C"}
+    alternative_readings:
+      - {lcsc: "C580654", model: "LTC2954ITS8-1#TRMPBF", stock: 195, read: "2026-09-25T21:50Z", note: "the I grade, -40 to 85 C"}
+      - {lcsc: "C2657885", model: "LTC2954ITS8-1#TRPBF", stock: 0, read: "2026-09-25T21:50Z"}
+      - {lcsc: "C107801", model: "LTC2954ITS8-1#PBF", stock: 0, read: "2026-09-25T21:50Z"}
+    identity: MATCH
+    grade_vs_envelope: OUTSIDE
+    grade_note: "the schematic itself names the C grade, 0 to 70 C (datasheet order information); the envelope's in-use minimum is -20 C. The I grade exists at JLC today (one reading) and is a part change, so it is a mismatch until its identity is read against the same sheet (it is: LTC2954ITS8-1 is in the order information table)."
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/power/ltc2954.pdf"
+        doc_id: "ADI (Linear Technology) LTC2954-1/LTC2954-2"
+        revision: "revision marker 2954fb"
+        url: TBD
+        sha256: "1e9e2567d15e569ecc95023a40e4fb99eb0288db842803ff78cd14fdd621d8ae"
+        matches_fitted: "yes: order information lists LTC2954CTS8-1#TRPBF, 0 to 70 C, and LTC2954ITS8-1, -40 to 85 C"
+
+  - id: tvs-surge-clamps
+    function: "unidirectional surge clamps on the power conductors of A, B, D, E and P"
+    boards: [A, B, D, E, P]
+    parts_and_makers:
+      - {code: "C224052", model: "SMCJ40A", maker: "Littelfuse", polarity: "unidirectional", where: "E D1, D2 (and D10 in the 21 Sep netlist only); A D2 in the netlist"}
+      - {code: "C224047", model: "SMCJ28A", maker: "Littelfuse", polarity: "unidirectional", where: "E D4"}
+      - {code: "C374030", model: "SMCJ18A", maker: "Littelfuse", polarity: "unidirectional", where: "A D1"}
+      - {code: null, model: "SMCJ18A", maker: TBD, polarity: "unidirectional (A suffix)", where: "E D3: no code in the generator or netlist; the older E deliverable BOM row read by jlc_certify carries C151906 (BORN), JLC-CERTIFIED.tsv:466"}
+      - {code: "C113974", model: "SMBJ5.0A", maker: "MDD", polarity: "unidirectional", where: "A D3, B D1, D D1"}
+      - {code: "C151256", model: "SMBJ18A", maker: "Littelfuse", polarity: "unidirectional", where: "A D4"}
+      - {code: "C83270", model: "SMBJ6.0A", maker: "Littelfuse", polarity: "unidirectional", where: "B D101, D201, D301"}
+      - {code: "C135085", model: "SMBJ58A-13-F", maker: "Diodes Incorporated", polarity: "unidirectional", where: "B D2"}
+      - {code: "C364296", model: "SMBJ20A", maker: "MDD", polarity: "unidirectional", where: "P D1"}
+    maker_evidence: "LCSC detail records read 2026-09-25 (C224052 re-read at 21:53Z: SMCJ40A, Littelfuse, DO-214AB, Polarity Unidirectional, Vrwm 40 V, Vbr 49.1 V max, clamping 64.5 V at 23.3 A). C224052 is NOT a Vishay part."
+    identity: MATCH
+    symbol_note: "all sixteen unidirectional clamps are drawn with KiCad's Device:D_TVS, which is the bidirectional symbol (pins A1/A2, no cathode), so the schematic does not itself say which pin is the cathode; on every diode land in the set pad 1 is the cathode"
+    orientation_note: "seven of the sixteen are generated with pad 1 (the cathode) on the return: E D1, D2, D3, D4 and D10; P D1; D D1 (read on 25 September 2026 on the committed netlists and boards: pad 1 is the cathode on every diode land of the set, marked by the fab glyph and the silk bracket). This record is about identity; the orientation is a schematic defect held by the board records."
+    not_in_the_certification_table: "JLC-CERTIFIED.tsv (taken 2026-09-20 from the deliverable folders) has no row for C224052, C224047 or C19224: those codes entered the generators after the folders the table reads were cut, so the table does not cover board E's and board D's current clamps"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/power/littelfuse-smcj-series-tvs.pdf"
+        doc_id: "Littelfuse SMCJ Series 1500 W transient voltage suppressors"
+        revision: "Revised 11/20/15"
+        url: "https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C224052 (LCSC's copy of the maker's sheet, the document attached to the fitted code)"
+        fetched: "2026-09-25T21:56Z, HTTP 200 application/pdf; the same bytes are served for C224047 and C374030"
+        sha256: "6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea"
+        matches_fitted: "yes for C224052, C224047 and C374030: SMCJ40A row VR 40.0 V, VBR 44.40 to 49.10 V at 1 mA, VC 64.5 V at 23.3 A; 'Uni-directional' with the CA suffix for bidirectional"
+      - path: "v2/vendor/vishay/vishay-smcj-series-tvs.pdf"
+        doc_id: "Vishay document 88394"
+        revision: "09-Jan-2024"
+        url: "https://www.vishay.com/docs/88394/smcj.pdf"
+        sha256: "d9b1dafa25c0fa45eeb22fc4258fbdee3cafffb0bd14741e3cd9e35ea98f8e4c"
+        matches_fitted: "no for the maker (no fitted code is Vishay); valid as the family's polarity reference ('for unidirectional types the band denotes cathode end'; CA suffix for bidirectional)"
+      - path: "v2/vendor/vishay/vishay-smbj-series-tvs.pdf"
+        doc_id: "Vishay document 88392"
+        revision: "09-Jan-2024"
+        url: "https://www.vishay.com/docs/88392/smbj.pdf"
+        sha256: "1b65b57a4311128068c1dec747bbb99f6846ae932d77fcfd39904cb2d7a5cd50"
+        matches_fitted: "no for the maker (the SMBJ codes are MDD, Littelfuse and Diodes); family polarity reference only"
+    documents_owed: "MDD SMBJ (C113974, C364296) and Diodes DS19002 (C135085) sheets are not held"
+
+  - id: esd-headset-clamps
+    function: "ESD clamps at the two headset jacks, one per conductor (D9 to D14)"
+    boards: [D]
+    schematic_name: {text: "PESD5V0S1BA bidirectional ESD clamp", where: "v2/ecad/tools/gen_sch_d.py:264-269"}
+    fitted_mpn: "PESD5V0S1BA,115"
+    package: "SOD323 (SC-76)"
+    lcsc: "C19224"
+    lcsc_reading: {model: "PESD5V0S1BA,115", maker: "Nexperia", pkg: "SOD-323", stock: 39189, polarity: "Bidirectional", read: "2026-09-25T21:50Z", source: "JLCPCB parts API; LCSC detail 21:53Z"}
+    identity: MATCH
+    substitution_note: "decision 31's text names Nexperia PESD5V0S2BT (C49338, SOT-23, two lines per package; JLC reading 2026-09-25: PESD5V0S2BT,215, Nexperia, stock 20635). The generator fits six single-line PESD5V0S1BA instead, with its reason in the generator comment (gen_sch_d.py:255-263). Same maker, same 5 V standoff; the substitution must be recorded in decision 31's record."
+    application_note: "the microphone conductor carries a 5 V electret bias from +5V_D8 through R43 2.2k (gen_sch_d.py:236, 251); with no headset plugged it sits at the rail, which equals the part's VRWM maximum of 5 V; the margin to VBR minimum (5.5 V at 1 mA) is 0.5 V and leakage above VRWM is not specified; +5V_D8's tolerance is TBD (effect: a rail above 5.0 V runs the clamp past its rated standoff)"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/nexperia/nexperia-pesd5v0s1ba.pdf"
+        doc_id: "Nexperia PESD5V0S1BA, Bidirectional ESD protection diode"
+        revision: "PESD5V0S1BA v.6, 26 April 2024 (revision history, supersedes v.5 of 23 August 2018)"
+        url: "https://assets.nexperia.com/documents/data-sheet/PESD5V0S1BA.pdf"
+        fetched: "2026-09-25T21:56Z, HTTP 200 application/pdf; byte-identical to LCSC's datasheet for C19224"
+        sha256: "6546e415b8885ea3790c91629034c6b4e5c6961d5fde734e55dfa479dd8dc49a"
+        matches_fitted: "yes: 'Bidirectional ESD protection of one line', SOD323; VRWM 5 V max; VBR 5.5 to 9.5 V at 1 mA; IRM 5 nA typ, 100 nA max at 5 V, 25 C; Cd 35 pF typ, 45 pF max; VCL 14 V max at IPPM 12 A; IEC 61000-4-2 contact 30 kV; Tamb -55 to 150 C"
+
+  - id: usb-esd-array
+    function: "USB and bus ESD arrays"
+    boards: [A, B, C, D, E, P]
+    schematic_name: {text: "USBLC6-2SC6", where: "gen_sch_a.py, gen_sch_b.py, gen_sch_c.py, gen_sch_d.py:176 (the esd() helper), gen_sch_e.py, gen_sch_p.py:171"}
+    fitted_mpn: "USBLC6-2SC6"
+    package: "SOT-23-6"
+    lcsc: "C7519"
+    lcsc_reading: {model: "USBLC6-2SC6", maker: "STMicroelectronics", pkg: "SOT-23-6L", stock: 25802, read: "2026-09-20", source: "JLC-CERTIFIED.tsv:553"}
+    identity: MATCH
+    application_note: "on board P, D2's VBUS pin (pin 5) is on VCC_F, which sits at the pack voltage (12 to 16.8 V) through R7 1k (gen_sch_p.py:171); the part's VBUS pin is rated VRM 5.25 V with a 6 V minimum breakdown between VBUS and GND (DS4260 Rev 7, electrical characteristics); a schematic defect, recorded here because it is the fitted part used outside its document"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/st/st-usblc6-2-esd-protection.pdf"
+        doc_id: "ST DS4260"
+        revision: "Rev 7, December 2021"
+        url: TBD
+        sha256: "bc30154f310cd631043214ed52571daefe04270587ec55072d49a23bd18b9068"
+        matches_fitted: "yes: pin 1 I/O1, 2 GND, 3 I/O2, 4 I/O2, 5 VBUS, 6 I/O1"
+
+  - id: pack-connector
+    function: "pack power connector at board E (J_BATT)"
+    boards: [E]
+    schematic_name: {text: "Amass XT60-M", where: "v2/ecad/tools/gen_sch_e.py:132"}
+    fitted_mpn: "XT60-M"
+    package: "AMASS_XT60-M_1x02_P7.20mm_Vertical"
+    lcsc: "C98733"
+    lcsc_reading:
+      - {model: "XT60-M.", maker: "Changzhou Amass Elec", stock: 14026, read: "2026-09-20", source: "JLC-CERTIFIED.tsv:347"}
+      - {model: "XT60-M.", maker: "Changzhou Amass Elec", stock: 23829, read: "2026-09-25T21:50Z", source: "JLCPCB parts API"}
+    identity: MATCH
+    grade_vs_envelope: "INSIDE at the edge: the sheet gives -20 to 120 C, the envelope's minimum is -20 C, no margin"
+    stale_text: "the generator description still names the withdrawn BB-2590/U pack cable (gen_sch_e.py:132, section title :408)"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/battery/amass-xt60-spec-tme.pdf"
+        doc_id: "Amass specification, XT60-F and XT60-M"
+        revision: "V1.2 (stated on the sheet); PDF created 2016-06-24"
+        url: TBD
+        url_effect: "a distributor's copy (the file name records the distributor)"
+        sha256: "c2cbb5962c1f37da89e76e505c75184dd07e84eec3a6fe5f24569dafc6f6b9e9"
+        matches_fitted: "yes, page 2 (XT60-M): rated current 30 A, momentary 60 A, rated voltage DC 500 V, contact resistance 0.55 mOhm, recommended cable 12 AWG, operating -20 to 120 C, 1000 mating cycles"
+      - path: "v2/vendor/battery/amass-xt60e-m-shoptronica.pdf"
+        doc_id: "Amass specification, XT60E-M"
+        revision: "PDF title 'AMASS XT60C-M SPEC', ModDate 2020-02-06"
+        sha256: "828c34996962cc63c5205a684186b7900650ecf16f2ab6373fe9ad38152c6a5e"
+        matches_fitted: "no: XT60E-M is a different variant; do not cite it for J_BATT"
+
+  - id: tps61288
+    function: "former 15 A boost rails of A19 to A21"
+    boards: []
+    identity: NOT_FITTED
+    status: VERIFIED
+    evidence: "no part(), ic() or synth() call names TPS61288 in any gen_sch_*.py on 82dd1e4d; the JLC-CERTIFIED.tsv rows for TPS61288LRQQR (C7498841) come from older board A folders"
+    documents:
+      - path: "v2/vendor/power/tps61288.pdf"
+        doc_id: "TI SLVSFP3"
+        revision: "Rev. C"
+        sha256: "3d9ec18fbba349164b8d355144ff7085f5dd49f7cf971e7a7e88cebd17237cec"
+        matches_fitted: "not applicable"
+
+  - id: usb-power-switch
+    function: "current-limited 5 V switch (camera rail U28)"
+    boards: [B]
+    schematic_name: {text: "TPS2065CDBV", where: "v2/ecad/tools/gen_sch_b.py:313 (definition), :707 (the only instance)"}
+    fitted_mpn: "TPS2065CDBVR"
+    package: "SOT-23-5 (DBV)"
+    lcsc: "C353882"
+    lcsc_reading: {model: "TPS2065CDBVR", pkg: "SOT-23-5", stock: 6903, read: "2026-09-20", source: "JLC-CERTIFIED.tsv"}
+    identity: MATCH
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/ti-tps2065c-slvsau6i.pdf"
+        doc_id: "TI SLVSAU6, TPS20xxC and TPS20xxC-2 Current Limited, Power-Distribution Switches"
+        revision: "Rev. I, June 2011, revised May 2026"
+        url: "https://www.ti.com/lit/ds/symlink/tps2065c.pdf"
+        fetched: "2026-09-25 from ti.com (HTTP 200, application/pdf)"
+        sha256: "898c093489ac30dde4c62f1ccaeaf71573239021a93da4182eb8efadf4be3fcd"
+        matches_fitted: "yes: orderable addendum lists TPS2065CDBVR, SOT-23 (DBV) 5, marking VCAQ; DBV pinout Table 5-2 p.4 (1 OUT, 2 GND, 3 FLT, 4 EN active high, 5 IN) equals the generator's map; 1 A rated output current limit IOS 1.3 / 1.55 / 1.8 A at TJ = 25 C (section 6.6) and 1.2 / 1.55 / 1.9 A over -40 to 125 C (section 6.7)"
+      - path: "v2/vendor/ti/ti-tps2065-tps2066-tps2067.pdf"
+        doc_id: "TI SLVS490"
+        revision: "Rev. K, revised June 2024"
+        sha256: "42af2c87de21378292500da9bafc9c074d494c9fc93af47db564b76895d7a4e5"
+        matches_fitted: "no: this sheet is the TPS2061 to TPS2067 family WITHOUT the C suffix and must not be cited for TPS2065CDBVR"
+
+  - id: vhf-exciter
+    function: "VHF APRS exciter, bench-fitted"
+    boards: [D]
+    schematic_name: {text: "NiceRF SA868 VHF 2 W exciter", where: "v2/ecad/tools/gen_sch_d.py:170"}
+    fitted_mpn: TBD
+    fitted_mpn_effect: "the SA868 ships as a VHF (134 to 174 MHz), a UHF (400 to 480 MHz) or a 350 band (320 to 400 MHz) variant (held V1.3 sheet, feature list); the generator names no order code, so a wrong-band module would be bought if the purchase line were written from the schematic text"
+    package: "castellated module, land NiceRF_SA868"
+    lcsc: null
+    purchase_route: "hand fit, NiceRF direct (v2/ecad/tools/jlc-handfit.txt:28)"
+    identity: NOT_PINNED
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf"
+        doc_id: "NiceRF SA868 2W Embedded walkie talkie module"
+        revision: "V1.3"
+        url: TBD
+        sha256: "938ef5ef5007df6bb8a3f2d2eb6878e3eac269e1f327c9a9164406b0f5152be1"
+        matches_fitted: "partial: covers all three band variants"
+
+  - id: vhf-pa
+    function: "30 W VHF power amplifier on the face plate"
+    boards: [D]
+    schematic_name: {text: "RA30H1317M1 (bench-fitted, leads to board D and board A's PA rail)", where: "v2/ecad/tools/gen_sch_d.py:14, :290-291, :314; gen_sch_a.py:81"}
+    fitted_mpn: "RA30H1317M1"
+    package: "Mitsubishi H2S module, bolted to the plate"
+    lcsc: null
+    purchase_route: "bench fitted (JLC-CERTIFIED.tsv:28 BENCH_FITTED)"
+    identity: MATCH
+    grade_vs_envelope: INSIDE
+    grade_note: "operation case temperature -30 to +100 C; 135 to 175 MHz"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/mitsubishi/ra30h1317m1-datasheet.pdf"
+        doc_id: "Mitsubishi RA30H1317M1"
+        revision: "publication date Oct. 2011"
+        url: TBD
+        sha256: "9fda757ab1acfb6b29125429035d2361ad711db44b6f40773469527fe17c6da0"
+        matches_fitted: "yes"
+
+  - id: board-d-usb-hub
+    function: "four-port USB 2.0 full-speed hub on board D (U4)"
+    boards: [D]
+    schematic_name: {text: "TUSB2046BI four-port USB 2.0 full-speed hub (LQFP-32 ...)", where: "v2/ecad/tools/gen_sch_d.py:178 (no LCSC code in the call)"}
+    fitted_mpn: "TUSB2046BVFR"
+    package: "LQFP-32 (VF) 7 x 7 mm"
+    lcsc: "C167642"
+    lcsc_reading:
+      - {model: "TUSB2046BVFR", pkg: "LQFP-32(7x7)", stock: 413, read: "2026-09-20", source: "JLC-CERTIFIED.tsv:539, accepted 'on the wider search' with the grade letter stripped (commit 07c57b30)"}
+      - {model: "TUSB2046BVFR", pkg: "LQFP-32(7x7)", stock: 375, read: "2026-09-25T21:50Z", source: "JLCPCB parts API: 0 to +70 C"}
+    alternative_readings:
+      - {lcsc: "C702369", model: "TUSB2046IBVFR", pkg: "LQFP-32(7x7)", stock: 16, read: "2026-09-25T21:50Z", note: "-40 to +85 C; five boards need 5"}
+    identity: MISMATCH
+    identity_note: "the schematic names TUSB2046BI in LQFP-32, a combination the maker does not offer: TUSB2046BI exists only as VQFN (RHB) 32 (orderable addendum, TUSB2046BIRHBR/RHBT); the LQFP-32 (VF) parts are TUSB2046BVF/BVFR (0 to 70 C) and TUSB2046IBVF/IBVFR (-40 to 85 C). The code bought is the commercial grade. TUSB2046IBVFR is the LQFP industrial part in the same sheet (revision history 'Added device TUSB2046IB'); whether it differs functionally from the TUSB2046B is not settled by the text read so far, so adopting it stays a mismatch until that is read."
+    grade_vs_envelope: OUTSIDE
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/ti-tusb2046b.pdf"
+        doc_id: "TI SLLS413"
+        revision: "Rev. L, February 2000, revised June 2017"
+        url: "https://www.ti.com/lit/ds/symlink/tusb2046b.pdf"
+        sha256: "d02d0b8af5cbdb1b8186f890efdb214cb8edc50d55b9df5eed0650933a08d3db"
+        currency: "same revision as ti.com on 2026-09-25 (different bytes, a different render)"
+        matches_fitted: "yes: covers TUSB2046BVFR and TUSB2046IBVFR; recommended operating conditions p.6 'TUSB2046B 0 to 70; TUSB2046BI, TUSB2046I -40 to 85'"
+
+  - id: lora-module
+    function: "1 W LoRa module, EU power capped in software"
+    boards: [B]
+    schematic_name: {text: "Ebyte E22-900M30S", where: "v2/ecad/tools/gen_sch_b.py:679"}
+    fitted_mpn: "E22-900M30S"
+    package: "SMD module 38.5 x 24 mm (land Ebyte_E22-900M30S)"
+    lcsc: "C411294"
+    lcsc_reading: {model: "E22-900M30S", pkg: "SMD,38.5x24mm", stock: 556, read: "2026-09-20", source: "JLC-CERTIFIED.tsv"}
+    identity: MATCH
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/lora/ebyte-e22-900m30s-user-manual-en-v1.20.pdf"
+        doc_id: "E22-900M30S User Manual"
+        revision: "v1.20 (file name and PDF title; PDF CreationDate 2019)"
+        url: TBD
+        sha256: "d864e9ca390f15c9a09aab6421a3e671263912ecd1d23fa1ad45c1324c801f75"
+        matches_fitted: "yes: 850 to 930 MHz, 30.0 dBm typical"
+      - path: "v2/vendor/ebyte/e22-900m30s-spec-zh.pdf"
+        doc_id: "E22-900M30S product specification (Chinese)"
+        revision: "not stated; the PDF Title metadata reads 'E01-2G4M27D' (a stale Ebyte template), the first page reads E22-900M30S"
+        sha256: "fa65f7f7d2412ac4af466b2a4761902897a719f0fbd952e3ffac20ad0c3ed55b"
+        matches_fitted: "yes by content"
+
+  - id: cellular-socket
+    function: "M.2 3052 socket for the 5G module (J_M2C2)"
+    boards: [B]
+    schematic_name: {text: "M.2 B-key 3052 socket, TE 1-2199119-5", where: "v2/ecad/tools/gen_sch_b.py:479 (footprint key M2B)"}
+    fitted_mpn: "1-2199119-5"
+    package: "M.2 edge connector, 67 positions, 0.5 mm pitch, 3.2 mm height"
+    lcsc: "C574849"
+    lcsc_reading:
+      - {model: "1-2199119-5", pkg: "SMD,P=0.5mm", stock: 8778, read: "2026-09-14", source: "JLC-CERTIFIED.tsv:424, labelled CERTIFIED on the model string alone"}
+      - {model: "1-2199119-5", pkg: "SMD,P=0.5mm", stock: 8143, read: "2026-09-25T21:50Z", source: "JLCPCB parts API; LCSC detail has no key field"}
+    identity: MISMATCH
+    identity_note: >-
+      TE 1-2199119-5 is a KEY M connector: TE customer drawing C-2199119 rev F (ECR-19-011878, 19 March 2020),
+      sheet 2 part-number table, key M = 1-2199119-3/-4/-5/-6 (-5 = 15u in. gold); key B = 2199119-1 and
+      3-2199119-1 (gold flash), 2199119-3 (15u in.), 2199119-5 (30u in.), 1-2199119-0 (10u in.). TE's product page for
+      1-2199119-5 reads 'KEY M 15U'' AU' and 'Connector & Keying Code: M' (Wayback captures 2025-06-09 and
+      2025-12-12; te.com refused this host). The module it must carry, the RM520N-GL, is a key-B-only 3052 card
+      ('standard M.2 Key-B WWAN module', RM520N series hardware design V1.1 p.15; pins 12 to 19 are the notch and
+      pins 59 to 66 are live, Figure 2 p.20), so it cannot be inserted as drawn. The design's own requirement is
+      key B (appendix line 2884 picked this part 'if its drawing confirms key B, else Amphenol MDT420B01001'); the
+      condition fails. The table row is a defective CERTIFIED: its own description says B-key while the part is
+      key M.
+    replacement_candidates:
+      - {part: "TE 2199119-3", lcsc: "C590866", key: "B (drawing sheet 2)", height_mm: 3.2, stock: 1432, read: "2026-09-25T21:50Z", note: "same drawing and height as the part it replaces; recommended"}
+      - {part: "TE 2199119-5", lcsc: "C4797645", key: "B", stock: 1, read: "2026-09-25T21:31Z"}
+      - {part: "Amphenol MDT420B01001", lcsc: "C4594496", key: "B (INFERRED from the family part numbering; the held Amphenol file is a family brochure that does not print this part number)", height_mm: 4.2, stock: 4025, read: "2026-09-25T21:50Z"}
+      - {part: "HOAUC HYCW01B-05NGFF-420B", lcsc: "C41430835", key: "B (LCSC 'Interface Form = M.2-B Key')", stock: 661, read: "2026-09-25T21:31Z"}
+    replacement_status: "every candidate is a part change and stays a mismatch until its land is proven against the maker's drawing; the current M2B land has no locating holes where drawing sheet 3 draws holes of 1.1 and 1.6 mm diameter"
+    related_defect: "SIM 2 on this socket is wired to the wrong pins (generator puts SIM2_CLK on 40, SIM2_IO on 42, SIM2_RST on 44, SIM2_VCC on 46; the module has 40 USIM2_DET, 42 USIM2_DATA, 44 USIM2_CLK, 46 USIM2_RST, 48 USIM2_VDD; gen_sch_b.py:477 and the B19 netlist against hardware design V1.1 Figure 2 and Table 6)"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/m2/te-2199119-customer-drawing-revF.pdf"
+        doc_id: "TE customer drawing C-2199119"
+        revision: "rev F, ECR-19-011878, 19 March 2020"
+        url: "https://web.archive.org/web/20240629111304id_/https://www.te.com/commerce/DocumentDelivery/DDEController?Action=showdoc&DocId=Customer+Drawing%7F2199119%7FB1%7Fpdf%7FEnglish%7FENG_CD_2199119_B1.pdf%7F1-2199119-5 (Wayback copy; te.com answered this host with HTTP 403)"
+        fetched: "2026-09-25 (MESHSAT-1357); the 2023-03-13 capture of the rev F URL is byte-identical"
+        sha256: "ef35dbf8332b951c64be9662678bc2820f6091e1f2bb07777d0b4bf4f97b9bff"
+        matches_fitted: "yes: sheet 2 part-number table gives 1-2199119-5 as key M; sheet 3 is the recommended PCB layout"
+      - path: "v2/vendor/m2/te-2199119-m2-b-key.pdf"
+        doc_id: "TE Quick Reference Guide 1-1773702-1 (M.2 connectors), CS 01/2014"
+        revision: "01/2014"
+        url: "byte-identical to LCSC's datasheet link for C574849"
+        sha256: "d8f58c5892aec2ef9505032a774ee9a4da52c3d9363604440bd3125a76f02012"
+        matches_fitted: "partial, and misnamed: this is NOT a drawing and NOT a B-key document; its page 5 table gives 2199119 key B as -1/-3/-5 and key M as -13/-15/-16, with TE writing dash 15 as 1-2199119-5, which agrees with the drawing"
+      - path: "v2/vendor/m2/amphenol-mdt420b01001-m2-b-key.pdf"
+        doc_id: "Amphenol M.2 connector family brochure"
+        revision: "not stated"
+        sha256: "7be3f397b1aa52d18384f29f4b61d928c75bef480c04d1aebc2e6e954f692e55"
+        matches_fitted: "no: family brochure for the fallback candidate; it does not print MDT420B01001 or a land pattern"
+
+  - id: cellular-module
+    function: "5G module on the M.2 3052 socket (owner-side purchase, bought as a card)"
+    boards: [B]
+    schematic_name: {text: "Quectel RM520N-GL", where: "v2/ecad/tools/gen_sch_b.py:479 (named in the socket's description)"}
+    fitted_mpn: TBD
+    fitted_mpn_effect: "no regional or firmware order code is named for the RM520N-GL, so band support and certification scope for the prototype are not pinned (the variant suffixes are not listed in the held documents, which name only RM520N-GL)"
+    package: "M.2 3052, key B only, 30.0 x 52.0 x 2.3 mm (hardware design V1.1 p.17 Table 4)"
+    lcsc: null
+    purchase_route: "Quectel through a distributor (v2/ecad/tools/jlc-handfit.txt:31)"
+    identity: NOT_PINNED
+    antennas: "four ports ANT0 to ANT3 (Table 4); no file records which port goes to which jack. The generator wires no RF on the socket: the leads run from the module's own receptacles to board A's J_RF8 and J_RF9 (gen_sch_a.py:576, nets named 5G-MAIN and 5G-DIV). The RM520N-GL has no connectors called MAIN and DIV (those are the EG25-G mini PCIe names). Per Table 32 (printed pp.58-59), a two-jack build must use ANT0 and ANT2, which keep every primary TX0/PRX path including n77/n78/n79; ANT0 with ANT1 leaves the n77/n78/n79 and UHB primary path unconnected. v2/vendor/open-picks.txt:23 misreads the table (it puts UHB TX0/PRX on ANT0)."
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf"
+        doc_id: "Quectel RM520N Series Hardware Design"
+        revision: "V1.1, 2023-03-16 (DOWNLOADS-2026-09-10.md)"
+        url: "https://e2e.ti.com/cfs-file/__key/communityserver-discussions-components-files/138/rm520_5F00_modem_5F00_datasheet.pdf (Quectel's file hosted on TI E2E)"
+        sha256: "2bae882148b45172e009f88cbea08878f80e284dc6d44e93af5d67f6b9ed030a"
+        matches_fitted: "yes for the GL variant (Table 32 antenna interfaces, Table 34 sensitivity); the later of the two held documents, cite it"
+      - path: "v2/vendor/quectel/quectel-rm520n-gl-hardware-design-v1.0.pdf"
+        doc_id: "Quectel RM520N-GL Hardware Design"
+        revision: "V1.0, 2022-07-15"
+        url: "https://forums.quectel.com/uploads/short-url/1zkjPRnxF5BZ2woox386baCZx4g.pdf"
+        sha256: "139583b38ce1fd47be76d73d47e44902bfd152510dd486956fc54022be0ec179"
+        matches_fitted: "yes for the GL variant; superseded by the series V1.1 (its antenna Table 29 is identical)"
+
+  - id: gnss
+    function: "GNSS RTK receiver"
+    boards: [B]
+    schematic_name: {text: "Quectel LG290P03AAMD", where: "v2/ecad/tools/gen_sch_b.py:669"}
+    fitted_mpn: "LG290P03AAMD"
+    package: "SMD module, land Quectel_LG290P"
+    lcsc: "C29781241"
+    lcsc_reading: {model: "LG290P03AAMD", pkg: "SMD", stock: 73, read: "2026-09-20", source: "JLC-CERTIFIED.tsv"}
+    identity: MATCH
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/quectel/lg290p03-hardware-design-v1.1.pdf"
+        doc_id: "Quectel LG290P03 Hardware Design"
+        revision: "V1.1 (file name; PDF ModDate 2024-12-30)"
+        url: TBD
+        url_effect: "sources.txt line 50: the LG290P documents predate the fetch log"
+        sha256: "422ca9a2aa5495c15df5080b50a01993404cf78d98d3ce526ae26efebf88ee77"
+        matches_fitted: "yes for the LG290P03 family; the AAMD suffix row was not re-read"
+      - path: "v2/vendor/quectel/lg290p03-module-specification-v1.3.pdf"
+        doc_id: "Quectel LG290P03 specification"
+        revision: "V1.3"
+        sha256: "f49af042f0e639730fb50ae8012f0b4166fca0c1cee4802b8cbc608e561352b8"
+        matches_fitted: "yes (family)"
+
+  - id: zigbee-thread-radio
+    function: "two CC2652P modules (Zigbee coordinator, OpenThread RCP)"
+    boards: [B]
+    schematic_name: {text: "Ebyte E72-2G4M20S1E CC2652P", where: "v2/ecad/tools/gen_sch_b.py:687"}
+    fitted_mpn: "E72-2G4M20S1E"
+    package: "SMD module, land Ebyte_E72-2G4M20S1E"
+    lcsc: "C5352930"
+    lcsc_reading: {model: "E72-2G4M20S1E", stock: 0, read: "2026-09-20", verdict_label: "HAND_FIT", source: "JLC-CERTIFIED.tsv"}
+    identity: MATCH
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/zigbee/ebyte-e72-2g4m20s1e-user-manual.pdf"
+        doc_id: "E72-2G4M20S1E User Manual"
+        revision: "not stated; the PDF Title metadata reads 'E01-2G4M27D' (a stale Ebyte template), the content is the E72 CC2652P manual"
+        url: TBD
+        sha256: "4bae5b3e67483b0bae1c4425f9de35242cb04adfab0446b03b61d7e4e7c6e081"
+        matches_fitted: "yes by content"
+
+  - id: secure-element
+    function: "secure element, keys behind ZEROIZE"
+    boards: [B]
+    schematic_name: {text: "ATECC608B-SSHDA-T", where: "v2/ecad/tools/gen_sch_b.py:750"}
+    fitted_mpn: "ATECC608B-SSHDA-T"
+    package: "SOIC-8 narrow, I2C, -40 to 85 C, tape and reel"
+    lcsc: "C1518769"
+    lcsc_reading: {model: "ATECC608B-SSHDA-T", pkg: "SOIC-8", stock: 1091, read: "2026-09-14", source: "JLC-CERTIFIED.tsv"}
+    identity: MATCH
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/microchip/microchip-atecc608b-datasheet.pdf"
+        doc_id: "Microchip DS40002239 (ATECC608B Summary Datasheet)"
+        revision: "A"
+        url: TBD
+        sha256: "519e2edac0deefe1755a98e30b8ce2a5a2ff9b9c39acda333bb625b87bdac3ff"
+        matches_fitted: "partial: the ordering table lists ATECC608B-SSHDA-T (SOIC, I2C, tape and reel), but this is the SUMMARY sheet; the I2C address 0x60 the generator uses and the slot-erase behaviour decision 30 depends on are not settled by it (the full datasheet is under NDA)"
+    decision_30: >-
+      OWNER RULING D-03 (25 to 26 September 2026): ZEROIZE is a crypto-erase through this part. The drive and eMMC
+      keys are wrapped by a key it holds; ZEROIZE destroys that key, then running modules drop their RAM keys, then
+      the slots are cut. The only trigger is the covered toggle held 5 s (the tamper and lid switch only log; a
+      remote wipe is deferred); the trigger is level-sensitive after a power loss (read at boot before any slot
+      powers, a wipe-pending record resumes, and it re-arms only when the toggle returns). Firmware and
+      provisioning, no board change. PRECONDITION, TBD: the ATECC608B slot map must be erasable in the way the
+      ruling needs, which only the full (NDA) datasheet settles; TPM 2.0 is the fallback the ruling names (effect:
+      if the precondition fails, the fallback part replaces this one and this entry changes). Residual risk
+      accepted by the owner: drive unlock at boot depends on this part, the panel and the kit I2C bus.
+
+owed:
+  - "DONE 26 September 2026 (integration I6): sources.txt file lines for the six documents added on 25 and 26 September and for this file, a vendor-status.txt line for each, a vendor-noindex.txt line for the text-less TE drawing, and the correction of sources.txt's m2 folder line and the same sentence in README.md ('key to be read from the drawing': the drawing says key M)"
+  - "the appendix entry recording that the conditional pick at appendix line 2884 resolved to its else-branch (the drawing says key M); the appendix is not a vendor file"
+  - "the full ATECC608B datasheet (under NDA) for owner ruling D-03's precondition that the slot map is erasable"
+  - "entries for board A's power tree regulators and eFuses and the PCA9555 expanders (criterion (a)); their behaviour was read on 25 September, their order codes were not audited here"
+  - "a re-fetch of the Amphenol 10164227 drawing with a readable variant table, or a visual read of the raster, before any receptacle land is re-derived"
+  - "st.com currency of DS12110, DS12117 and AN4938 from a host st.com answers"
+  - "the SA868 and RM520N-GL order codes (owner-side purchases): TBD with the effects stated above"
+  - "the MDD SMBJ and Diodes SMBJ58A-13-F datasheets; the land drawing of whichever key-B socket replaces C574849"

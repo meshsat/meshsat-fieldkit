@@ -115,3 +115,13 @@ duplicates-allowed.txt   tooling   # the declared reasons a file is kept in two 
 bulgin       current   # the sealed wall parts: PX0833 RJ45 coupler and the 4000 series C-type USB receptacle
 polyphaser   current   # GTH-SFF-AL SMA surge protector at the antenna bulkheads
 fabricator  current  # the chosen fabricator's own PCB capability page, fetched 16 September 2026: the authority behind every via, annular ring, track width and stackup limit this project enforces (rules VIA-001, VIA-002, RTE-001, STK-001, IMP-001)
+
+# --- file lines added 26 September 2026 (MESHSAT-1357, integration I6): each new document and what it is FOR ---
+SOURCES.yaml   tooling   # the identity and source record of the critical parts, written in this repository (MESHSAT-1357); not a vendor document and not a certification
+fabricator/jlcpcb-stackups-2026-09-25.md   current   # the fabricator's four-layer 2 oz outer (JLC04162H-7628) and eight-layer (JLC08161H-2116) stackups read 25 September 2026: the record behind stackup_write.STACKS rows added under owner decisions 28 (board P) and 43 (board B, experimental run)
+m2/te-2199119-customer-drawing-revF.pdf   current   # TE C-2199119 rev F: the drawing of J_M2C2's fitted part 1-2199119-5, which it gives as key M where the RM520N-GL needs key B (SOURCES.yaml, cellular-socket); its sheet 2 table also lists the family's key-B parts
+nexperia/nexperia-pesd5v0s1ba.pdf   current   # PESD5V0S1BA, the six headset ESD clamps D9 to D14 on board D (gen_sch_d.py)
+power/littelfuse-smcj-series-tvs.pdf   current   # Littelfuse SMCJ series: the maker's sheet for the fitted surge clamps C224052 (SMCJ40A), C224047 (SMCJ28A) and C374030 (SMCJ18A) on boards A and E
+st/st-an4938-rev7.pdf   current   # AN4938, hardware development of the STM32H74x/H75x: the three I/O supervisors on board B, both the named H753 and the bought H743
+ti/ti-slla552-tmuxhs4212-schematic-checklist.pdf   current   # TMUXHS4212 schematic checklist; its RSVD1/RSVD2 row is superseded by the datasheet's later revision (SOURCES.yaml, usb3-host-mux)
+ti/ti-tps2065c-slvsau6i.pdf   current   # TPS2065C (SLVSAU6), the camera-rail switch U28 on board B; the C-suffix sheet the fitted TPS2065CDBVR needs
