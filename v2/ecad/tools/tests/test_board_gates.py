@@ -102,7 +102,10 @@ def t_a_zone_on_a_net_the_board_does_not_have_is_refused():
     ni = b.GetNetInfo(); nc = pcbnew.NETINFO_ITEM(b, "/NOT_A_NET"); b.Add(nc); z.SetNet(nc)
     b.Add(z)
     path = os.path.join(tmp, "zone.kicad_pcb"); b.Save(path)
-    r = subprocess.run([sys.executable, os.path.join(TOOLS, "check_zone_nets.py"), path], capture_output=True, text=True)
+    # VERDICT_DIR=tmp (25 September 2026, MESHSAT-1357): without it this fixture's verdict landed in v2/ecad/out/, the
+    # set-level evidence the readiness reads, and on a host with pcbnew it displaced PLN-001 on five boards.
+    r = subprocess.run([sys.executable, os.path.join(TOOLS, "check_zone_nets.py"), path], capture_output=True, text=True,
+                       env=dict(os.environ, VERDICT_DIR=tmp))
     assert r.returncode != 0, "a zone on a net with no pad was accepted:\n%s" % (r.stdout + r.stderr)
 
 
@@ -117,7 +120,10 @@ def t_a_zone_on_a_real_net_passes():
     for (x, y) in ((2, 2), (38, 2), (38, 28), (2, 28)): o.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
     b.Add(z)
     path = os.path.join(tmp, "zone-ok.kicad_pcb"); b.Save(path)
-    r = subprocess.run([sys.executable, os.path.join(TOOLS, "check_zone_nets.py"), path], capture_output=True, text=True)
+    # VERDICT_DIR=tmp (25 September 2026, MESHSAT-1357): without it this fixture's verdict landed in v2/ecad/out/, the
+    # set-level evidence the readiness reads, and on a host with pcbnew it displaced PLN-001 on five boards.
+    r = subprocess.run([sys.executable, os.path.join(TOOLS, "check_zone_nets.py"), path], capture_output=True, text=True,
+                       env=dict(os.environ, VERDICT_DIR=tmp))
     assert r.returncode == 0, "a zone on a net with a pad was refused:\n%s" % (r.stdout + r.stderr)
 
 
