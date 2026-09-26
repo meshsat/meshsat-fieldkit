@@ -57,13 +57,27 @@ def _cov(maturity="ENFORCED"):
             "SCH-002": {"verification": {"tool": "x.py", "verdict": "gate_x"}, "maturity": maturity}}
 
 
+def _bundle(writer_sha=None, name="rules_status.py"):
+    """The code bundle a verdict written NOW by `name` records (verdict.code_bundle), with the entry script's hash
+    replaced by `writer_sha` when a fixture says the reading was written by another version of it. Since 26 September
+    2026 the tool a reading is judged against is its bundle, so a fixture that means "the byte-identical tool" records
+    the bundle of the tools here."""
+    import verdict as _v
+    b = _v.code_bundle(os.path.join(TOOLS, name), TOOLS)
+    if writer_sha:
+        b = dict(b, files=dict(b["files"], **{b["entry"]: writer_sha}))
+        b["sha16"] = _v.bundle_sha(b["files"])
+    return b
+
+
 def _rec(net=NET, board=None, writer_sha=None, result="PASS", **extra):
     inputs = {}
     if net: inputs["netlist"] = {"path": "out/pcb-x.net", "sha256_16": net}
     if board: inputs["board"] = {"path": "pcb-x.kicad_pcb", "sha256_16": board}
     rec = {"tool": "gate_x", "ts": "2026-09-26T10:00:00Z", "verdict": result, "denominator": 3, "counts": {},
            "policy": {"rule_set_fingerprint": FP}, "inputs": inputs,
-           "writer": {"file": "rules_status.py", "sha16": writer_sha or _now16()}}
+           "writer": {"file": "rules_status.py", "sha16": writer_sha or _now16()},
+           "code_bundle": _bundle(writer_sha)}
     rec.update(extra)
     return {"gate_x": rec}
 
@@ -103,8 +117,12 @@ def t_a_reading_under_a_changed_tool_does_not_count_as_current():
 
 
 def t_a_changed_tool_is_reused_only_under_a_rationale_that_pins_both_versions():
+    """Since 26 September 2026 an entry pins the reading's CODE BUNDLE as `then` and the writer's current bundle as
+    `now`, so its rationale answers for every file of the bundle that moved."""
+    then = _bundle("0" * 16)["sha16"]
     regs = {"invalidated": {}, "errors": [], "compatibility": [
-        {"kind": "tool", "tool": "rules_status.py", "then": "0" * 16, "now": _now16(), "rationale": "docstring only"}]}
+        {"kind": "tool", "tool": "rules_status.py", "then": then, "now": S._bundle_now16("rules_status.py"),
+         "rationale": "docstring only"}]}
     k, _ = _class(_rec(writer_sha="0" * 16), regs=regs)
     assert k["evidence_class"] == S.VALID_HISTORICAL and "docstring only" in k["evidence_why"], k
     # the same entry for another version of the file vouches for nothing

@@ -272,6 +272,212 @@ def _writer():
     return {"file": os.path.basename(cand), "sha16": h}
 
 
+# ------------------------------------------------------------------------------------------------------------------
+# THE CODE BUNDLE (26 September 2026, MESHSAT-1357; the review of the 22:35 progress report, finding D2: "Hashing only
+# the verdict-writing script, with a commit-date fallback for older results, does not establish that the calculation or
+# matching logic is unchanged. Fingerprint the relevant checking code, including local helpers ... A conservative
+# code-bundle hash is sufficient initially").
+#
+# `writer` above hashes the ENTRY script alone, and most of what a gate decides lives in the modules it imports:
+# port_protect's clamp chain walks `kisch`'s part classes, stackup_gate compares against `stackup_write.STACKS`, and every
+# gate records through this file and `rules_lib`. A change to any of those moved no hash a reading carried. The bundle
+# is the entry script plus EVERY LOCAL MODULE IT IMPORTS, transitively, found by PARSING each file (ast), never by
+# grepping it:
+#
+#   * every `import x` and `from x import y` at ANY depth of the file (inside a function, a try, a conditional), because
+#     a lazy import runs as surely as a top-level one; `from x import y` also takes `x/y.py` where that is a module;
+#   * `importlib.import_module("x")` and `__import__("x")` with a literal name;
+#   * a string literal that names a file of the tools tree by itself (`"energy_chain.py"`, or a path ending in one) and
+#     is not a dictionary key: that is how a script is run by path in a subprocess; a table keyed by file names is data
+#     about other tools and is left out;
+#   * a name resolves to `<root>/<a>/<b>.py` or `<root>/<a>/<b>/__init__.py`, or to the same beside the importing file;
+#     anything else (the standard library, pcbnew, yaml) is not this project's code and is not in the bundle.
+#
+# It is CONSERVATIVE by construction: a module imported for one helper brings its whole file. ONE DECLARED EXCEPTION,
+# THE RECORDING CHANNEL (taken by the session on 26 September 2026 under the owner's standing rule of that day): this
+# file is in every bundle, and the modules IT imports lazily (rules_lib, hardset, boardtable) are not followed from it,
+# because what they compute is what a verdict records ABOUT ITSELF (the rule-set and per-rule digests, the rules it
+# decides, the board it names, the hard-type count), and rules_status re-checks each of those against the current tree
+# when it reads the verdict (`_fresh` against today's rule digests, `_board_identities` against today's board files). A
+# gate that imports one of them for its own judgement has it in its bundle through its own import, as twelve of the
+# fifty-four writers on this disk did with rules_lib on 26 September 2026. Following them from here would stale every
+# reading on this disk on every edit of the requirements validator in rules_lib, which decides nothing a gate measures. What the bundle does not see,
+# and says so where it is read: a module named by a computed string, a shell script, and data a module opens at run
+# time (that is configuration, bound by rules_status.CONFIG_INPUTS). The rule a reading decides is bound by its own
+# digest (`policy.rule_fingerprints`), and configuration by CONFIG_INPUTS at the time the reading is judged; together
+# with this hash they are the three parts of the bundle a reading is judged against.
+# ------------------------------------------------------------------------------------------------------------------
+BUNDLE_METHOD = "ast-local-imports-v1"
+# Files whose own imports are not followed: the recording channel (see the block comment above). Relative to the root.
+RECORDING_CHANNEL = ("verdict.py",)
+_PARSE_CACHE = {}
+_SHA_CACHE = {}
+
+
+def _stat_key(path):
+    try:
+        s = os.stat(path)
+        return (path, s.st_mtime_ns, s.st_size)
+    except OSError:
+        return None
+
+
+def _sha16_cached(path):
+    k = _stat_key(path)
+    if k is None: return None
+    if k not in _SHA_CACHE:
+        try: _SHA_CACHE[k] = hashlib.sha256(open(path, "rb").read()).hexdigest()[:16]
+        except OSError: return None
+    return _SHA_CACHE[k]
+
+
+def _module_file(name, bases):
+    """The file a dotted module name resolves to under one of `bases`, or None."""
+    parts = [p for p in str(name or "").split(".") if p]
+    if not parts: return None
+    for b in bases:
+        p = os.path.join(b, *parts)
+        for c in (p + ".py", os.path.join(p, "__init__.py")):
+            if os.path.isfile(c): return os.path.abspath(c)
+    return None
+
+
+def _references(path, root):
+    """(files, unresolved): the local files one source file reaches, and the dynamic imports it could not name."""
+    k = (_stat_key(path), os.path.abspath(root))
+    if k[0] is not None and k in _PARSE_CACHE: return _PARSE_CACHE[k]
+    import ast
+    out, unresolved = set(), []
+    try:
+        tree = ast.parse(open(path, "rb").read(), filename=path)
+    except (OSError, SyntaxError, ValueError) as e:
+        res = (set(), ["%s could not be parsed (%s)" % (os.path.basename(path), type(e).__name__)])
+        _PARSE_CACHE[k] = res
+        return res
+    here = os.path.dirname(os.path.abspath(path))
+    bases = [os.path.abspath(root)] + ([here] if here != os.path.abspath(root) else [])
+    dict_keys = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Dict):
+            for kk in node.keys:
+                if isinstance(kk, ast.Constant): dict_keys.add(id(kk))
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for a in node.names:
+                parts = a.name.split(".")
+                for i in range(1, len(parts) + 1):          # `import a.b` executes a and a.b
+                    f = _module_file(".".join(parts[:i]), bases)
+                    if f: out.add(f)
+        elif isinstance(node, ast.ImportFrom):
+            if node.level:
+                up = here
+                for _ in range(node.level - 1): up = os.path.dirname(up)
+                bb = [up]
+            else:
+                bb = bases
+            mod = node.module or ""
+            if mod:
+                f = _module_file(mod, bb)
+                if f: out.add(f)
+            for a in node.names:
+                f = _module_file((mod + "." if mod else "") + a.name, bb)
+                if f: out.add(f)
+        elif isinstance(node, ast.Call):
+            fn = node.func
+            fname = fn.attr if isinstance(fn, ast.Attribute) else (fn.id if isinstance(fn, ast.Name) else "")
+            if fname in ("import_module", "__import__"):
+                a0 = node.args[0] if node.args else None
+                if isinstance(a0, ast.Constant) and isinstance(a0.value, str):
+                    f = _module_file(a0.value, bases)
+                    if f: out.add(f)
+                else:
+                    unresolved.append("%s:%d %s with a computed name" % (os.path.basename(path), node.lineno, fname))
+        elif isinstance(node, ast.Constant) and isinstance(node.value, str) and id(node) not in dict_keys:
+            v = node.value.strip()
+            if v.endswith(".py") and "\n" not in v and len(v) < 200 and " " not in v:
+                for b in bases:
+                    c = os.path.normpath(os.path.join(b, v)) if not os.path.isabs(v) else v
+                    cand = [c, os.path.join(b, os.path.basename(v))]
+                    hit = next((x for x in cand if os.path.isfile(x)), None)
+                    if hit:
+                        out.add(os.path.abspath(hit)); break
+    out.discard(os.path.abspath(path))
+    res = (out, unresolved)
+    if k[0] is not None: _PARSE_CACHE[k] = res
+    return res
+
+
+def bundle_sha(files):
+    """The bundle's own identity: sha256/16 over its sorted `path:sha16` lines."""
+    body = "\n".join("%s:%s" % (p, files[p]) for p in sorted(files))
+    return hashlib.sha256(body.encode()).hexdigest()[:16]
+
+
+def code_bundle(entry, root=None):
+    """{method, entry, files: {path: sha16}, sha16, unresolved} for a script and every local module it reaches.
+
+    `root` is the tools directory (this file's own by default); paths are relative to it where the file is inside it,
+    and absolute otherwise (a probe script in a temporary directory). An entry that cannot be read gives an empty
+    bundle with sha16 "" rather than raising: a verdict is never lost because its provenance could not be read."""
+    root = os.path.abspath(root or os.path.dirname(os.path.abspath(__file__)))
+    entry = os.path.abspath(entry)
+
+    def rel(p):
+        r = os.path.relpath(p, root)
+        return p if r.startswith("..") else r
+    if not os.path.isfile(entry):
+        return {"method": BUNDLE_METHOD, "entry": rel(entry), "files": {}, "sha16": "", "unresolved": ["entry not found"]}
+    seen, todo, unresolved = set(), [entry], []
+    channel = {os.path.join(root, x) for x in RECORDING_CHANNEL}
+    while todo:
+        p = todo.pop()
+        if p in seen: continue
+        seen.add(p)
+        if p in channel and p != entry: continue           # the recording channel: the file, not what it imports
+        refs, un = _references(p, root)
+        unresolved += un
+        todo += sorted(refs - seen)
+    files = {}
+    for p in seen:
+        s = _sha16_cached(p)
+        if s: files[rel(p)] = s
+    return {"method": BUNDLE_METHOD, "entry": rel(entry), "files": files, "sha16": bundle_sha(files),
+            "unresolved": sorted(set(unresolved))}
+
+
+def _entry_path():
+    """The script this process was started as, when it is a Python file (the same choice `_writer` makes)."""
+    a0 = (sys.argv[0] if sys.argv else "") or ""
+    if a0.endswith(".py") and os.path.exists(a0): return os.path.abspath(a0)
+    m = sys.modules.get("__main__")
+    f = getattr(m, "__file__", None)
+    if f and str(f).endswith(".py") and os.path.exists(f): return os.path.abspath(f)
+    return None
+
+
+def _code_bundle_now():
+    """The bundle of the running entry script, or {} when the process was not started from a Python file."""
+    try:
+        e = _entry_path()
+        return code_bundle(e) if e else {}
+    except BaseException as ex:                     # provenance never decides whether a verdict exists
+        return {"method": BUNDLE_METHOD, "files": {}, "sha16": "", "unresolved": ["%s: %s" % (type(ex).__name__, str(ex)[:80])]}
+
+
+def _runtime():
+    """The interpreter and, where the process loaded it, KiCad's own version. RECORDED, not compared: the runner has no
+    pcbnew, so no reader here can say which KiCad version is current, and a comparison it cannot make is not made."""
+    out = {"python": "%d.%d.%d" % sys.version_info[:3]}
+    pc = sys.modules.get("pcbnew")
+    if pc is not None:
+        for fn in ("GetBuildVersion", "Version", "GetMajorMinorVersion"):
+            try:
+                out["kicad"] = str(getattr(pc, fn)()); break
+            except Exception:
+                continue
+    return out
+
+
 def write(tool, result, counts=None, denominator=None, evidence=None, inputs=None, note="", out_dir=None,
           quiet=False, advisory=None, rules=None, applicable=True, missing_input=None):
     """Write out/<tool>.verdict.json and return the exit code that equals the verdict.
@@ -324,6 +530,10 @@ def write(tool, result, counts=None, denominator=None, evidence=None, inputs=Non
         "ts": now(),
         "tools": _tools(),         # the code that judged: git head and the tools tree's content hash (a StageResult field, 15 Sep 2026)
         "writer": _writer(),       # the FILE that judged and its own content hash, so staleness can be asked of the deciding tool (20 Sep 2026)
+        # AND EVERY LOCAL MODULE IT RAN (26 Sep 2026, the review's finding D2): the entry script plus its imports,
+        # transitively, each by sha256/16, and their combined hash. See `code_bundle`.
+        "code_bundle": _code_bundle_now(),
+        "runtime": _runtime(),     # the interpreter and KiCad's version where it was loaded; recorded, never compared
         # THE DIGESTS ARE STAMPED FOR THE RULES THE VERDICT DECIDES, NOT ONLY FOR THE ONES THE GATE TYPED (17
         # September 2026, the evening's second registry change). `rules` below falls back to the coverage map when a
         # gate passes none, and most gates pass none; the policy was built from the argument alone, so hardset,

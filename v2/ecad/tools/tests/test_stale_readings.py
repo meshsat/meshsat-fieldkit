@@ -51,12 +51,17 @@ def t_a_reading_whose_tool_has_changed_is_named():
 
 
 def t_a_reading_whose_tool_is_untouched_is_not_named():
-    """THE ACCEPTABLE FIXTURE: the same shape with the file's real hash."""
+    """THE ACCEPTABLE FIXTURE: the same shape with the file's real hash and, since 26 September 2026, the code bundle a
+    verdict written now records (the entry script and every local module it imports). The entry-only instrument still
+    answers CURRENT for the same record, which is what it did before the bundle."""
     name = os.path.basename(sorted(f for f in os.listdir(TOOLS) if f.endswith(".py"))[0])
     rec = {"tool": "anything", "ts": "2026-09-20T00:00:00Z",
-           "writer": {"file": name, "sha16": S.file_sha16(os.path.join(TOOLS, name))}}
+           "writer": {"file": name, "sha16": S.file_sha16(os.path.join(TOOLS, name))},
+           "code_bundle": _v.code_bundle(os.path.join(TOOLS, name), TOOLS)}
     state, said = S.judge_one(rec)
     assert state == "CURRENT", (state, said)
+    rec.pop("code_bundle")
+    assert S.judge_one(rec, bundle=False)[0] == "CURRENT"
 
 
 def t_a_reading_that_names_no_writer_is_answered_by_a_proxy_that_says_it_is_one():

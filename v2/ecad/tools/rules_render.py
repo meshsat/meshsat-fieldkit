@@ -163,13 +163,31 @@ def board_doc(letter, st, reg, cov):
          "Measured on %s.\n" % S.subject_line(st.get("subject") or S.subject(letter, m))]
     hold = R.board_holds().get(letter.lower())
     if hold:
-        L += ["> **HELD BY OWNER DECISION %s.** %s" % (hold["decision"], R.hold_banner(hold)), ">",
+        stg = S.hold_stage(hold)
+        L += ["> **HELD BY OWNER DECISION %s, AT %s.** %s" % (hold["decision"], stg.replace("_", " "), R.hold_banner(hold)), ">",
               "> " + " ".join(str(hold.get("why", "")).split()), ">",
               "> Permitted while held: %s." % " ".join(str(hold.get("permitted", "nothing")).split()), ">",
               "> Forbidden while held: %s." % " ".join(str(hold.get("forbidden", "promotion")).split()), ">",
-              "> This lifts when %s." % " ".join(str(hold.get("lifts_when", "the decision is ruled")).split()), ""]
+              "> This lifts when %s." % " ".join(str(hold.get("lifts_when", "the decision is ruled")).split())]
+        # A HOLD STAGED LATER NAMES WHAT ENTERING LAYOUT NEEDS FROM IT (26 September 2026): its requirements are counted
+        # by the layout-entry test in CURRENT-EVIDENCE.md, and listed here so the board's own page carries them.
+        if stg != "LAYOUT_ENTRY":
+            L += [">", "> It gates %s, not layout entry. Before this board enters layout: %s." % (
+                stg.replace("_", " ").lower(), "; ".join(" ".join(str(q.get("what") or q.get("kind")).split())
+                                                         for q in hold.get("layout_entry_requires") or []) or "nothing is named, "
+                "which the layout-entry test refuses")]
+        L.append("")
     c = S.counts(st["rows"])
-    L += ["| result | rules | percent |", "|---|---|---|"]
+    # THE PERCENTAGE TABLE IS A HISTORICAL AGGREGATE OF MIXED REVISIONS AND SAYS SO WHERE IT STANDS (26 September 2026,
+    # the review of the 22:35 progress report, section 3: "label the historical percentages on every generated board
+    # page"). The generated evidence page carried the name since that morning; these pages did not.
+    L += ["**Historical aggregate of mixed revisions, not readiness.** " + _wrap(
+              "The table below counts, per result, the newest reading of each required rule on this board under its "
+              "current rule, whatever revision it was taken on: readings of layouts that predate the corrected netlists, "
+              "of older netlists, and under tools (code bundles) that have changed since are all in it. It is not "
+              "readiness and not evidence about the current candidate: which readings count for the board as it is "
+              "designed now, and whether it may enter layout, are in [CURRENT-EVIDENCE.md](CURRENT-EVIDENCE.md).", 10**6), "",
+          "| historical aggregate, mixed revisions | rules | percent of this board's required rules |", "|---|---|---|"]
     for k in ("PASS", "FAIL", "INCONCLUSIVE", "WAIVED"):
         L.append("| %s | %d | %.1f |" % (k, c[k], c[k.lower() + "_percent"]))
     L += ["| **denominator** | **%d** | 100.0 |" % c["denominator"], "",
@@ -495,9 +513,31 @@ def requirements_doc(req=None, reg=None, dec=None, needs_doc=None, root=None, in
             r["evidence_result"] + (", " + r["evidence_class"] if r.get("evidence_class") else ""),
             r["feasibility_page"], ", ".join(r.get("blocker_ids") or []), holds or "-", _cell(r["owner"], 160)))
     L.append("")
+    # THE STAGES OF EACH BLOCKER'S CLOSING EVIDENCE (26 September 2026; the review of the 22:35 progress report, finding
+    # A): what gates layout entry, what gates fabrication release and what gates prototype verification. Rendered only
+    # where the registry carries them, so a tree without them renders the page it always did.
+    staged = [r for r in fea if isinstance(r.get("stages"), list) and r["stages"]]
+    if staged:
+        L += ["### What each blocker gates, stage by stage\n",
+              _para("A development-board test may gate an architecture decision; a test that needs the final PCB cannot "
+                    "gate designing that PCB (the review's words). The layout-entry stage holds the boards it names in "
+                    "the layout-entry test of CURRENT-EVIDENCE.md; the later stages are listed there and never counted "
+                    "at entry. `needs` is what the stage's evidence needs to exist, and the registry refuses a stage "
+                    "that needs what only a later stage produces."), "",
+              "| blocker | stage | holds | needs | status | what closes it at this stage |", "|---|---|---|---|---|---|"]
+        order = {k: i for i, k in enumerate(R.STAGES)} if hasattr(R, "STAGES") else {}
+        for r in staged:
+            for st_ in sorted(r["stages"], key=lambda x: order.get(str((x or {}).get("stage")), 9)):
+                st_ = st_ or {}
+                L.append("| %s | %s | %s | %s | %s | %s |" % (
+                    r["id"], st_.get("stage"), ", ".join(str(x).upper() if x in R.BOARD_LETTERS else str(x)
+                                                          for x in (st_.get("holds") or [])) or "nothing",
+                    ", ".join(st_.get("needs") or []), st_.get("status") or "OPEN", _cell(st_.get("requires"))))
+        L.append("")
     for r in fea:
         L += [_para("**%s**. %s" % (r["id"], r["statement"])), "",
               _para("*Closing evidence:* " + r["closing_evidence"]), ""]
+        if r.get("stages_note"): L += [_para("*Stages:* " + r["stages_note"]), ""]
     if not fea: L += ["None.", ""]
 
     # ---- rulings
@@ -958,7 +998,8 @@ EVIDENCE_CAUSES = (
      "not that board's current one", "re-taken, so every board it reads is read at its committed candidate"),
     ("BOARD_MISMATCH", "it names a board file other than the declared phase's",
      "re-taken on the declared phase's board"),
-    ("TOOL_CHANGED", "the file that wrote it has changed since (exact by the writer's hash, or by the tool's commit date)",
+    ("TOOL_CHANGED", "the code that wrote it has changed since: its entry script or a local module it imports (exact by "
+     "the reading's code bundle; for an older reading by its writer's hash and its imports' commit dates)",
      "re-taken under the current tool (current only when the re-take also binds its artefact and configuration), or a "
      "compatibility entry proving the change is not semantic"),
     ("TOOL_UNKNOWN", "the file that wrote it cannot be named", "re-taken, so the reading carries its writer"),
@@ -990,26 +1031,21 @@ def _evidence_audits():
 
 
 def _required(rows):
-    return [r for r in rows if r["result"] != S.NOT_APPLICABLE and r["release_effect"] in ("BLOCKER", "MUST_JUSTIFY")]
+    return S.required_rows(rows)
 
 
-def layout_entry(st, holds):
-    """(ready, reasons) by the RULE EVIDENCE alone: every applicable required SCHEMATIC-phase rule is a PASS on
-    current-candidate evidence (a manually verified document rule may be a pinned desk review), and no hold."""
-    reasons = []
-    for r in _required(st["rows"]):
-        if r["verification_phase"] != "SCHEMATIC": continue
-        if not (r["result"] == S.PASS and _entry_class_ok(r)):
-            reasons.append("%s %s on %s evidence (%s)" % (r["rule"], r["result"], r["evidence_class"], r["evidence_cause"]))
-    h = holds.get(st["board"])
-    if h: reasons.append("held by decision %s" % h.get("decision"))
-    return (not reasons), reasons
+def layout_entry(st, holds, req=None):
+    """(ready, reasons) of `rules_status.layout_entry`, the staged test (26 September 2026): the rule evidence, the
+    holds staged at layout entry, the layout-entry requirements of holds staged later, and the feasibility stages that
+    gate layout entry. Holds and stages that gate fabrication release or prototype verification are listed, never
+    counted."""
+    le = S.layout_entry(st, holds, req)
+    return le["ready"], le["reasons"]
 
 
 def _entry_class_ok(r, key="evidence_class"):
-    """Is this class acceptable for layout entry: current-candidate or reused evidence, or a pinned desk review of a
-    manually verified document rule."""
-    return r.get(key) in S.COUNTS_AS_CURRENT or (r.get(key) == S.DESK_REVIEW and r.get("maturity") == "VERIFIED_MANUALLY")
+    """Is this class acceptable for layout entry (`rules_status.entry_class_ok`)."""
+    return S.entry_class_ok(r, key)
 
 
 # ------------------------------------------------------------------------------------------------------------------
@@ -1040,6 +1076,10 @@ ENTRY_KINDS = (
      "evidence stream (rules_status.py)"),
     ("REGISTRY", "a deciding verification for the rule", "registry writer (pcb_rules_coverage.yaml)"),
     ("HOLD", "the owner-decision hold lifted on fresh evidence", "holds writer (tools/pcb_board_holds.yaml)"),
+    ("HOLD_REQUIREMENT", "a layout-entry requirement of a hold that gates a later stage (the hold itself stays until "
+     "that stage)", "board stream %s, with the holds writer for the record"),
+    ("FEASIBILITY", "the layout-entry stage of a feasibility blocker closed on its named evidence",
+     "the blocker's owner (tools/pcb_requirements.yaml)"),
     ("OTHER", "see the row", "board stream %s"),
 )
 # What "judge the netlist" means for each schematic-phase rule whose tool reads only the board file today.
@@ -1092,9 +1132,11 @@ def _decision(n):
     return None
 
 
-def entry_blockers(st, holds):
+def entry_blockers(st, holds, req=None):
     """[{rule, result, now, retake, kind, closes, owner}] for one board: every applicable required schematic-phase
-    rule that is not a PASS on evidence layout entry accepts, and the board's hold. See the block comment above."""
+    rule that is not a PASS on evidence layout entry accepts, the board's hold where it gates layout entry, each unmet
+    layout-entry requirement of a hold staged later, and each feasibility stage that holds layout entry. See the block
+    comment above."""
     L = st["board"]
     owner = {k: (o % L.upper()) if "%s" in o else o for k, _t, o in ENTRY_KINDS}
     art = "netlist" if (st.get("candidate") or {}).get("netlist_sha16") else "board file"
@@ -1139,7 +1181,8 @@ def entry_blockers(st, holds):
                         retake="%s (%s)" % (rc, cause) if rc else "not computed", kind=kind, closes=closes,
                         owner=owner[kind], writers=list(r.get("writers") or [])))
     h = holds.get(L)
-    if h:
+    le = S.layout_entry(st, holds, req)
+    if h and S.hold_stage(h) == "LAYOUT_ENTRY":
         d = _decision(h.get("decision"))
         state = ("; tools/pcb_decisions.yaml records it as %s (%s, %s), so what remains is fresh evidence that matches "
                  "the board and the entry's deletion" % d) if d and d[0] == "ruled" else ""
@@ -1147,6 +1190,19 @@ def entry_blockers(st, holds):
                         kind="HOLD", closes="decision %s's hold lifted; the holds file says it lifts when %s%s"
                         % (h.get("decision"), " ".join(str(h.get("lifts_when") or "its decision is ruled").split()), state),
                         owner=owner["HOLD"], writers=[]))
+    for hl in le["holds_later"]:
+        if not hl["requirements"]:
+            out.append(dict(rule="hold", short="", result="", now="decision %s at %s" % (hl["decision"], hl["stage"]),
+                            retake="", kind="HOLD_REQUIREMENT", closes="the hold names no layout-entry requirement: the "
+                            "holds file names what entering layout needs from it", owner=owner["HOLD_REQUIREMENT"], writers=[]))
+        for q in hl["requirements"]:
+            if q["met"]: continue
+            out.append(dict(rule="decision %s" % hl["decision"], short="", result="", now="%s: not met" % q["kind"],
+                            retake="", kind="HOLD_REQUIREMENT", closes="%s (%s)" % (q["what"], q["why"]),
+                            owner=owner["HOLD_REQUIREMENT"], writers=[]))
+    for f in le["feasibility_at_entry"]:
+        out.append(dict(rule=f["id"], short=f.get("title", ""), result="", now="layout-entry stage open", retake="",
+                        kind="FEASIBILITY", closes=f["requires"], owner=owner["FEASIBILITY"], writers=[]))
     return out
 
 
@@ -1161,7 +1217,10 @@ def _entry_section(boards, blockers):
     """The per-board layout-entry table (the review's checkpoint item 6): what closes each blocker first, and who."""
     L = ["", "## Layout entry, per board: the exact remaining blockers\n",
          _wrap("One line per applicable required schematic-phase rule that is not a PASS on evidence layout entry accepts, "
-               "and one per owner-decision hold. \"A re-take alone\" is `rules_status.retake_projection`: the class the "
+               "one per owner-decision hold that gates layout entry, one per unmet layout-entry requirement of a hold "
+               "that gates a later stage, and one per feasibility blocker whose layout-entry stage is open (holds and "
+               "stages that gate later stages are in the next section). \"A re-take alone\" is "
+               "`rules_status.retake_projection`: the class the "
                "row would have if every reading its rule names were re-taken now, in this tree, by the tool here, under "
                "the current rule, on the committed candidate, recording the same kinds of input the reading records, or "
                "for a writer that records more today (`rules_status.RECORDS_ARTEFACT`) what the tool here records. It "
@@ -1203,6 +1262,84 @@ def _entry_section(boards, blockers):
     return L
 
 
+def _later_stage_section(boards, les, req=None):
+    """What gates a LATER stage (26 September 2026, the review's finding A): the holds staged at fabrication release or
+    prototype verification, per board, with the layout-entry requirements each carries; then every feasibility stage
+    that is not layout entry, once per blocker and stage, with what it holds. Listed, never counted at layout entry."""
+    L = ["", "## Held at later stages: fabrication release and prototype verification\n",
+         _wrap("A hold or a feasibility stage that gates fabrication release (the actual PCB implements the reviewed "
+               "schematic and passes the physical protection and parity checks) or prototype verification (the physical "
+               "tests demonstrate the behaviour) stays until its own evidence exists, and is listed here rather than "
+               "counted at layout entry: counting it there made the work that produces its evidence impossible (the "
+               "review of 26 September 2026, finding A). What each hold needs AT layout entry is its "
+               "`layout_entry_requires` in `tools/pcb_board_holds.yaml`, and those ARE counted above, requirement by "
+               "requirement."), "",
+         "### Holds\n", "| board | hold | stage | lifts when | its layout-entry requirements, each evaluated now |",
+         "|---|---|---|---|---|"]
+    n = 0
+    for l in boards:
+        for h in les[l]["holds_later"]:
+            n += 1
+            qs = "; ".join("%s: %s (%s)" % ("met" if q["met"] else "NOT MET", q["what"], q["why"]) for q in h["requirements"]) \
+                or "none named, which the layout-entry test refuses"
+            L.append("| %s | decision %s | %s | %s | %s |" % (l.upper(), h["decision"], h["stage"],
+                                                             _cell(h["lifts_when"], 400), _cell(qs, 1200)))
+    if not n: L.append("| | | | none | |")
+    L += ["", "### Feasibility blockers\n",
+          _wrap("Each blocker's stages after layout entry, from `tools/pcb_requirements.yaml`. A blocker with no stages "
+                "holds layout entry of every board in its `holds_layout_entry` and is counted above."), "",
+          "| blocker | stage | holds | what closes it at this stage |", "|---|---|---|---|"]
+    m = 0
+    try:
+        recs = [r for r in ((req if req is not None else R.load_requirements()) or {}).get("records") or []
+                if r.get("kind") == "feasibility" and r.get("status") == "FEASIBILITY_OPEN" and isinstance(r.get("stages"), list)]
+    except BaseException:
+        recs = []
+    for r in sorted(recs, key=lambda x: x.get("id") or ""):
+        for st_ in r["stages"]:
+            st_ = st_ or {}
+            if str(st_.get("stage")) == "LAYOUT_ENTRY" or str(st_.get("status") or "OPEN") == "CLOSED": continue
+            m += 1
+            L.append("| %s %s | %s | %s | %s |" % (r["id"], _cell(r.get("title"), 90), st_.get("stage"),
+                                                   ", ".join(str(x).upper() if x in R.BOARD_LETTERS else str(x)
+                                                             for x in (st_.get("holds") or [])) or "nothing",
+                                                   _cell(st_.get("requires"), 600)))
+    if not m: L.append("| | | | none staged |")
+    return L
+
+
+def _provenance_section(audits, boards):
+    """Which readings changed class when the code bundle replaced the entry-script hash (the review's finding D2), with
+    the count and the files that moved, computed by rules_status from both instruments on the same evidence."""
+    rows = [r for l in boards for r in _required(audits[l]["rows"])]
+    have = [r for r in rows if r.get("writer_only_class")]
+    moved = [r for r in have if r.get("evidence_class") != r.get("writer_only_class")]
+    cause = [r for r in have if r.get("evidence_class") == r.get("writer_only_class")
+             and r.get("evidence_cause") != r.get("writer_only_cause")]
+    L = ["", "## Readings whose class changed when the tool identity became the code bundle\n",
+         _wrap("Since 26 September 2026 a reading's tool is its CODE BUNDLE: the entry script and every local module it "
+               "imports, transitively, each by content hash (`verdict.code_bundle`), recorded in the verdict; a reading "
+               "is TOOL_CHANGED when any file of it has changed. A reading written before the bundle is judged by its "
+               "writer's own hash with the modules it imports dated by their last commit against the reading, or, "
+               "with no writer, by the whole bundle's commit dates; a file that cannot be dated counts as changed. The "
+               "rows below are those whose evidence class differs from what the entry-script instrument of 20 September "
+               "gives on the same evidence; a row whose class stayed the same and whose first failing cause moved (most "
+               "often to TOOL_CHANGED from a cause checked after it) is counted but not listed."), ""]
+    if not have:
+        L.append(_wrap("This audit carries no entry-script comparison (it predates it): run rules_status.py."))
+        return L
+    L.append("**%d of %d required rows changed class; %d more changed only their first failing cause.**\n"
+             % (len(moved), len(have), len(cause)))
+    if moved:
+        L += ["| board | rule | result | entry script alone | code bundle | files that moved |", "|---|---|---|---|---|---|"]
+        for r in moved:
+            L.append("| %s | %s %s | %s | %s (%s) | %s (%s) | %s |" % (
+                str(r.get("board") or "").upper(), r["rule"], r.get("short_name", ""), r["result"],
+                r.get("writer_only_class"), r.get("writer_only_cause"), r.get("evidence_class"), r.get("evidence_cause"),
+                _cell(", ".join("`%s`" % f for f in r.get("provenance_files") or []) or "see the row's reason", 300)))
+    return L
+
+
 def _undeclared_writers_section(audits, boards):
     """Every writer of a required row's readings that rules_status.CONFIG_INPUTS does not declare, with its rules."""
     seen = {}
@@ -1226,24 +1363,33 @@ def _undeclared_writers_section(audits, boards):
     return L
 
 
-def current_evidence_doc(audits, holds=None, regs=None):
-    """The page. `audits` is {letter: status as rules_status.board_status returns it}."""
+def current_evidence_doc(audits, holds=None, regs=None, req=None):
+    """The page. `audits` is {letter: status as rules_status.board_status returns it}; `req` replaces the requirements
+    registry the feasibility stages are read from (fixtures only)."""
     holds = holds if holds is not None else R.board_holds()
     regs = regs if regs is not None else S.registers()
+    if req is None:
+        try: req = R.load_requirements()
+        except BaseException: req = None          # rules_status.feasibility_stages then holds every board, and says why
     boards = sorted(audits, key=lambda l: (len(l), l))
-    ready = {l: layout_entry(audits[l], holds) for l in boards}
+    les = {l: S.layout_entry(audits[l], holds, req) for l in boards}
+    ready = {l: (les[l]["ready"], les[l]["reasons"]) for l in boards}
     n_ready = sum(1 for l in boards if ready[l][0])
     n_phys = sum(1 for l in boards if physically_verified(audits[l]))
-    blockers = {l: entry_blockers(audits[l], holds) for l in boards}
+    blockers = {l: entry_blockers(audits[l], holds, req) for l in boards}
     by_retake = sum(1 for l in boards if all(b["kind"] == "RETAKE" for b in blockers[l]))
     L = [EVIDENCE_HEAD, "# Current evidence\n",
          "**Foundations incomplete; %d boards ready for layout; %d physically verified.**\n" % (n_ready, n_phys),
          _wrap("Prototype design: no V2 board has been fabricated, ordered, assembled or measured. The foundations are "
                "incomplete because the requirements and architecture baselines are still open (review of 26 September "
-               "2026, section 6 item 1), whatever this page counts. \"Ready for layout\" here is the rule evidence "
-               "alone: every applicable required schematic-phase rule is a PASS on current-candidate evidence (a "
-               "document rule may rest on a pinned desk review) and no owner-decision hold is on the board. A board "
-               "that meets it still needs its interfaces, stackup and geometry closed before a layout candidate is "
+               "2026, section 6 item 1), whatever this page counts. \"Ready for layout\" here is the staged layout-entry "
+               "test (`rules_status.layout_entry`): every applicable required schematic-phase rule is a PASS on "
+               "current-candidate evidence (a document rule may rest on a pinned desk review), no owner-decision hold "
+               "that gates layout entry is on the board, every layout-entry requirement of a hold that gates a later "
+               "stage is met, and no feasibility blocker's layout-entry stage holds the board. Holds and blocker stages "
+               "that gate fabrication release or prototype verification are listed in their own section and are not "
+               "counted here: a check applies at the stage where it can be satisfied, and none is waived. A board that "
+               "meets the test still needs its interfaces, stackup and geometry closed before a layout candidate is "
                "committed, and a desk review is never a physical test."), "",
          _wrap("Re-takes alone would bring %d of the %d boards to layout entry, even if every re-take read PASS: the "
                "section \"Layout entry, per board\" names, for each remaining blocker, the step that must come first "
@@ -1261,6 +1407,8 @@ def current_evidence_doc(audits, holds=None, regs=None):
             ("yes: " if c.get("layout_current") else "no: ") + " ".join(str(c.get("layout_why") or "").split())[:120].replace("|", "/"),
             "yes" if ok else "no: %d reason(s), first %s" % (len(why), why[0].replace("|", "/") if why else "")))
     L += _entry_section(boards, blockers)
+    L += _later_stage_section(boards, les, req)
+    L += _provenance_section(audits, boards)
     L += ["", "## Evidence classes, per board\n",
           _wrap("Required rule-board pairs (BLOCKER and MUST_JUSTIFY, not applicable ones left out), the same rows the "
                 "per-board status pages count. CURRENT_CANDIDATE: taken on the board's current netlist and board file "
@@ -1342,9 +1490,13 @@ def current_evidence_doc(audits, holds=None, regs=None):
           "is a current PASS on them, which is what makes a layout the candidate's.",
           "- `rules_status.evidence_class`: per rule-board row, the worst class over every verdict the coverage map names "
           "for the rule. Order of the checks: current reading at all (`_fresh`), not a temporary directory, the writing "
-          "tool byte for byte unchanged (`stale_readings.judge_one`: exact where the verdict carries its writer's hash, "
-          "by the tool's commit date where it does not), then the artefact bound by the rule's phase, then the "
+          "tool's code bundle byte for byte unchanged (`stale_readings.judge_detail`: exact where the verdict carries its "
+          "code bundle; its writer's hash and its imports' commit dates where it carries only a writer; the bundle's "
+          "commit dates where it carries neither), then the artefact bound by the rule's phase, then the "
           "configuration its writer reads.",
+          "- `rules_status.layout_entry`: the staged layout-entry test; holds from `tools/pcb_board_holds.yaml` (a hold's "
+          "`stage`, LAYOUT_ENTRY when it names none, and its `layout_entry_requires`) and feasibility stages from "
+          "`tools/pcb_requirements.yaml` (a feasibility record's `stages`, or its `holds_layout_entry` when it has none).",
           ] + _evidence_bindings(regs) + [
           "- Holds from `tools/pcb_board_holds.yaml` via `rules_lib.board_holds`.", ""]
     if regs.get("errors"):
@@ -1372,11 +1524,21 @@ def _evidence_bindings(regs):
         "the reading by the sha it recorded or by the file's last commit (uncommitted edits count as changed). Declared "
         "writers: %s. A reading from any other writer is AWAITING_REVALIDATION with cause CONFIG_UNDECLARED;" % declared,
         "  - rule semantics: the rule's digest and the rule-set fingerprint (`_fresh`, `_after_meaning_changed`);",
-        "  - tool semantics: the writer's own sha256/16 against the file here.",
+        "  - tool semantics: the reading's code bundle (the entry script and every local module it imports, each by "
+        "sha256/16) against the bundle of the same entry here; for a reading older than the bundle, the writer's own "
+        "sha256/16 and its imports' commit dates.",
         "- Instrument limits, which a reading shown current here can still fall foul of:",
-        "  - the writer instrument names the ENTRY script and not the modules it imports, so a change in a shared helper "
-        "is not seen by it (a data table in an imported module is covered only where it is declared as configuration, "
-        "as `stackup_write.py` is for `stackup_gate.py`);",
+        "  - the code bundle follows every import it can PARSE (`import`, `from ... import`, `importlib.import_module` with "
+        "a literal name, a literal that names a tools file); a module named by a computed string, a shell script and "
+        "data a module opens at run time are not in it (data is configuration, bound above). `verdict.py` is in every "
+        "bundle and the modules IT imports are not followed from it (the recording channel: what they compute is what "
+        "a verdict records about itself, re-checked against the tree when the verdict is read); a gate that imports "
+        "them for its own judgement has them in its bundle through that import;",
+        "  - a reading older than the bundle is judged by commit dates for the files its writer imports TODAY: a module "
+        "the writer imported then and no longer does is not seen, and a commit that did not change what the tool "
+        "measures still makes the reading owed;",
+        "  - the interpreter and KiCad versions are recorded in each verdict (`runtime`) and not compared: this host has "
+        "no pcbnew, so it cannot say which KiCad version is current;",
         "  - `CONFIG_INPUTS` holds what the session found by reading each tool on 26 September 2026; a configuration "
         "read added to a tool later is not seen until its entry is updated;",
         "  - inputs outside this tree, or named inside another input, are not declared: the host's KiCad footprint "

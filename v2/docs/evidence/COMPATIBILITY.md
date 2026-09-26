@@ -8,8 +8,12 @@ here is built or measured.
 This page is the record that rationale lives in. `rules_status.py` reads the block at the end (`registers`,
 `_compatible`) and classes a reading VALID_HISTORICAL only when an entry pins BOTH versions by content:
 
-- `kind: tool`: `tool` (the writer file name), `then` (the writer sha256/16 the verdict carries), `now` (the sha256/16
-  of the file in this tree). A later edit of the file changes `now`, and the entry stops applying by itself.
+- `kind: tool`: `tool` (the writer file name), `then` (the reading's code bundle sha16, `code_bundle.sha16`; for a
+  reading written before the bundle, the writer sha256/16 it carries), `now` (the sha16 of that writer's code bundle in
+  this tree, `rules_status._bundle_now16`). Since 26 September 2026 (the review of the 22:35 progress report, finding
+  D2) a reading's tool is its code bundle, the entry script and every local module it imports (`verdict.code_bundle`),
+  so an entry's rationale has to answer for EVERY file of the bundle that moved, and a later edit of any of them changes
+  `now` and stops the entry applying by itself.
 - `kind: artefact`: `rule`, `board` (letter), `input` (`netlist`), `then` (the sha256/16 the verdict recorded),
   `now` (the sha256/16 the board's phase directory holds).
 - `kind: config` (added 26 September 2026, second round): `rule`, `board`, `input` (the configuration file, relative
@@ -51,6 +55,12 @@ The other inputs of these readings are unchanged since before them (the intent f
 September; E5's project file, 4 September), and board E5's footprints were read to confirm the declared zero of its
 CMP-001 reading: 17 footprints, all targets, mounting holes and wire lands (`pcb-e5-block/pcb-e5-block.kicad_pcb`,
 sha256/16 686b29a734c55b9a), no rated part.
+
+**Since the code bundle (26 September 2026), the two E5 readings above (MEC-001, RTE-001) read TOOL_CHANGED before
+their configuration is judged:** a module each writer imports was committed after the reading, so the entry script
+alone no longer shows the tool unchanged. Their configuration entries stay as the record of what was compared; they
+apply again when the readings are re-taken, or when a `kind: tool` entry answers for the modules that moved. The
+readings of TRN-001 on A and B awaited revalidation for other causes already.
 
 Not reused, and why: REL-001 on all seven boards (`reliability.py` records no netlist and picks the newest
 `<stem>*/out/<stem>.net` by modification time, `reliability.py:47`, so no rationale can say which netlist it read; and

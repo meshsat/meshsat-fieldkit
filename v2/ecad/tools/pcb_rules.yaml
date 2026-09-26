@@ -1539,10 +1539,22 @@ rules:
 
  - id: INT-002
    domain: INTERFACE_COMPLIANCE
-   short_name: a transformerless Ethernet link is verified at both ends
+   short_name: a transformerless Ethernet link has a pre-layout assessment on its current nets
    requirement: >
-     Where an Ethernet link is built PHY-to-PHY without magnetics, both PHYs' own documentation is checked to
-     permit it, and the coupling, termination, common-mode handling and bias are as both require.
+     Where an Ethernet link is built PHY-to-PHY without magnetics, a pre-layout assessment on the board's current
+     netlist records both PHYs' documents as this project holds them, quotes the permitted topology from each end that
+     states one, compares the implemented coupling, termination, common-mode handling and bias with them conductor by
+     conductor, and states as an open gap, with the test that closes it and the fallback, every requirement neither
+     document settles.
+   _split: >-
+     SPLIT on 26 September 2026 (MESHSAT-1357; the review of the 22:35 progress report, finding A) by the session under
+     the owner's standing rule of that day. INT-002 was a SCHEMATIC gate whose only closing evidence was a test on the
+     first built board B, which made it a circular gate on board B's layout entry. Its two halves are now two rules and
+     neither is weakened: this rule is the pre-layout assessment at the SCHEMATIC phase, and INT-003 is the bench link
+     test at the PROTOTYPE phase. The requirement it had ("both PHYs' own documentation is checked to permit it, and the
+     coupling, termination, common-mode handling and bias are as both require") cannot be met from documents while
+     Broadcom does not publish the module PHY's datasheet; it is met here as far as documents reach and carried by
+     INT-003 for the rest.
    classification: INTERFACE_REQUIREMENT
    applicability: CONDITIONAL
    condition: {fact: interfaces, op: contains, value: ETHERNET}
@@ -1551,43 +1563,97 @@ rules:
    source_status: PARTIALLY_VERIFIED
    sources:
     - {title: "KSZ989x/KSZ956x/KSZ9477 hardware design checklist", issuer: Microchip, revision: "DS00004151A (2021)",
-       clause: "6.6 Capacitive Coupling Option, page 12",
+       clause: "6.6 Capacitive Coupling Option, page 12, and its checklist row",
        url_or_path: "v2/vendor/cluster/ksz989x-hw-design-checklist.pdf", accessed: "2026-09-16",
-       note: "READ 16 September 2026, and it PERMITS what board B does, in terms that match the implementation
-         exactly: the family may be used in transformer-less applications where the PHY-to-PHY connection is
-         within one PCB or interconnected PCBs and a cable is not needed; a single DC blocking 0.1 uF capacitor
-         in series on each of the eight signals; no additional components between the switch and the capacitor;
-         keep auto-negotiation enabled at 1000M. The same clause states the open half in one sentence: the
-         other device may require termination or other circuitry. Section 6.2 requires 1:1 isolation
-         transformers at the MEDIA interface, which is the RJ45 side and is where board B already fits the
-         Pulse H5007NL on port 4."}
-    - {title: "Raspberry Pi Compute Module 5 datasheet", issuer: "Raspberry Pi Ltd", revision: "in this tree",
-       clause: "2.2.1 connector and design guidance; pin table, Ethernet pairs",
-       url_or_path: "v2/vendor/cm5/cm5-datasheet.pdf", accessed: "2026-09-16",
-       note: "the other end, READ 16 September 2026. It describes ONE topology: Ethernet connects to CM5 using a
-         standard 1:1 RJ45 MagJack, and every Ethernet pin reads connect to transformer or MagJack. It neither
-         permits nor forbids capacitive coupling; it does not discuss it. So one end permits the link and the
-         other has not been asked."}
+       note: "READ 16 September 2026 and again 26 September 2026: it PERMITS what board B does, in terms that match the
+         implementation exactly (within one PCB, a single DC blocking 0.1 uF in series on each of the eight signals, no
+         additional components between the switch and the capacitor, auto-negotiation kept enabled at 1000M), and names
+         the open half in one sentence: the other device may require termination or other circuitry. Its checklist row
+         asks whether the link partner needs pull-ups (a current-mode line driver)."}
+    - {title: "KSZ9897R data sheet", issuer: Microchip, revision: "DS00002330E (2022)", clause: "7.2",
+       url_or_path: "v2/vendor/cluster/ksz9897.pdf", accessed: "2026-09-26",
+       note: "the switch's PHY ports use voltage-mode transmit drivers with on-chip terminations"}
+    - {title: "Raspberry Pi Compute Module 5 datasheet", issuer: "Raspberry Pi Ltd", revision: "Release 3 (build 08/06/2026)",
+       clause: "2.2, 2.2.1 connector and design guidance; Table 4, Ethernet pairs",
+       url_or_path: "v2/vendor/cm5/cm5-datasheet.pdf", accessed: "2026-09-26",
+       note: "the other end describes ONE topology, a 1:1 RJ45 MagJack, and every Ethernet pin reads connect to
+         transformer or MagJack. It neither permits nor forbids capacitive coupling; it does not discuss it."}
+    - {title: "CM5 IO board KiCad design", issuer: "Raspberry Pi Ltd", revision: "cm5io-kicad.zip in this tree",
+       clause: "CM5IO.kicad_sch, the MagJack U3 and C1", url_or_path: "v2/vendor/cm5/cm5io-kicad.zip",
+       accessed: "2026-09-26",
+       note: "the module maker's reference ties the MagJack's PHY-side centre taps to one 100 nF capacitor to ground and
+         to no supply, which is how a voltage-mode driver is biased: consistent with a module PHY that needs no pull-ups
+         (INFERRED, not a Broadcom statement)"}
     - {title: "BCM54210PE datasheet", issuer: Broadcom, revision: "", clause: "", url_or_path: "NOT IN THIS TREE",
        accessed: "",
-       note: "the PHY inside the module, named in the CM5 datasheet section 2.2. Broadcom does not publish it, so
-         the termination and bias question the switch vendor's clause 6.6 raises cannot be answered from
-         documents this project can obtain: it needs a vendor answer or a prototype measurement."}
+       note: "the PHY inside the module. Broadcom does not publish it, so its termination and bias for a capacitively
+         coupled link cannot be read; INT-003 is the test that closes that half."}
    acceptance_criteria: >
-     Both PHYs' documents on file, the permitted topology quoted from each, and the implemented coupling and
-     termination compared against both.
-   rationale: "One end's permission is not the link's permission."
-   failure_mode: "Link instability, bias fighting between the two PHYs, and emissions from an unbalanced pair."
-   verification_method: [MANUAL_REVIEW, VENDOR_CONFIRMATION]
+     A desk review record, pinned by content in the coverage map and bound to the nets it read on the board's current
+     netlist, that (1) quotes the switch vendor's permission and its checklist question; (2) quotes the module vendor's
+     own statements and says whether they permit, forbid or do not discuss the topology; (3) lists the implemented
+     coupling conductor by conductor from the netlist and compares it with each permitted topology item by item; (4)
+     states every requirement neither document settles as an open gap, names INT-003 (or a written vendor answer) as
+     what closes it, and names the fallback and its trigger. A record that finds a mismatch with a permitted topology,
+     or a gap it does not allocate, does not pass. It establishes that the link is defensible to lay out, never that it
+     works.
+   rationale: "One end's permission is not the link's permission, and a test that needs the built board cannot be the
+     reason the board is never laid out."
+   failure_mode: "A layout entered on a coupling no document supports, or a board held forever on a test only the board
+     can host."
+   verification_method: [MANUAL_REVIEW]
    verification_phase: SCHEMATIC
+   automation_feasibility: PARTIALLY_AUTOMATABLE
+   boards_affected: [b]
+   interfaces_affected: [ETHERNET]
+   implementation_location: "v2/docs/reviews/INT-002-PRE-LAYOUT-ASSESSMENT.md; rules_status.verified_nets_current binds it to the nets it read"
+   evidence_scope: [schematic_sha256, vendor_document_revision]
+   owner: SESSION
+   waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
+   maturity_at_writing: SOURCE_UNVERIFIED
+
+ - id: INT-003
+   domain: INTERFACE_COMPLIANCE
+   short_name: a transformerless Ethernet link is verified up at 1000M on the built board
+   requirement: >
+     Every PHY-to-PHY Ethernet link built without magnetics is shown on the built board to link at 1000 Mbit/s full
+     duplex with auto-negotiation enabled on both ends and to carry traffic without errors, which is the half of INT-002
+     that documents cannot settle while one PHY's datasheet is unpublished.
+   classification: INTERFACE_REQUIREMENT
+   applicability: CONDITIONAL
+   condition: {fact: interfaces, op: contains, value: ETHERNET}
+   risk_class: [ELECTRICAL_FUNCTION, EMC, RELIABILITY]
+   release_effect: BLOCKER
+   source_status: PARTIALLY_VERIFIED
+   sources:
+    - {title: "KSZ989x/KSZ956x/KSZ9477 hardware design checklist", issuer: Microchip, revision: "DS00004151A (2021)",
+       clause: "6.6", url_or_path: "v2/vendor/cluster/ksz989x-hw-design-checklist.pdf", accessed: "2026-09-26",
+       note: "keep auto-negotiation enabled when 1000M speed is used"}
+    - {title: "IEEE 802.3, clause 40 (1000BASE-T)", issuer: IEEE, revision: "", clause: "40.1 objectives",
+       url_or_path: "NOT IN THIS TREE", accessed: "",
+       note: "the bit error ratio objective of 1000BASE-T, 10^-10, from which the soak length below is derived: zero
+         errors over 3 x 10^10 bits bound the ratio below 10^-10 at 95 percent confidence (the rule of three). Cited
+         from the standard, which is not filed here."}
+   _split: "the PROTOTYPE half of INT-002, split on 26 September 2026 (see INT-002's _split)"
+   acceptance_criteria: >
+     On the first built board B with its three modules fitted: each of the three module links comes up at 1000 Mbit/s
+     full duplex with auto-negotiation enabled on both ends (CON-005), and carries line-rate traffic in each direction
+     for at least 60 s (more than 3 x 10^10 bits) with zero frame, CRC and symbol errors in the switch's port counters
+     and the module's interface counters; repeated at the cold and hot operating points of TEST-PLAN.md. A link that
+     does not come up at 1000M, or counts an error, is decision 29's fallback trigger (magnetics of an
+     extended-temperature family on the three links); it is never waived.
+   rationale: "A permission and an inference are not a link; only the built board carries this channel."
+   failure_mode: "Link instability, bias fighting between the two PHYs, and emissions from an unbalanced pair."
+   verification_method: [PROTOTYPE_MEASUREMENT]
+   verification_phase: PROTOTYPE
    automation_feasibility: HUMAN_OR_LAB_ONLY
    boards_affected: [b]
    interfaces_affected: [ETHERNET]
    implementation_location: NONE_YET
    evidence_scope: [schematic_sha256, vendor_document_revision]
-   owner: SESSION
+   owner: LAB
    waiver_policy: {allowed: false, authority: OWNER, evidence: "", scope: "", expiry: "", residual_risk: ""}
-   maturity_at_writing: SOURCE_UNVERIFIED
+   maturity_at_writing: OPEN
 
 # ---------------------------------------------------------------------------------------------------------
 # 18 to 25. TRANSIENTS, ISOLATION AND SPACING, THERMAL, PLACEMENT, ROUTING, VIAS, PLANES, EMC
