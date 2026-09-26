@@ -755,16 +755,6 @@ open_items:
     class: SESSION
     status: OPEN
     title: "RF-002 enumerates every transmitter from the netlists and fails any without a hardware gate."
-  - id: S-07
-    class: SESSION
-    status: OPEN
-    title: >-
-      The closure of the correction. Every item of the former title (the published contracts rewritten against the
-      circuits of faf8c981, 458b2873 and d90f30e4: PANEL.md sections 1, 6, 7 and 10; CONOPS sections 4, 4b and 5;
-      V2-SPEC.md lines 24, 34, 41, 43 and 76 and their corrections; OPERATING-ENVELOPE.md sections 3 and 4, re-pinned;
-      ASSEMBLY.md section 4 and build step 7; TEST-PLAN.md:46's EMCON check; the outcomes of decisions 28 and 40) is
-      made by stream s07's document commit of 26 September 2026 against 45bde541, which resolves CFL-014 and CFL-016;
-      the item closes by that commit once this tree holds it.
   - id: S-09
     class: SESSION
     status: OPEN
@@ -1043,6 +1033,21 @@ closed_items:
     title: >-
       The J_SMB contract in check_contracts.py (the connector half closed in faf8c981: both ends JST-XH 1x4 in board
       P's pin order).
+  - id: S-07
+    closed_by: commit 9a151c78
+    closing_evidence: >-
+      v2/docs/PANEL.md sections 1, 6, 7 and 10, v2/docs/CONOPS.md sections 4, 4b and 5, v2/docs/V2-SPEC.md lines 24,
+      34, 41, 43 and 76 with corrections 2, 4, 7, 9, 12, 13 and 19, v2/docs/OPERATING-ENVELOPE.md sections 3 and 4
+      (re-pinned in v2/ecad/tools/pcb_rules_coverage.yaml and v2/ecad/tools/pcb_envelope.yaml), v2/docs/ASSEMBLY.md
+      section 4 and build step 7, v2/docs/TEST-PLAN.md:46 and the outcomes of decisions 28 and 40 in
+      v2/ecad/tools/pcb_decisions.yaml, read against the generators and committed netlists of 45bde541: each describes
+      the circuit as generated, and CFL-014 and CFL-016 are resolved on those readings.
+    title: >-
+      The published contracts rewritten against the circuits of faf8c981, 458b2873 and d90f30e4: PANEL.md sections 1,
+      6, 7 and 10; CONOPS sections 4, 4b and 5; V2-SPEC.md lines 24, 34, 41, 43 and 76 and their corrections;
+      OPERATING-ENVELOPE.md sections 3 and 4, re-pinned; ASSEMBLY.md section 4 and build step 7; TEST-PLAN.md:46's
+      EMCON check (an external receiver, not the kit's SDR); the outcomes of decisions 28 and 40 in pcb_decisions.yaml
+      (CFL-014, CFL-015, CFL-016).
   - id: S-06
     closed_by: commit 4ec785d8
     closing_evidence: >-
@@ -4900,6 +4905,8 @@ records:
           four-layer 2 oz stackup row JLC04162H-7628 is recorded (v2/ecad/tools/stackup_write.py:46) and board P's
           schematic carries decision 40's floor, both outcomes saying so with the layouts still to come
     evidence_bound_to:
+      - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@f13d8b70099ab03e"
+      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d910e49c5f5f50b2"
       - "v2/docs/PANEL.md@b1cde9f7ff1ada7b"
       - "v2/docs/CONOPS.md@b9080983ccc03a84"
       - "v2/docs/V2-SPEC.md@df8ac22603440bc5"
