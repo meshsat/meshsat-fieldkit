@@ -1,0 +1,43 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "fail": 0,
+  "pass": 3,
+  "unjudged": 4
+ },
+ "denominator": 7,
+ "evidence": [
+  "unjudged, the other board is absent: J_PANEL 2x13 map identical on B and C",
+  "unjudged, the other board is absent: panel controller USB pair USB_PNL_P on B16 and C7 J_PANEL",
+  "unjudged, the other board is absent: panel controller USB pair USB_PNL_N on B16 and C7 J_PANEL",
+  "unjudged, the other board is absent: rail +3V3: the shares sum to 3.0% within the 3.0% the rail declares"
+ ],
+ "inputs": {
+  "boards": "A,B,C,D,E,P"
+ },
+ "missing_input": "4 of this board's contracts name a board absent from this tree",
+ "note": "4 of this board's contracts name a board absent from this tree and were not judged",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "SCH-003": "ddf200a8e65c127b"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "SCH-003"
+ ],
+ "tool": "check_contracts_c",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "60b5a5a915850caa"
+ },
+ "ts": "2026-09-26T13:33:14Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown",
+ "writer": {
+  "file": "check_contracts.py",
+  "sha16": "4f4cb3a61d808820"
+ }
+}

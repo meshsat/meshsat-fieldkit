@@ -1,0 +1,12 @@
+components: base 85, new 85
+REMOVED components (0):
+ADDED components (0):
+CHANGED components:
+  ~ R33    value     '22k' -> '18k'
+  ~ R33    LCSC      '' -> 'C25810'
+  ~ R34    value     '200R' -> '270R'
+  ~ R34    LCSC      'C8218' -> 'C22966'
+PIN NET CHANGES on components present on both sides:
+NETS only in base: []
+NETS only in new: []
+NETS on both sides whose node set changed:

@@ -1,0 +1,7 @@
+/root/rv/bat/run/base/v2/ecad/pcb-p-pack-p2/../tools/power_path.py:51: SyntaxWarning: invalid escape sequence '\d'
+  """{net: [(ref, pin), ...]} and the set of references, from KiCad's s-expression netlist.
+power_path: CELL4        declares 10.00 A typ / 18.00 peak and feeds 1 converter(s) drawing 10.00 / 18.00
+power_path: FUSED        declares 10.00 A typ / 18.00 peak and feeds 1 converter(s) drawing 10.00 / 18.00
+power_path: 0 net(s) carry a declared rail's current through one of its own source or load parts without being a rail: 0 declared a node and 0 NOT DECLARED AT ALL, of 5 rail(s) and 2 node(s)
+verdict: power_path             PASS         {"feeds": 2, "feeds_short": 0, "nodes": 2, "rails": 5, "segments": 0, "undeclared": 0} | every declared node that carries a declared rail's current through one of that rail's own load parts: a candidate segment of a power path that no power rule is looking at. It REPORTS: some of these are genuinely nodes and the declaration is where that is written down, with its reason.
+power_path exit 0

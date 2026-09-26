@@ -136,7 +136,7 @@ boards:
        load: "the whole pack current and the pull of the lead when the pack is handled",
        measure: "2.5 mm2 lands with a strain relief hole beside each, and the lead is tied to the pack's own
          enclosure before it leaves the board"}
-    - {name: "the cell tap and thermistor headers", refs: ["J_CELL", "J_TS", "J_SMB"], cycles: 30,
+    - {name: "the cell tap and thermistor headers", refs: ["J_CELL", "J_TS", "J_TS2", "J_SMB"], cycles: 30,
        basis: "the JST-XH and PH families' own figures",
        load: "mated once at pack build",
        measure: "through-hole; the tap harness is dressed inside the pack enclosure"}

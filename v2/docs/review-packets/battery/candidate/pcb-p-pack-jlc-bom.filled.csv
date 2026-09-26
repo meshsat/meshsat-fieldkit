@@ -1,0 +1,38 @@
+Comment,Designator,Footprint,LCSC Part #
+2.2u,C1,C_0805_2012Metric,C19110
+100n,"C2,C3,C4,C5,C6,C7,C8,C9,C13,C14,C15,C16,C17,C18,C19",C_0603_1608Metric,C14663
+100n 50V,C11,C_0603_1608Metric,C14663
+100n 50V,C12,C_1206_3216Metric,C24497
+"SMBJ20A (pack terminal clamp, unidirectional: cathode on PACK_P)",D1,D_SMB,C364296
+PESD5V0S1BA (SMBC ESD clamp to the pack side of the shunt),D2,D_SOD-323,C19224
+PESD5V0S1BA (SMBD ESD clamp to the pack side of the shunt),D3,D_SOD-323,C19224
+25 A mini blade (Keystone 3568 holder): the pack's fuse,F1,Fuseholder_Blade_Mini_Keystone_3568,
+"SCF9550-30-05 self-control fuse (Eaton, 30 A, 4-5 cells): 1 and 2 the fuse, 3 the heater",F2,Eaton_SCF9550_9.5x5.0mm,C3670061
+cell tap sense wires from the 4S block (JST-XH 1x5): B- C1 C2 C3 B+; the current leaves through W_BP and W_BN,J_CELL,JST_XH_B5B-XH-A_1x05_P2.50mm_Vertical,C157991
+SMBus lead to E6 J_SMB (JST-XH 1x4): SMBC SMBD GND(pack side of the shunt) PRES,J_SMB,JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical,C594232
+"second-level cell thermistor socket, JST-PH 1x2 (Semitec 103AT-2 on the hottest cell): 1 TS_SEC_J, 2 VSS",J_TS2,JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical,C5251182
+"JST-PH 1x5 socket for the four cell thermistors (Semitec 103AT-2, one per series group of the 4S3P block): TS1 TS2 TS3 TS4 VSS",J_TS,JST_PH_B5B-PH-K_1x05_P2.00mm_Vertical,C157993
+"CSD17570Q5B 30 V N-FET, charge switch",Q1,PowerPAK_SO-8_Single,C529279
+"CSD17570Q5B 30 V N-FET, discharge switch",Q2,PowerPAK_SO-8_Single,C529279
+"AO3400A 30 V N-FET, chemical fuse heater switch",Q3,SOT-23,C20917
+2N7002 60 V N-FET: the second level's under-voltage holds the discharge FET off,Q5,SOT-23,C8545
+100R,"R1,R2,R3,R4,R5,R8,R9,R20,R21",R_0603_1608Metric,C22775
+1k,"R6,R7,R22,R24,R25,R26,R27",R_0603_1608Metric,C21190
+2m 2512 2W (sense),R10,R_2512_6332Metric,C154685
+10k,"R14,R15",R_0603_1608Metric,C25804
+5.1k,"R16,R18,R30",R_0603_1608Metric,C23186
+10M,"R17,R19",R_0603_1608Metric,C7250
+300R,R23,R_0603_1608Metric,C23025
+100k,R28,R_0603_1608Metric,C25803
+20k,R29,R_0603_1608Metric,C4184
+51k,R31,R_0603_1608Metric,C23196
+1M,R32,R_0603_1608Metric,C22935
+18k,R33,R_0603_1608Metric,C25810
+270R,R34,R_0603_1608Metric,C22966
+"PRF15BB103RB6RC chip PTC 10k, 4.7M at 130 C (Murata): the BQ4050 PTC element beside Q1 and Q2",RT1,R_0402_1005Metric,C443668
+"BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm",U1,Texas_RSM0032A_VQFN-32-1EP_4x4mm_P0.4mm_EP1.4x1.4mm,C157570
+"BQ7720700DSSR: second-level cell OV 4.325 V / UV 2.25 V / open wire / OT 70 C on its own 103AT-2 (J_TS2), 3S-7S (SLUSEG7D)",U2,WSON-12-1EP_3x2mm_P0.5mm_EP1x2.65,C3681715
+cell block B- (12 AWG from the block's negative strip),W_BN,SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm,
+cell block B+ (12 AWG from the block's positive strip),W_BP,SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm,
+pack lead - (12 AWG to the XT60 on E6 J_BATT pin 1),W_N,SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm,
+pack lead + (12 AWG to the XT60 on E6 J_BATT pin 2),W_P,SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm,

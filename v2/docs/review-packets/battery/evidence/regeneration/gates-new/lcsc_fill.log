@@ -1,0 +1,3 @@
+lcsc_fill: 10 lines filled (0 of them from the certified table), 9 still blank of 37 (4 allow-listed, 5 not: C1, C12, F1, R10, R17,R19)
+verdict: lcsc_fill              FAIL         of 37 {"blank_over_allowance": 5, "rejected_code": 0, "rows": 37, "stale_allow_lines": 0}
+lcsc_fill exit 1

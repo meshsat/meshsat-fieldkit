@@ -90,6 +90,10 @@ power/aos-ao3401a-p-mosfet.pdf   # aosmd.com/res/data_sheets/AO3401A.pdf, fetche
 power/infineon-irf7404-p-mosfet.pdf   # infineon.com/dgdl/irf7404pbf.pdf, fetched 10 September 2026
 power/bourns-srf1260-common-mode-choke.pdf   # bourns.com/docs/product-datasheets/srf1260.pdf, fetched 10 September 2026
 switches/apem-5000-series-toggles.pdf   # Farnell's copy of APEM's 5000 series toggle catalogue; apem.com serves its datasheets behind a product-page form
+# Added 26 September 2026 (MESHSAT-1357, review stream BAT, the battery review packet): two TI E2E threads, saved from the
+# runner with curl the same day as HTML snapshots. The sha256 identifies this copy only; the quoted words are the evidence.
+ti/ti-e2e-1316778-bq25731-chargecurrent-por.html   # https://e2e.ti.com/support/power-management-group/power-management/f/power-management-forum/1316778/bq25731-bq25731-chargecurrent-start-up-behavior, fetched 26 September 2026
+battery/ti-e2e-1421182-bq77207-application.html   # https://e2e.ti.com/support/power-management-group/power-management/f/power-management-forum/1421182/bq77207-help-understanding-application-configuration, fetched 26 September 2026
 
 # Our own files at the root of this folder: written in this repository, not fetched from a vendor.
 README.md            # written in this repository: what each folder is, the licence position and the takedown line

@@ -1,0 +1,45 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "by_vendor_reference": 0,
+  "judged": 6,
+  "undeclared_nets": 0,
+  "under_rated": 0,
+  "unrated_parts": 20
+ },
+ "denominator": 6,
+ "evidence": [],
+ "inputs": {
+  "board": "p",
+  "margin": 0.2,
+  "netlist": {
+   "path": "/root/rv/bat/run/new/v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net",
+   "sha256_16": "4342c4cbe1b43dc4"
+  }
+ },
+ "missing_input": null,
+ "note": "a part's rating against the declared voltage of the rail it is soldered to; DC-bias capacitance derating is NOT checked here and is an open gap",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "CMP-001": "117de3adbf51c9c8"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "CMP-001"
+ ],
+ "tool": "derate",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "60b5a5a915850caa"
+ },
+ "ts": "2026-09-26T13:33:11Z",
+ "verdict": "PASS",
+ "version": "unknown",
+ "writer": {
+  "file": "derate.py",
+  "sha16": "129c189f7c7860df"
+ }
+}

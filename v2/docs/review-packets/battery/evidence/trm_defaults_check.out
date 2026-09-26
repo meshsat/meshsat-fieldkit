@@ -1,0 +1,60 @@
+input: drafts/datasheets/ti-sluuaq3-bq4050-trm.pdf, sha256 525d16b2bdee44e5b587ccf6800b9967bc524772d0b5a20937957ea2e738b7ad
+A DIFFERS 14.2.4.3  Enabled Protections B          section 0xFF     (p.129)  Table 14-1 0x3f     at 0x447e (p.186)
+A DIFFERS 14.2.4.4  Enabled Protections C          section 0xFF     (p.130)  Table 14-1 0xd5     at 0x447f (p.186)
+A DIFFERS 14.2.4.5  Enabled Protections D          section 0xFF     (p.131)  Table 14-1 0x0f     at 0x4480 (p.186)
+A DIFFERS 14.2.7    ZVCHG Exit Threshold           section 0x0000   (p.134)  Table 14-1 2200     at 0x4583 (p.187)
+A DIFFERS 14.10.7.3 FET Delta                      section 1500     (p.164)  Table 14-1 200      at 0x450e (p.189)
+A DIFFERS 14.10.7.4 Cell Delta                     section 1500     (p.164)  Table 14-1 200      at 0x4510 (p.189)
+A DIFFERS 14.10.8.3 Delta Threshold                section 200      (p.165)  Table 14-1 500      at 0x4516 (p.189)
+A DIFFERS 14.10.9.3 Delta Threshold                section 300      (p.165)  Table 14-1 200      at 0x451f (p.189)
+A DIFFERS 14.10.9.4 Delay                          section 5        (p.165)  Table 14-1 2        at 0x4521 (p.189)
+A DIFFERS 14.10.13.2 Delay Period                   section 5        (p.166)  Table 14-1 2        at 0x452c (p.189)
+B DIFFERS 14.2.1.1  FET Options                    header 0x20    bit texts imply 0x0     over mask 0x7d   ; bits [5] (p.116)
+B DIFFERS 14.2.1.6  LED Configuration              header 0x0D0   bit texts imply 0x10    over mask 0x1f8  ; bits [6, 7] (p.118)
+B DIFFERS 14.2.1.12 Temperature Enable             header 0x6     bit texts imply 0x1e    over mask 0x1f   ; bits [3, 4] (p.123)
+B DIFFERS 14.2.4.1  Protection Configuration       header 0x00    bit texts imply 0x3     over mask 0x3    ; bits [0, 1] (p.128)
+B DIFFERS 14.2.5.1  Enabled PF A                   header 0x00    bit texts imply 0x50    over mask 0x5f   ; bits [4, 6] (p.131)
+B DIFFERS 14.2.5.2  Enabled PF B                   header 0x00    bit texts imply 0x18    over mask 0x18   ; bits [3, 4] (p.132)
+B DIFFERS 14.2.5.3  Enabled PF C                   header 0x00    bit texts imply 0x7b    over mask 0x7b   ; bits [0, 1, 3, 4, 5, 6] (p.132)
+B DIFFERS 14.2.5.4  Enabled PF D                   header 0x00    bit texts imply 0xf2    over mask 0xf2   ; bits [1, 4, 5, 6, 7] (p.133)
+B DIFFERS 14.14.1.4 Initial Battery Mode           header 0x0081  bit texts imply 0x4000  over mask 0xe303 ; bits [0, 14] (p.183)
+C DIFFERS 14.2.1.1  FET Options                    Table 14-1 0x20    at 0x4407 (p.187) against bit texts 0x0    ; bits [5]
+C DIFFERS 14.2.1.6  LED Configuration              Table 14-1 0x00d0  at 0x442e (p.187) against bit texts 0x10   ; bits [6, 7]
+C DIFFERS 14.2.1.12 Temperature Enable             Table 14-1 0x06    at 0x4579 (p.187) against bit texts 0x1e   ; bits [3, 4]
+C DIFFERS 14.2.4.1  Protection Configuration       Table 14-1 0x0     at 0x447c (p.186) against bit texts 0x3    ; bits [0, 1]
+C DIFFERS 14.2.4.4  Enabled Protections C          Table 14-1 0xd5    at 0x447f (p.186) against bit texts 0xd7   ; bits [1]
+C DIFFERS 14.2.5.1  Enabled PF A                   Table 14-1 0x0     at 0x44f5 (p.186) against bit texts 0x50   ; bits [4, 6]
+C SELF     14.2.5.1  Enabled PF A                   a bit marked twice with different defaults: bits [4] (p.131)
+C DIFFERS 14.2.5.2  Enabled PF B                   Table 14-1 0x0     at 0x44f6 (p.187) against bit texts 0x18   ; bits [3, 4]
+C DIFFERS 14.2.5.3  Enabled PF C                   Table 14-1 0x0     at 0x44f7 (p.187) against bit texts 0x7b   ; bits [0, 1, 3, 4, 5, 6]
+C DIFFERS 14.2.5.4  Enabled PF D                   Table 14-1 0x0     at 0x44f8 (p.187) against bit texts 0xf2   ; bits [1, 4, 5, 6, 7]
+C DIFFERS 14.14.1.4 Initial Battery Mode           Table 14-1 0x0081  at 0x4449 (p.195) against bit texts 0x4000 ; bits [0, 14]
+label slips (row name differs from the section title):
+  14.2.2.6  Fuse Blow Timeout                row named 'Min Blow Fuse Voltage' (p.128)
+  14.2.3.2  Init Charge Set                  row named 'Init Discharge Set' (p.128)
+  14.4.1.7  Hysteresis                       row named 'Hysteresis Temp' (p.136)
+  14.4.6    Pre-Charging                     row named 'Current' (p.138)
+  14.4.7    Maintenance Charging             row named 'Current' (p.138)
+  14.4.8.5  Charging Voltage Hysteresis      row named 'Voltage Range' (p.139)
+  14.4.9.1  Charge Term Taper Current        row named 'Termination Config' (p.139)
+  14.5.1    Power                            row named 'Valid Update Voltage' (p.140)
+  14.5.2.3  Charger Present Threshold        row named 'Shutdown' (p.141)
+  14.5.5    Power Off                        row named 'Timeout' (p.142)
+  14.5.6    Manual FET Control               row named 'MFC Delay' (p.142)
+  14.7.1    Manufacturer Info                row named 'ManufacturerInfo' (p.145)
+  14.8.6    Power Events                     row named 'No of Shutdowns' (p.151)
+  14.9.2.2  Threshold Standard Tem           row named 'Threshold Standard Temp' (p.153)
+  14.9.11.5 Thresholds 1 and 2               row named 'Threshold 1' (p.157)
+  14.9.17   HWD - Host Watchdog              row named 'Delay' (p.159)
+  14.10.15  2LVL - 2nd Level OV              row named 'Threshold' (p.167)
+  14.11.2.5 Battery Direct Voltage           row named 'Device Voltage Data' (p.172)
+  14.11.3   Device Current Data              row named 'Current' (p.172)
+  14.13.1   CEDV Profile 1                   row named 'Voltage 0% DOD' (p.176)
+  14.13.5.2 Design Capacity in cWh           row named 'Design Capacity cWh' (p.180)
+  14.13.6   Cycle                            row named 'Cycle Count Percentage' (p.180)
+  14.14.1.1 Remaining Ah Capacity Alarm      row named 'Data' (p.182)
+  14.14.1.2 Remaining Wh Capacity Alarm      row named 'Data' (p.183)
+A: 350 chapter-14 parameters compared with Table 14-1, 10 differ; 20 sections not matched to a table row: 14.7.1 Manufacturer Info (p.145); 14.8.8.1 Total Firmware Runtime (p.151); 14.9.6.2 Delay (p.155); 14.9.21.3 Recovery (p.161); 14.10.8.4 Delay (p.165); 14.10.10.2 Delay (p.166); 14.10.11.2 Delay (p.166); 14.10.15 2LVL - 2nd Level OV (p.167); 14.10.16.2 Delay Period (p.167); 14.13.7.3 Set RSOC % Threshold (p.180); 14.13.7.4 Clear RSOC % Threshold (p.180); 14.13.8.3 Set RSOC % Threshold (p.181); 14.13.8.4 Clear RSOC % Threshold (p.181); 14.13.9.3 Set RSOC % Threshold (p.181); 14.13.9.4 Clear RSOC % Threshold (p.181); 14.13.10.3 Set RSOC % Threshold (p.182); 14.13.10.4 Clear RSOC % Threshold (p.182); 14.14.1.1 Remaining Ah Capacity Alarm (p.182); 14.14.1.2 Remaining Wh Capacity Alarm (p.183); 14.14.1.6 Manufacturer Date (p.184)
+B/C: 83 bit-field words, 28 with at least one default mark, 55 with none: 14.2.1.4 Power Config; 14.2.1.10 CEDV Gauging Configuration; 14.5.3.5 Wake Comparator; 14.7.2 Static DF Signature; 14.7.3 All DF Signature; 14.9.9.5 Threshold; 14.9.10.5 Threshold; 14.9.11.5 Thresholds 1 and 2; 14.11.1.1 Safety Alert A; 14.11.1.2 Safety Status A; 14.11.1.3 Safety Alert B; 14.11.1.4 Safety Status B; 14.11.1.5 Safety Alert C; 14.11.1.6 Safety Status C; 14.11.1.7 Safety Alert D; 14.11.1.8 Safety Status D; 14.11.1.9 PF Alert A; 14.11.1.10 PF Status A; 14.11.1.11 PF Alert B; 14.11.1.12 PF Status B; 14.11.1.13 PF Alert C; 14.11.1.14 PF Status C; 14.11.1.15 PF Alert D; 14.11.1.16 PF Status D; 14.11.1.17 Fuse Flag; 14.11.1.18 Operation Status A; 14.11.1.19 Operation Status B; 14.11.1.20 Temp Range; 14.11.1.21 Charging Status A; 14.11.1.22 Charging Status B; 14.11.1.23 Gauging Status; 14.11.1.24 CEDV Status; 14.11.5.1 AFE Interrupt Status; 14.11.5.2 AFE FET Status; 14.11.5.3 AFE RXIN; 14.11.5.4 AFE Latch Status; 14.11.5.5 AFE Interrupt Enable; 14.11.5.6 AFE FET Control; 14.11.5.7 AFE RXIEN; 14.11.5.8 AFE RLOUT; 14.11.5.9 AFE RHOUT; 14.11.5.10 AFE RHINT; 14.11.5.11 AFE Cell Balance; 14.11.5.12 AFE AD/CC Control; 14.11.5.13 AFE ADC Mux; 14.11.5.14 AFE LED Output; 14.11.5.15 AFE State Control; 14.11.5.16 AFE LED/Wake Control; 14.11.5.17 AFE Protection Control; 14.11.5.18 AFE OCD; 14.11.5.19 AFE SCC; 14.11.5.20 AFE SCD1; 14.11.5.21 AFE SCD2; 14.14.1.5 Specification Information; 14.14.1.7 Serial Number
+sections whose parameter row could not be parsed: 14.14.1.8 Manufacturer Name (p.185); 14.14.1.9 Device Name (p.185); 14.14.1.10 Device Chemistry (p.185)
+multi-row parameter tables not compared by name in A: 14.4.12 Cell Balancing Config (p.140); 14.12.1 Safety Status (p.175); 14.12.2 PF Status (p.176); 14.13.2 CEDV Cfg (p.178); 14.13.3 CEDV Smoothing Config (p.179)

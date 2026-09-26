@@ -1,0 +1,45 @@
+{
+ "kind": "erc",
+ "violations": [
+  120,
+  123
+ ],
+ "by_type": [
+  {
+   "warning:lib_symbol_issues": 103,
+   "warning:unconnected_wire_endpoint": 17
+  },
+  {
+   "warning:lib_symbol_issues": 106,
+   "warning:unconnected_wire_endpoint": 17
+  }
+ ],
+ "only_committed": [],
+ "only_other": [
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'Connector'",
+   [
+    "Symbol TP15 [TestPoint]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'Connector_Generic'",
+   [
+    "Symbol J_TS2 [Conn_01x02]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'Device'",
+   [
+    "Symbol R34 [R]"
+   ]
+  ]
+ ],
+ "result": "DIFFERENT"
+}

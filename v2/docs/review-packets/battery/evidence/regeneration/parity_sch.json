@@ -1,0 +1,26 @@
+{
+ "kind": "schematic",
+ "phase_labels": [
+  [
+   "P4"
+  ],
+  [
+   "P4"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N1_title_date": 1,
+   "N2_page_frame_date": 2,
+   "L1_comment1_phase": 1,
+   "L2_frame_phase": 2
+  },
+  {
+   "N1_title_date": 1,
+   "N2_page_frame_date": 2,
+   "L1_comment1_phase": 1,
+   "L2_frame_phase": 2
+  }
+ ],
+ "result": "PARITY"
+}

@@ -1,0 +1,5 @@
+erc_gate: warning  lib_symbol_issues                        103
+erc_gate: warning  unconnected_wire_endpoint                17
+erc_gate: no blocking error (120 violations, 0 error(s) allow-listed with a reason, warnings 120)
+verdict: erc_gate               PASS         of 120 {"allowed": 0, "blocking": 0, "violations": 120}
+erc_gate exit 0

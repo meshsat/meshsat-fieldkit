@@ -1,0 +1,42 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "fail": 0,
+  "pass": 0,
+  "unjudged": 3
+ },
+ "denominator": 3,
+ "evidence": [
+  "unjudged, the other board is absent: transmit inhibit present on B (J_PANEL)",
+  "unjudged, the other board is absent: B: no device drives TX_INHIBIT_n, the panel toggle is its only source",
+  "unjudged, the other board is absent: B: TX_INHIBIT_n is pulled DOWN on this board, so a missing panel inhibits"
+ ],
+ "inputs": {
+  "boards": "A,B,C,D,E,P"
+ },
+ "missing_input": "this board's netlist is absent from this tree, so no contract that names it could be judged",
+ "note": "this board's netlist is absent from this tree",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "RF-002": "b4c62839dd113ee3"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "RF-002"
+ ],
+ "tool": "inhibit_chain_b",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "3f5a673e727ddd39"
+ },
+ "ts": "2026-09-26T13:33:01Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown",
+ "writer": {
+  "file": "check_contracts.py",
+  "sha16": "4f4cb3a61d808820"
+ }
+}
