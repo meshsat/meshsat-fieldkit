@@ -7,16 +7,16 @@ Every pair that is not a current PASS, classified. Generated from tools/pcb_deci
 map's maturity and each deciding verdict: a decision that claims a pair wins over everything else, because
 the ruling is the action that moves it, and the measurement is reported beside it rather than lost.
 
-**118 open pair(s)** over 7 board(s). **40 are measured failures** (a tool looked and the board failed), which are **32 distinct readings**, and **2 of those are claimed by an open owner decision**.
+**118 open pair(s)** over 7 board(s). **40 are measured failures** (a tool looked and the board failed), which are **32 distinct readings**, and **1 of those are claimed by an open owner decision**.
 
 | waiting on | pairs | what it means |
 |---|---:|---|
-| `DECISION` | 2 | an owner decision by name |
+| `DECISION` | 1 | an owner decision by name |
 | `DECISION_UNCLAIMED` | 7 | a rule that says a decision is open while no decision claims it |
 | `AUTHORITY` | 3 | an authority this project does not have |
 | `NO_INSTRUMENT` | 11 | nothing verifies it |
 | `MISSING_INPUT` | 19 | an input the reading declared absent |
-| `MEASURED_FAILURE` | 38 | the tool looked and the board failed |
+| `MEASURED_FAILURE` | 39 | the tool looked and the board failed |
 | `VENDOR_WAIT` | 2 | a fabricator or a standards body, and nobody here |
 | `OWNER_WORK` | 7 | work only the owner or the ordering session can do |
 | `NOT_JUDGED` | 29 | not judged, for the reason the reading gives |
@@ -37,7 +37,7 @@ things to fix.
 | D | 13 | 2 | 1 | 1 | 4 | 4 |
 | E | 17 | 6 | 1 | 0 | 4 | 5 |
 | E5 | 4 | 3 | 1 | 0 | 0 | 0 |
-| P | 13 | 7 | 2 | 0 | 1 | 2 |
+| P | 13 | 7 | 1 | 0 | 1 | 2 |
 
 ## Readings owed
 
@@ -75,15 +75,13 @@ holding a number, not a question about a number.
 
 | decision | pairs held | of which measured | rules | boards |
 |---:|---:|---:|---|---|
-| 40 | 1 | 1 | BAT-001 | P |
 | 42 | 1 | 1 | DEC-001 | A |
 
-## DECISION (2): an owner decision by name
+## DECISION (1): an owner decision by name
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
 | `DEC-001` | A | FAIL | decision 42: a decoupling capacitor cannot be both within 3 mm of a fine-pitch pin and outside that part's escape fan |
-| `BAT-001` | P | FAIL | decision 40: the pack's cell-level protection is one firmware-configured device, and the rule asks for hardware independent of any software |
 
 ## DECISION_UNCLAIMED (7): a rule that says a decision is open while no decision claims it
 
@@ -145,7 +143,7 @@ holding a number, not a question about a number.
 | `DOC-002` | E | INCONCLUSIVE | board E declares E17 and the order set holds E6: the note beside those folders describes a board this project is not building |
 | `DOC-002` | P | INCONCLUSIVE | board P declares P4 and the order set holds P1: the note beside those folders describes a board this project is not building |
 
-## MEASURED_FAILURE (38): the tool looked and the board failed
+## MEASURED_FAILURE (39): the tool looked and the board failed
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -186,6 +184,7 @@ holding a number, not a question about a number.
 | `RET-001` | P | FAIL | intent_return_path FAIL: {'fail': 5, 'pass': 24} |
 | `RET-002` | P | FAIL | intent_return_path FAIL: {'fail': 5, 'pass': 24} |
 | `RTE-001` | P | FAIL | fab_limits FAIL: {'classes': 4, 'under_capability': 5} |
+| `BAT-001` | P | FAIL | pack_protection FAIL: {'checks': 45, 'devices': 5, 'fail': 1, 'functions': 9, 'limits': 14, 'software_only': 9} |
 | `OUT-001` | P | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 
 ## VENDOR_WAIT (2): a fabricator or a standards body, and nobody here

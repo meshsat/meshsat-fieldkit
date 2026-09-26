@@ -2618,3 +2618,93 @@ the stale order set.
 are regenerated at their new stackups and routed, because they are measurements of copper that does not yet
 exist. STK-002 stays OWNER_DECISION_REQUIRED on the rule as a whole, since A, D, E and E5 still have no written
 layer decision under the 11 September P0.
+
+
+## Decision 30 ruled by the owner, 26 September 2026: ZEROIZE is a crypto-erase through the secure element
+
+Asked as foundation question D-03 of MESHSAT-1357, in three parts and one part at a time (what is erased, what
+triggers it, what a power loss during the hold does), each with its options, the reasoning behind each and the
+recommendation. **All three parts were ruled at the recommendation.** The same sitting, from about 23:27 CEST on
+25 September to about 00:55 CEST on 26 September, ruled the foundation questions D-01 to D-17 (D-03 is this
+decision, D-15 is decision 40 below); they are listed with their dates in appendix 32.366, and the envelope ones
+are in `OPERATING-ENVELOPE.md`, not here.
+
+| part | ruling | what it means as built |
+|---|---|---|
+| what is erased | **crypto-erase through the secure element**: every drive and eMMC key is wrapped by a key only the secure element holds; ZEROIZE destroys that key first, then the running modules drop the keys they hold in RAM, then the slot rails are cut | panel controller firmware (MESHSAT-837) and module provisioning; no conductor changes. The secure element is `U8`, the ATECC608B at 0x60 on the kit I2C bus (`gen_sch_b.py:750`), and the panel controller is that bus's only master, so it is the device that performs the erase |
+| what triggers it | **only the covered ZEROIZE toggle held 5 s**; the tamper or lid switch logs and never wipes; a remote wipe is deferred | this narrows appendix 32.50 item 6 ("case-open and tamper switch feeding ZEROIZE logic and the log") to the log half |
+| power loss during the hold | **level-sensitive**: the panel controller reads `ZEROIZE_HW` at boot before any slot powers, a wipe-pending record in its own flash resumes an interrupted wipe, and the kit re-arms only when the toggle is returned | a wipe fails toward erasing, not toward keeping keys |
+| residual risk | **accepted by the owner**: a drive's unlock at boot depends on the secure element, the panel controller and the kit I2C bus | a module that reboots while the panel or the bus is down cannot unlock its drive until they return; ARCH-PCB-B-IOHA section 10 already names the ribbon and the bus as whole-kit common modes |
+
+**The one precondition, and it is the session's to settle.** The erase works only if the ATECC608B slot that
+holds the wrapping key can be erased or overwritten after its zones are locked. The tree holds the summary
+datasheet DS40002239A (`v2/vendor/microchip/`), which does not say; the full datasheet is under NDA. Until it is
+read the slot map is TBD, and its effect is stated here rather than assumed: if no lockable slot can be erased,
+the fallback is the TPM 2.0 that appendix 32.50 item 5 already names, which is a board B part change and comes
+back as engineering with its own evidence.
+
+**Not taken:** the register's own recommendation of 17 September (the panel wipes the secure element on the
+falling edge and messages the running modules, which leaves a powered-off module holding its drive keys);
+a hardware ZEROIZE line into the I/O supervisors and the modules (board B copper and more ways to wipe by
+accident); the three options of this record's 16 September section (the supervisors execute the wipe, power
+removal only, the software path renamed); edge-only behaviour after a power loss; the tamper switch, pack loss
+or a remote command as a trigger.
+
+**A correction to the 16 September section, found on 25 and 26 September.** That section's "second fact" says
+the three supervisors "are already on the same kit I2C bus as the secure element". As generated they cannot
+use it: `gen_sch_b.py:824` lands SDA and SCL on LQFP-100 pins 35 and 36, which the same file's pin table
+(`gen_sch_b.py:261`) names PB1 and PB2, and neither pin lists an I2C function in ST's pin table (DS12117 Rev 9,
+Table 8, read 26 September 2026 from `v2/vendor/st/st-stm32h753xi-datasheet.pdf`, sha256 3bf346d8a511...; the
+same two rows in DS12110 Rev 10 for the STM32H743 that is bought). It is an open design finding of board B
+(ARCH-PCB-B-IOHA section 6), and it does not touch this ruling, which gives the supervisors no role.
+
+**What it releases, read from the rendered page:** decision 30 held SCH-004 on boards A, B, C, D, E and P, six
+of the ten pairs that open decisions held before 26 September. Released is not passed: SCH-004 now waits on the
+panel firmware and the slot map like any other unmet requirement. With decision 40 below, open decisions go
+from three to one (42) and the pairs held by an open decision from 10 to 3 of the 333 the set is judged on
+(`OWNER-DECISIONS-OPEN.md`, rendered 26 September 2026).
+
+**What it does not do yet, named:** no firmware exists, so nothing is erased by anything today, and the
+ZEROIZE test of `TEST-PLAN.md` is the measurement that will show it. Three texts still describe a "disk-key
+wipe line" that no netlist carries: `V2-SPEC.md:34`, the SW_ZERO value string at `gen_sch_c.py:174`, and
+appendix 32.52 at line 2840. The appendix is append-only and appendix 32.366 records the correction; the other
+two are corrected by their owners, not in this record. How success is shown on the kit (the failed key
+operation, drives that do not unlock, the e-paper and sounder indications, the event record) is the session's
+to define.
+
+
+## Decision 40 ruled by the owner, 26 September 2026: a secondary protector for the pack, and cell under-voltage by sourcing
+
+Asked as foundation question D-15 of MESHSAT-1357, with its options, the reasoning behind each and the
+recommendation, and ruled at the recommendation. Decision 40 was registered on 18 September in
+`pcb_decisions.yaml` with its evidence in appendix 32.224 (the addendum of 18 September, 20:20 CEST) and had no
+section in this record until now; the question
+it asked was whether the pack's cell-level protection may rest on one firmware-configured device, the BQ4050,
+when rule BAT-001 asks for protection "in hardware, independent of any software".
+
+**What round 1 of the foundation work found first (W2 finding F-DEC40, confirmed by its challenger).** The two
+parts the register named on 18 September cannot do the job: ABLIC's S-8261 is a protector "for 1-cell pack"
+(Rev.5.5_00, `v2/vendor/battery/ablic-s8261.pdf`) and TI's bq2970 is single-cell with PACK+ limited to 12 V
+(SLUSBU9I, `ti-bq2970.pdf`). A 4S block needs a multi-cell part, and none of those has a datasheet in this tree yet.
+
+| part | ruling | who |
+|---|---|---|
+| the floor | a 4S secondary over-voltage protector across the four taps; a chemical fuse in the pack path that both the secondary protector and the BQ4050's own FUSE output (pin 25 in `gen_sch_p.py`'s pin table) can blow; the BQ4050's PTC input turned on (it is tied to VSS today, `gen_sch_p.py:11`) | the session's engineering, recorded here because the ruling rests on it |
+| cell under-voltage | **a 4S secondary protector that also covers under-voltage, if one can be sourced near the cost of the over-voltage-only part; otherwise the under-voltage protection stays in the BQ4050's firmware and that residual is accepted, with the gauge's data flash verified at commissioning** | the owner, 26 September 2026 |
+
+**What the second branch means in practice.** The BQ4050's under-voltage threshold (2.50 V against the Samsung
+35E's 2.30 V over-discharge protection, `pcb_pack_protection.yaml`) lives in data flash. A pack whose data flash
+is wrong or unprogrammed has no under-voltage cut, so the commissioning step reads the thresholds and the enabled
+protections back from the gauge and compares them with `pcb_pack_protection.yaml` before the pack is first
+charged or discharged (`ASSEMBLY.md` section 8). Over-voltage, the gross fault and heat do not depend on it once
+the floor exists: the secondary protector and the chemical fuse act with the gauge unpowered or crashed.
+
+**Not taken:** the register's 18 September recommendation as worded (it named the single-cell parts); a hardware
+under-voltage cut on board A, which protects only against the kit's own load and not against self-discharge or
+another load on the pack; accepting the BQ4050 alone against the rule.
+
+**What it releases, read from the rendered page:** BAT-001 on board P is no longer held by an open decision. It
+is not passed: nothing is laid for this ruling yet (a board P schematic change, a re-route of board P and a
+data-flash setting), so BAT-001 on P stays open until that copper exists and `pack_protection.py` judges it.
+The branch between the two under-voltage options is taken when a 4S part is sourced and priced, and that part's
+datasheet comes into `v2/vendor/` with its revision and hash first.

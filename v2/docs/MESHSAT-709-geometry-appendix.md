@@ -18734,3 +18734,140 @@ Box housekeeping the same evening: E39, E40 and E41 (run dirs `20260921T155925Z-
 `20260921T120454Z-f9b8a70c`, `20260921T130912Z-1d918ee3`) were fetched to the runner and checked file by file
 against the box, and the box they ran on (vast.ai 51145697) was destroyed after being idle since 22 September
 02:30. E41's kept board is `finished-round2.kicad_pcb` and has not been read yet.
+
+
+### 32.366, 26 September 2026 01:45 CEST: the foundation round is recorded: the owner rules D-01 to D-17 (decisions 30 and 40 among them) and ends owner questions with a standing rule, the critical findings by ID, and two evidence-integrity fixes with a correction to the second
+
+**What this round was (MESHSAT-1357).** The foundation re-baseline asked seven workstreams to write down what the
+kit must do and to check the generated design against it, in two rounds with a challenger on each and eleven
+adjudications (A01 to A11) where two workstreams disagreed. Nothing has been built, powered or measured: every
+finding below is about the generators and the committed boards at `82dd1e4d`, and every ruling is a
+requirement, a condition or a design direction, not a result.
+
+**The owner's rulings of 25 and 26 September 2026.** Each question was asked one at a time with its options, the
+reasoning behind each and a recommendation, and each was ruled at the recommendation. Decisions 27, 28, 41 and 43
+were ruled at 21:40 CEST on 25 September (32.365). D-01, D-02a and D-02b were ruled on 25 September between
+about 23:27 and 23:40 CEST; D-02c and every later question on 26 September between about 00:05 and 00:55 CEST.
+The individual minute of each is not recorded, so none is given here.
+
+| date | question | ruling | where it is recorded |
+|---|---|---|---|
+| 25 September, 21:40 CEST | decisions 27, 28, 41, 43 | board C on six layers; board P on four layers at 2 oz; the order set rebuilt and quarantined; board B measured on eight layers first. Decision 43's whole-board eight-layer run is EXPERIMENTAL: its outputs are never adopted as board B's phase, never promoted and never counted as a layout candidate, and a pass permits only further investigation | 32.365; `OWNER-DECISIONS-2026-09-11.md`; `pcb_decisions.yaml` |
+| 25 September, about 23:27 to 23:40 CEST | D-01, prototype scope | **FULL DESIGN, STAGED ACCEPTANCE.** Every ruled function stays designed and is fitted where copper exists. Prototype 1 is accepted on a named core: messaging over Iridium, 5G, LoRa and APRS (NEED-01, NEED-02); the three-slot failover fabric (NEED-03, `ARCH-PCB-B-IOHA.md` tests A1 to A14); pack, vehicle and solar charging (NEED-05); hardware EMCON (NEED-08); ZEROIZE of the secure element (NEED-10); pack safety (NEED-13); service and programming access (NEED-14). Everything else is built where possible and reported NOT_YET_TESTED. Requirements carry `prototype_1: core` or `prototype_1: deferred` | this section; the requirements registry. D-06 below rules one pack, so the "second pack" among the deferred items is not expected to be buildable: no pack is expected to fit the west pocket (A06, INFERRED until the case is measured, D-08) |
+| 25 September, same sitting | D-02a | `TEST-PLAN.md`'s +55 C operation, +71 C storage and -33 C storage are qualification margins over the -20 to +40 C use and -20 to +45 C storage envelope; two pass lines, to specification inside the envelope and survive and recover at the margin | `OPERATING-ENVELOPE.md` section 8; `pcb_envelope.yaml` `owner_rulings` |
+| 25 September, same sitting | D-02b | closed-lid operation in a defined reduced mode (the owner's example: GNSS, the LoRa mesh, Iridium and APRS beacons, the monitor off, one compute module); a closed-lid state and thermal test join `TEST-PLAN.md`; a lid sensor is engineering, and the tamper switch can serve both. Accepted with it: one module above +35 C ambient, and with three loaded modules charging holds off above about +25 C | as D-02a |
+| 26 September, from about 00:05 CEST | D-02c | shock is `TEST-PLAN.md` E1 (26 drops from 1.22 m) and vibration E2 (composite wheeled vehicle, 1 hour per axis); altitude 0 to 3000 m in use and 0 to 4500 m in transport; service life TBD for prototype 1 | as D-02a |
+| 26 September | D-02d | a cold start from the pack is OUT OF SCOPE and stated: below about -10 C cell temperature the kit needs shore or vehicle power, or warming, before it starts from its pack; use down to -20 C holds once warm; no hardware added | as D-02a; the ruling asks for the same statement in the ConOps |
+| 26 September | D-02e | "operate shaded" is a stated operating condition, with a shade accessory (a lid sun shield or a tarp); full-sun design is a later qualification item; no board change | as D-02a |
+| 26 September | D-03, decision 30, ZEROIZE | a crypto-erase through the secure element (drive and eMMC keys wrapped by a key only the ATECC608B holds; ZEROIZE destroys it, then the running modules drop their RAM keys, then the slots are cut); firmware and provisioning, no board change; precondition an erasable ATECC608B slot map, TBD against the NDA datasheet, with a TPM 2.0 as the fallback; the ONLY trigger is the covered toggle held 5 s (the tamper or lid switch logs only, a remote wipe is deferred); level-sensitive across a power loss. Residual risk accepted by the owner: a drive's unlock at boot depends on the secure element, the panel controller and the kit I2C bus | `OWNER-DECISIONS-2026-09-11.md`; `pcb_decisions.yaml` (`authority: OWNER`, `ruled_on: 2026-09-26`, `reversed_by`); `PANEL.md` sections 1, 5, 6 and 9 |
+| 26 September | D-04, markets and obligations | a non-commercial prototype in the Netherlands and the EU, operated by a licensed radio amateur; no CE or RED marking and no EMC claim (the MIL-STD-461 runs are characterisation), with an EU route kept open; every transmitter configured to the operator's licence and the EU limits; a band lock on the VHF path; the pack's transport route stated, its UN 38.3 status unknown | `OPERATING-ENVELOPE.md` sections 6 and 8 |
+| 26 September | D-05, EMCON | the radios go DARK, as generated and completed: every radio with an emission path is powered off or RF-disabled in hardware; VHF keeps listening (a transmit-only gate); GNSS, DCF77 and the lightning detector continue. The gap fixes are session work: the compute modules' own WiFi and Bluetooth onto the EMCON line through open-drain parts that may only pull low, and the AW7915 `W_DISABLE1#` gated or proven | `PANEL.md` section 6; `OPERATING-ENVELOPE.md` section 4 |
+| 26 September | D-06, the pack | one 4S3P 18650 pack (Samsung 35E) of about 145 Wh, shrink-wrapped in the east pocket, subject to the case measurement; longer missions rely on vehicle or solar input; the runtime requirement is battery-only hours in the idle and typical modes at +20 C for an aged pack, the number not yet computed. Session items: a lower charge setting than 4 A for cell life, and `pack_4s.py` redesigned | `ASSEMBLY.md` section 3; `OPERATING-ENVELOPE.md` section 4 |
+| 26 September | D-07, 5G antenna jacks | three jacks (ANT0, ANT2, ANT3), making twelve bulkheads, at the board A site found free (X +46), if the case measurement confirms the site and the board E clamp fit; otherwise two (ANT0, ANT2). The key-M socket is replaced by a key-B part regardless (session) | `ASSEMBLY.md` corrections note |
+| 26 September | D-08, the case check | the owner measures his Peli 1450 and builds the cardboard mock-up himself from the written request; the 1450PF frame is bought later, before the face plate is final. The ban on asking him to measure a COTS part still holds for everything else | `ASSEMBLY.md` section 3 |
+| 26 September | D-09, the review route | the SIDN voucher goes to a ZEROIZE and key-fill security review; a paid battery-and-protection review by a qualified electronics engineer before the pack is built; an EMC pre-compliance session once the prototype exists. The session prepares the packets and requests; any spend beyond the voucher needs a quote and the owner's approval | this section |
+| 26 September | D-10, SOS | a distress message with position over the available bearers, Iridium first when nothing else is up, to a configured recipient list; never through EMCON: under EMCON it is queued and the operator is told; firmware only | `PANEL.md` section 9 |
+| 26 September | D-11, peak simultaneity | all radios may still transmit at once, for a declared key-down time above a declared state of charge, with the outlets at their minimum contract; the session sets the thresholds from the fuse and gauge limits and adds a hardware interlock that drops the outlets while the PA keys | this section |
+| 26 September | D-12, external USB | the existing wall data path is routed to the sealed Glenair 233-370, the USB-C becomes a power-only outlet, and the Glenair is the console and key-fill port | `ASSEMBLY.md` section 4 |
+| 26 September | D-13, firmware integrity and the supervisor part | the prototype floor is software-verified boot on the STM32H743 supervisors (and on the CM5 if Raspberry Pi documents it); a hardware root of trust is required at a production trigger; the H743 is accepted formally, and condition 1's H753/H743 mismatch closes only when the schematic text and the BOM are aligned to the H743 and parity is re-proven | `ARCH-PCB-B-IOHA.md` sections 6 and 10a |
+| 26 September | D-14, lifting the stack | the procedure (kit off, pack XT60 unplugged, shore removed) plus an insulating cap over E5 while the stack is out; lifting live is an accepted, recorded residual risk; a hardware "stack present" interlock is studied at Review D | `ASSEMBLY.md` sections 7 and 8 |
+| 26 September | D-15, decision 40, cell under-voltage | a 4S secondary protector that also covers under-voltage if one is sourced near the cost of the over-voltage-only part; otherwise firmware under-voltage on the BQ4050 with a data-flash verification at commissioning. The floor under both: a 4S secondary over-voltage protector, a chemical fuse, the BQ4050's FUSE output and its PTC input | `OWNER-DECISIONS-2026-09-11.md`; `pcb_decisions.yaml` (`authority: OWNER`, `ruled_on: 2026-09-26`, `reversed_by`); `ASSEMBLY.md` section 8 |
+| 26 September | D-16, vehicle surge | no vehicle surge claim for the prototype; the entry is recorded as not qualified, with a warning against 24 V military vehicle buses; MIL-STD-1275 is revisited if military vehicles become a market | `OPERATING-ENVELOPE.md` sections 4, 6 and 8; the ruling asks for the same statement in the ConOps |
+| 26 September, up to about 00:55 CEST | D-17, board A's USB-C CC pins | an external low-capacitance ESD array at the CC pins by the connector, riding on the owed board A update | this section |
+
+**D-18, the IP68 fans, stays CONDITIONAL.** It arises only if Delta's 40 mm IP68 fan does not fit the coolers,
+and under the rule below it would then be taken by the session, not asked.
+
+**The owner's standing rule of 26 September 2026.** Having picked the recommended option on every question of
+the two sittings, the owner ruled that he is never to be asked a question again: "find the recommended answer
+and use it". Where a choice is left, the session takes the option the evidence recommends and records it as
+taken by the session under this rule, with its reason, so that it can be reversed. The limits that are actions
+rather than questions still hold: no order, cart change or payment, no spend beyond the existing
+authorisations, no contact with outside parties on his behalf, no host reboot and no credential. Two choices
+this round's documents needed were taken under it:
+
+- **SOS joins prototype 1's core** (D-01-R2), because D-10 defines its action and the foundation decision table
+  had recommended it (`PANEL.md` section 9).
+- **The critical peripherals of NEED-03 are named** (D-01-R1): every USB peripheral of `ARCH-PCB-B-IOHA.md`
+  section 15 and the kit-to-kit WiFi link are critical; the LoRa module and cellular data are the named
+  exceptions for prototype 1, because making either critical changes board B's floor plan and the kit keeps at
+  least three of the four messaging bearers through any one module loss without them (`ARCH-PCB-B-IOHA.md`
+  section 15a).
+
+The other open items of the requirements registry are for that registry to settle under the same rule.
+
+**The critical findings, by ID.** Each is a defect of the generated design, and each carries the fix it points
+to; none is fixed in the generators by this entry.
+
+| ID | finding | status |
+|---|---|---|
+| W1-F01, settled by A11 | EMCON has no hardware path to the three compute modules' own WiFi and Bluetooth (their disables are software expander outputs). The four U19/U20 gates on board B are SUPPLY enables, so the SDR, the RockBLOCK, the E22 and both E72 stop receiving under EMCON; the 5G module goes to airplane mode; the AW7915 link cards' response to W_DISABLE1# is unproven. Only VHF/APRS is transmit-only. D-05 makes "dark" the ruled behaviour, so the first two are gaps to close and the rest is as ruled | VERIFIED |
+| W1-F03 | ZEROIZE was described four incompatible ways (V2-SPEC, `PANEL.md` twice, decision 30) and the netlist matched none: the only listener is the panel controller's GPIO 22 | settled in the documents by decision 30's ruling above; the firmware is owed |
+| F-IN-01, extended and settled by A03 | ten diodes are drawn reversed: seven one-way surge clamps (board E D1 to D4 and D10, board P D1, board D D1) and board C's three e-paper booster rectifiers D19 to D21; and sixteen one-way clamps use KiCad's bidirectional D_TVS symbol, which states no cathode | VERIFIED (pcbnew cathode marks on the committed boards, and regeneration parity of those parts on the box) |
+| F-CH-01, settled by A02 | the BQ25731's cell-count strap (60.4k over 40.2k, 40 %) sits in the 2S window of SLUSE66A, so it charges to 8.4 V and trips system over-voltage at 12 V: the 4S pack is never charged | VERIFIED (re-read against SLUSE66A on 26 September) |
+| F-SQ-01 refined by A01, and W3-F22 | the kit is not deadlocked, but the device rail and the panel come up only through the expander's unspecified internal pull-up (DEV_EN about 1.7 V against a 1.25 V threshold, failing above about 181k), and no compute slot powers until the panel firmware drives SLOT_EN. The fix is R42 re-terminated to A's +3V3 | INFERRED (nominal levels); the wiring VERIFIED |
+| W3-F01 | every PCIe downstream link on board B joins the switch's transmitter to the module's transmit pins, so no link can train | VERIFIED (confirmed by the challenger on the B21 netlist and DS40068) |
+| W6-F13, W3-F21, settled by A08 | board B's 5G socket (TE 1-2199119-5, C574849) is a key M connector and the RM520N-GL is key B only, so the module cannot be inserted as drawn; SIM 2 is on the wrong socket pins | VERIFIED |
+| W4-F1-r2, settled by A06 | the pack as designed (`pack_4s.py`'s rigid box) is not expected to fit either pocket under B21; 4S4P is not expected to fit in any packaging with board P beside it; the east pocket is expected to take about 145 Wh at most, shrink-wrapped. D-06 rules the pack to that finding | INFERRED until the case is measured (D-08) |
+| W6-F2 | board P's BQ4050RSMR (4 x 4 mm, 0.4 mm pitch) is placed on a 5 x 5 mm, 0.5 mm land, so every P route result around U1 is void, including the P8 arm decision 28 cites (notice N-01 to the owner) | VERIFIED |
+| A04 | board A's decision-31 hold may not be lifted: its entry clamp D2 on VIN_RAW is SMCJ33A on the committed A32 board and SMCJ40A in the netlist | VERIFIED |
+
+Also recorded in the documents this round, as major findings: the P to E pack SMBus lead has no single connector
+(A07); board E's LoRa blind-mate site is 2.0 mm stale against board A's X 100 (A09); A22's `J_AB2` is expected to
+collide with D8 on its 6 mm standoffs (A09, INFERRED from the header's class height, since it has no picked
+part); the supervisors' I2C status pins PB1 and PB2 have no I2C function (W5-F3, `ARCH-PCB-B-IOHA.md` section
+6); and `ARCH-PCB-B-IOHA.md` section 15 read the reverse failover ring against its own section 4 and
+`gen_sch_b.py:543` (corrected there).
+
+**The two evidence-integrity fixes, and a correction to the second.** `2ba560ec` (25 September, 22:53 CEST) moved
+three test fixtures that wrote their verdicts into the tree's own `v2/ecad/out/` (the `check_zone_nets.py` runs of
+`test_board_gates.py` and the routeflow validate loop of `test_finish_order.py`); on a KiCad box the stray verdict
+had turned PLN-001 on five boards from PASS to INCONCLUSIVE. `82dd1e4d` (23:21 CEST) moved the fourth,
+`test_gate_fixtures.py`'s run of `lcsc_fill.py`, which replaced `v2/ecad/out/lcsc_fill.verdict.json` with the
+fixture's PASS of 1 (inputs `{}`) on every suite run. **Its message was wrong about what reads that file.** It said
+the published CMP-002 and SUP-001 results come from the per-board `jlc_certify` verdicts, as if `lcsc_fill` were
+unread. It is read: the coverage map names `lcsc_fill` as the second deciding verdict of both rules
+(`pcb_rules_coverage.yaml:144` and `:154`), and `rules_status.py` searches the set-level `out/` for every board and
+keeps the newest file of a name (`:53-62`, `:152-162`). So while the fixture file stood (written 25 September,
+20:32:57Z) it was the `lcsc_fill` reading for boards C and P, over their real readings in
+`pcb-c-display-c8/routed/` (71 rows) and `pcb-p-pack-p2/routed/` (23 rows), both of 21 September. Found by the
+first-round challenger of W7 (finding W7-F5, confirmed) and restated as W7-R2-08. What limits the damage: the
+committed pages `PCB-RULE-STATUS-C.md` and `-P.md` were last rendered on 21 September (`9345b62e`), before the
+fixture wrote, and name `jlc_certify` as their source; and at 26 September 00:53 CEST the runner's main checkout
+holds no `v2/ecad/out/lcsc_fill.verdict.json` at all. Still owed: fresh `lcsc_fill` readings for C and P, a re-read
+of CMP-002 and SUP-001 from a re-render, and a guard in `run.py` that sees a verdict a run CREATES, not only one it
+changes (W7-F5).
+
+**Corrections to earlier sections of this appendix, which stay as they were written.**
+
+- **32.52 (line 2840)** says ZEROIZE "wipes the secure element and asserts the disk-key wipe line". No such line
+  exists in any netlist; decision 30 (above) is what ZEROIZE is.
+- **32.50 item 6** has the tamper switch "feeding ZEROIZE logic and the log". Under decision 30 it feeds the log only.
+- **32.55 (line 2930)** lists a supply switch and W_DISABLE for the 5G module and a 3.3 V buck enable for the WiFi
+  card among the EMCON gates. The generated boards carry neither rail gate: EMCON only asserts W_DISABLE1# on the
+  three M.2 cards (A11). D-05 (above) rules the radios dark, so for the 5G module airplane mode meets it, and for
+  the WiFi cards the session either gates their supply or proves that W_DISABLE1# silences them.
+- **32.62 (line 3062)** says "the charger BQ25731 of A22 already speaks SMBus to it" (the pack gauge) and keeps E6's
+  `J_SMB` "as released". The charger is an I2C target on the kit bus with no conductor to the gauge, only E6's
+  sensor controller can read it, and the two ends of the lead do not mate (A07). The same section's two pack
+  options (4S4P 18650 at about 200 Wh, 4S3P 21700 at 216 Wh) are not expected to fit beside board P under B21
+  (A06, INFERRED until the case is measured); that section's own research gate item (line 3056) asked for a pack
+  of about 100 to 150 Wh, and D-06 (above) rules one of about 145 Wh.
+- **32.85 (line 3524)** says "the tallest thing under B16 is D8's SA868 at Z 27.4". D8's mated power connector
+  reaches higher on its 6 mm standoffs (about Z 40.7 by JST's catalogue height, INFERRED), and A22's `J_AB2`
+  under D8 is the open, expected collision (A09, INFERRED).
+
+**What is still owed after these rulings, by owner of the file:** the generator changes each ruling and finding
+points to (each with a netlist-parity proof, condition 5); the ConOps statements of D-02d and D-16; the
+`TEST-PLAN.md` closed-lid state and thermal test (D-02b), the two pass lines (D-02a) and E3's +55 C line as survive
+and recover; and the stale texts in `V2-SPEC.md`, `BUILD.md`, `CONOPS.md`, `gen_sch_c.py`, `panel1450.py`,
+`scene.py` and the two READMEs named in this round's reports.
+
+**The files these rulings and corrections touch:** `pcb_decisions.yaml` (decisions 30 and 40), the rendered
+`OWNER-DECISIONS-OPEN.md` (one open decision, 42, holding 3 of 333 pairs), `OWNER-DECISIONS-2026-09-11.md`
+(decision 30's and decision 40's records), `PANEL.md` (sections 1, 3, 5, 6, 7, 9 and 10 and a dated corrections
+note), `ARCH-PCB-B-IOHA.md` (sections 6, 10, 10a, 13, 15 and a new 15a), `OPERATING-ENVELOPE.md` (its status,
+sections 2 to 7 corrected, section 8 new) with `pcb_envelope.yaml`, ENV-001's pin and texts in
+`pcb_rules_coverage.yaml` and the envelope tests in `tests/test_envelope_data.py`, and `ASSEMBLY.md` (sections 1
+to 4, 7 and 8, each correction dated). None of them is a generator, a board, a verdict or an order file, and no
+board's phase changes.

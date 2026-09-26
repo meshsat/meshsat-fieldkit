@@ -207,7 +207,29 @@ decisions:
   - n: 30
     title: "ZEROIZE is a switch wired to nothing that can act on it"
     asked: 2026-09-16
-    status: open
+    status: ruled
+    authority: OWNER
+    ruled_by: OWNER
+    ruled_on: 2026-09-26
+    outcome: >-
+      owner ruling 26 September 2026 (foundation question D-03 of MESHSAT-1357), asked one decision at a time with
+      the options and the recommendation: ZEROIZE is a CRYPTO-ERASE THROUGH THE SECURE ELEMENT. Every drive and eMMC
+      key is wrapped by a key only the secure element holds; ZEROIZE destroys that key first, then the running
+      modules drop the keys they hold in RAM, then the panel controller cuts the three slot rails. It is firmware
+      and provisioning with no board change. Its precondition is that the ATECC608B slot map lets that key be
+      erased, which the summary datasheet the tree holds (DS40002239A) does not state and the full datasheet, under
+      NDA, is needed for; a TPM 2.0 is the fallback appendix 32.50 item 5 already names. The ONLY trigger is the covered toggle held 5 s: the tamper or
+      lid switch logs and never wipes, and a remote wipe is deferred. The line is LEVEL-SENSITIVE across a power
+      loss: the panel controller reads ZEROIZE_HW at boot before any slot powers, a wipe-pending record in its flash
+      resumes an interrupted wipe, and the kit re-arms only when the toggle is returned. Residual risk accepted by
+      the owner: a drive's unlock at boot depends on the secure element, the panel controller and the kit I2C bus.
+      This is the recommendation the D-03 question carried (option Z-B of the W5 contract draft); it replaces this
+      entry's own recommendation of 17 September, kept in its `recommendation` field as history (the panel wipes
+      the secure element and messages the running modules), whose named gap, a powered-off module keeping its
+      drive keys, is what the crypto-erase closes.
+    reversed_by: >-
+      reopen this decision; nothing has been laid for this ruling yet, because it is panel firmware, module
+      provisioning and a slot map, and no conductor changes
     ask: "which device performs the wipe, and on what edge"
     recommendation: >-
       the panel controller does the wipe on the falling edge, because it is the only device that both sees the
@@ -841,7 +863,29 @@ decisions:
   - n: 40
     title: "the pack's cell-level protection is one firmware-configured device, and the rule asks for hardware independent of any software"
     asked: 2026-09-18
-    status: open
+    status: ruled
+    authority: OWNER
+    ruled_by: OWNER
+    ruled_on: 2026-09-26
+    outcome: >-
+      owner ruling 26 September 2026 (foundation question D-15 of MESHSAT-1357), asked one decision at a time with
+      the options and the recommendation, and ruled at the recommendation. THE FLOOR, which is the session's
+      engineering and stands under either branch: a 4S secondary over-voltage protector across the four taps, a
+      chemical fuse in the pack path that the secondary protector AND the BQ4050's own FUSE output (its pin 25) can
+      both blow, and the BQ4050's PTC input turned on instead of tied off. THE OWNER'S PART: cell UNDER-voltage,
+      which the floor leaves on the gauge's data flash. If a 4S secondary protector that also covers under-voltage
+      can be sourced near the cost of the over-voltage-only part, it is used; otherwise the under-voltage
+      protection stays in the BQ4050's firmware and the residual is accepted, with a verification of the gauge's
+      data flash (the thresholds and the enabled protections read back against `pcb_pack_protection.yaml`) as a
+      commissioning step. The two parts this entry named on 18 September (ABLIC S-8261 and TI bq2970) are
+      single-cell protectors and cannot protect a 4S block (W2 finding F-DEC40, confirmed by its challenger:
+      S-8261 is "FOR 1-CELL PACK", bq2970's PACK+ is limited to 12 V), so neither is the part; no 4S secondary
+      protector's datasheet is in this tree yet, and the choice between the two branches is made on the sourced
+      part and its price. Nothing is laid for this ruling yet: it is a board P schematic change, a re-route of
+      board P and a data-flash setting, and BAT-001 on board P stays open until that copper exists and is judged.
+    reversed_by: >-
+      reopen this decision; nothing has been laid for this ruling yet, because the secondary protector, the
+      chemical fuse and the PTC input are a board P schematic change that has not been made
     ask: "add a protector that needs no firmware (a dedicated cell protector IC on the taps, or the gauge's chemical-fuse output with a fuse that has one), or accept the BQ4050 alone with that written down against the rule"
     recommendation: >-
       add the second protector. It is one small part, its datasheets are already in this tree, and it is the

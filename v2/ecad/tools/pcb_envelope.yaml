@@ -1,7 +1,9 @@
 # THE ADOPTED OPERATING ENVELOPE, AS DATA (rule ENV-001, decision 34 ruled 21 September 2026).
 #
 # `v2/docs/OPERATING-ENVELOPE.md` is the record and stays the authority: it carries the reasoning, the
-# carve-outs and the three severities that are deliberately still open. This file is the same numbers in a
+# carve-outs and what is still open. Since 25 and 26 September 2026 it also carries the OWNER's rulings on the
+# envelope (its section 8: D-02a to D-02e, D-04 and D-16), which are quoted in `owner_rulings` below under the
+# same rule as every other number here. This file is the same numbers in a
 # form a RULE can resolve against, because four rules name the envelope (CMP-001, THM-001, ISO-001, REL-001)
 # and until today each of them would have had to read prose or pick its own number.
 #
@@ -14,11 +16,13 @@ schema_version: 1
 adopted: "2026-09-21"
 adopted_by: SESSION
 document: "v2/docs/OPERATING-ENVELOPE.md"
-document_sha256: "cadc28d252f11807b8ee0d11341d65d3a22e344e3cd2812dcc9846f3cf4559aa"
+document_sha256: "6e16960da6128a5e4f9262cf8d53a4dfaee0212fab8f2559147307ddc3accc60"   # re-read and re-pinned 26 September 2026 after the owner rulings of section 8
 what_is_adopted: >-
   section 4 as the design envelope and section 6's first row as the transient level. The altitude, the
-  vibration and shock severities and the service life stay OPEN in the document's own words and are NOT
-  invented here; a rule that needs one of them says so rather than reading a number from this file.
+  vibration and shock severities and the service life stayed OPEN in the document's own words on 21 September
+  and were NOT invented here. On 26 September 2026 the owner ruled the altitude and the severities BY NAME
+  (the document's section 8, quoted in owner_rulings); the service life is TBD for prototype 1 and stays in
+  open_in_the_document, and a rule that needs it says so rather than reading a number from this file.
 
 ambient_c:
   in_use: {min: -20, max: 40}
@@ -44,7 +48,79 @@ transient:
   eft: {adopted: false,
         why: "the 2 kV row of the document is the number a reader would expect and it has NO authority behind it, so it is recorded as NOT A REQUIREMENT of this project"}
 
+# THE OWNER'S RULINGS OF 25 AND 26 SEPTEMBER 2026 (foundation questions D-02a to D-02e, D-04 and D-16 of
+# MESHSAT-1357, the document's section 8). They sit beside decision 34's adoption and do not replace it:
+# `adopted_by` above is the session's adoption of section 4, and this block is the owner's. Each item carries
+# its own date, because the sitting ran across midnight. Every number in it appears in the document and
+# `tests/test_envelope_data.py` refuses one that does not, exactly as for the numbers above; the severities
+# were ruled BY NAME, so that item carries no number at all and the test refuses one.
+owner_rulings:
+  ruled_by: OWNER
+  qualification_margins_c:
+    ruled_on: "2026-09-25"
+    question: D-02a
+    what: >-
+      the TEST-PLAN.md levels beyond the envelope are QUALIFICATION MARGINS over it and not limits of it. Two
+      pass lines: operation to specification inside the envelope; survival and recovery at the margin. No test
+      level is lowered to the envelope.
+    operating_max: 55
+    storage_max: 71
+    storage_min: -33
+    source: "TEST-PLAN.md E3 (+55 C operation, +71 C storage) and E4 (-33 C storage)"
+  closed_lid:
+    ruled_on: "2026-09-25"
+    question: D-02b
+    what: >-
+      the kit operates with its lid closed in a defined REDUCED MODE; the owner's example is GNSS, the LoRa
+      mesh, Iridium and APRS beacons, the monitor off and one compute module. The exact bearer set is
+      engineering. A closed-lid state and thermal test join TEST-PLAN.md; a lid sensor is an engineering item.
+    accepted_consequences:
+      - {above_c: 35, what: "the kit runs one compute module, so there is no compute redundancy in the heat"}
+      - {above_c: 25, what: "with three loaded modules, charging holds off (about +25 C ambient)"}
+  severities:
+    ruled_on: "2026-09-26"
+    question: D-02c
+    what: "shock and vibration severities are two TEST-PLAN.md tests, ruled by name; neither has been run"
+    shock: "TEST-PLAN.md E1: 26 transit drops from 1.22 m"
+    vibration: "TEST-PLAN.md E2: the composite wheeled vehicle profile, 1 hour per axis"
+  altitude_m:
+    ruled_on: "2026-09-26"
+    question: D-02c
+    in_use: {min: 0, max: 3000}
+    transport: {min: 0, max: 4500}
+  cold_start:
+    ruled_on: "2026-09-26"
+    question: D-02d
+    in_scope: false
+    cell_below_c: -10
+    what: >-
+      a kit cold-soaked below about -10 C cell temperature needs shore or vehicle power, or warming, before it
+      starts from its pack; once warm, use down to the in-use floor holds. No hardware is added.
+  direct_sun:
+    ruled_on: "2026-09-26"
+    question: D-02e
+    operate_shaded: true
+    what: >-
+      shade is a stated operating condition, with a shade accessory (a lid sun shield or a tarp); a design for
+      full sun is a later qualification item. No board change.
+  vehicle_surge:
+    ruled_on: "2026-09-26"
+    question: D-16
+    qualified: false
+    what: >-
+      no vehicle surge claim for the prototype; the entry is recorded as not qualified and is not for military
+      vehicle buses; MIL-STD-1275 is revisited only if military vehicles become a market
+  emc_claim:
+    ruled_on: "2026-09-26"
+    question: D-04
+    claimed: false
+    what: >-
+      a non-commercial prototype in the NL/EU operated by a licensed radio amateur: no CE or RED marking and no
+      EMC claim, so the MIL-STD-461 runs are characterisation and the transient level above is a design level,
+      not a claim; the design keeps an EU route open
+
+# What the document still leaves open. The altitude and the vibration and shock severities were on this list
+# until 26 September 2026, and the cold start and direct sun were added and ruled the same night; all four are
+# the owner's rulings above now. Nothing in this file assumes a service life.
 open_in_the_document:
-  - altitude
-  - "vibration and shock severities"
   - "service life"

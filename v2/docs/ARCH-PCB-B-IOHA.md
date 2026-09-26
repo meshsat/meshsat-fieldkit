@@ -95,6 +95,8 @@ Four independent mechanisms, strongest first.
 
 **Heartbeat: two independent CAN-FD fabrics**, one per FDCAN peripheral, with separate transceivers, separate termination and separately routed pairs. Loss of either fabric, or of one transceiver, leaves quorum. Ethernet health reporting to the cluster is secondary and is never the arbitration path. **That open item is closed with a decision, not with a port:** the three supervisors report status on the **kit I2C bus** (each of them a slave at its own address, 0x30, 0x31 and 0x32, which are free in the map of section 8 of the repo handover), which the panel controller masters and the cluster reads through the panel's USB device. Three Ethernet links do not fit on the KSZ's one free PHY port, an Ethernet PHY per supervisor is three more parts and three more failure points for a status path, and status must never be able to become the arbitration path by accident. If bank 1 is unreachable the cluster loses the status read and the supervisors keep arbitrating on CAN, which is the intended order of dependence.
 
+**OPEN DESIGN FINDING, 26 September 2026: as generated, the supervisors cannot be I2C targets at all.** `gen_sch_b.py:824` lands `SDA` and `SCL` on LQFP-100 pins 35 and 36, which the generator's own pin table names PB1 and PB2 (`gen_sch_b.py:261`). Neither pin lists any I2C function in ST's pin table (DS12117 Rev 9, Table 8, `v2/vendor/st/st-stm32h753xi-datasheet.pdf`, sha256 3bf346d8a511...: PB1 carries TIM1_CH3N, TIM3_CH4, TIM8_CH3N, DFSDM1_DATIN1, LCD_R6, OTG_HS_ULPI_D2, ETH_MII_RXD3 and LCD_G0; PB2 carries RTC_OUT, SAI1_D1, DFSDM1_CKIN1, SAI1_SD_A, SPI3_MOSI, SAI4_SD_A, QUADSPI_CLK and SAI4_D1), and the same two rows read the same in DS12110 Rev 10 for the STM32H743 that is actually bought (the H753 against H743 difference is a component mismatch: the owner accepted the H743 on 26 September 2026, and it is not closed yet, section 10a). I2C-capable pins that the generator leaves unconnected: PB6 and PB7 (pins 92 and 93, I2C1 or I2C4) and PB10 and PB11 (pins 46 and 47, I2C2). So the status path of the paragraph above does not exist on the generated board: the cluster cannot read the supervisors, while arbitration on the two CAN fabrics is untouched. The fix is a board B generator change (for example SDA to PB7 and SCL to PB6), proven by a netlist diff and then routed; until then this paragraph describes intent, not the board.
+
 **The CAN pairs are not in a controlled-impedance class, deliberately.** They sit in the board's Default class (0.25 mm
 at 0.2 mm) and are routed as two nets rather than as a coupled pair. The reason is measured rather than assumed: on the
 JLC 3313 outer layer the narrowest track this board allows, 0.127 mm, reaches about 109 ohm differential at any
@@ -140,6 +142,7 @@ Named honestly, because an FMEA that lists nothing is worthless:
 
 - `+5V_DEV` and `+3V3_DEV` feed everything shared. A short on either is a whole-board failure.
 - The `J_PANEL` ribbon remains a whole-kit control failure.
+- **The panel controller is a whole-compute dependency (added 26 September 2026).** Board A holds `SLOT_EN1..3` low through 100k (`gen_sch_a.py:407`, "a slot with no controller line stays off"), and only the panel controller drives them, so with the ribbon out, the panel unpowered or its controller held in reset or in its bootloader, no module powers at all. The same controller is the only master of the kit I2C bus, and since the owner's ZEROIZE ruling of 26 September 2026 (decision 30) every drive's unlock at boot goes through the secure element on that bus, a residual risk the owner accepted.
 - The KSZ9897R is one switch: it fails, all three modules lose the wall port and each other's Ethernet.
 - The kit I2C bus is one bus with one master on another board.
 - The voters themselves are silicon and can fail; they fail to a defined state, which is why the safe state is the home assignment.
@@ -159,6 +162,15 @@ because CAN-FD bit timing cannot ride on the HSI, its own reset, SWD pads, statu
 on two independent fabrics with separate termination. The pin table is KiCad's own `STM32H753VITx` symbol, which cites
 `https://www.st.com/resource/en/datasheet/stm32h753vi.pdf`; the alternate-function choices, FDCAN1 on PD0/PD1 and FDCAN2
 on PB12/PB13, are the classic H7 mappings and are to be confirmed against the datasheet's AF table before release.
+
+**The part, and its firmware floor: owner ruling of 26 September 2026 (D-13).** The STM32H743 that is bought is
+accepted formally as the supervisor part. This text, the generator and the BOM still say STM32H753, so the
+component mismatch is not closed by the ruling: it closes when the schematic text and the BOM are aligned to the
+H743 and netlist parity is shown again by a diff, and neither has been done yet. The H753's extra crypto and hash
+accelerators are not what the supervisors need, which is why the ruling can accept the H743; that stays a claim
+about the firmware until the firmware exists. The prototype's firmware-integrity floor is software-verified boot
+on these supervisors (and on the compute modules if Raspberry Pi documents one); a hardware root of trust is
+required at a production trigger, and none is designed here.
 
 **Six voters**, one per voted bit, `out = AB + BC + CA` in 74LVC08 and 74LVC32 quads, the same families the EMCON chain
 already uses. Verified on bank 1: the three controllers' selects enter U70 at pins 1/9, 2/4 and 10/5, the three products
@@ -248,7 +260,7 @@ prototype; none has been run.
 | A11 | WiFi failover | disable the primary card | the voted `WIFI_SEC` moves both chains, the second card links to the peer kit, and the measured link margin is within 1 dB of the primary path |
 | A12 | Dark plane | unpopulate or hold all three supervisors in reset from power-on | every bank comes up on its home module, every hub leaves reset, the kit works |
 | A13 | USB bandwidth under failover | run the SDR at full rate on a bank that has failed over | throughput is measured and recorded; the neighbour hosting two banks is expected to share, and the number is what matters |
-| A14 | EMCON through the fabric | assert EMCON while a bank is failed over | every transmitter of that bank is silenced, measured with the SDR, exactly as when it is home |
+| A14 | EMCON through the fabric | assert EMCON while a bank is failed over | every transmitter of that bank is silenced, measured with an external receiver or spectrum analyser (corrected 26 September 2026: as generated EMCON removes the LimeSDR's own supply, so the kit's SDR cannot be the instrument), exactly as when it is home |
 
 ## 14. What it costs
 
@@ -287,20 +299,26 @@ The owner asked three questions of each device: which surviving module owns it, 
 further failure removes it. This is the answer for every peripheral on the board, read off the netlist rather than
 described. "Home" and "failover" are the ring of section 4.
 
+**Corrected 26 September 2026.** Until today the failover column below read the REVERSE ring (bank 1 to slot 3,
+bank 2 to slot 1, bank 3 to slot 2), contradicting section 4. The generator settles it: `gen_sch_b.py:543` sets the
+failover host of bank s to `f = s % 3 + 1`, which both host selects of the bank use (the TMUXHS4212 at `:547` and the
+TS3USB221A at `:552`), so bank 1 fails over to slot 2, bank 2 to slot 3 and bank 3 to slot 1, exactly as section 4
+draws it. The columns "after the home module is lost" and "removed by one further failure" now follow that ring.
+
 | Peripheral | Where it hangs | Owner while everything works | After the home module is lost | Removed by one further failure |
 |---|---|---|---|---|
-| LimeSDR Mini 2.4 | bank 1, port 1 (USB 3) | slot 1 | slot 3 adopts bank 1 through its spare USB3-1 | losing slot 3 as well, or the bank 1 hub |
-| Panel controller (C7) | bank 1, port 2 | slot 1 | slot 3 | as above; the panel's hardware lines (EMCON, ZEROIZE, MAIN PWR) do not depend on any module at all |
-| Camera | bank 1, port 3 | slot 1 | slot 3 | as above |
-| RockBLOCK 9704 (Iridium) | bank 1, port 4 through a CP2102N | slot 1 | slot 3 | as above |
-| GNSS LG290P | bank 2, port 1 through a CP2102N | slot 2 | slot 1 adopts bank 2 | losing slot 1 as well, or the bank 2 hub |
-| E72 Zigbee coordinator | bank 2, port 2 | slot 2 | slot 1 | as above |
-| E72 Thread RCP | bank 2, port 3 | slot 2 | slot 1 | as above |
-| QMX HF unit | bank 2, port 4 | slot 2 | slot 1 | as above |
-| APRS board (D8) | bank 3, port 1 | slot 3 | slot 2 adopts bank 3 | losing slot 2 as well, or the bank 3 hub |
-| Sensor controller (E6) | bank 3, port 2 | slot 3 | slot 2 | as above |
-| Sealed wall USB port | bank 3, port 3 | slot 3 | slot 2 | as above |
-| 5G module, management | bank 3, port 4 | slot 3 | slot 2 | as above. **This is the AT and firmware link only** |
+| LimeSDR Mini 2.4 | bank 1, port 1 (USB 3) | slot 1 | slot 2 adopts bank 1 through its spare USB3-1 | losing slot 2 as well, or the bank 1 hub |
+| Panel controller (C7) | bank 1, port 2 | slot 1 | slot 2 | as above. EMCON and MAIN PWR act with no module and no firmware; ZEROIZE needs no module either, but its erase is the panel controller's own firmware (decision 30) |
+| Camera | bank 1, port 3 | slot 1 | slot 2 | as above |
+| RockBLOCK 9704 (Iridium) | bank 1, port 4 through a CP2102N | slot 1 | slot 2 | as above |
+| GNSS LG290P | bank 2, port 1 through a CP2102N | slot 2 | slot 3 adopts bank 2 | losing slot 3 as well, or the bank 2 hub |
+| E72 Zigbee coordinator | bank 2, port 2 | slot 2 | slot 3 | as above |
+| E72 Thread RCP | bank 2, port 3 | slot 2 | slot 3 | as above |
+| QMX HF unit | bank 2, port 4 | slot 2 | slot 3 | as above |
+| APRS board (D8) | bank 3, port 1 | slot 3 | slot 1 adopts bank 3 | losing slot 1 as well, or the bank 3 hub |
+| Sensor controller (E6) | bank 3, port 2 | slot 3 | slot 1 | as above |
+| Sealed wall USB port | bank 3, port 3 | slot 3 | slot 1 | as above |
+| 5G module, management | bank 3, port 4 | slot 3 | slot 1 | as above. **This is the AT and firmware link only** |
 | 5G module, data | slot 2's PCIe switch | slot 2 | **nothing: it does not move** | slot 2 alone. Open ruling 4 would move it onto bank 3 |
 | WiFi mesh card 1 | slot 1's PCIe switch | slot 1 | **the card does not move; the antennas do** | losing slot 3 as well, which takes the second card |
 | WiFi mesh card 2 | slot 3's PCIe switch | standby, radio disabled | takes the antennas on the voted `WIFI_SEC` | losing slot 1 as well |
@@ -314,3 +332,34 @@ described. "Home" and "failover" are the ring of section 4.
 Read the table as the honest statement of what this work bought: **every USB peripheral survives one module loss, and
 the two bearers that do not are named** (the LoRa module, which is on slot 3's SPI, and cellular data, which is on
 slot 2's PCIe lane until open ruling 4 is decided).
+
+## 15a. The kit-level claim against this table (26 September 2026)
+
+`V2-SPEC.md` line 29 states the owner's requirement: "no single CM5 is a single point of failure". Read against
+sections 10, 12 and 15, that requirement is met BY DESIGN for compute (k3s on three modules) and for every USB
+peripheral (the ring), and NOT met for two bearers: the LoRa module goes with slot 3 and cellular data with slot 2.
+Nothing here has been built or tested, so "met" means designed to, with section 13 as the proof still owed.
+
+The requirement is about modules, and the kit has other single points that a module-level statement must not be
+read as covering. As generated: the device rails `+5V_DEV` and `+3V3_DEV` (FMEA row 11); the `J_PANEL` ribbon (row
+12); the KSZ9897R switch (row 13); the kit I2C bus and its one master; and the panel controller itself, without
+which no module powers (section 10). Since decision 30 was ruled on 26 September 2026 the drives' unlock at boot
+also depends on the secure element, the panel controller and the kit bus, a residual risk the owner accepted.
+**Any public or product-level wording therefore says "no single compute module is a single point of failure for
+compute or for the USB peripherals", names the LoRa module and cellular data as the exceptions, and never says
+"no single point of failure" about the kit.**
+
+**The critical peripherals of prototype 1, named (taken by the session under the owner's standing rule of 26
+September 2026, question D-01-R1).** The requirement of section 1 protects "a critical peripheral" and never
+listed one; the owner's D-01 made the fabric and its tests A1 to A14 part of prototype 1's core without naming
+the peripherals it must keep. The list: every USB peripheral of section 15 is critical (the LimeSDR, the panel
+controller, the camera, the RockBLOCK, the GNSS, both E72, the QMX, the APRS board D8, the sensor controller, the
+sealed wall USB port and the 5G management link), each moving with its bank, and so is the kit-to-kit WiFi link,
+whose antennas move to the standby card (A11). The LoRa module and cellular data are NOT critical for prototype
+1 and stay the named exceptions. The reasons: making either critical needs a second LoRa site or the 5G module
+moved to USB 3 (open ruling 4), and both change board B's floor plan, which is the board that is not routed;
+and without them the kit keeps at least three of D-01's four messaging bearers through any one module loss, by
+section 15 read against the ring (slot 1 lost: all four stay, Iridium's bank moving to slot 2; slot 2 lost:
+LoRa, Iridium and APRS stay; slot 3 lost: 5G, Iridium and APRS stay). Nothing here is built, so that is the
+design's answer, and the tests of section 13 are its proof. Reverse by naming either bearer critical, which
+reopens board B's floor plan.
