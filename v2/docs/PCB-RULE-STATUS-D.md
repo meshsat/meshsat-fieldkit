@@ -3,23 +3,27 @@
 
 # Rule status: board D
 
-Manifest **2026-09-16.1**, rule set **ff8151db3576437b**, evidence epoch **2026-09-16T00:35:00+02:00**.
+Manifest **2026-09-16.1**, rule set **950539a66227908b**, evidence epoch **2026-09-16T00:35:00+02:00**.
 
 **Readiness: NOT_READY**
 
 Measured on board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12.
 
-> **HELD BY OWNER DECISION 31.** ROUTING_STATUS = PASS   ELECTRICAL_PROTECTION_STATUS = BLOCKED_DECISION_31   FAB_READINESS = NOT_READY   PUBLICATION_STATUS = HELD
+> **HELD BY OWNER DECISION 31, AT FABRICATION RELEASE.** ROUTING_STATUS = PASS   ELECTRICAL_PROTECTION_STATUS = BLOCKED_DECISION_31   FAB_READINESS = NOT_READY   PUBLICATION_STATUS = HELD
 >
-> measured on 17 September by cutting this board's deliverable, which the finish refused at that gate: SEVEN of board D's SEVEN judged conductors reach a semiconductor with nothing between them, which is EVERY one of them, three each on the two headset jacks a person plugs a headset into and one on the 30 W amplifier output. The fourteen this line carried until that evening counted the jacks' own grounds, which the rule skips by pattern: the numerator was always right and the denominator flattered the board. Its antenna jack is the one that is answered, by the arrestor at the bulkhead. The rule did not even APPLY to board D until that morning, because its applicability was a list of interfaces this board does not carry
+> decision 31 was ruled on 21 September 2026 (the session's) and its executed record reads the ruled protection in the schematic of the declared phase and in no layout: J_PAOUT declared off board at the PolyPhaser GTH-SFF-AL, and the headset conductors each clamped at the jack by a single-line bidirectional part, substituted by the session for the ruled PESD5V0S2BT (D9, D11, D12, D14 PESD5V0S1BA C19224; D10, D13 PESD12VL1BA C38558); netlist f13d8b70099ab03e, port_protect PASS of 21 with 0 reversed. The committed board predates it. Until 26 September this hold held layout entry; it gates fabrication release since. The measurement it was opened on (17 September): seven of board D's seven judged conductors reached a semiconductor with nothing between them
 >
-> Permitted while held: a review package clearly quarantined as NOT_FOR_FAB may be generated.
+> Permitted while held: a review package clearly quarantined as NOT_FOR_FAB may be generated, and the board may enter layout once every layout_entry_requires above is met and the rest of its layout-entry test passes.
 >
 > Forbidden while held: any orderable fabrication package, any promotion of the board or its folder.
 >
-> This lifts when decision 31 is ruled and this entry is deleted.
+> This lifts when the layout of the declared phase implements the reviewed schematic: SCH-002 PASS on it on current-candidate evidence, TRN-001 PASS on that layout's netlist, each part of layout_entry_requires on its land at its conductor with the placement and return path the review states, the release's physical checks of the board (hardset, the release DRC) clean, and this entry deleted with that evidence named in the commit.
+>
+> It gates fabrication release, not layout entry. Before this board enters layout: decision 31's protection topology reviewed on this board's current netlist: every exposed conductor, the part it meets first, the clamp's rating against decision 34's level, and the placement and return-path constraints the layout must keep (the clamp at the entry, its ground return short and on the plane); the exact fitted parts decision 31's executed record lists for board D, at their conductors; TRN-001 PASS on the current netlist.
 
-| result | rules | percent |
+**Historical aggregate of mixed revisions, not readiness.** The table below counts, per result, the newest reading of each required rule on this board under its current rule, whatever revision it was taken on: readings of layouts that predate the corrected netlists, of older netlists, and under tools (code bundles) that have changed since are all in it. It is not readiness and not evidence about the current candidate: which readings count for the board as it is designed now, and whether it may enter layout, are in [CURRENT-EVIDENCE.md](CURRENT-EVIDENCE.md).
+
+| historical aggregate, mixed revisions | rules | percent of this board's required rules |
 |---|---|---|
 | PASS | 37 | 72.5 |
 | FAIL | 2 | 3.9 |
@@ -78,5 +82,5 @@ Measured on board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12.
 | DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | final_gate_d INCONCLUSIVE: this board is HELD by an open owner decision, so its paperwork is not current and cannot be made current while the hold sta |
 | DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **INCONCLUSIVE** | doc_provenance_d INCONCLUSIVE: board D declares D12 and the order set holds D8: the note beside those folders describes a board this project is not bu |
 | OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
-| SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 334 |
+| SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 335 |
 | SGN-002 a prototype-only unknown is named | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | PCB-PROTOTYPE-UNKNOWNS.md is current with the registry |

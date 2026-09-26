@@ -7,7 +7,7 @@ Every applicable rule this project does not yet verify, by the category of the g
 needs, who decides and the effort estimate. A gap is not a failure of the board: it is a question nobody has
 answered yet, made visible so it cannot be forgotten.
 
-**17 of 58 rules carry a gap.**
+**17 of 59 rules carry a gap.**
 
 ## absent (1)
 
@@ -225,28 +225,13 @@ this rule asks for is a question at order time or a coupon, which is the orderin
 is written into ORDER-SESSION-PROMPT.md on 19 September beside the layer prices  
 *Close it by* solve every geometry, pin the standard, and get the fabricator's written confirmation with a coupon where the tolerance needs it. Owner **OWNER**, after STK-001. Effort P50 8h, P80 24h.
 
-**INT-002 a transformerless Ethernet link is verified at both ends** (BLOCKER, DOCUMENTED_ONLY)  
-DECISION 29 IS RULED (the session's, 21 September 2026): the three links stay capacitively coupled as built
-and no magnetics are fitted. What decided it, beyond the 16 September reading below: the compute module's own
-datasheet says of all eight Ethernet pins 'connect to transformer or MagJack' (Table 4), which is the cable
-application those pins were designed for and not a prohibition of a PHY-to-PHY link inside one board, where
-nothing leaves the enclosure and there is nothing for a transformer to isolate; the fallback's own part is a
-0 to +70 C device against an envelope adopted at -20 to +40, so fitting three more would triple a part
-already outside its range; and waiting is not available, because Broadcom does not publish the PHY's
-datasheet to anyone here. THE RULING DOES NOT PRODUCE THE MISSING DOCUMENT and this maturity says so: nothing
-measured this link, the answer rests on one vendor's clause plus a ruling that accepts a named risk, and the
-reading that would close it is a bench test (each module link up at 1000M). The 16 September recommendation
-in the last line below, to fit the magnetics, is SUPERSEDED by that ruling and is left in place so the change
-of mind is visible. BOTH ends read on 16 September 2026, and they do not close the question. The switch
-vendor PERMITS this exact topology and board B matches its clause word for word (Microchip DS00004151A
-section 6.6: transformer-less where the PHY-to-PHY connection is within one PCB, a single DC blocking 0.1 uF
-in series on each of the eight signals, no additional components between the switch and the capacitor). The
-module's datasheet describes ONE topology, a 1:1 RJ45 MagJack, and never discusses capacitive coupling; and
-the switch vendor's own clause names the gap in a sentence, the other device may require termination or other
-circuitry. The module's PHY is a Broadcom BCM54210PE and Broadcom does not publish its datasheet, so this
-cannot be closed from any document this project can obtain. Owner decision 29, with three costed options; the
-recommendation is to fit the magnetics board B already carries on its wall port  
-*Close it by* the bench test the ruling rests on: each of the three module links brought up at 1000M with auto-negotiation enabled, on the first board B that exists; a link that does not come up is the fallback's trigger and the fallback is three magnetics of an extended-temperature family. Owner **LAB**. Effort P50 2h, P80 8h.
+**INT-003 a transformerless Ethernet link is verified up at 1000M on the built board** (BLOCKER, OPEN)  
+the PROTOTYPE half of INT-002 (split 26 September 2026). Nothing is built, so nothing verifies it and it
+reads INCONCLUSIVE until the bench. The module PHY's datasheet is not published (Broadcom BCM54210PE), so the
+termination and bias question the switch vendor's clause 6.6 raises is closed by this test (the acceptance
+and method below); a written vendor answer would only inform it. It is never closed by the assessment of
+INT-002.  
+*Close it by* the bench test the ruling rests on: each of the three module links brought up at 1000M full duplex with auto-negotiation enabled, on the first board B that exists, carrying line-rate traffic each way for at least 60 s with zero frame, CRC and symbol errors, at room temperature and at TEST-PLAN's cold and hot points; a link that does not come up or counts an error is the fallback's trigger (three magnetics of an extended-temperature family). Owner **LAB**. Effort P50 3h, P80 10h.
 
 **PAIR-001 a pair is coupled and matched** (BLOCKER, ENFORCED)  
 coupling and the 1 mm length gate are enforced; the 1 mm is a project number. 17 September 2026: the
@@ -312,11 +297,11 @@ stated for 1 oz only, and they stay INCONCLUSIVE rather than being judged agains
 process  
 *Close it by* ask the fabricator for the annular ring rows AT 2 oz, which its published page does not state, so boards E5 and P can be judged rather than left inconclusive. Owner **VENDOR**. Effort P50 2h, P80 48h.
 
-## covered (41)
+## covered (42)
 
 These rules have an executable gate, a machine-readable verdict and behavioural fixtures: BAT-001, BAT-002,
-CLK-001, CMP-001, CMP-002, DFM-001, DOC-001, DOC-002, ENV-001, ENV-002, GND-001, IMP-002, INT-001, ISO-001,
-MEC-001, PI-001, PI-002, PI-003, PLC-001, PLC-002, PLN-001, PWR-001, PWR-002, PWR-003, RET-002, RET-004,
-RF-002, RTE-001, RTE-002, SCH-001, SCH-002, SCH-003, SCH-004, SCH-005, SGN-001, SGN-002, STK-001, SUP-001,
-TRN-001, TST-001, VIA-001
+CLK-001, CMP-001, CMP-002, DFM-001, DOC-001, DOC-002, ENV-001, ENV-002, GND-001, IMP-002, INT-001, INT-002,
+ISO-001, MEC-001, PI-001, PI-002, PI-003, PLC-001, PLC-002, PLN-001, PWR-001, PWR-002, PWR-003, RET-002,
+RET-004, RF-002, RTE-001, RTE-002, SCH-001, SCH-002, SCH-003, SCH-004, SCH-005, SGN-001, SGN-002, STK-001,
+SUP-001, TRN-001, TST-001, VIA-001
 

@@ -40,22 +40,49 @@ things to fix.
 
 ## Readings owed
 
-Of the 98 open pairs with a reading beside them, **25 are decided by a reading taken under a tool that has
+Of the 98 open pairs with a reading beside them, **98 are decided by a reading taken under a tool that has
 CHANGED since**. A tool change moves no rule-set fingerprint and no per-rule digest, so nothing else on these
 pages can say it. It is an upper bound, because a tool file moves for a comment as readily as for a
 criterion, and it decides nothing: it says the reading is owed. Re-take with retake_gate.sh or a sweep.
 
 | rule | boards |
 |---|---|
-| `CMP-002` | A, B, D, E |
+| `ANA-001` | A, E |
+| `BAT-001` | P |
+| `CMP-002` | A, B, D, E, P |
+| `DEC-001` | A |
 | `DFA-001` | A, B, C, D, E, P |
+| `DFM-001` | A, B, D, E |
+| `DOC-001` | A, B, D, E |
+| `DOC-002` | A, B, D, E |
+| `EMC-001` | B |
+| `GND-001` | B |
+| `ISO-001` | A, B, E |
 | `MEC-001` | A |
-| `PI-001` | A, E, P |
-| `PI-002` | A |
-| `PI-003` | A, D, E |
-| `RET-004` | A |
+| `OUT-001` | A, B, C, D, E, E5, P |
+| `PAIR-001` | B |
+| `PI-001` | A, B, E, P |
+| `PI-002` | A, B |
+| `PI-003` | A, B, D, E |
+| `PLC-001` | A, B |
+| `PLC-002` | B |
+| `PLN-001` | B |
+| `PWR-003` | B |
+| `RET-001` | B, C, P |
+| `RET-002` | B, C, P |
+| `RET-003` | A, B, C, D, E |
+| `RET-004` | A, B, C, E |
+| `RF-001` | A, B |
+| `RTE-001` | B, P |
+| `RTE-002` | B |
 | `SCH-002` | A, B |
-| `SUP-001` | A, B, D, E |
+| `SCH-003` | B |
+| `SI-001` | A, B, C, D, E, P |
+| `STK-001` | B, E5, P |
+| `SUP-001` | A, B, D, E, P |
+| `TRN-001` | A, B |
+| `VIA-001` | B |
+| `VIA-002` | B, P |
 
 ## Boards behind their own generator
 
@@ -98,7 +125,7 @@ What closes these is a re-cut and a route, not a drawing.
 | `GND-002` | A | INCONCLUSIVE | no verification: 16 September 2026: the strategy is WRITTEN, which it was not before, and writing it found the gap. The kit has no single conductive enclosure: the Peli 1450 is |
 | `THM-001` | A | INCONCLUSIVE | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) and from what each |
 | `GND-002` | B | INCONCLUSIVE | no verification: 16 September 2026: the strategy is WRITTEN, which it was not before, and writing it found the gap. The kit has no single conductive enclosure: the Peli 1450 is |
-| `INT-002` | B | INCONCLUSIVE | no verification: DECISION 29 IS RULED (the session's, 21 September 2026): the three links stay capacitively coupled as built and no magnetics are fitted. What decided it, beyond |
+| `INT-003` | B | INCONCLUSIVE | no verification: the PROTOTYPE half of INT-002 (split 26 September 2026). Nothing is built, so nothing verifies it and it reads INCONCLUSIVE until the bench. The module PHY's da |
 | `THM-001` | B | INCONCLUSIVE | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) and from what each |
 | `GND-002` | C | INCONCLUSIVE | no verification: 16 September 2026: the strategy is WRITTEN, which it was not before, and writing it found the gap. The kit has no single conductive enclosure: the Peli 1450 is |
 | `THM-001` | C | INCONCLUSIVE | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) and from what each |

@@ -7,7 +7,7 @@ Every rule this project holds a board to, with its authority, its applicability,
 its verification is currently worth. Generated from the registry: the registry is the authority and this page
 is its rendering.
 
-Registry version **2026-09-16.1**, fingerprint **ff8151db3576437b**, 58 rules over 34 domains.
+Registry version **2026-09-16.1**, fingerprint **950539a66227908b**, 59 rules over 34 domains.
 
 ## How to read a rule
 
@@ -1489,10 +1489,13 @@ check_contracts.py to declare its verdict names (RULE_VERDICTS) so the set verdi
 _shared_verdict_why beside SCH-003, and changing check_contracts.py at this merge would stale the re-take it
 carries. Until then E5's INT-001 is routed to the registry writer.
 
-### INT-002  a transformerless Ethernet link is verified at both ends
+### INT-002  a transformerless Ethernet link has a pre-layout assessment on its current nets
 
-Where an Ethernet link is built PHY-to-PHY without magnetics, both PHYs' own documentation is checked to
-permit it, and the coupling, termination, common-mode handling and bias are as both require.
+Where an Ethernet link is built PHY-to-PHY without magnetics, a pre-layout assessment on the board's current
+netlist records both PHYs' documents as this project holds them, quotes the permitted topology from each end
+that states one, compares the implemented coupling, termination, common-mode handling and bias with them
+conductor by conductor, and states as an open gap, with the test that closes it and the fallback, every
+requirement neither document settles.
 
 | | |
 |---|---|
@@ -1500,43 +1503,83 @@ permit it, and the coupling, termination, common-mode handling and bias are as b
 | applies | conditional; boards b |
 | release effect | **BLOCKER** |
 | risk | ELECTRICAL_FUNCTION, EMC, RELIABILITY |
-| verified by | MANUAL_REVIEW, VENDOR_CONFIRMATION at SCHEMATIC (human or lab only) |
+| verified by | MANUAL_REVIEW at SCHEMATIC (partially automatable) |
 | source | PARTIALLY_VERIFIED |
-| | KSZ989x/KSZ956x/KSZ9477 hardware design checklist, Microchip, 6.6 Capacitive Coupling Option, page 12 -- v2/vendor/cluster/ksz989x-hw-design-checklist.pdf |
-| | Raspberry Pi Compute Module 5 datasheet, Raspberry Pi Ltd, 2.2.1 connector and design guidance; pin table, Ethernet pairs -- v2/vendor/cm5/cm5-datasheet.pdf |
+| | KSZ989x/KSZ956x/KSZ9477 hardware design checklist, Microchip, 6.6 Capacitive Coupling Option, page 12, and its checklist row -- v2/vendor/cluster/ksz989x-hw-design-checklist.pdf |
+| | KSZ9897R data sheet, Microchip, 7.2 -- v2/vendor/cluster/ksz9897.pdf |
+| | Raspberry Pi Compute Module 5 datasheet, Raspberry Pi Ltd, 2.2, 2.2.1 connector and design guidance; Table 4, Ethernet pairs -- v2/vendor/cm5/cm5-datasheet.pdf |
+| | CM5 IO board KiCad design, Raspberry Pi Ltd, CM5IO.kicad_sch, the MagJack U3 and C1 -- v2/vendor/cm5/cm5io-kicad.zip |
 | | BCM54210PE datasheet, Broadcom -- NOT IN THIS TREE |
 | implementation | gen_sch_b.py, eight 100 nF series capacitors per module link, no magnetics |
-| maturity | **DOCUMENTED_ONLY** |  (at writing: SOURCE_UNVERIFIED)
+| maturity | **VERIFIED_MANUALLY** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | not waivable |
 
-**Accept when** Both PHYs' documents on file, the permitted topology quoted from each, and the implemented coupling and
-termination compared against both.
+**Accept when** A desk review record, pinned by content in the coverage map and bound to the nets it read on the board's
+current netlist, that (1) quotes the switch vendor's permission and its checklist question; (2) quotes the
+module vendor's own statements and says whether they permit, forbid or do not discuss the topology; (3) lists
+the implemented coupling conductor by conductor from the netlist and compares it with each permitted topology
+item by item; (4) states every requirement neither document settles as an open gap, names INT-003 (or a
+written vendor answer) as what closes it, and names the fallback and its trigger. A record that finds a
+mismatch with a permitted topology, or a gap it does not allocate, does not pass. It establishes that the
+link is defensible to lay out, never that it works.
 
-**Why** One end's permission is not the link's permission.
+**Why** One end's permission is not the link's permission, and a test that needs the built board cannot be the reason
+the board is never laid out.
+
+**If violated** A layout entered on a coupling no document supports, or a board held forever on a test only the board can
+host.
+
+**Today** SPLIT on 26 September 2026 (the review of the 22:35 progress report, finding A; the session under the owner's
+standing rule of that day): this rule is the pre-layout assessment at the SCHEMATIC phase and INT-003 the
+bench link test at the PROTOTYPE phase, so the test on the first built board B no longer holds that board's
+layout entry and is not weakened either. The assessment (v2/docs/reviews/INT-002-PRE-LAYOUT-ASSESSMENT.md)
+reads the switch vendor's permission (Microchip DS00004151A section 6.6, matched item by item by the 24
+conductors of board B's netlist), the module vendor's statements (the CM5 datasheet describes a MagJack only
+and neither permits nor forbids the coupling), the module maker's reference design (its PHY-side centre taps
+on 100 nF to ground and no supply, consistent with a voltage-mode driver, INFERRED), and states the
+unresolved gap (the BCM54210PE's termination and bias, unpublished), allocated to INT-003 with decision 29's
+fallback and its trigger. It is a DESK_REVIEW and never a physical test. DECISION 29 IS RULED (the session's,
+21 September 2026): the three links stay capacitively coupled as built and no magnetics are fitted; what
+decided it and the 16 September reading are in decision 29 and in this entry's history.
+
+### INT-003  a transformerless Ethernet link is verified up at 1000M on the built board
+
+Every PHY-to-PHY Ethernet link built without magnetics is shown on the built board to link at 1000 Mbit/s
+full duplex with auto-negotiation enabled on both ends and to carry traffic without errors, which is the half
+of INT-002 that documents cannot settle while one PHY's datasheet is unpublished.
+
+| | |
+|---|---|
+| classification | INTERFACE_REQUIREMENT |
+| applies | conditional; boards b |
+| release effect | **BLOCKER** |
+| risk | ELECTRICAL_FUNCTION, EMC, RELIABILITY |
+| verified by | PROTOTYPE_MEASUREMENT at PROTOTYPE (human or lab only) |
+| source | PARTIALLY_VERIFIED |
+| | KSZ989x/KSZ956x/KSZ9477 hardware design checklist, Microchip, 6.6 -- v2/vendor/cluster/ksz989x-hw-design-checklist.pdf |
+| | IEEE 802.3, clause 40 (1000BASE-T), IEEE, 40.1 objectives -- NOT IN THIS TREE |
+| implementation | NONE_YET |
+| maturity | **OPEN** |  (at writing: OPEN)
+| owner | LAB |
+| waiver | not waivable |
+
+**Accept when** On the first built board B with its three modules fitted: each of the three module links comes up at 1000
+Mbit/s full duplex with auto-negotiation enabled on both ends (CON-005), and carries line-rate traffic in
+each direction for at least 60 s (more than 3 x 10^10 bits) with zero frame, CRC and symbol errors in the
+switch's port counters and the module's interface counters; repeated at the cold and hot operating points of
+TEST-PLAN.md. A link that does not come up at 1000M, or counts an error, is decision 29's fallback trigger
+(magnetics of an extended-temperature family on the three links); it is never waived.
+
+**Why** A permission and an inference are not a link; only the built board carries this channel.
 
 **If violated** Link instability, bias fighting between the two PHYs, and emissions from an unbalanced pair.
 
-**Today** DECISION 29 IS RULED (the session's, 21 September 2026): the three links stay capacitively coupled as built
-and no magnetics are fitted. What decided it, beyond the 16 September reading below: the compute module's own
-datasheet says of all eight Ethernet pins 'connect to transformer or MagJack' (Table 4), which is the cable
-application those pins were designed for and not a prohibition of a PHY-to-PHY link inside one board, where
-nothing leaves the enclosure and there is nothing for a transformer to isolate; the fallback's own part is a
-0 to +70 C device against an envelope adopted at -20 to +40, so fitting three more would triple a part
-already outside its range; and waiting is not available, because Broadcom does not publish the PHY's
-datasheet to anyone here. THE RULING DOES NOT PRODUCE THE MISSING DOCUMENT and this maturity says so: nothing
-measured this link, the answer rests on one vendor's clause plus a ruling that accepts a named risk, and the
-reading that would close it is a bench test (each module link up at 1000M). The 16 September recommendation
-in the last line below, to fit the magnetics, is SUPERSEDED by that ruling and is left in place so the change
-of mind is visible. BOTH ends read on 16 September 2026, and they do not close the question. The switch
-vendor PERMITS this exact topology and board B matches its clause word for word (Microchip DS00004151A
-section 6.6: transformer-less where the PHY-to-PHY connection is within one PCB, a single DC blocking 0.1 uF
-in series on each of the eight signals, no additional components between the switch and the capacitor). The
-module's datasheet describes ONE topology, a 1:1 RJ45 MagJack, and never discusses capacitive coupling; and
-the switch vendor's own clause names the gap in a sentence, the other device may require termination or other
-circuitry. The module's PHY is a Broadcom BCM54210PE and Broadcom does not publish its datasheet, so this
-cannot be closed from any document this project can obtain. Owner decision 29, with three costed options; the
-recommendation is to fit the magnetics board B already carries on its wall port
+**Today** the PROTOTYPE half of INT-002 (split 26 September 2026). Nothing is built, so nothing verifies it and it
+reads INCONCLUSIVE until the bench. The module PHY's datasheet is not published (Broadcom BCM54210PE), so the
+termination and bias question the switch vendor's clause 6.6 raises is closed by this test (the acceptance
+and method below); a written vendor answer would only inform it. It is never closed by the assessment of
+INT-002.
 
 ## Transient Protection
 

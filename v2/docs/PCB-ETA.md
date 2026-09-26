@@ -28,7 +28,7 @@ figures are below.
 | SEQUENTIAL | 6 | 22 h | 72 h | session work that must be serialised: one producer, a shared file, or a never-auto floor |
 | OWNER | 4 | 13 h | 107 h | a ruling. No amount of compute shortens it and it is never in the engineering total |
 | PARALLEL_BOX | 3 | 12 h | 34 h | work whose cost is a route, a sweep or a solve on a rented host, so it runs at the fleet's width |
-| HARDWARE | 2 | 10 h | 32 h | needs built hardware, so it cannot start before the fabrication stage ends |
+| HARDWARE | 2 | 11 h | 34 h | needs built hardware, so it cannot start before the fabrication stage ends |
 | VENDOR_OR_STANDARD_WAIT | 2 | 10 h | 72 h | a third party's answer, or a document that has to be obtained and read |
 
 ## Elapsed, at 1 session worker(s) and 2 rented box(es)
