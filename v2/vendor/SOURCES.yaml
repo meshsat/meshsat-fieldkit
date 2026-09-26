@@ -723,7 +723,7 @@ parts:
         matches_fitted: "yes"
       - path: "v2/vendor/rp2040/rpi-rp2040-hardware-design.pdf"
         doc_id: "Hardware design with RP2040"
-        revision: "not read; PDF ModDate 2026-08-20"
+        revision: "Build date 20/08/2026 (printed on page 2; read in round 8, 26 September 2026, for board E's G13)"
         sha256: "51c4f430153fcdbf3209d9b3b41662c8527ff0150bc25777e3fcd6f5221a1c19"
         matches_fitted: "yes"
 
@@ -1024,7 +1024,7 @@ parts:
       - {model: "XT60-M.", maker: "Changzhou Amass Elec", stock: 23829, read: "2026-09-25T21:50Z", source: "JLCPCB parts API"}
     identity: MATCH
     grade_vs_envelope: "INSIDE at the edge: the sheet gives -20 to 120 C, the envelope's minimum is -20 C, no margin"
-    stale_text: "the generator description still names the withdrawn BB-2590/U pack cable (gen_sch_e.py:132, section title :408)"
+    stale_text: "none since round 8 (26 September 2026): J_BATT's value names board P's 12 AWG lead (gen_sch_e.py:231 at the round 8 commit); it named the withdrawn BB-2590/U pack cable, and so did the title block's comment 2"
     status: VERIFIED
     documents:
       - path: "v2/vendor/battery/amass-xt60-spec-tme.pdf"
@@ -1770,6 +1770,12 @@ parts:
       what_moved: "round 8 of MESHSAT-1357, stream d: board D's J_FLANGE, the PA flange NTC lead's socket, is a B2B-XH-A with C158012 (B2B-XH-A(LF)(SN), JST, JLC API 2026-09-26T21:18Z: stock 363,732), the code board E's J_TAMP carries; the held catalogue's header table lists B2B-XH-A. XH rather than PH so the NTC lead and the PA's VGG lead (J_VGG, PH) are not interchangeable"
       boards: [D, E, P]
       identity_d: MATCH
+    update_r8e:
+      read_on: "2026-09-26"
+      what_moved: "board E's J_SMB carries C144395 in its generator since round 8 (gen_sch_e.py:264-265 at the round 8 commit), the recommendation above: LCSC's detail record re-read 2026-09-26T21:18Z gives B4B-XH-A(LF)(SN), JST, 'Contact Plating: Tin', 1x4P, 2.5 mm, 12.4 mm, -25 to +85 C, stock 101,970; C594232's record gives B4B-XH-A-G with 'Contact Plating: Gold'. The held catalogue's page 5 lists B4B-XH-A with a tin-plated post and '(LF)(SN)' on its label, so E's line is MATCH. Board P's J_SMB still takes lcsc_fill.py's MAP code; the round 8 draft moves that line to C144395 as well (board P's generator is its writer's)"
+      identity_r8e: "MATCH for E J_SMB (C144395); P J_SMB as filled follows the MAP"
+      table_r8e: "JLC-CERTIFIED.tsv carries C144395 CERTIFIED since the cert stream's round 8 run (board P's J_SMB line and board B's DCF77 remote row; jlc_retake_r8cert), but no row for board E's J_SMB on C144395 yet: lcsc_fill neither fills nor refuses it (it is on the line), and the certification re-take over E's declared folder reads it (corrected at integration, 27 September 2026, from the draft's 'no row carries C144395 yet')"
+
   - id: jst-ph-headers
     function: "JST PH 1x5 sockets: the four cell thermistors on board P (J_TS, new in round 4) and the two headset leads on board D (J_HS1, J_HS2, already fitted)"
     boards: [D, P]
@@ -1841,6 +1847,73 @@ parts:
       what_moved: "round 8 of MESHSAT-1357, stream d: board D places a TPS22810 again, U21, which feeds the exciter, the VGG regulator U15 and the T/R relay coil (+5V_TX) only while +3V3_D8, the supply of board D's PTT and EMCON gates, is in the 74LVC1G range (EMCON L4). Unlike B's and E's, D's line pins its code in the generator, C527679 (TPS22810DRVR, JLC API 2026-09-26T21:17Z: TI, WSON-6-EP 2x2, stock 29,287), and its QOD reaches VOUT through R95 (100 Ohm), the second of 9.3.2's three ways; the EN/UVLO divider R90 11k over R91 10k is read against 7.5's VENR 1.13 to 1.30 V, VENF 1.08 to 1.18 V and VUVR 2.00 to 2.62 V"
       boards: [B, D, E]
       where: "gen_sch_d.py, the EMCON L4 block (U21)"
+
+  # --- added 26 September 2026 (MESHSAT-1357 round 8, board E): the parts whose held sheets decided that round's board E
+  #     changes and that had no entry (the review of 26 September asks the sources needed to reproduce a circuit review first).
+
+  - id: tracker-controller-lt8705a
+    function: "LT8705A four-switch buck-boost controller, board E's panel tracker U5"
+    boards: [E]
+    on_main: true
+    schematic_name: {text: "LT8705A buck-boost controller, 38-lead QFN 5x7", where: "v2/ecad/tools/gen_sch_e.py (U5)"}
+    fitted_mpn: "LT8705AEUHF#TRPBF"
+    package: "QFN-38 5 x 7 mm (UHF), land Package_DFN_QFN:WQFN-38-1EP_5x7mm_P0.5mm_EP3.15x5.15mm"
+    lcsc: "C674164"
+    lcsc_reading: {model: "LT8705AEUHF#TRPBF", maker: "ADI", pkg: "QFN-38-EP(5x7)", stock: 3, read: "2026-09-26T21:51Z", source: "LCSC product detail"}
+    purchase_route: "hand-fitted on all five boards (owner ruling 12, 13 September 2026; tools/jlc-handfit.txt, key LT8705A)"
+    identity: MATCH
+    grade_vs_envelope: "INSIDE: -40 to 125 C (E grade, LCSC's record; the sheet's E and I grades)"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/power/lt8705a.pdf"
+        doc_id: "LT8705A datasheet"
+        revision: "8705af (the sheet's own page footer)"
+        url: TBD
+        url_effect: "no source URL is recorded for the file; its identity rests on the footer and this sha256"
+        sha256: "8f552a0b57677bfa7e4a5d5d0fac56d56fbbd1a6f65a9ee7aaaf8743cd534ec3"
+        matches_fitted: "yes: the LT8705A in the UHF package. Round 8 read: Inductor Current Sense Filtering and Figure 13a (p.34), 'Resistors greater than 10 Ohm should be avoided ... The RC product should be kept to less than 30ns' (R6 and R7 become 10 R, R8E-F03); PCB layout, the CSP/CSN filter capacitor 'as close as possible to the IC' (p.36); maximum current sense thresholds (p.3) and the FBIN regulation voltage (p.4), used for TRK_OUT's 10.33 A (R4A-N12)"
+
+  - id: buck-ap63205
+    function: "AP63205 5 V 2 A synchronous buck, board E's always-on 5 V U12"
+    boards: [E]
+    on_main: true
+    schematic_name: {text: "AP63205WU-7 5 V 2 A buck", where: "v2/ecad/tools/gen_sch_e.py (U12)"}
+    fitted_mpn: "AP63205WU-7"
+    package: "TSOT-26 (TSOT-23-6)"
+    lcsc: "C2071056"
+    lcsc_reading: {model: "AP63205WU-7", maker: "DIODES", pkg: "TSOT-23-6", stock: 34007, read: "2026-09-26T21:51Z", source: "LCSC product detail"}
+    identity: MATCH
+    grade_vs_envelope: "INSIDE: -40 to 85 C (LCSC's record)"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/diodes/diodes-ap63200-series-buck.pdf"
+        doc_id: "Diodes DS41326"
+        revision: "Rev. 3-2, November 2024"
+        url: "https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf (sources.txt)"
+        sha256: "ef99daa3789d835bc025dfcb4c605c5c2e6d3e7223e86d40b33e6b497ea5a722"
+        matches_fitted: "yes: the series sheet names the AP63205. Round 8 read: pin descriptions (p.2), pin 2 EN and pin 3 VIN 'Bypass VIN to GND with a suitably large capacitor' (G11: C31 declared at pin 3), 11 Input Capacitor (p.13), the bootstrap capacitor (p.14), PCB layout item 4 (p.15)"
+
+  - id: climate-bme688
+    function: "BME688 inside climate and gas sensor, board E's U14"
+    boards: [E]
+    on_main: true
+    schematic_name: {text: "BME688 inside climate", where: "v2/ecad/tools/gen_sch_e.py (U14)"}
+    fitted_mpn: "BME688"
+    package: "LGA-8 3 x 3 mm"
+    lcsc: "C3664478"
+    lcsc_reading: {model: "BME688", maker: "Bosch", pkg: "SMD-8P", stock: 700, read: "2026-09-26T21:51Z", source: "LCSC product detail"}
+    identity: MATCH
+    grade_vs_envelope: "INSIDE: -40 to 85 C (LCSC's record)"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/bosch/bosch-bme688.pdf"
+        doc_id: "Bosch BST-BME688-DS000-03"
+        revision: "revision 1.3, February 2024"
+        url: TBD
+        url_effect: "no source URL is recorded for the file; its identity rests on the document number and this sha256"
+        sha256: "fce73ae028a985b3265ce3dbc17ab5b7bea1ae31b7ea84c6698c7694083e2478"
+        matches_fitted: "yes. Round 8 read: Table 26 pin description (p.51), 6 VDDIO and 8 VDD; 7.2 Connection diagrams (p.52), 'For the I2C connection, it is recommended to use 100 nF for C1 and C2', Picture 15 (a) one capacitor per supply line (R8E-F02: C62 at VDDIO)"
+
   # --- round 6 candidates for board A (NOT on main at 1f614233; on main since 458b2873, see each update_45bde541) ---
 
   - id: usbc-cc-esd

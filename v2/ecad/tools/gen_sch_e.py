@@ -90,17 +90,49 @@ _intent.rail("CELL+", 14.4, 10.0, 18.0, "J_BATT", loads={"F3": 10.0}, series_of=
 # (0.38 W at 6.15 A), Q7 CSD19532Q5B. Taken by the session under the owner's standing rule of 26 September 2026
 # (drafts/r4-decisions.md, R4E-02). Board A's own VIN_RAW declaration (gen_sch_a.py) still reads 8/10 A and is
 # that board author's item, as is the IIN_HOST rule in the host contract.
-_VIN_T, _VIN_P = 6.15, 6.15
-_intent.rail("VIN_RAW", 12.0, _VIN_T, _VIN_P, "L2", switch="U6", enable_net="HS_UVLO", v_work=36.0, converted=False,
+# R4A-N12, 26 September 2026 (MESHSAT-1357 round 8): THE VEHICLE ENTRY'S FIGURE IS NOT THE BUS'S FIGURE. The 6.15 A above
+# is what the VEHICLE path carries (J_DCIN to L2) and stays the figure of its five series segments below (_VEH_T). The
+# bus VIN_RAW is fed at TWO places: L2 pad 3 (the vehicle entry) and Q2's drain, pads 5 to 8 (the panel tracker's ideal
+# diode U4/Q2, which ORs TRK_OUT onto this bus behind the hot-swap). The copper from Q2's drain to J_BLK therefore carries
+# both, and the rail was declared from L2 alone (board A's round 4 record R4A-N12, its open item O-28). The bound, from the
+# makers' documents and the two generators:
+#   - the tracker: TRK_OUT regulates at 15.1 V only while its load is below the panel's power. When the vehicle holds the
+#     bus lower, the LT8705A's input loop holds the panel at its 17.6 V maximum-power point (FBIN, LT8705A 8705af,
+#     "Regulation Voltage for FBIN", p.4) and the output delivers the panel's power at the bus voltage: 100 W x 0.93 /
+#     9.0 V = 10.33 A at the 9 V bottom of this entry's service range. Its inductor current limit does not bound it lower:
+#     69 mV minimum buck valley threshold (8705af p.3) over R5's 5 mOhm is 13.8 A. So 10.33 A (_TRK_A, declared on TRK_OUT).
+#   - the load: board A's front end U2 (LM5176) limits its OUTPUT at VSNS 57 mV maximum (SNVSAI1D, "Average current loop
+#     regulation target", 43 / 50 / 57 mV) over its 10 mOhm R11, 5.7 A, at VBUS20's 20.7 V corner, so it draws at most
+#     5.7 x 20.7 / 0.93 = 126.9 W, which at a 9.0 V bus is 14.10 A (_FE_A; the LM5176's boost peak limit, 100 to 140 mV
+#     over its 5 mOhm, bounds nothing lower). gen_sch_a.py:56-57 and :552 carry those three numbers.
+#   - so the bus copper carries min(6.15 + 10.33, 14.10) = 14.10 A continuously, with no limiter acting: at a 9 V vehicle
+#     in full sun with the charger asking for the front end's maximum (the hot-swap then passes 3.77 A, under its limit).
+#     At 12 V the same state is 10.57 A (tracker 7.75, vehicle 2.82). The vehicle at 9.0 V AT THE CONNECTOR puts the bus
+#     about 0.2 V lower through F1, Q1, R19, Q7 and L2, which reads 14.4 A; the 0.93 is this project's assertion, not a
+#     measurement, so the figure is declared at the bus and that sensitivity is stated rather than hidden.
+# Both feeds are the rail's sources (L2 and Q2), because they are both at full current at once, which is the case
+# board A's VBAT comment says a source list is NOT for. Board A declares 12.31 A (the sum of this board's two previous
+# figures); this board's 14.10 A replaces that basis and puts each of the four Preci-Dip 813 VIN_RAW contacts of the dock
+# at 3.53 A against their 3.5 A even with perfect sharing (the return also has the pack's ground pins in parallel): a
+# cross-board finding for board A and IF-AE-DOCK (R8E-N01), handed to the integrator with this round's drafts, not a
+# change made here.
+_VEH_T, _VEH_P = 6.15, 6.15
+_TRK_A = round(100.0 * 0.93 / 9.0, 2)                    # R4A-N12: 10.33 A, the panel's power at the 9 V bus floor
+_FE_A = round(5.7 * 20.7 / 0.93 / 9.0, 2)                # R4A-N12: 14.10 A, board A's front end at its ISNS limit, 9 V in
+_VIN_T = _VIN_P = min(round(_VEH_T + _TRK_A, 2), _FE_A)  # R4A-N12: 14.10 A
+# R4A-N12: the bus is declared from both feeds, L2 and Q2, at the figure derived above.
+_intent.rail("VIN_RAW", 12.0, _VIN_T, _VIN_P, ["L2", "Q2"], switch="U6", enable_net="HS_UVLO", v_work=36.0, converted=False,
              # the hot-swap controller IS the switch and its enable is the UVLO divider: the rail comes
              # up when the input passes 9 V and drops out above 40 V, which is the LM5069's own gate.
+             # (The tracker's ideal diode U4/Q2 is the second feed; it has no switch of its own on this bus.)
 
              loads={"J_BLK": _VIN_T}, budget=0.02, share=0.005,
-             note="shore and vehicle entry after the filter choke, 10 A fuse. Declared at the hot-swap's current "
-                  "limit (F-IN-02, 26 September 2026): 6.15 A, U6's maximum limit with its 10 mOhm sense, as both "
-                  "the typical and the peak, because a unit at VCL max passes it continuously without limiting; "
-                  "4.85 A (VCL min) is only what the entry is guaranteed to pass, which bounds the host's IIN_HOST "
-                  "and not the conductors. THIS BOARD'S SHARE is 0.5 of the "
+             note="the raw bus to the dock block: the vehicle and shore entry after the filter choke (L2 pad 3, 10 A "
+                  "fuse) AND the panel tracker through its ideal diode (Q2's drain), ORed on the same copper to J_BLK. "
+                  "Declared at 14.10 A typical and peak (R4A-N12, 26 September 2026): board A's front end at its ISNS "
+                  "limit (5.7 A at 20.7 V, 0.93) drawing from a 9.0 V bus, which the two feeds can supply together "
+                  "(vehicle up to 6.15 A at U6's VCL max, tracker 10.33 A at the panel's 93 W). The vehicle path alone "
+                  "stays 6.15 A (F-IN-02) and its five segments are declared at that. THIS BOARD'S SHARE is 0.5 of the "
                   "rail's 2 percent (16 September 2026): the entry, the choke and the dock block are a short run on "
                   "this strip and measured 0.16 percent at the old 8 A, while board A carries the same current from "
                   "the dock across the power board to its front end and measured 0.86, so the 1.5 points go there")
@@ -189,8 +221,14 @@ def nfet(ref, value, g, d, s, fp="PPAK", lcsc=""):
     own helper; nothing held the two together until kisch judged every map against its land."""
     part(ref, "Connector_Generic", "Conn_01x05", value, fp, {"1": s, "2": s, "3": s, "4": g, "5": d}, lcsc)
 def ph(ref, n, value, nets): part(ref, "Connector_Generic", "Conn_01x%02d" % n, value, "PH%d" % n, nets)
-# --- pack entry: the BTA-70762-2 cable of the BB-2590/U (both 14.4 V sections in parallel) on an XT60, the 25 A blade, the 12 AWG pads to the block; the pack's two SMBus sections on J_SMB
-part("J_BATT", "Connector_Generic", "Conn_01x02", "Amass XT60-M: the BB-2590/U pack cable BTA-70762-2 (pin 2, the pad nearer the fuse F3, is +; pin 1 is the return; the pack's own protection is inside it. E6 run 11: a 3 mm CELL+ track could not pass the return pad to reach pin 1)", "XT60", {"1": "GND", "2": "CELL+"}, "C98733")
+# --- pack entry: the 4S pack lead from board P on an XT60, the 25 A blade, the 12 AWG pads to the block; the pack's SMBus lead on J_SMB
+# PARTS RE-TAKE / R4E open item 16, 26 September 2026 (MESHSAT-1357 round 8): J_BATT'S VALUE NAMED THE WITHDRAWN PACK. It read
+# "the BB-2590/U pack cable BTA-70762-2 ... the pack's own protection is inside it" (and this section's comment said the same),
+# while the BB-2590/U was withdrawn on 7 September 2026 (appendix 32.62) and owner ruling D-06 made the pack board P's 4S3P.
+# The lead is IF-PE-PACK's (pcb_interfaces.yaml): 12 AWG, 350 mm, board P's W_P (PACK_P) to pin 2 and W_N (PACK_N) to
+# pin 1, and the pack's protection is board P's (its F1 blade, the F2 chemical fuse and the BQ4050's FETs). Text only:
+# the part (Amass XT60-M, C98733, amass-xt60-spec-tme.pdf V1.2 page 2), its land and its two nets are unchanged.
+part("J_BATT", "Connector_Generic", "Conn_01x02", "Amass XT60-M: the 4S pack power lead from board P, 12 AWG (pin 2, the pad nearer the fuse F3, is + from P's W_P; pin 1 is the return from P's W_N; the pack's protection is on board P. E6 run 11: a 3 mm CELL+ track could not pass the return pad to reach pin 1)", "XT60", {"1": "GND", "2": "CELL+"}, "C98733")
 part("F3", "Device", "Fuse", "25 A mini blade (Keystone 3568 holder): pack to the block", "FUSE", {"1": "CELL+", "2": "CELL_F"})
 part("P_CP", "Connector", "Conn_01x01_Pin", "solder pad, 12 AWG wire to the block board CELL+ targets", "PAD86", {"1": "CELL_F"})
 part("P_CN", "Connector", "Conn_01x01_Pin", "solder pad, 12 AWG wire to the block board return targets", "PAD86", {"1": "GND"})
@@ -198,7 +236,7 @@ part("P_CN", "Connector", "Conn_01x01_Pin", "solder pad, 12 AWG wire to the bloc
 # header left from the withdrawn BB-2590/U (1 SDA0, 2 SCL0, 3 SDA1, 4 SCL1, 5 GND, 6 GND) while board P's end is a
 # JST-XH 1x4 (1 SMBC, 2 SMBD, 3 GND, 4 PRES), so a straight lead put the clock on data, P's ground on the sensor bus
 # data line and PRES on the sensor clock (adjudication A07). It is the same part as P's now, JST B4B-XH-A (LCSC
-# C594232; JST XH catalogue eXH: 2.5 mm pitch, 3 A, -25 to +85 C, 9.8 mm high), pin for pin P's order, so a straight
+# C594232 in round 4, C144395 since round 8, below; JST XH catalogue eXH: 2.5 mm pitch, 3 A, -25 to +85 C, 9.8 mm high), pin for pin P's order, so a straight
 # XH-to-XH four-way lead is correct. The two pack nets are renamed from SDA0/SCL0 to SMBD/SMBC, P's own names,
 # because the old names said I2C0 on pins that are the RP2040's I2C1 (GPIO2 SDA, GPIO3 SCL, rpi-rp2040-datasheet
 # Table 279): the roles were right and the index was not. The sensor controller U10 is the gauge's only SMBus host
@@ -215,8 +253,16 @@ part("P_CN", "Connector", "Conn_01x01_Pin", "solder pad, 12 AWG wire to the bloc
 # firmware turns GPIO17's pad pull-down OFF before it reads PRES, or a lead that is out reads as a lead that is in
 # (review of round 4; drafts/r4-decisions.md open item 10). And the reading is only right while board P keeps its
 # own R14 10k to ground on PRES: that belongs in the J_SMB contract between P and E (open item 8).
+# PARTS RE-TAKE (jlc_retake_45bde541, condition 1), 26 September 2026 (MESHSAT-1357 round 8): THE ORDER CODE WAS A GOLD
+# VARIANT THE CATALOGUE DOES NOT LIST. C594232 reads "B4B-XH-A-G" at JLCPCB and "Contact Plating: Gold" at LCSC (LCSC
+# detail record re-read 2026-09-26T21:18Z), where the held JST XH catalogue (v2/vendor/connectors/jst-xh-catalogue.pdf,
+# sha256 9426b136..., page 5) lists B4B-XH-A with a "Brass, copper-undercoated, tin-plated" post and the note "This
+# product displays (LF)(SN) on a label", and the mating XH housing's contacts are tin (page 3): gold against tin is the
+# mixed plating the catalogue does not offer. C144395 is B4B-XH-A(LF)(SN), JST, "Contact Plating: Tin", 2.5 mm, 1x4P,
+# 12.4 mm, -25 to +85 C (the same record, stock 101,970), the catalogue's own part: the land, pins and nets do not change.
+# Taken as the parts stream's recommendation (v2/vendor/SOURCES.yaml, jlc_retake_45bde541.condition_1_mismatches).
 part("J_SMB", "Connector_Generic", "Conn_01x04", "SMBus lead to board P, JST-XH 1x4 (B4B-XH-A), P's pin order: 1 SMBC, 2 SMBD, 3 GND, 4 PRES", "XH4",
-     {"1": "SMBC", "2": "SMBD", "3": "GND", "4": "PRES_LEAD"}, "C594232")
+     {"1": "SMBC", "2": "SMBD", "3": "GND", "4": "PRES_LEAD"}, "C144395")
 # S-09 / A03 / F-IN-01, 26 September 2026: THE PACK NODE CLAMP POINTED THE WRONG WAY. An SMCJ18A is UNIDIRECTIONAL
 # (the A suffix; CA is the bidirectional part, Littelfuse SMCJ series rev 11/20/15), and on the D_SMC land pad 1 is the
 # cathode (A03 read the fab glyph and the silk bracket on every committed board). D3 had GND on pad 1 and CELL_F on
@@ -266,7 +312,9 @@ part("F1", "Device", "Fuse", "10 A mini blade (Keystone 3568 holder): vehicle in
 # F-IN-02, 26 September 2026: their currents follow VIN_RAW's restated declaration (6.15 A typical and peak, the
 # LM5069's maximum limit with R19 = 10 mOhm, which a unit at VCL max passes continuously); they were 8.0 and 10.0,
 # which U6 never lets through.
-_DC_V, _DC_T, _DC_P_, _DC_VW, _DC_VMAX = 12.0, _VIN_T, _VIN_P, 36.0, 53.3
+# R4A-N12, 26 September 2026: they carry the VEHICLE path's own 6.15 A (_VEH_T), not the bus's 14.10 A, because the
+# tracker's current joins at Q2's drain, downstream of L2, and never flows in these five.
+_DC_V, _DC_T, _DC_P_, _DC_VW, _DC_VMAX = 12.0, _VEH_T, _VEH_P, 36.0, 53.3
 _DC_NOTE = ("the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at "
             "40 V, and the SMCJ40 clamps (D10 SMCJ40CA at the entry, D1 SMCJ40A behind the ideal diode) "
             "clamping a transient at about 64.5 V at their peak pulse current, which is "
@@ -431,7 +479,17 @@ part("Q5", "Transistor_FET", "IRF7404", "BSC028N06NS 60 V N-FET, M3 boost bottom
 part("Q6", "Transistor_FET", "IRF7404", "BSC039N06NS 60 V N-FET, M4 boost top", "TDSON8", {"1": "TRK_SW2", "2": "TRK_SW2", "3": "TRK_SW2", "4": "TRK_TG2", "5": "TRK_OUT", "6": "TRK_OUT", "7": "TRK_OUT", "8": "TRK_OUT"}, "C534330")
 part("L1", "Device", "L", "10uH Coilcraft XAL1510-103MED (Isat 26 A, 10.0 mm tall)", "L1510", {"1": "TRK_SW1", "2": "TRK_LSENSE"}, "C3911782")
 part("R5", "Device", "R", "5 mOhm 1% 3 W 2512 RSENSE (RALEC LR2512-23R005F4)", "RS2512", {"1": "TRK_LSENSE", "2": "TRK_SW2"}, "C154688")
-r("R6", "100R", "TRK_LSENSE", "TRK_CSP"); r("R7", "100R", "TRK_SW2", "TRK_CSN"); c("C16", "1n", "TRK_CSP", "TRK_CSN", bypass=("U5", "3"))
+# R8E-F03, FOUND IN ROUND 8 while G14 read the maker's clause for C16, 26 September 2026 (MESHSAT-1357): THE SENSE FILTER
+# CARRIED TEN TIMES THE MAKER'S RESISTANCE. R6 and R7 were 100 R with C16 1 nF across the pair. LT8705A datasheet 8705af,
+# "Inductor Current Sense Filtering" (p.34): "The CSP/CSN sense signals can be filtered by adding one of the RC networks
+# shown in Figures 13a and 13b ... The network should be placed as close as possible to the IC ... Resistors greater than
+# 10 Ohm should be avoided as this can increase offset voltages at the CSP/CSN pins. The RC product should be kept to
+# less than 30ns", and Figure 13a draws 10 Ohm in each leg with 1 nF across. 100 R x 1 nF is 100 ns, and an offset at
+# these pins moves the current trip point, which the pin description says the VC voltage "and built-in offsets between
+# CSP and CSN pins" set with RSENSE (p.11). So R6 and R7 are 10 R (UNI-ROYAL 0603WAF100JT5E, LCSC C22859, 10 Ohm 1
+# percent 0603, record read 2026-09-26T21:18Z; the code lcsc_fill.py already maps to "10R" on an 0603): 10 ns, Figure
+# 13a's own network. Nets, lands and C16 are unchanged.
+r("R6", "10R", "TRK_LSENSE", "TRK_CSP", "R", "C22859"); r("R7", "10R", "TRK_SW2", "TRK_CSN", "R", "C22859"); c("C16", "1n", "TRK_CSP", "TRK_CSN", bypass=("U5", "3"))
 # THE FILTER CAPACITOR BELONGS AT THE PINS AND THE TWO RESISTORS AT THE SHUNT (18 September 2026, rule ANA-001).
 # R6 and R7 are the Kelvin series resistors of the tracker's current sense and C16 is the pair's filter; on E17 they
 # sit 15 to 20 mm from the shunt R5 and 11 to 15 mm from U5, so the filtered pair itself runs beside the switching
@@ -461,7 +519,20 @@ r("R10", "115k 1% (RFBOUT1: 15.1 V)", "TRK_OUT", "TRK_FBOUT"); r("R11", "10.0k 1
 # of two SOT-23-6 pads for 3.08 A apiece and declined both for want of room, twice a night, and via_current would
 # attribute 6.16 A to a fanout via at a sense pin as it did HS_S at U6 pin 1 on 20 September. Q2, the TDSON-8 whose
 # source pads 1 to 3 are on TRK_OUT and drain pads 5 to 8 on VIN_RAW, is what the current goes through.
-_intent.rail("TRK_OUT", 15.1, 6.16, 6.16, "Q6", loads={"Q2": 6.16}, fed_from="PV_P", efficiency=0.93,
+# R4A-N12, 26 September 2026 (MESHSAT-1357 round 8): 6.16 A IS THE CURRENT AT 15.1 V, NOT THE MOST THIS CONDUCTOR CARRIES.
+# The output regulates at 15.1 V only while the load takes less than the panel's power. With a vehicle holding the bus
+# lower, the LT8705A's input loop keeps the panel at its maximum-power point (FBIN; 8705af p.4) and the output carries
+# the panel's 93 W at the bus voltage through Q2, which at the entry's 9 V floor is 10.33 A (_TRK_A, derived at VIN_RAW
+# above), continuously; the inductor's own limit (69 mV minimum buck valley over R5's 5 mOhm, 13.8 A) does not bound it
+# lower, and L1 (XAL1510-103, Coilcraft Document 947-1 revised 05/04/26: Isat 26.3 A, Irms 16 A at a 20 C rise) carries
+# it. So 10.33 A is typical AND peak, the same basis VIN_RAW uses. `volts` stays the regulated 15.1 V, because the
+# bring-up page prints it as what to expect at the output. Stated cost: the two report-only readers that multiply
+# `volts` by `amps` now overstate this rail's power (15.1 x 10.33 = 156 W where the panel gives 93 W at any bus
+# voltage): `thermal` reports the tracker's loss at about 11.7 W where it is about 7.0 W (pessimistic, the safe
+# direction), and `power_path`'s feed sum prints PV_P as drawing 9.53 A where the panel gives 5.68 (a report line that
+# decides nothing). Neither reader holds the operating point (9 V at 10.33 A); the conductor rules, which decide, read
+# `amps` alone and are right.
+_intent.rail("TRK_OUT", 15.1, _TRK_A, _TRK_A, "Q6", loads={"Q2": _TRK_A}, fed_from="PV_P", efficiency=0.93,
              # PWR-002 COULD NOT RESOLVE THIS RAIL AND THE REASON IS THE SYMBOL (20 September 2026).
              # U5 is drawn as a generic 40-pin connector because this library has no LT8705A symbol, so
              # every pinfunction in the netlist reads `Pin_NN` and no pattern over pin names can find the
@@ -470,7 +541,10 @@ _intent.rail("TRK_OUT", 15.1, 6.16, 6.16, "Q6", loads={"Q2": 6.16}, fed_from="PV
              # through DSG_G. Nothing about the copper changes.
              switch="U5", enable_net="TRK_SHDN", converted=True,
              note="the LT8705A tracker's regulated output, set by R10 and R11 (115k over 10.0k), carrying "
-                  "the panel's 100 W into the pack bus through the ideal diode U4")
+                  "the panel's 100 W into the pack bus through the ideal diode U4. Declared at 10.33 A typical and "
+                  "peak (R4A-N12, 26 September 2026): the panel's 93 W at the 9 V bus floor, when a vehicle holds the "
+                  "bus under 15.1 V; 6.16 A is the figure at 15.1 V. volts x amps therefore overstates the power "
+                  "(93 W at any bus voltage)")
 _intent.node("TRK_SW1", 25.0, "LT8705A buck-side switching node: it reaches the panel", v_min=-1.0)
 _intent.node("TRK_SW2", 15.1, "LT8705A boost-side switching node: it reaches the regulated output", v_min=-1.0)
 _intent.node("TRK_INTVCC", 6.35, "the LT8705A's own INTVCC regulator, which supplies both gate drivers")
@@ -515,7 +589,24 @@ part("Y1", "Device", "Crystal_GND24", "12 MHz ABM8-272-T3 (3225): 1 XIN, 3 XOUT,
 c("C36", "15p", "XIN", "GND"); c("C37", "15p", "XOUT", "GND"); r("R28", "1k", "XOUT_R", "XOUT")
 r("R29", "27R", "USB_DP_R", "USB_E6_P"); r("R30", "27R", "USB_DM_R", "USB_E6_N"); r("R31", "10k", "E6_RUN", "+3V3_E6"); r("R32", "1k (BOOTSEL)", "QSPI_SS", "BOOT_J"); part("JP1", "Jumper", "SolderJumper_2_Open", "BOOTSEL: short while powering to enter the USB bootloader", "JP2", {"1": "BOOT_J", "2": "GND"})
 for k in range(38, 45): c("C%d" % k, "100n", "+3V3_E6", "GND")
-c("C45", "1u", "E6_DVDD", "GND"); c("C46", "1u", "E6_DVDD", "GND"); c("C47", "1u", "+3V3_E6", "GND")
+# G13 (DECOUPLING.md section 8.3), 26 September 2026 (MESHSAT-1357 round 8): THE CORE SUPPLY NET HELD TWO 1 uF AND NO
+# 100 nF. E6_DVDD joins the regulator's output VREG_VOUT (U10 pin 45) to the two core pins DVDD (23 and 50) off chip,
+# and C45 and C46 were both 1 uF, declared at the DVDD pins. The maker asks for three different things on that net:
+# RP2040 datasheet (build-date 2025-02-20) 2.9.2, printed p.151: "DVDD should be decoupled with a 100nF capacitor close
+# to each of the chip's DVDD pins"; 2.10.1, printed p.156: "The regulator must have 1uF capacitors placed close to its
+# input (VREG_VIN) and output (VREG_VOUT) pins"; the hardware design guide (build 20/08/2026) 2.1.2 and 2.1.3 say the
+# same. So C45 stays 1 uF and is declared at VREG_VOUT (pin 45); C46 becomes 100 nF at DVDD pin 50; C59, a new 100 nF,
+# serves DVDD pin 23. C47 (1 uF, VREG_VIN pin 44, 2.9.3) is unchanged. The 100 nF part is the one this board already
+# fits (YAGEO CC0603KRX7R9BB104, LCSC C14663, 100 nF 50 V X7R 0603, record read 2026-09-26T21:18Z).
+c("C45", "1u", "E6_DVDD", "GND"); c("C46", "100n", "E6_DVDD", "GND", "C", "C14663"); c("C47", "1u", "+3V3_E6", "GND")
+c("C59", "100n", "E6_DVDD", "GND", "C", "C14663")   # G13: the second DVDD pin's own 100 nF (pin 23; C46 serves pin 50)
+# R8E-F01, FOUND IN ROUND 8 while G14 read the RP2040's own clauses, 26 September 2026: TWO SUPPLY PINS HAD NO CAPACITOR
+# OF THEIR OWN. ADC_AVDD (pin 43) and USB_VDD (pin 48) are on +3V3_E6 and no capacitor was declared at either; the six
+# 100 nF above serve the IOVDD pins. RP2040 datasheet 2.9.4 (printed p.151): "USB_VDD should be decoupled with a 100nF
+# capacitor close to the chip's USB_VDD pin"; 2.9.5 (printed p.152): "ADC_AVDD should be decoupled with a 100nF capacitor
+# close to the chip's ADC_AVDD pin". This is DECOUPLING.md's G9, written there for board C only; board E's RP2040 has the
+# same two pins undecoupled. C60 serves pin 43 and C61 pin 48, the same 100 nF part.
+c("C60", "100n", "+3V3_E6", "GND", "C", "C14663"); c("C61", "100n", "+3V3_E6", "GND", "C", "C14663")
 tp("TP10", "SWCLK"); tp("TP11", "SWDIO"); tp("TP12", "E6_RUN")
 r("R33", "1k", "LED_STAT", "LED_STAT_A"); part("LED2", "Device", "LED", "status (GPIO25)", "LED", {"2": "LED_STAT_A", "1": "GND"})
 r("R34", "4.7k", "SMBD", "+3V3_E6"); r("R35", "4.7k", "SMBC", "+3V3_E6"); r("R36", "4.7k", "SDA1", "+3V3_E6"); r("R37", "4.7k", "SCL1", "+3V3_E6")
@@ -543,6 +634,12 @@ r("R52", "100k", "TAMPER_LEAD", "+3V3_E6", "R", "C25803"); r("R53", "10k", "TAMP
 # --- sensors on the strip: BME688 inside climate and gas (bosch/bosch-bme688.pdf, LGA-8: 1 GND 2 CSB 3 SDI 4 SCK 5 SDO 6 VDDIO 7 GND 8 VDD; I2C 0x76 with SDO low), BMI270 IMU for shock, tilt and
 #     motion (bosch/bosch-bmi270.pdf, LGA-14; I2C 0x68 with SDO low; CSB and the unused OIS and aux pins tied per the sheet's I2C column); the magnetometer sits in the outside pod (32.57)
 ic("U14", 8, "BME688 inside climate: temperature, humidity, pressure, gas index (I2C 0x76)", "LGA8B", {"1": "GND", "2": "+3V3_E6", "3": "SDA1", "4": "SCL1", "5": "GND", "6": "+3V3_E6", "7": "GND", "8": "+3V3_E6"}, "C3664478"); c("C48", "100n", "+3V3_E6", "GND")
+# R8E-F02, FOUND IN ROUND 8 while G14 read the BME688's clause, 26 September 2026: THE INTERFACE SUPPLY HAD NO CAPACITOR.
+# The BME688 has two supplies, VDD (pin 8, analog) and VDDIO (pin 6, digital and interface; Table 26, p.51 of Bosch
+# BST-BME688-DS000-03 revision 1.3, February 2024), and C48 serves VDD only. Section 7.2 (p.52): "For the I2C connection,
+# it is recommended to use 100 nF for C1 and C2", Picture 15 (a) drawing one capacitor on the VDD line and one on the
+# VDDIO line. C62, the same 100 nF part, serves VDDIO (pin 6).
+c("C62", "100n", "+3V3_E6", "GND", "C", "C14663")
 ic("U15", 14, "BMI270 six-axis IMU (I2C 0x68): shock and tilt log, motion wake", "LGA14B", {"1": "GND", "2": "GND", "3": "GND", "4": "IMU_INT1", "5": "+3V3_E6", "6": "GND", "7": "GND", "8": "+3V3_E6", "9": "NC", "10": "NC", "11": "NC", "12": "IMU_CSB", "13": "SCL1", "14": "SDA1"}, "C2836813"); r("R51", "0R (CSB high: I2C mode; its own net keeps the pin joiner off the diagonal)", "+3V3_E6", "IMU_CSB"); c("C49", "100n", "+3V3_E6", "GND"); c("C50", "100n", "+3V3_E6", "GND")
 # S-10 / C-05, 26 September 2026 (MESHSAT-1357 round 4): THE BATTERY-BAY GAS SENSOR APPENDIX 32.54 PICKED. The pick was
 # a BME688 inside, one in the pod AND "the Sensirion SGP41 (C3659325) in the battery bay", and no generator ever fitted
@@ -605,21 +702,31 @@ kisch.configure(power=POWER, stub=STUB, root=ROOT, project=PROJECT, seed=PROJECT
 # power flag symbols connect at their pin; place them wired to a label of the net
 
 # layout: columns, top-down cursor; group order = list order with section titles
+# G13, R8E-F01 and R8E-F02 (26 September 2026): C59 to C61 join the sensor controller's section and C62 the sensors'.
 SECTIONS = [("PACK ENTRY: PACK CABLE ON XT60, 25 A BLADE, PADS TO THE BLOCK, PACK SMBUS LEAD (JST-XH 1x4)", ["J_BATT", "F3", "P_CP", "P_CN", "J_SMB", "C1", "D3"]),
             ("VEHICLE AND SHORE ENTRY 9-36 V: F1, LM74700 IDEAL DIODE, LM5069 HOT-SWAP, SRF1260 FILTER, CLAMPS", ["J_DCIN", "F1", "U3", "Q1", "C4", "R1", "D1", "C2", "U6", "R19", "Q7", "R20", "R21", "R22", "R23", "C5", "R24", "R25", "Q8", "R26", "L2", "D10", "C6", "C7", "C8", "D2", "R27", "LED1"]),
             ("PANEL TRACKER: J_SOLAR, F2, LT8705A BUCK-BOOST (FBIN 17.6 V, FBOUT 15.1 V, 202 kHz), ORed INTO THE RAW BUS", ["J_SOLAR", "F2", "D4", "C11", "C12", "C13", "C14", "C15", "U5", "Q3", "Q4", "Q5", "Q6", "L1", "R5", "R6", "R7", "C16", "C17", "C18", "D5", "D6", "C19", "C20", "R8", "R9", "R10", "R11", "R12", "R13", "C21", "C22", "C23", "R14", "R15", "R16", "R17", "C24", "C25", "C26", "C27", "U4", "Q2", "C28", "R18"]),
             ("BLOCK LANDS (MIRROR OF A22 J_DOCK)", ["J_BLK"]),
-            ("SENSOR CONTROLLER: 5 V BUCK, 3.3 V LDO, RP2040, QSPI FLASH, CRYSTAL, USB, BOOTSEL, PULL-UPS", ["U12", "L3", "C30", "C31", "C32", "C33", "U13", "C34", "C35", "U10", "U11", "Y1", "C36", "C37", "R28", "R29", "R30", "R31", "R32", "JP1"] + ["C%d" % k for k in range(38, 48)] + ["TP10", "TP11", "TP12", "R33", "LED2", "R34", "R35", "R36", "R37", "R54", "R55"]),
-            ("SENSORS, WATER ELECTRODES, MONITORS, FANS, HEADERS, LID SWITCH, GEIGER SUPPLY", ["U14", "C48", "U15", "R51", "C49", "C50", "U17", "R57", "C57", "C58", "J_TAMP", "R52", "R53", "C52", "PAD_W1", "R38", "PAD_W2", "R39", "C51", "R40", "R41", "R42", "R43", "D9", "J_FAN1", "Q9", "R44", "R46", "D7", "J_FAN2", "Q10", "R45", "R47", "D8", "U16", "R56", "C53", "C54", "C55", "C56", "J_GEIGER", "J_DCF", "J_LTG", "J_POD", "R48", "TP13", "R49", "R50"]),
+            ("SENSOR CONTROLLER: 5 V BUCK, 3.3 V LDO, RP2040, QSPI FLASH, CRYSTAL, USB, BOOTSEL, PULL-UPS", ["U12", "L3", "C30", "C31", "C32", "C33", "U13", "C34", "C35", "U10", "U11", "Y1", "C36", "C37", "R28", "R29", "R30", "R31", "R32", "JP1"] + ["C%d" % k for k in range(38, 48)] + ["C59", "C60", "C61"] + ["TP10", "TP11", "TP12", "R33", "LED2", "R34", "R35", "R36", "R37", "R54", "R55"]),
+            ("SENSORS, WATER ELECTRODES, MONITORS, FANS, HEADERS, LID SWITCH, GEIGER SUPPLY", ["U14", "C48", "C62", "U15", "R51", "C49", "C50", "U17", "R57", "C57", "C58", "J_TAMP", "R52", "R53", "C52", "PAD_W1", "R38", "PAD_W2", "R39", "C51", "R40", "R41", "R42", "R43", "D9", "J_FAN1", "Q9", "R44", "R46", "D7", "J_FAN2", "Q10", "R45", "R47", "D8", "U16", "R56", "C53", "C54", "C55", "C56", "J_GEIGER", "J_DCF", "J_LTG", "J_POD", "R48", "TP13", "R49", "R50"]),
             ("TEST POINTS, FLAGS", ["TP%d" % k for k in range(1, 10)] + ["#FLG%02d" % k for k in range(1, 18)])]
 _listed = {r for _, refs in SECTIONS for r in refs}
 _rest = [p["ref"] for p in P if p["ref"] not in _listed]
 if _rest: SECTIONS.append(("OTHER PARTS (not in a section list)", _rest))
 for _i, _pin in enumerate((1, 10, 22, 33, 42, 49)): _intent.bypass("C%d" % (38 + _i), "U10", _pin, "+3V3_E6")   # the RP2040's six IOVDD pins
 _intent.bypass("C44", "U11", "8", "+3V3_E6")     # the QSPI flash's VCC
-_intent.bypass("C45", "U10", "23", "E6_DVDD"); _intent.bypass("C46", "U10", "50", "E6_DVDD")
+# G13, 26 September 2026: C45 (1 uF) is the regulator's output capacitor and is declared at VREG_VOUT, pin 45, not at a
+# DVDD pin; the two DVDD pins take their own 100 nF, C46 at pin 50 and the new C59 at pin 23 (see the parts above).
+_intent.bypass("C45", "U10", "45", "E6_DVDD"); _intent.bypass("C46", "U10", "50", "E6_DVDD"); _intent.bypass("C59", "U10", "23", "E6_DVDD")
 _intent.bypass("C47", "U10", "44", "+3V3_E6")    # VREG_VIN
-_intent.bypass("C31", "U12", "2", "CELL_F")      # the 5 V buck's input capacitor, the loop that matters on a switcher
+# R8E-F01 (found in round 8): ADC_AVDD (pin 43) and USB_VDD (pin 48), each with its own 100 nF.
+_intent.bypass("C60", "U10", "43", "+3V3_E6"); _intent.bypass("C61", "U10", "48", "+3V3_E6")
+# G11, 26 September 2026 (DECOUPLING.md section 8.3): THE BUCK'S INPUT CAPACITOR WAS DECLARED AT ITS ENABLE PIN. C31 sits
+# across CELL_F and GND, and U12's CELL_F pins are 2 (EN) and 3 (VIN); the declaration named pin 2. Diodes DS41326 Rev. 3-2
+# (November 2024), pin descriptions p.2: pin 2 "EN ... Enable Input", pin 3 "VIN ... Power Input ... Bypass VIN to GND with
+# a suitably large capacitor"; 11 "Input Capacitor" p.13; PCB layout item 4 p.15: "Place the VIN capacitors as close to
+# the device as possible". Declared at pin 3, class R. The net, the part and its value are unchanged.
+_intent.bypass("C31", "U12", "3", "CELL_F")      # the 5 V buck's input capacitor, the loop that matters on a switcher
 # THE BOOTSTRAP CAPACITOR IS A DECOUPLING CAPACITOR OF ITS OWN PIN (18 September 2026, E16). The AP63205's BST to SW
 # capacitor C30 sat 17.6 mm from pin 6 in the PACK region's packer rows, and /E6_BST is the net that stayed open on E7
 # (closed by the stub router then), E14 and E16 (17.6 mm apart after the closers). The datasheet puts it at the pin; a
@@ -627,15 +734,99 @@ _intent.bypass("C31", "U12", "2", "CELL_F")      # the 5 V buck's input capacito
 _intent.bypass("C30", "U12", "6", "E6_BST")
 _intent.bypass("C34", "U13", "1", "+5V_E6"); _intent.bypass("C35", "U13", "5", "+3V3_E6")   # the LDO's input and output
 _intent.bypass("C48", "U14", "8", "+3V3_E6")     # BME688 VDD
+_intent.bypass("C62", "U14", "6", "+3V3_E6")     # BME688 VDDIO (R8E-F02, found in round 8)
 _intent.bypass("C49", "U15", "8", "+3V3_E6"); _intent.bypass("C50", "U15", "5", "+3V3_E6")  # BMI270 VDD and VDDIO
 _intent.bypass("C57", "U17", "1", "SGP_VDD"); _intent.bypass("C58", "U17", "5", "+3V3_E6")   # SGP41 VDD and VDDH (Figure 6), S-10 26 September 2026
 _intent.bypass("C56", "U16", "6", "+5V_E6")      # TPS22810 VIN (SLVSDH0C: 1 uF input capacitor), F-BP-02 26 September 2026
+# G14 (DECOUPLING.md sections 6, 6a and 8.3; decision 42), 26 September 2026 (MESHSAT-1357 round 8): EVERY DECLARED
+# CAPACITOR CARRIES ITS CLASS AND THE MAKER'S CLAUSE THAT GIVES IT. A class is the capacitor's ROLE as its maker describes
+# it, never its value string (section 6): R a converter's own power-stage capacitor, D one a maker ties to a supply pin
+# (any value), L a regulator's output, A a pin behind a series resistor, B1 and B2 bulk. Section 8.1's T5 (intent.bypass
+# taking the class, intent.write refusing an entry without one) is the tools stream's and is not in intent.py yet, and
+# intent.py sits in every board's generator identity (sch_prov.py), so this board writes the same two fields onto its own
+# entries here and refuses its own omissions: an entry with no class, a class outside the ruled six, a class L entry
+# without its maker's value floor, or a row naming a capacitor that is declared nowhere stops the generator. Class R
+# entries carry same_side (R3: never on the other side; board E is single-sided anyway, D5). Where two readings stood,
+# the choice is the session's under the owner's standing rule of 26 September 2026, and it is said so in the row.
+_RP = "RP2040 datasheet (v2/vendor/rp2040/rpi-rp2040-datasheet.pdf, build-date 2025-02-20)"   # G14: the source the RP2040 rows cite
+# G14: the class of every declared capacitor, with the maker's clause that gives it
+_DEC_CLASS = {
+    **{"C%d" % (38 + _i): ("D", _RP + " 2.9.1, printed p.151: \"IOVDD should be decoupled with a 100nF capacitor close to each "
+                               "of the chip's IOVDD pins\"") for _i in range(6)},
+    "C44": ("D", "Winbond W25Q16JV datasheet Revision H (v2/vendor/winbond/winbond-w25q16jv-serial-flash.pdf) states no "
+                 "decoupling capacitor; the flash's only supply capacitor, so class D by role, and value and count are this "
+                 "generator's own (DECOUPLING.md D1: where the maker states none, the generator's count stands, said as such)"),
+    "C45": ("L", _RP + " 2.10.1, printed p.156: \"The regulator must have 1uF capacitors placed close to its input (VREG_VIN) and "
+                 "output (VREG_VOUT) pins\"; the hardware design guide (build 20/08/2026) 2.1.3, p.9, the same with a restriction "
+                 "on ESR it gives no figure for", {"value_floor": "1u", "esr_max": "not stated by the maker (TBD)"}),
+    "C46": ("D", _RP + " 2.9.2, printed p.151: \"DVDD should be decoupled with a 100nF capacitor close to each of the chip's "
+                 "DVDD pins\""),
+    "C59": ("D", _RP + " 2.9.2, printed p.151, as C46 (the other DVDD pin)"),
+    "C47": ("D", _RP + " 2.9.3, printed p.151: \"A 1uF capacitor should be connected between VREG_VIN and ground close to the "
+                 "chip's VREG_VIN pin\""),
+    "C60": ("D", _RP + " 2.9.5, printed p.152: \"ADC_AVDD should be decoupled with a 100nF capacitor close to the chip's "
+                 "ADC_AVDD pin\""),
+    "C61": ("D", _RP + " 2.9.4, printed p.151: \"USB_VDD should be decoupled with a 100nF capacitor close to the chip's USB_VDD "
+                 "pin\""),
+    "C31": ("R", "Diodes AP63200/AP63201/AP63203/AP63205 DS41326 Rev. 3-2, November 2024 (v2/vendor/diodes/"
+                 "diodes-ap63200-series-buck.pdf): pin 3 VIN \"Bypass VIN to GND with a suitably large capacitor\" (p.2); "
+                 "11 Input Capacitor (p.13); PCB layout item 4 \"Place the VIN capacitors as close to the device as "
+                 "possible\" (p.15)", {"same_side": True}),
+    "C30": ("R", "DS41326 Rev. 3-2: pin 6 BST \"A 100nF capacitor is recommended from SW to BST\" (p.2), bootstrap capacitor "
+                 "(p.14); a converter's own bootstrap capacitor is a power-stage part (DECOUPLING.md R2)", {"same_side": True}),
+    "C34": ("D", "TI TLV755P SBVS320D, September 2024 (v2/vendor/power/ti-tlv755p-ldo.pdf): recommended CIN 1 uF (p.4), 7.1.1 "
+                 "Input and Output Capacitor Selection (p.15), 7.4.1 \"Place input and output capacitors as close as possible "
+                 "to the device\" (p.21); an LDO's input capacitor is class D (DECOUPLING.md section 6)"),
+    "C35": ("L", "TI TLV755P SBVS320D: 7.1.1 \"requires an output capacitance of 0.47uF or larger for stability\" (p.15), the "
+                 "pin table's note \"Make sure the effective capacitance at the pin is greater than 0.47uF\" (p.3), 7.4.1 "
+                 "(p.21)", {"value_floor": "0.47u effective", "esr_max": "not stated by the maker (X5R or X7R named, p.15)"}),
+    "C48": ("D", "Bosch BME688 BST-BME688-DS000-03 revision 1.3, February 2024 (v2/vendor/bosch/bosch-bme688.pdf): 7.2 "
+                 "\"For the I2C connection, it is recommended to use 100 nF for C1 and C2\" (p.52), the VDD line (pin 8, "
+                 "Table 26 p.51)"),
+    "C62": ("D", "Bosch BME688 BST-BME688-DS000-03 revision 1.3: 7.2 (p.52), the VDDIO line (pin 6, Table 26 p.51)"),
+    "C49": ("D", "Bosch BMI270 BST-BMI270-DS000-08 revision 1.6, March 2026 (v2/vendor/bosch/bosch-bmi270.pdf): 7.2 \"It is "
+                 "recommended to use 100nF decoupling capacitors at pin 5 (VDDIO) and pin 8 (VDD)\" (p.136)"),
+    "C50": ("D", "Bosch BMI270 BST-BMI270-DS000-08 revision 1.6: 7.2 (p.136), as C49"),
+    "C57": ("A", "Sensirion SGP41 datasheet version 1.0, December 2021 (v2/vendor/sensirion/sgp41-datasheet.pdf): 2.5 \"The VDD "
+                 "pin must be decoupled with an RC element\" (p.7), Figure 6 (p.8): R57 4.7 Ohm then C57 at the pin"),
+    "C58": ("D", "Sensirion SGP41 version 1.0: 2.5 \"The required decoupling for VDDH depends on the power supply network ... a "
+                 "capacitor of 1 uF is recommended\" (p.7)"),
+    "C56": ("D", "TI TPS22810 SLVSDH0C, January 2018 (v2/vendor/ti/ti-tps22810-load-switch.pdf): pin 6 VIN \"Place ceramic "
+                 "bypass capacitor(s) between this pin and GND\" (p.3), recommended CIN 1 uF (p.4)"),
+    "C16": ("A", "LT8705A datasheet 8705af (v2/vendor/power/lt8705a.pdf): Inductor Current Sense Filtering and Figure 13a (p.34), "
+                 "\"The network should be placed as close as possible to the IC\"; PCB layout \"The optional filter network "
+                 "capacitor between CSP and CSN should be as close as possible to the IC\" (p.36). A sense filter, not a supply "
+                 "capacitor: of the ruled classes only A (a capacitor at the pin end of its series resistors, the nearest free "
+                 "seat, A1 and A2) states that seat, where D's 3.0 mm screen answers a supply question it does not ask and "
+                 "dropping the declaration (R4) would lose the seat ANA-001 needs. Taken by the session under the owner's "
+                 "standing rule of 26 September 2026"),
+}
+_DEC_RULED = ("R", "D", "L", "A", "B1", "B2")   # G14: the six classes decision 42 rules (DECOUPLING.md section 6)
+_seen = set()   # G14: the entries given a class
+# G14: every entry gets its class and basis, and an entry without one stops the generator
+for _e in _intent._I["bypass"]:
+    _row = _DEC_CLASS.get(_e["cap"])
+    if _row is None:
+        raise SystemExit("gen_sch_e: decoupling entry %s -> %s.%s carries no class (G14): add it to _DEC_CLASS with its "
+                         "maker's clause" % (_e["cap"], _e["part"], _e["pin"]))
+    _cls, _basis = _row[0], _row[1]
+    if _cls not in _DEC_RULED or not _basis.strip():
+        raise SystemExit("gen_sch_e: decoupling entry %s: class %r is not one of %s, or its basis is empty" % (_e["cap"], _cls, _DEC_RULED))
+    _extra = _row[2] if len(_row) > 2 else {}
+    if _cls == "L" and not _extra.get("value_floor"):
+        raise SystemExit("gen_sch_e: class L entry %s names no value floor (DECOUPLING.md L2)" % _e["cap"])
+    _e.update({"class": _cls, "basis": _basis}, **_extra); _seen.add(_e["cap"])
+# G14: a class row that names no declared capacitor is refused too (a typo would read as coverage)
+_orphans = sorted(set(_DEC_CLASS) - _seen)
+if _orphans: raise SystemExit("gen_sch_e: _DEC_CLASS names %s, which no decoupling entry declares" % _orphans)
 import schlayout, time as _time
 PAPER, NPAGES, NCOLS, NROWS = schlayout.run(P, SECTIONS, POWER, _intent._I["bypass"], {"date": _time.strftime("%Y-%m-%d")}, os.environ.get("PHASE", ""), 'PCB-E1 DOCK')   # 15 Sep 2026: one A3 page per block, real wiring (32.196)
 out = kisch.out
 print("layout: %d A3 pages on a %d x %d sheet -> paper %s" % (NPAGES, NCOLS, NROWS, PAPER))
 hdr = '(kicad_sch\n\t(version 20250114)\n\t(generator "eeschema")\n\t(generator_version "9.0")\n\t(uuid "%s")\n\t(paper %s)\n' % (ROOT, PAPER)
-hdr += '\t(title_block (title "MeshSat Field Kit carrier - PCB-E1 DOCK") (date "%s")' % _time.strftime("%Y-%m-%d") + ' (rev "A (E6)") (company "MeshSat") (comment 1 "Phase ' + (os.environ.get("PHASE") or "?") + ' schematic (MESHSAT-830, appendix 32.55 to 32.57), generated by tools/gen_sch_e.py. Netlist style: every pin carries a stub and a net label.") (comment 2 "E6: BB-2590/U cable entry and 25 A blade to the raised block; vehicle input 9-36 V through LM74700, LM5069 hot-swap and the SRF1260 filter to the raw bus up the dock contacts; LT8705A panel tracker ORed into the bus; RP2040 sensor controller on USB (BME688, BMI270, water electrodes, fans, pack SMBus, Geiger, DCF77, lightning and pod headers); eleven float clamps."))\n'
+# PARTS RE-TAKE / R4E open item 16, 26 September 2026: comment 2 named the withdrawn BB-2590/U cable entry and "eleven
+# float clamps", which are mechanical and not in this schematic (A09, R4E-07, D-07 change their number); text only.
+hdr += '\t(title_block (title "MeshSat Field Kit carrier - PCB-E1 DOCK") (date "%s")' % _time.strftime("%Y-%m-%d") + ' (rev "A (E6)") (company "MeshSat") (comment 1 "Phase ' + (os.environ.get("PHASE") or "?") + ' schematic (MESHSAT-830, appendix 32.55 to 32.57), generated by tools/gen_sch_e.py. Netlist style: every pin carries a stub and a net label.") (comment 2 "E6 and later: the 4S pack lead from board P on an XT60 and the 25 A blade to the raised block; vehicle input 9-36 V through LM74700, LM5069 hot-swap and the SRF1260 filter to the raw bus up the dock contacts; LT8705A panel tracker ORed into the bus; RP2040 sensor controller on USB (BME688, BMI270, SGP41, water electrodes, fans, pack SMBus, lid switch, Geiger, DCF77, lightning and pod headers); the blind-mate float clamps are mechanical (gen_pcb_e.py)."))\n'
 hdr += '\t(lib_symbols\n' + "".join("\t\t" + ser(v, 2).replace("\n", "\n\t\t") + "\n" for v in libsyms.values()) + '\t)\n'
 body = "".join("\t" + s.replace("\n", "\n\t").rstrip("\t") for s in out)
 tail = '\t(sheet_instances (path "/" (page "1")))\n)\n'

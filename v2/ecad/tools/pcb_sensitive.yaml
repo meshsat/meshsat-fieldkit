@@ -279,12 +279,14 @@ boards:
    # filter resistor tapping each side. R5 is 5 mOhm between TRK_LSENSE and TRK_SW2, R6 taps the high side
    # into TRK_CSP and R7 the low side into TRK_CSN, with C16 across the pair at U5 pin 3.
    kelvin:
-    - {sense: TRK_CSP, rail: TRK_LSENSE, element: "R5.1", tap: "R6.1", full_scale_mv: 30.8,
+    - {sense: TRK_CSP, rail: TRK_LSENSE, element: "R5.1", tap: "R6.1", full_scale_mv: 51.7,
        why: "the LT8705A tracker's inductor-current sense across R5, 5 mOhm. THE FULL SCALE IS DERIVED AND ITS
-         BASIS IS STATED: 5 mOhm at TRK_OUT's declared 6.16 A typical, the nearest declared current to the one
-         this shunt carries; the inductor's OWN current is declared nowhere and in a buck-boost it is not the
-         output current, so the percentage is read against 30.8 mV knowing that"}
-    - {sense: TRK_CSN, rail: TRK_SW2, element: "R5.2", tap: "R7.1", full_scale_mv: 30.8,
+         BASIS IS STATED: 5 mOhm at TRK_OUT's declared 10.33 A (round 8, R4A-N12, 26 September 2026: the panel's
+         93 W at the 9 V bus floor; it read 6.16 A, the figure at 15.1 V, and 30.8 mV), which is the inductor's own
+         current there because the stage runs in its buck region with 17.6 V in; the inductor's current is declared
+         nowhere else and in the boost region it is not the output current, so the percentage is read against
+         51.7 mV knowing that"}
+    - {sense: TRK_CSN, rail: TRK_SW2, element: "R5.2", tap: "R7.1", full_scale_mv: 51.7,
        why: "the other half of the same pair, and the sharper one: the low side taps TRK_SW2, which is the
          boost-side SWITCHING NODE, so the same conductor is both the sense reference and a node that swings
          every cycle. Its drop between R5.2 and R7.1 is current the LT8705A reads that is not there. This is
@@ -293,13 +295,14 @@ boards:
     # THE FILTERED PAIR, NOT THE SHUNT'S TERMINALS (18 September 2026). TRK_LSENSE was declared as the tracker's
     # current sense and it is L1 pin 2, one end of the 5 mOhm shunt R5 whose other end IS TRK_SW2: it swings with
     # the boost half every cycle, so E17's reading of it 0.171 mm from TRK_SW1 measured a power conductor. The
-    # design's own sense pair is behind R6, R7 and C16 (100 R each with 1 nF across, LT8705A), which is what the
+    # design's own sense pair is behind R6, R7 and C16 (10 R each with 1 nF across since round 8, the LT8705A's own
+    # Figure 13a; they were 100 R, ten times the "Resistors greater than 10 Ohm should be avoided" of 8705af p.34), which is what the
     # controller's CSP and CSN pins see and what ANA-001 has to protect.
     - {net: TRK_CSP, what: "the tracker's filtered inductor-current sense, positive half across the 5 mOhm shunt",
-       filter: "100 R (R6) from the shunt's inductor end with 1 nF (C16) across the pair at the controller",
+       filter: "10 R (R6) from the shunt's inductor end with 1 nF (C16) across the pair at the controller (LT8705A 8705af Figure 13a)",
        kelvin_with: TRK_CSN, keep_mm: 0.5}
     - {net: TRK_CSN, what: "the tracker's filtered inductor-current sense, negative half across the 5 mOhm shunt",
-       filter: "100 R (R7) from the shunt's bridge end with 1 nF (C16) across the pair", kelvin_with: TRK_CSP, keep_mm: 0.5}
+       filter: "10 R (R7) from the shunt's bridge end with 1 nF (C16) across the pair", kelvin_with: TRK_CSP, keep_mm: 0.5}
     - {net: WATER_SENSE, what: "the floor water sensor input, a high-impedance node on a lead that leaves the
         board", filter: "the pull-up and the 100 nF at the controller", kelvin_with: null, keep_mm: 1.0}
 
