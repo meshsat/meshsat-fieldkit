@@ -63,7 +63,7 @@ G6K-2F-Y           # Omron through Mouser, https://www.mouser.com/c/?q=G6K-2F-Y 
 
 # --- Fuse holders and blade fuses. A blade holder is a through-hole part with a spring clip; JLCPCB does not
 #     place it and the fuse itself is fitted at build, so both are a build-time purchase (12 September 2026, A24).
-3568               # Keystone 3568 mini blade holder, Digi-Key https://www.digikey.com/en/products?keywords=Keystone%203568 ; the 25 A pack-node holder on A, F1
+3568               # Keystone 3568 mini blade holder, Digi-Key https://www.digikey.com/en/products?keywords=Keystone%203568 ; the 25 A pack-node holder on A, F1; board E's F1 and F2 (10 A, vehicle and panel) and F3 (25 A, pack) and board P's F1 (25 A) are the same holder (MESHSAT-1357 round 8, 26 Sep 2026: the parts re-take found E's three and P's one with no route their own board declares; board E's lcsc-allow.txt now carries one)
 25 A mini blade    # the fuse itself (Littelfuse MINI 25 A), Digi-Key https://www.digikey.com/en/products?keywords=0997025 ; fitted at build, not a board part
 
 # --- The panel tracker's controller. 12 September 2026, the orderability pass before the draft order.

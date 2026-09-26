@@ -416,7 +416,7 @@ board_to_board:
       ends:
         - {board: a, refs: [J_DOCK, J_CP1-4, J_CN1-4, J_PRE1], src: "v2/ecad/tools/gen_sch_a.py:206-210, 226-227"}
         - {board: e5, what: "no schematic; targets and lands generated from board A's file by position (gen_pcb_e5.py)"}
-        - {board: e, refs: [J_BLK, P_CP, P_CN], src: "v2/ecad/tools/gen_sch_e.py:195-196, 488"}
+        - {board: e, refs: [J_BLK, P_CP, P_CN], src: "v2/ecad/tools/gen_sch_e.py:233-234, 562"}
       aliases: [["DOCK_SPARE", "BLK_SPARE"], ["CELL+", "CELL_F", "E's pack positive after its F3 blade"]]
       map_identity: {status: VERIFIED, judged_by: "check_contracts.py:236-241; block_contract.py (needs pcbnew) for E5"}
       pins: {1: VIN_RAW, 2: VIN_RAW, 3: VIN_RAW, 4: VIN_RAW, 5: GND, 6: GND, 7: GND, 8: SHORE_INHIBIT, 9: USB_E6_P,
@@ -424,13 +424,19 @@ board_to_board:
       vin_raw: {voltage: "9 to 36 V (v_work 36 V)",
                 a_declares: "12.31 A typical and peak: board E's vehicle entry at its hot swap's maximum limit (6.15 A) and
                   its solar tracker (6.16 A) ORed onto one bus, which A's front end can draw (gen_sch_a.py:49-66)",
-                e_declares: "6.15 A on its own VIN_RAW (the vehicle entry alone, gen_sch_e.py:66-100), while the same copper from
-                  L2 to J_BLK carries the tracker's current too (R4A-N12, board E's item)",
+                e_declares: "14.10 A typical and peak on its own VIN_RAW since round 8 (R4A-N12, 26 September 2026,
+                  gen_sch_e.py:93-138): both feeds, L2 (the vehicle entry, at most 6.15 A) and Q2's drain (the panel
+                  tracker, 10.33 A: the panel's 93 W at a 9 V bus, LT8705A 8705af), limited by what A's front end draws at a
+                  9.0 V bus at its ISNS limit (5.7 A at 20.7 V over 0.93 is 126.9 W, SNVSAI1D VSNS 57 mV maximum). A's own
+                  12.31 A (the sum of E's two earlier figures) is below it: R8E-N01, board A's item",
                 contact: "Preci-Dip 813, 'OPERATING CURRENT Max. 3.5 A' per contact; -55 to +85 C with the music wire spring
                   (v2/vendor/precidip/precidip-813-spring-loaded-connector-pages-31-34.pdf, VERIFIED)",
                 margin: "3.08 A per contact at 12.31 A if the four share evenly, 88 percent of the rating; with one of the four
                   open, 4.10 A, over the rating (INFERRED arithmetic; R4A-N13, open): the contract carries no margin for an
-                  open or high-resistance contact; hot-end derating TBD"}
+                  open or high-resistance contact; hot-end derating TBD. At board E's 14.10 A (round 8) the four carry 3.53 A
+                  each with even sharing, 101 percent of the 3.5 A rating: NOT MET at nominal (R8E-N01, open; the remedy is
+                  board A's or the contract's: a fifth VIN_RAW contact, a front-end input bound in hardware, or the host's
+                  IIN_HOST extended to the panel, the last a firmware bound only)"}
       pack_pins: {rating: "9 A per pin per the generator description (gen_sch_a.py:208-209); no Mill-Max datasheet held (TBD)",
                   load: "CELL+ 10.0 A typical, 18.0 A peak (gen_sch_a.py:24; gen_sch_e.py:52): 4.5 A per pin with four sharing,
                     6.0 A with one open; every PA key-down makes up to 18 A a service current for its 60 s (PWR-F12)",
@@ -446,7 +452,7 @@ board_to_board:
         section 7; the cap is not yet drawn or sourced); lifting live is an accepted, recorded residual risk; a hardware
         stack-present interlock is studied at Review D."
       not_judged: ["clamp orientation and value against the board (A03, A04)", "contact current at temperature", "the declared currents of the two ends"]
-      findings: [R4A-N13, R4A-N12, A04-D2, W3-F09, BAT-F06, PWR-F12]
+      findings: [R4A-N13, R4A-N12, R8E-N01, A04-D2, W3-F09, BAT-F06, PWR-F12]
       serves: [NEED-05, NEED-13, NEED-14]
 
     IF-PE-PACK:
@@ -454,7 +460,7 @@ board_to_board:
       kind: board_to_board
       ends:
         - {board: p, refs: [W_P, W_N, J_SMB], src: "v2/ecad/tools/gen_sch_p.py:347-348, 514"}
-        - {board: e, refs: [J_BATT, J_SMB], src: "v2/ecad/tools/gen_sch_e.py:193, 218-219"}
+        - {board: e, refs: [J_BATT, J_SMB], src: "v2/ecad/tools/gen_sch_e.py:231, 264-265"}
       power: {map: "W_P = PACK_P to E J_BATT pin 2 (CELL+); W_N = PACK_N to J_BATT pin 1 (GND)", status: VERIFIED,
               judged_by: "check_contracts.py:357-380", typ_a: 10.0, peak_a: 18.0,
               connector: "Amass XT60 (C98733): 30 A rated, 60 A instantaneous (v2/vendor/battery/amass-xt60-spec-tme.pdf, VERIFIED)",
@@ -466,16 +472,16 @@ board_to_board:
                 note: "pin 3 is on the PACK side of the 2 mOhm shunt; SMBC and SMBD leave through 100 ohm with a PESD5V0S1BA
                   clamp each to PACK_N (F-BP-01 corrected, gen_sch_p.py:317-346); PRES_J is PRES through TI's 1k (R22,
                   gen_sch_p.py:227), held low by R14 10k (gen_sch_p.py:223)"}
-        e_end: {part: "JST-XH B4B-XH-A 1x4 (C594232)", pins: {1: SMBC, 2: SMBD, 3: GND, 4: PRES_LEAD}, src: "gen_sch_e.py:218-219",
+        e_end: {part: "JST-XH B4B-XH-A(LF)(SN) 1x4 (C144395, the catalogue's tin part since round 8; C594232 was the gold -G variant)", pins: {1: SMBC, 2: SMBD, 3: GND, 4: PRES_LEAD}, src: "gen_sch_e.py:264-265",
                 note: "the RP2040's I2C1 block (GPIO2 SDA, GPIO3 SCL); PRES_LEAD to GPIO17 through R54 1k with R55 1M up"}
         lead: "a straight XH-to-XH four-way lead, pin for pin"
-        pres_contract: "the lead-present reading holds only while board P keeps R14 10k to ground on PRES (gen_sch_e.py:197-217,
+        pres_contract: "the lead-present reading holds only while board P keeps R14 10k to ground on PRES (gen_sch_e.py:235-252,
           open item 8 of round 4), and E's firmware turns GPIO17's pad pull-down OFF before reading PRES, or a lead that is out
           reads as in (open item 10)"
         reader: "only board E's RP2040 reads the gauge; the BQ25731 on A has no conductor to P; the gauge's host watchdog is
           enabled at 10 s by an explicit write, so a silent sensor controller holds charging off (BAT-F10)"
         judged_by: "none yet: the check_contracts P/E lead check is held in round 7 (458b2873's record)"
-      stale_text: "E's J_BATT description still names the BB-2590/U pack cable (gen_sch_e.py:193)"
+      stale_text: "none on E since round 8: J_BATT's value names board P's 12 AWG lead (gen_sch_e.py:231); it named the BB-2590/U pack cable until 26 September 2026"
       pack: "owner ruling D-06: one 4S3P of Samsung INR18650-35E, about 145 Wh, shrink-wrapped in the east pocket. The case
         measurement D-06 named was withdrawn when the owner reversed D-08 on 26 September 2026; the fit is judged at the worst
         of Peli's own figures (CASE-MARGINS.md M4a to M6: M4b to the east wall 7.38 mm and M6 under board B 3.66 mm at the

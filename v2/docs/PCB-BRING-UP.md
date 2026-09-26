@@ -141,15 +141,16 @@ fault from one that reads low.
 
 | step | rail | apply | current limit | at | what it feeds |
 |---|---|---|---|---|---|
-| 1 | +3V3 | 3.30 V | 0.06 A | J_HARN1 | U16, U19, U20 |
-| 2 | +5V_D8 | 5.00 V | 1.00 A | J_PWR1 | FB1, J_USB3, U1, U15, U17, U3 |
+| 1 | +3V3 | 3.30 V | 0.06 A | J_HARN1 | R92, U16, U19, U20, U22 |
+| 2 | +5V_D8 | 5.00 V | 1.00 A | J_PWR1 | J_USB3, U1, U17, U21, U3, U6 |
 
 **Measured, in this order, after the inputs are up.**
 
 | step | rail | expect | at | what it feeds |
 |---|---|---|---|---|
-| 1 | +3V3_D8 | 3.30 V (3.13 to 3.46) | U1 | Q3, Q4, Q5, Q8, Q9, U10 |
+| 1 | +3V3_D8 | 3.30 V (3.13 to 3.46) | U1 | Q3, Q4, Q5, Q8, Q9, R90 |
 | 2 | +3V4_HUB | 3.44 V (3.27 to 3.61) | U17 | U4 |
+| 3 | +5V_TX | 5.00 V (4.75 to 5.25) | U21 | FB1, K1, U15 |
 
 **Decide before powering: the declared source is an inductor or a ferrite, which is a filter on an incoming feed on some boards and a converter's output on others.**
 
@@ -176,17 +177,17 @@ fault from one that reads low.
 |---|---|---|---|---|
 | 1 | +3V3_E6 | 3.30 V (3.13 to 3.46) | U13 | J_DCF, J_LTG, J_POD, U10, U11, U14 |
 | 2 | +5V_GEIGER | 5.00 V (4.75 to 5.25) | U16 | J_GEIGER |
-| 3 | DC_P | 12.00 V (11.40 to 12.60) | Q1 | R19 |
-| 4 | HS_S | 12.00 V (11.40 to 12.60) | R19 | Q7 |
-| 5 | DC_HS | 12.00 V (11.40 to 12.60) | Q7 | L2 |
-| 6 | TRK_OUT | 15.10 V (14.34 to 15.86) | Q6 | Q2 |
+| 3 | VIN_RAW | 12.00 V (11.40 to 12.60) | ['L2', 'Q2'] | J_BLK |
+| 4 | DC_P | 12.00 V (11.40 to 12.60) | Q1 | R19 |
+| 5 | HS_S | 12.00 V (11.40 to 12.60) | R19 | Q7 |
+| 6 | DC_HS | 12.00 V (11.40 to 12.60) | Q7 | L2 |
+| 7 | TRK_OUT | 15.10 V (14.34 to 15.86) | Q6 | Q2 |
 
 **Decide before powering: the declared source is an inductor or a ferrite, which is a filter on an incoming feed on some boards and a converter's output on others.**
 
 | rail | volts | current | source | what it feeds |
 |---|---|---|---|---|
 | +5V_E6 | 5.00 V | 0.30 A | L3 | U13, U16 |
-| VIN_RAW | 12.00 V | 6.15 A | L2 | J_BLK |
 
 ## Board E5
 
