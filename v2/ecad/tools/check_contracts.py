@@ -116,7 +116,11 @@ def load(stem):
             return None, None
     txt = open(path, encoding="utf-8", errors="replace").read()
     by_net, by_pin = {}, {}
-    for m in re.finditer(r'\(net \(code "?\d+"?\) \(name "([^"]*)"\)(.*?)(?=\n    \(net |\n  \)\n)', txt, re.S):
+    # THE LAST NET OF A KICAD NETLIST WAS NEVER READ (r4t, 26 September 2026). KiCad 9 closes the nets section on
+    # the last net's own line, "...)))))", so a look-ahead for "\n  )\n" never matched it and every netlist lost
+    # its last net here. Today that is always an unconnected single pin, which is why nothing noticed; a real net
+    # sorting last would have vanished. A net now ends where the next one starts, or at the end of the file.
+    for m in re.finditer(r'\(net \(code "?\d+"?\) \(name "([^"]*)"\)(.*?)(?=\(net \(code|\Z)', txt, re.S):
         name = m.group(1).lstrip("/"); nodes = set()
         for n in re.finditer(r'\(node \(ref "([^"]+)"\) \(pin "([^"]+)"\)', m.group(2)):
             nodes.add((n.group(1), n.group(2))); by_pin[(n.group(1), n.group(2))] = name
@@ -151,9 +155,23 @@ def same(a, b):
 # their board, because the English article "A" had to be stripped for the inference to work at all. An
 # attribution that is right most of the time puts a board's failure on another board's page.
 fails = []; checked = []
-per_board = collections.defaultdict(lambda: {"pass": 0, "fail": [], "unjudged": []})
+per_board = collections.defaultdict(lambda: {"pass": 0, "fail": [], "unjudged": [], "undecided": []})
 unjudged = []
-def check(ok, text, detail="", boards=None, group=None):
+# A CONTRACT JUDGED ON EVERY INPUT IT NEEDS CAN STILL BE UNDECIDED (review fix-up of round 4, 26 September 2026).
+# RF-002's transmitter walk meets pins no held document shows to be inputs (an M.2 card's W_DISABLE1# whose maker is
+# silent, an accessory whose basis is owed). That is not a pass and not a failure, and it is not an absent board
+# either: the input is all here and it does not decide. `ok=None` records it; the verdict is INCONCLUSIVE when no
+# contract failed, and the guard that keeps a reading taken with more input does not apply, because nothing is absent.
+undecided = []
+# A RESULT THAT ANSWERS ONE RULE AND NO CONTRACT (review fix-up of round 4, 26 September 2026). The transmitter walk of
+# section 15a answers RF-002 and nothing else: whether board B's Compute Modules can be told to stop transmitting is
+# not a question about a signal agreeing at both ends of a connector, which is what SCH-003 reads here through
+# check_contracts_<letter>, and INT-001 reads the set verdict. Counted like the contracts, the walk failed SCH-003 on
+# A, B, C and D and the set verdict with them: a rule decided by another rule's question, the class of 18 September.
+# `only_group=True` records a result in its group alone, so it decides inhibit_chain_<letter> and nothing else; the
+# counts are kept apart in `group_only` and printed after the contracts.
+group_only = collections.defaultdict(list)
+def check(ok, text, detail="", boards=None, group=None, only_group=False):
     """`group` names a SUBSET of the contracts that answers a rule of its own (18 September 2026).
 
     RF-002 (the transmit inhibit chain is traced, its driver count is one, its sense is verified and it fails
@@ -162,6 +180,19 @@ def check(ok, text, detail="", boards=None, group=None):
     question: the contracts tagged `inhibit` write `inhibit_chain_<letter>` beside the board's own
     `check_contracts_<letter>`, and RF-002 reads that one."""
     if not boards: raise AssertionError("contract %r declares no board: say which boards it is about" % text[:70])
+    if only_group:
+        if not group: raise AssertionError("result %r is recorded in its group alone and names no group" % text[:70])
+        _st = ("UNJUDGED" if [b for b in boards if b in MISSING] else "UNDECIDED" if ok is None else
+               "PASS" if ok else "FAIL")
+        print(("%s  " % _st) + text + (("   " + detail) if detail and _st != "PASS" else "")
+              + "   [%s only]" % group)
+        group_only[_st].append(text)
+        for _b in boards:
+            _g = per_board[_b].setdefault("groups", {}).setdefault(group, {"pass": 0, "fail": []})
+            if _st == "PASS": _g["pass"] += 1
+            elif _st == "FAIL": _g["fail"].append(text)
+            else: _g.setdefault(_st.lower(), []).append(text)
+        return
     # A CONTRACT THAT NAMES AN ABSENT BOARD IS UNJUDGED, NOT FAILED (17 September 2026). A contract is an
     # agreement between two boards' netlists, so with one of them missing from this tree the comparison was
     # never made: its pin map reads as empty and every pin "disagrees". The per-board guard below covers the
@@ -176,6 +207,14 @@ def check(ok, text, detail="", boards=None, group=None):
         for _b in boards:
             per_board[_b]["unjudged"].append(text)
             if group: per_board[_b].setdefault("groups", {}).setdefault(group, {"pass": 0, "fail": []}).setdefault("unjudged", []).append(text)
+        return
+    if ok is None:
+        print("UNDECIDED  " + text + (("   " + detail) if detail else ""))
+        checked.append(text); undecided.append(text)
+        for _b in boards:
+            per_board[_b].setdefault("undecided", []).append(text)
+            if group:
+                per_board[_b].setdefault("groups", {}).setdefault(group, {"pass": 0, "fail": []}).setdefault("undecided", []).append(text)
         return
     print(("PASS  " if ok else "FAIL  ") + text + (("   " + detail) if detail and not ok else ""))
     checked.append(text)
@@ -355,6 +394,55 @@ _u9 = _value_of("pcb-c-display", "U9")
 check("1G04" not in _u9 and ("1G34" in _u9 or "buffer" in _u9.lower()), "C7: U9 buffers TX_INHIBIT_n into EMCON_HW rather than inverting it", _u9 or "no value read", boards={"C"}, group="inhibit")
 
 
+# 15a. RF-002 ASKS ABOUT THE TRANSMITTERS, AND NOTHING ABOVE DID (S-02 of MESHSAT-1357, 26 September 2026). The
+# contracts of group `inhibit` above ask about the LINE: that it is there, that it reaches board D's keying gate, that
+# the toggle is its only driver, its sense and its pull. Board B read PASS of 3 on them while its three Compute
+# Modules' own WiFi and Bluetooth were disabled only through a software I/O expander and its two AW7915-AED cards
+# through a pin their maker does not document (CONOPS section 4b, adjudication A11). `tx_inhibit.py` holds CONOPS
+# 4b's list of transmitters, finds each one on the netlists, and walks from the asserted line through the parts whose
+# pin maps its datasheets give to the transmitter's supply switch, its keying pin or a disable pin its maker
+# documents; it also refuses any part that names a radio and is not in its list. Every result is recorded in the
+# `inhibit` group ALONE (`only_group`), so it lands in `inhibit_chain_<letter>`, the verdict RF-002 reads, on the board
+# that carries it, and moves neither `check_contracts_<letter>` (SCH-003) nor the set verdict.
+# Review fix-up of round 4 (26 September 2026): every net on an accepted path is also taken as a conductor across the
+# mated ribbons, and a pin on it that firmware can drive fails the path; the two asserted lines are judged once each
+# over the whole set, and a result is attributed to the transmitter's board, to every board holding a part it names,
+# and to any board it needed and could not read (which check() then counts as unjudged, not failed). Second fix-up
+# (26 September 2026): each line is also solved in its fail-safe states (every subset of its ribbons unplugged, the
+# panel's own rails down), and must stay under the gates' 0.8 V VIL on its own pull-downs, because RF-002 asks that
+# "the inhibit is asserted by the unpowered and disconnected states" and board B's level shifters lift EMCON_HW there.
+# Round 6 (26 September 2026): every pin a held net meets passes its sheet's current into that solve (II, Ioff, an
+# enable's current, a module's own pull; a pin no sheet bounds leaves it undecided), and every element on a path is also
+# judged with its own supply down, so an enable or keying pin it drove must be held at EMCON's level by a passive pull
+# (R4T-F9, ruled in scope by the review of the second fix-up). Round 6's second pass: in those solves every part but
+# the reader is taken powered or unpowered, whichever is worse, since any board or any one of its rails can be down
+# while another board reads the line, and resistors and rails are taken at the adverse end of their tolerance. Round 6's
+# third pass (R4T-D41): a part's supply is read from its pin map (a logic part's VCC pin, a switch's input pin), whatever
+# the net is named, so a reader on VBAT or 3V3_DEV is judged as well, and a supply whose name states no voltage leaves a
+# state undecided instead of being walked as a signal. Round 6's fourth pass (R4T-D42 to R4T-D45): a pull on a net EMCON
+# holds high is harmless only to a '+' rail at or above the level it holds, a supply known only by its name is walked for
+# its drivers as well, a resistor from a pin-map supply or a transistor channel onto a gated rail is a second feed, and a
+# line at a level no supply voltage reads as low fails whatever its reader's supply.
+# RF-002 applies today only where the fact rf_transmit holds (B and D), so the results written for A, C, E and P decide
+# no rule until the registry writer widens RF-002's row (tests/test_tx_inhibit.py, the guard that says so).
+# THE WALK RUNS ONLY WHERE ITS TOOL IS IN THE TREE (round 7b integration, 26 September 2026). tx_inhibit.py is still
+# under review and lands in a commit of its own; this file landed first with the line contracts, the SMBus lead and the
+# last-net fix. Without the tool the walk is not run and SAYS so: inhibit_chain_<letter> is then the line contracts
+# above alone, exactly as before the walk existed, and its note says only that. A tool that IS in the tree and fails to
+# import is an error, not a skip, so the guard asks whether the module exists rather than catching its ImportError.
+import importlib.util as _ilu
+_tx = None
+if _ilu.find_spec("tx_inhibit") is not None:
+    import tx_inhibit as _tx
+else:
+    print("NOTE  RF-002's transmitter walk (section 15a) was not run: tx_inhibit.py is not in this tree")
+if _tx is not None:
+    _TX_NL = {_k: (None if _k in MISSING else _tx.parse_netlist(netlist_path(_st))) for _k, _st in NETS.items()}
+    # The walk's results decide inhibit_chain_<letter> alone (`only_group`): they are RF-002's question, not a contract.
+    for _res in _tx.judge(_TX_NL):
+        check(_res["ok"], "RF-002 " + _res["text"], (_res["detail"] or "")[:1500], boards=set(_res["boards"]), group="inhibit",
+              only_group=True)
+
 # 15b. THE PACK'S TWO WIRES ARE A CONNECTOR (16 September 2026). Board P's pack leads are solder lands and
 # 12 AWG wire to the XT60 on board E, which is why this set left board P out for as long as it existed and why
 # rule SCH-003 had nothing to say about it. A wire is a conductor: what makes it a contract is that both ends
@@ -381,6 +469,96 @@ if "P" in B and B["P"][1] and B["E"][1]:
     _fuse = B["P"][1].get(("F1", "1"), "") or B["P"][1].get(("F1", "2"), "")
     check(bool(_fuse), "P: the pack's blade fuse is on the netlist and carries a net", "F1 %r" % _fuse,
           boards={"P"})
+
+# 15c. THE PACK'S SMBUS LEAD IS A CONNECTOR PAIR, AND ITS TWO ENDS WERE NEVER THE SAME CONNECTOR (S-05 of
+# MESHSAT-1357, adjudication A07, 26 September 2026). Board P's J_SMB is a JST-XH 1x4 at 2.50 mm (SMBC, SMBD, GND,
+# PRES) and board E's J_SMB was a generic 1x6 pin header at 2.54 mm (SDA0, SCL0, SDA1, SCL1, GND, GND), a pinout left
+# from the two SMBus sections of the withdrawn BB-2590/U. No lead can be crimped for that pair, and a lead made pin n
+# to pin n would have crossed clock and data. Nothing checked it because no contract named it. What must hold:
+#   - both ends are the same connector family, pitch and pin count, read from their footprints;
+#   - pin n carries the same role at both ends: clock (SMBC, SCL*), data (SMBD, SDA*), return, and presence (PRES),
+#     which E may leave open because P pulls it to its own return (R14; TI SLUSC67B section on PRES, Figure 28), or
+#     ground, which is TI's own host arrangement (SLUSC67B 8.2.2.2.3: "In the host system, this pin is grounded";
+#     review fix-up of round 4, 26 September 2026);
+#   - P's return pin is the net of P's own negative lead W_N, the load side of the 2 mOhm shunt R10, so the gauge's
+#     SMBus reference is the pack terminal the host shares (TI SLUSC67B Figures 21, 29 and 30: the SMBus connector's
+#     VSS and the ESD clamps return to PACK-), and the host's ground current never flows through the sense resistor.
+def _footprint_of(stem, ref):
+    _p = netlist_path(stem)
+    if not os.path.isfile(_p): return ""
+    txt = open(_p, encoding="utf-8", errors="replace").read()
+    m = re.search(r'\(comp \(ref "%s"\)\s*\(value "[^"]*"\)\s*\(footprint "([^"]*)"\)' % re.escape(ref), txt)
+    return m.group(1) if m else ""
+
+
+def _conn_shape(fp):
+    """(family, pitch in mm, pin count) from a KiCad connector footprint name, or None."""
+    m = re.search(r"JST_([A-Z]+)_[^:]*?_(\d+)x(\d+)_P([\d.]+)mm", fp or "")
+    if m: return ("JST " + m.group(1), float(m.group(4)), int(m.group(2)) * int(m.group(3)))
+    m = re.search(r"(PinHeader|PinSocket)_(\d+)x(\d+)_P([\d.]+)mm", fp or "")
+    if m: return (m.group(1), float(m.group(4)), int(m.group(2)) * int(m.group(3)))
+    m = re.search(r"^([^:]+):.*?_(\d+)x(\d+)_P([\d.]+)mm", fp or "")
+    if m: return (m.group(1), float(m.group(4)), int(m.group(2)) * int(m.group(3)))
+    return None
+
+
+_SMB_ROLES = ((r"^(SMBC|SCL\w*)$", "clock"), (r"^(SMBD|SDA\w*)$", "data"), (r"^PRES\w*$", "presence"))
+
+
+def _smb_role(net, returns):
+    if not net or net.startswith("unconnected-") or net == "NC": return "open"
+    if net in returns or re.match(r"^(GND|AGND|DGND|PGND|GNDA|VSS)([_\-].*)?$", net): return "return"
+    for pat, role in _SMB_ROLES:
+        if re.match(pat, net): return role
+    return "unknown (%s)" % net
+
+
+_smb_p = sorted(p for (r, p) in B["P"][1] if r == "J_SMB")
+_smb_e = sorted(p for (r, p) in B["E"][1] if r == "J_SMB")
+_fp_p = _footprint_of(NETS["P"], "J_SMB") if "P" not in MISSING else ""
+_fp_e = _footprint_of(NETS["E"], "J_SMB") if "E" not in MISSING else ""
+_sh_p, _sh_e = _conn_shape(_fp_p), _conn_shape(_fp_e)
+check(bool(_smb_p) and bool(_smb_e), "P and E: the pack SMBus lead has a J_SMB at both ends",
+      "P pins %s, E pins %s" % (_smb_p, _smb_e), boards={"P", "E"})
+check(bool(_sh_p) and _sh_p == _sh_e,
+      "P and E: J_SMB is the same connector family, pitch and pin count at both ends of the pack SMBus lead",
+      "P %s is %s, E %s is %s" % (_fp_p or "absent", _sh_p, _fp_e or "absent", _sh_e), boards={"P", "E"})
+_wn = B["P"][1].get(("W_N", "1"), "")
+_n_smb = max([int(x) for x in _smb_p + _smb_e if x.isdigit()] or [0])
+_rp = {str(i): _smb_role(B["P"][1].get(("J_SMB", str(i)), ""), {_wn} if _wn else set()) for i in range(1, _n_smb + 1)}
+_re = {str(i): _smb_role(B["E"][1].get(("J_SMB", str(i)), ""), set()) for i in range(1, _n_smb + 1)}
+_bad_roles = {i: (_rp[i], _re[i]) for i in _rp if not (_rp[i] == _re[i] or (_rp[i], _re[i]) in (("presence", "open"),
+                                                                                                    ("presence", "return")))}
+check(bool(_n_smb) and not _bad_roles and all(v in ("clock", "data", "return", "presence", "open") for v in _rp.values()),
+      "P and E: J_SMB pin n carries the same role at both ends (clock, data, return; E may leave P's PRES open or ground it)",
+      "pins where the roles differ (P, E): %s" % _bad_roles, boards={"P", "E"})
+_ret_pins = [i for i, v in _rp.items() if v == "return"]
+check(bool(_wn) and bool(_ret_pins) and all(B["P"][1].get(("J_SMB", i), "") == _wn for i in _ret_pins),
+      "P: the SMBus lead's return is the pack's own negative lead W_N (the load side of the shunt), not the cell side",
+      "W_N is on %r; J_SMB return pin(s) %s are on %s" % (_wn, _ret_pins, [B["P"][1].get(("J_SMB", i), "") for i in _ret_pins]),
+      boards={"P"})
+# AND THE SMBUS LINES' CLAMPS RETURN THERE TOO (review fix-up of round 4, 26 September 2026). The contract above held
+# only J_SMB's return pin. TI SLUSC67B Figure 30 returns the SMBus connector's VSS AND the lines' ESD clamps to PACK-:
+# a clamp to the cell-side GND sends the ESD current through the 2 mOhm shunt and the coulomb counter. Board P's
+# USBLC6-2SC6 D2 had its GND pin 2 on the cell-side GND at main 82dd1e4d. Every protection part on P's SMBus lines
+# must have its ground-side pins on W_N's net, and each line must carry one.
+_PROT = re.compile(r"^(USBLC6|PESD\d|TPD\d|SMBJ|SMCJ|SMAJ|ESD\d)", re.I)
+_smb_lines = sorted({B["P"][1].get(("J_SMB", i), "") for i, v in _rp.items() if v in ("clock", "data")} - {""})
+_smb_prot = {}
+for _ln in _smb_lines:
+    for _r, _pin in B["P"][0].get(_ln, set()):
+        if _PROT.match(_value_of(NETS["P"], _r)):
+            _smb_prot.setdefault(_r, set())
+for _r in _smb_prot:
+    for (_rr, _pin), _n in B["P"][1].items():
+        if _rr == _r and (_n == _wn or re.match(r"^(GND|AGND|DGND|PGND|GNDA|VSS)([_\-].*)?$", _n)):
+            _smb_prot[_r].add(_n)
+_bare = [_ln for _ln in _smb_lines if not any(_r in _smb_prot for _r, _p in B["P"][0].get(_ln, set()))]
+_wrong = {_r: sorted(_n) for _r, _n in _smb_prot.items() if not _n or _n != {_wn}}
+check(bool(_smb_lines) and bool(_wn) and not _bare and not _wrong,
+      "P: every clamp on the SMBus lead's clock and data lines returns to W_N, the net the lead's return pin carries",
+      "lines %s; lines with no clamp %s; clamps whose ground side is not %r: %s" % (_smb_lines, _bare, _wn, _wrong),
+      boards={"P"})
 
 # 16. an in-line part is in line with something (9 Sep 2026, E7, appendix 32.83). R48 on E is drawn as the Geiger
 # module's "pulse input series" resistor, but U10 pin 9 sat on GEIGER_PULSE with the connector, so the pulse reached
@@ -456,7 +634,11 @@ if MISSING:
     print("\n%d board netlist(s) absent from this tree: %s. Every contract that names one of them was judged "
           "against nothing, so this is INCONCLUSIVE and not a verdict on the design; generate those boards "
           "and run it again." % (len(MISSING), ", ".join(MISSING)))
-print("\n%d contract(s) FAILED" % len(fails) if fails else ("\nALL CONTRACTS PASS" if not MISSING else ""))
+print("\n%d contract(s) FAILED" % len(fails) if fails else
+      ("\n%d contract(s) UNDECIDED, none failed" % len(undecided)) if undecided else ("\nALL CONTRACTS PASS" if not MISSING else ""))
+if group_only:
+    print("RF-002's transmitter walk (section 15a, decides inhibit_chain_<letter> only): %s"
+          % ", ".join("%d %s" % (len(group_only[k]), k) for k in ("FAIL", "UNDECIDED", "UNJUDGED", "PASS") if group_only.get(k)))
 import os as _osv
 sys.path.insert(0, _osv.path.dirname(_osv.path.abspath(__file__)))
 import verdict as _v
@@ -519,6 +701,7 @@ for _bd in sorted(set(list(per_board) + list(B))):
                                      "%d contract(s) that name an absent board" % _u))
         continue
     _n = _r["pass"] + len(_r["fail"])
+    _d = len(_r.get("undecided") or [])     # judged on every input and not decided (review fix-up of round 4)
     # THE INHIBIT CHAIN IS ITS OWN QUESTION AND GETS ITS OWN VERDICT (18 September 2026). RF-002 asks about the
     # transmit inhibit line and nothing else: that it is present on every board that carries it, that it reaches
     # the keying gate, that the panel toggle is its only driver, that its sense is a buffer rather than an
@@ -529,17 +712,38 @@ for _bd in sorted(set(list(per_board) + list(B))):
     if _g is not None:
         _gu = len(_g.get("unjudged") or [])
         _gn = _g["pass"] + len(_g["fail"])
+        _gd = len(_g.get("undecided") or [])
         if not ((_bd in MISSING or _gu) and _richer_on_disk("inhibit_chain_%s" % _bd.lower())):
             _v.write("inhibit_chain_%s" % _bd.lower(),
-                     _v.INCONCLUSIVE if (not _gn or _bd in MISSING or _gu) else (_v.PASS if not _g["fail"] else _v.FAIL),
-                     counts={"fail": len(_g["fail"]), "pass": _g["pass"], "unjudged": _gu},
-                     denominator=_gn + _gu,
-                     evidence=(_g["fail"] + ["unjudged, the other board is absent: " + t for t in (_g.get("unjudged") or [])])[:20],
+                     _v.INCONCLUSIVE if (not _gn or _bd in MISSING or _gu) else
+                     (_v.FAIL if _g["fail"] else (_v.INCONCLUSIVE if _gd else _v.PASS)),
+                     counts={"fail": len(_g["fail"]), "pass": _g["pass"], "unjudged": _gu, "undecided": _gd},
+                     denominator=_gn + _gu + _gd,
+                     evidence=(_g["fail"] + ["undecided: " + t for t in (_g.get("undecided") or [])]
+                               + ["unjudged, the other board is absent: " + t for t in (_g.get("unjudged") or [])])[:20],
                      inputs={"boards": ",".join(sorted(B))},
+                     # THE NOTE SAYS WHAT WAS ASKED OF THIS BOARD (review fix-up of round 4, 26 September 2026). It
+                     # described only the line, and it is also written for E and P, which carry no line and no
+                     # transmitter: there it is the classification of every part that names a radio.
                      note=("this board's netlist is absent from this tree" if _bd in MISSING else
+                           # Without tx_inhibit.py in the tree the walk did not run (section 15a), so the note claims
+                           # only the line contracts, in the words it used before the walk existed.
                            "the transmit inhibit chain on this board: it is present, it reaches the gate it keys, "
                            "the panel toggle is its only driver, its sense is a buffer and it is pulled down so a "
-                           "missing panel inhibits"),
+                           "missing panel inhibits; RF-002's transmitter walk (tx_inhibit.py) is not in this tree, so "
+                           "no transmitter, fail-safe state or radio-named part was judged" if _tx is None else
+                           "RF-002 on this board: where the transmit inhibit line runs, it is present, reaches the "
+                           "gate it keys, has the panel toggle as its only source, is buffered and not inverted, and "
+                           "is pulled down so a missing panel inhibits, and with the panel unplugged or unpowered its "
+                           "own pull-downs hold it under the gates' 0.8 V against everything on it that can source "
+                           "current, every pin's stated leakage included (II, Ioff) with every other part powered or "
+                           "not, whichever is worse; every transmitter this board "
+                           "carries is reached from EMCON in hardware (tx_inhibit.py), with every net on the way driven "
+                           "by nothing else on any board, and with each gate on the way unpowered its enable or keying "
+                           "pin is still held at EMCON's level by a passive pull; and every part that names a radio is "
+                           "a listed transmitter, an accessory or a receiver" + (". %d result(s) are undecided: judged on every input, "
+                                                            "and a pin or a declaration on the way is not proved"
+                                                            % _gd if _gd else "")),
                      # A SENTENCE IN THE NOTE IS NOT THE FIELD (20 September 2026). `_richer_on_disk` protects
                      # a better reading in THIS tree and can know nothing about another host's; the only
                      # mechanism that crosses trees is `missing_input`, which `rules_status` honours whatever
@@ -550,12 +754,14 @@ for _bd in sorted(set(list(per_board) + list(B))):
                                     "it could be judged" if _bd in MISSING else None),
                      quiet=True)
     _v.write("check_contracts_%s" % _bd.lower(),
-             _v.INCONCLUSIVE if (not _n or _bd in MISSING or _u) else (_v.PASS if not _r["fail"] else _v.FAIL),
-             counts={"fail": len(_r["fail"]), "pass": _r["pass"], "unjudged": _u}, denominator=_n + _u,
-             evidence=(_r["fail"] + ["unjudged, the other board is absent: " + t for t in (_r.get("unjudged") or [])])[:20],
+             _v.INCONCLUSIVE if (not _n or _bd in MISSING or _u) else
+             (_v.FAIL if _r["fail"] else (_v.INCONCLUSIVE if _d else _v.PASS)),
+             counts={"fail": len(_r["fail"]), "pass": _r["pass"], "unjudged": _u, "undecided": _d}, denominator=_n + _u + _d,
+             evidence=(_r["fail"] + ["undecided: " + t for t in (_r.get("undecided") or [])]
+                       + ["unjudged, the other board is absent: " + t for t in (_r.get("unjudged") or [])])[:20],
              inputs={"boards": ",".join(sorted(B))},
              note=("this board's netlist is absent from this tree" if _bd in MISSING else
-                   "no contract of this set names this board" if not _n and not _u else
+                   "no contract of this set names this board" if not _n and not _u and not _d else
                    "%d of this board's contracts name a board absent from this tree and were not judged" % _u
                    if _u else
                    "the contracts that name this board; the set's own verdict is check_contracts"),
@@ -572,8 +778,9 @@ if (not checked or MISSING or _NO_INTENT) and _richer_on_disk("check_contracts",
           % ("no netlist in this tree" if not checked else "no netlist for " + ", ".join(MISSING)))
     sys.exit(3)
 sys.exit(_v.write("check_contracts",
-                  _v.INCONCLUSIVE if (not checked or MISSING or (UNSPLIT and not fails)) else (_v.PASS if not fails else _v.FAIL),
-                  counts={"fail": len(fails), "pass": len(checked) - len(fails), "missing_boards": len(MISSING),
+                  _v.INCONCLUSIVE if (not checked or MISSING or ((UNSPLIT or undecided) and not fails)) else (_v.PASS if not fails else _v.FAIL),
+                  counts={"fail": len(fails), "pass": len(checked) - len(fails) - len(undecided), "undecided": len(undecided),
+                          "missing_boards": len(MISSING),
                           # THE CONTRACTS THAT EXIST AND COULD NOT BE JUDGED ARE COUNTED (17 September 2026).
                           # They are not passes and they are not failures, and leaving them out of the
                           # denominator would make "0 of 0" out of a set where most of the work is simply not
@@ -583,7 +790,8 @@ sys.exit(_v.write("check_contracts",
                           "boards_without_intent": len(_NO_INTENT), "rails_unsplit": len(UNSPLIT)},
                   denominator=len(checked) + len(unjudged),
                   evidence=(["netlist absent: " + k for k in MISSING] + ["rail unsplit: " + u for u in UNSPLIT]
-                            + fails + ["unjudged, a board it names is absent: " + t for t in unjudged[:8]]),
+                            + fails + ["undecided: " + t for t in undecided[:8]]
+                            + ["unjudged, a board it names is absent: " + t for t in unjudged[:8]]),
                   inputs={"boards": ",".join(sorted(B))},
                   missing_input=(("%d of the set's contracts name a board absent from this tree and none "
                                   "could be evaluated" % len(unjudged)) if not checked else
@@ -591,4 +799,5 @@ sys.exit(_v.write("check_contracts",
                   note=("no contract was evaluated (%d of the set's contracts name a board absent from this "
                         "tree)" % len(unjudged) if not checked else
                         ("%s absent from this tree, so nothing that names them was judged" % ", ".join(MISSING)) if MISSING else
-                        ("%d rail(s) cross a connector with no share of their budget declared" % len(UNSPLIT)) if UNSPLIT else "")))
+                        ("%d rail(s) cross a connector with no share of their budget declared" % len(UNSPLIT)) if UNSPLIT else
+                        ("%d contract(s) judged on every input they need are undecided" % len(undecided)) if undecided else "")))

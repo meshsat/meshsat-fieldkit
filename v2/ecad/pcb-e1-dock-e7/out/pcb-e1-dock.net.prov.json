@@ -2,7 +2,7 @@
  "what": "the generator that wrote this netlist, by content",
  "letter": "e",
  "netlist": "pcb-e1-dock.net",
- "generator_sha": "51c527e30704671d",
+ "generator_sha": "4f9e7d18846e3442",
  "identity_since": "2026-09-26",
  "generator_files": [
   "boards/e.json#gen_env",
@@ -82,7 +82,7 @@
   "gen_footprints_panel.py": "8291174d7f0a2993",
   "gen_sch_e.py": "d120ebfb9afbee6e",
   "intent.py": "f1ac033e0f3c10f1",
-  "kisch.py": "5cb50bd8ba2b90b2",
+  "kisch.py": "98229aef3bff1892",
   "meshsat.pretty/BackerScrew_M3_GND.kicad_mod": "e0b8f321b6539d37",
   "meshsat.pretty/CM5_Amphenol_10164227.kicad_mod": "e5ad42053038d917",
   "meshsat.pretty/CM5_Conn_A_10164227.kicad_mod": "3a9dd27aa4e83571",
@@ -145,5 +145,5 @@
   "schlayout.py": "a9eee3d6b0b38bae"
  },
  "schematic_sha256": "4b0438bec4a85b45f83cff0ad15883a2",
- "taken": "2026-09-26T10:01:33+00:00"
+ "taken": "2026-09-26T17:52:41+00:00"
 }

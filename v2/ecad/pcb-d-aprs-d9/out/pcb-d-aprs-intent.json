@@ -1,6 +1,6 @@
 {
  "board": "pcb-d-aprs",
- "written": "2026-09-26 14:19",
+ "written": "2026-09-26 17:52",
  "bypass": [
   {
    "cap": "C51",
@@ -322,5 +322,14 @@
    "z_se": 50.0
   }
  },
- "pass_through": {}
+ "pass_through": {},
+ "clamps": {
+  "D1": {
+   "direction": "uni",
+   "basis": "SMBJ6.0A: no C in the suffix, the unidirectional part (Littelfuse, Diodes Inc and MDD number them alike)",
+   "protected": "+5V_D8",
+   "return": "GND",
+   "symbol": "Device:D_Zener"
+  }
+ }
 }

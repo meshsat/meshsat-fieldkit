@@ -452,3 +452,328 @@ def t_a_clamp_on_the_next_segment_of_the_power_path_is_this_conductors_clamp():
         assert rc == 0, "a clamp one fuse past the connector was not seen:\n%s" % out[-700:]
     finally:
         restore()
+
+
+# ---------------------------------------------------------------------------------------------------------
+# CLAMP POLARITY (S-09 of MESHSAT-1357, 26 September 2026). A03 found sixteen one-way clamps all drawn with the
+# bidirectional Device:D_TVS, and seven of them with the band on the return. These fixtures carry what a KiCad
+# export carries (libsource and pinfunction), written the way kisch.tvs() draws a one-way part (Device:D_Zener,
+# K on pin 1) or the way the boards drew them before (Device:D_TVS, A1 and A2).
+
+def _net_full(d, comps, nets, stem="pcb-d-aprs", intent=None):
+    """comps: {ref: (value, "Lib:Part")}; nets: {name: [(ref, pin, pinfunction)]}."""
+    os.makedirs(d, exist_ok=True)
+    c = "".join('    (comp (ref "%s")\n      (value "%s")\n      (footprint "Diode_SMD:D_SMB")\n'
+                '      (libsource (lib "%s") (part "%s") (description ""))\n      (tstamps "x"))\n'
+                % (r, v, lib.split(":")[0], lib.split(":")[1]) for r, (v, lib) in sorted(comps.items()))
+    n = ""
+    for i, (name, nodes) in enumerate(sorted(nets.items()), 1):
+        body = "".join('      (node (ref "%s") (pin "%s") (pinfunction "%s") (pintype "passive"))\n' % (r, p, f)
+                       for r, p, f in nodes)
+        n += '    (net (code %d) (name "/%s")\n%s    )\n' % (i, name, body)
+    p = os.path.join(d, "%s.net" % stem)
+    open(p, "w").write("(export (version E)\n  (components\n%s  )\n  (nets\n%s  )\n)\n" % (c, n))
+    if intent is not None:
+        json.dump(intent, open(os.path.join(d, "%s-intent.json" % stem), "w"))
+    return p
+
+
+_JACK = {"ref": "J_X", "why": "the 5 V lead to the radio in its bay"}
+
+
+def _clamp_fixture(prefix, k_net, a_net, lib="Device:D_Zener", value="SMBJ5.0A"):
+    d = tempfile.mkdtemp(prefix=prefix)
+    f1, f2 = ("K", "A") if lib.endswith("D_Zener") else ("A1", "A2")
+    return d, _net_full(d, {"J_X": ("lead", "Connector_Generic:Conn_01x02"), "D1": (value, lib), "U1": ("load", "X:Y")},
+                        {"+5V_X": [("J_X", "1", "Pin_1"), ("U1", "3", "VCC")] + ([("D1", "1", f1)] if k_net == "+5V_X" else [("D1", "2", f2)]),
+                         "GND": [("J_X", "2", "Pin_2")] + ([("D1", "1", f1)] if k_net == "GND" else [("D1", "2", f2)])})
+
+
+def t_a_one_way_clamp_with_its_band_on_the_return_is_refused():
+    """DEFECTIVE (board D's D1 as drawn): the cathode on GND and the anode on the rail. The conductor still
+    TOUCHES a clamp, which is all this gate used to ask, and the clamp is a forward diode across the rail."""
+    restore = _with_ports("d", [_JACK])
+    try:
+        d, p = _clamp_fixture("clamp-rev-", "GND", "+5V_X")
+        rc, out = _run(p, d)
+        assert rc == 1, "a reversed one-way clamp passed:\n%s" % out[-700:]
+        assert "REVERSED D1" in out and "the wrong way round" in out, out[-700:]
+        v = json.load(open(os.path.join(d, "out", "port_protect.verdict.json")))
+        assert v["counts"]["clamps_reversed"] == 1, v["counts"]
+    finally:
+        restore()
+
+
+def t_a_one_way_clamp_drawn_with_its_cathode_on_the_rail_passes():
+    """ACCEPTABLE: the same part the right way round, drawn as kisch.tvs() draws it (K on pin 1)."""
+    restore = _with_ports("d", [_JACK])
+    try:
+        d, p = _clamp_fixture("clamp-ok-", "+5V_X", "GND")
+        rc, out = _run(p, d)
+        assert rc == 0, "a correct one-way clamp was refused:\n%s" % out[-700:]
+        assert "CLAMP D1     OK" in out, out[-700:]
+    finally:
+        restore()
+
+
+def t_a_one_way_part_on_the_bidirectional_symbol_is_refused_even_the_right_way_round():
+    """DEFECTIVE (boards A and B as drawn): pad 1 is on the rail, so the land is right, and the schematic still
+    shows a symbol with no cathode, so no reader and no tool can see which way the part points."""
+    restore = _with_ports("d", [_JACK])
+    try:
+        d, p = _clamp_fixture("clamp-sym-", "+5V_X", "GND", lib="Device:D_TVS")
+        rc, out = _run(p, d)
+        assert rc == 1, "a one-way part on an A1/A2 symbol passed:\n%s" % out[-700:]
+        assert "SYMBOL D1" in out and "hides its" in out, out[-700:]
+    finally:
+        restore()
+
+
+def t_a_two_way_part_on_the_bidirectional_symbol_is_either_way_round():
+    """ACCEPTABLE (board D's PESD5V0S1BA headset clamps): ground on pin 1 is correct for a two-way part."""
+    restore = _with_ports("d", [_JACK])
+    try:
+        d, p = _clamp_fixture("clamp-bi-", "GND", "+5V_X", lib="Device:D_TVS", value="PESD5V0S1BA bidirectional ESD clamp")
+        rc, out = _run(p, d)
+        assert rc == 0, "a two-way clamp was judged for polarity:\n%s" % out[-700:]
+        assert "N/A" in out, out[-700:]
+    finally:
+        restore()
+
+
+def t_board_ds_microphone_clamp_is_judged_two_way_from_its_own_sheet():
+    """ACCEPTABLE (board D's D10 and D13 since round 4, PESD12VL1BA on Device:D_TVS with ground on pin 1): the part
+    number is read from Nexperia's own sheet for it (round 6); before, it read UNJUDGED and TRN-001 was INCONCLUSIVE."""
+    restore = _with_ports("d", [_JACK])
+    try:
+        d, p = _clamp_fixture("clamp-pesd12-", "GND", "+5V_X", lib="Device:D_TVS",
+                              value="PESD12VL1BA bidirectional ESD clamp at the jack: headset 1 microphone, above the electret bias")
+        rc, out = _run(p, d)
+        assert rc == 0 and "UNJUDGED" not in out, "the PESD12VL1BA was not read:\n%s" % out[-700:]
+    finally:
+        restore()
+
+
+def t_board_as_restart_guard_zener_is_judged_one_way_from_its_own_sheet():
+    """Board A's D22 since main 458b2873 (round 6 fourth pass): a BZT52C12-7-F on Device:D_Zener. ACCEPTABLE: cathode on
+    the rail, anode on ground, OK and not UNJUDGED (the direction is read from Diodes' DS18004, "SURFACE MOUNT ZENER
+    DIODE", "Polarity: Cathode Band"); on kisch 88b20565 it read UNJUDGED and the board INCONCLUSIVE. DEFECTIVE: the same
+    part with its cathode on ground is REVERSED. A sibling type the sheet lists but no board fits (BZT52C15-7-F) is not
+    read by family: UNJUDGED."""
+    restore = _with_ports("d", [_JACK])
+    try:
+        val = "BZT52C12-7-F zener, the restart guard's pull-up clamp"
+        d, p = _clamp_fixture("clamp-bzt-ok-", "+5V_X", "GND", value=val)
+        rc, out = _run(p, d)
+        assert rc == 0 and "CLAMP D1     OK" in out and "UNJUDGED" not in out, out[-700:]
+        d, p = _clamp_fixture("clamp-bzt-rev-", "GND", "+5V_X", value=val)
+        rc, out = _run(p, d)
+        assert rc == 1 and "REVERSED D1" in out, out[-700:]
+        d, p = _clamp_fixture("clamp-bzt15-", "+5V_X", "GND", value="BZT52C15-7-F")
+        assert {c["ref"]: c for c in port_protect.clamp_rows(p)}["D1"]["verdict"] == "UNJUDGED"
+    finally:
+        restore()
+
+
+def _pack(prefix, reversed_):
+    """Board P's shape: no external port declared, D1 across the pack terminals, PACK_N declared as the return."""
+    d = tempfile.mkdtemp(prefix=prefix)
+    k, a = ("PACK_N", "PACK_P") if reversed_ else ("PACK_P", "PACK_N")
+    lib = "Device:D_TVS" if reversed_ else "Device:D_Zener"
+    f1, f2 = ("A1", "A2") if reversed_ else ("K", "A")
+    p = _net_full(d, {"D1": ("SMBJ20A", lib), "W_P": ("lead +", "Connector:Conn_01x01_Pin"), "W_N": ("lead -", "Connector:Conn_01x01_Pin")},
+                  {k: [("D1", "1", f1)] + [("W_P" if k == "PACK_P" else "W_N", "1", "1")],
+                   a: [("D1", "2", f2)] + [("W_P" if a == "PACK_P" else "W_N", "1", "1")]},
+                  stem="pcb-p-pack",
+                  intent={"rails": {"PACK_P": {"volts": 14.4}, "PACK_N": {"volts": 0.05, "returns": "PACK_P"}}})
+    return d, p
+
+
+def t_a_board_that_declares_no_port_still_fails_a_reversed_clamp():
+    """DEFECTIVE (board P's D1): a declared zero of external ports is an answer about ports, not about a clamp
+    across the pack terminals with its band on PACK_N, the return the board's own intent declares."""
+    restore = _with_ports("p", [], why="nothing of this board's own leaves the case")
+    try:
+        d, p = _pack("clamp-pack-rev-", True)
+        rc, out = _run(p, d)
+        assert rc == 1, "board P's reversed clamp passed on a declared zero:\n%s" % out[-700:]
+        assert "REVERSED D1" in out and "PACK_N" in out, out[-700:]
+    finally:
+        restore()
+
+
+def t_a_board_that_declares_no_port_and_carries_its_clamp_the_right_way_passes():
+    restore = _with_ports("p", [], why="nothing of this board's own leaves the case")
+    try:
+        d, p = _pack("clamp-pack-ok-", False)
+        rc, out = _run(p, d)
+        assert rc == 0, "board P's corrected clamp was refused:\n%s" % out[-700:]
+    finally:
+        restore()
+
+
+def t_a_clamp_between_two_conductors_nobody_placed_is_unjudged_not_passed():
+    """Neither net is a ground or a declared return and no voltages are declared: the polarity cannot be read,
+    and that is INCONCLUSIVE, never a pass."""
+    restore = _with_ports("d", [_JACK])
+    try:
+        d = tempfile.mkdtemp(prefix="clamp-unj-")
+        p = _net_full(d, {"J_X": ("lead", "Connector_Generic:Conn_01x02"), "D1": ("SMBJ5.0A", "Device:D_Zener"),
+                          "D2": ("SMBJ5.0A", "Device:D_Zener")},
+                      {"+5V_X": [("J_X", "1", "Pin_1"), ("D1", "1", "K")], "GND": [("J_X", "2", "Pin_2"), ("D1", "2", "A")],
+                       "NODE_A": [("D2", "1", "K")], "NODE_B": [("D2", "2", "A")]})
+        rc, out = _run(p, d)
+        v = json.load(open(os.path.join(d, "out", "port_protect.verdict.json")))
+        assert v["verdict"] == "INCONCLUSIVE", (v, out[-600:])
+        assert v["counts"]["clamps_unjudged"] == 1, v["counts"]
+    finally:
+        restore()
+
+
+def t_between_two_rails_the_cathode_belongs_on_the_higher_voltage():
+    restore = _with_ports("d", [_JACK])
+    try:
+        for k, a, want in (("+12V", "+5V_X", 0), ("+5V_X", "+12V", 1)):
+            d = tempfile.mkdtemp(prefix="clamp-rails-")
+            p = _net_full(d, {"J_X": ("lead", "Connector_Generic:Conn_01x02"), "D1": ("SMBJ5.0A", "Device:D_Zener")},
+                          {"+5V_X": [("J_X", "1", "Pin_1")], "GND": [("J_X", "2", "Pin_2")],
+                           k: [("D1", "1", "K")] + ([("J_X", "1", "Pin_1")] if k == "+5V_X" else []),
+                           a: [("D1", "2", "A")] + ([("J_X", "1", "Pin_1")] if a == "+5V_X" else [])},
+                          intent={"rails": {"+12V": {"volts": 12.0}, "+5V_X": {"volts": 5.0}}})
+            clamp = [c for c in port_protect.clamp_rows(p) if c["ref"] == "D1"][0]
+            assert (clamp["orientation"] == "OK") == (want == 0), clamp
+    finally:
+        restore()
+
+
+def t_the_last_net_of_a_kicad_netlist_is_read():
+    """KiCad 9 closes the nets section on the last net's own line, "...)))))". The look-ahead this gate (and
+    check_contracts) used needed a "\\n  )\\n" after it, so the last net of every netlist was never read (found by
+    r4t's KiCad round trip on 26 September 2026, where the one-way clamp's anode sat on that last net)."""
+    d = tempfile.mkdtemp(prefix="lastnet-")
+    p = os.path.join(d, "pcb-d-aprs.net")
+    open(p, "w").write('(export (version "E")\n  (components\n    (comp (ref "D1")\n      (value "SMBJ5.0A")\n'
+                       '      (libsource (lib "Device") (part "D_Zener") (description ""))))\n  (nets\n'
+                       '    (net (code "1") (name "/+5V_X") (class "Default")\n'
+                       '      (node (ref "D1") (pin "1") (pinfunction "K") (pintype "passive")))\n'
+                       '    (net (code "2") (name "/GND") (class "Default")\n'
+                       '      (node (ref "D1") (pin "2") (pinfunction "A") (pintype "passive")))))\n')
+    by_net, by_ref, _v = port_protect.netlist(p)
+    assert set(by_net) == {"+5V_X", "GND"}, by_net
+    rows = {c["ref"]: c for c in port_protect.clamp_rows(p)}
+    assert rows["D1"]["orientation"] == "OK" and rows["D1"]["anode_net"] == "GND", rows
+    src = open(os.path.join(TOOLS, "check_contracts.py"), encoding="utf-8").read()
+    assert r'(?=\(net \(code|\Z)' in src, "check_contracts still stops a net at a closer KiCad 9 does not write"
+
+
+# ---------------------------------------------------------------------------------------------------------
+# THE DRAWING IS NEVER THE SOURCE OF A DIRECTION (review fix-up of round 4, 26 September 2026). The first polarity
+# pass fell back to the drawing when the part number could not be read, so a reversed SMAJ18A on Device:D_TVS read
+# N/A (a pass), and a clamp kisch.tvs(..., direction="uni") draws on Device:D_Zener was not a row at all unless its
+# number was in the suppressor family list (a reversed P6KE18A was absent). Neither may read PASS.
+
+def t_a_reversed_one_way_part_whose_number_is_not_read_does_not_pass_on_an_a1a2_drawing():
+    """DEFECTIVE: SMAJ18A (not a family the helper reads) on Device:D_TVS with pad 1, the band, on GND."""
+    restore = _with_ports("d", [_JACK])
+    try:
+        d, p = _clamp_fixture("clamp-smaj-", "GND", "+5V_X", lib="Device:D_TVS", value="SMAJ18A")
+        rows = {c["ref"]: c for c in port_protect.clamp_rows(p)}
+        assert rows["D1"]["verdict"] == "UNJUDGED", rows["D1"]
+        rc, out = _run(p, d)
+        v = json.load(open(os.path.join(d, "out", "port_protect.verdict.json")))
+        assert v["verdict"] != "PASS" and rc != 0, (v["verdict"], out[-600:])
+        assert v["counts"]["clamps_unjudged"] == 1, v["counts"]
+    finally:
+        restore()
+
+
+def t_a_reversed_one_way_part_on_the_zener_symbol_is_a_row_and_fails():
+    """DEFECTIVE: P6KE18A on Device:D_Zener with K on GND and A on the rail. It used to be absent from the rows."""
+    restore = _with_ports("d", [_JACK])
+    try:
+        d, p = _clamp_fixture("clamp-p6ke-", "GND", "+5V_X", lib="Device:D_Zener", value="P6KE18A")
+        rows = {c["ref"]: c for c in port_protect.clamp_rows(p)}
+        assert "D1" in rows and rows["D1"]["verdict"] == "REVERSED", rows
+        rc, out = _run(p, d)
+        assert rc == 1, "a reversed P6KE18A on D_Zener passed:\n%s" % out[-700:]
+    finally:
+        restore()
+
+
+def t_an_unread_part_on_the_zener_symbol_the_right_way_is_undecided_without_a_declaration():
+    """A K/A drawing is not evidence of what is bought: P6KE18A, K on the rail, and no declaration of its direction."""
+    restore = _with_ports("d", [_JACK])
+    try:
+        d, p = _clamp_fixture("clamp-p6ke-ok-", "+5V_X", "GND", lib="Device:D_Zener", value="P6KE18A")
+        rows = {c["ref"]: c for c in port_protect.clamp_rows(p)}
+        assert rows["D1"]["verdict"] == "UNJUDGED", rows["D1"]
+        rc, out = _run(p, d)
+        v = json.load(open(os.path.join(d, "out", "port_protect.verdict.json")))
+        assert v["verdict"] == "INCONCLUSIVE", (v["verdict"], out[-500:])
+    finally:
+        restore()
+
+
+def t_a_declared_direction_with_its_basis_is_read_from_the_intent():
+    """ACCEPTABLE: kisch.tvs(..., direction="uni", basis=...) writes the declaration into the intent file, and the
+    gate reads it; the same part reversed against its declaration FAILS."""
+    restore = _with_ports("d", [_JACK])
+    try:
+        for k_net, want in (("+5V_X", "OK"), ("GND", "DECLARATION")):
+            d = tempfile.mkdtemp(prefix="clamp-decl-")
+            p = _net_full(d, {"J_X": ("lead", "Connector_Generic:Conn_01x02"), "D1": ("P6KE18A", "Device:D_Zener")},
+                          {"+5V_X": [("J_X", "1", "Pin_1")] + ([("D1", "1", "K")] if k_net == "+5V_X" else [("D1", "2", "A")]),
+                           "GND": [("J_X", "2", "Pin_2")] + ([("D1", "1", "K")] if k_net == "GND" else [("D1", "2", "A")])},
+                          intent={"clamps": {"D1": {"direction": "uni", "basis": "maker sheet: P6KE18A is unidirectional",
+                                                    "protected": "+5V_X", "return": "GND"}}})
+            row = {c["ref"]: c for c in port_protect.clamp_rows(p)}["D1"]
+            if want == "OK":
+                assert row["verdict"] == "OK" and "declared uni" in row["basis"], row
+            else:
+                # the reversed land reads REVERSED and the declaration disagrees with the netlist: the worse is named
+                assert row["verdict"] in ("DECLARATION", "REVERSED") and row["orientation"] == "REVERSED", row
+            rc, out = _run(p, d)
+            assert (rc == 0) == (want == "OK"), (want, out[-600:])
+    finally:
+        restore()
+
+
+def t_a_declaration_that_contradicts_the_part_number_fails():
+    restore = _with_ports("d", [_JACK])
+    try:
+        d = tempfile.mkdtemp(prefix="clamp-contra-")
+        p = _net_full(d, {"J_X": ("lead", "Connector_Generic:Conn_01x02"), "D1": ("SMBJ5.0A", "Device:D_Zener")},
+                      {"+5V_X": [("J_X", "1", "Pin_1"), ("D1", "1", "K")], "GND": [("J_X", "2", "Pin_2"), ("D1", "2", "A")]},
+                      intent={"clamps": {"D1": {"direction": "bi", "basis": "a wrong claim", "protected": "+5V_X", "return": "GND"}}})
+        row = {c["ref"]: c for c in port_protect.clamp_rows(p)}["D1"]
+        assert row["verdict"] == "DECLARATION", row
+        rc, out = _run(p, d)
+        assert rc == 1, out[-500:]
+    finally:
+        restore()
+
+
+# ---------------------------------------------------------------------------------------------------------
+# Second fix-up of round 4 (26 September 2026): a clamp on a conductor below its return, and a suppressor whose
+# reference does not start with D.
+
+def t_on_a_negative_conductor_the_cathode_belongs_on_the_return():
+    """A one-way clamp on -12V: ACCEPTABLE with its cathode on GND and its anode on -12V; DEFECTIVE the other way,
+    which the first version called OK because it assumed every protected conductor is positive."""
+    for k, a, want in (("GND", "-12V", "OK"), ("-12V", "GND", "REVERSED")):
+        d = tempfile.mkdtemp(prefix="clamp-neg-")
+        p = _net_full(d, {"D1": ("SMBJ12A", "Device:D_Zener")}, {k: [("D1", "1", "K")], a: [("D1", "2", "A")]},
+                      intent={"rails": {"-12V": {"volts": -12.0}}})
+        row = {c["ref"]: c for c in port_protect.clamp_rows(p)}["D1"]
+        assert row["orientation"] == want, (k, a, row)
+
+
+def t_a_suppressor_whose_reference_is_not_a_d_is_still_judged():
+    """DEFECTIVE: an SMBJ5.0A drawn as Z1 from a library that is not Device, band on GND. It was not a row, because
+    the value family was matched only on D references; a resistor whose value happens to start the same way is not."""
+    d = tempfile.mkdtemp(prefix="clamp-z-")
+    p = _net_full(d, {"Z1": ("SMBJ5.0A", "meshsat:TVS"), "CR1": ("SMBJ5.0A", "meshsat:TVS"), "R9": ("TVS bias 10k", "Device:R")},
+                  {"+5V_X": [("Z1", "2", "A"), ("CR1", "1", "K"), ("R9", "1", "")],
+                   "GND": [("Z1", "1", "K"), ("CR1", "2", "A"), ("R9", "2", "")]})
+    rows = {c["ref"]: c for c in port_protect.clamp_rows(p)}
+    assert rows["Z1"]["orientation"] == "REVERSED" and rows["CR1"]["orientation"] == "OK" and "R9" not in rows, rows

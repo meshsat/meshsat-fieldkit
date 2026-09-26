@@ -323,6 +323,140 @@ def r(ref, val, a, b, fp="R", lcsc=""): part(ref, "Device", "R", val, fp, {"1": 
 
 def esd(ref, dp, dm, vbus): part(ref, "Power_Protection", "USBLC6-2SC6", "USBLC6-2SC6", "SOT236", {"1": dp, "6": dp, "3": dm, "4": dm, "5": vbus, "2": "GND"}, "C7519")
 
+
+# ---------------------------------------------------------------- a clamp drawn with its polarity (S-09, 26 September 2026)
+#
+# Every one-way suppressor on the set (sixteen of them, adjudication A03 of MESHSAT-1357) was drawn with KiCad's
+# Device:D_TVS, whose own description is "Bidirectional transient-voltage-suppression diode" and whose two pins are
+# named A1 and A2. A drawing with no cathode cannot show which way a one-way part points, so nothing read it: seven of
+# the sixteen were drawn with the cathode on the RETURN (board D's D1, board E's D1 to D4 and D10, board P's D1), where
+# a unidirectional clamp is a forward-biased diode across its own rail; the other nine (board A's four, board B's five)
+# were the right way round on the wrong symbol. KiCad 9.0.9's Device library has no unidirectional TVS symbol (checked
+# on the box: D_TVS is the bidirectional one, and the Diode library's own one-way parts, SM6T* and SMAJ*A, also name
+# their pins A1/A2), so a one-way part is drawn with Device:D_Zener: pin 1 is K and pin 2 is A, the bent-bar mark is
+# the standard one-way suppressor symbol, and on KiCad's Diode_SMD lands (D_SMA, D_SMB, D_SMC, SOD-123, SOD-323) pad 1
+# is the banded cathode, so the K pin lands on the band.
+#
+# The direction comes from the part number, because that is what is bought, and only for families whose makers'
+# sheets say how their numbers read. SMBJ and SMCJ: a C in the suffix is the bidirectional part in every maker's sheet
+# held for the codes the set buys. One fitted clamp has no code and no maker yet: board E's D3, SMCJ18A, whose
+# generator and netlist carry no LCSC code (v2/vendor/SOURCES.yaml at main 26b80900 lists its maker as TBD; the older
+# E deliverable BOM row read by jlc_certify carries C151906), so its one-way reading rests on the family's numbering
+# convention, which the four makers' sheets below all follow, and not on its own maker's sheet (second fix-up of round
+# 4, 26 September 2026). Littelfuse SMCJ series (v2/vendor/power/littelfuse-smcj-series-tvs.pdf, "Part Numbering System:
+# SMCJ XXX C A", C = BI-DIRECTIONAL; SMCJ40A under "Part Number (Uni)", SMCJ40CA under "(Bi)"); Littelfuse SMBJ series
+# (revised JC.07/04/25, LCSC C151256); Diodes Inc DS19002 Rev. 20-2 note 8, "Suffix C denotes Bi-directional device"
+# (board B's SMBJ58A-13-F, LCSC C135085); MDD SMBJ5.0(C)A THRU SMBJ440(C)A, Rev:2025A7, whose table lists SMBJ5.0A and
+# SMBJ20A under "Unidirectional" and SMBJ5.0CA and SMBJ20CA under "Bidirectional" (the fitted C113974 and C364296,
+# fetched in the review fix-up of 26 September 2026); the Vishay SMBJ and SMCJ sheets in v2/vendor/vishay number them
+# the same way. Nexperia's PESD5V0S1BA is "Bidirectional ESD protection diode" on the first line of its own datasheet
+# (v2/vendor/nexperia/nexperia-pesd5v0s1ba.pdf, LCSC C19224). The Littelfuse SMBJ, Diodes and MDD copies are in the r4t
+# drafts/datasheets with their URLs and sha256 until they are added to v2/vendor. Any other part number is refused
+# unless the caller says which it is AND names the datasheet that says so (`basis=`), and that declaration is written
+# into the board's intent file under "clamps", where the gate (port_protect.py, TRN-001) reads it.
+_UNI_FAMILY = re.compile(r"^(SMBJ|SMCJ)(\d+(?:\.\d+)?)(C?A?)\b", re.I)
+_PESD = re.compile(r"^PESD\d+V\d+S1B[A-Z]\b", re.I)
+# PART NUMBERS READ ONE BY ONE, where the maker's own sheet for exactly that part is held and says which it is (round 6,
+# 26 September 2026). Board D's microphone clamps D10 and D13 moved from PESD5V0S1BA to Nexperia PESD12VL1BA (LCSC
+# C38558) in round 4, and this reader returned None for it, so port_protect judged both UNJUDGED and TRN-001 read
+# INCONCLUSIVE on D under r4t's tools. Nexperia's naming is not read as a rule from one sheet (a PESDxVL1BA is not
+# asserted to be two-way because a PESDxVS1BA is): each part is listed with its own sheet's words. The sheet is held
+# in r4t's drafts/datasheets (sha256 3cc06cb0...) until it is added to v2/vendor/nexperia.
+#
+# BOARD A's D22 SINCE MAIN 458b2873 (round 6 fourth pass, 26 September 2026): the restart guard's pull-up clamp, a
+# BZT52C12-7-F on Device:D_Zener, cathode on FE_VZ and anode on ground. A zener is a one-way part, but that is read from
+# its maker's sheet here as well, not from the symbol it is drawn with: Diodes Incorporated DS18004 Rev. 38-2 (the board
+# A author's copy, sha256 0fbd7d13..., held in r4t's drafts/datasheets until it is added to v2/vendor/diodes) is headed
+# "BZT52C2V0 - BZT52C51 SURFACE MOUNT ZENER DIODE", states "Polarity: Cathode Band", lists type BZT52C12 (11.4 V to
+# 12.7 V at 5 mA) and orders it as "(Type Number)-7-F". Without it the polarity pass read D22 UNJUDGED.
+_HELD_DIRECTION = {
+    "PESD12VL1BA": ("bi", "Nexperia PESD12VL1BA product data sheet, 14 April 2023: 'Low capacitance bidirectional ESD "
+                          "protection diode', section 2 'Bidirectional ESD protection of one line', pins K1 and K2 "
+                          "(LCSC C38558)"),
+    "BZT52C12-7-F": ("uni", "Diodes Incorporated DS18004 Rev. 38-2, 'BZT52C2V0 - BZT52C51 SURFACE MOUNT ZENER DIODE', "
+                            "'Polarity: Cathode Band', type BZT52C12 11.4 V to 12.7 V, ordered as '(Type Number)-7-F' "
+                            "(LCSC C124196)"),
+}
+_GROUNDISH = re.compile(r"^(GND|AGND|DGND|PGND|GNDA|VSS|EARTH|CHASSIS)([_\-].*)?$", re.I)
+
+
+def tvs_direction(value):
+    """("uni" | "bi" | None, basis): the direction of a suppressor, read from the part number its value starts with."""
+    mpn = str(value).strip().split()[0] if str(value).strip() else ""
+    held = _HELD_DIRECTION.get(re.sub(r",\d+$", "", mpn).upper())
+    if held:
+        return held[0], "%s: %s" % (mpn, held[1])
+    m = _UNI_FAMILY.match(mpn)
+    if m:
+        return ("bi", "%s: a C in the suffix is the bidirectional part (Littelfuse, Diodes Inc and MDD number them alike)" % mpn) \
+            if "C" in m.group(3).upper() else \
+            ("uni", "%s: no C in the suffix, the unidirectional part (Littelfuse, Diodes Inc and MDD number them alike)" % mpn)
+    if _PESD.match(mpn):
+        return "bi", "%s: Nexperia's S1B type, 'Bidirectional ESD protection diode'" % mpn
+    return None, "%s: not a part number this helper can read" % (mpn or "(empty value)")
+
+
+def _declared_rail(net):
+    """The intent's record of a rail under either of the two keys intent.py stores ('X' and '/X')."""
+    rails = _intent._I.get("rails") or {}
+    n = str(net).lstrip("/")
+    return rails.get(n) or rails.get("/" + n) or {}
+
+
+def tvs(ref, value, protected, ret, fp, lcsc="", direction=None, basis=""):
+    """A transient clamp between a protected conductor and its return, drawn so its polarity can be read (S-09).
+
+    One-way part: Device:D_Zener, K (pin 1) on `protected`, A (pin 2) on `ret`. Two-way part: Device:D_TVS, pin 1 on
+    `protected`, pin 2 on `ret`. `direction` is read from the part number `value` starts with; a caller that gives
+    one that contradicts it is refused, and a part number the helper cannot read needs `direction` said AND `basis`,
+    the maker's datasheet statement of it. Every call is recorded in the board's intent (key "clamps": direction,
+    basis, protected, return), so the gate judges what the generator declared as well as what it drew."""
+    read, why_read = tvs_direction(value)
+    if direction is not None and direction not in ("uni", "bi"):
+        raise SystemExit("tvs %s: direction must be 'uni' or 'bi', not %r" % (ref, direction))
+    if direction is not None and read is not None and direction != read:
+        raise SystemExit("tvs %s (%s): the call says %s and the part number says %s (%s)" % (ref, value, direction, read, why_read))
+    d = direction or read
+    if d is None:
+        raise SystemExit("tvs %s (%s): %s, so say direction='uni' or 'bi' with basis= naming the datasheet that says so"
+                         % (ref, value, why_read))
+    if read is None and not str(basis or "").strip():
+        # A DIRECTION WITH NO SOURCE IS THE DRAWING'S CLAIM ALL OVER AGAIN (review fix-up of round 4, 26 September
+        # 2026): the gate reads this declaration as the part's direction, so it has to carry where it came from.
+        raise SystemExit("tvs %s (%s): direction=%r is said for a part number this helper cannot read, so give basis= "
+                         "with the maker's datasheet statement of it" % (ref, value, direction))
+    if str(protected).lstrip("/") == str(ret).lstrip("/"):
+        raise SystemExit("tvs %s (%s): the protected conductor and the return are the same net %s" % (ref, value, ret))
+    # THE HELPER DRAWS K ON THE PROTECTED CONDUCTOR, which is right when that conductor is positive with respect to its
+    # return (second fix-up of round 4, 26 September 2026). On a negative rail the cathode belongs on the return, so a
+    # negative conductor (a name that starts with '-', or a rail the intent declares below zero) is refused rather
+    # than drawn the wrong way round. No board carries one today.
+    _pv = _declared_rail(protected).get("volts")
+    if str(protected).lstrip("/").startswith("-") or (_pv is not None and float(_pv) < 0):
+        raise SystemExit("tvs %s (%s): %s is a negative conductor, and this helper draws the cathode on the protected "
+                         "net, which is right only above the return; draw it with its cathode on %s" % (ref, value, protected, ret))
+    # THE SWAPPED CALL IS THE DEFECT THIS HELPER EXISTS FOR: a clamp's protected conductor is never a ground, and a net
+    # the board's intent already declares as a RETURN rail (board P's PACK_N, rail(..., returns="PACK_P")) is not one
+    # either. The intent check sees only rails declared BEFORE this call; the gate (port_protect.py) judges the netlist
+    # and the finished intent again, independently of this call, so a return declared later is still caught there.
+    if _GROUNDISH.match(str(protected).lstrip("/")):
+        raise SystemExit(("tvs %s (%s): the protected conductor %s is a ground and the return %s is not: the two "
+                          "arguments are swapped" if not _GROUNDISH.match(str(ret).lstrip("/")) else
+                          "tvs %s (%s): the protected conductor %s and the return %s are both grounds")
+                         % (ref, value, protected, ret))
+    _rail = _declared_rail(protected)
+    if _rail.get("returns"):
+        raise SystemExit("tvs %s (%s): %s is declared as the return of %s in this board's intent, so it cannot be the "
+                         "conductor this clamp protects" % (ref, value, protected, _rail.get("returns")))
+    _intent._I.setdefault("clamps", {})[str(ref)] = {
+        "direction": d, "basis": why_read if read is not None else str(basis).strip(),
+        "protected": str(protected).lstrip("/"), "return": str(ret).lstrip("/"),
+        "symbol": "Device:D_Zener" if d == "uni" else "Device:D_TVS"}
+    if d == "uni":
+        part(ref, "Device", "D_Zener", value, fp, {"1": protected, "2": ret}, lcsc)
+    else:
+        part(ref, "Device", "D_TVS", value, fp, {"1": protected, "2": ret}, lcsc)
+
 def noconn(x, y): out.append('(no_connect (at %.2f %.2f) (uuid "%s"))\n' % (x, y, U()))
 
 def q(s): return '"' + s.replace('\\', '\\\\').replace('"', '\\"') + '"'

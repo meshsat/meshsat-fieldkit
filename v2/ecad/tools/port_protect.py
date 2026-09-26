@@ -36,7 +36,12 @@ import boardtable as _bt
 # regex read straight past it. GALVANIC ISOLATION is protection and the strongest kind: an Ethernet port
 # behind its magnetics is not an unprotected port, and the first version called all eight of board B's MDI
 # lines unprotected because T1's value says "magnetics" and not "TVS".
-PROTECT = re.compile(r"(TVS|ESD|SMBJ|SMCJ|SMAJ|USBLC|PESD|SP\d{4}|GDT|arrest|polyfuse|PTC|common.?mode|"
+# 26 September 2026 (review fix-up of round 4): the suppressor families kisch.tvs() can draw are protection here too
+# (SMDJ, SMLJ, P4SMA, P6SMB, P6KE, 1.5KE, 1.5SMC, 3.0SMC, SMF, SM6T, SM15T, 5KP, 15KP), and so is any part the board's
+# intent declares a clamp, because a P6KE18A drawn by the helper was a clamp to the polarity pass and a bare
+# conductor to this one.
+PROTECT = re.compile(r"(TVS|ESD|SMBJ|SMCJ|SMAJ|SMDJ|SMLJ|P4SMA|P6SMB|P6KE|1\.5KE|1\.5SMC|3\.0SMC|SMF\d|SM6T|SM15T|"
+                     r"\b1?5KP|USBLC|PESD|SP\d{4}|GDT|arrest|polyfuse|PTC|common.?mode|"
                      r"choke|magnetic|transformer|isolat|opto|clamp|varistor|\bMOV\b|limiter|D_TVS)", re.I)
 # Series parts a conductor may pass through on its way to a clamp. Protection is a CHAIN and not a single net:
 # the normal topology on a DC inlet is a fuse, then the transient clamp behind it, and demanding the clamp on
@@ -72,7 +77,11 @@ def is_ground(name):
 def netlist(path):
     txt = open(path, encoding="utf-8", errors="replace").read()
     by_net, by_ref = {}, {}
-    for m in re.finditer(r'\(net \(code "?\d+"?\) \(name "([^"]*)"\)(.*?)(?=\n    \(net |\n  \)\n)', txt, re.S):
+    # THE LAST NET OF A KICAD NETLIST WAS NEVER READ (r4t, 26 September 2026). KiCad 9 closes the nets section on
+    # the last net's own line, "...)))))", so a look-ahead for "\n  )\n" never matched it and every netlist lost
+    # its last net here. Today that is always an unconnected single pin, which is why nothing noticed; a real net
+    # sorting last would have vanished. A net now ends where the next one starts, or at the end of the file.
+    for m in re.finditer(r'\(net \(code "?\d+"?\) \(name "([^"]*)"\)(.*?)(?=\(net \(code|\Z)', txt, re.S):
         name = m.group(1).lstrip("/")
         nodes = set(re.findall(r'\(node \(ref "([^"]+)"\) \(pin "([^"]+)"\)', m.group(2)))
         by_net[name] = nodes
@@ -91,8 +100,12 @@ def judge(net_path, letter=None):
     rails = set()
     intent_p = os.path.join(os.path.dirname(net_path),
                             os.path.basename(net_path).replace(".net", "-intent.json"))
+    declared_clamps = set()
     if os.path.exists(intent_p):
-        try: rails = {k.lstrip("/") for k in (json.load(open(intent_p)).get("rails") or {})}
+        try:
+            _it = json.load(open(intent_p))
+            rails = {k.lstrip("/") for k in (_it.get("rails") or {})}
+            declared_clamps = {str(k) for k in (_it.get("clamps") or {})}
         except ValueError: rails = set()
     rails |= {n for n in by_net if n.startswith("+")}
     letter = letter or ""
@@ -159,7 +172,7 @@ def judge(net_path, letter=None):
                     if n in rails and not is_start and not via_power: continue
                     on_rail = n in rails
                     for r, _p in sorted(by_net.get(n, ())):
-                        if PROTECT.search(values.get(r, "") or "") or PROTECT.search(r):
+                        if PROTECT.search(values.get(r, "") or "") or PROTECT.search(r) or r in declared_clamps:
                             # A CLAMP MORE THAN ONE HOP PAST THE ACTIVE PART IS SOMETHING ELSE'S CLAMP. Once the
                             # chain crosses a semiconductor, that part is what the transient meets; a clamp on
                             # one of ITS OWN nets is the topology owner decision 31 asks about, and anything
@@ -200,6 +213,218 @@ def judge(net_path, letter=None):
             bad.append("%s (%s): %d conductor(s) reach a chip with nothing between: %s"
                        % (ref, why[:60], len(unprotected), ", ".join(unprotected[:6])))
     return rows, bad, missing_refs, len(ports)
+
+
+# ---------------------------------------------------------------- clamp polarity (S-09, 26 September 2026)
+#
+# A ONE-WAY CLAMP THE WRONG WAY ROUND IS A DIODE ACROSS ITS OWN RAIL. Adjudication A03 of MESHSAT-1357 read all
+# forty-nine protection parts of the set against their datasheets and their lands: sixteen are unidirectional, all
+# sixteen were drawn with KiCad's Device:D_TVS (its own description: "Bidirectional transient-voltage-suppression
+# diode", pins A1 and A2), and seven of them had the banded end on the return (board D's D1, board E's D1 to D4 and
+# D10, board P's D1). A reversed SMCJ40A on a 36 V bus conducts forward at about 0.8 V: it is a short across the
+# rail, found by the fuse. Nothing here could see it, because the only question this gate asked was whether a
+# clamp TOUCHED the conductor. So every two-pin clamp on the netlist is now judged, on every board, whether or not
+# it sits on a declared external port (board P declares none and carries one of the seven):
+#   - a one-way part drawn with an A1/A2 symbol FAILS, because the schematic then hides its polarity from every
+#     reader and every tool (kisch.tvs() draws it with Device:D_Zener, K on pin 1);
+#   - a two-way part drawn with a K/A symbol FAILS, the other mismatch between the drawing and what is bought;
+#   - a one-way clamp FAILS when its cathode is on the return and its anode on the protected conductor. The cathode
+#     is the K pin, or on an A1/A2 drawing pad 1, the banded end on KiCad's Diode_SMD lands. The return is a ground
+#     family net or a rail the board's intent declares with `returns=` (board P's PACK_N); between two rails the
+#     cathode belongs on the higher declared voltage;
+#   - a clamp whose two conductors cannot be placed that way is UNJUDGED, named, and makes the verdict
+#     INCONCLUSIVE when nothing failed: a polarity nobody could read is not a pass.
+#
+# THE DRAWING IS NEVER THE SOURCE OF A DIRECTION (review fix-up of round 4, 26 September 2026). The first version
+# fell back to the drawing when the part number could not be read: an A1/A2 drawing read as "two-way" and passed as
+# N/A, which trusted exactly the drawing S-09 exists to distrust (a reversed SMAJ18A on Device:D_TVS read N/A), and
+# a part kisch.tvs(..., direction="uni") draws on Device:D_Zener was not looked at at all unless its number was in
+# CLAMP_VALUE (a reversed P6KE18A was absent from the rows). Now:
+#   - every part on a Device:D_TVS* or Device:D_Zener* symbol, every D* part whose value names a suppressor family,
+#     and every part the board's intent declares as a clamp (kisch.tvs() records each call under "clamps") is judged;
+#   - the direction comes from the part number (kisch.tvs_direction, the families whose datasheets are held) or from
+#     the generator's declaration, which kisch.tvs() writes with the datasheet basis its caller gave; if the two
+#     disagree the row FAILS;
+#   - with neither, the row is UNJUDGED whatever the drawing says, except that a K/A drawing with K on the return
+#     FAILS as REVERSED: that is wrong for a one-way part and a drawing mismatch for a two-way one.
+CLAMP_VALUE = re.compile(r"^(SMAJ|SMBJ|SMCJ|SMDJ|SMLJ|P4SMA|P6SMB|P6KE|1\.5KE|1\.5SMC|3\.0SMC|5\.0SMDJ|SMF\d|SM6T|SM15T|"
+                         r"PESD|TVS|ESD\d|5KP|15KP)", re.I)
+CLAMP_LIBS = ("Device:D_TVS", "Device:D_Zener")
+_NOT_A_DIODE_PREFIX = {"R", "C", "L", "FB", "F", "TP", "J", "P", "SW", "Y", "X", "K", "BT", "H", "MH", "FID"}
+
+
+class _NotADiode:
+    """The references that are never a suppressor, by their exact letter prefix (so CR1, a diode, is not an R)."""
+    @staticmethod
+    def match(ref):
+        m = re.match(r"^([A-Za-z]+)", ref or "")
+        return (ref or "").startswith("#") or bool(m and m.group(1).upper() in _NOT_A_DIODE_PREFIX)
+
+
+_NOT_A_DIODE = _NotADiode()
+
+
+def components(path):
+    """{ref: {"value", "lib", "fp"}} and {(ref, pin): pinfunction} from a KiCad netlist; a fixture that carries
+    no libsource or pinfunction reads as "" for them."""
+    txt = open(path, encoding="utf-8", errors="replace").read()
+    comps = {}
+    for ch in re.split(r"\(comp ", txt)[1:]:
+        m = re.match(r'\(ref "([^"]+)"\)\s*\(value "((?:[^"\\]|\\.)*)"\)', ch)
+        if not m: continue
+        head = ch[:4000]
+        ls = re.search(r'\(libsource \(lib "([^"]*)"\) \(part "([^"]*)"\)', head)
+        fp = re.search(r'\(footprint "([^"]*)"\)', head)
+        comps[m.group(1)] = {"value": m.group(2), "lib": ("%s:%s" % ls.groups()) if ls else "",
+                             "fp": fp.group(1) if fp else ""}
+    funcs = {(r, p): f for r, p, f in
+             re.findall(r'\(node \(ref "([^"]+)"\) \(pin "([^"]+)"\) \(pinfunction "([^"]*)"\)', txt)}
+    return comps, funcs
+
+
+def _intent_of(net_path):
+    p = os.path.join(os.path.dirname(net_path), os.path.basename(net_path).replace(".net", "-intent.json"))
+    try: return json.load(open(p))
+    except (OSError, ValueError): return {}
+
+
+def _direction(value):
+    """The direction the part number says, through the schematic engine's own reader (kisch.tvs_direction)."""
+    try:
+        import kisch as _k
+        return _k.tvs_direction(value)
+    except Exception as e:                      # a reader that cannot be imported reads nothing, and says so
+        return None, "the part-number reader could not be loaded (%s)" % type(e).__name__
+
+
+def clamp_rows(net_path):
+    """One row per two-pin clamp on the netlist: its direction, its drawing, where its cathode is, and the verdict
+    (OK, REVERSED, SYMBOL, DECLARATION, UNJUDGED, or N/A for a two-way part drawn two-way)."""
+    by_net, by_ref, values = netlist(net_path)
+    comps, funcs = components(net_path)
+    it = _intent_of(net_path)
+    rails = {k.lstrip("/"): v for k, v in (it.get("rails") or {}).items()}
+    nodes = {k.lstrip("/"): v for k, v in (it.get("nodes") or {}).items()}
+    declared = {str(k): v for k, v in (it.get("clamps") or {}).items()}
+
+    def is_return(n):
+        return is_ground(n) or bool((rails.get(n) or {}).get("returns"))
+
+    def volts(n):
+        if is_ground(n): return 0.0
+        if n in rails and rails[n].get("volts") is not None: return float(rails[n]["volts"])
+        if n in nodes and nodes[n].get("v_max") is not None: return float(nodes[n]["v_max"])
+        return None
+
+    def negative(n):
+        """A conductor below its return: a name that starts with '-' or a voltage the intent declares below zero."""
+        v = volts(n)
+        return str(n).startswith("-") or (v is not None and v < 0)
+
+    def orient(nk, na, via):
+        """(verdict, why) for a one-way clamp with its cathode on nk and its anode on na.
+
+        A CONDUCTOR BELOW ITS RETURN TAKES THE CLAMP THE OTHER WAY ROUND (second fix-up of round 4, 26 September
+        2026): the cathode belongs on the more positive side, which for a negative rail is the return. No board
+        carries one today; the first version would have called the right orientation on one REVERSED."""
+        rk, ra, vk, va = is_return(nk), is_return(na), volts(nk), volts(na)
+        if ra and not rk:
+            if negative(nk):
+                return "REVERSED", ("cathode (%s) on %s, a conductor below its return %s, and anode on the return: on "
+                                    "a negative conductor a one-way clamp the wrong way round conducts forward" % (via, nk, na))
+            return "OK", "cathode (%s) on %s, anode on the return %s" % (via, nk, na)
+        if rk and not ra:
+            if negative(na):
+                return "OK", "cathode (%s) on the return %s, anode on %s, a conductor below its return" % (via, nk, na)
+            return "REVERSED", ("cathode (%s) on the return %s and anode on %s: a one-way clamp the wrong way round "
+                                "conducts forward across the conductor it protects" % (via, nk, na))
+        if not rk and not ra and vk is not None and va is not None:
+            return ("OK" if vk >= va else "REVERSED"), "cathode (%s) on %s at %.2f V, anode on %s at %.2f V" % (
+                via, nk, vk, na, va)
+        return "UNJUDGED", ("cathode (%s) on %s and anode on %s: %s" % (
+            via, nk, na, "both are returns" if (rk and ra) else
+            "neither is a return and their voltages are not both declared in the intent"))
+
+    out = []
+    for ref in sorted(by_ref):
+        c = comps.get(ref) or {"value": values.get(ref, ""), "lib": "", "fp": ""}
+        val, lib = c["value"], c["lib"]
+        pins = sorted(by_ref[ref])
+        dec = declared.get(ref)
+        # A SUPPRESSOR IS JUDGED WHATEVER ITS REFERENCE (second fix-up of round 4, 26 September 2026): the value
+        # family matched only on D* references, so an SMAJ drawn as "Z1" or "TVS1" from another library was not a row.
+        # Only the references that are never a diode are left out.
+        if not (lib.startswith(CLAMP_LIBS) or (CLAMP_VALUE.match(val or "") and not _NOT_A_DIODE.match(ref)) or dec):
+            continue
+        if len(pins) != 2:
+            if dec:        # a declared clamp that is not a two-pin part on the netlist is a declaration gone wrong
+                out.append(dict(ref=ref, value=val, lib=lib or "(no libsource)", drawing="(%d pins)" % len(pins),
+                                direction=dec.get("direction"), basis="declared", cathode_net="", anode_net="",
+                                orientation="DECLARATION", symbol="OK", verdict="DECLARATION",
+                                why="kisch.tvs() declared it a clamp and the netlist has it on %d pin(s)" % len(pins)))
+            continue
+        f = {p: funcs.get((ref, p), "") for p, _n in pins}
+        net = {p: n for p, n in pins}
+        drawing = "K/A" if set(f.values()) == {"K", "A"} else "A1/A2" if set(f.values()) == {"A1", "A2"} else ""
+        d_mpn, basis = _direction(val)
+        d_dec = (dec or {}).get("direction") if (dec or {}).get("direction") in ("uni", "bi") else None
+        conflict = ""
+        if d_mpn and d_dec and d_mpn != d_dec:
+            conflict = ("the generator declares it %s (%s) and its part number says %s (%s)"
+                        % (d_dec, (dec or {}).get("basis", "no basis given"), d_mpn, basis))
+        if not d_mpn and d_dec:
+            basis = "declared %s in the generator by kisch.tvs(): %s" % (d_dec, (dec or {}).get("basis") or "no basis given")
+        direction = d_mpn or d_dec
+        row = dict(ref=ref, value=val, lib=lib or "(no libsource)", drawing=drawing or "(no pin names)",
+                   direction=direction, basis=basis, cathode_net="", anode_net="", verdict="", why="")
+        why_sym = ""
+        if direction == "uni" and drawing == "A1/A2":
+            why_sym = ("a one-way part drawn with %s, whose pins A1/A2 name no cathode, so the schematic hides its "
+                       "polarity (%s)" % (lib, basis))
+        elif direction == "bi" and drawing == "K/A":
+            why_sym = "a two-way part drawn with the one-way symbol %s (%s)" % (lib, basis)
+        if direction == "uni":
+            kp = [p for p, fn in f.items() if fn == "K"]
+            k = kp[0] if drawing == "K/A" and kp else "1"
+            a = [p for p in net if p != k][0]
+            nk, na = net[k], net[a]
+            row.update(cathode_net=nk, anode_net=na)
+            verdict, why = orient(nk, na, "its K pin" if drawing == "K/A" else "pad 1, the banded end on KiCad's diode lands")
+        elif direction == "bi":
+            verdict, why = "N/A", "a two-way part (%s): either way round is correct" % basis
+        elif drawing == "K/A":
+            kp = [p for p, fn in f.items() if fn == "K"][0]
+            nk, na = net[kp], [n for p, n in net.items() if p != kp][0]
+            verdict, why = orient(nk, na, "its K pin")
+            if verdict == "REVERSED":
+                why = ("drawn one-way with " + why + "; its direction is read from neither its part number (%s) nor a "
+                       "declaration, and a K/A drawing with K on the return is wrong either way" % basis)
+            else:
+                row.update(cathode_net=nk, anode_net=na)
+                verdict, why = "UNJUDGED", ("its direction is read neither from its part number (%s) nor from a "
+                                            "kisch.tvs() declaration; the K/A drawing is not evidence of what is "
+                                            "bought (%s)" % (basis, why))
+        else:
+            verdict, why = "UNJUDGED", ("its direction is read neither from its part number (%s) nor from a "
+                                        "kisch.tvs() declaration, and an %s drawing is not evidence of what is bought"
+                                        % (basis, drawing or "unnamed-pin"))
+        # the declaration must describe this part as it stands on the netlist
+        if dec and not conflict and direction == "uni" and row["cathode_net"]:
+            dp, dr = str(dec.get("protected", "")).lstrip("/"), str(dec.get("return", "")).lstrip("/")
+            if dp and dr and (dp, dr) != (row["cathode_net"], row["anode_net"]):
+                conflict = ("kisch.tvs() declared it protecting %s over %s and the netlist has its cathode on %s and "
+                            "its anode on %s" % (dp, dr, row["cathode_net"], row["anode_net"]))
+        # the orientation and the drawing are two findings; the verdict names the worse, the row keeps both
+        row.update(orientation=verdict, symbol=("MISMATCH" if (why_sym or conflict) else "OK"))
+        if conflict:
+            verdict, why = "DECLARATION", conflict + "; " + why
+        elif why_sym and verdict != "REVERSED":
+            verdict, why = "SYMBOL", why_sym + "; orientation read from the land: " + why
+        elif why_sym:
+            why = why + "; and " + why_sym
+        row.update(verdict=verdict, why=why)
+        out.append(row)
+    return out
 
 
 def _write_both(letter, result, **kw):
@@ -250,8 +475,23 @@ def main(argv):
         stem = os.path.basename(path).replace(".net", "")
         letter = _bt.letter_for(stem + ".kicad_pcb")
     rows, bad, missing, n_declared = judge(path, letter)
+    # S-09 (26 September 2026): every clamp's polarity, on every board, before anything returns early.
+    clamps = clamp_rows(path)
+    c_bad = ["%s %s (%s): %s" % (c["verdict"], c["ref"], c["value"][:40], c["why"]) for c in clamps
+             if c["verdict"] in ("REVERSED", "SYMBOL", "DECLARATION")]
+    c_unj = ["%s (%s): %s" % (c["ref"], c["value"][:40], c["why"]) for c in clamps if c["verdict"] == "UNJUDGED"]
+    c_counts = {"clamps": len(clamps),
+                "clamps_one_way": sum(1 for c in clamps if c["cathode_net"]),
+                "clamps_reversed": sum(1 for c in clamps if c["orientation"] == "REVERSED"),
+                "clamps_symbol_mismatch": sum(1 for c in clamps if c["symbol"] == "MISMATCH"),
+                "clamps_unjudged": len(c_unj)}
     print("port_protect: board %s declares %d external port(s); %d found on this netlist"
           % ((letter or "?").upper(), n_declared, len(rows)))
+    print("port_protect: %d clamp(s) judged for polarity: %d reversed, %d drawn with a symbol that does not match the "
+          "part's direction, %d unjudged" % (len(clamps), c_counts["clamps_reversed"], c_counts["clamps_symbol_mismatch"],
+                                             len(c_unj)))
+    for c in clamps:
+        print("  CLAMP %-6s %-8s %-9s %-6s %s" % (c["ref"], c["verdict"], c["drawing"], c["direction"] or "?", c["why"][:150]))
     for r in rows:
         tail = ("protected off board by %s" % r["off_board"]) if r.get("off_board") else \
                ("%d unprotected, %d behind an active part, %d answered in the part it reaches"
@@ -261,6 +501,24 @@ def main(argv):
     for b in bad: print("  FAIL %s" % b)
     for m in missing: print("  NOTE declared port %s is not on this netlist" % m)
     if "--json" in argv: print(json.dumps(rows, indent=1))
+    if not n_declared and c_bad:
+        # A DECLARED ZERO OF PORTS SAYS NOTHING ABOUT A CLAMP THE WRONG WAY ROUND (S-09, 26 September 2026). Board P
+        # declares that nothing of its own leaves the case, and its D1 sits across the pack terminals with the band
+        # on PACK_N. The ports answer is still what the declared-zero block below would give; the clamps decide.
+        for b in c_bad: print("  FAIL %s" % b)
+        return _write_both(letter, _v.FAIL, denominator=len(clamps),
+                           counts=dict({"ports": 0, "unprotected": 0}, **c_counts), evidence=c_bad[:20],
+                           inputs={"netlist": path, "board": letter},
+                           note="no external port is declared, and %d clamp(s) on this board are reversed or drawn "
+                                "so their polarity cannot be read" % len(c_bad))
+    if not n_declared and c_unj and "external_ports" in (_bt.table(letter) or {}) and \
+            str((_bt.table(letter) or {}).get("_external_ports_why", "")).strip():
+        for u in c_unj: print("  UNJUDGED %s" % u)
+        return _write_both(letter, _v.INCONCLUSIVE, denominator=len(clamps),
+                           counts=dict({"ports": 0, "unprotected": 0}, **c_counts), evidence=c_unj[:20],
+                           inputs={"netlist": path, "board": letter},
+                           note="no external port is declared, and %d clamp(s) could not be judged for polarity"
+                                % len(c_unj))
     if not n_declared:
         # AN EMPTY DECLARATION IS AN ANSWER; A MISSING ONE IS A QUESTION (16 September 2026). Board P carries
         # nothing out of the case: its cell taps, its thermistor lead and its gauge bus all end inside the
@@ -278,7 +536,7 @@ def main(argv):
         # which is the opposite of what the declaration says. A declaration with no reason stays a question,
         # and so does a board with no declaration at all.
         if answered and why:
-            return _write_both(letter, _v.PASS, denominator=0, counts={"ports": 0, "unprotected": 0},
+            return _write_both(letter, _v.PASS, denominator=len(clamps), counts=dict({"ports": 0, "unprotected": 0}, **c_counts),
                             inputs={"netlist": path, "board": letter},
                             note="this board declares that no conductor of its own leaves the enclosure, so the "
                                  "rule is true of it with nothing to check: %s" % why[:180])
@@ -294,15 +552,25 @@ def main(argv):
     n_behind = sum(len(r.get("behind") or []) for r in rows)
     n_unprot = sum(len(r["unprotected"]) for r in rows)
     n_in_part = sum(len(r.get("in_part") or []) for r in rows)
-    return _write_both(letter, _v.FAIL if bad else _v.PASS,
-                    counts={"ports": len(rows), "declared": n_declared, "unprotected": n_unprot,
-                            "behind_an_active_part": n_behind, "answered_in_part": n_in_part,
-                            "not_on_netlist": len(missing)},
-                    denominator=sum(r["pins"] for r in rows) or 1, evidence=bad[:20],
+    for b in c_bad: print("  FAIL %s" % b)
+    for u in c_unj: print("  UNJUDGED %s" % u)
+    n_port_bad = len(bad)
+    bad = bad + c_bad            # a reversed or unreadable clamp fails the rule as a bare conductor does (S-09)
+    result = _v.FAIL if bad else _v.PASS if not c_unj else _v.INCONCLUSIVE
+    return _write_both(letter, _v.FAIL if bad else _v.PASS if not c_unj else _v.INCONCLUSIVE,
+                    counts=dict({"ports": len(rows), "declared": n_declared, "unprotected": n_unprot,
+                                 "behind_an_active_part": n_behind, "answered_in_part": n_in_part,
+                                 "not_on_netlist": len(missing)}, **c_counts),
+                    denominator=(sum(r["pins"] for r in rows) or 1) + len(clamps),
+                    evidence=(bad[:n_port_bad][:12] + c_bad[:12] + ["UNJUDGED " + u for u in c_unj[:6]])[:20],
                     inputs={"netlist": path, "board": letter},
-                    note=("every declared external conductor meets a protection part before a chip" if not bad else
-                          "%d conductor(s) reach a semiconductor with nothing between, and %d meet their clamp only "
-                          "through an active part, which therefore sees the transient itself" % (n_unprot, n_behind)))
+                    note=("every declared external conductor meets a protection part before a chip, and every clamp "
+                          "is drawn and placed the right way round" if result == _v.PASS else
+                          ("every declared external conductor meets a protection part before a chip; %d clamp(s) could "
+                           "not be judged for polarity" % len(c_unj)) if result == _v.INCONCLUSIVE else
+                          "%d conductor(s) reach a semiconductor with nothing between, %d meet their clamp only "
+                          "through an active part, which therefore sees the transient itself, and %d clamp(s) are "
+                          "reversed or drawn so their polarity cannot be read" % (n_unprot, n_behind, len(c_bad))))
 
 
 if __name__ == "__main__":
