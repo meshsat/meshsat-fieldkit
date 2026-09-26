@@ -1,7 +1,9 @@
 # Manifest of the battery and protection review packet
 
 Written by the stream's manifest script from the files themselves (review stream BAT, MESHSAT-1357, 26 September 2026,
-third cycle). Prototype design: nothing listed here has been built or measured. **Release check:**
+third cycle; the rows of the packet's own text files rewritten from the files themselves by the round-8 stream r8bat on
+26 September 2026, which also added `THERMAL-COORDINATION.md` and one cited document). Prototype design: nothing listed
+here has been built or measured. **Release check:**
 `python3 v2/docs/review-packets/battery/evidence/check_manifest.py` must print `RELEASE CHECK PASS` at the commit that
 is sent (`REVIEW-REQUEST.md` section 5).
 
@@ -15,6 +17,7 @@ is sent (`REVIEW-REQUEST.md` section 5).
 | Regeneration | vast.ai box 52646493, KiCad 9.0.9, 2026-09-26T13:32:48Z to 2026-09-26T13:33:16Z, driver `evidence/regeneration/bat_box.sh`; log, parity, change records, gate verdicts and output hashes in `evidence/regeneration/`; the regenerated files in `candidate/` |
 | Fixture | `v2/ecad/tools/tests/test_pack_secondary_ts.py` (new, sha256 `26316ddfe7fc1e1bb6ef2605aa57cba3fde1f213739a07503baf604a4f24222f`): FAIL on main's generator and committed netlist and on the first cycle's netlist, PASS on the candidate generator and netlist (`evidence/regeneration/test-pack-secondary-ts-runs.txt`) |
 | Parity of main's committed board P files with main's generator | schematic PARITY, netlist PARITY_AFTER_NOISE, BOM PARITY, ERC PARITY_AFTER_NOISE, intent PARITY_AFTER_NOISE (`evidence/regeneration/parity_*.json`) |
+| Round 8 text revision | base main `fc144600`; the packet's `.md` files revised for finding B of the second checkpoint review (`v2/docs/reviews/2026-09-26-second-checkpoint-review.md`) and `THERMAL-COORDINATION.md` added, then corrected on 27 September 2026 after the round's independent check (E5 and E3-O as stated deviations with finding BAT-F19, the owner attributions, the charge inhibit at T3, the heating rate's label); `candidate/` unchanged; the budget script behind `THERMAL-COORDINATION.md` section 3 filed at integration (27 September 2026) as `evidence/thermal_budget.py` with its output `evidence/thermal_budget.out`, which it reproduces byte for byte; the second independent check's open finding BAT-F20 (the charge FET held off during discharge under CHGIN = 1) recorded in `THERMAL-COORDINATION.md` sections 0, 4, 6 and 11 and `REVIEW-REQUEST.md` (Q-P18, Q-TI-10), and the envelope's rise attributed to the session (decision 34) in `SECONDARY-OT-DECISION.md` |
 | Board A charger revisions read | main `1f614233` `v2/ecad/tools/gen_sch_a.py` (sha256 `02271970ab6aec2acc55253c1edec8de490f16a0225cec31e345acccc36b25b8`); round-6 candidate `wt/r4a` `gen_sch_a.py` (sha256 `a0452054ec04cf5d9f5b7590acaf6b95131e0ba30bedd67146f04978e455a83c` when this manifest was written, uncommitted and still moving; first read `17c204ad4fb0cddb8dbb58c1320ecb4ae79c1bc6fe1bc4857aebb0732734e272`, second `a0452054ec04cf5d9f5b7590acaf6b95131e0ba30bedd67146f04978e455a83c`) |
 
 ## Files of this packet
@@ -23,13 +26,14 @@ Paths relative to this folder.
 
 | File | Bytes | sha256 |
 |---|---|---|
-| `CHARGER-STATE-SEQUENCE.md` | 18939 | `df84d98b9e47160cecd42a3c736b246b2da363871a668775d90ed5f1dc2fe1d9` |
-| `FUSE-INTERPRETATION.md` | 19638 | `c2fa9df36a9776ff08edf30b10983b528bbfdc1763ae7b0ec99689cd78c23f6f` |
-| `PRIMARY-CONFIGURATION.md` | 26834 | `45c0267f7277abc1ccced4fc8c5be1d9baf92426900b38ad14d43aeefedd9f66` |
-| `PROTECTION-ARCHITECTURE.md` | 25065 | `21b0535ecafa9aa046f0ee4cc2a80a796b04aaaab6a72922ca36bb7999c14ce7` |
-| `README.md` | 790 | `68f059b840bb6a13f6e21399ffc821602d327c3dd745d87cfaa5fca58ad94a83` |
-| `REVIEW-REQUEST.md` | 26743 | `e36ebfd98c2ead3a5c2b4529ab7ba78bd3d5db901eebf2ef16a62143faa0d0db` |
-| `SECONDARY-OT-DECISION.md` | 31849 | `5a784f1731b9db1fe1b9a0ac917b2275110d1c418fac7cfc2ab41f897543fab3` |
+| `CHARGER-STATE-SEQUENCE.md` | 24220 | `44fdf9a022c49337d60eeefd15b7e7267fb5a4659449f7dc5c38153a9786548f` |
+| `FUSE-INTERPRETATION.md` | 23303 | `cc340aa73b5d03218e4a064e820df8cdf0d7b880d8b72e432da321aef936077e` |
+| `PRIMARY-CONFIGURATION.md` | 31022 | `6726f23778f48e1017d29fffe923c4b07b9e196d4636e3e90432774d9f922aac` |
+| `PROTECTION-ARCHITECTURE.md` | 27738 | `756706110da9d1f502b46274a054e1b3a8e1e12ed3f07639dbb5a8d069a709f4` |
+| `README.md` | 1147 | `c2bf5a9c05788f6ecba871568395aeff27b475514ba2f73f942f05e326bf4746` |
+| `REVIEW-REQUEST.md` | 39307 | `407f939fc4d7e50ada566fe115e4d9daf1eb9c609051817216628e47966cc7af` |
+| `SECONDARY-OT-DECISION.md` | 33658 | `358dc726cd30e5ac52445109215d032ff921ea24989fbc533bb5f9f398c531eb` |
+| `THERMAL-COORDINATION.md` | 62904 | `0d4d60f03260f004cd7af9d738e41bbdb5f5a1d4818fa33775328d0d264d41ec` |
 | `candidate/netlist-diff-vs-first-cycle.txt` | 384 | `09bcb21d687c3e4f9b3ae968205f68b8c37521b6fc46ca75bbffc09745ee4fef` |
 | `candidate/netlist-diff-vs-main.txt` | 1004 | `79c8e0ece3bb125ccf0ba52ae9d4d5429980e51dd4ff4f9d88ebaac1b5c03465` |
 | `candidate/pcb-p-pack-bom.csv` | 3785 | `2e3980dc2a769db2f2793b0c317a6f8551c5ac658a99b72f4b3bda7037f2a617` |
@@ -44,6 +48,8 @@ Paths relative to this folder.
 | `candidate/ts_network.py` | 10374 | `2a6925c4c62c030efb3c128a9ab563fdb41bc49bcd36745072abfea13adc6bbd` |
 | `evidence/check_manifest.py` | 2419 | `7f501f8a2de4cf42fb53add0dab4e77a28cb0c7507e59bb758de8eb0ac8e06c7` |
 | `evidence/jlc-queries-bat.json` | 8925 | `69ba9104f80d94b2ed8e79ba26c40f1fe9760d42d4f0442eb94606d46f4d52aa` |
+| `evidence/thermal_budget.py` | 9024 | `b78aeed52a24063d6b35b599755b8219595f92610736cddd9000f5a4396c8775` |
+| `evidence/thermal_budget.out` | 3609 | `7de91fcecd3d109280c6beefdb817efb8455d472dba8cd024da7385289bfa15b` |
 | `evidence/trm_defaults_check.out` | 8517 | `b04e2438d09cbf4a514c854dc215e8252cf0b1290839095af11709bb3ed6b0c4` |
 | `evidence/trm_defaults_check.py` | 12770 | `870eecc2f324fcd38268afcde63a012ebf9f36931bd0970eafb0d15980f99500` |
 | `evidence/regeneration/bat_box.sh` | 8197 | `ebfbb319abc08d530b05e8b047d29e36f392645abf123db50fbf7a0d2c0b2b10` |
@@ -163,6 +169,7 @@ filed. HTML files are snapshots of a dynamic page: the sha256 identifies the cop
 | `v2/vendor/power/aos-ao3400a-n-mosfet.pdf` | filed by stream PKT (same review; pending merge); not in this tree yet | `9c60d0b6c1ddc7609a4b788a91181468d8ffe6c3e9ba425c3d8ffc5ba88c5033` |
 | `v2/vendor/power/jscj-2n7002-c8545.pdf` | filed by stream PKT (same review; pending merge); not in this tree yet | `7941fb423af7c6c6c8979063a7e8819bb19217ece275efcce18948950a41d9f6` |
 | `v2/vendor/connectors/jst-ph-catalogue.pdf` | filed by stream PKT (same review; pending merge); not in this tree yet | `447624f4f2f7d37c58c1eaa7ee314ad757fe7aff48f6186491ef6f69fbc00b96` |
+| `v2/vendor/battery/murata-nxrt15xh103fa1b.pdf` | on main (filed before this packet; cited from round 8 by `THERMAL-COORDINATION.md`) | `81a99339fb677f38c90fcd3778cebf701c8bbead6a941d36694cc10849f78f57` |
 | `v2/vendor/ti/ti-e2e-1316778-bq25731-chargecurrent-por.html` | filed by this stream | `96c511cf238d00182bcd82c5e7bdce3d25571c49cbd77f6b57a9171159f0d8c4` |
 | `v2/vendor/battery/ti-e2e-1421182-bq77207-application.html` | filed by this stream | `2038e7af80b8c35e3b0a92c07f9d0edd482e146bb0e0bf80072c0c2b6428610c` |
 

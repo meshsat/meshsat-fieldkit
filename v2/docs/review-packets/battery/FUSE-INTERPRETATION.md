@@ -35,18 +35,38 @@ assembled-pack suitability"); `gen_sch_p.py:263-277` says so now.
 | Kit storage envelope | -20 to +45 C for 3 months | inside | `OPERATING-ENVELOPE.md:141`; the cells bound it (Samsung Ver. 1.1 3.13) |
 | Pack's own storage limit | +60 C for 1 month; -20 C (Ver. 1.1) or 0 C (2016 Version 1.0) | at the limit | cells, `PROTECTION-ARCHITECTURE.md` section 1 |
 | Use, one module above +35 C ambient | air about +50 C (40 C plus 10 K, D-02b) plus F2's own heating | inside, with margin TBD | F2 dissipates 18 x 18 x 1.0 to 2.5 mohm = 0.32 to 0.81 W at the 18 A peak (INFERRED from ELX1135's fuse DCR); board P's other dissipation at the peak (Q1, Q2, R10, F1) adds to the board temperature; no measurement exists |
-| Use at the cells' 60 C discharge limit | about 60 C plus self-heating | **at or above the limit** | the primary stops discharge at 60 C cell surface (`PRIMARY-CONFIGURATION.md`), so F2 sits above 60 C only while the board is hotter than the cells; TBD by the thermal test |
-| E3 +71 C storage, E3 +55 C operation, E4 -33 C storage | not applied to the pack | n/a | reconciled for the pack at its cells' limits (`SECONDARY-OT-DECISION.md` section 5) |
+| Use at the cells' discharge limit | the cells up to 60 C (the gauge's discharge stop is set at 57.5 C and acts at 56.8 to 59.5 C true, `THERMAL-COORDINATION.md` section 4) plus F2's own heating and board P's | **at or above the limit** | F2 sits above 60 C whenever board P runs hotter than the hottest cell by more than the cells' margin to 60 C; TBD by measurement |
+| E3, E4 and E5 | E3-S and E4-S: the pack is out (the stored state as the ConOps and the test plan define it, session text); E3-O and E5: the pack stands outside the chamber at room temperature (test deviations: the kit with its pack cannot take those levels, finding BAT-F19); E3-T and E3-P: the cells at most +60 C (a +58 C set point); E3-A and E5-A: inside the use envelope, the cells' limit a pass line | F2 not exposed in E3-S, E4-S, E3-O and E5; at the limit for E3-T and E3-P; at the limit or above in E3-A and E5-A whenever board P runs hotter than the hottest cell (the row above) | `THERMAL-COORDINATION.md` sections 9 and 9a (option C); `TEST-PLAN.md` section 6 |
 
-**Interpretation (the session's, under the owner's standing rule of 26 September 2026):** the SCF9550-30-05 fits the
-assembled pack as long as the pack is held within its cells' rating, which the reconciled test plan does. Two residuals
-remain and are stated rather than assumed away:
+**What stands and what is withdrawn (round 8, 26 September 2026).** The reading of the environmental entries in section 1
+stands: the operating range governs the mounted part, and the +105 C exposure is not a rating. **The conclusion drawn
+from it in cycle 3, "the SCF9550-30-05 fits the assembled pack as long as the pack is held within its cells' rating", is
+withdrawn**: the second checkpoint review of 26 September 2026 (section 2 B) found it unsupported, because this page
+itself left F2's local hot condition and its current behaviour unresolved, and a pack whose cells are inside their rating
+can still hold its fuse above +60 C. F2's suitability is therefore **not concluded**. Two items are open, each with the
+evidence that closes it:
 
-1. **No current derating is published**, at any temperature (ELX1135 has no derating curve). At 60 % of its 30 A rating
-   (18 A peak, 10 A typical) the risk of a nuisance opening is judged low, not proven. The thermal test reads F2's case
-   temperature at the pack's hot limit (open item O-8 of the round-4 record; bench list O-9).
-2. **The hot corner of use can put F2 at or above 60 C** if board P runs warmer than the cells. Eaton's behaviour above
-   60 C (nuisance opening, or a heater that opens more slowly) is not published: question Q-E2.
+1. **F2's local hot condition.** F2 sits on board P beside Q1, Q2, the shunt R10 and the blade F1, and dissipates 0.1 to
+   0.25 W of its own at 10 A and 0.32 to 0.81 W at 18 A (INFERRED from ELX1135's 1.0 to 2.5 mohm). The cells may be kept
+   up to 60 C by the ladder of `THERMAL-COORDINATION.md` section 4, so any rise of F2 over the hottest cell puts it past
+   its +60 C operating limit, and Eaton publishes nothing above +60 C. **Closed by** (a) a thermocouple on F2's body in
+   `TEST-PLAN.md` E3-A (hot use), E3-T and E3-P (the soaks) and P13 (18 A for 60 s from a block at +55 C; 10 A for 1 h at
+   the pack's hot limit), pass line "F2's body never above +60 C"; or (b) Eaton's written answer to Q-E2 covering the
+   highest body temperature measured. If (a) fails and Eaton does not cover it, (c) board P's 4-layer placement (O-11)
+   moves F2 away from Q1, Q2, R10 and F1, or the gauge's discharge stop and the key-down gate (`POWER-THERMAL.md` K2) come
+   down by F2's measured rise over the cells, and the reading is taken again. No alternative part fits (section 1.2).
+2. **F2's current behaviour.** ELX1135 states only "100% of current rating, 1 hour minimum" and "200% of current rating,
+   60 seconds maximum" (page 2) at an unstated temperature: no derating, no melting I2t, and no test conditions for the
+   80 A breaking capacity. The pack asks it to carry 10 A continuously and 18 A for 60 s per key-down at up to +60 C, to
+   stay closed while F1 clears a hard short (section 3), and to open on its heater down to the pack's lowest voltage
+   (section 2). **Closed by**, for each: holding at temperature, Eaton's derating (Q-E2) or P13 on a board P coupon at
+   +60 C (no opening at 10 A for 1 h or at 18 A for 60 s, element resistance logged before and after); coordination with
+   F1, Eaton's melting I2t and time-current curve (Q-E4) or a laboratory test of F1 and F2 in series on a representative
+   fault (250 to 500 A at 16.8 V, destructive); the heater below 10.5 V, Eaton (Q-E3) or a bench opening test at 9.0 and
+   10.0 V (destructive per sample); the heater at the ends of its range, opening within 60 s at -20 C and at +60 C
+   (destructive per sample).
+
+Until both close, F2 is the pack's chemical fuse by design and not a verified part of it.
 
 ### 1.2 Alternatives evaluated
 
@@ -182,7 +202,8 @@ the commissioning record and a label are the control (TBD, pack build).
 
 | Question from the review | Answer here | State |
 |---|---|---|
-| Does the SCF9550's +60 C rating fit +71 C storage? | It does not, and it no longer needs to: the pack is bounded by its cells at +60 C and the +71 C margin is reconciled for the pack | interpretation taken; Q-E1, Q-E2 to Eaton |
+| Does the SCF9550's +60 C rating fit +71 C storage? | It does not. Whether it must depends on where a stored kit's pack is. The session's reading (`THERMAL-COORDINATION.md` section 9, against the envelope's other reading) stores the kit with its pack out, so F2 is not at +71 C in the product's storage. Every test exposure with the pack fitted is set so that no cell should pass +60 C (the soaks at a +58 C set point, the hot and humid use inside the envelope) and fails its pass line if one does; the two levels the fitted pack cannot take (+55 C operation, E5's +60 C dwell) run with the pack outside the chamber and are recorded as finding BAT-F19. If a stored kit were to keep its pack, F2 would sit at +71 C with nothing to rate it there: BAT-F19's third part | reading of the entries taken; the storage reading is the session's; Q-E1, Q-E2 to Eaton |
+| Is F2 suitable whenever the cells are inside their rating? | Not concluded (round 8): its local hot condition and its current behaviour are open, each with the evidence that closes it (section 1.1) | open: BAT-F17; P13, E3-A, E3-T, E3-P; Q-E2 to Q-E4 |
 | Actuation | heater rated from 10.5 V; good at over-voltage; not guaranteed below 10.5 V; gauge's fuse timeout default too short | requirements set (`PRIMARY-CONFIGURATION.md`) |
 | Interruption capability versus prospective fault | F2 80 A cannot break a hard short; F1 1000 A can; the order F1 before F2 is unproven | open, Q-E4 |
 | FET and gate behaviour | a hard-short turn-off through 5.1 kohm is marginal to outside the FET SOA, not established either way | open, BAT-F07, Q-P6 |

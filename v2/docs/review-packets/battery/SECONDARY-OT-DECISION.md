@@ -8,7 +8,8 @@ decision and the evidence behind it, prepared for the qualified battery-and-prot
 function is restored. Its TS pin gets its own Semitec 103AT-2 thermistor on a separate socket (J_TS2), through a 270 ohm
 series resistor (R34) with an 18 kohm resistor from TS to VSS (R33). The fixed 10 kohm that held TS at a 25 C reading is
 withdrawn. The +71 C storage margin of D-02a is reconciled for the pack at its cells' own limit instead of being bought
-by disabling the protection. The circuit change is in `v2/ecad/tools/gen_sch_p.py` (candidate, generator identity
+by disabling the protection; since round 8 that reconciliation is option C of `THERMAL-COORDINATION.md` section 9, set
+against the product requirement, which replaces the proposal of section 5 below. The circuit change is in `v2/ecad/tools/gen_sch_p.py` (candidate, generator identity
 `4ce12f9caae757d0`), regenerated on the KiCad box and diffed (section 6), and held by a fixture test (section 7).
 
 **Second cycle (the checker's blocking item on BAT-F01).** The first cycle sized the shunt at 22 kohm and claimed it sat
@@ -54,12 +55,14 @@ What the evidence settles:
 1. **A pack held at +71 C is outside its cells' rating whatever board P does.** Both Samsung revisions cap storage at +60 C
    for one month (E7, E8) and discharge at +60 C (E7, E8). TEST-PLAN E3's own pass line already says "pack under 60 C" (E9),
    which a 24 h soak at +71 C cannot meet. The margin, not the protection, is what is inconsistent for the pack.
-2. **The +55 C operating margin is also outside the cells' rating for the pack inside the case.** With the ruled internal
-   rise of +10 K (one module, D-02b) the air round the pack is about +65 C, above the cells' 60 C discharge limit (E7). The
-   primary stops discharge at 60 C (E11); the cells are still beyond their rating.
+2. **The +55 C operating margin is also outside the cells' rating for the pack inside the case.** With the envelope's
+   estimated rise (session, decision 34) of +10 K (one module) the air round the pack is about +65 C, above the cells'
+   60 C discharge limit (E7). The primary stops discharge at its OTD (60 C in E11, 57.5 C in the round-8 image); the
+   cells are still beyond their rating.
 3. **The protective function does what TI and Samsung intend.** Samsung's note (E8) puts discharge over-temperature
-   protection at no more than 60 C at the hottest cell surface: that is the primary's OTD at 60 C (E11), and it is why
-   both levels' sensors go on the hottest cells. It does not ask for a trip above 60 C. The secondary's trip sits above
+   protection at no more than 60 C at the hottest cell surface: that is the primary's OTD (E11 plans it at 60 C; since
+   round 8 the golden image sets it at 57.5 C, so that its own tolerance keeps it at or below 60 C,
+   `THERMAL-COORDINATION.md` section 3), and it is why both levels' sensors go on the hottest cells. It does not ask for a trip above 60 C. The secondary's trip sits above
    the primary's as the independent backstop for a failed or misconfigured primary, which is TI's stated use of this part,
    with the fuse as its actuator (E6); a pack that reaches it has already passed the point Samsung sets for protection,
    so retiring it is the intended outcome.
@@ -79,7 +82,7 @@ What the evidence settles:
 | D. A variant with a higher OT | 00701 and 00702 (80 C) and 00704 (83 C) have a 4.275 V OV (+-50 mV over temperature), which can trip at 4.225 V, below a 4.25 V primary COV, and would blow the fuse on a normal overcharge event handled by the primary; 00704 also has an open-drain COUT. 00705 (75 C) has open wire disabled and UV 2.5 V, equal to the primary's CUV. | **Rejected** (SLUSEG7D section 4; the OV reasoning is round-4 RP-03). |
 | E. A custom BQ77207xy | Any listed OT from 62 to 83 C, OV and UV to order. | Not orderable ("For future options, contact TI"). |
 | F. Route OT so it cannot fire the fuse (for example fuse drive gated by "COUT and not DOUT") | OT and open wire would only hold the FETs through DOUT. | **Rejected.** It also removes open wire from the fuse, puts OT on the same FETs the primary uses (so a welded FET defeats both levels), and adds logic, for a storage case that the cells already rule out. |
-| G. Reconcile the margin for the pack | The pack is stored and operated within its cells' limits in qualification; the kit without the pack keeps the +71 C / +55 C / -33 C margins. | **Taken with C** (section 5). |
+| G. Reconcile the margin for the pack | The pack is stored and operated within its cells' limits in qualification; the kit without the pack keeps the +71 C / +55 C / -33 C margins. | **Taken with C** (section 5); its test-plan form revised in round 8 to the product's own states (`THERMAL-COORDINATION.md` section 9, option C). |
 
 ## 4. The circuit taken, and its numbers
 
@@ -142,19 +145,23 @@ the distance by which the threshold sat above the cap; the cap sat 15.1 % below 
 `MARGIN`, section 7); a smaller shunt buys more UT margin at the cost of slope, which widens the OT window downward toward
 the primary's 60 C. 270 ohm then puts the nominal trip at 69.97 C. Both are JLC basic parts (E13).
 
-The window against the other thresholds (cell surface):
+The window against the other thresholds (cell surface; round 8 values, each with its tolerance, sensor, lag and mode in
+`THERMAL-COORDINATION.md` section 4):
 
 ```
- 45 C   primary OTC (charge stop, recoverable)            pcb_pack_protection.yaml
- 60 C   primary OTD (discharge stop, recoverable) = Samsung discharge limit and 1-month storage limit
- 62.7-77.5  secondary OT, reading B (63.6-76.6 reading A) -> COUT -> F2 open (permanent) and DOUT -> Q2 off
- 65 C   primary SOT permanent fail (TRM default 650 x 0.1 C, enabled by the image)   SLUUAQ3A 14.10.5
-110-133 PTC element RT1 beside the FETs -> PTC permanent fail            gen_sch_p.py:228-244
+ 42 C         primary charge inhibit at T3 (no charge STARTS above it, recoverable below 41 C)
+ 43 / 44.0 C  primary charge algorithm T4 / OTC (a running charge stops, recoverable); cell limit 45 C
+ 57.5 C       primary OTD (discharge stop, recoverable); acts at 56.8 to 59.5 C true; cell limit 60 C
+ 62.7-77.5    secondary OT, reading B (63.6-76.6 reading A) -> COUT -> F2 open (permanent) and DOUT -> Q2 off
+ 65.0 C       primary SOT permanent fail (enabled by the image), 64.2 to 67.4 C true   SLUUAQ3A 14.10.5
+ 110-133      PTC element RT1 beside the FETs -> FETs off in hardware, PTC permanent fail   gen_sch_p.py:228-244
 ```
 
-The gap between the primary's 60 C and the secondary's lowest trip is about 2.7 K (reading B) or 3.6 K (reading A). A pack
-kept inside its cells' rating does not reach the secondary; a pack that reaches it has left every temperature Samsung
-rates (E7, E8), and a permanent disconnect for inspection is the intended outcome.
+The gap between the primary's discharge stop (59.5 C at its latest, published terms only) and the secondary's lowest trip
+is 3.2 K (reading B), less the gradient between the two sensed cells (TBD). A pack kept inside its cells' rating does not
+reach the secondary; a pack that reaches it has left every temperature Samsung rates (E7, E8), and a permanent disconnect
+for inspection is the intended outcome. The secondary therefore never enforces the 60 C limit itself; what does, and the
+circuit that would, are `THERMAL-COORDINATION.md` section 8.
 
 **The sensor.** The secondary has its own 103AT-2 on its own two-way socket, J_TS2 (JST B2B-PH-K-S-GW, C5251182), so an
 unplugged J_TS blinds only the gauge and an unplugged J_TS2 only the second level. It is taped to the cell expected
@@ -189,11 +196,24 @@ TUT_ACC (reading B), unplugging J_TS2 on an armed pack does not open F2 even if 
 still unplugs J_TS2 only with JP1 open, because that margin rests on a conservative reading of a data sheet that does not
 state UT for this variant at all (Q-TI-1).
 
-## 5. The margin, reconciled for the pack (proposed TEST-PLAN text; owner of TEST-PLAN.md applies it)
+## 5. The margin, reconciled for the pack (cycle 3's proposal, SUPERSEDED in round 8)
 
-Taken by the session under the owner's standing rule of 26 September 2026, because it follows from the cells' rating and
-changes no product ruling: D-02a's margins stay for the kit; the pack's margins are its cells' limits. The proposed
-TEST-PLAN rows are handed to that file's owner with this stream's integration notes (not part of the packet). In short:
+**Superseded on 26 September 2026 (round 8).** The second checkpoint review of that evening (section 2 B) found that this
+proposal "changes the tested configuration and operating procedure" and asked that it be reconciled "explicitly with the
+intended product requirement", not chosen because the circuit can pass it. `THERMAL-COORDINATION.md` section 9 does
+that: it sets four options against the state definitions of the ConOps and the test plan (storage with the pack out,
+transport and use with the pack fitted; session text, not an owner ruling: the owner approved on 6 September 2026 that a
+test plan be written, and the session wrote its states on 7 September, `2e33773b`), D-02a and the cells' maker, and the
+session took option C. What changes against the table below: the storage margins still run with the pack out, now
+because the storage state as those documents define it has no pack in it (the envelope reads the other way, and
+`THERMAL-COORDINATION.md` section 9 states the tension and the reading taken); the +55 C operating margin still keeps the
+cells out, but as a stated test deviation (the pack outside the chamber on an extension of its leads), because the maker
+forbids using the cells above +60 C and, by `OPERATING-ENVELOPE.md` section 8's own arithmetic, the inside air is +65 to
++71 C there; E5's +60 C humidity dwell is treated the same way; the product-level result those deviations cannot give is
+recorded as finding BAT-F19 (the kit with its own pack cannot meet those levels, section 9a there); and two exposures this
+proposal left out are added: the transport state with the pack fitted at the cells' own limits (E3-T, E4-T) and the hot
+and humid use of the product with its pack inside the envelope (E3-A, E3-L, E5-A). `v2/docs/TEST-PLAN.md` sections 1, 2,
+6 and 7 carry it. The table is kept for the record.
 
 | Test | Kit | Pack |
 |---|---|---|
@@ -201,14 +221,6 @@ TEST-PLAN rows are handed to that file's owner with this stream's integration no
 | E3 operation | +55 C, 4 h, on shore or vehicle input with the pack removed (or a bench supply on the pack lead) | its own check at its **60 C discharge limit** (cell surface): the gauge stops discharge and recovers; the secondary does not fire |
 | E4 storage | -33 C, 24 h, **pack removed** | its own check at the **lowest storage temperature of the governing cell specification** (-20 C in Ver. 1.1, 0 C in the 2016 Version 1.0; which revision governs the purchased lot is TBD, owner the pack purchase) |
 | E4 operation | -20 C with the pack heater (unchanged) | unchanged |
-
-The storage soak's set point is 58 C so that a chamber at the edge of its +-2 K tolerance still keeps the cells at or
-under their 60 C rating, which leaves 2.7 K to the secondary's lowest trip (reading B) even then. The discharge check
-brings the cells to 60 C by their own heating, where the primary's OTD must stop discharge; a cell surface reading above
-60 C during E3-P is itself a fail of that check, so the secondary firing there would be a finding, not a nuisance. The kit's
-electronics keep the full margin; the pack is never asked to survive a temperature its maker does not rate. The same
-reconciliation removes the round-4 residual that the chemical fuse F2 would sit above its +60 C operating rating at E3 (see
-`FUSE-INTERPRETATION.md`).
 
 ## 6. The netlist change (VERIFIED on the KiCad box)
 
@@ -301,7 +313,8 @@ Recorded runs (`evidence/regeneration/test-pack-secondary-ts-runs.txt`):
   regeneration (O-11) is where this lands.
 - `pcb_pack_protection.yaml` (BAT-001 owner, O-4): the second level now has over-temperature at 70 C (window 62.7 to 77.5
   C, reading B) through its own NTC; `secondary_protection.present: true`; add U2, F2, Q3, Q5, RT1, JP1, R33, R34, J_TS2.
-- `TEST-PLAN.md` (owner): E3 and E4 reconciled for the pack (section 5).
+- `TEST-PLAN.md`: written in round 8 by the stream that owns it that round (sections 1, 2, 6 and 7), from
+  `THERMAL-COORDINATION.md` section 9, option C.
 - Certification (`JLC-CERTIFIED.tsv`): rows J_TS2, R33 (new value), R34 are not certified yet (the same state as the other
   round-4 rows, O-3).
 
@@ -312,7 +325,8 @@ Recorded runs (`evidence/regeneration/test-pack-secondary-ts-runs.txt`):
   fixture's cap would then be restated for a bare socket, on a fixture, with TI's answer cited.
 - **If TI states the UT accuracy another way** (for example that TUT_ACC already includes RUT_ACC, reading A), the margin
   rises from 15.0 % to 16.6 % (on the 103AT's slope); nothing changes.
-- **If the thermal test shows the hottest cell above about 63 C inside the use envelope** (40 C ambient plus the ruled
-  rise), the envelope, not the protector, is wrong for the pack: the D-02b carve-outs are what move.
+- **If the thermal test shows the hottest cell above about 63 C inside the use envelope** (40 C ambient plus the
+  envelope's estimated rise (session, decision 34)), the envelope, not the protector, is wrong for the pack: the D-02b
+  carve-outs are what move.
 - **If the qualified reviewer prefers the fixed resistor**, the reason must be a technical one about this pack; the margin
   reason is withdrawn (section 2).
