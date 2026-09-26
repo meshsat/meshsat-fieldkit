@@ -1746,7 +1746,9 @@ Prototype 1: in the core D-01 names. 10 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/ASSEMBLY.md and v2/docs/PANEL.md re-read at the S-07 correction of 26 September 2026 (stream s07, read against 45bde541): ASSEMBLY's Pack SMBus row is byte-identical, and build step 7 was rewritten for the pack's power lead (board P's own XT60 lead, not the BB-2590/U cable) and still reads "the SMBus lead's XH housing into J_SMB (a straight four-way XH lead, pin n to pin n, section 4)"; PANEL.md section 10's SMBus sentences are byte-identical (its charger sentences changed, CFL-014); so this reading stands on the files at e4a0b78616c69779 and b1cde9f7ff1ada7b
 
-*Bound to:* `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d910e49c5f5f50b2`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@4342c4cbe1b43dc4`, `v2/docs/ASSEMBLY.md@e4a0b78616c69779`, `v2/docs/PANEL.md@b1cde9f7ff1ada7b`, `v2/ecad/tools/check_contracts.py@7d17ab3ed7c53854`
+*Evidence (PASS, DESK_REVIEW):* v2/ecad/tools/check_contracts.py re-read at the tools stream's recording merge of 26 September 2026: the change records each board's netlist it reads by sha (the artefact binding) and touches no line of the J_SMB contract, its W_N return or its clamp check, so this reading stands on the file at 304cad5fa2886a73
+
+*Bound to:* `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d910e49c5f5f50b2`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@4342c4cbe1b43dc4`, `v2/docs/ASSEMBLY.md@e4a0b78616c69779`, `v2/docs/PANEL.md@b1cde9f7ff1ada7b`, `v2/ecad/tools/check_contracts.py@304cad5fa2886a73`
 
 *Source (verified):* `v2/ecad/tools/gen_sch_e.py:218`; `v2/docs/ASSEMBLY.md section 4`; `v2/docs/PANEL.md section 10`
 
