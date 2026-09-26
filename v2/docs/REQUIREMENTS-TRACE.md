@@ -3,7 +3,7 @@
 
 # Requirements trace
 
-Generated from the requirements registry `v2/ecad/tools/pcb_requirements.yaml`. Prototype design: nothing described here has been built, powered or field deployed, and every statement below is a requirement, what the design is intended to do, never a report of what hardware has done. A record that needs hardware reads NOT_YET_TESTED, and a record reads PASS or FAIL only where its evidence names the file it was read from. The needs are quoted from `v2/docs/CONOPS.md` section 2 (pinned by sha256 `3c8591471936c45a`); every record traces to one need; the rules of the PCB rule registry and the owner decisions of `pcb_decisions.yaml` judge or settle parts of the records; and every record says how and at which phase it is intended to be verified.
+Generated from the requirements registry `v2/ecad/tools/pcb_requirements.yaml`. Prototype design: nothing described here has been built, powered or field deployed, and every statement below is a requirement, what the design is intended to do, never a report of what hardware has done. A record that needs hardware reads NOT_YET_TESTED, and a record reads PASS or FAIL only where its evidence names the file it was read from. The needs are quoted from `v2/docs/CONOPS.md` section 2 (pinned by sha256 `b9080983ccc03a84`); every record traces to one need; the rules of the PCB rule registry and the owner decisions of `pcb_decisions.yaml` judge or settle parts of the records; and every record says how and at which phase it is intended to be verified.
 
 Every reading carries its evidence class, in the six classes of `v2/docs/CURRENT-EVIDENCE.md`: a record reads PASS only on a class that counts, never on evidence awaiting revalidation, and a desk review (the session's own reading of named files, each bound by its sha256) is never a physical test. The prototype-core functions whose feasibility is not closed are listed first, as explicit architecture feasibility blockers (review of 26 September 2026, section 3 and checkpoint item 1): a merged document is configuration control, not proof that the architecture is feasible.
 
@@ -27,14 +27,14 @@ Registry state **DRAFT_FOR_REVIEW_C**. Sources read at commit `eadbe571` unless 
 | DEFINED | 75 |
 | TBD | 27 |
 | SUPERSEDED | 6 |
-| CONFLICT_OPEN | 7 |
-| CONFLICT_RESOLVED | 10 |
+| CONFLICT_OPEN | 5 |
+| CONFLICT_RESOLVED | 12 |
 | FEASIBILITY_OPEN | 6 |
 
 | evidence result | records | what it means |
 |---|---:|---|
-| PASS | 10 | the record's own reading passed, at the phase named, with the file it was read from |
-| FAIL | 17 | the record's own reading failed, at the phase named; an open conflict reads FAIL on its own sources |
+| PASS | 12 | the record's own reading passed, at the phase named, with the file it was read from |
+| FAIL | 15 | the record's own reading failed, at the phase named; an open conflict reads FAIL on its own sources |
 | INCONCLUSIVE | 12 | a reading was taken and cannot decide |
 | NOT_JUDGED | 79 | judgeable before hardware and not yet read at requirement level (rule verdicts live in rules_status) |
 | NOT_YET_TESTED | 7 | needs the built prototype, which does not exist |
@@ -42,8 +42,8 @@ Registry state **DRAFT_FOR_REVIEW_C**. Sources read at commit `eadbe571` unless 
 
 | reading | evidence class | records |
 |---|---|---:|
-| PASS | DESK_REVIEW | 10 |
-| FAIL | DESK_REVIEW | 13 |
+| PASS | DESK_REVIEW | 12 |
+| FAIL | DESK_REVIEW | 11 |
 | FAIL | none: an open conflict read on its own cited sources | 4 |
 | INCONCLUSIVE | DESK_REVIEW | 12 |
 
@@ -176,7 +176,7 @@ Each prototype-core function whose feasibility is not closed, with its feasibili
 
 **decision-27**, 2026-09-25, owner. Six layers for board C, regenerated on the six-layer stackup (JLC06161H-3313) as its next phase; the price of six against four layers is quoted before anything is paid.
 
-**decision-28**, 2026-09-25, owner. Four layers at 2 oz outer copper for board P (the P8 arm). The fabricator's four-layer 2 oz stackup record, owed when the owner ruled, is recorded since d468613e (JLC04162H-7628 in stackup_write.STACKS, equal layer by layer to JLCPCB's captured response of 25 September 2026); pcb_decisions.yaml's outcome for decision 28 still calls it owed, a stale sentence carried by CFL-016.
+**decision-28**, 2026-09-25, owner. Four layers at 2 oz outer copper for board P (the P8 arm). The fabricator's four-layer 2 oz stackup record, owed when the owner ruled, is recorded since d468613e (JLC04162H-7628 in stackup_write.STACKS, equal layer by layer to JLCPCB's captured response of 25 September 2026); pcb_decisions.yaml's outcome for decision 28 says so since the S-07 correction of 26 September 2026 (it had called the record owed, CFL-016).
 
 **decision-41**, 2026-09-25, owner. Rebuild v2/release/revA/order/ from the deliverable folders and quarantine it in the same commit, every ORDER-NOTES.txt carrying its board's readiness block; nothing is ordered.
 
@@ -394,7 +394,9 @@ Prototype 1: in the core D-01 names. 18 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/ARCH-PCB-B-IOHA.md re-read at the integration of 26 September 2026: the architecture merge corrected it in sections 5, 6 and 10a only (the fail-safe, break-before-make, CAN rate and voter-count paragraphs); sections 4, 15 and 15a and line 17 are byte-identical to eadbe571's, so this reading stands on the file at 6c3c93b7f32f953a
 
-*Bound to:* `v2/docs/CONOPS.md@3c8591471936c45a`, `v2/docs/ARCH-PCB-B-IOHA.md@6c3c93b7f32f953a`, `v2/docs/V2-SPEC.md@c3c84ac28266d3db`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/CONOPS.md and v2/docs/V2-SPEC.md re-read at the S-07 correction of 26 September 2026 (stream s07, read against 45bde541): it changed CONOPS's status header and sections 3 (M2 and M4), 4, 4a (the PS-EMCON row and its mapping sentence), 4b and 5, and V2-SPEC.md lines 11, 22, 24, 34, 41, 43, 73 and 76 with its corrections 2, 4, 7, 9, 12 and 13 and a new correction 19; CONOPS section 2a and V2-SPEC.md:32 (correction 6), which this reading cites, are byte-identical, so it stands on the files at b9080983ccc03a84 and df8ac22603440bc5
+
+*Bound to:* `v2/docs/CONOPS.md@b9080983ccc03a84`, `v2/docs/ARCH-PCB-B-IOHA.md@6c3c93b7f32f953a`, `v2/docs/V2-SPEC.md@df8ac22603440bc5`
 
 *Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md:17`; `v2/docs/ARCH-PCB-B-IOHA.md section 15a`; `session choice SC-02`; `v2/docs/CONOPS.md section 2a`
 
@@ -570,7 +572,9 @@ Prototype 1: in the core D-01 names. 18 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read at the round 7b integration of 26 September 2026: only section 10's pack SMBus sentences changed (the lead as generated since faf8c981, CFL-015); section 1 and its pin table are byte-identical, so this reading stands on the file at 6121b640ea28f30f
 
-*Bound to:* `v2/docs/ARCH-PCB-B-IOHA.md@6c3c93b7f32f953a`, `v2/docs/PANEL.md@6121b640ea28f30f`, `v2/ecad/tools/gen_sch_b.py@6e3d880901fd3030`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read at the S-07 correction of 26 September 2026 (stream s07, read against 45bde541): it added a second corrections block and changed section 1's ZEROIZE and EMCON logic rows, the ribbon table's pin 10 row, section 3's GPIO 22 row, section 5's boot order, section 6's EMCON_HW and ZEROIZE_HW rows, section 7 and section 10's charger sentences; the bank 1 failover host (line 5 and the ribbon table's pin 15 row), which this reading cites, is byte-identical, so it stands on the file at b1cde9f7ff1ada7b
+
+*Bound to:* `v2/docs/ARCH-PCB-B-IOHA.md@6c3c93b7f32f953a`, `v2/docs/PANEL.md@b1cde9f7ff1ada7b`, `v2/ecad/tools/gen_sch_b.py@6e3d880901fd3030`
 
 *Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md section 4`; `v2/docs/ARCH-PCB-B-IOHA.md section 15`; `v2/ecad/tools/gen_sch_b.py:788`
 
@@ -717,7 +721,7 @@ Prototype 1: in the core D-01 names. 14 record(s).
 | CON-007 | constraint | deferred | DEFINED | CALCULATION, SCRIPT | SCHEMATIC | CMP-001, PWR-001 | - | NOT_JUDGED | MUST_JUSTIFY |
 | CON-013 | constraint | deferred | TBD | CALCULATION, PROTOTYPE_MEASUREMENT | SCHEMATIC, PROTOTYPE | BAT-001, THM-001 | - | NOT_JUDGED | MUST_JUSTIFY |
 | CFL-012 | conflict | core | CONFLICT_RESOLVED | CALCULATION | SCHEMATIC | PWR-001 | - | NOT_JUDGED | ADVISORY |
-| CFL-014 | conflict | core | CONFLICT_OPEN | SCRIPT, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT | SCHEMATIC, PROTOTYPE | DOC-002, PWR-001 | - | FAIL at SCHEMATIC; PROTOTYPE not yet judged, DESK_REVIEW | BLOCKER |
+| CFL-014 | conflict | core | CONFLICT_RESOLVED | SCRIPT, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT | SCHEMATIC, PROTOTYPE | DOC-002, PWR-001 | - | PASS at SCHEMATIC; PROTOTYPE not yet judged, DESK_REVIEW | BLOCKER |
 
 **REQ-014** (requirement). The kit runs from its internal pack, and its battery-only runtime is stated in hours in an idle and a typical mode (PS-IDLE-SPEC and PS-TYP) at +20 C for an aged pack; missions longer than the pack rely on vehicle or solar input (D-06).
 
@@ -881,15 +885,17 @@ Prototype 1: in the core D-01 names. 14 record(s).
 
 *Accept when:* PANEL.md section 10, CONOPS section 4 and OPERATING-ENVELOPE.md section 3 (re-pinned) describe the charger and the pack path as generated at the commit that carries them; a hostless kit's charge behaviour is stated as the charger state sequence of the battery review packet and bench-confirmed.
 
-*What an earlier reading said:* At d468613e four documents credited the charger with behaviour it did not have (charging with a crashed panel, a thermistor input, reading the gauge); 4ec785d8 corrected them to the generator of that day, which selected 2S. 458b2873 then fixed the strap and the topology (S-03, S-04, closed), so the same documents now describe the superseded circuit. The battery packet's CHARGER-STATE-SEQUENCE.md reviews the hostless sequence (startup, watchdog expiry, temperature inhibition, termination, recovery).
+*Resolved by:* The S-07 document correction of 26 September 2026 (stream s07, against 45bde541): PANEL.md section 10, CONOPS.md section 4's Charging row and OPERATING-ENVELOPE.md section 3 (re-pinned) describe the charger and the pack path as generated since 458b2873, and the hostless behaviour as the battery review packet's charger state sequence sets it out; the bench confirmation of that sequence is the PROTOTYPE half, not judged yet.
 
-*allocated to a, fw_panel; waits on S-07.*
+*What an earlier reading said:* At d468613e four documents credited the charger with behaviour it did not have (charging with a crashed panel, a thermistor input, reading the gauge); 4ec785d8 corrected them to the generator of that day, which selected 2S. 458b2873 then fixed the strap and the topology (S-03, S-04, closed), so the same documents now describe the superseded circuit. The battery packet's CHARGER-STATE-SEQUENCE.md reviews the hostless sequence (startup, watchdog expiry, temperature inhibition, termination, recovery). Read FAIL at eadbe571 and again at the round 7b integration of 26 September 2026 (PANEL.md section 10 still read "R26 60.4k ... sits in the BQ25731's 2S window", CONOPS's Charging row put the loads on the pack side of the shunt, and the envelope said the pack lead did not mate); the S-07 correction rewrote the three documents against 45bde541.
 
-*Evidence (FAIL, DESK_REVIEW):* v2/docs/PANEL.md section 10 read at eadbe571 still reads "R26 60.4k ... sits in the BQ25731's 2S window", against v2/ecad/tools/gen_sch_a.py:765-771 (R26 13.3 kohm, 75 percent, 4S) and :26-47 (the loads on VBAT, the charger's VSYS, the pack through F1 and R17)
+*allocated to a, fw_panel.*
 
-*Evidence (FAIL, DESK_REVIEW):* v2/docs/PANEL.md re-read at the round 7b integration of 26 September 2026: section 10 was rewritten there for the pack SMBus lead only (CFL-015), and its charger sentence still reads "R26 60.4k ... sits in the BQ25731's 2S window", so this reading stands on the file at 6121b640ea28f30f
+*Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md section 10 read at the S-07 correction of 26 September 2026 (stream s07, read against 45bde541) against v2/ecad/tools/gen_sch_a.py:764-771 and :18-48 and the committed netlist v2/ecad/pcb-a-power-a23/out/pcb-a-power.net (R26 13.3 kohm over R27 40.2 kohm from CH_VDDA, the 4S window; R17 from VBAT to CELL_FUSED and F1 from CELL_FUSED to CELL+, so the loads on VBAT are the charger's system side and the pack is beyond the shunt): the section says so, with shore carrying the loads up to the charger's input limit and the hostless 256 mA going to the pack less board E's always-on draw, as v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md sections 2 to 6 set it out
 
-*Bound to:* `v2/docs/PANEL.md@6121b640ea28f30f`, `v2/docs/CONOPS.md@3c8591471936c45a`, `v2/docs/OPERATING-ENVELOPE.md@5af08b98e6de52f7`, `v2/ecad/tools/gen_sch_a.py@a0452054ec04cf5d`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/CONOPS.md section 4 (the Charging row, and section 5's case S4) and v2/docs/OPERATING-ENVELOPE.md section 3 read the same way at the S-07 correction of 26 September 2026 (stream s07, read against 45bde541): the loads on the charger's system node, the strap at 4S, the charge window the gauge's (its over-temperature half acting only with the golden image's OTFET bit), and board P's second level a 70 C backstop that opens the chemical fuse (v2/ecad/tools/gen_sch_p.py:414-502); the envelope is re-pinned (ENV-001 in v2/ecad/tools/pcb_rules_coverage.yaml and v2/ecad/tools/pcb_envelope.yaml)
+
+*Bound to:* `v2/docs/PANEL.md@b1cde9f7ff1ada7b`, `v2/docs/CONOPS.md@b9080983ccc03a84`, `v2/docs/OPERATING-ENVELOPE.md@89de81a11c52f34a`, `v2/ecad/tools/gen_sch_a.py@a0452054ec04cf5d`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2e8923d6853ee4e1`, `v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md@df84d98b9e47160c`
 
 *Source (verified):* `v2/docs/PANEL.md section 10`; `v2/docs/CONOPS.md section 4 (Charging row)`; `v2/docs/OPERATING-ENVELOPE.md section 3`; `v2/ecad/tools/gen_sch_a.py:765-771`; `v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md`; `v2/vendor/ti/bq25731-datasheet.pdf (SLUSE66A)`
 
@@ -1250,7 +1256,7 @@ Prototype 1: in the core D-01 names. 8 record(s).
 
 *Source (verified):* `v2/docs/PANEL.md section 9`; `v2/docs/ARCH-PCB-B-IOHA.md:263`; `v2/docs/TEST-PLAN.md:46`
 
-*Notes:* ARCH-PCB-B-IOHA A14 names an external receiver or spectrum analyser since 4ec785d8 (line 263 at eadbe571), because EMCON switches the LimeSDR off (v2/ecad/tools/gen_sch_b.py:975). TEST-PLAN.md:46's functional check still says "measured with the SDR", which EMCON as ruled cannot meet (EMCON.md section 6); that is CFL-016's.
+*Notes:* ARCH-PCB-B-IOHA A14 names an external receiver or spectrum analyser since 4ec785d8 (line 263 at eadbe571), because EMCON switches the LimeSDR off (v2/ecad/tools/gen_sch_b.py:975). TEST-PLAN.md:46's functional check said "measured with the SDR", which EMCON as ruled cannot meet (EMCON.md section 6); since the S-07 correction of 26 September 2026 it names a receiver or spectrum analyser outside the kit (CFL-016, resolved).
 
 **REQ-032** (requirement). While EMCON is closed every radio with an emission path is powered off or RF-disabled in hardware; the VHF path keeps listening because its gate is on the transmit side only; GNSS, DCF77 and the lightning sensor continue (D-05).
 
@@ -1278,7 +1284,7 @@ Prototype 1: in the core D-01 names. 8 record(s).
 
 *Resolved by:* Commit 4ec785d8: PANEL.md's corrections note (1) and section 7 say R102 pulls EMCON_HW LOW, the slot enables are pulled low, and a kit without its panel neither computes nor transmits and does not usefully charge.
 
-*What an earlier reading said:* Open at d468613e, waiting on S-03, S-04, S-07 and S-08. PANEL.md section 7 was corrected in 4ec785d8, and the charger and power-up fixes landed in 458b2873 (S-03, S-04, S-08 closed). PANEL.md's other sections still describe circuits 458b2873 replaced: that is CFL-014 (the charger) and CFL-016 (the rest), not this record.
+*What an earlier reading said:* Open at d468613e, waiting on S-03, S-04, S-07 and S-08. PANEL.md section 7 was corrected in 4ec785d8, and the charger and power-up fixes landed in 458b2873 (S-03, S-04, S-08 closed). PANEL.md's other sections still described circuits 458b2873 replaced: that was CFL-014 (the charger) and CFL-016 (the rest), not this record; both are resolved by the S-07 correction of 26 September 2026.
 
 *allocated to a, c.*
 
@@ -1286,7 +1292,9 @@ Prototype 1: in the core D-01 names. 8 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read at the round 7b integration of 26 September 2026: only section 10's pack SMBus sentences changed (the lead as generated since faf8c981, CFL-015); section 7 is byte-identical, so this reading stands on the file at 6121b640ea28f30f
 
-*Bound to:* `v2/docs/PANEL.md@6121b640ea28f30f`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2e8923d6853ee4e1`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md section 7 re-read at the S-07 correction of 26 September 2026 (stream s07, read against 45bde541): the bus table is rewritten from the SDA and SCL nets and a note on the TPS23861's broadcast address is added; the panel-absent paragraph keeps every sentence this reading cites (R102 and R58 on EMCON_HW, R145, R59 and R2 on TX_INHIBIT_n, R117, R118, the slot enables pulled low on A22, as v2/ecad/tools/gen_sch_a.py:1112 and :1150 and the committed netlist v2/ecad/pcb-a-power-a23/out/pcb-a-power.net have them) and its last sentence now says the charger has no host and the pack gains at best the host-free 256 mA less board E's always-on draw, which is the charger's behaviour as v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md section 5 sets it out; it stands on the file at b1cde9f7ff1ada7b
+
+*Bound to:* `v2/docs/PANEL.md@b1cde9f7ff1ada7b`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2e8923d6853ee4e1`
 
 *Source (verified):* `v2/docs/PANEL.md section 7`; `v2/ecad/tools/gen_sch_a.py:1112`; `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net (R102 pin 2 on GND)`
 
@@ -1434,7 +1442,7 @@ Prototype 1: in the core D-01 names. 8 record(s).
 
 *Source (verified):* `v2/docs/feasibility/ZEROIZE.md section 8 (R7)`; `v2/docs/feasibility/ZEROIZE.md section 9 (item 8)`; `v2/ecad/tools/gen_sch_b.py:1140`; `v2/docs/ARCH-PCB-B-IOHA.md:96`
 
-*Notes:* Created from ZEROIZE.md's firmware rule Z-C3 (26 September 2026). The supervisors sit on I2C1 (PB6 and PB7, pins 92 and 93) with the secure element at 0x60 on the same bus (committed netlist v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net at eadbe571: U41, U51 and U61 pins 92 and 93 on SCL and SDA, U8 pins 5 and 6). PANEL.md section 7's bus table does not list the supervisors (CFL-016).
+*Notes:* Created from ZEROIZE.md's firmware rule Z-C3 (26 September 2026). The supervisors sit on I2C1 (PB6 and PB7, pins 92 and 93) with the secure element at 0x60 on the same bus (committed netlist v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net at eadbe571: U41, U51 and U61 pins 92 and 93 on SCL and SDA, U8 pins 5 and 6). PANEL.md section 7's bus table lists them since the S-07 correction of 26 September 2026 (CFL-016, resolved), and it records an open finding that bears on this record: board B's TPS23861 PoE controller (U5) answers the broadcast address 0x30 whatever its A3 pin says (TI SLUSBX9I, sections 7.3.13 and 8.3.3.1), and 0x30 is supervisor 1's status address; the broadcast address is fixed in the part, so it is the supervisors' address that has to move, in their firmware.
 
 **REQ-036** (requirement). A sealed case-open (tamper) switch under the frame logs lid events and senses the lid for the reduced mode; it never triggers ZEROIZE.
 
@@ -1538,7 +1546,9 @@ Prototype 1: not in the core. 3 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/V2-SPEC.md:35 read at eadbe571 against v2/ecad/tools/gen_sch_e.py:581 and the committed netlist v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net: DCF_PULSE runs from J_DCF pin 3 to the sensor controller U10 and nowhere else
 
-*Bound to:* `v2/docs/V2-SPEC.md@c3c84ac28266d3db`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d910e49c5f5f50b2`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/V2-SPEC.md re-read at the S-07 correction of 26 September 2026 (stream s07, read against 45bde541): lines 11, 22, 24, 34, 41, 43, 73 and 76 and corrections 2, 4, 7, 9, 12 and 13 changed and correction 19 was added; line 35 and correction 8 are byte-identical, so this reading stands on the file at df8ac22603440bc5
+
+*Bound to:* `v2/docs/V2-SPEC.md@df8ac22603440bc5`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d910e49c5f5f50b2`
 
 *Source (verified):* `v2/docs/V2-SPEC.md:35`; `v2/ecad/tools/gen_sch_e.py:581`
 
@@ -1734,7 +1744,9 @@ Prototype 1: in the core D-01 names. 10 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/ASSEMBLY.md section 4 (the Pack SMBus row) and build step 7, and v2/docs/PANEL.md section 10, rewritten at the round 7b integration of 26 September 2026 to describe the lead as generated: one JST-XH 1x4 at both ends in P's order, a straight lead, P's pin 3 on PACK_N
 
-*Bound to:* `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d910e49c5f5f50b2`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@4342c4cbe1b43dc4`, `v2/docs/ASSEMBLY.md@e47f8c8508e24377`, `v2/docs/PANEL.md@6121b640ea28f30f`, `v2/ecad/tools/check_contracts.py@7d17ab3ed7c53854`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/ASSEMBLY.md and v2/docs/PANEL.md re-read at the S-07 correction of 26 September 2026 (stream s07, read against 45bde541): ASSEMBLY's Pack SMBus row is byte-identical, and build step 7 was rewritten for the pack's power lead (board P's own XT60 lead, not the BB-2590/U cable) and still reads "the SMBus lead's XH housing into J_SMB (a straight four-way XH lead, pin n to pin n, section 4)"; PANEL.md section 10's SMBus sentences are byte-identical (its charger sentences changed, CFL-014); so this reading stands on the files at e4a0b78616c69779 and b1cde9f7ff1ada7b
+
+*Bound to:* `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d910e49c5f5f50b2`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@4342c4cbe1b43dc4`, `v2/docs/ASSEMBLY.md@e4a0b78616c69779`, `v2/docs/PANEL.md@b1cde9f7ff1ada7b`, `v2/ecad/tools/check_contracts.py@7d17ab3ed7c53854`
 
 *Source (verified):* `v2/ecad/tools/gen_sch_e.py:218`; `v2/docs/ASSEMBLY.md section 4`; `v2/docs/PANEL.md section 10`
 
@@ -1819,7 +1831,7 @@ Prototype 1: not in the core. 7 record(s).
 |---|---|---|---|---|---|---|---|---|---|
 | REQ-050 | requirement | core | DEFINED | MANUAL_REVIEW | SCHEMATIC, PROTOTYPE | ENV-002, SGN-002 | - | NOT_JUDGED | BLOCKER |
 | REQ-070 | requirement | core | DEFINED | MANUAL_REVIEW | SCHEMATIC, ASSEMBLY | none | - | NOT_JUDGED | BLOCKER |
-| CFL-016 | conflict | core | CONFLICT_OPEN | MANUAL_REVIEW | SCHEMATIC | DOC-002 | 28, 40 | FAIL at SCHEMATIC, DESK_REVIEW | BLOCKER |
+| CFL-016 | conflict | core | CONFLICT_RESOLVED | MANUAL_REVIEW | SCHEMATIC | DOC-002 | 28, 40 | PASS at SCHEMATIC, DESK_REVIEW | BLOCKER |
 | CFL-007 | conflict | deferred | CONFLICT_RESOLVED | MANUAL_REVIEW | SCHEMATIC | ENV-001 | - | NOT_JUDGED | ADVISORY |
 | CFL-017 | conflict | deferred | CONFLICT_OPEN | MANUAL_REVIEW | SCHEMATIC | none | - | FAIL at SCHEMATIC | ADVISORY |
 | CFL-008 | conflict | deferred | CONFLICT_OPEN | MANUAL_REVIEW | SCHEMATIC | none | - | FAIL at SCHEMATIC | ADVISORY |
@@ -1847,21 +1859,23 @@ Prototype 1: not in the core. 7 record(s).
 
 *Accept when:* Each named document and outcome, re-read against the generators and committed netlists of the commit that carries them, describes the circuit as generated, and the envelope is re-pinned where it changes.
 
-*allocated to kit, procedure; waits on S-07; prototype 1 core, taken by the session under the owner's standing rule (SC-04): The reviews the core is accepted through (D-09's packets, R-PWR and R-HSD) and the panel firmware (MESHSAT-837) are written against these contracts, so a contract describing a replaced circuit misleads them..*
+*Resolved by:* The S-07 document correction of 26 September 2026 (stream s07, against 45bde541): every document and outcome named in the statement describes the circuit as generated, the envelope is re-pinned (ENV-001), and TEST-PLAN.md:46 measures EMCON with a receiver outside the kit.
 
-*Evidence (FAIL, DESK_REVIEW):* v2/docs/PANEL.md section 6 read at eadbe571 ("The three compute modules' own WiFi and Bluetooth have no hardware path from EMCON") against v2/ecad/tools/gen_sch_b.py:716-741 and the committed netlist v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net (the module disables pulled low by open drains on EMCON_ON)
+*allocated to kit, procedure; prototype 1 core, taken by the session under the owner's standing rule (SC-04): The reviews the core is accepted through (D-09's packets, R-PWR and R-HSD) and the panel firmware (MESHSAT-837) are written against these contracts, so a contract describing a replaced circuit misleads them..*
 
-*Evidence (FAIL, DESK_REVIEW):* v2/docs/V2-SPEC.md:76 read at eadbe571 lists the D-05, D-11, D-12, D-15 and D-17 changes as "none of them in the generators yet", against v2/ecad/tools/gen_sch_a.py:1016-1026 (U31), :1088-1104 (U30, U26), :1151-1167 (J_USBW) and v2/ecad/tools/gen_sch_p.py:355-430 (the second level)
+*Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md sections 1, 6 and 7 read at the S-07 correction of 26 September 2026 (stream s07, read against 45bde541) against v2/ecad/tools/gen_sch_c.py:157-178 and :217, v2/ecad/tools/gen_sch_b.py:478, :621, :644, :713, :716-741, :974-977 and :1029, and the committed netlists v2/ecad/pcb-c-display-c8/out/pcb-c-display.net and v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net: U9 is the 74LVC1G17 Schmitt buffer; the ZEROIZE toggle is on the local ZEROIZE_SW at GPIO 22 and U12 copies it onto ZEROIZE_HW; EMCON_ON removes the WiFi cards' supplies and pulls the three W_DISABLE1# and the six module radio disables low through open drains; the 5G module's only path is W_DISABLE1#, recorded as open under S-01; the ZEROIZE precondition is stated as v2/docs/feasibility/ZEROIZE.md closes it at desk; the section 7 bus table is the SDA and SCL nets of boards A, B, C and D, with the supervisors at 0x30 to 0x32 (ARCH-PCB-B-IOHA.md section 6)
 
-*Evidence (FAIL, DESK_REVIEW):* v2/ecad/tools/pcb_decisions.yaml:52-92 and :863-915 read at eadbe571: decision 28's outcome calls board P's 2 oz stackup record owed, which d468613e recorded, and decision 40's says nothing is laid, which faf8c981 laid
+*Evidence (PASS, DESK_REVIEW):* v2/docs/CONOPS.md sections 3 (M2 and M4), 4, 4a (PS-EMCON), 4b and 5 read at the S-07 correction of 26 September 2026 (stream s07, read against 45bde541): the per-radio table from the netlists above and v2/ecad/pcb-a-power-a23/out/pcb-a-power.net and v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net; the startup fixes (v2/ecad/tools/gen_sch_a.py:260-261, :887, :1041-1064, :1112, :1125), the outlet interlock U30 and U26 (:1088-1104), the wall data path at J_USBW (:1151-1167), the lid switch (v2/ecad/tools/gen_sch_e.py:524-542) and the D-15 floor on board P (v2/ecad/tools/gen_sch_p.py:243, :288, :414-502 and the committed netlist v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net)
 
-*Evidence (FAIL, DESK_REVIEW):* v2/docs/PANEL.md re-read at the round 7b integration of 26 September 2026: only section 10's pack SMBus sentences changed (the lead as generated since faf8c981, CFL-015); section 6 is byte-identical, so this reading stands on the file at 6121b640ea28f30f
+*Evidence (PASS, DESK_REVIEW):* v2/docs/V2-SPEC.md lines 24, 34, 41, 43 and 76 and corrections 2, 4, 7, 9, 12 and 13, with correction 19 recording the re-read, and v2/docs/OPERATING-ENVELOPE.md sections 2 (the protection-board row), 3 and 4, read at the S-07 correction of 26 September 2026 (stream s07, read against 45bde541) against the same generators and netlists; the envelope is re-pinned in v2/ecad/tools/pcb_rules_coverage.yaml (ENV-001) and v2/ecad/tools/pcb_envelope.yaml
 
-*Bound to:* `v2/docs/PANEL.md@6121b640ea28f30f`, `v2/docs/CONOPS.md@3c8591471936c45a`, `v2/docs/V2-SPEC.md@c3c84ac28266d3db`, `v2/docs/OPERATING-ENVELOPE.md@5af08b98e6de52f7`, `v2/ecad/tools/pcb_decisions.yaml@b703d593be93042e`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/TEST-PLAN.md:46 read at the S-07 correction of 26 September 2026 (stream s07, read against 45bde541): EMCON is measured with a receiver or spectrum analyser outside the kit, never the kit's own SDR (v2/docs/feasibility/EMCON.md section 6); and v2/ecad/tools/pcb_decisions.yaml decisions 28 and 40: the four-layer 2 oz stackup row JLC04162H-7628 is recorded (v2/ecad/tools/stackup_write.py:46) and board P's schematic carries decision 40's floor, both outcomes saying so with the layouts still to come
+
+*Bound to:* `v2/docs/PANEL.md@b1cde9f7ff1ada7b`, `v2/docs/CONOPS.md@b9080983ccc03a84`, `v2/docs/V2-SPEC.md@df8ac22603440bc5`, `v2/docs/OPERATING-ENVELOPE.md@89de81a11c52f34a`, `v2/docs/TEST-PLAN.md@e7a90ba054150bb7`, `v2/ecad/tools/pcb_decisions.yaml@e5c1f94779b6cfd6`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2e8923d6853ee4e1`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@2834f0d8c4071d56`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@4342c4cbe1b43dc4`
 
 *Source (verified):* `v2/docs/PANEL.md section 6`; `v2/docs/CONOPS.md section 4b`; `v2/docs/V2-SPEC.md:76`; `v2/docs/OPERATING-ENVELOPE.md section 4`; `v2/docs/TEST-PLAN.md:46`; `v2/ecad/tools/pcb_decisions.yaml:863-915`
 
-*Notes:* Created on 26 September 2026 when the registry was re-read at main: the documents were corrected in 4ec785d8 and 68bc9e8f against the generators of 82dd1e4d, and the circuit corrections merged after them. The charger's share is CFL-014 and the SMBus lead's CFL-015. A document merge is configuration control, not proof of the design (review of 26 September 2026, checkpoint item 1).
+*Notes:* Created on 26 September 2026 when the registry was re-read at main: the documents were corrected in 4ec785d8 and 68bc9e8f against the generators of 82dd1e4d, and the circuit corrections merged after them. The charger's share is CFL-014 and the SMBus lead's CFL-015. A document merge is configuration control, not proof of the design (review of 26 September 2026, checkpoint item 1). Read FAIL at eadbe571 and at the round 7b integration; resolved by the S-07 correction, which also made true the sentences of the same documents that described replaced circuits outside the statement's list (PANEL.md sections 2, 3 and 5; CONOPS M2; ASSEMBLY.md section 4, build steps 1 and 6 and sections 8 and 9; OPERATING-ENVELOPE.md section 2's protection-board row; TEST-PLAN.md section 5's closing paragraph). It found one open item for its owner: every TPS23861 answers the broadcast address 0x30, which is supervisor 1's status address (PANEL.md section 7).
 
 **CFL-007** (conflict). TEST-PLAN limits sit outside the adopted envelope: E3 stores at +71 C and operates at +55 C against +45 C storage and +40 C use; E4 stores at -33 C against -20 C. Each may be a deliberate qualification margin; no purpose is recorded.
 
@@ -1893,7 +1907,7 @@ Prototype 1: not in the core. 7 record(s).
 
 *Source (verified):* `v2/docs/TEST-PLAN.md:20`; `v2/docs/TEST-PLAN.md:23`; `v2/docs/MESHSAT-709-geometry-appendix.md:2864`
 
-*Notes:* W5's TEST-PLAN revision (MESHSAT-1357) drops the vent from E5 and names the Peli valve in E8 (its section 0, item A.1); it is not on main: TEST-PLAN.md is unchanged at eadbe571, so the record stays open.
+*Notes:* W5's TEST-PLAN revision (MESHSAT-1357) drops the vent from E5 and names the Peli valve in E8 (its section 0, item A.1); it is not on main: TEST-PLAN.md is unchanged at eadbe571, so the record stays open. The S-07 correction of 26 September 2026 changed TEST-PLAN.md lines 7 and 46 and section 5's closing paragraph only; E5 and E8 still read as before.
 
 **CFL-009** (conflict). TEST-PLAN has three article states (transit, deployed, stored); the reduced mode is defined as closed-lid operation, but no closed-lid operating state (antennas on, cables in, lid closed) is tested.
 
@@ -2002,7 +2016,9 @@ Prototype 1: not in the core. 8 record(s).
 
 *Evidence (FAIL, DESK_REVIEW):* v2/docs/V2-SPEC.md:41 read at eadbe571 says "dual SIM (eSIM plus nano-SIM)" and still that SIM 2 is on the wrong pins, while v2/ecad/tools/gen_sch_b.py:672-697 fits two GCT SIM8060 nano-SIM holders, SIM 2 on the module's own USIM2 pins (458b2873) behind four 0 ohm links an eSIM build leaves off, and records the TVS array as an open item
 
-*Bound to:* `v2/docs/V2-SPEC.md@c3c84ac28266d3db`, `v2/ecad/tools/gen_sch_b.py@6e3d880901fd3030`
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/V2-SPEC.md:41 re-read at the S-07 correction of 26 September 2026 (stream s07, read against 45bde541): the line now says the socket is key B since 458b2873 and SIM 2 is on the module's own pins, and it states the generated fit, two nano-SIM holders with an eSIM build option (v2/ecad/tools/gen_sch_b.py:672-697), beside the ruled "eSIM plus nano-SIM" of appendix 32.50 item 12, naming this record (and correction 9 does the same); the description conflict stands on the file at df8ac22603440bc5 until S-13 settles one description and fits the SIM TVS array
+
+*Bound to:* `v2/docs/V2-SPEC.md@df8ac22603440bc5`, `v2/ecad/tools/gen_sch_b.py@6e3d880901fd3030`
 
 *Source (verified):* `v2/docs/V2-SPEC.md:41`; `v2/docs/MESHSAT-709-geometry-appendix.md:2796`; `v2/ecad/tools/gen_sch_b.py:672-697`
 
@@ -2070,7 +2086,9 @@ Prototype 1: not in the core. 3 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/ecad/tools/gen_sch_a.py:1016-1026 read at eadbe571 and the committed netlist v2/ecad/pcb-a-power-a23/out/pcb-a-power.net: U31, a TPD2E2U06QDBZRQ1, sits on PD_CC1 and PD_CC2 with the pigtail header J_USBC_OUT; its 1.9 pF maximum leaves C96 and C97 (330 pF) inside the TPS25740A's 200 to 600 pF C(RX) window, as the generator's note records from SLLSEJ9E and SLVSDG8B; TEST-PLAN M7 covers every exposed conductor (v2/docs/TEST-PLAN.md:36)
 
-*Bound to:* `v2/ecad/tools/gen_sch_a.py@a0452054ec04cf5d`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2e8923d6853ee4e1`, `v2/docs/TEST-PLAN.md@9779094fb69757a4`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/TEST-PLAN.md re-read at the S-07 correction of 26 September 2026 (stream s07, read against 45bde541): it changed line 7 (a doubled word), line 46 (EMCON measured with a receiver outside the kit) and section 5's closing paragraph; line 36 (M7), which this reading cites, is byte-identical, so it stands on the file at e7a90ba054150bb7
+
+*Bound to:* `v2/ecad/tools/gen_sch_a.py@a0452054ec04cf5d`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2e8923d6853ee4e1`, `v2/docs/TEST-PLAN.md@e7a90ba054150bb7`
 
 *Source (verified):* `owner ruling D-17`; `v2/ecad/tools/gen_sch_a.py:1016-1026`; `v2/ecad/tools/pcb_decisions.yaml:256-396 (decision 31)`
 
@@ -2248,7 +2266,7 @@ Each of these stops prototype 1's acceptance while it is unmet. The scope column
 | REQ-049 | NEED-14 | requirement | NEED_DEFAULT | DEFINED | NOT_JUDGED |
 | REQ-050 | NEED-15 | requirement | SESSION SC-04 | DEFINED | NOT_JUDGED |
 | REQ-070 | NEED-15 | requirement | SESSION SC-04 | DEFINED | NOT_JUDGED |
-| CFL-016 | NEED-15 | conflict | SESSION SC-04 | CONFLICT_OPEN | FAIL at SCHEMATIC |
+| CFL-016 | NEED-15 | conflict | SESSION SC-04 | CONFLICT_RESOLVED | PASS at SCHEMATIC |
 | REQ-053 | NEED-16 | requirement | SESSION SC-04 | DEFINED | NOT_JUDGED |
 | REQ-054 | NEED-16 | requirement | SESSION SC-04 | DEFINED | NOT_JUDGED |
 | REQ-055 | NEED-16 | requirement | SESSION SC-04 | DEFINED | NOT_JUDGED |
@@ -2256,7 +2274,7 @@ Each of these stops prototype 1's acceptance while it is unmet. The scope column
 | REQ-057 | NEED-17 | requirement | SESSION SC-04 | DEFINED | NOT_JUDGED |
 | REQ-060 | NEED-19 | requirement | NEED_DEFAULT | DEFINED | NOT_JUDGED |
 | REQ-062 | NEED-03 | requirement | NEED_DEFAULT | DEFINED | NOT_YET_TESTED |
-| CFL-014 | NEED-05 | conflict | NEED_DEFAULT | CONFLICT_OPEN | FAIL at SCHEMATIC; PROTOTYPE not yet judged |
+| CFL-014 | NEED-05 | conflict | NEED_DEFAULT | CONFLICT_RESOLVED | PASS at SCHEMATIC; PROTOTYPE not yet judged |
 | CFL-015 | NEED-13 | conflict | NEED_DEFAULT | CONFLICT_RESOLVED | PASS at SCHEMATIC |
 | CON-014 | NEED-03 | constraint | NEED_DEFAULT | DEFINED | NOT_JUDGED |
 | REQ-066 | NEED-14 | requirement | NEED_DEFAULT | DEFINED | NOT_JUDGED |
@@ -2355,8 +2373,6 @@ Each of these stops prototype 1's acceptance while it is unmet. The scope column
 | CFL-008 | CONFLICT_OPEN | deferred | TEST-PLAN E5 runs 'deployed with the vent open', against the owner's ruling of 7 September 2026 that there is no vent opening anywhere. E8's 'vent ... operate' is ambiguous rather than stale: it plausibly means Peli's pressure valve, whi... | E5 describes the sealed kit; E8 names the Peli pressure valve if that is what is meant (W5). | - |
 | CFL-010 | CONFLICT_OPEN | core | Dual SIM is 'eSIM plus nano-SIM' in V2-SPEC and 32.50 item 12; the B generator fits two nano-SIM holders with an eSIM build option (Quectel HD v1.1 Figure 19's 0 ohm links at the module). | One description in V2-SPEC and the generator; if eSIM is kept, the module variant with the internal eSIM is named; the SIM TVS array Quectel asks for is fitted. | S-13 |
 | CFL-011 | CONFLICT_OPEN | deferred | The reduced mode is 'one module' in the envelope (PS-RED, 19.7 W) and 'monitor off, cluster idle' in 32.53 (PS-RED-b, 25.4 W, both PROVISIONAL); its trigger is 'lid closed or above +35 C', and the definition that settles which is still t... | One definition (which modules, which bearers, monitor state) and a named trigger source. | S-24 |
-| CFL-014 | CONFLICT_OPEN | core | The documents describe the charger circuit 458b2873 replaced: PANEL.md section 10 and CONOPS section 4's Charging row say the cell-count strap selects 2S and the kit's loads sit on the pack side of the charge shunt, where the generator n... | PANEL.md section 10, CONOPS section 4 and OPERATING-ENVELOPE.md section 3 (re-pinned) describe the charger and the pack path as generated at the commit that carries them; a hostless kit's charge be... | S-07 |
-| CFL-016 | CONFLICT_OPEN | core | The published contracts describe circuits that faf8c981, 458b2873 and d90f30e4 replaced: PANEL.md sections 1 and 6 (the compute modules' radios with no EMCON path, the WiFi cards' disable unproven, the toggle driving ZEROIZE_HW, U9 a 74L... | Each named document and outcome, re-read against the generators and committed netlists of the commit that carries them, describes the circuit as generated, and the envelope is re-pinned where it ch... | S-07 |
 | CFL-017 | CONFLICT_OPEN | deferred | TEST-PLAN E3 stores the kit at +71 C and runs it at +55 C with its pack, and E4 stores it at -33 C, while both Samsung revisions rate the cells to +60 C in storage and discharge; the session reconciled the margin for the pack (SC-09) and... | TEST-PLAN E3 and E4 run the kit's margins with the pack removed, and the pack's own checks at its cells' limits, as SECONDARY-OT-DECISION.md section 5 proposes. | S-43 |
 | CFL-001 | CONFLICT_RESOLVED | core | Which neighbour adopts each bank: ARCH-PCB-B-IOHA section 4 (bank 1 to slot 2, 2 to 3, 3 to 1) against section 15 (bank 1 to slot 3, 2 to 1, 3 to 2). | One mapping in every document, equal to the generator's f = s % 3 + 1. | Commit 4ec785d8: ARCH-PCB-B-IOHA section 15 is marked corrected on 26 September 2026 and its failover column follows f = s % 3 + 1, as section 4 does. |
 | CFL-002 | CONFLICT_RESOLVED | deferred | The envelope's hot end is set by the Sensirion SGP41 battery-bay sensor (-20 to +55 C), which appendix 32.54 picked for the battery bay beside the BME688 inside and in the pod; no generator fitted the SGP41. | The SGP41 is fitted where the battery bay's air is sampled, or an owner ruling drops it; the envelope's hot end is not recomputed until one of the two happens. | Commit faf8c981: board E fits the SGP41-D-R4 as U17 for the battery-bay air (S-10, closed), so the envelope's hot end stands on a fitted part. |
@@ -2367,7 +2383,9 @@ Each of these stops prototype 1's acceptance while it is unmet. The scope column
 | CFL-009 | CONFLICT_RESOLVED | deferred | TEST-PLAN has three article states (transit, deployed, stored); the reduced mode is defined as closed-lid operation, but no closed-lid operating state (antennas on, cables in, lid closed) is tested. | A closed-lid operating state is added to TEST-PLAN section 1 with its own thermal test, or closed-lid operation is ruled out. | D-02b |
 | CFL-012 | CONFLICT_RESOLVED | core | Peak draw 'about 150 W with everything transmitting' (V2-SPEC, the one-module set of 32.49) against 'about 200 W peak without the outlets, up to 290 W with them' (32.52 item 3, battery-side) and the re-derived PS-ALLTX 227.0 W and PS-ALL... | V2-SPEC line 23 carries the current per-state figures, marked PROVISIONAL, and the D-11 bound. | D-06 and D-11 (26 Sep 2026): the peak is PS-ALLTX, bounded by a declared key-down time above a declared state of charge; V2-SPEC line 23 withdraws the 150 W peak since 68bc9e8f and points to CONOPS... |
 | CFL-013 | CONFLICT_RESOLVED | deferred | V2-SPEC said the DCF77 pulse is fanned out to every slot; the generator takes it only to the sensor controller RP2040. | The pulse reaches every slot, or V2-SPEC says the sensor controller serves DCF77 time over USB. | Commit 68bc9e8f: V2-SPEC line 35 says the DCF77 pulse reaches only the sensor controller on E (correction 8). |
+| CFL-014 | CONFLICT_RESOLVED | core | The documents describe the charger circuit 458b2873 replaced: PANEL.md section 10 and CONOPS section 4's Charging row say the cell-count strap selects 2S and the kit's loads sit on the pack side of the charge shunt, where the generator n... | PANEL.md section 10, CONOPS section 4 and OPERATING-ENVELOPE.md section 3 (re-pinned) describe the charger and the pack path as generated at the commit that carries them; a hostless kit's charge be... | The S-07 document correction of 26 September 2026 (stream s07, against 45bde541): PANEL.md section 10, CONOPS.md section 4's Charging row and OPERATING-ENVELOPE.md section 3 (re-pinned) describe th... |
 | CFL-015 | CONFLICT_RESOLVED | core | The pack SMBus lead: both generators now draw a JST-XH 1x4 in board P's pin order (faf8c981), while ASSEMBLY.md section 4 and build step 7 and PANEL.md section 10 still describe board E's end as a 2.54 mm 1x6 pin header that no lead mate... | Both ends are the same family, pitch and pin count, pin n meets pin n with clock, data and ground aligned, P's ground pin is on the pack side of the shunt, check_contracts.py carries a J_SMB contra... | Commit 93138ac1 (check_contracts.py carries the J_SMB contract, S-05) and the round 7b integration commit that rewrote ASSEMBLY.md section 4 and build step 7 and PANEL.md section 10 to describe the... |
+| CFL-016 | CONFLICT_RESOLVED | core | The published contracts describe circuits that faf8c981, 458b2873 and d90f30e4 replaced: PANEL.md sections 1 and 6 (the compute modules' radios with no EMCON path, the WiFi cards' disable unproven, the toggle driving ZEROIZE_HW, U9 a 74L... | Each named document and outcome, re-read against the generators and committed netlists of the commit that carries them, describes the circuit as generated, and the envelope is re-pinned where it ch... | The S-07 document correction of 26 September 2026 (stream s07, against 45bde541): every document and outcome named in the statement describes the circuit as generated, the envelope is re-pinned (EN... |
 
 ## Open items and what they hold
 
@@ -2384,7 +2402,7 @@ SESSION items are engineering the session decides and records with authority SES
 | L-06 | LATER | The bench parts for ZEROIZE experiments Z-EXP-A and Z-EXP-B (ZEROIZE.md section 5: a development board, a SOIC adapter, ten ATECC608B-SSHDA-T, a Raspberry Pi Pico, a load switch): nothing is spent beyond the voucher without a quote and the owner's approval (D-09). | ASM-005, FEA-001 |
 | S-01 | SESSION | EMCON reaches every transmitter (D-05), what is left after 458b2873 gated the compute modules' radios and the WiFi card supplies: SD-EMC-1's two stages for the 5G module drawn on board B; the shared-line items L1 to L4 and L7 of EMCON.md section 7 remedied (firmware pins on EMCON_HW, the line's hold with its source gone, the +3V3_DEV loss that releases nine radios, gate supplies outside their range, the 2N7002 drive); the back-feed paths of SD-EMC-2. | REQ-030, REQ-032, FEA-002 |
 | S-02 | SESSION | RF-002 enumerates every transmitter from the netlists and fails any without a hardware gate. | REQ-030, FEA-002 |
-| S-07 | SESSION | The published contracts rewritten against the circuits of faf8c981, 458b2873 and d90f30e4: PANEL.md sections 1, 6, 7 and 10; CONOPS sections 4, 4b and 5; V2-SPEC.md lines 24, 34, 41, 43 and 76 and their corrections; OPERATING-ENVELOPE.md sections 3 and 4, re-pinned; ASSEMBLY.md section 4 and build step 7; TEST-PLAN.md:46's EMCON check (an external receiver, not the kit's SDR); the outcomes of decisions 28 and 40 in pcb_decisions.yaml (CFL-014, CFL-015, CFL-016). | CFL-016, CFL-014 |
+| S-07 | SESSION | The closure of the correction. Every item of the former title (the published contracts rewritten against the circuits of faf8c981, 458b2873 and d90f30e4: PANEL.md sections 1, 6, 7 and 10; CONOPS sections 4, 4b and 5; V2-SPEC.md lines 24, 34, 41, 43 and 76 and their corrections; OPERATING-ENVELOPE.md sections 3 and 4, re-pinned; ASSEMBLY.md section 4 and build step 7; TEST-PLAN.md:46's EMCON check; the outcomes of decisions 28 and 40) is made by stream s07's document commit of 26 September 2026 against 45bde541, which resolves CFL-014 and CFL-016; the item closes by that commit once this tree holds it. | none |
 | S-09 | SESSION | The ten unidirectional clamps of boards A and B (A's D1 to D4; B's D1, D2, D101, D201, D301, D520) moved off KiCad's bidirectional D_TVS symbol onto one that carries a cathode, as boards D, E and P now are, and the orientation check in the protection gate merged (the round-7 tool set: the polarity symbol and port_protect's polarity pass). Every clamp's orientation is right on main since faf8c981. | CON-016 |
 | S-12 | SESSION | The key-B socket's land carries TE's two locating holes (drawing C-2199119 rev F, sheet 3; gen_footprints_b16.py draws neither), and D-07's third jack is confirmed by the board E clamp fit (its case half is laid out, CASE-MARGINS.md section 3.4). The key-B part is fitted since 458b2873. | CHO-001, CON-015 |
 | S-13 | SESSION | One SIM description: V2-SPEC line 41 says eSIM plus nano-SIM, the generator fits two nano-SIM holders with an eSIM build option (the 0 ohm links of Quectel HD v1.1 Figure 19); and the SIM TVS array the HD asks for (at most 10 pF) fitted. SIM 2 is on the module's own pins since 458b2873. | CFL-010 |
@@ -2458,7 +2476,7 @@ Every item that has left the open list, and what closed it: an owner ruling, a s
 
 ## Readings
 
-### FAIL (17)
+### FAIL (15)
 
 | record | prototype 1 | effect | at | class | evidence |
 |---|---|---|---|---|---|
@@ -2471,12 +2489,10 @@ Every item that has left the open list, and what closed it: an owner ruling, a s
 | REQ-030 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/EMCON.md sections 0 and 7 read at eadbe571, on the round-6 netlists main carries since 458b2873: of 17 transmitters no row is closed on the bench and one (the 30 W PA) closes at desk; the line's fail-safe hold with its source gone is UNDECIDED (L2), and a loss of +3V3_DEV on board B releases the gates of nine radios (L3: six CM5 radios, two AW7915 cards, the RM520N-GL), so t... |
 | REQ-032 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/EMCON.md sections 0, 4.5 and 7 read at eadbe571: the RM520N-GL's only inhibit as drawn is W_DISABLE1#, a firmware-mediated airplane mode whose timing, boot behaviour and configurability Quectel does not state; SD-EMC-1's supply removal is not drawn on board B; v2/docs/feasibility/EMCON.md section 7, L3: with +3V3_DEV lost on board B the gates of the six CM5 radios, the two A... |
 | CON-021 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/EMCON.md section 0 read at eadbe571: as drawn no indication of the EMCON lines is independent of firmware (the TX lamp's supply exists only while the panel controller drives PANEL_PWM); board C's committed netlist v2/ecad/pcb-c-display-c8/out/pcb-c-display.net carries no EMCON lamp; v2/docs/feasibility/EMCON.md re-read at the records filing of 26 September 2026 (428c697c): o... |
-| CFL-016 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/PANEL.md section 6 read at eadbe571 ("The three compute modules' own WiFi and Bluetooth have no hardware path from EMCON") against v2/ecad/tools/gen_sch_b.py:716-741 and the committed netlist v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net (the module disables pulled low by open drains on EMCON_ON); v2/docs/V2-SPEC.md:76 read at eadbe571 lists the D-05, D-11, D-12, D-15 and D-17 changes... |
 | CFL-017 | deferred | ADVISORY | SCHEMATIC | - | its own sources disagree: v2/docs/TEST-PLAN.md:18-19; v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 2; v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 5 |
 | CFL-008 | deferred | ADVISORY | SCHEMATIC | - | its own sources disagree: v2/docs/TEST-PLAN.md:20; v2/docs/TEST-PLAN.md:23; v2/docs/MESHSAT-709-geometry-appendix.md:2864 |
-| CFL-010 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/V2-SPEC.md:41 read at eadbe571 says "dual SIM (eSIM plus nano-SIM)" and still that SIM 2 is on the wrong pins, while v2/ecad/tools/gen_sch_b.py:672-697 fits two GCT SIM8060 nano-SIM holders, SIM 2 on the module's own USIM2 pins (458b2873) behind four 0 ohm links an eSIM build leaves off, and records the TVS array as an open item |
+| CFL-010 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/V2-SPEC.md:41 read at eadbe571 says "dual SIM (eSIM plus nano-SIM)" and still that SIM 2 is on the wrong pins, while v2/ecad/tools/gen_sch_b.py:672-697 fits two GCT SIM8060 nano-SIM holders, SIM 2 on the module's own USIM2 pins (458b2873) behind four 0 ohm links an eSIM build leaves off, and records the TVS array as an open item; v2/docs/V2-SPEC.md:41 re-read at the S-07 correction of 2... |
 | CFL-011 | deferred | MUST_JUSTIFY | SCHEMATIC | - | its own sources disagree: v2/docs/OPERATING-ENVELOPE.md section 8 (D-02b); v2/docs/OPERATING-ENVELOPE.md:171-172; v2/ecad/tools/pcb_envelope.yaml:34; v2/docs/MESHSAT-709-geometry-appendix.md:2860 |
-| CFL-014 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/PANEL.md section 10 read at eadbe571 still reads "R26 60.4k ... sits in the BQ25731's 2S window", against v2/ecad/tools/gen_sch_a.py:765-771 (R26 13.3 kohm, 75 percent, 4S) and :26-47 (the loads on VBAT, the charger's VSYS, the pack through F1 and R17); v2/docs/PANEL.md re-read at the round 7b integration of 26 September 2026: section 10 was rewritten there for the pack SMBus lead only... |
 | CON-015 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/ecad/tools/gen_sch_b.py:635-643 read at eadbe571: J_M2C2 is TE 2199119-3, key ID B on TE drawing C-2199119 rev F (458b2873), and its land lacks the drawing's two locating holes (1.1 and 1.6 mm), which the generator's footprint does not draw |
 | CON-016 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | orientation holds on every committed netlist at eadbe571 (pad 1 the cathode, adjudication A03): board E's D1, D2, D3 and D4 and board P's D1 on their positive conductors and board E's D10 now bidirectional, board D's D1 on +5V_D8, board C's D19 to D21 toward VGH and from VGL, boards A's and B's clamps on their rails (v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net, v2/ecad/pcb-p-pack-p2/out/pcb-p-pa... |
 
@@ -2497,7 +2513,7 @@ Every item that has left the open list, and what closed it: an owner ruling, a s
 | REQ-044 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | the netlist clause holds on the committed netlist v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net at eadbe571 (v2/ecad/tools/gen_sch_p.py:243, :288 and :355-430): the BQ7720700 second level (cell OV 4.325 V and UV 2.25 V, open wire, OT on its own thermistor J_TS2) and the BQ4050's FUSE output both drive FUSE_G through R29 and R30, which closes Q3 on the Eaton SCF9550 F2's heater once the arming jumper... |
 | FEA-005 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/review-packets/battery/REVIEW-REQUEST.md read at eadbe571: "All reviews to date are by AI agent sessions; no qualified human engineer has reviewed this revision" and "Nothing in this file has been sent to anyone"; PROTECTION-ARCHITECTURE.md names what is not covered with the primary failed and its FETs held on (over-current between the cells' 24 A and F1's 25 A, charge over-current, cha... |
 
-### PASS (10)
+### PASS (12)
 
 | record | prototype 1 | effect | at | class | evidence |
 |---|---|---|---|---|---|
@@ -2509,7 +2525,9 @@ Every item that has left the open list, and what closed it: an owner ruling, a s
 | CFL-004 | core | ADVISORY | SCHEMATIC | DESK_REVIEW | v2/ecad/tools/gen_sch_b.py:716-741 read at eadbe571 and the committed netlist v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net: WL_nDIS1 reaches only Q109's drain and the module's pin 89; Q109's gate is WL_nDIS1_KILL from the OR gate U111 (WL_nDIS1_OFF or EMCON_ON), held low by R173 100k; the same for BT_nDIS and slots 2 and 3; U6 pins 13 to 18 now drive the OFF requests, never a module pin |
 | CFL-005 | core | ADVISORY | SCHEMATIC | DESK_REVIEW | v2/docs/PANEL.md section 7 read at eadbe571 against v2/ecad/tools/gen_sch_a.py:1112 and the committed netlist v2/ecad/pcb-a-power-a23/out/pcb-a-power.net (R102 100k from EMCON_HW to GND; R145 on TX_INHIBIT_n; the slot enable pull-downs): the section describes the panel-absent state as generated; v2/docs/PANEL.md re-read at the round 7b integration of 26 September 2026: only section 10's pack SM... |
 | REQ-036 | deferred | MUST_JUSTIFY | SCHEMATIC | DESK_REVIEW | v2/ecad/tools/gen_sch_e.py:524-542 read at eadbe571 and the committed netlist v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net: the reed lead J_TAMP (Littelfuse 59140, normally open, closed by the lid's magnet) is pulled up to +3V3_E6 by R52 and reaches the sensor controller's TAMPER_IO through R53, on the always-on domain (the 5 V buck U12 takes VIN and EN from CELL_F); no board routes it to ZEROIZE... |
-| CFL-013 | deferred | ADVISORY | SCHEMATIC | DESK_REVIEW | v2/docs/V2-SPEC.md:35 read at eadbe571 against v2/ecad/tools/gen_sch_e.py:581 and the committed netlist v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net: DCF_PULSE runs from J_DCF pin 3 to the sensor controller U10 and nowhere else |
+| CFL-016 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/PANEL.md sections 1, 6 and 7 read at the S-07 correction of 26 September 2026 (stream s07, read against 45bde541) against v2/ecad/tools/gen_sch_c.py:157-178 and :217, v2/ecad/tools/gen_sch_b.py:478, :621, :644, :713, :716-741, :974-977 and :1029, and the committed netlists v2/ecad/pcb-c-display-c8/out/pcb-c-display.net and v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net: U9 is the 74LVC... |
+| CFL-013 | deferred | ADVISORY | SCHEMATIC | DESK_REVIEW | v2/docs/V2-SPEC.md:35 read at eadbe571 against v2/ecad/tools/gen_sch_e.py:581 and the committed netlist v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net: DCF_PULSE runs from J_DCF pin 3 to the sensor controller U10 and nowhere else; v2/docs/V2-SPEC.md re-read at the S-07 correction of 26 September 2026 (stream s07, read against 45bde541): lines 11, 22, 24, 34, 41, 43, 73 and 76 and corrections 2, 4,... |
+| CFL-014 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/PANEL.md section 10 read at the S-07 correction of 26 September 2026 (stream s07, read against 45bde541) against v2/ecad/tools/gen_sch_a.py:764-771 and :18-48 and the committed netlist v2/ecad/pcb-a-power-a23/out/pcb-a-power.net (R26 13.3 kohm over R27 40.2 kohm from CH_VDDA, the 4S window; R17 from VBAT to CELL_FUSED and F1 from CELL_FUSED to CELL+, so the loads on VBAT are the charger... |
 | CFL-015 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | the connectors agree at eadbe571: v2/ecad/tools/gen_sch_e.py:218 (J_SMB, B4B-XH-A, 1 SMBC 2 SMBD 3 GND 4 PRES) and board P's J_SMB in the same order with its return on the pack side of the shunt (committed netlists v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net and v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net); v2/ecad/tools/check_contracts.py carries the J_SMB contract since 93138ac1 (S-05): the same... |
 
 7 records need the built prototype before they can be read at all (NOT_YET_TESTED): REQ-003, REQ-010, REQ-022, REQ-026, REQ-062, REQ-063, REQ-064.
