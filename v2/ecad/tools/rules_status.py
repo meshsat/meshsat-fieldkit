@@ -20,6 +20,11 @@ reported), summing to 100 subject to rounding. The gate state is printed BEFORE 
 qualifier cannot be hidden by any of them. The project aggregate sums rule-board pairs; it never averages
 board percentages.
 
+Those percentages are a HISTORICAL AGGREGATE OF MIXED REVISIONS and are printed under that name (review of 26
+September 2026). Every row also carries an EVIDENCE CLASS (CURRENT_CANDIDATE, VALID_HISTORICAL, AWAITING_REVALIDATION,
+DESK_REVIEW, PHYSICAL_TEST or NO_EVIDENCE; see `evidence_class`), which binds a reading to the board's current netlist,
+board file, layout and tool, and `rules_render.py` renders v2/docs/CURRENT-EVIDENCE.md from it.
+
 Usage:
   rules_status.py [--board <letter>] [--phase <SCHEMATIC|PLACED_BOARD|ROUTED_BOARD|RELEASE_PACKAGE>]
                   [--out-dir out/rule-audit] [--json]
@@ -153,12 +158,22 @@ def _supersedes(new, old):
 
 
 def _verdicts(letter, m):
-    """{name: record} of every verdict file the board has, newest wins (see _supersedes for the one exception)."""
+    """{name: record} of every verdict file the board has, newest wins (see _supersedes for the one exception).
+
+    AN INVALIDATED READING IS NOT READ, WHEREVER IT SITS (26 September 2026, MESHSAT-1357). A verdict a test fixture
+    wrote into this tree's evidence is listed by its CONTENT hash in v2/docs/evidence/INVALIDATED-*.md, so the
+    invalidation holds in every checkout that still carries the file (the gitignored copies on the runner, a box
+    clone) and not only where somebody moved it to an archive name."""
     found = {}
+    bad = registers()["invalidated"]
     for d in _project_dirs(letter, m):
         for f in sorted(glob.glob(os.path.join(d, "*.verdict.json"))):
-            try: rec = json.load(open(f))
-            except ValueError: continue
+            try:
+                raw = open(f, "rb").read()
+                if bad and hashlib.sha256(raw).hexdigest() in bad:
+                    _REFUSED.add(os.path.relpath(f, ECAD)); continue
+                rec = json.loads(raw.decode("utf-8"))
+            except (ValueError, OSError): continue
             name = rec.get("name") or os.path.basename(f)[:-len(".verdict.json")]
             prev = found.get(name)
             if prev is None or _supersedes(rec, prev): rec["_path"] = f; found[name] = rec
@@ -548,21 +563,749 @@ def _phases_up_to(phase):
     return PHASE_ORDER[:i + 1]
 
 
+# ------------------------------------------------------------------------------------------------------------------
+# EVIDENCE CLASSES (26 September 2026, MESHSAT-1357; review of the 26 September progress report, section 1, and its
+# checkpoint item 3).
+#
+# `result` above answers "what did the newest current-rule reading say", and summed over the set it mixes revisions:
+# 94 of the 212 PASS results of that day were measured on layouts that predate the corrected netlists, and a reading
+# taken under a tool whose matching or polarity algorithm has since changed still decided. `result` is left exactly
+# as it was (it is the historical aggregate, and every generated page that reads it stays byte for byte the same).
+# Beside it every row now carries an EVIDENCE CLASS, which answers a different question: is this reading evidence
+# about the design this project is building NOW, and of what kind?
+#
+#   CURRENT_CANDIDATE      taken on the exact current candidate: the netlist the board declares (by sha), the board
+#                          file of its declared phase (by sha) and, for a layout or release rule, a layout proven to
+#                          carry that netlist (LAYOUT_RULE reads a current PASS), and for a release rule the files of
+#                          the declared phase's folder it records, each by its current sha and the BOM among them where
+#                          the folder has one; under the rule's current digest and the
+#                          byte-identical tool file that wrote it; with every configuration input its writer is
+#                          declared to read (CONFIG_INPUTS) unchanged since.
+#   VALID_HISTORICAL       taken on an older artefact, under an older tool or before a configuration input changed, and
+#                          reused ONLY because a recorded compatibility rationale in v2/docs/evidence/COMPATIBILITY.md
+#                          pins the versions by sha.
+#   AWAITING_REVALIDATION  anything else that is a reading: an older artefact, a changed tool or configuration, a
+#                          reading that does not record the artefact it judged, a reading of a temporary directory. It
+#                          does NOT count as current, whatever its result says.
+#   DESK_REVIEW            a document check: a manually verified record, or a reading of a rule verified at the
+#                          PROTOTYPE phase that is bound like any other reading, because nothing has been built and a
+#                          desk check is all such a reading can be. An unbound one awaits revalidation.
+#   PHYSICAL_TEST          a verdict that declares evidence_kind PHYSICAL_TEST and names its measurement record, bound
+#                          like any other reading to the current candidate. No tool writes one today and none exists,
+#                          because nothing has been fabricated.
+#   NO_EVIDENCE            no reading at all (no verdict, no implementation, a waiver), and NOT_APPLICABLE rows.
+# ------------------------------------------------------------------------------------------------------------------
+CURRENT_CANDIDATE, VALID_HISTORICAL, AWAITING_REVALIDATION = "CURRENT_CANDIDATE", "VALID_HISTORICAL", "AWAITING_REVALIDATION"
+DESK_REVIEW, PHYSICAL_TEST, NO_EVIDENCE = "DESK_REVIEW", "PHYSICAL_TEST", "NO_EVIDENCE"
+EVIDENCE_CLASSES = (CURRENT_CANDIDATE, VALID_HISTORICAL, AWAITING_REVALIDATION, DESK_REVIEW, PHYSICAL_TEST, NO_EVIDENCE)
+COUNTS_AS_CURRENT = (CURRENT_CANDIDATE, VALID_HISTORICAL)
+# The rule whose current PASS is what makes a LAYOUT the current candidate's layout: netlist against board.
+LAYOUT_RULE = "SCH-002"
+# Rules whose subject is not a board artefact. Every other rule is bound by its verification phase.
+DEPENDS_ON = {"SGN-001": "REGISTRY", "ENV-002": "DOCUMENTS"}
+EVIDENCE_DOCS = os.path.normpath(os.path.join(ECAD, "..", "docs", "evidence"))
+_REFUSED = set()
+_REGISTERS = {}
+_GIT_WHEN = {}
+
+
+def registers(docs=None):
+    """The two evidence registers, read from the fenced yaml blocks of v2/docs/evidence/*.md:
+
+      <!-- evidence-register: invalidated -->      ```yaml  invalidated: [{path, sha256, ...}]  ```
+      <!-- evidence-register: compatibility -->    ```yaml  compatibility: [{kind, ..., then, now, rationale}]  ```
+
+    {invalidated: {sha256: entry}, compatibility: [entry], errors: [text]}. A register that cannot be read is an
+    ERROR, never an empty register: `evidence_class` then refuses to call any reading current (a floor that cannot
+    be read is not a floor), and `result` is untouched."""
+    key = docs or EVIDENCE_DOCS
+    if key in _REGISTERS: return _REGISTERS[key]
+    out = {"invalidated": {}, "compatibility": [], "errors": []}
+    mark = re.compile(r"<!--\s*evidence-register:\s*(invalidated|compatibility)\s*-->\s*```ya?ml\s*\n(.*?)\n```", re.S)
+    for f in sorted(glob.glob(os.path.join(key, "*.md"))):
+        try: text = open(f, encoding="utf-8").read()
+        except OSError as e: out["errors"].append("%s: %s" % (os.path.basename(f), e)); continue
+        for kind, body in mark.findall(text):
+            try: data = (R._yaml().safe_load(body) or {}).get(kind)
+            except BaseException as e: out["errors"].append("%s: %s block unreadable (%s)" % (os.path.basename(f), kind, type(e).__name__)); continue
+            if data is None: data = []
+            if not isinstance(data, list):
+                out["errors"].append("%s: %s is not a list" % (os.path.basename(f), kind)); continue
+            for e in data:
+                if not isinstance(e, dict):
+                    out["errors"].append("%s: a %s entry is not a mapping" % (os.path.basename(f), kind)); continue
+                if kind == "invalidated":
+                    s = str(e.get("sha256") or "").lower()
+                    if not re.fullmatch(r"[0-9a-f]{64}", s):
+                        out["errors"].append("%s: an invalidated entry has no full sha256 (%s)" % (os.path.basename(f), e.get("path")))
+                        continue
+                    out["invalidated"][s] = e
+                else:
+                    if not (e.get("then") and e.get("now") and e.get("rationale")):
+                        out["errors"].append("%s: a compatibility entry lacks then, now or rationale" % os.path.basename(f))
+                        continue
+                    out["compatibility"].append(e)
+    _REGISTERS[key] = out
+    return out
+
+
+def _git_when(path):
+    """The commit instant of the version of `path` this checkout holds, or None (no git, or never committed)."""
+    if path in _GIT_WHEN: return _GIT_WHEN[path]
+    when = None
+    try:
+        import subprocess
+        r = subprocess.run(["git", "-C", os.path.dirname(path), "log", "-1", "--format=%cI", "--", os.path.basename(path)],
+                           capture_output=True, text=True, timeout=20)
+        if r.returncode == 0 and r.stdout.strip(): when = r.stdout.strip()
+    except Exception:
+        pass
+    _GIT_WHEN[path] = when
+    return when
+
+
+# ------------------------------------------------------------------------------------------------------------------
+# CONFIGURATION AND PACKAGE CONTENT ARE BOUND TOO (26 September 2026, the second round on this stream). The review's
+# words: "Bind current acceptance to the applicable schematic/netlist, PCB, BOM, stackup, configuration, rule and tool
+# semantics." The first version bound the netlist, the board file (which carries the stackup), the rule digest and
+# the tool, and left two holes a checker found: a RELEASE_PACKAGE reading was accepted on its folder NAME (E5's
+# DFM-001 and DOC-001 record only {"folder": "meshsat-pcb-e5-revA-E5"}), and no configuration file a tool reads was
+# bound at all (REL-001 read as a current desk review on all seven boards although `faf8c981` changed
+# pcb_reliability.yaml five days after the readings).
+#
+# CONFIGURATION: a reading counts as current only when every configuration input its WRITER is declared to read below
+# is unchanged since the reading was taken: by the sha the reading recorded where it carries one, else by the instant
+# this checkout's version of the file was committed (a file with uncommitted edits, or one no commit holds, cannot be
+# dated and counts as changed). A changed input is reused only through a `kind: config` compatibility entry naming the
+# rule, the board, the input and the input's CURRENT sha, so a later edit voids the entry by itself. A writer that is
+# not declared here cannot be current at all (cause CONFIG_UNDECLARED): nobody has read it to say what it depends on.
+#
+# Each entry was audited by reading the tool at 1f614233 (file:line). Templates: {letter}; {phase}, the phase directory
+# relative to v2/ecad; {stem}, the project name; a `*` is a glob and every match is an input. Paths are relative to
+# v2/ecad. The instrument sees what is declared: a new configuration read added to a tool is not seen until its entry
+# here is updated.
+CONFIG_INPUTS = {
+    # port_protect.py:99, :228-230, :271-272: the board table's external_ports and _external_ports_why; :248-251
+    # boardtable.letter_for (every table's `name`; the reading records the letter it resolved); :92-95 the intent file
+    # beside the netlist, whose rails stop the search.
+    "port_protect.py": ("tools/boards/{letter}.json", "{phase}/out/{stem}-intent.json"),
+    # reliability.py:31 and :53 the declared list; :55 rules_lib.board_facts for the project names. (It also reads
+    # the newest `<stem>*/out/<stem>.net` by mtime, :47, and records no netlist, so its readings do not bind anyway.)
+    "reliability.py": ("tools/pcb_reliability.yaml", "tools/pcb_board_facts.yaml"),
+    # check_pcb_e5.py:38 `_bt.value("e5", "copper_layers", 2)`; every other number is a literal in the tool.
+    "check_pcb_e5.py": ("tools/boards/e5.json",),
+    # fab_limits.py:61-63 the project file beside the board (design rules, net classes); :31 DOC, the fabricator
+    # document its constant tables are transcribed from. The document is not opened at run time, but a correction of
+    # it can make a constant wrong, so a change to it is a change to what the reading means.
+    "fab_limits.py": ("{phase}/{stem}.kicad_pro", "../vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md"),
+    # derate.py:131-133 the intent file beside the netlist (rails and nodes). Board E5's reading is the declared zero
+    # of derate.py:248-257, which opens no file.
+    "derate.py": ("{phase}/out/{stem}-intent.json",),
+    # netlist_board.py:40-55 read_aliases opens tools/pad-aliases.txt, and :133-147 use it to decide which pad a
+    # netlist pin must land on: that is SCH-002's matching configuration, and SCH-002 is LAYOUT_RULE, the reading
+    # that decides whether a layout is the candidate's. (The first audit of 26 September called this entry empty,
+    # citing :50 as a netlist read; :50 is the alias loop. Corrected the same day on a checker's finding.) :58-66
+    # and :111-112 read the netlist and the board file, which a reading of SCH-002 records by sha.
+    "netlist_board.py": ("tools/pad-aliases.txt",),
+    # netlist_parts.py:75 the netlist and :97 the board file, both recorded by sha; no other file is opened.
+    "netlist_parts.py": (),
+    # stackup_gate.py:36 stackup_write.STACKS (a data table in an imported module, which the writer instrument does
+    # not see), :81 the declared stack in pcb_board_facts.yaml, :62-72 the board's order notes (all of them are
+    # declared: a glob, conservative).
+    "stackup_gate.py": ("tools/stackup_write.py", "tools/pcb_board_facts.yaml", "../release/revA/order/*/ORDER-NOTES.txt"),
+    # rules_complete is written by this file's `main` (below, `_v.write("rules_complete", ...)`), and its writer is the
+    # ENTRY script: rules_status.py run directly, rules_render.py when the render refreshes the audit. Its subject is
+    # the registry, which the fingerprint `_fresh` checks pins. Whether every applicable rule reached a decision also
+    # depends on (third round, 26 September 2026, a checker's finding) the coverage map (COVERAGE, `coverage()`), the
+    # board facts that decide applicability (rules_lib.FACTS via `R.rules_for`) and the manifest (MANIFEST, which
+    # boards are judged), none of which the fingerprint pins.
+    "rules_status.py": ("tools/pcb_rules_coverage.yaml", "tools/pcb_board_facts.yaml", "tools/readiness_manifest.json"),
+    "rules_render.py": ("tools/pcb_rules_coverage.yaml", "tools/pcb_board_facts.yaml", "tools/readiness_manifest.json"),
+    # THE WRITERS OF THE SCHEMATIC-PHASE RULES, audited on 26 September 2026 (third round on this stream) because every
+    # one of them decides layout entry and none was declared, so a re-take of any of them would have read
+    # CONFIG_UNDECLARED. Board-table reads go through boardtable.letter_for (every table's `name`), and the reading
+    # records the letter it was filed under, as for port_protect above. Helpers are named where the read happens.
+    #
+    # erc_gate.py:47-49 the ERC report kicad-cli wrote from the schematic (an output of the schematic, not
+    # configuration); :21-30 and :55 the project's erc-allow.txt, the reasons an ERC error may stand.
+    "erc_gate.py": ("{phase}/erc-allow.txt",),
+    # safe_lines.py:55 and :130/:179-180 the board table's safety_lines and _safety_lines_why; :150-152 letter_for;
+    # :61-66 the intent file beside the netlist (its rails). The netlist is read by port_protect.netlist
+    # (port_protect.py:72-82), which opens the netlist alone.
+    "safe_lines.py": ("tools/boards/{letter}.json", "{phase}/out/{stem}-intent.json"),
+    # pin_map_lands.py:25 and :59 the netlist; :35 kisch.land_pads and :38-42 read each land from the footprint
+    # directories of kisch._fp_dirs (kisch.py:245-256): this tree's meshsat.pretty (declared, a glob, conservative)
+    # and the host's KiCad library under /usr/share/kicad/footprints, which is not in this tree and is not declared
+    # (an instrument limit, stated on the page).
+    "pin_map_lands.py": ("meshsat.pretty/*.kicad_mod",),
+    # clock_check.py:49 the netlist; :151-156 the board table's crystals (C_L from the parts' datasheets); :168-170
+    # letter_for.
+    "clock_check.py": ("tools/boards/{letter}.json",),
+    # power_sequence.py:42 the netlist; :55-58 the intent file beside it (or --intent), whose rails it sequences.
+    "power_sequence.py": ("{phase}/out/{stem}-intent.json",),
+    # energy_chain.py:36 and :92 the chain; :60-67 the fuse makers' derating tables; :44-52 the NEWEST netlist of
+    # every board by mtime (an artefact, which it does not record); :119-131 whether each v2/vendor file a stage
+    # cites exists (not declared: the files are named inside the chain, an instrument limit).
+    "energy_chain.py": ("tools/pcb_energy_chain.yaml", "tools/pcb_fuse_derating.yaml"),
+    # check_contracts.py:36-41 every board table's `phase` and :49-55 every routeflow profile (which netlist is each
+    # board's); :411-416 every `<stem>*/out/*-intent.json` (the rail shares, the last one sorted wins); :64-117 each
+    # board's netlist, its schematic and provenance sidecar, and sch_prov.current's generator files (artefacts and a
+    # provenance guard on them, not configuration of the contracts, which are code in this file).
+    "check_contracts.py": ("tools/boards/*.json", "tools/routeflow/*.json", "pcb-*/out/*-intent.json"),
+    # interfaces.py:41, :153 and :248 the interface sheet; :163-167 and :216-219 the first `<stem>*/out/<stem>-intent
+    # .json` in sorted order (its pair classes). `_classes` (:48) reads a project file and nothing calls it.
+    "interfaces.py": ("tools/pcb_interfaces.yaml", "{stem}*/out/{stem}-intent.json"),
+    # pack_protection.py:33 and :43-45 the protection table; :48-62 and :81 the cell specification the table names
+    # (pcb_pack_protection.yaml:44 names v2/vendor/battery/samsung-35e-orbtronic.pdf; a change of the name is a
+    # change of the table), read through the host's pdftotext; :34 and :95 board P's netlist (an artefact).
+    "pack_protection.py": ("tools/pcb_pack_protection.yaml", "../vendor/battery/samsung-35e-orbtronic.pdf"),
+    # intent_checks.py:41 intent.load (intent.py:321-325, the intent file beside the board); :43-44 and
+    # signalnets.py:25-26 the project file; :161 signal_class.classify, which reads the board table's
+    # signal_classes (signal_class.py:88-92, the letter by name at :68-85), as does return_via.judge (return_via.py
+    # :139-153) through :225; :244-245 bypass-allow.txt beside the board. One entry covers every verdict this file
+    # writes (intent_rails and the return-path, return-via and decoupling ones), so it is conservative for each.
+    "intent_checks.py": ("{phase}/out/{stem}-intent.json", "{phase}/{stem}.kicad_pro", "{phase}/bypass-allow.txt",
+                         "tools/boards/{letter}.json"),
+    # edge_length.py:77 the intent file beside the board; :78-80, :86, :118 and :149 the board table's rise_ns,
+    # critical_k, signal_classes and edge_allow; :97-99 signal_class.classify (the same table); :108-110 the project
+    # file; :82 impedance_check.read_stackup reads the stack from the board file itself, which the reading records.
+    "edge_length.py": ("tools/boards/{letter}.json", "{phase}/out/{stem}-intent.json", "{phase}/{stem}.kicad_pro"),
+}
+V2 = os.path.normpath(os.path.join(ECAD, ".."))
+_GIT_DIRTY = {}
+_CFG_WHEN = {}
+
+
+def _sha16_of(path):
+    try: return hashlib.sha256(open(path, "rb").read()).hexdigest()[:16]
+    except OSError: return None
+
+
+def _config_when(path):
+    """The instant of the last commit that touched `path` (a deletion included), asked from v2/ecad so a file whose
+    directory is gone still answers; None when no commit ever held it or git cannot answer."""
+    if path in _CFG_WHEN: return _CFG_WHEN[path]
+    when = None
+    try:
+        import subprocess
+        r = subprocess.run(["git", "-C", ECAD, "log", "-1", "--format=%cI", "--", os.path.relpath(path, ECAD)],
+                           capture_output=True, text=True, timeout=20)
+        if r.returncode == 0 and r.stdout.strip(): when = r.stdout.strip()
+    except Exception:
+        pass
+    _CFG_WHEN[path] = when
+    return when
+
+
+def _git_dirty(path):
+    """True when this checkout's copy of `path` is not its last commit's (modified, or untracked and present)."""
+    if path in _GIT_DIRTY: return _GIT_DIRTY[path]
+    dirty = False
+    try:
+        import subprocess
+        r = subprocess.run(["git", "-C", ECAD, "status", "--porcelain", "--", os.path.relpath(path, ECAD)],
+                           capture_output=True, text=True, timeout=20)
+        dirty = r.returncode == 0 and bool(r.stdout.strip())
+    except Exception:
+        pass
+    _GIT_DIRTY[path] = dirty
+    return dirty
+
+
+def _writer_file(rec):
+    """The file that wrote a reading: its `writer.file`, else the tool name as a file (`port_protect_a` is
+    port_protect.py), else None."""
+    w = (rec.get("writer") or {}).get("file")
+    if w: return str(w)
+    t = str(rec.get("tool") or "")
+    for cand in (t, re.sub(r"_[a-z]\d?$", "", t), t.split("-", 1)[0]):
+        if cand and os.path.exists(os.path.join(HERE, cand + ".py")): return cand + ".py"
+    return None
+
+
+def _recorded_sha(rec, path):
+    """The sha256/16 a reading recorded for this file, or None. Matched by name and, where the reading recorded a
+    directory too, by the directory it sits in (third round, 26 September 2026, a checker's finding): stackup_gate
+    declares every board's ORDER-NOTES.txt, and a reading that recorded its own board's note by sha would otherwise be
+    compared with every other board's note of the same name and could never bind. A bare name still matches every
+    declared file of that name, which is the conservative direction."""
+    dp = os.path.normpath(path).split(os.sep)
+    for v in (rec.get("inputs") or {}).values():
+        if not (isinstance(v, dict) and v.get("sha256_16")): continue
+        rp = [x for x in os.path.normpath(str(v.get("path") or "")).split(os.sep) if x not in ("", ".", "..")]
+        if rp and rp[-1] == dp[-1] and (len(rp) < 2 or len(dp) < 2 or rp[-2] == dp[-2]):
+            return str(v["sha256_16"])
+    return None
+
+
+def _config_state(rec, letter, m, rid, regs, config_inputs=None):
+    """(ok, cause, why, entries): is every configuration input the reading's writer is declared to read unchanged since
+    the reading, or reused under a `kind: config` entry? See the block comment above CONFIG_INPUTS."""
+    table = CONFIG_INPUTS if config_inputs is None else config_inputs
+    wf = _writer_file(rec)
+    if wf not in table:
+        return (False, "CONFIG_UNDECLARED", "%s is not declared in rules_status.CONFIG_INPUTS, so what configuration the "
+                "reading depended on is unknown" % (wf or "the writer"), [])
+    d = os.path.relpath(_phase_dir(letter, m), ECAD)
+    stem = (m["boards"].get(letter) or {}).get("project", "")
+    ts = str(rec.get("ts") or "")
+    t = _instant(ts)
+    used = []
+    paths = []
+    for tmpl in table[wf]:
+        p = os.path.normpath(os.path.join(ECAD, tmpl.format(letter=letter, phase=d, stem=stem)))
+        paths += sorted(glob.glob(p)) if "*" in p else [p]
+    for p in paths:
+        rel = os.path.relpath(p, ECAD)
+        now = _sha16_of(p)
+        said = _recorded_sha(rec, p)
+        if said:
+            if said == now: continue
+            how = "the reading recorded sha %s and the file is %s" % (said, now or "absent")
+        else:
+            when = _config_when(p)
+            if when is None and now is None: continue          # never in this checkout's history and absent now
+            if when is None or (now is not None and _git_dirty(p)):
+                how = "this checkout's copy cannot be dated by a commit (uncommitted or untracked)"
+            else:
+                w = _instant(when)
+                if t is not None and w is not None and w <= t: continue
+                how = "last committed %s, after the reading (%s)" % (when[:19], ts[:19])
+        # THE ENTRY NAMES THE ONE READING IT VOUCHES FOR (third round, 26 September 2026): matched on the reading's
+        # own `ts` as well, so an older reading of the same rule and board is never reused under it.
+        e = _compatible("config", regs, rule=rid, board=letter, input=rel, now=now or "absent", reading=ts)
+        if e: used.append(e); continue
+        return False, "CONFIG_CHANGED", "configuration input %s changed since the reading: %s" % (rel, how), []
+    return True, "BOUND", "", used
+
+
+def _package(letter, phase):
+    """The deliverable folder of the DECLARED phase, by content: {folder, files: {name: sha16}}, or {} when this tree
+    holds none (or more than one, which is refused rather than guessed)."""
+    if not phase: return {}
+    pat = re.compile(r"^meshsat-pcb-%s-rev[A-Za-z0-9]+-%s$" % (re.escape(str(letter).lower()), re.escape(str(phase))), re.I)
+    hits = sorted(d for d in glob.glob(os.path.join(V2, "release", "*", "boards", "*"))
+                  if os.path.isdir(d) and pat.match(os.path.basename(d)))
+    if len(hits) != 1: return {}
+    files = {}
+    for f in sorted(glob.glob(os.path.join(hits[0], "*"))):
+        if os.path.isfile(f): files[os.path.basename(f)] = _sha16_of(f)
+    return {"folder": os.path.relpath(hits[0], V2), "files": files}
+
+
+def candidate(letter, m, vs=None, ident=None, reg=None, cov=None, fingerprint=None, facts=None):
+    """THE CURRENT CANDIDATE of one board, by content: the phase it declares, the netlist its phase directory holds
+    (sha and the instant that version was committed), the board files of that phase (sha), and whether the LAYOUT is
+    the candidate's, which is what LAYOUT_RULE's current PASS says. A board the manifest marks `no_chain` (E5) has
+    no schematic: its board file is its design."""
+    d = _phase_dir(letter, m)
+    stem = (m["boards"].get(letter) or {}).get("project", "")
+    net = os.path.join(d, "out", stem + ".net")
+    c = {"declared_phase": _declared_phase(letter), "netlist": None, "netlist_sha16": None, "netlist_committed": None,
+         "board_shas": sorted(x for x in (ident if ident is not None else _board_identities(letter, m)) if len(x) == 16),
+         "layout_current": False, "layout_why": ""}
+    # THE PACKAGE OF THE DECLARED PHASE, BY CONTENT: a release-package reading binds to a file of it by sha (_bound).
+    c["package"] = _package(letter, c["declared_phase"])
+    if os.path.exists(net):
+        raw = open(net, "rb").read()
+        c["netlist"] = os.path.relpath(net, ECAD)
+        c["netlist_sha16"] = hashlib.sha256(raw).hexdigest()[:16]
+        c["netlist_committed"] = _git_when(net)
+        # THE NETLIST'S CONTENT IDENTITY TOO. gate_sweep.sh regenerates the netlist in its copy before judging it, and
+        # a regenerated file carries a new export date, so its sha never equals the committed file's even when the
+        # design is the same. regen_compare.content_hash (components and nets, no path, date or tool) is the project's
+        # own parity identity; a reading that records it as `content16` beside a netlist input binds by content.
+        try:
+            import regen_compare as _rc
+            c["netlist_content16"] = _rc.content_hash(raw.decode("utf-8", "replace"))
+        except Exception:
+            c["netlist_content16"] = None
+    if (m["boards"].get(letter) or {}).get("no_chain"):
+        c["layout_current"], c["layout_why"] = True, "a bare contact board with no schematic (manifest no_chain): its board file is its design"
+        return c
+    if not c["netlist_sha16"]:
+        c["layout_why"] = "this tree holds no netlist at %s" % os.path.relpath(net, ECAD)
+        return c
+    reg = reg or R.load(); cov = cov if cov is not None else coverage()
+    fingerprint = fingerprint or R.fingerprint(reg)
+    vs = vs if vs is not None else _verdicts(letter, m)
+    rule = next((r for r in reg["rules"] if r["id"] == LAYOUT_RULE), None)
+    if rule is None:
+        c["layout_why"] = "the registry holds no %s, so nothing says the layout carries the netlist" % LAYOUT_RULE
+        return c
+    row = result_for(rule, letter, cov, vs, m, fingerprint, None, ident)
+    if row["result"] != PASS:
+        c["layout_why"] = "%s (netlist against board) reads %s on it" % (LAYOUT_RULE, row["result"])
+        c["layout_detail"] = " ".join(str(row["why"]).split())[:200]
+        return c
+    k = evidence_class(rule, letter, cov, vs, m, fingerprint, ident, row, c)
+    c["layout_current"] = k["evidence_class"] in COUNTS_AS_CURRENT
+    c["layout_why"] = "%s reads PASS on evidence %s" % (LAYOUT_RULE, k["evidence_class"])
+    c["layout_detail"] = k["evidence_why"][:200]
+    return c
+
+
+def _names(c, letter):
+    raw = (c.get("verification") or {}).get("verdict")
+    return [n.strip().replace("<letter>", letter) for n in str(raw or "").split(",") if n.strip()]
+
+
+def _recorded(rec):
+    """(netlist shas, board shas) the reading records by content. A bare letter is not a content identity."""
+    nets, boards = set(), set()
+    for v in (rec.get("inputs") or {}).values():
+        if not isinstance(v, dict): continue
+        p, s = str(v.get("path") or ""), v.get("sha256_16")
+        if p.endswith(".net") and v.get("content16"): nets.add("content:" + str(v["content16"]))
+        if not s: continue
+        if p.endswith(".net"): nets.add(s)
+        if p.endswith(".kicad_pcb"): boards.add(s)
+    nb = _named_board(rec)
+    if nb and re.fullmatch(r"[0-9a-f]{16}", str(nb)): boards.add(nb)
+    return nets, boards
+
+
+def _temp_input(rec):
+    """The first recorded input under a temporary directory: a fixture's world or another checkout, not this tree."""
+    import tempfile
+    roots = ("/tmp/", "/var/tmp/", tempfile.gettempdir().rstrip("/") + "/")
+    for v in (rec.get("inputs") or {}).values():
+        p = v.get("path") if isinstance(v, dict) else v
+        if isinstance(p, str) and p.startswith(roots): return p
+    return None
+
+
+def _physical(rec):
+    """A reading that declares a physical measurement and names its record. None exists today."""
+    return rec.get("evidence_kind") == PHYSICAL_TEST and bool((rec.get("inputs") or {}).get("measurement_record"))
+
+
+def _compatible(kind, regs, **want):
+    """The compatibility entry that vouches for exactly this pair of versions, or None."""
+    for e in regs.get("compatibility") or []:
+        if e.get("kind") != kind: continue
+        if all(str(e.get(k) or "") == str(v or "") for k, v in want.items()): return e
+    return None
+
+
+def _bound(rule, letter, name, rec, cand, regs):
+    """(bound, cause, why, rationale): does this reading judge the current candidate's artefact for its rule?"""
+    rid = rule["id"]
+    # A PROTOTYPE-PHASE READING IS A DESK CHECK OF THE DESIGN AS DRAWN (REL-001 reads the netlist and a declared
+    # list), so it binds as a schematic reading does; `evidence_class` then names it a DESK_REVIEW, never a test.
+    dep = DEPENDS_ON.get(rid) or {"PROTOTYPE": "SCHEMATIC"}.get(rule["verification_phase"], rule["verification_phase"])
+    nets, boards = _recorded(rec)
+    mine = set(cand.get("board_shas") or [])
+    now_net = {x for x in (cand.get("netlist_sha16"), ("content:%s" % cand["netlist_content16"]) if cand.get("netlist_content16") else None) if x}
+    shown = ",".join(sorted(x for x in nets if not x.startswith("content:"))) or ",".join(sorted(nets))
+    ts = str(rec.get("ts") or "")
+
+    def unbound(what, timed=True):
+        when = cand.get("netlist_committed")
+        t, w = _instant(ts), _instant(str(when or ""))
+        if timed and t is not None and w is not None and t < w:
+            return (False, "PREDATES_ARTEFACT", "taken %s, before the current netlist %s was committed (%s)"
+                    % (ts[:19], cand.get("netlist_sha16"), str(when)[:19]), None)
+        return (False, "UNBOUND", "%s records no %s by content, so it cannot be shown to be about the current "
+                "candidate; re-take it with the artefact's sha recorded" % (name, what), None)
+
+    if dep == "REGISTRY":
+        return True, "BOUND", "the rule judges the registry itself and the reading is taken under the current one", None
+    if dep == "DOCUMENTS":
+        return unbound("document", timed=False)       # a document rule's subject is not the netlist
+    # A READING THAT ALSO JUDGED ANOTHER BOARD'S FILE (a cross-board contract: E5's block against board A's dock pads)
+    # is about that board too, and it is current only when that board's layout is. No other board's layout is shown
+    # to be current here, so such a reading waits for it.
+    foreign = boards - mine
+    if foreign and (boards & mine):
+        return (False, "OTHER_BOARD", "%s also judged board file %s, which is not this board's; a cross-board reading "
+                "is current only when every board it read is its candidate's" % (name, ",".join(sorted(foreign))), None)
+    if rid == LAYOUT_RULE:
+        if not (boards & mine): return (False, "BOARD_MISMATCH" if boards else "UNBOUND",
+                                        "%s names board %s, not the declared phase's %s" % (name, ",".join(sorted(boards)) or "none", ",".join(sorted(mine)) or "none"), None)
+        if not (nets & now_net):
+            e = _compatible("artefact", regs, rule=rid, board=letter, input="netlist", then=shown, now=cand.get("netlist_sha16"))
+            if e: return True, "RATIONALE", e.get("rationale"), e
+            return (False, "NETLIST_MISMATCH", "taken on netlist %s; the current netlist is %s" % (shown or "none", cand.get("netlist_sha16")), None)
+        return True, "BOUND", "board %s and netlist %s are the current candidate's" % (",".join(sorted(boards & mine)), cand.get("netlist_sha16")), None
+    if dep == "SCHEMATIC":
+        if not cand.get("netlist_sha16"):
+            if boards & mine: return True, "BOUND", "board %s is the current design (no schematic)" % ",".join(sorted(boards & mine)), None
+            return unbound("board")
+        if nets:
+            if cand["netlist_sha16"] in nets:
+                return True, "BOUND", "netlist %s is the current candidate's" % cand["netlist_sha16"], None
+            if nets & now_net:
+                return True, "BOUND", "netlist content %s is the current candidate's" % cand.get("netlist_content16"), None
+            e = _compatible("artefact", regs, rule=rid, board=letter, input="netlist", then=shown, now=cand["netlist_sha16"])
+            if e: return True, "RATIONALE", e.get("rationale"), e
+            return (False, "NETLIST_MISMATCH", "taken on netlist %s; the current netlist is %s (%s)"
+                    % (shown, cand["netlist_sha16"], cand.get("netlist")), None)
+        if boards & mine:
+            if cand.get("layout_current"): return True, "BOUND", "judged the current layout, which carries the current netlist", None
+            return False, "LAYOUT_NOT_CURRENT", "judged the layout, which is not the candidate's: %s" % cand.get("layout_why"), None
+        return unbound("netlist")
+    if dep in ("PLACED_BOARD", "ROUTED_BOARD", "ASSEMBLY"):
+        if not (boards & mine):
+            if boards: return False, "BOARD_MISMATCH", "%s names board %s, not the declared phase's" % (name, ",".join(sorted(boards))), None
+            return unbound("board")
+        if not cand.get("layout_current"):
+            return False, "LAYOUT_NOT_CURRENT", "the layout it judged is not the candidate's: %s" % cand.get("layout_why"), None
+        return True, "BOUND", "board %s is the declared phase's and %s" % (
+            ",".join(sorted(boards & mine)), "carries the current netlist" if cand.get("netlist_sha16") else
+            "is the design itself (no schematic)"), None
+    if dep == "RELEASE_PACKAGE":
+        if not cand.get("layout_current"):
+            return False, "LAYOUT_NOT_CURRENT", "the package it judged is cut from a layout that is not the candidate's: %s" % cand.get("layout_why"), None
+        # A PACKAGE READING BINDS BY THE FOLDER'S CONTENT, NEVER BY ITS NAME (26 September 2026, second round). A
+        # folder name says which phase somebody meant; a file of it recorded by sha says what was read. The reading
+        # must record at least one file of the declared phase's folder (its BOM, gerber zip, CPL or board snapshot)
+        # with the sha that file has in this tree. A board sha alone is not the package: the BOM and the gerbers
+        # beside it are what the rule judges.
+        inp = rec.get("inputs") or {}
+        pk = cand.get("package") or {}
+        files = pk.get("files") or {}
+        folder = inp.get("folder")
+        folder = str((folder or {}).get("path") if isinstance(folder, dict) else folder or "")
+        if not files:
+            return (False, "UNBOUND", "this tree holds no deliverable folder of the declared phase %s, so %s cannot be "
+                    "about it" % (cand.get("declared_phase"), name), None)
+        # AND BY EVERY FILE OF IT THAT THE READING RECORDS, WITH THE BOM AMONG THEM (third round, 26 September 2026, a
+        # checker's finding): one matching file used to be enough, so a reading that recorded the CPL alone bound while
+        # the BOM beside it could have been edited by hand, and a stale BOM beside a current CPL bound too. The review
+        # asks for acceptance bound to the BOM, so where the folder holds one it must be recorded at its current sha.
+        seen = {}
+        for v in inp.values():
+            if isinstance(v, dict) and v.get("sha256_16"):
+                b = os.path.basename(str(v.get("path") or ""))
+                if b in files: seen[b] = str(v["sha256_16"])
+        stale = sorted(b for b, s in seen.items() if files[b] != s)
+        hits = sorted(b for b, s in seen.items() if files[b] == s)
+        boms = sorted(b for b in files if b.lower().endswith(".csv") and "bom" in b.lower())
+        if stale:
+            return (False, "UNBOUND", "%s recorded %s at a sha other than the one %s holds, so it read another copy"
+                    % (name, ", ".join(stale), pk.get("folder")), None)
+        if hits and boms and not (set(hits) & set(boms)):
+            return (False, "UNBOUND", "%s recorded %s of %s by sha and not its BOM (%s), so a BOM edited beside them "
+                    "would not be seen; re-take it with the BOM recorded" % (name, ", ".join(hits), pk.get("folder"),
+                                                                            ", ".join(boms)), None)
+        if hits:
+            return True, "BOUND", "%s recorded %s of %s by sha" % (name, ", ".join(hits), pk.get("folder")), None
+        return (False, "UNBOUND", "%s names the folder %s by name only and records none of its files by content, so it "
+                "cannot be shown to be about the folder this tree holds (%s); re-take it with the BOM or gerber sha "
+                "recorded" % (name, folder or "(none)", pk.get("folder")), None)
+    return unbound("artefact")
+
+
+def _tool_state(rec):
+    """`stale_readings.judge_one`, which answers exactly from the writer's own hash where the reading carries one and by
+    the tool file's last commit date where it does not. A LABELLED reading with no writer (`hardset-placed`, written by
+    `hardset.py <report> placed` before the writer field existed) is asked about the file that wrote it."""
+    import stale_readings as _sr
+    if not (rec.get("writer") or {}).get("file"):
+        t = str(rec.get("tool") or "")
+        head = t.split("-", 1)[0]
+        if "-" in t and not os.path.exists(os.path.join(HERE, t + ".py")) and os.path.exists(os.path.join(HERE, head + ".py")):
+            rec = dict(rec, tool=head)
+    return _sr.judge_one(rec)
+
+
+def evidence_class(rule, letter, cov, vs, m, fingerprint, identities, row, cand, regs=None, tool_state=None,
+                   config_inputs=None):
+    """{evidence_class, evidence_cause, evidence_why} for one rule-board row. See the block comment above.
+
+    The worst class among the verdicts a rule names decides (AWAITING_REVALIDATION before VALID_HISTORICAL before
+    CURRENT_CANDIDATE), because a rule is current only when every tool that decides it read the current candidate.
+    `config_inputs` replaces CONFIG_INPUTS (fixtures only)."""
+    if regs is None: regs = registers()
+    if tool_state is None: tool_state = _tool_state
+    rid = rule["id"]; c = cov.get(rid) or {}; res = row.get("result")
+
+    def out(k, cause, why): return {"evidence_class": k, "evidence_cause": cause, "evidence_why": " ".join(str(why).split())}
+    if res == NOT_APPLICABLE: return out(NO_EVIDENCE, "NOT_APPLICABLE", row.get("why") or "not applicable")
+    if res == WAIVED: return out(NO_EVIDENCE, "WAIVED", "a waiver is a decision about a gap, not evidence")
+    if c.get("maturity") == "VERIFIED_MANUALLY":
+        return out(DESK_REVIEW, "DOCUMENT", "a manual (not a tool) check of a document pinned by content, which on this "
+                   "project is the session's own review and not a qualified engineer's: %s" % row.get("why", ""))
+    if c.get("maturity") in ("OPEN", "DOCUMENTED_ONLY", "SOURCE_UNVERIFIED", "OWNER_DECISION_REQUIRED", "GENERATED_ONLY"):
+        return out(NO_EVIDENCE, c.get("maturity"), "the coverage map gives this rule no deciding verification")
+    present = [(n, vs.get(n)) for n in _names(c, letter) if vs.get(n) is not None]
+    if not present: return out(NO_EVIDENCE, "NO_VERDICT", row.get("why") or "no verdict")
+    if regs.get("errors"):
+        return out(AWAITING_REVALIDATION, "REGISTER_UNREADABLE", "the evidence registers cannot be read (%s), so no "
+                   "reading can be shown to be current" % "; ".join(regs["errors"])[:160])
+    rank = {AWAITING_REVALIDATION: 0, VALID_HISTORICAL: 1, CURRENT_CANDIDATE: 2}
+    worst = None
+    for n, rec in present:
+        k = out(*_class_one(rule, letter, n, rec, c, m, fingerprint, identities, cand, regs, tool_state, config_inputs))
+        if worst is None or rank[k["evidence_class"]] < rank[worst["evidence_class"]]: worst = k
+    # A PHYSICAL TEST IS BOUND LIKE ANY OTHER READING TOO (third round, 26 September 2026, a checker's finding). It was
+    # returned before the register, tool, artefact and configuration checks, so a future measurement of an older board
+    # revision would have counted toward `physically_verified`. A measurement names the netlist (or board) of the
+    # revision it was taken on, like any reading; it is PHYSICAL_TEST only when that is the current candidate's.
+    if all(_physical(r) for _n, r in present):
+        if worst["evidence_class"] not in COUNTS_AS_CURRENT: return worst
+        return out(PHYSICAL_TEST, "MEASURED", "a physical measurement: %s; %s" % (", ".join(
+            str((r.get("inputs") or {}).get("measurement_record")) for _n, r in present), worst["evidence_why"]))
+    # A DESK REVIEW IS BOUND LIKE ANY OTHER READING (26 September 2026, second round). It used to be named a desk review
+    # before anything was checked, so REL-001 read as a current desk review on all seven boards while its list had
+    # changed since (faf8c981) and it records no netlist. It is a DESK_REVIEW only when the reading would otherwise
+    # count as current; otherwise it awaits revalidation like anything else. Never a physical test either way.
+    if rule.get("verification_phase") == "PROTOTYPE" and worst["evidence_class"] in COUNTS_AS_CURRENT:
+        return out(DESK_REVIEW, "PROTOTYPE_DESK_CHECK", "nothing is built, so a reading of a PROTOTYPE-phase rule is a "
+                   "desk check and never a physical test: %s" % worst["evidence_why"])
+    return worst
+
+
+def _class_one(rule, letter, n, rec, c, m, fingerprint, identities, cand, regs, tool_state, config_inputs=None):
+    """(class, cause, why) of ONE reading: current evidence at all, then not a temporary directory, then the tool
+    that wrote it byte for byte the tool here, then the artefact it judged the candidate's, then every configuration
+    input its writer is declared to read unchanged since."""
+    ok, why = _fresh(rec, m, fingerprint, identities, rule)
+    if ok: ok, why = _after_meaning_changed(rec, n, c, letter)
+    if not ok: return AWAITING_REVALIDATION, "NOT_CURRENT_EVIDENCE", "%s: %s" % (n, why)
+    tmp = _temp_input(rec)
+    if tmp: return AWAITING_REVALIDATION, "TEMP_INPUT", "%s judged %s, a temporary directory and not this tree" % (n, tmp[:100])
+    # A CHANGED TOOL DOES NOT DECIDE (the review's words): a matching or polarity algorithm that moved since the
+    # reading makes it a reading of a different question. A change that is provably not semantic is reused only
+    # through a compatibility entry that pins both versions of the file by content.
+    st, said = tool_state(rec)
+    hist = None
+    if st == "STALE":
+        w = rec.get("writer") or {}
+        now = None
+        if w.get("file"):
+            try: now = hashlib.sha256(open(os.path.join(HERE, w["file"]), "rb").read()).hexdigest()[:16]
+            except OSError: now = None
+        hist = _compatible("tool", regs, tool=w.get("file"), then=w.get("sha16"), now=now) if w.get("sha16") and now else None
+        if not hist: return AWAITING_REVALIDATION, "TOOL_CHANGED", "%s: %s" % (n, said)
+    elif st != "CURRENT":
+        return AWAITING_REVALIDATION, "TOOL_UNKNOWN", "%s: %s" % (n, said)
+    b, cause, bwhy, ahist = _bound(rule, letter, n, rec, cand, regs)
+    if not b: return AWAITING_REVALIDATION, cause, "%s: %s" % (n, bwhy)
+    cok, ccause, cwhy, chist = _config_state(rec, letter, m, rule["id"], regs, config_inputs)
+    if not cok: return AWAITING_REVALIDATION, ccause, "%s: %s" % (n, cwhy)
+    reused = [e for e in (hist, ahist) if e] + list(chist)
+    if reused:
+        return VALID_HISTORICAL, "RATIONALE", "%s reused under a recorded rationale (%s); %s" % (
+            n, "; ".join(str(e.get("summary") or e.get("rationale")) for e in reused), bwhy)
+    return CURRENT_CANDIDATE, "BOUND", "%s: %s" % (n, bwhy)
+
+
+# ------------------------------------------------------------------------------------------------------------------
+# WHAT A RE-TAKE ALONE WOULD READ (26 September 2026, third round on this stream). The page used to say that a row
+# awaiting revalidation for NETLIST_MISMATCH or PREDATES_ARTEFACT is re-validated by "the gate re-taken on the committed
+# netlist (no layout needed)". A checker re-dated the readings of boards A and C to now with every recorded netlist sha
+# set to the committed candidate's, and no schematic-phase rule became current: erc_gate, power_sequence and
+# energy_chain record no netlist by sha (UNBOUND), safe_lines, pin_map_lands and clock_check had no declared
+# configuration (CONFIG_UNDECLARED), and intent_rails and edge_length record only the board, so they wait on a layout
+# (LAYOUT_NOT_CURRENT). A PREDATES_ARTEFACT row records no artefact by definition, so its re-take reads UNBOUND.
+#
+# So the remedy is computed, per row, instead of written per cause: the class the row would have if every reading its
+# rule names were re-taken NOW, in this tree, by the tool here, under the current rule, on the COMMITTED candidate,
+# recording the same kinds of input its reading records. A recorded netlist or board of this board's own name takes the
+# candidate's sha, a recorded file of the declared phase's package takes that file's sha, and every other recorded input
+# is dated now; nothing the reading did not record is invented. Its limits, stated where it is read: a tool changed
+# since the reading may record more than the reading shows, and the projection says nothing about the RESULT, which is
+# the design's.
+def _retake_record(rec, letter, m, cand, now):
+    """The reading as a re-take of it would record it: see the block comment above."""
+    import copy
+    stem = (m["boards"].get(letter) or {}).get("project", "")
+    r = copy.deepcopy(rec)
+    r["ts"] = now
+    files = (cand.get("package") or {}).get("files") or {}
+    mine = sorted(cand.get("board_shas") or [])
+    for v in (r.get("inputs") or {}).values():
+        if not isinstance(v, dict) or not v.get("sha256_16"): continue
+        base = os.path.basename(str(v.get("path") or ""))
+        if stem and base == stem + ".net" and cand.get("netlist_sha16"):
+            v["sha256_16"] = cand["netlist_sha16"]
+            if v.get("content16"): v["content16"] = cand.get("netlist_content16")
+        elif stem and base == stem + ".kicad_pcb" and mine:
+            v["sha256_16"] = mine[0]
+        elif base in files:
+            v["sha256_16"] = files[base]
+        elif not base.endswith((".net", ".kicad_pcb")):
+            v.pop("sha256_16", None)          # a configuration input: the re-take reads it as it is, dated now
+    return r
+
+
+def _now_iso():
+    import datetime as _dt
+    return _dt.datetime.now(_dt.timezone.utc).isoformat()
+
+
+def retake_projection(rule, letter, cov, vs, m, row, cand, regs=None, config_inputs=None, now=None):
+    """{retake_class, retake_cause, retake_why, writers, retake_blockers}: the class this row would have after a
+    re-take alone (see the block comment above), the files that wrote the readings its rule names, and those of them
+    whose re-take would still not be current. `config_inputs` replaces CONFIG_INPUTS and `now` the instant of the
+    re-take (fixtures only)."""
+    if regs is None: regs = registers()
+    rid = rule["id"]; c = cov.get(rid) or {}; res = row.get("result")
+    present = [(n, vs.get(n)) for n in _names(c, letter) if vs.get(n) is not None]
+    wf = lambda n, r: _writer_file(r) or str(r.get("tool") or n)
+    writers = sorted({wf(n, r) for n, r in present})
+    blockers = set()
+
+    def out(k, cause, why):
+        return {"retake_class": k, "retake_cause": cause, "retake_why": " ".join(str(why).split()), "writers": writers,
+                "retake_blockers": sorted(blockers)}
+    if res in (NOT_APPLICABLE, WAIVED): return out(NO_EVIDENCE, str(res), "nothing to re-take")
+    if c.get("maturity") == "VERIFIED_MANUALLY":
+        return out(DESK_REVIEW, "DOCUMENT", "a manual check of a pinned document: re-reviewed, not re-taken")
+    if c.get("maturity") in ("OPEN", "DOCUMENTED_ONLY", "SOURCE_UNVERIFIED", "OWNER_DECISION_REQUIRED", "GENERATED_ONLY"):
+        return out(NO_EVIDENCE, c.get("maturity"), "the coverage map gives this rule no deciding verification, so "
+                   "there is nothing to re-take")
+    if not present: return out(NO_EVIDENCE, "NO_VERDICT", "no reading on this board, so there is nothing to re-take")
+    if regs.get("errors"):
+        return out(AWAITING_REVALIDATION, "REGISTER_UNREADABLE", "the evidence registers cannot be read")
+    now = now or _now_iso()
+    rank = {AWAITING_REVALIDATION: 0, CURRENT_CANDIDATE: 1}
+    worst = None
+    for n, rec in present:
+        r2 = _retake_record(rec, letter, m, cand, now)
+        b, cause, bwhy, _e = _bound(rule, letter, n, r2, cand, regs)
+        if not b: k = (AWAITING_REVALIDATION, cause, "%s re-taken: %s" % (n, bwhy))
+        else:
+            cok, ccause, cwhy, _c = _config_state(r2, letter, m, rid, regs, config_inputs)
+            k = (CURRENT_CANDIDATE, "BOUND", "%s re-taken: %s" % (n, bwhy)) if cok else \
+                (AWAITING_REVALIDATION, ccause, "%s re-taken: %s" % (n, cwhy))
+        if k[0] != CURRENT_CANDIDATE: blockers.add(wf(n, rec))
+        if worst is None or rank[k[0]] < rank[worst[0]]: worst = k
+    if rule.get("verification_phase") == "PROTOTYPE" and worst[0] == CURRENT_CANDIDATE:
+        return out(DESK_REVIEW, "PROTOTYPE_DESK_CHECK", "a re-taken PROTOTYPE-phase reading is still a desk check: %s" % worst[2])
+    return out(*worst)
+
+
+def evidence_counts(rows, required_only=True):
+    """Rows per evidence class, over the same rows `counts` takes (NOT_APPLICABLE rows leave, as they do there)."""
+    rs = [r for r in rows if r["result"] != NOT_APPLICABLE]
+    if required_only: rs = [r for r in rs if r["release_effect"] in ("BLOCKER", "MUST_JUSTIFY")]
+    out = {k: sum(1 for r in rs if r.get("evidence_class") == k) for k in EVIDENCE_CLASSES}
+    out["current_pass"] = sum(1 for r in rs if r["result"] == PASS and r.get("evidence_class") in COUNTS_AS_CURRENT)
+    out["rows"] = len(rs)
+    return out
+
+
 def board_status(letter, reg=None, facts=None, cov=None, m=None, fingerprint=None, phase=None):
     reg = reg or R.load(); facts = facts if facts is not None else R.facts(); cov = cov if cov is not None else coverage()
     m = m or manifest(); fingerprint = fingerprint or R.fingerprint(reg)
     vs = _verdicts(letter, m)
     ident = _board_identities(letter, m)
+    cand = candidate(letter, m, vs, ident, reg, cov, fingerprint)
     rows = []
     for rule, why in R.rules_for(letter, reg, facts):
         r = result_for(rule, letter, cov, vs, m, fingerprint, phase, ident)
+        r.update(evidence_class(rule, letter, cov, vs, m, fingerprint, ident, r, cand))
+        r.update(retake_projection(rule, letter, cov, vs, m, r, cand))
         rows.append(dict(rule=rule["id"], domain=rule["domain"], short_name=rule["short_name"],
                          release_effect=rule["release_effect"], verification_phase=rule["verification_phase"],
                          maturity=(cov.get(rule["id"]) or {}).get("maturity", "UNASSESSED"),
                          applies_because=why, **r))
     return dict(board=letter, rule_set_fingerprint=fingerprint, manifest_version=m.get("manifest_version"),
                 evidence_epoch=m.get("evidence", {}).get("epoch"), verdicts_seen=len(vs),
-                subject=subject(letter, m), rows=rows)
+                subject=subject(letter, m), candidate=cand, rows=rows)
 
 
 def counts(rows, required_only=True):
@@ -584,6 +1327,13 @@ def gate_state(rows, m):
     if any(r["result"] == FAIL for r in blockers): state = "NOT_READY"
     elif any(r["result"] == INCONCLUSIVE for r in pre): state = "INCONCLUSIVE"
     if m.get("promotion", {}).get("frozen") and state == "READY_FOR_PROTOTYPE": state = "INCONCLUSIVE"
+    # ACCEPTANCE IS BOUND TO THE CANDIDATE (26 September 2026, MESHSAT-1357). A pre-fabrication blocker whose PASS is
+    # not current-candidate evidence (a changed tool, an older netlist, a layout that does not carry the netlist)
+    # cannot make a board READY. A row with no evidence class at all is one computed before classes existed and is
+    # judged as it always was.
+    if state == "READY_FOR_PROTOTYPE" and any(
+            r["result"] == PASS and r.get("evidence_class") not in (None, DESK_REVIEW) + COUNTS_AS_CURRENT for r in pre):
+        state = "INCONCLUSIVE"
     if any(r["result"] == WAIVED for r in blockers): state += " WITH_WAIVERS"
     return state
 
@@ -668,12 +1418,27 @@ def _finish(argv, all_rows, per_board, m, fp, phase, out_dir):
     agg = counts(all_rows); state = gate_state(all_rows, m)
     summary = dict(manifest_version=m.get("manifest_version"), rule_set_fingerprint=fp,
                    promotion_frozen=bool(m.get("promotion", {}).get("frozen")), phase=phase or "ALL",
-                   gate_state=state, counts=agg, boards={k: counts(v["rows"]) for k, v in per_board.items()})
+                   gate_state=state, counts=agg, boards={k: counts(v["rows"]) for k, v in per_board.items()},
+                   evidence=evidence_counts(all_rows),
+                   evidence_boards={k: evidence_counts(v["rows"]) for k, v in per_board.items()},
+                   refused_as_invalidated=sorted(_REFUSED), register_errors=registers()["errors"])
     json.dump(summary, open(os.path.join(out_dir, "summary.json"), "w"), indent=1)
     print("\nreadiness: %s   (manifest %s, rule set %s%s)" % (state, m.get("manifest_version"), fp,
           ", promotion frozen" if m.get("promotion", {}).get("frozen") else ""))
-    print("verified %.1f%%  waived %.1f%%  failed %.1f%%  inconclusive %.1f%%  of %d applicable required rule-board pair(s)"
+    # THE PERCENTAGE IS A HISTORICAL AGGREGATE OF MIXED REVISIONS (26 September 2026, the review of that day): it sums
+    # readings of layouts that predate the corrected netlists and readings under tools that have changed since. It is
+    # printed under that name and never as readiness; the evidence line under it is the current-candidate count.
+    print("historical aggregate, mixed revisions: PASS %.1f%%  waived %.1f%%  failed %.1f%%  inconclusive %.1f%%  of %d "
+          "applicable required rule-board pair(s)"
           % (agg["pass_percent"], agg["waived_percent"], agg["fail_percent"], agg["inconclusive_percent"], agg["denominator"]))
+    ev = summary["evidence"]
+    print("evidence: %d PASS on the current candidate; %s" % (ev["current_pass"], "  ".join(
+        "%s %d" % (k, ev[k]) for k in EVIDENCE_CLASSES)))
+    if _REFUSED:
+        print("evidence: %d reading(s) refused as invalidated by content (v2/docs/evidence/INVALIDATED-*.md): %s"
+              % (len(_REFUSED), ", ".join(sorted(_REFUSED))[:300]))
+    if registers()["errors"]:
+        print("evidence: THE EVIDENCE REGISTERS CANNOT BE READ, so no reading counts as current: %s" % "; ".join(registers()["errors"]))
     if _DISPLACED:
         # A reading that declares it lacked its input stood in front of one that had it, because its rule-set
         # fingerprint is current and the other's is not. It is legal by the order in `_supersedes` and it is
