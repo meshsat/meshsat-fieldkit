@@ -4,6 +4,33 @@ Started 25 September 2026. This is the short, hand-kept execution record for reb
 
 It is a prototype design programme. **Nothing here has been built, and no board has been ordered.** Progress is reported as reviewed milestones and verification coverage, never as a single percentage of the whole. Rule-level readiness stays in the generated pages (`PCB-RULE-STATUS-*.md`, `PCB-OPEN-PAIRS.md`, `OWNER-DECISIONS-OPEN.md`).
 
+## Priority from 27 September 2026 01:20 CEST: the engineering handover
+
+The owner's execution prompt of 27 September (`v2/docs/reviews/2026-09-27-handover-execution-prompt.md`) makes a
+portable engineering handover the immediate delivery: completed pre-PCB layers that an engineer or a company can take
+over without this session. It corrects priorities; the scope, the rulings, the seven conditions and the stage gates
+below stand.
+
+- **The nine pre-PCB layers** (the owner's numbering): 1 product definition, 2 concept of operations, 3 requirements,
+  4 system architecture, 5 partitioning and interfaces, 6 components, 7 mechanical and enclosure, 8 schematics,
+  9 pre-layout design analysis; PCB layout is layer 10. Each layer's scope, deliverables by revision, acceptance
+  items, status (NOT_STARTED, IN_PROGRESS, BLOCKED or COMPLETE) and next closing action are kept in
+  `v2/docs/handover/LAYER-STATUS.md`, a view over the existing records, never a second registry. COMPLETE means
+  complete for the layer's own engineering purpose with its review; it never means a later physical test has passed.
+  An AI review is labelled as one and does not stand in for a qualified review a record requires.
+- **The handover snapshot** is built from one commit into `v2/release/handover/<version>/` (START-HERE, layer
+  table, continuation brief, one engineering question per blocked item, manifest with every file's revision and
+  sha256, and a ZIP). The editable documents in `v2/docs/` stay the authority; a snapshot is an immutable copy. The
+  first snapshot is partial and says so. One fresh checker, who did not build it, tests it for usability.
+- **Order of work:** the earliest unfinished layers close first; circuit round 8 (layer 8) continues in parallel;
+  no routing campaign resumes. Board B's Q-B-ESC-2 stays a bounded feasibility experiment for FEA-003 and runs only
+  on the netlist that follows round 8.
+- **Two attempts, then a change of method.** A check loop that has not closed an issue in two passes is reassessed
+  (targeted experiment, qualified review or a justified alternative) or recorded as a blocker with its engineering
+  question. The RF-002 transmitter walk, past its second pass long ago, gets one final method change (every pin not
+  cleared by a held document reads UNDECIDED); whatever it yields is merged with its limits named or recorded as a
+  blocker with a manual-review route.
+
 ## Baseline, 25 September 2026 22:33 CEST
 
 | Item | Value |
