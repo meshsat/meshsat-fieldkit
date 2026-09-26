@@ -23,8 +23,9 @@ generated: "2026-09-16"
 # was written while the registry computed ff8151db3576437b, which is a number in a file a person reads
 # describing something else, the class this project keeps finding. A rule holds the two together now
 # (test_rule_gate_mapping), and it only has to be touched when a rule's DEMANDS change, which is rare and
-# deliberate: writing down a source or a rationale does not move it.
-rule_set_fingerprint: "ff8151db3576437b"
+# deliberate: writing down a source or a rationale does not move it. Moved on 26 September 2026 (MESHSAT-1357) from
+# ff8151db3576437b, when INT-002 was split into its pre-layout assessment and INT-003's bench test.
+rule_set_fingerprint: "950539a66227908b"
 
 coverage:
 
@@ -679,30 +680,22 @@ coverage:
      owner: SESSION, execution: PARALLEL_AGENT, depends_on: [], p50_h: 10, p80_h: 34}}
 
  INT-002: {implementation: "gen_sch_b.py, eight 100 nF series capacitors per module link, no magnetics",
-   verification: {tool: "both vendors' documents, read 16 September 2026", document: "docs/OWNER-DECISIONS-2026-09-11.md"},
-   maturity: DOCUMENTED_ONLY, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
-   note: "DECISION 29 IS RULED (the session's, 21 September 2026): the three links stay capacitively coupled as
-     built and no magnetics are fitted. What decided it, beyond the 16 September reading below: the compute
-     module's own datasheet says of all eight Ethernet pins 'connect to transformer or MagJack' (Table 4), which
-     is the cable application those pins were designed for and not a prohibition of a PHY-to-PHY link inside one
-     board, where nothing leaves the enclosure and there is nothing for a transformer to isolate; the fallback's
-     own part is a 0 to +70 C device against an envelope adopted at -20 to +40, so fitting three more would
-     triple a part already outside its range; and waiting is not available, because Broadcom does not publish
-     the PHY's datasheet to anyone here. THE RULING DOES NOT PRODUCE THE MISSING DOCUMENT and this maturity says
-     so: nothing measured this link, the answer rests on one vendor's clause plus a ruling that accepts a named
-     risk, and the reading that would close it is a bench test (each module link up at 1000M). The 16 September
-     recommendation in the last line below, to fit the magnetics, is SUPERSEDED by that ruling and is left in
-     place so the change of mind is visible. BOTH ends read on 16 September 2026, and they do not close the
-     question. The switch vendor PERMITS this exact
-     topology and board B matches its clause word for word (Microchip DS00004151A section 6.6: transformer-less where the
-     PHY-to-PHY connection is within one PCB, a single DC blocking 0.1 uF in series on each of the eight signals, no
-     additional components between the switch and the capacitor). The module's datasheet describes ONE topology, a 1:1 RJ45
-     MagJack, and never discusses capacitive coupling; and the switch vendor's own clause names the gap in a sentence, the
-     other device may require termination or other circuitry. The module's PHY is a Broadcom BCM54210PE and Broadcom does
-     not publish its datasheet, so this cannot be closed from any document this project can obtain. Owner decision 29, with
-     three costed options; the recommendation is to fit the magnetics board B already carries on its wall port",
-   remediation: {action: "the bench test the ruling rests on: each of the three module links brought up at 1000M with auto-negotiation enabled, on the first board B that exists; a link that does not come up is the fallback's trigger and the fallback is three magnetics of an extended-temperature family",
-     owner: LAB, execution: HARDWARE, depends_on: [], p50_h: 2, p80_h: 8}}
+   verification: {tool: "the pre-layout assessment, a desk review by the session", document: "docs/reviews/INT-002-PRE-LAYOUT-ASSESSMENT.md"},
+   maturity: VERIFIED_MANUALLY, gap_category: NONE,
+   verified_sha: "cad907b73c7ed8ea3c3f7b3dfb05ddcffd68fa4dedeb7333ebf70be502372ed4",
+   _verified_sha_why: "the assessment is hand-written, so it is pinned by content: any later edit takes this verification away until the page is re-read and re-pinned.",
+   verified_nets: {b: {nets: [SWP1_A_P, SWP1_A_N, SWP1_B_P, SWP1_B_N, SWP1_C_P, SWP1_C_N, SWP1_D_P, SWP1_D_N, SWP2_A_P, SWP2_A_N, SWP2_B_P, SWP2_B_N, SWP2_C_P, SWP2_C_N, SWP2_D_P, SWP2_D_N, SWP3_A_P, SWP3_A_N, SWP3_B_P, SWP3_B_N, SWP3_C_P, SWP3_C_N, SWP3_D_P, SWP3_D_N, ETH1_P0_P, ETH1_P0_N, ETH1_P1_P, ETH1_P1_N, ETH1_P2_P, ETH1_P2_N, ETH1_P3_P, ETH1_P3_N, ETH2_P0_P, ETH2_P0_N, ETH2_P1_P, ETH2_P1_N, ETH2_P2_P, ETH2_P2_N, ETH2_P3_P, ETH2_P3_N, ETH3_P0_P, ETH3_P0_N, ETH3_P1_P, ETH3_P1_N, ETH3_P2_P, ETH3_P2_N, ETH3_P3_P, ETH3_P3_N],
+     digest: "262e8b039e833d02"}},
+   _verified_nets_why: "the assessment read these 48 nets on netlist 669d02d07aeaae4b (rules_status.net_digest: every node, and every part on them with its value and land). It stays current while they are unchanged on board B's current netlist, whatever else on the board changes, and it stops counting the moment one of them moves (26 September 2026, rules_status.verified_nets_current).",
+   note: "SPLIT on 26 September 2026 (the review of the 22:35 progress report, finding A; the session under the owner's standing rule of that day): this rule is the pre-layout assessment at the SCHEMATIC phase and INT-003 the bench link test at the PROTOTYPE phase, so the test on the first built board B no longer holds that board's layout entry and is not weakened either. The assessment (v2/docs/reviews/INT-002-PRE-LAYOUT-ASSESSMENT.md) reads the switch vendor's permission (Microchip DS00004151A section 6.6, matched item by item by the 24 conductors of board B's netlist), the module vendor's statements (the CM5 datasheet describes a MagJack only and neither permits nor forbids the coupling), the module maker's reference design (its PHY-side centre taps on 100 nF to ground and no supply, consistent with a voltage-mode driver, INFERRED), and states the unresolved gap (the BCM54210PE's termination and bias, unpublished), allocated to INT-003 with decision 29's fallback and its trigger. It is a DESK_REVIEW and never a physical test. DECISION 29 IS RULED (the session's, 21 September 2026): the three links stay capacitively coupled as built and no magnetics are fitted; what decided it and the 16 September reading are in decision 29 and in this entry's history.",
+   history: "DECISION 29 IS RULED (the session's, 21 September 2026): the three links stay capacitively coupled as built and no magnetics are fitted. What decided it, beyond the 16 September reading below: the compute module's own datasheet says of all eight Ethernet pins 'connect to transformer or MagJack' (Table 4), which is the cable application those pins were designed for and not a prohibition of a PHY-to-PHY link inside one board, where nothing leaves the enclosure and there is nothing for a transformer to isolate; the fallback's own part is a 0 to +70 C device against an envelope adopted at -20 to +40, so fitting three more would triple a part already outside its range; and waiting is not available, because Broadcom does not publish the PHY's datasheet to anyone here. THE RULING DOES NOT PRODUCE THE MISSING DOCUMENT and this maturity says so: nothing measured this link, the answer rests on one vendor's clause plus a ruling that accepts a named risk, and the reading that would close it is a bench test (each module link up at 1000M). The 16 September recommendation in the last line below, to fit the magnetics, is SUPERSEDED by that ruling and is left in place so the change of mind is visible. BOTH ends read on 16 September 2026, and they do not close the question. The switch vendor PERMITS this exact topology and board B matches its clause word for word (Microchip DS00004151A section 6.6: transformer-less where the PHY-to-PHY connection is within one PCB, a single DC blocking 0.1 uF in series on each of the eight signals, no additional components between the switch and the capacitor). The module's datasheet describes ONE topology, a 1:1 RJ45 MagJack, and never discusses capacitive coupling; and the switch vendor's own clause names the gap in a sentence, the other device may require termination or other circuitry. The module's PHY is a Broadcom BCM54210PE and Broadcom does not publish its datasheet, so this cannot be closed from any document this project can obtain. Owner decision 29, with three costed options; the recommendation is to fit the magnetics board B already carries on its wall port (the note of this entry until the split of 26 September 2026, kept so the change of mind reads true; its remediation, now INT-003's, read: the bench test the ruling rests on: each of the three module links brought up at 1000M with auto-negotiation enabled, on the first board B that exists; a link that does not come up is the fallback's trigger and the fallback is three magnetics of an extended-temperature family)"}
+
+ INT-003: {implementation: NONE_YET,
+   verification: {tool: "the bench link test on the first built board B"},
+   maturity: OPEN, gap_category: SOURCE_OR_APPLICABILITY_UNRESOLVED,
+   note: "the PROTOTYPE half of INT-002 (split 26 September 2026). Nothing is built, so nothing verifies it and it reads INCONCLUSIVE until the bench. The module PHY's datasheet is not published (Broadcom BCM54210PE), so the termination and bias question the switch vendor's clause 6.6 raises is closed by this test (the acceptance and method below); a written vendor answer would only inform it. It is never closed by the assessment of INT-002.",
+   remediation: {action: "the bench test the ruling rests on: each of the three module links brought up at 1000M full duplex with auto-negotiation enabled, on the first board B that exists, carrying line-rate traffic each way for at least 60 s with zero frame, CRC and symbol errors, at room temperature and at TEST-PLAN's cold and hot points; a link that does not come up or counts an error is the fallback's trigger (three magnetics of an extended-temperature family)",
+     owner: LAB, execution: HARDWARE, depends_on: [], p50_h: 3, p80_h: 10}}
 
  TRN-001: {implementation: "gen_sch_*.py protection parts (one-way clamps through kisch.tvs(), 26 September 2026) and each board's external_ports declaration",
    verification: {tool: port_protect.py, verdict: port_protect_<letter>, fixtures: "tests/test_port_protect.py, tests/test_kisch_tvs.py, tests/test_artefact_recording.py"},

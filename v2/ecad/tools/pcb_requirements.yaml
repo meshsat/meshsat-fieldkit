@@ -1676,6 +1676,42 @@ records:
       high-speed reviewer once the owner approves R-HSD (L-05), bring-up (FB-FAB-8).
     blocks: [REQ-004, REQ-006, CON-003, CON-022]
     holds_layout_entry: [b]
+    stages:
+      - stage: LAYOUT_ENTRY
+        holds: [b]
+        needs: [DESK]
+        status: OPEN
+        requires: >-
+          FB-FAB-1 to FB-FAB-5 closed on the committed netlist: fabmap.py and check_pcb_b.py at 0 MISMATCH and 0
+          FAIL; the TEST2 strap; the back-power gate network with a power-state check over the netlist, or Raspberry
+          Pi's written tolerance for the currents of section 5.2; the break-before-make sequence with its timing
+          budget against [U2M] 5.8 and [MUX] 6.7; the 23 safe-low pull-downs with their assertion and mutations.
+          FB-FAB-6's escape strategy decided from Q-B-ESC-1's reading on the corrected inputs and the stack decision
+          43 selects, with the floor-plan study of A4, A2 and A7 (EXPERIMENTAL evidence, which permits the layout to
+          start and never authorises a candidate). FB-FAB-7's channel budget per link from a primary document, with
+          the lengths of the floor-plan screen and a field-solver impedance on the chosen stack.
+      - stage: FABRICATION_RELEASE
+        holds: [b]
+        needs: [DESK, LAYOUT, QUALIFIED_REVIEW]
+        status: OPEN
+        requires: >-
+          A placement that seats every part (region_room read) and a complete route of the candidate; routed-length
+          extraction against each link's channel budget and the fabricator's impedance record for the chosen stack;
+          the qualified high-speed review R-HSD of the candidate (outside the agents that wrote it, on the owner's
+          approval under L-05) with its findings answered.
+      - stage: PROTOTYPE_VERIFICATION
+        holds: [kit, fw_ioctrl]
+        needs: [BUILT_KIT]
+        status: OPEN
+        requires: >-
+          IOHA A1 to A14 on the bench (A6, A10, A12 and A13 among them); FB-FAB-8, the reference clock measured at
+          each socket with the switch's buffer in the path and all six downstream links training at Gen 2, with
+          Raspberry Pi's statement of the clock output.
+    stages_note: >-
+      Staged on 26 September 2026 (review of the 22:35 progress report, finding A) by the session under the owner's
+      standing rule of that day: which part of the closing evidence gates layout entry, which fabrication release and
+      which prototype verification; a stage never needs what only a later stage produces
+      (rules_lib.STAGE_CANNOT_NEED).
     allocated_to: [b, fw_ioctrl]
     verification_method: [SCRIPT, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
     verification_phase: SCHEMATIC
@@ -1741,6 +1777,38 @@ records:
       placements; the session for the Diodes question.
     blocks: []
     holds_layout_entry: [a, b, c, d, e, p]
+    stages:
+      - stage: LAYOUT_ENTRY
+        holds: [a, b, c, d, e, p]
+        needs: [DESK]
+        status: OPEN
+        requires: >-
+          The per-class requirement of DECOUPLING.md written from each maker's own words (capacitance, dielectric,
+          count per pin or rail, loop and return geometry), with its source per class; T1 to T10 merged with
+          DEC-001's registry text; G1 to G14 in each board's generator and the five circuit gaps closed (the
+          STM32H743's VDDA capacitor among them, the TPA6132A2 at its maker's 2.2 uF), each read back on the board's
+          committed netlist; the PI7C9X2G404SL question asked of Diodes, with the class's requirement taken until it
+          answers.
+      - stage: FABRICATION_RELEASE
+        holds: [a, b, c, d, e, p]
+        needs: [LAYOUT]
+        status: OPEN
+        requires: >-
+          Each board's placement read under the class rules (the seats inside the own-pin window, far-side seats only
+          on B21, C24 and D12 and outside every fan) with its escape cost measured, and DEC-001 CURRENT_CANDIDATE on
+          each board's placed and routed candidate.
+      - stage: PROTOTYPE_VERIFICATION
+        holds: []
+        needs: [BUILT_KIT]
+        status: OPEN
+        requires: >-
+          Nothing of its own: the rail checks of PCB-BRING-UP.md on the built boards are the boards' own; this
+          blocker closes at fabrication release.
+    stages_note: >-
+      Staged on 26 September 2026 (review of the 22:35 progress report, finding A) by the session under the owner's
+      standing rule of that day: which part of the closing evidence gates layout entry, which fabrication release and
+      which prototype verification; a stage never needs what only a later stage produces
+      (rules_lib.STAGE_CANNOT_NEED).
     allocated_to: [a, b, c, d, e, p]
     verification_method: [SCRIPT, MANUAL_REVIEW]
     verification_phase: SCHEMATIC
@@ -1890,7 +1958,7 @@ records:
     prototype_1: core
     prototype_1_basis: NEED_DEFAULT
     satisfied_by:
-      rules: [INT-002]
+      rules: [INT-002, INT-003]
       decisions: [29]
     rule_coverage: PARTIAL
     status: DEFINED
@@ -2341,7 +2409,43 @@ records:
       levels); board A's owner (the pack-node copper); board D's owner (the flange sensor, PWR-F15); the owner only for
       money (an early case, R-PWR under L-04).
     blocks: [REQ-014, REQ-018]
-    holds_layout_entry: [a]
+    holds_layout_entry: [a, d]
+    stages:
+      - stage: LAYOUT_ENTRY
+        holds: [a, d]
+        needs: [DESK]
+        status: OPEN
+        requires: >-
+          PWR-F12's chain re-declared (10 A continuous held by C2 and C3, 18 A for 60 s for every PA key-down, 20 A
+          for 2 s as the trip) in pcb_energy_chain.yaml and pcb_pack_protection.yaml with F2 carried as a stage, and
+          board A's pack-path copper requirement at 18 A derived from it as a layout constraint (width and copper
+          weight; the 2 oz price is the owner's only if it is the answer); PWR-F15's flange sensor drawn on board D's
+          netlist with its lead and bus address; C1 to C4 and K1 to K5 written into the W5 firmware contract as
+          PROVISIONAL.
+      - stage: FABRICATION_RELEASE
+        holds: [a, d, p]
+        needs: [BENCH_MOCKUP, VENDOR_ANSWER, DEVELOPMENT_HARDWARE, LAYOUT]
+        status: OPEN
+        requires: >-
+          The empty-case heat-balance test of POWER-THERMAL.md section 10 (conductance lid open and closed, fans on
+          and off, and the PA patch's rise and cooling) run before the placement of the hot parts is frozen, the
+          review's bounded enclosure heat experiment; board A's routed pack-path copper judged at the re-declared 18
+          A; F2 shown inside its +60 C rating at 18 A for 60 s from +55 C, by Eaton's written answer or by a bench
+          test of the part alone on a coupon, before board P is released.
+      - stage: PROTOTYPE_VERIFICATION
+        holds: [kit]
+        needs: [BUILT_KIT]
+        status: OPEN
+        requires: >-
+          The bring-up readings of POWER-THERMAL.md section 10 (monitor, WiFi cards, LimeSDR, NVMe, PA drain, the PA
+          flange against a thermocouple through 60 s key-downs from a +50 C plate), the pack's DC impedance at +20, 0
+          and -10 C, TEST-PLAN.md E3, the extended protection test (18 A for 60 s from a +55 C block, F2's body at
+          most +60 C), 'aged' defined for REQ-014, and C1 to C4 and K1 to K5 re-derived from the readings.
+    stages_note: >-
+      Staged on 26 September 2026 (review of the 22:35 progress report, finding A) by the session under the owner's
+      standing rule of that day: which part of the closing evidence gates layout entry, which fabrication release and
+      which prototype verification; a stage never needs what only a later stage produces
+      (rules_lib.STAGE_CANNOT_NEED).
     allocated_to: [a, p, d, kit]
     verification_method: [CALCULATION, PROTOTYPE_MEASUREMENT]
     verification_phase: SCHEMATIC
@@ -3868,6 +3972,43 @@ records:
       RF-002's instrument (L6), and the TEST-PLAN owner for the bench rows and the silence latency.
     blocks: [REQ-030, REQ-032, CON-021]
     holds_layout_entry: [a, b, c, d]
+    stages:
+      - stage: LAYOUT_ENTRY
+        holds: [a, b, c, d]
+        needs: [DESK, DEVELOPMENT_HARDWARE]
+        status: OPEN
+        requires: >-
+          EMCON.md section 4 closed at desk on the committed netlists, transmitter by transmitter, each row stating
+          its required maximum latency and the fault states it holds in (every processor dead, in reset or unflashed,
+          the line's own supply lost, back-power from parts that stay powered): SD-EMC-1's two stages for the
+          RM520N-GL drawn on board B with the supervisor that sets Tpr, and either fallback (iii) provided for in
+          that circuit or bench test E-05 (b) to (d) run first on a development adapter carrying the fitted RM520N-GL
+          firmware, so the fallback decision does not wait for a built board; L1 to L4 and L7 remedied on boards A,
+          B, C and D; SD-EMC-2's back-feed bounded; the hardware EMCON lamp of SD-EMC-6 (CON-021) on board C; each
+          read back on its board's committed netlist. A path that needs working firmware in its failure case closes
+          no row (the review of the 22:35 progress report, finding C).
+      - stage: FABRICATION_RELEASE
+        holds: [a, b, c, d, case]
+        needs: [DESK, LAYOUT]
+        status: OPEN
+        requires: >-
+          RF-002 PASS on each board's current netlist with its instrument gaps (L6, the J_QMX declaration) closed;
+          each layout implements its remedied netlist (SCH-002 PASS on current-candidate evidence); the face plate
+          drawing carries the EMCON lamp's light-guide hole.
+      - stage: PROTOTYPE_VERIFICATION
+        holds: [kit]
+        needs: [BUILT_KIT]
+        status: OPEN
+        requires: >-
+          Bench tests E-01 to E-12 of EMCON.md section 6 on the built kit with an external receiver or power meter,
+          E-05 and E-12 first because they decide SD-EMC-1's fallback; the silence latency against the limit
+          TEST-PLAN.md sets; the flash-integrity cycles of E-12 (e). Local and end-to-end results are reported
+          separately (finding C).
+    stages_note: >-
+      Staged on 26 September 2026 (review of the 22:35 progress report, finding A) by the session under the owner's
+      standing rule of that day: which part of the closing evidence gates layout entry, which fabrication release and
+      which prototype verification; a stage never needs what only a later stage produces
+      (rules_lib.STAGE_CANNOT_NEED).
     allocated_to: [a, b, c, d, kit]
     verification_method: [SCRIPT, PROTOTYPE_MEASUREMENT]
     verification_phase: SCHEMATIC
@@ -4300,6 +4441,40 @@ records:
       (L-06); residuals R2 and R7 go to the D-09 security reviewer (R-SEC).
     blocks: [REQ-035, ASM-005, REQ-038]
     holds_layout_entry: [b]
+    stages:
+      - stage: LAYOUT_ENTRY
+        holds: [b]
+        needs: [DESK, DEVELOPMENT_HARDWARE]
+        status: OPEN
+        requires: >-
+          FB-ZER-1's part rows decided before board B's U8 site is laid out: the Z-EXP-A and Z-EXP-B pass records
+          (script, log, part lot, configuration read-back, and the OLD, NEW and ERROR counts) from ATECC608B-SSHDA-T
+          parts on the development rig of ZEROIZE.md section 5, filed under v2/docs/feasibility/evidence/; or switch
+          condition S1 or S2 taken with the SLB 9673 (or the SE050E2HQ1 under its own bench run) drawn on the U8 site
+          of the committed netlist. A development-device test gates this legitimately: it decides which part and land
+          U8 carries, and nothing else on board B depends on it (ZEROIZE.md section 7).
+      - stage: FABRICATION_RELEASE
+        holds: [b]
+        needs: [DESK, LAYOUT]
+        status: OPEN
+        requires: >-
+          Board B's layout carries the U8 part and land the layout-entry stage selected, on SCH-002 PASS on
+          current-candidate evidence; Z-EXP-B step B0's measured maxima entered in zer_budget.py and the pass lines
+          of ZEROIZE.md section 3.4 re-checked with them; residuals R2 and R7 carried in the D-09 security review
+          packet.
+      - stage: PROTOTYPE_VERIFICATION
+        holds: [kit, fw_panel]
+        needs: [DEVELOPMENT_HARDWARE, BUILT_KIT]
+        status: OPEN
+        requires: >-
+          The Z-EXP-C pass record with the panel firmware (resume, slot gating, the 1.5 s and 3.0 s pass lines, the
+          held-bus cases C-H1 to C-H3), then REQ-035's acceptance and the ZEROIZE rows of TEST-PLAN.md on the built
+          kit; ZEROIZE.md section 7 closed row by row.
+    stages_note: >-
+      Staged on 26 September 2026 (review of the 22:35 progress report, finding A) by the session under the owner's
+      standing rule of that day: which part of the closing evidence gates layout entry, which fabrication release and
+      which prototype verification; a stage never needs what only a later stage produces
+      (rules_lib.STAGE_CANNOT_NEED).
     allocated_to: [b, fw_panel]
     verification_method: [VENDOR_CONFIRMATION, PROTOTYPE_MEASUREMENT]
     verification_phase: SCHEMATIC
@@ -4636,6 +4811,41 @@ records:
       qualification D-09 names.
     blocks: [REQ-044]
     holds_layout_entry: [p]
+    stages:
+      - stage: LAYOUT_ENTRY
+        holds: [p]
+        needs: [DESK]
+        status: OPEN
+        requires: >-
+          The battery review packet complete and current on the candidate (its evidence/check_manifest.py printing
+          RELEASE CHECK PASS at the commit whose netlist is laid out); the secondary protection's coordination with
+          the primary and the cell limit stated at desk (thresholds with their tolerances, sensor placement and lag,
+          operating mode, behaviour with the primary failed; the review of the 22:35 progress report, finding B) with
+          the thermistor and sense placement constraints the layout must keep; the charger's state sequence with a
+          crashed controller documented (CHARGER-STATE-SEQUENCE.md).
+      - stage: FABRICATION_RELEASE
+        holds: [p]
+        needs: [QUALIFIED_REVIEW, DESK, LAYOUT]
+        status: OPEN
+        requires: >-
+          The qualified battery-and-protection review owed under D-09 (route R-BAT, an electronics engineer outside
+          the agents that wrote the design, engaged by the owner from a quote under L-03) examines the packet of the
+          candidate, covering fuse actuation and interruption against the prospective fault, FET and gate behaviour,
+          temperature sensing, the commissioning jumper and the charger's state sequence; its findings on BAT-F01 to
+          BAT-F14 and Q-TI-1 to Q-TI-7 are answered before the placement is frozen and board P is released, and the
+          layout implements the reviewed netlist.
+      - stage: PROTOTYPE_VERIFICATION
+        holds: [p, kit]
+        needs: [BUILT_KIT]
+        status: OPEN
+        requires: >-
+          The gauge's golden image (PRIMARY-CONFIGURATION.md) written and read back, the commissioning readings O-9
+          on the bench, and the pack protection tests of TEST-PLAN.md on the built pack.
+    stages_note: >-
+      Staged on 26 September 2026 (review of the 22:35 progress report, finding A) by the session under the owner's
+      standing rule of that day: which part of the closing evidence gates layout entry, which fabrication release and
+      which prototype verification; a stage never needs what only a later stage produces
+      (rules_lib.STAGE_CANNOT_NEED).
     allocated_to: [p, a]
     verification_method: [MANUAL_REVIEW, VENDOR_CONFIRMATION, PROTOTYPE_MEASUREMENT]
     verification_phase: SCHEMATIC

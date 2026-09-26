@@ -66,6 +66,19 @@ HOLDS = os.path.join(HERE, "pcb_board_holds.yaml")
 # The four fields the owner named on 16 September 2026. A hold that does not carry all four is refused: a
 # partial status line is how "held" turns into "nearly ready" over a few reports.
 HOLD_FIELDS = ("ROUTING_STATUS", "ELECTRICAL_PROTECTION_STATUS", "FAB_READINESS", "PUBLICATION_STATUS")
+# THE STAGE A HOLD OR A FEASIBILITY STAGE GATES (26 September 2026, MESHSAT-1357; the review of the 22:35 progress
+# report, finding A). A hold that names none gates LAYOUT_ENTRY. rules_status.layout_entry counts only what gates
+# layout entry, plus every `layout_entry_requires` of a hold staged later; the fabrication gates refuse a held board
+# whatever its stage.
+STAGES = ("LAYOUT_ENTRY", "FABRICATION_RELEASE", "PROTOTYPE_VERIFICATION")
+HOLD_REQUIREMENT_KINDS = ("rule_pass", "fitted_parts", "review")
+# What a stage's closing evidence needs to exist. A stage may not need what only a LATER stage produces: a test that
+# needs the final PCB cannot gate designing that PCB, and a development-board test may gate an architecture decision.
+STAGE_NEEDS = ("DESK", "DEVELOPMENT_HARDWARE", "BENCH_MOCKUP", "VENDOR_ANSWER", "QUALIFIED_REVIEW", "LAYOUT",
+               "FINAL_PCB", "BUILT_KIT")
+STAGE_CANNOT_NEED = {"LAYOUT_ENTRY": ("LAYOUT", "FINAL_PCB", "BUILT_KIT"),
+                     "FABRICATION_RELEASE": ("FINAL_PCB", "BUILT_KIT"),
+                     "PROTOTYPE_VERIFICATION": ()}
 
 DOMAINS = (
     "PRODUCT_ENVELOPE", "SCHEMATIC_INTEGRITY", "COMPONENT_SELECTION", "LIFECYCLE_SUPPLY",
@@ -160,6 +173,29 @@ def board_holds(path=None):
                              "binding" % (letter.upper(), ", ".join(missing)))
         if not h.get("decision"):
             raise ValueError("the hold on board %s names no decision, so nothing says what would lift it" % letter.upper())
+        stg = h.get("stage")
+        if stg is not None and str(stg) not in STAGES:
+            raise ValueError("the hold on board %s names stage %r, which is not one of %s" % (letter.upper(), stg, ", ".join(STAGES)))
+        if stg is not None and str(stg) != "LAYOUT_ENTRY":
+            # A HOLD MOVED TO A LATER STAGE SAYS WHAT ENTERING LAYOUT NEEDS FROM IT, or the move is a waiver.
+            qs = h.get("layout_entry_requires")
+            if not isinstance(qs, list) or not qs:
+                raise ValueError("the hold on board %s gates %s and names no layout_entry_requires, so moving it off "
+                                 "layout entry would waive it there" % (letter.upper(), stg))
+            for q in qs:
+                k = (q or {}).get("kind")
+                if k not in HOLD_REQUIREMENT_KINDS:
+                    raise ValueError("the hold on board %s has a layout-entry requirement of kind %r" % (letter.upper(), k))
+                if not str((q or {}).get("what") or "").strip():
+                    raise ValueError("a layout-entry requirement of the hold on board %s says nothing" % letter.upper())
+                if k == "rule_pass" and not q.get("rule"):
+                    raise ValueError("a rule_pass requirement of the hold on board %s names no rule" % letter.upper())
+                if k == "fitted_parts" and not all((p or {}).get("ref") and (p or {}).get("part") and (p or {}).get("at")
+                                                   for p in (q.get("parts") or [None])):
+                    raise ValueError("a fitted_parts requirement of the hold on board %s needs ref, part and at for every "
+                                     "part" % letter.upper())
+                if k == "review" and not q.get("document"):
+                    raise ValueError("a review requirement of the hold on board %s names no document" % letter.upper())
         out[str(letter).lower()] = h
     return out
 
@@ -956,10 +992,45 @@ def validate_requirements(req=None, path=None, root=None, rules=None, decisions=
             if not r.get("blocker_ids"): errs.append("%s: a feasibility blocker names none of its page's blocker ids" % rid)
             for k in ("closing_evidence", "owner"):
                 if len(str(r.get(k) or "").strip()) < 20: errs.append("%s: a feasibility blocker with no %s" % (rid, k))
-            if not (r.get("blocks") or r.get("holds_layout_entry")):
-                errs.append("%s: a feasibility blocker that holds nothing (blocks, holds_layout_entry)" % rid)
+            if not (r.get("blocks") or r.get("holds_layout_entry")
+                    or any((x or {}).get("holds") for x in (r.get("stages") if isinstance(r.get("stages"), list) else []))):
+                errs.append("%s: a feasibility blocker that holds nothing (blocks, holds_layout_entry, stages)" % rid)
             for L in r.get("holds_layout_entry") or []:
                 if L not in BOARD_LETTERS: errs.append("%s: holds_layout_entry %r is not a board" % (rid, L))
+            # STAGES (26 September 2026; the review of the 22:35 report, finding A): which part of the closing evidence
+            # gates layout entry, which fabrication release and which prototype verification. Optional until every
+            # blocker carries them; when present, all three, each with what closes it, what it holds and what its
+            # evidence needs, and a stage never needs what only a later stage produces.
+            sts = r.get("stages")
+            if sts is not None:
+                if not isinstance(sts, list):
+                    errs.append("%s: stages is not a list" % rid); sts = []
+                names = [str((x or {}).get("stage")) for x in sts]
+                if sorted(names) != sorted(STAGES):
+                    errs.append("%s: stages names %s; it names each of %s once" % (rid, ", ".join(names) or "none", ", ".join(STAGES)))
+                for x in sts:
+                    x = x or {}; nm = str(x.get("stage"))
+                    if len(str(x.get("requires") or "").strip()) < 20:
+                        errs.append("%s: stage %s says nothing of what closes it" % (rid, nm))
+                    for e in x.get("holds") or []:
+                        if e not in ELEMENTS: errs.append("%s: stage %s holds %r, which is not an element" % (rid, nm, e))
+                    nd = x.get("needs") or []
+                    if not nd: errs.append("%s: stage %s names no needs (%s)" % (rid, nm, ", ".join(STAGE_NEEDS)))
+                    for n_ in nd:
+                        if n_ not in STAGE_NEEDS: errs.append("%s: stage %s needs %r, which is not one of %s" % (rid, nm, n_, ", ".join(STAGE_NEEDS)))
+                        if n_ in STAGE_CANNOT_NEED.get(nm, ()):
+                            errs.append("%s: stage %s needs %s, which only a later stage produces: a test that needs the "
+                                        "final PCB cannot gate designing it" % (rid, nm, n_))
+                    stt = str(x.get("status") or "OPEN")
+                    if stt not in ("OPEN", "CLOSED"): errs.append("%s: stage %s status %r is not OPEN or CLOSED" % (rid, nm, stt))
+                    if stt == "CLOSED" and len(str(x.get("closed_by") or "").strip()) < 20:
+                        errs.append("%s: stage %s is CLOSED and names no closing evidence (closed_by)" % (rid, nm))
+                    if nm == "LAYOUT_ENTRY":
+                        want = sorted(str(b) for b in (x.get("holds") or []) if b in BOARD_LETTERS) if stt == "OPEN" else []
+                        have = sorted(str(b) for b in (r.get("holds_layout_entry") or []))
+                        if want != have:
+                            errs.append("%s: holds_layout_entry %s is not the boards its open LAYOUT_ENTRY stage holds (%s)"
+                                        % (rid, have, want))
             if st == "FEASIBILITY_OPEN" and res not in ("FAIL", "INCONCLUSIVE"):
                 errs.append("%s: an open feasibility blocker reads FAIL or INCONCLUSIVE on its page, not %s" % (rid, res))
             if st == "FEASIBILITY_OPEN" and r.get("prototype_1") == "core" and eff != "BLOCKER":

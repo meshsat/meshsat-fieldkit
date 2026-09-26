@@ -25,6 +25,16 @@ September 2026). Every row also carries an EVIDENCE CLASS (CURRENT_CANDIDATE, VA
 DESK_REVIEW, PHYSICAL_TEST or NO_EVIDENCE; see `evidence_class`), which binds a reading to the board's current netlist,
 board file, layout and tool, and `rules_render.py` renders v2/docs/CURRENT-EVIDENCE.md from it.
 
+The TOOL a reading is judged against is its CODE BUNDLE since 26 September 2026 (the review of the 22:35 progress
+report, finding D2): the entry script and every local module it imports, each by content hash, recorded by verdict.py;
+an older reading is judged by its writer's hash and its imports' commit dates (`_tool_detail`). Each row also carries the
+class the entry-script instrument of 20 September would give (`writer_only_class`), so the page can say which rows
+changed class because of the bundle.
+
+LAYOUT ENTRY is staged since the same day (finding A): `layout_entry` counts only the holds and feasibility stages that
+gate layout entry, plus every `layout_entry_requires` of a hold staged at fabrication release or prototype
+verification, and lists the rest separately. The result is written into each board's audit as `layout_entry`.
+
 Usage:
   rules_status.py [--board <letter>] [--phase <SCHEMATIC|PLACED_BOARD|ROUTED_BOARD|RELEASE_PACKAGE>]
                   [--out-dir out/rule-audit] [--json]
@@ -381,6 +391,11 @@ def _document_current(rel, sha=None):
     if key in _DOC_CACHE: return _DOC_CACHE[key]
     name = os.path.basename(rel)
     path = os.path.join(ECAD, "..", "docs", name)
+    # A RECORD IN A SUBDIRECTORY OF docs/ IS READ WHERE IT IS (26 September 2026): the path was built from the file's
+    # name alone, so `docs/reviews/X.md` was looked for as `docs/X.md` and could never be current.
+    if "/" in str(rel).strip("/") and not str(rel).startswith("/"):
+        sub = os.path.normpath(os.path.join(ECAD, "..", str(rel)))
+        if os.path.exists(sub): path = sub
     try:
         import rules_render as RR                       # imported here: rules_render imports this module
         fn = RR.SELF_CONTAINED.get(name)
@@ -439,7 +454,16 @@ def _unrouted(vs, m=None, fingerprint=None, identities=None):
     # longer holds, would otherwise suppress every routed-board rule on a board that IS routed: the guard is
     # only allowed to speak when the reading it speaks from is one this computation would accept anywhere else.
     if m is not None:
-        ok, _why = _fresh(rec, m, fingerprint, identities)
+        # ASKED RULE BY RULE, like every other reading since 17 September (26 September 2026). This asked the SET
+        # fingerprint only, so adding a rule anywhere in the registry (INT-003 that day) silenced the guard until the
+        # route gate was re-taken, and board B's ten routed-board rules turned from "not routed" into measured FAILs of
+        # the half-routed board: the historical aggregate moved with no board changed. The gate names the rules it
+        # decides (RTE-002) with their digests; it is current while each of those is.
+        rids = [x for x in (rec.get("rules") or []) if _rule_digest(x)]
+        if rids and ((rec.get("policy") or {}).get("rule_fingerprints") or {}):
+            ok = all(_fresh(rec, m, fingerprint, identities, {"id": x})[0] for x in rids)
+        else:
+            ok, _why = _fresh(rec, m, fingerprint, identities)
         if not ok: return 0, ""
     n = (rec.get("counts") or {}).get("unrouted")
     if not n: return 0, ""
@@ -466,6 +490,12 @@ def result_for(rule, letter, cov, vs, m, fingerprint, phase=None, identities=Non
         if not doc:
             return dict(result=INCONCLUSIVE, why="a manual verification with no record is not evidence", evidence=None)
         ok, why = _document_current(doc, c.get("verified_sha"))
+        if ok:
+            # AND BOUND TO WHAT IT READ ON THE BOARD (26 September 2026): a desk review of a circuit names the nets it
+            # read, and it stops counting the moment those nets change on the board's current netlist.
+            nok, nwhy = verified_nets_current(c, letter, m)
+            if not nok: return dict(result=INCONCLUSIVE, why=nwhy, evidence=doc)
+            if nwhy: why = "%s, %s" % (why, nwhy)
         return (dict(result=PASS, why=why, evidence=doc) if ok
                 else dict(result=INCONCLUSIVE, why=why, evidence=doc))
     if c.get("maturity") == "GENERATED_ONLY":
@@ -909,7 +939,7 @@ def _package(letter, phase):
     return {"folder": os.path.relpath(hits[0], V2), "files": files}
 
 
-def candidate(letter, m, vs=None, ident=None, reg=None, cov=None, fingerprint=None, facts=None):
+def candidate(letter, m, vs=None, ident=None, reg=None, cov=None, fingerprint=None, facts=None, provenance="bundle"):
     """THE CURRENT CANDIDATE of one board, by content: the phase it declares, the netlist its phase directory holds
     (sha and the instant that version was committed), the board files of that phase (sha), and whether the LAYOUT is
     the candidate's, which is what LAYOUT_RULE's current PASS says. A board the manifest marks `no_chain` (E5) has
@@ -954,7 +984,7 @@ def candidate(letter, m, vs=None, ident=None, reg=None, cov=None, fingerprint=No
         c["layout_why"] = "%s (netlist against board) reads %s on it" % (LAYOUT_RULE, row["result"])
         c["layout_detail"] = " ".join(str(row["why"]).split())[:200]
         return c
-    k = evidence_class(rule, letter, cov, vs, m, fingerprint, ident, row, c)
+    k = evidence_class(rule, letter, cov, vs, m, fingerprint, ident, row, c, provenance=provenance)
     c["layout_current"] = k["evidence_class"] in COUNTS_AS_CURRENT
     c["layout_why"] = "%s reads PASS on evidence %s" % (LAYOUT_RULE, k["evidence_class"])
     c["layout_detail"] = k["evidence_why"][:200]
@@ -1180,28 +1210,67 @@ def _bound(rule, letter, name, rec, cand, regs, m=None):
     return unbound("artefact")
 
 
-def _tool_state(rec):
-    """`stale_readings.judge_one`, which answers exactly from the writer's own hash where the reading carries one and by
-    the tool file's last commit date where it does not. A LABELLED reading with no writer (`hardset-placed`, written by
-    `hardset.py <report> placed` before the writer field existed) is asked about the file that wrote it."""
-    import stale_readings as _sr
-    if not (rec.get("writer") or {}).get("file"):
+def _tool_rec(rec):
+    """A LABELLED reading with no writer (`hardset-placed`, written by `hardset.py <report> placed` before the writer field
+    existed) is asked about the file that wrote it."""
+    if not (rec.get("writer") or {}).get("file") and not (rec.get("code_bundle") or {}).get("entry"):
         t = str(rec.get("tool") or "")
         head = t.split("-", 1)[0]
         if "-" in t and not os.path.exists(os.path.join(HERE, t + ".py")) and os.path.exists(os.path.join(HERE, head + ".py")):
             rec = dict(rec, tool=head)
-    return _sr.judge_one(rec)
+    return rec
+
+
+def _tool_detail(rec, bundle=True):
+    """`stale_readings.judge_detail`: exact against the reading's CODE BUNDLE (the entry script and every local module it
+    imported, 26 September 2026) where it carries one; else its writer's own hash with the modules the writer imports
+    today dated by commit against the reading; else the whole bundle by commit date. `bundle=False` is the entry-only
+    instrument of 20 September, asked only to say which readings changed class when the bundle arrived."""
+    import stale_readings as _sr
+    return _sr.judge_detail(_tool_rec(rec), bundle=bundle)
+
+
+def _tool_state(rec, bundle=True):
+    """(state, said) of `_tool_detail`."""
+    d = _tool_detail(rec, bundle)
+    return d["state"], d["said"]
+
+
+def _bundle_now16(wf, bundle=True):
+    """The current identity a `kind: tool` compatibility entry's `now` is compared with: the code bundle of the writer
+    file here (the entry file's own sha under the entry-only instrument)."""
+    p = os.path.join(HERE, str(wf or ""))
+    if not wf or not os.path.isfile(p): return None
+    if not bundle: return _sha16_of(p)
+    return _v.code_bundle(p, HERE).get("sha16") or None
+
+
+def _compat_tool(rec, regs, bundle=True):
+    """The `kind: tool` entry that vouches for a reading taken under an older tool, or None. Since 26 September 2026 an
+    entry pins the reading's CODE BUNDLE (or, for a reading older than the bundle, its writer's own sha) as `then` and
+    the CURRENT bundle of that writer as `now`, so its rationale has to cover every file of the bundle that moved, and
+    any later edit of any of them voids it by itself."""
+    w = rec.get("writer") or {}
+    cb = rec.get("code_bundle") or {}
+    wf = w.get("file") or (os.path.basename(str(cb.get("entry") or "")) if cb.get("entry") else None)
+    then = (cb.get("sha16") if bundle and cb.get("sha16") else None) or w.get("sha16")
+    now = _bundle_now16(wf, bundle)
+    if not (wf and then and now): return None
+    return _compatible("tool", regs, tool=wf, then=then, now=now)
 
 
 def evidence_class(rule, letter, cov, vs, m, fingerprint, identities, row, cand, regs=None, tool_state=None,
-                   config_inputs=None):
+                   config_inputs=None, provenance="bundle"):
     """{evidence_class, evidence_cause, evidence_why} for one rule-board row. See the block comment above.
 
     The worst class among the verdicts a rule names decides (AWAITING_REVALIDATION before VALID_HISTORICAL before
     CURRENT_CANDIDATE), because a rule is current only when every tool that decides it read the current candidate.
-    `config_inputs` replaces CONFIG_INPUTS (fixtures only)."""
+    `config_inputs` replaces CONFIG_INPUTS (fixtures only). `provenance` is "bundle" (the code bundle, the instrument
+    since 26 September 2026) or "writer" (the entry script alone, the instrument before it), which `board_status` asks
+    only to say which rows changed class when the bundle arrived."""
     if regs is None: regs = registers()
-    if tool_state is None: tool_state = _tool_state
+    bundle = provenance != "writer"
+    if tool_state is None: tool_state = (lambda r: _tool_state(r, bundle))
     rid = rule["id"]; c = cov.get(rid) or {}; res = row.get("result")
 
     def out(k, cause, why): return {"evidence_class": k, "evidence_cause": cause, "evidence_why": " ".join(str(why).split())}
@@ -1220,7 +1289,8 @@ def evidence_class(rule, letter, cov, vs, m, fingerprint, identities, row, cand,
     rank = {AWAITING_REVALIDATION: 0, VALID_HISTORICAL: 1, CURRENT_CANDIDATE: 2}
     worst = None
     for n, rec in present:
-        k = out(*_class_one(rule, letter, n, rec, c, m, fingerprint, identities, cand, regs, tool_state, config_inputs))
+        k = out(*_class_one(rule, letter, n, rec, c, m, fingerprint, identities, cand, regs, tool_state, config_inputs,
+                            bundle))
         if worst is None or rank[k["evidence_class"]] < rank[worst["evidence_class"]]: worst = k
     # A PHYSICAL TEST IS BOUND LIKE ANY OTHER READING TOO (third round, 26 September 2026, a checker's finding). It was
     # returned before the register, tool, artefact and configuration checks, so a future measurement of an older board
@@ -1240,27 +1310,24 @@ def evidence_class(rule, letter, cov, vs, m, fingerprint, identities, row, cand,
     return worst
 
 
-def _class_one(rule, letter, n, rec, c, m, fingerprint, identities, cand, regs, tool_state, config_inputs=None):
-    """(class, cause, why) of ONE reading: current evidence at all, then not a temporary directory, then the tool
-    that wrote it byte for byte the tool here, then the artefact it judged the candidate's, then every configuration
-    input its writer is declared to read unchanged since."""
+def _class_one(rule, letter, n, rec, c, m, fingerprint, identities, cand, regs, tool_state, config_inputs=None,
+               bundle=True):
+    """(class, cause, why) of ONE reading: current evidence at all, then not a temporary directory, then the code that
+    wrote it (its whole code bundle since 26 September 2026) unchanged, then the artefact it judged the candidate's, then
+    every configuration input its writer is declared to read unchanged since."""
     ok, why = _fresh(rec, m, fingerprint, identities, rule)
     if ok: ok, why = _after_meaning_changed(rec, n, c, letter)
     if not ok: return AWAITING_REVALIDATION, "NOT_CURRENT_EVIDENCE", "%s: %s" % (n, why)
     tmp = _temp_input(rec)
     if tmp: return AWAITING_REVALIDATION, "TEMP_INPUT", "%s judged %s, a temporary directory and not this tree" % (n, tmp[:100])
     # A CHANGED TOOL DOES NOT DECIDE (the review's words): a matching or polarity algorithm that moved since the
-    # reading makes it a reading of a different question. A change that is provably not semantic is reused only
-    # through a compatibility entry that pins both versions of the file by content.
+    # reading makes it a reading of a different question, and since 26 September 2026 the TOOL is the entry script and
+    # every local module it imports (finding D2 of the review of the 22:35 report). A change that is provably not
+    # semantic is reused only through a compatibility entry that pins both bundles by content.
     st, said = tool_state(rec)
     hist = None
     if st == "STALE":
-        w = rec.get("writer") or {}
-        now = None
-        if w.get("file"):
-            try: now = hashlib.sha256(open(os.path.join(HERE, w["file"]), "rb").read()).hexdigest()[:16]
-            except OSError: now = None
-        hist = _compatible("tool", regs, tool=w.get("file"), then=w.get("sha16"), now=now) if w.get("sha16") and now else None
+        hist = _compat_tool(rec, regs, bundle)
         if not hist: return AWAITING_REVALIDATION, "TOOL_CHANGED", "%s: %s" % (n, said)
     elif st != "CURRENT":
         return AWAITING_REVALIDATION, "TOOL_UNKNOWN", "%s: %s" % (n, said)
@@ -1413,18 +1480,325 @@ def evidence_counts(rows, required_only=True):
     return out
 
 
+# ------------------------------------------------------------------------------------------------------------------
+# STAGES (26 September 2026, MESHSAT-1357; the review of the 22:35 progress report, finding A: "Separate layout-entry
+# holds from fabrication-release holds", "Review all six feasibility blockers for the same distinction").
+#
+# Decision 31's hold lifted only on a corrected LAYOUT with SCH-002 PASS, and layout entry needed the hold absent: a
+# deadlock for boards A, D and E. Every hold and every feasibility blocker now names the STAGE it gates:
+#
+#   LAYOUT_ENTRY            what must be true of the schematic and its documents before a layout is drawn: reviewed
+#                           protection topology, exact fitted parts, corrected schematic, owned interfaces, placement and
+#                           return-path constraints, and development-board evidence where an architecture turns on it;
+#   FABRICATION_RELEASE     what the actual PCB must show before it is ordered: that it implements that schematic and
+#                           passes the physical protection and parity checks;
+#   PROTOTYPE_VERIFICATION  what the built prototype must demonstrate on the bench.
+#
+# The layout-entry test counts ONLY what gates layout entry and lists the rest separately, so a check applies when it
+# can be satisfied and never earlier; nothing is waived. A hold staged later carries `layout_entry_requires`, which ARE
+# counted at entry, so moving a hold to its real stage does not weaken what entering layout demands. A hold with no
+# stage is a layout-entry hold (conservative), and so is an unknown stage. A feasibility record without `stages` holds
+# layout entry of every board in its `holds_layout_entry`, as before.
+# ------------------------------------------------------------------------------------------------------------------
+# One list, rules_lib's, where it carries it (the holds validator reads the same names); this file's own copy otherwise.
+STAGES = tuple(getattr(R, "STAGES", ("LAYOUT_ENTRY", "FABRICATION_RELEASE", "PROTOTYPE_VERIFICATION")))
+REQUIREMENT_KINDS = tuple(getattr(R, "HOLD_REQUIREMENT_KINDS", ("rule_pass", "fitted_parts", "review")))
+
+
+def hold_stage(h):
+    """The stage a hold gates: its `stage`, or LAYOUT_ENTRY when it names none or one this file does not know."""
+    st = str((h or {}).get("stage") or "LAYOUT_ENTRY").strip().upper()
+    return st if st in STAGES else "LAYOUT_ENTRY"
+
+
+def required_rows(rows):
+    """The required rule-board rows: BLOCKER and MUST_JUSTIFY, the not-applicable ones left out."""
+    return [r for r in rows if r["result"] != NOT_APPLICABLE and r["release_effect"] in ("BLOCKER", "MUST_JUSTIFY")]
+
+
+def entry_class_ok(r, key="evidence_class"):
+    """Is this class acceptable for layout entry: current-candidate or reused evidence, or a pinned desk review of a
+    manually verified document rule."""
+    return r.get(key) in COUNTS_AS_CURRENT or (r.get(key) == DESK_REVIEW and r.get("maturity") == "VERIFIED_MANUALLY")
+
+
+_NET_CACHE = {}
+
+
+def _sexp(text):
+    """A KiCad s-expression as nested lists of atoms (strings unquoted). Parsed, never grepped."""
+    tok = re.compile(r'\(|\)|"((?:[^"\\]|\\.)*)"|([^\s()"]+)')
+    stack, cur = [], []
+    for m in tok.finditer(text):
+        t = m.group(0)
+        if t == "(":
+            stack.append(cur); cur = []
+        elif t == ")":
+            done = cur; cur = stack.pop() if stack else []; cur.append(done)
+        elif m.group(1) is not None:
+            cur.append(m.group(1).replace('\\"', '"'))
+        else:
+            cur.append(m.group(2))
+    return cur
+
+
+def _kv(node, key):
+    for x in node[1:] if isinstance(node, list) else []:
+        if isinstance(x, list) and x and x[0] == key: return x
+    return None
+
+
+def netlist_parse(path):
+    """{comps: {ref: {value, footprint, lcsc}}, nets: {name: [(ref, pin)]}} of a KiCad netlist, cached by content."""
+    try: raw = open(path, "rb").read()
+    except OSError: return None
+    key = hashlib.sha256(raw).hexdigest()
+    if key in _NET_CACHE: return _NET_CACHE[key]
+    tree = _sexp(raw.decode("utf-8", "replace"))
+    root = tree[0] if tree and isinstance(tree[0], list) else tree
+    comps, nets = {}, {}
+    for sec in root[1:] if isinstance(root, list) else []:
+        if not (isinstance(sec, list) and sec): continue
+        if sec[0] == "components":
+            for c in sec[1:]:
+                if not (isinstance(c, list) and c and c[0] == "comp"): continue
+                ref = (_kv(c, "ref") or [None, None])[1]
+                val = (_kv(c, "value") or [None, ""])[1]
+                fp = (_kv(c, "footprint") or [None, ""])[1]
+                lcsc = None
+                f = _kv(c, "fields")
+                for fld in (f[1:] if f else []):
+                    nm = _kv(fld, "name")
+                    if nm and len(nm) > 1 and nm[1] == "LCSC" and len(fld) > 2 and isinstance(fld[-1], str): lcsc = fld[-1]
+                if ref: comps[ref] = {"value": val or "", "footprint": fp or "", "lcsc": lcsc}
+        elif sec[0] == "nets":
+            for n in sec[1:]:
+                if not (isinstance(n, list) and n and n[0] == "net"): continue
+                name = (_kv(n, "name") or [None, ""])[1]
+                nodes = []
+                for x in n[1:]:
+                    if isinstance(x, list) and x and x[0] == "node":
+                        r_, p_ = _kv(x, "ref"), _kv(x, "pin")
+                        if r_ and p_: nodes.append((r_[1], p_[1]))
+                nets[str(name).lstrip("/")] = sorted(nodes)
+    out = {"comps": comps, "nets": nets}
+    _NET_CACHE[key] = out
+    return out
+
+
+def net_digest(parsed, nets):
+    """sha256/16 of what a desk review of these nets read: each net's nodes, and each part on them with its value and
+    land. A renamed net, a part added or taken away, a changed value or land moves it; the rest of the board does not."""
+    body = []
+    for n in sorted(nets):
+        nodes = (parsed or {}).get("nets", {}).get(str(n).lstrip("/"))
+        parts = sorted({r for r, _p in nodes or []})
+        body.append([n, nodes, [[r, ((parsed or {}).get("comps", {}).get(r) or {}).get("value"),
+                                 ((parsed or {}).get("comps", {}).get(r) or {}).get("footprint")] for r in parts]])
+    return hashlib.sha256(json.dumps(body, sort_keys=True).encode()).hexdigest()[:16]
+
+
+def _board_netlist(letter, m):
+    """The declared phase's netlist path of a board, or None (also when `m` names no such board: a fixture's)."""
+    stem = (((m or {}).get("boards") or {}).get(letter) or {}).get("project", "")
+    if not stem: return None
+    p = os.path.join(_phase_dir(letter, m), "out", stem + ".net")
+    return p if os.path.exists(p) else None
+
+
+def verified_nets_current(c, letter, m):
+    """(ok, why): a manual verification bound to the NETS it read (`verified_nets: {<letter>: {nets, digest}}` in the
+    coverage entry) is current only while those nets are what it read on the board's current netlist (26 September
+    2026). An entry that binds no nets for this board is judged by its document pin alone, as before."""
+    vn = (c.get("verified_nets") or {}).get(letter)
+    if not vn: return True, ""
+    nets, want = vn.get("nets") or [], str(vn.get("digest") or "")
+    net = _board_netlist(letter, m)
+    if not net: return False, "the review is bound to %d net(s) of board %s's netlist and this tree holds none" % (len(nets), letter.upper())
+    have = net_digest(netlist_parse(net), nets)
+    if have != want:
+        return False, ("the review read %d net(s) of board %s at digest %s and the current netlist reads %s there: "
+                       "re-review them and re-pin" % (len(nets), letter.upper(), want or "none", have))
+    return True, "and the %d net(s) it read are unchanged on the current netlist (digest %s)" % (len(nets), have)
+
+
+def _part_token(value):
+    return (str(value or "").split() or [""])[0]
+
+
+def _requirement(q, letter, st, m, root=None):
+    """{kind, what, met, why} for one layout-entry requirement of a hold staged later. Kinds:
+      rule_pass     {rule}: the rule reads PASS on this board on evidence that counts as the current candidate's;
+      fitted_parts  {parts: [{ref, part, lcsc, at: [REF.PIN]}]}: each part in the current netlist, its value's part
+                    number and its LCSC code exactly as listed, with a pin on the net of every conductor it is at;
+      review        {document, sha256, netlist_sha16 or netlist_content16}: the review record exists, is the text that
+                    was pinned, and read the netlist the board holds now.
+    An unknown kind is not met: a requirement nobody can evaluate is not a requirement that holds."""
+    kind = str(q.get("kind") or "")
+    what = " ".join(str(q.get("what") or kind).split())
+    root = root or os.path.normpath(os.path.join(ECAD, "..", ".."))
+    if kind == "rule_pass":
+        rid = q.get("rule")
+        row = next((r for r in st.get("rows") or [] if r.get("rule") == rid), None)
+        if row is None: return dict(kind=kind, what=what, met=False, why="%s does not apply to board %s in this audit" % (rid, letter.upper()))
+        ok = row.get("result") == PASS and row.get("evidence_class") in COUNTS_AS_CURRENT
+        return dict(kind=kind, what=what, met=ok, why="%s reads %s on %s evidence (%s)" % (
+            rid, row.get("result"), row.get("evidence_class"), row.get("evidence_cause")))
+    if kind == "fitted_parts":
+        net = (st.get("candidate") or {}).get("netlist")
+        path = os.path.join(ECAD, net) if net else _board_netlist(letter, m)
+        parsed = netlist_parse(path) if path else None
+        if not parsed: return dict(kind=kind, what=what, met=False, why="no netlist of the declared phase to read the parts from")
+        bad, good = [], 0
+        for p in q.get("parts") or []:
+            ref = p.get("ref"); c = parsed["comps"].get(ref)
+            if not c: bad.append("%s is not in the netlist" % ref); continue
+            if p.get("part") and _part_token(c["value"]) != p["part"]:
+                bad.append("%s is %s, not %s" % (ref, _part_token(c["value"]) or "blank", p["part"])); continue
+            if p.get("lcsc") and c.get("lcsc") != p["lcsc"]:
+                bad.append("%s carries LCSC %s, not %s" % (ref, c.get("lcsc"), p["lcsc"])); continue
+            mine = {n for n, nodes in parsed["nets"].items() if any(r == ref for r, _x in nodes)}
+            miss = []
+            for at in p.get("at") or []:
+                r2, _, pin = str(at).partition(".")
+                nn = next((n for n, nodes in parsed["nets"].items() if (r2, pin) in nodes), None)
+                if nn is None or nn not in mine: miss.append(at)
+            if miss: bad.append("%s is not on the net of %s" % (ref, ", ".join(miss))); continue
+            good += 1
+        return dict(kind=kind, what=what, met=not bad and good > 0,
+                    why=("%d of %d fitted part(s) as listed, at their conductors, in %s" % (good, len(q.get("parts") or []), net or path)
+                         if not bad else "; ".join(bad)))
+    if kind == "review":
+        doc, pin = str(q.get("document") or ""), str(q.get("sha256") or "")
+        p = os.path.join(root, doc)
+        if not doc or not os.path.exists(p):
+            return dict(kind=kind, what=what, met=False, why="no review record on file (%s)" % (doc or "none named"))
+        have = hashlib.sha256(open(p, "rb").read()).hexdigest()
+        if not pin or have != pin:
+            return dict(kind=kind, what=what, met=False, why="%s is not the text that was pinned (pinned %s, now %s)" % (doc, pin[:16] or "nothing", have[:16]))
+        cand = st.get("candidate") or {}
+        want_s, want_c = q.get("netlist_sha16"), q.get("netlist_content16")
+        if not ((want_s and want_s == cand.get("netlist_sha16")) or (want_c and want_c == cand.get("netlist_content16"))):
+            return dict(kind=kind, what=what, met=False, why="%s read netlist %s and board %s's netlist is %s now: re-review it" % (
+                doc, want_s or want_c or "none", letter.upper(), cand.get("netlist_sha16")))
+        return dict(kind=kind, what=what, met=True, why="%s pinned %s, read on netlist %s" % (doc, have[:16], cand.get("netlist_sha16")))
+    return dict(kind=kind or "?", what=what, met=False, why="a requirement of kind %r cannot be evaluated here" % kind)
+
+
+def feasibility_stages(letter, req=None):
+    """[{id, title, stage, open, requires, owner}] of every OPEN feasibility record that names this board at a stage.
+
+    A record with `stages` names, per stage, the boards it holds (`holds`), what closes it (`requires`) and its `status`
+    (OPEN or CLOSED). A record without them holds layout entry of each board in `holds_layout_entry`, unstaged. A
+    registry that cannot be read holds layout entry itself: absence is never a pass."""
+    try:
+        req = req if req is not None else R.load_requirements()
+    except BaseException as e:
+        return [dict(id="REQUIREMENTS", title="the requirements registry", stage="LAYOUT_ENTRY", open=True,
+                     requires="the requirements registry cannot be read (%s), so no feasibility blocker can be shown "
+                              "not to hold this board" % type(e).__name__, owner="the registry writer")]
+    out = []
+    for r in (req or {}).get("records") or []:
+        if r.get("kind") != "feasibility" or r.get("status") != "FEASIBILITY_OPEN": continue
+        stages = r.get("stages")
+        if isinstance(stages, list) and stages:
+            for s_ in stages:
+                if letter not in [str(x).lower() for x in (s_.get("holds") or [])]: continue
+                stg = str(s_.get("stage") or "LAYOUT_ENTRY").upper()
+                out.append(dict(id=r.get("id"), title=r.get("title") or "", stage=stg if stg in STAGES else "LAYOUT_ENTRY",
+                                open=str(s_.get("status") or "OPEN").upper() != "CLOSED",
+                                requires=" ".join(str(s_.get("requires") or "").split()), owner=" ".join(str(r.get("owner") or "").split())))
+        elif letter in [str(x).lower() for x in (r.get("holds_layout_entry") or [])]:
+            out.append(dict(id=r.get("id"), title=r.get("title") or "", stage="LAYOUT_ENTRY", open=True,
+                            requires="unstaged: " + " ".join(str(r.get("closing_evidence") or "").split()),
+                            owner=" ".join(str(r.get("owner") or "").split())))
+    return out
+
+
+def layout_entry(st, holds=None, req=None, m=None):
+    """The layout-entry test of one board (moved here from rules_render on 26 September 2026 and staged):
+
+      * every applicable required SCHEMATIC-phase rule reads PASS on evidence entry accepts (`entry_class_ok`);
+      * no hold whose stage is LAYOUT_ENTRY (or that names no stage) is on the board;
+      * every `layout_entry_requires` of a hold staged LATER is met (`_requirement`);
+      * no open feasibility stage LAYOUT_ENTRY holds the board.
+
+    Returns {ready, reasons, holds_at_entry, holds_later, requirements, feasibility_at_entry, feasibility_later}. Holds
+    and feasibility stages that gate fabrication release or prototype verification are LISTED and never counted here."""
+    letter = str(st.get("board") or "").lower()
+    holds = R.board_holds() if holds is None else holds
+    m = m or {}
+    reasons, at_entry, later, reqs, fe, fl = [], [], [], [], [], []
+    for r in required_rows(st.get("rows") or []):
+        if r["verification_phase"] != "SCHEMATIC": continue
+        if not (r["result"] == PASS and entry_class_ok(r)):
+            reasons.append("%s %s on %s evidence (%s)" % (r["rule"], r["result"], r.get("evidence_class"), r.get("evidence_cause")))
+    h = holds.get(letter)
+    if h:
+        stg = hold_stage(h)
+        if stg == "LAYOUT_ENTRY":
+            at_entry.append(dict(decision=h.get("decision"), stage=stg, lifts_when=" ".join(str(h.get("lifts_when") or "").split())))
+            reasons.append("held by decision %s at layout entry" % h.get("decision"))
+        else:
+            qs = [dict(_requirement(q, letter, st, m), decision=h.get("decision")) for q in (h.get("layout_entry_requires") or [])]
+            later.append(dict(decision=h.get("decision"), stage=stg, lifts_when=" ".join(str(h.get("lifts_when") or "").split()),
+                              requirements=qs))
+            reqs += qs
+            if not qs:
+                reasons.append("decision %s's hold is staged at %s and names no layout-entry requirement, so nothing says "
+                               "what entering layout needs from it" % (h.get("decision"), stg))
+            for q in qs:
+                if not q["met"]:
+                    reasons.append("decision %s's layout-entry requirement not met: %s (%s)" % (h.get("decision"), q["what"], q["why"]))
+    for f in feasibility_stages(letter, req):
+        if not f["open"]: continue
+        if f["stage"] == "LAYOUT_ENTRY":
+            fe.append(f); reasons.append("%s holds layout entry: %s" % (f["id"], f["requires"][:160]))
+        else:
+            fl.append(f)
+    return dict(ready=not reasons, reasons=reasons, holds_at_entry=at_entry, holds_later=later, requirements=reqs,
+                feasibility_at_entry=fe, feasibility_later=fl)
+
+
+def provenance_changes(rows, required_only=True):
+    """{class_changed, cause_changed, rows: [(board, rule, before, after, cause)]}: the rows whose evidence class (or,
+    within the same class, whose cause) differs between the code-bundle instrument and the entry-only one of 20
+    September. Rows computed before the counterfactual existed are left out rather than counted as unchanged."""
+    rs = required_rows(rows) if required_only else [r for r in rows if r["result"] != NOT_APPLICABLE]
+    rs = [r for r in rs if r.get("writer_only_class")]
+    moved = [r for r in rs if r.get("evidence_class") != r.get("writer_only_class")]
+    cause = [r for r in rs if r.get("evidence_class") == r.get("writer_only_class")
+             and r.get("evidence_cause") != r.get("writer_only_cause")]
+    return dict(class_changed=len(moved), cause_changed=len(cause), rows_compared=len(rs),
+                rows=[(r.get("board"), r["rule"], r.get("writer_only_class"), r.get("evidence_class"), r.get("evidence_cause"))
+                      for r in moved])
+
+
 def board_status(letter, reg=None, facts=None, cov=None, m=None, fingerprint=None, phase=None):
     reg = reg or R.load(); facts = facts if facts is not None else R.facts(); cov = cov if cov is not None else coverage()
     m = m or manifest(); fingerprint = fingerprint or R.fingerprint(reg)
     vs = _verdicts(letter, m)
     ident = _board_identities(letter, m)
     cand = candidate(letter, m, vs, ident, reg, cov, fingerprint)
+    # THE SAME CANDIDATE AND ROWS UNDER THE ENTRY-ONLY INSTRUMENT of 20 September (26 September 2026, the review's finding
+    # D2): asked only so the page can say which rows changed class because the code bundle arrived, with the count.
+    cand_w = candidate(letter, m, vs, ident, reg, cov, fingerprint, provenance="writer")
     rows = []
     for rule, why in R.rules_for(letter, reg, facts):
         r = result_for(rule, letter, cov, vs, m, fingerprint, phase, ident)
         r.update(evidence_class(rule, letter, cov, vs, m, fingerprint, ident, r, cand))
+        w = evidence_class(rule, letter, cov, vs, m, fingerprint, ident, r, cand_w, provenance="writer")
+        r.update(writer_only_class=w["evidence_class"], writer_only_cause=w["evidence_cause"])
+        if r.get("evidence_class") != w["evidence_class"]:
+            # WHICH FILES MOVED, so the page can say whether a helper that judges changed or only the recording channel
+            ch = set()
+            for n in _names(cov.get(rule["id"]) or {}, letter):
+                if vs.get(n) is None: continue
+                d = _tool_detail(vs[n])
+                if d["state"] == "STALE": ch |= set(d["changed"])
+            r["provenance_files"] = sorted(ch)
         r.update(retake_projection(rule, letter, cov, vs, m, r, cand))
-        rows.append(dict(rule=rule["id"], domain=rule["domain"], short_name=rule["short_name"],
+        rows.append(dict(board=letter, rule=rule["id"], domain=rule["domain"], short_name=rule["short_name"],
                          release_effect=rule["release_effect"], verification_phase=rule["verification_phase"],
                          maturity=(cov.get(rule["id"]) or {}).get("maturity", "UNASSESSED"),
                          applies_because=why, **r))
@@ -1470,16 +1844,34 @@ def main(argv):
     out_dir = _v.opt(argv, "--out-dir", os.path.join(ECAD, "out", "rule-audit"))
     os.makedirs(out_dir, exist_ok=True)
     all_rows, per_board = [], {}
+    try: holds = R.board_holds()
+    except BaseException as e:
+        holds = None
+        print("rules_status: the holds file cannot be read (%s: %s), so no board is shown ready for layout" % (type(e).__name__, str(e)[:90]))
+    # read once for every board; a registry that cannot be read is re-asked per board by feasibility_stages, which then
+    # holds each board's layout entry and says why (absence is never a pass)
+    try: req_all = R.load_requirements()
+    except BaseException: req_all = None
     for letter in only:
         st = board_status(letter, reg, facts, cov, m, fp, phase)
+        # THE STAGED LAYOUT-ENTRY TEST, recorded with the audit so a reader need not recompute it (26 September 2026).
+        st["layout_entry"] = (layout_entry(st, holds, req=req_all, m=m) if holds is not None else
+                              dict(ready=False, reasons=["the holds file cannot be read"], holds_at_entry=[], holds_later=[],
+                                   requirements=[], feasibility_at_entry=[], feasibility_later=[]))
         per_board[letter] = st; all_rows += st["rows"]
         json.dump(st, open(os.path.join(out_dir, "%s.json" % letter), "w"), indent=1)
         c = counts(st["rows"])
         print("%-3s %-28s %s" % (letter.upper(), gate_state(st["rows"], m),
-                                 "PASS %d  FAIL %d  INCONCLUSIVE %d  WAIVED %d  of %d required rule(s)"
+                                 "PASS %d  FAIL %d  INCONCLUSIVE %d  WAIVED %d  of %d required rule(s), historical aggregate"
                                  % (c[PASS], c[FAIL], c[INCONCLUSIVE], c[WAIVED], c["denominator"])))
         # AND WHICH BOARD THOSE NUMBERS ARE ABOUT, on the line that carries them.
         print("    %s" % subject_line(st["subject"]))
+        le = st["layout_entry"]
+        print("    layout entry: %s%s%s" % ("ready" if le["ready"] else "not ready, %d reason(s)" % len(le["reasons"]),
+                                          "; held later: %s" % ", ".join("decision %s at %s" % (h["decision"], h["stage"]) for h in le["holds_later"])
+                                          if le["holds_later"] else "",
+                                          "; feasibility at later stages: %s" % ", ".join(sorted({f["id"] for f in le["feasibility_later"]}))
+                                          if le["feasibility_later"] else ""))
     # SGN-001, and it is a DIFFERENT question from readiness: not "does this board pass" but "did every rule
     # that applies to it reach a decision at all". A rule that applies and produces nothing is the failure this
     # whole registry exists to make impossible, and it would otherwise be invisible, since a rule missing from
@@ -1546,6 +1938,10 @@ def _finish(argv, all_rows, per_board, m, fp, phase, out_dir):
                    gate_state=state, counts=agg, boards={k: counts(v["rows"]) for k, v in per_board.items()},
                    evidence=evidence_counts(all_rows),
                    evidence_boards={k: evidence_counts(v["rows"]) for k, v in per_board.items()},
+                   provenance_changes=provenance_changes(all_rows),
+                   layout_entry={k: dict(ready=(v.get("layout_entry") or {}).get("ready", False),
+                                         reasons=len((v.get("layout_entry") or {}).get("reasons") or []))
+                                 for k, v in per_board.items()},
                    refused_as_invalidated=sorted(_REFUSED), register_errors=registers()["errors"])
     json.dump(summary, open(os.path.join(out_dir, "summary.json"), "w"), indent=1)
     print("\nreadiness: %s   (manifest %s, rule set %s%s)" % (state, m.get("manifest_version"), fp,
@@ -1559,6 +1955,9 @@ def _finish(argv, all_rows, per_board, m, fp, phase, out_dir):
     ev = summary["evidence"]
     print("evidence: %d PASS on the current candidate; %s" % (ev["current_pass"], "  ".join(
         "%s %d" % (k, ev[k]) for k in EVIDENCE_CLASSES)))
+    pc = summary["provenance_changes"]
+    print("provenance: %d required row(s) changed evidence class when the code bundle replaced the entry-script hash "
+          "(%d changed cause within the class)" % (pc["class_changed"], pc["cause_changed"]))
     if _REFUSED:
         print("evidence: %d reading(s) refused as invalidated by content (v2/docs/evidence/INVALIDATED-*.md): %s"
               % (len(_REFUSED), ", ".join(sorted(_REFUSED))[:300]))

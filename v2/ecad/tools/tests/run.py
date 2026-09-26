@@ -28,6 +28,9 @@ def load(path):
 def _evidence():
     """What this tree's own verdicts SAY, with the timestamp, the tools hash and the writer removed.
 
+    `code_bundle` and `runtime` joined it on 26 September 2026 for the same reason (the entry script and every module it
+    imports, and the interpreter and KiCad versions: provenance, not an answer).
+
     `writer` joined that list on 20 September 2026, the day it was added to every verdict: it is PROVENANCE,
     the file that judged and its own hash, and a verdict carrying it beside one written an hour earlier that
     does not is the same answer written twice. Left in the comparison it made the guard fire on every tree
@@ -44,7 +47,8 @@ def _evidence():
         try:
             import json as _j
             r = _j.load(open(p, encoding="utf-8"))
-            out[os.path.relpath(p, d)] = _j.dumps({k: v for k, v in r.items() if k not in ("ts", "tools", "version", "writer")},
+            out[os.path.relpath(p, d)] = _j.dumps({k: v for k, v in r.items()
+                                                   if k not in ("ts", "tools", "version", "writer", "code_bundle", "runtime")},
                                                   sort_keys=True)
         except Exception:
             out[os.path.relpath(p, d)] = "unreadable"

@@ -70,6 +70,39 @@ Rules for the workstreams:
 6. Skipped tests are not passes. A hold is lifted only on fresh evidence that matches the board's actual configuration.
 7. Board B feasibility evidence permits further investigation only. A committed layout candidate needs its schematic, parts, interfaces, stackup and mechanics reviewed first. Experiments stay EXPERIMENTAL.
 
+## Stage gates: layout entry, fabrication release, prototype verification
+
+The review of the 22:35 progress report (`v2/docs/reviews/2026-09-26-second-checkpoint-review.md`, finding A) found
+gates that could never be satisfied because they waited for the thing they gated: decision 31's holds lifted only on a
+corrected layout while layout entry needed them gone, INT-002 was a schematic gate closed only by a test on the built
+board B, and several feasibility blockers held layout entry until a placement or a bench test. Every gate now names its
+stage. Moving a check to its stage changes when it applies; it waives nothing. The acceptance criteria live in the
+registries (`tools/pcb_board_holds.yaml`, `tools/pcb_requirements.yaml` stages, `tools/pcb_rules.yaml` INT-002 and
+INT-003); `rules_status.layout_entry` computes the layout-entry test and CURRENT-EVIDENCE.md renders it.
+
+| Stage | What it needs | What it may not need |
+|---|---|---|
+| Layout entry | per board: every required schematic-phase rule a PASS on current-candidate evidence; reviewed protection topology, exact fitted parts, corrected schematic, owned interfaces, placement and return-path constraints; each feasibility blocker's layout-entry stage closed (desk evidence, or a development-board test where an architecture decision turns on it) | a layout, a fabricated board or a built kit |
+| Fabrication release | the actual layout implements the reviewed schematic (SCH-002 PASS on current-candidate evidence) and passes the physical protection, parity and routed-board checks; the fabrication-release stages (the qualified reviews where a blocker names one, the bounded enclosure heat experiment before hot-part placement is frozen) | a fabricated board or a built kit |
+| Prototype verification | the physical tests of TEST-PLAN and the feasibility pages, on the built kit | nothing earlier stands in for them; a desk review is never a physical test |
+
+Milestones, per board, in the order they can close (none is closed today):
+
+| Board | Layout entry also needs, beyond its rule evidence | Fabrication release also needs | Prototype verification |
+|---|---|---|---|
+| A | decision 31: the protection-topology review on A's netlist, U31 as fitted, TRN-001 PASS; FEA-002 (EMCON lines L1 to L4, L7); FEA-004 (the chain re-declared at 18 A for 60 s and A's pack-path copper constraint); FEA-006 (decoupling classes in the generator) | decision 31's hold lifted on the layout; FEA-002 RF-002 PASS; FEA-004 the heat-balance test and A's routed copper at 18 A; FEA-006 class seats read on the placement | FEA-002 E-01 to E-12; FEA-004 bring-up readings and TEST-PLAN E3 |
+| B | FEA-001 (Z-EXP-A and Z-EXP-B on development parts, or the switch taken); FEA-002 (SD-EMC-1 drawn, L1 to L4, L7); FEA-003 (FB-FAB-1 to FB-FAB-5 on the netlist, the escape strategy from Q-B-ESC-1 and decision 43's stack, the channel budgets); FEA-006; INT-002's pre-layout assessment current on its 48 nets | FEA-001 U8 as selected; FEA-002; FEA-003 complete placement and route, routed lengths, the fabricator's impedance record, the qualified high-speed review R-HSD; FEA-006 | INT-003 (the three module links at 1000M, error free, cold and hot); FEA-001 Z-EXP-C and REQ-035; FEA-002 bench; FEA-003 IOHA A1 to A14 and the reference clock |
+| C | FEA-002 (the hardware EMCON lamp, L1); FEA-006 | FEA-002 (RF-002, the lamp's light-guide hole); FEA-006 | FEA-002 bench |
+| D | decision 31: the review on D's netlist, D9 to D14 as fitted, TRN-001 PASS; FEA-002; FEA-004 (the PA flange sensor drawn); FEA-006 | decision 31's hold lifted on the layout; FEA-002; FEA-004 heat-balance test; FEA-006 | FEA-002 E-01, E-02; FEA-004 the flange against a thermocouple |
+| E | decision 31: the review on E's netlist, D9 and D10 as fitted, TRN-001 PASS; FEA-006 | decision 31's hold lifted on the layout; FEA-006 | TEST-PLAN rows of its interfaces |
+| P | FEA-005 (the packet current on the candidate, the secondary coordination at desk with its placement constraints, the charger state sequence); FEA-006 | FEA-004 F2 at 18 A for 60 s by Eaton's answer or a coupon test; FEA-005 the qualified battery review answered; FEA-006 | FEA-004 extended protection test; FEA-005 golden image and O-9 |
+| E5 | its rule evidence alone (no hold, no feasibility stage names it) | its release package bound by content | the mate test of its contact targets |
+
+Taken by the session under the owner's standing rule of 26 September 2026 (the review named what each stage needs and
+left the allocation of each item to the session): the stage of every item above, the three requirement kinds of a
+later-staged hold (rule_pass, fitted_parts, review), and INT-002's split into a pre-layout assessment and INT-003's
+bench test. Reverse by moving an item back, which the validators allow only if its evidence can exist at that stage.
+
 ## Compute and spend
 
 | Date | Resource | Purpose | Rate | Cap | State |
