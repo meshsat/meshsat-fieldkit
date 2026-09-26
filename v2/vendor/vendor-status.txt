@@ -164,3 +164,6 @@ battery/ti-sffs317a-bq77207-fusa.pdf   current   # TI's pin FMA for the BQ77207 
 battery/littelfuse-itv9550-30a.pdf   retired   # NOT FITTED: the chemical fuse alternative the battery review stream evaluated and did not take (-10 C operating floor), kept for the record of that choice (SOURCES.yaml, pack-chemical-fuse-alternative)
 ti/ti-sn74lvc86a.pdf   current   # SN74LVC86APWR, the part board B's U80 order code C350562 resolves to (the break-before-make XOR; SOURCES.yaml, bbm-xor)
 nexperia/nexperia-74lvc86a.pdf   current   # 74LVC86APW, the type number board B's U80 value names; a component mismatch with the ordered TI part (SOURCES.yaml, bbm-xor)
+
+# --- added 26 September 2026 (MESHSAT-1357, parts stream) ---
+diodes/diodes-bzt52c-ds18004.pdf   current   # BZT52C12-7-F, board A's D22, the front end's restart-guard clamp (SOURCES.yaml, zener-bzt52c12); the sheet kisch.py's _HELD_DIRECTION cites
