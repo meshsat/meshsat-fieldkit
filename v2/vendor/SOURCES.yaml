@@ -853,6 +853,16 @@ parts:
       grade_vs_envelope_45bde541: "INSIDE: the I grade, -40 to 85 C in the held sheet's order information"
       identity_45bde541: MISMATCH
       identity_note: "the change of grade is proven by the held 2954fb (its order information lists LTC2954ITS8-1#PBF and #TRPBF, -40 to 85 C, TSOT-23-8). The ordered suffix #TRMPBF is not in that table; Linear Technology's convention reads #TRM as a 500-piece reel (INFERRED, not in the held document). A component mismatch under owner condition 1 until the maker's current sheet or ordering guide lists #TRMPBF: analog.com gave no answer to this host again on 2026-09-26 at about 19:10 UTC"
+    update_r8a:
+      read_on: "2026-09-26"
+      by: "board A's round 8 author (worktree fnd/r8a on main fc144600)"
+      what_moved: "board A's U1 takes C2657885, LTC2954ITS8-1#TRPBF (Analog Devices, TSOT-23-8, -40 to +85 C), in place of C580654 (#TRMPBF). Read from the JLCPCB parts API and LCSC's detail record (GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=C2657885) on 2026-09-26 at 21:18 UTC"
+      code: "C2657885"
+      where: "v2/ecad/tools/gen_sch_a.py:269 (U1)"
+      maker_currency: "the maker's current copy of 2954fb is the held file: the Internet Archive's capture of https://www.analog.com/media/en/technical-documentation/data-sheets/2954fb.pdf of 2026-09-18T05:48:29Z (web.archive.org id_ form, served gzip-encoded), decompressed, has sha256 1e9e2567d15e569ecc95023a40e4fb99eb0288db842803ff78cd14fdd621d8ae, byte-identical to v2/vendor/power/ltc2954.pdf; analog.com itself answered this host with a broken HTTP/2 stream and nothing over HTTP/1.1 on 2026-09-26 at about 21:16 UTC"
+      identity_r8a: MATCH
+      identity_note_r8a: "LTC2954ITS8-1#TRPBF is a line of 2954fb's ORDER INFORMATION (p.2: TAPE AND REEL column, marking LTCJH, 8-Lead Plastic TSOT-23, -40 C to 85 C). #TRMPBF stays a mismatch: the maker's current table does not list it"
+      stock_r8a: "0 at JLCPCB and 0 at LCSC on 2026-09-26 at 21:18 UTC (C107801, #PBF, also 0; C580654, #TRMPBF, 197): a procurement item (NO_STOCK), not a mismatch; the only exact codes are out of stock today"
 
   - id: tvs-surge-clamps
     function: "unidirectional surge clamps on the power conductors of A, B, D, E and P"
@@ -1732,6 +1742,14 @@ parts:
       identity_45bde541: MISMATCH
       identity_note: "for C594232 (E J_SMB, and P J_SMB as filled): the value and the land name B4B-XH-A and the ordered part is B4B-XH-A-G, a suffix and a gold plating the held JST XH catalogue does not list. C158012 (E J_TAMP) resolves to B2B-XH-A(LF)(SN) and matches. Taken under the owner's standing rule of 26 September 2026 as the session's recommendation: C144395, B4B-XH-A(LF)(SN) (JST, stock 108,974 at 2026-09-26T19:00Z), in gen_sch_e.py for J_SMB and in gen_sch_p.py for P's J_SMB so that neither depends on a fill, with lcsc_fill.py:158's MAP line moved to the same code"
       table_45bde541: "every JLC-CERTIFIED.tsv row carrying C594232 is WRONG_MODEL with the condition 1 reason since the parts stream's second pass (jlc_retake_45bde541.table_marks), so lcsc_fill refuses the code on E J_SMB and on P J_SMB as filled"
+    update_r8a:
+      read_on: "2026-09-26"
+      by: "board A's round 8 author (worktree fnd/r8a on main fc144600)"
+      boards: [A]
+      what_moved: "board A's J_HEAT and J_MAINSW (JST-XH 1x2 sockets on the JST_XH_B2B-XH-A land) take C158012, B2B-XH-A(LF)(SN), in place of C265283, B2B-XH-A-GU (gold contacts), the condition 1 mismatch of jlc_retake_45bde541 (condition_1_mismatches, row 'A J_HEAT, J_MAINSW'). Read from the JLCPCB parts API and LCSC's detail records on 2026-09-26 at 21:18 UTC: C158012 'B2B-XH-A(LF)(SN)', JST, Contact Plating = Tin, stock 344,040; C265283 'B2B-XH-A-GU', JST, Contact Plating = Gold"
+      where: "v2/ecad/tools/gen_sch_a.py:278 (J_MAINSW), :1161 (J_HEAT)"
+      identity_r8a: MATCH
+      identity_note_r8a: "the held catalogue's header table (printed page -4-, Top entry type) lists B2B-XH-A with 'Post: Brass, copper-undercoated, tin-plated'; LCSC's record for C158012 gives tin plating, and (LF)(SN) is read as that standard lead-free tin finish (INFERRED from the record's plating field; the catalogue prints no suffix), the same reading this entry already takes for board E's J_TAMP"
 
   - id: jst-ph-headers
     function: "JST PH 1x5 sockets: the four cell thermistors on board P (J_TS, new in round 4) and the two headset leads on board D (J_HS1, J_HS2, already fitted)"
@@ -1878,6 +1896,29 @@ parts:
       what_moved: "on main since 458b2873: the 45bde541 netlists place A U30 with the code(s) this entry names. The `where` of the entry is the candidate's; main's lines follow"
       where: "v2/ecad/tools/gen_sch_a.py:1104 (U30)"
       where_rev: "45bde541"
+
+  - id: emcon-gates-board-a
+    function: "board A's PA and HF rails' EMCON gates since its round 8 candidate: U35 and U37 AND TX_INHIBIT_n with EMCON_HW, U36 and U38 AND the result with the software hold (MESHSAT-1357, EMCON.md section 4a)"
+    boards: [A]
+    on_main: false
+    adopted_in: "board A's round 8 candidate (worktree fnd/r8a on main fc144600, 26 September 2026)"
+    schematic_name: {text: "SN74AUP1G08DBVR AND", where: "v2/ecad/tools/gen_sch_a.py:1240-1243 (U35 to U38) in the candidate"}
+    fitted_mpn: "SN74AUP1G08DBVR"
+    package: "SOT-23 (DBV) 5"
+    lcsc: "C139409 (Texas Instruments SN74AUP1G08DBVR, SOT-23-5, stock 12,485: JLCPCB parts API and LCSC's detail record, 2026-09-26T21:18Z)"
+    identity: MATCH
+    status: VERIFIED
+    grade_vs_envelope: "INSIDE: -40 to +85 C (Recommended Operating Conditions, TA)"
+    documents:
+      - path: "v2/vendor/ti/ti-sn74aup1g08.pdf"
+        doc_id: "TI SCES502"
+        revision: "Rev. Q, November 2003, revised March 2024"
+        url: "https://www.ti.com/lit/ds/symlink/sn74aup1g08.pdf"
+        fetched: "2026-09-26T21:14:28Z, HTTP 200 application/pdf, 3,130,585 bytes, by board A's round 8 author (held in fnd/r8a drafts/a/datasheets/ until filed)"
+        sha256: "6d3ebde01544528256297fbf38fcbc9b0c09f1d28147a3b911a6aa684c962256"
+        currency: "fetched from ti.com on 2026-09-26"
+        matches_fitted: "yes: the orderable addendum lists SN74AUP1G08DBVR, SOT-23 (DBV) 5, 3000 LARGE T&R, -40 to 85 C; Table 4-1 (p.4) DBV pin 1 A, 2 B, 3 GND, 4 Y, 5 VCC"
+    rows_read: "5.1 (p.5): VCC and VI absolute maximum 4.6 V, the lowest rating on board A's +3V3 and under the 6.40 to 7.00 V at which D3, that rail's SMBJ5.0A clamp, starts to conduct (a +3V3 overvoltage between the two is recorded OPEN in EMCON.md section 7, integration of 27 September 2026, from the independent check); 5.3 (p.5): VCC 0.8 to 3.6 V, VIL 0 at 0.8 V, 0.35 x VCC at 1.1 to 1.95 V, 0.7 V at 2.3 to 2.7 V, 0.9 V at 3 to 3.6 V, input transition 200 ns/V; 5.5 (p.7): VOH VCC - 0.1 V at -20 uA, 2.67 V at 3 V and -2.7 mA, VOL 0.1 V at 20 uA, II 0.5 uA and Ioff 0.6 uA over -40 to +85 C; 5.6 to 5.9 (pp.7-8): tpd 4.3 ns at CL 5 pF and 7.5 ns at CL 30 pF (3.3 V +- 0.3 V); 9 (p.14): 0.1 uF per VCC pin; Features (p.1): Ioff for partial power down and back drive protection, Schmitt-trigger action, Vhys 250 mV typical"
 
   - id: stage-current-shunts
     function: "2512 current shunts of board A's LM5176 stages (R35, R43, R55 in the candidate)"

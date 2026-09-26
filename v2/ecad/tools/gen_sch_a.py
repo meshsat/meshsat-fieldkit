@@ -118,9 +118,10 @@ _intent.rail("+5V_DEV", 5.0, 4.0, 6.9, "R43", loads={"J_5V_DEV": 3.2, "U23": 0.5
 _intent.rail("+3V3", 3.3, 0.3, 0.6, "L7", budget=0.03, share=0.015, switch="U12", efficiency=0.88, fed_from="VBAT",
              loads={"J_MEZZ1": 0.10, "U8": 0.03, "U9": 0.03, "U10": 0.03, "U11": 0.03,
                     "U14": 0.02, "U17": 0.02, "U26": 0.02, "U27": 0.01, "U28": 0.01}, note="this board's logic (two PCA9555, five INA226, the LTC2954, the controllers' VCC pins: tens of mA each; the 1 A of the first intent was a placeholder, 32.69); the net starts at the TPS62933 inductor L7")
-_intent.rail("+13V8_PA", 13.8, 5.0, 6.0, "R55", loads={"J_PA": 6.0}, switch="U13", efficiency=0.93, fed_from="VBAT", note="the RA30H1317M1 on the face plate")
-_intent.rail("+12V_HF", 12.0, 1.0, 2.0, "R65", budget=0.03, loads={"J_HF": 1.0}, switch="U15", efficiency=0.93, fed_from="VBAT",
-             note="the QMX")   # the whole rail leaves at J_HF for the HF unit in the lid tray
+_intent.rail("+13V8_PA", 13.8, 5.0, 6.0, "R55", loads={"J_PA": 6.0}, switch="U13", efficiency=0.93, fed_from="VBAT", enable_net="PA_UVLO",
+             note="the RA30H1317M1 on the face plate; U13's EN/UVLO is PA_UVLO, 0.6 of the EMCON gate's output PA_EN since round 8 (26 September 2026)")
+_intent.rail("+12V_HF", 12.0, 1.0, 2.0, "R65", budget=0.03, loads={"J_HF": 1.0}, switch="U15", efficiency=0.93, fed_from="VBAT", enable_net="HF_UVLO",
+             note="the QMX; U15's EN/UVLO is HF_UVLO, 0.6 of the EMCON gate's output HF_EN since round 8 (26 September 2026)")   # the whole rail leaves at J_HF for the HF unit in the lid tray
 _intent.rail("+54V_POE", 54.0, 0.3, 0.6, "R71", loads={"J_54V": 0.3}, budget=0.02, share=0.005, switch="U16", efficiency=0.88, fed_from="VBAT",
              note="the TPS23861 PSE on B16")   # the whole rail leaves at J_54V on the VH lead to B
 SYMDIR = "/usr/share/kicad/symbols/"
@@ -231,6 +232,7 @@ part("J_DOCK", "Connector_Generic", "Conn_01x12", "spring pins to the dock block
 #     85 C, the same TS8 package, the same pin configuration (one TS8 pinout for both grades) and the same marking
 #     LTCJH (order information table). LCSC C580654 = LTC2954ITS8-1#TRMPBF, Analog Devices, TSOT-23-8, read back
 #     from the JLCPCB parts API on 26 September 2026 (drafts/jlc/jlc-C580654.json), stock 195 against 5 needed.
+#     SUPERSEDED IN ROUND 8 for the code (not the grade): #TRMPBF is not in the maker's order table, see U1 below.
 #  2. KILL WITHIN ITS ABSOLUTE MAXIMUM. KILL is rated -0.3 to 7 V and was pulled to VBAT (up to 16.8 V). R4 now pulls
 #     it to +3V3, the rail this controller enables: the sheet's own arrangement ("connect to a low voltage output
 #     supply"). +3V3 rises within milliseconds and KILL is blanked for 400 to 650 ms after turn-on, so KILL is high
@@ -256,12 +258,24 @@ part("J_DOCK", "Connector_Generic", "Conn_01x12", "spring pins to the dock block
 #  6. PI_KILL CANNOT BE LIFTED BY A POWERED SLOT. R5 is 1.0 k, not 100 k: three slots back-driving through board B's
 #     level stages (10 k pull-ups and a body diode each, W5-F5) hold the net at about 0.65 to 0.7 V, under Q1's
 #     1.0 V minimum threshold. The panel then sources 3.3 mA to kill; Q1 needs only 33 uA through R4 to take KILL low.
-ic("U1", 8, "LTC2954ITS8-1 push-button on/off controller, -40 to 85 C", "TSOT8", {"1": "VBAT", "2": "MAIN_PB", "3": "NC", "4": "GND", "5": "PI_SHDN_REQ", "6": "RAIL_EN", "7": "MAIN_PDT", "8": "KILL"}, "C580654")
+# ROUND 8 (26 September 2026, the parts stream's condition 1 finding, v2/vendor/SOURCES.yaml power-button-controller):
+# THE CODE NAMES THE PART THE MAKER'S ORDER TABLE LISTS. C580654 is LTC2954ITS8-1#TRMPBF, and the held 2954fb (ORDER
+# INFORMATION p.2) lists LTC2954ITS8-1#PBF and LTC2954ITS8-1#TRPBF only; the maker's current copy is the same file
+# (analog.com's 2954fb.pdf as the Internet Archive held it on 18 September 2026, sha256 1e9e2567, byte-identical to
+# v2/vendor/power/ltc2954.pdf; analog.com itself did not answer this host). So #TRMPBF stays a component mismatch
+# under owner condition 1, and U1 takes C2657885, LTC2954ITS8-1#TRPBF (Analog Devices, TSOT-23-8, -40 to +85 C: the
+# JLCPCB parts API and LCSC's detail record, 26 September 2026 21:18 UTC), the table's tape-and-reel line. ITS STOCK
+# READ 0 at JLCPCB and at LCSC: a procurement item (NO_STOCK), not a mismatch, and the one open question of the part.
+ic("U1", 8, "LTC2954ITS8-1 push-button on/off controller, -40 to 85 C", "TSOT8", {"1": "VBAT", "2": "MAIN_PB", "3": "NC", "4": "GND", "5": "PI_SHDN_REQ", "6": "RAIL_EN", "7": "MAIN_PDT", "8": "KILL"}, "C2657885")
 c("C4", "1u", "VBAT", "GND"); r("R2", "100k", "RAIL_EN", "VBAT"); r("R184", "39k 1%", "RAIL_EN", "GND", lcsc="C23153")
 r("R3", "10k", "PI_SHDN_REQ", "+3V3"); r("R4", "100k", "KILL", "+3V3")   # R185 (round 4) removed in the fix-up: see item 5
 c("C152", "680n", "MAIN_PDT", "GND", lcsc="C107067")   # YAGEO CC0603KRX7R7BB684, 680 nF 16 V X7R 0603 (JLCPCB API, 26 Sep 2026); PDT is rated 2.7 V
 part("Q1", "Transistor_FET", "2N7002", "2N7002: panel controller high = pull KILL low = power off (1 G, 2 S, 3 D)", "SOT23", {"1": "PI_KILL", "2": "GND", "3": "KILL"}); r("R5", "1k", "PI_KILL", "GND")
-part("J_MAINSW", "Connector_Generic", "Conn_01x02", "JST-XH 1x2 socket: the MAIN button lead from the panel, PB and GND", "XH2", {"1": "MAIN_PB", "2": "GND"}, "C265283")
+# ROUND 8: J_MAINSW and J_HEAT carried C265283, B2B-XH-A-GU, gold contacts (LCSC detail record, 26 September 2026), a
+# suffix and a plating the held JST XH catalogue does not list (v2/vendor/connectors/jst-xh-catalogue.pdf p.-4-, Header,
+# top entry: B2B-XH-A, "Post: Brass, copper-undercoated, tin-plated"), and the mating XH contacts are tin. Both take
+# C158012, B2B-XH-A(LF)(SN), JST, tin (the same record; stock 344,040), the code board E's J_TAMP carries.
+part("J_MAINSW", "Connector_Generic", "Conn_01x02", "JST-XH 1x2 socket: the MAIN button lead from the panel, PB and GND", "XH2", {"1": "MAIN_PB", "2": "GND"}, "C158012")
 # --- LM5176 four-switch buck-boost stages (lm5176-datasheet.pdf, HTSSOP-28 PWP; Vref 0.8 V; pins: 1 EN/UVLO 2 VIN 3 VISNS 4 MODE 5 DITH 6 RT/SYNC 7 SLOPE 8 SS 9 COMP 10 AGND 11 FB 12 VOSNS
 #     13 ISNS- 14 ISNS+ 15 CSG 16 CS 17 PGOOD 18 SW2 19 HDRV2 20 BOOT2 21 LDRV2 22 PGND 23 VCC 24 BIAS 25 LDRV1 26 BOOT1 27 HDRV1 28 SW1, pad 29)
 # The stages' local bulk (round 4 fix-up, (3) in the helper below): Panasonic ZK series hybrid polymer, one series
@@ -276,10 +290,37 @@ BULK_ZK = {
     "E471": ("470u 25V Panasonic EEHZK1E471P hybrid polymer (10.2 mm)", "CPOL10", "C242138"),   # ESR 20 mOhm max, G 10 x 10.2
     "V331": ("330u 35V Panasonic EEHZK1V331P hybrid polymer (10.2 mm)", "CPOL10", "C278516"),   # ESR 20 mOhm max, 2.8 A rms, G 10 x 10.2 (the E471's land); stock 6,551 (JLCPCB API, 26 Sep 2026)
 }
+# DECISION 42's CLASSES ON THIS BOARD (round 8, 26 September 2026, MESHSAT-1357; v2/docs/feasibility/DECOUPLING.md
+# section 6 and items G1 to G3 of 8.3). Every declared decoupling capacitor carries its CLASS, the role its maker gives
+# it, and the maker's clause as its BASIS: R a converter's own power-stage capacitor, D a capacitor a maker ties to a
+# supply pin, L a regulator's output capacitor with its maker's value bound, A an analog supply pin behind a series
+# resistor. A converter's input and output capacitors are declared against the POWER LOOP they close (R1, R4), never
+# against a controller pin, in `power_loops`. intent.py has no class argument yet (DECOUPLING.md T5 is the tools
+# stream's), so the class is written onto the entry the engine recorded, and write() below refuses an unclassed entry
+# on this board. The page numbers are the PDFs' own pages.
+_LM_VIN = "TI SNVSAI1D (LM5176) 10.1 p.30: 'Bypass the VIN pin to AGND with a low ESR ceramic capacitor located close to the controller IC. A 0.1-uF ceramic capacitor is typically used'"
+_LM_BIAS = "TI SNVSAI1D 10.1 p.30: 'Place the BIAS bypass capacitor close to the controller IC, between the BIAS and PGND pins. A 0.1-uF ceramic capacitor is typically used'"
+_LM_VCC = "TI SNVSAI1D 10.1 p.30: 'Place the VCC bypass capacitor close to the controller IC, between the VCC and PGND pins'; 7.3.2 p.15: 'A ceramic capacitor of 16 V or higher voltage rating and a value between 1 uF and 4.7 uF is required'"
+_LM_CS = "TI SNVSAI1D 10.1 p.30: 'Place the filter capacitor for the current sense signal as close to the IC pins as possible'"
+_LM_ISNS = "TI SNVSAI1D 10.1 p.30: 'Place the average current loop filter capacitor close to the IC between the ISNS(+) and ISNS(-) pins'"
+_LM_LOOP_IN = "TI SNVSAI1D 10.1 p.30: 'Place the power components including the input filter capacitor CIN, the power MOSFETs QL1 and QH1, and the sense resistor RSENSE close together to minimize the loop area for input switching current in buck operation'"
+_LM_LOOP_OUT = "TI SNVSAI1D 10.1 p.30: 'Place the power components including the output filter capacitor COUT, the power MOSFETs QL2 and QH2, and the sense resistor RSENSE close together to minimize the loop area for output switching current in boost operation'"
+def _cls(cap, cls, basis, **extra):
+    """Write decision 42's class and its maker clause onto the declared entry of `cap` (the last one recorded)."""
+    if cls not in ("R", "D", "L", "A", "B1", "B2"): raise SystemExit("decoupling class %r for %s is not one of decision 42's" % (cls, cap))
+    for _b in reversed(_intent._I["bypass"]):
+        if _b["cap"] == cap:
+            _b["class"] = cls; _b["basis"] = basis; _b.update(extra); return
+    raise SystemExit("decoupling class for %s: the capacitor has no declared pin" % cap)
+def _loop(conv, loop, caps, parts, basis, cls="R"):
+    """A power-stage loop declaration (decision 42 R1 and R4): the capacitors that close it and the switches and sense
+    resistor it runs through, in place of a declaration against a controller pin."""
+    _intent._I.setdefault("power_loops", []).append({"converter": conv, "loop": loop, "caps": list(caps), "parts": list(parts),
+                                                      "class": cls, "basis": basis, "same_side": True})
 def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, cs_filter, isns_filter, isns="10m", rcs="5m", bias=None,
            rfb_val="10k 1%", cout="10u 50V X7R 1210", cin="10u 50V X7R 1210", out_budget=None,
            cslope=None, boot_diodes=None, en_div=True, isns_lcsc="", cout_lcsc="", comp=None, bulk=(), bulk_part="V101", cout_extra=(), l_lcsc="",
-           bias_cap=None, css=("47n", ""), cout_pre=(), vin_block=None, visns_r=None):
+           bias_cap=None, css=("47n", ""), cout_pre=(), vin_block=None, visns_r=None, en_node=None, en_vals=None, vin_cap=None):
     """one stage with prefix p: refs = (Q_bh, Q_bl, Q_bsl, Q_bsh, R_fb_top, R_fb_bot, R_rt, C_slope, R_comp, C_comp, C_comp2, C_ss, C_vcc, C_boot1, C_boot2, R_isns, R_cs, R_pgood, R_en_top, R_en_bot, Cin1, Cin2, Cout1, Cout2, Cout3, R_mode)
     cslope = (value, lcsc) of the SLOPE capacitor; boot_diodes = (D for BOOT1, D for BOOT2). Both are REQUIRED
     (26 September 2026): a stage without them cannot run, see the comment below. en_div=False drives EN/UVLO
@@ -307,7 +348,17 @@ def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, cs_
     exceed 40 V (fourth fix-up of 26 September 2026, the third re-review's minor item 3): SNVSAI1D 7.3.7, "For
     application where input voltage is higher than 40 V, a 2-kOhm resistor in series with the VISNS pin is required
     as shown in Figure 8-1"; Figure 8-1 draws the 2 k with no capacitor at the pin, so none is declared as pin 3's
-    bypass when it is given."""
+    bypass when it is given.
+    en_node, en_vals (round 8, 26 September 2026, MESHSAT-1357 EMCON L4): the EN/UVLO pin sits on its own net en_node
+    behind a divider from the enable line `en`, en_vals = ((top value, lcsc), (bottom value, lcsc)). Without en_node the
+    divider's middle is N("EN"), which for the PA, HF, PoE and PD stages IS the enable line's own name, so their 62 k
+    top resistor had both pins on one net (a part doing nothing; kept as it was on PoE and PD, which EMCON does not gate).
+    vin_cap = (ref, value, lcsc) (round 8, DECOUPLING.md G1): the VIN pin's own 0.1 uF to AGND, SNVSAI1D 10.1 p.30
+    ("Bypass the VIN pin to AGND with a low ESR ceramic capacitor located close to the controller IC. A 0.1-uF ceramic
+    capacitor is typically used"), REQUIRED on a stage without vin_block, whose blocking-diode capacitor already is that
+    pin's capacitor. CIN is no longer declared against a controller pin (it was declared against VIN on four stages and
+    against VISNS on six): it is declared against the input power loop, and COUT against the output loop (decision 42,
+    R1 and R4; the loop declarations are `power_loops` in the intent)."""
     qbh, qbl, qsl, qsh, rft, rfb, rrt, csl, rco, cco, cco2, _css_ref, cvcc, cb1, cb2, risns, rcs_, rpg, ret, reb, ci1, ci2, co1, co2, co3, rmd = refs
     # TWO DEFECTS OF THIS HELPER, FOUND 26 September 2026 (MESHSAT-1357 round 4) while building the two new stages
     # of F-PR-04, and fixed here for all seven stages because the helper is one place. Source: TI SNVSAI1D (August
@@ -374,7 +425,7 @@ def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, cs_
                          "(SNVSAI1D 7.3.2 and 9.1); none was given" % (p, bias or vout, vin))
     N = lambda s: p + "_" + s
     ic(uref, 29, "LM5176PWPR buck-boost controller, %s from %s" % (vout, vin), "HTSSOP28", {
-        "1": N("EN") if en_div else en, "2": N("VINP") if vin_block else vin, "3": N("VISNS") if visns_r else vin, "4": N("MODE"), "5": "GND", "6": N("RT"), "7": N("SLOPE"), "8": N("SS"), "9": N("COMP"), "10": "GND", "11": N("FB"), "12": vout,
+        "1": (en_node or N("EN")) if en_div else en, "2": N("VINP") if vin_block else vin, "3": N("VISNS") if visns_r else vin, "4": N("MODE"), "5": "GND", "6": N("RT"), "7": N("SLOPE"), "8": N("SS"), "9": N("COMP"), "10": "GND", "11": N("FB"), "12": vout,
         "13": N("ISNS_N"), "14": N("ISNS_P"), "15": N("CSGF"), "16": N("CSF"), "17": N("PGOOD"), "18": N("SW2"), "19": N("HDRV2"), "20": N("BOOT2"), "21": N("LDRV2"), "22": "GND", "23": N("VCC"),
         "24": bias or vout, "25": N("LDRV1"), "26": N("BOOT1"), "27": N("HDRV1"), "28": N("SW1"), "29": "GND"}, "C442493")
     nfet(qbh, fet, N("HDRV1"), vin, N("SW1"), lcsc=fet_lcsc); nfet(qbl, fet, N("LDRV1"), N("SW1"), N("CS"), lcsc=fet_lcsc)
@@ -384,7 +435,9 @@ def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, cs_
     c(csl, cslope[0], N("SLOPE"), "GND", lcsc=cslope[1])   # the slope capacitor, 26 September 2026 (see above)
     (_rc1, _rc1c), (_cc1, _cc1c), (_cc2, _cc2c) = comp   # the stage's own compensation, (3) above
     r(rco, _rc1, N("COMP"), N("COMPC"), lcsc=_rc1c); c(cco, _cc1, N("COMPC"), "GND", lcsc=_cc1c); c(cco2, _cc2, N("COMP"), "GND", lcsc=_cc2c); c(_css_ref, css[0], N("SS"), "GND", *(css[2:3] or ("C",)), lcsc=css[1]); c(cvcc, "4.7u", N("VCC"), "GND", "C10u", bypass=(uref, "23"))   # the controller's own VCC
+    _cls(cvcc, "L", _LM_VCC, value_floor="1u", value_ceiling="4.7u", esr_bound=None)   # round 8 (G1): the VCC regulator's own output capacitor, class L
     c(bias_cap, "100n", bias or vout, "GND", bypass=(uref, "24"))   # SNVSAI1D 9.1, the BIAS pin's own bypass (second fix-up); C14663 is 50 V, and BIAS is at most 20 V (VBUS20)
+    _cls(bias_cap, "D", _LM_BIAS)
     c(cb1, "100n 25V", N("BOOT1"), N("SW1")); c(cb2, "100n 25V", N("BOOT2"), N("SW2"))
     # The value names no controller: emc_sheet.py reads a part number in a value string as a switching source,
     # and "LM5176" in fourteen diode values made each of them one (the first suite run of 26 September 2026).
@@ -418,6 +471,7 @@ def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, cs_
     r(_rcsf, "100R 1% (CS filter, Kelvin from the shunt's top)", N("CS"), N("CSF"))
     r(_rcsgf, "100R 1% (CSG filter, Kelvin from the shunt's ground pad)", "GND", N("CSGF"))
     c(_ccsf, "1n", N("CSF"), N("CSGF"), bypass=(uref, "16"))   # "as close to the IC pins as possible": declared as pin 16's own decoupling so bypass_slots reserves its seat before the packer runs and DEC-001 measures the distance
+    _cls(_ccsf, "D", _LM_CS)
     # AND THE AVERAGE-CURRENT PAIR GETS THE SAME NETWORK, for a reason that was MEASURED on A54's routed board
     # (20 September 2026). Pins 13 and 14 were wired straight onto the two power rails the ISNS shunt separates,
     # so the tap was not a net at all: `kelvin_check` on that board read ELEVEN of thirteen taps as not Kelvin
@@ -441,7 +495,12 @@ def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, cs_
     r(_risnsp, "100R 1% (ISNS+ filter, Kelvin from the shunt's output pad)", N("OUT"), N("ISNS_P"))
     r(_risnsn, "100R 1% (ISNS- filter, Kelvin from the shunt's rail pad)", vout, N("ISNS_N"))
     c(_cisns, "1n", N("ISNS_P"), N("ISNS_N"), bypass=(uref, "14"))   # at the pins, as the CS capacitor is: declared as pin 14's own decoupling so bypass_slots reserves its seat before the packer runs
-    if en_div:
+    _cls(_cisns, "D", _LM_ISNS)
+    if en_div and en_vals:   # round 8 (EMCON L4): the divider's middle is the EN/UVLO pin's own net
+        if not en_node: raise SystemExit("lm5176 %s: en_vals names a divider and no en_node for its middle" % p)
+        (_etv, _etl), (_ebv, _ebl) = en_vals
+        r(ret, _etv, en, en_node, lcsc=_etl); r(reb, _ebv, en_node, "GND", lcsc=_ebl)
+    elif en_div:
         r(ret, "62k 1%", en, N("EN")); r(reb, "10k 1%", N("EN"), "GND")
     elif ret or reb:
         raise SystemExit("lm5176 %s: en_div=False takes no EN divider references, and %s/%s were given" % (p, ret, reb))
@@ -457,13 +516,26 @@ def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, cs_
     # part in the same land (C5156756, X7R, 426,107 in stock). The cost of the ruling is capacitance: 20 uF in
     # and 30 uF out per stage against 44 and 66, and X7R derates further under bias, so the ripple and loop
     # margin on a 5 A converter are owed a measurement before the order.
+    # ROUND 8 (26 September 2026, DECOUPLING.md G1, decision 42 R1 and R4): CIN IS DECLARED AGAINST THE POWER LOOP IT
+    # CLOSES, AND THE VIN PIN GETS ITS OWN 0.1 uF. Until round 8 ci1 was declared against VIN (pin 2) on the four stages
+    # without a blocking diode, and ci2 against VISNS (pin 3) on six stages: VISNS is a sense input ("VIN sense input.
+    # Connect to power stage input rail", pin table p.3) with no decoupling requirement, and a 10 uF power-stage
+    # capacitor serves the input loop (QH1, QL1, RSENSE, SNVSAI1D 10.1 p.30), not a controller pin. The VIN pin's own
+    # capacitor is the 0.1 uF 10.1 names: on FE, PA and HF it is the blocking diode's capacitor already at the pin, and
+    # S2, SD, POE and PD get vin_cap.
     if vin_block:   # third fix-up (R4A-N11): the VIN pin behind its blocking diode, with its own capacitor at the pin
         _dvb, _cvb, _cvbv, _cvbl, _cvbf = vin_block
         part(_dvb, "Device", "D_Schottky", "BAT46W-7-F Schottky 100V (VIN blocking)", "SOD123", {"1": N("VINP"), "2": vin}, "C83152")
-        c(_cvb, _cvbv, N("VINP"), "GND", _cvbf, lcsc=_cvbl, bypass=(uref, "2"))
-        c(ci1, cin, vin, "GND", "C1210"); c(ci2, cin, vin, "GND", "C1210", **({} if visns_r else {"bypass": (uref, "3")}))   # the power stage's input capacitors; ci2 serves VISNS unless VISNS sits behind its 2 k
+        c(_cvb, _cvbv, N("VINP"), "GND", _cvbf, lcsc=_cvbl, bypass=(uref, "2")); _cls(_cvb, "D", _LM_VIN)
+        c(ci1, cin, vin, "GND", "C1210"); c(ci2, cin, vin, "GND", "C1210")   # the power stage's input capacitors: the input loop, below
     else:
-        c(ci1, cin, vin, "GND", "C1210", bypass=(uref, "2")); c(ci2, cin, vin, "GND", "C1210", **({} if visns_r else {"bypass": (uref, "3")}))   # the two VIN pins
+        if not vin_cap:
+            raise SystemExit("lm5176 %s: the VIN pin needs its own 0.1 uF to AGND (SNVSAI1D 10.1 p.30; DECOUPLING.md G1); "
+                             "none was given" % p)
+        _vcr, _vcv, _vcl = vin_cap
+        c(ci1, cin, vin, "GND", "C1210"); c(ci2, cin, vin, "GND", "C1210")   # the power stage's input capacitors: the input loop, below
+        c(_vcr, _vcv, vin, "GND", lcsc=_vcl, bypass=(uref, "2")); _cls(_vcr, "D", _LM_VIN)   # the VIN pin's own 0.1 uF (round 8, G1)
+    _loop(uref, "input", (ci1, ci2), (qbh, qbl, rcs_), _LM_LOOP_IN)
     for cr in (co1, co2, co3) + tuple(cout_extra):
         if cr in cout_pre: continue
         c(cr, cout, vout, "GND", "C1210", lcsc=cout_lcsc)
@@ -475,6 +547,7 @@ def lm5176(p, uref, vin, vout, en, rfb_top, lref, lval, fet, fet_lcsc, refs, cs_
         raise SystemExit("lm5176 %s: the bulk part %s is rated %s and %s runs at %s V, over 80 percent of it" % (p, bulk_part, _bv.split()[1], vout, _intent.net_volts(vout)))
     for cb in bulk:   # local bulk the stage's loop design asks for, (3) above; pad 1 is the positive terminal
         part(cb, "Device", "C_Polarized", _bv, _bfp, {"1": vout, "2": "GND"}, _bl)
+    _loop(uref, "output", (co1, co2, co3) + tuple(cout_extra) + tuple(bulk), (qsl, qsh, rcs_), _LM_LOOP_OUT)   # round 8: COUT against the output loop (decision 42 R4)
     # THE STAGE'S OWN NON-RAIL NETS, DECLARED HERE AND NOT IN TWENTY HAND-WRITTEN LINES (16 September 2026,
     # rule CMP-001). A buck-boost's two switching nodes are where the highest voltage on the board appears and
     # nothing declared them: `derate.py` reported twenty-nine of board A's nets as UNDECLARED and judged no
@@ -649,7 +722,7 @@ kisch.tvs("D2", "SMCJ40A (VIN_RAW clamp behind E6's filter: 40 V standoff on a l
 #   0.792 V, whatever channel 2 does afterwards. Its state is VBUS20 itself, so it is rebuilt from the bank at every
 #   power-up of the supervisor; no memory is lost when VIN_RAW vanishes.
 #  FE_RUN (both RESET pins) is pulled to FE_VZ by R198 (100 k); FE_VZ is VIN_RAW through R200 (33 k) clamped by D22
-#   (BZT52C12-7-F, Diodes DS18004, 11.4 to 12.7 V; v2/vendor/diodes/diodes-bzt52c-ds18004.pdf): 5.9 V at the UV fall, 0.63
+#   (BZT52C12-7-F, Diodes DS18004 Rev. 38-2, 11.4 to 12.7 V; v2/vendor/diodes/diodes-bzt52c-ds18004.pdf, sha256 0fbd7d13, filed in 2aaa7b7f): 5.9 V at the UV fall, 0.63
 #   mA in the zener at 36 V, 85 mW in R200 at the clamp's 64.5 V. U2's EN/UVLO (60 V, VEN(OP) 1.17 to 1.29 V) takes
 #   FE_RUN over R199 (47 k) and R206 (100 k), 0.68 of it, with C213 (2.2 nF) at the pin. Three things rest on that:
 #   (a) while held, EN sits at 0.44 V at most (U34's 0.3 V VOL plus the pin's own 7 uA into 32 k), under VEN(STBY)'s
@@ -682,6 +755,7 @@ _gw = "restart guard (fourth fix-up, R4A-N15): "
 ic("U34", 11, "TPS37A010122DSKR 65 V OV/UV supervisor: the FE's enable and its restart latch", "WSON10", {
  "1": "FE_GVDD", "2": "FE_LATCH", "3": "FE_UVS", "4": "FE_RUN", "5": "FE_RUN", "6": "NC", "7": "NC", "8": "NC", "9": "FE_CTR2", "10": "GND", "11": "GND"}, "C3685740")
 r("R196", "1k", "VIN_RAW", "FE_GVDD", lcsc="C21190"); c("C210", "1u 100V 1210", "FE_GVDD", "GND", "C1210", lcsc="C382212", bypass=("U34", "1"))   # VDD's own filter: 1 ms keeps a clamp-edge step under SNVSBJ1E's 100 mV/us for its UVLO figures
+_cls("C210", "D", "TI SNVSBJ1E (TPS37A) pin table: VDD 'Input Supply Voltage: Bypass with a 0.1 uF capacitor to GND' (the sheet is r4a's drafts/datasheets/ti-tps37.pdf, sha256 d6aed9d9, not yet filed under v2/vendor); the fitted 1 uF behind R196 is also VDD's filter")
 r("R14", "91k 1%", "VIN_RAW", "FE_UVS", lcsc="C23265"); r("R15", "10k 1%", "FE_UVS", "GND", lcsc="C25804"); c("C211", "10n", "FE_UVS", "GND", lcsc="C57112")   # channel 2 (UV): 8.08 V falling, 8.24 V rising
 c("C212", "100n", "FE_CTR2", "GND", lcsc="C14663")   # CTR2: the UV channel's release delay, 79 to 201 ms
 r("R197", "100k", "VBUS20", "FE_LATCH", lcsc="C25803")   # channel 1 (the latch) reads VBUS20 itself
@@ -816,6 +890,8 @@ def buck5(n, uref, en, out, refs, ina, a1, a0):
     ic(uref, 9, "AP64500SP-13 5 A buck, 5.1 V rail %s" % out, "SO8EP", {"1": "S%s_BOOT" % n, "2": "VBAT", "3": en, "4": "S%s_RT" % n, "5": "S%s_FB" % n, "6": "S%s_COMP" % n, "7": "GND", "8": "S%s_SW" % n, "9": "GND"}, "C2070920")
     part(L, "Device", "L", "4.7uH XAL6060-472ME (Isat 11 A)", "L6060", {"1": "S%s_SW" % n, "2": "S%s_OUT" % n}); c(cb, "100n", "S%s_BOOT" % n, "S%s_SW" % n)
     c(ci1, "10u 25V 1210", "VBAT", "GND", "C1210", bypass=(uref, "2")); c(ci2, "10u 25V 1210", "VBAT", "GND", "C1210", bypass=(uref, "2"))   # the buck's VIN pin
+    for _ci in (ci1, ci2):   # round 8, decision 42 R1: an AP64500's input capacitors close its switching loop across VIN and its GND pin
+        _cls(_ci, "R", "Diodes DS41979 Rev 5-2 (AP64500), Layout item 2 p.23: 'Place the input capacitors as closely across VIN and GND as possible'")
     for cr in (co1, co2, co3): c(cr, "22u 10V X7R 1210", out, "GND", "C1210")
     r(rt, "53.6k 1%", out, "S%s_FB" % n); r(rb, "10k 1%", "S%s_FB" % n, "GND"); r(rrt, "68k (RT: 500 kHz)", "S%s_RT" % n, "GND"); r(rco, "22k", "S%s_COMP" % n, "S%s_COMPC" % n); c(cco, "3.3n", "S%s_COMPC" % n, "GND")
     r(rsh, "5mOhm 1% 2512 (shunt)", "S%s_OUT" % n, out, "RS2512"); r(rpg, "100k", en, "GND")   # a slot with no controller line stays off
@@ -874,7 +950,8 @@ lm5176("S2", "U5", "VBAT", "+5V_S2", "SLOT_EN2", "53.6k", "L4", "6.8uH XAL1010-6
        ["Q28", "Q29", "Q30", "Q31", "R32", "R33", "R46", "C133", "R130", "C113", "C134", "C135", "C136", "C34", "C137", "R35", "R170", "R171", None, None, "C35", "C36", "C37", "C38", "C39", "R172"],
        cs_filter=("R173", "R174", "C138"), isns_filter=("R175", "R176", "C139"), isns="6m", isns_lcsc="C843882",
        cout="22u 25V 1210", cout_lcsc="C2918511", cslope=("470p", "C27694"), boot_diodes=("D5", "D6"), en_div=False,
-       bias="VBAT", comp=(("2.2k", "C4190"), ("100n", "C14663"), ("1n", "C1588")), bulk=("C164", "C165", "C166"), bulk_part="E151", bias_cap="C193")   # fix-up: BIAS on VBAT (R4A-N6); loop PM 68, GM 15.1 dB, 2.6 to 9.4 kHz, 72 mOhm against 85
+       bias="VBAT", comp=(("2.2k", "C4190"), ("100n", "C14663"), ("1n", "C1588")), bulk=("C164", "C165", "C166"), bulk_part="E151", bias_cap="C193",
+       vin_cap=("C219", "100n", "C14663"))   # fix-up: BIAS on VBAT (R4A-N6); loop PM 68, GM 15.1 dB, 2.6 to 9.4 kHz, 72 mOhm against 85
 # second fix-up (26 Sep 2026): bulk ripple 0.28 A rms per EEHZK1E151XP, 15 percent of 1.8 A (buck only; bulk_ripple.py); on the widened loop band (Q to 1.5, L +-20 percent) PM 68, GM 9.4 dB
 r("R34", "100k", "SLOT_EN2", "GND")   # a slot with no controller line stays off (as the AP64500 stage had it)
 ic("U9", 10, "INA226 rail monitor +5V_S2", "VSSOP10", {"1": "GND", "2": "+3V3", "3": "INA_ALERT", "4": "SDA", "5": "SCL", "6": "+3V3", "7": "GND", "8": "+5V_S2", "9": "+5V_S2", "10": "S2_OUT"}, "C49851")   # 0x41, across the ISNS shunt R35
@@ -882,7 +959,8 @@ lm5176("SD", "U7", "VBAT", "+5V_DEV", "DEV_EN", "53.6k", "L6", "6.8uH XAL1010-68
        ["Q32", "Q33", "Q34", "Q35", "R40", "R41", "R115", "C140", "R132", "C115", "C141", "C142", "C143", "C46", "C144", "R43", "R177", "R178", None, None, "C47", "C48", "C49", "C50", "C51", "R179"],
        cs_filter=("R180", "R181", "C145"), isns_filter=("R182", "R183", "C146"), isns="6m", isns_lcsc="C843882",
        cout="22u 25V 1210", cout_lcsc="C2918511", cslope=("470p", "C27694"), boot_diodes=("D7", "D8"), en_div=False,
-       bias="VBAT", comp=(("2.2k", "C4190"), ("100n", "C14663"), ("1n", "C1588")), bulk=("C167", "C168", "C169"), bulk_part="E151", bias_cap="C194")   # fix-up: BIAS on VBAT (R4A-N6); loop PM 68, GM 15.1 dB, 2.9 to 9.4 kHz, 72 mOhm against 85
+       bias="VBAT", comp=(("2.2k", "C4190"), ("100n", "C14663"), ("1n", "C1588")), bulk=("C167", "C168", "C169"), bulk_part="E151", bias_cap="C194",
+       vin_cap=("C220", "100n", "C14663"))   # fix-up: BIAS on VBAT (R4A-N6); loop PM 68, GM 15.1 dB, 2.9 to 9.4 kHz, 72 mOhm against 85
 # second fix-up (26 Sep 2026): bulk ripple 0.28 A rms per EEHZK1E151XP, 15 percent of 1.8 A (buck only; bulk_ripple.py); on the widened loop band (Q to 1.5, L +-20 percent) PM 68, GM 9.4 dB
 r("R42", "100k", "DEV_EN", "+3V3")   # S-08, 26 September 2026 (A01, W2 F-SQ-01): a PULL-UP to board A's +3V3, not a pull-down
 ic("U11", 10, "INA226 rail monitor +5V_DEV", "VSSOP10", {"1": "+3V3", "2": "+3V3", "3": "INA_ALERT", "4": "SDA", "5": "SCL", "6": "+3V3", "7": "GND", "8": "+5V_DEV", "9": "+5V_DEV", "10": "SD_OUT"}, "C49851")   # 0x45, across the ISNS shunt R43
@@ -897,6 +975,12 @@ _intent.node("B33_SW", _intent.rail_volts("VBAT"),
              "the TPS62933's switching node: it swings to VBAT, the pack node that feeds the 3.3 V buck, and "
              "a diode drop below ground on the other half of the cycle", v_min=-1.0)
 part("L7", "Device", "L", "4.7uH XAL4030-472ME", "L4030", {"1": "B33_SW", "2": "+3V3"}); c("C52", "100n", "B33_BST", "B33_SW"); c("C53", "10n", "B33_SS", "GND"); c("C54", "10u 25V 1210", "VBAT", "GND", "C1210")
+# ROUND 8 (26 September 2026, DECOUPLING.md G2): THE 0.1 uF AT U12's VIN. TI SLUSEA4D 12.1 p.40: "Place a 0.1-uF ceramic
+# decoupling capacitor or capacitors as close as possible to VIN and GND pins, which is key to EMI reduction"; U12 had
+# only C54, the 10 uF input capacitor. C223 is the certified 100 nF 50 V X7R 0603 (C14663); VBAT is at most 16.8 V in
+# service and 29.2 V at the SMCJ18A's clamp. Both are class R, on the IC's own side ("Place the inductor, input and
+# output capacitors, and the IC on the same layer", the same page).
+c("C223", "100n", "VBAT", "GND", lcsc="C14663")
 c("C55", "22u 10V X7R 1210", "+3V3", "GND", "C1210"); c("C56", "22u 10V X7R 1210", "+3V3", "GND", "C1210"); r("R48", "31.6k 1%", "+3V3", "B33_FB"); r("R49", "10k 1%", "B33_FB", "GND")
 kisch.tvs("D3", "SMBJ5.0A", "+3V3", "GND", "TVS")   # TRN-001 / S-09 (ts-tvs, 26 Sep 2026): a one-way part, drawn K/A by kisch.tvs() (Device:D_Zener, K pin 1 on +3V3, A pin 2 on GND; direction from the part number, recorded in the intent under "clamps"); nets, value, land and code as before (lcsc_fill fits MDD C113974, v2/vendor/power/mdd-smbj-series-tvs.pdf)
 # --- PA rail: LM5176 from VBAT to 13.8 V at 6 A for the RA30H1317M1 on the face plate (32.56), enabled by the hardware EMCON gate AND the software hold (PA_EN from U26); 40 V FETs
@@ -915,7 +999,8 @@ lm5176("PA", "U13", "VBAT", "+13V8_PA", "PA_EN", "162k", "L8", "6.8uH XAL1010-68
        ["Q11", "Q12", "Q13", "Q14", "R50", "R51", "R52", "C148", "R54", "C57", "C58", "C59", "C60", "C61", "C62", "R55", "R56", "R57", "R58", "R59", "C63", "C64", "C65", "C66", "C67", "R120"], cs_filter=("R152", "R153", "C124"), isns_filter=("R162", "R163", "C129"),
        isns="6m", isns_lcsc="C843882", cslope=("470p", "C27694"), boot_diodes=("D11", "D12"),
        comp=(("6.8k", "C23212"), ("100n", "C14663"), ("1.5n", "C37788")), bulk=("C170", "C171"), bulk_part="E471", bias_cap="C195",
-       vin_block=("D20", "C208", "1u", "C15849", "C"))   # third fix-up (R4A-N11): BIAS is +13V8_PA, so pin 2 sits behind D20 with C208 (1 uF 50 V X5R 0603, Samsung CL10A105KB8NNNC) at the pin; VBAT's 16.8 V is well inside both. The fix-up loop: PM 65, GM 12.8 dB, 1.5 to 5.4 kHz, 86 mOhm against 127; round 4, 26 Sep 2026: F-PR-01 (ISNS 6 mOhm) and the helper's two defects (CSLOPE 544 pF dead-beat, 470 pF C0G; R53 retired)
+       vin_block=("D20", "C208", "1u", "C15849", "C"),
+       en_node="PA_UVLO", en_vals=(("10k 1%", "C25804"), ("15k 1%", "C22809")))   # round 8 (EMCON L4): EN/UVLO at 0.6 of PA_EN, see the EMCON gates below. Third fix-up (R4A-N11): BIAS is +13V8_PA, so pin 2 sits behind D20 with C208 (1 uF 50 V X5R 0603, Samsung CL10A105KB8NNNC) at the pin; VBAT's 16.8 V is well inside both. The fix-up loop: PM 65, GM 12.8 dB, 1.5 to 5.4 kHz, 86 mOhm against 127; round 4, 26 Sep 2026: F-PR-01 (ISNS 6 mOhm) and the helper's two defects (CSLOPE 544 pF dead-beat, 470 pF C0G; R53 retired)
 # second fix-up (26 Sep 2026): bulk ripple 2.15 A rms per EEHZK1E471P at 10 V in and 6 A, 77 percent of 2.8 A (Equation 19: 3.7 A for the node; bulk_ripple.py); on the widened loop band PM 63.7, GM 9.9 dB
 ic("U14", 10, "INA226 PA rail monitor (0x46)", "VSSOP10", {"1": "+3V3", "2": "SDA", "3": "INA_ALERT", "4": "SDA", "5": "SCL", "6": "+3V3", "7": "GND", "8": "+13V8_PA", "9": "+13V8_PA", "10": "PA_OUT"}, "C49851")
 vh2("J_PA", "13.8 V to the PA module on the face plate (JST-VH, 16 AWG): + -", "+13V8_PA")
@@ -924,7 +1009,8 @@ lm5176("HF", "U15", "VBAT", "+12V_HF", "HF_EN", "140k", "L9", "6.8uH XAL1010-682
        ["Q15", "Q16", "Q23", "Q24", "R60", "R61", "R62", "C149", "R64", "C68", "C69", "C70", "C71", "C72", "C73", "R65", "R122", "R123", "R124", "R125", "C74", "C108", "C109", "C110", "C111", "R126"], cs_filter=("R154", "R155", "C125"), isns_filter=("R164", "R165", "C130"), isns="10m",
        cslope=("470p", "C27694"), boot_diodes=("D13", "D14"),   # 26 Sep 2026: CSLOPE 544 pF dead-beat, 470 pF C0G; R63 retired
        comp=(("3.3k", "C22978"), ("100n", "C14663"), ("1n", "C1588")), bulk=("C172", "C173"), bulk_part="E151", bias_cap="C196",
-       vin_block=("D21", "C209", "1u", "C15849", "C"))   # third fix-up (R4A-N11): BIAS is +12V_HF, so pin 2 sits behind D21 with C209 at the pin. The fix-up loop: PM 67, GM 12.7 dB, 2.5 to 9.1 kHz, 134 mOhm against 300
+       vin_block=("D21", "C209", "1u", "C15849", "C"),
+       en_node="HF_UVLO", en_vals=(("10k 1%", "C25804"), ("15k 1%", "C22809")))   # round 8 (EMCON L4): EN/UVLO at 0.6 of HF_EN, see the EMCON gates below. Third fix-up (R4A-N11): BIAS is +12V_HF, so pin 2 sits behind D21 with C209 at the pin. The fix-up loop: PM 67, GM 12.7 dB, 2.5 to 9.1 kHz, 134 mOhm against 300
 # second fix-up (26 Sep 2026): bulk ripple 0.55 A rms per EEHZK1E151XP at 10 V in, 31 percent of 1.8 A (bulk_ripple.py); on the widened loop band PM 66.2, GM 8.2 dB
 vh2("J_HF", "12.0 V to the QMX HF unit in its lid tray (JST-VH, in the lid harness): + -", "+12V_HF")
 # --- PoE rail: LM5176 in boost from VBAT to 54 V at 0.6 A for the TPS23861 PSE on B16 (the port magnetics sit beside the switch chip); 100 V FETs; software enable
@@ -945,7 +1031,8 @@ lm5176("POE", "U16", "VBAT", "+54V_POE", "POE_EN", "665k", "L10", "15uH XAL1010-
        ["Q17", "Q18", "Q19", "Q20", "R66", "R67", "R68", "C150", "R70", "C75", "C76", "C77", "C78", "C79", "C80", "R71", "R72", "R73", "R74", "R75", "C81", "C82", "C83", "C84", "C85", "R121"], cs_filter=("R156", "R157", "C126"), isns_filter=("R166", "R167", "C131"), isns="20m", rcs="10m", bias="VBAT",
        cout="10u 100V X7R 1210",   # +54V_POE: a 50 V part on a 54 V rail is over its rating (decision 10)
        cslope=("560p", "C43962"), boot_diodes=("D15", "D16"), l_lcsc="C2802562",
-       comp=(("4.7k", "C23162"), ("100n", "C14663"), ("470p", "C27694")), cout_extra=("C176", "C177"), bias_cap="C197")   # fix-up loop: five output ceramics, PM 65, GM 13.1 dB, 1.5 to 8.6 kHz, 3.8 Ohm against 4.5   # R69 retired 26 Sep 2026; CSLOPE 560 pF for the 15 uH of R4A-N7 (was 820 pF for the 22 uH part that does not exist)
+       comp=(("4.7k", "C23162"), ("100n", "C14663"), ("470p", "C27694")), cout_extra=("C176", "C177"), bias_cap="C197",
+       vin_cap=("C221", "100n", "C14663"))   # fix-up loop: five output ceramics, PM 65, GM 13.1 dB, 1.5 to 8.6 kHz, 3.8 Ohm against 4.5   # R69 retired 26 Sep 2026; CSLOPE 560 pF for the 15 uH of R4A-N7 (was 820 pF for the 22 uH part that does not exist)
 # second fix-up (26 Sep 2026): no bulk; worst output ceramic 0.37 A rms at 10 V in (bulk_ripple.py); on the widened loop band PM 63.6, GM 12.0 dB
 ic("U17", 10, "INA226 PoE rail monitor (0x47)", "VSSOP10", {"1": "+3V3", "2": "SCL", "3": "INA_ALERT", "4": "SDA", "5": "SCL", "6": "+3V3", "7": "GND", "8": "NC", "9": "+54V_POE", "10": "POE_OUT"}, "C49851")   # VBUS pin open: 54 V exceeds its 36 V range
 vh2("J_54V", "54 V to the PoE injector on B16 (JST-VH): + -", "+54V_POE")
@@ -997,7 +1084,8 @@ _intent.rail("PD_VBUS", _PD_V, _PD_A, _PD_A, "R138", loads={"J_USBC_OUT": _PD_A}
 lm5176("PD", "U19", "VBAT", "PD_VPWR", "PD_EN", "105k", "L11", "6.8uH XAL1010-682ME", "CSD18510Q5B 40 V N-FET", "",
        ["Q21", "Q22", "Q25", "Q26", "R76", "R77", "R78", "C151", "R80", "C86", "C87", "C88", "C89", "C90", "C91", "R81", "R127", "R128", "R133", "R134", "C92", "C116", "C117", "C118", "C119", "R135"], cs_filter=("R158", "R159", "C127"), isns_filter=("R168", "R169", "C132"), isns="10m", rfb_val="20k 1% (R_FBL)",
        out_budget=_PD_BUDGET, cslope=("470p", "C27694"), boot_diodes=("D17", "D18"),
-       bias="VBAT", comp=(("3.3k", "C22978"), ("220n", "C160828"), ("1.5n", "C37788")), bulk=("C174", "C175"), bulk_part="E471", bias_cap="C198")   # fix-up: BIAS on VBAT (R4A-N6, the 5 V profile); loop PM 70, GM 15 dB, 0.65 to 8.4 kHz   # 26 Sep 2026: CSLOPE 544 pF dead-beat, 470 pF C0G; R79 retired
+       bias="VBAT", comp=(("3.3k", "C22978"), ("220n", "C160828"), ("1.5n", "C37788")), bulk=("C174", "C175"), bulk_part="E471", bias_cap="C198",
+       vin_cap=("C222", "100n", "C14663"))   # fix-up: BIAS on VBAT (R4A-N6, the 5 V profile); loop PM 70, GM 15 dB, 0.65 to 8.4 kHz   # 26 Sep 2026: CSLOPE 544 pF dead-beat, 470 pF C0G; R79 retired
 # second fix-up (26 Sep 2026): bulk ripple 1.25 A rms per EEHZK1E471P at 10 V in and 15 V 3 A, 45 percent of 2.8 A (bulk_ripple.py); on the widened loop band PM 70.3, GM 9.85 dB
 r("R136", "21.0k 1% (R_FBL2: 9 V when CTL2 is low)", "PD_FB", "PD_CTL2"); r("R137", "14.0k 1% (R_FBL1: 15 V when CTL1 is low too)", "PD_FB", "PD_CTL1")
 ic("U18", 25, "TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A)", "QFN24", {
@@ -1066,10 +1154,11 @@ ic("U33", 8, "TPS62933DRLR 3 A buck, 12.0 V heater rail", "SOT583", {"1": "NC", 
 r("R193", "100k", "VHEAT_IN", "HT_EN"); r("R194", "20k 1%", "HT_EN", "GND")
 part("L12", "Device", "L", "15uH XAL4040-153ME (Isat 2.9 A)", "L4040", {"1": "HT_SW", "2": "VHEAT"})
 c("C157", "100n", "HT_BST", "HT_SW"); c("C158", "10n", "HT_SS", "GND")
-c("C159", "10u 25V 1210", "VHEAT_IN", "GND", "C1210", bypass=("U33", "3")); c("C160", "100n", "VHEAT_IN", "GND")
+c("C159", "10u 25V 1210", "VHEAT_IN", "GND", "C1210", bypass=("U33", "3")); c("C160", "100n", "VHEAT_IN", "GND", bypass=("U33", "3"))   # round 8 (G2): C160 is the 0.1 uF SLUSEA4D 12.1 asks for and is now declared
+for _ci in ("C159", "C160"): _cls(_ci, "R", "TI SLUSEA4D (TPS62933) 12.1 p.40: 'the most critical PCB feature is the loop formed by the input capacitors and power ground'; 'Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins'")
 c("C161", "22u 25V 1210", "VHEAT", "GND", "C1210"); c("C162", "22u 25V 1210", "VHEAT", "GND", "C1210")
 r("R191", "140k 1%", "VHEAT", "HT_FB"); r("R192", "10k 1%", "HT_FB", "GND")
-part("J_HEAT", "Connector_Generic", "Conn_01x02", "JST-XH 1x2 socket: the pack heater mat (12 V, 7.5 W), fed a regulated 12.0 V: + and -", "XH2", {"1": "VHEAT", "2": "GND"}, "C265283")
+part("J_HEAT", "Connector_Generic", "Conn_01x02", "JST-XH 1x2 socket: the pack heater mat (12 V, 7.5 W), fed a regulated 12.0 V: + and -", "XH2", {"1": "VHEAT", "2": "GND"}, "C158012")   # round 8: B2B-XH-A(LF)(SN), not the gold -GU variant (see J_MAINSW)
 _intent.rail("VHEAT_IN", 14.4, 0.58, 0.9, "U22", source_ic="U22 is a TPS2596 eFuse: its OUT pin IS the power path, which is what an eFuse is",
              loads={"U33": 0.58}, fed_from="VBAT", converted=False, v_work=16.8, budget=0.03,
              note="F-PR-06, 26 September 2026: the heater branch between the eFuse U22 and its 12 V buck U33, at VBAT; 7.5 W / 0.9 / 14.4 V = 0.58 A typical, 0.65 A at the 12.9 V edge of regulation (below it the buck is at maximum duty and the mat takes less), under U22's 1.0 A limit")
@@ -1099,8 +1188,60 @@ efuse("U23", "+5V_DEV", "+5V_D8", "D8_EN", "D8_FLT", ["C102", "R98", "R99", "R10
 # drafts/datasheets/ti-sn74lvc1g00.pdf), DBV pin 1 A, 2 B, 3 GND, 4 Y, 5 VCC, 1.65 to 5.5 V, -40 to +125 C; LCSC
 # C7826 (JLCPCB API, 26 September 2026); the KiCad SOT-23-5 land. The 74LVC08 pin map is SCAS283W's PW pinout,
 # which the comment above U26 already carries.
-ic("U26", 14, "SN74LVC08APWR quad AND: EMCON gates for the PA and HF rails, the outlet interlock for PoE and USB-C", "TSSOP14", {
- "1": "EMCON_HW", "2": "PA_SW_EN", "3": "PA_EN", "4": "EMCON_HW", "5": "HF_SW_EN", "6": "HF_EN", "7": "GND", "8": "POE_EN", "9": "POE_SW_EN", "10": "OUTLET_OK", "11": "PD_EN", "12": "PD_SW_EN", "13": "OUTLET_OK", "14": "+3V3"}, "C465737")
+# ROUND 8 (26 September 2026, MESHSAT-1357; EMCON.md L2 and L4, the second checkpoint review's finding C, RF-002): THE PA
+# AND HF RAILS LEAVE U26 FOR FOUR SINGLE GATES THAT READ BOTH EMCON LINES. What U26's sections 1 and 2 were:
+#   PA_EN = EMCON_HW AND PA_SW_EN and HF_EN = EMCON_HW AND HF_SW_EN, straight into the LM5176 EN/UVLO pins, with
+#   R102 100 k on EMCON_HW. Three defects, all read against the makers' sheets:
+#   (L2) the SN74LVC08A states no Ioff and 5 uA of II (SCAS283W 5.7), so with its source gone the line's hold was
+#        UNDECIDED, and board A alone with J_AB1 out read 2 x 5 uA x 100 k = 1.0 V against its 0.8 V VIL;
+#   (L4) below 1.65 V of its own supply the part is unspecified and its output may sit anywhere up to that supply,
+#        above the LM5176's VEN(OP) of 1.17 V minimum (SNVSAI1D 6.5 p.6);
+#   (C)  EMCON_HW carries four pins firmware can drive (board B's three STM32 PC5, board C's RP2040 GPIO21, EMCON.md
+#        L1), so a gate that reads EMCON_HW alone is not dominant end to end whatever this board does: RF-002's walk
+#        read J_PA and J_HF FAIL on the line (tx_inhibit.py 397331f5 on main's netlists).
+# WHAT REPLACES THEM. Per rail two TI SN74AUP1G08DBVR (SCES502Q, March 2024, v2/vendor/ti/ti-sn74aup1g08.pdf, fetched
+# from ti.com on 26 September 2026 and filed with this change, sha256 6d3ebde0; DBV pin 1 A, 2 B, 3 GND, 4 Y, 5 VCC, Table
+# 4-1 p.4; LCSC C139409, TI, read from the JLCPCB API and
+# LCSC's detail record on 26 September 2026, 21:18 UTC, stock 12,485, the exact orderable of the sheet's addendum):
+#   U35: PA_TXOK = TX_INHIBIT_n AND EMCON_HW    U36: PA_EN = PA_TXOK AND PA_SW_EN
+#   U37: HF_TXOK = TX_INHIBIT_n AND EMCON_HW    U38: HF_EN = HF_TXOK AND HF_SW_EN
+# (a) DOMINANT END TO END. TX_INHIBIT_n is the toggle's own conductor and no firmware pin sits on it on any board
+#     (RF-002's walk reads that line PASS), so either EMCON line LOW forces the rail's enable LOW whatever PA_SW_EN,
+#     HF_SW_EN or any firmware pin on EMCON_HW does. EMCON_HW stays as the second input: a fault that holds one
+#     conductor high downstream of board C's U9 leaves the other. The common element is still SW_EMCON and
+#     TX_INHIBIT_n upstream of U9 (EMCON.md SD-EMC-6), and the two gates of a rail are that rail's own.
+# (b) THE HOLD (L2). The AUP parts state II 0.5 uA and Ioff 0.6 uA, -40 to +85 C (SCES502Q 5.5 p.7). R102 becomes
+#     10 k 1% as EMCON.md L2 asks: board A alone with J_AB1 out holds EMCON_HW at 2 x 0.6 uA x 10.1 k = 12 mV. On
+#     TX_INHIBIT_n R145 stays 100 k, because board C's R14 (10 k) sets the line's released level against the three
+#     100 k pull-downs and a lower R145 would take margin from board D's KEY gate; the two AUP inputs add 1.2 uA to
+#     board D's 10 uA, so the A and D pair with J_AB1 out holds 11.2 uA x 52.5 k (both at 5 percent) = 0.59 V.
+# (c) THE GATE'S OWN SUPPLY (L4). The AUP family is specified from 0.8 V (SCES502Q 5.3 p.5), and EN/UVLO is no longer
+#     the gate's output but 0.6 of it: R58/R124 10 k over R59/R125 15 k (1 percent) into PA_UVLO and HF_UVLO. So EN
+#     reaches VEN(OP)'s 1.17 V minimum only with the gate's output at (1.17 - 6 k x 7.25 uA) / 0.606 = 1.86 V or
+#     more, which needs the gate's own +3V3 at 1.86 V or more (VO 0 to VCC, 5.3), where its VIL is 0.35 x VCC = 0.65 V
+#     or higher (5.3; 0.7 V at 2.3 to 2.7 V, 0.9 V at 3 to 3.6 V; between the tabulated bands INFERRED by monotony).
+#     Both lines' asserted levels (12 mV and 0.59 V above, 0 V at the contact) read LOW there, so no supply level of
+#     the gate lets an asserted line enable the stage. 7.25 uA is the pin's IEN(STBY) 3 uA plus dIHYS(OP) 4.25 uA
+#     (SNVSAI1D 6.5 p.6). Released: VOH 2.67 V minimum at VCC 3 V and -2.7 mA (5.5 p.7; the load here is 0.2 mA)
+#     gives EN 0.594 x 2.67 = 1.59 V against VEN(OP)'s 1.29 V maximum. Asserted: VOL 0.1 V (5.5, IOL 20 uA) gives EN
+#     0.061 + 0.044 = 0.10 V, under VEN(STBY)'s 0.55 V minimum: shutdown, not only standby (7.3.3 p.15).
+# (d) THE EDGE. SCES502Q 5.3 limits the input transition to 200 ns/V; TX_INHIBIT_n releases through R14 and C24
+#     (about 100 us) and falls through the toggle's contact, so only the RELEASE edge is out of it, where the parts'
+#     Schmitt action (Vhys 250 mV typical, Features p.1) is what is left: the release direction, as EMCON.md L5 records
+#     for board D's KEY gate, not an inhibit item.
+# (e) FLOATING. PA_TXOK and HF_TXOK carry R207 and R208 (100 k) so a gate pair whose supply is gone leaves nothing
+#     floating (R4T-F9), and each gate has its own 100 nF at VCC (SCES502Q 9 p.14: "For devices with a single supply,
+#     0.1 uF is recommended").
+# U26 keeps the outlet interlock (sections 3 and 4) and its sections 1 and 2 are unused, inputs to GND (SCAS283W
+# Recommended Operating Conditions note 1: "All unused inputs of the device must be held at VCC or GND").
+ic("U26", 14, "SN74LVC08APWR quad AND: the outlet interlock for PoE and USB-C (sections 3 and 4; 1 and 2 unused)", "TSSOP14", {
+ "1": "GND", "2": "GND", "3": "NC", "4": "GND", "5": "GND", "6": "NC", "7": "GND", "8": "POE_EN", "9": "POE_SW_EN", "10": "OUTLET_OK", "11": "PD_EN", "12": "PD_SW_EN", "13": "OUTLET_OK", "14": "+3V3"}, "C465737")
+_AUP = "C139409"   # TI SN74AUP1G08DBVR
+ic("U35", 5, "SN74AUP1G08DBVR AND: PA_TXOK = TX_INHIBIT_n AND EMCON_HW (the PA rail's EMCON gate)", "SOT235", {"1": "TX_INHIBIT_n", "2": "EMCON_HW", "3": "GND", "4": "PA_TXOK", "5": "+3V3"}, _AUP); c("C215", "100n", "+3V3", "GND", lcsc="C14663")
+ic("U36", 5, "SN74AUP1G08DBVR AND: PA_EN = PA_TXOK AND PA_SW_EN (the software hold)", "SOT235", {"1": "PA_TXOK", "2": "PA_SW_EN", "3": "GND", "4": "PA_EN", "5": "+3V3"}, _AUP); c("C216", "100n", "+3V3", "GND", lcsc="C14663")
+ic("U37", 5, "SN74AUP1G08DBVR AND: HF_TXOK = TX_INHIBIT_n AND EMCON_HW (the HF rail's EMCON gate)", "SOT235", {"1": "TX_INHIBIT_n", "2": "EMCON_HW", "3": "GND", "4": "HF_TXOK", "5": "+3V3"}, _AUP); c("C217", "100n", "+3V3", "GND", lcsc="C14663")
+ic("U38", 5, "SN74AUP1G08DBVR AND: HF_EN = HF_TXOK AND HF_SW_EN (the software hold)", "SOT235", {"1": "HF_TXOK", "2": "HF_SW_EN", "3": "GND", "4": "HF_EN", "5": "+3V3"}, _AUP); c("C218", "100n", "+3V3", "GND", lcsc="C14663")
+r("R207", "100k", "PA_TXOK", "GND", lcsc="C25803"); r("R208", "100k", "HF_TXOK", "GND", lcsc="C25803")
 ic("U30", 5, "SN74LVC1G00DBVR NAND: OUTLET_OK = NOT (TR_APRS AND PA_EN), the outlet interlock", "SOT235", {"1": "TR_APRS", "2": "PA_EN", "3": "GND", "4": "OUTLET_OK", "5": "+3V3"}, "C7826"); c("C153", "100n", "+3V3", "GND")
 # S-08, 26 September 2026 (adjudication A01, W2 F-SQ-07, W5-F1): the pull-downs on the expander-driven enables are
 # 4.7 k, not 100 k. The TI PCA9555 pulls every undriven I/O up through about 100 k at power-up (SCPS131J 8.1 and
@@ -1109,7 +1250,8 @@ ic("U30", 5, "SN74LVC1G00DBVR NAND: OUTLET_OK = NOT (TR_APRS AND PA_EN), the out
 # (A01 node_calc: 100 uA x 4.7 k), under every OFF threshold, at 0.71 mA per line driven high. R114 and R143 join
 # the list because the interlock above made POE_SW_EN and PD_SW_EN logic inputs where the LM5176's 10 k used to hold
 # them.
-r("R102", "100k", "EMCON_HW", "GND"); c("C104", "100n", "+3V3", "GND"); r("R103", "4.7k", "PA_SW_EN", "GND"); r("R104", "4.7k", "HF_SW_EN", "GND"); r("R145", "100k", "TX_INHIBIT_n", "GND")   # fail safe: no panel, no transmit
+r("R102", "10k 1%", "EMCON_HW", "GND", lcsc="C25804"); c("C104", "100n", "+3V3", "GND");   # R102: round 8, EMCON.md L2 (see U35 above)
+r("R103", "4.7k", "PA_SW_EN", "GND"); r("R104", "4.7k", "HF_SW_EN", "GND"); r("R145", "100k", "TX_INHIBIT_n", "GND")   # fail safe: no panel, no transmit
 # --- I2C: the kit bus (SDA, SCL) carries the charger, the expanders and the INA226s; no mux since the TPS55288 and TPS25750 left the design (7 Sep 01:50)
 # --- expanders: U27 0x21 (outputs: the enables and the charge inhibit; inputs: faults and status), U28 0x24 (power-good lines, spares on test points); PCA9555PW pins as the A21 map
 # 26 September 2026: U27 pin 8 is POE_SW_EN (S-14, the software hold ANDed with OUTLET_OK in U26); U28 pin 13 is
@@ -1192,16 +1334,16 @@ SECTIONS = [("PACK NODE OVER THE DOCK BLOCK (32.56): 9 A PINS, PRE-CHARGE, 25 A 
              + ["R195", "U34", "R196", "C210", "C211", "C212", "R197", "Q36", "R200", "D22", "C214", "R198", "R199", "R206", "C213", "Q37", "R201", "Q38", "R202", "R203", "R204", "R205"]),   # fourth fix-up: VISNS's 2 k and the restart guard (R4A-N15)
             ("CHARGER BQ25731: 4S FROM THE 20 V BUS, SYSTEM ON VSYS (VBAT), PACK BEYOND RSR, I2C 0x6B", ["U3", "Q7", "Q8", "Q9", "Q10", "L2", "R16", "R17", "C16", "C17", "C18", "R18", "C19", "C20", "C21", "C22", "C190", "C191", "C23", "C24", "C25", "R19", "R20", "Q6", "R21", "R22", "R23", "R24", "R25", "C26", "C27", "R26", "R27"]),
             ("SLOT RAIL S1: AP64500 5.1 V + INA226 0x40", ["U4", "L3", "C28", "C29", "C30", "C31", "C32", "C33", "R28", "R29", "R30", "R31", "R45", "R129", "C112", "U8", "J_5V_S1"]),
-            ("SLOT RAIL S2: LM5176 5.1 V (7.2 A MINIMUM LIMIT) + INA226 0x41", ["U5", "Q28", "Q29", "Q30", "Q31", "L4", "R32", "R33", "R46", "C133", "R130", "C113", "C134", "C135", "C136", "C34", "C137", "D5", "D6", "R35", "R170", "R171", "C35", "C36", "C37", "C38", "C39", "C164", "C165", "C166", "C193", "R172", "R173", "R174", "C138", "R175", "R176", "C139", "R34", "U9", "J_5V_S2"]),
+            ("SLOT RAIL S2: LM5176 5.1 V (7.2 A MINIMUM LIMIT) + INA226 0x41", ["U5", "Q28", "Q29", "Q30", "Q31", "L4", "R32", "R33", "R46", "C133", "R130", "C113", "C134", "C135", "C136", "C34", "C137", "D5", "D6", "R35", "R170", "R171", "C35", "C36", "C37", "C38", "C39", "C164", "C165", "C166", "C193", "C219", "R172", "R173", "R174", "C138", "R175", "R176", "C139", "R34", "U9", "J_5V_S2"]),
             ("SLOT RAIL S3: AP64500 5.1 V + INA226 0x44", ["U6", "L5", "C40", "C41", "C42", "C43", "C44", "C45", "R36", "R37", "R38", "R39", "R47", "R131", "C114", "U10", "J_5V_S3"]),
-            ("DEVICE RAIL: LM5176 5.1 V (7.2 A MINIMUM LIMIT) + INA226 0x45", ["U7", "Q32", "Q33", "Q34", "Q35", "L6", "R40", "R41", "R115", "C140", "R132", "C115", "C141", "C142", "C143", "C46", "C144", "D7", "D8", "R43", "R177", "R178", "C47", "C48", "C49", "C50", "C51", "C167", "C168", "C169", "C194", "R179", "R180", "R181", "C145", "R182", "R183", "C146", "R42", "U11", "J_5V_DEV", "R44"]),
-            ("3.3 V LOGIC: TPS62933", ["U12", "L7", "C52", "C53", "C54", "C55", "C56", "R48", "R49", "D3"]),
+            ("DEVICE RAIL: LM5176 5.1 V (7.2 A MINIMUM LIMIT) + INA226 0x45", ["U7", "Q32", "Q33", "Q34", "Q35", "L6", "R40", "R41", "R115", "C140", "R132", "C115", "C141", "C142", "C143", "C46", "C144", "D7", "D8", "R43", "R177", "R178", "C47", "C48", "C49", "C50", "C51", "C167", "C168", "C169", "C194", "C220", "R179", "R180", "R181", "C145", "R182", "R183", "C146", "R42", "U11", "J_5V_DEV", "R44"]),
+            ("3.3 V LOGIC: TPS62933", ["U12", "L7", "C52", "C53", "C54", "C223", "C55", "C56", "R48", "R49", "D3"]),
             ("PA RAIL: LM5176 13.8 V 6 A, EMCON GATED, INA226 0x46", ["U13", "Q11", "Q12", "Q13", "Q14", "L8", "R50", "R51", "R52", "C148", "R54", "C57", "C58", "C59", "C60", "C61", "C62", "R55", "R56", "R57", "R58", "R59", "C63", "C64", "C65", "C66", "C67", "C170", "C171", "C195", "R120", "D11", "D12", "D20", "C208", "U14", "J_PA"]),
             ("HF RAIL: LM5176 12.0 V 2 A, EMCON GATED", ["U15", "Q15", "Q16", "Q23", "Q24", "L9", "R60", "R61", "R62", "C149", "R64", "C68", "C69", "C70", "C71", "C72", "C73", "R65", "R122", "R123", "R124", "R125", "C74", "C108", "C109", "C110", "C111", "C172", "C173", "C196", "R126", "D13", "D14", "D21", "C209", "J_HF"]),
-            ("POE RAIL: LM5176 BOOST 54 V 0.6 A, INA226 0x47", ["U16", "Q17", "Q18", "Q19", "Q20", "L10", "R66", "R67", "R68", "C150", "R70", "C75", "C76", "C77", "C78", "C79", "C80", "R71", "R72", "R73", "R74", "R75", "C81", "C82", "C83", "C84", "C85", "C176", "C177", "C197", "R121", "D15", "D16", "U17", "J_54V"]),
-            ("USB-C PD OUTLET: TPS25740A + LM5176 5/9/15 V STAGE", ["U19", "Q21", "Q22", "Q25", "Q26", "L11", "R76", "R77", "R78", "C151", "R80", "C86", "C87", "C88", "C89", "C90", "C91", "R81", "R127", "R128", "R133", "R134", "C92", "C116", "C117", "C118", "C119", "C174", "C175", "C198", "R135", "R136", "R137", "U18", "Q27", "R138", "R139", "R140", "R141", "R142", "R143", "C93", "C94", "C95", "C96", "C97", "C120", "D4", "D17", "D18", "J_USBC_OUT", "U31"]),
+            ("POE RAIL: LM5176 BOOST 54 V 0.6 A, INA226 0x47", ["U16", "Q17", "Q18", "Q19", "Q20", "L10", "R66", "R67", "R68", "C150", "R70", "C75", "C76", "C77", "C78", "C79", "C80", "R71", "R72", "R73", "R74", "R75", "C81", "C82", "C83", "C84", "C85", "C176", "C177", "C197", "C221", "R121", "D15", "D16", "U17", "J_54V"]),
+            ("USB-C PD OUTLET: TPS25740A + LM5176 5/9/15 V STAGE", ["U19", "Q21", "Q22", "Q25", "Q26", "L11", "R76", "R77", "R78", "C151", "R80", "C86", "C87", "C88", "C89", "C90", "C91", "R81", "R127", "R128", "R133", "R134", "C92", "C116", "C117", "C118", "C119", "C174", "C175", "C198", "C222", "R135", "R136", "R137", "U18", "Q27", "R138", "R139", "R140", "R141", "R142", "R143", "C93", "C94", "C95", "C96", "C97", "C120", "D4", "D17", "D18", "J_USBC_OUT", "U31"]),
             ("EFUSES: MONITOR, HEATER (12.0 V BUCK), D8 5 V", ["U21", "C98", "R90", "R91", "R92", "R93", "C99", "J_MON", "U22", "C100", "R94", "R95", "R96", "R97", "C101", "U33", "L12", "C157", "C158", "C159", "C160", "C161", "C162", "R191", "R192", "R193", "R194", "J_HEAT", "U23", "C102", "R98", "R99", "R100", "R101", "C103", "J_MEZZ_PWR1"]),
-            ("EMCON GATES 74LVC08, OUTLET INTERLOCK, EXPANDERS 0x21 0x24", ["U26", "U30", "C153", "R102", "C104", "R103", "R104", "U27", "U28", "C106", "C107", "R110", "R111", "R112", "R113", "R114"] + ["TP%d" % k for k in range(3, 9)] + ["TP23", "TP24", "TP25", "TP26"]),
+            ("EMCON GATES 74AUP1G08 (BOTH LINES), OUTLET INTERLOCK 74LVC08, EXPANDERS 0x21 0x24", ["U35", "C215", "U36", "C216", "U37", "C217", "U38", "C218", "R207", "R208", "U26", "U30", "C153", "R102", "C104", "R103", "R104", "U27", "U28", "C106", "C107", "R110", "R111", "R112", "R113", "R114"] + ["TP%d" % k for k in range(3, 9)] + ["TP23", "TP24", "TP25", "TP26"]),
             ("RIBBON J_AB1 2x13, WALL-PORT RIBBON J_AB2 2x5, MEZZANINE HARNESS J_MEZZ1 2x8, GLENAIR WALL USB HOST PORT", ["J_AB1", "J_AB2", "J_MEZZ1", "R116", "R117", "R118", "J_USBW", "U29", "U32", "C154", "R186", "R187", "R188", "R189", "C155", "R190", "C156"] + [p["ref"] for p in P if p["ref"] == "R145"]),
             ("ELEVEN BLIND-MATE RF SITES: SMA JACK (TOP) + SMP-MAX RECEPTACLE (UNDERSIDE)", ["J_RF%d" % k for k in range(1, 12)] + ["J_BM%d" % k for k in range(1, 12)]),
             ("TEST POINTS, FLAGS", ["TP%d" % k for k in range(9, 23)] + ["TP27"] + [p["ref"] for p in P if p["ref"].startswith("#FLG")])]
@@ -1220,6 +1362,39 @@ _intent.bypass("C104", "U26", "14", "+3V3")
 _intent.bypass("C106", "U27", "24", "+3V3")
 _intent.bypass("C107", "U28", "24", "+3V3")
 _intent.bypass("C153", "U30", "5", "+3V3")   # 26 September 2026: the outlet interlock NAND's own decoupling (S-14)
+# ROUND 8 (26 September 2026, DECOUPLING.md G1 to G3 and decision 42's classes, MESHSAT-1357). The new entries, then the
+# class of every entry this block declares. C94 moves from U18 pin 5 to pin 13: pin 5 is HIPWR, which this board ties to
+# DVDD, and pin 13 is DVDD itself, "Internally regulated 1.85 V rail for external use up to 35 mA. Connect this pin to GND
+# via the recommended bypass capacitor" (TI SLVSDG8B pin table p.5), whose recommendation is C(DVDD) 0.198 / 0.22 /
+# 0.242 uF (p.7): a regulator output, class L, declared against its own output pin (decision 42 L1).
+for _k, (_cap, _u) in enumerate((("C215", "U35"), ("C216", "U36"), ("C217", "U37"), ("C218", "U38"))):
+    _intent.bypass(_cap, _u, "5", "+3V3")
+_intent.bypass("C223", "U12", "3", "VBAT")
+for _b in _intent._I["bypass"]:
+    if _b["cap"] == "C94": _b["pin"] = "13"   # DVDD, not HIPWR (above)
+_AUP_BYP = "TI SCES502Q (SN74AUP1G08) 9 p.14: 'For devices with a single supply, 0.1 uF is recommended ... The bypass capacitor should be installed as close to the power terminal as possible'"
+_LVC_BYP = "the maker's sheet ties no value or distance to VCC; class D by role (a supply pin's own decoupling), the generator's own 100 nF (decision 42 D1)"
+for _cap, _cl, _basis, _x in (
+        ("C4", "D", "ADI 2954fb (LTC2954) pin functions p.6: 'VIN: Power Supply Input: 2.7V to 26.4V'; the sheet states no capacitor, class D by role, the generator's own 1 uF (decision 42 D1)", {}),
+        ("C19", "A", "TI SLUSE66A (BQ25731) pin table p.7: VDDA 'Internal reference bias pin. Connect a 10-Ohm resistor from REGN to VDDA and a 1-uF ceramic capacitor from VDDA to power ground' (R18 and C19: the RC the maker draws)", {}),
+        ("C54", "R", "TI SLUSEA4D (TPS62933) 12.1 p.40: 'the most critical PCB feature is the loop formed by the input capacitors and power ground'; 'Place the inductor, input and output capacitors, and the IC on the same layer'", {}),
+        ("C223", "R", "TI SLUSEA4D (TPS62933) 12.1 p.40: 'Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins, which is key to EMI reduction' (round 8, G2)", {}),
+        ("C94", "L", "TI SLVSDG8B (TPS25740A) pin table p.5: DVDD 'Internally regulated 1.85 V rail ... Connect this pin to GND via the recommended bypass capacitor'; p.7: C(DVDD) 0.198 / 0.22 / 0.242 uF", {"value_floor": "198n", "value_ceiling": "242n", "esr_bound": None}),
+        ("C104", "D", "TI SCAS283W (SN74LVC08A): " + _LVC_BYP, {}),
+        ("C106", "D", "TI SCPS131J (PCA9555): " + _LVC_BYP, {}),
+        ("C107", "D", "TI SCPS131J (PCA9555): " + _LVC_BYP, {}),
+        ("C153", "D", "TI SCES212AC (SN74LVC1G00): " + _LVC_BYP, {}),
+        ("C215", "D", _AUP_BYP, {}), ("C216", "D", _AUP_BYP, {}), ("C217", "D", _AUP_BYP, {}), ("C218", "D", _AUP_BYP, {})):
+    _cls(_cap, _cl, _basis, **_x)
+# G3: C190 and C191 against the BQ25731's input loop, with the VBUS capacitors (CBUS), RAC (R16), Q1 and Q2 (Q7 and Q8 here).
+_loop("U3", "input", ("C20", "C21", "C22", "C190", "C191"), ("R16", "Q7", "Q8"),
+      "TI SLUSE66A (BQ25731) Table 12-1 rule 2 p.93: 'VBUS capacitors, RAC, Q1 and Q2 form a small loop 1. It is best to put them on the same side ... After RAC before Q1 and Q2 power stage recommend to put 10 nF + 1 nF (0402 package) decoupling capacitors as close as possible to IC'")
+_unclassed = sorted({_b["cap"] for _b in _intent._I["bypass"] if not _b.get("class")})
+if _unclassed:   # DECOUPLING.md T5, taken on this board ahead of intent.py: no declaration without its class and basis
+    raise SystemExit("board A: decoupling declarations without a class (decision 42): %s" % ", ".join(_unclassed))
+for _lp in _intent._I.get("power_loops", []):
+    _miss = [x for x in _lp["caps"] + _lp["parts"] + [_lp["converter"]] if not any(_q["ref"] == x for _q in P)]
+    if _miss: raise SystemExit("board A: power loop of %s names parts not in the schematic: %s" % (_lp["converter"], _miss))
 import schlayout, time as _time
 PAPER, NPAGES, NCOLS, NROWS = schlayout.run(P, SECTIONS, POWER, _intent._I["bypass"], {"date": _time.strftime("%Y-%m-%d")}, os.environ.get("PHASE", ""), 'PCB-A POWER + I/O')   # 15 Sep 2026: one A3 page per block, real wiring (32.196)
 out = kisch.out

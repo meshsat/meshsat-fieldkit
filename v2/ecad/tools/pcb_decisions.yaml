@@ -314,7 +314,12 @@ decisions:
       ruled: J_USBC_OUT.2 and .3 are answered by U18's own CC protection through the declaration in tools/boards/a.json,
       and since D-17 (owner, 26 September 2026) they also meet U31, a TPD2E2U06QDBZRQ1 (C488151), at the connector;
       netlist pcb-a-power-a23/out/pcb-a-power.net sha256 7b08510106687b3d2788cbb90247d046d89a2b1308c7138c0731eaf55b58a024,
-      port_protect PASS of 26 with 0 reversed. TWO, board D's J_PAOUT, as ruled: declared off board at the PolyPhaser
+      port_protect PASS of 26 with 0 reversed. SINCE BOARD A'S ROUND 8 (26 September 2026, MESHSAT-1357) the declaration
+      is removed from tools/boards/a.json, because it answered both conductors by U18 and so port_protect never judged
+      U31, the array D-17 added: port_protect now answers J_USBC_OUT.2 and .3 by U31 on the connector's own nets, PASS of
+      26 with 0 answered in part and 0 reversed, on netlist sha256
+      3a786cf31614fe63725f57227b6160226d5d945a99401fcb7c279e7ff51ec78a. The ruling's protection is the two layers D-17
+      left in place; restoring the declaration is not needed to reverse it. TWO, board D's J_PAOUT, as ruled: declared off board at the PolyPhaser
       GTH-SFF-AL. THREE, board D's headset conductors, SUBSTITUTED: the ruling named two Nexperia PESD5V0S2BT per
       jack, and gen_sch_d.py fits one single-line clamp per conductor at the jack, D9, D11, D12 and D14 PESD5V0S1BA
       (C19224) on the speaker and push-to-talk conductors and D10 and D13 PESD12VL1BA (C38558) on the microphone

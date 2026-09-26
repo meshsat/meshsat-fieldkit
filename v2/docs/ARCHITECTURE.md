@@ -327,7 +327,7 @@ P beside them, so which blade opens on a fault is undetermined (INFERRED, W3); t
 
 The fitted expanders are TI PCA9555PWR, which carry a 100 k internal pull-up on every I/O and power up as inputs
 (SCPS131J section 8.1 and Figure 8-2; VERIFIED A01). Board A's power controller is now `LTC2954ITS8-1` (-40 to 85 C,
-C580654): RAIL_EN is held by R2 over R184 inside the TPS62933's EN rating, KILL is pulled to +3V3 by R4, PDT carries
+C580654; C2657885, the `#TRPBF` line of the maker's order table, in board A's round 8 candidate): RAIL_EN is held by R2 over R184 inside the TPS62933's EN rating, KILL is pulled to +3V3 by R4, PDT carries
 C152 (680 nF, about 4.4 s to a forced power-off), PI_SHDN_REQ is pulled up by R3 10 k and driven only by open drains,
 and PI_KILL has R5 1 k so a powered slot cannot lift it (`gen_sch_a.py:227-264`, S-08, VERIFIED re-read).
 
@@ -638,7 +638,7 @@ Source: W5 round 2 contract with A01, A02, A07 and A11 applied, re-read against 
 
 | Line | Driven by | Consumed by | With the panel ribbon out | Source |
 |---|---|---|---|---|
-| EMCON_HW | C's U9, a 74LVC1G17 Schmitt buffer of TX_INHIBIT_n | A's PA and HF gates (U26), B's radio gates (U19, U20) and B's Q11, which inverts it into EMCON_ON | LOW: EMCON asserted | A R102 100 k, B R58 10 k to GND (`gen_sch_a.py:1112`, `gen_sch_b.py:1024`); the line's hold with its source gone is UNDECIDED as drawn (EMCON L2) |
+| EMCON_HW | C's U9, a 74LVC1G17 Schmitt buffer of TX_INHIBIT_n | A's PA and HF gates (U26; in board A's round 8 candidate U35 and U37, which AND it with TX_INHIBIT_n), B's radio gates (U19, U20) and B's Q11, which inverts it into EMCON_ON | LOW: EMCON asserted | A R102 100 k (10 k 1% in board A's round 8 candidate, `gen_sch_a.py:1253`), B R58 10 k to GND (`gen_sch_a.py:1112` at `45bde541`, `gen_sch_b.py:1024`); the line's hold with its source gone is UNDECIDED as drawn (EMCON L2) |
 | TX_INHIBIT_n | C's SW_EMCON (to GND) with R14 10 k up on C | D's KEY gate; A and B | LOW: inhibited | R145 (A), R59 (B), R2 (D), 100 k each |
 | ZEROIZE_SW | C's covered SW_ZERO (to GND) | **only** C's RP2040 GPIO22 | not on the ribbon | `gen_sch_c.py:168-178`, `:217` |
 | ZEROIZE_HW | C's U12, a buffered copy of ZEROIZE_SW (`faf8c981`) | nothing acts on it: in the committed netlists it reaches A's pull-up R117 and test points on B (TP8), C (TP12) and D (TP9) | HIGH: no wipe | R117 10 k to A's +3V3 (`gen_sch_a.py:1150`); U12's Ioff keeps R117 off C's rail |
@@ -674,7 +674,7 @@ continue.
 | 17 | LimeSDR Mini 2.4 (B) | eFuse on its USB VBUS off | OPEN on the shared items |
 
 The shared line items (`EMCON.md` section 3): L1, four firmware-direction pins on EMCON_HW (buffers owed on B and C);
-L2, the line's hold with its source gone (R102 10 k 1% and R58 4.7 k 1% with single gates, owed on A and B); L3, the loss
+L2, the line's hold with its source gone (R102 10 k 1% and R58 4.7 k 1% with single gates, owed on A and B; drawn on A in its round 8 candidate with SN74AUP1G08 readers, `EMCON.md` section 4a); L3, the loss
 of +3V3_DEV releases nine radios (an EMCON_ON source that does not share it, owed on B); L4, gate supplies outside
 their specified range; L6, the RF-002 instrument's gaps (tools); L7, the 2N7002s on EMCON_ON driven at about 3.3 V
 with RDS(on) stated only at 5 V and 10 V. **Feasibility verdict of that page:** radios dark is feasible with the ruled
@@ -1289,7 +1289,7 @@ board only where closing it can change that board's circuit, interface, stackup 
 
 | Board | Rule evidence (`CURRENT-EVIDENCE.md`): re-take alone / tool records its artefact / tool judges the netlist / registry / hold | Feasibility blockers that hold it | Its own open circuit, interface, stackup and geometry items |
 |---|---|---|---|
-| A | 12: 4 / 5 / 2 / 0 / 1 (decision 31) | FB-EMC (L2: R102 and single gates on U26's EMCON sections; L4); FB-PWR (PWR-F12: the pack-node copper and R17 at 18 A; PWR-F02); FB-DEC (G1 to G3); R-PWR, which `REVIEW-ROUTES.md` times before board A enters layout and which needs the owner's spending approval | IF-AB-POWER's current declarations (I-03); IF-AE-DOCK's contact margin at 12.31 A (R4A-N13); D-07's third site at X +46; J_AB2 under board D (W4-F17); the SLOT_EN hold if it is drawn on A; layer count not re-decided (P0) |
+| A | 12: 4 / 5 / 2 / 0 / 1 (decision 31) | FB-EMC (L2: R102 and single gates on U26's EMCON sections; L4; both drawn in board A's round 8 candidate, `EMCON.md` section 4a, with RF-002's walk still UNDECIDED on the LM5176's gate drive in shutdown); FB-PWR (PWR-F12: the pack-node copper and R17 at 18 A; PWR-F02); FB-DEC (G1 to G3); R-PWR, which `REVIEW-ROUTES.md` times before board A enters layout and which needs the owner's spending approval | IF-AB-POWER's current declarations (I-03); IF-AE-DOCK's contact margin at 12.31 A (R4A-N13); D-07's third site at X +46; J_AB2 under board D (W4-F17); the SLOT_EN hold if it is drawn on A; layer count not re-decided (P0) |
 | B | 13: 5 / 5 / 2 / 1 / 0 | FB-FAB (FB-FAB-2 to 8); FB-EMC (SD-EMC-1's stages, SD-EMC-2, L2, L3, L7); FB-ZER-1 (the U8 site only, until Z-EXP-A and B decide between the ATECC608B and the TPM fallback); FB-PWR (PWR-F01, F03 to F06); FB-DEC (G4 to G7, G10); R-HSD before a board B layout is committed (needs the owner's spending approval) | stackup: decision 43's eight-layer measurement (EXPERIMENTAL; JLC08161H-2116 recorded) and its price; the key-B socket's locating holes; B_PANEL_5V, PWR-003's FAIL on B (F1's 2.0 A hold over a PANEL_5V track rated 1.23 A; the 0.8 mm PANEL class at the next placement and route, or an MF-MSMF110, section 4.5); I3-F01 (firmware only, holds nothing on the board) |
 | C | 8: 4 / 2 / 2 / 0 / 0 | FB-EMC (L1: GPIO21 behind a buffer; SD-EMC-6: the hardware EMCON lamp); FB-DEC (G9, G13, G14) | stackup: six layers ruled (decision 27), C24 is four and C is not regenerated at six; the SLOT_EN hold if it is drawn on C |
 | D | 11: 5 / 3 / 2 / 0 / 1 (decision 31) | FB-EMC (L4 on D's gates); FB-PWR (PWR-F15: the PA flange sensor, a circuit on D); FB-DEC (G12, G14: the TPA6132A2's 2.2 uF and its 5 mm; the other-side entries) | the VHF band lock of D-04 if it is hardware; W4-F17 (A's header under D) |

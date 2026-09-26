@@ -390,11 +390,26 @@ for _s in (1, 2, 3):
                   "value %r" % _cv, boards={"B"})
 
 # 13. one driver: the inhibit line is made by the panel toggle and read everywhere else. No gate output may sit on it.
+# A GATE MAY READ IT (round 8, 26 September 2026, MESHSAT-1357, board A: U35 and U37, SN74AUP1G08, AND TX_INHIBIT_n with
+# EMCON_HW into the PA and HF rails' enables, so the rails are silenced by the line no firmware pin can reach). What
+# this contract refuses is a device OUTPUT on the line, so a part is read by its maker's pin table, never by its
+# reference letter: the single two-input AND gates on the SOT-23-5 land take their inputs on pins 1 (A) and 2 (B) and
+# drive pin 4 (Y) (TI SCES502Q Table 4-1 for the SN74AUP1G08, TI SCES217AA Pin Functions for the SN74LVC1G08). Any other
+# device pin on the line, and any gate pin but an input, fails as before.
+_GATE_INPUTS = ((re.compile(r"74(AUP|LVC)1G08"), {"1", "2"}),)
+def _line_devices_not_inputs(stem, bd, net):
+    _bad = []
+    for _r, _pin in sorted(B[bd][0].get(net, set())):
+        if not _r.startswith("U"): continue
+        _val = _value_of(stem, _r)
+        if any(_rx.search(_val) and _pin in _pins for _rx, _pins in _GATE_INPUTS): continue
+        _bad.append("%s pin %s (%s)" % (_r, _pin, _val[:40] or "no value read"))
+    return _bad
 for _bd, _stem in (("A", "pcb-a-power"), ("B", "pcb-b-compute")):
-    _u = sorted({r for r, _ in B[_bd][0].get("TX_INHIBIT_n", set()) if r.startswith("U")})
-    check(not _u, "%s: no device drives TX_INHIBIT_n, the panel toggle is its only source" % _bd, "found %s" % _u, boards={_bd}, group="inhibit")
-_u26 = sorted({pin for r, pin in B["A"][0].get("EMCON_HW", set()) if r == "U26"})
-check(set(_u26) <= {"1", "4"}, "A22: EMCON_HW reaches only the AND gates' inputs 1A and 2A, never an output", "U26 pins %s" % _u26, boards={"A"}, group="inhibit")
+    _u = _line_devices_not_inputs(_stem, _bd, "TX_INHIBIT_n")
+    check(not _u, "%s: no device drives TX_INHIBIT_n, the panel toggle is its only source (a device on it is a gate input by its maker's pin table)" % _bd, "found %s" % _u, boards={_bd}, group="inhibit")
+_ua = _line_devices_not_inputs("pcb-a-power", "A", "EMCON_HW")
+check(not _ua, "A: EMCON_HW reaches only gate inputs on this board, never an output", "found %s" % _ua, boards={"A"}, group="inhibit")
 
 # 14. fail safe: with the panel ribbon out, every consumer must read the inhibit line LOW, so each holds it down itself.
 for _bd in ("A", "B", "D"):
