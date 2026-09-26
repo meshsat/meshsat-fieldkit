@@ -41,7 +41,11 @@ def netlist(path):
     """({net: [(ref, pin, function)]}, {ref: value})"""
     txt = open(path, encoding="utf-8", errors="replace").read()
     by_net = {}
-    for m in re.finditer(r'\(net \(code "?\d+"?\) \(name "([^"]*)"\)(.*?)(?=\n    \(net |\n  \)\n)', txt, re.S):
+    # THE LAST NET OF A KICAD NETLIST WAS NEVER READ HERE (R4T-F1, fixed in port_protect and check_contracts by r4t on
+    # 26 September 2026 and carried here by the tools stream the same day). KiCad 9 closes the nets section on the last
+    # net's own line, "...)))))", so a look-ahead for "\n  )\n" never matched it and every netlist lost its last net.
+    # A net now ends where the next one starts, or at the end of the file.
+    for m in re.finditer(r'\(net \(code "?\d+"?\) \(name "([^"]*)"\)(.*?)(?=\(net \(code|\Z)', txt, re.S):
         name = m.group(1).lstrip("/")
         rows = []
         for n in re.finditer(r'\(node \(ref "([^"]+)"\) \(pin "([^"]+)"\)(?: \(pinfunction "([^"]*)"\))?', m.group(2)):
@@ -192,6 +196,23 @@ def judge(net_path, intent_path=None):
                 segments=sorted(segments), always_on=sorted(always_on))
 
 
+def _inputs(net, intent_path):
+    """WHAT THIS READING JUDGED, BY CONTENT (MESHSAT-1357, 26 September 2026, the tools stream's recording round). It
+    recorded the netlist's bare file name, which verdict.write cannot hash from anywhere but the netlist's own
+    directory, so no reading of rule PWR-002 could be tied to the netlist of the board it is filed under. The netlist
+    is recorded by sha and by content (phase_artefacts.record), and the intent file whose rails it sequences by sha
+    (a configuration input, rules_status.CONFIG_INPUTS). The board is still named from the netlist's stem by
+    verdict.write."""
+    import phase_artefacts as _pa
+    inputs = {}
+    n = _pa.record(net)
+    inputs["netlist"] = n if n else net
+    ip = intent_path or os.path.join(os.path.dirname(net), os.path.basename(net).replace(".net", "-intent.json"))
+    i = _pa.record(ip, content=False)
+    if i: inputs["intent"] = i
+    return inputs
+
+
 def main(argv):
     if not argv: print(__doc__); return 2
     net = argv[0]
@@ -200,10 +221,11 @@ def main(argv):
         print("power_sequence: no netlist at %s" % net)
         return _v.write("power_sequence", _v.INCONCLUSIVE, denominator=0, inputs={"netlist": net},
                         rules=["PWR-002"], note="no netlist, so no sequencing could be derived")
+    inputs = _inputs(net, intent)
     r = judge(net, intent)
     if not r["rails"]:
         print("power_sequence: this board declares no rail, so there is no sequence to derive")
-        return _v.write("power_sequence", _v.INCONCLUSIVE, denominator=0, inputs={"netlist": net},
+        return _v.write("power_sequence", _v.INCONCLUSIVE, denominator=0, inputs=inputs,
                         rules=["PWR-002"], note="no rail is declared in the intent file")
     print("power_sequence: %d rail(s); %d always on" % (r["rails"], len(r["always_on"])))
     for row in r["rows"]:
@@ -222,7 +244,7 @@ def main(argv):
                             "segments": len(r.get("segments") or []),
                             "deadlocks": len(r["deadlocks"]), "unresolved": len(r["unresolved"])},
                     denominator=r["rails"], evidence=(r["deadlocks"] + r["unresolved"])[:20],
-                    inputs={"netlist": os.path.basename(net)}, rules=["PWR-002"],
+                    inputs=inputs, rules=["PWR-002"],
                     note="each rail's enable derived from the netlist and the part that drives it named; a rail "
                          "whose enable is driven only by a device powered from that same rail cannot start and "
                          "is a failure. The ORDER between rails is reported as the graph and not decided here, "

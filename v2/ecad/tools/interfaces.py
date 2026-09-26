@@ -159,9 +159,12 @@ def judge(spec_path=None, ecad=None, only=None):
         stem = b["name"]
         rows, fails, notes = [], [], []
         # the intent's pair classes carry the target this project assigns to each class
-        intent = None
-        for cand in sorted(_glob_intent(ecad, stem)):
-            intent = cand; break
+        # THE INTENT BESIDE THE DECLARED PHASE'S NETLIST (MESHSAT-1357, 26 September 2026, the tools stream's
+        # recording round). This took the first `<stem>*/out/<stem>-intent.json` in sorted order, which is the declared
+        # phase's only while no other directory of the stem holds one (true in this tree, not on a box with arm
+        # directories); it is now the file `rules_status.candidate`'s phase directory holds (phase_artefacts.intent),
+        # and the verdicts below record it and the netlist beside it by content.
+        intent = _declared_intent(letter, ecad, stem)
         pair_classes = {}
         if intent:
             try: pair_classes = (json.load(open(intent, encoding="utf-8")).get("pair_classes") or {})
@@ -209,14 +212,37 @@ def judge(spec_path=None, ecad=None, only=None):
                                  % (letter.upper(), a["interface"], bar, a["interface"], float(need),
                                     bar / float(need), why))
             rows.append(row)
-        out[letter] = dict(rows=rows, fails=fails, notes=notes)
+        out[letter] = dict(rows=rows, fails=fails, notes=notes, intent=intent)
     return out
 
 
-def _glob_intent(ecad, stem):
-    import glob
-    return [p for p in glob.glob(os.path.join(ecad, stem + "*", "out", stem + "-intent.json"))
-            if os.path.isfile(p)]
+def _declared_intent(letter, ecad, stem):
+    """The declared phase's intent file for board `letter` in the tree `ecad`, or None when that tree holds none. A
+    letter the manifest does not know (a fixture's sheet) falls back to `<ecad>/<stem>/out/<stem>-intent.json`."""
+    import phase_artefacts as _pa
+    p = _pa.intent(letter, ecad) if _pa.stem(letter) == stem else os.path.join(ecad, stem, "out", stem + "-intent.json")
+    return p if p and os.path.isfile(p) else None
+
+
+def _spec_record():
+    import phase_artefacts as _pa
+    return _pa.record(SPEC, content=False) or os.path.basename(SPEC)
+
+
+def recorded_inputs(letter, intent=None):
+    """WHAT A READING OF THIS BOARD JUDGED, BY CONTENT (26 September 2026). It recorded the sheet's name and the letter,
+    so rules_status could tie no reading of INT-001 to a board. Now: the sheet by sha, the intent file whose pair
+    classes were judged (a configuration input), and the artefact that identifies the board's design, which is the
+    declared phase's netlist beside that intent (by sha and by content) or, for a board with no schematic (E5, whose
+    entry in the sheet is a declared zero with its reason), its declared phase's board file."""
+    import phase_artefacts as _pa
+    inp = {"spec": _spec_record(), "board": letter}
+    if intent:
+        r = _pa.record(intent, content=False)
+        if r: inp["intent"] = r
+    kind, rec = _pa.design_of(letter)
+    if rec: inp[kind] = rec
+    return inp
 
 
 def main(argv):
@@ -256,7 +282,7 @@ def main(argv):
         _v.write("interfaces_%s" % letter, _res,
                  counts={"assignments": _n, "disagreements": len(_f)}, denominator=_n,
                  evidence=(_f[:12] or ([_why] if _why and not _n else [])),
-                 inputs={"spec": os.path.basename(SPEC), "board": letter},
+                 inputs=recorded_inputs(letter, v.get("intent")),
                  note=_note if _n else ("board %s declares that no interface of its own carries a target, with "
                                         "its reason" % letter.upper() if _why else
                                         "board %s declares no interface assignment" % letter.upper()),
@@ -264,7 +290,7 @@ def main(argv):
     return _v.write("interfaces", _v.FAIL if fails else (_v.INCONCLUSIVE if not rows else _v.PASS),
                     counts={"assignments": rows, "boards": len(res), "disagreements": len(fails)},
                     denominator=rows, evidence=fails[:25],
-                    inputs={"spec": os.path.basename(SPEC)},
+                    inputs={"spec": _spec_record()},
                     note=(_note + "; each board also carries its own interfaces_<letter> verdict, because a "
                           "set-level result deciding every board's own is a defect this project has already "
                           "met once" if rows else

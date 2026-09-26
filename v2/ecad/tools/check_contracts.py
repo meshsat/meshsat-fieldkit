@@ -58,6 +58,12 @@ def netlist_path(stem):
     return max(cands, key=os.path.getmtime) if cands else os.path.join(ECAD, stem, "out", stem + ".net")
 
 
+# {letter: phase_artefacts.record} of every netlist `load` parsed, and {letter: path} of the intent file each board's
+# rail shares were read from: what the verdicts record (26 September 2026).
+import phase_artefacts as _pa
+NET_READ, INTENT_READ = {}, {}
+
+
 def load(stem):
     """{net name: {(ref, pin)}} and {(ref, pin): net name} from a KiCad netlist."""
     path = netlist_path(stem)
@@ -114,7 +120,12 @@ def load(stem):
         if not _ok:
             print("UNKNOWN GENERATOR for %s: %s" % (stem, _why))
             return None, None
-    txt = open(path, encoding="utf-8", errors="replace").read()
+    raw = open(path, "rb").read()
+    txt = raw.decode("utf-8", "replace")
+    # THE BYTES JUDGED ARE RECORDED (MESHSAT-1357, 26 September 2026, the tools stream's recording round): every
+    # verdict below names the netlist of each board it read by sha and by content, where it used to name only the
+    # boards' letters, so rules_status could tie no reading of INT-001 or RF-002 to any board's netlist.
+    if _letter: NET_READ[_letter] = _pa.record(path, raw)
     by_net, by_pin = {}, {}
     # THE LAST NET OF A KICAD NETLIST WAS NEVER READ (r4t, 26 September 2026). KiCad 9 closes the nets section on
     # the last net's own line, "...)))))", so a look-ahead for "\n  )\n" never matched it and every netlist lost
@@ -180,6 +191,8 @@ def check(ok, text, detail="", boards=None, group=None, only_group=False):
     question: the contracts tagged `inhibit` write `inhibit_chain_<letter>` beside the board's own
     `check_contracts_<letter>`, and RF-002 reads that one."""
     if not boards: raise AssertionError("contract %r declares no board: say which boards it is about" % text[:70])
+    # THE BOARDS A BOARD'S OWN VERDICTS DEPEND ON: every board named by a contract that names it (26 September 2026).
+    for _b in boards: per_board[_b].setdefault("with", set()).update(boards)
     if only_group:
         if not group: raise AssertionError("result %r is recorded in its group alone and names no group" % text[:70])
         _st = ("UNJUDGED" if [b for b in boards if b in MISSING] else "UNDECIDED" if ok is None else
@@ -590,7 +603,7 @@ import glob as _glob, json as _json, os as _os
 _intents = {}
 for _k, _stem in NETS.items():
     for _f in sorted(_glob.glob(_os.path.join(ECAD, _stem + "*", "out", "*-intent.json"))):
-        try: _intents[_k] = _json.load(open(_f))
+        try: _intents[_k] = _json.load(open(_f)); INTENT_READ[_k] = _f
         except ValueError: pass
 # A BOARD WHOSE INTENT FILE IS NOT IN THIS TREE HAS DECLARED NOTHING HERE, and that is an absent input rather
 # than an absent declaration (17 September 2026). The intent file is written by the schematic generator into
@@ -671,6 +684,20 @@ def _v_out_dir():
     return os.environ.get("VERDICT_DIR") or os.path.join(os.getcwd(), "out")
 
 
+def _recorded(letters):
+    """WHAT A VERDICT ABOUT THESE BOARDS JUDGED, BY CONTENT (26 September 2026). The letters are kept (`boards`, every
+    board this run read, as before); beside them each named board's netlist (`netlist_<letter>`, sha and content) and
+    the intent file its rail shares were read from (`intent_<letter>`, a configuration input). A board's own verdicts
+    name the boards of every contract that names it, the set verdict names every board read. Board E5 is not read
+    here (block_contract.py judges it), so nothing of E5 is recorded here."""
+    out = {"boards": ",".join(sorted(B))}
+    for L in sorted(set(letters)):
+        if NET_READ.get(L): out["netlist_%s" % L.lower()] = NET_READ[L]
+        r = _pa.record(INTENT_READ[L], content=False) if INTENT_READ.get(L) else None
+        if r: out["intent_%s" % L.lower()] = r
+    return out
+
+
 # A contract set that checked nothing has found nothing wrong, which is not the same as agreement.
 # A PER-BOARD VERDICT BESIDE THE SET ONE (16 September 2026), the pattern final_gate already uses. The set
 # verdict is what the contracts as a whole say and it still blocks; these say what each board's own contracts
@@ -721,7 +748,7 @@ for _bd in sorted(set(list(per_board) + list(B))):
                      denominator=_gn + _gu + _gd,
                      evidence=(_g["fail"] + ["undecided: " + t for t in (_g.get("undecided") or [])]
                                + ["unjudged, the other board is absent: " + t for t in (_g.get("unjudged") or [])])[:20],
-                     inputs={"boards": ",".join(sorted(B))},
+                     inputs=_recorded(set(_r.get("with") or ()) | {_bd}),
                      # THE NOTE SAYS WHAT WAS ASKED OF THIS BOARD (review fix-up of round 4, 26 September 2026). It
                      # described only the line, and it is also written for E and P, which carry no line and no
                      # transmitter: there it is the classification of every part that names a radio.
@@ -759,7 +786,7 @@ for _bd in sorted(set(list(per_board) + list(B))):
              counts={"fail": len(_r["fail"]), "pass": _r["pass"], "unjudged": _u, "undecided": _d}, denominator=_n + _u + _d,
              evidence=(_r["fail"] + ["undecided: " + t for t in (_r.get("undecided") or [])]
                        + ["unjudged, the other board is absent: " + t for t in (_r.get("unjudged") or [])])[:20],
-             inputs={"boards": ",".join(sorted(B))},
+             inputs=_recorded(set(_r.get("with") or ()) | {_bd}),
              note=("this board's netlist is absent from this tree" if _bd in MISSING else
                    "no contract of this set names this board" if not _n and not _u and not _d else
                    "%d of this board's contracts name a board absent from this tree and were not judged" % _u
@@ -792,7 +819,7 @@ sys.exit(_v.write("check_contracts",
                   evidence=(["netlist absent: " + k for k in MISSING] + ["rail unsplit: " + u for u in UNSPLIT]
                             + fails + ["undecided: " + t for t in undecided[:8]]
                             + ["unjudged, a board it names is absent: " + t for t in unjudged[:8]]),
-                  inputs={"boards": ",".join(sorted(B))},
+                  inputs=_recorded(B),
                   missing_input=(("%d of the set's contracts name a board absent from this tree and none "
                                   "could be evaluated" % len(unjudged)) if not checked else
                                  ("%s absent from this tree" % ", ".join(MISSING)) if MISSING else None),
