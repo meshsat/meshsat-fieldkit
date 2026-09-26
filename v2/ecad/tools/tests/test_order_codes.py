@@ -340,12 +340,16 @@ def t_a_manufacturers_prefix_on_an_order_code_is_the_same_part():
     """
     for want, got in (("74LVC08APW", "SN74LVC08APWR"),      # TI prefix and reel
                       ("LM74700-Q1", "LM74700QDBVRQ1"),     # suffix in the middle
-                      ("TPS2065CDBV", "TPS2065DBVR")):
+                      ("TPS2065CDBV", "TPS2065CDBVR")):     # the reel
         assert jc.same_part(want, got), "%s and %s are the same part and were not matched" % (want, got)
+    # 26 September 2026 (MESHSAT-1357, finding W6-F3 of v2/docs/ARCHITECTURE.md's known design findings): TPS2065DBVR was in the list above until today. It is the
+    # non-C TPS2065, a different family on a different datasheet (SLVS490K against SLVSAU6I), and this rule held
+    # the defect as the expected answer. It is a mismatch.
     for want, got in (("ATECC608B-SSHDA-T", "BMI270"),      # the secure element against an IMU
                       ("1-2199119-5", "HYCW01B-05NGFF-420B"),   # TE M.2 socket against a house brand
                       ("MDT420M02001", "HYCW25M-05NGFF-230B"),
                       ("SMCJ15A", "SMCJ18A"),               # one digit apart and a different clamp voltage
+                      ("TPS2065CDBV", "TPS2065DBVR"),       # the C part against the non-C family
                       ("1k", "X1kY")):                      # too short to be contained credibly
         assert not jc.same_part(want, got), "%s and %s are NOT the same part and were matched" % (want, got)
 

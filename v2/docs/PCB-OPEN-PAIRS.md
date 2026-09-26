@@ -7,7 +7,7 @@ Every pair that is not a current PASS, classified. Generated from tools/pcb_deci
 map's maturity and each deciding verdict: a decision that claims a pair wins over everything else, because
 the ruling is the action that moves it, and the measurement is reported beside it rather than lost.
 
-**118 open pair(s)** over 7 board(s). **40 are measured failures** (a tool looked and the board failed), which are **32 distinct readings**, and **1 of those are claimed by an open owner decision**.
+**128 open pair(s)** over 7 board(s). **40 are measured failures** (a tool looked and the board failed), which are **32 distinct readings**, and **1 of those are claimed by an open owner decision**.
 
 | waiting on | pairs | what it means |
 |---|---:|---|
@@ -19,7 +19,7 @@ the ruling is the action that moves it, and the measurement is reported beside i
 | `MEASURED_FAILURE` | 39 | the tool looked and the board failed |
 | `VENDOR_WAIT` | 2 | a fabricator or a standards body, and nobody here |
 | `OWNER_WORK` | 7 | work only the owner or the ordering session can do |
-| `NOT_JUDGED` | 29 | not judged, for the reason the reading gives |
+| `NOT_JUDGED` | 39 | not judged, for the reason the reading gives |
 
 A pair is what a BOARD has to satisfy, so the table counts pairs; these rules are decided by a verdict
 written ONCE for the whole set, so their rows are one reading seen on every board and not that many separate
@@ -33,26 +33,29 @@ things to fix.
 |---|---:|---:|---:|---:|---:|---:|
 | A | 24 | 13 | 2 | 1 | 4 | 4 |
 | B | 36 | 5 | 1 | 1 | 5 | 21 |
-| C | 11 | 4 | 1 | 0 | 1 | 4 |
-| D | 13 | 2 | 1 | 1 | 4 | 4 |
-| E | 17 | 6 | 1 | 0 | 4 | 5 |
-| E5 | 4 | 3 | 1 | 0 | 0 | 0 |
-| P | 13 | 7 | 1 | 0 | 1 | 2 |
+| C | 14 | 4 | 1 | 0 | 1 | 7 |
+| D | 14 | 2 | 1 | 1 | 4 | 5 |
+| E | 18 | 6 | 1 | 0 | 4 | 6 |
+| E5 | 6 | 3 | 1 | 0 | 0 | 2 |
+| P | 16 | 7 | 1 | 0 | 1 | 5 |
 
 ## Readings owed
 
-Of the 97 open pairs with a reading beside them, **9 are decided by a reading taken under a tool that has
+Of the 103 open pairs with a reading beside them, **25 are decided by a reading taken under a tool that has
 CHANGED since**. A tool change moves no rule-set fingerprint and no per-rule digest, so nothing else on these
 pages can say it. It is an upper bound, because a tool file moves for a comment as readily as for a
 criterion, and it decides nothing: it says the reading is owed. Re-take with retake_gate.sh or a sweep.
 
 | rule | boards |
 |---|---|
+| `CMP-002` | A, B, C, D, E, E5, P |
 | `MEC-001` | A |
 | `PI-001` | A, E, P |
 | `PI-002` | A |
 | `PI-003` | A, D, E |
 | `RET-004` | A |
+| `SCH-002` | A, B |
+| `SUP-001` | A, B, C, D, E, E5, P |
 
 ## Boards behind their own generator
 
@@ -206,7 +209,7 @@ holding a number, not a question about a number.
 | `DFA-001` | E | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 | `DFA-001` | P | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 
-## NOT_JUDGED (29): not judged, for the reason the reading gives
+## NOT_JUDGED (39): not judged, for the reason the reading gives
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -230,13 +233,23 @@ holding a number, not a question about a number.
 | `VIA-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 | `PLN-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 | `EMC-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
+| `SCH-002` | C | INCONCLUSIVE | no netlist_parts verdict for this board |
+| `CMP-002` | C | INCONCLUSIVE | jlc_certify_c was taken 2026-09-20T14:11:39, before 2026-09-26T01:45:00+02:00, when its tool changed what the verdict means; re-take it |
+| `SUP-001` | C | INCONCLUSIVE | jlc_certify_c was taken 2026-09-20T14:11:39, before 2026-09-26T01:45:00+02:00, when its tool changed what the verdict means; re-take it |
 | `RET-003` | C | INCONCLUSIVE | return_stitch INCONCLUSIVE: this board has no transition between two different reference nets, so RET-003 has nothing on it to judge |
 | `SI-001` | C | INCONCLUSIVE | edge_length INCONCLUSIVE: every signal net's routed length against the critical length its own class implies, and a net past it is asked whether it is impedance-controlled, series-termin |
+| `SCH-002` | D | INCONCLUSIVE | no netlist_parts verdict for this board |
 | `RET-003` | D | INCONCLUSIVE | return_stitch INCONCLUSIVE: this board has no transition between two different reference nets, so RET-003 has nothing on it to judge |
 | `SI-001` | D | INCONCLUSIVE | edge_length INCONCLUSIVE: every signal net's routed length against the critical length its own class implies, and a net past it is asked whether it is impedance-controlled, series-termin |
 | `DOC-001` | D | INCONCLUSIVE | final_gate_d INCONCLUSIVE: this board is HELD by an open owner decision, so its paperwork is not current and cannot be made current while the hold stands |
+| `SCH-002` | E | INCONCLUSIVE | no netlist_parts verdict for this board |
 | `RET-003` | E | INCONCLUSIVE | return_stitch INCONCLUSIVE: this board has no transition between two different reference nets, so RET-003 has nothing on it to judge |
 | `SI-001` | E | INCONCLUSIVE | edge_length INCONCLUSIVE: every signal net's routed length against the critical length its own class implies, and a net past it is asked whether it is impedance-controlled, series-termin |
 | `DOC-001` | E | INCONCLUSIVE | final_gate_e INCONCLUSIVE: this board is HELD by an open owner decision, so its paperwork is not current and cannot be made current while the hold stands |
+| `CMP-002` | E5 | INCONCLUSIVE | jlc_certify_e5 was taken 2026-09-20T14:11:40, before 2026-09-26T01:45:00+02:00, when its tool changed what the verdict means; re-take it |
+| `SUP-001` | E5 | INCONCLUSIVE | jlc_certify_e5 was taken 2026-09-20T14:11:40, before 2026-09-26T01:45:00+02:00, when its tool changed what the verdict means; re-take it |
+| `SCH-002` | P | INCONCLUSIVE | no netlist_parts verdict for this board |
+| `CMP-002` | P | INCONCLUSIVE | jlc_certify_p was taken 2026-09-20T14:11:40, before 2026-09-26T01:45:00+02:00, when its tool changed what the verdict means; re-take it |
+| `SUP-001` | P | INCONCLUSIVE | jlc_certify_p was taken 2026-09-20T14:11:40, before 2026-09-26T01:45:00+02:00, when its tool changed what the verdict means; re-take it |
 | `SI-001` | P | INCONCLUSIVE | edge_length INCONCLUSIVE: this board declares no rise_ns anywhere, and an edge nobody wrote down decides nothing |
 

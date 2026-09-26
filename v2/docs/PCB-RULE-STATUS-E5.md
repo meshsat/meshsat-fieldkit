@@ -11,9 +11,9 @@ Measured on board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 21 | 84.0 |
+| PASS | 19 | 76.0 |
 | FAIL | 3 | 12.0 |
-| INCONCLUSIVE | 1 | 4.0 |
+| INCONCLUSIVE | 3 | 12.0 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **25** | 100.0 |
 
@@ -24,8 +24,8 @@ Measured on board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5.
 | SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_e5 PASS of 33 |
 | SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **PASS** | safe_lines_e5 PASS of 0 |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 0 |
-| CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify_e5 PASS of 0 |
-| SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **PASS** | jlc_certify_e5 PASS of 0 |
+| CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_e5 was taken 2026-09-20T14:11:40, before 2026-09-26T01:45:00+02:00, when its tool changed what the verdict means; re-take it |
+| SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_e5 was taken 2026-09-20T14:11:40, before 2026-09-26T01:45:00+02:00, when its tool changed what the verdict means; re-take it |
 | PWR-003 protection coordination | BLOCKER | SCHEMATIC | **PASS** | energy_chain_e5 PASS of 1 |
 | STK-001 the stackup is declared, feasible and in the board | BLOCKER | ROUTED_BOARD | **FAIL** | stackup_gate FAIL: {'compared': 8, 'copper_layers': 2, 'disagreements': 1} |
 | STK-002 a layer count is decided and costed | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | an owner decision is open: layer_judge measures what the router did, not what the board needs, and says so; no like-for-like price for four against si |

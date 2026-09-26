@@ -21,9 +21,9 @@ Measured on board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12.
 
 | result | rules | percent |
 |---|---|---|
-| PASS | 38 | 74.5 |
+| PASS | 37 | 72.5 |
 | FAIL | 2 | 3.9 |
-| INCONCLUSIVE | 11 | 21.6 |
+| INCONCLUSIVE | 12 | 23.5 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **51** | 100.0 |
 
@@ -32,13 +32,13 @@ Measured on board D12 (pcb-d-aprs-d9, 929bf82d2bf6eed4), declares D12.
 | ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **PASS** | OPERATING-ENVELOPE.md is the record that was verified (sha 6e16960da6128a5e) |
 | ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 25 |
 | SCH-001 ERC clean or explained | BLOCKER | SCHEMATIC | **PASS** | erc_gate PASS of 357 |
-| SCH-002 board matches its netlist | BLOCKER | PLACED_BOARD | **PASS** | netlist_board PASS of 994 |
+| SCH-002 board matches its netlist | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no netlist_parts verdict for this board |
 | SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_d PASS of 11 |
 | SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **PASS** | safe_lines_d PASS of 2 |
 | SCH-005 every pad of a part's land carries a net or a declared no-connect | BLOCKER | SCHEMATIC | **PASS** | pin_map_lands_d PASS of 206 |
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 13 |
-| CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_d INCONCLUSIVE: no deliverable folder at the declared phase D12, so this board's parts were not certified against the board this tree hold |
-| SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_d INCONCLUSIVE: no deliverable folder at the declared phase D12, so this board's parts were not certified against the board this tree hold |
+| CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_d was taken 2026-09-20T14:11:40, before 2026-09-26T01:45:00+02:00, when its tool changed what the verdict means; re-take it |
+| SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_d was taken 2026-09-20T14:11:40, before 2026-09-26T01:45:00+02:00, when its tool changed what the verdict means; re-take it |
 | PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **PASS** | intent_rails PASS of 5 |
 | DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **PASS** | intent_decoupling PASS of 27 |
 | PI-001 conductor current capacity | BLOCKER | ROUTED_BOARD | **PASS** | dc_density PASS of 4 |

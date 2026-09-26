@@ -59,8 +59,14 @@ coverage:
  SCH-001: {implementation: "gen_sch_*.py", verification: {tool: erc_gate.py, verdict: erc_gate, fixtures: tests/test_erc_gate.py},
    maturity: ENFORCED, gap_category: NONE, note: "an allow line without a reason waves nothing through, proved by fixture"}
 
- SCH-002: {implementation: "gen_pcb_*3.py", verification: {tool: netlist_board.py, verdict: netlist_board, fixtures: tests/test_netlist_board.py},
-   maturity: ENFORCED, gap_category: NONE, note: "three comparisons with denominators; runs on the placed and on the routed board"}
+ SCH-002: {implementation: "gen_pcb_*3.py", verification: {tool: "netlist_board.py, netlist_parts.py", verdict: "netlist_board, netlist_parts", fixtures: "tests/test_netlist_board.py, tests/test_netlist_parts.py"},
+   _verdict_why: "26 September 2026 (MESHSAT-1357; finding W7-R2-02 in the known design findings of v2/docs/ARCHITECTURE.md): netlist_board compares references, pad nets and
+     net names and never what a reference IS, so the value and land differences the regeneration parity run measured
+     on A32 (C11, C12, D2), B21 (U10, and the SWD land of U42, U52 and U62) and D12 (C26, C27, R11, Y1, Y2) passed it.
+     netlist_parts compares value and footprint name per shared reference; netlist_board runs it at the end of every
+     run, so each run site leaves both verdicts, and the rule reads the worst of the two. A board with only the
+     netlist_board half reads INCONCLUSIVE until it is re-taken.",
+   maturity: ENFORCED, gap_category: NONE, note: "five comparisons with denominators (references, pad nets, net names, values, footprint names); runs on the placed and on the routed board"}
 
  SCH-003: {implementation: "gen_sch_*.py, gen_pcb_e5.py", verification: {tool: "check_contracts.py, block_contract.py", verdict: "check_contracts_<letter>", fixtures: "tests/test_gate_fixtures.py, tests/test_block_contract.py"},
    _verdict_why: "The whole of what check_contracts measures: every declared contract on the netlists of the
@@ -141,22 +147,45 @@ coverage:
    remediation: {action: "the DC-bias curves for the decoupling on the fastest rails, and a rating from the ordered part for the values that state none",
      owner: SESSION, execution: PARALLEL_AGENT, depends_on: [], p50_h: 6, p80_h: 18}}
 
- CMP-002: {implementation: "lcsc_fill.py", verification: {tool: "jlc_certify.py, lcsc_fill.py", verdict: "jlc_certify_<letter>, lcsc_fill", fixtures: "tests/test_order_codes.py, tests/test_gate_fixtures.py"},
+ CMP-002: {implementation: "lcsc_fill.py", verification: {tool: "jlc_certify.py, lcsc_fill.py", verdict: "jlc_certify_<letter>, lcsc_fill", fixtures: "tests/test_order_codes.py, tests/test_gate_fixtures.py, tests/test_certify_identity.py"},
    _shared_verdict_why: "SHARED WITH SUP-001 (18 September 2026). One query per BOM row answers both, which is why
      one verdict is honest here: the supplier's record gives the model and the package for the code, and the row is
      then CERTIFIED with its stock and date or it is not. This rule is the PACKAGE half, the code's package against
      the footprint the board places. THE ASYMMETRY: a row with no code at all fails SUP-001 and gives CMP-002
      nothing to check, so a CMP-002 reading is read against the row list before it is believed; lcsc_fill's own
      verdict is the code-to-land half (a fill rule must name a land this project draws).",
-   maturity: ENFORCED, gap_category: NONE, note: "package mismatch is caught against the supplier's own record, with a date"}
+   _identity_why: "26 September 2026 (MESHSAT-1357; finding W6-F3 in the known design findings of v2/docs/ARCHITECTURE.md):
+     CERTIFIED had not been evidence of part identity or land. same_part took six shared leading characters, or one
+     number contained in the other, as the same part; the package was compared by family with no body size or pitch;
+     and a row carrying a code was taken to be identified by it. So BQ4050RSMR (a 4 x 4 mm RSM package) was
+     certified on a 5 x 5 mm land, TUSB2046BVFR (commercial) as TUSB2046BI, STM32H743VIT6 as STM32H753VITx, a
+     5 mOhm shunt as a 3 mOhm one, TE 1-2199119-5 (key M) on a key B land, XSD's C4661 on the Keystone 3568
+     fuse-holder land (boards A, E and P), C10081 on board E's other two, and C2089, an 8550SS in TO-92-3, as
+     sixteen of board C's 3 mm LEDs. Now, code or no code: the answer carries every character of the part the row
+     names; a land drawn from one maker's drawing names its part and the answer is that part; the body and pitch
+     both sides state agree; an M.2 land's key is the key the maker's drawing gives the part; and a row that names
+     no part, on a land that names none, answered on a package only one side names, is NOT_IDENTIFIED.
+     STILL NOT CAUGHT, beyond this rule's acceptance criteria but inside its failure mode: a code on a class land
+     whose package the answer shares (an 0603 resistor on LED_0603_1608Metric) passes on its code, because no
+     catalogue line this tool reads states a class, and a value is compared only where it is a frequency.",
+   evidence_not_before: {"jlc_certify_<letter>": "2026-09-26T01:45:00+02:00"},
+   _evidence_not_before_why: "the instant jlc_certify's CERTIFIED changed meaning (above). Every per-board verdict in
+     the tree is older and would otherwise stand: measured on 26 September, boards C, E5 and P read PASS on this rule
+     and on SUP-001 and now read INCONCLUSIVE until jlc_certify is re-taken; A, B, D and E were INCONCLUSIVE already
+     (no deliverable folder at the declared phase). The re-take queries JLCPCB's catalogue and belongs to the
+     order-set rebuild of decision 41 (owner, 25 September 2026); board E5's declared zero has no row to query.",
+   maturity: ENFORCED, gap_category: NONE, note: "the part the row or its land names, the package family, body, pitch and M.2 key are caught against the supplier's record and the maker's drawing, with a date; a verdict older than evidence_not_before is re-taken"}
 
  SUP-001: {implementation: "lcsc_fill.py, jlc-handfit.txt",
-   verification: {tool: "jlc_certify.py, lcsc_fill.py", verdict: "jlc_certify_<letter>, lcsc_fill", fixtures: "tests/test_order_codes.py, tests/test_gate_fixtures.py"},
+   verification: {tool: "jlc_certify.py, lcsc_fill.py", verdict: "jlc_certify_<letter>, lcsc_fill", fixtures: "tests/test_order_codes.py, tests/test_gate_fixtures.py, tests/test_certify_identity.py"},
    _shared_verdict_why: "SHARED WITH CMP-002 (18 September 2026). The same per-row query answers both: this rule is
      the BUYABILITY half, every row CERTIFIED against the live catalogue with its stock at a recorded date, or
      HAND_FIT with a written purchase route, or BENCH_FITTED and excluded from the assembly. A row whose package
      disagrees fails both, a row with no code fails this one alone, and a board with no deliverable folder at its
      declared phase makes both INCONCLUSIVE rather than either of them a pass.",
+   evidence_not_before: {"jlc_certify_<letter>": "2026-09-26T01:45:00+02:00"},
+   _evidence_not_before_why: "the same instant and the same reason as CMP-002: a row CERTIFIED before it was not
+     shown to be the part the row or its land names, so it was not shown that the part to be placed is buyable.",
    maturity: ENFORCED, gap_category: NONE, note: "stock is read at a date; the date is the evidence's freshness"}
 
  PWR-001: {implementation: "gen_sch_*.py via intent.rail()", verification: {tool: intent_checks.py, verdict: intent_rails, fixtures: tests/test_rail_loads.py},
