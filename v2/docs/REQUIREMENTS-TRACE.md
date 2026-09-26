@@ -1350,7 +1350,9 @@ Prototype 1: in the core D-01 names. 8 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at the clamp-symbol merge of 26 September 2026: compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent checker, it differs only in D1 to D4's symbol (Device:D_TVS to Device:D_Zener) and pin names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 7b08510106687b3d
 
-*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@f13d8b70099ab03e`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@7b08510106687b3d`, `v2/docs/feasibility/EMCON.md@fa355479df681ed8`, `v2/docs/CURRENT-EVIDENCE.md@179c7190fc226a7d`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CURRENT-EVIDENCE.md re-read at the clamp-symbol merge of 26 September 2026: board A's netlist changed (its four one-way clamps only), so RF-002 on board D, whose reading also records A's netlist, reads AWAITING_REVALIDATION (OTHER_DESIGN) until the re-take; SCH-004 on D stays PASS on current evidence. The record's own reasons (the line contracts only, the SA868's open row) are unchanged, so it stays INCONCLUSIVE
+
+*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@f13d8b70099ab03e`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@7b08510106687b3d`, `v2/docs/feasibility/EMCON.md@fa355479df681ed8`, `v2/docs/CURRENT-EVIDENCE.md@bb5d2f579556c7fc`
 
 *Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2825`; `v2/docs/PANEL.md section 6`; `v2/docs/feasibility/EMCON.md sections 4.1 and 4.2`
 
@@ -1710,7 +1712,9 @@ Prototype 1: in the core D-01 names. 10 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CURRENT-EVIDENCE.md re-read at the tools stream's recording merge of 26 September 2026: BAT-001 on board P now reads FAIL on current-candidate evidence (pack_protection on netlist 4342c4cbe1b43dc4, 1 of 45: no protection independent of software). That gate's own inputs still describe the old pack (the battery packet's regeneration log), so the FAIL does not judge the second level this record describes, and the qualified review has not been engaged; the record stays INCONCLUSIVE
 
-*Bound to:* `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@4342c4cbe1b43dc4`, `v2/ecad/tools/gen_sch_p.py@e111e10a047f587e`, `v2/docs/CURRENT-EVIDENCE.md@179c7190fc226a7d`, `v2/docs/review-packets/battery/REVIEW-REQUEST.md@e36ebfd98c2ead3a`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CURRENT-EVIDENCE.md re-read at the clamp-symbol merge of 26 September 2026: BAT-001 on board P still reads FAIL on current-candidate evidence, with the reasons given above, so this reading stands
+
+*Bound to:* `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@4342c4cbe1b43dc4`, `v2/ecad/tools/gen_sch_p.py@e111e10a047f587e`, `v2/docs/CURRENT-EVIDENCE.md@bb5d2f579556c7fc`, `v2/docs/review-packets/battery/REVIEW-REQUEST.md@e36ebfd98c2ead3a`
 
 *Source (verified):* `v2/docs/TEST-PLAN.md:48-77`; `v2/ecad/tools/pcb_pack_protection.yaml:17-40`; `owner ruling D-15`; `v2/docs/review-packets/battery/PROTECTION-ARCHITECTURE.md`; `v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md`; `v2/ecad/tools/gen_sch_p.py:355-430`
 
