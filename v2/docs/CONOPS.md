@@ -4,7 +4,9 @@
 same day after an independent challenge, and revised on 26 September 2026 to carry the owner's rulings D-01 to
 D-17 of 25 and 26 September 2026 and the choices the session took under the owner's standing rule of 26
 September 2026; section 7 lists every question with its ruling, and D-18, the one still open and
-conditional.** Prototype design.
+conditional. Corrected later on 26 September 2026 (appendix 32.367): the owner reversed D-08 at about 09:30 CEST
+and D-08a stands (section 7), the session settled SC-02 at about 11:35 CEST (section 2a), and the pack's
+transport route follows the review of that day (section 4, Transport row).** Prototype design.
 Nothing described here has been built, powered or field deployed. This document says how the kit is meant to be
 used, so that requirements, budgets and tests have something to trace to. The needs of section 2 carry stable
 identifiers (NEED-nn); requirements trace to them, and an identifier is never reused for a different need.
@@ -73,7 +75,7 @@ recording, the tablet bracket, the NVG claim, HF and a second pack. Deferral rem
 
 The second pack has no location found yet: no pack is expected to fit the 160 mm west pocket as the board set
 stands (INFERRED from the committed board B underside, `v2/ecad/tools/panel1450.py` line 23, against the pocket of
-appendix 32.62, until the case is measured under D-08), and the pack ruling D-06 of 26 September 2026 sets one pack
+appendix 32.62; no case measurement is owed since the owner reversed D-08 on 26 September 2026), and the pack ruling D-06 of 26 September 2026 sets one pack
 in the east pocket, with missions longer than it relying on vehicle or solar input. The second pack stays a
 deferred function of D-01; it is not withdrawn.
 
@@ -99,12 +101,19 @@ the pass lines of D-02a and the severities of D-02c. Reading D-01 this literally
 names the core and says the rest is reported NOT_YET_TESTED) is **taken by the session under the owner's standing
 rule of 26 September 2026**. The classification record by record is in the requirements registry.
 
-**Which peripherals NEED-03 protects.** Every peripheral that `ARCH-PCB-B-IOHA.md` section 15 traces. **Taken by
-the session under the owner's standing rule of 26 September 2026**, because the owner's requirement names no
-exception ("every device visible to all modules", `V2-SPEC.md` line 29) and narrowing it would change what the
-kit is claimed to be. So the LoRa module (slot 3's SPI) and cellular data (slot 2's PCIe lane), which have no
-second path, are open design gaps against NEED-03, not accepted exceptions. Prototype 1's NEED-03 acceptance stays
-IOHA tests A1 to A14, as D-01 names it.
+**Which peripherals NEED-03 protects.** Every USB peripheral that `ARCH-PCB-B-IOHA.md` section 15 traces, each
+designed to move with its bank, and the kit-to-kit WiFi link, whose antennas move to the standby card (IOHA A11).
+The LoRa module (slot 3's SPI) and cellular data (slot 2's PCIe lane), which have no second path and go down with
+their module, are **NAMED EXCEPTIONS to NEED-03 for prototype 1**, as `ARCH-PCB-B-IOHA.md` sections 15 and 15a and
+appendix 32.366 record. **Settled by the session under the owner's standing rule of 26 September 2026 (SC-02,
+about 11:35 CEST):** making either bearer critical needs a second LoRa site or the 5G module moved to USB 3, and
+both change the floor plan of board B, the board that is not routed; the exceptions need no board B change, and
+without them the kit is designed to keep at least three of D-01's four messaging bearers through the loss of any
+one module (`ARCH-PCB-B-IOHA.md` section 15a). Reverse by naming either bearer critical, which reopens board B's
+floor plan. **Corrected 26 September 2026:** this paragraph first called the two "open design gaps against
+NEED-03, not accepted exceptions", on the reading that the owner's requirement ("every device visible to all
+modules", `V2-SPEC.md` line 29) names no exception; that contradicted section 15a and appendix 32.366, and SC-02
+settles it as above. Prototype 1's NEED-03 acceptance stays IOHA tests A1 to A14, as D-01 names it.
 
 ## 3. Representative missions
 
@@ -178,8 +187,8 @@ established. NEED-08 is not met for those radios until the design closes both.
 one compute module stops: its I/O bank moves to its neighbour under 2-of-3 voted control (bank 1 to slot 2, bank
 2 to slot 3, bank 3 to slot 1, per `gen_sch_b.py` line 543 and `ARCH-PCB-B-IOHA.md` section 4) and k3s
 reschedules the workload; the two bearers with no second path go with their slot (the LoRa module on slot 3's
-SPI, cellular data on slot 2's PCIe lane; `ARCH-PCB-B-IOHA.md` section 15), which section 2a records as open gaps
-against NEED-03; a slot whose heartbeat stays flat for 60 s is power-cycled once and then left off until the
+SPI, cellular data on slot 2's PCIe lane; `ARCH-PCB-B-IOHA.md` section 15), which section 2a records as the named
+exceptions to NEED-03 for prototype 1 (SC-02); a slot whose heartbeat stays flat for 60 s is power-cycled once and then left off until the
 operator acts (`PANEL.md` section 5); above +35 C ambient the kit drops to the reduced mode, which runs one module
 (the consequence the owner accepted with ruling D-02b), so it has no compute redundancy left in the heat (the
 session's inference from that consequence); below -15 C the e-paper updates slowly or not at all; below 0 C at
@@ -198,7 +207,7 @@ points to section 4a.
 
 | Mode | Entry | Exit | Running | Off or held | Guarantee | Power state | Source | Open |
 |---|---|---|---|---|---|---|---|---|
-| Transport | lid closed and latched, antennas off, cables out, pack fitted | deploy | nothing required; pack protection always | everything else | pack gauge (its own firmware); the floor of owner ruling D-15 (a 4S secondary over-voltage protector with a chemical fuse, the gauge's FUSE output and its PTC input; as generated board P fits no chemical fuse and holds PTC disabled, `gen_sch_p.py` line 11); the 25 A blade | PS-OFF if unpowered | `TEST-PLAN.md` line 8 | whether the kit is powered in transport (PS-OFF against a reduced state); altitude ruled 0 to 4500 m in transport and 0 to 3000 m in use (owner ruling D-02c). The pack's transport route (owner ruling D-04, **taken by the session under the owner's standing rule of 26 September 2026**): by road, with the kit, as the operator's own equipment; carriage by air or by a parcel carrier waits on a UN 38.3 test summary for the pack, which is built for the kit rather than bought and whose test status is unknown (INFERRED: no transport regulation is held in this tree) |
+| Transport | lid closed and latched, antennas off, cables out, pack fitted | deploy | nothing required; pack protection always | everything else | pack gauge (its own firmware); the floor of owner ruling D-15 (a 4S secondary over-voltage protector with a chemical fuse, the gauge's FUSE output and its PTC input; as generated board P fits no chemical fuse and holds PTC disabled, `gen_sch_p.py` line 11); the 25 A blade | PS-OFF if unpowered | `TEST-PLAN.md` line 8 | whether the kit is powered in transport (PS-OFF against a reduced state); altitude ruled 0 to 4500 m in transport and 0 to 3000 m in use (owner ruling D-02c). The pack's transport route (owner ruling D-04): **TBD**. The pack is built for the kit rather than bought and its UN 38.3 status is unknown, and an unknown status permits no route by itself: road carriage has its own dangerous-goods rules (the ADR, which the Dutch ILT names for road consignments; review of 26 September 2026, `reviews/2026-09-26-foundation-progress-review.md` section 5, reference R5), as air and parcel carriage have theirs. The pack's classification, the conditions that apply to it or an exception that applies are to be established before any transport route is claimed acceptable; that is a bounded item, not a broad compliance project. **Corrected 26 September 2026:** this cell had stated a road route with the kit as the session's choice, inferring from the unknown status that carriage by road was open where air and parcel carriage were not (no transport regulation is held in this tree); that inference is withdrawn (appendix 32.367) |
 | Deploy | operator opens the lid, fits antennas, connects cables, shades the plate (D-02e) | startup | none | none | operator | PS-OFF | `TEST-PLAN.md` line 8 | none |
 | Startup | MAIN PWR held (hardware lead to board A's power controller) | normal, reduced or degraded | board A's 3.3 V and the shared device rail come up; the panel controller boots, reads `ZEROIZE_HW` and completes any pending wipe (D-03), then raises `SLOT_EN1..3`; LED rail dark until firmware is up; `SHORE_INHIBIT` low | every slot stays off until the panel controller raises its enable (pull-downs on board A); a slot with a flat heartbeat after 60 s is marked faulty, cycled once, then left off | HW power path, FW slot enable and supervision | transient | `PANEL.md` sections 3, 5, 6 and 10 | cold start from a pack below about -10 C at the cells is out of scope (D-02d); as generated the device rail's enable rests on an I/O expander's internal pull-up that no datasheet limit guarantees, and two pins are pulled to the pack voltage (up to 16.8 V) above their rated maximum: the power controller's KILL input (7 V, LTC2954) and the 3.3 V buck's EN (6 V, TPS62933), `gen_sch_a.py` lines 172 and 434; until the panel firmware writes board A's expander, the PA and HF software enables and the charge inhibit sit between logic levels, and the monitor, heater and mezzanine enables are asserted; the monitor and heater eFuses lock out above about 12.9 to 13.4 V of the pack (100 k over 10 k against the TPS2596's 1.17 to 1.22 V threshold, `gen_sch_a.py` lines 526 to 528, SLVSET8A), so both are dark over most of the pack range: engineering fixes owed; rail sequencing, inrush and hot-plug bounds (rule PWR-002): **TBD** |
 | Normal (full) | startup with three modules, lid open, ambient at or below +35 C | any other mode | three modules, monitor, every bearer available, sensors | none | SW | PS-IDLE to PS-TYP, bursts to PS-ALLTX inside the bounds of D-11 | `OPERATING-ENVELOPE.md` section 4 | busy-relay duty cycles (PS-BUSY): **TBD**; the declared key-down time and state-of-charge floor of D-11: **TBD**, set by the session from the fuse and gauge limits |
@@ -248,10 +257,15 @@ document or on duty assumptions (12.2 of the 29.4 W of PS-IDLE, 29.7 of the 60.1
 
 **The pack (owner ruling D-06, 26 September 2026).** One 4S3P block of the held cell, the Samsung INR18650-35E, of
 about 145 Wh (144.7 Wh at the cell's specification minimum), shrink-wrapped in the east pocket under board B,
-subject to the case measurement (D-08). Missions longer than the pack rely on vehicle or solar input. The 4S3P
-columns describe the ruled pack. The fit leaves about 1.35 mm across the pocket, which is less than the uncertainty
-of the case walls, so it waits on that measurement; no rigid box fits, so `v2/cad/pack_4s.py` is to be redesigned
-around the shrink-wrapped block (a session item under D-06). No 4S4P 18650 block (193 Wh) has been shown to fit
+ruled subject to the case measurement, which the owner withdrew on 26 September 2026 (D-08 reversed): the fit is
+designed against the worst of Peli's own figures instead, and the margins that rest on unstated allowances stay OPEN
+until a mock-up at the build (`CASE-MARGINS.md`). Missions longer than the pack rely on vehicle or solar input. The
+4S3P columns describe the ruled pack. The 1.35 mm across the pocket that A06 reported was taken against the X 178
+of appendix 32.62, which is not a Peli surface: bounded by board A's edge and Peli's R 15.88 floor fillet, the
+block keeps 1.85 mm to the fillet and 7.38 mm to the east wall at the worst of Peli's figures, and, centred in Y,
+3.65 mm per side to the frame's setting legs, 1.77 at the worst (`CASE-MARGINS.md` M4a, M4b, M5, on the design
+basis only; M4b MET, M4a and M5 OPEN on the pack's placement by hand); no rigid box fits, so `v2/cad/pack_4s.py` is
+to be redesigned around the shrink-wrapped block (a session item under D-06). No 4S4P 18650 block (193 Wh) has been shown to fit
 either pocket while the pack board stays beside the cells (INFERRED from the committed board B underside and the
 pocket of appendix 32.62): the 4S4P columns are arithmetic for comparison, not a configuration the design carries.
 PS-ALLTX and PS-ALLTX-OUT are energy arithmetic only: the gauge's 20 A for 2 s limit and the 25 A blade bound
@@ -355,7 +369,7 @@ the fans) and uses one flat 12 % for conversion; re-derived per path, the typica
 The runtime of `V2-SPEC.md` line 23 (8 to 9.5 hours typical) was computed for the withdrawn BB-2590/U pack
 and is **not valid** for this kit. It divided the BB-2590's nominal energy by a battery-side figure with no
 derating (29 W x 8 to 9.5 h is 232 to 276 Wh; 50 W x 5 to 6 h is 250 to 300 Wh). On the pack the owner ruled
-(D-06: one 4S3P 18650 block of about 145 Wh, subject to the case measurement), with usable energy, conversion
+(D-06: one 4S3P 18650 block of about 145 Wh, its fit designed against Peli's figures since D-08 was reversed), with usable energy, conversion
 losses and a reserve applied, the PROVISIONAL figures of section 4a are:
 
 - the state `V2-SPEC.md` describes (monitor on, radios idle, beacons), PS-IDLE-SPEC: about 4.2 h new and
@@ -379,7 +393,9 @@ this tree states one.
 Each question was asked one at a time with its evidence, options and a recommendation, and the owner took the
 recommended option each time. The identifiers D-nn are those of the foundation's owner decision table
 (MESHSAT-1357). D-01, D-02a and D-02b were ruled on 25 September 2026 (about 23:27 to 23:40 CEST); D-02c and every
-later ruling on 26 September 2026 (about 00:05 to 00:55 CEST). A ruling that sets a threshold or names a session
+later ruling of that sitting on 26 September 2026 (about 00:05 to 00:55 CEST). D-08a was ruled later on 26
+September, and at about 09:30 CEST the owner reversed D-08, declining the measurement request that ruling had
+answered (appendix 32.367). A ruling that sets a threshold or names a session
 item leaves that engineering work to the session; until it is done, the requirements that depend on it carry TBD
 with its effect, never an assumed answer.
 
@@ -392,11 +408,12 @@ with its effect, never an assumed answer.
 | D-02d | Cold start from a cold-soaked pack | RULED 26 Sep | out of scope for the prototype, to be stated in the envelope and stated here: a kit cold-soaked below about -10 C at the cells needs shore or vehicle power, or warming, before it starts from the pack; once warm, use down to -20 C holds. No hardware is added |
 | D-02e | Direct sun | RULED 26 Sep | "operate shaded" is a stated operating condition, with a shade accessory (a lid sun shield or a tarp); full-sun design is a later qualification item. No board change |
 | D-03 | ZEROIZE: what it erases, what triggers it, what a power loss during the hold does | RULED 26 Sep | a crypto-erase through the secure element, the covered toggle held 5 s the only trigger, level-sensitive after a power loss, and the accepted residual risk that a drive unlocks at boot only through the secure element, the panel controller and the kit I2C bus (section 4, ZEROIZE row). Firmware and provisioning, no board change; the secure element's erasable slot map is a precondition still **TBD**. Decision 30 is ruled by it |
-| D-04 | Markets and obligations | RULED 26 Sep | a non-commercial prototype in the Netherlands and the EU, operated by a licensed radio amateur; no CE or RED conformity marking claimed and no EMC claim yet, so every MIL-STD-461 run is characterisation; the design keeps an EU route open. Every transmitter is to be configured to the operator's licence and the EU limits, the VHF path gets a band lock, and the pack's transport route is stated (section 4, Transport row; UN 38.3 status unknown) |
+| D-04 | Markets and obligations | RULED 26 Sep | a non-commercial prototype in the Netherlands and the EU, operated by a licensed radio amateur; no CE or RED conformity marking claimed and no EMC claim yet, so every MIL-STD-461 run is characterisation; the design keeps an EU route open. Every transmitter is to be configured to the operator's licence and the EU limits, the VHF path gets a band lock, and the pack's transport route is stated (section 4, Transport row; UN 38.3 status unknown). What the row states since its correction of 26 September 2026 is that no route is claimed acceptable until the pack's classification, conditions or applicable exception are established (section 7a) |
 | D-05 | EMCON meaning | RULED 26 Sep | radios dark, as generated and completed: every radio with an emission path powered off or RF-disabled in hardware; VHF keeps listening (transmit-only gate); GNSS, DCF77 and lightning continue. The gap fixes (the compute modules' radios onto the line, the WiFi link cards' disable shown to act or their supplies gated) are session work (section 4b) |
-| D-06 | Pack size and runtime target | RULED 26 Sep | one 4S3P 18650 (Samsung INR18650-35E) pack of about 145 Wh, shrink-wrapped in the east pocket, subject to the case measurement; missions longer than the pack rely on vehicle or solar input; the runtime requirement is battery-only hours in idle and typical modes at +20 C for an aged pack (section 6); the mission duration for the solar energy balance is set later by the owner. Session items: a lower charge setting for cell life, and `pack_4s.py` redesigned |
-| D-07 | 5G antenna jacks | RULED 26 Sep, conditional | three jacks (ANT0, ANT2, ANT3), making twelve bulkheads, at the board A site found free (X +46), if the case measurement confirms that site and the board E clamp fit; otherwise two jacks on ANT0 and ANT2. The key-M socket is replaced by a key-B part either way (session) |
-| D-08 | Measuring the owner's Peli 1450 and building a mock-up | RULED 26 Sep | the owner measures his case (about 1 hour) and builds a cardboard mock-up (2 to 3 hours) from the written request; the 1450PF frame is bought later, before the face plate is final |
+| D-06 | Pack size and runtime target | RULED 26 Sep | one 4S3P 18650 (Samsung INR18650-35E) pack of about 145 Wh, shrink-wrapped in the east pocket, subject to the case measurement (answered from Peli's own figures after the D-08 reversal: `CASE-MARGINS.md` M4a to M6, with M4b and M6 MET and M4a and M5 OPEN until the pack's hold-down and a mock-up at the build); missions longer than the pack rely on vehicle or solar input; the runtime requirement is battery-only hours in idle and typical modes at +20 C for an aged pack (section 6); the mission duration for the solar energy balance is set later by the owner. Session items: a lower charge setting for cell life, and `pack_4s.py` redesigned |
+| D-07 | 5G antenna jacks | RULED 26 Sep, conditional | three jacks (ANT0, ANT2, ANT3), making twelve bulkheads, at the board A site found free (X +46), if the case measurement confirms that site and the board E clamp fit; otherwise two jacks on ANT0 and ANT2. The case half is laid out from Peli's own figures after the D-08 reversal (the third jack is one of five arrestor bulkheads on the east wall's RF entry plate, at Y 0 and Z 59, between 5G DIV (Y -31) and IRIDIUM (Y +31); that wall's margins and its jumpers' planned route are in `CASE-MARGINS.md` section 3.4, where the jumpers' layering under the east plugs stays OPEN until the plug is picked); the board E clamp fit remains a board item. The key-M socket is replaced by a key-B part either way (session) |
+| D-08 | Measuring the owner's Peli 1450 and building a mock-up | RULED 26 Sep, REVERSED 26 Sep about 09:30 | no owner measurement and no mock-up. The owner: "you have the CAD files and all the measurements why do you need from me to measure an old case?" The design computes every case-dependent margin against the worst of Peli's own figures (drawing 1451-931 of 15 January 2025, the STEP bodies, frame sheet 1453-314-000, the pelican.com page), plus a stated minimum, and marks OPEN what rests on a tolerance no source states (`CASE-MARGINS.md`); the OPEN margins, the seals and the stack-up are shown on hardware, on a targeted unpowered mock-up the session recommends for the build stage in a new case of the current moulding. The first ruling answered a request the session had written (W4); it had the owner measure his case (about 1 hour) and build a cardboard mock-up (2 to 3 hours), and buy the 1450PF frame later, before the face plate is final |
+| D-08a | Which moulding the design targets | RULED 26 Sep | the current 1450 moulding of Peli's 1451-931 customer drawing dated 15 January 2025. The owner: "if it is older i will buy another newer case": the design never adapts to an older moulding, and a new 1450 is bought if the build case is older |
 | D-09 | Independent review and test route | RULED 26 Sep | the SIDN voucher goes to a ZEROIZE and key-fill security review; a paid battery-and-protection review by a qualified electronics engineer before the pack is built; an EMC pre-compliance session once the prototype exists. The session prepares the packets and requests; nothing is spent beyond the voucher without a quote and the owner's approval |
 | D-10 | SOS | RULED 26 Sep | a distress message with position over the available bearers (Iridium first when nothing else is up) to a configured recipient list; never through EMCON: under EMCON the message is queued and the operator is told. Firmware only |
 | D-11 | Peak simultaneity | RULED 26 Sep | every radio may still transmit at once, for a declared key-down time above a declared state of charge, with the outlets at their minimum contract; the session sets the thresholds from the fuse and gauge limits and adds a hardware interlock that drops the outlets while the PA keys (section 5) |
@@ -416,12 +433,16 @@ ruled by the owner on 25 September 2026 (appendix 32.365). They change no need, 
 
 On 26 September 2026 the owner ruled that he is not to be asked further questions: where a choice is left, the
 session takes the option the evidence recommends and records it as its own, so that it can be reversed. Each
-choice below was taken that way.
+choice below was taken that way; a choice later corrected or withdrawn keeps its row, marked and dated. The last
+three rows are the case choices of `CASE-MARGINS.md` section 4, taken after the owner reversed D-08 (section 7).
 
 | Choice | Taken | Why | Where |
 |---|---|---|---|
 | Does SOS join prototype 1's core? | yes | D-10 defines its action as firmware only, and W1's decision table recommended it for the core | section 2a |
-| Which peripherals NEED-03 protects | every peripheral `ARCH-PCB-B-IOHA.md` section 15 traces; LoRa and cellular data are open gaps | the owner's requirement names no exception; narrowing it would change the claim | section 2a |
+| Which peripherals NEED-03 protects (SC-02, settled about 11:35 CEST) | every USB peripheral `ARCH-PCB-B-IOHA.md` section 15 traces, and the kit-to-kit WiFi link; the LoRa module and cellular data are NAMED EXCEPTIONS for prototype 1, as `ARCH-PCB-B-IOHA.md` sections 15 and 15a and appendix 32.366 record | making either critical needs a second LoRa site or the 5G module on USB 3, and both change board B's floor plan, the board that is not routed; without them the kit is designed to keep at least three of the four messaging bearers through the loss of any one module. **Corrected 26 September 2026:** this row first recorded the two as open gaps, because the owner's requirement names no exception, which contradicted section 15a and appendix 32.366 | section 2a |
 | Are the qualification tests (NEED-06, 07, 15, 17, 18) outside the core? | yes, except where a requirement is a condition of a core function | D-01 names the core and says the rest is reported NOT_YET_TESTED; D-02a and D-02c set how those tests pass when they run | section 2a |
 | The two modes of the D-06 runtime requirement | PS-IDLE-SPEC and PS-TYP | the pair W1's decision table recommended with D-06 | section 6 |
-| The pack's transport route (D-04) | by road with the kit, as the operator's own equipment; air or parcel carriage waits on a UN 38.3 test summary | the pack is to be built for the kit, not bought, and has no test summary; the 4500 m transport ceiling of D-02c is the value W1's question tied to no carriage in an unpressurised aircraft hold | section 4, Transport row |
+| The pack's transport route (D-04) | **WITHDRAWN 26 September 2026:** no route is claimed; the pack's classification, the conditions that apply to it or an exception that applies are to be established before any transport route is claimed acceptable (**TBD**, a bounded item, not a broad compliance project). The choice first recorded here was by road with the kit, as the operator's own equipment, with air or parcel carriage waiting on a UN 38.3 test summary | that choice read the pack's unknown UN 38.3 status as leaving road carriage open, and it does not: road carriage has its own dangerous-goods rules (the ADR; review of 26 September 2026, `reviews/2026-09-26-foundation-progress-review.md` section 5, reference R5). The pack is to be built for the kit, not bought, and has no test summary. The 4500 m transport ceiling of D-02c stands as ruled; W1's question tied it to no carriage in an unpressurised aircraft hold | section 4, Transport row |
+| How the face plate mounts in the 1450PF (C1) | on the frame over Peli's o-ring, screwed from above into Peli's 6-32 inserts, as Peli documents | the as-coded plate under the frame's ring puts the monitor about 8 mm into the compute module heatsinks when the frame sits where Peli puts it | `CASE-MARGINS.md` C1 |
+| What sets the frame's height (C6) | four setting legs bonded under the frame's ring by a locator in each window corner, standing on the floor, placed by the frame's centring with wedges before Peli's four screws are driven; pad top 94.13, face top 106.52 | Peli's ribs catch the frame by 0.012 mm at nominal, so its rest spans 11.9 mm on the frame's published tolerance alone, twice the 5.96 mm window the monitor and the lid leave; legs bonded to the floor by hand would have nothing to locate them | `CASE-MARGINS.md` C6, section 2.7 |
+| Antenna bulkheads, connector plate, RF entry plates, lid tray (C2 to C5) | the ruled gas-discharge arrestors (PolyPhaser GTH-SFF-AL) are the twelve antenna bulkheads, five on the east wall and seven on the west (the two WIFI P2P moved west, so that every jumper has a planned route past the pack and the setting legs) at a 31 mm pitch and Z 59, bodies outside, on one 6 mm aluminium RF entry plate per end wall that is also their common ground; one 114 x 68.3 x 5 connector plate between the hinge fairings carrying all six ruled items, the sealed RJ45 picked to a MIL-DTL-38999 shell 15 envelope rated for the 54 V PoE feed; the QMX tray 1.5 mm west | each is laid out against the case features Peli's files show, at the worst of Peli's figures, with every margin MET or OPEN in `CASE-MARGINS.md` section 3.2 and none NOT MET; how the east jumpers lie under the plugs stays OPEN until the plug is picked; the arrestors were ruled but had no place, and inside the case their bodies meet the frame skirt and the tall parts at the board's edge; the recommended RJ45 coupler is too large for the wall and rated 42 V | `CASE-MARGINS.md` C2 to C5 |

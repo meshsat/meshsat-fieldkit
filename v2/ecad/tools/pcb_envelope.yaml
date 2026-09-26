@@ -16,7 +16,7 @@ schema_version: 1
 adopted: "2026-09-21"
 adopted_by: SESSION
 document: "v2/docs/OPERATING-ENVELOPE.md"
-document_sha256: "6e16960da6128a5e4f9262cf8d53a4dfaee0212fab8f2559147307ddc3accc60"   # re-read and re-pinned 26 September 2026 after the owner rulings of section 8
+document_sha256: "5af08b98e6de52f708ee79edf7d52b2af88724ecaf761fcacfc57a9d29fdb232"   # re-read and re-pinned 26 September 2026 after the owner rulings of section 8, and again the same day after the D-08 reversal and the transport correction (appendix 32.367)
 what_is_adopted: >-
   section 4 as the design envelope and section 6's first row as the transient level. The altitude, the
   vibration and shock severities and the service life stayed OPEN in the document's own words on 21 September

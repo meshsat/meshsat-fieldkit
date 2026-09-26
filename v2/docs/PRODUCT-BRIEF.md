@@ -2,7 +2,8 @@
 
 **Status: DRAFT for Review A of the foundation baseline (MESHSAT-1357), written 25 September 2026, revised on
 26 September 2026 with the owner's rulings of 25 and 26 September 2026 (D-01 to D-17, listed in `CONOPS.md`
-section 7).**
+section 7), and corrected later that day for the owner's reversal of D-08 with D-08a and the session's SC-02
+(appendix 32.367).**
 Prototype design. No V2 board has been fabricated, ordered or powered, and no kit has been field
 deployed. Nothing in this brief is a claim about a built product; every line states what the design is
 meant to do. The concept of operations with the numbered needs is `CONOPS.md`; the parts and rulings
@@ -37,12 +38,13 @@ itself implies are:
 A sealed Peli 1450 case with an aluminium face plate, holding seven carrier boards (A power and I/O,
 B compute and radios, C panel backer, D VHF APRS, E dock strip, E5 dock block, P pack protection) and a
 4S lithium-ion pack to be built for the kit rather than bought: one 4S3P block of Samsung INR18650-35E cells, about
-145 Wh, shrink-wrapped in the east pocket (owner ruling D-06 of 26 September 2026, subject to a measurement of
-the owner's case). Its main properties, as designed:
+145 Wh, shrink-wrapped in the east pocket (owner ruling D-06 of 26 September 2026; its fit designed against
+Peli's own figures, `CASE-MARGINS.md`, since the owner reversed D-08). Its main properties, as designed:
 
 - **Several independent long-range bearers:** Iridium (RockBLOCK 9704), 5G cellular (Quectel RM520N-GL, the
   module the generator carries; its socket as drawn has the wrong key and is being replaced by a key-B part; three
-  antenna jacks, ANT0, ANT2 and ANT3, if the case measurement confirms the extra site, otherwise two, owner ruling
+  antenna jacks, ANT0, ANT2 and ANT3, if the board E clamp fit is shown (the case half of the condition is laid out
+  from Peli's figures), otherwise two, owner ruling
   D-07), HF (an assembled QRP Labs QMX), VHF APRS and voice (NiceRF SA868 with a 30 W amplifier), and kit-to-kit
   WiFi without an access point (two AsiaRF AW7915-AED cards sharing one antenna pair).
 - **Local networks:** a 1 W LoRa module for Meshtastic, Zigbee and Thread radios (two CC2652P modules),
@@ -52,8 +54,8 @@ the owner's case). Its main properties, as designed:
   and each of the three USB peripheral banks is designed to move in hardware to a neighbouring module when
   its home module is lost, under 2-of-3 voted control. Compute redundancy is not peripheral redundancy:
   two bearers have no second path and go with their module, the LoRa module (on one module's SPI) and
-  cellular data (on one module's PCIe lane) (`ARCH-PCB-B-IOHA.md` section 15). Both are open design gaps
-  against that requirement, not accepted exceptions (`CONOPS.md` section 2a).
+  cellular data (on one module's PCIe lane) (`ARCH-PCB-B-IOHA.md` section 15). Both are the named exceptions
+  to that requirement for prototype 1 (`ARCH-PCB-B-IOHA.md` section 15a, `CONOPS.md` section 2a).
 - **Power:** its own pack; a 9 to 36 V vehicle and shore input (NATO 2-pin plug cable) that carries no vehicle
   surge claim and is not for 24 V military vehicle buses (owner ruling D-16); a solar input; missions longer than
   the pack rely on the vehicle or solar input (D-06). For accessories, a USB-C outlet that carries power only and
@@ -120,6 +122,6 @@ qualification margins with two pass lines: operate to specification inside the e
 the margin. Every owner question of the foundation batch is ruled except D-18, on the rating of the internal
 fans, which is open and conditional: it does not arise unless no 40 mm fan of the ruled rating fits the coolers,
 and if it arises the session settles it under the owner's standing rule. Where a ruling sets a threshold or names
-engineering work (the D-11 key-down bound, the D-05 gap fixes, the D-07 jack count after the case measurement),
+engineering work (the D-11 key-down bound, the D-05 gap fixes, the D-07 jack count after the board E clamp fit),
 the requirements that depend on it carry TBD with their effect stated until the work is done, rather than an
 assumed value.

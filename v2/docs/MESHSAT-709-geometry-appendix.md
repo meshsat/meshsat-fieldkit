@@ -18871,3 +18871,125 @@ sections 2 to 7 corrected, section 8 new) with `pcb_envelope.yaml`, ENV-001's pi
 `pcb_rules_coverage.yaml` and the envelope tests in `tests/test_envelope_data.py`, and `ASSEMBLY.md` (sections 1
 to 4, 7 and 8, each correction dated). None of them is a generator, a board, a verdict or an order file, and no
 board's phase changes.
+
+### 32.367, 26 September 2026 17:02 CEST: the owner reverses D-08 and D-08a stands, so the case is designed against the worst of Peli's own figures; SC-02 names the two NEED-03 exceptions; and the pack's road route is withdrawn after the review of that day
+
+**What this entry records (MESHSAT-1357).** Four corrections to the foundation records written earlier on 26
+September 2026 (32.366). Nothing has been built, fitted to a case, powered or measured: each is a correction to the
+design record, not to a kit. None of them touches a generator, a board, a verdict or an order file, and no board's
+phase changes.
+
+**(1) The rulings.** At about 09:30 CEST the owner reversed D-08 (32.366): "you have the CAD files and all the
+measurements why do you need from me to measure an old case?" The case measurement and the cardboard mock-up, a
+request the session had written (workstream W4), are withdrawn, and nothing is asked of him. D-08a, ruled earlier
+the same day, stands as the design basis: the current 1450 moulding of Peli's 1451-931 customer drawing dated 15
+January 2025 ("if it is older i will buy another newer case"); the design never adapts to an older moulding, and a
+new 1450 is bought if the case used for the build is older. The design computes every case-dependent margin against
+the worst of Peli's own figures (the 1451-931 drawing, the base, lid and 1450PF STEP bodies, the 1453-314-000 frame
+sheet with its tolerance block, the pelican.com page), plus a stated minimum. After the review of 26 September 2026
+(`v2/docs/reviews/2026-09-26-foundation-progress-review.md:79`) a margin that rests on a tolerance no source
+states, a TBD or a pick is OPEN, and nominal CAD establishes no fit, blind-mate alignment or seal. The OPEN margins,
+the seals and the stack-up are shown on hardware, on a targeted unpowered mock-up the session recommends for the
+build stage, by the assembler, in a new case of that moulding. The ban on asking the owner to measure a COTS part
+now holds without exception. The analysis is `v2/docs/CASE-MARGINS.md`.
+
+**What reading Peli's files properly found** (`CASE-MARGINS.md`, sections 2 and 3; readers and readings in
+`v2/vendor/peli/`): the base is 108.97 deep, not 109.4 (32.41's table, line 2598); the frame's ring is 9.39 thick
+and has no ledge 8 mm under its top (line 2603); 371 x 259 is the lid's interior, not the floor at the rim (line
+2611); the floor fillet is R 15.88; the inner ribs are fifteen small tapered ribs at X 0, +-76.2, +-152.4 on the
+long walls and Y 0, +-76.2 on the end walls, not five at X -170, -95, -18, +60, +137; Peli seats the frame "fully
+seated on the internal ribs" and mounts a panel on top of it over the o-ring, screwed from above.
+
+**The frame seat.** In Peli's own envelope the ribs catch the frame by 0.012 mm at the end walls and miss it by
+0.75 at the long walls, so the frame's rest spans 11.9 mm over the frame sheet's own +-0.76 and about 31 mm with the
+case allowances, while the monitor and the lid leave a 5.96 mm window for the face. No face mounting referenced to
+that rest holds; the session gave the frame a designed height (C6, four setting legs bonded under the frame's ring
+and standing on the floor, placed by the frame's own centring).
+
+**The session's choices** under the owner's standing rule of 26 September 2026, each recorded as its own and
+reversible: C1 the plate on the frame as Peli documents (face top 106.52, 104.77 to 108.27), 377.2 x 263.0 on
+4.6 mm holes for Peli's 6-32 inserts; C2 the ruled gas-discharge arrestors (appendix 32.50 item 4, decision 31) as
+the twelve antenna bulkheads, five east and seven west at a 31 mm pitch and Z 59, bodies outside, their jumpers'
+planned route over the pack's outer strip and down beyond the legs (east) or straight down (west), the east jumpers'
+layering under the plugs OPEN until the plug is picked; C3 one 114 x 68.3 x 5 connector plate between the hinge
+fairings carrying all six ruled items (shore DC, the Glenair USB with a right-angle plug inside, the sealed RJ45,
+the sealed USB-C, the pod's M8 receptacle, the ground stud), six M4 x 25 under bonded sealing washers; C4 one 6 mm
+aluminium RF entry plate per end wall, spot-faced under each arrestor's nut, on eight M4 x 12 through 5 mm wall
+holes, carrying the arrestors and joining them to one ground lead to the ground stud, the Amphenol couplers
+retired; C5 the QMX tray 1.5 mm west; C6 the setting legs (pad top 94.13, the lowest that keeps the plate's
+underside above the shoulder) and a centring step for the frame. With them, 35 of the 70 margins `CASE-MARGINS.md`
+computes are MET and 35 OPEN, and none is NOT MET. Two OPEN rows, the east jumpers' layering under the plugs (M17g,
+M17x), fall below their minimum at the limit of the jumper plug's class and wait on its pick. The other OPEN rows
+rest on the case's unpublished tolerance, the build's allowances or a TBD, and that document's section 7 names what
+closes each. None of the choices changes a board, a ruled device or a purchase. C3 constrains two open picks: the
+sealed RJ45 to a MIL-DTL-38999 shell 15 envelope and the 54 V PoE feed (the recommended Bulgin PX0833 is 38.1 mm
+across and rated 42 V on its own sheet), and the sealed USB-C to the 4000 series body its sibling's sheet draws; C4
+constrains the arrestor's nut and the jumpers' right-angle plug, whose ferrule and cable axis decide the layering;
+the arrestor's own nut on its thread stays OPEN until PolyPhaser dimensions the O-ring its drawing shows (M13).
+D-06's "subject to the case measurement" is answered by M4a to M6 (M4b and M6 MET; M4a and M5 OPEN until the
+pack's hold-down fixes its place), and the case half of D-07 by that document's section 3.4; D-07's board E clamp
+fit stays open. Nothing here says that a fit is established: `CASE-MARGINS.md` gives MET, NOT MET or OPEN on the
+design basis only.
+
+**(2) SC-02, settled by the session under the owner's standing rule at about 11:35 CEST.** The LoRa module (slot
+3's SPI) and cellular data (slot 2's PCIe lane) are NAMED EXCEPTIONS to NEED-03 for prototype 1: they go down with
+their module, as `ARCH-PCB-B-IOHA.md` sections 15 and 15a and the standing-rule choice D-01-R1 of 32.366 already
+record. It needs no board B change, and board B is the hardest board of the set; making either bearer critical
+needs a second LoRa site or the 5G module moved to USB 3, and both change board B's floor plan. Without them the
+kit is designed to keep at least three of D-01's four messaging bearers through the loss of any one module
+(section 15a). `CONOPS.md` sections 2a and 7a and its mission M5 had called the two "open design gaps against
+NEED-03, not accepted exceptions", which contradicted section 15a and 32.366; they are corrected to match, and so
+are `PRODUCT-BRIEF.md` (its compute bullet) and `V2-SPEC.md` (line 32 and correction 6, with a new correction 18).
+The requirements registry follows in its own file. Reverse by naming either bearer critical, which reopens board
+B's floor plan.
+
+**(3) The pack's transport route, after the review of 26 September 2026** (supplied by the owner at 14:12 CEST,
+`v2/docs/reviews/2026-09-26-foundation-progress-review.md` section 5, reference R5, the Dutch ILT's page on
+dangerous goods for road and sea transport). The ConOps had recorded, as the session's choice under D-04, that the
+pack goes by road with the kit as the operator's own equipment and that air or parcel carriage waits on a UN 38.3
+test summary. That read the pack's unknown UN 38.3 status as leaving road carriage open, and it does not: road
+carriage has its own dangerous-goods rules (the ADR). The choice is withdrawn. The pack's classification, the
+conditions that apply to it or an exception that applies are to be established before any transport route is
+claimed acceptable: TBD, a bounded item, not a broad compliance project. Corrected in `CONOPS.md` (section 4, the
+Transport row; section 7, a pointer in the D-04 row; section 7a, the row marked WITHDRAWN) and in
+`OPERATING-ENVELOPE.md` section 8 (its D-04 paragraph). D-04 itself stands as ruled; the 4500 m transport ceiling
+of D-02c stands.
+
+**(4) The build guide's reach.** `v2/README.md` said `BUILD.md` "walks from an empty cart to a running kit"; it now
+says "to an assembled kit". No kit has been built or powered, and nothing in this tree says one runs.
+
+**Where (1) is recorded, each edit dated:** `CONOPS.md` (status; section 2a; section 6's pack paragraph and runtime
+line; section 7's introduction, the D-06, D-07 and D-08 rows and a new D-08a row; section 7a, three rows for the
+case choices C1 to C6); `OPERATING-ENVELOPE.md` (section 4, the pack row); `ASSEMBLY.md` (corrections (5) and (10)
+and a new (11), section 1's pack row, section 3's table, finding and ruling paragraph, all on their own lines so that
+citations of this file by line still resolve); `V2-SPEC.md` (lines 20 and 76, corrections 1 and 12, and the new
+correction 18); `PRODUCT-BRIEF.md` (status, the pack sentence, the 5G bullet, the TBD paragraph); `README.md` and
+`v2/README.md` (the pack sentence). The envelope document changed, so its sha256 is re-pinned in `pcb_envelope.yaml`
+and in ENV-001's `verified_sha` in `pcb_rules_coverage.yaml`, the same pin `tests/test_envelope_data.py` compares;
+no envelope number changed.
+
+**Corrections to earlier sections of this appendix, which stay as they were written.**
+
+- **32.366, the D-01 row** ("no pack is expected to fit the west pocket (A06, INFERRED until the case is measured,
+  D-08)"), **the W4-F1-r2 finding** ("INFERRED until the case is measured (D-08)") and **the correction to 32.62**
+  ("(A06, INFERRED until the case is measured)"): each stays INFERRED from the committed board heights; no case
+  measurement is owed, and the case side is designed against Peli's figures (`CASE-MARGINS.md`).
+- **32.366, the D-06 row** ("subject to the case measurement"): answered from Peli's figures by `CASE-MARGINS.md`
+  M4a to M6, with M4b and M6 MET and M4a and M5 OPEN until the pack's hold-down fixes its place.
+- **32.366, the D-07 row** ("if the case measurement confirms the site and the board E clamp fit"): the case half is
+  laid out (`CASE-MARGINS.md` section 3.4, the east jumpers' layering OPEN until the plug is picked); the board E
+  clamp fit remains.
+- **32.366, the D-08 row**: superseded, reversed by the owner at about 09:30 CEST (above). The first ruling answered
+  a request the session had written.
+- **32.366, the D-04 row** ("the pack's transport route stated, its UN 38.3 status unknown"): the ruling stands; the
+  route the ConOps then stated under it is withdrawn, (3) above.
+- **32.41, lines 2598, 2603 and 2611, and the rib positions** of the 5 September interior rulings: Peli's files do
+  not support them, as listed under (1) above and in `CASE-MARGINS.md` section 2.6.
+
+**Files.** New in the same change: `CASE-MARGINS.md`; `v2/vendor/peli/1450/1450_pf.pdf` and
+`v2/vendor/peli/panel-frame-inst.pdf` (Peli's frame sheet and mounting instructions, fetched 26 September 2026);
+`v2/vendor/bulgin/bulgin-pxp4043-micro-usb-rear-panel.pdf` and `bulgin-pxp4043c-usb-c-rear-panel.pdf` (fetched the
+same day); the readers `step_faces.py`, `dxf_read.py`, `case_margins.py` and `frame_seat.py` beside `proj.py`, with
+their readings. Corrected: the files listed under (1) to (4). **Still owed:** the generator and drawing changes each
+case choice lists (`CASE-MARGINS.md` section 4, among them `v2/README.md`'s "eleven antenna couplers ... at 88 mm",
+which C2 replaces); `EXECUTION-PLAN.md`'s W4 row, which still names the measurement request; and the requirements registry's rows for SC-02 and the transport route.
