@@ -1,0 +1,202 @@
+{
+  "sha": "f14572c203d57492e1d4e5d7851a3b143e083b82",
+  "node_id": "C_kwDOACN7MtoAKGYxNDU3MmMyMDNkNTc0OTJlMWQ0ZTVkNzg1MWEzYjE0M2UwODNiODI",
+  "commit": {
+    "author": {
+      "name": "Linus Torvalds",
+      "email": "torvalds@linux-foundation.org",
+      "date": "2026-09-25T20:30:04Z"
+    },
+    "committer": {
+      "name": "Linus Torvalds",
+      "email": "torvalds@linux-foundation.org",
+      "date": "2026-09-25T20:30:04Z"
+    },
+    "message": "Merge tag 'cifs-fixes-7.3-rc5' of https://git.manguebit.org/linux\n\nPull smb client fixes from Paulo Alcantara:\n\n - Fix leaked server handles and dropped errors in the SMB2 compound\n   create path: a parsing error reported as success, an earlier CREATE\n   left open when a later command fails, the cached directory open\n   losing the FID needed for cleanup, and SMB2_open() not closing the\n   handle after a create-context parse failure\n\n - Fix out-of-bounds reads when parsing create contexts from a\n   malicious server: bound each context by its Next field, parse the\n   lease and QFid contexts from their declared offsets and validate\n   the POSIX create context length\n\n - Fix a double credit decrement, and its warning, when a compound\n   send fails and triggers a reconnect; found by syzbot\n\n - Fix a dentry and server handle leak in cifs_atomic_open() when an\n   O_CREAT open resolves to a symlink or other non-regular inode\n\n - Use GFP_KERNEL in the DFS get_targets() path\n\n - Minor update to the POSIX extension specification references\n\n* tag 'cifs-fixes-7.3-rc5' of https://git.manguebit.org/linux:\n  smb: client: use finish_no_open() for non-regular inodes\n  smb: client: use GFP_KERNEL in get_targets()\n  smb: client: update POSIX extension specification references\n  smb: client: preserve create-context parsing errors\n  smb: client: close completed creates on compound wait errors\n  smb: client: clean up failed cached directory opens\n  smb: client: close handle after create-context parsing failure\n  smb: client: validate POSIX create context length\n  smb: client: fix create context out-of-bounds reads\n  smb: client: delete compound mids on send failure before unlock",
+    "tree": {
+      "sha": "3e509947147565629021a557b21e272d585bbb45",
+      "url": "https://api.github.com/repos/torvalds/linux/git/trees/3e509947147565629021a557b21e272d585bbb45"
+    },
+    "url": "https://api.github.com/repos/torvalds/linux/git/commits/f14572c203d57492e1d4e5d7851a3b143e083b82",
+    "comment_count": 0,
+    "verification": {
+      "verified": false,
+      "reason": "unsigned",
+      "signature": null,
+      "payload": null,
+      "verified_at": null
+    }
+  },
+  "url": "https://api.github.com/repos/torvalds/linux/commits/f14572c203d57492e1d4e5d7851a3b143e083b82",
+  "html_url": "https://github.com/torvalds/linux/commit/f14572c203d57492e1d4e5d7851a3b143e083b82",
+  "comments_url": "https://api.github.com/repos/torvalds/linux/commits/f14572c203d57492e1d4e5d7851a3b143e083b82/comments",
+  "author": {
+    "login": "torvalds",
+    "id": 1024025,
+    "node_id": "MDQ6VXNlcjEwMjQwMjU=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1024025?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/torvalds",
+    "html_url": "https://github.com/torvalds",
+    "followers_url": "https://api.github.com/users/torvalds/followers",
+    "following_url": "https://api.github.com/users/torvalds/following{/other_user}",
+    "gists_url": "https://api.github.com/users/torvalds/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/torvalds/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/torvalds/subscriptions",
+    "organizations_url": "https://api.github.com/users/torvalds/orgs",
+    "repos_url": "https://api.github.com/users/torvalds/repos",
+    "events_url": "https://api.github.com/users/torvalds/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/torvalds/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "committer": {
+    "login": "torvalds",
+    "id": 1024025,
+    "node_id": "MDQ6VXNlcjEwMjQwMjU=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/1024025?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/torvalds",
+    "html_url": "https://github.com/torvalds",
+    "followers_url": "https://api.github.com/users/torvalds/followers",
+    "following_url": "https://api.github.com/users/torvalds/following{/other_user}",
+    "gists_url": "https://api.github.com/users/torvalds/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/torvalds/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/torvalds/subscriptions",
+    "organizations_url": "https://api.github.com/users/torvalds/orgs",
+    "repos_url": "https://api.github.com/users/torvalds/repos",
+    "events_url": "https://api.github.com/users/torvalds/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/torvalds/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "parents": [
+    {
+      "sha": "aa98230e410f0ed212b6788c46b1e4d49e0ff7ca",
+      "url": "https://api.github.com/repos/torvalds/linux/commits/aa98230e410f0ed212b6788c46b1e4d49e0ff7ca",
+      "html_url": "https://github.com/torvalds/linux/commit/aa98230e410f0ed212b6788c46b1e4d49e0ff7ca"
+    },
+    {
+      "sha": "e66cf1625ec4a3fe68346119f371def713fd0a4d",
+      "url": "https://api.github.com/repos/torvalds/linux/commits/e66cf1625ec4a3fe68346119f371def713fd0a4d",
+      "html_url": "https://github.com/torvalds/linux/commit/e66cf1625ec4a3fe68346119f371def713fd0a4d"
+    }
+  ],
+  "stats": {
+    "total": 266,
+    "additions": 200,
+    "deletions": 66
+  },
+  "files": [
+    {
+      "sha": "647fa26da4d24ce02e7bfc451d964960e13e310a",
+      "filename": "fs/smb/client/cached_dir.c",
+      "status": "modified",
+      "additions": 22,
+      "deletions": 10,
+      "changes": 32,
+      "blob_url": "https://github.com/torvalds/linux/blob/f14572c203d57492e1d4e5d7851a3b143e083b82/fs%2Fsmb%2Fclient%2Fcached_dir.c",
+      "raw_url": "https://github.com/torvalds/linux/raw/f14572c203d57492e1d4e5d7851a3b143e083b82/fs%2Fsmb%2Fclient%2Fcached_dir.c",
+      "contents_url": "https://api.github.com/repos/torvalds/linux/contents/fs%2Fsmb%2Fclient%2Fcached_dir.c?ref=f14572c203d57492e1d4e5d7851a3b143e083b82",
+      "patch": "@@ -8,6 +8,7 @@\n #include <linux/namei.h>\n #include \"cifsglob.h\"\n #include \"cifsproto.h\"\n+#include \"../common/smb2status.h\"\n #include \"cifs_debug.h\"\n #include \"smb2proto.h\"\n #include \"cached_dir.h\"\n@@ -323,25 +324,37 @@ int open_cached_dir(unsigned int xid, struct cifs_tcon *tcon,\n \trc = compound_send_recv(xid, ses, server,\n \t\t\t\tflags, 2, rqst,\n \t\t\t\tresp_buftype, rsp_iov);\n-\tif (rc) {\n-\t\tif (rc == -EREMCHG) {\n-\t\t\ttcon->need_reconnect = true;\n-\t\t\tpr_warn_once(\"server share %s deleted\\n\",\n-\t\t\t\t     tcon->tree_name);\n-\t\t}\n-\t\tgoto oshr_free;\n+\tif (rc == -EREMCHG) {\n+\t\ttcon->need_reconnect = true;\n+\t\tpr_warn_once(\"server share %s deleted\\n\",\n+\t\t\t     tcon->tree_name);\n \t}\n-\tcfid->is_open = true;\n \n-\tspin_lock(&cfids->cfid_list_lock);\n+\tif (!rsp_iov[0].iov_base || rsp_iov[0].iov_len < sizeof(*o_rsp)) {\n+\t\tif (!rc)\n+\t\t\trc = -EIO;\n+\t\tgoto oshr_free;\n+\t}\n \n \to_rsp = (struct smb2_create_rsp *)rsp_iov[0].iov_base;\n+\tif (o_rsp->hdr.Status != STATUS_SUCCESS) {\n+\t\tif (!rc)\n+\t\t\trc = -EIO;\n+\t\tgoto oshr_free;\n+\t}\n+\n \toparms.fid->persistent_fid = o_rsp->PersistentFileId;\n \toparms.fid->volatile_fid = o_rsp->VolatileFileId;\n #ifdef CONFIG_CIFS_DEBUG2\n \toparms.fid->mid = le64_to_cpu(o_rsp->hdr.MessageId);\n #endif /* CIFS_DEBUG2 */\n+\tcfid->is_open = true;\n+\tatomic_inc(&tcon->num_remote_opens);\n \n+\tif (rc)\n+\t\tgoto oshr_free;\n+\n+\tspin_lock(&cfids->cfid_list_lock);\n \n \tif (o_rsp->OplockLevel != SMB2_OPLOCK_LEVEL_LEASE) {\n \t\tspin_unlock(&cfids->cfid_list_lock);\n@@ -408,7 +421,6 @@ int open_cached_dir(unsigned int xid, struct cifs_tcon *tcon,\n \t\tclose_cached_dir(cfid);\n \t} else {\n \t\t*ret_cfid = cfid;\n-\t\tatomic_inc(&tcon->num_remote_opens);\n \t}\n \tkfree(utf16_path);\n "
+    },
+    {
+      "sha": "26956e33037e7c01044a65949e28e56fef2a2965",
+      "filename": "fs/smb/client/dfs_cache.c",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 2,
+      "changes": 4,
+      "blob_url": "https://github.com/torvalds/linux/blob/f14572c203d57492e1d4e5d7851a3b143e083b82/fs%2Fsmb%2Fclient%2Fdfs_cache.c",
+      "raw_url": "https://github.com/torvalds/linux/raw/f14572c203d57492e1d4e5d7851a3b143e083b82/fs%2Fsmb%2Fclient%2Fdfs_cache.c",
+      "contents_url": "https://api.github.com/repos/torvalds/linux/contents/fs%2Fsmb%2Fclient%2Fdfs_cache.c?ref=f14572c203d57492e1d4e5d7851a3b143e083b82",
+      "patch": "@@ -798,13 +798,13 @@ static int get_targets(struct cache_entry *ce, struct dfs_cache_tgt_list *tl)\n \tINIT_LIST_HEAD(head);\n \n \tlist_for_each_entry(t, &ce->tlist, list) {\n-\t\tit = kzalloc_obj(*it, GFP_ATOMIC);\n+\t\tit = kzalloc_obj(*it, GFP_KERNEL);\n \t\tif (!it) {\n \t\t\trc = -ENOMEM;\n \t\t\tgoto err_free_it;\n \t\t}\n \n-\t\tit->it_name = kstrdup(t->name, GFP_ATOMIC);\n+\t\tit->it_name = kstrdup(t->name, GFP_KERNEL);\n \t\tif (!it->it_name) {\n \t\t\tkfree(it);\n \t\t\trc = -ENOMEM;"
+    },
+    {
+      "sha": "1a56fa4d0e8905f30a88e886fb73b3fd006a2f62",
+      "filename": "fs/smb/client/dir.c",
+      "status": "modified",
+      "additions": 39,
+      "deletions": 13,
+      "changes": 52,
+      "blob_url": "https://github.com/torvalds/linux/blob/f14572c203d57492e1d4e5d7851a3b143e083b82/fs%2Fsmb%2Fclient%2Fdir.c",
+      "raw_url": "https://github.com/torvalds/linux/raw/f14572c203d57492e1d4e5d7851a3b143e083b82/fs%2Fsmb%2Fclient%2Fdir.c",
+      "contents_url": "https://api.github.com/repos/torvalds/linux/contents/fs%2Fsmb%2Fclient%2Fdir.c?ref=f14572c203d57492e1d4e5d7851a3b143e083b82",
+      "patch": "@@ -199,7 +199,7 @@ static int __cifs_do_create(struct inode *dir, struct dentry *direntry,\n \t\t\t    struct tcon_link *tlink, unsigned int oflags,\n \t\t\t    umode_t mode, __u32 *oplock, struct cifs_fid *fid,\n \t\t\t    struct cifs_open_info_data *buf,\n-\t\t\t    struct inode **inode)\n+\t\t\t    struct inode **inode, bool *opened)\n {\n \tint rc = -ENOENT;\n \tint create_options = CREATE_NOT_DIR;\n@@ -216,6 +216,7 @@ static int __cifs_do_create(struct inode *dir, struct dentry *direntry,\n \t__le32 lease_flags = 0;\n \n \t*inode = NULL;\n+\t*opened = false;\n \t*oplock = 0;\n \tif (tcon->ses->server->oplocks)\n \t\t*oplock = REQ_OPLOCK;\n@@ -232,6 +233,7 @@ static int __cifs_do_create(struct inode *dir, struct dentry *direntry,\n \t\t\t\t     oflags, oplock, &fid->netfid, xid);\n \t\tswitch (rc) {\n \t\tcase 0:\n+\t\t\t*opened = true;\n \t\t\tif (newinode == NULL) {\n \t\t\t\t/* query inode info */\n \t\t\t\tgoto cifs_create_get_file_info;\n@@ -253,11 +255,9 @@ static int __cifs_do_create(struct inode *dir, struct dentry *direntry,\n \t\t\t\t/*\n \t\t\t\t * The server may allow us to open things like\n \t\t\t\t * FIFOs, but the client isn't set up to deal\n-\t\t\t\t * with that. If it's not a regular file, just\n-\t\t\t\t * close it and proceed as if it were a normal\n-\t\t\t\t * lookup.\n+\t\t\t\t * with that. Keep the handle until the caller\n+\t\t\t\t * can finish the lookup.\n \t\t\t\t */\n-\t\t\t\tCIFSSMBClose(xid, tcon, fid->netfid);\n \t\t\t\tgoto cifs_create_get_file_info;\n \t\t\t}\n \t\t\t/* success, no need to query */\n@@ -384,6 +384,7 @@ static int __cifs_do_create(struct inode *dir, struct dentry *direntry,\n \t\t}\n \t\treturn rc;\n \t}\n+\t*opened = true;\n \tif (rdwr_for_fscache == 2)\n \t\tcifs_invalidate_cache(dir, FSCACHE_INVAL_DIO_WRITE);\n \n@@ -475,7 +476,7 @@ static int __cifs_do_create(struct inode *dir, struct dentry *direntry,\n \treturn rc;\n \n out_err:\n-\tif (server->ops->close)\n+\tif (*opened && server->ops->close)\n \t\tserver->ops->close(xid, tcon, fid);\n \tif (newinode)\n \t\tiput(newinode);\n@@ -487,7 +488,7 @@ static int cifs_do_create(struct inode *dir, struct dentry *direntry,\n \t\t\t  unsigned int oflags, umode_t mode,\n \t\t\t  __u32 *oplock, struct cifs_fid *fid,\n \t\t\t  struct cifs_open_info_data *buf,\n-\t\t\t  struct inode **inode)\n+\t\t\t  struct inode **inode, bool *opened)\n {\n \tvoid *page = alloc_dentry_path();\n \tconst char *full_path;\n@@ -496,10 +497,11 @@ static int cifs_do_create(struct inode *dir, struct dentry *direntry,\n \tfull_path = build_path_from_dentry(direntry, page);\n \tif (IS_ERR(full_path)) {\n \t\trc = PTR_ERR(full_path);\n+\t\t*opened = false;\n \t} else {\n \t\trc = __cifs_do_create(dir, direntry, full_path, xid,\n \t\t\t\t      tlink, oflags, mode, oplock,\n-\t\t\t\t      fid, buf, inode);\n+\t\t\t\t      fid, buf, inode, opened);\n \t}\n \tfree_dentry_path(page);\n \treturn rc;\n@@ -529,6 +531,8 @@ int cifs_atomic_open(struct inode *dir, struct dentry *direntry,\n \tstruct inode *inode;\n \tunsigned int xid;\n \t__u32 oplock;\n+\tbool is_regular;\n+\tbool opened;\n \tint rc;\n \n \tif (unlikely(cifs_forced_shutdown(cifs_sb)))\n@@ -581,12 +585,26 @@ int cifs_atomic_open(struct inode *dir, struct dentry *direntry,\n \tcifs_add_pending_open(&fid, tlink, &open);\n \n \trc = cifs_do_create(dir, direntry, xid, tlink, oflags, mode,\n-\t\t\t    &oplock, &fid, &buf, &inode);\n+\t\t\t    &oplock, &fid, &buf, &inode, &opened);\n \tif (rc) {\n \t\tcifs_del_pending_open(&open);\n \t\tgoto out;\n \t}\n \n+\tis_regular = S_ISREG(inode->i_mode);\n+\tif (!is_regular || !opened) {\n+\t\tif (opened && server->ops->close)\n+\t\t\tserver->ops->close(xid, tcon, &fid);\n+\t\tcifs_del_pending_open(&open);\n+\t\tif (S_ISLNK(inode->i_mode) &&\n+\t\t    (oflags & (O_NOFOLLOW | __O_REGULAR)) ==\n+\t\t    (O_NOFOLLOW | __O_REGULAR) && !(oflags & O_EXCL)) {\n+\t\t\tiput(inode);\n+\t\t\trc = -ELOOP;\n+\t\t\tgoto out;\n+\t\t}\n+\t}\n+\n \tif (d_in_lookup(direntry)) {\n \t\talias = d_splice_alias(inode, direntry);\n \t\tif (!IS_ERR_OR_NULL(alias))\n@@ -595,9 +613,15 @@ int cifs_atomic_open(struct inode *dir, struct dentry *direntry,\n \t\td_instantiate(direntry, inode);\n \t}\n \n-\tif ((oflags & (O_CREAT | O_EXCL)) == (O_CREAT | O_EXCL))\n+\tif (is_regular && opened &&\n+\t    (oflags & (O_CREAT | O_EXCL)) == (O_CREAT | O_EXCL))\n \t\tfile->f_mode |= FMODE_CREATED;\n \n+\tif (!is_regular || !opened) {\n+\t\trc = finish_no_open(file, NULL);\n+\t\tgoto out;\n+\t}\n+\n \trc = finish_open(file, direntry, generic_file_open);\n \tif (rc) {\n \t\tif (server->ops->close)\n@@ -660,6 +684,7 @@ int cifs_create(struct mnt_idmap *idmap, struct inode *dir,\n \tstruct inode *inode;\n \tstruct cifs_fid fid;\n \t__u32 oplock;\n+\tbool opened;\n \tstruct cifs_open_info_data buf = {};\n \n \tcifs_dbg(FYI, \"cifs_create parent inode = 0x%p name is: %pd and dentry = 0x%p\\n\",\n@@ -682,10 +707,10 @@ int cifs_create(struct mnt_idmap *idmap, struct inode *dir,\n \t\tserver->ops->new_lease_key(&fid);\n \n \trc = cifs_do_create(dir, direntry, xid, tlink, oflags,\n-\t\t\t    mode, &oplock, &fid, &buf, &inode);\n+\t\t\t    mode, &oplock, &fid, &buf, &inode, &opened);\n \tif (!rc) {\n \t\td_instantiate(direntry, inode);\n-\t\tif (server->ops->close)\n+\t\tif (opened && server->ops->close)\n \t\t\tserver->ops->close(xid, tcon, &fid);\n \t}\n \n@@ -1078,6 +1103,7 @@ int cifs_tmpfile(struct mnt_idmap *idmap, struct inode *dir,\n \tstruct inode *inode;\n \tunsigned int xid;\n \t__u32 oplock;\n+\tbool opened;\n \tint namelen;\n \tint rc;\n \n@@ -1116,7 +1142,7 @@ int cifs_tmpfile(struct mnt_idmap *idmap, struct inode *dir,\n \t\tnamelen = scnprintf(name, namesize, CIFS_TMPNAME_PREFIX \"%x\",\n \t\t\t\t    atomic_inc_return(&cifs_tmpcounter));\n \t\trc = __cifs_do_create(dir, dentry, path, xid, tlink, oflags,\n-\t\t\t\t      mode, &oplock, &fid, NULL, &inode);\n+\t\t\t\t      mode, &oplock, &fid, NULL, &inode, &opened);\n \t\tif (!rc) {\n \t\t\trc = d_mark_tmpfile_name(file, &QSTR_LEN(name, namelen));\n \t\t\tif (rc) {"
+    },
+    {
+      "sha": "f46a62eae65912562b8cf0ecfc4b7a460772c19e",
+      "filename": "fs/smb/client/smb2inode.c",
+      "status": "modified",
+      "additions": 4,
+      "deletions": 2,
+      "changes": 6,
+      "blob_url": "https://github.com/torvalds/linux/blob/f14572c203d57492e1d4e5d7851a3b143e083b82/fs%2Fsmb%2Fclient%2Fsmb2inode.c",
+      "raw_url": "https://github.com/torvalds/linux/raw/f14572c203d57492e1d4e5d7851a3b143e083b82/fs%2Fsmb%2Fclient%2Fsmb2inode.c",
+      "contents_url": "https://api.github.com/repos/torvalds/linux/contents/fs%2Fsmb%2Fclient%2Fsmb2inode.c?ref=f14572c203d57492e1d4e5d7851a3b143e083b82",
+      "patch": "@@ -598,8 +598,10 @@ static int smb2_compound_op(const unsigned int xid, struct cifs_tcon *tcon,\n \t\t/* smb2_parse_contexts() fills idata->fi.IndexNumber */\n \t\trc = smb2_parse_contexts(server, &rsp_iov[0], &oparms->fid->epoch,\n \t\t\t\t\t oparms->fid->lease_key, &oplock, &idata->fi, NULL);\n-\t\tif (rc)\n+\t\tif (rc) {\n \t\t\tcifs_dbg(VFS, \"rc: %d parsing context of compound op\\n\", rc);\n+\t\t\ttmp_rc = rc;\n+\t\t}\n \t}\n \n \tfor (i = 0; i < num_cmds; i++) {\n@@ -1121,7 +1123,7 @@ smb2_unlink(const unsigned int xid, struct cifs_tcon *tcon, const char *name,\n \tstruct kvec close_iov;\n \tint resp_buftype[2];\n \tstruct cifs_fid fid;\n-\tint flags = 0;\n+\tint flags = CIFS_CP_CREATE_CLOSE_OP;\n \t__u8 oplock;\n \tint rc;\n "
+    },
+    {
+      "sha": "5e5cf92d1eb3404d2214288d531d0dc51971b2a0",
+      "filename": "fs/smb/client/smb2misc.c",
+      "status": "modified",
+      "additions": 6,
+      "deletions": 3,
+      "changes": 9,
+      "blob_url": "https://github.com/torvalds/linux/blob/f14572c203d57492e1d4e5d7851a3b143e083b82/fs%2Fsmb%2Fclient%2Fsmb2misc.c",
+      "raw_url": "https://github.com/torvalds/linux/raw/f14572c203d57492e1d4e5d7851a3b143e083b82/fs%2Fsmb%2Fclient%2Fsmb2misc.c",
+      "contents_url": "https://api.github.com/repos/torvalds/linux/contents/fs%2Fsmb%2Fclient%2Fsmb2misc.c?ref=f14572c203d57492e1d4e5d7851a3b143e083b82",
+      "patch": "@@ -834,7 +834,8 @@ smb2_cancelled_close_fid(struct work_struct *work)\n  */\n static int\n __smb2_handle_cancelled_cmd(struct cifs_tcon *tcon, __u16 cmd, __u64 mid,\n-\t\t\t    __u64 persistent_fid, __u64 volatile_fid)\n+\t\t\t    __u64 persistent_fid, __u64 volatile_fid,\n+\t\t\t    bool account_remote_open)\n {\n \tstruct close_cancelled_open *cancelled;\n \n@@ -848,6 +849,8 @@ __smb2_handle_cancelled_cmd(struct cifs_tcon *tcon, __u16 cmd, __u64 mid,\n \tcancelled->cmd = cmd;\n \tcancelled->mid = mid;\n \tINIT_WORK(&cancelled->work, smb2_cancelled_close_fid);\n+\tif (account_remote_open)\n+\t\tatomic_inc(&tcon->num_remote_opens);\n \tWARN_ON(queue_work(cifsiod_wq, &cancelled->work) == false);\n \n \treturn 0;\n@@ -884,7 +887,7 @@ smb2_handle_cancelled_close(struct cifs_tcon *tcon, __u64 persistent_fid,\n \tspin_unlock(&tcon->tc_lock);\n \n \trc = __smb2_handle_cancelled_cmd(tcon, SMB2_CLOSE_HE, 0,\n-\t\t\t\t\t persistent_fid, volatile_fid);\n+\t\t\t\t\t persistent_fid, volatile_fid, false);\n \tif (rc)\n \t\tcifs_put_tcon(tcon, netfs_trace_tcon_ref_put_cancelled_close);\n \n@@ -912,7 +915,7 @@ smb2_handle_cancelled_mid(struct mid_q_entry *mid, struct TCP_Server_Info *serve\n \t\t\t\t\t le16_to_cpu(hdr->Command),\n \t\t\t\t\t le64_to_cpu(hdr->MessageId),\n \t\t\t\t\t rsp->PersistentFileId,\n-\t\t\t\t\t rsp->VolatileFileId);\n+\t\t\t\t\t rsp->VolatileFileId, true);\n \tif (rc)\n \t\tcifs_put_tcon(tcon, netfs_trace_tcon_ref_put_cancelled_mid);\n "
+    },
+    {
+      "sha": "aa142420dae2e6a32f81b34a53ce7afa25c8f36d",
+      "filename": "fs/smb/client/smb2ops.c",
+      "status": "modified",
+      "additions": 20,
+      "deletions": 8,
+      "changes": 28,
+      "blob_url": "https://github.com/torvalds/linux/blob/f14572c203d57492e1d4e5d7851a3b143e083b82/fs%2Fsmb%2Fclient%2Fsmb2ops.c",
+      "raw_url": "https://github.com/torvalds/linux/raw/f14572c203d57492e1d4e5d7851a3b143e083b82/fs%2Fsmb%2Fclient%2Fsmb2ops.c",
+      "contents_url": "https://api.github.com/repos/torvalds/linux/contents/fs%2Fsmb%2Fclient%2Fsmb2ops.c?ref=f14572c203d57492e1d4e5d7851a3b143e083b82",
+      "patch": "@@ -4572,25 +4572,37 @@ smb3_create_lease_buf(u8 *lease_key, u8 oplock, u8 *parent_lease_key, __le32 fla\n static __u8\n smb2_parse_lease_buf(void *buf, __u16 *epoch, char *lease_key)\n {\n-\tstruct create_lease *lc = (struct create_lease *)buf;\n+\tstruct create_context *cc = buf;\n+\tstruct lease_context lc;\n \n \t*epoch = 0; /* not used */\n-\tif (lc->lcontext.LeaseFlags & SMB2_LEASE_FLAG_BREAK_IN_PROGRESS_LE)\n+\tif (le32_to_cpu(cc->DataLength) != sizeof(lc))\n+\t\treturn 0;\n+\n+\tmemcpy(&lc, (u8 *)cc + le16_to_cpu(cc->DataOffset), sizeof(lc));\n+\tif (lc.LeaseFlags & SMB2_LEASE_FLAG_BREAK_IN_PROGRESS_LE)\n \t\treturn SMB2_OPLOCK_LEVEL_NOCHANGE;\n-\treturn le32_to_cpu(lc->lcontext.LeaseState);\n+\treturn le32_to_cpu(lc.LeaseState);\n }\n \n static __u8\n smb3_parse_lease_buf(void *buf, __u16 *epoch, char *lease_key)\n {\n-\tstruct create_lease_v2 *lc = (struct create_lease_v2 *)buf;\n+\tstruct create_context *cc = buf;\n+\tstruct lease_context_v2 lc;\n+\n+\tif (le32_to_cpu(cc->DataLength) != sizeof(lc)) {\n+\t\t*epoch = 0;\n+\t\treturn 0;\n+\t}\n \n-\t*epoch = le16_to_cpu(lc->lcontext.Epoch);\n-\tif (lc->lcontext.LeaseFlags & SMB2_LEASE_FLAG_BREAK_IN_PROGRESS_LE)\n+\tmemcpy(&lc, (u8 *)cc + le16_to_cpu(cc->DataOffset), sizeof(lc));\n+\t*epoch = le16_to_cpu(lc.Epoch);\n+\tif (lc.LeaseFlags & SMB2_LEASE_FLAG_BREAK_IN_PROGRESS_LE)\n \t\treturn SMB2_OPLOCK_LEVEL_NOCHANGE;\n \tif (lease_key)\n-\t\tmemcpy(lease_key, &lc->lcontext.LeaseKey, SMB2_LEASE_KEY_SIZE);\n-\treturn le32_to_cpu(lc->lcontext.LeaseState);\n+\t\tmemcpy(lease_key, lc.LeaseKey, SMB2_LEASE_KEY_SIZE);\n+\treturn le32_to_cpu(lc.LeaseState);\n }\n \n static unsigned int"
+    },
+    {
+      "sha": "3d7ead36d1a0e647f2f79dd1c467efc6e37cce56",
+      "filename": "fs/smb/client/smb2pdu.c",
+      "status": "modified",
+      "additions": 42,
+      "deletions": 12,
+      "changes": 54,
+      "blob_url": "https://github.com/torvalds/linux/blob/f14572c203d57492e1d4e5d7851a3b143e083b82/fs%2Fsmb%2Fclient%2Fsmb2pdu.c",
+      "raw_url": "https://github.com/torvalds/linux/raw/f14572c203d57492e1d4e5d7851a3b143e083b82/fs%2Fsmb%2Fclient%2Fsmb2pdu.c",
+      "contents_url": "https://api.github.com/repos/torvalds/linux/contents/fs%2Fsmb%2Fclient%2Fsmb2pdu.c?ref=f14572c203d57492e1d4e5d7851a3b143e083b82",
+      "patch": "@@ -2379,23 +2379,32 @@ create_reconnect_durable_buf(struct cifs_fid *fid)\n static void\n parse_query_id_ctxt(struct create_context *cc, struct smb2_file_all_info *buf)\n {\n-\tstruct create_disk_id_rsp *pdisk_id = (struct create_disk_id_rsp *)cc;\n+\tu16 doff = le16_to_cpu(cc->DataOffset);\n+\tu32 dlen = le32_to_cpu(cc->DataLength);\n+\tu8 *beg;\n \n-\tcifs_dbg(FYI, \"parse query id context 0x%llx 0x%llx\\n\",\n-\t\tpdisk_id->DiskFileId, pdisk_id->VolumeId);\n-\tbuf->IndexNumber = pdisk_id->DiskFileId;\n+\tif (dlen < sizeof(__le64))\n+\t\treturn;\n+\n+\tbeg = (u8 *)cc + doff;\n+\tmemcpy(&buf->IndexNumber, beg, sizeof(__le64));\n+\tcifs_dbg(FYI, \"parse query id context 0x%llx\\n\",\n+\t\t le64_to_cpu(buf->IndexNumber));\n }\n \n static void\n parse_posix_ctxt(struct create_context *cc, struct smb2_file_all_info *info,\n \t\t struct create_posix_rsp *posix)\n {\n-\tint sid_len;\n \tu8 *beg = (u8 *)cc + le16_to_cpu(cc->DataOffset);\n-\tu8 *end = beg + le32_to_cpu(cc->DataLength);\n+\tu32 dlen = le32_to_cpu(cc->DataLength);\n+\tu8 *end = beg + dlen;\n+\tint sid_len;\n \tu8 *sid;\n \n \tmemset(posix, 0, sizeof(*posix));\n+\tif (dlen < 3 * sizeof(__le32))\n+\t\treturn;\n \n \tposix->nlink = get_unaligned_le32(beg);\n \tposix->reparse_tag = get_unaligned_le32(beg + 4);\n@@ -2431,6 +2440,7 @@ int smb2_parse_contexts(struct TCP_Server_Info *server,\n \tstruct smb2_create_rsp *rsp = rsp_iov->iov_base;\n \tstruct create_context *cc;\n \tsize_t rem, off, len;\n+\tsize_t cc_len;\n \tsize_t doff, dlen;\n \tsize_t noff, nlen;\n \tchar *name;\n@@ -2453,29 +2463,41 @@ int smb2_parse_contexts(struct TCP_Server_Info *server,\n \t\tbuf->IndexNumber = 0;\n \n \twhile (rem >= sizeof(*cc)) {\n+\t\toff = le32_to_cpu(cc->Next);\n+\t\tif (off) {\n+\t\t\tif ((off & 0x7) || off >= rem || off < sizeof(*cc))\n+\t\t\t\treturn -EINVAL;\n+\t\t\tcc_len = off;\n+\t\t} else {\n+\t\t\tcc_len = rem;\n+\t\t}\n+\n \t\tdoff = le16_to_cpu(cc->DataOffset);\n \t\tdlen = le32_to_cpu(cc->DataLength);\n-\t\tif (check_add_overflow(doff, dlen, &len) || len > rem)\n+\t\tif (doff < sizeof(*cc) ||\n+\t\t    check_add_overflow(doff, dlen, &len) || len > cc_len)\n \t\t\treturn -EINVAL;\n \n \t\tnoff = le16_to_cpu(cc->NameOffset);\n \t\tnlen = le16_to_cpu(cc->NameLength);\n-\t\tif (noff + nlen > doff)\n+\t\tif (noff < sizeof(*cc) ||\n+\t\t    check_add_overflow(noff, nlen, &len) || len > cc_len ||\n+\t\t    (dlen && len > doff))\n \t\t\treturn -EINVAL;\n \n \t\tname = (char *)cc + noff;\n \t\tswitch (nlen) {\n \t\tcase 4:\n-\t\t\tif (!strncmp(name, SMB2_CREATE_REQUEST_LEASE, 4)) {\n+\t\t\tif (dlen && !strncmp(name, SMB2_CREATE_REQUEST_LEASE, 4)) {\n \t\t\t\t*oplock = server->ops->parse_lease_buf(cc, epoch,\n \t\t\t\t\t\t\t\t       lease_key);\n-\t\t\t} else if (buf &&\n+\t\t\t} else if (dlen && buf &&\n \t\t\t\t   !strncmp(name, SMB2_CREATE_QUERY_ON_DISK_ID, 4)) {\n \t\t\t\tparse_query_id_ctxt(cc, buf);\n \t\t\t}\n \t\t\tbreak;\n \t\tcase 16:\n-\t\t\tif (posix && !memcmp(name, smb3_create_tag_posix, 16))\n+\t\t\tif (dlen && posix && !memcmp(name, smb3_create_tag_posix, 16))\n \t\t\t\tparse_posix_ctxt(cc, buf, posix);\n \t\t\tbreak;\n \t\tdefault:\n@@ -2487,13 +2509,18 @@ int smb2_parse_contexts(struct TCP_Server_Info *server,\n \t\t}\n \n \t\toff = le32_to_cpu(cc->Next);\n-\t\tif (!off)\n+\t\tif (!off) {\n+\t\t\trem = 0;\n \t\t\tbreak;\n+\t\t}\n \t\tif (check_sub_overflow(rem, off, &rem))\n \t\t\treturn -EINVAL;\n \t\tcc = (struct create_context *)((u8 *)cc + off);\n \t}\n \n+\tif (rem)\n+\t\treturn -EINVAL;\n+\n \tif (rsp->OplockLevel != SMB2_OPLOCK_LEVEL_LEASE)\n \t\t*oplock = rsp->OplockLevel;\n \n@@ -3389,6 +3416,9 @@ SMB2_open(const unsigned int xid, struct cifs_open_parms *oparms, __le16 *path,\n \n \trc = smb2_parse_contexts(server, &rsp_iov, &oparms->fid->epoch,\n \t\t\t\t oparms->fid->lease_key, oplock, file_info, posix);\n+\tif (rc)\n+\t\tSMB2_close(xid, tcon, oparms->fid->persistent_fid,\n+\t\t\t   oparms->fid->volatile_fid);\n \n \ttrace_smb3_open_done(xid, rsp->PersistentFileId, tcon->tid, ses->Suid,\n \t\t\t     oparms->create_options, oparms->desired_access,"
+    },
+    {
+      "sha": "b37a1e3941a1d95ffa248f5d1b0a6897c6fc9b6d",
+      "filename": "fs/smb/client/smb2pdu.h",
+      "status": "modified",
+      "additions": 7,
+      "deletions": 3,
+      "changes": 10,
+      "blob_url": "https://github.com/torvalds/linux/blob/f14572c203d57492e1d4e5d7851a3b143e083b82/fs%2Fsmb%2Fclient%2Fsmb2pdu.h",
+      "raw_url": "https://github.com/torvalds/linux/raw/f14572c203d57492e1d4e5d7851a3b143e083b82/fs%2Fsmb%2Fclient%2Fsmb2pdu.h",
+      "contents_url": "https://api.github.com/repos/torvalds/linux/contents/fs%2Fsmb%2Fclient%2Fsmb2pdu.h?ref=f14572c203d57492e1d4e5d7851a3b143e083b82",
+      "patch": "@@ -224,8 +224,7 @@ struct smb2_file_id_extd_directory_info {\n extern char smb2_padding[7];\n \n /*\n- * See POSIX-SMB2 2.2.14.2.16\n- * Link: https://gitlab.com/samba-team/smb3-posix-spec/-/blob/master/smb3_posix_extensions.md\n+ * See POSIX-SMB2 2.1.3.2.1\n  */\n struct create_posix_rsp {\n \tu32 nlink;\n@@ -238,6 +237,7 @@ struct create_posix_rsp {\n #define SMB2_QUERY_DIRECTORY_IOV_SIZE 2\n \n /*\n+ * See POSIX-FSCC 2.2.1\n  * SMB2-only POSIX info level for query dir\n  *\n  * See posix_info_sid_size(), posix_info_extra_size() and\n@@ -256,13 +256,17 @@ struct smb2_posix_info {\n \t__le64 Inode;\n \t__le32 DeviceId;\n \t__le32 Zero;\n-\t/* beginning of POSIX Create Context Response */\n+\t/*\n+\t * Beginning of POSIX Create Context Response\n+\t * See POSIX-SMB2 2.1.3.2.1\n+\t */\n \t__le32 HardLinks;\n \t__le32 ReparseTag;\n \t__le32 Mode;\n \t/*\n \t * var sized owner SID\n \t * var sized group SID\n+\t * End of POSIX Create Context Response\n \t * le32 filenamelength\n \t * u8  filename[]\n \t */"
+    },
+    {
+      "sha": "6e21b5f8754a1ec0dbcaf26cb367586a86c98ca2",
+      "filename": "fs/smb/client/transport.c",
+      "status": "modified",
+      "additions": 58,
+      "deletions": 13,
+      "changes": 71,
+      "blob_url": "https://github.com/torvalds/linux/blob/f14572c203d57492e1d4e5d7851a3b143e083b82/fs%2Fsmb%2Fclient%2Ftransport.c",
+      "raw_url": "https://github.com/torvalds/linux/raw/f14572c203d57492e1d4e5d7851a3b143e083b82/fs%2Fsmb%2Fclient%2Ftransport.c",
+      "contents_url": "https://api.github.com/repos/torvalds/linux/contents/fs%2Fsmb%2Fclient%2Ftransport.c?ref=f14572c203d57492e1d4e5d7851a3b143e083b82",
+      "patch": "@@ -805,6 +805,18 @@ cifs_cancelled_callback(struct TCP_Server_Info *server, struct mid_q_entry *mid)\n \trelease_mid(server, mid);\n }\n \n+static void\n+cifs_mark_compound_mids_cancelled(struct mid_q_entry **mid, int count)\n+{\n+\tint i;\n+\n+\tfor (i = 0; i < count; i++) {\n+\t\tspin_lock(&mid[i]->mid_lock);\n+\t\tmid[i]->wait_cancelled = true;\n+\t\tspin_unlock(&mid[i]->mid_lock);\n+\t}\n+}\n+\n /*\n  * cifs_pick_channel - pick an eligible channel for network operations\n  *\n@@ -865,6 +877,7 @@ compound_send_recv(const unsigned int xid, struct cifs_ses *ses,\n \t\t   int *resp_buf_type, struct kvec *resp_iov)\n {\n \tint i, j, optype, rc = 0;\n+\tint num_processed = 0;\n \tstruct mid_q_entry *mid[MAX_COMPOUND];\n \tbool cancelled_mid[MAX_COMPOUND] = {false};\n \tstruct cifs_credits credits[MAX_COMPOUND] = {\n@@ -965,6 +978,10 @@ compound_send_recv(const unsigned int xid, struct cifs_ses *ses,\n \tif (rc < 0) {\n \t\trevert_current_mid(server, num_rqst);\n \t\tserver->sequence_number -= 2;\n+\t\tfor (i = 0; i < num_rqst; i++) {\n+\t\t\tdelete_mid(server, mid[i]);\n+\t\t\tcancelled_mid[i] = true;\n+\t\t}\n \t}\n \n \tcifs_server_unlock(server);\n@@ -1011,6 +1028,14 @@ compound_send_recv(const unsigned int xid, struct cifs_ses *ses,\n \t\t\tbreak;\n \t}\n \tif (rc != 0) {\n+\t\t/*\n+\t\t * A completed CREATE earlier in the compound chain may have\n+\t\t * opened a remote handle even though a later wait was\n+\t\t * interrupted. Mark it cancelled so __release_mid() invokes\n+\t\t * the existing unmatched-open cleanup.\n+\t\t */\n+\t\tcifs_mark_compound_mids_cancelled(mid, i);\n+\n \t\tfor (; i < num_rqst; i++) {\n \t\t\tcifs_server_dbg(FYI, \"Cancelling wait for mid %llu cmd: %d\\n\",\n \t\t\t\t mid[i]->mid, le16_to_cpu(mid[i]->command));\n@@ -1033,6 +1058,14 @@ compound_send_recv(const unsigned int xid, struct cifs_ses *ses,\n \n \t\trc = cifs_sync_mid_result(mid[i], server);\n \t\tif (rc != 0) {\n+\t\t\t/*\n+\t\t\t * A previous CREATE may have completed before this\n+\t\t\t * response failed. Mark it cancelled so its remote\n+\t\t\t * handle is closed when the mid is released.\n+\t\t\t */\n+\t\t\tcifs_mark_compound_mids_cancelled(mid, i);\n+\t\t\t/* Keep their response buffers for cancelled-mid cleanup. */\n+\t\t\tnum_processed = 0;\n \t\t\t/* mark this mid as cancelled to not free it below */\n \t\t\tcancelled_mid[i] = true;\n \t\t\tgoto out;\n@@ -1042,13 +1075,24 @@ compound_send_recv(const unsigned int xid, struct cifs_ses *ses,\n \t\t    mid[i]->mid_state != MID_RESPONSE_READY) {\n \t\t\trc = smb_EIO1(smb_eio_trace_rx_mid_unready, mid[i]->mid_state);\n \t\t\tcifs_dbg(FYI, \"Bad MID state?\\n\");\n+\t\t\tcifs_mark_compound_mids_cancelled(mid, i);\n+\t\t\tnum_processed = 0;\n \t\t\tgoto out;\n \t\t}\n \n \t\trc = server->ops->check_receive(mid[i], server,\n \t\t\t\t\t\tflags & CIFS_LOG_ERROR);\n+\t\tnum_processed = i + 1;\n+\t}\n \n-\t\tif (resp_iov) {\n+out:\n+\t/*\n+\t * Delay moving response buffers out of their mids until response\n+\t * synchronization completes. This lets cancelled-mid cleanup inspect\n+\t * an earlier CREATE response if a later MID fails.\n+\t */\n+\tif (resp_iov) {\n+\t\tfor (i = 0; i < num_processed; i++) {\n \t\t\tbuf = (char *)mid[i]->resp_buf;\n \t\t\tresp_iov[i].iov_base = buf;\n \t\t\tresp_iov[i].iov_len = mid[i]->resp_buf_size;\n@@ -1067,21 +1111,22 @@ compound_send_recv(const unsigned int xid, struct cifs_ses *ses,\n \t/*\n \t * Compounding is never used during session establish.\n \t */\n-\tspin_lock(&ses->ses_lock);\n-\tif ((ses->ses_status == SES_NEW) || (optype & CIFS_NEG_OP) || (optype & CIFS_SESS_OP)) {\n-\t\tstruct kvec iov = {\n-\t\t\t.iov_base = resp_iov[0].iov_base,\n-\t\t\t.iov_len = resp_iov[0].iov_len\n-\t\t};\n-\t\tspin_unlock(&ses->ses_lock);\n-\t\tcifs_server_lock(server);\n-\t\tsmb311_update_preauth_hash(ses, server, &iov, 1);\n-\t\tcifs_server_unlock(server);\n+\tif (num_processed == num_rqst) {\n \t\tspin_lock(&ses->ses_lock);\n+\t\tif ((ses->ses_status == SES_NEW) || (optype & CIFS_NEG_OP) || (optype & CIFS_SESS_OP)) {\n+\t\t\tstruct kvec iov = {\n+\t\t\t\t.iov_base = resp_iov[0].iov_base,\n+\t\t\t\t.iov_len = resp_iov[0].iov_len\n+\t\t\t};\n+\t\t\tspin_unlock(&ses->ses_lock);\n+\t\t\tcifs_server_lock(server);\n+\t\t\tsmb311_update_preauth_hash(ses, server, &iov, 1);\n+\t\t\tcifs_server_unlock(server);\n+\t\t\tspin_lock(&ses->ses_lock);\n+\t\t}\n+\t\tspin_unlock(&ses->ses_lock);\n \t}\n-\tspin_unlock(&ses->ses_lock);\n \n-out:\n \t/*\n \t * This will dequeue all mids. After this it is important that the\n \t * demultiplex_thread will not process any of these mids any further."
+    }
+  ]
+}

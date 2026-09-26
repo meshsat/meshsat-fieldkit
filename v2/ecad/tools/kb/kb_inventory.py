@@ -336,11 +336,19 @@ def write_parts_md(items, counts):
     L.append("")
     L.append("Documented is not the same as buyable, so the purchase side is counted separately from")
     L.append("`v2/release/revA/order/JLC-CERTIFIED.tsv`, which is a dated reading of JLCPCB's catalogue")
-    L.append("and not a promise about tomorrow.")
+    L.append("and not a promise about tomorrow. Neither count validates a part: a document on file and a")
+    L.append("catalogue answer say where a part's facts come from and whether it can be bought, not whether")
+    L.append("it suits this design (`v2/vendor/SOURCES.yaml`, header).")
     L.append("")
     L.append("| purchase | meaning | count |")
     L.append("|---|---|---|")
-    L.append("| CERTIFIED | JLCPCB returns this exact part, in our package, in stock | %d |" % counts.get("buyable_certified", 0))
+    L.append("| CERTIFIED | a dated reading of JLCPCB's catalogue that `jlc_certify.py`'s current comparison accepted:"
+             " the answer carries every letter and digit of the part the row names, a land drawn from one maker's"
+             " drawing is answered by that maker's part, the package family agrees and, where both sides state"
+             " them, so do body size and pitch, and stock covered the order on that date. Not proof of grade,"
+             " suitability or land; and a row marked WRONG_MODEL by hand over the tool's CERTIFIED is not an input"
+             " the tool reads, so a re-run could certify it again (second checkpoint review of 26 September 2026,"
+             " section 2D) | %d |" % counts.get("buyable_certified", 0))
     L.append("| HAND_FIT | bought elsewhere, with a distributor and a URL on record | %d |" % counts.get("buyable_hand_fit", 0))
     L.append("| BENCH_FITTED | a header, land or jumper that nobody places | %d |" % counts.get("buyable_bench_fitted", 0))
     L.append("| unproved | no certified row yet: an open pick, or a part still owed | %d |" % counts.get("buyable_unproved", 0))

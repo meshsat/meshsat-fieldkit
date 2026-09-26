@@ -663,9 +663,9 @@ continue.
 | # | Transmitter | Hardware inhibit as generated | Status (`EMCON.md`) |
 |---|---|---|---|
 | 1 | SA868 VHF exciter (D) | PTT held at receive by TX_INHIBIT_n; supply kept | OPEN: the maker states no "receive" threshold (bench E-01) |
-| 2 | RA30H1317M1 30 W PA (plate) | (a) the drain rail off on A; (b) the gate bias off and the relay at rest on D | **CLOSED at desk** on (b); single-fault tolerant only downstream of `SW_EMCON` and TX_INHIBIT_n (SD-EMC-6: accepted on condition of a hardware EMCON lamp on C) |
+| 2 | RA30H1317M1 30 W PA (plate) | (a) the drain rail off on A; (b) the gate bias off and the relay at rest on D | local: **CLOSED at desk** on (b); end to end: OPEN (`EMCON.md` 0a: the lamp of SD-EMC-6 is not drawn, and path (a)'s EMCON_HW line carries L1, L2 and L4); single-fault tolerant only downstream of `SW_EMCON` and TX_INHIBIT_n |
 | 3 | QMX HF (lid) | its DC input rail off | OPEN on the shared items L1, L2, L4 |
-| 4 | RockBLOCK 9704 (B) | eFuse off | OPEN: back-feed (SD-EMC-2) |
+| 4 | RockBLOCK 9704 (B) | eFuse off | OPEN locally since `EMCON.md`'s sixth revision: the module runs on two 10 F supercapacitors of its own after the eFuse opens, with its ENABLE held by U6 alone (`EMCON.md` 4.4); back-feed (SD-EMC-2) |
 | 5 | RM520N-GL 5G (B) | W_DISABLE1# low, a firmware-mediated airplane mode; supply kept | OPEN: the only firmware-independent inhibit the maker documents is supply removal; SD-EMC-1 requires it in the maker's order, and the circuit is not drawn |
 | 6, 7 | AW7915-AED cards, slots 1 and 3 (B) | card buck off (`458b2873`); W_DISABLE1# not counted | gate CLOSED at desk; back-feed OPEN |
 | 8 to 13 | CM5 WiFi and Bluetooth, three slots (B) | WL_nDisable and BT_nDisable pulled low by open drains (`458b2873`) | gate CLOSED at desk; OPEN on L1 to L4 and L7 |
@@ -679,8 +679,11 @@ of +3V3_DEV releases nine radios (an EMCON_ON source that does not share it, owe
 their specified range; L6, the RF-002 instrument's gaps (tools); L7, the 2N7002s on EMCON_ON driven at about 3.3 V
 with RDS(on) stated only at 5 V and 10 V. **Feasibility verdict of that page:** radios dark is feasible with the ruled
 architecture, each open item has a named circuit remedy that changes no board-to-board interface, stackup or radio
-part, the 5G row only at a stated cost (up to T_off + T_cut, at least 15.9 s plus the software's reaction time, in the
-fault and booting cases, accepted by the session in SD-EMC-1), and every row shares the toggle and TX_INHIBIT_n. The
+part, the 5G row only at a stated cost (up to T_off + T_cut in the fault and booting cases, accepted by the session in
+SD-EMC-1, and required to be at most 20 s with its hardware timers at their worst tolerance, SD-EMC-7 and REQ-071, not yet drawn), the RockBLOCK row only once
+the Iridium 9704 module's response to ENABLE is known, and every row shares the toggle and TX_INHIBIT_n. Every
+conclusion at desk is local; end to end no row is closed (`EMCON.md` 0a), and `EMCON.md` 5a sets the maximum latency
+(1 s for every row but the 5G module) and the fault conditions each inhibit must meet (REQ-071). The
 physical proof is twelve bench tests E-01 to E-12, none with the kit's own SDR, whose supply EMCON removes
 (`TEST-PLAN.md`'s functional check still says "measured with the SDR" and is owed the correction; `ARCH-PCB-B-IOHA.md`
 test A14 and `ASSEMBLY.md` section 8 item 7 already say an external receiver). EMCON is a core blocker of section 14.
@@ -722,9 +725,12 @@ hold (section 9).
 figures plus a stated minimum, a margin that rests on a tolerance no source states is OPEN, and nominal CAD establishes
 no physical fit, blind-mate alignment or seal (`CASE-MARGINS.md` section 1, Verdicts; the review of 26 September 2026,
 section 4). Of the 70 margins `CASE-MARGINS.md` computes for the session's chosen arrangement (C1 to C6), 35 are MET, 35
-OPEN and none NOT MET; its section 7 names what closes each OPEN row, chiefly lookups of makers' drawings and a targeted
-unpowered mock-up that the session recommends for the build stage in a new case of the current moulding. Nothing is
-asked of the owner; buying the case and the mock-up's parts stays his decision at the build.
+OPEN and none NOT MET. MET there is a sensitivity reading (every unstated allowance taken twice), not a bound on a
+tolerance no source states, and two OPEN rows, M17g and M17x, fail with the geometry as currently assumed until the
+jumper plug is picked. Its section 7 names what closes each OPEN row, chiefly lookups of makers' drawings and a targeted
+unpowered mock-up in a new case of the current moulding, now recommended before the outlines and connector placements
+of boards A, B, C, E and P freeze for routing; if it has not run by then, those rows move to the boards' fabrication
+release. Nothing is asked of the owner; buying the case and the mock-up's parts stays his decision.
 
 ### 7.1 The stack in Z (case frame, floor = 0)
 

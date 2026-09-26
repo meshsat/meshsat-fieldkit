@@ -26,7 +26,9 @@ dmr858/dmr858m-datasheet.pdf   # a saved '404 Not Found' page from the vendor's 
 
 # Present, indexed, and almost entirely pictures. Declared for the same reason as the drawings
 # above: a document that search can technically reach but cannot answer from must not be counted
-# as covered. Both are retired as well (see vendor-status.txt), so nothing current depends on them.
+# as covered. Both were retired as well when this was written. Corrected 26 September 2026 (stream r8docs): the Samsung
+# 35E sheets are current again, because the ruled 4S3P pack (D-06) uses the same cell; the relectro copy stays declared here
+# because its text is pictures, and the three other Samsung 35E sheets beside it carry the same cell's figures as text.
 battery/samsung-35e-relectro.pdf   # 13 pages carrying 1097 characters in total; the three other Samsung 35E sheets beside it carry real text
 cm5/doc-touch-display-2.adoc   # a 38-byte include stub: one 'include::touch-display-2/about.adoc[]' line, the content is in doc-td2-about.adoc
 
@@ -38,3 +40,12 @@ m2/te-2199119-customer-drawing-revF.pdf   # TE customer drawing C-2199119 rev F,
 # Added 26 September 2026 (MESHSAT-1357, stream PKT). pdftotext returns 6 characters for 6 pages: the maker's file is
 # page images. Read from renders at 70 dpi on 26 September 2026 (pages 1 and 2: ordering, pins, ratings, conditions).
 techpublic/techpublic-74lvc1g08gv-c19829591.pdf   # TECH PUBLIC 74LVC1G08, six pages of images with no text layer
+
+# Added 26 September 2026 (MESHSAT-1357, stream r8docs). QRP Labs publishes the QMX schematics as page images: pdftotext
+# returns 254 characters for five pages (the page titles). EMCON.md section 4.3 read them from renders at 300 dpi, and the
+# crops that carry that reading are filed beside them under qrp-labs/qmx-crops/. G4GIR's searchable redraw of Rev 1,
+# qrp-labs/qrplabs-qmx-rev1-searchable-schematic-1b.pdf, has a text layer and is indexed.
+qrp-labs/qrplabs-qmx-schematics-rev5.pdf   # QMX PCB Rev 5 schematic, five page images, no text layer beyond the page titles
+qrp-labs/qrplabs-qmx-schematics-rev3.pdf   # QMX PCB Rev 3/4 schematic, five page images, no text layer beyond the page titles
+qrp-labs/qrplabs-qmx-schematics-rev2.pdf   # QMX PCB Rev 2 schematic, five page images, no text layer beyond the page titles
+qrp-labs/qrplabs-qmx-schematics-rev1-a.pdf   # QMX PCB Rev 1 schematic, five page images, no text layer beyond the page titles

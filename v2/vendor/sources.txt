@@ -25,9 +25,11 @@ d38999         # Glenair D38999/20 and /26 sheets, panel cut-outs, pin selection
 diodes         # Diodes PI7C9X2G304SL (3-port, 4-lane PCIe 2.0 packet switch, 128-pin LQFP 14 x 14, -40 to 85 C; the one-to-two switch of each CM5 slot) and PI7C9X2G404SL (4-port variant, the alternative with a third downstream port) datasheets re
 dmr858         # NiceRF DMR858M and DMR858S datasheets and mechanical drawing, the vendor pages as saved; NXP SC16IS740/750/760 datasheet (the D7 I2C-to-UART bridge on the module's control UART)
 ebyte          # Ebyte E22-M series user manual (E22-900M30S 1 W LoRa module: pins, currents, dimensions)
+fans           # sunon.com, the DC brushless fan and blower catalogue 240-A (two pages extracted), fetched 26 September 2026
 everlight      # everlighteurope.com datasheet service, fetched 11 September 2026
 gnss           # u-blox NEO-M9N-00B data sheet and integration manual, MAX-M10S and SAM-M10Q data sheets; see `gnss/README.md`
 hirose         # hirose.com's own document service, the FH12 and FH34 series catalogues, fetched 11 September 2026
+infineon       # infineon.com's own document service, the OPTIGA TPM SLB 9673 data sheet, fetched 26 September 2026
 keystone       # Keystone catalogue page with the 3568 and 3549-2 mini blade holders; Littelfuse 297 blade dimensions
 labs           # QRP Labs QMX operating and CAT manuals (the HF module in its bay on B16; the assembly manual stays online)
 limesdr        # LimeSDR Mini 2.4 drawings and STEP
@@ -39,6 +41,7 @@ microchip      # USB5744 four-port USB 3.2 Gen 1 hub datasheet (the alternative 
 mitsubishi     # Mitsubishi RA30H1317M1 datasheet (30 W VHF amplifier module of D8)
 nexperia       # assets.nexperia.com/documents/data-sheet/, fetched 10 and 11 September 2026
 nicerf         # NiceRF SA868 2 W embedded walkie-talkie module datasheet V1.3 (VHF 134 to 174 MHz or UHF 400 to 480 MHz variants; 3.3 to 5.5 V, RX 60 mA, TX 1 A at 2 W; UART 9600 8N1 AT+DMO command set; pins: Audio ON, AF_OUT, PTT low = transmit,
+nxp            # the Internet Archive's byte copies of nxp.com/docs (nxp.com answers this host 404 on the direct links), captured 2026, fetched 26 September 2026
 omron          # omronfs.omron.com, fetched 11 September 2026
 openthread     # README of the OpenThread ot-cc13x2-cc26x2 platform repository (the RCP build for the CC2652P)
 pdi            # Pervasive Displays E2370KS0C1 flyer and the EPD driving circuit note rev.02 (24-pin FPC, boost circuit)
@@ -60,6 +63,8 @@ seals          # 3M VHB and 467MP tape sheets, polycarbonate sheet data, Silex s
 sensirion      # SGP41 datasheet (VOC and NOx sensing in the battery bay)
 silabs         # CP2102N USB-to-UART bridge datasheet (QFN20/24/28, 3 Mbaud, no crystal)
 st             # the Wayback Machine's stored copies of st.com/resource/en/datasheet/, because st.com refuses this host (section 7 of the handover)
+standards      # our transcriptions of the clauses this project cites from free standards and specifications (ECSS, USB-IF, TCG); each file's header names the URL, the fetch date and the sha256 of the file read. Added 26 September 2026: until then the four ECSS and USB files had no line here
+storage        # advantech.com and cervoz.com, the makers' own download services, fetched 26 September 2026
 switches       # C&K ATP19 and ATP16 anti-vandal pushbutton data sheets (ordering codes, panel holes 19.2 and 16.2); NKK M series miniature toggle data sheet (circuits, levers, bushings) and the NKK accessories and hardware catalogue (boots, nuts,
 tbeam          # LilyGO T-Beam 1W shell and PCB models, drawing
 tcall          # LilyGO T-Call A7670 dimension drawing `T-Call-A7670-ESP32.dxf` and `T-Call-A767X-ESP32.png` (from `Xinyuan-LilyGO/LilyGo-Modem-Series`, `dimensions/esp32`): the source of the 74.78 x 29.01 outline and the four Ø3 holes on 69.46 x 
@@ -226,3 +231,53 @@ peli/1450/1451-931-customer-drawing.dxf   # the same drawing as DXF, supplied by
 peli/1450/1451-931-bottom.STEP   # Peli's base body STEP, supplied by the owner on 5 September 2026; source URL not recorded
 peli/1450/1451-931-top.STEP   # Peli's lid body STEP, supplied by the owner on 5 September 2026; source URL not recorded
 peli/1450/1450-panel-frame.STEP   # Peli's 1450 panel frame STEP (2015), supplied by the owner on 5 September 2026; source URL not recorded
+
+# --- added 26 September 2026 (MESHSAT-1357, stream r8docs): the maker documents the committed pages cited from the review
+# streams' drafts/ folders (v2/docs/records/README.md, "Cited but not filed: maker documents"). Each was fetched again that
+# evening from the URL its stream recorded (the maker's first, then the stream's own fallback), and compared by sha256
+# with the stream's copy; every copied file here is byte for byte that copy (the one transcription says so on its line). "identical" below means the fetch of that time
+# returned the same bytes; where no fetch did, the line says so and whose copy is filed. A source line records where a
+# file came from; it does not validate the part the file describes.
+microchip/microchip-atecc508a-complete-20005927A.pdf   # http://ww1.microchip.com/downloads/en/DeviceDoc/20005927A.pdf answered HTTP 403 at 2026-09-26T21:15:46Z; the Internet Archive's capture https://web.archive.org/web/20190618060547id_/http://ww1.microchip.com/downloads/en/DeviceDoc/20005927A.pdf was identical at 21:15:47Z
+microchip/microchip-atecc608a-40001977A.pdf   # http://ww1.microchip.com/downloads/en/DeviceDoc/40001977A.pdf, identical at 2026-09-26T21:15:49Z (the stream had taken it from the Internet Archive, capture 20260301151407)
+microchip/microchip-atecc608b-tngtls-DS40002250.pdf   # https://ww1.microchip.com/downloads/aemDocuments/documents/SCBU/ProductDocuments/DataSheets/ATECC608B-TNGTLS-CryptoAuthentication-Data-Sheet-DS40002250.pdf, identical at 2026-09-26T21:15:50Z
+microchip/microchip-atecc608b-tflxtls-DS40002249.pdf   # https://ww1.microchip.com/downloads/aemDocuments/documents/SCBU/ProductDocuments/DataSheets/ATECC608B-TFLXTLS-CryptoAuthentication-Data-DS40002249.pdf, identical at 2026-09-26T21:15:50Z
+microchip/microchip-dm320118-users-guide-DS50002921A.pdf   # http://ww1.microchip.com/downloads/en/DeviceDoc/CryptoAuth-Trust-Platform-Users-Guide-DS50002921A.pdf, identical at 2026-09-26T21:15:52Z
+microchip/microchip-atecc608b-summary-DS40002239B.pdf   # https://ww1.microchip.com/downloads/aemDocuments/documents/SCBU/ProductDocuments/DataSheets/ATECC608B-CryptoAuthentication-Device-Summary-Data-Sheet-DS40002239B.pdf, fetched 2026-09-26T21:17:24Z (revision B, October 2021)
+infineon/infineon-slb9673-fw26-datasheet-rev1.4.pdf   # https://www.infineon.com/dgdl/Infineon-SLB9673-TPM20-I2C_FW26xx_DS_Rev1-4-2024-11-13-DataSheet-v01_00-EN.pdf?fileId=8ac78c8c93dda25b01944055dd2c5d11, identical at 2026-09-26T21:15:52Z
+nxp/nxp-se050-datasheet.pdf   # https://www.nxp.com/docs/en/data-sheet/SE050-DATASHEET.pdf answered HTTP 404 at 2026-09-26T21:15:52Z; the Internet Archive's capture https://web.archive.org/web/20260313115240id_/https://www.nxp.com/docs/en/data-sheet/SE050-DATASHEET.pdf?pspll=1 was identical
+nxp/nxp-an12413-se050-apdu.pdf   # https://www.nxp.com/docs/en/application-note/AN12413.pdf answered HTTP 404 at 2026-09-26T21:15:54Z; the Internet Archive's capture https://web.archive.org/web/20260916110513id_/https://www.nxp.com/docs/en/application-note/AN12413.pdf was identical
+standards/tcg-tpm2-library-r1p59-2019-11-08.md   # our transcription of the clauses ZEROIZE.md cites, from TCG's Part 1 and Part 3 of Revision 01.59: trustedcomputinggroup.org answered HTTP 403 at 2026-09-26T21:15:57Z and 21:15:59Z; the Internet Archive's captures 20260904023834 and 20260428182655 of the two URLs returned the ZEROIZE stream's bytes (sha256 18e393ef... and d2e5e718..., in the file's header)
+standards/intel-an574.pdf   # https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/an/an574.pdf answered HTTP 403 at 2026-09-26T21:16:02Z; the Internet Archive's capture https://web.archive.org/web/20211201012633id_/<that URL> was identical (the path DECOUPLING.md already names)
+quectel/quectel-rm5x0n-at-commands-manual-v1.0-digikey.pdf   # https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/6382/Quectel_RG520NRG525FRG5x0FRM5x0NRM521F_Series_AT_Commands_Manual_V1.0.pdf (Digi-Key's copy of Quectel's manual), identical at 2026-09-26T21:16:05Z
+quectel/quectel-rm520n-at-commands-manual-v1.0.0-prelim-20220812-waveshare.pdf   # https://files.waveshare.com/upload/8/8a/Quectel_RG520N&RG52xF&RG530F&RM520N&RM530N_Series_AT_Commands_Manual_V1.0.0_Preliminary_20220812.pdf (Waveshare's copy of Quectel's manual), identical at 2026-09-26T21:16:05Z
+quectel/quectel-ec2x-eg2x-eg9x-em05-qcfg-at-commands-manual-v1.1-sixfab.pdf   # https://sixfab.com/wp-content/uploads/2023/11/Quectel_EC2xEG2xEG9xEM05_Series_QCFG_AT_Commands_Manual_V1.1.pdf (Sixfab's copy of Quectel's manual), identical at 2026-09-26T21:16:07Z
+quectel/quectel-rg50xq-rm5xxq-at-commands-manual-v1.1.1-quectelforums.pdf   # https://forums.quectel.com/uploads/short-url/avUSxfJeKqWJzAie8wEZCshlXjm.pdf (Quectel's forum host), identical at 2026-09-26T21:16:07Z
+qrp-labs/qrplabs-qmx-schematics-rev5.pdf   # https://qrp-labs.com/images/qmx/manuals/schematics_rev5.pdf, identical at 2026-09-26T21:16:10Z
+qrp-labs/qrplabs-qmx-schematics-rev3.pdf   # https://qrp-labs.com/images/qmx/manuals/schematics_rev3.pdf, identical at 2026-09-26T21:16:11Z
+qrp-labs/qrplabs-qmx-schematics-rev2.pdf   # https://qrp-labs.com/images/qmx/manuals/schematics_rev2.pdf, identical at 2026-09-26T21:16:13Z
+qrp-labs/qrplabs-qmx-schematics-rev1-a.pdf   # https://qrp-labs.com/images/qmx/manuals/schematics_rev1_a.pdf, identical at 2026-09-26T21:16:14Z
+qrp-labs/qrplabs-qmx-rev1-searchable-schematic-1b.pdf   # https://qrp-labs.com/images/qmx/manuals/QMX_Rev1_Searchable_Schematic_1b.pdf (compiled by G4GIR, hosted by QRP Labs), identical at 2026-09-26T21:16:15Z
+qrp-labs/qmx-crops/rev1a-p2-J201.png   # our own render of page 2 (J201 region) of qrplabs-qmx-schematics-rev1-a.pdf, pdftoppm at 300 dpi, made by the EMCON stream on 26 September 2026 (EMCON.md 4.3); derived, sha256 in v2/docs/records/rv-emc/datasheets/SHA256SUMS
+qrp-labs/qmx-crops/rev3-left-rev2-right-p2-J201.png   # our own render of page 2 (J201 region), side by side, of qrplabs-qmx-schematics-rev3.pdf and qrplabs-qmx-schematics-rev2.pdf, pdftoppm at 300 dpi, made by the EMCON stream on 26 September 2026 (EMCON.md 4.3); derived, sha256 in v2/docs/records/rv-emc/datasheets/SHA256SUMS
+qrp-labs/qmx-crops/rev5-p1-power-supplies.png   # our own render of page 1 of qrplabs-qmx-schematics-rev5.pdf (power supplies), pdftoppm at 300 dpi and downscaled, made by the EMCON stream on 26 September 2026 (EMCON.md 4.3); derived, sha256 in v2/docs/records/rv-emc/datasheets/SHA256SUMS
+qrp-labs/qmx-crops/rev5-p2-J201.png   # our own render of page 2 (J201 region) of qrplabs-qmx-schematics-rev5.pdf, pdftoppm at 300 dpi, made by the EMCON stream on 26 September 2026 (EMCON.md 4.3); derived, sha256 in v2/docs/records/rv-emc/datasheets/SHA256SUMS
+wifi/linux-mt7915-f14572c2/mcu.c   # Linux (GPL-2.0), https://raw.githubusercontent.com/torvalds/linux/f14572c203d57492e1d4e5d7851a3b143e083b82/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c, identical at 2026-09-26T21:16:16Z
+wifi/linux-mt7915-f14572c2/mt7915.h   # Linux (GPL-2.0), https://raw.githubusercontent.com/torvalds/linux/f14572c203d57492e1d4e5d7851a3b143e083b82/drivers/net/wireless/mediatek/mt76/mt7915/mt7915.h, identical at 2026-09-26T21:16:16Z
+wifi/linux-mt7915-f14572c2/head.json   # https://api.github.com/repos/torvalds/linux/commits/master as answered on 25 September 2026 (adjudication A11's record that master was f14572c2 when the two files beside it were read); filed from the EMCON stream's copy, not re-fetchable
+wifi/asiarf-AW7915-AED_V1.pdf   # https://asiarf.com/wp-content/uploads/2023/09/AW7915-AED_V1.pdf, identical at 2026-09-26T21:16:17Z
+wifi/asiarf-aw7915-aed-product-page-20260926.html   # https://asiarf.com/product/wifi-6-11ax-m-2-ae-key-module-aw7915-aed/ as the power stream saved it on 26 September 2026 (sha256 b153fe71...); the page served at 21:16:18Z differs in bytes (a dynamic page), so the stream's copy is filed and its quoted words are the evidence
+limesdr/myriadrf-limesdr-mini-2-0-page-20260925.html   # https://myriadrf.org/projects/limesdr-mini-2-0 (adjudication A11's copy of 25 September 2026), identical at 2026-09-26T21:16:17Z; the power stream's limesdr-mini-v2-introduction.html is the same bytes and is not filed twice
+limesdr/myriadrf-limesdr-mini-2-0-user-setup-20260926.html   # https://myriadrf.org/projects/limesdr-mini-2-0/user/setup.html, identical at 2026-09-26T21:16:17Z (the power stream's limesdr-mini-v2-user-setup.html)
+xenarc/xenarc-709gnk-product-page-20260926.html   # https://www.xenarc.com/709GNK.html, identical at 2026-09-26T21:16:20Z
+storage/advantech-sqflash-720-d-m2-2242-v1.9.pdf   # https://advdownload.advantech.com/productfile/Downloadfile2/1-2MDTFS2/Advantech%20SQFlash_PCIe%20NVMe%20M.2%202242_M%20Key_720-D-DS_v1.9_20240709.pdf, identical at 2026-09-26T21:16:21Z
+storage/cervoz-m2-2242-nvme-titan.pdf   # https://www.cervoz.com/products/download/8r0k7y0bWdEw/Cervoz_Industrial_Embedded_Module_M.pdf, identical at 2026-09-26T21:16:21Z
+fans/sunon-dc-fan-catalogue-240A-pp18-40-extract.pdf   # pages 18 and 40 of https://www.sunon.com/en/MANAGE/Docs/PRODUCT/286/360/Sunon%20DC%20Brushless%20Fan%20&%20Blower_(240-A).pdf, extracted by the power stream with pdfseparate and pdfunite; the full catalogue fetched at 2026-09-26T21:16:23Z has the sha256 the stream recorded for its original (bd47c704...), so the extract's source is confirmed; the extract itself is derived and not re-made
+switches/littelfuse-59140-reed-sensor-2022-03-25.pdf   # NOT RE-FETCHED: the round 4 board E author's copy (revised 03/25/22), whose source URL was never recorded; littelfuse.com answered this host HTTP 403 again at 2026-09-26T21:16:33Z and the Internet Archive holds no capture of the sheet. Filed so the reading can be reproduced; its source stays owed (SOURCES.yaml owed list)
+battery/ti-bq2947.pdf   # https://www.ti.com/lit/ds/symlink/bq2947.pdf, identical at 2026-09-26T21:16:33Z (the round 4 board P author's copy, SLUSB15K)
+battery/dexerials-sfk-series-datasheet.pdf   # https://6197088.fs1.hubspotusercontent-na1.net/hubfs/6197088/TDS/SCP/SFK%20series_Datasheet.pdf (linked from dexerials.jp's SFK page), identical at 2026-09-26T21:16:33Z
+battery/littelfuse-itv4030-c1869305.pdf   # https://datasheet.lcsc.com/datasheet/pdf/1305195b724f0906085249dd41c3e69b.pdf?productCode=C1869305 (LCSC's copy of the Littelfuse sheet), identical at 2026-09-26T21:16:34Z
+battery/prosemi-dhc45-c2937382.pdf   # https://datasheet.lcsc.com/datasheet/pdf/44513f68c55bda342d8773122bf0e7c7.pdf?productCode=C2937382 (LCSC's copy of the Prosemi sheet), identical at 2026-09-26T21:16:34Z
+battery/onsemi-mm3z-c82071.pdf   # https://datasheet.lcsc.com/datasheet/pdf/d230120ac088f212a72f52868a6ffd7b.pdf?productCode=C82071 (LCSC's copy of onsemi's MM3Z2V4T1/D), identical at 2026-09-26T21:16:34Z
+diodes/diodes-pi7c9x2g404sl.pdf   # https://www.diodes.com/assets/Datasheets/PI7C9X2G404SL.pdf, identical at 2026-09-26T21:16:44Z (DS40068 Rev 5-2; the folder line above had been its only record)
+diodes/diodes-pi7c9x2g304sl.pdf   # https://www.diodes.com/assets/Datasheets/PI7C9X2G304SL.pdf, identical at 2026-09-26T21:16:47Z
