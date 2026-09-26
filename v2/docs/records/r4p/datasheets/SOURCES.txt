@@ -1,0 +1,53 @@
+# Primary documents fetched by the round-4 board P author (MESHSAT-1357 Review D), 26 September 2026 (all fetched 2026-09-25/26 UTC
+# from the runner). One line per file: sha256, file, maker and document, revision, URL, what it was used for.
+# Documents already in the tree and read in place: v2/vendor/battery/ti-bq4050.pdf (SLUSC67B, sha256 2664e33f...f443f5e),
+# v2/vendor/st/st-usblc6-2-esd-protection.pdf (ST DS4260 Rev 7, sha256 bc30154f...8b9068), v2/vendor/battery/ti-csd17570q5b.pdf,
+# v2/vendor/battery/semitec-at-p12-13.pdf (103AT table), v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md.
+
+45c1c99e2d303be8bcf1a2b1eea8275f657c7c80170bda7c2778042a688295cb  ti-bq77207.pdf  TI BQ77207 data sheet  SLUSEG7D, Dec 2021, revised May 2026  https://www.ti.com/lit/ds/symlink/bq77207.pdf  the second-level protector U2 (BQ7720700): thresholds, pin table, DSS0012B land, application circuit
+5ce408285737a207b8deee0bc9b6f1c167fccf56f382dbf93d740bcde42ee98e  ti-bq2947.pdf  TI BQ2947 data sheet  SLUSB15K, Sep 2012, revised June 2026  https://www.ti.com/lit/ds/symlink/bq2947.pdf  the OV-only second level TI names beside the BQ4050 (SLUSC67B 8.2.2.1.2); comparator, not fitted
+57d15a22870fd8a510ed3e2bba72b4dc3780e9f75df4689ec30a2a6c1c153ff6  ti-bq7718.pdf  TI BQ7718 data sheet  SLUSAX1L, Dec 2012, revised June 2021  https://www.ti.com/lit/ds/symlink/bq7718.pdf  the OV-only 2S-5S cost comparator (BQ771806, BQ771818); not fitted
+9cd739e6a4662bca1da06044d1f65b5267a026fdedf51e06c4ba52f2581a782d  ti-bq77216.pdf  TI BQ77216 data sheet  SLUSE36L, July 2021, revised Sep 2025  https://www.ti.com/lit/ds/symlink/bq77216.pdf  a 3S-16S OV/UV alternative (JLC: 3.97 USD, stock 0); not fitted
+14a6ee1db2faeb6cc447468ff49eef81af45db7f966fb2cd777b8ea799b83c3d  ti-bq77904.pdf  TI BQ77904/5 data sheet  SLUSCM3K, June 2016, revised July 2020  https://www.ti.com/lit/ds/symlink/bq77904.pdf  a stackable primary protector driving its own FETs; considered, not a fuse driver; not fitted
+917c0db25428865ac1124aedfa315343fa9cee6bf54db8bae967cec7deb029d1  ti-sluubf9-bq4050evm.pdf  TI bq4050EVM-561 user's guide  SLUUBF9, March 2016  https://www.ti.com/lit/ug/sluubf9/sluubf9.pdf  the EVM bill of materials (103AT-2 thermistors, F1 DNP, MM3Z5V6C, TFPT1206 on PTC) and the cell-connection warning (2.5.2)
+0a88d8645a71d9dab6e9e074d3197e0494b87bce008906c93bfdc07e9854e350  ti-sluuav7c-bq40z50evm.pdf  TI bq40z50EVM user's guide  SLUUAV7C, Dec 2013, revised Nov 2022  https://www.ti.com/lit/ug/sluuav7c/sluuav7c.pdf  section 4.5, the PTC element requirement (10 kohm typical, over 1.2 Mohm at trip, Murata PRF18)
+8e58c68254fb833570e3fa01323b5bc4231d70096f62eafc1d3175f14d3ab773  dexerials-sfk-series-datasheet.pdf  Dexerials "Self Control Protector (SCP) - SFK series Datasheet -"  dated 2025/10/8 (PDF created 8 Oct 2025)  https://6197088.fs1.hubspotusercontent-na1.net/hubfs/6197088/TDS/SCP/SFK%20series_Datasheet.pdf (linked from https://www.dexerials.jp/en/products/surface-mount-fuse/sfk0630.html)  the chemical fuse F2 (SFK-1830A): ratings, heater, terminals, current-carrying capacity
+f19f1bca636dcb235a4f1e1348f3eaeb9082b270cb83547eb4f7fa10ef0c0c23  lcsc-C1869305.pdf  Littelfuse ITV4030 series (15 A)  Revised 01/22/20  https://datasheet.lcsc.com/datasheet/pdf/1305195b724f0906085249dd41c3e69b.pdf?productCode=C1869305  refused: 15 A and -10 C operating
+7888f3b48e46d52eaee937bc30454cf5304609ab380be1dd9e94cfea14cca51a  lcsc-C2937382.pdf  Prosemi DHC45 series  P0F0510130217001A  https://datasheet.lcsc.com/datasheet/pdf/44513f68c55bda342d8773122bf0e7c7.pdf?productCode=C2937382  refused: a two-terminal brick fuse, not a self control protector
+a29cd6200c656636fd69bf525d365cfa50432a2fe696ee8ee9e172a4b7cba27a  murata-prf-series-datasheet.pdf  Murata PRF series data sheet  DM-SA16-E056 Rev.1 201608 (Ver1.1, 3 Oct 2016)  https://www.murata.com/~/media/webrenewal/products/thermistor/ptc/prf/datasheet_prfseries.ashx?la=en-us  the PTC element RT1: PRF15BB103RB6RC since the fix-up (10 kohm +-50 %, 100 kohm above 110 C, 4.7 Mohm at 130 +-3 C, -20 to +140 C); the first pass's PRF15BE103RB6RC (4.7 Mohm at 100 C) is obsolete
+9c60d0b6c1ddc7609a4b788a91181468d8ffe6c3e9ba425c3d8ffc5ba88c5033  aos-ao3400a.pdf  Alpha and Omega AO3400A  Rev 3.1, July 2023  https://www.aosmd.com/res/datasheets/AO3400A.pdf  the fuse heater FET Q3
+e5bfeef6cd3aa209f2e191ba42d5616259e8e7143ff01ed6c532b8ec3b13ab73  lcsc-C20917.pdf  AO3400A (LCSC's copy for C20917)  AO3400A_Rev3  https://datasheet.lcsc.com/datasheet/pdf/130876b936da464599428c58fd8de8f6.pdf?productCode=C20917  identity of the JLC basic part C20917 with the AOS part
+7941fb423af7c6c6c8979063a7e8819bb19217ece275efcce18948950a41d9f6  lcsc-C8545.pdf  Jiangsu Changjiang 2N7002 (SOT-23)  J, Sep 2016  https://datasheet.lcsc.com/datasheet/pdf/a141b8bd86b14475955ac8c4d3eea0a8.pdf?productCode=C8545  the under-voltage hold FET Q5 (the project's existing 2N7002, C8545)
+be0d734edc03a774996b107f2f92f3b2d909c5da931b7e964f7a3bf7602ce2a4  lcsc-C82071.pdf  onsemi MM3ZxxxT1G series  MM3Z2V4T1/D Rev. 11, Sep 2014  https://datasheet.lcsc.com/datasheet/pdf/d230120ac088f212a72f52868a6ffd7b.pdf?productCode=C82071  TI's reference zener (MM3Z5V6), 200 pF maximum at 0 V: why it was not taken for the SMBus clamps
+6546e415b8885ea3790c91629034c6b4e5c6961d5fde734e55dfa479dd8dc49a  nexperia-pesd5v0s1ba.pdf  Nexperia PESD5V0S1BA  v.6, 26 April 2024  https://assets.nexperia.com/documents/data-sheet/PESD5V0S1BA.pdf (copied from W6's round-2 tree, v2/vendor/nexperia/, same sha256 as W6's SOURCES.yaml)  the SMBus clamps D2 and D3
+447624f4f2f7d37c58c1eaa7ee314ad757fe7aff48f6186491ef6f69fbc00b96  jst-ph.pdf  JST PH connector catalogue  PDF of 27 Jan 2026  https://www.jst-mfg.com/product/pdf/eng/ePH.pdf  J_TS (B5B-PH-K-S) and J_TS2 (B2B-PH-K-S): -40 to +105 C, 2 A, 5-way body 11.9 mm
+#
+# Not obtainable from this host in the first pass (26 September 2026, 01:5x): Eaton SCF9550 data sheet ELX1135 (obtained at the fix-up,
+# see below), Dexerials SFK Rev-20 of 2017 on twhuanxing.com (empty body), onsemi's own
+# MM3Z2V4T1/D (403; LCSC's copy above is the same publication). ABLIC S-8254A / S-8244 were priced at JLC (stock 0 on every code) and
+# not fetched. Renesas (web search of 26 September 2026): its 3S to 8S parts found are the ISL94202 and ISL94203 pack monitors, which are
+# PRIMARY protectors with their own charge-pump FET drive and EEPROM-set thresholds, and the RAJ240047 fuel gauge; no second-level part
+# with an under-voltage output was found, so none was fetched.
+#
+# ADDED AT THE FIX-UP OF 26 SEPTEMBER 2026 (the round-4 fix-up author, from the runner):
+3ecc2424acfa1753c2aec0b62d5706d4f25b7a08e731795c0d84d59938a3158e  eaton-scf9550-elx1135.pdf  Eaton Bussmann SCF9550 "9.5 mm x 5.0 mm Surface mount self-control fuse", Technical Data ELX1135  effective December 2021 (page 1) / January 2022 (pages 2 to 5), PDF created 25 Jan 2022  https://www.eaton.com/content/dam/eaton/products/electronic-components/resources/data-sheet/eaton-scf9550-self-control-fuse-data-sheet-elx1135-en.pdf (eaton.com still hangs from this host; the file is the Wayback Machine's capture of that URL, whose recorded payload digest F5RGDEN74HBGN25WPSBP3WTJVJY545ZF, identical for the captures of 2024-04-12 and 2025-05-05, is the base32 SHA-1 of this file; it is also byte-identical to LCSC's copy for C3667292)  the chemical fuse F2 (SCF9550-30-05): ratings (30 A, heater 4.8 to 8.0 ohm, operating voltage 10.5 to 23.5 V, 4 to 5 cells, 80 A breaking), operating -20 to +60 C, storage (unmounted) -10 to +40 C below 90 % RH for 1 year, reliability runs +105 C 1000 h and -40 C 500 h, pins (page 1), recommended pad layout (page 3), from which meshsat.pretty/Eaton_SCF9550_9.5x5.0mm is drawn
+#
+# Distributor readings taken at the fix-up, 26 September 2026 (a reading of one moment, for D-15's "near the OV-only part's cost" and
+# the order route; the order set binds, not the board):
+#   BQ7720700DSSR   JLCPCB C3681715: 3 in stock, 2.12 USD (JLC API). Digi-Key 296-BQ7720700DSSRCT-ND: active, 2,588 in stock, 2.12 USD at 1,
+#                   1.567 USD at 10, 9 weeks factory lead time. ti.com: active, out of stock.
+#   PRF15BB103RB6RC JLCPCB C443668: 5,388 in stock, 0.126 USD (JLC API). Digi-Key: active, 20 in stock, 0.17 USD; Digi-Key lists
+#                   PRF15BE103RB6RC as "obsolete and no longer manufactured" with PRF15BB103RB6RC as its substitute (JLC: C882445, 0 in stock).
+#   SCF9550-30-05   JLCPCB C3670061: 0 in stock, 1.09 USD (JLC API). Digi-Key 283-SCF9550-30-05CT-ND: active, 907 in stock, 5.82 USD at 1,
+#                   4.46 USD at 10: the hand-fit route until JLC stocks it.
+#   Mouser was not read (the search page timed out from this host).
+#
+# SECOND FIX-UP OF 26 SEPTEMBER 2026 (after the re-review; no new file fetched). Read in place for it: the AO3400A (VGS +-12 V,
+# VGS(th) 0.65 to 1.45 V, IGSS 100 nA; the JP1 check's polarity), the JCET 2N7002 (VGS +-20 V, IDSS 80 nA maximum at 25 C and 60 V,
+# no figure above 25 C; Q5's leakage), SLUSEG7D 6.1 (COUT and DOUT -0.3 to 45 V), SLUSC67B 6.1 (FUSE -0.3 to 30 V), 6.18 (the DSG
+# drive specified into 10 Mohm) and 6.32 (tSCD1 0 to 915 us, or 1850 us with SCDDx2; tDETECT 160 us maximum), ELX1135 page 2 (fuse
+# DCR 1.0 to 2.5 mohm, breaking 80 A, no derating curve anywhere in the document), and v2/ecad/tools/pcb_energy_chain.yaml stage
+# PACK_CELLS (prospective fault 240 to 480 A; F1 1000 A interrupting, I2t 1000 A2s).
+#   Keystone 3568    JLCPCB C5249699: Keystone "3568", 0 in stock, 1.51 USD (JLC API, 26 September 2026 about 10:20 CEST; the query
+#                    is in drafts/box/jlc-queries.json under "3568" and "Keystone 3568"): the code for F1's holder that main's 29f00554
+#                    re-certification points to by marking C4661 WRONG_MODEL (O-3).

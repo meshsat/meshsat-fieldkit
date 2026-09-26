@@ -1,0 +1,152 @@
+== pcb-a-power-a23/pcb-a-power
+C8    4.7u     cap F     U2    LM5176PWPR buck-boost contro part F    pin 23  net FE_VCC       under_part False pad_to_pin 25.24
+C123  U2    pin 16  not on this board
+C128  U2    pin 14  not on this board
+C11   10u 50V  cap F     U2    LM5176PWPR buck-boost contro part F    pin 2   net VIN_RAW      under_part False pad_to_pin 18.47
+C12   10u 50V  cap F     U2    LM5176PWPR buck-boost contro part F    pin 3   net VIN_RAW      under_part False pad_to_pin 18.19
+C29   10u 25V  cap F     U4    AP64500SP-13 5 A buck, 5.1 V part F    pin 2   net VBAT         under_part False pad_to_pin 13.37
+C30   10u 25V  cap F     U4    AP64500SP-13 5 A buck, 5.1 V part F    pin 2   net VBAT         under_part False pad_to_pin 13.74
+C35   10u 25V  cap F     U5    AP64500SP-13 5 A buck, 5.1 V part F    pin 2   net VBAT         under_part False pad_to_pin 13.37
+C36   10u 25V  cap F     U5    AP64500SP-13 5 A buck, 5.1 V part F    pin 2   net VBAT         under_part False pad_to_pin 13.74
+C41   10u 25V  cap F     U6    AP64500SP-13 5 A buck, 5.1 V part F    pin 2   net VBAT         under_part False pad_to_pin 13.37
+C42   10u 25V  cap F     U6    AP64500SP-13 5 A buck, 5.1 V part F    pin 2   net VBAT         under_part False pad_to_pin 13.74
+C47   10u 25V  cap F     U7    AP64500SP-13 5 A buck, 5.1 V part F    pin 2   net VBAT         under_part False pad_to_pin 13.37
+C48   10u 25V  cap F     U7    AP64500SP-13 5 A buck, 5.1 V part F    pin 2   net VBAT         under_part False pad_to_pin 13.74
+C60   4.7u     cap F     U13   LM5176PWPR buck-boost contro part F    pin 23  net PA_VCC       under_part False pad_to_pin 26.14
+C124  U13   pin 16  not on this board
+C129  U13   pin 14  not on this board
+C63   10u 50V  cap F     U13   LM5176PWPR buck-boost contro part F    pin 2   net VBAT         under_part False pad_to_pin 20.3
+C64   10u 50V  cap F     U13   LM5176PWPR buck-boost contro part F    pin 3   net VBAT         under_part False pad_to_pin 18.71
+C71   4.7u     cap F     U15   LM5176PWPR buck-boost contro part F    pin 23  net HF_VCC       under_part False pad_to_pin 25.47
+C125  U15   pin 16  not on this board
+C130  U15   pin 14  not on this board
+C74   10u 50V  cap F     U15   LM5176PWPR buck-boost contro part F    pin 2   net VBAT         under_part False pad_to_pin 24.38
+C108  10u 50V  cap F     U15   LM5176PWPR buck-boost contro part F    pin 3   net VBAT         under_part False pad_to_pin 30.18
+C78   4.7u     cap F     U16   LM5176PWPR buck-boost contro part F    pin 23  net POE_VCC      under_part False pad_to_pin 19.97
+C126  U16   pin 16  not on this board
+C131  U16   pin 14  not on this board
+C81   10u 50V  cap F     U16   LM5176PWPR buck-boost contro part F    pin 2   net VBAT         under_part False pad_to_pin 18.87
+C82   10u 50V  cap F     U16   LM5176PWPR buck-boost contro part F    pin 3   net VBAT         under_part False pad_to_pin 17.98
+C89   4.7u     cap F     U19   LM5176PWPR buck-boost contro part F    pin 23  net PD_VCC       under_part False pad_to_pin 26.59
+C127  U19   pin 16  not on this board
+C132  U19   pin 14  not on this board
+C92   10u 50V  cap F     U19   LM5176PWPR buck-boost contro part F    pin 2   net VBAT         under_part False pad_to_pin 18.58
+C116  10u 50V  cap F     U19   LM5176PWPR buck-boost contro part F    pin 3   net VBAT         under_part False pad_to_pin 18.33
+C4    1u       cap F     U1    LTC2954CTS8-1 push-button on part F    pin 1   net VBAT         under_part False pad_to_pin 108.59
+C19   1u       cap F     U3    BQ25731RSNR 1 to 5 cell buck part F    pin 7   net CH_VDDA      under_part False pad_to_pin 18.84
+C54   10u 25V  cap F     U12   TPS62933DRLR 3 A buck, 3.3 V part F    pin 3   net VBAT         under_part False pad_to_pin 43.22
+C94   220n     cap F     U18   TPS25740ARGER USB-C PD sourc part F    pin 5   net PD_DVDD      under_part False pad_to_pin 15.9
+C104  100n     cap F     U26   SN74LVC08APWR quad AND: EMCO part F    pin 14  net +3V3         under_part False pad_to_pin 138.84
+C106  100n     cap F     U27   PCA9555PW (0x21): enables an part F    pin 24  net +3V3         under_part False pad_to_pin 113.85
+C107  100n     cap F     U28   PCA9555PW (0x24): power-good part F    pin 24  net +3V3         under_part False pad_to_pin 129.94
+declared entries with the capacitor on B.Cu: 0
+== pcb-b-compute-b19/pcb-b-compute
+C112  22u 10V  cap F     U103  AP64500SP-13 5 A buck, 3.3 V part F    pin 2   net +5V_S1       under_part False pad_to_pin 32.19
+C113  22u 10V  cap F     U103  AP64500SP-13 5 A buck, 3.3 V part F    pin 2   net +5V_S1       under_part False pad_to_pin 26.56
+C119  22u 10V  cap F     U104  AP64500SP-13 5 A buck, 3.3 V part F    pin 2   net +5V_S1       under_part False pad_to_pin 13.23
+C120  22u 10V  cap F     U104  AP64500SP-13 5 A buck, 3.3 V part F    pin 2   net +5V_S1       under_part False pad_to_pin 9.23
+C125  10u      cap F     U105  TPS62933DRLR buck 1.0 V PCIe part F    pin 3   net +5V_S1       under_part False pad_to_pin 12.3
+C130  10u      cap F     U106  TPS62933DRLR buck 1.1 V hub  part F    pin 3   net +5V_DEV      under_part False pad_to_pin 13.37
+C212  22u 10V  cap F     U203  AP64500SP-13 5 A buck, 3.3 V part F    pin 2   net +5V_S2       under_part False pad_to_pin 16.91
+C213  22u 10V  cap F     U203  AP64500SP-13 5 A buck, 3.3 V part F    pin 2   net +5V_S2       under_part False pad_to_pin 22.76
+C219  22u 10V  cap F     U204  AP64500SP-13 5 A buck, 3.3 V part F    pin 2   net +5V_S2       under_part False pad_to_pin 12.81
+C220  22u 10V  cap F     U204  AP64500SP-13 5 A buck, 3.3 V part F    pin 2   net +5V_S2       under_part False pad_to_pin 8.97
+C225  10u      cap F     U205  TPS62933DRLR buck 1.0 V PCIe part F    pin 3   net +5V_S2       under_part False pad_to_pin 9.44
+C230  10u      cap F     U206  TPS62933DRLR buck 1.1 V hub  part F    pin 3   net +5V_DEV      under_part False pad_to_pin 15.16
+C312  22u 10V  cap F     U303  AP64500SP-13 5 A buck, 3.3 V part F    pin 2   net +5V_S3       under_part False pad_to_pin 32.19
+C313  22u 10V  cap F     U303  AP64500SP-13 5 A buck, 3.3 V part F    pin 2   net +5V_S3       under_part False pad_to_pin 26.56
+C319  22u 10V  cap F     U304  AP64500SP-13 5 A buck, 3.3 V part F    pin 2   net +5V_S3       under_part False pad_to_pin 13.23
+C320  22u 10V  cap F     U304  AP64500SP-13 5 A buck, 3.3 V part F    pin 2   net +5V_S3       under_part False pad_to_pin 9.23
+C325  10u      cap F     U305  TPS62933DRLR buck 1.0 V PCIe part F    pin 3   net +5V_S3       under_part False pad_to_pin 12.3
+C330  10u      cap F     U306  TPS62933DRLR buck 1.1 V hub  part F    pin 3   net +5V_DEV      under_part False pad_to_pin 13.37
+C7    10u      cap F     U26   TPS62933DRLR buck 1.2 V Ethe part F    pin 3   net +5V_DEV      under_part False pad_to_pin 20.89
+C4    10u      cap F     U25   AP63203WU-7 3.3 V 2 A buck:  part F    pin 2   net +5V_DEV      under_part False pad_to_pin 17.56
+C5    22u 6.3V cap F     U25   AP63203WU-7 3.3 V 2 A buck:  part F    pin 1   net +3V3_DEV     under_part False pad_to_pin 21.75
+C6    22u 6.3V cap F     U25   AP63203WU-7 3.3 V 2 A buck:  part F    pin 1   net +3V3_DEV     under_part False pad_to_pin 21.87
+C12   1u       cap F     U27   AP2112K-2.5 LDO: the switch' part F    pin 5   net +2V5_KSZ     under_part False pad_to_pin 12.28
+C13   1u       cap F     U27   AP2112K-2.5 LDO: the switch' part F    pin 1   net +3V3_DEV     under_part False pad_to_pin 13.83
+C36   100n     cap F     U5    TI TPS23861PWR PoE PSE contr part F    pin 1   net +3V3_DEV     under_part False pad_to_pin 176.99
+C37   100n     cap F     U5    TI TPS23861PWR PoE PSE contr part F    pin 1   net +3V3_DEV     under_part False pad_to_pin 247.28
+C38   100n     cap F     U5    TI TPS23861PWR PoE PSE contr part F    pin 1   net +3V3_DEV     under_part False pad_to_pin 251.49
+C69   100n     cap F     U8    ATECC608B-SSHDA-T secure ele part F    pin 8   net +3V3_DEV     under_part False pad_to_pin 27.69
+C70   100n     cap F     U9    DS3231MZ+ holdover clock (I2 part F    pin 2   net +3V3_DEV     under_part False pad_to_pin 13.23
+C71   100n     cap F     U9    DS3231MZ+ holdover clock (I2 part F    pin 2   net +3V3_DEV     under_part False pad_to_pin 17.16
+declared entries with the capacitor on B.Cu: 0
+== pcb-c-display-c8/pcb-c-display
+C7    100n     cap B     U3    RP2040 panel controller (USB part B    pin 1   net +3V3         under_part False pad_to_pin 41.45
+C8    100n     cap B     U3    RP2040 panel controller (USB part B    pin 10  net +3V3         under_part False pad_to_pin 46.5
+C9    100n     cap B     U3    RP2040 panel controller (USB part B    pin 22  net +3V3         under_part False pad_to_pin 22.28
+C10   100n     cap B     U3    RP2040 panel controller (USB part B    pin 33  net +3V3         under_part False pad_to_pin 19.67
+C11   100n     cap B     U3    RP2040 panel controller (USB part B    pin 42  net +3V3         under_part False pad_to_pin 15.39
+C12   100n     cap B     U3    RP2040 panel controller (USB part B    pin 49  net +3V3         under_part False pad_to_pin 15.88
+C13   100n     cap B     U4    W25Q16JVUXIQ 16 Mbit QSPI fl part B    pin 8   net +3V3         under_part False pad_to_pin 35.86
+C14   1u       cap B     U3    RP2040 panel controller (USB part B    pin 23  net C_DVDD       under_part False pad_to_pin 25.82
+C15   1u       cap B     U3    RP2040 panel controller (USB part B    pin 50  net C_DVDD       under_part False pad_to_pin 24.28
+C16   1u       cap B     U3    RP2040 panel controller (USB part B    pin 44  net +3V3         under_part False pad_to_pin 25.75
+C3    1u       cap B     U5    TLV75533PDBV 3.3 V 500 mA LD part B    pin 1   net +5V          under_part False pad_to_pin 12.52
+C4    1u       cap B     U5    TLV75533PDBV 3.3 V 500 mA LD part B    pin 5   net +3V3         under_part False pad_to_pin 10.65
+C17   100n     cap B     U1    PCA9555PW 0x22: LED sinks, l part B    pin 24  net +3V3         under_part False pad_to_pin 19.78
+C18   100n     cap B     U2    PCA9555PW 0x23: LED sinks, t part B    pin 24  net +3V3         under_part False pad_to_pin 16.62
+C25   100n     cap B     U9    74LVC1G34 non-inverting buff part B    pin 5   net +3V3         under_part False pad_to_pin 15.42
+C39   U12   pin 5   not on this board
+C38   100n     cap F     U_LIGHT Vishay VEML7700 ambient ligh part F    pin 2   net +3V3         under_part False pad_to_pin 2.55
+C29   100n     cap F     J_EPD Hirose FH34SRJ-24S-0.5SH ZIF part F    pin 15  net EPD_VCC      under_part False pad_to_pin 26.65
+C28   4.7u     cap F     J_EPD Hirose FH34SRJ-24S-0.5SH ZIF part F    pin 16  net EPD_VCC      under_part False pad_to_pin 46.13
+declared entries with the capacitor on B.Cu: 15
+== pcb-d-aprs-d9/pcb-d-aprs
+C51   100n     cap B     U9    74LVC1G08 AND (1 A 2 B 3 GND part F    pin 5   net +3V3_D8      under_part False pad_to_pin 2.79
+C52   100n     cap B     U10   74LVC1G08 AND: headsets AND  part F    pin 5   net +3V3_D8      under_part False pad_to_pin 1.66
+C53   100n     cap B     U11   74LVC1G04 inverter (2 A 4 Y) part F    pin 5   net +3V3_D8      under_part False pad_to_pin 0.54
+C54   100n     cap B     U12   74LVC1G08 AND: KEY = PTT_ANY part F    pin 5   net +3V3_D8      under_part False pad_to_pin 12.21
+C55   100n     cap B     U13   74LVC1G04 inverter: KEY -> S part F    pin 5   net +3V3_D8      under_part False pad_to_pin 11.24
+C56   100n     cap F     U14   74LVC1G08 AND: PA_KEY = KEY  part F    pin 5   net +3V3_D8      under_part False pad_to_pin 1.9
+C7    1u       cap F     U1    TLV75533PDBV 3.3 V 500 mA LD part F    pin 1   net +5V_D8       under_part False pad_to_pin 2.26
+C8    1u       cap B     U1    TLV75533PDBV 3.3 V 500 mA LD part F    pin 5   net +3V3_D8      under_part False pad_to_pin 9.32
+C9    10u      cap B     U1    TLV75533PDBV 3.3 V 500 mA LD part F    pin 5   net +3V3_D8      under_part False pad_to_pin 10.38
+C15   100n     cap B     U4    TUSB2046BI four-port USB 2.0 part F    pin 3   net +3V4_HUB     under_part False pad_to_pin 17.42
+C16   100n     cap B     U4    TUSB2046BI four-port USB 2.0 part F    pin 3   net +3V4_HUB     under_part False pad_to_pin 21.63
+C17   10u      cap B     U4    TUSB2046BI four-port USB 2.0 part F    pin 3   net +3V4_HUB     under_part False pad_to_pin 12.48
+C64   U17   pin 1   not on this board
+C65   U17   pin 5   not on this board
+C61   4.7n     cap F     U15   TPS22810DRV                  part F    pin 6   net +5V_D8       under_part False pad_to_pin None
+C62   100n     cap F     U15   TPS22810DRV                  part F    pin 1   net VGG_SW       under_part False pad_to_pin 5.4
+C18   1u       cap B     U6    TI PCM2912A USB audio codec  part F    pin 2   net +5V_D8       under_part False pad_to_pin 21.66
+C19   1u       cap F     U6    TI PCM2912A USB audio codec  part F    pin 5   net PCM_VDD      under_part False pad_to_pin 20.17
+C20   1u       cap F     U6    TI PCM2912A USB audio codec  part F    pin 15  net PCM_VCCA     under_part False pad_to_pin 19.82
+C21   1u       cap F     U6    TI PCM2912A USB audio codec  part F    pin 19  net PCM_VCCL     under_part False pad_to_pin 19.2
+C22   1u       cap F     U6    TI PCM2912A USB audio codec  part F    pin 21  net PCM_VCCR     under_part False pad_to_pin 16.72
+C23   1u       cap F     U6    TI PCM2912A USB audio codec  part F    pin 26  net PCM_VCCP     under_part False pad_to_pin 16.14
+C31   1u       cap F     U7    TI TPA6132A2 headphone ampli part F    pin 12  net AMP_HPVDD    under_part False pad_to_pin 18.1
+C32   1u       cap F     U7    TI TPA6132A2 headphone ampli part F    pin 14  net +5V_D8       under_part False pad_to_pin 13.59
+C33   10u      cap F     U7    TI TPA6132A2 headphone ampli part F    pin 14  net +5V_D8       under_part False pad_to_pin 32.09
+C39   100n     cap F     U8    TLV9062IDGK dual op amp (1 O part F    pin 8   net +5V_D8       under_part False pad_to_pin 23.53
+declared entries with the capacitor on B.Cu: 11
+== pcb-e1-dock-e7/pcb-e1-dock
+C16   1n       cap F     U5    LT8705A buck-boost controlle part F    pin 3   net TRK_CSP      under_part False pad_to_pin 33.46
+C38   100n     cap F     U10   RP2040 sensor controller (US part F    pin 1   net +3V3_E6      under_part False pad_to_pin 22.21
+C39   100n     cap F     U10   RP2040 sensor controller (US part F    pin 10  net +3V3_E6      under_part False pad_to_pin 26.62
+C40   100n     cap F     U10   RP2040 sensor controller (US part F    pin 22  net +3V3_E6      under_part False pad_to_pin 27.58
+C41   100n     cap F     U10   RP2040 sensor controller (US part F    pin 33  net +3V3_E6      under_part False pad_to_pin 2.75
+C42   100n     cap F     U10   RP2040 sensor controller (US part F    pin 42  net +3V3_E6      under_part False pad_to_pin 7.57
+C43   100n     cap F     U10   RP2040 sensor controller (US part F    pin 49  net +3V3_E6      under_part False pad_to_pin 14.89
+C44   100n     cap F     U11   W25Q16JVUXIQ 16 Mbit QSPI fl part F    pin 8   net +3V3_E6      under_part False pad_to_pin 14.51
+C45   1u       cap F     U10   RP2040 sensor controller (US part F    pin 23  net E6_DVDD      under_part False pad_to_pin 22.58
+C46   1u       cap F     U10   RP2040 sensor controller (US part F    pin 50  net E6_DVDD      under_part False pad_to_pin 27.67
+C47   1u       cap F     U10   RP2040 sensor controller (US part F    pin 44  net +3V3_E6      under_part False pad_to_pin 7.71
+C31   10u 25V  cap F     U12   AP63205WU-7 5 V 2 A buck for part F    pin 2   net CELL_F       under_part False pad_to_pin 8.83
+C30   100n     cap F     U12   AP63205WU-7 5 V 2 A buck for part F    pin 6   net E6_BST       under_part False pad_to_pin 1.89
+C34   1u       cap F     U13   TLV75533PDBVR 3.3 V LDO      part F    pin 1   net +5V_E6       under_part False pad_to_pin 3.28
+C35   1u       cap F     U13   TLV75533PDBVR 3.3 V LDO      part F    pin 5   net +3V3_E6      under_part False pad_to_pin 5.25
+C48   100n     cap F     U14   BME688 inside climate: tempe part F    pin 8   net +3V3_E6      under_part False pad_to_pin 5.52
+C49   100n     cap F     U15   BMI270 six-axis IMU (I2C 0x6 part F    pin 8   net +3V3_E6      under_part False pad_to_pin 9.32
+C50   100n     cap F     U15   BMI270 six-axis IMU (I2C 0x6 part F    pin 5   net +3V3_E6      under_part False pad_to_pin 11.96
+C57   U17   pin 1   not on this board
+C58   U17   pin 5   not on this board
+C56   U16   pin 6   not on this board
+declared entries with the capacitor on B.Cu: 0
+== pcb-p-pack-p2/pcb-p-pack
+C1    2.2u     cap F     U1    BQ4050RSMR: SMBus 1.1 gas ga part F    pin 1   net PBI          under_part False pad_to_pin 10.11
+C6    100n     cap F     U1    BQ4050RSMR: SMBus 1.1 gas ga part F    pin 32  net BAT_F        under_part False pad_to_pin 11.03
+C8    100n     cap F     U1    BQ4050RSMR: SMBus 1.1 gas ga part F    pin 26  net VCC_F        under_part False pad_to_pin 14.39
+C14   U2    pin 1   not on this board
+declared entries with the capacitor on B.Cu: 0

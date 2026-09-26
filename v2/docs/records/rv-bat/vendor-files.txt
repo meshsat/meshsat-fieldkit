@@ -1,0 +1,40 @@
+# Review stream BAT (MESHSAT-1357, 26 September 2026, third cycle): the documents the battery packet cites, and who files each.
+# Rule of this review: a stream files a document into v2/vendor/ only when no other stream files it. Checked against the
+# worktree of stream PKT (wt/rv-pkt, uncommitted) at 17:00 CEST: every PDF below marked PKT is present there at the
+# path given, byte-identical (sha256 compared) to this stream's copy in drafts/datasheets/.
+#
+# FILED BY THIS STREAM (v2/vendor, with lines in sources.txt, vendor-status.txt and a block `battery_review_documents` in
+# SOURCES.yaml placed before `parts:` so it touches no entry stream PKT edits):
+96c511cf238d00182bcd82c5e7bdce3d25571c49cbd77f6b57a9171159f0d8c4  v2/vendor/ti/ti-e2e-1316778-bq25731-chargecurrent-por.html      (from drafts/datasheets/e2e-1316778.html)
+2038e7af80b8c35e3b0a92c07f9d0edd482e146bb0e0bf80072c0c2b6428610c  v2/vendor/battery/ti-e2e-1421182-bq77207-application.html  (from drafts/datasheets/e2e-1421182.html)
+#
+# FILED BY STREAM PKT (the packet cites these paths; this stream does NOT file them):
+45c1c99e2d303be8bcf1a2b1eea8275f657c7c80170bda7c2778042a688295cb  v2/vendor/battery/ti-bq77207.pdf                 (= drafts/datasheets/ti-bq77207.pdf)
+fe429cf90332c2bba2eb3d456036312982ff25eba4f0f370a2107b67ed4812b3  v2/vendor/battery/ti-sffs317a-bq77207-fusa.pdf   (= drafts/datasheets/ti-sffs317a-bq77207-fusa.pdf)
+525d16b2bdee44e5b587ccf6800b9967bc524772d0b5a20937957ea2e738b7ad  v2/vendor/battery/ti-sluuaq3a-bq4050-trm.pdf     (= drafts/datasheets/ti-sluuaq3-bq4050-trm.pdf)
+3ecc2424acfa1753c2aec0b62d5706d4f25b7a08e731795c0d84d59938a3158e  v2/vendor/battery/eaton-scf9550-elx1135.pdf      (= drafts/datasheets/eaton-scf9550-elx1135.pdf)
+018e0d53243b986d0f089eb210728452c94cf2bbbcd09fd160e6a36ff2ff72ed  v2/vendor/battery/littelfuse-itv9550-30a.pdf     (= drafts/datasheets/littelfuse-itv9550-30a-digikey.pdf)
+a29cd6200c656636fd69bf525d365cfa50432a2fe696ee8ee9e172a4b7cba27a  v2/vendor/battery/murata-prf-series.pdf         (= drafts/datasheets/murata-prf-series-datasheet.pdf)
+917c0db25428865ac1124aedfa315343fa9cee6bf54db8bae967cec7deb029d1  v2/vendor/battery/ti-sluubf9-bq4050evm.pdf      (= drafts/datasheets/ti-sluubf9-bq4050evm.pdf)
+9c60d0b6c1ddc7609a4b788a91181468d8ffe6c3e9ba425c3d8ffc5ba88c5033  v2/vendor/power/aos-ao3400a-n-mosfet.pdf        (= drafts/datasheets/aos-ao3400a.pdf)
+7941fb423af7c6c6c8979063a7e8819bb19217ece275efcce18948950a41d9f6  v2/vendor/power/jscj-2n7002-c8545.pdf           (= drafts/datasheets/lcsc-C8545.pdf)
+447624f4f2f7d37c58c1eaa7ee314ad757fe7aff48f6186491ef6f69fbc00b96  v2/vendor/connectors/jst-ph-catalogue.pdf       (= drafts/datasheets/jst-ph.pdf)
+#
+# ALREADY ON MAIN 1f614233 (cited in place):
+# v2/vendor/battery/ti-bq4050.pdf, samsung-35e-orbtronic.pdf, samsung-35e-akkuzentrum.pdf, semitec-at-p12-13.pdf,
+# ti-csd17570q5b.pdf, littelfuse-287-atof.pdf; v2/vendor/keystone/M65p42.pdf, littelfuse-297-ficcorp.pdf;
+# v2/vendor/ti/bq25731-datasheet.pdf; v2/vendor/nexperia/nexperia-pesd5v0s1ba.pdf (6546e415..., = drafts/datasheets/nexperia-pesd5v0s1ba.pdf).
+#
+# NOT FILED ANYWHERE (session record only): the seven reviewer-candidate web page snapshots in drafts/datasheets/reviewers/.
+# They are third-party web pages the reviewer does not need; MANIFEST.md lists their URLs and sha256 ("Route evidence").
+#
+# MERGE NOTES FOR THE INTEGRATOR
+# 1. The packet's release check (v2/docs/review-packets/battery/evidence/check_manifest.py) FAILS until stream PKT's
+#    v2/vendor files are merged; merge PKT and BAT together, then run it: it must print RELEASE CHECK PASS.
+# 2. The integrator may move the two `battery_review_documents` rows of SOURCES.yaml under the `charger` entry and under
+#    PKT's `pack-secondary-protector` entry.
+# 3. Not this stream's file, reported for its owner: vendor-status.txt lines 99 to 101 (main) mark
+#    battery/samsung-35e-akkuzentrum.pdf, samsung-35e-conrad.pdf and samsung-35e-orbtronic.pdf "retired" ("the 1S12P Samsung
+#    35E module went with the pack ruling of 7 September 2026"), but the ruled 4S3P pack (D-06) is built from the same
+#    Samsung INR18650-35E cells, and this packet and pcb_pack_protection.yaml rest on those sheets. kb_search.py pushes a
+#    retired document down its ranking.

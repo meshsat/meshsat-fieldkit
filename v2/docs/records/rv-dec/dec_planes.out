@@ -1,0 +1,114 @@
+v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb
+  copper layers: ['F.Cu', 'In1.Cu', 'In2.Cu', 'In3.Cu', 'In4.Cu', 'B.Cu']
+  stack: ('F.SilkS', 'Top Silk Screen', None)
+  stack: ('F.Paste', 'Top Solder Paste', None)
+  stack: ('F.Mask', 'Top Solder Mask', 0.01)
+  stack: ('F.Cu', 'copper', 0.035)
+  stack: ('dielectric 1', 'prepreg', 0.0994)
+  stack: ('In1.Cu', 'copper', 0.0152)
+  stack: ('dielectric 2', 'core', 0.55)
+  stack: ('In2.Cu', 'copper', 0.0152)
+  stack: ('dielectric 3', 'prepreg', 0.1088)
+  stack: ('In3.Cu', 'copper', 0.0152)
+  stack: ('dielectric 4', 'core', 0.55)
+  stack: ('In4.Cu', 'copper', 0.0152)
+  stack: ('dielectric 5', 'prepreg', 0.0994)
+  stack: ('B.Cu', 'copper', 0.035)
+  stack: ('B.Mask', 'Bottom Solder Mask', 0.01)
+  stack: ('B.Paste', 'Bottom Solder Paste', None)
+  stack: ('B.SilkS', 'Bottom Silk Screen', None)
+  F.Cu   /VIN_RAW              649 mm2
+  F.Cu   /CELL+                252 mm2
+  F.Cu   /VBAT                 174 mm2
+  F.Cu   /S3_OUT               153 mm2
+  F.Cu   /S2_OUT               145 mm2
+  F.Cu   /S1_OUT               125 mm2
+  F.Cu   /SD_OUT               121 mm2
+  F.Cu   /VBUS20                97 mm2
+  F.Cu   /+5V_S1                84 mm2
+  F.Cu   /+5V_S3                84 mm2
+  F.Cu   /+5V_S2                79 mm2
+  F.Cu   /+5V_DEV               77 mm2
+  F.Cu   /+13V8_PA              60 mm2
+  In1.Cu GND                 35032 mm2
+  In2.Cu GND                 15388 mm2
+  In2.Cu /VBAT               10152 mm2
+  In3.Cu /+12V_HF             1075 mm2
+  In3.Cu /VIN_RAW              624 mm2
+  In3.Cu /VBUS20               219 mm2
+  In4.Cu GND                 35246 mm2
+  B.Cu   /VIN_RAW             1430 mm2
+  B.Cu   /VBAT                1250 mm2
+  B.Cu   /+13V8_PA            1021 mm2
+  B.Cu   /CELL+                254 mm2
+  B.Cu   /+5V_DEV               86 mm2
+  B.Cu   /+5V_S3                85 mm2
+  B.Cu   /+5V_S2                84 mm2
+  B.Cu   /+5V_S1                84 mm2
+  B.Cu   /S2_OUT                73 mm2
+  B.Cu   /S3_OUT                73 mm2
+  B.Cu   /S1_OUT                73 mm2
+  B.Cu   /SD_OUT                73 mm2
+v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_pcb
+  copper layers: ['F.Cu', 'In1.Cu', 'In2.Cu', 'In3.Cu', 'In4.Cu', 'B.Cu']
+  stack: ('F.SilkS', 'Top Silk Screen', None)
+  stack: ('F.Paste', 'Top Solder Paste', None)
+  stack: ('F.Mask', 'Top Solder Mask', 0.01)
+  stack: ('F.Cu', 'copper', 0.035)
+  stack: ('dielectric 1', 'prepreg', 0.0994)
+  stack: ('In1.Cu', 'copper', 0.0152)
+  stack: ('dielectric 2', 'core', 0.55)
+  stack: ('In2.Cu', 'copper', 0.0152)
+  stack: ('dielectric 3', 'prepreg', 0.1088)
+  stack: ('In3.Cu', 'copper', 0.0152)
+  stack: ('dielectric 4', 'core', 0.55)
+  stack: ('In4.Cu', 'copper', 0.0152)
+  stack: ('dielectric 5', 'prepreg', 0.0994)
+  stack: ('B.Cu', 'copper', 0.035)
+  stack: ('B.Mask', 'Bottom Solder Mask', 0.01)
+  stack: ('B.Paste', 'Bottom Solder Paste', None)
+  stack: ('B.SilkS', 'Bottom Silk Screen', None)
+  In1.Cu GND                 61187 mm2
+  In4.Cu /+5V_DEV            23406 mm2
+  In4.Cu /+5V_S2             12620 mm2
+  In4.Cu /+5V_S1             11671 mm2
+  In4.Cu /+5V_S3             11100 mm2
+v2/ecad/pcb-c-display-c8/pcb-c-display.kicad_pcb
+  copper layers: ['F.Cu', 'In1.Cu', 'In2.Cu', 'B.Cu']
+  stack: ('F.SilkS', 'Top Silk Screen', None)
+  stack: ('F.Paste', 'Top Solder Paste', None)
+  stack: ('F.Mask', 'Top Solder Mask', 0.01)
+  stack: ('F.Cu', 'copper', 0.035)
+  stack: ('dielectric 1', 'prepreg', 0.2104)
+  stack: ('In1.Cu', 'copper', 0.0152)
+  stack: ('dielectric 2', 'core', 1.065)
+  stack: ('In2.Cu', 'copper', 0.0152)
+  stack: ('dielectric 3', 'prepreg', 0.2104)
+  stack: ('B.Cu', 'copper', 0.035)
+  stack: ('B.Mask', 'Bottom Solder Mask', 0.01)
+  stack: ('B.Paste', 'Bottom Solder Paste', None)
+  stack: ('B.SilkS', 'Bottom Silk Screen', None)
+  F.Cu   GND                 21697 mm2
+  In1.Cu GND                 30394 mm2
+  In2.Cu GND                 20185 mm2
+  B.Cu   GND                 19646 mm2
+v2/ecad/pcb-d-aprs-d9/pcb-d-aprs.kicad_pcb
+  copper layers: ['F.Cu', 'In1.Cu', 'In2.Cu', 'B.Cu']
+  stack: ('F.SilkS', 'Top Silk Screen', None)
+  stack: ('F.Paste', 'Top Solder Paste', None)
+  stack: ('F.Mask', 'Top Solder Mask', 0.01)
+  stack: ('F.Cu', 'copper', 0.035)
+  stack: ('dielectric 1', 'prepreg', 0.2104)
+  stack: ('In1.Cu', 'copper', 0.0152)
+  stack: ('dielectric 2', 'core', 1.065)
+  stack: ('In2.Cu', 'copper', 0.0152)
+  stack: ('dielectric 3', 'prepreg', 0.2104)
+  stack: ('B.Cu', 'copper', 0.035)
+  stack: ('B.Mask', 'Bottom Solder Mask', 0.01)
+  stack: ('B.Paste', 'Bottom Solder Paste', None)
+  stack: ('B.SilkS', 'Bottom Silk Screen', None)
+  F.Cu   GND                  3891 mm2
+  In1.Cu GND                  7160 mm2
+  In2.Cu GND                  7042 mm2
+  In2.Cu /+5V_D8                92 mm2
+  B.Cu   GND                  4390 mm2

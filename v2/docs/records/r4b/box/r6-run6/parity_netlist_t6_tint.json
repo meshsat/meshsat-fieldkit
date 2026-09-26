@@ -1,0 +1,40 @@
+{
+ "kind": "netlist",
+ "phase_labels": [
+  [
+   "B21"
+  ],
+  [
+   "B21"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  },
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  }
+ ],
+ "design_header": [
+  [
+   "/root/r6/b/t6/v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_sch",
+   "2026-09-26T10:54:29+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ],
+  [
+   "/root/r6/b/tint/v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_sch",
+   "2026-09-26T11:15:35+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ]
+ ],
+ "content_hash": [
+  "142fe788dabbaf58",
+  "142fe788dabbaf58"
+ ],
+ "result": "PARITY_AFTER_NOISE"
+}

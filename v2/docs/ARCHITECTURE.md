@@ -581,7 +581,7 @@ with that.
   quorum on bank ownership and hub resets (`gen_sch_b.py:1160-1163`). The fitted TCAN334D is specified to 1 Mbps, not
   the 5 Mbps the generator comment and IOHA section 6 claimed (FAB-05; the IOHA text is corrected in this baseline, the
   generator comment is board B's writer's). The owner accepted the H743 (D-13): the schematic text and the BOM read
-  STM32H743VIT6 since `458b2873`, and pin parity is 100 of 100 on both parts (`drafts/pin_parity.py` of that round,
+  STM32H743VIT6 since `458b2873`, and pin parity is 100 of 100 on both parts (`v2/docs/records/r4b/pin_parity.py` of that round,
   RECORDED). Owner condition 1 is not closed by the text: the peripherals the supervisors use (FDCAN1 and FDCAN2, I2C1,
   GPIO) are read in the H743's own datasheet (`FAILOVER-FABRIC.md` section 4.9), and the firmware and build evidence
   that would prove compatibility do not exist. The firmware floor is software-verified boot on the supervisors; a

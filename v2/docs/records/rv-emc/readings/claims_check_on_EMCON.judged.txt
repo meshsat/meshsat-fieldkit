@@ -1,0 +1,4 @@
+claims_check verdict drafts/readings/claims_check_on_EMCON.verdict.json judged:
+document v2/docs/feasibility/EMCON.md sha256 268c5e3d0cd5cff777d534baa0766472179e85cbb0470b5884ed3d577bb27c5a (same before and after the run: yes)
+tool v2/ecad/tools/claims_check.py sha256 c0fd3da56b9981549862c7436b3a3c1de6f91a39773e78fa0d691a36bf7af3b1
+verdict ts 2026-09-26T16:28:46Z, run 2026-09-26 18:28:46 CEST with VERDICT_DIR outside the tree; the verdict JSON itself records no document hash, so this file carries it

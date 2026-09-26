@@ -104,39 +104,39 @@ Both are part of prototype 1's core (owner ruling D-01).
 
 Boards C, E and P are read at main. Boards A, B and D are read at their round-6 candidates, which were in review when
 this file's first three versions were written. Main merged them in `458b2873` (16:48 CEST), and they equal the copies
-read here (below). Copies of all nine files are in
-`drafts/netlists/` with `SHA256SUMS`. This stream did not regenerate: each candidate's author regenerated on the build
+read here (below). The A and D candidates are filed in
+`v2/docs/records/rv-emc/netlists/` with `SHA256SUMS`; the B candidate is rebuilt by command N1 and main's six are in git at the commits `v2/docs/records/README.md` names. This stream did not regenerate: each candidate's author regenerated on the build
 host with parity against the committed files, and the provenance sidecars below name the generator that wrote each one.
 
 | Board | Netlist | sha256 (first 16) | Generator | State |
 |---|---|---|---|---|
-| A | r4a round 6, `drafts/box/fixup3-run2/x6main/pcb-a-power.net` (written on main `faf8c981`, 12:04 UTC) | `e7c50a4f212a510a` | `gen_sch_a.py` sha256 `17c204ad4fb0cddb`, sidecar `eb0a7ee75f73015b` | candidate; merged on main in `458b2873` |
-| B | r4b round 6 integration tree, `drafts/box/r6-run6/tint/regen/pcb-b-compute.net` (on `faf8c981`, 11:15 UTC) | `af8a9186f981210c` | `gen_sch_b.py` sha256 `6e3d880901fd3030`, sidecar `ffaaf9606f526757` | candidate; merged on main in `458b2873` |
+| A | r4a round 6, `drafts/box/fixup3-run2/x6main/pcb-a-power.net` (written on main `faf8c981`, 12:04 UTC; filed as `v2/docs/records/rv-emc/netlists/A-r6cand-pcb-a-power.net`) | `e7c50a4f212a510a` | `gen_sch_a.py` sha256 `17c204ad4fb0cddb`, sidecar `eb0a7ee75f73015b` | candidate; merged on main in `458b2873` |
+| B | r4b round 6 integration tree, `drafts/box/r6-run6/tint/regen/pcb-b-compute.net` (on `faf8c981`, 11:15 UTC; rebuilt by command N1 of `v2/docs/records/README.md`) | `af8a9186f981210c` | `gen_sch_b.py` sha256 `6e3d880901fd3030`, sidecar `ffaaf9606f526757` | candidate; merged on main in `458b2873` |
 | C | main, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net` | `2834f0d8c4071d56` | sidecar `f917034bde25de83` | merged in `faf8c981` |
-| D | r6d round 6, `drafts/box/run/new/pcb-d-aprs.net` (on `faf8c981`, 12:12 UTC) | `9aae5bf93a104abc` | `gen_sch_d.py` sha256 `08a7c08f0f13a71d`, sidecar `e410df300bb6b57a` | candidate; merged on main in `458b2873` |
+| D | r6d round 6, `drafts/box/run/new/pcb-d-aprs.net` (on `faf8c981`, 12:12 UTC; filed as `v2/docs/records/rv-emc/netlists/D-r6cand-pcb-d-aprs.net`) | `9aae5bf93a104abc` | `gen_sch_d.py` sha256 `08a7c08f0f13a71d`, sidecar `e410df300bb6b57a` | candidate; merged on main in `458b2873` |
 | E | main, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net` | `d910e49c5f5f50b2` | sidecar `51c527e30704671d` | merged |
 | P | main, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net` | `3c925191447136ac` | sidecar `0a73ba784f3d409d` | merged; changed on main in `d90f30e4` (3 nets, 5 parts, no radio; below) |
 
 Board D was regenerated after the first version of this file (r6d `drafts/box/run/new/pcb-d-aprs.net`, 12:53 UTC,
-sha256 `88aee4e209809f9e`) with generator `39c5713b`, whose code lines equal `08a7c08f` (only comments changed, r6d
-`drafts/r6-decisions.md` header). Its netlist differs from the copy read here in the `(date ...)` line alone (`diff`,
+sha256 `88aee4e209809f9e`, rebuilt by command N2 of `v2/docs/records/README.md`) with generator `39c5713b`, whose code lines equal `08a7c08f` (only comments changed, r6d
+`v2/docs/records/r6d/r6-decisions.md` header). Its netlist differs from the copy read here in the `(date ...)` line alone (`diff`,
 15:08 CEST), so every board D citation below stands on either file.
 
 Board A took a fourth fix-up after this file's second version: r4a's final regeneration is now
-`drafts/box/fixup4-run3/x6main/pcb-a-power.net` (sha256 `f0258b5ba24d21f0`, generator `a0452054`), for the front end's
+`drafts/box/fixup4-run3/x6main/pcb-a-power.net` (sha256 `f0258b5ba24d21f0`, generator `a0452054`, rebuilt by command N3 of `v2/docs/records/README.md`), for the front end's
 restart guard (r4a R4A-N15). The round-6 integration tree (`r6int`, netlists written 16:08 and 16:29 CEST) carries it.
 Compared net by net and part by part with the copies read here (16:43 CEST,
-`drafts/readings/candidates-vs-r6int-1629.txt`):
+`v2/docs/records/rv-emc/readings/candidates-vs-r6int-1629.txt`):
 - the integrator's B, C and D are identical in every net and every part value;
 - the integrator's A differs in 16 nets, all of them the front end's (`FE_*`, `VBUS20`, `VIN_RAW`, `GND` and three
   U34 no-connects), and in 24 parts on those nets. `R14` and `C7` sit on `FE_UVS`, `FE_SS` and `VIN_RAW`.
 
 No net or part this file cites moved, so every board A citation stands. Its line numbers are those of the copy in
-`drafts/netlists/`.
+`v2/docs/records/rv-emc/netlists/`.
 
 **Merged on main, `458b2873` (16:48 CEST).** Main then took boards A, B and D's round-4 and round-6 corrections.
 Compared net by net and part by part with the copies read here (17:15 CEST, `git show 458b2873:<path>`,
-`drafts/readings/candidates-vs-main-458b2873.txt`, tool `drafts/tools/netcompare.py`):
+`v2/docs/records/rv-emc/readings/candidates-vs-main-458b2873.txt`, tool `v2/docs/records/rv-emc/tools/netcompare.py`):
 - main's B, C and D equal them in every net and every part value;
 - main's A differs in the same 16 front-end nets and 24 parts as the integration tree's (above).
 
@@ -147,7 +147,7 @@ reuse for any wider claim has to add those fields.
 Main's generators at `458b2873` are byte-identical to the ones cited here: A `a0452054`, B `6e3d8809`, C `5f1ce2dd`, D
 `39c5713b` (sha256, first 8). So every citation stands on main, and no row rests on an unmerged candidate any more.
 
-**Main at `b69f20db` (17:21 CEST), re-checked at 18:14 CEST** (`drafts/readings/main-b69f20db-drift.txt`). That commit
+**Main at `b69f20db` (17:21 CEST), re-checked at 18:14 CEST** (`v2/docs/records/rv-emc/readings/main-b69f20db-drift.txt`). That commit
 records the case margins (`CASE-MARGINS.md`) and changes no netlist and no generator: the four generators still hash to
 the values above (`git show b69f20db:<path> | sha256sum`). `PANEL.md`, `TEST-PLAN.md`, `pcb_rules.yaml`, the review, the
 vendor folders cited here and the C, E and P netlists are unchanged from `1f614233` (`git diff --stat`). It does change
@@ -159,25 +159,25 @@ the two ranges is empty), and section 2a now records SC-02 (`:104` to `:116`). T
 (`26e847bc` to `ccf5808e`: current evidence, ZEROIZE, the failover fabric, decision 42, the review packets). They
 change none of the files this document cites: `git diff --stat b69f20db ccf5808e` over the generators, the netlists,
 `PANEL.md`, `TEST-PLAN.md`, `CONOPS.md`, `pcb_rules.yaml`, the review and the cited vendor folders is empty for every
-modified file (`drafts/readings/main-ccf5808e-drift.txt`). They add sheets to `v2/vendor/`, and some are now cited
+modified file (`v2/docs/records/rv-emc/readings/main-ccf5808e-drift.txt`). They add sheets to `v2/vendor/`, and some are now cited
 from there: the JSCJ 2N7002 (section 1.2, the same bytes as r4b's copy), and in L4 the LVC single gates that r6d and
 r4t had cited by document number, among them the SN74LVC1G04, whose Ioff row this version reads. The new
 `FAILOVER-FABRIC.md` agrees with section 4.5: slot 2's card buck runs "on `PCIE_PWR_EN2` alone"
 (`v2/docs/feasibility/FAILOVER-FABRIC.md:348`).
 
-**Main at `01469100` (18:25 CEST), checked at 18:28 CEST** (`drafts/readings/main-01469100-drift.txt`). Two more
+**Main at `01469100` (18:25 CEST), checked at 18:28 CEST** (`v2/docs/records/rv-emc/readings/main-01469100-drift.txt`). Two more
 commits: `d90f30e4` restores board P's secondary over-temperature, and `01469100` is a plan checkpoint. Of the cited
 files only board P's netlist changed: 3 nets (`TS_SEC`, `TS_SEC_J`, `GND`) and 5 parts (the thermistor socket
 `J_TS2`, R33, R34, TP15 and U2's value text), none of them a radio. So section 4.18's census for board P stands.
 The generators and every other cited file are as at `ccf5808e`.
 
 Main's A23, B19 and D9 netlists from before `458b2873` (`faf8c981`) are also copied for contrast, as
-`drafts/netlists/main-*`. Those A and B are the state adjudication A11 read on 25 September: no hardware path to the CM5 radios, and W_DISABLE1# only on the WiFi cards. Main's D, regenerated in
+`drafts/netlists/main-*` (the same bytes as the commits `v2/docs/records/README.md` names). Those A and B are the state adjudication A11 read on 25 September: no hardware path to the CM5 radios, and W_DISABLE1# only on the WiFi cards. Main's D, regenerated in
 `faf8c981`, still has the push-pull SA868 PTT driver and the Q6 and Q7 read-back paths that r6d replaces. `CONOPS.md`
 section 4b describes main before `458b2873`, not the candidates.
 
-Netlist citations below are `file:line` in `drafts/netlists/`, the line being the net's `(net (code ...)` line
-(`drafts/tools/netline.py`); the dumps behind every row are in `drafts/readings/`.
+Netlist citations below are `file:line` in `v2/docs/records/rv-emc/netlists/` (B's candidate as N1 rebuilds it, main's C from git), the line being the net's `(net (code ...)` line
+(`v2/docs/records/rv-emc/tools/netline.py`); the dumps behind every row are in `v2/docs/records/rv-emc/readings/`.
 
 Generator citations `gen_sch_X.py:N` are line numbers in each board's current generator, re-checked line by line at
 16:44 CEST: A in r4a's `gen_sch_a.py` `a0452054` (its fourth fix-up; the netlist copy read here was written by
@@ -191,11 +191,11 @@ cited lines by 25 or 26, and they are re-cited here.
 
 | Record | sha256 (first 16) | Modified (CEST) | State |
 |---|---|---|---|
-| r4t `drafts/r4-decisions.md` (tools) | `e5efdc619832e46a` | 15:43:16 | "final after ROUND 6'S THIRD PASS" (its header) |
+| r4t `drafts/r4-decisions.md` (tools; not kept at this hash, a later edition is filed as `v2/docs/records/r4t/r4-decisions.md`: see `v2/docs/records/README.md`) | `e5efdc619832e46a` | 15:43:16 | "final after ROUND 6'S THIRD PASS" (its header) |
 | r4t `v2/ecad/tools/tx_inhibit.py` | `5aece264d2825251` | 15:37:32 | the file the r4t record's section 4 names as final and ties RF-002's evidence to |
-| r6d `drafts/r6-decisions.md` (board D) | `959ee8c6b9bf4e66` | 15:01:11 | round 6 after two re-reviews (unchanged) |
-| r4b `drafts/r4-decisions.md` (board B) | `27023b76fce3d48d` | 13:37:34 | round 6 (unchanged) |
-| r4a `drafts/r4-decisions.md` (board A) | `2e5a0c20fc9d4f25` | 15:41:01 | round 4 fourth fix-up (front end only, above) |
+| r6d `v2/docs/records/r6d/r6-decisions.md` (board D) | `959ee8c6b9bf4e66` | 15:01:11 | round 6 after two re-reviews (unchanged) |
+| r4b `v2/docs/records/r4b/r4-decisions.md` (board B) | `27023b76fce3d48d` | 13:37:34 | round 6 (unchanged) |
+| r4a `v2/docs/records/r4a/r4-decisions.md` (board A) | `2e5a0c20fc9d4f25` | 15:41:01 | round 4 fourth fix-up (front end only, above) |
 | i1 `v2/ecad/tools/pcb_requirements.yaml` (registry, pending merge) | `9389d2960ce3d49c` | 02:26:58 | pending merge (unchanged) |
 
 The second version of this file read r4t at `1e3fe2800c3b33db` (14:55:01), whose header then said "final after round
@@ -209,7 +209,7 @@ RF-002's evidence to the third-pass file.
 
 ### 1.2 Maker documents
 
-Held in `v2/vendor/` (sha256 first 16; full values in `drafts/datasheets/SHA256SUMS` for fetched files and by
+Held in `v2/vendor/` (sha256 first 16; full values in `v2/docs/records/rv-emc/datasheets/SHA256SUMS` for fetched files and by
 `sha256sum` on the vendor paths). Page numbers below are the printed page numbers in each document's footer.
 
 | Document | Path | Revision | sha256 |
@@ -238,8 +238,8 @@ Held in `v2/vendor/` (sha256 first 16; full values in `drafts/datasheets/SHA256S
 | Raspberry Pi RP2040 datasheet | `v2/vendor/rp2040/rpi-rp2040-datasheet.pdf` | as held | `be56fbb75ba0ae9e` |
 | JSCJ 2N7002 (LCSC C8545) | `v2/vendor/power/jscj-2n7002-c8545.pdf` on main since `ccf5808e` (SOURCES.yaml `logic-nfet-2n7002`); first read as r4b `drafts/datasheets/cj-2N7002_C8545.pdf`, the same bytes | as held | `7941fb423af7c6c6` |
 
-Fetched by this stream on 26 September 2026 and kept in `drafts/datasheets/` (full sha256 in its `SHA256SUMS`, URLs
-and fetch dates in its `SOURCES.txt`):
+Fetched by this stream on 26 September 2026 and kept in `drafts/datasheets/` of `fnd/rv-emc`, listed for `v2/vendor/` in `v2/docs/records/README.md` (full sha256 in `v2/docs/records/rv-emc/datasheets/SHA256SUMS`, URLs
+and fetch dates in `v2/docs/records/rv-emc/datasheets/SOURCES.txt`):
 
 | Document | URL | Revision | sha256 (first 16) |
 |---|---|---|---|
@@ -254,7 +254,7 @@ and fetch dates in its `SOURCES.txt`):
 | QMX Rev 1 searchable schematic (G4GIR, hosted by QRP Labs) | https://qrp-labs.com/images/qmx/manuals/QMX_Rev1_Searchable_Schematic_1b.pdf | 1b, 2025-02-17 | `dd7c32c85ffc2586` |
 
 The QMX schematics are image-only PDFs; they were read from renders, and the crops that carry the reading are kept in
-`drafts/datasheets/qmx-crops/`. Re-read from adjudication A11's fetch of 25 September 2026 and re-fetched here with
+`drafts/datasheets/qmx-crops/` of `fnd/rv-emc` (listed for `v2/vendor/` in `v2/docs/records/README.md`). Re-read from adjudication A11's fetch of 25 September 2026 and re-fetched here with
 identical sha256: Linux `torvalds/linux` at `f14572c203d57492e1d4e5d7851a3b143e083b82`,
 `drivers/net/wireless/mediatek/mt76/mt7915/mcu.c` (`e3cc6c75c355e7e2`) and `mt7915/mt7915.h` (`b11e1fc5910e4a70`),
 and the MyriadRF LimeSDR Mini 2.0 page (https://myriadrf.org/projects/limesdr-mini-2-0, A11's copy `f1146105a3c09ebc`).
@@ -265,8 +265,8 @@ used here only as precedent for how Quectel firmware treats W_DISABLE#, never as
 
 `tx_inhibit.py`, the RF-002 instrument in the unmerged tools round, was run in its final r4t form (sha256
 `5aece264d2825251`, round 6's third pass) on the candidate set above, in 0.41 s on the runner (16:40 CEST):
-`drafts/readings/tx_inhibit_r4t-5aece264_on_candidate_set.txt`. Its output is byte-identical to the second version's
-reading with `e88aa46b` (`drafts/readings/tx_inhibit_r4t-e88aa46b_on_candidate_set.txt`, which differs only in the
+`v2/docs/records/rv-emc/readings/tx_inhibit_r4t-5aece264_on_candidate_set.txt`. Its output is byte-identical to the second version's
+reading with `e88aa46b` (`v2/docs/records/rv-emc/readings/tx_inhibit_r4t-e88aa46b_on_candidate_set.txt`, which differs only in the
 timing lines appended to it); the first version's reading with `853f3082` is kept beside them. It reads the `EMCON_HW` line FAIL (the firmware pins of L1; the bound is 3.46 V with rails 5 percent high,
 R4T-D36), the `TX_INHIBIT_n` line PASS, the SA868 UNDECIDED (it now follows the open-drain release, R4T-D38: 2.85 V and
 2.86 V from the known currents, no maker threshold), every other transmitter FAIL on the line or on a part it does not
@@ -285,7 +285,7 @@ Both lines are LOW when EMCON is asserted.
   (`main-pcb-c-display.net:4113`, `B-r6cand-pcb-b-compute.net:22317`, `A-r6cand-pcb-a-power.net:10816`,
   `D-r6cand-pcb-d-aprs.net:4514`). Its neighbours on the flat cables are `ZEROIZE_HW` and `HDMI_SEL1` (panel ribbon
   pins 10 and 12), `EMCON_HW` and `SLOT_EN1` (`J_AB1` pins 15 and 17), `TR_APRS` and `PA_EN` (`J_MEZZ1` pins 7 and 9)
-  (`drafts/readings/tx-inhibit-conductor.txt`).
+  (`v2/docs/records/rv-emc/readings/tx-inhibit-conductor.txt`).
 - **`EMCON_HW`** follows through U9, a 74LVC1G17 Schmitt buffer on board C (`gen_sch_c.py:166`;
   `main-pcb-c-display.net:3702`), and runs over `J_PANEL` pin 8 and `J_AB1` pin 15 to boards B and A. It is derived
   from the `TX_INHIBIT_n` node, so the two lines are not independent upstream of U9.
@@ -307,7 +307,7 @@ Both lines are LOW when EMCON is asserted.
 
 Every row that depends on `EMCON_HW` inherits L1 to L4, and every row that depends on `EMCON_ON` also inherits L7. The
 PA's path (b) and the SA868 depend on `TX_INHIBIT_n` only, which the tool reads PASS in every fail-safe state
-(`drafts/readings/tx_inhibit_r4t-5aece264_on_candidate_set.txt` line 3).
+(`v2/docs/records/rv-emc/readings/tx_inhibit_r4t-5aece264_on_candidate_set.txt` line 3).
 
 Read against the r4t record at sha256 `e5efdc619832e46a` ("final after ROUND 6'S THIRD PASS") and its tool at
 `5aece264d2825251` (section 1.1 says what the third pass changed). The r4t figures were taken on main `faf8c981` with remedies applied in memory, not on the r4b
@@ -360,7 +360,7 @@ supply while its gate is off. "Shared" lists the section 3 items the row inherit
   - D's PCA9555 U16 reads KEY and PA_KEY through the one-way buffers U19 and U20 and 1 k (R86, R87);
   - board C's RP2040 sees the PTT mirror only through U18 and R48 (220 Ohm);
   - the CP2102N's software PTT enters ahead of U12 and is ANDed with `TX_INHIBIT_n`
-  (`D-r6cand-pcb-d-aprs.net`, nets `X_KEY`, `X_PA_KEY`, `PTT_MIR`; `drafts/readings/D-nets.txt`). The r4t record's
+  (`D-r6cand-pcb-d-aprs.net`, nets `X_KEY`, `X_PA_KEY`, `PTT_MIR`; `v2/docs/records/rv-emc/readings/D-nets.txt`). The r4t record's
   open item "KEY's readback and TR_APRS (R4T-F6) still fail the SA868" describes main's board D; on the candidate, r6d's
   R6D-1 removed those paths and the tool reads UNDECIDED, not FAIL.
 
@@ -432,7 +432,7 @@ supply while its gate is off. "Shared" lists the section 3 items the row inherit
   - The USB lead's `VBUS_QMX` is +5V_DEV through the 0.5 A polyfuse F3 and is not gated
     (`B-r6cand-pcb-b-compute.net:22459`; `gen_sch_b.py:959`).
   - QRP Labs' own schematics show the USB-C connector J201's VBUS pin with no connection, on every published PCB
-    revision: Rev 1, Rev 2, Rev 3/4 and Rev 5 (page 2, `drafts/datasheets/qmx-crops/`). In Rev 2 and later, CC1 and CC2
+    revision: Rev 1, Rev 2, Rev 3/4 and Rev 5 (page 2, `drafts/datasheets/qmx-crops/` of `fnd/rv-emc`, listed in `v2/docs/records/README.md`). In Rev 2 and later, CC1 and CC2
     carry 5.1 k to ground. Page 1 of Rev 5 (power supplies) derives +12V, VCC and VDD from V_IN at the DC jack J101 only.
     So VBUS does not power the QMX. This is VERIFIED from the maker's drawings, read from renders because the PDFs are
     images. It answers the tool's OWED item (R4T-D17), which asked for "a QRP Labs statement that USB VBUS does not power
@@ -453,7 +453,7 @@ supply while its gate is off. "Shared" lists the section 3 items the row inherit
   `RB_EN = EMCON_HW AND RB_SW_EN` (U19 gate 3), with R515 (10 k) to GND (`gen_sch_b.py:951`, `:1002`;
   `B-r6cand-pcb-b-compute.net:21545`, `:19456`). The FET turns off below VUVLO(F), 1.08 V minimum (SLVSET8A, electrical
   table). Pin 15 (V_EXT_RAW) is the module's only supply wired: pins 12 (V_BATT), 2, 5, 9 and 11 and the module's own
-  USB-C are not connected (`drafts/readings/B-rb-lime.txt`; A11 read Ground Control's schematic rev 2B for the pin
+  USB-C are not connected (`v2/docs/records/rv-emc/readings/B-rb-lime.txt`; A11 read Ground Control's schematic rev 2B for the pin
   functions).
 - **Active level.** `EMCON_HW` LOW gives `RB_EN` LOW: supply off.
 - **Default.** `RB_SW_EN` is held low by R51 (4.7 k). The PCA9555 U6 powers up with every I/O an input (SCPS131J,
@@ -558,7 +558,7 @@ supply while its gate is off. "Shared" lists the section 3 items the row inherit
     booting case).
 - **Powering and back-powering.** Not applicable as drawn (the module stays powered). Under SD-EMC-1 the rail becomes
   removable, and these lines stay live while it is off (`B-r6cand-pcb-b-compute.net`; dumps in
-  `drafts/readings/B-m2c2-sdemc1.txt`): `USB_5G_P` and `USB_5G_N` from
+  `v2/docs/records/rv-emc/readings/B-m2c2-sdemc1.txt`): `USB_5G_P` and `USB_5G_N` from
   U302 port 4, slot 3's TUSB8041 hub (`:22362`); PERST# from U201's DWNRST_L2 (`:21345`), the same TBD drive as the
   AW7915 rows; REFCLK from U201 through R283 (33.2 Ohm) with R285 (49.9 Ohm) to ground (`:19842`); the PCIe TX pair
   `CARD2_TX` from U201; PEWAKE# through R232 (10 k) to `+3V3_S2B` (`:21369`). CLKREQ# (R234), W_DISABLE1# (R237),
@@ -741,7 +741,7 @@ supply while its gate is off. "Shared" lists the section 3 items the row inherit
   powered. L1, L2 and L4 apply.
 - **Powering and back-powering.** Slot 3's CM5 keeps driving the SPI and control lines while `+5V_LORA` is off:
   - `SPI3_SCLK`, `SPI3_MOSI`, `SPI3_CE1` (the last also 10 k, R25, to `+3V3_S3B`);
-  - GPIO26 (NRST), GPIO4 (TXEN), GPIO5 (RXEN) (`:22159`, `:21074`; `drafts/readings/B-e22-e72.txt`).
+  - GPIO26 (NRST), GPIO4 (TXEN), GPIO5 (RXEN) (`:22159`, `:21074`; `v2/docs/records/rv-emc/readings/B-e22-e72.txt`).
 
   The module operates from 2.5 V ("Support 2.5V~5.5V power supply", manual v1.20). A 3.3 V line through an input clamp
   can sit above that. U21's quick output discharge pin is left open (`unconnected-(U21-QOD-Pad2)`), so nothing pulls the
@@ -761,7 +761,7 @@ supply while its gate is off. "Shared" lists the section 3 items the row inherit
   R4T-F9). L1 and L2 apply. L4 does not, since the rail cannot exceed a sagging +3V3_DEV, which in that band is under the
   E72's 1.9 V minimum.
 - **Powering and back-powering.** Each module is driven by a CP2102N (U16, U17) whose VREGIN and VBUS are +5V_DEV, not
-  gated: TXD to DIO_12, RTS to RESET_N and DTR to DIO_15 (`:22607`, `:22602`, `:22583`; `drafts/readings/B-e22-e72.txt`).
+  gated: TXD to DIO_12, RTS to RESET_N and DTR to DIO_15 (`:22607`, `:22602`, `:22583`; `v2/docs/records/rv-emc/readings/B-e22-e72.txt`).
   - R28 to R31 (10 k) pull RESET_N and DIO_15 up to the gated `+3V3_ZB`, so a high RTS or DTR also feeds the dead rail
     through a resistor, 0.33 mA each at most.
   - The CP2102N sources at least 7 mA at VIO minus 0.7 V in push-pull, with no maximum stated. Its GPIO pins default to
@@ -1115,7 +1115,7 @@ be; SD-EMC-1 and SD-EMC-6 each accept a residual risk, stated with its bound.
     transmitter's inhibit starts there, the PA's two paths included (section 4.2).
   - **What the second version got wrong.** It called the TX lamp a hardware detection path, and it treated the panel's
     EMCON indication as a firmware reading of U9's copy of the line. It concluded that the two would expose a toggle at
-    EMCON with the line not asserted. On the netlist (`drafts/readings/C-lamp-nets.txt`):
+    EMCON with the line not asserted. On the netlist (`v2/docs/records/rv-emc/readings/C-lamp-nets.txt`):
     - The TX lamp's sink is hardware: Q3's gate is `TR_APRS` through 1 k (`gen_sch_c.py:198`;
       `main-pcb-c-display.net:3962`). Its anode is not. D3's anode is `LED_RAIL` through R36, 300R
       (`gen_sch_c.py:197`; `:4110`). `LED_RAIL` exists only while the P-FET Q1 conducts (`:3812`). Q1 conducts only
@@ -1188,7 +1188,7 @@ firmware revisions, the RM520N-GL's recorded configuration and the fitted QMX PC
 
 | Id | Radio | Procedure | Pass |
 |---|---|---|---|
-| E-01 | SA868 | r6d's bench rows (`drafts/r6-decisions.md` section 5): U1 fitted, unfitted and shorted; U16 bits forced high under EMCON; pin 5's "1" threshold and input current measured | no carrier in any state; the threshold is at or below 2.677 V |
+| E-01 | SA868 | r6d's bench rows (`v2/docs/records/r6d/r6-decisions.md` section 5): U1 fitted, unfitted and shorted; U16 bits forced high under EMCON; pin 5's "1" threshold and input current measured | no carrier in any state; the threshold is at or below 2.677 V |
 | E-02 | 30 W PA and the common element | EMCON asserted with PTT held, then each downstream single fault: A's `J_AB1` unplugged; D's U1 unfitted; a firmware image that drives A's `PA_SW_EN` high. Then the shared-element cases of SD-EMC-6, into a dummy load, each with LIGHTING at DAY and at NIGHT: (1) the toggle at EMCON with its lug 1 lead open, PTT held; (2) the toggle at EMCON with U9's output forced high; (3) EMCON correctly asserted with the panel RP2040 held in reset (`C_RUN` low) and then with it unflashed; (4) EMCON released with the controller in reset. Then (1) with LIGHTING at BLACKOUT | downstream faults: no RF at the PA output; `+13V8_PA`, VGG and K1 recorded. (1): both paths release, as the design predicts, and the EMCON lamp stays dark; the e-paper shows EMCON not asserted when the controller and the display owner run. (2): the EMCON lamp dark. (3): the EMCON lamp lit, with the controller not running. (4): the lamp dark. BLACKOUT: every lamp dark, as the design intends; recorded, not a failure. The TX lamp's behaviour is recorded in each case; it is not a pass condition, because its feed needs `PANEL_PWM` |
 | E-03 | QMX | EMCON asserted: +12V_HF off, VBUS_QMX live, USB enumeration attempted from the host; current into VBUS | no RF at the BNC; VBUS current under 1 mA |
 | E-04 | RockBLOCK 9704 | EMCON asserted with `RB_IEN`, `RB_CTRL` and `RB_RXD` driven high by U6 and U18; V_EXT_RAW and every reachable module rail read; a 10 min watch covering a ring-alert slot | no RF at the SMA; the module rails stay below the level SD-EMC-2 sets |
@@ -1305,7 +1305,7 @@ firmware revisions, the RM520N-GL's recorded configuration and the fitted QMX PC
   - The round-6 candidates are merged (`458b2873`). Section 1.1 records that main's B, C and D equal the copies read
     here and that its A differs in the front end only, so no row waits on a merge.
 - **SOURCES.yaml writer.** File the four Quectel AT and QCFG manuals and the four QMX schematic PDFs from
-  `drafts/datasheets/`, with their URLs and sha256. The JSCJ 2N7002 sheet is filed since `ccf5808e`
+  `drafts/datasheets/` of `fnd/rv-emc` (listed in `v2/docs/records/README.md`), with their URLs and sha256. The JSCJ 2N7002 sheet is filed since `ccf5808e`
   (`logic-nfet-2n7002`), so that part of this hand-off is done.
 
 ## 9. What changed in the fifth cycle (the fourth checker's one blocking item and seven minor ones)
@@ -1361,7 +1361,7 @@ firmware revisions, the RM520N-GL's recorded configuration and the fitted QMX PC
    - (4) SD-EMC-1's power-up trace adds U203's input. That input is `+5V_S2`, whose only source on board B is
      `J_5V_S2` from board A's U5 (B:19488, A:9538). So the rail has no input before `SLOT_EN2` rises, whatever the
      CM5 does.
-   - (5) claims_check is re-run on this version. Its sidecar `drafts/readings/claims_check_on_EMCON.judged.txt`
+   - (5) claims_check is re-run on this version. Its sidecar `v2/docs/records/rv-emc/readings/claims_check_on_EMCON.judged.txt`
      records the sha256 of the document it judged.
    - (6) Section 1.1 states `netcompare.py`'s limit: it compares net nodes and part values only.
    - (7) Section 1.1's board C generator citation is re-pointed to main.
@@ -1369,11 +1369,11 @@ firmware revisions, the RM520N-GL's recorded configuration and the fitted QMX PC
    changes no netlist or generator, and none of `PANEL.md`, `TEST-PLAN.md`, `pcb_rules.yaml` or the review. In
    `CONOPS.md`, section 4b moved down 14 lines with its text unchanged, and section 2a now records SC-02. The CONOPS
    citations are re-anchored to `:307`, `:294` to `:319` and `:104` to `:116`. The check is in
-   `drafts/readings/main-b69f20db-drift.txt`. Main then moved on to `ccf5808e` while this version was written. Its
+   `v2/docs/records/rv-emc/readings/main-b69f20db-drift.txt`. Main then moved on to `ccf5808e` while this version was written. Its
    six commits modify no cited file. They file the JSCJ 2N7002 and the LVC single-gate sheets in `v2/vendor/`, so
    section 1.2, L4 and the SOURCES.yaml hand-off now cite them there, and L4 reads U11's Ioff row
-   (`drafts/readings/main-ccf5808e-drift.txt`). Then `d90f30e4` changed board P in 3 nets and 5 parts, none a radio,
-   and `01469100` is a plan checkpoint (`drafts/readings/main-01469100-drift.txt`).
+   (`v2/docs/records/rv-emc/readings/main-ccf5808e-drift.txt`). Then `d90f30e4` changed board P in 3 nets and 5 parts, none a radio,
+   and `01469100` is a plan checkpoint (`v2/docs/records/rv-emc/readings/main-01469100-drift.txt`).
 
 ## 9b. What changed in the fourth cycle (the third checker's one blocking item)
 

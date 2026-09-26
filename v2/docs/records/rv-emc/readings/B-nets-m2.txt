@@ -1,0 +1,92 @@
+S1A_EN (3 nodes):
+   Q111.3 (D) | 2N7002: EMCON removes the WiFi card's supply (S-01)
+   R164.2  | 10k
+   U103.3 (S1A_EN) | AP64500SP-13 5 A buck, 3.3 V rail +3V3_S1A
+S3A_EN (3 nodes):
+   Q311.3 (D) | 2N7002: EMCON removes the WiFi card's supply (S-01)
+   R364.2  | 10k
+   U303.3 (S3A_EN) | AP64500SP-13 5 A buck, 3.3 V rail +3V3_S3A
+PCIE_PWR_EN1 (3 nodes):
+   R106.1  | 100k
+   R164.1  | 10k
+   U30B.106 (PCIE_PWR_EN) | Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side)
+PCIE_PWR_EN2 (3 nodes):
+   R206.1  | 100k
+   U203.3 (PCIE_PWR_EN2) | AP64500SP-13 5 A buck, 3.3 V rail +3V3_S2A
+   U31B.106 (PCIE_PWR_EN) | Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side)
+PCIE_PWR_EN3 (3 nodes):
+   R306.1  | 100k
+   R364.1  | 10k
+   U32B.106 (PCIE_PWR_EN) | Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side)
+WIFI_W_DIS_n (3 nodes):
+   J_M2C1.56 (~{W_DISABLE1}) | M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (two MHF4 leads to A22's P2P jack
+   Q106.3 (D) | 2N7002: EMCON_ON pulls W_DISABLE1# low (open drain)
+   R137.1  | 10k
+WIFI_W_DIS2_n (2 nodes):
+   J_M2C1.54 (~{W_DISABLE2}) | M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (two MHF4 leads to A22's P2P jack
+   R138.1  | 10k
+WIFI2_W_DIS_n (3 nodes):
+   J_M2C3.56 (~{W_DISABLE1}) | M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: the second AsiaRF AW7915-AED (two MHF4 leads to the antenna changeov
+   Q306.3 (D) | 2N7002: EMCON_ON pulls W_DISABLE1# low (open drain)
+   R337.1  | 10k
+WIFI2_W_DIS2_n (2 nodes):
+   J_M2C3.54 (~{W_DISABLE2}) | M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: the second AsiaRF AW7915-AED (two MHF4 leads to the antenna changeov
+   R338.1  | 10k
+5G_W_DIS_n (3 nodes):
+   J_M2C2.8 (~{W_DISABLE1}) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   Q206.3 (D) | 2N7002: EMCON_ON pulls W_DISABLE1# low (open drain)
+   R237.1  | 10k
+5G_PWROFF_n (3 nodes):
+   J_M2C2.6 (~{FULL_CARD_POWER_OFF}) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   Q207.3 (D) | 2N7002 expander -> FULL_CARD_POWER_OFF#
+   R238.1  | 10k
+5G_OFF (3 nodes):
+   Q207.1 (G) | 2N7002 expander -> FULL_CARD_POWER_OFF#
+   R61.1  | 4.7k
+   U6.10 (IO0_6) | PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)
+5G_RST_n (2 nodes):
+   J_M2C2.67 (~{RESET}) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   Q208.3 (D) | 2N7002 expander -> RESET# (open drain, no pull-up: HD Figure 12)
+5G_RESET (3 nodes):
+   Q208.1 (G) | 2N7002 expander -> RESET# (open drain, no pull-up: HD Figure 12)
+   R62.1  | 4.7k
+   U6.11 (IO0_7) | PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)
++3V3_S1A (12 nodes):
+   C114.1  | 22u 10V X7R 1210
+   C115.1  | 22u 10V X7R 1210
+   C116.1  | 22u 10V X7R 1210
+   L101.2 (2) | 3.3uH XAL6030-332ME
+   R102.1  | 31.6k 1%
+   R134.2  | 10k
+   R137.2  | 10k
+   R138.2  | 10k
+   R139.1  | 1k
+   R165.1  | 5mOhm 1% 2512 (Kelvin shunt: card socket current, W5 TESTACCESS-B)
+   TP102.1 (1) | +3V3_S1A
+   TP20.1 (1) | +3V3_S1A
++3V3_S2A (12 nodes):
+   C214.1  | 22u 10V X7R 1210
+   C215.1  | 22u 10V X7R 1210
+   C216.1  | 22u 10V X7R 1210
+   L201.2 (2) | 3.3uH XAL6030-332ME
+   R202.1  | 33.2k 1%
+   R234.2  | 10k
+   R237.2  | 10k
+   R238.2  | 10k
+   R239.1  | 1k
+   R265.1  | 5mOhm 1% 2512 (Kelvin shunt: card socket current, W5 TESTACCESS-B)
+   TP202.1 (1) | +3V3_S2A
+   TP24.1 (1) | +3V3_S2A
++3V3_S3A (12 nodes):
+   C314.1  | 22u 10V X7R 1210
+   C315.1  | 22u 10V X7R 1210
+   C316.1  | 22u 10V X7R 1210
+   L301.2 (2) | 3.3uH XAL6030-332ME
+   R302.1  | 31.6k 1%
+   R334.2  | 10k
+   R337.2  | 10k
+   R338.2  | 10k
+   R339.1  | 1k
+   R365.1  | 5mOhm 1% 2512 (Kelvin shunt: card socket current, W5 TESTACCESS-B)
+   TP28.1 (1) | +3V3_S3A
+   TP302.1 (1) | +3V3_S3A

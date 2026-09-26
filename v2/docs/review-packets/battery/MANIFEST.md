@@ -184,9 +184,9 @@ and are not published; their URL and sha256 are listed so the quoted words can b
 
 | Session record file | sha256 |
 |---|---|
-| `drafts/bat-integration-notes.md` | `af4516bccc528c3e309a9237fa060357ac26961de499458f0b19a6f9f640bc5b` |
-| `drafts/vendor-files.txt` | `f3c546e124cc2b27f89dba24d7283e7329508a258642f3bcbceebcb4b33aac36` |
-| `drafts/datasheets/SOURCES.txt` | `fa0399eb8bfcf2a9c9d0fb1a3bf9306836f6b6cd8194742a7fd5099d35d2e576` |
-| `drafts/box/bat/suite-worktree.log` | `b10fecd057ba0aff6bc53aad1a7e4d5cea3aee4c071177e08ddaf256aafc2629` |
-| `drafts/box/bat/suite-worktree-cycle3.log` | `239a5d3e3d1fd06459627ce8bd081aecd534629520b50a16a9da1cca29cf7fec` |
-| `drafts/box/bat-cycle1/run.log` | `9bffc3191029b7f528e42f8e9302f3d2b1ba00ad34a2ccfe0efafde5702d99e7` |
+| `v2/docs/records/rv-bat/bat-integration-notes.md` | `af4516bccc528c3e309a9237fa060357ac26961de499458f0b19a6f9f640bc5b` |
+| `v2/docs/records/rv-bat/vendor-files.txt` | `f3c546e124cc2b27f89dba24d7283e7329508a258642f3bcbceebcb4b33aac36` |
+| `v2/docs/records/rv-bat/datasheets/SOURCES.txt` | `fa0399eb8bfcf2a9c9d0fb1a3bf9306836f6b6cd8194742a7fd5099d35d2e576` |
+| `v2/docs/records/rv-bat/box/bat/suite-worktree.log` | `b10fecd057ba0aff6bc53aad1a7e4d5cea3aee4c071177e08ddaf256aafc2629` |
+| `v2/docs/records/rv-bat/box/bat/suite-worktree-cycle3.log` | `239a5d3e3d1fd06459627ce8bd081aecd534629520b50a16a9da1cca29cf7fec` |
+| `v2/docs/records/rv-bat/box/bat-cycle1/run.log` | `9bffc3191029b7f528e42f8e9302f3d2b1ba00ad34a2ccfe0efafde5702d99e7` |

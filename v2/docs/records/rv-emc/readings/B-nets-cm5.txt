@@ -1,0 +1,80 @@
+WL_nDIS1 (2 nodes):
+   Q109.3 (D) | 2N7002: pulls WL_nDisable low only (S-01)
+   U30A.89 (WL_nDisable) | Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted
+WL_nDIS1_KILL (3 nodes):
+   Q109.1 (G) | 2N7002: pulls WL_nDisable low only (S-01)
+   R173.1  | 100k
+   U111.3 (WL_nDIS1_KILL) | SN74LVC32APWR quad OR, slot S1: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare
+WL_nDIS1_OFF (3 nodes):
+   R162.1  | 10k
+   U111.1 (WL_nDIS1_OFF) | SN74LVC32APWR quad OR, slot S1: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare
+   U6.13 (IO1_0) | PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)
+BT_nDIS1 (2 nodes):
+   Q110.3 (D) | 2N7002: pulls BT_nDisable low only (S-01)
+   U30A.91 (BT_nDisable) | Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted
+BT_nDIS1_KILL (3 nodes):
+   Q110.1 (G) | 2N7002: pulls BT_nDisable low only (S-01)
+   R174.1  | 100k
+   U111.6 (BT_nDIS1_KILL) | SN74LVC32APWR quad OR, slot S1: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare
+BT_nDIS1_OFF (3 nodes):
+   R163.1  | 10k
+   U111.4 (BT_nDIS1_OFF) | SN74LVC32APWR quad OR, slot S1: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare
+   U6.16 (IO1_3) | PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)
+WL_nDIS2 (2 nodes):
+   Q209.3 (D) | 2N7002: pulls WL_nDisable low only (S-01)
+   U31A.89 (WL_nDisable) | Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted
+WL_nDIS3_KILL (3 nodes):
+   Q309.1 (G) | 2N7002: pulls WL_nDisable low only (S-01)
+   R373.1  | 100k
+   U311.3 (WL_nDIS3_KILL) | SN74LVC32APWR quad OR, slot S3: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare
+U111 | SN74LVC32APWR quad OR, slot S1: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare
+   pin 1 (WL_nDIS1_OFF) -> WL_nDIS1_OFF
+   pin 2 (EMCON_ON) -> EMCON_ON
+   pin 3 (WL_nDIS1_KILL) -> WL_nDIS1_KILL
+   pin 4 (BT_nDIS1_OFF) -> BT_nDIS1_OFF
+   pin 5 (EMCON_ON) -> EMCON_ON
+   pin 6 (BT_nDIS1_KILL) -> BT_nDIS1_KILL
+   pin 7 (GND) -> GND
+   pin 8 (NC) -> unconnected-(U111-NC-Pad8)
+   pin 9 (GND) -> GND
+   pin 10 (GND) -> GND
+   pin 11 (NC) -> unconnected-(U111-NC-Pad11)
+   pin 12 (GND) -> GND
+   pin 13 (GND) -> GND
+   pin 14 (+3V3_DEV) -> +3V3_DEV
+U211 | SN74LVC32APWR quad OR, slot S2: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare
+   pin 1 (WL_nDIS2_OFF) -> WL_nDIS2_OFF
+   pin 2 (EMCON_ON) -> EMCON_ON
+   pin 3 (WL_nDIS2_KILL) -> WL_nDIS2_KILL
+   pin 4 (BT_nDIS2_OFF) -> BT_nDIS2_OFF
+   pin 5 (EMCON_ON) -> EMCON_ON
+   pin 6 (BT_nDIS2_KILL) -> BT_nDIS2_KILL
+   pin 7 (GND) -> GND
+   pin 8 (NC) -> unconnected-(U211-NC-Pad8)
+   pin 9 (GND) -> GND
+   pin 10 (GND) -> GND
+   pin 11 (NC) -> unconnected-(U211-NC-Pad11)
+   pin 12 (GND) -> GND
+   pin 13 (GND) -> GND
+   pin 14 (+3V3_DEV) -> +3V3_DEV
+U311 | SN74LVC32APWR quad OR, slot S3: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare
+   pin 1 (WL_nDIS3_OFF) -> WL_nDIS3_OFF
+   pin 2 (EMCON_ON) -> EMCON_ON
+   pin 3 (WL_nDIS3_KILL) -> WL_nDIS3_KILL
+   pin 4 (BT_nDIS3_OFF) -> BT_nDIS3_OFF
+   pin 5 (EMCON_ON) -> EMCON_ON
+   pin 6 (BT_nDIS3_KILL) -> BT_nDIS3_KILL
+   pin 7 (GND) -> GND
+   pin 8 (NC) -> unconnected-(U311-NC-Pad8)
+   pin 9 (GND) -> GND
+   pin 10 (GND) -> GND
+   pin 11 (NC) -> unconnected-(U311-NC-Pad11)
+   pin 12 (GND) -> GND
+   pin 13 (GND) -> GND
+   pin 14 (+3V3_DEV) -> +3V3_DEV
+Q109 2N7002: pulls WL_nDisable low only (S-01)
+Q110 2N7002: pulls BT_nDisable low only (S-01)
+Q209 2N7002: pulls WL_nDisable low only (S-01)
+Q210 2N7002: pulls BT_nDisable low only (S-01)
+Q309 2N7002: pulls WL_nDisable low only (S-01)
+Q310 2N7002: pulls BT_nDisable low only (S-01)

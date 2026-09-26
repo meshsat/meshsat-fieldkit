@@ -1,0 +1,78 @@
+EMCON_HW (5 nodes):
+   J_AB1.15 (Pin_15) | A-B interconnect (IDC 2x13, top side) to B16's underside header
+   R102.1  | 100k
+   TP15.1 (1) | EMCON_HW
+   U26.1 (EMCON_HW) | SN74LVC08APWR quad AND: EMCON gates for the PA and HF rails, the outlet interlock for PoE and USB-C
+   U26.4 (EMCON_HW) | SN74LVC08APWR quad AND: EMCON gates for the PA and HF rails, the outlet interlock for PoE and USB-C
+TX_INHIBIT_n (3 nodes):
+   J_AB1.16 (Pin_16) | A-B interconnect (IDC 2x13, top side) to B16's underside header
+   J_MEZZ1.8 (Pin_8) | D8 mezzanine harness (IDC 2x8): its USB pair, the PTT mirror, the inhibit, the PA rail state, I2C
+   R145.1  | 100k
+PA_EN (7 nodes):
+   J_MEZZ1.9 (Pin_9) | D8 mezzanine harness (IDC 2x8): its USB pair, the PTT mirror, the inhibit, the PA rail state, I2C
+   R58.1  | 62k 1%
+   R58.2  | 62k 1%
+   R59.1  | 10k 1%
+   U13.1 (PA_EN) | LM5176PWPR buck-boost controller, +13V8_PA from VBAT
+   U26.3 (PA_EN) | SN74LVC08APWR quad AND: EMCON gates for the PA and HF rails, the outlet interlock for PoE and USB-C
+   U30.2 (PA_EN) | SN74LVC1G00DBVR NAND: OUTLET_OK = NOT (TR_APRS AND PA_EN), the outlet interlock
+PA_SW_EN (3 nodes):
+   R103.1  | 4.7k
+   U26.2 (PA_SW_EN) | SN74LVC08APWR quad AND: EMCON gates for the PA and HF rails, the outlet interlock for PoE and USB-C
+   U27.9 (IO0_5) | PCA9555PW (0x21): enables and status
+HF_EN (5 nodes):
+   R124.1  | 62k 1%
+   R124.2  | 62k 1%
+   R125.1  | 10k 1%
+   U15.1 (HF_EN) | LM5176PWPR buck-boost controller, +12V_HF from VBAT
+   U26.6 (HF_EN) | SN74LVC08APWR quad AND: EMCON gates for the PA and HF rails, the outlet interlock for PoE and USB-C
+HF_SW_EN (3 nodes):
+   R104.1  | 4.7k
+   U26.5 (HF_SW_EN) | SN74LVC08APWR quad AND: EMCON gates for the PA and HF rails, the outlet interlock for PoE and USB-C
+   U27.10 (IO0_6) | PCA9555PW (0x21): enables and status
++13V8_PA (14 nodes):
+   C170.1  | 470u 25V Panasonic EEHZK1E471P hybrid polymer (10.2 mm)
+   C171.1  | 470u 25V Panasonic EEHZK1E471P hybrid polymer (10.2 mm)
+   C195.1  | 100n
+   C65.1  | 10u 50V X7R 1210
+   C66.1  | 10u 50V X7R 1210
+   C67.1  | 10u 50V X7R 1210
+   J_PA.1 (Pin_1) | 13.8 V to the PA module on the face plate (JST-VH, 16 AWG): + -
+   R163.1  | 100R 1% (ISNS- filter, Kelvin from the shunt's rail pad)
+   R50.1  | 162k 1%
+   R55.2  | 6mOhm 1% 2512 (ISNS)
+   U13.12 (+13V8_PA) | LM5176PWPR buck-boost controller, +13V8_PA from VBAT
+   U13.24 (+13V8_PA) | LM5176PWPR buck-boost controller, +13V8_PA from VBAT
+   U14.8 (+13V8_PA) | INA226 PA rail monitor (0x46)
+   U14.9 (+13V8_PA) | INA226 PA rail monitor (0x46)
++12V_HF (12 nodes):
+   C109.1  | 10u 50V X7R 1210
+   C110.1  | 10u 50V X7R 1210
+   C111.1  | 10u 50V X7R 1210
+   C172.1  | 150u 25V Panasonic EEHZK1E151XP hybrid polymer (7.7 mm)
+   C173.1  | 150u 25V Panasonic EEHZK1E151XP hybrid polymer (7.7 mm)
+   C196.1  | 100n
+   J_HF.1 (Pin_1) | 12.0 V to the QMX HF unit in its lid tray (JST-VH, in the lid harness): + -
+   R165.1  | 100R 1% (ISNS- filter, Kelvin from the shunt's rail pad)
+   R60.1  | 140k 1%
+   R65.2  | 10mOhm 1% 2512 (ISNS)
+   U15.12 (+12V_HF) | LM5176PWPR buck-boost controller, +12V_HF from VBAT
+   U15.24 (+12V_HF) | LM5176PWPR buck-boost controller, +12V_HF from VBAT
+TR_APRS (4 nodes):
+   J_AB1.14 (Pin_14) | A-B interconnect (IDC 2x13, top side) to B16's underside header
+   J_MEZZ1.7 (Pin_7) | D8 mezzanine harness (IDC 2x8): its USB pair, the PTT mirror, the inhibit, the PA rail state, I2C
+   R116.1  | 100k
+   U30.1 (TR_APRS) | SN74LVC1G00DBVR NAND: OUTLET_OK = NOT (TR_APRS AND PA_EN), the outlet interlock
+D8_EN (3 nodes):
+   R113.1  | 4.7k
+   U23.3 (D8_EN) | TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (453R 1% (ILM: 2.0 A))
+   U27.7 (IO0_3) | PCA9555PW (0x21): enables and status
++5V_D8 (2 nodes):
+   J_MEZZ_PWR1.1 (Pin_1) | D8 mezzanine 5 V (JST-VH): + -
+   U23.5 (+5V_D8) | TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (453R 1% (ILM: 2.0 A))
+POE_EN (5 nodes):
+   R74.1  | 62k 1%
+   R74.2  | 62k 1%
+   R75.1  | 10k 1%
+   U16.1 (POE_EN) | LM5176PWPR buck-boost controller, +54V_POE from VBAT
+   U26.8 (POE_EN) | SN74LVC08APWR quad AND: EMCON gates for the PA and HF rails, the outlet interlock for PoE and USB-C

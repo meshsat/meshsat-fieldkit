@@ -1,0 +1,2002 @@
+{
+ "keyword": "SRF1280",
+ "asked_utc": "2026-09-25T23:58:25.682763Z",
+ "list": [
+  {
+   "componentId": 3836426,
+   "componentLibraryType": "expand",
+   "stockCount": 8,
+   "componentTypeEn": "Power Inductors",
+   "erpComponentName": "47uH \u00b120% 5.28A",
+   "componentSource": "shop",
+   "lcscGoodsUrl": "https://www.lcsc.com/product-detail/power-inductors_bourns-srf1280-470m_C3273529.html",
+   "componentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 2.3694
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 1.9894
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 1.7523
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 399,
+     "productPrice": 1.5087
+    },
+    {
+     "startNumber": 400,
+     "endNumber": 799,
+     "productPrice": 1.3999
+    },
+    {
+     "startNumber": 800,
+     "endNumber": -1,
+     "productPrice": 1.3512
+    }
+   ],
+   "buyComponentPrices": [
+    {
+     "startNumber": 400,
+     "endNumber": 799,
+     "productPrice": 1.3485
+    },
+    {
+     "startNumber": 800,
+     "endNumber": -1,
+     "productPrice": 1.3016
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 399,
+     "productPrice": 1.4533
+    },
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 2.2824
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 1.9164
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 1.688
+    }
+   ],
+   "firstSortAccessId": "85c6b138230a4e15a2194c0849a3d6ae",
+   "secondSortAccessId": "b3e40b0323bb4714b4f411a802fab96e",
+   "canPresaleNumber": -7,
+   "componentProductType": 0,
+   "mergedComponentCode": "",
+   "urlSuffix": "BOURNS-SRF1280470M/C3273529",
+   "leastPatchNumber": 0,
+   "lossNumber": 0,
+   "isBuyComponent": "1",
+   "noBuyReason": null,
+   "componentAlternativesCode": "",
+   "replaceUrlSuffix": null,
+   "preferredComponentFlag": false,
+   "allowPostFlag": true,
+   "score": null,
+   "idleFlag": null,
+   "estimateDate": null,
+   "fullReelPrice": null,
+   "encapsulationNumber": 400,
+   "shopCostPrice": 7.75763,
+   "preMinPurchaseNum": 4,
+   "minPurchaseNum": 4,
+   "initialPrice": 2.3694,
+   "componentCode": "C3273529",
+   "componentBrandEn": "BOURNS",
+   "componentModelEn": "SRF1280-470M",
+   "componentImageUrl": "",
+   "productBigImageAccessId": "8770370935575076864",
+   "productBigImageAccessIdUrl": null,
+   "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2404031011_BOURNS-SRF1280-470M_C3273529.pdf",
+   "dataManualFileAccessId": "8589835561235488768",
+   "dataManualFileAccessIdUrl": null,
+   "dataManualOfficialLink": "",
+   "componentName": "BOURNS SRF1280-470M",
+   "minImage": "",
+   "minImageAccessId": "8770370936669790208",
+   "minImageAccessIdUrl": null,
+   "imageList": [
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    }
+   ],
+   "manufacturerBlackFlag": null,
+   "componentNameEn": null,
+   "componentSpecificationEn": "SMD-4P,12.5x12.5mm",
+   "describe": "2.95A 47uH 5.28A 89.8m\u03a9 \u00b120% SMD-4P,12.5x12.5mm Power Inductors ROHS",
+   "attributes": [
+    {
+     "attribute_name_en": "Current - Saturation(Isat)",
+     "attribute_value_name": "5.28A"
+    },
+    {
+     "attribute_name_en": "Inductance",
+     "attribute_value_name": "47uH"
+    },
+    {
+     "attribute_name_en": "Tolerance",
+     "attribute_value_name": "\u00b120%"
+    },
+    {
+     "attribute_name_en": "Current Rating",
+     "attribute_value_name": "2.95A"
+    },
+    {
+     "attribute_name_en": "DC Resistance(DCR)",
+     "attribute_value_name": "89.8m\u03a9"
+    }
+   ],
+   "rankScore": null,
+   "firstSortName": "Power Inductors",
+   "secondSortName": "Inductors, Coils, Chokes",
+   "componentBrandHigh": null,
+   "remarkHigh": null,
+   "componentModelHigh": "<span class='lucene_highlight_class'>SRF1280</span>-470M",
+   "componentCodeHigh": null,
+   "componentSpecificationHigh": null,
+   "rohsFlag": 1,
+   "shopShowPriceFlag": true,
+   "shopShowForeignPriceFlag": true,
+   "shopRealPriceFlag": true,
+   "assemblyComponentFlag": false,
+   "rohsFileId": null,
+   "rohsUrl": null
+  },
+  {
+   "componentId": 3836435,
+   "componentLibraryType": "expand",
+   "stockCount": 4,
+   "componentTypeEn": "Power Inductors",
+   "erpComponentName": "22uH \u00b120% 7.57A",
+   "componentSource": "shop",
+   "lcscGoodsUrl": "https://www.lcsc.com/product-detail/power-inductors_bourns-srf1280-220m_C3273538.html",
+   "componentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 1.2959
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 1.2618
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 1.2407
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 101,
+     "productPrice": 1.218
+    },
+    {
+     "startNumber": 102,
+     "endNumber": 103,
+     "productPrice": 1.218
+    },
+    {
+     "startNumber": 104,
+     "endNumber": -1,
+     "productPrice": 1.218
+    }
+   ],
+   "buyComponentPrices": [
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 1.1952
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 1.2155
+    },
+    {
+     "startNumber": 104,
+     "endNumber": -1,
+     "productPrice": 1.1733
+    },
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 1.2484
+    },
+    {
+     "startNumber": 102,
+     "endNumber": 103,
+     "productPrice": 1.1733
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 101,
+     "productPrice": 1.1733
+    }
+   ],
+   "firstSortAccessId": "85c6b138230a4e15a2194c0849a3d6ae",
+   "secondSortAccessId": "b3e40b0323bb4714b4f411a802fab96e",
+   "canPresaleNumber": 2,
+   "componentProductType": 0,
+   "mergedComponentCode": "",
+   "urlSuffix": "BOURNS-SRF1280220M/C3273538",
+   "leastPatchNumber": 0,
+   "lossNumber": 0,
+   "isBuyComponent": "1",
+   "noBuyReason": null,
+   "componentAlternativesCode": "",
+   "replaceUrlSuffix": null,
+   "preferredComponentFlag": false,
+   "allowPostFlag": true,
+   "score": null,
+   "idleFlag": null,
+   "estimateDate": null,
+   "fullReelPrice": null,
+   "encapsulationNumber": 400,
+   "shopCostPrice": 7.08081,
+   "preMinPurchaseNum": 7,
+   "minPurchaseNum": 1,
+   "initialPrice": 1.2959,
+   "componentCode": "C3273538",
+   "componentBrandEn": "BOURNS",
+   "componentModelEn": "SRF1280-220M",
+   "componentImageUrl": "",
+   "productBigImageAccessId": "8583671521453740032",
+   "productBigImageAccessIdUrl": null,
+   "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2404031011_BOURNS-SRF1280-220M_C3273538.pdf",
+   "dataManualFileAccessId": "8589785465135542272",
+   "dataManualFileAccessIdUrl": null,
+   "dataManualOfficialLink": "",
+   "componentName": "BOURNS SRF1280-220M",
+   "minImage": "",
+   "minImageAccessId": "8583671522356056064",
+   "minImageAccessIdUrl": null,
+   "imageList": [
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    }
+   ],
+   "manufacturerBlackFlag": null,
+   "componentNameEn": null,
+   "componentSpecificationEn": "SMD-4P,12.5x12.5mm",
+   "describe": "22uH 4A 50.3m\u03a9 7.57A \u00b120% SMD-4P,12.5x12.5mm Power Inductors ROHS",
+   "attributes": [
+    {
+     "attribute_name_en": "Current - Saturation(Isat)",
+     "attribute_value_name": "7.57A"
+    },
+    {
+     "attribute_name_en": "Inductance",
+     "attribute_value_name": "22uH"
+    },
+    {
+     "attribute_name_en": "Tolerance",
+     "attribute_value_name": "\u00b120%"
+    },
+    {
+     "attribute_name_en": "Current Rating",
+     "attribute_value_name": "4A"
+    },
+    {
+     "attribute_name_en": "DC Resistance(DCR)",
+     "attribute_value_name": "50.3m\u03a9"
+    }
+   ],
+   "rankScore": null,
+   "firstSortName": "Power Inductors",
+   "secondSortName": "Inductors, Coils, Chokes",
+   "componentBrandHigh": null,
+   "remarkHigh": null,
+   "componentModelHigh": "<span class='lucene_highlight_class'>SRF1280</span>-220M",
+   "componentCodeHigh": null,
+   "componentSpecificationHigh": null,
+   "rohsFlag": 1,
+   "shopShowPriceFlag": true,
+   "shopShowForeignPriceFlag": true,
+   "shopRealPriceFlag": true,
+   "assemblyComponentFlag": false,
+   "rohsFileId": null,
+   "rohsUrl": null
+  },
+  {
+   "componentId": 6863253,
+   "componentLibraryType": "expand",
+   "stockCount": 30,
+   "componentTypeEn": "Power Inductors",
+   "erpComponentName": "1uH \u00b130% 40A",
+   "componentSource": "shop",
+   "lcscGoodsUrl": "https://www.lcsc.com/product-detail/power-inductors_bourns-srf1280-1r0y_C5925989.html",
+   "componentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 1.7539
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 1.7165
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 1.6906
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 101,
+     "productPrice": 1.6662
+    },
+    {
+     "startNumber": 102,
+     "endNumber": 103,
+     "productPrice": 1.6662
+    },
+    {
+     "startNumber": 104,
+     "endNumber": -1,
+     "productPrice": 1.6662
+    }
+   ],
+   "buyComponentPrices": [
+    {
+     "startNumber": 102,
+     "endNumber": 103,
+     "productPrice": 1.6051
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 101,
+     "productPrice": 1.6051
+    },
+    {
+     "startNumber": 104,
+     "endNumber": -1,
+     "productPrice": 1.6051
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 1.6536
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 1.6285
+    },
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 1.6895
+    }
+   ],
+   "firstSortAccessId": "85c6b138230a4e15a2194c0849a3d6ae",
+   "secondSortAccessId": "b3e40b0323bb4714b4f411a802fab96e",
+   "canPresaleNumber": 30,
+   "componentProductType": 0,
+   "mergedComponentCode": null,
+   "urlSuffix": "BOURNS-SRF12801R0Y/C5925989",
+   "leastPatchNumber": 0,
+   "lossNumber": 0,
+   "isBuyComponent": "1",
+   "noBuyReason": null,
+   "componentAlternativesCode": null,
+   "replaceUrlSuffix": null,
+   "preferredComponentFlag": false,
+   "allowPostFlag": true,
+   "score": null,
+   "idleFlag": null,
+   "estimateDate": null,
+   "fullReelPrice": null,
+   "encapsulationNumber": 400,
+   "shopCostPrice": 8.1111,
+   "preMinPurchaseNum": 6,
+   "minPurchaseNum": 1,
+   "initialPrice": 1.7539,
+   "componentCode": "C5925989",
+   "componentBrandEn": "BOURNS",
+   "componentModelEn": "SRF1280-1R0Y",
+   "componentImageUrl": "",
+   "productBigImageAccessId": "8769930992335773696",
+   "productBigImageAccessIdUrl": null,
+   "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2404171055_BOURNS-SRF1280-1R0Y_C5925989.pdf",
+   "dataManualFileAccessId": "8602693420805222400",
+   "dataManualFileAccessIdUrl": null,
+   "dataManualOfficialLink": "",
+   "componentName": "BOURNS SRF1280-1R0Y",
+   "minImage": "",
+   "minImageAccessId": "8769930993321299968",
+   "minImageAccessIdUrl": null,
+   "imageList": [
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    }
+   ],
+   "manufacturerBlackFlag": null,
+   "componentNameEn": null,
+   "componentSpecificationEn": "SMD-4P,12.5x12.5mm",
+   "describe": "15.5A 1uH 40A 6.7m\u03a9 \u00b130% SMD-4P,12.5x12.5mm Power Inductors ROHS",
+   "attributes": [
+    {
+     "attribute_name_en": "Inductance",
+     "attribute_value_name": "1uH"
+    },
+    {
+     "attribute_name_en": "Current - Saturation(Isat)",
+     "attribute_value_name": "40A"
+    },
+    {
+     "attribute_name_en": "Tolerance",
+     "attribute_value_name": "\u00b130%"
+    },
+    {
+     "attribute_name_en": "Current Rating",
+     "attribute_value_name": "15.5A"
+    },
+    {
+     "attribute_name_en": "DC Resistance(DCR)",
+     "attribute_value_name": "6.7m\u03a9"
+    }
+   ],
+   "rankScore": null,
+   "firstSortName": "Power Inductors",
+   "secondSortName": "Inductors, Coils, Chokes",
+   "componentBrandHigh": null,
+   "remarkHigh": null,
+   "componentModelHigh": "<span class='lucene_highlight_class'>SRF1280</span>-1R0Y",
+   "componentCodeHigh": null,
+   "componentSpecificationHigh": null,
+   "rohsFlag": 1,
+   "shopShowPriceFlag": true,
+   "shopShowForeignPriceFlag": true,
+   "shopRealPriceFlag": true,
+   "assemblyComponentFlag": false,
+   "rohsFileId": null,
+   "rohsUrl": null
+  },
+  {
+   "componentId": 7983187,
+   "componentLibraryType": "expand",
+   "stockCount": 22,
+   "componentTypeEn": "Power Inductors",
+   "erpComponentName": "1.5uH \u00b130% 31.1A",
+   "componentSource": "shop",
+   "lcscGoodsUrl": "https://www.lcsc.com/product-detail/power-inductors_bourns-srf1280-1r5y_C7016897.html",
+   "componentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 2.2232
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 2.168
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 2.1306
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 101,
+     "productPrice": 2.0949
+    },
+    {
+     "startNumber": 102,
+     "endNumber": 103,
+     "productPrice": 2.0949
+    },
+    {
+     "startNumber": 104,
+     "endNumber": -1,
+     "productPrice": 2.0949
+    }
+   ],
+   "buyComponentPrices": [
+    {
+     "startNumber": 102,
+     "endNumber": 103,
+     "productPrice": 2.018
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 101,
+     "productPrice": 2.018
+    },
+    {
+     "startNumber": 104,
+     "endNumber": -1,
+     "productPrice": 2.018
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 2.0884
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 2.0525
+    },
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 2.1416
+    }
+   ],
+   "firstSortAccessId": "85c6b138230a4e15a2194c0849a3d6ae",
+   "secondSortAccessId": "b3e40b0323bb4714b4f411a802fab96e",
+   "canPresaleNumber": 22,
+   "componentProductType": 0,
+   "mergedComponentCode": null,
+   "urlSuffix": "BOURNS-SRF12801R5Y/C7016897",
+   "leastPatchNumber": 0,
+   "lossNumber": 0,
+   "isBuyComponent": "1",
+   "noBuyReason": null,
+   "componentAlternativesCode": null,
+   "replaceUrlSuffix": null,
+   "preferredComponentFlag": false,
+   "allowPostFlag": true,
+   "score": null,
+   "idleFlag": null,
+   "estimateDate": null,
+   "fullReelPrice": null,
+   "encapsulationNumber": 400,
+   "shopCostPrice": 11.7209,
+   "preMinPurchaseNum": 5,
+   "minPurchaseNum": 1,
+   "initialPrice": 2.2232,
+   "componentCode": "C7016897",
+   "componentBrandEn": "BOURNS",
+   "componentModelEn": "SRF1280-1R5Y",
+   "componentImageUrl": "",
+   "productBigImageAccessId": "8764843326619303936",
+   "productBigImageAccessIdUrl": null,
+   "dataManualUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2410010001_BOURNS-SRF1280-1R5Y_C7016897.pdf",
+   "dataManualFileAccessId": "8552821970442858496",
+   "dataManualFileAccessIdUrl": null,
+   "dataManualOfficialLink": "",
+   "componentName": "BOURNS SRF1280-1R5Y",
+   "minImage": "",
+   "minImageAccessId": "8764843327680598016",
+   "minImageAccessIdUrl": null,
+   "imageList": [
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    }
+   ],
+   "manufacturerBlackFlag": null,
+   "componentNameEn": null,
+   "componentSpecificationEn": "SMD-4P,12.5x12.5mm",
+   "describe": "1.5uH 13.5A 31.1A 7.6m\u03a9 \u00b130% SMD-4P,12.5x12.5mm Power Inductors ROHS",
+   "attributes": [
+    {
+     "attribute_name_en": "Current - Saturation(Isat)",
+     "attribute_value_name": "31.1A"
+    },
+    {
+     "attribute_name_en": "Inductance",
+     "attribute_value_name": "1.5uH"
+    },
+    {
+     "attribute_name_en": "Tolerance",
+     "attribute_value_name": "\u00b130%"
+    },
+    {
+     "attribute_name_en": "Current Rating",
+     "attribute_value_name": "13.5A"
+    },
+    {
+     "attribute_name_en": "DC Resistance(DCR)",
+     "attribute_value_name": "7.6m\u03a9"
+    }
+   ],
+   "rankScore": null,
+   "firstSortName": "Power Inductors",
+   "secondSortName": "Inductors, Coils, Chokes",
+   "componentBrandHigh": null,
+   "remarkHigh": null,
+   "componentModelHigh": "<span class='lucene_highlight_class'>SRF1280</span>-1R5Y",
+   "componentCodeHigh": null,
+   "componentSpecificationHigh": null,
+   "rohsFlag": 1,
+   "shopShowPriceFlag": true,
+   "shopShowForeignPriceFlag": true,
+   "shopRealPriceFlag": true,
+   "assemblyComponentFlag": false,
+   "rohsFileId": null,
+   "rohsUrl": null
+  },
+  {
+   "componentId": 7983191,
+   "componentLibraryType": "expand",
+   "stockCount": 85,
+   "componentTypeEn": "Power Inductors",
+   "erpComponentName": "68uH \u00b120% 4.44A",
+   "componentSource": "shop",
+   "lcscGoodsUrl": "https://www.lcsc.com/product-detail/power-inductors_bourns-srf1280-680m_C7016901.html",
+   "componentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 2.7526
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 2.3531
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 2.103
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 399,
+     "productPrice": 1.8465
+    },
+    {
+     "startNumber": 400,
+     "endNumber": 799,
+     "productPrice": 1.7295
+    },
+    {
+     "startNumber": 800,
+     "endNumber": -1,
+     "productPrice": 1.6792
+    }
+   ],
+   "buyComponentPrices": [
+    {
+     "startNumber": 400,
+     "endNumber": 799,
+     "productPrice": 1.6661
+    },
+    {
+     "startNumber": 800,
+     "endNumber": -1,
+     "productPrice": 1.6176
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 399,
+     "productPrice": 1.7787
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 2.2668
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 2.0259
+    },
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 2.6516
+    }
+   ],
+   "firstSortAccessId": "85c6b138230a4e15a2194c0849a3d6ae",
+   "secondSortAccessId": "b3e40b0323bb4714b4f411a802fab96e",
+   "canPresaleNumber": 85,
+   "componentProductType": 0,
+   "mergedComponentCode": null,
+   "urlSuffix": "BOURNS-SRF1280680M/C7016901",
+   "leastPatchNumber": 0,
+   "lossNumber": 0,
+   "isBuyComponent": "1",
+   "noBuyReason": null,
+   "componentAlternativesCode": null,
+   "replaceUrlSuffix": null,
+   "preferredComponentFlag": false,
+   "allowPostFlag": true,
+   "score": null,
+   "idleFlag": null,
+   "estimateDate": null,
+   "fullReelPrice": null,
+   "encapsulationNumber": 400,
+   "shopCostPrice": 8.1794,
+   "preMinPurchaseNum": 4,
+   "minPurchaseNum": 1,
+   "initialPrice": 2.7526,
+   "componentCode": "C7016901",
+   "componentBrandEn": "BOURNS",
+   "componentModelEn": "SRF1280-680M",
+   "componentImageUrl": "",
+   "productBigImageAccessId": "8766675503766364160",
+   "productBigImageAccessIdUrl": null,
+   "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2404231338_BOURNS-SRF1280-680M_C7016901.pdf",
+   "dataManualFileAccessId": "8590904592593076224",
+   "dataManualFileAccessIdUrl": null,
+   "dataManualOfficialLink": "",
+   "componentName": "BOURNS SRF1280-680M",
+   "minImage": "",
+   "minImageAccessId": "8766675504856342528",
+   "minImageAccessIdUrl": null,
+   "imageList": [
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    }
+   ],
+   "manufacturerBlackFlag": null,
+   "componentNameEn": null,
+   "componentSpecificationEn": "SMD-4P,12.5x12.5mm",
+   "describe": "123m\u03a9 2.44A 4.44A 68uH \u00b120% SMD-4P,12.5x12.5mm Power Inductors ROHS",
+   "attributes": [
+    {
+     "attribute_name_en": "Current - Saturation(Isat)",
+     "attribute_value_name": "4.44A"
+    },
+    {
+     "attribute_name_en": "Inductance",
+     "attribute_value_name": "68uH"
+    },
+    {
+     "attribute_name_en": "Tolerance",
+     "attribute_value_name": "\u00b120%"
+    },
+    {
+     "attribute_name_en": "Current Rating",
+     "attribute_value_name": "2.44A"
+    },
+    {
+     "attribute_name_en": "DC Resistance(DCR)",
+     "attribute_value_name": "123m\u03a9"
+    }
+   ],
+   "rankScore": null,
+   "firstSortName": "Power Inductors",
+   "secondSortName": "Inductors, Coils, Chokes",
+   "componentBrandHigh": null,
+   "remarkHigh": null,
+   "componentModelHigh": "<span class='lucene_highlight_class'>SRF1280</span>-680M",
+   "componentCodeHigh": null,
+   "componentSpecificationHigh": null,
+   "rohsFlag": 1,
+   "shopShowPriceFlag": true,
+   "shopShowForeignPriceFlag": true,
+   "shopRealPriceFlag": true,
+   "assemblyComponentFlag": false,
+   "rohsFileId": null,
+   "rohsUrl": null
+  },
+  {
+   "componentId": 3836384,
+   "componentLibraryType": "expand",
+   "stockCount": 0,
+   "componentTypeEn": "Power Inductors",
+   "erpComponentName": "100uH \u00b120% 3.64A",
+   "componentSource": "shop",
+   "lcscGoodsUrl": "https://www.lcsc.com/product-detail/power-inductors_bourns-srf1280-101m_C3273487.html",
+   "componentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 2.8095
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 2.384
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 2.1193
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 399,
+     "productPrice": 1.8465
+    },
+    {
+     "startNumber": 400,
+     "endNumber": 799,
+     "productPrice": 1.723
+    },
+    {
+     "startNumber": 800,
+     "endNumber": -1,
+     "productPrice": 1.6695
+    }
+   ],
+   "buyComponentPrices": [
+    {
+     "startNumber": 400,
+     "endNumber": 799,
+     "productPrice": 1.6598
+    },
+    {
+     "startNumber": 800,
+     "endNumber": -1,
+     "productPrice": 1.6082
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 399,
+     "productPrice": 1.7787
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 2.2965
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 2.0415
+    },
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 2.7064
+    }
+   ],
+   "firstSortAccessId": "85c6b138230a4e15a2194c0849a3d6ae",
+   "secondSortAccessId": "b3e40b0323bb4714b4f411a802fab96e",
+   "canPresaleNumber": -4,
+   "componentProductType": 0,
+   "mergedComponentCode": null,
+   "urlSuffix": "BOURNS-SRF1280101M/C3273487",
+   "leastPatchNumber": 0,
+   "lossNumber": 0,
+   "isBuyComponent": "1",
+   "noBuyReason": null,
+   "componentAlternativesCode": null,
+   "replaceUrlSuffix": null,
+   "preferredComponentFlag": false,
+   "allowPostFlag": true,
+   "score": null,
+   "idleFlag": null,
+   "estimateDate": null,
+   "fullReelPrice": null,
+   "encapsulationNumber": 400,
+   "shopCostPrice": 8.6892,
+   "preMinPurchaseNum": 4,
+   "minPurchaseNum": 4,
+   "initialPrice": 2.8095,
+   "componentCode": "C3273487",
+   "componentBrandEn": "BOURNS",
+   "componentModelEn": "SRF1280-101M",
+   "componentImageUrl": "",
+   "productBigImageAccessId": "8585129518285115392",
+   "productBigImageAccessIdUrl": null,
+   "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2404031011_BOURNS-SRF1280-101M_C3273487.pdf",
+   "dataManualFileAccessId": "8590413301990924288",
+   "dataManualFileAccessIdUrl": null,
+   "dataManualOfficialLink": "",
+   "componentName": "BOURNS SRF1280-101M",
+   "minImage": "",
+   "minImageAccessId": "8585129519183507456",
+   "minImageAccessIdUrl": null,
+   "imageList": [
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    }
+   ],
+   "manufacturerBlackFlag": null,
+   "componentNameEn": null,
+   "componentSpecificationEn": "SMD-4P,12.5x12.5mm",
+   "describe": "1.96A 100uH 175m\u03a9 3.64A \u00b120% SMD-4P,12.5x12.5mm Power Inductors ROHS",
+   "attributes": [
+    {
+     "attribute_name_en": "Current - Saturation(Isat)",
+     "attribute_value_name": "3.64A"
+    },
+    {
+     "attribute_name_en": "Inductance",
+     "attribute_value_name": "100uH"
+    },
+    {
+     "attribute_name_en": "Tolerance",
+     "attribute_value_name": "\u00b120%"
+    },
+    {
+     "attribute_name_en": "Current Rating",
+     "attribute_value_name": "1.96A"
+    },
+    {
+     "attribute_name_en": "DC Resistance(DCR)",
+     "attribute_value_name": "175m\u03a9"
+    }
+   ],
+   "rankScore": null,
+   "firstSortName": "Power Inductors",
+   "secondSortName": "Inductors, Coils, Chokes",
+   "componentBrandHigh": null,
+   "remarkHigh": null,
+   "componentModelHigh": "<span class='lucene_highlight_class'>SRF1280</span>-101M",
+   "componentCodeHigh": null,
+   "componentSpecificationHigh": null,
+   "rohsFlag": 1,
+   "shopShowPriceFlag": true,
+   "shopShowForeignPriceFlag": true,
+   "shopRealPriceFlag": true,
+   "assemblyComponentFlag": false,
+   "rohsFileId": null,
+   "rohsUrl": null
+  },
+  {
+   "componentId": 3836422,
+   "componentLibraryType": "expand",
+   "stockCount": 0,
+   "componentTypeEn": "Power Inductors",
+   "erpComponentName": "10uH \u00b120% 11.2A",
+   "componentSource": "shop",
+   "lcscGoodsUrl": "https://www.lcsc.com/product-detail/power-inductors_bourns-srf1280-100m_C3273525.html",
+   "componentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 1.3187
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 1.2878
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 1.2667
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 101,
+     "productPrice": 1.2456
+    },
+    {
+     "startNumber": 102,
+     "endNumber": 103,
+     "productPrice": 1.2456
+    },
+    {
+     "startNumber": 104,
+     "endNumber": -1,
+     "productPrice": 1.2456
+    }
+   ],
+   "buyComponentPrices": [
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 1.2202
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 1.2406
+    },
+    {
+     "startNumber": 104,
+     "endNumber": -1,
+     "productPrice": 1.1999
+    },
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 1.2703
+    },
+    {
+     "startNumber": 102,
+     "endNumber": 103,
+     "productPrice": 1.1999
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 101,
+     "productPrice": 1.1999
+    }
+   ],
+   "firstSortAccessId": "85c6b138230a4e15a2194c0849a3d6ae",
+   "secondSortAccessId": "b3e40b0323bb4714b4f411a802fab96e",
+   "canPresaleNumber": -13,
+   "componentProductType": 0,
+   "mergedComponentCode": null,
+   "urlSuffix": "BOURNS-SRF1280100M/C3273525",
+   "leastPatchNumber": 0,
+   "lossNumber": 0,
+   "isBuyComponent": "1",
+   "noBuyReason": null,
+   "componentAlternativesCode": null,
+   "replaceUrlSuffix": null,
+   "preferredComponentFlag": false,
+   "allowPostFlag": true,
+   "score": null,
+   "idleFlag": null,
+   "estimateDate": null,
+   "fullReelPrice": null,
+   "encapsulationNumber": 400,
+   "shopCostPrice": 6.8177,
+   "preMinPurchaseNum": 7,
+   "minPurchaseNum": 7,
+   "initialPrice": 1.3187,
+   "componentCode": "C3273525",
+   "componentBrandEn": "BOURNS",
+   "componentModelEn": "SRF1280-100M",
+   "componentImageUrl": "",
+   "productBigImageAccessId": "8584844812419391488",
+   "productBigImageAccessIdUrl": null,
+   "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2404031011_BOURNS-SRF1280-100M_C3273525.pdf",
+   "dataManualFileAccessId": "8590236725801738240",
+   "dataManualFileAccessIdUrl": null,
+   "dataManualOfficialLink": "",
+   "componentName": "BOURNS SRF1280-100M",
+   "minImage": "",
+   "minImageAccessId": "8584844813338619904",
+   "minImageAccessIdUrl": null,
+   "imageList": [
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    }
+   ],
+   "manufacturerBlackFlag": null,
+   "componentNameEn": null,
+   "componentSpecificationEn": "SMD-4P,12.5x12.5mm",
+   "describe": "10uH 11.2A 24.1m\u03a9 6.04A \u00b120% SMD-4P,12.5x12.5mm Power Inductors ROHS",
+   "attributes": [
+    {
+     "attribute_name_en": "Current - Saturation(Isat)",
+     "attribute_value_name": "11.2A"
+    },
+    {
+     "attribute_name_en": "Inductance",
+     "attribute_value_name": "10uH"
+    },
+    {
+     "attribute_name_en": "Current Rating",
+     "attribute_value_name": "6.04A"
+    },
+    {
+     "attribute_name_en": "Tolerance",
+     "attribute_value_name": "\u00b120%"
+    },
+    {
+     "attribute_name_en": "DC Resistance(DCR)",
+     "attribute_value_name": "24.1m\u03a9"
+    }
+   ],
+   "rankScore": null,
+   "firstSortName": "Power Inductors",
+   "secondSortName": "Inductors, Coils, Chokes",
+   "componentBrandHigh": null,
+   "remarkHigh": null,
+   "componentModelHigh": "<span class='lucene_highlight_class'>SRF1280</span>-100M",
+   "componentCodeHigh": null,
+   "componentSpecificationHigh": null,
+   "rohsFlag": 1,
+   "shopShowPriceFlag": true,
+   "shopShowForeignPriceFlag": true,
+   "shopRealPriceFlag": true,
+   "assemblyComponentFlag": false,
+   "rohsFileId": null,
+   "rohsUrl": null
+  },
+  {
+   "componentId": 3836440,
+   "componentLibraryType": "expand",
+   "stockCount": 0,
+   "componentTypeEn": "Power Inductors",
+   "erpComponentName": "33uH \u00b120% 6.22A",
+   "componentSource": "shop",
+   "lcscGoodsUrl": "https://www.lcsc.com/product-detail/power-inductors_bourns-srf1280-330m_C3273543.html",
+   "componentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 1.3024
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 1.2732
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 1.2537
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 101,
+     "productPrice": 1.2326
+    },
+    {
+     "startNumber": 102,
+     "endNumber": 103,
+     "productPrice": 1.2326
+    },
+    {
+     "startNumber": 104,
+     "endNumber": -1,
+     "productPrice": 1.2326
+    }
+   ],
+   "buyComponentPrices": [
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 1.2077
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 1.2265
+    },
+    {
+     "startNumber": 104,
+     "endNumber": -1,
+     "productPrice": 1.1874
+    },
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 1.2546
+    },
+    {
+     "startNumber": 102,
+     "endNumber": 103,
+     "productPrice": 1.1874
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 101,
+     "productPrice": 1.1874
+    }
+   ],
+   "firstSortAccessId": "85c6b138230a4e15a2194c0849a3d6ae",
+   "secondSortAccessId": "b3e40b0323bb4714b4f411a802fab96e",
+   "canPresaleNumber": 0,
+   "componentProductType": 0,
+   "mergedComponentCode": "",
+   "urlSuffix": "BOURNS-SRF1280330M/C3273543",
+   "leastPatchNumber": 0,
+   "lossNumber": 0,
+   "isBuyComponent": "1",
+   "noBuyReason": null,
+   "componentAlternativesCode": "",
+   "replaceUrlSuffix": null,
+   "preferredComponentFlag": false,
+   "allowPostFlag": true,
+   "score": null,
+   "idleFlag": null,
+   "estimateDate": null,
+   "fullReelPrice": null,
+   "encapsulationNumber": 400,
+   "shopCostPrice": 4.9,
+   "preMinPurchaseNum": 7,
+   "minPurchaseNum": 7,
+   "initialPrice": 1.3024,
+   "componentCode": "C3273543",
+   "componentBrandEn": "BOURNS",
+   "componentModelEn": "SRF1280-330M",
+   "componentImageUrl": "",
+   "productBigImageAccessId": "8583670361124163584",
+   "productBigImageAccessIdUrl": null,
+   "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2305221629_BOURNS-SRF1280-330M_C3273543.pdf",
+   "dataManualFileAccessId": "8589785215028654080",
+   "dataManualFileAccessIdUrl": null,
+   "dataManualOfficialLink": "",
+   "componentName": "BOURNS SRF1280-330M",
+   "minImage": "",
+   "minImageAccessId": "8583670362114154496",
+   "minImageAccessIdUrl": null,
+   "imageList": [
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    },
+    {
+     "productImage": null,
+     "productImageAccessId": null,
+     "productBigImage": null,
+     "productBigImageAccessId": null,
+     "fileType": null
+    }
+   ],
+   "manufacturerBlackFlag": null,
+   "componentNameEn": null,
+   "componentSpecificationEn": "SMD-4P,12.5x12.5mm",
+   "describe": "3.23A 33uH 6.22A 66.4m\u03a9 \u00b120% SMD-4P,12.5x12.5mm Power Inductors ROHS",
+   "attributes": [
+    {
+     "attribute_name_en": "Current - Saturation(Isat)",
+     "attribute_value_name": "6.22A"
+    },
+    {
+     "attribute_name_en": "Inductance",
+     "attribute_value_name": "33uH"
+    },
+    {
+     "attribute_name_en": "Tolerance",
+     "attribute_value_name": "\u00b120%"
+    },
+    {
+     "attribute_name_en": "Current Rating",
+     "attribute_value_name": "3.23A"
+    },
+    {
+     "attribute_name_en": "DC Resistance(DCR)",
+     "attribute_value_name": "66.4m\u03a9"
+    }
+   ],
+   "rankScore": null,
+   "firstSortName": "Power Inductors",
+   "secondSortName": "Inductors, Coils, Chokes",
+   "componentBrandHigh": null,
+   "remarkHigh": null,
+   "componentModelHigh": "<span class='lucene_highlight_class'>SRF1280</span>-330M",
+   "componentCodeHigh": null,
+   "componentSpecificationHigh": null,
+   "rohsFlag": 1,
+   "shopShowPriceFlag": true,
+   "shopShowForeignPriceFlag": true,
+   "shopRealPriceFlag": true,
+   "assemblyComponentFlag": false,
+   "rohsFileId": null,
+   "rohsUrl": null
+  },
+  {
+   "componentId": 3836442,
+   "componentLibraryType": "expand",
+   "stockCount": 0,
+   "componentTypeEn": "Power Inductors",
+   "erpComponentName": "4.7uH \u00b130% 16.5A",
+   "componentSource": "shop",
+   "lcscGoodsUrl": "https://www.lcsc.com/product-detail/power-inductors_bourns-srf1280-4r7y_C3273545.html",
+   "componentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 1.3544
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 11,
+     "productPrice": 1.3544
+    },
+    {
+     "startNumber": 12,
+     "endNumber": 199,
+     "productPrice": 1.3544
+    },
+    {
+     "startNumber": 200,
+     "endNumber": 399,
+     "productPrice": 0.5246
+    },
+    {
+     "startNumber": 400,
+     "endNumber": 799,
+     "productPrice": 0.5067
+    },
+    {
+     "startNumber": 800,
+     "endNumber": -1,
+     "productPrice": 0.497
+    }
+   ],
+   "buyComponentPrices": [
+    {
+     "startNumber": 12,
+     "endNumber": 199,
+     "productPrice": 1.3047
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 11,
+     "productPrice": 1.3047
+    },
+    {
+     "startNumber": 200,
+     "endNumber": 399,
+     "productPrice": 0.5053
+    },
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 1.3047
+    },
+    {
+     "startNumber": 400,
+     "endNumber": 799,
+     "productPrice": 0.4881
+    },
+    {
+     "startNumber": 800,
+     "endNumber": -1,
+     "productPrice": 0.4787
+    }
+   ],
+   "firstSortAccessId": "85c6b138230a4e15a2194c0849a3d6ae",
+   "secondSortAccessId": "b3e40b0323bb4714b4f411a802fab96e",
+   "canPresaleNumber": 0,
+   "componentProductType": 0,
+   "mergedComponentCode": null,
+   "urlSuffix": "BOURNS-SRF12804R7Y/C3273545",
+   "leastPatchNumber": 0,
+   "lossNumber": 0,
+   "isBuyComponent": "1",
+   "noBuyReason": null,
+   "componentAlternativesCode": null,
+   "replaceUrlSuffix": null,
+   "preferredComponentFlag": false,
+   "allowPostFlag": true,
+   "score": null,
+   "idleFlag": null,
+   "estimateDate": null,
+   "fullReelPrice": null,
+   "encapsulationNumber": 400,
+   "shopCostPrice": 0.0,
+   "preMinPurchaseNum": 7,
+   "minPurchaseNum": 7,
+   "initialPrice": 1.3544,
+   "componentCode": "C3273545",
+   "componentBrandEn": "BOURNS",
+   "componentModelEn": "SRF1280-4R7Y",
+   "componentImageUrl": null,
+   "productBigImageAccessId": null,
+   "productBigImageAccessIdUrl": null,
+   "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2404031011_BOURNS-SRF1280-4R7Y_C3273545.pdf",
+   "dataManualFileAccessId": "8590252011384958977",
+   "dataManualFileAccessIdUrl": null,
+   "dataManualOfficialLink": "",
+   "componentName": "BOURNS SRF1280-4R7Y",
+   "minImage": null,
+   "minImageAccessId": null,
+   "minImageAccessIdUrl": null,
+   "imageList": null,
+   "manufacturerBlackFlag": null,
+   "componentNameEn": null,
+   "componentSpecificationEn": "SMD-4P,12.5x12.5mm",
+   "describe": "13.5m\u03a9 16.5A 4.7uH 8.25A \u00b130% SMD-4P,12.5x12.5mm Power Inductors ROHS",
+   "attributes": [
+    {
+     "attribute_name_en": "Current - Saturation(Isat)",
+     "attribute_value_name": "16.5A"
+    },
+    {
+     "attribute_name_en": "Inductance",
+     "attribute_value_name": "4.7uH"
+    },
+    {
+     "attribute_name_en": "Tolerance",
+     "attribute_value_name": "\u00b130%"
+    },
+    {
+     "attribute_name_en": "Current Rating",
+     "attribute_value_name": "8.25A"
+    },
+    {
+     "attribute_name_en": "DC Resistance(DCR)",
+     "attribute_value_name": "13.5m\u03a9"
+    }
+   ],
+   "rankScore": null,
+   "firstSortName": "Power Inductors",
+   "secondSortName": "Inductors, Coils, Chokes",
+   "componentBrandHigh": null,
+   "remarkHigh": null,
+   "componentModelHigh": "<span class='lucene_highlight_class'>SRF1280</span>-4R7Y",
+   "componentCodeHigh": null,
+   "componentSpecificationHigh": null,
+   "rohsFlag": 1,
+   "shopShowPriceFlag": true,
+   "shopShowForeignPriceFlag": true,
+   "shopRealPriceFlag": true,
+   "assemblyComponentFlag": false,
+   "rohsFileId": null,
+   "rohsUrl": null
+  },
+  {
+   "componentId": 5842588,
+   "componentLibraryType": "expand",
+   "stockCount": 0,
+   "componentTypeEn": "Power Inductors",
+   "erpComponentName": "\u00b120%",
+   "componentSource": "shop",
+   "lcscGoodsUrl": null,
+   "componentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 2.0754
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 2.0754
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 199,
+     "productPrice": 2.0754
+    },
+    {
+     "startNumber": 200,
+     "endNumber": 499,
+     "productPrice": 0.8039
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 999,
+     "productPrice": 0.7763
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": -1,
+     "productPrice": 0.7617
+    }
+   ],
+   "buyComponentPrices": [
+    {
+     "startNumber": 200,
+     "endNumber": 499,
+     "productPrice": 0.7744
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": -1,
+     "productPrice": 0.7337
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 199,
+     "productPrice": 1.9993
+    },
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 1.9993
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 999,
+     "productPrice": 0.7478
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 1.9993
+    }
+   ],
+   "firstSortAccessId": null,
+   "secondSortAccessId": null,
+   "canPresaleNumber": 0,
+   "componentProductType": 0,
+   "mergedComponentCode": "",
+   "urlSuffix": "BOURNS-SRF1280150M/C5182199",
+   "leastPatchNumber": 0,
+   "lossNumber": 1,
+   "isBuyComponent": "1",
+   "noBuyReason": null,
+   "componentAlternativesCode": "",
+   "replaceUrlSuffix": null,
+   "preferredComponentFlag": false,
+   "allowPostFlag": true,
+   "score": null,
+   "idleFlag": null,
+   "estimateDate": null,
+   "fullReelPrice": null,
+   "encapsulationNumber": 4000,
+   "shopCostPrice": 0.1,
+   "preMinPurchaseNum": 5,
+   "minPurchaseNum": 5,
+   "initialPrice": 2.0754,
+   "componentCode": "C5182199",
+   "componentBrandEn": "BOURNS",
+   "componentModelEn": "SRF1280-150M",
+   "componentImageUrl": null,
+   "productBigImageAccessId": null,
+   "productBigImageAccessIdUrl": null,
+   "dataManualUrl": null,
+   "dataManualFileAccessId": "8589834840351801344",
+   "dataManualFileAccessIdUrl": null,
+   "dataManualOfficialLink": "",
+   "componentName": "BOURNS SRF1280-150M",
+   "minImage": null,
+   "minImageAccessId": null,
+   "minImageAccessIdUrl": null,
+   "imageList": null,
+   "manufacturerBlackFlag": null,
+   "componentNameEn": null,
+   "componentSpecificationEn": "SMD-4P,12.5x12.5mm",
+   "describe": "33.3m\u03a9 5.03A \u00b120% SMD-4P,12.5x12.5mm Power Inductors ROHS",
+   "attributes": [
+    {
+     "attribute_name_en": "Inductance",
+     "attribute_value_name": "-"
+    },
+    {
+     "attribute_name_en": "Tolerance",
+     "attribute_value_name": "\u00b120%"
+    },
+    {
+     "attribute_name_en": "Current Rating",
+     "attribute_value_name": "5.03A"
+    },
+    {
+     "attribute_name_en": "DC Resistance(DCR)",
+     "attribute_value_name": "33.3m\u03a9"
+    }
+   ],
+   "rankScore": null,
+   "firstSortName": "Power Inductors",
+   "secondSortName": "Inductors, Coils, Chokes",
+   "componentBrandHigh": null,
+   "remarkHigh": null,
+   "componentModelHigh": "<span class='lucene_highlight_class'>SRF1280</span>-150M",
+   "componentCodeHigh": null,
+   "componentSpecificationHigh": null,
+   "rohsFlag": 1,
+   "shopShowPriceFlag": true,
+   "shopShowForeignPriceFlag": true,
+   "shopRealPriceFlag": true,
+   "assemblyComponentFlag": false,
+   "rohsFileId": null,
+   "rohsUrl": null
+  },
+  {
+   "componentId": 6686282,
+   "componentLibraryType": "expand",
+   "stockCount": 0,
+   "componentTypeEn": "Power Inductors",
+   "erpComponentName": "470uH \u00b120% 1.68A",
+   "componentSource": "shop",
+   "lcscGoodsUrl": "https://www.lcsc.com/product-detail/power-inductors_bourns-srf1280-471m_C5760054.html",
+   "componentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 1.8936
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 11,
+     "productPrice": 1.8936
+    },
+    {
+     "startNumber": 12,
+     "endNumber": 199,
+     "productPrice": 1.8936
+    },
+    {
+     "startNumber": 200,
+     "endNumber": 399,
+     "productPrice": 0.7568
+    },
+    {
+     "startNumber": 400,
+     "endNumber": 799,
+     "productPrice": 0.7308
+    },
+    {
+     "startNumber": 800,
+     "endNumber": -1,
+     "productPrice": 0.7178
+    }
+   ],
+   "buyComponentPrices": [
+    {
+     "startNumber": 400,
+     "endNumber": 799,
+     "productPrice": 0.704
+    },
+    {
+     "startNumber": 800,
+     "endNumber": -1,
+     "productPrice": 0.6915
+    },
+    {
+     "startNumber": 200,
+     "endNumber": 399,
+     "productPrice": 0.729
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 11,
+     "productPrice": 1.8241
+    },
+    {
+     "startNumber": 12,
+     "endNumber": 199,
+     "productPrice": 1.8241
+    },
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 1.8241
+    }
+   ],
+   "firstSortAccessId": "85c6b138230a4e15a2194c0849a3d6ae",
+   "secondSortAccessId": "b3e40b0323bb4714b4f411a802fab96e",
+   "canPresaleNumber": 0,
+   "componentProductType": 0,
+   "mergedComponentCode": null,
+   "urlSuffix": "BOURNS-SRF1280471M/C5760054",
+   "leastPatchNumber": 0,
+   "lossNumber": 0,
+   "isBuyComponent": "1",
+   "noBuyReason": null,
+   "componentAlternativesCode": null,
+   "replaceUrlSuffix": null,
+   "preferredComponentFlag": false,
+   "allowPostFlag": true,
+   "score": null,
+   "idleFlag": null,
+   "estimateDate": null,
+   "fullReelPrice": null,
+   "encapsulationNumber": 400,
+   "shopCostPrice": 0.1,
+   "preMinPurchaseNum": 5,
+   "minPurchaseNum": 5,
+   "initialPrice": 1.8936,
+   "componentCode": "C5760054",
+   "componentBrandEn": "BOURNS",
+   "componentModelEn": "SRF1280-471M",
+   "componentImageUrl": null,
+   "productBigImageAccessId": null,
+   "productBigImageAccessIdUrl": null,
+   "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2404160949_BOURNS-SRF1280-471M_C5760054.pdf",
+   "dataManualFileAccessId": "8590906247166042112",
+   "dataManualFileAccessIdUrl": null,
+   "dataManualOfficialLink": "",
+   "componentName": "BOURNS SRF1280-471M",
+   "minImage": null,
+   "minImageAccessId": null,
+   "minImageAccessIdUrl": null,
+   "imageList": null,
+   "manufacturerBlackFlag": null,
+   "componentNameEn": null,
+   "componentSpecificationEn": "SMD-4P,12.5x12.5mm",
+   "describe": "1.68A 470uH 850mA 865m\u03a9 \u00b120% SMD-4P,12.5x12.5mm Power Inductors ROHS",
+   "attributes": [
+    {
+     "attribute_name_en": "Current - Saturation(Isat)",
+     "attribute_value_name": "1.68A"
+    },
+    {
+     "attribute_name_en": "Inductance",
+     "attribute_value_name": "470uH"
+    },
+    {
+     "attribute_name_en": "Tolerance",
+     "attribute_value_name": "\u00b120%"
+    },
+    {
+     "attribute_name_en": "Current Rating",
+     "attribute_value_name": "850mA"
+    },
+    {
+     "attribute_name_en": "DC Resistance(DCR)",
+     "attribute_value_name": "865m\u03a9"
+    }
+   ],
+   "rankScore": null,
+   "firstSortName": "Power Inductors",
+   "secondSortName": "Inductors, Coils, Chokes",
+   "componentBrandHigh": null,
+   "remarkHigh": null,
+   "componentModelHigh": "<span class='lucene_highlight_class'>SRF1280</span>-471M",
+   "componentCodeHigh": null,
+   "componentSpecificationHigh": null,
+   "rohsFlag": 1,
+   "shopShowPriceFlag": true,
+   "shopShowForeignPriceFlag": true,
+   "shopRealPriceFlag": true,
+   "assemblyComponentFlag": false,
+   "rohsFileId": null,
+   "rohsUrl": null
+  },
+  {
+   "componentId": 6843481,
+   "componentLibraryType": "expand",
+   "stockCount": 0,
+   "componentTypeEn": "Power Inductors",
+   "erpComponentName": "680uH \u00b120% 1.39A",
+   "componentSource": "shop",
+   "lcscGoodsUrl": "https://www.lcsc.com/product-detail/power-inductors_bourns-srf1280-681m_C5907338.html",
+   "componentPrices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 1.343
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 11,
+     "productPrice": 1.343
+    },
+    {
+     "startNumber": 12,
+     "endNumber": 199,
+     "productPrice": 1.343
+    },
+    {
+     "startNumber": 200,
+     "endNumber": 399,
+     "productPrice": 0.5359
+    },
+    {
+     "startNumber": 400,
+     "endNumber": 799,
+     "productPrice": 0.5181
+    },
+    {
+     "startNumber": 800,
+     "endNumber": -1,
+     "productPrice": 0.51
+    }
+   ],
+   "buyComponentPrices": [
+    {
+     "startNumber": 800,
+     "endNumber": -1,
+     "productPrice": 0.4913
+    },
+    {
+     "startNumber": 400,
+     "endNumber": 799,
+     "productPrice": 0.4991
+    },
+    {
+     "startNumber": 200,
+     "endNumber": 399,
+     "productPrice": 0.5163
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 11,
+     "productPrice": 1.2938
+    },
+    {
+     "startNumber": 12,
+     "endNumber": 199,
+     "productPrice": 1.2938
+    },
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 1.2938
+    }
+   ],
+   "firstSortAccessId": "85c6b138230a4e15a2194c0849a3d6ae",
+   "secondSortAccessId": "b3e40b0323bb4714b4f411a802fab96e",
+   "canPresaleNumber": 0,
+   "componentProductType": 0,
+   "mergedComponentCode": null,
+   "urlSuffix": "BOURNS-SRF1280681M/C5907338",
+   "leastPatchNumber": 0,
+   "lossNumber": 0,
+   "isBuyComponent": "1",
+   "noBuyReason": null,
+   "componentAlternativesCode": null,
+   "replaceUrlSuffix": null,
+   "preferredComponentFlag": false,
+   "allowPostFlag": true,
+   "score": null,
+   "idleFlag": null,
+   "estimateDate": null,
+   "fullReelPrice": null,
+   "encapsulationNumber": 400,
+   "shopCostPrice": 0.0,
+   "preMinPurchaseNum": 7,
+   "minPurchaseNum": 7,
+   "initialPrice": 1.343,
+   "componentCode": "C5907338",
+   "componentBrandEn": "BOURNS",
+   "componentModelEn": "SRF1280-681M",
+   "componentImageUrl": null,
+   "productBigImageAccessId": null,
+   "productBigImageAccessIdUrl": null,
+   "dataManualUrl": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2404171028_BOURNS-SRF1280-681M_C5907338.pdf",
+   "dataManualFileAccessId": "8602693293935374336",
+   "dataManualFileAccessIdUrl": null,
+   "dataManualOfficialLink": "",
+   "componentName": "BOURNS SRF1280-681M",
+   "minImage": null,
+   "minImageAccessId": null,
+   "minImageAccessIdUrl": null,
+   "imageList": null,
+   "manufacturerBlackFlag": null,
+   "componentNameEn": null,
+   "componentSpecificationEn": "SMD-4P,12.5x12.5mm",
+   "describe": "1.296\u03a9 1.39A 680uH 760mA \u00b120% SMD-4P,12.5x12.5mm Power Inductors ROHS",
+   "attributes": [
+    {
+     "attribute_name_en": "Current - Saturation(Isat)",
+     "attribute_value_name": "1.39A"
+    },
+    {
+     "attribute_name_en": "Inductance",
+     "attribute_value_name": "680uH"
+    },
+    {
+     "attribute_name_en": "Tolerance",
+     "attribute_value_name": "\u00b120%"
+    },
+    {
+     "attribute_name_en": "Current Rating",
+     "attribute_value_name": "760mA"
+    },
+    {
+     "attribute_name_en": "DC Resistance(DCR)",
+     "attribute_value_name": "1.296\u03a9"
+    }
+   ],
+   "rankScore": null,
+   "firstSortName": "Power Inductors",
+   "secondSortName": "Inductors, Coils, Chokes",
+   "componentBrandHigh": null,
+   "remarkHigh": null,
+   "componentModelHigh": "<span class='lucene_highlight_class'>SRF1280</span>-681M",
+   "componentCodeHigh": null,
+   "componentSpecificationHigh": null,
+   "rohsFlag": 1,
+   "shopShowPriceFlag": true,
+   "shopShowForeignPriceFlag": true,
+   "shopRealPriceFlag": true,
+   "assemblyComponentFlag": false,
+   "rohsFileId": null,
+   "rohsUrl": null
+  }
+ ]
+}

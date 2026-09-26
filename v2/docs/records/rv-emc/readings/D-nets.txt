@@ -1,0 +1,101 @@
+TX_INHIBIT_n (4 nodes):
+   J_HARN1.8 (Pin_8) | A22 mezzanine harness J_MEZZ1 (IDC 2x8): USB pair, PTT mirror, inhibit, PA rail state, I2C, 3.3 V
+   R2.1  | 100k
+   TP15.1 (1) | TX_INHIBIT_n
+   U12.2 (TX_INHIBIT_n) | 74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)
+KEY (8 nodes):
+   R49.1  | 1k
+   R84.1  | 10k
+   TP3.1 (1) | KEY
+   U12.4 (KEY) | 74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)
+   U13.2 (KEY) | 74LVC1G06 open-drain inverter (2 A 4 Y): KEY -> SA868 PTT (low = transmit; released = receive, held by R88 and R89)
+   U14.1 (KEY) | 74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state)
+   U18.2 (KEY) | 74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): KEY -> PTT_MIR, the one-way driver of the PTT mirror TR_APRS
+   U19.2 (KEY) | 74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): KEY read back into U16 IO0_3, one way (VCC the harness +3V3)
+SA_PTT_n (4 nodes):
+   R88.2  | 1.2k
+   R89.1  | 2k
+   U13.4 (SA_PTT_n) | 74LVC1G06 open-drain inverter (2 A 4 Y): KEY -> SA868 PTT (low = transmit; released = receive, held by R88 and R89)
+   U2.5 (PTT_n) | NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)
+PA_KEY (7 nodes):
+   R50.1  | 1k
+   R52.1  | 1k
+   R85.1  | 10k
+   TP4.1 (1) | PA_KEY
+   U14.4 (PA_KEY) | 74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state)
+   U15.4 (PA_KEY) | TLV75801PDRVR adjustable LDO, PA gate bias VGG 4.48 V while PA_KEY is high (1 OUT 2 FB 3 GND 4 EN 5 DNC 6 IN 7 pad)
+   U20.2 (PA_KEY) | 74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): PA_KEY read back into U16 IO0_4, one way (VCC the harness +3V3)
+PA_EN (5 nodes):
+   J_HARN1.9 (Pin_9) | A22 mezzanine harness J_MEZZ1 (IDC 2x8): USB pair, PTT mirror, inhibit, PA rail state, I2C, 3.3 V
+   Q1.1 (G) | 2N7002 PA_EN -> H/L low (never tie H/L high)
+   R3.1  | 100k
+   TP16.1 (1) | PA_EN
+   U14.2 (PA_EN) | 74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state)
+PTT_ANY (2 nodes):
+   U11.4 (PTT_ANY) | 74LVC1G04 inverter (2 A 4 Y): PTT_ANY
+   U12.1 (PTT_ANY) | 74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)
+PTT_MIR (2 nodes):
+   R48.1  | 220
+   U18.4 (PTT_MIR) | 74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): KEY -> PTT_MIR, the one-way driver of the PTT mirror TR_APRS
+X_KEY (2 nodes):
+   R86.1  | 1k
+   U16.7 (IO0_3) | PCA9555PW 0x26: COS, PTT states, KEY, PA_KEY in; exciter PD, amplifier EN, codec mute out; eight spares
+X_PA_KEY (2 nodes):
+   R87.1  | 1k
+   U16.8 (IO0_4) | PCA9555PW 0x26: COS, PTT states, KEY, PA_KEY in; exciter PD, amplifier EN, codec mute out; eight spares
+RLY_DRV (3 nodes):
+   Q2.1 (G) | 2N7002 relay coil
+   R52.2  | 1k
+   R53.1  | 100k
+VGG_SW (5 nodes):
+   C62.1  | 2.2u 16V X5R
+   J_VGG.1 (Pin_1) | JST-PH 1x2 socket: PA gate bias, VGG GND (the lead runs to the RA30H1317M1 VGG pin)
+   R82.1  | 71.5k 1%
+   TP7.1 (1) | VGG_SW
+   U15.1 (VGG_SW) | TLV75801PDRVR adjustable LDO, PA gate bias VGG 4.48 V while PA_KEY is high (1 OUT 2 FB 3 GND 4 EN 5 DNC 6 IN 7 pad)
+SA_PD (4 nodes):
+   Q8.2 (S) | 2N7002
+   R76.1  | 10k
+   TP14.1 (1) | SA_PD
+   U2.6 (PD) | NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)
++5V_SA (5 nodes):
+   C5.1  | 47u 6.3V X5R 1210
+   C6.1  | 100n
+   FB1.2  | 600R 2A ferrite (the exciter's 1 A transmit pulses)
+   R88.1  | 1.2k
+   U2.8 (VBAT) | NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)
++3V3_D8 (34 nodes):
+   C51.1  | 100n
+   C52.1  | 100n
+   C53.1  | 100n
+   C54.1  | 100n
+   C55.1  | 100n
+   C56.1  | 100n
+   C66.1  | 100n
+   C8.1  | 1u
+   C9.1  | 10u
+   Q3.1 (G) | 2N7002
+   Q4.1 (G) | 2N7002
+   Q5.1 (G) | 2N7002
+   Q8.1 (G) | 2N7002
+   Q9.1 (G) | 2N7002
+   R1.1  | 2.2k
+   R29.1  | 1k
+   R30.1  | 1k
+   R5.2  | 10k
+   R51.1  | 2.2k
+   R66.2  | 10k
+   R68.2  | 10k
+   R70.2  | 10k
+   R76.2  | 10k
+   R78.2  | 10k
+   TP5.1 (1) | +3V3_D8
+   U1.5 (+3V3_D8) | TLV75533PDBV 3.3 V 500 mA LDO (1 IN 2 GND 3 EN 4 NC 5 OUT)
+   U10.5 (+3V3_D8) | 74LVC1G08 AND: headsets AND software PTT (RTS)
+   U11.5 (+3V3_D8) | 74LVC1G04 inverter (2 A 4 Y): PTT_ANY
+   U12.5 (+3V3_D8) | 74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)
+   U13.5 (+3V3_D8) | 74LVC1G06 open-drain inverter (2 A 4 Y): KEY -> SA868 PTT (low = transmit; released = receive, held by R88 and R89)
+   U14.5 (+3V3_D8) | 74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state)
+   U18.5 (+3V3_D8) | 74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): KEY -> PTT_MIR, the one-way driver of the PTT mirror TR_APRS
+   U7.6 (G0) | TI TPA6132A2 headphone amplifier (QFN-16), receive audio to the two headset leads
+   U9.5 (+3V3_D8) | 74LVC1G08 AND (1 A 2 B 3 GND 4 Y 5 VCC): both headset PTT lines idle high
