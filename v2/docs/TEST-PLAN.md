@@ -4,7 +4,7 @@ Prototype design. This plan is written before the build and run on the built pro
 
 ## 1. Test articles and conditions
 
-- **Article:** one complete kit as specified in `V2-SPEC.md`: Peli 1450 with the face plate, the A22 to E6 board set, the built 4S pack pack, the Xenarc monitor, all radios and antennas fitted as for deployment, the lid tablet bracket loaded with a dummy mass.
+- **Article:** one complete kit as specified in `V2-SPEC.md`: Peli 1450 with the face plate, the A22 to E6 board set, the built 4S pack, the Xenarc monitor, all radios and antennas fitted as for deployment, the lid tablet bracket loaded with a dummy mass.
 - **States:** transit (closed, latched, antennas off, cables out, pack fitted), deployed (open, antennas on, cables in), stored (closed, pack out).
 - **Instrumentation:** the kit's own sensor board (inside temperature, humidity, pressure, shock and tilt log, water sensor, gas) logs every test; the bridge's logs and the panel controller's event log are the record; external references are a calibrated thermometer, a pressure gauge for the seal check, and the laboratory's equipment where a laboratory runs the test.
 - **Order:** the seal check first and after every environmental test; the functional check (section 4) before and after every test; a failure stops the sequence until its cause is recorded.
@@ -43,7 +43,7 @@ rule; the method is here so that the ruling has a test to point at.
 
 ## 4. Functional check (run before and after every test)
 
-Power on from the pack; the panel controller reports; every bearer comes up and passes traffic (Iridium message, 5G data, WiFi link to a second kit or a laptop, LoRa mesh packet, Zigbee and Thread join, APRS beacon heard by a receiver, HF CAT and audio, SDR capture, GNSS fix with time pulse); the display, touch, e-paper, LEDs, sounder, headset audio and PTT, camera; the sensors report; the seal check (inside against outside pressure after the valve settles) passes; EMCON silences every transmitter (measured with the SDR); blackout darkens the kit; ZEROIZE wipes the secure element (verified by a failed key operation afterwards); the tamper switch logs the lid; shore, solar and vehicle inputs charge the pack; the PoE and USB-C outlets deliver; the log holds every step.
+Power on from the pack; the panel controller reports; every bearer comes up and passes traffic (Iridium message, 5G data, WiFi link to a second kit or a laptop, LoRa mesh packet, Zigbee and Thread join, APRS beacon heard by a receiver, HF CAT and audio, SDR capture, GNSS fix with time pulse); the display, touch, e-paper, LEDs, sounder, headset audio and PTT, camera; the sensors report; the seal check (inside against outside pressure after the valve settles) passes; EMCON silences every transmitter, measured with a receiver or spectrum analyser outside the kit and never with the kit's own SDR, whose supply EMCON removes (the per-transmitter bench tests of `feasibility/EMCON.md` section 6; corrected 26 September 2026, S-07); blackout darkens the kit; ZEROIZE wipes the secure element (verified by a failed key operation afterwards); the tamper switch logs the lid; shore, solar and vehicle inputs charge the pack; the PoE and USB-C outlets deliver; the log holds every step.
 
 ## 5. Pack protection (rule BAT-001), function by function
 
@@ -71,10 +71,17 @@ level and the wrong time is not the protection this rule asks for.
 | 9 | **precharge window**: a deeply discharged cell is charged at full current, or a dead cell is charged at all | 1 to 3 V | 1.00 to 3.00 V, Pack Design Guideline, pre-charging voltage range | a block brought to 2.5 V per cell: the gauge pre-charges at about 1 A and does not raise the current until every cell is above 3.00 V; a block below 1.00 V per cell is not charged at all and the gauge says so |
 
 **And the one this table cannot test.** BAT-001 asks for protection in hardware INDEPENDENT OF ANY
-SOFTWARE. Every function above is the gauge's, whose thresholds live in data flash; board P carries no
-second protector, no chemical fuse and its PTC input is tied off, so the only element that needs no
-firmware is the 25 A ATOF blade, which is a gross-fault device. No bench test changes that: it is **owner
-decision 40**.
+SOFTWARE. Every function above is the gauge's, whose thresholds live in data flash. **Corrected 26 September 2026
+(S-07), as generated at `45bde541`:** owner decision 40 (D-15) is ruled and board P's schematic carries its floor
+since `faf8c981`: a BQ7720700 second level on its own tap filters (cell over-voltage 4.325 V and under-voltage 2.25 V,
+open wire, and a fixed 70 C over-temperature on its own thermistor since `d90f30e4`), whose fault output and the
+gauge's FUSE output both blow the Eaton SCF9550-30-05 chemical fuse F2 once the arming jumper JP1 is closed, whose
+under-voltage output holds the discharge FET off, and the gauge's PTC input enabled with its own PTC element
+(`gen_sch_p.py` lines 243, 288 and 414 to 502). Those need no firmware, and they sit beyond the gauge's thresholds
+rather than beside them, so they are not rows of the table above; their bench checks are items of the battery review
+packet (`review-packets/battery/PROTECTION-ARCHITECTURE.md`, its commissioning readings O-9 among them, and
+`SECONDARY-OT-DECISION.md` sections 4 and 5), and none has run. The 25 A blade stays the gross-fault device. Until `faf8c981` this
+paragraph said board P carried no second protector, no chemical fuse and a PTC input tied off, which was then true.
 
 ## 6. Records
 

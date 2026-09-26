@@ -57,7 +57,7 @@ decisions:
     ruled_by: OWNER
     ruled_on: 2026-09-25
     outcome: >-
-      owner ruling 25 September 2026, asked one decision at a time with the options and the recommendation: four layers at 2 oz outer copper for board P, the arm P8 measured at 0 hard and 0 unrouted at the fabricator's 0.16 mm floor. Ruling 7's 2 oz stands. The one question still owed is the fabricator's four-layer 2 oz stackup record, which the ordering session asks JLCPCB for; until that row is in stackup_write.STACKS, STK-001 on board P reads UNKNOWN STACK.
+      owner ruling 25 September 2026, asked one decision at a time with the options and the recommendation: four layers at 2 oz outer copper for board P, the arm P8 measured at 0 hard and 0 unrouted at the fabricator's 0.16 mm floor. Ruling 7's 2 oz stands. The fabricator's four-layer 2 oz stackup record, the one question owed when the owner ruled, is recorded since d468613e: JLC04162H-7628 in stackup_write.STACKS (stackup_write.py:46 at 45bde541), transcribed from JLCPCB's captured response of 25 September 2026 (v2/vendor/fabricator/jlcpcb-stackups-2026-09-25.md). The committed board P layout is still the two-layer P4, so board P is judged on the four-layer stackup only once its next phase is placed and routed on it. Corrected 26 September 2026 (S-07 of the requirements registry): this outcome called the stackup record owed.
     reversed_by: >-
       reopen this decision and route board P on two layers again; nothing has been laid for this ruling yet
     ask: "two layers or four for board P"
@@ -879,13 +879,22 @@ decisions:
       data flash (the thresholds and the enabled protections read back against `pcb_pack_protection.yaml`) as a
       commissioning step. The two parts this entry named on 18 September (ABLIC S-8261 and TI bq2970) are
       single-cell protectors and cannot protect a 4S block (W2 finding F-DEC40, confirmed by its challenger:
-      S-8261 is "FOR 1-CELL PACK", bq2970's PACK+ is limited to 12 V), so neither is the part; no 4S secondary
-      protector's datasheet is in this tree yet, and the choice between the two branches is made on the sourced
-      part and its price. Nothing is laid for this ruling yet: it is a board P schematic change, a re-route of
-      board P and a data-flash setting, and BAT-001 on board P stays open until that copper exists and is judged.
+      S-8261 is "FOR 1-CELL PACK", bq2970's PACK+ is limited to 12 V), so neither is the part. IN BOARD P'S SCHEMATIC SINCE faf8c981 (round 4 of MESHSAT-1357), with the second
+      level's over-temperature network of d90f30e4: a TI BQ7720700 second level (3S to 7S; cell over-voltage 4.325 V,
+      cell under-voltage 2.25 V, open wire, and a fixed 70 C over-temperature on its own 103AT-2 thermistor; SLUSEG7D,
+      v2/vendor/battery/ti-bq77207.pdf) whose COUT and the BQ4050's FUSE output both drive the heater switch of an
+      Eaton SCF9550-30-05 chemical fuse F2 through the arming jumper JP1, which is closed at commissioning after the
+      gauge's image is written and read back; its DOUT holds the discharge FET off below 2.25 V; and the BQ4050's PTC
+      input is enabled with a Murata PRF15BB103RB6RC chip PTC element (gen_sch_p.py:243, :288 and :414-502 at
+      45bde541). The second level covers cell under-voltage, so the first branch is taken (closed item S-29 of the
+      requirements registry), and the data-flash read-back stays a commissioning step. It is not laid out: the
+      committed board P layout (P4) predates the schematic and is re-placed and re-routed at board P's next phase,
+      and BAT-001 on board P stays open until that copper exists and pack_protection judges board P as generated
+      (S-45). Corrected 26 September 2026 (S-07 of the requirements registry): this outcome said nothing was laid for
+      the ruling and that no 4S secondary protector's datasheet was in this tree.
     reversed_by: >-
-      reopen this decision; nothing has been laid for this ruling yet, because the secondary protector, the
-      chemical fuse and the PTC input are a board P schematic change that has not been made
+      reopen this decision and take the second level, the chemical fuse and the PTC element out of board P's schematic
+      (gen_sch_p.py), which carries them since faf8c981; no board P layout carries them yet
     ask: "add a protector that needs no firmware (a dedicated cell protector IC on the taps, or the gauge's chemical-fuse output with a fuse that has one), or accept the BQ4050 alone with that written down against the rule"
     recommendation: >-
       add the second protector. It is one small part, its datasheets are already in this tree, and it is the
