@@ -1,6 +1,6 @@
 # Building a V2 kit from this repository
 
-The MESHSAT-830 generation of the carrier set (7 Sep 2026) has been designed and generated; no board of it has been fabricated and no kit has been built. This page is the path from an empty JLCPCB cart to a running kit, in order, pointing at the documents that carry the detail. Read it together with `docs/ASSEMBLY.md` (fasteners, build order, the pack, leads, coating, labels, removal, bench checks, bench-fit lists), `docs/PANEL.md` (the panel controller contract), `docs/V2-SPEC.md` (the device set and the budgets) and `docs/TEST-PLAN.md` (the qualification plan). The design record with every number and every ruling is `docs/MESHSAT-709-geometry-appendix.md`; sections 32.49 to 32.61 are this generation.
+The MESHSAT-830 generation of the carrier set (7 Sep 2026) has been designed and generated; no board of it has been fabricated and no kit has been built. This page is the path from an empty JLCPCB cart to an assembled kit, in order, pointing at the documents that carry the detail. Read it together with `docs/ASSEMBLY.md` (fasteners, build order, the pack, leads, coating, labels, removal, bench checks, bench-fit lists), `docs/PANEL.md` (the panel controller contract), `docs/V2-SPEC.md` (the device set and the budgets) and `docs/TEST-PLAN.md` (the qualification plan). The design record with every number and every ruling is `docs/MESHSAT-709-geometry-appendix.md`; sections 32.49 to 32.61 are this generation.
 
 MeshSat is a prototype. Expect changes after the first build.
 

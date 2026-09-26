@@ -1,0 +1,71 @@
+== (1) case geometry read from Peli's files
+  inside at Z   0.00:  373.94 x  259.64  (wall planes extended; flat floor 343.28 x 228.98)
+  inside at Z   2.50:  374.11 x  259.81
+  inside at Z  15.32:  375.01 x  260.71
+  inside at Z  54.50:  377.75 x  263.45
+  inside at Z  59.00:  378.06 x  263.76
+  inside at Z  88.00:  380.09 x  265.79
+  inside at Z 101.04:  381.00 x  266.70
+  on the fillet at Z 2.50: 360.39 x 246.09 (32.42's '360 x 246 at the floor')
+  rim zone Z 101.04..108.97: 382.02 x 267.72 at the shoulder, 382.58 x 268.28 at the rim
+  lid: parting plane 373.88 x 261.87, at 39.19 up 371.16 x 259.27, flat ceiling 346.16 x 231.86, depth STEP 45.47 / WEB 44.45
+  end wall thickness at Z 88 (DXF B-B): 5.34; outer rim flange from Z 97.91
+  inner rib at Z 26.42: -0.00 proud, 0.00 half-width
+  inner rib at Z 50.00: 0.31 proud, 0.91 half-width
+  inner rib at Z 76.00: 0.65 proud, 0.90 half-width
+  inner rib at Z 84.58: 0.76 proud, 0.76 half-width
+
+== (2) margins
+ M1 monitor body bottom against the CM5 heatsink top (floor 2.0, z_budget.py:16)
+  (0) as coded: FACE_TOP_Z 101.4 (109.4 - 8), no VHB in the chain [W4]           nominal   +2.24  worst   +0.95 (BELOW)  RSS low   +1.66  [min 2.0]
+  (A1) plate under the ring, frame top flush with the rim: FACE 99.05, VHB as written nominal   -1.21  worst   -3.62 (BELOW)  RSS low   -2.37  [min 2.0]
+  (A2) plate under the ring, frame seated on the ribs (INST step 3): FACE 92.18  nominal   -8.08  worst  -10.49 (BELOW)  RSS low   -9.24  [min 2.0]
+  (B) C1: plate ON the frame over the o-ring (INST step 4): FACE 105.10, VHB as written nominal   +4.84  worst   +2.30 (MET)  RSS low   +3.68  [min 2.0]
+  (B) C1, VHB not lifting the stack (W4 F5 option b)                             nominal   +5.94  worst   +3.40 (MET)  RSS low   +4.78  [min 2.0]
+  C1 face top range at Peli's figures: 103.45 .. 106.75 (plate underside 100.58 .. 103.62)
+ M2 plate against the lid's wall where the lid overhangs the rim zone (plate top <= rim - 1.0)
+  C1 full-thickness edge: 1.46;  with the lettering under it (no relief): 0.95;  with a 2.0 mm top rebate on the edge band: 3.46
+  generic PF detail (1400/1450/1520 sheets, 'do not scale'), frame top about 2.8 below the rim (INFERRED): full edge -1.85, rebated edge 0.15
+ M3 lid space above the face (lid ceiling = rim + lid depth)
+  as coded: 53.04 nominal (ASSEMBLY.md:66 states 46.5)
+  C1: nominal 49.34; worst (WEB lid 44.45, rim -0.76, face high 106.75) 45.91; QMX tray 28.0 leaves 16.91 for the parts under it
+  QMX tray east edge 172.5 against the lid's flat ceiling edge 173.08: 0.58; shifted 1.5 west: 2.08 (worst -0.38: 1.70)
+ M4 pack block (4S3P 18650, 3 x 2, 56.65 x 133.5 x 38.1 wrapped, A06) in the east pocket
+  Peli STEP/DXF                                    west face 122.00 (2.0 from A's edge), east face 178.65: corner to the fillet 3.71, east face to the wall 9.68; the block can move 4.75 further east at 1.0 mm
+  case -0.38 per wall (INFERRED)                   west face 122.00 (2.0 from A's edge), east face 178.65: corner to the fillet 3.45, east face to the wall 9.30; the block can move 4.35 further east at 1.0 mm
+  WEB interior 372.4 applied at the fillet (worst) west face 122.00 (2.0 from A's edge), east face 178.65: corner to the fillet 2.85, east face to the wall 8.38; the block can move 3.40 further east at 1.0 mm
+  A06 reported X spare 1.35 against a pocket bound X 178 (appendix 32.62), which is not Peli's wall
+  length: flat floor 228.98 against block + board P 205.5: 23.48 (worst 22.72)
+ M5 lift-out through the frame window (B 330 x 200)
+  per side 9.83 / 16.91; frame -0.76: 9.45 / 16.53
+ M6 face plate fit
+  as coded (under the ring, in the skirt 366.68 x 250.84): 0.59 / 0.67 per side; frame -0.76: 0.21 / 0.29
+  as coded, Peli's frame screw heads on the skirt's inside at Y +-125.42 (No. 6 pan head about 2.4 tall, INFERRED): plate edge overlap 1.73
+  C1 plate 379.0 x 264.0, underside as low as Z 100.58: 0.98 / 1.33 per side; case -0.38: 0.60 / 0.95
+  C1 plate 378.0 x 263.0, underside as low as Z 100.58: 1.48 / 1.83 per side; case -0.38: 1.10 / 1.45
+  C1 plate 377.2 x 263.0, underside as low as Z 100.58: 1.88 / 1.83 per side; case -0.38: 1.50 / 1.45
+  C1 plate 377.2 x 263.0 R16 corner against the case corner R15.88 at Z 100.58: 1.96 (case -0.38: 1.58)
+  o-ring channel (flange to wall at the step): X 6.07, Y 6.83; the 377.2 x 263.0 plate edge covers 4.25 / 5.06 of it
+ M7 wall jacks (inner lock washer r 5.10, outer hex r 5.48, O-ring r 4.25) against the frame skirt
+  A1 frame top at the rim                                    skirt bottom 91.45: jack Z 88 -> -1.65; jack Z 76 -> 10.35 (worst -0.76: 9.59)
+  as coded re-derived (plate 101.4 under the ring + PORON)   skirt bottom 93.80: jack Z 88 -> 0.70; jack Z 76 -> 12.70 (worst -0.76: 11.94)
+  C1 frame seated on the ribs                                skirt bottom 84.58: jack Z 88 -> -8.52; jack Z 76 -> 3.48 (worst -0.76: 2.72)
+ M8 jacks at |Y| 72 against the inner ribs at Y +-76.2 and the outer features at Y +-79.0
+  jack Y 72 Z 88: inner washer to rib -1.66 (rib -0.38: -2.04); outer hex to feature: Y -1.53, Z -5.55 -> OVERLAP
+  jack Y 72 Z 76: inner washer to rib -1.80 (rib -0.38: -2.18); outer hex to feature: Y -1.53, Z +6.45 -> clear
+  jack Y 68 Z 76: inner washer to rib +2.20 (rib -0.38: +1.82); outer hex to feature: Y +2.47, Z +6.45 -> clear
+  jack Y 68 Z 88: inner washer to rib +2.34 (rib -0.38: +1.96); outer hex to feature: Y +2.47, Z -5.55 -> clear
+ M9 coupler clamp stack: wall 5.34 + O-ring 0.75 (INFERRED compressed) = 6.09 against 6.5: 0.41; wall +0.76: -0.35
+ M10 connector plate (case_wall_cutouts.py:25-29, outside the back wall)
+  as coded: bottom Z 13.0 against the outer fillet end 15.14: -2.14; west M4 column X -79 washer r 4.5 against the rib at -76.2 (half-width 0.95 at Z 54): -2.65
+  under C1: top row Z 82 + 4.5 against the skirt 84.58: -1.92; USB body r 14.5 (29 mm wall hole) at Z 74: -3.92
+  C3 as chosen (the plate at X -57..57 with the full ruled set): frame_seat.py part E
+ M11 floor items against the fillet tangents (flat floor 343.28 x 228.98)
+  dock strip south edge Y -113.0: 1.49 (case -0.38: 1.11); west end X -149.0: 22.64
+  rods at (+-110.5, +-73.0): 61.14 / 41.49
+ M12 east-wall lead band between B's edge X 165 and the wall: Z 50 23.72, Z 76 24.62 (case -0.38: 23.34)
+ M13 frame in the case (Peli's own interface): bottom edge 0.74 / 1.50 per side, at z 0 0.75 / 1.51; RSS of +-0.38 frame and +-0.38 case: 0.54
+  rib reach against the frame's bottom outer edge: end walls +0.02, long walls -0.74 (positive = the rib catches the frame)
+ C1 plate blank volume 273206 -> 284875 mm3: +31.5 g at 2.70 g/cm3 (cut-outs equal in both)
+ frame mounting screws under C1 at Z 88.49; plan distance from the backer edge (Y 114) to the skirt face (Y 125.42): 11.42
+ 6-32 x 1/2 in: bore 9.39 - insert 6.3 = 3.09 empty; screw below the plate 9.70; engagement 6.30

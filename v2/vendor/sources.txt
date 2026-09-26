@@ -43,6 +43,9 @@ omron          # omronfs.omron.com, fetched 11 September 2026
 openthread     # README of the OpenThread ot-cc13x2-cc26x2 platform repository (the RCP build for the CC2652P)
 pdi            # Pervasive Displays E2370KS0C1 flyer and the EPD driving circuit note rev.02 (24-pin FPC, boost circuit)
 peli           # Peli Products customer drawings, STEP, DXF and Parasolid of the 1520EU and 1400EU cases and their PF panel frames (downloaded by the owner from peli.com); `proj.py`, `sect.py` are our probes
+peli/1450/1450_pf.pdf   # Peli 1450PF panel frame instruction sheet 1453-314-000 rev A, fetched from peli.com 26 September 2026 (MESHSAT-1357 case margins); sha256 4681c0525a3cf605
+peli/panel-frame-inst.pdf   # Peli's generic panel frame mounting instructions, fetched from peli.com 26 September 2026; sha256 797a2ed6f9809d0b
+peli/step_faces.py, dxf_read.py, case_margins.py, frame_seat.py   # our readers of the 1451-931 STEP and DXF (MESHSAT-1357); their readings are the .faces.txt and .out files in peli/1450/, reproduced byte for byte
 power          # TI BQ25798 and BQ25792 charger, BQ34Z100-G1 gauge (and the MAX17048 fallback), TPS61288 boost, TPS2596 eFuse, LTC2954 push-button controller, ADI LT8705A buck-boost controller, Coilcraft XAL1010 and XAL1510 inductors, RALEC shunt,
 precidip       # Preci-Dip spring-loaded connector catalogue, pages 31 (general specifications) and 34 (813 series, 2.54 mm double row, solder tail, heights 6 to 7.5 mm)
 probes         # our own STEP probe scripts (build123d), kept with the models they read
@@ -150,6 +153,8 @@ bulgin       # bulgin.com's own datasheet service, fetched 11 September 2026
 polyphaser   # polyphaser.com datasheet downloads, fetched 11 September 2026
 bulgin/bulgin-px0833-sealed-rj45-coupler.pdf   # https://www.bulgin.com/pdf/pdf.php?sku=PX0833
 bulgin/bulgin-4000-series-sealed-usb-c.pdf   # https://www.bulgin.com/products/pub/media/bulgin/data/4000_series_c_type.pdf
+bulgin/bulgin-pxp4043-micro-usb-rear-panel.pdf   # https://www.bulgin.com/pdf/pdf.php?sku=PXP4043, fetched 26 September 2026 (MESHSAT-1357 case margins): the 4000 series rear-panel body, a sibling's sheet (micro-B), used for the connector plate's envelope; sha256 245d895c678995b2
+bulgin/bulgin-pxp4043c-usb-c-rear-panel.pdf   # https://www.bulgin.com/pdf/pdf.php?sku=PXP4043/C, fetched 26 September 2026: the recommended part's own sheet (rear panel mount, no panel dimension); sha256 cce556227a71f895
 polyphaser/polyphaser-gth-sff-al-sma-surge-protector.pdf   # https://www.polyphaser.com/Images/Downloadables/Datasheets/GTH-SFF-AL_datasheets_US.pdf
 switches/apem-switch-guards-series.pdf   # https://www.apem.com/storage/datasheets/files/safety_guards_serie_switchguards/media/safety guards-serie-switchguards.pdf
 

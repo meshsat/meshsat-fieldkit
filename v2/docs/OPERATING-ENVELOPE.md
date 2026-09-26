@@ -164,7 +164,7 @@ Neither test has been run, so nothing is qualified to them.
 |---|---|---|
 | vehicle and shore DC | **9 to 36 V** | MIL-STD-461 class line filter, NATO 2-pin cable, the 38999 receptacle. **Not qualified for vehicle surge** (D-16, owner ruling of 26 September 2026): no surge claim is made, the entry is not for 24 V military vehicle buses, and MIL-STD-1275 is revisited only if military vehicles become a market |
 | solar | tracker input, LT8705A | the tracker's own window, board E |
-| pack | 4S, about 14.4 V nominal | **one 4S3P pack of Samsung 35E 18650 cells, about 145 Wh, shrink-wrapped in the east pocket** (D-06, owner ruling of 26 September 2026), subject to the owner's case measurement (D-08). Missions longer than the pack rely on vehicle or solar input. The runtime requirement is battery-only hours in the idle and typical modes at +20 C for an aged pack; that number is not computed yet and no runtime is claimed here. Corrected 26 September 2026: the 4S4P 18650 and 4S3P 21700 packs this row named are not expected to fit beside board P under board B, and the 4S3P 18650 fits only without a rigid enclosure (A06, INFERRED from the committed board heights until the case is measured) |
+| pack | 4S, about 14.4 V nominal | **one 4S3P pack of Samsung 35E 18650 cells, about 145 Wh, shrink-wrapped in the east pocket** (D-06, owner ruling of 26 September 2026); the case measurement it was subject to was withdrawn by the owner on 26 September 2026 (D-08 reversed), and the fit is designed against the worst of Peli's own figures (`CASE-MARGINS.md` M4a to M6; M4a and M5 OPEN until the pack's hold-down and a mock-up at the build). Missions longer than the pack rely on vehicle or solar input. The runtime requirement is battery-only hours in the idle and typical modes at +20 C for an aged pack; that number is not computed yet and no runtime is claimed here. Corrected 26 September 2026: the 4S4P 18650 and 4S3P 21700 packs this row named are not expected to fit beside board P under board B, and the 4S3P 18650 fits only without a rigid enclosure (A06, INFERRED from the committed board heights; the case side at the worst of Peli's figures, `CASE-MARGINS.md`) |
 | Power over Ethernet out | 54 V | the rail that makes ISO-001 and the altitude question real |
 | USB-C Power Delivery out | 45 W | TPS25740 and TPS55288 |
 
@@ -315,7 +315,11 @@ the Netherlands and the EU, operated by a licensed radio amateur. No CE or RED m
 so the MIL-STD-461 runs of `TEST-PLAN.md` are characterisation, not qualification, and section 6's first row is
 a design level, not a claim; the design keeps an EU route open. Every transmitter is configured to the
 operator's licence and the EU limits, and the VHF path gets a band lock. The pack's UN 38.3 status is unknown,
-so how it is transported is stated rather than assumed.
+so how it is transported is stated rather than assumed. **Corrected 26 September 2026** (the review of that day,
+`reviews/2026-09-26-foundation-progress-review.md` section 5): an unknown status permits no route by itself, road included, since road carriage has its own
+dangerous-goods rules (the ADR); the pack's classification, the conditions that apply to it or an exception that
+applies are to be established before any transport route is claimed acceptable (TBD, a bounded item, not a broad
+compliance project; `CONOPS.md` section 4, Transport row).
 
 **What these rulings leave open:** the service life (TBD for prototype 1), the pollution degree ISO-001 needs
 and the duty cycle REL-001 needs.
