@@ -56,7 +56,8 @@ M2044SD3A01        # NKK through Mouser, https://www.mouser.com/c/?q=M2044SD3A01
 1282.5004          # Mentor through Mouser, https://www.mouser.com/c/?q=1282.5004 ; IP68 light guides, sheet in v2/vendor/mentor/
 
 # --- Magnetics and the relay, none stocked at JLCPCB today.
-SRF1260-4R7Y       # Bourns through Mouser, https://www.mouser.com/c/?q=SRF1260-4R7Y ; dual-winding choke, JLCPCB stock 0
+SRF1260-4R7Y       # Bourns through Mouser, https://www.mouser.com/c/?q=SRF1260-4R7Y ; dual-winding choke, JLCPCB stock 0; stays while the released E6, E7 and E9 BOMs carry it
+SRF1260-1R5Y       # Bourns through Mouser, https://www.mouser.com/c/?q=SRF1260-1R5Y ; dual-winding choke, board E's L2 since MESHSAT-1357 round 4 (F-IN-02: in its common-mode connection each winding carries the line current, so the series column rates it, 6.89 A against the 4R7Y's 3.59 A), JLCPCB stock 0 (C7320434, 26 Sep 2026)
 H5007NL            # Pulse through Mouser, https://www.mouser.com/c/?q=H5007NL ; 1000BASE-T magnetics
 G6K-2F-Y           # Omron through Mouser, https://www.mouser.com/c/?q=G6K-2F-Y ; 5 V DPDT signal relay, JLCPCB stock 0
 

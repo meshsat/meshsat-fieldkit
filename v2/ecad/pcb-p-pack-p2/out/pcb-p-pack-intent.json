@@ -1,6 +1,6 @@
 {
  "board": "pcb-p-pack",
- "written": "2026-09-20 14:42",
+ "written": "2026-09-26 10:01",
  "bypass": [
   {
    "cap": "C1",
@@ -19,6 +19,12 @@
    "part": "U1",
    "pin": "26",
    "net": "VCC_F"
+  },
+  {
+   "cap": "C14",
+   "part": "U2",
+   "pin": "1",
+   "net": "SEC_VDD"
   }
  ],
  "rails": {
@@ -55,13 +61,27 @@
    "amps_peak": 18.0,
    "source": "F1",
    "loads": {
-    "Q1": 10.0
+    "F2": 10.0
    },
-   "note": "after the blade fuse",
+   "note": "after the blade fuse, into the chemical fuse F2 (round 4, 26 September 2026: it fed Q1 directly until then)",
    "always_on": true,
    "always_on_why": "the cell node after the 25 A blade: a fuse is protection and not a switch",
    "converted": false,
    "fed_from": "CELL4"
+  },
+  "SCP_OUT": {
+   "volts": 14.4,
+   "amps_typ": 10.0,
+   "amps_peak": 18.0,
+   "source": "F2",
+   "loads": {
+    "Q1": 10.0
+   },
+   "note": "after the SCF9550-30-05 chemical fuse, into the charge FET's source",
+   "always_on": true,
+   "always_on_why": "the cell node after the chemical fuse: a fuse is protection and not a switch, and the heater that opens it is driven only by a protection event",
+   "converted": false,
+   "fed_from": "FUSED"
   },
   "PACK_N": {
    "volts": 0.05,
@@ -84,6 +104,11 @@
    "v_max": 0.0,
    "v_min": 0.0,
    "basis": "the board's reference, so a part between a live net and ground is judged against the live net rather than reported as sitting on an undeclared one"
+  },
+  "PACK_MID": {
+   "v_max": 16.8,
+   "v_min": 0.0,
+   "basis": "the midpoint of the series terminal pair (SLUSC67B 8.2.2.1.5): about half the pack in normal operation, and the whole of it, 16.8 V at 4.20 V per cell, across one capacitor when the other has shorted"
   }
  },
  "pair_classes": {

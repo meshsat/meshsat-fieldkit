@@ -2,7 +2,9 @@
  "name": "pcb-e1-dock",
  "letter": "e",
  "title": "PCB-E1 DOCK STRIP",
- "footprint_generator": null,
+ "footprint_generator": [
+  "gen_footprints_e.py"
+ ],
  "extra_compile": [],
  "gate_before_placement": false,
  "bypass_place_after": "stackup",
@@ -307,6 +309,36 @@
    "pattern": "GND_V",
    "class": "LOW_SPEED_OR_DC",
    "basis": "the isolated converter's secondary-side return reference, a DC node"
+  },
+  {
+   "pattern": "SMB?",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the pack gauge's SMBus to board P (SMBC clock, SMBD data), 100 kHz open-drain with 4.7k pull-ups: the edge is set by the pull-up and the lead's capacitance (MESHSAT-1357 round 4, S-05, 26 September 2026)"
+  },
+  {
+   "pattern": "PRES_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the pack-present line from J_SMB pin 4 through 1k to a GPIO with a 1M pull-up: a static level the gauge samples once a second (S-05, 26 September 2026)"
+  },
+  {
+   "pattern": "TAMPER_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the lid reed contact through a 100k pull-up and a 10k/100n filter: a static level that changes when the lid is opened or shut (S-11, 26 September 2026)"
+  },
+  {
+   "pattern": "GEIGER_EN",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the enable of the Geiger rail's load switch U16, a static level from a GPIO with a 100k pull-down (F-BP-02, 26 September 2026)"
+  },
+  {
+   "pattern": "GEIGER_CT",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "U16's slew-rate capacitor, a ramp of milliseconds when the switch turns on (F-BP-02, 26 September 2026)"
+  },
+  {
+   "pattern": "SGP_VDD",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the SGP41's VDD behind its 4.7 Ohm and 1 uF filter (datasheet Figure 6): a local supply decoupled at the pin (S-10, 26 September 2026)"
   }
  ],
  "gnd_grid": {

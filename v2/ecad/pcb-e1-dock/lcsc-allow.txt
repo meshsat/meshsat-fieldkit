@@ -4,7 +4,7 @@
 # bought elsewhere with a route in tools/jlc-handfit.txt. It is NOT a place to park a part nobody has chosen.
 
 (JST-VH          # solar and vehicle input leads
-(XH or pin header)              # the pack SMBus lead
+(XH or pin header)              # the pack SMBus lead of E17 as committed, a 2.54 mm 1x6 with no code. Since MESHSAT-1357 round 4 J_SMB is a JST-XH 1x4 that carries its code (C594232), so this line covers no row of the new schematic: remove it when board E is re-cut
 BOOTSEL:         # the BOOTSEL solder jumper, copper on our own board ("BOOTSEL:" with its colon: the bare word also covered the 1k BOOTSEL resistor, a real part JLCPCB places, 26 Sep 2026)
 solder lands     # the twelve signal wires to the block board, soldered at build
 solder pad       # 12 AWG pack wires, soldered at build
@@ -21,5 +21,6 @@ AS3935 lightning sensor module  # 1x05 pin header: the CJMCU-3935 board hangs of
 outside sensor pod              # 1x04 pin header: the pod's M8 sealed lead is made up at build
 mixer fan                       # 1x03 pin header per fan: the IP68 fan's own flying lead is pushed on
 lead from the D38999            # wall receptacle leads, made up at build
-Bourns SRF1260-4R7Y             # JLCPCB stock 0, route in tools/jlc-handfit.txt
+Bourns SRF1260-4R7Y             # JLCPCB stock 0, route in tools/jlc-handfit.txt. E17 as committed; no row of the round-4 schematic carries it: remove it when board E is re-cut
+Bourns SRF1260-1R5Y             # JLCPCB stock 0 (C7320434, 26 Sep 2026), route in tools/jlc-handfit.txt: board E's L2 since MESHSAT-1357 round 4 (F-IN-02)
 XAL              # Coilcraft: not in JLCPCB's catalogue, route in tools/jlc-handfit.txt

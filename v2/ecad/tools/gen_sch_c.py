@@ -5,9 +5,10 @@ stub and a net label; GND gets power symbols). Runs where the KiCad symbol libra
 The backer hangs 10 mm under the aluminium face plate (tools/panel1450.py is the single source of the face positions). C7 replaces the two expanders'
 role by an RP2040 panel controller (32.52: a USB device of B16's slot-1 hub, PORTS[1][2] in gen_sch_b.py, corrected 9 Sep 2026, the kit I2C master, the e-paper, the sounder, the LED rail PWM, the
 heartbeats, slot enables, HDMI input select and the power-control lines to B16 over the 2x13 ribbon J_PANEL; the two PCA9555 stay as the LED sinks
-and mode inputs on the same bus). The hardware lines stay hardware: the EMCON toggle drives TX_INHIBIT_n directly and EMCON_HW through an inverter,
-the ZEROIZE toggle drives ZEROIZE_HW, the TX lamp follows TR_APRS. The e-paper is the bare Pervasive Displays E2370KS0C1 on a 24-way ZIF with the
-maker's boost circuit (rev 02 note: MOSFET, 10 uH, three SS2040FL, 0.47 ohm, 1 uF/25 V caps) behind a P-FET power switch. New on the face: the Xenarc
+and mode inputs on the same bus). The hardware lines stay hardware: the EMCON toggle drives TX_INHIBIT_n directly and EMCON_HW through a
+Schmitt-trigger buffer (U9), the ZEROIZE toggle drives the local sense ZEROIZE_SW that the controller reads and U12 buffers onto ZEROIZE_HW (26 September
+2026, D-03), the TX lamp follows TR_APRS. The e-paper is the bare Pervasive Displays E2370KS0C1 on a 24-way ZIF with the
+maker's boost circuit (rev 02 note: MOSFET, 10 uH, three SS2040FL, 0.47 ohm, 1 uF/25 V caps and one 4.7 uF/25 V pump cap) behind a P-FET power switch. New on the face: the Xenarc
 monitor (no electronics here; its cables go to B16 and A22), two U-174/U headset jacks wired to D8, a VEML7700 ambient light sensor under a light guide,
 and a USB camera module behind a sealed window (its lead to B16's J_CAM). Eight standoff screws bond the board to the plate."""
 import re, sys, os, uuid
@@ -38,7 +39,7 @@ _intent.rail("+3V3", 3.3, 0.12, 0.20, "U5", budget=0.03, share=0.0075, always_on
              always_on_why="U5 is a TLV75533 whose EN pin is tied to its own input, so this rail follows the 5 V that arrives on the ribbon and has no switch of its own",
              source_ic="U5 is a TLV75533 LDO in SOT-23-5: pin 5 IS its output power pin",
              loads={"U1": 0.040, "U2": 0.010, "U3": 0.010, "U4": 0.015, "U6": 0.005, "U7": 0.005,
-                    "U8": 0.005, "U10": 0.005, "U11": 0.005, "U9": 0.002, "U_LIGHT": 0.020, "Q5": 0.001},
+                    "U8": 0.005, "U10": 0.005, "U11": 0.005, "U9": 0.002, "U12": 0.002, "U_LIGHT": 0.020, "Q5": 0.001},   # U12: the ZEROIZE buffer (D-03, 26 September 2026)
              note="the panel's logic 3.3 V from the LDO U5: the RP2040 controller, its QSPI flash, the two "
                   "expanders, the buffers, the light sensor and the e-paper's supply switch. Budget 3 percent, "
                   "because every load is a logic part with a wide supply range")
@@ -106,11 +107,24 @@ for i in range(1, 6): part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", 
 # --- the RP2040 panel controller (rp2040/rpi-rp2040-datasheet.pdf; the minimal design of the hardware design guide: 12 MHz crystal with 15 pF loads and a 1k on XOUT, W25Q16 QSPI flash,
 #     27 ohm USB series, RUN pull-up, BOOTSEL by a solder jumper on QSPI_SS). GPIO: 0 SDA 1 SCL (the kit I2C bus, this board its master), 2 EPD SCL, 3 EPD SDA, 4 EPD DC, 5 EPD CS, 6 EPD RST,
 #     7 EPD BUSY, 8 LED rail PWM, 9 sounder PWM, 10 to 12 heartbeats HB1..3 (in), 13 to 15 SLOT_EN1..3, 16 and 17 HDMI_SEL1/2, 18 PI_SHDN_REQ, 19 PI_KILL, 20 SHORE_INHIBIT, 21 EMCON_HW (read),
-#     22 ZEROIZE_HW (read), 23 TR_APRS (read), 24 EXP_INT (read), 25 status LED, 26 LED rail sense (ADC0), 27 TEST_SW, 28 SOS_SW, 29 EPD_PWR_n (the boost's power switch)
+#     22 ZEROIZE_SW (read, the toggle's local sense), 23 TR_APRS (read), 24 EXP_INT (read), 25 status LED, 26 LED rail sense (ADC0), 27 TEST_SW, 28 SOS_SW, 29 EPD_PWR_n (the boost's power switch)
+# ZEROIZE AT BOOT, WHAT THE HARDWARE GIVES THE FIRMWARE (26 September 2026, owner ruling D-03.3: level-sensitive, read before any slot powers).
+#   The pin: GPIO22 (pin 34) on ZEROIZE_SW. RP2040 datasheet (build 3184e62) PADS_BANK0 resets IE=1, OD=0, PDE=1, PUE=0, SCHMITT=1, and section
+#   2.19.2 says the input "is always connected, so software can check the state of GPIOs at any time": the level is readable at the first
+#   instruction, before any function select. The pull: R10 10k to +3V3 against the pad's 50 to 80k pull-down (Table 625 RPD) gives at least
+#   2.75 V open, over VIH min 2.0 V at IOVDD 3.3 V (Table 625); closed is 0 V. The toggle: APEM 5636ADKB-2V, single pole ON-NONE-ON, both
+#   positions locked (appendix 32.13 ruling 1), so the level holds through a power loss; APEM's 5000 series sheet
+#   (v2/vendor/seals/apem-5000-series-datasheet-rs-copy.pdf, page 6, 5636 row) connects 1-2 in lever position I and 2-3 in position III, so
+#   lug 2 is the common and is the one on GND here (26 September 2026 fix-up). SLOT_EN1..3 (GPIO13..15) reset as inputs with the pad
+#   pull-down, and board A holds them with 100k to GND (gen_sch_a.py buck5, R30/R34/R38), so no slot powers until firmware drives a pin high.
+#   The bootrom drives no bank-0 GPIO on a cold boot (Table 168: an activity pin only when _reset_to_usb_boot is given a mask); the only SDK
+#   code that touches GPIO15 (SLOT_EN3) is the RP2040-E5 USB enumeration fix, off by default and fixed in hardware on RP2040B2 (datasheet
+#   errata). The firmware obligations that follow (read GPIO22 before any SLOT_EN write, the 5 s hold, the wipe-pending record, never the E5
+#   fix, a BOOTSEL activity mask of 0 or GPIO25 only) belong in PANEL.md section 6 beside ZEROIZE and in decision 30 of pcb_decisions.yaml.
 synth("U3", "RP2040", "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)", "QFN56", {
  1: "+3V3", 10: "+3V3", 22: "+3V3", 33: "+3V3", 42: "+3V3", 49: "+3V3", 43: "+3V3", 44: "+3V3", 48: "+3V3", 23: "C_DVDD", 50: "C_DVDD", 45: "C_DVDD", 57: "GND", 19: "GND",
  2: "SDA", 3: "SCL", 4: "EPD_SCL", 5: "EPD_SDA", 6: "EPD_DC", 7: "EPD_CS", 8: "EPD_RST", 9: "EPD_BUSY", 11: "PANEL_PWM", 12: "PWM1", 13: "HB1", 14: "HB2", 15: "HB3", 16: "SLOT_EN1", 17: "SLOT_EN2", 18: "SLOT_EN3",
- 20: "XIN", 21: "XOUT_R", 24: "SWCLK", 25: "SWDIO", 26: "C_RUN", 27: "HDMI_SEL1", 28: "HDMI_SEL2", 29: "PI_SHDN_REQ", 30: "PI_KILL", 31: "SHORE_INHIBIT", 32: "EMCON_HW", 34: "ZEROIZE_HW", 35: "TR_APRS", 36: "EXP_INT",
+ 20: "XIN", 21: "XOUT_R", 24: "SWCLK", 25: "SWDIO", 26: "C_RUN", 27: "HDMI_SEL1", 28: "HDMI_SEL2", 29: "PI_SHDN_REQ", 30: "PI_KILL", 31: "SHORE_INHIBIT", 32: "EMCON_HW", 34: "ZEROIZE_SW", 35: "TR_APRS", 36: "EXP_INT",
  37: "LED_STAT", 38: "RAIL_SENSE", 39: "TEST_SW", 40: "SOS_SW", 41: "EPD_PWR_n", 46: "USB_DM_R", 47: "USB_DP_R", 51: "QSPI_D3", 52: "QSPI_SCLK", 53: "QSPI_D0", 54: "QSPI_D2", 55: "QSPI_D1", 56: "QSPI_SS"}, "C2040")
 ic("U4", 9, "W25Q16JVUXIQ 16 Mbit QSPI flash (USON-8: 1 CS 2 DO/IO1 3 WP/IO2 4 GND 5 DI/IO0 6 CLK 7 HOLD/IO3 8 VCC, pad)", "USON8", {"1": "QSPI_SS", "2": "QSPI_D1", "3": "QSPI_D2", "4": "GND", "5": "QSPI_D0", "6": "QSPI_SCLK", "7": "QSPI_D3", "8": "+3V3", "9": "GND"}, "C2843335")
 part("Y1", "Device", "Crystal_GND24", "12 MHz ABM8-272-T3 (3225): 1 XIN, 3 XOUT, 2 and 4 GND", "XTAL", {"1": "XIN", "2": "GND", "3": "XOUT", "4": "GND"}, "C20625731")
@@ -131,7 +145,7 @@ part("U2", "Interface_Expansion", "PCA9555PW", "PCA9555PW 0x23: LED sinks, the b
  "4": "SHORE_K", "5": "MSG_K", "6": "PIRING_K", "7": "BAT1_K", "8": "BAT2_K", "9": "BAT3_K", "10": "BAT4_K", "11": "BAT5_K",
  "13": "TX_LAMPTEST", "14": "SPARE6", "15": "SPARE7", "16": "SPARE8", "17": "SPARE9", "18": "SPARE10", "19": "SPARE11", "20": "SPARE12"}, "C2864778")
 c("C17", "100n", "+3V3", "GND", "C", "C14663"); c("C18", "100n", "+3V3", "GND", "C", "C14663")
-for i, net in enumerate(("SOS_SW", "ZEROIZE_HW", "TEST_SW", "LIGHT_DAY_n", "LIGHT_NIGHT_n"), 9):
+for i, net in enumerate(("SOS_SW", "ZEROIZE_SW", "TEST_SW", "LIGHT_DAY_n", "LIGHT_NIGHT_n"), 9):   # R10/C20 now on the local ZEROIZE_SW (D-03, 26 September 2026)
     r("R%d" % i, "10k", net, "+3V3", "R", "C25804"); c("C%d" % (i + 10), "10n", net, "GND", "C", "C57112")
 r("R14", "10k", "TX_INHIBIT_n", "+3V3", "R", "C25804"); c("C24", "10n", "TX_INHIBIT_n", "GND", "C", "C57112")   # 10k, not 100k: A22, B16 and D9
 # each hold TX_INHIBIT_n down with 100k so a cut ribbon inhibits at every consumer; 10k against those three in parallel still reads 2.5 V, a solid high
@@ -140,8 +154,29 @@ r("R14", "10k", "TX_INHIBIT_n", "+3V3", "R", "C25804"); c("C24", "10n", "TX_INHI
 # inverted the toggle into them. Asserting EMCON therefore ENABLED the PA and released both M.2 radios' W_DISABLE1#. A 74LVC1G34
 # non-inverting buffer in the same SOT-23-5 land (2 A, 4 Y) fixes the sense at its source. The toggle stays the only driver of
 # TX_INHIBIT_n: A22's gate that drove it back from EMCON_HW is deleted, which also removes a one-inversion feedback loop.
-ic("U9", 5, "74LVC1G34 non-inverting buffer (2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3)", "SOT235", {"1": "NC", "2": "TX_INHIBIT_n", "3": "GND", "4": "EMCON_HW", "5": "+3V3"})
+# A SCHMITT INPUT, NOT A PLAIN ONE (26 September 2026, MESHSAT-1357 round 4). TX_INHIBIT_n is a switch node with R14 10k up, C24 10n down
+# and three 100k pull-downs off board (A R145, B R59, D R2), so releasing the EMCON toggle gives a rising edge with a 77 us time constant
+# (7.7k Thevenin into 10n) toward 2.54 V, about 74 us/V at a 1.5 V threshold. The 74LVC1G34's recommended operating conditions allow an
+# input transition of 10 ns/V at 3.3 V (Diodes DS36108 Rev. 10-2, Delta t/Delta V), so the plain buffer ran several thousand times
+# outside its input-slew limit on the kit's EMCON line. The
+# 74LVC1G17 is the same function with a Schmitt-trigger input and no slew limit, in the same SOT-25 land with the same pins (Diodes
+# DS35124 Rev. 8-2: 1 NC, 2 A, 3 GND, 4 Y, 5 VCC; IOFF partial power down; -40 to +125 C; VT+ 1.50 to 2.00 V at 3.0 V and 2.16 to 2.74 V
+# at 4.5 V; the sheet has no 3.3 V row, and interpolating linearly between those two gives about 2.15 V worst case at 3.3 V, against
+# the 2.54 V this line rests at). Diodes 74LVC1G17W5-7, LCSC C151394.
+ic("U9", 5, "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3)", "SOT235", {"1": "NC", "2": "TX_INHIBIT_n", "3": "GND", "4": "EMCON_HW", "5": "+3V3"}, "C151394")
 c("C25", "100n", "+3V3", "GND")
+# ZEROIZE IS SENSED ON THIS BOARD ONLY, AND EXPORTED THROUGH A BUFFER (26 September 2026, owner rulings D-03.2 and D-03.3, MESHSAT-1357
+# round 4). As generated at 82dd1e4d the toggle, R10, C20 and GPIO22 sat on ZEROIZE_HW itself, which leaves this board on J_PANEL pin 10,
+# crosses board B to J_AB1 pin 20, board A (a second 10k pull-up R117 to A's +3V3) and the mezzanine to board D, and is read by nothing
+# but GPIO22. D-03.2 makes the covered toggle the ONLY trigger and D-03.3 makes the wipe level-sensitive at boot, so any conductor of that
+# chain held low (a pinched ribbon shorting conductor 10 to its neighbour, conductor 9, which is GND; a board fault) would read as a closed toggle and
+# start an irreversible crypto-erase. Round 2 also left open (W3-F12) that A's R117 back-feeds this board through ZEROIZE_HW when A's 3.3 V
+# is up and this board is not; RP2040 Table 622 allows an IO no higher than IOVDD + 0.5 V. Now the toggle, R10, C20 and GPIO22 are on
+# the local net ZEROIZE_SW, and U12 copies it onto ZEROIZE_HW for the boards that carry the name (their test points, and any later
+# listener). U12's IOFF disables its output while this board is unpowered, so R117 no longer reaches this board's rail through this line.
+# Same part as U9 for the same reason (a 10k/10n switch node): Diodes 74LVC1G17W5-7, LCSC C151394, pins as above.
+ic("U12", 5, "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): ZEROIZE_HW follows the local ZEROIZE_SW (owner D-03)", "SOT235", {"1": "NC", "2": "ZEROIZE_SW", "3": "GND", "4": "ZEROIZE_HW", "5": "+3V3"}, "C151394")
+c("C39", "100n", "+3V3", "GND", "C", "C14663")
 r("R15", "10k", "LED_RAIL_SW", "RAIL_SENSE", "R", "C25804"); r("R16", "10k", "PANEL_ID", "+3V3", "R", "C25804")
 part("JP2", "Jumper", "SolderJumper_2_Open", "PANEL_ID strap (closed = variant B)", "JP2", {"1": "PANEL_ID", "2": "GND"})
 # --- LED rail: +5V -> LIGHTING toggle (open in BLACKOUT) -> LED_RAIL_SW -> Q1 P-FET (PWM from PANEL_PWM through Q2) -> LED_RAIL; NVG mode is the lowest PWM level in firmware (16c)
@@ -169,9 +204,17 @@ part("SW_PI", "Connector_Generic", "Conn_01x04", "PI 16 mm recessed momentary, a
 r("R%d" % rn, "300R", "LED_RAIL", "PIRING_A", "R", "C23025"); rn += 1
 part("SW_TEST", "Connector_Generic", "Conn_01x04", "TEST/ACK 16 mm momentary, white ring; C&K ATP16-SL1-203-M0SA-04G; silicone gasket washer under the bezel", "SW16", {"1": "TEST_SW", "2": "GND", "3": "TESTRING_A", "4": "GND"})
 r("R%d" % rn, "470R", "LED_RAIL", "TESTRING_A", "R", "C23179"); rn += 1
+# SW_SOS, SW_EMCON and SW_ZERO are the same APEM 5636ADKB-2V: lug 2 is the common (APEM 5000 series sheet, page 6, 5636 row: 1-2 in
+# lever position I, 2-3 in position III; v2/vendor/seals/apem-5000-series-datasheet-rs-copy.pdf), so lug 2 on GND and lug 1 on the
+# sense line is the maker's own wiring; which lever position the hinged cover forces is an assembly item (26 September 2026 fix-up).
 part("SW_SOS", "Connector_Generic", "Conn_01x03", "SOS locking toggle, maintained (APEM 5636ADKB-2V, both positions locked, red boot, hinged safety cover per 32.50; ruling 32.13); K front seal in the keyed 6.5 hole; the controller acts after 2 s closed", "TGL3", {"1": "SOS_SW", "2": "GND", "3": "NC"})
 part("SW_EMCON", "Connector_Generic", "Conn_01x03", "EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_HW low, the same sense; APEM 5636ADKB-2V, hinged safety cover); K front seal in the keyed 6.5 hole", "TGL3", {"1": "TX_INHIBIT_n", "2": "GND", "3": "NC"})
-part("SW_ZERO", "Connector_Generic", "Conn_01x03", "ZEROIZE locking toggle, maintained (APEM 5636ADKB-2V, hinged safety cover; ruling 32.13); K front seal in the keyed 6.5 hole; ZEROIZE_HW low = wipe the secure element and assert the disk-key wipe (32.52)", "TGL3", {"1": "ZEROIZE_HW", "2": "GND", "3": "NC"})
+# 26 September 2026 (W5-ZEROIZE-4, owner rulings D-03.1 to D-03.3): the value string promised "assert the disk-key wipe (32.52)", a line
+# that exists in no netlist. It now says what the hardware does (the closed toggle pulls ZEROIZE_SW low and the panel controller alone reads
+# it) and names the rest as the firmware behaviour the owner ruled (D-03): read at boot before any slot powers, the crypto-erase after 5 s
+# closed. The erase itself is not stated as a fact of this board, because its precondition, an erasable slot map in the secure element
+# (NDA datasheet), is still open (fix-up of 26 September 2026). Lug 2 is the common per APEM's 5636 row (see the U3 note above).
+part("SW_ZERO", "Connector_Generic", "Conn_01x03", "ZEROIZE locking toggle, maintained (APEM 5636ADKB-2V, single pole ON-NONE-ON, lug 2 common, hinged safety cover; ruling 32.13); K front seal in the keyed 6.5 hole; closed = ZEROIZE_SW low, read by the panel controller alone (GPIO22); ruled firmware behaviour (owner D-03): read at boot before any slot powers, crypto-erase after 5 s closed", "TGL3", {"1": "ZEROIZE_SW", "2": "GND", "3": "NC"})
 # power-button leads: ferrite + 100 nF at the panel end (the leads pass the antenna feeds)
 part("FB1", "Device", "L", "ferrite 600R", "FB", {"1": "MAINSW_A", "2": "MAINSW_A2"}, "C1002"); part("FB2", "Device", "L", "ferrite 600R", "FB", {"1": "MAINSW_B", "2": "MAINSW_B2"}, "C1002")
 c("C26", "100n", "MAINSW_A2", "MAINSW_B2", "C", "C14663")
@@ -199,10 +242,26 @@ synth("J_EPD", "EPD24", "Hirose FH34SRJ-24S-0.5SH ZIF for the E2370KS0C1 flex (0
 part("Q5", "Transistor_FET", "AO3401A", "AO3401A P-FET: the e-paper's supply switch (EPD_PWR_n low = on)", "SOT23", {"1": "EPD_PWR_n", "2": "+3V3", "3": "EPD_VCC"}, "C15127"); r("R%d" % rn, "10k", "EPD_PWR_n", "+3V3"); rn += 1
 c("C28", "4.7u", "EPD_VCC", "GND", "C10u"); c("C29", "100n", "EPD_VCC", "GND")
 part("L1", "Device", "L", "10uH ATNR4010100MT 0.8 A (the boost inductor)", "L4020", {"1": "EPD_VCC", "2": "EPD_SW"})
-part("Q6", "Transistor_FET", "2N7002", "Si2302CDS-T1-GE3 logic-level N-FET (Vishay, SOT-23, G S D like the 2N7002 symbol; VGS(th) 0.45 to 1.0 V, RDS 85 mOhm at VGS 2.5 V): the boost switch on GDR", "SOT23", {"1": "EPD_GDR", "2": "EPD_RESE", "3": "EPD_SW"}, "C10488")
+# THE BOOST SWITCH MEETS THE PANEL MAKER'S VOLTAGE CRITERION (26 September 2026, MESHSAT-1357 round 4). PDi Rev.02 page 4 note (1) asks
+# for "RDS<200m ohm ..., VDDS=30V, VGS<2.5V@Id=0.5A"; the Si2302CDS fitted until now is a 20 V part (Vishay 68645, S12-2336-Rev. D:
+# VDS 20 V), below the drain rating every part PDi lists carries, on a node that swings to the positive gate rail plus a diode. The
+# replacement is one PDi names, the Vishay Si2300DS-T1-GE3 (document 65701, S10-0111-Rev. A: VDS 30 V, VGS +-12 V, RDS(on) 85 mOhm max
+# at VGS 2.5 V, VGS(th) 0.6 to 1.5 V, TJ -55 to +150 C, SOT-23 with 1 G 2 S 3 D, the same land and pin map). LCSC C72271.
+part("Q6", "Transistor_FET", "2N7002", "Si2300DS-T1-GE3 N-FET (Vishay, SOT-23, G S D like the 2N7002 symbol; VDS 30 V, RDS 85 mOhm max at VGS 2.5 V, VGS(th) 0.6 to 1.5 V; named by PDi Rev.02): the boost switch on GDR", "SOT23", {"1": "EPD_GDR", "2": "EPD_RESE", "3": "EPD_SW"}, "C72271")
 r("R%d" % rn, "0.47R 1%", "EPD_RESE", "GND"); rn += 1
-part("D19", "Device", "D_Schottky", "SS2040FL: EPD_SW -> VGH", "SOD123F", {"1": "EPD_SW", "2": "EPD_VGH"}); c("C30", "1u 25V", "EPD_VGH", "GND")
-c("C31", "1u 25V", "EPD_SW", "EPD_PUMP"); part("D20", "Device", "D_Schottky", "SS2040FL: pump clamp", "SOD123F", {"1": "EPD_PUMP", "2": "GND"}); part("D21", "Device", "D_Schottky", "SS2040FL: pump -> VGL", "SOD123F", {"1": "EPD_VGL", "2": "EPD_PUMP"}); c("C32", "1u 25V", "EPD_VGL", "GND")
+# THE THREE RECTIFIERS POINT THE WAY THE PANEL MAKER DRAWS THEM (26 September 2026, S-09, adjudication A03, finding F-IN-01 extended).
+# Device:D_Schottky pin 1 is K and pin 2 is A, and pad 1 of D_SOD-123F is the cathode; PANJIT's SS2020FL~SS20100FL sheet (SS2020FL_SERIES
+# REV.10S, 17 Aug 2017, SOD-123FL) draws "1 Cathode, 2 Anode", colour band on the cathode. PDi's driving-circuit note Rev.02 page 3 puts the
+# VGH diode's anode on the L1/MOSFET switch node and its cathode on VGH (pin 21, 1 uF to GND); the pump clamp's anode on the pump node and
+# its cathode on GND; the VGL diode's cathode on the pump node and its anode on VGL (pin 23, "Negative Gate driving voltage", page 7).
+# As generated at 82dd1e4d all three were the other way round: VGH could not charge and VGL would have charged positive. The code is
+# pinned here to PANJIT's own part, the one PDi names (LCSC C268712, PANJIT SS2040FL: 40 V, 2 A, TJ -50 to +150 C), so no filler can
+# substitute a same-named part of another maker (the generated PARTS.md row still carries C55259975, a FUXINSEMI part, from the C17 BOM).
+part("D19", "Device", "D_Schottky", "SS2040FL: EPD_SW -> VGH", "SOD123F", {"1": "EPD_VGH", "2": "EPD_SW"}, "C268712"); c("C30", "1u 25V", "EPD_VGH", "GND")
+# THE PUMP CAPACITOR IS THE 4.7 uF THE MAKER DRAWS (26 September 2026). PDi Rev.02 page 3 labels the capacitor from the switch node to the
+# pump node "4.7uF/25V" and its BOM (page 10, item 2) lists "CAP 4.7uF 25V 0603"; this board carried 1 uF there. Murata
+# GRM188R61E475KE11D (0603, X5R, 4.7 uF, DC 25 V, -55 to +85 C; Murata reference sheet GRM188R61E475KE11-01), LCSC C90057.
+c("C31", "4.7u 25V", "EPD_SW", "EPD_PUMP", "C", "C90057"); part("D20", "Device", "D_Schottky", "SS2040FL: pump clamp", "SOD123F", {"1": "GND", "2": "EPD_PUMP"}, "C268712"); part("D21", "Device", "D_Schottky", "SS2040FL: pump -> VGL", "SOD123F", {"1": "EPD_PUMP", "2": "EPD_VGL"}, "C268712"); c("C32", "1u 25V", "EPD_VGL", "GND")
 for i, net in enumerate(("EPD_VDHR", "EPD_VDDD", "EPD_VDH", "EPD_VDL", "EPD_VCOM"), 33): c("C%d" % i, "1u 25V", net, "GND")
 # THE PANEL'S OWN CHARGE PUMPS, JUDGED BY THE PANEL MAKER (16 September 2026, rule CMP-001). These ten nets
 # are the source and gate supplies the driver builds inside the glass, and this board only carries the boost
@@ -212,10 +271,12 @@ for i, net in enumerate(("EPD_VDHR", "EPD_VDDD", "EPD_VDH", "EPD_VDL", "EPD_VCOM
 # maker STATES THE PART. PDI's driving-circuit note rev 02 (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf)
 # specifies "Capacitors 25V 0603" for this circuit and lists 1 uF 25 V 0603 in its own bill of materials, and
 # every capacitor on these nets here is exactly that. `derate.py` records the citation instead of a number.
+# 26 September 2026: the pump capacitor C31 is the 4.7 uF 25 V 0603 of BOM item 2, the others the 1 uF 25 V 0603 of item 1.
 _PDI = ("PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V "
-        "0603' and 'CAP 1uF 25V 0603' for this exact pump and stabilising network "
+        "0603', 'CAP 1uF 25V 0603' and 'CAP 4.7uF 25V 0603' for this exact pump and stabilising network "
         "(v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is "
-        "the 1 uF 25 V 0603 part the panel maker specifies")
+        "the 25 V 0603 part the panel maker specifies there: 1 uF on the stabilising pins and 4.7 uF for the "
+        "pump capacitor from the switch node to the pump node, as the page 3 figure labels it")
 for _en in ("EPD_VGH", "EPD_VGL", "EPD_VDH", "EPD_VDL", "EPD_VDHR", "EPD_VCOM", "EPD_VDDD",
             "EPD_SW", "EPD_PUMP"):
     _intent.node(_en, None, "a charge-pump node of the e-paper driver, inside the panel's own glass: this "
@@ -242,6 +303,11 @@ for i in (1, 2): part("J_HSJ%d" % i, "Mechanical", "MountingHole", "U-174/U head
 # --- chassis bond: the eight standoff screws through GND ring pads (MIL-STD-461 bonding of the aluminium plate)
 for i in range(1, 9): part("H%d" % i, "Mechanical", "MountingHole_Pad", "M3 x 6 into the face plate's self-clinching standoff: GND bond to the plate", "MHPAD", {"1": "GND"})
 for i, net in enumerate(("+5V", "+3V3", "GND", "EXP_INT", "TX_INHIBIT_n", "EMCON_HW", "ZEROIZE_HW", "SPARE1", "SPARE2", "SPARE3", "SPARE4", "SPARE5", "SPARE6", "SPARE7", "SPARE8", "SPARE9", "SPARE10", "SPARE11", "SPARE12", "EPD_BUSY", "EPD_VGH", "EPD_VGL", "HB1", "HB2", "HB3", "SLOT_EN1", "SLOT_EN2", "SLOT_EN3", "HDMI_SEL1", "HDMI_SEL2", "PI_SHDN_REQ", "PI_KILL", "SHORE_INHIBIT", "PIJ2_A", "PIJ2_B"), 6): tp("TP%d" % i, net)
+# THE TEST ACCESS OWED BEFORE PLACEMENT (26 September 2026, rule TST-001, W5 test-access list section 3, MESHSAT-1357 round 4). Appended
+# after TP40 so no existing test point is renumbered. ZEROIZE_SW is the local sense HW6 times from the switch edge; SDA and SCL, SOS_SW,
+# TEST_SW and TR_APRS are the lines W5 names; C_DVDD is the RP2040 core; BOOT_J is the BOOTSEL node beside JP1, which a probe grounds through
+# R5's 1k exactly as the solder jumper does (a pad on QSPI_SS itself would let a probe short the flash select without that 1k).
+for i, net in enumerate(("ZEROIZE_SW", "SDA", "SCL", "SOS_SW", "TEST_SW", "TR_APRS", "C_DVDD", "BOOT_J"), 41): tp("TP%d" % i, net)
 # ----------------------------------------------------------------- emit (as B15)
 POWER = {"GND": ("power", "GND")}
 libsyms = kisch.libsyms; out = kisch.out; pf_n = kisch.pf_n   # the engine's objects, by reference
@@ -253,7 +319,7 @@ byref = {p["ref"]: p for p in P}
 def refs_matching(pred): return [p["ref"] for p in P if pred(p["ref"])]
 SECTIONS = [("RIBBON FROM B16, 5 V, 3.3 V LDO, USB AND BUS ESD, FLAGS", ["J_PANEL", "C1", "C2", "U5", "C3", "C4", "U6", "U7", "U8", "#FLG01", "#FLG02", "#FLG03", "#FLG04", "#FLG05"]),
             ("RP2040 PANEL CONTROLLER, FLASH, CRYSTAL, BOOTSEL, BUS PULL-UPS", ["U3", "U4", "Y1", "C5", "C6", "R1", "R2", "R3", "R4", "R5", "JP1"] + ["C%d" % k for k in range(7, 17)] + ["TP1", "TP2", "TP3", "R6", "D18", "R7", "R8"]),
-            ("EXPANDERS 0x22 / 0x23, MODE INPUTS, EMCON INVERTER, STRAPS", ["U1", "U2", "C17", "C18"] + ["R%d" % k for k in range(9, 17)] + ["C%d" % k for k in range(19, 26)] + ["U9", "JP2"]),
+            ("EXPANDERS 0x22 / 0x23, MODE INPUTS, EMCON AND ZEROIZE BUFFERS, STRAPS", ["U1", "U2", "C17", "C18"] + ["R%d" % k for k in range(9, 17)] + ["C%d" % k for k in range(19, 26)] + ["U9", "U12", "C39", "JP2"]),   # U9 is a buffer since 9 Sep 2026, "INVERTER" was stale; U12 and C39 added 26 Sep 2026
             ("LED RAIL, INDICATORS, TX LAMP, SWITCHES AND LEADS", ["SW_LIGHT", "Q1", "R17", "R18", "Q2", "R19", "R20", "TP4", "TP5"] + [p["ref"] for p in P if p["ref"].startswith("D") and p["ref"][1:].isdigit() and int(p["ref"][1:]) <= 17] + ["R%d" % k for k in range(21, 43)] + ["Q3", "SW_MAIN", "SW_PI", "SW_TEST", "SW_SOS", "SW_EMCON", "SW_ZERO", "FB1", "FB2", "C26", "U10", "J_MAINSW", "FB3", "FB4", "C27", "U11", "J_PIJ2"]),
             ("E-PAPER ZIF AND THE PDi BOOST, SOUNDER, LIGHT SENSOR, CAMERA MOUNT", ["J_EPD", "Q5", "C28", "C29", "L1", "Q6", "D19", "C30", "C31", "D20", "D21", "C32", "C33", "C34", "C35", "C36", "C37", "BZ1", "Q4", "U_LIGHT", "C38", "CAM_H1", "CAM_H2", "J_HSJ1", "J_HSJ2"])]
 placed_refs = {r_ for _, rs in SECTIONS for r_ in rs}
@@ -284,7 +350,8 @@ _intent.bypass("C14", "U3", "23", "C_DVDD"); _intent.bypass("C15", "U3", "50", "
 _intent.bypass("C16", "U3", "44", "+3V3")       # VREG_VIN
 _intent.bypass("C3", "U5", "1", "+5V"); _intent.bypass("C4", "U5", "5", "+3V3")            # the LDO's input and output capacitors
 _intent.bypass("C17", "U1", "24", "+3V3"); _intent.bypass("C18", "U2", "24", "+3V3")       # the two expanders
-_intent.bypass("C25", "U9", "5", "+3V3")        # the EMCON inverter
+_intent.bypass("C25", "U9", "5", "+3V3")        # the EMCON buffer
+_intent.bypass("C39", "U12", "5", "+3V3")       # the ZEROIZE buffer (26 September 2026)
 _intent.bypass("C38", "U_LIGHT", "2", "+3V3")   # the light sensor
 _intent.bypass("C29", "J_EPD", "15", "EPD_VCC"); _intent.bypass("C28", "J_EPD", "16", "EPD_VCC")
 import schlayout, time as _time

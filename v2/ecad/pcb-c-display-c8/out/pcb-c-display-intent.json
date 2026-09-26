@@ -1,6 +1,6 @@
 {
  "board": "pcb-c-display",
- "written": "2026-09-20 06:46",
+ "written": "2026-09-26 10:00",
  "bypass": [
   {
    "cap": "C7",
@@ -93,6 +93,12 @@
    "net": "+3V3"
   },
   {
+   "cap": "C39",
+   "part": "U12",
+   "pin": "5",
+   "net": "+3V3"
+  },
+  {
    "cap": "C38",
    "part": "U_LIGHT",
    "pin": "2",
@@ -143,6 +149,7 @@
     "U10": 0.005,
     "U11": 0.005,
     "U9": 0.002,
+    "U12": 0.002,
     "U_LIGHT": 0.02,
     "Q5": 0.001
    },
@@ -159,55 +166,55 @@
    "v_max": null,
    "v_min": 0.0,
    "basis": "a charge-pump node of the e-paper driver, inside the panel's own glass: this project states no voltage for it and does not need to, because the panel maker states the part",
-   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603' and 'CAP 1uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 1 uF 25 V 0603 part the panel maker specifies"
+   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603', 'CAP 1uF 25V 0603' and 'CAP 4.7uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 25 V 0603 part the panel maker specifies there: 1 uF on the stabilising pins and 4.7 uF for the pump capacitor from the switch node to the pump node, as the page 3 figure labels it"
   },
   "EPD_VGL": {
    "v_max": null,
    "v_min": 0.0,
    "basis": "a charge-pump node of the e-paper driver, inside the panel's own glass: this project states no voltage for it and does not need to, because the panel maker states the part",
-   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603' and 'CAP 1uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 1 uF 25 V 0603 part the panel maker specifies"
+   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603', 'CAP 1uF 25V 0603' and 'CAP 4.7uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 25 V 0603 part the panel maker specifies there: 1 uF on the stabilising pins and 4.7 uF for the pump capacitor from the switch node to the pump node, as the page 3 figure labels it"
   },
   "EPD_VDH": {
    "v_max": null,
    "v_min": 0.0,
    "basis": "a charge-pump node of the e-paper driver, inside the panel's own glass: this project states no voltage for it and does not need to, because the panel maker states the part",
-   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603' and 'CAP 1uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 1 uF 25 V 0603 part the panel maker specifies"
+   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603', 'CAP 1uF 25V 0603' and 'CAP 4.7uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 25 V 0603 part the panel maker specifies there: 1 uF on the stabilising pins and 4.7 uF for the pump capacitor from the switch node to the pump node, as the page 3 figure labels it"
   },
   "EPD_VDL": {
    "v_max": null,
    "v_min": 0.0,
    "basis": "a charge-pump node of the e-paper driver, inside the panel's own glass: this project states no voltage for it and does not need to, because the panel maker states the part",
-   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603' and 'CAP 1uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 1 uF 25 V 0603 part the panel maker specifies"
+   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603', 'CAP 1uF 25V 0603' and 'CAP 4.7uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 25 V 0603 part the panel maker specifies there: 1 uF on the stabilising pins and 4.7 uF for the pump capacitor from the switch node to the pump node, as the page 3 figure labels it"
   },
   "EPD_VDHR": {
    "v_max": null,
    "v_min": 0.0,
    "basis": "a charge-pump node of the e-paper driver, inside the panel's own glass: this project states no voltage for it and does not need to, because the panel maker states the part",
-   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603' and 'CAP 1uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 1 uF 25 V 0603 part the panel maker specifies"
+   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603', 'CAP 1uF 25V 0603' and 'CAP 4.7uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 25 V 0603 part the panel maker specifies there: 1 uF on the stabilising pins and 4.7 uF for the pump capacitor from the switch node to the pump node, as the page 3 figure labels it"
   },
   "EPD_VCOM": {
    "v_max": null,
    "v_min": 0.0,
    "basis": "a charge-pump node of the e-paper driver, inside the panel's own glass: this project states no voltage for it and does not need to, because the panel maker states the part",
-   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603' and 'CAP 1uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 1 uF 25 V 0603 part the panel maker specifies"
+   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603', 'CAP 1uF 25V 0603' and 'CAP 4.7uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 25 V 0603 part the panel maker specifies there: 1 uF on the stabilising pins and 4.7 uF for the pump capacitor from the switch node to the pump node, as the page 3 figure labels it"
   },
   "EPD_VDDD": {
    "v_max": null,
    "v_min": 0.0,
    "basis": "a charge-pump node of the e-paper driver, inside the panel's own glass: this project states no voltage for it and does not need to, because the panel maker states the part",
-   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603' and 'CAP 1uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 1 uF 25 V 0603 part the panel maker specifies"
+   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603', 'CAP 1uF 25V 0603' and 'CAP 4.7uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 25 V 0603 part the panel maker specifies there: 1 uF on the stabilising pins and 4.7 uF for the pump capacitor from the switch node to the pump node, as the page 3 figure labels it"
   },
   "EPD_SW": {
    "v_max": null,
    "v_min": 0.0,
    "basis": "a charge-pump node of the e-paper driver, inside the panel's own glass: this project states no voltage for it and does not need to, because the panel maker states the part",
-   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603' and 'CAP 1uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 1 uF 25 V 0603 part the panel maker specifies"
+   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603', 'CAP 1uF 25V 0603' and 'CAP 4.7uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 25 V 0603 part the panel maker specifies there: 1 uF on the stabilising pins and 4.7 uF for the pump capacitor from the switch node to the pump node, as the page 3 figure labels it"
   },
   "EPD_PUMP": {
    "v_max": null,
    "v_min": 0.0,
    "basis": "a charge-pump node of the e-paper driver, inside the panel's own glass: this project states no voltage for it and does not need to, because the panel maker states the part",
-   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603' and 'CAP 1uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 1 uF 25 V 0603 part the panel maker specifies"
+   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603', 'CAP 1uF 25V 0603' and 'CAP 4.7uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 25 V 0603 part the panel maker specifies there: 1 uF on the stabilising pins and 4.7 uF for the pump capacitor from the switch node to the pump node, as the page 3 figure labels it"
   },
   "GND": {
    "v_max": 0.0,

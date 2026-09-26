@@ -2,7 +2,7 @@
 """PCB-P PACK BMS P1 (MESHSAT-830, appendix 32.62): bring the netlist onto the mechanical board of gen_pcb_p.py, fix the power path and the connectors, pack the
 gauge and its filters, lay the locked 2 oz bands of the power path on both layers, pour the ground on the underside and set the net classes.
 Usage: gen_pcb_p3.py <board.kicad_pcb> <netlist.net>. Board frame: origin at the board centre, +X along the pack.
-The power path never travels in router tracks (the A21 rule of 32.39): B+ land > blade holder > charge FET > discharge FET > pack + land along the north edge
+The power path never travels in router tracks (the A21 rule of 32.39): B+ land > blade holder > chemical fuse (round 4) > charge FET > discharge FET > pack + land along the north edge
 and B- land > shunt > pack - land along the south edge are 4 mm locked tracks on F.Cu and B.Cu with stitch vias; the router connects the small-signal
 pads to them."""
 import sys, re, math, os, pcbnew
@@ -62,17 +62,86 @@ placed = {}
 for ref in comps:                                                   # the holes are already on the board from gen_pcb_e.py
     if ref in existing: existing[ref].SetValue(comps[ref][0]); placed[ref] = existing[ref]
 # ---------------------------------------------------------------- fixed parts (board mm, rot, back): the power path along the north edge, the shunt along the south edge, the leads at the edges
-FIXED = {"W_BP": (-27, 12.5, 0, False), "F1": (-15.6, 15, 0, False), "Q1": (0, 15, 0, False), "Q2": (8, 15, 180, False), "W_P": (26, 12.5, 0, False),
+# ROUND 4 OF REVIEW D (MESHSAT-1357, 26 September 2026). Four things moved, each forced by a schematic change, and check_pcb_p.py's SITES
+# table (not this author's file) still names the old numbers, so its Q1, Q2 and J_TS lines fail until its owner follows:
+#   * F2, the chemical fuse (decision 40 / D-15), goes where TI puts it, between the blade and the charge FET (SLUSC67B Figure 21). Its
+#     fuse element runs ACROSS the 9.5 x 5.0 mm body, so it is turned 90 degrees and costs 6.4 mm of the path: F2 at x -3.9, Q1 from x 0
+#     to 5.3 and Q2 from 8 to 13.3 (their 8 mm spacing kept), W_P where it was. Q1's source tracks and their six barrels now sit between
+#     F2 and Q1. FIX-UP OF 26 SEPTEMBER 2026: F2 is the Eaton SCF9550-30-05 on Eaton's own recommended pad layout (ELX1135 page 3), whose
+#     pins are 1 and 2 the fuse ends and 3 the heater: pin 1 west on FUSED, pin 2 east on SCP_OUT, the heater pin 3 south towards Q3.
+#     Its heater land reaches 1.2 mm past the body, so its courtyard is 11.35 mm long where the Dexerials draft's was 10.4: the courtyard
+#     is centred at y 16.05 (10.375 to 21.725, clear of GAUGE's C2 at 10.22 and F1 at x -7.31); SEC's top edge is 5.7, below the
+#     fixed Q3 (fix-up of 26 September 2026; 10.3 in the first fix-up draft, 10.6 in the first pass).
+#   * J_TS is a five-way socket (F-PK-02: four thermistors and their return), 13 mm long, which fits neither the east edge between J_SMB
+#     and H2's keep-out nor its old site, so it lies along the south-east at (26.8, -12.7). (J_TS2, the second level's own thermistor
+#     socket of the first pass, is gone at the fix-up: U2's TS pin is held by the fixed 10 kohm R33, gen_sch_p.py.)
+#   * RT1, the PTC element, and its capacitor C13 are FIXED under the gap between Q1 and Q2, because TI's note 2 asks for the element
+#     "close to Q2 and Q3" (the protection FETs) and the region packer places by size, not by neighbour.
+#   * Q3, the heater switch, and R32, its gate pull-down, are FIXED directly under F2 (fix-up of 26 September 2026). Q3 is turned 90
+#     degrees so its drain pad faces north and sits about 1 mm below F2's heater pad. What that measures is ONE segment of the heater
+#     loop, SCP_HTR from F2's pin 3 to Q3's drain (pin 3), about 1 mm pad to pad instead of about 10 mm when the packer set Q3 below
+#     U2 (second fix-up of 26 September 2026, re-review: the first wording called it the loop). The heater current, 1.3 to 3.5 A for
+#     up to 60 s while the SCF opens, returns from Q3's source (pin 2, GND, on F.Cu) to the B.Cu ground and on to W_BN, and that
+#     return is the router's: this board has no top-side ground pour, and the ground class would give it one 0.6/0.3 mm via. The
+#     route brief (drafts/r4-decisions.md O-11 and O-14) asks for at least five 0.3 mm or four 0.4 mm barrels at Q3's source, the
+#     tree's own via_current.barrels_for(3.5 A) at 10 K and 18 um plating (steady state, so conservative for a 60 s pulse). It also
+#     takes Q3, the largest part in SEC, out of the packer, which put it between U2 and U2's own filters (the review's point below).
+FIXED = {"W_BP": (-27, 12.5, 0, False), "F1": (-15.6, 15, 0, False), "F2": (-3.9, 16.05, 90, False), "Q1": (5.3, 15, 0, False), "Q2": (13.3, 15, 180, False), "W_P": (26, 12.5, 0, False),
          "W_BN": (-27, -12.5, 0, False), "R10": (-18, -15, 0, False), "W_N": (-8, -13.5, 0, False),
-         "J_CELL": (12, -17.5, 0, False), "J_TS": (30.5, -9, 90, False), "J_SMB": (30.5, 2, 90, False)}
+         "J_CELL": (12, -17.5, 0, False), "J_TS": (26.8, -12.7, 0, False), "J_SMB": (30.5, 2, 90, False),
+         "RT1": (9.3, 11.0, 0, False), "C13": (12.0, 11.0, 0, False),
+         "Q3": (-2.3, 7.9, 90, False), "R32": (1.6, 8.3, 0, False)}
 for ref, (x, y, rot, back) in FIXED.items(): placed[ref] = place(ref, x, y, rot, back)
-for ref, x, y in (("B+", -27, 16.2), ("F1 25A", -15.6, 19.6), ("CHG", 0, 18.6), ("DSG", 8, 18.6), ("PACK+", 26, 16.2), ("B-", -27, -16.2), ("2m", -18, -18.4), ("PACK-", -8, -17.2), ("TAPS", 12, -21.2), ("NTC", 30.5, -15), ("SMB", 30.5, 10.5)):
+for ref, x, y in (("B+", -27, 16.2), ("F1 25A", -15.6, 19.6), ("CHG", 5.3, 18.6), ("DSG", 13.3, 18.6), ("PACK+", 26, 16.2), ("B-", -27, -16.2), ("2m", -18, -18.4), ("PACK-", -8, -17.2), ("TAPS", 12, -21.2), ("NTC", 26.8, -9.3), ("SMB", 30.5, 10.5)):
     text(ref, x, y, pcbnew.F_SilkS, 0.8, 0.14)
 # ---------------------------------------------------------------- packed regions (name, rect, refs, back): the gauge and its filters in the middle, the gate networks and ESD east, the test points west
+# ROUND 4 (26 September 2026): the regions are redrawn around the new parts, which is a floor-plan change on the reserved list
+# (reserved.json, "region definitions in the packer") taken by the session under the owner's standing rule of 26 September 2026 and
+# recorded in drafts/r4-decisions.md with the room each region had before and has now. Each rectangle is sized in whole rows of the
+# packer's own cells (an 0603 is a 4.25 x 2.75 mm cell with the 1.2 mm gap; U1's RSM land with its 2.2 mm fan margin a 10.8 mm square),
+# so none overflows, and each is clear of the fixed parts' courtyards: W_BP and W_BN at x -24.4, F1 above y 11.3, F2 above 10.9, W_N
+# right of x -5.45 below -10.95, J_CELL right of x 4.0 below -14.1, J_TS and J_SMB, and H1 and H2's keep-outs.
+#   GAUGE  the gauge and its filters (U1, C1..C9, R1..R9): 19.65 wide for U1, C1 and one 0603 in the first row and four 0603 in the next four
+#   SEC    the second level with ALL of its RC filters (U2, RVD R23 and CVD C14, RIN R24..R27 and the CIN ladder C15..C18) and its TS
+#          resistor R33, a column from under the fixed Q3 to the south edge. The list is in the order the pairs should sit under U2
+#          (VDD first, then V4 to V1, R33 last): the packer sorts by size and keeps list order among equals, so each RC pair lands in
+#          the rows directly below U2 (about 5 to 16 mm from it in this 8.5 mm column; the pin-adjacent placement is the 4-layer
+#          regeneration's, open item O-11). FIX-UP OF 26 SEPTEMBER 2026 (review minor): the first pass
+#          put RIN and RVD in EAST, 20 to 25 mm from U2, where SLUSEG7D 8.4.1 asks for "the RC filters for the Vn and VDD pins ... as
+#          close as possible to the target terminal"; they swap places with the fuse divider, which has no layout rule of its own
+#          (SLUSC67B 8.2.2.2.5 keeps C19 only for RFI immunity) and whose inputs are slow logic levels.
+#   SIG    the gate networks, the terminal and SMBus clamps, the under-voltage hold (Q5, R28) and PRES
+#   EAST   the fuse divider (R29, R30, R31, C19) and the arming jumper JP1, and PRES's series resistor R22 by the SMBus socket. So
+#          FUSE_GQ runs from JP1 in the east to Q3 and R32 (north centre) and to TP14 (south-west), a board-crossing gate net held
+#          only by R32's 1 Mohm while JP1 is open, and C19, the gate's RFI capacitor once JP1 is closed, sits at the far end of it.
+#          SLUSC67B 8.2.2.2.5 lets that capacitor go because the fuse is slow, so this is no function risk, but it undoes the purpose
+#          TI gives it: JP1 and C19 move beside Q3 when the regions are next redrawn, at the 4-layer regeneration (O-11).
+#   TPS    ten test points along the west edge, as before; TPS2 four more under R10 and W_N (TP11 to TP14; TP14 on FUSE_GQ added at the
+#          fix-up of 26 September 2026, so the arming jumper's closure is measured; TP13 moved here from SEC at the same fix-up; TPS2
+#          runs east under W_N's courtyard, which ends at y -16.0, to x -4.55, GAUGE's east edge, clear of SEC)
+#          THE ORDER IS A SAFETY CHOICE (second fix-up of 26 September 2026, re-review). The packer lays equal sizes in list order, west
+#          to east, at a 3.75 mm pitch with 1.5 mm pads, so neighbours are 2.25 mm apart and a slipped probe bridges them. The fix-up's
+#          order (TP11, TP12, TP13, TP14) put TP14, Q3's gate, beside TP13, the cell node at 10 to 16.8 V: a bridge there fires F2 with
+#          JP1 open and puts up to 16.8 V on a +-12 V gate, in the very row the TP11-to-TP14 arming check probes. Now it is TP14, TP11,
+#          TP12, TP13. TP14 is at the west end and its only test-point neighbour is TP11, the other side of JP1: a bridge there is a
+#          closure, harmless once TP11 has been read low (the commissioning order, gen_sch_p.py JP1), and the check's two probes sit
+#          side by side. With four in a row and TP11 beside TP14, one of that pair must have TP12 or TP13 as its other neighbour; here
+#          it is TP11, which reaches Q3's gate only through a closed JP1, and its neighbour is TP12 (SEC_DOUT), which sits at VSS unless
+#          the second level holds an under-voltage or sees an open wire, never TP13. TP13 takes the east end, beside TP12 only: a bridge
+#          there puts at most 16.8 V on DOUT (rated to 45 V, SLUSEG7D 6.1) and on Q5's gate (+-20 V, JCET 2N7002), which turns Q5 on and
+#          holds the discharge FET off, a recoverable state. Measured on the placed board (drafts/scripts/tps2_neighbours.py, pad
+#          polygons edge to edge): TP14's nearest exposed pad outside the row is R10.1 (GND) at 1.72 mm, harmless for a gate; TP13's
+#          is W_N (PACK_N) at 2.83 mm, where the third position gives 2.41 mm to R10.2 (PACK_N), so this order does not bring the cell
+#          node closer to ground. The ground stitch vias nearer the two ends (0.73 mm from TP13, 0.93 mm from TP14) are tented (board
+#          setup: tenting front and back), so under mask. A probe on TP13 is a probe on the cells: a slip onto W_N shorts them through
+#          F1 and F2 (commissioning note, drafts/r4-decisions.md O-9).
 REGIONS = [
- ("GAUGE", (-23, -10, 4, 12), ["U1", "C1"] + ["C%d" % k for k in range(2, 11)] + ["R%d" % k for k in range(1, 10)], False),
- ("SIG",   (4, -10, 22, 12), ["R11", "R12", "R13", "R14", "R15", "R16", "R17", "R18", "R19", "R20", "R21", "C11", "C12", "D1", "D2"], False),
+ ("GAUGE", (-24.2, -10.9, -4.55, 10.8), ["U1", "C1"] + ["C%d" % k for k in range(2, 10)] + ["R%d" % k for k in range(1, 10)], False),
+ ("SEC",   (-4.35, -21.3, 4.15, 5.7), ["U2", "C14", "R23", "C18", "R27", "C17", "R26", "C16", "R25", "C15", "R24", "R33"], False),
+ ("SIG",   (4.35, -13.6, 19.8, 10.0), ["R14", "R15", "R16", "R17", "R18", "R19", "R20", "R21", "R28", "C11", "C12", "D1", "D2", "D3", "Q5"], False),
+ ("EAST",  (20.0, -9.6, 26.9, 9.7), ["R22", "R29", "R30", "R31", "C19", "JP1"], False),
  ("TPS",   (-33, -12, -25, 8.5), ["TP%d" % k for k in range(1, 11)], False),   # ten test points along the west edge (the cell tap nets are on J_CELL already)
+ ("TPS2",  (-21.9, -21.3, -4.55, -17.2), ["TP14", "TP11", "TP12", "TP13"], False),   # west to east; the order is a safety choice, see TPS2 above
 ]
 rest = [r for r in comps if r not in placed and not r.startswith("H") and not any(r in refs for _, _, refs, _ in REGIONS)]
 if rest: REGIONS.append(("REST", (22, -10, 24, 8), rest, False))
@@ -206,6 +275,8 @@ def short_of(a, b, d=0.8):
     L = math.hypot(b[0] - a[0], b[1] - a[1]); return (b[0] - (b[0] - a[0]) / L * d, b[1] - (b[1] - a[1]) / L * d)
 # the PowerPAK SO-8 land: pins 1-3 (source) at x -2.67, y +1.91, +0.64, -0.64; pin 4 (gate) at y -1.91; the tab centred at x +0.69; Q2 is rotated 180
 q1, q2 = FIXED["Q1"][:2], FIXED["Q2"][:2]
+f2a, f2c = mm(pad_at("F2", "1")), mm(pad_at("F2", "2"))                                              # the chemical fuse's two ends (round 4; pins 1 and 2 on the Eaton land of the fix-up)
+print("F2 pads: 1 at (%.2f, %.2f), 2 at (%.2f, %.2f), heater 3 at (%.2f, %.2f)" % (f2a + f2c + mm(pad_at("F2", "3"))))
 f1a, f1b, r10a, r10b = mm(pad_at("F1", "1")), mm(pad_at("F1", "2")), mm(pad_at("R10", "1")), mm(pad_at("R10", "2"))
 wbp, wp, wbn, wn = mm(pad_at("W_BP", "1")), mm(pad_at("W_P", "1")), mm(pad_at("W_BN", "1")), mm(pad_at("W_N", "1"))
 band("CELL4", short_of(f1a, wbp), short_of(wbp, f1a))                                                    # B+ land to the blade holder
@@ -215,14 +286,19 @@ band("CELL4", short_of(f1a, wbp), short_of(wbp, f1a))                           
 # 1.30 and left FUSED's at 2.25. At 3.6 mm one layer carries 10.01 A, which is the rail exactly, so either
 # layer can take the whole of it and the crossing becomes whatever the copper decides rather than something
 # the barrels have to force. It is not margin on one layer; it is margin on the pair of them.
-q1_src = (q1[0] - 4.6, q1[1] + 0.64); band("FUSED", short_of(q1_src, f1b), q1_src, w=2.8)                   # the blade to the charge FET's source side
+q1_src = (q1[0] - 4.6, q1[1] + 0.64)
+# ROUND 4 (26 September 2026): the blade no longer feeds the charge FET directly. FUSED runs from the blade to F2's pin 1 and SCP_OUT from
+# F2's pin 2 (pin 3 on the first pass's Dexerials draft) to the charge FET's source side, both at the 2.8 mm the old FUSED band had, on
+# both layers and stitched as before.
+band("FUSED", short_of(f2a, f1b), f2a, w=2.8)                                                                # the blade to the chemical fuse
+band("SCP_OUT", f2c, q1_src, w=2.8)                                                                           # the chemical fuse to the charge FET's source side
 # 13 September 2026 (MESHSAT-862, appendix 32.164): THE PACK CURRENT ENTERS THE BAND THROUGH THESE THREE
 # TRACKS AND THEY WERE 0.6 mm. IPC-2221 gives 0.6 mm at 2 oz 2.73 A, and the measure found 4.16 A in one of
 # PACK_P's three (ratio 1.52) and 2.09 A in one of FUSED's: the 10 A does not divide evenly over three
 # parallel runs, the one nearest the band's own entry takes the most. 1.2 mm carries 4.51 A each. The pads
 # sit on a 1.27 mm pitch so the three nearly merge, which is what is wanted, and they are all the same net;
 # the gate pad is 1.27 mm beyond the outermost source pin and keeps 0.37 mm of clearance at this width.
-for dy in (1.91, 0.64, -0.64): track("FUSED", (q1[0] - 2.67, q1[1] + dy), (q1_src[0], q1[1] + dy), 1.2, pcbnew.F_Cu)
+for dy in (1.91, 0.64, -0.64): track("SCP_OUT", (q1[0] - 2.67, q1[1] + dy), (q1_src[0], q1[1] + dy), 1.2, pcbnew.F_Cu)   # SCP_OUT since round 4: Q1's source is after F2
 # A VIA IN EACH SOURCE TRACK, which is the one place the current has to change layer: the FET's source pads
 # are SMD on F.Cu and the band's other half is on B.Cu. Five attempts at the band's own stations moved the
 # worst barrel from 2.67 A to 1.88 because they were all downstream of this point. Each track is 1.93 mm long
@@ -230,7 +306,7 @@ for dy in (1.91, 0.64, -0.64): track("FUSED", (q1[0] - 2.67, q1[1] + dy), (q1_sr
 # FUSED's to 1.82, so each track takes TWO, at 3.15 and 4.05 mm from the FET: 0.9 mm apart along the track,
 # which is 0.4 mm hole to hole, and 0.15 mm to each edge across it. Six barrels per FET where there were
 # three, and the three tracks are 1.27 mm apart, 0.77 mm hole to hole.
-_srcvia("FUSED", [(q1[0] - x, q1[1] + dy) for dy in (1.91, 0.64, -0.64) for x in (3.15, 4.05)])
+_srcvia("SCP_OUT", [(q1[0] - x, q1[1] + dy) for dy in (1.91, 0.64, -0.64) for x in (3.15, 4.05)])
 band("SW", (q1[0] + 0.69, q1[1]), (q2[0] - 0.69, q2[1]))                                  # tab to tab
 q2_src = (q2[0] + 4.6, q2[1] - 0.64); band("PACK_P", q2_src, short_of(q2_src, wp), w=2.8)  # the discharge FET's source side to the pack + land
 for dy in (-1.91, -0.64, 0.64): track("PACK_P", (q2[0] + 2.67, q2[1] + dy), (q2_src[0], q2[1] + dy), 1.2, pcbnew.F_Cu)
@@ -251,6 +327,13 @@ pour(pcbnew.B_Cu, "GND", "GND pour B.Cu", (-35, -22, 35, 22))
 # on 5 mm, wherever 1.6 mm from every pad, band and hole, so each piece the router leaves is anchored to the top-side ground
 _gnd = net_for("GND", create=False); _n = 0
 _obst = [(pd.GetPosition(), 1.6) for f in board.GetFootprints() for pd in f.Pads()]
+# FIX-UP OF 26 SEPTEMBER 2026: 1.6 mm FROM A PAD'S CENTRE IS NOT A CLEARANCE ONCE THE PAD IS LARGE. The SCF9550's heater land is 3.0 x
+# 2.15 mm, and a grid via at (-2, 11) passed the centre test at 2.0 mm while its barrel stood 0.10 mm from the pad's edge, where the
+# heater net's PWR class asks 0.30 (the one DRC clearance error of the first fix-up run). Every pad's outline is now kept at the same
+# distance the tracks are kept below: the via's radius, the PWR clearance and a margin.
+_obst_bb = [pd.GetBoundingBox() for f in board.GetFootprints() for pd in f.Pads()]
+def _rect_d(p_, bb_):
+    return math.hypot(max(bb_.GetLeft() - p_.x, 0, p_.x - bb_.GetRight()), max(bb_.GetTop() - p_.y, 0, p_.y - bb_.GetBottom()))
 def _seg_d(p_, a_, b_):
     dx_, dy_ = b_.x - a_.x, b_.y - a_.y; l2 = dx_ * dx_ + dy_ * dy_
     t_ = 0 if l2 == 0 else max(0, min(1, ((p_.x - a_.x) * dx_ + (p_.y - a_.y) * dy_) / l2))
@@ -260,6 +343,7 @@ for _gx in range(-32, 33, 5):
     for _gy in range(-19, 20, 5):
         _p = P(_gx, _gy)
         if not all(math.hypot(_p.x - o.x, _p.y - o.y) > FromMM(r) for o, r in _obst): continue
+        if not all(_rect_d(_p, bb_) > FromMM(0.3 + 0.3 + 0.15) for bb_ in _obst_bb): continue
         if not all(_seg_d(_p, t.GetStart(), t.GetEnd()) > t.GetWidth() / 2 + FromMM(0.3 + 0.3 + 0.15) for t in board.GetTracks() if t.GetClass() == "PCB_TRACK"): continue   # the PWR class clearance 0.3 plus the via
         if any(z.Outline().Contains(_p) for z in _rules): continue
         if board.GetBoardEdgesBoundingBox().Contains(_p):
@@ -272,7 +356,13 @@ DEFAULT = (0.16, 0.25, 0.6, 0.3); cls(ns.GetDefaultNetclass(), *DEFAULT)
 # EVERY CLEARANCE ON THIS BOARD IS 0.16 mm, not 0.127: two layers at 2 oz, and the fabricator's own capability
 # for that combination is 0.16 for both track width and spacing (rule RTE-001, 16 September 2026). The widths
 # stay as they are, because every one of them is already above 0.16.
-PATTERNS = [("CELL4", "PWR"), ("FUSED", "PWR"), ("SW", "PWR"), ("PACK_P", "PWR"), ("PACK_N", "PACK"), ("GND", "GNDC"), ("CELL1", "SENSE"), ("CELL2", "SENSE"), ("CELL3", "SENSE")]
+# ROUND 4 (26 September 2026): SCP_OUT, the cell node after the chemical fuse, is a 10 A power net like FUSED; SCP_HTR is the fuse heater's
+# return to Q3, 1.3 to 3.5 A for up to the 60 s the SCP needs to open (Eaton ELX1135; the fix-up of 26 September 2026 replaced the
+# SFK-1830A with the SCF9550-30-05, the same heater figures), and a default 0.25 mm track at 2 oz fuses at about 5 A in
+# one second, so it takes the PWR class's 0.5 mm (held for the full 60 s at 3.5 A, a 0.5 mm 2 oz outer track rises about 25 K by
+# IPC-2221A, fix-up of 26 September 2026). A reserved line (net classes), changed by the session under the owner's standing rule
+# of 26 September 2026 and recorded in drafts/r4-decisions.md.
+PATTERNS = [("CELL4", "PWR"), ("FUSED", "PWR"), ("SCP_OUT", "PWR"), ("SCP_HTR", "PWR"), ("SW", "PWR"), ("PACK_P", "PWR"), ("PACK_N", "PACK"), ("GND", "GNDC"), ("CELL1", "SENSE"), ("CELL2", "SENSE"), ("CELL3", "SENSE")]
 # SENSE: every net pcb_sensitive.yaml declares for this board, in a class of its own with the default geometry, listed ahead
 # of the table so a sensitive net wins over a pattern that also names it; the DSN class-pair clearance of route_one.sh
 # (FR_CLASS_CLEAR, appendix 32.222) is what reads it (17 September 2026, rule ANA-001).

@@ -1,6 +1,6 @@
 {
  "board": "pcb-e1-dock",
- "written": "2026-09-21 18:48",
+ "written": "2026-09-26 10:01",
  "bypass": [
   {
    "cap": "C16",
@@ -109,6 +109,24 @@
    "part": "U15",
    "pin": "5",
    "net": "+3V3_E6"
+  },
+  {
+   "cap": "C57",
+   "part": "U17",
+   "pin": "1",
+   "net": "SGP_VDD"
+  },
+  {
+   "cap": "C58",
+   "part": "U17",
+   "pin": "5",
+   "net": "+3V3_E6"
+  },
+  {
+   "cap": "C56",
+   "part": "U16",
+   "pin": "6",
+   "net": "+5V_E6"
   }
  ],
  "rails": {
@@ -147,13 +165,13 @@
   },
   "VIN_RAW": {
    "volts": 12.0,
-   "amps_typ": 8.0,
-   "amps_peak": 10.0,
+   "amps_typ": 6.15,
+   "amps_peak": 6.15,
    "source": "L2",
    "loads": {
-    "J_BLK": 8.0
+    "J_BLK": 6.15
    },
-   "note": "shore and vehicle entry after the filter choke, 10 A fuse. THIS BOARD'S SHARE is 0.5 of the rail's 2 percent (16 September 2026): the entry, the choke and the dock block are a short run on this strip and measure 0.16 percent, while board A carries the same 8 A from the dock across the power board to its front end and measures 0.86, so the 1.5 points go there",
+   "note": "shore and vehicle entry after the filter choke, 10 A fuse. Declared at the hot-swap's current limit (F-IN-02, 26 September 2026): 6.15 A, U6's maximum limit with its 10 mOhm sense, as both the typical and the peak, because a unit at VCL max passes it continuously without limiting; 4.85 A (VCL min) is only what the entry is guaranteed to pass, which bounds the host's IIN_HOST and not the conductors. THIS BOARD'S SHARE is 0.5 of the rail's 2 percent (16 September 2026): the entry, the choke and the dock block are a short run on this strip and measured 0.16 percent at the old 8 A, while board A carries the same current from the dock across the power board to its front end and measured 0.86, so the 1.5 points go there",
    "budget": 0.02,
    "share": 0.005,
    "switch": "U6",
@@ -171,6 +189,7 @@
     "U11": 0.05,
     "U14": 0.04,
     "U15": 0.04,
+    "U17": 0.005,
     "J_DCF": 0.03,
     "J_LTG": 0.03,
     "J_POD": 0.1
@@ -189,23 +208,37 @@
    "source": "L3",
    "loads": {
     "U13": 0.2,
-    "J_GEIGER": 0.1
+    "U16": 0.1
    },
-   "note": "the local 5 V buck U12: the 3.3 V regulator's input and the Geiger tube's high-voltage supply on its own header",
+   "note": "the local 5 V buck U12: the 3.3 V regulator's input and, through the load switch U16, the Geiger tube's high-voltage supply on its own header",
    "always_on": true,
    "always_on_why": "U12 is an AP63205 whose EN pin is tied to CELL_F, the pack node it runs from, so this rail follows the pack and has no switch of its own",
    "efficiency": 0.88,
    "converted": true
   },
+  "+5V_GEIGER": {
+   "volts": 5.0,
+   "amps_typ": 0.1,
+   "amps_peak": 0.1,
+   "source": "U16",
+   "loads": {
+    "J_GEIGER": 0.1
+   },
+   "note": "the Geiger module's 5 V behind its load switch (F-BP-02, 26 September 2026), off whenever the sensor controller does not ask for it, so the kit-off state no longer carries the tube's high-voltage supply",
+   "switch": "U16",
+   "enable_net": "GEIGER_EN",
+   "converted": false,
+   "fed_from": "+5V_E6"
+  },
   "DC_IN": {
    "volts": 12.0,
-   "amps_typ": 8.0,
-   "amps_peak": 10.0,
+   "amps_typ": 6.15,
+   "amps_peak": 6.15,
    "source": "J_DCIN",
    "loads": {
-    "F1": 8.0
+    "F1": 6.15
    },
-   "note": "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at 40 V, and the SMCJ40A clamping a transient at about 64.5 V at its peak pulse current, which is why the parts on this line are 100 V ceramics and why `v_work` is 53.3 and not the 36 V service maximum. It carries VIN_RAW's own current, this being one conductor run in five pieces",
+   "note": "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at 40 V, and the SMCJ40 clamps (D10 SMCJ40CA at the entry, D1 SMCJ40A behind the ideal diode) clamping a transient at about 64.5 V at their peak pulse current, which is why the parts on this line are 100 V ceramics and why `v_work` is 53.3 and not the 36 V service maximum. It carries VIN_RAW's own current, this being one conductor run in five pieces",
    "v_work": 36.0,
    "converted": false,
    "series_of": "VIN_RAW",
@@ -213,13 +246,13 @@
   },
   "DC_F": {
    "volts": 12.0,
-   "amps_typ": 8.0,
-   "amps_peak": 10.0,
+   "amps_typ": 6.15,
+   "amps_peak": 6.15,
    "source": "F1",
    "loads": {
-    "Q1": 8.0
+    "Q1": 6.15
    },
-   "note": "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at 40 V, and the SMCJ40A clamping a transient at about 64.5 V at its peak pulse current, which is why the parts on this line are 100 V ceramics and why `v_work` is 53.3 and not the 36 V service maximum. It carries VIN_RAW's own current, this being one conductor run in five pieces",
+   "note": "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at 40 V, and the SMCJ40 clamps (D10 SMCJ40CA at the entry, D1 SMCJ40A behind the ideal diode) clamping a transient at about 64.5 V at their peak pulse current, which is why the parts on this line are 100 V ceramics and why `v_work` is 53.3 and not the 36 V service maximum. It carries VIN_RAW's own current, this being one conductor run in five pieces",
    "v_work": 36.0,
    "converted": false,
    "series_of": "VIN_RAW",
@@ -227,13 +260,13 @@
   },
   "DC_P": {
    "volts": 12.0,
-   "amps_typ": 8.0,
-   "amps_peak": 10.0,
+   "amps_typ": 6.15,
+   "amps_peak": 6.15,
    "source": "Q1",
    "loads": {
-    "R19": 8.0
+    "R19": 6.15
    },
-   "note": "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at 40 V, and the SMCJ40A clamping a transient at about 64.5 V at its peak pulse current, which is why the parts on this line are 100 V ceramics and why `v_work` is 53.3 and not the 36 V service maximum. It carries VIN_RAW's own current, this being one conductor run in five pieces",
+   "note": "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at 40 V, and the SMCJ40 clamps (D10 SMCJ40CA at the entry, D1 SMCJ40A behind the ideal diode) clamping a transient at about 64.5 V at their peak pulse current, which is why the parts on this line are 100 V ceramics and why `v_work` is 53.3 and not the 36 V service maximum. It carries VIN_RAW's own current, this being one conductor run in five pieces",
    "v_work": 36.0,
    "converted": false,
    "series_of": "VIN_RAW",
@@ -241,13 +274,13 @@
   },
   "HS_S": {
    "volts": 12.0,
-   "amps_typ": 8.0,
-   "amps_peak": 10.0,
+   "amps_typ": 6.15,
+   "amps_peak": 6.15,
    "source": "R19",
    "loads": {
-    "Q7": 8.0
+    "Q7": 6.15
    },
-   "note": "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at 40 V, and the SMCJ40A clamping a transient at about 64.5 V at its peak pulse current, which is why the parts on this line are 100 V ceramics and why `v_work` is 53.3 and not the 36 V service maximum. It carries VIN_RAW's own current, this being one conductor run in five pieces",
+   "note": "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at 40 V, and the SMCJ40 clamps (D10 SMCJ40CA at the entry, D1 SMCJ40A behind the ideal diode) clamping a transient at about 64.5 V at their peak pulse current, which is why the parts on this line are 100 V ceramics and why `v_work` is 53.3 and not the 36 V service maximum. It carries VIN_RAW's own current, this being one conductor run in five pieces",
    "v_work": 36.0,
    "converted": false,
    "series_of": "VIN_RAW",
@@ -255,13 +288,13 @@
   },
   "DC_HS": {
    "volts": 12.0,
-   "amps_typ": 8.0,
-   "amps_peak": 10.0,
+   "amps_typ": 6.15,
+   "amps_peak": 6.15,
    "source": "Q7",
    "loads": {
-    "L2": 8.0
+    "L2": 6.15
    },
-   "note": "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at 40 V, and the SMCJ40A clamping a transient at about 64.5 V at its peak pulse current, which is why the parts on this line are 100 V ceramics and why `v_work` is 53.3 and not the 36 V service maximum. It carries VIN_RAW's own current, this being one conductor run in five pieces",
+   "note": "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at 40 V, and the SMCJ40 clamps (D10 SMCJ40CA at the entry, D1 SMCJ40A behind the ideal diode) clamping a transient at about 64.5 V at their peak pulse current, which is why the parts on this line are 100 V ceramics and why `v_work` is 53.3 and not the 36 V service maximum. It carries VIN_RAW's own current, this being one conductor run in five pieces",
    "v_work": 36.0,
    "converted": false,
    "series_of": "VIN_RAW",
@@ -389,6 +422,6 @@
   }
  },
  "pass_through": {
-  "L2": "the SRF1260 dual-winding choke: winding 1 (pins 1-2) carries the positive line from DC_HS to VIN_RAW and winding 2 (pins 3-4) the return, so it is two pass-throughs in one four-pin package and no shape test can tell it from a connector"
+  "L2": "the SRF1260 dual-winding choke in its common-mode connection: winding 1-3 carries the positive line from DC_HS (pad 1) to VIN_RAW (pad 3) and winding 2-4 the return from GND_V (pad 2) to GND (pad 4), so it is two pass-throughs in one four-pin package and no shape test can tell it from a connector"
  }
 }
