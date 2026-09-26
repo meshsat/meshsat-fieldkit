@@ -74,7 +74,7 @@ Rules for the workstreams:
 
 | Date | Resource | Purpose | Rate | Cap | State |
 |---|---|---|---|---|---|
-| 25 Sep 22:25 | vast.ai 52646493 (64 vCPU, 251 GB) | the full suite with KiCad, regeneration parity, adjudication readings, every circuit regeneration, the review packets; later the board B escape trial | 0.121 to 0.142 USD/h | about 10 USD for the foundation rounds | running; 19.9 host-hours and 2.88 USD spent at 26 Sep 18:24; credit 125.11 USD |
+| 25 Sep 22:25 | vast.ai 52646493 (64 vCPU, 251 GB) | the full suite with KiCad, regeneration parity, adjudication readings, every circuit regeneration, the review packets; later the board B escape trial | 0.121 to 0.142 USD/h | about 10 USD for the foundation rounds | running; 19.9 host-hours and 2.88 USD spent at 26 Sep 18:24 (credit 125.11 USD); 22.3 host-hours and 3.19 USD at 26 Sep 20:45 (credit 124.80 USD) |
 
 Credit at the start: 127.99 USD. A box is destroyed when its last result is fetched and verified.
 
@@ -103,3 +103,17 @@ Credit at the start: 127.99 USD. A box is destroyed when its last result is fetc
 | Blockers open, bounded | ZEROIZE on the fitted ATECC608B (a bounded development-device experiment specified); EMCON guarantees for the 5G module and WiFi cards (bench proof specified); the failover fabric's escape strategy and signal integrity; the battery packet awaiting the approved qualified reviewer; two new qualified review routes (board A power, board B high-speed digital) needing the owner's spending approval; the requirements registry and architecture page (re-anchoring to main, then merge) |
 | Next verifiable result | round 7 merged with every board regenerated and the clamp polarity and RF-002 transmitter checks reading the real boards; review packets for A, B and D; the requirements and architecture candidate merged with its feasibility blockers explicit |
 
+### Checkpoint, 26 September 2026 20:45 CEST
+
+**Headline** (v2/docs/CURRENT-EVIDENCE.md): foundations incomplete; 0 boards ready for layout; 0 physically verified.
+
+| Item | State |
+|---|---|
+| Elapsed since the baseline (25 Sep 22:33) | 22 h 12 min |
+| Host-hours and spend | one KiCad build host, 22.3 h, 3.19 USD; credit 124.80 USD |
+| Experiments completed | none routed (the board B escape trial Q-B-ESC-1 is specified with its driver in tools/routeflow/experiments/b_esc1/, not run) |
+| Evidence made current | unchanged in class: 8 current candidate, 2 valid historical, 282 awaiting revalidation, 20 desk review, 0 physical test, 21 no evidence. The layout-entry blockers are 74: 27 close with a re-take alone, 31 once a tool records the artefact it judged, 12 once PWR-001's and SI-001's tools judge the netlist, 1 needs a deciding verification (INT-002 on B), 3 are decision 31's holds on A, D and E |
+| Blockers closed with evidence | review item 1: the requirements registry (131 records, six FEA feasibility blockers, validator and generated trace) and the architecture page with board-to-board contracts and board B's escape diagnosis and trial specification (9f848223, 7808734f, 70819008); round 7b's shared tools: clamp polarity judged from the part number on every board, the pack SMBus lead a cross-board contract, maker-named lands on the rotation checklist, every board regenerated with schematics byte-identical (93138ac1); S-05 closed and CFL-015 resolved with the assembly guide and panel contract describing the lead as generated (16fa4c23) |
+| Blockers open, bounded | as at 18:24, plus: TRN-001 reads FAIL on A and B on the clamp symbol (0 reversed); the RF-002 transmitter walk is in its review loop and not merged |
+| Running | tools stream (seven writers record the artefact they judge; PWR-001 and SI-001 on the netlist; A's and B's clamps on the one-way symbol with every board regenerated); published contracts rewritten against the circuits (S-07); parts (certification re-take, owed source entries); records filing (every drafts/ record a committed page cites, filed in the tree); the RF-002 walk's review loop |
+| Next verifiable result | the tools stream merged, then one re-take of every schematic-phase reading on the committed netlists in a clean clone on the box, which is the step that can move boards to layout entry |
