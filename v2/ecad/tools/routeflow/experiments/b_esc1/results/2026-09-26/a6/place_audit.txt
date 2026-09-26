@@ -1,0 +1,43 @@
+place_audit: WARN  J_M2N3: 2 of 34 fine-pitch pads without an escape (pads 3,75): the router's job, pruned_gate-style check after the route
+place_audit: FAIL  U7: 12 of 24 fine-pitch pads without an escape (pads 6,7,8,9,10,11,12,20): the fan could not be placed
+place_audit: WARN  U21: 1 of 6 fine-pitch pads without an escape (pads 5): the router's job, pruned_gate-style check after the route
+place_audit: WARN  U22: 1 of 6 fine-pitch pads without an escape (pads 5): the router's job, pruned_gate-style check after the route
+place_audit: WARN  J_M2C2: 4 of 39 fine-pitch pads without an escape (pads 5,53,55,73): the router's job, pruned_gate-style check after the route
+place_audit: FAIL  U301: 34 of 99 fine-pitch pads without an escape (pads 2,3,4,5,8,9,10,11): the fan could not be placed
+place_audit: WARN  U4 has no escapes (excluded by ESCAPE_SKIP), nothing fine-pitch near it
+place_audit: WARN  U1: 9 of 78 fine-pitch pads without an escape (pads 6,7,8,9,12,13,31,32): the router's job, pruned_gate-style check after the route
+place_audit: FAIL  U202: 17 of 35 fine-pitch pads without an escape (pads 2,8,9,10,39,41,49,52): the fan could not be placed
+place_audit: FAIL  U101: 38 of 99 fine-pitch pads without an escape (pads 8,9,10,11,15,73,74,79): the fan could not be placed
+place_audit: WARN  J_M2N1: 2 of 34 fine-pitch pads without an escape (pads 3,75): the router's job, pruned_gate-style check after the route
+place_audit: WARN  U32B: 4 of 66 fine-pitch pads without an escape (pads 116,118,169,171): the router's job, pruned_gate-style check after the route
+place_audit: FAIL  U302: 14 of 35 fine-pitch pads without an escape (pads 5,9,10,39,49,50,51,55): the fan could not be placed
+place_audit: FAIL  U19: 5 of 14 fine-pitch pads without an escape (pads 1,2,5,6,7): the fan could not be placed
+place_audit: WARN  J_HDMI has no escapes (excluded by ESCAPE_SKIP), nothing fine-pitch near it
+place_audit: WARN  U109: 1 of 21 fine-pitch pads without an escape (pads 21): the router's job, pruned_gate-style check after the route
+place_audit: WARN  U210: 1 of 10 fine-pitch pads without an escape (pads 5): the router's job, pruned_gate-style check after the route
+place_audit: FAIL  U20: 3 of 11 fine-pitch pads without an escape (pads 12,13,14): the fan could not be placed
+place_audit: FAIL  U209: 15 of 21 fine-pitch pads without an escape (pads 1,3,4,5,6,8,9,11): the fan could not be placed
+place_audit: WARN  U37: 2 of 6 fine-pitch pads without an escape (pads 2,5): the router's job, pruned_gate-style check after the route
+place_audit: WARN  U29: 2 of 6 fine-pitch pads without an escape (pads 2,5): the router's job, pruned_gate-style check after the route
+place_audit: WARN  J_M2N2: 2 of 34 fine-pitch pads without an escape (pads 3,75): the router's job, pruned_gate-style check after the route
+place_audit: WARN  U10: 1 of 6 fine-pitch pads without an escape (pads 2): the router's job, pruned_gate-style check after the route
+place_audit: WARN  U30B: 3 of 66 fine-pitch pads without an escape (pads 110,122,124): the router's job, pruned_gate-style check after the route
+place_audit: WARN  U309: 1 of 21 fine-pitch pads without an escape (pads 21): the router's job, pruned_gate-style check after the route
+place_audit: WARN  U35: 2 of 6 fine-pitch pads without an escape (pads 2,5): the router's job, pruned_gate-style check after the route
+place_audit: WARN  U31B: 3 of 66 fine-pitch pads without an escape (pads 116,118,122): the router's job, pruned_gate-style check after the route
+place_audit: WARN  U201: 27 of 99 fine-pitch pads without an escape (pads 1,2,8,15,77,89,90,91): the router's job, pruned_gate-style check after the route
+place_audit: WARN  U3 has no escapes (excluded by ESCAPE_SKIP), nothing fine-pitch near it
+place_audit: FAIL  U102: 21 of 41 fine-pitch pads without an escape (pads 3,4,8,9,10,16,34,39): the fan could not be placed
+place_audit: WARN  U61: 8 of 44 fine-pitch pads without an escape (pads 6,10,11,12,13,94,99,100): the router's job, pruned_gate-style check after the route
+place_audit: WARN  U82: 2 of 7 fine-pitch pads without an escape (pads 2,5): the router's job, pruned_gate-style check after the route
+place_audit: WARN  U83: 2 of 7 fine-pitch pads without an escape (pads 2,5): the router's job, pruned_gate-style check after the route
+place_audit: WARN  U51: 12 of 44 fine-pitch pads without an escape (pads 6,10,11,12,22,24,26,33): the router's job, pruned_gate-style check after the route
+place_audit: INFO  escape envelopes: 128 overlapping pairs, 24924 mm2 (a Stage E feature; the escape pass and the pre-route DRC already proved the fans fit)
+place_audit: INFO  pin density: busiest 20 mm tiles (pads per cm2): (10,6) 41, (9,1) 38, (4,6) 35, (11,6) 26, (7,6) 23
+place_audit: INFO  HPWL: 90783 mm over 844 nets; longest GND 516, +5V_DEV 504, +3V3_DEV 481, WIFI_SEC 409, SCL 409, SDA 407, HB3 406, EMCON_HW 403, EXP_INT 398, PI_KILL 394
+place_audit: INFO  decoupling: 0 of 0 bypass entries (no intent file or none listed)
+place_audit: FAIL  3 plane pad(s) with no path to their plane before the route (no via within 1.5 mm, not in their own fill, no locked copper, and no free via site within 1.5 mm or a track keep-out over the pad): U301.2 (GND, no via site), U201.120 (GND, no via site), U40.1 (+5V_DEV, no via site)
+place_audit: INFO  every filled pour on this board reaches a via or a plated pad of its own net; the islands a ROUTER cuts out of a pour cannot be predicted from a placed board and are the other half of this class
+place_audit: INFO  escapes measured on 75 of 75 fine-pitch parts (957 parts, 6395 locked pieces on the board)
+place_audit: 10 predicted collision(s) among 75 fine-pitch parts of 957; FAIL
+verdict: place_audit            FAIL         of 75 {"collisions": 10, "fine_pitch": 75, "footprints": 957, "measured": 75}

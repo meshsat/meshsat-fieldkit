@@ -1,0 +1,131 @@
+{
+ "label": "EXPERIMENTAL (Q-B-ESC-1)",
+ "board": "/root/besc1/v2/ecad/out/routeflow/b-esc1/a6/s3.kicad_pcb",
+ "board_sha256": "682d567e24b43582cb0a3eeab29c68b327bff1c89be430aa2c86c5f3712f638d",
+ "part_json": "/root/besc1/v2/ecad/out/routeflow/b-esc1/a6/part.json",
+ "part_json_sha256": "0d54fe1b87d1496825f867a8375c5ee869551652288f629ce9647d4e7b7e0a92",
+ "group": "S3",
+ "imported": null,
+ "copper_layers": 6,
+ "nets_in_group": 146,
+ "nets_with_pads": 146,
+ "zone_nets": [],
+ "open": 33,
+ "open_nets": [
+  "/+1V0_S3",
+  "/+1V1_S3",
+  "/+3V3_S3A",
+  "/+3V3_S3B",
+  "/BANK3_UPTX_N",
+  "/BOE3_n",
+  "/CARD3_RX_N",
+  "/CARD3_RX_P",
+  "/CARD3_TX_P",
+  "/HOST3_0D_N",
+  "/HUB3_R1",
+  "/HUB3_RST_n",
+  "/HUB3_SMBUS_n",
+  "/HUB3_XI",
+  "/HUB3_XO",
+  "/IOCC_XI",
+  "/IOCC_XO",
+  "/NVME3_RX_N",
+  "/PCIE3_RCLK0_N",
+  "/PCIE3_RXSW_P",
+  "/PCIE3_TX_P",
+  "/PCIE_PWR_EN3",
+  "/S3_IREF"
+ ],
+ "per_net_open": {
+  "/+1V0_S3": 2,
+  "/+1V1_S3": 2,
+  "/+3V3_S3A": 4,
+  "/+3V3_S3B": 2,
+  "/BANK3_UPTX_N": 1,
+  "/BOE3_n": 1,
+  "/CARD3_RX_N": 1,
+  "/CARD3_RX_P": 1,
+  "/CARD3_TX_P": 1,
+  "/HOST3_0D_N": 1,
+  "/HUB3_R1": 1,
+  "/HUB3_RST_n": 2,
+  "/HUB3_SMBUS_n": 1,
+  "/HUB3_XI": 2,
+  "/HUB3_XO": 3,
+  "/IOCC_XI": 1,
+  "/IOCC_XO": 1,
+  "/NVME3_RX_N": 1,
+  "/PCIE3_RCLK0_N": 1,
+  "/PCIE3_RXSW_P": 1,
+  "/PCIE3_TX_P": 1,
+  "/PCIE_PWR_EN3": 1,
+  "/S3_IREF": 1
+ },
+ "walk_split_nets": 23,
+ "residue": {
+  "U301": [
+   {
+    "pad": "U301.101",
+    "net": "/NVME3_RX_N",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.111",
+    "net": "/PCIE3_RCLK0_N",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.124",
+    "net": "/PCIE3_RXSW_P",
+    "zone_net": false
+   }
+  ],
+  "U302": [
+   {
+    "pad": "U302.50",
+    "net": "/HUB3_RST_n",
+    "zone_net": false
+   }
+  ],
+  "U309": [
+   {
+    "pad": "U309.4",
+    "net": "/BANK3_UPTX_N",
+    "zone_net": false
+   }
+  ],
+  "U32B": [
+   {
+    "pad": "U32B.136",
+    "net": "/HOST3_0D_N",
+    "zone_net": false
+   },
+   {
+    "pad": "U32B.122",
+    "net": "/PCIE3_TX_P",
+    "zone_net": false
+   }
+  ]
+ },
+ "copper_by_layer": {
+  "B.Cu": {
+   "tracks_mm": 1711.4,
+   "segments": 667
+  },
+  "F.Cu": {
+   "tracks_mm": 1593.1,
+   "segments": 790
+  },
+  "In2.Cu": {
+   "tracks_mm": 6775.6,
+   "segments": 956
+  },
+  "In3.Cu": {
+   "tracks_mm": 2939.3,
+   "segments": 536
+  }
+ },
+ "vias": 440,
+ "board_ratsnest_total": 1662,
+ "seconds": 8.2
+}

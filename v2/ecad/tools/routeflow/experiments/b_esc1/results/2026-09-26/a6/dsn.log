@@ -1,0 +1,18 @@
+18:49:47: Debug: Adding duplicate image handler for 'PNG file'
+18:49:47: Debug: Adding duplicate image handler for 'JPEG file'
+18:49:47: Debug: Adding duplicate image handler for 'TIFF file'
+18:49:47: Debug: Adding duplicate image handler for 'GIF file'
+18:49:47: Debug: Adding duplicate image handler for 'PNM file'
+18:49:47: Debug: Adding duplicate image handler for 'PCX file'
+18:49:47: Debug: Adding duplicate image handler for 'IFF file'
+18:49:47: Debug: Adding duplicate image handler for 'Windows icon file'
+18:49:47: Debug: Adding duplicate image handler for 'Windows cursor file'
+18:49:47: Debug: Adding duplicate image handler for 'Windows animated cursor file'
+18:49:47: Debug: Adding duplicate image handler for 'TGA file'
+18:49:47: Debug: Adding duplicate image handler for 'XPM file'
+dsn_export: planes kept 1 DSN export: True
+swig/python detected a memory leak of type 'ZONE *', no destructor found.
+swig/python detected a memory leak of type 'ZONE *', no destructor found.
+swig/python detected a memory leak of type 'ZONE *', no destructor found.
+swig/python detected a memory leak of type 'ZONE *', no destructor found.
+dsn_export: power layers In1.Cu, In4.Cu (2 typed, 2 keep-outs dropped)

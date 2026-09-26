@@ -1,0 +1,185 @@
+{
+ "label": "EXPERIMENTAL (Q-B-ESC-1)",
+ "a6": "out/routeflow/b-esc1/a6/pcb-b-compute.kicad_pcb",
+ "a6_sha256": "62facf0952ff4c01cb0a47698ec6870b5fae0f0d9b836bf95db6c3c7bae166dd",
+ "a8": "out/routeflow/b-esc1/a8/pcb-b-compute.kicad_pcb",
+ "a8_sha256": "c858ef17f05d59f57e1777ea1edf775a69fa2e54fa61524b0985d943841bbd45",
+ "a6_census": {
+  "copper_layers": 6,
+  "enabled_copper": [
+   "F.Cu",
+   "In1.Cu",
+   "In2.Cu",
+   "In3.Cu",
+   "In4.Cu",
+   "B.Cu"
+  ],
+  "tracks": {
+   "F.Cu": 2606,
+   "B.Cu": 1244,
+   "In2.Cu": 220,
+   "In3.Cu": 135
+  },
+  "vias": 2218,
+  "zones": {
+   "F.Cu": 27,
+   "In1.Cu": 29,
+   "In2.Cu": 27,
+   "In3.Cu": 27,
+   "In4.Cu": 33,
+   "B.Cu": 27
+  },
+  "zone_nets": {
+   "F.Cu": [
+    ""
+   ],
+   "In1.Cu": [
+    "",
+    "GND"
+   ],
+   "In2.Cu": [
+    ""
+   ],
+   "In3.Cu": [
+    ""
+   ],
+   "In4.Cu": [
+    "",
+    "/+5V_DEV",
+    "/+5V_S1",
+    "/+5V_S2",
+    "/+5V_S3"
+   ],
+   "B.Cu": [
+    ""
+   ]
+  },
+  "pads_by_layer": {
+   "F.Cu": 3607,
+   "In1.Cu": 229,
+   "In2.Cu": 229,
+   "In3.Cu": 229,
+   "In4.Cu": 229,
+   "In5.Cu": 229,
+   "In6.Cu": 229,
+   "In7.Cu": 229,
+   "In8.Cu": 229,
+   "In9.Cu": 229,
+   "In10.Cu": 229,
+   "In11.Cu": 229,
+   "In12.Cu": 229,
+   "In13.Cu": 229,
+   "In14.Cu": 229,
+   "In15.Cu": 229,
+   "In16.Cu": 229,
+   "In17.Cu": 229,
+   "In18.Cu": 229,
+   "In19.Cu": 229,
+   "In20.Cu": 229,
+   "In21.Cu": 229,
+   "In22.Cu": 229,
+   "In23.Cu": 229,
+   "In24.Cu": 229,
+   "In25.Cu": 229,
+   "In26.Cu": 229,
+   "In27.Cu": 229,
+   "In28.Cu": 229,
+   "In29.Cu": 229,
+   "In30.Cu": 229,
+   "B.Cu": 1654
+  },
+  "footprints": 957,
+  "nets": 845
+ },
+ "a8_census": {
+  "copper_layers": 8,
+  "enabled_copper": [
+   "F.Cu",
+   "In1.Cu",
+   "In2.Cu",
+   "In3.Cu",
+   "In4.Cu",
+   "In5.Cu",
+   "In6.Cu",
+   "B.Cu"
+  ],
+  "tracks": {
+   "F.Cu": 2606,
+   "B.Cu": 1244,
+   "In2.Cu": 220,
+   "In3.Cu": 135
+  },
+  "vias": 2218,
+  "zones": {
+   "F.Cu": 27,
+   "In1.Cu": 29,
+   "In2.Cu": 27,
+   "In3.Cu": 27,
+   "In4.Cu": 33,
+   "B.Cu": 27
+  },
+  "zone_nets": {
+   "F.Cu": [
+    ""
+   ],
+   "In1.Cu": [
+    "",
+    "GND"
+   ],
+   "In2.Cu": [
+    ""
+   ],
+   "In3.Cu": [
+    ""
+   ],
+   "In4.Cu": [
+    "",
+    "/+5V_DEV",
+    "/+5V_S1",
+    "/+5V_S2",
+    "/+5V_S3"
+   ],
+   "B.Cu": [
+    ""
+   ]
+  },
+  "pads_by_layer": {
+   "F.Cu": 3607,
+   "In1.Cu": 229,
+   "In2.Cu": 229,
+   "In3.Cu": 229,
+   "In4.Cu": 229,
+   "In5.Cu": 229,
+   "In6.Cu": 229,
+   "In7.Cu": 229,
+   "In8.Cu": 229,
+   "In9.Cu": 229,
+   "In10.Cu": 229,
+   "In11.Cu": 229,
+   "In12.Cu": 229,
+   "In13.Cu": 229,
+   "In14.Cu": 229,
+   "In15.Cu": 229,
+   "In16.Cu": 229,
+   "In17.Cu": 229,
+   "In18.Cu": 229,
+   "In19.Cu": 229,
+   "In20.Cu": 229,
+   "In21.Cu": 229,
+   "In22.Cu": 229,
+   "In23.Cu": 229,
+   "In24.Cu": 229,
+   "In25.Cu": 229,
+   "In26.Cu": 229,
+   "In27.Cu": 229,
+   "In28.Cu": 229,
+   "In29.Cu": 229,
+   "In30.Cu": 229,
+   "B.Cu": 1654
+  },
+  "footprints": 957,
+  "nets": 845
+ },
+ "differences": [],
+ "agree": true
+}

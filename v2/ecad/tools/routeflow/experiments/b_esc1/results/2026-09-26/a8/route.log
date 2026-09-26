@@ -1,0 +1,2 @@
+dsn_confine: S3 confined with 24 keep-outs over ['DEVW', 'S1', 'S2', 'DEVE'] on ['F.Cu', 'In2.Cu', 'In3.Cu', 'In5.Cu', 'In6.Cu', 'B.Cu']
+route_part S3: passes 20 timeout 9000 ignoring 21 classes; start 18:50:31

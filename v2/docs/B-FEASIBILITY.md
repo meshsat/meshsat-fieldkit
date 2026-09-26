@@ -10,11 +10,13 @@ of what was corrected; the committed B21 **board** and its pre-route snapshot ar
 carry B21's netlist. The failover fabric's own review, `v2/docs/feasibility/FAILOVER-FABRIC.md` (`a5266aa8`), adds four
 circuit findings in the same pockets (FAB-01 to FAB-04) and the placement item FAB-08, which this page's trial limits
 now carry. Every citation below was re-read at `eadbe571`. The system view this page sits in is
-`v2/docs/ARCHITECTURE.md` (its section 14 lists this page's open items as blocker FB-FAB). **Prototype design: no V2 board has been built, and board B has never been routed to
-completion.** This
-page is a diagnosis from existing artefacts and a specification of one experiment. It proposes no layout, adopts no
-phase, and authorises nothing: under the owner's condition 7 of 25 September, feasibility evidence is separate from
-layout authorisation.
+`v2/docs/ARCHITECTURE.md` (its section 14 lists this page's open items as blocker FB-FAB). **Revised again late on
+26 September 2026 against `main` at `fc144600`: the trial of section 7 has run; its result is section 7.8
+(EXPERIMENTAL, INCONCLUSIVE by its own table) and the next test is section 7.9 (specified, not run). Sections 7.8 and
+7.9 were read against the trial's filed files and the netlists at `fc144600`.** **Prototype design: no V2 board has been
+built, and board B has never been routed to completion.** This page is a diagnosis from existing artefacts, the record
+of one bounded experiment and the specification of the next. It proposes no layout, adopts no phase, and authorises
+nothing: under the owner's condition 7 of 25 September, feasibility evidence is separate from layout authorisation.
 
 Evidence labels: **VERIFIED** (read in the artefact cited), **RECORDED** (a measurement written into
 `v2/ecad/tools/boards/b.json` or `pcb_decisions.yaml` whose underlying run is not in this tree, so it is cited, not
@@ -51,8 +53,9 @@ of each direction at its own transmitter; no PCIe or M.2 specification is held i
 the committed netlist since `458b2873`** (Appendix A; the fabric map reads 202 of 202 rows OK on it,
 `ARCHITECTURE.md` section 5.2), and every reference clock output pair is now also coupled and source-terminated. The
 correction grows the pockets: slot 3's block gains 32 parts against B21, 18 of them to be seated beside the switch U301
-(`FAILOVER-FABRIC.md` FAB-08). No board file carries the corrected netlist yet, and the fabric review's FAB-01 (every
-switch's `TEST2` strap) to FAB-04 are still open in it, so a route of the B21 board is evidence of routability only.
+(`FAILOVER-FABRIC.md` FAB-08): six at its north-row pins and twelve at its east-row clock outputs (section 7.7). No
+board file carries the corrected netlist yet, and the fabric review's FAB-01 (every switch's `TEST2` strap) to FAB-04
+are still open in it, so a route of the B21 board is evidence of routability only.
 
 The recommendation (section 6) is to finish the schematic (Appendix A is done; FAB-01 to FAB-04 are not), to run the
 bounded region trial of section 7 because it is cheap and separates "layers" from "geometry", and to study the floor
@@ -62,7 +65,12 @@ regeneration and route of board B, and its text does not make that run wait for 
 (`v2/docs/EXECUTION-PLAN.md`, the reviews table) puts board B feasibility inside Review C, and the integrating session's
 working plan answers this trial before any whole-board route. So the order is the integrating session's to set and
 record in `EXECUTION-PLAN.md`; this page does not set it. Whatever order runs, the whole-board run's outputs are
-EXPERIMENTAL.
+EXPERIMENTAL. **The trial ran on 26 September 2026** and read INCONCLUSIVE by its pre-registered table (section 7.8):
+on the pre-correction board its eight-layer arm settled at 18 open connections, nine of which no router could close in
+the trial's configuration and eight of the rest at the switch's and hub's unescaped north pad rows, a band that two more
+layers did not clear and that this page reads as bounded by placement (INFERRED; the distances behind it are
+VERIFIED). The next test (section 7.9) therefore tests the escape and placement remedy on the corrected netlist, not
+more layers.
 
 ## 2. What was read
 
@@ -79,6 +87,7 @@ EXPERIMENTAL.
 | JLCPCB pages and order form | fetched 25 September 2026 (section 4); transcribed in `v2/vendor/fabricator/jlcpcb-stackups-2026-09-25.md` | stackups offered, via capabilities |
 | Raspberry Pi CM5 IO board design | `v2/vendor/cm5/cm5io-kicad.zip` | how Raspberry Pi escapes one CM5 |
 | Preparation smoke test of the trial | run on the rented box on 25 September 2026 22:03 UTC, no router started (section 7.6) | the arms agree, S3's size and its pass-0 count |
+| The trial's run and its analysis | 26 September 2026 18:48 to 21:22 UTC at `44cfa045`; files in `v2/ecad/tools/routeflow/experiments/b_esc1/results/2026-09-26/` (each file's sha256 in its README; the final boards and sessions named there by sha256) | section 7.8 |
 
 ## 3. Diagnosis
 
@@ -280,7 +289,8 @@ No option below relaxes an electrical rule or extends route time.
    and its reading tells the whole-board run where to look (which routing layers carry the region, and whether the
    pocket or the buses between regions bind). Decision 43's own text does not make the whole-board run wait for it; the
    execution plan's Review C carries board B feasibility, and the order is the integrating session's to set and record
-   in `v2/docs/EXECUTION-PLAN.md` (section 1 of this page).
+   in `v2/docs/EXECUTION-PLAN.md` (section 1 of this page). **Ran 26 September 2026: section 7.8; the next test it
+   points to is section 7.9.**
 3. **In parallel, a paper floor-plan study of A4 with A2 and A7** (no compute): the cut screen of section 3.3 repeated on
    a proposed rectangle set, reporting the high-speed nets per cut before and after.
 4. **The whole-board eight-layer experiment that decision 43 authorises runs within that authorisation, and its
@@ -303,7 +313,7 @@ No option below relaxes an electrical rule or extends route time.
    because the session never logs into JLCPCB or writes to a supplier as the owner. Any price in the answer goes to the
    owner with a quote (D-09).
 
-## 7. The bounded escape trial Q-B-ESC-1 (specification, box-ready, not run)
+## 7. The bounded escape trial Q-B-ESC-1 (specification; run 26 September 2026, result in 7.8, EXPERIMENTAL)
 
 ### 7.1 Question
 
@@ -474,8 +484,10 @@ as well as one cut by a cap (its outcomes are unchanged on the synthetic cases o
 
 1. **The trial routes B21's netlist, not the corrected one.** The corrected netlist on `main` since `458b2873` adds
    173 parts to board B and removes one (R240); in slot 3's block that is 32 parts against B21: 18 to be seated beside
-   U301 (the AC coupling capacitors C353 to C356, C395, C396 and the twelve reference clock resistors R375 to R386, whose
-   place the HCSL rule ties to the source), and 14 elsewhere in the block (U311, Q309 to Q311, R362 to R365, R373, R374,
+   U301, six of them at its north-row pins (the AC coupling capacitors C353 to C356 at the transmit pins 100, 101, 106
+   and 107, and C395 and C396 at the reference clock input 110 and 111) and twelve at its east-row clock outputs (the
+   HCSL resistors R375 to R386 at pins 77 to 85, whose place the HCSL rule ties to the source; VERIFIED in the corrected
+   netlist at `fc144600`), and 14 elsewhere in the block (U311, Q309 to Q311, R362 to R365, R373, R374,
    C397, TP301 to TP303), plus the pair swap at J_M2N3 and J_M2C3 (`FAILOVER-FABRIC.md` FAB-08, VERIFIED there by
    netlist difference). The pockets had 0.0 mm of room before them (section 3.3). The trial routes the easier circuit,
    so it is optimistic for the corrected design: a LAYERS-NOT-THE-LEVER reading is strong, a REGION-CLOSES-ON-6 reading
@@ -489,10 +501,342 @@ as well as one cut by a cap (its outcomes are unchanged on the synthetic cases o
 3. **One sample per arm**, because the router is deterministic; the factor of one half is a convention.
 4. **Per-pass sessions can be missed** while the previous one is read; the plateau is over observed sessions.
 5. **A8 is more routing than any real eight-layer board B** (section 7.2).
+6. **Found by the result (7.8), not foreseen here:** nine S3 connections have their far pad inside the keep-out that
+   `dsn_confine.py` writes over another region's core, so no router could close them in this configuration, and they
+   floor both arms' decisive number at 9.
+
+### 7.8 Q-B-ESC-1 result (26 September 2026, EXPERIMENTAL)
+
+**Label and outcome.** EXPERIMENTAL: a reading of one region of the pre-correction B21 board; never a phase, a
+promotion or a layout candidate, and no authorisation of layout (condition 7). **By the pre-registered table of 7.5 the
+outcome is INCONCLUSIVE**, because A6 was cut by its 9,000 s job cap while its count was still falling. That outcome
+stands; nothing below re-judges it, and no cap is extended.
+
+**Run and files (VERIFIED).** The driver ran on the rented box 52646493 at commit `44cfa045` (tools tree `ee1906fa`,
+the trial's scripts hashed in its journal) from 18:48:19 to 21:21:46 UTC, both arms at once from 18:50:31 UTC. Its files
+are filed in `v2/ecad/tools/routeflow/experiments/b_esc1/results/2026-09-26/` with each file's sha256 in the README
+there, beside the read-only analysis of this section (scripts and outputs under `analysis/`). The two final boards, the
+two DRC reports and the 26 per-pass sessions stay on the box and are named there by sha256; a copy of each final board
+is kept with the session record outside this tree under the same sha256. The integrity check passed
+(arms equal; `place_audit` 10 collisions of 75 fine-pitch parts; S3 146 nets), and pass 0 read 290 on both arms. Every
+per-pass session was observed (12 and 14 in each `fr.log`, 12 and 14 rows in `passes.csv`), so limit 4 of 7.7 did not
+bite. The hard count is 0 on both final boards; the DRC's unrouted count sits at its 499 cap because every group the
+trial did not route is unrouted.
+
+| After pass | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| A6 open (F.Cu, In2, In3, B.Cu) | 290 | 138 | 111 | 84 | 71 | 66 | 56 | 42 | 39 | 40 | 37 | 38 | 33 | cut | |
+| A8 open (plus In5, In6) | 290 | 106 | 66 | 40 | 28 | 29 | 28 | 22 | 25 | 21 | 18 | 16 | 23 | 18 | 18 |
+
+A6 stopped JOB_ENDED at the cap, 33 open over 23 nets, 440 S3 vias; A8 stopped on the plateau rule, minimum 16 after
+pass 11, 18 open over 16 nets, 398 S3 vias (by size, 184 of 0.40 to 0.60 mm, the number S3 carried before routing,
+and 214 of 0.70 and 0.80 mm, the router's via sizes for S3's classes). Both arms leave U301.101 and U301.124 in the
+driver's residue.
+
+**Where the wall time went (VERIFIED from `fr.log` and the watcher; `analysis/time-split.csv`).**
+
+| | A6 | A8 |
+|---|---|---|
+| Job wall, from 18:50:31 UTC | 9,008 s, ended by the job cap (exit 124) | 8,485 s, ended by the watcher's plateau kill |
+| Input load (job start to the DSN reader's last line) | 6.6 s | 6.8 s |
+| Blocked on the modal "DSN file reader" warning | 3,386.7 s (56.4 min, 37.6 % of the wall) | 3,388.6 s (56.5 min, 39.9 %) |
+| Active routing ("Starting auto-routing" to the end) | 5,614.6 s: 12 passes in 5,286.5 s, then 328.1 s of a thirteenth pass lost at the cap | 5,089.2 s: 14 passes in 5,073.6 s, then 15.6 s lost at the kill |
+| First pass; mean of the later passes | 348 s; 449 s | 426 s; 358 s |
+
+Precision of those figures: the job start is journalled to the second (18:50:31), so the input loads and the job walls
+carry about 1 s; A8's job end is the watcher's clock, known to within 3 s (8,484.6 to 8,487.6 s); and each blocked
+interval includes the time from the Return at 19:47:02 UTC (journalled to the second) to "Starting auto-routing", 2.4 s
+on A6 and 4.4 s on A8. Outside the two jobs the driver spent 132 s preparing both arms and 67 s on the final readings.
+Four things follow.
+(1) The 9,000 s cap gave A6 5,615 s of routing; at its own pace the 3,387 s it sat blocked would have been about seven
+more passes, whose count is not known. (2) The first-pass cap (5,400 s from the watcher's start) was met only because
+the operator dismissed the warning at 19:47:02 UTC; unattended, it would have fired with no session written and the
+trial would have stopped with no pass on either arm. (3) At matched active routing time, A8's last session (5,074 s)
+read 18 where A6's latest session before that time (pass 11, 4,837 s) read 38, and A8 read 40 after 1,333 s where A6
+first read below 40 after 3,552 s. That is one deterministic run per arm on one shared box with A6 unsettled, so it is
+not equal-runtime evidence. (4) B23's record that S3's "first pass takes more than four hours" (`b.json`
+`_b23_pass_rate_why`) is wall time this page cannot split: its `fr.log` is not in this tree, and `d2cde4ff` records that
+it may hold the same wait. Here S3's first pass took 348 s and 426 s of routing alone on the board; B23's S3 routed
+against 14,305 locked tracks, so the two do not compare either.
+
+The warning itself (VERIFIED, `fr.log`): the DSN reader failed to normalise seven nets (`ETH2_P2_N`, `ETH3_P2_N`,
+`HOST3_1D_N`, `LIME_SSRX_P`, `LIME_SSTX_N`, `PCIE3_CLK_N`, `SWP4_C_N`). Two are S3 nets, `ETH3_P2_N` and `PCIE3_CLK_N`,
+and both read connected on both final boards by KiCad's own connectivity, which is what the decisive number is
+(`PCIE3_CLK_N` raised the same normalisation error again while routing, four log entries on each arm). That checks
+review finding F for this run only; the handler of `d2cde4ff` (`fr_dialog_watch.sh`) still sends Return to any window
+titled "DSN file reader", "Warning", "Message" or "Error", which the finding asks to narrow.
+
+**What is left open, connection by connection (VERIFIED on the final boards with `pcbnew`).** For every S3 net still
+split: its copper clusters by direct copper (no S3 net carries a zone, so this is exact, and the totals equal the
+driver's 33 and 18); the missing connections as a minimum spanning tree between the pad-bearing clusters; and at each
+end the partition region, whether the input board had an escape on the pad, and a via-site search: on a 0.05 mm grid
+within 3 mm of the pad centre, the nearest point that holds a through via of 0.40 mm (the escape pass's) or 0.70 mm (the
+router's via for S3's signal classes in this DSN; 0.80 mm for its power class) at 0.127 mm or more from every copper
+item of another net on every copper layer, reached from the pad by a straight 0.127 mm stub on the pad's layer, every
+item taken as KiCad's own shape (pcbnew's effective shape per layer, so a U301 pad is its rounded rectangle) and every
+clearance as KiCad's own collision test. The search can err both ways: a site found is not proof that a via fits (zone
+fills and hole-to-hole distances are not checked), and a site not found is not proof that none exists (grid points and
+straight stubs only). Because the nearest grid site clears by less than one grid step (except on the first ring beside the pad centre, which
+the search excludes), the file also counts the
+sites (up to 25): a site that is one or two grid points is one that a slightly different model of the copper could
+remove. Each connection's history comes from re-importing every observed session into the input board (the per-pass
+totals equal `passes.csv` on every pass); **"Open in observed passes"** counts the passes after which no pad of the
+final board's copper cluster at one end shared a copper cluster with any pad of the final board's cluster at the other
+end. Cause rules, in order: **keep-out** (an end inside another region's confinement keep-out), **via site** (no 0.70
+mm site for an end pad even on the input board), **escape at the pad** (a fine-pitch pad of U301, U302, U309, U310 or
+U32B with no escape on the input board, no copper on the final one, and no 0.70 mm site left), **congestion** (the
+rest). The flag **pre-correction netlist** marks a connection the corrected netlist changes. Rules and full rows:
+`analysis/besc1_causes.py`, `analysis/residue-a6.csv`, `analysis/residue-a8.csv`.
+
+**Corrected on 27 September 2026 after the independent check.** The first analysis (a) named a net's largest copper
+cluster its main one and counted a pad as open only outside it, so a tie between equal clusters hid a pad: A6's
+`PCIE_PWR_EN3` read 1 of 12 where U303.3 was cut off from R306.1 after 6 of the 12 passes, and A8's U301.105 to
+U301.108 read 8 of 14 where the two were apart after 5; and (b) modelled every pad as its bounding rectangle and
+skipped any track whose two ends lay more than 8 mm from the pad, however close its middle ran. The readers were
+rewritten (`besc1_passes.py`, `besc1_viasite.py`, second versions) and every reading below comes from them. The
+per-pass totals, the residue and the keep-out rows are unchanged. The history column changed on six A6 rows and one
+A8 row; on every row whose two ends are pads, the stricter reading "the two end pads apart" gives the same count,
+except A6's `HUB3_RST_n` U302.50 to C363.1 (8 against 7). Three pads now have a 0.70 mm site that the first search did
+not find, each at a few grid points only, and three causes moved with them: on A8's final board U301.102 has one grid
+point 1.707 mm out at (198.225, 131.512), 0.135 mm from C366.1 on B.Cu, and U301.106 has two, the nearest 1.801 mm out
+at (196.525, 131.412), 0.128 mm from C363.2 on B.Cu, so `CARD3_TX_P` and `CARD3_RX_P` move from escape at the pad to
+congestion by the rules; on A6's input board U301.86 has five, the nearest 1.1 mm out at (200.438, 138.675), 0.131 mm
+from U301.85, so `S3_IREF` moves from via site to escape at the pad. Those three causes turn on 1 to 8 micrometres over
+a 0.127 mm clearance, and are read as such. The second search also puts the nearest site farther out at four pads
+(C351.1 on both input boards and A6's final board; J_M2C3.41, J_M2C3.43 and R337.2 on A6's final board). Where that
+was checked, the first search had passed a via over a long track it skipped: at C351.1 the B.Cu tracks of
+`LIME_SSRX_P` and `LIME_SSRX_N`, whose ends lie 11 and 25 mm from the pad, and at R337.2 two In3.Cu tracks. None of
+those four changes decided a cause.
+
+A8, 18 open:
+
+| Net | Ends (layer; region when not S3) | Open in observed passes | Cause |
+|---|---|---|---|
+| `+1V0_S3` | S3 copper to TP30.1 (F.Cu; S2 core) | 14 of 14 | keep-out |
+| `+1V1_S3` | S3 via to TP31.1 (F.Cu; S2 core) | 14 of 14 | keep-out |
+| `+3V3_S3A` | J_M2C3.2 to TP28.1 (F.Cu; S2 core) | 14 of 14 | keep-out; pre-correction netlist (the E-key socket leaves this rail) |
+| `+3V3_S3B` | J_M2N3.74 to R25.2 (F.Cu; DEVE core) | 14 of 14 | keep-out |
+| `+3V3_S3B` | J_M2N3.2 to TP29.1 (F.Cu; S2 core) | 14 of 14 | keep-out |
+| `BOE3_n` | S3 copper to U80.8's via (B.Cu; DEVW core) | 14 of 14 | keep-out |
+| `HUB3_RST_n` | R341.1 to Q5.3 (B.Cu; DEVW core) | 14 of 14 | keep-out |
+| `IOCC_XI` | U61.12 (B.Cu; S2 core) to the Y4 and C450 copper | 14 of 14 | keep-out |
+| `IOCC_XO` | Y4.3 to U61.13 (B.Cu; S2 core) | 14 of 14 | keep-out |
+| `+1V0_S3` | U301.105 to U301.108 (F.Cu, 1.2 mm apart) | 5 of 14 | escape at the pad (U301.108) |
+| `BANK3_UPRX_P` | U302.55 (F.Cu) to C359.1 (B.Cu) | 6 of 14 | escape at the pad (U302.55) |
+| `BANK3_UPTX_P` | U302.58 to U309.3 (F.Cu) | 7 of 14 | escape at the pad (U302.58) |
+| `NVME3_RX_N` | U301.101 to J_M2N3.41 (F.Cu) | 12 of 14 | escape at the pad; pre-correction netlist |
+| `NVME3_RX_P` | U301.100 to J_M2N3.43 (F.Cu) | 9 of 14 | escape at the pad; pre-correction netlist |
+| `PCIE3_RXSW_P` | U301.124 to C351.1 (F.Cu) | 14 of 14 | escape at the pad (U301.124) |
+| `CARD3_RX_P` | U301.106 to J_M2C3.41 (F.Cu) | 10 of 14 | congestion by the rules, on a 0.70 mm site of two grid points 1 micrometre over the clearance (above); pre-correction netlist |
+| `CARD3_TX_P` | U301.102 to J_M2C3.35 (F.Cu) | 10 of 14 | congestion by the rules, on a 0.70 mm site of one grid point 8 micrometres over the clearance (above); pre-correction netlist |
+| `HUB3_XO` | the hub's copper to Y301.3 (F.Cu) | 4 of 14 | congestion |
+
+A8 by cause: keep-out 9, escape at the pad 6, congestion 3 (two of them the margin cases above).
+
+A6, 33 open (full rows in `residue-a6.csv`): **keep-out 9**, the same nine connections as A8; **escape at the pad 7**,
+U301.101, .102, .106, .107 and .124 (`NVME3_RX_N`, `CARD3_TX_P`, `CARD3_RX_P`, `CARD3_RX_N`, `PCIE3_RXSW_P`), U302.39
+(`HUB3_SMBUS_n`) and U301.86 (`S3_IREF`, by the input-board site of five grid points noted above); **via site 2**,
+U301.83 to U301.111 (`PCIE3_RCLK0_N`) and U301.128 (`PCIE3_TX_P`), pads with no 0.70 mm site even on the input board;
+**congestion 15**, the hub's crystal nets (`HUB3_XI` and `HUB3_XO`, five connections), `+3V3_S3A` (three, inside the
+slot's own regulator copper), `+1V0_S3` (L303 to its capacitors), `+1V1_S3` (C374), `BANK3_UPTX_N`, `HUB3_R1`,
+`HUB3_RST_n` (U302.50 to C363), `HOST3_0D_N` (U310 to U32B, 114 mm) and `PCIE_PWR_EN3` (U303.3 to R306.1, open after
+6 of the 12 passes: 2, 4, 6, 8, 10 and 12). Eight of the 24 in-region connections carry the pre-correction flag.
+
+What the residue shows (VERIFIED unless marked):
+
+1. **Nine connections in both arms could not be closed by any router in this trial.** Their far pad lies inside the
+   keep-out that `dsn_confine.py` writes over another region's core on every routing layer: the test points TP28 to TP31
+   at y 14 to 18 in S2's core, R25 in DEVE's, U80 and Q5 in DEVW's, and U61, the I/O supervisor whose crystal Y4 is in
+   slot 3 but whose pins 12 and 13 sit 3 mm inside S2's keep-out. They are open in all 26 observed sessions, they were
+   in the pass-0 count of 290, and they floor both arms' decisive number at 9 (limit 6 of 7.7). In the region the arms
+   leave 24 (A6) and 9 (A8).
+2. **Eight of A8's nine in-region connections end at a pad on the north row of the switch U301 or of the hub U302 that
+   carried no escape on the input board** (six of them classed escape at the pad; `CARD3_TX_P` and `CARD3_RX_P`
+   congestion, by the margin cases above). U301's rows on the input board (rows, nets and escapes from `analysis/rows.json`; the pin names from B21's netlist at
+   `82dd1e4d`, sha256 `0e72edb5...`, which carries each pin's function, because the board's pads carry none and the
+   file's `function` field is empty): the north row carries
+   every PCIe lane pin of the switch (the twelve connected ones: port 0 at 123, 124, 127 and 128, ports 1 and 2 at 97,
+   98, 100 to 103, 106 and 107; port 3's four, 117, 118, 121 and 122, are unused) and the reference clock input pair
+   REFCLKP and REFCLKN (110, 111), which B21 joins straight to the switch's own clock output (defect A.3); the east row
+   carries the host's clock into REFCLKI (73, 74) and the three reference clock output pairs (77 and 78, 80 and 81, 83
+   and 85); the west row carries the resets PERST_L (10) and DWNRST_L1 and DWNRST_L2 (5, 6). 19 of the north row's 27
+   connected pads had no escape, among them 11 of its 14 lane and clock-input pads (U302's north row: 10 of 15, all four
+   upstream SuperSpeed pins among them). Before routing, each of the eight pads, taken alone, had a site for the
+   router's 0.70 mm via 1.1 mm from its centre (0.7 mm on U302). On the final board six of them have none within 3 mm,
+   and the other two, U301.102 and U301.106, have one only at one and two grid points 1.71 and 1.80 mm out, clearing
+   back-side capacitors by 8 and 1 micrometres over the clearance; five of the eight have a site for a 0.40 mm via, 1.4
+   to 1.7 mm out. INFERRED from those two readings: the router made these escapes itself, with its own larger vias, and
+   the band filled before every pad had one.
+3. **The band is bounded by placement, which two more layers did not change (INFERRED: the distances below are
+   VERIFIED, that they are what binds the band is this page's reading).** U301's north pad tips (y 132.48) face J_M2N3's
+   5.0 mm standoff pad at (198.0, 127.5), 2.5 mm away, and four capacitors on B.Cu (C309, C363, C366, C374) sit under
+   the tip-via line at y 132.35 to 132.6 (input board).
+4. **The router trades these connections from pass to pass.** On A8 `BANK3_UPRX_N` is open after every odd pass and
+   `BANK3_UPTX_P` after every even one, and eight of the nine in-region rows are open after some passes and closed after
+   others, which is what connections competing for one band look like (INFERRED). U301.124 is the exception:
+   `PCIE3_RXSW_P` never connected in any of the 26 sessions, while its partner `PCIE3_RXSW_N` (U301.123 to C352.1) was
+   joined after 21 of them (13 of 14 on A8, 8 of 12 on A6) and on both final boards. Its coupling capacitor C351 sits at
+   (205.4, 153.1), across the package from the pin: pin 124 to C351 is 25.3 mm and C351 to the receptacle pin U32B.116
+   the pair then runs to is 111.8 mm, against 99.4 mm from the pin to U32B.116 directly.
+5. **Four of A8's nine in-region connections (`NVME3_RX_P`, `NVME3_RX_N`, `CARD3_RX_P`, `CARD3_TX_P`) and eight of A6's
+   24 are links the corrected netlist rewires:** the downstream transmit pairs now reach the other socket pins through
+   C353 to C356 at the switch (Appendix A.1), the clock output reaches the input through R376, R378 and C396 (A.3), the
+   E-key socket leaves `+3V3_S3A`, and `PCIE_PWR_EN3` no longer reaches U303. Those failures describe a circuit that is
+   no longer the design. The correction seats 18 more parts around the switch (FAB-08; VERIFIED in the corrected netlist
+   at `fc144600`): six at north-row pins, in the band where the residue sits (C353 to C356 at the transmit pins 100,
+   101, 106 and 107; C395 and C396 between the clock output's termination and the clock input 110 and 111), and twelve
+   at the east-row clock outputs (R375 to R386 at pins 77 to 85: a series resistor at each output pin and a shunt
+   resistor to ground beyond it, both placed at the source by the HCSL rule).
+6. **A6's extra residue is mostly congestion around parts placed far from the pins they serve** (INFERRED from the
+   rows): the hub's crystal Y301 22 to 24 mm and its load capacitors 28 to 31 mm from U302's XI and XO pins, R317 41 mm
+   from U301.86, R342 19 mm from U302.64, and C374 (the hub's rail, 23 mm from its nearest supply pin) and C363 on B.Cu
+   under U301's tip-via line.
+
+**What the trial establishes (EXPERIMENTAL; B21's pre-correction board; group S3 routed alone).**
+
+- With six routing layers (A8, more than any real eight-layer board B has), the region settled on the plateau rule at 18
+  open, minimum 16: nine not routable in this configuration and nine in the region, eight of those at the north-row pads
+  of U301 and U302 that the escape pass left bare and one at a remote crystal. That is the plateau the eight-layer arm
+  reached on this region of this board, 16 to 18 (its last five sessions read 18, 16, 23, 18 and 18), not a proven
+  floor: not zero, and concentrated at the switch's escape band.
+- At equal pass count A8 read lower than A6 after every pass (84 against 40 after pass 3, 66 against 29 after pass 5,
+  33 against 23 after pass 12; the review's table of 26 September is reproduced by `passes.csv`).
+- A6 is unsettled: 33 when cut (24 in the region), still falling.
+- Both arms leave U301.101 and U301.124, and U301.124 never connected.
+- Of the arms' wall times, 56.4 minutes (A6) and 56.5 minutes (A8) were the blocked warning and not routing.
+
+**What it does not establish.**
+
+- **It is not a route of the corrected board.** The corrected netlist has 1,103 components against B21's 931, 32 more in
+  slot 3's block and 18 of them around the switch: six at its north-row pins, in the band where the residue sits, and
+  twelve at its east-row clock outputs.
+- **It is not equal-runtime evidence.** The arms shared a start, a blocked hour and one box, one deterministic sample
+  each; A6 was cut while falling; their later passes cost 449 s and 358 s.
+- **It is not whole-board feasibility.** Only S3 was routed; the GLOBAL nets through the pocket were absent (7.7 limit
+  2); nine S3 connections that leave the region could not be routed; the cross-board buses of section 3.3 were not
+  touched.
+- **The floor-plan and escape causes of section 1 are separate obstacles.** The band's standoff and back-side
+  capacitors, and the parts placed far from their pins, are there on eight layers as on six.
+- **The six-layer arm is unsettled, and its impedance result is already outside target:** A6 laid 1,747 mm of
+  differential-pair copper on In2 (318 mm of `DIFF100_S3` and 1,429 mm of `USB_S3`'s pair members) and 755 mm on In3
+  (63 and 691 mm), where a pair solves to 140.5 ohm against 100 (section 3.2). Of all its S3 copper on those two layers
+  (6,776 and 2,939 mm) the rest is single-ended and power copper, among it 583 and 278 mm of `USB_S3`'s single-ended
+  members (`analysis/copper.json`).
+- **A8 is not a stackup.** It has six routing layers and no plane beside In5 or In6, and impedance was not judged. A
+  real eight-layer board B with a plane beside every signal layer (for example S/G/S/G/P/S/G/S on JLC08161H-2116;
+  section 4 leaves the assignment to decision 43's run) would have four routing layers, as many as A6.
+- **It neither reopens nor satisfies decision 43**, whose whole-board eight-layer run stays separate and has not
+  started.
+
+### 7.9 The next feasibility test Q-B-ESC-2 (specification, not run)
+
+Chosen by the session under the owner's standing rule of 26 September 2026, following the second checkpoint review's
+finding E ("test the actual critical escape/placement remedy against corrected inputs and an acceptable stackup").
+EXPERIMENTAL like Q-B-ESC-1: it proposes no layout and authorises nothing, and decision 43's whole-board eight-layer run
+stays separate and not started.
+
+**Question.** On board B's corrected netlist, with slot 3's block placed so that the escape pass escapes every connected
+pad of the switch U301 and the hub U302 before any routing, does group S3 route to zero open connections between pads
+inside the S3 region on board B's own six-layer stack (JLC06161H-3313 as used: In1 GND, In4 the 5 V planes), with every
+differential pair held to F.Cu and B.Cu, the two layers on which a pair can meet its impedance there (with section
+3.2's caveat: B.Cu's reference In4 is split into four 5 V planes, so a B.Cu pair that crosses between slot rails
+crosses a reference-plane split, INFERRED from the zone list)?
+
+**Why this test and not another.** The residue of 7.8 sits at the band the escape pass left bare, which more layers did
+not clear and which this page reads as bounded by placement (INFERRED, 7.8 point 3); the corrected netlist seats six
+more parts in that band and twelve at the east-row clock outputs beside it; and board B's own stack with pairs on its
+two outer layers needs no new stackup decision, so it is the acceptable stackup available today, subject to the same
+B.Cu caveat. Holding every pair to the outer layers is also the strictest pair assignment, so a closure is strong
+evidence, and a failure is read by its residue: if pairs fail for want of controlled inner layers, that sets up
+decision 43's run or option A2, both separate. Via-in-pad (option A3) is not in it: before routing, a site for the
+escape pass's 0.40 mm via existed at each of the ten bare north-row pads of U301 the analysis examined, taken alone, so
+this evidence does not yet call for it.
+
+**Inputs.**
+
+1. A clean clone at a recorded commit carrying the corrected netlist (`out/pcb-b-compute.net` sha256 `669d02d0...` at
+   `fc144600`, or its successor, recorded in the journal).
+2. A pre-route board of that netlist written by board B's own generators at six layers (the placement chain's pre-route
+   stage: schematic, outline, placement, planes, fanout and escape pass; no route), whose slot 3 meets three conditions
+   that are the placement owner's to realise (round-6 O-02, FAB-08): (a) the band north of U301 free of back-side pads
+   under the tip-via line and deep enough for the escape pass's staggered vias and the six corrected parts that serve
+   north-row pins: the downstream coupling capacitors C353 to C356 at the transmit pins 100, 101, 106 and 107, and the
+   reference clock coupling capacitors C395 and C396 at the clock input 110 and 111; the twelve HCSL resistors R375 to
+   R386 go outside that band, at the east-row clock outputs 77 to 85 (the series resistors R375, R376, R379, R380, R383
+   and R384 at the output pins and the shunt resistors R377, R378, R381, R382, R385 and R386 beyond them, both at the
+   source as FAB-08's HCSL rule asks), so the east side of U301 must hold them clear of the escape band; (b) C351 and
+   C352 beside pins 123 and 124, Y301 with C364 and C365 beside U302's XI and XO pins, R317 beside U301.86 and R342
+   beside U302.64, as the makers' layout rules cited in FAB-08 ask; (c) all 32 corrected parts of slot 3's block seated.
+   The test starts when such a board exists; it does not write one.
+3. The DSN as in 7.3 steps 5 and 8 (plane net GND, power layers In1.Cu and In4.Cu, partition S3, `CONFINE=1`), with the
+   pairs of `DIFF100_S3` and `USB_S3`, and nothing else, held to F.Cu and B.Cu. In the trial's DSN `DIFF100_S3` holds
+   the four ETH3 pairs only, and `USB_S3` holds 51 nets: 38 pair members (among them `USB_OTG_P3`/`USB_OTG_N3` and
+   `MUX3_A1P`/`MUX3_A1N`, pairs by function whose names do not end in `_P`/`_N`) and 13 single-ended nets (`HUB3_XI`,
+   `HUB3_XO`, `HUB3_R1`, `HUB3_RST_n`, `HUB3_SMBUS_n`, `HUB3_VBUS`, `HUB3_PWRPOL`, `PCIE3_CLKREQ_n`, `PCIE3_RST1_n`,
+   `PCIE3_RST2_n`, `PCIE3_nRST`, `PCIE3_nWAKE`, `PCIE_PWR_EN3`; `analysis/copper.json`). A `(use_layer F.Cu B.Cu)`
+   written into `USB_S3`'s circuit block by `route_one.sh`'s `FR_LAYER_RULES` edit (8 September 2026) would hold those
+   13 to the outer layers as well, which the question does not ask and which would confound the residue (the crystal
+   nets were residue on both arms). So the edit first moves the class's single-ended members into a class of their own
+   with `USB_S3`'s width, clearance and via and no layer rule, then writes the layer rule into `DIFF100_S3` and what is
+   left of `USB_S3` (the session's choice under the standing rule of 26 September 2026). Both lists are re-read from
+   the corrected netlist's DSN, which adds nets (the `_SW`, `_SRC` and `RCLKIN` legs of the coupled links among them),
+   not taken from this page.
+4. The router with the import handling review finding F asks for: the warning's text written to the journal, only the
+   "DSN file reader" normalisation warning continued, any other dialog failing the job, and the S3 nets it names read by
+   KiCad at pass 0 and at the end.
+5. A driver in `v2/ecad/tools/routeflow/experiments/b_esc2/` derived from b_esc1's (`run.sh`; `count_open.py` taking an
+   exclusion list; `plateau_watch.py` with the import rule below), reviewed before it runs.
+
+**Preparation, no router; any failure stops the test before routing.** `place_audit` with board B's `ESCAPE_SKIP`
+reads 0 connected pads of U301 and U302 without an escape; the 32 parts lie inside the outline with no courtyard
+collision (`courtyards_overlap` on a pre-route DRC); the out-of-region list is written before any router starts (every
+S3 connection with a pad inside another region's keep-out; nine on B21) and counted apart from the decisive number; the
+import handler is proven on this trial's `job.dsn` (the stall of 7.8 reproduced and continued by the handler, not by
+hand); the edited DSN is read back, every pair member of `DIFF100_S3` and `USB_S3` under the layer rule and no
+single-ended net under it; and the layer rule is proven on the first observed session, which must carry no pair copper
+on In2 or In3.
+
+**Decisive number.** The S3 open count of 7.3 less the pre-declared out-of-region connections, with the hard count
+(the fifteen types of `tools/hardset.py`).
+
+| Cap | Value | Enforced by |
+|---|---|---|
+| Passes | 20 | `route_part.sh` (`-mp`) |
+| Wall per job | 9,000 s | `route_part.sh`'s own `timeout` |
+| Import | "Starting auto-routing" in `fr.log` within 600 s of the job start, else the job is stopped as an import failure | the watcher (a new rule) |
+| Plateau | three observed sessions with no new minimum of the decisive number | `plateau_watch.py` |
+| First pass | no session within 90 minutes of "Starting auto-routing" | `plateau_watch.py` |
+| Whole test | the smaller of 4 box-hours and 5 USD at the box's rate, less 45 minutes for the final readings | the driver, which refuses to start without the rate |
+
+The journal records the time split of 7.8 (input load, blocked, active routing) from `fr.log`. One job: the router is
+deterministic. Nothing is extended when a cap fires, and no electrical rule is relaxed. Settled means what it means in
+7.5.
+
+| Outcome | Condition | Meaning |
+|---|---|---|
+| NOT-REACHED | the preparation fails | the placement or the tool is the finding; nothing is routed |
+| POCKET-CLOSES | decisive number 0 and hard 0 | slot 3's corrected block, escaped first, routes alone on the six-layer stack with every pair on a controlled layer, so this region does not need more layers; it says nothing of the whole board |
+| BAND-CLEARED | settled, decisive number above 0, no residue pad on U301 or U302 | the band remedy works; the residue names what binds next (for example pairs that need controlled inner layers, which informs decision 43's run) |
+| BAND-STILL-BINDS | settled, a residue pad on U301 or U302 | escaping first is not enough; the residue's causes choose between via-in-pad (A3, only where the fabricator's process covers the pad) and the floor plan (A4) |
+| INCONCLUSIVE | cut while still falling, or stopped by any other cap | no conclusion; nothing is extended |
+
+**Cost (INFERRED).** With the import fixed, one job is at most 9,000 s of routing plus about 15 minutes of preparation
+and 15 of final readings, about 3 box-hours: about 0.43 USD on the present box at 0.142 USD an hour, about 3.60 USD on a
+CPU box at 1.20 USD an hour, and never more than the 5 USD cap. The pre-route board is the placement owner's generator
+run and is outside this budget. Owner and date (the session's, under the owner's standing rule of 26 September 2026):
+board B's placement stream writes it from the netlist that follows circuit round 8's board B corrections (the
+successor of `669d02d0`), and the job is prepared from that commit; it does not start before that netlist is merged.
+
+**Limits stated in advance.** Group S3 alone, with the GLOBAL nets through the pocket absent (optimistic, as 7.7 limit
+2); one sample; pairs held to the outer layers, the strictest assignment; B.Cu pairs over the split In4 planes are not
+judged for their return path here (section 3.2); no equal-runtime comparison with any other run; not whole-board
+feasibility; no layout authorisation.
 
 ## 8. What this page does not claim
 
 - It does not claim board B is feasible, or infeasible, on any layer count.
+- It does not read Q-B-ESC-1 (section 7.8) as either: that reading is EXPERIMENTAL, INCONCLUSIVE by its own table, and
+  taken on one region of the pre-correction board.
 - It does not claim that decision 43 requires the trial before the whole-board eight-layer experiment; that order is
   the integrating session's (section 1).
 - It re-reads B21's own artefacts; the B22 and B23 runs and the `region_room` readings are cited from `b.json`, whose

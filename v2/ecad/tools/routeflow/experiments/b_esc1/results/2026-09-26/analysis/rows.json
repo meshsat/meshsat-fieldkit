@@ -1,0 +1,2735 @@
+{
+ "label": "EXPERIMENTAL (Q-B-ESC-1) package rows on the input board",
+ "board": "a6/pcb-b-compute.kicad_pcb",
+ "parts": {
+  "U301": {
+   "at": [
+    193.875,
+    140.875
+   ],
+   "orientation_deg": 0.0,
+   "rows": {
+    "north": [
+     {
+      "pad": "",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       192.375,
+       139.375
+      ],
+      "tip": 138.115
+     },
+     {
+      "pad": "",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       195.375,
+       139.375
+      ],
+      "tip": 138.115
+     },
+     {
+      "pad": "97",
+      "function": "",
+      "net": "/NVME3_TX_P",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       200.075,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "98",
+      "function": "",
+      "net": "/NVME3_TX_N",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       199.675,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "99",
+      "function": "",
+      "net": "/+1V0_S3",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       199.275,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "100",
+      "function": "",
+      "net": "/NVME3_RX_P",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       198.875,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "101",
+      "function": "",
+      "net": "/NVME3_RX_N",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       198.475,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "102",
+      "function": "",
+      "net": "/CARD3_TX_P",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       198.075,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "103",
+      "function": "",
+      "net": "/CARD3_TX_N",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       197.675,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "104",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       197.275,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "105",
+      "function": "",
+      "net": "/+1V0_S3",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       196.875,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "106",
+      "function": "",
+      "net": "/CARD3_RX_P",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       196.475,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "107",
+      "function": "",
+      "net": "/CARD3_RX_N",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       196.075,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "108",
+      "function": "",
+      "net": "/+1V0_S3",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       195.675,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "109",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       195.275,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "110",
+      "function": "",
+      "net": "/PCIE3_RCLK0_P",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       194.875,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "111",
+      "function": "",
+      "net": "/PCIE3_RCLK0_N",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       194.475,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "112",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       194.075,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "113",
+      "function": "",
+      "net": "/+3V3_S3B",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       193.675,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "114",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       193.275,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "115",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       192.875,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "116",
+      "function": "",
+      "net": "/S3_REXT",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       192.475,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "117",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       192.075,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "118",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       191.675,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "119",
+      "function": "",
+      "net": "/+1V0_S3",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       191.275,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "120",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       190.875,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "121",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       190.475,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "122",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       190.075,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "123",
+      "function": "",
+      "net": "/PCIE3_RXSW_N",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       189.675,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "124",
+      "function": "",
+      "net": "/PCIE3_RXSW_P",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       189.275,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "125",
+      "function": "",
+      "net": "/+1V0_S3",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       188.875,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "126",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       188.475,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "127",
+      "function": "",
+      "net": "/PCIE3_TX_N",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       188.075,
+       133.213
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "128",
+      "function": "",
+      "net": "/PCIE3_TX_P",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       187.675,
+       133.213
+      ],
+      "tip": 132.475
+     }
+    ],
+    "east": [
+     {
+      "pad": "65",
+      "function": "",
+      "net": "/+1V0_S3",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       201.537,
+       147.075
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "66",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       201.537,
+       146.675
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "67",
+      "function": "",
+      "net": "/S3_PST0",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       201.537,
+       146.275
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "68",
+      "function": "",
+      "net": "/S3_PST1",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       201.537,
+       145.875
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "69",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       201.537,
+       145.475
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "70",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       201.537,
+       145.075
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "71",
+      "function": "",
+      "net": "/S3_EEPD",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       201.537,
+       144.675
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "72",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       201.537,
+       144.275
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "73",
+      "function": "",
+      "net": "/PCIE3_CLK_N",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       201.537,
+       143.875
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "74",
+      "function": "",
+      "net": "/PCIE3_CLK_P",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       201.537,
+       143.475
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "75",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       201.537,
+       143.075
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "76",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       201.537,
+       142.675
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "77",
+      "function": "",
+      "net": "/CARD3_CLK_N",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       201.537,
+       142.275
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "78",
+      "function": "",
+      "net": "/CARD3_CLK_P",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       201.537,
+       141.875
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "79",
+      "function": "",
+      "net": "/+3V3_S3B",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       201.537,
+       141.475
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "80",
+      "function": "",
+      "net": "/NVME3_CLK_N",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       201.537,
+       141.075
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "81",
+      "function": "",
+      "net": "/NVME3_CLK_P",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       201.537,
+       140.675
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "82",
+      "function": "",
+      "net": "/+3V3_S3B",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       201.537,
+       140.275
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "83",
+      "function": "",
+      "net": "/PCIE3_RCLK0_N",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       201.537,
+       139.875
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "84",
+      "function": "",
+      "net": "/+3V3_S3B",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       201.537,
+       139.475
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "85",
+      "function": "",
+      "net": "/PCIE3_RCLK0_P",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       201.537,
+       139.075
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "86",
+      "function": "",
+      "net": "/S3_IREF",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       201.537,
+       138.675
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "87",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       201.537,
+       138.275
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "88",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       201.537,
+       137.875
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "89",
+      "function": "",
+      "net": "/S3_JTAGL",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       201.537,
+       137.475
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "90",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       201.537,
+       137.075
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "91",
+      "function": "",
+      "net": "/+1V0_S3",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       201.537,
+       136.675
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "92",
+      "function": "",
+      "net": "/S3_JTAGL",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       201.537,
+       136.275
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "93",
+      "function": "",
+      "net": "/S3_JTAGL",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       201.537,
+       135.875
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "94",
+      "function": "",
+      "net": "/S3_JTAGL",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       201.537,
+       135.475
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "95",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       201.537,
+       135.075
+      ],
+      "tip": 202.275
+     },
+     {
+      "pad": "96",
+      "function": "",
+      "net": "/+3V3_S3B",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       201.537,
+       134.675
+      ],
+      "tip": 202.275
+     }
+    ],
+    "south": [
+     {
+      "pad": "",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       192.375,
+       142.375
+      ],
+      "tip": 143.635
+     },
+     {
+      "pad": "",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       195.375,
+       142.375
+      ],
+      "tip": 143.635
+     },
+     {
+      "pad": "33",
+      "function": "",
+      "net": "/S3_SLOTCLK",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       187.675,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "34",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       188.075,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "35",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       188.475,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "36",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       188.875,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "37",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       189.275,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "38",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       189.675,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "39",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       190.075,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "40",
+      "function": "",
+      "net": "/+1V0_S3",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       190.475,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "41",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       190.875,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "42",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       191.275,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "43",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       191.675,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "44",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       192.075,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "45",
+      "function": "",
+      "net": "/S3_SLOTIMP",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       192.475,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "46",
+      "function": "",
+      "net": "/S3_SLOTIMP",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       192.875,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "47",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       193.275,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "48",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       193.675,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "49",
+      "function": "",
+      "net": "/+3V3_S3B",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       194.075,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "50",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       194.475,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "51",
+      "function": "",
+      "net": "/S3_TESTL",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       194.875,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "52",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       195.275,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "53",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       195.675,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "54",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       196.075,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "55",
+      "function": "",
+      "net": "/+1V0_S3",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       196.475,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "56",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       196.875,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "57",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       197.275,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "58",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       197.675,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "59",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       198.075,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "60",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       198.475,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "61",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       198.875,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "62",
+      "function": "",
+      "net": "/+1V0_S3",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       199.275,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "63",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       199.675,
+       148.537
+      ],
+      "tip": 149.275
+     },
+     {
+      "pad": "64",
+      "function": "",
+      "net": "/+3V3_S3B",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       200.075,
+       148.537
+      ],
+      "tip": 149.275
+     }
+    ],
+    "west": [
+     {
+      "pad": "1",
+      "function": "",
+      "net": "/+3V3_S3B",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       186.213,
+       134.675
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "2",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       186.213,
+       135.075
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "3",
+      "function": "",
+      "net": "/+1V0_S3",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       186.213,
+       135.475
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "4",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       186.213,
+       135.875
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "5",
+      "function": "",
+      "net": "/PCIE3_RST1_n",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       186.213,
+       136.275
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "6",
+      "function": "",
+      "net": "/PCIE3_RST2_n",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       186.213,
+       136.675
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "7",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       186.213,
+       137.075
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "8",
+      "function": "",
+      "net": "/+3V3_S3B",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       186.213,
+       137.475
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "9",
+      "function": "",
+      "net": "/S3_TEST1",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       186.213,
+       137.875
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "10",
+      "function": "",
+      "net": "/PCIE3_nRST",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       186.213,
+       138.275
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "11",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       186.213,
+       138.675
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "12",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       186.213,
+       139.075
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "13",
+      "function": "",
+      "net": "/+1V0_S3",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       186.213,
+       139.475
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "14",
+      "function": "",
+      "net": "/+1V0_S3",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       186.213,
+       139.875
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "15",
+      "function": "",
+      "net": "/+3V3_S3B",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       186.213,
+       140.275
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "16",
+      "function": "",
+      "net": "/S3_TESTL",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       186.213,
+       140.675
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "17",
+      "function": "",
+      "net": "/S3_TESTL",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       186.213,
+       141.075
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "18",
+      "function": "",
+      "net": "/S3_TESTL",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       186.213,
+       141.475
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "19",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       186.213,
+       141.875
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "20",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       186.213,
+       142.275
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "21",
+      "function": "",
+      "net": "/S3_PRSNT3",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       186.213,
+       142.675
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "22",
+      "function": "",
+      "net": "/S3_TESTL",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       186.213,
+       143.075
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "23",
+      "function": "",
+      "net": "/+1V0_S3",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       186.213,
+       143.475
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "24",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       186.213,
+       143.875
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "25",
+      "function": "",
+      "net": "/S3_TESTL",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       186.213,
+       144.275
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "26",
+      "function": "",
+      "net": "/S3_SMBCLK",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       186.213,
+       144.675
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "27",
+      "function": "",
+      "net": "/S3_SMBDAT",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       186.213,
+       145.075
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "28",
+      "function": "",
+      "net": "/S3_PWRSAV",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       186.213,
+       145.475
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "29",
+      "function": "",
+      "net": "/+1V0_S3",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       186.213,
+       145.875
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "30",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       186.213,
+       146.275
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "31",
+      "function": "",
+      "net": "/+1V0_S3",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       186.213,
+       146.675
+      ],
+      "tip": 185.475
+     },
+     {
+      "pad": "32",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       186.213,
+       147.075
+      ],
+      "tip": 185.475
+     }
+    ],
+    "centre": [
+     {
+      "pad": "129",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       193.875,
+       140.875
+      ],
+      "tip": null
+     }
+    ]
+   }
+  },
+  "U302": {
+   "at": [
+    212.45,
+    137.325
+   ],
+   "orientation_deg": 0.0,
+   "rows": {
+    "north": [
+     {
+      "pad": "",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       210.88,
+       135.755
+      ],
+      "tip": 135.125
+     },
+     {
+      "pad": "",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       212.45,
+       135.755
+      ],
+      "tip": 135.125
+     },
+     {
+      "pad": "",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       214.02,
+       135.755
+      ],
+      "tip": 135.125
+     },
+     {
+      "pad": "49",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       216.2,
+       132.912
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "50",
+      "function": "",
+      "net": "/HUB3_RST_n",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       215.7,
+       132.912
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "51",
+      "function": "",
+      "net": "/+1V1_S3",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       215.2,
+       132.912
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "52",
+      "function": "",
+      "net": "/+3V3_DEV",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       214.7,
+       132.912
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "53",
+      "function": "",
+      "net": "/BANK3_UPD_P",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       214.2,
+       132.912
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "54",
+      "function": "",
+      "net": "/BANK3_UPD_N",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       213.7,
+       132.912
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "55",
+      "function": "",
+      "net": "/BANK3_UPRX_P",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       213.2,
+       132.912
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "56",
+      "function": "",
+      "net": "/BANK3_UPRX_N",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       212.7,
+       132.912
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "57",
+      "function": "",
+      "net": "/+1V1_S3",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       212.2,
+       132.912
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "58",
+      "function": "",
+      "net": "/BANK3_UPTX_P",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       211.7,
+       132.912
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "59",
+      "function": "",
+      "net": "/BANK3_UPTX_N",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       211.2,
+       132.912
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "60",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       210.7,
+       132.912
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "61",
+      "function": "",
+      "net": "/HUB3_XO",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       210.2,
+       132.912
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "62",
+      "function": "",
+      "net": "/HUB3_XI",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       209.7,
+       132.912
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "63",
+      "function": "",
+      "net": "/+3V3_DEV",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       209.2,
+       132.912
+      ],
+      "tip": 132.475
+     },
+     {
+      "pad": "64",
+      "function": "",
+      "net": "/HUB3_R1",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       208.7,
+       132.912
+      ],
+      "tip": 132.475
+     }
+    ],
+    "east": [
+     {
+      "pad": "",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       214.02,
+       137.325
+      ],
+      "tip": 214.65
+     },
+     {
+      "pad": "33",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       216.863,
+       141.075
+      ],
+      "tip": 217.3
+     },
+     {
+      "pad": "34",
+      "function": "",
+      "net": "/+3V3_DEV",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       216.863,
+       140.575
+      ],
+      "tip": 217.3
+     },
+     {
+      "pad": "35",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       216.863,
+       140.075
+      ],
+      "tip": 217.3
+     },
+     {
+      "pad": "36",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       216.863,
+       139.575
+      ],
+      "tip": 217.3
+     },
+     {
+      "pad": "37",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       216.863,
+       139.075
+      ],
+      "tip": 217.3
+     },
+     {
+      "pad": "38",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       216.863,
+       138.575
+      ],
+      "tip": 217.3
+     },
+     {
+      "pad": "39",
+      "function": "",
+      "net": "/HUB3_SMBUS_n",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       216.863,
+       138.075
+      ],
+      "tip": 217.3
+     },
+     {
+      "pad": "40",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       216.863,
+       137.575
+      ],
+      "tip": 217.3
+     },
+     {
+      "pad": "41",
+      "function": "",
+      "net": "/HUB3_PWRPOL",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       216.863,
+       137.075
+      ],
+      "tip": 217.3
+     },
+     {
+      "pad": "42",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       216.863,
+       136.575
+      ],
+      "tip": 217.3
+     },
+     {
+      "pad": "43",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       216.863,
+       136.075
+      ],
+      "tip": 217.3
+     },
+     {
+      "pad": "44",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       216.863,
+       135.575
+      ],
+      "tip": 217.3
+     },
+     {
+      "pad": "45",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       216.863,
+       135.075
+      ],
+      "tip": 217.3
+     },
+     {
+      "pad": "46",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       216.863,
+       134.575
+      ],
+      "tip": 217.3
+     },
+     {
+      "pad": "47",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       216.863,
+       134.075
+      ],
+      "tip": 217.3
+     },
+     {
+      "pad": "48",
+      "function": "",
+      "net": "/HUB3_VBUS",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       216.863,
+       133.575
+      ],
+      "tip": 217.3
+     }
+    ],
+    "south": [
+     {
+      "pad": "",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       210.88,
+       138.895
+      ],
+      "tip": 139.525
+     },
+     {
+      "pad": "",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       212.45,
+       138.895
+      ],
+      "tip": 139.525
+     },
+     {
+      "pad": "",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       214.02,
+       138.895
+      ],
+      "tip": 139.525
+     },
+     {
+      "pad": "17",
+      "function": "",
+      "net": "/USB_WALL_P",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       208.7,
+       141.738
+      ],
+      "tip": 142.175
+     },
+     {
+      "pad": "18",
+      "function": "",
+      "net": "/USB_WALL_N",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       209.2,
+       141.738
+      ],
+      "tip": 142.175
+     },
+     {
+      "pad": "19",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       209.7,
+       141.738
+      ],
+      "tip": 142.175
+     },
+     {
+      "pad": "20",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       210.2,
+       141.738
+      ],
+      "tip": 142.175
+     },
+     {
+      "pad": "21",
+      "function": "",
+      "net": "/+1V1_S3",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       210.7,
+       141.738
+      ],
+      "tip": 142.175
+     },
+     {
+      "pad": "22",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       211.2,
+       141.738
+      ],
+      "tip": 142.175
+     },
+     {
+      "pad": "23",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       211.7,
+       141.738
+      ],
+      "tip": 142.175
+     },
+     {
+      "pad": "24",
+      "function": "",
+      "net": "/USB_5G_P",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       212.2,
+       141.738
+      ],
+      "tip": 142.175
+     },
+     {
+      "pad": "25",
+      "function": "",
+      "net": "/USB_5G_N",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       212.7,
+       141.738
+      ],
+      "tip": 142.175
+     },
+     {
+      "pad": "26",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       213.2,
+       141.738
+      ],
+      "tip": 142.175
+     },
+     {
+      "pad": "27",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       213.7,
+       141.738
+      ],
+      "tip": 142.175
+     },
+     {
+      "pad": "28",
+      "function": "",
+      "net": "/+1V1_S3",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       214.2,
+       141.738
+      ],
+      "tip": 142.175
+     },
+     {
+      "pad": "29",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       214.7,
+       141.738
+      ],
+      "tip": 142.175
+     },
+     {
+      "pad": "30",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       215.2,
+       141.738
+      ],
+      "tip": 142.175
+     },
+     {
+      "pad": "31",
+      "function": "",
+      "net": "/+1V1_S3",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       215.7,
+       141.738
+      ],
+      "tip": 142.175
+     },
+     {
+      "pad": "32",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       216.2,
+       141.738
+      ],
+      "tip": 142.175
+     }
+    ],
+    "west": [
+     {
+      "pad": "",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       210.88,
+       137.325
+      ],
+      "tip": 210.25
+     },
+     {
+      "pad": "1",
+      "function": "",
+      "net": "/USB_D8_P",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       208.037,
+       133.575
+      ],
+      "tip": 207.6
+     },
+     {
+      "pad": "2",
+      "function": "",
+      "net": "/USB_D8_N",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       208.037,
+       134.075
+      ],
+      "tip": 207.6
+     },
+     {
+      "pad": "3",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       208.037,
+       134.575
+      ],
+      "tip": 207.6
+     },
+     {
+      "pad": "4",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       208.037,
+       135.075
+      ],
+      "tip": 207.6
+     },
+     {
+      "pad": "5",
+      "function": "",
+      "net": "/+1V1_S3",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       208.037,
+       135.575
+      ],
+      "tip": 207.6
+     },
+     {
+      "pad": "6",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       208.037,
+       136.075
+      ],
+      "tip": 207.6
+     },
+     {
+      "pad": "7",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       208.037,
+       136.575
+      ],
+      "tip": 207.6
+     },
+     {
+      "pad": "8",
+      "function": "",
+      "net": "/+1V1_S3",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       208.037,
+       137.075
+      ],
+      "tip": 207.6
+     },
+     {
+      "pad": "9",
+      "function": "",
+      "net": "/USB_E6_P",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       208.037,
+       137.575
+      ],
+      "tip": 207.6
+     },
+     {
+      "pad": "10",
+      "function": "",
+      "net": "/USB_E6_N",
+      "connected": true,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       208.037,
+       138.075
+      ],
+      "tip": 207.6
+     },
+     {
+      "pad": "11",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       208.037,
+       138.575
+      ],
+      "tip": 207.6
+     },
+     {
+      "pad": "12",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       208.037,
+       139.075
+      ],
+      "tip": 207.6
+     },
+     {
+      "pad": "13",
+      "function": "",
+      "net": "/+1V1_S3",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       208.037,
+       139.575
+      ],
+      "tip": 207.6
+     },
+     {
+      "pad": "14",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       208.037,
+       140.075
+      ],
+      "tip": 207.6
+     },
+     {
+      "pad": "15",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       208.037,
+       140.575
+      ],
+      "tip": 207.6
+     },
+     {
+      "pad": "16",
+      "function": "",
+      "net": "/+3V3_DEV",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       208.037,
+       141.075
+      ],
+      "tip": 207.6
+     }
+    ],
+    "centre": [
+     {
+      "pad": "",
+      "function": "",
+      "net": "",
+      "connected": false,
+      "escape_connectivity": false,
+      "escape_place_audit": false,
+      "at": [
+       212.45,
+       137.325
+      ],
+      "tip": null
+     },
+     {
+      "pad": "65",
+      "function": "",
+      "net": "GND",
+      "connected": true,
+      "escape_connectivity": true,
+      "escape_place_audit": true,
+      "at": [
+       212.45,
+       137.325
+      ],
+      "tip": null
+     }
+    ]
+   }
+  }
+ }
+}

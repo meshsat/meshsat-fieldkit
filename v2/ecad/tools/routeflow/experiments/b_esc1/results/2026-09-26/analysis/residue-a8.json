@@ -1,0 +1,3772 @@
+{
+ "label": "EXPERIMENTAL (Q-B-ESC-1) residue analysis",
+ "arm": "a8",
+ "copper_layers": [
+  "F.Cu",
+  "In1.Cu",
+  "In2.Cu",
+  "In3.Cu",
+  "In4.Cu",
+  "In5.Cu",
+  "In6.Cu",
+  "B.Cu"
+ ],
+ "nets": {
+  "/+1V0_S3": {
+   "pad_clusters": [
+    [
+     "C326.1",
+     "C327.1",
+     "C341.1",
+     "C342.1",
+     "C343.1",
+     "C344.1",
+     "C345.1",
+     "C346.1",
+     "C348.1",
+     "L303.2",
+     "R313.1",
+     "U301.105",
+     "U301.119",
+     "U301.125",
+     "U301.13",
+     "U301.14",
+     "U301.23",
+     "U301.29",
+     "U301.3",
+     "U301.31",
+     "U301.40",
+     "U301.55",
+     "U301.62",
+     "U301.65",
+     "U301.91",
+     "U301.99"
+    ],
+    [
+     "U301.108"
+    ],
+    [
+     "TP30.1"
+    ]
+   ],
+   "cluster_copper": [
+    {
+     "F.Cu": 52,
+     "via": 17,
+     "B.Cu": 31,
+     "In2.Cu": 22,
+     "In3.Cu": 8,
+     "In5.Cu": 9
+    },
+    {},
+    {}
+   ],
+   "orphan_copper_clusters": 0,
+   "open": 2,
+   "edges": [
+    {
+     "length_mm": 1.2,
+     "a": {
+      "at": [
+       196.875,
+       133.213
+      ],
+      "region": "S3 core",
+      "item": {
+       "kind": "pad",
+       "ref": "U301.105",
+       "pinfunction": "",
+       "layers": [
+        "F.Cu"
+       ],
+       "pad_mm": [
+        0.25,
+        1.475
+       ],
+       "copper_on_pad_final": [
+        "F.Cu"
+       ],
+       "escape_on_input_board": [],
+       "neighbours_within_1mm": [
+        {
+         "pad": "U301.103",
+         "net": "/CARD3_TX_N",
+         "d_mm": 0.8,
+         "copper_on_it": 2
+        },
+        {
+         "pad": "U301.104",
+         "net": "GND",
+         "d_mm": 0.4,
+         "copper_on_it": 1
+        },
+        {
+         "pad": "U301.106",
+         "net": "/CARD3_RX_P",
+         "d_mm": 0.4,
+         "copper_on_it": 0
+        },
+        {
+         "pad": "U301.107",
+         "net": "/CARD3_RX_N",
+         "d_mm": 0.8,
+         "copper_on_it": 1
+        }
+       ]
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.275,
+        "n_within_2.0": 19
+       },
+       "In1.Cu": {
+        "nearest_mm": 1.111,
+        "n_within_2.0": 4
+       },
+       "In2.Cu": {
+        "nearest_mm": 0.357,
+        "n_within_2.0": 7
+       },
+       "In3.Cu": {
+        "nearest_mm": 0.0,
+        "n_within_2.0": 7
+       },
+       "In4.Cu": {
+        "nearest_mm": 1.111,
+        "n_within_2.0": 4
+       },
+       "In5.Cu": {
+        "nearest_mm": 0.545,
+        "n_within_2.0": 10
+       },
+       "In6.Cu": {
+        "nearest_mm": 0.221,
+        "n_within_2.0": 7
+       },
+       "B.Cu": {
+        "nearest_mm": 0.455,
+        "n_within_2.0": 10
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "b": {
+      "at": [
+       195.675,
+       133.213
+      ],
+      "region": "S3 core",
+      "item": {
+       "kind": "pad",
+       "ref": "U301.108",
+       "pinfunction": "",
+       "layers": [
+        "F.Cu"
+       ],
+       "pad_mm": [
+        0.25,
+        1.475
+       ],
+       "copper_on_pad_final": [],
+       "escape_on_input_board": [],
+       "neighbours_within_1mm": [
+        {
+         "pad": "U301.106",
+         "net": "/CARD3_RX_P",
+         "d_mm": 0.8,
+         "copper_on_it": 0
+        },
+        {
+         "pad": "U301.107",
+         "net": "/CARD3_RX_N",
+         "d_mm": 0.4,
+         "copper_on_it": 1
+        },
+        {
+         "pad": "U301.109",
+         "net": "GND",
+         "d_mm": 0.4,
+         "copper_on_it": 0
+        },
+        {
+         "pad": "U301.110",
+         "net": "/PCIE3_RCLK0_P",
+         "d_mm": 0.8,
+         "copper_on_it": 1
+        }
+       ]
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.275,
+        "n_within_2.0": 27
+       },
+       "In1.Cu": {
+        "nearest_mm": 0.949,
+        "n_within_2.0": 4
+       },
+       "In2.Cu": {
+        "nearest_mm": 0.0,
+        "n_within_2.0": 7
+       },
+       "In3.Cu": {
+        "nearest_mm": 0.0,
+        "n_within_2.0": 9
+       },
+       "In4.Cu": {
+        "nearest_mm": 0.949,
+        "n_within_2.0": 4
+       },
+       "In5.Cu": {
+        "nearest_mm": 0.947,
+        "n_within_2.0": 15
+       },
+       "In6.Cu": {
+        "nearest_mm": 0.13,
+        "n_within_2.0": 7
+       },
+       "B.Cu": {
+        "nearest_mm": 0.387,
+        "n_within_2.0": 9
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "straight_line_foreign_track_crossings": {},
+     "straight_line_foreign_vias": 0
+    },
+    {
+     "length_mm": 119.839,
+     "a": {
+      "at": [
+       188.486,
+       131.39
+      ],
+      "region": "S3 margin",
+      "item": {
+       "kind": "track end",
+       "layer": "In2.Cu",
+       "width_mm": 0.4,
+       "locked": true
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.585,
+        "n_within_2.0": 16
+       },
+       "In1.Cu": {
+        "nearest_mm": 0.585,
+        "n_within_2.0": 3
+       },
+       "In2.Cu": {
+        "nearest_mm": 0.345,
+        "n_within_2.0": 5
+       },
+       "In3.Cu": {
+        "nearest_mm": 0.585,
+        "n_within_2.0": 5
+       },
+       "In4.Cu": {
+        "nearest_mm": 0.585,
+        "n_within_2.0": 3
+       },
+       "In5.Cu": {
+        "nearest_mm": 0.0,
+        "n_within_2.0": 12
+       },
+       "In6.Cu": {
+        "nearest_mm": 0.585,
+        "n_within_2.0": 5
+       },
+       "B.Cu": {
+        "nearest_mm": 0.585,
+        "n_within_2.0": 13
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "b": {
+      "at": [
+       162.625,
+       14.375
+      ],
+      "region": "S2 core",
+      "item": {
+       "kind": "pad",
+       "ref": "TP30.1",
+       "pinfunction": "",
+       "layers": [
+        "F.Cu"
+       ],
+       "pad_mm": [
+        1.5,
+        1.5
+       ],
+       "copper_on_pad_final": [],
+       "escape_on_input_board": [],
+       "neighbours_within_1mm": []
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 3.0,
+        "n_within_2.0": 0
+       },
+       "In1.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In2.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In3.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In4.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In5.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In6.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "B.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "straight_line_foreign_track_crossings": {
+      "In2.Cu": 9,
+      "In5.Cu": 5,
+      "In3.Cu": 8,
+      "F.Cu": 6,
+      "B.Cu": 8
+     },
+     "straight_line_foreign_vias": 2
+    }
+   ]
+  },
+  "/+1V1_S3": {
+   "pad_clusters": [
+    [
+     "C331.1",
+     "C332.1",
+     "C366.1",
+     "C367.1",
+     "C368.1",
+     "C369.1",
+     "C374.1",
+     "L304.2",
+     "R315.1",
+     "U302.13",
+     "U302.21",
+     "U302.28",
+     "U302.31",
+     "U302.5",
+     "U302.51",
+     "U302.57",
+     "U302.8"
+    ],
+    [
+     "TP31.1"
+    ]
+   ],
+   "cluster_copper": [
+    {
+     "F.Cu": 31,
+     "via": 11,
+     "B.Cu": 15,
+     "In2.Cu": 9,
+     "In3.Cu": 23,
+     "In6.Cu": 4
+    },
+    {}
+   ],
+   "orphan_copper_clusters": 0,
+   "open": 1,
+   "edges": [
+    {
+     "length_mm": 126.265,
+     "a": {
+      "at": [
+       187.503,
+       129.954
+      ],
+      "region": "S3 margin",
+      "item": {
+       "kind": "via",
+       "layers": "through",
+       "locked": true
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.541,
+        "n_within_2.0": 8
+       },
+       "In1.Cu": {
+        "nearest_mm": 0.76,
+        "n_within_2.0": 3
+       },
+       "In2.Cu": {
+        "nearest_mm": 0.529,
+        "n_within_2.0": 8
+       },
+       "In3.Cu": {
+        "nearest_mm": 0.76,
+        "n_within_2.0": 4
+       },
+       "In4.Cu": {
+        "nearest_mm": 0.76,
+        "n_within_2.0": 3
+       },
+       "In5.Cu": {
+        "nearest_mm": 0.53,
+        "n_within_2.0": 11
+       },
+       "In6.Cu": {
+        "nearest_mm": 0.76,
+        "n_within_2.0": 3
+       },
+       "B.Cu": {
+        "nearest_mm": 0.76,
+        "n_within_2.0": 10
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "b": {
+      "at": [
+       128.875,
+       18.125
+      ],
+      "region": "S2 core",
+      "item": {
+       "kind": "pad",
+       "ref": "TP31.1",
+       "pinfunction": "",
+       "layers": [
+        "F.Cu"
+       ],
+       "pad_mm": [
+        1.5,
+        1.5
+       ],
+       "copper_on_pad_final": [],
+       "escape_on_input_board": [],
+       "neighbours_within_1mm": []
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 1.936,
+        "n_within_2.0": 2
+       },
+       "In1.Cu": {
+        "nearest_mm": 1.936,
+        "n_within_2.0": 1
+       },
+       "In2.Cu": {
+        "nearest_mm": 1.936,
+        "n_within_2.0": 1
+       },
+       "In3.Cu": {
+        "nearest_mm": 1.936,
+        "n_within_2.0": 1
+       },
+       "In4.Cu": {
+        "nearest_mm": 1.936,
+        "n_within_2.0": 1
+       },
+       "In5.Cu": {
+        "nearest_mm": 1.936,
+        "n_within_2.0": 1
+       },
+       "In6.Cu": {
+        "nearest_mm": 1.936,
+        "n_within_2.0": 1
+       },
+       "B.Cu": {
+        "nearest_mm": 1.936,
+        "n_within_2.0": 1
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "straight_line_foreign_track_crossings": {
+      "In2.Cu": 5,
+      "In5.Cu": 3,
+      "In3.Cu": 6,
+      "B.Cu": 8,
+      "F.Cu": 3
+     },
+     "straight_line_foreign_vias": 0
+    }
+   ]
+  },
+  "/+3V3_S3A": {
+   "pad_clusters": [
+    [
+     "C314.1",
+     "C315.1",
+     "C316.1",
+     "C357.1",
+     "C358.1",
+     "J_M2C3.2",
+     "J_M2C3.4",
+     "J_M2C3.72",
+     "J_M2C3.74",
+     "L301.2",
+     "Q306.1",
+     "R302.1",
+     "R334.2",
+     "R337.2",
+     "R338.2",
+     "R339.1"
+    ],
+    [
+     "TP28.1"
+    ]
+   ],
+   "cluster_copper": [
+    {
+     "F.Cu": 27,
+     "via": 7,
+     "B.Cu": 16,
+     "In2.Cu": 7,
+     "In3.Cu": 3,
+     "In5.Cu": 8
+    },
+    {}
+   ],
+   "orphan_copper_clusters": 0,
+   "open": 1,
+   "edges": [
+    {
+     "length_mm": 99.472,
+     "a": {
+      "at": [
+       220.0,
+       89.78
+      ],
+      "region": "S3 core",
+      "item": {
+       "kind": "pad",
+       "ref": "J_M2C3.2",
+       "pinfunction": "",
+       "layers": [
+        "F.Cu"
+       ],
+       "pad_mm": [
+        0.3,
+        1.55
+       ],
+       "copper_on_pad_final": [
+        "F.Cu",
+        "F.Cu"
+       ],
+       "escape_on_input_board": [
+        "F.Cu",
+        "F.Cu"
+       ],
+       "neighbours_within_1mm": [
+        {
+         "pad": "J_M2C3.4",
+         "net": "/+3V3_S3A",
+         "d_mm": 0.5,
+         "copper_on_it": 2
+        },
+        {
+         "pad": "J_M2C3.6",
+         "net": "/WIFI2_nLED",
+         "d_mm": 1.0,
+         "copper_on_it": 1
+        }
+       ]
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.85,
+        "n_within_2.0": 6
+       },
+       "In1.Cu": {
+        "nearest_mm": 1.268,
+        "n_within_2.0": 2
+       },
+       "In2.Cu": {
+        "nearest_mm": 1.268,
+        "n_within_2.0": 2
+       },
+       "In3.Cu": {
+        "nearest_mm": 1.268,
+        "n_within_2.0": 2
+       },
+       "In4.Cu": {
+        "nearest_mm": 1.268,
+        "n_within_2.0": 2
+       },
+       "In5.Cu": {
+        "nearest_mm": 0.001,
+        "n_within_2.0": 9
+       },
+       "In6.Cu": {
+        "nearest_mm": 1.268,
+        "n_within_2.0": 2
+       },
+       "B.Cu": {
+        "nearest_mm": 1.268,
+        "n_within_2.0": 2
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "b": {
+      "at": [
+       155.125,
+       14.375
+      ],
+      "region": "S2 core",
+      "item": {
+       "kind": "pad",
+       "ref": "TP28.1",
+       "pinfunction": "",
+       "layers": [
+        "F.Cu"
+       ],
+       "pad_mm": [
+        1.5,
+        1.5
+       ],
+       "copper_on_pad_final": [],
+       "escape_on_input_board": [],
+       "neighbours_within_1mm": []
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 3.0,
+        "n_within_2.0": 0
+       },
+       "In1.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In2.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In3.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In4.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In5.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In6.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "B.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "straight_line_foreign_track_crossings": {
+      "F.Cu": 2,
+      "B.Cu": 14,
+      "In5.Cu": 17,
+      "In3.Cu": 7,
+      "In2.Cu": 9
+     },
+     "straight_line_foreign_vias": 4
+    }
+   ]
+  },
+  "/+3V3_S3B": {
+   "pad_clusters": [
+    [
+     "C321.1",
+     "C322.1",
+     "C323.1",
+     "C335.1",
+     "C336.1",
+     "C337.1",
+     "C338.1",
+     "C339.1",
+     "C340.1",
+     "C347.1",
+     "C349.1",
+     "C350.1",
+     "J_M2N3.12",
+     "J_M2N3.14",
+     "J_M2N3.16",
+     "J_M2N3.18",
+     "J_M2N3.2",
+     "J_M2N3.4",
+     "J_M2N3.70",
+     "J_M2N3.72",
+     "J_M2N3.74",
+     "J_SPI3.1",
+     "L302.2",
+     "R307.1",
+     "R319.2",
+     "R320.2",
+     "R321.2",
+     "R323.2",
+     "R325.2",
+     "R326.2",
+     "R330.1",
+     "R331.1",
+     "R332.2",
+     "R333.2",
+     "R336.1",
+     "U301.1",
+     "U301.113",
+     "U301.15",
+     "U301.49",
+     "U301.64",
+     "U301.79",
+     "U301.8",
+     "U301.82",
+     "U301.84",
+     "U301.96"
+    ],
+    [
+     "R25.2"
+    ],
+    [
+     "TP29.1"
+    ]
+   ],
+   "cluster_copper": [
+    {
+     "F.Cu": 51,
+     "via": 19,
+     "B.Cu": 56,
+     "In2.Cu": 13,
+     "In3.Cu": 6,
+     "In5.Cu": 8,
+     "In6.Cu": 14
+    },
+    {},
+    {}
+   ],
+   "orphan_copper_clusters": 0,
+   "open": 2,
+   "edges": [
+    {
+     "length_mm": 77.836,
+     "a": {
+      "at": [
+       207.0,
+       89.53
+      ],
+      "region": "S3 core",
+      "item": {
+       "kind": "pad",
+       "ref": "J_M2N3.74",
+       "pinfunction": "",
+       "layers": [
+        "F.Cu"
+       ],
+       "pad_mm": [
+        0.3,
+        1.55
+       ],
+       "copper_on_pad_final": [
+        "F.Cu",
+        "F.Cu"
+       ],
+       "escape_on_input_board": [
+        "F.Cu",
+        "F.Cu"
+       ],
+       "neighbours_within_1mm": [
+        {
+         "pad": "J_M2N3.70",
+         "net": "/+3V3_S3B",
+         "d_mm": 1.0,
+         "copper_on_it": 2
+        },
+        {
+         "pad": "J_M2N3.72",
+         "net": "/+3V3_S3B",
+         "d_mm": 0.5,
+         "copper_on_it": 2
+        }
+       ]
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 1.35,
+        "n_within_2.0": 1
+       },
+       "In1.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In2.Cu": {
+        "nearest_mm": 2.04,
+        "n_within_2.0": 0
+       },
+       "In3.Cu": {
+        "nearest_mm": 2.199,
+        "n_within_2.0": 0
+       },
+       "In4.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In5.Cu": {
+        "nearest_mm": 0.704,
+        "n_within_2.0": 3
+       },
+       "In6.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "B.Cu": {
+        "nearest_mm": 2.375,
+        "n_within_2.0": 0
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "b": {
+      "at": [
+       280.575,
+       64.13
+      ],
+      "region": "DEVE core",
+      "item": {
+       "kind": "pad",
+       "ref": "R25.2",
+       "pinfunction": "",
+       "layers": [
+        "F.Cu"
+       ],
+       "pad_mm": [
+        0.8,
+        0.95
+       ],
+       "copper_on_pad_final": [],
+       "escape_on_input_board": [],
+       "neighbours_within_1mm": []
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 1.25,
+        "n_within_2.0": 1
+       },
+       "In1.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In2.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In3.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In4.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In5.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In6.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "B.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "straight_line_foreign_track_crossings": {
+      "In5.Cu": 23,
+      "F.Cu": 11,
+      "In2.Cu": 11,
+      "B.Cu": 6,
+      "In3.Cu": 2
+     },
+     "straight_line_foreign_vias": 7
+    },
+    {
+     "length_mm": 80.968,
+     "a": {
+      "at": [
+       189.0,
+       89.53
+      ],
+      "region": "S3 margin",
+      "item": {
+       "kind": "pad",
+       "ref": "J_M2N3.2",
+       "pinfunction": "",
+       "layers": [
+        "F.Cu"
+       ],
+       "pad_mm": [
+        0.3,
+        1.55
+       ],
+       "copper_on_pad_final": [
+        "F.Cu"
+       ],
+       "escape_on_input_board": [
+        "F.Cu"
+       ],
+       "neighbours_within_1mm": [
+        {
+         "pad": "J_M2N3.4",
+         "net": "/+3V3_S3B",
+         "d_mm": 0.5,
+         "copper_on_it": 2
+        },
+        {
+         "pad": "J_M2N3.6",
+         "net": "",
+         "d_mm": 1.0,
+         "copper_on_it": 0
+        }
+       ]
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.85,
+        "n_within_2.0": 4
+       },
+       "In1.Cu": {
+        "nearest_mm": 2.491,
+        "n_within_2.0": 0
+       },
+       "In2.Cu": {
+        "nearest_mm": 2.491,
+        "n_within_2.0": 0
+       },
+       "In3.Cu": {
+        "nearest_mm": 2.491,
+        "n_within_2.0": 0
+       },
+       "In4.Cu": {
+        "nearest_mm": 2.491,
+        "n_within_2.0": 0
+       },
+       "In5.Cu": {
+        "nearest_mm": 2.491,
+        "n_within_2.0": 0
+       },
+       "In6.Cu": {
+        "nearest_mm": 2.491,
+        "n_within_2.0": 0
+       },
+       "B.Cu": {
+        "nearest_mm": 2.491,
+        "n_within_2.0": 0
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "b": {
+      "at": [
+       158.875,
+       14.375
+      ],
+      "region": "S2 core",
+      "item": {
+       "kind": "pad",
+       "ref": "TP29.1",
+       "pinfunction": "",
+       "layers": [
+        "F.Cu"
+       ],
+       "pad_mm": [
+        1.5,
+        1.5
+       ],
+       "copper_on_pad_final": [],
+       "escape_on_input_board": [],
+       "neighbours_within_1mm": []
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 3.0,
+        "n_within_2.0": 0
+       },
+       "In1.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In2.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In3.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In4.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In5.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In6.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "B.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "straight_line_foreign_track_crossings": {
+      "In3.Cu": 6,
+      "In2.Cu": 4,
+      "In5.Cu": 1,
+      "F.Cu": 1
+     },
+     "straight_line_foreign_vias": 1
+    }
+   ]
+  },
+  "/BANK3_UPRX_P": {
+   "pad_clusters": [
+    [
+     "U302.55"
+    ],
+    [
+     "C359.1"
+    ]
+   ],
+   "cluster_copper": [
+    {},
+    {}
+   ],
+   "orphan_copper_clusters": 0,
+   "open": 1,
+   "edges": [
+    {
+     "length_mm": 18.865,
+     "a": {
+      "at": [
+       213.2,
+       132.912
+      ],
+      "region": "S3 core",
+      "item": {
+       "kind": "pad",
+       "ref": "U302.55",
+       "pinfunction": "",
+       "layers": [
+        "F.Cu"
+       ],
+       "pad_mm": [
+        0.2,
+        0.875
+       ],
+       "copper_on_pad_final": [],
+       "escape_on_input_board": [],
+       "neighbours_within_1mm": [
+        {
+         "pad": "U302.53",
+         "net": "/BANK3_UPD_P",
+         "d_mm": 1.0,
+         "copper_on_it": 2
+        },
+        {
+         "pad": "U302.54",
+         "net": "/BANK3_UPD_N",
+         "d_mm": 0.5,
+         "copper_on_it": 4
+        },
+        {
+         "pad": "U302.56",
+         "net": "/BANK3_UPRX_N",
+         "d_mm": 0.5,
+         "copper_on_it": 2
+        },
+        {
+         "pad": "U302.57",
+         "net": "/+1V1_S3",
+         "d_mm": 1.0,
+         "copper_on_it": 2
+        }
+       ]
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.4,
+        "n_within_2.0": 31
+       },
+       "In1.Cu": {
+        "nearest_mm": 1.041,
+        "n_within_2.0": 3
+       },
+       "In2.Cu": {
+        "nearest_mm": 1.041,
+        "n_within_2.0": 4
+       },
+       "In3.Cu": {
+        "nearest_mm": 1.041,
+        "n_within_2.0": 3
+       },
+       "In4.Cu": {
+        "nearest_mm": 1.041,
+        "n_within_2.0": 3
+       },
+       "In5.Cu": {
+        "nearest_mm": 0.115,
+        "n_within_2.0": 8
+       },
+       "In6.Cu": {
+        "nearest_mm": 0.0,
+        "n_within_2.0": 6
+       },
+       "B.Cu": {
+        "nearest_mm": 0.082,
+        "n_within_2.0": 6
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "b": {
+      "at": [
+       231.365,
+       138.005
+      ],
+      "region": "S3 core",
+      "item": {
+       "kind": "pad",
+       "ref": "C359.1",
+       "pinfunction": "",
+       "layers": [
+        "B.Cu"
+       ],
+       "pad_mm": [
+        0.56,
+        0.62
+       ],
+       "copper_on_pad_final": [],
+       "escape_on_input_board": [],
+       "neighbours_within_1mm": [
+        {
+         "pad": "C359.2",
+         "net": "/MUX3_A1P",
+         "d_mm": 0.96,
+         "copper_on_it": 1
+        }
+       ]
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 1.116,
+        "n_within_2.0": 10
+       },
+       "In1.Cu": {
+        "nearest_mm": 1.116,
+        "n_within_2.0": 3
+       },
+       "In2.Cu": {
+        "nearest_mm": 1.116,
+        "n_within_2.0": 5
+       },
+       "In3.Cu": {
+        "nearest_mm": 1.116,
+        "n_within_2.0": 3
+       },
+       "In4.Cu": {
+        "nearest_mm": 1.116,
+        "n_within_2.0": 3
+       },
+       "In5.Cu": {
+        "nearest_mm": 0.135,
+        "n_within_2.0": 7
+       },
+       "In6.Cu": {
+        "nearest_mm": 0.28,
+        "n_within_2.0": 8
+       },
+       "B.Cu": {
+        "nearest_mm": 0.615,
+        "n_within_2.0": 23
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "straight_line_foreign_track_crossings": {
+      "F.Cu": 3,
+      "B.Cu": 5,
+      "In5.Cu": 11,
+      "In2.Cu": 2,
+      "In6.Cu": 2
+     },
+     "straight_line_foreign_vias": 2
+    }
+   ]
+  },
+  "/BANK3_UPTX_P": {
+   "pad_clusters": [
+    [
+     "U309.3"
+    ],
+    [
+     "U302.58"
+    ]
+   ],
+   "cluster_copper": [
+    {
+     "F.Cu": 2,
+     "via": 1
+    },
+    {}
+   ],
+   "orphan_copper_clusters": 0,
+   "open": 1,
+   "edges": [
+    {
+     "length_mm": 34.327,
+     "a": {
+      "at": [
+       211.7,
+       132.912
+      ],
+      "region": "S3 core",
+      "item": {
+       "kind": "pad",
+       "ref": "U302.58",
+       "pinfunction": "",
+       "layers": [
+        "F.Cu"
+       ],
+       "pad_mm": [
+        0.2,
+        0.875
+       ],
+       "copper_on_pad_final": [],
+       "escape_on_input_board": [],
+       "neighbours_within_1mm": [
+        {
+         "pad": "U302.56",
+         "net": "/BANK3_UPRX_N",
+         "d_mm": 1.0,
+         "copper_on_it": 2
+        },
+        {
+         "pad": "U302.57",
+         "net": "/+1V1_S3",
+         "d_mm": 0.5,
+         "copper_on_it": 2
+        },
+        {
+         "pad": "U302.59",
+         "net": "/BANK3_UPTX_N",
+         "d_mm": 0.5,
+         "copper_on_it": 1
+        },
+        {
+         "pad": "U302.60",
+         "net": "",
+         "d_mm": 1.0,
+         "copper_on_it": 0
+        }
+       ]
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.3,
+        "n_within_2.0": 28
+       },
+       "In1.Cu": {
+        "nearest_mm": 1.483,
+        "n_within_2.0": 1
+       },
+       "In2.Cu": {
+        "nearest_mm": 1.483,
+        "n_within_2.0": 3
+       },
+       "In3.Cu": {
+        "nearest_mm": 1.483,
+        "n_within_2.0": 1
+       },
+       "In4.Cu": {
+        "nearest_mm": 1.483,
+        "n_within_2.0": 1
+       },
+       "In5.Cu": {
+        "nearest_mm": 0.046,
+        "n_within_2.0": 10
+       },
+       "In6.Cu": {
+        "nearest_mm": 0.0,
+        "n_within_2.0": 4
+       },
+       "B.Cu": {
+        "nearest_mm": 0.082,
+        "n_within_2.0": 7
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "b": {
+      "at": [
+       185.86,
+       155.51
+      ],
+      "region": "S3 margin",
+      "item": {
+       "kind": "pad",
+       "ref": "U309.3",
+       "pinfunction": "",
+       "layers": [
+        "F.Cu"
+       ],
+       "pad_mm": [
+        0.6,
+        0.24
+       ],
+       "copper_on_pad_final": [
+        "F.Cu"
+       ],
+       "escape_on_input_board": [
+        "F.Cu"
+       ],
+       "neighbours_within_1mm": [
+        {
+         "pad": "U309.2",
+         "net": "/BOE3_n",
+         "d_mm": 0.5,
+         "copper_on_it": 1
+        },
+        {
+         "pad": "U309.4",
+         "net": "/BANK3_UPTX_N",
+         "d_mm": 0.5,
+         "copper_on_it": 1
+        },
+        {
+         "pad": "U309.5",
+         "net": "GND",
+         "d_mm": 1.0,
+         "copper_on_it": 1
+        }
+       ]
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.38,
+        "n_within_2.0": 23
+       },
+       "In1.Cu": {
+        "nearest_mm": 1.376,
+        "n_within_2.0": 2
+       },
+       "In2.Cu": {
+        "nearest_mm": 1.376,
+        "n_within_2.0": 4
+       },
+       "In3.Cu": {
+        "nearest_mm": 1.376,
+        "n_within_2.0": 2
+       },
+       "In4.Cu": {
+        "nearest_mm": 1.376,
+        "n_within_2.0": 2
+       },
+       "In5.Cu": {
+        "nearest_mm": 0.13,
+        "n_within_2.0": 4
+       },
+       "In6.Cu": {
+        "nearest_mm": 0.538,
+        "n_within_2.0": 4
+       },
+       "B.Cu": {
+        "nearest_mm": 1.376,
+        "n_within_2.0": 2
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "straight_line_foreign_track_crossings": {
+      "In2.Cu": 12,
+      "F.Cu": 14,
+      "B.Cu": 13,
+      "In3.Cu": 8,
+      "In6.Cu": 5,
+      "In5.Cu": 21
+     },
+     "straight_line_foreign_vias": 8
+    }
+   ]
+  },
+  "/BOE3_n": {
+   "pad_clusters": [
+    [
+     "R361.1",
+     "U309.2",
+     "U310.6"
+    ],
+    [
+     "U80.8"
+    ]
+   ],
+   "cluster_copper": [
+    {
+     "F.Cu": 4,
+     "via": 3,
+     "B.Cu": 3,
+     "In2.Cu": 20
+    },
+    {
+     "via": 1,
+     "B.Cu": 1
+    }
+   ],
+   "orphan_copper_clusters": 0,
+   "open": 1,
+   "edges": [
+    {
+     "length_mm": 183.706,
+     "a": {
+      "at": [
+       184.26,
+       153.96
+      ],
+      "region": "S3 margin",
+      "item": {
+       "kind": "track end",
+       "layer": "F.Cu",
+       "width_mm": 0.2,
+       "locked": true
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.575,
+        "n_within_2.0": 6
+       },
+       "In1.Cu": {
+        "nearest_mm": 0.575,
+        "n_within_2.0": 2
+       },
+       "In2.Cu": {
+        "nearest_mm": 0.575,
+        "n_within_2.0": 5
+       },
+       "In3.Cu": {
+        "nearest_mm": 0.575,
+        "n_within_2.0": 2
+       },
+       "In4.Cu": {
+        "nearest_mm": 0.575,
+        "n_within_2.0": 2
+       },
+       "In5.Cu": {
+        "nearest_mm": 0.471,
+        "n_within_2.0": 7
+       },
+       "In6.Cu": {
+        "nearest_mm": 0.575,
+        "n_within_2.0": 3
+       },
+       "B.Cu": {
+        "nearest_mm": 0.575,
+        "n_within_2.0": 4
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "b": {
+      "at": [
+       0.575,
+       151.165
+      ],
+      "region": "DEVW core",
+      "item": {
+       "kind": "via",
+       "layers": "through",
+       "locked": true
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.829,
+        "n_within_2.0": 2
+       },
+       "In1.Cu": {
+        "nearest_mm": 0.829,
+        "n_within_2.0": 2
+       },
+       "In2.Cu": {
+        "nearest_mm": 0.829,
+        "n_within_2.0": 2
+       },
+       "In3.Cu": {
+        "nearest_mm": 0.829,
+        "n_within_2.0": 2
+       },
+       "In4.Cu": {
+        "nearest_mm": 0.829,
+        "n_within_2.0": 2
+       },
+       "In5.Cu": {
+        "nearest_mm": 0.829,
+        "n_within_2.0": 2
+       },
+       "In6.Cu": {
+        "nearest_mm": 0.829,
+        "n_within_2.0": 2
+       },
+       "B.Cu": {
+        "nearest_mm": 0.55,
+        "n_within_2.0": 7
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "straight_line_foreign_track_crossings": {
+      "In2.Cu": 2,
+      "F.Cu": 18,
+      "B.Cu": 6,
+      "In6.Cu": 1,
+      "In5.Cu": 1
+     },
+     "straight_line_foreign_vias": 7
+    }
+   ]
+  },
+  "/CARD3_RX_P": {
+   "pad_clusters": [
+    [
+     "J_M2C3.41"
+    ],
+    [
+     "U301.106"
+    ]
+   ],
+   "cluster_copper": [
+    {
+     "F.Cu": 1,
+     "via": 1
+    },
+    {}
+   ],
+   "orphan_copper_clusters": 0,
+   "open": 1,
+   "edges": [
+    {
+     "length_mm": 60.881,
+     "a": {
+      "at": [
+       196.475,
+       133.213
+      ],
+      "region": "S3 core",
+      "item": {
+       "kind": "pad",
+       "ref": "U301.106",
+       "pinfunction": "",
+       "layers": [
+        "F.Cu"
+       ],
+       "pad_mm": [
+        0.25,
+        1.475
+       ],
+       "copper_on_pad_final": [],
+       "escape_on_input_board": [],
+       "neighbours_within_1mm": [
+        {
+         "pad": "U301.104",
+         "net": "GND",
+         "d_mm": 0.8,
+         "copper_on_it": 1
+        },
+        {
+         "pad": "U301.105",
+         "net": "/+1V0_S3",
+         "d_mm": 0.4,
+         "copper_on_it": 1
+        },
+        {
+         "pad": "U301.107",
+         "net": "/CARD3_RX_N",
+         "d_mm": 0.4,
+         "copper_on_it": 1
+        },
+        {
+         "pad": "U301.108",
+         "net": "/+1V0_S3",
+         "d_mm": 0.8,
+         "copper_on_it": 0
+        }
+       ]
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.275,
+        "n_within_2.0": 25
+       },
+       "In1.Cu": {
+        "nearest_mm": 0.977,
+        "n_within_2.0": 5
+       },
+       "In2.Cu": {
+        "nearest_mm": 0.357,
+        "n_within_2.0": 8
+       },
+       "In3.Cu": {
+        "nearest_mm": 0.0,
+        "n_within_2.0": 8
+       },
+       "In4.Cu": {
+        "nearest_mm": 0.977,
+        "n_within_2.0": 5
+       },
+       "In5.Cu": {
+        "nearest_mm": 0.827,
+        "n_within_2.0": 13
+       },
+       "In6.Cu": {
+        "nearest_mm": 0.221,
+        "n_within_2.0": 8
+       },
+       "B.Cu": {
+        "nearest_mm": 0.383,
+        "n_within_2.0": 9
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "b": {
+      "at": [
+       229.75,
+       82.23
+      ],
+      "region": "S3 core",
+      "item": {
+       "kind": "pad",
+       "ref": "J_M2C3.41",
+       "pinfunction": "",
+       "layers": [
+        "F.Cu"
+       ],
+       "pad_mm": [
+        0.3,
+        1.55
+       ],
+       "copper_on_pad_final": [
+        "F.Cu"
+       ],
+       "escape_on_input_board": [
+        "F.Cu"
+       ],
+       "neighbours_within_1mm": [
+        {
+         "pad": "J_M2C3.37",
+         "net": "/CARD3_TX_N",
+         "d_mm": 1.0,
+         "copper_on_it": 1
+        },
+        {
+         "pad": "J_M2C3.39",
+         "net": "GND",
+         "d_mm": 0.5,
+         "copper_on_it": 1
+        },
+        {
+         "pad": "J_M2C3.43",
+         "net": "/CARD3_RX_N",
+         "d_mm": 0.5,
+         "copper_on_it": 1
+        },
+        {
+         "pad": "J_M2C3.45",
+         "net": "GND",
+         "d_mm": 1.0,
+         "copper_on_it": 1
+        }
+       ]
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.35,
+        "n_within_2.0": 20
+       },
+       "In1.Cu": {
+        "nearest_mm": 1.268,
+        "n_within_2.0": 4
+       },
+       "In2.Cu": {
+        "nearest_mm": 0.5,
+        "n_within_2.0": 11
+       },
+       "In3.Cu": {
+        "nearest_mm": 0.253,
+        "n_within_2.0": 6
+       },
+       "In4.Cu": {
+        "nearest_mm": 1.268,
+        "n_within_2.0": 4
+       },
+       "In5.Cu": {
+        "nearest_mm": 1.268,
+        "n_within_2.0": 7
+       },
+       "In6.Cu": {
+        "nearest_mm": 1.268,
+        "n_within_2.0": 4
+       },
+       "B.Cu": {
+        "nearest_mm": 1.268,
+        "n_within_2.0": 4
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "straight_line_foreign_track_crossings": {
+      "In3.Cu": 6,
+      "In5.Cu": 31,
+      "In2.Cu": 13,
+      "F.Cu": 8,
+      "B.Cu": 6,
+      "In6.Cu": 4
+     },
+     "straight_line_foreign_vias": 5
+    }
+   ]
+  },
+  "/CARD3_TX_P": {
+   "pad_clusters": [
+    [
+     "J_M2C3.35"
+    ],
+    [
+     "U301.102"
+    ]
+   ],
+   "cluster_copper": [
+    {
+     "F.Cu": 1,
+     "via": 1
+    },
+    {}
+   ],
+   "orphan_copper_clusters": 0,
+   "open": 1,
+   "edges": [
+    {
+     "length_mm": 59.244,
+     "a": {
+      "at": [
+       198.075,
+       133.213
+      ],
+      "region": "S3 core",
+      "item": {
+       "kind": "pad",
+       "ref": "U301.102",
+       "pinfunction": "",
+       "layers": [
+        "F.Cu"
+       ],
+       "pad_mm": [
+        0.25,
+        1.475
+       ],
+       "copper_on_pad_final": [],
+       "escape_on_input_board": [],
+       "neighbours_within_1mm": [
+        {
+         "pad": "U301.100",
+         "net": "/NVME3_RX_P",
+         "d_mm": 0.8,
+         "copper_on_it": 0
+        },
+        {
+         "pad": "U301.101",
+         "net": "/NVME3_RX_N",
+         "d_mm": 0.4,
+         "copper_on_it": 0
+        },
+        {
+         "pad": "U301.103",
+         "net": "/CARD3_TX_N",
+         "d_mm": 0.4,
+         "copper_on_it": 2
+        },
+        {
+         "pad": "U301.104",
+         "net": "GND",
+         "d_mm": 0.8,
+         "copper_on_it": 1
+        }
+       ]
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.275,
+        "n_within_2.0": 32
+       },
+       "In1.Cu": {
+        "nearest_mm": 0.912,
+        "n_within_2.0": 3
+       },
+       "In2.Cu": {
+        "nearest_mm": 0.622,
+        "n_within_2.0": 6
+       },
+       "In3.Cu": {
+        "nearest_mm": 0.0,
+        "n_within_2.0": 6
+       },
+       "In4.Cu": {
+        "nearest_mm": 0.912,
+        "n_within_2.0": 3
+       },
+       "In5.Cu": {
+        "nearest_mm": 0.177,
+        "n_within_2.0": 6
+       },
+       "In6.Cu": {
+        "nearest_mm": 0.221,
+        "n_within_2.0": 5
+       },
+       "B.Cu": {
+        "nearest_mm": 0.494,
+        "n_within_2.0": 9
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "b": {
+      "at": [
+       228.25,
+       82.23
+      ],
+      "region": "S3 core",
+      "item": {
+       "kind": "pad",
+       "ref": "J_M2C3.35",
+       "pinfunction": "",
+       "layers": [
+        "F.Cu"
+       ],
+       "pad_mm": [
+        0.3,
+        1.55
+       ],
+       "copper_on_pad_final": [
+        "F.Cu"
+       ],
+       "escape_on_input_board": [
+        "F.Cu"
+       ],
+       "neighbours_within_1mm": [
+        {
+         "pad": "J_M2C3.33",
+         "net": "GND",
+         "d_mm": 0.5,
+         "copper_on_it": 1
+        },
+        {
+         "pad": "J_M2C3.37",
+         "net": "/CARD3_TX_N",
+         "d_mm": 0.5,
+         "copper_on_it": 1
+        },
+        {
+         "pad": "J_M2C3.39",
+         "net": "GND",
+         "d_mm": 1.0,
+         "copper_on_it": 1
+        }
+       ]
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.35,
+        "n_within_2.0": 14
+       },
+       "In1.Cu": {
+        "nearest_mm": 0.986,
+        "n_within_2.0": 4
+       },
+       "In2.Cu": {
+        "nearest_mm": 0.436,
+        "n_within_2.0": 7
+       },
+       "In3.Cu": {
+        "nearest_mm": 0.253,
+        "n_within_2.0": 5
+       },
+       "In4.Cu": {
+        "nearest_mm": 0.986,
+        "n_within_2.0": 4
+       },
+       "In5.Cu": {
+        "nearest_mm": 0.986,
+        "n_within_2.0": 6
+       },
+       "In6.Cu": {
+        "nearest_mm": 0.986,
+        "n_within_2.0": 4
+       },
+       "B.Cu": {
+        "nearest_mm": 0.986,
+        "n_within_2.0": 4
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "straight_line_foreign_track_crossings": {
+      "In3.Cu": 6,
+      "In5.Cu": 30,
+      "In2.Cu": 13,
+      "F.Cu": 6,
+      "B.Cu": 6,
+      "In6.Cu": 4
+     },
+     "straight_line_foreign_vias": 1
+    }
+   ]
+  },
+  "/HUB3_RST_n": {
+   "pad_clusters": [
+    [
+     "C363.1",
+     "R341.1",
+     "U302.50"
+    ],
+    [
+     "Q5.3"
+    ]
+   ],
+   "cluster_copper": [
+    {
+     "F.Cu": 2,
+     "via": 3,
+     "B.Cu": 4,
+     "In2.Cu": 3,
+     "In6.Cu": 5
+    },
+    {}
+   ],
+   "orphan_copper_clusters": 0,
+   "open": 1,
+   "edges": [
+    {
+     "length_mm": 194.35,
+     "a": {
+      "at": [
+       185.28,
+       135.565
+      ],
+      "region": "S3 margin",
+      "item": {
+       "kind": "pad",
+       "ref": "R341.1",
+       "pinfunction": "",
+       "layers": [
+        "B.Cu"
+       ],
+       "pad_mm": [
+        0.8,
+        0.95
+       ],
+       "copper_on_pad_final": [
+        "B.Cu"
+       ],
+       "escape_on_input_board": [],
+       "neighbours_within_1mm": []
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.0,
+        "n_within_2.0": 27
+       },
+       "In1.Cu": {
+        "nearest_mm": 0.667,
+        "n_within_2.0": 4
+       },
+       "In2.Cu": {
+        "nearest_mm": 0.025,
+        "n_within_2.0": 13
+       },
+       "In3.Cu": {
+        "nearest_mm": 0.046,
+        "n_within_2.0": 8
+       },
+       "In4.Cu": {
+        "nearest_mm": 0.667,
+        "n_within_2.0": 4
+       },
+       "In5.Cu": {
+        "nearest_mm": 0.0,
+        "n_within_2.0": 9
+       },
+       "In6.Cu": {
+        "nearest_mm": 0.647,
+        "n_within_2.0": 5
+       },
+       "B.Cu": {
+        "nearest_mm": 0.667,
+        "n_within_2.0": 11
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "b": {
+      "at": [
+       -6.508,
+       167.015
+      ],
+      "region": "DEVW core",
+      "item": {
+       "kind": "pad",
+       "ref": "Q5.3",
+       "pinfunction": "",
+       "layers": [
+        "B.Cu"
+       ],
+       "pad_mm": [
+        1.475,
+        0.6
+       ],
+       "copper_on_pad_final": [],
+       "escape_on_input_board": [],
+       "neighbours_within_1mm": []
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In1.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In2.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In3.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In4.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In5.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In6.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "B.Cu": {
+        "nearest_mm": 1.31,
+        "n_within_2.0": 3
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "straight_line_foreign_track_crossings": {
+      "F.Cu": 29,
+      "In2.Cu": 8,
+      "B.Cu": 11,
+      "In3.Cu": 2,
+      "In5.Cu": 1
+     },
+     "straight_line_foreign_vias": 13
+    }
+   ]
+  },
+  "/HUB3_XO": {
+   "pad_clusters": [
+    [
+     "C365.1",
+     "R347.2",
+     "U302.61"
+    ],
+    [
+     "Y301.3"
+    ]
+   ],
+   "cluster_copper": [
+    {
+     "F.Cu": 2,
+     "via": 3,
+     "B.Cu": 7,
+     "In5.Cu": 3,
+     "In6.Cu": 2
+    },
+    {}
+   ],
+   "orphan_copper_clusters": 0,
+   "open": 1,
+   "edges": [
+    {
+     "length_mm": 19.606,
+     "a": {
+      "at": [
+       209.55,
+       135.324
+      ],
+      "region": "S3 core",
+      "item": {
+       "kind": "via",
+       "layers": "through",
+       "locked": true
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.55,
+        "n_within_2.0": 18
+       },
+       "In1.Cu": {
+        "nearest_mm": 0.864,
+        "n_within_2.0": 2
+       },
+       "In2.Cu": {
+        "nearest_mm": 0.479,
+        "n_within_2.0": 8
+       },
+       "In3.Cu": {
+        "nearest_mm": 0.484,
+        "n_within_2.0": 4
+       },
+       "In4.Cu": {
+        "nearest_mm": 0.864,
+        "n_within_2.0": 2
+       },
+       "In5.Cu": {
+        "nearest_mm": 0.518,
+        "n_within_2.0": 14
+       },
+       "In6.Cu": {
+        "nearest_mm": 0.864,
+        "n_within_2.0": 3
+       },
+       "B.Cu": {
+        "nearest_mm": 0.59,
+        "n_within_2.0": 12
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "b": {
+      "at": [
+       201.665,
+       153.275
+      ],
+      "region": "S3 core",
+      "item": {
+       "kind": "pad",
+       "ref": "Y301.3",
+       "pinfunction": "",
+       "layers": [
+        "F.Cu"
+       ],
+       "pad_mm": [
+        1.4,
+        1.2
+       ],
+       "copper_on_pad_final": [],
+       "escape_on_input_board": [],
+       "neighbours_within_1mm": []
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.89,
+        "n_within_2.0": 9
+       },
+       "In1.Cu": {
+        "nearest_mm": 1.475,
+        "n_within_2.0": 1
+       },
+       "In2.Cu": {
+        "nearest_mm": 0.243,
+        "n_within_2.0": 4
+       },
+       "In3.Cu": {
+        "nearest_mm": 0.378,
+        "n_within_2.0": 2
+       },
+       "In4.Cu": {
+        "nearest_mm": 1.475,
+        "n_within_2.0": 1
+       },
+       "In5.Cu": {
+        "nearest_mm": 1.137,
+        "n_within_2.0": 4
+       },
+       "In6.Cu": {
+        "nearest_mm": 0.0,
+        "n_within_2.0": 13
+       },
+       "B.Cu": {
+        "nearest_mm": 0.047,
+        "n_within_2.0": 3
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "straight_line_foreign_track_crossings": {
+      "F.Cu": 8,
+      "In2.Cu": 4,
+      "B.Cu": 8,
+      "In3.Cu": 8,
+      "In5.Cu": 12,
+      "In6.Cu": 9
+     },
+     "straight_line_foreign_vias": 4
+    }
+   ]
+  },
+  "/IOCC_XI": {
+   "pad_clusters": [
+    [
+     "C450.1",
+     "Y4.1"
+    ],
+    [
+     "U61.12"
+    ]
+   ],
+   "cluster_copper": [
+    {
+     "B.Cu": 5
+    },
+    {}
+   ],
+   "orphan_copper_clusters": 0,
+   "open": 1,
+   "edges": [
+    {
+     "length_mm": 19.541,
+     "a": {
+      "at": [
+       172.975,
+       33.455
+      ],
+      "region": "S2 core",
+      "item": {
+       "kind": "pad",
+       "ref": "U61.12",
+       "pinfunction": "",
+       "layers": [
+        "B.Cu"
+       ],
+       "pad_mm": [
+        1.6,
+        0.3
+       ],
+       "copper_on_pad_final": [],
+       "escape_on_input_board": [],
+       "neighbours_within_1mm": [
+        {
+         "pad": "U61.10",
+         "net": "GND",
+         "d_mm": 1.0,
+         "copper_on_it": 0
+        },
+        {
+         "pad": "U61.11",
+         "net": "/+3V3_IOCC",
+         "d_mm": 0.5,
+         "copper_on_it": 0
+        },
+        {
+         "pad": "U61.13",
+         "net": "/IOCC_XO",
+         "d_mm": 0.5,
+         "copper_on_it": 0
+        },
+        {
+         "pad": "U61.14",
+         "net": "/IOCC_RST_n",
+         "d_mm": 1.0,
+         "copper_on_it": 1
+        }
+       ]
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.315,
+        "n_within_2.0": 6
+       },
+       "In1.Cu": {
+        "nearest_mm": 2.162,
+        "n_within_2.0": 0
+       },
+       "In2.Cu": {
+        "nearest_mm": 2.162,
+        "n_within_2.0": 0
+       },
+       "In3.Cu": {
+        "nearest_mm": 2.162,
+        "n_within_2.0": 0
+       },
+       "In4.Cu": {
+        "nearest_mm": 2.162,
+        "n_within_2.0": 0
+       },
+       "In5.Cu": {
+        "nearest_mm": 2.162,
+        "n_within_2.0": 0
+       },
+       "In6.Cu": {
+        "nearest_mm": 2.162,
+        "n_within_2.0": 0
+       },
+       "B.Cu": {
+        "nearest_mm": 0.35,
+        "n_within_2.0": 9
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "b": {
+      "at": [
+       186.423,
+       47.632
+      ],
+      "region": "S3 margin",
+      "item": {
+       "kind": "track end",
+       "layer": "B.Cu",
+       "width_mm": 0.25,
+       "locked": true
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 2.86,
+        "n_within_2.0": 0
+       },
+       "In1.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In2.Cu": {
+        "nearest_mm": 0.161,
+        "n_within_2.0": 2
+       },
+       "In3.Cu": {
+        "nearest_mm": 0.539,
+        "n_within_2.0": 2
+       },
+       "In4.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In5.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In6.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "B.Cu": {
+        "nearest_mm": 0.303,
+        "n_within_2.0": 4
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "straight_line_foreign_track_crossings": {
+      "In3.Cu": 4,
+      "In2.Cu": 2
+     },
+     "straight_line_foreign_vias": 2
+    }
+   ]
+  },
+  "/IOCC_XO": {
+   "pad_clusters": [
+    [
+     "C451.1",
+     "Y4.3"
+    ],
+    [
+     "U61.13"
+    ]
+   ],
+   "cluster_copper": [
+    {
+     "B.Cu": 5
+    },
+    {}
+   ],
+   "orphan_copper_clusters": 0,
+   "open": 1,
+   "edges": [
+    {
+     "length_mm": 22.793,
+     "a": {
+      "at": [
+       190.82,
+       47.135
+      ],
+      "region": "S3 margin",
+      "item": {
+       "kind": "pad",
+       "ref": "Y4.3",
+       "pinfunction": "",
+       "layers": [
+        "B.Cu"
+       ],
+       "pad_mm": [
+        1.4,
+        1.2
+       ],
+       "copper_on_pad_final": [
+        "B.Cu"
+       ],
+       "escape_on_input_board": [],
+       "neighbours_within_1mm": []
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In1.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In2.Cu": {
+        "nearest_mm": 1.187,
+        "n_within_2.0": 2
+       },
+       "In3.Cu": {
+        "nearest_mm": 0.935,
+        "n_within_2.0": 2
+       },
+       "In4.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "In5.Cu": {
+        "nearest_mm": 0.964,
+        "n_within_2.0": 1
+       },
+       "In6.Cu": {
+        "nearest_mm": null,
+        "n_within_2.0": 0
+       },
+       "B.Cu": {
+        "nearest_mm": 0.986,
+        "n_within_2.0": 5
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "b": {
+      "at": [
+       172.975,
+       32.955
+      ],
+      "region": "S2 core",
+      "item": {
+       "kind": "pad",
+       "ref": "U61.13",
+       "pinfunction": "",
+       "layers": [
+        "B.Cu"
+       ],
+       "pad_mm": [
+        1.6,
+        0.3
+       ],
+       "copper_on_pad_final": [],
+       "escape_on_input_board": [],
+       "neighbours_within_1mm": [
+        {
+         "pad": "U61.11",
+         "net": "/+3V3_IOCC",
+         "d_mm": 1.0,
+         "copper_on_it": 0
+        },
+        {
+         "pad": "U61.12",
+         "net": "/IOCC_XI",
+         "d_mm": 0.5,
+         "copper_on_it": 0
+        },
+        {
+         "pad": "U61.14",
+         "net": "/IOCC_RST_n",
+         "d_mm": 0.5,
+         "copper_on_it": 1
+        },
+        {
+         "pad": "U61.15",
+         "net": "",
+         "d_mm": 1.0,
+         "copper_on_it": 0
+        }
+       ]
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.316,
+        "n_within_2.0": 6
+       },
+       "In1.Cu": {
+        "nearest_mm": 1.872,
+        "n_within_2.0": 1
+       },
+       "In2.Cu": {
+        "nearest_mm": 1.872,
+        "n_within_2.0": 1
+       },
+       "In3.Cu": {
+        "nearest_mm": 1.872,
+        "n_within_2.0": 1
+       },
+       "In4.Cu": {
+        "nearest_mm": 1.872,
+        "n_within_2.0": 1
+       },
+       "In5.Cu": {
+        "nearest_mm": 1.872,
+        "n_within_2.0": 1
+       },
+       "In6.Cu": {
+        "nearest_mm": 1.872,
+        "n_within_2.0": 1
+       },
+       "B.Cu": {
+        "nearest_mm": 0.35,
+        "n_within_2.0": 10
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "straight_line_foreign_track_crossings": {
+      "In3.Cu": 6,
+      "In2.Cu": 4,
+      "B.Cu": 3
+     },
+     "straight_line_foreign_vias": 5
+    }
+   ]
+  },
+  "/NVME3_RX_N": {
+   "pad_clusters": [
+    [
+     "J_M2N3.41"
+    ],
+    [
+     "U301.101"
+    ]
+   ],
+   "cluster_copper": [
+    {
+     "F.Cu": 1,
+     "via": 1
+    },
+    {}
+   ],
+   "orphan_copper_clusters": 0,
+   "open": 1,
+   "edges": [
+    {
+     "length_mm": 51.234,
+     "a": {
+      "at": [
+       198.75,
+       81.98
+      ],
+      "region": "S3 core",
+      "item": {
+       "kind": "pad",
+       "ref": "J_M2N3.41",
+       "pinfunction": "",
+       "layers": [
+        "F.Cu"
+       ],
+       "pad_mm": [
+        0.3,
+        1.55
+       ],
+       "copper_on_pad_final": [
+        "F.Cu"
+       ],
+       "escape_on_input_board": [
+        "F.Cu"
+       ],
+       "neighbours_within_1mm": [
+        {
+         "pad": "J_M2N3.37",
+         "net": "",
+         "d_mm": 1.0,
+         "copper_on_it": 0
+        },
+        {
+         "pad": "J_M2N3.39",
+         "net": "GND",
+         "d_mm": 0.5,
+         "copper_on_it": 1
+        },
+        {
+         "pad": "J_M2N3.43",
+         "net": "/NVME3_RX_P",
+         "d_mm": 0.5,
+         "copper_on_it": 1
+        },
+        {
+         "pad": "J_M2N3.45",
+         "net": "GND",
+         "d_mm": 1.0,
+         "copper_on_it": 1
+        }
+       ]
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.35,
+        "n_within_2.0": 17
+       },
+       "In1.Cu": {
+        "nearest_mm": 1.268,
+        "n_within_2.0": 3
+       },
+       "In2.Cu": {
+        "nearest_mm": 1.268,
+        "n_within_2.0": 4
+       },
+       "In3.Cu": {
+        "nearest_mm": 1.268,
+        "n_within_2.0": 3
+       },
+       "In4.Cu": {
+        "nearest_mm": 1.268,
+        "n_within_2.0": 3
+       },
+       "In5.Cu": {
+        "nearest_mm": 1.268,
+        "n_within_2.0": 3
+       },
+       "In6.Cu": {
+        "nearest_mm": 1.268,
+        "n_within_2.0": 3
+       },
+       "B.Cu": {
+        "nearest_mm": 1.268,
+        "n_within_2.0": 7
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "b": {
+      "at": [
+       198.475,
+       133.213
+      ],
+      "region": "S3 core",
+      "item": {
+       "kind": "pad",
+       "ref": "U301.101",
+       "pinfunction": "",
+       "layers": [
+        "F.Cu"
+       ],
+       "pad_mm": [
+        0.25,
+        1.475
+       ],
+       "copper_on_pad_final": [],
+       "escape_on_input_board": [],
+       "neighbours_within_1mm": [
+        {
+         "pad": "U301.99",
+         "net": "/+1V0_S3",
+         "d_mm": 0.8,
+         "copper_on_it": 1
+        },
+        {
+         "pad": "U301.100",
+         "net": "/NVME3_RX_P",
+         "d_mm": 0.4,
+         "copper_on_it": 0
+        },
+        {
+         "pad": "U301.102",
+         "net": "/CARD3_TX_P",
+         "d_mm": 0.4,
+         "copper_on_it": 0
+        },
+        {
+         "pad": "U301.103",
+         "net": "/CARD3_TX_N",
+         "d_mm": 0.8,
+         "copper_on_it": 2
+        }
+       ]
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.275,
+        "n_within_2.0": 30
+       },
+       "In1.Cu": {
+        "nearest_mm": 1.111,
+        "n_within_2.0": 3
+       },
+       "In2.Cu": {
+        "nearest_mm": 0.905,
+        "n_within_2.0": 5
+       },
+       "In3.Cu": {
+        "nearest_mm": 0.0,
+        "n_within_2.0": 5
+       },
+       "In4.Cu": {
+        "nearest_mm": 1.111,
+        "n_within_2.0": 3
+       },
+       "In5.Cu": {
+        "nearest_mm": 0.46,
+        "n_within_2.0": 5
+       },
+       "In6.Cu": {
+        "nearest_mm": 0.221,
+        "n_within_2.0": 6
+       },
+       "B.Cu": {
+        "nearest_mm": 0.094,
+        "n_within_2.0": 11
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "straight_line_foreign_track_crossings": {
+      "In3.Cu": 4,
+      "In6.Cu": 5,
+      "In2.Cu": 6,
+      "In5.Cu": 3,
+      "F.Cu": 4,
+      "B.Cu": 4
+     },
+     "straight_line_foreign_vias": 1
+    }
+   ]
+  },
+  "/NVME3_RX_P": {
+   "pad_clusters": [
+    [
+     "J_M2N3.43"
+    ],
+    [
+     "U301.100"
+    ]
+   ],
+   "cluster_copper": [
+    {
+     "F.Cu": 1,
+     "via": 1
+    },
+    {}
+   ],
+   "orphan_copper_clusters": 0,
+   "open": 1,
+   "edges": [
+    {
+     "length_mm": 51.234,
+     "a": {
+      "at": [
+       199.25,
+       81.98
+      ],
+      "region": "S3 core",
+      "item": {
+       "kind": "pad",
+       "ref": "J_M2N3.43",
+       "pinfunction": "",
+       "layers": [
+        "F.Cu"
+       ],
+       "pad_mm": [
+        0.3,
+        1.55
+       ],
+       "copper_on_pad_final": [
+        "F.Cu"
+       ],
+       "escape_on_input_board": [
+        "F.Cu"
+       ],
+       "neighbours_within_1mm": [
+        {
+         "pad": "J_M2N3.39",
+         "net": "GND",
+         "d_mm": 1.0,
+         "copper_on_it": 1
+        },
+        {
+         "pad": "J_M2N3.41",
+         "net": "/NVME3_RX_N",
+         "d_mm": 0.5,
+         "copper_on_it": 1
+        },
+        {
+         "pad": "J_M2N3.45",
+         "net": "GND",
+         "d_mm": 0.5,
+         "copper_on_it": 1
+        },
+        {
+         "pad": "J_M2N3.47",
+         "net": "/NVME3_TX_N",
+         "d_mm": 1.0,
+         "copper_on_it": 1
+        }
+       ]
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.35,
+        "n_within_2.0": 19
+       },
+       "In1.Cu": {
+        "nearest_mm": 0.986,
+        "n_within_2.0": 5
+       },
+       "In2.Cu": {
+        "nearest_mm": 0.986,
+        "n_within_2.0": 6
+       },
+       "In3.Cu": {
+        "nearest_mm": 0.986,
+        "n_within_2.0": 5
+       },
+       "In4.Cu": {
+        "nearest_mm": 0.986,
+        "n_within_2.0": 5
+       },
+       "In5.Cu": {
+        "nearest_mm": 0.986,
+        "n_within_2.0": 5
+       },
+       "In6.Cu": {
+        "nearest_mm": 0.986,
+        "n_within_2.0": 5
+       },
+       "B.Cu": {
+        "nearest_mm": 0.986,
+        "n_within_2.0": 11
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "b": {
+      "at": [
+       198.875,
+       133.213
+      ],
+      "region": "S3 core",
+      "item": {
+       "kind": "pad",
+       "ref": "U301.100",
+       "pinfunction": "",
+       "layers": [
+        "F.Cu"
+       ],
+       "pad_mm": [
+        0.25,
+        1.475
+       ],
+       "copper_on_pad_final": [],
+       "escape_on_input_board": [],
+       "neighbours_within_1mm": [
+        {
+         "pad": "U301.98",
+         "net": "/NVME3_TX_N",
+         "d_mm": 0.8,
+         "copper_on_it": 4
+        },
+        {
+         "pad": "U301.99",
+         "net": "/+1V0_S3",
+         "d_mm": 0.4,
+         "copper_on_it": 1
+        },
+        {
+         "pad": "U301.101",
+         "net": "/NVME3_RX_N",
+         "d_mm": 0.4,
+         "copper_on_it": 0
+        },
+        {
+         "pad": "U301.102",
+         "net": "/CARD3_TX_P",
+         "d_mm": 0.8,
+         "copper_on_it": 0
+        }
+       ]
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.275,
+        "n_within_2.0": 27
+       },
+       "In1.Cu": {
+        "nearest_mm": 1.323,
+        "n_within_2.0": 2
+       },
+       "In2.Cu": {
+        "nearest_mm": 1.187,
+        "n_within_2.0": 4
+       },
+       "In3.Cu": {
+        "nearest_mm": 0.0,
+        "n_within_2.0": 3
+       },
+       "In4.Cu": {
+        "nearest_mm": 1.323,
+        "n_within_2.0": 2
+       },
+       "In5.Cu": {
+        "nearest_mm": 0.743,
+        "n_within_2.0": 6
+       },
+       "In6.Cu": {
+        "nearest_mm": 0.221,
+        "n_within_2.0": 5
+       },
+       "B.Cu": {
+        "nearest_mm": 0.0,
+        "n_within_2.0": 9
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "straight_line_foreign_track_crossings": {
+      "In3.Cu": 4,
+      "In6.Cu": 5,
+      "In2.Cu": 7,
+      "In5.Cu": 2,
+      "F.Cu": 4,
+      "B.Cu": 4
+     },
+     "straight_line_foreign_vias": 2
+    }
+   ]
+  },
+  "/PCIE3_RXSW_P": {
+   "pad_clusters": [
+    [
+     "C351.1"
+    ],
+    [
+     "U301.124"
+    ]
+   ],
+   "cluster_copper": [
+    {},
+    {}
+   ],
+   "orphan_copper_clusters": 0,
+   "open": 1,
+   "edges": [
+    {
+     "length_mm": 25.346,
+     "a": {
+      "at": [
+       204.945,
+       153.135
+      ],
+      "region": "S3 core",
+      "item": {
+       "kind": "pad",
+       "ref": "C351.1",
+       "pinfunction": "",
+       "layers": [
+        "F.Cu"
+       ],
+       "pad_mm": [
+        0.56,
+        0.62
+       ],
+       "copper_on_pad_final": [],
+       "escape_on_input_board": [],
+       "neighbours_within_1mm": [
+        {
+         "pad": "C351.2",
+         "net": "/PCIE3_RX_P",
+         "d_mm": 0.96,
+         "copper_on_it": 1
+        }
+       ]
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.417,
+        "n_within_2.0": 13
+       },
+       "In1.Cu": {
+        "nearest_mm": 1.033,
+        "n_within_2.0": 3
+       },
+       "In2.Cu": {
+        "nearest_mm": 0.755,
+        "n_within_2.0": 5
+       },
+       "In3.Cu": {
+        "nearest_mm": 0.238,
+        "n_within_2.0": 4
+       },
+       "In4.Cu": {
+        "nearest_mm": 1.033,
+        "n_within_2.0": 3
+       },
+       "In5.Cu": {
+        "nearest_mm": 0.453,
+        "n_within_2.0": 11
+       },
+       "In6.Cu": {
+        "nearest_mm": 0.024,
+        "n_within_2.0": 8
+       },
+       "B.Cu": {
+        "nearest_mm": 0.0,
+        "n_within_2.0": 5
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "b": {
+      "at": [
+       189.275,
+       133.213
+      ],
+      "region": "S3 margin",
+      "item": {
+       "kind": "pad",
+       "ref": "U301.124",
+       "pinfunction": "",
+       "layers": [
+        "F.Cu"
+       ],
+       "pad_mm": [
+        0.25,
+        1.475
+       ],
+       "copper_on_pad_final": [],
+       "escape_on_input_board": [],
+       "neighbours_within_1mm": [
+        {
+         "pad": "U301.122",
+         "net": "",
+         "d_mm": 0.8,
+         "copper_on_it": 0
+        },
+        {
+         "pad": "U301.123",
+         "net": "/PCIE3_RXSW_N",
+         "d_mm": 0.4,
+         "copper_on_it": 1
+        },
+        {
+         "pad": "U301.125",
+         "net": "/+1V0_S3",
+         "d_mm": 0.4,
+         "copper_on_it": 2
+        },
+        {
+         "pad": "U301.126",
+         "net": "GND",
+         "d_mm": 0.8,
+         "copper_on_it": 1
+        }
+       ]
+      },
+      "clearance": {
+       "F.Cu": {
+        "nearest_mm": 0.275,
+        "n_within_2.0": 24
+       },
+       "In1.Cu": {
+        "nearest_mm": 1.111,
+        "n_within_2.0": 5
+       },
+       "In2.Cu": {
+        "nearest_mm": 1.111,
+        "n_within_2.0": 7
+       },
+       "In3.Cu": {
+        "nearest_mm": 0.0,
+        "n_within_2.0": 8
+       },
+       "In4.Cu": {
+        "nearest_mm": 1.111,
+        "n_within_2.0": 5
+       },
+       "In5.Cu": {
+        "nearest_mm": 0.098,
+        "n_within_2.0": 9
+       },
+       "In6.Cu": {
+        "nearest_mm": 0.388,
+        "n_within_2.0": 11
+       },
+       "B.Cu": {
+        "nearest_mm": 0.25,
+        "n_within_2.0": 13
+       }
+      },
+      "rule_areas": [
+       {
+        "name": "keep tracks off In1 (solid ground plane)",
+        "layers": [
+         "In1.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       },
+       {
+        "name": "keep tracks off In4 (5 V planes)",
+        "layers": [
+         "In4.Cu"
+        ],
+        "no_tracks": true,
+        "no_vias": false
+       }
+      ]
+     },
+     "straight_line_foreign_track_crossings": {
+      "In2.Cu": 3,
+      "In5.Cu": 8,
+      "In3.Cu": 4,
+      "F.Cu": 6,
+      "In6.Cu": 6,
+      "B.Cu": 6
+     },
+     "straight_line_foreign_vias": 1
+    }
+   ]
+  }
+ },
+ "open_total": 18
+}
