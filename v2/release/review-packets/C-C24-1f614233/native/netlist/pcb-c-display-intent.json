@@ -1,0 +1,247 @@
+{
+ "board": "pcb-c-display",
+ "written": "2026-09-26 10:00",
+ "bypass": [
+  {
+   "cap": "C7",
+   "part": "U3",
+   "pin": "1",
+   "net": "+3V3"
+  },
+  {
+   "cap": "C8",
+   "part": "U3",
+   "pin": "10",
+   "net": "+3V3"
+  },
+  {
+   "cap": "C9",
+   "part": "U3",
+   "pin": "22",
+   "net": "+3V3"
+  },
+  {
+   "cap": "C10",
+   "part": "U3",
+   "pin": "33",
+   "net": "+3V3"
+  },
+  {
+   "cap": "C11",
+   "part": "U3",
+   "pin": "42",
+   "net": "+3V3"
+  },
+  {
+   "cap": "C12",
+   "part": "U3",
+   "pin": "49",
+   "net": "+3V3"
+  },
+  {
+   "cap": "C13",
+   "part": "U4",
+   "pin": "8",
+   "net": "+3V3"
+  },
+  {
+   "cap": "C14",
+   "part": "U3",
+   "pin": "23",
+   "net": "C_DVDD"
+  },
+  {
+   "cap": "C15",
+   "part": "U3",
+   "pin": "50",
+   "net": "C_DVDD"
+  },
+  {
+   "cap": "C16",
+   "part": "U3",
+   "pin": "44",
+   "net": "+3V3"
+  },
+  {
+   "cap": "C3",
+   "part": "U5",
+   "pin": "1",
+   "net": "+5V"
+  },
+  {
+   "cap": "C4",
+   "part": "U5",
+   "pin": "5",
+   "net": "+3V3"
+  },
+  {
+   "cap": "C17",
+   "part": "U1",
+   "pin": "24",
+   "net": "+3V3"
+  },
+  {
+   "cap": "C18",
+   "part": "U2",
+   "pin": "24",
+   "net": "+3V3"
+  },
+  {
+   "cap": "C25",
+   "part": "U9",
+   "pin": "5",
+   "net": "+3V3"
+  },
+  {
+   "cap": "C39",
+   "part": "U12",
+   "pin": "5",
+   "net": "+3V3"
+  },
+  {
+   "cap": "C38",
+   "part": "U_LIGHT",
+   "pin": "2",
+   "net": "+3V3"
+  },
+  {
+   "cap": "C29",
+   "part": "J_EPD",
+   "pin": "15",
+   "net": "EPD_VCC"
+  },
+  {
+   "cap": "C28",
+   "part": "J_EPD",
+   "pin": "16",
+   "net": "EPD_VCC"
+  }
+ ],
+ "rails": {
+  "+5V": {
+   "volts": 5.0,
+   "amps_typ": 0.6,
+   "amps_peak": 1.0,
+   "source": "J_PANEL",
+   "loads": {
+    "SW_LIGHT": 0.35,
+    "U5": 0.2,
+    "BZ1": 0.03
+   },
+   "note": "the panel rail over the ribbon (PANEL_5V on B16, fused F6). Budget 5 percent, not the 2 percent default and not the 3 percent this line carried until 8 Sep 2026 22:55: every load tolerates it. The LED rail is PWM'd, the sounder is a buzzer, and the only regulated load is the TLV75533 LDO, which has 1.5 V of headroom at 5 V in and 3.3 V out. C8 measures 171 mV (3.41 percent) with 0.6 A over 561 mm of 0.5 mm track, half of it on 0.5 oz inner copper; the rail class stays 0.5 mm because 1.0 mm strangled the router in the driver cluster (32.76).",
+   "budget": 0.05,
+   "always_on": true,
+   "always_on_why": "it arrives over the panel ribbon from board B, behind B's own fuse F6; nothing on this board switches it"
+  },
+  "+3V3": {
+   "volts": 3.3,
+   "amps_typ": 0.12,
+   "amps_peak": 0.2,
+   "source": "U5",
+   "loads": {
+    "U1": 0.04,
+    "U2": 0.01,
+    "U3": 0.01,
+    "U4": 0.015,
+    "U6": 0.005,
+    "U7": 0.005,
+    "U8": 0.005,
+    "U10": 0.005,
+    "U11": 0.005,
+    "U9": 0.002,
+    "U12": 0.002,
+    "U_LIGHT": 0.02,
+    "Q5": 0.001
+   },
+   "note": "the panel's logic 3.3 V from the LDO U5: the RP2040 controller, its QSPI flash, the two expanders, the buffers, the light sensor and the e-paper's supply switch. Budget 3 percent, because every load is a logic part with a wide supply range",
+   "budget": 0.03,
+   "share": 0.0075,
+   "always_on": true,
+   "always_on_why": "U5 is a TLV75533 whose EN pin is tied to its own input, so this rail follows the 5 V that arrives on the ribbon and has no switch of its own",
+   "fed_from": "+5V"
+  }
+ },
+ "nodes": {
+  "EPD_VGH": {
+   "v_max": null,
+   "v_min": 0.0,
+   "basis": "a charge-pump node of the e-paper driver, inside the panel's own glass: this project states no voltage for it and does not need to, because the panel maker states the part",
+   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603', 'CAP 1uF 25V 0603' and 'CAP 4.7uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 25 V 0603 part the panel maker specifies there: 1 uF on the stabilising pins and 4.7 uF for the pump capacitor from the switch node to the pump node, as the page 3 figure labels it"
+  },
+  "EPD_VGL": {
+   "v_max": null,
+   "v_min": 0.0,
+   "basis": "a charge-pump node of the e-paper driver, inside the panel's own glass: this project states no voltage for it and does not need to, because the panel maker states the part",
+   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603', 'CAP 1uF 25V 0603' and 'CAP 4.7uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 25 V 0603 part the panel maker specifies there: 1 uF on the stabilising pins and 4.7 uF for the pump capacitor from the switch node to the pump node, as the page 3 figure labels it"
+  },
+  "EPD_VDH": {
+   "v_max": null,
+   "v_min": 0.0,
+   "basis": "a charge-pump node of the e-paper driver, inside the panel's own glass: this project states no voltage for it and does not need to, because the panel maker states the part",
+   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603', 'CAP 1uF 25V 0603' and 'CAP 4.7uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 25 V 0603 part the panel maker specifies there: 1 uF on the stabilising pins and 4.7 uF for the pump capacitor from the switch node to the pump node, as the page 3 figure labels it"
+  },
+  "EPD_VDL": {
+   "v_max": null,
+   "v_min": 0.0,
+   "basis": "a charge-pump node of the e-paper driver, inside the panel's own glass: this project states no voltage for it and does not need to, because the panel maker states the part",
+   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603', 'CAP 1uF 25V 0603' and 'CAP 4.7uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 25 V 0603 part the panel maker specifies there: 1 uF on the stabilising pins and 4.7 uF for the pump capacitor from the switch node to the pump node, as the page 3 figure labels it"
+  },
+  "EPD_VDHR": {
+   "v_max": null,
+   "v_min": 0.0,
+   "basis": "a charge-pump node of the e-paper driver, inside the panel's own glass: this project states no voltage for it and does not need to, because the panel maker states the part",
+   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603', 'CAP 1uF 25V 0603' and 'CAP 4.7uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 25 V 0603 part the panel maker specifies there: 1 uF on the stabilising pins and 4.7 uF for the pump capacitor from the switch node to the pump node, as the page 3 figure labels it"
+  },
+  "EPD_VCOM": {
+   "v_max": null,
+   "v_min": 0.0,
+   "basis": "a charge-pump node of the e-paper driver, inside the panel's own glass: this project states no voltage for it and does not need to, because the panel maker states the part",
+   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603', 'CAP 1uF 25V 0603' and 'CAP 4.7uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 25 V 0603 part the panel maker specifies there: 1 uF on the stabilising pins and 4.7 uF for the pump capacitor from the switch node to the pump node, as the page 3 figure labels it"
+  },
+  "EPD_VDDD": {
+   "v_max": null,
+   "v_min": 0.0,
+   "basis": "a charge-pump node of the e-paper driver, inside the panel's own glass: this project states no voltage for it and does not need to, because the panel maker states the part",
+   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603', 'CAP 1uF 25V 0603' and 'CAP 4.7uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 25 V 0603 part the panel maker specifies there: 1 uF on the stabilising pins and 4.7 uF for the pump capacitor from the switch node to the pump node, as the page 3 figure labels it"
+  },
+  "EPD_SW": {
+   "v_max": null,
+   "v_min": 0.0,
+   "basis": "a charge-pump node of the e-paper driver, inside the panel's own glass: this project states no voltage for it and does not need to, because the panel maker states the part",
+   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603', 'CAP 1uF 25V 0603' and 'CAP 4.7uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 25 V 0603 part the panel maker specifies there: 1 uF on the stabilising pins and 4.7 uF for the pump capacitor from the switch node to the pump node, as the page 3 figure labels it"
+  },
+  "EPD_PUMP": {
+   "v_max": null,
+   "v_min": 0.0,
+   "basis": "a charge-pump node of the e-paper driver, inside the panel's own glass: this project states no voltage for it and does not need to, because the panel maker states the part",
+   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603', 'CAP 1uF 25V 0603' and 'CAP 4.7uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 25 V 0603 part the panel maker specifies there: 1 uF on the stabilising pins and 4.7 uF for the pump capacitor from the switch node to the pump node, as the page 3 figure labels it"
+  },
+  "GND": {
+   "v_max": 0.0,
+   "v_min": 0.0,
+   "basis": "the board's reference, so a part between a live net and ground is judged against the live net rather than reported as sitting on an undeclared one"
+  },
+  "BZ_K": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "the sounder's low side between BZ1 and Q4's drain: it sits at the +5V rail while the FET is off and at its on-state drop while it conducts"
+  }
+ },
+ "pair_classes": {
+  "USB": {},
+  "DIFF100": {
+   "z_diff": 100.0,
+   "z_se": 50.0
+  },
+  "PCIE": {
+   "z_diff": 100.0
+  },
+  "HDMI": {
+   "z_diff": 100.0
+  },
+  "RF": {
+   "z_se": 50.0
+  }
+ },
+ "pass_through": {}
+}

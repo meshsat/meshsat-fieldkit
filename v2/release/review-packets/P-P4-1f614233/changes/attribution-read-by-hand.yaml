@@ -1,0 +1,77 @@
+# Board P (pack BMS): every changed reference between 82dd1e4d and 1f614233, read by hand.
+# Same rules as c-1f614233.yaml: each ID is checked by review_packet.py against the cited lines of gen_sch_p.py at
+# 1f614233, and each cited range must be tied to the part. Parts of the second-level protector cite the section header
+# at 341 ('--- the second-level protector, decision 40 / D-15') that every one of their statements sits under.
+# `record` quotes the round-4 board P record (a session draft, not in the repository, section 3 "every difference with
+# its finding") where it says more than the generator; it is never counted as an ID.
+# This is the circuit AS COMMITTED at 1f614233. The battery review stream's candidate (not on main when this was
+# written) changes U2's TS network; board P's packet is rebuilt at the revision that merges it.
+# Unbuilt prototype design; this reading releases nothing.
+board: p
+rev: 1f614233998c3087a53abfa977be134465ce9f47
+prev: 82dd1e4dc44efabeee1164a995cda4e866610f3d
+read_by: "the session (review stream PKT), 26 September 2026, from gen_sch_p.py at both revisions and the round-4 board P record"
+rows:
+  C10: {ids: [F-PK-02], cite: [[542, 542]], why: "the thermistor filter on TS1 goes with the move to four cell NTCs on J_TS"}
+  R11: {ids: [F-PK-02], cite: [[208, 208]], why: "TS2 was a fixed 10k; it becomes a cell thermistor input on J_TS"}
+  R12: {ids: [F-PK-02], cite: [[208, 208]], why: "TS3 was a fixed 10k; it becomes a cell thermistor input on J_TS"}
+  R13: {ids: [F-PK-02], cite: [[208, 208]], why: "TS4 was a fixed 10k; it becomes a cell thermistor input on J_TS"}
+  J_TS: {ids: [F-PK-02], cite: [[208, 208]], why: "one thermistor covered twelve cells; J_TS becomes a JST-PH 1x5 for four 103AT-2 NTCs, one per series group"}
+  C11: {ids: [O-12, RP-22], cite: [[285, 290]], why: "the two terminal ESD capacitors were in parallel, so one shorted part shorted the pack terminals; now in series through PACK_MID (SLUSC67B 8.2.2.1.5)"}
+  C12: {ids: [O-12, RP-22], cite: [[285, 290]], why: "the second terminal ESD capacitor, in series with C11 through PACK_MID"}
+  C13: {ids: [D-15, decision 40], cite: [[226, 232]], why: "the capacitor across the PTC element (TI Figure 21)"}
+  RT1: {ids: [D-15, decision 40], cite: [[226, 226]], why: "the PRF15BB103 PTC element beside the protection FETs, the PTC input of the D-15 floor"}
+  U1:
+    ids: [W6-F2, D-15, decision 40]
+    cite: [[160, 160]]
+    why: "the gauge sits on TI's true RSM0032A 4 x 4 mm land (W6-F2), and its PTC and PTCEN pins leave VSS for the PTC input (D-15)"
+  U2: {ids: [D-15, decision 40], cite: [[341, 341]], why: "the BQ7720700 second-level protector (cell over-voltage, under-voltage, open wire), the owner's D-15 floor"}
+  R23: {ids: [D-15, decision 40], cite: [[341, 341]], why: "U2's supply resistor RVD, 300 ohm (inline at 390; SLUSEG7D Table 8-1)"}
+  C14: {ids: [D-15, decision 40], cite: [[341, 341]], why: "U2's supply capacitor CVD, 0.1 uF (inline at 390)"}
+  R24: {ids: [D-15, decision 40], cite: [[341, 341]], why: "U2's cell 1 input resistor RIN, 1k (inline at 392)"}
+  R25: {ids: [D-15, decision 40], cite: [[341, 341]], why: "U2's cell 2 input resistor RIN, 1k"}
+  R26: {ids: [D-15, decision 40], cite: [[341, 341]], why: "U2's cell 3 input resistor RIN, 1k"}
+  R27: {ids: [D-15, decision 40], cite: [[341, 341]], why: "U2's cell 4 input resistor RIN, 1k"}
+  C15: {ids: [D-15, decision 40], cite: [[341, 341]], why: "U2's CIN ladder, cell 1 (inline at 394)"}
+  C16: {ids: [D-15, decision 40], cite: [[341, 341]], why: "U2's CIN ladder, cell 2"}
+  C17: {ids: [D-15, decision 40], cite: [[341, 341]], why: "U2's CIN ladder, cell 3"}
+  C18: {ids: [D-15, decision 40], cite: [[341, 341]], why: "U2's CIN ladder, cell 4"}
+  R33:
+    ids: [RP-17]
+    cite: [[363, 383]]
+    why: "at 1f614233 U2's TS pin is held at the 25 C reading by a fixed 10k, so the second level has no temperature function; taken at the round-4 fix-up for the +71 C storage margin of D-02a. The review of 26 September 2026 (section 2) says this needs technical justification, and the battery stream's candidate restores the over-temperature trip"
+  F2: {ids: [D-15, decision 40], cite: [[245, 245]], why: "the Eaton SCF9550-30-05 chemical fuse between the blade and the charge FET, as TI places it"}
+  Q1: {ids: [D-15, decision 40], cite: [[65, 66]], why: "the charge FET's source moves from FUSED to SCP_OUT, behind the new chemical fuse"}
+  R17: {ids: [D-15, decision 40], cite: [[65, 66]], why: "the charge FET's gate-source resistor follows its source to SCP_OUT (inline at 281)"}
+  R29: {ids: [D-15, decision 40], cite: [[341, 345]], why: "the fuse drive: U2's COUT into the heater FET's gate through 20k (SLUSC67B 8.2.2.2.5)"}
+  R30: {ids: [D-15, decision 40], cite: [[341, 345]], why: "the fuse drive: the gauge's FUSE output into the heater FET's gate through 5.1k"}
+  R31: {ids: [D-15, decision 40], cite: [[341, 345]], why: "the fuse drive: the gate node's 51k to ground"}
+  C19: {ids: [D-15, decision 40], cite: [[341, 345]], why: "the fuse drive: the gate node's capacitor"}
+  JP1: {ids: [D-15, decision 40], cite: [[341, 345], [418, 421]], why: "the fuse arming jumper, open as built and closed at commissioning after the gauge's data flash is written and read back (the verification D-15 names)"}
+  R32: {ids: [D-15, decision 40], cite: [[341, 345]], why: "holds the heater FET's gate low while JP1 is open"}
+  Q3: {ids: [D-15, decision 40], cite: [[341, 345]], why: "the AO3400A that switches the chemical fuse's heater"}
+  Q5:
+    ids: [D-15, decision 40, RP-02]
+    cite: [[341, 345], [451, 462]]
+    why: "U2's under-voltage output holds the discharge FET off through Q5 instead of firing the fuse, whose heater is rated only from 10.5 V"
+  R28:
+    ids: [D-15, decision 40, RP-02]
+    cite: [[341, 345], [462, 462]]
+    why: "the pull-down on U2's DOUT at Q5's gate"
+  D1: {ids: [S-09, A03, F-IN-01], cite: [[297, 297]], why: "the pack terminal clamp SMBJ20A was reversed, a forward-biased diode across the terminals; cathode now on PACK_P"}
+  D2: {ids: [F-BP-01], cite: [[192, 193]], why: "the SMBus clamp USBLC6-2 held the gauge's VCC at its own breakdown; each SMBus line gets a PESD5V0S1BA to the pack side of the shunt"}
+  D3: {ids: [F-BP-01], cite: [[192, 193]], why: "the second SMBus line's PESD5V0S1BA clamp"}
+  J_SMB: {ids: [S-05, A07], cite: [[472, 472]], why: "the SMBus lead's ground (pin 3) moves to the pack side of the shunt, PACK_N, so the coulomb counter sees every ampere; PRES goes out through R22"}
+  R22: {ids: [S-05], cite: [[222, 222]], why: "PRES leaves the board on the SMBus lead, so it takes TI's series resistor"}
+  TP11: {ids: [O-9, D-15], cite: [[382, 382], [421, 423]], why: "a test point on the fuse gate FUSE_G, read low before JP1 is closed"}
+  TP12:
+    ids: []
+    cite: [[482, 482]]
+    why: "a test point on U2's under-voltage output SEC_DOUT for the commissioning checks (inline at 482)"
+    record: "round-4 board P record, section 3: 'TP11 FUSE_G, TP12 SEC_DOUT, TP13 SCP_OUT | D-15 commissioning (O-9)'; no ID beside TP12 in the generator"
+  TP13:
+    ids: []
+    cite: [[482, 482]]
+    why: "a test point on the protected cell node SCP_OUT for the commissioning checks (inline at 482)"
+    record: "round-4 board P record, section 3: 'TP11 FUSE_G, TP12 SEC_DOUT, TP13 SCP_OUT | D-15 commissioning (O-9)'; no ID beside TP13 in the generator"
+  TP14: {ids: [D-15], cite: [[421, 423]], why: "a test point on the FET side of JP1, so the arming is verified by continuity TP11 to TP14"}

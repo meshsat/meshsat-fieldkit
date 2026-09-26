@@ -1,0 +1,26 @@
+{
+ "holds": [
+  {
+   "ELECTRICAL_PROTECTION_STATUS": "BLOCKED_DECISION_31",
+   "FAB_READINESS": "NOT_READY",
+   "PUBLICATION_STATUS": "HELD",
+   "ROUTING_STATUS": "PASS",
+   "board": "e",
+   "decision": 31,
+   "forbidden": "any orderable fabrication package, any promotion of the board or its folder, any publication of the board file or its evidence",
+   "lifts_when": "decision 31 is ruled in v2/docs/OWNER-DECISIONS-2026-09-11.md and this entry is deleted",
+   "opened": "2026-09-16",
+   "permitted": "a review package clearly quarantined as NOT_FOR_FAB may be generated, so the board can be read and reviewed while it is held",
+   "title": "board E's exposed-port protection",
+   "why": "rule TRN-001 is a BLOCKER and reads FAIL on board E, and the reading was corrected on the evening of 17 September: of its FIVE judged conductors ONE has a clamp behind an active part, the shore inlet, whose path is the fuse F1, the ideal-diode FET Q1 and then the SMCJ40A, THREE reach a semiconductor with nothing between them at all, the sensor pod's 3.3 V feed and its two I2C lines, and ONE is answered as it should be, the solar input, which meets its own clamp first. Until that evening the pod's three read as clamped by the shore inlet's own part, which the chain reached by crossing the RP2040 and a ground: a clamp on the other side of the board is not this conductor's. The fix is a schematic change, which a route cannot make, and which of the options is taken is the owner's to rule because it trades parts, board area and the operating envelope against each other. The envelope itself is decision 34, which is why 31 cannot be ruled before it. AND THE SAME GENERATION CARRIES A SECOND CORRECTION THAT NEEDS NO RULING (17 September 2026, 32.219): Q7, the hot-swap pass FET on the shore and vehicle DC entry, was written with a three-pin map on a five-pad land, so its gate and drain nets sit on two SOURCE pins and its drain tab floats on the E11 that was cut; the generator is corrected and rule SCH-005 reads FAIL on E11 until the board is regenerated"
+  }
+ ],
+ "open_decisions": [
+  {
+   "boards": "not declared; the text names them",
+   "n": 42,
+   "status": "open",
+   "title": "a decoupling capacitor cannot be both within 3 mm of a fine-pitch pin and outside that part's escape fan"
+  }
+ ]
+}

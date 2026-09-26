@@ -1,0 +1,11 @@
+{
+ "holds": [],
+ "open_decisions": [
+  {
+   "boards": "not declared; the text names them",
+   "n": 42,
+   "status": "open",
+   "title": "a decoupling capacitor cannot be both within 3 mm of a fine-pitch pin and outside that part's escape fan"
+  }
+ ]
+}

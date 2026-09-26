@@ -1,0 +1,2179 @@
+{
+ "attribution": {
+  "by_hand": true,
+  "file": "c-1f614233.yaml",
+  "read_by": "the session (review stream PKT), 26 September 2026, from gen_sch_c.py at both revisions and the round-4 board C record",
+  "rows_missing": [],
+  "sha256": "52570da3a6d22defb72a5f0494877adf847b46777242c7630654ab8696043d2c"
+ },
+ "changes": [
+  {
+   "authority_ids": [
+    "D-03.2",
+    "D-03.3"
+   ],
+   "evidence": {
+    "anchor": "loop",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [
+      "D-03"
+     ],
+     "candidate_ids": [
+      "D-03"
+     ],
+     "finding_ids": [],
+     "read": "loop",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "R10/C20 now on the local ZEROIZE_SW (D-03, 26 September 2026) SOS_SW ZEROIZE_SW TEST_SW LIGHT_DAY_n LIGHT_NIGHT_n",
+      "ids": {
+       "owner_ruling": [
+        "D-03"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       148,
+       148
+      ]
+     },
+     {
+      "excerpt": "R10/C20 now on the local ZEROIZE_SW (D-03, 26 September 2026) SOS_SW ZEROIZE_SW TEST_SW LIGHT_DAY_n LIGHT_NIGHT_n | round 4). As generated at 82dd1e4d the toggle, R10, C20 and GPIO22 sat on ZEROIZE_HW itself, which leaves this board on J_PANEL pin 10, | is up and this board is not; RP2040 Table 622 ",
+      "ids": {
+       "owner_ruling": [
+        "D-03"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       148,
+       169,
+       174
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "R10/C20 now on the local ZEROIZE_SW (D-03, 26 September 2026) SOS_SW ZEROIZE_SW TEST_SW LIGHT_DAY_n LIGHT_NIGHT_n",
+     "introduced": {
+      "owner_ruling": [
+       "D-03"
+      ]
+     },
+     "lines": [
+      148
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       168,
+       174
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        168,
+        174
+       ],
+       "tie": [
+        "names_ref",
+        "names_net:ZEROIZE_HW"
+       ]
+      }
+     ],
+     "why": "R10's filter capacitor moves with the ZEROIZE toggle from the exported ZEROIZE_HW to the local net ZEROIZE_SW, so a fault on the exported chain cannot read as a closed toggle (the toggle is the only trigger and the wipe is level-sensitive), and board A's pull-up no longer back-feeds this board"
+    },
+    "spans": [
+     [
+      148,
+      149
+     ]
+    ]
+   },
+   "fields": {},
+   "finding_ids": [
+    "W3-F12"
+   ],
+   "footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "kind": "CHANGED",
+   "lcsc": "C57112",
+   "pins_moved": {
+    "1": [
+     "ZEROIZE_HW",
+     "ZEROIZE_SW"
+    ]
+   },
+   "read": "hand",
+   "ref": "C20",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "10n"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "A03",
+      "F-IN-01",
+      "S-09"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "THE THREE RECTIFIERS POINT THE WAY THE PANEL MAKER DRAWS THEM (26 September 2026, S-09, adjudication A03, finding F-IN-01 extended). | Device:D_Schottky pin 1 is K and pin 2 is A, and pad 1 of D_SOD-123F is the cathode; PANJIT's SS2020FL~SS20100FL sheet (SS2020FL_SERIES | REV.10S, 17 Aug 2017, SOD-1",
+      "ids": {
+       "adjudication": [
+        "A03"
+       ],
+       "finding": [
+        "F-IN-01",
+        "S-09"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       252,
+       263
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "THE PUMP CAPACITOR IS THE 4.7 uF THE MAKER DRAWS (26 September 2026). PDi Rev.02 page 3 labels the capacitor from the switch node to the | pump node \"4.7uF/25V\" and its BOM (page 10, item 2) lists \"CAP 4.7uF 25V 0603\"; this board carried 1 uF there. Murata | GRM188R61E475KE11D (0603, X5R, 4.7 uF, DC 25 V, -55 to +85 C; Murata reference sheet GRM188R61E475KE11-01), LCSC C90057.",
+     "introduced": {},
+     "lines": [
+      261,
+      262,
+      263
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       261,
+       263
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "round-4 board C record, section 1 item 2: found while proving item 1 (S-09 / A03 / F-IN-01) against the same PDi figure; the record gives it no finding ID of its own",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        261,
+        263
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the pump capacitor goes from 1 uF to 4.7 uF 25 V because PDi's EPD driving-circuit note Rev.02 draws 4.7 uF there (page 3) and lists it in its BOM (page 10, item 2)"
+    },
+    "spans": [
+     [
+      264,
+      264
+     ]
+    ]
+   },
+   "fields": {
+    "lcsc": [
+     "",
+     "C90057"
+    ],
+    "value": [
+     "1u 25V",
+     "4.7u 25V"
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "kind": "CHANGED",
+   "lcsc": "C90057",
+   "pins_moved": {},
+   "read": "hand",
+   "ref": "C31",
+   "rule_ids": [],
+   "status": "NO_ID_OF_ANY_KIND",
+   "value": "4.7u 25V"
+  },
+  {
+   "authority_ids": [
+    "D-03.2",
+    "D-03.3"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "D-03.2",
+      "D-03.3",
+      "W3-F12"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "ZEROIZE IS SENSED ON THIS BOARD ONLY, AND EXPORTED THROUGH A BUFFER (26 September 2026, owner rulings D-03.2 and D-03.3, MESHSAT-1357 | round 4). As generated at 82dd1e4d the toggle, R10, C20 and GPIO22 sat on ZEROIZE_HW itself, which leaves this board on J_PANEL pin 10, | crosses board B to J_AB1 p",
+      "ids": {
+       "finding": [
+        "W3-F12"
+       ],
+       "owner_ruling": [
+        "D-03.2",
+        "D-03.3"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       168,
+       177
+      ]
+     },
+     {
+      "excerpt": "ZEROIZE IS SENSED ON THIS BOARD ONLY, AND EXPORTED THROUGH A BUFFER (26 September 2026, owner rulings D-03.2 and D-03.3, MESHSAT-1357 | round 4). As generated at 82dd1e4d the toggle, R10, C20 and GPIO22 sat on ZEROIZE_HW itself, which leaves this board on J_PANEL pin 10, | crosses board B to J_AB1 p",
+      "ids": {
+       "finding": [
+        "W3-F12"
+       ],
+       "owner_ruling": [
+        "D-03.2",
+        "D-03.3"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       168,
+       177
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "the ZEROIZE buffer (26 September 2026) C39 U12 5 +3V3",
+     "introduced": {},
+     "lines": [
+      354
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       168,
+       173
+      ],
+      [
+       354,
+       354
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "C39 is U12's supply capacitor: its statement (179) follows U12's (178) under the block at 168 to 177, and line 354 declares it as U12 pin 5's bypass",
+     "ties": [
+      {
+       "lines": [
+        168,
+        173
+       ],
+       "tie": []
+      },
+      {
+       "lines": [
+        354,
+        354
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the 100 nF supply capacitor of the new ZEROIZE buffer U12"
+    },
+    "spans": [
+     [
+      179,
+      179
+     ],
+     [
+      354,
+      354
+     ]
+    ]
+   },
+   "finding_ids": [
+    "W3-F12"
+   ],
+   "footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "C14663",
+   "pins": {
+    "1": "+3V3",
+    "2": "GND"
+   },
+   "read": "hand",
+   "ref": "C39",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "100n"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "A03",
+      "F-IN-01",
+      "S-09"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "THE THREE RECTIFIERS POINT THE WAY THE PANEL MAKER DRAWS THEM (26 September 2026, S-09, adjudication A03, finding F-IN-01 extended). | Device:D_Schottky pin 1 is K and pin 2 is A, and pad 1 of D_SOD-123F is the cathode; PANJIT's SS2020FL~SS20100FL sheet (SS2020FL_SERIES | REV.10S, 17 Aug 2017, SOD-1",
+      "ids": {
+       "adjudication": [
+        "A03"
+       ],
+       "finding": [
+        "F-IN-01",
+        "S-09"
+       ]
+      },
+      "kind": "other_paragraph",
+      "lines": [
+       252,
+       259
+      ]
+     },
+     {
+      "excerpt": "THE THREE RECTIFIERS POINT THE WAY THE PANEL MAKER DRAWS THEM (26 September 2026, S-09, adjudication A03, finding F-IN-01 extended). | Device:D_Schottky pin 1 is K and pin 2 is A, and pad 1 of D_SOD-123F is the cathode; PANJIT's SS2020FL~SS20100FL sheet (SS2020FL_SERIES | REV.10S, 17 Aug 2017, SOD-1",
+      "ids": {
+       "adjudication": [
+        "A03"
+       ],
+       "finding": [
+        "F-IN-01",
+        "S-09"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       252,
+       259
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": [
+      252,
+      253,
+      254,
+      255,
+      256,
+      257,
+      258,
+      259
+     ]
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       252,
+       252
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        252,
+        252
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the VGH rectifier was reversed; its anode is now on the switch node and its cathode on VGH, as PDi draws it, with PANJIT's SS2040FL code pinned"
+    },
+    "spans": [
+     [
+      260,
+      260
+     ]
+    ]
+   },
+   "fields": {
+    "lcsc": [
+     "",
+     "C268712"
+    ]
+   },
+   "finding_ids": [
+    "A03",
+    "F-IN-01",
+    "S-09"
+   ],
+   "footprint": "Diode_SMD:D_SOD-123F",
+   "kind": "CHANGED",
+   "lcsc": "C268712",
+   "pins_moved": {
+    "1": [
+     "EPD_SW",
+     "EPD_VGH"
+    ],
+    "2": [
+     "EPD_VGH",
+     "EPD_SW"
+    ]
+   },
+   "read": "hand",
+   "ref": "D19",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "SS2040FL: EPD_SW -> VGH"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "A03",
+      "F-IN-01",
+      "S-09"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "THE THREE RECTIFIERS POINT THE WAY THE PANEL MAKER DRAWS THEM (26 September 2026, S-09, adjudication A03, finding F-IN-01 extended). | Device:D_Schottky pin 1 is K and pin 2 is A, and pad 1 of D_SOD-123F is the cathode; PANJIT's SS2020FL~SS20100FL sheet (SS2020FL_SERIES | REV.10S, 17 Aug 2017, SOD-1",
+      "ids": {
+       "adjudication": [
+        "A03"
+       ],
+       "finding": [
+        "F-IN-01",
+        "S-09"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       252,
+       263
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "THE PUMP CAPACITOR IS THE 4.7 uF THE MAKER DRAWS (26 September 2026). PDi Rev.02 page 3 labels the capacitor from the switch node to the | pump node \"4.7uF/25V\" and its BOM (page 10, item 2) lists \"CAP 4.7uF 25V 0603\"; this board carried 1 uF there. Murata | GRM188R61E475KE11D (0603, X5R, 4.7 uF, DC 25 V, -55 to +85 C; Murata reference sheet GRM188R61E475KE11-01), LCSC C90057.",
+     "introduced": {},
+     "lines": [
+      261,
+      262,
+      263
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       252,
+       257
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "the block heads THE THREE RECTIFIERS; line 255 names the pump clamp (D20, value 'SS2040FL: pump clamp') and 257 says all three were the other way round",
+     "ties": [
+      {
+       "lines": [
+        252,
+        257
+       ],
+       "tie": []
+      }
+     ],
+     "why": "the pump clamp was reversed; anode now on the pump node and cathode on GND"
+    },
+    "spans": [
+     [
+      264,
+      264
+     ]
+    ]
+   },
+   "fields": {
+    "lcsc": [
+     "",
+     "C268712"
+    ]
+   },
+   "finding_ids": [
+    "A03",
+    "F-IN-01",
+    "S-09"
+   ],
+   "footprint": "Diode_SMD:D_SOD-123F",
+   "kind": "CHANGED",
+   "lcsc": "C268712",
+   "pins_moved": {
+    "1": [
+     "EPD_PUMP",
+     "GND"
+    ],
+    "2": [
+     "GND",
+     "EPD_PUMP"
+    ]
+   },
+   "read": "hand",
+   "ref": "D20",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "SS2040FL: pump clamp"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "A03",
+      "F-IN-01",
+      "S-09"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "THE THREE RECTIFIERS POINT THE WAY THE PANEL MAKER DRAWS THEM (26 September 2026, S-09, adjudication A03, finding F-IN-01 extended). | Device:D_Schottky pin 1 is K and pin 2 is A, and pad 1 of D_SOD-123F is the cathode; PANJIT's SS2020FL~SS20100FL sheet (SS2020FL_SERIES | REV.10S, 17 Aug 2017, SOD-1",
+      "ids": {
+       "adjudication": [
+        "A03"
+       ],
+       "finding": [
+        "F-IN-01",
+        "S-09"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       252,
+       263
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "THE PUMP CAPACITOR IS THE 4.7 uF THE MAKER DRAWS (26 September 2026). PDi Rev.02 page 3 labels the capacitor from the switch node to the | pump node \"4.7uF/25V\" and its BOM (page 10, item 2) lists \"CAP 4.7uF 25V 0603\"; this board carried 1 uF there. Murata | GRM188R61E475KE11D (0603, X5R, 4.7 uF, DC 25 V, -55 to +85 C; Murata reference sheet GRM188R61E475KE11-01), LCSC C90057.",
+     "introduced": {},
+     "lines": [
+      261,
+      262,
+      263
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       252,
+       257
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "the block heads THE THREE RECTIFIERS; line 256 names the VGL diode (D21, value 'SS2040FL: pump -> VGL') and 257 says all three were the other way round",
+     "ties": [
+      {
+       "lines": [
+        252,
+        257
+       ],
+       "tie": []
+      }
+     ],
+     "why": "the VGL diode was reversed; cathode now on the pump node and anode on VGL"
+    },
+    "spans": [
+     [
+      264,
+      264
+     ]
+    ]
+   },
+   "fields": {
+    "lcsc": [
+     "",
+     "C268712"
+    ]
+   },
+   "finding_ids": [
+    "A03",
+    "F-IN-01",
+    "S-09"
+   ],
+   "footprint": "Diode_SMD:D_SOD-123F",
+   "kind": "CHANGED",
+   "lcsc": "C268712",
+   "pins_moved": {
+    "1": [
+     "EPD_VGL",
+     "EPD_PUMP"
+    ],
+    "2": [
+     "EPD_PUMP",
+     "EPD_VGL"
+    ]
+   },
+   "read": "hand",
+   "ref": "D21",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "SS2040FL: pump -> VGL"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [],
+     "finding_ids": [],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "NO_ID_OF_ANY_KIND"
+    },
+    "candidates": [],
+    "direct": {
+     "context": {},
+     "excerpt": "THE BOOST SWITCH MEETS THE PANEL MAKER'S VOLTAGE CRITERION (26 September 2026, MESHSAT-1357 round 4). PDi Rev.02 page 4 note (1) asks | for \"RDS<200m ohm ..., VDDS=30V, VGS<2.5V@Id=0.5A\"; the Si2302CDS fitted until now is a 20 V part (Vishay 68645, S12-2336-Rev. D: | VDS 20 V), below the drain rating every part PDi lists carries, on a node that swings to the positive gate rail plus a diode. The | replacement is one PDi names, the Vishay Si2300DS-T1-GE3 (document 65701, S10-0111-Rev. A: VDS 30 V, VGS +-12 V, RDS(on) 85 mOhm max | at VGS 2.5 V, VGS(th) 0.6 to 1.5 V, TJ -55 to +150 C, SOT-23 with 1 G 2 S 3 D, the same land and pin map). LCSC C72271.",
+     "introduced": {},
+     "lines": [
+      245,
+      246,
+      247,
+      248,
+      249
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       245,
+       249
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "round-4 board C record, section 1 item 3: found while proving item 1; no finding ID of its own",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        245,
+        249
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the boost FET changes from the 20 V Si2302CDS to the 30 V Si2300DS that PDi names, to meet PDi's drain criterion (Rev.02 page 4 note 1: VDDS 30 V)"
+    },
+    "spans": [
+     [
+      250,
+      250
+     ]
+    ]
+   },
+   "fields": {
+    "lcsc": [
+     "C10488",
+     "C72271"
+    ],
+    "value": [
+     "Si2302CDS-T1-GE3 logic-level N-FET (Vishay, SOT-23, G S D like the 2N7002 symbol; VGS(th) 0.45 to 1.0 V, RDS 85 mOhm at VGS 2.5 V): the boost switch on GDR",
+     "Si2300DS-T1-GE3 N-FET (Vishay, SOT-23, G S D like the 2N7002 symbol; VDS 30 V, RDS 85 mOhm max at VGS 2.5 V, VGS(th) 0.6 to 1.5 V; named by PDi Rev.02): the boost switch on GDR"
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "Package_TO_SOT_SMD:SOT-23",
+   "kind": "CHANGED",
+   "lcsc": "C72271",
+   "pins_moved": {},
+   "read": "hand",
+   "ref": "Q6",
+   "rule_ids": [],
+   "status": "NO_ID_OF_ANY_KIND",
+   "value": "Si2300DS-T1-GE3 N-FET (Vishay, SOT-23, G S D like the 2N7002 symbol; VDS 30 V, RDS 85 mOhm max at VGS 2.5 V, VGS(th) 0.6 to 1.5 V; named by PDi Rev.02): the boost switch on GDR"
+  },
+  {
+   "authority_ids": [
+    "D-03.2",
+    "D-03.3"
+   ],
+   "evidence": {
+    "anchor": "loop",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [
+      "D-03"
+     ],
+     "candidate_ids": [
+      "D-03"
+     ],
+     "finding_ids": [],
+     "read": "loop",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "R10/C20 now on the local ZEROIZE_SW (D-03, 26 September 2026) SOS_SW ZEROIZE_SW TEST_SW LIGHT_DAY_n LIGHT_NIGHT_n",
+      "ids": {
+       "owner_ruling": [
+        "D-03"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       148,
+       148
+      ]
+     },
+     {
+      "excerpt": "instruction, before any function select. The pull: R10 10k to +3V3 against the pad's 50 to 80k pull-down (Table 625 RPD) gives at least | R10/C20 now on the local ZEROIZE_SW (D-03, 26 September 2026) SOS_SW ZEROIZE_SW TEST_SW LIGHT_DAY_n LIGHT_NIGHT_n | round 4). As generated at 82dd1e4d the toggle,",
+      "ids": {
+       "owner_ruling": [
+        "D-03"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       114,
+       148,
+       169,
+       174
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "R10/C20 now on the local ZEROIZE_SW (D-03, 26 September 2026) SOS_SW ZEROIZE_SW TEST_SW LIGHT_DAY_n LIGHT_NIGHT_n",
+     "introduced": {
+      "owner_ruling": [
+       "D-03"
+      ]
+     },
+     "lines": [
+      148
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       168,
+       174
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        168,
+        174
+       ],
+       "tie": [
+        "names_ref",
+        "names_net:ZEROIZE_HW"
+       ]
+      }
+     ],
+     "why": "the toggle's pull-up moves to the local net ZEROIZE_SW, for the same reason as C20"
+    },
+    "spans": [
+     [
+      148,
+      149
+     ]
+    ]
+   },
+   "fields": {},
+   "finding_ids": [
+    "W3-F12"
+   ],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "CHANGED",
+   "lcsc": "C25804",
+   "pins_moved": {
+    "1": [
+     "ZEROIZE_HW",
+     "ZEROIZE_SW"
+    ]
+   },
+   "read": "hand",
+   "ref": "R10",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "10k"
+  },
+  {
+   "authority_ids": [
+    "D-03.1",
+    "D-03.2",
+    "D-03.3"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [
+      "D-03",
+      "D-03.1",
+      "D-03.3"
+     ],
+     "candidate_ids": [
+      "D-03",
+      "D-03.1",
+      "D-03.3",
+      "W5-ZEROIZE-4"
+     ],
+     "finding_ids": [
+      "W5-ZEROIZE-4"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "26 September 2026 (W5-ZEROIZE-4, owner rulings D-03.1 to D-03.3): the value string promised \"assert the disk-key wipe (32.52)\", a line | that exists in no netlist. It now says what the hardware does (the closed toggle pulls ZEROIZE_SW low and the panel controller alone reads | it) and names the rest",
+      "ids": {
+       "finding": [
+        "W5-ZEROIZE-4"
+       ],
+       "owner_ruling": [
+        "D-03",
+        "D-03.1",
+        "D-03.3"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       212,
+       216
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "26 September 2026 (W5-ZEROIZE-4, owner rulings D-03.1 to D-03.3): the value string promised \"assert the disk-key wipe (32.52)\", a line | that exists in no netlist. It now says what the hardware does (the closed toggle pulls ZEROIZE_SW low and the panel controller alone reads | it) and names the rest as the firmware behaviour the owner ruled (D-03): read at boot before any slot powers, the crypto-erase after 5 s | closed. The erase itself is not stated as a fact of this board, because its precondition, an erasable slot map in the secure element | (NDA datasheet), is still open (fix-up of 26 September 2026). Lug 2 is the common per APEM's 5636 row (see the U3 note above).",
+     "introduced": {
+      "finding": [
+       "W5-ZEROIZE-4"
+      ],
+      "owner_ruling": [
+       "D-03",
+       "D-03.1",
+       "D-03.3"
+      ]
+     },
+     "lines": [
+      212,
+      213,
+      214,
+      215,
+      216
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       212,
+       212
+      ],
+      [
+       168,
+       175
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        212,
+        212
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      },
+      {
+       "lines": [
+        168,
+        175
+       ],
+       "tie": [
+        "names_net:ZEROIZE_HW,ZEROIZE_SW"
+       ]
+      }
+     ],
+     "why": "the value text now states what the hardware does, not a disk-key wipe line that exists in no netlist (W5-ZEROIZE-4, D-03.1 to D-03.3), and pin 1 moves to the local net ZEROIZE_SW (D-03.2, D-03.3, W3-F12)"
+    },
+    "spans": [
+     [
+      217,
+      217
+     ]
+    ]
+   },
+   "fields": {
+    "value": [
+     "ZEROIZE locking toggle, maintained (APEM 5636ADKB-2V, hinged safety cover; ruling 32.13); K front seal in the keyed 6.5 hole; ZEROIZE_HW low = wipe the secure element and assert the disk-key wipe (32.52)",
+     "ZEROIZE locking toggle, maintained (APEM 5636ADKB-2V, single pole ON-NONE-ON, lug 2 common, hinged safety cover; ruling 32.13); K front seal in the keyed 6.5 hole; closed = ZEROIZE_SW low, read by the panel controller alone (GPIO22); ruled firmware behaviour (owner D-03): read at boot before any slot powers, crypto-erase after 5 s closed"
+    ]
+   },
+   "finding_ids": [
+    "W3-F12",
+    "W5-ZEROIZE-4"
+   ],
+   "footprint": "meshsat:ToggleBody_SPDT",
+   "kind": "CHANGED",
+   "lcsc": "",
+   "pins_moved": {
+    "1": [
+     "ZEROIZE_HW",
+     "ZEROIZE_SW"
+    ]
+   },
+   "read": "hand",
+   "ref": "SW_ZERO",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "ZEROIZE locking toggle, maintained (APEM 5636ADKB-2V, single pole ON-NONE-ON, lug 2 common, hinged safety cover; ruling 32.13); K front seal in the keyed 6.5 hole; closed = ZEROIZE_SW low, read by the panel controller alone (GPIO22); ruled firmware behaviour (owner D-03): read at boot before any slot powers, crypto-erase after 5 s closed"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "loop",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [
+      "TST-001"
+     ],
+     "finding_ids": [],
+     "read": "loop",
+     "rule_ids": [
+      "TST-001"
+     ],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "THE TEST ACCESS OWED BEFORE PLACEMENT (26 September 2026, rule TST-001, W5 test-access list section 3, MESHSAT-1357 round 4). Appended | after TP40 so no existing test point is renumbered. ZEROIZE_SW is the local sense HW6 times from the switch edge; SDA and SCL, SOS_SW, | TEST_SW and TR_APRS are th",
+      "ids": {
+       "rule": [
+        "TST-001"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       306,
+       309
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "THE TEST ACCESS OWED BEFORE PLACEMENT (26 September 2026, rule TST-001, W5 test-access list section 3, MESHSAT-1357 round 4). Appended | after TP40 so no existing test point is renumbered. ZEROIZE_SW is the local sense HW6 times from the switch edge; SDA and SCL, SOS_SW, | TEST_SW and TR_APRS are the lines W5 names; C_DVDD is the RP2040 core; BOOT_J is the BOOTSEL node beside JP1, which a probe grounds through | R5's 1k exactly as the solder jumper does (a pad on QSPI_SS itself would let a probe short the flash select without that 1k).",
+     "introduced": {
+      "rule": [
+       "TST-001"
+      ]
+     },
+     "lines": [
+      306,
+      307,
+      308,
+      309
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       306,
+       306
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        306,
+        306
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "test access owed before placement: ZEROIZE_SW (W5 test-access list, section 3), appended after TP40 so nothing is renumbered"
+    },
+    "spans": [
+     [
+      310,
+      310
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "ZEROIZE_SW"
+   },
+   "read": "hand",
+   "ref": "TP41",
+   "rule_ids": [
+    "TST-001"
+   ],
+   "status": "TRACED",
+   "value": "ZEROIZE_SW"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "loop",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [
+      "TST-001"
+     ],
+     "finding_ids": [],
+     "read": "loop",
+     "rule_ids": [
+      "TST-001"
+     ],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "THE TEST ACCESS OWED BEFORE PLACEMENT (26 September 2026, rule TST-001, W5 test-access list section 3, MESHSAT-1357 round 4). Appended | after TP40 so no existing test point is renumbered. ZEROIZE_SW is the local sense HW6 times from the switch edge; SDA and SCL, SOS_SW, | TEST_SW and TR_APRS are th",
+      "ids": {
+       "rule": [
+        "TST-001"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       306,
+       309
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "THE TEST ACCESS OWED BEFORE PLACEMENT (26 September 2026, rule TST-001, W5 test-access list section 3, MESHSAT-1357 round 4). Appended | after TP40 so no existing test point is renumbered. ZEROIZE_SW is the local sense HW6 times from the switch edge; SDA and SCL, SOS_SW, | TEST_SW and TR_APRS are the lines W5 names; C_DVDD is the RP2040 core; BOOT_J is the BOOTSEL node beside JP1, which a probe grounds through | R5's 1k exactly as the solder jumper does (a pad on QSPI_SS itself would let a probe short the flash select without that 1k).",
+     "introduced": {
+      "rule": [
+       "TST-001"
+      ]
+     },
+     "lines": [
+      306,
+      307,
+      308,
+      309
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       306,
+       306
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        306,
+        306
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "test access owed before placement: SDA"
+    },
+    "spans": [
+     [
+      310,
+      310
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "SDA"
+   },
+   "read": "hand",
+   "ref": "TP42",
+   "rule_ids": [
+    "TST-001"
+   ],
+   "status": "TRACED",
+   "value": "SDA"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "loop",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [
+      "TST-001"
+     ],
+     "finding_ids": [],
+     "read": "loop",
+     "rule_ids": [
+      "TST-001"
+     ],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "THE TEST ACCESS OWED BEFORE PLACEMENT (26 September 2026, rule TST-001, W5 test-access list section 3, MESHSAT-1357 round 4). Appended | after TP40 so no existing test point is renumbered. ZEROIZE_SW is the local sense HW6 times from the switch edge; SDA and SCL, SOS_SW, | TEST_SW and TR_APRS are th",
+      "ids": {
+       "rule": [
+        "TST-001"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       306,
+       309
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "THE TEST ACCESS OWED BEFORE PLACEMENT (26 September 2026, rule TST-001, W5 test-access list section 3, MESHSAT-1357 round 4). Appended | after TP40 so no existing test point is renumbered. ZEROIZE_SW is the local sense HW6 times from the switch edge; SDA and SCL, SOS_SW, | TEST_SW and TR_APRS are the lines W5 names; C_DVDD is the RP2040 core; BOOT_J is the BOOTSEL node beside JP1, which a probe grounds through | R5's 1k exactly as the solder jumper does (a pad on QSPI_SS itself would let a probe short the flash select without that 1k).",
+     "introduced": {
+      "rule": [
+       "TST-001"
+      ]
+     },
+     "lines": [
+      306,
+      307,
+      308,
+      309
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       306,
+       306
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        306,
+        306
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "test access owed before placement: SCL"
+    },
+    "spans": [
+     [
+      310,
+      310
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "SCL"
+   },
+   "read": "hand",
+   "ref": "TP43",
+   "rule_ids": [
+    "TST-001"
+   ],
+   "status": "TRACED",
+   "value": "SCL"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "loop",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [
+      "TST-001"
+     ],
+     "finding_ids": [],
+     "read": "loop",
+     "rule_ids": [
+      "TST-001"
+     ],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "THE TEST ACCESS OWED BEFORE PLACEMENT (26 September 2026, rule TST-001, W5 test-access list section 3, MESHSAT-1357 round 4). Appended | after TP40 so no existing test point is renumbered. ZEROIZE_SW is the local sense HW6 times from the switch edge; SDA and SCL, SOS_SW, | TEST_SW and TR_APRS are th",
+      "ids": {
+       "rule": [
+        "TST-001"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       306,
+       309
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "THE TEST ACCESS OWED BEFORE PLACEMENT (26 September 2026, rule TST-001, W5 test-access list section 3, MESHSAT-1357 round 4). Appended | after TP40 so no existing test point is renumbered. ZEROIZE_SW is the local sense HW6 times from the switch edge; SDA and SCL, SOS_SW, | TEST_SW and TR_APRS are the lines W5 names; C_DVDD is the RP2040 core; BOOT_J is the BOOTSEL node beside JP1, which a probe grounds through | R5's 1k exactly as the solder jumper does (a pad on QSPI_SS itself would let a probe short the flash select without that 1k).",
+     "introduced": {
+      "rule": [
+       "TST-001"
+      ]
+     },
+     "lines": [
+      306,
+      307,
+      308,
+      309
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       306,
+       306
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        306,
+        306
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "test access owed before placement: SOS_SW"
+    },
+    "spans": [
+     [
+      310,
+      310
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "SOS_SW"
+   },
+   "read": "hand",
+   "ref": "TP44",
+   "rule_ids": [
+    "TST-001"
+   ],
+   "status": "TRACED",
+   "value": "SOS_SW"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "loop",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [
+      "TST-001"
+     ],
+     "finding_ids": [],
+     "read": "loop",
+     "rule_ids": [
+      "TST-001"
+     ],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "THE TEST ACCESS OWED BEFORE PLACEMENT (26 September 2026, rule TST-001, W5 test-access list section 3, MESHSAT-1357 round 4). Appended | after TP40 so no existing test point is renumbered. ZEROIZE_SW is the local sense HW6 times from the switch edge; SDA and SCL, SOS_SW, | TEST_SW and TR_APRS are th",
+      "ids": {
+       "rule": [
+        "TST-001"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       306,
+       309
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "THE TEST ACCESS OWED BEFORE PLACEMENT (26 September 2026, rule TST-001, W5 test-access list section 3, MESHSAT-1357 round 4). Appended | after TP40 so no existing test point is renumbered. ZEROIZE_SW is the local sense HW6 times from the switch edge; SDA and SCL, SOS_SW, | TEST_SW and TR_APRS are the lines W5 names; C_DVDD is the RP2040 core; BOOT_J is the BOOTSEL node beside JP1, which a probe grounds through | R5's 1k exactly as the solder jumper does (a pad on QSPI_SS itself would let a probe short the flash select without that 1k).",
+     "introduced": {
+      "rule": [
+       "TST-001"
+      ]
+     },
+     "lines": [
+      306,
+      307,
+      308,
+      309
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       306,
+       306
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        306,
+        306
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "test access owed before placement: TEST_SW"
+    },
+    "spans": [
+     [
+      310,
+      310
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "TEST_SW"
+   },
+   "read": "hand",
+   "ref": "TP45",
+   "rule_ids": [
+    "TST-001"
+   ],
+   "status": "TRACED",
+   "value": "TEST_SW"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "loop",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [
+      "TST-001"
+     ],
+     "finding_ids": [],
+     "read": "loop",
+     "rule_ids": [
+      "TST-001"
+     ],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "THE TEST ACCESS OWED BEFORE PLACEMENT (26 September 2026, rule TST-001, W5 test-access list section 3, MESHSAT-1357 round 4). Appended | after TP40 so no existing test point is renumbered. ZEROIZE_SW is the local sense HW6 times from the switch edge; SDA and SCL, SOS_SW, | TEST_SW and TR_APRS are th",
+      "ids": {
+       "rule": [
+        "TST-001"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       306,
+       309
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "THE TEST ACCESS OWED BEFORE PLACEMENT (26 September 2026, rule TST-001, W5 test-access list section 3, MESHSAT-1357 round 4). Appended | after TP40 so no existing test point is renumbered. ZEROIZE_SW is the local sense HW6 times from the switch edge; SDA and SCL, SOS_SW, | TEST_SW and TR_APRS are the lines W5 names; C_DVDD is the RP2040 core; BOOT_J is the BOOTSEL node beside JP1, which a probe grounds through | R5's 1k exactly as the solder jumper does (a pad on QSPI_SS itself would let a probe short the flash select without that 1k).",
+     "introduced": {
+      "rule": [
+       "TST-001"
+      ]
+     },
+     "lines": [
+      306,
+      307,
+      308,
+      309
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       306,
+       306
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        306,
+        306
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "test access owed before placement: TR_APRS"
+    },
+    "spans": [
+     [
+      310,
+      310
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "TR_APRS"
+   },
+   "read": "hand",
+   "ref": "TP46",
+   "rule_ids": [
+    "TST-001"
+   ],
+   "status": "TRACED",
+   "value": "TR_APRS"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "loop",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [
+      "TST-001"
+     ],
+     "finding_ids": [],
+     "read": "loop",
+     "rule_ids": [
+      "TST-001"
+     ],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "THE TEST ACCESS OWED BEFORE PLACEMENT (26 September 2026, rule TST-001, W5 test-access list section 3, MESHSAT-1357 round 4). Appended | after TP40 so no existing test point is renumbered. ZEROIZE_SW is the local sense HW6 times from the switch edge; SDA and SCL, SOS_SW, | TEST_SW and TR_APRS are th",
+      "ids": {
+       "rule": [
+        "TST-001"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       306,
+       309
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "THE TEST ACCESS OWED BEFORE PLACEMENT (26 September 2026, rule TST-001, W5 test-access list section 3, MESHSAT-1357 round 4). Appended | after TP40 so no existing test point is renumbered. ZEROIZE_SW is the local sense HW6 times from the switch edge; SDA and SCL, SOS_SW, | TEST_SW and TR_APRS are the lines W5 names; C_DVDD is the RP2040 core; BOOT_J is the BOOTSEL node beside JP1, which a probe grounds through | R5's 1k exactly as the solder jumper does (a pad on QSPI_SS itself would let a probe short the flash select without that 1k).",
+     "introduced": {
+      "rule": [
+       "TST-001"
+      ]
+     },
+     "lines": [
+      306,
+      307,
+      308,
+      309
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       306,
+       306
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        306,
+        306
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "test access owed before placement: C_DVDD, the RP2040 core"
+    },
+    "spans": [
+     [
+      310,
+      310
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "C_DVDD"
+   },
+   "read": "hand",
+   "ref": "TP47",
+   "rule_ids": [
+    "TST-001"
+   ],
+   "status": "TRACED",
+   "value": "C_DVDD"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "loop",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [
+      "TST-001"
+     ],
+     "finding_ids": [],
+     "read": "loop",
+     "rule_ids": [
+      "TST-001"
+     ],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "THE TEST ACCESS OWED BEFORE PLACEMENT (26 September 2026, rule TST-001, W5 test-access list section 3, MESHSAT-1357 round 4). Appended | after TP40 so no existing test point is renumbered. ZEROIZE_SW is the local sense HW6 times from the switch edge; SDA and SCL, SOS_SW, | TEST_SW and TR_APRS are th",
+      "ids": {
+       "rule": [
+        "TST-001"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       306,
+       309
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "THE TEST ACCESS OWED BEFORE PLACEMENT (26 September 2026, rule TST-001, W5 test-access list section 3, MESHSAT-1357 round 4). Appended | after TP40 so no existing test point is renumbered. ZEROIZE_SW is the local sense HW6 times from the switch edge; SDA and SCL, SOS_SW, | TEST_SW and TR_APRS are the lines W5 names; C_DVDD is the RP2040 core; BOOT_J is the BOOTSEL node beside JP1, which a probe grounds through | R5's 1k exactly as the solder jumper does (a pad on QSPI_SS itself would let a probe short the flash select without that 1k).",
+     "introduced": {
+      "rule": [
+       "TST-001"
+      ]
+     },
+     "lines": [
+      306,
+      307,
+      308,
+      309
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       306,
+       306
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        306,
+        306
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "test access owed before placement: BOOT_J, the BOOTSEL node through R5's 1k"
+    },
+    "spans": [
+     [
+      310,
+      310
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "BOOT_J"
+   },
+   "read": "hand",
+   "ref": "TP48",
+   "rule_ids": [
+    "TST-001"
+   ],
+   "status": "TRACED",
+   "value": "BOOT_J"
+  },
+  {
+   "authority_ids": [
+    "D-03.2",
+    "D-03.3",
+    "decision 30"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [
+      "D-03.3",
+      "decision 30"
+     ],
+     "candidate_ids": [
+      "D-03.3",
+      "decision 30"
+     ],
+     "finding_ids": [],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "22 ZEROIZE_SW (read, the toggle's local sense), 23 TR_APRS (read), 24 EXP_INT (read), 25 status LED, 26 LED rail sense (ADC0), 27 TEST_SW, 28 SOS_SW, 29 EPD_PWR_n (the boost's power switch) | ZEROIZE AT BOOT, WHAT THE HARDWARE GIVES THE FIRMWARE (26 September 2026, owner ruling D-03.3: level-sensiti",
+      "ids": {
+       "decision": [
+        "decision 30"
+       ],
+       "owner_ruling": [
+        "D-03.3"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       110,
+       123
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "22 ZEROIZE_SW (read, the toggle's local sense), 23 TR_APRS (read), 24 EXP_INT (read), 25 status LED, 26 LED rail sense (ADC0), 27 TEST_SW, 28 SOS_SW, 29 EPD_PWR_n (the boost's power switch) | ZEROIZE AT BOOT, WHAT THE HARDWARE GIVES THE FIRMWARE (26 September 2026, owner ruling D-03.3: level-sensitive, read before any slot powers). | The pin: GPIO22 (pin 34) on ZEROIZE_SW. RP2040 datasheet (build 3184e62) PADS_BANK0 resets IE=1, OD=0, PDE=1, PUE=0, SCHMITT=1, and section | 2.19.2 says the input \"is always connected, so software can check the state of GPIOs at any time\": the level is readable at the first | instruction, before any function select. The pull: R10 10k to +3V3 against the pad's 5",
+     "introduced": {
+      "decision": [
+       "decision 30"
+      ],
+      "owner_ruling": [
+       "D-03.3"
+      ]
+     },
+     "lines": [
+      107,
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       111,
+       111
+      ],
+      [
+       123,
+       123
+      ],
+      [
+       168,
+       175
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        111,
+        111
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      },
+      {
+       "lines": [
+        123,
+        123
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      },
+      {
+       "lines": [
+        168,
+        175
+       ],
+       "tie": [
+        "names_net:ZEROIZE_HW,ZEROIZE_SW"
+       ]
+      }
+     ],
+     "why": "the panel controller's GPIO22 (pin 34) reads the local ZEROIZE_SW at boot, before any slot powers (D-03.3, decision 30), instead of the exported ZEROIZE_HW (D-03.2, W3-F12)"
+    },
+    "spans": [
+     [
+      124,
+      128
+     ]
+    ]
+   },
+   "fields": {},
+   "finding_ids": [
+    "W3-F12"
+   ],
+   "footprint": "Package_DFN_QFN:QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm",
+   "kind": "CHANGED",
+   "lcsc": "C2040",
+   "pins_moved": {
+    "34": [
+     "ZEROIZE_HW",
+     "ZEROIZE_SW"
+    ]
+   },
+   "read": "hand",
+   "ref": "U3",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [],
+     "finding_ids": [],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "NO_ID_OF_ANY_KIND"
+    },
+    "candidates": [],
+    "direct": {
+     "context": {},
+     "excerpt": "A SCHMITT INPUT, NOT A PLAIN ONE (26 September 2026, MESHSAT-1357 round 4). TX_INHIBIT_n is a switch node with R14 10k up, C24 10n down | and three 100k pull-downs off board (A R145, B R59, D R2), so releasing the EMCON toggle gives a rising edge with a 77 us time constant | (7.7k Thevenin into 10n) toward 2.54 V, about 74 us/V at a 1.5 V threshold. The 74LVC1G34's recommended operating conditions allow an | input transition of 10 ns/V at 3.3 V (Diodes DS36108 Rev. 10-2, Delta t/Delta V), so the plain buffer ran several thousand times | outside its input-slew limit on the kit's EMCON line. The | 74LVC1G17 is the same function with a Schmitt-trigger input and no slew limit, in the same SOT-25",
+     "introduced": {},
+     "lines": [
+      151,
+      152,
+      153,
+      154,
+      155,
+      156,
+      157,
+      158,
+      159,
+      160,
+      161,
+      162,
+      163,
+      164,
+      165
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       157,
+       165
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "round-4 board C record, section 1 item 6: found while doing item 5 (D-03.2 and D-03.3 conformance, W3-F12); no finding ID of its own",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        157,
+        165
+       ],
+       "tie": [
+        "names_net:TX_INHIBIT_n",
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the EMCON buffer becomes a Schmitt-input 74LVC1G17, because TX_INHIBIT_n rises with a 77 us time constant against the 74LVC1G34's 10 ns/V input-transition limit"
+    },
+    "spans": [
+     [
+      166,
+      166
+     ]
+    ]
+   },
+   "fields": {
+    "lcsc": [
+     "",
+     "C151394"
+    ],
+    "value": [
+     "74LVC1G34 non-inverting buffer (2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3)",
+     "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3)"
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+   "kind": "CHANGED",
+   "lcsc": "C151394",
+   "pins_moved": {},
+   "read": "hand",
+   "ref": "U9",
+   "rule_ids": [],
+   "status": "NO_ID_OF_ANY_KIND",
+   "value": "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3)"
+  },
+  {
+   "authority_ids": [
+    "D-03.2",
+    "D-03.3"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [
+      "D-03.2",
+      "D-03.3"
+     ],
+     "candidate_ids": [
+      "D-03",
+      "D-03.2",
+      "D-03.3",
+      "W3-F12"
+     ],
+     "finding_ids": [
+      "W3-F12"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "ZEROIZE IS SENSED ON THIS BOARD ONLY, AND EXPORTED THROUGH A BUFFER (26 September 2026, owner rulings D-03.2 and D-03.3, MESHSAT-1357 | round 4). As generated at 82dd1e4d the toggle, R10, C20 and GPIO22 sat on ZEROIZE_HW itself, which leaves this board on J_PANEL pin 10, | crosses board B to J_AB1 p",
+      "ids": {
+       "finding": [
+        "W3-F12"
+       ],
+       "owner_ruling": [
+        "D-03.2",
+        "D-03.3"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       168,
+       177
+      ]
+     },
+     {
+      "excerpt": "U12: the ZEROIZE buffer (D-03, 26 September 2026) U8 U10 U11 U9 U12 U_LIGHT Q5 | the local net ZEROIZE_SW, and U12 copies it onto ZEROIZE_HW for the boards that carry the name (their test points, and any later | listener). U12's IOFF disables its output while this board is unpowered, so R117 no long",
+      "ids": {
+       "owner_ruling": [
+        "D-03"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       42,
+       175,
+       176,
+       322
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "ZEROIZE IS SENSED ON THIS BOARD ONLY, AND EXPORTED THROUGH A BUFFER (26 September 2026, owner rulings D-03.2 and D-03.3, MESHSAT-1357 | round 4). As generated at 82dd1e4d the toggle, R10, C20 and GPIO22 sat on ZEROIZE_HW itself, which leaves this board on J_PANEL pin 10, | crosses board B to J_AB1 pin 20, board A (a second 10k pull-up R117 to A's +3V3) and the mezzanine to board D, and is read by nothing | but GPIO22. D-03.2 makes the covered toggle the ONLY trigger and D-03.3 makes the wipe level-sensitive at boot, so any conductor of that | chain held low (a pinched ribbon shorting conductor 10 to its neighbour, conductor 9, which is GND; a board fault) would read as a closed toggle and | ",
+     "introduced": {
+      "finding": [
+       "W3-F12"
+      ],
+      "owner_ruling": [
+       "D-03.2",
+       "D-03.3"
+      ]
+     },
+     "lines": [
+      168,
+      169,
+      170,
+      171,
+      172,
+      173,
+      174,
+      175,
+      176,
+      177
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       168,
+       176
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        168,
+        176
+       ],
+       "tie": [
+        "names_ref",
+        "names_net:ZEROIZE_HW,ZEROIZE_SW",
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "a new Schmitt buffer copies the local ZEROIZE_SW onto the exported ZEROIZE_HW; its IOFF stops board A's pull-up back-feeding this board"
+    },
+    "spans": [
+     [
+      178,
+      178
+     ]
+    ]
+   },
+   "finding_ids": [
+    "W3-F12"
+   ],
+   "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+   "kind": "ADDED",
+   "lcsc": "C151394",
+   "pins": {
+    "1": "unconnected-(U12-NC-Pad1)",
+    "2": "ZEROIZE_SW",
+    "3": "GND",
+    "4": "ZEROIZE_HW",
+    "5": "+3V3"
+   },
+   "read": "hand",
+   "ref": "U12",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): ZEROIZE_HW follows the local ZEROIZE_SW (owner D-03)"
+  }
+ ],
+ "generator_lines_added": 83,
+ "prev": "82dd1e4dc44efabeee1164a995cda4e866610f3d",
+ "rev": "1f614233998c3087a53abfa977be134465ce9f47",
+ "summary": {
+  "added": 10,
+  "changed": 10,
+  "components": [
+   194,
+   204
+  ],
+  "content_hash": [
+   "044074e6bd88aa6d",
+   "89f0c572416af87a"
+  ],
+  "nets": [
+   144,
+   146
+  ],
+  "nets_only_prev": [],
+  "nets_only_rev": [
+   "/ZEROIZE_SW",
+   "unconnected-(U12-NC-Pad1)"
+  ],
+  "nets_renamed": [],
+  "removed": 0
+ }
+}

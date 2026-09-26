@@ -1,0 +1,5623 @@
+{
+ "attribution": {
+  "by_hand": true,
+  "file": "p-1f614233.yaml",
+  "read_by": "the session (review stream PKT), 26 September 2026, from gen_sch_p.py at both revisions and the round-4 board P record",
+  "rows_missing": [],
+  "sha256": "91e14f52288281a29ccf0c2eb0ae8d99a5b3f769672c9ff5009974757ae37c44"
+ },
+ "changes": [
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "F-PK-02"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "the lead carries four sense wires and one common return to VSS. The old C10 (100 nF on TS1 alone) is removed with the fixed | thermistor filter C10 is gone since round 4, F-PK-02); `intent.write` refuses an entry whose capacitor is not on that pin's net.",
+      "ids": {
+       "finding": [
+        "F-PK-02"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       214,
+       542
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "prev",
+    "hand": {
+     "cite": [
+      [
+       542,
+       542
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        542,
+        542
+       ],
+       "tie": [
+        "names_ref"
+       ]
+      }
+     ],
+     "why": "the thermistor filter on TS1 goes with the move to four cell NTCs on J_TS"
+    },
+    "spans": [
+     [
+      153,
+      153
+     ]
+    ]
+   },
+   "finding_ids": [
+    "F-PK-02"
+   ],
+   "footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "kind": "REMOVED",
+   "lcsc": "",
+   "pins": {
+    "1": "TS1",
+    "2": "GND"
+   },
+   "read": "hand",
+   "ref": "C10",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "100n"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [
+      "CMP-001",
+      "F-BP-01",
+      "O-12",
+      "RP-22",
+      "S-05"
+     ],
+     "finding_ids": [
+      "O-12",
+      "RP-22"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "O-12 (round 4, fixed at the fix-up of 26 September 2026): THE TWO TERMINAL CAPACITORS WERE IN PARALLEL, so one cracked or shorted | part shorted PACK+ to PACK- behind the protection FETs. TI's words for this pair: \"A pair of series 0.1-uF ceramic capacitors is | placed across the PACK+ and PACK- ter",
+      "ids": {
+       "finding": [
+        "O-12",
+        "RP-22"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       285,
+       291
+      ]
+     },
+     {
+      "excerpt": "S-05 and F-BP-01, still with no switching part; C11 now reaches it through C12, the series pair of O-12.) High-side protection means the return is permanently connected, which is a | PACK_MID is declared so CMP-001 still judges the pair (it judged C11 and C12 against PACK_P before the split, and an ",
+      "ids": {
+       "finding": [
+        "F-BP-01",
+        "O-12",
+        "S-05"
+       ],
+       "rule": [
+        "CMP-001"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       193,
+       292,
+       541
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "O-12 (round 4, fixed at the fix-up of 26 September 2026): THE TWO TERMINAL CAPACITORS WERE IN PARALLEL, so one cracked or shorted | part shorted PACK+ to PACK- behind the protection FETs. TI's words for this pair: \"A pair of series 0.1-uF ceramic capacitors is | placed across the PACK+ and PACK- terminals to help in the mitigation of external electrostatic discharges. The two devices in series | ensure continued operation of the pack if one of the capacitors becomes shorted\" (SLUSC67B 8.2.2.1.5). They are in series now through | PACK_MID, the same two parts and codes as before: 50 nF across the terminals, each 50 V part seeing about 8.4 V at 16.8 V and the | whole 16.8 V if its partner short",
+     "introduced": {
+      "finding": [
+       "O-12",
+       "RP-22"
+      ]
+     },
+     "lines": [
+      285,
+      286,
+      287,
+      288,
+      289,
+      290,
+      291
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       285,
+       290
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        285,
+        290
+       ],
+       "tie": [
+        "names_net:PACK_MID",
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the two terminal ESD capacitors were in parallel, so one shorted part shorted the pack terminals; now in series through PACK_MID (SLUSC67B 8.2.2.1.5)"
+    },
+    "spans": [
+     [
+      291,
+      291
+     ]
+    ]
+   },
+   "fields": {},
+   "finding_ids": [
+    "O-12",
+    "RP-22"
+   ],
+   "footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "kind": "CHANGED",
+   "lcsc": "",
+   "pins_moved": {
+    "2": [
+     "PACK_N",
+     "PACK_MID"
+    ]
+   },
+   "read": "hand",
+   "ref": "C11",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "100n 50V"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [
+      "CMP-001",
+      "F-BP-01",
+      "O-12",
+      "RP-22",
+      "S-05"
+     ],
+     "finding_ids": [
+      "O-12",
+      "RP-22"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "O-12 (round 4, fixed at the fix-up of 26 September 2026): THE TWO TERMINAL CAPACITORS WERE IN PARALLEL, so one cracked or shorted | part shorted PACK+ to PACK- behind the protection FETs. TI's words for this pair: \"A pair of series 0.1-uF ceramic capacitors is | placed across the PACK+ and PACK- ter",
+      "ids": {
+       "finding": [
+        "O-12",
+        "RP-22"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       285,
+       291
+      ]
+     },
+     {
+      "excerpt": "\"PTCEN ... Connect to BAT\"; Figure 21, RT1 and C12). 26 September 2026. | S-05 and F-BP-01, still with no switching part; C11 now reaches it through C12, the series pair of O-12.) High-side protection means the return is permanently connected, which is a | (\"Place RT1 close to Q2 and Q3\"), with C13 ",
+      "ids": {
+       "finding": [
+        "F-BP-01",
+        "O-12",
+        "S-05"
+       ],
+       "rule": [
+        "CMP-001"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       162,
+       193,
+       232,
+       292,
+       541
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "O-12 (round 4, fixed at the fix-up of 26 September 2026): THE TWO TERMINAL CAPACITORS WERE IN PARALLEL, so one cracked or shorted | part shorted PACK+ to PACK- behind the protection FETs. TI's words for this pair: \"A pair of series 0.1-uF ceramic capacitors is | placed across the PACK+ and PACK- terminals to help in the mitigation of external electrostatic discharges. The two devices in series | ensure continued operation of the pack if one of the capacitors becomes shorted\" (SLUSC67B 8.2.2.1.5). They are in series now through | PACK_MID, the same two parts and codes as before: 50 nF across the terminals, each 50 V part seeing about 8.4 V at 16.8 V and the | whole 16.8 V if its partner short",
+     "introduced": {
+      "finding": [
+       "O-12",
+       "RP-22"
+      ]
+     },
+     "lines": [
+      285,
+      286,
+      287,
+      288,
+      289,
+      290,
+      291
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       285,
+       290
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        285,
+        290
+       ],
+       "tie": [
+        "names_net:PACK_MID",
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the second terminal ESD capacitor, in series with C11 through PACK_MID"
+    },
+    "spans": [
+     [
+      291,
+      291
+     ]
+    ]
+   },
+   "fields": {},
+   "finding_ids": [
+    "O-12",
+    "RP-22"
+   ],
+   "footprint": "Capacitor_SMD:C_1206_3216Metric",
+   "kind": "CHANGED",
+   "lcsc": "",
+   "pins_moved": {
+    "1": [
+     "PACK_P",
+     "PACK_MID"
+    ]
+   },
+   "read": "hand",
+   "ref": "C12",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "100n 50V"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "D-02a",
+      "D-15",
+      "S-05",
+      "decision 40"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "THE PTC INPUT (decision 40 / D-15 floor, 26 September 2026). SLUSC67B 6.23: the gauge biases PTC with 200 to 350 nA and trips when | PTCEN - PTC exceeds 200 to 890 mV, which is an element resistance of 1.2 to 3.95 Mohm. TI's bq40z50 EVM guide (SLUUAV7C 4.5) says of | the same interface that the elem",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       226,
+       240
+      ]
+     },
+     {
+      "excerpt": "S-05 (round 4, 26 September 2026): PRES leaves the board on the SMBus lead (J_SMB pin 4), so it takes TI's series resistor: \"An | integrated ESD protection on the PRES device pin reduces the external protection requirement to just R29 for an 8-kV ESD contact | rating\" (SLUSC67B 8.2.2.2.3, Figures 29",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "S-05"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       222,
+       240
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       226,
+       232
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        226,
+        232
+       ],
+       "tie": [
+        "names_ref",
+        "names_net:PTC"
+       ]
+      }
+     ],
+     "why": "the capacitor across the PTC element (TI Figure 21)"
+    },
+    "spans": [
+     [
+      242,
+      242
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "PTC",
+    "2": "BAT_F"
+   },
+   "read": "hand",
+   "ref": "C13",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "100n"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "D-02a",
+      "D-15",
+      "O-10",
+      "O-9",
+      "RP-17",
+      "decision 40"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       390
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "RVD and CVD R23 300R CELL4 SEC_VDD C23025 C14 100n SEC_VDD GND | the second level's VDD filter (CVD, SLUSEG7D Table 8-1), 26 September 2026 C14 U2 1 SEC_VDD",
+     "introduced": {},
+     "lines": [
+      390,
+      522
+     ],
+     "other_paragraph_lines": [
+      388,
+      389
+     ]
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       341,
+       341
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        341,
+        341
+       ],
+       "tie": [
+        "in_section"
+       ]
+      }
+     ],
+     "why": "U2's supply capacitor CVD, 0.1 uF (inline at 390)"
+    },
+    "spans": [
+     [
+      390,
+      390
+     ],
+     [
+      522,
+      522
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "SEC_VDD",
+    "2": "GND"
+   },
+   "read": "hand",
+   "ref": "C14",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "100n"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "loop",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "D-02a",
+      "D-15",
+      "O-10",
+      "O-9",
+      "RP-17",
+      "decision 40"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       394
+      ]
+     },
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       394
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "CIN ladder (C15..C18) C%d 100n",
+     "introduced": {},
+     "lines": [
+      394
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       341,
+       341
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        341,
+        341
+       ],
+       "tie": [
+        "in_section"
+       ]
+      }
+     ],
+     "why": "U2's CIN ladder, cell 1 (inline at 394)"
+    },
+    "spans": [
+     [
+      393,
+      394
+     ],
+     [
+      394,
+      394
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "SEC_V1",
+    "2": "GND"
+   },
+   "read": "hand",
+   "ref": "C15",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "100n"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "loop",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "D-02a",
+      "D-15",
+      "O-10",
+      "O-9",
+      "RP-17",
+      "decision 40"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       394
+      ]
+     },
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       394
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "CIN ladder (C15..C18) C%d 100n",
+     "introduced": {},
+     "lines": [
+      394
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       341,
+       341
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        341,
+        341
+       ],
+       "tie": [
+        "in_section"
+       ]
+      }
+     ],
+     "why": "U2's CIN ladder, cell 2"
+    },
+    "spans": [
+     [
+      393,
+      394
+     ],
+     [
+      394,
+      394
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "SEC_V2",
+    "2": "SEC_V1"
+   },
+   "read": "hand",
+   "ref": "C16",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "100n"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "loop",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "D-02a",
+      "D-15",
+      "O-10",
+      "O-9",
+      "RP-17",
+      "decision 40"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       394
+      ]
+     },
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       394
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "CIN ladder (C15..C18) C%d 100n",
+     "introduced": {},
+     "lines": [
+      394
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       341,
+       341
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        341,
+        341
+       ],
+       "tie": [
+        "in_section"
+       ]
+      }
+     ],
+     "why": "U2's CIN ladder, cell 3"
+    },
+    "spans": [
+     [
+      393,
+      394
+     ],
+     [
+      394,
+      394
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "SEC_V3",
+    "2": "SEC_V2"
+   },
+   "read": "hand",
+   "ref": "C17",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "100n"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "loop",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "D-02a",
+      "D-15",
+      "O-10",
+      "O-9",
+      "RP-17",
+      "decision 40"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       394
+      ]
+     },
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       394
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "CIN ladder (C15..C18) C%d 100n",
+     "introduced": {},
+     "lines": [
+      394
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       341,
+       341
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        341,
+        341
+       ],
+       "tie": [
+        "in_section"
+       ]
+      }
+     ],
+     "why": "U2's CIN ladder, cell 4"
+    },
+    "spans": [
+     [
+      393,
+      394
+     ],
+     [
+      394,
+      394
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "SEC_V4",
+    "2": "SEC_V3"
+   },
+   "read": "hand",
+   "ref": "C18",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "100n"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [
+      "D-15"
+     ],
+     "candidate_ids": [
+      "D-02a",
+      "D-15",
+      "O-10",
+      "O-9",
+      "RP-17",
+      "decision 40"
+     ],
+     "finding_ids": [],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "OPEN WIRE STILL FIRES THE FUSE, AND THAT IS KEPT ON PURPOSE (fix-up of 26 September 2026). Table 7-1 drives COUT on an open wire too: | a J_CELL tap that stays open for the 4 s tOW_DELAY (6.6), counted from the moment the 50 uA, 128 us every 128 ms detection pulses | (7.3.2) have pulled its filtered",
+      "ids": {
+       "finding": [
+        "O-9"
+       ]
+      },
+      "kind": "other_paragraph",
+      "lines": [
+       395,
+       405
+      ]
+     },
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       442
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "THE NUMBERS, CORRECTED AT THE FIX-UP OF 26 SEPTEMBER 2026 (review minor m1): the first pass left out R32, which sits in parallel with | R31 once JP1 is closed, and at 100 kohm it pulled the protector's current past the 100 uA its 6 V minimum is specified at. R32 is | 1 Mohm now (the gate's own leakage, IGSS 100 nA at most, drops 0.1 V across it; C19 is the gate's low impedance once JP1 is closed). With | JP1 closed, R31 || R32 = 48.5 kohm, and: | the gauge alone (COUT inactive, so R29 is 20 kohm to ground): 6 x (48.5 || 20 = 14.2) / (3.2 + 5.1 + 14.2) = 3.78 V at the gate; | the protector alone (the FUSE pin an input, 150 to 330 nA of internal pull-up, 6.20): 6 x 48.5 / 68.5 = 4.25 V, at 88 ",
+     "introduced": {
+      "owner_ruling": [
+       "D-15"
+      ]
+     },
+     "lines": [
+      406,
+      407,
+      408,
+      409,
+      410,
+      411,
+      412,
+      413,
+      414,
+      415,
+      416,
+      417,
+      418,
+      419,
+      420,
+      421,
+      422,
+      423,
+      424,
+      425,
+      426,
+      427,
+      428,
+      429,
+      430,
+      431,
+      432,
+      433,
+      434,
+      435,
+      436,
+      437,
+      438,
+      439,
+      440,
+      441,
+      442
+     ],
+     "other_paragraph_lines": [
+      395,
+      396,
+      397,
+      398,
+      399,
+      400,
+      401,
+      402,
+      403,
+      404,
+      405
+     ]
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       341,
+       345
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        341,
+        345
+       ],
+       "tie": [
+        "in_section"
+       ]
+      }
+     ],
+     "why": "the fuse drive: the gate node's capacitor"
+    },
+    "spans": [
+     [
+      443,
+      443
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "FUSE_G",
+    "2": "GND"
+   },
+   "read": "hand",
+   "ref": "C19",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "100n"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "A03",
+      "A07",
+      "CMP-001",
+      "F-BP-01",
+      "F-IN-01",
+      "O-12",
+      "RP-22",
+      "S-09",
+      "TRN-001"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "S-09 / A03 / W2 F-IN-01, 26 September 2026: D1 WAS REVERSED AND DRAWN WITHOUT A POLARITY. The SMBJ20A is UNIDIRECTIONAL (the A | suffix with no C; MDD SMBJ20A, LCSC C364296, the part the P4 BOM filled), and it had PACK_N on pad 1, which on KiCad's Diode_SMD:D_SMB | is the cathode (A03 read the fab a",
+      "ids": {
+       "adjudication": [
+        "A03",
+        "A07"
+       ],
+       "finding": [
+        "F-BP-01",
+        "F-IN-01",
+        "S-09"
+       ],
+       "rule": [
+        "TRN-001"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       297,
+       324
+      ]
+     },
+     {
+      "excerpt": "O-12 (round 4, fixed at the fix-up of 26 September 2026): THE TWO TERMINAL CAPACITORS WERE IN PARALLEL, so one cracked or shorted | part shorted PACK+ to PACK- behind the protection FETs. TI's words for this pair: \"A pair of series 0.1-uF ceramic capacitors is | placed across the PACK+ and PACK- ter",
+      "ids": {
+       "adjudication": [
+        "A03",
+        "A07"
+       ],
+       "finding": [
+        "F-BP-01",
+        "F-IN-01",
+        "O-12",
+        "RP-22",
+        "S-09"
+       ],
+       "rule": [
+        "CMP-001",
+        "TRN-001"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       285,
+       326
+      ]
+     },
+     {
+      "excerpt": "S-09 / A03 / W2 F-IN-01, 26 September 2026: D1 WAS REVERSED AND DRAWN WITHOUT A POLARITY. The SMBJ20A is UNIDIRECTIONAL (the A | suffix with no C; MDD SMBJ20A, LCSC C364296, the part the P4 BOM filled), and it had PACK_N on pad 1, which on KiCad's Diode_SMD:D_SMB | is the cathode (A03 read the fab a",
+      "ids": {
+       "adjudication": [
+        "A03",
+        "A07"
+       ],
+       "finding": [
+        "F-BP-01",
+        "F-IN-01",
+        "S-09"
+       ],
+       "rule": [
+        "TRN-001"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       297,
+       324
+      ]
+     },
+     {
+      "excerpt": "O-12 (round 4, fixed at the fix-up of 26 September 2026): THE TWO TERMINAL CAPACITORS WERE IN PARALLEL, so one cracked or shorted | part shorted PACK+ to PACK- behind the protection FETs. TI's words for this pair: \"A pair of series 0.1-uF ceramic capacitors is | placed across the PACK+ and PACK- ter",
+      "ids": {
+       "adjudication": [
+        "A03",
+        "A07"
+       ],
+       "finding": [
+        "F-BP-01",
+        "F-IN-01",
+        "O-12",
+        "RP-22",
+        "S-09"
+       ],
+       "rule": [
+        "CMP-001",
+        "TRN-001"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       285,
+       326
+      ]
+     },
+     {
+      "excerpt": "S-09 / A03 / W2 F-IN-01, 26 September 2026: D1 WAS REVERSED AND DRAWN WITHOUT A POLARITY. The SMBJ20A is UNIDIRECTIONAL (the A | by the netlist (D1.1, the cathode, on PACK_P), not by TRN-001, which judged no port on this board. | FIX-UP OF 26 SEPTEMBER 2026: D1 CARRIES ITS CODE IN THE GENERATOR NOW.",
+      "ids": {
+       "adjudication": [
+        "A03"
+       ],
+       "finding": [
+        "F-IN-01",
+        "S-09"
+       ],
+       "rule": [
+        "TRN-001"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       297,
+       303,
+       304,
+       459
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       297,
+       297
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        297,
+        297
+       ],
+       "tie": [
+        "names_ref"
+       ]
+      }
+     ],
+     "why": "the pack terminal clamp SMBJ20A was reversed, a forward-biased diode across the terminals; cathode now on PACK_P"
+    },
+    "spans": [
+     [
+      330,
+      330
+     ],
+     [
+      334,
+      334
+     ]
+    ]
+   },
+   "fields": {
+    "lcsc": [
+     "",
+     "C364296"
+    ],
+    "value": [
+     "SMBJ20A",
+     "SMBJ20A (pack terminal clamp, unidirectional: cathode on PACK_P)"
+    ]
+   },
+   "finding_ids": [
+    "A03",
+    "F-IN-01",
+    "S-09"
+   ],
+   "footprint": "Diode_SMD:D_SMB",
+   "kind": "CHANGED",
+   "lcsc": "C364296",
+   "pins_moved": {
+    "1": [
+     "PACK_N",
+     "PACK_P"
+    ],
+    "2": [
+     "PACK_P",
+     "PACK_N"
+    ]
+   },
+   "read": "hand",
+   "ref": "D1",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "SMBJ20A (pack terminal clamp, unidirectional: cathode on PACK_P)"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "A03",
+      "A07",
+      "CMP-001",
+      "F-BP-01",
+      "F-IN-01",
+      "O-12",
+      "RP-22",
+      "S-09",
+      "TRN-001"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "S-09 / A03 / W2 F-IN-01, 26 September 2026: D1 WAS REVERSED AND DRAWN WITHOUT A POLARITY. The SMBJ20A is UNIDIRECTIONAL (the A | suffix with no C; MDD SMBJ20A, LCSC C364296, the part the P4 BOM filled), and it had PACK_N on pad 1, which on KiCad's Diode_SMD:D_SMB | is the cathode (A03 read the fab a",
+      "ids": {
+       "adjudication": [
+        "A03",
+        "A07"
+       ],
+       "finding": [
+        "F-BP-01",
+        "F-IN-01",
+        "S-09"
+       ],
+       "rule": [
+        "TRN-001"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       297,
+       324
+      ]
+     },
+     {
+      "excerpt": "O-12 (round 4, fixed at the fix-up of 26 September 2026): THE TWO TERMINAL CAPACITORS WERE IN PARALLEL, so one cracked or shorted | part shorted PACK+ to PACK- behind the protection FETs. TI's words for this pair: \"A pair of series 0.1-uF ceramic capacitors is | placed across the PACK+ and PACK- ter",
+      "ids": {
+       "adjudication": [
+        "A03",
+        "A07"
+       ],
+       "finding": [
+        "F-BP-01",
+        "F-IN-01",
+        "O-12",
+        "RP-22",
+        "S-09"
+       ],
+       "rule": [
+        "CMP-001",
+        "TRN-001"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       285,
+       326
+      ]
+     },
+     {
+      "excerpt": "S-09 / A03 / W2 F-IN-01, 26 September 2026: D1 WAS REVERSED AND DRAWN WITHOUT A POLARITY. The SMBJ20A is UNIDIRECTIONAL (the A | suffix with no C; MDD SMBJ20A, LCSC C364296, the part the P4 BOM filled), and it had PACK_N on pad 1, which on KiCad's Diode_SMD:D_SMB | is the cathode (A03 read the fab a",
+      "ids": {
+       "adjudication": [
+        "A03",
+        "A07"
+       ],
+       "finding": [
+        "F-BP-01",
+        "F-IN-01",
+        "S-09"
+       ],
+       "rule": [
+        "TRN-001"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       297,
+       324
+      ]
+     },
+     {
+      "excerpt": "O-12 (round 4, fixed at the fix-up of 26 September 2026): THE TWO TERMINAL CAPACITORS WERE IN PARALLEL, so one cracked or shorted | part shorted PACK+ to PACK- behind the protection FETs. TI's words for this pair: \"A pair of series 0.1-uF ceramic capacitors is | placed across the PACK+ and PACK- ter",
+      "ids": {
+       "adjudication": [
+        "A03",
+        "A07"
+       ],
+       "finding": [
+        "F-BP-01",
+        "F-IN-01",
+        "O-12",
+        "RP-22",
+        "S-09"
+       ],
+       "rule": [
+        "CMP-001",
+        "TRN-001"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       285,
+       326
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       192,
+       193
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        192,
+        193
+       ],
+       "tie": [
+        "names_ref"
+       ]
+      }
+     ],
+     "why": "the SMBus clamp USBLC6-2 held the gauge's VCC at its own breakdown; each SMBus line gets a PESD5V0S1BA to the pack side of the shunt"
+    },
+    "spans": [
+     [
+      331,
+      331
+     ],
+     [
+      335,
+      335
+     ]
+    ]
+   },
+   "fields": {
+    "footprint": [
+     "Package_TO_SOT_SMD:SOT-23-6",
+     "Diode_SMD:D_SOD-323"
+    ],
+    "lcsc": [
+     "C7519",
+     "C19224"
+    ],
+    "value": [
+     "USBLC6-2SC6 ESD clamp on the SMBus pair",
+     "PESD5V0S1BA (SMBC ESD clamp to the pack side of the shunt)"
+    ]
+   },
+   "finding_ids": [
+    "F-BP-01"
+   ],
+   "footprint": "Diode_SMD:D_SOD-323",
+   "kind": "CHANGED",
+   "lcsc": "C19224",
+   "pins_moved": {
+    "2": [
+     "GND",
+     "PACK_N"
+    ],
+    "3": [
+     "SMBD",
+     null
+    ],
+    "4": [
+     "SMBD",
+     null
+    ],
+    "5": [
+     "VCC_F",
+     null
+    ],
+    "6": [
+     "SMBC",
+     null
+    ]
+   },
+   "read": "hand",
+   "ref": "D2",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "PESD5V0S1BA (SMBC ESD clamp to the pack side of the shunt)"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "A03",
+      "A07",
+      "CMP-001",
+      "F-BP-01",
+      "F-IN-01",
+      "O-12",
+      "RP-22",
+      "S-09",
+      "TRN-001"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "O-12 (round 4, fixed at the fix-up of 26 September 2026): THE TWO TERMINAL CAPACITORS WERE IN PARALLEL, so one cracked or shorted | part shorted PACK+ to PACK- behind the protection FETs. TI's words for this pair: \"A pair of series 0.1-uF ceramic capacitors is | placed across the PACK+ and PACK- ter",
+      "ids": {
+       "adjudication": [
+        "A03",
+        "A07"
+       ],
+       "finding": [
+        "F-BP-01",
+        "F-IN-01",
+        "O-12",
+        "RP-22",
+        "S-09"
+       ],
+       "rule": [
+        "CMP-001",
+        "TRN-001"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       285,
+       326
+      ]
+     },
+     {
+      "excerpt": "O-12 (round 4, fixed at the fix-up of 26 September 2026): THE TWO TERMINAL CAPACITORS WERE IN PARALLEL, so one cracked or shorted | part shorted PACK+ to PACK- behind the protection FETs. TI's words for this pair: \"A pair of series 0.1-uF ceramic capacitors is | placed across the PACK+ and PACK- ter",
+      "ids": {
+       "adjudication": [
+        "A03",
+        "A07"
+       ],
+       "finding": [
+        "F-BP-01",
+        "F-IN-01",
+        "O-12",
+        "RP-22",
+        "S-09"
+       ],
+       "rule": [
+        "CMP-001",
+        "TRN-001"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       285,
+       326
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       192,
+       193
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        192,
+        193
+       ],
+       "tie": [
+        "names_ref"
+       ]
+      }
+     ],
+     "why": "the second SMBus line's PESD5V0S1BA clamp"
+    },
+    "spans": [
+     [
+      332,
+      332
+     ],
+     [
+      336,
+      336
+     ]
+    ]
+   },
+   "finding_ids": [
+    "F-BP-01"
+   ],
+   "footprint": "Diode_SMD:D_SOD-323",
+   "kind": "ADDED",
+   "lcsc": "C19224",
+   "pins": {
+    "1": "SMBD",
+    "2": "PACK_N"
+   },
+   "read": "hand",
+   "ref": "D3",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "PESD5V0S1BA (SMBD ESD clamp to the pack side of the shunt)"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [
+      "D-02a",
+      "D-02b",
+      "D-09",
+      "D-15",
+      "decision 40"
+     ],
+     "candidate_ids": [
+      "D-02a",
+      "D-02b",
+      "D-09",
+      "D-15",
+      "O-10",
+      "O-13",
+      "O-3",
+      "O-8",
+      "W6-F2",
+      "decision 40"
+     ],
+     "finding_ids": [
+      "O-10",
+      "O-13",
+      "O-3",
+      "O-8"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "THE CHEMICAL FUSE (decision 40 / D-15, 26 September 2026). SLUSC67B 8.2.2.1.2: \"The chemical fuse (Dexerials, Uchihashi, and so on) is | ignited under command from either the bq294700 secondary voltage protection IC or from the FUSE pin of the gas gauge\", placed between | the cells and the charge FE",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-13",
+        "O-3",
+        "O-8"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-02b",
+        "D-09",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       245,
+       277
+      ]
+     },
+     {
+      "excerpt": "26 September 2026 (decision 40 / D-15): the chemical fuse F2 sits between the blade and the charge FET, as TI places it (SLUSC67B | W6-F2, 26 September 2026: THE GAUGE SAT ON THE WRONG LAND. The BQ4050RSMR is TI's RSM0032A VQFN, 4 x 4 mm on a 0.4 mm pitch with a | U1 is on its own RSM0032A land (W6-",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-13",
+        "W6-F2"
+       ],
+       "owner_ruling": [
+        "D-09",
+        "D-15"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       65,
+       110,
+       160,
+       268,
+       272,
+       276,
+       277,
+       367,
+       397,
+       402
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "THE CHEMICAL FUSE (decision 40 / D-15, 26 September 2026). SLUSC67B 8.2.2.1.2: \"The chemical fuse (Dexerials, Uchihashi, and so on) is | ignited under command from either the bq294700 secondary voltage protection IC or from the FUSE pin of the gas gauge\", placed between | the cells and the charge FET (Figure 21, F1 SFDxxxx between 4P and Q2), so its heater is fed from the cells whatever the FETs are | doing. FIX-UP OF 26 SEPTEMBER 2026: THE PART IS THE EATON SCF9550-30-05, NOT THE DEXERIALS SFK-1830A OF THE FIRST PASS. Both have the | same electrical figures (4 to 5 cells, 30 A, heater 4.8 to 8.0 ohm, heater operating voltage 10.5 to 23.5 V, fuse 1.0 to 2.5 mohm, 80 A | breaking), but Dexeri",
+     "introduced": {
+      "decision": [
+       "decision 40"
+      ],
+      "finding": [
+       "O-10",
+       "O-13",
+       "O-3",
+       "O-8"
+      ],
+      "owner_ruling": [
+       "D-02a",
+       "D-02b",
+       "D-09",
+       "D-15"
+      ]
+     },
+     "lines": [
+      245,
+      246,
+      247,
+      248,
+      249,
+      250,
+      251,
+      252,
+      253,
+      254,
+      255,
+      256,
+      257,
+      258,
+      259,
+      260,
+      261,
+      262,
+      263,
+      264,
+      265,
+      266,
+      267,
+      268,
+      269,
+      270,
+      271,
+      272,
+      273,
+      274,
+      275,
+      276,
+      277
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       245,
+       245
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        245,
+        245
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the Eaton SCF9550-30-05 chemical fuse between the blade and the charge FET, as TI places it"
+    },
+    "spans": [
+     [
+      278,
+      279
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "meshsat:Eaton_SCF9550_9.5x5.0mm",
+   "kind": "ADDED",
+   "lcsc": "C3670061",
+   "pins": {
+    "1": "FUSED",
+    "2": "SCP_OUT",
+    "3": "SCP_HTR"
+   },
+   "read": "hand",
+   "ref": "F2",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "SCF9550-30-05 self-control fuse (Eaton, 30 A, 4-5 cells): 1 and 2 the fuse, 3 the heater"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "D-02a",
+      "D-15",
+      "O-10",
+      "O-9",
+      "RP-17",
+      "decision 40"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "OPEN WIRE STILL FIRES THE FUSE, AND THAT IS KEPT ON PURPOSE (fix-up of 26 September 2026). Table 7-1 drives COUT on an open wire too: | a J_CELL tap that stays open for the 4 s tOW_DELAY (6.6), counted from the moment the 50 uA, 128 us every 128 ms detection pulses | (7.3.2) have pulled its filtered",
+      "ids": {
+       "finding": [
+        "O-9"
+       ],
+       "owner_ruling": [
+        "D-15"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       395,
+       442
+      ]
+     },
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       442
+      ]
+     },
+     {
+      "excerpt": "be active from power-up and the fuse would open the moment JP1 is closed. 10 kohm (the 103AT's value at 25 C, ratiometric against | (a solder bridge at R33, or pin 12 to the exposed pad) would read as over-temperature and fire the fuse once armed; JP1 is closed only | R31 once JP1 is closed, and at ",
+      "ids": {
+       "owner_ruling": [
+        "D-15"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       375,
+       381,
+       407,
+       408,
+       409,
+       418,
+       421,
+       435,
+       437,
+       482
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       341,
+       345
+      ],
+      [
+       418,
+       421
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        341,
+        345
+       ],
+       "tie": [
+        "in_section"
+       ]
+      },
+      {
+       "lines": [
+        418,
+        421
+       ],
+       "tie": [
+        "names_ref"
+       ]
+      }
+     ],
+     "why": "the fuse arming jumper, open as built and closed at commissioning after the gauge's data flash is written and read back (the verification D-15 names)"
+    },
+    "spans": [
+     [
+      444,
+      444
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "FUSE_G",
+    "2": "FUSE_GQ"
+   },
+   "read": "hand",
+   "ref": "JP1",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "fuse arming jumper: open as built, closed at commissioning"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "A07",
+      "O-5",
+      "S-05"
+     ],
+     "finding_ids": [
+      "A07",
+      "O-5",
+      "S-05"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "S-05 (round 4, 26 September 2026, adjudication A07): THE LEAD'S GROUND RAN PARALLEL TO THE SHUNT. Pin 3 was the cell-side GND, | upstream of R10, so the SMBus lead's ground wire (26 AWG, 350 mm, about 47 mohm) sat in parallel with the 2 mohm shunt and the | 12 AWG return and took 5 to 8 percent of t",
+      "ids": {
+       "adjudication": [
+        "A07"
+       ],
+       "finding": [
+        "O-5",
+        "S-05"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       472,
+       480
+      ]
+     },
+     {
+      "excerpt": "not one switching part. (26 September 2026, round 4: J_SMB pin 3 and the two SMBus clamps D2 and D3 join it, | S-05 (round 4, 26 September 2026): PRES leaves the board on the SMBus lead (J_SMB pin 4), so it takes TI's series resistor: \"An",
+      "ids": {
+       "finding": [
+        "S-05"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       192,
+       222
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "S-05 (round 4, 26 September 2026, adjudication A07): THE LEAD'S GROUND RAN PARALLEL TO THE SHUNT. Pin 3 was the cell-side GND, | upstream of R10, so the SMBus lead's ground wire (26 AWG, 350 mm, about 47 mohm) sat in parallel with the 2 mohm shunt and the | 12 AWG return and took 5 to 8 percent of the pack current (1.0 to 1.4 A at 18 A) that the coulomb counter never saw. TI puts the | SMBus connector's VSS on the PACK side of the sense resistor (SLUSC67B Figure 21, J2 pin 1 on CHGND). Pin order unchanged, | as the round-4 brief fixes it for both ends: 1 SMBC, 2 SMBD, 3 GND (the pack side), 4 PRES (now through R22). | WHAT THIS DOES AND DOES NOT DO (fix-up of 26 September 2026): both returns",
+     "introduced": {
+      "adjudication": [
+       "A07"
+      ],
+      "finding": [
+       "O-5",
+       "S-05"
+      ]
+     },
+     "lines": [
+      472,
+      473,
+      474,
+      475,
+      476,
+      477,
+      478,
+      479,
+      480
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       472,
+       472
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        472,
+        472
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the SMBus lead's ground (pin 3) moves to the pack side of the shunt, PACK_N, so the coulomb counter sees every ampere; PRES goes out through R22"
+    },
+    "spans": [
+     [
+      481,
+      481
+     ]
+    ]
+   },
+   "fields": {
+    "value": [
+     "SMBus lead to E6 J_SMB (JST-XH 1x4): SMBC SMBD GND PRES",
+     "SMBus lead to E6 J_SMB (JST-XH 1x4): SMBC SMBD GND(pack side of the shunt) PRES"
+    ]
+   },
+   "finding_ids": [
+    "A07",
+    "S-05"
+   ],
+   "footprint": "Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical",
+   "kind": "CHANGED",
+   "lcsc": "",
+   "pins_moved": {
+    "3": [
+     "GND",
+     "PACK_N"
+    ],
+    "4": [
+     "PRES",
+     "PRES_J"
+    ]
+   },
+   "read": "hand",
+   "ref": "J_SMB",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "SMBus lead to E6 J_SMB (JST-XH 1x4): SMBC SMBD GND(pack side of the shunt) PRES"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [
+      "D-06"
+     ],
+     "candidate_ids": [
+      "D-06",
+      "F-PK-02"
+     ],
+     "finding_ids": [
+      "F-PK-02"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "F-PK-02 (round 4, 26 September 2026): ONE THERMISTOR COVERED THE WHOLE BLOCK. TS2 to TS4 were fixed 10k resistors, so twelve cells | (sixteen in the old 4S4P reading) were judged by one 103AT on TS1, and the pack protection record listed \"10k NTC x4\" against a | reference (R10) that is the shunt. Th",
+      "ids": {
+       "finding": [
+        "F-PK-02"
+       ],
+       "owner_ruling": [
+        "D-06"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       208,
+       218
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "F-PK-02 (round 4, 26 September 2026): ONE THERMISTOR COVERED THE WHOLE BLOCK. TS2 to TS4 were fixed 10k resistors, so twelve cells | (sixteen in the old 4S4P reading) were judged by one 103AT on TS1, and the pack protection record listed \"10k NTC x4\" against a | reference (R10) that is the shunt. The gauge has four thermistor inputs and TI's application schematic fits all four (SLUSC67B | Figure 21, RT2 to RT5, 10k NTC, each from TSx to VSS with nothing else on the line; the EVM bill of materials SLUUBF9 Table 5 names | them \"103AT-2, Semitec\"), so the pack gets four: one per SERIES GROUP of the 4S3P block (D-06), taped to the middle cell of its three, | which is the one with the least surfa",
+     "introduced": {
+      "finding": [
+       "F-PK-02"
+      ],
+      "owner_ruling": [
+       "D-06"
+      ]
+     },
+     "lines": [
+      208,
+      209,
+      210,
+      211,
+      212,
+      213,
+      214,
+      215,
+      216,
+      217,
+      218
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       208,
+       208
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        208,
+        208
+       ],
+       "tie": [
+        "names_net:TS2,TS3,TS4",
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "one thermistor covered twelve cells; J_TS becomes a JST-PH 1x5 for four 103AT-2 NTCs, one per series group"
+    },
+    "spans": [
+     [
+      219,
+      220
+     ]
+    ]
+   },
+   "fields": {
+    "footprint": [
+     "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical",
+     "Connector_JST:JST_PH_B5B-PH-K_1x05_P2.00mm_Vertical"
+    ],
+    "lcsc": [
+     "C5251182",
+     "C157993"
+    ],
+    "value": [
+     "JST-PH 1x2 socket for the cell thermistor lead (the 10k NTC, a 103AT, sits in the cell block)",
+     "JST-PH 1x5 socket for the four cell thermistors (Semitec 103AT-2, one per series group of the 4S3P block): TS1 TS2 TS3 TS4 VSS"
+    ]
+   },
+   "finding_ids": [
+    "F-PK-02"
+   ],
+   "footprint": "Connector_JST:JST_PH_B5B-PH-K_1x05_P2.00mm_Vertical",
+   "kind": "CHANGED",
+   "lcsc": "C157993",
+   "pins_moved": {
+    "2": [
+     "GND",
+     "TS2"
+    ],
+    "3": [
+     null,
+     "TS3"
+    ],
+    "4": [
+     null,
+     "TS4"
+    ],
+    "5": [
+     null,
+     "GND"
+    ]
+   },
+   "read": "hand",
+   "ref": "J_TS",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "JST-PH 1x5 socket for the four cell thermistors (Semitec 103AT-2, one per series group of the 4S3P block): TS1 TS2 TS3 TS4 VSS"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "D-02a",
+      "D-02b",
+      "D-09",
+      "D-15",
+      "O-10",
+      "O-13",
+      "O-3",
+      "O-8",
+      "decision 40"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "THE CHEMICAL FUSE (decision 40 / D-15, 26 September 2026). SLUSC67B 8.2.2.1.2: \"The chemical fuse (Dexerials, Uchihashi, and so on) is | ignited under command from either the bq294700 secondary voltage protection IC or from the FUSE pin of the gas gauge\", placed between | the cells and the charge FE",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-13",
+        "O-3",
+        "O-8"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-02b",
+        "D-09",
+        "D-15"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       245,
+       277
+      ]
+     },
+     {
+      "excerpt": "THE CHEMICAL FUSE (decision 40 / D-15, 26 September 2026). SLUSC67B 8.2.2.1.2: \"The chemical fuse (Dexerials, Uchihashi, and so on) is | ignited under command from either the bq294700 secondary voltage protection IC or from the FUSE pin of the gas gauge\", placed between | the cells and the charge FE",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-13",
+        "O-3",
+        "O-8"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-02b",
+        "D-09",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       245,
+       277
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       65,
+       66
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        65,
+        66
+       ],
+       "tie": [
+        "names_ref",
+        "names_net:FUSED,SCP_OUT"
+       ]
+      }
+     ],
+     "why": "the charge FET's source moves from FUSED to SCP_OUT, behind the new chemical fuse"
+    },
+    "spans": [
+     [
+      280,
+      280
+     ]
+    ]
+   },
+   "fields": {},
+   "finding_ids": [],
+   "footprint": "Package_SO:PowerPAK_SO-8_Single",
+   "kind": "CHANGED",
+   "lcsc": "C529279",
+   "pins_moved": {
+    "1": [
+     "FUSED",
+     "SCP_OUT"
+    ],
+    "2": [
+     "FUSED",
+     "SCP_OUT"
+    ],
+    "3": [
+     "FUSED",
+     "SCP_OUT"
+    ]
+   },
+   "read": "hand",
+   "ref": "Q1",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "CSD17570Q5B 30 V N-FET, charge switch"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "D-02a",
+      "D-15",
+      "O-10",
+      "O-9",
+      "RP-17",
+      "decision 40"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       446
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "KiCad's Transistor_FET:AO3400A is Q_NMOS_GSD (pin 1 gate, 2 source, 3 drain), the JEDEC TO-236 order AOS draws (drain alone on one side).",
+     "introduced": {},
+     "lines": [
+      446
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       341,
+       345
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        341,
+        345
+       ],
+       "tie": [
+        "in_section"
+       ]
+      }
+     ],
+     "why": "the AO3400A that switches the chemical fuse's heater"
+    },
+    "spans": [
+     [
+      447,
+      447
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "Package_TO_SOT_SMD:SOT-23",
+   "kind": "ADDED",
+   "lcsc": "C20917",
+   "pins": {
+    "1": "FUSE_GQ",
+    "2": "GND",
+    "3": "SCP_HTR"
+   },
+   "read": "hand",
+   "ref": "Q3",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "AO3400A 30 V N-FET, chemical fuse heater switch"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "D-02a",
+      "D-15",
+      "O-10",
+      "O-9",
+      "RP-02",
+      "RP-17",
+      "decision 40"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "UNDER-VOLTAGE IN HARDWARE: DOUT turns the DISCHARGE switch off, it does not blow the fuse. An under-voltage is recoverable by charging, | and the SCF9550-30-05's heater is only rated from 10.5 V, which a block with one cell at 2.25 V may already be below. The BQ77207 datasheet's | own arrangement fo",
+      "ids": {
+       "finding": [
+        "O-9",
+        "RP-02"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       448,
+       467
+      ]
+     },
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-02",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       467
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       341,
+       345
+      ],
+      [
+       451,
+       462
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        341,
+        345
+       ],
+       "tie": [
+        "in_section"
+       ]
+      },
+      {
+       "lines": [
+        451,
+        462
+       ],
+       "tie": [
+        "names_ref",
+        "names_net:DSG_G"
+       ]
+      }
+     ],
+     "why": "U2's under-voltage output holds the discharge FET off through Q5 instead of firing the fuse, whose heater is rated only from 10.5 V"
+    },
+    "spans": [
+     [
+      469,
+      469
+     ]
+    ]
+   },
+   "finding_ids": [
+    "RP-02"
+   ],
+   "footprint": "Package_TO_SOT_SMD:SOT-23",
+   "kind": "ADDED",
+   "lcsc": "C8545",
+   "pins": {
+    "1": "SEC_DOUT",
+    "2": "GND",
+    "3": "DSG_G"
+   },
+   "read": "hand",
+   "ref": "Q5",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "2N7002 60 V N-FET: the second level's under-voltage holds the discharge FET off"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [],
+     "finding_ids": [],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "NO_ID_OF_ANY_KIND"
+    },
+    "candidates": [],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "prev",
+    "hand": {
+     "cite": [
+      [
+       208,
+       208
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        208,
+        208
+       ],
+       "tie": [
+        "names_net:TS2"
+       ]
+      }
+     ],
+     "why": "TS2 was a fixed 10k; it becomes a cell thermistor input on J_TS"
+    },
+    "spans": [
+     [
+      184,
+      186
+     ]
+    ]
+   },
+   "finding_ids": [
+    "F-PK-02"
+   ],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "REMOVED",
+   "lcsc": "",
+   "pins": {
+    "1": "TS2",
+    "2": "GND"
+   },
+   "read": "hand",
+   "ref": "R11",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "10k"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [],
+     "finding_ids": [],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "NO_ID_OF_ANY_KIND"
+    },
+    "candidates": [],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "prev",
+    "hand": {
+     "cite": [
+      [
+       208,
+       208
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        208,
+        208
+       ],
+       "tie": [
+        "names_net:TS3"
+       ]
+      }
+     ],
+     "why": "TS3 was a fixed 10k; it becomes a cell thermistor input on J_TS"
+    },
+    "spans": [
+     [
+      184,
+      186
+     ]
+    ]
+   },
+   "finding_ids": [
+    "F-PK-02"
+   ],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "REMOVED",
+   "lcsc": "",
+   "pins": {
+    "1": "TS3",
+    "2": "GND"
+   },
+   "read": "hand",
+   "ref": "R12",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "10k"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [],
+     "finding_ids": [],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "NO_ID_OF_ANY_KIND"
+    },
+    "candidates": [],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "prev",
+    "hand": {
+     "cite": [
+      [
+       208,
+       208
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        208,
+        208
+       ],
+       "tie": [
+        "names_net:TS4"
+       ]
+      }
+     ],
+     "why": "TS4 was a fixed 10k; it becomes a cell thermistor input on J_TS"
+    },
+    "spans": [
+     [
+      184,
+      186
+     ]
+    ]
+   },
+   "finding_ids": [
+    "F-PK-02"
+   ],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "REMOVED",
+   "lcsc": "",
+   "pins": {
+    "1": "TS4",
+    "2": "GND"
+   },
+   "read": "hand",
+   "ref": "R13",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "10k"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "D-02a",
+      "D-02b",
+      "D-09",
+      "D-15",
+      "O-10",
+      "O-13",
+      "O-3",
+      "O-8",
+      "decision 40"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "THE CHEMICAL FUSE (decision 40 / D-15, 26 September 2026). SLUSC67B 8.2.2.1.2: \"The chemical fuse (Dexerials, Uchihashi, and so on) is | ignited under command from either the bq294700 secondary voltage protection IC or from the FUSE pin of the gas gauge\", placed between | the cells and the charge FE",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-13",
+        "O-3",
+        "O-8"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-02b",
+        "D-09",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       245,
+       281
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "R17 follows Q1's source to SCP_OUT R16 5.1k CHG_G CHG_R R17 10M CHG_G SCP_OUT R18 5.1k DSG_G DSG_R R19 10M DSG_G PACK_P",
+     "introduced": {},
+     "lines": [
+      281
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       65,
+       66
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        65,
+        66
+       ],
+       "tie": [
+        "names_net:FUSED,SCP_OUT"
+       ]
+      }
+     ],
+     "why": "the charge FET's gate-source resistor follows its source to SCP_OUT (inline at 281)"
+    },
+    "spans": [
+     [
+      281,
+      281
+     ]
+    ]
+   },
+   "fields": {},
+   "finding_ids": [],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "CHANGED",
+   "lcsc": "",
+   "pins_moved": {
+    "2": [
+     "FUSED",
+     "SCP_OUT"
+    ]
+   },
+   "read": "hand",
+   "ref": "R17",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "10M"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [
+      "S-05"
+     ],
+     "finding_ids": [
+      "S-05"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "S-05 (round 4, 26 September 2026): PRES leaves the board on the SMBus lead (J_SMB pin 4), so it takes TI's series resistor: \"An | integrated ESD protection on the PRES device pin reduces the external protection requirement to just R29 for an 8-kV ESD contact | rating\" (SLUSC67B 8.2.2.2.3, Figures 29",
+      "ids": {
+       "finding": [
+        "S-05"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       222,
+       224
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "S-05 (round 4, 26 September 2026): PRES leaves the board on the SMBus lead (J_SMB pin 4), so it takes TI's series resistor: \"An | integrated ESD protection on the PRES device pin reduces the external protection requirement to just R29 for an 8-kV ESD contact | rating\" (SLUSC67B 8.2.2.2.3, Figures 29 and 30: R29 1k between the pin and J3). R14 keeps the pin low on this board either way.",
+     "introduced": {
+      "finding": [
+       "S-05"
+      ]
+     },
+     "lines": [
+      222,
+      223,
+      224
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       222,
+       222
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        222,
+        222
+       ],
+       "tie": [
+        "names_net:PRES",
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "PRES leaves the board on the SMBus lead, so it takes TI's series resistor"
+    },
+    "spans": [
+     [
+      225,
+      225
+     ]
+    ]
+   },
+   "finding_ids": [
+    "S-05"
+   ],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "PRES_J",
+    "2": "PRES"
+   },
+   "read": "hand",
+   "ref": "R22",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "1k"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "D-02a",
+      "D-15",
+      "O-10",
+      "O-9",
+      "RP-17",
+      "decision 40"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       390
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "R23 carries its code (fix-up of 26 September 2026): no lcsc_fill MAP rule reads \"300R\". UNI-ROYAL 0603WAF3000T5E, 300 ohm 1 percent | 0603, LCSC C23025, a JLC basic part (JLC API 26 September 2026: stock 1,671,357). | RVD and CVD R23 300R CELL4 SEC_VDD C23025 C14 100n SEC_VDD GND",
+     "introduced": {},
+     "lines": [
+      388,
+      389,
+      390
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       341,
+       341
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        341,
+        341
+       ],
+       "tie": [
+        "in_section"
+       ]
+      }
+     ],
+     "why": "U2's supply resistor RVD, 300 ohm (inline at 390; SLUSEG7D Table 8-1)"
+    },
+    "spans": [
+     [
+      390,
+      390
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "C23025",
+   "pins": {
+    "1": "CELL4",
+    "2": "SEC_VDD"
+   },
+   "read": "hand",
+   "ref": "R23",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "300R"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "loop",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "D-02a",
+      "D-15",
+      "O-10",
+      "O-9",
+      "RP-17",
+      "decision 40"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       392
+      ]
+     },
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       392
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "RIN (R24..R27) R%d 1k",
+     "introduced": {},
+     "lines": [
+      392
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       341,
+       341
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        341,
+        341
+       ],
+       "tie": [
+        "in_section"
+       ]
+      }
+     ],
+     "why": "U2's cell 1 input resistor RIN, 1k (inline at 392)"
+    },
+    "spans": [
+     [
+      391,
+      392
+     ],
+     [
+      392,
+      392
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "CELL1",
+    "2": "SEC_V1"
+   },
+   "read": "hand",
+   "ref": "R24",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "1k"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "loop",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "D-02a",
+      "D-15",
+      "O-10",
+      "O-9",
+      "RP-17",
+      "decision 40"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       392
+      ]
+     },
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       392
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "RIN (R24..R27) R%d 1k",
+     "introduced": {},
+     "lines": [
+      392
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       341,
+       341
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        341,
+        341
+       ],
+       "tie": [
+        "in_section"
+       ]
+      }
+     ],
+     "why": "U2's cell 2 input resistor RIN, 1k"
+    },
+    "spans": [
+     [
+      391,
+      392
+     ],
+     [
+      392,
+      392
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "CELL2",
+    "2": "SEC_V2"
+   },
+   "read": "hand",
+   "ref": "R25",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "1k"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "loop",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "D-02a",
+      "D-15",
+      "O-10",
+      "O-9",
+      "RP-17",
+      "decision 40"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       392
+      ]
+     },
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       392
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "RIN (R24..R27) R%d 1k",
+     "introduced": {},
+     "lines": [
+      392
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       341,
+       341
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        341,
+        341
+       ],
+       "tie": [
+        "in_section"
+       ]
+      }
+     ],
+     "why": "U2's cell 3 input resistor RIN, 1k"
+    },
+    "spans": [
+     [
+      391,
+      392
+     ],
+     [
+      392,
+      392
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "CELL3",
+    "2": "SEC_V3"
+   },
+   "read": "hand",
+   "ref": "R26",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "1k"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "loop",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "D-02a",
+      "D-15",
+      "O-10",
+      "O-9",
+      "RP-17",
+      "decision 40"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       392
+      ]
+     },
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       392
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "RIN (R24..R27) R%d 1k",
+     "introduced": {},
+     "lines": [
+      392
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       341,
+       341
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        341,
+        341
+       ],
+       "tie": [
+        "in_section"
+       ]
+      }
+     ],
+     "why": "U2's cell 4 input resistor RIN, 1k"
+    },
+    "spans": [
+     [
+      391,
+      392
+     ],
+     [
+      392,
+      392
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "CELL4",
+    "2": "SEC_V4"
+   },
+   "read": "hand",
+   "ref": "R27",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "1k"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "D-02a",
+      "D-15",
+      "O-10",
+      "O-9",
+      "RP-02",
+      "RP-17",
+      "decision 40"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "UNDER-VOLTAGE IN HARDWARE: DOUT turns the DISCHARGE switch off, it does not blow the fuse. An under-voltage is recoverable by charging, | and the SCF9550-30-05's heater is only rated from 10.5 V, which a block with one cell at 2.25 V may already be below. The BQ77207 datasheet's | own arrangement fo",
+      "ids": {
+       "finding": [
+        "O-9",
+        "RP-02"
+       ]
+      },
+      "kind": "other_paragraph",
+      "lines": [
+       448,
+       467
+      ]
+     },
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-02",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       467
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": [
+      448,
+      449,
+      450,
+      451,
+      452,
+      453,
+      454,
+      455,
+      456,
+      457,
+      458,
+      459,
+      460,
+      461,
+      462,
+      463,
+      464,
+      465,
+      466,
+      467
+     ]
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       341,
+       345
+      ],
+      [
+       462,
+       462
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        341,
+        345
+       ],
+       "tie": [
+        "in_section"
+       ]
+      },
+      {
+       "lines": [
+        462,
+        462
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the pull-down on U2's DOUT at Q5's gate"
+    },
+    "spans": [
+     [
+      468,
+      468
+     ]
+    ]
+   },
+   "finding_ids": [
+    "RP-02"
+   ],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "SEC_DOUT",
+    "2": "GND"
+   },
+   "read": "hand",
+   "ref": "R28",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "100k"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [
+      "D-15"
+     ],
+     "candidate_ids": [
+      "D-02a",
+      "D-15",
+      "O-10",
+      "O-9",
+      "RP-17",
+      "decision 40"
+     ],
+     "finding_ids": [],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "OPEN WIRE STILL FIRES THE FUSE, AND THAT IS KEPT ON PURPOSE (fix-up of 26 September 2026). Table 7-1 drives COUT on an open wire too: | a J_CELL tap that stays open for the 4 s tOW_DELAY (6.6), counted from the moment the 50 uA, 128 us every 128 ms detection pulses | (7.3.2) have pulled its filtered",
+      "ids": {
+       "finding": [
+        "O-9"
+       ]
+      },
+      "kind": "other_paragraph",
+      "lines": [
+       395,
+       405
+      ]
+     },
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       442
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "THE NUMBERS, CORRECTED AT THE FIX-UP OF 26 SEPTEMBER 2026 (review minor m1): the first pass left out R32, which sits in parallel with | R31 once JP1 is closed, and at 100 kohm it pulled the protector's current past the 100 uA its 6 V minimum is specified at. R32 is | 1 Mohm now (the gate's own leakage, IGSS 100 nA at most, drops 0.1 V across it; C19 is the gate's low impedance once JP1 is closed). With | JP1 closed, R31 || R32 = 48.5 kohm, and: | the gauge alone (COUT inactive, so R29 is 20 kohm to ground): 6 x (48.5 || 20 = 14.2) / (3.2 + 5.1 + 14.2) = 3.78 V at the gate; | the protector alone (the FUSE pin an input, 150 to 330 nA of internal pull-up, 6.20): 6 x 48.5 / 68.5 = 4.25 V, at 88 ",
+     "introduced": {
+      "owner_ruling": [
+       "D-15"
+      ]
+     },
+     "lines": [
+      406,
+      407,
+      408,
+      409,
+      410,
+      411,
+      412,
+      413,
+      414,
+      415,
+      416,
+      417,
+      418,
+      419,
+      420,
+      421,
+      422,
+      423,
+      424,
+      425,
+      426,
+      427,
+      428,
+      429,
+      430,
+      431,
+      432,
+      433,
+      434,
+      435,
+      436,
+      437,
+      438,
+      439,
+      440,
+      441,
+      442
+     ],
+     "other_paragraph_lines": [
+      395,
+      396,
+      397,
+      398,
+      399,
+      400,
+      401,
+      402,
+      403,
+      404,
+      405
+     ]
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       341,
+       345
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        341,
+        345
+       ],
+       "tie": [
+        "in_section"
+       ]
+      }
+     ],
+     "why": "the fuse drive: U2's COUT into the heater FET's gate through 20k (SLUSC67B 8.2.2.2.5)"
+    },
+    "spans": [
+     [
+      443,
+      443
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "C4184",
+   "pins": {
+    "1": "SEC_COUT",
+    "2": "FUSE_G"
+   },
+   "read": "hand",
+   "ref": "R29",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "20k"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [
+      "D-15"
+     ],
+     "candidate_ids": [
+      "D-02a",
+      "D-15",
+      "O-10",
+      "O-9",
+      "RP-17",
+      "decision 40"
+     ],
+     "finding_ids": [
+      "O-9"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       442
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "OPEN WIRE STILL FIRES THE FUSE, AND THAT IS KEPT ON PURPOSE (fix-up of 26 September 2026). Table 7-1 drives COUT on an open wire too: | a J_CELL tap that stays open for the 4 s tOW_DELAY (6.6), counted from the moment the 50 uA, 128 us every 128 ms detection pulses | (7.3.2) have pulled its filtered node 200 mV below its neighbour, opens F2 permanently. An open tap blinds the second level on that | cell, so the fuse is the conservative answer, and the only variants with open wire disabled (00705, 00706) fail on OV or UV above. A | contact bounce shorter than the delay resets the timer (7.3.2). The consequence for TEST-PLAN E1 and E2: a tap lead that backs out and | stays out opens the fuse, ",
+     "introduced": {
+      "finding": [
+       "O-9"
+      ],
+      "owner_ruling": [
+       "D-15"
+      ]
+     },
+     "lines": [
+      395,
+      396,
+      397,
+      398,
+      399,
+      400,
+      401,
+      402,
+      403,
+      404,
+      405,
+      406,
+      407,
+      408,
+      409,
+      410,
+      411,
+      412,
+      413,
+      414,
+      415,
+      416,
+      417,
+      418,
+      419,
+      420,
+      421,
+      422,
+      423,
+      424,
+      425,
+      426,
+      427,
+      428,
+      429,
+      430,
+      431,
+      432,
+      433,
+      434,
+      435,
+      436,
+      437,
+      438,
+      439,
+      440,
+      441,
+      442
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       341,
+       345
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        341,
+        345
+       ],
+       "tie": [
+        "names_net:FUSE",
+        "in_section"
+       ]
+      }
+     ],
+     "why": "the fuse drive: the gauge's FUSE output into the heater FET's gate through 5.1k"
+    },
+    "spans": [
+     [
+      443,
+      443
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "FUSE",
+    "2": "FUSE_G"
+   },
+   "read": "hand",
+   "ref": "R30",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "5.1k"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [
+      "D-15"
+     ],
+     "candidate_ids": [
+      "D-02a",
+      "D-15",
+      "O-10",
+      "O-9",
+      "RP-17",
+      "decision 40"
+     ],
+     "finding_ids": [],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "OPEN WIRE STILL FIRES THE FUSE, AND THAT IS KEPT ON PURPOSE (fix-up of 26 September 2026). Table 7-1 drives COUT on an open wire too: | a J_CELL tap that stays open for the 4 s tOW_DELAY (6.6), counted from the moment the 50 uA, 128 us every 128 ms detection pulses | (7.3.2) have pulled its filtered",
+      "ids": {
+       "finding": [
+        "O-9"
+       ]
+      },
+      "kind": "other_paragraph",
+      "lines": [
+       395,
+       405
+      ]
+     },
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       442
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "THE NUMBERS, CORRECTED AT THE FIX-UP OF 26 SEPTEMBER 2026 (review minor m1): the first pass left out R32, which sits in parallel with | R31 once JP1 is closed, and at 100 kohm it pulled the protector's current past the 100 uA its 6 V minimum is specified at. R32 is | 1 Mohm now (the gate's own leakage, IGSS 100 nA at most, drops 0.1 V across it; C19 is the gate's low impedance once JP1 is closed). With | JP1 closed, R31 || R32 = 48.5 kohm, and: | the gauge alone (COUT inactive, so R29 is 20 kohm to ground): 6 x (48.5 || 20 = 14.2) / (3.2 + 5.1 + 14.2) = 3.78 V at the gate; | the protector alone (the FUSE pin an input, 150 to 330 nA of internal pull-up, 6.20): 6 x 48.5 / 68.5 = 4.25 V, at 88 ",
+     "introduced": {
+      "owner_ruling": [
+       "D-15"
+      ]
+     },
+     "lines": [
+      406,
+      407,
+      408,
+      409,
+      410,
+      411,
+      412,
+      413,
+      414,
+      415,
+      416,
+      417,
+      418,
+      419,
+      420,
+      421,
+      422,
+      423,
+      424,
+      425,
+      426,
+      427,
+      428,
+      429,
+      430,
+      431,
+      432,
+      433,
+      434,
+      435,
+      436,
+      437,
+      438,
+      439,
+      440,
+      441,
+      442
+     ],
+     "other_paragraph_lines": [
+      395,
+      396,
+      397,
+      398,
+      399,
+      400,
+      401,
+      402,
+      403,
+      404,
+      405
+     ]
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       341,
+       345
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        341,
+        345
+       ],
+       "tie": [
+        "in_section"
+       ]
+      }
+     ],
+     "why": "the fuse drive: the gate node's 51k to ground"
+    },
+    "spans": [
+     [
+      443,
+      443
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "C23196",
+   "pins": {
+    "1": "FUSE_G",
+    "2": "GND"
+   },
+   "read": "hand",
+   "ref": "R31",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "51k"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "D-02a",
+      "D-15",
+      "O-10",
+      "O-9",
+      "RP-17",
+      "decision 40"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "OPEN WIRE STILL FIRES THE FUSE, AND THAT IS KEPT ON PURPOSE (fix-up of 26 September 2026). Table 7-1 drives COUT on an open wire too: | a J_CELL tap that stays open for the 4 s tOW_DELAY (6.6), counted from the moment the 50 uA, 128 us every 128 ms detection pulses | (7.3.2) have pulled its filtered",
+      "ids": {
+       "finding": [
+        "O-9"
+       ],
+       "owner_ruling": [
+        "D-15"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       395,
+       442
+      ]
+     },
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       442
+      ]
+     },
+     {
+      "excerpt": "THE NUMBERS, CORRECTED AT THE FIX-UP OF 26 SEPTEMBER 2026 (review minor m1): the first pass left out R32, which sits in parallel with | R31 once JP1 is closed, and at 100 kohm it pulled the protector's current past the 100 uA its 6 V minimum is specified at. R32 is | JP1 closed, R31 || R32 = 48.5 ko",
+      "ids": {
+       "owner_ruling": [
+        "D-15"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       406,
+       407,
+       409,
+       421,
+       426,
+       427,
+       437,
+       442
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       341,
+       345
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        341,
+        345
+       ],
+       "tie": [
+        "in_section"
+       ]
+      }
+     ],
+     "why": "holds the heater FET's gate low while JP1 is open"
+    },
+    "spans": [
+     [
+      445,
+      445
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "FUSE_GQ",
+    "2": "GND"
+   },
+   "read": "hand",
+   "ref": "R32",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "1M"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "D-02a",
+      "D-15",
+      "O-10",
+      "O-9",
+      "RP-17",
+      "decision 40"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       387
+      ]
+     },
+     {
+      "excerpt": "(a solder bridge at R33, or pin 12 to the exposed pad) would read as over-temperature and fire the fuse once armed; JP1 is closed only | FET action and its own permanent failures, set by the golden image, O-10) and the PTC element beside the FETs. R33 is MAP's \"10k\"",
+      "ids": {
+       "finding": [
+        "O-10"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       381,
+       383
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "TS held at the 25 C reading R33 10k TS_SEC GND",
+     "introduced": {},
+     "lines": [
+      387
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       363,
+       383
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        363,
+        383
+       ],
+       "tie": [
+        "names_ref"
+       ]
+      }
+     ],
+     "why": "at 1f614233 U2's TS pin is held at the 25 C reading by a fixed 10k, so the second level has no temperature function; taken at the round-4 fix-up for the +71 C storage margin of D-02a. The review of 26 September 2026 (section 2) says this needs technical justification, and the battery stream's candidate restores the over-temperature trip"
+    },
+    "spans": [
+     [
+      387,
+      387
+     ]
+    ]
+   },
+   "finding_ids": [
+    "RP-17"
+   ],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "TS_SEC",
+    "2": "GND"
+   },
+   "read": "hand",
+   "ref": "R33",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "10k"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [
+      "D-02a",
+      "D-15",
+      "decision 40"
+     ],
+     "candidate_ids": [
+      "D-02a",
+      "D-15",
+      "S-05",
+      "decision 40"
+     ],
+     "finding_ids": [],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "S-05 (round 4, 26 September 2026): PRES leaves the board on the SMBus lead (J_SMB pin 4), so it takes TI's series resistor: \"An | integrated ESD protection on the PRES device pin reduces the external protection requirement to just R29 for an 8-kV ESD contact | rating\" (SLUSC67B 8.2.2.2.3, Figures 29",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "S-05"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       222,
+       240
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "THE PTC INPUT (decision 40 / D-15 floor, 26 September 2026). SLUSC67B 6.23: the gauge biases PTC with 200 to 350 nA and trips when | PTCEN - PTC exceeds 200 to 890 mV, which is an element resistance of 1.2 to 3.95 Mohm. TI's bq40z50 EVM guide (SLUUAV7C 4.5) says of | the same interface that the element \"must have a 10-kOhm typical resistance over the normal operating temperature range and the | resistance must be greater than 1.2 MOhm at the PTC trip temperature\" and names a Murata PRF18 part. Murata's PRF series data sheet | (DM-SA16-E056 Rev.1, 2016, page 4) lists the 10 kohm types by the temperature at which they REACH 4.7 Mohm, which is above the gauge's | 3.95 Mohm maximum, so the trip ",
+     "introduced": {
+      "decision": [
+       "decision 40"
+      ],
+      "owner_ruling": [
+       "D-02a",
+       "D-15"
+      ]
+     },
+     "lines": [
+      226,
+      227,
+      228,
+      229,
+      230,
+      231,
+      232,
+      233,
+      234,
+      235,
+      236,
+      237,
+      238,
+      239,
+      240
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       226,
+       226
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        226,
+        226
+       ],
+       "tie": [
+        "names_net:PTC",
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the PRF15BB103 PTC element beside the protection FETs, the PTC input of the D-15 floor"
+    },
+    "spans": [
+     [
+      241,
+      241
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "Resistor_SMD:R_0402_1005Metric",
+   "kind": "ADDED",
+   "lcsc": "C443668",
+   "pins": {
+    "1": "PTC",
+    "2": "BAT_F"
+   },
+   "read": "hand",
+   "ref": "RT1",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "PRF15BB103RB6RC chip PTC 10k, 4.7M at 130 C (Murata): the BQ4050 PTC element beside Q1 and Q2"
+  },
+  {
+   "authority_ids": [
+    "D-15"
+   ],
+   "evidence": {
+    "anchor": "loop",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "A07",
+      "O-5",
+      "O-9",
+      "S-05"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "S-05 (round 4, 26 September 2026, adjudication A07): THE LEAD'S GROUND RAN PARALLEL TO THE SHUNT. Pin 3 was the cell-side GND, | upstream of R10, so the SMBus lead's ground wire (26 AWG, 350 mm, about 47 mohm) sat in parallel with the 2 mohm shunt and the | 12 AWG return and took 5 to 8 percent of t",
+      "ids": {
+       "adjudication": [
+        "A07"
+       ],
+       "finding": [
+        "O-5",
+        "S-05"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       472,
+       482
+      ]
+     },
+     {
+      "excerpt": "after TP11 has been read low with the cells on (O-9), which finds it. Over-temperature stays with the gauge's four NTCs (recoverable | allow-listed instead; closing it is verified by continuity from TP11 (FUSE_G) to TP14 (FUSE_GQ), which the fix-up adds. | on TP11, cells connected. The fault the che",
+      "ids": {
+       "finding": [
+        "O-9"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       382,
+       423,
+       425,
+       438,
+       482
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "TP11 to TP13 (round 4): the fuse gate, the second level's UV output and the protected cell node, for the commissioning checks; TP14 (fix-up, 26 September 2026): the FET side of JP1, so the arming is verified by continuity TP11 to TP14, COM (black) on TP14 (see JP1) BTP_INT FUSE CHG_R DSG_R SW FUSED PACK_P PACK_N SMBC SMBD FUSE_G SEC_DOUT SCP_OUT FUSE_GQ TP%d Connector TestPoint TP 1",
+     "introduced": {},
+     "lines": [
+      482
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       382,
+       382
+      ],
+      [
+       421,
+       423
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        382,
+        382
+       ],
+       "tie": [
+        "names_ref"
+       ]
+      },
+      {
+       "lines": [
+        421,
+        423
+       ],
+       "tie": [
+        "names_ref",
+        "names_net:FUSE_G"
+       ]
+      }
+     ],
+     "why": "a test point on the fuse gate FUSE_G, read low before JP1 is closed"
+    },
+    "spans": [
+     [
+      482,
+      482
+     ]
+    ]
+   },
+   "finding_ids": [
+    "O-9"
+   ],
+   "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "FUSE_G"
+   },
+   "read": "hand",
+   "ref": "TP11",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "FUSE_G"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "loop",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "A07",
+      "O-5",
+      "S-05"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "S-05 (round 4, 26 September 2026, adjudication A07): THE LEAD'S GROUND RAN PARALLEL TO THE SHUNT. Pin 3 was the cell-side GND, | upstream of R10, so the SMBus lead's ground wire (26 AWG, 350 mm, about 47 mohm) sat in parallel with the 2 mohm shunt and the | 12 AWG return and took 5 to 8 percent of t",
+      "ids": {
+       "adjudication": [
+        "A07"
+       ],
+       "finding": [
+        "O-5",
+        "S-05"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       472,
+       482
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "TP11 to TP13 (round 4): the fuse gate, the second level's UV output and the protected cell node, for the commissioning checks; TP14 (fix-up, 26 September 2026): the FET side of JP1, so the arming is verified by continuity TP11 to TP14, COM (black) on TP14 (see JP1) BTP_INT FUSE CHG_R DSG_R SW FUSED PACK_P PACK_N SMBC SMBD FUSE_G SEC_DOUT SCP_OUT FUSE_GQ TP%d Connector TestPoint TP 1",
+     "introduced": {},
+     "lines": [
+      482
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       482,
+       482
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "round-4 board P record, section 3: 'TP11 FUSE_G, TP12 SEC_DOUT, TP13 SCP_OUT | D-15 commissioning (O-9)'; no ID beside TP12 in the generator",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        482,
+        482
+       ],
+       "tie": [
+        "names_ref",
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "a test point on U2's under-voltage output SEC_DOUT for the commissioning checks (inline at 482)"
+    },
+    "spans": [
+     [
+      482,
+      482
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "SEC_DOUT"
+   },
+   "read": "hand",
+   "ref": "TP12",
+   "rule_ids": [],
+   "status": "NO_ID_OF_ANY_KIND",
+   "value": "SEC_DOUT"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "loop",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "A07",
+      "O-5",
+      "S-05"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "S-05 (round 4, 26 September 2026, adjudication A07): THE LEAD'S GROUND RAN PARALLEL TO THE SHUNT. Pin 3 was the cell-side GND, | upstream of R10, so the SMBus lead's ground wire (26 AWG, 350 mm, about 47 mohm) sat in parallel with the 2 mohm shunt and the | 12 AWG return and took 5 to 8 percent of t",
+      "ids": {
+       "adjudication": [
+        "A07"
+       ],
+       "finding": [
+        "O-5",
+        "S-05"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       472,
+       482
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "TP11 to TP13 (round 4): the fuse gate, the second level's UV output and the protected cell node, for the commissioning checks; TP14 (fix-up, 26 September 2026): the FET side of JP1, so the arming is verified by continuity TP11 to TP14, COM (black) on TP14 (see JP1) BTP_INT FUSE CHG_R DSG_R SW FUSED PACK_P PACK_N SMBC SMBD FUSE_G SEC_DOUT SCP_OUT FUSE_GQ TP%d Connector TestPoint TP 1",
+     "introduced": {},
+     "lines": [
+      482
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       482,
+       482
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "round-4 board P record, section 3: 'TP11 FUSE_G, TP12 SEC_DOUT, TP13 SCP_OUT | D-15 commissioning (O-9)'; no ID beside TP13 in the generator",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        482,
+        482
+       ],
+       "tie": [
+        "names_ref",
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "a test point on the protected cell node SCP_OUT for the commissioning checks (inline at 482)"
+    },
+    "spans": [
+     [
+      482,
+      482
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "SCP_OUT"
+   },
+   "read": "hand",
+   "ref": "TP13",
+   "rule_ids": [],
+   "status": "NO_ID_OF_ANY_KIND",
+   "value": "SCP_OUT"
+  },
+  {
+   "authority_ids": [
+    "D-15"
+   ],
+   "evidence": {
+    "anchor": "loop",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "A07",
+      "O-5",
+      "S-05"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "S-05 (round 4, 26 September 2026, adjudication A07): THE LEAD'S GROUND RAN PARALLEL TO THE SHUNT. Pin 3 was the cell-side GND, | upstream of R10, so the SMBus lead's ground wire (26 AWG, 350 mm, about 47 mohm) sat in parallel with the 2 mohm shunt and the | 12 AWG return and took 5 to 8 percent of t",
+      "ids": {
+       "adjudication": [
+        "A07"
+       ],
+       "finding": [
+        "O-5",
+        "S-05"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       472,
+       482
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "TP11 to TP13 (round 4): the fuse gate, the second level's UV output and the protected cell node, for the commissioning checks; TP14 (fix-up, 26 September 2026): the FET side of JP1, so the arming is verified by continuity TP11 to TP14, COM (black) on TP14 (see JP1) BTP_INT FUSE CHG_R DSG_R SW FUSED PACK_P PACK_N SMBC SMBD FUSE_G SEC_DOUT SCP_OUT FUSE_GQ TP%d Connector TestPoint TP 1",
+     "introduced": {},
+     "lines": [
+      482
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       421,
+       423
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        421,
+        423
+       ],
+       "tie": [
+        "names_ref",
+        "names_net:FUSE_GQ"
+       ]
+      }
+     ],
+     "why": "a test point on the FET side of JP1, so the arming is verified by continuity TP11 to TP14"
+    },
+    "spans": [
+     [
+      482,
+      482
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "FUSE_GQ"
+   },
+   "read": "hand",
+   "ref": "TP14",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "FUSE_GQ"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [
+      "D-15",
+      "decision 40"
+     ],
+     "candidate_ids": [
+      "D-15",
+      "W6-F2",
+      "decision 28",
+      "decision 40"
+     ],
+     "finding_ids": [
+      "W6-F2"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "U1 is on its own RSM0032A land (W6-F2, see the footprint table). PTC and PTCEN are no longer tied to VSS: decision 40 / D-15 makes the | PTC input part of the session floor, so PTCEN goes to BAT and the PTC element RT1 sits between PTC and BAT (SLUSC67B pin table: | \"PTCEN ... Connect to BAT\"; Figur",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "W6-F2"
+       ],
+       "owner_ruling": [
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       160,
+       162
+      ]
+     },
+     {
+      "excerpt": "pad, so every board P route and DRC result around U1 was taken on a land the part does not fit (including decision 28's P8 arm). | U1 is on its own RSM0032A land (W6-F2, see the footprint table). PTC and PTCEN are no longer tied to VSS: decision 40 / D-15 makes the",
+      "ids": {
+       "decision": [
+        "decision 28",
+        "decision 40"
+       ],
+       "finding": [
+        "W6-F2"
+       ],
+       "owner_ruling": [
+        "D-15"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       112,
+       160
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "U1 is on its own RSM0032A land (W6-F2, see the footprint table). PTC and PTCEN are no longer tied to VSS: decision 40 / D-15 makes the | PTC input part of the session floor, so PTCEN goes to BAT and the PTC element RT1 sits between PTC and BAT (SLUSC67B pin table: | \"PTCEN ... Connect to BAT\"; Figure 21, RT1 and C12). 26 September 2026.",
+     "introduced": {
+      "decision": [
+       "decision 40"
+      ],
+      "finding": [
+       "W6-F2"
+      ],
+      "owner_ruling": [
+       "D-15"
+      ]
+     },
+     "lines": [
+      160,
+      161,
+      162
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       160,
+       160
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        160,
+        160
+       ],
+       "tie": [
+        "names_ref",
+        "names_net:PTC",
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the gauge sits on TI's true RSM0032A 4 x 4 mm land (W6-F2), and its PTC and PTCEN pins leave VSS for the PTC input (D-15)"
+    },
+    "spans": [
+     [
+      163,
+      165
+     ]
+    ]
+   },
+   "fields": {
+    "footprint": [
+     "Package_DFN_QFN:QFN-32-1EP_5x5mm_P0.5mm_EP3.1x3.1mm",
+     "meshsat:Texas_RSM0032A_VQFN-32-1EP_4x4mm_P0.4mm_EP1.4x1.4mm"
+    ],
+    "value": [
+     "BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B)",
+     "BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm"
+    ]
+   },
+   "finding_ids": [
+    "W6-F2"
+   ],
+   "footprint": "meshsat:Texas_RSM0032A_VQFN-32-1EP_4x4mm_P0.4mm_EP1.4x1.4mm",
+   "kind": "CHANGED",
+   "lcsc": "C157570",
+   "pins_moved": {
+    "23": [
+     "GND",
+     "PTC"
+    ],
+    "24": [
+     "GND",
+     "BAT_F"
+    ]
+   },
+   "read": "hand",
+   "ref": "U1",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm"
+  },
+  {
+   "authority_ids": [
+    "D-15",
+    "decision 40"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [
+      "D-15",
+      "decision 40"
+     ],
+     "candidate_ids": [
+      "D-02a",
+      "D-15",
+      "O-10",
+      "O-9",
+      "RP-17",
+      "decision 40"
+     ],
+     "finding_ids": [],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "THE TS PIN SEES A FIXED 10 KOHM TO VSS, SO THE SECOND LEVEL HAS NO TEMPERATURE FUNCTION (fix-up of 26 September 2026, the | reviewer's blocking finding; taken by the session under the owner's standing rule of 26 September 2026, drafts/r4-decisions.md RP-17). | The first pass put its own 103AT-2 on T",
+      "ids": {
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a"
+       ]
+      },
+      "kind": "other_paragraph",
+      "lines": [
+       363,
+       384
+      ]
+     },
+     {
+      "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at co",
+      "ids": {
+       "decision": [
+        "decision 40"
+       ],
+       "finding": [
+        "O-10",
+        "O-9",
+        "RP-17"
+       ],
+       "owner_ruling": [
+        "D-02a",
+        "D-15"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       341,
+       384
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "--- the second-level protector, decision 40 / D-15 (26 September 2026) | THE OWNER'S RULING (D-15, 26 September 2026): \"use a 4S secondary protector that also covers under-voltage, if one can be sourced near | the OV-only part's cost; otherwise accept firmware UV with a data-flash verification at commissioning. The OV secondary protector, | chemical fuse, BQ4050 FUSE output and PTC input are the session floor.\" One was found. TI BQ7720700DSSR, the BQ77207 family (SLUSEG7D | Rev. D, May 2026): 3S to 7S, cell over-voltage 4.325 V +-20 mV from 0 to 60 C with 100 mV hysteresis and a 1 s delay, cell under-voltage | 2.25 V +-50 mV with a 1 s delay, open-wire detection, over-temperature 70 C on an ",
+     "introduced": {
+      "decision": [
+       "decision 40"
+      ],
+      "owner_ruling": [
+       "D-15"
+      ]
+     },
+     "lines": [
+      341,
+      342,
+      343,
+      344,
+      345,
+      346,
+      347,
+      348,
+      349,
+      350,
+      351,
+      352,
+      353,
+      354,
+      355,
+      356,
+      357,
+      358,
+      359,
+      360,
+      361,
+      362
+     ],
+     "other_paragraph_lines": [
+      363,
+      364,
+      365,
+      366,
+      367,
+      368,
+      369,
+      370,
+      371,
+      372,
+      373,
+      374,
+      375,
+      376,
+      377,
+      378,
+      379,
+      380,
+      381,
+      382,
+      383,
+      384
+     ]
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       341,
+       341
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        341,
+        341
+       ],
+       "tie": [
+        "at_anchor",
+        "in_section"
+       ]
+      }
+     ],
+     "why": "the BQ7720700 second-level protector (cell over-voltage, under-voltage, open wire), the owner's D-15 floor"
+    },
+    "spans": [
+     [
+      385,
+      386
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "Package_SON:WSON-12-1EP_3x2mm_P0.5mm_EP1x2.65",
+   "kind": "ADDED",
+   "lcsc": "C3681715",
+   "pins": {
+    "1": "SEC_VDD",
+    "10": "SEC_COUT",
+    "11": "SEC_DOUT",
+    "12": "TS_SEC",
+    "13": "GND",
+    "2": "SEC_V4",
+    "3": "SEC_V4",
+    "4": "SEC_V4",
+    "5": "SEC_V4",
+    "6": "SEC_V3",
+    "7": "SEC_V2",
+    "8": "SEC_V1",
+    "9": "GND"
+   },
+   "read": "hand",
+   "ref": "U2",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "BQ7720700DSSR: second-level cell OV 4.325 V / UV 2.25 V / open wire, TS on a fixed 10k, 3S-7S (SLUSEG7D)"
+  }
+ ],
+ "generator_lines_added": 346,
+ "prev": "82dd1e4dc44efabeee1164a995cda4e866610f3d",
+ "rev": "1f614233998c3087a53abfa977be134465ce9f47",
+ "summary": {
+  "added": 30,
+  "changed": 9,
+  "components": [
+   56,
+   82
+  ],
+  "content_hash": [
+   "223025beeec21b62",
+   "9bf3a3a46b5d95a6"
+  ],
+  "nets": [
+   39,
+   54
+  ],
+  "nets_only_prev": [],
+  "nets_only_rev": [
+   "/FUSE_G",
+   "/FUSE_GQ",
+   "/PACK_MID",
+   "/PRES_J",
+   "/PTC",
+   "/SCP_HTR",
+   "/SCP_OUT",
+   "/SEC_COUT",
+   "/SEC_DOUT",
+   "/SEC_V1",
+   "/SEC_V2",
+   "/SEC_V3",
+   "/SEC_V4",
+   "/SEC_VDD",
+   "/TS_SEC"
+  ],
+  "nets_renamed": [],
+  "removed": 4
+ }
+}

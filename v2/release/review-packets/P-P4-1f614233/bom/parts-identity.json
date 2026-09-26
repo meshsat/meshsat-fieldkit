@@ -1,0 +1,1018 @@
+[
+ {
+  "footprint": "Capacitor_SMD:C_0805_2012Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "C1"
+  ],
+  "sources_entries": [],
+  "value": "2.2u"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "C11"
+  ],
+  "sources_entries": [],
+  "value": "100n 50V"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_1206_3216Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "C12"
+  ],
+  "sources_entries": [],
+  "value": "100n 50V"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 15,
+  "refs": [
+   "C2",
+   "C3",
+   "C4",
+   "C5",
+   "C6",
+   "C7",
+   "C8",
+   "C9",
+   "C13",
+   "C14",
+   "C15",
+   "C16",
+   "C17",
+   "C18",
+   "C19"
+  ],
+  "sources_entries": [],
+  "value": "100n"
+ },
+ {
+  "footprint": "Diode_SMD:D_SMB",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "MDD(Microdiode Semiconductor)",
+   "model": "SMBJ20A",
+   "pkg": "DO-214AA(SMB)",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C364296",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "D1"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "MDD (Microdiode) SMBJ5.0(C)A thru SMBJ440(C)A",
+      "matches_fitted": "yes for C113974 and C364296: 'Unidirectional' column SMBJ5.0A (VRWM 5.0 V, VBR 6.40 to 7.00 V, VC 9.2 V) and SMBJ20A (VRWM 20.0 V, VBR 22.20 to 24.50 V, VC 32.4 V), p.2",
+      "path": "v2/vendor/power/mdd-smbj-series-tvs.pdf",
+      "revision": "Rev:2025A7",
+      "sha256": "95385273b5009dc9ec2f2a432e07e215f71626b825bd53a9f5525f4186566d3b",
+      "url": "https://datasheet.lcsc.com/datasheet/pdf/2fdb55289569ebfc0bc21eab3853afe6.pdf?productCode=C113974 (LCSC's copy; the same bytes for C364296)"
+     }
+    ],
+    "fitted_mpn": null,
+    "id": "tvs-surge-clamps",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C364296",
+    "on_main": null,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "SMBJ20A (pack terminal clamp, unidirectional: cathode on PACK_P)"
+ },
+ {
+  "footprint": "Diode_SMD:D_SOD-323",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C19224",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "D2"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "Nexperia PESD5V0S1BA, Bidirectional ESD protection diode",
+      "matches_fitted": "yes: 'Bidirectional ESD protection of one line', SOD323; VRWM 5 V max; VBR 5.5 to 9.5 V at 1 mA; IRM 5 nA typ, 100 nA max at 5 V, 25 C; Cd 35 pF typ, 45 pF max; VCL 14 V max at IPPM 12 A; IEC 61000-4-2 contact 30 kV; Tamb -55 to 150 C",
+      "path": "v2/vendor/nexperia/nexperia-pesd5v0s1ba.pdf",
+      "revision": "PESD5V0S1BA v.6, 26 April 2024 (revision history, supersedes v.5 of 23 August 2018)",
+      "sha256": "6546e415b8885ea3790c91629034c6b4e5c6961d5fde734e55dfa479dd8dc49a",
+      "url": "https://assets.nexperia.com/documents/data-sheet/PESD5V0S1BA.pdf"
+     }
+    ],
+    "fitted_mpn": "PESD5V0S1BA,115",
+    "id": "esd-headset-clamps",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C19224",
+    "on_main": null,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "PESD5V0S1BA (SMBC ESD clamp to the pack side of the shunt)"
+ },
+ {
+  "footprint": "Diode_SMD:D_SOD-323",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C19224",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "D3"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "Nexperia PESD5V0S1BA, Bidirectional ESD protection diode",
+      "matches_fitted": "yes: 'Bidirectional ESD protection of one line', SOD323; VRWM 5 V max; VBR 5.5 to 9.5 V at 1 mA; IRM 5 nA typ, 100 nA max at 5 V, 25 C; Cd 35 pF typ, 45 pF max; VCL 14 V max at IPPM 12 A; IEC 61000-4-2 contact 30 kV; Tamb -55 to 150 C",
+      "path": "v2/vendor/nexperia/nexperia-pesd5v0s1ba.pdf",
+      "revision": "PESD5V0S1BA v.6, 26 April 2024 (revision history, supersedes v.5 of 23 August 2018)",
+      "sha256": "6546e415b8885ea3790c91629034c6b4e5c6961d5fde734e55dfa479dd8dc49a",
+      "url": "https://assets.nexperia.com/documents/data-sheet/PESD5V0S1BA.pdf"
+     }
+    ],
+    "fitted_mpn": "PESD5V0S1BA,115",
+    "id": "esd-headset-clamps",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C19224",
+    "on_main": null,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "PESD5V0S1BA (SMBD ESD clamp to the pack side of the shunt)"
+ },
+ {
+  "footprint": "Fuse:Fuseholder_Blade_Mini_Keystone_3568",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "F1"
+  ],
+  "sources_entries": [],
+  "value": "25 A mini blade (Keystone 3568 holder): the pack's fuse"
+ },
+ {
+  "footprint": "meshsat:Eaton_SCF9550_9.5x5.0mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C3670061",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "F2"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "Eaton Technical Data ELX1135 (publication BU-ELX21143)",
+      "matches_fitted": "yes: product specifications page 2, SCF9550-30-05: 30 A, 62 Vdc rating, heater DCR 4.8 to 8.0 ohm, operating voltage 10.5 to 23.5 V, breaking capacity 80 A, fuse DCR 1.0 to 2.5 mohm, 4-5 cells in series, marking 30A4K; page 4 operating -20 to +60 C, storage -10 to +40 C < 90 % RH, storage duration 1 year, high temperature +105 C at 1000 hours",
+      "path": "v2/vendor/battery/eaton-scf9550-elx1135.pdf",
+      "revision": "effective December 2021 (page 1), January 2022 (pages 2 to 5)",
+      "sha256": "3ecc2424acfa1753c2aec0b62d5706d4f25b7a08e731795c0d84d59938a3158e",
+      "url": "https://www.eaton.com/content/dam/eaton/products/electronic-components/resources/data-sheet/eaton-scf9550-self-control-fuse-data-sheet-elx1135-en.pdf"
+     }
+    ],
+    "fitted_mpn": "SCF9550-30-05",
+    "id": "pack-chemical-fuse",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C3670061",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "SCF9550-30-05 self-control fuse (Eaton, 30 A, 4-5 cells): 1 and 2 the fuse, 3 the heater"
+ },
+ {
+  "footprint": "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "JP1"
+  ],
+  "sources_entries": [],
+  "value": "fuse arming jumper: open as built, closed at commissioning"
+ },
+ {
+  "footprint": "Connector_JST:JST_XH_B5B-XH-A_1x05_P2.50mm_Vertical",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "J_CELL"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "JST XH connector catalogue",
+      "matches_fitted": "yes: current rating 3 A AC/DC (AWG 22), -25 to +85 C; the header table lists B2B-XH-A and B4B-XH-A",
+      "path": "v2/vendor/connectors/jst-xh-catalogue.pdf",
+      "revision": "not printed; the catalogue as served on 2026-09-26",
+      "sha256": "9426b136902f11900825077535e5c65032b7fbc31ffb59c5e9e1f463bb20fb90",
+      "url": "https://www.jst-mfg.com/product/pdf/eng/eXH.pdf"
+     }
+    ],
+    "fitted_mpn": "B4B-XH-A (E J_SMB), B2B-XH-A (E J_TAMP)",
+    "id": "pack-and-lid-leads-jst-xh",
+    "identity": "MATCH",
+    "joined_by": "where gen_sch_p.py:159 at 1f614233 (names J_CELL)",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "cell tap sense wires from the 4S block (JST-XH 1x5): B- C1 C2 C3 B+; the current leaves through W_BP and W_BN"
+ },
+ {
+  "footprint": "Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "J_SMB"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "JST XH connector catalogue",
+      "matches_fitted": "yes: current rating 3 A AC/DC (AWG 22), -25 to +85 C; the header table lists B2B-XH-A and B4B-XH-A",
+      "path": "v2/vendor/connectors/jst-xh-catalogue.pdf",
+      "revision": "not printed; the catalogue as served on 2026-09-26",
+      "sha256": "9426b136902f11900825077535e5c65032b7fbc31ffb59c5e9e1f463bb20fb90",
+      "url": "https://www.jst-mfg.com/product/pdf/eng/eXH.pdf"
+     }
+    ],
+    "fitted_mpn": "B4B-XH-A (E J_SMB), B2B-XH-A (E J_TAMP)",
+    "id": "pack-and-lid-leads-jst-xh",
+    "identity": "MATCH",
+    "joined_by": "where gen_sch_p.py:481 at 1f614233 (names J_SMB)",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "SMBus lead to E6 J_SMB (JST-XH 1x4): SMBC SMBD GND(pack side of the shunt) PRES"
+ },
+ {
+  "footprint": "Connector_JST:JST_PH_B5B-PH-K_1x05_P2.00mm_Vertical",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "JST",
+   "model": "B5B-PH-K-S(LF)(SN)",
+   "pkg": "Plugin,P=2mm",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C157993",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "J_TS"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "JST PH connector catalogue",
+      "matches_fitted": "yes: -40 to +105 C including temperature rise; the header table lists B5B-PH-K-S (and B2B-PH-K-S)",
+      "path": "v2/vendor/connectors/jst-ph-catalogue.pdf",
+      "revision": "not printed; PDF of 27 January 2026 per the round 4 board P author",
+      "sha256": "447624f4f2f7d37c58c1eaa7ee314ad757fe7aff48f6186491ef6f69fbc00b96",
+      "url": "https://www.jst-mfg.com/product/pdf/eng/ePH.pdf"
+     }
+    ],
+    "fitted_mpn": "B5B-PH-K-S(LF)(SN)",
+    "id": "jst-ph-headers",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C157993",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "JST-PH 1x5 socket for the four cell thermistors (Semitec 103AT-2, one per series group of the 4S3P block): TS1 TS2 TS3 TS4 VSS"
+ },
+ {
+  "footprint": "Package_SO:PowerPAK_SO-8_Single",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Texas Instruments",
+   "model": "CSD17570Q5B",
+   "pkg": "SON-8(5x6)",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C529279",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "Q1"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "TI SLPS471",
+      "matches_fitted": "yes: 30 V VDS, 0.56 mOhm typical at VGS 10 V (p.1)",
+      "path": "v2/vendor/battery/ti-csd17570q5b.pdf",
+      "revision": "Rev. D, February 2014, revised May 2017",
+      "sha256": "596555c33dce1fcac6de3b6ecc3eeb443f202382b3e2091fd6e1c27d129f2436",
+      "url": "TBD"
+     }
+    ],
+    "fitted_mpn": "CSD17570Q5B",
+    "id": "pack-fets",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C529279",
+    "on_main": null,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "CSD17570Q5B 30 V N-FET, charge switch"
+ },
+ {
+  "footprint": "Package_SO:PowerPAK_SO-8_Single",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Texas Instruments",
+   "model": "CSD17570Q5B",
+   "pkg": "SON-8(5x6)",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C529279",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "Q2"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "TI SLPS471",
+      "matches_fitted": "yes: 30 V VDS, 0.56 mOhm typical at VGS 10 V (p.1)",
+      "path": "v2/vendor/battery/ti-csd17570q5b.pdf",
+      "revision": "Rev. D, February 2014, revised May 2017",
+      "sha256": "596555c33dce1fcac6de3b6ecc3eeb443f202382b3e2091fd6e1c27d129f2436",
+      "url": "TBD"
+     }
+    ],
+    "fitted_mpn": "CSD17570Q5B",
+    "id": "pack-fets",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C529279",
+    "on_main": null,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "CSD17570Q5B 30 V N-FET, discharge switch"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C20917",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "Q3"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "Alpha and Omega Semiconductor AO3400A",
+      "matches_fitted": "yes: VDS 30 V, ID 5.7 A at VGS 10 V, RDS(on) under 26.5 / 32 / 48 mohm at VGS 10 / 4.5 / 2.5 V (p.1)",
+      "path": "v2/vendor/power/aos-ao3400a-n-mosfet.pdf",
+      "revision": "Rev 3.1, July 2023",
+      "sha256": "9c60d0b6c1ddc7609a4b788a91181468d8ffe6c3e9ba425c3d8ffc5ba88c5033",
+      "url": "https://www.aosmd.com/res/datasheets/AO3400A.pdf"
+     }
+    ],
+    "fitted_mpn": "AO3400A",
+    "id": "fuse-heater-fet",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C20917",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "AO3400A 30 V N-FET, chemical fuse heater switch"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Jiangsu Changjing Electronics Technology Co., Ltd.",
+   "model": "2N7002",
+   "pkg": "SOT-23",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C8545",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "Q5"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "JSCJ 2N7002 (SOT-23)",
+      "matches_fitted": "yes: the sheet LCSC attaches to C8545",
+      "path": "v2/vendor/power/jscj-2n7002-c8545.pdf",
+      "revision": "J, Sep 2016 (as printed)",
+      "sha256": "7941fb423af7c6c6c8979063a7e8819bb19217ece275efcce18948950a41d9f6",
+      "url": "https://datasheet.lcsc.com/datasheet/pdf/a141b8bd86b14475955ac8c4d3eea0a8.pdf?productCode=C8545 (LCSC's copy of the maker's sheet, the document attached to the fitted code; the same bytes are served at the wmsc.lcsc.com address the round 4 board B author used)"
+     }
+    ],
+    "fitted_mpn": "2N7002 (Jiangsu Changjiang Electronics Technology, JSCJ)",
+    "id": "logic-nfet-2n7002",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C8545",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "2N7002 60 V N-FET: the second level's under-voltage holds the discharge FET off"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 9,
+  "refs": [
+   "R1",
+   "R2",
+   "R3",
+   "R4",
+   "R5",
+   "R8",
+   "R9",
+   "R20",
+   "R21"
+  ],
+  "sources_entries": [],
+  "value": "100R"
+ },
+ {
+  "footprint": "Resistor_SMD:R_2512_6332Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "R10"
+  ],
+  "sources_entries": [],
+  "value": "2m 2512 2W (sense)"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 3,
+  "refs": [
+   "R14",
+   "R15",
+   "R33"
+  ],
+  "sources_entries": [],
+  "value": "10k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 3,
+  "refs": [
+   "R16",
+   "R18",
+   "R30"
+  ],
+  "sources_entries": [],
+  "value": "5.1k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 2,
+  "refs": [
+   "R17",
+   "R19"
+  ],
+  "sources_entries": [],
+  "value": "10M"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 7,
+  "refs": [
+   "R6",
+   "R7",
+   "R22",
+   "R24",
+   "R25",
+   "R26",
+   "R27"
+  ],
+  "sources_entries": [],
+  "value": "1k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "UNI-ROYAL(Uniroyal Elec)",
+   "model": "0603WAF3000T5E",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C23025",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "R23"
+  ],
+  "sources_entries": [],
+  "value": "300R"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "R28"
+  ],
+  "sources_entries": [],
+  "value": "100k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "UNI-ROYAL(Uniroyal Elec)",
+   "model": "0603WAF2002T5E",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C4184",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "R29"
+  ],
+  "sources_entries": [],
+  "value": "20k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C23196",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "R31"
+  ],
+  "sources_entries": [],
+  "value": "51k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "R32"
+  ],
+  "sources_entries": [],
+  "value": "1M"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0402_1005Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C443668",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "RT1"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "Murata PRF series data sheet, Doc. No. DM-SA16-E056",
+      "matches_fitted": "yes: page 4 row PRF15BB103RB6RC, 10k +-50 % at 25 C, sensing temperature above 110 C at 100 kohm, 130 +-3 C at 4.7 Mohm, 32 VDC maximum, operation -20 to +140 C",
+      "path": "v2/vendor/battery/murata-prf-series.pdf",
+      "revision": "Rev.1 201608",
+      "sha256": "a29cd6200c656636fd69bf525d365cfa50432a2fe696ee8ee9e172a4b7cba27a",
+      "url": "https://www.murata.com/~/media/webrenewal/products/thermistor/ptc/prf/datasheet_prfseries.ashx?la=en-us"
+     },
+     {
+      "doc_id": "TI SLUUAV7, bq40z50EVM user's guide",
+      "matches_fitted": "requirement, not the part: section 4.5 'the thermistor must have a 10-kOhm typical resistance over the normal operating temperature range and the resistance must be greater than 1.2 MOhm at the PTC trip temperature' (names Murata PRF18BA103QB1RB); the BQ4050 is a sibling gauge of the bq40z50, so applying this section to it is INFERRED",
+      "path": "v2/vendor/battery/ti-sluuav7c-bq40z50evm.pdf",
+      "revision": "Rev. C, December 2013, revised November 2022",
+      "sha256": "0a88d8645a71d9dab6e9e074d3197e0494b87bce008906c93bfdc07e9854e350",
+      "url": "https://www.ti.com/lit/ug/sluuav7c/sluuav7c.pdf"
+     }
+    ],
+    "fitted_mpn": "PRF15BB103RB6RC",
+    "id": "pack-ptc-element",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C443668",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "PRF15BB103RB6RC chip PTC 10k, 4.7M at 130 C (Murata): the BQ4050 PTC element beside Q1 and Q2"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP1"
+  ],
+  "sources_entries": [],
+  "value": "BTP_INT"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP10"
+  ],
+  "sources_entries": [],
+  "value": "SMBD"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP11"
+  ],
+  "sources_entries": [],
+  "value": "FUSE_G"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP12"
+  ],
+  "sources_entries": [],
+  "value": "SEC_DOUT"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP13"
+  ],
+  "sources_entries": [],
+  "value": "SCP_OUT"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP14"
+  ],
+  "sources_entries": [],
+  "value": "FUSE_GQ"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP2"
+  ],
+  "sources_entries": [],
+  "value": "FUSE"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP3"
+  ],
+  "sources_entries": [],
+  "value": "CHG_R"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP4"
+  ],
+  "sources_entries": [],
+  "value": "DSG_R"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP5"
+  ],
+  "sources_entries": [],
+  "value": "SW"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP6"
+  ],
+  "sources_entries": [],
+  "value": "FUSED"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP7"
+  ],
+  "sources_entries": [],
+  "value": "PACK_P"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP8"
+  ],
+  "sources_entries": [],
+  "value": "PACK_N"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP9"
+  ],
+  "sources_entries": [],
+  "value": "SMBC"
+ },
+ {
+  "footprint": "meshsat:Texas_RSM0032A_VQFN-32-1EP_4x4mm_P0.4mm_EP1.4x1.4mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Texas Instruments",
+   "model": "BQ4050RSMR",
+   "pkg": "VQFN-32-EP(4x4)",
+   "verdict": "PACKAGE_MISMATCH"
+  },
+  "lcsc": "C157570",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "U1"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "TI SLUSC67",
+      "matches_fitted": "yes: orderable addendum lists BQ4050RSMR, VQFN (RSM) 32; package outline RSM0032A p.51, example board layout p.52, stencil p.53",
+      "path": "v2/vendor/battery/ti-bq4050.pdf",
+      "revision": "Rev. B, March 2016, revised October 2017",
+      "sha256": "2664e33fe6d6ebed3a0f58153d8ba8ce66cb84f07741f6708ae11a224f443f5e",
+      "url": "https://www.ti.com/lit/ds/symlink/bq4050.pdf"
+     },
+     {
+      "doc_id": "TI SLUUAQ3, BQ4050 Technical Reference Manual",
+      "matches_fitted": "yes: the firmware and data-flash reference of the fitted gauge (protections, FUSE, ship mode); what is configured is a commissioning item",
+      "path": "v2/vendor/battery/ti-sluuaq3a-bq4050-trm.pdf",
+      "revision": "Rev. A, April 2016, revised October 2022",
+      "sha256": "525d16b2bdee44e5b587ccf6800b9967bc524772d0b5a20937957ea2e738b7ad",
+      "url": "https://www.ti.com/lit/ug/sluuaq3a/sluuaq3a.pdf"
+     },
+     {
+      "doc_id": "TI SLUUBF9, bq4050EVM-561 user's guide",
+      "matches_fitted": "the maker's evaluation circuit of the fitted gauge: its bill of materials and the cell-connection warning of section 2.5.2, read by the round 4 board P author",
+      "path": "v2/vendor/battery/ti-sluubf9-bq4050evm.pdf",
+      "revision": "March 2016 (no revision letter)",
+      "sha256": "917c0db25428865ac1124aedfa315343fa9cee6bf54db8bae967cec7deb029d1",
+      "url": "https://www.ti.com/lit/ug/sluubf9/sluubf9.pdf"
+     }
+    ],
+    "fitted_mpn": "BQ4050RSMR",
+    "id": "pack-gauge-protection",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C157570",
+    "on_main": null,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm"
+ },
+ {
+  "footprint": "Package_SON:WSON-12-1EP_3x2mm_P0.5mm_EP1x2.65",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C3681715",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "U2"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "TI SLUSEG7",
+      "matches_fitted": "yes: device comparison table p.3, BQ7720700: OVP 4.325 V, OV hysteresis 0.100 V, UVP 2.25 V, UV hysteresis 0.100 V, delays 1 s, OT 70 C, open wire enabled, latch disabled, output drive active high 6 V, tape and reel BQ7720700DSSR; features p.1 'Overtemperature protection using NTC or PTC'",
+      "path": "v2/vendor/battery/ti-bq77207.pdf",
+      "revision": "Rev. D, December 2021, revised May 2026",
+      "sha256": "45c1c99e2d303be8bcf1a2b1eea8275f657c7c80170bda7c2778042a688295cb",
+      "url": "https://www.ti.com/lit/ds/symlink/bq77207.pdf"
+     },
+     {
+      "doc_id": "TI SFFS317, BQ77207 Functional Safety FIT Rate, FMD and Pin FMA",
+      "matches_fitted": "partial: the analysis is for the BQ77207 family (the device the BQ7720700 is a variant of), not per variant. Pin FMA for TS (pin 12), read in the text layer: short to ground 'Automatic OT detection.' class D; open 'No OT detection.' class B; short to adjacent pin (DOUT) 'Automatic OT detection.' class D; short to supply 'No OT detection.' class A",
+      "path": "v2/vendor/battery/ti-sffs317a-bq77207-fusa.pdf",
+      "revision": "SFFS317A, December 2021, revised April 2022 (revision history p.7: Revision * November 2021 to Revision A April 2022)",
+      "sha256": "fe429cf90332c2bba2eb3d456036312982ff25eba4f0f370a2107b67ed4812b3",
+      "url": "https://www.ti.com/lit/fs/sffs317a/sffs317a.pdf"
+     }
+    ],
+    "fitted_mpn": "BQ7720700DSSR",
+    "id": "pack-secondary-protector",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C3681715",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "BQ7720700DSSR: second-level cell OV 4.325 V / UV 2.25 V / open wire, TS on a fixed 10k, 3S-7S (SLUSEG7D)"
+ },
+ {
+  "footprint": "Connector_Wire:SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "W_BN"
+  ],
+  "sources_entries": [],
+  "value": "cell block B- (12 AWG from the block's negative strip)"
+ },
+ {
+  "footprint": "Connector_Wire:SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "W_BP"
+  ],
+  "sources_entries": [],
+  "value": "cell block B+ (12 AWG from the block's positive strip)"
+ },
+ {
+  "footprint": "Connector_Wire:SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "W_N"
+  ],
+  "sources_entries": [],
+  "value": "pack lead - (12 AWG to the XT60 on E6 J_BATT pin 1)"
+ },
+ {
+  "footprint": "Connector_Wire:SolderWire-2.5sqmm_1x01_D2.4mm_OD3.6mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "W_P"
+  ],
+  "sources_entries": [],
+  "value": "pack lead + (12 AWG to the XT60 on E6 J_BATT pin 2)"
+ }
+]

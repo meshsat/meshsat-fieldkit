@@ -1,0 +1,59 @@
+# Board E1 (dock strip): every changed reference between 82dd1e4d and 1f614233, read by hand.
+# Same rules as c-1f614233.yaml: each ID is checked by review_packet.py against the cited lines of gen_sch_e.py at
+# 1f614233, and each cited range must be tied to the part. IDs a comment names only as context (D-16 and D-04 beside
+# D10 and L2, A06 and W6-P7 beside the gas sensor, W3-F25 on other boards) are left out: they are not the change's cause.
+# Unbuilt prototype design; this reading releases nothing.
+board: e
+rev: 1f614233998c3087a53abfa977be134465ce9f47
+prev: 82dd1e4dc44efabeee1164a995cda4e866610f3d
+read_by: "the session (review stream PKT), 26 September 2026, from gen_sch_e.py at both revisions and the round-4 board E record"
+rows:
+  J_TAMP:
+    ids: [S-11, W1-F04, W5-F11, D-02b, D-03.2]
+    cite: [[524, 526]]
+    why: "the lid and tamper reed sensor lead (JST-XH 1x2) that appendix 32.50 approved and no generator drew; it goes to the sensor controller alone and logs only (D-03.2)"
+  C52: {ids: [S-11, W1-F04, W5-F11, D-02b, D-03.2], cite: [[524, 537]], why: "the tamper input's filter capacitor"}
+  R52: {ids: [S-11, W1-F04, W5-F11, D-02b, D-03.2], cite: [[524, 537]], why: "the tamper lead's 100k pull-up"}
+  R53: {ids: [S-11, W1-F04, W5-F11, D-02b, D-03.2], cite: [[524, 537]], why: "the tamper input's 10k series resistor"}
+  U16: {ids: [F-BP-02], cite: [[575, 575]], why: "a TPS22810 load switch takes the Geiger module off the always-on domain, the largest single drain of the kit-off state"}
+  R56: {ids: [F-BP-02], cite: [[132, 140]], why: "GEIGER_EN pull-down, so the tube stays off while the sensor controller is in reset (the switch's EN must not float)"}
+  C53:
+    ids: [F-BP-02]
+    cite: [[575, 576]]
+    tie: "C53 is U16's CT (slew) capacitor on GEIGER_CT, U16 pin 3 in the kisch.tps22810 call at 577; its statement at 578 follows U16's"
+    why: "the load switch's slew-rate capacitor"
+  C54: {ids: [F-BP-02], cite: [[575, 575]], why: "the switched Geiger rail +5V_GEIGER's 10 uF capacitor"}
+  C55: {ids: [F-BP-02], cite: [[575, 575]], why: "the switched Geiger rail +5V_GEIGER's 100 nF capacitor"}
+  C56: {ids: [F-BP-02], cite: [[632, 632]], why: "the load switch's 1 uF input capacitor (SLVSDH0C)"}
+  J_GEIGER: {ids: [F-BP-02], cite: [[575, 575]], why: "the Geiger header's 5 V pin moves to the switched +5V_GEIGER"}
+  U17:
+    ids: [S-10, C-05, W1-F05]
+    cite: [[547, 549]]
+    why: "the SGP41 VOC and NOx sensor in the battery bay that appendix 32.54 picked and no generator fitted"
+  C57: {ids: [S-10, C-05, W1-F05], cite: [[547, 557]], why: "the SGP41's VDD capacitor behind R57"}
+  C58: {ids: [S-10, C-05, W1-F05], cite: [[547, 557]], why: "the SGP41's VDDH capacitor"}
+  R57: {ids: [S-10, C-05, W1-F05], cite: [[547, 557]], why: "the SGP41's 4.7 ohm VDD filter resistor"}
+  D1: {ids: [S-09, A03, F-IN-01], cite: [[296, 296]], why: "the unidirectional SMCJ40A on DC_P had its return on the cathode pad, a short behind the fuse; cathode now on the line"}
+  D2: {ids: [S-09, A03, F-IN-01], cite: [[296, 296]], why: "the unidirectional SMCJ40A bus clamp on VIN_RAW was reversed the same way; cathode now on the line"}
+  D3: {ids: [S-09, A03, F-IN-01], cite: [[220, 220]], why: "the pack node clamp SMCJ18A was reversed; cathode now on CELL_F, with board A's code for the same part"}
+  D4: {ids: [S-09, A03, F-IN-01], cite: [[419, 419]], why: "the solar input clamp SMCJ28A was reversed; cathode now on PV_P"}
+  D10:
+    ids: [S-09, R4E-01]
+    cite: [[354, 354]]
+    why: "the inlet clamp in front of the ideal diode is the bidirectional SMCJ40CA, because a one-way part there is a short in one input polarity or the other"
+  L2:
+    ids: [F-IN-02, R4E-02, R4E-09]
+    cite: [[314, 314], [329, 329]]
+    why: "the choke becomes the SRF1260-1R5Y (series rating 6.89 A against the 6.15 A the limiter lets through) wired as a common-mode choke, and its pin map, which shorted both lines, is corrected"
+  R34: {ids: [S-05, A07], cite: [[197, 202]], why: "the pull-up follows the pack SMBus data net renamed SDA0 to SMBD, board P's name"}
+  R35: {ids: [S-05, A07], cite: [[197, 202]], why: "the pull-up follows the pack SMBus clock net renamed SCL0 to SMBC, board P's name"}
+  R54: {ids: [S-05, A07], cite: [[197, 207]], why: "PRES from the pack lead reaches GPIO17 through this 1k"}
+  R55: {ids: [S-05, A07], cite: [[197, 207]], why: "PRES's 1M pull-up on the GPIO side, so a lead that is out reads high"}
+  U10:
+    ids: [S-05, S-11, F-BP-02, A07]
+    cite: [[503, 504], [197, 204]]
+    why: "the sensor controller's pins 4 and 5 go to the renamed pack SMBus (S-05, A07), pin 27 reads the lid and tamper lead (S-11), pin 28 PRES (S-05), pin 29 drives the Geiger enable (F-BP-02)"
+  J_SMB:
+    ids: [S-05, A07]
+    cite: [[197, 197]]
+    why: "the pack SMBus lead becomes a JST-XH 1x4 in board P's pin order (1 SMBC, 2 SMBD, 3 GND, 4 PRES), so a straight XH-to-XH lead mates"

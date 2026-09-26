@@ -1,0 +1,2151 @@
+[
+ {
+  "footprint": "Capacitor_SMD:C_1210_3225Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 2,
+  "refs": [
+   "C1",
+   "C31"
+  ],
+  "sources_entries": [],
+  "value": "10u 25V 1210"
+ },
+ {
+  "footprint": "Capacitor_SMD:CP_Elec_6.3x7.7",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "PANASONIC",
+   "model": "EEHZK1V101XP",
+   "pkg": "SMD,D6.3xL7.7mm",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C454360",
+  "order_code_on_line": true,
+  "qty": 2,
+  "refs": [
+   "C11",
+   "C12"
+  ],
+  "sources_entries": [],
+  "value": "100u 35V Panasonic EEHZK1V101XP hybrid polymer (7.7 mm)"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_1206_3216Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 2,
+  "refs": [
+   "C13",
+   "C14"
+  ],
+  "sources_entries": [],
+  "value": "10u 50V"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_1206_3216Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "C15"
+  ],
+  "sources_entries": [],
+  "value": "4.7u 50V"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "C16"
+  ],
+  "sources_entries": [],
+  "value": "1n"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 2,
+  "refs": [
+   "C17",
+   "C18"
+  ],
+  "sources_entries": [],
+  "value": "470n 25V"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_1206_3216Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "C19"
+  ],
+  "sources_entries": [],
+  "value": "4.7u 25V"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0805_2012Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "C2"
+  ],
+  "sources_entries": [],
+  "value": "100n 100V"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 6,
+  "refs": [
+   "C20",
+   "C34",
+   "C35",
+   "C45",
+   "C46",
+   "C47"
+  ],
+  "sources_entries": [],
+  "value": "1u"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "C21"
+  ],
+  "sources_entries": [],
+  "value": "4.7n"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "C22"
+  ],
+  "sources_entries": [],
+  "value": "100p"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 13,
+  "refs": [
+   "C23",
+   "C30",
+   "C38",
+   "C39",
+   "C40",
+   "C41",
+   "C42",
+   "C43",
+   "C44",
+   "C48",
+   "C49",
+   "C50",
+   "C51"
+  ],
+  "sources_entries": [],
+  "value": "100n"
+ },
+ {
+  "footprint": "Capacitor_SMD:CP_Elec_8x6.7",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "PANASONIC",
+   "model": "35SVPF39M",
+   "pkg": "SMD,D8xL6.9mm",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C189474",
+  "order_code_on_line": true,
+  "qty": 2,
+  "refs": [
+   "C24",
+   "C25"
+  ],
+  "sources_entries": [],
+  "value": "39u 35V Panasonic 35SVPF39M polymer (6.9 mm)"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_1206_3216Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 2,
+  "refs": [
+   "C26",
+   "C27"
+  ],
+  "sources_entries": [],
+  "value": "10u 25V"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "YAGEO",
+   "model": "CC0603KRX7R9BB104",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C14663",
+  "order_code_on_line": true,
+  "qty": 2,
+  "refs": [
+   "C4",
+   "C28"
+  ],
+  "sources_entries": [],
+  "value": "100n 50V"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_1210_3225Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 2,
+  "refs": [
+   "C32",
+   "C33"
+  ],
+  "sources_entries": [],
+  "value": "22u 10V X7R 1210"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 2,
+  "refs": [
+   "C36",
+   "C37"
+  ],
+  "sources_entries": [],
+  "value": "15p"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "C5"
+  ],
+  "sources_entries": [],
+  "value": "100n (TIMER)"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "YAGEO",
+   "model": "CC0603KRX7R9BB104",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C14663",
+  "order_code_on_line": true,
+  "qty": 2,
+  "refs": [
+   "C52",
+   "C55"
+  ],
+  "sources_entries": [],
+  "value": "100n"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Samsung Electro-Mechanics",
+   "model": "CL10B102KB8NNNC",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C1588",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "C53"
+  ],
+  "sources_entries": [],
+  "value": "1n"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_1206_3216Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Samsung Electro-Mechanics",
+   "model": "CL31B106KBHNNNE",
+   "pkg": "1206",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C89632",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "C54"
+  ],
+  "sources_entries": [],
+  "value": "10u 25V"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Samsung Electro-Mechanics",
+   "model": "CL10A105KB8NNNC",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C15849",
+  "order_code_on_line": true,
+  "qty": 3,
+  "refs": [
+   "C56",
+   "C57",
+   "C58"
+  ],
+  "sources_entries": [],
+  "value": "1u"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_1210_3225Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "C6"
+  ],
+  "sources_entries": [],
+  "value": "1u 100V 1210 (X, input side)"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_1210_3225Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "C7"
+  ],
+  "sources_entries": [],
+  "value": "1u 100V 1210 (X, bus side)"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_1210_3225Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "C8"
+  ],
+  "sources_entries": [],
+  "value": "10u 100V X7R 1210"
+ },
+ {
+  "footprint": "Diode_SMD:D_SMC",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C224052",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "D1"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "Littelfuse SMCJ Series 1500 W transient voltage suppressors",
+      "matches_fitted": "yes for C224052, C224047 and C374030: SMCJ40A row VR 40.0 V, VBR 44.40 to 49.10 V at 1 mA, VC 64.5 V at 23.3 A; 'Uni-directional' with the CA suffix for bidirectional",
+      "path": "v2/vendor/power/littelfuse-smcj-series-tvs.pdf",
+      "revision": "Revised 11/20/15",
+      "sha256": "6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea",
+      "url": "https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C224052 (LCSC's copy of the maker's sheet, the document attached to the fitted code)"
+     }
+    ],
+    "fitted_mpn": null,
+    "id": "tvs-surge-clamps",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C224052",
+    "on_main": null,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "SMCJ40A (input surge: 40 V standoff on a line specified to 36 V, clamping 64.5 V; unidirectional, cathode on DC_P)"
+ },
+ {
+  "footprint": "Diode_SMD:D_SMC",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C80273",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "D10"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "Littelfuse SMCJ Series (the file already recorded above, read again for the two-way row)",
+      "matches_fitted": "yes for C80273: SMCJ40A (uni) / SMCJ40CA (bi) row, marking GFR / BFR, VR 40.0 V, VBR 44.40 to 49.10 V at 1 mA, VC 64.5 V at 23.3 A",
+      "path": "v2/vendor/power/littelfuse-smcj-series-tvs.pdf",
+      "revision": "Revised 11/20/15",
+      "sha256": "6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea",
+      "url": "https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C80273 (LCSC's copy for the fitted code)"
+     }
+    ],
+    "fitted_mpn": null,
+    "id": "tvs-surge-clamps",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C80273",
+    "on_main": null,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "SMCJ40CA (bidirectional, Littelfuse SMCJ40 row: 40 V standoff and 44.4 V minimum breakdown each way, clamping 64.5 V at 23.3 A; shore inlet clamp at the entry, in front of the ideal-diode FET, so a reversed input stays blocked)"
+ },
+ {
+  "footprint": "Diode_SMD:D_SMC",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C224052",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "D2"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "Littelfuse SMCJ Series 1500 W transient voltage suppressors",
+      "matches_fitted": "yes for C224052, C224047 and C374030: SMCJ40A row VR 40.0 V, VBR 44.40 to 49.10 V at 1 mA, VC 64.5 V at 23.3 A; 'Uni-directional' with the CA suffix for bidirectional",
+      "path": "v2/vendor/power/littelfuse-smcj-series-tvs.pdf",
+      "revision": "Revised 11/20/15",
+      "sha256": "6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea",
+      "url": "https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C224052 (LCSC's copy of the maker's sheet, the document attached to the fitted code)"
+     }
+    ],
+    "fitted_mpn": null,
+    "id": "tvs-surge-clamps",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C224052",
+    "on_main": null,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "SMCJ40A (bus clamp: 40 V standoff on the 9 to 36 V bus; unidirectional, cathode on VIN_RAW)"
+ },
+ {
+  "footprint": "Diode_SMD:D_SMC",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Littelfuse",
+   "model": "SMCJ18A",
+   "pkg": "DO-214AB",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C374030",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "D3"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "Littelfuse SMCJ Series 1500 W transient voltage suppressors",
+      "matches_fitted": "yes for C224052, C224047 and C374030: SMCJ40A row VR 40.0 V, VBR 44.40 to 49.10 V at 1 mA, VC 64.5 V at 23.3 A; 'Uni-directional' with the CA suffix for bidirectional",
+      "path": "v2/vendor/power/littelfuse-smcj-series-tvs.pdf",
+      "revision": "Revised 11/20/15",
+      "sha256": "6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea",
+      "url": "https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C224052 (LCSC's copy of the maker's sheet, the document attached to the fitted code)"
+     }
+    ],
+    "fitted_mpn": null,
+    "id": "tvs-surge-clamps",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C374030",
+    "on_main": null,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "SMCJ18A (pack node clamp, unidirectional: cathode on CELL_F)"
+ },
+ {
+  "footprint": "Diode_SMD:D_SMC",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C224047",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "D4"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "Littelfuse SMCJ Series 1500 W transient voltage suppressors",
+      "matches_fitted": "yes for C224052, C224047 and C374030: SMCJ40A row VR 40.0 V, VBR 44.40 to 49.10 V at 1 mA, VC 64.5 V at 23.3 A; 'Uni-directional' with the CA suffix for bidirectional",
+      "path": "v2/vendor/power/littelfuse-smcj-series-tvs.pdf",
+      "revision": "Revised 11/20/15",
+      "sha256": "6e610db955ed876306999009c62b242f7de9bb05e2cd9717288a96586a5093ea",
+      "url": "https://datasheet.lcsc.com/datasheet/pdf/4ffc39069ef6aef3785dfbfda82b9e7d.pdf?productCode=C224052 (LCSC's copy of the maker's sheet, the document attached to the fitted code)"
+     }
+    ],
+    "fitted_mpn": null,
+    "id": "tvs-surge-clamps",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C224047",
+    "on_main": null,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "SMCJ28A (panel surge: 28 V standoff, conducting from 31.1 V, below the 35 V bulk capacitors; unidirectional, cathode on PV_P)"
+ },
+ {
+  "footprint": "Diode_SMD:D_SOD-123",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "D5"
+  ],
+  "sources_entries": [],
+  "value": "BAT54 boost diode INTVCC -> BOOST1"
+ },
+ {
+  "footprint": "Diode_SMD:D_SOD-123",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "D6"
+  ],
+  "sources_entries": [],
+  "value": "BAT54 boost diode INTVCC -> BOOST2"
+ },
+ {
+  "footprint": "Diode_SMD:D_SMB",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "D7"
+  ],
+  "sources_entries": [],
+  "value": "SS14 flyback across fan 1"
+ },
+ {
+  "footprint": "Diode_SMD:D_SMB",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "D8"
+  ],
+  "sources_entries": [],
+  "value": "SS14 flyback across fan 2"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23-6",
+  "generator_cited_documents": [
+   "v2/vendor/st/st-usblc6-2-esd-protection.pdf"
+  ],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "STMicroelectronics",
+   "model": "USBLC6-2SC6",
+   "pkg": "SOT-23-6L",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C7519",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "D9"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "ST DS4260",
+      "matches_fitted": "yes: pin 1 I/O1, 2 GND, 3 I/O2, 4 I/O2, 5 VBUS, 6 I/O1",
+      "path": "v2/vendor/st/st-usblc6-2-esd-protection.pdf",
+      "revision": "Rev 7, December 2021",
+      "sha256": "bc30154f310cd631043214ed52571daefe04270587ec55072d49a23bd18b9068",
+      "url": "TBD"
+     }
+    ],
+    "fitted_mpn": "USBLC6-2SC6",
+    "id": "usb-esd-array",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C7519",
+    "on_main": null,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "USBLC6-2SC6"
+ },
+ {
+  "footprint": "Fuse:Fuseholder_Blade_Mini_Keystone_3568",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "F1"
+  ],
+  "sources_entries": [],
+  "value": "10 A mini blade (Keystone 3568 holder): vehicle input"
+ },
+ {
+  "footprint": "Fuse:Fuseholder_Blade_Mini_Keystone_3568",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "F2"
+  ],
+  "sources_entries": [],
+  "value": "10 A mini blade (Keystone 3568 holder): panel input"
+ },
+ {
+  "footprint": "Fuse:Fuseholder_Blade_Mini_Keystone_3568",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "F3"
+  ],
+  "sources_entries": [],
+  "value": "25 A mini blade (Keystone 3568 holder): pack to the block"
+ },
+ {
+  "footprint": "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "JP1"
+  ],
+  "sources_entries": [],
+  "value": "BOOTSEL: short while powering to enter the USB bootloader"
+ },
+ {
+  "footprint": "Connector_AMASS:AMASS_XT60-M_1x02_P7.20mm_Vertical",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Changzhou Amass Elec",
+   "model": "XT60-M.",
+   "pkg": "-",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C98733",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "J_BATT"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "Amass specification, XT60-F and XT60-M",
+      "matches_fitted": "yes, page 2 (XT60-M): rated current 30 A, momentary 60 A, rated voltage DC 500 V, contact resistance 0.55 mOhm, recommended cable 12 AWG, operating -20 to 120 C, 1000 mating cycles",
+      "path": "v2/vendor/battery/amass-xt60-spec-tme.pdf",
+      "revision": "V1.2 (stated on the sheet); PDF created 2016-06-24",
+      "sha256": "c2cbb5962c1f37da89e76e505c75184dd07e84eec3a6fe5f24569dafc6f6b9e9",
+      "url": "TBD"
+     },
+     {
+      "doc_id": "Amass specification, XT60E-M",
+      "matches_fitted": "no: XT60E-M is a different variant; do not cite it for J_BATT",
+      "path": "v2/vendor/battery/amass-xt60e-m-shoptronica.pdf",
+      "revision": "PDF title 'AMASS XT60C-M SPEC', ModDate 2020-02-06",
+      "sha256": "828c34996962cc63c5205a684186b7900650ecf16f2ab6373fe9ad38152c6a5e",
+      "url": null
+     }
+    ],
+    "fitted_mpn": "XT60-M",
+    "id": "pack-connector",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C98733",
+    "on_main": null,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "Amass XT60-M: the BB-2590/U pack cable BTA-70762-2 (pin 2, the pad nearer the fuse F3, is +; pin 1 is the return; the pack's own protection is inside it. E6 run 11: a 3 mm CELL+ track could not pass the return pad to reach pin 1)"
+ },
+ {
+  "footprint": "meshsat:PogoTargets_2x6",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "J_BLK"
+  ],
+  "sources_entries": [],
+  "value": "solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 1-4 VIN_RAW, 5-7 GND, 8 SHORE_INHIBIT, 9 USB D+, 10 USB D-, 11 GND, 12 spare"
+ },
+ {
+  "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "J_DCF"
+  ],
+  "sources_entries": [],
+  "value": "DCF77 receiver module: 3.3 V, GND, pulse"
+ },
+ {
+  "footprint": "Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "JST",
+   "model": "B2P-VH-BL(LF)(SN)",
+   "pkg": "Plugin,P=3.96mm",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C274411",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "J_DCIN"
+  ],
+  "sources_entries": [],
+  "value": "JST-VH socket, 10 A: vehicle and shore DC in 9 to 36 V (lead from the D38999 wall receptacle DC pair): + -"
+ },
+ {
+  "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "J_FAN1"
+  ],
+  "sources_entries": [],
+  "value": "mixer fan 1 under the plate (12 V class fan on the pack node, low-side PWM, tachometer)"
+ },
+ {
+  "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "J_FAN2"
+  ],
+  "sources_entries": [],
+  "value": "mixer fan 2 under the plate (12 V class fan on the pack node, low-side PWM, tachometer)"
+ },
+ {
+  "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "J_GEIGER"
+  ],
+  "sources_entries": [],
+  "value": "Geiger counter module (RadiationD-v1.1 class): 5 V switched by U16, GND, pulse"
+ },
+ {
+  "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "J_LTG"
+  ],
+  "sources_entries": [],
+  "value": "AS3935 lightning sensor module (CJMCU-3935 class): 3.3 V, GND, SDA, SCL, IRQ"
+ },
+ {
+  "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "J_POD"
+  ],
+  "sources_entries": [],
+  "value": "outside sensor pod on the connector plate (M8 sealed lead): 3.3 V, GND, SDA, SCL"
+ },
+ {
+  "footprint": "Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "JST",
+   "model": "B4B-XH-A-G",
+   "pkg": "Plugin,P=2.5mm",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C594232",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "J_SMB"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "JST XH connector catalogue",
+      "matches_fitted": "yes: current rating 3 A AC/DC (AWG 22), -25 to +85 C; the header table lists B2B-XH-A and B4B-XH-A",
+      "path": "v2/vendor/connectors/jst-xh-catalogue.pdf",
+      "revision": "not printed; the catalogue as served on 2026-09-26",
+      "sha256": "9426b136902f11900825077535e5c65032b7fbc31ffb59c5e9e1f463bb20fb90",
+      "url": "https://www.jst-mfg.com/product/pdf/eng/eXH.pdf"
+     }
+    ],
+    "fitted_mpn": "B4B-XH-A (E J_SMB), B2B-XH-A (E J_TAMP)",
+    "id": "pack-and-lid-leads-jst-xh",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C594232",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "SMBus lead to board P, JST-XH 1x4 (B4B-XH-A), P's pin order: 1 SMBC, 2 SMBD, 3 GND, 4 PRES"
+ },
+ {
+  "footprint": "Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical",
+  "generator_cited_documents": [
+   "power/lt8705a.pdf"
+  ],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "JST",
+   "model": "B2P-VH-BL(LF)(SN)",
+   "pkg": "Plugin,P=3.96mm",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C274411",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "J_SOLAR"
+  ],
+  "sources_entries": [],
+  "value": "JST-VH socket, 10 A: bare panel in (lead from the D38999 spare pair; a 36-cell 12 V class panel, up to about 22 V open circuit, 100 W): + -"
+ },
+ {
+  "footprint": "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C158012",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "J_TAMP"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "JST XH connector catalogue",
+      "matches_fitted": "yes: current rating 3 A AC/DC (AWG 22), -25 to +85 C; the header table lists B2B-XH-A and B4B-XH-A",
+      "path": "v2/vendor/connectors/jst-xh-catalogue.pdf",
+      "revision": "not printed; the catalogue as served on 2026-09-26",
+      "sha256": "9426b136902f11900825077535e5c65032b7fbc31ffb59c5e9e1f463bb20fb90",
+      "url": "https://www.jst-mfg.com/product/pdf/eng/eXH.pdf"
+     }
+    ],
+    "fitted_mpn": "B4B-XH-A (E J_SMB), B2B-XH-A (E J_TAMP)",
+    "id": "pack-and-lid-leads-jst-xh",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C158012",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "JST-XH 1x2 (B2B-XH-A): lid and tamper reed sensor lead, Littelfuse 59140-1-S-05-A normally open under the frame, 57140-000 magnet in the lid: 1 lead, 2 GND"
+ },
+ {
+  "footprint": "Inductor_SMD:L_Coilcraft_XAL1510-103",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Coilcraft",
+   "model": "XAL1510-103MED",
+   "pkg": "SMD,15.2x16.2mm",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C3911782",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "L1"
+  ],
+  "sources_entries": [],
+  "value": "10uH Coilcraft XAL1510-103MED (Isat 26 A, 10.0 mm tall)"
+ },
+ {
+  "footprint": "Inductor_SMD:L_CommonModeChoke_Bourns_SRF1260",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "L2"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "Bourns SRF1260 Series",
+      "matches_fitted": "yes: SRF1260-1R5Y row, parallel 1.5 uH, 0.0073 ohm, 13.8 A Irms, 18.3 A Isat; SERIES 6 uH, 0.0302 ohm, 6.89 A Irms, 9.15 A Isat (the column that applies to the common-mode connection, where each winding carries the line current)",
+      "path": "v2/vendor/power/bourns-srf1260-common-mode-choke.pdf",
+      "revision": "REV. 03/18",
+      "sha256": "93b2dc7565d07e727adb658843b52ec227a2c05f1ee21e117d7057d03ba1aea6",
+      "url": "https://www.bourns.com/docs/product-datasheets/srf1260.pdf"
+     }
+    ],
+    "fitted_mpn": "SRF1260-1R5Y",
+    "id": "vehicle-input-choke",
+    "identity": "MATCH",
+    "joined_by": "where gen_sch_e.py:341 at 1f614233 (the value names SRF1260-1R5Y)",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "Bourns SRF1260-1R5Y dual-winding choke, common-mode connection (each winding carries the line current: 6.89 A Irms and 9.15 A Isat in the series column, 1.5 uH per winding): winding pins 1-3 on the positive line, winding pins 2-4 on the return (Bourns electrical schematic, N1 1-3 and N2 2-4)"
+ },
+ {
+  "footprint": "Inductor_SMD:L_Coilcraft_XAL4020-XXX",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "L3"
+  ],
+  "sources_entries": [],
+  "value": "4.7uH XAL4030-472ME"
+ },
+ {
+  "footprint": "LED_SMD:LED_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "LED1"
+  ],
+  "sources_entries": [],
+  "value": "green: vehicle input present"
+ },
+ {
+  "footprint": "LED_SMD:LED_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "LED2"
+  ],
+  "sources_entries": [],
+  "value": "status (GPIO25)"
+ },
+ {
+  "footprint": "meshsat:SolderPad_8x6",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "PAD_W1"
+  ],
+  "sources_entries": [],
+  "value": "water electrode A (bare copper, +3.3 V through 1 M)"
+ },
+ {
+  "footprint": "meshsat:SolderPad_8x6",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "PAD_W2"
+  ],
+  "sources_entries": [],
+  "value": "water electrode B (bare copper, to ADC0)"
+ },
+ {
+  "footprint": "meshsat:SolderPad_8x6",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "P_CN"
+  ],
+  "sources_entries": [],
+  "value": "solder pad, 12 AWG wire to the block board return targets"
+ },
+ {
+  "footprint": "meshsat:SolderPad_8x6",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "P_CP"
+  ],
+  "sources_entries": [],
+  "value": "solder pad, 12 AWG wire to the block board CELL+ targets"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:TDSON-8-1",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Infineon Technologies",
+   "model": "BSC039N06NS",
+   "pkg": "TDSON-8(5x6)",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C534330",
+  "order_code_on_line": true,
+  "qty": 2,
+  "refs": [
+   "Q1",
+   "Q2"
+  ],
+  "sources_entries": [],
+  "value": "BSC039N06NS 60 V 3.9 mOhm N-FET (PG-TDSON-8: 1-3 S, 4 G, 5-8 D)"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "Q10"
+  ],
+  "sources_entries": [],
+  "value": "2N7002 fan 2 low-side switch (1 G, 2 S, 3 D)"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:TDSON-8-1",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Infineon Technologies",
+   "model": "BSC028N06NS",
+   "pkg": "TDSON-8(5x6)",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C148250",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "Q3"
+  ],
+  "sources_entries": [],
+  "value": "BSC028N06NS 60 V 2.8 mOhm N-FET, M1 buck top (TDSON-8: 1-3 S, 4 G, 5-8 D)"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:TDSON-8-1",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Infineon Technologies",
+   "model": "BSC039N06NS",
+   "pkg": "TDSON-8(5x6)",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C534330",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "Q4"
+  ],
+  "sources_entries": [],
+  "value": "BSC039N06NS 60 V N-FET, M2 buck bottom"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:TDSON-8-1",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Infineon Technologies",
+   "model": "BSC028N06NS",
+   "pkg": "TDSON-8(5x6)",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C148250",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "Q5"
+  ],
+  "sources_entries": [],
+  "value": "BSC028N06NS 60 V N-FET, M3 boost bottom"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:TDSON-8-1",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Infineon Technologies",
+   "model": "BSC039N06NS",
+   "pkg": "TDSON-8(5x6)",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C534330",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "Q6"
+  ],
+  "sources_entries": [],
+  "value": "BSC039N06NS 60 V N-FET, M4 boost top"
+ },
+ {
+  "footprint": "Package_SO:PowerPAK_SO-8_Single",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Texas Instruments",
+   "model": "CSD19532Q5B",
+   "pkg": "SON-8(5x6)",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C473333",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "Q7"
+  ],
+  "sources_entries": [],
+  "value": "CSD19532Q5B 100 V N-FET (4.6 mOhm at VGS 6 V, PowerPAK SO-8 / SON-8 5x6), hot-swap pass"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "Q8"
+  ],
+  "sources_entries": [],
+  "value": "2N7002: SHORE_INHIBIT high pulls UVLO low = input off (1 G, 2 S, 3 D)"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "Q9"
+  ],
+  "sources_entries": [],
+  "value": "2N7002 fan 1 low-side switch (1 G, 2 S, 3 D)"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "UNI-ROYAL(Uniroyal Elec)",
+   "model": "0603WAF1003T5E",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C25803",
+  "order_code_on_line": true,
+  "qty": 4,
+  "refs": [
+   "R1",
+   "R18",
+   "R52",
+   "R56"
+  ],
+  "sources_entries": [],
+  "value": "100k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "R10"
+  ],
+  "sources_entries": [],
+  "value": "115k 1% (RFBOUT1: 15.1 V)"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "R11"
+  ],
+  "sources_entries": [],
+  "value": "10.0k 1% (RFBOUT2)"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "R12"
+  ],
+  "sources_entries": [],
+  "value": "215k 1% (RT: 202 kHz)"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 9,
+  "refs": [
+   "R13",
+   "R16",
+   "R17",
+   "R25",
+   "R31",
+   "R46",
+   "R47",
+   "R49",
+   "R50"
+  ],
+  "sources_entries": [],
+  "value": "10k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 5,
+  "refs": [
+   "R14",
+   "R20",
+   "R22",
+   "R40",
+   "R42"
+  ],
+  "sources_entries": [],
+  "value": "100k 1%"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "R15"
+  ],
+  "sources_entries": [],
+  "value": "15.0k 1% (SHDN: enable above about 9.5 V)"
+ },
+ {
+  "footprint": "Resistor_SMD:R_2512_6332Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "R19"
+  ],
+  "sources_entries": [],
+  "value": "10mOhm 1% 2512 (hot-swap sense)"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "R21"
+  ],
+  "sources_entries": [],
+  "value": "38.3k 1% (UVLO: 9 V)"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "R23"
+  ],
+  "sources_entries": [],
+  "value": "6.65k 1% (OVLO: 40 V)"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "R24"
+  ],
+  "sources_entries": [],
+  "value": "20k (PWR: power limit)"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "R26"
+  ],
+  "sources_entries": [],
+  "value": "100k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "UNI-ROYAL(Uniroyal Elec)",
+   "model": "0603WAF2201T5E",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C4190",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "R27"
+  ],
+  "sources_entries": [],
+  "value": "2.2k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 2,
+  "refs": [
+   "R28",
+   "R33"
+  ],
+  "sources_entries": [],
+  "value": "1k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 2,
+  "refs": [
+   "R29",
+   "R30"
+  ],
+  "sources_entries": [],
+  "value": "27R"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "R32"
+  ],
+  "sources_entries": [],
+  "value": "1k (BOOTSEL)"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 4,
+  "refs": [
+   "R34",
+   "R35",
+   "R36",
+   "R37"
+  ],
+  "sources_entries": [],
+  "value": "4.7k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 2,
+  "refs": [
+   "R38",
+   "R39"
+  ],
+  "sources_entries": [],
+  "value": "1M"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "R41"
+  ],
+  "sources_entries": [],
+  "value": "10k 1% (ADC1: 0.091 x bus)"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "R43"
+  ],
+  "sources_entries": [],
+  "value": "22k 1% (ADC2: 0.18 x pack)"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 4,
+  "refs": [
+   "R6",
+   "R7",
+   "R44",
+   "R45"
+  ],
+  "sources_entries": [],
+  "value": "100R"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "R48"
+  ],
+  "sources_entries": [],
+  "value": "22R (pulse input series)"
+ },
+ {
+  "footprint": "Resistor_SMD:R_2512_6332Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "RALEC",
+   "model": "LR2512-23R005F4",
+   "pkg": "2512",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C154688",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "R5"
+  ],
+  "sources_entries": [],
+  "value": "5 mOhm 1% 3 W 2512 RSENSE (RALEC LR2512-23R005F4)"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "R51"
+  ],
+  "sources_entries": [],
+  "value": "0R (CSB high: I2C mode; its own net keeps the pin joiner off the diagonal)"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "UNI-ROYAL(Uniroyal Elec)",
+   "model": "0603WAF1002T5E",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C25804",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "R53"
+  ],
+  "sources_entries": [],
+  "value": "10k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "UNI-ROYAL(Uniroyal Elec)",
+   "model": "0603WAF1001T5E",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C21190",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "R54"
+  ],
+  "sources_entries": [],
+  "value": "1k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "UNI-ROYAL(Uniroyal Elec)",
+   "model": "0603WAF1004T5E",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C22935",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "R55"
+  ],
+  "sources_entries": [],
+  "value": "1M"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C23164",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "R57"
+  ],
+  "sources_entries": [],
+  "value": "4.7R"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "R8"
+  ],
+  "sources_entries": [],
+  "value": "102k 1% (RFBIN1: panel point 17.6 V)"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "R9"
+  ],
+  "sources_entries": [],
+  "value": "7.50k 1% (RFBIN2)"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP1"
+  ],
+  "sources_entries": [],
+  "value": "DC_IN"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP10"
+  ],
+  "sources_entries": [],
+  "value": "SWCLK"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP11"
+  ],
+  "sources_entries": [],
+  "value": "SWDIO"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP12"
+  ],
+  "sources_entries": [],
+  "value": "E6_RUN"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP13"
+  ],
+  "sources_entries": [],
+  "value": "GEIGER_IN"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP2"
+  ],
+  "sources_entries": [],
+  "value": "DC_P"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP3"
+  ],
+  "sources_entries": [],
+  "value": "VIN_RAW"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP4"
+  ],
+  "sources_entries": [],
+  "value": "GND"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP5"
+  ],
+  "sources_entries": [],
+  "value": "PV_P"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP6"
+  ],
+  "sources_entries": [],
+  "value": "TRK_OUT"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP7"
+  ],
+  "sources_entries": [],
+  "value": "BLK_SPARE"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP8"
+  ],
+  "sources_entries": [],
+  "value": "CELL_F"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP9"
+  ],
+  "sources_entries": [],
+  "value": "+5V_E6"
+ },
+ {
+  "footprint": "Package_DFN_QFN:QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm",
+  "generator_cited_documents": [
+   "rp2040/rpi-rp2040-datasheet.pdf"
+  ],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Raspberry Pi",
+   "model": "RP2040",
+   "pkg": "LQFN-56(7x7)",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C2040",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "U10"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "RP2040 Datasheet",
+      "matches_fitted": "yes",
+      "path": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+      "revision": "build-date 2025-02-20, build-version 3184e62-clean",
+      "sha256": "be56fbb75ba0ae9e26558a73c93ac3e75c2ad4e6878d3b6703de2a76d886ea8c",
+      "url": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf (INFERRED from sources.txt line 53)"
+     },
+     {
+      "doc_id": "Hardware design with RP2040",
+      "matches_fitted": "yes",
+      "path": "v2/vendor/rp2040/rpi-rp2040-hardware-design.pdf",
+      "revision": "not read; PDF ModDate 2026-08-20",
+      "sha256": "51c4f430153fcdbf3209d9b3b41662c8527ff0150bc25777e3fcd6f5221a1c19",
+      "url": null
+     }
+    ],
+    "fitted_mpn": "RP2040",
+    "id": "rp2040",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C2040",
+    "on_main": null,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "RP2040 sensor controller (USB to B16 through the dock)"
+ },
+ {
+  "footprint": "Package_SON:Winbond_USON-8-1EP_3x2mm_P0.5mm_EP0.2x1.6mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Winbond Elec",
+   "model": "W25Q16JVUXIQ",
+   "pkg": "USON-8-EP(2x3)",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C2843335",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "U11"
+  ],
+  "sources_entries": [],
+  "value": "W25Q16JVUXIQ 16 Mbit QSPI flash (USON-8: 1 CS 2 DO/IO1 3 WP/IO2 4 GND 5 DI/IO0 6 CLK 7 HOLD/IO3 8 VCC, pad)"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:TSOT-23-6",
+  "generator_cited_documents": [
+   "diodes/diodes-ap63205.pdf"
+  ],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Diodes Incorporated",
+   "model": "AP63205WU-7",
+   "pkg": "TSOT-23-6",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C2071056",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "U12"
+  ],
+  "sources_entries": [],
+  "value": "AP63205WU-7 5 V 2 A buck for the controller, the Geiger module and the fans' logic"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Texas Instruments",
+   "model": "TLV75533PDBVR",
+   "pkg": "SOT-23-5",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C404027",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "U13"
+  ],
+  "sources_entries": [],
+  "value": "TLV75533PDBVR 3.3 V LDO"
+ },
+ {
+  "footprint": "Package_LGA:Bosch_LGA-8_3x3mm_P0.8mm_ClockwisePinNumbering",
+  "generator_cited_documents": [
+   "bosch/bosch-bme688.pdf",
+   "bosch/bosch-bmi270.pdf"
+  ],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Bosch Sensortec",
+   "model": "BME688",
+   "pkg": "SMD-8P",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C3664478",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "U14"
+  ],
+  "sources_entries": [],
+  "value": "BME688 inside climate: temperature, humidity, pressure, gas index (I2C 0x76)"
+ },
+ {
+  "footprint": "Package_LGA:Bosch_LGA-14_3x2.5mm_P0.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Bosch Sensortec",
+   "model": "BMI270",
+   "pkg": "LGA-14(2.5x3)",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C2836813",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "U15"
+  ],
+  "sources_entries": [],
+  "value": "BMI270 six-axis IMU (I2C 0x68): shock and tilt log, motion wake"
+ },
+ {
+  "footprint": "Package_SON:WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "U16"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "TI SLVSDH0",
+      "matches_fitted": "yes for the device and package the schematic names (TPS22810, DRV): device comparison table, DRV 3 A maximum output current, RON 79 mohm at 12 V, configurable quick output discharge, active-high enable",
+      "path": "v2/vendor/ti/ti-tps22810-load-switch.pdf",
+      "revision": "SLVSDH0C, December 2016, revised January 2018; package option addendum dated 15-Jul-2026",
+      "sha256": "10450eedecbc454291088e3c8cf0e177555814ac83be021448d1d16cba126c98",
+      "url": "https://www.ti.com/lit/ds/symlink/tps22810.pdf (the URL sources.txt records for the file)"
+     }
+    ],
+    "fitted_mpn": null,
+    "id": "load-switch-tps22810",
+    "identity": "NOT_PINNED",
+    "joined_by": "where gen_sch_e.py:577 at 1f614233 (names U16)",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "TPS22810DRV"
+ },
+ {
+  "footprint": "meshsat:Sensirion_DFN-6-1EP_2.44x2.44mm_P0.8mm_EP1.25x1.7mm",
+  "generator_cited_documents": [
+   "v2/vendor/sensirion/sgp41-datasheet.pdf"
+  ],
+  "jlc_certified_row": null,
+  "lcsc": "C3659325",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "U17"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "Sensirion SGP41 datasheet",
+      "matches_fitted": "yes: ordering table lists SGP41-D-R4, tape on reel, 2,500 pieces",
+      "path": "v2/vendor/sensirion/sgp41-datasheet.pdf",
+      "revision": "version 1.0, December 2021",
+      "sha256": "331f35ed1f027a74ec79b302763f7adb920759bc055b3d2ada17822bb0005bec",
+      "url": "https://sensirion.com/media/documents/5FE8673C/61E96F50/Sensirion_Gas_Sensors_Datasheet_SGP41.pdf (the link on https://sensirion.com/products/catalog/SGP41, read 2026-09-26)"
+     }
+    ],
+    "fitted_mpn": "SGP41-D-R4",
+    "id": "battery-bay-gas-sensor",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C3659325",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "SGP41-D-R4 VOC and NOx gas sensor, battery-bay air (I2C 0x59; DFN-6: 1 VDD 2 VSS 3 SDA 4 n/a to GND 5 VDDH 6 SCL, 7 die pad GND)"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23-6",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C2941042",
+  "order_code_on_line": true,
+  "qty": 2,
+  "refs": [
+   "U3",
+   "U4"
+  ],
+  "sources_entries": [],
+  "value": "LM74700-Q1 ideal-diode controller: 1 VCAP 2 GND 3 EN 4 CATHODE 5 GATE 6 ANODE"
+ },
+ {
+  "footprint": "Package_DFN_QFN:WQFN-38-1EP_5x7mm_P0.5mm_EP3.15x5.15mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C674164",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "U5"
+  ],
+  "sources_entries": [],
+  "value": "LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted"
+ },
+ {
+  "footprint": "Package_SO:VSSOP-10_3x3mm_P0.5mm",
+  "generator_cited_documents": [
+   "ti/ti-lm5069.pdf"
+  ],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Texas Instruments",
+   "model": "LM5069MM-2/NOPB",
+   "pkg": "VSSOP-10-0.5mm",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C111822",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "U6"
+  ],
+  "sources_entries": [],
+  "value": "LM5069MM-2 hot-swap controller: 9 V on, 40 V off, current and power limit"
+ },
+ {
+  "footprint": "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Abracon LLC",
+   "model": "ABM8-272-T3",
+   "pkg": "SMD3225-4P",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C20625731",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "Y1"
+  ],
+  "sources_entries": [],
+  "value": "12 MHz ABM8-272-T3 (3225): 1 XIN, 3 XOUT, 2 and 4 GND"
+ }
+]

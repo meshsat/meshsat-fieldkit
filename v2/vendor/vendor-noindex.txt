@@ -34,3 +34,7 @@ cm5/doc-touch-display-2.adoc   # a 38-byte include stub: one 'include::touch-dis
 # objects, no images, and pdftotext returns only the five page breaks; the lettering is AutoCAD vector paths. Read by rendering the
 # pages (sheet 2, the part-number table by key, was read at 110 dpi on 26 September 2026).
 m2/te-2199119-customer-drawing-revF.pdf   # TE customer drawing C-2199119 rev F, 5 pages of CAD linework (AutoCAD Mechanical through Ghostscript), no font objects and no images
+
+# Added 26 September 2026 (MESHSAT-1357, stream PKT). pdftotext returns 6 characters for 6 pages: the maker's file is
+# page images. Read from renders at 70 dpi on 26 September 2026 (pages 1 and 2: ordering, pins, ratings, conditions).
+techpublic/techpublic-74lvc1g08gv-c19829591.pdf   # TECH PUBLIC 74LVC1G08, six pages of images with no text layer
