@@ -53,7 +53,7 @@ appears in the gap register.
 | RTE-002 | ROUTING | BLOCKER | routeflow.py, finish.sh | hardset.py -> hardset-routed-board-gate, pruned_gate | tests/test_hardset.py, tests/test_gate_fixtures.py | **ENFORCED** |
 | SCH-001 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_*.py | erc_gate.py -> erc_gate | tests/test_erc_gate.py | **ENFORCED** |
 | SCH-002 | SCHEMATIC_INTEGRITY | BLOCKER | gen_pcb_*3.py | netlist_board.py, netlist_parts.py -> netlist_board, netlist_parts | tests/test_netlist_board.py, tests/test_netlist_parts.py | **ENFORCED** |
-| SCH-003 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_*.py, gen_pcb_e5.py | check_contracts.py, block_contract.py -> check_contracts_<letter> | tests/test_gate_fixtures.py, tests/test_block_contract.py | **ENFORCED** |
+| SCH-003 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_*.py, gen_pcb_e5.py | check_contracts.py, block_contract.py -> check_contracts_<letter> | tests/test_gate_fixtures.py, tests/test_block_contract.py, tests/test_smbus_lead_contract.py | **ENFORCED** |
 | SCH-004 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_b.py, gen_sch_c.py, gen_sch_d.py | safe_lines.py -> safe_lines_<letter> | tests/test_safe_lines.py | **ENFORCED** |
 | SCH-005 | SCHEMATIC_INTEGRITY | BLOCKER | kisch.py (check_land, land_pads), schlayout.py (_lands), gen_sch_e.py, gen_sch_b.py | kisch.py, pin_map_lands.py -> pin_map_lands_<letter> | tests/test_pin_map_lands.py | **ENFORCED** |
 | SGN-001 | VERIFICATION_SIGNOFF | BLOCKER | rules_status.py, over pcb_rules.yaml and pcb_rules_coverage.yaml | rules_status.py -> rules_complete | tests/test_rules_status.py | **ENFORCED** |
@@ -63,7 +63,7 @@ appears in the gap register.
 | STK-002 | STACKUP | BLOCKER | NONE_YET | layer_judge.py -> layer_judge |  | **OWNER_DECISION_REQUIRED** |
 | SUP-001 | LIFECYCLE_SUPPLY | BLOCKER | lcsc_fill.py, jlc-handfit.txt | jlc_certify.py, lcsc_fill.py -> jlc_certify_<letter>, lcsc_fill | tests/test_order_codes.py, tests/test_gate_fixtures.py, tests/test_certify_identity.py | **ENFORCED** |
 | THM-001 | THERMAL | BLOCKER | gen_pcb_*3.py copper and thermal vias | thermal.py -> thermal | tests/test_thermal.py | **DOCUMENTED_ONLY** |
-| TRN-001 | TRANSIENT_PROTECTION | BLOCKER | gen_sch_*.py protection parts and each board's external_ports declaration | port_protect.py -> port_protect_<letter> | tests/test_port_protect.py | **ENFORCED** |
+| TRN-001 | TRANSIENT_PROTECTION | BLOCKER | gen_sch_*.py protection parts (one-way clamps through kisch.tvs(), 26 September 2026) and each board's external_ports declaration | port_protect.py -> port_protect_<letter> | tests/test_port_protect.py, tests/test_kisch_tvs.py | **ENFORCED** |
 | TST-001 | TEST_BRINGUP | MUST_JUSTIFY | rules_render.py bringup_doc, from each board's own intent file | rules_render.py | tests/test_rules_status.py | **VERIFIED_MANUALLY** |
 | VIA-001 | VIAS | BLOCKER | escape.py, prefanout.py, gen_pcb_*.py minimums | via_audit.py -> via_audit | tests/test_board_gates.py | **ENFORCED** |
 | VIA-002 | VIAS | BLOCKER | escape.py, prefanout.py, gen_pcb_*.py minimums; boards/<letter>.json annular_min_mm and via_ring_min_mm | via_audit.py -> via_annular | tests/test_board_gates.py | **ENFORCED** |

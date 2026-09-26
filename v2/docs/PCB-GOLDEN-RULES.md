@@ -181,7 +181,19 @@ schematic and no netlist, so its contract is between two BOARDS: gen_pcb_e5.py r
 puts a target under each spring pin carrying that pin's net, and block_contract.py re-derives that match by
 position and compares it, 33 checks on the current A. It is the one blind-mate interface in the kit, where a
 target on the wrong net is invisible until the pack current is on it, and until today nothing checked it at
-all
+all. 26 September 2026 (S-05 of MESHSAT-1357, adjudication A07; tool in 93138ac1): the pack SMBus lead is a
+contract. J_SMB on P and on E must be the same connector family, pitch and pin count (read from the
+footprints), pin n must carry the same role at both ends (clock, data, return; E may leave P's PRES open or
+ground it, TI SLUSC67B 8.2.2.2.3), P's return pin must be the net of its own negative lead W_N, the load side
+of the shunt, and every clamp on P's SMBus clock and data lines must return to W_N too (TI SLUSC67B Figures
+21, 29, 30). Before faf8c981 it would have failed four ways (a 1x6 2.54 mm header on E against P's JST-XH
+1x4, clock and data crossed, P's return and its SMBus clamps on the cell-side ground); the generators carry
+A07's fix since then, and the round 7b box regeneration with this tool read check_contracts PASS 96 of 96
+across the set, the five new rows the lead's. A contract judged on every input and not decided (check(None,
+...)) makes the board and set verdicts INCONCLUSIVE when nothing failed. RF-002's transmitter walk
+(tx_inhibit.py, held for its own commit) is NOT one of this rule's contracts: its results go to the `inhibit`
+group alone, so they decide inhibit_chain_<letter> and move neither check_contracts_<letter> nor the set
+verdict.
 
 ### SCH-004  a safety line fails safe
 
@@ -1502,7 +1514,7 @@ the signal.
 | risk | SAFETY, RELIABILITY, ELECTRICAL_FUNCTION |
 | verified by | MANUAL_REVIEW, SCRIPT at SCHEMATIC (partially automatable) |
 | source | SOURCE_UNVERIFIED |
-| implementation | gen_sch_*.py protection parts and each board's external_ports declaration |
+| implementation | gen_sch_*.py protection parts (one-way clamps through kisch.tvs(), 26 September 2026) and each board's external_ports declaration |
 | maturity | **ENFORCED** |  (at writing: SOURCE_UNVERIFIED)
 | owner | SESSION |
 | waiver | by OWNER, scope one port, expires prototype validation |
@@ -1525,7 +1537,21 @@ receptacle, and board E's shore inlet whose SMCJ33A sits BEHIND the pass FET so 
 the clamp exists to stop. The check took four rounds of false-positive removal to get there, each recorded in
 its own docstring: a part family matched with a word boundary that a part number does not have, galvanic
 isolation not recognised as protection, protection treated as a single net rather than a chain, and a search
-that walked out through a power rail and found a clamp on the other side of the board
+that walked out through a power rail and found a clamp on the other side of the board. 26 SEPTEMBER 2026
+(S-09 of MESHSAT-1357, adjudication A03; tool in 93138ac1): A CLAMP THAT TOUCHES THE CONDUCTOR IS NOT ENOUGH,
+IT HAS TO POINT THE RIGHT WAY. All sixteen one-way clamps of the set had been drawn with KiCad's
+bidirectional Device:D_TVS (pins A1/A2, no cathode) and seven had the band on the return (D's D1, E's D1 to
+D4 and D10, P's D1): forward diodes across their own rails. port_protect.py now judges every clamp on every
+board, declared port or not: a one-way part on an A1/A2 symbol FAILS, a two-way part on a K/A symbol FAILS,
+and a one-way clamp FAILS when its cathode (the K pin, or pad 1 on an A1/A2 drawing) is on the return. The
+direction is read from the part number (the families whose makers' sheets are held) or from the generator's
+declaration, which kisch.tvs() writes into the intent with its datasheet basis, never from the drawing; a
+part whose direction is read from neither is UNJUDGED and makes the verdict INCONCLUSIVE. kisch.tvs() draws a
+one-way part with Device:D_Zener (K on pin 1) and refuses a swapped call. C, D, E and P took their
+corrections in faf8c981. Reading on the round 7b box regeneration: A FAIL (D1 to D4 on the two-way symbol, 0
+reversed; D22 BZT52C12 read OK), B FAIL (D1, D2, D101, D201, D301 and D520 on the two-way symbol, 0
+reversed), C PASS (0 clamps), D PASS (7), E PASS (5), P PASS (3). A's and B's switch to kisch.tvs() is owed
+by their board streams; it changes their pin names and intents only
 
 ## Isolation Spacing
 
@@ -1996,7 +2022,13 @@ been compared with a preview by anyone. That is an assumption rather than a veri
 INCONCLUSIVE with the 41 named, and the list is the checklist for the session that has the preview. The tool
 also compares the TWO copies of the table, the CSV and the literal in make_handoff.py that actually reaches a
 CPL: that line is on the never-auto floor, so a disagreement is reported for a person to resolve rather than
-edited here.
+edited here. 26 September 2026 (MESHSAT-1357 round 6, R4T-D35; tool in 93138ac1): the polarised-footprint
+test matched its families only at the START of the footprint name, so every land named after its maker
+dropped out: board P's gauge left the list when it moved to Texas_RSM0032A_VQFN-32 in round 4, and board E's
+SGP41 on Sensirion_DFN-6 and board P's three-terminal Eaton_SCF9550 were never on it. A family now counts
+anywhere in the name at a word boundary, and any part with three or more pins is polarised whatever its name.
+The checklist grows from 47 to 82 footprints on the committed netlists; ROTATION-CHECKLIST.md is re-rendered
+with assembly_set.py --checklist.
 
 ## Test Bringup
 

@@ -749,12 +749,6 @@ open_items:
     class: SESSION
     status: OPEN
     title: "RF-002 enumerates every transmitter from the netlists and fails any without a hardware gate."
-  - id: S-05
-    class: SESSION
-    status: OPEN
-    title: >-
-      The J_SMB contract in check_contracts.py (the connector half closed in faf8c981: both ends JST-XH 1x4 in board
-      P's pin order).
   - id: S-07
     class: SESSION
     status: OPEN
@@ -1032,6 +1026,16 @@ closed_items:
       v2/ecad/tools/gen_sch_a.py:26-47 and :716 read at eadbe571: the kit's loads sit on VBAT, the charger's VSYS, and
       the pack reaches it through the blade F1 and the RSR shunt R17 (CELL_FUSED), TI's SLUSE66A Figure 10-1 topology.
     title: "Charger topology and host duty (loads on VSYS or a host-computed charge current; RSNS_RAC written)."
+  - id: S-05
+    closed_by: commit 93138ac1
+    closing_evidence: >-
+      v2/ecad/tools/check_contracts.py read at 93138ac1: the pack SMBus lead is a cross-board contract between P and E,
+      J_SMB at both ends, the same family, pitch and pin count, pin n's role at both ends, P's return on its own
+      negative lead W_N, and every SMBus clamp returning to W_N (TI SLUSC67B Figures 21, 29 and 30); on the box
+      regeneration of round 7b with this tool it read PASS 96 of 96 across the set, the five new rows the lead's.
+    title: >-
+      The J_SMB contract in check_contracts.py (the connector half closed in faf8c981: both ends JST-XH 1x4 in board
+      P's pin order).
   - id: S-06
     closed_by: commit 4ec785d8
     closing_evidence: >-
@@ -1936,9 +1940,13 @@ records:
           v2/docs/ARCH-PCB-B-IOHA.md re-read at the integration of 26 September 2026: the architecture merge corrected it in sections
           5, 6 and 10a only (the fail-safe, break-before-make, CAN rate and voter-count paragraphs); sections 4, 15 and
           15a and line 17 are byte-identical to eadbe571's, so this reading stands on the file at 6c3c93b7f32f953a
+      - >-
+          v2/docs/PANEL.md re-read at the round 7b integration of 26 September 2026: only section 10's pack SMBus
+          sentences changed (the lead as generated since faf8c981, CFL-015); section 1 and its pin table are byte-identical, so this
+          reading stands on the file at 6121b640ea28f30f
     evidence_bound_to:
       - "v2/docs/ARCH-PCB-B-IOHA.md@6c3c93b7f32f953a"
-      - "v2/docs/PANEL.md@43e150bc58944ea2"
+      - "v2/docs/PANEL.md@6121b640ea28f30f"
       - "v2/ecad/tools/gen_sch_b.py@6e3d880901fd3030"
     release_effect: ADVISORY
     source:
@@ -3526,8 +3534,12 @@ records:
           v2/docs/PANEL.md section 7 read at eadbe571 against v2/ecad/tools/gen_sch_a.py:1112 and the committed netlist
           v2/ecad/pcb-a-power-a23/out/pcb-a-power.net (R102 100k from EMCON_HW to GND; R145 on TX_INHIBIT_n; the slot
           enable pull-downs): the section describes the panel-absent state as generated
+      - >-
+          v2/docs/PANEL.md re-read at the round 7b integration of 26 September 2026: only section 10's pack SMBus
+          sentences changed (the lead as generated since faf8c981, CFL-015); section 7 is byte-identical, so this
+          reading stands on the file at 6121b640ea28f30f
     evidence_bound_to:
-      - "v2/docs/PANEL.md@43e150bc58944ea2"
+      - "v2/docs/PANEL.md@6121b640ea28f30f"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2e8923d6853ee4e1"
     release_effect: ADVISORY
     source:
@@ -3571,11 +3583,15 @@ records:
           open (the maker states no receive threshold for its PTT pin, bench E-01); the rules that judge the whole
           record, RF-002 and SCH-004, read AWAITING_REVALIDATION on board D (v2/docs/CURRENT-EVIDENCE.md), and the held
           RF-002 walk reads the SA868 row UNDECIDED on D (458b2873)
+      - >-
+          v2/docs/CURRENT-EVIDENCE.md re-read at the round 7b integration of 26 September 2026: RF-002 on board D
+          now reads AWAITING_REVALIDATION (TOOL_CHANGED, check_contracts.py changed in 93138ac1) and SCH-004 on D
+          AWAITING_REVALIDATION (NETLIST_MISMATCH), so neither decides and this reading stands
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@f13d8b70099ab03e"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2e8923d6853ee4e1"
       - "v2/docs/feasibility/EMCON.md@268c5e3d0cd5cff7"
-      - "v2/docs/CURRENT-EVIDENCE.md@bcc3c169d3f3d3b9"
+      - "v2/docs/CURRENT-EVIDENCE.md@780bf278bb95dd84"
     release_effect: BLOCKER
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2825", "v2/docs/PANEL.md section 6", "v2/docs/feasibility/EMCON.md sections 4.1 and 4.2"]
     source_check: VERIFIED
@@ -4336,10 +4352,13 @@ records:
           because its inputs describe the old pack
           (v2/docs/review-packets/battery/evidence/regeneration/gates-new/pack_protection.log); the qualified review
           of D-09 has not been engaged (v2/docs/review-packets/battery/REVIEW-REQUEST.md: nothing sent)
+      - >-
+          v2/docs/CURRENT-EVIDENCE.md re-read at the round 7b integration of 26 September 2026: BAT-001 on board P
+          still reads FAIL and AWAITING_REVALIDATION (PREDATES_ARTEFACT), so this reading stands
     evidence_bound_to:
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@4342c4cbe1b43dc4"
       - "v2/ecad/tools/gen_sch_p.py@e111e10a047f587e"
-      - "v2/docs/CURRENT-EVIDENCE.md@bcc3c169d3f3d3b9"
+      - "v2/docs/CURRENT-EVIDENCE.md@780bf278bb95dd84"
       - "v2/docs/review-packets/battery/REVIEW-REQUEST.md@e36ebfd98c2ead3a"
     release_effect: BLOCKER
     source:
@@ -4741,8 +4760,12 @@ records:
       - >-
           v2/ecad/tools/pcb_decisions.yaml:52-92 and :863-915 read at eadbe571: decision 28's outcome calls board P's
           2 oz stackup record owed, which d468613e recorded, and decision 40's says nothing is laid, which faf8c981 laid
+      - >-
+          v2/docs/PANEL.md re-read at the round 7b integration of 26 September 2026: only section 10's pack SMBus
+          sentences changed (the lead as generated since faf8c981, CFL-015); section 6 is byte-identical, so this
+          reading stands on the file at 6121b640ea28f30f
     evidence_bound_to:
-      - "v2/docs/PANEL.md@43e150bc58944ea2"
+      - "v2/docs/PANEL.md@6121b640ea28f30f"
       - "v2/docs/CONOPS.md@3c8591471936c45a"
       - "v2/docs/V2-SPEC.md@c3c84ac28266d3db"
       - "v2/docs/OPERATING-ENVELOPE.md@5af08b98e6de52f7"
@@ -5837,8 +5860,12 @@ records:
           v2/docs/PANEL.md section 10 read at eadbe571 still reads "R26 60.4k ... sits in the BQ25731's 2S window",
           against v2/ecad/tools/gen_sch_a.py:765-771 (R26 13.3 kohm, 75 percent, 4S) and :26-47 (the loads on VBAT, the
           charger's VSYS, the pack through F1 and R17)
+      - >-
+          v2/docs/PANEL.md re-read at the round 7b integration of 26 September 2026: section 10 was rewritten there
+          for the pack SMBus lead only (CFL-015), and its charger sentence still reads "R26 60.4k ... sits in the
+          BQ25731's 2S window", so this reading stands on the file at 6121b640ea28f30f
     evidence_bound_to:
-      - "v2/docs/PANEL.md@43e150bc58944ea2"
+      - "v2/docs/PANEL.md@6121b640ea28f30f"
       - "v2/docs/CONOPS.md@3c8591471936c45a"
       - "v2/docs/OPERATING-ENVELOPE.md@5af08b98e6de52f7"
       - "v2/ecad/tools/gen_sch_a.py@a0452054ec04cf5d"
@@ -5883,9 +5910,11 @@ records:
       rules: [SCH-003, INT-001]
       decisions: []
     rule_coverage: PARTIAL
-    waits_on: [S-05, S-07]
-    status: CONFLICT_OPEN
-    evidence_result: FAIL
+    status: CONFLICT_RESOLVED
+    resolved_by: >-
+      Commit 93138ac1 (check_contracts.py carries the J_SMB contract, S-05) and the round 7b integration commit that
+      rewrote ASSEMBLY.md section 4 and build step 7 and PANEL.md section 10 to describe the lead as generated.
+    evidence_result: PASS
     evidence_phase: SCHEMATIC
     evidence_class: DESK_REVIEW
     evidence:
@@ -5894,22 +5923,27 @@ records:
           and board P's J_SMB in the same order with its return on the pack side of the shunt (committed netlists
           v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net and v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net)
       - >-
-          the rest does not: v2/docs/ASSEMBLY.md section 4 (the Pack SMBus row) and PANEL.md section 10 describe E6's
-          J_SMB as a 2.54 mm 1x6 header, and v2/ecad/tools/check_contracts.py names no J_SMB (the P/E lead contract is in
-          the held round-7 tool set)
+          v2/ecad/tools/check_contracts.py carries the J_SMB contract since 93138ac1 (S-05): the same family, pitch
+          and pin count, pin n's role at both ends, P's return on its own negative lead W_N; the committed netlists
+          read at 93138ac1 give E's J_SMB 1 SMBC, 2 SMBD, 3 GND, 4 PRES_LEAD and P's 1 SMBC, 2 SMBD, 3 PACK_N, 4 PRES_J
+      - >-
+          v2/docs/ASSEMBLY.md section 4 (the Pack SMBus row) and build step 7, and v2/docs/PANEL.md section 10, rewritten
+          at the round 7b integration of 26 September 2026 to describe the lead as generated: one JST-XH 1x4 at both
+          ends in P's order, a straight lead, P's pin 3 on PACK_N
     evidence_bound_to:
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d910e49c5f5f50b2"
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@4342c4cbe1b43dc4"
-      - "v2/docs/ASSEMBLY.md@acecd5a9e86d6a52"
-      - "v2/docs/PANEL.md@43e150bc58944ea2"
-      - "v2/ecad/tools/check_contracts.py@4f4cb3a61d808820"
+      - "v2/docs/ASSEMBLY.md@e47f8c8508e24377"
+      - "v2/docs/PANEL.md@6121b640ea28f30f"
+      - "v2/ecad/tools/check_contracts.py@7d17ab3ed7c53854"
     release_effect: BLOCKER
     source: ["v2/ecad/tools/gen_sch_e.py:218", "v2/docs/ASSEMBLY.md section 4", "v2/docs/PANEL.md section 10"]
     source_check: VERIFIED
     conflict_ref: C-29
     history: >-
       At d468613e the two ends disagreed (P JST-XH 1x4, E a 1x6 header, ASSEMBLY 'XH2.5 x 6'); a straight lead would
-      have swapped clock and data (adjudication A07). The generators agree since faf8c981.
+      have swapped clock and data (adjudication A07). The generators agree since faf8c981; the contract check landed
+      in 93138ac1 and the documents were rewritten the same day, which resolved the conflict.
 
   - id: CON-014
     kind: constraint
