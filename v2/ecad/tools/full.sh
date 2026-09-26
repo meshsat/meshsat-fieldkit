@@ -77,7 +77,10 @@ rm -f out/$N.net
 [ "$BSCH" -eq 0 ] || block "the schematic build exited $BSCH (out/build_sch.log)" out/build_sch.log
 [ -s out/$N.net ] || block "no netlist (out/build_sch.log)" out/build_sch.log
 rm -f out/$N-erc.status out/erc_gate.verdict.json
-python3 ../tools/erc_gate.py . $N > out/erc_gate.log 2>&1; ERCG=$?; tail -6 out/erc_gate.log
+# THE ERC IS TAKEN BY THE GATE ITSELF (--run, 26 September 2026, the tools stream's recording round): kicad-cli runs again
+# on the schematic this directory holds and erc_gate writes out/$N-erc.json.prov.json naming it by sha, which is what ties the
+# reading to out/$N.net (rule SCH-001); build_sch.sh's own report cannot say which schematic it was taken on. A few seconds.
+python3 ../tools/erc_gate.py . $N --run > out/erc_gate.log 2>&1; ERCG=$?; tail -6 out/erc_gate.log
 # 11 Sep 2026 (MESHSAT-862, stage 0a): the gate's own exit code decides, not a grep of a status file it also writes.
 # 3 is INCONCLUSIVE (no ERC output at all) and blocks exactly like 1, which the status-file grep also did but silently.
 [ "$ERCG" -eq 0 ] || block "ERC (out/$N-erc.json, out/erc_gate.verdict.json; allow-list erc-allow.txt with a reason per line)" out/erc_gate.log

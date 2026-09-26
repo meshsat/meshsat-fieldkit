@@ -427,6 +427,15 @@ def clamp_rows(net_path):
     return out
 
 
+def recorded_inputs(letter, path=None):
+    """WHAT THIS READING JUDGED, BY CONTENT (MESHSAT-1357, 26 September 2026, the tools stream's recording round): the
+    netlist and the intent beside it, or on a board with no schematic (E5, --board) its declared phase's board file
+    (phase_artefacts.reading_inputs, which says why). It recorded the path as typed, and on E5 the letter alone, so
+    rules_status could tie no reading of TRN-001 on E5 to any board."""
+    import phase_artefacts as _pa
+    return _pa.reading_inputs(letter, path)
+
+
 def _write_both(letter, result, **kw):
     """The board's own verdict beside the bare one (17 September 2026).
 
@@ -457,17 +466,17 @@ def main(argv):
         if items:
             print("port_protect: board %s declares %d item(s) and has no netlist to judge them on" % (letter.upper(), len(items)))
             return _write_both(letter, _v.INCONCLUSIVE, counts={"declared": len(items)}, denominator=0,
-                               inputs={"board": letter}, rules=["TRN-001"], out_dir=out_dir,
+                               inputs=recorded_inputs(letter), rules=["TRN-001"], out_dir=out_dir,
                                missing_input="this board declares items of this kind and has no netlist to judge them on",
                                note="declared, and not judgeable without a netlist")
         if ("external_ports" in t) and why:
             print("port_protect: board %s declares none, with its reason" % letter.upper())
             return _write_both(letter, _v.PASS, counts={"declared": 0}, denominator=0, evidence=[why],
-                               inputs={"board": letter}, rules=["TRN-001"], out_dir=out_dir,
+                               inputs=recorded_inputs(letter), rules=["TRN-001"], out_dir=out_dir,
                                note="this board declares that it has none, with its reason, and it has no netlist")
         print("port_protect: board %s declares nothing and has no netlist" % letter.upper())
         return _write_both(letter, _v.INCONCLUSIVE, counts={"declared": 0}, denominator=0,
-                           inputs={"board": letter}, rules=["TRN-001"], out_dir=out_dir,
+                           inputs=recorded_inputs(letter), rules=["TRN-001"], out_dir=out_dir,
                            missing_input="this board has no netlist and no declaration, so nobody has looked",
                            note="no netlist and no declaration")
     letter = _bt.letter_for(path.replace("/out/", "/").replace(".net", ".kicad_pcb"))
@@ -508,7 +517,7 @@ def main(argv):
         for b in c_bad: print("  FAIL %s" % b)
         return _write_both(letter, _v.FAIL, denominator=len(clamps),
                            counts=dict({"ports": 0, "unprotected": 0}, **c_counts), evidence=c_bad[:20],
-                           inputs={"netlist": path, "board": letter},
+                           inputs=recorded_inputs(letter, path),
                            note="no external port is declared, and %d clamp(s) on this board are reversed or drawn "
                                 "so their polarity cannot be read" % len(c_bad))
     if not n_declared and c_unj and "external_ports" in (_bt.table(letter) or {}) and \
@@ -516,7 +525,7 @@ def main(argv):
         for u in c_unj: print("  UNJUDGED %s" % u)
         return _write_both(letter, _v.INCONCLUSIVE, denominator=len(clamps),
                            counts=dict({"ports": 0, "unprotected": 0}, **c_counts), evidence=c_unj[:20],
-                           inputs={"netlist": path, "board": letter},
+                           inputs=recorded_inputs(letter, path),
                            note="no external port is declared, and %d clamp(s) could not be judged for polarity"
                                 % len(c_unj))
     if not n_declared:
@@ -537,10 +546,10 @@ def main(argv):
         # and so does a board with no declaration at all.
         if answered and why:
             return _write_both(letter, _v.PASS, denominator=len(clamps), counts=dict({"ports": 0, "unprotected": 0}, **c_counts),
-                            inputs={"netlist": path, "board": letter},
+                            inputs=recorded_inputs(letter, path),
                             note="this board declares that no conductor of its own leaves the enclosure, so the "
                                  "rule is true of it with nothing to check: %s" % why[:180])
-        return _write_both(letter, _v.INCONCLUSIVE, denominator=0, inputs={"netlist": path, "board": letter},
+        return _write_both(letter, _v.INCONCLUSIVE, denominator=0, inputs=recorded_inputs(letter, path),
                         note=("this board declares no external port and gives no reason: a zero with nothing "
                               "behind it is a question, not an answer") if answered else
                              ("this board declares no external port, and no board of this kit is truly internal: "
@@ -563,7 +572,7 @@ def main(argv):
                                  "not_on_netlist": len(missing)}, **c_counts),
                     denominator=(sum(r["pins"] for r in rows) or 1) + len(clamps),
                     evidence=(bad[:n_port_bad][:12] + c_bad[:12] + ["UNJUDGED " + u for u in c_unj[:6]])[:20],
-                    inputs={"netlist": path, "board": letter},
+                    inputs=recorded_inputs(letter, path),
                     note=("every declared external conductor meets a protection part before a chip, and every clamp "
                           "is drawn and placed the right way round" if result == _v.PASS else
                           ("every declared external conductor meets a protection part before a chip; %d clamp(s) could "

@@ -88,7 +88,9 @@ run() { echo "--- $1"; shift; timeout 1800 "$@" 2>&1 | tail -3; }
 # THE ERC GATE BELONGS TO THE SWEEP TOO (17 September 2026). build_sch.sh above runs the ERC and writes its
 # JSON; the gate over it was the chain's alone, so SCH-001 could only be refreshed by a full chain run and read
 # as stale on seven boards the moment the rule set moved. It judges the file this sweep has just produced.
-[ -s out/$N-erc.json ] && run "ERC" python3 $T/erc_gate.py . $N
+# --run (26 September 2026, the tools stream's recording round): the gate re-takes the ERC with kicad-cli on the schematic this
+# sweep regenerated and names that schematic by sha, so the reading is tied to the sweep's netlist by content (SCH-001).
+[ -s out/$N-erc.json ] && run "ERC" python3 $T/erc_gate.py . $N --run
 if [ -f $T/check_pcb_$L.py ]; then run "board gate"        python3 $T/check_pcb_$L.py $N.kicad_pcb
 else echo "--- board gate"; echo "gate_sweep: there is no check_pcb_$L.py, so nothing asserts a number about this board"; fi
 run "zone nets"         python3 $T/check_zone_nets.py $N.kicad_pcb

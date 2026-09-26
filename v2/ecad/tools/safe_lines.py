@@ -109,6 +109,15 @@ def judge(net_path, letter=None):
     return rows, bad, len(lines)
 
 
+def recorded_inputs(letter, path=None):
+    """WHAT THIS READING JUDGED, BY CONTENT (MESHSAT-1357, 26 September 2026, the tools stream's recording round): the
+    netlist and the intent beside it, or on a board with no schematic (E5, --board) its declared phase's board file
+    (phase_artefacts.reading_inputs, which says why). It recorded the path as typed, and on E5 the letter alone, so
+    rules_status could tie no reading of SCH-004 on E5 to any board."""
+    import phase_artefacts as _pa
+    return _pa.reading_inputs(letter, path)
+
+
 def _write_both(letter, result, **kw):
     """The board's own verdict beside the bare one, the port_protect pattern: SCH-004 is per board and a board
     with no reading of its own would otherwise read whatever the last run left in the set-level out/."""
@@ -134,17 +143,17 @@ def main(argv):
         if items:
             print("safe_lines: board %s declares %d item(s) and has no netlist to judge them on" % (letter.upper(), len(items)))
             return _write_both(letter, _v.INCONCLUSIVE, counts={"declared": len(items)}, denominator=0,
-                               inputs={"board": letter}, rules=["SCH-004"], out_dir=out_dir,
+                               inputs=recorded_inputs(letter), rules=["SCH-004"], out_dir=out_dir,
                                missing_input="this board declares items of this kind and has no netlist to judge them on",
                                note="declared, and not judgeable without a netlist")
         if ("safety_lines" in t) and why:
             print("safe_lines: board %s declares none, with its reason" % letter.upper())
             return _write_both(letter, _v.PASS, counts={"declared": 0}, denominator=0, evidence=[why],
-                               inputs={"board": letter}, rules=["SCH-004"], out_dir=out_dir,
+                               inputs=recorded_inputs(letter), rules=["SCH-004"], out_dir=out_dir,
                                note="this board declares that it has none, with its reason, and it has no netlist")
         print("safe_lines: board %s declares nothing and has no netlist" % letter.upper())
         return _write_both(letter, _v.INCONCLUSIVE, counts={"declared": 0}, denominator=0,
-                           inputs={"board": letter}, rules=["SCH-004"], out_dir=out_dir,
+                           inputs=recorded_inputs(letter), rules=["SCH-004"], out_dir=out_dir,
                            missing_input="this board has no netlist and no declaration, so nobody has looked",
                            note="no netlist and no declaration")
     letter = _bt.letter_for(path.replace("/out/", "/").replace(".net", ".kicad_pcb"))
@@ -180,15 +189,15 @@ def main(argv):
         why = str((_bt.table(letter) or {}).get("_safety_lines_why", "")).strip()
         if answered and why:
             return _write_both(letter, _v.PASS, counts=counts, denominator=0, evidence=[why],
-                               inputs={"board": letter, "netlist": path}, rules=["SCH-004"], out_dir=out_dir,
+                               inputs=recorded_inputs(letter, path), rules=["SCH-004"], out_dir=out_dir,
                                note="this board declares that no line of its own inhibits a hazard, with its reason")
         return _write_both(letter, _v.INCONCLUSIVE, counts=counts, denominator=0,
-                           inputs={"board": letter, "netlist": path}, rules=["SCH-004"], out_dir=out_dir,
+                           inputs=recorded_inputs(letter, path), rules=["SCH-004"], out_dir=out_dir,
                            missing_input="this board declares no safety line, and a zero with nothing behind it is not an answer",
                            note="no safety line is declared on this board")
     res = _v.FAIL if bad else _v.PASS
     return _write_both(letter, res, counts=counts, denominator=counts["on_netlist"], evidence=ev,
-                       inputs={"board": letter, "netlist": path}, rules=["SCH-004"], out_dir=out_dir,
+                       inputs=recorded_inputs(letter, path), rules=["SCH-004"], out_dir=out_dir,
                        note=("%d line(s) this board reads hold the safe state with its own copper; the rest are "
                              "driven here or only cross it" % counts["listened"])
                        if not bad else "a declared safety line does not hold its safe state on this board")

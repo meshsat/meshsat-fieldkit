@@ -31,7 +31,11 @@ import verdict as _v
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))     # v2/ecad/tools -> the repo root
 TABLE = os.path.join(HERE, "pcb_pack_protection.yaml")
-NETLIST = os.path.join(os.path.dirname(HERE), "pcb-p-pack-p2", "out", "pcb-p-pack.net")
+# THE DECLARED PHASE'S NETLIST, NOT A DIRECTORY NAMED IN THIS FILE (MESHSAT-1357, 26 September 2026, the tools stream's
+# recording round). This was `pcb-p-pack-p2/out/pcb-p-pack.net` written out, which is board P's declared phase directory
+# today and would silently stop being it when P moves; it is now the netlist rules_status.candidate judges against.
+import phase_artefacts as _pa
+NETLIST = _pa.netlist("p") or os.path.join(os.path.dirname(HERE), "pcb-p-pack-p2", "out", "pcb-p-pack.net")
 REQUIRED = {"over-voltage": "CELL_OVER_VOLTAGE", "under-voltage": "CELL_UNDER_VOLTAGE",
             "over-current in discharge": "PACK_OVER_CURRENT_DISCHARGE",
             "over-current in charge": "PACK_OVER_CURRENT_CHARGE",
@@ -157,6 +161,18 @@ def judge(t, netlist=None):
                 devices=len(devs), software_only=len(soft_only), quotes_checked=txt is not None)
 
 
+def recorded_inputs(table, netlist, t):
+    """WHAT THIS READING JUDGED, BY CONTENT (26 September 2026). It recorded the netlist relative to the repository root,
+    which verdict.write hashes only when the tool is run from there, so no reading of BAT-001 could be tied to board P's
+    netlist. Now: the protection table and the cell maker's specification it quotes by sha (configuration inputs,
+    rules_status.CONFIG_INPUTS) and board P's netlist by sha and by content, or None where none was read."""
+    spec = (t.get("cell") or {}).get("spec")
+    spec_p = (spec if os.path.isabs(spec) else os.path.join(ROOT, spec)) if spec else None
+    return {"table": _pa.record(table, content=False) or os.path.relpath(table, ROOT),
+            "netlist": _pa.record(netlist) if netlist and os.path.isfile(netlist) else None,
+            "cell_spec": (_pa.record(spec_p, content=False) if spec_p else None) or spec}
+
+
 def main(a):
     table = _v.opt(a, "--table", TABLE)
     netlist = _v.opt(a, "--netlist", NETLIST)
@@ -173,8 +189,7 @@ def main(a):
                     counts={"functions": r["functions"], "limits": r["limits"], "devices": r["devices"],
                             "checks": r["checks"], "fail": len(r["fails"]), "software_only": r["software_only"]},
                     denominator=r["checks"], evidence=r["fails"][:20],
-                    inputs={"table": os.path.relpath(table, ROOT), "netlist": os.path.relpath(netlist, ROOT) if os.path.isfile(netlist) else None,
-                            "cell_spec": (t.get("cell") or {}).get("spec")},
+                    inputs=recorded_inputs(table, netlist, t),
                     note="every protection this requirement names, with the device that implements it, its "
                          "configured threshold, the cell limit it is derived from (quoted and re-read from the "
                          "cell maker's own specification) and the test that will demonstrate it on the "

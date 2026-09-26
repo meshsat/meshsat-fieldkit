@@ -575,13 +575,19 @@ def t_the_layout_entry_table_names_the_first_step_and_its_owner():
     A = S.AWAITING_REVALIDATION
     audits = {"x": _audit("x", [
         _prow("R-1", "PASS", A, "NETLIST_MISMATCH", S.CURRENT_CANDIDATE, "BOUND", ["safe_lines.py"]),
-        _prow("R-2", "PASS", A, "UNBOUND", A, "UNBOUND", ["erc_gate.py"]),
+        _prow("R-2", "PASS", A, "UNBOUND", A, "UNBOUND", ["new_recorder.py"]),
         _prow("R-3", "INCONCLUSIVE", A, "LAYOUT_NOT_CURRENT", A, "LAYOUT_NOT_CURRENT", ["edge_length.py"]),
-        _prow("R-4", "PASS", A, "NETLIST_MISMATCH", A, "CONFIG_UNDECLARED", ["new_tool.py"])]),
+        _prow("R-4", "PASS", A, "NETLIST_MISMATCH", A, "CONFIG_UNDECLARED", ["new_tool.py"]),
+        # the tools stream's recording round (26 September 2026): a re-take of erc_gate binds only with --run, and the
+        # set verdict of check_contracts on a board it reads nothing of is the registry writer's step, not the tool's
+        _prow("R-5", "PASS", A, "TOOL_CHANGED", S.CURRENT_CANDIDATE, "BOUND", ["erc_gate.py"]),
+        _prow("R-6", "PASS", A, "TOOL_CHANGED", A, "UNBOUND", ["check_contracts.py"])]),
               "y": _audit("y", [_prow("R-1", "PASS", A, "NETLIST_MISMATCH", S.CURRENT_CANDIDATE, "BOUND", ["safe_lines.py"])])}
     kinds = {b["rule"]: (b["kind"], b["owner"], b["closes"]) for b in RR.entry_blockers(audits["x"], {})}
     assert kinds["R-1"][:2] == ("RETAKE", "board stream X"), kinds["R-1"]
-    assert kinds["R-2"][:2] == ("TOOL", "tools stream") and "erc_gate.py:53" in kinds["R-2"][2], kinds["R-2"]
+    assert kinds["R-2"][:2] == ("TOOL", "tools stream") and "new_recorder.py taught to record" in kinds["R-2"][2], kinds["R-2"]
+    assert kinds["R-5"][:2] == ("RETAKE", "board stream X") and "--run" in kinds["R-5"][2], kinds["R-5"]
+    assert kinds["R-6"][0] == "REGISTRY" and "block_contract.py" in kinds["R-6"][2], kinds["R-6"]
     assert kinds["R-3"][:2] == ("LAYOUT_TOOL", "tools stream") and "INCONCLUSIVE" in kinds["R-3"][2], kinds["R-3"]
     assert kinds["R-4"][0] == "CONFIG" and "evidence stream" in kinds["R-4"][1], kinds["R-4"]
     body = RR.current_evidence_doc(audits, holds={}, regs=EMPTY)

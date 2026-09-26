@@ -44,13 +44,27 @@ def _yaml():
 
 
 def netlist_refs(stem, ecad=None):
-    """{reference} from the newest netlist of this board in the tree, or None when there is none to read."""
-    ecad = ecad or ECAD
-    cands = [c for c in glob.glob(os.path.join(ecad, stem + "*", "out", stem + ".net")) if os.path.isfile(c)]
-    if not cands: return None
-    import re
-    txt = open(max(cands, key=os.path.getmtime), encoding="utf-8", errors="replace").read()
-    return set(re.findall(r'\(comp \(ref "([^"]+)"\)', txt))
+    """{reference} from the DECLARED phase's netlist of this board, or None when the tree holds none to read."""
+    got = netlist_read(stem, ecad)
+    return got[0] if got else None
+
+
+def netlist_read(stem, ecad=None):
+    """({reference}, record) of the DECLARED phase's netlist of the board whose stem this is, or None.
+
+    THE DECLARED PHASE, NOT THE NEWEST FILE (MESHSAT-1357, 26 September 2026, the tools stream's recording round). This
+    read the newest `<stem>*/out/<stem>.net` by mtime, which on a box with forty-one arm directories for one board is
+    whichever arm ran last (check_contracts.netlist_path, 14 September), and it recorded none of them, so no reading
+    of PWR-003 or BAT-002 could be tied to the netlist of the board it is filed under. The netlist is now the one
+    `rules_status.candidate` judges against (phase_artefacts.netlist: the manifest's stem, the routeflow profile's
+    project directory), and the bytes the references were read from are recorded by sha and by content."""
+    import phase_artefacts as _pa
+    letter = next((k.lower() for k, v in BOARD_NET.items() if v == stem), "")
+    p = _pa.netlist(letter, ecad) if letter else None
+    if not p or not os.path.isfile(p): return None
+    raw = open(p, "rb").read()
+    txt = raw.decode("utf-8", "replace")
+    return set(re.findall(r'\(comp \(ref "([^"]+)"\)', txt)), _pa.record(p, raw)
 
 
 # ECSS-Q-ST-30-11C Rev.2 Table 6-17: a fuse's current at or below 85 C case temperature. The same table falls
@@ -104,6 +118,8 @@ def check(chain=None, ecad=None, vendor=None):
     # which is the set-verdict shape this project has now corrected four times.
     fails, stage_fails, notes, checked = [], [], [], 0
     refs_cache = {}
+    # WHICH NETLIST EACH STAGE WAS LOOKED UP IN, so each verdict records the bytes it judged (26 September 2026).
+    netlists, stage_netlist = {}, {}
     # THE SELECTION CRITERIA OF ECSS 6.17 ARE PWR-003's, NOT BAT-002's. BAT-002 asks whether the chain is
     # bounded END TO END; a fuse at 80 percent of its rating is a coordination finding about one stage, and
     # counting it in the set verdict failed four boards for something that is one board's (17 September 2026).
@@ -148,8 +164,12 @@ def check(chain=None, ecad=None, vendor=None):
         letter = str(s.get("board", "")).split()[0].upper()
         stem = BOARD_NET.get(letter)
         if prot.get("ref") and stem:
-            if stem not in refs_cache: refs_cache[stem] = netlist_refs(stem, ecad)
+            if stem not in refs_cache:
+                _got = netlist_read(stem, ecad)
+                refs_cache[stem] = _got[0] if _got else None
+                if _got: netlists[letter.lower()] = _got[1]
             refs = refs_cache[stem]
+            if refs is not None: stage_netlist[sid] = letter.lower()
             checked += 1
             if refs is None:
                 notes.append("%s: board %s has no netlist in this tree, so %s could not be looked up"
@@ -302,7 +322,33 @@ def check(chain=None, ecad=None, vendor=None):
             by_board.setdefault(L.lower(), []).append(st["id"])
     return dict(stages=len(stages), checked=checked, fails=fails, stage_fails=stage_fails,
                 derate_fails=derate_fails, notes=notes,
-                unjudged_citations=unjudged_citations, vendor_seen=bool(have_vendor), by_board=by_board)
+                unjudged_citations=unjudged_citations, vendor_seen=bool(have_vendor), by_board=by_board,
+                netlists=netlists, stage_netlist=stage_netlist)
+
+
+def recorded_inputs(r, ids, chain=None, ecad=None, stages=True):
+    """WHAT A READING OF THESE STAGES JUDGED, BY CONTENT (MESHSAT-1357, 26 September 2026). It recorded the chain's
+    name alone, so rules_status could tie no reading of PWR-003 or BAT-002 to any board. Now: the chain and the fuse
+    makers' tables by sha (configuration, rules_status.CONFIG_INPUTS), every netlist a stage among `ids` was looked
+    up in (`netlist_<letter>`, by sha and by content), and for a board those stages name that has no schematic (E5,
+    the dock block, whose stage DOCK_BLOCK the chain describes) the declared phase's board file (`board_file_<letter>`):
+    its design is that file, so a reading of its stage is tied to the revision it was taken for. The chain's claims
+    about that board are declarations the chain carries; nothing here reads the board file for a number."""
+    import phase_artefacts as _pa
+    ch = chain or CHAIN
+    inp = {"chain": _pa.record(ch, content=False) or os.path.basename(ch)}
+    ft = _pa.record(FUSE_TABLES, content=False)
+    if ft: inp["derating"] = ft
+    if stages: inp["stages"] = ",".join(ids)
+    for sid in ids:
+        L = (r.get("stage_netlist") or {}).get(sid)
+        if L and (r.get("netlists") or {}).get(L): inp["netlist_%s" % L] = r["netlists"][L]
+    named = sorted({L for L, _ids in (r.get("by_board") or {}).items() if set(_ids) & set(ids)})
+    for L in named:
+        if _pa.no_schematic(L):
+            b = _pa.record(_pa.board_file(L, ecad), content=False) if _pa.board_file(L, ecad) else None
+            if b: inp["board_file_%s" % L] = b
+    return inp
 
 
 def main(argv):
@@ -333,7 +379,7 @@ def main(argv):
         _v.write("energy_chain_%s" % _L, _v.FAIL if _mine else _v.PASS,
                  counts={"stages": len(_ids), "fail": len(_mine)}, denominator=len(_ids),
                  evidence=_mine[:20], quiet=True, rules=["PWR-003"],
-                 inputs={"chain": os.path.basename(ch or CHAIN), "stages": ",".join(_ids)},
+                 inputs=recorded_inputs(r, _ids, ch, ec),
                  note="the stages of the stored-energy chain that sit on this board; the chain as a whole is "
                       "energy_chain, and whether it is bounded end to end is that verdict's question")
     res = _v.FAIL if r["fails"] else _v.PASS
@@ -343,7 +389,8 @@ def main(argv):
                             "selection_findings": len(r.get("derate_fails", [])),
                             "citations_unjudged": r.get("unjudged_citations", 0)},
                     denominator=r["checked"], evidence=r["fails"][:20],
-                    inputs={"chain": os.path.basename(ch or CHAIN)},
+                    inputs=recorded_inputs(r, [s for _ids in (r.get("by_board") or {}).values() for s in _ids] +
+                                           sorted(r.get("stage_netlist") or {}), ch, ec, stages=False),
                     rules=["BAT-002"],
                     note="THE CHAIN END TO END, which is BAT-002's question; a selection finding against ECSS "
                          "6.17 belongs to the stage that has it and is in energy_chain_<letter>, rule PWR-003. "

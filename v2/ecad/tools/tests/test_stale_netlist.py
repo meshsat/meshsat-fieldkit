@@ -19,7 +19,11 @@ def t_the_contract_check_refuses_a_netlist_older_than_its_schematic():
     src = open(os.path.join(TOOLS, "check_contracts.py")).read()
     assert "STALE netlist" in src, "the contract check reads a netlist without asking how old it is"
     assert "os.path.getmtime(path) < os.path.getmtime(_sch)" in src, "it does not compare the two times"
-    i, j = src.find("STALE netlist"), src.find("txt = open(path")
+    # the parse reads the bytes once (26 September 2026, the tools stream's recording round), so the verdicts record
+    # exactly the bytes judged: `raw = open(path, "rb")` then `txt = raw.decode(...)`; either spelling is the parse
+    i = src.find("STALE netlist")
+    j = min(k for k in (src.find("txt = open(path"), src.find("raw = open(path")) if k >= 0) if (
+        "txt = open(path" in src or "raw = open(path" in src) else -1
     assert 0 < i < j, "the staleness check must come before the netlist is parsed"
 
 

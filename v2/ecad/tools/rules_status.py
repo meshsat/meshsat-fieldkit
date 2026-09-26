@@ -684,10 +684,17 @@ def _git_when(path):
 # relative to v2/ecad; {stem}, the project name; a `*` is a glob and every match is an input. Paths are relative to
 # v2/ecad. The instrument sees what is declared: a new configuration read added to a tool is not seen until its entry
 # here is updated.
+#
+# RE-READ AFTER THE RECORDING ROUND (26 September 2026, the tools stream). port_protect, erc_gate, safe_lines,
+# power_sequence, energy_chain, check_contracts, interfaces and pack_protection were changed to record the artefact
+# they judge (phase_artefacts.record), so their entries below were read again and their line numbers are this round's.
+# What a tool reads to FIND an artefact (the manifest's stem, the routeflow profile's project directory) is not
+# declared: the artefact itself is recorded by sha and compared with the candidate rules_status computes the same way.
 CONFIG_INPUTS = {
-    # port_protect.py:99, :228-230, :271-272: the board table's external_ports and _external_ports_why; :248-251
-    # boardtable.letter_for (every table's `name`; the reading records the letter it resolved); :92-95 the intent file
-    # beside the netlist, whose rails stop the search.
+    # port_protect.py:112, :463-472, :523-524 and :538-539 the board table's external_ports and _external_ports_why;
+    # :482-485 boardtable.letter_for (every table's `name`; the reading records the letter it resolved); :101-106 and
+    # :285-288 the intent file beside the netlist, whose rails stop the search, which the reading records by sha
+    # (phase_artefacts.reading_inputs, :436).
     "port_protect.py": ("tools/boards/{letter}.json", "{phase}/out/{stem}-intent.json"),
     # reliability.py:31 and :53 the declared list; :55 rules_lib.board_facts for the project names. (It also reads
     # the newest `<stem>*/out/<stem>.net` by mtime, :47, and records no netlist, so its readings do not bind anyway.)
@@ -726,12 +733,16 @@ CONFIG_INPUTS = {
     # CONFIG_UNDECLARED. Board-table reads go through boardtable.letter_for (every table's `name`), and the reading
     # records the letter it was filed under, as for port_protect above. Helpers are named where the read happens.
     #
-    # erc_gate.py:47-49 the ERC report kicad-cli wrote from the schematic (an output of the schematic, not
-    # configuration); :21-30 and :55 the project's erc-allow.txt, the reasons an ERC error may stand.
-    "erc_gate.py": ("{phase}/erc-allow.txt",),
-    # safe_lines.py:55 and :130/:179-180 the board table's safety_lines and _safety_lines_why; :150-152 letter_for;
-    # :61-66 the intent file beside the netlist (its rails). The netlist is read by port_protect.netlist
-    # (port_protect.py:72-82), which opens the netlist alone.
+    # erc_gate.py:170 the ERC report kicad-cli wrote from the schematic (an output of the schematic, not configuration;
+    # with --run, :77-107 take it here and write the sidecar naming the schematic); :110-140 that sidecar and the
+    # netlist's own provenance (sch_prov.read), which decide whether the netlist is recorded (provenance of artefacts,
+    # not configuration); :21-30, :149-152 and :177 the project's erc-allow.txt, the reasons an ERC error may stand.
+    # and, since erc_gate --run (26 September 2026, the tools stream), the project file kicad-cli reads for the ERC's
+    # rule_severities, erc_exclusions and pin_map: a later edit that tightened them must stale a bound SCH-001 PASS.
+    "erc_gate.py": ("{phase}/erc-allow.txt", "{phase}/{stem}.kicad_pro"),
+    # safe_lines.py:55, :140-141 and :188-189 the board table's safety_lines and _safety_lines_why; :159-161 letter_for;
+    # :62-66 the intent file beside the netlist (its rails), recorded by sha (phase_artefacts.reading_inputs, :118). The
+    # netlist is read by port_protect.netlist (port_protect.py:77-91), which opens the netlist alone.
     "safe_lines.py": ("tools/boards/{letter}.json", "{phase}/out/{stem}-intent.json"),
     # pin_map_lands.py:25 and :59 the netlist; :35 kisch.land_pads and :38-42 read each land from the footprint
     # directories of kisch._fp_dirs (kisch.py:245-256): this tree's meshsat.pretty (declared, a glob, conservative)
@@ -741,23 +752,28 @@ CONFIG_INPUTS = {
     # clock_check.py:49 the netlist; :151-156 the board table's crystals (C_L from the parts' datasheets); :168-170
     # letter_for.
     "clock_check.py": ("tools/boards/{letter}.json",),
-    # power_sequence.py:42 the netlist; :55-58 the intent file beside it (or --intent), whose rails it sequences.
+    # power_sequence.py:42 the netlist; :59-62 the intent file beside it (or --intent), whose rails it sequences; both
+    # recorded by sha at :199-213.
     "power_sequence.py": ("{phase}/out/{stem}-intent.json",),
-    # energy_chain.py:36 and :92 the chain; :60-67 the fuse makers' derating tables; :44-52 the NEWEST netlist of
-    # every board by mtime (an artefact, which it does not record); :119-131 whether each v2/vendor file a stage
-    # cites exists (not declared: the files are named inside the chain, an instrument limit).
+    # energy_chain.py:36 and :106 the chain; :74-81 the fuse makers' derating tables; both recorded by sha (:338-341);
+    # :52-68 the declared phase's netlist of each board a stage names (phase_artefacts.netlist; an artefact, recorded
+    # by sha and content); :135-146 whether each v2/vendor file a stage cites exists (not declared: the files are named
+    # inside the chain, an instrument limit).
     "energy_chain.py": ("tools/pcb_energy_chain.yaml", "tools/pcb_fuse_derating.yaml"),
     # check_contracts.py:36-41 every board table's `phase` and :49-55 every routeflow profile (which netlist is each
-    # board's); :411-416 every `<stem>*/out/*-intent.json` (the rail shares, the last one sorted wins); :64-117 each
-    # board's netlist, its schematic and provenance sidecar, and sch_prov.current's generator files (artefacts and a
-    # provenance guard on them, not configuration of the contracts, which are code in this file).
+    # board's); :605-606 every `<stem>*/out/*-intent.json` (the rail shares, the last one sorted wins), recorded by sha
+    # at :696; :67-139 each board's netlist (recorded by sha and content), its schematic and provenance sidecar, and
+    # sch_prov.current's generator files (artefacts and a provenance guard on them, not configuration of the
+    # contracts, which are code in this file).
     "check_contracts.py": ("tools/boards/*.json", "tools/routeflow/*.json", "pcb-*/out/*-intent.json"),
-    # interfaces.py:41, :153 and :248 the interface sheet; :163-167 and :216-219 the first `<stem>*/out/<stem>-intent
-    # .json` in sorted order (its pair classes). `_classes` (:48) reads a project file and nothing calls it.
-    "interfaces.py": ("tools/pcb_interfaces.yaml", "{stem}*/out/{stem}-intent.json"),
-    # pack_protection.py:33 and :43-45 the protection table; :48-62 and :81 the cell specification the table names
+    # interfaces.py:41, :153 and :269 the interface sheet; :167-170 and :219-226 the declared phase's intent file (its
+    # pair classes), phase_artefacts.intent, which replaced the first `<stem>*/out/<stem>-intent.json` in sorted order
+    # (the same file in this tree); both recorded by sha. `_classes` (:48) reads a project file and nothing calls it.
+    "interfaces.py": ("tools/pcb_interfaces.yaml", "{phase}/out/{stem}-intent.json"),
+    # pack_protection.py:33 and :47-49 the protection table; :52-66 and :85 the cell specification the table names
     # (pcb_pack_protection.yaml:44 names v2/vendor/battery/samsung-35e-orbtronic.pdf; a change of the name is a
-    # change of the table), read through the host's pdftotext; :34 and :95 board P's netlist (an artefact).
+    # change of the table), read through the host's pdftotext; both recorded by sha (:164-173); :38 and :99 board P's
+    # netlist, the declared phase's (an artefact, recorded by sha and content).
     "pack_protection.py": ("tools/pcb_pack_protection.yaml", "../vendor/battery/samsung-35e-orbtronic.pdf"),
     # intent_checks.py:41 intent.load (intent.py:321-325, the intent file beside the board); :43-44 and
     # signalnets.py:25-26 the project file; :161 signal_class.classify, which reads the board table's
@@ -988,7 +1004,68 @@ def _compatible(kind, regs, **want):
     return None
 
 
-def _bound(rule, letter, name, rec, cand, regs):
+# ------------------------------------------------------------------------------------------------------------------
+# ANOTHER BOARD'S ARTEFACT IN A READING (26 September 2026, the tools stream's recording round). A cross-board reading
+# now records every board it judged: check_contracts names each board's netlist, energy_chain the netlist of every
+# board a stage's protective element was looked up on and the dock block's board file. Such a reading is about the
+# other boards too, so it is current for THIS board only while every other board's recorded artefact is still that
+# board's candidate: the declared phase's netlist (by sha, or by content identity), or for a board with no schematic
+# its declared phase's board file. A reading of an A-to-B contract taken against B's previous netlist says nothing
+# about that contract today, whatever A's own netlist is. The board files of boards WITH a schematic keep the rule in
+# `_bound` (OTHER_BOARD: a reading that judged this board's file and another's is current only when that board's
+# layout is). No reading recorded another board's artefact before this round, so no reading's class moved with it.
+_DESIGN_NOW = {}
+
+
+def _design_now(letter, m):
+    """{no_chain, netlist_sha16, netlist_content16, board_shas} of board `letter`'s current candidate, read once."""
+    b = (m.get("boards") or {}).get(letter) or {}
+    key = (letter, b.get("project"))
+    if key in _DESIGN_NOW: return _DESIGN_NOW[key]
+    out = {"no_chain": bool(b.get("no_chain")), "netlist_sha16": None, "netlist_content16": None, "board_shas": set()}
+    stem = b.get("project") or ""
+    if stem:
+        try: raw = open(os.path.join(_phase_dir(letter, m), "out", stem + ".net"), "rb").read()
+        except OSError: raw = None
+        if raw is not None:
+            out["netlist_sha16"] = hashlib.sha256(raw).hexdigest()[:16]
+            try:
+                import regen_compare as _rc
+                out["netlist_content16"] = _rc.content_hash(raw.decode("utf-8", "replace"))
+            except Exception:
+                out["netlist_content16"] = None
+        if out["no_chain"]:
+            out["board_shas"] = {x for x in _board_identities(letter, m) if len(x) == 16}
+    _DESIGN_NOW[key] = out
+    return out
+
+
+def _other_boards_artefacts(rec, letter, m):
+    """[(input key, other letter, kind, recorded sha, current)] for every artefact of ANOTHER board of the manifest the
+    reading recorded (a netlist, or the board file of a board with no schematic) that is not that board's current one."""
+    by_stem = {(b or {}).get("project"): l for l, b in (m.get("boards") or {}).items() if (b or {}).get("project")}
+    out = []
+    for k, v in sorted((rec.get("inputs") or {}).items()):
+        if not isinstance(v, dict) or not v.get("sha256_16"): continue
+        base = os.path.basename(str(v.get("path") or ""))
+        if base.endswith(".net"): other, kind = by_stem.get(base[:-len(".net")]), "netlist"
+        elif base.endswith(".kicad_pcb"): other, kind = by_stem.get(base[:-len(".kicad_pcb")]), "board file"
+        else: continue
+        if not other or other == letter: continue
+        now = _design_now(other, m)
+        if kind == "netlist":
+            ok = (v["sha256_16"] == now["netlist_sha16"] or
+                  bool(v.get("content16")) and v.get("content16") == now["netlist_content16"])
+            cur = now["netlist_sha16"] or "none"
+        else:
+            if not now["no_chain"]: continue                  # a board with a schematic: OTHER_BOARD's rule
+            ok = v["sha256_16"] in now["board_shas"]
+            cur = ",".join(sorted(now["board_shas"])) or "none"
+        if not ok: out.append((k, other, kind, v["sha256_16"], cur))
+    return out
+
+
+def _bound(rule, letter, name, rec, cand, regs, m=None):
     """(bound, cause, why, rationale): does this reading judge the current candidate's artefact for its rule?"""
     rid = rule["id"]
     # A PROTOTYPE-PHASE READING IS A DESK CHECK OF THE DESIGN AS DRAWN (REL-001 reads the netlist and a declared
@@ -1020,6 +1097,12 @@ def _bound(rule, letter, name, rec, cand, regs):
     if foreign and (boards & mine):
         return (False, "OTHER_BOARD", "%s also judged board file %s, which is not this board's; a cross-board reading "
                 "is current only when every board it read is its candidate's" % (name, ",".join(sorted(foreign))), None)
+    stale = _other_boards_artefacts(rec, letter, m if m is not None else manifest())
+    if stale:
+        return (False, "OTHER_DESIGN", "%s also judged %s, which %s not that board's current one; a cross-board reading "
+                "is current only when every board it read is read at its candidate" % (name, "; ".join(
+                    "board %s's %s %s (current %s)" % (o.upper(), kind, said, cur) for _k, o, kind, said, cur in stale),
+                    "is" if len(stale) == 1 else "are each"), None)
     if rid == LAYOUT_RULE:
         if not (boards & mine): return (False, "BOARD_MISMATCH" if boards else "UNBOUND",
                                         "%s names board %s, not the declared phase's %s" % (name, ",".join(sorted(boards)) or "none", ",".join(sorted(mine)) or "none"), None)
@@ -1181,7 +1264,7 @@ def _class_one(rule, letter, n, rec, c, m, fingerprint, identities, cand, regs, 
         if not hist: return AWAITING_REVALIDATION, "TOOL_CHANGED", "%s: %s" % (n, said)
     elif st != "CURRENT":
         return AWAITING_REVALIDATION, "TOOL_UNKNOWN", "%s: %s" % (n, said)
-    b, cause, bwhy, ahist = _bound(rule, letter, n, rec, cand, regs)
+    b, cause, bwhy, ahist = _bound(rule, letter, n, rec, cand, regs, m)
     if not b: return AWAITING_REVALIDATION, cause, "%s: %s" % (n, bwhy)
     cok, ccause, cwhy, chist = _config_state(rec, letter, m, rule["id"], regs, config_inputs)
     if not cok: return AWAITING_REVALIDATION, ccause, "%s: %s" % (n, cwhy)
@@ -1208,6 +1291,29 @@ def _class_one(rule, letter, n, rec, c, m, fingerprint, identities, cand, regs, 
 # is dated now; nothing the reading did not record is invented. Its limits, stated where it is read: a tool changed
 # since the reading may record more than the reading shows, and the projection says nothing about the RESULT, which is
 # the design's.
+#
+# EXCEPT WHERE THE TOOL HERE IS KNOWN TO RECORD MORE (26 September 2026, the tools stream's recording round). The eight
+# writers below were taught that day to record the artefact of the board they file a reading under, and every reading
+# of theirs in this tree predates it, so projecting from the old reading's inputs would say "UNBOUND" of a re-take that
+# binds. For these writers the projection records what the tool here records: `netlist`, the declared phase's netlist
+# of this board (erc_gate records it when re-taken with --run, where kicad-cli takes the report on the schematic that
+# netlist was exported from); `board_file`, on a board with no schematic its declared phase's board file. A recorded
+# artefact of ANOTHER board is re-read at that board's candidate, because a re-take reads every board's committed
+# files. tests/test_artefact_recording.py runs each of these tools and holds this table to what the tool writes: a
+# tool that stops recording an artefact fails the suite rather than leaving the page promising a re-take that cannot
+# bind.
+RECORDS_ARTEFACT = {
+    "erc_gate.py": ("netlist",),
+    "power_sequence.py": ("netlist",),
+    "energy_chain.py": ("netlist", "board_file"),
+    "check_contracts.py": ("netlist",),
+    "interfaces.py": ("netlist", "board_file"),
+    "pack_protection.py": ("netlist",),
+    "safe_lines.py": ("netlist", "board_file"),
+    "port_protect.py": ("netlist", "board_file"),
+}
+
+
 def _retake_record(rec, letter, m, cand, now):
     """The reading as a re-take of it would record it: see the block comment above."""
     import copy
@@ -1216,18 +1322,37 @@ def _retake_record(rec, letter, m, cand, now):
     r["ts"] = now
     files = (cand.get("package") or {}).get("files") or {}
     mine = sorted(cand.get("board_shas") or [])
+    by_stem = {(b or {}).get("project"): l for l, b in (m.get("boards") or {}).items() if (b or {}).get("project")}
+    own_net = own_board = False
     for v in (r.get("inputs") or {}).values():
         if not isinstance(v, dict) or not v.get("sha256_16"): continue
         base = os.path.basename(str(v.get("path") or ""))
+        other = by_stem.get(base[:-len(".net")]) if base.endswith(".net") else \
+            by_stem.get(base[:-len(".kicad_pcb")]) if base.endswith(".kicad_pcb") else None
         if stem and base == stem + ".net" and cand.get("netlist_sha16"):
-            v["sha256_16"] = cand["netlist_sha16"]
+            v["sha256_16"] = cand["netlist_sha16"]; own_net = True
             if v.get("content16"): v["content16"] = cand.get("netlist_content16")
         elif stem and base == stem + ".kicad_pcb" and mine:
-            v["sha256_16"] = mine[0]
+            v["sha256_16"] = mine[0]; own_board = True
         elif base in files:
             v["sha256_16"] = files[base]
+        elif other and other != letter and base.endswith(".net"):
+            now_o = _design_now(other, m)             # another board's netlist, read at that board's candidate
+            if now_o["netlist_sha16"]:
+                v["sha256_16"] = now_o["netlist_sha16"]
+                if v.get("content16"): v["content16"] = now_o["netlist_content16"]
+        elif other and other != letter and _design_now(other, m)["no_chain"] and _design_now(other, m)["board_shas"]:
+            v["sha256_16"] = sorted(_design_now(other, m)["board_shas"])[0]
         elif not base.endswith((".net", ".kicad_pcb")):
             v.pop("sha256_16", None)          # a configuration input: the re-take reads it as it is, dated now
+    kinds = RECORDS_ARTEFACT.get(_writer_file(rec) or "") or ()
+    inp = r.get("inputs") if isinstance(r.get("inputs"), dict) else None
+    if kinds and inp is not None:
+        if cand.get("netlist_sha16"):
+            if "netlist" in kinds and not own_net:
+                inp["retake_netlist"] = {"path": cand.get("netlist") or stem + ".net", "sha256_16": cand["netlist_sha16"]}
+        elif "board_file" in kinds and mine and not own_board:
+            inp["retake_board_file"] = {"path": stem + ".kicad_pcb", "sha256_16": mine[0]}
     return r
 
 
@@ -1265,7 +1390,7 @@ def retake_projection(rule, letter, cov, vs, m, row, cand, regs=None, config_inp
     worst = None
     for n, rec in present:
         r2 = _retake_record(rec, letter, m, cand, now)
-        b, cause, bwhy, _e = _bound(rule, letter, n, r2, cand, regs)
+        b, cause, bwhy, _e = _bound(rule, letter, n, r2, cand, regs, m)
         if not b: k = (AWAITING_REVALIDATION, cause, "%s re-taken: %s" % (n, bwhy))
         else:
             cok, ccause, cwhy, _c = _config_state(r2, letter, m, rid, regs, config_inputs)

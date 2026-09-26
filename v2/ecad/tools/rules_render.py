@@ -948,11 +948,14 @@ EVIDENCE_CAUSES = (
      "and committed (the next column counts the rows where that holds)"),
     ("PREDATES_ARTEFACT", "it records no artefact by content and was taken before the board's current netlist was committed",
      "the gate taught to record the netlist, board or package file sha it reads, then re-taken; a re-take alone reads "
-     "UNBOUND, because the reading records no artefact"),
+     "UNBOUND, because the reading records no artefact, unless the tool here already records it "
+     "(rules_status.RECORDS_ARTEFACT)"),
     ("UNBOUND", "it records no artefact by content (a release-package reading: no file of the declared phase's folder by sha), so it cannot be tied to the candidate",
      "the gate taught to record the netlist, board or package file sha it read, then re-taken"),
     ("OTHER_BOARD", "it also judged another board's file, whose layout is not shown current",
      "every board it reads current, then re-taken"),
+    ("OTHER_DESIGN", "it also judged another board's netlist (or the board file of a board with no schematic), which is "
+     "not that board's current one", "re-taken, so every board it reads is read at its committed candidate"),
     ("BOARD_MISMATCH", "it names a board file other than the declared phase's",
      "re-taken on the declared phase's board"),
     ("TOOL_CHANGED", "the file that wrote it has changed since (exact by the writer's hash, or by the tool's commit date)",
@@ -1049,20 +1052,33 @@ NETLIST_FORM = {
 }
 
 
-# Where each writer that binds nothing today records its inputs, read at 1f614233, so the tools stream starts at the
-# line. A writer missing here is named without a place.
-TOOL_NOTES = {
-    "erc_gate.py": "it records only the project directory, erc_gate.py:53, :64, :70",
-    "power_sequence.py": "it records the netlist's bare file name, which verdict.write cannot hash, power_sequence.py:225",
-    "energy_chain.py": "it records only the chain's name, energy_chain.py:336, :346, and reads each board's newest "
-                       "netlist by mtime, :44-52, where the declared phase's is the one to read",
-    "check_contracts.py": "it records only the letters of the boards it read, check_contracts.py:538, :556, :587",
-    "interfaces.py": "it records the sheet's name and the letter, interfaces.py:259, and judges the intent file beside "
-                     "the netlist, :163-167",
-    "pack_protection.py": "it records the netlist relative to the repository root, which verdict.write hashes only "
-                          "when run from there, pack_protection.py:176",
-    "safe_lines.py": "on a board with no netlist its --board mode records only the letter, safe_lines.py:137-147",
-    "port_protect.py": "on a board with no netlist its --board mode records only the letter, port_protect.py:235-245",
+# Where each writer that binds nothing on some board records its inputs, so the tools stream starts at the line. A
+# writer missing here is named without a place.
+#
+# THE RECORDING ROUND CLOSED EIGHT OF THESE (26 September 2026, the tools stream). erc_gate, power_sequence,
+# energy_chain, check_contracts, interfaces, pack_protection, safe_lines and port_protect now record the artefact of
+# the board they file a reading under (phase_artefacts.record: the declared phase's netlist by sha and by content, or on
+# a board with no schematic its board file), and `rules_status.RECORDS_ARTEFACT` lets the re-take projection see it.
+# What remains is not a recording gap: see REGISTRY_ROUTES below.
+TOOL_NOTES = {}
+# A BLOCKER WHOSE FIRST STEP IS THE REGISTRY'S, NOT THE TOOL'S (26 September 2026, the tools stream). A reading that
+# judges nothing of the board a rule is filed under cannot be tied to that board by recording more, and binding it to
+# a file it never read would be a declaration dressed as evidence. The coverage map has to name, for that board, a
+# reading that judged it. Keyed by the writer; used where every writer blocking a re-take is listed here.
+REGISTRY_ROUTES = {
+    "check_contracts.py": "the coverage map reads check_contracts's set verdict here, which judges the contracts between "
+                          "the six boards that have a netlist and reads nothing of this board: it records every netlist it "
+                          "read by sha since the tools stream's recording round and none of this board's, and it will not "
+                          "be tied to a board file it never opened. block_contract.py judges the dock block and writes "
+                          "check_contracts_<letter> from its board file and board A's, so the rule can bind here once the "
+                          "coverage map names that per-board verdict (a draft for the registry writer), and then only while "
+                          "board A's layout carries its netlist (OTHER_BOARD)",
+}
+# What a RE-TAKE must be to bind, where "re-taken" alone would not say it (26 September 2026, the tools stream).
+RETAKE_NOTES = {
+    "erc_gate.py": "with --run where kicad-cli is (the box), so the report is taken on the committed schematic and tied to "
+                   "its netlist by the schematic's sha; a report from before the schematic, or one with no provenance "
+                   "sidecar, is recorded and stays unbound",
 }
 
 
@@ -1095,9 +1111,13 @@ def entry_blockers(st, holds):
             if _entry_class_ok(r):
                 kind, closes = "DESIGN", "the reading is current and reads %s" % res
             else:
-                kind, closes = "RETAKE", "%s re-taken on the committed %s%s" % (w, art, tail)
+                rn = "; ".join(RETAKE_NOTES[x] for x in (r.get("writers") or []) if x in RETAKE_NOTES)
+                kind, closes = "RETAKE", "%s re-taken on the committed %s%s%s" % (w, art, (" (%s)" % rn) if rn else "", tail)
         elif rc == S.NO_EVIDENCE:
             kind, closes = "REGISTRY", "the coverage map gives it no deciding verification (%s)" % cause
+        elif cause in ("UNBOUND", "PREDATES_ARTEFACT") and (r.get("retake_blockers") or []) and all(
+                x in REGISTRY_ROUTES for x in r.get("retake_blockers") or []):
+            kind, closes = "REGISTRY", "; ".join(REGISTRY_ROUTES[x] for x in r["retake_blockers"]) + tail
         elif cause in ("UNBOUND", "PREDATES_ARTEFACT"):
             notes = "; ".join(TOOL_NOTES[x] for x in (r.get("retake_blockers") or []) if x in TOOL_NOTES)
             kind, closes = "TOOL", "%s taught to record by sha the %s that ties its reading to this board%s, then re-taken%s" % (
@@ -1143,10 +1163,10 @@ def _entry_section(boards, blockers):
          _wrap("One line per applicable required schematic-phase rule that is not a PASS on evidence layout entry accepts, "
                "and one per owner-decision hold. \"A re-take alone\" is `rules_status.retake_projection`: the class the "
                "row would have if every reading its rule names were re-taken now, in this tree, by the tool here, under "
-               "the current rule, on the committed candidate, recording the same kinds of input the reading records. It "
-               "says nothing about the result, which is the design's, and a tool changed since the reading may record "
-               "more than the reading shows. \"What closes it first\" is the step without which no re-take can make the "
-               "row current, and the owner is the stream that takes that step."), "",
+               "the current rule, on the committed candidate, recording the same kinds of input the reading records, or "
+               "for a writer that records more today (`rules_status.RECORDS_ARTEFACT`) what the tool here records. It "
+               "says nothing about the result, which is the design's. \"What closes it first\" is the step without "
+               "which no re-take can make the row current, and the owner is the stream that takes that step."), "",
          "| what closes it first | owner | " + " | ".join(l.upper() for l in boards) + " | set |",
          "|---|---|" + "---:|" * (len(boards) + 1)]
     for kind, text, owner in ENTRY_KINDS:
@@ -1363,8 +1383,12 @@ def _evidence_bindings(regs):
         "library that `pin_map_lands.py` also reads, the existence of the vendor files `energy_chain.py` and "
         "`reliability.py` check for their citations, and any cell specification other than the one "
         "`pcb_pack_protection.yaml` names today (a change of that name is a change of the table, which is declared);",
-        "  - \"a re-take alone would read\" assumes the re-take records the same kinds of input its reading records; a "
-        "tool changed since may record more;",
+        "  - \"a re-take alone would read\" assumes the re-take records the same kinds of input its reading records, "
+        "except for the writers `rules_status.RECORDS_ARTEFACT` names, which record the artefact of the board they file "
+        "under whatever their older readings show (the suite runs each of them and holds the table to what it writes); "
+        "any other tool changed since may record more;",
+        "  - a reading that records another board's netlist, or the board file of a board with no schematic, is current "
+        "only while that artefact is the other board's candidate (cause OTHER_DESIGN);",
         "  - a file's last commit dates the version in this checkout; an edit made and reverted between two commits "
         "cannot be seen.",
         "- `v2/docs/evidence/INVALIDATED-*.md`: verdict files refused by content hash (%d listed); "
