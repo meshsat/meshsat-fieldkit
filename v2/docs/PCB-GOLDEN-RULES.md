@@ -117,7 +117,16 @@ explained in writing.
 
 **If violated** A driver contention or a floating enable ships.
 
-**Today** an allow line without a reason waves nothing through, proved by fixture
+**Today** an allow line without a reason waves nothing through, proved by fixture. 26 September 2026, the tools
+stream's recording round: erc_gate.py records the ERC report, the schematic and erc-allow.txt by sha, and
+records the netlist out/<name>.net (sha and content) only when the report's sidecar names the schematic the
+netlist's own provenance (sch_prov.py) names. `erc_gate.py <dir> <name> --run` takes the ERC with kicad-cli
+on the schematic the directory holds and writes that sidecar; a report without one, or taken on another
+schematic, is recorded and stays unbound. The reports in the main checkout's out/ date from 11 September and
+predate the schematics committed on 26 September. Re-taken with --run on the six committed schematics (box
+52646493, KiCad 9.0.9): PASS on all six, A 0 blocking of 1474 violations, B 0 of 2431 with 5 allow-listed, C
+0 of 322, D 0 of 415, E 0 of 361, P 0 of 125, each tied to its committed netlist. full.sh and gate_sweep.sh
+are to call it with --run (drafts/ts-rec/erc_gate-run-in-drivers.patch).
 
 ### SCH-002  board matches its netlist
 
@@ -236,7 +245,11 @@ own line: A on EMCON_HW, PI_KILL and KILL, B on EMCON_HW, D on TX_INHIBIT_n, E o
 source of five and P declaring with its reason that it has none. A declaration is not taken on trust: a board
 that calls a line a pass-through while a part of it reads that line is refused, which is the fixture that
 would have caught the EMCON defect of 9 September. What the tool cannot settle is ZEROIZE, which is decision
-30: the line is held de-asserted everywhere it goes and the question is which device performs the wipe
+30: the line is held de-asserted everywhere it goes and the question is which device performs the wipe. 26
+September 2026, the tools stream's recording round: safe_lines.py records the netlist (sha and content) and
+the intent by sha, and on a board with no netlist (E5, --board) its declared phase's board file, the design
+its declared zero is about. Readings unchanged: A PASS of 6 lines, B 5, C 6, D 2, E 1, P a declared zero, E5
+a declared zero.
 
 ### SCH-005  every pad of a part's land carries a net or a declared no-connect
 
@@ -462,7 +475,13 @@ property of the modules' own datasheets and belongs with INT-001. Boards A (13 r
 and P (3) pass; board B declares 36 rails and none of them yet, so it reads INCONCLUSIVE with the list.
 Deriving the switch instead of declaring it was tried and withdrawn the same hour: a walk across two-pin
 passives from the rail's own net reached 28 candidate parts on board A, and a search that answers 'one of
-twenty-eight' is not an answer.
+twenty-eight' is not an answer. 26 September 2026, the tools stream's recording round: power_sequence.py
+records the netlist it judged by sha and by content and the intent file by sha (it recorded the netlist's
+bare file name, which verdict.write could not hash), and it reads the last net of a KiCad 9 netlist (R4T-F1,
+the look-ahead r4t fixed in port_protect and check_contracts). On the six committed netlists every reading is
+unchanged: A PASS of 30 rails, B 41, C 2, D 5, E 14, P 5; the net the old parser lost on each board was one
+unconnected pin (A U34 pad 8, B U311 pad 11, C U12 pad 1, D U20 pad 1, E U16 pad 2, P U1 pad 30) that no rail
+or enable touches.
 
 ### PWR-003  protection coordination
 
@@ -515,7 +534,14 @@ current declared at its position, and followed by the stage it protects; plus th
 is in this tree and every protective element is in its board's netlist. What it PRINTS rather than decides is
 the melting time from the I2t figure, because a clearing curve is a curve and this reads one point of it. The
 rule's own authority for the SELECTION CRITERIA is still not in the tree, which is why the registry keeps
-source_status SOURCE_UNVERIFIED.
+source_status SOURCE_UNVERIFIED. 26 September 2026, the tools stream's recording round: energy_chain.py reads
+each board's DECLARED phase netlist (phase_artefacts.netlist, the one rules_status.candidate judges against)
+where it read the newest `<stem>*/out/<stem>.net` by mtime, and energy_chain_<letter> records every netlist
+its stages' protective elements were looked up in (sha and content), the chain and pcb_fuse_derating.yaml by
+sha, and for the DOCK_BLOCK stage board E5's declared board file, the design the stage describes (the chain's
+claims about E5 are declarations; nothing reads the board file for a number). In this tree the declared and
+the newest netlists are the same files and every reading is unchanged: A PASS of 4 stages, B FAIL 1 of 3
+(B_PANEL_5V, the known finding), E PASS of 3, E5 PASS of 1, P PASS of 3.
 
 ## Decoupling
 
@@ -1388,7 +1414,11 @@ one, its sense is verified, and the behaviour with each board absent is stated.
 
 **If violated** A transmitter keys when the operator has commanded silence.
 
-**Today** driver count, sense and fail-safe pull are checked across three boards
+**Today** driver count, sense and fail-safe pull are checked across three boards. 26 September 2026, the tools stream's
+recording round: inhibit_chain_<letter> records the netlist (sha and content) and the intent of every board
+named by a contract that names the board, and rules_status holds a reading that recorded another board's
+netlist current only while that netlist is still the other board's (cause OTHER_DESIGN). Readings unchanged:
+B PASS of 3, D PASS of 5 (A 4 and C 3, which RF-002 does not decide today).
 
 ## Interface Compliance
 
@@ -1446,7 +1476,18 @@ disagreements are closed. WHAT THIS RULE STILL DOES NOT ASK, named rather than i
 against `max_length_mm` (board B's M.2 PCIe states 200 mm and its USB 225), which nothing in this tree reads
 today; the per-pair mismatch itself is read off the board by `check_pcb_a.py` and `check_pcb_b.py` and
 refused by `pair_match.sh`. Boards C, D and E carry USB only at full speed and declare no target, which their
-parts' datasheets say in as many words: a declared zero with a reason, not a silence
+parts' datasheets say in as many words: a declared zero with a reason, not a silence. 26 September 2026, the
+tools stream's recording round: interfaces_<letter> records the netlist beside the declared phase's intent
+(phase_artefacts.intent, where it took the first `<stem>*/out/<stem>-intent.json` in sorted order, the same
+file in this tree), the intent and the sheet by sha, and on E5 its declared board file; check_contracts
+records each board's netlist it read. Readings unchanged: interfaces 12 assignments, 0 disagreements (E5 a
+declared zero); check_contracts PASS of 96. On E5 the set verdict check_contracts judges nothing of E5 and
+records nothing of it, so INT-001 cannot bind there by any recording. The recommended change of the verdict
+to interfaces_<letter> with check_contracts_<letter> (per board, so E5 is decided by block_contract.py's
+check_contracts_e5) is deferred by the session under the owner's standing rule of 26 September 2026: it needs
+check_contracts.py to declare its verdict names (RULE_VERDICTS) so the set verdict keeps a rule, and a
+_shared_verdict_why beside SCH-003, and changing check_contracts.py at this merge would stale the re-take it
+carries. Until then E5's INT-001 is routed to the registry writer.
 
 ### INT-002  a transformerless Ethernet link is verified at both ends
 
@@ -1551,7 +1592,12 @@ one-way part with Device:D_Zener (K on pin 1) and refuses a swapped call. C, D, 
 corrections in faf8c981. Reading on the round 7b box regeneration: A FAIL (D1 to D4 on the two-way symbol, 0
 reversed; D22 BZT52C12 read OK), B FAIL (D1, D2, D101, D201, D301 and D520 on the two-way symbol, 0
 reversed), C PASS (0 clamps), D PASS (7), E PASS (5), P PASS (3). A's and B's switch to kisch.tvs() is owed
-by their board streams; it changes their pin names and intents only
+by their board streams; it changes their pin names and intents only. 26 September 2026, the tools stream's
+recording round: port_protect.py records the netlist (sha and content) and the intent by sha, and on E5
+(--board) its declared phase's board file. Readings unchanged by the change: A FAIL (4 clamps drawn with a
+symbol that does not match the part's direction), B FAIL (6), C PASS of 4, D PASS of 21, E PASS of 13, P PASS
+of 3, E5 a declared zero. The FAIL on A and B is the S-09 polarity pass of 93138ac1 read on the committed
+netlists; the readings of A and B on disk (PASS) predate it.
 
 ## Isolation Spacing
 
@@ -2151,7 +2197,12 @@ REQUIREMENT: `in hardware, independent of any software`. All nine functions are 
 thresholds live in data flash and whose protection subsystem is firmware; there is no second protector IC, no
 chemical fuse (gen_sch_p.py: the 25 A mini blade is the fuse) and the PTC input is tied off, so the only
 element on the board that needs no firmware is a 25 A blade fuse, which does not protect a cell from
-over-voltage, over-discharge or heat. The remedy is a part and a board change and is owner DECISION 40.
+over-voltage, over-discharge or heat. The remedy is a part and a board change and is owner DECISION 40. 26
+September 2026, the tools stream's recording round: pack_protection.py reads board P's declared phase netlist
+(phase_artefacts.netlist) where it named pcb-p-pack-p2 in its own source, and records it by sha and content
+with the protection table and the cell specification by sha (it recorded the netlist relative to the
+repository root, which verdict.write hashed only when run from there). Reading unchanged: FAIL, 1 of 45
+checks (no protection independent of software).
 
 ### BAT-002  the energy chain is bounded end to end
 
@@ -2197,7 +2248,9 @@ at its position, and followed by the stage it protects; plus that every rating's
 and every protective element is in its board's netlist. What it PRINTS rather than decides is the melting
 time from the I2t figure, because a clearing curve is a curve and this reads one point of it. The rule's own
 authority for the SELECTION CRITERIA is still not in the tree, which is why the registry keeps source_status
-SOURCE_UNVERIFIED.
+SOURCE_UNVERIFIED. 26 September 2026, the tools stream's recording round: the set verdict energy_chain
+records the netlists of boards A, B, E and P its elements were looked up in and board E5's declared board
+file (the DOCK_BLOCK stage), so it binds on A, E, E5 and P; unchanged reading, PASS of 98 checks.
 
 ## Documentation Control
 

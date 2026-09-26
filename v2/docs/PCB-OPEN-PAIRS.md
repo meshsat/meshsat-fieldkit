@@ -7,7 +7,7 @@ Every pair that is not a current PASS, classified. Generated from tools/pcb_deci
 map's maturity and each deciding verdict: a decision that claims a pair wins over everything else, because
 the ruling is the action that moves it, and the measurement is reported beside it rather than lost.
 
-**121 open pair(s)** over 7 board(s). **41 are measured failures** (a tool looked and the board failed), which are **32 distinct readings**, and **0 of those are claimed by an open owner decision**.
+**123 open pair(s)** over 7 board(s). **43 are measured failures** (a tool looked and the board failed), which are **34 distinct readings**, and **0 of those are claimed by an open owner decision**.
 
 | waiting on | pairs | what it means |
 |---|---:|---|
@@ -15,7 +15,7 @@ the ruling is the action that moves it, and the measurement is reported beside i
 | `AUTHORITY` | 3 | an authority this project does not have |
 | `NO_INSTRUMENT` | 11 | nothing verifies it |
 | `MISSING_INPUT` | 17 | an input the reading declared absent |
-| `MEASURED_FAILURE` | 41 | the tool looked and the board failed |
+| `MEASURED_FAILURE` | 43 | the tool looked and the board failed |
 | `VENDOR_WAIT` | 2 | a fabricator or a standards body, and nobody here |
 | `OWNER_WORK` | 7 | work only the owner or the ordering session can do |
 | `NOT_JUDGED` | 33 | not judged, for the reason the reading gives |
@@ -30,8 +30,8 @@ things to fix.
 
 | board | open | of which measured | decision-bound | authority | missing input | not judged |
 |---|---:|---:|---:|---:|---:|---:|
-| A | 24 | 13 | 1 | 1 | 4 | 4 |
-| B | 36 | 5 | 1 | 1 | 5 | 21 |
+| A | 25 | 14 | 1 | 1 | 4 | 4 |
+| B | 37 | 6 | 1 | 1 | 5 | 21 |
 | C | 11 | 4 | 1 | 0 | 0 | 5 |
 | D | 14 | 2 | 1 | 1 | 4 | 5 |
 | E | 18 | 6 | 1 | 0 | 4 | 6 |
@@ -40,7 +40,7 @@ things to fix.
 
 ## Readings owed
 
-Of the 96 open pairs with a reading beside them, **25 are decided by a reading taken under a tool that has
+Of the 98 open pairs with a reading beside them, **25 are decided by a reading taken under a tool that has
 CHANGED since**. A tool change moves no rule-set fingerprint and no per-rule digest, so nothing else on these
 pages can say it. It is an upper bound, because a tool file moves for a comment as readily as for a
 criterion, and it decides nothing: it says the reading is owed. Re-take with retake_gate.sh or a sweep.
@@ -129,7 +129,7 @@ What closes these is a re-cut and a route, not a drawing.
 | `DFM-001` | E | INCONCLUSIVE | the folder judged here is meshsat-pcb-e-revA-E9 and this board declares E17, so its properties are a reading of a board this set is not building |
 | `DOC-002` | E | INCONCLUSIVE | board E declares E17 and the order set holds E6: the note beside those folders describes a board this project is not building |
 
-## MEASURED_FAILURE (41): the tool looked and the board failed
+## MEASURED_FAILURE (43): the tool looked and the board failed
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -142,12 +142,14 @@ What closes these is a re-cut and a route, not a drawing.
 | `RET-004` | A | FAIL | return_via FAIL: {'examined_same_reference': 0, 'examined_to_power': 10, 'exempt': 54, 'judged': 40, 'lacking': 32, 'same_plane': 27, 'sl |
 | `ANA-001` | A | FAIL | sensitive_nodes FAIL: {'declared': 34, 'fail': 25, 'measured': 10} |
 | `RF-001` | A | FAIL | rf_line FAIL: {'judged': 11, 'missed': 11} |
+| `TRN-001` | A | FAIL | port_protect_a FAIL: {'answered_in_part': 2, 'behind_an_active_part': 0, 'clamps': 5, 'clamps_one_way': 5, 'clamps_reversed': 0, 'clamps_symb |
 | `ISO-001` | A | FAIL | spacing FAIL: {'below_limit': 5, 'closest_mm': 0.1287, 'hv_nets': 6, 'pairs_measured': 10124} |
 | `PLC-001` | A | FAIL | place_audit FAIL: {'collisions': 1, 'fine_pitch': 19, 'footprints': 400, 'measured': 19} |
 | `MEC-001` | A | FAIL | check_pcb_a FAIL: {'fail': 1, 'footprints': 400, 'intent_items_reported': 266, 'pass': 586, 'route_items_reported': 0} |
 | `OUT-001` | A | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `SCH-002` | B | FAIL | netlist_board FAIL: {'agree': 6752, 'aliased_pins': 0, 'board_footprints': 957, 'board_only_inert': 0, 'fail': 1, 'netlist_refs': 931} |
 | `PWR-003` | B | FAIL | energy_chain_b FAIL: {'fail': 1, 'stages': 3} |
+| `TRN-001` | B | FAIL | port_protect_b FAIL: {'answered_in_part': 0, 'behind_an_active_part': 0, 'clamps': 6, 'clamps_one_way': 6, 'clamps_reversed': 0, 'clamps_symb |
 | `PLC-001` | B | FAIL | place_audit FAIL: {'collisions': 13, 'fine_pitch': 75, 'footprints': 957, 'measured': 75} |
 | `RTE-002` | B | FAIL | hardset-routed-board-gate FAIL: {'by_type': {}, 'hard': 0, 'report': {'silk_edge_clearance': 9, 'silk_over_copper': 47, 'silk_overlap': 69, 'track_dangl |
 | `OUT-001` | B | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |

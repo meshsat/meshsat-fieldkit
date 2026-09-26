@@ -10,8 +10,8 @@ appears in the gap register.
 | rule | domain | effect | implementation | verification | fixtures | maturity |
 |---|---|---|---|---|---|---|
 | ANA-001 | ANALOG_MIXED_SIGNAL | MUST_JUSTIFY | pcb_sensitive.yaml, the nodes and their filters; sense_fence.py, the keep-out the router obeys | sensitive_nodes.py -> sensitive_nodes | tests/test_sensitive_nodes.py | **ENFORCED** |
-| BAT-001 | ENERGY_STORAGE | BLOCKER | gen_sch_p.py BQ4050 and protection FETs, pcb_pack_protection.yaml | pack_protection.py -> pack_protection | tests/test_pack_protection.py | **ENFORCED** |
-| BAT-002 | ENERGY_STORAGE | BLOCKER | pcb_energy_chain.yaml, the chain as data | energy_chain.py -> energy_chain | tests/test_energy_chain.py | **ENFORCED** |
+| BAT-001 | ENERGY_STORAGE | BLOCKER | gen_sch_p.py BQ4050 and protection FETs, pcb_pack_protection.yaml | pack_protection.py -> pack_protection | tests/test_pack_protection.py, tests/test_artefact_recording.py | **ENFORCED** |
+| BAT-002 | ENERGY_STORAGE | BLOCKER | pcb_energy_chain.yaml, the chain as data | energy_chain.py -> energy_chain | tests/test_energy_chain.py, tests/test_artefact_recording.py | **ENFORCED** |
 | CLK-001 | CLOCKS_RESET_BOOT | BLOCKER | gen_sch_*.py crystal networks | clock_check.py -> clock_check | tests/test_clock_check.py | **ENFORCED** |
 | CMP-001 | COMPONENT_SELECTION | BLOCKER | gen_sch_*.py value strings, each board's intent rails and its declared nodes | derate.py -> derate | tests/test_gate_fixtures.py, tests/test_derate_prefix.py | **ENFORCED** |
 | CMP-002 | COMPONENT_SELECTION | BLOCKER | lcsc_fill.py | jlc_certify.py, lcsc_fill.py -> jlc_certify_<letter>, lcsc_fill | tests/test_order_codes.py, tests/test_gate_fixtures.py, tests/test_certify_identity.py | **ENFORCED** |
@@ -27,7 +27,7 @@ appears in the gap register.
 | GND-002 | GROUNDING_SHIELDING | MUST_JUSTIFY | gen_sch_c.py standoff bond, gen_sch_b.py magnetics termination | a written strategy and a bench measurement |  | **DOCUMENTED_ONLY** |
 | IMP-001 | CONTROLLED_IMPEDANCE | BLOCKER | gen_pcb_*3.py net classes | impedance_check.py -> impedance_check |  | **SOURCE_UNVERIFIED** |
 | IMP-002 | CONTROLLED_IMPEDANCE | BLOCKER | gen_pcb_*3.py class table (board B's project classes are built from CLASSES since 16 September) | class_floor.py -> class_floor | tests/test_board_gates.py, tests/test_return_rules.py | **ENFORCED** |
-| INT-001 | INTERFACE_COMPLIANCE | BLOCKER | gen_sch_*.py, with the PCIe clauses of the module datasheet held by check_contracts.py | interfaces.py, check_contracts.py -> interfaces_<letter>, check_contracts | tests/test_interfaces.py, tests/test_gate_fixtures.py | **ENFORCED** |
+| INT-001 | INTERFACE_COMPLIANCE | BLOCKER | gen_sch_*.py, with the PCIe clauses of the module datasheet held by check_contracts.py | interfaces.py, check_contracts.py -> interfaces_<letter>, check_contracts | tests/test_interfaces.py, tests/test_gate_fixtures.py, tests/test_artefact_recording.py | **ENFORCED** |
 | INT-002 | INTERFACE_COMPLIANCE | BLOCKER | gen_sch_b.py, eight 100 nF series capacitors per module link, no magnetics | both vendors' documents, read 16 September 2026 |  | **DOCUMENTED_ONLY** |
 | ISO-001 | ISOLATION_SPACING | BLOCKER | gen_pcb_a3.py HV class, gen_pcb_b3.py HV class | spacing.py -> spacing | tests/test_spacing.py | **ENFORCED** |
 | MEC-001 | MECHANICAL | BLOCKER | panel1450.py, gen_pcb_*.py | check_pcb_*.py -> check_pcb_<letter> | tests/test_board_gates.py | **ENFORCED** |
@@ -40,21 +40,21 @@ appears in the gap register.
 | PLC-002 | PLACEMENT | MUST_JUSTIFY | closers declared in pcb_closers.yaml; the pour-island half predicted by place_audit.py | closer_audit.py -> closer_audit | tests/test_closer_audit.py | **ENFORCED** |
 | PLN-001 | PLANES_POURS | BLOCKER | pour_stitch.py, zone_pad_via.py, stitch_prune.py | check_zone_nets.py -> check_zone_nets | tests/test_gate_fixtures.py | **ENFORCED** |
 | PWR-001 | POWER_TREE | BLOCKER | gen_sch_*.py via intent.rail() | intent_checks.py -> intent_rails | tests/test_rail_loads.py | **ENFORCED** |
-| PWR-002 | POWER_TREE | MUST_JUSTIFY | the switch and always_on declarations in each gen_sch_*.py rail | power_sequence.py -> power_sequence | tests/test_power_sequence.py | **ENFORCED** |
-| PWR-003 | POWER_TREE | BLOCKER | pcb_energy_chain.yaml, the chain as data | energy_chain.py, pcb_fuse_derating.yaml -> energy_chain_<letter> | tests/test_energy_chain.py | **ENFORCED** |
+| PWR-002 | POWER_TREE | MUST_JUSTIFY | the switch and always_on declarations in each gen_sch_*.py rail | power_sequence.py -> power_sequence | tests/test_power_sequence.py, tests/test_artefact_recording.py | **ENFORCED** |
+| PWR-003 | POWER_TREE | BLOCKER | pcb_energy_chain.yaml, the chain as data | energy_chain.py, pcb_fuse_derating.yaml -> energy_chain_<letter> | tests/test_energy_chain.py, tests/test_artefact_recording.py | **ENFORCED** |
 | REL-001 | RELIABILITY | MUST_JUSTIFY | NONE_YET | reliability.py -> reliability | tests/test_reliability.py | **ENFORCED** |
 | RET-001 | RETURN_PATH | BLOCKER | signal_class.py plus each board's signal_classes table, judged by intent_checks.py | intent_checks.py -> intent_return_path | tests/test_signal_class.py | **ENFORCED** |
 | RET-002 | RETURN_PATH | MUST_JUSTIFY | gen_pcb_*3.py pours | intent_checks.py -> intent_return_path | tests/test_board_gates.py | **ENFORCED** |
 | RET-003 | RETURN_PATH | BLOCKER | gen_pcb_a3.py In2 pours | ref_change.py -> return_stitch | tests/test_ref_change.py | **ENFORCED** |
 | RET-004 | RETURN_PATH | MUST_JUSTIFY | gnd_grid.py, return_via.py fixer | return_via.py -> return_via | tests/test_board_gates.py, tests/test_signal_class.py | **ENFORCED** |
 | RF-001 | RF | BLOCKER | gen_pcb_d3.py, gen_pcb_b3.py keep-outs | rf_line.py, check_pcb_d.py -> rf_line | tests/test_rf_line.py | **ENFORCED** |
-| RF-002 | RF | BLOCKER | gen_sch_c.py, gen_sch_d.py, gen_sch_a.py | check_contracts.py -> inhibit_chain_<letter> | tests/test_gate_fixtures.py | **ENFORCED** |
+| RF-002 | RF | BLOCKER | gen_sch_c.py, gen_sch_d.py, gen_sch_a.py | check_contracts.py -> inhibit_chain_<letter> | tests/test_gate_fixtures.py, tests/test_artefact_recording.py | **ENFORCED** |
 | RTE-001 | ROUTING | BLOCKER | gen_pcb_*.py design rules | drc.sh, fab_limits.py -> fab_limits | tests/test_fab_limits.py, tests/test_rule_gate_mapping.py | **ENFORCED** |
 | RTE-002 | ROUTING | BLOCKER | routeflow.py, finish.sh | hardset.py -> hardset-routed-board-gate, pruned_gate | tests/test_hardset.py, tests/test_gate_fixtures.py | **ENFORCED** |
-| SCH-001 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_*.py | erc_gate.py -> erc_gate | tests/test_erc_gate.py | **ENFORCED** |
+| SCH-001 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_*.py | erc_gate.py -> erc_gate | tests/test_erc_gate.py, tests/test_artefact_recording.py | **ENFORCED** |
 | SCH-002 | SCHEMATIC_INTEGRITY | BLOCKER | gen_pcb_*3.py | netlist_board.py, netlist_parts.py -> netlist_board, netlist_parts | tests/test_netlist_board.py, tests/test_netlist_parts.py | **ENFORCED** |
 | SCH-003 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_*.py, gen_pcb_e5.py | check_contracts.py, block_contract.py -> check_contracts_<letter> | tests/test_gate_fixtures.py, tests/test_block_contract.py, tests/test_smbus_lead_contract.py | **ENFORCED** |
-| SCH-004 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_b.py, gen_sch_c.py, gen_sch_d.py | safe_lines.py -> safe_lines_<letter> | tests/test_safe_lines.py | **ENFORCED** |
+| SCH-004 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_b.py, gen_sch_c.py, gen_sch_d.py | safe_lines.py -> safe_lines_<letter> | tests/test_safe_lines.py, tests/test_artefact_recording.py | **ENFORCED** |
 | SCH-005 | SCHEMATIC_INTEGRITY | BLOCKER | kisch.py (check_land, land_pads), schlayout.py (_lands), gen_sch_e.py, gen_sch_b.py | kisch.py, pin_map_lands.py -> pin_map_lands_<letter> | tests/test_pin_map_lands.py | **ENFORCED** |
 | SGN-001 | VERIFICATION_SIGNOFF | BLOCKER | rules_status.py, over pcb_rules.yaml and pcb_rules_coverage.yaml | rules_status.py -> rules_complete | tests/test_rules_status.py | **ENFORCED** |
 | SGN-002 | VERIFICATION_SIGNOFF | MUST_JUSTIFY | rules_render.py prototype_doc | rules_render.py | tests/test_rule_gate_mapping.py | **VERIFIED_MANUALLY** |
@@ -63,7 +63,7 @@ appears in the gap register.
 | STK-002 | STACKUP | BLOCKER | NONE_YET | layer_judge.py -> layer_judge |  | **OWNER_DECISION_REQUIRED** |
 | SUP-001 | LIFECYCLE_SUPPLY | BLOCKER | lcsc_fill.py, jlc-handfit.txt | jlc_certify.py, lcsc_fill.py -> jlc_certify_<letter>, lcsc_fill | tests/test_order_codes.py, tests/test_gate_fixtures.py, tests/test_certify_identity.py | **ENFORCED** |
 | THM-001 | THERMAL | BLOCKER | gen_pcb_*3.py copper and thermal vias | thermal.py -> thermal | tests/test_thermal.py | **DOCUMENTED_ONLY** |
-| TRN-001 | TRANSIENT_PROTECTION | BLOCKER | gen_sch_*.py protection parts (one-way clamps through kisch.tvs(), 26 September 2026) and each board's external_ports declaration | port_protect.py -> port_protect_<letter> | tests/test_port_protect.py, tests/test_kisch_tvs.py | **ENFORCED** |
+| TRN-001 | TRANSIENT_PROTECTION | BLOCKER | gen_sch_*.py protection parts (one-way clamps through kisch.tvs(), 26 September 2026) and each board's external_ports declaration | port_protect.py -> port_protect_<letter> | tests/test_port_protect.py, tests/test_kisch_tvs.py, tests/test_artefact_recording.py | **ENFORCED** |
 | TST-001 | TEST_BRINGUP | MUST_JUSTIFY | rules_render.py bringup_doc, from each board's own intent file | rules_render.py | tests/test_rules_status.py | **VERIFIED_MANUALLY** |
 | VIA-001 | VIAS | BLOCKER | escape.py, prefanout.py, gen_pcb_*.py minimums | via_audit.py -> via_audit | tests/test_board_gates.py | **ENFORCED** |
 | VIA-002 | VIAS | BLOCKER | escape.py, prefanout.py, gen_pcb_*.py minimums; boards/<letter>.json annular_min_mm and via_ring_min_mm | via_audit.py -> via_annular | tests/test_board_gates.py | **ENFORCED** |
