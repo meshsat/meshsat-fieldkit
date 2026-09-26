@@ -221,7 +221,7 @@ part("F1", "Device", "Fuse", "25 A mini blade (Keystone 3568 holder): pack node 
 # and the 2 x 10 uF plus 0.1 uF at BATT in Figure 10-1), and until today that side was exactly where these three
 # were, on the old VBAT. They are about 25 uF effective at 16.8 V. The VSYS side keeps its own 50 uF effective (the
 # same section): C23 to C25 at Q10 and the input capacitors of every converter on VBAT. D1 stays on VBAT.
-c("C1", "47u 25V", "CELL_FUSED", "GND", "C100u"); c("C2", "47u 25V", "CELL_FUSED", "GND", "C100u"); c("C3", "10u 25V 1210", "CELL_FUSED", "GND", "C1210"); part("D1", "Device", "D_TVS", "SMCJ18A (VBAT clamp)", "TVSC", {"1": "VBAT", "2": "GND"}, "C374030")
+c("C1", "47u 25V", "CELL_FUSED", "GND", "C100u"); c("C2", "47u 25V", "CELL_FUSED", "GND", "C100u"); c("C3", "10u 25V 1210", "CELL_FUSED", "GND", "C1210"); kisch.tvs("D1", "SMCJ18A (VBAT clamp)", "VBAT", "GND", "TVSC", "C374030")   # TRN-001 / S-09 (ts-tvs, 26 Sep 2026): a one-way part, drawn K/A by kisch.tvs() (Device:D_Zener, K pin 1 on VBAT, A pin 2 on GND; direction from the part number, recorded in the intent under "clamps"); nets, value, land and code as before (Littelfuse C374030, v2/vendor/power/littelfuse-smcj-series-tvs.pdf)
 part("J_DOCK", "Connector_Generic", "Conn_01x12", "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-4 VIN_RAW (9 to 36 V from E6), 5-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare", "POGO12",
      {"1": "VIN_RAW", "2": "VIN_RAW", "3": "VIN_RAW", "4": "VIN_RAW", "5": "GND", "6": "GND", "7": "GND", "8": "SHORE_INHIBIT", "9": "USB_E6_P", "10": "USB_E6_N", "11": "GND", "12": "DOCK_SPARE"})
 # --- main power control LTC2954-1 (ltc2954.pdf): the panel MAIN button, EN to every converter's enable (RAIL_EN), INT = shutdown request, KILL from the panel controller through Q1
@@ -615,7 +615,7 @@ lm5176("FE", "U2", "VIN_RAW", "VBUS20", "FE_EN", "240k", "L1", "10uH XAL1010-103
 # their own output). FOURTH FIX-UP: VISNS now sits behind R195 (2 k), SNVSAI1D 7.3.7's requirement for an input that can
 # pass 40 V (VIN_RAW's clamp does); no capacitor at the pin, as Figure 8-1 draws it. The FE's EN/UVLO is no longer the
 # 62k / 10k divider from VIN_RAW: see THE RESTART GUARD below.
-part("D2", "Device", "D_TVS", "SMCJ40A (VIN_RAW clamp behind E6's filter: 40 V standoff on a line specified to 36)", "TVSC", {"1": "VIN_RAW", "2": "GND"}, "C224052")
+kisch.tvs("D2", "SMCJ40A (VIN_RAW clamp behind E6's filter: 40 V standoff on a line specified to 36)", "VIN_RAW", "GND", "TVSC", "C224052")   # TRN-001 / S-09 (ts-tvs, 26 Sep 2026): a one-way part, drawn K/A by kisch.tvs() (Device:D_Zener, K pin 1 on VIN_RAW, A pin 2 on GND; direction from the part number, recorded in the intent under "clamps"); nets, value, land and code as before (Littelfuse C224052, v2/vendor/power/littelfuse-smcj-series-tvs.pdf)
 # THE RESTART GUARD (fourth fix-up of 26 September 2026, R4A-N15; the third re-review's blocking item). Taken by the
 # session under the owner's standing rule of 26 Sep 2026. drafts/scripts/restart.py, drafts/box/fixup4/restart.
 # THE DEFECT. The FE's soft-start capacitor is discharged whenever U2 is disabled (SNVSAI1D 7.3.4: EN/UVLO below its
@@ -649,7 +649,7 @@ part("D2", "Device", "D_TVS", "SMCJ40A (VIN_RAW clamp behind E6's filter: 40 V s
 #   0.792 V, whatever channel 2 does afterwards. Its state is VBUS20 itself, so it is rebuilt from the bank at every
 #   power-up of the supervisor; no memory is lost when VIN_RAW vanishes.
 #  FE_RUN (both RESET pins) is pulled to FE_VZ by R198 (100 k); FE_VZ is VIN_RAW through R200 (33 k) clamped by D22
-#   (BZT52C12-7-F, Diodes DS18004, 11.4 to 12.7 V; drafts/datasheets/diodes-bzt52c.pdf): 5.9 V at the UV fall, 0.63
+#   (BZT52C12-7-F, Diodes DS18004, 11.4 to 12.7 V; v2/vendor/diodes/diodes-bzt52c-ds18004.pdf): 5.9 V at the UV fall, 0.63
 #   mA in the zener at 36 V, 85 mW in R200 at the clamp's 64.5 V. U2's EN/UVLO (60 V, VEN(OP) 1.17 to 1.29 V) takes
 #   FE_RUN over R199 (47 k) and R206 (100 k), 0.68 of it, with C213 (2.2 nF) at the pin. Three things rest on that:
 #   (a) while held, EN sits at 0.44 V at most (U34's 0.3 V VOL plus the pin's own 7 uA into 32 k), under VEN(STBY)'s
@@ -898,7 +898,7 @@ _intent.node("B33_SW", _intent.rail_volts("VBAT"),
              "a diode drop below ground on the other half of the cycle", v_min=-1.0)
 part("L7", "Device", "L", "4.7uH XAL4030-472ME", "L4030", {"1": "B33_SW", "2": "+3V3"}); c("C52", "100n", "B33_BST", "B33_SW"); c("C53", "10n", "B33_SS", "GND"); c("C54", "10u 25V 1210", "VBAT", "GND", "C1210")
 c("C55", "22u 10V X7R 1210", "+3V3", "GND", "C1210"); c("C56", "22u 10V X7R 1210", "+3V3", "GND", "C1210"); r("R48", "31.6k 1%", "+3V3", "B33_FB"); r("R49", "10k 1%", "B33_FB", "GND")
-part("D3", "Device", "D_TVS", "SMBJ5.0A", "TVS", {"1": "+3V3", "2": "GND"})
+kisch.tvs("D3", "SMBJ5.0A", "+3V3", "GND", "TVS")   # TRN-001 / S-09 (ts-tvs, 26 Sep 2026): a one-way part, drawn K/A by kisch.tvs() (Device:D_Zener, K pin 1 on +3V3, A pin 2 on GND; direction from the part number, recorded in the intent under "clamps"); nets, value, land and code as before (lcsc_fill fits MDD C113974, v2/vendor/power/mdd-smbj-series-tvs.pdf)
 # --- PA rail: LM5176 from VBAT to 13.8 V at 6 A for the RA30H1317M1 on the face plate (32.56), enabled by the hardware EMCON gate AND the software hold (PA_EN from U26); 40 V FETs
 # F-PR-01, 26 September 2026 (MESHSAT-1357; W2 F-PR-01): THE PA RAIL GETS A LIMIT NEAR ITS 6 A PEAK. The stage's
 # only limits were its average loop at 50 mV across a 2 mOhm ISNS shunt, 25 A, and its cycle limit at 66 to 94 mV
@@ -1008,7 +1008,7 @@ nfet("Q27", "CSD18510Q5B 40 V N-FET (VBUS switch)", "PD_GDNG", "PD_VPWR", "PD_SW
 # none in 0603, and 0.3 percent on a gate-bias divider is nothing.
 r("R140", "1M (GD to VPWR, 9.1.3)", "PD_VPWR", "PD_GD"); r("R141", "698k", "PD_GD", "GND"); r("R142", "10k", "PD_UFP", "+3V3"); r("R143", "4.7k", "PD_SW_EN", "GND")   # S-14 and S-08, 26 Sep 2026: the expander's software hold, ANDed with OUTLET_OK in U26
 c("C93", "100n", "PD_VTX", "GND"); c("C94", "220n", "PD_DVDD", "GND"); c("C95", "100n", "PD_VAUX", "GND"); c("C96", "330p", "PD_CC1", "GND"); c("C97", "330p", "PD_CC2", "GND"); c("C120", "10u 25V 1210", "PD_VBUS", "GND", "C1210")
-part("D4", "Device", "D_TVS", "SMBJ18A (VBUS clamp at the outlet)", "TVS", {"1": "PD_VBUS", "2": "GND"})
+kisch.tvs("D4", "SMBJ18A (VBUS clamp at the outlet)", "PD_VBUS", "GND", "TVS")   # TRN-001 / S-09 (ts-tvs, 26 Sep 2026): a one-way part, drawn K/A by kisch.tvs() (Device:D_Zener, K pin 1 on PD_VBUS, A pin 2 on GND; direction from the part number, recorded in the intent under "clamps"); nets, value, land and code as before (lcsc_fill fits Littelfuse C151256, v2/vendor/power/littelfuse-smbj-series-tvs.pdf)
 # D-12, 26 September 2026 (owner ruling): THE USB-C OUTLET IS POWER ONLY. Its data pair used to arrive on J_USBW,
 # the pigtail's data side; that path now goes to the sealed Glenair 233-370 (below, at J_USBW), and this header
 # carries VBUS, CC1 and CC2 only. The TPS25740A needs no data lines to negotiate: PD runs on CC.

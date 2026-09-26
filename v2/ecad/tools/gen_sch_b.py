@@ -438,7 +438,7 @@ def slot(s):
     # C83270, DO-214AA, stock 5,910) stands off 6.0 V and breaks down at 6.67 V minimum. Neither part
     # protects the module from a surge, whose clamping voltage is 9 to 10 V either way; what a stand-off
     # above the rail buys is that the protector is not a load on the rail it protects.
-    part("D%d" % (100 * s + 1), "Device", "D_TVS", "SMBJ6.0A (6.0 V standoff on the 5.1 V slot rail)", "TVS", {"1": n5, "2": "GND"}, "C83270")
+    kisch.tvs("D%d" % (100 * s + 1), "SMBJ6.0A (6.0 V standoff on the 5.1 V slot rail)", n5, "GND", "TVS", "C83270")   # TRN-001 / S-09 (ts-tvs, 26 Sep 2026): a one-way part, drawn K/A by kisch.tvs() (Device:D_Zener, K pin 1 on the slot rail, A pin 2 on GND; direction from the part number, recorded in the intent under "clamps"); nets, value, land and code as before (Littelfuse C83270, v2/vendor/power/littelfuse-smbj-series-tvs.pdf)
     for k in (1, 2, 3, 4): c(C(k), "100u 10V", n5, "GND", "C100u")
     for k in (5, 6, 7, 8): c(C(k), "10u", n5, "GND", "C10u")
     c(C(9), "10u", cm33, "GND", "C10u"); c(C(10), "100n", cm33, "GND")
@@ -668,7 +668,7 @@ def slot(s):
         _c5("C522", "6.8n 50V X7R", "C93654", "2"); _c5("C523", "220p 50V C0G", "C107001", "2"); _c5("C524", "68p 50V C0G", "C107009", "2")
         _c5("C525", "100n", "", "70"); _c5("C526", "220p 50V C0G", "C107001", "70"); _c5("C527", "68p 50V C0G", "C107009", "70")
         _c5("C528", "15p 50V C0G", "C106997", "70"); _c5("C529", "9.1p 50V C0G", "C526972", "70"); _c5("C530", "4.7p 50V C0G", "C325453", "70")
-        part("D520", "Device", "D_TVS", "SMBJ5.0A", "TVS", {"1": m2c, "2": "GND"}, "C113974"); _5g.append("D520")   # HD 3.3.1's 5 V TVS; pin 1 on the rail is pad 1, the cathode (A03)
+        kisch.tvs("D520", "SMBJ5.0A", m2c, "GND", "TVS", "C113974"); _5g.append("D520")   # HD 3.3.1's 5 V TVS; pin 1 (K) on the rail is pad 1, the cathode (A03). TRN-001 / S-09 (ts-tvs, 26 Sep 2026): a one-way part, drawn K/A by kisch.tvs() (Device:D_Zener, K pin 1 on the 5G rail, A pin 2 on GND; direction from the part number, recorded in the intent under "clamps"); nets, value, land and code as before (MDD C113974, v2/vendor/power/mdd-smbj-series-tvs.pdf)
         # S-13, 26 September 2026: each SIM per HD v1.1 Figure 18 (a 6-pin holder without hot-plug): 22 Ohm in series in
         # RST, CLK and DATA, 10 pF on each at the holder, 100 nF on VCC. SIM 2 also follows Figure 19's compatible design:
         # four 0 Ohm links at the module (RST, CLK, DATA, VDD) are the removable parts, so an eSIM-fitted module
@@ -829,7 +829,7 @@ _SEC_MARKS = []   # 15 Sep 2026: the shared parts are sectioned by the headings 
 # ================================================================= shared: power
 _SEC_MARKS.append(('SHARED: POWER', len(P)))
 part("J_5V_DEV", "Connector_Generic", "Conn_01x02", "JST-VH socket, 10 A: USB device rail from A22 J_5V_DEV: + -", "VH2", {"1": "+5V_DEV", "2": "GND"}, "C274411")
-part("D1", "Device", "D_TVS", "SMBJ5.0A", "TVS", {"1": "+5V_DEV", "2": "GND"}); c("C1", "100u 10V", "+5V_DEV", "GND", "C100u"); c("C2", "100u 10V", "+5V_DEV", "GND", "C100u")
+kisch.tvs("D1", "SMBJ5.0A", "+5V_DEV", "GND", "TVS"); c("C1", "100u 10V", "+5V_DEV", "GND", "C100u"); c("C2", "100u 10V", "+5V_DEV", "GND", "C100u")   # TRN-001 / S-09 (ts-tvs, 26 Sep 2026): a one-way part, drawn K/A by kisch.tvs() (Device:D_Zener, K pin 1 on +5V_DEV, A pin 2 on GND; direction from the part number, recorded in the intent under "clamps"); nets, value, land and code as before (lcsc_fill fits MDD C113974, v2/vendor/power/mdd-smbj-series-tvs.pdf)
 ic("U25", 6, "AP63203WU-7 3.3 V 2 A buck: the shared logic (+3V3_DEV)", "TSOT6", {"1": "+3V3_DEV", "2": "+5V_DEV", "3": "+5V_DEV", "4": "GND", "5": "DEV_SW", "6": "DEV_BST"}, "C780769")   # TSOT-23-6, 12,477 in stock
 # DEV_SW is the one buck on this board written out rather than through a helper, so it gets its line here
 # (20 September 2026, the same sweep): the AP63203 runs the shared logic rail off +5V_DEV.
@@ -873,7 +873,7 @@ part("J_ETH", "Connector", "RJ45_Shielded", "RJ45 jack (Amphenol RJHSE5380): pat
      {"1": "MDI_A_P", "2": "MDI_A_N", "3": "MDI_B_P", "4": "MDI_C_P", "5": "MDI_C_N", "6": "MDI_B_N", "7": "MDI_D_P", "8": "MDI_D_N", "SH": "GND"})
 # PoE injector TPS23861 (one port used; unused ports per section 8.2.2: SEN grounded, GATE floating, DRAIN open); 54 V from A22's LM5176 boost over J_54V
 part("J_54V", "Connector_Generic", "Conn_01x02", "JST-VH socket, 10 A: 54 V PoE feed from A22 J_54V: + -", "VH2", {"1": "+54V_POE", "2": "GND"}, "C274411")
-part("D2", "Device", "D_TVS", "SMBJ58A", "TVS", {"1": "+54V_POE", "2": "GND"}, "C135085"); c("C34", "100n 100V", "+54V_POE", "GND", "C10u", "C106243")
+kisch.tvs("D2", "SMBJ58A", "+54V_POE", "GND", "TVS", "C135085"); c("C34", "100n 100V", "+54V_POE", "GND", "C10u", "C106243")   # TRN-001 / S-09 (ts-tvs, 26 Sep 2026): a one-way part, drawn K/A by kisch.tvs() (Device:D_Zener, K pin 1 on +54V_POE, A pin 2 on GND; direction from the part number, recorded in the intent under "clamps"); nets, value, land and code as before (Diodes SMBJ58A-13-F C135085, v2/vendor/diodes/diodes-smbj-ds19002.pdf note 8)
 # C35 WAS A PART NOBODY SELLS, in the shape of owner ruling 10's twenty-five capacitors: 10 uF 100 V in an
 # 1812 land, and JLCPCB's only exact match is a SANYEAR part at stock ZERO, everything else in 1812 at 100 V
 # topping out at 2.2 uF. It exists in the SMALLER 1210 land: Murata GRM32EC72A106KE05L, X7S, 243,928 in

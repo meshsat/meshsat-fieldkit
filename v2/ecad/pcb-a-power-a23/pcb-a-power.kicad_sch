@@ -19881,7 +19881,7 @@
 					)
 					(embedded_fonts no)
 				)
-		(symbol "Device:D_TVS"
+		(symbol "Device:D_Zener"
 					(pin_numbers
 						(hide yes)
 					)
@@ -19900,7 +19900,7 @@
 							)
 						)
 					)
-					(property "Value" "D_TVS"
+					(property "Value" "D_Zener"
 						(at 0 -2.54 0)
 						(effects
 							(font
@@ -19926,7 +19926,7 @@
 							(hide yes)
 						)
 					)
-					(property "Description" "Bidirectional transient-voltage-suppression diode"
+					(property "Description" "Zener diode"
 						(at 0 0 0)
 						(effects
 							(font
@@ -19935,7 +19935,7 @@
 							(hide yes)
 						)
 					)
-					(property "ki_keywords" "diode TVS thyrector"
+					(property "ki_keywords" "diode"
 						(at 0 0 0)
 						(effects
 							(font
@@ -19953,29 +19953,12 @@
 							(hide yes)
 						)
 					)
-					(symbol "D_TVS_0_1"
+					(symbol "D_Zener_0_1"
 						(polyline
 							(pts
-								(xy -2.54 1.27)
-								(xy -2.54 -1.27)
-								(xy 2.54 1.27)
-								(xy 2.54 -1.27)
-								(xy -2.54 1.27)
-							)
-							(stroke
-								(width 0.254)
-								(type default)
-							)
-							(fill
-								(type none)
-							)
-						)
-						(polyline
-							(pts
-								(xy 0.508 1.27)
-								(xy 0 1.27)
-								(xy 0 -1.27)
-								(xy -0.508 -1.27)
+								(xy -1.27 -1.27)
+								(xy -1.27 1.27)
+								(xy -0.762 1.27)
 							)
 							(stroke
 								(width 0.254)
@@ -19998,12 +19981,27 @@
 								(type none)
 							)
 						)
+						(polyline
+							(pts
+								(xy 1.27 -1.27)
+								(xy 1.27 1.27)
+								(xy -1.27 0)
+								(xy 1.27 -1.27)
+							)
+							(stroke
+								(width 0.254)
+								(type default)
+							)
+							(fill
+								(type none)
+							)
+						)
 					)
-					(symbol "D_TVS_1_1"
+					(symbol "D_Zener_1_1"
 						(pin passive line
 							(at -3.81 0 0)
 							(length 2.54)
-							(name "A1"
+							(name "K"
 								(effects
 									(font
 										(size 1.27 1.27)
@@ -20021,7 +20019,7 @@
 						(pin passive line
 							(at 3.81 0 180)
 							(length 2.54)
-							(name "A2"
+							(name "A"
 								(effects
 									(font
 										(size 1.27 1.27)
@@ -21520,162 +21518,6 @@
 							(at 0 -3.81 90)
 							(length 2.794)
 							(name "~"
-								(effects
-									(font
-										(size 1.27 1.27)
-									)
-								)
-							)
-							(number "2"
-								(effects
-									(font
-										(size 1.27 1.27)
-									)
-								)
-							)
-						)
-					)
-					(embedded_fonts no)
-				)
-		(symbol "Device:D_Zener"
-					(pin_numbers
-						(hide yes)
-					)
-					(pin_names
-						(offset 1.016)
-						(hide yes)
-					)
-					(exclude_from_sim no)
-					(in_bom yes)
-					(on_board yes)
-					(property "Reference" "D"
-						(at 0 2.54 0)
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(property "Value" "D_Zener"
-						(at 0 -2.54 0)
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(property "Footprint" ""
-						(at 0 0 0)
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-							(hide yes)
-						)
-					)
-					(property "Datasheet" "~"
-						(at 0 0 0)
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-							(hide yes)
-						)
-					)
-					(property "Description" "Zener diode"
-						(at 0 0 0)
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-							(hide yes)
-						)
-					)
-					(property "ki_keywords" "diode"
-						(at 0 0 0)
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-							(hide yes)
-						)
-					)
-					(property "ki_fp_filters" "TO-???* *_Diode_* *SingleDiode* D_*"
-						(at 0 0 0)
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-							(hide yes)
-						)
-					)
-					(symbol "D_Zener_0_1"
-						(polyline
-							(pts
-								(xy -1.27 -1.27)
-								(xy -1.27 1.27)
-								(xy -0.762 1.27)
-							)
-							(stroke
-								(width 0.254)
-								(type default)
-							)
-							(fill
-								(type none)
-							)
-						)
-						(polyline
-							(pts
-								(xy 1.27 0)
-								(xy -1.27 0)
-							)
-							(stroke
-								(width 0)
-								(type default)
-							)
-							(fill
-								(type none)
-							)
-						)
-						(polyline
-							(pts
-								(xy 1.27 -1.27)
-								(xy 1.27 1.27)
-								(xy -1.27 0)
-								(xy 1.27 -1.27)
-							)
-							(stroke
-								(width 0.254)
-								(type default)
-							)
-							(fill
-								(type none)
-							)
-						)
-					)
-					(symbol "D_Zener_1_1"
-						(pin passive line
-							(at -3.81 0 0)
-							(length 2.54)
-							(name "K"
-								(effects
-									(font
-										(size 1.27 1.27)
-									)
-								)
-							)
-							(number "1"
-								(effects
-									(font
-										(size 1.27 1.27)
-									)
-								)
-							)
-						)
-						(pin passive line
-							(at 3.81 0 180)
-							(length 2.54)
-							(name "A"
 								(effects
 									(font
 										(size 1.27 1.27)
@@ -25393,7 +25235,7 @@
 	)
 	(wire (pts (xy 265.43 29.21) (xy 262.89 29.21)) (stroke (width 0) (type default)) (uuid "5ce78804-888d-563f-a3e7-9716ac70c2ff"))
 	(wire (pts (xy 273.05 29.21) (xy 275.59 29.21)) (stroke (width 0) (type default)) (uuid "2e5e8aa3-2e2b-552a-aec2-ded81f076be0"))
-	(symbol (lib_id "Device:D_TVS") (at 311.15 27.94 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "63de0fc0-c131-5872-ac4b-0bdf936462a2")
+	(symbol (lib_id "Device:D_Zener") (at 311.15 27.94 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "63de0fc0-c131-5872-ac4b-0bdf936462a2")
 		(property "Reference" "D1" (at 309.64 25.40 0) (effects (font (size 1.27 1.27)) (justify left bottom)))
 		(property "Value" "SMCJ18A (VBAT clamp)" (at 305.88 32.19 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))
 		(property "Footprint" "Diode_SMD:D_SMC" (at 311.15 27.94 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))
@@ -26927,7 +26769,7 @@
 		(pin "1" (uuid "468b572c-4de5-5868-8856-c84f0055df2d"))
 		(instances (project "pcb-a-power" (path "/5663fbcf-143d-5acc-8e65-3ad892df2ec3" (reference "#PWR035") (unit 1))))
 	)
-	(symbol (lib_id "Device:D_TVS") (at 744.22 49.53 270) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "e9b92e6e-6463-5505-b90c-15296c78551e")
+	(symbol (lib_id "Device:D_Zener") (at 744.22 49.53 270) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "e9b92e6e-6463-5505-b90c-15296c78551e")
 		(property "Reference" "D2" (at 745.89 47.43 0) (effects (font (size 1.27 1.27)) (justify left bottom)))
 		(property "Value" "SMCJ40A (VIN_RAW clamp behind E6's filter: 40 V standoff on a line specified to 36)" (at 745.89 49.45 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))
 		(property "Footprint" "Diode_SMD:D_SMC" (at 744.22 49.53 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))
@@ -31582,7 +31424,7 @@
 	)
 	(wire (pts (xy 1043.94 326.39) (xy 1041.40 326.39)) (stroke (width 0) (type default)) (uuid "046131f7-8fea-530a-9784-df79aac0fe06"))
 	(wire (pts (xy 1051.56 326.39) (xy 1054.10 326.39)) (stroke (width 0) (type default)) (uuid "e51083fe-7c78-5eb9-bff8-9689a9843d8c"))
-	(symbol (lib_id "Device:D_TVS") (at 1092.20 325.12 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "73b4317f-64fc-55a8-8cdf-74441339d8cd")
+	(symbol (lib_id "Device:D_Zener") (at 1092.20 325.12 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "73b4317f-64fc-55a8-8cdf-74441339d8cd")
 		(property "Reference" "D3" (at 1090.69 322.58 0) (effects (font (size 1.27 1.27)) (justify left bottom)))
 		(property "Value" "SMBJ5.0A" (at 1086.17 329.37 0) (effects (font (size 1.27 1.27)) (justify left bottom)))
 		(property "Footprint" "Diode_SMD:D_SMB" (at 1092.20 325.12 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))
@@ -35350,7 +35192,7 @@
 	(global_label "GND" (shape input) (at 875.03 698.50 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left)) (uuid "c844c7b1-9a25-5558-b39c-f35c6f450c40")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}" (at 875.03 698.50 0) (effects (font (size 1.27 1.27)) (hide yes)))
 	)
-	(symbol (lib_id "Device:D_TVS") (at 909.32 698.50 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "e9fcd713-c7e9-5f28-b63b-002de40b183b")
+	(symbol (lib_id "Device:D_Zener") (at 909.32 698.50 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid "e9fcd713-c7e9-5f28-b63b-002de40b183b")
 		(property "Reference" "D4" (at 907.81 695.96 0) (effects (font (size 1.27 1.27)) (justify left bottom)))
 		(property "Value" "SMBJ18A (VBUS clamp at the outlet)" (at 904.05 702.75 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))
 		(property "Footprint" "Diode_SMD:D_SMB" (at 909.32 698.50 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))
