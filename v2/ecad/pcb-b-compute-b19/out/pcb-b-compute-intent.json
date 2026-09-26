@@ -1,6 +1,6 @@
 {
  "board": "pcb-b-compute",
- "written": "2026-09-26 14:16",
+ "written": "2026-09-26 18:59",
  "bypass": [
   {
    "cap": "C112",
@@ -1479,5 +1479,49 @@
    "z_se": 50.0
   }
  },
- "pass_through": {}
+ "pass_through": {},
+ "clamps": {
+  "D101": {
+   "direction": "uni",
+   "basis": "SMBJ6.0A: no C in the suffix, the unidirectional part (Littelfuse, Diodes Inc and MDD number them alike)",
+   "protected": "+5V_S1",
+   "return": "GND",
+   "symbol": "Device:D_Zener"
+  },
+  "D201": {
+   "direction": "uni",
+   "basis": "SMBJ6.0A: no C in the suffix, the unidirectional part (Littelfuse, Diodes Inc and MDD number them alike)",
+   "protected": "+5V_S2",
+   "return": "GND",
+   "symbol": "Device:D_Zener"
+  },
+  "D520": {
+   "direction": "uni",
+   "basis": "SMBJ5.0A: no C in the suffix, the unidirectional part (Littelfuse, Diodes Inc and MDD number them alike)",
+   "protected": "+3V3_M2C2",
+   "return": "GND",
+   "symbol": "Device:D_Zener"
+  },
+  "D301": {
+   "direction": "uni",
+   "basis": "SMBJ6.0A: no C in the suffix, the unidirectional part (Littelfuse, Diodes Inc and MDD number them alike)",
+   "protected": "+5V_S3",
+   "return": "GND",
+   "symbol": "Device:D_Zener"
+  },
+  "D1": {
+   "direction": "uni",
+   "basis": "SMBJ5.0A: no C in the suffix, the unidirectional part (Littelfuse, Diodes Inc and MDD number them alike)",
+   "protected": "+5V_DEV",
+   "return": "GND",
+   "symbol": "Device:D_Zener"
+  },
+  "D2": {
+   "direction": "uni",
+   "basis": "SMBJ58A: no C in the suffix, the unidirectional part (Littelfuse, Diodes Inc and MDD number them alike)",
+   "protected": "+54V_POE",
+   "return": "GND",
+   "symbol": "Device:D_Zener"
+  }
+ }
 }

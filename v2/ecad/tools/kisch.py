@@ -339,19 +339,25 @@ def esd(ref, dp, dm, vbus): part(ref, "Power_Protection", "USBLC6-2SC6", "USBLC6
 #
 # The direction comes from the part number, because that is what is bought, and only for families whose makers'
 # sheets say how their numbers read. SMBJ and SMCJ: a C in the suffix is the bidirectional part in every maker's sheet
-# held for the codes the set buys. One fitted clamp has no code and no maker yet: board E's D3, SMCJ18A, whose
-# generator and netlist carry no LCSC code (v2/vendor/SOURCES.yaml at main 26b80900 lists its maker as TBD; the older
-# E deliverable BOM row read by jlc_certify carries C151906), so its one-way reading rests on the family's numbering
-# convention, which the four makers' sheets below all follow, and not on its own maker's sheet (second fix-up of round
-# 4, 26 September 2026). Littelfuse SMCJ series (v2/vendor/power/littelfuse-smcj-series-tvs.pdf, "Part Numbering System:
-# SMCJ XXX C A", C = BI-DIRECTIONAL; SMCJ40A under "Part Number (Uni)", SMCJ40CA under "(Bi)"); Littelfuse SMBJ series
-# (revised JC.07/04/25, LCSC C151256); Diodes Inc DS19002 Rev. 20-2 note 8, "Suffix C denotes Bi-directional device"
-# (board B's SMBJ58A-13-F, LCSC C135085); MDD SMBJ5.0(C)A THRU SMBJ440(C)A, Rev:2025A7, whose table lists SMBJ5.0A and
-# SMBJ20A under "Unidirectional" and SMBJ5.0CA and SMBJ20CA under "Bidirectional" (the fitted C113974 and C364296,
-# fetched in the review fix-up of 26 September 2026); the Vishay SMBJ and SMCJ sheets in v2/vendor/vishay number them
-# the same way. Nexperia's PESD5V0S1BA is "Bidirectional ESD protection diode" on the first line of its own datasheet
-# (v2/vendor/nexperia/nexperia-pesd5v0s1ba.pdf, LCSC C19224). The Littelfuse SMBJ, Diodes and MDD copies are in the r4t
-# drafts/datasheets with their URLs and sha256 until they are added to v2/vendor. Any other part number is refused
+# held for the codes the set buys. Every one of those sheets is filed in v2/vendor, with its source URL and sha256 in
+# v2/vendor/SOURCES.yaml; the four sha256 prefixes below were read off the filed bytes on 26 September 2026 (ts-tvs,
+# main 45bde541) and equal the SOURCES.yaml records:
+#   - Littelfuse SMCJ series, Revised 11/20/15, v2/vendor/power/littelfuse-smcj-series-tvs.pdf (sha256 6e610db9...):
+#     "Part Numbering System: SMCJ XXX C A", C = BI-DIRECTIONAL; SMCJ40A under "Part Number (Uni)", SMCJ40CA under
+#     "(Bi)". The fitted C224052 (SMCJ40A), C224047 (SMCJ28A), C374030 (SMCJ18A) and C80273 (SMCJ40CA).
+#   - Littelfuse SMBJ series, Revised JC.07/04/25, v2/vendor/power/littelfuse-smbj-series-tvs.pdf (sha256 d7df155b...):
+#     the fitted C83270 (SMBJ6.0A) and C151256 (SMBJ18A).
+#   - Diodes Incorporated DS19002 Rev. 20-2, v2/vendor/diodes/diodes-smbj-ds19002.pdf (sha256 752945fa...), note 8,
+#     "Suffix C denotes Bi-directional device": board B's SMBJ58A-13-F, LCSC C135085.
+#   - MDD SMBJ5.0(C)A THRU SMBJ440(C)A, Rev:2025A7, v2/vendor/power/mdd-smbj-series-tvs.pdf (sha256 95385273...), whose
+#     table lists SMBJ5.0A and SMBJ20A under "Unidirectional" and SMBJ5.0CA and SMBJ20CA under "Bidirectional": the
+#     fitted C113974 (SMBJ5.0A) and C364296 (SMBJ20A).
+# The Vishay SMBJ and SMCJ sheets in v2/vendor/vishay number them the same way. The SMCJ18A on board E's D3 and board
+# A's D1 carries C374030, the Littelfuse part the SMCJ sheet above covers (the second fix-up of round 4 wrote that E's
+# D3 had no code: gen_sch_e.py has carried C374030 since; the older E deliverable BOM row jlc_certify reads carries
+# C151906, a BORN SMCJ18A whose own sheet is not held). Nexperia's PESD5V0S1BA is "Bidirectional ESD protection diode"
+# on the first line of its own datasheet (v2/vendor/nexperia/nexperia-pesd5v0s1ba.pdf, LCSC C19224). Any other part
+# number is refused
 # unless the caller says which it is AND names the datasheet that says so (`basis=`), and that declaration is written
 # into the board's intent file under "clamps", where the gate (port_protect.py, TRN-001) reads it.
 _UNI_FAMILY = re.compile(r"^(SMBJ|SMCJ)(\d+(?:\.\d+)?)(C?A?)\b", re.I)
@@ -360,13 +366,15 @@ _PESD = re.compile(r"^PESD\d+V\d+S1B[A-Z]\b", re.I)
 # 26 September 2026). Board D's microphone clamps D10 and D13 moved from PESD5V0S1BA to Nexperia PESD12VL1BA (LCSC
 # C38558) in round 4, and this reader returned None for it, so port_protect judged both UNJUDGED and TRN-001 read
 # INCONCLUSIVE on D under r4t's tools. Nexperia's naming is not read as a rule from one sheet (a PESDxVL1BA is not
-# asserted to be two-way because a PESDxVS1BA is): each part is listed with its own sheet's words. The sheet is held
-# in r4t's drafts/datasheets (sha256 3cc06cb0...) until it is added to v2/vendor/nexperia.
+# asserted to be two-way because a PESDxVS1BA is): each part is listed with its own sheet's words. The sheet is filed
+# at v2/vendor/nexperia/nexperia-pesd12vl1ba.pdf (sha256 3cc06cb0..., read off the filed bytes on 26 September 2026 and
+# equal to its v2/vendor/SOURCES.yaml record).
 #
 # BOARD A's D22 SINCE MAIN 458b2873 (round 6 fourth pass, 26 September 2026): the restart guard's pull-up clamp, a
 # BZT52C12-7-F on Device:D_Zener, cathode on FE_VZ and anode on ground. A zener is a one-way part, but that is read from
 # its maker's sheet here as well, not from the symbol it is drawn with: Diodes Incorporated DS18004 Rev. 38-2 (the board
-# A author's copy, sha256 0fbd7d13..., held in r4t's drafts/datasheets until it is added to v2/vendor/diodes) is headed
+# A author's copy, sha256 0fbd7d13..., filed by the parts stream of this round at v2/vendor/diodes/diodes-bzt52c-ds18004.pdf
+# with its v2/vendor/SOURCES.yaml record) is headed
 # "BZT52C2V0 - BZT52C51 SURFACE MOUNT ZENER DIODE", states "Polarity: Cathode Band", lists type BZT52C12 (11.4 V to
 # 12.7 V at 5 mA) and orders it as "(Type Number)-7-F". Without it the polarity pass read D22 UNJUDGED.
 _HELD_DIRECTION = {

@@ -1,6 +1,6 @@
 {
  "board": "pcb-a-power",
- "written": "2026-09-26 14:16",
+ "written": "2026-09-26 18:58",
  "bypass": [
   {
    "cap": "C8",
@@ -1225,5 +1225,35 @@
    "z_se": 50.0
   }
  },
- "pass_through": {}
+ "pass_through": {},
+ "clamps": {
+  "D1": {
+   "direction": "uni",
+   "basis": "SMCJ18A: no C in the suffix, the unidirectional part (Littelfuse, Diodes Inc and MDD number them alike)",
+   "protected": "VBAT",
+   "return": "GND",
+   "symbol": "Device:D_Zener"
+  },
+  "D2": {
+   "direction": "uni",
+   "basis": "SMCJ40A: no C in the suffix, the unidirectional part (Littelfuse, Diodes Inc and MDD number them alike)",
+   "protected": "VIN_RAW",
+   "return": "GND",
+   "symbol": "Device:D_Zener"
+  },
+  "D3": {
+   "direction": "uni",
+   "basis": "SMBJ5.0A: no C in the suffix, the unidirectional part (Littelfuse, Diodes Inc and MDD number them alike)",
+   "protected": "+3V3",
+   "return": "GND",
+   "symbol": "Device:D_Zener"
+  },
+  "D4": {
+   "direction": "uni",
+   "basis": "SMBJ18A: no C in the suffix, the unidirectional part (Littelfuse, Diodes Inc and MDD number them alike)",
+   "protected": "PD_VBUS",
+   "return": "GND",
+   "symbol": "Device:D_Zener"
+  }
+ }
 }
