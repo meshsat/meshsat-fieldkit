@@ -14,7 +14,13 @@ kicad-cli sch export netlist --format kicadsexpr -o "out/$N.net" "$N.kicad_sch" 
 python3 "$(dirname "$0")/sch_prov.py" write "out/$N.net" "$N" || true
 # 15 Sep 2026 (MESHSAT-862, 32.196): the sheet is a grid of A3 cells (schlayout.py), so the PDF a reader opens is that grid cut into
 # A3 pages, one block per page, no drawing-sheet border across the cells. The whole sheet stays beside it for a viewer that wants it.
-kicad-cli sch export pdf --exclude-drawing-sheet -o "out/$N-schematic-sheet.pdf" "$N.kicad_sch" >/dev/null && echo "sheet pdf: out/$N-schematic-sheet.pdf"
+# NO PROPERTY POPUPS (26 September 2026, MESHSAT-1357, board B round 4). KiCad writes one JavaScript link annotation
+# per symbol field on the sheet's single page, and `mutool poster` copies every one of them onto each of the 42 A3
+# tiles. Poppler refuses a page with more than 10000 annotations ("Page annotations object (page 1) is likely
+# malformed. Too big"), so pdftoppm rendered every tile blank and sch_pages.py kept none: board B's sheet carries
+# 10480 once round 4 added its 168 parts (the committed B21 sheet 9561), and its paged PDF came out with no page at
+# all while build_sch.sh reported success. The popups are a viewer convenience; the netlist is the record.
+kicad-cli sch export pdf --exclude-drawing-sheet --exclude-pdf-property-popups -o "out/$N-schematic-sheet.pdf" "$N.kicad_sch" >/dev/null && echo "sheet pdf: out/$N-schematic-sheet.pdf"
 # A MISSING TOOL IS A REFUSAL HERE, NOT A MISSING FILE THREE STAGES LATER (17 September 2026). sch_pages.py
 # needs mutool and the hub box did not have it, so board C's paged schematic PDF was never written, nothing
 # said so, and the deliverable failed at `cp: cannot stat out/pcb-c-display-schematic.pdf` with no clue what

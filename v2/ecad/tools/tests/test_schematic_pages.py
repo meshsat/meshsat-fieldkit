@@ -31,6 +31,47 @@ def t_the_build_cuts_the_sheet_into_pages_without_the_drawing_sheet_border():
     assert "sch_pages.py" in b, "the sheet is not cut into pages"
 
 
+def t_the_sheet_pdf_carries_no_property_popups():
+    """26 September 2026 (MESHSAT-1357): KiCad's per-field popups put 10480 link annotations on board B's one page, poppler
+    refuses a page over 10000 and every tile rendered blank. The export must leave them out."""
+    b = open(os.path.join(TOOLS, "build_sch.sh")).read()
+    assert "--exclude-pdf-property-popups" in b, "the sheet PDF carries KiCad's property popups again"
+
+
+def _pages_fixture(d, ink_cells):
+    """A two-cell sheet (2 x 1 A3 cells of schlayout's grid) and its PDF, with a filled square in the cells named."""
+    import subprocess
+    w_mm, h_mm = 2 * 330 * 1.27, 234 * 1.27
+    open(os.path.join(d, "s.kicad_sch"), "w").write('(kicad_sch (paper "User" %.2f %.2f))\n' % (w_mm, h_mm))
+    w_pt, h_pt = w_mm / 25.4 * 72, h_mm / 25.4 * 72
+    body = "".join("0 g %.1f 200 400 400 re f\n" % (c * w_pt / 2 + 200) for c in ink_cells)
+    open(os.path.join(d, "page.txt"), "w").write("%%%%MediaBox 0 0 %.1f %.1f\n%s" % (w_pt, h_pt, body))
+    subprocess.run(["mutool", "create", "-o", os.path.join(d, "sheet.pdf"), os.path.join(d, "page.txt")], check=True, capture_output=True)
+
+
+def t_a_sheet_of_cells_with_no_ink_anywhere_is_refused_and_an_inked_one_is_paged():
+    """THE DEFECTIVE FIXTURE is a two-cell sheet with no ink, which is what a sheet looks like to this tool when poppler
+    refuses to render its tiles: it must exit non-zero rather than write a PDF with no page. THE ACCEPTABLE FIXTURE is
+    the same sheet with one filled square in the second cell: one page kept, exit 0."""
+    import shutil, subprocess, sys, tempfile
+    from harness import Skip
+    if not (shutil.which("mutool") and shutil.which("pdftoppm")): raise Skip("mutool or pdftoppm is not on this host")
+    try: import PIL  # noqa: F401
+    except ImportError: raise Skip("Pillow is not on this host")
+    tool = os.path.join(TOOLS, "sch_pages.py")
+    for cells, want_rc, want_pages in (((), "nonzero", None), ((1,), 0, 1)):
+        d = tempfile.mkdtemp(prefix="schpages-fixture-")
+        _pages_fixture(d, cells)
+        p = subprocess.run([sys.executable, tool, os.path.join(d, "s.kicad_sch"), os.path.join(d, "sheet.pdf"), os.path.join(d, "out.pdf")],
+                           capture_output=True, text=True)
+        if want_rc == "nonzero":
+            assert p.returncode != 0, "a sheet with no ink in any cell was paged into %s: %s" % (d, p.stdout + p.stderr)
+            assert "not one tile carries ink" in p.stdout + p.stderr, p.stdout + p.stderr
+        else:
+            assert p.returncode == 0, p.stdout + p.stderr
+            assert "%d pages kept of 2 tiles" % want_pages in p.stdout, p.stdout
+
+
 def t_wires_are_cut_at_junctions_and_labels():
     s = open(os.path.join(TOOLS, "schlayout.py")).read()
     assert "junction" in s and "cuts = set(junctions)" in s, "a junction on an unsplit wire disconnects everything past it (measured 15 Sep 2026)"

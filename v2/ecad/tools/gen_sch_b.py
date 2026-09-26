@@ -60,7 +60,16 @@ for _n in (1, 2, 3):
 #   and both are below anything those parts claim. Taken low on purpose: a lower efficiency is a higher loss.
 #   AP2112K LDOs (U27's 2.5 V from 3.3, and the three controllers' private 3.3 V from the 5 V device rail):
 #   a linear regulator's efficiency is arithmetic, Vout/Vin, so 2.5/3.3 = 0.76 and 3.3/5.0 = 0.66 exactly.
-    _intent.rail("+5V_S%d" % _n, 5.1, 2.5, 5.0, "J_5V_S%d" % _n, loads=_SLOT_LOADS(_n), budget=0.02, share=0.015, converted=False,
+    # F-PR-05, 26 September 2026: slot 2's continuous current rises with its 5G module's 3.0 A at 3.3 V. power_path
+    # adds up what the slot's three converters draw at their declared typical currents (3.05 A on slot 2, 2.21 of it
+    # the card buck), and with the module's own 0.9 A (CM5 datasheet Table 9) and the fan's 0.1 A that is 4.05 A,
+    # against the 2.5 A this line declared for every slot. The peak stays the source's 5.0 A (board A's AP64500).
+    # Fix-up, 26 September 2026: whether the socket's two 220 uF carry the 5G burst so that +5V_S2 stays under that
+    # 5.0 A is NOT computed here; the coincident worst case is open item I-03 on board A (drafts/r4-interfaces.md).
+    # O-17, 26 September 2026 (fix-up pass 2): the card buck now sets 3.456 V, so its 3.0 A draws 2.31 A at 5.1 V
+    # (3.0 x 3.456 / 0.88 / 5.1) and the three converters 3.16 A; with the module and the fan that is 4.16 A, so the
+    # typical is 4.2 A. The coincident peak with the module at 4 A becomes 5.63 A (I-03).
+    _intent.rail("+5V_S%d" % _n, 5.1, 4.2 if _n == 2 else 2.5, 5.0, "J_5V_S%d" % _n, loads=_SLOT_LOADS(_n), budget=0.02, share=0.015, converted=False,
                  always_on=True, always_on_why="it arrives from board A over the JST-VH lead; board A switches it and this board consumes it",
                  note="slot rail from A22 (JST-VH): the module, the two 3.3 V bucks, the 1.0 V switch core and the fan. "
                       "THIS BOARD'S SHARE is 1.5 of the rail's 2 percent (16 September 2026): board A regulates it and "
@@ -138,11 +147,26 @@ for _n in (1, 2, 3): _GND_LOADS.update(_SLOT_LOADS(_n))
 # output pin really is a power pin (an LDO, an eFuse, a load switch, a polyfuse) says so with source_ic.
 # The currents are design estimates of where the current goes, in the same form as the rails above.
 for _s in (1, 2, 3):
-    _intent.rail("+3V3_S%dA" % _s, 3.3, 0.5, 1.5, "L%d01" % _s, switch="U%d03" % _s, converted=True, efficiency=0.88,
+    # F-PR-05, 26 September 2026: slot 2's socket carries the RM520N-GL, whose maker asks for "3.0 A at least"
+    # continuous and "4 A at least" peak (HD v1.1 3.3.1); it was declared at 0.5 and 1.5 A, the AW7915's figures.
+    # W5 TESTACCESS-B, the same day: the socket is fed through the Kelvin shunt R{s}65, so the buck side is this rail
+    # and the socket side is +3V3_M2C{s}, a series segment of it.
+    _ta, _pk = (3.0, 4.0) if _s == 2 else (0.5, 1.5)
+    # O-17, 26 September 2026: slot 2's card buck is set to 3.456 V (R202 33.2 k, see slot()), inside the RM520N's
+    # 3.135 to 4.4 V; the rail keeps its name and declares the voltage it is set to.
+    _v2a = 3.456 if _s == 2 else 3.3
+    _intent.rail("+3V3_S%dA" % _s, _v2a, _ta, _pk, "L%d01" % _s, switch="U%d03" % _s, converted=True, efficiency=0.88,
                  fed_from="+5V_S%d" % _s,
-                 loads={"J_M2C%d" % _s: 1.5},
-                 note="slot %d's card-socket 3.3 V from the AP63203 buck U%d03 through L%d01: an M.2 A/E-key "
-                      "radio card, 3 A at its own connector's rating and 1.5 A for the AW7915-AED" % (_s, _s, _s))
+                 loads={"R%d65" % _s: _pk},
+                 note=("slot %d's card-socket %s V from the AP64500 buck U%d03 through L%d01, out through the 5 mOhm "
+                       "Kelvin shunt R%d65 to the socket: " % (_s, "3.456" if _s == 2 else "3.3", _s, _s, _s)) +
+                      ("the Quectel RM520N-GL, 3.0 A continuous and 4 A peak (HD v1.1 3.3.1)" if _s == 2 else
+                       "the AsiaRF AW7915-AED, 1.5 A"))
+    _intent.rail("+3V3_M2C%d" % _s, _v2a, _ta, _pk, "R%d65" % _s, converted=False, series_of="+3V3_S%dA" % _s,
+                 source_ic="R%d65 is the socket's Kelvin shunt: its pad on this net IS the power path" % _s,
+                 loads={"J_M2C%d" % _s: _pk},
+                 note="slot %d's card socket past its Kelvin shunt (W5 TESTACCESS-B, 26 September 2026): the same "
+                      "current as +3V3_S%dA, a series segment of it" % (_s, _s))
     _intent.rail("+3V3_S%dB" % _s, 3.3, 0.9, 1.8, "L%d02" % _s, switch="U%d04" % _s, converted=True, efficiency=0.88,
                  fed_from="+5V_S%d" % _s,
                  loads={"J_M2N%d" % _s: 1.2, "U%d01" % _s: 0.55},
@@ -172,7 +196,7 @@ for _t, _u, _n in (("A", "U40", ("U41", "U42", "U43", "U44")), ("B", "U50", ("U5
                    ("C", "U60", ("U61", "U62", "U63", "U64"))):
     _intent.rail("+3V3_IOC%s" % _t, 3.3, 0.12, 0.25, _u, budget=0.03, always_on=True, converted=True, efficiency=0.66,
                  fed_from="+5V_DEV",   # U40/U50/U60 pins 1 and 3 are both /+5V_DEV in the netlist
-                 always_on_why="each controller's private LDO has its EN tied to its own input, so it follows the device rail and the controller is up whenever the kit is",
+                 always_on_why="each controller's private LDO has its EN pulled to its own input through 100 k, so it follows the device rail and the controller is up whenever the kit is; only the bench jumper J_IOCOFF_x holds it off, for IOHA A4 and A6 (26 September 2026)",
                  source_ic="%s is an AP2112K-3.3 LDO in SOT-23-5: pin 5 IS its output power pin" % _u,
                  loads=dict([(_n[0], 0.060), (_n[1], 0.020), (_n[2], 0.020), (_n[3], 0.020)]),
                  note="controller %s's private 3.3 V, its own branch off the device rail so that one "
@@ -254,13 +278,15 @@ TMUXHS = {1: "RSVD1", 2: "OEn", 3: "A0p", 4: "A0n", 5: "GND", 6: "VCC", 7: "A1p"
 # port 1 or port 2, OE is active low. 10-pin uQFN. It exists because the TMUXHS4212 cannot carry USB2: its common-mode
 # range is 0 to 1.8 V and its I/O absolute maximum is 2.4 V, against USB2's 3.3 V single-ended swing.
 TS3USB = {1: "1Dp", 2: "1Dn", 3: "2Dp", 4: "2Dn", 5: "GND", 6: "OEn", 7: "Dn", 8: "Dp", 9: "S", 10: "VCC"}
-# STM32H753VITx, LQFP-100 14 x 14 mm 0.5 mm pitch. The pin table is KiCad's own MCU_ST_STM32H7 symbol, whose Datasheet
-# property is https://www.st.com/resource/en/datasheet/stm32h753vi.pdf, transcribed here rather than by hand so no pin
-# is mistyped. Alternate-function choices below (FDCAN1 on PD0/PD1, FDCAN2 on PB12/PB13) are the classic H7 mappings and
-# are to be confirmed against the datasheet's alternate function table before the board is released.
-H753 = {1: "PE2", 2: "PE3", 3: "PE4", 4: "PE5", 5: "PE6", 6: "VBAT", 7: "PC13", 8: "PC14", 9: "PC15", 10: "VSS", 11: "VDD", 12: "PH0", 13: "PH1", 14: "NRST", 15: "PC0", 16: "PC1", 17: "PC2_C", 18: "PC3_C", 19: "VSSA", 20: "VREF+", 21: "VDDA", 22: "PA0", 23: "PA1", 24: "PA2", 25: "PA3", 26: "VSS", 27: "VDD", 28: "PA4", 29: "PA5", 30: "PA6", 31: "PA7", 32: "PC4", 33: "PC5", 34: "PB0", 35: "PB1", 36: "PB2", 37: "PE7", 38: "PE8", 39: "PE9", 40: "PE10", 41: "PE11", 42: "PE12", 43: "PE13", 44: "PE14", 45: "PE15", 46: "PB10", 47: "PB11", 48: "VCAP", 49: "VSS", 50: "VDD", 51: "PB12", 52: "PB13", 53: "PB14", 54: "PB15", 55: "PD8", 56: "PD9", 57: "PD10", 58: "PD11", 59: "PD12", 60: "PD13", 61: "PD14", 62: "PD15", 63: "PC6", 64: "PC7", 65: "PC8", 66: "PC9", 67: "PA8", 68: "PA9", 69: "PA10", 70: "PA11", 71: "PA12", 72: "PA13", 73: "VCAP", 74: "VSS", 75: "VDD", 76: "PA14", 77: "PA15", 78: "PC10", 79: "PC11", 80: "PC12", 81: "PD0", 82: "PD1", 83: "PD2", 84: "PD3", 85: "PD4", 86: "PD5", 87: "PD6", 88: "PD7", 89: "PB3", 90: "PB4", 91: "PB5", 92: "PB6", 93: "PB7", 94: "BOOT0", 95: "PB8", 96: "PB9", 97: "PE0", 98: "PE1", 99: "VSS", 100: "VDD"}
+# STM32H743VIT6, LQFP-100 14 x 14 mm 0.5 mm pitch (D-13, 26 September 2026: the part bought, JLCPCB C114409; owner
+# ruling D-13 accepts it: software-verified boot on the supervisors is the prototype floor, so the H753's crypto and
+# secure access mode are not required). The table was transcribed from KiCad's MCU_ST_STM32H7 STM32H753VITx symbol and
+# is re-proven for BOTH parts by drafts/pin_parity.py against DS12110 Rev 10 Figure 5 (STM32H743) and DS12117 Rev 9
+# Figure 4 (STM32H753): 100 of 100 pins agree on both (W6 found the same on 25 September). Alternate functions used,
+# read in DS12110 Rev 10 Tables 11 and 13: FDCAN1 PD0/PD1 and FDCAN2 PB12/PB13 (AF9); I2C1 on PB6/PB7 (AF4, below).
+H743 = {1: "PE2", 2: "PE3", 3: "PE4", 4: "PE5", 5: "PE6", 6: "VBAT", 7: "PC13", 8: "PC14", 9: "PC15", 10: "VSS", 11: "VDD", 12: "PH0", 13: "PH1", 14: "NRST", 15: "PC0", 16: "PC1", 17: "PC2_C", 18: "PC3_C", 19: "VSSA", 20: "VREF+", 21: "VDDA", 22: "PA0", 23: "PA1", 24: "PA2", 25: "PA3", 26: "VSS", 27: "VDD", 28: "PA4", 29: "PA5", 30: "PA6", 31: "PA7", 32: "PC4", 33: "PC5", 34: "PB0", 35: "PB1", 36: "PB2", 37: "PE7", 38: "PE8", 39: "PE9", 40: "PE10", 41: "PE11", 42: "PE12", 43: "PE13", 44: "PE14", 45: "PE15", 46: "PB10", 47: "PB11", 48: "VCAP", 49: "VSS", 50: "VDD", 51: "PB12", 52: "PB13", 53: "PB14", 54: "PB15", 55: "PD8", 56: "PD9", 57: "PD10", 58: "PD11", 59: "PD12", 60: "PD13", 61: "PD14", 62: "PD15", 63: "PC6", 64: "PC7", 65: "PC8", 66: "PC9", 67: "PA8", 68: "PA9", 69: "PA10", 70: "PA11", 71: "PA12", 72: "PA13", 73: "VCAP", 74: "VSS", 75: "VDD", 76: "PA14", 77: "PA15", 78: "PC10", 79: "PC11", 80: "PC12", 81: "PD0", 82: "PD1", 83: "PD2", 84: "PD3", 85: "PD4", 86: "PD5", 87: "PD6", 88: "PD7", 89: "PB3", 90: "PB4", 91: "PB5", 92: "PB6", 93: "PB7", 94: "BOOT0", 95: "PB8", 96: "PB9", 97: "PE0", 98: "PE1", 99: "VSS", 100: "VDD"}
 SYNTH = {"CM5A": {k: v for k, v in CM5_PINS.items() if k <= 100}, "CM5B": {k: v for k, v in CM5_PINS.items() if k > 100},
-         "PI7C9X2G404SL": PI7C, "TUSB8041": TUSB, "TS3DV642": TS3, "KSZ9897R": KSZ, "LG290P": LG, "E22_900M30S": E22P, "H5007NL": H5007, "TPS23861": TPS23861, "CP2102N": CP2102, "TMUXHS4212": TMUXHS, "TS3USB221A": TS3USB, "STM32H753VI": H753}
+         "PI7C9X2G404SL": PI7C, "TUSB8041": TUSB, "TS3DV642": TS3, "KSZ9897R": KSZ, "LG290P": LG, "E22_900M30S": E22P, "H5007NL": H5007, "TPS23861": TPS23861, "CP2102N": CP2102, "TMUXHS4212": TMUXHS, "TS3USB221A": TS3USB, "STM32H743VI": H743}
 
 # ----------------------------------------------------------------- footprints
 FP = {
@@ -279,11 +305,12 @@ FP = {
  "XH2": "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical", "VH2": "Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical", "VH4": "Connector_JST:JST_VH_B4P-VH_1x04_P3.96mm_Vertical",
  "SH4": "Connector_JST:JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical",
  "IDC16": idc("2x08"), "IDC26": idc("2x13"), "IDC10": idc("2x05"),
- "PH1x2": "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical", "PH1x3": "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical", "PH1x4": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical",
+ "PH1x2": "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical", "PH1x2S": "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical_SMD_Pin1Left", "PH1x3": "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical", "PH1x4": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical",
  "PH1x5": "Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical", "PH1x5S": "Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical_SMD_Pin1Left", "PH1x5S": "Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical_SMD_Pin1Left", "PH2x5": "Connector_PinHeader_2.54mm:PinHeader_2x05_P2.54mm_Vertical",
  "USBC": "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12", "USB3A": "Connector_USB:USB3_A_Receptacle_Wuerth_692122030100", "HDMI": "Connector_Video:HDMI_A_Molex_208658-1001_Horizontal",
  "RJ45": "Connector_RJ:RJ45_Amphenol_RJHSE5380", "TP": "TestPoint:TestPoint_Pad_D1.5mm", "UFL": "Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical", "CR2032": "Battery:BatteryHolder_Keystone_3034_1x20mm",
  "NANOSIM": "Connector_Card:nanoSIM_GCT_SIM8060-6-0-14-00",
+ "CPT3528": "Capacitor_Tantalum_SMD:CP_EIA-3528-21_Kemet-B",   # 26 September 2026 (F-PR-05): the RM520N's two 220 uF, KEMET T520B case B
  # B16 sites (gen_footprints_b16.py and the B13/B14 files in meshsat.pretty)
  "CM5A": "meshsat:CM5_Conn_A_10164227", "CM5B": "meshsat:CM5_Conn_B_10164227", "M2E": "meshsat:M2_E-Key_Socket_2230", "M2M": "meshsat:M2_M-Key_Socket_2242", "M2B": "meshsat:M2_B-Key_Socket_3052",
  "LG290P": "meshsat:Quectel_LG290P", "E22": "meshsat:Ebyte_E22-900M30S", "E72": "meshsat:Ebyte_E72-2G4M20S1E", "H5007": "meshsat:Pulse_H5007NL",
@@ -315,8 +342,11 @@ def efuse(uref, vin, vout, en, flt, refs, ilim):
     cd, rilm, rflt, rov1, rov2, cin = refs
     ic(uref, 9, "TPS259631DDAR eFuse %s -> %s (%s)" % (vin, vout, ilim), "DDA8", {"1": "GND", "2": uref + "_DVDT", "3": en, "4": vin, "5": vout, "6": flt, "7": uref + "_ILM", "8": uref + "_OVLO", "9": "GND"}, "C2155778")
     c(cd, "10n", uref + "_DVDT", "GND"); r(rilm, ilim, uref + "_ILM", "GND"); r(rflt, "10k", flt, "+3V3_DEV"); r(rov1, "100k 1%", vin, uref + "_OVLO"); r(rov2, "10k 1% (OVLO)", uref + "_OVLO", "GND"); c(cin, "100n", vin, "GND")
-def buck33(uref, tag, vin, en, out, refs):
-    """AP64500SP-13 5 A buck (A22 buck5 recipe) set to 3.32 V: 31.6k/10k on the 0.8 V reference, 3.3 uH XAL6060, 500 kHz."""
+def buck33(uref, tag, vin, en, out, refs, rt_val="31.6k 1%", rt_lcsc="", rco_val="22k", rco_lcsc="", c6=None):
+    """AP64500SP-13 5 A buck (A22 buck5 recipe) set to 3.32 V: 31.6k/10k on the 0.8 V reference, 3.3 uH XAL6060, meant
+    for 500 kHz; but the 68k RT sets 1.47 MHz (DS41979 Rev 5-2 Eq. 7, RT[kOhm] = 100000 / fsw[kHz]), open item O-20.
+    rt_val/rco_val/c6 (26 September 2026, O-17): a rail whose output capacitance differs from the recipe's 3 x 22 uF
+    takes its own set point and compensation (DS41979 Eq. 6 and 17 to 19); c6 is (ref, value, lcsc) from COMP to GND."""
     L, cb, ci1, ci2, co1, co2, co3, rt, rb, rrt, rco, cco = refs
     ic(uref, 9, "AP64500SP-13 5 A buck, 3.3 V rail %s" % out, "SO8EP", {"1": tag + "_BOOT", "2": vin, "3": en, "4": tag + "_RT", "5": tag + "_FB", "6": tag + "_COMP", "7": "GND", "8": tag + "_SW", "9": "GND"}, "C2070920")
     # A SWITCHING NODE MUST BE DECLARED, AND THIS BOARD DECLARED NONE (20 September 2026, found by
@@ -332,7 +362,13 @@ def buck33(uref, tag, vin, en, out, refs):
     part(L, "Device", "L", "3.3uH XAL6030-332ME", "L6060", {"1": tag + "_SW", "2": out}); c(cb, "100n", tag + "_BOOT", tag + "_SW")
     c(ci1, "22u 10V X7R 1210", vin, "GND", "C1210", bypass=(uref, "2")); c(ci2, "22u 10V X7R 1210", vin, "GND", "C1210", bypass=(uref, "2"))   # the buck's VIN pin
     for cr in (co1, co2, co3): c(cr, "22u 10V X7R 1210", out, "GND", "C1210")
-    r(rt, "31.6k 1%", out, tag + "_FB"); r(rb, "10k 1%", tag + "_FB", "GND"); r(rrt, "68k (RT: 500 kHz)", tag + "_RT", "GND"); r(rco, "22k", tag + "_COMP", tag + "_COMPC"); c(cco, "3.3n", tag + "_COMPC", "GND")
+    r(rt, rt_val, out, tag + "_FB", "R", rt_lcsc); r(rb, "10k 1%", tag + "_FB", "GND"); r(rrt, "68k (RT: 500 kHz)", tag + "_RT", "GND"); r(rco, rco_val, tag + "_COMP", tag + "_COMPC", "R", rco_lcsc); c(cco, "3.3n", tag + "_COMPC", "GND")
+    if c6:
+        c(c6[0], c6[1], tag + "_COMP", "GND", "C0402", c6[2])
+        _intent.node(tag + "_COMP", _intent.net_volts(vin),
+                     "the %s buck's COMP pin (its error amplifier's output), which carries C6 to ground: it cannot rise "
+                     "above the IC's own supply %s (DS41979 Rev 5-2 absolute maximum 6.0 V), so it is declared at that "
+                     "rail, read from the intent" % (out, vin))
 def buck_small(uref, tag, vin, en, out, refs, rb_val, note):
     """TPS62933 3 A buck (SOT-583: 1 RT 2 EN 3 VIN 4 GND 5 SW 6 BST 7 SS/PG 8 FB; 0.8 V reference, RT floating = 500 kHz): 10k top, rb_val bottom."""
     L, ci, co1, co2, cb, css, rt, rb = refs
@@ -355,6 +391,13 @@ def cp2102(uref, tag, vusb, dp, dm, txd, rxd, rts="NC", dtr="NC", refs=()):
     rr, c1, c2 = refs
     r(rr, "1k", tag + "_RST", tag + "_3V3"); c(c1, "4.7u", tag + "_3V3", "GND", "C10u"); c(c2, "100n", tag + "_3V3", "GND")
 
+# 26 September 2026 (round 4): parts that belong to a slot's column but whose reference is outside the slot's
+# 100s block (its test pads and the 5G socket's power and SIM parts), so the schematic sections still group them.
+SLOT_EXTRA = {1: set(), 2: set(), 3: set()}
+def _TP(num, net, slot=None):
+    """A test pad on `net` (the value is the net, as every other pad on this board)."""
+    part("TP%d" % num, "Connector", "TestPoint", net, "TP", {"1": net})
+    if slot: SLOT_EXTRA[slot].add("TP%d" % num)
 # ================================================================= the three slot columns
 GPIO_FIXED = {6: "PI_SHDN_REQ_CM%d", 7: "SPI%d_CE1", 8: "SPI%d_CE0", 9: "SPI%d_MISO", 10: "SPI%d_MOSI", 11: "SPI%d_SCLK", 14: "UART0_TX%d", 15: "UART0_RX%d", 16: "HB_CM%d", 17: "PI_KILL_CM%d",
               22: "GNSS_PPS_CM%d", 23: "SPI%d_IO23", 24: "SPI%d_IO24", 26: "SPI%d_IO26", 2: "SDA_CM%d", 3: "SCL_CM%d"}
@@ -403,7 +446,36 @@ def slot(s):
     _intent.node("LED_5V_A%d" % s, 5.0, "the slot %s indicator's anode, behind its 1k series resistor from "
                  "the 5 V rail: it can only reach that rail" % s)
     # --- 3.3 V bucks: A the card socket (PCIE_PWR_EN, as the B14 WiFi rail), B the switch, hub and NVMe (follows the module's 3.3 V); the two cores from TPS62933 on the 5 V rail
-    buck33(U(3), "S%dA" % s, n5, "PCIE_PWR_EN%d" % s, a33, [L(1), C(11), C(12), C(13), C(14), C(15), C(16), R(2), R(3), R(4), R(5), C(17)]); r(R(6), "100k", "PCIE_PWR_EN%d" % s, "GND")
+    # S-01 (owner ruling D-05, radios dark), 26 September 2026: on slots 1 and 3 the card socket carries an AW7915-AED
+    # whose W_DISABLE1# effect no maker's document states, so its SUPPLY is what EMCON removes: the buck's enable
+    # S{s}A_EN follows PCIE_PWR_EN through a 10 k series resistor R{s}64, and Q{s}11 (gate EMCON_ON, the board's one
+    # inverted copy of EMCON_HW) pulls it to ground while EMCON is asserted; the module pin only ever sees 10 k and
+    # R{s}06, never a driven voltage. Slot 2's 5G module keeps
+    # PCIE_PWR_EN alone: Quectel documents W_DISABLE1# as airplane mode ("the RF function is invalid", HD v1.1
+    # 3.1 and 3.1.2) and forbids cutting VCC before the module has turned off ("To avoid corrupting the data in the
+    # internal flash, DO NOT cut off the power supply", 3.3.2), so its hardware RF disable is W_DISABLE1#, as wired.
+    # O-17, 26 September 2026 (round-4 review, minor; taken in the fix-up under the owner's standing rule): SLOT 2'S CARD
+    # BUCK GETS ITS OWN SET POINT AND COMPENSATION. The recipe's 22 k / 3.3 nF was sized for 3 x 22 uF, and F-PR-05
+    # put two 220 uF polymer capacitors on this rail. AP64500 DS41979 Rev 5-2 Eq. 17, R5 = 4.67e3 x fc x VOUT x COUT
+    # (gm 0.15 mS, RT 0.089 V/A): with COUT about 0.50 mF (3 x 22 uF X7R at its bias, the socket's 22 uF, 2 x 220 uF)
+    # the old 22 k crosses over at about 2.8 kHz, a mid-band output impedance 1/(2 pi fc COUT) of about 0.11 Ohm, so a
+    # 3 A burst step would sag about 0.34 V. R205 = 120 k puts fc at 14.7 kHz (12 to 18 kHz over COUT 0.41 to
+    # 0.62 mF; DS41979's own example is 15 kHz, below fsw/10), about 21 mOhm. C5 = VOUT x COUT / (IOUT x R5) (Eq. 18) =
+    # 3.6 nF at 4 A, so C217 stays 3.3 nF (zero 402 Hz on the 365 Hz load pole). C6 = max(RC x COUT / R5,
+    # 1 / (pi x fsw x R5)) (Eq. 19): the first term, RC 12.5 to 20 mOhm (two 25 mOhm polymers, the shunt and copper), is
+    # 52 to 84 pF and the second 1.8 pF, so C298 = 68 pF, a pole at 19.5 kHz on the ESR zero. FREQUENCY (fix-up pass 3,
+    # the re-review's minor): the recipe's RT, 68 k, sets fsw = 100000 / 68 = 1.47 MHz (DS41979 Eq. 7), not the 500 kHz
+    # its label says (500 kHz is RT = 200 k in the electrical table). fc is far below fsw/10 at either frequency and
+    # the second term is 5.3 pF at 500 kHz, so these values hold at both; the frequency itself is open item O-20 on
+    # boards A and B. SET POINT: R202 = 33.2 k gives 0.8 x 4.32 = 3.456 V, worst case 3.369 to 3.545 V (VFB 792 to 808 mV,
+    # 1 percent resistors), inside the RM520N's 3.135 to 4.4 V (HD v1.1 3.3.1, nominal 3.7 V) and at nominal inside
+    # the M.2 3.3 V + 5 percent. A 4 A step from idle at the worst set point: 3.369 V - 20 mV shunt - 50 mV ESR step -
+    # 86 mV loop sag = 3.213 V, 78 mV above the module's minimum for the copper.
+    _s2a = dict(rt_val="33.2k 1%", rt_lcsc="C23003", rco_val="120k 1%", rco_lcsc="C25808", c6=(C(98), "68p 50V C0G", "C107009")) if s == 2 else {}
+    buck33(U(3), "S%dA" % s, n5, ("S%dA_EN" % s) if s != 2 else ("PCIE_PWR_EN%d" % s), a33, [L(1), C(11), C(12), C(13), C(14), C(15), C(16), R(2), R(3), R(4), R(5), C(17)], **_s2a); r(R(6), "100k", "PCIE_PWR_EN%d" % s, "GND")
+    if s != 2:
+        r(R(64), "10k", "PCIE_PWR_EN%d" % s, "S%dA_EN" % s)   # the AP64500's EN sources 1.5 uA: 15 mV across this, and R{s}06 holds both low with the module off
+        nfet(Q(11), "EMCON_ON", "GND", "S%dA_EN" % s, "2N7002: EMCON removes the WiFi card's supply (S-01)")
     buck33(U(4), "S%dB" % s, n5, "EN33_S%d" % s, b33, [L(2), C(18), C(19), C(20), C(21), C(22), C(23), R(7), R(8), R(9), R(10), C(24)])
     r(R(11), "100k", cm33, "EN33_S%d" % s); r(R(12), "100k", "EN33_S%d" % s, "GND")   # 1.65 V when the module's 3.3 V is up
     buck_small(U(5), "S%dC" % s, n5, "EN33_S%d" % s, v10, [L(3), C(25), C(26), C(27), C(28), C(29), R(13), R(14)], "40.2k 1%", "1.0 V PCIe switch core S%d" % s)
@@ -423,10 +495,32 @@ def slot(s):
     # IC" (v2/vendor/cm5/cm5-datasheet.pdf). The TX and RX pairs ARE correctly swapped for a direct IC
     # connection, which the same clause requires; only the capacitors were missing. Found 16 September 2026 by
     # reading the host vendor's own document under rule INT-001, on a board that had passed every gate.
+    # W3-F01, 26 September 2026: THE DOWNSTREAM LINKS ARE NAMED FROM THE DEVICE'S SIDE AND EACH SWITCH TRANSMITTER
+    # GETS ITS 220 nF. The switch's PETP1/PETN1 (100/101) and PETP2/PETN2 (106/107) are type O "transmit" and
+    # PERP1/PERN1 (97/98) and PERP2/PERN2 (102/103) type I "receive" (DS40068 Rev 5-2 section 3.1). A socket's pins
+    # are named from the HOST'S side (CM5 datasheet 2.3.1: "the signals are labelled from the host's point of view";
+    # KiCad's own M.2 symbols: PETp0/PETn0 at 49/47 on keys M and B and at 35/37 on key E, PERp0/PERn0 at 43/41 and
+    # 41/43). So the switch's transmitter goes through a series capacitor to the socket's PETp0/PETn0 and the
+    # socket's PERp0/PERn0 come straight back to the switch's receiver. The capacitor sits at the transmitter, as
+    # the upstream pair already does: Quectel RM520N series HD v1.1 section 4.3.3 puts 220 nF on the host's TX
+    # "close to the host" and says the module's own TX capacitors are inside the module; the CM5 datasheet 2.3 says
+    # PCIe and NVMe cards carry their own TX capacitors. Net names: *_RX_SW_* is the switch side of the capacitor,
+    # *_RX_* the socket side (what the device receives), *_TX_* what the device transmits.
+    # W3-F03, 26 September 2026: REFCLKP/REFCLKN (110/111) "must be delivered to the clock buffer cell through an
+    # AC-coupled interface ... It is recommended that a 0.1uF be used" (DS40068 section 3.1; Table 8-2 note 4, the
+    # PHY rebuilds its own common mode), so REFCLKO0 (85/83) reaches them through two 100 nF, C{s}95 and C{s}96 below.
+    # W3-F03 fix-up, 26 September 2026 (round-4 review, blocking): the three used REFCLKO pairs are TERMINATED at the
+    # source. They are "external differential HCSL clock outputs" whose current is set by IREF ("External resistor (475
+    # Ohm +/- 1%) connection to set the differential reference clock output current", DS40068 Rev 5-2 section 3.1), and
+    # a current-mode output only develops its swing across a resistor to ground; Table 8-1 note 1 gives the load its
+    # numbers are measured into: "Test configuration is Rs=33.2 Ohm, Rp=49.9 Ohm, and 2pF". Without Rp, REFCLKO0 had no
+    # DC path at all behind C{s}95/C{s}96, so the PHY had no clock and no link in any bank could train. So each pin now
+    # carries *_SRC_x to a 33.2 Ohm series resistor, and the line after it (PCIE{s}_RCLK0_x, NVME{s}_CLK_x,
+    # CARD{s}_CLK_x, the names the long runs already had) carries 49.9 Ohm to ground, both at the switch.
     m.update({5: "PCIE%d_RST1_n" % s, 6: "PCIE%d_RST2_n" % s, 10: "PCIE%d_nRST" % s, 123: "PCIE%d_RXSW_N" % s, 124: "PCIE%d_RXSW_P" % s, 127: "PCIE%d_TX_N" % s, 128: "PCIE%d_TX_P" % s,
-              100: "NVME%d_RX_P" % s, 101: "NVME%d_RX_N" % s, 97: "NVME%d_TX_P" % s, 98: "NVME%d_TX_N" % s, 106: "CARD%d_RX_P" % s, 107: "CARD%d_RX_N" % s, 102: "CARD%d_TX_P" % s, 103: "CARD%d_TX_N" % s,
-              73: "PCIE%d_CLK_N" % s, 74: "PCIE%d_CLK_P" % s, 83: "PCIE%d_RCLK0_N" % s, 85: "PCIE%d_RCLK0_P" % s, 110: "PCIE%d_RCLK0_P" % s, 111: "PCIE%d_RCLK0_N" % s,
-              80: "NVME%d_CLK_N" % s, 81: "NVME%d_CLK_P" % s, 77: "CARD%d_CLK_N" % s, 78: "CARD%d_CLK_P" % s,
+              100: "NVME%d_RX_SW_P" % s, 101: "NVME%d_RX_SW_N" % s, 97: "NVME%d_TX_P" % s, 98: "NVME%d_TX_N" % s, 106: "CARD%d_RX_SW_P" % s, 107: "CARD%d_RX_SW_N" % s, 102: "CARD%d_TX_P" % s, 103: "CARD%d_TX_N" % s,
+              73: "PCIE%d_CLK_N" % s, 74: "PCIE%d_CLK_P" % s, 83: "PCIE%d_RCLK0_SRC_N" % s, 85: "PCIE%d_RCLK0_SRC_P" % s, 110: "PCIE%d_RCLKIN_P" % s, 111: "PCIE%d_RCLKIN_N" % s,
+              80: "NVME%d_CLK_SRC_N" % s, 81: "NVME%d_CLK_SRC_P" % s, 77: "CARD%d_CLK_SRC_N" % s, 78: "CARD%d_CLK_SRC_P" % s,
               86: "S%d_IREF" % s, 116: "S%d_REXT" % s, 33: "S%d_SLOTCLK" % s, 45: "S%d_SLOTIMP" % s, 46: "S%d_SLOTIMP" % s, 19: "GND", 20: "GND", 21: "S%d_PRSNT3" % s, 28: "S%d_PWRSAV" % s,
               9: "S%d_TEST1" % s, 16: "S%d_TESTL" % s, 17: "S%d_TESTL" % s, 22: "S%d_TESTL" % s, 25: "S%d_TESTL" % s, 51: "S%d_TESTL" % s, 18: "S%d_TESTL" % s, 26: "S%d_SMBCLK" % s, 27: "S%d_SMBDAT" % s,
               71: "S%d_EEPD" % s, 89: "S%d_JTAGL" % s, 92: "S%d_JTAGL" % s, 93: "S%d_JTAGL" % s, 94: "S%d_JTAGL" % s, 67: "S%d_PST0" % s, 68: "S%d_PST1" % s})
@@ -441,6 +535,35 @@ def slot(s):
         _intent.node(_pn, 3.6, "a PCIe receive lane: about 1.2 V peak to peak of differential signal on a "
                      "common mode the specification holds below 3.6 V, which is what an AC coupling "
                      "capacitor on it has to stand off")
+    # W3-F01, 26 September 2026: the two downstream transmit pairs, each through its own 220 nF at the switch.
+    for _k, _dev in ((53, "NVME"), (55, "CARD")):
+        c(C(_k), "220n 16V (PCIe AC coupling at the switch transmitter, W3-F01)", "%s%d_RX_SW_P" % (_dev, s), "%s%d_RX_P" % (_dev, s), "C0402")
+        c(C(_k + 1), "220n 16V (PCIe AC coupling at the switch transmitter, W3-F01)", "%s%d_RX_SW_N" % (_dev, s), "%s%d_RX_N" % (_dev, s), "C0402")
+        for _pn in ("%s%d_RX_SW_P" % (_dev, s), "%s%d_RX_SW_N" % (_dev, s), "%s%d_RX_P" % (_dev, s), "%s%d_RX_N" % (_dev, s)):
+            _intent.node(_pn, 3.6, "a PCIe downstream transmit lane of the switch (W3-F01): a differential signal on a "
+                         "common mode below 3.6 V, which is what its AC coupling capacitor has to stand off")
+    # W3-F03, 26 September 2026: the reference clock's own AC coupling, REFCLKO0 to REFCLKP/N.
+    c(C(95), "100n 16V (REFCLK AC coupling, DS40068 3.1, W3-F03)", "PCIE%d_RCLK0_P" % s, "PCIE%d_RCLKIN_P" % s, "C0402")
+    c(C(96), "100n 16V (REFCLK AC coupling, DS40068 3.1, W3-F03)", "PCIE%d_RCLK0_N" % s, "PCIE%d_RCLKIN_N" % s, "C0402")
+    for _pn in ("PCIE%d_RCLK0_P" % s, "PCIE%d_RCLK0_N" % s, "PCIE%d_RCLKIN_P" % s, "PCIE%d_RCLKIN_N" % s):
+        _intent.node(_pn, 3.6, "the switch's 100 MHz HCSL reference clock (W3-F03): at most 1.15 V high per DS40068 "
+                     "Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case")
+    # W3-F03 fix-up, 26 September 2026: the HCSL source termination of Table 8-1 note 1 on REFCLKO0 (to the switch's
+    # own REFCLKP/N), REFCLKO1 (the NVMe socket) and REFCLKO2 (the card socket); REFCLKO3 (75/76) stays unused and
+    # open. Rs in series at the pin, Rp from the line side of Rs to ground, both placed at the switch (O-02 seats).
+    # Parts: UNI-ROYAL 0603WAF332JT5E (33.2 Ohm 1%, 1/10 W, -55 to +155 C, JLCPCB C23004) and 0603WAF499JT5E
+    # (49.9 Ohm 1%, JLCPCB C23185, a basic part); the series datasheet decodes "332J" and "499J" as 33.2 and 49.9 Ohm
+    # (UNI-ROYAL thick film chip resistor datasheet, 2.4.3, drafts/datasheets). Worst case from Table 8-1's VHIGH of
+    # at most 1.15 V held continuously: 23 mA, so 26.5 mW in Rp and 17.6 mW in Rs, against 100 mW each.
+    for _k, (_src, _line) in enumerate((("PCIE%d_RCLK0_SRC" % s, "PCIE%d_RCLK0" % s), ("NVME%d_CLK_SRC" % s, "NVME%d_CLK" % s),
+                                        ("CARD%d_CLK_SRC" % s, "CARD%d_CLK" % s))):
+        for _j, _h in enumerate(("P", "N")):
+            r(R(75 + 4 * _k + _j), "33.2R 1% (HCSL series Rs, DS40068 Table 8-1, W3-F03)", "%s_%s" % (_src, _h), "%s_%s" % (_line, _h), "R", "C23004")
+            r(R(77 + 4 * _k + _j), "49.9R 1% (HCSL shunt Rp, DS40068 Table 8-1, W3-F03)", "%s_%s" % (_line, _h), "GND", "R", "C23185")
+            for _pn in ("%s_%s" % (_src, _h),) + ((("%s_%s" % (_line, _h)),) if _k else ()):
+                _intent.node(_pn, 3.6, "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load "
+                             "(33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, "
+                             "declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)")
     r(R(17), "475 1% (IREF)", "S%d_IREF" % s, "GND"); r(R(18), "1.43k 1% (REXT)", "S%d_REXT" % s, "GND"); r(R(19), "5.1k", "S%d_SLOTCLK" % s, b33); r(R(20), "5.1k", "S%d_SLOTIMP" % s, b33)
     r(R(21), "5.1k", "S%d_PRSNT3" % s, b33); r(R(22), "330", "S%d_PWRSAV" % s, "GND"); r(R(23), "5.1k", "S%d_TEST1" % s, b33); r(R(24), "330", "S%d_TESTL" % s, "GND"); r(R(25), "5.1k", "S%d_SMBCLK" % s, b33)
     r(R(26), "5.1k", "S%d_SMBDAT" % s, b33); r(R(27), "4.7k", "S%d_EEPD" % s, "GND"); r(R(28), "330", "S%d_JTAGL" % s, "GND"); r(R(29), "1k", "PCIE%d_CLKREQ_n" % s, "GND")   # the switch cannot forward CLKREQ: the module's clock is always requested
@@ -458,32 +581,123 @@ def slot(s):
     _M2_MECH = {"M1": "NC", "S1": "NC", "S2": "NC"}
     M = {n: "NC" for n in range(1, 76) if not 59 <= n <= 66}
     M.update({n: b33 for n in (2, 4, 12, 14, 16, 18, 70, 72, 74)}); M.update({n: "GND" for n in (1, 3, 9, 15, 21, 27, 33, 39, 45, 51, 57, 71, 73, 75)})
-    M.update({41: "NVME%d_RX_N" % s, 43: "NVME%d_RX_P" % s, 47: "NVME%d_TX_N" % s, 49: "NVME%d_TX_P" % s, 53: "NVME%d_CLK_N" % s, 55: "NVME%d_CLK_P" % s, 50: "PCIE%d_RST1_n" % s, 52: "NVME%d_CLKREQ_n" % s,
+    # W3-F01, 26 September 2026: 47/49 are PETn0/PETp0 (the host's transmit, the drive's receive) and 41/43 PERn0/PERp0
+    # (the drive's transmit); they were the other way round, transmitter to transmitter, and no link could train.
+    M.update({41: "NVME%d_TX_N" % s, 43: "NVME%d_TX_P" % s, 47: "NVME%d_RX_N" % s, 49: "NVME%d_RX_P" % s, 53: "NVME%d_CLK_N" % s, 55: "NVME%d_CLK_P" % s, 50: "PCIE%d_RST1_n" % s, 52: "NVME%d_CLKREQ_n" % s,
               54: "PCIE%d_nWAKE" % s, 38: "NVME%d_DEVSLP" % s, 10: "NVME%d_nLED" % s})
     part("J_M2N%d" % s, "Connector", "Bus_M.2_Socket_M", "M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S%d (k3s replicated storage)" % s, "M2M", dict(M, **_M2_MECH), "C2927698")
     r(R(35), "10k", "NVME%d_DEVSLP" % s, "GND"); r(R(36), "1k", b33, "LED_NV_A%d" % s); led("LED%d4" % s, "amber NVMe activity", "LED_NV_A%d" % s, "NVME%d_nLED" % s)
     c(C(49), "22u 6.3V", b33, "GND", "C10u"); c(C(50), "100n", b33, "GND")
-    if s == 1:   # WiFi link card AW7915-AED on an E-key 2230 (B14 wiring); W_DISABLE1# from the hardware EMCON line through a level stage on the card rail
+    # W5 TESTACCESS-B, 26 September 2026: the card socket's current is measured. A 5 mOhm Kelvin shunt R_65 (the
+    # LR2512D-3W-5mR-1% board A already buys, C500739) sits between the buck's output capacitors and the socket, so
+    # +3V3_S{s}A is the buck side (its feedback divider senses there) and +3V3_M2C{s} the socket side. TP_02 and
+    # TP_03 are the two Kelvin pads, TP_01 the slot column's ground pad. At the 5G module's 4 A peak the shunt drops
+    # 20 mV (Quectel HD v1.1 3.3.1: 3.135 V minimum at the module); slot 2's budget with it is in the O-17 note above.
+    m2c = "+3V3_M2C%d" % s
+    r(R(65), "5mOhm 1% 2512 (Kelvin shunt: card socket current, W5 TESTACCESS-B)", a33, m2c, "R2512", "C500739")
+    _TP(100 * s + 1, "GND", s); _TP(100 * s + 2, a33, s); _TP(100 * s + 3, m2c, s)
+    # EMCON REACHES W_DISABLE1# THROUGH AN OPEN DRAIN FROM EMCON_ON, NEVER THROUGH A STAGE ON EMCON_HW (MESHSAT-1357 round 4,
+    # fix-up pass 3, 26 September 2026, the round-5 re-review's blocking item; taken by the session under the owner's
+    # standing rule of 26 September 2026). From B14 on, each card's W_DISABLE1# came from a bidirectional 2N7002 stage:
+    # gate on the card rail a33, source on W_DISABLE1# with R{s}37 10 k up to a33, drain on EMCON_HW. The body diode of
+    # an N-channel MOSFET has its anode at the source (CJ 2N7002 datasheet, VSD 0.55 to 1.2 V at 115 mA). So whenever a
+    # card rail was up and EMCON_HW was held only by its pull-downs (panel ribbon out, or board C's buffer U9 unpowered),
+    # each stage sourced current into the line: up to 0.35 mA into a line held at 0 V (3.456 V / 10 k), and about 50 uA
+    # against the 50 k that held it ((3.456 - 0.5) V / 60 k), which lifted it to about 2.3 to 2.5 V. That is a HIGH (SN74LVC08A VIH
+    # 2.0 V, SCAS283W 5.4) at U19, U20, Q11 and board A's U26, so "EMCON released" with no panel. Slot 2's card rail is
+    # not EMCON-gated and comes up with its module, so the 5G rail alone was enough to do it.
+    # Now Q{s}06 is an open drain: gate EMCON_ON (high = EMCON asserted, Q11 and R513 below), source GND, drain on
+    # W_DISABLE1#, R{s}37 kept to the card rail. EMCON asserted: Q{s}06 on and W_DISABLE1# low (on slots 1 and 3 the card's
+    # supply is off as well, Q{s}11). EMCON released: Q{s}06 off and R{s}37 holds the pin at the card rail. No resistor,
+    # channel or body diode joins a card rail to EMCON_HW any more, and check_pcb_b.py asserts it. The cost:
+    # W_DISABLE1# now depends on +3V3_DEV (R513), as the module kill gates already do, which is open item O-14's class.
+    if s == 1:   # WiFi link card AW7915-AED on an E-key 2230 (B14 wiring); W_DISABLE1# pulled low by EMCON_ON through the open drain Q106
         E = {n: "NC" for n in list(range(1, 24)) + list(range(32, 76))}
-        E.update({n: "GND" for n in (1, 7, 18, 33, 39, 45, 51, 57, 63, 69, 75)}); E.update({n: a33 for n in (2, 4, 72, 74)})
-        E.update({3: "NC", 5: "NC", 35: "CARD1_TX_P", 37: "CARD1_TX_N", 41: "CARD1_RX_P", 43: "CARD1_RX_N", 47: "CARD1_CLK_P", 49: "CARD1_CLK_N", 52: "PCIE1_RST2_n", 53: "CARD1_CLKREQ_n",
+        E.update({n: "GND" for n in (1, 7, 18, 33, 39, 45, 51, 57, 63, 69, 75)}); E.update({n: m2c for n in (2, 4, 72, 74)})
+        # W3-F01, 26 September 2026: E-key 35/37 are PETp0/PETn0 (the host transmits, the card receives) and 41/43 PERp0/PERn0.
+        E.update({3: "NC", 5: "NC", 35: "CARD1_RX_P", 37: "CARD1_RX_N", 41: "CARD1_TX_P", 43: "CARD1_TX_N", 47: "CARD1_CLK_P", 49: "CARD1_CLK_N", 52: "PCIE1_RST2_n", 53: "CARD1_CLKREQ_n",
                   55: "PCIE1_nWAKE", 56: "WIFI_W_DIS_n", 54: "WIFI_W_DIS2_n", 6: "WIFI_nLED"})
         part("J_M2C1", "Connector", "Bus_M.2_Socket_E", "M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (two MHF4 leads to A22's P2P jacks)", "M2E", dict(E, **_M2_MECH), "C2977809")
-        r(R(37), "10k", "WIFI_W_DIS_n", a33); r(R(38), "10k", "WIFI_W_DIS2_n", a33); nfet(Q(6), a33, "WIFI_W_DIS_n", "EMCON_HW", "2N7002 EMCON -> W_DISABLE1#")
+        r(R(37), "10k", "WIFI_W_DIS_n", a33); r(R(38), "10k", "WIFI_W_DIS2_n", a33); nfet(Q(6), "EMCON_ON", "GND", "WIFI_W_DIS_n", "2N7002: EMCON_ON pulls W_DISABLE1# low (open drain)")
         r(R(39), "1k", a33, "LED_WIFI_A"); led("LED15", "blue WiFi link", "LED_WIFI_A", "WIFI_nLED")
-    elif s == 2:   # 5G module RM520N-GL on a B-key 3052 (M.2 WWAN socket 2 pinout; TE 1-2199119-5); SIM 1 on the UIM pins, SIM 2 on GPIO_0..3 per the RM5xx series (to confirm from the RM520N-GL hardware design)
+    elif s == 2:   # 5G module RM520N-GL on a B-key 3052 (M.2 WWAN socket 2 pinout); SIM 1 on the UIM pins, SIM 2 on the module's USIM2 pins 40 to 48
         B = {n: "NC" for n in range(1, 76) if not 12 <= n <= 19}
-        B.update({n: "GND" for n in (3, 5, 11, 27, 33, 39, 45, 51, 57, 71, 73)}); B.update({n: a33 for n in (2, 4, 70, 72, 74)})
-        B.update({7: "USB_5G_P", 9: "USB_5G_N", 41: "CARD2_RX_N", 43: "CARD2_RX_P", 47: "CARD2_TX_N", 49: "CARD2_TX_P", 53: "CARD2_CLK_N", 55: "CARD2_CLK_P", 50: "PCIE2_RST2_n", 52: "CARD2_CLKREQ_n",
-                  54: "PCIE2_nWAKE", 6: "5G_PWROFF_n", 8: "5G_W_DIS_n", 67: "5G_RST_n", 30: "SIM1_RST", 32: "SIM1_CLK", 34: "SIM1_IO", 36: "SIM1_VCC", 40: "SIM2_CLK", 42: "SIM2_IO", 44: "SIM2_RST", 46: "SIM2_VCC", 10: "5G_nLED"})
-        part("J_M2C2", "Connector", "Bus_M.2_Socket_B", "M.2 B-key 3052 socket, TE 1-2199119-5, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; two antenna leads to A22's 5G jacks)", "M2B", dict(B, **_M2_MECH), "C574849")
-        r(R(37), "10k", "5G_W_DIS_n", a33); nfet(Q(6), a33, "5G_W_DIS_n", "EMCON_HW", "2N7002 EMCON -> W_DISABLE1#")
+        B.update({n: "GND" for n in (3, 5, 11, 27, 33, 39, 45, 51, 57, 71, 73)}); B.update({n: m2c for n in (2, 4, 70, 72, 74)})
+        # W3-F01, 26 September 2026: the RM520N's own pin table (HD v1.1 Table 18) is 41 PCIE_TX_M, 43 PCIE_TX_P (AO) and
+        # 47 PCIE_RX_M, 49 PCIE_RX_P (AI), so the switch's transmitter reaches 47/49 through its 220 nF and 41/43 return.
+        # S-13, 26 September 2026: SIM 2 on the module's own pins, 40 USIM2_DET, 42 USIM2_DATA, 44 USIM2_CLK, 46 USIM2_RST
+        # and 48 USIM2_VDD (HD v1.1 Figure 2 and Table 15; the old map had CLK on 40, IO on 42, RST on 44, VCC on 46 and
+        # left 48 open). The GCT SIM8060-6 holder has no card-detect switch, so both DET pins (40 and 66) stay unconnected,
+        # which is what HD 4.1.5 asks when hot-plug is not used.
+        B.update({7: "USB_5G_P", 9: "USB_5G_N", 41: "CARD2_TX_N", 43: "CARD2_TX_P", 47: "CARD2_RX_N", 49: "CARD2_RX_P", 53: "CARD2_CLK_N", 55: "CARD2_CLK_P", 50: "PCIE2_RST2_n", 52: "CARD2_CLKREQ_n",
+                  54: "PCIE2_nWAKE", 6: "5G_PWROFF_n", 8: "5G_W_DIS_n", 67: "5G_RST_n", 30: "SIM1_RST", 32: "SIM1_CLK", 34: "SIM1_IO", 36: "SIM1_VCC",
+                  40: "NC", 42: "SIM2_IO", 44: "SIM2_CLK", 46: "SIM2_RST", 48: "SIM2_VCC", 10: "5G_nLED"})
+        # S-12 (adjudication A08), 26 September 2026: TE 1-2199119-5 (C574849) is KEY M and the RM520N-GL is key B only
+        # (HD v1.1 "standard M.2 Key-B WWAN module", pins 12 to 19 the notch). TE customer drawing C-2199119 rev F sheet 2:
+        # 2199119-3 is KEY ID B, 15u" gold, the same 3.2 mm height and 67 positions; JLCPCB C590866 reads "2199119-3, TE
+        # Connectivity, -40 to +80 C" (26 Sep 2026 01:15 CEST). Its land (sheet 3) is the M2B footprint's pad field, checked pad by pad in
+        # drafts/r4-decisions.md, EXCEPT the two locating holes (dia 1.1 datum Y at X -10, dia 1.6 datum X at X +10, on the
+        # line 4.5 mm below the odd row), which gen_footprints_b16.py does not draw: a mismatch until that land carries them.
+        # ANTENNAS (D-07): the socket carries no RF; the module's own IPEX 20579-001E receptacles (HD 5.2.1) take pigtails,
+        # ANT0 and ANT2 always and ANT3 as the third jack when the case measurement (D-08) confirms board A's site at X +46.
+        part("J_M2C2", "Connector", "Bus_M.2_Socket_B", "M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the module's ANT0, ANT2 and, subject to D-08, ANT3 to board A's 5G jacks)", "M2B", dict(B, **_M2_MECH), "C590866")
+        r(R(37), "10k", "5G_W_DIS_n", a33); nfet(Q(6), "EMCON_ON", "GND", "5G_W_DIS_n", "2N7002: EMCON_ON pulls W_DISABLE1# low (open drain)")
         r(R(38), "10k", "5G_PWROFF_n", a33); nfet(Q(7), "5G_OFF", "GND", "5G_PWROFF_n", "2N7002 expander -> FULL_CARD_POWER_OFF#")
-        r(R(40), "10k", "5G_RST_n", a33); nfet(Q(8), "5G_RESET", "GND", "5G_RST_n", "2N7002 expander -> RESET#")
+        # O-15, 26 September 2026 (round-4 review, minor; taken in the round-4 fix-up under the owner's standing rule):
+        # RESET# (pin 67) is a 1.8 V input "internally pulled up to 1.8 V" (HD v1.1 Table 12, Figure 12: a 1.5 uA
+        # source), and "Voltage at Digital Pins" is at most 2.3 V absolute (HD v1.1 Table 50). The 10 k pull-up to this
+        # 3.3 V rail that stood here (R240) held the pin above that limit whenever the module ran, so it is removed:
+        # Quectel's own circuit is an open collector or drain on the pin and nothing else ("An open collector/drain
+        # driver or a button can be used to control RESET#", HD 3.6). Q208's off-state leakage is at most 80 nA at
+        # VDS 60 V (CJ 2N7002 datasheet, IDSS, JLCPCB C8545), against the module's 1.5 uA pull-up; R62 holds its gate low.
+        nfet(Q(8), "5G_RESET", "GND", "5G_RST_n", "2N7002 expander -> RESET# (open drain, no pull-up: HD Figure 12)")
         r(R(39), "1k", a33, "LED_5G_A"); led("LED25", "amber 5G network", "LED_5G_A", "5G_nLED")
-        for k, (vcc, rst, clk, io) in ((1, ("SIM1_VCC", "SIM1_RST", "SIM1_CLK", "SIM1_IO")), (2, ("SIM2_VCC", "SIM2_RST", "SIM2_CLK", "SIM2_IO"))):
-            part("J_SIM%d" % k, "Connector", "SIM_Card_Shielded", "nano-SIM push-push GCT SIM8060 (SIM %d)" % k, "NANOSIM", {"1": vcc, "2": rst, "3": clk, "5": "GND", "6": "NC", "7": io, "SH": "GND"}, "C6296715")
-            c(C(83 + 3 * k), "100n", vcc, "GND"); c(C(84 + 3 * k), "33p", io, "GND", "C0402"); c(C(85 + 3 * k), "33p", clk, "GND", "C0402")
+        # F-PR-05, 26 September 2026: "Ensure the continuous current capability of the power supply is 3.0 A at least and
+        # the peak current capability ... is 4 A at least ... two bypass capacitors of 220 uF with low ESR ... and a
+        # multi-layer ceramic chip capacitor (MLCC) array" (HD v1.1 3.3.1, Figure 6: 220 uF, 100 nF, 6.8 nF, 220 pF,
+        # 68 pF at the PMU pins 2/4; 220 uF, 100 nF, 220 pF, 68 pF, 15 pF, 9.1 pF, 4.7 pF at the APT pins 70/72/74; "a
+        # TVS with working peak reverse voltage of 5 V"). The buck is a 5 A AP64500, so 4 A is inside its rating; the rail
+        # declaration above carries 3.0 A and 4.0 A. Bulk: KEMET T520B227M006ATE025 (220 uF 6.3 V polymer tantalum, 25 mOhm,
+        # EIA 3528-21, -55 to +105 C on KEMET's part sheet, JLCPCB C212684); ceramics YAGEO CC0402 (the family this board already buys).
+        _5g = []
+        def _c5(ref, val, lcsc, pin, fp="C0402"):
+            c(ref, val, m2c, "GND", fp, lcsc, bypass=("J_M2C2", pin)); _5g.append(ref)
+        for _ref, _pin in (("C520", "2"), ("C521", "70")):
+            part(_ref, "Device", "C_Polarized", "220u 6.3V KEMET T520B227M006ATE025 polymer tantalum 25 mOhm (RM520N HD 3.3.1 bulk)", "CPT3528", {"1": m2c, "2": "GND"}, "C212684")
+            _intent.bypass(_ref, "J_M2C2", _pin, m2c); _5g.append(_ref)
+        _c5("C522", "6.8n 50V X7R", "C93654", "2"); _c5("C523", "220p 50V C0G", "C107001", "2"); _c5("C524", "68p 50V C0G", "C107009", "2")
+        _c5("C525", "100n", "", "70"); _c5("C526", "220p 50V C0G", "C107001", "70"); _c5("C527", "68p 50V C0G", "C107009", "70")
+        _c5("C528", "15p 50V C0G", "C106997", "70"); _c5("C529", "9.1p 50V C0G", "C526972", "70"); _c5("C530", "4.7p 50V C0G", "C325453", "70")
+        part("D520", "Device", "D_TVS", "SMBJ5.0A", "TVS", {"1": m2c, "2": "GND"}, "C113974"); _5g.append("D520")   # HD 3.3.1's 5 V TVS; pin 1 on the rail is pad 1, the cathode (A03)
+        # S-13, 26 September 2026: each SIM per HD v1.1 Figure 18 (a 6-pin holder without hot-plug): 22 Ohm in series in
+        # RST, CLK and DATA, 10 pF on each at the holder, 100 nF on VCC. SIM 2 also follows Figure 19's compatible design:
+        # four 0 Ohm links at the module (RST, CLK, DATA, VDD) are the removable parts, so an eSIM-fitted module
+        # variant ("pins 40, 42, 44, 46 and 48 of the module must be kept open") is built by leaving them off. Module
+        # side SIMk_*, holder side SIMCk_*. The TVS array the HD asks for (at most 10 pF) is an open item in drafts.
+        # Fix-up, 26 September 2026 (round-4 review, minor): Figure 19 draws BOTH, five 0 Ohm "near the module" and the
+        # 22 Ohm near the holder, and one part cannot sit in both places. A 22 Ohm left off at the holder would leave the
+        # whole run hanging on the eSIM's pins. So SIM 2's RST, CLK and DATA now carry a 0 Ohm at the module, R287 to
+        # R289, before the 22 Ohm at the holder (module side SIM2_x, the run SIMR2_x, the holder SIMC2_x), and R272 is
+        # the fourth link, on VDD, also at the module. DET (pin 40) stays open. An eSIM build leaves the four 0 Ohm off.
+        for k in (1, 2):
+            md = lambda x: "SIM%d_%s" % (k, x); cd = lambda x: "SIMC%d_%s" % (k, x)
+            vcc = md("VCC") if k == 1 else cd("VCC")
+            if k == 2: r(R(72), "0R (eSIM option link at the module, HD 4.1.6 Figure 19)", md("VCC"), cd("VCC"), "R", "C21189")
+            for j, x in enumerate(("RST", "CLK", "IO")):
+                if k == 2:
+                    r(R(87 + j), "0R (eSIM option link at the module, HD 4.1.6 Figure 19)", md(x), "SIMR2_%s" % x, "R", "C21189")
+                    r(R(63 + 3 * k + j), "22R", "SIMR2_%s" % x, cd(x))
+                    _intent.node("SIMR2_%s" % x, 3.3, "SIM 2's line between the module's 0 Ohm link and the holder's 22 Ohm, "
+                                 "swinging to USIM2_VDD (1.8 or 3.0 V, HD v1.1 pin table); declared at 3.3 V like the holder side")
+                else:
+                    r(R(63 + 3 * k + j), "22R", md(x), cd(x))
+            part("J_SIM%d" % k, "Connector", "SIM_Card_Shielded", "nano-SIM push-push GCT SIM8060 (SIM %d)" % k, "NANOSIM", {"1": vcc, "2": cd("RST"), "3": cd("CLK"), "5": "GND", "6": "NC", "7": cd("IO"), "SH": "GND"}, "C6296715")
+            c(C(83 + 3 * k), "100n", vcc, "GND"); c(C(84 + 3 * k), "10p 50V C0G", cd("IO"), "GND", "C0402", "C106199"); c(C(85 + 3 * k), "10p 50V C0G", cd("CLK"), "GND", "C0402", "C106199")
+            c(C(82 + k), "10p 50V C0G", cd("RST"), "GND", "C0402", "C106199")
+            for x in ("RST", "CLK", "IO"):
+                _intent.node(cd(x), 3.3, "a SIM card line at the holder, swinging to USIM%d_VDD, which the module sets to 1.8 or "
+                             "3.0 V (HD v1.1 pin table: 1.8/3.0 V, Class B and C cards); declared at 3.3 V for the 50 V capacitor on it" % k)
+        SLOT_EXTRA[2].update(_5g)
     else:   # 9 September 2026 (ARCH-PCB-B-IOHA ruling 3): the spare M-key drive slot carries a SECOND WiFi card instead.
             # The mesh link is the one bearer with no second path in the kit, and the card is single-homed to slot 1's
             # PCIe switch, so losing slot 1 lost the kit-to-kit link entirely. A second identical card on slot 3 fixes
@@ -491,13 +705,40 @@ def slot(s):
             # because under the no-vent ruling every case penetration is a seal and two more jacks would be a case change.
             # What is given up is a fourth drive slot, which k3s does not need with three replicas.
         E3 = {n: "NC" for n in list(range(1, 24)) + list(range(32, 76))}
-        E3.update({n: "GND" for n in (1, 7, 18, 33, 39, 45, 51, 57, 63, 69, 75)}); E3.update({n: a33 for n in (2, 4, 72, 74)})
-        E3.update({3: "NC", 5: "NC", 35: "CARD3_TX_P", 37: "CARD3_TX_N", 41: "CARD3_RX_P", 43: "CARD3_RX_N", 47: "CARD3_CLK_P", 49: "CARD3_CLK_N", 52: "PCIE3_RST2_n", 53: "CARD3_CLKREQ_n",
+        E3.update({n: "GND" for n in (1, 7, 18, 33, 39, 45, 51, 57, 63, 69, 75)}); E3.update({n: m2c for n in (2, 4, 72, 74)})
+        # W3-F01, 26 September 2026: as slot 1, 35/37 PETp0/PETn0 carry what the card receives and 41/43 what it transmits.
+        E3.update({3: "NC", 5: "NC", 35: "CARD3_RX_P", 37: "CARD3_RX_N", 41: "CARD3_TX_P", 43: "CARD3_TX_N", 47: "CARD3_CLK_P", 49: "CARD3_CLK_N", 52: "PCIE3_RST2_n", 53: "CARD3_CLKREQ_n",
                    55: "PCIE3_nWAKE", 56: "WIFI2_W_DIS_n", 54: "WIFI2_W_DIS2_n", 6: "WIFI2_nLED"})
         part("J_M2C3", "Connector", "Bus_M.2_Socket_E", "M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: the second AsiaRF AW7915-AED (two MHF4 leads to the antenna changeover U82 and U83)", "M2E", dict(E3, **_M2_MECH), "C2977809")
-        r(R(37), "10k", "WIFI2_W_DIS_n", a33); r(R(38), "10k", "WIFI2_W_DIS2_n", a33); nfet(Q(6), a33, "WIFI2_W_DIS_n", "EMCON_HW", "2N7002 EMCON -> W_DISABLE1#")
+        r(R(37), "10k", "WIFI2_W_DIS_n", a33); r(R(38), "10k", "WIFI2_W_DIS2_n", a33); nfet(Q(6), "EMCON_ON", "GND", "WIFI2_W_DIS_n", "2N7002: EMCON_ON pulls W_DISABLE1# low (open drain)")
         r(R(39), "1k", a33, "LED_WIFI2_A"); led("LED35", "blue WiFi link, card 2", "LED_WIFI2_A", "WIFI2_nLED")
-    c(C(57), "22u 6.3V", a33, "GND", "C10u"); c(C(58), "100n", a33, "GND")
+    c(C(57), "22u 6.3V", m2c, "GND", "C10u"); c(C(58), "100n", m2c, "GND")   # the socket's own decoupling, on the socket side of the shunt
+    # S-01 (owner ruling D-05, radios dark), 26 September 2026: THE MODULE'S OWN WIFI AND BLUETOOTH ON THE EMCON LINE.
+    # WL_nDisable (89) and BT_nDisable (91) "may only be driven low; it can't be driven high" and are "internally
+    # pulled up through 1.8 kOhm to CM5_3.3V" (CM5 datasheet release 3, 2.1.1, 2.1.2 and the pin table), and "No pins
+    # should be powered before the 5 V rail is active" (3.1). They used to sit straight on U6, a push-pull PCA9555
+    # output with its own internal pull-up to +3V3_DEV, which drove them high and powered them with the module off.
+    # Now each is an OPEN DRAIN: a 2N7002 with its source on ground and its drain on the module pin, so the pin is
+    # only ever pulled low (a pull-down is not a powered pin, and the datasheet allows "driven or tied low"), and the
+    # module's own internal driver never meets a driven high on our side. Its gate is U{s}11 (SN74LVC32A, the OR
+    # the voters already use): KILL = OFF OR EMCON_ON, so the radio is released only when U6 asks for it AND EMCON
+    # is not asserted. U6's two requests per slot are active HIGH = radio off, with a 10 k pull-up each, so from
+    # power-on until the panel firmware writes U6 the module radios are dark by design, not by the expander's
+    # internal pull-up (A01). A 100 k on each gate holds it defined while U{s}11 starts.
+    # Fix-up, 26 September 2026 (round-4 review, minor): that 100 k goes to GND, so if +3V3_DEV is lost while a slot is
+    # up, KILL sits at 0 and the module's radios are RELEASED (fail open), as they were with U6 driving the pins before
+    # round 4. The review's remedy, the 100 k up to +3V3_CM{s}, was not taken: in the normal power-on default (requests
+    # high, KILL high) with the module off it feeds 33 uA per line into the module's unpowered 3.3 V output (CM5
+    # datasheet 3.1, "No pins should be powered before the 5 V rail is active"). Open item O-14 carries the remedy.
+    part(U(11), "Connector_Generic", "Conn_01x14", "SN74LVC32APWR quad OR, slot S%d: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare" % s, "TSSOP14",
+         {"7": "GND", "14": "+3V3_DEV", "1": "WL_nDIS%d_OFF" % s, "2": "EMCON_ON", "3": "WL_nDIS%d_KILL" % s,
+          "4": "BT_nDIS%d_OFF" % s, "5": "EMCON_ON", "6": "BT_nDIS%d_KILL" % s,
+          "9": "GND", "10": "GND", "8": "NC", "12": "GND", "13": "GND", "11": "NC"}, "C352974")
+    c(C(97), "100n", "+3V3_DEV", "GND")
+    nfet(Q(9), "WL_nDIS%d_KILL" % s, "GND", "WL_nDIS%d" % s, "2N7002: pulls WL_nDisable low only (S-01)")
+    nfet(Q(10), "BT_nDIS%d_KILL" % s, "GND", "BT_nDIS%d" % s, "2N7002: pulls BT_nDisable low only (S-01)")
+    r(R(62), "10k", "WL_nDIS%d_OFF" % s, "+3V3_DEV"); r(R(63), "10k", "BT_nDIS%d_OFF" % s, "+3V3_DEV")
+    r(R(73), "100k", "WL_nDIS%d_KILL" % s, "GND"); r(R(74), "100k", "BT_nDIS%d_KILL" % s, "GND")
     # --- USB 3 hub TUSB8041I on the module's USB3-0 port; downstream ports per the fabric of 32.58
     # 9 September 2026 (ARCH-PCB-B-IOHA): the hub and the two host-selection switches run on the DEVICE rail, not on
     # this slot's. They used to sit on +3V3_S{s}B, whose buck is enabled by the module's own 3.3 V, so a bank died with
@@ -516,7 +757,11 @@ def slot(s):
     # and slots 1 and 2 were spending those pins on their M.2 card's USB2 link. On slot 1 that link was already dead copper:
     # the AW7915-AED is an MT7915, WiFi only, with no Bluetooth companion to use it. On slot 2 the 5G module does use it, for
     # firmware and AT access, so rather than lose it the link becomes a device on a hub, which also gives it the bank's failover.
-    PORTS = {1: {1: ("LIME_DP", "LIME_DM", "HUB1_D1TX_P", "HUB1_D1TX_N", "LIME_SSTX_P", "LIME_SSTX_N"), 2: ("USB_PNL_P", "USB_PNL_N"), 3: ("CAM_DP", "CAM_DM"), 4: ("RB_DP", "RB_DM")},
+    # W3-F02, 26 September 2026: the LimeSDR's SuperSpeed pairs were crossed. A Standard-A receptacle is named from the
+    # HOST'S side (KiCad USB3_A: 5 SSRX-, 6 SSRX+, 8 SSTX-, 9 SSTX+; TI's own Figure 6 in SLLSEE4E puts USB_SSTXP_DN1
+    # through 0.1 uF to the connector's SSTXP and brings its SSRXP straight to USB_SSRXP_DN1). So the hub's receiver
+    # (6/7) takes LIME_SSRX from J_LIME 6/5 and its transmitter (3/4) reaches J_LIME 9/8 through C161/C162.
+    PORTS = {1: {1: ("LIME_DP", "LIME_DM", "HUB1_D1TX_P", "HUB1_D1TX_N", "LIME_SSRX_P", "LIME_SSRX_N"), 2: ("USB_PNL_P", "USB_PNL_N"), 3: ("CAM_DP", "CAM_DM"), 4: ("RB_DP", "RB_DM")},
              2: {1: ("GNSS_DP", "GNSS_DM"), 2: ("ZBA_DP", "ZBA_DM"), 3: ("ZBB_DP", "ZBB_DM"), 4: ("QMX_DP", "QMX_DM")},
              3: {1: ("USB_D8_P", "USB_D8_N"), 2: ("USB_E6_P", "USB_E6_N"), 3: ("USB_WALL_P", "USB_WALL_N"), 4: ("USB_5G_P", "USB_5G_N")}}[s]
     for port, nets in PORTS.items():
@@ -526,7 +771,7 @@ def slot(s):
     if s == 1: h[36] = "LIME_HW_EN"; h[46] = "LIME_FLT"
     synth(U(2), "TUSB8041", "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S%d (upstream the CM5 USB3-0 port)" % s, "QFN64", h, "C544686")
     c(C(59), "100n", "BANK%d_UPRX_P" % s, "MUX%d_A1P" % s, "C0402"); c(C(60), "100n", "BANK%d_UPRX_N" % s, "MUX%d_A1N" % s, "C0402")   # AC coupling on the hub's transmit pair, hub side of the mux so it serves either host
-    if s == 1: c(C(61), "100n", "HUB1_D1TX_P", "LIME_SSRX_P", "C0402"); c(C(62), "100n", "HUB1_D1TX_N", "LIME_SSRX_N", "C0402")
+    if s == 1: c(C(61), "100n", "HUB1_D1TX_P", "LIME_SSTX_P", "C0402"); c(C(62), "100n", "HUB1_D1TX_N", "LIME_SSTX_N", "C0402")   # W3-F02: to the receptacle's SSTX
     r(R(41), "10k", "HUB%d_RST_n" % s, "+3V3_DEV"); c(C(63), "1u", "HUB%d_RST_n" % s, "GND"); r(R(42), "9.53k 1%", "HUB%d_R1" % s, "GND"); r(R(43), "90.9k 1%", "+5V_DEV", "HUB%d_VBUS" % s); r(R(44), "10k 1%", "HUB%d_VBUS" % s, "GND")
     r(R(45), "10k", "HUB%d_SMBUS_n" % s, "+3V3_DEV"); r(R(46), "10k", "HUB%d_PWRPOL" % s, "+3V3_DEV")
     part("Y%d" % (100 * s + 1), "Device", "Crystal_GND24", "24 MHz 3225", "XTAL", {"1": "HUB%d_XI" % s, "3": "HUB%d_XO" % s, "2": "GND", "4": "GND"})
@@ -693,6 +938,8 @@ for i, (tag, uref, ub, refs) in enumerate((("ZBA", "U13", "U16", ("R26", "C48", 
 tps22810("U22", "+3V3_DEV", "E72_EN", "+3V3_ZB", "E72_CT"); c("C52", "1n", "E72_CT", "GND"); c("C53", "10u", "+3V3_ZB", "GND", "C10u"); c("C54", "100n", "+3V3_ZB", "GND"); c("C55", "100n", "+3V3_ZB", "GND")
 # ================================================================= LimeSDR Mini receptacle (bank 1 hub, port 1, USB 3) and the RockBLOCK 9704 header (bank 1 hub, port 4, through a CP2102N), both behind TPS259631 eFuses
 _SEC_MARKS.append(('LIMESDR MINI RECEPTACLE (BANK 1 HUB, PORT 1, USB 3) AND THE ROCKBLOCK 9704 HEADER (BANK..', len(P)))
+# W3-F02, 26 September 2026: the receptacle's names are the HOST'S: LIME_SSTX on 8/9 is what the hub transmits (through
+# C161/C162), LIME_SSRX on 5/6 what it receives from the LimeSDR.
 part("J_LIME", "Connector", "USB3_A", "USB 3.0 type A receptacle (Wuerth 692122030100 land): the LimeSDR Mini 2.4 in its bay", "USB3A",
      {"1": "+5V_LIME", "2": "LIME_DM", "3": "LIME_DP", "4": "GND", "5": "LIME_SSRX_N", "6": "LIME_SSRX_P", "7": "GND", "8": "LIME_SSTX_N", "9": "LIME_SSTX_P", "10": "GND"}, "C5355286")
 esd("U33", "LIME_DP", "LIME_DM", "+5V_LIME")
@@ -704,7 +951,10 @@ r("R41", "10k", "RB_STATUS", "+3V3_DEV"); r("R42", "10k", "RB_XMTG", "+3V3_DEV")
 efuse("U24", "+5V_DEV", "+5V_RB", "RB_EN", "RB_FLT", ["C61", "R43", "R44", "R45", "R46", "C62"], "301R 1% (ILM: 3.0 A)"); c("C63", "22u 6.3V", "+5V_RB", "GND", "C10u")
 # ================================================================= camera, QMX and spare USB headers, the wall USB pair (bank 3 hub, port 3) with its ESD
 _SEC_MARKS.append(('CAMERA, QMX AND SPARE USB HEADERS, THE WALL USB PAIR (BANK 3 HUB, PORT 3) WITH ITS ESD', len(P)))
-tps2065("U28", "+5V_DEV", "CAM_EN", "+5V_CAM", "CAM_FLT"); r("R47", "10k", "CAM_FLT", "+3V3_DEV"); r("R48", "100k", "CAM_EN", "GND"); c("C64", "10u", "+5V_CAM", "GND", "C10u")
+# S-08 (adjudication A01), 26 September 2026: R48 is 4.7 k, not 100 k. The fitted TI PCA9555 pulls every pin up
+# through its own resistor after power-on reset (SCPS131J Fig 8-2, IIL up to -100 uA), and against 100 k the enable
+# sat near 1.7 V, inside the TPS2065's undefined band; 4.7 k holds it at 0.49 V or less, a defined OFF.
+tps2065("U28", "+5V_DEV", "CAM_EN", "+5V_CAM", "CAM_FLT"); r("R47", "10k", "CAM_FLT", "+3V3_DEV"); r("R48", "4.7k", "CAM_EN", "GND"); c("C64", "10u", "+5V_CAM", "GND", "C10u")
 part("J_CAM", "Connector_Generic", "Conn_01x04", "camera lead (USB 2.0, bank 1 hub, port 3): 5V D- D+ GND", "PH1x4", {"1": "+5V_CAM", "2": "CAM_DM", "3": "CAM_DP", "4": "GND"}); esd("U34", "CAM_DP", "CAM_DM", "+5V_CAM")
 part("F3", "Device", "Polyfuse", "0.5A hold 1812", "F1812", {"1": "+5V_DEV", "2": "VBUS_QMX"})
 # VBUS_QMX IS A CONDUCTOR AND IT WAS DECLARED AS NOTHING AT ALL (20 September 2026; appendix 32.237). It is
@@ -725,22 +975,68 @@ part("U19", "Connector_Generic", "Conn_01x14", "SN74LVC08APWR quad AND: LimeSDR 
      {"1": "EMCON_HW", "2": "LIME_HW_EN", "3": "LIME_EN_A", "4": "LIME_EN_A", "5": "LIME_SW_EN", "6": "LIME_EN", "7": "GND", "8": "RB_EN", "9": "EMCON_HW", "10": "RB_SW_EN", "11": "E22_EN", "12": "EMCON_HW", "13": "LORA_ON", "14": "+3V3_DEV"}, "C465737")
 part("U20", "Connector_Generic", "Conn_01x14", "SN74LVC08APWR quad AND: E72 radios (EMCON AND software); spare gates grounded", "TSSOP14",
      {"1": "EMCON_HW", "2": "ZB_ON", "3": "E72_EN", "4": "GND", "5": "GND", "6": "NC", "7": "GND", "8": "NC", "9": "GND", "10": "GND", "11": "NC", "12": "GND", "13": "GND", "14": "+3V3_DEV"}, "C465737")
-c("C65", "100n", "+3V3_DEV", "GND"); c("C66", "100n", "+3V3_DEV", "GND"); r("R49", "100k", "LIME_HW_EN", "GND"); r("R50", "100k", "LIME_SW_EN", "GND"); r("R51", "100k", "RB_SW_EN", "GND"); r("R52", "100k", "LORA_ON", "GND"); r("R53", "100k", "ZB_ON", "GND")
+# S-08 (adjudication A01), 26 September 2026: R50 to R53 are 4.7 k for the same reason as R48: with 100 k against the
+# expander's internal pull-up these four software enables read about 1.9 V, inside the LVC08's 0.8 to 2.0 V undefined
+# band, until the panel firmware writes U6. R49 stays 100 k: LIME_HW_EN is the hub's PWRCTL1 output, not an expander pin.
+c("C65", "100n", "+3V3_DEV", "GND"); c("C66", "100n", "+3V3_DEV", "GND"); r("R49", "100k", "LIME_HW_EN", "GND"); r("R50", "4.7k", "LIME_SW_EN", "GND"); r("R51", "4.7k", "RB_SW_EN", "GND"); r("R52", "4.7k", "LORA_ON", "GND"); r("R53", "4.7k", "ZB_ON", "GND")
+# AN EMCON GATE THAT LOSES ITS OWN SUPPLY MUST STILL LEAVE ITS TRANSMITTER OFF (MESHSAT-1357 round 4, R4T-F9, ruled in
+# scope by the round-5 tools re-review; taken by the session under the owner's standing rule of 26 September 2026).
+# LIME_EN, RB_EN and E22_EN were driven by U19 alone and carried no pull. U19 runs on +3V3_DEV, while the three switches
+# it enables take their input from +5V_DEV (U23 and U24 pin 4, U21 pin 6), so a lost +3V3_DEV (U25 or L1 failed) or an
+# open U19 pin 14 leaves +5V_DEV up and the three EN pins floating. Both makers forbid that: TPS2596 (SLVSET8A, pin
+# table) "Do not leave floating", TPS22810 (SLVSDH0C 9.3.3) "EN/UVLO terminal must not be left floating". E72_EN (U20)
+# takes the same pull: U22's input is +3V3_DEV itself, so a lost rail is safe there, but an open U20 pin 14 is not.
+# THE UNPOWERED GATE'S OUTPUT: SCAS283W gives the SN74LVC08A no Ioff (it has no partial-power-down feature) and 7.3.3
+# says its outputs carry clamp diodes to VCC and to GND. With VCC at 0 V the output can only sink (into the dead rail
+# through the upper clamp, at VO > VCC + about 0.5 V), and its inputs, with only a negative clamp, cannot reach it; with
+# VCC open nothing in the part can source it either. What remains is leakage the sheet does not bound, so the sizing
+# takes the Ioff that the SN74LVC1G08 (SCES217AA, the same family, a part that has the feature) guarantees, 10 uA at
+# VCC 0 V and VO 0 to 5.5 V, plus the EN pin's own leakage, 0.1 uA on both makers' sheets (SLVSET8A IENLKG, SLVSDH0C
+# IEN/UVLO). 10.1 uA into 10 k is 0.10 V. THE THRESHOLDS: the TPS259631 turns its FET off below VUVLO(F), 1.08 V
+# minimum, and reaches its lowest shutdown current below VSD, 0.53 V minimum (SLVSET8A 7.5); the TPS22810 turns off
+# below VENF, 1.08 V minimum, and shuts down below VSHUTF, 0.5 V minimum (SLVSDH0C 7.5). So 10 k holds every EN pin
+# in full shutdown until the leakage reaches 50 uA, five times the family Ioff, and OFF until 108 uA. THE COST when
+# the gate drives high: 3.3 V / 10 k = 0.33 mA per output, inside the SN74LVC08A's VOH of 2.4 V minimum at 12 mA
+# (SCAS283W 5.7, VCC 3 V), far above VUVLO(R) 1.22 V and VENR 1.3 V maximum. 10 k and not the 4.7 k of S-08: the
+# leakage here is 10 uA, not the PCA9555's 100 uA pull-up, and 10 k is already on this board's BOM (R58, R513).
+r("R514", "10k", "LIME_EN", "GND"); r("R515", "10k", "RB_EN", "GND"); r("R516", "10k", "E22_EN", "GND"); r("R517", "10k", "E72_EN", "GND")
 # 9 September 2026 (ARCH-PCB-B-IOHA section 2, defect 3): three expander-driven FET gates had no pull-down, so they float
 # through the PCA9555's power-on reset, when its ports come up as high-impedance inputs. KSZ_RST holds the Ethernet switch
 # in reset for the whole kit if it floats high; 5G_OFF and 5G_RESET do the same to the cellular module. The six gates around
 # them have carried a 100k pull-down since the board was drawn; these three were simply missed.
-r("R60", "100k", "KSZ_RST", "GND"); r("R61", "100k", "5G_OFF", "GND"); r("R62", "100k", "5G_RESET", "GND")
+# S-08, 26 September 2026 (A01's optional item, taken by the session): these three were "nominally asserted" by the
+# expander's pull-up against 100 k, a gate at about 1.7 V against the 2N7002's 1.0 to 2.5 V threshold. At 4.7 k each
+# is a defined OFF at power-up: the Ethernet switch out of reset and the 5G module neither held off nor in reset,
+# which is the M.2 default and leaves EMCON to W_DISABLE1#, which is independent of this expander.
+r("R60", "4.7k", "KSZ_RST", "GND"); r("R61", "4.7k", "5G_OFF", "GND"); r("R62", "4.7k", "5G_RESET", "GND")
 # Fail safe on the two panel lines (9 September 2026, red team C1): with the panel ribbon out, EMCON_HW and TX_INHIBIT_n must read LOW here,
-# which silences every transmitter on this board and, through J_AB1, on A22 and D9 as well. C7 holds them up with 10k when the panel is
-# present, which wins over these three boards' 100k pull-downs in parallel (2.5 V, a solid high).
-r("R58", "100k", "EMCON_HW", "GND"); r("R59", "100k", "TX_INHIBIT_n", "GND")
+# which silences every transmitter on this board and, through J_AB1, on A22 and D9 as well. C7 holds TX_INHIBIT_n up with 10k when the
+# panel is present, which wins over these three boards' 100k pull-downs in parallel (2.5 V, a solid high), so R59 stays 100k.
+# R58 IS 10 k SINCE 26 SEPTEMBER 2026 (MESHSAT-1357 round 4, fix-up pass 3, open item O-08; taken by the session under the
+# owner's standing rule of 26 September 2026). No resistor holds EMCON_HW up: C7 drives it with the push-pull buffer U9
+# (74LVC1G34, since 9 September), so nothing needs this pull-down to be weak. With the panel absent the line is held only
+# by the pull-downs, 100 k here and R102's 100 k on board A, 50 k together, against the leakage of every input that reads
+# it. At the datasheet maxima (-40 to +85 C) that is six SN74LVC08A inputs at +-5 uA (SCAS283W 5.7: U19 three, U20 one,
+# board A's U26 two), three powered STM32H743 TT_a inputs at +-250 nA (DS12110 Rev 10 Table 60) and Q11's gate at 80 nA
+# (CJ 2N7002 IGSS), 30.8 uA. At 50 k that is 1.54 V, above the LVC08's VIL of 0.8 V (5.4), so the panel-absent LOW was not
+# proven. At 10 k (9.09 k with R102) it is 0.28 V, and the line reaches 0.8 V only at 88 uA. An unpowered board C cannot
+# lift it (its U9 and R14 sit on a dead +3V3). The cost is 0.33 mA from U9 while EMCON is released.
+r("R58", "10k", "EMCON_HW", "GND"); r("R59", "100k", "TX_INHIBIT_n", "GND")
+# S-01, 26 September 2026: EMCON_ON is EMCON_HW inverted once for the board (high = EMCON asserted), so the three module
+# radio gates, the two WiFi card supply switches and (since fix-up pass 3) the three W_DISABLE1# open drains Q{s}06 add
+# one FET gate to EMCON_HW rather than eight logic inputs. With the panel absent R58 holds EMCON_HW low, Q11 is off (its
+# threshold is at least 1.0 V, CJ 2N7002) and R513 holds EMCON_ON high: asserted, which is the safe state.
+nfet("Q11", "EMCON_HW", "GND", "EMCON_ON", "2N7002: EMCON_ON = NOT EMCON_HW (S-01)"); r("R513", "10k", "EMCON_ON", "+3V3_DEV")
 # ================================================================= expanders, secure element, holdover clock, temperature (kit I2C bus, mastered by the panel controller over J_PANEL)
 _SEC_MARKS.append(('EXPANDERS, SECURE ELEMENT, HOLDOVER CLOCK, TEMPERATURE (KIT I2C BUS, MASTERED BY THE..', len(P)))
-part("U6", "Interface_Expansion", "PCA9555PW", "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio disables, 5G control)", "EXP", {
+# S-01, 26 September 2026: U6's module radio outputs are REQUESTS now (WL_nDISx_OFF, BT_nDISx_OFF, high = radio off,
+# 10 k pull-ups so the power-on state is off), each into its slot's gate U{s}11 and never onto a module pin. S-16, the same day: slot 1's module is the one on the WIFI 2.4 jack
+# (ASSEMBLY.md: "one Compute Module's antenna-kit lead (slot 1)", A's J_RF3, dtparam=ant2); slots 2 and 3 keep their
+# radios dark (WL_nDIS2/3_OFF and BT_nDIS2/3_OFF high) unless the panel firmware moves the local WiFi to them after losing slot 1.
+part("U6", "Interface_Expansion", "PCA9555PW", "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)", "EXP", {
  "24": "+3V3_DEV", "12": "GND", "22": "SCL", "23": "SDA", "1": "EXP_INT", "2": "GND", "21": "GND", "3": "GND",
  "4": "KSZ_RST", "5": "LIME_SW_EN", "6": "RB_SW_EN", "7": "LORA_ON", "8": "ZB_ON", "9": "CAM_EN", "10": "5G_OFF", "11": "5G_RESET",
- "13": "WL_nDIS1", "14": "WL_nDIS2", "15": "WL_nDIS3", "16": "BT_nDIS1", "17": "BT_nDIS2", "18": "BT_nDIS3", "19": "RB_IEN", "20": "RB_CTRL"}, "C2864778")
+ "13": "WL_nDIS1_OFF", "14": "WL_nDIS2_OFF", "15": "WL_nDIS3_OFF", "16": "BT_nDIS1_OFF", "17": "BT_nDIS2_OFF", "18": "BT_nDIS3_OFF", "19": "RB_IEN", "20": "RB_CTRL"}, "C2864778")
 part("U7", "Interface_Expansion", "PCA9555PW", "PCA9555PW 0x25: inputs (faults, RockBLOCK status) and spares", "EXP", {
  "24": "+3V3_DEV", "12": "GND", "22": "SCL", "23": "SDA", "1": "EXP_INT", "2": "GND", "21": "+3V3_DEV", "3": "+3V3_DEV",
  "4": "LIME_FLT", "5": "RB_FLT", "6": "CAM_FLT", "7": "RB_STATUS", "8": "RB_XMTG", "9": "EXP_SPARE1", "10": "EXP_SPARE2", "11": "EXP_SPARE3",
@@ -781,7 +1077,10 @@ esd("U37", "USB_PNL_P", "USB_PNL_N", "+3V3_DEV")
 part("J_AB1", "Connector_Generic", "Conn_02x13_Odd_Even", "A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)", "IDC26", {
  "1": "USB_D8_P", "2": "USB_D8_N", "3": "GND", "4": "GND", "5": "GND", "6": "GND", "7": "GND", "8": "GND", "9": "PI_SHDN_REQ", "10": "PI_KILL", "11": "SDA", "12": "SCL",
  "13": "EXP_INT", "14": "TR_APRS", "15": "EMCON_HW", "16": "TX_INHIBIT_n", "17": "SLOT_EN1", "18": "SLOT_EN2", "19": "SLOT_EN3", "20": "ZEROIZE_HW", "21": "SHORE_INHIBIT", "22": "GND", "23": "GND", "24": "GND", "25": "USB_E6_P", "26": "USB_E6_N"})
-part("J_AB2", "Connector_Generic", "Conn_02x05_Odd_Even", "A-B wall-port ribbon (IDC 2x5): the wall USB pair on the END row with eight grounds behind it", "IDC10", {
+# D-12 (owner ruling, 26 September 2026): the wall data path, bank 3 hub port 3 (USB_WALL), goes to the sealed Glenair
+# 233-370 USB receptacle and the USB-C outlet becomes power only. Nothing changes on this board: the pair still leaves
+# on J_AB2 pins 1 and 2 with U29 at its hub end, and board A routes it to the Glenair pigtail (drafts/r4-interfaces.md).
+part("J_AB2", "Connector_Generic", "Conn_02x05_Odd_Even", "A-B wall-port ribbon (IDC 2x5): the wall USB pair (bank 3 hub port 3) on the END row with eight grounds behind it, to board A's pigtail for the sealed Glenair 233-370 (D-12)", "IDC10", {
  "1": "USB_WALL_P", "2": "USB_WALL_N", "3": "GND", "4": "GND", "5": "GND", "6": "GND", "7": "GND", "8": "GND", "9": "GND", "10": "GND"})
 for i, net in enumerate(("+5V_DEV", "+3V3_DEV", "+1V2_KSZ", "+2V5_KSZ", "VBAT", "EMCON_HW", "ZEROIZE_HW", "GNSS_PPS", "SDA", "SCL", "+54V_POE", "POE_DRAIN", "+5V_LIME", "+5V_RB", "+5V_LORA", "+3V3_ZB", "HDMI_SEL1", "HDMI_SEL2",
                         "+3V3_S1A", "+3V3_S1B", "+1V0_S1", "+1V1_S1", "+3V3_S2A", "+3V3_S2B", "+1V0_S2", "+1V1_S2", "+3V3_S3A", "+3V3_S3B", "+1V0_S3", "+1V1_S3"), 2):
@@ -791,7 +1090,7 @@ _SEC_MARKS.append(('THE I/O HIGH-AVAILABILITY CONTROL PLANE (ARCH-PCB-B-IOHA)', 
 # Three equivalent supervisors. They decide which module owns each bank and never carry a byte of peripheral traffic:
 # no USB, no PCIe and no Ethernet payload passes through one. Their decisions reach the fabric only through the 2-of-3
 # majority voters below, so a controller wedged in any state is outvoted by the other two and no firmware is trusted.
-# Watchdog and brownout are the H753's own IWDG and BOR. That is deliberate: an internal watchdog cannot save a core
+# Watchdog and brownout are the H743's own IWDG and BOR. That is deliberate: an internal watchdog cannot save a core
 # that has wedged with its outputs in the wrong state, and the thing that protects the system from that is the voter,
 # not a supervisor chip. Each controller still has its own regulator, its own reset and its own SWD access so it is a
 # failure domain of its own, and a shorted controller cannot pull the other two down through a shared rail.
@@ -800,12 +1099,26 @@ for _tag, _k in (("A", 0), ("B", 1), ("C", 2)):
     R_ = lambda n, _k=_k: "R%d" % (63 + 12 * _k + n)
     C_ = lambda n, _k=_k: "C%d" % (400 + 20 * _k + n)   # the slots take C101 to C394 (100 * s + n), so every global capacitor of this plane lives at 400 and above
     v33 = "+3V3_IOC%s" % _tag
+    # W5 TESTACCESS-B (IOHA A4 and A6), 26 September 2026: the LDO's EN is no longer tied to its input. It is pulled up
+    # to the device rail through 100 k (AP2112 DS39724 Rev 2-2: VIH 1.5 to 6.0 V, a 3 MOhm internal pull-down, so it sits
+    # at about 4.8 V) and a two-pin bench jumper J_IOCOFF_x shorts it to ground: fitted, the controller is unpowered
+    # (VIL 0.4 V; the 60 Ohm output discharge empties its rail), removed, it runs. Not fitted in service.
+    # Fix-up, 26 September 2026 (round-4 review, minor): the jumper's land is the SMD 1x02 (PH1x2S), for the reason the
+    # SWD land below records on 17 September 2026 (a through-hole header in these pockets cost 29 hard violations).
+    # In the fitted state EMCON_HW (PC5), HB1 (PA6), HB2 (PA7) and HB3 (PC4) still sit at up to 3.3 V on an H743 whose
+    # VDD is then 0 (the round-4 review's O-16). DS12110 Rev 10 answers it: Table 21 gives the input voltage on TT_xx
+    # pins an ABSOLUTE maximum of 4.0 V, not a VDD-relative one (FT_xxx: Min(VDD, ...) + 4.0 V, so 4.0 V unpowered),
+    # and Table 22 note 3 says "Positive injection is not possible on these I/Os and does not occur for input voltages
+    # lower than the specified maximum value", so nothing back-feeds the dark controller. The VDD + 0.3 V of Table 24
+    # is an operating condition of a powered part. PA4 and PA5 (HUBRST2/3, IINJ 0/0) are outputs, 100 k to GND.
     ic(U_(0), 5, "AP2112K-3.3 LDO: the private 3.3 V of controller %s, its own branch off the device rail" % _tag, "SOT235",
-       {"1": "+5V_DEV", "2": "GND", "3": "+5V_DEV", "4": "NC", "5": v33})
+       {"1": "+5V_DEV", "2": "GND", "3": "IOC%s_LDO_EN" % _tag, "4": "NC", "5": v33})
+    r(R_(3), "100k", "+5V_DEV", "IOC%s_LDO_EN" % _tag)
+    part("J_IOCOFF_%s" % _tag, "Connector_Generic", "Conn_01x02", "bench jumper, controller %s: fit to hold its LDO off (IOHA A4, A6); not fitted in service" % _tag, "PH1x2S", {"1": "IOC%s_LDO_EN" % _tag, "2": "GND"})
     c(C_(0), "1u", "+5V_DEV", "GND"); c(C_(1), "10u", v33, "GND", "C10u")
     for _n in range(2, 7): c(C_(_n), "100n", v33, "GND")
     m = {}
-    for _p, _nm in H753.items():
+    for _p, _nm in H743.items():
         if _nm == "VDD": m[_p] = v33
         elif _nm in ("VSS", "VSSA"): m[_p] = "GND"
         elif _nm == "VDDA": m[_p] = v33
@@ -821,12 +1134,16 @@ for _tag, _k in (("A", 0), ("B", 1), ("C", 2)):
               22: "SEL1_%s" % _tag, 23: "SEL2_%s" % _tag, 24: "SEL3_%s" % _tag,
               25: "HUBRST1_%s" % _tag, 28: "HUBRST2_%s" % _tag, 29: "HUBRST3_%s" % _tag,
               30: "HB1", 31: "HB2", 32: "HB3",
-              33: "EMCON_HW", 34: "IOC%s_LED_A" % _tag, 35: "SDA", 36: "SCL",
+              # W5-F3 / W6-F4, 26 September 2026: the kit I2C status path (IOHA section 6) sat on pins 35/36, PB1/PB2,
+              # which have no I2C function on the H743 or the H753. It moves to pins 92/93, PB6 = I2C1_SCL and PB7 =
+              # I2C1_SDA (AF4, DS12110 Rev 10 Table 11), both FT_f/FT_fa (5 V tolerant, Fm+), free on this map.
+              33: "EMCON_HW", 34: "IOC%s_LED_A" % _tag, 92: "SCL", 93: "SDA",
               37: "WSEC_%s" % _tag,
               # read-back of the voted bits: without it a voter stuck at one value is invisible to the plane, and the
               # FMEA had no detection for that row. Four inputs, no parts, and the outputs are push-pull already.
               38: "BSEL1", 39: "BSEL2", 40: "BSEL3", 41: "WIFI_SEC"})
-    synth(U_(1), "STM32H753VI", "STM32H753VITx I/O supervisor %s: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset" % _tag, "LQFP100", m, "C114409")   # the buyable H7: the STM32H753VIT6 (C730206) has no JLC stock, and the H743VIT6 is the same die and pinout without the crypto accelerator, which an I/O supervisor does not use
+    # D-13, 26 September 2026: the symbol, the value and the order line name the part bought, STM32H743VIT6 (C114409).
+    synth(U_(1), "STM32H743VI", "STM32H743VIT6 I/O supervisor %s: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset" % _tag, "LQFP100", m, "C114409")
     c(C_(7), "2.2u", "IOC%s_VCAP" % _tag, "GND"); c(C_(8), "2.2u", "IOC%s_VCAP" % _tag, "GND")
     r(R_(0), "10k", "IOC%s_RST_n" % _tag, v33); c(C_(9), "100n", "IOC%s_RST_n" % _tag, "GND")
     r(R_(1), "10k", "IOC%s_BOOT0" % _tag, "GND")
@@ -842,14 +1159,22 @@ for _tag, _k in (("A", 0), ("B", 1), ("C", 2)):
     # two CAN-FD transceivers on two INDEPENDENT fabrics, so neither a broken bus nor a failed transceiver can take both
     # heartbeat paths from a controller. TI TCAN334D, 3.3 V, CAN FD to 5 Mbps: https://www.ti.com/product/TCAN334
     for _f, _rx, _tx, _un in (("A", "IOC%s_CAN1_RX" % _tag, "IOC%s_CAN1_TX" % _tag, 3), ("B", "IOC%s_CAN2_RX" % _tag, "IOC%s_CAN2_TX" % _tag, 4)):
+        _seg = "1" if _tag == "A" else ""   # controller A sits on its own segment, behind the break links below
         ic(U_(_un), 8, "TCAN334D CAN-FD transceiver, controller %s on heartbeat fabric %s" % (_tag, _f), "SOIC8",
-           {"1": _tx, "2": "GND", "3": v33, "4": _rx, "5": "NC", "6": "CANL_%s" % _f, "7": "CANH_%s" % _f, "8": "GND"}, "C2871143")
+           {"1": _tx, "2": "GND", "3": v33, "4": _rx, "5": "NC", "6": "CANL_%s%s" % (_f, _seg), "7": "CANH_%s%s" % (_f, _seg), "8": "GND"}, "C2871143")
 # Each fabric is terminated at BOTH physical ends, which are controller A's pocket and controller C's: a bus terminated
 # once, in the middle, reflects off both ends. Split termination (two 60R4 to a 4.7 nF) at each end, so 120.8 ohm twice.
 # The two fabrics keep separate termination so a shorted terminator on one cannot load the other.
 # the slots take R101 to R394 (100 * s + n), so the plane's shared passives live at 470 and above
-r("R470", "60R4 1%", "CANH_A", "CANT_A"); r("R471", "60R4 1%", "CANT_A", "CANL_A"); c("C460", "4.7n", "CANT_A", "GND")
-r("R472", "60R4 1%", "CANH_B", "CANT_B"); r("R473", "60R4 1%", "CANT_B", "CANL_B"); c("C461", "4.7n", "CANT_B", "GND")
+# W5 TESTACCESS-B (IOHA A7, "cut fabric A, then fabric B"), 26 September 2026: each fabric has a break link between
+# controller A's pocket and the rest, two 0 Ohm per fabric (CANH and CANL). Removed, controller A and its end's
+# termination are cut off that fabric; fitted, the bus is as before. Controller A's segment is CANH_x1/CANL_x1 and
+# keeps the west termination R470 to R473; B, C and the east termination R504 to R507 stay on CANH_x/CANL_x.
+r("R470", "60R4 1%", "CANH_A1", "CANT_A"); r("R471", "60R4 1%", "CANT_A", "CANL_A1"); c("C460", "4.7n", "CANT_A", "GND")
+r("R472", "60R4 1%", "CANH_B1", "CANT_B"); r("R473", "60R4 1%", "CANT_B", "CANL_B1"); c("C461", "4.7n", "CANT_B", "GND")
+for _r0, _f in (("R508", "A"), ("R511", "B")):
+    r(_r0, "0R (break link: remove to cut fabric %s between controller A and B/C, IOHA A7)" % _f, "CANH_%s1" % _f, "CANH_%s" % _f, "R", "C21189")
+    r("R%d" % (int(_r0[1:]) + 1), "0R (break link: remove to cut fabric %s between controller A and B/C, IOHA A7)" % _f, "CANL_%s1" % _f, "CANL_%s" % _f, "R", "C21189")
 r("R504", "60R4 1%", "CANH_A", "CANT2_A"); r("R505", "60R4 1%", "CANT2_A", "CANL_A"); c("C506", "4.7n", "CANT2_A", "GND")
 r("R506", "60R4 1%", "CANH_B", "CANT2_B"); r("R507", "60R4 1%", "CANT2_B", "CANL_B"); c("C507", "4.7n", "CANT2_B", "GND")
 
@@ -905,6 +1230,14 @@ CTRL_BITS = ("SEL1", "SEL2", "SEL3", "HUBRST1", "HUBRST2", "HUBRST3", "WSEC")
 for _j, _bit in enumerate(CTRL_BITS):
     for _i, _t in enumerate(("A", "B", "C")):
         r("R%d" % (480 + 3 * _j + _i), "100k", "%s_%s" % (_bit, _t), "GND")
+# W5 TESTACCESS-B, 26 September 2026: the pads the IOHA kill tests need (ARCH-PCB-B-IOHA section 13). A ground pad in
+# each controller pocket (every scope reading, A10); the voted lines and the mux enables (A8 forces a voter output,
+# A10 scopes BOE against BSEL); every controller's own seven outputs (A5 pulls a held controller's GPIOs the wrong way);
+# CANH and CANL of each fabric on the B/C segment (A7 scopes it, or shorts it to take the fabric down).
+_tp = 501
+for _net in (["GND"] * 3 + ["BSEL1", "BSEL2", "BSEL3", "BOE1_n", "BOE2_n", "BOE3_n", "WIFI_SEC", "HUBRST1_VOTE", "HUBRST2_VOTE", "HUBRST3_VOTE"]
+             + ["%s_%s" % (_bit, _t) for _bit in CTRL_BITS for _t in ("A", "B", "C")] + ["CANH_A", "CANL_A", "CANH_B", "CANL_B"]):
+    _TP(_tp, _net); _tp += 1
 
 # Break before make, in hardware. Any change of a voted select charges an RC through an exclusive-or against the
 # undelayed select, which raises the mux output enable for the RC time and drops it again once both sides agree. The
@@ -939,7 +1272,8 @@ for _ch, _u, _c0 in (("A", "U82", 500), ("B", "U83", 503)):
        {"1": "SW%s_O1" % _ch, "2": "GND", "3": "SW%s_O2" % _ch, "4": "WIFI_SEC", "5": "SW%s_IN" % _ch, "6": "WIFI_PRI"}, "C129189")
 
 RAILS = ["+5V_DEV", "+3V3_DEV", "+1V2_KSZ", "+2V5_KSZ", "VBAT", "+54V_POE", "+5V_LIME", "+5V_RB", "+5V_LORA", "+3V3_ZB", "+5V_HDMI", "+5V_CAM", "VBUS_QMX", "PANEL_5V", "GND", "POE_P", "POE_DRAIN", "GNSS_3V3", "ZBA_3V3", "ZBB_3V3", "RB_3V3"]
-for s in (1, 2, 3): RAILS += ["+5V_S%d" % s, "+3V3_S%dA" % s, "+3V3_S%dB" % s, "+1V0_S%d" % s, "+1V1_S%d" % s, "+3V3_CM%d" % s, "+1V8_CM%d" % s, "VBUS_FLASH%d" % s]
+for s in (1, 2, 3): RAILS += ["+5V_S%d" % s, "+3V3_S%dA" % s, "+3V3_S%dB" % s, "+1V0_S%d" % s, "+1V1_S%d" % s, "+3V3_CM%d" % s, "+1V8_CM%d" % s, "VBUS_FLASH%d" % s,
+                               "+3V3_M2C%d" % s]   # 26 September 2026: the socket side of the Kelvin shunt feeds the socket's power pins
 for i, net in enumerate(RAILS, 1): part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", {"1": net})
 
 # ----------------------------------------------------------------- emit (as B15)
@@ -952,7 +1286,7 @@ byref = {p["ref"]: p for p in P}
 def refs_matching(pred): return [p["ref"] for p in P if pred(p["ref"])]
 SECTIONS = [("SHARED POWER: DEVICE RAIL, +3V3_DEV, KSZ CORE RAILS, CR2032", ["J_5V_DEV", "D1", "C1", "C2", "U25", "L1", "C3", "C4", "C5", "C6", "U26", "L2", "C7", "C8", "C9", "C10", "C11", "R1", "R2", "U27", "C12", "C13", "BT1"] + ["TP%d" % k for k in range(2, 32)] + ["TP%d" % k for k in range(41, 52)] + ["#FLG%02d" % k for k in range(1, len(RAILS) + 1)])]
 for s in (1, 2, 3):
-    mine = lambda ref, s=s: (ref[0] in "RCLQDUY" and ref[1:].isdigit() and 100 * s <= int(ref[1:]) < 100 * (s + 1)) or ref in ("U3%dA" % (s - 1), "U3%dB" % (s - 1)) or ref.startswith("LED%d" % s) and len(ref) == 5 or ref.endswith("%d" % s) and ref.startswith(("J_5V_S", "J_FAN", "J_FLASH", "J_RPIBOOT", "J_DBG", "J_SPI", "J_M2N", "J_M2C")) or (s == 2 and ref in ("J_SIM1", "J_SIM2"))
+    mine = lambda ref, s=s: (ref[0] in "RCLQDUY" and ref[1:].isdigit() and 100 * s <= int(ref[1:]) < 100 * (s + 1)) or ref in ("U3%dA" % (s - 1), "U3%dB" % (s - 1)) or ref.startswith("LED%d" % s) and len(ref) == 5 or ref.endswith("%d" % s) and ref.startswith(("J_5V_S", "J_FAN", "J_FLASH", "J_RPIBOOT", "J_DBG", "J_SPI", "J_M2N", "J_M2C")) or (s == 2 and ref in ("J_SIM1", "J_SIM2")) or ref in SLOT_EXTRA[s]
     SECTIONS.append(("SLOT S%d: COMPUTE MODULE 5, PCIe SWITCH, USB 3 HUB, M.2 SOCKETS, RAILS, SUPPORT" % s, refs_matching(mine)))
 placed_refs = {r_ for _, rs in SECTIONS for r_ in rs}
 for _k, (_t, _s) in enumerate(_SEC_MARKS):   # one section per heading of the shared area, the parts registered under it

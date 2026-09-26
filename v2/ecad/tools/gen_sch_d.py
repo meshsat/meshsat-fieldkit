@@ -11,8 +11,10 @@ codec, port 2 a CP2102N bridge to the SA868's UART with RTS as the software PTT,
 antenna SMA (pigtail to A22's VHF jack), the PA gate bias regulated to 4.48 V by a TLV75801P enabled by PA_KEY, a TPA6132A2 headphone amplifier
 driving the two headset leads (U-174/U jacks on the face plate) with the
 receive audio and the codec's playback, a TLV9062 microphone summing preamplifier into the exciter's MIC_IN together with the codec's transmit audio,
-the PTT logic in single-gate 74LVC1G parts (KEY = any PTT AND TX_INHIBIT_n; PA_KEY = KEY AND PA_EN), a PCA9555 at 0x26 on the kit I2C bus (harness
-+3V3, level stages into the mezzanine's own 3.3 V domain), LEDs and test points. The RA30H1317M1 PA module bolts to the face plate (32.56): its
+the PTT logic in single-gate 74LVC1G parts (KEY = any PTT AND TX_INHIBIT_n; PA_KEY = KEY AND PA_EN; the SA868's PTT pulled low by an open-drain
+inverter and otherwise held at receive by a divider from the exciter's own rail), a PCA9555 at 0x26 on the kit I2C bus (harness
++3V3, level stages into the mezzanine's own 3.3 V domain, and one-way buffers where it reads KEY and PA_KEY back, so no software pin shares a
+conductor with the EMCON gates), LEDs and test points. The RA30H1317M1 PA module bolts to the face plate (32.56): its
 13.8 V comes from A22's J_PA lead directly, its drive and output coax and its VGG lead from this board's north edge.
 """
 import re, sys, os, uuid
@@ -63,11 +65,14 @@ _intent.rail("+3V3_D8", 3.3, 0.04, 0.17, "U1", budget=0.03, always_on=True, conv
              # J_HARN1 is NOT on this net: the gated 3.3 V that leaves on the harness is board A's +3V3, and the
              # intent validator said so on the first run, which is what it is for. U1 is the SOURCE of this rail
              # and cannot be a load of its own output, which is the same mistake from the other side.
+             # R4T-F9 and RF-002, 26 September 2026: Q6 and Q7 left this rail (KEY and PA_KEY are read back through
+             # one-way buffers on +3V3 now) and U18, the buffer that drives the PTT mirror TR_APRS, joined it, so the
+             # sum is unchanged at 0.039 A.
              loads={"U7": 0.020, "U9": 0.002, "U10": 0.002, "U11": 0.002, "U12": 0.002,
-                    "U13": 0.002, "U14": 0.002, "Q3": 0.001, "Q4": 0.001, "Q5": 0.001, "Q6": 0.001,
-                    "Q7": 0.001, "Q8": 0.001, "Q9": 0.001},
-             note="the local 3.3 V from U1: the six single-gate PTT and inhibit gates, "
-                  "their level shifters, the headphone amplifier's logic, the indicator LEDs and the pull-ups. "
+                    "U13": 0.002, "U14": 0.002, "U18": 0.002, "Q3": 0.001, "Q4": 0.001, "Q5": 0.001,
+                    "Q8": 0.001, "Q9": 0.001},
+             note="the local 3.3 V from U1: the six single-gate PTT and inhibit gates, the PTT mirror's buffer U18, "
+                  "the level shifters, the headphone amplifier's logic, the indicator LEDs and the pull-ups. "
                   "The USB hub moved to its own +3V4_HUB on 26 September 2026 (W6-F5). "
                   "Budget 3 percent: every consumer is a logic part with a wide supply range")
 # THE HUB'S OWN RAIL (W6-F5, 26 September 2026). The hub is now the industrial TUSB2046IBVFR, and TI's
@@ -135,9 +140,11 @@ _intent.rail("+5V_SA", 5.0, 0.35, 1.10, "FB1", budget=0.05, always_on=True, conv
                   "Budget 5 percent because the module's own range is 3.3 to 5.5 V")
 _intent.rail("+3V3", 3.3, 0.06, 0.10, "J_HARN1", budget=0.03, share=0.0075, always_on=True, converted=False,
              always_on_why="board A's gated 3.3 V arriving over the mezzanine harness; it is switched on board A by U12 and this board only consumes it",
-             loads={"U16": 0.060},
+             loads={"U16": 0.060, "U19": 0.002, "U20": 0.002},
              note="board A's always-on 3.3 V arriving over the mezzanine harness, which on this board feeds "
-                  "only the PTT inhibit's pull-ups through U16. It is a rail of board A and a load of this one")
+                  "the expander U16 with its level stages' far-side pull-ups, and since 26 September 2026 (RF-002) "
+                  "the two one-way buffers U19 and U20 that read KEY and PA_KEY back into U16. It is a rail of "
+                  "board A and a load of this one")
 
 SYMDIR = "/usr/share/kicad/symbols/"
 
@@ -265,6 +272,78 @@ r("R2", "100k", "TX_INHIBIT_n", "GND"); r("R3", "100k", "PA_EN", "GND")   # a di
 synth("U2", "SA868", "NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)", "SA868",
       {1: "SA_AUDIO_ON_n", 3: "AF_OUT", 5: "SA_PTT_n", 6: "SA_PD", 7: "SA_HL", 8: "+5V_SA", 9: "GND", 10: "GND", 12: "RF_SA", 16: "SA_RXD", 17: "SA_TXD", 18: "MIC_IN"})
 nfet("Q1", "PA_EN", "GND", "SA_HL", "2N7002 PA_EN -> H/L low (never tie H/L high)")
+# THE KEYING PIN HOLDS "RECEIVE" WHATEVER ITS GATE'S SUPPLY DOES (R4T-F9, review of the shared tools, round 4; 26 September
+# 2026, corrected on the re-review of round 6 the same day). SA_PTT_n is driven only by U13 on +3V3_D8 from the LDO U1, while
+# the SA868 runs on +5V_SA (FB1 from +5V_D8). Until round 6 the pin had no pull at all, so a failed U1 with +5V_D8 up left
+# the keying pin of a powered exciter floating. The SA868 v1.3 sheet (v2/vendor/nicerf, pin table) says only that pin 5 is
+# a "Module Input" on which "0" forces transmit and "1" receive; it states no internal pull, no input current and no input
+# levels. It also warns that another of its pins, H/L, "can NOT be connected to VDD or high level of cmos output", so a pin
+# of this module is not shown to take its own VBAT, and a pull straight to +5V_SA is not taken.
+# U1 FAILED OPEN IS NOT U1 AT 0 V. With U1's output open, +3V3_D8 is back-fed: through R5 (10k) from the CP2102N's RTS (U3
+# pin 24, on the bridge's own regulator SAU_3V3) whenever RTS idles high, and through R66 (10k) from the SA868's AUDIO_ON
+# output (pin 1, whose high level the sheet does not state). Its loads (LED1 on R1, LED6 on R51, LED2 and LED3 on R29 and
+# R30 only while the codec drives its REC and PLAY pins low, the gates' supply currents) bound nothing, so the rail can sit
+# anywhere from 0 V up to its highest back-feed source, and that source is what bounds it (second fix-up of round 6): a
+# logic output does not rise above the supply of the part that drives it. RTS sits on the CP2102N's own VDD, 3.1 to 3.6 V
+# (Silabs CP2102N Table 3.6; Table 5.1 gives the QFN28 no VIO pin, and Table 3.1 note 3 then makes VIO = VDD), and
+# AUDIO_ON on the SA868's only supply, +5V_SA, at most 5.23 V (+5V_D8's v_work; FB1 drops nothing at rest). So the
+# back-fed rail is at most 5.23 V, inside the 1.65 to 5.5 V operating range of every gate on it (TECH PUBLIC 74LVC1G08
+# page 2; SCES295AB 5.3; SCES214AF 5.3; DS36108, recommended operating conditions).
+# A push-pull U13 drives SA_PTT_n to that rail, and no divider overrides an active output.
+# SO U13 IS AN OPEN-DRAIN INVERTER, taken by the session under the owner's standing rule of 26 September 2026: TI
+# SN74LVC1G06DBVR (SCES295AB, October 2025, held: Table 4-1, DBV: 1 NC, 2 A, 3 GND, 4 Y, 5 VCC; 6.3.1, the output "sink[s]
+# current to GND but not ... source[s] current from VCC"; Figure 6-2 gives the output only a clamp diode to GND, so nothing
+# joins Y to VCC; VO 0 to 5.5 V at any VCC; Ioff +-10 uA at VCC 0; VOL 0.4 V at 16 mA with VCC 3 V; VIL 0.8 V at VCC 3 to
+# 3.6 V; -40 to +125 C). LCSC C840103, JLC API 2026-09-26T11:55Z: Texas Instruments SN74LVC1G06DBVR, SOT-23-5, stock 8,537.
+# KEY high pulls SA_PTT_n low (transmit); KEY low releases it, and R88 and R89 alone set it (receive), so while the output
+# is off the level on the pin does not depend on +3V3_D8 at all. The output is off:
+#   (i) with +3V3_D8 at 0 V (U1's output shorted, or nothing back-feeding): U13 is in Ioff, its output high impedance
+#   (SCES295AB 6.3.4);
+#   (ii) with +3V3_D8 anywhere in 1.65 to 5.5 V, the operating range of U12 and U13 (TECH PUBLIC 74LVC1G08 sheet, page 2;
+#   SCES295AB 5.3), so over the whole back-fed range up to 5.23 V, whenever EMCON is asserted: EMCON's contact holds
+#   TX_INHIBIT_n at ground, and U12 holds KEY at or under its VOL of 0.1 V (the 100 uA row, which TECH PUBLIC page 3 gives
+#   for VCC 1.65 to 5.5 V; while KEY is low U12 sinks only its readers' input leakage, since R84 and R49 lead to ground).
+#   Both inputs are then under every VIL row the sheets tabulate, 0.3 x VCC at 4.5 to 5.5 V included. Between those rows
+#   (1.95 to 2.3, 2.7 to 3.0 and 3.6 to 4.5 V) neither sheet tabulates VIL; the EMCON-asserted inputs sit near 0 V there,
+#   under a fifth of the lowest VIL either sheet gives anywhere in 1.65 to 5.5 V (0.35 x 1.65 V = 0.58 V), so the
+#   conclusion holds there too;
+#   (iii) with EMCON released and no PTT asked for, when U12 also drives KEY low; this is shown only with +3V3_D8 at 3.6 V
+#   or less (see NOT PROVEN EITHER, below).
+# NOT PROVEN: +3V3_D8 above 0 and below 1.65 V, where no sheet specifies U9 to U14, and R84 holds KEY only against their
+# leakage. What the rail sits at with U1 open, and that the exciter stays in receive there, are a bench measurement OWED to
+# TEST-PLAN.md, not in it yet. SA_PD at a back-fed level (R76 to +3V3_D8) may select power-down or normal work, and the
+# pin table gives transmit to pin 5 at "0" only, so no level on pin 6 keys the module.
+# NOT PROVEN EITHER (found on the second fix-up of round 6; EMCON released, so not a D-05 case): no PTT asked for with
+# +3V3_D8 back-fed above 3.6 V. PTT_SW_n idles where the CP2102N's RTS holds it, toward that part's own VDD (3.1 to 3.6 V,
+# Silabs Table 3.6), not at the rail. The sheets tabulate no VIH from 3.6 to 4.5 V, and from 4.5 V their 0.7 x VCC
+# (3.15 V at 4.5 V) is already above the CP2102N's 3.1 V floor, so U10 is not shown to read an idle RTS as high there, and
+# a software PTT could key the exciter. The rail reaches that band only if AUDIO_ON's high level, which the SA868 sheet
+# does not state, is above 3.6 V. The same bench measurement, with EMCON released and RTS idle, decides it; no circuit
+# change is made for it in this round.
+# THE PULL: a divider from the exciter's own rail, live whenever the exciter is, bounded by the level the pin has been driven
+# with in every earlier cut (a 3.3 V output on +3V3_D8, at most 3.333 V from U1's +-1 percent, TI SBVS320D). R88 1.2k from
+# +5V_SA over R89 2.0k to ground, 0.625 nominal, UNI-ROYAL 0603WAF at +-1 percent and +-100 ppm/C (JLC API
+# 2026-09-26T12:01Z: C22765 and C22975, both BASIC), taken over 65 K as +-1.65 percent each. It was 12k over 20k in the first
+# cut of round 6; it now sets the receive level in service as well, and the SA868 states no pin 5 current, so the Thevenin
+# comes down tenfold, to 0.76k, where 10 uA moves the pin 7.6 mV instead of 76 mV:
+#   top: 5.23 V (+5V_D8's v_work; the ferrite drops nothing at rest) x 0.6327 = 3.309 V, 3.317 V with +-10 uA from U13's
+#   output. That term is a STAND-IN: SCES295AB states no off-state output current with VCC applied, and the +-10 uA is
+#   Ioff, its VCC = 0 figure, the only one held for this pin, with no sign given (at 0.76k even 100 uA would move the pin
+#   only 76 mV);
+#   bottom: 4.35 V (the source's 4.90 V less both declared drop budgets, +5V_D8's 6 and +5V_SA's 5 percent, a transmit
+#   current worst case, so conservative for the receive state this pull is for) x 0.6172 = 2.685 V, 2.677 V with the same
+#   stand-in; nominal 3.18 V at 5.088 V.
+#   The 3.333 V ceiling is this design's own choice, the level the pin has always been driven with, not a limit the SA868
+#   sheet states. The band carries tolerance and TCR only: no UNI-ROYAL sheet with an endurance drift figure is held, and
+#   the top corner sits 16 mV under that ceiling.
+# Costs: U13 low (transmit) sinks at most 5.23 V / 1.18k = 4.4 mA, inside the 16 mA at which SCES295AB gives VOL 0.4 V at
+# VCC 3 V; R88 then dissipates 23 mW of its 100 mW; the divider draws 1.7 mA from +5V_SA. The census tx_inhibit.py takes
+# against a forced "1" is R89's 3.3 V / 1.97k = 1.7 mA, inside its 4 mA.
+# WHAT THIS DOES NOT PROVE: the SA868's threshold for "1" and its pin 5 current. The pin reads 2.68 to 3.32 V in every
+# state, 3.18 V nominal, where the push-pull U13 of earlier cuts gave 3.17 V or more in service. The level on SA_PTT_n
+# with U1 fitted, with U1 unfitted and with U1's output shorted, and that the exciter stays in receive in each (no carrier
+# into a dummy load), are a bench measurement OWED to TEST-PLAN.md, not in it yet.
+r("R88", "1.2k", "+5V_SA", "SA_PTT_n", lcsc="C22765"); r("R89", "2k", "SA_PTT_n", "GND", lcsc="C22975")
 cp2102("U3", "SAU", "+5V_D8", "USB2_P", "USB2_N", "SA_RXD", "SA_TXD", rts="PTT_SW_n", refs=("R4", "C10", "C11"))   # the bridge's TXD into the exciter's RXD; RTS low = software PTT
 r("R5", "10k", "PTT_SW_n", "+3V3_D8")
 # --- USB hub TUSB2046I (self-powered, no EEPROM, 6 MHz crystal): upstream from the harness pair, port 1 the codec, port 2 the bridge, port 3 a spare header, port 4 terminated
@@ -438,17 +517,79 @@ part("D12", "Device", "D_TVS", "PESD5V0S1BA bidirectional ESD clamp at the jack:
 part("D13", "Device", "D_TVS", "PESD12VL1BA bidirectional ESD clamp at the jack: headset 2 microphone, above the electret bias", "SOD323", {"1": "GND", "2": "HS2_MIC"}, "C38558")
 part("D14", "Device", "D_TVS", "PESD5V0S1BA bidirectional ESD clamp at the jack: headset 2 push to talk", "SOD323", {"1": "GND", "2": "PTT_HS2_n"}, "C19224")
 # --- PTT and EMCON logic (74LVC1G, 3.3 V): KEY = (PTT headset 1 OR 2 OR software) AND TX_INHIBIT_n; the exciter keys on KEY; PA_KEY = KEY AND PA_EN drives the relay and the gate bias switch
-ic("U9", 5, "74LVC1G08 AND (1 A 2 B 3 GND 4 Y 5 VCC): both headset PTT lines idle high", "SOT235", {"1": "PTT_HS1_n", "2": "PTT_HS2_n", "3": "GND", "4": "PTT_HS_n", "5": "+3V3_D8"})
-ic("U10", 5, "74LVC1G08 AND: headsets AND software PTT (RTS)", "SOT235", {"1": "PTT_HS_n", "2": "PTT_SW_n", "3": "GND", "4": "PTT_ANY_n", "5": "+3V3_D8"})
-ic("U11", 5, "74LVC1G04 inverter (2 A 4 Y): PTT_ANY", "SOT235", {"1": "NC", "2": "PTT_ANY_n", "3": "GND", "4": "PTT_ANY", "5": "+3V3_D8"})
-ic("U12", 5, "74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)", "SOT235", {"1": "PTT_ANY", "2": "TX_INHIBIT_n", "3": "GND", "4": "KEY", "5": "+3V3_D8"})
-ic("U13", 5, "74LVC1G04 inverter: KEY -> SA868 PTT (low = transmit)", "SOT235", {"1": "NC", "2": "KEY", "3": "GND", "4": "SA_PTT_n", "5": "+3V3_D8"})
-ic("U14", 5, "74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state)", "SOT235", {"1": "KEY", "2": "PA_EN", "3": "GND", "4": "PA_KEY", "5": "+3V3_D8"})
+# THE FITTED GATES, NAMED (re-review of round 6, 26 September 2026). The certification bought U9, U10, U12 and U14 as TECH
+# PUBLIC 74LVC1G08GV (C19829591) and U11 and U13 as MDD 74LVC1G04GV (C53185133), while every figure this file quoted for them
+# came from TI's sheets. The 1G08 lines are pinned to the part bought, and its maker's sheet is held (LCSC C19829591, six
+# pages, image only, sha256 37d1f4d4: page 1, SOT-23-5 1 A, 2 B, 3 GND, 4 Y, 5 VCC and "power down protection"; page 2, VCC
+# 1.65 to 5.5 V and an input transition of 10 ns/V at 3.3 V; page 3, over -40 to +125 C, VIL 0.8 V and VIH 2 V at VCC 3.0 to
+# 3.6 V, VOL 0.1 V at 100 uA, 0.55 V at 24 mA at 25 C and 0.8 V over temperature, II +-5 uA, IOFF +-10 uA at VCC 0). No
+# maker's sheet is held for the MDD part, and JLC gives none for C53185133, so U11 moves to TI SN74LVC1G04DBVR (C7827, JLC
+# API 2026-09-26T11:55Z: Texas Instruments, SOT-23-5, stock 55,684; SCES214AF held: DBV 1 NC, 2 A, 3 GND, 4 Y, 5 VCC, Ioff
+# +-10 uA, VIL 0.8 V at VCC 3 to 3.6 V) and U13 to the open-drain SN74LVC1G06DBVR (R4T-F9, at R88 and R89 above).
+ic("U9", 5, "74LVC1G08 AND (1 A 2 B 3 GND 4 Y 5 VCC): both headset PTT lines idle high", "SOT235", {"1": "PTT_HS1_n", "2": "PTT_HS2_n", "3": "GND", "4": "PTT_HS_n", "5": "+3V3_D8"}, "C19829591")
+ic("U10", 5, "74LVC1G08 AND: headsets AND software PTT (RTS)", "SOT235", {"1": "PTT_HS_n", "2": "PTT_SW_n", "3": "GND", "4": "PTT_ANY_n", "5": "+3V3_D8"}, "C19829591")
+ic("U11", 5, "74LVC1G04 inverter (2 A 4 Y): PTT_ANY", "SOT235", {"1": "NC", "2": "PTT_ANY_n", "3": "GND", "4": "PTT_ANY", "5": "+3V3_D8"}, "C7827")
+ic("U12", 5, "74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)", "SOT235", {"1": "PTT_ANY", "2": "TX_INHIBIT_n", "3": "GND", "4": "KEY", "5": "+3V3_D8"}, "C19829591")
+ic("U13", 5, "74LVC1G06 open-drain inverter (2 A 4 Y): KEY -> SA868 PTT (low = transmit; released = receive, held by R88 and R89)", "SOT235", {"1": "NC", "2": "KEY", "3": "GND", "4": "SA_PTT_n", "5": "+3V3_D8"}, "C840103")
+ic("U14", 5, "74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state)", "SOT235", {"1": "KEY", "2": "PA_EN", "3": "GND", "4": "PA_KEY", "5": "+3V3_D8"}, "C19829591")
 # one 100 nF per gate, tied to its gate as data so the decoupling gate measures the loop instead of trusting the schematic order
 # (8 Sep 2026: the note below that these six gates carried no bypass capacitor was wrong, the capacitors existed since D8; what was
 # missing was the intent entry, so no gate ever measured the distance on the chain that keys a 30 W transmitter)
 for _i, _u in enumerate(("U9", "U10", "U11", "U12", "U13", "U14")): c("C%d" % (51 + _i), "100n", "+3V3_D8", "GND", bypass=(_u, "5"))
-r("R48", "100", "KEY", "TR_APRS")   # the PTT mirror to A22 (100k pull-down there): the TX lamp follows the real key line
+# NOTHING BUT LOGIC INPUTS AND PASSIVE PULLS ON KEY AND PA_KEY (RF-002, S-02 of the shared-tools review, round 4; owner
+# D-05 and appendix 32.50 item 3, 26 September 2026). EMCON holds KEY low through U12 (TX_INHIBIT_n low) and so PA_KEY low
+# through U14, but until today two pins that firmware sets shared KEY's conductor, and one shared PA_KEY's:
+#   U16 IO0_3 (pin 7, the PCA9555) through the level shifter Q6 (gate on +3V3_D8, source on KEY, drain on X_KEY). With KEY
+#   low Q6's channel is on, so U16's pin set as an output and driven high by a firmware error fights U12 through it;
+#   board C's U3 pin 35 (an RP2040 GPIO) through R48's 100 Ohm, the harness and boards A and B (TR_APRS);
+#   U16 IO0_4 (pin 8) on PA_KEY through Q7, the same shape, on the PA bias path (VGG through U15's EN, and the relay).
+# No held figure bounds those fights under the 0.8 V at which U13 and U14 are guaranteed to read low (VIL at VCC 3 to 3.6 V:
+# TI SCES295AB for U13, the TECH PUBLIC 74LVC1G08 sheet, page 3, for U14). U12 guarantees its VOL only up to 24 mA, and
+# there 0.55 V at 25 C and 0.8 V over -40 to +125 C, which is the VIL itself (the same sheet); the PCA9555's P port
+# sources about 43 mA at only 0.7 V under its supply (TI SCPS131J Figure 6-14, VCC 3.3 V, 25 C, typical) and is limited
+# only by its 50 mA absolute maximum (6.1); Q6's channel is not bounded at this gate voltage (the JSCJ 2N7002, C8545,
+# states RDS(on) only at VGS 5 V and 10 V); and the RP2040's drive into 100 Ohm is not bounded either. So a firmware error
+# could lift KEY into the region where U13 may key the SA868 with EMCON asserted: the hardware gate was NOT proven, and
+# tx_inhibit.py's RF-002 walk read FAIL for exactly these pins (Q6 to U16 pin 7, and R48 to C's U3 pin 35). It was not a
+# tool artefact.
+# THE REMEDY, taken by the session under the owner's standing rule of 26 September 2026 (the remedy the shared-tools
+# review names for board D: read KEY back through a one-way buffer, drive the mirror through one): three 74LVC1G34 buffers,
+# Diodes 74LVC1G34W5-7, proven on their own evidence: the maker's sheet, DS36108 Rev. 10-2, April 2021, held (sha256
+# efd2d797: SOT25 pin 1 NC, 2 A, 3 GND, 4 Y, 5 VCC; inputs accept up to 5.5 V at any VCC; IOFF +-10 uA; II +-1 uA at -40 to
+# 85 C and +-2 uA to 125 C; IOH and IOL 24 mA at VCC 3 V), and JLC's readback of C526347 as that part (JLC API
+# 2026-09-26T12:01Z: Diodes Incorporated 74LVC1G34W5-7, SOT-25, stock 1,944). Its input transition limit is 10 ns/V at VCC
+# 3.3 V (DS36108, recommended operating conditions), the limit that moved board C's EMCON buffer off this part in round 4,
+# and it is met here: U18, U19 and U20 are driven only by the push-pull outputs of U12 and U14. The only slow edges on KEY
+# and PA_KEY follow +3V3_D8 itself, its ramp (when a PTT is held with EMCON released) and its decay through R84 and R85.
+# U18 runs on that same rail, so its input moves with its own supply; U19 and U20, on the always-on +3V3, feed only U16
+# through 1k, so a slow edge there can at most glitch an expander read.
+#   U18 on +3V3_D8 drives the mirror, PTT_MIR, then R48 to TR_APRS. A firmware pin on TR_APRS on A, B or C now meets U18's
+#   output, never KEY, and TR_APRS still follows KEY whenever this board's logic is powered. R48 is 220 Ohm since the
+#   re-review of round 6 (100 Ohm before): a pin driving TR_APRS against U18 draws at most 3.333 V / 216 Ohm = 15.4 mA,
+#   inside the 24 mA U18 is rated for at VCC 3 V (DS36108), where 100 Ohm allowed 34 mA (UNI-ROYAL 0603WAF2200T5E, C22962,
+#   JLC API 2026-09-26T11:55Z: BASIC, +-1 percent, +-100 ppm/C);
+#   U19 and U20 (below, with the expander) read KEY and PA_KEY into U16 through 1k. Q6, Q7 and their pulls R72 to R75 are
+#   gone, so on KEY there are now only U13, U14, U18 and U19 inputs, R49 to the transmit LED, R84 and a test point, and on
+#   PA_KEY only U15's EN, U20's input, R50 to the LED, R52 to the relay FET's gate, R85 and a test point.
+# AND KEY AND PA_KEY HOLD LOW WITH THEIR OWN GATES UNPOWERED (R4T-F9, same day). U12 and U14 run on +3V3_D8 from U1 while
+# U15 and the relay run on +5V_D8, so a U1 whose output is at 0 V leaves both outputs in IOFF with the PA bias regulator
+# powered. (With U1's output open and the rail back-fed to 1.65 V or more, U12 and U14 drive KEY and PA_KEY by their logic,
+# low while EMCON is asserted; under 1.65 V no sheet specifies them: see R4T-F9 at R88 and R89.) At 0 V:
+#   PA_KEY: R85 10k to ground, in parallel with R52 and R53 (101k), 9.25k at the resistors' high corner. The leakage it
+#   holds is at most 12.1 uA (U14's output unpowered, +-10 uA, TECH PUBLIC IOFF; U20's input, +-2 uA at 125 C (DS36108);
+#   Q2's gate, +-80 nA (JSCJ 2N7002); U15's EN, 10 nA typical (TI SBVS351D 5.5, no maximum)), 0.11 V, under the 0.3 V at which U15 is
+#   guaranteed OFF (VEN(LO), SBVS351D 5.5). With only R52 and R53 the same leakage could reach 1.2 V, above its 1.0 V
+#   VEN(HI), and before today R74 pulled PA_KEY toward the dead rail itself;
+#   KEY: R84 10k to ground. At most 42 uA (unpowered at +-10 uA each: U12's output and U14's input, TECH PUBLIC IOFF; U13's
+#   input, SCES295AB Ioff; U18's input, DS36108 IOFF; and U19's powered input, +-2 uA), 0.43 V, under U19's 0.8 V VIL, so U16
+#   reads "not keyed", which with U13 in Ioff and R88 and R89 on SA_PTT_n is true. With the harness +3V3 down as well,
+#   U19's input is in IOFF (+-10 uA, DS36108) instead: 50 uA, 0.51 V, still under 0.8 V, and U19 and U16 are then
+#   unpowered and read nothing. The two pull-downs ask U12 and U14 for 0.34 mA each when they drive high.
+ic("U18", 5, "74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): KEY -> PTT_MIR, the one-way driver of the PTT mirror TR_APRS", "SOT235",
+   {"1": "NC", "2": "KEY", "3": "GND", "4": "PTT_MIR", "5": "+3V3_D8"}, "C526347")
+c("C66", "100n", "+3V3_D8", "GND", bypass=("U18", "5"))
+r("R48", "220", "PTT_MIR", "TR_APRS", lcsc="C22962")   # the PTT mirror to A22 (100k pull-down there) and C's TX lamp, through U18; 220 Ohm bounds a fight to 15.4 mA
+r("R84", "10k", "KEY", "GND", lcsc="C25804"); r("R85", "10k", "PA_KEY", "GND", lcsc="C25804")
 led("LED4", "red transmit", "LED_TX_A", "GND"); r("R49", "1k", "KEY", "LED_TX_A"); led("LED5", "amber PA keyed", "LED_PA_A", "GND"); r("R50", "1k", "PA_KEY", "LED_PA_A")
 led("LED6", "green receive (AUDIO_ON low)", "LED_RX_A", "SA_AUDIO_ON_n"); r("R51", "2.2k", "+3V3_D8", "LED_RX_A")
 # --- T/R relay G6K-2F-Y (5 V coil; top view pins 8 7 6 5 over 1 2 3 4: coil 1 (+) 8 (-), pole 3-2-4 and 6-7-5 with 2 and 7 the rest contacts):
@@ -545,8 +686,31 @@ part("U16", "Interface_Expansion", "PCA9555PW", "PCA9555PW 0x26: COS, PTT states
  "4": "X_COS_n", "5": "X_PTT_HS1_n", "6": "X_PTT_HS2_n", "7": "X_KEY", "8": "X_PA_KEY", "9": "X_SA_PD", "10": "X_AMP_EN", "11": "X_MMUTE",
  "13": "EXP_SPARE1", "14": "EXP_SPARE2", "15": "EXP_SPARE3", "16": "EXP_SPARE4", "17": "EXP_SPARE5", "18": "EXP_SPARE6", "19": "EXP_SPARE7", "20": "EXP_SPARE8"})
 c("C63", "100n", "+3V3", "GND")
-for i, (far, near) in enumerate((("X_COS_n", "SA_AUDIO_ON_n"), ("X_PTT_HS1_n", "PTT_HS1_n"), ("X_PTT_HS2_n", "PTT_HS2_n"), ("X_KEY", "KEY"), ("X_PA_KEY", "PA_KEY"), ("X_SA_PD", "SA_PD"), ("X_AMP_EN", "AMP_EN")), 3):
+# The stages keep their numbers (Q3 to Q5, Q8, Q9 with R66 to R71 and R76 to R79) so the placement's ranges still name
+# them; stages 6 and 7 (Q6 on KEY, Q7 on PA_KEY) became the buffers U19 and U20 below (RF-002, 26 September 2026).
+for i, far, near in ((3, "X_COS_n", "SA_AUDIO_ON_n"), (4, "X_PTT_HS1_n", "PTT_HS1_n"), (5, "X_PTT_HS2_n", "PTT_HS2_n"), (8, "X_SA_PD", "SA_PD"), (9, "X_AMP_EN", "AMP_EN")):
     level("Q%d" % i, "R%d" % (60 + 2 * i), far, near, "+3V3_D8", "+3V3", "R%d" % (61 + 2 * i))
+# KEY AND PA_KEY ARE READ BACK ONE WAY (RF-002, see the PTT logic above). U19 and U20 run on the harness +3V3, U16's own
+# supply, so the read is true in every power state: with +3V3_D8 down, KEY and PA_KEY sit on R84 and R85 and U16 reads
+# "not keyed", where Q6 and Q7 had let X_KEY and X_PA_KEY float up to "keyed" on R73 and R75. KEY and PA_KEY at up to
+# 3.333 V into a buffer on a lower +3V3 are inside DS36108's 5.5 V input range, and with +3V3 down the inputs are in IOFF.
+# R86 and R87 (1k) are for a firmware error that makes IO0_3 or IO0_4 an output: it then fights only a buffer, at most
+# 3.7 mA, inside both parts' 50 mA ratings (DS36108; SCPS131J 6.1). Read levels on guaranteed figures: low, U19's VOL 0.1 V
+# at 100 uA plus U16's own pull-up (at most 100 uA, IIL, SCPS131J 6.5) across 1k, 0.2 V against U16's VIL of 0.3 x VCC
+# (0.9 V at 3.0 V); high, the pull-up only helps, against VIH 0.7 x VCC (SCPS131J 6.3).
+# DRAWING ONLY: R86 and R87 are written U16 side first, and R48 is listed with the harness in SECTIONS, so schlayout hangs
+# them on U16's and J_HARN1's lanes. Hung on the buffers' output lanes, schlayout's decoupling row (placed beside the part
+# without an occupancy check) put its rail bus through the series part's far label, and its own verify refused the drawing
+# on the first box run of 26 September 2026, and again when that drawing order was restored on the re-review's generator
+# for the record ("schlayout verify: SHORT ['+3V3_D8', 'TR_APRS']: pins [('R48', '2'), ('C66', '1')]" and "SHORT ['+3V3',
+# 'X_PA_KEY']: pins [('U16', '8'), ('R87', '2'), ('C68', '1')]"). The pin-to-net map is the same either way; a resistor's
+# pin order changes nothing electrical.
+ic("U19", 5, "74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): KEY read back into U16 IO0_3, one way (VCC the harness +3V3)", "SOT235",
+   {"1": "NC", "2": "KEY", "3": "GND", "4": "X_KEY_B", "5": "+3V3"}, "C526347")
+c("C67", "100n", "+3V3", "GND", bypass=("U19", "5")); r("R86", "1k", "X_KEY", "X_KEY_B", lcsc="C21190")
+ic("U20", 5, "74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): PA_KEY read back into U16 IO0_4, one way (VCC the harness +3V3)", "SOT235",
+   {"1": "NC", "2": "PA_KEY", "3": "GND", "4": "X_PA_KEY_B", "5": "+3V3"}, "C526347")
+c("C68", "100n", "+3V3", "GND", bypass=("U20", "5")); r("R87", "1k", "X_PA_KEY", "X_PA_KEY_B", lcsc="C21190")
 # TP25 on +3V4_HUB (review fix-up of round 4, 26 September 2026): the hub's own supply is to be measured at the
 # bench, a measurement OWED to TEST-PLAN.md and not in it yet, so the rail gets a pad of its own. Appended, so TP1
 # to TP24 keep their numbers and their seats in gen_pcb_d3.py.
@@ -563,8 +727,8 @@ kisch.configure(power=POWER, stub=STUB, root=ROOT, project=PROJECT, seed=PROJECT
 byref = {p["ref"]: p for p in P}
 
 def refs_matching(pred): return [p["ref"] for p in P if pred(p["ref"])]
-SECTIONS = [("HARNESS, 5 V ENTRY, 3.3 V LDO, EXCITER SUPPLY", ["J_HARN1", "J_PWR1", "D1", "C1", "C2", "C3", "C4", "FB1", "C5", "C6", "U1", "C7", "C8", "C9", "LED1", "R1", "R2", "R3"]),
-            ("SA868 EXCITER, UART BRIDGE, T/R RELAY, 10 dB PAD, LPF, PA LEADS, GATE BIAS REGULATOR", ["U2", "Q1", "U3", "R4", "C10", "C11", "R5", "K1", "Q2", "R52", "R53", "D2", "C57", "R54", "R55", "R56", "J_PAIN", "J_PAOUT", "C58", "L1", "C59", "L2", "C60", "J_ANT", "U15", "C61", "C62", "R82", "R83", "J_VGG"]),
+SECTIONS = [("HARNESS, 5 V ENTRY, 3.3 V LDO, EXCITER SUPPLY", ["J_HARN1", "R48", "J_PWR1", "D1", "C1", "C2", "C3", "C4", "FB1", "C5", "C6", "U1", "C7", "C8", "C9", "LED1", "R1", "R2", "R3"]),
+            ("SA868 EXCITER, UART BRIDGE, T/R RELAY, 10 dB PAD, LPF, PA LEADS, GATE BIAS REGULATOR", ["U2", "Q1", "R88", "R89", "U3", "R4", "C10", "C11", "R5", "K1", "Q2", "R52", "R53", "D2", "C57", "R54", "R55", "R56", "J_PAIN", "J_PAOUT", "C58", "L1", "C59", "L2", "C60", "J_ANT", "U15", "C61", "C62", "R82", "R83", "J_VGG"]),
             ("USB HUB TUSB2046I AND ITS 3.44 V LDO, PORT TERMINATIONS, SPARE PORT", ["U5", "R6", "R7", "R8", "U4", "R9", "R10", "C12", "U17", "C64", "C65", "R80", "R81", "Y1", "R11", "C13", "C14", "C15", "C16", "C17"] + ["R%d" % k for k in range(12, 26)] + ["J_USB3"]),
             ("USB AUDIO CODEC PCM2912A, HEADPHONE AMPLIFIER, MIC PREAMP, HEADSET LEADS", ["R26", "R27", "R28", "U6"] + ["C%d" % k for k in range(18, 28)] + ["Y2", "LED2", "R29", "LED3", "R30", "R31", "R32", "C28", "R33", "R34", "U7"] + ["C%d" % k for k in range(29, 34)] +
              ["R35", "C34", "R36", "R37", "C35", "C36", "C37", "C38", "U8", "C39", "R38", "R39", "C40", "C41", "R40", "C42", "R41", "R42", "C43", "JP1", "R43", "JP2", "R44", "C44", "C45", "C46", "R45", "C47", "R46", "R47", "C48", "J_HS1", "J_HS2", "C49", "C50", "D9", "D10", "D11", "D12", "D13", "D14"])]

@@ -22,43 +22,46 @@ fault from one that reads low.
 
 | step | rail | apply | current limit | at | what it feeds |
 |---|---|---|---|---|---|
-| 1 | VIN_RAW | 12.00 V | 8.00 A | J_DOCK | C11, C12, Q2 |
+| 1 | VIN_RAW | 12.00 V | 12.31 A | J_DOCK | C11, C12, Q2 |
 | 2 | CELL+ | 14.40 V | 10.00 A | J_CP1 | F1 |
-| 3 | VBAT | 14.40 V | 10.00 A | F1 | Q11, U12, U15, U4, U5, U6 |
+| 3 | CELL_FUSED | 14.40 V | 10.00 A | F1 | R17 |
 
 **Measured, in this order, after the inputs are up.**
 
 | step | rail | expect | at | what it feeds |
 |---|---|---|---|---|
-| 1 | +5V_DEV | 5.00 V (4.75 to 5.25) | R43 | J_5V_DEV |
+| 1 | +5V_DEV | 5.00 V (4.75 to 5.25) | R43 | J_5V_DEV, U23, U32 |
 | 2 | +5V_D8 | 5.00 V (4.75 to 5.25) | U23 | J_MEZZ_PWR1 |
-| 3 | +5V_S1 | 5.10 V (4.84 to 5.35) | R31 | J_5V_S1 |
-| 4 | +5V_S2 | 5.10 V (4.84 to 5.35) | R35 | J_5V_S2 |
-| 5 | +5V_S3 | 5.10 V (4.84 to 5.35) | R39 | J_5V_S3 |
-| 6 | +12V_HF | 12.00 V (11.40 to 12.60) | R65 | J_HF |
-| 7 | HF_OUT | 12.00 V (11.40 to 12.60) | Q24 | R65 |
-| 8 | +13V8_PA | 13.80 V (13.11 to 14.49) | R55 | J_PA |
-| 9 | PA_OUT | 13.80 V (13.11 to 14.49) | Q14 | R55 |
-| 10 | CH_SRP | 14.40 V (13.68 to 15.12) | Q10 | R17 |
-| 11 | PD_VPWR | 15.00 V (14.25 to 15.75) | R81 | Q27 |
-| 12 | PD_SW | 15.00 V (14.25 to 15.75) | Q27 | R138 |
-| 13 | PD_VBUS | 15.00 V (14.25 to 15.75) | R138 | J_USBC_OUT |
-| 14 | PD_OUT | 15.00 V (14.25 to 15.75) | Q26 | R81 |
-| 15 | VBUS20 | 20.00 V (19.00 to 21.00) | R11 | R16 |
-| 16 | FE_OUT | 20.00 V (19.00 to 21.00) | Q5 | R11 |
-| 17 | CH_ACN | 20.00 V (19.00 to 21.00) | R16 | Q7 |
-| 18 | +54V_POE | 54.00 V (51.30 to 56.70) | R71 | J_54V |
-| 19 | POE_OUT | 54.00 V (51.30 to 56.70) | Q20 | R71 |
+| 3 | SD_OUT | 5.00 V (4.75 to 5.25) | Q35 | R43 |
+| 4 | VBUS_WALL | 5.00 V (4.75 to 5.25) | U32 | J_USBW |
+| 5 | +5V_S1 | 5.10 V (4.84 to 5.35) | R31 | J_5V_S1 |
+| 6 | +5V_S2 | 5.10 V (4.84 to 5.35) | R35 | J_5V_S2 |
+| 7 | +5V_S3 | 5.10 V (4.84 to 5.35) | R39 | J_5V_S3 |
+| 8 | S2_OUT | 5.10 V (4.84 to 5.35) | Q31 | R35 |
+| 9 | +12V_HF | 12.00 V (11.40 to 12.60) | R65 | J_HF |
+| 10 | HF_OUT | 12.00 V (11.40 to 12.60) | Q24 | R65 |
+| 11 | +13V8_PA | 13.80 V (13.11 to 14.49) | R55 | J_PA |
+| 12 | PA_OUT | 13.80 V (13.11 to 14.49) | Q14 | R55 |
+| 13 | VBAT | 14.40 V (13.68 to 15.12) | R17 | Q11, Q28, Q32, U12, U15, U22 |
+| 14 | VHEAT_IN | 14.40 V (13.68 to 15.12) | U22 | U33 |
+| 15 | PD_VPWR | 15.00 V (14.25 to 15.75) | R81 | Q27 |
+| 16 | PD_SW | 15.00 V (14.25 to 15.75) | Q27 | R138 |
+| 17 | PD_VBUS | 15.00 V (14.25 to 15.75) | R138 | J_USBC_OUT |
+| 18 | PD_OUT | 15.00 V (14.25 to 15.75) | Q26 | R81 |
+| 19 | VBUS20 | 20.00 V (19.00 to 21.00) | R11 | R16 |
+| 20 | FE_OUT | 20.00 V (19.00 to 21.00) | Q5 | R11 |
+| 21 | CH_ACN | 20.00 V (19.00 to 21.00) | R16 | Q7 |
+| 22 | +54V_POE | 54.00 V (51.30 to 56.70) | R71 | J_54V |
+| 23 | POE_OUT | 54.00 V (51.30 to 56.70) | Q20 | R71 |
 
 **Decide before powering: the declared source is an inductor or a ferrite, which is a filter on an incoming feed on some boards and a converter's output on others.**
 
 | rail | volts | current | source | what it feeds |
 |---|---|---|---|---|
 | +3V3 | 3.30 V | 0.30 A | L7 | J_MEZZ1, U10, U11, U14, U17, U26 |
-| SD_OUT | 5.00 V | 3.80 A | L6 | R43 |
 | S1_OUT | 5.10 V | 2.50 A | L3 | R31 |
-| S2_OUT | 5.10 V | 2.50 A | L4 | R35 |
 | S3_OUT | 5.10 V | 2.50 A | L5 | R39 |
+| VHEAT | 12.00 V | 0.63 A | L12 | J_HEAT |
 
 ## Board B
 
@@ -71,7 +74,7 @@ fault from one that reads low.
 | 3 | VBUS_QMX | 5.00 V | 0.30 A | F3 | J_QMX |
 | 4 | PANEL_5V | 5.00 V | 0.60 A | F1 | J_PANEL |
 | 5 | +5V_S1 | 5.10 V | 2.50 A | J_5V_S1 | J_FAN1, U103, U104, U105, U30A |
-| 6 | +5V_S2 | 5.10 V | 2.50 A | J_5V_S2 | J_FAN2, U203, U204, U205, U31A |
+| 6 | +5V_S2 | 5.10 V | 4.20 A | J_5V_S2 | J_FAN2, U203, U204, U205, U31A |
 | 7 | +5V_S3 | 5.10 V | 2.50 A | J_5V_S3 | J_FAN3, U303, U304, U305, U32A |
 | 8 | +54V_POE | 54.00 V | 0.30 A | J_54V | U5 |
 
@@ -84,17 +87,20 @@ fault from one that reads low.
 | 3 | +1V8_CM2 | 1.80 V (1.71 to 1.89) | U31A | U31A |
 | 4 | +1V8_CM3 | 1.80 V (1.71 to 1.89) | U32A | U32A |
 | 5 | +2V5_KSZ | 2.50 V (2.38 to 2.62) | U27 | U1 |
-| 6 | +3V3_CM1 | 3.30 V (3.13 to 3.46) | U30A | U30A |
-| 7 | +3V3_CM2 | 3.30 V (3.13 to 3.46) | U31A | U31A |
-| 8 | +3V3_CM3 | 3.30 V (3.13 to 3.46) | U32A | U32A |
-| 9 | +3V3_IOCA | 3.30 V (3.13 to 3.46) | U40 | U41, U42, U43, U44 |
-| 10 | +3V3_IOCB | 3.30 V (3.13 to 3.46) | U50 | U51, U52, U53, U54 |
-| 11 | +3V3_IOCC | 3.30 V (3.13 to 3.46) | U60 | U61, U62, U63, U64 |
-| 12 | +3V3_ZB | 3.30 V (3.13 to 3.46) | U22 | J_ZBDBG1, J_ZBDBG2, U13, U14 |
-| 13 | +5V_LORA | 5.00 V (4.75 to 5.25) | U21 | U12 |
-| 14 | +5V_LIME | 5.00 V (4.75 to 5.25) | U23 | J_LIME |
-| 15 | +5V_RB | 5.00 V (4.75 to 5.25) | U24 | J_RB9704 |
-| 16 | +5V_CAM | 5.00 V (4.75 to 5.25) | U28 | J_CAM |
+| 6 | +3V3_M2C1 | 3.30 V (3.13 to 3.46) | R165 | J_M2C1 |
+| 7 | +3V3_CM1 | 3.30 V (3.13 to 3.46) | U30A | U30A |
+| 8 | +3V3_CM2 | 3.30 V (3.13 to 3.46) | U31A | U31A |
+| 9 | +3V3_M2C3 | 3.30 V (3.13 to 3.46) | R365 | J_M2C3 |
+| 10 | +3V3_CM3 | 3.30 V (3.13 to 3.46) | U32A | U32A |
+| 11 | +3V3_IOCA | 3.30 V (3.13 to 3.46) | U40 | U41, U42, U43, U44 |
+| 12 | +3V3_IOCB | 3.30 V (3.13 to 3.46) | U50 | U51, U52, U53, U54 |
+| 13 | +3V3_IOCC | 3.30 V (3.13 to 3.46) | U60 | U61, U62, U63, U64 |
+| 14 | +3V3_ZB | 3.30 V (3.13 to 3.46) | U22 | J_ZBDBG1, J_ZBDBG2, U13, U14 |
+| 15 | +3V3_M2C2 | 3.46 V (3.28 to 3.63) | R265 | J_M2C2 |
+| 16 | +5V_LORA | 5.00 V (4.75 to 5.25) | U21 | U12 |
+| 17 | +5V_LIME | 5.00 V (4.75 to 5.25) | U23 | J_LIME |
+| 18 | +5V_RB | 5.00 V (4.75 to 5.25) | U24 | J_RB9704 |
+| 19 | +5V_CAM | 5.00 V (4.75 to 5.25) | U28 | J_CAM |
 
 **Decide before powering: the declared source is an inductor or a ferrite, which is a filter on an incoming feed on some boards and a converter's output on others.**
 
@@ -108,12 +114,12 @@ fault from one that reads low.
 | +1V1_S3 | 1.10 V | 0.40 A | L304 | U302 |
 | +1V2_KSZ | 1.20 V | 0.50 A | L2 | U1 |
 | +3V3_DEV | 3.30 V | 1.20 A | L1 | U1, U10, U102, U109, U11, U110 |
-| +3V3_S1A | 3.30 V | 0.50 A | L101 | J_M2C1 |
+| +3V3_S1A | 3.30 V | 0.50 A | L101 | R165 |
 | +3V3_S1B | 3.30 V | 0.90 A | L102 | J_M2N1, U101 |
-| +3V3_S2A | 3.30 V | 0.50 A | L201 | J_M2C2 |
 | +3V3_S2B | 3.30 V | 0.90 A | L202 | J_M2N2, U201 |
-| +3V3_S3A | 3.30 V | 0.50 A | L301 | J_M2C3 |
+| +3V3_S3A | 3.30 V | 0.50 A | L301 | R365 |
 | +3V3_S3B | 3.30 V | 0.90 A | L302 | J_M2N3, U301 |
+| +3V3_S2A | 3.46 V | 3.00 A | L201 | R265 |
 
 ## Board C
 
@@ -135,14 +141,14 @@ fault from one that reads low.
 
 | step | rail | apply | current limit | at | what it feeds |
 |---|---|---|---|---|---|
-| 1 | +3V3 | 3.30 V | 0.06 A | J_HARN1 | U16 |
+| 1 | +3V3 | 3.30 V | 0.06 A | J_HARN1 | U16, U19, U20 |
 | 2 | +5V_D8 | 5.00 V | 1.00 A | J_PWR1 | FB1, J_USB3, U1, U15, U17, U3 |
 
 **Measured, in this order, after the inputs are up.**
 
 | step | rail | expect | at | what it feeds |
 |---|---|---|---|---|
-| 1 | +3V3_D8 | 3.30 V (3.13 to 3.46) | U1 | Q3, Q4, Q5, Q6, Q7, Q8 |
+| 1 | +3V3_D8 | 3.30 V (3.13 to 3.46) | U1 | Q3, Q4, Q5, Q8, Q9, U10 |
 | 2 | +3V4_HUB | 3.44 V (3.27 to 3.61) | U17 | U4 |
 
 **Decide before powering: the declared source is an inductor or a ferrite, which is a filter on an incoming feed on some boards and a converter's output on others.**

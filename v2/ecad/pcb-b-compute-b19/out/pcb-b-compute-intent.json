@@ -1,6 +1,6 @@
 {
  "board": "pcb-b-compute",
- "written": "2026-09-20 06:45",
+ "written": "2026-09-26 14:16",
  "bypass": [
   {
    "cap": "C112",
@@ -73,6 +73,72 @@
    "part": "U206",
    "pin": "3",
    "net": "+5V_DEV"
+  },
+  {
+   "cap": "C520",
+   "part": "J_M2C2",
+   "pin": "2",
+   "net": "+3V3_M2C2"
+  },
+  {
+   "cap": "C521",
+   "part": "J_M2C2",
+   "pin": "70",
+   "net": "+3V3_M2C2"
+  },
+  {
+   "cap": "C522",
+   "part": "J_M2C2",
+   "pin": "2",
+   "net": "+3V3_M2C2"
+  },
+  {
+   "cap": "C523",
+   "part": "J_M2C2",
+   "pin": "2",
+   "net": "+3V3_M2C2"
+  },
+  {
+   "cap": "C524",
+   "part": "J_M2C2",
+   "pin": "2",
+   "net": "+3V3_M2C2"
+  },
+  {
+   "cap": "C525",
+   "part": "J_M2C2",
+   "pin": "70",
+   "net": "+3V3_M2C2"
+  },
+  {
+   "cap": "C526",
+   "part": "J_M2C2",
+   "pin": "70",
+   "net": "+3V3_M2C2"
+  },
+  {
+   "cap": "C527",
+   "part": "J_M2C2",
+   "pin": "70",
+   "net": "+3V3_M2C2"
+  },
+  {
+   "cap": "C528",
+   "part": "J_M2C2",
+   "pin": "70",
+   "net": "+3V3_M2C2"
+  },
+  {
+   "cap": "C529",
+   "part": "J_M2C2",
+   "pin": "70",
+   "net": "+3V3_M2C2"
+  },
+  {
+   "cap": "C530",
+   "part": "J_M2C2",
+   "pin": "70",
+   "net": "+3V3_M2C2"
   },
   {
    "cap": "C312",
@@ -205,7 +271,7 @@
   },
   "+5V_S2": {
    "volts": 5.1,
-   "amps_typ": 2.5,
+   "amps_typ": 4.2,
    "amps_peak": 5.0,
    "source": "J_5V_S2",
    "loads": {
@@ -328,13 +394,25 @@
    "amps_peak": 1.5,
    "source": "L101",
    "loads": {
-    "J_M2C1": 1.5
+    "R165": 1.5
    },
-   "note": "slot 1's card-socket 3.3 V from the AP63203 buck U103 through L101: an M.2 A/E-key radio card, 3 A at its own connector's rating and 1.5 A for the AW7915-AED",
+   "note": "slot 1's card-socket 3.3 V from the AP64500 buck U103 through L101, out through the 5 mOhm Kelvin shunt R165 to the socket: the AsiaRF AW7915-AED, 1.5 A",
    "switch": "U103",
    "efficiency": 0.88,
    "converted": true,
    "fed_from": "+5V_S1"
+  },
+  "+3V3_M2C1": {
+   "volts": 3.3,
+   "amps_typ": 0.5,
+   "amps_peak": 1.5,
+   "source": "R165",
+   "loads": {
+    "J_M2C1": 1.5
+   },
+   "note": "slot 1's card socket past its Kelvin shunt (W5 TESTACCESS-B, 26 September 2026): the same current as +3V3_S1A, a series segment of it",
+   "converted": false,
+   "series_of": "+3V3_S1A"
   },
   "+3V3_S1B": {
    "volts": 3.3,
@@ -407,18 +485,30 @@
    "converted": false
   },
   "+3V3_S2A": {
-   "volts": 3.3,
-   "amps_typ": 0.5,
-   "amps_peak": 1.5,
+   "volts": 3.456,
+   "amps_typ": 3.0,
+   "amps_peak": 4.0,
    "source": "L201",
    "loads": {
-    "J_M2C2": 1.5
+    "R265": 4.0
    },
-   "note": "slot 2's card-socket 3.3 V from the AP63203 buck U203 through L201: an M.2 A/E-key radio card, 3 A at its own connector's rating and 1.5 A for the AW7915-AED",
+   "note": "slot 2's card-socket 3.456 V from the AP64500 buck U203 through L201, out through the 5 mOhm Kelvin shunt R265 to the socket: the Quectel RM520N-GL, 3.0 A continuous and 4 A peak (HD v1.1 3.3.1)",
    "switch": "U203",
    "efficiency": 0.88,
    "converted": true,
    "fed_from": "+5V_S2"
+  },
+  "+3V3_M2C2": {
+   "volts": 3.456,
+   "amps_typ": 3.0,
+   "amps_peak": 4.0,
+   "source": "R265",
+   "loads": {
+    "J_M2C2": 4.0
+   },
+   "note": "slot 2's card socket past its Kelvin shunt (W5 TESTACCESS-B, 26 September 2026): the same current as +3V3_S2A, a series segment of it",
+   "converted": false,
+   "series_of": "+3V3_S2A"
   },
   "+3V3_S2B": {
    "volts": 3.3,
@@ -496,13 +586,25 @@
    "amps_peak": 1.5,
    "source": "L301",
    "loads": {
-    "J_M2C3": 1.5
+    "R365": 1.5
    },
-   "note": "slot 3's card-socket 3.3 V from the AP63203 buck U303 through L301: an M.2 A/E-key radio card, 3 A at its own connector's rating and 1.5 A for the AW7915-AED",
+   "note": "slot 3's card-socket 3.3 V from the AP64500 buck U303 through L301, out through the 5 mOhm Kelvin shunt R365 to the socket: the AsiaRF AW7915-AED, 1.5 A",
    "switch": "U303",
    "efficiency": 0.88,
    "converted": true,
    "fed_from": "+5V_S3"
+  },
+  "+3V3_M2C3": {
+   "volts": 3.3,
+   "amps_typ": 0.5,
+   "amps_peak": 1.5,
+   "source": "R365",
+   "loads": {
+    "J_M2C3": 1.5
+   },
+   "note": "slot 3's card socket past its Kelvin shunt (W5 TESTACCESS-B, 26 September 2026): the same current as +3V3_S3A, a series segment of it",
+   "converted": false,
+   "series_of": "+3V3_S3A"
   },
   "+3V3_S3B": {
    "volts": 3.3,
@@ -588,7 +690,7 @@
    "note": "controller A's private 3.3 V, its own branch off the device rail so that one controller's fault cannot pull the other two down. Budget 3 percent: logic only",
    "budget": 0.03,
    "always_on": true,
-   "always_on_why": "each controller's private LDO has its EN tied to its own input, so it follows the device rail and the controller is up whenever the kit is",
+   "always_on_why": "each controller's private LDO has its EN pulled to its own input through 100 k, so it follows the device rail and the controller is up whenever the kit is; only the bench jumper J_IOCOFF_x holds it off, for IOHA A4 and A6 (26 September 2026)",
    "efficiency": 0.66,
    "converted": true,
    "fed_from": "+5V_DEV"
@@ -607,7 +709,7 @@
    "note": "controller B's private 3.3 V, its own branch off the device rail so that one controller's fault cannot pull the other two down. Budget 3 percent: logic only",
    "budget": 0.03,
    "always_on": true,
-   "always_on_why": "each controller's private LDO has its EN tied to its own input, so it follows the device rail and the controller is up whenever the kit is",
+   "always_on_why": "each controller's private LDO has its EN pulled to its own input through 100 k, so it follows the device rail and the controller is up whenever the kit is; only the bench jumper J_IOCOFF_x holds it off, for IOHA A4 and A6 (26 September 2026)",
    "efficiency": 0.66,
    "converted": true,
    "fed_from": "+5V_DEV"
@@ -626,7 +728,7 @@
    "note": "controller C's private 3.3 V, its own branch off the device rail so that one controller's fault cannot pull the other two down. Budget 3 percent: logic only",
    "budget": 0.03,
    "always_on": true,
-   "always_on_why": "each controller's private LDO has its EN tied to its own input, so it follows the device rail and the controller is up whenever the kit is",
+   "always_on_why": "each controller's private LDO has its EN pulled to its own input through 100 k, so it follows the device rail and the controller is up whenever the kit is; only the bench jumper J_IOCOFF_x holds it off, for IOHA A4 and A6 (26 September 2026)",
    "efficiency": 0.66,
    "converted": true,
    "fed_from": "+5V_DEV"
@@ -877,6 +979,116 @@
    "v_min": 0.0,
    "basis": "a PCIe receive lane: about 1.2 V peak to peak of differential signal on a common mode the specification holds below 3.6 V, which is what an AC coupling capacitor on it has to stand off"
   },
+  "NVME1_RX_SW_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe downstream transmit lane of the switch (W3-F01): a differential signal on a common mode below 3.6 V, which is what its AC coupling capacitor has to stand off"
+  },
+  "NVME1_RX_SW_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe downstream transmit lane of the switch (W3-F01): a differential signal on a common mode below 3.6 V, which is what its AC coupling capacitor has to stand off"
+  },
+  "NVME1_RX_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe downstream transmit lane of the switch (W3-F01): a differential signal on a common mode below 3.6 V, which is what its AC coupling capacitor has to stand off"
+  },
+  "NVME1_RX_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe downstream transmit lane of the switch (W3-F01): a differential signal on a common mode below 3.6 V, which is what its AC coupling capacitor has to stand off"
+  },
+  "CARD1_RX_SW_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe downstream transmit lane of the switch (W3-F01): a differential signal on a common mode below 3.6 V, which is what its AC coupling capacitor has to stand off"
+  },
+  "CARD1_RX_SW_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe downstream transmit lane of the switch (W3-F01): a differential signal on a common mode below 3.6 V, which is what its AC coupling capacitor has to stand off"
+  },
+  "CARD1_RX_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe downstream transmit lane of the switch (W3-F01): a differential signal on a common mode below 3.6 V, which is what its AC coupling capacitor has to stand off"
+  },
+  "CARD1_RX_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe downstream transmit lane of the switch (W3-F01): a differential signal on a common mode below 3.6 V, which is what its AC coupling capacitor has to stand off"
+  },
+  "PCIE1_RCLK0_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "the switch's 100 MHz HCSL reference clock (W3-F03): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case"
+  },
+  "PCIE1_RCLK0_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "the switch's 100 MHz HCSL reference clock (W3-F03): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case"
+  },
+  "PCIE1_RCLKIN_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "the switch's 100 MHz HCSL reference clock (W3-F03): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case"
+  },
+  "PCIE1_RCLKIN_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "the switch's 100 MHz HCSL reference clock (W3-F03): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case"
+  },
+  "PCIE1_RCLK0_SRC_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "PCIE1_RCLK0_SRC_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "NVME1_CLK_SRC_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "NVME1_CLK_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "NVME1_CLK_SRC_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "NVME1_CLK_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "CARD1_CLK_SRC_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "CARD1_CLK_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "CARD1_CLK_SRC_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "CARD1_CLK_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
   "LED_5V_A2": {
    "v_max": 5.0,
    "v_min": 0.0,
@@ -886,6 +1098,11 @@
    "v_max": 5.1,
    "v_min": -1.0,
    "basis": "the +3V3_S2A buck's switching node: it swings to +5V_S2, the rail that feeds it, and a diode drop below ground on the other half of the cycle"
+  },
+  "S2A_COMP": {
+   "v_max": 5.1,
+   "v_min": 0.0,
+   "basis": "the +3V3_S2A buck's COMP pin (its error amplifier's output), which carries C6 to ground: it cannot rise above the IC's own supply +5V_S2 (DS41979 Rev 5-2 absolute maximum 6.0 V), so it is declared at that rail, read from the intent"
   },
   "S2B_SW": {
    "v_max": 5.1,
@@ -921,6 +1138,161 @@
    "v_max": 3.6,
    "v_min": 0.0,
    "basis": "a PCIe receive lane: about 1.2 V peak to peak of differential signal on a common mode the specification holds below 3.6 V, which is what an AC coupling capacitor on it has to stand off"
+  },
+  "NVME2_RX_SW_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe downstream transmit lane of the switch (W3-F01): a differential signal on a common mode below 3.6 V, which is what its AC coupling capacitor has to stand off"
+  },
+  "NVME2_RX_SW_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe downstream transmit lane of the switch (W3-F01): a differential signal on a common mode below 3.6 V, which is what its AC coupling capacitor has to stand off"
+  },
+  "NVME2_RX_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe downstream transmit lane of the switch (W3-F01): a differential signal on a common mode below 3.6 V, which is what its AC coupling capacitor has to stand off"
+  },
+  "NVME2_RX_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe downstream transmit lane of the switch (W3-F01): a differential signal on a common mode below 3.6 V, which is what its AC coupling capacitor has to stand off"
+  },
+  "CARD2_RX_SW_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe downstream transmit lane of the switch (W3-F01): a differential signal on a common mode below 3.6 V, which is what its AC coupling capacitor has to stand off"
+  },
+  "CARD2_RX_SW_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe downstream transmit lane of the switch (W3-F01): a differential signal on a common mode below 3.6 V, which is what its AC coupling capacitor has to stand off"
+  },
+  "CARD2_RX_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe downstream transmit lane of the switch (W3-F01): a differential signal on a common mode below 3.6 V, which is what its AC coupling capacitor has to stand off"
+  },
+  "CARD2_RX_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe downstream transmit lane of the switch (W3-F01): a differential signal on a common mode below 3.6 V, which is what its AC coupling capacitor has to stand off"
+  },
+  "PCIE2_RCLK0_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "the switch's 100 MHz HCSL reference clock (W3-F03): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case"
+  },
+  "PCIE2_RCLK0_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "the switch's 100 MHz HCSL reference clock (W3-F03): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case"
+  },
+  "PCIE2_RCLKIN_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "the switch's 100 MHz HCSL reference clock (W3-F03): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case"
+  },
+  "PCIE2_RCLKIN_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "the switch's 100 MHz HCSL reference clock (W3-F03): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case"
+  },
+  "PCIE2_RCLK0_SRC_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "PCIE2_RCLK0_SRC_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "NVME2_CLK_SRC_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "NVME2_CLK_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "NVME2_CLK_SRC_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "NVME2_CLK_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "CARD2_CLK_SRC_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "CARD2_CLK_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "CARD2_CLK_SRC_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "CARD2_CLK_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "SIMC1_RST": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "a SIM card line at the holder, swinging to USIM1_VDD, which the module sets to 1.8 or 3.0 V (HD v1.1 pin table: 1.8/3.0 V, Class B and C cards); declared at 3.3 V for the 50 V capacitor on it"
+  },
+  "SIMC1_CLK": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "a SIM card line at the holder, swinging to USIM1_VDD, which the module sets to 1.8 or 3.0 V (HD v1.1 pin table: 1.8/3.0 V, Class B and C cards); declared at 3.3 V for the 50 V capacitor on it"
+  },
+  "SIMC1_IO": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "a SIM card line at the holder, swinging to USIM1_VDD, which the module sets to 1.8 or 3.0 V (HD v1.1 pin table: 1.8/3.0 V, Class B and C cards); declared at 3.3 V for the 50 V capacitor on it"
+  },
+  "SIMR2_RST": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "SIM 2's line between the module's 0 Ohm link and the holder's 22 Ohm, swinging to USIM2_VDD (1.8 or 3.0 V, HD v1.1 pin table); declared at 3.3 V like the holder side"
+  },
+  "SIMR2_CLK": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "SIM 2's line between the module's 0 Ohm link and the holder's 22 Ohm, swinging to USIM2_VDD (1.8 or 3.0 V, HD v1.1 pin table); declared at 3.3 V like the holder side"
+  },
+  "SIMR2_IO": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "SIM 2's line between the module's 0 Ohm link and the holder's 22 Ohm, swinging to USIM2_VDD (1.8 or 3.0 V, HD v1.1 pin table); declared at 3.3 V like the holder side"
+  },
+  "SIMC2_RST": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "a SIM card line at the holder, swinging to USIM2_VDD, which the module sets to 1.8 or 3.0 V (HD v1.1 pin table: 1.8/3.0 V, Class B and C cards); declared at 3.3 V for the 50 V capacitor on it"
+  },
+  "SIMC2_CLK": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "a SIM card line at the holder, swinging to USIM2_VDD, which the module sets to 1.8 or 3.0 V (HD v1.1 pin table: 1.8/3.0 V, Class B and C cards); declared at 3.3 V for the 50 V capacitor on it"
+  },
+  "SIMC2_IO": {
+   "v_max": 3.3,
+   "v_min": 0.0,
+   "basis": "a SIM card line at the holder, swinging to USIM2_VDD, which the module sets to 1.8 or 3.0 V (HD v1.1 pin table: 1.8/3.0 V, Class B and C cards); declared at 3.3 V for the 50 V capacitor on it"
   },
   "LED_5V_A3": {
    "v_max": 5.0,
@@ -966,6 +1338,116 @@
    "v_max": 3.6,
    "v_min": 0.0,
    "basis": "a PCIe receive lane: about 1.2 V peak to peak of differential signal on a common mode the specification holds below 3.6 V, which is what an AC coupling capacitor on it has to stand off"
+  },
+  "NVME3_RX_SW_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe downstream transmit lane of the switch (W3-F01): a differential signal on a common mode below 3.6 V, which is what its AC coupling capacitor has to stand off"
+  },
+  "NVME3_RX_SW_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe downstream transmit lane of the switch (W3-F01): a differential signal on a common mode below 3.6 V, which is what its AC coupling capacitor has to stand off"
+  },
+  "NVME3_RX_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe downstream transmit lane of the switch (W3-F01): a differential signal on a common mode below 3.6 V, which is what its AC coupling capacitor has to stand off"
+  },
+  "NVME3_RX_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe downstream transmit lane of the switch (W3-F01): a differential signal on a common mode below 3.6 V, which is what its AC coupling capacitor has to stand off"
+  },
+  "CARD3_RX_SW_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe downstream transmit lane of the switch (W3-F01): a differential signal on a common mode below 3.6 V, which is what its AC coupling capacitor has to stand off"
+  },
+  "CARD3_RX_SW_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe downstream transmit lane of the switch (W3-F01): a differential signal on a common mode below 3.6 V, which is what its AC coupling capacitor has to stand off"
+  },
+  "CARD3_RX_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe downstream transmit lane of the switch (W3-F01): a differential signal on a common mode below 3.6 V, which is what its AC coupling capacitor has to stand off"
+  },
+  "CARD3_RX_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a PCIe downstream transmit lane of the switch (W3-F01): a differential signal on a common mode below 3.6 V, which is what its AC coupling capacitor has to stand off"
+  },
+  "PCIE3_RCLK0_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "the switch's 100 MHz HCSL reference clock (W3-F03): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case"
+  },
+  "PCIE3_RCLK0_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "the switch's 100 MHz HCSL reference clock (W3-F03): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case"
+  },
+  "PCIE3_RCLKIN_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "the switch's 100 MHz HCSL reference clock (W3-F03): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case"
+  },
+  "PCIE3_RCLKIN_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "the switch's 100 MHz HCSL reference clock (W3-F03): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case"
+  },
+  "PCIE3_RCLK0_SRC_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "PCIE3_RCLK0_SRC_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "NVME3_CLK_SRC_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "NVME3_CLK_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "NVME3_CLK_SRC_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "NVME3_CLK_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "CARD3_CLK_SRC_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "CARD3_CLK_P": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "CARD3_CLK_SRC_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
+  },
+  "CARD3_CLK_N": {
+   "v_max": 3.6,
+   "v_min": 0.0,
+   "basis": "a 100 MHz HCSL reference clock output of the switch into its Table 8-1 load (33.2 Ohm series, 49.9 Ohm to ground): at most 1.15 V high per DS40068 Table 8-1, declared at the 3.6 V ceiling of the switch's own I/O supply as the worst case (W3-F03)"
   },
   "DEV_SW": {
    "v_max": 5.0,

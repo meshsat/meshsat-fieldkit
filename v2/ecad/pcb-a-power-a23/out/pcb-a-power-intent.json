@@ -1,12 +1,18 @@
 {
  "board": "pcb-a-power",
- "written": "2026-09-20 12:21",
+ "written": "2026-09-26 14:16",
  "bypass": [
   {
    "cap": "C8",
    "part": "U2",
    "pin": "23",
    "net": "FE_VCC"
+  },
+  {
+   "cap": "C192",
+   "part": "U2",
+   "pin": "24",
+   "net": "VBUS20"
   },
   {
    "cap": "C123",
@@ -21,16 +27,16 @@
    "net": "FE_ISNS_P"
   },
   {
-   "cap": "C11",
+   "cap": "C207",
    "part": "U2",
    "pin": "2",
-   "net": "VIN_RAW"
+   "net": "FE_VINP"
   },
   {
-   "cap": "C12",
-   "part": "U2",
-   "pin": "3",
-   "net": "VIN_RAW"
+   "cap": "C210",
+   "part": "U34",
+   "pin": "1",
+   "net": "FE_GVDD"
   },
   {
    "cap": "C29",
@@ -41,18 +47,6 @@
   {
    "cap": "C30",
    "part": "U4",
-   "pin": "2",
-   "net": "VBAT"
-  },
-  {
-   "cap": "C35",
-   "part": "U5",
-   "pin": "2",
-   "net": "VBAT"
-  },
-  {
-   "cap": "C36",
-   "part": "U5",
    "pin": "2",
    "net": "VBAT"
   },
@@ -69,6 +63,66 @@
    "net": "VBAT"
   },
   {
+   "cap": "C136",
+   "part": "U5",
+   "pin": "23",
+   "net": "S2_VCC"
+  },
+  {
+   "cap": "C193",
+   "part": "U5",
+   "pin": "24",
+   "net": "VBAT"
+  },
+  {
+   "cap": "C138",
+   "part": "U5",
+   "pin": "16",
+   "net": "S2_CSF"
+  },
+  {
+   "cap": "C139",
+   "part": "U5",
+   "pin": "14",
+   "net": "S2_ISNS_P"
+  },
+  {
+   "cap": "C35",
+   "part": "U5",
+   "pin": "2",
+   "net": "VBAT"
+  },
+  {
+   "cap": "C36",
+   "part": "U5",
+   "pin": "3",
+   "net": "VBAT"
+  },
+  {
+   "cap": "C143",
+   "part": "U7",
+   "pin": "23",
+   "net": "SD_VCC"
+  },
+  {
+   "cap": "C194",
+   "part": "U7",
+   "pin": "24",
+   "net": "VBAT"
+  },
+  {
+   "cap": "C145",
+   "part": "U7",
+   "pin": "16",
+   "net": "SD_CSF"
+  },
+  {
+   "cap": "C146",
+   "part": "U7",
+   "pin": "14",
+   "net": "SD_ISNS_P"
+  },
+  {
    "cap": "C47",
    "part": "U7",
    "pin": "2",
@@ -77,7 +131,7 @@
   {
    "cap": "C48",
    "part": "U7",
-   "pin": "2",
+   "pin": "3",
    "net": "VBAT"
   },
   {
@@ -85,6 +139,12 @@
    "part": "U13",
    "pin": "23",
    "net": "PA_VCC"
+  },
+  {
+   "cap": "C195",
+   "part": "U13",
+   "pin": "24",
+   "net": "+13V8_PA"
   },
   {
    "cap": "C124",
@@ -99,10 +159,10 @@
    "net": "PA_ISNS_P"
   },
   {
-   "cap": "C63",
+   "cap": "C208",
    "part": "U13",
    "pin": "2",
-   "net": "VBAT"
+   "net": "PA_VINP"
   },
   {
    "cap": "C64",
@@ -117,6 +177,12 @@
    "net": "HF_VCC"
   },
   {
+   "cap": "C196",
+   "part": "U15",
+   "pin": "24",
+   "net": "+12V_HF"
+  },
+  {
    "cap": "C125",
    "part": "U15",
    "pin": "16",
@@ -129,10 +195,10 @@
    "net": "HF_ISNS_P"
   },
   {
-   "cap": "C74",
+   "cap": "C209",
    "part": "U15",
    "pin": "2",
-   "net": "VBAT"
+   "net": "HF_VINP"
   },
   {
    "cap": "C108",
@@ -145,6 +211,12 @@
    "part": "U16",
    "pin": "23",
    "net": "POE_VCC"
+  },
+  {
+   "cap": "C197",
+   "part": "U16",
+   "pin": "24",
+   "net": "VBAT"
   },
   {
    "cap": "C126",
@@ -177,6 +249,12 @@
    "net": "PD_VCC"
   },
   {
+   "cap": "C198",
+   "part": "U19",
+   "pin": "24",
+   "net": "VBAT"
+  },
+  {
    "cap": "C127",
    "part": "U19",
    "pin": "16",
@@ -199,6 +277,12 @@
    "part": "U19",
    "pin": "3",
    "net": "VBAT"
+  },
+  {
+   "cap": "C159",
+   "part": "U33",
+   "pin": "3",
+   "net": "VHEAT_IN"
   },
   {
    "cap": "C4",
@@ -241,6 +325,12 @@
    "part": "U28",
    "pin": "24",
    "net": "+3V3"
+  },
+  {
+   "cap": "C153",
+   "part": "U30",
+   "pin": "5",
+   "net": "+3V3"
   }
  ],
  "rails": {
@@ -252,45 +342,59 @@
    "loads": {
     "F1": 10.0
    },
-   "note": "the pack side of the RSR shunt. The pack current leaves this node through F1, the 25 A blade to VBAT; R17 is the 5 mOhm charge-sense shunt, R1 the 10 R pre-charge trickle, TP14 a test point and U3 pin 19 the BQ25731's CELL+ SENSE input, which draws microamps. Undeclared, dc_drop split the 10 A over every non-passive part on the net and pushed amps through U3 pin 19's 0.20 mm escape on a 0.4 mm pitch, reading 2.21 percent at a 0.5 mm cell and 2.75 at 0.25 against a 2 percent budget: the same correction VIN_RAW carries above, and for the same reason (12 September 2026, A24)",
+   "note": "the pack node on the dock block contacts. S-04, 26 September 2026: the pack current leaves this node through F1, the 25 A blade, into CELL_FUSED and on through the RSR shunt R17 into VBAT, the system node (TI SLUSE66A Figure 10-1). R1 is the 10 R pre-charge trickle and TP14 a test point. Undeclared, dc_drop split the 10 A over every non-passive part on the net and pushed amps through a sense escape, reading 2.21 percent at a 0.5 mm cell and 2.75 at 0.25 against a 2 percent budget: the same correction VIN_RAW carries above, and for the same reason (12 September 2026, A24)",
    "share": 0.005,
    "always_on": true,
    "always_on_why": "the pack node as it arrives on the dock block contacts; it is switched on board E and in the pack, never here",
    "v_work": 16.8,
    "converted": false
   },
-  "VBAT": {
+  "CELL_FUSED": {
    "volts": 14.4,
    "amps_typ": 10.0,
    "amps_peak": 18.0,
    "source": "F1",
    "loads": {
-    "U4": 2.0,
-    "U5": 2.0,
-    "U6": 2.0,
-    "U7": 2.0,
-    "Q11": 1.5,
-    "U15": 0.3,
-    "U12": 0.2
+    "R17": 10.0
    },
-   "note": "the 4S node after the 25 A blade F1; 10 A continuous, 18 A peak by the pack's rating (32.55)",
-   "always_on": true,
-   "always_on_why": "the fused pack node: nothing on this board switches it. What opens it is the pack's own BQ4050 protection FETs and the 25 A blade F1, which are the first two stages of the energy chain",
+   "note": "S-04, 26 September 2026: the pack node behind the 25 A blade F1 and ahead of the 5 mOhm RSR shunt R17 (the BQ25731's battery side, SRN through R148). It carries the pack's charge and discharge current, 10.0 A typical and 18.0 A peak, and is counted once as a segment of CELL+",
    "v_work": 16.8,
    "converted": false,
-   "fed_from": "CELL+"
+   "series_of": "CELL+"
+  },
+  "VBAT": {
+   "volts": 14.4,
+   "amps_typ": 10.0,
+   "amps_peak": 18.0,
+   "source": "R17",
+   "loads": {
+    "U4": 2.0,
+    "Q28": 2.0,
+    "U6": 2.0,
+    "Q32": 2.0,
+    "Q11": 1.5,
+    "U15": 0.3,
+    "U12": 0.2,
+    "U22": 0.65
+   },
+   "note": "the 4S system node (VSYS) behind the RSR shunt R17; 10 A continuous, 18 A peak by the pack's rating (32.55)",
+   "always_on": true,
+   "always_on_why": "the system node (VSYS): nothing on this board switches it. The pack reaches it through the 25 A blade F1 and the RSR shunt R17, opened only by the pack's own BQ4050 FETs and the blade; the charger's converter feeds it from shore through Q10",
+   "v_work": 16.8,
+   "converted": false,
+   "fed_from": "CELL_FUSED"
   },
   "VIN_RAW": {
    "volts": 12.0,
-   "amps_typ": 8.0,
-   "amps_peak": 10.0,
+   "amps_typ": 12.31,
+   "amps_peak": 12.31,
    "source": "J_DOCK",
    "loads": {
-    "Q2": 7.0,
+    "Q2": 11.31,
     "C11": 0.5,
     "C12": 0.5
    },
-   "note": "shore and vehicle input from E6 over the dock, 10 A fuse; the current enters the front end at Q2's drain and the input caps (the LM5176 U2 draws only its bias: a load named U2 put 8 A into two QFN pins and read 3.3 percent, 32.69)",
+   "note": "shore, vehicle and panel input from E6 over the dock: board E's vehicle entry (LM5069 U6, 6.15 A at VCL max, 10 A fuse) and its panel tracker (TRK_OUT, 6.16 A) ORed onto one bus, 12.31 A together (third fix-up of round 4, 26 September 2026, reconciled with board E's F-IN-02); the current enters the front end at Q2's drain and the input caps (the LM5176 U2 draws only its bias: a load named U2 put 8 A into two QFN pins and read 3.3 percent, 32.69)",
    "budget": 0.02,
    "share": 0.015,
    "always_on": true,
@@ -358,13 +462,15 @@
   },
   "+5V_DEV": {
    "volts": 5.0,
-   "amps_typ": 3.8,
-   "amps_peak": 6.0,
+   "amps_typ": 4.0,
+   "amps_peak": 6.9,
    "source": "R43",
    "loads": {
-    "J_5V_DEV": 3.2
+    "J_5V_DEV": 3.2,
+    "U23": 0.5,
+    "U32": 0.3
    },
-   "note": "the USB devices, the LimeSDR bay and the RockBLOCK behind their switches; the net starts at the shunt. 9 September 2026 (ARCH-PCB-B-IOHA): +0.8 A because B16's three hub banks had to leave the slot rails, or a bank would die with the module it fails away from. The AP64500 is a 5 A part, so the headroom is there; what this declaration buys is that dc_drop judges the copper at the current it now carries.",
+   "note": "the USB devices, the LimeSDR bay and the RockBLOCK behind their switches, the D8 mezzanine behind U23 and the wall host port behind U32; the net starts at the ISNS shunt R43. 9 September 2026 (ARCH-PCB-B-IOHA): +0.8 A because B16's three hub banks had to leave the slot rails. 26 September 2026 (F-PR-04, D-12): the converter is an LM5176 stage with a 7.2 A minimum average limit, and the Glenair port's 0.9 A takes the peak to 6.9 A.",
    "budget": 0.02,
    "share": 0.005,
    "switch": "U7",
@@ -471,23 +577,10 @@
    "loads": {
     "Q7": 6.0
    },
-   "note": "the charger's input node BEHIND the 10 mOhm input shunt R16: the same 20 V charge bus as VBUS20 and the same 6.0 A, from the shunt's far pad to the BQ25731's high-side FET Q7 and the three input capacitors. VBUS20 is the rail INTO the shunt (source R11, load R16) and this is the rail out of it: DIFFERENT COPPER, which is why both need judging, and the SAME WATTS, which is why this one is declared a series segment of VBUS20 so the board's power total counts the path once. Declared 20 September 2026 because it had been a `node`, which is documented as a net that is not a rail, and the consequence was that nothing solved it: no PI-001, no PI-002, and no low-side reading for the Kelvin report",
+   "note": "the charger's input node BEHIND the 10 mOhm input shunt R16: the same 20 V charge bus as VBUS20 and the same 6.0 A, from the shunt's far pad to the BQ25731's high-side FET Q7 and the half bridge's 10 nF and 1 nF (R4A-N8, 26 September 2026: the three 10 uF input capacitors are on VBUS20, in front of the shunt, as SLUSE66A 10.2.2.4 asks). VBUS20 is the rail INTO the shunt (source R11, load R16) and this is the rail out of it: DIFFERENT COPPER, which is why both need judging, and the SAME WATTS, which is why this one is declared a series segment of VBUS20 so the board's power total counts the path once. Declared 20 September 2026 because it had been a `node`, which is documented as a net that is not a rail, and the consequence was that nothing solved it: no PI-001, no PI-002, and no low-side reading for the Kelvin report",
    "v_work": 20.0,
    "converted": false,
    "series_of": "VBUS20"
-  },
-  "CH_SRP": {
-   "volts": 14.4,
-   "amps_typ": 10.0,
-   "amps_peak": 18.0,
-   "source": "Q10",
-   "loads": {
-    "R17": 10.0
-   },
-   "note": "the charger's output node BEFORE the 5 mOhm charge shunt R17: Q10's drain, the three 22 uF input capacitors and the shunt, at the pack's own 10.0 A typical and 18.0 A peak. CELL+ is the rail on the far side of that shunt: DIFFERENT COPPER, which both rules have to look at, and the SAME PACK NODE, so this is declared a series segment of CELL+ and the board's power total counts that node once. The voltage a part on it can see is the 4S termination of 4.2 V a cell, not the 14.4 V nominal, which is what `v_work` carries",
-   "v_work": 16.8,
-   "converted": false,
-   "series_of": "CELL+"
   },
   "S1_OUT": {
    "volts": 5.1,
@@ -502,19 +595,6 @@
    "converted": false,
    "series_of": "+5V_S1"
   },
-  "S2_OUT": {
-   "volts": 5.1,
-   "amps_typ": 2.5,
-   "amps_peak": 5.0,
-   "source": "L4",
-   "loads": {
-    "R35": 2.5
-   },
-   "note": "the AP64500 stage's output between the inductor L4 and the 5 mOhm shunt R35, at the whole of the rail's own current. Declared 20 September 2026: it had been declared as nothing at all",
-   "v_work": 5.1,
-   "converted": false,
-   "series_of": "+5V_S2"
-  },
   "S3_OUT": {
    "volts": 5.1,
    "amps_typ": 2.5,
@@ -528,15 +608,28 @@
    "converted": false,
    "series_of": "+5V_S3"
   },
+  "S2_OUT": {
+   "volts": 5.1,
+   "amps_typ": 2.5,
+   "amps_peak": 5.0,
+   "source": "Q31",
+   "loads": {
+    "R35": 2.5
+   },
+   "note": "LM5176 stage S2, VBAT to +5V_S2: the output conductor between Q31's drain tab and the ISNS shunt R35, at the stage's whole output current. It was a node until 20 September 2026, so no power rule had ever looked at it.",
+   "v_work": 5.1,
+   "converted": false,
+   "series_of": "+5V_S2"
+  },
   "SD_OUT": {
    "volts": 5.0,
-   "amps_typ": 3.8,
-   "amps_peak": 6.0,
-   "source": "L6",
+   "amps_typ": 4.0,
+   "amps_peak": 6.9,
+   "source": "Q35",
    "loads": {
-    "R43": 3.8
+    "R43": 4.0
    },
-   "note": "the AP64500 stage's output between the inductor L6 and the 5 mOhm shunt R43, at the whole of the rail's own current. Declared 20 September 2026: it had been declared as nothing at all",
+   "note": "LM5176 stage SD, VBAT to +5V_DEV: the output conductor between Q35's drain tab and the ISNS shunt R43, at the stage's whole output current. It was a node until 20 September 2026, so no power rule had ever looked at it.",
    "v_work": 5.0,
    "converted": false,
    "series_of": "+5V_DEV"
@@ -636,6 +729,47 @@
    "v_work": 15.0,
    "converted": false,
    "series_of": "PD_VPWR"
+  },
+  "VHEAT_IN": {
+   "volts": 14.4,
+   "amps_typ": 0.58,
+   "amps_peak": 0.9,
+   "source": "U22",
+   "loads": {
+    "U33": 0.58
+   },
+   "note": "F-PR-06, 26 September 2026: the heater branch between the eFuse U22 and its 12 V buck U33, at VBAT; 7.5 W / 0.9 / 14.4 V = 0.58 A typical, 0.65 A at the 12.9 V edge of regulation (below it the buck is at maximum duty and the mat takes less), under U22's 1.0 A limit",
+   "budget": 0.03,
+   "v_work": 16.8,
+   "converted": false,
+   "fed_from": "VBAT"
+  },
+  "VHEAT": {
+   "volts": 12.0,
+   "amps_typ": 0.63,
+   "amps_peak": 0.63,
+   "source": "L12",
+   "loads": {
+    "J_HEAT": 0.63
+   },
+   "note": "F-PR-06, 26 September 2026: the heater mat's regulated 12.0 V, 0.63 A into its 19.2 Ohm at the mat's own 7.5 W rating",
+   "budget": 0.03,
+   "switch": "U33",
+   "efficiency": 0.9,
+   "fed_from": "VHEAT_IN"
+  },
+  "VBUS_WALL": {
+   "volts": 5.0,
+   "amps_typ": 0.5,
+   "amps_peak": 0.9,
+   "source": "U32",
+   "loads": {
+    "J_USBW": 0.9
+   },
+   "note": "D-12, 26 September 2026: the Glenair 233-370 host port's VBUS behind the eFuse U32 (limit 0.89 A), out at the J_USBW lead; USB 2.0 asks 4.75 V at the port, so from a 5.09 V source the eFuse and the copper share 340 mV",
+   "budget": 0.03,
+   "converted": false,
+   "fed_from": "+5V_DEV"
   }
  },
  "nodes": {
@@ -668,6 +802,16 @@
    "v_min": 0.0,
    "basis": "LM5176 stage FE, VIN_RAW to VBUS20: the controller's own regulator output, 7.6 V typical"
   },
+  "FE_VISNS": {
+   "v_max": 36.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage FE, VIN_RAW to VBUS20: the controller's VIN sense pin behind its series 2 k (SNVSAI1D 7.3.7, Figure 8-1): the input rail's service maximum; the pin draws microamps, so the resistor drops millivolts"
+  },
+  "FE_VINP": {
+   "v_max": 36.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage FE, VIN_RAW to VBUS20: the controller's VIN pin behind its series blocking diode (SNVSAI1D 7.3.2, Figure 7-1): the input rail's service maximum less a diode drop, never above it"
+  },
   "FE_CS": {
    "v_max": 1.0,
    "v_min": 0.0,
@@ -682,6 +826,51 @@
    "v_max": 1.0,
    "v_min": 0.0,
    "basis": "LM5176 stage FE, VIN_RAW to VBUS20: the filtered current-sense ground at pin 15, 100 R from the shunt's ground pad (the Kelvin return TI's pin table asks for)"
+  },
+  "FE_GVDD": {
+   "v_max": 36.0,
+   "v_min": 0.0,
+   "basis": "restart guard (fourth fix-up, R4A-N15): U34's VDD, VIN_RAW behind R196 (1 k at 2.6 uA: millivolts); the clamp's 64.5 V is inside VDD's 65 V"
+  },
+  "FE_UVS": {
+   "v_max": 3.56,
+   "v_min": 0.0,
+   "basis": "restart guard (fourth fix-up, R4A-N15): SENSE2, VIN_RAW over R14 / R15 (10 / 101 of it)"
+  },
+  "FE_LATCH": {
+   "v_max": 20.7,
+   "v_min": 0.0,
+   "basis": "restart guard (fourth fix-up, R4A-N15): SENSE1 on VBUS20 through R197 when Q36 is off (VBUS20's 20.7 V maximum); 0 V while the stage runs"
+  },
+  "FE_CTR2": {
+   "v_max": 5.5,
+   "v_min": 0.0,
+   "basis": "restart guard (fourth fix-up, R4A-N15): U34's CTR2 delay capacitor: SNVSBJ1E recommends 0 to 5.5 V on the pin (6 V absolute)"
+  },
+  "FE_VZ": {
+   "v_max": 12.7,
+   "v_min": 0.0,
+   "basis": "restart guard (fourth fix-up, R4A-N15): VIN_RAW through R200 clamped by D22, BZT52C12 11.4 to 12.7 V (DS18004)"
+  },
+  "FE_RUN": {
+   "v_max": 12.7,
+   "v_min": 0.0,
+   "basis": "restart guard (fourth fix-up, R4A-N15): U34's two open-drain RESET outputs pulled to FE_VZ by R198"
+  },
+  "FE_EN": {
+   "v_max": 8.9,
+   "v_min": 0.0,
+   "basis": "restart guard (fourth fix-up, R4A-N15): U2's EN/UVLO pin, FE_RUN (at most FE_VZ's 12.7 V) over R199 / R206, 0.68 of it, plus the pin's own 7 uA into 32 k (0.2 V)"
+  },
+  "FE_BLEED_G": {
+   "v_max": 12.7,
+   "v_min": 0.0,
+   "basis": "restart guard (fourth fix-up, R4A-N15): Q38's gate, FE_VZ through R201 while Q37 is off"
+  },
+  "FE_BLEED": {
+   "v_max": 20.7,
+   "v_min": 0.0,
+   "basis": "restart guard (fourth fix-up, R4A-N15): Q38's drain, VBUS20 through the four 510 Ohm bleed resistors (VBUS20's 20.7 V while Q38 is off)"
   },
   "CH_SW1": {
    "v_max": 20.0,
@@ -727,20 +916,98 @@
    "v_min": -1.0,
    "basis": "the AP64500's switching node on the +5V_S1 stage: it swings to VBAT, the pack node that feeds the buck, and a diode drop below ground on the other half of the cycle"
   },
-  "S2_SW": {
-   "v_max": 14.4,
-   "v_min": -1.0,
-   "basis": "the AP64500's switching node on the +5V_S2 stage: it swings to VBAT, the pack node that feeds the buck, and a diode drop below ground on the other half of the cycle"
-  },
   "S3_SW": {
    "v_max": 14.4,
    "v_min": -1.0,
    "basis": "the AP64500's switching node on the +5V_S3 stage: it swings to VBAT, the pack node that feeds the buck, and a diode drop below ground on the other half of the cycle"
   },
-  "SD_SW": {
+  "S2_SW1": {
    "v_max": 14.4,
    "v_min": -1.0,
-   "basis": "the AP64500's switching node on the +5V_DEV stage: it swings to VBAT, the pack node that feeds the buck, and a diode drop below ground on the other half of the cycle"
+   "basis": "LM5176 stage S2, VBAT to +5V_S2: the buck-side switching node reaches the input rail"
+  },
+  "S2_SW2": {
+   "v_max": 5.1,
+   "v_min": -1.0,
+   "basis": "LM5176 stage S2, VBAT to +5V_S2: the boost-side switching node reaches the output rail"
+  },
+  "S2_BOOT1": {
+   "v_max": 22.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage S2, VBAT to +5V_S2: the bootstrap rides on SW1 at the controller's 7.6 V VCC",
+   "rides_on": "S2_SW1",
+   "bias_v": 7.6
+  },
+  "S2_BOOT2": {
+   "v_max": 12.7,
+   "v_min": 0.0,
+   "basis": "LM5176 stage S2, VBAT to +5V_S2: the bootstrap rides on SW2 at the controller's 7.6 V VCC",
+   "rides_on": "S2_SW2",
+   "bias_v": 7.6
+  },
+  "S2_VCC": {
+   "v_max": 7.6,
+   "v_min": 0.0,
+   "basis": "LM5176 stage S2, VBAT to +5V_S2: the controller's own regulator output, 7.6 V typical"
+  },
+  "S2_CS": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage S2, VBAT to +5V_S2: the current-sense node: the drop across a 5m Ohm shunt, under a volt at any current this stage carries"
+  },
+  "S2_CSF": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage S2, VBAT to +5V_S2: the filtered current-sense input at pin 16, 100 R from the shunt's top"
+  },
+  "S2_CSGF": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage S2, VBAT to +5V_S2: the filtered current-sense ground at pin 15, 100 R from the shunt's ground pad (the Kelvin return TI's pin table asks for)"
+  },
+  "SD_SW1": {
+   "v_max": 14.4,
+   "v_min": -1.0,
+   "basis": "LM5176 stage SD, VBAT to +5V_DEV: the buck-side switching node reaches the input rail"
+  },
+  "SD_SW2": {
+   "v_max": 5.0,
+   "v_min": -1.0,
+   "basis": "LM5176 stage SD, VBAT to +5V_DEV: the boost-side switching node reaches the output rail"
+  },
+  "SD_BOOT1": {
+   "v_max": 22.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage SD, VBAT to +5V_DEV: the bootstrap rides on SW1 at the controller's 7.6 V VCC",
+   "rides_on": "SD_SW1",
+   "bias_v": 7.6
+  },
+  "SD_BOOT2": {
+   "v_max": 12.6,
+   "v_min": 0.0,
+   "basis": "LM5176 stage SD, VBAT to +5V_DEV: the bootstrap rides on SW2 at the controller's 7.6 V VCC",
+   "rides_on": "SD_SW2",
+   "bias_v": 7.6
+  },
+  "SD_VCC": {
+   "v_max": 7.6,
+   "v_min": 0.0,
+   "basis": "LM5176 stage SD, VBAT to +5V_DEV: the controller's own regulator output, 7.6 V typical"
+  },
+  "SD_CS": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage SD, VBAT to +5V_DEV: the current-sense node: the drop across a 5m Ohm shunt, under a volt at any current this stage carries"
+  },
+  "SD_CSF": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage SD, VBAT to +5V_DEV: the filtered current-sense input at pin 16, 100 R from the shunt's top"
+  },
+  "SD_CSGF": {
+   "v_max": 1.0,
+   "v_min": 0.0,
+   "basis": "LM5176 stage SD, VBAT to +5V_DEV: the filtered current-sense ground at pin 15, 100 R from the shunt's ground pad (the Kelvin return TI's pin table asks for)"
   },
   "B33_SW": {
    "v_max": 14.4,
@@ -775,6 +1042,11 @@
    "v_max": 7.6,
    "v_min": 0.0,
    "basis": "LM5176 stage PA, VBAT to +13V8_PA: the controller's own regulator output, 7.6 V typical"
+  },
+  "PA_VINP": {
+   "v_max": 16.8,
+   "v_min": 0.0,
+   "basis": "LM5176 stage PA, VBAT to +13V8_PA: the controller's VIN pin behind its series blocking diode (SNVSAI1D 7.3.2, Figure 7-1): the input rail's service maximum less a diode drop, never above it"
   },
   "PA_CS": {
    "v_max": 1.0,
@@ -819,6 +1091,11 @@
    "v_max": 7.6,
    "v_min": 0.0,
    "basis": "LM5176 stage HF, VBAT to +12V_HF: the controller's own regulator output, 7.6 V typical"
+  },
+  "HF_VINP": {
+   "v_max": 16.8,
+   "v_min": 0.0,
+   "basis": "LM5176 stage HF, VBAT to +12V_HF: the controller's VIN pin behind its series blocking diode (SNVSAI1D 7.3.2, Figure 7-1): the input rail's service maximum less a diode drop, never above it"
   },
   "HF_CS": {
    "v_max": 1.0,
@@ -922,6 +1199,11 @@
    "v_max": 1.0,
    "v_min": 0.0,
    "basis": "LM5176 stage PD, VBAT to PD_VPWR: the filtered current-sense ground at pin 15, 100 R from the shunt's ground pad (the Kelvin return TI's pin table asks for)"
+  },
+  "HT_SW": {
+   "v_max": 16.8,
+   "v_min": -1.0,
+   "basis": "the heater buck's switching node: it swings to VBAT through U22, and a diode drop below ground"
   }
  },
  "pair_classes": {

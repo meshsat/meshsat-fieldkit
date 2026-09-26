@@ -29,6 +29,13 @@ def main():
     for i, f in enumerate(pngs):
         im = Image.open(os.path.join(tmp, f)).convert("L"); px = list(im.getdata()); ink = sum(1 for v in px if v < 200) / max(1, len(px))
         if ink > 0.0005: keep.append(i + 1)
+    # A SHEET OF MANY CELLS THAT KEEPS NO PAGE IS A FAILURE, NOT AN EMPTY PDF (26 September 2026, MESHSAT-1357). When
+    # pdftoppm cannot build a tile (poppler refuses a page with more than 10000 annotations) it still writes a blank PNG
+    # and exits 0, so this loop found no ink anywhere and `mutool merge` wrote a PDF with no page that build_sch.sh
+    # reported as its schematic. Board B's round-4 sheet did exactly that.
+    if not keep:
+        raise SystemExit("sch_pages: %d x %d cells and not one tile carries ink: the tiles did not render (see pdftoppm's "
+                         "messages above; a page with more than 10000 annotations is refused by poppler)" % (cols, rows))
     subprocess.run(["mutool", "merge", "-o", out, tiles, ",".join(str(k) for k in keep)], check=True)
     print("sch_pages: %d x %d cells, %d pages kept of %d tiles" % (cols, rows, len(keep), len(pngs)))
 

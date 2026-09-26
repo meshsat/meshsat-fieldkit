@@ -1,6 +1,6 @@
 {
  "board": "pcb-d-aprs",
- "written": "2026-09-26 10:01",
+ "written": "2026-09-26 14:19",
  "bypass": [
   {
    "cap": "C51",
@@ -37,6 +37,24 @@
    "part": "U14",
    "pin": "5",
    "net": "+3V3_D8"
+  },
+  {
+   "cap": "C66",
+   "part": "U18",
+   "pin": "5",
+   "net": "+3V3_D8"
+  },
+  {
+   "cap": "C67",
+   "part": "U19",
+   "pin": "5",
+   "net": "+3V3"
+  },
+  {
+   "cap": "C68",
+   "part": "U20",
+   "pin": "5",
+   "net": "+3V3"
   },
   {
    "cap": "C7",
@@ -196,15 +214,14 @@
     "U12": 0.002,
     "U13": 0.002,
     "U14": 0.002,
+    "U18": 0.002,
     "Q3": 0.001,
     "Q4": 0.001,
     "Q5": 0.001,
-    "Q6": 0.001,
-    "Q7": 0.001,
     "Q8": 0.001,
     "Q9": 0.001
    },
-   "note": "the local 3.3 V from U1: the six single-gate PTT and inhibit gates, their level shifters, the headphone amplifier's logic, the indicator LEDs and the pull-ups. The USB hub moved to its own +3V4_HUB on 26 September 2026 (W6-F5). Budget 3 percent: every consumer is a logic part with a wide supply range",
+   "note": "the local 3.3 V from U1: the six single-gate PTT and inhibit gates, the PTT mirror's buffer U18, the level shifters, the headphone amplifier's logic, the indicator LEDs and the pull-ups. The USB hub moved to its own +3V4_HUB on 26 September 2026 (W6-F5). Budget 3 percent: every consumer is a logic part with a wide supply range",
    "budget": 0.03,
    "always_on": true,
    "always_on_why": "U1 is a TLV75533 whose EN pin is tied to its own input, so this rail follows +5V_D8 and has no switch of its own",
@@ -250,9 +267,11 @@
    "amps_peak": 0.1,
    "source": "J_HARN1",
    "loads": {
-    "U16": 0.06
+    "U16": 0.06,
+    "U19": 0.002,
+    "U20": 0.002
    },
-   "note": "board A's always-on 3.3 V arriving over the mezzanine harness, which on this board feeds only the PTT inhibit's pull-ups through U16. It is a rail of board A and a load of this one",
+   "note": "board A's always-on 3.3 V arriving over the mezzanine harness, which on this board feeds the expander U16 with its level stages' far-side pull-ups, and since 26 September 2026 (RF-002) the two one-way buffers U19 and U20 that read KEY and PA_KEY back into U16. It is a rail of board A and a load of this one",
    "budget": 0.03,
    "share": 0.0075,
    "always_on": true,
