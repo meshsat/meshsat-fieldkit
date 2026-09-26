@@ -390,7 +390,9 @@ Prototype 1: in the core D-01 names. 18 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/CONOPS.md section 2a ("Which peripherals NEED-03 protects"), v2/docs/ARCH-PCB-B-IOHA.md section 15a ("The critical peripherals of prototype 1, named") and v2/docs/V2-SPEC.md:32 (correction 6) read at eadbe571: all three name every USB peripheral of IOHA section 15 and the kit-to-kit WiFi link as critical, and the LoRa module and cellular data as the named exceptions for prototype 1
 
-*Bound to:* `v2/docs/CONOPS.md@3c8591471936c45a`, `v2/docs/ARCH-PCB-B-IOHA.md@87db50d25ba2d45f`, `v2/docs/V2-SPEC.md@c3c84ac28266d3db`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/ARCH-PCB-B-IOHA.md re-read at the integration of 26 September 2026: the architecture merge corrected it in sections 5, 6 and 10a only (the fail-safe, break-before-make, CAN rate and voter-count paragraphs); sections 4, 15 and 15a and line 17 are byte-identical to eadbe571's, so this reading stands on the file at 6c3c93b7f32f953a
+
+*Bound to:* `v2/docs/CONOPS.md@3c8591471936c45a`, `v2/docs/ARCH-PCB-B-IOHA.md@6c3c93b7f32f953a`, `v2/docs/V2-SPEC.md@c3c84ac28266d3db`
 
 *Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md:17`; `v2/docs/ARCH-PCB-B-IOHA.md section 15a`; `session choice SC-02`; `v2/docs/CONOPS.md section 2a`
 
@@ -420,7 +422,9 @@ Prototype 1: in the core D-01 names. 18 record(s).
 
 *Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/FAILOVER-FABRIC.md section 9, FAB-04: the 100 kohm pull-downs R480 to R500 (the 21 controller outputs) and R15, R16 (the display selects) do not hold their lines below VIL at the parts' datasheet leakage (2.025 V against 0.8 V), so the dark-plane default of A12 is not assured; read on the committed netlist v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net at eadbe571, R480 and R500 still 100k
 
-*Bound to:* `v2/docs/feasibility/FAILOVER-FABRIC.md@d50af7a1a4f95b63`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b`
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/FAILOVER-FABRIC.md re-read at the integration of 26 September 2026: the architecture merge changed only where the page says its scripts and datasheets are filed (section 2 and Appendix A's header, now v2/docs/feasibility/fab/ and v2/vendor/); sections 1, 5.2, 8, 9 and 10 are byte-identical to eadbe571's, so this reading stands on the file at 29100c28d96cda8e
+
+*Bound to:* `v2/docs/feasibility/FAILOVER-FABRIC.md@29100c28d96cda8e`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b`
 
 *Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md:87-89`; `v2/docs/ARCH-PCB-B-IOHA.md:178-189`; `v2/docs/ARCH-PCB-B-IOHA.md section 13 (A10, A12)`; `v2/docs/feasibility/FAILOVER-FABRIC.md section 9`
 
@@ -434,7 +438,9 @@ Prototype 1: in the core D-01 names. 18 record(s).
 
 *Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/FAILOVER-FABRIC.md sections 5.2 and 9, FAB-02: at every kit power-up and whenever a slot is off, the always-on fabric applies voltage to the pins of that module (the hubs' USB and SuperSpeed paths, the display switches); the finding stands on main and on the round-6 candidate, and its remedy (b) and (c) is not drawn
 
-*Bound to:* `v2/docs/feasibility/FAILOVER-FABRIC.md@d50af7a1a4f95b63`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b`
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/FAILOVER-FABRIC.md re-read at the integration of 26 September 2026: the architecture merge changed only where the page says its scripts and datasheets are filed (section 2 and Appendix A's header, now v2/docs/feasibility/fab/ and v2/vendor/); sections 1, 5.2, 8, 9 and 10 are byte-identical to eadbe571's, so this reading stands on the file at 29100c28d96cda8e
+
+*Bound to:* `v2/docs/feasibility/FAILOVER-FABRIC.md@29100c28d96cda8e`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b`
 
 *Source (verified):* `v2/docs/feasibility/FAILOVER-FABRIC.md section 5.2`; `v2/docs/feasibility/FAILOVER-FABRIC.md section 10`
 
@@ -448,7 +454,9 @@ Prototype 1: in the core D-01 names. 18 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/FAILOVER-FABRIC.md sections 1, 8 and 10 read at eadbe571: 202 of 202 rows with an expected far end read OK on the round-6 netlist; FAB-01 to FAB-04 stand on main and on the candidate; the escape trial Q-B-ESC-1 is specified and not run, and the eight-layer whole-board run of decision 43 has not been run; none of FB-FAB-1 to FB-FAB-8 is closed
 
-*Bound to:* `v2/docs/feasibility/FAILOVER-FABRIC.md@d50af7a1a4f95b63`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/FAILOVER-FABRIC.md re-read at the integration of 26 September 2026: the architecture merge changed only where the page says its scripts and datasheets are filed (section 2 and Appendix A's header, now v2/docs/feasibility/fab/ and v2/vendor/); sections 1, 5.2, 8, 9 and 10 are byte-identical to eadbe571's, so this reading stands on the file at 29100c28d96cda8e
+
+*Bound to:* `v2/docs/feasibility/FAILOVER-FABRIC.md@29100c28d96cda8e`
 
 *Feasibility page:* `v2/docs/feasibility/FAILOVER-FABRIC.md`, blocker ids FB-FAB-1, FB-FAB-2, FB-FAB-3, FB-FAB-4, FB-FAB-5, FB-FAB-6, FB-FAB-7, FB-FAB-8; *owner:* Board B's author (FB-FAB-2 to FB-FAB-7), the integrator (FB-FAB-1, the run order of FB-FAB-6), an outside high-speed reviewer once the owner approves R-HSD (L-05), bring-up (FB-FAB-8).; *holds:* REQ-004, REQ-006, CON-003, CON-022; layout entry of B.
 
@@ -548,7 +556,9 @@ Prototype 1: in the core D-01 names. 18 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/ARCH-PCB-B-IOHA.md sections 4 and 15 read at eadbe571 give bank 1 to slot 2, bank 2 to slot 3 and bank 3 to slot 1; v2/docs/PANEL.md section 1 and its pin table give bank 1's failover host as slot 2; the generator sets f = s % 3 + 1 at v2/ecad/tools/gen_sch_b.py:788
 
-*Bound to:* `v2/docs/ARCH-PCB-B-IOHA.md@87db50d25ba2d45f`, `v2/docs/PANEL.md@43e150bc58944ea2`, `v2/ecad/tools/gen_sch_b.py@6e3d880901fd3030`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/ARCH-PCB-B-IOHA.md re-read at the integration of 26 September 2026: the architecture merge corrected it in sections 5, 6 and 10a only (the fail-safe, break-before-make, CAN rate and voter-count paragraphs); sections 4, 15 and 15a and line 17 are byte-identical to eadbe571's, so this reading stands on the file at 6c3c93b7f32f953a
+
+*Bound to:* `v2/docs/ARCH-PCB-B-IOHA.md@6c3c93b7f32f953a`, `v2/docs/PANEL.md@43e150bc58944ea2`, `v2/ecad/tools/gen_sch_b.py@6e3d880901fd3030`
 
 *Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md section 4`; `v2/docs/ARCH-PCB-B-IOHA.md section 15`; `v2/ecad/tools/gen_sch_b.py:788`
 
@@ -2408,7 +2418,7 @@ Every item that has left the open list, and what closed it: an owner ruling, a s
 |---|---|---|---|---|---|
 | CHO-001 | core | MUST_JUSTIFY | SCHEMATIC | DESK_REVIEW | v2/ecad/tools/gen_sch_b.py:635-643 read at eadbe571: the 5G socket is now TE 2199119-3, key B (458b2873), but its land does not carry the two locating holes of TE drawing C-2199119 rev F sheet 3, which the generator's own comment records as a mismatch until the land carries them; v2/docs/evidence/WRONG-MODEL-RECONCILIATION.md: the certification rows reconciled on 26 September 2026 list current... |
 | CON-003 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/FAILOVER-FABRIC.md section 9, FAB-03: the voted select drives the muxes directly and the enable follows one XOR delay later, and no maker's document bounds the overlap, so A10's pass criterion ("the enable is low for the whole select transition") cannot be met as generated; the delayed copy reaches the XOR through a 100 us RC against a 10 ns/V input limit; v2/docs/feasibilit... |
-| CON-022 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/FAILOVER-FABRIC.md sections 5.2 and 9, FAB-02: at every kit power-up and whenever a slot is off, the always-on fabric applies voltage to the pins of that module (the hubs' USB and SuperSpeed paths, the display switches); the finding stands on main and on the round-6 candidate, and its remedy (b) and (c) is not drawn |
+| CON-022 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/FAILOVER-FABRIC.md sections 5.2 and 9, FAB-02: at every kit power-up and whenever a slot is off, the always-on fabric applies voltage to the pins of that module (the hubs' USB and SuperSpeed paths, the display switches); the finding stands on main and on the round-6 candidate, and its remedy (b) and (c) is not drawn; v2/docs/feasibility/FAILOVER-FABRIC.md re-read at the inte... |
 | REQ-012 | deferred | MUST_JUSTIFY | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/EMCON.md section 0 read at eadbe571, on board C's committed netlist v2/ecad/pcb-c-display-c8/out/pcb-c-display.net: the TX lamp's supply, the LED rail behind Q1 and Q2, exists only while the panel controller drives PANEL_PWM, so with the controller in reset the lamp cannot follow KEY and the bench clause fails as drawn (EMCON.md E-02 records the lamp and makes it no pass con... |
 | CON-009 | deferred | MUST_JUSTIFY | SCHEMATIC | DESK_REVIEW | v2/docs/MESHSAT-709-geometry-appendix.md:18532-18533 (32.360): board B's T1, the Pulse H5007NL, is rated 0 to +70 C against the envelope's -20 C floor; v2/docs/feasibility/POWER-THERMAL.md section 9.4 read at eadbe571: two bought parts are outside the adopted envelope and not in pcb_part_temps.yaml, the AW7915-AED WiFi card (0 to +70 C, or -10 to +70 C on the maker's current page) and the LimeS... |
 | CFL-003 | deferred | MUST_JUSTIFY | SCHEMATIC | - | its own sources disagree: v2/ecad/tools/pcb_board_facts.yaml:281-282; v2/ecad/tools/pcb_envelope.yaml:15-19 |
@@ -2429,7 +2439,7 @@ Every item that has left the open list, and what closed it: an owner ruling, a s
 
 | record | prototype 1 | effect | at | class | evidence |
 |---|---|---|---|---|---|
-| FEA-003 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/FAILOVER-FABRIC.md sections 1, 8 and 10 read at eadbe571: 202 of 202 rows with an expected far end read OK on the round-6 netlist; FAB-01 to FAB-04 stand on main and on the candidate; the escape trial Q-B-ESC-1 is specified and not run, and the eight-layer whole-board run of decision 43 has not been run; none of FB-FAB-1 to FB-FAB-8 is closed |
+| FEA-003 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/FAILOVER-FABRIC.md sections 1, 8 and 10 read at eadbe571: 202 of 202 rows with an expected far end read OK on the round-6 netlist; FAB-01 to FAB-04 stand on main and on the candidate; the escape trial Q-B-ESC-1 is specified and not run, and the eight-layer whole-board run of decision 43 has not been run; none of FB-FAB-1 to FB-FAB-8 is closed; v2/docs/feasibility/FAILOVER-FA... |
 | FEA-006 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/DECOUPLING.md sections 1 and 10 read at eadbe571: the 3 mm number is a project heuristic for every part it is applied to and the rule is per class; "Nothing is laid for this ruling yet"; DEC-001's PASS readings on boards B and P are 33 blanket allowances, not evidence; the TPA6132A2 on board D is fitted with 1 uF where its maker asks 2.2 uF |
 | CON-017 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | (1) and (2) hold: v2/ecad/tools/gen_sch_b.py:281-289 and :1145-1146 read at eadbe571 name STM32H743VIT6 (JLCPCB C114409) with the pin table checked again for both parts, the committed netlist v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net carries U41, U51 and U61 as STM32H743VIT6, and 458b2873's parity run traced every difference to a finding; (3) and (4) cannot be decided: no supervisor firmw... |
 | FEA-004 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/POWER-THERMAL.md sections 0 and 11 read at eadbe571 (Status: PROVISIONAL): runtime 2.5 h and 1.7 h aged on bounds of 1.3 to 3.3 h and 0.9 to 2.3 h; D-11's thresholds set PROVISIONAL; F2's margin during a key-down unknown; the hot end undecided until the enclosure conductance is measured |
@@ -2446,8 +2456,8 @@ Every item that has left the open list, and what closed it: an owner ruling, a s
 
 | record | prototype 1 | effect | at | class | evidence |
 |---|---|---|---|---|---|
-| REQ-005 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/CONOPS.md section 2a ("Which peripherals NEED-03 protects"), v2/docs/ARCH-PCB-B-IOHA.md section 15a ("The critical peripherals of prototype 1, named") and v2/docs/V2-SPEC.md:32 (correction 6) read at eadbe571: all three name every USB peripheral of IOHA section 15 and the kit-to-kit WiFi link as critical, and the LoRa module and cellular data as the named exceptions for prototype 1 |
-| CFL-001 | core | ADVISORY | SCHEMATIC | DESK_REVIEW | v2/docs/ARCH-PCB-B-IOHA.md sections 4 and 15 read at eadbe571 give bank 1 to slot 2, bank 2 to slot 3 and bank 3 to slot 1; v2/docs/PANEL.md section 1 and its pin table give bank 1's failover host as slot 2; the generator sets f = s % 3 + 1 at v2/ecad/tools/gen_sch_b.py:788 |
+| REQ-005 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/CONOPS.md section 2a ("Which peripherals NEED-03 protects"), v2/docs/ARCH-PCB-B-IOHA.md section 15a ("The critical peripherals of prototype 1, named") and v2/docs/V2-SPEC.md:32 (correction 6) read at eadbe571: all three name every USB peripheral of IOHA section 15 and the kit-to-kit WiFi link as critical, and the LoRa module and cellular data as the named exceptions for prototype 1; v2/... |
+| CFL-001 | core | ADVISORY | SCHEMATIC | DESK_REVIEW | v2/docs/ARCH-PCB-B-IOHA.md sections 4 and 15 read at eadbe571 give bank 1 to slot 2, bank 2 to slot 3 and bank 3 to slot 1; v2/docs/PANEL.md section 1 and its pin table give bank 1's failover host as slot 2; the generator sets f = s % 3 + 1 at v2/ecad/tools/gen_sch_b.py:788; v2/docs/ARCH-PCB-B-IOHA.md re-read at the integration of 26 September 2026: the architecture merge corrected it in sectio... |
 | CON-019 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/ecad/tools/gen_sch_a.py:1088-1104 read at eadbe571, on the committed netlists v2/ecad/pcb-a-power-a23/out/pcb-a-power.net and v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net: U30 (SN74LVC1G00) gives OUTLET_OK = NOT (TR_APRS AND PA_EN), and U26's spare gates give POE_EN = POE_SW_EN AND OUTLET_OK and PD_EN = PD_SW_EN AND OUTLET_OK, the enables of the PoE stage U16 and the USB-C stage U19. TR_APRS is... |
 | CON-018 | deferred | MUST_JUSTIFY | SCHEMATIC | DESK_REVIEW | v2/ecad/tools/gen_sch_a.py:1016-1026 read at eadbe571 and the committed netlist v2/ecad/pcb-a-power-a23/out/pcb-a-power.net: U31, a TPD2E2U06QDBZRQ1, sits on PD_CC1 and PD_CC2 with the pigtail header J_USBC_OUT; its 1.9 pF maximum leaves C96 and C97 (330 pF) inside the TPS25740A's 200 to 600 pF C(RX) window, as the generator's note records from SLLSEJ9E and SLVSDG8B; TEST-PLAN M7 covers every e... |
 | CFL-002 | deferred | ADVISORY | SCHEMATIC | DESK_REVIEW | v2/ecad/tools/gen_sch_e.py:563 read at eadbe571 and the committed netlist v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net: U17 is the SGP41-D-R4 on the sensor controller's bus (SDA1, SCL1), described as sampling the battery-bay air |

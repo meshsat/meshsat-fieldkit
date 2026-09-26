@@ -20,7 +20,7 @@ Measured on board C24 (pcb-c-display-c8, 2a273803757c68fb), declares C24.
 | rule | effect | phase | result | why |
 |---|---|---|---|---|
 | ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **PASS** | OPERATING-ENVELOPE.md is the record that was verified (sha 5af08b98e6de52f7) |
-| ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 25 |
+| ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 67 |
 | SCH-001 ERC clean or explained | BLOCKER | SCHEMATIC | **PASS** | erc_gate PASS of 308 |
 | SCH-002 board matches its netlist | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no netlist_parts verdict for this board |
 | SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_c PASS of 7 |

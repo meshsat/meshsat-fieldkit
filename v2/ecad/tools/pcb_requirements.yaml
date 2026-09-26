@@ -1417,9 +1417,13 @@ records:
           ("The critical peripherals of prototype 1, named") and v2/docs/V2-SPEC.md:32 (correction 6) read at eadbe571:
           all three name every USB peripheral of IOHA section 15 and the kit-to-kit WiFi link as critical, and the LoRa
           module and cellular data as the named exceptions for prototype 1
+      - >-
+          v2/docs/ARCH-PCB-B-IOHA.md re-read at the integration of 26 September 2026: the architecture merge corrected it in sections
+          5, 6 and 10a only (the fail-safe, break-before-make, CAN rate and voter-count paragraphs); sections 4, 15 and
+          15a and line 17 are byte-identical to eadbe571's, so this reading stands on the file at 6c3c93b7f32f953a
     evidence_bound_to:
       - "v2/docs/CONOPS.md@3c8591471936c45a"
-      - "v2/docs/ARCH-PCB-B-IOHA.md@87db50d25ba2d45f"
+      - "v2/docs/ARCH-PCB-B-IOHA.md@6c3c93b7f32f953a"
       - "v2/docs/V2-SPEC.md@c3c84ac28266d3db"
     release_effect: BLOCKER
     source:
@@ -1518,8 +1522,13 @@ records:
           controller outputs) and R15, R16 (the display selects) do not hold their lines below VIL at the parts'
           datasheet leakage (2.025 V against 0.8 V), so the dark-plane default of A12 is not assured; read on the
           committed netlist v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net at eadbe571, R480 and R500 still 100k
+      - >-
+          v2/docs/feasibility/FAILOVER-FABRIC.md re-read at the integration of 26 September 2026: the architecture merge
+          changed only where the page says its scripts and datasheets are filed (section 2 and Appendix A's header, now
+          v2/docs/feasibility/fab/ and v2/vendor/); sections 1, 5.2, 8, 9 and 10 are byte-identical to eadbe571's, so
+          this reading stands on the file at 29100c28d96cda8e
     evidence_bound_to:
-      - "v2/docs/feasibility/FAILOVER-FABRIC.md@d50af7a1a4f95b63"
+      - "v2/docs/feasibility/FAILOVER-FABRIC.md@29100c28d96cda8e"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b"
     release_effect: BLOCKER
     source:
@@ -1562,8 +1571,13 @@ records:
           is off, the always-on fabric applies voltage to the pins of that module (the hubs' USB and SuperSpeed paths,
           the display switches); the finding stands on main and on the round-6 candidate, and its remedy (b) and (c) is
           not drawn
+      - >-
+          v2/docs/feasibility/FAILOVER-FABRIC.md re-read at the integration of 26 September 2026: the architecture merge
+          changed only where the page says its scripts and datasheets are filed (section 2 and Appendix A's header, now
+          v2/docs/feasibility/fab/ and v2/vendor/); sections 1, 5.2, 8, 9 and 10 are byte-identical to eadbe571's, so
+          this reading stands on the file at 29100c28d96cda8e
     evidence_bound_to:
-      - "v2/docs/feasibility/FAILOVER-FABRIC.md@d50af7a1a4f95b63"
+      - "v2/docs/feasibility/FAILOVER-FABRIC.md@29100c28d96cda8e"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/FAILOVER-FABRIC.md section 5.2", "v2/docs/feasibility/FAILOVER-FABRIC.md section 10"]
@@ -1621,8 +1635,13 @@ records:
           expected far end read OK on the round-6 netlist; FAB-01 to FAB-04 stand on main and on the candidate; the
           escape trial Q-B-ESC-1 is specified and not run, and the eight-layer whole-board run of decision 43 has not
           been run; none of FB-FAB-1 to FB-FAB-8 is closed
+      - >-
+          v2/docs/feasibility/FAILOVER-FABRIC.md re-read at the integration of 26 September 2026: the architecture merge
+          changed only where the page says its scripts and datasheets are filed (section 2 and Appendix A's header, now
+          v2/docs/feasibility/fab/ and v2/vendor/); sections 1, 5.2, 8, 9 and 10 are byte-identical to eadbe571's, so
+          this reading stands on the file at 29100c28d96cda8e
     evidence_bound_to:
-      - "v2/docs/feasibility/FAILOVER-FABRIC.md@d50af7a1a4f95b63"
+      - "v2/docs/feasibility/FAILOVER-FABRIC.md@29100c28d96cda8e"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/FAILOVER-FABRIC.md section 10", "v2/docs/reviews/2026-09-26-foundation-progress-review.md section 3"]
     source_check: VERIFIED
@@ -1913,8 +1932,12 @@ records:
           v2/docs/ARCH-PCB-B-IOHA.md sections 4 and 15 read at eadbe571 give bank 1 to slot 2, bank 2 to slot 3 and bank
           3 to slot 1; v2/docs/PANEL.md section 1 and its pin table give bank 1's failover host as slot 2; the generator
           sets f = s % 3 + 1 at v2/ecad/tools/gen_sch_b.py:788
+      - >-
+          v2/docs/ARCH-PCB-B-IOHA.md re-read at the integration of 26 September 2026: the architecture merge corrected it in sections
+          5, 6 and 10a only (the fail-safe, break-before-make, CAN rate and voter-count paragraphs); sections 4, 15 and
+          15a and line 17 are byte-identical to eadbe571's, so this reading stands on the file at 6c3c93b7f32f953a
     evidence_bound_to:
-      - "v2/docs/ARCH-PCB-B-IOHA.md@87db50d25ba2d45f"
+      - "v2/docs/ARCH-PCB-B-IOHA.md@6c3c93b7f32f953a"
       - "v2/docs/PANEL.md@43e150bc58944ea2"
       - "v2/ecad/tools/gen_sch_b.py@6e3d880901fd3030"
     release_effect: ADVISORY
