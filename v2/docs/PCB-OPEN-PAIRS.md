@@ -7,7 +7,7 @@ Every pair that is not a current PASS, classified. Generated from tools/pcb_deci
 map's maturity and each deciding verdict: a decision that claims a pair wins over everything else, because
 the ruling is the action that moves it, and the measurement is reported beside it rather than lost.
 
-**128 open pair(s)** over 7 board(s). **40 are measured failures** (a tool looked and the board failed), which are **32 distinct readings**, and **1 of those are claimed by an open owner decision**.
+**121 open pair(s)** over 7 board(s). **41 are measured failures** (a tool looked and the board failed), which are **32 distinct readings**, and **1 of those are claimed by an open owner decision**.
 
 | waiting on | pairs | what it means |
 |---|---:|---|
@@ -15,11 +15,11 @@ the ruling is the action that moves it, and the measurement is reported beside i
 | `DECISION_UNCLAIMED` | 7 | a rule that says a decision is open while no decision claims it |
 | `AUTHORITY` | 3 | an authority this project does not have |
 | `NO_INSTRUMENT` | 11 | nothing verifies it |
-| `MISSING_INPUT` | 19 | an input the reading declared absent |
-| `MEASURED_FAILURE` | 39 | the tool looked and the board failed |
+| `MISSING_INPUT` | 17 | an input the reading declared absent |
+| `MEASURED_FAILURE` | 40 | the tool looked and the board failed |
 | `VENDOR_WAIT` | 2 | a fabricator or a standards body, and nobody here |
 | `OWNER_WORK` | 7 | work only the owner or the ordering session can do |
-| `NOT_JUDGED` | 39 | not judged, for the reason the reading gives |
+| `NOT_JUDGED` | 33 | not judged, for the reason the reading gives |
 
 A pair is what a BOARD has to satisfy, so the table counts pairs; these rules are decided by a verdict
 written ONCE for the whole set, so their rows are one reading seen on every board and not that many separate
@@ -33,29 +33,29 @@ things to fix.
 |---|---:|---:|---:|---:|---:|---:|
 | A | 24 | 13 | 2 | 1 | 4 | 4 |
 | B | 36 | 5 | 1 | 1 | 5 | 21 |
-| C | 14 | 4 | 1 | 0 | 1 | 7 |
+| C | 11 | 4 | 1 | 0 | 0 | 5 |
 | D | 14 | 2 | 1 | 1 | 4 | 5 |
 | E | 18 | 6 | 1 | 0 | 4 | 6 |
-| E5 | 6 | 3 | 1 | 0 | 0 | 2 |
-| P | 16 | 7 | 1 | 0 | 1 | 5 |
+| E5 | 3 | 2 | 1 | 0 | 0 | 0 |
+| P | 15 | 9 | 1 | 0 | 0 | 3 |
 
 ## Readings owed
 
-Of the 103 open pairs with a reading beside them, **25 are decided by a reading taken under a tool that has
+Of the 96 open pairs with a reading beside them, **19 are decided by a reading taken under a tool that has
 CHANGED since**. A tool change moves no rule-set fingerprint and no per-rule digest, so nothing else on these
 pages can say it. It is an upper bound, because a tool file moves for a comment as readily as for a
 criterion, and it decides nothing: it says the reading is owed. Re-take with retake_gate.sh or a sweep.
 
 | rule | boards |
 |---|---|
-| `CMP-002` | A, B, C, D, E, E5, P |
+| `CMP-002` | A, B, D, E |
 | `MEC-001` | A |
 | `PI-001` | A, E, P |
 | `PI-002` | A |
 | `PI-003` | A, D, E |
 | `RET-004` | A |
 | `SCH-002` | A, B |
-| `SUP-001` | A, B, C, D, E, E5, P |
+| `SUP-001` | A, B, D, E |
 
 ## Boards behind their own generator
 
@@ -122,7 +122,7 @@ holding a number, not a question about a number.
 | `THM-001` | E | INCONCLUSIVE | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) and from what each |
 | `THM-001` | P | INCONCLUSIVE | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the source part) and from what each |
 
-## MISSING_INPUT (19): an input the reading declared absent
+## MISSING_INPUT (17): an input the reading declared absent
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -135,7 +135,6 @@ holding a number, not a question about a number.
 | `DFM-001` | B | INCONCLUSIVE | the folder judged here is meshsat-pcb-b-revA-B19-quote and this board declares B21, so its properties are a reading of a board this set is not building |
 | `DOC-001` | B | INCONCLUSIVE | a deliverable folder at the declared phase B21: the only folder is meshsat-pcb-b-revA-B19-quote, a quote, and a folder is judged against itself |
 | `DOC-002` | B | INCONCLUSIVE | board B declares B21 and the order set holds B16: the note beside those folders describes a board this project is not building |
-| `DOC-002` | C | INCONCLUSIVE | board C declares C24 and the order set holds C7: the note beside those folders describes a board this project is not building |
 | `CMP-002` | D | INCONCLUSIVE | no deliverable folder at the declared phase D12, so this board's parts were not certified against the board this tree holds (the folders that exist are D10, D11, D5, D6, D7, D8, D9) |
 | `SUP-001` | D | INCONCLUSIVE | no deliverable folder at the declared phase D12, so this board's parts were not certified against the board this tree holds (the folders that exist are D10, D11, D5, D6, D7, D8, D9) |
 | `DFM-001` | D | INCONCLUSIVE | the folder judged here is meshsat-pcb-d-revA-D11 and this board declares D12, so its properties are a reading of a board this set is not building |
@@ -144,9 +143,8 @@ holding a number, not a question about a number.
 | `SUP-001` | E | INCONCLUSIVE | no deliverable folder at the declared phase E17, so this board's parts were not certified against the board this tree holds (the folders that exist are E4, E6, E7, E9) |
 | `DFM-001` | E | INCONCLUSIVE | the folder judged here is meshsat-pcb-e-revA-E9 and this board declares E17, so its properties are a reading of a board this set is not building |
 | `DOC-002` | E | INCONCLUSIVE | board E declares E17 and the order set holds E6: the note beside those folders describes a board this project is not building |
-| `DOC-002` | P | INCONCLUSIVE | board P declares P4 and the order set holds P1: the note beside those folders describes a board this project is not building |
 
-## MEASURED_FAILURE (39): the tool looked and the board failed
+## MEASURED_FAILURE (40): the tool looked and the board failed
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -180,8 +178,9 @@ holding a number, not a question about a number.
 | `ISO-001` | E | FAIL | spacing FAIL: {'below_limit': 92, 'closest_mm': 0.1287, 'hv_nets': 8, 'pairs_measured': 10759} |
 | `OUT-001` | E | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `STK-001` | E5 | FAIL | stackup_gate FAIL: {'compared': 8, 'copper_layers': 2, 'disagreements': 1} |
-| `DOC-002` | E5 | FAIL | doc_provenance_e5 FAIL: {'folders': 1, 'untraceable': 1} |
 | `OUT-001` | E5 | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
+| `CMP-002` | P | FAIL | jlc_certify_p FAIL: {'CERTIFIED': 17, 'PACKAGE_MISMATCH': 1, 'WRONG_MODEL': 1} |
+| `SUP-001` | P | FAIL | jlc_certify_p FAIL: {'CERTIFIED': 17, 'PACKAGE_MISMATCH': 1, 'WRONG_MODEL': 1} |
 | `PI-001` | P | FAIL | dc_density FAIL: {'met': 3, 'missed': 1, 'undeclared': 0} |
 | `STK-001` | P | FAIL | stackup_gate FAIL: {'compared': 8, 'copper_layers': 2, 'disagreements': 1} |
 | `RET-001` | P | FAIL | intent_return_path FAIL: {'fail': 5, 'pass': 24} |
@@ -209,7 +208,7 @@ holding a number, not a question about a number.
 | `DFA-001` | E | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 | `DFA-001` | P | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 
-## NOT_JUDGED (39): not judged, for the reason the reading gives
+## NOT_JUDGED (33): not judged, for the reason the reading gives
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -234,8 +233,6 @@ holding a number, not a question about a number.
 | `PLN-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 | `EMC-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 | `SCH-002` | C | INCONCLUSIVE | no netlist_parts verdict for this board |
-| `CMP-002` | C | INCONCLUSIVE | jlc_certify_c was taken 2026-09-20T14:11:39, before 2026-09-26T01:45:00+02:00, when its tool changed what the verdict means; re-take it |
-| `SUP-001` | C | INCONCLUSIVE | jlc_certify_c was taken 2026-09-20T14:11:39, before 2026-09-26T01:45:00+02:00, when its tool changed what the verdict means; re-take it |
 | `RET-003` | C | INCONCLUSIVE | return_stitch INCONCLUSIVE: this board has no transition between two different reference nets, so RET-003 has nothing on it to judge |
 | `SI-001` | C | INCONCLUSIVE | edge_length INCONCLUSIVE: every signal net's routed length against the critical length its own class implies, and a net past it is asked whether it is impedance-controlled, series-termin |
 | `SCH-002` | D | INCONCLUSIVE | no netlist_parts verdict for this board |
@@ -246,10 +243,6 @@ holding a number, not a question about a number.
 | `RET-003` | E | INCONCLUSIVE | return_stitch INCONCLUSIVE: this board has no transition between two different reference nets, so RET-003 has nothing on it to judge |
 | `SI-001` | E | INCONCLUSIVE | edge_length INCONCLUSIVE: every signal net's routed length against the critical length its own class implies, and a net past it is asked whether it is impedance-controlled, series-termin |
 | `DOC-001` | E | INCONCLUSIVE | final_gate_e INCONCLUSIVE: this board is HELD by an open owner decision, so its paperwork is not current and cannot be made current while the hold stands |
-| `CMP-002` | E5 | INCONCLUSIVE | jlc_certify_e5 was taken 2026-09-20T14:11:40, before 2026-09-26T01:45:00+02:00, when its tool changed what the verdict means; re-take it |
-| `SUP-001` | E5 | INCONCLUSIVE | jlc_certify_e5 was taken 2026-09-20T14:11:40, before 2026-09-26T01:45:00+02:00, when its tool changed what the verdict means; re-take it |
 | `SCH-002` | P | INCONCLUSIVE | no netlist_parts verdict for this board |
-| `CMP-002` | P | INCONCLUSIVE | jlc_certify_p was taken 2026-09-20T14:11:40, before 2026-09-26T01:45:00+02:00, when its tool changed what the verdict means; re-take it |
-| `SUP-001` | P | INCONCLUSIVE | jlc_certify_p was taken 2026-09-20T14:11:40, before 2026-09-26T01:45:00+02:00, when its tool changed what the verdict means; re-take it |
 | `SI-001` | P | INCONCLUSIVE | edge_length INCONCLUSIVE: this board declares no rise_ns anywhere, and an edge nobody wrote down decides nothing |
 

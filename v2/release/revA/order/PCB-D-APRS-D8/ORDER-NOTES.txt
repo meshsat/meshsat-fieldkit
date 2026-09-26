@@ -1,3 +1,21 @@
+READINESS OF THIS FOLDER: QUARANTINED, NOT_FOR_FAB
+This folder is not an approved fabrication package and nothing may be ordered from it (owner decision 41,
+25 September 2026: the order set is rebuilt and quarantined; promotion, publication and money are the owner's).
+
+ROUTING_STATUS = PASS
+ELECTRICAL_PROTECTION_STATUS = BLOCKED_DECISION_31
+FAB_READINESS = NOT_READY
+PUBLICATION_STATUS = HELD
+
+- This folder holds D8 and board D declares D12. Its gerbers, BOM and CPL are an older phase than the board this project is building, it was not rebuilt because no deliverable folder exists at D12, and the readiness above is board D at D12, not a judgement of the files in this folder.
+- Board D is held by decision 31 (board D's exposed-port protection). Forbidden while it holds: any orderable fabrication package, any promotion of the board or its folder. Lifts when: decision 31 is ruled and this entry is deleted; the decision register records decision 31 as ruled on 2026-09-21 by SESSION, and this hold entry has not been lifted.
+- ROUTING_STATUS: the hold's value; the registry today: the board's routing rules read RTE-001 PASS, RTE-002 PASS (2 PASS).
+- ELECTRICAL_PROTECTION_STATUS: the hold's value; the registry today: the board's protection rules read TRN-001 PASS (1 PASS).
+- FAB_READINESS: the hold's value; the registry today: the readiness gate reads NOT_READY over 51 required rule-board pairs: 37 PASS, 2 FAIL, 12 INCONCLUSIVE, 0 WAIVED; blockers failing: OUT-001.
+- PUBLICATION_STATUS: the hold's value; the registry today: board promotion has been frozen by the owner since 2026-09-16 (readiness manifest), so no folder here is released; this set was rebuilt under owner decision 41 of 25 September 2026 as a quarantined record. Nothing is ordered from it and no cart line was touched.
+- Computed 2026-09-26 by tools/order_readiness.py under rule set ff8151db3576437b (manifest 2026-09-16.1). The full reading is v2/docs/PCB-RULE-STATUS-D.md.
+END OF READINESS
+
 MeshSat field-kit carrier PCB-D APRS MEZZANINE Rev A, phase D8: JLCPCB order notes
 
 PCB

@@ -3,12 +3,15 @@
  "applicable": true,
  "counts": {
   "blank_over_allowance": 0,
-  "rejected_code": 0,
+  "rejected_code": 2,
   "rows": 23,
   "stale_allow_lines": 0
  },
  "denominator": 23,
- "evidence": [],
+ "evidence": [
+  "F1 C4661: WRONG_MODEL, the row names no part number and its land is drawn for 3568; the code'",
+  "U1 C157570: PACKAGE_MISMATCH, our land's body is 5 x 5 mm and the part's is 4 x 4 mm"
+ ],
  "inputs": {},
  "missing_input": null,
  "note": "",
@@ -26,12 +29,12 @@
  ],
  "tool": "lcsc_fill",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "git_head": "26b809006d62",
+  "tools_tree_sha": "a6f6dfb33a7f902f"
  },
- "ts": "2026-09-21T12:52:54Z",
- "verdict": "PASS",
- "version": "unknown",
+ "ts": "2026-09-26T07:30:21Z",
+ "verdict": "FAIL",
+ "version": "26b809006d62+dirty",
  "writer": {
   "file": "lcsc_fill.py",
   "sha16": "da4dbe667e26d0eb"

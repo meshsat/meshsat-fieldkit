@@ -26,12 +26,12 @@
  ],
  "tool": "lcsc_fill",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "git_head": "26b809006d62",
+  "tools_tree_sha": "a6f6dfb33a7f902f"
  },
- "ts": "2026-09-21T12:50:37Z",
+ "ts": "2026-09-26T07:30:20Z",
  "verdict": "PASS",
- "version": "unknown",
+ "version": "26b809006d62+dirty",
  "writer": {
   "file": "lcsc_fill.py",
   "sha16": "da4dbe667e26d0eb"

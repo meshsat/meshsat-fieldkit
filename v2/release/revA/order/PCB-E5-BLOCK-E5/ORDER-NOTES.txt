@@ -1,15 +1,37 @@
+READINESS OF THIS FOLDER: QUARANTINED, NOT_FOR_FAB
+This folder is not an approved fabrication package and nothing may be ordered from it (owner decision 41,
+25 September 2026: the order set is rebuilt and quarantined; promotion, publication and money are the owner's).
+
+ROUTING_STATUS = PASS
+ELECTRICAL_PROTECTION_STATUS = PASS
+FAB_READINESS = NOT_READY
+PUBLICATION_STATUS = NOT_RELEASED
+
+- Board E5 declares E5 and this folder is cut from the E5 deliverable folder; the readiness above is that board's.
+- ROUTING_STATUS: the board's routing rules read RTE-001 PASS (1 PASS).
+- ELECTRICAL_PROTECTION_STATUS: the board's protection rules read TRN-001 PASS, BAT-002 PASS (2 PASS).
+- FAB_READINESS: the readiness gate reads NOT_READY over 25 required rule-board pairs: 22 PASS, 2 FAIL, 1 INCONCLUSIVE, 0 WAIVED; blockers failing: OUT-001, STK-001.
+- PUBLICATION_STATUS: board promotion has been frozen by the owner since 2026-09-16 (readiness manifest), so no folder here is released; this set was rebuilt under owner decision 41 of 25 September 2026 as a quarantined record. Nothing is ordered from it and no cart line was touched.
+- Computed 2026-09-26 by tools/order_readiness.py under rule set ff8151db3576437b (manifest 2026-09-16.1). The full reading is v2/docs/PCB-RULE-STATUS-E5.md.
+END OF READINESS
+
 MeshSat field-kit carrier PCB-E5 DOCK BLOCK Rev A, phase E5: JLCPCB order notes
 
 PCB
 - Gerbers + Excellon drill: pcb-e5-block-gerbers.zip (KiCad 9, Protel extensions .gtl .g1 .g2 .gbl .gts .gbs .gto .gbo .gtp .gbp .gm1, every copper layer of the board, Excellon .drl, drill map .gbr)
 - Size 43.1 x 26.1 mm, 2 copper layers, 1.6 mm FR-4
-- 1 oz outer copper, surface finish ENIG, matte black solder mask, white silkscreen, no castellations, remove order number: yes (or specify location)
-- Impedance control: none (no controlled-impedance nets)
+- 2 oz outer copper (the board file's stackup), surface finish ENIG, matte black solder mask, white silkscreen, no castellations, remove order number: yes (or specify location)
+- Impedance control: none (no USB-named differential pair on this board)
 - Quantity: 5 (JLC minimum); confirm the board fits the rod holes of the case before ordering more
 
 ASSEMBLY
-- None: mechanical board (holes, window, tabs). PCB only.
-- Fitted at the bench: bare 2 oz board, no assembly: it sits on four M3 standoffs 6 mm above the dock strip so its face is at 7.4 mm, PCB-A's spring pins land on the twelve signal targets and the nine power targets, and the wires from the strip are soldered into the plated lands underneath (the underside legend names each one)
+- None: a bare board, no part is placed by JLC. PCB only.
+- Fitted at the bench: E5 is the dock block, a bare 2 oz board with no assembly: it sits on four M3 standoffs 6 mm above the dock strip so its face is at 7.4 mm, PCB-A's spring pins land on the twelve signal targets and the nine power targets, and the wires from the strip are soldered into the plated lands underneath (the underside legend names each one)
+
+PROVENANCE
+- These numbers were read from pcb-e5-block.kicad_pcb, sha256 686b29a734c55b9a
+- The gerber zip in this folder is sha256 ebfb01968ef93055
+- Written 2026-09-26 by tools/make_handoff.py; nothing in this note is typed by hand
 
 SOURCE
 - Deliverable folder: v2/release/revA/boards/meshsat-pcb-e5-revA-E5 in the meshsat-fieldkit repo (KiCad 9 project, schematic PDF, DRC report, renders, 1:1 prints)

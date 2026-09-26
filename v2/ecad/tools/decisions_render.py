@@ -98,7 +98,10 @@ def render():
     if closed:
         L += ["## Closed, for the record", "", "| # | what it was | how it ended |", "|---|---|---|"]
         for d in closed:
-            L.append("| %d | %s | %s |" % (d["n"], d["title"], d.get("outcome", d.get("status", ""))))
+            # an executed ruling says so where it is listed (26 September 2026, decision 41: the ruling and what
+            # was done under it are two facts, and a reader of this table is owed both)
+            L.append("| %d | %s | %s%s |" % (d["n"], d["title"], d.get("outcome", d.get("status", "")),
+                                             (" **Executed:** " + " ".join(str(d["executed"]).split())) if d.get("executed") else ""))
         L.append("")
     return {os.path.join(RR.DOCS, "OWNER-DECISIONS-OPEN.md"): "\n".join(L) + "\n"}
 

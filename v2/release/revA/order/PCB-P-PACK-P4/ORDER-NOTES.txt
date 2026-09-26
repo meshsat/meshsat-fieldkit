@@ -1,0 +1,48 @@
+READINESS OF THIS FOLDER: QUARANTINED, NOT_FOR_FAB
+This folder is not an approved fabrication package and nothing may be ordered from it (owner decision 41,
+25 September 2026: the order set is rebuilt and quarantined; promotion, publication and money are the owner's).
+
+ROUTING_STATUS = FAIL
+ELECTRICAL_PROTECTION_STATUS = FAIL
+FAB_READINESS = NOT_READY
+PUBLICATION_STATUS = NOT_RELEASED
+
+- Board P declares P4 and this folder is cut from the P4 deliverable folder; the readiness above is that board's.
+- ROUTING_STATUS: the board's routing rules read RTE-001 FAIL, RTE-002 PASS (1 FAIL, 1 PASS).
+- ELECTRICAL_PROTECTION_STATUS: the board's protection rules read TRN-001 PASS, BAT-001 FAIL, BAT-002 PASS (1 FAIL, 2 PASS).
+- FAB_READINESS: the readiness gate reads NOT_READY over 47 required rule-board pairs: 32 PASS, 9 FAIL, 6 INCONCLUSIVE, 0 WAIVED; blockers failing: BAT-001, CMP-002, OUT-001, PI-001, RET-001, RTE-001, STK-001, SUP-001; the order-code rules name WRONG_MODEL: 25 A mini blade (Keystone 3568 holder): the pack's fuse (the row names no part number and its land is drawn for 3568;); PACKAGE_MISMATCH: BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S bala (our land's body is 5 x 5 mm and the part's is 4 x 4 mm).
+- PUBLICATION_STATUS: board promotion has been frozen by the owner since 2026-09-16 (readiness manifest), so no folder here is released; this set was rebuilt under owner decision 41 of 25 September 2026 as a quarantined record. Nothing is ordered from it and no cart line was touched.
+- Computed 2026-09-26 by tools/order_readiness.py under rule set ff8151db3576437b (manifest 2026-09-16.1). The full reading is v2/docs/PCB-RULE-STATUS-P.md.
+END OF READINESS
+
+MeshSat field-kit carrier PCB-P PACK BMS Rev A, phase P4: JLCPCB order notes
+
+PCB
+- Gerbers + Excellon drill: pcb-p-pack-gerbers.zip (KiCad 9, Protel extensions .gtl .g1 .g2 .gbl .gts .gbs .gto .gbo .gtp .gbp .gm1, every copper layer of the board, Excellon .drl, drill map .gbr)
+- Size 70.1 x 44.1 mm, 2 copper layers, 1.6 mm FR-4
+- 2 oz outer copper (the board file's stackup), surface finish ENIG, matte black solder mask, white silkscreen, no castellations, remove order number: yes (or specify location)
+- Impedance control: none (no USB-named differential pair on this board)
+- Quantity: 5 (JLC minimum); confirm the board fits the rod holes of the case before ordering more
+
+ASSEMBLY (standard PCBA; the economic tier is not offered for these boards; the sides are the counts below)
+- BOM: pcb-p-pack-bom.csv (19 lines, 19 with an LCSC number, the rest must be matched in the JLC parts library at order time)
+- CPL: pcb-p-pack-cpl.csv (JLC format: Designator, Mid X, Mid Y, Layer, Rotation; rotations already carry the JLC offsets verified against their preview on 3 Sep for box headers, SOIC, SSOP, TSSOP, LQFP, WSON, SOT-23, SOT-223, LED 0603, USB-C; do not add them again); still check pin 1 in the JLC preview
+- Parts on the TOP side: 42, on the BOTTOM side: 0
+- Those are footprint counts; the CPL lists only the parts JLCPCB places (BOM-listed, not bench-fitted, not DNP), so it has fewer rows (ORDER-LOG.md, 3 Sep, checked per board).
+- Removed from the JLC BOM/CPL as DNP (they stay in the full BOM in the deliverable folder): none
+- Left out of the JLC BOM/CPL as bench-fitted parts (they stay in the full BOM in the deliverable folder, LCSC field empty where JLC has no equivalent): W_BN, W_BP, W_N, W_P
+- Not assembled by JLC, fitted at the bench: P4 is the BMS board of the built 4S smart pack (appendix 32.62): the TI BQ4050 SMBus gauge with primary protection and internal balancing, two CSD17570Q5B N-FETs in series on the high side (common drain), a 2 mohm 2512 shunt in the return, the 25 A mini blade holder, the cell tap header J_CELL (JST-XH 1x5, sense only), the thermistor header J_TS, the SMBus lead header J_SMB (JST-XH 1x4 to board E's J_SMB), and four 2.5 mm2 solder lands for the block's B+ and B- straps and the pack's two leads (12 AWG to the XT60 on board E's J_BATT). Two layers on JLC's 2 oz stack, the power path in locked 3 mm bands on both layers. Bench-fitted: the blade, the four lead wires, the tap and thermistor wires from the block; the board lies parts-up in the enclosure bay of v2/cad/pack_4s.py on four M3 bosses. P4 is the phase board P declares, cut on 13 September 2026, and at that finish it read 0 hard, 0 unrouted, THREE of three rails MET on the corrected density measure, the three pack connectors carrying the codes read back from JLCPCB with their pin count, pitch and stock (C157991, C594232, C5251182), and verify_deliverable accepting the folder on all 36 of its properties
+
+FABRICATION NOTES (P4, the pack BMS board, appendix 32.62 and 32.116)
+- Two layers, 1.6 mm, 2 oz outer copper (the power path carries the pack current in 3 mm bands on both faces); ENIG; vias 0.5/0.3 mm at the finest, 0.127 mm tracks and clearance at the QFN gauge; the gerber zip carries both copper layers, check the layer count on the order form (2) and the copper weight (2 oz).
+- The four 2.5 mm2 solder lands (W_BP, W_BN, W_P, W_N) and the 25 A blade are fitted at the bench; the gauge needs its golden image from bqStudio before the pack is closed (a bench step of the software list).
+- Owner decision 28 (25 September 2026) moves board P to four layers at 2 oz outer copper for its next phase. This folder is the two-layer P4 and is not that board.
+
+PROVENANCE
+- These numbers were read from pcb-p-pack.kicad_pcb, sha256 d79865e7b1aceb95
+- The gerber zip in this folder is sha256 faf5cd9d787d5609
+- Written 2026-09-26 by tools/make_handoff.py; nothing in this note is typed by hand
+
+SOURCE
+- Deliverable folder: v2/release/revA/boards/meshsat-pcb-p-revA-P4 in the meshsat-fieldkit repo (KiCad 9 project, schematic PDF, DRC report, renders, 1:1 prints)
+- Design record: v2/docs/MESHSAT-709-geometry-appendix.md (sections 18 to 25; 25 = case, panel, dock, single-pack ruling), YouTrack MESHSAT-709

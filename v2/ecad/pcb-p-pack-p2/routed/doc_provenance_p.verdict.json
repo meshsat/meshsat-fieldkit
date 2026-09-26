@@ -2,21 +2,20 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "folders": 1
+  "folders": 1,
+  "untraceable": 0
  },
- "denominator": 0,
- "evidence": [
-  "order folder(s) present: PCB-P-PACK-P1"
- ],
+ "denominator": 1,
+ "evidence": [],
  "inputs": {
   "declares": "P4",
   "release": {
-   "path": "/root/sweep38/v2/release/revA",
+   "path": "/tmp/claude-1000/-home-claude-runner-gitlab-products-meshsat-meshsat-fieldkit/3744628d-5552-4a03-8300-e043b6cdc9c8/scratchpad/wt/d41/v2/release/revA",
    "sha256_16": null
   }
  },
- "missing_input": "board P declares P4 and the order set holds P1: the note beside those folders describes a board this project is not building",
- "note": "DOC-002 asks about the document that describes THIS board",
+ "missing_input": null,
+ "note": "every document that asserts hardware numbers about board P names the artefact it was read from, by sha256",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -29,12 +28,12 @@
  ],
  "tool": "doc_provenance_p",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "git_head": "26b809006d62",
+  "tools_tree_sha": "a6f6dfb33a7f902f"
  },
- "ts": "2026-09-21T12:52:53Z",
- "verdict": "INCONCLUSIVE",
- "version": "unknown",
+ "ts": "2026-09-26T07:30:39Z",
+ "verdict": "PASS",
+ "version": "26b809006d62+dirty",
  "writer": {
   "file": "doc_provenance.py",
   "sha16": "f2e2ea02b8039562"

@@ -614,6 +614,72 @@ def t_a_board_is_certified_from_the_folder_it_declares_and_never_from_the_newest
         shutil.rmtree(d, ignore_errors=True)
 
 
+def t_a_row_the_declared_folder_carries_without_a_code_is_not_given_an_older_folders_code():
+    """A DECLARED FOLDER'S BLANK IS AN ANSWER (26 September 2026, the decision 41 re-take).
+
+    The declared folder went first so that its code would win, and a BLANK in it did not: the first non-empty code
+    won, so a row the declared folder carries with no code took the code an older folder of the same board had.
+    Board C's sixteen 3 mm panel lamps carry no code in C24, where they are bench-fitted and allow-listed, and
+    C2089 (an 8550SS transistor in TO-92-3) in C17; the per-board verdict failed C24 NOT_IDENTIFIED sixteen times
+    for a code C24 does not order.
+
+    DEFECTIVE, on a temporary release: X9 is declared and carries the row blank, X7 carries it with a code; the
+    row must come back with no code. ACCEPTABLE: a row only the older folder carries keeps its code, because the
+    table is also this project's knowledge of what can be bought."""
+    import tempfile, shutil, json
+    sys.path.insert(0, TOOLS)
+    import jlc_certify as J
+    d = tempfile.mkdtemp(prefix="certify-blank-")
+    try:
+        boards = os.path.join(d, "boards"); tools = os.path.join(d, "tools", "boards"); os.makedirs(tools)
+        rows = {"X7": 'Comment,Designator,Footprint,LCSC Part #\n"3 mm lamp",D1,LED_D3.0mm,C2089\n"old only 10k",R9,R_0603_1608Metric,C25804\n',
+                "X9": 'Comment,Designator,Footprint,LCSC Part #\n"3 mm lamp",D1,LED_D3.0mm,\n'}
+        for ph, text in rows.items():
+            f = os.path.join(boards, "meshsat-pcb-x-revA-%s" % ph); os.makedirs(f)
+            open(os.path.join(f, "pcb-x-bom.csv"), "w").write(text)
+        json.dump({"phase": "X9"}, open(os.path.join(tools, "x.json"), "w"))
+        got = J.rows_to_check(boards_dir=boards, tools=os.path.dirname(tools))
+        lamp = got[("3 mm lamp", "LED_D3.0mm")]
+        assert lamp["code"] == "", "the declared folder's blank took an older folder's code: %r" % lamp["code"]
+        old = got[("old only 10k", "R_0603_1608Metric")]
+        assert old["code"] == "C25804", "a row only an older folder carries lost its code: %r" % old
+        decl = J.rows_to_check(declared_only=True, boards_dir=boards, tools=os.path.dirname(tools))
+        assert set(decl) == {("3 mm lamp", "LED_D3.0mm")}, sorted(decl)
+    finally:
+        shutil.rmtree(d, ignore_errors=True)
+
+
+def t_no_allow_line_covers_a_part_on_a_passive_land_of_a_declared_folder():
+    """AN ALLOW LINE NAMES WHAT IT COVERS, NOT A WORD IT SHARES (26 September 2026).
+
+    Board C's and board E's `BOOTSEL` line was written for the solder jumper ("BOOTSEL: short while powering...")
+    and, being a substring, also covered "1k (BOOTSEL)", the RP2040's boot resistor, a real part JLCPCB places:
+    C24's BOM carries that resistor with no code and every gate read it as declared. The line is `BOOTSEL:` now.
+
+    The property, on every folder at its board's declared phase: no blank row on a resistor, capacitor or inductor
+    land is covered by an allow line of its own board. DEFECTIVE fixture: the old line against the resistor.
+    ACCEPTABLE: the narrowed line covers the jumper and not the resistor."""
+    passive = re.compile(r"^(?:R|C|L)_(?:0201|0402|0603|0805|1206|1210|1812|2010|2512)_")
+    def covered(allow, comment): return [a for a in allow if a in comment]
+    assert covered(["BOOTSEL"], "1k (BOOTSEL)"), "the defective fixture no longer reproduces the defect"
+    assert not covered(["BOOTSEL:"], "1k (BOOTSEL)") and covered(["BOOTSEL:"], "BOOTSEL: short while powering")
+    sys.path.insert(0, TOOLS)
+    import jlc_certify as J, rules_status as RS
+    ecad = os.path.dirname(TOOLS)
+    bad = []
+    for letter, (bom, folder) in sorted(J.newest_boms().items()):
+        try: pd = RS._phase_dir(letter, RS.manifest())
+        except Exception: continue
+        ap = os.path.join(pd, "lcsc-allow.txt")
+        if not os.path.exists(ap): continue
+        allow = [l.split("#", 1)[0].strip() for l in open(ap, errors="replace") if "#" in l and l.split("#", 1)[0].strip()]
+        for r in csv.DictReader(open(bom, errors="replace")):
+            if (r.get("LCSC Part #") or "").strip() or not passive.match(r.get("Footprint") or ""): continue
+            hit = covered(allow, r.get("Comment") or "")
+            if hit: bad.append("%s %s %r covered by %r" % (folder, r.get("Designator"), r.get("Comment"), hit))
+    assert not bad, "an allow line covers a real part on a passive land: %s" % bad[:6]
+
+
 def t_a_run_about_one_board_does_not_rewrite_the_set_s_certification_table():
     """`JLC-CERTIFIED.tsv` IS THE ORDER SET'S RECORD AND A SCOPED RUN WAS OVERWRITING IT (17 September 2026).
 

@@ -1,3 +1,20 @@
+READINESS OF THIS FOLDER: QUARANTINED, NOT_FOR_FAB
+This folder is not an approved fabrication package and nothing may be ordered from it (owner decision 41,
+25 September 2026: the order set is rebuilt and quarantined; promotion, publication and money are the owner's).
+
+ROUTING_STATUS = FAIL
+ELECTRICAL_PROTECTION_STATUS = PASS
+FAB_READINESS = NOT_READY
+PUBLICATION_STATUS = NOT_RELEASED
+
+- This folder holds B16 and board B declares B21. Its gerbers, BOM and CPL are an older phase than the board this project is building, it was not rebuilt because no deliverable folder exists at B21, and the readiness above is board B at B21, not a judgement of the files in this folder.
+- ROUTING_STATUS: the board's routing rules read RTE-001 INCONCLUSIVE, RTE-002 FAIL (1 FAIL, 1 INCONCLUSIVE).
+- ELECTRICAL_PROTECTION_STATUS: the board's protection rules read TRN-001 PASS (1 PASS).
+- FAB_READINESS: the readiness gate reads NOT_READY over 55 required rule-board pairs: 19 PASS, 5 FAIL, 31 INCONCLUSIVE, 0 WAIVED; blockers failing: OUT-001, PLC-001, PWR-003, RTE-002, SCH-002.
+- PUBLICATION_STATUS: board promotion has been frozen by the owner since 2026-09-16 (readiness manifest), so no folder here is released; this set was rebuilt under owner decision 41 of 25 September 2026 as a quarantined record. Nothing is ordered from it and no cart line was touched.
+- Computed 2026-09-26 by tools/order_readiness.py under rule set ff8151db3576437b (manifest 2026-09-16.1). The full reading is v2/docs/PCB-RULE-STATUS-B.md.
+END OF READINESS
+
 MeshSat field-kit carrier PCB-B COMPUTE Rev A, phase B16: JLCPCB order notes
 
 QUOTE ONLY: this line is priced from the PLACED, UNROUTED pre-route board of B16 (8 Sep 2026, MESHSAT-776). Size, layers, stack, finish and parts are the design's, the copper is not. Never pay this line; rebuild it from the routed deliverable first.
