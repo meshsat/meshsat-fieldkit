@@ -678,12 +678,20 @@ def t_b_runs_no_gate_before_placement():
 
 def t_the_router_launcher_dismisses_a_modal_warning_it_would_otherwise_wait_on():
     """B19's first route (15 Sep 2026) sat three hours on Freerouting's "normalization of net failed" dialog under Xvfb,
-    computing nothing; Return sent to its display started the route. route_one.sh runs the router in the background,
-    watches its CPU time and sends Return to the display when it stalls inside the first twenty minutes, and the box
-    setup installs xdotool so it can."""
+    computing nothing. route_one.sh grew its own CPU-stall watchdog that pressed Return, and on 26 September 2026 (round 8,
+    review finding F) it was replaced by the shared watcher, which reads what the dialog says before it answers. So:
+    route_one.sh sources fr_dialog_watch.sh, confirms the import with the probe BEFORE it starts the router, runs
+    fr_watch beside the router with the router's own log, and keeps no inline watchdog of its own. The box setup
+    installs xdotool so the watcher can answer."""
     s = open(os.path.join(TOOLS, "route_one.sh")).read()
-    assert "_RPID=$!" in s and "/proc/$_J/stat" in s and "xdotool key --clearmodifiers Return" in s and 'DISPLAY=":$_XDISP"' in s, "the launcher has no dialog watchdog"
-    assert s.find("xdotool key") < s.find('wait "$_RPID"'), "the watchdog must run while the router does"
+    code = "\n".join(l for l in s.splitlines() if not l.lstrip().startswith("#"))
+    assert 'fr_dialog_watch.sh"' in code, "route_one.sh does not source the shared watcher"
+    assert "fr_import_probe " in code and "fr_watch " in code, "route_one.sh has no import probe or no watcher"
+    assert code.index("fr_import_probe ") < code.index("-jar "), "the import must be confirmed before the router starts"
+    assert code.index("fr_watch ") > code.index("-jar "), "the watcher must run beside the router"
+    assert "xdotool" not in code and "_CPU0" not in code, "route_one.sh still carries a watchdog of its own"
+    m = re.search(r'fr_watch "\$_RPID" "\$_XDISP" "\$ADSN" "[^"]*" "([^"]+)"', code)
+    assert m and m.group(1).endswith("fr.log"), "route_one.sh does not give the watcher the router's log"
     o = open(os.path.join(TOOLS, "routeflow", "cloud", "onstart.sh")).read()
     assert "xdotool" in o, "a new box would have no xdotool for the watchdog"
 
@@ -694,22 +702,27 @@ def t_the_optimiser_is_bounded_and_the_autoroute_session_survives_it():
     Our build writes the Specctra session after every autoroute pass, so the moment the autoroute finishes the
     result exists; the optimiser then improves length and vias and its work reaches the board only if the
     WHOLE job ends before the time limit. E8 on 14 September 2026: fifteen minutes of autoroute, two hours
-    forty of optimiser, nothing used. E12 today: twenty-eight minutes of autoroute converging at pass 232 of
-    260, and an optimiser that would have run to the three-hour cap and been killed with nothing kept.
+    forty of optimiser, nothing used. E12: twenty-eight minutes of autoroute converging at pass 232 of 260, and
+    an optimiser that would have run to the three-hour cap and been killed with nothing kept.
 
-    So the optimiser gets a bound, it is expressed in SECONDS rather than in Freerouting's -oit, which is an
-    improvement threshold in percent and has no time in it at all, and it is stopped by PID rather than by a
-    pattern that could match another route on the same host.
+    So the optimiser gets a bound, in SECONDS rather than in Freerouting's -oit (a threshold in percent with no
+    time in it), and it is stopped by PID rather than by a pattern that could match another route on the same
+    host. Round 8 (26 September 2026) moved the bound into the shared watcher with the watchdog it lived in;
+    route_one.sh asks for it with FRW_OPT_BOUND=1 and names its session.
     """
-    s = open(os.path.join(TOOLS, "route_one.sh")).read()
-    assert "Auto-routing was completed" in s, "nothing notices that the autoroute has finished"
-    assert "FR_OPT_MAX_S" in s, "the optimiser bound cannot be set or removed"
-    assert 'kill -TERM "$_J"' in s, "the optimiser is not stopped by the pid the watchdog already holds"
-    i, j = s.find("Auto-routing was completed"), s.find('wait "$_RPID"')
-    assert 0 < i < j, "the bound must be applied while the router is running"
+    ro = open(os.path.join(TOOLS, "route_one.sh")).read()
+    assert "FRW_OPT_BOUND=1" in ro and 'FRW_SES="$ASES"' in ro, "route_one.sh does not ask for the optimiser bound"
+    s = open(os.path.join(TOOLS, "fr_dialog_watch.sh")).read()
+    body = s[s.index("fr_watch() {"):s.index("fr_import_probe() {")]
+    assert "Auto-routing was completed" in body, "nothing notices that the autoroute has finished"
+    assert "FR_OPT_MAX_S" in body, "the optimiser bound cannot be set or removed"
+    assert 'kill -TERM "$_J"' in body, "the optimiser is not stopped by the pid the watchdog already holds"
     # the session has to be on disk before anything is stopped, or the attempt scores 9999 and the round is lost
-    k = s.find("stopping the optimiser")
-    assert s.rfind('[ -s "$W/$N.ses" ]', 0, k) > 0, "the optimiser may only be stopped once a session exists"
+    k = body.find("stopping the optimiser")
+    assert k > 0 and body.rfind('[ -s "${FRW_SES:-/nonexistent}" ]', 0, k) > 0, "the optimiser may only be stopped once a session exists"
+    # and the bound is off for every other launcher
+    for f in ("route_part.sh", "cont_route.sh", "route_pcb.sh", "fr_probe.sh"):
+        assert "FRW_OPT_BOUND=1" not in open(os.path.join(TOOLS, f)).read(), "%s bounds an optimiser it never asked to" % f
 
 
 def t_every_python_block_embedded_in_a_shell_tool_parses():
@@ -799,26 +812,30 @@ def t_a_function_whose_stdout_is_read_as_a_number_lets_nothing_else_write_to_it(
 
 
 def t_every_launcher_that_starts_freerouting_under_xvfb_dismisses_its_modal_dialog():
-    """The fix went to one launcher of two, and the other is the parallel route.
+    """The fix went to one launcher of two, and the other was the parallel route.
 
     On 15 September 2026 board B's router sat three hours on Freerouting's "The normalization of net
-    failed" warning under Xvfb, computing nothing, and `route_one.sh` got a CPU-stall watchdog that sends
-    Return to the display. `route_part.sh` launches the same jar the same way, was written on 7 September
-    and never received it: the first confined partition run of board B, on 16 September, stalled on exactly
-    that warning at 6 percent of one core and went to 1.27 cores the moment Return reached its display by
-    hand. Every partition run in the record was exposed to it.
-
-    A router under Xvfb that can be stopped by a dialog needs the watchdog wherever it is launched.
+    failed" warning under Xvfb, and `route_one.sh` got a watchdog. `route_part.sh` launches the same jar the
+    same way and never received it: the first confined partition run of board B, on 16 September, stalled on
+    exactly that warning. A router under Xvfb that can be stopped by a dialog needs the watcher wherever it is
+    launched, and since round 8 (26 September 2026) the watcher must be given the router's LOG, because what a
+    dialog says is read there before it is answered, and every launcher confirms the import with the probe first.
     """
     import glob
     bad = []
     for p in sorted(glob.glob(os.path.join(TOOLS, "*.sh"))):
         s = open(p, errors="replace").read()
         if "xvfb-run" not in s or "-jar" not in s: continue
-        shared = "fr_dialog_watch.sh" in s and "fr_watch " in s
-        inline = "xdotool key" in s and "/proc/$_J/stat" in s
-        if not (shared or inline):
-            bad.append("%s launches Freerouting under Xvfb with no dialog watchdog" % os.path.basename(p))
+        if os.path.basename(p) == "fr_dialog_watch.sh": continue          # the watcher's own probe run
+        code = "\n".join(l for l in s.splitlines() if not l.lstrip().startswith("#"))
+        if not ("fr_dialog_watch.sh" in code and "fr_watch " in code):
+            bad.append("%s launches Freerouting under Xvfb with no watcher" % os.path.basename(p)); continue
+        for m in re.finditer(r"fr_watch\s+(.*)", code):
+            if m.group(0).startswith("fr_watch()"): continue
+            args = re.findall(r'"[^"]*"|\S+', m.group(1).split(";")[0].split("||")[0])
+            if len(args) < 5: bad.append("%s calls fr_watch without the router's log: %s" % (os.path.basename(p), m.group(0)[:100]))
+        if "fr_import_probe " not in code:
+            bad.append("%s starts a route without confirming its import (fr_import_probe)" % os.path.basename(p))
     assert not bad, "; ".join(bad)
 
 
@@ -846,12 +863,35 @@ def t_the_dialog_watchdog_finds_the_modal_by_its_title_and_not_only_by_a_flat_cp
     """26 September 2026, board B's escape trial Q-B-ESC-1: both arms sat 57 minutes on Freerouting's
     "DSN file reader" warning with the watchdog running and silent. An idle JVM's garbage collector and AWT
     threads still tick, so a CPU-flat trigger is never true while the router waits for a click. The modal
-    is found by its window title on the JVM's own display; the CPU trigger stays as the fallback."""
+    is found by its window title on the JVM's own display.
+
+    Round 8, the same night: the CPU-flat trigger is GONE, because all it could ever do was press Return on a
+    window nobody had identified. Every titled window is either one of Freerouting's own non-modal frames or
+    Java's internal windows (ignored by name), the DSN reader's dialog (answered only after its content is
+    read), or refused."""
     s = open(os.path.join(TOOLS, "fr_dialog_watch.sh"), errors="replace").read()
-    assert "xdotool search --name" in s, "the modal is not looked for by its window title"
-    assert "DSN file reader" in s, "the title the trial measured is not among those searched"
-    assert "Board Layout - Freerouting" in s, "the main window would be dismissed with the modal"
-    assert s.index("xdotool search --name") < s.index('"$_STILL" -ge 2'), "the title search runs only after the CPU trigger"
+    code = "\n".join(l for l in s.splitlines() if not l.lstrip().startswith("#"))
+    assert "search --onlyvisible --name ''" in code, "the windows on the router's display are not enumerated"
+    assert "DSN file reader - Freerouting" in code, "the DSN reader's dialog is not known by its title"
+    assert "Board Layout - Freerouting" in code and "General Settings" in code, "Freerouting's own frames would be refused"
+    assert "_STILL" not in code and "/proc/$_J/stat" not in code, "the CPU-flat trigger is still there"
+    assert "windowactivate" not in code, "windowactivate needs a window manager Xvfb has not got; it fails and takes the key with it"
+    assert "window-refused" in code, "a window nobody has read is not refused"
+
+
+def t_a_dialog_is_answered_only_after_what_it_says_is_read():
+    """Review finding F, 26 September 2026: "automatically pressing Return on a DSN file reader warning should require
+    understanding that warning". The only Return the watcher sends is in its dismissal, and the dismissal is reached
+    only on the branch where `fr_import_check.py classify` accepted every entry of the dialog."""
+    s = open(os.path.join(TOOLS, "fr_dialog_watch.sh"), errors="replace").read()
+    code = "\n".join(l for l in s.splitlines() if not l.lstrip().startswith("#"))
+    keys = [m.start() for m in re.finditer(r"key --clearmodifiers Return", code)]
+    d0, d1 = code.index("_frw_dismiss() {"), code.index("\n}\n", code.index("_frw_dismiss() {"))
+    assert keys and all(d0 < k < d1 for k in keys), "Return is sent outside the dismissal"
+    w = code[code.index("fr_watch() {"):]
+    c = w.index('classify "$_LOG" "$_DSN"'); g = w.index('if [ "$_rc" = 0 ]; then', c); call = w.index('_frw_dismiss "$_W"', g)
+    assert c < g < call, "the dialog is dismissed before, or without, its content being classified"
+    assert "_frw_visible" in code[d0:d1], "the dismissal does not check that the dialog is gone"
 
 
 def t_racing_attempts_differ_in_something_the_router_reads():
@@ -1344,3 +1384,287 @@ def t_the_session_importer_is_not_the_partition_importer():
     lock = open(os.path.join(here, "ses_import_lock.py"), encoding="utf-8").read()
     assert "sys.argv[1:6]" in lock, \
         "ses_import_lock no longer takes five arguments, so this rule is about a tool that changed"
+
+
+# ------------------------------------------------------------------------------------------------------------------
+# THE WATCHER, RUN (round 8 of MESHSAT-1357, 26 September 2026). A fake `java` (a bash script of that name, which is
+# what `pgrep -x java` and /proc/<pid>/cmdline see) writes a Freerouting log and raises windows in a fake `xdotool`'s
+# state; the fake xdotool behaves as Xvfb was MEASURED to behave on the box that night: windowactivate fails for want
+# of a window manager, and a Return reaches the dialog only when X focus is on the dialog's own focus proxy. Seconds
+# on the runner, no X server, no JVM.
+_FAKE_XDOTOOL = r'''#!/bin/bash
+S="$FAKEX"; cmd="$1"; shift
+case "$cmd" in
+  search)
+    name=""; while [ $# -gt 0 ]; do case "$1" in --name) name="$2"; shift;; esac; shift; done
+    while read -r id title; do [ -n "$id" ] || continue; if [ -z "$name" ] || [[ "$title" =~ $name ]]; then echo "$id"; fi; done < "$S/windows";;
+  getwindowname) grep -q "^$1 " "$S/windows" || exit 1; grep -m1 "^$1 " "$S/windows" | cut -d' ' -f2-;;
+  getwindowfocus) cat "$S/focus";;
+  windowfocus) [ "$1" = --sync ] && shift; echo "$1" > "$S/focus"; echo "windowfocus $1" >> "$S/keys.log";;
+  key) echo "key $* focus=$(cat "$S/focus")" >> "$S/keys.log"
+       if [ -f "$S/dialog" ] && [ "$(cat "$S/focus")" = "$(cat "$S/proxy")" ]; then
+         grep -v "^$(cat "$S/dialog") " "$S/windows" > "$S/w2"; mv "$S/w2" "$S/windows"; fi;;
+  getwindowgeometry) printf 'WINDOW=%s\nX=10\nY=10\nWIDTH=1000\nHEIGHT=600\nSCREEN=0\n' "${2:-$1}";;
+  mousemove) echo "mousemove $*" >> "$S/keys.log";;
+  windowactivate) echo "Your windowmanager claims not to support _NET_ACTIVE_WINDOW" >&2; echo "windowactivate $*" >> "$S/keys.log"; exit 1;;
+esac
+'''
+_FAKE_JAVA = r'''#!/bin/bash
+# fake java: -de <dsn> <mode>; writes the log on stdout the way log4j does, and windows into $FAKEX
+S="$FAKEX"; DSN="$2"; MODE="$3"
+ts() { date +"%Y-%m-%d %H:%M:%S.%3N"; }
+echo "$(ts) [main] INFO  Freerouting v1.9.0 (build-date: 2026-09-25)"
+echo "$(ts) [main] INFO  Opening '$DSN'..."
+printf '100 Board Layout - Freerouting\n110 FocusProxy\n111 Content window\n120 General Settings\n' > "$S/windows"
+echo 110 > "$S/focus"
+case "$MODE" in
+  known|unknown)
+    echo "$(ts) [main] WARN  The normalization of net '/PCIE3_CLK_N' failed."
+    [ "$MODE" = unknown ] && echo "$(ts) [main] WARN  Wiring.read_via_scope: net with name 'NOPE' not found at 'NOPE'"
+    printf '200 DSN file reader - Freerouting\n211 Content window\n213 FocusProxy\n' >> "$S/windows"
+    echo 200 > "$S/dialog"; echo 213 > "$S/proxy"; echo 200 > "$S/focus"      # focus moved off the proxy, as it was
+    while grep -q "^200 " "$S/windows"; do sleep 0.1; done
+    echo "$(ts) [Thread-33] INFO  Starting auto-routing..."
+    echo "$(ts) [Thread-33] INFO  Auto-routing was completed in 0.10 seconds.";;
+  exception)
+    printf '300 Exception Occurred\n' >> "$S/windows"; while :; do sleep 0.1; done;;
+  silent)
+    echo "$(ts) [main] WARN  Network.insert_net_class: via rule not found at 'kicad_default'"
+    echo "$(ts) [Thread-33] INFO  Starting auto-routing..."; while :; do sleep 0.1; done;;
+  quick-unknown|quick-known)
+    # a job shorter than one poll (board E5's route took 4.1 s, every probe without a dialog ends about 1 s after its
+    # import): it logs its import, routes, writes its session and ENDS before the watcher's next look
+    [ "$MODE" = quick-known ] && echo "$(ts) [main] WARN  The normalization of net '/PCIE3_CLK_N' failed."
+    echo "$(ts) [main] INFO  Opening 'job.rules'..."
+    [ "$MODE" = quick-unknown ] && echo "$(ts) [main] WARN  RulesFile.add_rules: layer not found at 'In9.Cu'"
+    echo "$(ts) [Thread-33] INFO  Starting auto-routing..."
+    echo "$(ts) [Thread-33] INFO  Auto-routing was completed in 0.40 seconds."
+    : > "$S/windows"; exit 0;;
+  quick-frame)
+    # MainApplication.java:372-376: create_board_frame returned null, WARN and System.exit(1)
+    echo "$(ts) [main] WARN  Couldn't create window frame"; : > "$S/windows"; exit 1;;
+  quick-cut)
+    # a JVM that dies in the middle of its import (a crash or a kill): no line that ends an import
+    : > "$S/windows"; exit 137;;
+esac
+'''
+
+
+def _watch(mode, default_poll=False):
+    """Run fr_watch against the fake router in `mode`; returns (rc, keys log, watch record, fake java alive, output,
+    import record). default_poll=True runs the watcher as the launchers do, at its default poll (FRW_POLL 5 s)."""
+    import shutil
+    d = tempfile.mkdtemp(); b = os.path.join(d, "bin"); x = os.path.join(d, "x"); os.makedirs(b); os.makedirs(x)
+    for name, src in (("xdotool", _FAKE_XDOTOOL), ("java", _FAKE_JAVA)):
+        open(os.path.join(b, name), "w").write(src); os.chmod(os.path.join(b, name), 0o755)
+    open(os.path.join(x, "keys.log"), "w").close(); open(os.path.join(x, "windows"), "w").close()
+    dsn = os.path.join(d, "job.dsn"); log = os.path.join(d, "fr.log")
+    polls = "" if default_poll else "FRW_POLL=0.3 FRW_POLL_ROUTE=0.3 FRW_STOP_GRACE=0.3 "
+    script = r'''
+set -u
+. "%(tools)s/fr_dialog_watch.sh"
+"%(b)s/java" -de "%(dsn)s" %(mode)s > "%(log)s" 2>&1 &
+J=$!
+%(polls)sfr_watch "$J" 977 "%(dsn)s" fixture "%(log)s"; rc=$?
+kill -0 $J 2>/dev/null && { echo ALIVE; kill -KILL $J; }
+echo "RC=$rc"
+''' % {"tools": TOOLS, "b": b, "dsn": dsn, "mode": mode, "log": log, "polls": polls}
+    env = {k: v for k, v in os.environ.items() if not k.startswith(("FRW_", "FR_"))}   # the watcher's own defaults
+    env.update(PATH=b + ":" + env.get("PATH", ""), FAKEX=x, DISPLAY=":977", XAUTHORITY=os.path.join(d, "xa"))
+    try:
+        r = subprocess.run(["bash", "-c", script], capture_output=True, text=True, env=env, timeout=60)
+    finally:
+        subprocess.run(["pkill", "-KILL", "-f", "[/]%s/bin/java" % os.path.basename(d)], capture_output=True)
+    m = re.search(r"RC=(\d+)", r.stdout)
+    rec = json.load(open(log + ".watch.json")) if os.path.exists(log + ".watch.json") else {}
+    keys = open(os.path.join(x, "keys.log")).read()
+    imp = json.load(open(log + ".import.json")) if os.path.exists(log + ".import.json") else None
+    out = (int(m.group(1)) if m else None, keys, rec, "ALIVE" in r.stdout, r.stdout + r.stderr, imp)
+    shutil.rmtree(d, ignore_errors=True)
+    return out
+
+
+def t_the_watcher_answers_a_dialog_whose_every_warning_is_known():
+    """The known warning of board B, a dialog that took focus off its proxy: focus goes back to the proxy, Return is
+    sent, the dialog is confirmed gone, and the record says so. windowactivate is never tried."""
+    rc, keys, rec, alive, out, imp = _watch("known")
+    assert rc == 0, out
+    assert "windowfocus 213" in keys and "key --clearmodifiers Return focus=213" in keys, keys
+    assert "windowactivate" not in keys, keys
+    ev = [e.get("event") for e in rec.get("events", [])]
+    assert "dialog-dismissed" in ev and "routing-started" in ev, ev
+    assert rec.get("decision") == "CONTINUE", rec.get("decision")
+
+
+def t_the_watcher_refuses_a_dialog_it_does_not_understand():
+    rc, keys, rec, alive, out, imp = _watch("unknown")
+    assert rc == 3, out
+    assert "key" not in keys, "a Return reached a dialog carrying an unknown warning: %s" % keys
+    assert not alive, "the router is still running after the refusal"
+    assert "IMPORT-REFUSED" in out and rec.get("decision") == "REFUSED", out
+
+
+def t_the_watcher_refuses_a_window_it_has_not_identified():
+    """"Exception Occurred" is DefaultExceptionHandler's modal; a Return would dismiss an exception unread."""
+    rc, keys, rec, alive, out, imp = _watch("exception")
+    assert rc == 3 and "key" not in keys and not alive, out
+    assert any(e.get("event") == "window-refused" and e.get("title") == "Exception Occurred" for e in rec.get("events", [])), rec
+
+
+def t_the_watcher_reads_an_import_that_raised_no_dialog():
+    """A warning logged during the import that raised no window (here a via rule the class did not find) is still a
+    warning: the watcher reads the import's lines when routing starts, and stops the router."""
+    rc, keys, rec, alive, out, imp = _watch("silent")
+    assert rc == 3 and not alive, out
+    assert any(e.get("event") == "import-refused" for e in rec.get("events", [])), rec
+
+
+def t_the_watcher_reads_the_import_of_a_router_that_ended_between_two_polls():
+    """Round 8, pass 2 (the independent check of 26 September 2026 reproduced it with these fakes): the loop read the
+    import only on a poll that saw routing start, so a job that imported, routed and ENDED between two polls left it
+    unread and fr_watch returned 0. Every import probe without a dialog is such a job, and so was board E5's 4.1 s
+    route, whose directory held no fr.log.import.json. Run as the launchers run it, at the default poll: an unknown
+    rules-file warning logged by a router that is already gone is refused, and the session it left is not taken."""
+    rc, keys, rec, alive, out, imp = _watch("quick-unknown", default_poll=True)
+    assert rc == 3, out
+    assert imp is not None and imp.get("decision") == "REFUSE" and imp.get("router_exited") is True, imp
+    assert any("RulesFile.add_rules" in x for x in imp.get("reasons", [])), imp
+    ev = rec.get("events", [])
+    assert any(e.get("event") == "import-refused" and e.get("when") == "after-exit" for e in ev), ev
+    assert rec.get("decision") == "REFUSED" and "IMPORT-REFUSED" in out, (rec.get("decision"), out)
+
+
+def t_the_import_of_a_router_that_ended_between_two_polls_is_still_accepted_when_it_is_known():
+    """The other way: the same short job whose one warning is board B's known normalisation line is read after it
+    ended, accepted, and its record carries the warned net that fr_after_route passes to the final session check."""
+    rc, keys, rec, alive, out, imp = _watch("quick-known", default_poll=True)
+    assert rc == 0, out
+    assert imp is not None and imp.get("decision") == "CONTINUE" and imp.get("warned_nets") == ["/PCIE3_CLK_N"], imp
+    assert any(e.get("event") == "import-read" and e.get("when") == "after-exit" for e in rec.get("events", [])), rec
+    assert rec.get("decision") is None and "IMPORT-REFUSED" not in out, (rec.get("decision"), out)
+
+
+def t_an_import_the_router_did_not_finish_is_refused_and_not_left_unread():
+    """Two import failures that raise no dialog and log no warning the loop would ever see: the jar could not build
+    its board frame (MainApplication.java:372-376, a WARN and System.exit(1)), and a JVM that died in the middle of
+    its import. Both ended between two polls; both must fail rather than read as a quiet run."""
+    for mode, why in (("quick-frame", "could not build its board"), ("quick-cut", "ended during its import")):
+        rc, keys, rec, alive, out, imp = _watch(mode, default_poll=True)
+        assert rc == 3, (mode, out)
+        assert imp is not None and any(why in x for x in imp.get("reasons", [])), (mode, imp)
+
+
+def t_a_launcher_that_never_opened_the_dsn_has_no_import_to_refuse():
+    """A log with no "Opening" line had no import: nothing is classified, the record says so, and the code stays 0
+    (the launchers then fail on the missing session, as before)."""
+    import shutil
+    d = tempfile.mkdtemp(); log = os.path.join(d, "fr.log")
+    open(log, "w").write("Error: Unable to access jarfile /nonexistent.jar\n")
+    script = '. "%s/fr_dialog_watch.sh"; sleep 0.5 & L=$!; fr_watch "$L" 977 "%s/job.dsn" fixture "%s"; echo "RC=$?"' % (TOOLS, d, log)
+    r = subprocess.run(["bash", "-c", script], capture_output=True, text=True, timeout=60)
+    rec = json.load(open(log + ".watch.json"))
+    shutil.rmtree(d, ignore_errors=True)
+    assert "RC=0" in r.stdout, r.stdout + r.stderr
+    assert any(e.get("event") == "no-import" for e in rec.get("events", [])), rec
+
+
+# a fake jar for the import probe that applies Freerouting 1.9.0's own design-name rule: the design is named after the
+# DSN's file name up to its first dot (gui/MainApplication.java:597-599) and a -dr rules file naming anything else logs
+# "RulesFile.read: design_name not matching" (designforms/specctra/RulesFile.java:71-74); it writes back $FAKEX/back.dsn
+_FAKE_PROBE_JAVA = r"""#!/bin/bash
+de=""; out=""; dr=""
+while [ $# -gt 0 ]; do case "$1" in -de) de="$2"; shift;; -do) out="$2"; shift;; -dr) dr="$2"; shift;; esac; shift; done
+ts() { date +"%Y-%m-%d %H:%M:%S.%3N"; }
+echo "$de" > "$FAKEX/de"
+echo "$(ts) [main] INFO  Freerouting v1.9.0 (build-date: 2026-09-25)"
+echo "$(ts) [main] INFO  Opening '$de'..."
+if [ -n "$dr" ]; then
+  echo "$(ts) [main] INFO  Opening '$dr'..."
+  design=$(basename "$de"); design="${design%%.*}"
+  name=$(head -1 "$dr" | sed -n 's/^(rules PCB \(.*\)$/\1/p')
+  [ "$name" = "$design" ] || echo "$(ts) [main] WARN  RulesFile.read: design_name not matching at 'x'"
+fi
+echo "$(ts) [Thread-33] INFO  Starting auto-routing..."
+echo "$(ts) [Thread-33] INFO  Auto-routing was completed in 0.00 seconds."
+cp "$FAKEX/back.dsn" "$out"
+"""
+_FAKE_XVFB_RUN = r"""#!/bin/bash
+while [ $# -gt 0 ]; do case "$1" in -a) shift; break;; -n) shift 2;; *) shift;; esac; done
+exec "$@"
+"""
+
+
+def _probe_with_rules(rules_name):
+    """fr_import_probe on the import-check fixture DSN, saved as board.dsn, with a -dr rules file named `rules_name`;
+    returns (rc, the -de path the jar was given, output)."""
+    import importlib.util, shutil
+    sp = importlib.util.spec_from_file_location("meshsat_fic_fixture", os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_fr_import_check.py"))
+    fic = importlib.util.module_from_spec(sp); sp.loader.exec_module(fic)
+    d = tempfile.mkdtemp(); b = os.path.join(d, "bin"); x = os.path.join(d, "x"); w = os.path.join(d, "run")
+    for q in (b, x, w): os.makedirs(q)
+    for name, src in (("xdotool", _FAKE_XDOTOOL), ("java", _FAKE_PROBE_JAVA), ("xvfb-run", _FAKE_XVFB_RUN)):
+        open(os.path.join(b, name), "w").write(src); os.chmod(os.path.join(b, name), 0o755)
+    open(os.path.join(x, "keys.log"), "w").close(); open(os.path.join(x, "windows"), "w").close()
+    open(os.path.join(x, "back.dsn"), "w").write(fic.BACK)
+    dsn = os.path.join(w, "board.dsn"); open(dsn, "w").write(fic.DSN)
+    rules = os.path.join(w, "board.rules")
+    open(rules, "w").write("(rules PCB %s\n  (autoroute_settings (fanout off) (autoroute on) (postroute on) (via_costs 200))\n)\n" % rules_name)
+    script = '. "%s/fr_dialog_watch.sh"; fr_import_probe "%s" "%s" fixture -dr "%s"; echo "RC=$?"' % (TOOLS, dsn, w, rules)
+    env = {k: v for k, v in os.environ.items() if not k.startswith(("FRW_", "FR_"))}
+    env.update(PATH=b + ":" + env.get("PATH", ""), FAKEX=x, FR_PROBE_JAR="/nonexistent/freerouting-1.9.0-mesh.jar",
+               DISPLAY=":977", XAUTHORITY=os.path.join(d, "xa"))
+    try:
+        r = subprocess.run(["bash", "-c", script], capture_output=True, text=True, env=env, timeout=120)
+    finally:
+        subprocess.run(["pkill", "-KILL", "-f", "[/]%s/bin/java" % os.path.basename(d)], capture_output=True)
+    de = open(os.path.join(x, "de")).read().strip() if os.path.exists(os.path.join(x, "de")) else None
+    m = re.search(r"RC=(\d+)", r.stdout)
+    shutil.rmtree(d, ignore_errors=True)
+    return (int(m.group(1)) if m else None), de, r.stdout + r.stderr
+
+
+def t_the_import_probe_gives_the_jar_the_design_name_the_route_gives_it():
+    """Round 8, pass 2, measured on the box on board E5: the probe's copy was import-probe-in.dsn, so Freerouting named
+    the design "import-probe-in" and every -dr rules file warned "design_name not matching", which the route itself,
+    given <name>.dsn, would not. The copy keeps the DSN's file name now: a rules file named after the DSN's stem passes
+    the probe, one named anything else is still refused (the warning is not known, and means another design's rules)."""
+    rc, de, out = _probe_with_rules("board")
+    assert rc == 0, out
+    assert de and os.path.basename(de) == "board.dsn" and os.path.basename(os.path.dirname(de)) == "import-probe-in", de
+    rc, de, out = _probe_with_rules("../out/board.dsn")        # fr_rules.py's name today: the DSN's (pcb ...) path
+    assert rc == 3 and "design_name not matching" in out, out
+
+
+def t_the_watcher_never_takes_another_trees_router_with_the_same_relative_dsn():
+    """Two clones running the same driver name the same relative DSN (out/routeflow/b-esc1/a6/run/S3/job.dsn), so a JVM
+    whose command line carries that string is not necessarily this watcher's: with a relative DSN the JVM must also be
+    working in this directory. Here another tree's router shows an "Exception Occurred" window; the watcher, in its
+    own directory with its own launcher, must neither answer it nor stop it."""
+    import shutil
+    d = tempfile.mkdtemp(); b = os.path.join(d, "bin"); x = os.path.join(d, "x"); other = os.path.join(d, "other"); mine = os.path.join(d, "mine")
+    for p in (b, x, os.path.join(other, "out"), os.path.join(mine, "out")): os.makedirs(p)
+    for name, src in (("xdotool", _FAKE_XDOTOOL), ("java", _FAKE_JAVA)):
+        open(os.path.join(b, name), "w").write(src); os.chmod(os.path.join(b, name), 0o755)
+    open(os.path.join(x, "keys.log"), "w").close(); open(os.path.join(x, "windows"), "w").close()
+    script = r'''
+set -u
+. "%(tools)s/fr_dialog_watch.sh"
+( cd "%(other)s" && exec "%(b)s/java" -de out/job.dsn exception > out/fr.log 2>&1 ) &
+O=$!
+sleep 0.5
+cd "%(mine)s"; : > out/fr.log
+sleep 2 & L=$!
+FRW_POLL=0.3 FRW_STOP_GRACE=0.3 fr_watch "$L" 977 out/job.dsn mine "%(mine)s/out/fr.log"; rc=$?
+kill -0 $O 2>/dev/null && echo OTHER-ALIVE
+kill -KILL $O 2>/dev/null
+echo "RC=$rc"
+''' % {"tools": TOOLS, "b": b, "other": other, "mine": mine}
+    env = dict(os.environ); env.update(PATH=b + ":" + env.get("PATH", ""), FAKEX=x, DISPLAY=":977", XAUTHORITY=os.path.join(d, "xa"))
+    try:
+        r = subprocess.run(["bash", "-c", script], capture_output=True, text=True, env=env, timeout=60)
+    finally:
+        subprocess.run(["pkill", "-KILL", "-f", "[/]%s/bin/java" % os.path.basename(d)], capture_output=True)
+    keys = open(os.path.join(x, "keys.log")).read()
+    shutil.rmtree(d, ignore_errors=True)
+    assert "RC=0" in r.stdout and "OTHER-ALIVE" in r.stdout, r.stdout + r.stderr
+    assert "IMPORT-REFUSED" not in r.stdout and not keys, "the watcher acted on another tree's router: %s %s" % (r.stdout, keys)

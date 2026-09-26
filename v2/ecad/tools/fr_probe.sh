@@ -23,6 +23,9 @@ PY
 LAYERS=$(grep -o "(layer [A-Za-z0-9_.]*" "$N.dsn" | awk '{print $2}' | sort -u)
 { echo "(rules PCB $N"; echo "  (snap_angle fortyfive_degree)"; echo "  (autoroute_settings (fanout off) (autoroute on) (postroute on) (vias on) (via_costs 200) (plane_via_costs 5) (start_ripup_costs 100) (start_pass_no 1)";
   for L in $LAYERS; do echo "    (layer_rule $L (active on) (preferred_direction horizontal) (preferred_direction_trace_costs 1.0) (against_preferred_direction_trace_costs 2.5))"; done; echo "  )"; echo ")"; } > via200.rules
+# the import is confirmed once, on the DSN every knob shares (MESHSAT-1357 round 8, review finding F): a probe that
+# measures knobs on a board the router did not import as declared measures nothing
+FR_PROBE_JAR="$JAR" fr_import_probe "$W/$N.dsn" "$W/import" "fr_probe" || { echo "fr_probe: the import was refused or could not be confirmed ($W/import/import-probe.json); capabilities NOT written"; echo PROBE-DONE; exit 1; }
 declare -A KNOBS=( [base]="" [oit_0.5]="-oit 0.5" [us_global]="-us global" [us_hybrid_1_1]="-us hybrid -hr 1:1" [is_sequential]="-is sequential" [is_random]="-is random" [inc_PWR]="-inc PWR" [im]="-im" [mp_10]="-mp 10" )
 nosession=0
 run_one() {   # name, extra args...
@@ -30,9 +33,12 @@ run_one() {   # name, extra args...
   # the dialog watchdog, 16 September 2026 (fr_dialog_watch.sh): a probe that stalls on the modal warning
   # reports a pass rate that is the dialog's, not the board's, and every pass ceiling is read off a probe
   local t0=$(date +%s); local _XD=$(( 200 + ($$ + RANDOM) % 700 ))
-  timeout 600 xvfb-run -n "$_XD" -a java -jar "$JAR" -de "$N.dsn" -do "$d/$N.ses" -mp ${MP:-40} -mt 1 -oit 2 -dct 0 "$@" > "$d/fr.log" 2>&1 &
-  local _RP=$!; fr_watch "$_RP" "$_XD" "$PWD/$N.dsn" "fr_probe $name"
+  # the DSN by its absolute path on the command line, because the watcher finds its JVM by that path (round 8: it was
+  # given $PWD/$N.dsn while the JVM was given $N.dsn, so it never found the router it was watching)
+  timeout 600 xvfb-run -n "$_XD" -a java -jar "$JAR" -de "$W/$N.dsn" -do "$d/$N.ses" -mp ${MP:-40} -mt 1 -oit 2 -dct 0 "$@" > "$d/fr.log" 2>&1 &
+  local _RP=$!; local _FW=0; fr_watch "$_RP" "$_XD" "$W/$N.dsn" "fr_probe $name" "$d/fr.log" || _FW=$?
   wait "$_RP"; local rc=$?; local t1=$(date +%s)
+  if [ "$_FW" != 0 ]; then echo "  $name: IMPORT-REFUSED or stopped by the watcher ($d/fr.log.watch.json)"; rm -f "$d/$N.ses"; fi
   local auto=$(grep -a -o "Auto-routing was completed in [0-9]* minute(s) [0-9.]* seconds" "$d/fr.log" | head -1); local opt=$(grep -a -o "optimization was completed in [0-9]* minute(s) [0-9.]* seconds" "$d/fr.log" | head -1)
   if [ ! -s "$d/$N.ses" ]; then echo "  $name: NO SESSION (exit $rc, $((t1 - t0)) s)"; nosession=$((nosession + 1)); echo "\"$name\": {\"session\": false, \"exit\": $rc, \"wall_s\": $((t1 - t0)), \"args\": \"$*\"}" >> "$d/row.json"; return; fi
   python3 - "$d/$N.kicad_pcb" "$d/$N.ses" <<'PY' 2>&1 | grep -v "Debug\|assert"

@@ -74,6 +74,20 @@ def sh(argv, cwd, log, env=None):
     return p.returncode
 
 # ---------------------------------------------------------------- predicates (each reads an artefact; absence blocks)
+def import_refused(w):
+    """Why the launcher in attempt directory `w` refused its import, or None. The records are fr_dialog_watch.sh's:
+    import-probe.json (the board the jar holds against the DSN), import-probe.log.watch.json and fr.log.watch.json
+    (the watcher's decisions, a dialog or window it would not answer among them) and fr.log.final-survive.json."""
+    for f, key, bad in (("import-probe.json", "decision", ("LOST", "UNREADABLE")), ("import-probe.log.watch.json", "decision", ("REFUSED",)),
+                        ("fr.log.watch.json", "decision", ("REFUSED",)), ("fr.log.final-survive.json", "decision", ("LOST",))):
+        try: r = json.load(open(os.path.join(w, f)))
+        except (OSError, ValueError): continue
+        if r.get(key) in bad:
+            why = r.get("findings") or r.get("reasons") or [e.get("reason") for e in r.get("events", []) if e.get("reason")]
+            return "%s %s: %s" % (f, r.get(key), json.dumps(why)[:300])
+    return None
+
+
 def read(fn):
     try: return open(fn, errors="replace").read()
     except OSError: return None
@@ -930,7 +944,14 @@ def experiment(exp_fn, budget_hours, use_services, parallel=1):
                    # 10 September 2026 (report 2 M3): the tool versions belong in the row. A benchmark comparing two boxes or two
                    # months compares KiCad builds and Python versions too, and the record could not say which build a row was measured on.
                    "kicad": _kicad_version(), "python": platform.python_version(), "cpus": os.cpu_count()}
-            if not os.path.exists(ses) or os.path.getsize(ses) == 0:
+            refused = import_refused(w)
+            if refused:
+                # round 8 (review finding F, 26 September 2026): route_one.sh confirms the import before it routes and
+                # its watcher reads every dialog before answering; a refusal is a finding about the DSN or the jar, not a
+                # routing result and not a tool that died, so it is neither NO_SESSION nor run again unchanged
+                row.update(verdict="IMPORT_REFUSED", Q=None, metrics=None, note=refused)
+                jn(dict(run="exp", board=name, stage="experiment", status="IMPORT_REFUSED", note="%s: %s" % (cfg["name"], refused[:200])))
+            elif not os.path.exists(ses) or os.path.getsize(ses) == 0:
                 row.update(verdict="NO_SESSION", Q=None, metrics=None); jn(dict(run="exp", board=name, stage="experiment", status="NO_SESSION", note="%s: no session in %d s" % (cfg["name"], wall)))
             else: finish(row, cfg, w, board, ses, flog)
             return row
