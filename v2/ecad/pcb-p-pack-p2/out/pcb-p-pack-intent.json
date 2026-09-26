@@ -1,6 +1,6 @@
 {
  "board": "pcb-p-pack",
- "written": "2026-09-26 13:33",
+ "written": "2026-09-26 17:52",
  "bypass": [
   {
    "cap": "C1",
@@ -130,5 +130,28 @@
    "z_se": 50.0
   }
  },
- "pass_through": {}
+ "pass_through": {},
+ "clamps": {
+  "D1": {
+   "direction": "uni",
+   "basis": "SMBJ20A: no C in the suffix, the unidirectional part (Littelfuse, Diodes Inc and MDD number them alike)",
+   "protected": "PACK_P",
+   "return": "PACK_N",
+   "symbol": "Device:D_Zener"
+  },
+  "D2": {
+   "direction": "bi",
+   "basis": "PESD5V0S1BA: Nexperia's S1B type, 'Bidirectional ESD protection diode'",
+   "protected": "SMBC",
+   "return": "PACK_N",
+   "symbol": "Device:D_TVS"
+  },
+  "D3": {
+   "direction": "bi",
+   "basis": "PESD5V0S1BA: Nexperia's S1B type, 'Bidirectional ESD protection diode'",
+   "protected": "SMBD",
+   "return": "PACK_N",
+   "symbol": "Device:D_TVS"
+  }
+ }
 }

@@ -14,6 +14,10 @@ zero is a real answer and is recorded the same way; what the rule refuses is the
 | footprint | boards | one designator | offset (deg) | compared on |
 |---|---|---|---|---|
 | `BatteryHolder_Keystone_3034_1x20mm` | B | BT1 |  |  |
+| `Bosch_LGA-14_3x2.5mm_P0.5mm` | E | U15 |  |  |
+| `Bosch_LGA-8_3x3mm_P0.8mm_ClockwisePinNumbering` | E | U14 |  |  |
+| `CM5_Conn_A_10164227` | B | U30A |  |  |
+| `CM5_Conn_B_10164227` | B | U30B |  |  |
 | `CP_EIA-3528-21_Kemet-B` | B | C520 |  |  |
 | `CP_Elec_10x10` | A | C163 |  |  |
 | `CP_Elec_6.3x7.7` | A, E | C164 |  |  |
@@ -25,7 +29,12 @@ zero is a real answer and is recorded the same way; what the rule refuses is the
 | `D_SOD-123` | A, C, D, E | D10 |  |  |
 | `D_SOD-123F` | C | D19 |  |  |
 | `D_SOD-323` | D, P | D10 |  |  |
+| `Eaton_SCF9550_9.5x5.0mm` | P | F2 |  |  |
+| `Ebyte_E22-900M30S` | B | U12 |  |  |
+| `Ebyte_E72-2G4M20S1E` | B | U13 |  |  |
 | `Fuseholder_Blade_Mini_Keystone_3568` | P | F1 |  |  |
+| `HDMI_A_Molex_208658-1001_Horizontal` | B | J_HDMI |  |  |
+| `HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP2.85x5.4mm` | A | U13 |  |  |
 | `Hirose_FH34SRJ-24S` | C | J_EPD |  |  |
 | `JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical` | D, P | J_VGG |  |  |
 | `JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical` | A, D | J_USBW |  |  |
@@ -39,6 +48,10 @@ zero is a real answer and is recorded the same way; what the rule refuses is the
 | `LQFP-100_14x14mm_P0.5mm` | B | U41 |  |  |
 | `LQFP-128_14x14mm_P0.4mm_EP6.0` | B | U101 |  |  |
 | `LQFP-32_7x7mm_P0.8mm` | D | U4 |  |  |
+| `L_CommonModeChoke_Bourns_SRF1260` | E | L2 |  |  |
+| `M2_B-Key_Socket_3052` | B | J_M2C2 |  |  |
+| `M2_E-Key_Socket_2230` | B | J_M2C1 |  |  |
+| `M2_M-Key_Socket_2242` | B | J_M2N1 |  |  |
 | `PinHeader_1x02_P2.54mm_Vertical` | B | J_RPIBOOT1 |  |  |
 | `PinHeader_1x02_P2.54mm_Vertical_SMD_Pin1Left` | B | J_IOCOFF_A |  |  |
 | `PinHeader_1x03_P2.54mm_Vertical` | B, E | J_GNSS2 |  |  |
@@ -46,19 +59,41 @@ zero is a real answer and is recorded the same way; what the rule refuses is the
 | `PinHeader_1x05_P2.54mm_Vertical` | A, B, E | J_USBC_OUT |  |  |
 | `PinHeader_1x05_P2.54mm_Vertical_SMD_Pin1Left` | B | U42 |  |  |
 | `PinHeader_2x05_P2.54mm_Vertical` | B | J_SPI3 |  |  |
+| `PowerPAK_SO-8_Single` | A, B, E, P | Q10 |  |  |
+| `Pulse_H5007NL` | B | T1 |  |  |
 | `QFN-16-1EP_3x3mm_P0.5mm_EP1.75x1.75mm` | D | U7 |  |  |
 | `QFN-24-1EP_4x4mm_P0.5mm_EP2.5x2.5mm` | A | U18 |  |  |
 | `QFN-28-1EP_5x5mm_P0.5mm_EP3.35x3.35mm` | B, D | U15 |  |  |
 | `QFN-32-1EP_4x4mm_P0.4mm_EP2.65x2.65mm` | A | U3 |  |  |
 | `QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm` | C, E | U3 |  |  |
 | `QFN-64-1EP_9x9mm_P0.5mm_EP4.7x4.7mm` | B | U102 |  |  |
+| `Quectel_LG290P` | B | U11 |  |  |
+| `RJ45_Amphenol_RJHSE5380` | B | J_ETH |  |  |
+| `Relay_DPDT_Omron_G6K-2F-Y` | D | K1 |  |  |
+| `SMA_Amphenol_132134-11_Vertical` | A | J_RF1 |  |  |
+| `SMA_Amphenol_132134_Vertical` | D | J_ANT |  |  |
 | `SOT-583-8` | A, B | U12 |  |  |
+| `Sensirion_DFN-6-1EP_2.44x2.44mm_P0.8mm_EP1.25x1.7mm` | E | U17 |  |  |
+| `Skyworks_SKY13351_MLPD-6_1x1mm` | B | U82 |  |  |
+| `TDSON-8-1` | E | Q1 |  |  |
+| `TQFP-128_14x14mm_P0.4mm_EP10.0` | B | U1 |  |  |
+| `TQFP-32_7x7mm_P0.8mm` | D | U6 |  |  |
+| `TSOT-23-6` | B, E | U25 |  |  |
+| `TSOT-23-8` | A | U1 |  |  |
 | `TSSOP-14_4.4x5mm_P0.65mm` | A, B | U26 |  |  |
 | `TSSOP-28_4.4x9.7mm_P0.65mm` | B | U5 |  |  |
+| `Texas_RKS0020A_VQFN-20_2.5x4.5mm` | B | U109 |  |  |
+| `Texas_RSE0010A_UQFN-10_1.5x2mm` | B | U110 |  |  |
+| `Texas_RSM0032A_VQFN-32-1EP_4x4mm_P0.4mm_EP1.4x1.4mm` | P | U1 |  |  |
+| `U.FL_Hirose_U.FL-R-SMT-1_Vertical` | B, D | J_GNSS1 |  |  |
 | `USB3_A_Receptacle_Wuerth_692122030100` | B | J_LIME |  |  |
 | `VSSOP-10_3x3mm_P0.5mm` | A, E | U10 |  |  |
 | `VSSOP-8_3x3mm_P0.65mm` | D | U8 |  |  |
+| `Vishay_VEML7700` | C | U_LIGHT |  |  |
+| `WQFN-42-1EP_3.5x9mm_P0.5mm_EP2.05x7.55mm` | B | U3 |  |  |
 | `WSON-10-1EP_2.5x2.5mm_P0.5mm_EP1.2x2mm` | A | U34 |  |  |
 | `WSON-12-1EP_3x2mm_P0.5mm_EP1x2.65` | P | U2 |  |  |
+| `Winbond_USON-8-1EP_3x2mm_P0.5mm_EP0.2x1.6mm` | C, E | U4 |  |  |
+| `nanoSIM_GCT_SIM8060-6-0-14-00` | B | J_SIM1 |  |  |
 
-47 footprint(s) to compare, over 7 board(s).
+82 footprint(s) to compare, over 7 board(s).

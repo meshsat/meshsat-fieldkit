@@ -147,13 +147,51 @@ def t_the_checklist_flag_answers_a_missing_path_instead_of_raising():
     turned that into an INCONCLUSIVE verdict, and DFA-001 then read as though the boards had been judged and
     found wanting when what had happened was an argument error. A gate that cannot tell a missing argument from
     a finding is the shape this project keeps meeting; the flag has the one default the ordering session looks
-    in, and a tree without that folder is told so rather than raised at."""
-    import subprocess, sys, tempfile
+    in, and a tree without that folder is told so rather than raised at.
+    Round 6 second pass (review of round 6, minor 7): the default is moved to a temporary file for the run through
+    MESHSAT_ROTATION_CHECKLIST, because the bare flag wrote the tracked v2/release/revA/order/ROTATION-CHECKLIST.md
+    on every suite run; the tracked file is read before and after and must not change."""
+    import subprocess, sys, tempfile, hashlib
     src = open(os.path.join(TOOLS, "assembly_set.py"), encoding="utf-8").read()
     assert "DEFAULT_CHECKLIST" in src, "the flag has no default, so the documented invocation raises"
     assert "argv[_i + 1].startswith(\"--\")" in src, "a following flag would be taken as the path"
+    tracked = os.path.normpath(os.path.join(TOOLS, "..", "..", "release", "revA", "order", "ROTATION-CHECKLIST.md"))
+
+    def sha(p):
+        return hashlib.sha256(open(p, "rb").read()).hexdigest() if os.path.isfile(p) else None
+    before = sha(tracked)
     with tempfile.TemporaryDirectory() as d:
+        out = os.path.join(d, "ROTATION-CHECKLIST.md")
         p = subprocess.run([sys.executable, os.path.join(TOOLS, "assembly_set.py"), "--checklist"],
                            cwd=d, capture_output=True, text=True, timeout=600,
-                           env=dict(os.environ, VERDICT_DIR=d))
+                           env=dict(os.environ, VERDICT_DIR=d, MESHSAT_ROTATION_CHECKLIST=out))
         assert "IndexError" not in (p.stdout + p.stderr), (p.stdout + p.stderr)[-300:]
+        assert os.path.isfile(out) and ("written to %s" % out) in p.stdout, (p.stdout + p.stderr)[-300:]
+    assert sha(tracked) == before, "the suite rewrote the tracked rotation checklist"
+
+
+def t_a_land_named_after_its_maker_is_still_polarised():
+    """Round 6 (26 September 2026): the family was matched only at the start of the footprint name, so board P's gauge
+    on Texas_RSM0032A_VQFN-32, board E's SGP41 on Sensirion_DFN-6 and board P's three-terminal Eaton_SCF9550 fuse never
+    reached the rotation checklist. DEFECTIVE before, ACCEPTABLE now: each is polarised, and the symmetric two-pin
+    passives are still not."""
+    for fp, n in (("Texas_RSM0032A_VQFN-32-1EP_4x4mm_P0.4mm_EP1.4x1.4mm", 33), ("Sensirion_DFN-6-1EP_2.44x2.44mm_P0.8mm", 7),
+                  ("Eaton_SCF9550_9.5x5.0mm", 3), ("HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP2.85x5.4mm", 29),
+                  ("TQFP-32_7x7mm_P0.8mm", 32), ("TSOT-23-6", 6), ("PowerPAK_SO-8_Single", 5), ("Bosch_LGA-8_3x3mm_P0.8mm", 8),
+                  ("Winbond_USON-8-1EP_3x2mm_P0.5mm", 9), ("AMASS_XT60-M_1x02_P7.20mm_Vertical", 2), ("D_SMB", 2),
+                  ("CP_EIA-3528-21_Kemet-B", 2)):
+        assert A.polarised(fp, n), fp
+    assert A.POLARISED.search("Texas_RSM0032A_VQFN-32-1EP_4x4mm") and A.POLARISED.search("Sensirion_DFN-6-1EP_2.44x2.44mm")
+    for fp in ("R_0603_1608Metric", "C_0603_1608Metric", "L_0805_2012Metric", "Fuse_1812_4532Metric", "TestPoint_Pad_D1.5mm",
+               "SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm", "SolderPad_8x6", "R_2512_6332Metric"):
+        assert not A.polarised(fp, 2), fp
+
+
+def t_the_pin_count_is_read_from_the_netlist():
+    d = tempfile.mkdtemp(prefix="dfa-pins-")
+    p = os.path.join(d, "x.net")
+    open(p, "w").write('(export (components (comp (ref "F2") (value "SCF9550") (footprint "meshsat:Eaton_SCF9550_9.5x5.0mm")))'
+                       ' (nets (net (code "1") (name "A") (node (ref "F2") (pin "1"))) (net (code "2") (name "B") '
+                       '(node (ref "F2") (pin "2"))) (net (code "3") (name "unconnected-(F2-Pad3)") (node (ref "F2") (pin "3")))))\n')
+    assert A.pin_counts(p) == {"F2": 3} and A.footprints(p) == {"F2": "Eaton_SCF9550_9.5x5.0mm"}
+    assert A.polarised("Eaton_SCF9550_9.5x5.0mm", A.pin_counts(p)["F2"])

@@ -35,8 +35,24 @@ ECAD = os.path.dirname(HERE)
 ROT = os.path.normpath(os.path.join(ECAD, "..", "release", "revA", "order", "jlc-rotations.csv"))
 # A footprint whose orientation can be wrong: two-pin passives that are symmetric are not in it, and the
 # families that are name the reason they are (a polarity mark, a pin 1, a keyed body).
-POLARISED = re.compile(r"^(D_|LED|CP_|USB|SOT|SOIC|SSOP|TSSOP|QFN|LQFP|WSON|DFN|VSSOP|SOP|Crystal|IDC|"
-                       r"PinHeader|JST|Molex|HRO|Fuseholder|BatteryHolder|SMP|Amphenol|Hirose)", re.I)
+#
+# A LAND NAMED AFTER ITS MAKER IS STILL A PACKAGE (round 6, 26 September 2026, MESHSAT-1357). The families were
+# matched only at the START of the footprint name, so every land whose name begins with its maker dropped out of
+# DFA-001's checklist: board P's gauge U1 moved to Texas_RSM0032A_VQFN-32 in round 4 and left the list, and board E's
+# SGP41 on Sensirion_DFN-6 and board P's three-terminal Eaton_SCF9550 chemical fuse were never on it; so were
+# HTSSOP-28, TQFP, TSOT, WQFN, TDSON, the PowerPAK SO-8 and every maker-named module land. Two things now decide it:
+# a package family anywhere in the name at a word boundary (with the letters a maker puts in front: H, T, V, W, U,
+# X2-), and a pin count of three or more, whatever the name, because a part with three terminals cannot be turned
+# without moving at least one of them to another net. A two-pin part is polarised only by its family (a diode, an
+# LED, a polarised capacitor, a keyed connector), which is what leaves the symmetric passives out.
+POLARISED = re.compile(r"(?:^|[_\-])(?:D_|LED|CP_|USB|[A-Z]{0,2}SOT|[A-Z]?SOIC|[A-Z]?SSOP|[A-Z]?TSSOP|[A-Z]{0,2}QFN|"
+                       r"[A-Z]{0,2}QFP|[A-Z]{0,2}SON|[A-Z0-9]{0,3}-?DFN|LGA|BGA|MLP[DQ]?|SO-?\d|SOP|Crystal|IDC|PinHeader|"
+                       r"JST|Molex|HRO|Fuseholder|BatteryHolder|SMP|Amphenol|Hirose|XT30|XT60|XT90)", re.I)
+
+
+def polarised(fp, npins):
+    """True when a footprint's orientation can be wrong: its family says so, or it has three or more pins."""
+    return bool(POLARISED.search(fp or "")) or (npins or 0) >= 3
 
 
 def rotations(path=None):
@@ -59,6 +75,16 @@ def footprints(net_path):
     for m in re.finditer(r'\(comp \(ref "([^"]+)"\).*?\(footprint "([^"]*)"\)', t, re.S):
         out[m.group(1)] = m.group(2).split(":")[-1]
     return out
+
+
+def pin_counts(net_path):
+    """{ref: the number of distinct pins the netlist carries for it}. KiCad 9 exports an unconnected pin as a net of
+    its own ("unconnected-(U1-Pad3)"), so every pin of a placed part is counted."""
+    t = open(net_path, encoding="utf-8", errors="replace").read()
+    pins = {}
+    for r, p in re.findall(r'\(node \(ref "([^"]+)"\) \(pin "([^"]+)"\)', t):
+        pins.setdefault(r, set()).add(p)
+    return {r: len(v) for r, v in pins.items()}
 
 
 def bench_fitted(stem, path=None):
@@ -151,14 +177,15 @@ def judge(ecad=None, only=None, rot=None):
         elif not nets:
             notes.append("board %s has no netlist in this tree, so its footprints could not be listed" % letter.upper())
         else:
-            fps = footprints(max(nets, key=os.path.getmtime))
+            _net = max(nets, key=os.path.getmtime)
+            fps, npins = footprints(_net), pin_counts(_net)
             # A ROTATION MATTERS FOR A PART THE ASSEMBLER PLACES. The bench-fitted designators of this board
             # never reach a CPL, so their rotation is nobody's to verify; the count is reported so the
             # exclusion is visible rather than silent.
             _bench = bench_fitted(str((facts.get(letter) or {}).get("project") or "")) or set()
             n_bench = 0
             for ref, fp in sorted(fps.items()):
-                if not POLARISED.search(fp or ""): continue
+                if not polarised(fp, npins.get(ref, 0)): continue
                 if ref in _bench: n_bench += 1; continue
                 hit = next(((p, o, v) for p, o, v in rows if re.search(p, fp)), None)
                 if hit is None:
@@ -176,7 +203,9 @@ def judge(ecad=None, only=None, rot=None):
     return out
 
 
-DEFAULT_CHECKLIST = os.path.normpath(os.path.join(
+# The tracked checklist the ordering session reads. MESHSAT_ROTATION_CHECKLIST moves the default elsewhere (round 6
+# second pass, review of round 6, minor 7): the suite's test of the bare flag rewrote this tracked file on every run.
+DEFAULT_CHECKLIST = os.environ.get("MESHSAT_ROTATION_CHECKLIST") or os.path.normpath(os.path.join(
     os.path.dirname(os.path.dirname(HERE)), "release", "revA", "order", "ROTATION-CHECKLIST.md"))
 
 
