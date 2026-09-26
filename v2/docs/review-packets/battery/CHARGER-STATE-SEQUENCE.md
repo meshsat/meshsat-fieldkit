@@ -6,10 +6,25 @@ the generators and is NOT_YET_TESTED. Labels: VERIFIED, INFERRED (step shown), T
 
 The review asks (section 2) whether "the complete kit charges safely and usefully with its controller crashed", as a
 sequence of startup, watchdog expiry, temperature inhibition, termination and recovery, and notes that the 40-hour figure
-is "an idealized capacity/current estimate, not a charging guarantee". Short answer, argued below: **with the round-6
-board A candidate the kit charges SAFELY with its controller crashed, because every cell limit on charge is enforced by the
-pack's own gauge and second level, not by the charger or its host; it does not charge USEFULLY: the pack is held roughly
-where it is rather than charged. With board A as committed on main, it cannot charge at all.**
+is "an idealized capacity/current estimate, not a charging guarantee".
+
+**Status (round 8, 26 September 2026): OPEN, and not a verified result.** The second checkpoint review of 26 September
+2026 (section 4) answered this page's first conclusion: "Do not adopt 'charges safely' as a verified result. TI
+documents the watchdog-current behavior and host-controlled termination [R3]; the complete protection/configuration
+sequence remains a project obligation. A prototype may deliberately stop charging after controller failure if that meets
+its requirements. Continued autonomous charging needs its own demonstrated protection behavior." That is right, and the
+sentence "the kit charges SAFELY with its controller crashed" that stood here is **withdrawn**. What this page establishes
+from documents, and what it does not:
+
+- **Documented (VERIFIED):** the charger, with no host, falls back to 256 mA after its 175 s watchdog, keeps its 16.8 V
+  strap and its BATOVP, has no temperature input and never ends a charge by itself (section 2); the gauge's manual
+  documents functions that hold the cell limits on charge without any host, once its golden image is written and read
+  back (section 3).
+- **Designed, not demonstrated:** that the pack's own layers hold every cell limit through every crash state of section 5.
+  That is the obligation O-CHG-1 to O-CHG-8 of section 6, each with the evidence that discharges it.
+- **Established:** the kit does not charge USEFULLY with its controller crashed: the pack is held roughly where it is
+  (section 6). With board A as committed at `1f614233` it could not charge at all; `main` carries the round-6 board A
+  since `458b2873` (4S strap, `gen_sch_a.py:771`; loads on VSYS).
 
 ## 1. Revisions and actors
 
@@ -55,9 +70,9 @@ sensor controller crashing is a separate case (section 4, row S9).
 | Behaviour | Source |
 |---|---|
 | No FET moves at all until FET control is enabled: TI's Mfg Status Init is 0x0000, and FET_EN = 0 disables both charge and discharge; the image writes 0x01F8 (FET_EN, PF_EN, FUSE_EN and the rest) and the commissioning read-back of ManufacturingStatus() after a reset confirms it (`PRIMARY-CONFIGURATION.md` sections 1 and 2) | 4.12, 11.1, 14.3.1 |
-| UTC (below 0 C) turns the charge FET off unconditionally | 2.11 |
-| OTC (above 45 C, required value) turns the charge FET off only if FET Options[OTFET] = 1 (default 0) | 2.8, 14.2.1.1 |
-| Charge inhibit and suspend on the temperature ranges act on the FET only if CHGIN and CHGSU = 1 (default 0) | 4.13, 4.14 |
+| UTC (below 1.0 C, the round-8 required value inside the 0 C limit) turns the charge FET off unconditionally | 2.11 |
+| OTC (above 44.0 C, the round-8 required value inside the 45 C limit, `THERMAL-COORDINATION.md`) turns the charge FET off only if FET Options[OTFET] = 1 (default 0); the charge algorithm suspends a running charge above T4, 43 C | 2.8, 4.2, 14.2.1.1 |
+| Charge inhibit and suspend on the temperature ranges act on the FET only if CHGIN and CHGSU = 1 (default 0). They are two actions: the **inhibit** holds the charge FET off while the pack is not charging and its reading is in High Temp (T3 to T4), Over Temp or Under Temp, so **no charge STARTS above T3** (42 C in the round-8 image, corrected on 27 September 2026 from TI's 30 C, which would refuse every start above a sensed 30 C) and none below T1; the **suspend** stops a running charge in Over Temp or Under Temp only | 4.2, 4.13, 4.14 |
 | At valid charge termination, with CHGFET = 1, written explicitly (FET Options 0x3D; the TRM states CHGFET's default two ways: the header's 0x20 sets it, the bit text calls 0 the default, finding BAT-F13), the charge FET turns off: the gauge ends the charge without any host | 4.6, 4.7 ("When GaugingStatus() [FC] is set AND FET Option[CHGFET] = 1, the CHG FET turns off"), 14.2.1.1 |
 | COV, OCC, overcharge (OC), CHGV and CHGC protections disable charge | 4.12 |
 | Host watchdog: no valid SMBus transaction for HWD Delay (10 s) disables charge, **only when Enabled Protections C[HWDF] = 1**. SLUUAQ3A gives that bit two defaults ("1 = Enabled (default)" in 14.2.4.4, page 130; 0 in Table 14-1's 0xd5 at 0x447F, page 186), so this packet requires the golden image to write HWDF = 1 and HWD Delay = 10 s and commissioning to read them back (`PRIMARY-CONFIGURATION.md` section 2, finding BAT-F13) | 2.13, 14.2.4.4, 14.9.17, Table 14-1 |
@@ -75,16 +90,16 @@ load is paid out of it before the cells see any. Board E declares that rail at 0
 
 ## 4. The sequence (round-6 candidate topology)
 
-| # | State | Charger (U3) | Pack (U1, U2) | Safe? | Useful? |
+| # | State | Charger (U3) | Pack (U1, U2) | Cell limits held? (by design, NOT_YET_TESTED; section 6) | Useful? |
 |---|---|---|---|---|---|
 | S0 | Pack only, kit off or on | battery-only low-power mode (EN_LWPWR = 1 at POR), converter off | normal; U1 host = sensor controller | yes | n/a |
-| S1 | Shore or vehicle arrives; host still booting | POR defaults: 16.8 V, 256 mA (INFERRED), input limit about 1.6 to 1.7 A at 20 V (about 31 W into VSYS), watchdog 175 s | charge FET on if the gauge allows (0 to 45 C, below COV) | yes: 16.8 V strap, BATOVP 17.47 V, the gauge's window, U2 | partly: shore carries the loads up to about 31 W; at PS-IDLE 29.4 W (`CONOPS.md:238`) this roughly breaks even, above it the pack supplies the difference |
+| S1 | Shore or vehicle arrives; host still booting | POR defaults: 16.8 V, 256 mA (INFERRED), input limit about 1.6 to 1.7 A at 20 V (about 31 W into VSYS), watchdog 175 s | charge FET on if the gauge allows: a charge STARTS only with the reading between T1 and T3, 1 to 42 C in the round-8 image (coming up from cold: 2 C by T1's hysteresis, 5.0 C after a UTC trip; the charge inhibit, `THERMAL-COORDINATION.md` L4a), and runs on to T4 at 43 C and OTC at 44.0 C; below COV. A kit whose cells are already warm when shore arrives does not start charging until they read below 42 C | yes: 16.8 V strap, BATOVP 17.47 V, the gauge's window, U2 | partly: shore carries the loads up to about 31 W; at PS-IDLE 29.4 W (`CONOPS.md:238`) this roughly breaks even, above it the pack supplies the difference |
 | S2 | Host configures | writes RSNS_RAC, IIN_HOST (FW-A16, 80 % of the entry), ChargeVoltage, ChargeCurrent up to 3.0 A (FW-A02), and services the watchdog | as S1 | yes | yes |
 | S3 | Constant-current charge | regulates ChargeCurrent through R17; input DPM trims charge current when the loads rise; the pack supplements above the input limit (no battery FET) | counts, balances, protects | yes | yes |
 | S4 | Constant voltage | holds 16.8 V at SRN; current tapers | balancing; COV at 4.25 V per cell guards a high cell | yes | yes |
 | S5 | Termination | the charger does not terminate (9.4.1); the host ends it by CHRG_INHIBIT or ChargeCurrent 0 | with CHGFET = 1 the gauge turns the charge FET off at valid termination (TRM 4.6) | yes | yes |
 | S6 | Maintenance | host decides a recharge; or, without the host, the gauge re-enables the charge FET when TC clears | the pack sits near full on shore | yes | yes, at a calendar-life cost: near 100 % charge in warm air (Samsung's storage figures are for 30 %) |
-| S7 | Temperature out of window | nothing in U3 sees it | UTC below 0 C opens the charge FET; OTC above 45 C only with OTFET = 1; the host's own holds (the +25 C rule with three loaded modules, D-02b; heater before charge below -10 C, FW-A13) also act while the host lives | **yes only with the golden image's OTFET = 1** (default: no FET action on OTC) | n/a |
+| S7 | Temperature out of window | nothing in U3 sees it | UTC below 1.0 C opens the charge FET; no charge starts above T3, 42 C (the inhibit), a running one stops above T4, 43 C, and OTC acts above 44.0 C, only with CHGIN, CHGSU and OTFET = 1; the host's own holds (the +25 C rule with three loaded modules, D-02b; heater before charge below -10 C, FW-A13) also act while the host lives | **by design only with the golden image's OTFET = 1** (default: no FET action on OTC) | n/a |
 | S8 | Watchdog expiry (host silent for 175 s) | ChargeCurrent back to 256 mA; IIN_HOST, ChargeVoltage and CHRG_INHIBIT unchanged | as before | yes | see section 5 |
 | S9 | Sensor controller (the gauge's host) crashed | unaffected | **with the golden image's explicit HWDF = 1 and HWD Delay 10 s, read back at commissioning**: host watchdog, charge FET off after 10 s; discharge unaffected. Without that write (the TRM's two defaults disagree) the charge FET stays under the gauge's own COV, OCC, temperature windows, termination and U2, with nothing reading the gauge | yes, either way: cell limits are the gauge's and U2's | with the write: no charging until it recovers. Without it: charging continues unobserved (the case BAT-F10's decision removes) |
 | S10 | Adapter removed and back | ChargeCurrent resets (to 0 by 9.6.2's text, to 256 mA by TI's answer: TBD); IIN_HOST resets once to 3.25 A | as before | yes | the host must rewrite RSNS_RAC and IIN_HOST (FW-A16 b) |
@@ -92,7 +107,7 @@ load is paid out of it before the cells see any. Board E declares that rail at 0
 
 ## 5. The controller crashing in each state
 
-| Host crashes during | What the charger keeps | Outcome | Safe? | Useful? |
+| Host crashes during | What the charger keeps | Outcome | Cell limits held? (by design, NOT_YET_TESTED; section 6) | Useful? |
 |---|---|---|---|---|
 | S1 (never configured) | POR defaults: 256 mA, about 31 W input | the kit roughly breaks even at idle on shore; the pack gains at most 256 mA less board E's always-on draw (about 0.12 A declared, above 0.25 A with both fans), about 0.14 A net or less, **or loses charge above idle load** | yes | **no**: the pack is held, not charged |
 | S2 to S4 (configured, charging) | IIN_HOST as configured; ChargeCurrent as written for up to 175 s, then 256 mA | the kit is carried from shore up to the configured input limit; charge continues at up to 3.0 A for at most 175 s, then at 256 mA less board E's draw | yes: the host's temperature and rate policy stops, but the gauge's window (UTC, and OTC with OTFET = 1), COV, OCC, termination (CHGFET) and U2 continue | barely: about 0.14 A net at best; about 74 h from empty (10.07 Ah / 0.136 A, INFERRED), not counting the CV taper |
@@ -106,15 +121,33 @@ load is paid out of it before the cells see any. Board E declares that rail at 0
 (`PANEL.md:172` says so: "As generated nothing charges the 4S pack in any case"); and the loads sit on the pack side of
 R17, so even a working charger could carry them only up to ChargeCurrent. Nothing charges, crashed controller or not.
 
-## 6. Answer
+## 6. Answer: the obligations, not a result
 
-- **Safe:** yes, in the candidate topology, **provided the golden image enables FET control (Mfg Status Init 0x01F8;
-  TI's 0x0000 holds both FETs off, so a pack on TI's image does not charge at all), sets OTFET = 1 (and CHGIN, CHGSU, and
-  CHGFET explicitly), the 4-cell count (TI's default is 3 cells) and the four thermistors as cell temperatures (TI's
-  default makes TS2 a FET temperature; `PRIMARY-CONFIGURATION.md` section 1, items 8 and 9)**. With the host gone, every cell limit on charge is still enforced: voltage by the 16.8 V strap and BATOVP in the charger, COV in the
-  gauge and OV in the second level (which opens F2); temperature by the gauge alone (UTC always, OTC with OTFET), with the
-  second level's OT as a permanent backstop; current by the 256 mA default and the gauge's OCC; end of charge by the
-  gauge's CHGFET. The charger contributes no temperature protection at all, by design of the part.
+**The behaviour this design declares, taken by the session under the owner's standing rule of 26 September 2026:** with
+the charger's host crashed, the charger continues at its own fall-back (256 mA after 175 s; section 2), and every cell
+limit on charge is to be held by the pack itself. The alternative the review names, stopping charge deliberately when the
+controller fails, is not available in firmware for a crash in the middle of a charge (the watchdog restores 256 mA
+whatever the host last wrote, 9.3.21.1, and CHG_INHIBIT on the expander survives a reboot, section 5), so it would be a
+board A circuit (for example a charge enable that needs the host's heartbeat) with its own failure modes to prove; the
+charger's own design already falls back to a trickle, and the pack's limits never rested on the charger's host (the host
+is not in the temperature, voltage or termination path when it is alive either). Reversed by: the D-09 reviewer or board
+A's owner preferring a hardware stop, in which case the obligations below are rewritten for it.
+
+**"Continued autonomous charging needs its own demonstrated protection behavior."** Until every obligation below is
+discharged, nothing in this tree may say that the kit charges safely with its controller crashed; the most that may be
+said is that it is **designed** to.
+
+| ID | Obligation | Discharged by | State |
+|---|---|---|---|
+| O-CHG-1 | The golden image holds the charge side: FET control on (Mfg Status Init 0x01F8), OTFET, CHGIN, CHGSU and CHGFET set (FET Options 0x3D), the 4-cell count (DA Configuration 0x17), the four thermistors as cell temperatures, COV 4250 mV, OCC 5000 mA, the charge window of `THERMAL-COORDINATION.md` (UTC 1.0 C, OTC 44.0 C, T1 1 C, T3 42 C, T4 43 C), HWDF = 1 with HWD Delay 10 s | every word of `PRIMARY-CONFIGURATION.md` section 2 read back after a reset at commissioning, with the fresh device's data flash archived first (`FUSE-INTERPRETATION.md` section 5, step 2) | NOT_YET_TESTED (no image exists) |
+| O-CHG-2 | What the charger does with no host write at all: 256 mA at power-on, or nothing until a host writes | TI's answer to Q-TI-2, and board A FW-A15 item 1 on the bench (SRP-SRN current at power-on and after 175 s with no host) | TBD |
+| O-CHG-3 | With the host crashed in each state of section 5, the charge current into the pack is at most the charger's fall-back plus what the host last wrote for at most 175 s, and never above the gauge's OCC | bench: the panel controller halted (SWD) in S1 to S7, the pack current logged through R17 and R10 | NOT_YET_TESTED |
+| O-CHG-4 | Temperature: with the host crashed, the charge FET opens outside the gauge's charge window and closes inside it | `TEST-PLAN.md` section 5 row 7 run with the panel controller halted, and P12 | NOT_YET_TESTED |
+| O-CHG-5 | Voltage: the charge stops at the gauge's COV or the charger's strap, whichever first, and the second level's OV stands behind both | `TEST-PLAN.md` section 5 row 1 with the host halted; U2's customer-test-mode check (`FUSE-INTERPRETATION.md` section 5, step 3) | NOT_YET_TESTED |
+| O-CHG-6 | Termination: the gauge ends the charge by CHGFET at valid termination, with no host | a full charge from 50 % with the host halted: the charge FET opens at TC, and re-closes only when TC clears | NOT_YET_TESTED |
+| O-CHG-7 | The gauge's own host (the sensor controller) crashing stops charging within 10 s (HWD) | the sensor controller halted during a charge | NOT_YET_TESTED |
+| O-CHG-8 | Recovery: a rebooted panel controller rewrites the expander U27 first, then the charger (FW-A08, FW-A14, FW-A16), and never starts a charge the gauge's window forbids | the reboot test of board A's firmware items, on the bench | NOT_YET_TESTED |
+
 - **Useful:** no. The host-free charge current is 256 mA, of which board E's always-on domain takes about half by its
   own declaration (BAT-F06), and the host-free input limit (about 31 W into VSYS) is at the kit's idle load. The pack is
   held, not charged; above idle it discharges on shore. A charge from empty needs the host.

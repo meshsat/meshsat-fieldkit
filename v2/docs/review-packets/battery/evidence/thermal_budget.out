@@ -1,0 +1,41 @@
+The pack's temperature thresholds and their error budget (MESHSAT-1357, round 8, stream r8bat, 26 September 2026; T3 and the mass sensitivity added on 27 September).
+103AT slope beta(T) per C: -10 C 0.0455, 0 C 0.0430, 45 C 0.0337, 60 C 0.0312, 70 C 0.0297
+103AT tolerance as temperature (R25 and B +-1 percent): -10 C 0.56 K, 0 C 0.48 K, 45 C 0.51 K, 60 C 0.71 K, 65 C 0.78 K, 70 C 0.84 K
+
+Reading-low (hot side) and reading-high (cold side) budgets, hazard direction only:
+OTD, discharge, NORMAL             limit   60.0 C  NTC 0.71  pull-up 0.40  lag 0.80  detect 0.16  = 2.07 K  -> threshold <= 57.9 C
+OTC, charge, NORMAL                limit   45.0 C  NTC 0.51  pull-up 0.21  lag 0.02  detect 0.00  = 0.75 K  -> threshold <= 44.2 C
+UTC, charge, NORMAL                limit    0.0 C  NTC 0.48  pull-up 0.21  lag 0.02  detect 0.00  = 0.71 K  -> threshold >= 0.7 C
+UTD, discharge, NORMAL             limit  -10.0 C  NTC 0.56  pull-up 0.28  lag 0.02  detect 0.00  = 0.86 K  -> threshold >= -9.1 C
+
+Thresholds taken (0.1 C resolution, rounded toward the inside of the window):
+  OTD 57.5 C: when it acts, the sensed cell is at most 59.57 C (limit 60 C), before the TBD terms
+  OTC 44.0 C: when it acts, the sensed cell is at most 44.75 C (limit 45 C), before the TBD terms
+  UTC 1.0 C: while it allows, the sensed cell is at least 0.29 C (limit 0 C), before the TBD terms
+  UTD -9.0 C: while it allows, the sensed cell is at least -9.86 C (limit -10 C), before the TBD terms
+
+Static reading-high error (NTC only; the pull-up drift reads LOW on the hot side), for the early edge of each trip:
+  OTD 57.5 C: may act with the sensed cell as low as 56.83 C
+  OTC 44.0 C: may act with the sensed cell as low as 43.50 C
+  SOT 65.0 C: may act with the sensed cell as low as 64.22 C
+
+SOT (permanent, 5 s delay) upper edge in discharge: 65.0 + 2.37 K = 67.37 C
+Second level (U2) at its TS network, reading B: 62.7 to 77.5 C (candidate/ts_network.out); its own sensor lag and tOT_DELAY (4 s typ, +-10 % drift, SLUSEG7D 6.6) add up to 1.03 K at the 3.2 K per minute rate (50 g cells; more for lighter ones)
+Mass sensitivity (the rate scales as 50 g over the real cell mass; tau 15 s, 1 s decision and 2 s delay = 18 s of
+rate-driven terms): the lightest cell for which each taken threshold still holds on the published terms:
+  OTD 57.5 C: in hand 0.43 K on the published terms; holds up to 4.63 K per minute, i.e. down to 34.6 g per cell at 0.8 J/gK (the sheet: 50 g maximum, no minimum published)
+  OTC 44.0 C: in hand 0.25 K on the published terms; holds up to 0.92 K per minute, i.e. down to 4.9 g per cell at 0.8 J/gK (the sheet: 50 g maximum, no minimum published)
+SLEEP adds (5 s - 1 s) x rate of detection lag: 0.21 K at the discharge rate (the pack is not discharging hard in SLEEP, so this bounds it)
+
+True sensed-cell temperature when each threshold on the gauge's reading acts (the kit's controls read the same
+thermistors through the sensor controller; their SMBus polling interval is TBD and not counted):
+  UTD -9.0 C, 2 s                         -9.84 to  -8.46 C
+  UTC 1.0 C, 2 s                           0.31 to   1.47 C
+  C2 50 C (control)                       49.43 to  51.70 C
+  T3 42 C (no charge start above)         41.53 to  42.67 C
+  T3 less hysteresis 41 C (start again)   40.54 to  41.65 C
+  T4 43 C (charge suspend)                42.52 to  43.70 C
+  OTC 44.0 C, 2 s                         43.50 to  44.73 C
+  C1/K2 55 C (control)                    54.36 to  56.83 C
+  OTD 57.5 C, 2 s                         56.83 to  59.51 C
+  SOT 65.0 C, 5 s                         64.22 to  67.37 C

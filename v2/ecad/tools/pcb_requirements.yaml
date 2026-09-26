@@ -117,7 +117,7 @@ written: "2026-09-26"
 baseline_state: DRAFT_FOR_REVIEW_C
 sources_read_at: eadbe571
 needs_document: "v2/docs/CONOPS.md"
-needs_document_sha256: 49119f89f2d98920d681a8341c54db60b018a55e03efa714b25afbbe65089e88
+needs_document_sha256: 122c921af6e3de40dcd9fedafb49e7f8c8147cf5a5abb0ed28dba01f2532e6e7
 companion_documents: []
 
 # The needs of CONOPS section 2, quoted. The validator compares each statement with the needs table of the
@@ -659,6 +659,13 @@ session_choices:
       soak exceeds the cells' rating whatever board P does, and TEST-PLAN E3's own pass line ("pack under 60 C")
       already says so (SECONDARY-OT-DECISION.md sections 2, 3 option G, and 5).
     source: ["v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 5", "owner ruling D-02a"]
+    withdrawn_on: "2026-09-26"
+    withdrawn_why: >-
+      Its test-plan half removed the pack from every margin because the cells cannot meet them, which the second
+      checkpoint review of 26 September 2026 (section 2 B) found changes the tested configuration and procedure without
+      reconciling it with the product requirement, and it left the transport state (pack fitted) and the hot use of the
+      product with its pack untested. SC-12 takes both halves again: the circuit unchanged, the margins by the product's
+      own states.
   - id: SC-10
     authority: SESSION
     under: standing-rule
@@ -693,6 +700,38 @@ session_choices:
       costs in the fault and booting cases (emission for up to T_off + T_cut, at least 15.9 s, and the module's flash)
       are bounded and accepted there (EMCON.md sections 0, 4.5, 5 and 7).
     source: ["v2/docs/feasibility/EMCON.md section 5", "owner ruling D-05"]
+  - id: SC-12
+    authority: SESSION
+    under: standing-rule
+    taken_on: "2026-09-26"
+    question: >-
+      How the pack's temperature protection is coordinated, and how D-02a's qualification margins meet a pack whose
+      cells are rated to +60 C, reconciled with the product requirement (second checkpoint review, finding B).
+    taken: >-
+      The BQ7720700's over-temperature stays active on its own 103AT-2 (J_TS2, R34 270 ohm, R33 18 kohm), an emergency
+      backstop at 62.7 to 77.5 C. The gauge's thresholds sit inside the cells' limits by the gauge's own published
+      error budget: OTC 44.0 C, OTD 57.5 C, UTC 1.0 C, UTD -9.0 C, the charge ranges T1 1 C, T3 42 C (no charge starts
+      above it, the charge inhibit) and T4 43 C, SOT 65.0 C, the die as the FET temperature (PROVISIONAL until the bench
+      measures the gradient to the hottest cell and the cells are weighed). Each qualification margin runs in the
+      configuration of the state it represents: +71 C and -33 C storage with the pack out (the stored state as CONOPS
+      section 4 and TEST-PLAN section 1 define it; the session's reading where OPERATING-ENVELOPE section 4 reads as a
+      kit stored with its pack), and the pack-fitted exposures (transport soaks, hot use at +40 C and +25 C, closed lid,
+      humid use up to +40 C, the pack's own soaks) at the cells' own limits. The +55 C operation and E5's +60 C humidity
+      dwell, which the kit cannot take with its pack fitted, run as stated test deviations with the pack outside the
+      chamber on an extension of its leads, and their product-level result is recorded as a conflict (CFL-017, finding
+      BAT-F19), not closed by them. A kit with its pack fitted is never left where the temperature may exceed +60 C.
+    why: >-
+      The state definitions are session text: the owner approved on 6 September 2026 that a whole-kit test plan be
+      written (appendix 32.50 item 16e), the session wrote its states on 7 September (2e33773b, whose deployed state said
+      nothing about the pack) and the ConOps took them on 25 September; they put the pack out in storage and fitted in
+      transport and use. The cell maker rates storage and discharge to +60 C at most and forbids leaving the cells "in a
+      car or similar place where inside of temperature may be over 60°C" (Samsung INR18650-35E Ver. 1.1), and
+      OPERATING-ENVELOPE section 8's own arithmetic, beside the owner's D-02a table, puts the inside air at +65 to +71 C at
+      the +55 C margin. The choice would be the same with any board P or none, and where the pack is kept out only
+      because its cells cannot take a level the test is written as a deviation and its product-level result recorded,
+      so no qualification condition is chosen by what the circuit can pass
+      (v2/docs/review-packets/battery/THERMAL-COORDINATION.md sections 3, 4, 5, 9 and 9a).
+    source: ["v2/docs/review-packets/battery/THERMAL-COORDINATION.md sections 9 and 9a", "owner ruling D-02a"]
 
 # What is still open. SESSION items are engineering the session decides and records with authority SESSION;
 # OWNER_ACTION is something the owner has ruled that he does or sets himself; LATER a money item he approves from a
@@ -897,8 +936,11 @@ open_items:
     class: SESSION
     status: OPEN
     title: >-
-      TEST-PLAN.md E3 and E4 revised as SECONDARY-OT-DECISION.md section 5 proposes (SC-09): the kit's margins run with
-      the pack removed, and the pack's own checks at its cells' limits.
+      TEST-PLAN.md written for SC-12 (THERMAL-COORDINATION.md sections 9 and 9a, option C): section 1's states, marked
+      as session text; E3 and E4 as the kit's margins in their states (E3-S, E3-O, E4-S, E4-O), with E3-O and E5 written
+      as stated test deviations (the pack outside the chamber; CFL-017); section 6's pack-fitted exposures and the pack's
+      own soaks (E3-A, E3-L, E5-A, E3-T, E3-P, E4-T, E4-P); and section 7's thermal protection tests (P10 to P14).
+      Written by stream r8bat in round 8; closed by the commit that merges it.
   - id: S-44
     class: SESSION
     status: OPEN
@@ -912,6 +954,18 @@ open_items:
       BAT-001's instrument brought to board P as generated: pack_protection still reads FAIL on the regenerated board
       P ("no second protector and no chemical fuse", battery packet evidence gates-new/pack_protection.log), because
       its inputs describe the old pack.
+  - id: S-46
+    class: SESSION
+    status: OPEN
+    title: >-
+      Finding BAT-F20 (round 8, the battery stream's second independent check, 27 September 2026): with FET Options
+      CHGIN = 1 the charge inhibit above T3 and the T1 range below it hold board P's charge FET Q1 off whenever the pack
+      is not charging, discharge included (SLUUAQ3A 4.12, 4.13, 14.2.1.1), so the kit's discharge current runs through
+      Q1's body diode, about 2 to 3 W at the reduced load and about 7 W at 10 A on board P. Open until one option is
+      taken and carried into the ladder, the mode table, F2's analysis and the E3-A, E4-O and P12 pass lines: (a) a FET
+      Options setting that keeps discharge on, with the charge-start protection kept another way; (b) a separate
+      charge-path FET; (c) a thermal budget for the diode. Asked of the qualified reviewer (REVIEW-REQUEST.md Q-P18) and of
+      TI (Q-TI-10).
 
 # Items that left the open list, and what closed each: an owner ruling, a session choice, or a commit whose effect
 # was read in the file `closing_evidence` names. A record never waits on a closed item; it cites what closed it.
@@ -1469,8 +1523,14 @@ records:
           (drafts/a/CONOPS-4b-board-a-round8.patch): only section 4b's SA868-with-PA and QMX rows change, each gaining board
           A's round 8 gates (U35 to U38) beside the 45bde541 text; section 2a, which this reading cites, is byte-identical,
           so it stands on the file at 49119f89f2d98920
+      - >-
+          v2/docs/CONOPS.md re-read at round 8 of 26 September 2026 (stream r8bat, integrated on 27 September 2026 onto
+          board A's round 8 CONOPS.md at 49119f89f2d98920, whose section 4b rows it leaves alone): only section
+          4's Transport and Storage rows changed, each in place (the restriction of SC-12: a kit with its pack fitted never
+          left where the temperature may exceed +60 C, and the pack stored apart inside its cells' rating); the needs table
+          is byte-identical and no row or section this reading cites is among the two, so it stands on the file at 122c921af6e3de40
     evidence_bound_to:
-      - "v2/docs/CONOPS.md@49119f89f2d98920"
+      - "v2/docs/CONOPS.md@122c921af6e3de40"
       - "v2/docs/ARCH-PCB-B-IOHA.md@6c3c93b7f32f953a"
       - "v2/docs/V2-SPEC.md@df8ac22603440bc5"
     release_effect: BLOCKER
@@ -3278,9 +3338,11 @@ records:
     parent: NEED-07
     statement: "Humidity: non-condensing in use."
     acceptance: >-
-      Non-condensing in use: no condensation inside the sealed compartment. TEST-PLAN E5 (10 cycles of 24 h at 95 %
-      RH, 30 to 60 C) is a qualification margin under SC-03, judged on D-02a's two pass lines: at the margin no damage
-      and no lost data or keys, and full function once the kit is back inside the envelope.
+      Non-condensing in use: no condensation inside the sealed compartment. TEST-PLAN E5-A (10 cycles of 24 h at 95 %
+      RH up to the use envelope's +40 C, pack fitted) is the acceptance inside the envelope. E5 (the same cycle, 30 to
+      60 C) is a qualification margin under SC-03, run as a stated deviation with the pack outside the chamber (CFL-017)
+      and judged on D-02a's two pass lines: at the margin no damage and no lost data or keys, and full function once the
+      kit is back inside the envelope.
     allocated_to: [kit]
     verification_method: [PROTOTYPE_MEASUREMENT]
     verification_phase: PROTOTYPE
@@ -3291,11 +3353,11 @@ records:
       decisions: []
     rule_coverage: PARTIAL
     rulings: [D-02a]
-    choices: [SC-03]
+    choices: [SC-03, SC-12]
     status: DEFINED
     evidence_result: NOT_YET_TESTED
     release_effect: MUST_JUSTIFY
-    source: ["v2/docs/OPERATING-ENVELOPE.md:144", "v2/docs/TEST-PLAN.md:20"]
+    source: ["v2/docs/OPERATING-ENVELOPE.md:144", "v2/docs/TEST-PLAN.md:20", "v2/docs/TEST-PLAN.md section 6"]
     source_check: VERIFIED
     conflict_ref: C-06
 
@@ -3473,10 +3535,15 @@ records:
           v2/ecad/tools/gen_sch_a.py:1104-1114), and since round 8 port_protect judges it: boards/a.json no longer declares
           J_USBC_OUT's CC pins protected inside U18, so the reading of TRN-001 answers PD_CC1 and PD_CC2 by U31 (PASS of 26,
           0 answered in part); the reading stands on the files at 5a97fed72c42b79d and 3a786cf31614fe63
+      - >-
+          v2/docs/TEST-PLAN.md re-read at round 8 of 26 September 2026 (stream r8bat, read against fc144600): it changed
+          lines 7, 8, 18 to 20, 23, 69, 70 and 84 in place and added sections 6 and 7, renumbering Records to 8; every
+          line number up to 88 is kept, and line 36 (M7), which this reading cites, is byte-identical, so it stands on the file
+          at 86742b72d44adce6
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_a.py@5a97fed72c42b79d"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63"
-      - "v2/docs/TEST-PLAN.md@e7a90ba054150bb7"
+      - "v2/docs/TEST-PLAN.md@86742b72d44adce6"
     release_effect: MUST_JUSTIFY
     source: ["owner ruling D-17", "v2/ecad/tools/gen_sch_a.py:1104-1114", "v2/ecad/tools/pcb_decisions.yaml:256-429 (decision 31)"]
     source_check: VERIFIED
@@ -5154,7 +5221,7 @@ records:
       decisions: [40]
     rule_coverage: FULL
     rulings: [D-15, D-09]
-    choices: [SC-09]
+    choices: [SC-12]
     waits_on: [S-45, L-03]
     status: DEFINED
     evidence_result: INCONCLUSIVE
@@ -5190,11 +5257,17 @@ records:
           v2/docs/CURRENT-EVIDENCE.md re-read at the code-bundle provenance merge of 27 September 2026: BAT-001 on board P
           now reads FAIL on AWAITING_REVALIDATION evidence (TOOL_CHANGED) until the consolidated re-take; the reasons
           given above are unchanged, so this reading stands
+      - >-
+          v2/docs/review-packets/battery/REVIEW-REQUEST.md re-read at round 8 of 26 September 2026 (stream r8bat): the
+          packet adds THERMAL-COORDINATION.md (the pack's temperature ladder), findings BAT-F15 to BAT-F20 (BAT-F20 open,
+          recorded at integration) and questions Q-P15 to Q-P18, Q-TI-8 to Q-TI-10 and Q-S2; it still says that nothing
+          has been sent and that every review so far is by AI agent sessions, and the schematic and candidate files are unchanged, so this reading stands on the file at
+          407f939fc4d7e50a
     evidence_bound_to:
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@4342c4cbe1b43dc4"
       - "v2/ecad/tools/gen_sch_p.py@e111e10a047f587e"
       - "v2/docs/CURRENT-EVIDENCE.md@9c9bba12790d645a"
-      - "v2/docs/review-packets/battery/REVIEW-REQUEST.md@e36ebfd98c2ead3a"
+      - "v2/docs/review-packets/battery/REVIEW-REQUEST.md@407f939fc4d7e50a"
     release_effect: BLOCKER
     source:
       - "v2/docs/TEST-PLAN.md:48-77"
@@ -5207,7 +5280,7 @@ records:
     history: >-
       Read FAIL at d468613e: PTC and PTCEN were tied to GND, FUSE reached only a test point, no secondary or chemical
       fuse was fitted. The floor landed in faf8c981 (S-29, closed) and the secondary's over-temperature on its own
-      thermistor in d90f30e4 (SC-09). The owner's conditional residual of D-15 (under-voltage on firmware alone) does
+      thermistor in d90f30e4 (SC-09, withdrawn in round 8 for its test-plan half; SC-12 carries the circuit on). The owner's conditional residual of D-15 (under-voltage on firmware alone) does
       not arise: the fitted BQ7720700 covers cell under-voltage (PROTECTION-ARCHITECTURE.md, fault-state table).
     notes: >-
       The acceptance names the qualified review since 26 September 2026 (review of that day, section 2: a documented
@@ -5228,7 +5301,7 @@ records:
       sensing, the commissioning jumper and the charger's state sequence, and its findings are answered before the pack
       PCB is released or the pack is built.
     feasibility_page: "v2/docs/review-packets/battery/REVIEW-REQUEST.md"
-    blocker_ids: [BAT-F01, BAT-F14, Q-TI-1, Q-TI-7]
+    blocker_ids: [BAT-F01, BAT-F14, BAT-F20, Q-TI-1, Q-TI-7, Q-TI-10]
     closing_evidence: >-
       The reviewer's findings on BAT-F01 to BAT-F14 and the questions Q-TI-1 to Q-TI-7 recorded against the requirement
       ids they touch, with each answered; the packet's
@@ -5287,8 +5360,8 @@ records:
       decisions: [40]
     rule_coverage: PARTIAL
     rulings: [D-09, D-15]
-    choices: [SC-09]
-    waits_on: [L-03, S-34, S-45]
+    choices: [SC-12]
+    waits_on: [L-03, S-34, S-45, S-46]
     status: FEASIBILITY_OPEN
     evidence_result: INCONCLUSIVE
     evidence_phase: SCHEMATIC
@@ -5299,9 +5372,26 @@ records:
           sessions; no qualified human engineer has reviewed this revision" and "Nothing in this file has been sent to
           anyone"; PROTECTION-ARCHITECTURE.md names what is not covered with the primary failed and its FETs held on
           (over-current between the cells' 24 A and F1's 25 A, charge over-current, charge below 0 C)
+      - >-
+          v2/docs/review-packets/battery/REVIEW-REQUEST.md and PROTECTION-ARCHITECTURE.md re-read at round 8 of 26 September 2026 (stream r8bat): the
+          packet adds THERMAL-COORDINATION.md (the pack's temperature ladder), findings BAT-F15 to BAT-F20 (BAT-F20 open,
+          recorded at integration) and questions Q-P15 to Q-P18, Q-TI-8 to Q-TI-10 and Q-S2; it still says that nothing
+          has been sent and that every review so far is by AI agent sessions, and the schematic and candidate files are unchanged, so this reading stands on the files at
+          407f939fc4d7e50a and 756706110da9d1f5
+      - >-
+          v2/docs/review-packets/battery/THERMAL-COORDINATION.md sections 0, 4 (rows L2 and L4a), 6 (the discharge row)
+          and 11, and REVIEW-REQUEST.md sections 2 to 4, read at the round 8 integration of 27 September 2026: finding
+          BAT-F20 is recorded OPEN (open item S-46). With FET Options CHGIN = 1 the charge inhibit holds the charge FET
+          Q1 off whenever the pack is not charging and its reading is above T3 or below T1, discharge included, so the
+          kit's discharge current runs through Q1's body diode, about 2 to 3 W at the reduced load and about 7 W at 10 A
+          on board P; its consequences for F2, RT1, OTF and the E3-A, E4-O and P12 pass lines are not examined. The
+          temperature ladder the LAYOUT_ENTRY stage asks for is therefore stated and not closed; the options go to the
+          qualified reviewer (Q-P18) and TI is asked (Q-TI-10). The record stays INCONCLUSIVE and its release_effect
+          BLOCKER is unchanged, on the files at 0d4d60f03260f004 and the REVIEW-REQUEST.md binding below
     evidence_bound_to:
-      - "v2/docs/review-packets/battery/REVIEW-REQUEST.md@e36ebfd98c2ead3a"
-      - "v2/docs/review-packets/battery/PROTECTION-ARCHITECTURE.md@21b0535ecafa9aa0"
+      - "v2/docs/review-packets/battery/REVIEW-REQUEST.md@407f939fc4d7e50a"
+      - "v2/docs/review-packets/battery/THERMAL-COORDINATION.md@0d4d60f03260f004"
+      - "v2/docs/review-packets/battery/PROTECTION-ARCHITECTURE.md@756706110da9d1f5"
     release_effect: BLOCKER
     source:
       - "v2/docs/review-packets/battery/REVIEW-REQUEST.md"
@@ -5348,9 +5438,11 @@ records:
       The cells are charged only between 0 and +45 C and discharged only between -10 and +60 C at the cell surface;
       below 0 C the pack is warmed by its heater mat before charge.
     acceptance: >-
-      TEST-PLAN section 5 rows 7 and 8 (chamber at -5 and +50 C with the charger live; -15 and +65 C under a 2 A
-      load): the pack gauge's charge and discharge FETs follow the windows of pcb_pack_protection.yaml; the bridge's
-      own hold clears above 3 C (PANEL.md section 10).
+      TEST-PLAN section 5 rows 7 and 8 (chamber at -5 and +48 C with the charger live, and a block read at 42.5 to 43.0 C
+      taking no charge when the charger is connected; -15 C, then +59 to +60 C at most, under a 2 A load; a thermocouple
+      on every cell): the pack gauge's charge and discharge FETs open before any cell surface passes the windows, at the
+      thresholds set inside them by the gauge's own error budget, and no charge starts above the charge inhibit's T3
+      (THERMAL-COORDINATION.md sections 3 to 5); the bridge's own hold clears above 3 C (PANEL.md section 10).
     allocated_to: [p, a, e, fw_panel]
     verification_method: [SCRIPT, PROTOTYPE_MEASUREMENT]
     verification_phase: SCHEMATIC
@@ -5705,14 +5797,25 @@ records:
           capacitors C59 to C62 (on E6_DVDD and +3V3_E6, to GND), J_BATT's value text, J_SMB's order code (C594232 to
           C144395), R6 and R7's value (100 R to 10 R) and the title block's comment 2; the lid switch this reading cites
           (J_TAMP, R52, R53, TAMPER_IO) is unchanged, so it stands on the file at f3c1ad6153002976
+      - >-
+          v2/docs/TEST-PLAN.md re-read at round 8 of 26 September 2026 (stream r8bat, read against fc144600): it changed
+          lines 7, 8, 18 to 20, 23, 69, 70 and 84 in place and added sections 6 and 7, renumbering Records to 8; every
+          line number up to 88 is kept, and line 46 (EMCON measured with a receiver outside the kit), which this reading cites, is byte-identical, so it stands on the file
+          at 86742b72d44adce6
+      - >-
+          v2/docs/CONOPS.md re-read at round 8 of 26 September 2026 (stream r8bat, integrated on 27 September 2026 onto
+          board A's round 8 CONOPS.md at 49119f89f2d98920, whose section 4b rows it leaves alone): only section
+          4's Transport and Storage rows changed, each in place (the restriction of SC-12: a kit with its pack fitted never
+          left where the temperature may exceed +60 C, and the pack stored apart inside its cells' rating); the needs table
+          is byte-identical and no row or section this reading cites is among the two, so it stands on the file at 122c921af6e3de40
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976"
       - "v2/docs/PANEL.md@f1adb6681df74902"
-      - "v2/docs/CONOPS.md@49119f89f2d98920"
+      - "v2/docs/CONOPS.md@122c921af6e3de40"
       - "v2/docs/V2-SPEC.md@df8ac22603440bc5"
       - "v2/docs/OPERATING-ENVELOPE.md@89de81a11c52f34a"
-      - "v2/docs/TEST-PLAN.md@e7a90ba054150bb7"
+      - "v2/docs/TEST-PLAN.md@86742b72d44adce6"
       - "v2/ecad/tools/pcb_decisions.yaml@b5f7162443d5ad91"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
@@ -5776,13 +5879,19 @@ records:
       TEST-PLAN's +55 C operation and +71 C storage (E3) and -33 C storage (E4) are qualification margins over the
       adopted envelope (-20 to +40 C in use, -20 to +45 C storage), each judged on two pass lines: inside the envelope
       the kit is to operate to specification; at the margin it is to show no damage and recover. E5's humidity cycle
-      is judged the same way (SC-03, REQ-026). The margins are the kit's; the pack's are its cells' own limits, and
-      the kit runs its margins with the pack removed (SC-09).
+      is judged the same way (SC-03, REQ-026). The margins are the kit's, each run in the configuration of the state it
+      represents (the storage state has no pack in it; transport and use have it fitted), and the exposures with the
+      pack fitted run at the cells' own limits (SC-12). The +55 C operation and E5's +60 C dwell are beyond the fitted
+      cells' rating: they run as stated test deviations with the pack outside the chamber, and the kit with its own pack
+      does not meet them (CFL-017, finding BAT-F19).
     acceptance: >-
-      Inside the envelope, the functional check (TEST-PLAN section 4) passes at the envelope's limits. At each margin
-      level, with the pack removed: no damage, no lost data or keys, and full function resumed once the kit is back
-      inside the envelope, with its logs intact. The pack's own checks run at its cells' limits (SECONDARY-OT-DECISION.md
-      section 5). TEST-PLAN states both pass lines for E3 and E4 and never reports a margin result as an envelope claim.
+      Inside the envelope, the functional check (TEST-PLAN section 4) passes at the envelope's limits, the hot and humid
+      limits with the pack fitted (TEST-PLAN E3-A, E5-A). At each margin level, in the state the row names (E3-S and E4-S
+      stored with the pack out; E3-O and E5 as stated deviations, the pack outside the chamber): no damage, no lost data
+      or keys, and full function resumed once the kit is back inside the envelope, with its logs intact. The exposures
+      with the pack fitted (E3-T, E4-T) and the pack's own soaks (E3-P, E4-P) run at its cells' limits (TEST-PLAN
+      section 6). TEST-PLAN states both pass lines, never reports a margin result as an envelope claim, and never
+      reports a deviation's pass as the kit's margin with its pack.
     allocated_to: [kit, procedure]
     verification_method: [MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
     verification_phase: SCHEMATIC
@@ -5794,7 +5903,7 @@ records:
       decisions: [34]
     rule_coverage: PARTIAL
     rulings: [D-02a]
-    choices: [SC-03, SC-09]
+    choices: [SC-03, SC-12]
     waits_on: [S-43]
     status: DEFINED
     evidence_result: NOT_JUDGED
@@ -5804,19 +5913,30 @@ records:
       - "v2/docs/TEST-PLAN.md:18-19"
       - "v2/docs/OPERATING-ENVELOPE.md section 8"
       - "v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 5"
+      - "v2/docs/review-packets/battery/THERMAL-COORDINATION.md sections 9 and 9a"
+      - "v2/docs/TEST-PLAN.md section 6"
     source_check: VERIFIED
-    notes: "Created by the integrator from D-02a; E5 joined by SC-03; the pack's margins by SC-09 (CFL-017)."
+    notes: >-
+      Created by the integrator from D-02a; E5 joined by SC-03; the pack's margins by SC-09, withdrawn in round 8 for
+      SC-12; the levels the kit cannot take with its pack are CFL-017.
 
   - id: CFL-017
     kind: conflict
     parent: NEED-15
     statement: >-
-      TEST-PLAN E3 stores the kit at +71 C and runs it at +55 C with its pack, and E4 stores it at -33 C, while both
-      Samsung revisions rate the cells to +60 C in storage and discharge; the session reconciled the margin for the
-      pack (SC-09) and TEST-PLAN still reads as before.
+      With its own pack fitted the kit cannot meet D-02a's +55 C operating margin nor TEST-PLAN E5's +60 C humidity
+      dwell, nor the +71 C storage margin if a stored kit were to keep its pack (the reading OPERATING-ENVELOPE section 4
+      invites and the session did not take): both Samsung revisions rate the cells to +60 C in storage and discharge
+      and the maker forbids use above it, while OPERATING-ENVELOPE section 8's arithmetic puts the inside air at +65 to
+      +71 C at +55 C ambient (finding BAT-F19). Restated in round 8: until then the conflict was read as TEST-PLAN's;
+      since round 8 TEST-PLAN runs E3-O and E5 as stated deviations with the pack outside the chamber, which measures the
+      rest of the kit and does not resolve this.
     acceptance: >-
-      TEST-PLAN E3 and E4 run the kit's margins with the pack removed, and the pack's own checks at its cells' limits,
-      as SECONDARY-OT-DECISION.md section 5 proposes.
+      A result for the kit with its pack: a measured pack arrangement that keeps every cell under the gauge's OTD at
+      +55 C ambient and through E5's cycle (the bounded enclosure heat experiment, POWER-THERMAL section 10), cells rated
+      above +60 C (which reopens owner ruling D-06), or an owner reading of D-02a that its +55 C margin applies to the
+      kit without its cells. Until then TEST-PLAN writes E3-O and E5 as deviations and never reports their pass as the
+      kit's margin with its pack.
     allocated_to: [procedure, p]
     verification_method: [MANUAL_REVIEW]
     verification_phase: SCHEMATIC
@@ -5826,7 +5946,7 @@ records:
       rules: []
       decisions: []
     rule_coverage: NONE
-    choices: [SC-09]
+    choices: [SC-12]
     waits_on: [S-43]
     status: CONFLICT_OPEN
     evidence_result: FAIL
@@ -5836,10 +5956,13 @@ records:
       - "v2/docs/TEST-PLAN.md:18-19"
       - "v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 2"
       - "v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 5"
+      - "v2/docs/review-packets/battery/THERMAL-COORDINATION.md sections 9 and 9a"
+      - "v2/docs/OPERATING-ENVELOPE.md section 8"
     source_check: VERIFIED
     notes: >-
       Created on 26 September 2026 from the battery review packet. Deferred with the qualification tests (SC-04); the
-      pack's safety at its limits is REQ-044 and REQ-046, in the core.
+      pack's safety at its limits is REQ-044 and REQ-046, in the core. Restated on 27 September 2026 (round 8, stream
+      r8bat, after its independent check) as the product-level conflict: it stays open when S-43 closes.
 
   - id: CFL-008
     kind: conflict
@@ -5859,9 +5982,21 @@ records:
       rules: []
       decisions: []
     rule_coverage: NONE
-    status: CONFLICT_OPEN
-    evidence_result: FAIL
+    status: CONFLICT_RESOLVED
+    resolved_by: >-
+      TEST-PLAN.md E5 and E8 rewritten in round 8 of 26 September 2026 (stream r8bat): E5 runs deployed with the lid open
+      and says the case has no vent opening, Peli's pressure valve being its only opening; E8 names the pressure valve.
+    evidence_result: PASS
     evidence_phase: SCHEMATIC
+    evidence_class: DESK_REVIEW
+    evidence:
+      - >-
+          v2/docs/TEST-PLAN.md:20 and :23 read at round 8 of 26 September 2026 (stream r8bat, against fc144600): E5 reads
+          "deployed (lid open; the case has no vent opening, ruling of 7 September 2026, and Peli's pressure valve is its
+          only opening; a qualification margin, SC-03)" and E8 "latches, Peli's pressure valve and connectors operate",
+          against the ruling of 7 September 2026 recorded at v2/docs/MESHSAT-709-geometry-appendix.md:2864
+    evidence_bound_to:
+      - "v2/docs/TEST-PLAN.md@86742b72d44adce6"
     release_effect: ADVISORY
     source: ["v2/docs/TEST-PLAN.md:20", "v2/docs/TEST-PLAN.md:23", "v2/docs/MESHSAT-709-geometry-appendix.md:2864"]
     source_check: VERIFIED
@@ -6888,13 +7023,26 @@ records:
           round 8 PANEL.md at ee908df9e59b6349): only section 7 changed, a 0x48 row for board D's flange ADC U22 in the bus
           table and one clause in the sentence under it saying where that row was read; section 10, which this reading
           cites, is byte-identical, so it stands on the file at f1adb6681df74902
+      - >-
+          v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md re-read at round 8 of 26 September 2026 (stream r8bat,
+          read against fc144600): its opening and section 6 no longer state that the kit charges safely with its
+          controller crashed (the second checkpoint review, section 4); section 6 restates it as the obligations O-CHG-1 to
+          O-CHG-8, and the charge window's values in sections 3 and 4 are the round-8 image's. The facts this reading cites
+          are unchanged: the charger with no host falls back to 256 mA, less board E's always-on draw, so a hostless kit's
+          pack is held rather than charged (sections 2, 5 and 6), so it stands on the file at 44fdf9a022c49337
+      - >-
+          v2/docs/CONOPS.md re-read at round 8 of 26 September 2026 (stream r8bat, integrated on 27 September 2026 onto
+          board A's round 8 CONOPS.md at 49119f89f2d98920, whose section 4b rows it leaves alone): only section
+          4's Transport and Storage rows changed, each in place (the restriction of SC-12: a kit with its pack fitted never
+          left where the temperature may exceed +60 C, and the pack stored apart inside its cells' rating); the needs table
+          is byte-identical and no row or section this reading cites is among the two, so it stands on the file at 122c921af6e3de40
     evidence_bound_to:
       - "v2/docs/PANEL.md@f1adb6681df74902"
-      - "v2/docs/CONOPS.md@49119f89f2d98920"
+      - "v2/docs/CONOPS.md@122c921af6e3de40"
       - "v2/docs/OPERATING-ENVELOPE.md@89de81a11c52f34a"
       - "v2/ecad/tools/gen_sch_a.py@5a97fed72c42b79d"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63"
-      - "v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md@df84d98b9e47160c"
+      - "v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md@44fdf9a022c49337"
     release_effect: BLOCKER
     source:
       - "v2/docs/PANEL.md section 10"
