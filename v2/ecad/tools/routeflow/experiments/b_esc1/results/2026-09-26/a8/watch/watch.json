@@ -1,0 +1,136 @@
+{
+ "label": "EXPERIMENTAL (Q-B-ESC-1)",
+ "stop": "PLATEAU",
+ "job_pid": 746595,
+ "killed": [
+  746630,
+  922420,
+  746637,
+  746654,
+  746660,
+  746595
+ ],
+ "observed_sessions": 14,
+ "counts": [
+  106,
+  66,
+  40,
+  28,
+  29,
+  28,
+  22,
+  25,
+  21,
+  18,
+  16,
+  23,
+  18,
+  18
+ ],
+ "min_open": 16,
+ "final_open": 18,
+ "plateau_k": 3,
+ "first_pass_max_s": 5400.0,
+ "deadline": 1790467399.0,
+ "seconds": 8487.6,
+ "rows": [
+  {
+   "observed": 1,
+   "wall_s": 3852.6,
+   "ses_bytes": 136092,
+   "open": 106,
+   "count_rc": 0
+  },
+  {
+   "observed": 2,
+   "wall_s": 4302.2,
+   "ses_bytes": 165013,
+   "open": 66,
+   "count_rc": 0
+  },
+  {
+   "observed": 3,
+   "wall_s": 4748.9,
+   "ses_bytes": 181875,
+   "open": 40,
+   "count_rc": 0
+  },
+  {
+   "observed": 4,
+   "wall_s": 5114.6,
+   "ses_bytes": 189892,
+   "open": 28,
+   "count_rc": 0
+  },
+  {
+   "observed": 5,
+   "wall_s": 5480.3,
+   "ses_bytes": 191157,
+   "open": 29,
+   "count_rc": 0
+  },
+  {
+   "observed": 6,
+   "wall_s": 5806.4,
+   "ses_bytes": 190693,
+   "open": 28,
+   "count_rc": 0
+  },
+  {
+   "observed": 7,
+   "wall_s": 6131.7,
+   "ses_bytes": 197237,
+   "open": 22,
+   "count_rc": 0
+  },
+  {
+   "observed": 8,
+   "wall_s": 6497.0,
+   "ses_bytes": 196955,
+   "open": 25,
+   "count_rc": 0
+  },
+  {
+   "observed": 9,
+   "wall_s": 6842.0,
+   "ses_bytes": 198425,
+   "open": 21,
+   "count_rc": 0
+  },
+  {
+   "observed": 10,
+   "wall_s": 7166.6,
+   "ses_bytes": 199820,
+   "open": 18,
+   "count_rc": 0
+  },
+  {
+   "observed": 11,
+   "wall_s": 7470.8,
+   "ses_bytes": 202849,
+   "open": 16,
+   "count_rc": 0
+  },
+  {
+   "observed": 12,
+   "wall_s": 7795.8,
+   "ses_bytes": 197973,
+   "open": 23,
+   "count_rc": 0
+  },
+  {
+   "observed": 13,
+   "wall_s": 8140.2,
+   "ses_bytes": 201797,
+   "open": 18,
+   "count_rc": 0
+  },
+  {
+   "observed": 14,
+   "wall_s": 8484.6,
+   "ses_bytes": 202111,
+   "open": 18,
+   "count_rc": 0
+  }
+ ]
+}

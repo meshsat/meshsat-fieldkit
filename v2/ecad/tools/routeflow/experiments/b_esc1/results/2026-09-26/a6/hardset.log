@@ -1,0 +1,3 @@
+hardset: hard 0 of 15 types {} unrouted 499 (AT KiCad's list cap: a floor, not a count) | report {'silk_overlap': 69, 'silk_over_copper': 47, 'silk_edge_clearance': 9, 'via_dangling': 199, 'track_dangling': 8} | exempt {'solder_mask_bridge': 16}
+b-esc1 a6 EXPERIMENTAL: hard 0 unrouted 499 (15 types checked)
+verdict: hardset-b-esc1-a6-experimental FAIL         of 15 {"by_type": {}, "hard": 0, "report": {"silk_edge_clearance": 9, "silk_over_copper": 47, "silk_overlap": 69, "track_dangling": 8, "via_dangling": 199}, "stage": "post", "types_checked": 15, "unrouted": 499, "unrouted_at_cap": true} | b-esc1 a6 EXPERIMENTAL (routed board: hard and unrouted must both be zero) (exit code stays the reader contract of --score and --counts)

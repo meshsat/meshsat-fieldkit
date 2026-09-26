@@ -1,0 +1,7 @@
+partition GLOBAL nets  183 connections  1704 classes ['kicad_default_GLOBAL', 'DIFF100_GLOBAL', 'USB_GLOBAL', 'PWR_GLOBAL']
+partition DEVW   nets  116 connections   252 classes ['kicad_default_DEVW', 'DIFF100_DEVW', 'USB_DEVW', 'HV_DEVW', 'PWR_DEVW']
+partition S1     nets  158 connections   355 classes ['kicad_default_S1', 'DIFF100_S1', 'USB_S1', 'PWR_S1']
+partition S2     nets  157 connections   352 classes ['kicad_default_S2', 'DIFF100_S2', 'USB_S2', 'PWR_S2']
+partition S3     nets  146 connections   320 classes ['kicad_default_S3', 'DIFF100_S3', 'USB_S3', 'PWR_S3']
+partition DEVE   nets   84 connections   132 classes ['kicad_default_DEVE', 'DIFF100_DEVE', 'USB_DEVE', 'PWR_DEVE']
+partition: DSN written out/routeflow/b-esc1/a8/part.dsn

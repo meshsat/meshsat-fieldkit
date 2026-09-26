@@ -1,0 +1,111 @@
+{
+ "label": "EXPERIMENTAL (Q-B-ESC-1)",
+ "board": "/root/besc1/v2/ecad/out/routeflow/b-esc1/a8/s3.kicad_pcb",
+ "board_sha256": "b6d1d7af26611c9fdfea373cad0aadd162f057cde3b6132f8fc51e9afd9fa516",
+ "part_json": "/root/besc1/v2/ecad/out/routeflow/b-esc1/a8/part.json",
+ "part_json_sha256": "0d54fe1b87d1496825f867a8375c5ee869551652288f629ce9647d4e7b7e0a92",
+ "group": "S3",
+ "imported": null,
+ "copper_layers": 8,
+ "nets_in_group": 146,
+ "nets_with_pads": 146,
+ "zone_nets": [],
+ "open": 18,
+ "open_nets": [
+  "/+1V0_S3",
+  "/+1V1_S3",
+  "/+3V3_S3A",
+  "/+3V3_S3B",
+  "/BANK3_UPRX_P",
+  "/BANK3_UPTX_P",
+  "/BOE3_n",
+  "/CARD3_RX_P",
+  "/CARD3_TX_P",
+  "/HUB3_RST_n",
+  "/HUB3_XO",
+  "/IOCC_XI",
+  "/IOCC_XO",
+  "/NVME3_RX_N",
+  "/NVME3_RX_P",
+  "/PCIE3_RXSW_P"
+ ],
+ "per_net_open": {
+  "/+1V0_S3": 2,
+  "/+1V1_S3": 1,
+  "/+3V3_S3A": 1,
+  "/+3V3_S3B": 2,
+  "/BANK3_UPRX_P": 1,
+  "/BANK3_UPTX_P": 1,
+  "/BOE3_n": 1,
+  "/CARD3_RX_P": 1,
+  "/CARD3_TX_P": 1,
+  "/HUB3_RST_n": 1,
+  "/HUB3_XO": 1,
+  "/IOCC_XI": 1,
+  "/IOCC_XO": 1,
+  "/NVME3_RX_N": 1,
+  "/NVME3_RX_P": 1,
+  "/PCIE3_RXSW_P": 1
+ },
+ "walk_split_nets": 16,
+ "residue": {
+  "U301": [
+   {
+    "pad": "U301.108",
+    "net": "/+1V0_S3",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.101",
+    "net": "/NVME3_RX_N",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.100",
+    "net": "/NVME3_RX_P",
+    "zone_net": false
+   },
+   {
+    "pad": "U301.124",
+    "net": "/PCIE3_RXSW_P",
+    "zone_net": false
+   }
+  ],
+  "U309": [
+   {
+    "pad": "U309.3",
+    "net": "/BANK3_UPTX_P",
+    "zone_net": false
+   }
+  ]
+ },
+ "copper_by_layer": {
+  "B.Cu": {
+   "tracks_mm": 1246.0,
+   "segments": 515
+  },
+  "F.Cu": {
+   "tracks_mm": 1358.0,
+   "segments": 751
+  },
+  "In2.Cu": {
+   "tracks_mm": 2361.1,
+   "segments": 357
+  },
+  "In3.Cu": {
+   "tracks_mm": 1048.2,
+   "segments": 222
+  },
+  "In5.Cu": {
+   "tracks_mm": 5008.1,
+   "segments": 644
+  },
+  "In6.Cu": {
+   "tracks_mm": 1370.7,
+   "segments": 247
+  }
+ },
+ "vias": 398,
+ "board_ratsnest_total": 1646,
+ "seconds": 5.8
+}
