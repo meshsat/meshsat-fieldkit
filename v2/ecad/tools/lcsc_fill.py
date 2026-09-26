@@ -38,12 +38,19 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^60R4 1%", "R_0603"): "C2933247", (r"^330$", "R_0603"): "C23138", (r"^15k$", "R_0603"): "C22809",
  (r"^1k \(strap", "R_0603"): "C21190", (r"^20\.0k 1%", "R_0603"): "C4184",
  (r"^301R 1%", "R_0603"): "C25192",       # the eFuse ILM resistors: TPS2596 equation 7 at 3.0 A
- (r"^0R 2512", "R_2512"): "C25469",       # 25121WJ0000T4E, the PoE_P link (r"^green", "LED_0603"): "C2986059", (r"^red", "LED_0603"): "C2286",
+ (r"^0R 2512", "R_2512"): "C25469",       # 25121WJ0000T4E, the PoE_P link
+ # THE TWO LINES BELOW, AND THE TWO FERRITE LINES FURTHER DOWN, WERE NEVER LIVE until 26 September 2026 (round 8,
+ # MESHSAT-1357): each sat after a `#` at the end of another entry's line, so Python read them as comment text while a
+ # person reading the MAP read them as rules (and `blue` below still says "the red above"). Moved onto their own lines,
+ # where Python reads them. No present BOM line changes its code: every line they match carries this code already, or
+ # (board E's LED1, "green: vehicle input present") is filled with the same code from the certified table.
+ (r"^green", "LED_0603"): "C2986059", (r"^red", "LED_0603"): "C2286",
  (r"^blue", "LED_0603"): "C2288",        # KT-0603B, the blue of the same Hubei KENTO series as the red above
  (r"^amber", "LED_0603"): "C165983",     # BL-HJC36G-AV-TRB 605 nm; JLCPCB stocks no amber in the KENTO series
  (r"^status\b", "LED_0603"): "C2986059",# the bare "status (GPIO25)" rows name no colour: green, like every other indicator
  (r"^SS14\b", "D_SMB"): "C51897884",     # the fan flyback diodes on E6
- (r"^0\.25R 1% 2512$", "R_2512"): "C459675",   # RLP25FEER250, 2 W current sense, 1 percent (r"^600R@100MHz", "L_0603"): "C1002", (r"^ferrite 600R$", "L_0603"): "C1002",  # the C BOM writes the value this way round
+ (r"^0\.25R 1% 2512$", "R_2512"): "C459675",   # RLP25FEER250, 2 W current sense, 1 percent
+ (r"^600R@100MHz", "L_0603"): "C1002", (r"^ferrite 600R$", "L_0603"): "C1002",  # the C BOM writes the value this way round (live since round 8, see green above)
  # BOARD C'S REMAINING BLANKS, 17 September 2026. Its deliverable was refused for 24 uncoded rows and
  # these four values are the ones that are ordinary parts rather than hand-fitted panel pieces. Each is
  # read back from JLCPCB with its stock at the time it was chosen.
@@ -70,7 +77,9 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^1\.02k 1%", "R_0603"): "C2998111",
  (r"^10\.0k 1%", "R_0603"): "C25804",
  (r"^10k 1%", "R_0603"): "C25804",
- (r"^100k 1%", "R_0603"): "C25803",
+ # (the key ^100k 1% on R_0603 stood here a second time, C25803 as on the line near the top; removed in round 8,
+ # 26 September 2026, with the same for ^20k 1% below: a repeated key keeps its first position and its last value,
+ # both of which are unchanged, and tests/test_certify_mismatch.py now refuses any repeated key)
  (r"^102k 1%", "R_0603"): "C2933126",
  (r"^115k 1%", "R_0603"): "C22783",
  (r"^12\.0k 1%", "R_0603"): "C22790",
@@ -78,7 +87,6 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^15\.0k 1%", "R_0603"): "C22809",
  (r"^16\.5k 1%", "R_0603"): "C22812",
  (r"^2\.7k 1%", "R_0603"): "C13167",
- (r"^20k 1%", "R_0603"): "C4184",
  (r"^215k 1%", "R_0603"): "C5713280",
  (r"^33\.2k 1%", "R_0603"): "C23003",
  (r"^34\.8k 1%", "R_0603"): "C2933204",
@@ -115,7 +123,12 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^10u 100V X7R 1210$", "C_1210"): "C5156756",  # FS32X106K101EGG, 10 uF 100 V X7R, 426,107 in stock; same correction as the line above
  (r"^330p$", "C_0603"): "C1664",           # Samsung CL10C331JB8NNNC, C0G 50 V, a BASIC part with a million in stock: the USB-C CC line caps want C0G
  (r"^SMBJ18A", "D_SMB"): "C151256",        # Littelfuse SMBJ18A, DO-214AA, 7,993 in stock (D4, the VBUS clamp at the outlet)
- (r"^4\.7u$", "C_0805"): "C1779",
+ # A second entry for the key ^4\.7u$ on C_0805, giving C1779 (Samsung CL21A475KAQNNNE, X5R 25 V), stood here until
+ # 26 September 2026 (round 8, the parts stream's draft 02): the same key as the X7R line above (C354262, with its
+ # reason), so Python kept this later X5R part and the line above never
+ # applied: boards B, C and D filled their blank 4.7u 0805 lines with C1779 while board A's generator writes C354262,
+ # and the certified table, one row per (comment, land), certifies C354262 for the key. Removed, so one part fills
+ # the key on every board; tests/test_certify_mismatch.py refuses a repeated key.
  (r"^4\.7u 25V$", "C_1206"): "C132170",   # 50 V part, covers both 1206 4.7u lines
  (r"^4\.7u 50V$", "C_1206"): "C132170",
  (r"^10u 25V$", "C_1206"): "C89632",      # 50 V part, covers both 1206 10u lines
@@ -155,8 +168,17 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  # BOM lines with no code and no hand-fit declaration. Each is JST's own part on the land the footprint draws,
  # confirmed against JLCPCB's parts API with its pin count, pitch and stock read back from the same record.
  (r"cell tap sense wires.*JST-XH 1x5", "JST_XH_B5B"): "C157991",   # JST B5B-XH-A(LF)(SN), 1x5P 2.5 mm, 14.9 mm body, stock 85,826
- (r"SMBus lead.*JST-XH 1x4", "JST_XH_B4B"): "C594232",             # JST B4B-XH-A-G, 1x4P 2.5 mm, 12.4 mm body, stock 20,031
- (r"cell thermistor.*JST-PH 1x2", "JST_PH_B2B"): "C5251182",       # JST B2B-PH-K-S-GW, 1x2P 2.0 mm, stock 15,304
+ # ROUND 8, 26 SEPTEMBER 2026 (MESHSAT-1357, taken under the owner's standing rule of that day). The SMBus lead line
+ # filled C594232, B4B-XH-A-G (gold contacts), a variant the held JST XH catalogue does not list (p.5 lists B4B-XH-A
+ # with a tin-plated post): declared condition 1 mismatch MM-01 in tools/jlc-mismatch.yaml, board P's R8P-02, and
+ # board E's J_SMB, which round 8's stream e moves to C144395 in its generator. Until it moved, this script refused
+ # the code its own MAP wrote. Now the plain tin part the land names.
+ (r"SMBus lead.*JST-XH 1x4", "JST_XH_B4B"): "C144395",             # JST B4B-XH-A(LF)(SN), 1x4P 2.5 mm, 12.4 mm body, tin, stock 108,967 (JLCPCB API 2026-09-26T21:09Z)
+ # The cell thermistor line filled C5251182, B2B-PH-K-S-GW, a suffix the held JST PH catalogue does not list (p.3):
+ # declared condition 1 mismatch MM-03, the parts re-take's jst-ph-headers.update_45bde541, board P's R8P-03 (J_TS2)
+ # and board D's J_VGG, which round 8's stream d moves to C131337 in its generator. The cert, D and P streams each moved
+ # this one line to the same code; this is the one line, reconciled at integration (27 September 2026).
+ (r"cell thermistor.*JST-PH 1x2", "JST_PH_B2B"): "C131337",        # JST B2B-PH-K-S(LF)(SN), 1x2P 2.0 mm, tin, stock 86,615 (JLCPCB API 2026-09-26T21:05Z)
  # --- A24, 12 September 2026. Thirty-eight BOM lines carried no code and no hand-fit declaration, which is what
  # `verify_deliverable` and `lcsc_fill` exist to catch, and the shipped A22 folder carries the same blanks because
  # both gates postdate it. Every code below was read from JLCPCB's own catalogue that day, choosing a Basic part
@@ -319,6 +341,31 @@ if os.path.exists(cert):
         k = (c, (r.get("Comment") or "").strip(), (r.get("Footprint") or "").strip())
         if c and k in verdicts and k not in certified_for and c not in blocked:
             bad.append("%s %s: %s, %s" % (r["Designator"][:18], c, verdicts[k][0], verdicts[k][1]))
+
+# 3. DECLARED CONDITION 1 MISMATCHES (26 September 2026, round 8, MESHSAT-1357; review finding D1). tools/jlc-mismatch.yaml
+#    declares the codes whose ordered part is not the part the schematic names. The certified table is an OUTPUT of
+#    jlc_certify, and a table written by a run that did not read the declarations (or written before they existed)
+#    certifies them; this check reads the declaration itself, so the refusal does not depend on which table is beside
+#    it. Read with jlc_certify's own loader, so the two tools cannot disagree about what is declared; a declaration that
+#    cannot be read raises, and the crash hook above writes INCONCLUSIVE rather than a pass. A copy of this script with
+#    no declaration file beside it (a fixture's world) declares nothing.
+_mm = os.path.join(HERE, "jlc-mismatch.yaml")
+if os.path.exists(_mm):
+    import jlc_certify as _jc
+    _decl = _jc.mismatch_declarations(_mm)
+    for r in rows:
+        c = (r.get("LCSC Part #") or "").strip()
+        if not c or c in blocked:
+            continue
+        held = [e for e in _jc.declared_hits({"comment": (r.get("Comment") or "").strip(), "fp": (r.get("Footprint") or "").strip(),
+                                              "code": c}, {}, _decl) if e["id"] not in _decl["cleared"]]
+        if held:
+            # the table's own WRONG_MODEL line for the same row (check 2) says less than the declaration: one line per row
+            bad = [b for b in bad if not b.startswith("%s %s:" % (r["Designator"][:18], c))]
+            e = held[0]
+            bad.append("%s %s: declared mismatch %s in tools/jlc-mismatch.yaml (ordered %s, schematic names %s)%s"
+                       % (r["Designator"][:18], c, e["id"], e.get("ordered") or "?", e.get("named") or "?",
+                          ("; recommended %s" % e["recommended"]) if e.get("recommended") else ""))
 
 if bad:
     print("lcsc_fill: %d row(s) carry a code this project has checked and rejected:" % len(bad))

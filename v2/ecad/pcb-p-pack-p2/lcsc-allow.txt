@@ -7,3 +7,4 @@
 # (JST-PH        REMOVED 12 September 2026: the socket on the board is a JST B2B-PH-K-S-GW, C5251182,
 #                  stock 15,297, and it is placed. The LEAD is made up with the pack; the socket is not the lead.
 12 AWG           # pack and cell-block wires soldered to lands, not placed parts
+mini blade (Keystone 3568 holder)   # F1, the pack's 25 A fuse: holder and fuse fitted at build as on boards A and E (route in tools/jlc-handfit.txt, '3568' and '25 A mini blade'). Added 26 Sep 2026 (MESHSAT-1357 round 8, the parts stream's draft 03)

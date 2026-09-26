@@ -746,6 +746,24 @@ CONFIG_INPUTS = {
     "netlist_board.py": ("tools/pad-aliases.txt",),
     # netlist_parts.py:75 the netlist and :97 the board file, both recorded by sha; no other file is opened.
     "netlist_parts.py": (),
+    # THE PARTS CHECKERS, audited in round 8 (26 September 2026, MESHSAT-1357, stream cert; line numbers are the round 8
+    # files as integrated). Neither was declared, so every CMP-002 and SUP-001 reading read CONFIG_UNDECLARED, and round 8 added a
+    # configuration input to both (the declared condition 1 mismatches), which is exactly the read this table must see.
+    # jlc_certify.py:63 and :1383 tools/jlc-handfit.txt (purchase routes); :64 tools/package-aliases.txt (declared package
+    # equivalents); :65 and :1387 tools/jlc-mismatch.yaml (declared condition 1 mismatches; a compatibility decision in
+    # it names each evidence file with the sha256 it must have (_compat_problem, :211), so those files are pinned by the
+    # decision and not declared here); :843 the board table's phase (declared_phase), and :854 rules_lib.board_facts for
+    # a board with no table (pcb_board_facts.yaml); :1026 every project's lcsc-allow.txt (project_allow merges them: a
+    # glob, conservative); :1489 the readiness manifest (which boards get a declared zero). The deliverable BOMs are the
+    # artefacts it judges; tools/out/jlc-cache.json is a dated reading of the catalogue, not configuration.
+    "jlc_certify.py": ("tools/jlc-handfit.txt", "tools/package-aliases.txt", "tools/jlc-mismatch.yaml",
+                       "tools/boards/{letter}.json", "tools/pcb_board_facts.yaml", "pcb-*/lcsc-allow.txt",
+                       "tools/readiness_manifest.json"),
+    # lcsc_fill.py: its MAP is code in the tool itself. :245 and :322 the certified table (the fills it takes and the
+    # codes it refuses); :273 the project's lcsc-allow.txt (LCSC_ALLOW overrides it); :299 tools/lcsc-blocked.txt; :352
+    # and :355 tools/jlc-mismatch.yaml, read with jlc_certify's loader (so jlc_certify.py is a helper of this writer too).
+    "lcsc_fill.py": ("../release/revA/order/JLC-CERTIFIED.tsv", "{phase}/lcsc-allow.txt", "tools/lcsc-blocked.txt",
+                     "tools/jlc-mismatch.yaml"),
     # stackup_gate.py:36 stackup_write.STACKS (a data table in an imported module, which the writer instrument does
     # not see), :81 the declared stack in pcb_board_facts.yaml, :62-72 the board's order notes (all of them are
     # declared: a glob, conservative).

@@ -325,8 +325,10 @@ def t_a_certification_taken_before_the_change_is_not_current_evidence():
     """DEFECTIVE: the tracked jlc_certify_c and jlc_certify_p verdicts (17 September 2026) read PASS over rows the
     corrected certifier refuses (sixteen LEDs certified as C2089 on board C, C4661 on board P's fuse land). Neither
     the rule's digest nor the evidence epoch moved, because the RULE did not change, so those readings would have
-    stood as CMP-002 and SUP-001 PASS. ACCEPTABLE: a reading taken after the floor, and lcsc_fill, whose meaning did
-    not change, are read as before."""
+    stood as CMP-002 and SUP-001 PASS. ACCEPTABLE: a reading taken after the floor, and an lcsc_fill reading older than
+    its own floor only where the coverage map declares none. (Round 8, 26 September 2026: lcsc_fill's meaning changed too,
+    it refuses the declared condition 1 mismatches whatever the table says, so the coverage map may give it a floor; the
+    fixture follows the map rather than assuming its tool never changes.)"""
     import rules_status as S, rules_lib as R
     import datetime
     reg = R.load(); cov = S.coverage(); m = S.manifest(); fp = R.fingerprint(reg)
@@ -339,9 +341,16 @@ def t_a_certification_taken_before_the_change_is_not_current_evidence():
         old = {"jlc_certify_c": rec("2026-09-17T17:01:25Z"), "lcsc_fill": rec(after)}
         r = S.result_for(rule, "c", cov, old, m, fp)
         assert r["result"] == S.INCONCLUSIVE and "re-take" in r["why"], (rid, r)
-        new = {"jlc_certify_c": rec(after), "lcsc_fill": rec("2026-09-17T17:01:25Z")}
+        lfloor = (cov[rid]["evidence_not_before"] or {}).get("lcsc_fill")
+        l_after = ((S._instant(lfloor) + datetime.timedelta(minutes=1)).astimezone(datetime.timezone.utc)
+                   .strftime("%Y-%m-%dT%H:%M:%SZ")) if lfloor else "2026-09-17T17:01:25Z"
+        new = {"jlc_certify_c": rec(after), "lcsc_fill": rec(l_after)}
         r = S.result_for(rule, "c", cov, new, m, fp)
         assert r["result"] == S.PASS, (rid, r)
+        if lfloor:
+            stale = {"jlc_certify_c": rec(after), "lcsc_fill": rec("2026-09-17T17:01:25Z")}
+            r = S.result_for(rule, "c", cov, stale, m, fp)
+            assert r["result"] == S.INCONCLUSIVE and "re-take" in r["why"], (rid, r)
 
 
 def t_an_unreadable_floor_refuses_rather_than_passes():
