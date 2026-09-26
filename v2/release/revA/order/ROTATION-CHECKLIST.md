@@ -14,13 +14,15 @@ zero is a real answer and is recorded the same way; what the rule refuses is the
 | footprint | boards | one designator | offset (deg) | compared on |
 |---|---|---|---|---|
 | `BatteryHolder_Keystone_3034_1x20mm` | B | BT1 |  |  |
-| `CP_Elec_6.3x7.7` | E | C11 |  |  |
+| `CP_EIA-3528-21_Kemet-B` | B | C520 |  |  |
+| `CP_Elec_10x10` | A | C163 |  |  |
+| `CP_Elec_6.3x7.7` | A, E | C164 |  |  |
 | `CP_Elec_8x6.7` | E | C24 |  |  |
 | `Crystal_SMD_3225-4Pin_3.2x2.5mm` | B, C, E | Y1 |  |  |
 | `Crystal_SMD_HC49-SD` | D | Y1 |  |  |
 | `D_SMB` | A, B, D, E, P | D3 |  |  |
 | `D_SMC` | A, E | D1 |  |  |
-| `D_SOD-123` | C, D, E | D17 |  |  |
+| `D_SOD-123` | A, C, D, E | D10 |  |  |
 | `D_SOD-123F` | C | D19 |  |  |
 | `D_SOD-323` | D, P | D10 |  |  |
 | `Fuseholder_Blade_Mini_Keystone_3568` | P | F1 |  |  |
@@ -38,6 +40,7 @@ zero is a real answer and is recorded the same way; what the rule refuses is the
 | `LQFP-128_14x14mm_P0.4mm_EP6.0` | B | U101 |  |  |
 | `LQFP-32_7x7mm_P0.8mm` | D | U4 |  |  |
 | `PinHeader_1x02_P2.54mm_Vertical` | B | J_RPIBOOT1 |  |  |
+| `PinHeader_1x02_P2.54mm_Vertical_SMD_Pin1Left` | B | J_IOCOFF_A |  |  |
 | `PinHeader_1x03_P2.54mm_Vertical` | B, E | J_GNSS2 |  |  |
 | `PinHeader_1x04_P2.54mm_Vertical` | B, E | J_CAM |  |  |
 | `PinHeader_1x05_P2.54mm_Vertical` | A, B, E | J_USBC_OUT |  |  |
@@ -55,6 +58,7 @@ zero is a real answer and is recorded the same way; what the rule refuses is the
 | `USB3_A_Receptacle_Wuerth_692122030100` | B | J_LIME |  |  |
 | `VSSOP-10_3x3mm_P0.5mm` | A, E | U10 |  |  |
 | `VSSOP-8_3x3mm_P0.65mm` | D | U8 |  |  |
+| `WSON-10-1EP_2.5x2.5mm_P0.5mm_EP1.2x2mm` | A | U34 |  |  |
 | `WSON-12-1EP_3x2mm_P0.5mm_EP1x2.65` | P | U2 |  |  |
 
-43 footprint(s) to compare, over 7 board(s).
+47 footprint(s) to compare, over 7 board(s).

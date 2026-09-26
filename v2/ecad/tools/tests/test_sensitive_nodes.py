@@ -70,8 +70,8 @@ def t_board_a_carries_the_charger_sense_filters_the_datasheet_asks_for():
     # the one thing about these six parts that had to change: a value is the BOM's Comment column, and a
     # comment no code rule matches is a blank BOM line the finish refuses. The reasoning lives in comments now.
     for call in ('r("R146", "10R", "CH_ACN", "CH_ACN_F")', 'r("R147", "10R", "VBUS20", "CH_ACP_F")',
-                 'c("C121", "10n", "CH_ACP_F", "CH_ACN_F")', 'r("R148", "10R", "CELL+", "CH_SRN_F")',
-                 'r("R149", "10R", "CH_SRP", "CH_SRP_F")', 'c("C122", "100n", "CH_SRP_F", "CH_SRN_F")'):
+                 'c("C121", "10n", "CH_ACP_F", "CH_ACN_F")', 'r("R148", "10R", "CELL_FUSED", "CH_SRN_F")',
+                 'r("R149", "10R", "VBAT", "CH_SRP_F")', 'c("C122", "100n", "CH_SRP_F", "CH_SRN_F")'):
         assert call in src, "the charger sense filter lost %s" % call
     import yaml
     d = yaml.safe_load(open(os.path.join(TOOLS, "pcb_sensitive.yaml"), encoding="utf-8"))

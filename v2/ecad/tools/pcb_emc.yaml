@@ -23,26 +23,28 @@ boards:
  a:
    title: PCB-A POWER + I/O
    sources:
-    - {ref: U2,  part: LM5176, what: "buck-boost, VIN_RAW to the 20 V charge bus", f_khz: 300, edge_ns: null,
-       basis: "v2/vendor/ti/lm5176-datasheet.pdf; RT 40.2k in gen_sch_a.py sets 300 kHz"}
-    - {ref: U13, part: LM5176, what: "buck-boost, VBAT to the 13.8 V PA rail at 6 A", f_khz: 300, edge_ns: null,
-       basis: "v2/vendor/ti/lm5176-datasheet.pdf; RT 40.2k"}
-    - {ref: U15, part: LM5176, what: "buck-boost, VBAT to the 12 V HF rail", f_khz: 300, edge_ns: null,
-       basis: "v2/vendor/ti/lm5176-datasheet.pdf; RT 40.2k"}
-    - {ref: U16, part: LM5176, what: "buck-boost, VBAT to the 54 V PoE rail", f_khz: 300, edge_ns: null,
-       basis: "v2/vendor/ti/lm5176-datasheet.pdf; RT 40.2k"}
-    - {ref: U19, part: LM5176, what: "buck-boost, VBAT to the USB-PD supply", f_khz: 300, edge_ns: null,
-       basis: "v2/vendor/ti/lm5176-datasheet.pdf; RT 40.2k"}
+    - {ref: U2,  part: LM5176, what: "buck-boost, VIN_RAW to the 20 V charge bus", f_khz: 206, edge_ns: null,
+       basis: "v2/vendor/ti/lm5176-datasheet.pdf Equation 5; RT 40.2k sets 206 kHz (180 to 232 kHz over the fSW spread). The 300 kHz written here until 26 September 2026 was the datasheet example, never this board (board A round 4, review A minor 1)"}
+    - {ref: U13, part: LM5176, what: "buck-boost, VBAT to the 13.8 V PA rail at 6 A", f_khz: 206, edge_ns: null,
+       basis: "v2/vendor/ti/lm5176-datasheet.pdf Equation 5; RT 40.2k sets 206 kHz (180 to 232 kHz over the fSW spread). The 300 kHz written here until 26 September 2026 was the datasheet example, never this board (board A round 4, review A minor 1)"}
+    - {ref: U15, part: LM5176, what: "buck-boost, VBAT to the 12 V HF rail", f_khz: 206, edge_ns: null,
+       basis: "v2/vendor/ti/lm5176-datasheet.pdf Equation 5; RT 40.2k sets 206 kHz (180 to 232 kHz over the fSW spread). The 300 kHz written here until 26 September 2026 was the datasheet example, never this board (board A round 4, review A minor 1)"}
+    - {ref: U16, part: LM5176, what: "buck-boost, VBAT to the 54 V PoE rail", f_khz: 206, edge_ns: null,
+       basis: "v2/vendor/ti/lm5176-datasheet.pdf Equation 5; RT 40.2k sets 206 kHz (180 to 232 kHz over the fSW spread). The 300 kHz written here until 26 September 2026 was the datasheet example, never this board (board A round 4, review A minor 1)"}
+    - {ref: U19, part: LM5176, what: "buck-boost, VBAT to the USB-PD supply", f_khz: 206, edge_ns: null,
+       basis: "v2/vendor/ti/lm5176-datasheet.pdf Equation 5; RT 40.2k sets 206 kHz (180 to 232 kHz over the fSW spread). The 300 kHz written here until 26 September 2026 was the datasheet example, never this board (board A round 4, review A minor 1)"}
     - {ref: U4, part: AP64500, what: "5 A buck, slot rail 1", f_khz: 500, edge_ns: null,
        basis: "v2/vendor/diodes/diodes-ap64500.pdf; RT 68k in gen_sch_a.py"}
-    - {ref: U5, part: AP64500, what: "5 A buck, slot rail 2", f_khz: 500, edge_ns: null,
-       basis: "v2/vendor/diodes/diodes-ap64500.pdf"}
+    - {ref: U5, part: LM5176, what: "buck-boost, VBAT to slot rail 2 at 5.1 V (7.2 A minimum average limit; F-PR-04, 26 September 2026)", f_khz: 206, edge_ns: null,
+       basis: "v2/vendor/ti/lm5176-datasheet.pdf Equation 5; RT 40.2k sets 206 kHz (180 to 232 kHz over the fSW spread). The 300 kHz written here until 26 September 2026 was the datasheet example, never this board (board A round 4, review A minor 1)"}
     - {ref: U6, part: AP64500, what: "5 A buck, slot rail 3", f_khz: 500, edge_ns: null,
        basis: "v2/vendor/diodes/diodes-ap64500.pdf"}
-    - {ref: U7, part: AP64500, what: "5 A buck, the device rail", f_khz: 500, edge_ns: null,
-       basis: "v2/vendor/diodes/diodes-ap64500.pdf"}
+    - {ref: U7, part: LM5176, what: "buck-boost, VBAT to the device rail at 5.1 V (7.2 A minimum average limit; F-PR-04, 26 September 2026)", f_khz: 206, edge_ns: null,
+       basis: "v2/vendor/ti/lm5176-datasheet.pdf Equation 5; RT 40.2k sets 206 kHz (180 to 232 kHz over the fSW spread). The 300 kHz written here until 26 September 2026 was the datasheet example, never this board (board A round 4, review A minor 1)"}
     - {ref: U12, part: TPS62933, what: "3 A buck, this board's 3.3 V logic", f_khz: 500, edge_ns: null,
        basis: "the RT pin is left open, which the part's own table gives as 500 kHz"}
+    - {ref: U33, part: TPS62933, what: "3 A buck, the 12.0 V heater rail behind the eFuse U22 (F-PR-06, 26 September 2026)", f_khz: 500, edge_ns: null,
+       basis: "v2/vendor/ti/ti-tps62933.pdf; the RT pin is left open, which the part's own table gives as 500 kHz"}
    victims:
     - {what: "the five INA226 rail monitors", refs: [U8, U9, U10, U11, U14],
        why: "they measure millivolts across 5 mOhm shunts sitting between the converters they monitor"}

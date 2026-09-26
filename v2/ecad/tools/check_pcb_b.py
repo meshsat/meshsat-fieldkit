@@ -79,11 +79,13 @@ if placed:
     if j is not None:
         check(j.IsFlipped(), "J_AB1 on the underside"); r = bbox(j); check(abs((r[0] + r[2]) / 2 - 113) < 0.6 and abs((r[1] + r[3]) / 2 + 46) < 0.6, "J_AB1 centred at (113, -46) over A22's header (got %.1f, %.1f)" % ((r[0] + r[2]) / 2, (r[1] + r[3]) / 2))
     # the fabric nets: every PCIe, USB 3 and HDMI net of a slot reaches its module receptacle and the part it feeds (the B14 lesson: a net that lives only on one part makes no ratsnest)
-    bynet = {}
+    bynet = {}; bypad = {}   # bypad (MESHSAT-1357 round 4): the same map at pad level, so a lane's DIRECTION can be judged
+    byval = {}   # reference -> value text (MESHSAT-1357 round 4, R4T-F9): a pull-down is judged by its size as well as its place
     for f in b.GetFootprints():
+        byval[f.GetReference()] = f.GetValue()
         for pd in f.Pads():
             nm = pd.GetNetname().lstrip("/")
-            if nm: bynet.setdefault(nm, set()).add(f.GetReference())
+            if nm: bynet.setdefault(nm, set()).add(f.GetReference()); bypad.setdefault(nm, set()).add((f.GetReference(), pd.GetNumber()))
     for s in (1, 2, 3):
         rb = "U3%dB" % (s - 1); sw = "U%d01" % s; hub = "U%d02" % s
         # THE RECEIVE LINES RUN THROUGH A COUPLING CAPACITOR SINCE 16 SEPTEMBER 2026, so the switch is no longer
@@ -123,11 +125,120 @@ if placed:
         for nm in ("HDMI%d_D0_P" % s, "HDMI%d_D1_P" % s, "HDMI%d_D2_P" % s, "HDMI%d_CK_P" % s, "HDMI%d_HPD" % s, "HDMI%d_SDA" % s):
             check(rb in bynet.get(nm, set()) and ({"U3", "U4"} & bynet.get(nm, set())), "%s reaches %s and a display switch (got %s)" % (nm, rb, sorted(bynet.get(nm, set()))))
         for k in range(4): check(len(bynet.get("ETH%d_P%d_P" % (s, k), set())) == 2, "ETH%d_P%d_P reaches the receptacle and its coupling capacitor" % (s, k))
-        for nm in ("NVME%d_TX_P" % s, "NVME%d_RX_P" % s, "NVME%d_CLK_P" % s, "CARD%d_TX_P" % s, "CARD%d_RX_P" % s, "CARD%d_CLK_P" % s):
-            check(sw in bynet.get(nm, set()) and any(r.startswith("J_M2") for r in bynet.get(nm, set())), "%s reaches the switch and an M.2 socket (got %s)" % (nm, sorted(bynet.get(nm, set()))))
+        # THE DOWNSTREAM LINKS ARE JUDGED BY DIRECTION, NOT BY MEMBERSHIP (MESHSAT-1357 round 4, 26 September 2026,
+        # W3-F01 and W3-F03). The check this replaces asked only that each NVME*/CARD* net reach the switch and a
+        # socket, which a link wired transmitter to transmitter passes: B21 did, on all six links. Pins from DS40068
+        # Rev 5-2 section 3.1 (PETP1/PETN1 100/101 and PETP2/PETN2 106/107 type O, PERP1/PERN1 97/98 and PERP2/PERN2
+        # 102/103 type I, REFCLKO_P/N[1] 81/80, [2] 78/77, [0] 85/83, REFCLKP/N 110/111) and the M.2 sockets in the
+        # host's naming (keys M and B: PETp0/PETn0 49/47, PERp0/PERn0 43/41, REFCLKp/n 55/53; key E: 35/37, 41/43,
+        # 47/49). A switch transmitter reaches the socket's PET pin through exactly one series capacitor (*_RX_SW_x to
+        # *_RX_x, named from the device's side), the socket's PER pin returns straight to the switch receiver
+        # (*_TX_x), and every used REFCLKO pin meets its 33.2 Ohm series resistor (*_SRC_x) with the 49.9 Ohm to
+        # ground on the line after it (Table 8-1 note 1), REFCLKO0 then AC coupled into REFCLKP/N.
+        def _between(n1, n2, prefix):
+            return sorted(r for r in bynet.get(n1, set()) & bynet.get(n2, set()) if r.startswith(prefix))
+        for dev, sock, pet, per, rco in (("NVME", "J_M2N%d" % s, 100, 97, 81), ("CARD", "J_M2C%d" % s, 106, 102, 78)):
+            key_e = dev == "CARD" and s != 2
+            s_pet, s_per, s_clk = ((35, 37), (41, 43), (47, 49)) if key_e else ((49, 47), (43, 41), (55, 53))
+            for i, h in enumerate(("P", "N")):
+                swtx, devrx, devtx = "%s%d_RX_SW_%s" % (dev, s, h), "%s%d_RX_%s" % (dev, s, h), "%s%d_TX_%s" % (dev, s, h)
+                cap = _between(swtx, devrx, "C")
+                check((sw, str(pet + i)) in bypad.get(swtx, set()) and (sock, str(s_pet[i])) in bypad.get(devrx, set()) and len(cap) == 1,
+                      "%s: the switch transmitter %s.%d reaches %s.%d (PET%s0) through exactly one series capacitor (switch side %s, socket side %s, in series %s)"
+                      % (devrx, sw, pet + i, sock, s_pet[i], h.lower(), sorted(bypad.get(swtx, set())), sorted(bypad.get(devrx, set())), cap))
+                check((sw, str(per + i)) in bypad.get(devtx, set()) and (sock, str(s_per[i])) in bypad.get(devtx, set()),
+                      "%s: %s.%d (PER%s0) returns to the switch receiver %s.%d (got %s)" % (devtx, sock, s_per[i], h.lower(), sw, per + i, sorted(bypad.get(devtx, set()))))
+                src, line = "%s%d_CLK_SRC_%s" % (dev, s, h), "%s%d_CLK_%s" % (dev, s, h)
+                rs, rp = _between(src, line, "R"), _between(line, "GND", "R")
+                check((sw, str(rco - i)) in bypad.get(src, set()) and len(rs) == 1 and len(rp) == 1 and (sock, str(s_clk[i])) in bypad.get(line, set()),
+                      "%s: REFCLKO %s.%d reaches %s.%d through one series resistor with one resistor to ground on the line (series %s, to ground %s, line %s)"
+                      % (line, sw, rco - i, sock, s_clk[i], rs, rp, sorted(bypad.get(line, set()))))
+        for i, h in enumerate(("P", "N")):
+            src, line, rin = "PCIE%d_RCLK0_SRC_%s" % (s, h), "PCIE%d_RCLK0_%s" % (s, h), "PCIE%d_RCLKIN_%s" % (s, h)
+            rs, rp, cap = _between(src, line, "R"), _between(line, "GND", "R"), _between(line, rin, "C")
+            check((sw, str(85 - 2 * i)) in bypad.get(src, set()) and len(rs) == 1 and len(rp) == 1 and len(cap) == 1 and (sw, str(110 + i)) in bypad.get(rin, set()),
+                  "%s: REFCLKO0 %s.%d is terminated (series %s, to ground %s) and AC coupled through %s into REFCLK%s %s.%d"
+                  % (line, sw, 85 - 2 * i, rs, rp, cap, h, sw, 110 + i))
     for nm in ("HDMIO_D0_P", "HDMIO_CK_P", "HDMIO_SCL"): check("J_HDMI" in bynet.get(nm, set()) and "U4" in bynet.get(nm, set()), "%s reaches J_HDMI and U4" % nm)
     for nm in ("MDI_A_P", "MDI_B_P", "MDI_C_P", "MDI_D_P"): check("J_ETH" in bynet.get(nm, set()) and "T1" in bynet.get(nm, set()), "%s reaches J_ETH and the magnetics" % nm)
-    for nm in ("LIME_SSTX_P", "LIME_DP"): check("J_LIME" in bynet.get(nm, set()) and "U102" in bynet.get(nm, set()), "%s reaches J_LIME and the S1 hub" % nm)
+    # W3-F02 (MESHSAT-1357 round 4, 26 September 2026): J_LIME's names are the HOST's (USB 3.0 type A: 5/6 SSRX, 8/9
+    # SSTX). The hub's DN1 receiver USB_SSRXP/M_DN1 (TUSB8041 pins 6/7, type I, SLLSEE4E) takes LIME_SSRX from J_LIME 6/5,
+    # and its transmitter USB_SSTXP/M_DN1 (pins 3/4, type O) reaches J_LIME 9/8 on LIME_SSTX through one series capacitor.
+    # The check this replaces asked LIME_SSTX_P to reach the hub itself, which only the crossed wiring of B21 did.
+    check("J_LIME" in bynet.get("LIME_DP", set()) and "U102" in bynet.get("LIME_DP", set()), "LIME_DP reaches J_LIME and the S1 hub")
+    for i, h in enumerate(("P", "N")):
+        _lcap = sorted(r for r in bynet.get("HUB1_D1TX_%s" % h, set()) & bynet.get("LIME_SSTX_%s" % h, set()) if r.startswith("C"))
+        check(("U102", str(3 + i)) in bypad.get("HUB1_D1TX_%s" % h, set()) and ("J_LIME", str(9 - i)) in bypad.get("LIME_SSTX_%s" % h, set()) and len(_lcap) == 1,
+              "LIME_SSTX_%s: the hub transmitter U102.%d reaches J_LIME.%d through exactly one series capacitor (%s)" % (h, 3 + i, 9 - i, _lcap))
+        check(("J_LIME", str(6 - i)) in bypad.get("LIME_SSRX_%s" % h, set()) and ("U102", str(6 + i)) in bypad.get("LIME_SSRX_%s" % h, set()),
+              "LIME_SSRX_%s: J_LIME.%d returns to the hub receiver U102.%d (got %s)" % (h, 6 - i, 6 + i, sorted(bypad.get("LIME_SSRX_%s" % h, set()))))
+    # THE HARDWARE EMCON LINE IS ONLY READ ON THIS BOARD: NO PULL-UP, NO TRANSISTOR CHANNEL AND NO SLOT RAIL MAY REACH IT
+    # (MESHSAT-1357 round 4, fix-up pass 3, 26 September 2026, the round-5 re-review's blocking item). With the panel ribbon out, or board C's buffer
+    # U9 unpowered, EMCON_HW is held only by its pull-downs. B21's W_DISABLE1# stages Q106/Q206/Q306 had their gate on
+    # the card rail, their source on W_DISABLE1# with 10 k up to that rail and their drain on EMCON_HW. The body diode
+    # (anode at the source) sourced current per live card rail into the line (up to 0.35 mA into a line at 0 V, about
+    # 50 uA against the 50 k that held it) and lifted it to about 2.3 to 2.5 V,
+    # a HIGH at every EMCON gate on B and A: "EMCON released" with no panel. No gate read it, because every check asked
+    # only that a net exist or reach a part. Four properties, on pads, so the path cannot come back under another name:
+    #   1. every resistor on EMCON_HW goes to GND or to a signal, never to a rail (it is pulled down, never up);
+    #   2. a transistor meets EMCON_HW with its pad 1 only (the SOT-23 gate), never with a channel pad (2 or 3);
+    #   3. no other pad of such a transistor sits on a slot rail, directly or through one resistor (the review's rule;
+    #      a slot rail is any +3V3_S*, +3V3_M2C*, +3V3_CM*, +1V8_CM*, +5V_S*, +1V0_S* or +1V1_S* net);
+    #   4. the path that replaced the stages: Q11 inverts EMCON_HW into EMCON_ON (R513 to +3V3_DEV), and each card's
+    #      W_DISABLE1# is an open drain Q{s}06 (gate EMCON_ON, source GND, drain on the socket's pin) with one resistor
+    #      to its own card rail. Socket pins: key E W_DISABLE1# 56, key B W_DISABLE1# 8 (the M.2 pinouts in gen_sch_b.py).
+    _pads = {}
+    for _n, _ps in bypad.items():
+        for _r, _p in _ps: _pads.setdefault(_r, {})[_p] = _n
+    _SLOT_RAILS = ("+3V3_S", "+3V3_M2C", "+3V3_CM", "+1V8_CM", "+5V_S", "+1V0_S", "+1V1_S")
+    def _one_r(n):   # the nets one resistor away from net n
+        return sorted({_pads[r][p] for r in bynet.get(n, set()) if r.startswith("R") for p in _pads.get(r, {}) if _pads[r][p] != n})
+    def _gsd(ref):   # a SOT-23 transistor's pads in a fixed order, so the line reads the same from a board and a netlist
+        return "G %s S %s D %s" % tuple(_pads.get(ref, {}).get(k) for k in ("1", "2", "3")) if ref in _pads else "absent"
+    _far = _one_r("EMCON_HW")
+    check("GND" in _far and not [n for n in _far if n.startswith("+")],
+          "EMCON_HW: every resistor on it goes to GND or a signal, none to a rail (one resistor away: %s)" % _far)
+    for _q in sorted(r for r in bynet.get("EMCON_HW", set()) if r.startswith("Q")):
+        _on = sorted(p for p, n in _pads.get(_q, {}).items() if n == "EMCON_HW")
+        check(_on == ["1"], "EMCON_HW: %s meets it with its gate pad 1 only, never with a channel pad (pads on the line %s)" % (_q, _on))
+        _other = sorted({n for p, n in _pads.get(_q, {}).items() if n != "EMCON_HW" and n != "GND"})
+        _reach = sorted(set(_other) | {m for n in _other for m in _one_r(n)})
+        _bad = [n for n in _reach if n.startswith(_SLOT_RAILS)]
+        check(not _bad, "EMCON_HW: no other pad of %s reaches a slot rail directly or through one resistor (reaches %s)" % (_q, _bad or _reach))
+    check(_pads.get("Q11") == {"1": "EMCON_HW", "2": "GND", "3": "EMCON_ON"} and _one_r("EMCON_ON") == ["+3V3_DEV"],
+          "EMCON_ON: Q11 inverts EMCON_HW into it (gate EMCON_HW, source GND, drain EMCON_ON) with its pull-up to +3V3_DEV (Q11 %s, one resistor away %s)"
+          % (_gsd("Q11"), _one_r("EMCON_ON")))
+    for _sl, (_wd, _sk, _pin) in ((1, ("WIFI_W_DIS_n", "J_M2C1", "56")), (2, ("5G_W_DIS_n", "J_M2C2", "8")), (3, ("WIFI2_W_DIS_n", "J_M2C3", "56"))):
+        _q = "Q%d06" % _sl
+        check(_pads.get(_q) == {"1": "EMCON_ON", "2": "GND", "3": _wd} and (_sk, _pin) in bypad.get(_wd, set()) and _one_r(_wd) == ["+3V3_S%dA" % _sl],
+              "%s: W_DISABLE1# %s.%s is an open drain %s from EMCON_ON (gate EMCON_ON, source GND) with one pull-up to +3V3_S%dA (%s %s, one resistor away %s)"
+              % (_wd, _sk, _pin, _q, _sl, _q, _gsd(_q), _one_r(_wd)))
+    # AN EMCON GATE'S ENABLE OUTPUT HOLDS ITS SWITCH OFF WITHOUT ITS DRIVER (MESHSAT-1357 round 4, R4T-F9, 26 September
+    # 2026). U19 and U20 (SN74LVC08A, on +3V3_DEV) drive the EN pins of U23/U24 (TPS259631, input +5V_DEV), U21
+    # (TPS22810, input +5V_DEV) and U22 (TPS22810, input +3V3_DEV). A gate without its supply, or with its pin 14 open,
+    # drives nothing, and both makers forbid a floating EN (SLVSET8A pin table, SLVSDH0C 9.3.3). Each net must carry the
+    # gate's output pad, the switch's EN pad and exactly one resistor, to GND, sized between two bounds read from the
+    # sheets: at most V / I, where V is the lower full-shutdown threshold (TPS22810 VSHUTF 0.5 V minimum; TPS259631 VSD
+    # 0.53 V minimum) and I is 10 uA of output leakage (SCAS283W gives the LVC08A no Ioff, so the family's guaranteed
+    # figure, SN74LVC1G08 SCES217AA Ioff 10 uA, stands in) plus 0.1 uA of EN leakage (both sheets): 49.5 kOhm. At least
+    # the load the gate can drive high: SCAS283W 5.7 VOH 2.4 V minimum at 12 mA (VCC 3 V), 200 Ohm. A test point may
+    # share the net; any other pad or resistor fails it.
+    import re as _re
+    def _ohms(v):
+        m = _re.match(r"\s*(\d+(?:\.\d+)?)\s*([kKM]?)", v or "")
+        return float(m.group(1)) * {"": 1.0, "k": 1e3, "K": 1e3, "M": 1e6}[m.group(2)] if m else None
+    _R_MAX = 0.50 / (10e-6 + 0.1e-6); _R_MIN = 2.4 / 12e-3
+    for _en, _drv, _load in (("LIME_EN", ("U19", "6"), ("U23", "3")), ("RB_EN", ("U19", "8"), ("U24", "3")),
+                             ("E22_EN", ("U19", "11"), ("U21", "5")), ("E72_EN", ("U20", "3"), ("U22", "5"))):
+        _rs = sorted(r for r in bynet.get(_en, set()) if r.startswith("R"))
+        _down = [r for r in _rs if sorted(_pads.get(r, {}).values()) == sorted([_en, "GND"])]
+        _ohm = [_ohms(byval.get(r)) for r in _down]
+        _other = sorted(p for p in bypad.get(_en, set()) if p not in (_drv, _load) and p[0] not in _rs and not p[0].startswith("TP"))
+        check(_drv in bypad.get(_en, set()) and _load in bypad.get(_en, set()) and len(_rs) == 1 and len(_down) == 1
+              and _ohm[0] is not None and _R_MIN <= _ohm[0] <= _R_MAX and not _other,
+              "%s: %s.%s holds %s.%s OFF with its driver unpowered: one pull-down to GND of %.0f Ohm to %.1f kOhm "
+              "(pull-downs %s valued %s, resistors on the net %s, other pads %s)"
+              % (_en, _drv[0], _drv[1], _load[0], _load[1], _R_MIN, _R_MAX / 1e3, _down, [byval.get(r) for r in _down], _rs, _other))
     import fnmatch as _fn, json as _json, os as _os
     pro = _os.path.splitext(sys.argv[1])[0] + ".kicad_pro"
     if _os.path.exists(pro):
