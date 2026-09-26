@@ -307,6 +307,34 @@ decisions:
       tools/boards/a.json and the off_board line from board D's J_PAOUT, which puts TRN-001 back to FAIL on A and
       D; the parts reverse by removing them from gen_sch_d.py and gen_sch_e.py and regenerating, which is a
       netlist change and moves the schematic, the netlist, the sidecar and the intent with it
+    executed: >-
+      IN THE SCHEMATICS, NOT YET IN ANY LAYOUT, read on 26 September 2026 (MESHSAT-1357, stream ts-tvs) on the netlists
+      of the declared phases; the committed boards of A, D and E predate it and SCH-002 does not read PASS on any of
+      them, so the holds in tools/pcb_board_holds.yaml stay (owner condition 6 of 25 September 2026). ONE, board A, as
+      ruled: J_USBC_OUT.2 and .3 are answered by U18's own CC protection through the declaration in tools/boards/a.json,
+      and since D-17 (owner, 26 September 2026) they also meet U31, a TPD2E2U06QDBZRQ1 (C488151), at the connector;
+      netlist pcb-a-power-a23/out/pcb-a-power.net sha256 7b08510106687b3d2788cbb90247d046d89a2b1308c7138c0731eaf55b58a024,
+      port_protect PASS of 26 with 0 reversed. TWO, board D's J_PAOUT, as ruled: declared off board at the PolyPhaser
+      GTH-SFF-AL. THREE, board D's headset conductors, SUBSTITUTED: the ruling named two Nexperia PESD5V0S2BT per
+      jack, and gen_sch_d.py fits one single-line clamp per conductor at the jack, D9, D11, D12 and D14 PESD5V0S1BA
+      (C19224) on the speaker and push-to-talk conductors and D10 and D13 PESD12VL1BA (C38558) on the microphone
+      conductors, because a two-channel SOT-23 does not seat within reach of these pins and the electret bias of 5.09
+      to 5.23 V sits above a 5 V stand-off (rule CMP-001; the ruled dual has the same 5 V stand-off). Against this
+      ruling's own criteria, read off the filed sheets (v2/vendor/nexperia/nexperia-pesd5v0s1ba.pdf and
+      nexperia-pesd12vl1ba.pdf): both are bidirectional ("Bidirectional ESD protection of one line"), both are rated
+      IEC 61000-4-2 level 4 and 30 kV contact against decision 34's 8 kV contact and 15 kV air, and their stand-offs,
+      5 V and 12 V, sit above the conductors' swings (1.9 V speaker, 3.33 V push to talk, 5.23 V microphone). Netlist
+      pcb-d-aprs-d9/out/pcb-d-aprs.net sha256 f13d8b70099ab03e486f35351dd2ed8cff41cc3fbb1f3b32ca0657987d80060a,
+      port_protect PASS of 21 with 0 reversed. FOUR, board E's sensor pod, as ruled: D9, a USBLC6-2SC6 (C7519), on
+      J_POD.1 (+3V3_E6, pin 5), .3 (SDA1, pins 1 and 6) and .4 (SCL1, pins 3 and 4). FIVE, board E's shore inlet,
+      SUBSTITUTED: the ruling named a second SMCJ40A on DC_F, and gen_sch_e.py fits D10, the SMCJ40CA (Littelfuse
+      C80273, R4E-01), the two-way part of the same datasheet row (VR 40.0 V, VBR 44.40 to 49.10 V at 1 mA, VC 64.5 V
+      at 23.3 A; v2/vendor/power/littelfuse-smcj-series-tvs.pdf), in the ruled position between F1 and Q1 on the same
+      land, because DC_F is ahead of the reverse-polarity FET and a one-way part there conducts forward on a reversed
+      input. Netlist pcb-e1-dock-e7/out/pcb-e1-dock.net sha256
+      d910e49c5f5f50b271a56113b15af7178dbeac583510ea0412dca87d3a37385d, port_protect PASS of 13 with 0 reversed.
+      Both substitutions are recorded here as taken by the session under the owner's standing rule of 26 September
+      2026: each meets every criterion this ruling states, and reversing them is a generator change on D or E
     ask: "clamp every exposed conductor at its entry, or accept the three paths that reach their clamp through an active part"
     recommendation: >-
       rule decision 34 first, then clamp at the entry every conductor that reaches a semiconductor with nothing

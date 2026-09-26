@@ -766,6 +766,9 @@ parts:
           currency: "LCSC serves for C80273 the same bytes it serves for C224052"
           matches_fitted: "yes for C80273: SMCJ40A (uni) / SMCJ40CA (bi) row, marking GFR / BFR, VR 40.0 V, VBR 44.40 to 49.10 V at 1 mA, VC 64.5 V at 23.3 A"
       documents_owed_now: "none of the three named above; they are filed"
+    update_ts_tvs:
+      read_on: "2026-09-26"
+      what_moved: "stream ts-tvs (MESHSAT-1357) drew the ten one-way clamps of boards A and B through kisch.tvs(): A D1 (SMCJ18A, VBAT), D2 (SMCJ40A, VIN_RAW), D3 (SMBJ5.0A, +3V3), D4 (SMBJ18A, PD_VBUS); B D1 (SMBJ5.0A, +5V_DEV), D2 (SMBJ58A, +54V_POE), D101, D201, D301 (SMBJ6.0A, +5V_S1 to S3), D520 (SMBJ5.0A, +3V3_M2C2). Each is on Device:D_Zener now, pin 1 K on the protected conductor and pin 2 A on GND, with its direction read from the part number and recorded in the board's intent under clamps. All ten were already the right way round (pad 1, the banded cathode, on the conductor); values, lands, codes and nets are unchanged (regeneration compared net by net and part by part). With faf8c981 this puts every one-way clamp of the set on a symbol that names its cathode, so symbol_note above describes the state before these two changes. The row with code null for E D3 is also stale: gen_sch_e.py fits C374030 (Littelfuse SMCJ18A) there, and documents_owed at the head of this entry is answered by documents_owed_now."
 
   - id: esd-headset-clamps
     function: "ESD clamps at the two headset jacks, one per conductor (D9 to D14)"

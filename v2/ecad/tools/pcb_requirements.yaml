@@ -755,14 +755,6 @@ open_items:
     class: SESSION
     status: OPEN
     title: "RF-002 enumerates every transmitter from the netlists and fails any without a hardware gate."
-  - id: S-09
-    class: SESSION
-    status: OPEN
-    title: >-
-      The ten unidirectional clamps of boards A and B (A's D1 to D4; B's D1, D2, D101, D201, D301, D520) moved off
-      KiCad's bidirectional D_TVS symbol onto one that carries a cathode, as boards D, E and P now are, and the
-      orientation check in the protection gate merged (the round-7 tool set: the polarity symbol and port_protect's
-      polarity pass). Every clamp's orientation is right on main since faf8c981.
   - id: S-12
     class: SESSION
     status: OPEN
@@ -1048,6 +1040,19 @@ closed_items:
       OPERATING-ENVELOPE.md sections 3 and 4, re-pinned; ASSEMBLY.md section 4 and build step 7; TEST-PLAN.md:46's
       EMCON check (an external receiver, not the kit's SDR); the outcomes of decisions 28 and 40 in pcb_decisions.yaml
       (CFL-014, CFL-015, CFL-016).
+  - id: S-09
+    closed_by: commit 3a1f6576
+    closing_evidence: >-
+      v2/ecad/tools/gen_sch_a.py and v2/ecad/tools/gen_sch_b.py read at 3a1f6576: board A's D1 to D4 and board B's D1,
+      D2, D101, D201, D301 and D520 are drawn through kisch.tvs() on Device:D_Zener, K on the protected conductor and A on
+      GND, with the direction read from the part number and recorded in each board's intent under clamps; the netlists
+      regenerated on the KiCad box differ from main's only in those ten parts' pin names and libsource (independent
+      comparison, net by net), and port_protect.py's polarity pass (merged in 93138ac1) reads 0 reversed and 0 symbol
+      mismatches on all six boards (A PASS of 26, B PASS of 17).
+    title: >-
+      The ten unidirectional clamps of boards A and B (A's D1 to D4; B's D1, D2, D101, D201, D301, D520) moved off
+      KiCad's bidirectional D_TVS symbol onto one that carries a cathode, as boards D, E and P now are, and the
+      orientation check in the protection gate merged (93138ac1).
   - id: S-06
     closed_by: commit 4ec785d8
     closing_evidence: >-
@@ -1252,9 +1257,19 @@ records:
           drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
           files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
           file at 97b1f63aa6ea11f1
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at the clamp-symbol merge of 26 September 2026 (stream ts-tvs): it changed
+          only at lines 441, 671, 832 and 876 (board B's one-way clamps D1, D2, D101, D201, D301 and D520 now drawn
+          through kisch.tvs()); every line number is kept and this reading cites none of those lines, so it stands on the
+          file at dedaf34ce285e5ff
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at the clamp-symbol merge of 26 September 2026:
+          compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent
+          checker, it differs only in D1, D2, D101, D201, D301 and D520's symbol (Device:D_TVS to Device:D_Zener) and pin
+          names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 669d02d07aeaae4b
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@6e3d880901fd3030"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b"
+      - "v2/ecad/tools/gen_sch_b.py@dedaf34ce285e5ff"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
       - "v2/docs/evidence/WRONG-MODEL-RECONCILIATION.md@97b1f63aa6ea11f1"
     release_effect: MUST_JUSTIFY
     source:
@@ -1560,9 +1575,14 @@ records:
           drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
           files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
           file at 4646ad528ec4b3c6
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at the clamp-symbol merge of 26 September 2026:
+          compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent
+          checker, it differs only in D1, D2, D101, D201, D301 and D520's symbol (Device:D_TVS to Device:D_Zener) and pin
+          names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 669d02d07aeaae4b
     evidence_bound_to:
       - "v2/docs/feasibility/FAILOVER-FABRIC.md@4646ad528ec4b3c6"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
     release_effect: BLOCKER
     source:
       - "v2/docs/ARCH-PCB-B-IOHA.md:87-89"
@@ -1614,9 +1634,14 @@ records:
           drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
           files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
           file at 4646ad528ec4b3c6
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at the clamp-symbol merge of 26 September 2026:
+          compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent
+          checker, it differs only in D1, D2, D101, D201, D301 and D520's symbol (Device:D_TVS to Device:D_Zener) and pin
+          names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 669d02d07aeaae4b
     evidence_bound_to:
       - "v2/docs/feasibility/FAILOVER-FABRIC.md@4646ad528ec4b3c6"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/FAILOVER-FABRIC.md section 5.2", "v2/docs/feasibility/FAILOVER-FABRIC.md section 10"]
     source_check: VERIFIED
@@ -1826,9 +1851,19 @@ records:
           ARCH-PCB-B-IOHA.md section 6, v2/docs/feasibility/FAILOVER-FABRIC.md (FAB-05, FDCAN at 1 Mbps) and
           v2/docs/feasibility/ZEROIZE.md section 7 (no H753-only unit needed) without one matrix (review of 26
           September 2026: "Partly met")
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at the clamp-symbol merge of 26 September 2026 (stream ts-tvs): it changed
+          only at lines 441, 671, 832 and 876 (board B's one-way clamps D1, D2, D101, D201, D301 and D520 now drawn
+          through kisch.tvs()); every line number is kept and this reading cites none of those lines, so it stands on the
+          file at dedaf34ce285e5ff
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at the clamp-symbol merge of 26 September 2026:
+          compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent
+          checker, it differs only in D1, D2, D101, D201, D301 and D520's symbol (Device:D_TVS to Device:D_Zener) and pin
+          names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 669d02d07aeaae4b
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@6e3d880901fd3030"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b"
+      - "v2/ecad/tools/gen_sch_b.py@dedaf34ce285e5ff"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
     release_effect: BLOCKER
     source: ["owner ruling D-13", "v2/ecad/tools/gen_sch_b.py:1145-1146", "v2/docs/reviews/2026-09-26-foundation-progress-review.md"]
     source_check: VERIFIED
@@ -1994,10 +2029,15 @@ records:
           10 row, section 3's GPIO 22 row, section 5's boot order, section 6's EMCON_HW and ZEROIZE_HW rows, section 7
           and section 10's charger sentences; the bank 1 failover host (line 5 and the ribbon table's pin 15 row),
           which this reading cites, is byte-identical, so it stands on the file at b1cde9f7ff1ada7b
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at the clamp-symbol merge of 26 September 2026 (stream ts-tvs): it changed
+          only at lines 441, 671, 832 and 876 (board B's one-way clamps D1, D2, D101, D201, D301 and D520 now drawn
+          through kisch.tvs()); every line number is kept and this reading cites none of those lines, so it stands on the
+          file at dedaf34ce285e5ff
     evidence_bound_to:
       - "v2/docs/ARCH-PCB-B-IOHA.md@6c3c93b7f32f953a"
       - "v2/docs/PANEL.md@b1cde9f7ff1ada7b"
-      - "v2/ecad/tools/gen_sch_b.py@6e3d880901fd3030"
+      - "v2/ecad/tools/gen_sch_b.py@dedaf34ce285e5ff"
     release_effect: ADVISORY
     source:
       - "v2/docs/ARCH-PCB-B-IOHA.md section 4"
@@ -2636,9 +2676,19 @@ records:
           = PD_SW_EN AND OUTLET_OK, the enables of the PoE stage U16 and the USB-C stage U19. TR_APRS is board D's KEY
           through the buffer U18 and R48, and PA_KEY = KEY AND PA_EN (U14), so whenever the PA keys both outlets drop,
           with no processor in the path
+      - >-
+          v2/ecad/tools/gen_sch_a.py re-read at the clamp-symbol merge of 26 September 2026 (stream ts-tvs): it changed
+          only at lines 224, 618, 901 and 1011 (board A's one-way clamps D1 to D4 now drawn through kisch.tvs()) and one
+          datasheet path in the comment at line 652; every line number is kept and this reading cites none of those lines,
+          so it stands on the file at 7f6c34697753bac1
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at the clamp-symbol merge of 26 September 2026: compared
+          component by component and net by net (pin, pinfunction, pintype) by the stream and its independent checker, it
+          differs only in D1 to D4's symbol (Device:D_TVS to Device:D_Zener) and pin names (A1/A2 to K/A) on the same
+          nets, so this reading stands on the file at 7b08510106687b3d
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_a.py@a0452054ec04cf5d"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2e8923d6853ee4e1"
+      - "v2/ecad/tools/gen_sch_a.py@7f6c34697753bac1"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@7b08510106687b3d"
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@f13d8b70099ab03e"
     release_effect: BLOCKER
     source: ["owner ruling D-11", "v2/docs/MESHSAT-709-geometry-appendix.md:2932", "v2/ecad/tools/gen_sch_a.py:1088-1104"]
@@ -3189,9 +3239,19 @@ records:
           it changed line 7 (a doubled word), line 46 (EMCON measured with a receiver outside the kit) and section 5's
           closing paragraph; line 36 (M7), which this reading cites, is byte-identical, so it stands on the file at
           e7a90ba054150bb7
+      - >-
+          v2/ecad/tools/gen_sch_a.py re-read at the clamp-symbol merge of 26 September 2026 (stream ts-tvs): it changed
+          only at lines 224, 618, 901 and 1011 (board A's one-way clamps D1 to D4 now drawn through kisch.tvs()) and one
+          datasheet path in the comment at line 652; every line number is kept and this reading cites none of those lines,
+          so it stands on the file at 7f6c34697753bac1
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at the clamp-symbol merge of 26 September 2026: compared
+          component by component and net by net (pin, pinfunction, pintype) by the stream and its independent checker, it
+          differs only in D1 to D4's symbol (Device:D_TVS to Device:D_Zener) and pin names (A1/A2 to K/A) on the same
+          nets, so this reading stands on the file at 7b08510106687b3d
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_a.py@a0452054ec04cf5d"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2e8923d6853ee4e1"
+      - "v2/ecad/tools/gen_sch_a.py@7f6c34697753bac1"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@7b08510106687b3d"
       - "v2/docs/TEST-PLAN.md@e7a90ba054150bb7"
     release_effect: MUST_JUSTIFY
     source: ["owner ruling D-17", "v2/ecad/tools/gen_sch_a.py:1016-1026", "v2/ecad/tools/pcb_decisions.yaml:256-396 (decision 31)"]
@@ -3416,9 +3476,14 @@ records:
           drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
           files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
           file at fa355479df681ed8
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at the clamp-symbol merge of 26 September 2026:
+          compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent
+          checker, it differs only in D1, D2, D101, D201, D301 and D520's symbol (Device:D_TVS to Device:D_Zener) and pin
+          names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 669d02d07aeaae4b
     evidence_bound_to:
       - "v2/docs/feasibility/EMCON.md@fa355479df681ed8"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
     release_effect: BLOCKER
     source:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2787 (item 3)"
@@ -3473,9 +3538,19 @@ records:
           v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net: WL_nDIS1 reaches only Q109's drain and the module's pin 89;
           Q109's gate is WL_nDIS1_KILL from the OR gate U111 (WL_nDIS1_OFF or EMCON_ON), held low by R173 100k; the
           same for BT_nDIS and slots 2 and 3; U6 pins 13 to 18 now drive the OFF requests, never a module pin
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at the clamp-symbol merge of 26 September 2026 (stream ts-tvs): it changed
+          only at lines 441, 671, 832 and 876 (board B's one-way clamps D1, D2, D101, D201, D301 and D520 now drawn
+          through kisch.tvs()); every line number is kept and this reading cites none of those lines, so it stands on the
+          file at dedaf34ce285e5ff
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at the clamp-symbol merge of 26 September 2026:
+          compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent
+          checker, it differs only in D1, D2, D101, D201, D301 and D520's symbol (Device:D_TVS to Device:D_Zener) and pin
+          names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 669d02d07aeaae4b
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@6e3d880901fd3030"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b"
+      - "v2/ecad/tools/gen_sch_b.py@dedaf34ce285e5ff"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
     release_effect: ADVISORY
     source:
       - "v2/ecad/tools/gen_sch_b.py:716-741"
@@ -3564,9 +3639,14 @@ records:
           drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
           files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
           file at fa355479df681ed8
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at the clamp-symbol merge of 26 September 2026:
+          compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent
+          checker, it differs only in D1, D2, D101, D201, D301 and D520's symbol (Device:D_TVS to Device:D_Zener) and pin
+          names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 669d02d07aeaae4b
     evidence_bound_to:
       - "v2/docs/feasibility/EMCON.md@fa355479df681ed8"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
     release_effect: BLOCKER
     source:
       - "v2/ecad/tools/gen_sch_b.py:716-741"
@@ -3629,9 +3709,14 @@ records:
           and the pack gains at best the host-free 256 mA less board E's always-on draw, which is the charger's
           behaviour as v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md section 5 sets it out; it stands on the
           file at b1cde9f7ff1ada7b
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at the clamp-symbol merge of 26 September 2026: compared
+          component by component and net by net (pin, pinfunction, pintype) by the stream and its independent checker, it
+          differs only in D1 to D4's symbol (Device:D_TVS to Device:D_Zener) and pin names (A1/A2 to K/A) on the same
+          nets, so this reading stands on the file at 7b08510106687b3d
     evidence_bound_to:
       - "v2/docs/PANEL.md@b1cde9f7ff1ada7b"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2e8923d6853ee4e1"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@7b08510106687b3d"
     release_effect: ADVISORY
     source:
       - "v2/docs/PANEL.md section 7"
@@ -3690,9 +3775,14 @@ records:
           (inhibit_chain_d and safe_lines_d on netlist f13d8b70099ab03e). RF-002's reading is the line contracts only: the
           transmitter walk (tx_inhibit.py) is not merged, and EMCON.md still leaves the SA868's row open (no maker PTT
           threshold, bench E-01), so this record stays INCONCLUSIVE
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at the clamp-symbol merge of 26 September 2026: compared
+          component by component and net by net (pin, pinfunction, pintype) by the stream and its independent checker, it
+          differs only in D1 to D4's symbol (Device:D_TVS to Device:D_Zener) and pin names (A1/A2 to K/A) on the same
+          nets, so this reading stands on the file at 7b08510106687b3d
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@f13d8b70099ab03e"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2e8923d6853ee4e1"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@7b08510106687b3d"
       - "v2/docs/feasibility/EMCON.md@fa355479df681ed8"
       - "v2/docs/CURRENT-EVIDENCE.md@179c7190fc226a7d"
     release_effect: BLOCKER
@@ -4916,6 +5006,20 @@ records:
           (v2/docs/feasibility/EMCON.md section 6); and v2/ecad/tools/pcb_decisions.yaml decisions 28 and 40: the
           four-layer 2 oz stackup row JLC04162H-7628 is recorded (v2/ecad/tools/stackup_write.py:46) and board P's
           schematic carries decision 40's floor, both outcomes saying so with the layouts still to come
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at the clamp-symbol merge of 26 September 2026: compared
+          component by component and net by net (pin, pinfunction, pintype) by the stream and its independent checker, it
+          differs only in D1 to D4's symbol (Device:D_TVS to Device:D_Zener) and pin names (A1/A2 to K/A) on the same
+          nets, so this reading stands on the file at 7b08510106687b3d
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at the clamp-symbol merge of 26 September 2026:
+          compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent
+          checker, it differs only in D1, D2, D101, D201, D301 and D520's symbol (Device:D_TVS to Device:D_Zener) and pin
+          names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 669d02d07aeaae4b
+      - >-
+          v2/ecad/tools/pcb_decisions.yaml re-read at the clamp-symbol merge of 26 September 2026: the only change is an
+          `executed:` record added to decision 31 (28 lines after line 309); decisions 28 and 40, which this reading
+          cites, are byte-identical, so it stands on the file at 1367edbf54a842d3
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@f13d8b70099ab03e"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d910e49c5f5f50b2"
@@ -4924,9 +5028,9 @@ records:
       - "v2/docs/V2-SPEC.md@df8ac22603440bc5"
       - "v2/docs/OPERATING-ENVELOPE.md@89de81a11c52f34a"
       - "v2/docs/TEST-PLAN.md@e7a90ba054150bb7"
-      - "v2/ecad/tools/pcb_decisions.yaml@e5c1f94779b6cfd6"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2e8923d6853ee4e1"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b"
+      - "v2/ecad/tools/pcb_decisions.yaml@1367edbf54a842d3"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@7b08510106687b3d"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@2834f0d8c4071d56"
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@4342c4cbe1b43dc4"
     release_effect: BLOCKER
@@ -5418,9 +5522,14 @@ records:
           (v2/ecad/tools/gen_sch_b.py:672-697), beside the ruled "eSIM plus nano-SIM" of appendix 32.50 item 12, naming
           this record (and correction 9 does the same); the description conflict stands on the file at df8ac22603440bc5
           until S-13 settles one description and fits the SIM TVS array
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at the clamp-symbol merge of 26 September 2026 (stream ts-tvs): it changed
+          only at lines 441, 671, 832 and 876 (board B's one-way clamps D1, D2, D101, D201, D301 and D520 now drawn
+          through kisch.tvs()); every line number is kept and this reading cites none of those lines, so it stands on the
+          file at dedaf34ce285e5ff
     evidence_bound_to:
       - "v2/docs/V2-SPEC.md@df8ac22603440bc5"
-      - "v2/ecad/tools/gen_sch_b.py@6e3d880901fd3030"
+      - "v2/ecad/tools/gen_sch_b.py@dedaf34ce285e5ff"
     release_effect: BLOCKER
     source:
       - "v2/docs/V2-SPEC.md:41"
@@ -6052,12 +6161,22 @@ records:
           half acting only with the golden image's OTFET bit), and board P's second level a 70 C backstop that opens
           the chemical fuse (v2/ecad/tools/gen_sch_p.py:414-502); the envelope is re-pinned (ENV-001 in
           v2/ecad/tools/pcb_rules_coverage.yaml and v2/ecad/tools/pcb_envelope.yaml)
+      - >-
+          v2/ecad/tools/gen_sch_a.py re-read at the clamp-symbol merge of 26 September 2026 (stream ts-tvs): it changed
+          only at lines 224, 618, 901 and 1011 (board A's one-way clamps D1 to D4 now drawn through kisch.tvs()) and one
+          datasheet path in the comment at line 652; every line number is kept and this reading cites none of those lines,
+          so it stands on the file at 7f6c34697753bac1
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at the clamp-symbol merge of 26 September 2026: compared
+          component by component and net by net (pin, pinfunction, pintype) by the stream and its independent checker, it
+          differs only in D1 to D4's symbol (Device:D_TVS to Device:D_Zener) and pin names (A1/A2 to K/A) on the same
+          nets, so this reading stands on the file at 7b08510106687b3d
     evidence_bound_to:
       - "v2/docs/PANEL.md@b1cde9f7ff1ada7b"
       - "v2/docs/CONOPS.md@b9080983ccc03a84"
       - "v2/docs/OPERATING-ENVELOPE.md@89de81a11c52f34a"
-      - "v2/ecad/tools/gen_sch_a.py@a0452054ec04cf5d"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2e8923d6853ee4e1"
+      - "v2/ecad/tools/gen_sch_a.py@7f6c34697753bac1"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@7b08510106687b3d"
       - "v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md@df84d98b9e47160c"
     release_effect: BLOCKER
     source:
@@ -6258,9 +6377,19 @@ records:
           v2/ecad/tools/gen_sch_b.py:635-643 read at eadbe571: J_M2C2 is TE 2199119-3, key ID B on TE drawing C-2199119
           rev F (458b2873), and its land lacks the drawing's two locating holes (1.1 and 1.6 mm), which the generator's
           footprint does not draw
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at the clamp-symbol merge of 26 September 2026 (stream ts-tvs): it changed
+          only at lines 441, 671, 832 and 876 (board B's one-way clamps D1, D2, D101, D201, D301 and D520 now drawn
+          through kisch.tvs()); every line number is kept and this reading cites none of those lines, so it stands on the
+          file at dedaf34ce285e5ff
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at the clamp-symbol merge of 26 September 2026:
+          compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent
+          checker, it differs only in D1, D2, D101, D201, D301 and D520's symbol (Device:D_TVS to Device:D_Zener) and pin
+          names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 669d02d07aeaae4b
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@6e3d880901fd3030"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b"
+      - "v2/ecad/tools/gen_sch_b.py@dedaf34ce285e5ff"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
     release_effect: BLOCKER
     source:
       - "v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf (key B p.15 and p.20; Table 32)"
@@ -6296,7 +6425,6 @@ records:
       rules: []
       decisions: []
     rule_coverage: NONE
-    waits_on: [S-09]
     status: DEFINED
     evidence_result: FAIL
     evidence_phase: SCHEMATIC
@@ -6313,9 +6441,26 @@ records:
           SMBJ18A; B's D1 SMBJ5.0A, D2 SMBJ58A, D101, D201 and D301 SMBJ6.0A, D520 SMBJ5.0A) are still drawn on D_TVS
           (v2/ecad/pcb-a-power-a23/out/pcb-a-power.net, v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net), and no
           orientation check is on main (the polarity pass is in the held round-7 tool set)
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net and v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net at the
+          clamp-symbol merge of 26 September 2026: board A's D1 to D4 and board B's D1, D2, D101, D201, D301 and D520 are
+          drawn on Device:D_Zener with K on the conductor they protect, and the polarity pass of port_protect.py (on main
+          since 93138ac1) reads 0 clamps reversed on every board, so the clamp clauses now hold; the record stays FAIL on
+          the rectifier clause of its acceptance only: the orientation check judges clamps and does not read rectifiers
+          such as board C's D19 to D21 (a tools item)
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at the clamp-symbol merge of 26 September 2026: compared
+          component by component and net by net (pin, pinfunction, pintype) by the stream and its independent checker, it
+          differs only in D1 to D4's symbol (Device:D_TVS to Device:D_Zener) and pin names (A1/A2 to K/A) on the same
+          nets, so this reading stands on the file at 7b08510106687b3d
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at the clamp-symbol merge of 26 September 2026:
+          compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent
+          checker, it differs only in D1, D2, D101, D201, D301 and D520's symbol (Device:D_TVS to Device:D_Zener) and pin
+          names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 669d02d07aeaae4b
     evidence_bound_to:
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2e8923d6853ee4e1"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@7b08510106687b3d"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@2834f0d8c4071d56"
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@f13d8b70099ab03e"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d910e49c5f5f50b2"
