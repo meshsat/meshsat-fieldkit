@@ -1314,7 +1314,9 @@ Prototype 1: in the core D-01 names. 8 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the file at fa355479df681ed8
 
-*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@f13d8b70099ab03e`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2e8923d6853ee4e1`, `v2/docs/feasibility/EMCON.md@fa355479df681ed8`, `v2/docs/CURRENT-EVIDENCE.md@780bf278bb95dd84`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CURRENT-EVIDENCE.md re-read at the tools stream's recording merge of 26 September 2026, with the re-take its checker verified: RF-002 and SCH-004 on board D now read PASS on current-candidate evidence (inhibit_chain_d and safe_lines_d on netlist f13d8b70099ab03e). RF-002's reading is the line contracts only: the transmitter walk (tx_inhibit.py) is not merged, and EMCON.md still leaves the SA868's row open (no maker PTT threshold, bench E-01), so this record stays INCONCLUSIVE
+
+*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@f13d8b70099ab03e`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2e8923d6853ee4e1`, `v2/docs/feasibility/EMCON.md@fa355479df681ed8`, `v2/docs/CURRENT-EVIDENCE.md@179c7190fc226a7d`
 
 *Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2825`; `v2/docs/PANEL.md section 6`; `v2/docs/feasibility/EMCON.md sections 4.1 and 4.2`
 
@@ -1668,7 +1670,9 @@ Prototype 1: in the core D-01 names. 10 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CURRENT-EVIDENCE.md re-read at the round 7b integration of 26 September 2026: BAT-001 on board P still reads FAIL and AWAITING_REVALIDATION (PREDATES_ARTEFACT), so this reading stands
 
-*Bound to:* `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@4342c4cbe1b43dc4`, `v2/ecad/tools/gen_sch_p.py@e111e10a047f587e`, `v2/docs/CURRENT-EVIDENCE.md@780bf278bb95dd84`, `v2/docs/review-packets/battery/REVIEW-REQUEST.md@e36ebfd98c2ead3a`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CURRENT-EVIDENCE.md re-read at the tools stream's recording merge of 26 September 2026: BAT-001 on board P now reads FAIL on current-candidate evidence (pack_protection on netlist 4342c4cbe1b43dc4, 1 of 45: no protection independent of software). That gate's own inputs still describe the old pack (the battery packet's regeneration log), so the FAIL does not judge the second level this record describes, and the qualified review has not been engaged; the record stays INCONCLUSIVE
+
+*Bound to:* `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@4342c4cbe1b43dc4`, `v2/ecad/tools/gen_sch_p.py@e111e10a047f587e`, `v2/docs/CURRENT-EVIDENCE.md@179c7190fc226a7d`, `v2/docs/review-packets/battery/REVIEW-REQUEST.md@e36ebfd98c2ead3a`
 
 *Source (verified):* `v2/docs/TEST-PLAN.md:48-77`; `v2/ecad/tools/pcb_pack_protection.yaml:17-40`; `owner ruling D-15`; `v2/docs/review-packets/battery/PROTECTION-ARCHITECTURE.md`; `v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md`; `v2/ecad/tools/gen_sch_p.py:355-430`
 
