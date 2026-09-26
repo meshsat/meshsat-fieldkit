@@ -842,6 +842,18 @@ def t_the_dialog_watchdog_watches_the_jvm_and_not_its_wrapper():
     assert "1200" not in s, "the watchdog still gives up after twenty minutes"
 
 
+def t_the_dialog_watchdog_finds_the_modal_by_its_title_and_not_only_by_a_flat_cpu():
+    """26 September 2026, board B's escape trial Q-B-ESC-1: both arms sat 57 minutes on Freerouting's
+    "DSN file reader" warning with the watchdog running and silent. An idle JVM's garbage collector and AWT
+    threads still tick, so a CPU-flat trigger is never true while the router waits for a click. The modal
+    is found by its window title on the JVM's own display; the CPU trigger stays as the fallback."""
+    s = open(os.path.join(TOOLS, "fr_dialog_watch.sh"), errors="replace").read()
+    assert "xdotool search --name" in s, "the modal is not looked for by its window title"
+    assert "DSN file reader" in s, "the title the trial measured is not among those searched"
+    assert "Board Layout - Freerouting" in s, "the main window would be dismissed with the modal"
+    assert s.index("xdotool search --name") < s.index('"$_STILL" -ge 2'), "the title search runs only after the CPU trigger"
+
+
 def t_racing_attempts_differ_in_something_the_router_reads():
     """Freerouting is deterministic, so N attempts with identical parameters are one attempt run N times.
 
