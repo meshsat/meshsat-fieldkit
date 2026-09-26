@@ -2708,3 +2708,102 @@ is not passed: nothing is laid for this ruling yet (a board P schematic change, 
 data-flash setting), so BAT-001 on P stays open until that copper exists and `pack_protection.py` judges it.
 The branch between the two under-voltage options is taken when a 4S part is sourced and priced, and that part's
 datasheet comes into `v2/vendor/` with its revision and hash first.
+
+
+## Decision 42 taken by the session under the owner's standing rule, 26 September 2026: decoupling is placed by class, and the 3 mm is a screen
+
+Not asked. Since the foundation sitting of 25 and 26 September the owner is not asked again and the session takes
+the option the evidence recommends (`EXECUTION-PLAN.md:86`); the review of 26 September asked for exactly this
+question to be settled on the parts' own requirements (`reviews/2026-09-26-foundation-progress-review.md:81`). The
+full analysis, with every clause, number and hash, is `feasibility/DECOUPLING.md`; this section is the record. It was
+corrected before merge on three points a checker found at 15:25 (DECOUPLING.md section 12.1): which boards are
+already assembled on both sides, which capacitors may go without a pin distance, and the STM32H743's VBAT capacitor.
+It was corrected again at 16:42 on two more, both in the far-side seat (section 12.2):
+- board B's underside rule is kept as written, not narrowed;
+- AN4938 puts the STM32's capacitors on its own side for every package but BGA, and the STM32 on board B is an
+  LQFP.
+
+It was corrected once more at 17:15 on the set of parts that get a fan (section 12.3). The fan now follows the
+escape pass, so the six-pin parts it escapes (WSON-6-1EP, MLPD-6, SOT-23-6) are covered, and the far side under
+D12's U15 is refused.
+
+**The question as registered on 20 September.** A decoupling capacitor could not be both within 3 mm of a
+fine-pitch pin and outside that part's 2.2 mm escape fan, which left three capacitors on board A, three on board P
+and nineteen of thirty on board B without a seat. The options were the underside, inside the fan at the price of
+escapes, or a larger limit with a basis.
+
+**What was found first.**
+
+| finding | evidence |
+|---|---|
+| the 3 mm number has no maker behind it | fifteen documents read for the parts the decision holds; none gives a distance for any capacitor (DECOUPLING.md section 4); across the 311 PDFs of `v2/vendor/` the only maker distance is the TPA6132A2's 5 mm on board D (SLOS597B section 9, p.17); DEC-001 already said "a heuristic and is recorded as one" with `sources: []` (`v2/ecad/tools/pcb_rules.yaml:599-607`) |
+| the 2.2 mm fan has none either | its origin is the 9 September measurement on D10 and C9 (`bypass_slots.py:39-41`) |
+| the two rules never overlap | on the committed text of six boards the nearest seat outside the fan is 3.26 to 5.73 mm from the pin, on every fanned declaration (3.26 to 5.49 mm on the fan set as ruled); there is no 2.98 to 3.00 mm window |
+| the tools make it worse than the physics | a paste aperture fans the 1.27 mm AP64500; the fan and the escape pass select different parts, so 22 six-pin parts the escape pass escapes have no fan today (among them B21's MLPD-6 RF switches and D12's U5); the placers ask 3.0 mm of a 10 uF the gate judges at 6.0; the gate keys its limit on the value string and reads "10u" as a small capacitor; the placers measure the centre and the gate the pad; the placers try one rotation |
+| two PASS readings are allowances | one reason line of 8 September passes every far capacitor on its board; all 30 of board B's and all 3 of board P's declared capacitors are past the gate's limit on the committed boards, so their "PASS of 30" and "PASS of 3" are not evidence |
+| three boards already carry SMD parts on both sides | read from the committed board text: B21 464 on the back, C24 135, D12 71 (eleven of D12's declared capacitors already sit on the back); A32's back holds only 21 through-hole parts; E17 and P4 nothing |
+| the residue is not what it looked like | board A's C36 and C42 are AP64500 input capacitors behind the paste artefact; C108 is a power-stage capacitor declared against the LM5176's VISNS sense pin; board P's three are the PBI hold-up capacitor and two RC filters (100 ohm and 1 kOhm) of a gauge that "does not require an external decoupling capacitor" (SLUSC67B 8.2.2.2.2); board B's fanned entries are converter inputs and the PoE controller, two of whose three capacitors serve the HDMI switches |
+
+**The ruling.** A capacitor's class is its role as its maker describes it, never its value string.
+
+| class | what it covers | rule | source |
+|---|---|---|---|
+| R | a converter's own power-stage capacitors | input capacitor on the IC's side across VIN and power ground, declared at VIN, no via in the loop, rail pad within 3.0 mm; output capacitors declared against the output loop; sense pins (VISNS, FB) take no declaration; the fan does not apply to the converter's own power-stage parts; never on the other side | TPS62933 SLUSEA4D 12.1; AP64500 DS41979 Layout; AP63200 DS41326 pin table and Layout; BQ25731 SLUSE66A Table 12-1; LM5176 SNVSAI1D 10.1 |
+| D | a capacitor a maker ties to a supply pin, of any value | the maker's value and count; the own-pin window inside the fan, rail pad within 3.0 mm, ground pad to the plane by its own via (a new gate check, T10); only that window opened, its escape cost reported; a maker's own number is a hard limit (TPA6132A2, 5 mm); else the seat with the smallest loop-equivalent distance as a justified deviation naming the capacitor | AN4938 Rev 7 2.2, 7.4 ("min. 4.7 μF", placed "as close as possible to ... the appropriate pins"), 9.3; CP2102N Rev 1.5 p.5; SLLSEE4E 10.1, 11.1.1; DS00002330D Figure 4-8; SLOS597B 9; SCAA082A 2.4; AN 574 |
+| L | a regulator's output or VCAP capacitor | seated as class D, declared at the regulator's output pin, with the maker's value floor and ESR bound checked | AN4938 2.2 (VCAP 2.2 uF, ESR under 100 mOhm); SBVS320D 7.1.1; DS39724; SNVSAI1D p.15; RP2040 guide 2.1.3; SLOS597B 9 |
+| the other side | a seat for classes D and L | only on boards already assembled with SMD parts on both sides (B21, C24, D12), and only under board B's underside rule as written, "never beneath a fine-pitch part whose escapes need the vias" (`gen_pcb_b3.py:155`): never inside the fan box of a part the escape pass escapes or the placers fan, on either side (the fan set is every part `escape.py` escapes, plus every part of eight or more copper pads at 1.0 mm or less), never over a through-hole part, never for a part whose maker names the same side (the STM32H743 in its LQFP, the converters); where allowed, judged by its in-plane distance plus the stackup's via allowance (3.7 mm on the six-layer stack, 2.3 mm on JLC04161H-7628). It leaves a seat under the pin at small parts the escape pass does not escape and a fallback at fanned ones, and answers no fine-pitch conflict; not on A32, E17 or P4 | `gen_pcb_b3.py:155`, `:346-353`, appendix line 3010 and 32.174, decision 44; AN4938 9.3 and Figure 21 (same side for non-BGA); RP2040 guide 2.1.2; AN 574 pp.13, 15-16 |
+| A | a supply pin behind a series resistor, or a backup reservoir | the nearest free seat outside the fan, at the pin end of its RC, no high-current conductor between or alongside; provisional for the BQ4050 and BQ77207 until the battery/protection qualified review of review section 2 | SLUSC67B 8.2.2.2.2 and 10.1; SLUSEG7D 8.4.1 |
+| B1 | bulk the maker calls rail bulk | value and count, no pin distance; declared against the regulator that feeds the rail and seated toward it ("as close as possible to the voltage regulators"), its distance printed | SLLSEE4E 10.1, 11.1.1 item 7; SLLS413L p.17, p.18 item 5 |
+| B2 | microfarad bulk no maker places | the gate's existing 6.0 mm from the pin it is declared against, a project screen | DS00002330D Figure 4-8; SLOS597B 9.1; PDi EPD driving circuit Rev. 02 (C24's C28, the maker's C1, no placement given) |
+
+**Not taken:** the other side on A32, E17 and P4 (a first SMD part on the back is an assembly side, which is money),
+for any converter input loop, for the STM32H743's LQFP, and inside the fan box of any part the escape pass escapes
+or the placers fan (the escape evidence of `gen_pcb_b3.py:346-353` and decision 44 says those seats cost the escapes
+the fan keeps); the whole fan opened (it cost 49 escapes on board A on 20 September, appendix 32.311); one larger number for capacitors tied to a pin (every millimetre of track costs a quarter to two fifths of
+a nanohenry on these stacks); class B for any capacitor a maker ties to a pin or any regulator output; and the
+register's own recommendation of 20 September to measure the underside on board A's three first, since those three
+are not fine-pitch decoupling and board A carries no SMD part on its back.
+
+**Board D's eleven capacitors already on its back.** Read against every fan box and by loop-equivalent distance
+(DECOUPLING.md section 7):
+- **Admissible now:** C53 (within the 3.0 mm screen).
+- **Past the screen only because of their side:** C51 and C52.
+- **Past it at any side:** seven. Two of them, C15 and C16, also sit inside the fan box of U7 (the TPA6132A2, a
+  QFN-16 at 0.5 mm), which board B's rule forbids.
+- **Rail bulk in a forbidden seat:** C17 (TUSB2046B rail bulk, B1) needs no pin distance, but it sits inside the
+  fan box of U5, a SOT-23-6 the escape pass escapes.
+
+The front fares no better:
+- **Ten of D12's thirteen front-side declarations are past their limit** (5.40 to 32.1 mm), two are within
+  it, and the last, C61, was renamed by round 4 and has no pad on its declared net on D12.
+- **The TPA6132A2's two capacitors sit 18.1 and 13.6 mm from their pins** against the maker's 5 mm, so under this
+  ruling D12 reads FAIL at U7 once the class-keyed limit lands.
+
+Decision 44 keeps D12 for this revision, so nothing on it moves for this ruling. D's next cut carries the 2.2 uF
+values, their 5 mm seats, C15 and C16 out of U7's fan box and C17 out of U5's. D12's DEC-001 PASS stays the blanket allowance,
+awaiting revalidation.
+
+**What it releases, read from the rendered page:** decision 42 held DEC-001 on boards A, B and P, the last three
+rule-board pairs any open decision held; `OWNER-DECISIONS-OPEN.md` now lists no open decision, and on
+`PCB-OPEN-PAIRS.md` (re-rendered by `rules_render.py` on merge) board A's DEC-001 moves from decision-bound to a
+measured failure while the open-pair total does not change (isolated by rendering twice on the same evidence).
+Released is not passed. DEC-001 reads as it did (A FAIL on
+A32, B and P PASS by allowance) until the tool changes land, and the B and P readings are not to be quoted as
+evidence.
+
+**What it does not do yet, named:** nothing is laid. The tool changes (a fan set that follows the escape pass's
+own selection, one limit
+function keyed by class and measured to the pad with a maker cap, four rotations, the own-pin window and the escape
+cost of windows, of R2's openings and of far-side seats, a class on every declaration, allow lines that name their
+capacitor and are counted as justified, the far-side seat with its via allowance and its fan-box refusal at seat time
+and on the placed board, the ground pad's own via, the registry text for DEC-001 with its per-device clause kept open
+on SI-001, and `PCB-OPEN-PAIRS.md` re-rendered in the merge commit) belong to the tools' integrating writer; the circuit changes belong to
+each board's writer: on A the LM5176 VIN-pin capacitors and VISNS declarations and the TPS62933 0.1 uF; on B the
+TPS62933 0.1 uF, the STM32H743 VDDA capacitors (W6-F7; its VBAT stays tied to the rail, AN4938 giving the 100 nF only
+"as an example"), four more TUSB8041 core capacitors, the KSZ9897R's 27 per-pin capacitors, the CP2102N VREGIN pair,
+the HDMI-switch re-declaration and the AP63203 input and output declarations; on C the RP2040's two undecoupled pins
+and its regulator output declaration, which needs a third part on the DVDD net (1 uF at VREG_VOUT, 100 nF at each
+DVDD pin); on D the TPA6132A2's VDD and HPVDD capacitors, fitted at 1 uF where the maker asks 2.2 uF; on E the AP63205 input declared at EN and the RP2040 regulator output declaration; on P the class
+declarations. All are listed with file and line in DECOUPLING.md section 8. The PI7C9X2G404SL has no decoupling
+requirement in its data sheet and stays TBD, and the effective capacitance at bias stays TBD with `derate.py`'s
+open gap.
