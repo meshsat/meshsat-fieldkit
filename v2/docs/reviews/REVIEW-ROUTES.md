@@ -29,6 +29,12 @@ owner's standing rule of 26 Sep 2026**: R-BAT first; R-PWR as soon as board A's 
 engineer as R-BAT where one covers both (the charger sits in both scopes); R-HSD as a separate specialism, once board B
 has a merged correction and a measured escape result.
 
+**Ready to act.** The costed form of these routes, with the bench experiments (Z-EXP-A to C, the EMCON rows that can
+run on development hardware, the empty-case heat-balance test and the case mock-up), their parts, prices and lead
+times read from public pages, and the authorisations still missing, is `v2/docs/reviews/READY-TO-ACT.md` (written 26
+September 2026 on main `fc144600`). The battery packet, `ZEROIZE.md`, `POWER-THERMAL.md` and `DECOUPLING.md`, which this
+page calls pending merge, are on main (`d90f30e4`, `9b0635d1`, `eadbe571`, `9d566e8b`).
+
 ## How the owner would engage a reviewer (every route)
 
 1. **Choose a provider type** from the route's list. Types, not names: this page names no firm or person and none
@@ -183,8 +189,12 @@ revision that merges them): `v2/docs/feasibility/POWER-THERMAL.md` (the power an
   tool, and board B's packet for the PoE PSE and its port. Documents already filed: LM5176 (SNVSAI1D), BQ25731 (SLUSE66A), TPS2596x (SLVSET8A, the TPS259631 eFuse),
   TPS62933, AP64500, LTC2954 (2954fb, whose order table lists the industrial grade), CSD18510Q5B, Coilcraft XAL1010,
   Panasonic ZK, Vishay WSL, BAT46W, TPD2E2U06-Q1, SN74LVC1G00.
-- Owed: `SOURCES.yaml` entries for board A's other regulators (its `owed` list) and the per-stage calculations
-  (compensation, ripple current per bulk capacitor, inrush).
+- Owed: `SOURCES.yaml` entries for board A's other regulators (its `owed` list). The per-stage calculations
+  (compensation, ripple current per bulk capacitor, inrush) are filed since `428c697c` as board A's calculation record,
+  `v2/docs/records/r4a/r4-decisions.md` (B2's per-stage table, B3, B4, section 7's restart guard, S-08) and
+  `v2/docs/records/r4a/r4-open-items.md`, and go with this packet; the scripts and runs behind their figures
+  (`loop_design.py`, `bulk_ripple.py`, `ripple_dense.py`, `softstart.py` and the loop runs of the round 4 board A
+  author) are not in the tree yet (`v2/docs/reviews/READY-TO-ACT.md` section 2.3).
 - Pending merge, not owed: the charger with its controller crashed, as a state sequence, is the battery packet's
   `v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md` (its `REVIEW-REQUEST.md` question 14, Q-P10, and the
   questions prepared for TI, Q-TI-2 and Q-TI-3). It is written against both board A as committed and the round 6
