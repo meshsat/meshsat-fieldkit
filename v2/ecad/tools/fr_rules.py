@@ -6,8 +6,8 @@ D7's vias from 130 to 98 (25 percent) for 13 percent more length, while -us, -is
 Keys: via_costs, plane_via_costs, start_ripup_costs (integers), preferred (a list of per-layer directions in DSN layer order: h, v or -, where
 '-' keeps the layer active with no preference), inactive (layers routed on no wire), fanout/autoroute/postroute on|off.
 Usage: fr_rules.py <board.dsn> <out.rules> [--via-costs 50] [--plane-via-costs 5] [--ripup 100] [--preferred h,v,h,v] [--inactive In1.Cu,In4.Cu]
-       [--fanout off] [--autoroute on] [--postroute on] [--name PCB]"""
-import sys, re
+       [--fanout off] [--autoroute on] [--postroute on] [--name NAME, default the DSN file's stem]"""
+import os, sys, re
 
 def arg(name, default=None): return sys.argv[sys.argv.index(name) + 1] if name in sys.argv else default
 
@@ -18,7 +18,13 @@ layers = re.findall(r"\(layer (\S+)\s*\(type", m.group(1) if m else text)
 if not layers: layers = sorted(set(re.findall(r"\(layer ([A-Za-z0-9_.]+)", text)))
 pref = (arg("--preferred") or "").split(",") if arg("--preferred") else []
 inactive = set((arg("--inactive") or "").split(",")) - {""}
-name = arg("--name") or re.search(r"\(pcb\s+(\S+)", text).group(1).strip('"') if re.search(r"\(pcb\s+(\S+)", text) else "PCB"
+# THE DESIGN NAME (MESHSAT-1357 round 8, 26 September 2026): Freerouting 1.9.0 names the design after the DSN's FILE
+# name up to its first dot (gui/MainApplication.java:597-599) and warns "RulesFile.read: design_name not matching" when a
+# rules file names anything else (designforms/specctra/RulesFile.java:71-74). This used to write the DSN's (pcb ...)
+# token, which KiCad writes as a path ("../e5/e5.dsn"), so every -dr run raised that warning, and the import watcher
+# (fr_dialog_watch.sh) refuses a warning it does not know. The file's stem is what the router compares against; a
+# rules file is only ever routed with a DSN of the same stem (route_parallel.sh: out/<N>.dsn for out/par/<K>/<N>.dsn).
+name = arg("--name") or os.path.basename(dsn).split(".")[0] or "PCB"
 # --only a,b,c (6 Sep 2026 11:40): emit only these items of the block (fanout, autoroute, postroute, vias, via_costs, plane_via_costs, start_ripup_costs, start_pass_no, layer_rules);
 # the isolation of what in a "default" block makes the router lose the design's clearances on B15 (42 hard violations with the full block, 0 without any block)
 ONLY = set((arg("--only") or "fanout,autoroute,postroute,vias,via_costs,plane_via_costs,start_ripup_costs,start_pass_no,layer_rules").split(","))

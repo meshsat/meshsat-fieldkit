@@ -3,6 +3,7 @@
 set -uo pipefail
 _TOOLS="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"   # resolved before the cd below, like the jar
 . "$_TOOLS/fr_jar.sh"
+. "$_TOOLS/fr_dialog_watch.sh"
 cd "$1"; N="$2"; K="$3"; P="$4"; W="out/par/$K"; mkdir -p "$W"
 # 13 September 2026 (MESHSAT-862): A ROUTE THAT DROPS ITS BOARD'S PLANE NETS MEASURES NOTHING, and I made
 # that mistake twice in one afternoon. D's PWR class arm came back hard 0 with 121 unrouted and FOUR vias,
@@ -202,51 +203,49 @@ ADSN="$PWD/$W/$N.dsn"; ASES="$PWD/$W/$N.ses"
 # THAT WAS WRONG (the router was alive and the gap was the pass cadence), but the race is real and naming a
 # display costs nothing. `-n` names one per work directory and `-a` still walks forward if it is taken.
 _XDISP=$(( 200 + ($$ + $(printf '%s' "$W" | cksum | cut -d' ' -f1)) % 700 ))
-# 15 September 2026 (MESHSAT-862): B19's router sat for THREE HOURS on a modal dialog under Xvfb ("The normalization of net
-# /PCIE2_CLK_N failed: We reached the maximum normalization depth (16)", five pair nets whose fixed pieces Freerouting could
-# not normalise), computing nothing, until a screenshot of its display showed the OK button and Return was sent to it; the
-# route then ran normally. A warning the GUI holds for a click is not a route result. The router runs in the background and
-# a watchdog reads its CPU time every 30 s; when it has not moved for 60 s inside the first twenty minutes and xdotool is
-# on the host, Return goes to that display (the auth cookie is the one xvfb-run wrote for it) and the log says so.
+# THE ROUTER'S WATCHER (fr_dialog_watch.sh). 15 September 2026: B19's router sat three hours on a Freerouting warning
+# dialog under Xvfb ("The normalization of net /PCIE2_CLK_N failed"), and this file grew its own CPU-stall watchdog that
+# pressed Return. It watched the `timeout` wrapper (whose CPU never moves) rather than the JVM, pressed Return blindly,
+# and the round 8 measurement showed that a Return reaches the dialog only through its focus proxy. It is replaced by
+# the shared watcher, which reads what the dialog says before it answers, refuses what is not understood, checks the
+# first session, records the stage timing, and carries the optimiser bound of 16 September (FRW_OPT_BOUND=1: once the
+# autoroute is complete the optimiser gets the autoroute's own duration, five minutes at least, FR_OPT_MAX_S to set it
+# and 0 to remove it; the JVM is then stopped by pid and the last pass's session is kept).
+# THE IMPORT IS CONFIRMED FIRST (review finding F, 26 September 2026): the jar imports this DSN once with the autorouter
+# off and writes back what it holds; a loss or an unread warning ends the attempt here, as infrastructure (exit 8).
+# A 2.x jar (FR_JAR) runs headless with no dialog, logs in another form and has no -do export of the board it
+# holds, so neither the probe nor the stage reading applies to it: its import cannot be confirmed, and it is refused
+# unless FR_IMPORT_PROBE=0 says that deliberately (the watcher then only records the run's windows and timing).
+if [ ${#V2_ARGS[@]} -gt 0 ]; then
+  if [ "${FR_IMPORT_PROBE:-1}" != 0 ]; then
+    echo "attempt $K: $(basename "$JAR") is a 2.x build, whose import the 1.9.0 probe cannot confirm; set FR_IMPORT_PROBE=0 to route on it deliberately"
+    echo "ROUTE-ONE-DONE $K"; exit 9
+  fi
+  export FRW_STAGES=0
+fi
+fr_import_probe "$ADSN" "$PWD/$W" "attempt $K" "${RULES_ARG[@]}"; _PRB=$?
+if [ "$_PRB" != 0 ]; then
+  echo "attempt $K: the import $([ "$_PRB" = 3 ] && echo "was REFUSED" || echo "could not be confirmed") (import-probe.json, import-probe.log.watch.json); nothing was routed"
+  echo "ROUTE-ONE-DONE $K"; exit $([ "$_PRB" = 3 ] && echo 8 || echo 9)
+fi
 timeout ${FR_TIMEOUT:-4500} xvfb-run -n "$_XDISP" -a "$JAVA" -Dfreerouting.ses_per_pass="$ASES" -Dfreerouting.design_name="$N.dsn" -jar "$JAR" -de "$ADSN" -do "$ASES" -mp "$P" -mt ${FR_THREADS:-6} -oit ${FR_OIT:-2} -dct 0 "${RULES_ARG[@]}" "${V2_ARGS[@]}" > "$W/fr.log" 2>&1 || echo "attempt $K: freerouting exit $?" &
-_RPID=$!; _CPU0=-1; _STILL=0; _T0=$(date +%s)
-while kill -0 "$_RPID" 2>/dev/null; do
-  sleep 30
-  _J=$(pgrep -f "[j]ava .*-de $(printf '%s' "$ADSN" | sed 's/[.]/\\./g') " | head -1)
-  [ -n "$_J" ] || continue
-  _CPU=$(awk '{print $14+$15}' /proc/$_J/stat 2>/dev/null || echo -1)
-  if [ "$_CPU" = "$_CPU0" ]; then _STILL=$((_STILL+1)); else _STILL=0; fi; _CPU0=$_CPU
-  # THE OPTIMISER IS NOT THE ROUTE, AND IT HAS HELD THIS BOX FOR HOURS (16 September 2026; the evidence is
-  # 14 September's E8, fifteen minutes of autoroute and two hours forty of optimiser, none of it used, and
-  # today's E12, twenty-eight minutes of autoroute converging at pass 232 of 260 and an optimiser that would
-  # have run to the three-hour cap and been killed with nothing kept). Our build writes the session after
-  # every autoroute pass, so the moment the autoroute is finished the result is already on disk; the
-  # optimiser only improves length and vias, and only if the WHOLE job ends before the time limit. It is
-  # given the autoroute's own duration to do that, with a five-minute floor, and then the run is stopped and
-  # the session kept. FR_OPT_MAX_S sets the bound directly; FR_OPT_MAX_S=0 removes it.
-  if [ -z "${_OPT_T0:-}" ] && grep -q "Auto-routing was completed" "$W/fr.log" 2>/dev/null; then
-    _OPT_T0=$(date +%s); _AUTO=$(( _OPT_T0 - _T0 ))
-    _OPT_CAP=${FR_OPT_MAX_S-$_AUTO}; [ "$_OPT_CAP" -lt 300 ] && [ "$_OPT_CAP" != 0 ] && _OPT_CAP=300
-    echo "route_one: the autoroute finished in ${_AUTO}s and the optimiser has started; it is bounded to ${_OPT_CAP}s (0 = unbounded)"
-  fi
-  if [ -n "${_OPT_T0:-}" ] && [ "${_OPT_CAP:-0}" != 0 ] && [ -s "$W/$N.ses" ] \
-     && [ $(( $(date +%s) - _OPT_T0 )) -ge "$_OPT_CAP" ]; then
-    echo "route_one: stopping the optimiser after ${_OPT_CAP}s; the session the last autoroute pass wrote is kept"
-    kill -TERM "$_J" 2>/dev/null || true
-    break
-  fi
-  if [ "$_STILL" -ge 2 ] && [ $(( $(date +%s) - _T0 )) -lt 1200 ]; then
-    if command -v xdotool >/dev/null 2>&1; then
-      for _XA in $(ls -t /tmp/xvfb-run.*/Xauthority 2>/dev/null); do
-        XAUTHORITY="$_XA" DISPLAY=":$_XDISP" xdotool key --clearmodifiers Return >/dev/null 2>&1 && { echo "route_one: the router had no CPU progress for 60 s on display :$_XDISP; Return sent to its window (a modal warning Freerouting holds for a click)"; break; }
-      done
-    else echo "route_one: the router has had no CPU progress for 60 s on display :$_XDISP and xdotool is not on this host to dismiss a dialog"; fi
-    _STILL=0
-  fi
-done
+_RPID=$!
+FRW_OPT_BOUND=1 FRW_SES="$ASES" fr_watch "$_RPID" "$_XDISP" "$ADSN" "attempt $K" "$PWD/$W/fr.log"; _FRW=$?
 wait "$_RPID" 2>/dev/null || true
 pkill -9 -f "java .*-de $(printf '%s' "$ADSN" | sed 's/[.]/\\./g') " 2>/dev/null || true
+if [ "$_FRW" = 3 ]; then
+  [ -e "$W/$N.ses" ] && mv -f "$W/$N.ses" "$W/$N.ses.refused"
+  echo "attempt $K: IMPORT-REFUSED during the run (fr.log.watch.json); the session is not scored"; echo "ROUTE-ONE-DONE $K"; exit 8
+fi
+if [ "$_FRW" = 4 ] && [ ! -s "$W/$N.ses" ]; then
+  echo "attempt $K: a stage limit stopped the router before any session (fr.log.watch.json): infrastructure, not a route"; echo "ROUTE-ONE-DONE $K"; exit 9
+fi
 [ -s "$W/$N.ses" ] || { echo "9999 9999 999999" > "$W/score.txt"; echo "attempt $K: no session file (killed or crashed), scored out"; echo "ROUTE-ONE-DONE $K"; exit 0; }
+fr_after_route "$ADSN" "$ASES" "attempt $K" "$PWD/$W/fr.log"; _AR=$?
+if [ "$_AR" = 3 ]; then
+  mv -f "$W/$N.ses" "$W/$N.ses.lost"
+  echo "attempt $K: the session lost something the DSN declares (fr.log.final-survive.json); not scored"; echo "ROUTE-ONE-DONE $K"; exit 8
+fi
 # 10 September 2026 (round-two red teams, report 1 P0): the import, the DRC and the score used to fail silently and the attempt
 # still ended `ROUTE-ONE-DONE` with exit 0, so `routeflow.py` could never tell a broken attempt from a board that would not
 # route and applied a routing remedy to an infrastructure failure. Each step reports now and the attempt exits non-zero.

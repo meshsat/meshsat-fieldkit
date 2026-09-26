@@ -56,12 +56,29 @@ _XDISP=$(( 200 + ($$ + RANDOM) % 700 ))   # 12 September 2026: never let two rou
 # The dialog watchdog (16 September 2026): this launcher never had it either, and it runs inside EVERY
 # board's finish, so a continuation that stalled on Freerouting's modal warning simply reported that it
 # had improved nothing. See fr_dialog_watch.sh for what the warning is and what it cost.
+rm -f "$W/$N.ses"   # a session of an earlier continuation in this directory must not be taken for this one's
+# THE IMPORT IS CONFIRMED BEFORE THE CONTINUATION (MESHSAT-1357 round 8, review finding F): a refusal or a loss keeps the
+# board, as every other infrastructure failure of this stage does, and says so as one.
+fr_import_probe "$W/$N.dsn" "$W" "cont"; _PRB=$?
+if [ "$_PRB" != 0 ]; then
+  echo "cont: the import $([ "$_PRB" = 3 ] && echo "was REFUSED" || echo "could not be confirmed") ($W/import-probe.json). The board is kept and this is an infrastructure failure, not a routing result."
+  exit 0
+fi
 timeout "$T" xvfb-run -n "$_XDISP" -a java -Dfreerouting.ses_per_pass="$W/$N.ses" -Dfreerouting.design_name="$N.dsn" -jar "$JAR" -de "$W/$N.dsn" -do "$W/$N.ses" -mp "$P" -mt ${FR_THREADS:-2} -oit ${FR_OIT:-2} -dct 0 > "$W/fr.log" 2>&1 &
 _RPID=$!
-fr_watch "$_RPID" "$_XDISP" "$W/$N.dsn" "cont"
+fr_watch "$_RPID" "$_XDISP" "$W/$N.dsn" "cont" "$W/fr.log"; _FRW=$?
 wait "$_RPID" || echo "cont: freerouting exit $?"
 pkill -9 -f "^java .*$W/$N\.dsn" 2>/dev/null || true
+if [ "$_FRW" = 3 ]; then
+  [ -e "$W/$N.ses" ] && mv -f "$W/$N.ses" "$W/$N.ses.refused"
+  echo "cont: IMPORT-REFUSED during the run ($W/fr.log.watch.json). The board is kept and this is an infrastructure failure, not a routing result."; exit 0
+fi
 [ -s "$W/$N.ses" ] || { echo "cont: no session, board kept"; exit 0; }
+fr_after_route "$W/$N.dsn" "$W/$N.ses" "cont" "$W/fr.log"; _AR=$?
+if [ "$_AR" = 3 ]; then
+  mv -f "$W/$N.ses" "$W/$N.ses.lost"
+  echo "cont: the session lost something the DSN declares ($W/fr.log.final-survive.json). The board is kept and this is an infrastructure failure, not a routing result."; exit 0
+fi
 python3 - "$W/$N.kicad_pcb" "$W/$N.ses" <<'PYX'
 import sys, pcbnew
 b = pcbnew.LoadBoard(sys.argv[1]); print("cont: SES import", pcbnew.ImportSpecctraSES(b, sys.argv[2])); sys.path.insert(0, "../tools"); import ses_via_drill; ses_via_drill.restore_board(b, sys.argv[2]); pcbnew.ZONE_FILLER(b).Fill(b.Zones()); pcbnew.SaveBoard(sys.argv[1], b)
