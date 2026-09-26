@@ -1,0 +1,130 @@
+{
+ "all_boards_count": 73,
+ "exit": 0,
+ "regenerated_siblings": [
+  {
+   "board": "a",
+   "build_sch_exit": 0,
+   "gen_sch_exit": 0,
+   "log_tail": "lands: 36 footprint(s) judged, 0 pin(s) on a pad the land does not carry, 0 land(s) unreadable\nschlayout verify: 1338 pins in 1092 nets, every component one name\nlayout: 11 A3 pages on a 3 x 4 sheet -> paper \"User\" 1257.30 1188.72\nwrote pcb-a-power.kicad_sch parts: 456 lib symbols: 76\nnets: 274 single-pin nets (should be empty or intentional): []\nintent: /tmp/review-packet-78rd4lyk/v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json (40 bypass, 27 rails, 52 nodes, 5 pair classes)\n\nERC: violations (out/pcb-a-power-erc.json, out/pcb-a-power-erc.rpt; erc_gate.py decides)\nnetlist: out/pcb-a-power.net\nsch_prov: pcb-a-power.net written by generator 753bf8c3d03db5b0 (boards/a.json#gen_env, gen_footprints_b16.py, gen_footprints_e.py, gen_footprints_idc.py, gen_footprints_panel.py, gen_sch_a.py, idc_pads.py, intent.py, kisch.py, schlayout.py, and 59 land(s) in meshsat.pretty)\nsheet pdf: out/pcb-a-power-schematic-sheet.pdf\nsch_pages: 3 x 4 cells, 11 pages kept of 12 tiles\npdf: out/pcb-a-power-schematic.pdf\nbom: out/pcb-a-power-bom.csv\n",
+   "parity_with_committed_netlist": "PARITY_AFTER_NOISE",
+   "phase_label": "A65"
+  },
+  {
+   "board": "b",
+   "build_sch_exit": 0,
+   "gen_sch_exit": 0,
+   "log_tail": "lands: 64 footprint(s) judged, 0 pin(s) on a pad the land does not carry, 0 land(s) unreadable\nschlayout verify: 3970 pins in 3207 nets, every component one name\nlayout: 37 A3 pages on a 6 x 7 sheet -> paper \"User\" 2514.60 2080.26\nwrote pcb-b-compute.kicad_sch parts: 976 lib symbols: 103\nnets: 844 single-pin nets (should be empty or intentional): []\nintent: /tmp/review-packet-78rd4lyk/v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json (30 bypass, 38 rails, 29 nodes, 5 pair classes)\n\nERC: violations (out/pcb-b-compute-erc.json, out/pcb-b-compute-erc.rpt; erc_gate.py decides)\nnetlist: out/pcb-b-compute.net\nsch_prov: pcb-b-compute.net written by generator 2764bc16221aca89 (boards/b.json#gen_env, gen_footprints_b16.py, gen_footprints_e.py, gen_footprints_idc.py, gen_footprints_panel.py, gen_sch_b.py, idc_pads.py, intent.py, kisch.py, schlayout.py, and 59 land(s) in meshsat.pretty)\nsheet pdf: out/pcb-b-compute-schematic-sheet.pdf\nsch_pages: 6 x 7 cells, 37 pages kept of 42 tiles\npdf: out/pcb-b-compute-schematic.pdf\nbom: out/pcb-b-compute-bom.csv\n",
+   "parity_with_committed_netlist": "PARITY_AFTER_NOISE",
+   "phase_label": "B21"
+  }
+ ],
+ "status": "RUN",
+ "this_board": [
+  {
+   "absent_boards": [],
+   "boards": [
+    "A",
+    "E"
+   ],
+   "defined_at": "check_contracts.py:239",
+   "detail": "",
+   "group": null,
+   "result": "PASS",
+   "text": "dock 2x6 contact map identical on A (J_DOCK) and E (J_BLK)"
+  },
+  {
+   "absent_boards": [],
+   "boards": [
+    "E"
+   ],
+   "defined_at": "check_contracts.py:248",
+   "detail": "",
+   "group": null,
+   "result": "PASS",
+   "text": "E6: SHORE_INHIBIT reaches the sensor controller U10 (directly or through its series resistor)"
+  },
+  {
+   "absent_boards": [],
+   "boards": [
+    "E"
+   ],
+   "defined_at": "check_contracts.py:256",
+   "detail": "",
+   "group": null,
+   "result": "PASS",
+   "text": "E: the 12 AWG lands P_CP and P_CN exist"
+  },
+  {
+   "absent_boards": [],
+   "boards": [
+    "E"
+   ],
+   "defined_at": "check_contracts.py:258",
+   "detail": "",
+   "group": null,
+   "result": "PASS",
+   "text": "E6: the pack return lands on GND (the 14.4 V node's return is the ground plane, 32.56)"
+  },
+  {
+   "absent_boards": [],
+   "boards": [
+    "E",
+    "P"
+   ],
+   "defined_at": "check_contracts.py:371",
+   "detail": "",
+   "group": null,
+   "result": "PASS",
+   "text": "E: the XT60 carries the pack on pin 2 and the return on pin 1, which is what P's leads land on"
+  },
+  {
+   "absent_boards": [],
+   "boards": [
+    "E",
+    "P"
+   ],
+   "defined_at": "check_contracts.py:378",
+   "detail": "",
+   "group": null,
+   "result": "PASS",
+   "text": "the pack pair is not crossed between board P's leads and board E's XT60"
+  },
+  {
+   "absent_boards": [],
+   "boards": [
+    "E"
+   ],
+   "defined_at": "check_contracts.py:402",
+   "detail": "",
+   "group": null,
+   "result": "PASS",
+   "text": "E: R48 (22R (pulse input series)) is in series with a real pin on both sides"
+  },
+  {
+   "absent_boards": [],
+   "boards": [
+    "A",
+    "E"
+   ],
+   "defined_at": "check_contracts.py:448",
+   "detail": "",
+   "group": null,
+   "result": "PASS",
+   "text": "rail CELL+: the shares sum to 1.0% within the 2.0% the rail declares"
+  },
+  {
+   "absent_boards": [],
+   "boards": [
+    "A",
+    "E"
+   ],
+   "defined_at": "check_contracts.py:448",
+   "detail": "",
+   "group": null,
+   "result": "PASS",
+   "text": "rail VIN_RAW: the shares sum to 2.0% within the 2.0% the rail declares"
+  }
+ ],
+ "why": null
+}

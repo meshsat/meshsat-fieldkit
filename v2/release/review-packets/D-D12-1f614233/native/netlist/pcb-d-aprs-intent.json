@@ -1,0 +1,307 @@
+{
+ "board": "pcb-d-aprs",
+ "written": "2026-09-26 10:01",
+ "bypass": [
+  {
+   "cap": "C51",
+   "part": "U9",
+   "pin": "5",
+   "net": "+3V3_D8"
+  },
+  {
+   "cap": "C52",
+   "part": "U10",
+   "pin": "5",
+   "net": "+3V3_D8"
+  },
+  {
+   "cap": "C53",
+   "part": "U11",
+   "pin": "5",
+   "net": "+3V3_D8"
+  },
+  {
+   "cap": "C54",
+   "part": "U12",
+   "pin": "5",
+   "net": "+3V3_D8"
+  },
+  {
+   "cap": "C55",
+   "part": "U13",
+   "pin": "5",
+   "net": "+3V3_D8"
+  },
+  {
+   "cap": "C56",
+   "part": "U14",
+   "pin": "5",
+   "net": "+3V3_D8"
+  },
+  {
+   "cap": "C7",
+   "part": "U1",
+   "pin": "1",
+   "net": "+5V_D8"
+  },
+  {
+   "cap": "C8",
+   "part": "U1",
+   "pin": "5",
+   "net": "+3V3_D8"
+  },
+  {
+   "cap": "C9",
+   "part": "U1",
+   "pin": "5",
+   "net": "+3V3_D8"
+  },
+  {
+   "cap": "C15",
+   "part": "U4",
+   "pin": "3",
+   "net": "+3V4_HUB"
+  },
+  {
+   "cap": "C16",
+   "part": "U4",
+   "pin": "3",
+   "net": "+3V4_HUB"
+  },
+  {
+   "cap": "C17",
+   "part": "U4",
+   "pin": "3",
+   "net": "+3V4_HUB"
+  },
+  {
+   "cap": "C64",
+   "part": "U17",
+   "pin": "1",
+   "net": "+5V_D8"
+  },
+  {
+   "cap": "C65",
+   "part": "U17",
+   "pin": "5",
+   "net": "+3V4_HUB"
+  },
+  {
+   "cap": "C61",
+   "part": "U15",
+   "pin": "6",
+   "net": "+5V_D8"
+  },
+  {
+   "cap": "C62",
+   "part": "U15",
+   "pin": "1",
+   "net": "VGG_SW"
+  },
+  {
+   "cap": "C18",
+   "part": "U6",
+   "pin": "2",
+   "net": "+5V_D8"
+  },
+  {
+   "cap": "C19",
+   "part": "U6",
+   "pin": "5",
+   "net": "PCM_VDD"
+  },
+  {
+   "cap": "C20",
+   "part": "U6",
+   "pin": "15",
+   "net": "PCM_VCCA"
+  },
+  {
+   "cap": "C21",
+   "part": "U6",
+   "pin": "19",
+   "net": "PCM_VCCL"
+  },
+  {
+   "cap": "C22",
+   "part": "U6",
+   "pin": "21",
+   "net": "PCM_VCCR"
+  },
+  {
+   "cap": "C23",
+   "part": "U6",
+   "pin": "26",
+   "net": "PCM_VCCP"
+  },
+  {
+   "cap": "C31",
+   "part": "U7",
+   "pin": "12",
+   "net": "AMP_HPVDD"
+  },
+  {
+   "cap": "C32",
+   "part": "U7",
+   "pin": "14",
+   "net": "+5V_D8"
+  },
+  {
+   "cap": "C33",
+   "part": "U7",
+   "pin": "14",
+   "net": "+5V_D8"
+  },
+  {
+   "cap": "C39",
+   "part": "U8",
+   "pin": "8",
+   "net": "+5V_D8"
+  }
+ ],
+ "rails": {
+  "+5V_D8": {
+   "volts": 5.0,
+   "amps_typ": 1.0,
+   "amps_peak": 2.0,
+   "source": "J_PWR1",
+   "loads": {
+    "FB1": 0.5,
+    "U1": 0.17,
+    "U17": 0.04,
+    "U6": 0.1,
+    "J_USB3": 0.05,
+    "U7": 0.05,
+    "U3": 0.03,
+    "U15": 0.02
+   },
+   "note": "BUDGET FROM THE TIGHTEST CONSUMER'S DATASHEET, 16 September 2026, replacing a number this project had only asserted. The consumers of this rail sit on board D and the tightest of them is the PCM2912A USB codec, whose recommended operating VBUS is 4.35 V minimum (v2/vendor/ti/ti-pcm2912a.pdf, Recommended Operating Conditions); the next is the CP2102N, whose 3.3 V regulator leaves regulation below VREGIN 4.1 V (v2/vendor/silabs/silabs-cp2102n.pdf). The source is board A's eFuse output on the 5.0 V device rail, and at a 2 percent source tolerance its worst case is 4.90 V, so the IR drop that keeps the codec in its recommended range is 550 mV, 11 percent. The declared budget is 6 percent, 300 mV, which leaves the codec at 4.60 V with 250 mV in hand. The 3 percent it replaces was derived from nothing and was tighter than the parts ask for. This board's share is 2 of the 6 points and it measures 0.58. The mezzanine's 5 V from A22. Budget 3 percent, not the 2 percent default: every consumer either regulates this rail or tolerates a wide range (the TLV75533 3.3 V LDO with 1.5 V of headroom, the CP2102N bridge at a 4.0 V minimum, the ESD reference, and the exciter's own boost behind FB1). D10 measures 108 mV at 1.0 A, 2.16 percent, leaving 4.89 V at the tightest consumer (9 September 2026). ONE CONDUCTOR, ONE BUDGET (16 September 2026): this rail starts at board A's eFuse and both boards were measuring their own half against the whole three percent, so the halves could sum past it with both passing. The 3 percent is the rail's, the 1.5 is this board's share of it, and D's own 2.16 percent is over that share: the 108 mV is measured from the connector to the tightest consumer on THIS board, so D owes a widening too, not only A.",
+   "budget": 0.06,
+   "share": 0.02,
+   "always_on": true,
+   "always_on_why": "it arrives on the mezzanine behind board A's eFuse U23, which is where it is switched; this board consumes it",
+   "v_work": 5.23,
+   "converted": false
+  },
+  "+3V3_D8": {
+   "volts": 3.3,
+   "amps_typ": 0.04,
+   "amps_peak": 0.17,
+   "source": "U1",
+   "loads": {
+    "U7": 0.02,
+    "U9": 0.002,
+    "U10": 0.002,
+    "U11": 0.002,
+    "U12": 0.002,
+    "U13": 0.002,
+    "U14": 0.002,
+    "Q3": 0.001,
+    "Q4": 0.001,
+    "Q5": 0.001,
+    "Q6": 0.001,
+    "Q7": 0.001,
+    "Q8": 0.001,
+    "Q9": 0.001
+   },
+   "note": "the local 3.3 V from U1: the six single-gate PTT and inhibit gates, their level shifters, the headphone amplifier's logic, the indicator LEDs and the pull-ups. The USB hub moved to its own +3V4_HUB on 26 September 2026 (W6-F5). Budget 3 percent: every consumer is a logic part with a wide supply range",
+   "budget": 0.03,
+   "always_on": true,
+   "always_on_why": "U1 is a TLV75533 whose EN pin is tied to its own input, so this rail follows +5V_D8 and has no switch of its own",
+   "efficiency": 0.66,
+   "converted": true,
+   "fed_from": "+5V_D8"
+  },
+  "+3V4_HUB": {
+   "volts": 3.44,
+   "amps_typ": 0.04,
+   "amps_peak": 0.04,
+   "source": "U17",
+   "loads": {
+    "U4": 0.04
+   },
+   "note": "the USB hub's supply: TUSB2046IBVFR, ICC 40 mA maximum in normal operation (SLLS413L 7.5), VCC 3.3 V minimum to 3.6 V (SLLS413L 7.3, I grade; 3.6 V is also the absolute maximum, 7.1). U17 TLV75801P with R80 56.2k and R81 10.7k, both 0.1 percent 25 ppm/C thin film: 3.439 V nominal, 3.375 to 3.502 V at the LDO with every term (VFB +-1 percent, the resistors' tolerance and TCR over 65 K, line regulation 7.5 mV, load regulation 1.2 mV, IFB 0.1 uA through R80; SBVS351D 5.5). The 1 percent budget, 34 mV, leaves the hub's pin at 3.341 V or more, 41 mV over its minimum. With the resistors' endurance, damp-heat and thermal-shock limits added, +-(0.5 percent + 0.05 Ohm) each (YAGEO RT V.16 Table 4), the band is 3.347 to 3.531 V and the pin 3.312 V or more; v_work 3.54 V covers that top. Efficiency is the LDO's arithmetic, 3.44 / 5.09 = 0.676, at the nominal +5V_D8 of 5.088 V",
+   "budget": 0.01,
+   "always_on": true,
+   "always_on_why": "U17's EN pin is tied to its own input, so this rail follows +5V_D8 and has no switch of its own",
+   "efficiency": 0.676,
+   "v_work": 3.54,
+   "converted": true,
+   "fed_from": "+5V_D8"
+  },
+  "+5V_SA": {
+   "volts": 5.0,
+   "amps_typ": 0.35,
+   "amps_peak": 1.1,
+   "source": "FB1",
+   "loads": {
+    "U2": 1.1
+   },
+   "note": "the exciter's own 5 V behind the 600R ferrite FB1: the SA868 draws about 350 mA receiving and up to 1 A on a transmit pulse, which is what the bead and its bulk capacitor are for. Budget 5 percent because the module's own range is 3.3 to 5.5 V",
+   "budget": 0.05,
+   "always_on": true,
+   "always_on_why": "the exciter's rail behind the ferrite FB1: a ferrite is not a switch, so this rail follows +5V_D8. What gates the transmitter is the PTT chain, not this rail",
+   "converted": false,
+   "fed_from": "+5V_D8"
+  },
+  "+3V3": {
+   "volts": 3.3,
+   "amps_typ": 0.06,
+   "amps_peak": 0.1,
+   "source": "J_HARN1",
+   "loads": {
+    "U16": 0.06
+   },
+   "note": "board A's always-on 3.3 V arriving over the mezzanine harness, which on this board feeds only the PTT inhibit's pull-ups through U16. It is a rail of board A and a load of this one",
+   "budget": 0.03,
+   "share": 0.0075,
+   "always_on": true,
+   "always_on_why": "board A's gated 3.3 V arriving over the mezzanine harness; it is switched on board A by U12 and this board only consumes it",
+   "converted": false
+  }
+ },
+ "nodes": {
+  "RF_PAOUT": {
+   "v_max": 110.0,
+   "v_min": 0.0,
+   "basis": "the 30 W transmitter's output: 54.8 V peak into a matched 50 ohm load, and about 110 V peak at the voltage maximum of a standing wave if the antenna port is open or shorted"
+  },
+  "RF_LPF_M": {
+   "v_max": 110.0,
+   "v_min": 0.0,
+   "basis": "the 30 W transmitter's output: 54.8 V peak into a matched 50 ohm load, and about 110 V peak at the voltage maximum of a standing wave if the antenna port is open or shorted"
+  },
+  "RF_LPF_OUT": {
+   "v_max": 110.0,
+   "v_min": 0.0,
+   "basis": "the 30 W transmitter's output: 54.8 V peak into a matched 50 ohm load, and about 110 V peak at the voltage maximum of a standing wave if the antenna port is open or shorted"
+  },
+  "GND": {
+   "v_max": 0.0,
+   "v_min": 0.0,
+   "basis": "the board's reference, so a part between a live net and ground is judged against the live net rather than reported as sitting on an undeclared one"
+  },
+  "VGG_SW": {
+   "v_max": 4.68,
+   "v_min": 0.0,
+   "basis": "the PA gate bias from U15, a TLV75801P set by R82 71.5k over R83 10.0k: 0.55 V x (1 + 7.15) = 4.48 V nominal, 4.30 to 4.68 V with every term (TI SBVS351D 5.5: VFB +-1 percent at -40 to 85 C, line regulation 7.5 mV, IFB 0.1 uA; both 1 percent 100 ppm/C resistors over 65 K); 0 V while PA_KEY is low (the LDO's active discharge)"
+  }
+ },
+ "pair_classes": {
+  "USB": {},
+  "DIFF100": {
+   "z_diff": 100.0,
+   "z_se": 50.0
+  },
+  "PCIE": {
+   "z_diff": 100.0
+  },
+  "HDMI": {
+   "z_diff": 100.0
+  },
+  "RF": {
+   "z_se": 50.0
+  }
+ },
+ "pass_through": {}
+}

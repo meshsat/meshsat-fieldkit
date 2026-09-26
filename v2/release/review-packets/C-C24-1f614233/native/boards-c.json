@@ -1,0 +1,386 @@
+{
+ "name": "pcb-c-display",
+ "letter": "c",
+ "title": "PCB-C CONTROL PANEL backer",
+ "footprint_generator": null,
+ "extra_compile": [
+  "panel1450.py"
+ ],
+ "gate_before_placement": false,
+ "bypass_place_after": "stackup",
+ "escape_env": {},
+ "pair_classes": "USB",
+ "pair_layers": "F.Cu",
+ "pair_hop_layers": "In2.Cu",
+ "pair_tail": 12,
+ "fanout_nets": "GND",
+ "escape_prune_before_audit": false,
+ "finish": {
+  "stub_layers": "F.Cu,In2.Cu,B.Cu",
+  "pour_nets": "GND",
+  "pair_match": true,
+  "pair_audit_nets": [
+   "USB_C7"
+  ],
+  "post_fix": "-",
+  "pruned_gate": false,
+  "gate_grep": "FAIL|RESULT|^verdict:",
+  "cont_route": {
+   "max_opens": 15,
+   "passes": 8,
+   "timeout_s": 3600,
+   "power_layers": [
+    "In1.Cu"
+   ],
+   "plane_nets": [
+    "GND"
+   ]
+  },
+  "_cont_route_why": "11 September 2026: one continuation pass of the router before the stub router when a handful of connections are open (A21's lever of 5 September). cont_route.sh keeps the board only if it improves, so it cannot make one worse; it was declared for A alone because only the A clones carried it, and E and P both ended a route at exactly one open. 12 September 2026: raised from 6 to 15. C10's 60-pass route ended at ELEVEN opens scattered over eight nets, the stub router closed none of them, and the continuation never ran because eleven is more than six. A threshold that excludes the case it was written for is no threshold; cont_route keeps the board only if it improves, so the only cost of trying is the clock.",
+  "_cont_route_planes_why": "12 September 2026: the continuation exports its own DSN, and it did so with every plane REMOVED, because finish.sh passed it no plane treatment and routeflow never put one in the finish's environment either. That makes the continuation re-route every plane pin as a wire: on C that is GND on In1, the majority of the board's connections. It is the same treatment the route itself is given in routeflow/<phase>.json, and a test holds the two in agreement.",
+  "stub_timeout_s": 3600,
+  "_cont_route_budget_why": "13 September 2026, C11 round 2: the continuation ran and came back `freerouting exit 124`, its own 900 s cap, with the board unchanged at 3 unrouted. A pass of this DSN takes about eight minutes with the box busy, so a 900 second budget buys ONE pass and 80 were asked for: the ceiling has to come from a measured pass rate, which is the 8 September rule restated in the continuation's own clock. Eight passes in 3600 s is what that rate supports, and cont_route keeps the board only if it improves, so a cut run costs the clock and nothing else.",
+  "stub_env": "STUB_WIN_SCALE=25 STUB_GRID=0.2 STUB_MAXN=80000000",
+  "_stub_env_why": "14 September 2026, C11. The board routes to THREE opens and the stub router closes two of them; the one it refuses is `/EPD_SDA`, 249 mm from J_EPD pin 14 to U3 pad 5, both ends already escaped to vias. That is not a closure the default window can even see: the stub search is given a box around the two ends, and at the default scale a quarter-metre connection across the whole panel is outside it. This is the A22 recipe of 7 September (HEAT_FLT and HEAT_EN closed at scale 25, a 0.2 mm grid and an 80 M node cap) applied to the board that now presents the same shape: a coarse grid is what makes a window that large affordable, and the panel is mostly empty copper, which is where a coarse grid is safe.",
+  "return_via": true,
+  "_return_via_why": "15 September 2026, owner ruling 20:15 CEST (appendix 32.198): a ground via within 1.5 mm of every signal via, fine-pitch escape fans exempt; the finish places them after the last copper-changing stage and the board gate (intent_checks item 4) refuses a board with a signal via left without one.",
+  "via_parallel": true,
+  "_via_parallel_why": "18 September 2026 (rule PI-003): after every copper-editing stage and before the ground vias, via_parallel lays parallel barrels beside any via dc_drop's solved mesh puts over IPC-2221's rating for its wall (the fabricator's 18 um plating), joined on every layer the net touches there, DRC-guarded, then re-solves and re-judges. On the committed board: C24 passes PI-003; the stage lays nothing and says so"
+ },
+ "phase": "C24",
+ "_phase_why": "16 September 2026: C24 is the board this tree holds and the folder that was cut from it (sha 2a273803757c68fb99f5); this file still said C18, so the set gate read the CURRENT cut as stale against a phase six behind it. A cut takes its phase from here, never from the command line. 12 September 2026: the phase is a fact about the board and it lived as a DEFAULT inside each generator, where gen_pcb_c.py still said C9 while the deliverable is C10, and full.sh set it for one board of six. A board's silk then names a phase `verify_deliverable` refuses, after the route, which is how A24 came to carry A18 on its front silk. `full.sh` exports this unless the caller has already set PHASE.",
+ "prelay_nets": "",
+ "prelay_layers": "F.Cu,In2.Cu,B.Cu",
+ "_prelay_why": "14 September 2026: `/EPD_SDA` runs 249 mm from J_EPD pin 14 at (225.75, 116.95) to U3 pad 5 at (420.89, 273.96), across a panel whose outline is a ring with a 240 by 176 mm display window through the middle, so it has exactly one corridor: east along the top strip, then south down the right strip. Four routes left it or left another net exactly like it (C11 left EPD_SDA, C12 left /PWM1 and /HB2, C13 left fifty-nine, C14 left EPD_SDA and /HB3), and a board-wide search at a 0.1 mm grid on all three routing layers finds no path on the ROUTED board at the panel's own 0.127 class clearance. On the PLACED board the strips are empty. The lane is laid there, locked, and the router works around it, which is `bus_a21.py`'s pattern of 5 September with the waypoints searched rather than typed. The board is kept only if the hard count does not rise. C15 MEASURED, 14 September 2026 19:30 UTC: with /EPD_SDA alone pre-laid the round-one route left /EPD_DC, /EPD_RST and /EPD_SCL open, the three sibling lines of the same six-wire bus from U3 to J_EPD, which had never been open before. One lane taken by hand moved the shortage to the lines beside it, which is the greedy-pass law of 32.95 in the router. The bus is pre-laid as a bus: all six signal lines from the RP2040 to the e-paper connector, side by side on the empty placed board, so the corridor is theirs by construction and the router lays the rest around it. The boost stage's own nets (GDR, PUMP, RESE, SW and the panel voltages) stay with the router; they are local to J_EPD's own cluster. C16 MEASURED, 15 September 2026 01:50 CEST: the whole bus pre-laid (5 of 7 pairs closed on the placed board) routes WORSE, 15 unrouted in round one and 16 in round two against C14's 12 and 4 with nothing pre-laid, and C15 with SDA alone ended at 8 against C14's 2. A lane taken by hand on a board whose strips are its only corridors costs the router more than it buys, every time it was tried. The stage stays, declared for no board; C's best remains C14's board at 0 hard and 2 unrouted (/EPD_SDA and /HB3's test-point branch), and that is decision 26's.",
+ "_signal_classes_why": "Rule RET-001, 16 September 2026. The return-path rule asks what a net's spectral content deserves, so every signal net needs a class and a reason. A net matched by no entry here is UNKNOWN and is judged at the STRICTEST bar, so an omission costs a failure rather than buying a pass. Patterns are shell globs over the net name without its leading slash, first match wins.",
+ "signal_classes": [
+  {
+   "pattern": "QSPI_*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the RP2040's QSPI flash bus, clocked to 133 MHz by the chip's own ROM bootloader"
+  },
+  {
+   "pattern": "XIN",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the 12 MHz crystal drive node"
+  },
+  {
+   "pattern": "XOUT*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the other half of the same crystal loop"
+  },
+  {
+   "pattern": "USB_PNL_*",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the panel's USB port: full speed at 12 Mbit/s, and the EDGES are nanoseconds",
+   "rise_ns": 4.0,
+   "rise_basis": "USB 2.0 full speed: the specification's own minimum transition time, TFR/TFF 4 ns 10 to 90 percent (Table 7-9). The bit rate is 40 times slower than high speed and the edge only 8 times"
+  },
+  {
+   "pattern": "USB_D*_R",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the same USB pair after its series resistors",
+   "rise_ns": 4.0,
+   "rise_basis": "USB 2.0 full speed: the specification's own minimum transition time, TFR/TFF 4 ns 10 to 90 percent (Table 7-9). The bit rate is 40 times slower than high speed and the edge only 8 times"
+  },
+  {
+   "pattern": "LED_RAIL_SW",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the LED rail's switching node, a PWM'd FET drain"
+  },
+  {
+   "pattern": "EPD_SW",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "the e-paper's boost converter switching node"
+  },
+  {
+   "pattern": "Q?_G",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a FET gate drive"
+  },
+  {
+   "pattern": "Q?_D",
+   "class": "HIGH_SPEED_DIGITAL",
+   "basis": "a switched FET drain"
+  },
+  {
+   "pattern": "SCL",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "I2C at 100 or 400 kHz, open drain"
+  },
+  {
+   "pattern": "SDA",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the data half of the same I2C bus"
+  },
+  {
+   "pattern": "EPD_SCL",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the e-paper's SPI clock, a few megahertz at most"
+  },
+  {
+   "pattern": "EPD_SDA",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the e-paper's SPI data, same rate"
+  },
+  {
+   "pattern": "EPD_CS",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the e-paper's chip select, an edge per transfer"
+  },
+  {
+   "pattern": "EPD_DC",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the e-paper's data and command select, an edge per transfer"
+  },
+  {
+   "pattern": "SW*",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the SWD debug port, a few megahertz and used only with a probe attached"
+  },
+  {
+   "pattern": "PANEL_PWM",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the panel backlight PWM, tens of kilohertz into a gate"
+  },
+  {
+   "pattern": "PWM1",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the sounder drive PWM, an audio-rate square wave into a gate"
+  },
+  {
+   "pattern": "HB?",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "a heartbeat line from a compute module, a slow square wave that must keep its edge"
+  },
+  {
+   "pattern": "EXP_INT",
+   "class": "CLOCKED_DIGITAL",
+   "basis": "the expander's interrupt, an edge into a GPIO"
+  },
+  {
+   "pattern": "EPD_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the e-paper's generated supply rails, pump nodes and busy flag: local supplies and a static flag"
+  },
+  {
+   "pattern": "*_A",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an indicator LED anode: a static level or a blink of a few hertz"
+  },
+  {
+   "pattern": "*_K",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an indicator LED cathode, the return of the same"
+  },
+  {
+   "pattern": "*_A2",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the second anode of a two-colour indicator"
+  },
+  {
+   "pattern": "*_B",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a switch pole's second contact, a static level"
+  },
+  {
+   "pattern": "*_B2",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a switch pole's second contact, second deck"
+  },
+  {
+   "pattern": "SPARE*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an unused expander pin, driven by nothing"
+  },
+  {
+   "pattern": "SLOT_EN?",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a slot enable, a static level"
+  },
+  {
+   "pattern": "HDMI_SEL?",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the display switch's select lines, static levels changed by a person"
+  },
+  {
+   "pattern": "LIGHT_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the day and night lighting mode inputs, static levels from a toggle"
+  },
+  {
+   "pattern": "*_SW",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a panel switch contact, a static level"
+  },
+  {
+   "pattern": "*_SENSE",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a divider tap into an ADC, filtered"
+  },
+  {
+   "pattern": "PANEL_ID",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the panel identification divider, a DC level read once"
+  },
+  {
+   "pattern": "PI_*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the shutdown-request and kill lines to the modules, static levels"
+  },
+  {
+   "pattern": "TX_INHIBIT_n",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the hardware transmit inhibit from the panel toggle, a static level with a pull-down"
+  },
+  {
+   "pattern": "TX_LAMPTEST",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the lamp-test line, a static level held by a person"
+  },
+  {
+   "pattern": "TR_APRS",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the transmit indication from the APRS board, a static level"
+  },
+  {
+   "pattern": "EMCON_HW",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the emission-control line, a static level"
+  },
+  {
+   "pattern": "ZEROIZE_HW",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the zeroize line, a static level"
+  },
+  {
+   "pattern": "SHORE_INHIBIT",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the shore inhibit, a static level through an optocoupler"
+  },
+  {
+   "pattern": "BOOT_J",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the RP2040 boot-select jumper, read once at reset"
+  },
+  {
+   "pattern": "C_RUN",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the RP2040's run input, a static level with an RC"
+  },
+  {
+   "pattern": "C_DVDD",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the RP2040's internal digital supply node with its decoupling"
+  },
+  {
+   "pattern": "LED_RAIL",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the LED supply rail after its filter, a DC node"
+  },
+  {
+   "pattern": "LED_STAT*",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the status LED's drive, a static level or a slow blink"
+  },
+  {
+   "pattern": "BZ_K",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "the sounder's return"
+  }
+ ],
+ "_gnd_grid_why": "MEASURED AND REFUSED ON THIS BOARD, 17 September 2026 (C25 with the grid against C24 without it, same generators, same placement, same router invocation, one variable). C24 reached 0 hard and 0 UNROUTED of 133 nets in 1 h 21 min with 383 vias. C25 with a 2.1 mm ground-via grid laid before the route ran its full 6 h cap and ended at 0 hard and 21 UNROUTED with 365 vias; its stub router closed NONE of the 21 in a further hour and its finish refused the board. THE GRID DOES BUY SOMETHING AND IT IS NOT ENOUGH: on RET-004 it takes this board from 32 signal vias lacking a ground via within reach (of 85 judged) to 12 (of 69), which is the rule it exists for. Against that it costs twenty-one open connections, so the board cannot be cut at all, and it makes PLC-002's pour-island repair WORSE rather than preventing it (C25's finish stitched 2 islands and left 5 with no room; C24 stitched 1 and left 2). A board that does not route is not a board, so the trade is refused: board C carries no grid, and its remaining return vias are owner decision 32's case, the fixer reaching just past the declared 1.5 mm and taking what it found.",
+ "annular_min_mm": 0.2,
+ "_annular_min_mm_why": "Rule VIA-002. JLCPCB rigid PCB manufacturing capabilities, annular ring rows, read 16 September 2026 (v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md): four layers at 1 oz outer: multilayer 1 oz, recommended 0.20 mm or above. The RECOMMENDED figure is taken and not the absolute minimum, because the absolute minimum is where yield starts to suffer and this board is made five at a time with no second chance before the owner has it in his hands.",
+ "via_ring_min_mm": 0.05,
+ "_via_ring_min_mm_why": "Rule VIA-002, the VIA rows rather than the annular ring row. JLCPCB rigid PCB manufacturing capabilities, read 16 September 2026 (v2/vendor/fabricator/jlcpcb-pcb-capabilities-2026-09-16.md): minimum via diameter 0.25 mm on a minimum via hole of 0.15 mm for 2 or more layers, which leaves 0.05 mm of copper per side. The PTH annular ring row (0.20 mm) is stated for a plated COMPONENT hole and cannot bind a via, because no via at this document's own minimum could satisfy it; board D12 was refused on 16 September for a 0.45/0.20 via at 0.125 mm of ring, which is what that confusion costs.",
+ "copper_layers": 4,
+ "_copper_layers_why": "Four layers as built. OWNER DECISION 27 IS OPEN on this: the four-layer board fails the return-path rule by its stack, and the six-layer arm measured on 16 September routes 0 and 0 in 14.7 minutes against six hours. If the ruling goes to six, this is the line that changes.",
+ "external_ports": [
+  {
+   "ref": "J_PIJ2",
+   "why": "the panel's exposed jack on the face"
+  },
+  {
+   "ref": "J_MAINSW",
+   "why": "the main switch on the face, which a person touches"
+  }
+ ],
+ "_external_ports_why": "Rule TRN-001, 16 September 2026. A port that leaves the ENCLOSURE is a wire a person will plug something into, in the rain, having walked across a floor. Every one of them reaches a semiconductor, and the only thing between is a suppressor, a choke, a series resistor into a clamp, or nothing. Most connectors on these boards are internal (board-to-board ribbons, module sockets, fan leads inside a sealed case) and treating every J as external would refuse every board for wires that never leave it. The board knows which is which and nothing else does, so each one is named with where it goes.",
+ "grounds": {
+  "GND": {
+   "what": "the board's single ground: every return on this board is this net"
+  }
+ },
+ "_grounds_why": "16 September 2026, rule GND-001: either the board has one ground and says so, or every partition is drawn deliberately with its crossing points named and the signals that cross listed. ground_system.py reads the netlist and compares it with this.",
+ "critical_k": 6,
+ "critical_k_why": "l = t_r / (6 t_pd). ECSS-E-HB-20-07A section 6.1.2.3 works a real case where a 35 mm clock track with a 200 ps edge failed a radiated emission test: that track is ONE rise distance long (t_r / t_pd = 34.5 mm on its microstrip), which is k = 1, and the handbook calls it a textbook radiator. k = 2 is half a known failure and k = 6 is a sixth of it. The number is this project's choice; the handbook is what it was calibrated against, and no standard in this tree states a value for k",
+ "crystals": {
+  "Y1": {
+   "c_load_pf": 10.0,
+   "stray_pf": 3.0,
+   "source": "Abracon ABM8-272-T3, load capacitance 10 pF, read from the RP2040 hardware design guide section 2.3.1, which names this exact part and works this exact arithmetic: two 15 pF capacitors give 7.5 pF in series, the pins and tracks add about 3 pF, and 10.5 pF is close enough to the target of 10",
+   "_stray_why": "3 pF, the allowance the RP2040 hardware design guide uses for the pins and tracks of a 3225 crystal beside its IC, which is the geometry every crystal on these boards has"
+  }
+ },
+ "safety_lines": [
+  {
+   "net": "TX_INHIBIT_n",
+   "hazard": "every transmitter in the kit is released",
+   "safe_state": "low",
+   "role": "source",
+   "why": "the panel's locking toggle SW_EMCON shorts it to ground and R14 holds it up, so the switch asserts by pulling low and the consumer boards each hold their own pull-down"
+  },
+  {
+   "net": "EMCON_HW",
+   "hazard": "every transmitter in the kit is released",
+   "safe_state": "low",
+   "role": "source",
+   "why": "U9 buffers the toggle into it without inverting, so both consumer boards silence on low"
+  },
+  {
+   "net": "ZEROIZE_HW",
+   "hazard": "the secure element is wiped",
+   "safe_state": "high",
+   "role": "source",
+   "why": "U12, a 74LVC1G17 Schmitt buffer, copies the local toggle sense ZEROIZE_SW onto it for the boards that carry the name (their test points); nothing on this board reads it, and with this board unpowered U12's IOFF turns its output off, so board A's R117 holds the line high, not asserted (26 September 2026, owner D-03, MESHSAT-1357 round 4)"
+  },
+  {
+   "net": "ZEROIZE_SW",
+   "hazard": "the secure element is wiped",
+   "safe_state": "high",
+   "role": "listens",
+   "why": "the panel's locking toggle SW_ZERO shorts it to ground and R10 holds it up to +3V3; GPIO22 of the panel controller U3 reads it at boot before any slot powers and times the 5 s hold (owner D-03, which rules decision 30: crypto-erase, the toggle the only trigger, level-sensitive), and U12 copies it onto ZEROIZE_HW. It never leaves this board, so a fault on the ribbon or on another board cannot read as a closed toggle"
+  },
+  {
+   "net": "PI_KILL",
+   "hazard": "the modules are powered down",
+   "safe_state": "low",
+   "role": "source",
+   "why": "driven by the panel controller's GPIO and read on board A"
+  },
+  {
+   "net": "SHORE_INHIBIT",
+   "hazard": "shore power is admitted when the panel would refuse it",
+   "safe_state": "low",
+   "role": "source",
+   "why": "driven by the panel controller's GPIO and read on board E"
+  }
+ ],
+ "_safety_lines_why": "Board C is the face: five of these six lines are driven here, by a locking toggle, a buffer or the panel controller, so the fail-safe property belongs to the boards that read them. The sixth, ZEROIZE_SW (26 September 2026), is the ZEROIZE toggle's local sense: it is read here and never leaves the board, so it is judged here as a listener, on its own pull-up R10. What this board owes is the sense, and it has it: all three toggles assert by shorting to ground, and U9 and U12 buffer rather than invert, so a cut ribbon reads as INHIBIT everywhere EMCON is consumed and as NOT ASSERTED on ZEROIZE_HW (board A's R117).",
+ "_ret004_refinish_why": "18 September 2026 15:10 CEST, measured in /root/crefin: board C's routed board re-finished with today's tools, one question, no route. `return_via` placed EIGHTEEN more ground vias (259 to 277 on the board) over its three rounds, twelve and nine and five of its candidates refused by the DRC and retried, and **RET-004 did not move: 32 signal vias of 85 judged still have no ground via within 1.5 mm, and the distribution of every signal via's nearest ground via is IDENTICAL before and after** (117 within 1.5 mm, 49 between 1.5 and 2.0, 89 between 2.0 and 3.0, 251 beyond 3.0, of 506). So the eighteen went where a ground via was already in reach and not one of them became the nearest for a via that lacked one. Board C's RET-004 is not a fixer-rounds question and the 17 September paste-aperture fix did not free the sites it needs: the neighbourhoods of those 32 carry no free site at all. What is left is the ground-via GRID, measured on this board on 17 September and refused with its number (21 open connections), or the layer count, which is decision 27. The re-finish is not adopted: its board exists in the scratch tree only and the committed C24 is untouched.",
+ "_ret004_c_why": "RET-004 ON BOARD C IS MEASURED, EXAMINED AND REFUSED WITH ITS NUMBER (18 September 2026). The screen reads 85 signal vias judged, 61 exempt in fine-pitch fans, 35 on one reference plane, 278 on nets with no edge worth a return loop, and **32 without a ground via within the declared 1.5 mm**. All 32 survive the examination this rule's own requirement asks for: `ref_change` classifies every one of them as a move between two GROUND planes, which is exactly the case a ground via beside the transition answers, so none of them belongs to RET-003 or to `return_stitch`. **The fixer was then run on the committed C24 board with today's tools** (`/root/c_refinish.log`, a scratch tree, nothing adopted; the question was whether the paste-aperture fix of 17 September had given its site search room it did not have when C24 was cut): three rounds placed 18 ground vias, 26 candidate sites were refused by the DRC and retried, the board stayed 0 hard and 0 unrouted, **and the reading did not move: 32 lacking before and 32 after**. Every via it could place is beyond the declared radius of the transitions that need one, which the fixer says in its own words (a longer return loop is still a shorter one than none, and the judge is not moved by it). So on this board the screen's remaining 32 are a DENSITY fact and not a missing pass: board C is a two-sided panel backer whose inner layers carry the plane and the routing, and the room beside those transitions is taken. It is MUST_JUSTIFY and this is the justification: measured, examined, the fixer run, and the number unchanged.",
+ "_ret002_c_why": "RET-002 ON BOARD C IS THE STACK, NOT THE VIA FIELD (18 September 2026, re-taken read-only on C24). Fifteen nets of 127 are over their limit and the separation of another conductor's anti-pads took only one of them away, which is the answer to the obvious question: board C's uncovered run is not a hole in a reference, it is a back-side track whose only neighbour is In2, a ROUTING layer. The worst are `USB_PNL_P` at 122.4 mm of 456.5 against a 22.8 mm limit (5.4 times), `XIN` at 36.4 of 167.6 against 10.0 and `SCL` at 252.9 of 488.5 against 73.3. That is owner decision 27's question on this board, the layer count and what In2 is for, and no router setting and no closer moves it.",
+ "rail_barrels": {
+  "max_barrels": 8
+ },
+ "_rail_barrels_why": "BOARD C CARRIES THE BARRELS ITS RAILS NEED AND HAS NOTHING TO LAY (19 September 2026, `rail_barrels.py` on a placement regenerated at C24 with today's tools, board and intent written one minute apart so the rail table belongs to the board): 8 crossings of 2 declared rails, 0 short, PASS. The stage is declared anyway, because a board that passes today is the only kind whose next generation can quietly stop passing, and the stage costs a second on a board with nothing to do.",
+ "_board_c_state_why": "BOARD C HAS NO ENGINEERING ITEM LEFT (19 September 2026, every open pair read and classified). C24 reads **35 PASS, 3 FAIL, 9 INCONCLUSIVE of 47** required rule-board pairs, and all TWELVE open pairs are outside this session's reach: **three failures** are RET-002 (15 nets of 127, judged against a criterion that is owner decision 39), RET-004 (decision 32) and OUT-001 (the SET's order paperwork, not board C's); **four inconclusive** are owner decisions by name (ENV-001, GND-002, STK-002, THM-001); **three** wait on an authority this project does not have (RET-001, RET-003, SI-001); **one** is DFA-001, which only the assembler's own 2D preview can answer; and **one** is DOC-002, which is written into `make_handoff.py` already and waits on a folder re-cut. What board C has done: 0 hard, 0 unrouted, `check_pcb_c` ALL PASS, its 5 V rail MET, contracts ALL PASS, `rail_barrels` PASS with nothing to lay (8 crossings of 2 declared rails, 0 short), and it carries no sensitive-node list so ANA-001 does not apply to it. It is also the board that measured the ground-via grid and REFUSED it with its number, 21 open connections against 0 without. **So when the set's percentage is read, board C is what 'as ready as this session can make it' looks like**: 74 percent of its own pairs verified, and the remaining quarter is the owner's, the fabricator's, the assembler's and the standards bodies'. Nothing here is waiting on a route or a tool.",
+ "_decision_30s_line_traced_across_the_kit": "20 Sep 2026 07:22 CEST, appendix 32.278. Decision 30 reads 'ZEROIZE is a switch wired to nothing that can act on it' and that is TOO STRONG as written: traced net by net across the four committed netlists that carry it, ZEROIZE_HW IS read, by exactly one device in the kit. BOARD C, the panel: the toggle SW_ZERO.1, a 10k pull-UP R10 to +3V3, C20, TP12, the ribbon J_PANEL.10, and U3 pin 34 GPIO22, the panel's own RP2040. BOARD B: J_PANEL.10, J_AB1.20 and TP8, and NOTHING reads it. BOARD A: J_AB1.20, J_MEZZ1.15 and a SECOND 10k pull-up R117 to +3V3, and nothing reads it. BOARD D: J_HARN1.15 and TP9, and nothing reads it. SO THE TRUE SENTENCE IS NARROWER AND WORSE: the line is read by the panel controller alone and by nothing on the boards that hold what would be zeroized, so the wipe is NECESSARILY a software action carried over the bus from the panel, and no part of it survives the panel controller being wedged. Two independent 10k pull-ups hold the line high, so a missing or unpowered panel reads as NOT ASSERTED, which is the fail-safe direction for an accidental wipe and the unsafe one for a wipe that is wanted. NOT A RULING: decision 30 is the owner's; this is its packet, traced rather than asserted.",
+ "_the_fanout_in_pad_fix_measured_on_this_board": "THE FANOUT FIX COSTS BOARD C NOTHING AND GAINS IT ONE VIA (20 September 2026). One variable, both tools on board C's own placed snapshot: the old centre-circle test lays **60 vias (1 in the pad) with 4 pads skipped**, the polygon test **61 (2) with 3**, and the DRC reads hard 0 of the fifteen types both ways. Its whole chain then ends PREROUTE-DONE OK. So the fix that unblocked board D is free here and takes one pad off the skipped list.",
+ "_c26_chain_at_head_reads_zero_short_crossings": "21 September 2026, 02:45 CEST, board C's chain at HEAD on the hub (/root/crc, PHASE C26, no route): PREROUTE-DONE OK, rail_crossings 8 of 8 carrying, place_audit 0 collisions of 10 fine-pitch parts of 194. Board C is unmoved by tonight's three judge changes.",
+ "conformal_coated": false,
+ "_conformal_coated_why": "ASSEMBLY.md section 5 does not name this board: its UNDERSIDE is coated after the silicone beads cure, with J_PANEL, J_EPD, the lead lands and the eight standoff rings masked, and its top side is explicitly not coated where the LEDs stand, so the board as a whole is not a coated surface. Judged on the bare column of ECSS-Q-ST-70-12C Table 13-3, which is the stricter one, because a declaration that cannot be found must never be the reason a rule gets easier.",
+ "return_reach_mm": 3.0,
+ "_return_reach_mm_why": "OWNER DECISION 32, RULED BY THE SESSION ON 21 SEPTEMBER 2026. The screen asks for a ground via within 1.5 mm and this board cannot satisfy it at every judged via. THE NUMBER IS THE TOOL'S OWN: return_via's fixer searches outward on rings of 0.75, 1.0, 1.25 and 1.5 mm and then 1.75, 2.0, 2.25, 2.5 and 3.0, so 3.0 mm is the distance THIS PROJECT ALREADY PLACES A GROUND VIA AT, and a judge that refuses what its own fixer places is two rules. Every via accepted this way carries its measured distance in the verdict's evidence, which is what the ruling asks for, and a via whose nearest ground via is beyond 3.0 mm or absent altogether stays a failure with its number on the record. The alternative was measured and refused: a ground-via grid takes board C from 32 lacking of 85 to 12 of 69 AND COSTS IT ITS ROUTE, 21 open connections against zero (boards/c.json). A longer return loop is a shorter one than none. Reverse by removing this key, which puts the rule back to the 1.5 mm screen as written."
+}

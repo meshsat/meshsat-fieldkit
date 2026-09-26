@@ -1,0 +1,36 @@
+{
+ "entries_declaring_no_placed_part": [],
+ "entries_naming_this_board": [
+  "rp2040",
+  "usb-esd-array",
+  "logic-nfet-2n7002",
+  "panel-schmitt-buffers",
+  "epd-boost-fet",
+  "epd-rectifiers"
+ ],
+ "entries_naming_this_board_that_joined_no_line": [],
+ "joined": {
+  "epd-boost-fet": [
+   "Q6"
+  ],
+  "epd-rectifiers": [
+   "D19",
+   "D20",
+   "D21"
+  ],
+  "logic-nfet-2n7002": [
+   "Q2 Q3 Q4"
+  ],
+  "panel-schmitt-buffers": [
+   "U12",
+   "U9"
+  ],
+  "rp2040": [
+   "U3"
+  ],
+  "usb-esd-array": [
+   "U6 U7 U8 U10 U11"
+  ]
+ },
+ "rule": "a line with an LCSC code joins by that exact code; a line without one joins only an entry that names this board and either points its `where` (read at its own revision) at the line's defining statement while naming the reference or the part, or writes its fitted order code in the value"
+}

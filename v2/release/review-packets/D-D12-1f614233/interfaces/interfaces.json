@@ -1,0 +1,57 @@
+{
+ "interfaces": [
+  {
+   "class": "USB",
+   "impedance_ohm": null,
+   "impedance_tol_percent": null,
+   "interface": "USB_FULL_SPEED",
+   "intra_pair_mm": null,
+   "max_length_mm": null,
+   "nets_on_this_board": [
+    "HUB_DM0",
+    "HUB_DM1",
+    "HUB_DM2",
+    "HUB_DM3",
+    "HUB_DM4",
+    "HUB_DP0",
+    "HUB_DP1",
+    "HUB_DP2",
+    "HUB_DP3",
+    "HUB_DP4",
+    "HUB_FB",
+    "HUB_OVRCUR_n",
+    "HUB_RST_n",
+    "HUB_XTAL1",
+    "HUB_XTAL2",
+    "HUB_XTAL2R",
+    "USB1_N",
+    "USB1_NR",
+    "USB1_P",
+    "USB1_PR",
+    "USB2_N",
+    "USB2_P",
+    "USB3_N",
+    "USB3_P",
+    "USB_D8_N",
+    "USB_D8_P"
+   ],
+   "patterns": [
+    "USB*",
+    "HUB*"
+   ],
+   "sources": [
+    {
+     "clause": "features, first page",
+     "path": "v2/vendor/ti/ti-tusb2046b.pdf",
+     "title": "TI TUSB2046B datasheet"
+    },
+    {
+     "clause": "features",
+     "path": "v2/vendor/ti/ti-pcm2912a.pdf",
+     "title": "TI PCM2912A datasheet"
+    }
+   ],
+   "what": "USB 1.1 and 2.0 FULL speed, 12 Mb/s, between parts on one board"
+  }
+ ]
+}

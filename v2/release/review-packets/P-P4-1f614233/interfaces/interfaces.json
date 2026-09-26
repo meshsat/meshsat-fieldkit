@@ -1,0 +1,29 @@
+{
+ "interfaces": [
+  {
+   "class": "Default",
+   "impedance_ohm": null,
+   "impedance_tol_percent": null,
+   "interface": "SMBUS_GAUGE",
+   "intra_pair_mm": null,
+   "max_length_mm": null,
+   "nets_on_this_board": [
+    "SMBC",
+    "SMBC_I",
+    "SMBD",
+    "SMBD_I"
+   ],
+   "patterns": [
+    "SMB*"
+   ],
+   "sources": [
+    {
+     "clause": "SMBus timing, fSMB",
+     "path": "v2/vendor/battery/ti-bq4050.pdf",
+     "title": "TI BQ4050 datasheet"
+    }
+   ],
+   "what": "the pack gauge's SMBus, board P's only bus and the one conductor pair that leaves its board"
+  }
+ ]
+}

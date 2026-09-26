@@ -1,0 +1,55 @@
+{
+ "entries_declaring_no_placed_part": [
+  "vhf-pa"
+ ],
+ "entries_naming_this_board": [
+  "tvs-surge-clamps",
+  "esd-headset-clamps",
+  "usb-esd-array",
+  "vhf-exciter",
+  "board-d-usb-hub",
+  "logic-nfet-2n7002",
+  "esd-mic-clamps",
+  "board-d-regulators-tlv758p",
+  "jst-ph-headers"
+ ],
+ "entries_naming_this_board_that_joined_no_line": [],
+ "joined": {
+  "board-d-regulators-tlv758p": [
+   "U15",
+   "U17"
+  ],
+  "board-d-usb-hub": [
+   "U4"
+  ],
+  "esd-headset-clamps": [
+   "D11",
+   "D12",
+   "D14",
+   "D9"
+  ],
+  "esd-mic-clamps": [
+   "D10",
+   "D13"
+  ],
+  "jst-ph-headers": [
+   "J_HS1",
+   "J_HS2"
+  ],
+  "logic-nfet-2n7002": [
+   "Q1",
+   "Q2",
+   "Q3 Q4 Q5 Q6 Q7 Q8 Q9"
+  ],
+  "tvs-surge-clamps": [
+   "D1"
+  ],
+  "usb-esd-array": [
+   "U5"
+  ],
+  "vhf-exciter": [
+   "U2"
+  ]
+ },
+ "rule": "a line with an LCSC code joins by that exact code; a line without one joins only an entry that names this board and either points its `where` (read at its own revision) at the line's defining statement while naming the reference or the part, or writes its fitted order code in the value"
+}

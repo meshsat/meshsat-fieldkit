@@ -1,0 +1,284 @@
+{
+ "annotation_scan": {
+  "duplicate_reference_unit": [],
+  "instances": 309,
+  "unannotated": []
+ },
+ "artefacts": {
+  "README.md": {
+   "bytes": 21659,
+   "produced_by": "review_packet.py",
+   "sha256": "bc4cc67bb43b89560c50674b85d468560f4f5fc9457d1cfa617a19c6e80b0480",
+   "what": "this packet's front page: what it is, what it is not, how to verify it"
+  },
+  "bom/NOT_FOR_FAB-parts-identity.csv": {
+   "bytes": 14963,
+   "produced_by": "review_packet.py",
+   "sha256": "ed360faa6c3ea43b1b9c9dae257492305ba068ca22210f791a36c4b3db95d37e",
+   "what": "the part identity and footprint map, one row per BOM line (NOT_FOR_FAB: a review input, never an order file)"
+  },
+  "bom/NOT_FOR_FAB-pcb-d-aprs-bom.csv": {
+   "bytes": 8098,
+   "produced_by": "kicad-cli 9.0.9 on the committed schematic",
+   "sha256": "923ce0a8c4ebe85ecad6650d5cedcb988d2d4025d63bc571239f344ced7d35d3",
+   "what": "the BOM exported from the committed schematic (build_sch.sh's own fields and grouping), byte for byte as KiCad wrote it; NOT_FOR_FAB in its name because it is a review input, never an order file"
+  },
+  "bom/parts-identity.json": {
+   "bytes": 47312,
+   "produced_by": "review_packet.py",
+   "sha256": "2d7a26127a0b87d355aff4d80ce4d0fedaea794e88e0366ca03b78d1aeafc652",
+   "what": "machine-readable record, see README.md"
+  },
+  "bom/sources-coverage.json": {
+   "bytes": 1095,
+   "produced_by": "review_packet.py",
+   "sha256": "55c85301647aef8bcb6cc42da94f29ff5fed0abb99d60f034e51710506f4e7a7",
+   "what": "machine-readable record, see README.md"
+  },
+  "changes/attribution-read-by-hand.yaml": {
+   "bytes": 4942,
+   "produced_by": "copied from --attribution",
+   "sha256": "2a85b4fe4c1614b1e920c9568652fa313adef312295b2b4b171f55eff8392533",
+   "what": "the reading of every changed reference by hand: IDs, the generator lines that carry them, the reason in words; the build checked every ID against its lines"
+  },
+  "changes/changes.json": {
+   "bytes": 58908,
+   "produced_by": "review_packet.py",
+   "sha256": "5d841ca2d4a5d2045d4cf29b2b6931608a402b789df06ddc6ad576d20562e795",
+   "what": "machine-readable record, see README.md"
+  },
+  "changes/gen_sch_d.diff": {
+   "bytes": 52258,
+   "produced_by": "difflib",
+   "sha256": "4343d9a6888fcbdc286dab5f37e200833b0d0f38708baa40620f5c9ccccb6276",
+   "what": "the generator diff between the two revisions"
+  },
+  "changes/prev-82dd1e4d-gen_sch_d.py": {
+   "bytes": 46932,
+   "produced_by": "copied from the stage",
+   "sha256": "f1fef1594efd3e6e93f32b8e33506d06083cdb16ce15ede9132ec72103aa2ad9",
+   "what": "the generator at the previous revision"
+  },
+  "changes/prev-82dd1e4d.net": {
+   "bytes": 230595,
+   "produced_by": "copied from the stage",
+   "sha256": "9a087a115c7bb17587975006570e525925efe75a10b0acd6f98fa3e715465a0d",
+   "what": "the committed netlist at the previous revision"
+  },
+  "contracts/check_contracts.log": {
+   "bytes": 5333,
+   "produced_by": "check_contracts.py, traced",
+   "sha256": "6b3e2290bec66008d6e59ce81d66e9aa05a6b11f669ce59eefc319dbd5a98cf2",
+   "what": "the revision's check_contracts.py output in the packet's work copy"
+  },
+  "contracts/contracts.json": {
+   "bytes": 5285,
+   "produced_by": "review_packet.py",
+   "sha256": "db1d750a53d217b1a742459efe068e9e32de956bdace350022880209a9eac70c",
+   "what": "machine-readable record, see README.md"
+  },
+  "interfaces/interfaces.json": {
+   "bytes": 1032,
+   "produced_by": "review_packet.py",
+   "sha256": "285f33881ca301a3dc6a0679d46af47a49e4c9bce98ce90f445df73adfecff8f",
+   "what": "machine-readable record, see README.md"
+  },
+  "native/boards-d.json": {
+   "bytes": 86337,
+   "produced_by": "copied from the stage (git objects of the source revision)",
+   "sha256": "e0f787a8bfe117a196376ab3a9d685190eaf8aa1229ed700c1a5e1e26da29656",
+   "what": "the board declaration (declared phase, classes)"
+  },
+  "native/fp-lib-table": {
+   "bytes": 162,
+   "produced_by": "copied from the stage (git objects of the source revision)",
+   "sha256": "9c2d14bd7a666d8449ea4e59410076e5167000b98681b2ea302ae00e93d46c32",
+   "what": "the project's footprint library table"
+  },
+  "native/gen_sch_d.py": {
+   "bytes": 72335,
+   "produced_by": "copied from the stage (git objects of the source revision)",
+   "sha256": "c4317b3f53b6921244974298c149fc2f4b1042208acfbfd15baa925fabe92afc",
+   "what": "the generator that writes the schematic: the design's source of truth, with the finding IDs in its comments"
+  },
+  "native/meshsat.pretty/IDC-Header_2x08_P2.54mm_Vertical_NarrowPad.kicad_mod": {
+   "bytes": 6424,
+   "produced_by": "copied from the stage",
+   "sha256": "a01394897fbff0502fd3316e286001a0b789412163ae7cf2cc1227f89acc9d17",
+   "what": "project footprint used by this board"
+  },
+  "native/meshsat.pretty/NiceRF_SA868.kicad_mod": {
+   "bytes": 3060,
+   "produced_by": "copied from the stage",
+   "sha256": "e7a55e1a606daff47424d8946cb12a2af1c1d7e547261ab812d243032865d074",
+   "what": "project footprint used by this board"
+  },
+  "native/netlist/pcb-d-aprs-intent.json": {
+   "bytes": 9368,
+   "produced_by": "copied from the stage (git objects of the source revision)",
+   "sha256": "a8c9ea452c4aff59a889ab9cd85ab58cd8d397601dbec3f1e00217262e16f16d",
+   "what": "the generator's intent file (rails, nodes, bypass declarations)"
+  },
+  "native/netlist/pcb-d-aprs.net": {
+   "bytes": 238859,
+   "produced_by": "copied from the stage (git objects of the source revision)",
+   "sha256": "e2534f5e34c1f5bff6141d201c326f001e1a4d3af42423db49ab64777e8b690f",
+   "what": "the committed netlist (KiCad s-expression) the change report reads"
+  },
+  "native/netlist/pcb-d-aprs.net.prov.json": {
+   "bytes": 8498,
+   "produced_by": "copied from the stage (git objects of the source revision)",
+   "sha256": "7e21f4b5fad79d708cc9e82d296aa8d579a60ef3382f0b0aa8a124f614f0c05f",
+   "what": "the netlist's provenance sidecar (generator identity, schematic sha)"
+  },
+  "native/pcb-d-aprs.kicad_pro": {
+   "bytes": 12369,
+   "produced_by": "copied from the stage (git objects of the source revision)",
+   "sha256": "a820c200f1b4a5426b095a49537ab3e5dc5e751206d3f469c226ef9980db0685",
+   "what": "its KiCad project file"
+  },
+  "native/pcb-d-aprs.kicad_sch": {
+   "bytes": 731558,
+   "produced_by": "copied from the stage (git objects of the source revision)",
+   "sha256": "b9a44e503a3342b3182030c27d3f77c9fd1da04592736b3ae0c2a1ddb7d8961e",
+   "what": "the committed schematic at the source revision (KiCad 9 native)"
+  },
+  "open/holds-and-decisions.json": {
+   "bytes": 1516,
+   "produced_by": "review_packet.py",
+   "sha256": "c447fd05b2e462c31c4c932eec46ed0221425c3b820b13dbf134c385e8446d14",
+   "what": "machine-readable record, see README.md"
+  },
+  "schematic/pcb-d-aprs-erc.json": {
+   "bytes": 246180,
+   "produced_by": "kicad-cli 9.0.9 on the committed schematic",
+   "sha256": "957329a2129ff5f9fcbf09107615578fb97adfad85325f6c593b8113ad464150",
+   "what": "KiCad ERC of the committed schematic, every severity; a report, not a verdict"
+  },
+  "schematic/pcb-d-aprs-schematic-sheet.pdf": {
+   "bytes": 1260728,
+   "produced_by": "kicad-cli 9.0.9 on the committed schematic",
+   "sha256": "fb9f4470b7776dc90587e57600c0e109ab2d5eeee3dfde0457473f62c73a9e9f",
+   "what": "the whole schematic as one sheet"
+  },
+  "schematic/pcb-d-aprs-schematic.pdf": {
+   "bytes": 779794,
+   "produced_by": "kicad-cli 9.0.9 on the committed schematic",
+   "sha256": "cd12bba8cb1130a3912d62d0e520c1adf29762389afeb53a54c66e5afbef9f31",
+   "what": "the schematic, paged into A3 blocks by the revision's own sch_pages.py (what build_sch.sh publishes)"
+  }
+ },
+ "banner": "UNBUILT PROTOTYPE DESIGN. No board of this set has been fabricated, assembled or tested; nothing in this packet is physical evidence. A review packet is a review input: it does NOT release this board to fabrication, layout or ordering, and it approves nothing.",
+ "board": {
+  "declared_phase": "D12",
+  "declared_phase_why": "12 September 2026: the phase is a fact about the board and it lived as a DEFAULT inside each generator, where gen_pcb_c.py still said C9 while the deliverable is C10, and full.sh set it for one board of six. A board's silk then names a phase `verify_deliverable` refuses, after the route, which is how A24 came to carry A18 on its front silk. `full.sh` exports this unless the caller has already set ",
+  "letter": "D",
+  "project_dir": "v2/ecad/pcb-d-aprs-d9",
+  "schematic_phase_label": "D37P",
+  "stem": "pcb-d-aprs"
+ },
+ "built_utc": "2026-09-26T15:53:22Z",
+ "change_attribution": "READ_BY_HAND",
+ "complete": true,
+ "counts": {
+  "authority_or_rule_only": 0,
+  "bom_lines": 107,
+  "bom_lines_joined_by_code": 16,
+  "bom_lines_joined_without_code": 1,
+  "changes": 23,
+  "contracts_fail": 0,
+  "contracts_pass": 11,
+  "contracts_this_board": 11,
+  "contracts_unjudged": 0,
+  "hand_disagrees_with_automatic": 14,
+  "no_id_of_any_kind": 1,
+  "read_by_hand": 23,
+  "sources_entries_naming_board_unjoined": 0,
+  "unverified_attribution": 0,
+  "with_finding_id": 22,
+  "without_finding_id": 1
+ },
+ "failures": [],
+ "gitignore_check": {
+  "as_path": "v2/release/review-packets/D-D12-1f614233/",
+  "ignored": []
+ },
+ "hold": [
+  {
+   "ELECTRICAL_PROTECTION_STATUS": "BLOCKED_DECISION_31",
+   "FAB_READINESS": "NOT_READY",
+   "PUBLICATION_STATUS": "HELD",
+   "ROUTING_STATUS": "PASS",
+   "decision": 31,
+   "forbidden": "any orderable fabrication package, any promotion of the board or its folder",
+   "permitted": "a review package clearly quarantined as NOT_FOR_FAB may be generated",
+   "title": "board D's exposed-port protection"
+  }
+ ],
+ "host": "not recorded: a packet is public, and a host name says nothing a reviewer can check",
+ "kicad": {
+  "erc_by_type": {
+   "warning:endpoint_off_grid": 33,
+   "warning:lib_symbol_issues": 309,
+   "warning:unconnected_wire_endpoint": 44
+  },
+  "export_vs_committed_netlist": {
+   "comps_changed": null,
+   "comps_only_committed": null,
+   "comps_only_other": null,
+   "content_hash": [
+    "d550a3e3e5687237",
+    "d550a3e3e5687237"
+   ],
+   "nets_changed": null,
+   "result": "PARITY_AFTER_NOISE"
+  },
+  "prev_export_vs_prev_committed_netlist": "PARITY_AFTER_NOISE",
+  "status": "RUN",
+  "steps": {
+   "bom": {
+    "exit": 0,
+    "log_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/tmp/review-packet-3vg3pq3f/export/pcb-d-aprs-bom.csv'.\n"
+   },
+   "erc": {
+    "exit": 0,
+    "log_tail": "Found 386 violations\nSaved ERC Report to /tmp/review-packet-3vg3pq3f/export/pcb-d-aprs-erc.json\n"
+   },
+   "netlist": {
+    "exit": 0,
+    "log_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\n"
+   },
+   "pdf_paged": {
+    "exit": 0,
+    "log_tail": "sch_pages: 3 x 2 cells, 6 pages kept of 6 tiles\n",
+    "tool": "the revision's own tools/sch_pages.py"
+   },
+   "pdf_sheet": {
+    "exit": 0,
+    "log_tail": "Plotted to '/tmp/review-packet-3vg3pq3f/export/pcb-d-aprs-schematic-sheet.pdf'.\nDone.\n"
+   }
+  },
+  "version": "9.0.9"
+ },
+ "kind": "meshsat-fieldkit review packet",
+ "notes": [],
+ "readiness": "READINESS OF THIS PACKET: QUARANTINED, NOT_FOR_FAB",
+ "schema": 1,
+ "source": {
+  "prev": "82dd1e4dc44efabeee1164a995cda4e866610f3d",
+  "prev_subject": "fix(tests): the blocked-land fixture no longer overwrites the lcsc_fill evidence rules CMP-002 and SUP-001 read [MESHSAT-1357]",
+  "rev": "1f614233998c3087a53abfa977be134465ce9f47",
+  "rev_date": "2026-09-26T14:13:16+02:00",
+  "rev_subject": "docs(review): the review of the 26 September progress report is recorded, to be executed item by item [MESHSAT-1357]",
+  "stage_staged_utc": "2026-09-26T14:50:43Z"
+ },
+ "sources_yaml": {
+  "read": "a SOURCES.yaml supplied with --sources, identified by its sha256",
+  "sha256": "2b192f2bb8ded051b26396b9efca4d9ef54d647bcb1838f733bd0985dccf3040"
+ },
+ "tool": {
+  "path": "v2/ecad/tools/review_packet.py",
+  "regen_compare_sha256": "341d7f129a1e6f24453e3fd579b99a9648efc7e253b0f514f5c182a4691d6b22",
+  "sha256": "7913d0a57567d8961e413098d486c2ad12d0a21790462fbc5d6251e1812fe79c"
+ }
+}

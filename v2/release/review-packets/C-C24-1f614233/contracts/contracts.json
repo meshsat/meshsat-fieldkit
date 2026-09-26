@@ -1,0 +1,108 @@
+{
+ "all_boards_count": 73,
+ "exit": 0,
+ "regenerated_siblings": [
+  {
+   "board": "a",
+   "build_sch_exit": 0,
+   "gen_sch_exit": 0,
+   "log_tail": "lands: 36 footprint(s) judged, 0 pin(s) on a pad the land does not carry, 0 land(s) unreadable\nschlayout verify: 1338 pins in 1092 nets, every component one name\nlayout: 11 A3 pages on a 3 x 4 sheet -> paper \"User\" 1257.30 1188.72\nwrote pcb-a-power.kicad_sch parts: 456 lib symbols: 76\nnets: 274 single-pin nets (should be empty or intentional): []\nintent: /tmp/review-packet-62g9xp0_/v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json (40 bypass, 27 rails, 52 nodes, 5 pair classes)\n\nERC: violations (out/pcb-a-power-erc.json, out/pcb-a-power-erc.rpt; erc_gate.py decides)\nnetlist: out/pcb-a-power.net\nsch_prov: pcb-a-power.net written by generator 753bf8c3d03db5b0 (boards/a.json#gen_env, gen_footprints_b16.py, gen_footprints_e.py, gen_footprints_idc.py, gen_footprints_panel.py, gen_sch_a.py, idc_pads.py, intent.py, kisch.py, schlayout.py, and 59 land(s) in meshsat.pretty)\nsheet pdf: out/pcb-a-power-schematic-sheet.pdf\nsch_pages: 3 x 4 cells, 11 pages kept of 12 tiles\npdf: out/pcb-a-power-schematic.pdf\nbom: out/pcb-a-power-bom.csv\n",
+   "parity_with_committed_netlist": "PARITY_AFTER_NOISE",
+   "phase_label": "A65"
+  },
+  {
+   "board": "b",
+   "build_sch_exit": 0,
+   "gen_sch_exit": 0,
+   "log_tail": "lands: 64 footprint(s) judged, 0 pin(s) on a pad the land does not carry, 0 land(s) unreadable\nschlayout verify: 3970 pins in 3207 nets, every component one name\nlayout: 37 A3 pages on a 6 x 7 sheet -> paper \"User\" 2514.60 2080.26\nwrote pcb-b-compute.kicad_sch parts: 976 lib symbols: 103\nnets: 844 single-pin nets (should be empty or intentional): []\nintent: /tmp/review-packet-62g9xp0_/v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json (30 bypass, 38 rails, 29 nodes, 5 pair classes)\n\nERC: violations (out/pcb-b-compute-erc.json, out/pcb-b-compute-erc.rpt; erc_gate.py decides)\nnetlist: out/pcb-b-compute.net\nsch_prov: pcb-b-compute.net written by generator 2764bc16221aca89 (boards/b.json#gen_env, gen_footprints_b16.py, gen_footprints_e.py, gen_footprints_idc.py, gen_footprints_panel.py, gen_sch_b.py, idc_pads.py, intent.py, kisch.py, schlayout.py, and 59 land(s) in meshsat.pretty)\nsheet pdf: out/pcb-b-compute-schematic-sheet.pdf\nsch_pages: 6 x 7 cells, 37 pages kept of 42 tiles\npdf: out/pcb-b-compute-schematic.pdf\nbom: out/pcb-b-compute-bom.csv\n",
+   "parity_with_committed_netlist": "PARITY_AFTER_NOISE",
+   "phase_label": "B21"
+  }
+ ],
+ "status": "RUN",
+ "this_board": [
+  {
+   "absent_boards": [],
+   "boards": [
+    "B",
+    "C"
+   ],
+   "defined_at": "check_contracts.py:207",
+   "detail": "",
+   "group": null,
+   "result": "PASS",
+   "text": "J_PANEL 2x13 map identical on B and C"
+  },
+  {
+   "absent_boards": [],
+   "boards": [
+    "C"
+   ],
+   "defined_at": "check_contracts.py:213",
+   "detail": "",
+   "group": "inhibit",
+   "result": "PASS",
+   "text": "transmit inhibit present on C (SW_EMCON)"
+  },
+  {
+   "absent_boards": [],
+   "boards": [
+    "B",
+    "C"
+   ],
+   "defined_at": "check_contracts.py:297",
+   "detail": "",
+   "group": null,
+   "result": "PASS",
+   "text": "panel controller USB pair USB_PNL_P on B16 and C7 J_PANEL"
+  },
+  {
+   "absent_boards": [],
+   "boards": [
+    "B",
+    "C"
+   ],
+   "defined_at": "check_contracts.py:297",
+   "detail": "",
+   "group": null,
+   "result": "PASS",
+   "text": "panel controller USB pair USB_PNL_N on B16 and C7 J_PANEL"
+  },
+  {
+   "absent_boards": [],
+   "boards": [
+    "C"
+   ],
+   "defined_at": "check_contracts.py:299",
+   "detail": "",
+   "group": "inhibit",
+   "result": "PASS",
+   "text": "C7: SW_EMCON drives TX_INHIBIT_n, EMCON_HW leaves on J_PANEL"
+  },
+  {
+   "absent_boards": [],
+   "boards": [
+    "C"
+   ],
+   "defined_at": "check_contracts.py:355",
+   "detail": "",
+   "group": "inhibit",
+   "result": "PASS",
+   "text": "C7: U9 buffers TX_INHIBIT_n into EMCON_HW rather than inverting it"
+  },
+  {
+   "absent_boards": [],
+   "boards": [
+    "A",
+    "C",
+    "D"
+   ],
+   "defined_at": "check_contracts.py:448",
+   "detail": "",
+   "group": null,
+   "result": "PASS",
+   "text": "rail +3V3: the shares sum to 3.0% within the 3.0% the rail declares"
+  }
+ ],
+ "why": null
+}

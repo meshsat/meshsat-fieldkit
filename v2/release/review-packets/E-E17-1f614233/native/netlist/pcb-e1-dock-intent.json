@@ -1,0 +1,427 @@
+{
+ "board": "pcb-e1-dock",
+ "written": "2026-09-26 10:01",
+ "bypass": [
+  {
+   "cap": "C16",
+   "part": "U5",
+   "pin": "3",
+   "net": "TRK_CSP"
+  },
+  {
+   "cap": "C38",
+   "part": "U10",
+   "pin": "1",
+   "net": "+3V3_E6"
+  },
+  {
+   "cap": "C39",
+   "part": "U10",
+   "pin": "10",
+   "net": "+3V3_E6"
+  },
+  {
+   "cap": "C40",
+   "part": "U10",
+   "pin": "22",
+   "net": "+3V3_E6"
+  },
+  {
+   "cap": "C41",
+   "part": "U10",
+   "pin": "33",
+   "net": "+3V3_E6"
+  },
+  {
+   "cap": "C42",
+   "part": "U10",
+   "pin": "42",
+   "net": "+3V3_E6"
+  },
+  {
+   "cap": "C43",
+   "part": "U10",
+   "pin": "49",
+   "net": "+3V3_E6"
+  },
+  {
+   "cap": "C44",
+   "part": "U11",
+   "pin": "8",
+   "net": "+3V3_E6"
+  },
+  {
+   "cap": "C45",
+   "part": "U10",
+   "pin": "23",
+   "net": "E6_DVDD"
+  },
+  {
+   "cap": "C46",
+   "part": "U10",
+   "pin": "50",
+   "net": "E6_DVDD"
+  },
+  {
+   "cap": "C47",
+   "part": "U10",
+   "pin": "44",
+   "net": "+3V3_E6"
+  },
+  {
+   "cap": "C31",
+   "part": "U12",
+   "pin": "2",
+   "net": "CELL_F"
+  },
+  {
+   "cap": "C30",
+   "part": "U12",
+   "pin": "6",
+   "net": "E6_BST"
+  },
+  {
+   "cap": "C34",
+   "part": "U13",
+   "pin": "1",
+   "net": "+5V_E6"
+  },
+  {
+   "cap": "C35",
+   "part": "U13",
+   "pin": "5",
+   "net": "+3V3_E6"
+  },
+  {
+   "cap": "C48",
+   "part": "U14",
+   "pin": "8",
+   "net": "+3V3_E6"
+  },
+  {
+   "cap": "C49",
+   "part": "U15",
+   "pin": "8",
+   "net": "+3V3_E6"
+  },
+  {
+   "cap": "C50",
+   "part": "U15",
+   "pin": "5",
+   "net": "+3V3_E6"
+  },
+  {
+   "cap": "C57",
+   "part": "U17",
+   "pin": "1",
+   "net": "SGP_VDD"
+  },
+  {
+   "cap": "C58",
+   "part": "U17",
+   "pin": "5",
+   "net": "+3V3_E6"
+  },
+  {
+   "cap": "C56",
+   "part": "U16",
+   "pin": "6",
+   "net": "+5V_E6"
+  }
+ ],
+ "rails": {
+  "CELL_F": {
+   "volts": 14.4,
+   "amps_typ": 10.0,
+   "amps_peak": 18.0,
+   "source": "F3",
+   "loads": {
+    "P_CP": 9.0,
+    "U12": 0.8,
+    "J_FAN1": 0.1,
+    "J_FAN2": 0.1
+   },
+   "note": "the pack node after the 25 A blade F3, to the block pads",
+   "always_on": true,
+   "always_on_why": "the pack node after this board's 25 A blade: a fuse is protection and not a switch, and what opens this node is the pack's own gauge two stages upstream",
+   "v_work": 16.8,
+   "converted": false
+  },
+  "CELL+": {
+   "volts": 14.4,
+   "amps_typ": 10.0,
+   "amps_peak": 18.0,
+   "source": "J_BATT",
+   "loads": {
+    "F3": 10.0
+   },
+   "note": "the pack lead from the XT60 J_BATT pin 2 to the blade F3, at the pack's own 10.0 A typical and 18.0 A peak. Declared 20 September 2026: it had been declared as nothing at all, so no power rule had ever looked at it",
+   "share": 0.005,
+   "always_on": true,
+   "always_on_why": "the pack node BEFORE this board's 25 A blade: nothing on this board can open it, which is the same reason CELL_F gives one line up",
+   "v_work": 16.8,
+   "converted": false,
+   "series_of": "CELL_F"
+  },
+  "VIN_RAW": {
+   "volts": 12.0,
+   "amps_typ": 6.15,
+   "amps_peak": 6.15,
+   "source": "L2",
+   "loads": {
+    "J_BLK": 6.15
+   },
+   "note": "shore and vehicle entry after the filter choke, 10 A fuse. Declared at the hot-swap's current limit (F-IN-02, 26 September 2026): 6.15 A, U6's maximum limit with its 10 mOhm sense, as both the typical and the peak, because a unit at VCL max passes it continuously without limiting; 4.85 A (VCL min) is only what the entry is guaranteed to pass, which bounds the host's IIN_HOST and not the conductors. THIS BOARD'S SHARE is 0.5 of the rail's 2 percent (16 September 2026): the entry, the choke and the dock block are a short run on this strip and measured 0.16 percent at the old 8 A, while board A carries the same current from the dock across the power board to its front end and measured 0.86, so the 1.5 points go there",
+   "budget": 0.02,
+   "share": 0.005,
+   "switch": "U6",
+   "enable_net": "HS_UVLO",
+   "v_work": 36.0,
+   "converted": false
+  },
+  "+3V3_E6": {
+   "volts": 3.3,
+   "amps_typ": 0.35,
+   "amps_peak": 0.6,
+   "source": "U13",
+   "loads": {
+    "U10": 0.06,
+    "U11": 0.05,
+    "U14": 0.04,
+    "U15": 0.04,
+    "U17": 0.005,
+    "J_DCF": 0.03,
+    "J_LTG": 0.03,
+    "J_POD": 0.1
+   },
+   "note": "the sensor controller's own 3.3 V from U13: the RP2040, the sensors and the three sealed sensor headers. A logic rail at a third of an amp over long thin tracks is fine at 3 percent",
+   "budget": 0.03,
+   "always_on": true,
+   "always_on_why": "U13 is a TLV75533 whose EN pin is tied to its own input, so this rail follows the 5 V the AP63205 makes and has no switch of its own",
+   "efficiency": 0.85,
+   "converted": true
+  },
+  "+5V_E6": {
+   "volts": 5.0,
+   "amps_typ": 0.3,
+   "amps_peak": 0.5,
+   "source": "L3",
+   "loads": {
+    "U13": 0.2,
+    "U16": 0.1
+   },
+   "note": "the local 5 V buck U12: the 3.3 V regulator's input and, through the load switch U16, the Geiger tube's high-voltage supply on its own header",
+   "always_on": true,
+   "always_on_why": "U12 is an AP63205 whose EN pin is tied to CELL_F, the pack node it runs from, so this rail follows the pack and has no switch of its own",
+   "efficiency": 0.88,
+   "converted": true
+  },
+  "+5V_GEIGER": {
+   "volts": 5.0,
+   "amps_typ": 0.1,
+   "amps_peak": 0.1,
+   "source": "U16",
+   "loads": {
+    "J_GEIGER": 0.1
+   },
+   "note": "the Geiger module's 5 V behind its load switch (F-BP-02, 26 September 2026), off whenever the sensor controller does not ask for it, so the kit-off state no longer carries the tube's high-voltage supply",
+   "switch": "U16",
+   "enable_net": "GEIGER_EN",
+   "converted": false,
+   "fed_from": "+5V_E6"
+  },
+  "DC_IN": {
+   "volts": 12.0,
+   "amps_typ": 6.15,
+   "amps_peak": 6.15,
+   "source": "J_DCIN",
+   "loads": {
+    "F1": 6.15
+   },
+   "note": "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at 40 V, and the SMCJ40 clamps (D10 SMCJ40CA at the entry, D1 SMCJ40A behind the ideal diode) clamping a transient at about 64.5 V at their peak pulse current, which is why the parts on this line are 100 V ceramics and why `v_work` is 53.3 and not the 36 V service maximum. It carries VIN_RAW's own current, this being one conductor run in five pieces",
+   "v_work": 36.0,
+   "converted": false,
+   "series_of": "VIN_RAW",
+   "v_max": 53.3
+  },
+  "DC_F": {
+   "volts": 12.0,
+   "amps_typ": 6.15,
+   "amps_peak": 6.15,
+   "source": "F1",
+   "loads": {
+    "Q1": 6.15
+   },
+   "note": "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at 40 V, and the SMCJ40 clamps (D10 SMCJ40CA at the entry, D1 SMCJ40A behind the ideal diode) clamping a transient at about 64.5 V at their peak pulse current, which is why the parts on this line are 100 V ceramics and why `v_work` is 53.3 and not the 36 V service maximum. It carries VIN_RAW's own current, this being one conductor run in five pieces",
+   "v_work": 36.0,
+   "converted": false,
+   "series_of": "VIN_RAW",
+   "v_max": 53.3
+  },
+  "DC_P": {
+   "volts": 12.0,
+   "amps_typ": 6.15,
+   "amps_peak": 6.15,
+   "source": "Q1",
+   "loads": {
+    "R19": 6.15
+   },
+   "note": "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at 40 V, and the SMCJ40 clamps (D10 SMCJ40CA at the entry, D1 SMCJ40A behind the ideal diode) clamping a transient at about 64.5 V at their peak pulse current, which is why the parts on this line are 100 V ceramics and why `v_work` is 53.3 and not the 36 V service maximum. It carries VIN_RAW's own current, this being one conductor run in five pieces",
+   "v_work": 36.0,
+   "converted": false,
+   "series_of": "VIN_RAW",
+   "v_max": 53.3
+  },
+  "HS_S": {
+   "volts": 12.0,
+   "amps_typ": 6.15,
+   "amps_peak": 6.15,
+   "source": "R19",
+   "loads": {
+    "Q7": 6.15
+   },
+   "note": "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at 40 V, and the SMCJ40 clamps (D10 SMCJ40CA at the entry, D1 SMCJ40A behind the ideal diode) clamping a transient at about 64.5 V at their peak pulse current, which is why the parts on this line are 100 V ceramics and why `v_work` is 53.3 and not the 36 V service maximum. It carries VIN_RAW's own current, this being one conductor run in five pieces",
+   "v_work": 36.0,
+   "converted": false,
+   "series_of": "VIN_RAW",
+   "v_max": 53.3
+  },
+  "DC_HS": {
+   "volts": 12.0,
+   "amps_typ": 6.15,
+   "amps_peak": 6.15,
+   "source": "Q7",
+   "loads": {
+    "L2": 6.15
+   },
+   "note": "the vehicle and shore input: 9 to 36 V in normal use, the LM5069's over-voltage lockout off at 40 V, and the SMCJ40 clamps (D10 SMCJ40CA at the entry, D1 SMCJ40A behind the ideal diode) clamping a transient at about 64.5 V at their peak pulse current, which is why the parts on this line are 100 V ceramics and why `v_work` is 53.3 and not the 36 V service maximum. It carries VIN_RAW's own current, this being one conductor run in five pieces",
+   "v_work": 36.0,
+   "converted": false,
+   "series_of": "VIN_RAW",
+   "v_max": 53.3
+  },
+  "PV_P": {
+   "volts": 17.6,
+   "amps_typ": 5.68,
+   "amps_peak": 6.25,
+   "source": "F2",
+   "loads": {
+    "U5": 5.68
+   },
+   "note": "the bare panel entry: a 36-cell 12 V class panel at 100 W, about 22 V open circuit at 25 degC and about 25 V cold, held at its 17.6 V maximum-power point by the LT8705A's FBIN divider. 5.68 A at that point and about 6.25 A into a short, which is the most the conductor can carry",
+   "always_on": true,
+   "always_on_why": "a photovoltaic panel produces whenever there is light on it and nothing on this board is between the connector and the fuse, so there is no part whose enable pin could switch this rail. The tracker downstream decides how much of it is drawn, not whether it is present",
+   "v_work": 25.0,
+   "converted": false,
+   "v_max": 25.0
+  },
+  "PV_IN": {
+   "volts": 17.6,
+   "amps_typ": 5.68,
+   "amps_peak": 6.25,
+   "source": "J_SOLAR",
+   "loads": {
+    "F2": 5.68
+   },
+   "note": "the bare panel entry: a 36-cell 12 V class panel at 100 W, about 22 V open circuit at 25 degC and about 25 V cold, held at its 17.6 V maximum-power point by the LT8705A's FBIN divider. 5.68 A at that point and about 6.25 A into a short, which is the most the conductor can carry",
+   "v_work": 25.0,
+   "converted": false,
+   "series_of": "PV_P",
+   "v_max": 25.0
+  },
+  "TRK_OUT": {
+   "volts": 15.1,
+   "amps_typ": 6.16,
+   "amps_peak": 6.16,
+   "source": "Q6",
+   "loads": {
+    "Q2": 6.16
+   },
+   "note": "the LT8705A tracker's regulated output, set by R10 and R11 (115k over 10.0k), carrying the panel's 100 W into the pack bus through the ideal diode U4",
+   "switch": "U5",
+   "enable_net": "TRK_SHDN",
+   "efficiency": 0.93,
+   "converted": true,
+   "fed_from": "PV_P"
+  }
+ },
+ "nodes": {
+  "GND_V": {
+   "v_max": 0.0,
+   "v_min": 0.0,
+   "basis": "the vehicle-side return. It joins the kit ground through the choke's second winding and is NOT an isolation barrier, which is what boards/e.json declares to the ground system gate; it is a reference, and it is declared so a part across it is judged"
+  },
+  "GND": {
+   "v_max": 0.0,
+   "v_min": 0.0,
+   "basis": "the board's reference, so a part between a live net and ground is judged against the live net rather than reported as sitting on an undeclared one"
+  },
+  "U3_VCAP": {
+   "v_max": 22.0,
+   "v_min": 0.0,
+   "basis": "LM74700-Q1 VCAP: the internal charge pump sits about 10 V above the anode DC_F",
+   "rides_on": "DC_F",
+   "bias_v": 10.0
+  },
+  "TRK_SW1": {
+   "v_max": 25.0,
+   "v_min": -1.0,
+   "basis": "LT8705A buck-side switching node: it reaches the panel"
+  },
+  "TRK_SW2": {
+   "v_max": 15.1,
+   "v_min": -1.0,
+   "basis": "LT8705A boost-side switching node: it reaches the regulated output"
+  },
+  "TRK_INTVCC": {
+   "v_max": 6.35,
+   "v_min": 0.0,
+   "basis": "the LT8705A's own INTVCC regulator, which supplies both gate drivers"
+  },
+  "TRK_BOOST1": {
+   "v_max": 31.35,
+   "v_min": 0.0,
+   "basis": "the bootstrap rides on TRK_SW1 at INTVCC",
+   "rides_on": "TRK_SW1",
+   "bias_v": 6.35
+  },
+  "TRK_BOOST2": {
+   "v_max": 21.45,
+   "v_min": 0.0,
+   "basis": "the bootstrap rides on TRK_SW2 at INTVCC",
+   "rides_on": "TRK_SW2",
+   "bias_v": 6.35
+  },
+  "U4_VCAP": {
+   "v_max": 25.1,
+   "v_min": 0.0,
+   "basis": "LM74700-Q1 VCAP: the internal charge pump sits about 10 V above the anode TRK_OUT",
+   "rides_on": "TRK_OUT",
+   "bias_v": 10.0
+  },
+  "E6_SW": {
+   "v_max": 16.8,
+   "v_min": -1.0,
+   "basis": "the AP63205's switching node: it swings to CELL_F, which is the pack at its 4S termination of 16.8 V, and a diode drop below ground on the other half of the cycle"
+  }
+ },
+ "pair_classes": {
+  "USB": {},
+  "DIFF100": {
+   "z_diff": 100.0,
+   "z_se": 50.0
+  },
+  "PCIE": {
+   "z_diff": 100.0
+  },
+  "HDMI": {
+   "z_diff": 100.0
+  },
+  "RF": {
+   "z_se": 50.0
+  }
+ },
+ "pass_through": {
+  "L2": "the SRF1260 dual-winding choke in its common-mode connection: winding 1-3 carries the positive line from DC_HS (pad 1) to VIN_RAW (pad 3) and winding 2-4 the return from GND_V (pad 2) to GND (pad 4), so it is two pass-throughs in one four-pin package and no shape test can tell it from a connector"
+ }
+}

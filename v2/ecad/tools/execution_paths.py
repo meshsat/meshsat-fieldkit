@@ -55,6 +55,11 @@ READERS = {
     "routeflow.py":          "names the deliverable folder to judge a finish; writes no artefact in it",
     "build_sch.sh":          "exports the schematic and the netlist, which are not fab artefacts",
     "kb/kb_inventory.py":    "writes its own inventory CSV, which is a report about documents",
+    "review_packet.py":      "writes a REVIEW packet under release/review-packets/: the BOM kicad-cli exports from the "
+                             "committed schematic (as build_sch.sh does) and a part identity CSV, both review inputs "
+                             "about one board at one revision and both named NOT_FOR_FAB-*; it writes nothing under "
+                             "release/<rev>/order/, no gerber, no CPL and no JLC BOM, and every packet says QUARANTINED, "
+                             "NOT_FOR_FAB on its front page and in its manifest",
     "final_gate.py":         "re-reads every deliverable folder through verify_deliverable and prints one table; writes no artefact in any of them",
     "gate_sweep.sh":         "re-judges a board under the current rule set and writes only VERDICTS and its own "
                              "evidence manifest, which are records ABOUT a board; the board's sha256 is compared "

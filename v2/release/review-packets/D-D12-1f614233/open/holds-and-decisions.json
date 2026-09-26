@@ -1,0 +1,26 @@
+{
+ "holds": [
+  {
+   "ELECTRICAL_PROTECTION_STATUS": "BLOCKED_DECISION_31",
+   "FAB_READINESS": "NOT_READY",
+   "PUBLICATION_STATUS": "HELD",
+   "ROUTING_STATUS": "PASS",
+   "board": "d",
+   "decision": 31,
+   "forbidden": "any orderable fabrication package, any promotion of the board or its folder",
+   "lifts_when": "decision 31 is ruled and this entry is deleted",
+   "opened": "2026-09-17",
+   "permitted": "a review package clearly quarantined as NOT_FOR_FAB may be generated",
+   "title": "board D's exposed-port protection",
+   "why": "measured on 17 September by cutting this board's deliverable, which the finish refused at that gate: SEVEN of board D's SEVEN judged conductors reach a semiconductor with nothing between them, which is EVERY one of them, three each on the two headset jacks a person plugs a headset into and one on the 30 W amplifier output. The fourteen this line carried until that evening counted the jacks' own grounds, which the rule skips by pattern: the numerator was always right and the denominator flattered the board. Its antenna jack is the one that is answered, by the arrestor at the bulkhead. The rule did not even APPLY to board D until that morning, because its applicability was a list of interfaces this board does not carry"
+  }
+ ],
+ "open_decisions": [
+  {
+   "boards": "not declared; the text names them",
+   "n": 42,
+   "status": "open",
+   "title": "a decoupling capacitor cannot be both within 3 mm of a fine-pitch pin and outside that part's escape fan"
+  }
+ ]
+}

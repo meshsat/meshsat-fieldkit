@@ -1,0 +1,134 @@
+{
+ "board": "pcb-p-pack",
+ "written": "2026-09-26 10:01",
+ "bypass": [
+  {
+   "cap": "C1",
+   "part": "U1",
+   "pin": "1",
+   "net": "PBI"
+  },
+  {
+   "cap": "C6",
+   "part": "U1",
+   "pin": "32",
+   "net": "BAT_F"
+  },
+  {
+   "cap": "C8",
+   "part": "U1",
+   "pin": "26",
+   "net": "VCC_F"
+  },
+  {
+   "cap": "C14",
+   "part": "U2",
+   "pin": "1",
+   "net": "SEC_VDD"
+  }
+ ],
+ "rails": {
+  "PACK_P": {
+   "volts": 14.4,
+   "amps_typ": 10.0,
+   "amps_peak": 18.0,
+   "source": "W_P",
+   "loads": {
+    "Q2": 10.0
+   },
+   "note": "the pack lead. THE SWITCH IS THE GAUGE: Q2 is the discharge FET and the BQ4050 drives its gate on DSG_G, so the pack terminal is live only while the gauge allows it, which is the first stage of the energy chain",
+   "switch": "U1",
+   "enable_net": "DSG_R",
+   "v_work": 16.8,
+   "converted": false
+  },
+  "CELL4": {
+   "volts": 14.4,
+   "amps_typ": 10.0,
+   "amps_peak": 18.0,
+   "source": "W_BP",
+   "loads": {
+    "F1": 10.0
+   },
+   "note": "the top cell node from the block strip",
+   "always_on": true,
+   "always_on_why": "the cell block itself: there is nothing upstream of it to switch, which is why everything downstream is protected rather than enabled",
+   "converted": false
+  },
+  "FUSED": {
+   "volts": 14.4,
+   "amps_typ": 10.0,
+   "amps_peak": 18.0,
+   "source": "F1",
+   "loads": {
+    "F2": 10.0
+   },
+   "note": "after the blade fuse, into the chemical fuse F2 (round 4, 26 September 2026: it fed Q1 directly until then)",
+   "always_on": true,
+   "always_on_why": "the cell node after the 25 A blade: a fuse is protection and not a switch",
+   "converted": false,
+   "fed_from": "CELL4"
+  },
+  "SCP_OUT": {
+   "volts": 14.4,
+   "amps_typ": 10.0,
+   "amps_peak": 18.0,
+   "source": "F2",
+   "loads": {
+    "Q1": 10.0
+   },
+   "note": "after the SCF9550-30-05 chemical fuse, into the charge FET's source",
+   "always_on": true,
+   "always_on_why": "the cell node after the chemical fuse: a fuse is protection and not a switch, and the heater that opens it is driven only by a protection event",
+   "converted": false,
+   "fed_from": "FUSED"
+  },
+  "PACK_N": {
+   "volts": 0.05,
+   "amps_typ": 10.0,
+   "amps_peak": 18.0,
+   "source": "W_N",
+   "loads": {
+    "R10": 10.0
+   },
+   "note": "the pack negative from the 12 AWG lead land W_N to the 2 mOhm coulomb-counting shunt R10, at the pack's own 10.0 A typical and 18.0 A peak. Its own potential is 50 mV at 25 A, which is what a part on it is judged against; its DROP is judged against PACK_P, the rail it returns, because a percentage of 50 mV is not a bar anybody could state",
+   "always_on": true,
+   "always_on_why": "both protection FETs are in the positive path (Q1 on FUSED, Q2 on PACK_P), so nothing on this board is in series with the pack's negative: it runs from the lead land W_N through the 2 mOhm shunt R10 to ground with no switching part in it, which is what high-side protection means",
+   "v_work": 0.05,
+   "converted": false,
+   "returns": "PACK_P"
+  }
+ },
+ "nodes": {
+  "GND": {
+   "v_max": 0.0,
+   "v_min": 0.0,
+   "basis": "the board's reference, so a part between a live net and ground is judged against the live net rather than reported as sitting on an undeclared one"
+  },
+  "PACK_MID": {
+   "v_max": 16.8,
+   "v_min": 0.0,
+   "basis": "the midpoint of the series terminal pair (SLUSC67B 8.2.2.1.5): about half the pack in normal operation, and the whole of it, 16.8 V at 4.20 V per cell, across one capacitor when the other has shorted"
+  }
+ },
+ "pair_classes": {
+  "USB": {
+   "z_diff": 90.0,
+   "z_se": 50.0
+  },
+  "DIFF100": {
+   "z_diff": 100.0,
+   "z_se": 50.0
+  },
+  "PCIE": {
+   "z_diff": 100.0
+  },
+  "HDMI": {
+   "z_diff": 100.0
+  },
+  "RF": {
+   "z_se": 50.0
+  }
+ },
+ "pass_through": {}
+}

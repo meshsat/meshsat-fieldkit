@@ -1,0 +1,3458 @@
+{
+ "attribution": {
+  "by_hand": true,
+  "file": "e-1f614233.yaml",
+  "read_by": "the session (review stream PKT), 26 September 2026, from gen_sch_e.py at both revisions and the round-4 board E record",
+  "rows_missing": [],
+  "sha256": "3198b8024b4ab84fd1059ed6632e9c4965c3d961007e058baaf859607a2f5bc7"
+ },
+ "changes": [
+  {
+   "authority_ids": [
+    "D-02b",
+    "D-03.2"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "D-02b",
+      "D-03.2",
+      "S-05",
+      "S-11",
+      "TRN-001",
+      "W1-F04",
+      "W5-F11"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "S-11 / D-02b / D-03.2, 26 September 2026 (MESHSAT-1357 round 4): THE LID AND TAMPER SWITCH. Appendix 32.50 item 6 | approved \"one sealed switch under the frame\" and the E6 floor plan (32.51 item 4) put its input on this board; no | generator ever drew it (W1-F04, W5-F11). The owner's D-02b makes the",
+      "ids": {
+       "finding": [
+        "S-05",
+        "S-11",
+        "W1-F04",
+        "W5-F11"
+       ],
+       "owner_ruling": [
+        "D-02b",
+        "D-03.2"
+       ],
+       "rule": [
+        "TRN-001"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       524,
+       539
+      ]
+     },
+     {
+      "excerpt": "S-05, 26 September 2026: the pack's PRES pin from J_SMB.4 to GPIO17 (the reasoning and the thresholds are at J_SMB above) | S-11 / D-02b / D-03.2, 26 September 2026 (MESHSAT-1357 round 4): THE LID AND TAMPER SWITCH. Appendix 32.50 item 6 | approved \"one sealed switch under the frame\" and the E6 floo",
+      "ids": {
+       "finding": [
+        "S-05",
+        "S-11",
+        "W1-F04",
+        "W5-F11"
+       ],
+       "owner_ruling": [
+        "D-02b",
+        "D-03.2"
+       ],
+       "rule": [
+        "TRN-001"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       522,
+       539
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       524,
+       537
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        524,
+        537
+       ],
+       "tie": [
+        "names_ref"
+       ]
+      }
+     ],
+     "why": "the tamper input's filter capacitor"
+    },
+    "spans": [
+     [
+      542,
+      542
+     ]
+    ]
+   },
+   "finding_ids": [
+    "S-11",
+    "W1-F04",
+    "W5-F11"
+   ],
+   "footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "C14663",
+   "pins": {
+    "1": "TAMPER_IO",
+    "2": "GND"
+   },
+   "read": "hand",
+   "ref": "C52",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "100n"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "F-BP-02"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "F-BP-02, 26 September 2026: the Geiger header takes its 5 V from the load switch U16 (declared at +5V_GEIGER above). | kisch.tps22810 is the same pin map boards B and D use (6 VIN, 5 EN, 1 VOUT, 2 QOD open, 3 CT, 4 GND, 7 pad GND).",
+      "ids": {
+       "finding": [
+        "F-BP-02"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       575,
+       576
+      ]
+     },
+     {
+      "excerpt": "F-BP-02, 26 September 2026: the Geiger header takes its 5 V from the load switch U16 (declared at +5V_GEIGER above). | kisch.tps22810 is the same pin map boards B and D use (6 VIN, 5 EN, 1 VOUT, 2 QOD open, 3 CT, 4 GND, 7 pad GND).",
+      "ids": {
+       "finding": [
+        "F-BP-02"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       575,
+       576
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       575,
+       576
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "C53 is U16's CT (slew) capacitor on GEIGER_CT, U16 pin 3 in the kisch.tps22810 call at 577; its statement at 578 follows U16's",
+     "ties": [
+      {
+       "lines": [
+        575,
+        576
+       ],
+       "tie": []
+      }
+     ],
+     "why": "the load switch's slew-rate capacitor"
+    },
+    "spans": [
+     [
+      578,
+      578
+     ]
+    ]
+   },
+   "finding_ids": [
+    "F-BP-02"
+   ],
+   "footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "C1588",
+   "pins": {
+    "1": "GEIGER_CT",
+    "2": "GND"
+   },
+   "read": "hand",
+   "ref": "C53",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "1n"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "F-BP-02"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "F-BP-02, 26 September 2026: the Geiger header takes its 5 V from the load switch U16 (declared at +5V_GEIGER above). | kisch.tps22810 is the same pin map boards B and D use (6 VIN, 5 EN, 1 VOUT, 2 QOD open, 3 CT, 4 GND, 7 pad GND).",
+      "ids": {
+       "finding": [
+        "F-BP-02"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       575,
+       576
+      ]
+     },
+     {
+      "excerpt": "F-BP-02, 26 September 2026: the Geiger header takes its 5 V from the load switch U16 (declared at +5V_GEIGER above). | kisch.tps22810 is the same pin map boards B and D use (6 VIN, 5 EN, 1 VOUT, 2 QOD open, 3 CT, 4 GND, 7 pad GND).",
+      "ids": {
+       "finding": [
+        "F-BP-02"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       575,
+       576
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       575,
+       575
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        575,
+        575
+       ],
+       "tie": [
+        "names_net:+5V_GEIGER"
+       ]
+      }
+     ],
+     "why": "the switched Geiger rail +5V_GEIGER's 10 uF capacitor"
+    },
+    "spans": [
+     [
+      579,
+      579
+     ]
+    ]
+   },
+   "finding_ids": [
+    "F-BP-02"
+   ],
+   "footprint": "Capacitor_SMD:C_1206_3216Metric",
+   "kind": "ADDED",
+   "lcsc": "C89632",
+   "pins": {
+    "1": "+5V_GEIGER",
+    "2": "GND"
+   },
+   "read": "hand",
+   "ref": "C54",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "10u 25V"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "F-BP-02"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "F-BP-02, 26 September 2026: the Geiger header takes its 5 V from the load switch U16 (declared at +5V_GEIGER above). | kisch.tps22810 is the same pin map boards B and D use (6 VIN, 5 EN, 1 VOUT, 2 QOD open, 3 CT, 4 GND, 7 pad GND).",
+      "ids": {
+       "finding": [
+        "F-BP-02"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       575,
+       576
+      ]
+     },
+     {
+      "excerpt": "F-BP-02, 26 September 2026: the Geiger header takes its 5 V from the load switch U16 (declared at +5V_GEIGER above). | kisch.tps22810 is the same pin map boards B and D use (6 VIN, 5 EN, 1 VOUT, 2 QOD open, 3 CT, 4 GND, 7 pad GND).",
+      "ids": {
+       "finding": [
+        "F-BP-02"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       575,
+       576
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       575,
+       575
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        575,
+        575
+       ],
+       "tie": [
+        "names_net:+5V_GEIGER"
+       ]
+      }
+     ],
+     "why": "the switched Geiger rail +5V_GEIGER's 100 nF capacitor"
+    },
+    "spans": [
+     [
+      579,
+      579
+     ]
+    ]
+   },
+   "finding_ids": [
+    "F-BP-02"
+   ],
+   "footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "C14663",
+   "pins": {
+    "1": "+5V_GEIGER",
+    "2": "GND"
+   },
+   "read": "hand",
+   "ref": "C55",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "100n"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [
+      "F-BP-02",
+      "S-10"
+     ],
+     "finding_ids": [
+      "F-BP-02"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "F-BP-02, 26 September 2026: the Geiger header takes its 5 V from the load switch U16 (declared at +5V_GEIGER above). | kisch.tps22810 is the same pin map boards B and D use (6 VIN, 5 EN, 1 VOUT, 2 QOD open, 3 CT, 4 GND, 7 pad GND).",
+      "ids": {
+       "finding": [
+        "F-BP-02"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       575,
+       576
+      ]
+     },
+     {
+      "excerpt": "F-BP-02, 26 September 2026: the Geiger header takes its 5 V from the load switch U16 (declared at +5V_GEIGER above). | kisch.tps22810 is the same pin map boards B and D use (6 VIN, 5 EN, 1 VOUT, 2 QOD open, 3 CT, 4 GND, 7 pad GND).",
+      "ids": {
+       "finding": [
+        "F-BP-02"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       575,
+       576
+      ]
+     },
+     {
+      "excerpt": "SGP41 VDD and VDDH (Figure 6), S-10 26 September 2026 C57 U17 1 SGP_VDD C58 U17 5 +3V3_E6 | TPS22810 VIN (SLVSDH0C: 1 uF input capacitor), F-BP-02 26 September 2026 C56 U16 6 +5V_E6",
+      "ids": {
+       "finding": [
+        "F-BP-02",
+        "S-10"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       631,
+       632
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "TPS22810 VIN (SLVSDH0C: 1 uF input capacitor), F-BP-02 26 September 2026 C56 U16 6 +5V_E6",
+     "introduced": {
+      "finding": [
+       "F-BP-02"
+      ]
+     },
+     "lines": [
+      632
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       632,
+       632
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        632,
+        632
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the load switch's 1 uF input capacitor (SLVSDH0C)"
+    },
+    "spans": [
+     [
+      579,
+      579
+     ],
+     [
+      632,
+      632
+     ]
+    ]
+   },
+   "finding_ids": [
+    "F-BP-02"
+   ],
+   "footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "C15849",
+   "pins": {
+    "1": "+5V_E6",
+    "2": "GND"
+   },
+   "read": "hand",
+   "ref": "C56",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "1u"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "A06",
+      "C-05",
+      "S-10",
+      "W1-F05",
+      "W6-P7"
+     ],
+     "finding_ids": [
+      "S-10"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "S-10 / C-05, 26 September 2026 (MESHSAT-1357 round 4): THE BATTERY-BAY GAS SENSOR APPENDIX 32.54 PICKED. The pick was | a BME688 inside, one in the pod AND \"the Sensirion SGP41 (C3659325) in the battery bay\", and no generator ever fitted | the SGP41 (W1-F05, C-05). It goes on this board because this",
+      "ids": {
+       "adjudication": [
+        "A06"
+       ],
+       "finding": [
+        "C-05",
+        "S-10",
+        "W1-F05",
+        "W6-P7"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       547,
+       562
+      ]
+     },
+     {
+      "excerpt": "S-10 / C-05, 26 September 2026 (MESHSAT-1357 round 4): THE BATTERY-BAY GAS SENSOR APPENDIX 32.54 PICKED. The pick was | a BME688 inside, one in the pod AND \"the Sensirion SGP41 (C3659325) in the battery bay\", and no generator ever fitted | the SGP41 (W1-F05, C-05). It goes on this board because this",
+      "ids": {
+       "adjudication": [
+        "A06"
+       ],
+       "finding": [
+        "C-05",
+        "S-10",
+        "W1-F05",
+        "W6-P7"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       547,
+       562
+      ]
+     },
+     {
+      "excerpt": "SGP41 VDD and VDDH (Figure 6), S-10 26 September 2026 C57 U17 1 SGP_VDD C58 U17 5 +3V3_E6",
+      "ids": {
+       "finding": [
+        "S-10"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       631,
+       631
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "SGP41 VDD and VDDH (Figure 6), S-10 26 September 2026 C57 U17 1 SGP_VDD C58 U17 5 +3V3_E6",
+     "introduced": {
+      "finding": [
+       "S-10"
+      ]
+     },
+     "lines": [
+      631
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       547,
+       557
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        547,
+        557
+       ],
+       "tie": [
+        "names_ref"
+       ]
+      }
+     ],
+     "why": "the SGP41's VDD capacitor behind R57"
+    },
+    "spans": [
+     [
+      565,
+      565
+     ],
+     [
+      631,
+      631
+     ]
+    ]
+   },
+   "finding_ids": [
+    "C-05",
+    "S-10",
+    "W1-F05"
+   ],
+   "footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "C15849",
+   "pins": {
+    "1": "SGP_VDD",
+    "2": "GND"
+   },
+   "read": "hand",
+   "ref": "C57",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "1u"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "A06",
+      "C-05",
+      "S-10",
+      "W1-F05",
+      "W6-P7"
+     ],
+     "finding_ids": [
+      "S-10"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "S-10 / C-05, 26 September 2026 (MESHSAT-1357 round 4): THE BATTERY-BAY GAS SENSOR APPENDIX 32.54 PICKED. The pick was | a BME688 inside, one in the pod AND \"the Sensirion SGP41 (C3659325) in the battery bay\", and no generator ever fitted | the SGP41 (W1-F05, C-05). It goes on this board because this",
+      "ids": {
+       "adjudication": [
+        "A06"
+       ],
+       "finding": [
+        "C-05",
+        "S-10",
+        "W1-F05",
+        "W6-P7"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       547,
+       562
+      ]
+     },
+     {
+      "excerpt": "S-10 / C-05, 26 September 2026 (MESHSAT-1357 round 4): THE BATTERY-BAY GAS SENSOR APPENDIX 32.54 PICKED. The pick was | a BME688 inside, one in the pod AND \"the Sensirion SGP41 (C3659325) in the battery bay\", and no generator ever fitted | the SGP41 (W1-F05, C-05). It goes on this board because this",
+      "ids": {
+       "adjudication": [
+        "A06"
+       ],
+       "finding": [
+        "C-05",
+        "S-10",
+        "W1-F05",
+        "W6-P7"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       547,
+       562
+      ]
+     },
+     {
+      "excerpt": "SGP41 VDD and VDDH (Figure 6), S-10 26 September 2026 C57 U17 1 SGP_VDD C58 U17 5 +3V3_E6",
+      "ids": {
+       "finding": [
+        "S-10"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       631,
+       631
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "SGP41 VDD and VDDH (Figure 6), S-10 26 September 2026 C57 U17 1 SGP_VDD C58 U17 5 +3V3_E6",
+     "introduced": {
+      "finding": [
+       "S-10"
+      ]
+     },
+     "lines": [
+      631
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       547,
+       557
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        547,
+        557
+       ],
+       "tie": [
+        "names_ref"
+       ]
+      }
+     ],
+     "why": "the SGP41's VDDH capacitor"
+    },
+    "spans": [
+     [
+      565,
+      565
+     ],
+     [
+      631,
+      631
+     ]
+    ]
+   },
+   "finding_ids": [
+    "C-05",
+    "S-10",
+    "W1-F05"
+   ],
+   "footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "C15849",
+   "pins": {
+    "1": "+3V3_E6",
+    "2": "GND"
+   },
+   "read": "hand",
+   "ref": "C58",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "1u"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [
+      "A03",
+      "F-IN-01",
+      "S-09"
+     ],
+     "finding_ids": [
+      "A03",
+      "F-IN-01",
+      "S-09"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "S-09 / A03 / F-IN-01, 26 September 2026: D1 and D2 are unidirectional SMCJ40A (Littelfuse, LCSC C224052, the A | suffix; SMCJ40CA is the two-way part) and both had the RETURN on pad 1, which is the cathode of the D_SMC land: | each was forward-biased across its line, a short behind the fuse from the",
+      "ids": {
+       "adjudication": [
+        "A03"
+       ],
+       "finding": [
+        "F-IN-01",
+        "S-09"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       296,
+       302
+      ]
+     },
+     {
+      "excerpt": "pins A1 and A2 as well). D3 also gets the part code board A's D1 already carries for the same SMCJ18A: Littelfuse, | S-09 / A03 / F-IN-01, 26 September 2026: D1 and D2 are unidirectional SMCJ40A (Littelfuse, LCSC C224052, the A | pin 1 K, pin 2 A; see D3 above for why not D_TVS). Both sit BEHIND the",
+      "ids": {
+       "adjudication": [
+        "A03"
+       ],
+       "finding": [
+        "F-IN-01",
+        "S-09"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       227,
+       296,
+       300,
+       302,
+       420
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "S-09 / A03 / F-IN-01, 26 September 2026: D1 and D2 are unidirectional SMCJ40A (Littelfuse, LCSC C224052, the A | suffix; SMCJ40CA is the two-way part) and both had the RETURN on pad 1, which is the cathode of the D_SMC land: | each was forward-biased across its line, a short behind the fuse from the first connection and no clamp at all for | a positive surge. The cathode goes to the line, the anode to its own return, and the symbol names them (D_Zener, | pin 1 K, pin 2 A; see D3 above for why not D_TVS). Both sit BEHIND the ideal diode Q1 (D1 on DC_P, D2 on VIN_RAW), | where a reversed input never arrives, so one-way parts are right there. D10, in FRONT of Q1, is a two-way part: | see its ow",
+     "introduced": {
+      "adjudication": [
+       "A03"
+      ],
+      "finding": [
+       "F-IN-01",
+       "S-09"
+      ]
+     },
+     "lines": [
+      296,
+      297,
+      298,
+      299,
+      300,
+      301,
+      302
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       296,
+       296
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        296,
+        296
+       ],
+       "tie": [
+        "names_ref",
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the unidirectional SMCJ40A on DC_P had its return on the cathode pad, a short behind the fuse; cathode now on the line"
+    },
+    "spans": [
+     [
+      303,
+      303
+     ]
+    ]
+   },
+   "fields": {
+    "value": [
+     "SMCJ40A (input surge: 40 V standoff on a line specified to 36 V, clamping 64.5 V)",
+     "SMCJ40A (input surge: 40 V standoff on a line specified to 36 V, clamping 64.5 V; unidirectional, cathode on DC_P)"
+    ]
+   },
+   "finding_ids": [
+    "A03",
+    "F-IN-01",
+    "S-09"
+   ],
+   "footprint": "Diode_SMD:D_SMC",
+   "kind": "CHANGED",
+   "lcsc": "C224052",
+   "pins_moved": {
+    "1": [
+     "GND_V",
+     "DC_P"
+    ],
+    "2": [
+     "DC_P",
+     "GND_V"
+    ]
+   },
+   "read": "hand",
+   "ref": "D1",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "SMCJ40A (input surge: 40 V standoff on a line specified to 36 V, clamping 64.5 V; unidirectional, cathode on DC_P)"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "A03",
+      "F-IN-01",
+      "S-09"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "S-09 / A03 / F-IN-01, 26 September 2026: D1 and D2 are unidirectional SMCJ40A (Littelfuse, LCSC C224052, the A | pin 1 K, pin 2 A; see D3 above for why not D_TVS). Both sit BEHIND the ideal diode Q1 (D1 on DC_P, D2 on VIN_RAW), | see its own note below. The E17 board carries neither D10 nor the corr",
+      "ids": {
+       "adjudication": [
+        "A03"
+       ],
+       "finding": [
+        "F-IN-01",
+        "S-09"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       296,
+       300,
+       302,
+       420
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       296,
+       296
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        296,
+        296
+       ],
+       "tie": [
+        "names_ref"
+       ]
+      }
+     ],
+     "why": "the unidirectional SMCJ40A bus clamp on VIN_RAW was reversed the same way; cathode now on the line"
+    },
+    "spans": [
+     [
+      343,
+      343
+     ]
+    ]
+   },
+   "fields": {
+    "value": [
+     "SMCJ40A (bus clamp: 40 V standoff on the 9 to 36 V bus)",
+     "SMCJ40A (bus clamp: 40 V standoff on the 9 to 36 V bus; unidirectional, cathode on VIN_RAW)"
+    ]
+   },
+   "finding_ids": [
+    "A03",
+    "F-IN-01",
+    "S-09"
+   ],
+   "footprint": "Diode_SMD:D_SMC",
+   "kind": "CHANGED",
+   "lcsc": "C224052",
+   "pins_moved": {
+    "1": [
+     "GND",
+     "VIN_RAW"
+    ],
+    "2": [
+     "VIN_RAW",
+     "GND"
+    ]
+   },
+   "read": "hand",
+   "ref": "D2",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "SMCJ40A (bus clamp: 40 V standoff on the 9 to 36 V bus; unidirectional, cathode on VIN_RAW)"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [
+      "A03",
+      "A07",
+      "F-BP-02",
+      "F-IN-01",
+      "S-05",
+      "S-09"
+     ],
+     "finding_ids": [
+      "A03",
+      "F-IN-01",
+      "S-09"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "S-05 / A07, 26 September 2026 (MESHSAT-1357 round 4): THE PACK SMBUS LEAD MATES NOW. J_SMB was a 2.54 mm 1x6 pin | header left from the withdrawn BB-2590/U (1 SDA0, 2 SCL0, 3 SDA1, 4 SCL1, 5 GND, 6 GND) while board P's end is a | JST-XH 1x4 (1 SMBC, 2 SMBD, 3 GND, 4 PRES), so a straight lead put the",
+      "ids": {
+       "adjudication": [
+        "A03",
+        "A07"
+       ],
+       "finding": [
+        "F-BP-02",
+        "F-IN-01",
+        "S-05",
+        "S-09"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       197,
+       228
+      ]
+     },
+     {
+      "excerpt": "cathode (A03 read the fab glyph and the silk bracket on every committed board). D3 had GND on pad 1 and CELL_F on | pins A1 and A2 as well). D3 also gets the part code board A's D1 already carries for the same SMCJ18A: Littelfuse, | pin 1 K, pin 2 A; see D3 above for why not D_TVS). Both sit BEHIND ",
+      "ids": {
+       "adjudication": [
+        "A03"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       222,
+       227,
+       300,
+       420
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "S-09 / A03 / F-IN-01, 26 September 2026: THE PACK NODE CLAMP POINTED THE WRONG WAY. An SMCJ18A is UNIDIRECTIONAL | (the A suffix; CA is the bidirectional part, Littelfuse SMCJ series rev 11/20/15), and on the D_SMC land pad 1 is the | cathode (A03 read the fab glyph and the silk bracket on every committed board). D3 had GND on pad 1 and CELL_F on | pad 2, so it was forward-biased across the pack node from the moment the pack was connected. The cathode goes to | the rail. The symbol is Device:D_Zener (pin 1 K, pin 2 A) instead of Device:D_TVS, which KiCad draws as a | BIDIRECTIONAL suppressor with pins A1 and A2: a one-way part needs a symbol whose netlist names its cathode, or no | check can",
+     "introduced": {
+      "adjudication": [
+       "A03"
+      ],
+      "finding": [
+       "F-IN-01",
+       "S-09"
+      ]
+     },
+     "lines": [
+      220,
+      221,
+      222,
+      223,
+      224,
+      225,
+      226,
+      227,
+      228
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       220,
+       220
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        220,
+        220
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the pack node clamp SMCJ18A was reversed; cathode now on CELL_F, with board A's code for the same part"
+    },
+    "spans": [
+     [
+      229,
+      229
+     ]
+    ]
+   },
+   "fields": {
+    "lcsc": [
+     "",
+     "C374030"
+    ],
+    "value": [
+     "SMCJ18A (pack node clamp)",
+     "SMCJ18A (pack node clamp, unidirectional: cathode on CELL_F)"
+    ]
+   },
+   "finding_ids": [
+    "A03",
+    "F-IN-01",
+    "S-09"
+   ],
+   "footprint": "Diode_SMD:D_SMC",
+   "kind": "CHANGED",
+   "lcsc": "C374030",
+   "pins_moved": {
+    "1": [
+     "GND",
+     "CELL_F"
+    ],
+    "2": [
+     "CELL_F",
+     "GND"
+    ]
+   },
+   "read": "hand",
+   "ref": "D3",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "SMCJ18A (pack node clamp, unidirectional: cathode on CELL_F)"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [
+      "A03",
+      "F-IN-01",
+      "S-09"
+     ],
+     "finding_ids": [
+      "A03",
+      "F-IN-01",
+      "S-09"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "S-09 / A03 / F-IN-01, 26 September 2026: D4 is a unidirectional SMCJ28A (Littelfuse, LCSC C224047) and had GND on | its cathode pad 1, forward-biased across the panel input. Cathode to PV_P, anode to GND, K/A symbol as D1 to D3.",
+      "ids": {
+       "adjudication": [
+        "A03"
+       ],
+       "finding": [
+        "F-IN-01",
+        "S-09"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       419,
+       420
+      ]
+     },
+     {
+      "excerpt": "S-09 / A03 / F-IN-01, 26 September 2026: D4 is a unidirectional SMCJ28A (Littelfuse, LCSC C224047) and had GND on",
+      "ids": {
+       "adjudication": [
+        "A03"
+       ],
+       "finding": [
+        "F-IN-01",
+        "S-09"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       419
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "S-09 / A03 / F-IN-01, 26 September 2026: D4 is a unidirectional SMCJ28A (Littelfuse, LCSC C224047) and had GND on | its cathode pad 1, forward-biased across the panel input. Cathode to PV_P, anode to GND, K/A symbol as D1 to D3.",
+     "introduced": {
+      "adjudication": [
+       "A03"
+      ],
+      "finding": [
+       "F-IN-01",
+       "S-09"
+      ]
+     },
+     "lines": [
+      419,
+      420
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       419,
+       419
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        419,
+        419
+       ],
+       "tie": [
+        "names_ref",
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the solar input clamp SMCJ28A was reversed; cathode now on PV_P"
+    },
+    "spans": [
+     [
+      421,
+      421
+     ]
+    ]
+   },
+   "fields": {
+    "value": [
+     "SMCJ28A (panel surge: 28 V standoff, conducting from 31.1 V, below the 35 V bulk capacitors)",
+     "SMCJ28A (panel surge: 28 V standoff, conducting from 31.1 V, below the 35 V bulk capacitors; unidirectional, cathode on PV_P)"
+    ]
+   },
+   "finding_ids": [
+    "A03",
+    "F-IN-01",
+    "S-09"
+   ],
+   "footprint": "Diode_SMD:D_SMC",
+   "kind": "CHANGED",
+   "lcsc": "C224047",
+   "pins_moved": {
+    "1": [
+     "GND",
+     "PV_P"
+    ],
+    "2": [
+     "PV_P",
+     "GND"
+    ]
+   },
+   "read": "hand",
+   "ref": "D4",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "SMCJ28A (panel surge: 28 V standoff, conducting from 31.1 V, below the 35 V bulk capacitors; unidirectional, cathode on PV_P)"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [
+      "D-16"
+     ],
+     "candidate_ids": [
+      "D-16",
+      "R4E-01",
+      "S-09"
+     ],
+     "finding_ids": [
+      "R4E-01",
+      "S-09"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "ESD row to read either way. D10 goes on DC_F: AFTER the fuse, so a sustained overvoltage blows F1 rather than the | clamp, and at the entry, which is where this project's own vendor sheets put it (Nexperia layout clause 1: place | the device as close to the input terminal or connector as possible). ",
+      "ids": {
+       "finding": [
+        "R4E-01",
+        "S-09"
+       ],
+       "owner_ruling": [
+        "D-16"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       351,
+       375
+      ]
+     },
+     {
+      "excerpt": "where a reversed input never arrives, so one-way parts are right there. D10, in FRONT of Q1, is a two-way part: | see its own note below. The E17 board carries neither D10 nor the corrected D1 and D2. | ESD row to read either way. D10 goes on DC_F: AFTER the fuse, so a sustained overvoltage blows F1",
+      "ids": {
+       "finding": [
+        "R4E-01",
+        "S-09"
+       ],
+       "owner_ruling": [
+        "D-16"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       301,
+       302,
+       351,
+       354,
+       357,
+       367
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "ESD row to read either way. D10 goes on DC_F: AFTER the fuse, so a sustained overvoltage blows F1 rather than the | clamp, and at the entry, which is where this project's own vendor sheets put it (Nexperia layout clause 1: place | the device as close to the input terminal or connector as possible). | S-09 / R4E-01, corrected 26 September 2026 after review: D10 IS A TWO-WAY PART, THE SMCJ40CA. DC_F is the ANODE side | of the LM74700-Q1 ideal diode U3/Q1, the side a reversed input reaches. A one-way SMCJ40A there is a short in one | polarity or the other: cathode on GND_V (as committed) it conducts on a correctly connected input; cathode on DC_F | (this round's first correction) it is forward-",
+     "introduced": {
+      "finding": [
+       "R4E-01",
+       "S-09"
+      ],
+      "owner_ruling": [
+       "D-16"
+      ]
+     },
+     "lines": [
+      344,
+      345,
+      346,
+      347,
+      348,
+      349,
+      350,
+      351,
+      352,
+      353,
+      354,
+      355,
+      356,
+      357,
+      358,
+      359,
+      360,
+      361,
+      362,
+      363,
+      364,
+      365,
+      366,
+      367,
+      368,
+      369,
+      370,
+      371,
+      372,
+      373,
+      374,
+      375
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       354,
+       354
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        354,
+        354
+       ],
+       "tie": [
+        "names_ref",
+        "names_net:DC_F",
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the inlet clamp in front of the ideal diode is the bidirectional SMCJ40CA, because a one-way part there is a short in one input polarity or the other"
+    },
+    "spans": [
+     [
+      376,
+      376
+     ]
+    ]
+   },
+   "fields": {
+    "lcsc": [
+     "C224052",
+     "C80273"
+    ],
+    "value": [
+     "SMCJ40A (shore inlet clamp at the entry, in front of the ideal-diode FET: 40 V standoff on a line specified to 36 V)",
+     "SMCJ40CA (bidirectional, Littelfuse SMCJ40 row: 40 V standoff and 44.4 V minimum breakdown each way, clamping 64.5 V at 23.3 A; shore inlet clamp at the entry, in front of the ideal-diode FET, so a reversed input stays blocked)"
+    ]
+   },
+   "finding_ids": [
+    "R4E-01",
+    "S-09"
+   ],
+   "footprint": "Diode_SMD:D_SMC",
+   "kind": "CHANGED",
+   "lcsc": "C80273",
+   "pins_moved": {
+    "1": [
+     "GND_V",
+     "DC_F"
+    ],
+    "2": [
+     "DC_F",
+     "GND_V"
+    ]
+   },
+   "read": "hand",
+   "ref": "D10",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "SMCJ40CA (bidirectional, Littelfuse SMCJ40 row: 40 V standoff and 44.4 V minimum breakdown each way, clamping 64.5 V at 23.3 A; shore inlet clamp at the entry, in front of the ideal-diode FET, so a reversed input stays blocked)"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "F-BP-02"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "F-BP-02, 26 September 2026: the Geiger header takes its 5 V from the load switch U16 (declared at +5V_GEIGER above). | kisch.tps22810 is the same pin map boards B and D use (6 VIN, 5 EN, 1 VOUT, 2 QOD open, 3 CT, 4 GND, 7 pad GND).",
+      "ids": {
+       "finding": [
+        "F-BP-02"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       575,
+       576
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       575,
+       575
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        575,
+        575
+       ],
+       "tie": [
+        "names_net:+5V_GEIGER"
+       ]
+      }
+     ],
+     "why": "the Geiger header's 5 V pin moves to the switched +5V_GEIGER"
+    },
+    "spans": [
+     [
+      580,
+      580
+     ]
+    ]
+   },
+   "fields": {
+    "value": [
+     "Geiger counter module (RadiationD-v1.1 class): 5 V, GND, pulse",
+     "Geiger counter module (RadiationD-v1.1 class): 5 V switched by U16, GND, pulse"
+    ]
+   },
+   "finding_ids": [
+    "F-BP-02"
+   ],
+   "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical",
+   "kind": "CHANGED",
+   "lcsc": "",
+   "pins_moved": {
+    "1": [
+     "+5V_E6",
+     "+5V_GEIGER"
+    ]
+   },
+   "read": "hand",
+   "ref": "J_GEIGER",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "Geiger counter module (RadiationD-v1.1 class): 5 V switched by U16, GND, pulse"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "A07",
+      "F-BP-02",
+      "S-05"
+     ],
+     "finding_ids": [
+      "A07",
+      "F-BP-02",
+      "S-05"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "S-05 / A07, 26 September 2026 (MESHSAT-1357 round 4): THE PACK SMBUS LEAD MATES NOW. J_SMB was a 2.54 mm 1x6 pin | header left from the withdrawn BB-2590/U (1 SDA0, 2 SCL0, 3 SDA1, 4 SCL1, 5 GND, 6 GND) while board P's end is a | JST-XH 1x4 (1 SMBC, 2 SMBD, 3 GND, 4 PRES), so a straight lead put the",
+      "ids": {
+       "adjudication": [
+        "A07"
+       ],
+       "finding": [
+        "F-BP-02",
+        "S-05"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       197,
+       217
+      ]
+     },
+     {
+      "excerpt": "26 September 2026 (MESHSAT-1357 round 4): the lands of this round's parts. XH4 is board P's own J_SMB land (S-05); | S-05 / A07, 26 September 2026 (MESHSAT-1357 round 4): THE PACK SMBUS LEAD MATES NOW. J_SMB was a 2.54 mm 1x6 pin | own R14 10k to ground on PRES: that belongs in the J_SMB contract be",
+      "ids": {
+       "adjudication": [
+        "A07"
+       ],
+       "finding": [
+        "S-05"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       176,
+       197,
+       217,
+       522
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "S-05 / A07, 26 September 2026 (MESHSAT-1357 round 4): THE PACK SMBUS LEAD MATES NOW. J_SMB was a 2.54 mm 1x6 pin | header left from the withdrawn BB-2590/U (1 SDA0, 2 SCL0, 3 SDA1, 4 SCL1, 5 GND, 6 GND) while board P's end is a | JST-XH 1x4 (1 SMBC, 2 SMBD, 3 GND, 4 PRES), so a straight lead put the clock on data, P's ground on the sensor bus | data line and PRES on the sensor clock (adjudication A07). It is the same part as P's now, JST B4B-XH-A (LCSC | C594232; JST XH catalogue eXH: 2.5 mm pitch, 3 A, -25 to +85 C, 9.8 mm high), pin for pin P's order, so a straight | XH-to-XH four-way lead is correct. The two pack nets are renamed from SDA0/SCL0 to SMBD/SMBC, P's own names, | because the o",
+     "introduced": {
+      "adjudication": [
+       "A07"
+      ],
+      "finding": [
+       "F-BP-02",
+       "S-05"
+      ]
+     },
+     "lines": [
+      197,
+      198,
+      199,
+      200,
+      201,
+      202,
+      203,
+      204,
+      205,
+      206,
+      207,
+      208,
+      209,
+      210,
+      211,
+      212,
+      213,
+      214,
+      215,
+      216,
+      217
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       197,
+       197
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        197,
+        197
+       ],
+       "tie": [
+        "names_ref",
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the pack SMBus lead becomes a JST-XH 1x4 in board P's pin order (1 SMBC, 2 SMBD, 3 GND, 4 PRES), so a straight XH-to-XH lead mates"
+    },
+    "spans": [
+     [
+      218,
+      219
+     ]
+    ]
+   },
+   "fields": {
+    "footprint": [
+     "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical",
+     "Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical"
+    ],
+    "lcsc": [
+     "",
+     "C594232"
+    ],
+    "value": [
+     "pack SMBus (XH or pin header): section A SDA SCL on I2C0, section B SDA SCL on the sensor bus I2C1, GND GND",
+     "SMBus lead to board P, JST-XH 1x4 (B4B-XH-A), P's pin order: 1 SMBC, 2 SMBD, 3 GND, 4 PRES"
+    ]
+   },
+   "finding_ids": [
+    "A07",
+    "S-05"
+   ],
+   "footprint": "Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical",
+   "kind": "CHANGED",
+   "lcsc": "C594232",
+   "pins_moved": {
+    "1": [
+     "SDA0",
+     "SMBC"
+    ],
+    "2": [
+     "SCL0",
+     "SMBD"
+    ],
+    "3": [
+     "SDA1",
+     "GND"
+    ],
+    "4": [
+     "SCL1",
+     "PRES_LEAD"
+    ],
+    "5": [
+     "GND",
+     null
+    ],
+    "6": [
+     "GND",
+     null
+    ]
+   },
+   "read": "hand",
+   "ref": "J_SMB",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "SMBus lead to board P, JST-XH 1x4 (B4B-XH-A), P's pin order: 1 SMBC, 2 SMBD, 3 GND, 4 PRES"
+  },
+  {
+   "authority_ids": [
+    "D-02b",
+    "D-03.2"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [
+      "D-02b",
+      "D-03.2"
+     ],
+     "candidate_ids": [
+      "D-02b",
+      "D-03.2",
+      "S-05",
+      "S-11",
+      "TRN-001",
+      "W1-F04",
+      "W5-F11"
+     ],
+     "finding_ids": [
+      "S-11",
+      "W1-F04",
+      "W5-F11"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "D-03.2 rules that it LOGS ONLY: it never reaches ZEROIZE, the panel or any supervisor. So it goes to the sensor | controller alone, which is on the always-on domain (U12's EN is tied to CELL_F) and logs a lid opening with the | kit off; the RP2040 wakes from DORMANT on a GPIO edge (rpi-rp2040-datash",
+      "ids": {
+       "finding": [
+        "S-05"
+       ],
+       "owner_ruling": [
+        "D-03.2"
+       ],
+       "rule": [
+        "TRN-001"
+       ]
+      },
+      "kind": "other_paragraph",
+      "lines": [
+       527,
+       539
+      ]
+     },
+     {
+      "excerpt": "S-05, 26 September 2026: the pack's PRES pin from J_SMB.4 to GPIO17 (the reasoning and the thresholds are at J_SMB above) | S-11 / D-02b / D-03.2, 26 September 2026 (MESHSAT-1357 round 4): THE LID AND TAMPER SWITCH. Appendix 32.50 item 6 | approved \"one sealed switch under the frame\" and the E6 floo",
+      "ids": {
+       "finding": [
+        "S-05",
+        "S-11",
+        "W1-F04",
+        "W5-F11"
+       ],
+       "owner_ruling": [
+        "D-02b",
+        "D-03.2"
+       ],
+       "rule": [
+        "TRN-001"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       522,
+       539
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "S-11 / D-02b / D-03.2, 26 September 2026 (MESHSAT-1357 round 4): THE LID AND TAMPER SWITCH. Appendix 32.50 item 6 | approved \"one sealed switch under the frame\" and the E6 floor plan (32.51 item 4) put its input on this board; no | generator ever drew it (W1-F04, W5-F11). The owner's D-02b makes the lid state the reduced mode's trigger and",
+     "introduced": {
+      "finding": [
+       "S-11",
+       "W1-F04",
+       "W5-F11"
+      ],
+      "owner_ruling": [
+       "D-02b",
+       "D-03.2"
+      ]
+     },
+     "lines": [
+      524,
+      525,
+      526
+     ],
+     "other_paragraph_lines": [
+      527,
+      528,
+      529,
+      530,
+      531,
+      532,
+      533,
+      534,
+      535,
+      536,
+      537,
+      538,
+      539
+     ]
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       524,
+       526
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        524,
+        526
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the lid and tamper reed sensor lead (JST-XH 1x2) that appendix 32.50 approved and no generator drew; it goes to the sensor controller alone and logs only (D-03.2)"
+    },
+    "spans": [
+     [
+      540,
+      541
+     ]
+    ]
+   },
+   "finding_ids": [
+    "S-11",
+    "W1-F04",
+    "W5-F11"
+   ],
+   "footprint": "Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical",
+   "kind": "ADDED",
+   "lcsc": "C158012",
+   "pins": {
+    "1": "TAMPER_LEAD",
+    "2": "GND"
+   },
+   "read": "hand",
+   "ref": "J_TAMP",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "JST-XH 1x2 (B2B-XH-A): lid and tamper reed sensor lead, Littelfuse 59140-1-S-05-A normally open under the frame, 57140-000 magnet in the lid: 1 lead, 2 GND"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [
+      "D-04"
+     ],
+     "candidate_ids": [
+      "D-04",
+      "F-IN-02",
+      "R4E-02",
+      "R4E-09"
+     ],
+     "finding_ids": [
+      "F-IN-02",
+      "R4E-02",
+      "R4E-09"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "R4E-09 (found while changing L2 for F-IN-02, 26 September 2026): THE CHOKE'S PIN MAP SHORTED BOTH LINES. The map | was {1 DC_HS, 2 VIN_RAW, 3 GND_V, 4 GND} on the reading \"winding 1 pins 1-2, winding 2 pins 3-4\". The Bourns sheet | (bourns-srf1260-common-mode-choke.pdf, sha256 93b2dc75..., \"Electric",
+      "ids": {
+       "finding": [
+        "F-IN-02",
+        "R4E-02",
+        "R4E-09"
+       ],
+       "owner_ruling": [
+        "D-04"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       314,
+       336
+      ]
+     },
+     {
+      "excerpt": "R4E-09 (found while changing L2 for F-IN-02, 26 September 2026): THE CHOKE'S PIN MAP SHORTED BOTH LINES. The map | was {1 DC_HS, 2 VIN_RAW, 3 GND_V, 4 GND} on the reading \"winding 1 pins 1-2, winding 2 pins 3-4\". The Bourns sheet | (bourns-srf1260-common-mode-choke.pdf, sha256 93b2dc75..., \"Electric",
+      "ids": {
+       "finding": [
+        "F-IN-02",
+        "R4E-02",
+        "R4E-09"
+       ],
+       "owner_ruling": [
+        "D-04"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       310,
+       336
+      ]
+     },
+     {
+      "excerpt": "R4E-09 (found while changing L2 for F-IN-02, 26 September 2026): THE CHOKE'S PIN MAP SHORTED BOTH LINES. The map | was {1 DC_HS, 2 VIN_RAW, 3 GND_V, 4 GND} on the reading \"winding 1 pins 1-2, winding 2 pins 3-4\". The Bourns sheet | (bourns-srf1260-common-mode-choke.pdf, sha256 93b2dc75..., \"Electric",
+      "ids": {
+       "finding": [
+        "F-IN-02",
+        "R4E-02",
+        "R4E-09"
+       ],
+       "owner_ruling": [
+        "D-04"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       314,
+       336
+      ]
+     },
+     {
+      "excerpt": "which are the datasheet's PARALLEL columns (both windings sharing one current). L2 is wired with winding 1 in the | rise, about 73 K of rise: over the 105 C limit at the 51 C inside-air bar. The fix is L2 (see the part below): | choke L2 -> VIN_RAW, and every one of them carries VIN_RAW's own curren",
+      "ids": {
+       "finding": [
+        "F-IN-02",
+        "R4E-09"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       78,
+       83,
+       246,
+       314
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "R4E-09 (found while changing L2 for F-IN-02, 26 September 2026): THE CHOKE'S PIN MAP SHORTED BOTH LINES. The map | was {1 DC_HS, 2 VIN_RAW, 3 GND_V, 4 GND} on the reading \"winding 1 pins 1-2, winding 2 pins 3-4\". The Bourns sheet | (bourns-srf1260-common-mode-choke.pdf, sha256 93b2dc75..., \"Electrical Schematic\", read on the rendered page) | draws N1 between pins 1 and 3 and N2 between pins 2 and 4, dots on 1 and 2; its PARALLEL drawing joins 1 to 2 | and 3 to 4, which would short a winding if the windings were 1-2 and 3-4; its land puts 1 and 2 across the | 1.28 mm gap and 1 and 3 on the diagonal. On KiCad's L_CommonModeChoke_Bourns_SRF1260 land (pads 1 (-4.25,-1.7), | 2 (-4.25,1.7), 3 (4.2",
+     "introduced": {
+      "finding": [
+       "F-IN-02",
+       "R4E-02",
+       "R4E-09"
+      ],
+      "owner_ruling": [
+       "D-04"
+      ]
+     },
+     "lines": [
+      310,
+      311,
+      312,
+      313,
+      314,
+      315,
+      316,
+      317,
+      318,
+      319,
+      320,
+      321,
+      322,
+      323,
+      324,
+      325,
+      326,
+      327,
+      328,
+      329,
+      330,
+      331,
+      332,
+      333,
+      334,
+      335,
+      336
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       314,
+       314
+      ],
+      [
+       329,
+       329
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        314,
+        314
+       ],
+       "tie": [
+        "names_ref",
+        "at_anchor"
+       ]
+      },
+      {
+       "lines": [
+        329,
+        329
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the choke becomes the SRF1260-1R5Y (series rating 6.89 A against the 6.15 A the limiter lets through) wired as a common-mode choke, and its pin map, which shorted both lines, is corrected"
+    },
+    "spans": [
+     [
+      337,
+      340
+     ],
+     [
+      341,
+      341
+     ]
+    ]
+   },
+   "fields": {
+    "value": [
+     "Bourns SRF1260-4R7Y dual-winding choke (7.2 A per winding at 4.7 uH): winding 1 pins 1-2 on the positive line, winding 2 pins 3-4 on the return (pin map per the Bourns drawing, verified 7 Sep 2026)",
+     "Bourns SRF1260-1R5Y dual-winding choke, common-mode connection (each winding carries the line current: 6.89 A Irms and 9.15 A Isat in the series column, 1.5 uH per winding): winding pins 1-3 on the positive line, winding pins 2-4 on the return (Bourns electrical schematic, N1 1-3 and N2 2-4)"
+    ]
+   },
+   "finding_ids": [
+    "F-IN-02",
+    "R4E-02",
+    "R4E-09"
+   ],
+   "footprint": "Inductor_SMD:L_CommonModeChoke_Bourns_SRF1260",
+   "kind": "CHANGED",
+   "lcsc": "",
+   "pins_moved": {
+    "2": [
+     "VIN_RAW",
+     "GND_V"
+    ],
+    "3": [
+     "GND_V",
+     "VIN_RAW"
+    ]
+   },
+   "read": "hand",
+   "ref": "L2",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "Bourns SRF1260-1R5Y dual-winding choke, common-mode connection (each winding carries the line current: 6.89 A Irms and 9.15 A Isat in the series column, 1.5 uH per winding): winding pins 1-3 on the positive line, winding pins 2-4 on the return (Bourns electrical schematic, N1 1-3 and N2 2-4)"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [],
+     "finding_ids": [],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "NO_ID_OF_ANY_KIND"
+    },
+    "candidates": [],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       197,
+       202
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        197,
+        202
+       ],
+       "tie": [
+        "names_net:SDA0,SMBD"
+       ]
+      }
+     ],
+     "why": "the pull-up follows the pack SMBus data net renamed SDA0 to SMBD, board P's name"
+    },
+    "spans": [
+     [
+      521,
+      521
+     ]
+    ]
+   },
+   "fields": {},
+   "finding_ids": [
+    "A07",
+    "S-05"
+   ],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "CHANGED",
+   "lcsc": "",
+   "pins_moved": {
+    "1": [
+     "SDA0",
+     "SMBD"
+    ]
+   },
+   "read": "hand",
+   "ref": "R34",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "4.7k"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [],
+     "finding_ids": [],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "NO_ID_OF_ANY_KIND"
+    },
+    "candidates": [],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       197,
+       202
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        197,
+        202
+       ],
+       "tie": [
+        "names_net:SCL0,SMBC"
+       ]
+      }
+     ],
+     "why": "the pull-up follows the pack SMBus clock net renamed SCL0 to SMBC, board P's name"
+    },
+    "spans": [
+     [
+      521,
+      521
+     ]
+    ]
+   },
+   "fields": {},
+   "finding_ids": [
+    "A07",
+    "S-05"
+   ],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "CHANGED",
+   "lcsc": "",
+   "pins_moved": {
+    "1": [
+     "SCL0",
+     "SMBC"
+    ]
+   },
+   "read": "hand",
+   "ref": "R35",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "4.7k"
+  },
+  {
+   "authority_ids": [
+    "D-02b",
+    "D-03.2"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "D-02b",
+      "D-03.2",
+      "S-05",
+      "S-11",
+      "TRN-001",
+      "W1-F04",
+      "W5-F11"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "S-11 / D-02b / D-03.2, 26 September 2026 (MESHSAT-1357 round 4): THE LID AND TAMPER SWITCH. Appendix 32.50 item 6 | approved \"one sealed switch under the frame\" and the E6 floor plan (32.51 item 4) put its input on this board; no | generator ever drew it (W1-F04, W5-F11). The owner's D-02b makes the",
+      "ids": {
+       "finding": [
+        "S-05",
+        "S-11",
+        "W1-F04",
+        "W5-F11"
+       ],
+       "owner_ruling": [
+        "D-02b",
+        "D-03.2"
+       ],
+       "rule": [
+        "TRN-001"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       524,
+       539
+      ]
+     },
+     {
+      "excerpt": "S-05, 26 September 2026: the pack's PRES pin from J_SMB.4 to GPIO17 (the reasoning and the thresholds are at J_SMB above) | S-11 / D-02b / D-03.2, 26 September 2026 (MESHSAT-1357 round 4): THE LID AND TAMPER SWITCH. Appendix 32.50 item 6 | approved \"one sealed switch under the frame\" and the E6 floo",
+      "ids": {
+       "finding": [
+        "S-05",
+        "S-11",
+        "W1-F04",
+        "W5-F11"
+       ],
+       "owner_ruling": [
+        "D-02b",
+        "D-03.2"
+       ],
+       "rule": [
+        "TRN-001"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       522,
+       539
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       524,
+       537
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        524,
+        537
+       ],
+       "tie": [
+        "names_ref"
+       ]
+      }
+     ],
+     "why": "the tamper lead's 100k pull-up"
+    },
+    "spans": [
+     [
+      542,
+      542
+     ]
+    ]
+   },
+   "finding_ids": [
+    "S-11",
+    "W1-F04",
+    "W5-F11"
+   ],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "C25803",
+   "pins": {
+    "1": "TAMPER_LEAD",
+    "2": "+3V3_E6"
+   },
+   "read": "hand",
+   "ref": "R52",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "100k"
+  },
+  {
+   "authority_ids": [
+    "D-02b",
+    "D-03.2"
+   ],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "D-02b",
+      "D-03.2",
+      "S-05",
+      "S-11",
+      "TRN-001",
+      "W1-F04",
+      "W5-F11"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "S-11 / D-02b / D-03.2, 26 September 2026 (MESHSAT-1357 round 4): THE LID AND TAMPER SWITCH. Appendix 32.50 item 6 | approved \"one sealed switch under the frame\" and the E6 floor plan (32.51 item 4) put its input on this board; no | generator ever drew it (W1-F04, W5-F11). The owner's D-02b makes the",
+      "ids": {
+       "finding": [
+        "S-05",
+        "S-11",
+        "W1-F04",
+        "W5-F11"
+       ],
+       "owner_ruling": [
+        "D-02b",
+        "D-03.2"
+       ],
+       "rule": [
+        "TRN-001"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       524,
+       539
+      ]
+     },
+     {
+      "excerpt": "S-05, 26 September 2026: the pack's PRES pin from J_SMB.4 to GPIO17 (the reasoning and the thresholds are at J_SMB above) | S-11 / D-02b / D-03.2, 26 September 2026 (MESHSAT-1357 round 4): THE LID AND TAMPER SWITCH. Appendix 32.50 item 6 | approved \"one sealed switch under the frame\" and the E6 floo",
+      "ids": {
+       "finding": [
+        "S-05",
+        "S-11",
+        "W1-F04",
+        "W5-F11"
+       ],
+       "owner_ruling": [
+        "D-02b",
+        "D-03.2"
+       ],
+       "rule": [
+        "TRN-001"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       522,
+       539
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       524,
+       537
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        524,
+        537
+       ],
+       "tie": [
+        "names_ref"
+       ]
+      }
+     ],
+     "why": "the tamper input's 10k series resistor"
+    },
+    "spans": [
+     [
+      542,
+      542
+     ]
+    ]
+   },
+   "finding_ids": [
+    "S-11",
+    "W1-F04",
+    "W5-F11"
+   ],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "C25804",
+   "pins": {
+    "1": "TAMPER_LEAD",
+    "2": "TAMPER_IO"
+   },
+   "read": "hand",
+   "ref": "R53",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "10k"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "S-05"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "S-05, 26 September 2026: the pack's PRES pin from J_SMB.4 to GPIO17 (the reasoning and the thresholds are at J_SMB above)",
+      "ids": {
+       "finding": [
+        "S-05"
+       ]
+      },
+      "kind": "other_paragraph",
+      "lines": [
+       522,
+       522
+      ]
+     },
+     {
+      "excerpt": "S-05, 26 September 2026: the pack's PRES pin from J_SMB.4 to GPIO17 (the reasoning and the thresholds are at J_SMB above)",
+      "ids": {
+       "finding": [
+        "S-05"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       522,
+       522
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": [
+      522
+     ]
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       197,
+       207
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        197,
+        207
+       ],
+       "tie": [
+        "names_ref"
+       ]
+      }
+     ],
+     "why": "PRES from the pack lead reaches GPIO17 through this 1k"
+    },
+    "spans": [
+     [
+      523,
+      523
+     ]
+    ]
+   },
+   "finding_ids": [
+    "A07",
+    "S-05"
+   ],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "C21190",
+   "pins": {
+    "1": "PRES_LEAD",
+    "2": "PRES_IO"
+   },
+   "read": "hand",
+   "ref": "R54",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "1k"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "S-05"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "S-05, 26 September 2026: the pack's PRES pin from J_SMB.4 to GPIO17 (the reasoning and the thresholds are at J_SMB above)",
+      "ids": {
+       "finding": [
+        "S-05"
+       ]
+      },
+      "kind": "other_paragraph",
+      "lines": [
+       522,
+       522
+      ]
+     },
+     {
+      "excerpt": "S-05, 26 September 2026: the pack's PRES pin from J_SMB.4 to GPIO17 (the reasoning and the thresholds are at J_SMB above)",
+      "ids": {
+       "finding": [
+        "S-05"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       522,
+       522
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": [
+      522
+     ]
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       197,
+       207
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        197,
+        207
+       ],
+       "tie": [
+        "names_ref"
+       ]
+      }
+     ],
+     "why": "PRES's 1M pull-up on the GPIO side, so a lead that is out reads high"
+    },
+    "spans": [
+     [
+      523,
+      523
+     ]
+    ]
+   },
+   "finding_ids": [
+    "A07",
+    "S-05"
+   ],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "C22935",
+   "pins": {
+    "1": "PRES_IO",
+    "2": "+3V3_E6"
+   },
+   "read": "hand",
+   "ref": "R55",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "1M"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "F-BP-02"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "F-BP-02, 26 September 2026: the Geiger header takes its 5 V from the load switch U16 (declared at +5V_GEIGER above). | kisch.tps22810 is the same pin map boards B and D use (6 VIN, 5 EN, 1 VOUT, 2 QOD open, 3 CT, 4 GND, 7 pad GND).",
+      "ids": {
+       "finding": [
+        "F-BP-02"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       575,
+       576
+      ]
+     },
+     {
+      "excerpt": "F-BP-02, 26 September 2026: the Geiger header takes its 5 V from the load switch U16 (declared at +5V_GEIGER above). | kisch.tps22810 is the same pin map boards B and D use (6 VIN, 5 EN, 1 VOUT, 2 QOD open, 3 CT, 4 GND, 7 pad GND).",
+      "ids": {
+       "finding": [
+        "F-BP-02"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       575,
+       576
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       132,
+       140
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        132,
+        140
+       ],
+       "tie": [
+        "names_ref",
+        "names_net:GEIGER_EN"
+       ]
+      }
+     ],
+     "why": "GEIGER_EN pull-down, so the tube stays off while the sensor controller is in reset (the switch's EN must not float)"
+    },
+    "spans": [
+     [
+      578,
+      578
+     ]
+    ]
+   },
+   "finding_ids": [
+    "F-BP-02"
+   ],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "C25803",
+   "pins": {
+    "1": "GEIGER_EN",
+    "2": "GND"
+   },
+   "read": "hand",
+   "ref": "R56",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "100k"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "A06",
+      "C-05",
+      "S-10",
+      "W1-F05",
+      "W6-P7"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "S-10 / C-05, 26 September 2026 (MESHSAT-1357 round 4): THE BATTERY-BAY GAS SENSOR APPENDIX 32.54 PICKED. The pick was | a BME688 inside, one in the pod AND \"the Sensirion SGP41 (C3659325) in the battery bay\", and no generator ever fitted | the SGP41 (W1-F05, C-05). It goes on this board because this",
+      "ids": {
+       "adjudication": [
+        "A06"
+       ],
+       "finding": [
+        "C-05",
+        "S-10",
+        "W1-F05",
+        "W6-P7"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       547,
+       562
+      ]
+     },
+     {
+      "excerpt": "S-10 / C-05, 26 September 2026 (MESHSAT-1357 round 4): THE BATTERY-BAY GAS SENSOR APPENDIX 32.54 PICKED. The pick was | a BME688 inside, one in the pod AND \"the Sensirion SGP41 (C3659325) in the battery bay\", and no generator ever fitted | the SGP41 (W1-F05, C-05). It goes on this board because this",
+      "ids": {
+       "adjudication": [
+        "A06"
+       ],
+       "finding": [
+        "C-05",
+        "S-10",
+        "W1-F05",
+        "W6-P7"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       547,
+       562
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       547,
+       557
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        547,
+        557
+       ],
+       "tie": [
+        "names_ref"
+       ]
+      }
+     ],
+     "why": "the SGP41's 4.7 ohm VDD filter resistor"
+    },
+    "spans": [
+     [
+      565,
+      565
+     ]
+    ]
+   },
+   "finding_ids": [
+    "C-05",
+    "S-10",
+    "W1-F05"
+   ],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "C23164",
+   "pins": {
+    "1": "+3V3_E6",
+    "2": "SGP_VDD"
+   },
+   "read": "hand",
+   "ref": "R57",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "4.7R"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "F-BP-02",
+      "S-05",
+      "S-11"
+     ],
+     "finding_ids": [
+      "F-BP-02",
+      "S-05",
+      "S-11"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "RUN pull-up, BOOTSEL by a solder jumper on QSPI_SS). GPIO: 2 SMBD 3 SMBC (the pack gauge's SMBus, the RP2040's I2C1), 4 SDA1 5 SCL1 (the sensor bus, the RP2040's | I2C0: BME688, BMI270, SGP41, pod, lightning module), 6 DCF77 pulse, 7 Geiger pulse, | 8 and 9 fan PWM, 10 and 11 fan tachometers, 12 inp",
+      "ids": {
+       "finding": [
+        "F-BP-02",
+        "S-05",
+        "S-11"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       501,
+       506
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "RUN pull-up, BOOTSEL by a solder jumper on QSPI_SS). GPIO: 2 SMBD 3 SMBC (the pack gauge's SMBus, the RP2040's I2C1), 4 SDA1 5 SCL1 (the sensor bus, the RP2040's | I2C0: BME688, BMI270, SGP41, pod, lightning module), 6 DCF77 pulse, 7 Geiger pulse, | 8 and 9 fan PWM, 10 and 11 fan tachometers, 12 input power good, 13 IMU interrupt, 14 lightning interrupt, 15 SHORE_INHIBIT read-back, 16 lid and tamper switch (S-11), | 17 pack PRES (S-05), 18 Geiger supply enable (F-BP-02), 25 status LED, 26 water electrodes (ADC0), 27 bus voltage (ADC1), 28 pack voltage (ADC2). | 26 September 2026 (MESHSAT-1357 round 4): the pack pair was written \"2 SDA0 3 SCL0 (pack section A)\" and \"section B\" on the sensor b",
+     "introduced": {
+      "finding": [
+       "F-BP-02",
+       "S-05",
+       "S-11"
+      ]
+     },
+     "lines": [
+      500,
+      501,
+      502,
+      503,
+      504,
+      505,
+      506
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       503,
+       504
+      ],
+      [
+       197,
+       204
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        503,
+        504
+       ],
+       "tie": [
+        "names_net:SHORE_INHIBIT",
+        "at_anchor"
+       ]
+      },
+      {
+       "lines": [
+        197,
+        204
+       ],
+       "tie": [
+        "names_ref",
+        "names_net:SCL0,SCL1,SDA0"
+       ]
+      }
+     ],
+     "why": "the sensor controller's pins 4 and 5 go to the renamed pack SMBus (S-05, A07), pin 27 reads the lid and tamper lead (S-11), pin 28 PRES (S-05), pin 29 drives the Geiger enable (F-BP-02)"
+    },
+    "spans": [
+     [
+      507,
+      512
+     ]
+    ]
+   },
+   "fields": {},
+   "finding_ids": [
+    "A07",
+    "F-BP-02",
+    "S-05",
+    "S-11"
+   ],
+   "footprint": "Package_DFN_QFN:QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm",
+   "kind": "CHANGED",
+   "lcsc": "C2040",
+   "pins_moved": {
+    "27": [
+     "unconnected-(U10-NC-Pad27)",
+     "TAMPER_IO"
+    ],
+    "28": [
+     "unconnected-(U10-NC-Pad28)",
+     "PRES_IO"
+    ],
+    "29": [
+     "unconnected-(U10-NC-Pad29)",
+     "GEIGER_EN"
+    ],
+    "4": [
+     "SDA0",
+     "SMBD"
+    ],
+    "5": [
+     "SCL0",
+     "SMBC"
+    ]
+   },
+   "read": "hand",
+   "ref": "U10",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "RP2040 sensor controller (USB to B16 through the dock)"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [
+      "F-BP-02"
+     ],
+     "finding_ids": [
+      "F-BP-02"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "F-BP-02, 26 September 2026: the Geiger header takes its 5 V from the load switch U16 (declared at +5V_GEIGER above). | kisch.tps22810 is the same pin map boards B and D use (6 VIN, 5 EN, 1 VOUT, 2 QOD open, 3 CT, 4 GND, 7 pad GND).",
+      "ids": {
+       "finding": [
+        "F-BP-02"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       575,
+       576
+      ]
+     },
+     {
+      "excerpt": "F-BP-02, 26 September 2026: the Geiger header is fed through the load switch U16 now, so the | load on this rail is U16's input pin and not the header | high-voltage converter has no sleep of its own, so a switch is the only way to stop it. U16 is the TPS22810DRV the | F-BP-02, 26 September 2026: th",
+      "ids": {
+       "finding": [
+        "F-BP-02"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       127,
+       128,
+       136,
+       575
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "F-BP-02, 26 September 2026: the Geiger header takes its 5 V from the load switch U16 (declared at +5V_GEIGER above). | kisch.tps22810 is the same pin map boards B and D use (6 VIN, 5 EN, 1 VOUT, 2 QOD open, 3 CT, 4 GND, 7 pad GND).",
+     "introduced": {
+      "finding": [
+       "F-BP-02"
+      ]
+     },
+     "lines": [
+      575,
+      576
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       575,
+       575
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        575,
+        575
+       ],
+       "tie": [
+        "names_ref",
+        "names_net:+5V_GEIGER",
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "a TPS22810 load switch takes the Geiger module off the always-on domain, the largest single drain of the kit-off state"
+    },
+    "spans": [
+     [
+      577,
+      577
+     ]
+    ]
+   },
+   "finding_ids": [
+    "F-BP-02"
+   ],
+   "footprint": "Package_SON:WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "+5V_GEIGER",
+    "2": "unconnected-(U16-QOD-Pad2)",
+    "3": "GEIGER_CT",
+    "4": "GND",
+    "5": "GEIGER_EN",
+    "6": "+5V_E6",
+    "7": "GND"
+   },
+   "read": "hand",
+   "ref": "U16",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "TPS22810DRV"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "A06",
+      "C-05",
+      "S-10",
+      "W1-F05",
+      "W6-P7"
+     ],
+     "finding_ids": [
+      "A06",
+      "C-05",
+      "S-10",
+      "W1-F05",
+      "W6-P7"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "S-10 / C-05, 26 September 2026 (MESHSAT-1357 round 4): THE BATTERY-BAY GAS SENSOR APPENDIX 32.54 PICKED. The pick was | a BME688 inside, one in the pod AND \"the Sensirion SGP41 (C3659325) in the battery bay\", and no generator ever fitted | the SGP41 (W1-F05, C-05). It goes on this board because this",
+      "ids": {
+       "adjudication": [
+        "A06"
+       ],
+       "finding": [
+        "C-05",
+        "S-10",
+        "W1-F05",
+        "W6-P7"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       547,
+       562
+      ]
+     },
+     {
+      "excerpt": "U17 (S-10, 26 September 2026): the SGP41's hotplate supply VDDH sits on this rail, 3.4 mA maximum in | east pocket at X 120 to 178 (adjudication A06) and this strip ends at X 118, so the placement puts U17 at the strip's",
+      "ids": {
+       "adjudication": [
+        "A06"
+       ],
+       "finding": [
+        "S-10"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       115,
+       550
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "S-10 / C-05, 26 September 2026 (MESHSAT-1357 round 4): THE BATTERY-BAY GAS SENSOR APPENDIX 32.54 PICKED. The pick was | a BME688 inside, one in the pod AND \"the Sensirion SGP41 (C3659325) in the battery bay\", and no generator ever fitted | the SGP41 (W1-F05, C-05). It goes on this board because this board is where the bay's air is: the pack sits in the | east pocket at X 120 to 178 (adjudication A06) and this strip ends at X 118, so the placement puts U17 at the strip's | east end, south of PCB-A's edge (about X 110 to 117, Y -105 to -90), with the sensor opening facing up and the mixer | fans moving the sealed case's air past it; the placement generator is regenerated at layout entry, not n",
+     "introduced": {
+      "adjudication": [
+       "A06"
+      ],
+      "finding": [
+       "C-05",
+       "S-10",
+       "W1-F05",
+       "W6-P7"
+      ]
+     },
+     "lines": [
+      547,
+      548,
+      549,
+      550,
+      551,
+      552,
+      553,
+      554,
+      555,
+      556,
+      557,
+      558,
+      559,
+      560,
+      561,
+      562
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       547,
+       549
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        547,
+        549
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the SGP41 VOC and NOx sensor in the battery bay that appendix 32.54 picked and no generator fitted"
+    },
+    "spans": [
+     [
+      563,
+      564
+     ]
+    ]
+   },
+   "finding_ids": [
+    "C-05",
+    "S-10",
+    "W1-F05"
+   ],
+   "footprint": "meshsat:Sensirion_DFN-6-1EP_2.44x2.44mm_P0.8mm_EP1.25x1.7mm",
+   "kind": "ADDED",
+   "lcsc": "C3659325",
+   "pins": {
+    "1": "SGP_VDD",
+    "2": "GND",
+    "3": "SDA1",
+    "4": "GND",
+    "5": "+3V3_E6",
+    "6": "SCL1",
+    "7": "GND"
+   },
+   "read": "hand",
+   "ref": "U17",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "SGP41-D-R4 VOC and NOx gas sensor, battery-bay air (I2C 0x59; DFN-6: 1 VDD 2 VSS 3 SDA 4 n/a to GND 5 VDDH 6 SCL, 7 die pad GND)"
+  }
+ ],
+ "generator_lines_added": 237,
+ "prev": "82dd1e4dc44efabeee1164a995cda4e866610f3d",
+ "rev": "1f614233998c3087a53abfa977be134465ce9f47",
+ "summary": {
+  "added": 16,
+  "changed": 11,
+  "components": [
+   163,
+   179
+  ],
+  "content_hash": [
+   "7f6c3838a920dc4f",
+   "eff68e111475b599"
+  ],
+  "nets": [
+   118,
+   124
+  ],
+  "nets_only_prev": [
+   "/SCL0",
+   "/SDA0",
+   "unconnected-(U10-NC-Pad27)",
+   "unconnected-(U10-NC-Pad28)",
+   "unconnected-(U10-NC-Pad29)"
+  ],
+  "nets_only_rev": [
+   "/+5V_GEIGER",
+   "/GEIGER_CT",
+   "/GEIGER_EN",
+   "/PRES_IO",
+   "/PRES_LEAD",
+   "/SGP_VDD",
+   "/SMBC",
+   "/SMBD",
+   "/TAMPER_IO",
+   "/TAMPER_LEAD",
+   "unconnected-(U16-QOD-Pad2)"
+  ],
+  "nets_renamed": [],
+  "removed": 0
+ }
+}

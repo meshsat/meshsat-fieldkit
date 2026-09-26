@@ -1,0 +1,34 @@
+{
+ "interfaces": [
+  {
+   "class": "USB",
+   "impedance_ohm": null,
+   "impedance_tol_percent": null,
+   "interface": "USB_FULL_SPEED",
+   "intra_pair_mm": null,
+   "max_length_mm": null,
+   "nets_on_this_board": [
+    "USB_DM_R",
+    "USB_DP_R",
+    "USB_E6_N",
+    "USB_E6_P"
+   ],
+   "patterns": [
+    "USB*"
+   ],
+   "sources": [
+    {
+     "clause": "features, first page",
+     "path": "v2/vendor/ti/ti-tusb2046b.pdf",
+     "title": "TI TUSB2046B datasheet"
+    },
+    {
+     "clause": "features",
+     "path": "v2/vendor/ti/ti-pcm2912a.pdf",
+     "title": "TI PCM2912A datasheet"
+    }
+   ],
+   "what": "USB 1.1 and 2.0 FULL speed, 12 Mb/s, between parts on one board"
+  }
+ ]
+}

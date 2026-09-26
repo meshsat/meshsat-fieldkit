@@ -1,0 +1,58 @@
+{
+ "entries_declaring_no_placed_part": [
+  "pack-cells"
+ ],
+ "entries_naming_this_board": [
+  "pack-gauge-protection",
+  "pack-fets",
+  "tvs-surge-clamps",
+  "esd-headset-clamps",
+  "pack-secondary-protector",
+  "pack-chemical-fuse",
+  "fuse-heater-fet",
+  "pack-ptc-element",
+  "logic-nfet-2n7002",
+  "pack-and-lid-leads-jst-xh",
+  "jst-ph-headers"
+ ],
+ "entries_naming_this_board_that_joined_no_line": [],
+ "joined": {
+  "esd-headset-clamps": [
+   "D2",
+   "D3"
+  ],
+  "fuse-heater-fet": [
+   "Q3"
+  ],
+  "jst-ph-headers": [
+   "J_TS"
+  ],
+  "logic-nfet-2n7002": [
+   "Q5"
+  ],
+  "pack-and-lid-leads-jst-xh": [
+   "J_CELL",
+   "J_SMB"
+  ],
+  "pack-chemical-fuse": [
+   "F2"
+  ],
+  "pack-fets": [
+   "Q1",
+   "Q2"
+  ],
+  "pack-gauge-protection": [
+   "U1"
+  ],
+  "pack-ptc-element": [
+   "RT1"
+  ],
+  "pack-secondary-protector": [
+   "U2"
+  ],
+  "tvs-surge-clamps": [
+   "D1"
+  ]
+ },
+ "rule": "a line with an LCSC code joins by that exact code; a line without one joins only an entry that names this board and either points its `where` (read at its own revision) at the line's defining statement while naming the reference or the part, or writes its fitted order code in the value"
+}

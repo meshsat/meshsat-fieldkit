@@ -1,0 +1,55 @@
+{
+ "all_boards_count": 55,
+ "exit": 3,
+ "regenerated_siblings": [],
+ "status": "RUN",
+ "this_board": [
+  {
+   "absent_boards": [],
+   "boards": [
+    "P"
+   ],
+   "defined_at": "check_contracts.py:368",
+   "detail": "",
+   "group": null,
+   "result": "PASS",
+   "text": "P: the pack leads are the pack's own two nets, W_P on the positive and W_N on the return"
+  },
+  {
+   "absent_boards": [],
+   "boards": [
+    "E",
+    "P"
+   ],
+   "defined_at": "check_contracts.py:371",
+   "detail": "",
+   "group": null,
+   "result": "PASS",
+   "text": "E: the XT60 carries the pack on pin 2 and the return on pin 1, which is what P's leads land on"
+  },
+  {
+   "absent_boards": [],
+   "boards": [
+    "E",
+    "P"
+   ],
+   "defined_at": "check_contracts.py:378",
+   "detail": "",
+   "group": null,
+   "result": "PASS",
+   "text": "the pack pair is not crossed between board P's leads and board E's XT60"
+  },
+  {
+   "absent_boards": [],
+   "boards": [
+    "P"
+   ],
+   "defined_at": "check_contracts.py:382",
+   "detail": "",
+   "group": null,
+   "result": "PASS",
+   "text": "P: the pack's blade fuse is on the netlist and carries a net"
+  }
+ ],
+ "why": null
+}

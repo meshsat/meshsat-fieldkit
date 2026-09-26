@@ -1,0 +1,2680 @@
+{
+ "attribution": {
+  "by_hand": true,
+  "file": "d-1f614233.yaml",
+  "read_by": "the session (review stream PKT), 26 September 2026, from gen_sch_d.py at both revisions and the round-4 board D record",
+  "rows_missing": [],
+  "sha256": "2a85b4fe4c1614b1e920c9568652fa313adef312295b2b4b171f55eff8392533"
+ },
+ "changes": [
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [
+      "W6-F5"
+     ],
+     "finding_ids": [
+      "W6-F5"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "the hub's decoupling, on its own rail since W6-F5 (26 September 2026) C15 100n +3V4_HUB GND C16 100n +3V4_HUB GND C17 10u +3V4_HUB GND C10u",
+      "ids": {
+       "finding": [
+        "W6-F5"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       326,
+       326
+      ]
+     },
+     {
+      "excerpt": "W6-F5, 26 September 2026: the hub's decoupling follows it to +3V4_HUB C15 U4 3 +3V4_HUB",
+      "ids": {
+       "finding": [
+        "W6-F5"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       596,
+       596
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "the hub's decoupling, on its own rail since W6-F5 (26 September 2026) C15 100n +3V4_HUB GND C16 100n +3V4_HUB GND C17 10u +3V4_HUB GND C10u | W6-F5, 26 September 2026: the hub's decoupling follows it to +3V4_HUB C15 U4 3 +3V4_HUB",
+     "introduced": {
+      "finding": [
+       "W6-F5"
+      ]
+     },
+     "lines": [
+      326,
+      596
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       326,
+       326
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        326,
+        326
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the hub's 100 nF decoupling moves with the hub to its own rail +3V4_HUB"
+    },
+    "spans": [
+     [
+      326,
+      326
+     ],
+     [
+      596,
+      596
+     ]
+    ]
+   },
+   "fields": {},
+   "finding_ids": [
+    "W6-F5"
+   ],
+   "footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "kind": "CHANGED",
+   "lcsc": "",
+   "pins_moved": {
+    "1": [
+     "+3V3_D8",
+     "+3V4_HUB"
+    ]
+   },
+   "read": "hand",
+   "ref": "C15",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "100n"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [
+      "W6-F5"
+     ],
+     "finding_ids": [
+      "W6-F5"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "the hub's decoupling, on its own rail since W6-F5 (26 September 2026) C15 100n +3V4_HUB GND C16 100n +3V4_HUB GND C17 10u +3V4_HUB GND C10u",
+      "ids": {
+       "finding": [
+        "W6-F5"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       326,
+       326
+      ]
+     },
+     {
+      "excerpt": "W6-F5, 26 September 2026: the hub's decoupling follows it to +3V4_HUB C15 U4 3 +3V4_HUB",
+      "ids": {
+       "finding": [
+        "W6-F5"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       596,
+       596
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "the hub's decoupling, on its own rail since W6-F5 (26 September 2026) C15 100n +3V4_HUB GND C16 100n +3V4_HUB GND C17 10u +3V4_HUB GND C10u",
+     "introduced": {
+      "finding": [
+       "W6-F5"
+      ]
+     },
+     "lines": [
+      326
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       326,
+       326
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        326,
+        326
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the hub's 100 nF decoupling moves with the hub to its own rail +3V4_HUB"
+    },
+    "spans": [
+     [
+      326,
+      326
+     ],
+     [
+      597,
+      597
+     ]
+    ]
+   },
+   "fields": {},
+   "finding_ids": [
+    "W6-F5"
+   ],
+   "footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "kind": "CHANGED",
+   "lcsc": "",
+   "pins_moved": {
+    "1": [
+     "+3V3_D8",
+     "+3V4_HUB"
+    ]
+   },
+   "read": "hand",
+   "ref": "C16",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "100n"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [
+      "W6-F5"
+     ],
+     "finding_ids": [
+      "W6-F5"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "the hub's decoupling, on its own rail since W6-F5 (26 September 2026) C15 100n +3V4_HUB GND C16 100n +3V4_HUB GND C17 10u +3V4_HUB GND C10u",
+      "ids": {
+       "finding": [
+        "W6-F5"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       326,
+       326
+      ]
+     },
+     {
+      "excerpt": "W6-F5, 26 September 2026: the hub's decoupling follows it to +3V4_HUB C15 U4 3 +3V4_HUB",
+      "ids": {
+       "finding": [
+        "W6-F5"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       596,
+       596
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "the hub's decoupling, on its own rail since W6-F5 (26 September 2026) C15 100n +3V4_HUB GND C16 100n +3V4_HUB GND C17 10u +3V4_HUB GND C10u",
+     "introduced": {
+      "finding": [
+       "W6-F5"
+      ]
+     },
+     "lines": [
+      326
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       326,
+       326
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        326,
+        326
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the hub's 10 uF decoupling moves with the hub to its own rail +3V4_HUB"
+    },
+    "spans": [
+     [
+      326,
+      326
+     ],
+     [
+      598,
+      598
+     ]
+    ]
+   },
+   "fields": {},
+   "finding_ids": [
+    "W6-F5"
+   ],
+   "footprint": "Capacitor_SMD:C_0805_2012Metric",
+   "kind": "CHANGED",
+   "lcsc": "",
+   "pins_moved": {
+    "1": [
+     "+3V3_D8",
+     "+3V4_HUB"
+    ]
+   },
+   "read": "hand",
+   "ref": "C17",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "10u"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [
+      "F-PR-02",
+      "W3-F25",
+      "W6-F5"
+     ],
+     "finding_ids": [
+      "F-PR-02"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "W2 F-PR-02, 26 September 2026: THE PA GATE BIAS IS REGULATED BELOW 5 V, NOT SWITCHED FROM THE 5 V RAIL. U15 was a | TPS22810 load switch putting +5V_D8 on VGG: 5.088 V nominal, 5.23 V at most. The RA30H1317M1 sheet (Mitsubishi, | October 2011) rates VDD 17 V and Pout 45 W only with \"VGG<5V\", rates V",
+      "ids": {
+       "finding": [
+        "F-PR-02",
+        "W3-F25"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       483,
+       530
+      ]
+     },
+     {
+      "excerpt": "W2 F-PR-02, 26 September 2026: THE PA GATE BIAS IS REGULATED BELOW 5 V, NOT SWITCHED FROM THE 5 V RAIL. U15 was a | TPS22810 load switch putting +5V_D8 on VGG: 5.088 V nominal, 5.23 V at most. The RA30H1317M1 sheet (Mitsubishi, | October 2011) rates VDD 17 V and Pout 45 W only with \"VGG<5V\", rates V",
+      "ids": {
+       "finding": [
+        "F-PR-02",
+        "W3-F25"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       483,
+       530
+      ]
+     },
+     {
+      "excerpt": "W6-F5, 26 September 2026: the hub's decoupling follows it to +3V4_HUB C15 U4 3 +3V4_HUB | the hub LDO's input and output capacitors (SBVS351D 5.3) C64 U17 1 +5V_D8 | W2 F-PR-02: the VGG LDO's input and output capacitors C61 U15 6 +5V_D8",
+      "ids": {
+       "finding": [
+        "F-PR-02",
+        "W6-F5"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       596,
+       601
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "W2 F-PR-02: the VGG LDO's input and output capacitors C61 U15 6 +5V_D8",
+     "introduced": {
+      "finding": [
+       "F-PR-02"
+      ]
+     },
+     "lines": [
+      601
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       601,
+       601
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        601,
+        601
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "C61 was the TPS22810's 4.7 nF slew capacitor on a net that no longer exists; it becomes the VGG LDO's 1 uF input capacitor"
+    },
+    "spans": [
+     [
+      533,
+      533
+     ],
+     [
+      601,
+      601
+     ]
+    ]
+   },
+   "fields": {
+    "footprint": [
+     "Capacitor_SMD:C_0402_1005Metric",
+     "Capacitor_SMD:C_0603_1608Metric"
+    ],
+    "lcsc": [
+     "",
+     "C15849"
+    ],
+    "value": [
+     "4.7n",
+     "1u"
+    ]
+   },
+   "finding_ids": [
+    "F-PR-02"
+   ],
+   "footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "kind": "CHANGED",
+   "lcsc": "C15849",
+   "pins_moved": {
+    "1": [
+     "VGG_CT",
+     "+5V_D8"
+    ]
+   },
+   "read": "hand",
+   "ref": "C61",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "1u"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "F-PR-02",
+      "W3-F25",
+      "W6-F5"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "W2 F-PR-02, 26 September 2026: THE PA GATE BIAS IS REGULATED BELOW 5 V, NOT SWITCHED FROM THE 5 V RAIL. U15 was a | TPS22810 load switch putting +5V_D8 on VGG: 5.088 V nominal, 5.23 V at most. The RA30H1317M1 sheet (Mitsubishi, | October 2011) rates VDD 17 V and Pout 45 W only with \"VGG<5V\", rates V",
+      "ids": {
+       "finding": [
+        "F-PR-02",
+        "W3-F25"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       483,
+       530
+      ]
+     },
+     {
+      "excerpt": "W2 F-PR-02, 26 September 2026: THE PA GATE BIAS IS REGULATED BELOW 5 V, NOT SWITCHED FROM THE 5 V RAIL. U15 was a | TPS22810 load switch putting +5V_D8 on VGG: 5.088 V nominal, 5.23 V at most. The RA30H1317M1 sheet (Mitsubishi, | October 2011) rates VDD 17 V and Pout 45 W only with \"VGG<5V\", rates V",
+      "ids": {
+       "finding": [
+        "F-PR-02",
+        "W3-F25"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       483,
+       530
+      ]
+     },
+     {
+      "excerpt": "W6-F5, 26 September 2026: the hub's decoupling follows it to +3V4_HUB C15 U4 3 +3V4_HUB | the hub LDO's input and output capacitors (SBVS351D 5.3) C64 U17 1 +5V_D8 | W2 F-PR-02: the VGG LDO's input and output capacitors C61 U15 6 +5V_D8",
+      "ids": {
+       "finding": [
+        "F-PR-02",
+        "W6-F5"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       596,
+       601
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       483,
+       517
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        483,
+        517
+       ],
+       "tie": [
+        "names_ref",
+        "names_net:VGG_SW"
+       ]
+      }
+     ],
+     "why": "C62 becomes the VGG LDO's 2.2 uF 16 V output capacitor, the one capacitance on VGG"
+    },
+    "spans": [
+     [
+      533,
+      533
+     ],
+     [
+      602,
+      602
+     ]
+    ]
+   },
+   "fields": {
+    "lcsc": [
+     "",
+     "C23630"
+    ],
+    "value": [
+     "100n",
+     "2.2u 16V X5R"
+    ]
+   },
+   "finding_ids": [
+    "F-PR-02"
+   ],
+   "footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "kind": "CHANGED",
+   "lcsc": "C23630",
+   "pins_moved": {},
+   "read": "hand",
+   "ref": "C62",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "2.2u 16V X5R"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "W6-F5"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "U17, the hub's LDO (W6-F5, 26 September 2026; the arithmetic is at the +3V4_HUB declaration above). TLV75801PDBVR, | LCSC C2877852 (JLC API 2026-09-25T23:09Z: TI, SOT-23-5, -40 to 125 C TJ, stock 165,250). EN tied to IN as U1's is. | C64 is its input capacitor and C65 its own output capacitor, both ",
+      "ids": {
+       "finding": [
+        "W6-F5"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       288,
+       301
+      ]
+     },
+     {
+      "excerpt": "the upstream attach pull-up follows the hub's own supply (W6-F5) R6 22 USB_D8_P HUB_DP0 R7 22 USB_D8_N HUB_DM0 R8 1.5k HUB_DP0 +3V4_HUB | every hub input is tied to the hub's own VCC (SLLS413L 7.3: VI 0 to VCC) R9 10k HUB_OVRCUR_n +3V4_HUB R10 10k HUB_RST_n +3V4_HUB C12 1u HUB_RST_n GND | U17, the h",
+      "ids": {
+       "finding": [
+        "W6-F5"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       283,
+       301
+      ]
+     },
+     {
+      "excerpt": "W6-F5, 26 September 2026: the hub's decoupling follows it to +3V4_HUB C15 U4 3 +3V4_HUB | the hub LDO's input and output capacitors (SBVS351D 5.3) C64 U17 1 +5V_D8",
+      "ids": {
+       "finding": [
+        "W6-F5"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       596,
+       599
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "the hub LDO's input and output capacitors (SBVS351D 5.3) C64 U17 1 +5V_D8",
+     "introduced": {},
+     "lines": [
+      599
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       288,
+       290
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        288,
+        290
+       ],
+       "tie": [
+        "names_ref"
+       ]
+      }
+     ],
+     "why": "the input capacitor of the hub's own LDO U17"
+    },
+    "spans": [
+     [
+      303,
+      303
+     ],
+     [
+      599,
+      599
+     ]
+    ]
+   },
+   "finding_ids": [
+    "W6-F5"
+   ],
+   "footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "C15849",
+   "pins": {
+    "1": "+5V_D8",
+    "2": "GND"
+   },
+   "read": "hand",
+   "ref": "C64",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "1u"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "W6-F5"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "U17, the hub's LDO (W6-F5, 26 September 2026; the arithmetic is at the +3V4_HUB declaration above). TLV75801PDBVR, | LCSC C2877852 (JLC API 2026-09-25T23:09Z: TI, SOT-23-5, -40 to 125 C TJ, stock 165,250). EN tied to IN as U1's is. | C64 is its input capacitor and C65 its own output capacitor, both ",
+      "ids": {
+       "finding": [
+        "W6-F5"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       288,
+       301
+      ]
+     },
+     {
+      "excerpt": "the upstream attach pull-up follows the hub's own supply (W6-F5) R6 22 USB_D8_P HUB_DP0 R7 22 USB_D8_N HUB_DM0 R8 1.5k HUB_DP0 +3V4_HUB | every hub input is tied to the hub's own VCC (SLLS413L 7.3: VI 0 to VCC) R9 10k HUB_OVRCUR_n +3V4_HUB R10 10k HUB_RST_n +3V4_HUB C12 1u HUB_RST_n GND | U17, the h",
+      "ids": {
+       "finding": [
+        "W6-F5"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       283,
+       301
+      ]
+     },
+     {
+      "excerpt": "W6-F5, 26 September 2026: the hub's decoupling follows it to +3V4_HUB C15 U4 3 +3V4_HUB | the hub LDO's input and output capacitors (SBVS351D 5.3) C64 U17 1 +5V_D8",
+      "ids": {
+       "finding": [
+        "W6-F5"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       596,
+       599
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       288,
+       290
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        288,
+        290
+       ],
+       "tie": [
+        "names_ref"
+       ]
+      }
+     ],
+     "why": "the output capacitor of the hub's own LDO U17"
+    },
+    "spans": [
+     [
+      303,
+      303
+     ],
+     [
+      600,
+      600
+     ]
+    ]
+   },
+   "finding_ids": [
+    "W6-F5"
+   ],
+   "footprint": "Capacitor_SMD:C_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "C15849",
+   "pins": {
+    "1": "+3V4_HUB",
+    "2": "GND"
+   },
+   "read": "hand",
+   "ref": "C65",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "1u"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "A03",
+      "CMP-001",
+      "F-IN-01",
+      "F-SQ-06",
+      "S-09"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "S-09 / A03 / W2 F-IN-01, 26 September 2026: D1 WAS REVERSED AND DRAWN WITHOUT A POLARITY. It had GND on pad 1, | which on KiCad's Diode_SMD:D_SMB is the cathode (the fab apex and the silk bracket both mark pad 1, read with | pcbnew by A03), so the one-way clamp was forward-biased across +5V_D8 from ",
+      "ids": {
+       "adjudication": [
+        "A03"
+       ],
+       "finding": [
+        "F-IN-01",
+        "F-SQ-06",
+        "S-09"
+       ],
+       "rule": [
+        "CMP-001"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       216,
+       248
+      ]
+     },
+     {
+      "excerpt": "S-09 / A03 / W2 F-IN-01, 26 September 2026: D1 WAS REVERSED AND DRAWN WITHOUT A POLARITY. It had GND on pad 1, | which on KiCad's Diode_SMD:D_SMB is the cathode (the fab apex and the silk bracket both mark pad 1, read with | pcbnew by A03), so the one-way clamp was forward-biased across +5V_D8 from ",
+      "ids": {
+       "adjudication": [
+        "A03"
+       ],
+       "finding": [
+        "F-IN-01",
+        "F-SQ-06",
+        "S-09"
+       ],
+       "rule": [
+        "CMP-001"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       216,
+       250
+      ]
+     },
+     {
+      "excerpt": "S-09 / A03 / W2 F-IN-01, 26 September 2026: D1 WAS REVERSED AND DRAWN WITHOUT A POLARITY. It had GND on pad 1, | which on KiCad's Diode_SMD:D_SMB is the cathode (the fab apex and the silk bracket both mark pad 1, read with | pcbnew by A03), so the one-way clamp was forward-biased across +5V_D8 from ",
+      "ids": {
+       "adjudication": [
+        "A03"
+       ],
+       "finding": [
+        "F-IN-01",
+        "F-SQ-06",
+        "S-09"
+       ],
+       "rule": [
+        "CMP-001"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       216,
+       248
+      ]
+     },
+     {
+      "excerpt": "S-09 / A03 / W2 F-IN-01, 26 September 2026: D1 WAS REVERSED AND DRAWN WITHOUT A POLARITY. It had GND on pad 1, | which on KiCad's Diode_SMD:D_SMB is the cathode (the fab apex and the silk bracket both mark pad 1, read with | pcbnew by A03), so the one-way clamp was forward-biased across +5V_D8 from ",
+      "ids": {
+       "adjudication": [
+        "A03"
+       ],
+       "finding": [
+        "F-IN-01",
+        "F-SQ-06",
+        "S-09"
+       ],
+       "rule": [
+        "CMP-001"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       216,
+       250
+      ]
+     },
+     {
+      "excerpt": "S-09 / A03 / W2 F-IN-01, 26 September 2026: D1 WAS REVERSED AND DRAWN WITHOUT A POLARITY. It had GND on pad 1, | WHAT D1 DOES NOT DO (review fix-up of round 4, 26 September 2026): it is a transient clamp, not an overvoltage",
+      "ids": {
+       "adjudication": [
+        "A03"
+       ],
+       "finding": [
+        "F-IN-01",
+        "S-09"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       216,
+       231
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       216,
+       216
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "round-4 board D record, R4D-1: the part choice (SMBJ6.0A, board B's precedent) was taken by the session under the owner's standing rule of 26 September 2026",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        216,
+        216
+       ],
+       "tie": [
+        "names_ref"
+       ]
+      }
+     ],
+     "why": "the +5V_D8 rail clamp was reversed (GND on its cathode pad); now cathode on the rail, as SMBJ6.0A because the rail's 5.23 V working maximum is above a 5.0 V stand-off"
+    },
+    "spans": [
+     [
+      254,
+      254
+     ],
+     [
+      256,
+      256
+     ]
+    ]
+   },
+   "fields": {
+    "lcsc": [
+     "",
+     "C83270"
+    ],
+    "value": [
+     "SMBJ5.0A",
+     "SMBJ6.0A (6.0 V standoff on the 5.09 V mezzanine rail)"
+    ]
+   },
+   "finding_ids": [
+    "A03",
+    "F-IN-01",
+    "S-09"
+   ],
+   "footprint": "Diode_SMD:D_SMB",
+   "kind": "CHANGED",
+   "lcsc": "C83270",
+   "pins_moved": {
+    "1": [
+     "GND",
+     "+5V_D8"
+    ],
+    "2": [
+     "+5V_D8",
+     "GND"
+    ]
+   },
+   "read": "hand",
+   "ref": "D1",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "SMBJ6.0A (6.0 V standoff on the 5.09 V mezzanine rail)"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "CMP-001",
+      "W6-F14",
+      "W7-F3",
+      "decision 34"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "W7-F3 / W6-F14, 26 September 2026: ONE CLAMP PER CONDUCTOR, CHOSEN AGAINST THAT CONDUCTOR'S OWN WORKING VOLTAGE. | Decision 31's record names two PESD5V0S2BT per jack; the six singles are the measured substitution argued above | (and in the appendix), and the ruled dual carries the same 5 V stand-of",
+      "ids": {
+       "decision": [
+        "decision 34"
+       ],
+       "finding": [
+        "W6-F14",
+        "W7-F3"
+       ],
+       "rule": [
+        "CMP-001"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       396,
+       433
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       416,
+       425
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        416,
+        425
+       ],
+       "tie": [
+        "names_net:HS1_MIC"
+       ]
+      }
+     ],
+     "why": "the headset 1 microphone clamp moves from PESD5V0S1BA (5 V stand-off) to PESD12VL1BA, above the electret bias of up to 5.23 V"
+    },
+    "spans": [
+     [
+      435,
+      435
+     ]
+    ]
+   },
+   "fields": {
+    "lcsc": [
+     "C19224",
+     "C38558"
+    ],
+    "value": [
+     "PESD5V0S1BA bidirectional ESD clamp at the jack: headset 1 microphone",
+     "PESD12VL1BA bidirectional ESD clamp at the jack: headset 1 microphone, above the electret bias"
+    ]
+   },
+   "finding_ids": [
+    "W6-F14",
+    "W7-F3"
+   ],
+   "footprint": "Diode_SMD:D_SOD-323",
+   "kind": "CHANGED",
+   "lcsc": "C38558",
+   "pins_moved": {},
+   "read": "hand",
+   "ref": "D10",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "PESD12VL1BA bidirectional ESD clamp at the jack: headset 1 microphone, above the electret bias"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [],
+     "finding_ids": [],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "NO_ID_OF_ANY_KIND"
+    },
+    "candidates": [],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       416,
+       425
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        416,
+        425
+       ],
+       "tie": [
+        "names_net:HS2_MIC"
+       ]
+      }
+     ],
+     "why": "the headset 2 microphone clamp moves from PESD5V0S1BA to PESD12VL1BA, for the same reason as D10"
+    },
+    "spans": [
+     [
+      438,
+      438
+     ]
+    ]
+   },
+   "fields": {
+    "lcsc": [
+     "C19224",
+     "C38558"
+    ],
+    "value": [
+     "PESD5V0S1BA bidirectional ESD clamp at the jack: headset 2 microphone",
+     "PESD12VL1BA bidirectional ESD clamp at the jack: headset 2 microphone, above the electret bias"
+    ]
+   },
+   "finding_ids": [
+    "W6-F14",
+    "W7-F3"
+   ],
+   "footprint": "Diode_SMD:D_SOD-323",
+   "kind": "CHANGED",
+   "lcsc": "C38558",
+   "pins_moved": {},
+   "read": "hand",
+   "ref": "D13",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "PESD12VL1BA bidirectional ESD clamp at the jack: headset 2 microphone, above the electret bias"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [
+      "W6-F5"
+     ],
+     "finding_ids": [
+      "W6-F5"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "the upstream attach pull-up follows the hub's own supply (W6-F5) R6 22 USB_D8_P HUB_DP0 R7 22 USB_D8_N HUB_DM0 R8 1.5k HUB_DP0 +3V4_HUB",
+      "ids": {
+       "finding": [
+        "W6-F5"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       283,
+       283
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "the upstream attach pull-up follows the hub's own supply (W6-F5) R6 22 USB_D8_P HUB_DP0 R7 22 USB_D8_N HUB_DM0 R8 1.5k HUB_DP0 +3V4_HUB",
+     "introduced": {
+      "finding": [
+       "W6-F5"
+      ]
+     },
+     "lines": [
+      283
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       283,
+       283
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        283,
+        283
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the upstream attach pull-up follows the hub's own supply"
+    },
+    "spans": [
+     [
+      283,
+      283
+     ]
+    ]
+   },
+   "fields": {},
+   "finding_ids": [
+    "W6-F5"
+   ],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "CHANGED",
+   "lcsc": "",
+   "pins_moved": {
+    "2": [
+     "+3V3_D8",
+     "+3V4_HUB"
+    ]
+   },
+   "read": "hand",
+   "ref": "R8",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "1.5k"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "W6-F5"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "the upstream attach pull-up follows the hub's own supply (W6-F5) R6 22 USB_D8_P HUB_DP0 R7 22 USB_D8_N HUB_DM0 R8 1.5k HUB_DP0 +3V4_HUB | every hub input is tied to the hub's own VCC (SLLS413L 7.3: VI 0 to VCC) R9 10k HUB_OVRCUR_n +3V4_HUB R10 10k HUB_RST_n +3V4_HUB C12 1u HUB_RST_n GND",
+      "ids": {
+       "finding": [
+        "W6-F5"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       283,
+       287
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "every hub input is tied to the hub's own VCC (SLLS413L 7.3: VI 0 to VCC) R9 10k HUB_OVRCUR_n +3V4_HUB R10 10k HUB_RST_n +3V4_HUB C12 1u HUB_RST_n GND",
+     "introduced": {},
+     "lines": [
+      287
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       271,
+       271
+      ],
+      [
+       287,
+       287
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "R9 is a hub input pull-up; the inline comment at 287 says every hub input is tied to the hub's own VCC, and the block opened at 271 (W6-F5) moves the hub off +3V3_D8",
+     "ties": [
+      {
+       "lines": [
+        271,
+        271
+       ],
+       "tie": []
+      },
+      {
+       "lines": [
+        287,
+        287
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the hub's over-current input pull-up moves with the hub to +3V4_HUB (SLLS413L 7.3: VI 0 to VCC)"
+    },
+    "spans": [
+     [
+      287,
+      287
+     ]
+    ]
+   },
+   "fields": {},
+   "finding_ids": [
+    "W6-F5"
+   ],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "CHANGED",
+   "lcsc": "",
+   "pins_moved": {
+    "2": [
+     "+3V3_D8",
+     "+3V4_HUB"
+    ]
+   },
+   "read": "hand",
+   "ref": "R9",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "10k"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "W6-F5"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "the upstream attach pull-up follows the hub's own supply (W6-F5) R6 22 USB_D8_P HUB_DP0 R7 22 USB_D8_N HUB_DM0 R8 1.5k HUB_DP0 +3V4_HUB | every hub input is tied to the hub's own VCC (SLLS413L 7.3: VI 0 to VCC) R9 10k HUB_OVRCUR_n +3V4_HUB R10 10k HUB_RST_n +3V4_HUB C12 1u HUB_RST_n GND",
+      "ids": {
+       "finding": [
+        "W6-F5"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       283,
+       287
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "every hub input is tied to the hub's own VCC (SLLS413L 7.3: VI 0 to VCC) R9 10k HUB_OVRCUR_n +3V4_HUB R10 10k HUB_RST_n +3V4_HUB C12 1u HUB_RST_n GND",
+     "introduced": {},
+     "lines": [
+      287
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       271,
+       271
+      ],
+      [
+       287,
+       287
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "R10 is the hub's reset pull-up on the same statement line 287; the block opened at 271 (W6-F5) moves the hub off +3V3_D8",
+     "ties": [
+      {
+       "lines": [
+        271,
+        271
+       ],
+       "tie": []
+      },
+      {
+       "lines": [
+        287,
+        287
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the hub's reset pull-up moves with the hub to +3V4_HUB"
+    },
+    "spans": [
+     [
+      287,
+      287
+     ]
+    ]
+   },
+   "fields": {},
+   "finding_ids": [
+    "W6-F5"
+   ],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "CHANGED",
+   "lcsc": "",
+   "pins_moved": {
+    "2": [
+     "+3V3_D8",
+     "+3V4_HUB"
+    ]
+   },
+   "read": "hand",
+   "ref": "R10",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "10k"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [
+      "A01"
+     ],
+     "finding_ids": [
+      "A01"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "mute only when the expander drives it high (the codec pulls it down itself). | A01 remaining unknown 4, examined 26 September 2026: U16 powers up with every port an INPUT behind its internal | pull-up (TI SCPS131J 8.1; about 100k in the figure, at least 33k from IIL -100 uA at 0 V), and the codec's ",
+      "ids": {
+       "adjudication": [
+        "A01"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       350,
+       374
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "mute only when the expander drives it high (the codec pulls it down itself). | A01 remaining unknown 4, examined 26 September 2026: U16 powers up with every port an INPUT behind its internal | pull-up (TI SCPS131J 8.1; about 100k in the figure, at least 33k from IIL -100 uA at 0 V), and the codec's MMUTE | is a TTL-level input with an internal pull-down (TI PCM2912A SLES230A: VIH 2.0, VIL 0.8, IIH 65 typ / 100 max uA at | 3.3 V, input logic family TTL). With 4.7k in series and 100k to ground, MMUTE sat at 0.8 V with typical parts and | 1.56 V with a strong pull-up, between VIL and VIH, until the panel firmware first wrote U16. | RESTATED ON GUARANTEED FIGURES ONLY (review fix-up of round 4, ",
+     "introduced": {
+      "adjudication": [
+       "A01"
+      ]
+     },
+     "lines": [
+      350,
+      351,
+      352,
+      353,
+      354,
+      355,
+      356,
+      357,
+      358,
+      359,
+      360,
+      361,
+      362,
+      363,
+      364,
+      365,
+      366,
+      367
+     ],
+     "other_paragraph_lines": [
+      368,
+      369,
+      370,
+      371,
+      372,
+      373,
+      374
+     ]
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       351,
+       351
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        351,
+        351
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the MMUTE divider becomes 470R / 4.7k so the codec's mute is a defined low at power-up, while the expander's ports are inputs"
+    },
+    "spans": [
+     [
+      375,
+      375
+     ]
+    ]
+   },
+   "fields": {
+    "lcsc": [
+     "",
+     "C23179"
+    ],
+    "value": [
+     "4.7k",
+     "470R"
+    ]
+   },
+   "finding_ids": [
+    "A01"
+   ],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "CHANGED",
+   "lcsc": "C23179",
+   "pins_moved": {},
+   "read": "hand",
+   "ref": "R33",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "470R"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [
+      "A01"
+     ],
+     "finding_ids": [
+      "A01"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "mute only when the expander drives it high (the codec pulls it down itself). | A01 remaining unknown 4, examined 26 September 2026: U16 powers up with every port an INPUT behind its internal | pull-up (TI SCPS131J 8.1; about 100k in the figure, at least 33k from IIL -100 uA at 0 V), and the codec's ",
+      "ids": {
+       "adjudication": [
+        "A01"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       350,
+       374
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "mute only when the expander drives it high (the codec pulls it down itself). | A01 remaining unknown 4, examined 26 September 2026: U16 powers up with every port an INPUT behind its internal | pull-up (TI SCPS131J 8.1; about 100k in the figure, at least 33k from IIL -100 uA at 0 V), and the codec's MMUTE | is a TTL-level input with an internal pull-down (TI PCM2912A SLES230A: VIH 2.0, VIL 0.8, IIH 65 typ / 100 max uA at | 3.3 V, input logic family TTL). With 4.7k in series and 100k to ground, MMUTE sat at 0.8 V with typical parts and | 1.56 V with a strong pull-up, between VIL and VIH, until the panel firmware first wrote U16. | RESTATED ON GUARANTEED FIGURES ONLY (review fix-up of round 4, ",
+     "introduced": {
+      "adjudication": [
+       "A01"
+      ]
+     },
+     "lines": [
+      350,
+      351,
+      352,
+      353,
+      354,
+      355,
+      356,
+      357,
+      358,
+      359,
+      360,
+      361,
+      362,
+      363,
+      364,
+      365,
+      366,
+      367
+     ],
+     "other_paragraph_lines": [
+      368,
+      369,
+      370,
+      371,
+      372,
+      373,
+      374
+     ]
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       351,
+       351
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        351,
+        351
+       ],
+       "tie": [
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the lower resistor of the MMUTE divider becomes 4.7k, with R33"
+    },
+    "spans": [
+     [
+      375,
+      375
+     ]
+    ]
+   },
+   "fields": {
+    "value": [
+     "100k",
+     "4.7k"
+    ]
+   },
+   "finding_ids": [
+    "A01"
+   ],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "CHANGED",
+   "lcsc": "",
+   "pins_moved": {},
+   "read": "hand",
+   "ref": "R34",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "4.7k"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "W6-F5"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "U17, the hub's LDO (W6-F5, 26 September 2026; the arithmetic is at the +3V4_HUB declaration above). TLV75801PDBVR, | LCSC C2877852 (JLC API 2026-09-25T23:09Z: TI, SOT-23-5, -40 to 125 C TJ, stock 165,250). EN tied to IN as U1's is. | C64 is its input capacitor and C65 its own output capacitor, both ",
+      "ids": {
+       "finding": [
+        "W6-F5"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       288,
+       301
+      ]
+     },
+     {
+      "excerpt": "the upstream attach pull-up follows the hub's own supply (W6-F5) R6 22 USB_D8_P HUB_DP0 R7 22 USB_D8_N HUB_DM0 R8 1.5k HUB_DP0 +3V4_HUB | every hub input is tied to the hub's own VCC (SLLS413L 7.3: VI 0 to VCC) R9 10k HUB_OVRCUR_n +3V4_HUB R10 10k HUB_RST_n +3V4_HUB C12 1u HUB_RST_n GND | U17, the h",
+      "ids": {
+       "finding": [
+        "W6-F5"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       283,
+       301
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       288,
+       292
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        288,
+        292
+       ],
+       "tie": [
+        "names_ref"
+       ]
+      }
+     ],
+     "why": "U17's upper feedback resistor, 0.1 percent 25 ppm/C thin film, for +3V4_HUB at 3.44 V"
+    },
+    "spans": [
+     [
+      304,
+      304
+     ]
+    ]
+   },
+   "finding_ids": [
+    "W6-F5"
+   ],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "C705784",
+   "pins": {
+    "1": "+3V4_HUB",
+    "2": "HUB_FB"
+   },
+   "read": "hand",
+   "ref": "R80",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "56.2k 0.1% 25ppm"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "W6-F5"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "U17, the hub's LDO (W6-F5, 26 September 2026; the arithmetic is at the +3V4_HUB declaration above). TLV75801PDBVR, | LCSC C2877852 (JLC API 2026-09-25T23:09Z: TI, SOT-23-5, -40 to 125 C TJ, stock 165,250). EN tied to IN as U1's is. | C64 is its input capacitor and C65 its own output capacitor, both ",
+      "ids": {
+       "finding": [
+        "W6-F5"
+       ]
+      },
+      "kind": "nearby",
+      "lines": [
+       288,
+       301
+      ]
+     },
+     {
+      "excerpt": "the upstream attach pull-up follows the hub's own supply (W6-F5) R6 22 USB_D8_P HUB_DP0 R7 22 USB_D8_N HUB_DM0 R8 1.5k HUB_DP0 +3V4_HUB | every hub input is tied to the hub's own VCC (SLLS413L 7.3: VI 0 to VCC) R9 10k HUB_OVRCUR_n +3V4_HUB R10 10k HUB_RST_n +3V4_HUB C12 1u HUB_RST_n GND | U17, the h",
+      "ids": {
+       "finding": [
+        "W6-F5"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       283,
+       301
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       288,
+       292
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        288,
+        292
+       ],
+       "tie": [
+        "names_ref"
+       ]
+      }
+     ],
+     "why": "U17's lower feedback resistor, 0.1 percent 25 ppm/C thin film"
+    },
+    "spans": [
+     [
+      304,
+      304
+     ]
+    ]
+   },
+   "finding_ids": [
+    "W6-F5"
+   ],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "C861078",
+   "pins": {
+    "1": "HUB_FB",
+    "2": "GND"
+   },
+   "read": "hand",
+   "ref": "R81",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "10.7k 0.1% 25ppm"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "F-PR-02",
+      "W3-F25"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "W2 F-PR-02, 26 September 2026: THE PA GATE BIAS IS REGULATED BELOW 5 V, NOT SWITCHED FROM THE 5 V RAIL. U15 was a | TPS22810 load switch putting +5V_D8 on VGG: 5.088 V nominal, 5.23 V at most. The RA30H1317M1 sheet (Mitsubishi, | October 2011) rates VDD 17 V and Pout 45 W only with \"VGG<5V\", rates V",
+      "ids": {
+       "finding": [
+        "F-PR-02",
+        "W3-F25"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       483,
+       534
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "UNI-ROYAL 0603WAF7152T5E and 0603WAF1002T5E, JLC API 2026-09-25T23:19Z R82 71.5k 1% VGG_SW VGG_FB C23103 R83 10.0k 1% VGG_FB GND C25804",
+     "introduced": {},
+     "lines": [
+      534
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       483,
+       493
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        483,
+        493
+       ],
+       "tie": [
+        "names_ref",
+        "names_net:VGG_SW"
+       ]
+      }
+     ],
+     "why": "the VGG LDO's upper feedback resistor, VGG 4.48 V nominal"
+    },
+    "spans": [
+     [
+      534,
+      534
+     ]
+    ]
+   },
+   "finding_ids": [
+    "F-PR-02"
+   ],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "C23103",
+   "pins": {
+    "1": "VGG_SW",
+    "2": "VGG_FB"
+   },
+   "read": "hand",
+   "ref": "R82",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "71.5k 1%"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "F-PR-02",
+      "W3-F25"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "W2 F-PR-02, 26 September 2026: THE PA GATE BIAS IS REGULATED BELOW 5 V, NOT SWITCHED FROM THE 5 V RAIL. U15 was a | TPS22810 load switch putting +5V_D8 on VGG: 5.088 V nominal, 5.23 V at most. The RA30H1317M1 sheet (Mitsubishi, | October 2011) rates VDD 17 V and Pout 45 W only with \"VGG<5V\", rates V",
+      "ids": {
+       "finding": [
+        "F-PR-02",
+        "W3-F25"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       483,
+       534
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "UNI-ROYAL 0603WAF7152T5E and 0603WAF1002T5E, JLC API 2026-09-25T23:19Z R82 71.5k 1% VGG_SW VGG_FB C23103 R83 10.0k 1% VGG_FB GND C25804",
+     "introduced": {},
+     "lines": [
+      534
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       483,
+       493
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        483,
+        493
+       ],
+       "tie": [
+        "names_ref"
+       ]
+      }
+     ],
+     "why": "the VGG LDO's lower feedback resistor"
+    },
+    "spans": [
+     [
+      534,
+      534
+     ]
+    ]
+   },
+   "finding_ids": [
+    "F-PR-02"
+   ],
+   "footprint": "Resistor_SMD:R_0603_1608Metric",
+   "kind": "ADDED",
+   "lcsc": "C25804",
+   "pins": {
+    "1": "VGG_FB",
+    "2": "GND"
+   },
+   "read": "hand",
+   "ref": "R83",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "10.0k 1%"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "loop",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [],
+     "finding_ids": [],
+     "read": "loop",
+     "rule_ids": [],
+     "status": "NO_ID_OF_ANY_KIND"
+    },
+    "candidates": [],
+    "direct": {
+     "context": {},
+     "excerpt": "TP25 on +3V4_HUB (review fix-up of round 4, 26 September 2026): the hub's own supply is to be measured at the | bench, a measurement OWED to TEST-PLAN.md and not in it yet, so the rail gets a pad of its own. Appended, so TP1 | to TP24 keep their numbers and their seats in gen_pcb_d3.py.",
+     "introduced": {},
+     "lines": [
+      550,
+      551,
+      552
+     ],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       550,
+       552
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "round-4 board D record, R4D-2 (W6-F5): 'TP25 is its test point'; the generator's comment at 550 to 552 carries no ID",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        550,
+        552
+       ],
+       "tie": [
+        "names_ref",
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "a test pad on the hub's own supply +3V4_HUB, for the bench measurement owed to TEST-PLAN.md; appended so TP1 to TP24 keep their numbers"
+    },
+    "spans": [
+     [
+      553,
+      554
+     ]
+    ]
+   },
+   "finding_ids": [],
+   "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+   "kind": "ADDED",
+   "lcsc": "",
+   "pins": {
+    "1": "+3V4_HUB"
+   },
+   "read": "hand",
+   "ref": "TP25",
+   "rule_ids": [],
+   "status": "NO_ID_OF_ANY_KIND",
+   "value": "+3V4_HUB"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "W6-F5"
+     ],
+     "finding_ids": [],
+     "read": "automatic",
+     "rule_ids": [],
+     "status": "UNVERIFIED_ATTRIBUTION"
+    },
+    "candidates": [
+     {
+      "excerpt": "the upstream attach pull-up follows the hub's own supply (W6-F5) R6 22 USB_D8_P HUB_DP0 R7 22 USB_D8_N HUB_DM0 R8 1.5k HUB_DP0 +3V4_HUB",
+      "ids": {
+       "finding": [
+        "W6-F5"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       283,
+       283
+      ]
+     },
+     {
+      "excerpt": "W6-F5, 26 September 2026: the hub U4 LEFT this rail for its own +3V4_HUB (below), so its 0.080 A left the",
+      "ids": {
+       "finding": [
+        "W6-F5"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       58
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "",
+     "introduced": {},
+     "lines": [],
+     "other_paragraph_lines": []
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       58,
+       58
+      ],
+      [
+       271,
+       281
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "the block at 271 to 281 is the comment above the hub section's first statements (U5 at 282, R8 at 283, then U4 at 284): it names the hub by its part name, TUSB2046BI and TUSB2046IBVFR, the value U4 carries",
+     "ties": [
+      {
+       "lines": [
+        58,
+        58
+       ],
+       "tie": [
+        "names_ref"
+       ]
+      },
+      {
+       "lines": [
+        271,
+        281
+       ],
+       "tie": []
+      }
+     ],
+     "why": "the hub is the industrial TUSB2046IBVFR (the name TUSB2046BI in LQFP-32 does not exist and the code bought was commercial) on its own 3.44 V rail, because the I grade needs 3.3 V minimum"
+    },
+    "spans": [
+     [
+      284,
+      286
+     ]
+    ]
+   },
+   "fields": {
+    "lcsc": [
+     "",
+     "C702369"
+    ],
+    "value": [
+     "TUSB2046BI four-port USB 2.0 full-speed hub (LQFP-32; BUSPWR low = self-powered, EXTMEM high, GANGED high, TSTMODE low)",
+     "TUSB2046IBVFR four-port USB 2.0 full-speed hub (TI, LQFP-32 VF, -40 to 85 C, VCC 3.3 to 3.6 from +3V4_HUB; BUSPWR low = self-powered, EXTMEM high, GANGED high, TSTMODE low)"
+    ]
+   },
+   "finding_ids": [
+    "W6-F5"
+   ],
+   "footprint": "Package_QFP:LQFP-32_7x7mm_P0.8mm",
+   "kind": "CHANGED",
+   "lcsc": "C702369",
+   "pins_moved": {
+    "25": [
+     "+3V3_D8",
+     "+3V4_HUB"
+    ],
+    "26": [
+     "+3V3_D8",
+     "+3V4_HUB"
+    ],
+    "3": [
+     "+3V3_D8",
+     "+3V4_HUB"
+    ],
+    "6": [
+     "+3V3_D8",
+     "+3V4_HUB"
+    ]
+   },
+   "read": "hand",
+   "ref": "U4",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "TUSB2046IBVFR four-port USB 2.0 full-speed hub (TI, LQFP-32 VF, -40 to 85 C, VCC 3.3 to 3.6 from +3V4_HUB; BUSPWR low = self-powered, EXTMEM high, GANGED high, TSTMODE low)"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": false,
+     "authority_ids": [],
+     "candidate_ids": [
+      "F-PR-02",
+      "W3-F25"
+     ],
+     "finding_ids": [
+      "F-PR-02",
+      "W3-F25"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "W2 F-PR-02, 26 September 2026: THE PA GATE BIAS IS REGULATED BELOW 5 V, NOT SWITCHED FROM THE 5 V RAIL. U15 was a | TPS22810 load switch putting +5V_D8 on VGG: 5.088 V nominal, 5.23 V at most. The RA30H1317M1 sheet (Mitsubishi, | October 2011) rates VDD 17 V and Pout 45 W only with \"VGG<5V\", rates V",
+      "ids": {
+       "finding": [
+        "F-PR-02",
+        "W3-F25"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       483,
+       530
+      ]
+     },
+     {
+      "excerpt": "7.00 V, 9.2 V), sit above this rail's consumers' absolute maxima: U1 TLV75533 VIN 6.0 V (SBVS320D 5.1), U15 and | W2 F-PR-02, 26 September 2026: THE PA GATE BIAS IS REGULATED BELOW 5 V, NOT SWITCHED FROM THE 5 V RAIL. U15 was a | characterises. U15 is now a TLV75801P adjustable LDO (TI SBVS351D) in ",
+      "ids": {
+       "finding": [
+        "F-PR-02"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       233,
+       483,
+       488,
+       509,
+       512
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "W2 F-PR-02, 26 September 2026: THE PA GATE BIAS IS REGULATED BELOW 5 V, NOT SWITCHED FROM THE 5 V RAIL. U15 was a | TPS22810 load switch putting +5V_D8 on VGG: 5.088 V nominal, 5.23 V at most. The RA30H1317M1 sheet (Mitsubishi, | October 2011) rates VDD 17 V and Pout 45 W only with \"VGG<5V\", rates VGG 6 V only with \"VDD<12.5V\", and says the | nominal output \"becomes available at 4V (typical) and 5V (maximum)\"; this PA runs on A's 13.8 V rail, so at the old | VGG both maxima sat outside their own stated conditions and the drain current was set by nothing the sheet | characterises. U15 is now a TLV75801P adjustable LDO (TI SBVS351D) in the WSON-6 DRV package, TI drawing | DRV0006A (4222173/C),",
+     "introduced": {
+      "finding": [
+       "F-PR-02",
+       "W3-F25"
+      ]
+     },
+     "lines": [
+      483,
+      484,
+      485,
+      486,
+      487,
+      488,
+      489,
+      490,
+      491,
+      492,
+      493,
+      494,
+      507,
+      508,
+      509,
+      510,
+      511,
+      512,
+      513,
+      514,
+      515,
+      516,
+      517,
+      518,
+      519,
+      520,
+      521,
+      522
+     ],
+     "other_paragraph_lines": [
+      495,
+      496,
+      497,
+      498,
+      499,
+      500,
+      501,
+      502,
+      503,
+      504,
+      505,
+      506,
+      523,
+      524,
+      525,
+      526,
+      527,
+      528,
+      529,
+      530
+     ]
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       483,
+       483
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        483,
+        483
+       ],
+       "tie": [
+        "names_ref",
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "the PA gate bias comes from a TLV75801P LDO at 4.48 V enabled by PA_KEY, not the 5 V rail through a TPS22810 load switch, inside the RA30H1317M1's VGG under 5 V condition"
+    },
+    "spans": [
+     [
+      531,
+      532
+     ]
+    ]
+   },
+   "fields": {
+    "lcsc": [
+     "",
+     "C2876308"
+    ],
+    "value": [
+     "TPS22810DRV",
+     "TLV75801PDRVR adjustable LDO, PA gate bias VGG 4.48 V while PA_KEY is high (1 OUT 2 FB 3 GND 4 EN 5 DNC 6 IN 7 pad)"
+    ]
+   },
+   "finding_ids": [
+    "F-PR-02"
+   ],
+   "footprint": "Package_SON:WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm",
+   "kind": "CHANGED",
+   "lcsc": "C2876308",
+   "pins_moved": {
+    "2": [
+     "unconnected-(U15-QOD-Pad2)",
+     "VGG_FB"
+    ],
+    "3": [
+     "VGG_CT",
+     "GND"
+    ],
+    "4": [
+     "GND",
+     "PA_KEY"
+    ],
+    "5": [
+     "PA_KEY",
+     "unconnected-(U15-NC-Pad5)"
+    ]
+   },
+   "read": "hand",
+   "ref": "U15",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "TLV75801PDRVR adjustable LDO, PA gate bias VGG 4.48 V while PA_KEY is high (1 OUT 2 FB 3 GND 4 EN 5 DNC 6 IN 7 pad)"
+  },
+  {
+   "authority_ids": [],
+   "evidence": {
+    "anchor": "literal",
+    "automatic": {
+     "agrees": true,
+     "authority_ids": [],
+     "candidate_ids": [
+      "W6-F5"
+     ],
+     "finding_ids": [
+      "W6-F5"
+     ],
+     "read": "direct",
+     "rule_ids": [],
+     "status": "TRACED"
+    },
+    "candidates": [
+     {
+      "excerpt": "the upstream attach pull-up follows the hub's own supply (W6-F5) R6 22 USB_D8_P HUB_DP0 R7 22 USB_D8_N HUB_DM0 R8 1.5k HUB_DP0 +3V4_HUB | every hub input is tied to the hub's own VCC (SLLS413L 7.3: VI 0 to VCC) R9 10k HUB_OVRCUR_n +3V4_HUB R10 10k HUB_RST_n +3V4_HUB C12 1u HUB_RST_n GND | U17, the h",
+      "ids": {
+       "finding": [
+        "W6-F5"
+       ]
+      },
+      "kind": "hunk",
+      "lines": [
+       283,
+       301
+      ]
+     },
+     {
+      "excerpt": "LOADS RE-SPLIT the same day for the hub's own LDO U17 (W6-F5): the hub's 40 mA left U1's rail and U17 carries | it, so U1's share falls from 0.25 A to 0.17 A (+3V3_D8's new peak) and U17 takes 0.04 A (SLLS413L, ICC). | U17 is a TLV75801P adjustable LDO (TI SBVS351D: VFB 0.55 V, SOT-23-5 pin 1 IN, 2 ",
+      "ids": {
+       "finding": [
+        "W6-F5"
+       ]
+      },
+      "kind": "mention",
+      "lines": [
+       45,
+       46,
+       77,
+       99,
+       234,
+       279,
+       288,
+       555
+      ]
+     }
+    ],
+    "direct": {
+     "context": {},
+     "excerpt": "U17, the hub's LDO (W6-F5, 26 September 2026; the arithmetic is at the +3V4_HUB declaration above). TLV75801PDBVR, | YAGEO RT0603BRD0756K2L, LCSC C705784, and RT0603BRD0710K7L, LCSC C861078: RT series thin film, 0603, B = +-0.1 | percent, D = +-25 ppm/C, 1/10 W, 75 V, -55 to +155 C, offered in 0603 at 0.1 percent and 25 ppm from 1 Ohm to 1 MOhm | (YAGEO RT series product specification V.16, 6 May 2025, ordering code and Table 2). The land is the same | R_0603_1608Metric (RT0603 1.60 x 0.80 mm). JLC API 2026-09-25T23:51Z: both extended, stock 10,837 and 1,011. | The capacitors are the 0603 \"1u\" of lcsc_fill's table, CL10A105KB8NNNC C15849 (50 V X5R).",
+     "introduced": {
+      "finding": [
+       "W6-F5"
+      ]
+     },
+     "lines": [
+      288,
+      297,
+      298,
+      299,
+      300,
+      301
+     ],
+     "other_paragraph_lines": [
+      289,
+      290,
+      291,
+      292,
+      293,
+      294,
+      295,
+      296
+     ]
+    },
+    "generator_side": "rev",
+    "hand": {
+     "cite": [
+      [
+       288,
+       288
+      ]
+     ],
+     "ids_on_unchanged_lines": [],
+     "record": "",
+     "tie_stated": "",
+     "ties": [
+      {
+       "lines": [
+        288,
+        288
+       ],
+       "tie": [
+        "names_ref",
+        "at_anchor"
+       ]
+      }
+     ],
+     "why": "a TLV75801P LDO makes the hub's own rail +3V4_HUB (3.44 V)"
+    },
+    "spans": [
+     [
+      302,
+      302
+     ]
+    ]
+   },
+   "finding_ids": [
+    "W6-F5"
+   ],
+   "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+   "kind": "ADDED",
+   "lcsc": "C2877852",
+   "pins": {
+    "1": "+5V_D8",
+    "2": "GND",
+    "3": "+5V_D8",
+    "4": "HUB_FB",
+    "5": "+3V4_HUB"
+   },
+   "read": "hand",
+   "ref": "U17",
+   "rule_ids": [],
+   "status": "TRACED",
+   "value": "TLV75801PDBVR adjustable LDO, +3V4_HUB 3.44 V for the hub (1 IN 2 GND 3 EN 4 FB 5 OUT)"
+  }
+ ],
+ "generator_lines_added": 271,
+ "prev": "82dd1e4dc44efabeee1164a995cda4e866610f3d",
+ "rev": "1f614233998c3087a53abfa977be134465ce9f47",
+ "summary": {
+  "added": 8,
+  "changed": 15,
+  "components": [
+   213,
+   221
+  ],
+  "content_hash": [
+   "c5c3d34bd6858ed4",
+   "d550a3e3e5687237"
+  ],
+  "nets": [
+   172,
+   174
+  ],
+  "nets_only_prev": [
+   "/VGG_CT",
+   "unconnected-(U15-QOD-Pad2)"
+  ],
+  "nets_only_rev": [
+   "/+3V4_HUB",
+   "/HUB_FB",
+   "/VGG_FB",
+   "unconnected-(U15-NC-Pad5)"
+  ],
+  "nets_renamed": [],
+  "removed": 0
+ }
+}

@@ -1,0 +1,1974 @@
+[
+ {
+  "footprint": "Capacitor_SMD:C_1210_3225Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 3,
+  "refs": [
+   "C1",
+   "C2",
+   "C5"
+  ],
+  "sources_entries": [],
+  "value": "47u 6.3V X5R 1210"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0805_2012Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "C10"
+  ],
+  "sources_entries": [],
+  "value": "4.7u"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 16,
+  "refs": [
+   "C4",
+   "C6",
+   "C11",
+   "C15",
+   "C16",
+   "C39",
+   "C49",
+   "C50",
+   "C51",
+   "C52",
+   "C53",
+   "C54",
+   "C55",
+   "C56",
+   "C57",
+   "C63"
+  ],
+  "sources_entries": [],
+  "value": "100n"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 24,
+  "refs": [
+   "C7",
+   "C8",
+   "C12",
+   "C18",
+   "C19",
+   "C20",
+   "C21",
+   "C22",
+   "C23",
+   "C28",
+   "C29",
+   "C30",
+   "C31",
+   "C32",
+   "C34",
+   "C35",
+   "C36",
+   "C37",
+   "C38",
+   "C41",
+   "C42",
+   "C46",
+   "C47",
+   "C48"
+  ],
+  "sources_entries": [],
+  "value": "1u"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0402_1005Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 4,
+  "refs": [
+   "C13",
+   "C14",
+   "C26",
+   "C27"
+  ],
+  "sources_entries": [],
+  "value": "27p NP0"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0805_2012Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 7,
+  "refs": [
+   "C3",
+   "C9",
+   "C17",
+   "C24",
+   "C25",
+   "C33",
+   "C40"
+  ],
+  "sources_entries": [],
+  "value": "10u"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0402_1005Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "C43"
+  ],
+  "sources_entries": [],
+  "value": "100p NP0"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0402_1005Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 2,
+  "refs": [
+   "C44",
+   "C45"
+  ],
+  "sources_entries": [],
+  "value": "1n NP0"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_1206_3216Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 2,
+  "refs": [
+   "C58",
+   "C60"
+  ],
+  "sources_entries": [],
+  "value": "22p 500V NP0 1206"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_1206_3216Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "C59"
+  ],
+  "sources_entries": [],
+  "value": "39p 500V NP0 1206"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Samsung Electro-Mechanics",
+   "model": "CL10A105KB8NNNC",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C15849",
+  "order_code_on_line": true,
+  "qty": 3,
+  "refs": [
+   "C61",
+   "C64",
+   "C65"
+  ],
+  "sources_entries": [],
+  "value": "1u"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C23630",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "C62"
+  ],
+  "sources_entries": [],
+  "value": "2.2u 16V X5R"
+ },
+ {
+  "footprint": "Diode_SMD:D_SMB",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C83270",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "D1"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "Littelfuse SMBJ series",
+      "matches_fitted": "yes for C83270 and C151256: SMBJ6.0A row (uni) / SMBJ6.0CA (bi), VR 6.0 V, VBR 6.67 to 7.37 V; SMBJ18A row VR 18.0 V, VBR 20.00 to 22.10 V",
+      "path": "v2/vendor/power/littelfuse-smbj-series-tvs.pdf",
+      "revision": "Revised JC.07/04/25",
+      "sha256": "d7df155be4b1f612085401e8c946f065e284d65a0e7de22b9225a7b73946e51b",
+      "url": "https://datasheet.lcsc.com/datasheet/pdf/4ab84a227fae39f9eac85241b8264ead.pdf?productCode=C83270 (LCSC's copy of the maker's sheet; the same bytes for C151256; littelfuse.com answered this host HTTP 403)"
+     }
+    ],
+    "fitted_mpn": null,
+    "id": "tvs-surge-clamps",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C83270",
+    "on_main": null,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "SMBJ6.0A (6.0 V standoff on the 5.09 V mezzanine rail)"
+ },
+ {
+  "footprint": "Diode_SMD:D_SOD-323",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C38558",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "D10"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "Nexperia PESD12VL1BA product data sheet",
+      "matches_fitted": "yes: 'Bidirectional ESD protection of one line', SOD323, VRWM 12 V maximum at 25 C (p.1)",
+      "path": "v2/vendor/nexperia/nexperia-pesd12vl1ba.pdf",
+      "revision": "14 April 2023",
+      "sha256": "3cc06cb0d46c5565324c906f9d45c64c2b5f122e7e7532ee116c3188b0effc5a",
+      "url": "https://assets.nexperia.com/documents/data-sheet/PESD12VL1BA.pdf"
+     }
+    ],
+    "fitted_mpn": "PESD12VL1BA,115",
+    "id": "esd-mic-clamps",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C38558",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "PESD12VL1BA bidirectional ESD clamp at the jack: headset 1 microphone, above the electret bias"
+ },
+ {
+  "footprint": "Diode_SMD:D_SOD-323",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C19224",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "D11"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "Nexperia PESD5V0S1BA, Bidirectional ESD protection diode",
+      "matches_fitted": "yes: 'Bidirectional ESD protection of one line', SOD323; VRWM 5 V max; VBR 5.5 to 9.5 V at 1 mA; IRM 5 nA typ, 100 nA max at 5 V, 25 C; Cd 35 pF typ, 45 pF max; VCL 14 V max at IPPM 12 A; IEC 61000-4-2 contact 30 kV; Tamb -55 to 150 C",
+      "path": "v2/vendor/nexperia/nexperia-pesd5v0s1ba.pdf",
+      "revision": "PESD5V0S1BA v.6, 26 April 2024 (revision history, supersedes v.5 of 23 August 2018)",
+      "sha256": "6546e415b8885ea3790c91629034c6b4e5c6961d5fde734e55dfa479dd8dc49a",
+      "url": "https://assets.nexperia.com/documents/data-sheet/PESD5V0S1BA.pdf"
+     }
+    ],
+    "fitted_mpn": "PESD5V0S1BA,115",
+    "id": "esd-headset-clamps",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C19224",
+    "on_main": null,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "PESD5V0S1BA bidirectional ESD clamp at the jack: headset 1 push to talk"
+ },
+ {
+  "footprint": "Diode_SMD:D_SOD-323",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C19224",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "D12"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "Nexperia PESD5V0S1BA, Bidirectional ESD protection diode",
+      "matches_fitted": "yes: 'Bidirectional ESD protection of one line', SOD323; VRWM 5 V max; VBR 5.5 to 9.5 V at 1 mA; IRM 5 nA typ, 100 nA max at 5 V, 25 C; Cd 35 pF typ, 45 pF max; VCL 14 V max at IPPM 12 A; IEC 61000-4-2 contact 30 kV; Tamb -55 to 150 C",
+      "path": "v2/vendor/nexperia/nexperia-pesd5v0s1ba.pdf",
+      "revision": "PESD5V0S1BA v.6, 26 April 2024 (revision history, supersedes v.5 of 23 August 2018)",
+      "sha256": "6546e415b8885ea3790c91629034c6b4e5c6961d5fde734e55dfa479dd8dc49a",
+      "url": "https://assets.nexperia.com/documents/data-sheet/PESD5V0S1BA.pdf"
+     }
+    ],
+    "fitted_mpn": "PESD5V0S1BA,115",
+    "id": "esd-headset-clamps",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C19224",
+    "on_main": null,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "PESD5V0S1BA bidirectional ESD clamp at the jack: headset 2 speaker"
+ },
+ {
+  "footprint": "Diode_SMD:D_SOD-323",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C38558",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "D13"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "Nexperia PESD12VL1BA product data sheet",
+      "matches_fitted": "yes: 'Bidirectional ESD protection of one line', SOD323, VRWM 12 V maximum at 25 C (p.1)",
+      "path": "v2/vendor/nexperia/nexperia-pesd12vl1ba.pdf",
+      "revision": "14 April 2023",
+      "sha256": "3cc06cb0d46c5565324c906f9d45c64c2b5f122e7e7532ee116c3188b0effc5a",
+      "url": "https://assets.nexperia.com/documents/data-sheet/PESD12VL1BA.pdf"
+     }
+    ],
+    "fitted_mpn": "PESD12VL1BA,115",
+    "id": "esd-mic-clamps",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C38558",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "PESD12VL1BA bidirectional ESD clamp at the jack: headset 2 microphone, above the electret bias"
+ },
+ {
+  "footprint": "Diode_SMD:D_SOD-323",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C19224",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "D14"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "Nexperia PESD5V0S1BA, Bidirectional ESD protection diode",
+      "matches_fitted": "yes: 'Bidirectional ESD protection of one line', SOD323; VRWM 5 V max; VBR 5.5 to 9.5 V at 1 mA; IRM 5 nA typ, 100 nA max at 5 V, 25 C; Cd 35 pF typ, 45 pF max; VCL 14 V max at IPPM 12 A; IEC 61000-4-2 contact 30 kV; Tamb -55 to 150 C",
+      "path": "v2/vendor/nexperia/nexperia-pesd5v0s1ba.pdf",
+      "revision": "PESD5V0S1BA v.6, 26 April 2024 (revision history, supersedes v.5 of 23 August 2018)",
+      "sha256": "6546e415b8885ea3790c91629034c6b4e5c6961d5fde734e55dfa479dd8dc49a",
+      "url": "https://assets.nexperia.com/documents/data-sheet/PESD5V0S1BA.pdf"
+     }
+    ],
+    "fitted_mpn": "PESD5V0S1BA,115",
+    "id": "esd-headset-clamps",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C19224",
+    "on_main": null,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "PESD5V0S1BA bidirectional ESD clamp at the jack: headset 2 push to talk"
+ },
+ {
+  "footprint": "Diode_SMD:D_SOD-123",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "D2"
+  ],
+  "sources_entries": [],
+  "value": "1N4148W coil flyback"
+ },
+ {
+  "footprint": "Diode_SMD:D_SOD-323",
+  "generator_cited_documents": [
+   "data-sheet/PESD5V0S1BA.pdf"
+  ],
+  "jlc_certified_row": null,
+  "lcsc": "C19224",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "D9"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "Nexperia PESD5V0S1BA, Bidirectional ESD protection diode",
+      "matches_fitted": "yes: 'Bidirectional ESD protection of one line', SOD323; VRWM 5 V max; VBR 5.5 to 9.5 V at 1 mA; IRM 5 nA typ, 100 nA max at 5 V, 25 C; Cd 35 pF typ, 45 pF max; VCL 14 V max at IPPM 12 A; IEC 61000-4-2 contact 30 kV; Tamb -55 to 150 C",
+      "path": "v2/vendor/nexperia/nexperia-pesd5v0s1ba.pdf",
+      "revision": "PESD5V0S1BA v.6, 26 April 2024 (revision history, supersedes v.5 of 23 August 2018)",
+      "sha256": "6546e415b8885ea3790c91629034c6b4e5c6961d5fde734e55dfa479dd8dc49a",
+      "url": "https://assets.nexperia.com/documents/data-sheet/PESD5V0S1BA.pdf"
+     }
+    ],
+    "fitted_mpn": "PESD5V0S1BA,115",
+    "id": "esd-headset-clamps",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C19224",
+    "on_main": null,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "PESD5V0S1BA bidirectional ESD clamp at the jack: headset 1 speaker"
+ },
+ {
+  "footprint": "Inductor_SMD:L_0805_2012Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "FB1"
+  ],
+  "sources_entries": [],
+  "value": "600R 2A ferrite (the exciter's 1 A transmit pulses)"
+ },
+ {
+  "footprint": "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "JP1"
+  ],
+  "sources_entries": [],
+  "value": "electret bias headset 1 (close for an electret microphone)"
+ },
+ {
+  "footprint": "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "JP2"
+  ],
+  "sources_entries": [],
+  "value": "electret bias headset 2"
+ },
+ {
+  "footprint": "Connector_Coaxial:SMA_Amphenol_132134_Vertical",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Amphenol ICC",
+   "model": "132134",
+   "pkg": "Plugin",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C3174425",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "J_ANT"
+  ],
+  "sources_entries": [],
+  "value": "SMA jack: antenna pigtail to A22's VHF jack J_RF1"
+ },
+ {
+  "footprint": "meshsat:IDC-Header_2x08_P2.54mm_Vertical_NarrowPad",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "J_HARN1"
+  ],
+  "sources_entries": [],
+  "value": "A22 mezzanine harness J_MEZZ1 (IDC 2x8): USB pair, PTT mirror, inhibit, PA rail state, I2C, 3.3 V"
+ },
+ {
+  "footprint": "Connector_JST:JST_PH_B5B-PH-K_1x05_P2.00mm_Vertical",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "JST",
+   "model": "B5B-PH-K-S(LF)(SN)",
+   "pkg": "Plugin,P=2mm",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C157993",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "J_HS1"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "JST PH connector catalogue",
+      "matches_fitted": "yes: -40 to +105 C including temperature rise; the header table lists B5B-PH-K-S (and B2B-PH-K-S)",
+      "path": "v2/vendor/connectors/jst-ph-catalogue.pdf",
+      "revision": "not printed; PDF of 27 January 2026 per the round 4 board P author",
+      "sha256": "447624f4f2f7d37c58c1eaa7ee314ad757fe7aff48f6186491ef6f69fbc00b96",
+      "url": "https://www.jst-mfg.com/product/pdf/eng/ePH.pdf"
+     }
+    ],
+    "fitted_mpn": "B5B-PH-K-S(LF)(SN)",
+    "id": "jst-ph-headers",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C157993",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "JST-PH 1x5 socket: headset 1, SPK GND MIC GND PTT (the lead runs to the face plate U-174/U jack)"
+ },
+ {
+  "footprint": "Connector_JST:JST_PH_B5B-PH-K_1x05_P2.00mm_Vertical",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "JST",
+   "model": "B5B-PH-K-S(LF)(SN)",
+   "pkg": "Plugin,P=2mm",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C157993",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "J_HS2"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "JST PH connector catalogue",
+      "matches_fitted": "yes: -40 to +105 C including temperature rise; the header table lists B5B-PH-K-S (and B2B-PH-K-S)",
+      "path": "v2/vendor/connectors/jst-ph-catalogue.pdf",
+      "revision": "not printed; PDF of 27 January 2026 per the round 4 board P author",
+      "sha256": "447624f4f2f7d37c58c1eaa7ee314ad757fe7aff48f6186491ef6f69fbc00b96",
+      "url": "https://www.jst-mfg.com/product/pdf/eng/ePH.pdf"
+     }
+    ],
+    "fitted_mpn": "B5B-PH-K-S(LF)(SN)",
+    "id": "jst-ph-headers",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C157993",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "JST-PH 1x5 socket: headset 2, SPK GND MIC GND PTT (the lead runs to the face plate U-174/U jack)"
+ },
+ {
+  "footprint": "Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "HRS(Hirose)",
+   "model": "U.FL-R-SMT-1(10)",
+   "pkg": "SMD",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C88373",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "J_PAIN"
+  ],
+  "sources_entries": [],
+  "value": "U.FL socket: PA drive (coax to the RA30H1317M1 input on the plate)"
+ },
+ {
+  "footprint": "Connector_Coaxial:SMA_Amphenol_132134_Vertical",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Amphenol ICC",
+   "model": "132134",
+   "pkg": "Plugin",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C3174425",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "J_PAOUT"
+  ],
+  "sources_entries": [],
+  "value": "SMA jack: PA output (coax from the RA30H1317M1 output on the plate)"
+ },
+ {
+  "footprint": "Connector_JST:JST_VH_B2P-VH_1x02_P3.96mm_Vertical",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "JST",
+   "model": "B2P-VH-BL(LF)(SN)",
+   "pkg": "Plugin,P=3.96mm",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C274411",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "J_PWR1"
+  ],
+  "sources_entries": [],
+  "value": "JST-VH socket, 10 A: 5 V from A22 J_MEZZ_PWR1 (behind A22's 2 A eFuse U23): + -"
+ },
+ {
+  "footprint": "Connector_JST:JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "JST",
+   "model": "B4B-PH-K-S(LF)(SN)",
+   "pkg": "Plugin,P=2mm",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C131334",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "J_USB3"
+  ],
+  "sources_entries": [],
+  "value": "JST-PH 1x4 socket: spare hub port 3, 5V D- D+ GND (the lead is made up at build)"
+ },
+ {
+  "footprint": "Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "JST",
+   "model": "B2B-PH-K-S-GW",
+   "pkg": "Plugin,P=2mm",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C5251182",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "J_VGG"
+  ],
+  "sources_entries": [],
+  "value": "JST-PH 1x2 socket: PA gate bias, VGG GND (the lead runs to the RA30H1317M1 VGG pin)"
+ },
+ {
+  "footprint": "Relay_SMD:Relay_DPDT_Omron_G6K-2F-Y",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "K1"
+  ],
+  "sources_entries": [],
+  "value": "Omron G6K-2F-Y 5 VDC DPDT signal relay, T/R"
+ },
+ {
+  "footprint": "Inductor_SMD:L_0805_2012Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "L1"
+  ],
+  "sources_entries": [],
+  "value": "68nH 0805 (LPF, 145 MHz 5th order; values to be verified in MESHSAT-818)"
+ },
+ {
+  "footprint": "Inductor_SMD:L_0805_2012Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "L2"
+  ],
+  "sources_entries": [],
+  "value": "68nH 0805 (LPF)"
+ },
+ {
+  "footprint": "LED_SMD:LED_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Hubei KENTO Elec",
+   "model": "KT-0603G",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C12624",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "LED1"
+  ],
+  "sources_entries": [],
+  "value": "green power"
+ },
+ {
+  "footprint": "LED_SMD:LED_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Hubei KENTO Elec",
+   "model": "KT-0603Y",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C2287",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "LED2"
+  ],
+  "sources_entries": [],
+  "value": "amber record"
+ },
+ {
+  "footprint": "LED_SMD:LED_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Hubei KENTO Elec",
+   "model": "KT-0603G",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C12624",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "LED3"
+  ],
+  "sources_entries": [],
+  "value": "green playback"
+ },
+ {
+  "footprint": "LED_SMD:LED_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Hubei KENTO Elec",
+   "model": "KT-0603R",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C2286",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "LED4"
+  ],
+  "sources_entries": [],
+  "value": "red transmit"
+ },
+ {
+  "footprint": "LED_SMD:LED_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Hubei KENTO Elec",
+   "model": "KT-0603Y",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C2287",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "LED5"
+  ],
+  "sources_entries": [],
+  "value": "amber PA keyed"
+ },
+ {
+  "footprint": "LED_SMD:LED_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Hubei KENTO Elec",
+   "model": "KT-0603G",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C12624",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "LED6"
+  ],
+  "sources_entries": [],
+  "value": "green receive (AUDIO_ON low)"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Jiangsu Changjing Electronics Technology Co., Ltd.",
+   "model": "2N7002",
+   "pkg": "SOT-23",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C8545",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "Q1"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "JSCJ 2N7002 (SOT-23)",
+      "matches_fitted": "yes: the sheet LCSC attaches to C8545",
+      "path": "v2/vendor/power/jscj-2n7002-c8545.pdf",
+      "revision": "J, Sep 2016 (as printed)",
+      "sha256": "7941fb423af7c6c6c8979063a7e8819bb19217ece275efcce18948950a41d9f6",
+      "url": "https://datasheet.lcsc.com/datasheet/pdf/a141b8bd86b14475955ac8c4d3eea0a8.pdf?productCode=C8545 (LCSC's copy of the maker's sheet, the document attached to the fitted code; the same bytes are served at the wmsc.lcsc.com address the round 4 board B author used)"
+     }
+    ],
+    "fitted_mpn": "2N7002 (Jiangsu Changjiang Electronics Technology, JSCJ)",
+    "id": "logic-nfet-2n7002",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C8545",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "2N7002 PA_EN -> H/L low (never tie H/L high)"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Jiangsu Changjing Electronics Technology Co., Ltd.",
+   "model": "2N7002",
+   "pkg": "SOT-23",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C8545",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "Q2"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "JSCJ 2N7002 (SOT-23)",
+      "matches_fitted": "yes: the sheet LCSC attaches to C8545",
+      "path": "v2/vendor/power/jscj-2n7002-c8545.pdf",
+      "revision": "J, Sep 2016 (as printed)",
+      "sha256": "7941fb423af7c6c6c8979063a7e8819bb19217ece275efcce18948950a41d9f6",
+      "url": "https://datasheet.lcsc.com/datasheet/pdf/a141b8bd86b14475955ac8c4d3eea0a8.pdf?productCode=C8545 (LCSC's copy of the maker's sheet, the document attached to the fitted code; the same bytes are served at the wmsc.lcsc.com address the round 4 board B author used)"
+     }
+    ],
+    "fitted_mpn": "2N7002 (Jiangsu Changjiang Electronics Technology, JSCJ)",
+    "id": "logic-nfet-2n7002",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C8545",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "2N7002 relay coil"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Jiangsu Changjing Electronics Technology Co., Ltd.",
+   "model": "2N7002",
+   "pkg": "SOT-23",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C8545",
+  "order_code_on_line": true,
+  "qty": 7,
+  "refs": [
+   "Q3",
+   "Q4",
+   "Q5",
+   "Q6",
+   "Q7",
+   "Q8",
+   "Q9"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "JSCJ 2N7002 (SOT-23)",
+      "matches_fitted": "yes: the sheet LCSC attaches to C8545",
+      "path": "v2/vendor/power/jscj-2n7002-c8545.pdf",
+      "revision": "J, Sep 2016 (as printed)",
+      "sha256": "7941fb423af7c6c6c8979063a7e8819bb19217ece275efcce18948950a41d9f6",
+      "url": "https://datasheet.lcsc.com/datasheet/pdf/a141b8bd86b14475955ac8c4d3eea0a8.pdf?productCode=C8545 (LCSC's copy of the maker's sheet, the document attached to the fitted code; the same bytes are served at the wmsc.lcsc.com address the round 4 board B author used)"
+     }
+    ],
+    "fitted_mpn": "2N7002 (Jiangsu Changjiang Electronics Technology, JSCJ)",
+    "id": "logic-nfet-2n7002",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C8545",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "2N7002"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 4,
+  "refs": [
+   "R1",
+   "R43",
+   "R44",
+   "R51"
+  ],
+  "sources_entries": [],
+  "value": "2.2k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 27,
+  "refs": [
+   "R5",
+   "R9",
+   "R10",
+   "R31",
+   "R32",
+   "R35",
+   "R36",
+   "R37",
+   "R38",
+   "R39",
+   "R45",
+   "R46",
+   "R47",
+   "R66",
+   "R67",
+   "R68",
+   "R69",
+   "R70",
+   "R71",
+   "R72",
+   "R73",
+   "R74",
+   "R75",
+   "R76",
+   "R77",
+   "R78",
+   "R79"
+  ],
+  "sources_entries": [],
+  "value": "10k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "R11"
+  ],
+  "sources_entries": [],
+  "value": "1.0k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 8,
+  "refs": [
+   "R6",
+   "R7",
+   "R12",
+   "R13",
+   "R16",
+   "R17",
+   "R20",
+   "R21"
+  ],
+  "sources_entries": [],
+  "value": "22"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 8,
+  "refs": [
+   "R14",
+   "R15",
+   "R18",
+   "R19",
+   "R22",
+   "R23",
+   "R24",
+   "R25"
+  ],
+  "sources_entries": [],
+  "value": "15k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 3,
+  "refs": [
+   "R2",
+   "R3",
+   "R53"
+  ],
+  "sources_entries": [],
+  "value": "100k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 2,
+  "refs": [
+   "R26",
+   "R27"
+  ],
+  "sources_entries": [],
+  "value": "33"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 2,
+  "refs": [
+   "R8",
+   "R28"
+  ],
+  "sources_entries": [],
+  "value": "1.5k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 6,
+  "refs": [
+   "R4",
+   "R29",
+   "R30",
+   "R49",
+   "R50",
+   "R52"
+  ],
+  "sources_entries": [],
+  "value": "1k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "UNI-ROYAL(Uniroyal Elec)",
+   "model": "0603WAF4700T5E",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C23179",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "R33"
+  ],
+  "sources_entries": [],
+  "value": "470R"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 3,
+  "refs": [
+   "R34",
+   "R40",
+   "R41"
+  ],
+  "sources_entries": [],
+  "value": "4.7k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "R42"
+  ],
+  "sources_entries": [],
+  "value": "220k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "R48"
+  ],
+  "sources_entries": [],
+  "value": "100"
+ },
+ {
+  "footprint": "Resistor_SMD:R_2010_5025Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 2,
+  "refs": [
+   "R54",
+   "R56"
+  ],
+  "sources_entries": [],
+  "value": "27 1% 2010"
+ },
+ {
+  "footprint": "Resistor_SMD:R_2010_5025Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "R55"
+  ],
+  "sources_entries": [],
+  "value": "36 1% 2010"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C705784",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "R80"
+  ],
+  "sources_entries": [],
+  "value": "56.2k 0.1% 25ppm"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C861078",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "R81"
+  ],
+  "sources_entries": [],
+  "value": "10.7k 0.1% 25ppm"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C23103",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "R82"
+  ],
+  "sources_entries": [],
+  "value": "71.5k 1%"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "UNI-ROYAL(Uniroyal Elec)",
+   "model": "0603WAF1002T5E",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C25804",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "R83"
+  ],
+  "sources_entries": [],
+  "value": "10.0k 1%"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP1"
+  ],
+  "sources_entries": [],
+  "value": "AF_OUT"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP10"
+  ],
+  "sources_entries": [],
+  "value": "AB_SPARE"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP11"
+  ],
+  "sources_entries": [],
+  "value": "SA_TXD"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP12"
+  ],
+  "sources_entries": [],
+  "value": "SA_RXD"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP13"
+  ],
+  "sources_entries": [],
+  "value": "PTT_SW_n"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP14"
+  ],
+  "sources_entries": [],
+  "value": "SA_PD"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP15"
+  ],
+  "sources_entries": [],
+  "value": "TX_INHIBIT_n"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP16"
+  ],
+  "sources_entries": [],
+  "value": "PA_EN"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP17"
+  ],
+  "sources_entries": [],
+  "value": "EXP_SPARE1"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP18"
+  ],
+  "sources_entries": [],
+  "value": "EXP_SPARE2"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP19"
+  ],
+  "sources_entries": [],
+  "value": "EXP_SPARE3"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP2"
+  ],
+  "sources_entries": [],
+  "value": "MIC_SUM"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP20"
+  ],
+  "sources_entries": [],
+  "value": "EXP_SPARE4"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP21"
+  ],
+  "sources_entries": [],
+  "value": "EXP_SPARE5"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP22"
+  ],
+  "sources_entries": [],
+  "value": "EXP_SPARE6"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP23"
+  ],
+  "sources_entries": [],
+  "value": "EXP_SPARE7"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP24"
+  ],
+  "sources_entries": [],
+  "value": "EXP_SPARE8"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP25"
+  ],
+  "sources_entries": [],
+  "value": "+3V4_HUB"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP3"
+  ],
+  "sources_entries": [],
+  "value": "KEY"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP4"
+  ],
+  "sources_entries": [],
+  "value": "PA_KEY"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP5"
+  ],
+  "sources_entries": [],
+  "value": "+3V3_D8"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP6"
+  ],
+  "sources_entries": [],
+  "value": "+5V_D8"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP7"
+  ],
+  "sources_entries": [],
+  "value": "VGG_SW"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP8"
+  ],
+  "sources_entries": [],
+  "value": "RX_MIX"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP9"
+  ],
+  "sources_entries": [],
+  "value": "ZEROIZE_HW"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "U1"
+  ],
+  "sources_entries": [],
+  "value": "TLV75533PDBV 3.3 V 500 mA LDO (1 IN 2 GND 3 EN 4 NC 5 OUT)"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "U10"
+  ],
+  "sources_entries": [],
+  "value": "74LVC1G08 AND: headsets AND software PTT (RTS)"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "U11"
+  ],
+  "sources_entries": [],
+  "value": "74LVC1G04 inverter (2 A 4 Y): PTT_ANY"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "U12"
+  ],
+  "sources_entries": [],
+  "value": "74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "U13"
+  ],
+  "sources_entries": [],
+  "value": "74LVC1G04 inverter: KEY -> SA868 PTT (low = transmit)"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "U14"
+  ],
+  "sources_entries": [],
+  "value": "74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state)"
+ },
+ {
+  "footprint": "Package_SON:WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C2876308",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "U15"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "TI SBVS351",
+      "matches_fitted": "yes: packaging information p.26 lists TLV75801PDBVR, SOT-23 (DBV) 5, and TLV75801PDRVR, WSON (DRV) 6, both Active, -40 to 125 C",
+      "path": "v2/vendor/ti/ti-tlv758p.pdf",
+      "revision": "Rev. D, April 2018, revised October 2023",
+      "sha256": "4a86306d6734f1f4212e897c29787a93b56724c06adf87d926cc7b603a694d12",
+      "url": "https://www.ti.com/lit/ds/symlink/tlv758p.pdf"
+     }
+    ],
+    "fitted_mpn": "TLV75801PDBVR (U17), TLV75801PDRVR (U15)",
+    "id": "board-d-regulators-tlv758p",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C2876308",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "TLV75801PDRVR adjustable LDO, PA gate bias VGG 4.48 V while PA_KEY is high (1 OUT 2 FB 3 GND 4 EN 5 DNC 6 IN 7 pad)"
+ },
+ {
+  "footprint": "Package_SO:TSSOP-24_4.4x7.8mm_P0.65mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "U16"
+  ],
+  "sources_entries": [],
+  "value": "PCA9555PW 0x26: COS, PTT states, KEY, PA_KEY in; exciter PD, amplifier EN, codec mute out; eight spares"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C2877852",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "U17"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "TI SBVS351",
+      "matches_fitted": "yes: packaging information p.26 lists TLV75801PDBVR, SOT-23 (DBV) 5, and TLV75801PDRVR, WSON (DRV) 6, both Active, -40 to 125 C",
+      "path": "v2/vendor/ti/ti-tlv758p.pdf",
+      "revision": "Rev. D, April 2018, revised October 2023",
+      "sha256": "4a86306d6734f1f4212e897c29787a93b56724c06adf87d926cc7b603a694d12",
+      "url": "https://www.ti.com/lit/ds/symlink/tlv758p.pdf"
+     }
+    ],
+    "fitted_mpn": "TLV75801PDBVR (U17), TLV75801PDRVR (U15)",
+    "id": "board-d-regulators-tlv758p",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C2877852",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "TLV75801PDBVR adjustable LDO, +3V4_HUB 3.44 V for the hub (1 IN 2 GND 3 EN 4 FB 5 OUT)"
+ },
+ {
+  "footprint": "meshsat:NiceRF_SA868",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "U2"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "NiceRF SA868 2W Embedded walkie talkie module",
+      "matches_fitted": "partial: covers all three band variants",
+      "path": "v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf",
+      "revision": "V1.3",
+      "sha256": "938ef5ef5007df6bb8a3f2d2eb6878e3eac269e1f327c9a9164406b0f5152be1",
+      "url": "TBD"
+     }
+    ],
+    "fitted_mpn": "TBD",
+    "id": "vhf-exciter",
+    "identity": "NOT_PINNED",
+    "joined_by": "where gen_sch_d.py:265 at 1f614233 (names U2)",
+    "on_main": null,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)"
+ },
+ {
+  "footprint": "Package_DFN_QFN:QFN-28-1EP_5x5mm_P0.5mm_EP3.35x3.35mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "SKYWORKS/SILICON LABS",
+   "model": "CP2102N-A02-GQFN28R",
+   "pkg": "QFN-28-EP(5x5)",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C964632",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "U3"
+  ],
+  "sources_entries": [],
+  "value": "CP2102N-A02-GQFN28 USB-UART bridge (SAU)"
+ },
+ {
+  "footprint": "Package_QFP:LQFP-32_7x7mm_P0.8mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C702369",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "U4"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "TI SLLS413",
+      "matches_fitted": "yes: covers TUSB2046BVFR and TUSB2046IBVFR; recommended operating conditions p.6 'TUSB2046B 0 to 70; TUSB2046BI, TUSB2046I -40 to 85'",
+      "path": "v2/vendor/ti/ti-tusb2046b.pdf",
+      "revision": "Rev. L, February 2000, revised June 2017",
+      "sha256": "d02d0b8af5cbdb1b8186f890efdb214cb8edc50d55b9df5eed0650933a08d3db",
+      "url": "https://www.ti.com/lit/ds/symlink/tusb2046b.pdf"
+     },
+     {
+      "doc_id": "TI SLLS413",
+      "matches_fitted": "yes: packaging information lists TUSB2046IBVFR",
+      "path": "v2/vendor/ti/ti-tusb2046b-slls413l-addendum-2025.pdf",
+      "revision": "Rev. L, February 2000, revised June 2017; orderable addendum dated 31-Oct-2025",
+      "sha256": "eaa20027fc3dde2d9b4550fb300f9b3e4361c06e8418eaba093c856065f4be9a",
+      "url": "https://www.ti.com/lit/ds/symlink/tusb2046b.pdf"
+     }
+    ],
+    "fitted_mpn": "TUSB2046BVFR",
+    "id": "board-d-usb-hub",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C702369",
+    "on_main": null,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "TUSB2046IBVFR four-port USB 2.0 full-speed hub (TI, LQFP-32 VF, -40 to 85 C, VCC 3.3 to 3.6 from +3V4_HUB; BUSPWR low = self-powered, EXTMEM high, GANGED high, TSTMODE low)"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23-6",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "STMicroelectronics",
+   "model": "USBLC6-2SC6",
+   "pkg": "SOT-23-6L",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C7519",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "U5"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "ST DS4260",
+      "matches_fitted": "yes: pin 1 I/O1, 2 GND, 3 I/O2, 4 I/O2, 5 VBUS, 6 I/O1",
+      "path": "v2/vendor/st/st-usblc6-2-esd-protection.pdf",
+      "revision": "Rev 7, December 2021",
+      "sha256": "bc30154f310cd631043214ed52571daefe04270587ec55072d49a23bd18b9068",
+      "url": "TBD"
+     }
+    ],
+    "fitted_mpn": "USBLC6-2SC6",
+    "id": "usb-esd-array",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C7519",
+    "on_main": null,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "USBLC6-2SC6"
+ },
+ {
+  "footprint": "Package_QFP:TQFP-32_7x7mm_P0.8mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "U6"
+  ],
+  "sources_entries": [],
+  "value": "TI PCM2912A USB audio codec (TQFP-32): mono input from the exciter, stereo output to the headphone amplifier and the transmit sum"
+ },
+ {
+  "footprint": "Package_DFN_QFN:QFN-16-1EP_3x3mm_P0.5mm_EP1.75x1.75mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "U7"
+  ],
+  "sources_entries": [],
+  "value": "TI TPA6132A2 headphone amplifier (QFN-16), receive audio to the two headset leads"
+ },
+ {
+  "footprint": "Package_SO:VSSOP-8_3x3mm_P0.65mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "U8"
+  ],
+  "sources_entries": [],
+  "value": "TLV9062IDGK dual op amp (1 OUT1 2 IN1- 3 IN1+ 4 V- 5 IN2+ 6 IN2- 7 OUT2 8 V+): A the mic sum, B unused as a follower"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "U9"
+  ],
+  "sources_entries": [],
+  "value": "74LVC1G08 AND (1 A 2 B 3 GND 4 Y 5 VCC): both headset PTT lines idle high"
+ },
+ {
+  "footprint": "Crystal:Crystal_SMD_HC49-SD",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C252308",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "Y1"
+  ],
+  "sources_entries": [],
+  "value": "6 MHz HC-49S-SMD passive (CL 20 pF, 80 Ohm; C1 = C2 = 27 pF and Rd 1.0k, SLLS413 figure 6 re-chosen for this part's ESR)"
+ },
+ {
+  "footprint": "Crystal:Crystal_SMD_HC49-SD",
+  "generator_cited_documents": [
+   "v2/vendor/ti/ti-pcm2912a.pdf"
+  ],
+  "jlc_certified_row": null,
+  "lcsc": "C252308",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "Y2"
+  ],
+  "sources_entries": [],
+  "value": "6 MHz HC-49S-SMD passive (codec clock, CL 20 pF; C1 = C2 = 27 pF)"
+ }
+]

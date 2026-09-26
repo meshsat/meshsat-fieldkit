@@ -1,0 +1,2076 @@
+[
+ {
+  "footprint": "meshsat:PanelSounder",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "BZ1"
+  ],
+  "sources_entries": [],
+  "value": "IP67 panel-mount sounder, 5 V DC continuous, bezel gasket on the face, two flying leads (Floyd Bell MC-09-530-Q class)"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0805_2012Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Samsung Electro-Mechanics",
+   "model": "CL21A106KAYNNNE",
+   "pkg": "0805",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C15850",
+  "order_code_on_line": true,
+  "qty": 2,
+  "refs": [
+   "C1",
+   "C2"
+  ],
+  "sources_entries": [],
+  "value": "10u"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 10,
+  "refs": [
+   "C7",
+   "C8",
+   "C9",
+   "C10",
+   "C11",
+   "C12",
+   "C13",
+   "C25",
+   "C29",
+   "C38"
+  ],
+  "sources_entries": [],
+  "value": "100n"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 5,
+  "refs": [
+   "C3",
+   "C4",
+   "C14",
+   "C15",
+   "C16"
+  ],
+  "sources_entries": [],
+  "value": "1u"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "YAGEO",
+   "model": "CC0603KRX7R9BB104",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C14663",
+  "order_code_on_line": true,
+  "qty": 5,
+  "refs": [
+   "C17",
+   "C18",
+   "C26",
+   "C27",
+   "C39"
+  ],
+  "sources_entries": [],
+  "value": "100n"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "FH (Guangdong Fenghua Advanced Tech)",
+   "model": "0603B103K500NT",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C57112",
+  "order_code_on_line": true,
+  "qty": 6,
+  "refs": [
+   "C19",
+   "C20",
+   "C21",
+   "C22",
+   "C23",
+   "C24"
+  ],
+  "sources_entries": [],
+  "value": "10n"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0805_2012Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "C28"
+  ],
+  "sources_entries": [],
+  "value": "4.7u"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 7,
+  "refs": [
+   "C30",
+   "C32",
+   "C33",
+   "C34",
+   "C35",
+   "C36",
+   "C37"
+  ],
+  "sources_entries": [],
+  "value": "1u 25V"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C90057",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "C31"
+  ],
+  "sources_entries": [],
+  "value": "4.7u 25V"
+ },
+ {
+  "footprint": "Capacitor_SMD:C_0402_1005Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 2,
+  "refs": [
+   "C5",
+   "C6"
+  ],
+  "sources_entries": [],
+  "value": "15p NP0"
+ },
+ {
+  "footprint": "MountingHole:MountingHole_2.2mm_M2",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 2,
+  "refs": [
+   "CAM_H1",
+   "CAM_H2"
+  ],
+  "sources_entries": [],
+  "value": "M2 screw of the USB camera module (25 x 25 board, sheet owed) behind the plate's sealed window"
+ },
+ {
+  "footprint": "LED_THT:LED_D3.0mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "D1"
+  ],
+  "sources_entries": [],
+  "value": "3 mm MWARN red, sunlight viewable"
+ },
+ {
+  "footprint": "LED_THT:LED_D3.0mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "D10"
+  ],
+  "sources_entries": [],
+  "value": "3 mm CHG white, sunlight viewable"
+ },
+ {
+  "footprint": "LED_THT:LED_D3.0mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "D11"
+  ],
+  "sources_entries": [],
+  "value": "3 mm MSG white, sunlight viewable"
+ },
+ {
+  "footprint": "LED_THT:LED_D3.0mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "D12"
+  ],
+  "sources_entries": [],
+  "value": "3 mm BAT1 amber, sunlight viewable"
+ },
+ {
+  "footprint": "LED_THT:LED_D3.0mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "D13"
+  ],
+  "sources_entries": [],
+  "value": "3 mm BAT2 green, sunlight viewable"
+ },
+ {
+  "footprint": "LED_THT:LED_D3.0mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "D14"
+  ],
+  "sources_entries": [],
+  "value": "3 mm BAT3 green, sunlight viewable"
+ },
+ {
+  "footprint": "LED_THT:LED_D3.0mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "D15"
+  ],
+  "sources_entries": [],
+  "value": "3 mm BAT4 green, sunlight viewable"
+ },
+ {
+  "footprint": "LED_THT:LED_D3.0mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "D16"
+  ],
+  "sources_entries": [],
+  "value": "3 mm BAT5 green, sunlight viewable"
+ },
+ {
+  "footprint": "Diode_SMD:D_SOD-123",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "hongjiacheng",
+   "model": "BAT54W",
+   "pkg": "SOD-123",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C7502705",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "D17"
+  ],
+  "sources_entries": [],
+  "value": "BAT54 lamp-test tie"
+ },
+ {
+  "footprint": "LED_SMD:LED_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "D18"
+  ],
+  "sources_entries": [],
+  "value": "status (GPIO25)"
+ },
+ {
+  "footprint": "Diode_SMD:D_SOD-123F",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "PANJIT International",
+   "model": "SS2040FL",
+   "pkg": "SOD-123FL",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C268712",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "D19"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "PANJIT SS2020FL~SS20100FL",
+      "matches_fitted": "yes: SS2040FL column, VR and VRRM 40 V",
+      "path": "v2/vendor/power/panjit-ss2020fl-series.pdf",
+      "revision": "SS2020FL_SERIES-REV.10S, August 17, 2017",
+      "sha256": "92544a833cdaa6e17d9192a05ec84bbc8ec797c4cb5fa51c4250f158f2c534fe",
+      "url": "https://www.panjit.com.tw/upload/datasheet/SS2020FL_SERIES.pdf"
+     }
+    ],
+    "fitted_mpn": "SS2040FL (PANJIT)",
+    "id": "epd-rectifiers",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C268712",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "SS2040FL: EPD_SW -> VGH"
+ },
+ {
+  "footprint": "LED_THT:LED_D3.0mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "D2"
+  ],
+  "sources_entries": [],
+  "value": "3 mm MCAUT amber, sunlight viewable"
+ },
+ {
+  "footprint": "Diode_SMD:D_SOD-123F",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "PANJIT International",
+   "model": "SS2040FL",
+   "pkg": "SOD-123FL",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C268712",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "D20"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "PANJIT SS2020FL~SS20100FL",
+      "matches_fitted": "yes: SS2040FL column, VR and VRRM 40 V",
+      "path": "v2/vendor/power/panjit-ss2020fl-series.pdf",
+      "revision": "SS2020FL_SERIES-REV.10S, August 17, 2017",
+      "sha256": "92544a833cdaa6e17d9192a05ec84bbc8ec797c4cb5fa51c4250f158f2c534fe",
+      "url": "https://www.panjit.com.tw/upload/datasheet/SS2020FL_SERIES.pdf"
+     }
+    ],
+    "fitted_mpn": "SS2040FL (PANJIT)",
+    "id": "epd-rectifiers",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C268712",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "SS2040FL: pump clamp"
+ },
+ {
+  "footprint": "Diode_SMD:D_SOD-123F",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "PANJIT International",
+   "model": "SS2040FL",
+   "pkg": "SOD-123FL",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C268712",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "D21"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "PANJIT SS2020FL~SS20100FL",
+      "matches_fitted": "yes: SS2040FL column, VR and VRRM 40 V",
+      "path": "v2/vendor/power/panjit-ss2020fl-series.pdf",
+      "revision": "SS2020FL_SERIES-REV.10S, August 17, 2017",
+      "sha256": "92544a833cdaa6e17d9192a05ec84bbc8ec797c4cb5fa51c4250f158f2c534fe",
+      "url": "https://www.panjit.com.tw/upload/datasheet/SS2020FL_SERIES.pdf"
+     }
+    ],
+    "fitted_mpn": "SS2040FL (PANJIT)",
+    "id": "epd-rectifiers",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C268712",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "SS2040FL: pump -> VGL"
+ },
+ {
+  "footprint": "LED_THT:LED_D3.0mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "D3"
+  ],
+  "sources_entries": [],
+  "value": "3 mm TX red (RF hazard), sunlight viewable"
+ },
+ {
+  "footprint": "LED_THT:LED_D3.0mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "D4"
+  ],
+  "sources_entries": [],
+  "value": "3 mm SOSACT red, sunlight viewable"
+ },
+ {
+  "footprint": "LED_THT:LED_D3.0mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "D5"
+  ],
+  "sources_entries": [],
+  "value": "3 mm SAT green, sunlight viewable"
+ },
+ {
+  "footprint": "LED_THT:LED_D3.0mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "D6"
+  ],
+  "sources_entries": [],
+  "value": "3 mm MESH green, sunlight viewable"
+ },
+ {
+  "footprint": "LED_THT:LED_D3.0mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "D7"
+  ],
+  "sources_entries": [],
+  "value": "3 mm LTE green, sunlight viewable"
+ },
+ {
+  "footprint": "LED_THT:LED_D3.0mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "D8"
+  ],
+  "sources_entries": [],
+  "value": "3 mm GPS green, sunlight viewable"
+ },
+ {
+  "footprint": "LED_THT:LED_D3.0mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "D9"
+  ],
+  "sources_entries": [],
+  "value": "3 mm SHORE green, sunlight viewable"
+ },
+ {
+  "footprint": "Inductor_SMD:L_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Sunlord",
+   "model": "GZ1608D601TF",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C1002",
+  "order_code_on_line": true,
+  "qty": 4,
+  "refs": [
+   "FB1",
+   "FB2",
+   "FB3",
+   "FB4"
+  ],
+  "sources_entries": [],
+  "value": "ferrite 600R"
+ },
+ {
+  "footprint": "meshsat:BackerScrew_M3_GND",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 8,
+  "refs": [
+   "H1",
+   "H2",
+   "H3",
+   "H4",
+   "H5",
+   "H6",
+   "H7",
+   "H8"
+  ],
+  "sources_entries": [],
+  "value": "M3 x 6 into the face plate's self-clinching standoff: GND bond to the plate"
+ },
+ {
+  "footprint": "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "JP1"
+  ],
+  "sources_entries": [],
+  "value": "BOOTSEL: short while powering to enter the USB bootloader"
+ },
+ {
+  "footprint": "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "JP2"
+  ],
+  "sources_entries": [],
+  "value": "PANEL_ID strap (closed = variant B)"
+ },
+ {
+  "footprint": "meshsat:Hirose_FH34SRJ-24S",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "J_EPD"
+  ],
+  "sources_entries": [],
+  "value": "Hirose FH34SRJ-24S-0.5SH ZIF for the E2370KS0C1 flex (0.5 mm, 24 way; pin names per the PDi driving circuit note rev 02)"
+ },
+ {
+  "footprint": "meshsat:PanelJack_17mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "J_HSJ1"
+  ],
+  "sources_entries": [],
+  "value": "U-174/U headset jack 1 (Amphenol Nexus class, drawing owed): 17 mm hole through the backer, bushing nut below; its five leads run to D8 J_HS1"
+ },
+ {
+  "footprint": "meshsat:PanelJack_17mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "J_HSJ2"
+  ],
+  "sources_entries": [],
+  "value": "U-174/U headset jack 2 (Amphenol Nexus class, drawing owed): 17 mm hole through the backer, bushing nut below; its five leads run to D8 J_HS2"
+ },
+ {
+  "footprint": "meshsat:LeadLands_1x02",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "J_MAINSW"
+  ],
+  "sources_entries": [],
+  "value": "MAIN button lead to A22 J_MAINSW (XH2.5 at the A22 end): two solder lands on the underside, soldered and beaded"
+ },
+ {
+  "footprint": "Connector_IDC:IDC-Header_2x13_P2.54mm_Vertical_SMD",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "J_PANEL"
+  ],
+  "sources_entries": [],
+  "value": "panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inhibit, HDMI selects, USB, heartbeats, slot enables, power control"
+ },
+ {
+  "footprint": "meshsat:LeadLands_1x02",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "J_PIJ2"
+  ],
+  "sources_entries": [],
+  "value": "PI button lead: two solder lands on the underside (the controller reads it as the module shutdown request)"
+ },
+ {
+  "footprint": "Inductor_SMD:L_APV_ANR4020",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "L1"
+  ],
+  "sources_entries": [],
+  "value": "10uH ATNR4010100MT 0.8 A (the boost inductor)"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Alpha & Omega Semicon",
+   "model": "AO3401A",
+   "pkg": "SOT-23",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C15127",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "Q1"
+  ],
+  "sources_entries": [],
+  "value": "AO3401A P-FET high side"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Jiangsu Changjing Electronics Technology Co., Ltd.",
+   "model": "2N7002",
+   "pkg": "SOT-23",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C8545",
+  "order_code_on_line": true,
+  "qty": 3,
+  "refs": [
+   "Q2",
+   "Q3",
+   "Q4"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "JSCJ 2N7002 (SOT-23)",
+      "matches_fitted": "yes: the sheet LCSC attaches to C8545",
+      "path": "v2/vendor/power/jscj-2n7002-c8545.pdf",
+      "revision": "J, Sep 2016 (as printed)",
+      "sha256": "7941fb423af7c6c6c8979063a7e8819bb19217ece275efcce18948950a41d9f6",
+      "url": "https://datasheet.lcsc.com/datasheet/pdf/a141b8bd86b14475955ac8c4d3eea0a8.pdf?productCode=C8545 (LCSC's copy of the maker's sheet, the document attached to the fitted code; the same bytes are served at the wmsc.lcsc.com address the round 4 board B author used)"
+     }
+    ],
+    "fitted_mpn": "2N7002 (Jiangsu Changjiang Electronics Technology, JSCJ)",
+    "id": "logic-nfet-2n7002",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C8545",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "2N7002"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Alpha & Omega Semicon",
+   "model": "AO3401A",
+   "pkg": "SOT-23",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C15127",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "Q5"
+  ],
+  "sources_entries": [],
+  "value": "AO3401A P-FET: the e-paper's supply switch (EPD_PWR_n low = on)"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C72271",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "Q6"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "Vishay document 65701",
+      "matches_fitted": "yes: the ordering line names Si2300DS-T1-GE3 (lead (Pb)-free and halogen-free), p.1",
+      "path": "v2/vendor/vishay/vishay-si2300ds.pdf",
+      "revision": "S10-0111-Rev. A, 18-Jan-10",
+      "sha256": "cffcc3972eeb825d822def9e5d649e76ae74f94de08dab8021ff194b9175f231",
+      "url": "https://www.vishay.com/docs/65701/si2300ds.pdf"
+     }
+    ],
+    "fitted_mpn": "Si2300DS-T1-GE3",
+    "id": "epd-boost-fet",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C72271",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "Si2300DS-T1-GE3 N-FET (Vishay, SOT-23, G S D like the 2N7002 symbol; VDS 30 V, RDS 85 mOhm max at VGS 2.5 V, VGS(th) 0.6 to 1.5 V; named by PDi Rev.02): the boost switch on GDR"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 2,
+  "refs": [
+   "R1",
+   "R6"
+  ],
+  "sources_entries": [],
+  "value": "1k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "UNI-ROYAL(Uniroyal Elec)",
+   "model": "0603WAF1002T5E",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C25804",
+  "order_code_on_line": true,
+  "qty": 8,
+  "refs": [
+   "R9",
+   "R10",
+   "R11",
+   "R12",
+   "R13",
+   "R14",
+   "R15",
+   "R16"
+  ],
+  "sources_entries": [],
+  "value": "10k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "UNI-ROYAL(Uniroyal Elec)",
+   "model": "0603WAF2201T5E",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C4190",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "R17"
+  ],
+  "sources_entries": [],
+  "value": "2.2k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "UNI-ROYAL(Uniroyal Elec)",
+   "model": "0603WAF470JT5E",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C23182",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "R18"
+  ],
+  "sources_entries": [],
+  "value": "47R"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "UNI-ROYAL(Uniroyal Elec)",
+   "model": "0603WAF1000T5E",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C22775",
+  "order_code_on_line": true,
+  "qty": 2,
+  "refs": [
+   "R19",
+   "R44"
+  ],
+  "sources_entries": [],
+  "value": "100R"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 2,
+  "refs": [
+   "R2",
+   "R3"
+  ],
+  "sources_entries": [],
+  "value": "27R"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "UNI-ROYAL(Uniroyal Elec)",
+   "model": "0603WAF1003T5E",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C25803",
+  "order_code_on_line": true,
+  "qty": 3,
+  "refs": [
+   "R20",
+   "R38",
+   "R45"
+  ],
+  "sources_entries": [],
+  "value": "100k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "UNI-ROYAL(Uniroyal Elec)",
+   "model": "0603WAF3000T5E",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C23025",
+  "order_code_on_line": true,
+  "qty": 6,
+  "refs": [
+   "R21",
+   "R22",
+   "R23",
+   "R31",
+   "R36",
+   "R40"
+  ],
+  "sources_entries": [],
+  "value": "300R"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "UNI-ROYAL(Uniroyal Elec)",
+   "model": "0603WAF1800T5E",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C22828",
+  "order_code_on_line": true,
+  "qty": 11,
+  "refs": [
+   "R24",
+   "R25",
+   "R26",
+   "R27",
+   "R28",
+   "R29",
+   "R30",
+   "R32",
+   "R33",
+   "R34",
+   "R35"
+  ],
+  "sources_entries": [],
+  "value": "180R"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "UNI-ROYAL(Uniroyal Elec)",
+   "model": "0603WAF1001T5E",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C21190",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "R37"
+  ],
+  "sources_entries": [],
+  "value": "1k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "UNI-ROYAL(Uniroyal Elec)",
+   "model": "0603WAF4700T5E",
+   "pkg": "0603",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C23179",
+  "order_code_on_line": true,
+  "qty": 2,
+  "refs": [
+   "R39",
+   "R41"
+  ],
+  "sources_entries": [],
+  "value": "470R"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 2,
+  "refs": [
+   "R4",
+   "R42"
+  ],
+  "sources_entries": [],
+  "value": "10k"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "R43"
+  ],
+  "sources_entries": [],
+  "value": "0.47R 1%"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "R5"
+  ],
+  "sources_entries": [],
+  "value": "1k (BOOTSEL)"
+ },
+ {
+  "footprint": "Resistor_SMD:R_0603_1608Metric",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 2,
+  "refs": [
+   "R7",
+   "R8"
+  ],
+  "sources_entries": [],
+  "value": "2.2k"
+ },
+ {
+  "footprint": "meshsat:ToggleBody_SPDT",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "SW_EMCON"
+  ],
+  "sources_entries": [],
+  "value": "EMCON locking toggle (closed = TX inhibit, a hardware line: TX_INHIBIT_n low and EMCON_HW low, the same sense; APEM 5636ADKB-2V, hinged safety cover); K front seal in the keyed 6.5 hole"
+ },
+ {
+  "footprint": "meshsat:ToggleBody_DPDT",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "SW_LIGHT"
+  ],
+  "sources_entries": [],
+  "value": "LIGHTING DAY/NIGHT/BLACKOUT toggle DPDT ON-ON-ON (pole 1: rail, pole 2: sense); NKK M2044SD3A01 on the D3 splashproof bushing, its O-ring (spare AT516) under the nut on the face, AT428H boot; D hole, flat toward +X"
+ },
+ {
+  "footprint": "meshsat:PanelSwitch_19mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "SW_MAIN"
+  ],
+  "sources_entries": [],
+  "value": "MAIN PWR 19 mm momentary, green ring (to A22 J_MAINSW); C&K ATP19-SL1-603-B0SA-03G; silicone gasket washer under the bezel"
+ },
+ {
+  "footprint": "meshsat:PanelSwitch_16mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "SW_PI"
+  ],
+  "sources_entries": [],
+  "value": "PI 16 mm recessed momentary, amber ring (PI_SHDN_REQ to the modules through the controller); C&K ATP16-SL1-403-M0SA-04G; silicone gasket washer under the bezel"
+ },
+ {
+  "footprint": "meshsat:ToggleBody_SPDT",
+  "generator_cited_documents": [
+   "v2/vendor/seals/apem-5000-series-datasheet-rs-copy.pdf"
+  ],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "SW_SOS"
+  ],
+  "sources_entries": [],
+  "value": "SOS locking toggle, maintained (APEM 5636ADKB-2V, both positions locked, red boot, hinged safety cover per 32.50; ruling 32.13); K front seal in the keyed 6.5 hole; the controller acts after 2 s closed"
+ },
+ {
+  "footprint": "meshsat:PanelSwitch_16mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "SW_TEST"
+  ],
+  "sources_entries": [],
+  "value": "TEST/ACK 16 mm momentary, white ring; C&K ATP16-SL1-203-M0SA-04G; silicone gasket washer under the bezel"
+ },
+ {
+  "footprint": "meshsat:ToggleBody_SPDT",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "SW_ZERO"
+  ],
+  "sources_entries": [],
+  "value": "ZEROIZE locking toggle, maintained (APEM 5636ADKB-2V, single pole ON-NONE-ON, lug 2 common, hinged safety cover; ruling 32.13); K front seal in the keyed 6.5 hole; closed = ZEROIZE_SW low, read by the panel controller alone (GPIO22); ruled firmware behaviour (owner D-03): read at boot before any slot powers, crypto-erase after 5 s closed"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP1"
+  ],
+  "sources_entries": [],
+  "value": "SWCLK"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP10"
+  ],
+  "sources_entries": [],
+  "value": "TX_INHIBIT_n"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP11"
+  ],
+  "sources_entries": [],
+  "value": "EMCON_HW"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP12"
+  ],
+  "sources_entries": [],
+  "value": "ZEROIZE_HW"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP13"
+  ],
+  "sources_entries": [],
+  "value": "SPARE1"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP14"
+  ],
+  "sources_entries": [],
+  "value": "SPARE2"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP15"
+  ],
+  "sources_entries": [],
+  "value": "SPARE3"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP16"
+  ],
+  "sources_entries": [],
+  "value": "SPARE4"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP17"
+  ],
+  "sources_entries": [],
+  "value": "SPARE5"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP18"
+  ],
+  "sources_entries": [],
+  "value": "SPARE6"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP19"
+  ],
+  "sources_entries": [],
+  "value": "SPARE7"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP2"
+  ],
+  "sources_entries": [],
+  "value": "SWDIO"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP20"
+  ],
+  "sources_entries": [],
+  "value": "SPARE8"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP21"
+  ],
+  "sources_entries": [],
+  "value": "SPARE9"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP22"
+  ],
+  "sources_entries": [],
+  "value": "SPARE10"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP23"
+  ],
+  "sources_entries": [],
+  "value": "SPARE11"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP24"
+  ],
+  "sources_entries": [],
+  "value": "SPARE12"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP25"
+  ],
+  "sources_entries": [],
+  "value": "EPD_BUSY"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP26"
+  ],
+  "sources_entries": [],
+  "value": "EPD_VGH"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP27"
+  ],
+  "sources_entries": [],
+  "value": "EPD_VGL"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP28"
+  ],
+  "sources_entries": [],
+  "value": "HB1"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP29"
+  ],
+  "sources_entries": [],
+  "value": "HB2"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP3"
+  ],
+  "sources_entries": [],
+  "value": "C_RUN"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP30"
+  ],
+  "sources_entries": [],
+  "value": "HB3"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP31"
+  ],
+  "sources_entries": [],
+  "value": "SLOT_EN1"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP32"
+  ],
+  "sources_entries": [],
+  "value": "SLOT_EN2"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP33"
+  ],
+  "sources_entries": [],
+  "value": "SLOT_EN3"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP34"
+  ],
+  "sources_entries": [],
+  "value": "HDMI_SEL1"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP35"
+  ],
+  "sources_entries": [],
+  "value": "HDMI_SEL2"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP36"
+  ],
+  "sources_entries": [],
+  "value": "PI_SHDN_REQ"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP37"
+  ],
+  "sources_entries": [],
+  "value": "PI_KILL"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP38"
+  ],
+  "sources_entries": [],
+  "value": "SHORE_INHIBIT"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP39"
+  ],
+  "sources_entries": [],
+  "value": "PIJ2_A"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP4"
+  ],
+  "sources_entries": [],
+  "value": "LED_RAIL"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP40"
+  ],
+  "sources_entries": [],
+  "value": "PIJ2_B"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP41"
+  ],
+  "sources_entries": [],
+  "value": "ZEROIZE_SW"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP42"
+  ],
+  "sources_entries": [],
+  "value": "SDA"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP43"
+  ],
+  "sources_entries": [],
+  "value": "SCL"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP44"
+  ],
+  "sources_entries": [],
+  "value": "SOS_SW"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP45"
+  ],
+  "sources_entries": [],
+  "value": "TEST_SW"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP46"
+  ],
+  "sources_entries": [],
+  "value": "TR_APRS"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP47"
+  ],
+  "sources_entries": [],
+  "value": "C_DVDD"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP48"
+  ],
+  "sources_entries": [],
+  "value": "BOOT_J"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP5"
+  ],
+  "sources_entries": [],
+  "value": "LED_RAIL_SW"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP6"
+  ],
+  "sources_entries": [],
+  "value": "+5V"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP7"
+  ],
+  "sources_entries": [],
+  "value": "+3V3"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP8"
+  ],
+  "sources_entries": [],
+  "value": "GND"
+ },
+ {
+  "footprint": "TestPoint:TestPoint_Pad_D1.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "TP9"
+  ],
+  "sources_entries": [],
+  "value": "EXP_INT"
+ },
+ {
+  "footprint": "Package_SO:TSSOP-24_4.4x7.8mm_P0.65mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Texas Instruments",
+   "model": "PCA9555PWR",
+   "pkg": "TSSOP-24",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C2864778",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "U1"
+  ],
+  "sources_entries": [],
+  "value": "PCA9555PW 0x22: LED sinks, light mode inputs"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23-6",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "STMicroelectronics",
+   "model": "USBLC6-2SC6",
+   "pkg": "SOT-23-6L",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C7519",
+  "order_code_on_line": true,
+  "qty": 5,
+  "refs": [
+   "U6",
+   "U7",
+   "U8",
+   "U10",
+   "U11"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "ST DS4260",
+      "matches_fitted": "yes: pin 1 I/O1, 2 GND, 3 I/O2, 4 I/O2, 5 VBUS, 6 I/O1",
+      "path": "v2/vendor/st/st-usblc6-2-esd-protection.pdf",
+      "revision": "Rev 7, December 2021",
+      "sha256": "bc30154f310cd631043214ed52571daefe04270587ec55072d49a23bd18b9068",
+      "url": "TBD"
+     }
+    ],
+    "fitted_mpn": "USBLC6-2SC6",
+    "id": "usb-esd-array",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C7519",
+    "on_main": null,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "USBLC6-2SC6"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C151394",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "U12"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "Diodes Incorporated DS35124",
+      "matches_fitted": "yes: ordering information lists 74LVC1G17W5-7, SOT25, 3,000 per reel",
+      "path": "v2/vendor/diodes/diodes-74lvc1g17.pdf",
+      "revision": "Rev. 8-2 (pages 2 onward); page 1's footer reads Rev. 7-2, a mismatch inside the maker's file",
+      "sha256": "029f345a1e7be917fee46d47c49a61963938e0aab1631b019fe7eddb014fb548",
+      "url": "https://www.diodes.com/assets/Datasheets/74LVC1G17.pdf"
+     }
+    ],
+    "fitted_mpn": "74LVC1G17W5-7",
+    "id": "panel-schmitt-buffers",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C151394",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): ZEROIZE_HW follows the local ZEROIZE_SW (owner D-03)"
+ },
+ {
+  "footprint": "Package_SO:TSSOP-24_4.4x7.8mm_P0.65mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Texas Instruments",
+   "model": "PCA9555PWR",
+   "pkg": "TSSOP-24",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C2864778",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "U2"
+  ],
+  "sources_entries": [],
+  "value": "PCA9555PW 0x23: LED sinks, the battery bar, lamp test"
+ },
+ {
+  "footprint": "Package_DFN_QFN:QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm",
+  "generator_cited_documents": [
+   "rp2040/rpi-rp2040-datasheet.pdf",
+   "v2/vendor/seals/apem-5000-series-datasheet-rs-copy.pdf"
+  ],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Raspberry Pi",
+   "model": "RP2040",
+   "pkg": "LQFN-56(7x7)",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C2040",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "U3"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "RP2040 Datasheet",
+      "matches_fitted": "yes",
+      "path": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+      "revision": "build-date 2025-02-20, build-version 3184e62-clean",
+      "sha256": "be56fbb75ba0ae9e26558a73c93ac3e75c2ad4e6878d3b6703de2a76d886ea8c",
+      "url": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf (INFERRED from sources.txt line 53)"
+     },
+     {
+      "doc_id": "Hardware design with RP2040",
+      "matches_fitted": "yes",
+      "path": "v2/vendor/rp2040/rpi-rp2040-hardware-design.pdf",
+      "revision": "not read; PDF ModDate 2026-08-20",
+      "sha256": "51c4f430153fcdbf3209d9b3b41662c8527ff0150bc25777e3fcd6f5221a1c19",
+      "url": null
+     }
+    ],
+    "fitted_mpn": "RP2040",
+    "id": "rp2040",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C2040",
+    "on_main": null,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)"
+ },
+ {
+  "footprint": "Package_SON:Winbond_USON-8-1EP_3x2mm_P0.5mm_EP0.2x1.6mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Winbond Elec",
+   "model": "W25Q16JVUXIQ",
+   "pkg": "USON-8-EP(2x3)",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C2843335",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "U4"
+  ],
+  "sources_entries": [],
+  "value": "W25Q16JVUXIQ 16 Mbit QSPI flash (USON-8: 1 CS 2 DO/IO1 3 WP/IO2 4 GND 5 DI/IO0 6 CLK 7 HOLD/IO3 8 VCC, pad)"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "",
+  "order_code_on_line": false,
+  "qty": 1,
+  "refs": [
+   "U5"
+  ],
+  "sources_entries": [],
+  "value": "TLV75533PDBV 3.3 V 500 mA LDO for the controller, expanders, e-paper and sensor (1 IN 2 GND 3 EN 4 NC 5 OUT)"
+ },
+ {
+  "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+  "generator_cited_documents": [],
+  "jlc_certified_row": null,
+  "lcsc": "C151394",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "U9"
+  ],
+  "sources_entries": [
+   {
+    "documents": [
+     {
+      "doc_id": "Diodes Incorporated DS35124",
+      "matches_fitted": "yes: ordering information lists 74LVC1G17W5-7, SOT25, 3,000 per reel",
+      "path": "v2/vendor/diodes/diodes-74lvc1g17.pdf",
+      "revision": "Rev. 8-2 (pages 2 onward); page 1's footer reads Rev. 7-2, a mismatch inside the maker's file",
+      "sha256": "029f345a1e7be917fee46d47c49a61963938e0aab1631b019fe7eddb014fb548",
+      "url": "https://www.diodes.com/assets/Datasheets/74LVC1G17.pdf"
+     }
+    ],
+    "fitted_mpn": "74LVC1G17W5-7",
+    "id": "panel-schmitt-buffers",
+    "identity": "MATCH",
+    "joined_by": "LCSC code C151394",
+    "on_main": true,
+    "status": "VERIFIED"
+   }
+  ],
+  "value": "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3)"
+ },
+ {
+  "footprint": "meshsat:Vishay_VEML7700",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Vishay Intertech",
+   "model": "VEML7700-TR",
+   "pkg": "SMD-4P",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C504893",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "U_LIGHT"
+  ],
+  "sources_entries": [],
+  "value": "Vishay VEML7700 ambient light sensor (1 SCL 2 VDD 3 GND 4 SDA), I2C 0x10"
+ },
+ {
+  "footprint": "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm",
+  "generator_cited_documents": [],
+  "jlc_certified_row": {
+   "asked": "2026-09-26",
+   "brand": "Abracon LLC",
+   "model": "ABM8-272-T3",
+   "pkg": "SMD3225-4P",
+   "verdict": "CERTIFIED"
+  },
+  "lcsc": "C20625731",
+  "order_code_on_line": true,
+  "qty": 1,
+  "refs": [
+   "Y1"
+  ],
+  "sources_entries": [],
+  "value": "12 MHz ABM8-272-T3 (3225): 1 XIN, 3 XOUT, 2 and 4 GND"
+ }
+]

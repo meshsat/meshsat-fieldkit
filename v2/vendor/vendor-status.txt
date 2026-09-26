@@ -125,3 +125,36 @@ power/littelfuse-smcj-series-tvs.pdf   current   # Littelfuse SMCJ series: the m
 st/st-an4938-rev7.pdf   current   # AN4938, hardware development of the STM32H74x/H75x: the three I/O supervisors on board B, both the named H753 and the bought H743
 ti/ti-slla552-tmuxhs4212-schematic-checklist.pdf   current   # TMUXHS4212 schematic checklist; its RSVD1/RSVD2 row is superseded by the datasheet's later revision (SOURCES.yaml, usb3-host-mux)
 ti/ti-tps2065c-slvsau6i.pdf   current   # TPS2065C (SLVSAU6), the camera-rail switch U28 on board B; the C-suffix sheet the fitted TPS2065CDBVR needs
+
+# --- added 26 September 2026 (MESHSAT-1357, stream PKT): the new folder and each new document, and what it is FOR ---
+techpublic   current   # TECH PUBLIC 74LVC1G08GV, the AND gates of board D's keying and EMCON chain in the round 6 candidate (SOURCES.yaml, board-d-ptt-emcon-logic)
+battery/ti-bq77207.pdf   current   # BQ7720700, board P's second-level protector U2 (decision 40, D-15)
+battery/eaton-scf9550-elx1135.pdf   current   # SCF9550-30-05, board P's chemical fuse F2 (decision 40, D-15)
+battery/murata-prf-series.pdf   current   # PRF15BB103RB6RC, board P's PTC element RT1
+battery/ti-sluuaq3a-bq4050-trm.pdf   current   # the BQ4050 technical reference manual (board P's gauge: protections, FUSE, ship mode)
+battery/ti-sluubf9-bq4050evm.pdf   current   # the BQ4050 evaluation module guide (the maker's reference circuit for board P)
+battery/ti-sluuav7c-bq40z50evm.pdf   current   # the bq40z50 evaluation module guide, section 4.5: the PTC element requirement
+connectors/jst-ph-catalogue.pdf   current   # JST PH, board P's thermistor socket J_TS
+connectors/jst-xh-catalogue.pdf   current   # JST XH, the pack SMBus lead (E and P J_SMB), the cell taps and board E's lid lead J_TAMP
+diodes/diodes-74lvc1g17.pdf   current   # 74LVC1G17W5-7, board C's EMCON and ZEROIZE buffers U9 and U12
+diodes/diodes-74lvc1g34.pdf   current   # 74LVC1G34W5-7, board D's read-back buffers in the round 6 candidate (and board C's U9 before round 4)
+diodes/diodes-bat46w.pdf   current   # BAT46W-7-F, board A's bootstrap diodes in the round 6 candidate
+diodes/diodes-smbj-ds19002.pdf   current   # SMBJ58A-13-F, board B's PoE clamp D2
+nexperia/nexperia-pesd12vl1ba.pdf   current   # PESD12VL1BA, board D's microphone clamps D10 and D13
+power/aos-ao3400a-n-mosfet.pdf   current   # AO3400A, board P's fuse heater FET Q3
+power/jscj-2n7002-c8545.pdf   current   # the JSCJ 2N7002 behind C8545, the logic N-FET on B, D and P
+power/littelfuse-smbj-series-tvs.pdf   current   # Littelfuse SMBJ series: SMBJ6.0A (D D1) and SMBJ18A (A D4)
+power/mdd-smbj-series-tvs.pdf   current   # MDD SMBJ series: SMBJ5.0A (A, B, D clamps) and SMBJ20A (P D1)
+power/panjit-ss2020fl-series.pdf   current   # PANJIT SS2040FL, board C's e-paper boost rectifiers D19 to D21
+techpublic/techpublic-74lvc1g08gv-c19829591.pdf   current   # the AND gates of board D's keying chain in the round 6 candidate
+ti/ti-sn74lvc1g00.pdf   current   # SN74LVC1G00, board A's outlet interlock U30 in the round 6 candidate (D-11)
+ti/ti-sn74lvc1g04.pdf   current   # SN74LVC1G04, board D's PTT inverter U11 in the round 6 candidate
+ti/ti-sn74lvc1g06.pdf   current   # SN74LVC1G06, board D's open-drain PTT driver U13 in the round 6 candidate
+ti/ti-sn74lvc1g08.pdf   current   # SN74LVC1G08, the Ioff reference of board B's round 6 candidate (no part fitted from it)
+ti/ti-tlv758p.pdf   current   # TLV75801P, board D's hub rail U17 and PA gate bias U15
+ti/ti-tpd2e2u06-q1.pdf   current   # TPD2E2U06-Q1, board A's USB-C CC ESD array in the round 6 candidate (D-17)
+ti/ti-tusb2046b-slls413l-addendum-2025.pdf   current   # TUSB2046IBVFR, board D's hub U4 (the current orderable addendum)
+vishay/vishay-si2300ds.pdf   current   # Si2300DS-T1-GE3, board C's e-paper boost FET Q6
+vishay/vishay-wsl-power-metal-strip.pdf   current   # WSL25126L000FEA, board A's stage shunts in the round 6 candidate
+battery/ti-sffs317a-bq77207-fusa.pdf   current   # TI's pin FMA for the BQ77207 family, board P's U2: what an open, shorted or bridged TS pin does (SOURCES.yaml, pack-secondary-protector)
+battery/littelfuse-itv9550-30a.pdf   retired   # NOT FITTED: the chemical fuse alternative the battery review stream evaluated and did not take (-10 C operating floor), kept for the record of that choice (SOURCES.yaml, pack-chemical-fuse-alternative)
