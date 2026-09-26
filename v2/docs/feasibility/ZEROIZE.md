@@ -7,7 +7,7 @@ authorized device documentation or demonstrate the operation on a development de
 unsuitable, assess a concrete alternative and its interfaces before finalizing dependent boards.").
 Main moved to `458b2873` during the third cycle; that commit carries the round-6 board B circuit, with the supervisors
 on PB6 and PB7. Every repository line cited below is at `1f614233` unless it says otherwise, and
-`drafts/ZEROIZE-integration.md` section 7 maps the ones that moved.
+`v2/docs/records/rv-zer/ZEROIZE-integration.md` section 7 maps the ones that moved.
 
 **Prototype framing.** Nothing here has been built, provisioned or tested. No ATECC608B has been configured, no drive
 encrypted, no wipe run. Every result below is a DESK result: read from vendor documents and vendor source code. Desk
@@ -17,12 +17,12 @@ the bench experiment of section 5, which has not run.
 Evidence labels: **VERIFIED** = the cited artefact was read and says this; **SUPPORTED** = consistent public Microchip
 sources say it for the same device family or configuration, but not for the exact part in the exact state;
 **INFERRED** = a conclusion drawn by this study, with its reasoning given; **TBD** = not known, with its effect stated.
-Fetched documents are listed with URL, capture date and sha256 in `drafts/datasheets/SOURCES.md` of this worktree.
+Fetched documents are listed with URL, capture date and sha256 in `v2/docs/records/rv-zer/datasheets/SOURCES.md`.
 
 **Revision note (second cycle, same day).** A checker found two wrong facts in the first cycle, both corrected here:
 property P8 claimed the netlist settles who can reach the secure element, while three firmware-bearing supervisors
 share its bus (section 2, Z-C3, residual R7); and the wipe's "about 0.51 s worst case" left out the retries its own
-step 2 allowed (section 3.4, now computed by `drafts/zeroize/zer_budget.py` with every retry loop counted).
+step 2 allowed (section 3.4, now computed by `v2/docs/records/rv-zer/zeroize/zer_budget.py` with every retry loop counted).
 
 **Revision note (third cycle, same day).** A second check found that the bound at which the timed phase "gives up"
 modelled a part that refuses every poll on a free bus, and was claimed for "the bus not answering" too; on a held bus
@@ -58,10 +58,10 @@ corrected a sentence about the first cycle's pass lines (3.4), and its minor ite
    change, D-03 intact); two key-encryption keys (KEK_A in slot 0, KEK_B in slot 1), both needed to unlock any drive,
    both destroyed by ZEROIZE; SlotConfig 0x2084 and KeyConfig 0x0013 on both; every other configuration byte left at
    the ATECC608 image Microchip's test suite runs against. The image and its properties are generated and checked by
-   `drafts/zeroize/zer_config.py` (9 planted defects caught, 0 checks failed). The wipe takes about 0.52 s with no
+   `v2/docs/records/rv-zer/zeroize/zer_config.py` (9 planted defects caught, 0 checks failed). The wipe takes about 0.52 s with no
    retry and at most 0.82 s with every retry the design allows, and the modules are told to drop their keys by
    1.504 s whatever the part or the bus does, at a deadline the panel's own bus layer enforces (section 3.4,
-   `drafts/zeroize/zer_budget.py`);
+   `v2/docs/records/rv-zer/zeroize/zer_budget.py`);
    the proposed REQ-035 pass lines are 1.5 s for both KEKs destroyed and verified and 3.0 s for the slot cut, which a
    hardware timer enforces whatever the bus does.
 5. **Fallback if the bench fails:** a TPM 2.0 on the same kit I2C bus, Infineon OPTIGA TPM SLB 9673 (I2C, address
@@ -304,7 +304,7 @@ torn journal entry reads as PENDING, so a failure there fails toward the wipe; *
 the secure element, the bus or a module (step 0); **I5**, step 5 never waits on the secure element or the bus past
 the deadline D (step 3), so the modules are told before their power goes whatever the bus does.
 
-**Time budget** (computed by `drafts/zeroize/zer_budget.py`, which carries the source of every number in its header
+**Time budget** (computed by `v2/docs/records/rv-zer/zeroize/zer_budget.py`, which carries the source of every number in its header
 and refuses a pass line that does not cover the worst case). The kit bus clock is not declared anywhere (TBD); the
 budget assumes 100 kHz, the top of I2C standard mode and the lowest clock CryptoAuthLib itself uses (it wakes the part
 at 100 kHz, `calib_basic.c:54-63`, and defaults to 400 kHz off Linux, `lib/atca_cfgs.c:52-56`), so it holds for any
@@ -449,13 +449,13 @@ then the KEKs exist; see residual R1.
 Platform (a SAM D21 host speaking Microchip's kit protocol over USB HID, DS50002921A p. 4); MikroElektronika Secure
 SOIC click, a SOIC-8 socket on the mikroBUS header (DS50002921A Table 2-1 p. 6); ATECC608B-SSHDA-T samples of the
 fitted order code (LCSC C1518769, JLCPCB 2,344 in stock at 0.9955 USD, read 2026-09-26T12:27Z,
-`drafts/prices/jlc-ATECC608B-SSHDA-T.json`). The DIP switch is set to the mikroBUS only (SW2_1 ON, SW2_2 OFF,
+`v2/docs/records/rv-zer/prices/jlc-ATECC608B-SSHDA-T.json`). The DIP switch is set to the mikroBUS only (SW2_1 ON, SW2_2 OFF,
 DS50002921A p. 5), because the on-board TrustCUSTOM device also answers at 0x60 (p. 4). Host: a PC with CryptoAuthLib
 v3.8.0 and its kit HID HAL (`lib/hal/hal_all_platforms_kit_hidapi.c`). Steps on each of three parts:
 
 - A0: `atcab_info`; read the whole configuration zone; record it; require LockConfig = LockValue = 0x55 and byte 16 =
   0xC0 (closes U4).
-- A1: write the image of `drafts/zeroize/zer_config.py` (`calib_write_config_zone`), read it back byte for byte, lock
+- A1: write the image of `v2/docs/records/rv-zer/zeroize/zer_config.py` (`calib_write_config_zone`), read it back byte for byte, lock
   the configuration zone with the CRC of the read-back (`calib_lock_config_zone_crc`).
 - A2: GenKey mode 0x04 on slots 0 and 1; record P_A0, P_B0. A3: lock the data zone; require LockValue = 0x00.
 - A4: with a host test key pair (q, Q): ECDH(slot 0, Q) and ECDH(slot 1, Q) must equal the host's ECDH(q, P_A0) and
@@ -554,11 +554,11 @@ secret, resumably across a power loss, and never ending in a state where a key s
 
 | Part | Status | Closing evidence | Holds | Owner and bound |
 |---|---|---|---|---|
-| Mechanism exists on the part (P2, P3, P4, P6) | **CLOSED at desk level** (E1 to E9, E13) | this document; `drafts/zeroize/zer_config.py` PASS | nothing further at desk level | session; done 2026-09-26 |
+| Mechanism exists on the part (P2, P3, P4, P6) | **CLOSED at desk level** (E1 to E9, E13) | this document; `v2/docs/records/rv-zer/zeroize/zer_config.py` PASS | nothing further at desk level | session; done 2026-09-26 |
 | Mechanism works on the fitted MPN in this configuration | **OPEN** | Z-EXP-A pass record (script, log, part lot, config read-back) filed under `v2/docs/feasibility/evidence/` | board B layout entry, U8 site only | session runs it once the parts exist; the spend is the owner's under D-09; bound: section 5 |
 | Interrupted power (P5, U1) | **OPEN** | Z-EXP-B pass record, with the OLD/NEW/ERROR counts | board B layout entry, U8 site only; the panel firmware's wipe | as above |
 | Panel resume and slot gating (D-03.3) | **OPEN** | Z-EXP-C pass record | panel firmware (MESHSAT-837) | session, with the panel firmware |
-| Wipe time bounded, every retry counted (P7) | **CLOSED at desk level as a bound**: 0.517 s nominal, 0.817 s worst case in specification; the part not answering 1.414 s and the bus held throughout 0.708 s, both ended by the retry policy; step 5 (the modules told) starts by 1.504 s whatever the part or the bus does (deadline D with T_HAL = 10 ms); the slot cut is a hardware alarm at 3.0 s. **OPEN on the part** | `drafts/zeroize/zer_budget.py` PASS (10 planted defects, each caught by its own check); Z-EXP-B step B0 and the Z-EXP-C timing and held-bus records | the proposed REQ-035 pass lines (1.5 s, 3.0 s) until B0 and Z-EXP-C confirm them | session |
+| Wipe time bounded, every retry counted (P7) | **CLOSED at desk level as a bound**: 0.517 s nominal, 0.817 s worst case in specification; the part not answering 1.414 s and the bus held throughout 0.708 s, both ended by the retry policy; step 5 (the modules told) starts by 1.504 s whatever the part or the bus does (deadline D with T_HAL = 10 ms); the slot cut is a hardware alarm at 3.0 s. **OPEN on the part** | `v2/docs/records/rv-zer/zeroize/zer_budget.py` PASS (10 planted defects, each caught by its own check); Z-EXP-B step B0 and the Z-EXP-C timing and held-bus records | the proposed REQ-035 pass lines (1.5 s, 3.0 s) until B0 and Z-EXP-C confirm them | session |
 | Only the panel commands the part (P8) | modules: **CLOSED by the netlist**; the three supervisors: **BOUNDED, not closed**, by firmware rule Z-C3 under the owner's D-13 verified-boot floor; **ACCEPTED AS RESIDUAL R7**, for review | `gen_sch_b.py:360`, `:571` (modules); `gen_sch_b.py:824` and E17 (supervisors); Z-C3 written into the supervisor firmware's requirements and its D-13 verified boot; the Z-EXP-C held-bus cases C-H1 to C-H3 for the fail-secure outcome of R7(a); R7(d) goes to the D-09 review | the supervisor firmware (it must implement Z-C3); no board | session, with the supervisor firmware; the D-09 reviewer for R7 |
 | Physical remanence (U2) | **ACCEPTED AS RESIDUAL R2**, for review | D-09 security review note | nothing | D-09 reviewer |
 | Address 0x60 (U4) | **OPEN, trivial** | Z-EXP-A A0 | nothing (the address is programmable before the configuration lock, DS20005927A p. 13, so a different factory value costs no board change) | session |
@@ -643,7 +643,7 @@ the kit bus, which needs no H753-only unit. That reopen condition does not fire.
 1. Keep the ATECC608B-SSHDA-T. D-03 stands as ruled, with no board change.
 2. Provision it with the slot map of section 3.1 (KEK_A and KEK_B, SlotConfig 0x2084, KeyConfig 0x0013, all other bytes
    Microchip's tested image until key fill defines them under Z-C1 to Z-C3), generated and checked by
-   `drafts/zeroize/zer_config.py`.
+   `v2/docs/records/rv-zer/zeroize/zer_config.py`.
 3. Enrol every drive and eMMC under both KEKs with one LUKS keyslot and no recovery keyslot (3.3); keep `/boot` and a
    recovery image unencrypted and secret-free.
 4. Implement the wipe of 3.4 with invariants I1 to I5, the retry cap of 6 GenKey commands in the timed phase, the
@@ -651,7 +651,7 @@ the kit bus, which needs no H753-only unit. That reopen condition does not fire.
    through the Pico SDK's `_until` calls, and the deadline D = 1.5 s), the step-0 slot-cut alarm under its three
    firmware rules and the watchdog backstop, and the boot table of 3.5; propose to REQ-035 the pass lines of 1.5 s
    (KEKs destroyed and verified; worst case 0.817 s, nominal 0.517 s) and 3.0 s (slots cut, by the alarm) from the
-   end of the hold, as computed by `drafts/zeroize/zer_budget.py`.
+   end of the hold, as computed by `v2/docs/records/rv-zer/zeroize/zer_budget.py`.
 5. Run Z-EXP-A and Z-EXP-B on the fitted MPN before board B's layout entry; Z-EXP-C with the panel firmware.
 6. Keep the SLB 9673 on board B's U8 site as the fallback under switch conditions S1 and S2, with the SE050E2 behind it
    if the TPM stays unobtainable.

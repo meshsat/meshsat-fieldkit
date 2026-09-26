@@ -1,0 +1,134 @@
++3V3_M2C1 (8 nodes):
+   C157.1  | 22u 6.3V
+   C158.1  | 100n
+   J_M2C1.2 (3.3V) | M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (two MHF4 leads to A22's P2P jack
+   J_M2C1.4 (3.3V) | M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (two MHF4 leads to A22's P2P jack
+   J_M2C1.72 (3.3V) | M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (two MHF4 leads to A22's P2P jack
+   J_M2C1.74 (3.3V) | M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (two MHF4 leads to A22's P2P jack
+   R165.2  | 5mOhm 1% 2512 (Kelvin shunt: card socket current, W5 TESTACCESS-B)
+   TP103.1 (1) | +3V3_M2C1
++3V3_M2C2 (21 nodes):
+   C257.1  | 22u 6.3V
+   C258.1  | 100n
+   C520.1  | 220u 6.3V KEMET T520B227M006ATE025 polymer tantalum 25 mOhm (RM520N HD 3.3.1 bulk)
+   C521.1  | 220u 6.3V KEMET T520B227M006ATE025 polymer tantalum 25 mOhm (RM520N HD 3.3.1 bulk)
+   C522.1  | 6.8n 50V X7R
+   C523.1  | 220p 50V C0G
+   C524.1  | 68p 50V C0G
+   C525.1  | 100n
+   C526.1  | 220p 50V C0G
+   C527.1  | 68p 50V C0G
+   C528.1  | 15p 50V C0G
+   C529.1  | 9.1p 50V C0G
+   C530.1  | 4.7p 50V C0G
+   D520.1 (A1) | SMBJ5.0A
+   J_M2C2.2 (3.3V) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   J_M2C2.4 (3.3V) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   J_M2C2.70 (3.3V) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   J_M2C2.72 (3.3V) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   J_M2C2.74 (3.3V) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   R265.2  | 5mOhm 1% 2512 (Kelvin shunt: card socket current, W5 TESTACCESS-B)
+   TP203.1 (1) | +3V3_M2C2
++3V3_M2C3 (8 nodes):
+   C357.1  | 22u 6.3V
+   C358.1  | 100n
+   J_M2C3.2 (3.3V) | M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: the second AsiaRF AW7915-AED (two MHF4 leads to the antenna changeov
+   J_M2C3.4 (3.3V) | M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: the second AsiaRF AW7915-AED (two MHF4 leads to the antenna changeov
+   J_M2C3.72 (3.3V) | M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: the second AsiaRF AW7915-AED (two MHF4 leads to the antenna changeov
+   J_M2C3.74 (3.3V) | M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: the second AsiaRF AW7915-AED (two MHF4 leads to the antenna changeov
+   R365.2  | 5mOhm 1% 2512 (Kelvin shunt: card socket current, W5 TESTACCESS-B)
+   TP303.1 (1) | +3V3_M2C3
+CARD1_CLKREQ_n (2 nodes):
+   J_M2C1.53 (~{CLKREQ0}) | M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (two MHF4 leads to A22's P2P jack
+   R134.1  | 10k
+PCIE1_nWAKE (4 nodes):
+   J_M2C1.55 (~{PEWAKE0}) | M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (two MHF4 leads to A22's P2P jack
+   J_M2N1.54 (~{PEWAKE}) | M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S1 (k3s replicated storage)
+   R132.1  | 10k
+   U30B.104 (PCIE_nWAKE) | Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side)
+PCIE1_RST2_n (2 nodes):
+   J_M2C1.52 (~{PERST0}) | M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (two MHF4 leads to A22's P2P jack
+   U101.6 (DWNRST_L2) | Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket
+WIFI_nLED (2 nodes):
+   J_M2C1.6 (~{LED_1}) | M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (two MHF4 leads to A22's P2P jack
+   LED15.1 (K) | blue WiFi link
+CARD1_CLK_P (3 nodes):
+   J_M2C1.47 (REFCLKp0) | M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (two MHF4 leads to A22's P2P jack
+   R183.2  | 33.2R 1% (HCSL series Rs, DS40068 Table 8-1, W3-F03)
+   R185.1  | 49.9R 1% (HCSL shunt Rp, DS40068 Table 8-1, W3-F03)
+CARD1_RX_P (2 nodes):
+   C155.2  | 220n 16V (PCIe AC coupling at the switch transmitter, W3-F01)
+   J_M2C1.35 (PETp0) | M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (two MHF4 leads to A22's P2P jack
+CARD1_TX_P (2 nodes):
+   J_M2C1.41 (PERp0) | M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (two MHF4 leads to A22's P2P jack
+   U101.102 (PERP2) | Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket
++3V3_S1B (45 nodes):
+   C121.1  | 22u 10V X7R 1210
+   C122.1  | 22u 10V X7R 1210
+   C123.1  | 22u 10V X7R 1210
+   C135.1  | 100n
+   C136.1  | 100n
+   C137.1  | 100n
+   C138.1  | 100n
+   C139.1  | 100n
+   C140.1  | 100n
+   C147.1  | 10u
+   C149.1  | 22u 6.3V
+   C150.1  | 100n
+   J_M2N1.12 (3.3V) | M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S1 (k3s replicated storage)
+   J_M2N1.14 (3.3V) | M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S1 (k3s replicated storage)
+   J_M2N1.16 (3.3V) | M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S1 (k3s replicated storage)
+   J_M2N1.18 (3.3V) | M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S1 (k3s replicated storage)
+   J_M2N1.2 (3.3V) | M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S1 (k3s replicated storage)
+   J_M2N1.4 (3.3V) | M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S1 (k3s replicated storage)
+   J_M2N1.70 (3.3V) | M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S1 (k3s replicated storage)
+   J_M2N1.72 (3.3V) | M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S1 (k3s replicated storage)
+   J_M2N1.74 (3.3V) | M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S1 (k3s replicated storage)
+   L102.2 (2) | 3.3uH XAL6030-332ME
+   R107.1  | 31.6k 1%
+   R119.2  | 5.1k
+   R120.2  | 5.1k
+   R121.2  | 5.1k
+   R123.2  | 5.1k
+   R125.2  | 5.1k
+   R126.2  | 5.1k
+   R130.1  | 1k
+   R131.1  | 1k
+   R132.2  | 10k
+   R133.2  | 10k
+   R136.1  | 1k
+   TP21.1 (1) | +3V3_S1B
+   U101.1 (VDDR) | Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket
+   U101.113 (AVDDH) | Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket
+   U101.15 (VAUX) | Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket
+   U101.49 (VDDR) | Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket
+   U101.64 (VDDR) | Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket
+   U101.79 (CVDDR) | Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket
+   U101.8 (VDDR) | Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket
+   U101.82 (CVDDR) | Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket
+   U101.84 (CVDDR) | Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket
+   U101.96 (VDDR) | Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket
+CARD2_CLKREQ_n (2 nodes):
+   J_M2C2.52 (~{CLKREQ}) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   R234.1  | 10k
+PCIE2_nWAKE (4 nodes):
+   J_M2C2.54 (~{PEWAKE}) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   J_M2N2.54 (~{PEWAKE}) | M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S2 (k3s replicated storage)
+   R232.1  | 10k
+   U31B.104 (PCIE_nWAKE) | Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side)
+PCIE2_RST2_n (2 nodes):
+   J_M2C2.50 (~{PERST}) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   U201.6 (DWNRST_L2) | Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket
+5G_nLED (2 nodes):
+   J_M2C2.10 (GPIO_9/DAS/~{DSS}/~{LED1}) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   LED25.1 (K) | amber 5G network
+USB_5G_P (2 nodes):
+   J_M2C2.7 (USB_D+) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   U302.24 (USB_DP_DN4) | TI TUSB8041IRGCR four-port USB 3.0 hub, slot S3 (upstream the CM5 USB3-0 port)
+SIM1_VCC (3 nodes):
+   C286.1  | 100n
+   J_M2C2.36 (UIM-PWR) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   J_SIM1.1 (VCC) | nano-SIM push-push GCT SIM8060 (SIM 1)
+SIM2_VCC (2 nodes):
+   J_M2C2.48 (GPIO_4) | M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the modu
+   R272.1  | 0R (eSIM option link at the module, HD 4.1.6 Figure 19)

@@ -1,0 +1,21 @@
+C16    1n                     U5     WQFN-38-1EP_5x7mm_P0.5mm_E pin 3   gate 3 fan_now True  (0.5) fan_cu True  (0.5) fan_ruled True  cap_cy [2.96, 1.46]  dmin_fan  4.34  dmin_cy  2.14  now  32.74  gate_pad 33.46 over True
+C38    100n                   U10    QFN-56-1EP_7x7mm_P0.4mm_EP pin 1   gate 3 fan_now True  (0.4) fan_cu True  (0.4) fan_ruled True  cap_cy [2.96, 1.46]  dmin_fan  4.37  dmin_cy  2.17  now  22.99  gate_pad 22.21 over True
+C39    100n                   U10    QFN-56-1EP_7x7mm_P0.4mm_EP pin 10  gate 3 fan_now True  (0.4) fan_cu True  (0.4) fan_ruled True  cap_cy [2.96, 1.46]  dmin_fan  4.37  dmin_cy  2.17  now  27.39  gate_pad 26.62 over True
+C40    100n                   U10    QFN-56-1EP_7x7mm_P0.4mm_EP pin 22  gate 3 fan_now True  (0.4) fan_cu True  (0.4) fan_ruled True  cap_cy [2.96, 1.46]  dmin_fan  3.62  dmin_cy  1.42  now  28.34  gate_pad 27.58 over True
+C41    100n                   U10    QFN-56-1EP_7x7mm_P0.4mm_EP pin 33  gate 3 fan_now True  (0.4) fan_cu True  (0.4) fan_ruled True  cap_cy [2.96, 1.46]  dmin_fan  4.37  dmin_cy  2.17  now   3.52  gate_pad 2.75 over False
+C42    100n                   U10    QFN-56-1EP_7x7mm_P0.4mm_EP pin 42  gate 3 fan_now True  (0.4) fan_cu True  (0.4) fan_ruled True  cap_cy [2.96, 1.46]  dmin_fan  4.37  dmin_cy  2.17  now   8.28  gate_pad 7.57 over True
+C43    100n                   U10    QFN-56-1EP_7x7mm_P0.4mm_EP pin 49  gate 3 fan_now True  (0.4) fan_cu True  (0.4) fan_ruled True  cap_cy [2.96, 1.46]  dmin_fan  3.62  dmin_cy  1.42  now  15.64  gate_pad 14.89 over True
+C44    100n                   U11    Winbond_USON-8-1EP_3x2mm_P pin 8   gate 3 fan_now True  (0.5) fan_cu True  (0.5) fan_ruled True  cap_cy [2.96, 1.46]  dmin_fan  3.43  dmin_cy  1.23  now  14.97  gate_pad 14.51 over True
+C45    1u                     U10    QFN-56-1EP_7x7mm_P0.4mm_EP pin 23  gate 3 fan_now True  (0.4) fan_cu True  (0.4) fan_ruled True  cap_cy [2.96, 1.46]  dmin_fan  3.62  dmin_cy  1.42  now  23.35  gate_pad 22.58 over True
+C46    1u                     U10    QFN-56-1EP_7x7mm_P0.4mm_EP pin 50  gate 3 fan_now True  (0.4) fan_cu True  (0.4) fan_ruled True  cap_cy [2.96, 1.46]  dmin_fan  3.62  dmin_cy  1.42  now  28.44  gate_pad 27.67 over True
+C47    1u                     U10    QFN-56-1EP_7x7mm_P0.4mm_EP pin 44  gate 3 fan_now True  (0.4) fan_cu True  (0.4) fan_ruled True  cap_cy [2.96, 1.46]  dmin_fan  3.62  dmin_cy  1.42  now   8.14  gate_pad 7.71 over True
+C31    10u 25V 1210           U12    TSOT-23-6                  pin 2   gate 6 fan_now False (None) fan_cu False (None) fan_ruled True  cap_cy [4.6, 3.2]  dmin_fan  5.41  dmin_cy  3.21  now   9.64  gate_pad 8.83 over True
+C30    100n                   U12    TSOT-23-6                  pin 6   gate 3 fan_now False (None) fan_cu False (None) fan_ruled True  cap_cy [2.96, 1.46]  dmin_fan  3.68  dmin_cy  1.48  now   1.60  gate_pad 1.89 over False
+C34    1u                     U13    SOT-23-5                   pin 1   gate 3 fan_now False (None) fan_cu False (None) fan_ruled False cap_cy [2.96, 1.46]  dmin_fan  3.68  dmin_cy  1.48  now   2.50  gate_pad 3.28 over True
+C35    1u                     U13    SOT-23-5                   pin 5   gate 3 fan_now False (None) fan_cu False (None) fan_ruled False cap_cy [2.96, 1.46]  dmin_fan  3.68  dmin_cy  1.48  now   4.93  gate_pad 5.25 over True
+C48    100n                   U14    Bosch_LGA-8_3x3mm_P0.8mm_C pin 8   gate 3 fan_now True  (0.8) fan_cu True  (0.8) fan_ruled True  cap_cy [2.96, 1.46]  dmin_fan  3.49  dmin_cy  1.29  now   6.22  gate_pad 5.52 over True
+C49    100n                   U15    Bosch_LGA-14_3x2.5mm_P0.5m pin 8   gate 3 fan_now True  (0.5) fan_cu True  (0.5) fan_ruled True  cap_cy [2.96, 1.46]  dmin_fan  3.78  dmin_cy  1.58  now   9.37  gate_pad 9.32 over True
+C50    100n                   U15    Bosch_LGA-14_3x2.5mm_P0.5m pin 5   gate 3 fan_now True  (0.5) fan_cu True  (0.5) fan_ruled True  cap_cy [2.96, 1.46]  dmin_fan  3.52  dmin_cy  1.32  now  11.85  gate_pad 11.96 over True
+C57    U17    pin 1   not on this board
+C58    U17    pin 5   not on this board
+C56    U16    pin 6   not on this board

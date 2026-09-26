@@ -1,0 +1,36 @@
+1. track inductance per mm over the first inner plane (nH/mm)
+   JLC06161H-3313 (boards A and B, six layers)                            h 0.0994 mm:  w 0.20 0.296   w 0.30 0.232   w 0.50 0.164
+   JLC08161H-2116 (board B, the eight-layer measurement of decision 43)   h 0.1164 mm:  w 0.20 0.323   w 0.30 0.256   w 0.50 0.183
+   JLC04161H-7628 (boards C24 and D12, four layers 1 oz, ground on In1 and In2) h 0.2104 mm:  w 0.20 0.431   w 0.30 0.356   w 0.50 0.269
+   JLC04162H-7628 (board P, four layers 2 oz, decision 28)                h 0.2104 mm:  w 0.20 0.431   w 0.30 0.356   w 0.50 0.269
+2. via pair, 0.30 mm drill (r 0.15), through most of a 1.6 mm board (l = board minus the top dielectric)
+   pitch 0.5 mm, l 1.449 mm: 0.64 nH
+   pitch 0.8 mm, l 1.449 mm: 0.95 nH
+   pitch 1.2 mm, l 1.449 mm: 1.20 nH
+3. the options for one 0402 at a 0.4 to 0.5 mm pitch part on board B's six-layer stack, 0.25 mm track
+   own-pin window, rail pad about 1.0 mm from the pin         track 0.26 nH
+   outside the fan, rail pad about 3.2 mm from the pin        track 0.83 nH
+   outside the fan, rail pad about 5.0 mm (a crowded part)    track 1.30 nH
+   underside under the pin, dog-bone 0.5 mm + via pair at 0.5 mm pitch:        0.77 nH
+   underside under the pin, dog-bone 0.5 mm + via pair at 0.8 mm pitch:        1.08 nH
+4. a capacitor on the side OPPOSITE its part (checker item 1, 26 September): dog-bone 0.5 mm + via pair from
+   the far surface to the first plane under the part (l = board - outer copper - first dielectric), and the
+   VIA ALLOWANCE: the length of 0.25 mm outer track over that plane with the same inductance as the via pair
+   JLC06161H-3313 (boards A and B, six layers)                            L' 0.260 nH/mm, l 1.449 mm, via pair 0.64 / 0.95 / 1.20 nH at 0.5 / 0.8 / 1.2 mm; allowance at 0.8 mm 3.7 mm
+                                                                          opposite side under the pin (0.5 mm dog-bone + via pair at 0.8 mm) 1.08 nH; own side, rail pad 1.0 / 3.2 / 5.0 mm: 0.26 / 0.83 / 1.30 nH
+   JLC08161H-2116 (board B, the eight-layer measurement of decision 43)   L' 0.285 nH/mm, l 1.449 mm, via pair 0.64 / 0.95 / 1.20 nH at 0.5 / 0.8 / 1.2 mm; allowance at 0.8 mm 3.3 mm
+                                                                          opposite side under the pin (0.5 mm dog-bone + via pair at 0.8 mm) 1.09 nH; own side, rail pad 1.0 / 3.2 / 5.0 mm: 0.29 / 0.91 / 1.43 nH
+   JLC04161H-7628 (boards C24 and D12, four layers 1 oz, ground on In1 and In2) L' 0.389 nH/mm, l 1.341 mm, via pair 0.59 / 0.88 / 1.11 nH at 0.5 / 0.8 / 1.2 mm; allowance at 0.8 mm 2.3 mm
+                                                                          opposite side under the pin (0.5 mm dog-bone + via pair at 0.8 mm) 1.07 nH; own side, rail pad 1.0 / 3.2 / 5.0 mm: 0.39 / 1.25 / 1.95 nH
+   JLC04162H-7628 (board P, four layers 2 oz, decision 28)                L' 0.389 nH/mm, l 1.411 mm, via pair 0.62 / 0.92 / 1.16 nH at 0.5 / 0.8 / 1.2 mm; allowance at 0.8 mm 2.4 mm
+                                                                          opposite side under the pin (0.5 mm dog-bone + via pair at 0.8 mm) 1.12 nH; own side, rail pad 1.0 / 3.2 / 5.0 mm: 0.39 / 1.25 / 1.95 nH
+5. sensitivity of the via allowance (mm of outer track equal to the via pair) to via pitch and track width
+   JLC06161H-3313 (boards A and B, six layers)                            p0.5/w0.20 2.2  p0.5/w0.25 2.5  p0.5/w0.30 2.7  p0.8/w0.20 3.2  p0.8/w0.25 3.7  p0.8/w0.30 4.1  p1.2/w0.20 4.0  p1.2/w0.25 4.6  p1.2/w0.30 5.2
+   JLC08161H-2116 (board B, the eight-layer measurement of decision 43)   p0.5/w0.20 2.0  p0.5/w0.25 2.2  p0.5/w0.30 2.5  p0.8/w0.20 2.9  p0.8/w0.25 3.3  p0.8/w0.30 3.7  p1.2/w0.20 3.7  p1.2/w0.25 4.2  p1.2/w0.30 4.7
+   JLC04161H-7628 (boards C24 and D12, four layers 1 oz, ground on In1 and In2) p0.5/w0.20 1.4  p0.5/w0.25 1.5  p0.5/w0.30 1.7  p0.8/w0.20 2.0  p0.8/w0.25 2.3  p0.8/w0.30 2.5  p1.2/w0.20 2.6  p1.2/w0.25 2.8  p1.2/w0.30 3.1
+   JLC04162H-7628 (board P, four layers 2 oz, decision 28)                p0.5/w0.20 1.4  p0.5/w0.25 1.6  p0.5/w0.30 1.7  p0.8/w0.20 2.1  p0.8/w0.25 2.4  p0.8/w0.30 2.6  p1.2/w0.20 2.7  p1.2/w0.25 3.0  p1.2/w0.30 3.3
+   AN 574's example: 1.73 nH more for 2.311 mm more via length, 0.748 nH per mm of via
+   JLC06161H-3313 (boards A and B, six layers)                            far-side via 1.449 mm, own-side via to the first plane 0.134 mm, extra 1.314 mm: at AN 574's rate 0.98 nH; this model 0.95 nH at 0.8 mm pitch
+   JLC08161H-2116 (board B, the eight-layer measurement of decision 43)   far-side via 1.449 mm, own-side via to the first plane 0.151 mm, extra 1.297 mm: at AN 574's rate 0.97 nH; this model 0.95 nH at 0.8 mm pitch
+   JLC04161H-7628 (boards C24 and D12, four layers 1 oz, ground on In1 and In2) far-side via 1.341 mm, own-side via to the first plane 0.245 mm, extra 1.095 mm: at AN 574's rate 0.82 nH; this model 0.88 nH at 0.8 mm pitch
+   JLC04162H-7628 (board P, four layers 2 oz, decision 28)                far-side via 1.411 mm, own-side via to the first plane 0.245 mm, extra 1.165 mm: at AN 574's rate 0.87 nH; this model 0.92 nH at 0.8 mm pitch

@@ -1,0 +1,4 @@
+C1     2.2u                   U1     QFN-32-1EP_5x5mm_P0.5mm_EP pin 1   gate 3 fan_now True  (0.5) fan_cu True  (0.5) fan_ruled True  cap_cy [3.4, 1.96]  dmin_fan  4.56  dmin_cy  2.36  now  11.03  gate_pad 10.11 over True
+C6     100n                   U1     QFN-32-1EP_5x5mm_P0.5mm_EP pin 32  gate 3 fan_now True  (0.5) fan_cu True  (0.5) fan_ruled True  cap_cy [2.96, 1.46]  dmin_fan  3.62  dmin_cy  1.42  now  11.42  gate_pad 11.03 over True
+C8     100n                   U1     QFN-32-1EP_5x5mm_P0.5mm_EP pin 26  gate 3 fan_now True  (0.5) fan_cu True  (0.5) fan_ruled True  cap_cy [2.96, 1.46]  dmin_fan  3.62  dmin_cy  1.42  now  14.97  gate_pad 14.39 over True
+C14    U2     pin 1   not on this board

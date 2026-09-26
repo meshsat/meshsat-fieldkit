@@ -24,7 +24,7 @@ plus their uncommitted generator edits, read 26 September) are cited where they 
 
 1. **The 3 mm number is a project heuristic for every part it is applied to. No maker document gives it.** Fifteen
    documents were read for the parts decision 42 holds (section 4 and section 11), and none gives a distance for
-   any capacitor. Across the whole vendor tree (311 PDFs under `v2/vendor/`, scanned by `drafts/dec_mmscan.py` for a
+   any capacitor. Across the whole vendor tree (311 PDFs under `v2/vendor/`, scanned by `v2/docs/records/rv-dec/dec_mmscan.py` for a
    millimetre or mil figure beside a capacitor clause and a placement word; six hits, each read in context: four are
    track widths or bus-length matching in Quectel and ST documents) there is exactly **one** maker distance for a decoupling capacitor: TI's TPA6132A2 on board D, "Place both capacitors
    within 5 mm of their associated pins" (SLOS597B section 9, p.17). It is looser than 3 mm and it is that part's own
@@ -91,7 +91,7 @@ and no line of the three tools above.
 
 ### 3.1 Geometry, read from the board text
 
-Method (session record `drafts/dec_geometry.py`, a text reader of `.kicad_pcb` with no pcbnew, mirroring
+Method (session record `v2/docs/records/rv-dec/dec_geometry.py`, a text reader of `.kicad_pcb` with no pcbnew, mirroring
 `bypass_slots._courtyard`, `_fan_box` and `_needs_fan`, and for the fan as ruled also `escape.py`'s selection,
 `escaped` and `fan_as_ruled` in the same file): for every declared entry of a board's committed intent
 file, the smallest distance from the pin to a capacitor centre at which the capacitor's courtyard, placed at
@@ -149,7 +149,7 @@ B). It is the same defect class as a paste aperture read as copper elsewhere in 
   artefact.** The WSON-6-1EP's two paste apertures lift U15 to nine SMD pads, past `_needs_fan`'s floor of eight; on
   copper it has seven. But the escape pass escapes U15 at 0.65 mm (`escape.py:34-42` has no pad-count floor), and
   D12 carries vias of its pins' nets 1.50 mm from pin 3 (/VGG_CT) and 1.58 mm from pin 6 (/+5V_D8)
-  (`drafts/dec_escset.out`).
+  (`v2/docs/records/rv-dec/dec_escset.out`).
 - **So a copper-pad count alone would cut a fan an escaped part needs,** and T1 does not use it alone (section 8.1).
 
 (b) **The placers ask 3.0 mm of every value; the gate asks 6.0 mm of microfarad values.** `bypass_place.py:17` and
@@ -180,7 +180,7 @@ ten `pads found on the board` failures: the LM5176 current-sense filter capacito
 
 (g) **The fan and the escape pass select different parts.** `_needs_fan` asks eight SMD pads 1.0 mm apart or less;
 `escape.py` escapes any part at 0.7 mm or less, or with SOT-23-6/8 in its name, with no pad floor (section 2). Read
-on the six committed boards (`drafts/dec_escset.py`, output `drafts/dec_escset.out`), the parts the escape pass
+on the six committed boards (`v2/docs/records/rv-dec/dec_escset.py`, output `v2/docs/records/rv-dec/dec_escset.out`), the parts the escape pass
 escapes with fewer than eight numbered copper pads are:
 - **A32:** 1 (U29, SOT-23-6).
 - **B21:** 14. U82 and U83 (MLPD-6 at 0.35 mm, on the back); U10, U21 and U22 (WSON-6-1EP at 0.65 mm); nine
@@ -194,14 +194,14 @@ The four WSON-6-1EP and E17's six FETs are fanned today only through their paste
 fan at all, though the escape pass selects them, and 18 of them carry a via of a signal pad's own net within 3.5 mm
 (A32's U29, B21's U29 and U37 and D12's U5 carry none on their signal nets). Every nearest locked via of a signal pad's own net within
 3.5 mm of an escaped part's pad lies inside that part's fan box: 1,087 of 1,087 on the six boards
-(`drafts/dec_escvias.out`; that these are the escape vias is INFERRED from the net, the lock and the distance).
+(`v2/docs/records/rv-dec/dec_escvias.out`; that these are the escape vias is INFERRED from the net, the lock and the distance).
 `escape.py`'s own `is_fine` also counts paste apertures, as (a) describes for `_needs_fan`: E17's TDSON-8-1 FETs,
 whose pins are at 1.27 mm, read 0.40 mm and are escaped. Whether they should be is a question for `escape.py`, not
 for this ruling. T1 makes the fan follow whatever the escape pass selects.
 
 ### 3.3 Which boards are already assembled on both sides (checker item 1, VERIFIED)
 
-Read from the committed board text by `drafts/dec_sides.py` (a footprint is SMD when it carries a copper SMD pad
+Read from the committed board text by `v2/docs/records/rv-dec/dec_sides.py` (a footprint is SMD when it carries a copper SMD pad
 and no plated hole, THT when it carries a plated hole):
 
 | board | front: SMD / THT | back: SMD / THT | SMD on both sides already |
@@ -213,11 +213,11 @@ and no plated hole, THT when it carries a plated hole):
 | E17 | 148 / 13 | 0 / 0 | **no** |
 | P4 | 48 / 8 | 0 / 0 | **no** |
 
-Declared decoupling entries whose capacitor sits on the side OPPOSITE the part it serves (`drafts/dec_sides_decl.py`
+Declared decoupling entries whose capacitor sits on the side OPPOSITE the part it serves (`v2/docs/records/rv-dec/dec_sides_decl.py`
 against each board's committed intent file): A32 0, B21 0, C24 0 (its 15 back-side declarations all serve parts on
 the back), E17 0, P4 0, and **D12 11**: C51 to C55, C8, C9 and C15 to C18, all on B.Cu serving F.Cu parts. None sits
-inside its own part's courtyard. Read against the escape fans (`drafts/dec_farside.py`, output
-`drafts/dec_farside.out`: the fan box of every part in the set T1 rules, which is every part the escape pass escapes
+inside its own part's courtyard. Read against the escape fans (`v2/docs/records/rv-dec/dec_farside.py`, output
+`v2/docs/records/rv-dec/dec_farside.out`: the fan box of every part in the set T1 rules, which is every part the escape pass escapes
 and every part with eight or more numbered copper pads 1.0 mm apart or less, and every through-hole courtyard):
 - **C15 and C16 overlap the fan box of U7**, the TPA6132A2 in its QFN-16 at 0.5 mm, which is where U7's escape vias
   come through.
@@ -234,7 +234,7 @@ show it. Counted with the same reader:
 - **D12:** 20 on the back do, among them decision 44's nine inside the codec's pin field.
 - **C24:** none.
 
-(The 16:42 reading, on the copper-pad set alone, counted 92 and 18: `drafts/dec_farside.before-17h15.out`.)
+(The 16:42 reading, on the copper-pad set alone, counted 92 and 18: `v2/docs/records/rv-dec/dec_farside.before-17h15.out`.)
 
 Appendix 32.174 counted 71 back-side parts under the three 0.40 mm PCIe switches alone on B19, by a narrower
 measure (under the part rather than inside its fan).
@@ -246,7 +246,7 @@ numbers are the PDF's own pages.
 
 | part (board, references) | package, pitch (board text) | maker document | what it says about placement | number | value and count it asks, against the design |
 |---|---|---|---|---|---|
-| STM32H743VI (B, U41/U51/U61) | LQFP-100, 0.5 mm | ST AN4938 Rev 7, Oct 2024 | "each power supply pair must be decoupled with filtering ceramic capacitors (100 nF) and one single tantalum or ceramic capacitor (min. 4.7 μF) connected in parallel. These capacitors need to be placed as close as possible to, or below, the appropriate pins on the underside of the PCB" (7.4, p.32, a general recommendation); for these devices 9.3 states the package rule: "The following recommendations shall be followed: Place the decoupling capacitors as close as possible to the power and ground pins of the MCU. For BGA packages, it is recommended to place the decoupling capacitors on the other side of the PCB (see Figure 21)" (p.38), and Figure 21 (p.39) is captioned "Decoupling capacitor and STM32 MCU on the same side of the package (all packages except BGA)" against "on the opposite sides of the package (BGA package)". **For the LQFP-100 on board B the maker names the same side**; "Connect the decoupling capacitor pad to the power and ground plane with a wider, short trace/via" (p.38) | none | 100 nF per VDD pin and one 4.7 uF minimum for the package; VDDA 100 nF + 1 uF; VCAP1 and VCAP2 2.2 uF each, ESR under 100 mOhm (2.2, p.12). VBAT: "it is mandatory to connect this pin to an external power supply: as an example, VBAT pin can be connected to VDD through a 100 nF external ceramic decoupling capacitor" (p.12): the connection is required, the 100 nF is an example. Design: 5 x 100 nF for 5 VDD pins, 10 uF, 2 x 2.2 uF VCAP, VBAT tied to the 3.3 V rail: met. **VDDA is tied to the 3.3 V rail with no capacitor of its own** (`gen_sch_b.py:806`, `:811`; `fnd/r4b` `:1119`, `:1124`). That is W6-F7 as it stands (`wt/w6/drafts/w6-findings.md:34`, `:243-244`, which withdrew the VBAT 100 nF as a shortfall) |
+| STM32H743VI (B, U41/U51/U61) | LQFP-100, 0.5 mm | ST AN4938 Rev 7, Oct 2024 | "each power supply pair must be decoupled with filtering ceramic capacitors (100 nF) and one single tantalum or ceramic capacitor (min. 4.7 μF) connected in parallel. These capacitors need to be placed as close as possible to, or below, the appropriate pins on the underside of the PCB" (7.4, p.32, a general recommendation); for these devices 9.3 states the package rule: "The following recommendations shall be followed: Place the decoupling capacitors as close as possible to the power and ground pins of the MCU. For BGA packages, it is recommended to place the decoupling capacitors on the other side of the PCB (see Figure 21)" (p.38), and Figure 21 (p.39) is captioned "Decoupling capacitor and STM32 MCU on the same side of the package (all packages except BGA)" against "on the opposite sides of the package (BGA package)". **For the LQFP-100 on board B the maker names the same side**; "Connect the decoupling capacitor pad to the power and ground plane with a wider, short trace/via" (p.38) | none | 100 nF per VDD pin and one 4.7 uF minimum for the package; VDDA 100 nF + 1 uF; VCAP1 and VCAP2 2.2 uF each, ESR under 100 mOhm (2.2, p.12). VBAT: "it is mandatory to connect this pin to an external power supply: as an example, VBAT pin can be connected to VDD through a 100 nF external ceramic decoupling capacitor" (p.12): the connection is required, the 100 nF is an example. Design: 5 x 100 nF for 5 VDD pins, 10 uF, 2 x 2.2 uF VCAP, VBAT tied to the 3.3 V rail: met. **VDDA is tied to the 3.3 V rail with no capacitor of its own** (`gen_sch_b.py:806`, `:811`; `fnd/r4b` `:1119`, `:1124`). That is W6-F7 as it stands (`v2/docs/records/w6/w6-findings.md:34`, `:243-244`, which withdrew the VBAT 100 nF as a shortfall) |
 | PI7C9X2G404SL (B, U101/U201/U301) | LQFP-128-EP, 0.4 mm | Diodes DS40068 Rev 5-2 | nothing: section 3.5 lists the supply pins (p.14) and no clause, figure or table covers decoupling | none | **TBD**: no maker requirement in the tree. Design: 6 x 100 nF at 3.3 V and 6 x 100 nF at 1.0 V, 10 uF each (`gen_sch_b.py:450-451`), for 26 supply pads |
 | TUSB8041 (B, U102/U202/U302) | QFN-64, 0.5 mm | TI SLLSEE4E, Jun 2016 | "These bulk capacitors can be placed anywhere on the power rail. The smaller decoupling capacitors should be placed as close to the TUSB8041 power pins as possible with an optimal grouping of two of differing values per pin" (10.1, p.37); "A 0.1 uF capacitor should be placed as close as possible on each VDD and VDD33 power pin" and bulk "as close as possible to the voltage regulators" (11.1.1, p.38) | none | one 0.1 uF per pin: 8 VDD, 4 VDD33. Design: **4 on the 1.1 V core for 8 VDD pins** (`gen_sch_b.py:534`), 4 on 3.3 V, 10 uF on 1.1 V |
 | KSZ9897R (B, U1) | TQFP-128-EP, 0.4 mm | Microchip DS00002330D | 4.7: "An example power connection diagram can be seen in Figure 4-8"; the figure (p.51, read as an image) draws one 0.1 uF at each supply pin, 22 uF on DVDDL, AVDDL and AVDDH, 10 uF on VDDIO, AVDDL and AVDDH fed through ferrites | none | the example's 27 x 0.1 uF (DVDDL 8, AVDDL 9, AVDDH 7, VDDIO 3). Design: **10 x 100 nF** (4 at 3.3 V, 3 at 1.2 V for 17 pins, 3 at 2.5 V for 7) and 10 uF on 1.2 and 2.5 V (`gen_sch_b.py:619-620`) |
@@ -260,7 +260,7 @@ numbers are the PDF's own pages.
 | LM5176 (A, seven stages in the candidate) | HTSSOP-28, 0.65 mm | TI SNVSAI1D, Aug 2021 | CIN, QL1, QH1 and RSENSE "close together to minimize the loop area"; "Place the VCC bypass capacitor close to the controller IC, between the VCC and PGND pins"; BIAS 0.1 uF; "Bypass the VIN pin to AGND with a low ESR ceramic capacitor located close to the controller IC" (10.1, p.30). VCC is "Output of the VCC bias regulator" (pin table, p.3) and takes "a value between 1 µF and 4.7 µF" (p.15). Pin 3 is VISNS, "VIN sense input. Connect to power stage input rail" (p.3) | none | VCC 4.7 uF met; the candidate adds BIAS 0.1 uF on all seven and a 1 uF VIN-pin capacitor behind the blocking diode on FE, PA and HF (`fnd/r4a` `gen_sch_a.py:379`, `:453-456`); **S2, SD, POE and PD have no VIN-pin capacitor** (their 10 uF CIN is declared at pin 2, `:458`), and **every stage declares a 10 uF CIN against VISNS** (`:456`, `:458`) |
 | BQ25731 (A, U3) | QFN-32, 0.4 mm | TI SLUSE66A, Jan 2021 | Table 12-1 (p.93): the input loop "best to put them on the same side ... Move part of CBUS to the other side of PCB for high density design"; "10 nF + 1 nF (0402 package) decoupling capacitors as close as possible to IC"; "Place VBUS cap, VCC cap, REGN caps near IC" | none | the candidate carries C190/C191 (10 nF + 1 nF, `fnd/r4a` `gen_sch_a.py:649`), undeclared |
 | BQ4050 (P, U1) | QFN-32, 0.5 mm | TI SLUSC67B, Oct 2017 | "The bq4050 gauge has an internal LDO that is internally compensated and does not require an external decoupling capacitor"; PBI 2.2 uF (8.2.2.2.2, p.33); "Place all filter components as close as possible to the device" and keep high-current traces away from the gauge's signal traces (10.1, pp.42-43); protector FET and pack terminal bypass capacitors on wide copper (10.1.1, p.44) | none | PBI 2.2 uF met; BAT and VCC are RC filters (R5 100 ohm with C6, R7 1 kOhm with C8, `gen_sch_p.py:168-170`) |
-| BQ77207 (P, U2) | the DSS land | TI SLUSEG7D, May 2026 (`drafts/datasheets/`) | RVD 100 to 1000 ohm, CVD 0.05 to 1 uF (Table 8-1, p.14); "Ensure the RC filters for the Vn and VDD pins are placed as close as possible to the target terminal" (8.4.1, p.17) | none | met: R23 300 ohm, C14 100 nF (`gen_sch_p.py:390`) |
+| BQ77207 (P, U2) | the DSS land | TI SLUSEG7D, May 2026 (`v2/vendor/battery/ti-bq77207.pdf`) | RVD 100 to 1000 ohm, CVD 0.05 to 1 uF (Table 8-1, p.14); "Ensure the RC filters for the Vn and VDD pins are placed as close as possible to the target terminal" (8.4.1, p.17) | none | met: R23 300 ohm, C14 100 nF (`gen_sch_p.py:390`) |
 | RP2040 (C, U3; E, U10) | QFN-56, 0.4 mm | Raspberry Pi RP2040 hardware design guide, build 20/08/2026 | "it is important to place decoupling close to the power pins. Ordinarily, we recommend the use of a 100 nF capacitor per power pin"; room for all of them "could be overcome if we used ... a four layer PCB with components on both the top and bottom sides" (2.1.2, pp.8-9); "We must place 1 μF capacitors close to both the input (VREG_IN) and the output (VREG_OUT), in order to provide a stable 1.1 V supply" (2.1.3, p.9) | none | ADC_AVDD and USB_VDD have none of their own (round 4 open item O-C1); the two 1 uF on the regulator's output net are **declared against the DVDD pins 23 and 50**, not VREG_VOUT pin 45 (`gen_sch_c.py:349`, `gen_sch_e.py:620`; pin map `gen_sch_c.py:54-55`) |
 | TLV755P (C, U5; D, U1; E, U13) | SOT-23-5, 0.95 mm | TI SBVS320D, Sep 2024 | "requires an output capacitance of 0.47µF or larger for stability"; "Place a 1µF or greater capacitor on the input pin" (7.1.1, p.15); "Place input and output capacitors as close as possible to the device" (layout, p.21) | none | met: 1 uF in, 1 uF out on C and E; 1 uF in, 1 uF + 10 uF out on D (`gen_sch_d.py:593-595`) |
 | AP2112K (B, U27 and the three supervisor LDOs) | SOT-23-5, 0.95 mm | Diodes DS39724 Rev 2-2 | "Stable with 1.0µF Flexible Cap" (features, p.1); no layout clause | none | met: 1 uF in, 1 uF out on U27 (`gen_sch_b.py:987-988`) |
@@ -268,7 +268,7 @@ numbers are the PDF's own pages.
 | PCM2912A (D, U6) | TQFP-32, 0.8 mm | TI SLES230A, Aug 2015 | "The decoupling capacitors must be as close as possible to the PCM2912A pins" (p.27); 1 μF ceramic capacitors in the application circuit (p.24) | none | 1 uF per supply pin (C18 to C23, `gen_sch_d.py:336`, declared at `:603-608`) |
 | TPA6132A2 (D, U7) | QFN-16, 0.5 mm | TI SLOS597B, Jul 2017 | "Connect the HPVDD pin only to a 2.2 μF, X5R or better, capacitor ... Place both capacitors within 5 mm of their associated pins on the TPA6132A2. Ensure that the ground connection of each of the capacitors has a minimum length return path to the device" (9, p.17); "Place a 2.2 μF capacitor within 5 mm of the VDD pin ... Use 0402 or smaller size capacitors if possible"; an additional 10 uF "or higher" on VDD is optional and "unnecessary in most applications" (9.1, p.17); both 2.2 uF drawn in the application figures (pp.14, 16) | **5 mm** | **HPVDD has 1 uF (C31) where the maker asks 2.2 uF; VDD has 1 uF (C32) where the maker asks 2.2 uF**, plus the optional 10 uF (C33) (`gen_sch_d.py:379`). The generator cites "SLOS553" (`gen_sch_d.py:148`); the document in the tree is SLOS597B |
 | general | | TI SCAA082A, rev. Aug 2017 | "Place the lowest valued capacitor as close as possible to the device"; "Connect the pad of the capacitor directly with a via to the ground plane. Use two or three vias" (2.4, p.13) | none | |
-| general | | Altera AN 574, AN-574-1.0, May 2009 (`drafts/datasheets/`) | spreading inductance depends on the plane dielectric h and the distance d; "Minimizing the dielectric thickness (h) reduces the capacitor location sensitivity and allows you to place the capacitors farther away" (p.6); vias "as close as possible to the capacitor", "Place the capacitors on the PCB surface (top and bottom) closest to their corresponding power/ground planes" (p.13); a bottom 0402 through long vias 2.3 nH against a top 0402 "slightly far away" at 0.57 + 0.2 + 0.05 nH (p.16) | none | |
+| general | | Altera AN 574, AN-574-1.0, May 2009 (session copy, not yet in the tree: `v2/docs/records/README.md`) | spreading inductance depends on the plane dielectric h and the distance d; "Minimizing the dielectric thickness (h) reduces the capacitor location sensitivity and allows you to place the capacitors farther away" (p.6); vias "as close as possible to the capacitor", "Place the capacitors on the PCB surface (top and bottom) closest to their corresponding power/ground planes" (p.13); a bottom 0402 through long vias 2.3 nH against a top 0402 "slightly far away" at 0.57 + 0.2 + 0.05 nH (p.16) | none | |
 
 **Conclusion of the table.** For the parts decision 42 holds, not one maker gives a distance; across the vendor tree
 one maker does (TPA6132A2, 5 mm, board D). The makers' words split the capacitors by role, not by value: the
@@ -300,7 +300,7 @@ rail pad to the pin over the nearest plane, and the vias to the planes. How much
 rail is: on a plane pair with a thin dielectric distance matters little (AN 574, p.6), on a track it matters per
 millimetre.
 
-What the stackups give (session record `drafts/dec_loop.py`, output `drafts/dec_loop.out`; INFERRED, closed forms,
+What the stackups give (session record `v2/docs/records/rv-dec/dec_loop.py`, output `v2/docs/records/rv-dec/dec_loop.out`; INFERRED, closed forms,
 not a field solve):
 
 | stackup (source) | boards | outer copper to first plane | track over that plane, w 0.20 / 0.25 / 0.30 / 0.50 mm |
@@ -315,7 +315,7 @@ the far side to the first plane under the part (0.3 mm drill): L = (mu0 l / pi) 
 1.20 nH at 0.5, 0.8 and 1.2 mm via pitch on the six-layer stack (l 1.45 mm), and 0.59, 0.88 and 1.11 nH on
 JLC04161H-7628 (l 1.34 mm).
 
-Which rails are planes (VERIFIED from the filled zones of the committed boards, `drafts/dec_planes.py` for C and D):
+Which rails are planes (VERIFIED from the filled zones of the committed boards, `v2/docs/records/rv-dec/dec_planes.py` for C and D):
 board A32 has GND on In1, In2 and In4 (and VBAT on part of In2); board B21 has GND on In1 and the 5 V rails on In4; C24 and D12 have GND on
 In1 and In2 (and GND pours on both outer layers), with only a 92 mm2 island of +5V_D8 on D12's In2. **The supply
 rails that feed the fine-pitch parts are not planes on any board.** So a per-pin capacitor's loop is set by its
@@ -325,7 +325,7 @@ track to the pin.
 
 | seat | rail pad to pin | loop beyond the capacitor's own ESL, 0.25 mm track: six-layer (B) | four-layer (C24, D12) |
 |---|---|---|---|
-| own-pin window inside the fan (0402, just outside the courtyard) | 1.0 to 1.7 mm (window centres read on B21 with `drafts/dec_fanwin.py`) | 0.26 to 0.44 nH | 0.39 to 0.66 nH |
+| own-pin window inside the fan (0402, just outside the courtyard) | 1.0 to 1.7 mm (window centres read on B21 with `v2/docs/records/rv-dec/dec_fanwin.py`) | 0.26 to 0.44 nH | 0.39 to 0.66 nH |
 | nearest seat outside the fan (the rule today) | 3.2 to 3.9 mm | 0.83 to 1.01 nH | 1.25 to 1.52 nH |
 | a crowded part's seat outside the fan | about 5 mm | about 1.3 nH | about 1.95 nH |
 | the side opposite the part, under the pin: 0.5 mm dog-bone and via pair at 0.8 mm | | about 1.08 nH | about 1.07 nH |
@@ -347,11 +347,11 @@ would win outright only for a rail carried on a plane next to the far side, whic
 **The via allowance.** One number per stackup states the far side's cost in the same unit as every other seat: the
 length of 0.25 mm outer track whose inductance equals the via pair at 0.8 mm pitch. It is **3.7 mm on JLC06161H-3313
 (B, and C once it goes to six layers under decision 27), 3.3 mm on JLC08161H-2116, and 2.3 mm on JLC04161H-7628 (C24,
-D12)** (`drafts/dec_loop.out`, section 4; INFERRED). A seat on the far side then has a loop-equivalent distance equal
+D12)** (`v2/docs/records/rv-dec/dec_loop.out`, section 4; INFERRED). A seat on the far side then has a loop-equivalent distance equal
 to its in-plane rail pad to pin distance plus the allowance, and every seat on either side is compared on that one
 figure (D5).
 
-**How far the allowance moves, and AN 574's own example** (`drafts/dec_loop.out`, section 5; INFERRED).
+**How far the allowance moves, and AN 574's own example** (`v2/docs/records/rv-dec/dec_loop.out`, section 5; INFERRED).
 - **Via pitch** moves it most. On the six-layer stack it is 2.5, 3.7 and 4.6 mm at 0.5, 0.8 and 1.2 mm pitch, and on
   JLC04161H-7628 it is 1.5, 2.3 and 2.8 mm.
 - **Track width** moves it less. Between 0.20 and 0.30 mm at 0.8 mm pitch it spans 3.2 to 4.1 mm (six layers) and
@@ -488,9 +488,9 @@ logic parts; AN4938's 4.7 uF minimum per package, which 7.4 ties to "the appropr
     - **The set covers board B's own obstacle knob.** It holds every part `PLACE_NO_UNDER_FINE` would treat as
       fine-pitch (`is_fine`, `gen_pcb_b3.py:356-364`, with 16 or more SMD pads, `:396`). Read on B21, C24 and D12
       there is no exception: 38, 4 and 3 parts, all inside the fanned sets of 75, 10 and 8
-      (`drafts/dec_finesets.out`).
+      (`v2/docs/records/rv-dec/dec_finesets.out`).
     - A far-side seat is also refused over any through-hole part's courtyard.
-    - **What it keeps and what it changes against today's placers** (`drafts/dec_escset.out`). Both placers already
+    - **What it keeps and what it changes against today's placers** (`v2/docs/records/rv-dec/dec_escset.out`). Both placers already
       test the fan boxes they build with no side filter (`bypass_slots.py:59-62` builds them, `:94-95` tests them;
       `bypass_place.py:74-77` and `:88-89`). The ruled set:
       - drops only the SOIC-8-1EP lands (7 on A32, 8 on B21), fanned today by their paste apertures alone (3.2(a))
@@ -501,7 +501,7 @@ logic parts; AN4938's 4.7 uF minimum per package, which 7.4 ties to "the appropr
         1 on D12, 3 on E17 and 1 on P4.
 
       So no seat the rule admits, on either side, lies inside the box that holds an escaped part's escape vias.
-    - **What the added boxes cost today's declared seats** (`drafts/dec_newfans.out`). C24's C3 and C4, the
+    - **What the added boxes cost today's declared seats** (`v2/docs/records/rv-dec/dec_newfans.out`). C24's C3 and C4, the
       TLV75533's capacitors on the back, sit inside the fan box of U11, a SOT-23-6 beside them. D12's C17 sits inside
       U5's (section 7). The ruled placers seat those elsewhere on the next placement, or record a D4 deviation. The
       added boxes at B21's U25 and E17's U12 fall on their own converters' capacitors, which R2 exempts.
@@ -513,7 +513,7 @@ logic parts; AN4938's 4.7 uF minimum per package, which 7.4 ties to "the appropr
     pad to pin distance plus the board's via allowance (section 5.2: 3.7 mm on the six-layer stack, 2.3 mm on
     JLC04161H-7628, with their sensitivity). The seat with the smallest loop-equivalent distance wins on either side,
     and the 3.0 mm screen and D4 apply to that figure.
-  - **What that leaves of the far-side seat** (`drafts/dec_farside.out`, on the committed boards and their intent
+  - **What that leaves of the far-side seat** (`v2/docs/records/rv-dec/dec_farside.out`, on the committed boards and their intent
     files).
     - **At every fanned part, the far side under the pin is gone.** That covers every 0.4 to 0.5 mm part decision 42
       is about: the STM32H743, the PCIe switches, the USB hubs, the KSZ9897R, the CP2102N, the RP2040, the TPA6132A2
@@ -650,7 +650,7 @@ today; B2 at 6.0 mm, since no maker places them), and P4's C1, C6 and C8 (3.0 mm
     never used for a part whose maker names the same side (the STM32H743 in its LQFP, AN4938 9.3 and Figure 21;
     the converters, R3).
   - **What it gives.** A seat under the pin only at the small parts the escape pass does not escape: 4 of B21's 30
-    current declarations, 4 of C24's 18 and 7 of D12's 24 (`drafts/dec_farside.out`). At a fanned part it gives a
+    current declarations, 4 of C24's 18 and 7 of D12's 24 (`v2/docs/records/rv-dec/dec_farside.out`). At a fanned part it gives a
     fallback where the own side is full (D4), never the smaller loop.
   - **What it does not answer.** The fine-pitch capacitors this decision was asked about, where the loop comparison
     of 5.2 alone could favour the far side (on C24 and D12 against an own-side seat past about 2.8 mm, on B past
@@ -679,15 +679,15 @@ today; B2 at 6.0 mm, since no maker places them), and P4's C1, C6 and C8 (3.0 mm
 **Board D's eleven other-side entries (checker item 1, and the fan reading of the 16:42 correction).** D12 is not in
 decision 42's residue. Decision 44 keeps D12 for this revision: the region change goes into a commit that re-cuts D
 for another reason. Under D5 each entry is read two ways:
-- **Its seat,** against every fan box and through-hole courtyard (`drafts/dec_farside.out`, VERIFIED from the board
+- **Its seat,** against every fan box and through-hole courtyard (`v2/docs/records/rv-dec/dec_farside.out`, VERIFIED from the board
   text).
-- **Its loop-equivalent distance:** the in-plane rail pad to pin distance (VERIFIED by `drafts/dec_sides_decl.py`)
+- **Its loop-equivalent distance:** the in-plane rail pad to pin distance (VERIFIED by `v2/docs/records/rv-dec/dec_sides_decl.py`)
   plus D12's 2.3 mm allowance (INFERRED).
 
 | capacitors | serves | class | in plane | loop-equivalent | reading under the ruling |
 |---|---|---|---:|---:|---|
 | C53 | U11 pin 5 (74LVC1G04) | D | 0.54 mm | 2.8 mm | within the 3.0 mm screen |
-| C52, C51 | U10, U9 pin 5 (74LVC1G08) | D | 1.66, 2.79 mm | 4.0, 5.1 mm | past the screen because of their side: on D's next placement an own-side seat (1.48 mm to the centre at best, `drafts/dec_geom_pcb-d-aprs-d9.txt`) is the smaller loop, unless the placement leaves none |
+| C52, C51 | U10, U9 pin 5 (74LVC1G08) | D | 1.66, 2.79 mm | 4.0, 5.1 mm | past the screen because of their side: on D's next placement an own-side seat (1.48 mm to the centre at best, `v2/docs/records/rv-dec/dec_geom_pcb-d-aprs-d9.txt`) is the smaller loop, unless the placement leaves none |
 | C54, C55 | U12, U13 pin 5 | D | 12.21, 11.24 mm | 14.5, 13.5 mm | past the screen whatever their side; the pins lie inside U16's fan box, so no far-side seat under them is allowed; a nearer seat has to come from the front or from the back outside that fan box, on D's next placement |
 | C8, C9 | U1 pin 5, TLV75533 OUT | L | 9.32, 10.38 mm | 11.6, 12.7 mm | past the screen whatever their side |
 | C15, C16 | U4 pin 3, TUSB2046B VCC | D | 17.42, 21.63 mm | 19.7, 23.9 mm | **present seat inadmissible**: both overlap the fan box of U7 (TPA6132A2, QFN-16 at 0.5 mm), where U7's escape vias come through, which is the case board B's rule forbids; also past the screen whatever their side |
@@ -702,7 +702,7 @@ So of the eleven:
 - **one, C17, is rail bulk with no pin distance**, but it also sits where the rule forbids (inside U5's fan box).
 
 The front side fares no better. **Ten of D12's thirteen own-side declarations** are past their limit, at 5.40 to 32.1
-mm (C62 at 5.40 mm is the nearest; `drafts/dec_sides_decl.out`). Two, C56 and C7, are within it. The remaining one,
+mm (C62 at 5.40 mm is the nearest; `v2/docs/records/rv-dec/dec_sides_decl.out`). Two, C56 and C7, are within it. The remaining one,
 C61, has no pad on its declared net
 (+5V_D8) on D12. The round 4 generator made C61 the new VGG regulator's 1 uF input capacitor (`gen_sch_d.py:524-533`),
 while D12 still carries the TPS22810's 4.7 nF slew capacitor under that name, on /VGG_CT. So the gate would fail it on
@@ -737,7 +737,7 @@ What remains is work with named owners (section 10).
     0.8 mm TQFP and LQFP fans of 9 September, which the escape pass does not escape.
 
   Against today's set this drops only the SOIC-8-1EP lands and adds a fan at 22 six-pin parts (D5,
-  `drafts/dec_escset.out`). Fixtures:
+  `v2/docs/records/rv-dec/dec_escset.out`). Fixtures:
   - a `SOIC-8-1EP` land at 1.27 mm with its four paste apertures is not fanned;
   - a `WSON-6-1EP` at 0.65 mm with its two paste apertures stays fanned: it has seven copper pads, and the escape
     term holds;
@@ -788,7 +788,7 @@ What remains is work with named owners (section 10).
   `t_the_documents_are_generated_and_not_hand_maintained` fails on the box. This stream's worktree lacks those
   journals, which is why its own suite does not show it. Its effect was isolated
   here on 26 September by rendering twice on the same evidence, once with HEAD's `pcb_decisions.yaml` and once with
-  this ruling (session record `drafts/PCB-OPEN-PAIRS.decision-42.isolated.diff`): board A's DEC-001 moves from
+  this ruling (session record `v2/docs/records/rv-dec/PCB-OPEN-PAIRS.decision-42.isolated.diff`): board A's DEC-001 moves from
   decision-bound to a measured failure, the "By open decision" section goes, and the open-pair total does not
   change. The total itself depends on the evidence present (121 in the 14:45 render, 134 in this worktree, which
   lacks gitignored verdicts), not on this ruling. The rule-set fingerprint does not move: it digests only
@@ -796,7 +796,7 @@ What remains is work with named owners (section 10).
 - T9. The other side (D5). Every test below is geometric, so it can run when the seat is chosen, before the packer
   and before the escape pass.
   - **Which boards.** The placers and the gate read a board's two-sided status from its placed board: SMD footprints
-    on B.Cu present, as `drafts/dec_sides.py` reads it. They offer far-side seats only there.
+    on B.Cu present, as `v2/docs/records/rv-dec/dec_sides.py` reads it. They offer far-side seats only there.
   - **Where a seat is refused.** Inside the fan box of every part in T1's fanned set on the board, whichever side it
     is on. Both placers already test their fan boxes this way for the parts on the board at that moment:
     `bypass_slots.reserve` builds its fan list from every footprint (`bypass_slots.py:59-62`) and tests it with no
@@ -809,7 +809,7 @@ What remains is work with named owners (section 10).
     in any non-BGA package, and class R), are never offered the far side.
   - **The distance.** A far-side seat's distance is its in-plane rail pad to pin distance plus the via allowance. The
     allowance is computed from the board's stackup row in `stackup_write.py` by the two closed forms of
-    `drafts/dec_loop.py` (0.25 mm track, 0.3 mm drill, 0.8 mm via pitch). On a placed board it is re-read with the
+    `v2/docs/records/rv-dec/dec_loop.py` (0.25 mm track, 0.3 mm drill, 0.8 mm via pitch). On a placed board it is re-read with the
     seat's own via pitch.
   - **Fixtures.**
     - The allowances: B21 reads 3.7 mm, D12 2.3 mm.
@@ -881,8 +881,8 @@ What remains is work with named owners (section 10).
      maker document in the tree gives a distance (decision 42, ruled 26 September 2026).
 ```
 
-The `intel-an574.pdf` path assumes the integrator moves `drafts/datasheets/intel-an574.pdf` into
-`v2/vendor/standards/`, with the line from `drafts/datasheets/SOURCES.txt`.
+The `intel-an574.pdf` path assumes the integrator moves the session copy `drafts/datasheets/intel-an574.pdf` of `fnd/rv-dec` (listed in `v2/docs/records/README.md`) into
+`v2/vendor/standards/`, with the line from `v2/docs/records/rv-dec/datasheets/SOURCES.txt`.
 
 ### 8.3 Generators (each board's writer)
 
@@ -925,7 +925,7 @@ The `intel-an574.pdf` path assumes the integrator moves `drafts/datasheets/intel
 | G12, G14 on D | the TPA6132A2 fitted 1 uF at VDD and HPVDD against the maker's 2.2 uF, and on D12 seated 18.1 and 13.6 mm from its pins against the maker's 5 mm | board D's writer (values), the integrator (the seat, with D's next cut) |
 | board D's eleven other-side entries | re-judged by the loop-equivalent distance on D's next placement, with C15 and C16 moved out of U7's fan box and C17 out of U5's, where board B's rule forbids them; nothing moves on D12 (decision 44) | the integrator, with board D's next cut |
 | the escape cost of the own-pin windows, of R2's openings and of far-side seats under parts neither escaped nor fanned, per part (T4), and the re-seat of A, B and P and of C24's C3 and C4 out of U11's fan box (T1) | measured on the next placement of each board after T1 to T5, T9 and T10 (placement only, on the rented box) | the integrator |
-| PI7C9X2G404SL decoupling requirement | **TBD**: DS40068 Rev 5-2 has none; its 12 capacitors for 26 supply pads stand on the generator's own count. A request for Diodes' reference design is drafted in the session record, to be sent by the session that handles outside contact | the session |
+| PI7C9X2G404SL decoupling requirement | **TBD**: DS40068 Rev 5-2 has none; its 12 capacitors for 26 supply pads stand on the generator's own count. A request for Diodes' reference design is drafted in the session record (`v2/docs/records/rv-dec/dec-request-diodes-pi7c9x2g404sl.md`), to be sent by the session that handles outside contact | the session |
 | effective capacitance at DC bias | **TBD**: no maker curve in the tree; affects bulk value and count and whether a class L floor holds, not placement (5.5) | the session, with `derate.py`'s open gap |
 | rail noise at each class D part and converter input ripple | the prototype measurement DEC-001's waiver policy names; nothing is built | TEST-PLAN |
 | board B's 19 with no seat within 12 mm (20 September) | retaken under these rules on the next placement; its floor plan stays decisions 13 and 43 | the integrator |
@@ -961,14 +961,14 @@ In the tree (`v2/vendor/`), sha256 of the file read:
 | Raspberry Pi RP2040 hardware design | build 20/08/2026 | `rp2040/rpi-rp2040-hardware-design.pdf` | `51c4f430153fcdbf3209d9b3b41662c8527ff0150bc25777e3fcd6f5221a1c19` |
 | Pervasive Displays EPD driving circuit | Rev. 02, Oct 2025 | `pdi/pdi-epd-driving-circuit-rev02.pdf` | `1ea68f814afe04ca5ee0aa64b12aaf00eb26a95e9e8d7b9d424ad4f74a278623` |
 
-Not yet in the tree (session record `drafts/datasheets/`, with `SOURCES.txt`):
+Not yet in the tree unless the row says it is filed (session copies, listed in `v2/docs/records/README.md`; fetch record `v2/docs/records/rv-dec/datasheets/SOURCES.txt`):
 
 | document | revision | from | sha256 |
 |---|---|---|---|
 | Altera AN 574 | AN-574-1.0, May 2009 | intel.com via web.archive.org (`id_` copy of the publisher's file), fetched 26 September 2026 | `9c6cb94e3dcc9fdc1d2dd49dd56a1a7d1b47c35b29b4abaaef850a49c48b37d0` |
-| TI BQ77207 | SLUSEG7D, May 2026 | https://www.ti.com/lit/ds/symlink/bq77207.pdf (round 4 board P stream's copy, hash checked) | `45c1c99e2d303be8bcf1a2b1eea8275f657c7c80170bda7c2778042a688295cb` |
+| TI BQ77207 | SLUSEG7D, May 2026 | https://www.ti.com/lit/ds/symlink/bq77207.pdf (round 4 board P stream's copy, hash checked; since filed as `v2/vendor/battery/ti-bq77207.pdf`, the same bytes) | `45c1c99e2d303be8bcf1a2b1eea8275f657c7c80170bda7c2778042a688295cb` |
 
-Session records outside the vendor tree: W6's findings, `wt/w6/drafts/w6-findings.md` (lines 34, 58, 237-244, read 26
+Session records outside the vendor tree: W6's findings, `v2/docs/records/w6/w6-findings.md` (lines 34, 58, 237-244, read 26
 September) for W6-F7.
 
 Formulas (section 5): E. Hammerstad and O. Jensen, "Accurate models for microstrip computer-aided design", IEEE
@@ -976,12 +976,12 @@ MTT-S International Microwave Symposium Digest, 1980 (the microstrip Z01 used fo
 inductance L' = (mu0 / pi) acosh(s / 2r). Both are estimates for comparing options, not a substitute for the
 prototype measurement.
 
-Session record (not in this repository, offered with section 8): `drafts/dec_geometry.py` (section 3.1),
-`drafts/dec_sides.py`, `drafts/dec_sides_decl.py`, `drafts/dec_escset.py`, `drafts/dec_escvias.py` (section 3.2(g)),
-`drafts/dec_newfans.py` (section 6, D5),
-`drafts/dec_farside.py` and `drafts/dec_finesets.py` (sections 3.3,
-6 D5 and 7), `drafts/dec_planes.py` (section 5.1),
-`drafts/dec_fanwin.py` (section 5.2), `drafts/dec_loop.py` (sections 5.1 and 5.2), `drafts/dec_mmscan.py` (section 1)
+Session record (filed in `v2/docs/records/rv-dec/`): `v2/docs/records/rv-dec/dec_geometry.py` (section 3.1),
+`v2/docs/records/rv-dec/dec_sides.py`, `v2/docs/records/rv-dec/dec_sides_decl.py`, `v2/docs/records/rv-dec/dec_escset.py`, `v2/docs/records/rv-dec/dec_escvias.py` (section 3.2(g)),
+`v2/docs/records/rv-dec/dec_newfans.py` (section 6, D5),
+`v2/docs/records/rv-dec/dec_farside.py` and `v2/docs/records/rv-dec/dec_finesets.py` (sections 3.3,
+6 D5 and 7), `v2/docs/records/rv-dec/dec_planes.py` (section 5.1),
+`v2/docs/records/rv-dec/dec_fanwin.py` (section 5.2), `v2/docs/records/rv-dec/dec_loop.py` (sections 5.1 and 5.2), `v2/docs/records/rv-dec/dec_mmscan.py` (section 1)
 and their outputs.
 
 ## 12. Corrections before merge
@@ -993,7 +993,7 @@ and each was right.
 
 | item | what the 14:45 page said | what the artefacts show | corrected in |
 |---|---|---|---|
-| 1 | boards A, C, D, E and P are single-sided, so the other side is allowed on board B only, "on five boards it would add an assembly side" | C24 carries 135 SMD footprints on the back and 31 on the front, D12 71 and 128; eleven of D12's declared capacitors already sit on the back serving front parts; A32's back holds 21 through-hole parts and no SMD; E17 and P4 nothing (`drafts/dec_sides.py`, `drafts/dec_sides_decl.py`, section 3.3) | D5 now admits the other side on B21, C24 and D12 under one loop-equivalent test with a per-stackup via allowance (5.2); D12's eleven are read in section 7; decision 42's authority_why and outcome, the record section |
+| 1 | boards A, C, D, E and P are single-sided, so the other side is allowed on board B only, "on five boards it would add an assembly side" | C24 carries 135 SMD footprints on the back and 31 on the front, D12 71 and 128; eleven of D12's declared capacitors already sit on the back serving front parts; A32's back holds 21 through-hole parts and no SMD; E17 and P4 nothing (`v2/docs/records/rv-dec/dec_sides.py`, `v2/docs/records/rv-dec/dec_sides_decl.py`, section 3.3) | D5 now admits the other side on B21, C24 and D12 under one loop-equivalent test with a per-stackup via allowance (5.2); D12's eleven are read in section 7; decision 42's authority_why and outcome, the record section |
 | 2 | class B was "above 1 uF, not closing a converter's loop", no pin distance, citing AN4938's 4.7 uF "for the package" | AN4938 7.4 p.32 ties the 4.7 uF to "the appropriate pins"; CP2102N p.5 requires 4.7 uF and 0.1 uF "for each power pin placed as close to the pins as possible"; the value cut put the STM32 VCAP, the CP2102N VDD and VREGIN capacitors and the LDO outputs (D's 10 uF at U1) in class B | classes by role (section 6): D any value, a new class L for regulator outputs and VCAP, B1 only where the maker calls it rail bulk, B2 at the existing 6.0 mm; every declared microfarad capacitor classed in 6a |
 | 3 | the STM32H743 needs "VBAT to VDD with 100 nF", cited as W6-F7, and G7 told board B's writer to add it | AN4938 p.12 makes the VBAT connection mandatory and gives the 100 nF "as an example"; W6-F7 withdrew the VBAT shortfall and stands for VDDA only (`w6-findings.md:34`, `:58`, `:243-244`) | section 4 STM32 row, G7, section 10, the record section |
 
@@ -1008,7 +1008,7 @@ against its primary source here and each was right.
 
 | item | what the 15:25 page said | what the artefacts show | corrected in |
 |---|---|---|---|
-| 4 | D5: a far-side seat "is never taken over another pin's escape or ground via site (board B's own rule, `gen_pcb_b3.py:155`...)"; section 6's options: the other side "forms the smaller loop ... on nearly every fanned entry" of C24 and D12 | `gen_pcb_b3.py:155` reads "never beneath a fine-pitch part whose escapes need the vias", and the appendix at line 3010 adds "never under a through-hole header". `gen_pcb_b3.py:346-353` and appendix 32.174 record the harm: 71 back-side parts under the three PCIe switches, and "no stub path at via" at them as the pre-router's largest failure class (18 of 48). Decision 44 measured escapes 71/4 against 68/7 on D when a back-side region stepped clear. The page's per-via-site test narrowed that rule on a loop argument alone, and it could not be run when the seat is chosen (`bypass_slots.reserve` runs before the packer and the escape pass). D12's C15 and C16 already sit inside U7's fan box, which the page did not flag | D5 keeps board B's rule as written: never inside a fanned part's fan box, of either side, which both placers already test with no side filter, and never over a through-hole part. It says what that leaves: at fanned parts only a D4 fallback, never the smaller loop; a seat under the pin only at unfanned small parts (4 of B21's 30 entries, 4 of C24's 18, 9 of D12's 24, `drafts/dec_farside.out`). T4 reports the escape cost of far-side seats and of R2. T9's test is geometric and runs at seat time and again on the placed board. Also corrected: sections 1, 3.3, 5.2, 6 (options), 7, 9 and 10, decision 42's outcome, and the record section |
+| 4 | D5: a far-side seat "is never taken over another pin's escape or ground via site (board B's own rule, `gen_pcb_b3.py:155`...)"; section 6's options: the other side "forms the smaller loop ... on nearly every fanned entry" of C24 and D12 | `gen_pcb_b3.py:155` reads "never beneath a fine-pitch part whose escapes need the vias", and the appendix at line 3010 adds "never under a through-hole header". `gen_pcb_b3.py:346-353` and appendix 32.174 record the harm: 71 back-side parts under the three PCIe switches, and "no stub path at via" at them as the pre-router's largest failure class (18 of 48). Decision 44 measured escapes 71/4 against 68/7 on D when a back-side region stepped clear. The page's per-via-site test narrowed that rule on a loop argument alone, and it could not be run when the seat is chosen (`bypass_slots.reserve` runs before the packer and the escape pass). D12's C15 and C16 already sit inside U7's fan box, which the page did not flag | D5 keeps board B's rule as written: never inside a fanned part's fan box, of either side, which both placers already test with no side filter, and never over a through-hole part. It says what that leaves: at fanned parts only a D4 fallback, never the smaller loop; a seat under the pin only at unfanned small parts (4 of B21's 30 entries, 4 of C24's 18, 9 of D12's 24, `v2/docs/records/rv-dec/dec_farside.out`). T4 reports the escape cost of far-side seats and of R2. T9's test is geometric and runs at seat time and again on the placed board. Also corrected: sections 1, 3.3, 5.2, 6 (options), 7, 9 and 10, decision 42's outcome, and the record section |
 | 5 | Section 4's conclusion: "AN4938 permits 'below ... on the underside' for the STM32"; D5 cited AN4938 7.4 as a far-side source | AN4938 9.3 (p.38): "The following recommendations shall be followed: Place the decoupling capacitors as close as possible to the power and ground pins of the MCU. For BGA packages, it is recommended to place the decoupling capacitors on the other side of the PCB (see Figure 21)". Figure 21 (p.39) is captioned "on the same side of the package (all packages except BGA)". The STM32H743VI on board B is an LQFP-100 | Section 4's STM32 row and conclusion now say AN4938 allows the other side for BGA only. D5 excludes every part whose maker names the same side: the STM32H743 in a non-BGA package, and class R. AN4938 is no longer a far-side source; the RP2040 guide stays one for the parts it covers. T5 carries the flag and T9 has the fixture. The registry text's AN4938 note, decision 42's outcome and the record section are corrected too |
 
 Minor items of the same reading, each fixed or answered here:
@@ -1043,7 +1043,7 @@ It was checked against `escape.py`, `bypass_slots.py` and the committed board te
 
 | item | what the 16:42 page said | what the artefacts show | corrected in |
 |---|---|---|---|
-| 6 | D5 refused a far-side seat inside the fan box of "every part the escape pass fans", defined as `_needs_fan` counted on numbered copper pads (T1); it listed "WSON-6" among the small parts "the escape pass does not fan", counted C61 and C62 under D12's U15 among 9 open far-side seats, and said the rule "keeps what the tools do today". T1's evidence and fixture covered only the 1.27 mm SOIC-8-1EP | `escape.py:34-42` and `:176-177` escape every part at 0.7 mm or less, or with SOT-23-6/8 in its name, with no pad-count floor. Read on the committed boards (`drafts/dec_escset.out`), the parts escaped with fewer than eight copper pads are 14 on B21 (U82 and U83, MLPD-6 at 0.35 mm; U10, U21 and U22, WSON-6-1EP; nine SOT-23-6), 5 on C24 and 2 on D12 (U15, WSON-6-1EP; U5, SOT-23-6), with 1 on A32, 9 on E17 and 1 on P4 besides. D12 carries vias of U15's pin 3 net (/VGG_CT) and pin 6 net (/+5V_D8), 1.50 and 1.58 mm from those pins. Today's `_needs_fan` fans the four WSON-6-1EP through their two paste apertures (nine SMD pads); T1 as written cut them to seven and took their fan away on both sides, which weakened a protection that exists today with no evidence for it | T1 now fans every part the escape pass escapes (its selection moved into one function that `escape.py` and both placers call) together with every part of eight or more numbered copper pads at 1.0 mm or less, with fixtures for the WSON-6-1EP, the SOT-23-6, B21's MLPD-6 and D12's 0.8 mm TQFP. Against today it drops only the SOIC-8-1EP lands and adds 22 fans. D5 quotes the set, says what it keeps and changes against today, and counts 7 open far-side seats on D12 (C61 and C62 refused). T9's fixtures refuse a far-side seat under D12's U15 and under B21's U82. Also corrected: sections 1, 2, 3.1 (the ruled set: 83 fanned declarations, 3.26 to 5.49 mm), 3.2 (a) and a new (g), 3.3, 5.2, 6 (options), 7, 9 and 10, decision 42's authority_why and outcome, and the record section |
+| 6 | D5 refused a far-side seat inside the fan box of "every part the escape pass fans", defined as `_needs_fan` counted on numbered copper pads (T1); it listed "WSON-6" among the small parts "the escape pass does not fan", counted C61 and C62 under D12's U15 among 9 open far-side seats, and said the rule "keeps what the tools do today". T1's evidence and fixture covered only the 1.27 mm SOIC-8-1EP | `escape.py:34-42` and `:176-177` escape every part at 0.7 mm or less, or with SOT-23-6/8 in its name, with no pad-count floor. Read on the committed boards (`v2/docs/records/rv-dec/dec_escset.out`), the parts escaped with fewer than eight copper pads are 14 on B21 (U82 and U83, MLPD-6 at 0.35 mm; U10, U21 and U22, WSON-6-1EP; nine SOT-23-6), 5 on C24 and 2 on D12 (U15, WSON-6-1EP; U5, SOT-23-6), with 1 on A32, 9 on E17 and 1 on P4 besides. D12 carries vias of U15's pin 3 net (/VGG_CT) and pin 6 net (/+5V_D8), 1.50 and 1.58 mm from those pins. Today's `_needs_fan` fans the four WSON-6-1EP through their two paste apertures (nine SMD pads); T1 as written cut them to seven and took their fan away on both sides, which weakened a protection that exists today with no evidence for it | T1 now fans every part the escape pass escapes (its selection moved into one function that `escape.py` and both placers call) together with every part of eight or more numbered copper pads at 1.0 mm or less, with fixtures for the WSON-6-1EP, the SOT-23-6, B21's MLPD-6 and D12's 0.8 mm TQFP. Against today it drops only the SOIC-8-1EP lands and adds 22 fans. D5 quotes the set, says what it keeps and changes against today, and counts 7 open far-side seats on D12 (C61 and C62 refused). T9's fixtures refuse a far-side seat under D12's U15 and under B21's U82. Also corrected: sections 1, 2, 3.1 (the ruled set: 83 fanned declarations, 3.26 to 5.49 mm), 3.2 (a) and a new (g), 3.3, 5.2, 6 (options), 7, 9 and 10, decision 42's authority_why and outcome, and the record section |
 
 Found while correcting, and corrected with it:
 - **D12's C17 sits inside U5's fan box.** U5 is a SOT-23-6 the escape pass escapes. So C17's present seat is
@@ -1053,6 +1053,6 @@ Found while correcting, and corrected with it:
   TDSON-8-1 FETs, whose pins are at 1.27 mm, read 0.40 mm and are escaped (3.2(g)). Whether they should be is a
   question for `escape.py`. The fan follows whatever it selects, so the ruled set keeps their fans.
 - **The fan boxes hold the escape vias.** Every nearest locked via of a signal pad's own net within 3.5 mm of an
-  escaped part's pad lies inside that part's fan box: 1,087 of 1,087 on the six boards (`drafts/dec_escvias.out`).
+  escaped part's pad lies inside that part's fan box: 1,087 of 1,087 on the six boards (`v2/docs/records/rv-dec/dec_escvias.out`).
 - **The added boxes cost two declared own-side seats.** C24's C3 and C4 sit inside U11's fan box
-  (`drafts/dec_newfans.out`). They are re-seated on C24's next placement (section 10), not moved for this ruling.
+  (`v2/docs/records/rv-dec/dec_newfans.out`). They are re-seated on C24's next placement (section 10), not moved for this ruling.
