@@ -160,6 +160,20 @@ boards:
        mechanism: "radiated pickup on any track long enough to be an antenna at 144 MHz",
        measure: "the RF path is a coax pigtail from the module to the bulkhead and never board copper",
        evidence: "the SMA declaration in gen_sch_d.py"}
+    - {from: "the 30 W power amplifier on the plate", to: "the flange temperature reading (round 8, PWR-F15)",
+       mechanism: "radiated and conducted pickup at 144 MHz on the two-wire NTC lead, which runs from the PA's flange to
+         J_FLANGE beside the PA's own leads",
+       measure: "C72, 1 nF NP0, at J_FLANGE; R93 1k with C73 100 nF at the ADC input and the same on the reference
+         input (TI SBAS444E 9.1.5); the ratio cancels a shift of the +3V3 supply, not pickup on the lead, which reaches
+         AIN0 alone while AIN1 reads the board's +3V3 through R94, so C72, R93 and C73 are the mitigation (the
+         independent check's correction, at integration)",
+       evidence: "gen_sch_d.py, the PWR-F15 block (J_FLANGE, R92 to R94, C72 to C75, U22)"}
+    - {from: "the transmitter's field on board D's own logic supply", to: "U21's enable divider",
+       mechanism: "RF on the EN/UVLO node of the load switch that feeds the exciter, the bias regulator and the relay
+         coil (round 8, EMCON L4)",
+       measure: "C69, 1 nF NP0, on TXSUP_EN; the divider's 5.2k Thevenin gives about 5 us, far under the 2.23 V
+         turn-off margin's time",
+       evidence: "gen_sch_d.py, the EMCON L4 block at U21"}
    pre_compliance:
     - "transmit into a dummy load with the hub enumerated and the codec streaming, which is the only test that
        shows whether the ferrite and the decoupling are enough"

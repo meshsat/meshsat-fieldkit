@@ -214,3 +214,9 @@ battery/dexerials-sfk-series-datasheet.pdf   retired   # NOT FITTED: the Dexeria
 battery/littelfuse-itv4030-c1869305.pdf   retired   # NOT FITTED: Littelfuse ITV4030 (15 A, -10 C), refused in round 4 (FUSE-INTERPRETATION.md); LCSC's copy
 battery/prosemi-dhc45-c2937382.pdf   retired   # NOT FITTED: Prosemi DHC45, a two-terminal part refused in round 4 (FUSE-INTERPRETATION.md); LCSC's copy
 battery/onsemi-mm3z-c82071.pdf   retired   # NOT FITTED: onsemi MM3Z, TI's reference SMBus zener, not taken for board P's SMBus clamps (gen_sch_p.py); LCSC's copy
+
+# --- added 26 September 2026 (MESHSAT-1357, round 8, stream d) ---
+ti/ti-ads1115-sbas444e.pdf   current   # ADS1115IDGSR, board D's U22, the PA flange temperature ADC at 0x48 (SOURCES.yaml, board-d-flange-adc)
+kento/kento-kt-0603y-citayl-0603.pdf   current   # KT-0603Y (C2287), board D's LED2 and LED5, yellow (SOURCES.yaml, round8_board_d_parts)
+yageo/yageo-cc-general-purpose-np0-16v-250v.pdf   current   # CC0402JRNPO9BN102 (C113780), board D's 1 nF NP0 bypasses (SOURCES.yaml, round8_board_d_parts, R8D-P1)
+samsung/samsung-cl05a225ko5nqn-spec.html   current   # CL05A225KO5NQNC (C170151), board D's C31 and C32, G12 (SOURCES.yaml, round8_board_d_parts)

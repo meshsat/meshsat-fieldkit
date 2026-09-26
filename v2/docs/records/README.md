@@ -23,6 +23,7 @@ Worktrees:
 | `r4p/` | board P's author, round 4 |
 | `r4t/` | the shared tools' author, rounds 4 to 7 (still being edited when this was filed) |
 | `r6d/` | board D's author, round 6 |
+| `r8d/` | board D's author, round 8 (the regeneration's independent comparison, gates and suite; filed at integration, 27 September 2026) |
 | `rv-bat/` | review stream BAT, the battery and protection review packet |
 | `rv-dec/` | review stream DEC, decision 42 (decoupling placement) |
 | `rv-emc/` | review stream EMC, the per-transmitter EMCON table |
@@ -78,6 +79,13 @@ Paths are relative to this folder; the source is the same path below `drafts/` i
 | `r4p/scripts/r5p2_box.sh` | `af7d59d6a8da41beb8cfa21b0e14b17652afb395863b623797d6eb026e90bdcd` | 10587 | `fnd/r4p` `drafts/scripts/r5p2_box.sh` | `v2/docs/review-packets/battery/evidence/regeneration/bat_box.sh` |
 | `r4t/r4-decisions.md` | `833218028f012e008d20db38204d574e1b511661ae92be353f4f564578b6fcda` | 216568 | `fnd/r4t` `drafts/r4-decisions.md` | `v2/docs/feasibility/EMCON.md` |
 | `r6d/r6-decisions.md` | `959ee8c6b9bf4e6622a81d858775b099e5e8637d6fc19d8dc263b13accac3ca1` | 32654 | `fnd/r6d` `drafts/r6-decisions.md` | `v2/docs/feasibility/EMCON.md` |
+| `r8d/r8d-gates.txt` | `b32af9bc5bf5ac1c04f04ee18a0f1656a1106cde273f8c98a9dd38c2b1c73c1d` | 3731 | `fnd/r8d` `drafts/d/records/r8d-gates.txt` | board D's round 8 commit (MESHSAT-1357) |
+| `r8d/r8d-par.txt` | `064ae27b66f8bcff68ea377c14b0dbe415797814d70f8a9492bbc182fc940804` | 29949 | `fnd/r8d` `drafts/d/records/r8d-par.txt` | board D's round 8 commit (MESHSAT-1357) |
+| `r8d/r8d-parity-and-suite.txt` | `c763a2930bcc1e920a77093c6900e559a5e5323925083f9d33d4c6f4b3e80654` | 5185 | `fnd/r8d` `drafts/d/records/r8d-parity-and-suite.txt` | board D's round 8 commit (MESHSAT-1357) |
+| `r8d/r8d_par.py` | `72b766f7221008599ce1272d0b6bd118081194d9dc2b65aadf718ca87ce135f4` | 15435 | `fnd/r8d` `drafts/d/records/r8d_par.py` | board D's round 8 commit (MESHSAT-1357) |
+| `r8d/r8d_regen.sh` | `297651d22f4e3797360fb6517080c6a2e52865d81da9052aec7f0507dc155db1` | 8865 | `fnd/r8d` `drafts/d/records/r8d_regen.sh` | board D's round 8 commit (MESHSAT-1357) |
+| `r8d/r8d_set.sh` | `fa34ed5489c48ab438c3d9e98c465e8cdec35c5c4ce16a8ff092325496070a64` | 5804 | `fnd/r8d` `drafts/d/records/r8d_set.sh` | board D's round 8 commit (MESHSAT-1357) |
+| `r8d/r8d_suite.sh` | `c6ce1bdea945d1e606500e3f10dad8aa192e6b4609ff46d73080b9311e8efdc8` | 4908 | `fnd/r8d` `drafts/d/records/r8d_suite.sh` | board D's round 8 commit (MESHSAT-1357) |
 | `rv-bat/bat-integration-notes.md` | `af4516bccc528c3e309a9237fa060357ac26961de499458f0b19a6f9f640bc5b` | 12303 | `fnd/rv-bat` `drafts/bat-integration-notes.md` | `v2/docs/review-packets/battery/MANIFEST.md` |
 | `rv-bat/box/bat-cycle1/new/files/pcb-p-pack.net` | `4df605c1c9a9d2dbf17b4758cb1fe65205800668a19e30fb6f70b0daa1c4bfc4` | 91969 | `fnd/rv-bat` `drafts/box/bat-cycle1/new/files/pcb-p-pack.net` | `v2/docs/review-packets/battery/evidence/regeneration/test-pack-secondary-ts-runs.txt` |
 | `rv-bat/box/bat-cycle1/new/files/pcb-p-pack.net.prov.json` | `e6fe22a3cc3df7d6d08c2a0de930d6de4a4eca1bc5e876bccf967717b3f95638` | 8498 | `fnd/rv-bat` `drafts/box/bat-cycle1/new/files/pcb-p-pack.net.prov.json` | `v2/docs/review-packets/battery/evidence/regeneration/test-pack-secondary-ts-runs.txt` |

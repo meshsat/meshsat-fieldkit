@@ -28,6 +28,12 @@ MAP = {  # (value regex, footprint substring) -> LCSC
  (r"^22p", "C_0402"): "C106203",          # CC0402JRNPO9BN220, C0G
  (r"^33p", "C_0402"): "C107005",          # CC0402JRNPO9BN330, C0G
  (r"^47p", "C_0402"): "C60137",           # CC0402JRNPO9BN470, C0G
+ # R8D-P1 (round 8 of MESHSAT-1357, 26 September 2026): the certified row "1n NP0" on C_0402 resolved to C1523, which
+ # JLCPCB reads back as FH 0402B102K500NT, "1nF 50V X7R" (API 2026-09-26T21:18Z): an X7R part under an NP0 value, a
+ # mismatch under owner condition 1. YAGEO CC0402JRNPO9BN102 is the NP0 one, in the family of the four lines above
+ # (YAGEO CC general purpose NP0, product specification V.21, 14 March 2025; stock 160,278 the same minute). Board D
+ # pins it in its generator (C44, C45, C69, C72); this line fills any other blank "1n NP0" 0402 the same way.
+ (r"^1n NP0", "C_0402"): "C113780",       # CC0402JRNPO9BN102, NP0 50 V
  (r"^22u 6\.3V", "C_0805"): "C6119902",   # CGA0805X5R226M6R3MT
  (r"^1n 2kV", "C_1812"): "C36077",        # 1812B102K202NT, 2 kV: the Bob Smith termination
  (r"^100n 100V", "C_0805"): "C106243",    # YAGEO CC0805KKX7R0BB104, 100 V

@@ -1,0 +1,60 @@
+# round 8 stream d, board D regeneration on box 52646493 (KiCad 9.0.9), two trees cloned from github.com/meshsat/meshsat-fieldkit at fc144600 with real history
+# base = main untouched; new = main + this stream's gen_sch_d.py. regen_compare.py pair (main's tool) per artefact:
+base_vs_committed  schematic  exit 0  PARITY
+base_vs_committed  netlist    exit 0  PARITY_AFTER_NOISE
+base_vs_committed  intent     exit 0  PARITY_AFTER_NOISE
+base_vs_committed  provenance exit 0  PARITY_AFTER_NOISE
+base_vs_committed  bom        exit 0  PARITY
+base_vs_committed  erc        exit 0  PARITY_AFTER_NOISE
+new_vs_committed   schematic  exit 1  DIFFERENT
+new_vs_committed   netlist    exit 1  DIFFERENT
+new_vs_committed   intent     exit 1  DIFFERENT
+new_vs_committed   provenance exit 1  DIFFERENT
+new_vs_committed   bom        exit 1  DIFFERENT
+new_vs_committed   erc        exit 1  DIFFERENT
+new_vs_base        schematic  exit 1  DIFFERENT
+new_vs_base        netlist    exit 1  DIFFERENT
+new_vs_base        intent     exit 1  DIFFERENT
+new_vs_base        provenance exit 1  DIFFERENT
+new_vs_base        bom        exit 1  DIFFERENT
+new_vs_base        erc        exit 1  DIFFERENT
+bytes base schematic IDENTICAL  netlist differs  intent differs
+bytes new  schematic differs  netlist differs  intent differs
+
+# determinism (the tree's generator run twice):
+determinism pcb-d-aprs.kicad_sch: IDENTICAL
+determinism pcb-d-aprs.net: differs
+determinism pcb-d-aprs-intent.json: differs
+determinism by regen_compare: netlist PARITY_AFTER_NOISE (N3 design source/date/tool, N4 title date, L1 phase comment), schematic PARITY, intent PARITY_AFTER_NOISE (written)
+
+# sidecars:
+sidecar base sch_prov: pcb-d-aprs.net was written by this tree's own generator (1bb2c09bd2d1d4f2)
+sidecar new  sch_prov: pcb-d-aprs.net was written by this tree's own generator (e89deef7899e203d)
+
+# ERC:
+erc base: verdict: erc_gate               PASS         of 413 {"allowed": 0, "blocking": 0, "violations": 413}
+erc new: verdict: erc_gate               PASS         of 445 {"allowed": 0, "blocking": 0, "violations": 445}
+erc base: 413 violations {('endpoint_off_grid', 'warning'): 40, ('lib_symbol_issues', 'warning'): 325, ('unconnected_wire_endpoint', 'warning'): 48}
+erc new: 445 violations {('endpoint_off_grid', 'warning'): 42, ('lib_symbol_issues', 'warning'): 351, ('unconnected_wire_endpoint', 'warning'): 52}
+
+# cross-board:
+    check_contracts PASS 96 {'boards_without_intent': 0, 'fail': 0, 'missing_boards': 0, 'pass': 96, 'rails_unsplit': 0, 'undecided': 0, 'unjudged': 0}
+    check_contracts_d PASS 11 {'fail': 0, 'pass': 11, 'undecided': 0, 'unjudged': 0}
+    inhibit_chain_d PASS 5 {'fail': 0, 'pass': 5, 'undecided': 0, 'unjudged': 0}
+    check_contracts PASS 96 {'boards_without_intent': 0, 'fail': 0, 'missing_boards': 0, 'pass': 96, 'rails_unsplit': 0, 'undecided': 0, 'unjudged': 0}
+    check_contracts_d PASS 11 {'fail': 0, 'pass': 11, 'undecided': 0, 'unjudged': 0}
+    inhibit_chain_d PASS 5 {'fail': 0, 'pass': 5, 'undecided': 0, 'unjudged': 0}
+check_contracts line diff (base -> new): 0 lines
+
+# the full suite on exactly the commit set (five files) at fc144600 with real history:
+commit set: exactly the five files
+suite seconds 494
+tests: 1647 passed, 9 failed, 2 skipped; failed: test_reliability.t_the_committed_list_covers_every_wear_part_of_every_board, test_requirements.t_check_refuses_a_hand_edited_trace_page, test_requirements.t_no_real_record_reads_pass_on_evidence_that_does_not_count, test_requirements.t_the_page_does_not_change_with_the_decision_index_for_what_an_owner_ruling_names, test_requirements.t_the_real_registry_validates, test_requirements.t_the_trace_page_is_generated_not_hand_kept, test_rule_gate_mapping.t_one_render_converges_when_a_rule_judges_a_page_the_same_run_writes, test_rule_gate_mapping.t_the_documents_are_generated_and_not_hand_maintained, evidence:rule-audit/rules_status.verdict.json
+# the nine failures on the commit set alone, each closed by a draft of this stream:
+#   test_reliability (J_FLANGE in no class) -> ../pcb_reliability.yaml.patch
+#   test_requirements x5 and test_rule_gate_mapping x2 (CON-019 and CFL-016 bound to main's D netlist) -> ../pcb_requirements.yaml.patch with ../PANEL.md.patch
+#   evidence:rule-audit/rules_status.verdict.json (the suite's evidence guard: the page renders the failing tests ran rewrote it) -> the generated pages re-rendered in the merge commit
+# the full suite on the commit set with every draft applied (drafts/d/*.patch, the datasheets filed at their vendor paths,
+# the generated pages re-rendered with rules_render.py and assembly_set.py --checklist; a separate worktree at fc144600):
+tests: 1654 passed, 0 failed, 3 skipped (491 s); skips: routeflow validate (host path), numba absent, test_layer_judge "not a git worktree" (that worktree's .git is a file)
+requirements with the drafts: 0 errors, 11 warnings, every one a record bound to a page this round patches (EMCON.md: REQ-012, REQ-030, REQ-032, CON-010, CON-021, FEA-002; POWER-THERMAL.md: FEA-004, CON-009; DECOUPLING.md: FEA-006; CURRENT-EVIDENCE.md: CON-010, REQ-044), none PASS, re-read by the integrator after the round's page patches merge

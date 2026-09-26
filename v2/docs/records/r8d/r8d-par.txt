@@ -1,0 +1,170 @@
+PAIR committed  vs base_regen comps 227/227 nets 180/180 libparts 38/38  expected 0  UNEXPECTED 0  => IDENTICAL
+   noise      intent written 2026-09-26 17:52 -> 2026-09-26 21:36
+PAIR committed  vs new_regen  comps 227/245 nets 180/188 libparts 38/40  expected 81  UNEXPECTED 0  => ONLY_EXPECTED
+   noise      intent written 2026-09-26 17:52 -> 2026-09-26 21:40
+   expected   [G12] comp C31 changes ['value', 'footprint', 'fields', 'property:LCSC']: value '1u' -> '2.2u 16V X5R 0402', footprint 'Capacitor_SMD:C_0603_1608Metric' -> 'Capacitor_SMD:C_0402_1005Metric', LCSC None -> ['C170151']
+   expected   [G12] comp C32 changes ['value', 'footprint', 'fields', 'property:LCSC']: value '1u' -> '2.2u 16V X5R 0402', footprint 'Capacitor_SMD:C_0603_1608Metric' -> 'Capacitor_SMD:C_0402_1005Metric', LCSC None -> ['C170151']
+   expected   [R8D-P1] comp C44 changes ['fields', 'property:LCSC']: value '1n NP0' -> '1n NP0', footprint 'Capacitor_SMD:C_0402_1005Metric' -> 'Capacitor_SMD:C_0402_1005Metric', LCSC None -> ['C113780']
+   expected   [R8D-P1] comp C45 changes ['fields', 'property:LCSC']: value '1n NP0' -> '1n NP0', footprint 'Capacitor_SMD:C_0402_1005Metric' -> 'Capacitor_SMD:C_0402_1005Metric', LCSC None -> ['C113780']
+   expected   [EMCON-L4] comp C69 ADDED: 1n NP0 | Capacitor_SMD:C_0402_1005Metric | ['C113780']
+   expected   [EMCON-L4] comp C70 ADDED: 10n | Capacitor_SMD:C_0603_1608Metric | ['C57112']
+   expected   [EMCON-L4] comp C71 ADDED: 1u | Capacitor_SMD:C_0603_1608Metric | ['C15849']
+   expected   [PWR-F15] comp C72 ADDED: 1n NP0 | Capacitor_SMD:C_0402_1005Metric | ['C113780']
+   expected   [PWR-F15] comp C73 ADDED: 100n | Capacitor_SMD:C_0603_1608Metric | ['C14663']
+   expected   [PWR-F15] comp C74 ADDED: 100n | Capacitor_SMD:C_0603_1608Metric | ['C14663']
+   expected   [PWR-F15] comp C75 ADDED: 100n | Capacitor_SMD:C_0603_1608Metric | ['C14663']
+   expected   [PWR-F15] comp J_FLANGE ADDED: JST-XH 1x2 socket: power amplifier flange NTC lead (Semitec 103AT-2 on the flange, bench-fitted): NTC GND | Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical | ['C158012']
+   expected   [PARTS-J_VGG] comp J_VGG changes ['fields', 'property:LCSC']: value 'JST-PH 1x2 socket: PA gate bias, VGG GND (the lead runs to the RA30H1317M1 VGG pin)' -> 'JST-PH 1x2 socket: PA gate bias, VGG GND (the lead runs to the RA30H1317M1 VGG pin)', footprint 'Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical' -> 'Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical', LCSC ['C5251182'] -> ['C131337']
+   expected   [PARTS-C2287] comp LED2 changes ['value']: value 'amber record' -> 'yellow record', footprint 'LED_SMD:LED_0603_1608Metric' -> 'LED_SMD:LED_0603_1608Metric', LCSC ['C2287'] -> ['C2287']
+   expected   [PARTS-C2287] comp LED5 changes ['value']: value 'amber PA keyed' -> 'yellow PA keyed', footprint 'LED_SMD:LED_0603_1608Metric' -> 'LED_SMD:LED_0603_1608Metric', LCSC ['C2287'] -> ['C2287']
+   expected   [EMCON-L4] comp R90 ADDED: 11k 1% | Resistor_SMD:R_0603_1608Metric | ['C25950']
+   expected   [EMCON-L4] comp R91 ADDED: 10k 1% | Resistor_SMD:R_0603_1608Metric | ['C25804']
+   expected   [PWR-F15] comp R92 ADDED: 2k 1% | Resistor_SMD:R_0603_1608Metric | ['C22975']
+   expected   [PWR-F15] comp R93 ADDED: 1k | Resistor_SMD:R_0603_1608Metric | ['C21190']
+   expected   [PWR-F15] comp R94 ADDED: 1k | Resistor_SMD:R_0603_1608Metric | ['C21190']
+   expected   [EMCON-L4] comp R95 ADDED: 100R 1% | Resistor_SMD:R_0603_1608Metric | ['C22775']
+   expected   [PWR-F15] comp TP26 ADDED: FLANGE_NTC | TestPoint:TestPoint_Pad_D1.5mm | None
+   expected   [EMCON-L4] comp TP27 ADDED: +5V_TX | TestPoint:TestPoint_Pad_D1.5mm | None
+   expected   [EMCON-L4] comp U21 ADDED: TPS22810DRV load switch, +5V_TX on while +3V3_D8 is above 2.23 to 2.78 V (EN/UVLO divider R90 R91, QOD through R95) | Package_SON:WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm | ['C527679']
+   expected   [PWR-F15] comp U22 ADDED: ADS1115IDGSR 16-bit ADC at 0x48 (1 ADDR 2 ALERT/RDY 3 GND 4 AIN0 5 AIN1 6 AIN2 7 AIN3 8 VDD 9 SDA 10 SCL): the flange NTC over +3V3, ratiometric | Package_SO:VSSOP-10_3x3mm_P0.5mm | ['C37593']
+   expected   [PWR-F15] net +3V3: left [], joined ['C75.1(/passive)', 'R92.1(/passive)', 'R94.1(/passive)', 'U22.8(+3V3/passive)']
+   expected   [EMCON-L4] net +3V3_D8: left [], joined ['R90.1(/passive)']
+   expected   [EMCON-L4] net +5V_D8: left ['C57.1', 'C61.1', 'D2.1', 'FB1.1', 'K1.1', 'U15.6'], joined ['C71.1(/passive)', 'U21.6(VIN/power_in)']
+   expected   [EMCON-L4] net +5V_TX ADDED with ['C57.1(/passive)', 'C61.1(/passive)', 'D2.1(K/passive)', 'FB1.1(/passive)', 'K1.1(/passive)', 'R95.2(/passive)', 'TP27.1(1/passive)', 'U15.6(+5V_TX/passive)', 'U21.1(VOUT/power_out)']
+   expected   [PWR-F15] net FLANGE_AIN0 ADDED with ['C73.1(/passive)', 'R93.2(/passive)', 'U22.4(FLANGE_AIN0/passive)']
+   expected   [PWR-F15] net FLANGE_NTC ADDED with ['C72.1(/passive)', 'J_FLANGE.1(Pin_1/passive)', 'R92.2(/passive)', 'R93.1(/passive)', 'TP26.1(1/passive)']
+   expected   [PWR-F15] net FLANGE_REF ADDED with ['C74.1(/passive)', 'R94.2(/passive)', 'U22.5(FLANGE_REF/passive)']
+   expected   [EMCON-L4 and PWR-F15] net GND: left [], joined ['C69.2(/passive)', 'C70.2(/passive)', 'C71.2(/passive)', 'C72.2(/passive)', 'C73.2(/passive)', 'C74.2(/passive)', 'C75.2(/passive)', 'J_FLANGE.2(Pin_2/passive)', 'R91.2(/passive)', 'U21.4(GND/power_in)', 'U21.7(GND/passive)', 'U22.1(GND/passive)', 'U22.3(GND/passive)', 'U22.6(GND/passive)', 'U22.7(GND/passive)']
+   expected   [PWR-F15] net SCL: left [], joined ['U22.10(SCL/passive)']
+   expected   [PWR-F15] net SDA: left [], joined ['U22.9(SDA/passive)']
+   expected   [EMCON-L4] net TXSUP_CT ADDED with ['C70.1(/passive)', 'U21.3(CT/output)']
+   expected   [EMCON-L4] net TXSUP_EN ADDED with ['C69.1(/passive)', 'R90.2(/passive)', 'R91.1(/passive)', 'U21.5(EN/UVLO/input)']
+   expected   [EMCON-L4] net TXSUP_QOD ADDED with ['R95.1(/passive)', 'U21.2(QOD/open_collector)']
+   expected   [PWR-F15] net unconnected-(U22-NC-Pad2) ADDED (U22.2, a deliberate no-connect)
+   expected   [EMCON-L4] libpart Power_Management:TPS22810DRV ADDED
+   expected   [EMCON-L4] libpart meshsat_ic:U15: one pin name "\"+5V_D8\"" -> "\"+5V_TX\"", nothing else
+   expected   [PWR-F15] libpart meshsat_ic:U22 ADDED
+   expected   [PWR-F15] rail +3V3 changes: {'loads': ({'U16': 0.06, 'U19': 0.002, 'U20': 0.002}, {'U16': 0.06, 'U19': 0.002, 'U20': 0.002, 'U22': 0.0002, 'R92': 0.0012})} (+note)
+   expected   [EMCON-L4] rail +3V3_D8 changes: {'loads': ({'U7': 0.02, 'U9': 0.002, 'U10': 0.002, 'U11': 0.002, 'U12': 0.002, 'U13': 0.002, 'U14': 0.002, 'U18': 0.002, 'Q3': 0.001, 'Q4': 0.001, 'Q5': 0.001, 'Q8': 0.001, 'Q9': 0.001}, {'U7': 0.02, 'U9': 0.002, 'U10': 0.002, 'U11': 0.002, 'U12': 0.002, 'U13': 0.002, 'U14': 0.002, 'U18': 0.002, 'Q3': 0.001, 'Q4': 0.001, 'Q5': 0.001, 'Q8': 0.001, 'Q9': 0.001, 'R90': 0.0002})}
+   expected   [EMCON-L4] rail +5V_D8 changes: {'loads': ({'FB1': 0.5, 'U1': 0.17, 'U17': 0.04, 'U6': 0.1, 'J_USB3': 0.05, 'U7': 0.05, 'U3': 0.03, 'U15': 0.02}, {'U21': 0.52, 'U1': 0.17, 'U17': 0.04, 'U6': 0.1, 'J_USB3': 0.05, 'U7': 0.05, 'U3': 0.03})}
+   expected   [EMCON-L4] rail +5V_SA changes: {'always_on': (True, None), 'always_on_why': ("the exciter's rail behind the ferrite FB1: a ferrite is not a switch, so this rail follows +5V_D8. What gates the transmitter is the PTT chain, not this rail", None), 'enable_net': (None, 'TXSUP_EN'), 'fed_from': ('+5V_D8', '+5V_TX'), 'switch': (None, 'U21')} (+note)
+   expected   [EMCON-L4] rail +5V_TX ADDED: {'amps_peak': (None, 1.15), 'amps_typ': (None, 0.37), 'budget': (None, 0.03), 'converted': (None, False), 'enable_net': (None, 'TXSUP_EN'), 'fed_from': (None, '+5V_D8'), 'loads': (None, {'FB1': 1.1, 'U15': 0.02, 'K1': 0.02}), 'source': (None, 'U21'), 'switch': (None, 'U21'), 'v_work': (None, 5.23), 'volts': (None, 5.0)} (+note)
+   expected   [G12] node AMP_HPVDD ADDED: {'v_max': 1.9, 'v_min': 0.0, 'basis': "the TPA6132A2's internal positive supply for its headphone amplifiers, generated inside the part and never driven from outside: 'Headphone amplifier supply voltage HPVDD (do not connect to external supply) -0.3 to 1.9 V' (TI SLOS597B 6.1, Absolute Maximum Ratings); the pin takes only its 2.2 uF (5, 9)"}
+   expected   [PWR-F15] node FLANGE_NTC ADDED: {'v_max': 3.3, 'v_min': 0.0, 'basis': "the NTC divider's tap: at most the harness +3V3 (declared 3.3 V) with the flange lead open, and at most 1.1 mA through R92 into the NTC; read by U22's AIN0 through R93"}
+   expected   [EMCON-L4] node TXSUP_EN ADDED: {'v_max': 2.6, 'v_min': 0.0, 'basis': "U21's EN/UVLO tap: +3V3_D8 x R91 / (R90 + R91), 0.16 mA through the divider and nothing else; at most 2.53 V with +3V3_D8 back-fed to 5.23 V at the resistors' low ratio (5.23 / 2.064), 1.57 V in service; the pin itself is rated to 20 V (TI SLVSDH0C 7.1)"}
+   expected   [G14] bypass C15: {'cap': 'C15', 'part': 'U4', 'pin': '3', 'net': '+3V4_HUB'} -> same, + {'class': 'D', 'basis': "TI SLLS413L 11.1.1 item 1, p.18: 'A 0.1-uF should be placed as close a"}
+   expected   [G14] bypass C16: {'cap': 'C16', 'part': 'U4', 'pin': '3', 'net': '+3V4_HUB'} -> same, + {'class': 'D', 'basis': "TI SLLS413L 11.1.1 item 1, p.18: 'A 0.1-uF should be placed as close a"}
+   expected   [G14 and the C17 re-declaration] bypass C17: {'cap': 'C17', 'part': 'U4', 'pin': '3', 'net': '+3V4_HUB'} -> {'cap': 'C17', 'part': 'U17', 'pin': '5', 'net': '+3V4_HUB'}, + {'class': 'B1', 'basis': "TI SLLS413L 10.1, p.17, bulk 'can be placed anywhere on the power rail"}
+   expected   [G14] bypass C18: {'cap': 'C18', 'part': 'U6', 'pin': '2', 'net': '+5V_D8'} -> same, + {'class': 'D', 'basis': "TI SLES230A p.27: 'The decoupling capacitors must be as close as possi"}
+   expected   [G14] bypass C19: {'cap': 'C19', 'part': 'U6', 'pin': '5', 'net': 'PCM_VDD'} -> same, + {'class': 'L', 'basis': "TI SLES230A 9.5.1.6 and Table 6: VDD is an internal regulator's output"}
+   expected   [G14] bypass C20: {'cap': 'C20', 'part': 'U6', 'pin': '15', 'net': 'PCM_VCCA'} -> same, + {'class': 'L', 'basis': "TI SLES230A 9.5.1.6 and Table 6: VCCA is an internal regulator's outpu"}
+   expected   [G14] bypass C21: {'cap': 'C21', 'part': 'U6', 'pin': '19', 'net': 'PCM_VCCL'} -> same, + {'class': 'L', 'basis': "TI SLES230A 9.5.1.6 and Table 6: VCCL is an internal regulator's outpu"}
+   expected   [G14] bypass C22: {'cap': 'C22', 'part': 'U6', 'pin': '21', 'net': 'PCM_VCCR'} -> same, + {'class': 'L', 'basis': "TI SLES230A 9.5.1.6 and Table 6: VCCR is an internal regulator's outpu"}
+   expected   [G14] bypass C23: {'cap': 'C23', 'part': 'U6', 'pin': '26', 'net': 'PCM_VCCP'} -> same, + {'class': 'L', 'basis': "TI SLES230A 9.5.1.6 and Table 6: VCCP is an internal regulator's outpu"}
+   expected   [G14] bypass C31: {'cap': 'C31', 'part': 'U7', 'pin': '12', 'net': 'AMP_HPVDD'} -> same, + {'class': 'L', 'basis': "TI SLOS597B 9, p.17: 'Connect the HPVDD pin only to a 2.2 uF, X5R or b", 'floor_uF': 2.2, 'maker_mm': 5.0}
+   expected   [G14] bypass C32: {'cap': 'C32', 'part': 'U7', 'pin': '14', 'net': '+5V_D8'} -> same, + {'class': 'D', 'basis': "TI SLOS597B 9.1, p.17: 'Place a 2.2 uF capacitor within 5 mm of the VD", 'maker_mm': 5.0}
+   expected   [G14] bypass C33: {'cap': 'C33', 'part': 'U7', 'pin': '14', 'net': '+5V_D8'} -> same, + {'class': 'B2', 'basis': "TI SLOS597B 9.1, p.17: 'an additional 10 uF or higher value capacitor "}
+   expected   [G14] bypass C39: {'cap': 'C39', 'part': 'U8', 'pin': '8', 'net': '+5V_D8'} -> same, + {'class': 'D', 'basis': "TI SBOS839N 8.3: 'Place 0.1uF bypass capacitors close to the power-sup"}
+   expected   [G14] bypass C51: {'cap': 'C51', 'part': 'U9', 'pin': '5', 'net': '+3V3_D8'} -> same, + {'class': 'D', 'basis': 'TI SCES217AA 8.3, the family sheet (the fitted TECH PUBLIC 74LVC1G08 s'}
+   expected   [G14] bypass C52: {'cap': 'C52', 'part': 'U10', 'pin': '5', 'net': '+3V3_D8'} -> same, + {'class': 'D', 'basis': 'TI SCES217AA 8.3, the family sheet (the fitted TECH PUBLIC 74LVC1G08 s'}
+   expected   [G14] bypass C53: {'cap': 'C53', 'part': 'U11', 'pin': '5', 'net': '+3V3_D8'} -> same, + {'class': 'D', 'basis': 'TI SCES214AF 8.4: a 0.1 uF bypass capacitor at VCC, near the supply te'}
+   expected   [G14] bypass C54: {'cap': 'C54', 'part': 'U12', 'pin': '5', 'net': '+3V3_D8'} -> same, + {'class': 'D', 'basis': 'TI SCES217AA 8.3, the family sheet (the fitted TECH PUBLIC 74LVC1G08 s'}
+   expected   [G14] bypass C55: {'cap': 'C55', 'part': 'U13', 'pin': '5', 'net': '+3V3_D8'} -> same, + {'class': 'D', 'basis': 'TI SCES295AB 7.3: a 0.1 uF bypass capacitor at VCC, near the supply te'}
+   expected   [G14] bypass C56: {'cap': 'C56', 'part': 'U14', 'pin': '5', 'net': '+3V3_D8'} -> same, + {'class': 'D', 'basis': 'TI SCES217AA 8.3, the family sheet (the fitted TECH PUBLIC 74LVC1G08 s'}
+   expected   [G14 and EMCON-L4 (U15's IN on +5V_TX)] bypass C61: {'cap': 'C61', 'part': 'U15', 'pin': '6', 'net': '+5V_D8'} -> {'cap': 'C61', 'part': 'U15', 'pin': '6', 'net': '+5V_TX'}, + {'class': 'D', 'basis': "TI SBVS351D 7.1.2: an input capacitor 'is not required for stability' "}
+   expected   [G14] bypass C62: {'cap': 'C62', 'part': 'U15', 'pin': '1', 'net': 'VGG_SW'} -> same, + {'class': 'L', 'basis': "TI SBVS351D 7.1.2: 'requires an output capacitance of 0.47 uF or large", 'floor_uF': 0.47}
+   expected   [G14] bypass C64: {'cap': 'C64', 'part': 'U17', 'pin': '1', 'net': '+5V_D8'} -> same, + {'class': 'D', 'basis': "TI SBVS351D 7.1.2: an input capacitor 'is not required for stability' "}
+   expected   [G14] bypass C65: {'cap': 'C65', 'part': 'U17', 'pin': '5', 'net': '+3V4_HUB'} -> same, + {'class': 'L', 'basis': "TI SBVS351D 7.1.2: 'requires an output capacitance of 0.47 uF or large", 'floor_uF': 0.47}
+   expected   [G14] bypass C66: {'cap': 'C66', 'part': 'U18', 'pin': '5', 'net': '+3V3_D8'} -> same, + {'class': 'D', 'basis': 'Diodes DS36108 states no decoupling; TI SCES217AA 8.3 for the LVC fami'}
+   expected   [G14] bypass C67: {'cap': 'C67', 'part': 'U19', 'pin': '5', 'net': '+3V3'} -> same, + {'class': 'D', 'basis': 'Diodes DS36108 states no decoupling; TI SCES217AA 8.3 for the LVC fami'}
+   expected   [G14] bypass C68: {'cap': 'C68', 'part': 'U20', 'pin': '5', 'net': '+3V3'} -> same, + {'class': 'D', 'basis': 'Diodes DS36108 states no decoupling; TI SCES217AA 8.3 for the LVC fami'}
+   expected   [G14] bypass C7: {'cap': 'C7', 'part': 'U1', 'pin': '1', 'net': '+5V_D8'} -> same, + {'class': 'D', 'basis': "TI SBVS320D 7.1.1, p.15: 'Place a 1uF or greater capacitor on the inpu"}
+   expected   [EMCON-L4] bypass C71 ADDED: U21.6 +5V_D8 class D
+   expected   [PWR-F15] bypass C75 ADDED: U22.8 +3V3 class D
+   expected   [G14] bypass C8: {'cap': 'C8', 'part': 'U1', 'pin': '5', 'net': '+3V3_D8'} -> same, + {'class': 'L', 'basis': "TI SBVS320D 7.1.1, p.15: 'requires an output capacitance of 0.47uF or ", 'floor_uF': 0.47}
+   expected   [G14] bypass C9: {'cap': 'C9', 'part': 'U1', 'pin': '5', 'net': '+3V3_D8'} -> same, + {'class': 'L', 'basis': "TI SBVS320D 7.1.1, p.15: 'requires an output capacitance of 0.47uF or ", 'floor_uF': 0.47}
+PAIR base_regen vs new_regen  comps 227/245 nets 180/188 libparts 38/40  expected 81  UNEXPECTED 0  => ONLY_EXPECTED
+   noise      intent written 2026-09-26 21:36 -> 2026-09-26 21:40
+   expected   [G12] comp C31 changes ['value', 'footprint', 'fields', 'property:LCSC']: value '1u' -> '2.2u 16V X5R 0402', footprint 'Capacitor_SMD:C_0603_1608Metric' -> 'Capacitor_SMD:C_0402_1005Metric', LCSC None -> ['C170151']
+   expected   [G12] comp C32 changes ['value', 'footprint', 'fields', 'property:LCSC']: value '1u' -> '2.2u 16V X5R 0402', footprint 'Capacitor_SMD:C_0603_1608Metric' -> 'Capacitor_SMD:C_0402_1005Metric', LCSC None -> ['C170151']
+   expected   [R8D-P1] comp C44 changes ['fields', 'property:LCSC']: value '1n NP0' -> '1n NP0', footprint 'Capacitor_SMD:C_0402_1005Metric' -> 'Capacitor_SMD:C_0402_1005Metric', LCSC None -> ['C113780']
+   expected   [R8D-P1] comp C45 changes ['fields', 'property:LCSC']: value '1n NP0' -> '1n NP0', footprint 'Capacitor_SMD:C_0402_1005Metric' -> 'Capacitor_SMD:C_0402_1005Metric', LCSC None -> ['C113780']
+   expected   [EMCON-L4] comp C69 ADDED: 1n NP0 | Capacitor_SMD:C_0402_1005Metric | ['C113780']
+   expected   [EMCON-L4] comp C70 ADDED: 10n | Capacitor_SMD:C_0603_1608Metric | ['C57112']
+   expected   [EMCON-L4] comp C71 ADDED: 1u | Capacitor_SMD:C_0603_1608Metric | ['C15849']
+   expected   [PWR-F15] comp C72 ADDED: 1n NP0 | Capacitor_SMD:C_0402_1005Metric | ['C113780']
+   expected   [PWR-F15] comp C73 ADDED: 100n | Capacitor_SMD:C_0603_1608Metric | ['C14663']
+   expected   [PWR-F15] comp C74 ADDED: 100n | Capacitor_SMD:C_0603_1608Metric | ['C14663']
+   expected   [PWR-F15] comp C75 ADDED: 100n | Capacitor_SMD:C_0603_1608Metric | ['C14663']
+   expected   [PWR-F15] comp J_FLANGE ADDED: JST-XH 1x2 socket: power amplifier flange NTC lead (Semitec 103AT-2 on the flange, bench-fitted): NTC GND | Connector_JST:JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical | ['C158012']
+   expected   [PARTS-J_VGG] comp J_VGG changes ['fields', 'property:LCSC']: value 'JST-PH 1x2 socket: PA gate bias, VGG GND (the lead runs to the RA30H1317M1 VGG pin)' -> 'JST-PH 1x2 socket: PA gate bias, VGG GND (the lead runs to the RA30H1317M1 VGG pin)', footprint 'Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical' -> 'Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical', LCSC ['C5251182'] -> ['C131337']
+   expected   [PARTS-C2287] comp LED2 changes ['value']: value 'amber record' -> 'yellow record', footprint 'LED_SMD:LED_0603_1608Metric' -> 'LED_SMD:LED_0603_1608Metric', LCSC ['C2287'] -> ['C2287']
+   expected   [PARTS-C2287] comp LED5 changes ['value']: value 'amber PA keyed' -> 'yellow PA keyed', footprint 'LED_SMD:LED_0603_1608Metric' -> 'LED_SMD:LED_0603_1608Metric', LCSC ['C2287'] -> ['C2287']
+   expected   [EMCON-L4] comp R90 ADDED: 11k 1% | Resistor_SMD:R_0603_1608Metric | ['C25950']
+   expected   [EMCON-L4] comp R91 ADDED: 10k 1% | Resistor_SMD:R_0603_1608Metric | ['C25804']
+   expected   [PWR-F15] comp R92 ADDED: 2k 1% | Resistor_SMD:R_0603_1608Metric | ['C22975']
+   expected   [PWR-F15] comp R93 ADDED: 1k | Resistor_SMD:R_0603_1608Metric | ['C21190']
+   expected   [PWR-F15] comp R94 ADDED: 1k | Resistor_SMD:R_0603_1608Metric | ['C21190']
+   expected   [EMCON-L4] comp R95 ADDED: 100R 1% | Resistor_SMD:R_0603_1608Metric | ['C22775']
+   expected   [PWR-F15] comp TP26 ADDED: FLANGE_NTC | TestPoint:TestPoint_Pad_D1.5mm | None
+   expected   [EMCON-L4] comp TP27 ADDED: +5V_TX | TestPoint:TestPoint_Pad_D1.5mm | None
+   expected   [EMCON-L4] comp U21 ADDED: TPS22810DRV load switch, +5V_TX on while +3V3_D8 is above 2.23 to 2.78 V (EN/UVLO divider R90 R91, QOD through R95) | Package_SON:WSON-6-1EP_2x2mm_P0.65mm_EP1x1.6mm | ['C527679']
+   expected   [PWR-F15] comp U22 ADDED: ADS1115IDGSR 16-bit ADC at 0x48 (1 ADDR 2 ALERT/RDY 3 GND 4 AIN0 5 AIN1 6 AIN2 7 AIN3 8 VDD 9 SDA 10 SCL): the flange NTC over +3V3, ratiometric | Package_SO:VSSOP-10_3x3mm_P0.5mm | ['C37593']
+   expected   [PWR-F15] net +3V3: left [], joined ['C75.1(/passive)', 'R92.1(/passive)', 'R94.1(/passive)', 'U22.8(+3V3/passive)']
+   expected   [EMCON-L4] net +3V3_D8: left [], joined ['R90.1(/passive)']
+   expected   [EMCON-L4] net +5V_D8: left ['C57.1', 'C61.1', 'D2.1', 'FB1.1', 'K1.1', 'U15.6'], joined ['C71.1(/passive)', 'U21.6(VIN/power_in)']
+   expected   [EMCON-L4] net +5V_TX ADDED with ['C57.1(/passive)', 'C61.1(/passive)', 'D2.1(K/passive)', 'FB1.1(/passive)', 'K1.1(/passive)', 'R95.2(/passive)', 'TP27.1(1/passive)', 'U15.6(+5V_TX/passive)', 'U21.1(VOUT/power_out)']
+   expected   [PWR-F15] net FLANGE_AIN0 ADDED with ['C73.1(/passive)', 'R93.2(/passive)', 'U22.4(FLANGE_AIN0/passive)']
+   expected   [PWR-F15] net FLANGE_NTC ADDED with ['C72.1(/passive)', 'J_FLANGE.1(Pin_1/passive)', 'R92.2(/passive)', 'R93.1(/passive)', 'TP26.1(1/passive)']
+   expected   [PWR-F15] net FLANGE_REF ADDED with ['C74.1(/passive)', 'R94.2(/passive)', 'U22.5(FLANGE_REF/passive)']
+   expected   [EMCON-L4 and PWR-F15] net GND: left [], joined ['C69.2(/passive)', 'C70.2(/passive)', 'C71.2(/passive)', 'C72.2(/passive)', 'C73.2(/passive)', 'C74.2(/passive)', 'C75.2(/passive)', 'J_FLANGE.2(Pin_2/passive)', 'R91.2(/passive)', 'U21.4(GND/power_in)', 'U21.7(GND/passive)', 'U22.1(GND/passive)', 'U22.3(GND/passive)', 'U22.6(GND/passive)', 'U22.7(GND/passive)']
+   expected   [PWR-F15] net SCL: left [], joined ['U22.10(SCL/passive)']
+   expected   [PWR-F15] net SDA: left [], joined ['U22.9(SDA/passive)']
+   expected   [EMCON-L4] net TXSUP_CT ADDED with ['C70.1(/passive)', 'U21.3(CT/output)']
+   expected   [EMCON-L4] net TXSUP_EN ADDED with ['C69.1(/passive)', 'R90.2(/passive)', 'R91.1(/passive)', 'U21.5(EN/UVLO/input)']
+   expected   [EMCON-L4] net TXSUP_QOD ADDED with ['R95.1(/passive)', 'U21.2(QOD/open_collector)']
+   expected   [PWR-F15] net unconnected-(U22-NC-Pad2) ADDED (U22.2, a deliberate no-connect)
+   expected   [EMCON-L4] libpart Power_Management:TPS22810DRV ADDED
+   expected   [EMCON-L4] libpart meshsat_ic:U15: one pin name "\"+5V_D8\"" -> "\"+5V_TX\"", nothing else
+   expected   [PWR-F15] libpart meshsat_ic:U22 ADDED
+   expected   [PWR-F15] rail +3V3 changes: {'loads': ({'U16': 0.06, 'U19': 0.002, 'U20': 0.002}, {'U16': 0.06, 'U19': 0.002, 'U20': 0.002, 'U22': 0.0002, 'R92': 0.0012})} (+note)
+   expected   [EMCON-L4] rail +3V3_D8 changes: {'loads': ({'U7': 0.02, 'U9': 0.002, 'U10': 0.002, 'U11': 0.002, 'U12': 0.002, 'U13': 0.002, 'U14': 0.002, 'U18': 0.002, 'Q3': 0.001, 'Q4': 0.001, 'Q5': 0.001, 'Q8': 0.001, 'Q9': 0.001}, {'U7': 0.02, 'U9': 0.002, 'U10': 0.002, 'U11': 0.002, 'U12': 0.002, 'U13': 0.002, 'U14': 0.002, 'U18': 0.002, 'Q3': 0.001, 'Q4': 0.001, 'Q5': 0.001, 'Q8': 0.001, 'Q9': 0.001, 'R90': 0.0002})}
+   expected   [EMCON-L4] rail +5V_D8 changes: {'loads': ({'FB1': 0.5, 'U1': 0.17, 'U17': 0.04, 'U6': 0.1, 'J_USB3': 0.05, 'U7': 0.05, 'U3': 0.03, 'U15': 0.02}, {'U21': 0.52, 'U1': 0.17, 'U17': 0.04, 'U6': 0.1, 'J_USB3': 0.05, 'U7': 0.05, 'U3': 0.03})}
+   expected   [EMCON-L4] rail +5V_SA changes: {'always_on': (True, None), 'always_on_why': ("the exciter's rail behind the ferrite FB1: a ferrite is not a switch, so this rail follows +5V_D8. What gates the transmitter is the PTT chain, not this rail", None), 'enable_net': (None, 'TXSUP_EN'), 'fed_from': ('+5V_D8', '+5V_TX'), 'switch': (None, 'U21')} (+note)
+   expected   [EMCON-L4] rail +5V_TX ADDED: {'amps_peak': (None, 1.15), 'amps_typ': (None, 0.37), 'budget': (None, 0.03), 'converted': (None, False), 'enable_net': (None, 'TXSUP_EN'), 'fed_from': (None, '+5V_D8'), 'loads': (None, {'FB1': 1.1, 'U15': 0.02, 'K1': 0.02}), 'source': (None, 'U21'), 'switch': (None, 'U21'), 'v_work': (None, 5.23), 'volts': (None, 5.0)} (+note)
+   expected   [G12] node AMP_HPVDD ADDED: {'v_max': 1.9, 'v_min': 0.0, 'basis': "the TPA6132A2's internal positive supply for its headphone amplifiers, generated inside the part and never driven from outside: 'Headphone amplifier supply voltage HPVDD (do not connect to external supply) -0.3 to 1.9 V' (TI SLOS597B 6.1, Absolute Maximum Ratings); the pin takes only its 2.2 uF (5, 9)"}
+   expected   [PWR-F15] node FLANGE_NTC ADDED: {'v_max': 3.3, 'v_min': 0.0, 'basis': "the NTC divider's tap: at most the harness +3V3 (declared 3.3 V) with the flange lead open, and at most 1.1 mA through R92 into the NTC; read by U22's AIN0 through R93"}
+   expected   [EMCON-L4] node TXSUP_EN ADDED: {'v_max': 2.6, 'v_min': 0.0, 'basis': "U21's EN/UVLO tap: +3V3_D8 x R91 / (R90 + R91), 0.16 mA through the divider and nothing else; at most 2.53 V with +3V3_D8 back-fed to 5.23 V at the resistors' low ratio (5.23 / 2.064), 1.57 V in service; the pin itself is rated to 20 V (TI SLVSDH0C 7.1)"}
+   expected   [G14] bypass C15: {'cap': 'C15', 'part': 'U4', 'pin': '3', 'net': '+3V4_HUB'} -> same, + {'class': 'D', 'basis': "TI SLLS413L 11.1.1 item 1, p.18: 'A 0.1-uF should be placed as close a"}
+   expected   [G14] bypass C16: {'cap': 'C16', 'part': 'U4', 'pin': '3', 'net': '+3V4_HUB'} -> same, + {'class': 'D', 'basis': "TI SLLS413L 11.1.1 item 1, p.18: 'A 0.1-uF should be placed as close a"}
+   expected   [G14 and the C17 re-declaration] bypass C17: {'cap': 'C17', 'part': 'U4', 'pin': '3', 'net': '+3V4_HUB'} -> {'cap': 'C17', 'part': 'U17', 'pin': '5', 'net': '+3V4_HUB'}, + {'class': 'B1', 'basis': "TI SLLS413L 10.1, p.17, bulk 'can be placed anywhere on the power rail"}
+   expected   [G14] bypass C18: {'cap': 'C18', 'part': 'U6', 'pin': '2', 'net': '+5V_D8'} -> same, + {'class': 'D', 'basis': "TI SLES230A p.27: 'The decoupling capacitors must be as close as possi"}
+   expected   [G14] bypass C19: {'cap': 'C19', 'part': 'U6', 'pin': '5', 'net': 'PCM_VDD'} -> same, + {'class': 'L', 'basis': "TI SLES230A 9.5.1.6 and Table 6: VDD is an internal regulator's output"}
+   expected   [G14] bypass C20: {'cap': 'C20', 'part': 'U6', 'pin': '15', 'net': 'PCM_VCCA'} -> same, + {'class': 'L', 'basis': "TI SLES230A 9.5.1.6 and Table 6: VCCA is an internal regulator's outpu"}
+   expected   [G14] bypass C21: {'cap': 'C21', 'part': 'U6', 'pin': '19', 'net': 'PCM_VCCL'} -> same, + {'class': 'L', 'basis': "TI SLES230A 9.5.1.6 and Table 6: VCCL is an internal regulator's outpu"}
+   expected   [G14] bypass C22: {'cap': 'C22', 'part': 'U6', 'pin': '21', 'net': 'PCM_VCCR'} -> same, + {'class': 'L', 'basis': "TI SLES230A 9.5.1.6 and Table 6: VCCR is an internal regulator's outpu"}
+   expected   [G14] bypass C23: {'cap': 'C23', 'part': 'U6', 'pin': '26', 'net': 'PCM_VCCP'} -> same, + {'class': 'L', 'basis': "TI SLES230A 9.5.1.6 and Table 6: VCCP is an internal regulator's outpu"}
+   expected   [G14] bypass C31: {'cap': 'C31', 'part': 'U7', 'pin': '12', 'net': 'AMP_HPVDD'} -> same, + {'class': 'L', 'basis': "TI SLOS597B 9, p.17: 'Connect the HPVDD pin only to a 2.2 uF, X5R or b", 'floor_uF': 2.2, 'maker_mm': 5.0}
+   expected   [G14] bypass C32: {'cap': 'C32', 'part': 'U7', 'pin': '14', 'net': '+5V_D8'} -> same, + {'class': 'D', 'basis': "TI SLOS597B 9.1, p.17: 'Place a 2.2 uF capacitor within 5 mm of the VD", 'maker_mm': 5.0}
+   expected   [G14] bypass C33: {'cap': 'C33', 'part': 'U7', 'pin': '14', 'net': '+5V_D8'} -> same, + {'class': 'B2', 'basis': "TI SLOS597B 9.1, p.17: 'an additional 10 uF or higher value capacitor "}
+   expected   [G14] bypass C39: {'cap': 'C39', 'part': 'U8', 'pin': '8', 'net': '+5V_D8'} -> same, + {'class': 'D', 'basis': "TI SBOS839N 8.3: 'Place 0.1uF bypass capacitors close to the power-sup"}
+   expected   [G14] bypass C51: {'cap': 'C51', 'part': 'U9', 'pin': '5', 'net': '+3V3_D8'} -> same, + {'class': 'D', 'basis': 'TI SCES217AA 8.3, the family sheet (the fitted TECH PUBLIC 74LVC1G08 s'}
+   expected   [G14] bypass C52: {'cap': 'C52', 'part': 'U10', 'pin': '5', 'net': '+3V3_D8'} -> same, + {'class': 'D', 'basis': 'TI SCES217AA 8.3, the family sheet (the fitted TECH PUBLIC 74LVC1G08 s'}
+   expected   [G14] bypass C53: {'cap': 'C53', 'part': 'U11', 'pin': '5', 'net': '+3V3_D8'} -> same, + {'class': 'D', 'basis': 'TI SCES214AF 8.4: a 0.1 uF bypass capacitor at VCC, near the supply te'}
+   expected   [G14] bypass C54: {'cap': 'C54', 'part': 'U12', 'pin': '5', 'net': '+3V3_D8'} -> same, + {'class': 'D', 'basis': 'TI SCES217AA 8.3, the family sheet (the fitted TECH PUBLIC 74LVC1G08 s'}
+   expected   [G14] bypass C55: {'cap': 'C55', 'part': 'U13', 'pin': '5', 'net': '+3V3_D8'} -> same, + {'class': 'D', 'basis': 'TI SCES295AB 7.3: a 0.1 uF bypass capacitor at VCC, near the supply te'}
+   expected   [G14] bypass C56: {'cap': 'C56', 'part': 'U14', 'pin': '5', 'net': '+3V3_D8'} -> same, + {'class': 'D', 'basis': 'TI SCES217AA 8.3, the family sheet (the fitted TECH PUBLIC 74LVC1G08 s'}
+   expected   [G14 and EMCON-L4 (U15's IN on +5V_TX)] bypass C61: {'cap': 'C61', 'part': 'U15', 'pin': '6', 'net': '+5V_D8'} -> {'cap': 'C61', 'part': 'U15', 'pin': '6', 'net': '+5V_TX'}, + {'class': 'D', 'basis': "TI SBVS351D 7.1.2: an input capacitor 'is not required for stability' "}
+   expected   [G14] bypass C62: {'cap': 'C62', 'part': 'U15', 'pin': '1', 'net': 'VGG_SW'} -> same, + {'class': 'L', 'basis': "TI SBVS351D 7.1.2: 'requires an output capacitance of 0.47 uF or large", 'floor_uF': 0.47}
+   expected   [G14] bypass C64: {'cap': 'C64', 'part': 'U17', 'pin': '1', 'net': '+5V_D8'} -> same, + {'class': 'D', 'basis': "TI SBVS351D 7.1.2: an input capacitor 'is not required for stability' "}
+   expected   [G14] bypass C65: {'cap': 'C65', 'part': 'U17', 'pin': '5', 'net': '+3V4_HUB'} -> same, + {'class': 'L', 'basis': "TI SBVS351D 7.1.2: 'requires an output capacitance of 0.47 uF or large", 'floor_uF': 0.47}
+   expected   [G14] bypass C66: {'cap': 'C66', 'part': 'U18', 'pin': '5', 'net': '+3V3_D8'} -> same, + {'class': 'D', 'basis': 'Diodes DS36108 states no decoupling; TI SCES217AA 8.3 for the LVC fami'}
+   expected   [G14] bypass C67: {'cap': 'C67', 'part': 'U19', 'pin': '5', 'net': '+3V3'} -> same, + {'class': 'D', 'basis': 'Diodes DS36108 states no decoupling; TI SCES217AA 8.3 for the LVC fami'}
+   expected   [G14] bypass C68: {'cap': 'C68', 'part': 'U20', 'pin': '5', 'net': '+3V3'} -> same, + {'class': 'D', 'basis': 'Diodes DS36108 states no decoupling; TI SCES217AA 8.3 for the LVC fami'}
+   expected   [G14] bypass C7: {'cap': 'C7', 'part': 'U1', 'pin': '1', 'net': '+5V_D8'} -> same, + {'class': 'D', 'basis': "TI SBVS320D 7.1.1, p.15: 'Place a 1uF or greater capacitor on the inpu"}
+   expected   [EMCON-L4] bypass C71 ADDED: U21.6 +5V_D8 class D
+   expected   [PWR-F15] bypass C75 ADDED: U22.8 +3V3 class D
+   expected   [G14] bypass C8: {'cap': 'C8', 'part': 'U1', 'pin': '5', 'net': '+3V3_D8'} -> same, + {'class': 'L', 'basis': "TI SBVS320D 7.1.1, p.15: 'requires an output capacitance of 0.47uF or ", 'floor_uF': 0.47}
+   expected   [G14] bypass C9: {'cap': 'C9', 'part': 'U1', 'pin': '5', 'net': '+3V3_D8'} -> same, + {'class': 'L', 'basis': "TI SBVS320D 7.1.1, p.15: 'requires an output capacitance of 0.47uF or ", 'floor_uF': 0.47}
+TOTAL UNEXPECTED: 0
+r8d_par exit 0
