@@ -21,13 +21,13 @@ that owns it.
 
 | board | declared phase | netlist, sha256/16 | board file of the phase, sha256/16 | layout carries the netlist | ready for layout |
 |---|---|---|---|---|---|
-| A | A32 | `pcb-a-power-a23/out/pcb-a-power.net` 2e8923d6853ee4e1 | 58e26c67987b1daa | no: SCH-002 (netlist against board) reads FAIL on it | no: 6 reason(s), first SCH-005 PASS on AWAITING_REVALIDATION evidence (NETLIST_MISMATCH) |
-| B | B21 | `pcb-b-compute-b19/out/pcb-b-compute.net` 6048ee56c48a028b | 2e64b5bf2d9cd3bc | no: SCH-002 (netlist against board) reads FAIL on it | no: 8 reason(s), first SCH-005 PASS on AWAITING_REVALIDATION evidence (NETLIST_MISMATCH) |
-| C | C24 | `pcb-c-display-c8/out/pcb-c-display.net` 2834f0d8c4071d56 | 2a273803757c68fb | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 5 reason(s), first SCH-005 PASS on AWAITING_REVALIDATION evidence (NETLIST_MISMATCH) |
-| D | D12 | `pcb-d-aprs-d9/out/pcb-d-aprs.net` f13d8b70099ab03e | 929bf82d2bf6eed4 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 6 reason(s), first SCH-005 PASS on AWAITING_REVALIDATION evidence (NETLIST_MISMATCH) |
-| E | E17 | `pcb-e1-dock-e7/out/pcb-e1-dock.net` d910e49c5f5f50b2 | a462ac2620b9b8d3 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 6 reason(s), first SCH-005 PASS on AWAITING_REVALIDATION evidence (NETLIST_MISMATCH) |
-| P | P4 | `pcb-p-pack-p2/out/pcb-p-pack.net` 4342c4cbe1b43dc4 | d79865e7b1aceb95 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 5 reason(s), first SCH-005 PASS on AWAITING_REVALIDATION evidence (NETLIST_MISMATCH) |
-| E5 | E5 | none (no schematic) | 686b29a734c55b9a | yes: a bare contact board with no schematic (manifest no_chain): its board file is its design | no: 1 reason(s), first INT-001 PASS on AWAITING_REVALIDATION evidence (UNBOUND) |
+| A | A32 | `pcb-a-power-a23/out/pcb-a-power.net` 7b08510106687b3d | 58e26c67987b1daa | no: SCH-002 (netlist against board) reads FAIL on it | no: 12 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (NETLIST_MISMATCH) |
+| B | B21 | `pcb-b-compute-b19/out/pcb-b-compute.net` 669d02d07aeaae4b | 2e64b5bf2d9cd3bc | no: SCH-002 (netlist against board) reads FAIL on it | no: 13 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (NETLIST_MISMATCH) |
+| C | C24 | `pcb-c-display-c8/out/pcb-c-display.net` 2834f0d8c4071d56 | 2a273803757c68fb | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 6 reason(s), first SCH-005 PASS on AWAITING_REVALIDATION evidence (NETLIST_MISMATCH) |
+| D | D12 | `pcb-d-aprs-d9/out/pcb-d-aprs.net` f13d8b70099ab03e | 929bf82d2bf6eed4 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 8 reason(s), first SCH-005 PASS on AWAITING_REVALIDATION evidence (NETLIST_MISMATCH) |
+| E | E17 | `pcb-e1-dock-e7/out/pcb-e1-dock.net` d910e49c5f5f50b2 | a462ac2620b9b8d3 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 8 reason(s), first SCH-005 PASS on AWAITING_REVALIDATION evidence (NETLIST_MISMATCH) |
+| P | P4 | `pcb-p-pack-p2/out/pcb-p-pack.net` 4342c4cbe1b43dc4 | d79865e7b1aceb95 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 7 reason(s), first SCH-005 PASS on AWAITING_REVALIDATION evidence (NETLIST_MISMATCH) |
+| E5 | E5 | none (no schematic) | 686b29a734c55b9a | yes: a bare contact board with no schematic (manifest no_chain): its board file is its design | no: 2 reason(s), first INT-001 PASS on AWAITING_REVALIDATION evidence (OTHER_DESIGN) |
 
 ## Layout entry, per board: the exact remaining blockers
 
@@ -41,8 +41,8 @@ the row current, and the owner is the stream that takes that step.
 
 | what closes it first | owner | A | B | C | D | E | P | E5 | set |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| a re-take alone (the reading would be current) | board stream of that board | 2 | 3 | 3 | 3 | 3 | 2 | 0 | 16 |
-| the design or its declarations (the reading is current and is not a PASS) | board stream of that board | 1 | 2 | 0 | 0 | 0 | 1 | 0 | 4 |
+| a re-take alone (the reading would be current) | board stream of that board | 9 | 10 | 4 | 5 | 5 | 4 | 1 | 38 |
+| the design or its declarations (the reading is current and is not a PASS) | board stream of that board | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 1 |
 | the tool judges the netlist instead of the board file, then a re-take | tools stream | 2 | 2 | 2 | 2 | 2 | 2 | 0 | 12 |
 | a deciding verification for the rule | registry writer (pcb_rules_coverage.yaml) | 0 | 1 | 0 | 0 | 0 | 0 | 1 | 2 |
 | the owner-decision hold lifted on fresh evidence | holds writer (tools/pcb_board_holds.yaml) | 1 | 0 | 0 | 1 | 1 | 0 | 0 | 3 |
@@ -57,43 +57,62 @@ entry test, would admit a board on which nobody has judged them against its netl
 
 | board | rule | reading now | a re-take alone would read | what closes it first | owner |
 |---|---|---|---|---|---|
+| A | SCH-001 PASS | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | erc_gate.py re-taken on the committed netlist (with --run where kicad-cli is (the box), so the report is taken on the committed schematic and tied to its netlist by the schematic's sha; a report from before the schematic, or one with no provenance sidecar, is recorded and stays unbound) | board stream A |
+| A | SCH-004 PASS | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | safe_lines.py re-taken on the committed netlist | board stream A |
 | A | SCH-005 PASS | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | pin_map_lands.py re-taken on the committed netlist | board stream A |
 | A | CMP-001 PASS | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | derate.py re-taken on the committed netlist | board stream A |
 | A | PWR-001 PASS | AWAITING_REVALIDATION (LAYOUT_NOT_CURRENT) | AWAITING_REVALIDATION (LAYOUT_NOT_CURRENT) | intent_checks.py reads only the board file, so its reading can be current only on a layout that carries the netlist; taught to judge the declared rails against the netlist's power-symbol nets (the rule counts the board's power nets, and the netlist carries every one of them), then re-taken | tools stream |
+| A | PWR-002 PASS | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | power_sequence.py re-taken on the committed netlist | board stream A |
+| A | PWR-003 PASS | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | energy_chain.py re-taken on the committed netlist | board stream A |
 | A | SI-001 INCONCLUSIVE | AWAITING_REVALIDATION (LAYOUT_NOT_CURRENT) | AWAITING_REVALIDATION (LAYOUT_NOT_CURRENT) | edge_length.py reads only the board file, so its reading can be current only on a layout that carries the netlist; taught to judge the per-class critical length from the declared edge rates and the declared stack (the registry's own evidence scope for it is the schematic and the stackup), leaving the routed-length comparison to the layout's gate, then re-taken; today's reading is INCONCLUSIVE, which the re-take may repeat | tools stream |
-| A | TRN-001 FAIL | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads FAIL | board stream A |
+| A | INT-001 PASS | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | check_contracts.py, interfaces.py re-taken on the committed netlist | board stream A |
+| A | TRN-001 FAIL | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | port_protect.py re-taken on the committed netlist; today's reading is FAIL, which the re-take may repeat | board stream A |
+| A | BAT-002 PASS | AWAITING_REVALIDATION (OTHER_DESIGN) | CURRENT_CANDIDATE (BOUND) | energy_chain.py re-taken on the committed netlist | board stream A |
 | A | hold | decision 31 |  | decision 31's hold lifted; the holds file says it lifts when decision 31 is ruled and this entry is deleted; tools/pcb_decisions.yaml records it as ruled (SESSION, 2026-09-21), so what remains is fresh evidence that matches the board and the entry's deletion | holds writer (tools/pcb_board_holds.yaml) |
+| B | SCH-001 PASS | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | erc_gate.py re-taken on the committed netlist (with --run where kicad-cli is (the box), so the report is taken on the committed schematic and tied to its netlist by the schematic's sha; a report from before the schematic, or one with no provenance sidecar, is recorded and stays unbound) | board stream B |
+| B | SCH-004 PASS | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | safe_lines.py re-taken on the committed netlist | board stream B |
 | B | SCH-005 PASS | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | pin_map_lands.py re-taken on the committed netlist | board stream B |
 | B | CMP-001 PASS | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | derate.py re-taken on the committed netlist | board stream B |
 | B | PWR-001 PASS | AWAITING_REVALIDATION (LAYOUT_NOT_CURRENT) | AWAITING_REVALIDATION (LAYOUT_NOT_CURRENT) | intent_checks.py reads only the board file, so its reading can be current only on a layout that carries the netlist; taught to judge the declared rails against the netlist's power-symbol nets (the rule counts the board's power nets, and the netlist carries every one of them), then re-taken | tools stream |
-| B | PWR-003 FAIL | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads FAIL | board stream B |
+| B | PWR-002 PASS | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | power_sequence.py re-taken on the committed netlist | board stream B |
+| B | PWR-003 FAIL | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | energy_chain.py re-taken on the committed netlist; today's reading is FAIL, which the re-take may repeat | board stream B |
 | B | SI-001 INCONCLUSIVE | AWAITING_REVALIDATION (LAYOUT_NOT_CURRENT) | AWAITING_REVALIDATION (LAYOUT_NOT_CURRENT) | edge_length.py reads only the board file, so its reading can be current only on a layout that carries the netlist; taught to judge the per-class critical length from the declared edge rates and the declared stack (the registry's own evidence scope for it is the schematic and the stackup), leaving the routed-length comparison to the layout's gate, then re-taken; today's reading is INCONCLUSIVE, which the re-take may repeat | tools stream |
 | B | CLK-001 PASS | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | clock_check.py re-taken on the committed netlist | board stream B |
+| B | RF-002 PASS | AWAITING_REVALIDATION (OTHER_DESIGN) | CURRENT_CANDIDATE (BOUND) | check_contracts.py re-taken on the committed netlist | board stream B |
+| B | INT-001 PASS | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | check_contracts.py, interfaces.py re-taken on the committed netlist | board stream B |
 | B | INT-002 INCONCLUSIVE | NO_EVIDENCE (DOCUMENTED_ONLY) | NO_EVIDENCE (DOCUMENTED_ONLY) | the coverage map gives it no deciding verification (DOCUMENTED_ONLY) | registry writer (pcb_rules_coverage.yaml) |
-| B | TRN-001 FAIL | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads FAIL | board stream B |
+| B | TRN-001 FAIL | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | port_protect.py re-taken on the committed netlist; today's reading is FAIL, which the re-take may repeat | board stream B |
 | C | SCH-005 PASS | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | pin_map_lands.py re-taken on the committed netlist | board stream C |
 | C | CMP-001 PASS | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | derate.py re-taken on the committed netlist | board stream C |
 | C | PWR-001 PASS | AWAITING_REVALIDATION (LAYOUT_NOT_CURRENT) | AWAITING_REVALIDATION (LAYOUT_NOT_CURRENT) | intent_checks.py reads only the board file, so its reading can be current only on a layout that carries the netlist; taught to judge the declared rails against the netlist's power-symbol nets (the rule counts the board's power nets, and the netlist carries every one of them), then re-taken | tools stream |
 | C | SI-001 INCONCLUSIVE | AWAITING_REVALIDATION (LAYOUT_NOT_CURRENT) | AWAITING_REVALIDATION (LAYOUT_NOT_CURRENT) | edge_length.py reads only the board file, so its reading can be current only on a layout that carries the netlist; taught to judge the per-class critical length from the declared edge rates and the declared stack (the registry's own evidence scope for it is the schematic and the stackup), leaving the routed-length comparison to the layout's gate, then re-taken; today's reading is INCONCLUSIVE, which the re-take may repeat | tools stream |
 | C | CLK-001 PASS | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | clock_check.py re-taken on the committed netlist | board stream C |
+| C | INT-001 PASS | AWAITING_REVALIDATION (OTHER_DESIGN) | CURRENT_CANDIDATE (BOUND) | check_contracts.py, interfaces.py re-taken on the committed netlist | board stream C |
 | D | SCH-005 PASS | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | pin_map_lands.py re-taken on the committed netlist | board stream D |
 | D | CMP-001 PASS | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | derate.py re-taken on the committed netlist | board stream D |
 | D | PWR-001 PASS | AWAITING_REVALIDATION (LAYOUT_NOT_CURRENT) | AWAITING_REVALIDATION (LAYOUT_NOT_CURRENT) | intent_checks.py reads only the board file, so its reading can be current only on a layout that carries the netlist; taught to judge the declared rails against the netlist's power-symbol nets (the rule counts the board's power nets, and the netlist carries every one of them), then re-taken | tools stream |
 | D | SI-001 INCONCLUSIVE | AWAITING_REVALIDATION (LAYOUT_NOT_CURRENT) | AWAITING_REVALIDATION (LAYOUT_NOT_CURRENT) | edge_length.py reads only the board file, so its reading can be current only on a layout that carries the netlist; taught to judge the per-class critical length from the declared edge rates and the declared stack (the registry's own evidence scope for it is the schematic and the stackup), leaving the routed-length comparison to the layout's gate, then re-taken; today's reading is INCONCLUSIVE, which the re-take may repeat | tools stream |
 | D | CLK-001 PASS | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | clock_check.py re-taken on the committed netlist | board stream D |
+| D | RF-002 PASS | AWAITING_REVALIDATION (OTHER_DESIGN) | CURRENT_CANDIDATE (BOUND) | check_contracts.py re-taken on the committed netlist | board stream D |
+| D | INT-001 PASS | AWAITING_REVALIDATION (OTHER_DESIGN) | CURRENT_CANDIDATE (BOUND) | check_contracts.py, interfaces.py re-taken on the committed netlist | board stream D |
 | D | hold | decision 31 |  | decision 31's hold lifted; the holds file says it lifts when decision 31 is ruled and this entry is deleted; tools/pcb_decisions.yaml records it as ruled (SESSION, 2026-09-21), so what remains is fresh evidence that matches the board and the entry's deletion | holds writer (tools/pcb_board_holds.yaml) |
 | E | SCH-005 PASS | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | pin_map_lands.py re-taken on the committed netlist | board stream E |
 | E | CMP-001 PASS | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | derate.py re-taken on the committed netlist | board stream E |
 | E | PWR-001 PASS | AWAITING_REVALIDATION (LAYOUT_NOT_CURRENT) | AWAITING_REVALIDATION (LAYOUT_NOT_CURRENT) | intent_checks.py reads only the board file, so its reading can be current only on a layout that carries the netlist; taught to judge the declared rails against the netlist's power-symbol nets (the rule counts the board's power nets, and the netlist carries every one of them), then re-taken | tools stream |
 | E | SI-001 INCONCLUSIVE | AWAITING_REVALIDATION (LAYOUT_NOT_CURRENT) | AWAITING_REVALIDATION (LAYOUT_NOT_CURRENT) | edge_length.py reads only the board file, so its reading can be current only on a layout that carries the netlist; taught to judge the per-class critical length from the declared edge rates and the declared stack (the registry's own evidence scope for it is the schematic and the stackup), leaving the routed-length comparison to the layout's gate, then re-taken; today's reading is INCONCLUSIVE, which the re-take may repeat | tools stream |
 | E | CLK-001 PASS | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | clock_check.py re-taken on the committed netlist | board stream E |
+| E | INT-001 PASS | AWAITING_REVALIDATION (OTHER_DESIGN) | CURRENT_CANDIDATE (BOUND) | check_contracts.py, interfaces.py re-taken on the committed netlist | board stream E |
+| E | BAT-002 PASS | AWAITING_REVALIDATION (OTHER_DESIGN) | CURRENT_CANDIDATE (BOUND) | energy_chain.py re-taken on the committed netlist | board stream E |
 | E | hold | decision 31 |  | decision 31's hold lifted; the holds file says it lifts when decision 31 is ruled in v2/docs/OWNER-DECISIONS-2026-09-11.md and this entry is deleted; tools/pcb_decisions.yaml records it as ruled (SESSION, 2026-09-21), so what remains is fresh evidence that matches the board and the entry's deletion | holds writer (tools/pcb_board_holds.yaml) |
 | P | SCH-005 PASS | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | pin_map_lands.py re-taken on the committed netlist | board stream P |
 | P | CMP-001 PASS | AWAITING_REVALIDATION (NETLIST_MISMATCH) | CURRENT_CANDIDATE (BOUND) | derate.py re-taken on the committed netlist | board stream P |
 | P | PWR-001 PASS | AWAITING_REVALIDATION (LAYOUT_NOT_CURRENT) | AWAITING_REVALIDATION (LAYOUT_NOT_CURRENT) | intent_checks.py reads only the board file, so its reading can be current only on a layout that carries the netlist; taught to judge the declared rails against the netlist's power-symbol nets (the rule counts the board's power nets, and the netlist carries every one of them), then re-taken | tools stream |
 | P | SI-001 INCONCLUSIVE | AWAITING_REVALIDATION (LAYOUT_NOT_CURRENT) | AWAITING_REVALIDATION (LAYOUT_NOT_CURRENT) | edge_length.py reads only the board file, so its reading can be current only on a layout that carries the netlist; taught to judge the per-class critical length from the declared edge rates and the declared stack (the registry's own evidence scope for it is the schematic and the stackup), leaving the routed-length comparison to the layout's gate, then re-taken; today's reading is INCONCLUSIVE, which the re-take may repeat | tools stream |
+| P | INT-001 PASS | AWAITING_REVALIDATION (OTHER_DESIGN) | CURRENT_CANDIDATE (BOUND) | check_contracts.py, interfaces.py re-taken on the committed netlist | board stream P |
 | P | BAT-001 FAIL | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads FAIL | board stream P |
-| E5 | INT-001 PASS | AWAITING_REVALIDATION (UNBOUND) | AWAITING_REVALIDATION (UNBOUND) | the coverage map reads check_contracts's set verdict here, which judges the contracts between the six boards that have a netlist and reads nothing of this board: it records every netlist it read by sha since the tools stream's recording round and none of this board's, and it will not be tied to a board file it never opened. block_contract.py judges the dock block and writes check_contracts_<letter> from its board file and board A's, so the rule can bind here once the coverage map names that per-board verdict (a draft for the registry writer), and then only while board A's layout carries its netlist (OTHER_BOARD) | registry writer (pcb_rules_coverage.yaml) |
+| P | BAT-002 PASS | AWAITING_REVALIDATION (OTHER_DESIGN) | CURRENT_CANDIDATE (BOUND) | energy_chain.py re-taken on the committed netlist | board stream P |
+| E5 | INT-001 PASS | AWAITING_REVALIDATION (OTHER_DESIGN) | AWAITING_REVALIDATION (UNBOUND) | the coverage map reads check_contracts's set verdict here, which judges the contracts between the six boards that have a netlist and reads nothing of this board: it records every netlist it read by sha since the tools stream's recording round and none of this board's, and it will not be tied to a board file it never opened. block_contract.py judges the dock block and writes check_contracts_<letter> from its board file and board A's, so the rule can bind here once the coverage map names that per-board verdict (a draft for the registry writer), and then only while board A's layout carries its netlist (OTHER_BOARD) | registry writer (pcb_rules_coverage.yaml) |
+| E5 | BAT-002 PASS | AWAITING_REVALIDATION (OTHER_DESIGN) | CURRENT_CANDIDATE (BOUND) | energy_chain.py re-taken on the committed board file | board stream E5 |
 
 ## Evidence classes, per board
 
@@ -108,63 +127,44 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 
 | board | CURRENT_CANDIDATE | VALID_HISTORICAL | PASS on either | AWAITING_REVALIDATION | DESK_REVIEW | PHYSICAL_TEST | NO_EVIDENCE | pairs |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| A | 8 | 0 | 7 | 39 | 3 | 0 | 4 | 54 |
-| B | 8 | 0 | 6 | 39 | 3 | 0 | 5 | 55 |
-| C | 4 | 0 | 4 | 37 | 3 | 0 | 3 | 47 |
-| D | 6 | 0 | 6 | 39 | 3 | 0 | 3 | 51 |
-| E | 8 | 0 | 8 | 40 | 3 | 0 | 3 | 54 |
-| P | 9 | 0 | 8 | 33 | 3 | 0 | 2 | 47 |
-| E5 | 6 | 2 | 8 | 14 | 2 | 0 | 1 | 25 |
-| **set** | **49** | **2** | **47** | **241** | **20** | **0** | **21** | **333** |
+| A | 1 | 0 | 1 | 46 | 3 | 0 | 4 | 54 |
+| B | 1 | 0 | 1 | 46 | 3 | 0 | 5 | 55 |
+| C | 3 | 0 | 3 | 38 | 3 | 0 | 3 | 47 |
+| D | 4 | 0 | 4 | 41 | 3 | 0 | 3 | 51 |
+| E | 6 | 0 | 6 | 42 | 3 | 0 | 3 | 54 |
+| P | 7 | 0 | 6 | 35 | 3 | 0 | 2 | 47 |
+| E5 | 5 | 2 | 7 | 15 | 2 | 0 | 1 | 25 |
+| **set** | **27** | **2** | **28** | **263** | **20** | **0** | **21** | **333** |
 
 ## Rules with a PASS on the current candidate
 
 | board | rule | phase | the reading and what binds it |
 |---|---|---|---|
-| A | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist 2e8923d6853ee4e1 is the current candidate's |
-| A | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_a: netlist 2e8923d6853ee4e1 is the current candidate's |
-| A | PWR-002 sequencing and inrush | SCHEMATIC | power_sequence: netlist 2e8923d6853ee4e1 is the current candidate's |
-| A | PWR-003 protection coordination | SCHEMATIC | energy_chain_a: netlist 2e8923d6853ee4e1 is the current candidate's |
-| A | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_a: netlist 2e8923d6853ee4e1 is the current candidate's |
-| A | BAT-002 the energy chain is bounded end to end | SCHEMATIC | energy_chain: netlist 2e8923d6853ee4e1 is the current candidate's |
 | A | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
-| B | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist 6048ee56c48a028b is the current candidate's |
-| B | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_b: netlist 6048ee56c48a028b is the current candidate's |
-| B | PWR-002 sequencing and inrush | SCHEMATIC | power_sequence: netlist 6048ee56c48a028b is the current candidate's |
-| B | RF-002 transmit inhibit is hardware | SCHEMATIC | inhibit_chain_b: netlist 6048ee56c48a028b is the current candidate's |
-| B | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_b: netlist 6048ee56c48a028b is the current candidate's |
 | B | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 | C | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist 2834f0d8c4071d56 is the current candidate's |
-| C | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_c: netlist 2834f0d8c4071d56 is the current candidate's |
 | C | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_c: netlist 2834f0d8c4071d56 is the current candidate's |
 | C | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 | D | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist f13d8b70099ab03e is the current candidate's |
 | D | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_d: netlist f13d8b70099ab03e is the current candidate's |
-| D | RF-002 transmit inhibit is hardware | SCHEMATIC | inhibit_chain_d: netlist f13d8b70099ab03e is the current candidate's |
-| D | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_d: netlist f13d8b70099ab03e is the current candidate's |
 | D | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_d: netlist f13d8b70099ab03e is the current candidate's |
 | D | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 | E | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist d910e49c5f5f50b2 is the current candidate's |
 | E | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_e: netlist d910e49c5f5f50b2 is the current candidate's |
 | E | PWR-002 sequencing and inrush | SCHEMATIC | power_sequence: netlist d910e49c5f5f50b2 is the current candidate's |
 | E | PWR-003 protection coordination | SCHEMATIC | energy_chain_e: netlist d910e49c5f5f50b2 is the current candidate's |
-| E | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_e: netlist d910e49c5f5f50b2 is the current candidate's |
 | E | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_e: netlist d910e49c5f5f50b2 is the current candidate's |
-| E | BAT-002 the energy chain is bounded end to end | SCHEMATIC | energy_chain: netlist d910e49c5f5f50b2 is the current candidate's |
 | E | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 | P | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist 4342c4cbe1b43dc4 is the current candidate's |
 | P | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_p: netlist 4342c4cbe1b43dc4 is the current candidate's |
 | P | PWR-002 sequencing and inrush | SCHEMATIC | power_sequence: netlist 4342c4cbe1b43dc4 is the current candidate's |
 | P | PWR-003 protection coordination | SCHEMATIC | energy_chain_p: netlist 4342c4cbe1b43dc4 is the current candidate's |
-| P | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_p: netlist 4342c4cbe1b43dc4 is the current candidate's |
 | P | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_p: netlist 4342c4cbe1b43dc4 is the current candidate's |
-| P | BAT-002 the energy chain is bounded end to end | SCHEMATIC | energy_chain: netlist 4342c4cbe1b43dc4 is the current candidate's |
 | P | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 | E5 | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_e5: board 686b29a734c55b9a is the current design (no schematic) |
 | E5 | CMP-001 absolute maximum never reached | SCHEMATIC | derate: board 686b29a734c55b9a is the current design (no schematic) |
 | E5 | PWR-003 protection coordination | SCHEMATIC | energy_chain_e5: board 686b29a734c55b9a is the current design (no schematic) |
 | E5 | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_e5: board 686b29a734c55b9a is the current design (no schematic) |
-| E5 | BAT-002 the energy chain is bounded end to end | SCHEMATIC | energy_chain: board 686b29a734c55b9a is the current design (no schematic) |
 | E5 | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 
 ## Reused under a recorded rationale
@@ -183,10 +183,11 @@ tool.
 | cause | what it means | what re-validates it | A | B | C | D | E | P | E5 | set | of which a re-take alone makes current |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | LAYOUT_NOT_CURRENT | the layout or package it judged is not proven to carry the current netlist (SCH-002 is not a current PASS) | a layout of a new phase from the current netlist, then the reading re-taken on it; for a schematic-phase rule whose tool reads only the board file, the tool taught to judge the netlist instead | 20 | 20 | 21 | 21 | 21 | 18 | 0 | 121 | 0 |
-| NETLIST_MISMATCH | it recorded a netlist sha other than the one the board's phase directory holds | a re-take on the committed netlist, which makes it current only when its writer's configuration is declared and committed (the next column counts the rows where that holds) | 2 | 3 | 3 | 3 | 3 | 2 | 0 | 16 | 16 |
+| NETLIST_MISMATCH | it recorded a netlist sha other than the one the board's phase directory holds | a re-take on the committed netlist, which makes it current only when its writer's configuration is declared and committed (the next column counts the rows where that holds) | 8 | 9 | 3 | 3 | 3 | 2 | 0 | 28 | 28 |
 | PREDATES_ARTEFACT | it records no artefact by content and was taken before the board's current netlist was committed | the gate taught to record the netlist, board or package file sha it reads, then re-taken; a re-take alone reads UNBOUND, because the reading records no artefact, unless the tool here already records it (rules_status.RECORDS_ARTEFACT) | 5 | 4 | 4 | 5 | 5 | 5 | 0 | 28 | 0 |
-| UNBOUND | it records no artefact by content (a release-package reading: no file of the declared phase's folder by sha), so it cannot be tied to the candidate | the gate taught to record the netlist, board or package file sha it read, then re-taken | 2 | 2 | 2 | 2 | 2 | 2 | 10 | 22 | 0 |
+| UNBOUND | it records no artefact by content (a release-package reading: no file of the declared phase's folder by sha), so it cannot be tied to the candidate | the gate taught to record the netlist, board or package file sha it read, then re-taken | 1 | 1 | 1 | 1 | 1 | 2 | 9 | 16 | 0 |
 | OTHER_BOARD | it also judged another board's file, whose layout is not shown current | every board it reads current, then re-taken | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 1 | 0 |
+| OTHER_DESIGN | it also judged another board's netlist (or the board file of a board with no schematic), which is not that board's current one | re-taken, so every board it reads is read at its committed candidate | 2 | 2 | 2 | 3 | 3 | 2 | 2 | 16 | 10 |
 | TOOL_CHANGED | the file that wrote it has changed since (exact by the writer's hash, or by the tool's commit date) | re-taken under the current tool (current only when the re-take also binds its artefact and configuration), or a compatibility entry proving the change is not semantic | 8 | 8 | 6 | 6 | 7 | 5 | 1 | 41 | 6 |
 | NOT_CURRENT_EVIDENCE | the reading itself is stale (epoch, rule digest, another board, or a tool meaning change) | re-taken | 2 | 2 | 0 | 2 | 2 | 0 | 0 | 8 | 0 |
 | TEMP_INPUT | it judged files in a temporary directory, not this tree | re-taken in this tree | 0 | 0 | 1 | 0 | 0 | 1 | 1 | 3 | 0 |
