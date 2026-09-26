@@ -13,7 +13,21 @@ PRJDIR = os.path.dirname(os.path.abspath(OUT))
 open(os.path.join(PRJDIR, "fp-lib-table"), "w").write('(fp_lib_table\n  (version 7)\n  (lib (name "meshsat")(type "KiCad")(uri "${KIPRJMOD}/../meshsat.pretty")(options "")(descr "MeshSat carrier in-code footprints"))\n)\n')
 PHASE = os.environ.get("PHASE", "E7")   # 9 September 2026: E gets the phase variable the other boards have, so the silk and the deliverable agree
 X0, X1, Y0, Y1, R = -149.0, 118.0, -113.0, -45.0, 3.0   # E6: 267 x 68 (2 mm more to the wall, 6 mm more under A22); the west end stops 1 mm short of the BB-2590/U cradle (X -174 to -150, 32.49 item 12); the part west of X -121 is not under A22 (240 mm, X -120 to 120)
-RF_SITES = [(-52.0, "VHF"), (-38.0, "HF"), (-24.0, "WIFI 2.4"), (-10.0, "GNSS"), (4.0, "SDR"), (18.0, "P2P A"), (32.0, "P2P B"), (60.0, "5G MAIN"), (74.0, "5G DIV"), (88.0, "IRIDIUM"), (102.0, "LORA")]   # eleven float clamps for the R222M80500 plugs, mirroring A22 (32.56)
+# A09, 26 September 2026 (MESHSAT-1357 round 4): THE LORA SITE IS AT X 100, where board A's receptacle is. Appendix 32.58
+# moved it from 102 to 100 on 7 September ("its east wall jack does not move") and board A followed (gen_pcb_a.py RF_X,
+# gen_pcb_a3.py RF_X, J_BM11 pad 1 at (100.0, -66.0) on A32); this list and the gate stayed at 102 since commit
+# 273c5431, a 2.0 mm error against the nest's 1.0 mm float (float_clamp.py: 8.5 mm cavity, 6.5 mm plug body), so the
+# nest wall held the plug 1.0 mm off the receptacle axis. check_pcb_e.py now reads board A's RF_X itself and refuses a
+# board whose clamp holes are not on it.
+# THE NEST DOES NOT FIT THIS PITCH AND THAT IS NOT FIXED BY THIS LIST (A09, recorded, not solved here): the
+# float_clamp.py nest is 16 mm along X and the sites are 14 mm apart (12 mm from IRIDIUM at 88 to LORA at 100), so
+# neighbouring nests overlap by 2 mm (4 mm at the LORA pair), the LORA nest reaches X 108 against the H2 rod keep-out
+# that starts at 106, and each nest's cable slot leaves toward +X straight into the next nest. The geometry change
+# proposed for layout entry is in drafts/r4-decisions.md (R4E-07): one clamp bar for all eleven sites instead of eleven
+# blocks, cavities kept at 8.5 mm, walls 1.5 mm, the M3 clamp holes moved to the mid-pitch points between sites, and
+# the cable slots turned to -Y. The Dwgs_User outline below still draws today's 16 mm block, so the overlap stays
+# visible on the board until the CAD changes.
+RF_SITES = [(-52.0, "VHF"), (-38.0, "HF"), (-24.0, "WIFI 2.4"), (-10.0, "GNSS"), (4.0, "SDR"), (18.0, "P2P A"), (32.0, "P2P B"), (60.0, "5G MAIN"), (74.0, "5G DIV"), (88.0, "IRIDIUM"), (100.0, "LORA")]   # eleven float clamps for the R222M80500 plugs, mirroring A's RF_X (32.56, LORA per 32.58)
 BLOCK_HOLES = [(-104.0, -63.0), (-66.0, -63.0), (-104.0, -83.0), (-66.0, -83.0)]   # corner M3 standoffs of the raised contact block (pcb-e5-block, 43 x 25 at X -158..-115 Y -85..-60, face at 7.4 mm); its east edge stays 4.5 mm off the rod at (-110.5, -73) and its south edge 0.5 mm north of the J_BLK lands
 UNDER_A_Y = -80.0   # north of this line PCB-A sits 13.4 mm above the strip: parts at most 12 mm tall
 ROD_HOLES = [(-110.5, -73.0), (110.5, -73.0)]; ROD_D = 3.2; STANDOFF_KEEPOUT_D = 9.0

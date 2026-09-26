@@ -2,10 +2,13 @@
 """Generate PCB-P PACK BMS, phase P1 (MESHSAT-830, appendix 32.62: the built 4S smart pack): MECHANICAL layer.
 
 Board-local frame: origin at the board centre, +X along the pack's length, +Y across it. 70 x 44, two layers on JLC's 2 oz stack, four M3 holes at
-(+-32, +-19) for the enclosure's bosses (v2/cad/pack_4s.py). The board lies at the end of the cell block inside the enclosure, parts up, the
-25 A blade holder the tallest part. The power path (B+ land, blade, charge FET, discharge FET, pack + land) runs along the north edge and the
-shunt with the B- and pack - lands along the south edge; tools/gen_pcb_p3.py places the parts, lays the locked 2 oz bands of the power path on both
-layers and packs the gauge and its filters in the middle.
+(+-32, +-19). The board lies beside the cell block, parts up, the 25 A blade holder the tallest part. The power path (B+ land, blade, chemical
+fuse, charge FET, discharge FET, pack + land) runs along the north edge and the shunt with the B- and pack - lands along the south edge;
+tools/gen_pcb_p3.py places the parts, lays the locked 2 oz bands of the power path on both layers and packs the gauge and its filters in the middle.
+26 September 2026 (Review D round 4, D-06): the pack is one shrink-wrapped 4S3P 18650 block with this board mounted beside it, not the rigid
+enclosure of v2/cad/pack_4s.py that the holes were drawn for (adjudication A06: that box fits neither pocket). The holes stay where they are,
+because the outline and the holes are what check_pcb_p.py pins; how the board is held is W4's pack geometry work, and the layer count is
+decision 28's (this file still builds the two layers it declared before that ruling).
 """
 import math, sys, os
 import os, pcbnew
@@ -28,12 +31,13 @@ open(os.path.join(PRJDIR, "fp-lib-table"), "w").write('(fp_lib_table\n  (version
 W_BP, F1, Q1, Q2, W_P = (-27.0, 12.5), (-15.6, 15.0), (0.0, 15.0), (8.0, 15.0), (26.0, 12.5)     # B+ land, blade holder, charge FET, discharge FET, pack + land
 W_BN, R10, W_N = (-27.0, -12.5), (-18.0, -15.0), (-8.0, -13.5)                                    # B- land, the 2 mohm shunt, pack - land
 J_CELL, J_TS, J_SMB = (12.0, -17.5), (30.5, -9.0), (30.5, 2.0)                                     # the tap header, the thermistor lead, the SMBus lead (all along the south and east edges)
-ZONES = {"GAUGE": (-23, -10, 4, 12), "SIG": (4, -10, 22, 12), "TPS": (-33, -12, -25, 8.5)}
+ZONES = {"GAUGE": (-24.2, -10.9, -4.55, 10.8), "SEC": (-4.35, -21.3, 4.15, 5.7), "SIG": (4.35, -13.6, 19.8, 10.0), "EAST": (20.0, -9.6, 26.9, 9.7),
+         "TPS": (-33, -12, -25, 8.5), "TPS2": (-21.9, -21.3, -4.55, -17.2)}   # the packer regions of gen_pcb_p3.py, drawn for the reader (round 4, 26 September 2026; SEC and TPS2 at the fix-up the same day, SEC below the fixed Q3)
 # ---------------------------------------------------------------- plumbing (as PCB-B)
 board = pcbnew.BOARD()
 board.SetCopperLayerCount(2)
 tb = pcbnew.TITLE_BLOCK(); tb.SetTitle("MeshSat Field Kit carrier - PCB-P PACK BMS"); tb.SetRevision("A")
-tb.SetDate("2026-09-07"); tb.SetCompany("MeshSat"); tb.SetComment(0, "MESHSAT-830. Board-local frame, +X along the pack, the board at the end of the cell block inside the pack enclosure (appendix 32.62). P1: BQ4050 SMBus gauge and protection for the built 4S pack, two layers, 2 oz. tools/gen_pcb_p.py")
+tb.SetDate("2026-09-07"); tb.SetCompany("MeshSat"); tb.SetComment(0, "MESHSAT-830. Board-local frame, +X along the pack, the board beside the 4S3P cell block (appendix 32.62, D-06). P1: BQ4050 SMBus gauge, BQ77207 second level and chemical fuse for the built 4S pack, two layers, 2 oz. tools/gen_pcb_p.py")
 board.SetTitleBlock(tb)
 ds = board.GetDesignSettings(); ds.SetBoardThickness(FromMM(1.6)); ds.SetAuxOrigin(P(0, 0)); ds.SetGridOrigin(P(0, 0))
 # 0.16 AND NOT 0.127 (16 September 2026, rule RTE-001). This board is TWO LAYERS AT 2 oz by owner ruling 7, and
@@ -117,11 +121,11 @@ hx, hy = BOARD_L / 2, BOARD_W / 2
 rounded_rect(-hx, -hy, hx, hy, BOARD_R, pcbnew.Edge_Cuts)
 edge_band(0.5)
 for i, (x, y) in enumerate(STANDOFFS, 1):
-    hole("H%d" % i, x, y, 3.2, "M3 into the enclosure boss")
+    hole("H%d" % i, x, y, 3.2, "M3 mounting hole")
     circle(x, y, SO_KEEPOUT_D, pcbnew.F_SilkS, 0.12); rule_area_annulus(x, y, SO_KEEPOUT_D, SO_DRILL + 2.0, "boss keep-out H%d" % i)
 for k, r in ZONES.items(): rect(r, pcbnew.Dwgs_User, 0.12); text(k, (r[0] + r[2]) / 2, r[3] - 1.0, pcbnew.Dwgs_User, 0.8, 0.14)
-text("B+ > F1 25A > Q1 CHG > Q2 DSG > PACK+", 0.0, 20.2, pcbnew.F_SilkS, 0.8, 0.14)
-text("B- > R10 2m > PACK-   taps J_CELL   NTC J_TS   SMBus J_SMB", -6.0, -20.2, pcbnew.F_SilkS, 0.8, 0.14)
+text("B+ > F1 25A > F2 SCP > Q1 CHG > Q2 DSG > PACK+", 12.0, 20.6, pcbnew.F_SilkS, 0.8, 0.14)
+text("B- > R10 2m > PACK-   taps J_CELL   NTC J_TS   SMBus J_SMB", -6.0, -20.2, pcbnew.F_SilkS, 0.8, 0.14)   # J_TS2 gone at the fix-up of 26 September 2026
 text("PCB-P PACK BMS REV A (%s)" % PHASE, 0, -3.0, pcbnew.B_SilkS, 1.2, 0.2, mirror=True)
 text("MESHSAT-830 | 70x44x1.6 2L 2oz | 2026-09-07", 0, -5.5, pcbnew.B_SilkS, 0.8, 0.14, mirror=True)
 pcbnew.SaveBoard(OUT, board)

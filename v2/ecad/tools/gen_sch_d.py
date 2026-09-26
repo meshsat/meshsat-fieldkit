@@ -5,10 +5,11 @@ Usage: gen_sch_d.py <out.kicad_sch> <project>
 
 The mezzanine sits on A22's standoffs (case X 0..100, Y -40..40) and is a USB device set of the kit: A22's J_MEZZ1 harness brings one USB 2.0 pair,
 the kit I2C bus, the hardware inhibit TX_INHIBIT_n (the panel's EMCON toggle), the PA rail state PA_EN and the PTT mirror TR_APRS; J_MEZZ_PWR1 brings
-5 V (2 A eFuse on A22). On the board: a TUSB2046B four-port hub (port 1 the PCM2912A USB audio codec, port 2 a CP2102N bridge to the SA868's UART with
-RTS as the software PTT, port 3 a spare header), the NiceRF SA868 VHF exciter (bench-fitted, 2 W high / 0.5 W low), a G6K-2F-Y DPDT T/R relay,
-a 10 dB pad to the PA drive lead, the PA output lead into a 5-element low-pass filter and the antenna SMA (pigtail to A22's VHF jack), the PA gate
-bias switched by a TPS22810 on PA_KEY, a TPA6132A2 headphone amplifier driving the two headset leads (U-174/U jacks on the face plate) with the
+5 V (2 A eFuse on A22). On the board: a TUSB2046I (TUSB2046IBVFR, -40 to 85 C) four-port hub on its own 3.44 V LDO (port 1 the PCM2912A USB audio
+codec, port 2 a CP2102N bridge to the SA868's UART with RTS as the software PTT, port 3 a spare header), the NiceRF SA868 VHF exciter (bench-fitted,
+2 W high / 0.5 W low), a G6K-2F-Y DPDT T/R relay, a 10 dB pad to the PA drive lead, the PA output lead into a 5-element low-pass filter and the
+antenna SMA (pigtail to A22's VHF jack), the PA gate bias regulated to 4.48 V by a TLV75801P enabled by PA_KEY, a TPA6132A2 headphone amplifier
+driving the two headset leads (U-174/U jacks on the face plate) with the
 receive audio and the codec's playback, a TLV9062 microphone summing preamplifier into the exciter's MIC_IN together with the codec's transmit audio,
 the PTT logic in single-gate 74LVC1G parts (KEY = any PTT AND TX_INHIBIT_n; PA_KEY = KEY AND PA_EN), a PCA9555 at 0x26 on the kit I2C bus (harness
 +3V3, level stages into the mezzanine's own 3.3 V domain), LEDs and test points. The RA30H1317M1 PA module bolts to the face plate (32.56): its
@@ -36,9 +37,16 @@ import intent as _intent
 # 5.0 V to 3.3 V dissipates the difference, so its efficiency is 3.3/5.0 = 0.66 exactly, and the 0.8 W this
 # rail carries costs about 0.4 W in one SOT-23-5. That is the largest single dissipator on this board after
 # the transmitter, and it is the kind of number this rule exists to surface.
-_intent.rail("+5V_D8", 5.0, 1.0, 2.0, "J_PWR1", budget=0.06, share=0.02, always_on=True, converted=False,
+# THE WORKING MAXIMUM OF THIS RAIL, DECLARED (W2 F-IN-01 and S-09 follow-up, 26 September 2026). +5V_D8 is
+# board A's +5V_DEV behind the eFuse U23, and +5V_DEV is an AP64500 whose divider is 53.6k over 10k
+# (gen_sch_a.py buck5) on a 792 to 808 mV reference (Diodes DS41979, VFB, CCM): 5.088 V nominal and 5.23 V at
+# the top of the reference and both 1 percent resistors. The 5.0 V below stays the NOMINAL for the drop budget;
+# v_work is what a clamp's stand-off and a capacitor's rating are judged against (intent.rail, derate.py).
+# LOADS RE-SPLIT the same day for the hub's own LDO U17 (W6-F5): the hub's 40 mA left U1's rail and U17 carries
+# it, so U1's share falls from 0.25 A to 0.17 A (+3V3_D8's new peak) and U17 takes 0.04 A (SLLS413L, ICC).
+_intent.rail("+5V_D8", 5.0, 1.0, 2.0, "J_PWR1", budget=0.06, share=0.02, always_on=True, converted=False, v_work=5.23,
              always_on_why="it arrives on the mezzanine behind board A's eFuse U23, which is where it is switched; this board consumes it",
-             loads={"FB1": 0.50, "U1": 0.25, "U6": 0.10, "J_USB3": 0.05, "U7": 0.05, "U3": 0.03, "U15": 0.02}, note="BUDGET FROM THE TIGHTEST CONSUMER'S DATASHEET, 16 September 2026, replacing a number this project had only asserted. The consumers of this rail sit on board D and the tightest of them is the PCM2912A USB codec, whose recommended operating VBUS is 4.35 V minimum (v2/vendor/ti/ti-pcm2912a.pdf, Recommended Operating Conditions); the next is the CP2102N, whose 3.3 V regulator leaves regulation below VREGIN 4.1 V (v2/vendor/silabs/silabs-cp2102n.pdf). The source is board A's eFuse output on the 5.0 V device rail, and at a 2 percent source tolerance its worst case is 4.90 V, so the IR drop that keeps the codec in its recommended range is 550 mV, 11 percent. The declared budget is 6 percent, 300 mV, which leaves the codec at 4.60 V with 250 mV in hand. The 3 percent it replaces was derived from nothing and was tighter than the parts ask for. This board's share is 2 of the 6 points and it measures 0.58. The mezzanine's 5 V from A22. Budget 3 percent, not the 2 percent default: every consumer either regulates this rail or tolerates a wide range (the TLV75533 3.3 V LDO with 1.5 V of headroom, the CP2102N bridge at a 4.0 V minimum, the ESD reference, and the exciter's own boost behind FB1). D10 measures 108 mV at 1.0 A, 2.16 percent, leaving 4.89 V at the tightest consumer (9 September 2026). ONE CONDUCTOR, ONE BUDGET (16 September 2026): this rail starts at board A's eFuse and both boards were measuring their own half against the whole three percent, so the halves could sum past it with both passing. The 3 percent is the rail's, the 1.5 is this board's share of it, and D's own 2.16 percent is over that share: the 108 mV is measured from the connector to the tightest consumer on THIS board, so D owes a widening too, not only A.")
+             loads={"FB1": 0.50, "U1": 0.17, "U17": 0.04, "U6": 0.10, "J_USB3": 0.05, "U7": 0.05, "U3": 0.03, "U15": 0.02}, note="BUDGET FROM THE TIGHTEST CONSUMER'S DATASHEET, 16 September 2026, replacing a number this project had only asserted. The consumers of this rail sit on board D and the tightest of them is the PCM2912A USB codec, whose recommended operating VBUS is 4.35 V minimum (v2/vendor/ti/ti-pcm2912a.pdf, Recommended Operating Conditions); the next is the CP2102N, whose 3.3 V regulator leaves regulation below VREGIN 4.1 V (v2/vendor/silabs/silabs-cp2102n.pdf). The source is board A's eFuse output on the 5.0 V device rail, and at a 2 percent source tolerance its worst case is 4.90 V, so the IR drop that keeps the codec in its recommended range is 550 mV, 11 percent. The declared budget is 6 percent, 300 mV, which leaves the codec at 4.60 V with 250 mV in hand. The 3 percent it replaces was derived from nothing and was tighter than the parts ask for. This board's share is 2 of the 6 points and it measures 0.58. The mezzanine's 5 V from A22. Budget 3 percent, not the 2 percent default: every consumer either regulates this rail or tolerates a wide range (the TLV75533 3.3 V LDO with 1.5 V of headroom, the CP2102N bridge at a 4.0 V minimum, the ESD reference, and the exciter's own boost behind FB1). D10 measures 108 mV at 1.0 A, 2.16 percent, leaving 4.89 V at the tightest consumer (9 September 2026). ONE CONDUCTOR, ONE BUDGET (16 September 2026): this rail starts at board A's eFuse and both boards were measuring their own half against the whole three percent, so the halves could sum past it with both passing. The 3 percent is the rail's, the 1.5 is this board's share of it, and D's own 2.16 percent is over that share: the 108 mV is measured from the connector to the tightest consumer on THIS board, so D owes a widening too, not only A.")
 # DECLARED 16 September 2026. These three were not in the intent file, so `signalnets` could not know they
 # were rails and the return-path gate judged them as SIGNAL NETS, while `dc_drop` and `derate` could not see
 # them at all. A rail that is not declared is not excluded: it is silently checked against the wrong question
@@ -47,21 +55,67 @@ _intent.rail("+5V_D8", 5.0, 1.0, 2.0, "J_PWR1", budget=0.06, share=0.02, always_
 # WHAT FEEDS THIS RAIL (20 September 2026, appendix 32.246): `power_path` adds up what a rail's
 # converters draw and refuses to let a feeder declare less than its children take. Board A's VBAT
 # declared 10 A and its nine converters drew 15.18, and nothing checked it on any board until now.
-_intent.rail("+3V3_D8", 3.3, 0.12, 0.25, "U1", budget=0.03, always_on=True, converted=True, efficiency=0.66, fed_from="+5V_D8",
+# W6-F5, 26 September 2026: the hub U4 LEFT this rail for its own +3V4_HUB (below), so its 0.080 A left the
+# loads and the declared currents fell by the same amount (typical 0.12 to 0.04 A, peak 0.25 to 0.17 A).
+_intent.rail("+3V3_D8", 3.3, 0.04, 0.17, "U1", budget=0.03, always_on=True, converted=True, efficiency=0.66, fed_from="+5V_D8",
              always_on_why="U1 is a TLV75533 whose EN pin is tied to its own input, so this rail follows +5V_D8 and has no switch of its own",
              source_ic="U1 is a TLV75533 LDO in SOT-23-5: pin 5 IS its output power pin",
              # J_HARN1 is NOT on this net: the gated 3.3 V that leaves on the harness is board A's +3V3, and the
              # intent validator said so on the first run, which is what it is for. U1 is the SOURCE of this rail
              # and cannot be a load of its own output, which is the same mistake from the other side.
-             loads={"U4": 0.080, "U7": 0.020, "U9": 0.002, "U10": 0.002, "U11": 0.002, "U12": 0.002,
+             loads={"U7": 0.020, "U9": 0.002, "U10": 0.002, "U11": 0.002, "U12": 0.002,
                     "U13": 0.002, "U14": 0.002, "Q3": 0.001, "Q4": 0.001, "Q5": 0.001, "Q6": 0.001,
                     "Q7": 0.001, "Q8": 0.001, "Q9": 0.001},
-             note="the local 3.3 V from U1: the USB hub's logic, the seven single-gate PTT and inhibit gates, "
-                  "their level shifters, the headphone amplifier's logic and the gated 3.3 V leaving on the "
-                  "harness. Budget 3 percent: every consumer is a logic part with a wide supply range")
+             note="the local 3.3 V from U1: the six single-gate PTT and inhibit gates, "
+                  "their level shifters, the headphone amplifier's logic, the indicator LEDs and the pull-ups. "
+                  "The USB hub moved to its own +3V4_HUB on 26 September 2026 (W6-F5). "
+                  "Budget 3 percent: every consumer is a logic part with a wide supply range")
+# THE HUB'S OWN RAIL (W6-F5, 26 September 2026). The hub is now the industrial TUSB2046IBVFR, and TI's
+# SLLS413L (Recommended Operating Conditions, page 6) gives the I grade a narrower supply than the commercial B:
+# VCC 3.3 V MINIMUM to 3.6 V (the B part is 3.0 to 3.6). U1 is a TLV75533 at +-1 percent (TI SBVS320D,
+# -40 to 85 C, DBV), 3.267 V at its low edge before any load or copper drop, so the I part cannot share +3V3_D8.
+# U17 is a TLV75801P adjustable LDO (TI SBVS351D: VFB 0.55 V, SOT-23-5 pin 1 IN, 2 GND, 3 EN, 4 FB, 5 OUT) set by
+# R80 56.2k over R81 10.7k to 0.55 x (1 + 56.2/10.7) = 3.439 V nominal.
+# THE WORST-CASE BAND WITH EVERY TERM (review fix-up of round 4, 26 September 2026). A first draft counted only the
+# reference and 1 percent resistors at 25 C (3.348 to 3.532 V) and so claimed margins that did not exist: with the
+# 1 percent, 100 ppm/C parts over the envelope the pin could reach 3.274 V after the drop budget, below the I
+# grade's 3.3 V minimum, the same criterion that ruled +3V3_D8 out. The terms, from SBVS351D 5.5 and the parts:
+#   VFB +-1 percent at -40 to 85 C TJ (its note 1: external resistor tolerances not included);
+#   R80, R81 +-0.1 percent and +-25 ppm/C thin film, taken over 65 K from 25 C (so the whole -40 to 85 C range the
+#   reference is specified over, wider than the -20 C to inside-air envelope): +-0.2625 percent each;
+#   line regulation 7.5 mV maximum (accuracy is specified at VIN = VOUT + 0.5 V and this part runs at about 5 V);
+#   load regulation 0.030 V/A typical (no maximum is published) at the hub's 40 mA, 1.2 mV;
+#   IFB 0.1 uA maximum through R80, 5.6 mV either way.
+# Low corner 0.5445 x (1 + 5.2523 x 0.99476) = 3.389 V, minus 7.5, 1.2 and 5.6 mV = 3.375 V at the LDO; high corner
+# 0.5555 x (1 + 5.2523 x 1.00526) = 3.489 V, plus 7.5 and 5.6 mV = 3.502 V. The drop budget is 1 percent, 34 mV,
+# which is what dc_drop accepts at layout: the hub's pin stays at or above 3.341 V, 41 mV over SLLS413L 7.3's 3.3 V
+# minimum, and at or below 3.502 V, 98 mV under its 3.6 V maximum, which is also its absolute maximum (SLLS413L 7.1).
+# With the 1 percent parts the same arithmetic gives 3.297 to 3.584 V at the LDO, which is why R80 and R81 are
+# precision parts. Nothing but the hub and its own pull-ups is on this rail.
+# TWO MORE TERMS, READ ON THE RE-REVIEW OF ROUND 4 (26 September 2026). Drift: the RT series' test limits for
+# endurance (1,000 h at 70 C, rated voltage), damp heat and thermal shock are +-(0.5 percent + 0.05 Ohm) per
+# resistor (YAGEO RT V.16 Table 4); stacked on the band above they give 3.347 to 3.531 V at the LDO and 3.312 V at
+# the pin, still over 3.3 V and under 3.6 V, so the rail declares v_work 3.54 V rather than the as-supplied 3.51.
+# The reference's own window: VFB +-1 percent holds for TJ -40 to 85 C (SBVS351D 5.5). U17 dissipates at most
+# (5.23 - 3.375) V x 40 mA = 74 mW, +13 K at the SOT-23-5's 176.9 C/W (SBVS351D 5.4, JEDEC board), so TJ stays near
+# 68 C under the envelope's +55 C inside air (pcb_envelope.yaml, itself an estimate); even on the 125 C row, +-1.5
+# percent, the as-supplied pin holds 3.324 V.
+_intent.rail("+3V4_HUB", 3.44, 0.04, 0.04, "U17", budget=0.01, always_on=True, converted=True, efficiency=0.676, fed_from="+5V_D8", v_work=3.54,
+             always_on_why="U17's EN pin is tied to its own input, so this rail follows +5V_D8 and has no switch of its own",
+             source_ic="U17 is a TLV75801P LDO in SOT-23-5: pin 5 IS its output power pin",
+             loads={"U4": 0.040},
+             note="the USB hub's supply: TUSB2046IBVFR, ICC 40 mA maximum in normal operation (SLLS413L 7.5), VCC 3.3 V "
+                  "minimum to 3.6 V (SLLS413L 7.3, I grade; 3.6 V is also the absolute maximum, 7.1). U17 TLV75801P with "
+                  "R80 56.2k and R81 10.7k, both 0.1 percent 25 ppm/C thin film: 3.439 V nominal, 3.375 to 3.502 V at the "
+                  "LDO with every term (VFB +-1 percent, the resistors' tolerance and TCR over 65 K, line regulation 7.5 mV, "
+                  "load regulation 1.2 mV, IFB 0.1 uA through R80; SBVS351D 5.5). The 1 percent budget, 34 mV, leaves the "
+                  "hub's pin at 3.341 V or more, 41 mV over its minimum. With the resistors' endurance, damp-heat and "
+                  "thermal-shock limits added, +-(0.5 percent + 0.05 Ohm) each (YAGEO RT V.16 Table 4), the band is "
+                  "3.347 to 3.531 V and the pin 3.312 V or more; v_work 3.54 V covers that top. "
+                  "Efficiency is the LDO's arithmetic, 3.44 / 5.09 = 0.676, at the nominal +5V_D8 of 5.088 V")
 # EVERY USB LINK ON THIS BOARD IS FULL SPEED, so the 90 ohm differential target does not apply to it
 # (16 September 2026, rules STK-001 and PAIR-001; the same reading board C was given on 8 September).
-# The hub is a TI TUSB2046B, whose own datasheet's first page says "Full-Speed Hub" and "All Downstream Ports
+# The hub is a TI TUSB2046x (the I grade, TUSB2046IBVFR, since 26 September 2026: W6-F5), whose own datasheet's first page says "Full-Speed Hub" and "All Downstream Ports
 # Support Full-Speed and Low-Speed Operations" at 12 Mb/s (v2/vendor/ti/ti-tusb2046b.pdf); the codec is a
 # PCM2912A, "USB revision 2.0, full-speed" (v2/vendor/ti/ti-pcm2912a.pdf); the two CP2102N bridges and the
 # spare port are full speed as well. The 90 ohm target of the shared USB class belongs to USB 2.0 HIGH speed
@@ -91,16 +145,17 @@ SYMDIR = "/usr/share/kicad/symbols/"
 LIBCACHE = {}
 
 # ----------------------------------------------------------------- synthetic box symbols (parts with no library symbol): odd pins left, even pins right
-# NiceRF SA868 (V1.x manual, 18 castellations); TI PCM2912A (SLES230A, TQFP-32); TI TPA6132A2 (SLOS553, QFN-16, pin 17 the pad); TI TUSB2046B (SLLS413L, LQFP-32);
+# NiceRF SA868 (V1.x manual, 18 castellations); TI PCM2912A (SLES230A, TQFP-32); TI TPA6132A2 (SLOS553, QFN-16, pin 17 the pad); TI TUSB2046I (SLLS413L, LQFP-32 VF:
+# the VF pin functions table is shared by the B and I grades, so the map is unchanged by W6-F5 of 26 September 2026);
 # Silicon Labs CP2102N QFN28 (as B16)
 SA868 = {1: "AUDIO_ON_n", 2: "NC", 3: "AF_OUT", 4: "NC", 5: "PTT_n", 6: "PD", 7: "H/L", 8: "VBAT", 9: "GND", 10: "GND", 11: "NC", 12: "ANT", 13: "NC", 14: "NC", 15: "NC", 16: "RXD", 17: "TXD", 18: "MIC_IN"}
 PCM2912A = {1: "BGND", 2: "VBUS", 3: "D-", 4: "D+", 5: "VDD", 6: "DGND", 7: "XTO", 8: "XTI", 9: "FL", 10: "FR", 11: "VCOM1", 12: "VCOM2", 13: "AGND", 14: "NC", 15: "VCCA", 16: "VIN", 17: "MBIAS", 18: "VOUTL",
             19: "VCCL", 20: "HGND", 21: "VCCR", 22: "VOUTR", 23: "MAMP", 24: "POWER", 25: "PGND", 26: "VCCP", 27: "TEST1", 28: "TEST0", 29: "SSPND", 30: "MMUTE", 31: "REC", 32: "PLAY"}
 TPA6132A2 = {1: "INL-", 2: "INL+", 3: "INR+", 4: "INR-", 5: "OUTR", 6: "G0", 7: "G1", 8: "HPVSS", 9: "CPN", 10: "PGND", 11: "CPP", 12: "HPVDD", 13: "EN", 14: "VDD", 15: "SGND", 16: "OUTL", 17: "PAD"}
-TUSB2046B = {1: "DP0", 2: "DM0", 3: "VCC", 4: "RESET_n", 5: "EECLK", 6: "EEDATA/GANGED", 7: "GND", 8: "BUSPWR", 9: "PWRON1_n", 10: "OVRCUR1_n", 11: "DM1", 12: "DP1", 13: "PWRON2_n", 14: "OVRCUR2_n", 15: "DM2", 16: "DP2",
+TUSB2046I = {1: "DP0", 2: "DM0", 3: "VCC", 4: "RESET_n", 5: "EECLK", 6: "EEDATA/GANGED", 7: "GND", 8: "BUSPWR", 9: "PWRON1_n", 10: "OVRCUR1_n", 11: "DM1", 12: "DP1", 13: "PWRON2_n", 14: "OVRCUR2_n", 15: "DM2", 16: "DP2",
              17: "PWRON3_n", 18: "OVRCUR3_n", 19: "DM3", 20: "DP3", 21: "PWRON4_n", 22: "OVRCUR4_n", 23: "DM4", 24: "DP4", 25: "VCC", 26: "EXTMEM", 27: "TSTPLL/48MCLK", 28: "GND", 29: "XTAL2", 30: "XTAL1", 31: "TSTMODE", 32: "SUSPND"}
 CP2102 = {1:"DCD",2:"RI_CLK",3:"GND",4:"D+",5:"D-",6:"VDD",7:"VREGIN",8:"VBUS",9:"RSTb",10:"NC",11:"SUSPENDb",12:"SUSPEND",13:"CHREN",14:"CHR1",15:"CHR0",16:"GPIO3",17:"GPIO2",18:"GPIO1",19:"GPIO0",20:"GPIO6",21:"GPIO5",22:"GPIO4",23:"CTS",24:"RTS",25:"RXD",26:"TXD",27:"DSR",28:"DTR",29:"GND"}
-SYNTH = {"SA868": SA868, "PCM2912A": PCM2912A, "TPA6132A2": TPA6132A2, "TUSB2046B": TUSB2046B, "CP2102N": CP2102}
+SYNTH = {"SA868": SA868, "PCM2912A": PCM2912A, "TPA6132A2": TPA6132A2, "TUSB2046I": TUSB2046I, "CP2102N": CP2102}
 
 # ----------------------------------------------------------------- footprints
 FP = {
@@ -158,7 +213,47 @@ def cp2102(uref, tag, vusb, dp, dm, txd, rxd, rts="NC", dtr="NC", refs=()):
 part("J_HARN1", "Connector_Generic", "Conn_02x08_Odd_Even", "A22 mezzanine harness J_MEZZ1 (IDC 2x8): USB pair, PTT mirror, inhibit, PA rail state, I2C, 3.3 V", "IDC16", {
  "1": "USB_D8_P", "2": "USB_D8_N", "3": "GND", "4": "GND", "5": "GND", "6": "GND", "7": "TR_APRS", "8": "TX_INHIBIT_n", "9": "PA_EN", "10": "SDA", "11": "SCL", "12": "EXP_INT", "13": "+3V3", "14": "GND", "15": "ZEROIZE_HW", "16": "AB_SPARE"})
 part("J_PWR1", "Connector_Generic", "Conn_01x02", "JST-VH socket, 10 A: 5 V from A22 J_MEZZ_PWR1 (behind A22's 2 A eFuse U23): + -", "VH2", {"1": "+5V_D8", "2": "GND"}, "C274411")
-part("D1", "Device", "D_TVS", "SMBJ5.0A", "SMB", {"1": "GND", "2": "+5V_D8"})
+# S-09 / A03 / W2 F-IN-01, 26 September 2026: D1 WAS REVERSED AND DRAWN WITHOUT A POLARITY. It had GND on pad 1,
+# which on KiCad's Diode_SMD:D_SMB is the cathode (the fab apex and the silk bracket both mark pad 1, read with
+# pcbnew by A03), so the one-way clamp was forward-biased across +5V_D8 from power-up: a short limited by board
+# A's 2 A eFuse, and no clamp at all for a positive transient. Device:D_TVS is KiCad's BIDIRECTIONAL symbol (pins
+# A1/A2), which is why nothing in the schematic showed it. Now the cathode (K, pin 1, pad 1) is on +5V_D8 and the
+# anode on GND, drawn with Device:D_Zener, the K/A symbol the shared kisch.tvs() helper of Review D round 4 draws
+# for a one-way part (KiCad 9.0.9 has no unidirectional TVS symbol with K/A pins); the helper is used when the
+# tree carries it, and the fallback below writes the identical symbol and pin map.
+# AND THE PART MOVES UP ONE STAND-OFF, SMBJ5.0A TO SMBJ6.0A: the rail's nominal is 5.088 V and its working maximum
+# 5.23 V (declared as v_work above), while an SMBJ5.0A stands off 5.0 V (MDD sheet for C113974: VR 5.0, IR 800 uA
+# at VR, VBR 6.40 min), so it sat above its own stand-off in normal service. This is the class board B's three
+# slot-rail clamps were moved out of on 16 September (gen_sch_b.py D101/D201/D301, rule CMP-001), missed here
+# because this rail was declared at 5.0 V. Littelfuse SMBJ6.0A, LCSC C83270, DO-214AA on the same D_SMB land:
+# VR 6.0 V, VBR 6.67 to 7.37 V at 10 mA, VC 10.3 V at 58.3 A, TJ -65 to 150 C (Littelfuse SMBJ series, Revised
+# JC.07/04/25; JLC API 2026-09-25T23:09Z, Littelfuse, DO-214AA, stock 5,470).
+# WHAT D1 DOES NOT DO (review fix-up of round 4, 26 September 2026): it is a transient clamp, not an overvoltage
+# protector. Its breakdown (6.67 to 7.37 V) and clamping voltage (10.3 V), like the SMBJ5.0A's before it (6.40 to
+# 7.00 V, 9.2 V), sit above this rail's consumers' absolute maxima: U1 TLV75533 VIN 6.0 V (SBVS320D 5.1), U15 and
+# U17 TLV758P VIN 6.5 V (SBVS351D 5.1), U6 PCM2912A VBUS 6.5 V (SLES230A 7.1). A SUSTAINED overvoltage on +5V_D8
+# (board A's AP64500 losing regulation) is therefore stopped only by board A's eFuse U23 (TPS259631), whose OVLO
+# divider is the 100k over 10k its VBAT siblings carry. With every term (TPS2596 7.5: VOVLO(R) 1.17 to 1.22 V,
+# VOVLO(F) 1.08 to 1.13 V, IOVLKG 0.1 uA; both resistors 1 percent and 100 ppm/C over 65 K, the UNI-ROYAL 0603WAF
+# parts lcsc_fill fits, C25803 and C25804, the latter read back from JLC at +-100 ppm/C) it trips at 12.48 to
+# 13.84 V (the round-4 fix-up's 12.87 to 13.42 V left out the divider's own tolerance), and its pin sits at 0.46 V
+# in service, under the 0.5 V bottom of the OVLO pin's range (TPS2596 7.3; round-2 F-SQ-06). An open item for
+# board A's generator, not this one, re-derived on the re-review of round 4: the fix-up proposed 38.3k over 10k,
+# which with 1 percent 100 ppm/C parts trips at 5.50 to 6.05 V, its top above U1's 6.0 V. No divider of such parts
+# can both trip under 6.0 V and re-close above the rail's 5.23 V working maximum: that needs a corner-to-corner
+# ratio spread of 1.6 percent, and a 1 percent 100 ppm/C pair at this ratio spreads 5.4 percent. A 0.1 percent
+# 25 ppm/C pair, the class of R80 and R81, spreads 0.8 percent: 38.3k over 10k then trips at 5.62 to 5.92 V (80 mV
+# under U1's 6.0 V) and re-closes below 5.19 to 5.49 V, so a tripped U23 re-closes at the rail's 5.09 V nominal;
+# only a rail above 5.19 V, the top 40 mV of its band, could hold it off, and OVLO reports on D8_FLT (TPS2596
+# Table 3). That pin sits at 1.05 V in service, inside the 0.5 to 2 V range.
+try:
+    from kisch import tvs as _tvs          # r4t's helper (S-09), when the tree carries it
+except ImportError:
+    _tvs = None
+if _tvs:
+    _tvs("D1", "SMBJ6.0A (6.0 V standoff on the 5.09 V mezzanine rail)", "+5V_D8", "GND", "SMB", "C83270")
+else:
+    part("D1", "Device", "D_Zener", "SMBJ6.0A (6.0 V standoff on the 5.09 V mezzanine rail)", "SMB", {"1": "+5V_D8", "2": "GND"}, "C83270")
 c("C1", "47u 6.3V X5R 1210", "+5V_D8", "GND", "C1210"); c("C2", "47u 6.3V X5R 1210", "+5V_D8", "GND", "C1210"); c("C3", "10u", "+5V_D8", "GND", "C10u"); c("C4", "100n", "+5V_D8", "GND")
 part("FB1", "Device", "FerriteBead", "600R 2A ferrite (the exciter's 1 A transmit pulses)", "FB", {"1": "+5V_D8", "2": "+5V_SA"})
 c("C5", "47u 6.3V X5R 1210", "+5V_SA", "GND", "C1210"); c("C6", "100n", "+5V_SA", "GND")
@@ -172,13 +267,41 @@ synth("U2", "SA868", "NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; V
 nfet("Q1", "PA_EN", "GND", "SA_HL", "2N7002 PA_EN -> H/L low (never tie H/L high)")
 cp2102("U3", "SAU", "+5V_D8", "USB2_P", "USB2_N", "SA_RXD", "SA_TXD", rts="PTT_SW_n", refs=("R4", "C10", "C11"))   # the bridge's TXD into the exciter's RXD; RTS low = software PTT
 r("R5", "10k", "PTT_SW_n", "+3V3_D8")
-# --- USB hub TUSB2046B (self-powered, no EEPROM, 6 MHz crystal): upstream from the harness pair, port 1 the codec, port 2 the bridge, port 3 a spare header, port 4 terminated
+# --- USB hub TUSB2046I (self-powered, no EEPROM, 6 MHz crystal): upstream from the harness pair, port 1 the codec, port 2 the bridge, port 3 a spare header, port 4 terminated
+# W6-F5, 26 September 2026: THE HUB WAS NAMED "TUSB2046BI" IN LQFP-32, WHICH DOES NOT EXIST, AND THE CODE BOUGHT WAS
+# COMMERCIAL. TI SLLS413L (June 2017; the copy TI serves on 25 September 2026 is the same revision with the
+# 31-Oct-2025 orderable addendum) lists TUSB2046BI only in the RHB VQFN; the LQFP-32 (VF) parts are TUSB2046BVF/BVFR
+# (0 to 70 C) and TUSB2046IBVF/IBVFR (-40 to 85 C, marking TUSB2046I). C167642, the code the D11 BOM carried, is the
+# TUSB2046BVFR, outside the -20 C envelope. READ FOR DIFFERENCES BEFORE ADOPTING (owner condition 1): one data sheet
+# covers both; the VF pin functions table (page 4 and 5) and the electrical characteristics (7.5 to 7.7) are shared
+# with no per-grade rows; revision L's only change is "Added device TUSB2046IB". Two rows differ by grade: TA (0 to 70
+# against -40 to 85, pages 6 and 7.3) and VCC in 7.3 (B 3.0 / 3.3 / 3.6, I 3.3 MIN / 3.6 MAX). The pin map below is
+# the same; the supply is the one difference that touches this board, and it is met by U17 below, which is why the
+# hub no longer sits on +3V3_D8. TUSB2046IBVFR is LCSC C702369 (JLC API 2026-09-25T23:09Z: TI, LQFP-32 7x7, -40 to
+# +85 C, 3.3 to 3.6 V, stock 16: five boards need five, and the ordering session must re-read the stock).
 esd("U5", "USB_D8_P", "USB_D8_N", "+5V_D8")
-r("R6", "22", "USB_D8_P", "HUB_DP0"); r("R7", "22", "USB_D8_N", "HUB_DM0"); r("R8", "1.5k", "HUB_DP0", "+3V3_D8")
-synth("U4", "TUSB2046B", "TUSB2046BI four-port USB 2.0 full-speed hub (LQFP-32; BUSPWR low = self-powered, EXTMEM high, GANGED high, TSTMODE low)", "LQFP32",
-      {1: "HUB_DP0", 2: "HUB_DM0", 3: "+3V3_D8", 25: "+3V3_D8", 4: "HUB_RST_n", 6: "+3V3_D8", 7: "GND", 28: "GND", 8: "GND", 10: "HUB_OVRCUR_n", 14: "HUB_OVRCUR_n", 18: "HUB_OVRCUR_n", 22: "HUB_OVRCUR_n",
-       11: "HUB_DM1", 12: "HUB_DP1", 15: "HUB_DM2", 16: "HUB_DP2", 19: "HUB_DM3", 20: "HUB_DP3", 23: "HUB_DM4", 24: "HUB_DP4", 26: "+3V3_D8", 27: "GND", 29: "HUB_XTAL2", 30: "HUB_XTAL1", 31: "GND"})
-r("R9", "10k", "HUB_OVRCUR_n", "+3V3_D8"); r("R10", "10k", "HUB_RST_n", "+3V3_D8"); c("C12", "1u", "HUB_RST_n", "GND")
+r("R6", "22", "USB_D8_P", "HUB_DP0"); r("R7", "22", "USB_D8_N", "HUB_DM0"); r("R8", "1.5k", "HUB_DP0", "+3V4_HUB")   # the upstream attach pull-up follows the hub's own supply (W6-F5)
+synth("U4", "TUSB2046I", "TUSB2046IBVFR four-port USB 2.0 full-speed hub (TI, LQFP-32 VF, -40 to 85 C, VCC 3.3 to 3.6 from +3V4_HUB; BUSPWR low = self-powered, EXTMEM high, GANGED high, TSTMODE low)", "LQFP32",
+      {1: "HUB_DP0", 2: "HUB_DM0", 3: "+3V4_HUB", 25: "+3V4_HUB", 4: "HUB_RST_n", 6: "+3V4_HUB", 7: "GND", 28: "GND", 8: "GND", 10: "HUB_OVRCUR_n", 14: "HUB_OVRCUR_n", 18: "HUB_OVRCUR_n", 22: "HUB_OVRCUR_n",
+       11: "HUB_DM1", 12: "HUB_DP1", 15: "HUB_DM2", 16: "HUB_DP2", 19: "HUB_DM3", 20: "HUB_DP3", 23: "HUB_DM4", 24: "HUB_DP4", 26: "+3V4_HUB", 27: "GND", 29: "HUB_XTAL2", 30: "HUB_XTAL1", 31: "GND"}, "C702369")
+r("R9", "10k", "HUB_OVRCUR_n", "+3V4_HUB"); r("R10", "10k", "HUB_RST_n", "+3V4_HUB"); c("C12", "1u", "HUB_RST_n", "GND")   # every hub input is tied to the hub's own VCC (SLLS413L 7.3: VI 0 to VCC)
+# U17, the hub's LDO (W6-F5, 26 September 2026; the arithmetic is at the +3V4_HUB declaration above). TLV75801PDBVR,
+# LCSC C2877852 (JLC API 2026-09-25T23:09Z: TI, SOT-23-5, -40 to 125 C TJ, stock 165,250). EN tied to IN as U1's is.
+# C64 is its input capacitor and C65 its own output capacitor, both 1 uF (SBVS351D 5.3: CIN 1 uF, COUT 1 to 220 uF,
+# 0.47 uF minimum after derating), so its stability does not depend on where the layout puts the hub's C17.
+# R80 + R81 = 66.9k. SBVS351D equation 3 sets R1 + R2 <= VOUT / (100 x IFB) and its text takes IFB = 10 nA, which
+# allows 3.44 MOhm; at the 0.1 uA maximum of the table it is 344k, and 66.9k is under both. The IFB error at that
+# maximum is carried in the band above (5.6 mV), not assumed away.
+# R80 AND R81 ARE PRECISION PARTS (review fix-up of round 4, 26 September 2026): the 1 percent 100 ppm/C UNI-ROYAL
+# thick film first drawn (C23080, C22857) let the pin fall below the hub's 3.3 V minimum at the band's low corner.
+# YAGEO RT0603BRD0756K2L, LCSC C705784, and RT0603BRD0710K7L, LCSC C861078: RT series thin film, 0603, B = +-0.1
+# percent, D = +-25 ppm/C, 1/10 W, 75 V, -55 to +155 C, offered in 0603 at 0.1 percent and 25 ppm from 1 Ohm to 1 MOhm
+# (YAGEO RT series product specification V.16, 6 May 2025, ordering code and Table 2). The land is the same
+# R_0603_1608Metric (RT0603 1.60 x 0.80 mm). JLC API 2026-09-25T23:51Z: both extended, stock 10,837 and 1,011.
+# The capacitors are the 0603 "1u" of lcsc_fill's table, CL10A105KB8NNNC C15849 (50 V X5R).
+ic("U17", 5, "TLV75801PDBVR adjustable LDO, +3V4_HUB 3.44 V for the hub (1 IN 2 GND 3 EN 4 FB 5 OUT)", "SOT235", {"1": "+5V_D8", "2": "GND", "3": "+5V_D8", "4": "HUB_FB", "5": "+3V4_HUB"}, "C2877852")
+c("C64", "1u", "+5V_D8", "GND", lcsc="C15849"); c("C65", "1u", "+3V4_HUB", "GND", lcsc="C15849")
+r("R80", "56.2k 0.1% 25ppm", "+3V4_HUB", "HUB_FB", lcsc="C705784"); r("R81", "10.7k 0.1% 25ppm", "HUB_FB", "GND", lcsc="C861078")
 # OWNER DECISION 37, RULED BY THE SESSION 21 SEPTEMBER 2026: A 6 MHz PASSIVE CRYSTAL EXISTS IN ONE PACKAGE AND
 # IT IS NOT THE ONE THIS BOARD DREW. Measured against JLCPCB's catalogue: every 6 MHz part in a SMD3225-4P land
 # is an ACTIVE OSCILLATOR, which is a property of the blank and not of the catalogue, and the hub's own
@@ -190,13 +313,17 @@ r("R9", "10k", "HUB_OVRCUR_n", "+3V3_D8"); r("R10", "10k", "HUB_RST_n", "+3V3_D8
 # AND Rd IS RE-CHOSEN FOR THE PART THAT IS BOUGHT: TI's figure 6 gives 1.5k for a crystal of at most 50 Ohm and
 # every wide-temperature 6 MHz part reads 80, so the damping comes down to the reactance of C2 at 6 MHz, which
 # is 1/(2*pi*6e6*27e-12) = 982 Ohm, and 1.0k is that value in a standard resistor. The negative-resistance
-# margin (five times ESR, so 400 Ohm) is a BENCH MEASUREMENT at bring-up and is in TEST-PLAN.md, the same shape
-# as the 24 MHz load-capacitance correction of 16 September.
+# margin (five times ESR, so 400 Ohm) is a BENCH MEASUREMENT at bring-up, the same shape as the 24 MHz
+# load-capacitance correction of 16 September. CORRECTED 26 September 2026 (W5-F14): this line said the test "is
+# in TEST-PLAN.md" and the plan at 82dd1e4d did not carry it. The measurement is OWED to TEST-PLAN.md: workstream
+# W5 drafts it there as row HW10, and until that row lands this comment is its only record in the tree. The part's
+# own sheet (SJK 6CS series, P/N 6CS06000F20UCG, the datasheet LCSC links for C252308): 6.000 MHz AT fundamental,
+# CL 20 pF, C0 3 pF max, ESR 80 Ohm max, -40 to +85 C, drive 100 uW typical, which is where the 80 and the 400 come from.
 part("Y1", "Device", "Crystal", "6 MHz HC-49S-SMD passive (CL 20 pF, 80 Ohm; C1 = C2 = 27 pF and Rd 1.0k, SLLS413 figure 6 re-chosen for this part's ESR)", "XTAL", {"1": "HUB_XTAL1", "2": "HUB_XTAL2R"}, "C252308")
 # decision 37: the damping is the reactance of C2 at 6 MHz (982 Ohm), because the part that exists reads
 # 80 Ohm of ESR where TI's figure 6 assumes at most 50.
 r("R11", "1.0k", "HUB_XTAL2R", "HUB_XTAL2"); c("C13", "27p NP0", "HUB_XTAL1", "GND", "C0402"); c("C14", "27p NP0", "HUB_XTAL2R", "GND", "C0402")
-c("C15", "100n", "+3V3_D8", "GND"); c("C16", "100n", "+3V3_D8", "GND"); c("C17", "10u", "+3V3_D8", "GND", "C10u")
+c("C15", "100n", "+3V4_HUB", "GND"); c("C16", "100n", "+3V4_HUB", "GND"); c("C17", "10u", "+3V4_HUB", "GND", "C10u")   # the hub's decoupling, on its own rail since W6-F5 (26 September 2026)
 for port, (dp, dm, tp, tm, rs) in {1: ("HUB_DP1", "HUB_DM1", "USB1_P", "USB1_N", 12), 2: ("HUB_DP2", "HUB_DM2", "USB2_P", "USB2_N", 16), 3: ("HUB_DP3", "HUB_DM3", "USB3_P", "USB3_N", 20)}.items():
     r("R%d" % rs, "22", dp, tp); r("R%d" % (rs + 1), "22", dm, tm); r("R%d" % (rs + 2), "15k", tp, "GND"); r("R%d" % (rs + 3), "15k", tm, "GND")
 r("R24", "15k", "HUB_DP4", "GND"); r("R25", "15k", "HUB_DM4", "GND")
@@ -220,7 +347,32 @@ part("Y2", "Device", "Crystal", "6 MHz HC-49S-SMD passive (codec clock, CL 20 pF
 c("C26", "27p NP0", "PCM_XTI", "GND", "C0402"); c("C27", "27p NP0", "PCM_XTO", "GND", "C0402")   # decision 37: 2*(CL - Cstray) for the CL 20 pF part
 led("LED2", "amber record", "LED_REC_A", "LED_REC_K"); r("R29", "1k", "+3V3_D8", "LED_REC_A"); led("LED3", "green playback", "LED_PLAY_A", "LED_PLAY_K"); r("R30", "1k", "+3V3_D8", "LED_PLAY_A")
 r("R31", "10k", "AF_OUT", "AF_DIV"); r("R32", "10k", "AF_DIV", "GND"); c("C28", "1u", "AF_DIV", "PCM_VIN")   # 700 mV receive audio halved into the ADC
-r("R33", "4.7k", "X_MMUTE", "MMUTE"); r("R34", "100k", "MMUTE", "GND")   # mute only when the expander drives it high (the codec pulls it down itself)
+# mute only when the expander drives it high (the codec pulls it down itself).
+# A01 remaining unknown 4, examined 26 September 2026: U16 powers up with every port an INPUT behind its internal
+# pull-up (TI SCPS131J 8.1; about 100k in the figure, at least 33k from IIL -100 uA at 0 V), and the codec's MMUTE
+# is a TTL-level input with an internal pull-down (TI PCM2912A SLES230A: VIH 2.0, VIL 0.8, IIH 65 typ / 100 max uA at
+# 3.3 V, input logic family TTL). With 4.7k in series and 100k to ground, MMUTE sat at 0.8 V with typical parts and
+# 1.56 V with a strong pull-up, between VIL and VIH, until the panel firmware first wrote U16.
+# RESTATED ON GUARANTEED FIGURES ONLY (review fix-up of round 4, 26 September 2026). The first fix, 1.0k over 4.7k,
+# claimed 2.53 V or more when driven high from a 3.15 V output the PCA9555 sheet does not guarantee; its only
+# guaranteed P-port figure at this supply is VOH 2.6 V minimum at IOH -8 mA with VCC 3.0 V (SCPS131J 6.5), which
+# gave 2.09 V, 92 mV over VIH. R33 is now 470R, a JLC basic part (UNI-ROYAL 0603WAF4700T5E, C23179, JLC API
+# 2026-09-25T23:54Z), which balances the two margins on guaranteed numbers:
+#   power-up, U16 an input: its pull-up sources at most 100 uA (IIL -100 uA at VI = GND, VCC 2.3 to 5.5 V, and a
+#   pull-up sources less at any higher node), so MMUTE <= 100 uA x 4.7k = 0.47 V, the codec's own pull-down ignored:
+#   0.33 V under VIL 0.8 V;
+#   driven high: U16 sources under 1 mA here, so VOH >= 2.6 V, into 470R over 4.7k in parallel with the codec's
+#   pull-down at its strongest (33k, from IIH 100 uA at 3.3 V): MMUTE >= 2.6 x 4.11 / 4.58 = 2.33 V, 0.33 V over VIH;
+#   back-drive into an unpowered codec: at most 3.4 V / 470R = 7.2 mA even into a short, under SLES230A's 10 mA
+#   input current and with MMUTE's 4 V absolute maximum not referred to its supply.
+# THE TWO CONDITIONS THOSE MARGINS STAND ON (re-review of round 4, 26 September 2026): the codec's VIH 2.0 V and
+# VIL 0.8 V are specified at TA = 25 C and VBUS = 5 V only (SLES230A 7.5 heading; no over-temperature row is
+# published), and U16's VOH 2.6 V holds with its VCC, the harness +3V3 that board A declares at 3.3 V with a 3
+# percent drop budget, at 3.0 V or more (SCPS131J 6.5, over the operating free-air range). Outside 25 C the codec's
+# thresholds are not published, so the levels at power-up and when driven are a bench measurement OWED to
+# TEST-PLAN.md over the envelope, not yet in it.
+# So the default is a defined "mute off", as the line above intends, and "mute on" is defined when U16 drives it.
+r("R33", "470R", "X_MMUTE", "MMUTE", lcsc="C23179"); r("R34", "4.7k", "MMUTE", "GND")
 # --- headphone amplifier TPA6132A2 (G0 high, G1 low = 0 dB): the receive mix (exciter AF_OUT + codec playback L) to both headset earpieces
 synth("U7", "TPA6132A2", "TI TPA6132A2 headphone amplifier (QFN-16), receive audio to the two headset leads", "QFN16",
       {1: "AMP_INL_N", 2: "AMP_INL_P", 3: "AMP_INR_P", 4: "AMP_INR_N", 5: "HS2_SPK", 6: "+3V3_D8", 7: "GND", 8: "AMP_HPVSS", 9: "AMP_CPN", 10: "GND", 11: "AMP_CPP", 12: "AMP_HPVDD", 13: "AMP_EN", 14: "+5V_D8", 15: "GND", 16: "HS1_SPK", 17: "GND"})
@@ -261,11 +413,29 @@ c("C49", "100n", "PTT_HS1_n", "GND"); c("C50", "100n", "PTT_HS2_n", "GND")
 # assets.nexperia.com/documents/data-sheet/PESD5V0S1BA.pdf, bidirectional, reverse standoff 5 V, diode
 # capacitance 35 pF typical, rated IEC 61000-4-2 contact discharge 30 kV and IEC 61000-4-5 surge 12 A. Six of
 # them put EVERY conductor 2.25 mm from its own clamp and cost U7 nothing.
+# W7-F3 / W6-F14, 26 September 2026: ONE CLAMP PER CONDUCTOR, CHOSEN AGAINST THAT CONDUCTOR'S OWN WORKING VOLTAGE.
+# Decision 31's record names two PESD5V0S2BT per jack; the six singles are the measured substitution argued above
+# (and in the appendix), and the ruled dual carries the same 5 V stand-off (Nexperia PESD5V0S2BT product data sheet,
+# 23 August 2018: VRWM 5 V), so the ruling's own part had the microphone problem too. Read per conductor:
+#   SPEAKER (HS1_SPK, HS2_SPK): U7's outputs swing about ground inside its charge-pump rails, HPVDD 1.9 V absolute
+#     maximum (TI SLOS597B, 6.1), so +-1.9 V at most against a 5 V stand-off. PESD5V0S1BA stays (Nexperia v.6,
+#     26 April 2024: bidirectional, VRWM 5 V, VBR 5.5 to 9.5 V, Cd 35 pF, VCL 14 V at 12 A, IEC 61000-4-2 30 kV contact).
+#   PUSH TO TALK (PTT_HS1_n, PTT_HS2_n): idles at +3V3_D8 through its level stage's 10k (U1, 3.333 V at most).
+#     PESD5V0S1BA stays.
+#   MICROPHONE (HS1_MIC, HS2_MIC): with JP1 or JP2 closed and no headset, the conductor sits at +5V_D8 through R43 or
+#     R44, 5.088 V nominal and 5.23 V at most (the rail's v_work): ABOVE the PESD5V0S1BA's 5 V stand-off in normal
+#     service, the class rule CMP-001 exists for. The clamp moves to Nexperia PESD12VL1BA, same SOD-323 land, same
+#     bidirectional construction, so the design basis of this block holds: VRWM 12 V, VBR 14.2 to 16.7 V at 5 mA,
+#     IRM 50 nA max at 12 V, Cd 19 pF, VCL 20 V at 1 A and 37 V at 5 A, IEC 61000-4-2 30 kV contact and 15 kV air
+#     (level 4, decision 34's envelope), Tamb -65 to 150 C (Nexperia PESD12VL1BA product data sheet, 14 April 2023).
+#     LCSC C38558, PESD12VL1BA,115 (JLC API 2026-09-25T23:09Z: Nexperia, SOD-323, stock 6,960). The conductor's parts
+#     behind the clamp are C44 (1 nF NP0), C41 into 4.7k and R43 to the rail, so the higher let-through lands on a
+#     series resistor and a coupling capacitor, not on a pin.
 part("D9",  "Device", "D_TVS", "PESD5V0S1BA bidirectional ESD clamp at the jack: headset 1 speaker", "SOD323", {"1": "GND", "2": "HS1_SPK"}, "C19224")
-part("D10", "Device", "D_TVS", "PESD5V0S1BA bidirectional ESD clamp at the jack: headset 1 microphone", "SOD323", {"1": "GND", "2": "HS1_MIC"}, "C19224")
+part("D10", "Device", "D_TVS", "PESD12VL1BA bidirectional ESD clamp at the jack: headset 1 microphone, above the electret bias", "SOD323", {"1": "GND", "2": "HS1_MIC"}, "C38558")
 part("D11", "Device", "D_TVS", "PESD5V0S1BA bidirectional ESD clamp at the jack: headset 1 push to talk", "SOD323", {"1": "GND", "2": "PTT_HS1_n"}, "C19224")
 part("D12", "Device", "D_TVS", "PESD5V0S1BA bidirectional ESD clamp at the jack: headset 2 speaker", "SOD323", {"1": "GND", "2": "HS2_SPK"}, "C19224")
-part("D13", "Device", "D_TVS", "PESD5V0S1BA bidirectional ESD clamp at the jack: headset 2 microphone", "SOD323", {"1": "GND", "2": "HS2_MIC"}, "C19224")
+part("D13", "Device", "D_TVS", "PESD12VL1BA bidirectional ESD clamp at the jack: headset 2 microphone, above the electret bias", "SOD323", {"1": "GND", "2": "HS2_MIC"}, "C38558")
 part("D14", "Device", "D_TVS", "PESD5V0S1BA bidirectional ESD clamp at the jack: headset 2 push to talk", "SOD323", {"1": "GND", "2": "PTT_HS2_n"}, "C19224")
 # --- PTT and EMCON logic (74LVC1G, 3.3 V): KEY = (PTT headset 1 OR 2 OR software) AND TX_INHIBIT_n; the exciter keys on KEY; PA_KEY = KEY AND PA_EN drives the relay and the gate bias switch
 ic("U9", 5, "74LVC1G08 AND (1 A 2 B 3 GND 4 Y 5 VCC): both headset PTT lines idle high", "SOT235", {"1": "PTT_HS1_n", "2": "PTT_HS2_n", "3": "GND", "4": "PTT_HS_n", "5": "+3V3_D8"})
@@ -310,7 +480,64 @@ _intent.node("GND", 0.0, "the board's reference, so a part between a live net an
 c("C58", "22p 500V NP0 1206", "RF_PAOUT", "GND", "C1206"); part("L1", "Device", "L", "68nH 0805 (LPF, 145 MHz 5th order; values to be verified in MESHSAT-818)", "L0805", {"1": "RF_PAOUT", "2": "RF_LPF_M"})
 c("C59", "39p 500V NP0 1206", "RF_LPF_M", "GND", "C1206"); part("L2", "Device", "L", "68nH 0805 (LPF)", "L0805", {"1": "RF_LPF_M", "2": "RF_LPF_OUT"}); c("C60", "22p 500V NP0 1206", "RF_LPF_OUT", "GND", "C1206")
 part("J_ANT", "Connector", "Conn_Coaxial", "SMA jack: antenna pigtail to A22's VHF jack J_RF1", "SMA", {"1": "RF_ANT", "2": "GND"}, "C3174425")
-tps22810("U15", "+5V_D8", "PA_KEY", "VGG_SW", "VGG_CT"); c("C61", "4.7n", "VGG_CT", "GND", "C0402"); c("C62", "100n", "VGG_SW", "GND")
+# W2 F-PR-02, 26 September 2026: THE PA GATE BIAS IS REGULATED BELOW 5 V, NOT SWITCHED FROM THE 5 V RAIL. U15 was a
+# TPS22810 load switch putting +5V_D8 on VGG: 5.088 V nominal, 5.23 V at most. The RA30H1317M1 sheet (Mitsubishi,
+# October 2011) rates VDD 17 V and Pout 45 W only with "VGG<5V", rates VGG 6 V only with "VDD<12.5V", and says the
+# nominal output "becomes available at 4V (typical) and 5V (maximum)"; this PA runs on A's 13.8 V rail, so at the old
+# VGG both maxima sat outside their own stated conditions and the drain current was set by nothing the sheet
+# characterises. U15 is now a TLV75801P adjustable LDO (TI SBVS351D) in the WSON-6 DRV package, TI drawing
+# DRV0006A (4222173/C), the SAME land the TPS22810DRV sat on (its sheet cites the same drawing), so the footprint
+# stays and four pad nets move: pin 1 OUT and pin 6 IN keep VGG_SW and +5V_D8, pin 2 NC becomes FB, pin 3 CT becomes
+# GND, pin 4 GND becomes EN (PA_KEY), pin 5 EN becomes DNC; the exposed pad stays GND. EN from PA_KEY keeps the key
+# discipline (VEN(HI) 1.0 V, VEN 6.0 V max, 74LVC1G08 output at 3.3 V), and the part's active discharge (95 Ohm)
+# pulls VGG to ground when PA_KEY falls, where the TPS22810 needed its QOD pin. R82 71.5k over R83 10.0k set
+# 0.55 x (1 + 7.15) = 4.48 V nominal.
+# THE VGG BAND WITH EVERY TERM (review fix-up of round 4, 26 September 2026; a first draft counted the reference and
+# the resistors at 25 C only, 4.36 to 4.61 V): VFB +-1 percent at -40 to 85 C TJ, R82 and R83 +-1 percent and
+# +-100 ppm/C (UNI-ROYAL 0603WAF, JLC readback) over 65 K, so +-1.65 percent each, line regulation 7.5 mV maximum,
+# IFB 0.1 uA through R82 (7.3 mV), load regulation negligible at the gate's 1 mA (IGG, RA30H1317M1): 4.30 to 4.68 V.
+# The top is 0.32 V under the 5 V at which the sheet's VDD 17 V and Pout 45 W ratings hold, at every corner. Long-term
+# drift of R82 and R83 is not in that band, because no UNI-ROYAL 0603WAF sheet is held; the 0.32 V absorbs a further
+# 7.9 percent in the divider's ratio (about 4 percent on each resistor, in opposite directions) before 5 V. What the
+# sheet does NOT promise is nominal output at this VGG from a maximum-case module: it says nominal output becomes
+# available at 4 V typical and 5 V maximum, so a module at its 5 V corner may not reach nominal output at 4.30 to
+# 4.68 V. That is a bench measurement, not a claim, and it is OWED to TEST-PLAN.md, which does not carry it yet: the
+# drain current and Pout at 13.8 V into a dummy load at this VGG, with R82 as the trim (still under 5 V at every
+# corner) if the bench wants more.
+# THE KEY-UP AND KEY-DOWN ORDER IS NOT BOUNDED BY ANY PUBLISHED LIMIT (re-review of round 4, 26 September 2026; the
+# fix-up had said VGG leads the drive at key-up and that the discharge beats K1's release at key-down). PA_KEY starts
+# three things at once: U15's start-up, tSTR 500 us TYPICAL with no limit (SBVS351D 5.5; the TPS22810 with its
+# 4.7 nF CT took about 1 ms); K1's operate time, 3 ms MAXIMUM with no minimum (Omron G6K, Cat. No. K106-E1-11), the
+# exciter's drive reaching the PA input only through K1's contact (RF_SA to RF_PAD_IN); and, through KEY, the
+# SA868's own transmit, whose on and off times its v1.3 sheet does not give. On key-down VGG falls through U15's
+# pulldown, 95 Ohm TYPICAL with no limit (SBVS351D 5.5; tau by its equation 1, 6.3.2), into C62: tau about 0.2 ms
+# with the 2.2 uF nominal and less at bias, against K1's release, 3 ms maximum with no minimum. At each edge one
+# side has only a typical figure and the other only a maximum, so neither order follows from the sheets, and the
+# first fix-up's two claims are withdrawn. The key-down figure also holds only while
+# C62 is the one capacitance on VGG: the RA30H1317M1 sheet's test fixture puts a 4700 pF chip capacitor close to
+# the module and 22 uF or more on the gate supply ("Oscillation", and C1 of its test block diagram), and the VGG
+# lead carries none today. If W3-F25 (the board A to PA contract) adds that decoupling, tau becomes 95 Ohm x 24.2
+# uF, about 2.3 ms, comparable to K1's release; the total stays inside the TLV758P's 1 to 220 uF output range. The
+# held RA30H1317M1 sheet states no bias or drive sequence of its own. The scope capture of VGG, K1's contact and
+# the exciter's RF on key-up and key-down is a bench measurement OWED to TEST-PLAN.md with the PA item above.
+# TLV75801PDRVR, LCSC C2876308 (JLC API 2026-09-25T23:13Z: TI, WSON-6-EP 2x2, -40 to 125 C TJ, stock 10,498).
+# C61 was the TPS22810's 4.7 nF slew capacitor on CT, a net that no longer exists; it becomes the LDO's 1 uF input
+# capacitor (SBVS351D 5.3, CIN 1 uF), and C62 grows from 100 nF to the 1 uF minimum output capacitor (0.47 uF after
+# derating): 2.2 uF 16 V X5R, Samsung CL10A225KO8NNNC, C23630. Its DC-bias retention is NOT a held figure: Samsung's
+# data page for CL10A225KO8NNN (read 26 September 2026) says "Graphs for the item are not supported", so the "about
+# 1.1 uF at 4.5 V" of the first draft was an estimate. What is required is 0.47 uF, 21 percent of 2.2 uF, at 4.68 V,
+# 29 percent of the part's rating; the effective capacitance at bias is a bench measurement OWED to TEST-PLAN.md,
+# which does not carry it yet.
+ic("U15", 7, "TLV75801PDRVR adjustable LDO, PA gate bias VGG 4.48 V while PA_KEY is high (1 OUT 2 FB 3 GND 4 EN 5 DNC 6 IN 7 pad)", "WSON6",
+   {"1": "VGG_SW", "2": "VGG_FB", "3": "GND", "4": "PA_KEY", "5": "NC", "6": "+5V_D8", "7": "GND"}, "C2876308")
+c("C61", "1u", "+5V_D8", "GND", lcsc="C15849"); c("C62", "2.2u 16V X5R", "VGG_SW", "GND", lcsc="C23630")
+r("R82", "71.5k 1%", "VGG_SW", "VGG_FB", lcsc="C23103"); r("R83", "10.0k 1%", "VGG_FB", "GND", lcsc="C25804")   # UNI-ROYAL 0603WAF7152T5E and 0603WAF1002T5E, JLC API 2026-09-25T23:19Z
+# VGG_SW DECLARED (26 September 2026): C62 now states a rating (16 V), and a rated part on a net with no declared
+# voltage is a gap derate.py reports rather than a pass; the round-4 box run read "UNDECLARED nets: VGG_SW".
+_intent.node("VGG_SW", 4.68, "the PA gate bias from U15, a TLV75801P set by R82 71.5k over R83 10.0k: 0.55 V x "
+             "(1 + 7.15) = 4.48 V nominal, 4.30 to 4.68 V with every term (TI SBVS351D 5.5: VFB +-1 percent at -40 "
+             "to 85 C, line regulation 7.5 mV, IFB 0.1 uA; both 1 percent 100 ppm/C resistors over 65 K); "
+             "0 V while PA_KEY is low (the LDO's active discharge)")
 part("J_VGG", "Connector_Generic", "Conn_01x02", "JST-PH 1x2 socket: PA gate bias, VGG GND (the lead runs to the RA30H1317M1 VGG pin)", "PH2", {"1": "VGG_SW", "2": "GND"}, "C5251182")
 # --- expander PCA9555 0x26 on the kit bus (harness +3V3) with 2N7002 level stages into the mezzanine's 3.3 V domain
 part("U16", "Interface_Expansion", "PCA9555PW", "PCA9555PW 0x26: COS, PTT states, KEY, PA_KEY in; exciter PD, amplifier EN, codec mute out; eight spares", "TSSOP24", {
@@ -320,9 +547,13 @@ part("U16", "Interface_Expansion", "PCA9555PW", "PCA9555PW 0x26: COS, PTT states
 c("C63", "100n", "+3V3", "GND")
 for i, (far, near) in enumerate((("X_COS_n", "SA_AUDIO_ON_n"), ("X_PTT_HS1_n", "PTT_HS1_n"), ("X_PTT_HS2_n", "PTT_HS2_n"), ("X_KEY", "KEY"), ("X_PA_KEY", "PA_KEY"), ("X_SA_PD", "SA_PD"), ("X_AMP_EN", "AMP_EN")), 3):
     level("Q%d" % i, "R%d" % (60 + 2 * i), far, near, "+3V3_D8", "+3V3", "R%d" % (61 + 2 * i))
-for i, net in enumerate(("AF_OUT", "MIC_SUM", "KEY", "PA_KEY", "+3V3_D8", "+5V_D8", "VGG_SW", "RX_MIX", "ZEROIZE_HW", "AB_SPARE", "SA_TXD", "SA_RXD", "PTT_SW_n", "SA_PD", "TX_INHIBIT_n", "PA_EN") + tuple("EXP_SPARE%d" % k for k in range(1, 9)), 1):
+# TP25 on +3V4_HUB (review fix-up of round 4, 26 September 2026): the hub's own supply is to be measured at the
+# bench, a measurement OWED to TEST-PLAN.md and not in it yet, so the rail gets a pad of its own. Appended, so TP1
+# to TP24 keep their numbers and their seats in gen_pcb_d3.py.
+for i, net in enumerate(("AF_OUT", "MIC_SUM", "KEY", "PA_KEY", "+3V3_D8", "+5V_D8", "VGG_SW", "RX_MIX", "ZEROIZE_HW", "AB_SPARE", "SA_TXD", "SA_RXD", "PTT_SW_n", "SA_PD", "TX_INHIBIT_n", "PA_EN") + tuple("EXP_SPARE%d" % k for k in range(1, 9)) + ("+3V4_HUB",), 1):
     part("TP%d" % i, "Connector", "TestPoint", net, "TP", {"1": net})
-for i, net in enumerate(("+5V_D8", "+5V_SA", "+3V3_D8", "+3V3", "GND", "PCM_VDD", "SAU_3V3"), 1): part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", {"1": net})
+# +3V4_HUB joined the flags with the hub LDO U17 (W6-F5, 26 September 2026)
+for i, net in enumerate(("+5V_D8", "+5V_SA", "+3V3_D8", "+3V3", "GND", "PCM_VDD", "SAU_3V3", "+3V4_HUB"), 1): part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", {"1": net})
 # ----------------------------------------------------------------- emit (as B15)
 POWER = {"GND": ("power", "GND")}
 libsyms = kisch.libsyms; out = kisch.out; pf_n = kisch.pf_n   # the engine's objects, by reference
@@ -333,8 +564,8 @@ byref = {p["ref"]: p for p in P}
 
 def refs_matching(pred): return [p["ref"] for p in P if pred(p["ref"])]
 SECTIONS = [("HARNESS, 5 V ENTRY, 3.3 V LDO, EXCITER SUPPLY", ["J_HARN1", "J_PWR1", "D1", "C1", "C2", "C3", "C4", "FB1", "C5", "C6", "U1", "C7", "C8", "C9", "LED1", "R1", "R2", "R3"]),
-            ("SA868 EXCITER, UART BRIDGE, T/R RELAY, 10 dB PAD, LPF, PA LEADS, GATE BIAS SWITCH", ["U2", "Q1", "U3", "R4", "C10", "C11", "R5", "K1", "Q2", "R52", "R53", "D2", "C57", "R54", "R55", "R56", "J_PAIN", "J_PAOUT", "C58", "L1", "C59", "L2", "C60", "J_ANT", "U15", "C61", "C62", "J_VGG"]),
-            ("USB HUB TUSB2046B, PORT TERMINATIONS, SPARE PORT", ["U5", "R6", "R7", "R8", "U4", "R9", "R10", "C12", "Y1", "R11", "C13", "C14", "C15", "C16", "C17"] + ["R%d" % k for k in range(12, 26)] + ["J_USB3"]),
+            ("SA868 EXCITER, UART BRIDGE, T/R RELAY, 10 dB PAD, LPF, PA LEADS, GATE BIAS REGULATOR", ["U2", "Q1", "U3", "R4", "C10", "C11", "R5", "K1", "Q2", "R52", "R53", "D2", "C57", "R54", "R55", "R56", "J_PAIN", "J_PAOUT", "C58", "L1", "C59", "L2", "C60", "J_ANT", "U15", "C61", "C62", "R82", "R83", "J_VGG"]),
+            ("USB HUB TUSB2046I AND ITS 3.44 V LDO, PORT TERMINATIONS, SPARE PORT", ["U5", "R6", "R7", "R8", "U4", "R9", "R10", "C12", "U17", "C64", "C65", "R80", "R81", "Y1", "R11", "C13", "C14", "C15", "C16", "C17"] + ["R%d" % k for k in range(12, 26)] + ["J_USB3"]),
             ("USB AUDIO CODEC PCM2912A, HEADPHONE AMPLIFIER, MIC PREAMP, HEADSET LEADS", ["R26", "R27", "R28", "U6"] + ["C%d" % k for k in range(18, 28)] + ["Y2", "LED2", "R29", "LED3", "R30", "R31", "R32", "C28", "R33", "R34", "U7"] + ["C%d" % k for k in range(29, 34)] +
              ["R35", "C34", "R36", "R37", "C35", "C36", "C37", "C38", "U8", "C39", "R38", "R39", "C40", "C41", "R40", "C42", "R41", "R42", "C43", "JP1", "R43", "JP2", "R44", "C44", "C45", "C46", "R45", "C47", "R46", "R47", "C48", "J_HS1", "J_HS2", "C49", "C50", "D9", "D10", "D11", "D12", "D13", "D14"])]
 placed_refs = {r_ for _, rs in SECTIONS for r_ in rs}
@@ -362,9 +593,13 @@ def layout(page_h):
 _intent.bypass("C7", "U1", "1", "+5V_D8")
 _intent.bypass("C8", "U1", "5", "+3V3_D8")
 _intent.bypass("C9", "U1", "5", "+3V3_D8")
-_intent.bypass("C15", "U4", "3", "+3V3_D8")
-_intent.bypass("C16", "U4", "3", "+3V3_D8")
-_intent.bypass("C17", "U4", "3", "+3V3_D8")
+_intent.bypass("C15", "U4", "3", "+3V4_HUB")   # W6-F5, 26 September 2026: the hub's decoupling follows it to +3V4_HUB
+_intent.bypass("C16", "U4", "3", "+3V4_HUB")
+_intent.bypass("C17", "U4", "3", "+3V4_HUB")
+_intent.bypass("C64", "U17", "1", "+5V_D8")     # the hub LDO's input and output capacitors (SBVS351D 5.3)
+_intent.bypass("C65", "U17", "5", "+3V4_HUB")
+_intent.bypass("C61", "U15", "6", "+5V_D8")     # W2 F-PR-02: the VGG LDO's input and output capacitors
+_intent.bypass("C62", "U15", "1", "VGG_SW")
 _intent.bypass("C18", "U6", "2", "+5V_D8")
 _intent.bypass("C19", "U6", "5", "PCM_VDD")
 _intent.bypass("C20", "U6", "15", "PCM_VCCA")

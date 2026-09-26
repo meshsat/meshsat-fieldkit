@@ -1,6 +1,6 @@
 {
  "board": "pcb-d-aprs",
- "written": "2026-09-21 19:23",
+ "written": "2026-09-26 10:01",
  "bypass": [
   {
    "cap": "C51",
@@ -60,19 +60,43 @@
    "cap": "C15",
    "part": "U4",
    "pin": "3",
-   "net": "+3V3_D8"
+   "net": "+3V4_HUB"
   },
   {
    "cap": "C16",
    "part": "U4",
    "pin": "3",
-   "net": "+3V3_D8"
+   "net": "+3V4_HUB"
   },
   {
    "cap": "C17",
    "part": "U4",
    "pin": "3",
-   "net": "+3V3_D8"
+   "net": "+3V4_HUB"
+  },
+  {
+   "cap": "C64",
+   "part": "U17",
+   "pin": "1",
+   "net": "+5V_D8"
+  },
+  {
+   "cap": "C65",
+   "part": "U17",
+   "pin": "5",
+   "net": "+3V4_HUB"
+  },
+  {
+   "cap": "C61",
+   "part": "U15",
+   "pin": "6",
+   "net": "+5V_D8"
+  },
+  {
+   "cap": "C62",
+   "part": "U15",
+   "pin": "1",
+   "net": "VGG_SW"
   },
   {
    "cap": "C18",
@@ -143,7 +167,8 @@
    "source": "J_PWR1",
    "loads": {
     "FB1": 0.5,
-    "U1": 0.25,
+    "U1": 0.17,
+    "U17": 0.04,
     "U6": 0.1,
     "J_USB3": 0.05,
     "U7": 0.05,
@@ -155,15 +180,15 @@
    "share": 0.02,
    "always_on": true,
    "always_on_why": "it arrives on the mezzanine behind board A's eFuse U23, which is where it is switched; this board consumes it",
+   "v_work": 5.23,
    "converted": false
   },
   "+3V3_D8": {
    "volts": 3.3,
-   "amps_typ": 0.12,
-   "amps_peak": 0.25,
+   "amps_typ": 0.04,
+   "amps_peak": 0.17,
    "source": "U1",
    "loads": {
-    "U4": 0.08,
     "U7": 0.02,
     "U9": 0.002,
     "U10": 0.002,
@@ -179,11 +204,28 @@
     "Q8": 0.001,
     "Q9": 0.001
    },
-   "note": "the local 3.3 V from U1: the USB hub's logic, the seven single-gate PTT and inhibit gates, their level shifters, the headphone amplifier's logic and the gated 3.3 V leaving on the harness. Budget 3 percent: every consumer is a logic part with a wide supply range",
+   "note": "the local 3.3 V from U1: the six single-gate PTT and inhibit gates, their level shifters, the headphone amplifier's logic, the indicator LEDs and the pull-ups. The USB hub moved to its own +3V4_HUB on 26 September 2026 (W6-F5). Budget 3 percent: every consumer is a logic part with a wide supply range",
    "budget": 0.03,
    "always_on": true,
    "always_on_why": "U1 is a TLV75533 whose EN pin is tied to its own input, so this rail follows +5V_D8 and has no switch of its own",
    "efficiency": 0.66,
+   "converted": true,
+   "fed_from": "+5V_D8"
+  },
+  "+3V4_HUB": {
+   "volts": 3.44,
+   "amps_typ": 0.04,
+   "amps_peak": 0.04,
+   "source": "U17",
+   "loads": {
+    "U4": 0.04
+   },
+   "note": "the USB hub's supply: TUSB2046IBVFR, ICC 40 mA maximum in normal operation (SLLS413L 7.5), VCC 3.3 V minimum to 3.6 V (SLLS413L 7.3, I grade; 3.6 V is also the absolute maximum, 7.1). U17 TLV75801P with R80 56.2k and R81 10.7k, both 0.1 percent 25 ppm/C thin film: 3.439 V nominal, 3.375 to 3.502 V at the LDO with every term (VFB +-1 percent, the resistors' tolerance and TCR over 65 K, line regulation 7.5 mV, load regulation 1.2 mV, IFB 0.1 uA through R80; SBVS351D 5.5). The 1 percent budget, 34 mV, leaves the hub's pin at 3.341 V or more, 41 mV over its minimum. With the resistors' endurance, damp-heat and thermal-shock limits added, +-(0.5 percent + 0.05 Ohm) each (YAGEO RT V.16 Table 4), the band is 3.347 to 3.531 V and the pin 3.312 V or more; v_work 3.54 V covers that top. Efficiency is the LDO's arithmetic, 3.44 / 5.09 = 0.676, at the nominal +5V_D8 of 5.088 V",
+   "budget": 0.01,
+   "always_on": true,
+   "always_on_why": "U17's EN pin is tied to its own input, so this rail follows +5V_D8 and has no switch of its own",
+   "efficiency": 0.676,
+   "v_work": 3.54,
    "converted": true,
    "fed_from": "+5V_D8"
   },
@@ -238,6 +280,11 @@
    "v_max": 0.0,
    "v_min": 0.0,
    "basis": "the board's reference, so a part between a live net and ground is judged against the live net rather than reported as sitting on an undeclared one"
+  },
+  "VGG_SW": {
+   "v_max": 4.68,
+   "v_min": 0.0,
+   "basis": "the PA gate bias from U15, a TLV75801P set by R82 71.5k over R83 10.0k: 0.55 V x (1 + 7.15) = 4.48 V nominal, 4.30 to 4.68 V with every term (TI SBVS351D 5.5: VFB +-1 percent at -40 to 85 C, line regulation 7.5 mV, IFB 0.1 uA; both 1 percent 100 ppm/C resistors over 65 K); 0 V while PA_KEY is low (the LDO's active discharge)"
   }
  },
  "pair_classes": {

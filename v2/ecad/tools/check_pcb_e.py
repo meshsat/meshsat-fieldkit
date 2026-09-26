@@ -30,20 +30,54 @@ for ref, (x, y) in (("H1", (-110.5, -73.0)), ("H2", (110.5, -73.0))):
     check(p is not None and abs(p[0] - x) < 0.01 and abs(p[1] - y) < 0.01 and abs(list(fps[ref].Pads())[0].GetDrillSize().x / 1e6 - 3.2) < 0.01, "%s rod pass-through Ø3.2 at (%.1f, %.1f)" % (ref, x, y))
 jd = fps.get("J_DOCK"); bb = jd.GetBoundingBox(False, False) if jd else None
 check(all(not fp.IsFlipped() for fp in b.GetFootprints()), "no part on the underside (it sits on the floor)")
-for ref in ("J_DCIN", "F1", "U3", "Q1", "D1", "U6", "Q7", "L2", "U4", "Q2", "U5", "L1", "R5", "J_SOLAR", "F2", "J_BATT", "F3", "J_BLK", "P_CP", "P_CN", "U10", "U11", "U12", "U13", "U14", "U15", "J_SMB", "J_POD", "J_FAN1", "J_FAN2"): check(ref in fps, "%s present" % ref)
+# 26 September 2026 (MESHSAT-1357 round 4): the round's three new functions are parts a placement must carry: J_TAMP the lid
+# and tamper switch lead (S-11), U16 the Geiger supply switch (F-BP-02) and U17 the battery-bay SGP41 (S-10). A board placed
+# before the generator changed does not carry them and fails here, which is the point: it is not this design.
+for ref in ("J_DCIN", "F1", "U3", "Q1", "D1", "U6", "Q7", "L2", "U4", "Q2", "U5", "L1", "R5", "J_SOLAR", "F2", "J_BATT", "F3", "J_BLK", "P_CP", "P_CN", "U10", "U11", "U12", "U13", "U14", "U15", "J_SMB", "J_POD", "J_FAN1", "J_FAN2", "J_TAMP", "U16", "U17", "D10"): check(ref in fps, "%s present" % ref)
 def find(xy, d):
     for r, f in fps.items():
         if r.startswith("H") and abs(case(f.GetPosition())[0] - xy[0]) < 0.05 and abs(case(f.GetPosition())[1] - xy[1]) < 0.05 and abs(list(f.Pads())[0].GetDrillSize().x / 1e6 - d) < 0.05: return f
     return None
 # E4 height rule (32.18, 32.19 AO): every part north of Y -80 is under PCB-A at 13.4 mm; the tall parts must sit south of it
-TALL = {"F1": 16.3, "F2": 16.3, "F3": 16.3, "J_BATT": 10.5, "J_DCIN": 8.0, "J_SOLAR": 8.0, "C11": 7.7, "C12": 7.7, "C24": 6.9, "C25": 6.9, "L1": 10.0, "L2": 8.0, "J_SMB": 14.0, "J_POD": 14.0, "J_LTG": 14.0, "J_GEIGER": 14.0, "J_DCF": 14.0, "J_FAN1": 14.0, "J_FAN2": 14.0}
+# J_SMB is a JST-XH 1x4 since 26 September 2026 (S-05) and J_TAMP a JST-XH 1x2 (S-11): the header is 9.8 mm (JST eXH), and
+# both keep the 14.0 mm bar the lead headers carry here, which leaves room for the mated housing and the lead's bend.
+TALL = {"F1": 16.3, "F2": 16.3, "F3": 16.3, "J_BATT": 10.5, "J_DCIN": 8.0, "J_SOLAR": 8.0, "C11": 7.7, "C12": 7.7, "C24": 6.9, "C25": 6.9, "L1": 10.0, "L2": 8.0, "J_SMB": 14.0, "J_POD": 14.0, "J_LTG": 14.0, "J_GEIGER": 14.0, "J_DCF": 14.0, "J_FAN1": 14.0, "J_FAN2": 14.0, "J_TAMP": 14.0}
 for ref, h in TALL.items():
     if ref in fps:
         bb = fps[ref].GetBoundingBox(False, False); top = OY - bb.GetTop() / 1e6; right = bb.GetRight() / 1e6 - OX
         check(h <= 12.0 or top <= -80.0 or right <= -121.0, "%s (%.1f mm tall) sits south of the PCB-A edge, west of X -121 or under 12 mm (top edge Y %.1f, right edge X %.1f)" % (ref, h, top, right))
 for (x, y) in [(-104.0, -63.0), (-66.0, -63.0), (-104.0, -83.0), (-66.0, -83.0)]: check(find((x, y), 3.2) is not None, "block standoff hole at (%.1f, %.1f)" % (x, y))
-for x, cy in [(-52, -66), (-38, -66), (-24, -66), (-10, -66), (4, -66), (18, -66), (32, -66), (60, -66), (74, -66), (88, -66), (102, -66)]:
-    check(find((x, cy - 10.0), 3.2) is not None and find((x, cy + 10.0), 3.2) is not None, "float clamp holes at X %.0f" % x)
+# A09, 26 September 2026 (MESHSAT-1357 round 4): THE CLAMP SITES ARE BOARD A'S, READ FROM BOARD A. This list was a literal
+# ending at 102 while board A's LORA receptacle has been at 100 since 7 September (appendix 32.58), and the gate enforced
+# the stale number for nineteen days: the two boards could disagree by twice the nest's float and both gates pass. The
+# sites are now PARSED (ast, never grepped) from board A's two generators, which must agree with each other, and a
+# board whose clamp holes are not at A's X and A's Y is refused. Absence is never a pass: an unreadable RF_X fails.
+import ast as _ast
+def _a_const(fname, name):
+    """The literal value of a top-level `name = ...` (or `name, other = ...`) in a board A generator, or None."""
+    try:
+        tree = _ast.parse(open(_bo.path.join(_bo.path.dirname(_bo.path.abspath(__file__)), fname), encoding="utf-8").read())
+    except Exception:
+        return None
+    for n in tree.body:
+        if not isinstance(n, _ast.Assign): continue
+        for t in n.targets:
+            if isinstance(t, _ast.Name) and t.id == name:
+                try: return _ast.literal_eval(n.value)
+                except Exception: return None
+            if isinstance(t, _ast.Tuple) and isinstance(n.value, _ast.Tuple):
+                for k, e in enumerate(t.elts):
+                    if isinstance(e, _ast.Name) and e.id == name:
+                        try: return _ast.literal_eval(n.value.elts[k])
+                        except Exception: return None
+    return None
+_RF_A = _a_const("gen_pcb_a.py", "RF_X"); _RF_A3 = _a_const("gen_pcb_a3.py", "RF_X"); _RF_Y = _a_const("gen_pcb_a.py", "RF_Y")
+check(isinstance(_RF_A, list) and len(_RF_A) == 11 and _RF_A == _RF_A3 and isinstance(_RF_Y, (int, float)),
+      "board A's blind-mate sites read from its generators: gen_pcb_a.py RF_X %s, gen_pcb_a3.py RF_X %s, RF_Y %s" % (_RF_A, _RF_A3, _RF_Y))
+for x in (_RF_A if isinstance(_RF_A, list) else []):
+    cy = float(_RF_Y) if isinstance(_RF_Y, (int, float)) else -66.0
+    check(find((float(x), cy - 10.0), 3.2) is not None and find((float(x), cy + 10.0), 3.2) is not None,
+          "float clamp holes at X %.0f, on board A's receptacle (Y %.0f +- 10)" % (x, cy))
 # 8 Sep 2026 (MESHSAT-862 Stage C): the intent gates (return path under the pair-class nets, decoupling loops, the rails of the intent file)
 if any(t.GetClass() == "PCB_TRACK" and not t.IsLocked() for t in b.GetTracks()):
     import os as _os3, sys as _sys3; _sys3.path.insert(0, _os3.path.dirname(_os3.path.abspath(__file__))); import intent_checks as _ic

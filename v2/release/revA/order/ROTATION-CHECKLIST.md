@@ -22,16 +22,16 @@ zero is a real answer and is recorded the same way; what the rule refuses is the
 | `D_SMC` | A, E | D1 |  |  |
 | `D_SOD-123` | C, D, E | D17 |  |  |
 | `D_SOD-123F` | C | D19 |  |  |
-| `D_SOD-323` | D | D10 |  |  |
+| `D_SOD-323` | D, P | D10 |  |  |
 | `Fuseholder_Blade_Mini_Keystone_3568` | P | F1 |  |  |
 | `Hirose_FH34SRJ-24S` | C | J_EPD |  |  |
-| `JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical` | D, P | J_VGG |  |  |
+| `JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical` | D | J_VGG |  |  |
 | `JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical` | A, D | J_USBW |  |  |
-| `JST_PH_B5B-PH-K_1x05_P2.00mm_Vertical` | D | J_HS1 |  |  |
+| `JST_PH_B5B-PH-K_1x05_P2.00mm_Vertical` | D, P | J_HS1 |  |  |
 | `JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical` | B | J_FAN1 |  |  |
 | `JST_VH_B2P-VH_1x02_P3.96mm_Vertical` | A, B, D, E | J_54V |  |  |
-| `JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical` | A | J_HEAT |  |  |
-| `JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical` | P | J_SMB |  |  |
+| `JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical` | A, E | J_HEAT |  |  |
+| `JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical` | E, P | J_SMB |  |  |
 | `JST_XH_B5B-XH-A_1x05_P2.50mm_Vertical` | P | J_CELL |  |  |
 | `LED_D3.0mm` | C | D1 |  |  |
 | `LQFP-100_14x14mm_P0.5mm` | B | U41 |  |  |
@@ -42,13 +42,11 @@ zero is a real answer and is recorded the same way; what the rule refuses is the
 | `PinHeader_1x04_P2.54mm_Vertical` | B, E | J_CAM |  |  |
 | `PinHeader_1x05_P2.54mm_Vertical` | A, B, E | J_USBC_OUT |  |  |
 | `PinHeader_1x05_P2.54mm_Vertical_SMD_Pin1Left` | B | U42 |  |  |
-| `PinHeader_1x06_P2.54mm_Vertical` | E | J_SMB |  |  |
 | `PinHeader_2x05_P2.54mm_Vertical` | B | J_SPI3 |  |  |
 | `QFN-16-1EP_3x3mm_P0.5mm_EP1.75x1.75mm` | D | U7 |  |  |
 | `QFN-24-1EP_4x4mm_P0.5mm_EP2.5x2.5mm` | A | U18 |  |  |
 | `QFN-28-1EP_5x5mm_P0.5mm_EP3.35x3.35mm` | B, D | U15 |  |  |
 | `QFN-32-1EP_4x4mm_P0.4mm_EP2.65x2.65mm` | A | U3 |  |  |
-| `QFN-32-1EP_5x5mm_P0.5mm_EP3.1x3.1mm` | P | U1 |  |  |
 | `QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm` | C, E | U3 |  |  |
 | `QFN-64-1EP_9x9mm_P0.5mm_EP4.7x4.7mm` | B | U102 |  |  |
 | `SOT-583-8` | A, B | U12 |  |  |
@@ -57,5 +55,6 @@ zero is a real answer and is recorded the same way; what the rule refuses is the
 | `USB3_A_Receptacle_Wuerth_692122030100` | B | J_LIME |  |  |
 | `VSSOP-10_3x3mm_P0.5mm` | A, E | U10 |  |  |
 | `VSSOP-8_3x3mm_P0.65mm` | D | U8 |  |  |
+| `WSON-12-1EP_3x2mm_P0.5mm_EP1x2.65` | P | U2 |  |  |
 
-44 footprint(s) to compare, over 7 board(s).
+43 footprint(s) to compare, over 7 board(s).

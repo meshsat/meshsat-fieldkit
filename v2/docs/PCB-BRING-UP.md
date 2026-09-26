@@ -127,7 +127,7 @@ fault from one that reads low.
 
 | step | rail | expect | at | what it feeds |
 |---|---|---|---|---|
-| 1 | +3V3 | 3.30 V (3.13 to 3.46) | U5 | Q5, U1, U10, U11, U2, U3 |
+| 1 | +3V3 | 3.30 V (3.13 to 3.46) | U5 | Q5, U1, U10, U11, U12, U2 |
 
 ## Board D
 
@@ -136,13 +136,14 @@ fault from one that reads low.
 | step | rail | apply | current limit | at | what it feeds |
 |---|---|---|---|---|---|
 | 1 | +3V3 | 3.30 V | 0.06 A | J_HARN1 | U16 |
-| 2 | +5V_D8 | 5.00 V | 1.00 A | J_PWR1 | FB1, J_USB3, U1, U15, U3, U6 |
+| 2 | +5V_D8 | 5.00 V | 1.00 A | J_PWR1 | FB1, J_USB3, U1, U15, U17, U3 |
 
 **Measured, in this order, after the inputs are up.**
 
 | step | rail | expect | at | what it feeds |
 |---|---|---|---|---|
 | 1 | +3V3_D8 | 3.30 V (3.13 to 3.46) | U1 | Q3, Q4, Q5, Q6, Q7, Q8 |
+| 2 | +3V4_HUB | 3.44 V (3.27 to 3.61) | U17 | U4 |
 
 **Decide before powering: the declared source is an inductor or a ferrite, which is a filter on an incoming feed on some boards and a converter's output on others.**
 
@@ -156,8 +157,8 @@ fault from one that reads low.
 
 | step | rail | apply | current limit | at | what it feeds |
 |---|---|---|---|---|---|
-| 1 | DC_IN | 12.00 V | 8.00 A | J_DCIN | F1 |
-| 2 | DC_F | 12.00 V | 8.00 A | F1 | Q1 |
+| 1 | DC_IN | 12.00 V | 6.15 A | J_DCIN | F1 |
+| 2 | DC_F | 12.00 V | 6.15 A | F1 | Q1 |
 | 3 | CELL_F | 14.40 V | 10.00 A | F3 | J_FAN1, J_FAN2, P_CP, U12 |
 | 4 | CELL+ | 14.40 V | 10.00 A | J_BATT | F3 |
 | 5 | PV_P | 17.60 V | 5.68 A | F2 | U5 |
@@ -168,17 +169,18 @@ fault from one that reads low.
 | step | rail | expect | at | what it feeds |
 |---|---|---|---|---|
 | 1 | +3V3_E6 | 3.30 V (3.13 to 3.46) | U13 | J_DCF, J_LTG, J_POD, U10, U11, U14 |
-| 2 | DC_P | 12.00 V (11.40 to 12.60) | Q1 | R19 |
-| 3 | HS_S | 12.00 V (11.40 to 12.60) | R19 | Q7 |
-| 4 | DC_HS | 12.00 V (11.40 to 12.60) | Q7 | L2 |
-| 5 | TRK_OUT | 15.10 V (14.34 to 15.86) | Q6 | Q2 |
+| 2 | +5V_GEIGER | 5.00 V (4.75 to 5.25) | U16 | J_GEIGER |
+| 3 | DC_P | 12.00 V (11.40 to 12.60) | Q1 | R19 |
+| 4 | HS_S | 12.00 V (11.40 to 12.60) | R19 | Q7 |
+| 5 | DC_HS | 12.00 V (11.40 to 12.60) | Q7 | L2 |
+| 6 | TRK_OUT | 15.10 V (14.34 to 15.86) | Q6 | Q2 |
 
 **Decide before powering: the declared source is an inductor or a ferrite, which is a filter on an incoming feed on some boards and a converter's output on others.**
 
 | rail | volts | current | source | what it feeds |
 |---|---|---|---|---|
-| +5V_E6 | 5.00 V | 0.30 A | L3 | J_GEIGER, U13 |
-| VIN_RAW | 12.00 V | 8.00 A | L2 | J_BLK |
+| +5V_E6 | 5.00 V | 0.30 A | L3 | U13, U16 |
+| VIN_RAW | 12.00 V | 6.15 A | L2 | J_BLK |
 
 ## Board E5
 
@@ -191,7 +193,8 @@ missing, not because the board has no rails.
 
 | step | rail | apply | current limit | at | what it feeds |
 |---|---|---|---|---|---|
-| 1 | FUSED | 14.40 V | 10.00 A | F1 | Q1 |
+| 1 | FUSED | 14.40 V | 10.00 A | F1 | F2 |
+| 2 | SCP_OUT | 14.40 V | 10.00 A | F2 | Q1 |
 
 **Measured, in this order, after the inputs are up.**
 

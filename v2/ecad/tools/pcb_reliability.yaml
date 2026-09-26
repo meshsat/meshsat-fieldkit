@@ -123,10 +123,10 @@ boards:
        basis: "Keystone 3568 publishes no cycle figure",
        load: "extraction force, straight up",
        measure: "through-hole holders"}
-    - {name: "the DC inlet, the solar input and the SMBus header",
-       refs: ["J_DCIN", "J_SOLAR", "J_SMB"], cycles: 30,
+    - {name: "the DC inlet, the solar input, the SMBus header and the lid sensor lead",
+       refs: ["J_DCIN", "J_SOLAR", "J_SMB", "J_TAMP"], cycles: 30,
        basis: "the JST families' own figures; the wall receptacle itself is in the case",
-       load: "the leads from the wall receptacle and from the pack",
+       load: "the leads from the wall receptacle, from the pack and from the lid reed sensor under the frame",
        measure: "each lead is tied within 40 mm of its header"}
 
  p:
