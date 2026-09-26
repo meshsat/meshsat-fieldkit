@@ -857,7 +857,7 @@ open_items:
     title: >-
       The review packets and requests of D-09 and the routes of REVIEW-ROUTES.md: board packets for A, B and D at the
       revision that carries round 7 (C, D, E and P exist at 1f614233, D's superseded by 458b2873); the battery packet's
-      manifest check passing at the commit whose link is sent; the R-SEC request once ZEROIZE.md's drafts are filed;
+      manifest check passing at the commit whose link is sent; the R-SEC request (ZEROIZE.md's working records filed under v2/docs/records/rv-zer/ at 428c697c);
       the EMC request once the prototype exists. Nothing has been sent.
   - id: S-35
     class: SESSION
@@ -1235,10 +1235,15 @@ records:
           current WRONG_MODEL rows on current boards (27 of 40), so "the ordered part number checked against the BOM"
           is not yet shown for every device; CMP-002 and SUP-001 read INCONCLUSIVE until decision 41's rebuild re-takes
           them (v2/docs/CURRENT-EVIDENCE.md)
+      - >-
+          v2/docs/evidence/WRONG-MODEL-RECONCILIATION.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the
+          drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
+          files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
+          file at 97b1f63aa6ea11f1
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_b.py@6e3d880901fd3030"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b"
-      - "v2/docs/evidence/WRONG-MODEL-RECONCILIATION.md@a88b2dda0a30a672"
+      - "v2/docs/evidence/WRONG-MODEL-RECONCILIATION.md@97b1f63aa6ea11f1"
     release_effect: MUST_JUSTIFY
     source:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2756-2771"
@@ -1531,8 +1536,13 @@ records:
           changed only where the page says its scripts and datasheets are filed (section 2 and Appendix A's header, now
           v2/docs/feasibility/fab/ and v2/vendor/); sections 1, 5.2, 8, 9 and 10 are byte-identical to eadbe571's, so
           this reading stands on the file at 29100c28d96cda8e
+      - >-
+          v2/docs/feasibility/FAILOVER-FABRIC.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the
+          drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
+          files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
+          file at 4646ad528ec4b3c6
     evidence_bound_to:
-      - "v2/docs/feasibility/FAILOVER-FABRIC.md@29100c28d96cda8e"
+      - "v2/docs/feasibility/FAILOVER-FABRIC.md@4646ad528ec4b3c6"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b"
     release_effect: BLOCKER
     source:
@@ -1580,8 +1590,13 @@ records:
           changed only where the page says its scripts and datasheets are filed (section 2 and Appendix A's header, now
           v2/docs/feasibility/fab/ and v2/vendor/); sections 1, 5.2, 8, 9 and 10 are byte-identical to eadbe571's, so
           this reading stands on the file at 29100c28d96cda8e
+      - >-
+          v2/docs/feasibility/FAILOVER-FABRIC.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the
+          drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
+          files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
+          file at 4646ad528ec4b3c6
     evidence_bound_to:
-      - "v2/docs/feasibility/FAILOVER-FABRIC.md@29100c28d96cda8e"
+      - "v2/docs/feasibility/FAILOVER-FABRIC.md@4646ad528ec4b3c6"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/FAILOVER-FABRIC.md section 5.2", "v2/docs/feasibility/FAILOVER-FABRIC.md section 10"]
@@ -1644,8 +1659,13 @@ records:
           changed only where the page says its scripts and datasheets are filed (section 2 and Appendix A's header, now
           v2/docs/feasibility/fab/ and v2/vendor/); sections 1, 5.2, 8, 9 and 10 are byte-identical to eadbe571's, so
           this reading stands on the file at 29100c28d96cda8e
+      - >-
+          v2/docs/feasibility/FAILOVER-FABRIC.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the
+          drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
+          files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
+          file at 4646ad528ec4b3c6
     evidence_bound_to:
-      - "v2/docs/feasibility/FAILOVER-FABRIC.md@29100c28d96cda8e"
+      - "v2/docs/feasibility/FAILOVER-FABRIC.md@4646ad528ec4b3c6"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/FAILOVER-FABRIC.md section 10", "v2/docs/reviews/2026-09-26-foundation-progress-review.md section 3"]
     source_check: VERIFIED
@@ -1697,8 +1717,13 @@ records:
           for every part it is applied to and the rule is per class; "Nothing is laid for this ruling yet"; DEC-001's
           PASS readings on boards B and P are 33 blanket allowances, not evidence; the TPA6132A2 on board D is fitted
           with 1 uF where its maker asks 2.2 uF
+      - >-
+          v2/docs/feasibility/DECOUPLING.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the
+          drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
+          files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
+          file at 15915adb18843695
     evidence_bound_to:
-      - "v2/docs/feasibility/DECOUPLING.md@36f89d2d52b6e613"
+      - "v2/docs/feasibility/DECOUPLING.md@15915adb18843695"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/DECOUPLING.md section 10", "v2/ecad/tools/pcb_decisions.yaml:959-1076 (decision 42)"]
     source_check: VERIFIED
@@ -2139,8 +2164,13 @@ records:
           v2/ecad/pcb-c-display-c8/out/pcb-c-display.net: the TX lamp's supply, the LED rail behind Q1 and Q2, exists
           only while the panel controller drives PANEL_PWM, so with the controller in reset the lamp cannot follow KEY
           and the bench clause fails as drawn (EMCON.md E-02 records the lamp and makes it no pass condition)
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the
+          drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
+          files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
+          file at fa355479df681ed8
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@268c5e3d0cd5cff7"
+      - "v2/docs/feasibility/EMCON.md@fa355479df681ed8"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@2834f0d8c4071d56"
     release_effect: MUST_JUSTIFY
     source: ["v2/docs/PANEL.md:113", "v2/docs/PANEL.md:158"]
@@ -2270,8 +2300,13 @@ records:
           v2/docs/feasibility/POWER-THERMAL.md sections 0 and 11 read at eadbe571 (Status: PROVISIONAL): runtime 2.5 h
           and 1.7 h aged on bounds of 1.3 to 3.3 h and 0.9 to 2.3 h; D-11's thresholds set PROVISIONAL; F2's margin
           during a key-down unknown; the hot end undecided until the enclosure conductance is measured
+      - >-
+          v2/docs/feasibility/POWER-THERMAL.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the
+          drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
+          files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
+          file at bb9c861c9920c8d6
     evidence_bound_to:
-      - "v2/docs/feasibility/POWER-THERMAL.md@aab0b5a9bfca0435"
+      - "v2/docs/feasibility/POWER-THERMAL.md@bb9c861c9920c8d6"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/POWER-THERMAL.md section 11", "v2/docs/reviews/2026-09-26-foundation-progress-review.md section 4"]
     source_check: VERIFIED
@@ -3217,8 +3252,13 @@ records:
           envelope and not in pcb_part_temps.yaml, the AW7915-AED WiFi card (0 to +70 C, or -10 to +70 C on the maker's
           current page) and the LimeSDR Mini v2.4 (0 to +70 C operating and storage); the NVMe drive, not yet picked,
           has to be a -20 C grade
+      - >-
+          v2/docs/feasibility/POWER-THERMAL.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the
+          drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
+          files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
+          file at bb9c861c9920c8d6
     evidence_bound_to:
-      - "v2/docs/feasibility/POWER-THERMAL.md@aab0b5a9bfca0435"
+      - "v2/docs/feasibility/POWER-THERMAL.md@bb9c861c9920c8d6"
     release_effect: MUST_JUSTIFY
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:18527-18540 (32.360)", "v2/ecad/tools/pcb_part_temps.yaml", "v2/docs/feasibility/POWER-THERMAL.md section 9.4"]
     source_check: VERIFIED
@@ -3341,8 +3381,13 @@ records:
           v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net at eadbe571: the RM520N-GL's only EMCON path is W_DISABLE1#
           through the open drain Q206, a firmware-mediated airplane mode (EMCON.md section 4.5); SD-EMC-1's supply
           removal is not drawn
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the
+          drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
+          files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
+          file at fa355479df681ed8
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@268c5e3d0cd5cff7"
+      - "v2/docs/feasibility/EMCON.md@fa355479df681ed8"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b"
     release_effect: BLOCKER
     source:
@@ -3483,8 +3528,13 @@ records:
           v2/docs/feasibility/EMCON.md section 7, L3: with +3V3_DEV lost on board B the gates of the six CM5 radios, the
           two AW7915 cards and the RM520N-GL release (fail-open), read on the committed netlist
           v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the
+          drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
+          files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
+          file at fa355479df681ed8
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@268c5e3d0cd5cff7"
+      - "v2/docs/feasibility/EMCON.md@fa355479df681ed8"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b"
     release_effect: BLOCKER
     source:
@@ -3587,10 +3637,15 @@ records:
           v2/docs/CURRENT-EVIDENCE.md re-read at the round 7b integration of 26 September 2026: RF-002 on board D
           now reads AWAITING_REVALIDATION (TOOL_CHANGED, check_contracts.py changed in 93138ac1) and SCH-004 on D
           AWAITING_REVALIDATION (NETLIST_MISMATCH), so neither decides and this reading stands
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the
+          drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
+          files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
+          file at fa355479df681ed8
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@f13d8b70099ab03e"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2e8923d6853ee4e1"
-      - "v2/docs/feasibility/EMCON.md@268c5e3d0cd5cff7"
+      - "v2/docs/feasibility/EMCON.md@fa355479df681ed8"
       - "v2/docs/CURRENT-EVIDENCE.md@780bf278bb95dd84"
     release_effect: BLOCKER
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2825", "v2/docs/PANEL.md section 6", "v2/docs/feasibility/EMCON.md sections 4.1 and 4.2"]
@@ -3632,8 +3687,13 @@ records:
           v2/docs/feasibility/EMCON.md section 0 read at eadbe571: as drawn no indication of the EMCON lines is
           independent of firmware (the TX lamp's supply exists only while the panel controller drives PANEL_PWM); board
           C's committed netlist v2/ecad/pcb-c-display-c8/out/pcb-c-display.net carries no EMCON lamp
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the
+          drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
+          files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
+          file at fa355479df681ed8
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@268c5e3d0cd5cff7"
+      - "v2/docs/feasibility/EMCON.md@fa355479df681ed8"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@2834f0d8c4071d56"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/EMCON.md section 7 (the common element)", "session choice SC-11"]
@@ -3688,8 +3748,13 @@ records:
           v2/docs/feasibility/EMCON.md sections 0 and 7 read at eadbe571: "Radios dark" is feasible with the ruled
           architecture with two conditions (the 5G row only at the cost SD-EMC-1 accepts, the shared element only with
           a hardware EMCON lamp); no transmitter's EMCON is closed on the bench, one row (the 30 W PA) closes at desk
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the
+          drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
+          files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
+          file at fa355479df681ed8
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@268c5e3d0cd5cff7"
+      - "v2/docs/feasibility/EMCON.md@fa355479df681ed8"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/EMCON.md section 7", "v2/docs/reviews/2026-09-26-foundation-progress-review.md section 3"]
     source_check: VERIFIED
@@ -3878,8 +3943,13 @@ records:
           VERIFIED that they say it, SUPPORTED for the fitted part); physical demonstration OPEN (Z-EXP-A, Z-EXP-B); what
           GenKey does on an interrupted EEPROM write (U1) and the SSHDA part's factory configuration (U4) are not in any
           public document
+      - >-
+          v2/docs/feasibility/ZEROIZE.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the
+          drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
+          files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
+          file at e7a7b9d05a0560ed
     evidence_bound_to:
-      - "v2/docs/feasibility/ZEROIZE.md@3634103c6b9a5539"
+      - "v2/docs/feasibility/ZEROIZE.md@e7a7b9d05a0560ed"
     release_effect: MUST_JUSTIFY
     source:
       - "owner ruling D-03"
@@ -4107,8 +4177,13 @@ records:
           demonstration OPEN"; the mechanism rows are closed at desk (E1 to E9, E13), the part rows (Z-EXP-A), the
           interrupted-power rows (Z-EXP-B, U1) and the panel's resume (Z-EXP-C) are OPEN, P8 is closed by the netlist for
           the modules and bounded by firmware rule Z-C3 for the supervisors (residual R7)
+      - >-
+          v2/docs/feasibility/ZEROIZE.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the
+          drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
+          files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
+          file at e7a7b9d05a0560ed
     evidence_bound_to:
-      - "v2/docs/feasibility/ZEROIZE.md@3634103c6b9a5539"
+      - "v2/docs/feasibility/ZEROIZE.md@e7a7b9d05a0560ed"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/ZEROIZE.md section 7", "v2/docs/reviews/2026-09-26-foundation-progress-review.md section 3"]
     source_check: VERIFIED

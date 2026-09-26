@@ -297,7 +297,9 @@ Prototype 1: in the core D-01 names. 6 record(s).
 
 *Evidence (FAIL, DESK_REVIEW):* v2/docs/evidence/WRONG-MODEL-RECONCILIATION.md: the certification rows reconciled on 26 September 2026 list current WRONG_MODEL rows on current boards (27 of 40), so "the ordered part number checked against the BOM" is not yet shown for every device; CMP-002 and SUP-001 read INCONCLUSIVE until decision 41's rebuild re-takes them (v2/docs/CURRENT-EVIDENCE.md)
 
-*Bound to:* `v2/ecad/tools/gen_sch_b.py@6e3d880901fd3030`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b`, `v2/docs/evidence/WRONG-MODEL-RECONCILIATION.md@a88b2dda0a30a672`
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/evidence/WRONG-MODEL-RECONCILIATION.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the file at 97b1f63aa6ea11f1
+
+*Bound to:* `v2/ecad/tools/gen_sch_b.py@6e3d880901fd3030`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b`, `v2/docs/evidence/WRONG-MODEL-RECONCILIATION.md@97b1f63aa6ea11f1`
 
 *Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2756-2771`; `v2/docs/MESHSAT-709-geometry-appendix.md:2813-2816`; `v2/docs/MESHSAT-709-geometry-appendix.md:2896 (32.54 sensor picks)`; `v2/docs/V2-SPEC.md:37-51`
 
@@ -424,7 +426,9 @@ Prototype 1: in the core D-01 names. 18 record(s).
 
 *Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/FAILOVER-FABRIC.md re-read at the integration of 26 September 2026: the architecture merge changed only where the page says its scripts and datasheets are filed (section 2 and Appendix A's header, now v2/docs/feasibility/fab/ and v2/vendor/); sections 1, 5.2, 8, 9 and 10 are byte-identical to eadbe571's, so this reading stands on the file at 29100c28d96cda8e
 
-*Bound to:* `v2/docs/feasibility/FAILOVER-FABRIC.md@29100c28d96cda8e`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b`
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/FAILOVER-FABRIC.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the file at 4646ad528ec4b3c6
+
+*Bound to:* `v2/docs/feasibility/FAILOVER-FABRIC.md@4646ad528ec4b3c6`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b`
 
 *Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md:87-89`; `v2/docs/ARCH-PCB-B-IOHA.md:178-189`; `v2/docs/ARCH-PCB-B-IOHA.md section 13 (A10, A12)`; `v2/docs/feasibility/FAILOVER-FABRIC.md section 9`
 
@@ -440,7 +444,9 @@ Prototype 1: in the core D-01 names. 18 record(s).
 
 *Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/FAILOVER-FABRIC.md re-read at the integration of 26 September 2026: the architecture merge changed only where the page says its scripts and datasheets are filed (section 2 and Appendix A's header, now v2/docs/feasibility/fab/ and v2/vendor/); sections 1, 5.2, 8, 9 and 10 are byte-identical to eadbe571's, so this reading stands on the file at 29100c28d96cda8e
 
-*Bound to:* `v2/docs/feasibility/FAILOVER-FABRIC.md@29100c28d96cda8e`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b`
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/FAILOVER-FABRIC.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the file at 4646ad528ec4b3c6
+
+*Bound to:* `v2/docs/feasibility/FAILOVER-FABRIC.md@4646ad528ec4b3c6`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b`
 
 *Source (verified):* `v2/docs/feasibility/FAILOVER-FABRIC.md section 5.2`; `v2/docs/feasibility/FAILOVER-FABRIC.md section 10`
 
@@ -456,7 +462,9 @@ Prototype 1: in the core D-01 names. 18 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/FAILOVER-FABRIC.md re-read at the integration of 26 September 2026: the architecture merge changed only where the page says its scripts and datasheets are filed (section 2 and Appendix A's header, now v2/docs/feasibility/fab/ and v2/vendor/); sections 1, 5.2, 8, 9 and 10 are byte-identical to eadbe571's, so this reading stands on the file at 29100c28d96cda8e
 
-*Bound to:* `v2/docs/feasibility/FAILOVER-FABRIC.md@29100c28d96cda8e`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/FAILOVER-FABRIC.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the file at 4646ad528ec4b3c6
+
+*Bound to:* `v2/docs/feasibility/FAILOVER-FABRIC.md@4646ad528ec4b3c6`
 
 *Feasibility page:* `v2/docs/feasibility/FAILOVER-FABRIC.md`, blocker ids FB-FAB-1, FB-FAB-2, FB-FAB-3, FB-FAB-4, FB-FAB-5, FB-FAB-6, FB-FAB-7, FB-FAB-8; *owner:* Board B's author (FB-FAB-2 to FB-FAB-7), the integrator (FB-FAB-1, the run order of FB-FAB-6), an outside high-speed reviewer once the owner approves R-HSD (L-05), bring-up (FB-FAB-8).; *holds:* REQ-004, REQ-006, CON-003, CON-022; layout entry of B.
 
@@ -472,7 +480,9 @@ Prototype 1: in the core D-01 names. 18 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/DECOUPLING.md sections 1 and 10 read at eadbe571: the 3 mm number is a project heuristic for every part it is applied to and the rule is per class; "Nothing is laid for this ruling yet"; DEC-001's PASS readings on boards B and P are 33 blanket allowances, not evidence; the TPA6132A2 on board D is fitted with 1 uF where its maker asks 2.2 uF
 
-*Bound to:* `v2/docs/feasibility/DECOUPLING.md@36f89d2d52b6e613`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/DECOUPLING.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the file at 15915adb18843695
+
+*Bound to:* `v2/docs/feasibility/DECOUPLING.md@15915adb18843695`
 
 *Feasibility page:* `v2/docs/feasibility/DECOUPLING.md`, blocker ids T1, T10, G1, G14; *owner:* The integrating writer of v2/ecad/tools/ (T1 to T10); each board's writer (G1 to G14); the integrator for the placements; the session for the Diodes question.; *holds:* layout entry of A, B, C, D, E, P.
 
@@ -672,7 +682,9 @@ Prototype 1: not in the core. 7 record(s).
 
 *Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md section 0 read at eadbe571, on board C's committed netlist v2/ecad/pcb-c-display-c8/out/pcb-c-display.net: the TX lamp's supply, the LED rail behind Q1 and Q2, exists only while the panel controller drives PANEL_PWM, so with the controller in reset the lamp cannot follow KEY and the bench clause fails as drawn (EMCON.md E-02 records the lamp and makes it no pass condition)
 
-*Bound to:* `v2/docs/feasibility/EMCON.md@268c5e3d0cd5cff7`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@2834f0d8c4071d56`
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the file at fa355479df681ed8
+
+*Bound to:* `v2/docs/feasibility/EMCON.md@fa355479df681ed8`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@2834f0d8c4071d56`
 
 *Source (verified):* `v2/docs/PANEL.md:113`; `v2/docs/PANEL.md:158`
 
@@ -729,7 +741,9 @@ Prototype 1: in the core D-01 names. 14 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/POWER-THERMAL.md sections 0 and 11 read at eadbe571 (Status: PROVISIONAL): runtime 2.5 h and 1.7 h aged on bounds of 1.3 to 3.3 h and 0.9 to 2.3 h; D-11's thresholds set PROVISIONAL; F2's margin during a key-down unknown; the hot end undecided until the enclosure conductance is measured
 
-*Bound to:* `v2/docs/feasibility/POWER-THERMAL.md@aab0b5a9bfca0435`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/POWER-THERMAL.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the file at bb9c861c9920c8d6
+
+*Bound to:* `v2/docs/feasibility/POWER-THERMAL.md@bb9c861c9920c8d6`
 
 *Feasibility page:* `v2/docs/feasibility/POWER-THERMAL.md`, blocker ids PWR-F12, PWR-F13, PWR-F15; *owner:* The session (loads, duty cycles, 'aged'); the battery-protection stream (PWR-F12, the gauge's two over-current levels); board A's owner (the pack-node copper); board D's owner (the flange sensor, PWR-F15); the owner only for money (an early case, R-PWR under L-04).; *holds:* REQ-014, REQ-018; layout entry of A.
 
@@ -1091,7 +1105,9 @@ Prototype 1: not in the core. 17 record(s).
 
 *Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/POWER-THERMAL.md section 9.4 read at eadbe571: two bought parts are outside the adopted envelope and not in pcb_part_temps.yaml, the AW7915-AED WiFi card (0 to +70 C, or -10 to +70 C on the maker's current page) and the LimeSDR Mini v2.4 (0 to +70 C operating and storage); the NVMe drive, not yet picked, has to be a -20 C grade
 
-*Bound to:* `v2/docs/feasibility/POWER-THERMAL.md@aab0b5a9bfca0435`
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/POWER-THERMAL.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the file at bb9c861c9920c8d6
+
+*Bound to:* `v2/docs/feasibility/POWER-THERMAL.md@bb9c861c9920c8d6`
 
 *Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:18527-18540 (32.360)`; `v2/ecad/tools/pcb_part_temps.yaml`; `v2/docs/feasibility/POWER-THERMAL.md section 9.4`
 
@@ -1200,7 +1216,9 @@ Prototype 1: in the core D-01 names. 8 record(s).
 
 *Evidence (FAIL, DESK_REVIEW):* v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net at eadbe571: the RM520N-GL's only EMCON path is W_DISABLE1# through the open drain Q206, a firmware-mediated airplane mode (EMCON.md section 4.5); SD-EMC-1's supply removal is not drawn
 
-*Bound to:* `v2/docs/feasibility/EMCON.md@268c5e3d0cd5cff7`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b`
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the file at fa355479df681ed8
+
+*Bound to:* `v2/docs/feasibility/EMCON.md@fa355479df681ed8`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b`
 
 *Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2787 (item 3)`; `v2/docs/PANEL.md section 6`; `v2/docs/TEST-PLAN.md:46`; `v2/docs/feasibility/EMCON.md`; `v2/ecad/tools/pcb_rules_coverage.yaml:636-644`
 
@@ -1246,7 +1264,9 @@ Prototype 1: in the core D-01 names. 8 record(s).
 
 *Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md section 7, L3: with +3V3_DEV lost on board B the gates of the six CM5 radios, the two AW7915 cards and the RM520N-GL release (fail-open), read on the committed netlist v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net
 
-*Bound to:* `v2/docs/feasibility/EMCON.md@268c5e3d0cd5cff7`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b`
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the file at fa355479df681ed8
+
+*Bound to:* `v2/docs/feasibility/EMCON.md@fa355479df681ed8`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@6048ee56c48a028b`
 
 *Source (verified):* `v2/ecad/tools/gen_sch_b.py:716-741`; `v2/ecad/tools/gen_sch_b.py:449-456`; `v2/docs/feasibility/EMCON.md section 4`; `v2/docs/MESHSAT-709-geometry-appendix.md:2930`; `owner ruling D-05`
 
@@ -1284,7 +1304,9 @@ Prototype 1: in the core D-01 names. 8 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CURRENT-EVIDENCE.md re-read at the round 7b integration of 26 September 2026: RF-002 on board D now reads AWAITING_REVALIDATION (TOOL_CHANGED, check_contracts.py changed in 93138ac1) and SCH-004 on D AWAITING_REVALIDATION (NETLIST_MISMATCH), so neither decides and this reading stands
 
-*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@f13d8b70099ab03e`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2e8923d6853ee4e1`, `v2/docs/feasibility/EMCON.md@268c5e3d0cd5cff7`, `v2/docs/CURRENT-EVIDENCE.md@780bf278bb95dd84`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the file at fa355479df681ed8
+
+*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@f13d8b70099ab03e`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@2e8923d6853ee4e1`, `v2/docs/feasibility/EMCON.md@fa355479df681ed8`, `v2/docs/CURRENT-EVIDENCE.md@780bf278bb95dd84`
 
 *Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2825`; `v2/docs/PANEL.md section 6`; `v2/docs/feasibility/EMCON.md sections 4.1 and 4.2`
 
@@ -1296,7 +1318,9 @@ Prototype 1: in the core D-01 names. 8 record(s).
 
 *Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md section 0 read at eadbe571: as drawn no indication of the EMCON lines is independent of firmware (the TX lamp's supply exists only while the panel controller drives PANEL_PWM); board C's committed netlist v2/ecad/pcb-c-display-c8/out/pcb-c-display.net carries no EMCON lamp
 
-*Bound to:* `v2/docs/feasibility/EMCON.md@268c5e3d0cd5cff7`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@2834f0d8c4071d56`
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the file at fa355479df681ed8
+
+*Bound to:* `v2/docs/feasibility/EMCON.md@fa355479df681ed8`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@2834f0d8c4071d56`
 
 *Source (verified):* `v2/docs/feasibility/EMCON.md section 7 (the common element)`; `session choice SC-11`
 
@@ -1310,7 +1334,9 @@ Prototype 1: in the core D-01 names. 8 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/EMCON.md sections 0 and 7 read at eadbe571: "Radios dark" is feasible with the ruled architecture with two conditions (the 5G row only at the cost SD-EMC-1 accepts, the shared element only with a hardware EMCON lamp); no transmitter's EMCON is closed on the bench, one row (the 30 W PA) closes at desk
 
-*Bound to:* `v2/docs/feasibility/EMCON.md@268c5e3d0cd5cff7`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the file at fa355479df681ed8
+
+*Bound to:* `v2/docs/feasibility/EMCON.md@fa355479df681ed8`
 
 *Feasibility page:* `v2/docs/feasibility/EMCON.md`, blocker ids SD-EMC-1, SD-EMC-2, SD-EMC-6, E-05, E-07, E-12; *owner:* Board B's author (SD-EMC-1, L2, L3, L4, L7), boards A, C and D's authors for their gates, the tools author for RF-002's instrument (L6), and the TEST-PLAN owner for the bench rows and the silence latency.; *holds:* REQ-030, REQ-032, CON-021; layout entry of A, B, C, D.
 
@@ -1392,7 +1418,9 @@ Prototype 1: in the core D-01 names. 8 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/ZEROIZE.md sections 1, 4 and 7 read at eadbe571: documentary feasibility CLOSED (the documents say GenKey mode 0x04 replaces a key in an updatable, non-lockable slot after every zone lock; VERIFIED that they say it, SUPPORTED for the fitted part); physical demonstration OPEN (Z-EXP-A, Z-EXP-B); what GenKey does on an interrupted EEPROM write (U1) and the SSHDA part's factory configuration (U4) are not in any public document
 
-*Bound to:* `v2/docs/feasibility/ZEROIZE.md@3634103c6b9a5539`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/ZEROIZE.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the file at e7a7b9d05a0560ed
+
+*Bound to:* `v2/docs/feasibility/ZEROIZE.md@e7a7b9d05a0560ed`
 
 *Source (verified):* `owner ruling D-03`; `v2/docs/feasibility/ZEROIZE.md`; `v2/vendor/microchip/microchip-atecc608b-datasheet.pdf (summary sheet: 'A complete document is available under NDA')`; `v2/ecad/tools/gen_sch_b.py:1046`; `v2/docs/MESHSAT-709-geometry-appendix.md:2789`
 
@@ -1448,7 +1476,9 @@ Prototype 1: in the core D-01 names. 8 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/ZEROIZE.md sections 1 and 7 read at eadbe571: "documentary feasibility CLOSED; physical demonstration OPEN"; the mechanism rows are closed at desk (E1 to E9, E13), the part rows (Z-EXP-A), the interrupted-power rows (Z-EXP-B, U1) and the panel's resume (Z-EXP-C) are OPEN, P8 is closed by the netlist for the modules and bounded by firmware rule Z-C3 for the supervisors (residual R7)
 
-*Bound to:* `v2/docs/feasibility/ZEROIZE.md@3634103c6b9a5539`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/ZEROIZE.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the file at e7a7b9d05a0560ed
+
+*Bound to:* `v2/docs/feasibility/ZEROIZE.md@e7a7b9d05a0560ed`
 
 *Feasibility page:* `v2/docs/feasibility/ZEROIZE.md`, blocker ids FB-ZER-1, Z-EXP-A, Z-EXP-B, Z-EXP-C; *owner:* The session runs the experiments once the parts exist; the spend for the bench parts is the owner's under D-09 (L-06); residuals R2 and R7 go to the D-09 security reviewer (R-SEC).; *holds:* REQ-035, ASM-005, REQ-038; layout entry of B.
 
@@ -2371,7 +2401,7 @@ SESSION items are engineering the session decides and records with authority SES
 | S-28 | SESSION | Every transmitter configured to the operator's licence and the EU limits, with a band lock on the VHF path and the HF and SDR transmit paths limited to the licensed bands (D-04). | REQ-054, REQ-055, REQ-067, REQ-056 |
 | S-32 | SESSION | SOS firmware (D-10): the configured recipient list, the message format with the position, the bearer order with Iridium first when nothing else is up, and the EMCON queue with its operator notice. | REQ-060 |
 | S-33 | SESSION | The shade accessory of D-02e (a lid sun shield or a tarp) specified and added to the kit list. | ASM-006 |
-| S-34 | SESSION | The review packets and requests of D-09 and the routes of REVIEW-ROUTES.md: board packets for A, B and D at the revision that carries round 7 (C, D, E and P exist at 1f614233, D's superseded by 458b2873); the battery packet's manifest check passing at the commit whose link is sent; the R-SEC request once ZEROIZE.md's drafts are filed; the EMC request once the prototype exists. Nothing has been sent. | REQ-037, FEA-005, REQ-070 |
+| S-34 | SESSION | The review packets and requests of D-09 and the routes of REVIEW-ROUTES.md: board packets for A, B and D at the revision that carries round 7 (C, D, E and P exist at 1f614233, D's superseded by 458b2873); the battery packet's manifest check passing at the commit whose link is sent; the R-SEC request (ZEROIZE.md's working records filed under v2/docs/records/rv-zer/ at 428c697c); the EMC request once the prototype exists. Nothing has been sent. | REQ-037, FEA-005, REQ-070 |
 | S-35 | SESSION | The ATECC608B slot map of ZEROIZE.md section 3.1 shown on the fitted MPN to let both key-encryption keys be destroyed after every zone lock, including across an interrupted GenKey (Z-EXP-A and Z-EXP-B), with the SLB 9673 TPM 2.0 on board B's U8 site as the fallback under switch conditions S1 and S2. The desk half is closed by ZEROIZE.md (9b0635d1). | REQ-035, ASM-005, FEA-001 |
 | S-36 | SESSION | The whole-kit common modes (the device rails, the J_PANEL ribbon, the Ethernet switch and the kit I2C bus) each mitigated, or recorded as a residual with its reason, at Review C; among them ZEROIZE.md's R4: for a module that does not host bank 1, a drive's unlock also depends on the bank-1 host module and the KSZ9897R. | ASM-002 |
 | S-37 | SESSION | A delivery and latency target per bearer for the MeshSat Bridge's acceptance on the kit. | REQ-003 |
@@ -2440,7 +2470,7 @@ Every item that has left the open list, and what closed it: an owner ruling, a s
 | CFL-003 | deferred | MUST_JUSTIFY | SCHEMATIC | - | its own sources disagree: v2/ecad/tools/pcb_board_facts.yaml:281-282; v2/ecad/tools/pcb_envelope.yaml:15-19 |
 | REQ-030 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/EMCON.md sections 0 and 7 read at eadbe571, on the round-6 netlists main carries since 458b2873: of 17 transmitters no row is closed on the bench and one (the 30 W PA) closes at desk; the line's fail-safe hold with its source gone is UNDECIDED (L2), and a loss of +3V3_DEV on board B releases the gates of nine radios (L3: six CM5 radios, two AW7915 cards, the RM520N-GL), so t... |
 | REQ-032 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/EMCON.md sections 0, 4.5 and 7 read at eadbe571: the RM520N-GL's only inhibit as drawn is W_DISABLE1#, a firmware-mediated airplane mode whose timing, boot behaviour and configurability Quectel does not state; SD-EMC-1's supply removal is not drawn on board B; v2/docs/feasibility/EMCON.md section 7, L3: with +3V3_DEV lost on board B the gates of the six CM5 radios, the two A... |
-| CON-021 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/EMCON.md section 0 read at eadbe571: as drawn no indication of the EMCON lines is independent of firmware (the TX lamp's supply exists only while the panel controller drives PANEL_PWM); board C's committed netlist v2/ecad/pcb-c-display-c8/out/pcb-c-display.net carries no EMCON lamp |
+| CON-021 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/EMCON.md section 0 read at eadbe571: as drawn no indication of the EMCON lines is independent of firmware (the TX lamp's supply exists only while the panel controller drives PANEL_PWM); board C's committed netlist v2/ecad/pcb-c-display-c8/out/pcb-c-display.net carries no EMCON lamp; v2/docs/feasibility/EMCON.md re-read at the records filing of 26 September 2026 (428c697c): o... |
 | CFL-016 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/PANEL.md section 6 read at eadbe571 ("The three compute modules' own WiFi and Bluetooth have no hardware path from EMCON") against v2/ecad/tools/gen_sch_b.py:716-741 and the committed netlist v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net (the module disables pulled low by open drains on EMCON_ON); v2/docs/V2-SPEC.md:76 read at eadbe571 lists the D-05, D-11, D-12, D-15 and D-17 changes... |
 | CFL-017 | deferred | ADVISORY | SCHEMATIC | - | its own sources disagree: v2/docs/TEST-PLAN.md:18-19; v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 2; v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 5 |
 | CFL-008 | deferred | ADVISORY | SCHEMATIC | - | its own sources disagree: v2/docs/TEST-PLAN.md:20; v2/docs/TEST-PLAN.md:23; v2/docs/MESHSAT-709-geometry-appendix.md:2864 |
@@ -2455,13 +2485,13 @@ Every item that has left the open list, and what closed it: an owner ruling, a s
 | record | prototype 1 | effect | at | class | evidence |
 |---|---|---|---|---|---|
 | FEA-003 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/FAILOVER-FABRIC.md sections 1, 8 and 10 read at eadbe571: 202 of 202 rows with an expected far end read OK on the round-6 netlist; FAB-01 to FAB-04 stand on main and on the candidate; the escape trial Q-B-ESC-1 is specified and not run, and the eight-layer whole-board run of decision 43 has not been run; none of FB-FAB-1 to FB-FAB-8 is closed; v2/docs/feasibility/FAILOVER-FA... |
-| FEA-006 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/DECOUPLING.md sections 1 and 10 read at eadbe571: the 3 mm number is a project heuristic for every part it is applied to and the rule is per class; "Nothing is laid for this ruling yet"; DEC-001's PASS readings on boards B and P are 33 blanket allowances, not evidence; the TPA6132A2 on board D is fitted with 1 uF where its maker asks 2.2 uF |
+| FEA-006 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/DECOUPLING.md sections 1 and 10 read at eadbe571: the 3 mm number is a project heuristic for every part it is applied to and the rule is per class; "Nothing is laid for this ruling yet"; DEC-001's PASS readings on boards B and P are 33 blanket allowances, not evidence; the TPA6132A2 on board D is fitted with 1 uF where its maker asks 2.2 uF; v2/docs/feasibility/DECOUPLING.md... |
 | CON-017 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | (1) and (2) hold: v2/ecad/tools/gen_sch_b.py:281-289 and :1145-1146 read at eadbe571 name STM32H743VIT6 (JLCPCB C114409) with the pin table checked again for both parts, the committed netlist v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net carries U41, U51 and U61 as STM32H743VIT6, and 458b2873's parity run traced every difference to a finding; (3) and (4) cannot be decided: no supervisor firmw... |
-| FEA-004 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/POWER-THERMAL.md sections 0 and 11 read at eadbe571 (Status: PROVISIONAL): runtime 2.5 h and 1.7 h aged on bounds of 1.3 to 3.3 h and 0.9 to 2.3 h; D-11's thresholds set PROVISIONAL; F2's margin during a key-down unknown; the hot end undecided until the enclosure conductance is measured |
+| FEA-004 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/POWER-THERMAL.md sections 0 and 11 read at eadbe571 (Status: PROVISIONAL): runtime 2.5 h and 1.7 h aged on bounds of 1.3 to 3.3 h and 0.9 to 2.3 h; D-11's thresholds set PROVISIONAL; F2's margin during a key-down unknown; the hot end undecided until the enclosure conductance is measured; v2/docs/feasibility/POWER-THERMAL.md re-read at the records filing of 26 September 2026... |
 | CON-006 | core | BLOCKER | PLACED_BOARD | DESK_REVIEW | v2/docs/CASE-MARGINS.md section 3.2 read at eadbe571: of the pack's four margins, M4b (east face to the east wall) and M6 (pack top under B16's underside) are MET and M4a (the east corner to Peli's R 15.88 fillet) and M5 (the pack group in Y between the east legs) are OPEN until the pack's hold-down fixes its place (section 7) |
 | REQ-019 | core | BLOCKER | PLACED_BOARD | DESK_REVIEW | v2/docs/CASE-MARGINS.md sections 0 and 3 read at eadbe571: of 70 computed margins 35 are MET and 35 OPEN, none NOT MET; the OPEN rows rest on the case's unpublished tolerance, the build's allowances or a pick, and section 7 names what closes each (nominal CAD establishes no fit, blind-mate alignment or seal) |
 | CON-010 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | the trace holds on the committed netlist v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net at eadbe571: U12 KEY = PTT_ANY AND TX_INHIBIT_n, U14 PA_KEY = KEY AND PA_EN, U15 (the VGG regulator) enabled by PA_KEY, U13 an open drain from KEY to the SA868's PTT (v2/ecad/tools/gen_sch_d.py:532-534 and :672); board A's U26 gives PA_EN = EMCON_HW AND PA_SW_EN (v2/ecad/tools/gen_sch_a.py:1102-1103); it cannot de... |
-| FEA-002 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/EMCON.md sections 0 and 7 read at eadbe571: "Radios dark" is feasible with the ruled architecture with two conditions (the 5G row only at the cost SD-EMC-1 accepts, the shared element only with a hardware EMCON lamp); no transmitter's EMCON is closed on the bench, one row (the 30 W PA) closes at desk |
+| FEA-002 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/EMCON.md sections 0 and 7 read at eadbe571: "Radios dark" is feasible with the ruled architecture with two conditions (the 5G row only at the cost SD-EMC-1 accepts, the shared element only with a hardware EMCON lamp); no transmitter's EMCON is closed on the bench, one row (the 30 W PA) closes at desk; v2/docs/feasibility/EMCON.md re-read at the records filing of 26 September... |
 | ASM-005 | core | MUST_JUSTIFY | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/ZEROIZE.md sections 1, 4 and 7 read at eadbe571: documentary feasibility CLOSED (the documents say GenKey mode 0x04 replaces a key in an updatable, non-lockable slot after every zone lock; VERIFIED that they say it, SUPPORTED for the fitted part); physical demonstration OPEN (Z-EXP-A, Z-EXP-B); what GenKey does on an interrupted EEPROM write (U1) and the SSHDA part's factory... |
 | FEA-001 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/ZEROIZE.md sections 1 and 7 read at eadbe571: "documentary feasibility CLOSED; physical demonstration OPEN"; the mechanism rows are closed at desk (E1 to E9, E13), the part rows (Z-EXP-A), the interrupted-power rows (Z-EXP-B, U1) and the panel's resume (Z-EXP-C) are OPEN, P8 is closed by the netlist for the modules and bounded by firmware rule Z-C3 for the supervisors (resid... |
 | REQ-044 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | the netlist clause holds on the committed netlist v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net at eadbe571 (v2/ecad/tools/gen_sch_p.py:243, :288 and :355-430): the BQ7720700 second level (cell OV 4.325 V and UV 2.25 V, open wire, OT on its own thermistor J_TS2) and the BQ4050's FUSE output both drive FUSE_G through R29 and R30, which closes Q3 on the Eaton SCF9550 F2's heater once the arming jumper... |
