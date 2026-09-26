@@ -102,6 +102,32 @@ lcsc_readings:
   endpoint: "GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=<code>"
   time_utc: "2026-09-25T21:53Z"
 
+# ADDED 26 SEPTEMBER 2026 (MESHSAT-1357, review stream BAT, third cycle). Two TI E2E answers that the battery review packet
+# (v2/docs/review-packets/battery/) cites, filed as HTML snapshots saved from the runner with curl on 26 September 2026.
+# They belong to the `charger` entry below and to `pack-secondary-protector` (an entry stream PKT adds in the same review);
+# they sit here, outside `parts:`, so that neither stream edits the other's entry. The integrator may move each under its
+# entry's documents. A snapshot's sha256 identifies this copy only; the quoted words, read back from the saved file, are
+# the evidence. Nothing was posted to either thread.
+battery_review_documents:
+  - for_entry: charger
+    path: "v2/vendor/ti/ti-e2e-1316778-bq25731-chargecurrent-por.html"
+    doc_id: "TI E2E thread 1316778, 'BQ25731: BQ25731 ChargeCurrent Start Up Behavior'"
+    revision: "forum thread; the answers quoted are timestamped 2024-01-23T21:39Z and 2024-01-24T20:20Z in the page"
+    url: "https://e2e.ti.com/support/power-management-group/power-management/f/power-management-forum/1316778/bq25731-bq25731-chargecurrent-start-up-behavior"
+    fetched: "2026-09-26, curl from the runner, 147,958 bytes"
+    sha256: "96c511cf238d00182bcd82c5e7bdce3d25571c49cbd77f6b57a9171159f0d8c4"
+    status: VERIFIED
+    matches_fitted: "yes: the thread is about the BQ25731, and the TI expert's answer reads 'Looks like there is a mistake in the description. The POR value is indeed 256mA.' and, on holding charge off at start-up, 'you can use the CELL_BATPRESZ=0V at startup with BQ25731 as well because it will disable battery charging'"
+  - for_entry: pack-secondary-protector
+    path: "v2/vendor/battery/ti-e2e-1421182-bq77207-application.html"
+    doc_id: "TI E2E thread 1421182, 'BQ77207: Help understanding application configuration'"
+    revision: "forum thread; the answer quoted is timestamped 2024-10-04T21:04Z in the page"
+    url: "https://e2e.ti.com/support/power-management-group/power-management/f/power-management-forum/1421182/bq77207-help-understanding-application-configuration"
+    fetched: "2026-09-26, curl from the runner, 132,619 bytes"
+    sha256: "2038e7af80b8c35e3b0a92c07f9d0edd482e146bb0e0bf80072c0c2b6428610c"
+    status: VERIFIED
+    matches_fitted: "partial: the thread is about the BQ77207 family, not the 00700 variant. The TI engineer's answer reads 'At the moment no current released versions of this device have that capability' (an active-low COUT/DOUT) and 'This protector is most commonly used as a secondary protector meant to flow up a FUSE' (sic; read as 'blow')"
+
 parts:
 
   - id: cm5-receptacle

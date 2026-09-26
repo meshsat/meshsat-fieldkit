@@ -1,0 +1,200 @@
+{
+ "kind": "netlist",
+ "phase_labels": [
+  [
+   "P4"
+  ],
+  [
+   "P4"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  },
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  }
+ ],
+ "design_header": [
+  [
+   "/root/rv/bat/run/base/v2/ecad/pcb-p-pack-p2/pcb-p-pack.kicad_sch",
+   "2026-09-26T13:32:55+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ],
+  [
+   "/root/rv/bat/run/new/v2/ecad/pcb-p-pack-p2/pcb-p-pack.kicad_sch",
+   "2026-09-26T13:33:07+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ]
+ ],
+ "content_hash": [
+  "9bf3a3a46b5d95a6",
+  "c8a3d456e5d2936b"
+ ],
+ "counts": {
+  "comps": [
+   82,
+   85
+  ],
+  "nets": [
+   54,
+   55
+  ]
+ },
+ "comps_only_committed": [],
+ "comps_only_other": [
+  "J_TS2",
+  "R34",
+  "TP15"
+ ],
+ "comps_changed": [
+  [
+   "R33",
+   {
+    "value": [
+     "10k",
+     "18k"
+    ],
+    "fields": [
+     {
+      "Footprint": "Resistor_SMD:R_0603_1608Metric"
+     },
+     {
+      "LCSC": "C25810",
+      "Footprint": "Resistor_SMD:R_0603_1608Metric"
+     }
+    ],
+    "properties": [
+     {
+      "Sheetname": "",
+      "Sheetfile": "pcb-p-pack.kicad_sch",
+      "ki_keywords": "R res resistor",
+      "ki_fp_filters": "R_*"
+     },
+     {
+      "LCSC": "C25810",
+      "Sheetname": "",
+      "Sheetfile": "pcb-p-pack.kicad_sch",
+      "ki_keywords": "R res resistor",
+      "ki_fp_filters": "R_*"
+     }
+    ]
+   }
+  ],
+  [
+   "U2",
+   {
+    "value": [
+     "BQ7720700DSSR: second-level cell OV 4.325 V / UV 2.25 V / open wire, TS on a fixed 10k, 3S-7S (SLUSEG7D)",
+     "BQ7720700DSSR: second-level cell OV 4.325 V / UV 2.25 V / open wire / OT 70 C on its own 103AT-2 (J_TS2), 3S-7S (SLUSEG7D)"
+    ]
+   }
+  ]
+ ],
+ "comps_uuid_shifted": 24,
+ "nets_only_committed": [],
+ "nets_only_other": [
+  "/TS_SEC_J"
+ ],
+ "nets_changed": [
+  [
+   "/TS_SEC",
+   [],
+   [
+    [
+     "R34",
+     "1",
+     "",
+     "passive"
+    ],
+    [
+     "TP15",
+     "1",
+     "1",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "GND",
+   [],
+   [
+    [
+     "J_TS2",
+     "2",
+     "Pin_2",
+     "passive"
+    ]
+   ]
+  ]
+ ],
+ "changed_lines": 153,
+ "changed_lines_sample": [
+  "-      (tstamps \"f4dc78c0-41bf-5c33-af0b-b269a35eb439\"))",
+  "+      (tstamps \"c54beb5e-941e-5145-a5cd-17950c7c27f3\"))",
+  "-      (tstamps \"093d6e4e-9b42-572b-aece-38fb1012ec95\"))",
+  "+      (tstamps \"758e252a-3053-520e-bd63-2bbe253120d6\"))",
+  "-      (tstamps \"cccf765e-a8cc-5429-9aa2-a5bb0fe9f46f\"))",
+  "+      (tstamps \"14431245-c58a-5b21-8560-413287bd5f08\"))",
+  "-      (tstamps \"30dfe364-1293-5e8d-b919-cf86f9b36dc4\"))",
+  "+      (tstamps \"62b05f96-11d0-5e3f-889e-6a39f9302ba8\"))",
+  "-      (tstamps \"910c65bf-b6f5-5397-a3c6-26547f47ea9f\"))",
+  "+      (tstamps \"908e2eb3-b524-53da-914c-a5a5d510b1bd\"))",
+  "+    (comp (ref \"J_TS2\")",
+  "+      (value \"second-level cell thermistor socket, JST-PH 1x2 (Semitec 103AT-2 on the hottest cell): 1 TS_SEC_J, 2 VSS\")",
+  "+      (footprint \"Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical\")",
+  "+      (fields",
+  "+        (field (name \"LCSC\") \"C5251182\")",
+  "+        (field (name \"Footprint\") \"Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical\")",
+  "+        (field (name \"Datasheet\"))",
+  "+        (field (name \"Description\")))",
+  "+      (libsource (lib \"Connector_Generic\") (part \"Conn_01x02\") (description \"Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)\"))",
+  "+      (property (name \"LCSC\") (value \"C5251182\"))",
+  "+      (property (name \"Sheetname\") (value \"\"))",
+  "+      (property (name \"Sheetfile\") (value \"pcb-p-pack.kicad_sch\"))",
+  "+      (property (name \"ki_keywords\") (value \"connector\"))",
+  "+      (property (name \"ki_fp_filters\") (value \"Connector*:*_1x??_*\"))",
+  "+      (sheetpath (names \"/\") (tstamps \"/\"))",
+  "+      (tstamps \"30dfe364-1293-5e8d-b919-cf86f9b36dc4\"))",
+  "-      (tstamps \"63326a10-cd35-5ee1-92a7-bee3cc4a3075\"))",
+  "+      (tstamps \"faf0deb8-ace2-5063-83eb-9c17dcfb6b5a\"))",
+  "-      (tstamps \"a7cbf911-3376-5e14-85f2-2d11c29a506d\"))",
+  "+      (tstamps \"dacbc2cd-86f8-5135-9445-cc7df7c5af41\"))",
+  "-      (tstamps \"0c1e51d4-8b61-5b64-80b8-03c65b6e729a\"))",
+  "+      (tstamps \"71efe96e-9010-5675-9338-66a31fd6c764\"))",
+  "-      (tstamps \"64e920cb-20e2-5a28-b3e5-12cc28745326\"))",
+  "+      (tstamps \"7a5f4926-42a1-5013-8257-c78377ae1a37\"))",
+  "-      (tstamps \"ce5cb7b0-f4b3-587d-8c94-b88f7caf9e28\"))",
+  "+      (tstamps \"a7cbf911-3376-5e14-85f2-2d11c29a506d\"))",
+  "-      (value \"10k\")",
+  "-      (footprint \"Resistor_SMD:R_0603_1608Metric\")",
+  "-      (fields",
+  "-        (field (name \"Footprint\") \"Resistor_SMD:R_0603_1608Metric\")",
+  "-        (field (name \"Datasheet\"))",
+  "-        (field (name \"Description\")))",
+  "-      (libsource (lib \"Device\") (part \"R\") (description \"Resistor\"))",
+  "+      (value \"18k\")",
+  "+      (footprint \"Resistor_SMD:R_0603_1608Metric\")",
+  "+      (fields",
+  "+        (field (name \"LCSC\") \"C25810\")",
+  "+        (field (name \"Footprint\") \"Resistor_SMD:R_0603_1608Metric\")",
+  "+        (field (name \"Datasheet\"))",
+  "+        (field (name \"Description\")))",
+  "+      (libsource (lib \"Device\") (part \"R\") (description \"Resistor\"))",
+  "+      (property (name \"LCSC\") (value \"C25810\"))",
+  "+    (comp (ref \"R34\")",
+  "+      (value \"270R\")",
+  "+      (footprint \"Resistor_SMD:R_0603_1608Metric\")",
+  "+      (fields",
+  "+        (field (name \"LCSC\") \"C22966\")",
+  "+        (field (name \"Footprint\") \"Resistor_SMD:R_0603_1608Metric\")",
+  "+        (field (name \"Datasheet\"))",
+  "+        (field (name \"Description\")))"
+ ],
+ "result": "DIFFERENT"
+}

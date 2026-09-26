@@ -23,10 +23,12 @@ PRF15BB103RB6RC chip PTC beside the protection FETs from PTC to BAT with 0.1 uF 
 The high-side protection is two CSD17570Q5B PowerPAK N-FETs in series with common drain (the charge FET's source at the protected cell
 terminal, the discharge FET's source at PACK+), 5.1 kohm gate drive and 10 Mohm gate-source each, driven by CHG and DSG. THE SECOND LEVEL
 (decision 40 / D-15, round 4): a TI BQ7720700 (BQ77207 family, 3S to 7S, cell over-voltage 4.325 V, cell under-voltage 2.25 V, open wire)
-on its own 1 kohm / 0.1 uF tap filters, with its TS pin held by a fixed 10 kohm to VSS (R33, which reads as 25 C), so neither its fixed
-70 C over-temperature nor an under-temperature it may carry can ever fire the fuse (fix-up of 26 September 2026, see U2 below: owner
-ruling D-02a makes +71 C storage and +55 C operation margins the kit must survive and recover from). Its COUT (over-voltage, open wire,
-oscillator fault) and the gauge's FUSE output both drive the gate of an AO3400A that heats an Eaton SCF9550-30-05
+on its own 1 kohm / 0.1 uF tap filters, with its own Semitec 103AT-2 on TS through J_TS2 behind a 270 ohm series and 18 kohm shunt
+network (R34, R33), so its fixed 70 C over-temperature opens the fuse as TI intends while no under-temperature the silicon may carry
+can, at TI's stated UT accuracy (review of 26 September 2026, stream BAT, which withdraws the fixed 10 kohm the fix-up of that morning
+had put on TS, and whose second cycle re-dimensioned the first 200 ohm / 22 kohm network against TUT_ACC; see U2 below). Its COUT
+(over-voltage, open wire, over-temperature, oscillator fault) and the gauge's FUSE output both drive the gate of an AO3400A that heats
+an Eaton SCF9550-30-05
 self-control fuse (a three-terminal chemical fuse, 30 A, rated for four to five cells, operating -20 to +60 C) in series between the 25 A
 blade and the charge FET, through a normally open arming jumper JP1 that is closed at commissioning (after the gauge's golden image is
 written and read back, which is the data-flash verification D-15 names). Its DOUT (under-voltage) pulls the discharge FET's gate to
@@ -253,28 +255,36 @@ part("F1", "Device", "Fuse", "25 A mini blade (Keystone 3568 holder): the pack's
 # eaton.com copy of 5 May 2025, byte-identical to LCSC's) states "Operating temperature: -20 C to +60 C", reliability runs at +105 C for
 # 1000 h and -40 C for 500 h, cURus recognition E19180, 100 percent of rating for 1 hour minimum, 200 percent opens within 60 s, and the
 # heater opens it within 60 s at its operating voltage; page 3 gives the maker's recommended pad layout, from which the land is drawn.
-# So the -20 C floor of D-02a's -20 to +40 C use envelope is met by a stated rating, and the land is the maker's. The +60 C operating ceiling sits above the
-# -20 to +40 C use envelope plus the ruled internal rise with one module above +35 C (D-02b); at the +55 C operating margin of TEST-PLAN
-# E3 the part is beyond its operating rating and inside its +105 C reliability run (D-02a: survive and recover). The heater's 10.5 V
+# So the -20 C floor of D-02a's -20 to +40 C use envelope is met by a stated rating, and the land is the maker's. The heater's 10.5 V
 # floor is 2.63 V per cell, so a 4S block below that may not open it: the reason the second level's under-voltage holds the discharge FET
 # instead of firing the fuse (U2 below). PINS PER ELX1135 PAGE 1: 1 and 2 are the fuse ends on the two long edges (the element runs
 # across the body), 3 the heater on the short edge. LCSC C3670061 (JLC API 26 September 2026: Eaton, stock 0, 1.09 USD); Digi-Key
 # 283-SCF9550-30-05CT-ND, active, 907 in stock, 5.82 USD (read 26 September 2026): the hand-fit route until JLC stocks it (O-3).
-# ELX1135's other temperature line, "Storage temperature: -10 C to +40 C < 90% RH, Storage duration: 1 year", is read by this session as
-# the shelf condition of the reeled part before assembly (a one-year duration fits nothing else), not a limit on the mounted part,
-# whose endurance is the +105 C 1000 h and -40 C 500 h runs of the same page: those bracket TEST-PLAN E3's +71 C and E4's -33 C
-# storage. Eaton publishes no current derating against temperature (ELX1135 has no derating curve), EVEN INSIDE THE USE ENVELOPE:
-# the 50 C that the ruled rise gives (40 C ambient plus about 10 K with one module) counts the air, not the part, and at the 18 A
-# peak F2 dissipates 18 x 18 x 1.0 to 2.5 mohm (ELX1135 fuse DCR) = 0.32 to 0.81 W in its own body on top of that. At 60 percent
-# of its 30 A the risk is judged low, not proven; at E3's +55 C operating margin the part sits at about 65 to 71 C before its own
-# heating, above its 60 C operating rating (a recorded residual, drafts/r4-decisions.md O-8).
+# THE TEMPERATURE READING, REDONE FOR THE ASSEMBLED PACK (review of 26 September 2026 section 2, stream BAT;
+# v2/docs/review-packets/battery/FUSE-INTERPRETATION.md). ELX1135 page 4 lists "Operating temperature: -20 C to +60 C", then
+# "Storage temperature: -10 C to +40 C < 90% RH" with "Storage duration: 1 year", then three exposures (+105 C 1000 h, 85 C / 85 %
+# RH 500 h, -40 C 500 h) with no acceptance criteria. The storage line carries a humidity and a shelf duration and sits beside the
+# packaging data, so it is read as the condition of the unmounted, reeled part; once soldered into the pack the part is in circuit
+# whether the kit runs or not, so the OPERATING range governs it in use and in storage alike. The three exposures are qualification
+# runs, not ratings, and nothing here relies on them (the morning's fix-up had read them as covering E3's +71 C and E4's -33 C; that
+# reading is withdrawn). The pack's own storage is bounded by its CELLS, +60 C for one month (Samsung 35E Ver. 1.1 3.13), which is
+# F2's operating ceiling, so the pack is reconciled to the cells' limits rather than F2 being claimed for +71 C. Eaton publishes no
+# current derating against temperature (ELX1135 has no derating curve), EVEN INSIDE THE USE ENVELOPE: the 50 C that the ruled rise
+# gives (40 C ambient plus about 10 K with one module) counts the air, not the part, and at the 18 A peak F2 dissipates 18 x 18 x 1.0
+# to 2.5 mohm (ELX1135 fuse DCR) = 0.32 to 0.81 W in its own body on top of that. At 60 percent of its 30 A the risk is judged low,
+# not proven: F2's case temperature is a thermal-test reading, and the derating and the storage line are questions put to Eaton in
+# the packet. The alternative read for it, Littelfuse ITV9550L1430 (4 cells, 30 A, 80 A; ITV9550 30A datasheet revised 01/22/20),
+# publishes a derating (25 A at 60 C) but operates only from -10 C, so it fails the use envelope's -20 C and is not taken.
 # BREAKING CAPACITY: 80 A (ELX1135 page 2, the same figure as the SFK-1830A, so no regression), against a prospective fault of 240
 # to 480 A at this node (pcb_energy_chain.yaml, stage PACK_CELLS). F2 is not meant to clear a hard short. The gauge's short circuit
 # in discharge opens the FETs after its programmed delay (SLUSC67B 6.32: tSCD1 0 to 915 us, or to 1850 us with SCDDx2, plus at most
-# 160 us detection; the setting is the golden image's, O-10), inside F1's melting time; if the FETs have failed closed, the 25 A ATOF
-# blade F1 in series (1000 A interrupting at 32 VDC, I2t 1000 A2s, melting in 4.3 to 17 ms over that range, the same yaml stage) must
-# open before F2's element does. ELX1135 publishes no melting I2t for F2, so neither order is proven for F2: an energy-chain entry
-# for F2 (O-13) and the D-09 battery-and-protection review packet.
+# 160 us detection; the setting is the golden image's, O-10), inside F1's melting time; if the FETs have failed closed, the 25 A blade
+# F1 in series must open before F2's element does. F1 IS A MINI BLADE: its Keystone 3568 holder takes "Littelfuse Mini 297 or 997
+# series/Bussmann ATM" (Keystone catalogue page 42, v2/vendor/keystone/M65p42.pdf), and the Littelfuse 297 25 A is 1000 A interrupting
+# at 32 VDC with a typical I2t of 625 A2s (v2/vendor/keystone/littelfuse-297-ficcorp.pdf), melting in about 2.7 to 10.9 ms over 480 to
+# 240 A; the yaml stage's ATOF figures (I2t 1000 A2s) belong to the regular ATO size, which the holder does not take (a record defect
+# for the yaml's owner, listed in the packet). ELX1135 publishes no melting I2t for F2, so neither order is proven for F2: an
+# energy-chain entry for F2 (O-13) and a question in the D-09 battery-and-protection review packet.
 part("F2", "Connector_Generic", "Conn_01x03", "SCF9550-30-05 self-control fuse (Eaton, 30 A, 4-5 cells): 1 and 2 the fuse, 3 the heater", "SCF",
      {"1": "FUSED", "2": "SCP_OUT", "3": "SCP_HTR"}, "C3670061")
 pfet5("Q1", "CSD17570Q5B 30 V N-FET, charge switch", "CHG_G", "SW", "SCP_OUT", "C529279"); pfet5("Q2", "CSD17570Q5B 30 V N-FET, discharge switch", "DSG_G", "SW", "PACK_P", "C529279")
@@ -360,31 +370,53 @@ part("W_BN", "Connector", "Conn_01x01_Pin", "cell block B- (12 AWG from the bloc
 # 900 to 1100 ohm) with CIN = 0.1 uF as a LADDER, each capacitor across its own cell and the lowest to VSS (Figure 8-3); the unused inputs
 # V5, V6 and V7 tied to the top cell's input at the pin (Figure 8-3 ties V6 and V7 to V5 for five cells); VDD from the top of the stack
 # through RVD = 300 ohm (Table 8-1: 100 to 1k, 300 nominal) with CVD = 0.1 uF.
-# THE TS PIN SEES A FIXED 10 KOHM TO VSS, SO THE SECOND LEVEL HAS NO TEMPERATURE FUNCTION (fix-up of 26 September 2026, the
-# reviewer's blocking finding; taken by the session under the owner's standing rule of 26 September 2026, drafts/r4-decisions.md RP-17).
-# The first pass put its own 103AT-2 on TS through a socket J_TS2 (70 C threshold 2195 ohm against the 103AT-2's 2.228 kohm at 70 C).
-# But SLUSEG7D Table 7-1 drives BOTH outputs on an over-temperature, and COUT fires the chemical fuse on this board: the 70 C +-5 C trip
-# (TOT_ACC) would open F2 for good at TEST-PLAN E3's +71 C storage and within reach of its +55 C operation with the ruled +10 to +16 K
-# rise, where owner ruling D-02a asks the kit to survive AND RECOVER. No standard variant disables over-temperature (the highest
-# threshold, 83 C, belongs to 00704, which has a 4.275 V OV and an open-drain COUT); a custom BQ77207xy is "contact TI".
-# WHY A RESISTOR AND NOT THE OPEN PIN THE DATA SHEET ALLOWS ("TS ... Temperature sensor input. If not used, leave it NC", section 5):
-# an open NTC input reads as an infinite resistance, the coldest possible, and the same data sheet lists an UNDER-temperature
-# protection (6.5: TUT -30 to 0 C, RUT_EXT_NTC 26.7 to 111.1 kohm) that drives BOTH outputs (7.1: "If an undertemperature,
-# overtemperature, or open-wire fault is detected, then both the DOUT and COUT are triggered"), while the device comparison table
-# (section 4) has no UT column for any variant, so whether the 00700 carries it is not stated. With TS open and UT enabled, COUT would
-# be active from power-up and the fuse would open the moment JP1 is closed. 10 kohm (the 103AT's value at 25 C, ratiometric against
-# the internal 20 kohm RTC) sits a factor 4.6 above the 00700's own OT resistance (2195 ohm, 70 C), 3.5 above the highest of any
-# option (2850 ohm, 62 C), and a factor 2.7 below the lowest UT resistance listed (26.7 kohm, about 0 C on a 103AT; the others are
-# 42.2, 68.9 and 111.1 kohm), so it reads as neither fault whatever the silicon carries: the design is indifferent to the unknown
-# instead of relying on a commissioning check to find it. A resistor on TS is within the pin's use (the NTC case with a constant
-# temperature); TI's note against an external CAPACITOR on TS (7.3.3, CTS at most 200 pF) is kept, there is none. A TS-to-VSS short
-# (a solder bridge at R33, or pin 12 to the exposed pad) would read as over-temperature and fire the fuse once armed; JP1 is closed only
-# after TP11 has been read low with the cells on (O-9), which finds it. Over-temperature stays with the gauge's four NTCs (recoverable
-# FET action and its own permanent failures, set by the golden image, O-10) and the PTC element beside the FETs. R33 is MAP's "10k"
-# (C25804, the code R14 and R15 already use).
-synth("U2", "BQ77207", "BQ7720700DSSR: second-level cell OV 4.325 V / UV 2.25 V / open wire, TS on a fixed 10k, 3S-7S (SLUSEG7D)", "DSS12",
+# THE SECOND LEVEL'S OVER-TEMPERATURE IS RESTORED (review of 26 September 2026 section 2, stream BAT; taken by the session under the
+# owner's standing rule of 26 September 2026; v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md, which lists every netlist change).
+# HISTORY: the round-4 first pass had its own 103AT-2 on TS through J_TS2; the fix-up of the same morning (drafts/r4-decisions.md
+# RP-17) replaced it by a fixed 10 kohm so that the 70 C trip, which drives COUT (SLUSEG7D Table 7-1) and so opens F2 for good, could
+# not fire during TEST-PLAN E3's +71 C storage and +55 C operation margins (D-02a: survive and recover). The review answered that a
+# qualification target is not by itself a technical reason to disable a protective function, and the cells settle it: Samsung's
+# INR18650-35E allows storage at no more than +60 C for one month and discharge at no more than +60 C at the cell surface (Ver. 1.1,
+# 3.12 and 3.13, v2/vendor/battery/samsung-35e-orbtronic.pdf; the 2016 Version 1.0, samsung-35e-akkuzentrum.pdf, gives the same 60 C),
+# and E3's own pass line already reads "pack under 60 C". A pack held at +71 C is outside its cells' rating whatever this board does,
+# so the margin is reconciled for the pack (stored at its cells' limit, not at +71 C), and the protection stays. With the gauge's
+# discharge limit at 60 C and the secondary's window at about 63 to 77 C (below), a pack kept inside its cells' rating never reaches it.
+# THE CIRCUIT: TI's arrangement (SLUSEG7D Figure 8-1, RNTC from TS to VSS) with the second level's OWN sensor, a Semitec 103AT-2 taped
+# to the cell expected hottest (Samsung's 2016 note: "Protection set should be based on the location of the cell surface with the
+# highest temp increase part of the battery pack"), on its own socket J_TS2 so that one unplugged lead blinds only one level, plus two
+# resistors that make it indifferent to what the data sheet leaves open: R34 (270 ohm) in series with the NTC and R33 (18 kohm) from
+# TS to VSS. SLUSEG7D 6.5 lists an under-temperature detection (TUT -30 to 0 C; RUT_EXT_NTC 26.7, 42.2, 68.9 and 111.1 kohm; TUT_ACC
+# "UT Detection Accuracy (NTC)" +-5 C) that drives both outputs (7.1: "If an undertemperature, overtemperature, or open-wire fault is
+# detected, then both the DOUT and COUT are triggered"), and its variant table (section 4) has no UT column, so whether the BQ7720700
+# carries it is not stated; TI's pin FMA (SFFS317A Rev. A, April 2022, Table 4-3: TS open-circuited, "No OT detection", class B)
+# implies it does not, which is an inference and not a statement. THE CHIP'S UT ACCURACY IS TUT_ACC, +-5 C, NOT RUT_ACC: RUT_ACC (+-2
+# percent) is titled "UT Detection External Resistance Accuracy" and is the tolerance footnote (1) ASSUMES for the external part (second
+# cycle of stream BAT, 26 September 2026: the first cycle read RUT_ACC as the chip's and sized R33 at 22 kohm, whose ceiling of about
+# 22.4 kohm overlaps the TUT_ACC worst case). Read the conservative way (the +-5 C is the chip's alone), the 26.7 kohm (0 C) threshold
+# can sit as low as 21.5 kohm, the 103AT's value 5 C warmer. With R33 across the input the network never reads above 18.3 kohm (NTC
+# open, R33 at +1 percent and 100 ppm/C down to -40 C; 17.1 kohm at -50 C with the NTC in), 15.0 percent under that, so cold storage or
+# an open lead cannot open F2 whatever the silicon carries; R34 puts the 70 C trip back where the bare NTC has it (69.97 C nominal
+# against 70.5 C for a bare 103AT on 2195 ohm; drafts/scripts/ts_network.py on the Semitec table, v2/vendor/battery/semitec-at-p12-13.pdf).
+# THE COST: R33 flattens the network's slope at the trip by a factor 0.783, and the same TUT_ACC treatment applied to TOT_ACC's +-5 C
+# with the network's own tolerance (NTC R25 and B +-1 percent, R33 and R34 +-1 percent and 100 ppm/C) gives a window of 63.6 to 76.6 C
+# under the footnote's own reading and 62.7 to 77.5 C under the conservative one, above the gauge's own 60 C discharge limit
+# (pcb_pack_protection.yaml); and an open NTC reads as about 10 C rather than as a fault, which is also the bare NTC's behaviour in TI's
+# FMA, so it is found by the commissioning and service check on TP15 (the TS voltage with J_TS2 plugged against unplugged: about 0.25
+# against 0.47 of the input's internal reference, ratiometric on RTC 20 kohm) and not by the IC. A shorted NTC, R33 shorted or a
+# TS-to-VSS bridge reads as over-temperature and opens F2 once JP1 is closed (fail-safe; the TP11 read before arming finds it, O-9); R34
+# shorted moves the trip to 66.1 C and R33 open to 75.0 C. TI's advice against a capacitor on TS (7.3.3, CTS at most 200 pF) is kept,
+# there is none. The NTC lead runs in the cell block beside the taps: a TS wire chafed onto a cell tab exceeds the pin's 1.5 V absolute
+# maximum (SLUSEG7D 6.1; SFFS317A Table 4-5, TS to supply, class A, "No OT detection"), so its insulation and routing are a pack-build
+# item, as for the gauge's four. The property is held by tests/test_pack_secondary_ts.py, on fixtures and on this generator.
+# Codes (JLC API 26 September 2026, drafts/box/jlc-queries-bat.json): R34 UNI-ROYAL 0603WAF2700T5E, 270 ohm 1 percent 100 ppm/C, C22966
+# (basic, stock 801,146); R33 UNI-ROYAL 0603WAF1802T5E, 18 kohm 1 percent 100 ppm/C, C25810 (basic, stock 869,648; lcsc_fill's MAP has
+# no "18k" rule, so the code is carried here); J_TS2 JST B2B-PH-K-S-GW, C5251182 (JST, stock 37,049), MAP's cell-thermistor PH2 row.
+synth("U2", "BQ77207", "BQ7720700DSSR: second-level cell OV 4.325 V / UV 2.25 V / open wire / OT 70 C on its own 103AT-2 (J_TS2), 3S-7S (SLUSEG7D)", "DSS12",
       {1: "SEC_VDD", 2: "SEC_V4", 3: "SEC_V4", 4: "SEC_V4", 5: "SEC_V4", 6: "SEC_V3", 7: "SEC_V2", 8: "SEC_V1", 9: "GND", 10: "SEC_COUT", 11: "SEC_DOUT", 12: "TS_SEC", 13: "GND"}, "C3681715")
-r("R33", "10k", "TS_SEC", "GND")                                                                            # TS held at the 25 C reading
+r("R33", "18k", "TS_SEC", "GND", lcsc="C25810")                                                             # the shunt that caps the network under every UT resistance at TUT_ACC
+r("R34", "270R", "TS_SEC", "TS_SEC_J", lcsc="C22966")                                                       # the series leg that puts the 70 C trip back
+part("J_TS2", "Connector_Generic", "Conn_01x02", "second-level cell thermistor socket, JST-PH 1x2 (Semitec 103AT-2 on the hottest cell): 1 TS_SEC_J, 2 VSS", "PH2",
+     {"1": "TS_SEC_J", "2": "GND"}, "C5251182")
 # R23 carries its code (fix-up of 26 September 2026): no lcsc_fill MAP rule reads "300R". UNI-ROYAL 0603WAF3000T5E, 300 ohm 1 percent
 # 0603, LCSC C23025, a JLC basic part (JLC API 26 September 2026: stock 1,671,357).
 r("R23", "300R", "CELL4", "SEC_VDD", lcsc="C23025"); c("C14", "100n", "SEC_VDD", "GND")                        # RVD and CVD
@@ -463,8 +495,9 @@ part("Q3", "Transistor_FET", "AO3400A", "AO3400A 30 V N-FET, chemical fuse heate
 # Q5'S OWN LEAKAGE (second fix-up of 26 September 2026, re-review): with DSG on, Q5's drain sits at DSG_G, the charge pump's output
 # above PACK_P, and its off-state leakage adds to R19's roughly 1 uA on that pump: IDSS 80 nA maximum at 25 C and 60 V (JCET 2N7002
 # datasheet, J Sep 2016, drafts/datasheets/lcsc-C8545.pdf), with no figure above 25 C, and a MOSFET's leakage rises with temperature.
-# SLUSC67B specifies the DSG drive only into its 10 Mohm test load, so DSG_G with DSG on is measured at E3's +55 C operating phase
-# (O-9), not claimed.
+# SLUSC67B specifies the DSG drive only into its 10 Mohm test load, so DSG_G with DSG on is measured with the board at the pack's hot
+# limit (cells at +60 C, the gauge's discharge limit; E3's +55 C phase no longer holds the pack above its cells' rating, review stream
+# BAT) (O-9), not claimed.
 r("R28", "100k", "SEC_DOUT", "GND")
 nfet("Q5", "SEC_DOUT", "GND", "DSG_G", "2N7002 60 V N-FET: the second level's under-voltage holds the discharge FET off")
 # --- SMBus out, test points, flags
@@ -479,7 +512,7 @@ r("R20", "100R", "SMBC_I", "SMBC"); r("R21", "100R", "SMBD_I", "SMBD")
 # of 26 AWG and crimps against about 2.5 mohm of 12 AWG and XT60, so it carries roughly 4 percent of the return, about 0.7 A at 18 A.
 # That is a harness matter for board E's author and the harness owner (O-5), not a counting error.
 part("J_SMB", "Connector_Generic", "Conn_01x04", "SMBus lead to E6 J_SMB (JST-XH 1x4): SMBC SMBD GND(pack side of the shunt) PRES", "XH4", {"1": "SMBC", "2": "SMBD", "3": "PACK_N", "4": "PRES_J"})
-for i, net in enumerate(("BTP_INT", "FUSE", "CHG_R", "DSG_R", "SW", "FUSED", "PACK_P", "PACK_N", "SMBC", "SMBD", "FUSE_G", "SEC_DOUT", "SCP_OUT", "FUSE_GQ"), 1): part("TP%d" % i, "Connector", "TestPoint", net, "TP", {"1": net})   # TP11 to TP13 (round 4): the fuse gate, the second level's UV output and the protected cell node, for the commissioning checks; TP14 (fix-up, 26 September 2026): the FET side of JP1, so the arming is verified by continuity TP11 to TP14, COM (black) on TP14 (see JP1)
+for i, net in enumerate(("BTP_INT", "FUSE", "CHG_R", "DSG_R", "SW", "FUSED", "PACK_P", "PACK_N", "SMBC", "SMBD", "FUSE_G", "SEC_DOUT", "SCP_OUT", "FUSE_GQ", "TS_SEC"), 1): part("TP%d" % i, "Connector", "TestPoint", net, "TP", {"1": net})   # TP11 to TP13 (round 4): the fuse gate, the second level's UV output and the protected cell node, for the commissioning checks; TP14 (fix-up, 26 September 2026): the FET side of JP1, so the arming is verified by continuity TP11 to TP14, COM (black) on TP14 (see JP1); TP15 (review stream BAT, 26 September 2026): the second level's TS node, read with J_TS2 plugged and unplugged to prove its NTC is connected (see U2)
 for i, net in enumerate(("CELL4", "CELL1", "CELL2", "CELL3", "PACK_P", "PACK_N", "FUSED", "SCP_OUT", "SW", "GND"), 1): part("#FLG%02d" % i, "power", "PWR_FLAG", "PWR_FLAG", "", {"1": net})
 # ----------------------------------------------------------------- emit (as B15)
 POWER = {"GND": ("power", "GND")}
@@ -492,7 +525,7 @@ byref = {p["ref"]: p for p in P}
 def refs_matching(pred): return [p["ref"] for p in P if pred(p["ref"])]
 SECTIONS = [("CELL TAPS, GAUGE BQ4050, SENSE AND SUPPLY FILTERS, THERMISTORS, PTC", ["J_CELL", "U1", "C1"] + ["R%d" % k for k in range(1, 10)] + ["C%d" % k for k in range(2, 10)] + ["R10", "J_TS", "R14", "R15", "R22", "RT1", "C13"]),
             ("FUSE, CHEMICAL FUSE, PROTECTION FETS, GATE NETWORKS, TERMINAL ESD, PACK LEADS", ["W_BP", "W_BN", "F1", "F2", "Q1", "Q2", "R16", "R17", "R18", "R19", "C11", "C12", "D1", "W_P", "W_N"]),
-            ("SECOND-LEVEL PROTECTOR BQ77207, FUSE DRIVE, UNDER-VOLTAGE HOLD", ["U2", "R33", "R23", "C14"] + ["R%d" % k for k in range(24, 28)] + ["C%d" % k for k in range(15, 19)] + ["R29", "R30", "R31", "C19", "JP1", "R32", "Q3", "R28", "Q5"]),
+            ("SECOND-LEVEL PROTECTOR BQ77207, FUSE DRIVE, UNDER-VOLTAGE HOLD", ["U2", "R33", "R34", "J_TS2", "R23", "C14"] + ["R%d" % k for k in range(24, 28)] + ["C%d" % k for k in range(15, 19)] + ["R29", "R30", "R31", "C19", "JP1", "R32", "Q3", "R28", "Q5"]),
            ]
 placed_refs = {r_ for _, rs in SECTIONS for r_ in rs}
 SECTIONS.append(("SMBUS OUT, TEST POINTS, FLAGS", [p["ref"] for p in P if p["ref"] not in placed_refs]))

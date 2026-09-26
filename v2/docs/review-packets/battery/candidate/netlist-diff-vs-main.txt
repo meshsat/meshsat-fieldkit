@@ -1,0 +1,16 @@
+components: base 82, new 85
+REMOVED components (0):
+ADDED components (3):
+  + J_TS2  second-level cell thermistor socket, JST Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical  LCSC C5251182  [Connector_Generic:Conn_01x02]
+  + R34    270R                                     Resistor_SMD:R_0603_1608Metric  LCSC C22966  [Device:R]
+  + TP15   TS_SEC                                   TestPoint:TestPoint_Pad_D1.5mm  LCSC   [Connector:TestPoint]
+CHANGED components:
+  ~ R33    value     '10k' -> '18k'
+  ~ R33    LCSC      '' -> 'C25810'
+  ~ U2     value     'BQ7720700DSSR: second-level cell OV 4.325 V / UV 2.25 V / open wire, TS on a fixed 10k, 3S-7S (SLUSEG7D)' -> 'BQ7720700DSSR: second-level cell OV 4.325 V / UV 2.25 V / open wire / OT 70 C on its own 103AT-2 (J_TS2), 3S-7S (SLUSEG7D)'
+PIN NET CHANGES on components present on both sides:
+NETS only in base: []
+NETS only in new: ['/TS_SEC_J']
+NETS on both sides whose node set changed:
+  /TS_SEC: -[] +['R34.1', 'TP15.1']
+  GND: -[] +['J_TS2.2']

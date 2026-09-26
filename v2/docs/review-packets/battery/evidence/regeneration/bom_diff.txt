@@ -1,0 +1,13 @@
+11a12
+> ('J_TS2', 'second-level cell thermistor socket, JST-PH 1x2 (Semitec 103AT-2 on the hottest cell): 1 TS_SEC_J, 2 VSS', 'Connector_JST:JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical', 'C5251182', '1')
+19c20
+< ('R14,R15,R33', '10k', 'Resistor_SMD:R_0603_1608Metric', '', '3')
+---
+> ('R14,R15', '10k', 'Resistor_SMD:R_0603_1608Metric', '', '2')
+26a28,29
+> ('R33', '18k', 'Resistor_SMD:R_0603_1608Metric', 'C25810', '1')
+> ('R34', '270R', 'Resistor_SMD:R_0603_1608Metric', 'C22966', '1')
+31c34
+< ('U2', 'BQ7720700DSSR: second-level cell OV 4.325 V / UV 2.25 V / open wire, TS on a fixed 10k, 3S-7S (SLUSEG7D)', 'Package_SON:WSON-12-1EP_3x2mm_P0.5mm_EP1x2.65', 'C3681715', '1')
+---
+> ('U2', 'BQ7720700DSSR: second-level cell OV 4.325 V / UV 2.25 V / open wire / OT 70 C on its own 103AT-2 (J_TS2), 3S-7S (SLUSEG7D)', 'Package_SON:WSON-12-1EP_3x2mm_P0.5mm_EP1x2.65', 'C3681715', '1')

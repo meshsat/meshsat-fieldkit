@@ -26,7 +26,7 @@ that owns it.
 | C | C24 | `pcb-c-display-c8/out/pcb-c-display.net` 2834f0d8c4071d56 | 2a273803757c68fb | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 8 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (PREDATES_ARTEFACT) |
 | D | D12 | `pcb-d-aprs-d9/out/pcb-d-aprs.net` f13d8b70099ab03e | 929bf82d2bf6eed4 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 11 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (PREDATES_ARTEFACT) |
 | E | E17 | `pcb-e1-dock-e7/out/pcb-e1-dock.net` d910e49c5f5f50b2 | a462ac2620b9b8d3 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 13 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (PREDATES_ARTEFACT) |
-| P | P4 | `pcb-p-pack-p2/out/pcb-p-pack.net` 3c925191447136ac | d79865e7b1aceb95 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 12 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (PREDATES_ARTEFACT) |
+| P | P4 | `pcb-p-pack-p2/out/pcb-p-pack.net` 4342c4cbe1b43dc4 | d79865e7b1aceb95 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 12 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (PREDATES_ARTEFACT) |
 | E5 | E5 | none (no schematic) | 686b29a734c55b9a | yes: a bare contact board with no schematic (manifest no_chain): its board file is its design | no: 5 reason(s), first SCH-004 PASS on AWAITING_REVALIDATION evidence (UNBOUND) |
 
 ## Layout entry, per board: the exact remaining blockers

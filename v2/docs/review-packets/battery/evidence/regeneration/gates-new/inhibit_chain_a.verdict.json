@@ -1,0 +1,43 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "fail": 0,
+  "pass": 0,
+  "unjudged": 4
+ },
+ "denominator": 4,
+ "evidence": [
+  "unjudged, the other board is absent: transmit inhibit present on A (J_AB1)",
+  "unjudged, the other board is absent: A: no device drives TX_INHIBIT_n, the panel toggle is its only source",
+  "unjudged, the other board is absent: A22: EMCON_HW reaches only the AND gates' inputs 1A and 2A, never an output",
+  "unjudged, the other board is absent: A: TX_INHIBIT_n is pulled DOWN on this board, so a missing panel inhibits"
+ ],
+ "inputs": {
+  "boards": "A,B,C,D,E,P"
+ },
+ "missing_input": "this board's netlist is absent from this tree, so no contract that names it could be judged",
+ "note": "this board's netlist is absent from this tree",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "RF-002": "b4c62839dd113ee3"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "RF-002"
+ ],
+ "tool": "inhibit_chain_a",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "60b5a5a915850caa"
+ },
+ "ts": "2026-09-26T13:33:13Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "unknown",
+ "writer": {
+  "file": "check_contracts.py",
+  "sha16": "4f4cb3a61d808820"
+ }
+}

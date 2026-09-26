@@ -1,0 +1,40 @@
+{
+ "kind": "netlist",
+ "phase_labels": [
+  [
+   "P4"
+  ],
+  [
+   "P4"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  },
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  }
+ ],
+ "design_header": [
+  [
+   "/root/r5/int/tree/v2/ecad/pcb-p-pack-p2/pcb-p-pack.kicad_sch",
+   "2026-09-26T10:01:48+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ],
+  [
+   "/root/rv/bat/run/base/v2/ecad/pcb-p-pack-p2/pcb-p-pack.kicad_sch",
+   "2026-09-26T13:32:55+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ]
+ ],
+ "content_hash": [
+  "9bf3a3a46b5d95a6",
+  "9bf3a3a46b5d95a6"
+ ],
+ "result": "PARITY_AFTER_NOISE"
+}

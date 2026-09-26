@@ -1,0 +1,52 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "checks": 98,
+  "citations_unjudged": 0,
+  "coordination_findings": 1,
+  "fail": 7,
+  "selection_findings": 0,
+  "stages": 12
+ },
+ "denominator": 98,
+ "evidence": [
+  "DOCK_BLOCK: the conductor names v2/vendor/precidip/, which is not in this tree",
+  "B_PANEL_5V: the protection names v2/vendor/power/bourns-mf-msmf-pptc.pdf, which is not in this tree",
+  "B_PANEL_5V: the prospective fault names v2/vendor/diodes/diodes-ap64500.pdf, which is not in this tree",
+  "B_HDMI_5V: the protection names v2/vendor/power/bourns-mf-msmf-pptc.pdf, which is not in this tree",
+  "B_HDMI_5V: the prospective fault names v2/vendor/diodes/diodes-ap64500.pdf, which is not in this tree",
+  "B_QMX_5V: the protection names v2/vendor/power/bourns-mf-msmf-pptc.pdf, which is not in this tree",
+  "B_QMX_5V: the prospective fault names v2/vendor/diodes/diodes-ap64500.pdf, which is not in this tree"
+ ],
+ "inputs": {
+  "chain": {
+   "path": "pcb_energy_chain.yaml",
+   "sha256_16": "935e524eed0ee4d1"
+  }
+ },
+ "missing_input": null,
+ "note": "THE CHAIN END TO END, which is BAT-002's question; a selection finding against ECSS 6.17 belongs to the stage that has it and is in energy_chain_<letter>, rule PWR-003. Every rating against its own source document, every protective element against the board's netlist, and the four coordination tests (the element is below what it protects, above the path's peak, able to interrupt what is available, and followed by the stage it protects)",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "BAT-002": "fbf06a73485c1f88"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "BAT-002"
+ ],
+ "tool": "energy_chain",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "60b5a5a915850caa"
+ },
+ "ts": "2026-09-26T13:33:14Z",
+ "verdict": "FAIL",
+ "version": "unknown",
+ "writer": {
+  "file": "energy_chain.py",
+  "sha16": "73b908eb6b002690"
+ }
+}

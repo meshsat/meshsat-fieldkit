@@ -1,0 +1,26 @@
+energy_chain: 12 stage(s), 98 check(s)
+  note PACK_CELLS: F1 carries 10.0 A of its 25.0 A rating (40 percent), inside the 65 percent ECSS-Q-ST-30-11C Rev.2 Table 6-17 sets for a fuse at or below 85 C
+  note PACK_CELLS: the source delivers at least 240 A against a 25.0 A fuse, which is 9.6 times its rating (ECSS 6.17.3c asks for three)
+  note PACK_CELLS: F1 melts in about 4.3 ms at 480 A (I2t 1000 A2s)
+  note PACK_LEAD: F1 melts in about 4.3 ms at 480 A (I2t 1000 A2s)
+  note DOCK_ENTRY: F3 carries 10.0 A of its 25.0 A rating (40 percent), inside the 65 percent ECSS-Q-ST-30-11C Rev.2 Table 6-17 sets for a fuse at or below 85 C
+  note DOCK_ENTRY: the source delivers at least 240 A against a 25.0 A fuse, which is 9.6 times its rating (ECSS 6.17.3c asks for three)
+  note DOCK_ENTRY: F3 melts in about 4.3 ms at 480 A (I2t 1000 A2s)
+  note DOCK_BLOCK: F3 melts in about 4.3 ms at 480 A (I2t 1000 A2s)
+  note BOARD_A_NODE: F1 carries 10.0 A of its 25.0 A rating (40 percent), inside the 65 percent ECSS-Q-ST-30-11C Rev.2 Table 6-17 sets for a fuse at or below 85 C
+  note BOARD_A_NODE: the source delivers at least 240 A against a 25.0 A fuse, which is 9.6 times its rating (ECSS 6.17.3c asks for three)
+  note BOARD_A_NODE: F1 melts in about 4.3 ms at 480 A (I2t 1000 A2s)
+  note BOARD_A_CONVERTERS: F1 melts in about 4.3 ms at 480 A (I2t 1000 A2s)
+  note SHORE_INPUT: F1 carries 8.0 A where atof287 allows 8.0 A at its 65 C column (the stage is judged at 56 C, datasheet revised 18 August 2022, page 3, Temperature Table: max. allo), which is the WHOLE of what that column allows: this stage has no margin against the maker's own figure and a warmer envelope moves it
+  note SHORE_INPUT: the fault current available at F1 is not established, so ECSS 6.17.3c (the source delivers three times the fuse rating) cannot be judged here; it is part of the operating envelope, owner decision 34
+  note SHORE_INPUT: F1 melts in about 2.9 ms at 200 A (I2t 115 A2s)
+  FAIL DOCK_BLOCK: the conductor names v2/vendor/precidip/, which is not in this tree
+  FAIL B_PANEL_5V: the protection names v2/vendor/power/bourns-mf-msmf-pptc.pdf, which is not in this tree
+  FAIL B_PANEL_5V: the prospective fault names v2/vendor/diodes/diodes-ap64500.pdf, which is not in this tree
+  FAIL B_HDMI_5V: the protection names v2/vendor/power/bourns-mf-msmf-pptc.pdf, which is not in this tree
+  FAIL B_HDMI_5V: the prospective fault names v2/vendor/diodes/diodes-ap64500.pdf, which is not in this tree
+  FAIL B_QMX_5V: the protection names v2/vendor/power/bourns-mf-msmf-pptc.pdf, which is not in this tree
+  FAIL B_QMX_5V: the prospective fault names v2/vendor/diodes/diodes-ap64500.pdf, which is not in this tree
+  FAIL (coordination, rule PWR-003) B_PANEL_5V: the protection is rated 2.0 A and the conductor only 1.2 A, so the conductor is the fuse
+verdict: energy_chain           FAIL         of 98 {"checks": 98, "citations_unjudged": 0, "coordination_findings": 1, "fail": 7, "selection_findings": 0, "stages": 12} | THE CHAIN END TO END, which is BAT-002's question; a selection finding against ECSS 6.17 belongs to the stage that has it and is in energy_chain_<letter>, rule PWR-003. Every rating against its own source document, every protective element against the board's netlist, and the four coordination tests (the element is below what it protects, above the path's peak, able to interrupt what is available, and followed by the stage it protects)
+energy_chain exit 1

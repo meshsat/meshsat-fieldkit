@@ -116,6 +116,10 @@ bulgin       current   # the sealed wall parts: PX0833 RJ45 coupler and the 4000
 polyphaser   current   # GTH-SFF-AL SMA surge protector at the antenna bulkheads
 fabricator  current  # the chosen fabricator's own PCB capability page, fetched 16 September 2026: the authority behind every via, annular ring, track width and stackup limit this project enforces (rules VIA-001, VIA-002, RTE-001, STK-001, IMP-001)
 
+# --- file lines added 26 September 2026 (MESHSAT-1357, review stream BAT): the two TI E2E answers the battery packet cites ---
+ti/ti-e2e-1316778-bq25731-chargecurrent-por.html   current   # BQ25731, board A's charger U3: TI's answer that ChargeCurrent's power-on value is 256 mA (SOURCES.yaml, battery_review_documents)
+battery/ti-e2e-1421182-bq77207-application.html   current   # BQ7720700, board P's second level U2: TI's statement of its usual role (fuse drive) and that no active-low variant was released (SOURCES.yaml, battery_review_documents)
+
 # --- file lines added 26 September 2026 (MESHSAT-1357, integration I6): each new document and what it is FOR ---
 SOURCES.yaml   tooling   # the identity and source record of the critical parts, written in this repository (MESHSAT-1357); not a vendor document and not a certification
 fabricator/jlcpcb-stackups-2026-09-25.md   current   # the fabricator's four-layer 2 oz outer (JLC04162H-7628) and eight-layer (JLC08161H-2116) stackups read 25 September 2026: the record behind stackup_write.STACKS rows added under owner decisions 28 (board P) and 43 (board B, experimental run)

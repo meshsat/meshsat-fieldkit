@@ -1,0 +1,45 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "counts": {
+  "blank_over_allowance": 5,
+  "rejected_code": 0,
+  "rows": 37,
+  "stale_allow_lines": 0
+ },
+ "denominator": 37,
+ "evidence": [
+  "{'Comment': '2.2u', 'Designator': 'C1', 'Footprint': 'C_0805_2012Metric', 'LCSC Part #': ''}",
+  "{'Comment': '100n 50V', 'Designator': 'C12', 'Footprint': 'C_1206_3216Metric', 'LCSC Part #': ''}",
+  "{'Comment': \"25 A mini blade (Keystone 3568 holder): the pack's fuse\", 'Designator': 'F1', 'Footprint': 'Fuseholder_Blade_Mini_Keystone_3568', 'LCSC Part #': ''}",
+  "{'Comment': '2m 2512 2W (sense)', 'Designator': 'R10', 'Footprint': 'R_2512_6332Metric', 'LCSC Part #': ''}",
+  "{'Comment': '10M', 'Designator': 'R17,R19', 'Footprint': 'R_0603_1608Metric', 'LCSC Part #': ''}"
+ ],
+ "inputs": {},
+ "missing_input": null,
+ "note": "",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "CMP-002": "0228f21aeb49073d",
+   "SUP-001": "c1197ffafeee55ed"
+  },
+  "rule_set_fingerprint": "ff8151db3576437b"
+ },
+ "rules": [
+  "CMP-002",
+  "SUP-001"
+ ],
+ "tool": "lcsc_fill",
+ "tools": {
+  "git_head": "",
+  "tools_tree_sha": "60b5a5a915850caa"
+ },
+ "ts": "2026-09-26T13:33:14Z",
+ "verdict": "FAIL",
+ "version": "unknown",
+ "writer": {
+  "file": "lcsc_fill.py",
+  "sha16": "da4dbe667e26d0eb"
+ }
+}

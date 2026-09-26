@@ -27,7 +27,7 @@ zero is a real answer and is recorded the same way; what the rule refuses is the
 | `D_SOD-323` | D, P | D10 |  |  |
 | `Fuseholder_Blade_Mini_Keystone_3568` | P | F1 |  |  |
 | `Hirose_FH34SRJ-24S` | C | J_EPD |  |  |
-| `JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical` | D | J_VGG |  |  |
+| `JST_PH_B2B-PH-K_1x02_P2.00mm_Vertical` | D, P | J_VGG |  |  |
 | `JST_PH_B4B-PH-K_1x04_P2.00mm_Vertical` | A, D | J_USBW |  |  |
 | `JST_PH_B5B-PH-K_1x05_P2.00mm_Vertical` | D, P | J_HS1 |  |  |
 | `JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical` | B | J_FAN1 |  |  |
