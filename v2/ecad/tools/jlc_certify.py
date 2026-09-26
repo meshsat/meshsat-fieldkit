@@ -62,6 +62,8 @@ BOARDS_DIR = os.path.join(ROOT, "release", "revA", "boards")
 TABLE = os.path.join(ROOT, "release", "revA", "order", "JLC-CERTIFIED.tsv")
 HANDFIT = os.path.join(HERE, "jlc-handfit.txt")
 ALIASES = os.path.join(HERE, "package-aliases.txt")
+MISMATCH = os.path.join(HERE, "jlc-mismatch.yaml")     # declared condition 1 mismatches (round 8, 26 September 2026)
+REPO = os.path.dirname(ROOT)                            # the repository root, above v2/
 CACHE = os.path.join(HERE, "out", "jlc-cache.json")
 API = "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList"
 UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/120 Safari/537.36"
@@ -88,12 +90,32 @@ BENCH_FP = re.compile(r"^(?:PinHeader|PinSocket|TestPoint|SolderWire|Conn_01x|Co
 PART_TOKEN = re.compile(r"\b[A-Za-z0-9][A-Za-z0-9./+-]{4,}\b")
 # ...and the price of allowing that is that component VALUES now look like part numbers, so they are
 # excluded by shape: 10mOhm, 4.7uH, 100nF, 22u, 13V8, 145MHz.
+# 26 SEPTEMBER 2026, ROUND 8 (MESHSAT-1357; the parts stream's draft 01): four more shapes that are not a part and
+# that the re-take over the 45bde541 netlists took for one, each refusing a row whose ordered part is the part it
+# describes. A temperature coefficient ("10.7k 0.1% 25ppm": the tool asked JLCPCB for a part called 25ppm); a PACKAGE
+# name ("6 MHz HC-49S-SMD passive", "SOT-23-5", "DO-214AB", "QFN-32"); this project's own finding ids ("W3-F01",
+# "R4A-N15", "F-IN-02"); and TI's literature numbers by their family prefixes (SLUS, SLLS, SCPS, SLVS and the rest,
+# of which the first two were already here by name). Each is anchored on the whole token, and the collisions were
+# read against the parts this project names: SMAJ15A, SMBJ18A and SMCJ40A keep their letter after SM[ABC], so the
+# package shape (which needs a digit there) leaves them alone; a Coilcraft DO1608C or DO3316P carries no hyphen after
+# DO, so only the hyphenated JEDEC shape (DO-214AB, TO-92-3) is excluded; SN74LVC86APWR is not a TI literature
+# family; and a Maxim part in the DS range (DS3231MZ) is not touched, because document numbers such as DS40068 are
+# not excluded by shape at all: the one place they were read as a part was a parenthetical, and that is corrected
+# in `intended_part` instead.
 NOT_PART = re.compile(r"^(?:"
                       r"[0-9.]+\s*(?:m|u|n|p|k|K|M|G)?(?:Ohm|OHM|R|F|H|V|A|W|Hz|HZ)[0-9]*|"
                       r"[0-9.]+(?:m|u|n|p|k|K|M)?|"
+                      r"[0-9.]+\s*ppm(?:/K|/C)?|"
+                      r"HC-?49[A-Z0-9-]*|(?:SOT|SOD|SOIC|S?SOP|TSSOP|MSOP|[VWU]?QFN|[VWU]?DFN|[LT]?QFP|BGA|LGA)-?\d+[A-Z0-9-]*|"
+                      r"(?:DO|TO)-\d+[A-Z0-9-]*|"
+                      r"[A-Z]\d{1,2}[A-Z]?-[A-Z]{1,3}\d+|F-[A-Z]+-\d+|"
+                      r"S(?:BA|BO|BV|CA|CB|CE|CH|CL|CP|CZ|DA|DL|GL|LA|LD|LE|LL|LO|LU|LV|NA|NL|NO|NV|PR|WR)S[A-Z0-9]{3,5}|"
                       r"GND|VCC|VDD|USB[0-9]?|I2C|SPI|UART[0-9]?|PWM|LED|RGB|IP6[0-9]|NP0|X[57]R|"
                       r"GPIO[0-9]*|BCM[0-9]*|SLLS[0-9]+|SLUS[A-Z0-9]+|MESHSAT-[0-9]+"
                       r")$", re.I)
+
+
+PIN_COUNT = re.compile(r"^\d+-?(?:pin|pins|way|pole|pos)$", re.I)     # "22-pin", "16-pin": see `intended_part`
 
 
 VALUE = re.compile(r"^([0-9]+(?:\.[0-9]+)?)\s*(m|u|n|p|k|K|M|R)?\s*(Ohm|OHM|F|H|R)?\b")
@@ -161,6 +183,163 @@ def declared(path):
     return out
 
 
+# ------------------------------------------------------------------------------------------------------------------
+# DECLARED CONDITION 1 MISMATCHES (26 September 2026, round 8, MESHSAT-1357; review of the 22:35 progress report,
+# finding D1). The owner's condition 1 of 25 September: a part substitution is a component mismatch until compatibility
+# is proven. Fourteen rows of JLC-CERTIFIED.tsv (2aaa7b7f) record one: a gold-plated JST variant the held catalogue
+# does not list, an order suffix the held sheet does not list, a KENTO yellow LED on rows whose value says amber, TI's
+# SN74LVC86APWR where the value names Nexperia's 74LVC86APW. This tool reads every one of them CERTIFIED, because each
+# model carries every character of the part the row names, and a full run writes the whole table: the marks were made
+# by hand in the output, so the next run would have certified all fourteen again and lcsc_fill would have filled and
+# accepted their codes from the table. A mismatch written down only where the tool does not read it is not a refusal.
+#
+# So the mismatches are an INPUT, `tools/jlc-mismatch.yaml`, read here on every run. A row whose code (the BOM's, or the
+# answer a search picked) is declared there, and whose comment the entry's `comment_re` matches when it has one, reads
+# WRONG_MODEL with the declared reason, whatever the catalogue said; a row the tool already refuses for another reason
+# keeps its verdict and gains the reason. The declaration is lifted only by a compatibility decision in the same file
+# that names it and cites its evidence: a file in this repository, its sha256 as it sits here, and the words in it that
+# establish compatibility. A decision without that is REFUSED, printed and recorded, and the mismatch stands; a
+# mismatch entry that cannot be read (no id, code, reason or record) stops the run before the table is written, because
+# dropping it silently is the one failure this input exists to prevent.
+CONDITION_1 = "MISMATCH under owner condition 1, not a pass"
+
+
+class MismatchInputError(ValueError):
+    """The declared mismatch input cannot be read as declarations: the run must not write a table without it."""
+
+
+def _compat_problem(c, by_id, root):
+    """The reason a compatibility decision cannot lift its mismatch, or None when it can."""
+    if not isinstance(c, dict):
+        return "the entry is not a mapping"
+    mid = str(c.get("clears") or "").strip()
+    if not mid:
+        return "it names no mismatch to clear (clears:)"
+    if mid not in by_id:
+        return "it clears %s, which no mismatch entry declares" % mid
+    for k in ("ruled_by", "ruled_on", "why"):
+        if not str(c.get(k) or "").strip():
+            return "it has no %s" % k
+    ev = c.get("evidence")
+    if not isinstance(ev, list) or not ev:
+        return "it cites no evidence"
+    import hashlib
+    for i, item in enumerate(ev, 1):
+        if not isinstance(item, dict):
+            return "evidence %d is not a mapping of path, sha256 and finding" % i
+        p, sha, finding = (str(item.get(k) or "").strip() for k in ("path", "sha256", "finding"))
+        if not p or not sha or not finding:
+            return "evidence %d lacks %s" % (i, ", ".join(k for k, v in (("path", p), ("sha256", sha), ("finding", finding)) if not v))
+        full = os.path.normpath(os.path.join(root, p))
+        if os.path.isabs(p) or not full.startswith(os.path.normpath(root) + os.sep):
+            return "evidence %d (%s) is not a path inside this repository" % (i, p)
+        if not os.path.isfile(full):
+            return "evidence %d (%s) is not a file in this tree" % (i, p)
+        h = hashlib.sha256(open(full, "rb").read()).hexdigest()
+        if h != sha.lower():
+            return "evidence %d (%s) has sha256 %s, not the %s the decision cites" % (i, p, h[:12], sha[:12])
+    return None
+
+
+def mismatch_declarations(path=None, root=None):
+    """{"entries": [...], "cleared": {id: decision}, "refused": [(id, why)], "path": path} from the declared input.
+
+    Raises MismatchInputError when the file is missing or a mismatch entry cannot be read; a compatibility decision
+    that cannot be accepted is returned in `refused` and lifts nothing."""
+    path = path or MISMATCH
+    root = root or REPO
+    if not os.path.exists(path):
+        raise MismatchInputError("the declared mismatch input %s is missing" % os.path.basename(path))
+    try:
+        import yaml
+        d = yaml.safe_load(open(path, encoding="utf-8")) or {}
+    except Exception as e:
+        raise MismatchInputError("the declared mismatch input %s cannot be parsed: %s" % (os.path.basename(path), e))
+    if not isinstance(d, dict) or d.get("schema_version") != 1:
+        raise MismatchInputError("the declared mismatch input %s is not schema_version 1" % os.path.basename(path))
+    entries, ids = [], set()
+    for i, e in enumerate(d.get("mismatches") or [], 1):
+        if not isinstance(e, dict):
+            raise MismatchInputError("mismatch entry %d is not a mapping" % i)
+        lack = [k for k in ("id", "code", "reason", "record") if not str(e.get(k) or "").strip()]
+        if lack:
+            raise MismatchInputError("mismatch entry %d (%s) has no %s" % (i, e.get("id") or e.get("code") or "?", ", ".join(lack)))
+        code = str(e["code"]).strip()
+        if not re.fullmatch(r"C\d+", code):
+            raise MismatchInputError("mismatch entry %s: %r is not an LCSC code" % (e["id"], code))
+        if e["id"] in ids:
+            raise MismatchInputError("mismatch entry id %s is declared twice" % e["id"])
+        ids.add(e["id"])
+        rx = None
+        if e.get("comment_re"):
+            try:
+                rx = re.compile(str(e["comment_re"]))
+            except re.error as x:
+                raise MismatchInputError("mismatch entry %s: comment_re does not compile (%s)" % (e["id"], x))
+        entries.append(dict(e, id=str(e["id"]), code=code, _rx=rx, fp_contains=str(e.get("fp_contains") or "")))
+    by_id = {e["id"]: e for e in entries}
+    cleared, refused = {}, []
+    for c in d.get("compatibility") or []:
+        why = _compat_problem(c, by_id, root)
+        if why:
+            refused.append((str((c or {}).get("clears") or "?") if isinstance(c, dict) else "?", why))
+        else:
+            cleared[str(c["clears"]).strip()] = c
+    return {"entries": entries, "cleared": cleared, "refused": refused, "path": path}
+
+
+def declared_hits(rec, ev, decl):
+    """The mismatch entries that apply to this row: its code (the answer's, else the BOM's), its comment, its land."""
+    if not decl:
+        return []
+    codes = {c for c in ((ev or {}).get("code"), rec.get("code")) if c}
+    comment, fp = rec.get("comment") or "", rec.get("fp") or ""
+    return [e for e in decl["entries"] if e["code"] in codes
+            and (e["_rx"] is None or e["_rx"].search(comment))
+            and (not e["fp_contains"] or e["fp_contains"] in fp)]
+
+
+def apply_declared(rec, ev, decl):
+    """The row's verdict with every declared, uncleared mismatch applied to it (see the block above)."""
+    hits = declared_hits(rec, ev, decl)
+    if not hits:
+        return ev
+    ev = dict(ev)
+    rel = os.path.relpath(decl.get("path") or MISMATCH, os.path.dirname(HERE))
+    held = [e for e in hits if e["id"] not in decl["cleared"]]
+    if not held:
+        for e in hits:
+            c = decl["cleared"][e["id"]]
+            ev["note"] = ((ev.get("note") or "") + ("; " if ev.get("note") else "") +
+                          "declared mismatch %s (%s) cleared by a compatibility decision ruled by %s on %s, evidence %s"
+                          % (e["id"], rel, c["ruled_by"], c["ruled_on"],
+                             ", ".join("%s sha256 %s" % (x["path"], str(x["sha256"])[:12]) for x in c["evidence"])))
+        return ev
+    e = held[0]
+    refused = [w for i, w in decl["refused"] if i == e["id"]]
+    reason = "%s: ordered %s, schematic names %s; %s%s (declared %s in %s; record %s)%s" % (
+        CONDITION_1, e.get("ordered") or ev.get("model") or "?", e.get("named") or "?", e["reason"],
+        ("; recommended %s" % e["recommended"]) if e.get("recommended") else "", e["id"], rel, e["record"],
+        ("; a compatibility decision naming it was refused: %s" % refused[0]) if refused else "")
+    if ev.get("verdict") in ("WRONG_MODEL", "PACKAGE_MISMATCH"):
+        ev["note"] = (ev.get("note") or "") + "; also a " + reason
+    else:
+        ev["note"] = reason + "; the tool read %s%s" % (ev.get("verdict"), (" (%s)" % ev["note"]) if ev.get("note") else "")
+        ev["verdict"] = "WRONG_MODEL"
+    ev["declared_mismatch"] = e["id"]
+    return ev
+
+
+_DECLARED = None
+
+
+def _declared_mismatches():
+    global _DECLARED
+    if _DECLARED is None:
+        _DECLARED = mismatch_declarations()
+    return _DECLARED
+
+
 def norm_pkg(s):
     """One canonical spelling for a package, from either side.
 
@@ -171,6 +350,16 @@ def norm_pkg(s):
         return ""
     s = s.upper().strip()
     s = re.sub(r"^(?:PACKAGE_[A-Z_]+:|[A-Z_]+:)", "", s)          # strip a KiCad library prefix
+    # HC-49 CRYSTALS (26 September 2026, round 8). KiCad draws the surface-mount can as `Crystal_SMD_HC49-SD` and
+    # JLCPCB writes `HC-49S-SMD`; neither reduced to anything, so board D's two 6 MHz crystals read NOT_IDENTIFIED once
+    # the parser stopped taking "HC-49S-SMD" for their part. The family alone would join an SMD land to a through-hole
+    # HC-49/U or HC-49/S can, so the mounting stays in the name: HC-49-SMD for a surface-mount body on either side,
+    # and the through-hole spellings keep their own suffix and are compared as they are.
+    if re.search(r"HC-?49", s):
+        if re.search(r"SMD|HC-?49-?SD\b", s):
+            return "HC-49-SMD"
+        m = re.search(r"HC-?49[-/]?([A-Z0-9]*)", s)
+        return "HC-49" + (("-" + m.group(1)) if m and m.group(1) else "")
     m = re.match(r"^(?:R|C|L|LED|D|F|FB)_(\d{4})[_ ]", s)           # passive: R_0603_1608Metric
     if m:
         return m.group(1)
@@ -337,10 +526,17 @@ def query(keyword, cache, refresh=False):
         try:
             d = json.loads(r.stdout)
             lst = (d.get("data") or {}).get("componentPageInfo", {}).get("list") or []
+            # "describe" and "erpComponentName" joined the kept fields on 26 September 2026 (round 8). `_certify` builds
+            # the answer's description from exactly these two (ev["desc"]) and `frequency_conflict` reads it, but they
+            # were never kept, so the frequency guard saw only the model and the package: it caught NX3225SA-25MHz
+            # because the model spells its frequency, and it could not have caught a crystal whose model does not
+            # (SJK's 6CS06000F20UCG, whose catalogue line reads "6MHz ±20ppm 20pF"). A cached answer written before
+            # that day carries neither field, and the guard stays silent on it as before; --refresh re-asks.
             keep = [{k: c.get(k) for k in ("componentCode", "componentModelEn", "componentBrandEn",
                                            "componentSpecificationEn", "componentLibraryType",
                                            "stockCount", "initialPrice", "assemblyComponentFlag",
-                                           "minPurchaseNum", "leastPatchNumber")} for c in lst]
+                                           "minPurchaseNum", "leastPatchNumber",
+                                           "describe", "erpComponentName")} for c in lst]
             today = datetime.date.today().isoformat()
             cache[key] = {"asked": today, "list": keep}
             return keep, today
@@ -461,12 +657,163 @@ def intended_part(comment):
     # is narrow on purpose: it offers a candidate only for a parenthetical that opens with a capitalised maker
     # word followed by something part-shaped, so a bare `(RFBOUT2)` and a bare `(SX1262)` stay explanations and
     # the two rules those were written for still hold. Position decides between the candidates, as before.
+    # 26 SEPTEMBER 2026, ROUND 8 (MESHSAT-1357, the parts stream's draft 01): "FOLLOWED BY SOMETHING PART-SHAPED" MEANS
+    # THE NEXT WORD, NOT THE FIRST PART-SHAPED TOKEN ANYWHERE AFTER IT. The pattern took any capitalised word as the
+    # maker and then searched the rest of the parenthesis, so "100n 16V (REFCLK AC coupling, DS40068 3.1, W3-F03)"
+    # read REFCLK as a maker and DS40068, a Microchip document number, as the row's part; "(HCSL series Rs, DS40068
+    # Table 8-1, W3-F03)" and "(PCIe AC coupling at the switch transmitter, W3-F01)" did the same, and four board B
+    # passives whose ordered parts are exactly the values they name were refused WRONG_MODEL. A maker (one or two
+    # capitalised words: "Molex", "Texas Instruments") is followed by its part number, so the candidate is the word
+    # right after it, or nothing.
     for m in re.finditer(r"\(([^)]*)\)", comment):
-        mm = re.match(r"\s*[A-Z][A-Za-z&.\-]{2,}[\s,]+(.+)$", m.group(1))
+        mm = re.match(r"\s*[A-Z][A-Za-z&.\-]{2,}(?:\s+[A-Z][A-Za-z&.\-]{2,})?[\s,]+([^\s,;:()]+)", m.group(1))
         if not mm: continue
         t = _first_token(mm.group(1))
         if t: cands.append((m.start(), t))
+    # A PIN COUNT GIVES WAY TO A PART (27 September 2026, round 8, second pass). "Touch Display 2 FPC 22-pin 0.5 mm
+    # (Hirose FH12-22S-0.5SH), Standard-Mini 22-to-15 cable" read "22-pin", which comes first, as its part, ahead of the
+    # Hirose part in the parenthesis that its land is drawn for; the first pass then needed the land rule of `row_part`
+    # to read the row, and that rule no longer reads a row whose words give no reason. A pin count is not a part, so it
+    # never wins over a candidate that is one. Where it is the ONLY candidate ("RockBLOCK 9704 16-pin (IDC 2x8)", board
+    # B's bracket header) it is still returned, as before: `rows_to_check` keeps a row whose words say IDC, lead or
+    # header only when it names something, so returning None there would take a declared bench header out of the table
+    # altogether. That header's reading is a limit of LEAD, recorded, not changed in this pass.
+    real = [c for c in cands if not PIN_COUNT.match(c[1])]
+    cands = real or cands
     return min(cands)[1] if cands else None
+
+
+def row_part(comment, fp):
+    """(the part a row is identified by, or None; the OTHER part its words name, or None).
+
+    26 SEPTEMBER 2026, ROUND 8 (MESHSAT-1357, the parts stream's draft 01): A CONNECTOR ROW NAMES WHAT IT PLUGS INTO
+    AS OFTEN AS WHAT IT IS. Board P's "JST-PH 1x5 socket for the four cell thermistors (Semitec 103AT-2, ...)" sits on
+    JST's B5B-PH-K land and orders JST's B5B-PH-K-S; board E's "JST-XH 1x2 (B2B-XH-A): lid and tamper reed sensor
+    lead, Littelfuse 59140-1-S-05-A ..." sits on the B2B-XH-A land and orders B2B-XH-A. The tool read the thermistor
+    and the reed switch as the rows' parts and refused both. A land drawn from one maker's drawing (`land_part`) is
+    strong evidence of what the row IS: the copper is that part's.
+
+    27 SEPTEMBER 2026, ROUND 8, SECOND PASS (the independent check of the first): THE LAND IDENTIFIES THE ROW ONLY WHEN
+    THE WORDS SAY THE OTHER PART IS NOT THE ROW'S OWN. The first pass let the land's part win whenever the words named a
+    part unrelated to it, without asking whether that part was really at the far end of a lead. So a genuine conflict
+    between the value and the land read CERTIFIED with a note where fc144600 refused it; reproduced offline, all three
+    WRONG_MODEL at fc144600 and CERTIFIED after the first pass:
+      "Ebyte E22-900M30S 1 W LoRa (SX1262)" on the Ebyte_E22-900M33S land with an E22-900M33S code (the sibling class
+        of finding W6-F3: the schematic names one module and the copper and the order are another);
+      "JST B4B-XH-A socket" on JST's B4B-PH-K land with the PH code;
+      "Molex 502382-1270 12-pin panel lead" on a JST PH 12-pin land with the JST code.
+    Each is a substitution under the owner's condition 1: the schematic names X and the order is Y. Now the land's part
+    identifies the row only when `far_end_reason` finds BOTH halves of the evidence in the words: they name the land's
+    own part or its JST series (the row says what it IS), AND they mark the other part as a thing away from the land (a
+    maker other than the land's right before it, or wording such as "lead to", "from the", "on the", "holder" or
+    "thermistor" beside it, in its own clause). Otherwise the row is read by the part its words name, as at fc144600,
+    so the answer is compared with that part and with the land's (`_certify`), and `certify` writes both parts into the
+    note and never lets a catalogue pass stand over the conflict. A part the words name that IS the land's with more
+    ordering (132134-11 on the 132134 land) is no conflict and decides, which keeps board A's SMA jacks refused for
+    the base part JLCPCB answers."""
+    want = intended_part(comment)
+    lp = land_part(fp)
+    if want and lp and not (same_part(want, lp) or same_part(lp, want)) and far_end_reason(comment, fp, want, lp):
+        return lp, want
+    return want, None
+
+
+def value_land_conflict(comment, fp):
+    """(the part the words name, the land's part, the reason the words give for reading the named part as away from
+    the land, or None) when the two are unrelated parts; None when there is no such pair."""
+    want = intended_part(comment)
+    lp = land_part(fp)
+    if not (want and lp) or same_part(want, lp) or same_part(lp, want):
+        return None
+    return want, lp, far_end_reason(comment, fp, want, lp)
+
+
+def _land_maker_series(fp):
+    """(the maker a land that names a part is drawn from, as the land spells it; its JST series, PH or XH or VH, or
+    None), or (None, None) for a land that names no maker."""
+    toks = (fp or "").split(":")[-1].split("_")
+    for i, t in enumerate(toks):
+        if t.upper() in _LAND_MAKER:
+            ser = toks[i + 1] if (t.upper() == "JST" and i + 1 < len(toks) and re.fullmatch(r"[A-Z][A-Z][A-Z]?", toks[i + 1])) else None
+            return t, ser
+    return None, None
+
+
+_WORD = re.compile(r"[A-Za-z0-9](?:[A-Za-z0-9./+-]*[A-Za-z0-9])?")
+
+
+def _names_land(comment, fp, lp):
+    """The words of the row that name the land's own part (or its base part: 132134 for the 132134-11 land, Keystone's
+    3034) or, on a JST land, its series ("JST-PH", "JST XH", "XH2.5", "PH 2.0"); None when they name neither."""
+    for t in _WORD.findall(comment or ""):
+        if len(_alnum(t)) >= 4 and (same_part(t, lp) or same_part(lp, t)):
+            return t
+    _maker, ser = _land_maker_series(fp)
+    if ser:
+        m = (re.search(r"\bJST[- ]?%s\b" % ser, comment or "", re.I) or
+             re.search(r"\b%s ?\d+(?:\.\d+)?\b" % ser, comment or ""))
+        if m:
+            return m.group(0)
+    return None
+
+
+# The two marks of a part AWAY FROM the land, each read inside the named part's own clause (the text between the
+# nearest , ; : ( or ) on either side of it). BEFORE it: a lead, cable or pigtail running to or from it, "from the",
+# "to the" or "for the" right in front of it, or the kind of thing it is (a thermistor, a reed switch, a magnet).
+# AFTER it: "on the", "in the", "under the", "to the" (it sits somewhere else), or a word saying what it is that a
+# board connector is not (a holder it goes in, a cable, a remote unit, a thermistor, a wall receptacle).
+_FAR_BEFORE = re.compile(r"(?:\b(?:lead|leads|cable|pigtail|wire|harness)\s+(?:to|from)(?:\s+the)?|\b(?:from|to|for)\s+the|"
+                         r"\b(?:thermistor|NTC|reed\s+(?:switch|sensor)|magnet))\s+$", re.I)
+_FAR_AFTER = re.compile(r"^\s*(?:(?:on|in|under|inside|over|at|to)\s+the\b|(?:holder|cable|harness|remote|receiver|"
+                        r"magnet|thermistor|NTC|reed|sensor|wall\s+receptacle)\b)", re.I)
+# A PLACEMENT WHOSE OBJECT IS THE LAND ITSELF PLACES NOTHING AWAY FROM IT (27 September 2026, round 8, the integration
+# of the cert stream after its second independent check). "Ebyte E22-900M30S on the E22-900M33S land" and "Ebyte
+# E22-900M30S in the E22-900M33S footprint" put the M30S ON the copper drawn for the M33S: the W6-F3 sibling
+# substitution, which fc144600 refused and the second pass certified because "on the" and "in the" were counted
+# without reading what follows them. A preposition of place ("on/in/under/inside/over/at/to the") marks the named
+# part as away from the land only when its object is something else: an object that names the land's own part or
+# JST series, or the words land, footprint, pad or pads, is the land, and the words then say the part sits on it.
+# The noun marks (holder, cable, remote and the rest of _FAR_AFTER's second group) are unchanged.
+_FAR_PLACE = re.compile(r"^\s*(?:on|in|under|inside|over|at|to)\s+the\b", re.I)
+_LAND_WORD = re.compile(r"\b(?:lands?|footprints?|pads?)\b", re.I)
+# A maker's name, as this project writes one in front of a part ("Semitec 103AT-2", "Littelfuse 59140-1-S-05-A"): one
+# capitalised word. The words a clause may open with that are not makers are listed, so they never count as one.
+_MAKER_WORD = re.compile(r"^[A-Z][a-z][A-Za-z]+$")
+_NOT_MAKER = {"the", "for", "from", "lead", "leads", "cable", "socket", "header", "plug", "jack", "touch", "display",
+              "standard", "mini", "remote", "vehicle", "shore", "panel", "module", "cell", "pack", "pigtail", "second",
+              "bare", "lid", "one", "each", "both", "and", "with", "via", "mated", "mating", "housing", "receptacle"}
+
+
+def far_end_reason(comment, fp, want, lp):
+    """Why the row's words read `want` as a part away from the land drawn for `lp` (the far end of a lead, or the part
+    inside a holder), or None when they do not say so. Both halves are required (see `row_part`)."""
+    named = _names_land(comment, fp, lp)
+    if not named:
+        return None
+    c = comment or ""
+    # The named part as a whole token, not inside a longer one ("103AT" is not the head of "103AT-2").
+    m = re.search(r"(?<![A-Za-z0-9./+-])%s(?![A-Za-z0-9/+]|[-.][A-Za-z0-9])" % re.escape(want), c)
+    if not m:
+        return None
+    pos = m.start()
+    cs = max(c.rfind(ch, 0, pos) for ch in ",;:()") + 1
+    ends = [i for i in (c.find(ch, pos + len(want)) for ch in ",;:()") if i >= 0]
+    before, after = c[cs:pos], c[pos + len(want):min(ends) if ends else len(c)]
+    maker, _ser = _land_maker_series(fp)
+    words = before.split()
+    mk = words[-1] if words else ""
+    if _MAKER_WORD.match(mk) and mk.lower() not in _NOT_MAKER and mk.upper() != (maker or "").upper():
+        return "the words name the land's %s and put %s after another maker's name (%s)" % (named, want, mk)
+    m = _FAR_BEFORE.search(before)
+    if not m:
+        m = _FAR_AFTER.match(after)
+        if m and _FAR_PLACE.match(after):
+            obj = after[m.end():]
+            if _LAND_WORD.search(obj) or _names_land(obj, fp, lp):
+                m = None          # the object of the placement is the land: the part is ON it, not away from it
+    if m:
+        return "the words name the land's %s and place %s away from it ('%s')" % (named, want, " ".join(m.group(0).split()))
+    return None
 
 
 def _first_token(head):
@@ -732,15 +1079,45 @@ def frequency_conflict(comment, ev):
         fmt(want), fmt(got), ev.get("code") or "?", (ev.get("model") or "")[:40])
 
 
-def certify(rec, cache, handfit, aliases, refresh=False):
+def certify(rec, cache, handfit, aliases, refresh=False, mismatches=None):
     """One row's verdict, with the evidence that produced it. The frequency guard is applied HERE, to the
     result, rather than beside each of the four places a CERTIFIED verdict is written: a guard that has to be
-    remembered at every return is a guard that a fifth return will miss."""
+    remembered at every return is a guard that a fifth return will miss. The declared condition 1 mismatches are
+    applied here for the same reason, last, so that no return path can write a pass over one (`mismatches` is the
+    loaded input; None reads tools/jlc-mismatch.yaml)."""
     ev = _certify(rec, cache, handfit, aliases, refresh)
     if isinstance(ev, dict) and ev.get("verdict") in ("CERTIFIED", "HAND_FIT"):
         bad = frequency_conflict(rec.get("comment"), ev)
         if bad:
             ev = dict(ev); ev.update(verdict="WRONG_MODEL", note=bad)
+    if isinstance(ev, dict):
+        # THE VALUE AGAINST THE LAND (round 8; narrowed in its second pass, 27 September 2026, see `row_part`). A row
+        # whose words name a part unrelated to the part its land is drawn for is one of two things, and the note says
+        # which. With the words' own evidence that the named part is away from the land, the land's part identified the
+        # row and the named part is written here, never dropped. Without it, the value and the land disagree: both parts
+        # are written here, and a verdict reached through the catalogue (it carries a model) that would pass is
+        # WRONG_MODEL, so no answer can certify one side of the conflict. `_certify` refuses every such row already,
+        # since the answer cannot be both parts; this is the guard for the path a later change adds, as the frequency
+        # guard above is. A declared verdict (a hand-fit route or an allow line on a row with no code) keeps its verdict
+        # and gains the sentence: it declares a purchase, not an identity, as it did at fc144600.
+        vl = value_land_conflict(rec.get("comment") or "", rec.get("fp") or "")
+        if vl:
+            named, lp, why = vl
+            ev = dict(ev)
+            if why:
+                s = ("the row's words also name %s, which is not the part its land is drawn for (%s): %s, so %s is read as "
+                     "the part at the far end of its lead or inside the land's part, and the land's part identifies the row"
+                     % (named, lp, why, named))
+            else:
+                s = ("the row's words name %s and its land is drawn for %s, and nothing in them marks %s as a part away "
+                     "from the land (they would name the land's part or JST series, and put %s after another maker's name "
+                     "or after wording such as 'lead to', 'on the' or 'thermistor'): the value and the land disagree, a "
+                     "substitution under owner condition 1 until the generator's row names one part" % (named, lp, named, named))
+                if ev.get("model") and ev.get("verdict") in ("CERTIFIED", "HAND_FIT"):
+                    s += "; the tool read %s on %s" % (ev["verdict"], ev["model"])
+                    ev["verdict"] = "WRONG_MODEL"
+            ev["note"] = (ev.get("note") or "") + ("; " if ev.get("note") else "") + s
+        ev = apply_declared(rec, ev, _declared_mismatches() if mismatches is None else mismatches)
     return ev
 
 
@@ -775,7 +1152,7 @@ def key_problem(fp, ev):
 def _certify(rec, cache, handfit, aliases, refresh=False):
     """One row's verdict, with the evidence that produced it."""
     comment, fp, code = rec["comment"], rec["fp"], rec["code"]
-    want = intended_part(comment)
+    want, _other = row_part(comment, fp)
     need = rec["qty"] * BOARD_QTY
 
     # A bench header's comment names the chip it breaks out ("CC2652P cJTAG ZBA (bench): 3V3 ...") and
@@ -1004,6 +1381,17 @@ def main(argv):
               % (",".join(sorted(only)), os.path.relpath(TABLE, ROOT), a.table))
 
     handfit, aliases = declared(HANDFIT), declared(ALIASES)
+    # THE DECLARED MISMATCHES ARE READ BEFORE ANYTHING IS ASKED (26 September 2026, round 8). A run that cannot read
+    # them must not write the table: it would write CERTIFIED over every row they hold, which is the defect they fix.
+    try:
+        decl = mismatch_declarations()
+    except MismatchInputError as e:
+        print("jlc_certify: %s; the table %s is left as it stands" % (e, os.path.relpath(a.table, ROOT)))
+        return verdict.write("jlc_certify", verdict.INCONCLUSIVE, counts={}, denominator=0, out_dir=a.out_dir,
+                             missing_input="%s, so no row can be judged against the declared condition 1 mismatches" % e,
+                             note="the table was not written")
+    for mid, why in decl["refused"]:
+        print("jlc_certify: a compatibility decision for %s is REFUSED and lifts nothing: %s" % (mid, why))
     cache = load_cache()
     rows = rows_to_check(only)
     keys = sorted(rows)
@@ -1013,7 +1401,7 @@ def main(argv):
     results, counts = [], {}
     for i, k in enumerate(keys, 1):
         rec = rows[k]
-        ev = certify(rec, cache, handfit, aliases, a.refresh)
+        ev = certify(rec, cache, handfit, aliases, a.refresh, mismatches=decl)
         ev.update(comment=rec["comment"], fp=rec["fp"], bom_code=rec["code"],
                   boards=",".join(sorted(rec["boards"])), qty=rec["qty"], _key=k)
         results.append(ev)
@@ -1043,6 +1431,17 @@ def main(argv):
     _decl_bad = [r for r in _decl if r["verdict"] not in ("CERTIFIED", "HAND_FIT", "BENCH_FITTED")]
     for r in bad[:40]:
         print("%-17s %-42s %s" % (r["verdict"], r["comment"][:42], r.get("note", "")[:70]))
+    # What the declared input did on this run, and which declarations matched nothing (a stale declaration reads as
+    # cover it is not giving, as a stale allow line does; named, not blocking, since a scoped run sees fewer rows).
+    _held = {}
+    for r in results:
+        if r.get("declared_mismatch"): _held.setdefault(r["declared_mismatch"], []).append(r["comment"][:50])
+    _stale = [e["id"] for e in decl["entries"] if e["id"] not in _held and e["id"] not in decl["cleared"]]
+    print("jlc_certify: declared mismatches (%s): %d entries, %d row(s) held WRONG_MODEL by them, %d cleared by a "
+          "decision, %d decision(s) refused%s" % (os.path.relpath(decl["path"], ROOT), len(decl["entries"]),
+                                                  sum(len(v) for v in _held.values()), len(decl["cleared"]),
+                                                  len(decl["refused"]),
+                                                  ("; matching no row of this run: %s" % ", ".join(_stale)) if _stale else ""))
     # AND WHICH BOARDS THIS LINE IS NOT ABOUT (17 September 2026). The set's summary is read by the final gate
     # and printed where a person decides whether to order, so a count taken over three boards' folders must
     # not read like a count over seven. A board whose declared phase has no folder is named here every time.
@@ -1129,6 +1528,11 @@ def main(argv):
                                          "so the set's parts were judged over the rest"
                                          % (len(_miss), ", ".join(sorted(x.upper() for x in _miss))))
                                         if _miss else None),
+                         inputs={"declared_mismatches": os.path.abspath(decl["path"]),     # recorded by its sha256 (verdict.write)
+                                 "held": {k: len(v) for k, v in sorted(_held.items())},
+                                 "cleared": sorted(decl["cleared"]),
+                                 "refused": ["%s: %s" % (i, w) for i, w in decl["refused"]],
+                                 "matching_no_row": _stale},
                          note="table at %s" % os.path.relpath(a.table, ROOT), out_dir=a.out_dir)
 
 

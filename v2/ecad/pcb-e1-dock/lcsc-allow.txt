@@ -24,3 +24,4 @@ lead from the D38999            # wall receptacle leads, made up at build
 Bourns SRF1260-4R7Y             # JLCPCB stock 0, route in tools/jlc-handfit.txt. E17 as committed; no row of the round-4 schematic carries it: remove it when board E is re-cut
 Bourns SRF1260-1R5Y             # JLCPCB stock 0 (C7320434, 26 Sep 2026), route in tools/jlc-handfit.txt: board E's L2 since MESHSAT-1357 round 4 (F-IN-02)
 XAL              # Coilcraft: not in JLCPCB's catalogue, route in tools/jlc-handfit.txt
+mini blade (Keystone 3568 holder)   # F1, F2 (10 A) and F3 (25 A): the Keystone 3568 blade clip is through-hole and JLCPCB does not place it (route in tools/jlc-handfit.txt, '3568'), and the MINI blade fuse is fitted at build. Added 26 Sep 2026 (MESHSAT-1357 round 8, the parts stream's draft 03, as board A's '25 A mini blade (Keystone 3568' line)

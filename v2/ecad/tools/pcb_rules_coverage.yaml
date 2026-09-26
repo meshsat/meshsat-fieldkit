@@ -148,7 +148,7 @@ coverage:
    remediation: {action: "the DC-bias curves for the decoupling on the fastest rails, and a rating from the ordered part for the values that state none",
      owner: SESSION, execution: PARALLEL_AGENT, depends_on: [], p50_h: 6, p80_h: 18}}
 
- CMP-002: {implementation: "lcsc_fill.py", verification: {tool: "jlc_certify.py, lcsc_fill.py", verdict: "jlc_certify_<letter>, lcsc_fill", fixtures: "tests/test_order_codes.py, tests/test_gate_fixtures.py, tests/test_certify_identity.py"},
+ CMP-002: {implementation: "lcsc_fill.py", verification: {tool: "jlc_certify.py, lcsc_fill.py", verdict: "jlc_certify_<letter>, lcsc_fill", fixtures: "tests/test_order_codes.py, tests/test_gate_fixtures.py, tests/test_certify_identity.py, tests/test_certify_mismatch.py"},
    _shared_verdict_why: "SHARED WITH SUP-001 (18 September 2026). One query per BOM row answers both, which is why
      one verdict is honest here: the supplier's record gives the model and the package for the code, and the row is
      then CERTIFIED with its stock and date or it is not. This rule is the PACKAGE half, the code's package against
@@ -169,7 +169,21 @@ coverage:
      STILL NOT CAUGHT, beyond this rule's acceptance criteria but inside its failure mode: a code on a class land
      whose package the answer shares (an 0603 resistor on LED_0603_1608Metric) passes on its code, because no
      catalogue line this tool reads states a class, and a value is compared only where it is a frequency.",
-   evidence_not_before: {"jlc_certify_<letter>": "2026-09-26T01:45:00+02:00"},
+   evidence_not_before: {"jlc_certify_<letter>": "2026-09-27T01:27:45+02:00", "lcsc_fill": "2026-09-27T01:27:45+02:00"},
+   _evidence_not_before_r8_why: "ROUND 8, 26 September 2026 (MESHSAT-1357; review finding D1, stream cert): both tools changed
+     what their verdicts mean again. jlc_certify reads the declared condition 1 mismatches of tools/jlc-mismatch.yaml and
+     refuses them whatever the catalogue answers (a reading taken before certified fourteen rows the owner's condition 1
+     refuses); it no longer reads a document number, a finding id, a ppm figure, a package name or a far-end part as a
+     row's part (eleven rows it refused, ten of them wrongly; a far-end part only where the words name the land's part
+     and mark the other one as away from it, a placement word whose object is the land itself (its part or series, or the
+     words land, footprint or pads) marking nothing, else the value and the land conflict and the row is refused); and its frequency guard reads the catalogue's own
+     description. lcsc_fill refuses the declared codes whatever the certified table says, and its MAP fills the SMBus lead
+     and the cell thermistor lead with the plain JST parts. Every earlier per-board jlc_certify reading and every
+     earlier lcsc_fill reading is re-taken, not read. The instant written is the start of the run of the round 8 tool as
+     integrated (2026-09-26T23:27:45Z, v2/vendor/SOURCES.yaml jlc_retake_r8cert: the integration narrowed the placement
+     words after the second independent check and re-ran the tool over the same staging and cache, writing the second
+     pass's table byte for byte; the first pass's run at 21:24:07Z and the second pass's at 22:20:49Z read the far-end rows
+     by rules later narrowed). A later merge may move it to the merge instant, never earlier.",
    _evidence_not_before_why: "the instant jlc_certify's CERTIFIED changed meaning (above). Every per-board verdict in
      the tree is older and would otherwise stand: measured on 26 September, boards C, E5 and P read PASS on this rule
      and on SUP-001 and now read INCONCLUSIVE until jlc_certify is re-taken; A, B, D and E were INCONCLUSIVE already
@@ -178,13 +192,14 @@ coverage:
    maturity: ENFORCED, gap_category: NONE, note: "the part the row or its land names, the package family, body, pitch and M.2 key are caught against the supplier's record and the maker's drawing, with a date; a verdict older than evidence_not_before is re-taken"}
 
  SUP-001: {implementation: "lcsc_fill.py, jlc-handfit.txt",
-   verification: {tool: "jlc_certify.py, lcsc_fill.py", verdict: "jlc_certify_<letter>, lcsc_fill", fixtures: "tests/test_order_codes.py, tests/test_gate_fixtures.py, tests/test_certify_identity.py"},
+   verification: {tool: "jlc_certify.py, lcsc_fill.py", verdict: "jlc_certify_<letter>, lcsc_fill", fixtures: "tests/test_order_codes.py, tests/test_gate_fixtures.py, tests/test_certify_identity.py, tests/test_certify_mismatch.py"},
    _shared_verdict_why: "SHARED WITH CMP-002 (18 September 2026). The same per-row query answers both: this rule is
      the BUYABILITY half, every row CERTIFIED against the live catalogue with its stock at a recorded date, or
      HAND_FIT with a written purchase route, or BENCH_FITTED and excluded from the assembly. A row whose package
      disagrees fails both, a row with no code fails this one alone, and a board with no deliverable folder at its
      declared phase makes both INCONCLUSIVE rather than either of them a pass.",
-   evidence_not_before: {"jlc_certify_<letter>": "2026-09-26T01:45:00+02:00"},
+   evidence_not_before: {"jlc_certify_<letter>": "2026-09-27T01:27:45+02:00", "lcsc_fill": "2026-09-27T01:27:45+02:00"},
+   _evidence_not_before_r8_why: "the round 8 instant and reason of CMP-002 (above).",
    _evidence_not_before_why: "the same instant and the same reason as CMP-002: a row CERTIFIED before it was not
      shown to be the part the row or its land names, so it was not shown that the part to be placed is buyable.",
    maturity: ENFORCED, gap_category: NONE, note: "stock is read at a date; the date is the evidence's freshness"}

@@ -17,3 +17,4 @@ XAL              # Coilcraft: not in JLCPCB's catalogue, route in tools/jlc-hand
 QMX USB lead     # a pigtail to the QMX unit's own USB-C, made up at build
 CR2032 holder Keystone 3034   # hand-fit, route in tools/jlc-handfit.txt: JLCPCB stocks no CR2032 holder at all
 SWD pads,        # the three controllers' programming lands: five 2.54 mm holes each, copper on our own board and no part fitted
+bench jumper, controller   # J_IOCOFF_A to J_IOCOFF_C: a 1x02 header land for a bench jumper that holds a controller's LDO off (IOHA A4, A6), not fitted in service and never placed by JLCPCB. Added 26 Sep 2026 (MESHSAT-1357 round 8, the parts stream's draft 03)
