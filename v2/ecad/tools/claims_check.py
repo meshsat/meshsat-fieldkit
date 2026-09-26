@@ -26,7 +26,11 @@ DEFAULT = ["README.md", "v1/README.md", "v1/BUILD.md", "v2/README.md", "v2/BUILD
            "v2/docs/ASSEMBLY.md", "v2/docs/PANEL.md", "v2/docs/V2-SPEC.md",
            # the envelope names every rating this kit is designed to and is the document most likely to be
            # read as a promise, so it is screened with the rest (16 September 2026)
-           "v2/docs/OPERATING-ENVELOPE.md"]
+           "v2/docs/OPERATING-ENVELOPE.md",
+           # the foundation baseline's product documents and the generated requirements trace (MESHSAT-1357, 26
+           # September 2026): the brief and the concept of operations say what the kit is for, and the trace page
+           # states every requirement, so each is a place a rating could be read as a promise
+           "v2/docs/PRODUCT-BRIEF.md", "v2/docs/CONOPS.md", "v2/docs/REQUIREMENTS-TRACE.md"]
 
 # A claim word makes an assertion about the built hardware's behaviour or its rating.
 CLAIM = re.compile(r"\b(IP6[78]|IP\s?6[78]|waterproof|weatherproof|submersible|MIL-STD-\d+|"
@@ -40,6 +44,10 @@ QUALIFY = re.compile(r"\b(designed|intended|intent|aim|target|untested|not teste
 # deployed" is the opposite of a claim, and the first version of this screen flagged it as one.
 NEGATED = re.compile(r"\b(nothing|none|never|not|no)\b[^.]{0,80}?\b(been|is|are|has|have|claimed|built|"
                      r"powered|fabricated|deployed|tested|proven)\b", re.I)
+# A negation directly in front of the claim word ("is not rated for sun", "never qualified") says the opposite of a
+# claim. NEGATED above needs its verb AFTER the negation, so "its sheath is not rated for sun, rain or frost" (v1/BUILD.md,
+# a cable the kit does NOT use outdoors) read as an unqualified rating and failed the whole screen (26 September 2026).
+NEGATED_BEFORE = re.compile(r"\b(not|never|no|nor|without)\s+(?:\w+\s+){0,2}$", re.I)
 # An evidence reference: a test record, a measurement section, a vendor document.
 EVIDENCE = re.compile(r"(appendix\s+3?2?\.\d+|section\s+\d+|v2/vendor/|TEST-PLAN|test record|measured on)", re.I)
 
@@ -66,9 +74,10 @@ def check(paths):
         p = os.path.join(ROOT, rel)
         if not os.path.exists(p): continue
         for s in sentences(open(p, errors="replace").read()):
-            m = CLAIM.search(s)
-            if not m: continue
+            ms = list(CLAIM.finditer(s))
+            if not ms: continue
             n += 1
+            if all(NEGATED_BEFORE.search(s[:m.start()]) for m in ms): continue      # every claim word is negated
             if QUALIFY.search(s) or EVIDENCE.search(s) or NEGATED.search(s): continue
             if any(f in rel and frag.strip() in s for f, frag in al): continue
             bad.append("%s: %s" % (rel, s[:150]))
