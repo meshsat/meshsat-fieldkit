@@ -1,0 +1,2 @@
+# The root rule "out/" (.gitignore:20) would drop the evidence files FAILOVER-FABRIC.md cites by sha256.
+!out/

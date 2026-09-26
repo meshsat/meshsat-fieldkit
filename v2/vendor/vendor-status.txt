@@ -162,3 +162,5 @@ vishay/vishay-si2300ds.pdf   current   # Si2300DS-T1-GE3, board C's e-paper boos
 vishay/vishay-wsl-power-metal-strip.pdf   current   # WSL25126L000FEA, board A's stage shunts in the round 6 candidate
 battery/ti-sffs317a-bq77207-fusa.pdf   current   # TI's pin FMA for the BQ77207 family, board P's U2: what an open, shorted or bridged TS pin does (SOURCES.yaml, pack-secondary-protector)
 battery/littelfuse-itv9550-30a.pdf   retired   # NOT FITTED: the chemical fuse alternative the battery review stream evaluated and did not take (-10 C operating floor), kept for the record of that choice (SOURCES.yaml, pack-chemical-fuse-alternative)
+ti/ti-sn74lvc86a.pdf   current   # SN74LVC86APWR, the part board B's U80 order code C350562 resolves to (the break-before-make XOR; SOURCES.yaml, bbm-xor)
+nexperia/nexperia-74lvc86a.pdf   current   # 74LVC86APW, the type number board B's U80 value names; a component mismatch with the ordered TI part (SOURCES.yaml, bbm-xor)

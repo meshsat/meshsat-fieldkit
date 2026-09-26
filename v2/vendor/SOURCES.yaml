@@ -91,6 +91,9 @@
 # Only those two prose fields changed (no code, board, where, identity or document field), so no join of a review
 # packet can move; v2/release/review-packets/README.md records the rebuild of the four packets against this file.
 
+# Integration of 26 September 2026 (the requirements and architecture merge, after eadbe571): the entry bbm-xor for
+# board B's U80, with the two 74LVC86A sheets the fabric review stream fetched, filed from its worktree byte for byte.
+
 schema_version: 2
 read_on: "2026-09-25"
 tree: "82dd1e4d"
@@ -1602,6 +1605,33 @@ parts:
         sha256: "30b963cc44233cf3ca35c891ff987c8323a2244ecc765e23296ec96ca4b42666"
         currency: "byte-identical to ti.com on 2026-09-26"
         matches_fitted: "not applicable: a family reference; applying a single-gate part's Ioff to the quad SN74LVC08A is INFERRED and stays with the round 6 board B review"
+
+  - id: bbm-xor
+    function: "break-before-make on each USB bank's host select: BOE{b}_n = BSEL{b} XOR BSEL{b}_D (IOHA fabric, FAB-03)"
+    boards: [B]
+    schematic_name: {text: "74LVC86APW quad exclusive-or", where: "v2/ecad/tools/gen_sch_b.py:1246-1248", where_rev: "eadbe571"}
+    fitted_mpn: "SN74LVC86APWR"
+    package: "TSSOP-14 4.4 x 5 mm, 0.65 mm pitch"
+    lcsc: "C350562 (U80)"
+    lcsc_reading: {model: "SN74LVC86APWR", maker: "Texas Instruments", pkg: "TSSOP-14", stock: 4080, read: "2026-09-26", source: "JLC-CERTIFIED.tsv:304"}
+    identity: MISMATCH
+    identity_note: "the schematic value names Nexperia's type number 74LVC86APW while the order code resolves to TI's SN74LVC86APWR. Both sheets give the same function and the same 14-pin assignment (VERIFIED, read by the fabric review stream), but their input transition limits differ (TI 9 ns/V, Nexperia 10 ns/V at 2.7 to 3.6 V) and the Nexperia sheet states Schmitt-trigger action at all inputs (its section 1) where the stream's read of the TI sheet records no such statement, so which of the two is fitted matters for this circuit's slow delayed input. A component mismatch under owner condition 1 until the value text names the ordered part; the circuit change the fabric page takes (FAILOVER-FABRIC.md, FAB-03) removes the slow edge either way"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/ti-sn74lvc86a.pdf"
+        doc_id: "TI SCAS288R"
+        revision: "Rev. R, January 1993, revised August 2024"
+        url: "https://www.ti.com/lit/ds/symlink/sn74lvc86a.pdf"
+        fetched: "2026-09-26T12:31Z, HTTP 200 application/pdf, 3304765 bytes (fabric review stream)"
+        sha256: "8115c852d23ce42a0a2518462474171d809c6d6ad5ed28f21c110bdb5a60a334"
+        matches_fitted: "yes: the ordered part SN74LVC86APWR"
+      - path: "v2/vendor/nexperia/nexperia-74lvc86a.pdf"
+        doc_id: "Nexperia 74LVC86A product data sheet"
+        revision: "Rev. 8, 25 January 2024"
+        url: "https://assets.nexperia.com/documents/data-sheet/74LVC86A.pdf"
+        fetched: "2026-09-26T12:31Z, HTTP 200 application/pdf, 242741 bytes (fabric review stream; the first request without a browser user agent was refused with HTTP 403)"
+        sha256: "aa449c7949d141d555967710a235c7686a6ece02468f783f8c8cf924a1fc926a"
+        matches_fitted: "no: it describes the part the schematic value names, not the ordered TI part"
 
 owed:
   - "DONE 26 September 2026 (integration I6): sources.txt file lines for the six documents added on 25 and 26 September and for this file, a vendor-status.txt line for each, a vendor-noindex.txt line for the text-less TE drawing, and the correction of sources.txt's m2 folder line and the same sentence in README.md ('key to be read from the drawing': the drawing says key M)"

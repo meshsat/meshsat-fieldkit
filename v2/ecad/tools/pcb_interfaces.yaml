@@ -212,3 +212,372 @@ boards:
       belong to are declared on the boards at their ends, and what this board owes them is contact and current,
       which MEC-001 and PI-001 judge."
 
+# ======================================================================================================================
+# BOARD-TO-BOARD CONTRACTS (MESHSAT-1357). First integrated 26 September 2026 at 82dd1e4d from workstream W3's round-2
+# draft with the adjudications A01, A03, A04, A07, A08, A09 and A11 applied; RE-READ AGAINST THE CORRECTED NETLISTS the
+# same evening at main eadbe571 (faf8c981 boards C, D, E and P; 458b2873 boards A, B and D; d90f30e4 board P).
+#
+# WHAT THIS SECTION IS. The connector contract between two boards (or a board and a device it cables to): both ends,
+# the pin map, the state of every control line when the cable is out, the power it carries, whether it may be mated
+# live, and which tool judges which part of it. It is the "interfaces owned on both mating ends" record of Review C
+# (v2/docs/EXECUTION-PLAN.md) and the data behind v2/docs/ARCHITECTURE.md section 12.
+#
+# WHO READS IT. NOTHING YET, deliberately. interfaces.py (rule INT-001) reads only `interfaces` and `boards` above, and
+# so do its fixtures (tests/test_interfaces.py) and review_packet.py's interfaces_for(): a new top-level key is ignored
+# by all three. check_contracts.py holds the map-identity checks it names in `judged_by`, as code; moving those checks
+# onto this data is a later tool change with its own fixtures. So a line here is a CONTRACT, not a verdict. (This file
+# is a declared configuration input of interfaces.py in rules_status.CONFIG_INPUTS, so an edit here dates every
+# interfaces.py reading; those readings are already AWAITING_REVALIDATION for TOOL_CHANGED, which rules_status decides
+# first.)
+#
+# EVIDENCE WORDS. VERIFIED = read in the generator line or document cited, at eadbe571; RECORDED = a box result written
+# into a commit, not re-run here; INFERRED = reasoned from verified facts, not measured; TBD = no source in this tree,
+# effect stated. Prototype design: nothing here has been built, mated or powered. The generator lines are the corrected
+# design; the committed board files (A32, B21, C24, D12, E17, P4) predate it and carry the older netlists. Finding IDs
+# are defined in v2/docs/ARCHITECTURE.md sections 13 and 14; a contract that lists one is NOT met by the design until it
+# closes. Pin maps are given from the FIRST end named; `aliases` lists nets that are one conductor under two names.
+board_to_board:
+  schema: 1
+  read_at: {commit: eadbe571, date: "2026-09-26", phases: {a: A32, b: B21, c: C24, d: D12, e: E17, e5: E5, p: P4},
+            netlists_sha256_16: {a: 2e8923d6853ee4e1, b: 6048ee56c48a028b, c: 2834f0d8c4071d56, d: f13d8b70099ab03e,
+                                 e: d910e49c5f5f50b2, p: 4342c4cbe1b43dc4},
+            note: "generator and netlist lines are read at eadbe571; the phases are the committed LAYOUTS, which predate
+              these netlists (SCH-002 reads FAIL on A and B and INCONCLUSIVE on C, D, E and P, v2/docs/CURRENT-EVIDENCE.md).
+              check_contracts.py read PASS 91 of 91 across the corrected set in the integration tree of 458b2873
+              (RECORDED). The committed INT-001 readings on main are PASS on all seven boards (interfaces_<letter>, and
+              check_contracts at PASS 73 of 73 in every board's committed evidence of 21 September 2026);
+              CURRENT-EVIDENCE.md classes each AWAITING_REVALIDATION (TOOL_CHANGED) until check_contracts.py and
+              interfaces.py record by sha the netlists they read"}
+  rulings: "the owner's D-01 to D-17 of 25 and 26 September 2026, D-08a and the reversal of D-08 (v2/docs/CONOPS.md
+    section 7, appendix 32.367) apply to these contracts where named; which of their engineering is in a generator is
+    v2/docs/ARCHITECTURE.md section 1.3"
+  power_up_reference: "v2/docs/ARCHITECTURE.md section 4.3 (the power-up sequence as generated at eadbe571)"
+  contracts:
+
+    IF-BC-PANEL:
+      title: "panel ribbon, board B J_PANEL to board C J_PANEL"
+      kind: board_to_board
+      ends:
+        - {board: b, ref: J_PANEL, part: "IDC 2x13 2.54 mm box header", src: "v2/ecad/tools/gen_sch_b.py:1061-1063"}
+        - {board: c, ref: J_PANEL, part: "IDC 2x13 SMD box header, underside", src: "v2/ecad/tools/gen_sch_c.py:99-101"}
+      cable: {what: "26-way 1.27 mm flat ribbon, IDC both ends, 350 mm", src: "v2/docs/ASSEMBLY.md section 4, panel ribbon row",
+              rating: "TBD: no ribbon or IDC contact datasheet is held; effect: the PANEL_5V fault-current check below cannot close"}
+      aliases: [["PANEL_5V", "+5V"]]
+      map_identity: {status: VERIFIED, judged_by: "check_contracts.py:196-207"}
+      pins: {1: PANEL_5V, 2: PANEL_5V, 3: GND, 4: SDA, 5: SCL, 6: EXP_INT, 7: TR_APRS, 8: EMCON_HW, 9: GND,
+             10: ZEROIZE_HW, 11: TX_INHIBIT_n, 12: HDMI_SEL1, 13: HDMI_SEL2, 14: GND, 15: USB_PNL_P, 16: USB_PNL_N, 17: GND,
+             18: HB1, 19: HB2, 20: HB3, 21: SLOT_EN1, 22: SLOT_EN2, 23: SLOT_EN3, 24: PI_SHDN_REQ, 25: PI_KILL,
+             26: SHORE_INHIBIT}
+      power: {rail: PANEL_5V, from: "+5V_DEV through B's F1, 2.0 A hold polyfuse", declared_a: 0.60,
+              src: "gen_sch_b.py:1053-1060", note: "the panel's only supply; +5V_DEV starts by design since 458b2873 (R42 on A)",
+              protection: "NOT COORDINATED on board B (B_PANEL_5V, ARCHITECTURE.md sections 4.5 and 13.2): F1 holds 2.0 A and
+                trips at 3.5 A, and B21's 0.4 mm PWR-class PANEL_5V track is rated 1.23 A at 10 K, so the copper is the weaker
+                element. Rule PWR-003 reads FAIL on board B (energy_chain_b; pcb_energy_chain.yaml stage B_PANEL_5V and its
+                known finding, :217-245, :306-313), and a re-run on the corrected netlists repeats it (F1 is unchanged,
+                gen_sch_b.py:1053). Closes on B's next placement and route with the 0.8 mm PANEL class of gen_pcb_b3.py:563-567
+                (2.03 A at 10 K), or with an MF-MSMF110 (1.1 A hold, 2.2 A trip) in F1's place"}
+      bus: "the kit I2C bus: C's RP2040 (GPIO0/1) is its ONLY master; pull-ups 2.2k on B (R54, R55, gen_sch_b.py:1044) and
+        on C; every target and its address, read from the netlists' straps: v2/docs/ARCHITECTURE.md section 5.5. The three
+        supervisors are I2C targets on I2C1 since 458b2873, and the TPS23861 (B U5, A3 unconnected) answers the broadcast
+        address 0x30: the supervisors take 0x34 to 0x36 (I3-F01, the session's choice, firmware only)"
+      cable_out_states:   # VERIFIED from the pulls cited; what each far board sees with the ribbon out
+        EMCON_HW: "LOW, EMCON asserted (A R102 100k, B R58 10k to GND; gen_sch_a.py:1112, gen_sch_b.py:1024); the hold with
+          the source gone is UNDECIDED as drawn (feasibility/EMCON.md L2: remedy R102 10k 1% and R58 4.7k 1% with single gates)"
+        TX_INHIBIT_n: "LOW, transmit inhibited (A R145, B R59, D R2, 100k to GND)"
+        ZEROIZE_HW: "HIGH, no wipe (A R117 10k to A's +3V3, gen_sch_a.py:1150); nothing acts on this line since faf8c981: C
+          reads its own ZEROIZE_SW and U12 drives a buffered copy here (gen_sch_c.py:168-178)"
+        SLOT_EN1..3: "LOW, every compute slot OFF (A R30, R34, R38, 100k to GND; gen_sch_a.py:840-841, :879)"
+        SHORE_INHIBIT: "LOW, shore and vehicle inputs allowed (A R118, E R26)"
+        PI_KILL: "LOW, no kill (A R5 1k, gen_sch_a.py:263; three back-driving slots stay under Q1's threshold, INFERRED)"
+        PI_SHDN_REQ: "HIGH, no request (A R3 10k to A's +3V3, gen_sch_a.py:261; open-drain drivers only, by contract FW-A10)"
+        HDMI_SEL1..2: "LOW nominally (B R15, R16 100k, gen_sch_b.py:903); not a guaranteed low at the switch's input current
+          (feasibility/FAILOVER-FABRIC.md FAB-04: remedy 10k)"
+        HB1..3: "HIGH on B (10k to +3V3_DEV per slot, FAILOVER-FABRIC.md section 4.9): a dark module reads as a held-high
+          line, so liveness is the 1 Hz toggle; no pull on C"
+      zeroize_semantics: "owner ruling D-03 (decision 30): a crypto-erase through the secure element; the ONLY wipe trigger is
+        the covered toggle held 5 s, read on the local net ZEROIZE_SW by the panel controller's GPIO22 (gen_sch_c.py:217,
+        :126-127); LEVEL-SENSITIVE after power loss (read at boot before any slot powers). ZEROIZE_HW on this ribbon is a
+        buffered copy for test points; no board acts on it. Design: v2/docs/feasibility/ZEROIZE.md (blocker FB-ZER-1)"
+      slot_power_semantics: "the panel is the only path to slot power, by D-03's boot order; SLOT_EN powers up OFF. OWED
+        (the session's choice, ARCHITECTURE.md section 4.3): SLOT_EN holds its state across a panel reset (for example a
+        latch the panel sets and clears), so a panel reset or update no longer drops the running slots; in no generator"
+      emcon_semantics: "owner ruling D-05: radios dark. Since 458b2873 EMCON_HW gates the three CM5 radios through open drains
+        and removes the two WiFi cards' supplies (via Q11 and EMCON_ON on B). The per-transmitter table and what is open
+        (L1 to L4, L7, SD-EMC-1 for the 5G module, SD-EMC-2 back-feed) is v2/docs/feasibility/EMCON.md (blocker FB-EMC)"
+      hot_plug: "not hot-pluggable (proposed): mate and unmate with the kit off; PANEL.md section 7 already forbids
+        switching the panel's 3.3 V with the ribbon attached"
+      back_power: "INFERRED risk: EXP_INT (A R110, B R56) and PI_SHDN_REQ (A R3) are pulled to rails that can be up while C
+        is unpowered; up to about 0.33 mA per line into an unpowered RP2040 pad (IOVDD + 0.5 V allowed, RP2040 Table 622).
+        ZEROIZE_HW no longer back-feeds C: U12's Ioff disables its output with C unpowered (faf8c981)"
+      not_judged: ["pull state of SLOT_EN, ZEROIZE_HW and SHORE_INHIBIT", "back-power", "PANEL_5V conductor current in the cable",
+                   "which radios EMCON_HW actually reaches (RF-002 judges the line, not every transmitter)"]
+      findings: [W5-F4, I3-F01, FAB-04, EMCON-L1, EMCON-L2, B_PANEL_5V]
+      serves: [NEED-03, NEED-04, NEED-08, NEED-10, NEED-19]
+
+    IF-AB-RIBBON:
+      title: "A to B control ribbon, A J_AB1 (top) to B J_AB1 (underside), same case XY"
+      kind: board_to_board
+      ends:
+        - {board: a, ref: J_AB1, part: "IDC 2x13, top side", src: "v2/ecad/tools/gen_sch_a.py:1143-1145"}
+        - {board: b, ref: J_AB1, part: "IDC 2x13, underside", src: "v2/ecad/tools/gen_sch_b.py:1077-1079"}
+      cable: {what: "26-way 1.27 mm flat ribbon, 80 mm, folded once", src: "v2/docs/ASSEMBLY.md section 4, A to B ribbon row"}
+      map_identity: {status: VERIFIED, judged_by: "check_contracts.py:267-269"}
+      pins: {1: USB_D8_P, 2: USB_D8_N, 3: GND, 4: GND, 5: GND, 6: GND, 7: GND, 8: GND, 9: PI_SHDN_REQ, 10: PI_KILL,
+             11: SDA, 12: SCL, 13: EXP_INT, 14: TR_APRS, 15: EMCON_HW, 16: TX_INHIBIT_n, 17: SLOT_EN1, 18: SLOT_EN2,
+             19: SLOT_EN3, 20: ZEROIZE_HW, 21: SHORE_INHIBIT, 22: GND, 23: GND, 24: GND, 25: USB_E6_P, 26: USB_E6_N}
+      usb: "USB_D8 is B bank 3 hub port 1 to board D's TUSB2046I (full speed); USB_E6 is B bank 3 hub port 2 to board E's
+        RP2040 through A and the dock (gen_sch_b.py:764-766); each pair on an END row"
+      cable_out_states: "as IF-BC-PANEL for every control line: the pulls sit on board A (VERIFIED). TR_APRS also feeds A's
+        outlet interlock (U30); R116 holds it low with the ribbon out, so the outlets are not dropped"
+      hot_plug: "not hot-pluggable (proposed): no power crosses it, but a partly seated ribbon can assert PI_KILL or drop SLOT_EN"
+      findings: [W5-F4, EMCON-L2]
+      serves: [NEED-03, NEED-08]
+
+    IF-AB-WALL:
+      title: "A to B wall-port ribbon, A J_AB2 to B J_AB2, then A's lead to the sealed Glenair 233-370"
+      kind: board_to_board
+      ends:
+        - {board: a, ref: J_AB2, part: "IDC 2x5 vertical box header", src: "v2/ecad/tools/gen_sch_a.py:1146-1147"}
+        - {board: b, ref: J_AB2, part: "IDC 2x5", src: "v2/ecad/tools/gen_sch_b.py:1083-1085"}
+      cable: {what: "10-way ribbon", length: "TBD: no J_AB2 row in the leads table (v2/docs/ASSEMBLY.md section 4)"}
+      map_identity: {status: VERIFIED, judged_by: "check_contracts.py:274-278 (map), :292 (the pair reaches A's J_USBW)"}
+      pins: {1: USB_WALL_P, 2: USB_WALL_N, 3: GND, 4: GND, 5: GND, 6: GND, 7: GND, 8: GND, 9: GND, 10: GND}
+      usb: "B bank 3 hub port 3 to A's J_USBW (JST-PH 1x4: VBUS_WALL, D-, D+, GND), the Glenair 233-370 feed-through's lead
+        (a USB 2.0 type A coupler), a HOST port and the console and key-fill port (owner ruling D-12, in the netlist since
+        458b2873: gen_sch_a.py:1151-1167). VBUS_WALL comes from +5V_DEV through A's eFuse U32 (limit 0.89 A), switched and
+        watched by U28's USBX_EN and USBX_FLT; ESD on A (U29) and B. No impedance target declared for the ribbon (a bring-up
+        link-speed test is owed). The USB-C outlet is power only (IF-EXT-USB)"
+      mechanical: "COLLISION: A's J_AB2 stands inside board D's outline, its body to about Z 25.7 against D's underside on
+        6 mm standoffs (positions VERIFIED, height INFERRED; W4-F17, adjudication A09; ASSEMBLY.md section 1)"
+      findings: [W4-F17]
+      serves: [NEED-10, NEED-14]
+
+    IF-AB-POWER:
+      title: "A to B rail leads: J_5V_S1..3, J_5V_DEV, J_54V (JST-VH pairs, 16 and 18 AWG, 150 mm)"
+      kind: board_to_board
+      ends:
+        - {board: a, refs: [J_5V_S1, J_5V_S2, J_5V_S3, J_5V_DEV, J_54V], src: "v2/ecad/tools/gen_sch_a.py:889-890, 951"}
+        - {board: b, refs: [J_5V_S1, J_5V_S2, J_5V_S3, J_5V_DEV, J_54V], src: "v2/ecad/tools/gen_sch_b.py:434, 831, 875"}
+      cable: {src: "v2/docs/ASSEMBLY.md section 4, slot rails, device rail and PoE feed rows"}
+      pins_each: "1 = the rail, 2 = GND, on both ends"
+      converters: "A: +5V_S1 and +5V_S3 on AP64500 (U4, U6); +5V_S2 and +5V_DEV on LM5176 stages with a 7.2 to 9.5 A average
+        current limit (U5, U7; F-PR-04, 458b2873); +54V_POE on an LM5176 boost (U16)"
+      currents:
+        - {rail: "+5V_S1, +5V_S3", a_declares: "2.5 A typical, 5.0 A peak (gen_sch_a.py:106)", b_declares: "2.5 A typical, 5.0 A peak (gen_sch_b.py:72)",
+           enable: "SLOT_ENx from the panel; OFF until the panel firmware drives it"}
+        - {rail: "+5V_S2", a_declares: "2.5 A typical, 5.0 A peak (gen_sch_a.py:106)",
+           b_declares: "4.2 A typical, 5.0 A peak, 5.63 A coincident peak with the 5G module at 4 A (gen_sch_b.py:66-72)",
+           status: "DISAGREE: the two ends declare different currents for one conductor (I-03, open); A's stage limits at 7.2 A"}
+        - {rail: "+5V_DEV", a_declares: "4.0 A typical, 6.9 A peak at the converter, of which 3.2 A apportioned to J_5V_DEV
+             (gen_sch_a.py:110-115)", b_declares: "3.8 A typical, 6.0 A peak arriving (gen_sch_b.py:90)",
+           status: "DISAGREE at the lead (A 3.2 A against B 3.8 A typical); enable DEV_EN, ON by design since 458b2873 (R42)"}
+        - {rail: "+54V_POE", declared: "0.3 A typical, 0.6 A peak on both ends (gen_sch_a.py:124, gen_sch_b.py:242)",
+           enable: "POE_EN = POE_SW_EN AND OUTLET_OK: OFF at power-up and while the PA keys (S-14)"}
+      contact_rating: "JST-VH is a 10 A class family per the generator descriptions; datasheet not held (TBD)"
+      hot_plug: "not hot-pluggable (proposed): crimped leads, mate with the kit off"
+      back_power: "the always-on fabric on +5V_DEV and +3V3_DEV applies voltage to the pins of an unpowered module
+        (FAILOVER-FABRIC.md FAB-02; remedy: each bank's and each display switch's enable qualified by the selected slot's
+        power-good, owed on B)"
+      findings: [I-03, FAB-02]
+      serves: [NEED-03, NEED-05]
+
+    IF-AD-HARNESS:
+      title: "A to D mezzanine harness, A J_MEZZ1 to D J_HARN1 (IDC 2x8, 60 mm), and the 5 V lead A J_MEZZ_PWR1 to D J_PWR1 (VH, 18 AWG, 60 mm)"
+      kind: board_to_board
+      ends:
+        - {board: a, refs: [J_MEZZ1, J_MEZZ_PWR1], src: "v2/ecad/tools/gen_sch_a.py:1148-1149, 1082"}
+        - {board: d, refs: [J_HARN1, J_PWR1], src: "v2/ecad/tools/gen_sch_d.py:220-222"}
+      cable: {src: "v2/docs/ASSEMBLY.md section 4, mezzanine harness and mezzanine 5 V rows"}
+      map_identity: {status: VERIFIED, judged_by: "check_contracts.py:281-283"}
+      pins: {1: USB_D8_P, 2: USB_D8_N, 3: GND, 4: GND, 5: GND, 6: GND, 7: TR_APRS, 8: TX_INHIBIT_n, 9: PA_EN, 10: SDA,
+             11: SCL, 12: EXP_INT, 13: "+3V3", 14: GND, 15: ZEROIZE_HW, 16: AB_SPARE}
+      power_lead: {net: "+5V_D8", from: "A U23 eFuse, ILM 2.0 A, enable D8_EN (gen_sch_a.py:1082)", declared_a: 1.0,
+                   power_up: "D8_EN held OFF by R113 4.7k until the panel firmware writes U27 (458b2873)"}
+      cable_out_states: {TX_INHIBIT_n: "LOW (D R2 100k)", PA_EN: "LOW (D R3 100k)",
+                         note: "KEY and PA_KEY carry only logic inputs and passive pulls since 458b2873 (RF-002, R6D-1): the KEY gate cannot key"}
+      power_up: "PA_EN = EMCON_HW AND PA_SW_EN on A (U26); PA_SW_EN is held LOW by R103 4.7k until the panel writes U27 (F-SQ-07
+        corrected, 458b2873). TR_APRS is D's KEY line through R48 and feeds A's outlet interlock U30"
+      mechanical: "board D sits on 6 mm standoffs with its underside 6.0 mm above A's top (v2/cad/render/scene.py, appendix
+        32.85); ASSEMBLY.md is corrected to 6 mm; v2/BUILD.md still gives 22.6 mm (line 45 'M3 x 22.6 standoffs', line 75
+        '22.6 mm standoffs'), an absolute Z read as a length (A09)"
+      back_power: "INFERRED risk: D's harness-side logic is on A's +3V3 while its SA868 side is on +5V_D8 behind A's eFuse;
+        KEY and PA_KEY hold low with their own gates unpowered (R84, R85, R4T-F9); EMCON.md L4 (gate supplies outside their
+        specified range) applies to D's single gates"
+      not_judged: ["the J_MEZZ_PWR1 to J_PWR1 lead", "heights under board B"]
+      findings: [W4-F17, EMCON-L4, PWR-F15]
+      serves: [NEED-01, NEED-08]
+
+    IF-AE-DOCK:
+      title: "A to E through the dock block E5: A J_DOCK (12 Preci-Dip 813 spring pins) on E5 targets, E5 lands to E J_BLK (12 x 24 AWG); pack power pins A J_CP1..4, J_CN1..4, J_PRE1 on E5 targets, E5 holes to E P_CP and P_CN (12 AWG)"
+      kind: board_to_board
+      ends:
+        - {board: a, refs: [J_DOCK, J_CP1-4, J_CN1-4, J_PRE1], src: "v2/ecad/tools/gen_sch_a.py:205-209, 225-226"}
+        - {board: e5, what: "no schematic; targets and lands generated from board A's file by position (gen_pcb_e5.py)"}
+        - {board: e, refs: [J_BLK, P_CP, P_CN], src: "v2/ecad/tools/gen_sch_e.py:195-196, 488"}
+      aliases: [["DOCK_SPARE", "BLK_SPARE"], ["CELL+", "CELL_F", "E's pack positive after its F3 blade"]]
+      map_identity: {status: VERIFIED, judged_by: "check_contracts.py:236-241; block_contract.py (needs pcbnew) for E5"}
+      pins: {1: VIN_RAW, 2: VIN_RAW, 3: VIN_RAW, 4: VIN_RAW, 5: GND, 6: GND, 7: GND, 8: SHORE_INHIBIT, 9: USB_E6_P,
+             10: USB_E6_N, 11: GND, 12: DOCK_SPARE}
+      vin_raw: {voltage: "9 to 36 V (v_work 36 V)",
+                a_declares: "12.31 A typical and peak: board E's vehicle entry at its hot swap's maximum limit (6.15 A) and
+                  its solar tracker (6.16 A) ORed onto one bus, which A's front end can draw (gen_sch_a.py:49-66)",
+                e_declares: "6.15 A on its own VIN_RAW (the vehicle entry alone, gen_sch_e.py:66-100), while the same copper from
+                  L2 to J_BLK carries the tracker's current too (R4A-N12, board E's item)",
+                contact: "Preci-Dip 813, 'OPERATING CURRENT Max. 3.5 A' per contact; -55 to +85 C with the music wire spring
+                  (v2/vendor/precidip/precidip-813-spring-loaded-connector-pages-31-34.pdf, VERIFIED)",
+                margin: "3.08 A per contact at 12.31 A if the four share evenly, 88 percent of the rating; with one of the four
+                  open, 4.10 A, over the rating (INFERRED arithmetic; R4A-N13, open): the contract carries no margin for an
+                  open or high-resistance contact; hot-end derating TBD"}
+      pack_pins: {rating: "9 A per pin per the generator description (gen_sch_a.py:207-208); no Mill-Max datasheet held (TBD)",
+                  load: "CELL+ 10.0 A typical, 18.0 A peak (gen_sch_a.py:24; gen_sch_e.py:52): 4.5 A per pin with four sharing,
+                    6.0 A with one open; every PA key-down makes up to 18 A a service current for its 60 s (PWR-F12)",
+                  precharge: "J_PRE1 mates first, through R1 10R 2 W to CELL+ (gen_sch_a.py:209)"}
+      charge_share: "BAT-F06, taken by the session under the owner's standing rule (ARCHITECTURE.md section 4.4): board E's
+        always-on domain and fans sit on CELL_F, the pack side of A's charge shunt R17, so they share the charger's host-free
+        256 mA; stated, and the host sets ChargeCurrent to cover them; the VSYS-side feed through this contract is not taken"
+      protection: "VIN_RAW has a one-way clamp at each end: A D2 SMCJ40A in the netlist (gen_sch_a.py:618; the committed A32 board
+        carries SMCJ33A, A04-D2); E's clamps corrected at faf8c981 (D10 SMCJ40CA at the entry, D1 SMCJ40A behind the ideal diode)"
+      hot_plug: "INFERRED hazard: the stack lifts off live spring contacts whenever the pack or shore is connected, and the E5
+        targets are exposed live while the stack is out. Owner ruling D-14: the procedure (kit off, the vehicle, shore and
+        solar leads out, the pack's XT60 unplugged) plus an insulating cap over E5 while the stack is out (ASSEMBLY.md
+        section 7; the cap is not yet drawn or sourced); lifting live is an accepted, recorded residual risk; a hardware
+        stack-present interlock is studied at Review D."
+      not_judged: ["clamp orientation and value against the board (A03, A04)", "contact current at temperature", "the declared currents of the two ends"]
+      findings: [R4A-N13, R4A-N12, A04-D2, W3-F09, BAT-F06, PWR-F12]
+      serves: [NEED-05, NEED-13, NEED-14]
+
+    IF-PE-PACK:
+      title: "pack P to dock strip E: power lead (12 AWG, 350 mm, XT60) and SMBus lead (JST-XH 1x4 both ends)"
+      kind: board_to_board
+      ends:
+        - {board: p, refs: [W_P, W_N, J_SMB], src: "v2/ecad/tools/gen_sch_p.py:347-348, 514"}
+        - {board: e, refs: [J_BATT, J_SMB], src: "v2/ecad/tools/gen_sch_e.py:193, 218-219"}
+      power: {map: "W_P = PACK_P to E J_BATT pin 2 (CELL+); W_N = PACK_N to J_BATT pin 1 (GND)", status: VERIFIED,
+              judged_by: "check_contracts.py:357-380", typ_a: 10.0, peak_a: 18.0,
+              connector: "Amass XT60 (C98733): 30 A rated, 60 A instantaneous (v2/vendor/battery/amass-xt60-spec-tme.pdf, VERIFIED)",
+              chain: "the pack's own path is F1 25 A blade, F2 Eaton SCF9550-30-05 chemical fuse, Q1 and Q2 (gen_sch_p.py:246,
+                :288); the chain's short-time rating at 18 A and F2 near +60 C are PWR-F12, open"}
+      smbus:
+        status: "MATES, VERIFIED: one family at both ends since faf8c981 (S-05, adjudication A07)"
+        p_end: {part: "JST-XH B4B-XH-A 1x4, 2.50 mm", pins: {1: SMBC, 2: SMBD, 3: PACK_N, 4: PRES_J}, src: "gen_sch_p.py:514",
+                note: "pin 3 is on the PACK side of the 2 mOhm shunt; SMBC and SMBD leave through 100 ohm with a PESD5V0S1BA
+                  clamp each to PACK_N (F-BP-01 corrected, gen_sch_p.py:317-346); PRES_J is PRES through TI's 1k (R22,
+                  gen_sch_p.py:227), held low by R14 10k (gen_sch_p.py:223)"}
+        e_end: {part: "JST-XH B4B-XH-A 1x4 (C594232)", pins: {1: SMBC, 2: SMBD, 3: GND, 4: PRES_LEAD}, src: "gen_sch_e.py:218-219",
+                note: "the RP2040's I2C1 block (GPIO2 SDA, GPIO3 SCL); PRES_LEAD to GPIO17 through R54 1k with R55 1M up"}
+        lead: "a straight XH-to-XH four-way lead, pin for pin"
+        pres_contract: "the lead-present reading holds only while board P keeps R14 10k to ground on PRES (gen_sch_e.py:197-217,
+          open item 8 of round 4), and E's firmware turns GPIO17's pad pull-down OFF before reading PRES, or a lead that is out
+          reads as in (open item 10)"
+        reader: "only board E's RP2040 reads the gauge; the BQ25731 on A has no conductor to P; the gauge's host watchdog is
+          enabled at 10 s by an explicit write, so a silent sensor controller holds charging off (BAT-F10)"
+        judged_by: "none yet: the check_contracts P/E lead check is held in round 7 (458b2873's record)"
+      stale_text: "E's J_BATT description still names the BB-2590/U pack cable (gen_sch_e.py:193)"
+      pack: "owner ruling D-06: one 4S3P of Samsung INR18650-35E, about 145 Wh, shrink-wrapped in the east pocket. The case
+        measurement D-06 named was withdrawn when the owner reversed D-08 on 26 September 2026; the fit is judged at the worst
+        of Peli's own figures (CASE-MARGINS.md M4a to M6: M4b to the east wall 7.38 mm and M6 under board B 3.66 mm at the
+        worst, MET; M4a to the floor fillet 1.85 mm and M5 between the setting legs 1.77 mm at the worst, OPEN on the pack's
+        placement by hand, closed by the pack's hold-down design and check T4 at the build)"
+      hot_plug: "the XT60 is the pack's service disconnect (ASSEMBLY.md section 7); unplugged with the kit off, and before any
+        stack lift by the D-14 procedure"
+      findings: [PWR-F12, FB-BAT]
+      serves: [NEED-05, NEED-13]
+
+    IF-AC-MAINSW:
+      title: "panel MAIN button lead, C J_MAINSW (solder lands) to A J_MAINSW (JST-XH 1x2)"
+      kind: board_to_board
+      ends:
+        - {board: c, ref: J_MAINSW, pins: {1: MAINSW_A2, 2: MAINSW_B2}, src: "v2/ecad/tools/gen_sch_c.py:219-221"}
+        - {board: a, ref: J_MAINSW, pins: {1: MAIN_PB, 2: GND}, src: "v2/ecad/tools/gen_sch_a.py:264"}
+      note: "the start of the power-up sequence: a MAIN press releases the LTC2954ITS8-1's EN; PDT carries C152 680 nF, so a
+        forced power-off needs about 4.4 s held (458b2873, W5-F2 corrected)"
+      judged_by: "none (no contract names J_MAINSW)"
+      findings: []
+      serves: [NEED-04, NEED-05]
+
+    IF-AE-RF:
+      title: "eleven RF blind-mate joints as generated (twelve under D-07): A J_BM1..11 (Radiall SMP-MAX R222M00720, underside) onto E's float-clamped plugs, RG-316 to the end-wall arrestor bulkheads"
+      kind: board_to_board
+      ends:
+        - {board: a, refs: "J_RF1..11 (SMA, top) and J_BM1..11 (SMP-MAX, underside)", src: "v2/ecad/tools/gen_sch_a.py:1168-1172"}
+        - {board: e, what: "mechanical float clamps only; no RF net on E", src: "v2/ecad/tools/gen_pcb_e.py:16-30"}
+        - {case: "the ruled gas-discharge arrestors as the antenna bulkheads on one RF entry plate per end wall (CASE-MARGINS.md C2, C4)"}
+      sites_case_x_from_a: {VHF: -52, HF: -38, WIFI24: -24, GNSS: -10, SDR: 4, P2P-A: 18, P2P-B: 32, 5G-1: 60, 5G-2: 74,
+                            IRIDIUM: 88, LORA: 100}
+      site_source: "board A's RF_X (gen_pcb_a.py:38); board E's RF_SITES mirror it since faf8c981 (gen_pcb_e.py:30, LORA at
+        100), and check_pcb_e.py parses board A's RF_X and refuses a board whose clamp holes are not on it (W4-F16 corrected
+        in the generator; the committed E17 board still carries 102)"
+      nests: "the float_clamp.py nest is 16 mm along X and the sites are 14 mm apart (12 mm from IRIDIUM to LORA): neighbouring
+        nests overlap and the LORA nest reaches the rod keep-out (A09, recorded in gen_pcb_e.py:22-29); R4E-07 proposes one
+        clamp bar for all sites, owed"
+      walls: "chosen (CASE-MARGINS.md 3.4, the session's choices): west VHF -93, HF -62, WIFI 2.4 -31, GNSS 0, SDR +31, WIFI
+        P2P A +62, WIFI P2P B +93; east 5G MAIN (ANT0) -62, 5G DIV (ANT2) -31, 5G ANT3 0, IRIDIUM +31, LORA +62; 31 mm pitch,
+        Z 59; the jumpers 232 to 412 mm on their planned routes, each link budget at its own length"
+      five_g_ports: "the RM520N-GL has four ports ANT0..ANT3 and no MAIN or DIV connector. Owner ruling D-07: three jacks,
+        ANT0, ANT2 and ANT3, at board A's free site (X +46) if the case measurement confirms that site and a board E clamp
+        there; otherwise two, ANT0 and ANT2. The owner reversed D-08 on 26 September 2026, so no case measurement will
+        come, and the condition is judged on paper at the worst of Peli's figures (ARCHITECTURE.md section 9.2, the
+        session's reading under the standing rule): the case half is laid out (ANT3 the east wall's arrestor at Y 0, Z 59;
+        no case row NOT MET; the east jumpers' layering under the plugs, M17g and M17x, OPEN until the jumper plug is
+        picked); the board half is board A's site at X +46 and a board E clamp there, neither in a generator yet. The three
+        jacks stand unless the picked plug or board E's clamp bar makes a row NOT MET that no lever closes. The legends
+        5G-MAIN and 5G-DIV of gen_sch_a.py:1169 follow the module's port names when A is regenerated"
+      gap: "13.4 mm blind-mate gap, 12.4 to 14.4 window, on spacer tubes (appendix 32.21 and 32.30; ASSEMBLY.md section 1);
+        CASE-MARGINS.md judges no blind-mate alignment, and nominal CAD establishes none"
+      power_handling: "RF_VHF carries the 30 W PA output; SMP-MAX and RG-316 power handling at 144 MHz TBD"
+      judged_by: "check_pcb_e.py (the clamp sites against board A's RF_X); nothing judges the twelfth site"
+      findings: [W4-F10, W4-F12, A09, R4E-07]
+      serves: [NEED-01, NEED-02, NEED-11, NEED-17]
+
+    IF-A-PA:
+      title: "board to device: the PA module on the face plate (A J_PA 13.8 V; D J_VGG gate bias, J_PAIN drive, J_PAOUT output)"
+      kind: board_to_device
+      ends:
+        - {board: a, ref: J_PA, part: "JST-VH 1x2: 1 +13V8_PA, 2 GND", src: "v2/ecad/tools/gen_sch_a.py:921"}
+        - {board: d, refs: [J_VGG, J_PAIN, J_PAOUT], src: "v2/ecad/tools/gen_sch_d.py:601-602, 682"}
+        - {device: "Mitsubishi RA30H1317M1 on the plate; every lead soldered at the module (ASSEMBLY.md section 4, the four PA rows)"}
+      current: {typ_a: 5.0, peak_a: 6.0, src: "gen_sch_a.py:121",
+                note: "the stage's own average current loop limits at 7.2 to 9.5 A (F-PR-01, 458b2873); the drain current is not
+                  characterised (F-PR-02: 75 to 113 W, POWER-THERMAL.md)"}
+      bias: "VGG from a TLV75801P at 4.48 V on board D, enabled by PA_KEY (faf8c981), inside the RA30H1317M1's VGG under 5 V"
+      emcon: "PA_EN = EMCON_HW AND PA_SW_EN switches the rail; D's KEY gate drops the relay and the VGG regulator: CLOSED at
+        desk on the gate-bias path (EMCON.md row 2), single-fault tolerant only downstream of SW_EMCON and TX_INHIBIT_n"
+      peak: "owner ruling D-11: the outlet interlock is in A's netlist (U30, U26, 458b2873); every key-down at most 60 s, gated
+        at +55 C cells and +75 C on the PA's flange and cut at +85 C (POWER-THERMAL.md section 7.2, PROVISIONAL); no board
+        carries a flange sensor (PWR-F15): its lead would join this contract"
+      licence: "owner ruling D-04: the VHF path gets a band lock and runs inside the operator's licence and the EU limits (owed)"
+      hot_plug: "never unplug J_PA with the kit on (proposed): 13.8 V at up to 6 A"
+      judged_by: "none"
+      findings: [F-PR-02, PWR-F15]
+      serves: [NEED-01, NEED-08, NEED-16]
+
+    IF-LID-HF:
+      title: "board to device: the lid harness to the QMX HF unit (A J_HF 12 V, B J_QMX USB, A J_RF2 HF antenna)"
+      kind: board_to_device
+      ends:
+        - {board: a, refs: [J_HF, J_RF2], src: "v2/ecad/tools/gen_sch_a.py:929, 1168-1172"}
+        - {board: b, ref: J_QMX, part: "PH 1x4: 1 VBUS_QMX, 2 QMX_DM, 3 QMX_DP, 4 GND; bank 2 hub port 4", src: "v2/ecad/tools/gen_sch_b.py:964-966"}
+        - {device: "QMX HF transceiver in the lid tray (ASSEMBLY.md section 1, QMX tray row, and section 2, step 10)"}
+      current: {rail: "+12V_HF", typ_a: 1.0, peak_a: 2.0, src: "gen_sch_a.py:122", note: "set at 12.0 V, the QMX's maximum supply (F-PR-07, minor)"}
+      emcon: "EMCON switches +12V_HF off; VBUS_QMX from B is not gated, and the QMX does not connect USB VBUS inside (QRP Labs'
+        schematics, EMCON.md row 3: back-feed CLOSED)"
+      hot_plug: "the lid harness is unplugged when the lid comes off its hinge (ASSEMBLY.md section 7); only with the kit off (proposed)"
+      judged_by: "none"
+      prototype_1: "deferred (owner ruling D-01, 25 September 2026: HF is built where possible and reported NOT_YET_TESTED)"
+      findings: [W3-F25]
+      serves: [NEED-01, NEED-16]
+
+    IF-EXT-USB:
+      title: "external USB: the sealed Glenair 233-370 data port and the USB-C power outlet"
+      kind: external
+      decision: "owner ruling D-12, in A's netlist since 458b2873: the wall data path (USB_WALL, bank 3 hub port 3) leaves on
+        A's J_USBW to the Glenair 233-370 feed-through (USB 2.0 type A at front and rear), which is the console and
+        key-fill port, behind the eFuse U32 (gen_sch_a.py:1151-1167); the USB-C outlet is power only, its header carrying
+        VBUS, CC1, CC2 and ground (J_USBC_OUT, gen_sch_a.py:1012-1015). No hub port was added"
+      usb_c_cc: "owner ruling D-17, in A's netlist since 458b2873: U31 TPD2E2U06QDBZRQ1, a low-capacitance ESD array on PD_CC1
+        and PD_CC2 at the connector (gen_sch_a.py:1026)"
+      stale_text: "ASSEMBLY.md section 4's wall USB host row still routes the Glenair lead to 'B16 J_USBX', which no generator
+        defines"
+      judged_by: "check_contracts.py:292 (the wall pair reaches A's J_USBW)"
+      findings: []
+      serves: [NEED-05, NEED-10, NEED-14]

@@ -1,0 +1,11 @@
+SEL1     -> BSEL1         majority on all 8 states: True
+SEL2     -> BSEL2         majority on all 8 states: True
+SEL3     -> BSEL3         majority on all 8 states: True
+HUBRST1  -> HUBRST1_VOTE  majority on all 8 states: True
+HUBRST2  -> HUBRST2_VOTE  majority on all 8 states: True
+HUBRST3  -> HUBRST3_VOTE  majority on all 8 states: True
+WSEC     -> WIFI_SEC      majority on all 8 states: True
+BOE1_n = XOR(BSEL1, BSEL1_D)
+BOE2_n = XOR(BSEL2, BSEL2_D)
+BOE3_n = XOR(BSEL3_D, BSEL3)
+7 of 7 voted bits are 2-of-3 majorities; 38 gates read
