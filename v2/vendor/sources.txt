@@ -212,3 +212,17 @@ battery/ti-sffs317a-bq77207-fusa.pdf   # https://www.ti.com/lit/fs/sffs317a/sffs
 battery/littelfuse-itv9550-30a.pdf   # https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/194/ITV9550_30A_Series_DS.pdf (Digi-Key's copy of the Littelfuse sheet; littelfuse.com refused this host), fetched 26 September 2026 13:52 UTC
 ti/ti-sn74lvc86a.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc86a.pdf, fetched 26 September 2026 12:31 UTC by the fabric review stream (SCAS288R)
 nexperia/nexperia-74lvc86a.pdf   # https://assets.nexperia.com/documents/data-sheet/74LVC86A.pdf, fetched 26 September 2026 12:31 UTC by the fabric review stream (Rev. 8)
+
+# --- added 26 September 2026 (MESHSAT-1357, parts stream, at 45bde541): D22's zener sheet, and file lines for the documents
+# the new SOURCES.yaml entries read (each re-fetched that evening and byte-identical unless the line says otherwise)
+diodes/diodes-bzt52c-ds18004.pdf   # https://www.diodes.com/assets/Datasheets/ds18004.pdf, fetched 26 September 2026 18:48 UTC; the filed file is the round 6 board A author's copy, byte-identical to that fetch (DS18004 Rev. 38-2)
+diodes/diodes-ap64500.pdf   # https://www.diodes.com/assets/Datasheets/AP64500.pdf (filed 7 September 2026; byte-identical on 26 September 2026)
+ti/lm5176-datasheet.pdf   # https://www.ti.com/lit/ds/symlink/lm5176.pdf (filed 7 September 2026; byte-identical on 26 September 2026)
+ti/ti-tps62933.pdf   # https://www.ti.com/lit/ds/symlink/tps62933.pdf (filed 7 September 2026; byte-identical on 26 September 2026)
+ti/ti-lm74700-q1.pdf   # https://www.ti.com/lit/ds/symlink/lm74700-q1.pdf (filed 7 September 2026; byte-identical on 26 September 2026)
+ti/ti-lm5069.pdf   # https://www.ti.com/lit/ds/symlink/lm5069.pdf (filed 7 September 2026; byte-identical on 26 September 2026)
+peli/1450/1451-931-customer-drawing-2025-01-15.pdf   # Peli's CAD, supplied by the owner on 5 September 2026 (appendix 32.41); source URL not recorded and not re-fetched on 26 September 2026 (the Peli sheets that were re-fetched that day came from media.pelican.com and business.pelican.com)
+peli/1450/1451-931-customer-drawing.dxf   # the same drawing as DXF, supplied by the owner on 5 September 2026; source URL not recorded
+peli/1450/1451-931-bottom.STEP   # Peli's base body STEP, supplied by the owner on 5 September 2026; source URL not recorded
+peli/1450/1451-931-top.STEP   # Peli's lid body STEP, supplied by the owner on 5 September 2026; source URL not recorded
+peli/1450/1450-panel-frame.STEP   # Peli's 1450 panel frame STEP (2015), supplied by the owner on 5 September 2026; source URL not recorded

@@ -18,10 +18,9 @@
 #       power control, the pack connector;
 #   (b) it is the single part behind a mission function: compute, the switch fabric, a radio, a supervisor;
 #   (c) an internal record labels it CERTIFIED while its identity, grade or land is contested.
-# Deliberately NOT covered yet, with the reason: the regulators and eFuses of board A's power tree
-# (AP64500, TPS62933, LM5176, TPS2596/TPS259631, LM74700-Q1, LM5069) and the PCA9555 expanders. Their held
-# datasheets were read line by line for behaviour on 25 September (MESHSAT-1357), but their
-# order codes were not audited against the documents. Entries for them are owed (see `owed`).
+# Board A's power tree (AP64500, TPS62933, LM5176, TPS2596/TPS259631, LM74700-Q1, LM5069) and the PCA9555
+# expanders were not covered when this file was first written; their entries, with order codes audited against
+# the held documents, were added on 26 September 2026 by the parts stream. What is still owed is in `owed`.
 #
 # WHAT IT IS NOT. It is not a second parts registry: buyability stays in release/revA/order/JLC-CERTIFIED.tsv,
 # written by tools/jlc_certify.py. That tool's "CERTIFIED" label means only "JLCPCB's catalogue answered with a
@@ -94,6 +93,37 @@
 # Integration of 26 September 2026 (the requirements and architecture merge, after eadbe571): the entry bbm-xor for
 # board B's U80, with the two 74LVC86A sheets the fabric review stream fetched, filed from its worktree byte for byte.
 
+# Parts stream of 26 September 2026 (MESHSAT-1357, the round after the architecture merge; main at 45bde541; written
+# that evening, after 20:40 CEST). Added: (1) the block `jlc_retake_45bde541`, the record of the certification re-take
+# over the BOM lines of the six boards' committed netlists that JLC-CERTIFIED.tsv did not cover or that changed after
+# the table was written (29f00554), with every row where the fitted model and the schematic disagree, each a MISMATCH
+# under owner condition 1 however the tool labelled it; (2) the entries the `owed` list named: board A's and board B's
+# converters (buck-ap64500, buck-tps62933, buck-boost-lm5176), board E's vehicle entry (ideal-diode-lm74700,
+# hot-swap-lm5069: the owed line called them board A's, but at 45bde541 only gen_sch_e.py places them), the PCA9555
+# expanders (io-expander-pca9555), board A's D22 (zener-bzt52c12, with Diodes DS18004 now filed at
+# diodes/diodes-bzt52c-ds18004.pdf) and the case documents v2/docs/CASE-MARGINS.md reads (case-peli-1450,
+# wall-connectors-bulgin, both `placed_part: false`); (3) the seven round 6 candidate entries are on main since
+# 458b2873 and were re-read against the 45bde541 netlists: each now reads `on_main: true`, names the merge in
+# `on_main_since` and gains an `update_45bde541` block with main's generator lines (board-a-efuses also names board B,
+# which places the same eFuse); (4) `update_45bde541` blocks on pack-and-lid-leads-jst-xh (the J_SMB code resolves to a
+# gold-plated -G variant the held catalogue does not list: MISMATCH), jst-ph-headers (J_TS2 and J_VGG on the -GW
+# variant, not listed either), load-switch-tps22810 (the code lcsc_fill supplies), power-button-controller (the
+# I-grade LTC2954 on main, its #TRMPBF suffix not in the held sheet: MISMATCH) and vhf-exciter (its line moved).
+# Every document named in these additions was re-fetched from its maker's URL on 26 September 2026 between 18:48 and
+# 18:59 UTC and compared byte for byte (Bulgin renders its sheets per request, so those were compared by text layer;
+# Peli's 1451-931 files have no recorded URL and were not re-fetched); every sha256 was computed over the file as it
+# sits in this tree. Nothing here has been built, bought or measured.
+# Parts stream, second pass (26 September 2026, after an independent check of the first): (1) JLC-CERTIFIED.tsv now
+# records as WRONG_MODEL, with the condition 1 reason in the note, the thirteen rows whose ordered model is not the part
+# the schematic names; the first pass had left the tool's CERTIFIED on them and written the mismatch only here (six
+# re-taken rows and seven older rows carrying the same four codes; P J_TS2's row, already refused, gains the same
+# reason). `jlc_retake_45bde541.table_marks` lists them. (2) The netlist BOMs are staged as kicad-cli's BOM export
+# writes them, without the symbols marked exclude_from_bom: the first pass had staged C CAM_H1/CAM_H2 and P JP1, which
+# no BOM carries. The re-take set is 272 lines on 247 keys (P JP1's key was the only phantom in it and the tool wrote
+# no row for it, so no row of the table moves), and `lcsc_fill_after_the_merge` is re-read on the corrected BOMs
+# against the marked table. (3) Board P's J_SMB takes its code from lcsc_fill's MAP (lcsc_fill.py:158), not from the
+# table, and the entries now say so.
+
 schema_version: 2
 read_on: "2026-09-25"
 tree: "82dd1e4d"
@@ -104,6 +134,75 @@ jlc_readings:
 lcsc_readings:
   endpoint: "GET https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=<code>"
   time_utc: "2026-09-25T21:53Z"
+
+# ADDED 26 SEPTEMBER 2026 (parts stream, MESHSAT-1357). Outside `parts:` on purpose: it joins no BOM line. It says what
+# the certification re-take asked, how, and what a reading of its rows found that the tool does not judge.
+jlc_retake_45bde541:
+  what: "the certification re-take over the BOM lines of the six boards' committed netlists at 45bde541 (declared phases A32, B21, C24, D12, E17 and P4; v2/ecad/pcb-*/out/*.net) that JLC-CERTIFIED.tsv as it stood at 45bde541 did not cover, or whose line changed after the table was written at 29f00554"
+  tool: "v2/ecad/tools/jlc_certify.py itself, sha256 76eadc959673d682269ae96d0e13186f6e9a2d5ce8b1e86eb495cf61b2508834 (byte-identical at 45bde541), run with --refresh and an empty cache, no wrapper: JLCPCB's public catalogue API (the endpoint named under jlc_readings) asked live from 2026-09-26T18:50:39Z to 18:51:21Z. No login, no cart, no order"
+  method:
+    - "each netlist grouped the way build_sch.sh and export_jlc.sh group a BOM (value and footprint; symbols marked exclude_from_bom dropped, as kicad-cli's BOM export at build_sch.sh:34 drops them; references starting H, S_, TP or # dropped), then the tree's own lcsc_fill.py filled the blanks as a finish does, with each board's own lcsc-allow.txt"
+    - "a line was re-taken when no table row carried its (comment, footprint) key, when no row for the key had been asked about the line's code, or when the line differed from the same board's netlist at 29f00554 (faf8c981, 458b2873 and d90f30e4 are the only commits between the two that touch a netlist): 272 lines on 247 keys. The first pass read 273 lines on 248 keys: its staging filtered by reference prefix only and carried P JP1 ('fuse arming jumper: open as built, closed at commissioning', exclude_from_bom at gen_sch_p.py:476), a line no BOM of board P carries"
+    - "every line carrying one of those keys was staged in a scratch copy of the tree: the six netlists as the declared-phase deliverable folders and every older deliverable folder filtered to those keys, so the boards, qty and need columns are what a full run would compute if the declared folders held the netlists. C24 and P4, the two declared folders that exist, were replaced by their netlists for this run. The tool asked only about those keys"
+    - "30 of the 247 keys are leads, IDC and pin headers, jumpers, solder lands and wire lands, which the tool does not treat as components; the other 217 rows replaced the table's 70 rows for the same keys and added 147. Every other row is unchanged: 720 rows became 867"
+  result: {rows: 217, CERTIFIED: 188, BENCH_FITTED: 10, HAND_FIT: 4, NO_STOCK: 2, WRONG_MODEL: 13}
+  result_as_recorded: {rows: 217, CERTIFIED: 182, BENCH_FITTED: 10, HAND_FIT: 4, NO_STOCK: 2, WRONG_MODEL: 19, why: "the tool's verdicts less the six re-taken rows table_marks records as condition 1 mismatches"}
+  no_stock:
+    - "P U2 BQ7720700DSSR (C3681715): stock 3 against a need of 5 boards"
+    - "P F2 SCF9550-30-05 (C3670061): stock 0 against a need of 5 boards"
+  wrong_model_that_stands:
+    - "E F1 and F2, '10 A mini blade (Keystone 3568 holder)': the lines carry no code at 45bde541 (the table had asked C10081, which resolves to GL5528, a light-dependent resistor), no lcsc-allow line covers them, and the search's answer is a heat sink. They have no purchase route. Board A's allow line '25 A mini blade (Keystone 3568' covers the 25 A holders of A, E and P in this tool, which merges the boards' allow lists; lcsc_fill reads only a board's own list, so E F3 and P F1 are refused there"
+  wrong_model_from_the_parser:
+    note: "the tool took the first part-shaped token of the row's prose, which here is a document number, a finding id, a temperature coefficient, a package name or the part at the far end of a lead. The ordered code is, by this stream's read of the model string, the part the row describes; that read is not a certification, and the rows stay refused in the table until the tool is corrected and the rows re-taken (a verdict under a matching algorithm with a known defect does not decide)"
+    rows:
+      - "B '100n 16V (REFCLK AC coupling, DS40068 3.1, W3-F03)' C60474: asked for DS40068; the model CC0402KRX7R7BB104 is 100 nF X7R 16 V 0402"
+      - "B '220n 16V (PCIe AC coupling at the switch transmitter, W3-F01)' C696846: asked for W3-F01; TCC0402X7R224K160AT is 220 nF X7R 16 V 0402"
+      - "B '33.2R 1% (HCSL series Rs, DS40068 Table 8-1, W3-F03)' C23004: asked for DS40068; 0603WAF332JT5E is 33.2 ohm 1 %"
+      - "B '49.9R 1% (HCSL shunt Rp, DS40068 Table 8-1, W3-F03)' C23185: asked for DS40068; 0603WAF499JT5E is 49.9 ohm 1 %"
+      - "D '10.7k 0.1% 25ppm' C861078 and '56.2k 0.1% 25ppm' C705784: asked for 25ppm; RT0603BRD0710K7L and RT0603BRD0756K2L are YAGEO RT thin film, B = 0.1 %, D = 25 ppm/K"
+      - "D two '6 MHz HC-49S-SMD passive' rows, C252308: asked for HC-49S-SMD; 6CS06000F20UCG is SJK 6 MHz, 20 pF load, HC-49S SMD"
+      - "P J_TS 'JST-PH 1x5 socket ... (Semitec 103AT-2 ...)' C157993: asked for the thermistor; B5B-PH-K-S(LF)(SN) is the JST socket the land names"
+      - "P J_TS2 'second-level cell thermistor socket, JST-PH 1x2 (Semitec 103AT-2 ...)' C5251182: asked for the thermistor; the model is B2B-PH-K-S-GW (see condition_1_mismatches)"
+      - "E J_TAMP 'JST-XH 1x2 (B2B-XH-A): lid and tamper reed sensor lead, Littelfuse 59140-1-S-05-A ...' C158012: asked for the reed switch; B2B-XH-A(LF)(SN) is the JST header the value names"
+  condition_1_mismatches:
+    note: "rows the tool CERTIFIED (or refused for another reason) whose ordered model is not the part the schematic names, read from JLCPCB's model string and LCSC's product parameters (GET https://wmsc.lcsc.com/ftps/wm/product/detail, 2026-09-26T18:53Z) against the held documents. Each is a component mismatch until compatibility is proven; the recommendation is the session's under the owner's standing rule of 26 September 2026, and the generators that would carry it belong to their board authors. Since the second pass the table records every row carrying these codes as WRONG_MODEL (table_marks)"
+    rows:
+      - {refs: "E J_SMB (and P J_SMB, whose blank lcsc_fill fills from its MAP: lcsc_fill.py:158, 'SMBus lead.*JST-XH 1x4' on a JST_XH_B4B land, carries the same code)", code: C594232, named: "B4B-XH-A (value and land)", ordered: "B4B-XH-A-G, JST per LCSC, contact plating gold", why: "the held JST XH catalogue lists B4B-XH-A and B4B-XH-AM only; a -G suffix and gold contacts are not in it, and the mating XH housing contacts are tin", recommended: "C144395, B4B-XH-A(LF)(SN), JST, stock 108,974 (JLCPCB API 2026-09-26T19:00Z)"}
+      - {refs: "A J_HEAT, J_MAINSW", code: C265283, named: "JST-XH 1x2 on the B2B-XH-A land", ordered: "B2B-XH-A-GU, JST per LCSC, contact plating gold", why: "not in the held catalogue, as above", recommended: "C158012, B2B-XH-A(LF)(SN), JST, stock 363,735 (the code board E's J_TAMP carries)"}
+      - {refs: "P J_TS2, D J_VGG (and any blank 'cell thermistor ... JST-PH 1x2' line, which lcsc_fill.py:159's MAP fills with the same code)", code: C5251182, named: "JST-PH 1x2 on the B2B-PH-K land", ordered: "B2B-PH-K-S-GW, JST per LCSC, tin, PA66, UL94V-0", why: "the held JST PH catalogue lists B2B-PH-K-S; what -GW denotes is not in it", recommended: "C131337, B2B-PH-K-S(LF)(SN), JST, stock 86,610 (JLCPCB API 2026-09-26T19:00Z)"}
+      - {refs: "A U1", code: C580654, named: "LTC2954ITS8-1", ordered: "LTC2954ITS8-1#TRMPBF (Analog Devices)", why: "the held 2954fb lists LTC2954ITS8-1#PBF and #TRPBF only; #TRM as a 500-piece reel is Linear Technology's convention, INFERRED and not in the held document; analog.com gave this host no answer", recommended: "keep the code and read the suffix in the maker's current order guide when analog.com answers (entry power-button-controller, update_45bde541)"}
+      - {refs: "D LED2 'amber record', LED5 'amber PA keyed' (the same code is on board B's 'amber NVMe activity' and 'amber 5G network' rows, not re-taken, marked all the same)", code: C2287, named: "amber (no part number)", ordered: "KT-0603Y, Hubei KENTO, Yellow, 596 nm peak, 584 to 594 nm per LCSC", why: "a value-text mismatch rather than a part number: the generators' LED_CODE maps amber and yellow to one code (gen_sch_b.py:330, gen_sch_d.py:193 at 45bde541)", recommended: "the value text names the ordered colour (yellow), unless amber is a panel semantic, in which case C165983 (BL-HJC36G-AV-TRB, amber 605 nm, the lcsc_fill amber) replaces it"}
+  table_marks:
+    note: "under owner condition 1 a row whose ordered model is not the part the schematic names is a MISMATCH and not a pass, so JLC-CERTIFIED.tsv records each such row as WRONG_MODEL with its reason in the note, which opens 'MISMATCH under owner condition 1, not a pass' (second pass, 26 September 2026: a scratch script over the merged table set the verdict and the note of these rows only, every other row byte for byte and in the same order). The verdict is this stream's reading, not the tool's: jlc_certify.py read each row CERTIFIED, and a full run of the tool writes CERTIFIED over the mark until the tool reads a declared mismatch (drafted for the tools stream). Effect: lcsc_fill.py no longer fills a blank line from these rows (lcsc_fill.py:225-240 fills only from CERTIFIED rows), refuses their codes on the lines they name (:308-320, no row of the code and key is in certified_for any more), and review_packet.py shows WRONG_MODEL for the code (:1269)"
+    re_taken:
+      - "A 'JST-XH 1x2 socket: the pack heater mat (12 V, 7.5 W), fed a regulated 12.0 V: + and -' (J_HEAT) C265283, B2B-XH-A-GU"
+      - "A 'LTC2954ITS8-1 push-button on/off controller, -40 to 85 C' (U1) C580654, LTC2954ITS8-1#TRMPBF"
+      - "E 'SMBus lead to board P, JST-XH 1x4 (B4B-XH-A), ...' (J_SMB) C594232, B4B-XH-A-G"
+      - "P 'SMBus lead to E6 J_SMB (JST-XH 1x4): SMBC SMBD GND(pack side of the shunt) PRES' (J_SMB) C594232, B4B-XH-A-G"
+      - "D 'amber record' (LED2) C2287, KT-0603Y"
+      - "D 'amber PA keyed' (LED5) C2287, KT-0603Y"
+    older_rows_same_codes:
+      - "A 'JST-XH 1x2 socket: the MAIN button lead from the panel, PB and GND' (J_MAINSW, on the 45bde541 netlist) C265283"
+      - "A 'JST-XH 1x2 socket: the heater mat under the 2590 cradle, + and -' (the A22 and A24 folders' line) C265283"
+      - "P 'SMBus lead to E6 J_SMB (JST-XH 1x4): SMBC SMBD GND PRES' (the line of P4 and the older P folders) C594232"
+      - "P 'JST-PH 1x2 socket for the cell thermistor lead (the 10k NTC, a 103AT, ...)' (J_TS of P3 and P4) C5251182"
+      - "D 'JST-PH 1x2 socket: PA gate bias, VGG GND (the lead runs to the RA30H1317M1 VGG pin)' (J_VGG, on the 45bde541 netlist) C5251182"
+      - "B 'amber NVMe activity' (LED14, LED24, LED34 on the 45bde541 netlist) C2287"
+      - "B 'amber 5G network' (LED25 on the 45bde541 netlist) C2287"
+    annotated: "P 'second-level cell thermistor socket, JST-PH 1x2 (Semitec 103AT-2 ...)' (J_TS2) C5251182: already WRONG_MODEL for the parser defect (wrong_model_from_the_parser); its note gains the condition 1 reason"
+    table_counts: "867 rows: CERTIFIED 595, BENCH_FITTED 88, WRONG_MODEL 74, HAND_FIT 60, NO_STOCK 15, NOT_CHECKED 12, NOT_AT_JLC 9, NO_PART_CHOSEN 6, PACKAGE_MISMATCH 5, NOT_IDENTIFIED 3 (the first pass's merge read CERTIFIED 608 and WRONG_MODEL 61; the table at 45bde541 read 720 rows, CERTIFIED 481, WRONG_MODEL 53)"
+  one_row_per_key:
+    - "'4.7u' on C_0805_2012Metric: board A's generator writes C354262 (YAGEO CC0805KKX7R8BB475, X7R 25 V; gen_sch_a.py:549) and the blank lines of boards B, C and D are filled with C1779 (Samsung CL21A475KAQNNNE, X5R 25 V) by lcsc_fill, whose MAP carries this key twice (lcsc_fill.py:52 C354262 and :118 C1779; Python keeps the later). The table holds one row per (comment, footprint) and the tool takes the declared folders in board order, so the row now certifies C354262 and C1779 for this key is no longer in it. Both are 4.7 uF 25 V; the value names no dielectric. One code for the key is owed (the draft to the tools stream recommends deleting :118)"
+  values_read:
+    - "every re-taken resistor and capacitor row was decoded from its model (UNI-ROYAL, YAGEO RC, RT and CC, Samsung CL, CCTC, PSA FS, Samwha CS, Milliohm LR, Vishay WSL): 97 rows, value, stated voltage, tolerance and dielectric agree on all 97 (85 by rule, 12 by hand)"
+    - "every other row whose value names a part number carries a model that is that part, suffixes for packing only (for example LM74700QDBVRQ1 for LM74700-Q1 on SOT-23-6, TPS22810DRVR for TPS22810DRV, PCA9555PWR for PCA9555PW, and XAL1010-103MED and -153MED for XAL1010-103ME and -153ME, where the held power/coilcraft-xal1010.pdf defines 'D = 13 inch machine-ready reel')"
+    - "the 24 MHz hub crystals now resolve to C164058 (12 pF load) where the table had C70571 (18 pF): a substitution with its reason written at lcsc_fill.py:130-134 (18 pF load capacitors give about 12 pF with the board), so not a mismatch"
+  standing_rows_not_retaken:
+    - "B U9 'DS3231MZ' C9866 resolves to DS3231SN#T&R (the crystal-based part, not the MEMS DS3231M the value names): WRONG_MODEL in the table since before 29f00554 and still on the 45bde541 netlist"
+    - "A J_RF1 to J_RF11 C3174425: WRONG_MODEL in the table (asked for 132134-11, JLCPCB's answer 132134), unchanged"
+    - "B J_W1A, J_W1B, J_W3A, J_W3B, J_WOA and J_WOB C434808: WRONG_MODEL in the table (the U.FL-R-SMT-1 land, JLCPCB's answer U.FL-R-SMT(10)), unchanged and on the 45bde541 netlist (listed in the second pass; the first pass's sentence below had omitted them)"
+  lcsc_fill_after_the_merge: "second pass, 26 September 2026 (scratch, not tree evidence): lcsc_fill.py (the tree's, unmodified) on the six netlist BOMs staged as kicad-cli's export writes them (exclude_from_bom honoured), against the marked table, each board with its own declared-phase lcsc-allow.txt. C PASS; A, B, D, E and P FAIL. D's R11 '1.0k' is filled from the table (C21190) and D has no uncovered blank. Codes refused: the condition 1 rows (A J_HEAT, J_MAINSW and U1; B LED14, LED24, LED34 and LED25; D J_VGG, LED2 and LED5; E J_SMB; P J_SMB and J_TS2), the parser rows (B's four REFCLK and HCSL lines, D R80, R81, Y1 and Y2, E J_TAMP, P J_TS and J_TS2) and the standing rows above (A J_RF1 to J_RF11, B U9, B's six U.FL lands). Blanks no allow line covers: B J_IOCOFF_A to C (bench jumpers), E F1 to F3 and P F1 (the blade holders). The first pass also listed C CAM_H1 and CAM_H2 and P JP1 as uncovered blanks: all three are exclude_from_bom (gen_sch_c.py:301, gen_sch_p.py:476), no BOM carries them and no allow line is owed for them"
+  not_decided_here: "no per-board jlc_certify verdict in the tree was re-written: the tree's verdicts judge the deliverable folders, and A32, B21, D12 and E17 have none. CMP-002 and SUP-001 need a re-take over the folder each board declares once it is cut"
 
 # ADDED 26 SEPTEMBER 2026 (MESHSAT-1357, review stream BAT, third cycle). Two TI E2E answers that the battery review packet
 # (v2/docs/review-packets/battery/) cites, filed as HTML snapshots saved from the runner with curl on 26 September 2026.
@@ -374,6 +473,12 @@ parts:
       closes only after the owner has ruled on supervisor secure boot and the ZEROIZE firmware's use of the
       supervisors is written; the rename of the schematic record follows those, never precedes them.
     related_defect: "the supervisors' SDA/SCL land on LQFP pins 35/36 = PB1/PB2 (gen_sch_b.py:261, :824), which carry no I2C alternate function on either part (DS12110 Rev 10 Table 11 p.89; DS12117 Rev 9 Table 10, same rows); common to both parts, independent of the mismatch"
+    update_45bde541:
+      read_on: "2026-09-26"
+      what_moved: "458b2873 merged D-13: the symbol, the value and the order line name STM32H743VIT6 (C114409), gen_sch_b.py:1146, so the part the schematic names is the part the code buys."
+      schematic_name: {text: "STM32H743VIT6", where: "v2/ecad/tools/gen_sch_b.py:1146", where_rev: "45bde541"}
+      identity_45bde541: MATCH
+      identity_note: "The two reopen conditions of the note above are settled. Secure boot: the owner ruled D-13 on 26 September 2026 (software-verified boot on the STM32H743), which needs no H753-only capability. ZEROIZE: the sequence of feasibility/ZEROIZE.md destroys keys the ATECC608B holds, and no supervisor CRYP, HASH or secure access mode takes part (the supervisors' bus access is bounded there as residual R7). The H753 datasheet stays filed as the record of the comparison. Recorded by the integrator at the parts merge, under the owner's standing rule of 26 September 2026."
     documents:
       - path: "v2/vendor/st/st-stm32h743xi-datasheet.pdf"
         doc_id: "ST DS12110"
@@ -571,6 +676,15 @@ parts:
       what_moved: "nothing on main: board A at 1f614233 still fits LTC2954CTS8-1 (C683782). The round 6 candidate for board A adopts LTC2954ITS8-1, LCSC C580654 (gen_sch_a.py:229, :256 in the candidate; W6-F15)."
       candidate_order_code: "LTC2954ITS8-1#TRMPBF (C580654, as the candidate names it)"
       candidate_match: "partial: the held 2954fb order information table lists LTC2954ITS8-1#PBF and LTC2954ITS8-1#TRPBF, -40 to 85 C, TSOT-23-8, marking LTCJH, and does NOT list the #TRMPBF suffix. That the suffix names only a smaller reel is INFERRED (not in the held document). Currency of 2954fb: TBD, because analog.com answered neither the runner nor the build box on 2026-09-26 and the Internet Archive was offline (effect: a later revision with the #TRMPBF row, or with changed limits, would not be seen)."
+    update_45bde541:
+      read_on: "2026-09-26"
+      what_moved: "458b2873 merged the round 6 candidate: board A's U1 is LTC2954ITS8-1 at 45bde541 (gen_sch_a.py:259), with LCSC C580654 on its netlist line; C683782 is on no board. The re-take of jlc_retake_45bde541 read C580654 as LTC2954ITS8-1#TRMPBF (Analog Devices, TSOT-23-8) and CERTIFIED it; the table records the row WRONG_MODEL with the condition 1 reason since the parts stream's second pass (jlc_retake_45bde541.table_marks)"
+      code: "C580654"
+      where: "v2/ecad/tools/gen_sch_a.py:259 (U1)"
+      where_rev: "45bde541"
+      grade_vs_envelope_45bde541: "INSIDE: the I grade, -40 to 85 C in the held sheet's order information"
+      identity_45bde541: MISMATCH
+      identity_note: "the change of grade is proven by the held 2954fb (its order information lists LTC2954ITS8-1#PBF and #TRPBF, -40 to 85 C, TSOT-23-8). The ordered suffix #TRMPBF is not in that table; Linear Technology's convention reads #TRM as a 500-piece reel (INFERRED, not in the held document). A component mismatch under owner condition 1 until the maker's current sheet or ordering guide lists #TRMPBF: analog.com gave no answer to this host again on 2026-09-26 at about 19:10 UTC"
 
   - id: tvs-surge-clamps
     function: "unidirectional surge clamps on the power conductors of A, B, D, E and P"
@@ -791,6 +905,11 @@ parts:
       what_moved: "only the line: faf8c981 regenerated board D and U2's statement, unchanged in text, moved from gen_sch_d.py:170 to :265. The order code is still not pinned (identity NOT_PINNED above)."
       where: "v2/ecad/tools/gen_sch_d.py:265 (U2)"
       where_rev: "1f614233"
+    update_45bde541:
+      read_on: "2026-09-26"
+      what_moved: "only the line number: 458b2873 moved board D's U2 from gen_sch_d.py:265 to :272; the part, its value and its (absent) code are unchanged (parts stream, re-read against the 45bde541 generator)"
+      where: "v2/ecad/tools/gen_sch_d.py:272 (U2)"
+      where_rev: "45bde541"
 
   - id: vhf-pa
     function: "30 W VHF power amplifier on the face plate"
@@ -1378,6 +1497,12 @@ parts:
         sha256: "9426b136902f11900825077535e5c65032b7fbc31ffb59c5e9e1f463bb20fb90"
         currency: "byte-identical to jst-mfg.com on 2026-09-26 and to the round 4 board E author's copy"
         matches_fitted: "yes: current rating 3 A AC/DC (AWG 22), -25 to +85 C; the header table lists B2B-XH-A and B4B-XH-A"
+    update_45bde541:
+      read_on: "2026-09-26"
+      what_moved: "at 45bde541 board P's J_SMB still carries no code in its netlist and lcsc_fill fills it from its MAP (lcsc_fill.py:158, 'SMBus lead.*JST-XH 1x4' on a JST_XH_B4B land; corrected in the second pass, the first said 'from the certified table') with C594232, the code board E's J_SMB carries; board P's J_CELL is filled with C157991. The re-take of jlc_retake_45bde541 read C594232's model as B4B-XH-A-G (JLCPCB) and LCSC's parameters as gold contacts; the held catalogue lists no -G variant"
+      identity_45bde541: MISMATCH
+      identity_note: "for C594232 (E J_SMB, and P J_SMB as filled): the value and the land name B4B-XH-A and the ordered part is B4B-XH-A-G, a suffix and a gold plating the held JST XH catalogue does not list. C158012 (E J_TAMP) resolves to B2B-XH-A(LF)(SN) and matches. Taken under the owner's standing rule of 26 September 2026 as the session's recommendation: C144395, B4B-XH-A(LF)(SN) (JST, stock 108,974 at 2026-09-26T19:00Z), in gen_sch_e.py for J_SMB and in gen_sch_p.py for P's J_SMB so that neither depends on a fill, with lcsc_fill.py:158's MAP line moved to the same code"
+      table_45bde541: "every JLC-CERTIFIED.tsv row carrying C594232 is WRONG_MODEL with the condition 1 reason since the parts stream's second pass (jlc_retake_45bde541.table_marks), so lcsc_fill refuses the code on E J_SMB and on P J_SMB as filled"
 
   - id: jst-ph-headers
     function: "JST PH 1x5 sockets: the four cell thermistors on board P (J_TS, new in round 4) and the two headset leads on board D (J_HS1, J_HS2, already fitted)"
@@ -1404,6 +1529,11 @@ parts:
     update_battery_candidate:
       what_moved: "nothing on board P at 1f614233. The battery review stream's candidate for board P (pending merge when this block was written) adds J_TS2, a JST-PH 1x2 socket for the second level's own NTC, with LCSC C5251182 (JST B2B-PH-K-S-GW), the code board P's single-thermistor J_TS carried at 82dd1e4d (gen_sch_p.py:153 there). The same code IS on main at 1f614233 on board D's J_VGG, the JST-PH 1x2 lead of the PA gate bias (gen_sch_d.py:541), which this entry does not cover (not judged critical under criteria (a) to (c); its line joins no entry). The code stays out of this entry's lcsc field: joining it would give J_VGG and J_TS2 this entry's identity MATCH while the -GW suffix below is unread."
       candidate_match: "partial: the held catalogue's text layer lists B2B-PH-K-S (one occurrence) and does not list a -GW suffix, so what -GW denotes is not in the held document (TBD; effect: a packing or plating variant is assumed, not read). The PH series temperature range above applies to the series."
+    update_45bde541:
+      read_on: "2026-09-26"
+      what_moved: "the battery candidate merged in d90f30e4: board P's J_TS2 is on main with C5251182, and board D's J_VGG carries the same code. LCSC's product parameters for C5251182 (2026-09-26T18:53Z): B2B-PH-K-S-GW, JST, tin plating, PA66, UL94V-0, -25 to +85 C. The held catalogue still does not say what -GW denotes, so the code stays out of this entry's lcsc field, as the block above decided"
+      candidate_match_45bde541: "no: a component mismatch under owner condition 1 until JST's own document lists B2B-PH-K-S-GW. Recommended under the owner's standing rule (the session's): C131337, B2B-PH-K-S(LF)(SN) (JST, stock 86,610 at 2026-09-26T19:00Z), which the held catalogue lists, for P J_TS2 and D J_VGG, and for lcsc_fill.py:159's MAP line, which fills a blank cell-thermistor PH2 line with C5251182"
+      table_45bde541: "every JLC-CERTIFIED.tsv row carrying C5251182 (D J_VGG, P4's J_TS, P J_TS2) is WRONG_MODEL with the condition 1 reason since the parts stream's second pass (jlc_retake_45bde541.table_marks)"
 
   - id: load-switch-tps22810
     function: "TI TPS22810 load switch (2.7 to 18 V, 79 mohm, thermal shutdown): board E's U16 takes the Geiger module's 5 V off the always-on domain (round 4, F-BP-02); board B's U21 (+5V_LORA, the 1 W LoRa module) and U22 (+3V3_ZB, the two E72 radios)"
@@ -1430,13 +1560,19 @@ parts:
         sha256: "10450eedecbc454291088e3c8cf0e177555814ac83be021448d1d16cba126c98"
         currency: "byte-identical to ti.com on 2026-09-26"
         matches_fitted: "yes for the device and package the schematic names (TPS22810, DRV): device comparison table, DRV 3 A maximum output current, RON 79 mohm at 12 V, configurable quick output discharge, active-high enable"
+    update_45bde541:
+      read_on: "2026-09-26"
+      what_moved: "at 45bde541 the three lines (B U21, U22; E U16, gen_sch_b.py:925, :938 and gen_sch_e.py:577 through kisch.py:479) still carry no LCSC code, and lcsc_fill supplies C527679 from its map (lcsc_fill.py:149). The re-take of jlc_retake_45bde541 read C527679 as TPS22810DRVR (Texas Instruments, WSON-6) and CERTIFIED it: one of the two DRV orderables the held addendum lists. Board D no longer places a TPS22810 (its VGG switch became an LDO in round 6)"
+      where: "v2/ecad/tools/gen_sch_b.py:925 (U21), :938 (U22); gen_sch_e.py:577 (U16); the helper at kisch.py:479"
+      where_rev: "45bde541"
 
-  # --- round 6 candidates for board A (NOT on main at 1f614233) ----------------------------------------------------
+  # --- round 6 candidates for board A (NOT on main at 1f614233; on main since 458b2873, see each update_45bde541) ---
 
   - id: usbc-cc-esd
     function: "low-capacitance ESD array on the USB-C outlet's CC1 and CC2 (owner D-17)"
     boards: [A]
-    on_main: false
+    on_main: true
+    on_main_since: "458b2873 (the round 6 merge of boards A, B and D), re-read against the 45bde541 netlists on 26 September 2026 (parts stream)"
     adopted_in: "round 6 candidate for board A (gen_sch_a.py:914 in the candidate); board A on main has no part here"
     schematic_name: {text: "TPD2E2U06QDBZRQ1 low-capacitance ESD array, USB-C CC1 and CC2 at the connector", where: "candidate gen_sch_a.py:914"}
     fitted_mpn: "TPD2E2U06QDBZRQ1"
@@ -1454,11 +1590,17 @@ parts:
         sha256: "dca8b4e0bc48d8fceac96882eb49bd629c3c627ee259196ec19a42a115b1a0c6"
         currency: "byte-identical to ti.com on 2026-09-26"
         matches_fitted: "yes: packaging information lists TPD2E2U06QDBZRQ1, SOT-23 (DBZ) 3, Active, -40 to 125 C, marking 22U6Q"
+    update_45bde541:
+      read_on: "2026-09-26"
+      what_moved: "on main since 458b2873: the 45bde541 netlists place A U31 with the code(s) this entry names. The `where` of the entry is the candidate's; main's lines follow"
+      where: "v2/ecad/tools/gen_sch_a.py:1026 (U31)"
+      where_rev: "45bde541"
 
   - id: buck-boost-bootstrap-diodes
     function: "bootstrap and VIN-blocking Schottky diodes of board A's five LM5176 stages (R4A-N1)"
     boards: [A]
-    on_main: false
+    on_main: true
+    on_main_since: "458b2873 (the round 6 merge of boards A, B and D), re-read against the 45bde541 netlists on 26 September 2026 (parts stream)"
     adopted_in: "round 6 candidate for board A (gen_sch_a.py:384 and :454 in the candidate); on main the stages have no bootstrap diodes"
     schematic_name: {text: "BAT46W-7-F Schottky 100V", where: "candidate gen_sch_a.py:384, :454"}
     fitted_mpn: "BAT46W-7-F"
@@ -1475,11 +1617,17 @@ parts:
         sha256: "3bc31f4a5302521c7e298f95aef7e3425ea68ae287bd28a6cfa8d0689fcbe56b"
         currency: "byte-identical to diodes.com on 2026-09-26"
         matches_fitted: "yes: ordering information BAT46W-7-F, SOD123, 3,000 per reel; VRWM 100 V (p.2)"
+    update_45bde541:
+      read_on: "2026-09-26"
+      what_moved: "on main since 458b2873: the 45bde541 netlists place A D5 to D21 (17 diodes, bootstrap and VIN blocking of the seven LM5176 stages) with the code(s) this entry names. The `where` of the entry is the candidate's; main's lines follow"
+      where: "v2/ecad/tools/gen_sch_a.py:392 (bootstrap), :462 (VIN blocking), inside the lm5176 helper at :279"
+      where_rev: "45bde541"
 
   - id: outlet-interlock-nand
     function: "the outlet interlock U30 on board A: OUTLET_OK = NOT (TR_APRS AND PA_EN), owner D-11"
     boards: [A]
-    on_main: false
+    on_main: true
+    on_main_since: "458b2873 (the round 6 merge of boards A, B and D), re-read against the 45bde541 netlists on 26 September 2026 (parts stream)"
     adopted_in: "round 6 candidate for board A (gen_sch_a.py:992 in the candidate)"
     schematic_name: {text: "SN74LVC1G00DBVR NAND", where: "candidate gen_sch_a.py:992"}
     fitted_mpn: "SN74LVC1G00DBVR"
@@ -1496,11 +1644,17 @@ parts:
         sha256: "1264f79853e6119b66d60fe54f1f6e87995c12c00138bd820981fe68febb1063"
         currency: "byte-identical to ti.com on 2026-09-26"
         matches_fitted: "yes: packaging information lists SN74LVC1G00DBVR"
+    update_45bde541:
+      read_on: "2026-09-26"
+      what_moved: "on main since 458b2873: the 45bde541 netlists place A U30 with the code(s) this entry names. The `where` of the entry is the candidate's; main's lines follow"
+      where: "v2/ecad/tools/gen_sch_a.py:1104 (U30)"
+      where_rev: "45bde541"
 
   - id: stage-current-shunts
     function: "2512 current shunts of board A's LM5176 stages (R35, R43, R55 in the candidate)"
     boards: [A]
-    on_main: false
+    on_main: true
+    on_main_since: "458b2873 (the round 6 merge of boards A, B and D), re-read against the 45bde541 netlists on 26 September 2026 (parts stream)"
     adopted_in: "round 6 candidate for board A (gen_sch_a.py:740 and :799 in the candidate)"
     schematic_name: {text: "Vishay WSL25126L000FEA", where: "candidate gen_sch_a.py:740, :799"}
     fitted_mpn: "WSL25126L000FEA"
@@ -1518,11 +1672,17 @@ parts:
         sha256: "96c2dc89ae1e3039815ed6c41f566a6e9f6b53035f8e45ea2ada1697935a44dc"
         currency: "byte-identical to vishay.com on 2026-09-26"
         matches_fitted: "yes: WSL2512, 1.0 W at 70 C, 0.0005 to 0.5 ohm at 1 %, AEC-Q200 rev. D (standard electrical specifications, p.1)"
+    update_45bde541:
+      read_on: "2026-09-26"
+      what_moved: "on main since 458b2873: the 45bde541 netlists place A R35, R43, R55 with the code(s) this entry names. The `where` of the entry is the candidate's; main's lines follow"
+      where: "v2/ecad/tools/gen_sch_a.py:875 (the S2 stage, R35), :883 (the device stage, R43), :916 (the PA stage, R55)"
+      where_rev: "45bde541"
 
   - id: board-a-efuses
     function: "board A's eFuse switches (TPS259631DDAR, one helper, several instances)"
     boards: [A]
-    on_main: false
+    on_main: true
+    on_main_since: "458b2873 (the round 6 merge of boards A, B and D), re-read against the 45bde541 netlists on 26 September 2026 (parts stream)"
     adopted_in: "round 6 candidate for board A (the helper at gen_sch_a.py:915-919 in the candidate); the held sheet was listed as owed in `owed` below"
     schematic_name: {text: "TPS259631DDAR eFuse", where: "candidate gen_sch_a.py:919"}
     fitted_mpn: "TPS259631DDAR"
@@ -1540,13 +1700,20 @@ parts:
         sha256: "66f6bae4494f7bfe7dfdc314e508f0291d9ca1e87265cca9b6fdfeaa5cb19fe9"
         currency: "the held file is byte-identical to ti.com on 2026-09-26"
         matches_fitted: "yes: device table 'TPS259631 Adjustable OVLO, Auto-retry'; packaging information lists TPS259631DDAR, SO PowerPAD, Active, -40 to 125 C, marking 259631"
+    update_45bde541:
+      read_on: "2026-09-26"
+      what_moved: "on main since 458b2873: the 45bde541 netlists place A U21, U22, U23, U32; B U23, U24 with the code(s) this entry names. The `where` of the entry is the candidate's; main's lines follow"
+      where: "v2/ecad/tools/gen_sch_a.py:1031 (the efuse helper; U21 at :1046, U22 at :1064, U23 at :1082, U32 at :1163); gen_sch_b.py:343 (its helper; U23 at :946, U24 at :951)"
+      where_rev: "45bde541"
+      boards: [A, B]
 
-  # --- round 6 candidates for board D's keying and EMCON chain, and board B's Ioff reference (NOT on main) ---------
+  # --- round 6 candidates for board D's keying and EMCON chain, and board B's Ioff reference (on main since 458b2873) --
 
   - id: board-d-ptt-emcon-logic
     function: "board D's PTT and EMCON gates: U9, U10, U12, U14 (AND), U11 (inverter), U13 (open-drain inverter to the SA868 PTT), U18 to U20 (read-back buffers)"
     boards: [D]
-    on_main: false
+    on_main: true
+    on_main_since: "458b2873 (the round 6 merge of boards A, B and D), re-read against the 45bde541 netlists on 26 September 2026 (parts stream)"
     adopted_in: "round 6 candidate for board D's keying remedy (gen_sch_d.py:504-509, :531-532 in the candidate); main at 1f614233 still fits the parts the review found unsourced"
     schematic_name: {text: "74LVC1G08 AND, 74LVC1G04 inverter, 74LVC1G06 open-drain inverter, 74LVC1G34 buffer", where: "candidate gen_sch_d.py:504-509, :531"}
     fitted_mpn: "74LVC1G08GV (TECH PUBLIC), SN74LVC1G04DBVR (TI), SN74LVC1G06DBVR (TI), 74LVC1G34W5-7 (Diodes)"
@@ -1588,11 +1755,17 @@ parts:
         sha256: "efd2d7978bb880b7e07e05dee034b87701f12b834aa8132b6f61ce3705187a98"
         currency: "byte-identical to diodes.com on 2026-09-26"
         matches_fitted: "yes: ordering information lists 74LVC1G34W5-7, SOT25; also the part board C's U9 carried before round 4"
+    update_45bde541:
+      read_on: "2026-09-26"
+      what_moved: "on main since 458b2873: the 45bde541 netlists place D U9, U10, U12, U14 (C19829591), U11 (C7827), U13 (C840103), U18, U19, U20 (C526347) with the code(s) this entry names. The `where` of the entry is the candidate's; main's lines follow"
+      where: "v2/ecad/tools/gen_sch_d.py:529 (U9), :530 (U10), :531 (U11), :532 (U12), :533 (U13), :534 (U14), :588 (U18), :708 (U19), :711 (U20)"
+      where_rev: "45bde541"
 
   - id: lvc-ioff-reference
     function: "reference for partial-power-down (Ioff) figures: board B's round 6 candidate sizes R514 to R517 against the SN74LVC1G08's Ioff because the fitted SN74LVC08A sheet publishes none"
     boards: [B]
-    on_main: false
+    on_main: true
+    on_main_since: "458b2873 (the round 6 merge of boards A, B and D), re-read against the 45bde541 netlists on 26 September 2026 (parts stream)"
     adopted_in: "round 6 candidate for board B (the comment at gen_sch_b.py:993 in the candidate); a reference document, no part fitted from it"
     identity: NOT_FITTED
     status: VERIFIED
@@ -1605,6 +1778,11 @@ parts:
         sha256: "30b963cc44233cf3ca35c891ff987c8323a2244ecc765e23296ec96ca4b42666"
         currency: "byte-identical to ti.com on 2026-09-26"
         matches_fitted: "not applicable: a family reference; applying a single-gate part's Ioff to the quad SN74LVC08A is INFERRED and stays with the round 6 board B review"
+    update_45bde541:
+      read_on: "2026-09-26"
+      what_moved: "on main since 458b2873: the 45bde541 netlists place B R514 to R517 (a reference document; no part fitted from it) with the code(s) this entry names. The `where` of the entry is the candidate's; main's lines follow"
+      where: "v2/ecad/tools/gen_sch_b.py:989-1002 (the comment and R514 to R517)"
+      where_rev: "45bde541"
 
   - id: bbm-xor
     function: "break-before-make on each USB bank's host select: BOE{b}_n = BSEL{b} XOR BSEL{b}_D (IOHA fabric, FAB-03)"
@@ -1633,16 +1811,312 @@ parts:
         sha256: "aa449c7949d141d555967710a235c7686a6ece02468f783f8c8cf924a1fc926a"
         matches_fitted: "no: it describes the part the schematic value names, not the ordered TI part"
 
+  # --- added 26 September 2026 at 45bde541 (parts stream): the entries the `owed` list named, D22's zener, and the
+  # --- case documents. Every where is main's generator line at 45bde541; every document re-fetched that evening.
+
+  - id: zener-bzt52c12
+    function: "board A's D22, the zener that clamps the front end's restart-guard pull-up node FE_VZ (R4A-N15, round 6 fourth pass)"
+    boards: [A]
+    on_main: true
+    adopted_in: "458b2873 (round 6, board A); entry added 26 September 2026 (parts stream) when the sheet was filed"
+    schematic_name: {text: "BZT52C12-7-F zener, the restart guard's pull-up clamp", where: "v2/ecad/tools/gen_sch_a.py:691 (D22)"}
+    where_rev: "45bde541"
+    fitted_mpn: "BZT52C12-7-F"
+    package: "SOD-123 (land Diode_SMD:D_SOD-123)"
+    lcsc: "C124196"
+    lcsc_reading: {model: "BZT52C12-7-F", maker: "Diodes Incorporated", pkg: "SOD-123", read: "2026-09-26T18:51Z", source: "the re-take of jlc_retake_45bde541"}
+    identity: MATCH
+    grade_vs_envelope: INSIDE
+    grade_note: "TJ and TSTG -65 to +150 C; 500 mW at TL +75 C, 370 mW at TA +25 C (Note 8), RthJA 338 C/W (maximum ratings)"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/diodes/diodes-bzt52c-ds18004.pdf"
+        doc_id: "Diodes Incorporated DS18004"
+        revision: "Rev. 38-2 (PDF modified 26 October 2017)"
+        url: "https://www.diodes.com/assets/Datasheets/ds18004.pdf"
+        fetched: "2026-09-26T18:48:08Z, HTTP 200 application/pdf, 395,331 bytes. The filed file is the round 6 board A author's copy (held in that round's drafts as diodes-bzt52c.pdf, the copy kisch.py's _HELD_DIRECTION cites), byte-identical to this fetch"
+        sha256: "0fbd7d137524820f0160594065cbceb8c6b3188757c328416d08fceb7418202f"
+        currency: "byte-identical to diodes.com on 2026-09-26"
+        matches_fitted: "yes: 'BZT52C2V0 - BZT52C51 SURFACE MOUNT ZENER DIODE', 'Polarity: Cathode Band', type BZT52C12 marking WH, VZ 11.4 to 12.7 V at IZT 5 mA; ordering '(Type Number)-7-F', Commercial, SOD123, 3,000 per tape and reel (Ordering Information, notes 5 and 6)"
+
+  - id: buck-ap64500
+    function: "Diodes AP64500 5 A synchronous buck: board A's slot rails S1 and S3 (5.1 V, U4 and U6) and board B's six 3.3 V card-socket and switch rails (U103, U104, U203, U204, U303, U304)"
+    boards: [A, B]
+    on_main: true
+    adopted_in: "board A since A22 (7 September 2026), board B before 82dd1e4d; entry added 26 September 2026 (parts stream) from the `owed` list"
+    schematic_name: {text: "AP64500SP-13 5 A buck", where: "v2/ecad/tools/gen_sch_a.py:816 (the buck5 helper; U4 at :840, U6 at :841); gen_sch_b.py:351 (the buck33 helper)"}
+    where_rev: "45bde541"
+    fitted_mpn: "AP64500SP-13"
+    package: "SO-8EP (Diodes code SP), land Package_SO:SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.29x3mm"
+    lcsc: "C2070920"
+    lcsc_reading: {model: "AP64500SP-13", maker: "Diodes Incorporated", pkg: "SO-8-EP", stock: 3354, read: "2026-09-26", source: "JLC-CERTIFIED.tsv (rows asked for the table of 29f00554, unchanged since)"}
+    identity: MATCH
+    land_note: "body and pitch agree with the sheet's SO-8EP outline (E 3.85, D 4.90, e 1.27 mm typical). The exposed pad does not: the land's pad is 2.29 x 3.0 mm by its KiCad name, the package's pad 2.41 x 3.05 mm typical (H and F), and Diodes' suggested pad layout 2.613 x 3.502 mm (Y1 and X1). A land pad smaller than the maker's suggestion conducts less heat into the plane; which pad the layout uses is an item for the board A and B layout entry (TBD; effect: thermal pad copper below the maker's suggestion)"
+    grade_vs_envelope: INSIDE
+    grade_note: "operating junction -40 to +125 C, absolute maximum junction +160 C"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/diodes/diodes-ap64500.pdf"
+        doc_id: "Diodes Incorporated DS41979"
+        revision: "Rev. 5-2 (copyright 2024)"
+        url: "https://www.diodes.com/assets/Datasheets/AP64500.pdf"
+        fetched: "filed 7 September 2026 (c5de605d); re-fetched 2026-09-26T18:56Z, HTTP 200 application/pdf, 1,278,269 bytes"
+        sha256: "d3bcdc7dd4ca44cb36ef893d3dbfabbd1742dfc736557777868f6ead5d0a98e8"
+        currency: "byte-identical to diodes.com on 2026-09-26"
+        matches_fitted: "yes: Ordering Information lists AP64500SP-13, package SO-8EP (SP), 4,000 per tape and reel"
+
+  - id: buck-tps62933
+    function: "TI TPS62933 3 A synchronous buck: board A's 3.3 V logic rail (U12) and 12.0 V heater rail (U33); board B's Ethernet switch core (U26), PCIe switch cores and hub cores (U105, U106, U205, U206, U305, U306)"
+    boards: [A, B]
+    on_main: true
+    adopted_in: "board A since A22 (7 September 2026), board B before 82dd1e4d; entry added 26 September 2026 (parts stream) from the `owed` list"
+    schematic_name: {text: "TPS62933DRLR 3 A buck", where: "v2/ecad/tools/gen_sch_a.py:893 (U12), :1065 (U33); gen_sch_b.py:375 (the helper for U26 and the slot cores)"}
+    where_rev: "45bde541"
+    fitted_mpn: "TPS62933DRLR"
+    package: "SOT-583 (TI SOT-5X3, DRL) 8, land Package_TO_SOT_SMD:SOT-583-8"
+    lcsc: "C3200405"
+    lcsc_reading: {model: "TPS62933DRLR", maker: "Texas Instruments", pkg: "SOT-583", stock: 39310, read: "2026-09-26", source: "JLC-CERTIFIED.tsv (rows asked for the table of 29f00554; the heater-rail row re-taken 2026-09-26T18:51Z, stock 39,294)"}
+    identity: MATCH
+    grade_vs_envelope: INSIDE
+    grade_note: "operating junction -40 to +150 C (recommended operating conditions); the addendum gives -40 to 150 for the orderable"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/ti-tps62933.pdf"
+        doc_id: "TI SLUSEA4"
+        revision: "SLUSEA4D, June 2021, revised August 2022"
+        url: "https://www.ti.com/lit/ds/symlink/tps62933.pdf"
+        fetched: "filed 7 September 2026 (eb3610e0); re-fetched 2026-09-26T18:56Z, HTTP 200 application/pdf, 4,034,940 bytes"
+        sha256: "16ec2eac43c7374eb9e7edd7df7bdb24de6862f695e1582c68716ced4820e5f6"
+        currency: "byte-identical to ti.com on 2026-09-26"
+        matches_fitted: "yes: package option addendum lists TPS62933DRLR, Active, SOT-5X3 (DRL) 8, 4,000 per reel, -40 to 150, marking 2933"
+
+  - id: buck-boost-lm5176
+    function: "TI LM5176 four-switch buck-boost controller: board A's seven stages, the front end VIN_RAW to VBUS20 (U2), slot S2 (U5), the device rail (U7), the PA rail (U13), the HF rail (U15), the PoE boost (U16) and the USB-C PD stage (U19)"
+    boards: [A]
+    on_main: true
+    adopted_in: "board A since A22 (7 September 2026); entry added 26 September 2026 (parts stream) from the `owed` list"
+    schematic_name: {text: "LM5176PWPR buck-boost controller", where: "v2/ecad/tools/gen_sch_a.py:376 (inside the lm5176 helper at :279; U2 at :543, U5 at :873, U7 at :881, U13 at :914, U15 at :923, U16 at :944, U19 at :997)"}
+    where_rev: "45bde541"
+    fitted_mpn: "LM5176PWPR"
+    package: "HTSSOP-28 PowerPAD (PWP), land Package_SO:HTSSOP-28-1EP_4.4x9.7mm_P0.65mm_EP2.85x5.4mm"
+    lcsc: "C442493"
+    lcsc_reading: {model: "LM5176PWPR", maker: "Texas Instruments", pkg: "HTSSOP-28-EP", stock: 12309, read: "2026-09-26T18:51Z", source: "the re-take of jlc_retake_45bde541 (the +5V_S2 and +5V_DEV rows) and the table of 29f00554 (the other five)"}
+    identity: MATCH
+    land_note: "the sheet's PWP0028V outline gives an exposed thermal pad of 2.94 x 5.62 mm and its example land the same; the KiCad land's pad is 2.85 x 5.4 mm by its name, slightly smaller (TBD for the layout entry; effect: thermal pad copper below the maker's example)"
+    grade_vs_envelope: INSIDE
+    grade_note: "operating junction -40 to +125 C (recommended), absolute -40 to +150 C; the addendum gives -40 to 125 for LM5176PWPR"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/lm5176-datasheet.pdf"
+        doc_id: "TI SNVSAI1"
+        revision: "SNVSAI1D, June 2017, revised August 2021"
+        url: "https://www.ti.com/lit/ds/symlink/lm5176.pdf"
+        fetched: "filed 7 September 2026 (908ede32); re-fetched 2026-09-26T18:56Z, HTTP 200 application/pdf, 2,219,997 bytes"
+        sha256: "98191bec36d43771affa3e1540f6e1737347c19a1602747ffb4327509550a820"
+        currency: "byte-identical to ti.com on 2026-09-26"
+        matches_fitted: "yes: package option addendum lists LM5176PWPR, Active, HTSSOP (PWP) 28, 2,000 per large reel, -40 to 125, marking LM5176"
+
+  - id: ideal-diode-lm74700
+    function: "TI LM74700-Q1 ideal-diode controllers on board E's vehicle and panel inputs (U3, U4), each driving an N-FET"
+    boards: [E]
+    on_main: true
+    adopted_in: "board E before 82dd1e4d (the vehicle entry of E6); entry added 26 September 2026 (parts stream) from the `owed` list, which named it among board A's parts; no generator places it on board A at 45bde541"
+    schematic_name: {text: "LM74700-Q1 ideal-diode controller: 1 VCAP 2 GND 3 EN 4 CATHODE 5 GATE 6 ANODE", where: "v2/ecad/tools/gen_sch_e.py:286 (the ideal_diode helper at :284, which places U3 and U4)"}
+    where_rev: "45bde541"
+    fitted_mpn: "LM74700QDBVRQ1"
+    package: "SOT-23 (DBV) 6, land Package_TO_SOT_SMD:SOT-23-6"
+    lcsc: "C2941042"
+    lcsc_reading: {model: "LM74700QDBVRQ1", maker: "Texas Instruments", pkg: "SOT-23-6", stock: 2312, read: "2026-09-26T18:51Z", source: "the re-take of jlc_retake_45bde541 (the table of 29f00554 had asked C2760636 for this key, NOT_AT_JLC)"}
+    identity: MATCH
+    identity_note: "the value names the device and its grade (LM74700-Q1); the order code is its DBV orderable in reels of 3,000, and the pin map written in the value (1 VCAP 2 GND 3 EN 4 CATHODE 5 GATE 6 ANODE) is the DBV package's (Figure 5-1). The sheet also lists an 8-pin DDF package; the land is the 6-pin"
+    grade_vs_envelope: INSIDE
+    grade_note: "AEC-Q100 qualified; operating junction -40 to +150 C; the addendum gives -40 to 125 for the orderable"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/ti-lm74700-q1.pdf"
+        doc_id: "TI SNOSD17"
+        revision: "SNOSD17G, October 2017, revised December 2020"
+        url: "https://www.ti.com/lit/ds/symlink/lm74700-q1.pdf"
+        fetched: "filed 7 September 2026 (eb3610e0); re-fetched 2026-09-26T18:56Z, HTTP 200 application/pdf, 2,657,068 bytes"
+        sha256: "e16b3a8c0023201fafa5825436f5f2dd6f885b92b84e65602b3f50d741c58b6f"
+        currency: "byte-identical to ti.com on 2026-09-26"
+        matches_fitted: "yes: package option addendum lists LM74700QDBVRQ1, Active, SOT-23 (DBV) 6, 3,000 per large reel, -40 to 125, marking M747"
+
+  - id: hot-swap-lm5069
+    function: "TI LM5069 hot-swap controller on board E's vehicle and shore entry (U6): 9 V on, 40 V off, current and power limit, auto retry"
+    boards: [E]
+    on_main: true
+    adopted_in: "board E before 82dd1e4d (the vehicle entry of E6); entry added 26 September 2026 (parts stream) from the `owed` list, which named it among board A's parts; no generator places it on board A at 45bde541"
+    schematic_name: {text: "LM5069MM-2 hot-swap controller: 9 V on, 40 V off, current and power limit", where: "v2/ecad/tools/gen_sch_e.py:305 (U6)"}
+    where_rev: "45bde541"
+    fitted_mpn: "LM5069MM-2/NOPB"
+    package: "VSSOP (DGS) 10, land Package_SO:VSSOP-10_3x3mm_P0.5mm"
+    lcsc: "C111822"
+    lcsc_reading: {model: "LM5069MM-2/NOPB", maker: "Texas Instruments", pkg: "VSSOP-10-0.5mm", stock: 6684, read: "2026-09-26", source: "JLC-CERTIFIED.tsv (row asked for the table of 29f00554, unchanged since)"}
+    identity: MATCH
+    identity_note: "the -2 suffix is the variant the value names and the sheet defines: 'LM5069-2 Auto Retry on Fault', where -1 latches off (device table and section 8.3.7). /NOPB is TI's lead-free packing mark"
+    grade_vs_envelope: INSIDE
+    grade_note: "addendum -40 to 125 for the orderable; maximum junction +150 C"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/ti-lm5069.pdf"
+        doc_id: "TI SNVS452"
+        revision: "SNVS452G, September 2006, revised January 2020 (printed 'JAUNUARY')"
+        url: "https://www.ti.com/lit/ds/symlink/lm5069.pdf"
+        fetched: "filed 7 September 2026 (dd987815); re-fetched 2026-09-26T18:56Z, HTTP 200 application/pdf, 2,202,582 bytes"
+        sha256: "d60d8106a6e8113900ff8b9576dd959942fa7169742baf0beeb30684d4d64681"
+        currency: "byte-identical to ti.com on 2026-09-26"
+        matches_fitted: "yes: package option addendum lists LM5069MM-2/NOPB, Active, VSSOP (DGS) 10, 1,000 per small reel, -40 to 125, marking SNBB"
+
+  - id: io-expander-pca9555
+    function: "TI PCA9555 16-bit I2C I/O expanders: board A U27 (0x21) and U28 (0x24), board B U6 (0x20) and U7 (0x25), board C U1 (0x22) and U2 (0x23), board D U16 (0x26)"
+    boards: [A, B, C, D]
+    on_main: true
+    adopted_in: "on every board before 82dd1e4d; entry added 26 September 2026 (parts stream) from the `owed` list"
+    schematic_name: {text: "PCA9555PW", where: "v2/ecad/tools/gen_sch_a.py:1117 (U27), :1121 (U28); gen_sch_b.py:1036 (U6), :1040 (U7); gen_sch_c.py:139 (U1), :143 (U2); gen_sch_d.py:684 (U16)"}
+    where_rev: "45bde541"
+    fitted_mpn: "PCA9555PWR"
+    package: "TSSOP (PW) 24, land Package_SO:TSSOP-24_4.4x7.8mm_P0.65mm"
+    lcsc: "C2864778"
+    lcsc_reading: {model: "PCA9555PWR", maker: "Texas Instruments", pkg: "TSSOP-24", stock: 12871, read: "2026-09-26", source: "JLC-CERTIFIED.tsv (board B's U6 row re-taken 2026-09-26T18:51Z, the others asked for the table of 29f00554)"}
+    identity: MATCH
+    identity_note: "the value 'PCA9555PW' is TI's tube orderable, which TI's addendum lists as Obsolete; the order code resolves to PCA9555PWR, the same device in the same TSSOP (PW) 24 on a reel, marking PD9555 on both, so the suffix is packing only. The same text is also NXP's type number: the held sheet is TI's and the ordered part is TI's. Board D's U16 carries no code in its netlist; lcsc_fill supplies C2864778 from its map (lcsc_fill.py:59). Recommendation (the session's, under the owner's standing rule): the value text names the active orderable, PCA9555PWR"
+    grade_vs_envelope: INSIDE
+    grade_note: "operating free-air -40 to +85 C (recommended operating conditions); the -33 C storage and +71 C survive-and-recover margins of D-02a lie inside the storage rating the sheet gives (TBD against the margin line)"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/ti-pca9555.pdf"
+        doc_id: "TI SCPS131"
+        revision: "SCPS131J, August 2005, revised March 2021"
+        url: "https://www.ti.com/lit/ds/symlink/pca9555.pdf"
+        fetched: "filed 10 September 2026 (dded1710); re-fetched 2026-09-26T18:56Z, HTTP 200 application/pdf, 2,803,580 bytes"
+        sha256: "9b5cc24c3c9e286a7132e27267f98e8b8b36f02ead2157d66df2676de3a474cb"
+        currency: "byte-identical to ti.com on 2026-09-26"
+        matches_fitted: "yes: package option addendum lists PCA9555PWR, Active, TSSOP (PW) 24, 2,000 per large reel, -40 to 85, marking PD9555 (and PCA9555PW, Obsolete)"
+
+  - id: case-peli-1450
+    function: "the enclosure: Peli 1450 Protector case (current moulding, customer drawing 1451-931) and the 1450PF panel frame, the documents v2/docs/CASE-MARGINS.md holds every case-dependent margin against (ruling of 7 September 2026, D-08a, the D-08 reversal)"
+    boards: []
+    placed_part: false
+    on_main: true
+    fitted_mpn: "Peli 1450 Protector (base 1451-931) and 1450PF panel frame; purchased by the owner, not ordered through this tree"
+    identity: MATCH
+    identity_note: "D-08a: the design targets the current moulding of the 1451-931 customer drawing dated 15 January 2025. The drawing, the STEP bodies and the web page disagree in places; CASE-MARGINS.md takes the worst of Peli's own figures and records each"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/peli/1450/1451-931-customer-drawing-2025-01-15.pdf"
+        doc_id: "Pelican Products 1450 Protector customer drawing (base 1451-931)"
+        revision: "title block DATE 1.15.25; the PDF's title reads '1451-931 PID 7-24-2025' (SOLIDWORKS 2025, created 31 July 2025); no revision letter read"
+        url: "not recorded: supplied by the owner on 5 September 2026 from Peli's CAD (appendix 32.41, v2/vendor/README.md); peli.com and pelican.com answered this host HTTP 403 on 26 September 2026"
+        fetched: "filed 5 September 2026 (c1f6f357)"
+        sha256: "389facc842e41397c89a64395e2839b4153a93382499329c96f2a95e10d37356"
+        currency: "INFERRED: not re-fetched (no source URL, and Peli's site refuses this host); the file is what CASE-MARGINS.md read"
+        matches_fitted: "yes: '1450 PROTECTOR', 'CUSTOMER DRAWING', 'DIMENSIONS ARE FOR REFERENCE ONLY'"
+      - path: "v2/vendor/peli/1450/1451-931-customer-drawing.dxf"
+        doc_id: "the same drawing as DXF (AutoCAD 2000, AC1015; sheet at 1:3)"
+        revision: "as the PDF"
+        url: "not recorded (owner-supplied, 5 September 2026)"
+        fetched: "filed 5 September 2026 (c1f6f357)"
+        sha256: "f7e1aa81b3f7309862553587678b12cbd77334ff08d33848204ea7ae54ae8951"
+        currency: "INFERRED, as the PDF"
+        matches_fitted: "yes: the DXF of the 1451-931 drawing (CASE-MARGINS.md reads its $DIMLFAC 3.0)"
+      - path: "v2/vendor/peli/1450/1451-931-bottom.STEP"
+        doc_id: "Peli 1451-931 base, STEP AP214 ('1451-931 Bottom PID.STEP')"
+        revision: "STEP header time 2025-08-08T04:30:31"
+        url: "not recorded (owner-supplied, 5 September 2026)"
+        fetched: "filed 5 September 2026 (c1f6f357)"
+        sha256: "4b44e67c6911e8ca613cc0560f2719430147a18ee93861dd32d42f2769f05f1a"
+        currency: "INFERRED, as the PDF"
+        matches_fitted: "yes: the base body of the 1450 (cavity, ribs, rim zone)"
+      - path: "v2/vendor/peli/1450/1451-931-top.STEP"
+        doc_id: "Peli 1451-931 lid, STEP AP214 ('1451-931T Top 7-24-2025.STEP')"
+        revision: "STEP header time 2025-08-07T12:06:42"
+        url: "not recorded (owner-supplied, 5 September 2026)"
+        fetched: "filed 5 September 2026 (c1f6f357)"
+        sha256: "11a1aa05ff53d714f4a80efa14fb2e2e94cc4dd6e160039f1e279a3803fa4c8a"
+        currency: "INFERRED, as the PDF"
+        matches_fitted: "yes: the lid body of the 1450"
+      - path: "v2/vendor/peli/1450/1450-panel-frame.STEP"
+        doc_id: "Peli 1450 panel frame, STEP AP214 ('1450 panel frame.STEP', author 'pelican')"
+        revision: "STEP header time 2015-08-06T17:34:38"
+        url: "not recorded (owner-supplied, 5 September 2026)"
+        fetched: "filed 5 September 2026 (c1f6f357)"
+        sha256: "f58e434c61053940eef8946074617f0e12a6143ea61bdacd08e01594a8c79ea3"
+        currency: "INFERRED, as the PDF (CASE-MARGINS.md 2.7 records that the frame STEP is dated 2015 and the base 2025)"
+        matches_fitted: "yes: the 1450PF frame (skirt, ring, window, insert bores)"
+      - path: "v2/vendor/peli/1450/1450_pf.pdf"
+        doc_id: "Peli 1450 panel frame instruction sheet 1453-314-000"
+        revision: "rev A (05-27-09)"
+        url: "https://media.pelican.com/cad/protector-panel-frames/1450/1450_pf.pdf"
+        fetched: "filed 26 September 2026 (b69f20db); re-fetched 2026-09-26T18:59Z, HTTP 200 application/pdf, 121,126 bytes"
+        sha256: "4681c0525a3cf605a0cdf669573917b75d849170eff2ae2372a958c87ffbdd27"
+        currency: "byte-identical to media.pelican.com on 2026-09-26"
+        matches_fitted: "yes: the 1450's panel frame sheet, 1453-314-000 rev A"
+      - path: "v2/vendor/peli/panel-frame-inst.pdf"
+        doc_id: "Pelican panel frame mounting instructions"
+        revision: "not printed"
+        url: "https://business.pelican.com/storage/docs/cad-downloads/panel-frame-inst.pdf"
+        fetched: "filed 26 September 2026 (b69f20db); re-fetched 2026-09-26T18:59Z, HTTP 200 application/pdf, 51,110 bytes"
+        sha256: "797a2ed6f9809d0b22d78a2e5c1b740edf444a591ef623b7d2c8fe92f6b8f05c"
+        currency: "byte-identical to business.pelican.com on 2026-09-26"
+        matches_fitted: "partial: generic to Peli's panel frames, steps 1 to 4 as CASE-MARGINS.md 2.5 quotes them"
+
+  - id: wall-connectors-bulgin
+    function: "the sealed wall connectors CASE-MARGINS.md sizes the connector plate with: Bulgin PX0833 RJ45 coupler and the 4000 series C-type USB (PXP4043/C recommended; the PXP4043 micro-B sheet read for the series' rear-panel body)"
+    boards: []
+    placed_part: false
+    on_main: true
+    fitted_mpn: "PX0833; PXP4043/C (recommended in CASE-MARGINS.md, not yet ruled into a generator)"
+    identity: MATCH
+    identity_note: "the PXP4043 sheet describes a sibling (micro-B) whose rear-panel body the series shares; it is read for the envelope only, and its figures are flagged as a sibling's in CASE-MARGINS.md"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/bulgin/bulgin-px0833-sealed-rj45-coupler.pdf"
+        doc_id: "Bulgin PX0833 datasheet (Buccaneer RJ45 coupler, front panel mount)"
+        revision: "not printed; the page as bulgin.com rendered it on 11 September 2026"
+        url: "https://www.bulgin.com/pdf/pdf.php?sku=PX0833"
+        fetched: "filed 11 September 2026 (4ffbf639); re-fetched 2026-09-26T18:59Z, HTTP 200 application/pdf"
+        sha256: "b0fb46464e073ab9d145d805346ae3bc5227237f303d70d3799be4d68d6874a8"
+        currency: "bulgin.com renders this PDF per request (dompdf; creation time is the request time), so the bytes differ on every fetch: the re-fetch's text layer is identical to the held file's (64 lines, no difference)"
+        matches_fitted: "yes: 'PX0833 Datasheet', IP68 and IP69K, front panel mounting"
+      - path: "v2/vendor/bulgin/bulgin-pxp4043c-usb-c-rear-panel.pdf"
+        doc_id: "Bulgin PXP4043/C datasheet (4000 series C-type, rear panel mount)"
+        revision: "not printed; rendered 26 September 2026 11:53 CEST"
+        url: "https://www.bulgin.com/pdf/pdf.php?sku=PXP4043/C"
+        fetched: "filed 26 September 2026 (b69f20db); re-fetched 2026-09-26T18:59Z, HTTP 200 application/pdf"
+        sha256: "cce556227a71f8956420e5deb3a72ed99d639d376ac75bd612d36d23fa6d1532"
+        currency: "rendered per request, as above: text layer identical (56 lines)"
+        matches_fitted: "yes: 'PXP4043/C Datasheet', IP67, IP68, IP69K when mated"
+      - path: "v2/vendor/bulgin/bulgin-pxp4043-micro-usb-rear-panel.pdf"
+        doc_id: "Bulgin PXP4043 datasheet (4000 series micro-B, rear panel mount)"
+        revision: "not printed; rendered 26 September 2026 11:57 CEST"
+        url: "https://www.bulgin.com/pdf/pdf.php?sku=PXP4043"
+        fetched: "filed 26 September 2026 (b69f20db); re-fetched 2026-09-26T18:59Z, HTTP 200 application/pdf"
+        sha256: "245d895c678995b21d8d30c795b88ca0acf025abde2e5764a1938332d25d164b"
+        currency: "rendered per request, as above: text layer identical (56 lines)"
+        matches_fitted: "no: a sibling (micro-B), read for the series' rear-panel body"
+      - path: "v2/vendor/bulgin/bulgin-4000-series-sealed-usb-c.pdf"
+        doc_id: "Bulgin 4000 series C-type USB catalogue sheet"
+        revision: "not printed; PDF created 26 February 2026"
+        url: "https://www.bulgin.com/products/pub/media/bulgin/data/4000_series_c_type.pdf"
+        fetched: "filed 11 September 2026 (4ffbf639); re-fetched 2026-09-26T18:59Z, HTTP 200 application/pdf, 1,371,119 bytes"
+        sha256: "bc353c794cafec7a6108fa6e8abdca3bc64d5e3f550d53c4741640e098365dea"
+        currency: "byte-identical to bulgin.com on 2026-09-26"
+        matches_fitted: "yes for the series: lists PXP4043/C, 'IP-sealed C type USB, rear panel mounted', IP66, IP68 and IP69K"
+
 owed:
   - "DONE 26 September 2026 (integration I6): sources.txt file lines for the six documents added on 25 and 26 September and for this file, a vendor-status.txt line for each, a vendor-noindex.txt line for the text-less TE drawing, and the correction of sources.txt's m2 folder line and the same sentence in README.md ('key to be read from the drawing': the drawing says key M)"
   - "the appendix entry recording that the conditional pick at appendix line 2884 resolved to its else-branch (the drawing says key M); the appendix is not a vendor file"
   - "the full ATECC608B datasheet (under NDA) for owner ruling D-03's precondition that the slot map is erasable"
-  - "entries for board A's power tree regulators and eFuses and the PCA9555 expanders (criterion (a)); their behaviour was read on 25 September, their order codes were not audited here"
+  - "DONE 26 September 2026 (parts stream, at 45bde541): entries for board A's power tree regulators and eFuses and the PCA9555 expanders (buck-ap64500, buck-tps62933, buck-boost-lm5176, ideal-diode-lm74700, hot-swap-lm5069, io-expander-pca9555; board-a-efuses on main), each order code audited against its held document (suffix, package, grade). STILL OWED from them: the exposed-pad lands of the AP64500 and LM5176 against the makers' suggested pads (land_note on each), for the layout entry"
   - "a re-fetch of the Amphenol 10164227 drawing with a readable variant table, or a visual read of the raster, before any receptacle land is re-derived"
   - "st.com currency of DS12110, DS12117 and AN4938 from a host st.com answers"
   - "the SA868 and RM520N-GL order codes (owner-side purchases): TBD with the effects stated above"
-  - "DONE 26 September 2026 (stream PKT): the MDD SMBJ (C113974, C364296) and Diodes SMBJ58A-13-F (C135085) datasheets are filed (tvs-surge-clamps, update_1f614233). STILL OWED: the land drawing of whichever key-B socket replaces C574849"
-  - "PARTLY DONE 26 September 2026 (stream PKT): the TPS259631 eFuse sheet is recorded (board-a-efuses, a round 6 candidate); entries for board A's other regulators (AP64500, TPS62933, LM5176, LM74700-Q1, LM5069) and the PCA9555 expanders remain owed"
+  - "DONE 26 September 2026 (stream PKT): the MDD SMBJ (C113974, C364296) and Diodes SMBJ58A-13-F (C135085) datasheets are filed (tvs-surge-clamps, update_1f614233). STILL OWED: the land drawing of whichever key-B socket replaces C574849. At 45bde541 board B's socket line reads 'TE 2199119-3' with C590866, which the re-take CERTIFIED as 2199119-3 (TE) and which jlc_certify's M2_KEYS gives as key B from the held C-2199119 rev F sheet 2 table; whether that drawing's land applies to the -3 part unchanged is not read here"
+  - "DONE 26 September 2026 (parts stream, at 45bde541): the TPS259631 eFuses are on main since 458b2873 on boards A and B (board-a-efuses, update_45bde541), and the entries for AP64500, TPS62933, LM5176, LM74700-Q1 (board E), LM5069 (board E) and the PCA9555 expanders are written"
   - "the Littelfuse 59140-1-S-05-A reed sensor sheet behind board E's J_TAMP (round 4, R4E-06): the author's copy (sha256 c54b8c66982b..., revised 03/25/22) has no recorded source URL and littelfuse.com answered this host HTTP 403 on 2026-09-26, so it is not filed; effect: the lid and tamper switch rests on an unsourced document until re-fetched"
   - "a currency re-read of ELX1135 (Eaton) and 2954fb (ADI) from their makers or the Internet Archive: both makers refused this host and the build box on 2026-09-26 and the Archive was offline (retried from this host at 13:54 and 14:51 UTC: no answer from any of the three)"
-  - "re-reads of every LCSC and JLCPCB stock figure quoted in the entries added on 26 September 2026 (they are the round authors' readings, not re-read here), before any order"
+  - "re-reads of every LCSC and JLCPCB stock figure quoted in the entries added on 26 September 2026 (they are the round authors' readings, not re-read here), before any order. PARTLY DONE 26 September 2026 (parts stream): the lines of jlc_retake_45bde541 were re-read live at 18:50 to 18:51 UTC; stock is a reading of its moment and the rest stand as the round authors' readings"
+  - "the condition 1 mismatches of jlc_retake_45bde541 (C594232 and C265283 gold-plated XH variants, C5251182 -GW PH variant, the amber rows on C2287) and its parser-refused rows: the fixes live in the generators and lcsc_fill.py's MAP (codes) and in jlc_certify.py (its part-token reading), none a vendor file; the table is re-taken after they land. Until then the table records the mismatch rows WRONG_MODEL (table_marks, second pass), and jlc_certify.py needs a declared-mismatch input so that a full run does not write CERTIFIED over them (drafted for the tools stream)"
+  - "the three 10 A and 25 A Keystone 3568 blade-holder lines of board E and board P's F1 need a purchase route their own board declares (an lcsc-allow line or a code); E F1 and F2 are WRONG_MODEL in the table"
+  - "a currency re-read of the Peli 1451-931 drawing, DXF and STEP bodies from Peli (no source URL recorded; peli.com and pelican.com refused this host on 26 September 2026)"
