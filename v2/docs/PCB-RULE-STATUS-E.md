@@ -3,23 +3,27 @@
 
 # Rule status: board E
 
-Manifest **2026-09-16.1**, rule set **ff8151db3576437b**, evidence epoch **2026-09-16T00:35:00+02:00**.
+Manifest **2026-09-16.1**, rule set **950539a66227908b**, evidence epoch **2026-09-16T00:35:00+02:00**.
 
 **Readiness: NOT_READY**
 
 Measured on board E17 (pcb-e1-dock-e7, a462ac2620b9b8d3), declares E17.
 
-> **HELD BY OWNER DECISION 31.** ROUTING_STATUS = PASS   ELECTRICAL_PROTECTION_STATUS = BLOCKED_DECISION_31   FAB_READINESS = NOT_READY   PUBLICATION_STATUS = HELD
+> **HELD BY OWNER DECISION 31, AT FABRICATION RELEASE.** ROUTING_STATUS = PASS   ELECTRICAL_PROTECTION_STATUS = BLOCKED_DECISION_31   FAB_READINESS = NOT_READY   PUBLICATION_STATUS = HELD
 >
-> rule TRN-001 is a BLOCKER and reads FAIL on board E, and the reading was corrected on the evening of 17 September: of its FIVE judged conductors ONE has a clamp behind an active part, the shore inlet, whose path is the fuse F1, the ideal-diode FET Q1 and then the SMCJ40A, THREE reach a semiconductor with nothing between them at all, the sensor pod's 3.3 V feed and its two I2C lines, and ONE is answered as it should be, the solar input, which meets its own clamp first. Until that evening the pod's three read as clamped by the shore inlet's own part, which the chain reached by crossing the RP2040 and a ground: a clamp on the other side of the board is not this conductor's. The fix is a schematic change, which a route cannot make, and which of the options is taken is the owner's to rule because it trades parts, board area and the operating envelope against each other. The envelope itself is decision 34, which is why 31 cannot be ruled before it. AND THE SAME GENERATION CARRIES A SECOND CORRECTION THAT NEEDS NO RULING (17 September 2026, 32.219): Q7, the hot-swap pass FET on the shore and vehicle DC entry, was written with a three-pin map on a five-pad land, so its gate and drain nets sit on two SOURCE pins and its drain tab floats on the E11 that was cut; the generator is corrected and rule SCH-005 reads FAIL on E11 until the board is regenerated
+> decision 31 was ruled on 21 September 2026 (the session's) and its executed record reads the ruled protection in the schematic of the declared phase and in no layout: D9, a USBLC6-2SC6 (C7519), on the sensor pod's J_POD.1, .3 and .4, and D10, the SMCJ40CA (C80273, substituted by the session for the ruled SMCJ40A because DC_F is ahead of the reverse-polarity FET), between F1 and Q1 on DC_F; netlist d910e49c5f5f50b2, port_protect PASS of 13 with 0 reversed. The committed board predates it. Until 26 September this hold held layout entry; it gates fabrication release since. The measurement it was opened on (16 and 17 September): of five judged conductors one met its clamp behind an active part (the shore inlet, through F1 and Q1) and three reached a semiconductor with nothing between them (the pod's 3.3 V feed and its two I2C lines)
 >
-> Permitted while held: a review package clearly quarantined as NOT_FOR_FAB may be generated, so the board can be read and reviewed while it is held.
+> Permitted while held: a review package clearly quarantined as NOT_FOR_FAB may be generated, so the board can be read and reviewed while it is held, and the board may enter layout once every layout_entry_requires above is met and the rest of its layout-entry test passes.
 >
 > Forbidden while held: any orderable fabrication package, any promotion of the board or its folder, any publication of the board file or its evidence.
 >
-> This lifts when decision 31 is ruled in v2/docs/OWNER-DECISIONS-2026-09-11.md and this entry is deleted.
+> This lifts when the layout of the declared phase implements the reviewed schematic: SCH-002 PASS on it on current-candidate evidence, TRN-001 PASS on that layout's netlist, each part of layout_entry_requires on its land at its conductor with the placement and return path the review states, the release's physical checks of the board (hardset, the release DRC) clean, and this entry deleted with that evidence named in the commit.
+>
+> It gates fabrication release, not layout entry. Before this board enters layout: decision 31's protection topology reviewed on this board's current netlist: every exposed conductor, the part it meets first, the clamp's rating against decision 34's level, and the placement and return-path constraints the layout must keep (the clamp at the entry, its ground return short and on the plane); the exact fitted parts decision 31's executed record lists for board E, at their conductors; TRN-001 PASS on the current netlist.
 
-| result | rules | percent |
+**Historical aggregate of mixed revisions, not readiness.** The table below counts, per result, the newest reading of each required rule on this board under its current rule, whatever revision it was taken on: readings of layouts that predate the corrected netlists, of older netlists, and under tools (code bundles) that have changed since are all in it. It is not readiness and not evidence about the current candidate: which readings count for the board as it is designed now, and whether it may enter layout, are in [CURRENT-EVIDENCE.md](CURRENT-EVIDENCE.md).
+
+| historical aggregate, mixed revisions | rules | percent of this board's required rules |
 |---|---|---|
 | PASS | 36 | 66.7 |
 | FAIL | 6 | 11.1 |
@@ -81,5 +85,5 @@ Measured on board E17 (pcb-e1-dock-e7, a462ac2620b9b8d3), declares E17.
 | DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | final_gate_e INCONCLUSIVE: this board is HELD by an open owner decision, so its paperwork is not current and cannot be made current while the hold sta |
 | DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **INCONCLUSIVE** | doc_provenance_e INCONCLUSIVE: board E declares E17 and the order set holds E6: the note beside those folders describes a board this project is not bu |
 | OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
-| SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 334 |
+| SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 335 |
 | SGN-002 a prototype-only unknown is named | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | PCB-PROTOTYPE-UNKNOWNS.md is current with the registry |

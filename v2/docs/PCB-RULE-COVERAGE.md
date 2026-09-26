@@ -28,7 +28,8 @@ appears in the gap register.
 | IMP-001 | CONTROLLED_IMPEDANCE | BLOCKER | gen_pcb_*3.py net classes | impedance_check.py -> impedance_check |  | **SOURCE_UNVERIFIED** |
 | IMP-002 | CONTROLLED_IMPEDANCE | BLOCKER | gen_pcb_*3.py class table (board B's project classes are built from CLASSES since 16 September) | class_floor.py -> class_floor | tests/test_board_gates.py, tests/test_return_rules.py | **ENFORCED** |
 | INT-001 | INTERFACE_COMPLIANCE | BLOCKER | gen_sch_*.py, with the PCIe clauses of the module datasheet held by check_contracts.py | interfaces.py, check_contracts.py -> interfaces_<letter>, check_contracts | tests/test_interfaces.py, tests/test_gate_fixtures.py, tests/test_artefact_recording.py | **ENFORCED** |
-| INT-002 | INTERFACE_COMPLIANCE | BLOCKER | gen_sch_b.py, eight 100 nF series capacitors per module link, no magnetics | both vendors' documents, read 16 September 2026 |  | **DOCUMENTED_ONLY** |
+| INT-002 | INTERFACE_COMPLIANCE | BLOCKER | gen_sch_b.py, eight 100 nF series capacitors per module link, no magnetics | the pre-layout assessment, a desk review by the session |  | **VERIFIED_MANUALLY** |
+| INT-003 | INTERFACE_COMPLIANCE | BLOCKER | NONE_YET | the bench link test on the first built board B |  | **OPEN** |
 | ISO-001 | ISOLATION_SPACING | BLOCKER | gen_pcb_a3.py HV class, gen_pcb_b3.py HV class | spacing.py -> spacing | tests/test_spacing.py | **ENFORCED** |
 | MEC-001 | MECHANICAL | BLOCKER | panel1450.py, gen_pcb_*.py | check_pcb_*.py -> check_pcb_<letter> | tests/test_board_gates.py | **ENFORCED** |
 | OUT-001 | MANUFACTURING_OUTPUTS | BLOCKER | make_handoff.py | final_gate.py -> final_gate | tests/test_final_gate.py | **ENFORCED** |
@@ -73,7 +74,8 @@ appears in the gap register.
 | maturity | rules |
 |---|---|
 | ENFORCED | 50 |
-| VERIFIED_MANUALLY | 3 |
-| DOCUMENTED_ONLY | 3 |
+| VERIFIED_MANUALLY | 4 |
+| DOCUMENTED_ONLY | 2 |
+| OPEN | 1 |
 | SOURCE_UNVERIFIED | 1 |
 | OWNER_DECISION_REQUIRED | 1 |

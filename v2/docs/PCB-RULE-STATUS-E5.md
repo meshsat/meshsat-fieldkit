@@ -3,13 +3,15 @@
 
 # Rule status: board E5
 
-Manifest **2026-09-16.1**, rule set **ff8151db3576437b**, evidence epoch **2026-09-16T00:35:00+02:00**.
+Manifest **2026-09-16.1**, rule set **950539a66227908b**, evidence epoch **2026-09-16T00:35:00+02:00**.
 
 **Readiness: NOT_READY**
 
 Measured on board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5.
 
-| result | rules | percent |
+**Historical aggregate of mixed revisions, not readiness.** The table below counts, per result, the newest reading of each required rule on this board under its current rule, whatever revision it was taken on: readings of layouts that predate the corrected netlists, of older netlists, and under tools (code bundles) that have changed since are all in it. It is not readiness and not evidence about the current candidate: which readings count for the board as it is designed now, and whether it may enter layout, are in [CURRENT-EVIDENCE.md](CURRENT-EVIDENCE.md).
+
+| historical aggregate, mixed revisions | rules | percent of this board's required rules |
 |---|---|---|
 | PASS | 22 | 88.0 |
 | FAIL | 2 | 8.0 |
@@ -42,5 +44,5 @@ Measured on board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5.
 | DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **PASS** | final_gate_e5 PASS of 1 |
 | DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | doc_provenance_e5 PASS of 1 |
 | OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
-| SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 334 |
+| SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 335 |
 | SGN-002 a prototype-only unknown is named | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | PCB-PROTOTYPE-UNKNOWNS.md is current with the registry |

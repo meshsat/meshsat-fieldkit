@@ -3,19 +3,21 @@
 
 # Rule status: board B
 
-Manifest **2026-09-16.1**, rule set **ff8151db3576437b**, evidence epoch **2026-09-16T00:35:00+02:00**.
+Manifest **2026-09-16.1**, rule set **950539a66227908b**, evidence epoch **2026-09-16T00:35:00+02:00**.
 
 **Readiness: NOT_READY**
 
 Measured on board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21.
 
-| result | rules | percent |
+**Historical aggregate of mixed revisions, not readiness.** The table below counts, per result, the newest reading of each required rule on this board under its current rule, whatever revision it was taken on: readings of layouts that predate the corrected netlists, of older netlists, and under tools (code bundles) that have changed since are all in it. It is not readiness and not evidence about the current candidate: which readings count for the board as it is designed now, and whether it may enter layout, are in [CURRENT-EVIDENCE.md](CURRENT-EVIDENCE.md).
+
+| historical aggregate, mixed revisions | rules | percent of this board's required rules |
 |---|---|---|
-| PASS | 18 | 32.7 |
-| FAIL | 6 | 10.9 |
-| INCONCLUSIVE | 31 | 56.4 |
+| PASS | 19 | 33.9 |
+| FAIL | 6 | 10.7 |
+| INCONCLUSIVE | 31 | 55.4 |
 | WAIVED | 0 | 0.0 |
-| **denominator** | **55** | 100.0 |
+| **denominator** | **56** | 100.0 |
 
 | rule | effect | phase | result | why |
 |---|---|---|---|---|
@@ -52,7 +54,8 @@ Measured on board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21.
 | RF-001 RF paths are designed as RF | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed  |
 | RF-002 transmit inhibit is hardware | BLOCKER | SCHEMATIC | **PASS** | inhibit_chain_b PASS of 3 |
 | INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **PASS** | interfaces_b PASS of 7 |
-| INT-002 a transformerless Ethernet link is verified at both ends | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | no verification: DECISION 29 IS RULED (the session's, 21 September 2026): the three links stay capacitively coupled as built and no magnetics are fitt |
+| INT-002 a transformerless Ethernet link has a pre-layout assessment on its current nets | BLOCKER | SCHEMATIC | **PASS** | INT-002-PRE-LAYOUT-ASSESSMENT.md is the record that was verified (sha cad907b73c7ed8ea), and the 48 net(s) it read are unchanged on the current netlis |
+| INT-003 a transformerless Ethernet link is verified up at 1000M on the built board | BLOCKER | PROTOTYPE | **INCONCLUSIVE** | no verification: the PROTOTYPE half of INT-002 (split 26 September 2026). Nothing is built, so nothing verifies it and it reads INCONCLUSIVE until the |
 | TRN-001 every exposed port is protected | BLOCKER | SCHEMATIC | **FAIL** | port_protect_b FAIL: {'answered_in_part': 0, 'behind_an_active_part': 0, 'clamps': 6, 'clamps_one_way': 6, 'clamps_reversed': 0, 'clamps_symb |
 | ISO-001 creepage and clearance | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed  |
 | THM-001 every dissipating part has a path | BLOCKER | PLACED_BOARD | **INCONCLUSIVE** | no verification: 16 September 2026: the first half exists. thermal.py builds a per-board table from the board's own intent (rails, currents, the sourc |
@@ -72,5 +75,5 @@ Measured on board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21.
 | DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | final_gate_b INCONCLUSIVE: a deliverable folder at the declared phase B21: the only folder is meshsat-pcb-b-revA-B19-quote, a quote, and a folder is j |
 | DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **INCONCLUSIVE** | doc_provenance_b INCONCLUSIVE: board B declares B21 and the order set holds B16: the note beside those folders describes a board this project is not b |
 | OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
-| SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 334 |
+| SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 335 |
 | SGN-002 a prototype-only unknown is named | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | PCB-PROTOTYPE-UNKNOWNS.md is current with the registry |
