@@ -7,7 +7,7 @@ Every pair that is not a current PASS, classified. Generated from tools/pcb_deci
 map's maturity and each deciding verdict: a decision that claims a pair wins over everything else, because
 the ruling is the action that moves it, and the measurement is reported beside it rather than lost.
 
-**123 open pair(s)** over 7 board(s). **43 are measured failures** (a tool looked and the board failed), which are **34 distinct readings**, and **0 of those are claimed by an open owner decision**.
+**127 open pair(s)** over 7 board(s). **41 are measured failures** (a tool looked and the board failed), which are **33 distinct readings**, and **0 of those are claimed by an open owner decision**.
 
 | waiting on | pairs | what it means |
 |---|---:|---|
@@ -15,10 +15,10 @@ the ruling is the action that moves it, and the measurement is reported beside i
 | `AUTHORITY` | 3 | an authority this project does not have |
 | `NO_INSTRUMENT` | 11 | nothing verifies it |
 | `MISSING_INPUT` | 17 | an input the reading declared absent |
-| `MEASURED_FAILURE` | 43 | the tool looked and the board failed |
+| `MEASURED_FAILURE` | 41 | the tool looked and the board failed |
 | `VENDOR_WAIT` | 2 | a fabricator or a standards body, and nobody here |
 | `OWNER_WORK` | 7 | work only the owner or the ordering session can do |
-| `NOT_JUDGED` | 33 | not judged, for the reason the reading gives |
+| `NOT_JUDGED` | 39 | not judged, for the reason the reading gives |
 
 A pair is what a BOARD has to satisfy, so the table counts pairs; these rules are decided by a verdict
 written ONCE for the whole set, so their rows are one reading seen on every board and not that many separate
@@ -32,15 +32,15 @@ things to fix.
 |---|---:|---:|---:|---:|---:|---:|
 | A | 25 | 14 | 1 | 1 | 4 | 4 |
 | B | 37 | 6 | 1 | 1 | 5 | 21 |
-| C | 11 | 4 | 1 | 0 | 0 | 5 |
+| C | 13 | 4 | 1 | 0 | 0 | 7 |
 | D | 14 | 2 | 1 | 1 | 4 | 5 |
 | E | 18 | 6 | 1 | 0 | 4 | 6 |
-| E5 | 3 | 2 | 1 | 0 | 0 | 0 |
-| P | 15 | 9 | 1 | 0 | 0 | 3 |
+| E5 | 5 | 2 | 1 | 0 | 0 | 2 |
+| P | 15 | 7 | 1 | 0 | 0 | 5 |
 
 ## Readings owed
 
-Of the 98 open pairs with a reading beside them, **98 are decided by a reading taken under a tool that has
+Of the 102 open pairs with a reading beside them, **102 are decided by a reading taken under a tool that has
 CHANGED since**. A tool change moves no rule-set fingerprint and no per-rule digest, so nothing else on these
 pages can say it. It is an upper bound, because a tool file moves for a comment as readily as for a
 criterion, and it decides nothing: it says the reading is owed. Re-take with retake_gate.sh or a sweep.
@@ -49,7 +49,7 @@ criterion, and it decides nothing: it says the reading is owed. Re-take with ret
 |---|---|
 | `ANA-001` | A, E |
 | `BAT-001` | P |
-| `CMP-002` | A, B, D, E, P |
+| `CMP-002` | A, B, C, D, E, E5, P |
 | `DEC-001` | A |
 | `DFA-001` | A, B, C, D, E, P |
 | `DFM-001` | A, B, D, E |
@@ -79,7 +79,7 @@ criterion, and it decides nothing: it says the reading is owed. Re-take with ret
 | `SCH-003` | B |
 | `SI-001` | A, B, C, D, E, P |
 | `STK-001` | B, E5, P |
-| `SUP-001` | A, B, D, E, P |
+| `SUP-001` | A, B, C, D, E, E5, P |
 | `TRN-001` | A, B |
 | `VIA-001` | B |
 | `VIA-002` | B, P |
@@ -156,7 +156,7 @@ What closes these is a re-cut and a route, not a drawing.
 | `DFM-001` | E | INCONCLUSIVE | the folder judged here is meshsat-pcb-e-revA-E9 and this board declares E17, so its properties are a reading of a board this set is not building |
 | `DOC-002` | E | INCONCLUSIVE | board E declares E17 and the order set holds E6: the note beside those folders describes a board this project is not building |
 
-## MEASURED_FAILURE (43): the tool looked and the board failed
+## MEASURED_FAILURE (41): the tool looked and the board failed
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -194,8 +194,6 @@ What closes these is a re-cut and a route, not a drawing.
 | `OUT-001` | E | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
 | `STK-001` | E5 | FAIL | stackup_gate FAIL: {'compared': 8, 'copper_layers': 2, 'disagreements': 1} |
 | `OUT-001` | E5 | FAIL | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
-| `CMP-002` | P | FAIL | jlc_certify_p FAIL: {'CERTIFIED': 17, 'PACKAGE_MISMATCH': 1, 'WRONG_MODEL': 1} |
-| `SUP-001` | P | FAIL | jlc_certify_p FAIL: {'CERTIFIED': 17, 'PACKAGE_MISMATCH': 1, 'WRONG_MODEL': 1} |
 | `PI-001` | P | FAIL | dc_density FAIL: {'met': 3, 'missed': 1, 'undeclared': 0} |
 | `STK-001` | P | FAIL | stackup_gate FAIL: {'compared': 8, 'copper_layers': 2, 'disagreements': 1} |
 | `RET-001` | P | FAIL | intent_return_path FAIL: {'fail': 5, 'pass': 24} |
@@ -223,7 +221,7 @@ What closes these is a re-cut and a route, not a drawing.
 | `DFA-001` | E | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 | `DFA-001` | P | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 
-## NOT_JUDGED (33): not judged, for the reason the reading gives
+## NOT_JUDGED (39): not judged, for the reason the reading gives
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -248,6 +246,8 @@ What closes these is a re-cut and a route, not a drawing.
 | `PLN-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 | `EMC-001` | B | INCONCLUSIVE | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed board has nothing current to be judged against |
 | `SCH-002` | C | INCONCLUSIVE | no netlist_parts verdict for this board |
+| `CMP-002` | C | INCONCLUSIVE | jlc_certify_c was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
+| `SUP-001` | C | INCONCLUSIVE | jlc_certify_c was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
 | `RET-003` | C | INCONCLUSIVE | return_stitch INCONCLUSIVE: this board has no transition between two different reference nets, so RET-003 has nothing on it to judge |
 | `SI-001` | C | INCONCLUSIVE | edge_length INCONCLUSIVE: every signal net's routed length against the critical length its own class implies, and a net past it is asked whether it is impedance-controlled, series-termin |
 | `SCH-002` | D | INCONCLUSIVE | no netlist_parts verdict for this board |
@@ -258,6 +258,10 @@ What closes these is a re-cut and a route, not a drawing.
 | `RET-003` | E | INCONCLUSIVE | return_stitch INCONCLUSIVE: this board has no transition between two different reference nets, so RET-003 has nothing on it to judge |
 | `SI-001` | E | INCONCLUSIVE | edge_length INCONCLUSIVE: every signal net's routed length against the critical length its own class implies, and a net past it is asked whether it is impedance-controlled, series-termin |
 | `DOC-001` | E | INCONCLUSIVE | final_gate_e INCONCLUSIVE: this board is HELD by an open owner decision, so its paperwork is not current and cannot be made current while the hold stands |
+| `CMP-002` | E5 | INCONCLUSIVE | jlc_certify_e5 was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
+| `SUP-001` | E5 | INCONCLUSIVE | jlc_certify_e5 was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
 | `SCH-002` | P | INCONCLUSIVE | no netlist_parts verdict for this board |
+| `CMP-002` | P | INCONCLUSIVE | jlc_certify_p was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
+| `SUP-001` | P | INCONCLUSIVE | jlc_certify_p was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
 | `SI-001` | P | INCONCLUSIVE | edge_length INCONCLUSIVE: this board declares no rise_ns anywhere, and an edge nobody wrote down decides nothing |
 

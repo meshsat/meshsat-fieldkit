@@ -41,7 +41,7 @@ zero is a real answer and is recorded the same way; what the rule refuses is the
 | `JST_PH_B5B-PH-K_1x05_P2.00mm_Vertical` | D, P | J_HS1 |  |  |
 | `JST_SH_BM04B-SRSS-TB_1x04-1MP_P1.00mm_Vertical` | B | J_FAN1 |  |  |
 | `JST_VH_B2P-VH_1x02_P3.96mm_Vertical` | A, B, D, E | J_54V |  |  |
-| `JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical` | A, E | J_HEAT |  |  |
+| `JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical` | A, D, E | J_HEAT |  |  |
 | `JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical` | E, P | J_SMB |  |  |
 | `JST_XH_B5B-XH-A_1x05_P2.50mm_Vertical` | P | J_CELL |  |  |
 | `LED_D3.0mm` | C | D1 |  |  |
@@ -87,7 +87,7 @@ zero is a real answer and is recorded the same way; what the rule refuses is the
 | `Texas_RSM0032A_VQFN-32-1EP_4x4mm_P0.4mm_EP1.4x1.4mm` | P | U1 |  |  |
 | `U.FL_Hirose_U.FL-R-SMT-1_Vertical` | B, D | J_GNSS1 |  |  |
 | `USB3_A_Receptacle_Wuerth_692122030100` | B | J_LIME |  |  |
-| `VSSOP-10_3x3mm_P0.5mm` | A, E | U10 |  |  |
+| `VSSOP-10_3x3mm_P0.5mm` | A, D, E | U10 |  |  |
 | `VSSOP-8_3x3mm_P0.65mm` | D | U8 |  |  |
 | `Vishay_VEML7700` | C | U_LIGHT |  |  |
 | `WQFN-42-1EP_3.5x9mm_P0.5mm_EP2.05x7.55mm` | B | U3 |  |  |

@@ -25,11 +25,11 @@ that owns it.
 
 | board | declared phase | netlist, sha256/16 | board file of the phase, sha256/16 | layout carries the netlist | ready for layout |
 |---|---|---|---|---|---|
-| A | A32 | `pcb-a-power-a23/out/pcb-a-power.net` 7b08510106687b3d | 58e26c67987b1daa | no: SCH-002 (netlist against board) reads FAIL on it | no: 16 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (TOOL_CHANGED) |
+| A | A32 | `pcb-a-power-a23/out/pcb-a-power.net` 3a786cf31614fe63 | 58e26c67987b1daa | no: SCH-002 (netlist against board) reads FAIL on it | no: 16 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (TOOL_CHANGED) |
 | B | B21 | `pcb-b-compute-b19/out/pcb-b-compute.net` 669d02d07aeaae4b | 2e64b5bf2d9cd3bc | no: SCH-002 (netlist against board) reads FAIL on it | no: 16 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (TOOL_CHANGED) |
 | C | C24 | `pcb-c-display-c8/out/pcb-c-display.net` 2834f0d8c4071d56 | 2a273803757c68fb | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 10 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (TOOL_CHANGED) |
-| D | D12 | `pcb-d-aprs-d9/out/pcb-d-aprs.net` f13d8b70099ab03e | 929bf82d2bf6eed4 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 15 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (TOOL_CHANGED) |
-| E | E17 | `pcb-e1-dock-e7/out/pcb-e1-dock.net` d910e49c5f5f50b2 | a462ac2620b9b8d3 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 15 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (TOOL_CHANGED) |
+| D | D12 | `pcb-d-aprs-d9/out/pcb-d-aprs.net` 0dad82b4b6a79290 | 929bf82d2bf6eed4 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 15 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (TOOL_CHANGED) |
+| E | E17 | `pcb-e1-dock-e7/out/pcb-e1-dock.net` f3c1ad6153002976 | a462ac2620b9b8d3 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 15 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (TOOL_CHANGED) |
 | P | P4 | `pcb-p-pack-p2/out/pcb-p-pack.net` 4342c4cbe1b43dc4 | d79865e7b1aceb95 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 14 reason(s), first SCH-001 PASS on AWAITING_REVALIDATION evidence (TOOL_CHANGED) |
 | E5 | E5 | none (no schematic) | 686b29a734c55b9a | yes: a bare contact board with no schematic (manifest no_chain): its board file is its design | no: 6 reason(s), first SCH-004 PASS on AWAITING_REVALIDATION evidence (TOOL_CHANGED) |
 
@@ -204,20 +204,12 @@ whose evidence class differs from what the entry-script instrument of 20 Septemb
 evidence; a row whose class stayed the same and whose first failing cause moved (most often to TOOL_CHANGED
 from a cause checked after it) is counted but not listed.
 
-**22 of 334 required rows changed class; 211 more changed only their first failing cause.**
+**14 of 334 required rows changed class; 205 more changed only their first failing cause.**
 
 | board | rule | result | entry script alone | code bundle | files that moved |
 |---|---|---|---|---|---|
 | C | SCH-001 ERC clean or explained | PASS | CURRENT_CANDIDATE (BOUND) | AWAITING_REVALIDATION (TOOL_CHANGED) | `kisch.py`, `phase_artefacts.py`, `verdict.py` |
 | C | TRN-001 every exposed port is protected | PASS | CURRENT_CANDIDATE (BOUND) | AWAITING_REVALIDATION (TOOL_CHANGED) | `kisch.py`, `phase_artefacts.py`, `verdict.py` |
-| D | SCH-001 ERC clean or explained | PASS | CURRENT_CANDIDATE (BOUND) | AWAITING_REVALIDATION (TOOL_CHANGED) | `kisch.py`, `phase_artefacts.py`, `verdict.py` |
-| D | SCH-004 a safety line fails safe | PASS | CURRENT_CANDIDATE (BOUND) | AWAITING_REVALIDATION (TOOL_CHANGED) | `kisch.py`, `phase_artefacts.py`, `port_protect.py`, `verdict.py` |
-| D | TRN-001 every exposed port is protected | PASS | CURRENT_CANDIDATE (BOUND) | AWAITING_REVALIDATION (TOOL_CHANGED) | `kisch.py`, `phase_artefacts.py`, `verdict.py` |
-| E | SCH-001 ERC clean or explained | PASS | CURRENT_CANDIDATE (BOUND) | AWAITING_REVALIDATION (TOOL_CHANGED) | `kisch.py`, `phase_artefacts.py`, `verdict.py` |
-| E | SCH-004 a safety line fails safe | PASS | CURRENT_CANDIDATE (BOUND) | AWAITING_REVALIDATION (TOOL_CHANGED) | `kisch.py`, `phase_artefacts.py`, `port_protect.py`, `verdict.py` |
-| E | PWR-002 sequencing and inrush | PASS | CURRENT_CANDIDATE (BOUND) | AWAITING_REVALIDATION (TOOL_CHANGED) | `phase_artefacts.py`, `verdict.py` |
-| E | PWR-003 protection coordination | PASS | CURRENT_CANDIDATE (BOUND) | AWAITING_REVALIDATION (TOOL_CHANGED) | `phase_artefacts.py`, `verdict.py` |
-| E | TRN-001 every exposed port is protected | PASS | CURRENT_CANDIDATE (BOUND) | AWAITING_REVALIDATION (TOOL_CHANGED) | `kisch.py`, `phase_artefacts.py`, `verdict.py` |
 | P | SCH-001 ERC clean or explained | PASS | CURRENT_CANDIDATE (BOUND) | AWAITING_REVALIDATION (TOOL_CHANGED) | `kisch.py`, `phase_artefacts.py`, `verdict.py` |
 | P | SCH-004 a safety line fails safe | PASS | CURRENT_CANDIDATE (BOUND) | AWAITING_REVALIDATION (TOOL_CHANGED) | `kisch.py`, `phase_artefacts.py`, `port_protect.py`, `verdict.py` |
 | P | PWR-002 sequencing and inrush | PASS | CURRENT_CANDIDATE (BOUND) | AWAITING_REVALIDATION (TOOL_CHANGED) | `phase_artefacts.py`, `verdict.py` |
@@ -278,8 +270,8 @@ tool.
 
 | cause | what it means | what re-validates it | A | B | C | D | E | P | E5 | set | of which a re-take alone makes current |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| TOOL_CHANGED | the code that wrote it has changed since: its entry script or a local module it imports (exact by the reading's code bundle; for an older reading by its writer's hash and its imports' commit dates) | re-taken under the current tool (current only when the re-take also binds its artefact and configuration), or a compatibility entry proving the change is not semantic | 44 | 44 | 39 | 42 | 45 | 40 | 20 | 274 | 67 |
-| NOT_CURRENT_EVIDENCE | the reading itself is stale (epoch, rule digest, another board, or a tool meaning change) | re-taken | 2 | 2 | 0 | 2 | 2 | 0 | 0 | 8 | 0 |
+| TOOL_CHANGED | the code that wrote it has changed since: its entry script or a local module it imports (exact by the reading's code bundle; for an older reading by its writer's hash and its imports' commit dates) | re-taken under the current tool (current only when the re-take also binds its artefact and configuration), or a compatibility entry proving the change is not semantic | 44 | 44 | 37 | 42 | 45 | 38 | 18 | 268 | 67 |
+| NOT_CURRENT_EVIDENCE | the reading itself is stale (epoch, rule digest, another board, or a tool meaning change) | re-taken | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 14 | 0 |
 | TEMP_INPUT | it judged files in a temporary directory, not this tree | re-taken in this tree | 0 | 0 | 1 | 0 | 0 | 1 | 1 | 3 | 0 |
 
 ## Writers whose configuration is not declared yet
@@ -310,9 +302,7 @@ stream, which audits each writer by reading it, file and line.
 | `ground_system.py` | GND-001 |
 | `hardset.py` | PLC-001, RTE-002 |
 | `impedance_check.py` | IMP-001, PAIR-001 |
-| `jlc_certify.py` | CMP-002, SUP-001 |
 | `layer_judge.py` | STK-002 |
-| `lcsc_fill.py` | CMP-002, SUP-001 |
 | `ledger_verify.py` | DOC-002 |
 | `place_audit.py` | PLC-001 |
 | `pruned_gate.py` | RTE-002 |
@@ -360,7 +350,7 @@ tools that have changed since, across every board's revisions.
 
 | historical aggregate, mixed revisions | PASS | FAIL | INCONCLUSIVE | WAIVED | pairs |
 |---|---:|---:|---:|---:|---:|
-| rule-board pairs | 211 (63.2 percent, mixed revisions) | 43 | 80 | 0 | 334 |
+| rule-board pairs | 207 (62.0 percent, mixed revisions) | 41 | 86 | 0 | 334 |
 
 ## How this page is computed
 
@@ -371,7 +361,7 @@ tools that have changed since, across every board's revisions.
   - schematic and netlist: the netlist sha the reading records (or its content identity, `content16`), against the netlist in the declared phase directory's `out/`;
   - PCB and stackup: the board file sha the reading records; the stackup is a block inside that file, so the sha binds it;
   - BOM: for a schematic-phase rule the netlist carries every part's value, land and fields, so the netlist sha binds it; for a release-package rule the files of the declared phase's deliverable folder that the reading records, each at the sha this tree holds, with the folder's BOM among them where it has one (a gerber zip or CPL alone does not bind a folder with a BOM). A reading that names the folder only by its name is UNBOUND. The order set and `JLC-CERTIFIED.tsv` are bound only through the readings that record them;
-  - configuration: every file its writer is declared to read in `rules_status.CONFIG_INPUTS`, unchanged since the reading by the sha it recorded or by the file's last commit (uncommitted edits count as changed). Declared writers: `check_contracts.py`, `check_pcb_e5.py`, `clock_check.py`, `derate.py`, `edge_length.py`, `energy_chain.py`, `erc_gate.py`, `fab_limits.py`, `intent_checks.py`, `interfaces.py`, `netlist_board.py`, `netlist_parts.py`, `pack_protection.py`, `pin_map_lands.py`, `port_protect.py`, `power_sequence.py`, `reliability.py`, `rules_render.py`, `rules_status.py`, `safe_lines.py`, `stackup_gate.py`. A reading from any other writer is AWAITING_REVALIDATION with cause CONFIG_UNDECLARED;
+  - configuration: every file its writer is declared to read in `rules_status.CONFIG_INPUTS`, unchanged since the reading by the sha it recorded or by the file's last commit (uncommitted edits count as changed). Declared writers: `check_contracts.py`, `check_pcb_e5.py`, `clock_check.py`, `derate.py`, `edge_length.py`, `energy_chain.py`, `erc_gate.py`, `fab_limits.py`, `intent_checks.py`, `interfaces.py`, `jlc_certify.py`, `lcsc_fill.py`, `netlist_board.py`, `netlist_parts.py`, `pack_protection.py`, `pin_map_lands.py`, `port_protect.py`, `power_sequence.py`, `reliability.py`, `rules_render.py`, `rules_status.py`, `safe_lines.py`, `stackup_gate.py`. A reading from any other writer is AWAITING_REVALIDATION with cause CONFIG_UNDECLARED;
   - rule semantics: the rule's digest and the rule-set fingerprint (`_fresh`, `_after_meaning_changed`);
   - tool semantics: the reading's code bundle (the entry script and every local module it imports, each by sha256/16) against the bundle of the same entry here; for a reading older than the bundle, the writer's own sha256/16 and its imports' commit dates.
 - Instrument limits, which a reading shown current here can still fall foul of:
