@@ -4314,11 +4314,19 @@ records:
           board D's owner clause to section 7's L4 row, a board D bullet to section 8, a revision paragraph, and to section
           0a's row 1 that L4 on board D is closed at desk but for the decay race of E-11; sections 0, 1, 2, 4, 4a, 5, 5a and
           9 and every other row are byte-identical; sections 4.1 and 4.2, which this reading cites, are byte-identical
+      - >-
+          v2/docs/CURRENT-EVIDENCE.md re-read at the round 8 integration of 27 September 2026 (branch fnd/r8int1, rendered
+          after boards A, D and E were regenerated): the ready-for-layout table carries the new netlists of A
+          (3a786cf31614fe63), D (0dad82b4b6a79290) and E (f3c1ad6153002976), and the class-change table, the cause counts
+          and the historical aggregate move with them; RF-002 and SCH-004 on board D still read PASS on
+          AWAITING_REVALIDATION evidence (TOOL_CHANGED: RF-002's writer check_contracts.py changed in board A's round 8
+          commit, SCH-004's helper modules after its reading), so neither decides until the consolidated re-take; the
+          record's own reasons are unchanged and it stays INCONCLUSIVE
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63"
       - "v2/docs/feasibility/EMCON.md@115e9e7be7a36407"
-      - "v2/docs/CURRENT-EVIDENCE.md@9c9bba12790d645a"
+      - "v2/docs/CURRENT-EVIDENCE.md@635b88193a56e9ad"
     release_effect: BLOCKER
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2825", "v2/docs/PANEL.md section 6", "v2/docs/feasibility/EMCON.md sections 4.1 and 4.2"]
     source_check: VERIFIED
@@ -5269,10 +5277,16 @@ records:
           recorded at integration) and questions Q-P15 to Q-P18, Q-TI-8 to Q-TI-10 and Q-S2; it still says that nothing
           has been sent and that every review so far is by AI agent sessions, and the schematic and candidate files are unchanged, so this reading stands on the file at
           407f939fc4d7e50a
+      - >-
+          v2/docs/CURRENT-EVIDENCE.md re-read at the round 8 integration of 27 September 2026 (branch fnd/r8int1): the
+          netlist rows of A, D and E, the class-change table, the cause counts and the historical aggregate changed; BAT-001
+          on board P still reads FAIL on AWAITING_REVALIDATION evidence (TOOL_CHANGED) until the consolidated re-take, and
+          the battery packet's round 8 adds finding BAT-F20 (open) without engaging the qualified review, so the reasons
+          given above are unchanged and this reading stands
     evidence_bound_to:
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@4342c4cbe1b43dc4"
       - "v2/ecad/tools/gen_sch_p.py@e111e10a047f587e"
-      - "v2/docs/CURRENT-EVIDENCE.md@9c9bba12790d645a"
+      - "v2/docs/CURRENT-EVIDENCE.md@635b88193a56e9ad"
       - "v2/docs/review-packets/battery/REVIEW-REQUEST.md@407f939fc4d7e50a"
     release_effect: BLOCKER
     source:
