@@ -210,3 +210,5 @@ vishay/vishay-si2300ds.pdf   # https://www.vishay.com/docs/65701/si2300ds.pdf
 vishay/vishay-wsl-power-metal-strip.pdf   # https://www.vishay.com/docs/30100/wsl.pdf
 battery/ti-sffs317a-bq77207-fusa.pdf   # https://www.ti.com/lit/fs/sffs317a/sffs317a.pdf, fetched 26 September 2026 13:52 UTC (byte-identical to the battery review stream's copy)
 battery/littelfuse-itv9550-30a.pdf   # https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/194/ITV9550_30A_Series_DS.pdf (Digi-Key's copy of the Littelfuse sheet; littelfuse.com refused this host), fetched 26 September 2026 13:52 UTC
+ti/ti-sn74lvc86a.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc86a.pdf, fetched 26 September 2026 12:31 UTC by the fabric review stream (SCAS288R)
+nexperia/nexperia-74lvc86a.pdf   # https://assets.nexperia.com/documents/data-sheet/74LVC86A.pdf, fetched 26 September 2026 12:31 UTC by the fabric review stream (Rev. 8)
