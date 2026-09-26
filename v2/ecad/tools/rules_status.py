@@ -53,13 +53,16 @@ def coverage(path=None):
 def _project_dirs(letter, m):
     """Where a board's evidence can be: its phase directory's out/ and routed/, plus the SET-LEVEL out/ where
     the across-the-set gates write (the final gate, the contracts and the parts certification judge the whole
-    manifest at once, and their verdict is evidence for every board in it)."""
-    proj = (m["boards"].get(letter) or {}).get("project", "")
-    out = []
-    for d in sorted(glob.glob(os.path.join(ECAD, proj + "*"))):
-        out += [os.path.join(d, "out"), os.path.join(d, "routed")]
-    out.append(os.path.join(ECAD, "out"))
-    return [d for d in out if os.path.isdir(d)]
+    manifest at once, and their verdict is evidence for every board in it).
+
+    THE PHASE DIRECTORY, NOT EVERY DIRECTORY WHOSE NAME BEGINS WITH THE PROJECT'S (26 September 2026, MESHSAT-1357,
+    found by the regeneration parity run of 25 September). This globbed `<project>*`, so board A's evidence included `pcb-a-power/` (the A18 board of
+    the generation before) beside `pcb-a-power-a23/`, and every legacy directory of every board was read. No
+    verdict sat in one on that day (613 tracked and 784 in the main checkout were read), so no reading moved; the
+    directory is now the one the board's routeflow profile names, which `_phase_dir` already reads."""
+    d = _phase_dir(letter, m)
+    out = [os.path.join(d, "out"), os.path.join(d, "routed"), os.path.join(ECAD, "out")]
+    return [x for x in out if os.path.isdir(x)]
 
 
 _FP_NOW = [None]
@@ -192,11 +195,35 @@ def _board_identities(letter, m):
     # rule that forbids the glob is right to make no exception it cannot see.
     name = ((R.board_facts().get(letter) or {}).get("project") or "")
     if not name: return out
-    for d in _project_dirs(letter, m):
-        for f in (os.path.join(os.path.dirname(d), name + ".kicad_pcb"), os.path.join(d, name + ".kicad_pcb")):
-            try: out.add(hashlib.sha256(open(f, "rb").read()).hexdigest()[:16])
-            except OSError: continue
+    # A RETIRED BOARD IS NOT AN IDENTITY (26 September 2026, MESHSAT-1357). The phase directory's own board is one. A
+    # board saved in its out/ or routed/ is one only when its silk carries the phase the board DECLARES: the E9
+    # board still sits in pcb-e1-dock-e7/routed/ while board E declares E17, and it was an identity, so a verdict
+    # taken on E9 would have read as current evidence for E17. Before this, every `<project>*` directory's board
+    # was one too (see _project_dirs).
+    d = _phase_dir(letter, m)
+    try: raw = open(os.path.join(d, name + ".kicad_pcb"), "rb").read(); out.add(hashlib.sha256(raw).hexdigest()[:16])
+    except OSError: pass
+    decl = _declared_phase(letter)
+    for f in (os.path.join(d, "routed", name + ".kicad_pcb"), os.path.join(d, "out", name + ".kicad_pcb")):
+        try: raw = open(f, "rb").read()
+        except OSError: continue
+        if decl and decl.upper() in _legend_phases(raw.decode("utf-8", "replace"), letter):
+            out.add(hashlib.sha256(raw).hexdigest()[:16])
     return out
+
+
+def _declared_phase(letter):
+    """The phase the board table declares for this letter, or None."""
+    try: return (json.load(open(os.path.join(HERE, "boards", "%s.json" % letter), encoding="utf-8")) or {}).get("phase")
+    except (OSError, ValueError): return None
+
+
+def _legend_phases(text, letter):
+    """Every phase token (the board's letter and one to three digits) in a board file's silk legends."""
+    tok = re.compile(r"\b(%s\d{1,3})\b" % re.escape(letter.upper()[0]))
+    seen = set()
+    for t in _LEGEND.findall(text): seen |= set(tok.findall(t))
+    return seen
 
 
 _LEGEND = re.compile(r'\(gr_text "([^"]*)"')
@@ -446,6 +473,8 @@ def result_for(rule, letter, cov, vs, m, fingerprint, phase=None, identities=Non
             r = dict(result=INCONCLUSIVE, why="no %s verdict for this board" % name, evidence=None)
         else:
             ok, why = _fresh(rec, m, fingerprint, identities, rule)
+            if ok:
+                ok, why = _after_meaning_changed(rec, name, c, letter)
             if not ok:
                 r = dict(result=INCONCLUSIVE, why=why, evidence=rec.get("_path"))
             elif rec.get("applicable") is False:
@@ -486,6 +515,32 @@ def result_for(rule, letter, cov, vs, m, fingerprint, phase=None, identities=Non
         order = {FAIL: 0, INCONCLUSIVE: 1, PASS: 2}
         if worst is None or order[r["result"]] < order[worst["result"]]: worst = r
     return worst
+
+
+def _after_meaning_changed(rec, name, c, letter):
+    """(ok, why): was this verdict taken after its tool last changed what the verdict MEANS for this rule?
+
+    26 September 2026 (MESHSAT-1357). A rule's digest moves when the RULE's demands change and a verdict's epoch
+    when the audit restarts; neither moves when the TOOL is corrected to measure what the rule always demanded.
+    jlc_certify was: until that day CERTIFIED did not establish that the part was the one the row or its land
+    names (the tracked per-board verdicts of boards C and P read PASS over C2089, a TO-92-3 part, certified as sixteen panel
+    LEDs and XSD's C4661 on the Keystone 3568 fuse-holder land). A coverage row names, per verdict, the instant
+    its tool's meaning changed (`evidence_not_before`, `<letter>` expanded), and a reading taken before it is not
+    current evidence for that rule until it is re-taken. A floor that cannot be read is not a floor: it refuses."""
+    floors = c.get("evidence_not_before") or {}
+    if not isinstance(floors, dict):
+        return False, "the coverage map's evidence_not_before is not a map of verdict to instant (%r)" % (str(floors)[:40],)
+    for pat, since in floors.items():
+        if str(pat).replace("<letter>", letter) != name:
+            continue
+        e = _instant(str(since))
+        if e is None:
+            return False, "the coverage map's evidence_not_before for %s cannot be read (%r)" % (name, str(since)[:30])
+        t = _instant(str(rec.get("ts", "")))
+        if t is None or t < e:
+            return False, ("%s was taken %s, before %s, when its tool changed what the verdict means; re-take it"
+                           % (name, str(rec.get("ts") or "at no stated time")[:19], str(since)[:25]))
+    return True, "current"
 
 
 def _phases_up_to(phase):

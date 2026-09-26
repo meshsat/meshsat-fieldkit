@@ -146,7 +146,8 @@ comment swallowed three resistors and the board placed, routed and passed every 
 
 **If violated** A board is fabricated from a schematic that no longer describes it.
 
-**Today** three comparisons with denominators; runs on the placed and on the routed board
+**Today** five comparisons with denominators (references, pad nets, net names, values, footprint names); runs on the
+placed and on the routed board
 
 ### SCH-003  cross-board contracts
 
@@ -345,7 +346,8 @@ package that nothing checked for four board phases.
 
 **If violated** The assembler places a part that cannot solder to the land, or solders a wrong die.
 
-**Today** package mismatch is caught against the supplier's own record, with a date
+**Today** the part the row or its land names, the package family, body, pitch and M.2 key are caught against the
+supplier's record and the maker's drawing, with a date; a verdict older than evidence_not_before is re-taken
 
 ## Lifecycle Supply
 

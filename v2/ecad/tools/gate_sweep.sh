@@ -49,9 +49,11 @@ rm -rf $S; mkdir -p $S/out
 # answer sitting there, taken on the same board, so the freshness check could not see it either. Board E's
 # order-code rule read FAIL for exactly that reason, from a sweep in another tree. The verdicts of the gates
 # below are removed first: absence is INCONCLUSIVE, which is the honest reading of "this sweep did not judge
-# it", and every other producer's evidence in that directory is left alone.
+# it", and every other producer's evidence in that directory is left alone. netlist_parts is netlist_board's
+# companion (26 September 2026, MESHSAT-1357): netlist_board runs it, so it is cleared with it, or a sweep whose
+# netlist could not be rebuilt would leave the previous run's value and land reading standing for rule SCH-002.
 for _g in hardset-routed-board-gate check_pcb_$L check_zone_nets intent_checks intent_rails intent_decoupling \
-          intent_return_path intent_return_via dc_drop dc_density impedance_check netlist_board class_floor \
+          intent_return_path intent_return_via dc_drop dc_density impedance_check netlist_board netlist_parts class_floor \
           return_via return_stitch via_audit via_annular fab_limits stackup_gate via_current ref_change thermal spacing \
           edge_length derate clock_check port_protect safe_lines safe_lines_$L pin_map_lands_$L erc_gate place_audit check_contracts check_contracts_$L lcsc_fill \
           energy_chain pruned_gate power_sequence ground_system emc_sheet closer_audit reliability interfaces doc_provenance \
@@ -68,7 +70,13 @@ cd $S || exit 2
 echo "gate_sweep: $L $PD $N  board ${BEFORE:0:16}  label $LABEL"
 # The schematic is regenerated so the netlist and the intent file are OUTPUTS of this sweep and not files that
 # happen to be there: netlist_board and intent_checks are only meaningful against the netlist this board claims.
-PHASE=$LABEL python3 $T/gen_sch_$L.py $N.kicad_sch $N > out/gen_sch.log 2>&1 \
+# UNDER THE CHAIN'S GENERATOR ENVIRONMENT (26 September 2026, MESHSAT-1357). full.sh hands the generator the
+# `gen_env` the board table declares (IDC_PADS picks a land), and the netlist's provenance names that field as an
+# input; a sweep that regenerated without it would judge the board against a netlist the chain never makes. No
+# board declares one today, so no reading moves; a caller's own value wins, as in full.sh.
+GENV=""
+[ -f "$T/boards/$L.json" ] && GENV="$(python3 -c "import json,sys,os; d=json.load(open(sys.argv[1])).get('gen_env') or {}; print(' '.join('%s=%s' % (k, v) for k, v in d.items() if not os.environ.get(k)))" "$T/boards/$L.json")"
+PHASE=$LABEL env $GENV python3 $T/gen_sch_$L.py $N.kicad_sch $N > out/gen_sch.log 2>&1 \
   && $T/build_sch.sh . $N > out/build_sch.log 2>&1 \
   || echo "gate_sweep: the schematic could not be rebuilt, netlist-dependent gates will be INCONCLUSIVE (see out/build_sch.log)"
 

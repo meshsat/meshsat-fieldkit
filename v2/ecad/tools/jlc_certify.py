@@ -21,6 +21,32 @@ WHAT CERTIFIED MEANS. All of it true, and dated:
 Anything else is WRONG_MODEL, PACKAGE_MISMATCH, NO_STOCK, NOT_AT_JLC, NO_PART_CHOSEN or NOT_CHECKED,
 and each of those is fixed or declared with a reason, in this repository's erc-allow.txt idiom.
 
+WHAT "IS THAT PART" AND "MATCHES THE FOOTPRINT" MEAN SINCE 26 SEPTEMBER 2026 (MESHSAT-1357; finding W6-F3 of the
+known design findings in v2/docs/ARCHITECTURE.md). Before that day neither was true of the label. Two parts were
+"the same" when they shared six leading characters or one number sat inside the other, a package was compared by
+its family name alone, and a row carrying a code was taken to be identified by it. So this table certified
+BQ4050RSMR (a 4 x 4 mm package) on a 5 x 5 mm land, TUSB2046BVFR (the commercial grade) as TUSB2046BI,
+STM32H743VIT6 as STM32H753VITx, a 5 mOhm shunt as a 3 mOhm one, a key M socket on a key B land, XSD's C4661
+("23.5*16*25", no package) on the Keystone 3568 fuse-holder land, and C2089 ("8550SS-TA", TO-92-3, not an LED
+package) as sixteen 3 mm panel LEDs. Now, code or no code:
+
+  the answer carries every character of the part the row names (`same_part`);
+  a land drawn from one maker's drawing names its part (`land_part`: Keystone 3568, Hirose U.FL-R-SMT-1, JST
+    B2P-VH), and the answer is that part;
+  a body size and a pitch that both sides state agree (`pkg_geometry`);
+  an M.2 land's key is the key the maker's drawing gives the part (`part_key`);
+  and a row that names no part, on a land that names no part, answered on a package only one side names, is
+    NOT_IDENTIFIED.
+
+WHAT THAT STILL DOES NOT CATCH. A code-carrying row that names no part, on a class land whose package the answer
+shares (an 0603 resistor's code on `LED_0603_1608Metric`), is identified by its code: the package agrees and the
+class is not compared, because no catalogue line this tool reads states one. A value is compared only where it is
+a frequency (`frequency_conflict`). A land from a maker not in LAND_MAKERS is read as naming no part, and its row
+is judged as a class land's row is.
+
+A table written before that day is not evidence of identity or land; its re-take belongs to the order-set rebuild
+the owner ruled on 25 September 2026 (decision 41, appendix 32.365: the order set is rebuilt and quarantined).
+
 WHAT IT DOES NOT CLAIM. That a stock figure or a price is still true tomorrow: it is a dated reading,
 like the datasheet currency check. And that the part is the RIGHT part for the circuit, which is what
 the datasheet in the store and the gates on the board are for. This says only that it can be bought.
@@ -191,6 +217,96 @@ def norm_pkg(s):
     return ""
 
 
+_KI_BODY = re.compile(r"(?:^|_)(\d+(?:\.\d+)?)x(\d+(?:\.\d+)?)(?:x\d+(?:\.\d+)?)?mm(?=_|$)", re.I)
+_KI_PITCH = re.compile(r"(?:^|_)P(\d+(?:\.\d+)?)mm(?=_|$)", re.I)
+_JLC_BODY = re.compile(r"(?:\(|^|[,_])\s*(\d+(?:\.\d+)?)\s*[xX*]\s*(\d+(?:\.\d+)?)\s*(?:mm)?\s*(?:\)|,|$)")
+_JLC_PITCH = re.compile(r"\bP\s*=\s*(\d+(?:\.\d+)?)\s*mm", re.I)
+BODY_TOL_MM = 0.15      # a nominal 4.9 against 5.0 is the same body; 4 against 5 is not
+PITCH_TOL_MM = 0.01
+
+
+def pkg_geometry(s):
+    """{"body": (w, h) or None, "pitch": mm or None} as a package string STATES them, from either side.
+
+    26 September 2026 (W6-F3): `norm_pkg` reduces both sides to a family name, which is right for the naming habits
+    of the two tools and blind to size: KiCad's `QFN-32-1EP_5x5mm_P0.5mm_EP3.1x3.1mm` and JLCPCB's `VQFN-32-EP(4x4)`
+    are both QFN-32 and the alias QFN-32=VQFN-32 joined them, which is how board P's BQ4050RSMR (RSM, 4 x 4 mm,
+    0.4 mm pitch) was certified on a 5 x 5 mm land. KiCad writes the body as `_WxHmm` and the pitch as `_Pxmm` (an
+    exposed pad is `_EPaxbmm` and is not the body); JLCPCB writes the body in parentheses or after a comma and the
+    pitch as `P=x mm`. A dimension a side does not state is None, and nothing is compared against a None."""
+    s = (s or "").strip()
+    body = pitch = None
+    base = s.split(":")[-1]
+    m = _KI_BODY.search(base)
+    if m: body = (float(m.group(1)), float(m.group(2)))
+    else:
+        m = _JLC_BODY.search(s)
+        if m: body = (float(m.group(1)), float(m.group(2)))
+    m = _KI_PITCH.search(base) or _JLC_PITCH.search(s)
+    if m: pitch = float(m.group(1))
+    return {"body": body, "pitch": pitch}
+
+
+def geometry_conflict(fp, spec):
+    """The sentence for a body or pitch both sides state and that differs, or None. Only a land with a standard
+    package name is measured this way: a maker's own land (`Ebyte_E22-900M30S`, `BatteryHolder_Keystone_3034_1x20mm`)
+    carries numbers that are not a package body, and it has its own audit."""
+    if not norm_pkg(fp): return None
+    a, b = pkg_geometry(fp), pkg_geometry(spec)
+    if a["body"] and b["body"]:
+        sa, sb = sorted(a["body"]), sorted(b["body"])
+        if any(abs(x - y) > BODY_TOL_MM for x, y in zip(sa, sb)):
+            return "our land's body is %g x %g mm and the part's is %g x %g mm" % (a["body"] + b["body"])
+    if a["pitch"] and b["pitch"] and abs(a["pitch"] - b["pitch"]) > PITCH_TOL_MM:
+        return "our land's pitch is %g mm and the part's is %g mm" % (a["pitch"], b["pitch"])
+    return None
+
+
+# THE M.2 KEY IS PART OF THE LAND AND NO CATALOGUE LINE STATES IT (26 September 2026). Board B's J_M2C2 is drawn as a
+# key B socket and carried TE 1-2199119-5, which TE's own drawing gives as KEY M, and the RM520N-GL is "a standard
+# M.2 Key-B WWAN module" (Quectel RM520N-GL Hardware Design V1.0, 2022-07-15, section 2.1, held as
+# v2/vendor/quectel/quectel-rm520n-gl-hardware-design-v1.0.pdf), so it cannot be inserted. JLCPCB's line for C574849 reads `SMD,P=0.5mm` and names
+# no key, so the key is read from the maker's drawing, declared here per part number with the drawing it came from.
+M2_KEYS = {
+    # TE customer drawing C-2199119 rev F, ECR-19-011878, 19 March 2020, sheet 2 part-number table
+    # (v2/vendor/m2/te-2199119-customer-drawing-revF.pdf, sha256 ef35dbf8332b951c64be9662678bc2820f6091e1f2bb07777d0b4bf4f97b9bff)
+    **{pn: "M" for pn in ("1-2199119-3", "1-2199119-4", "1-2199119-5", "1-2199119-6")},
+    **{pn: "A" for pn in ("1-2199119-2", "2199119-7", "2199119-8", "2199119-9")},
+    **{pn: "E" for pn in ("1-2199119-1", "2199119-2", "2199119-4", "2199119-6")},
+    **{pn: "B" for pn in ("1-2199119-0", "2199119-1", "3-2199119-1", "2199119-3", "2199119-5")},
+    # TE customer drawing C-2199230 rev B3, sheet 2 part-number table
+    # (v2/vendor/m2/te-2199230-m2-e-key.pdf, sha256 3e2f380fe945f5246122692dd3ab7dc4926c343c7155346eac803b4b251ac7e2)
+    **{pn: "M" for pn in ("1-2199230-3", "1-2199230-4", "1-2199230-5", "1-2199230-6", "1-2199230-7")},
+    **{pn: "A" for pn in ("1-2199230-2", "2199230-7", "2199230-8", "2199230-9")},
+    **{pn: "E" for pn in ("1-2199230-1", "2199230-2", "2199230-4", "2199230-6")},
+    **{pn: "B" for pn in ("1-2199230-0", "2199230-1", "2199230-3", "2199230-5")},
+}
+# Amphenol customer drawing C MDT-XXX-X-XX-001 rev 4 (30 April 2014), ORDER P/N SYSTEM: MDT, the connector height
+# (three digits), the CONNECTOR KEY ID letter (A, B, E, M), the plating (01, 02, 03), 001
+# (v2/vendor/m2/amphenol-mdt420m02001-m2-m-key.pdf, sha256 1246e4aa4fdfc05efbd20b5b30a7f1bc1942f0813c567f0a9f9c1d92b5345113)
+_AMPHENOL_MDT = re.compile(r"^MDT\d{3}([ABEM])0[123]001$")
+_LAND_KEY = re.compile(r"(?:^|[_:\s])([ABEM])[-_ ]?KEY(?:[-_ ]|$)", re.I)
+_TEXT_KEY = re.compile(r"\bKEY[\s:=-]*([ABEM])\b|\b([ABEM])[\s-]KEY\b", re.I)
+
+
+def land_key(fp):
+    """The M.2 key our land is drawn for (`M2_B-Key_Socket_3052` is B), or None for a land that is not keyed."""
+    m = _LAND_KEY.search((fp or "").split(":")[-1])
+    return m.group(1).upper() if m else None
+
+
+def part_key(model, text=""):
+    """(key, source) of the part the catalogue answered, or (None, None) when nothing states it."""
+    mm = re.sub(r"\s", "", (model or "").upper())
+    for pn, k in M2_KEYS.items():
+        if mm == pn: return k, "TE's drawing for %s" % pn[pn.index("2199"):pn.index("2199") + 7]
+    m = _AMPHENOL_MDT.match(re.sub(r"[^A-Z0-9]", "", mm))
+    if m: return m.group(1), "Amphenol's order code system (C MDT-XXX-X-XX-001 rev 4)"
+    m = _TEXT_KEY.search(" ".join(str(x or "") for x in (model, text)))
+    if m: return (m.group(1) or m.group(2)).upper(), "the catalogue's own line"
+    return None, None
+
+
 def load_cache():
     try:
         return json.load(open(CACHE))
@@ -233,34 +349,92 @@ def query(keyword, cache, refresh=False):
     return None, None                                              # unreachable: never a pass
 
 
+_ORDER_TAIL = re.compile(r"^[A-Z][A-Z0-9]{0,2}$")
+
+
+def _alnum(x):
+    return re.sub(r"[^A-Z0-9]", "", (x or "").upper())
+
+
+def _model_core(got):
+    """A catalogue model without the packing and finish codes JLCPCB appends in trailing parentheses."""
+    return re.sub(r"(?:\s*\([^()]*\))+\s*$", "", got or "")
+
+
+# THE PART A LAND NAMES (26 September 2026). KiCad names a land drawn from one maker's drawing
+# <class>_<Maker>_<part>_<pins, pitch, orientation> (Fuseholder_Blade_Mini_Keystone_3568, U.FL_Hirose_U.FL-R-SMT-1_Vertical,
+# SMA_Amphenol_132134_Vertical, USB3_A_Receptacle_Wuerth_692122030100) and a JST land JST_<series>_<part>_...
+# (JST_VH_B2P-VH_1x02_P3.96mm_Vertical). The makers listed are the ones whose lands in this set name a part; a maker
+# whose land names only a PACKAGE (Texas_DSG0008A, Winbond_USON-8, Bosch_LGA-14), a land that names a family by a
+# placeholder (TRACO's TEN40-110xxWIRH) and a class land (LED_D3.0mm, IDC-Header_2x10_P2.54mm) name no part.
+LAND_MAKERS = ("AMASS", "Amphenol", "Ebyte", "GCT", "Hirose", "HRO", "JST", "Keystone", "Molex", "NiceRF", "Omron",
+               "Pulse", "Quectel", "Radiall", "Seeed", "Skyworks", "Stewart", "Vishay", "Wuerth")
+_LAND_MAKER = {m.upper() for m in LAND_MAKERS}
+# The fields after the part: pins (1x04, 1x04-1MP, 2Pin), pitch (P1.00mm), a size (1x20mm, D3.0mm), a metric code,
+# an orientation or a mounting word. The part is the first field after the maker that carries a digit, before these.
+_LAND_TAIL = re.compile(r"^(?:\d+x\d+.*|P\d.*|.*mm|.*Metric|\d+(?:-\d+)?MP|.*\d+Pin|Vertical|Horizontal|"
+                        r"SMD|THT|Pin\d.*|NarrowPad.*|ClockwisePinNumbering)$", re.I)
+
+
+def land_part(fp):
+    """The maker's part number a land is drawn for, or None when the land names a class, a package or a family."""
+    toks = (fp or "").split(":")[-1].split("_")
+    for i, t in enumerate(toks):
+        if t.upper() not in _LAND_MAKER:
+            continue
+        for u in toks[i + 1:]:
+            if _LAND_TAIL.match(u):
+                return None
+            if any(c.isdigit() for c in u):
+                return u
+        return None
+    return None
+
+
 def same_part(want, got):
-    """Is the component JLC returned the part we asked for? Punctuation and case do not matter; the
-    letters and digits do, and a suffix like R for reel or TRG1 for packaging is allowed on either."""
-    a = re.sub(r"[^A-Z0-9]", "", (want or "").upper())
-    b = re.sub(r"[^A-Z0-9]", "", (got or "").upper())
+    """Is the component JLC returned the part we asked for? Punctuation and case do not matter; EVERY letter and
+    digit of the part the row names does (26 September 2026, finding W6-F3).
+
+    Until that day two parts were the same when they shared six leading characters, or when one number sat inside
+    the other. That made TPS2065C the same as TPS2061C (an active-low enable) and TPS2069C (1.5 A), E22-900M30S
+    the same as E22-900M33S, ATECC608B as ATECC608A, BQ25731 as BQ25730, STM32H753 as STM32H743, TUSB2046BI (the
+    industrial grade) as TUSB2046BVFR (the commercial one), a 3 mOhm LR2512 shunt as the 5 mOhm one, and TE's key
+    B 2199119-5 as its key M 1-2199119-5. The rule now, which is what a maker's order code actually adds to a
+    part number, in three shapes and no others:
+
+      1. the answer begins with the whole part we named and adds ordering after it (TPS2065CDBV, TPS2065CDBVR);
+      2. a maker's letter prefix in front of a part we named from a DIGIT (74LVC08APW, TI's SN74LVC08APWR);
+      3. an ordering code inserted before a qualifier we named after the last hyphen, when that qualifier starts
+         with a letter (LM74700-Q1, LM74700QDBVRQ1; BQ34Z100-G1, BQ34Z100PWR-G1).
+
+    An answer that names LESS than the row (132134 for 132134-11) is not the part the row names: a row that means
+    the base part says so. A maker's placeholder is a character like any other: ST's `x` in STM32H753VITx stands for
+    a grade the row did not choose, so no orderable part carries it and the orderable code belongs in the generator.
+    A part number under five characters is compared exactly.
+
+    THE CATALOGUE'S TRAILING PARENTHESES ARE NOT PART OF THE PART (26 September 2026). JLCPCB appends packing and
+    finish codes to a model in parentheses: Hirose's reel code in `U.FL-R-SMT-1(10)`, JST's `(LF)(SN)`, a gain bin
+    in `8550SS-TA(RANGE:160-300)`. Read as characters, `U.FL-R-SMT(10)` begins with `UFLRSMT1` and passed for
+    U.FL-R-SMT-1, a different Hirose part number, by the reel code's first digit. They are dropped from the answer before
+    it is compared; the row's own part never carries parentheses (PART_TOKEN does not read them)."""
+    a, b = _alnum(want), _alnum(_model_core(got))
     if not a or not b:
         return False
-    if a.startswith(b) or b.startswith(a):
+    if len(a) < 5:
+        return a == b
+    if b.startswith(a):
         return True
-    # An order code carries suffixes in the middle as well as at the end: LM74700-Q1 is sold as
-    # LM74700QDBVRQ1, where DBVR is the package and reel. A common prefix of six or more characters is
-    # the same silicon; below that it is a coincidence.
-    n = 0
-    while n < min(len(a), len(b)) and a[n] == b[n]:
-        n += 1
-    if n >= 6:
-        return True
-    # 13 September 2026: an order code also carries the MANUFACTURER at the FRONT. We ask for 74LVC08APW,
-    # which is the part as its datasheet names it, and JLCPCB answers SN74LVC08APWR, TI's full order code:
-    # SN is the prefix, R the reel. The common-prefix test above compares from character one, so it scored
-    # zero and two of board B's rows read WRONG_MODEL for a part that is exactly what was asked for.
-    # A containment test needs a floor or it pairs anything with anything: eight characters of letters and
-    # digits is long enough that a coincidence is not credible, and every part number this is written for is
-    # longer than that. The shorter string must be the one contained, and it must be the part WE named.
-    if len(a) >= 8 and a in b:
-        return True
-    if len(b) >= 8 and b in a:
-        return True
+    if a[0].isdigit():
+        m = re.match(r"^([A-Z]{1,3})(\d.*)$", b)
+        if m and m.group(2).startswith(a):
+            return True
+    w = (want or "").upper().strip()
+    if "-" in w:
+        base, tail = w.rsplit("-", 1)
+        base, tail = _alnum(base), _alnum(tail)
+        if len(base) >= 5 and _ORDER_TAIL.match(tail) and len(b) > len(base) + len(tail) \
+                and b.startswith(base) and b.endswith(tail):
+            return True
     return False
 
 
@@ -562,6 +736,34 @@ def certify(rec, cache, handfit, aliases, refresh=False):
     return ev
 
 
+def package_problem(fp, spec, aliases):
+    """The sentence for a package that is not our land, or None: the family first (with the declared aliases),
+    then the body and pitch both sides state (26 September 2026)."""
+    a, b = norm_pkg(fp), norm_pkg(spec)
+    if a and b and a != b and aliases.get("%s=%s" % (a, b)) is None and aliases.get("%s=%s" % (b, a)) is None:
+        return "our land is %s, the part is %s" % (a, b)
+    return geometry_conflict(fp, spec)
+
+
+def _pkg_agrees(fp, spec, aliases):
+    """Both sides name a package and nothing about it differs."""
+    return bool(norm_pkg(fp) and norm_pkg(spec)) and package_problem(fp, spec, aliases) is None
+
+
+def key_problem(fp, ev):
+    """(verdict, note) for an M.2 land whose part is keyed differently or whose key nothing states, or None."""
+    lk = land_key(fp)
+    if not lk: return None
+    pk, src = part_key(ev.get("model"), " ".join(str(ev.get(k) or "") for k in ("pkg", "desc")))
+    if pk is None:
+        return ("NOT_CHECKED", "our land is M.2 key %s and neither the catalogue line for %s nor a declared maker's "
+                               "drawing states that part's key: read the drawing and declare it in M2_KEYS"
+                               % (lk, ev.get("model")))
+    if pk != lk:
+        return ("PACKAGE_MISMATCH", "our land is M.2 key %s and %s is key %s (%s)" % (lk, ev.get("model"), pk, src))
+    return None
+
+
 def _certify(rec, cache, handfit, aliases, refresh=False):
     """One row's verdict, with the evidence that produced it."""
     comment, fp, code = rec["comment"], rec["fp"], rec["code"]
@@ -629,21 +831,22 @@ def _certify(rec, cache, handfit, aliases, refresh=False):
 
     # Prefer an exact model match anywhere in the page over whatever ranked first.
     top = lst[0]
+    want_pkg = norm_pkg(fp)
+    lp = land_part(fp)
     if want:
-        # same_part is deliberately loose (a common prefix of six is the same silicon), so the FIRST
-        # match is often the wrong order code of the right chip: asked TUSB2046BI, the page answers
-        # TUSB2046BVF, TUSB2046BVFR and TUSB2046BIRHBR, and only one of those is an LQFP-32 like our
-        # land. Score every match instead: exact model first, then the package we actually drew, then
-        # stock that covers the order. This one change is what separates a wrong order code from a
-        # wrong part, and the wrong order code is the commoner defect by far.
-        want_pkg = norm_pkg(fp)
+        # Every candidate here carries the whole part the row names (same_part, 26 September 2026), so what
+        # still separates them is the order code, and the order code is mostly the PACKAGE: asked TUSB2046BI, the
+        # page answers the QFN industrial part and two LQFP commercial ones. Score every match: the part our land
+        # names, when it names one (land_part), then the package we actually drew (family, and body and pitch
+        # where both sides state them), then stock that covers the order, then the exact model. This one change is what separates a wrong order code from a wrong part,
+        # and the wrong order code is the commoner defect by far.
         cand = [c for c in lst if same_part(want, c.get("componentModelEn"))]
         if cand:
             def rank(c):
                 m = re.sub(r"[^A-Z0-9]", "", (c.get("componentModelEn") or "").upper())
                 w = re.sub(r"[^A-Z0-9]", "", want.upper())
-                pkg = norm_pkg(c.get("componentSpecificationEn"))
-                return (bool(want_pkg) and pkg == want_pkg,
+                return (not lp or same_part(lp, c.get("componentModelEn")),
+                        _pkg_agrees(fp, c.get("componentSpecificationEn"), aliases),
                         (c.get("stockCount") or 0) >= need,
                         m == w,
                         c.get("componentLibraryType") == "base",
@@ -653,8 +856,10 @@ def _certify(rec, cache, handfit, aliases, refresh=False):
         # A jellybean has no model to match, so the best answer is the one that is actually in stock
         # in the right package. The top hit is ranked by JLCPCB's own relevance and was repeatedly a
         # zero-stock part when an identical one with half a million in stock sat below it.
-        want_pkg = norm_pkg(fp)
-        ok = [c for c in lst if norm_pkg(c.get("componentSpecificationEn")) == want_pkg
+        # A PACKAGE NEITHER SIDE NAMES PICKS NOTHING (26 September 2026). Two empty package names compared
+        # equal, so a fuse-holder row searched as "25" took the first answer in stock, C4661 (XSD's "23.5*16*25"; its maker's
+        # sibling C4650 is "15*10*20 UType heat sink White").
+        ok = [c for c in lst if want_pkg and _pkg_agrees(fp, c.get("componentSpecificationEn"), aliases)
               and (c.get("stockCount") or 0) >= need]
         if ok:
             top = max(ok, key=lambda c: (c.get("componentLibraryType") == "base", c.get("stockCount") or 0))
@@ -669,7 +874,39 @@ def _certify(rec, cache, handfit, aliases, refresh=False):
                   note="asked for %s, JLCPCB's best answer is %s" % (want, ev["model"]))
         return ev
     a, b = norm_pkg(fp), norm_pkg(ev["pkg"])
-    if a and b and a != b and aliases.get("%s=%s" % (a, b)) is None and aliases.get("%s=%s" % (b, a)) is None:
+    prob = package_problem(fp, ev["pkg"], aliases)
+    if lp and not same_part(lp, ev["model"]):
+        # A LAND THAT NAMES ITS PART IS ANSWERED BY THAT PART (26 September 2026), whether the answer came from the
+        # row's code or from a search, and whether or not the row names a part as well. The copper is drawn from
+        # that maker's drawing; another maker's part on it is a substitution until a drawing proves the land is
+        # shared (the owner's condition 1 of 25 September 2026), and the proof then goes into the generator's row.
+        # The code used to be taken as the identity, and a code-carrying row that named no part was certified on it
+        # when a package was named on one side only, because the package comparison below needs both. JLC-CERTIFIED.tsv
+        # at 82dd1e4d, lines 194 to 196: C4661, XSD's "23.5*16*25" with no package (its maker's sibling C4650 reads
+        # "15*10*20 UType heat sink White"), on the Keystone 3568 land of the 25 A fuse on boards A, E and P; lines
+        # 79 and 80: C10081, "GL5528(10-20)", on board E's two 10 A ones. C4661 entered as a SEARCH answer with no
+        # code (the table at e0f3ef4f), lcsc_fill filled it into the BOMs from this table's CERTIFIED rows by comment
+        # and land, and from 07c57b30 on it was certified on that code. A code can be this table's own mistake.
+        # A row that names a part is held to its land too: "CR2032 holder Keystone 3034" reads CR2032, the CELL,
+        # as its part, and Q&J's CR2032-BS-6-1 matched it on the Keystone 3034 land (line 380).
+        ev.update(verdict="WRONG_MODEL",
+                  note="%sits land is drawn for %s; the %s answer is %s (%s)"
+                       % ("the row names no part number and " if not want else "the row names %s, but " % want,
+                          lp, "code's" if code else "search's", ev["model"], ev["pkg"] or "no package"))
+        return ev
+    if not want and not lp and not prob and not (a and b):
+        # A ROW THAT NAMES NO PART, ON A LAND THAT NAMES NO PART, ANSWERED ON A PACKAGE ONE SIDE DOES NOT NAME
+        # (26 September 2026), code or no code. Nothing then identifies the answer: C165546 ("NXA50V22M5*11 LO",
+        # "Plugin,D5xL11mm") for "22u 50V X7R 1210", and C2089 ("8550SS-TA", TO-92-3) as sixteen of board C's 3 mm
+        # panel LEDs on the class land LED_D3.0mm (JLC-CERTIFIED.tsv at 82dd1e4d, lines 228 to 243).
+        ev.update(verdict="NOT_IDENTIFIED",
+                  note="the row names no part number, its land names none, and %s, so the %s answer (%s, %s) is "
+                       "identified by nothing: name the part in the generator's row%s"
+                       % ("the land names no package" if not a else "the catalogue line names no package this comparison reads",
+                          "code's" if code else "search's", ev["model"], ev["pkg"] or "no package",
+                          "" if code else " or declare it hand-fit"))
+        return ev
+    if prob:
         if not want and not code:
             # No part number in the row, no code either, and the package does not match: the search
             # answered with something unrelated because there was nothing to search for.
@@ -687,11 +924,17 @@ def _certify(rec, cache, handfit, aliases, refresh=False):
             return ev
         # A row certified by its code alone has no part number to broaden, and since a code-carrying
         # row now reaches this branch, `want` can be None here.
+        # THE WIDER SEARCH IS A WIDER QUESTION, NOT A LOOSER ANSWER (26 September 2026). It drops the row's
+        # trailing letters to ask JLCPCB for more candidates; each candidate must still carry every letter the
+        # row named (same_part against `want`, never against `wider`) and the land we drew. Before, the looser
+        # same_part let the query's missing letters decide: TUSB2046BI came back as TUSB2046BVFR, "found on the
+        # wider search", which is the commercial grade (07c57b30).
         wider = re.sub(r"[A-Za-z]+$", "", want).rstrip("-") if want else ""
         if want and len(wider) >= 5 and wider.upper() != want.upper():
             lst2, asked2 = query(wider, cache, refresh)
             cand2 = [c for c in (lst2 or []) if same_part(want, c.get("componentModelEn"))
-                     and norm_pkg(c.get("componentSpecificationEn")) == a]
+                     and (not lp or same_part(lp, c.get("componentModelEn")))
+                     and _pkg_agrees(fp, c.get("componentSpecificationEn"), aliases)]
             if cand2:
                 top = max(cand2, key=lambda c: ((c.get("stockCount") or 0) >= need,
                                                 c.get("componentLibraryType") == "base",
@@ -701,6 +944,10 @@ def _certify(rec, cache, handfit, aliases, refresh=False):
                           brand=top.get("componentBrandEn"), pkg=top.get("componentSpecificationEn"),
                           lib=top.get("componentLibraryType"), stock=top.get("stockCount") or 0,
                           price=top.get("initialPrice"), need=need, asked=asked2)
+                kp = key_problem(fp, ev)
+                if kp:
+                    ev.update(verdict=kp[0], note=kp[1])
+                    return ev
                 if (ev["stock"] or 0) < need:
                     ev.update(verdict="NO_STOCK", note="stock %s against a need of %d for %d boards"
                               % (ev["stock"], need, BOARD_QTY))
@@ -708,8 +955,11 @@ def _certify(rec, cache, handfit, aliases, refresh=False):
                 ev.update(verdict="CERTIFIED",
                           note="found on the wider search %r: the row's suffix hid this package" % wider)
                 return ev
-        ev.update(verdict="PACKAGE_MISMATCH",
-                  note="our land is %s, the part is %s" % (a, b))
+        ev.update(verdict="PACKAGE_MISMATCH", note=prob)
+        return ev
+    kp = key_problem(fp, ev)
+    if kp:
+        ev.update(verdict=kp[0], note=kp[1])
         return ev
     if (ev["stock"] or 0) < need:
         if hf:

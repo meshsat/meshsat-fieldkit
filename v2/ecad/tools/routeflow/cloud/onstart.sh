@@ -6,7 +6,10 @@
 exec > /root/setup.log 2>&1; set -x
 export DEBIAN_FRONTEND=noninteractive LANG=C.UTF-8
 touch /root/.no_auto_tmux
-apt-get update && apt-get install -y --no-install-recommends software-properties-common ca-certificates curl git python3 python3-numpy python3-scipy python3-yaml python3.12-venv xvfb xdotool x11-apps openjdk-25-jre rsync unzip zip procps mupdf-tools || { echo "SETUP-FAILED apt"; exit 1; }
+# poppler-utils and python3-pil (26 Sep 2026, MESHSAT-1357, W7-R2-03): sch_pages.py renders the A3 tiles with pdftoppm and reads their
+# ink with Pillow, and a box built from this script had neither, so build_sch.sh exited 3 on every multi-page board before its BOM export
+# (box 52646493, 25 Sep). tests/test_box_packages.py derives what build_sch.sh needs from the tools themselves and holds this line to it.
+apt-get update && apt-get install -y --no-install-recommends software-properties-common ca-certificates curl git python3 python3-numpy python3-scipy python3-yaml python3-pil python3.12-venv xvfb xdotool x11-apps openjdk-25-jre rsync unzip zip procps mupdf-tools poppler-utils || { echo "SETUP-FAILED apt"; exit 1; }
 add-apt-repository -y ppa:kicad/kicad-9.0-releases && apt-get update && apt-get install -y --no-install-recommends kicad kicad-symbols kicad-footprints || { echo "SETUP-FAILED kicad"; exit 1; }
 mkdir -p /root/bin
 curl -fsSL -o /root/bin/freerouting-1.9.0.jar https://github.com/freerouting/freerouting/releases/download/v1.9.0/freerouting-1.9.0.jar || { echo "SETUP-FAILED download19"; exit 1; }

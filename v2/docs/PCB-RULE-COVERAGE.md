@@ -14,7 +14,7 @@ appears in the gap register.
 | BAT-002 | ENERGY_STORAGE | BLOCKER | pcb_energy_chain.yaml, the chain as data | energy_chain.py -> energy_chain | tests/test_energy_chain.py | **ENFORCED** |
 | CLK-001 | CLOCKS_RESET_BOOT | BLOCKER | gen_sch_*.py crystal networks | clock_check.py -> clock_check | tests/test_clock_check.py | **ENFORCED** |
 | CMP-001 | COMPONENT_SELECTION | BLOCKER | gen_sch_*.py value strings, each board's intent rails and its declared nodes | derate.py -> derate | tests/test_gate_fixtures.py, tests/test_derate_prefix.py | **ENFORCED** |
-| CMP-002 | COMPONENT_SELECTION | BLOCKER | lcsc_fill.py | jlc_certify.py, lcsc_fill.py -> jlc_certify_<letter>, lcsc_fill | tests/test_order_codes.py, tests/test_gate_fixtures.py | **ENFORCED** |
+| CMP-002 | COMPONENT_SELECTION | BLOCKER | lcsc_fill.py | jlc_certify.py, lcsc_fill.py -> jlc_certify_<letter>, lcsc_fill | tests/test_order_codes.py, tests/test_gate_fixtures.py, tests/test_certify_identity.py | **ENFORCED** |
 | DEC-001 | DECOUPLING | MUST_JUSTIFY | bypass_slots.py, bypass_place.py | intent_checks.py -> intent_decoupling | tests/test_board_gates.py | **ENFORCED** |
 | DFA-001 | ASSEMBLY_DFA | BLOCKER | export_jlc.sh, jlc-rotations.csv | assembly_set.py -> assembly_set | tests/test_assembly_set.py | **ENFORCED** |
 | DFM-001 | FABRICATION_DFM | BLOCKER | build_pcb.sh, export_jlc.sh | verify_deliverable.py -> verify_deliverable_<letter> | tests/test_gate_fixtures.py | **ENFORCED** |
@@ -52,7 +52,7 @@ appears in the gap register.
 | RTE-001 | ROUTING | BLOCKER | gen_pcb_*.py design rules | drc.sh, fab_limits.py -> fab_limits | tests/test_fab_limits.py, tests/test_rule_gate_mapping.py | **ENFORCED** |
 | RTE-002 | ROUTING | BLOCKER | routeflow.py, finish.sh | hardset.py -> hardset-routed-board-gate, pruned_gate | tests/test_hardset.py, tests/test_gate_fixtures.py | **ENFORCED** |
 | SCH-001 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_*.py | erc_gate.py -> erc_gate | tests/test_erc_gate.py | **ENFORCED** |
-| SCH-002 | SCHEMATIC_INTEGRITY | BLOCKER | gen_pcb_*3.py | netlist_board.py -> netlist_board | tests/test_netlist_board.py | **ENFORCED** |
+| SCH-002 | SCHEMATIC_INTEGRITY | BLOCKER | gen_pcb_*3.py | netlist_board.py, netlist_parts.py -> netlist_board, netlist_parts | tests/test_netlist_board.py, tests/test_netlist_parts.py | **ENFORCED** |
 | SCH-003 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_*.py, gen_pcb_e5.py | check_contracts.py, block_contract.py -> check_contracts_<letter> | tests/test_gate_fixtures.py, tests/test_block_contract.py | **ENFORCED** |
 | SCH-004 | SCHEMATIC_INTEGRITY | BLOCKER | gen_sch_b.py, gen_sch_c.py, gen_sch_d.py | safe_lines.py -> safe_lines_<letter> | tests/test_safe_lines.py | **ENFORCED** |
 | SCH-005 | SCHEMATIC_INTEGRITY | BLOCKER | kisch.py (check_land, land_pads), schlayout.py (_lands), gen_sch_e.py, gen_sch_b.py | kisch.py, pin_map_lands.py -> pin_map_lands_<letter> | tests/test_pin_map_lands.py | **ENFORCED** |
@@ -61,7 +61,7 @@ appears in the gap register.
 | SI-001 | SIGNAL_INTEGRITY | MUST_JUSTIFY | signal_class.py declarations | edge_length.py -> edge_length | tests/test_edge_length.py | **ENFORCED** |
 | STK-001 | STACKUP | BLOCKER | stackup_write.py, written LAST in full.sh so it survives the chain | stackup_gate.py -> stackup_gate | tests/test_stackup_gate.py, tests/test_stackup_reader.py | **ENFORCED** |
 | STK-002 | STACKUP | BLOCKER | NONE_YET | layer_judge.py -> layer_judge |  | **OWNER_DECISION_REQUIRED** |
-| SUP-001 | LIFECYCLE_SUPPLY | BLOCKER | lcsc_fill.py, jlc-handfit.txt | jlc_certify.py, lcsc_fill.py -> jlc_certify_<letter>, lcsc_fill | tests/test_order_codes.py, tests/test_gate_fixtures.py | **ENFORCED** |
+| SUP-001 | LIFECYCLE_SUPPLY | BLOCKER | lcsc_fill.py, jlc-handfit.txt | jlc_certify.py, lcsc_fill.py -> jlc_certify_<letter>, lcsc_fill | tests/test_order_codes.py, tests/test_gate_fixtures.py, tests/test_certify_identity.py | **ENFORCED** |
 | THM-001 | THERMAL | BLOCKER | gen_pcb_*3.py copper and thermal vias | thermal.py -> thermal | tests/test_thermal.py | **DOCUMENTED_ONLY** |
 | TRN-001 | TRANSIENT_PROTECTION | BLOCKER | gen_sch_*.py protection parts and each board's external_ports declaration | port_protect.py -> port_protect_<letter> | tests/test_port_protect.py | **ENFORCED** |
 | TST-001 | TEST_BRINGUP | MUST_JUSTIFY | rules_render.py bringup_doc, from each board's own intent file | rules_render.py | tests/test_rules_status.py | **VERIFIED_MANUALLY** |

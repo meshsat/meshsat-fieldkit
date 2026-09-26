@@ -15,7 +15,7 @@ Fixtures both ways: a netlist written by this tree's generator (expected to be j
 different generator (expected to be refused, as missing rather than as failing, because a comparison against
 another design's data is not a result in either direction).
 """
-import os, sys, json, shutil, tempfile
+import os, re, sys, json, shutil, tempfile
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, TOOLS)
@@ -108,3 +108,140 @@ def t_the_letter_comes_from_the_board_table_and_not_from_the_stems_spelling():
     # a stem the table does not carry keeps its field verbatim: the bare dock block is not board E
     assert P.letter_for("pcb-e5-block") == "e5"
     assert P.generator_sha("e5") is None, "a board with no schematic generator claimed one"
+
+
+# ---------------------------------------------------------------- the identity covers every input (26 September 2026)
+# Finding W7-F4 (MESHSAT-1357): the identity hashed gen_sch_<x>.py, kisch.py and intent.py only. Commit c26f6a22
+# (15 September) rewrote all six schematics while changing only schlayout.py and gen_sch_b.py, so for the five
+# boards other than B every sidecar kept reading CURRENT over a schematic its generator identity did not describe.
+# schlayout.py writes the connectivity-bearing wires; idc_pads.py picks the IDC land; the footprint generators and
+# meshsat.pretty are the lands the netlist names; boards/<x>.json carries the generator environment (gen_env).
+
+def _full_tree():
+    """A tools tree beside its own footprint library, shaped like v2/ecad: <root>/tools and <root>/meshsat.pretty."""
+    root = tempfile.mkdtemp(prefix="prov-full-")
+    t = os.path.join(root, "tools"); os.makedirs(os.path.join(t, "boards"))
+    open(os.path.join(t, "gen_sch_b.py"), "w").write("import kisch, schlayout, idc_pads\nfrom intent import rails\n")
+    open(os.path.join(t, "kisch.py"), "w").write("import intent\n")
+    open(os.path.join(t, "intent.py"), "w").write("# the rails\n")
+    open(os.path.join(t, "schlayout.py"), "w").write("import kisch\n# the wires\n")
+    open(os.path.join(t, "idc_pads.py"), "w").write("# the IDC land\n")
+    open(os.path.join(t, "gen_footprints_idc.py"), "w").write("# writes meshsat.pretty/IDC.kicad_mod\n")
+    open(os.path.join(t, "route_one.sh"), "w").write("# a router launcher the schematic never reads\n")
+    open(os.path.join(t, "check_pcb_b.py"), "w").write("# a board gate the schematic never reads\n")
+    open(os.path.join(t, "boards", "b.json"), "w").write('{"name": "pcb-b-compute", "gen_env": {"IDC_PADS": "smd"}}\n')
+    open(os.path.join(t, "boards", "c.json"), "w").write('{"name": "pcb-c-display"}\n')
+    os.makedirs(os.path.join(root, "meshsat.pretty"))
+    open(os.path.join(root, "meshsat.pretty", "IDC.kicad_mod"), "w").write("(footprint \"IDC\")\n")
+    return t
+
+
+def _moves(edit):
+    """Does `edit(tools_dir)` move board B's generator identity?"""
+    t = _full_tree(); before = P.generator_sha("b", t); edit(t); return P.generator_sha("b", t) != before
+
+
+def t_a_layout_engine_change_moves_the_identity():
+    """DEFECTIVE before the fix: schlayout.py was outside the identity (the c26f6a22 shape)."""
+    assert _moves(lambda t: open(os.path.join(t, "schlayout.py"), "a").write("# a wire moved\n")), \
+        "a change to schlayout.py, which writes the wires, left the generator identity where it was"
+
+
+def t_the_idc_land_chooser_moves_the_identity():
+    assert _moves(lambda t: open(os.path.join(t, "idc_pads.py"), "a").write("# THT now\n")), \
+        "a change to idc_pads.py left the generator identity where it was"
+
+
+def t_a_footprint_generator_or_a_library_land_moves_the_identity():
+    assert _moves(lambda t: open(os.path.join(t, "gen_footprints_idc.py"), "a").write("# pitch\n")), \
+        "a change to a footprint generator left the generator identity where it was"
+    assert _moves(lambda t: open(os.path.join(os.path.dirname(t), "meshsat.pretty", "IDC.kicad_mod"), "a")
+                  .write("(pad 1)\n")), "a change to a land in meshsat.pretty left the generator identity where it was"
+
+
+def t_the_board_table_moves_its_own_board_s_identity_and_not_another_s():
+    assert _moves(lambda t: open(os.path.join(t, "boards", "b.json"), "w").write('{"name": "pcb-b-compute", "gen_env": {"IDC_PADS": "tht"}}\n')), \
+        "a change to boards/b.json (the generator environment) left board B's identity where it was"
+    assert not _moves(lambda t: open(os.path.join(t, "boards", "c.json"), "w").write('{"name": "pcb-c-display", "x": 1}\n')), \
+        "board C's table moved board B's identity"
+
+
+def t_a_routing_only_edit_of_the_board_table_leaves_the_identity_alone():
+    """DEFECTIVE in the first widened identity: the WHOLE boards/b.json was hashed, so the layer decisions of
+    25 September (copper_layers, stackup, return reach) staled every sidecar although no generator reads them.
+    ACCEPTABLE: the same edit now leaves the identity where it was; a gen_env edit still moves it (above)."""
+    assert not _moves(lambda t: open(os.path.join(t, "boards", "b.json"), "w").write(
+        '{"name": "pcb-b-compute", "gen_env": {"IDC_PADS": "smd"}, "copper_layers": 8, "phase": "B22"}\n')), \
+        "a routing-only edit of boards/b.json moved board B's schematic identity"
+    assert not _moves(lambda t: open(os.path.join(t, "boards", "b.json"), "w").write(
+        '{"gen_env": {"IDC_PADS": "smd"},   "name": "pcb-b-compute"}\n')), "a re-spelling of the same table moved it"
+    assert _moves(lambda t: open(os.path.join(t, "boards", "b.json"), "w").write('{"name": ')), \
+        "a board table that does not parse read as an empty environment"
+
+
+def _closure(letter):
+    return [f for f in P.generator_files(letter) if f.endswith(".py")]
+
+
+def t_no_generator_reads_the_board_table_except_through_gen_env():
+    """The identity takes one field of boards/<x>.json because that field is the only channel from the table to a
+    schematic. This holds it: no module in any real generator's import closure names the table as a path (a string
+    that is exactly "boards", or a whole string shaped like boards/<x>.json), read by parsing, never by grep, so a
+    sentence that mentions the table in a rail's note is not a read of it."""
+    import ast, glob, re
+    shape = re.compile(r"(?:\.\./)?(?:tools/)?boards/[\w%{}<>.-]*\.json")
+    bad = []
+    for gen in sorted(glob.glob(os.path.join(TOOLS, "gen_sch_*.py"))):
+        letter = os.path.basename(gen)[len("gen_sch_"):-3]
+        for f in _closure(letter):
+            for n in ast.walk(ast.parse(open(f, encoding="utf-8").read())):
+                if isinstance(n, ast.Constant) and isinstance(n.value, str) and (n.value == "boards" or shape.fullmatch(n.value)):
+                    bad.append("%s (in %s's closure) line %s: %r" % (os.path.basename(f), letter, n.lineno, n.value))
+    assert not bad, "a schematic input reads the board table directly, so gen_env alone is not its channel: " + "; ".join(bad[:6])
+
+
+def t_every_driver_that_regenerates_a_schematic_hands_it_gen_env():
+    """full.sh has handed the generator the table's gen_env since 12 September; gate_sweep.sh regenerated without
+    it (26 September 2026, latent: no board declares one). Read as the shell reads the command: the words of the
+    line that runs gen_sch_$L.py must include `env $GENV`, and GENV must be read from the table's gen_env."""
+    import shlex
+    for drv in ("full.sh", "gate_sweep.sh"):
+        src = open(os.path.join(TOOLS, drv), encoding="utf-8").read().replace("\\\n", " ")   # continuation lines
+        runs = [ln for ln in src.splitlines() if "gen_sch_$L.py" in ln and not ln.lstrip().startswith(("#", "for "))]
+        assert runs, "%s runs no schematic generator this test can read" % drv
+        for ln in runs:
+            w = shlex.split(ln, comments=True)
+            assert "env" in w and w[w.index("env") + 1] == "$GENV", "%s runs the generator without gen_env: %s" % (drv, ln.strip())
+        sets = [ln for ln in src.splitlines() if re.search(r"GENV=\"\$\(python3", ln)]
+        assert sets and all("gen_env" in ln for ln in sets), "%s does not read GENV from the board table's gen_env" % drv
+
+
+def t_a_tool_the_schematic_never_reads_leaves_the_identity_alone():
+    """ACCEPTABLE, before and after: the identity is the inputs of the schematic, not the whole tools tree."""
+    assert not _moves(lambda t: open(os.path.join(t, "route_one.sh"), "a").write("# a router flag\n"))
+    assert not _moves(lambda t: open(os.path.join(t, "check_pcb_b.py"), "a").write("# a gate threshold\n"))
+
+
+def t_a_stale_sidecar_names_the_input_that_moved():
+    t = _full_tree()
+    d = tempfile.mkdtemp(prefix="prov-why-"); os.makedirs(os.path.join(d, "out"))
+    net = os.path.join(d, "out", "pcb-b-compute.net"); open(net, "w").write("(export)\n")
+    P.write(net, "b", t)
+    ok, why = P.current(net, "b", t)
+    assert ok, why
+    open(os.path.join(t, "schlayout.py"), "a").write("# a wire moved\n")
+    ok, why = P.current(net, "b", t)
+    assert not ok and "schlayout.py" in why, why
+
+
+def t_a_sidecar_written_under_the_narrow_identity_is_not_current_and_says_so():
+    """The six committed sidecars were written under the three-file identity. They say nothing about schlayout.py,
+    so they cannot be current under the wider one; the message says what to do rather than only 'different'."""
+    t = _full_tree()
+    d = tempfile.mkdtemp(prefix="prov-old-"); os.makedirs(os.path.join(d, "out"))
+    net = os.path.join(d, "out", "pcb-b-compute.net"); open(net, "w").write("(export)\n")
+    import json as _j
+    _j.dump({"letter": "b", "netlist": "pcb-b-compute.net", "generator_sha": "da28353cb4d2526f",
+             "generator_files": ["gen_sch_b.py", "kisch.py", "intent.py"]}, open(P.path_for(net), "w"))
+    ok, why = P.current(net, "b", t)
+    assert not ok and "three-file identity" in why, why

@@ -17,6 +17,14 @@ Three comparisons, each with its denominator:
   3. the net NAMES agree, once the root-sheet slash is stripped, because a board net that exists on no schematic
      pin is the phantom-net defect `check_zone_nets.py` catches from the other side.
 
+WHAT IT DOES NOT COMPARE, and what does (26 September 2026, MESHSAT-1357). None of the three asks what a reference
+IS: a value or a land that changed between the placement and the schematic passes all three. The regeneration
+parity run of 25 September found such differences on boards A32, B21 and D12 that this gate could not see.
+`netlist_parts.py` compares value and footprint per reference; this gate runs it at the end of every run and it
+writes its own verdict (`netlist_parts`), so every place SCH-002 is measured (full.sh, finish.sh, gate_sweep.sh)
+leaves both halves, and rule SCH-002 reads the worst of the two. The companion never changes this gate's verdict
+or exit code.
+
 Usage: netlist_board.py <board.kicad_pcb> [<netlist.net>]   exit 0 match, 1 mismatch, 3 nothing to compare
 """
 import os, re, sys
@@ -58,11 +66,39 @@ def read_netlist(path):
     return out
 
 
+def _parts(board_path, net_path):
+    """The companion half of SCH-002, under its own crash guard: a failure there writes ITS inconclusive verdict
+    and never reaches this gate's verdict or exit code."""
+    try:
+        import netlist_parts
+        return verdict.guard("netlist_parts", netlist_parts.main, [board_path, net_path])
+    except BaseException as e:
+        print("netlist_board: the value and footprint companion did not run (%s: %s)" % (type(e).__name__, str(e)[:120]))
+        return None
+
+
+_NAMES = {code: name for name, code in verdict.CODE.items()}
+
+
 def main(a):
     if not a: print(__doc__); return verdict.USAGE
     board_path = a[0]
     stem = os.path.splitext(os.path.basename(board_path))[0]
     net_path = a[1] if len(a) > 1 else os.path.join(os.path.dirname(os.path.abspath(board_path)), "out", stem + ".net")
+    rc = None
+    try:
+        rc = _main(board_path, net_path)
+        return rc
+    finally:
+        pc = _parts(board_path, net_path)   # after this gate's own verdict, and even if this gate raised
+        # THE LAST LINE OF THE LOG IS THIS GATE'S (26 September 2026). full.sh and finish.sh show the tail of this
+        # log when they judge the exit code, which is this gate's alone, and with the companion running last that
+        # tail had become the companion's lines. One closing line names both readings, this gate's first.
+        print("netlist_board: %s (this gate, exit %s); netlist_parts: %s (values and lands); rule SCH-002 reads both"
+              % (_NAMES.get(rc, "no verdict, it raised"), rc, _NAMES.get(pc, "did not run")))
+
+
+def _main(board_path, net_path):
     if not os.path.exists(net_path):
         print("netlist_board: no netlist at %s, so the board was compared with nothing" % net_path)
         return verdict.write("netlist_board", verdict.INCONCLUSIVE, denominator=0, inputs={"board": board_path},
