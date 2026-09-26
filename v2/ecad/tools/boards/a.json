@@ -504,16 +504,8 @@
   },
   {
    "ref": "J_USBC_OUT",
-   "why": "the USB-C outlet on the connector plate, out of the case",
-   "protected_in_part": {
-    "pins": [
-     "2",
-     "3"
-    ],
-    "part": "U18",
-    "cite": "TI TPS25740A datasheet, v2/vendor/ti/ti-tps25740.pdf section 9.1.1 System-Level ESD Protection: 'The device has ESD protection built into the CC1 and CC2 pins so that no external protection is necessary.' Its absolute maximum on CC1 and CC2 is -0.3 to 6 V, and the VBUS path its own Figure 37 clamps is D4, an SMBJ18A, which this board already carries. Owner decision 31, ruled by the session on 21 September 2026 against the IEC 61000-4-2 level 4 that decision 34 states."
-   },
-   "_protected_in_part_why": "pins 2 and 3 are PD_CC1 and PD_CC2 and they reach U18 pins 2 and 3 with only their own CC capacitors C96 and C97 between, which is the finding port_protect made; what it could not know is that the pins they arrive at carry the protection themselves, which is the part maker's own sentence and not this project's judgement"
+   "why": "the USB-C outlet on the connector plate, out of the case: VBUS meets D4 (SMBJ18A) and CC1 and CC2 meet U31 (TPD2E2U06QDBZRQ1, the owner's D-17 array) at the connector, and port_protect judges both",
+   "_protected_in_part_removed_why": "ROUND 8, 26 September 2026 (MESHSAT-1357, r4a open item O-20). Until round 8 pins 2 and 3 were declared protected inside U18, citing TI SLVSDG8B 9.1.1 ('The device has ESD protection built into the CC1 and CC2 pins so that no external protection is necessary'), owner decision 31 as ruled on 21 September 2026. Owner ruling D-17 of 26 September 2026 removed that residual with an external low-capacitance array at the connector, U31 (TI TPD2E2U06QDBZRQ1, SLLSEJ9E, IEC 61000-4-2 25 kV contact), on PD_CC1 and PD_CC2. With the declaration in place port_protect answered both conductors by U18 and never judged U31, so the array D-17 bought was never read. The declaration is removed and the two conductors are judged like every other: U31's value names an ESD array, which port_protect's PROTECT pattern reads, on the connector's own nets. Reversing it means restoring the protected_in_part entry, which is decision 31's own reversal text"
   }
  ],
  "_external_ports_why": "Rule TRN-001, 16 September 2026. A port that leaves the ENCLOSURE is a wire a person will plug something into, in the rain, having walked across a floor. Every one of them reaches a semiconductor, and the only thing between is a suppressor, a choke, a series resistor into a clamp, or nothing. Most connectors on these boards are internal (board-to-board ribbons, module sockets, fan leads inside a sealed case) and treating every J as external would refuse every board for wires that never leave it. The board knows which is which and nothing else does, so each one is named with where it goes.",
@@ -558,7 +550,7 @@
    "hazard": "every transmitter on this board is released",
    "safe_state": "low",
    "role": "listens",
-   "why": "U26's AND gates gate the PA and the radio enables with it, and R102 holds it down: with the A to B ribbon out this board silences"
+   "why": "U35 and U37 (SN74AUP1G08, round 8; U26's AND gates until then) gate the PA and HF rails with it together with TX_INHIBIT_n, and R102 (10 k 1 percent since round 8) holds it down: with the A to B ribbon out this board silences"
   },
   {
    "net": "PI_KILL",
@@ -572,14 +564,14 @@
    "hazard": "the kit powers down on its own",
    "safe_state": "high",
    "role": "listens",
-   "why": "the LTC2954's own kill input, internal to this board, held up by R4 to VBAT, which is the always-on rail"
+   "why": "the LTC2954's own kill input, internal to this board, held up by R4 (100 k) to +3V3, the rail the controller itself enables (S-08, 26 September 2026: it was VBAT, over KILL's 7 V absolute maximum; this text still said VBAT until round 8)"
   },
   {
    "net": "TX_INHIBIT_n",
-   "hazard": "board D's 30 W amplifier is keyed",
+   "hazard": "board D's 30 W amplifier is keyed, and this board's PA and HF rails are enabled",
    "safe_state": "low",
-   "role": "carries",
-   "why": "this board carries the panel's inhibit from the A to B ribbon to the D harness and holds it down with R145; board D is where it is read"
+   "role": "listens",
+   "why": "this board carries the panel's inhibit from the A to B ribbon to the D harness, holds it down with R145, and since round 8 (26 September 2026) READS it: U35 and U37 (SN74AUP1G08) AND it with EMCON_HW into the PA and HF rails' enables, so either line low silences both rails whatever firmware does to EMCON_HW"
   },
   {
    "net": "ZEROIZE_HW",
@@ -596,7 +588,7 @@
    "why": "carried from the ribbon to the dock pins with R118 to ground; board E reads it"
   }
  ],
- "_safety_lines_why": "Board A gates its own transmitters with EMCON_HW and can be switched off by PI_KILL, so those two are judged here; the other three cross this board between a ribbon and a connector and are judged where a part reads them. Every one of the five has its pull on this board, which is the property the rule asks for: a missing panel leaves the transmitters silent and the kit running.",
+ "_safety_lines_why": "Board A gates its own transmitters with EMCON_HW and TX_INHIBIT_n (both since round 8, 26 September 2026) and can be switched off by PI_KILL, so those three are judged here with KILL, the controller's own input; the other two, ZEROIZE_HW and SHORE_INHIBIT, cross this board between a ribbon and a connector and are judged where a part reads them. Every one of the six has its pull on this board, which is the property the rule asks for: a missing panel leaves the transmitters silent and the kit running.",
  "_rf_line_why": "ELEVEN RF PORTS AT 26 OHM, AND THE WIDTH IS NOT WHAT IS WRONG (17 September 2026, rule RF-001, which this board was outside of until its board list was corrected to match its own condition). Every one of board A's eleven RF nets runs EXACTLY 10.0 mm on In2.Cu at 0.35 mm, which the board's own stackup makes a 26 ohm stripline against the class's 50 ohm target, 49 percent low. The width is right: board D carries the same 0.35 mm RF class and passes RF-001 on twelve segments, because its runs are on an OUTER layer, where 0.35 mm is about 50 ohm. What board A has is a LAYER problem, and it comes from the geometry: J_RF<k> is the SMA jack on the top and J_BM<k> the SMP-MAX blind-mate receptacle on the UNDERSIDE, 10 mm south of it, so every port has to cross the board and the router took the whole crossing on one inner layer rather than a short run and a transition. The eleven lengths being identical to a tenth of a millimetre is what says it is systematic. THE SHAPE OF THE FIX, for the generation after A43: lay each port yourself, locked, as an outer-layer run from the jack to a point over the receptacle with a single via into its pad, which is the geometry board D already passes on; the cost has to be measured first, and this board's own arms say pre-laid copper is EXPENSIVE on it, the other way round from the first reading of this note: the routeflow journals have A40, which pre-lays four nets, at 25 unrouted of 254 and A42, which is A40 with those four removed and nothing else changed, at 15, so pre-laying cost this board ten connections and half again the time per pass. A43 routes without them. What is different about the eleven RF drops is that each is 10 mm in the south edge between two FIXED parts rather than a crossing of the board, and that they are already laid, by the router, on the wrong layer: the choice is not whether that copper exists but who chooses its layer. Nothing was changed while A43 routes. CORRECTED AND ANSWERED THE SAME EVENING (appendix 32.221): the width IS part of what is wrong, because board D passes at 0.35 mm on an outer layer for its 7628 four-layer stack's 0.2 mm of prepreg under F.Cu, and this six-layer 3313 stack puts 0.0994 mm (er 4.1) there: rf_line's own microstrip form with its 0.967 correction reads 0.35 mm on this board's F.Cu as 22.8 ohm, 0.15 as 48.2 and 0.14 as 50.1. gen_pcb_a3.py lays the eleven drops itself now, locked on F.Cu from the SMA centre pin to the blind-mate centre pin, straight and clear of every other net's copper on the placement, and the RF class is 0.14 mm; the first regeneration at 0.35 mm read all eleven at 23.5 ohm and the board's placed gate, escapes and hard set were unchanged (0 hard). The route has eleven connections fewer to make, the opposite of the pre-lay that cost it ten: these are ten millimetres between two fixed parts at the south edge, laid where the router had already laid them on the wrong layer.",
  "_thermal_pads_why": "17 September 2026, thermal_pads.py on the cut A32: 39 exposed pads, 32 with no via of their own net inside them. The 25 PowerPAK SO-8 drain pads (the converters' switching FETs, 14.90 mm2 each, nearest same-net via 2.2 to 14.1 mm) are carried by the top-side rail islands and bands by design (32.39) and get no via; the seven SOIC-8 exposed-pad parts (the three TPS2596 eFuses U21 to U23 and U4 to U7 on the same land, 6.87 mm2, GND) have no via and the nearest ground via is 4.31 to 5.09 mm away while In1, In2 and In4 ground copper is directly underneath. escape.py lays thermal vias in FINE-PITCH parts only, so no stage ever asked. The seven HTSSOP and QFN parts carry five each. ANSWERED IN escape.py the same evening: the exposed-pad block ran only inside the fine-pitch loop and runs for every footprint now; on a copy of A32's placed board it laid 103 thermal vias in the 31 coarse tabs, 0 refused for the other side, hard 0 before and after, and every one of the 39 exposed pads carries a via of its net. The next A generation carries them by construction.",
  "_ana_001_arm_why": "THE INSTRUMENT ANA-001 HAS BEEN MISSING, named 17 September 2026 23:25 CEST (not yet written): a per-net-pair keep-away cannot reach Freerouting through KiCad's custom rules, and a class clearance at the declared 0.50 mm cannot escape the sense pins (POE_CS 0.250 mm at U16 pin 16, B33_FB 0.200 at U12 pin 8), but the DSN's own structure section carries CLASS-PAIR clearances, (class_class (classes SENSE SW) (rule (clearance 0.5))), which apply between two nets of different classes and NOT inside a class, so a SENSE class for the declared sensitive nets with a 0.50 mm class-pair rule against SW and HV leaves each net's own escape at its class clearance and holds it 0.50 mm from a switching net everywhere else. fr_rules.py writes the rules block and dsn_export.sh the DSN, and neither emits class_class today. The arm: A43's board first (does it repeat POE_CS 10.79 mm and B33_FB 8.47 mm), then one route with the class-pair rule against A43, one variable.",

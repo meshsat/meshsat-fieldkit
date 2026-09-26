@@ -204,6 +204,7 @@ power/littelfuse-smbj-series-tvs.pdf   # https://datasheet.lcsc.com/datasheet/pd
 power/mdd-smbj-series-tvs.pdf   # https://datasheet.lcsc.com/datasheet/pdf/2fdb55289569ebfc0bc21eab3853afe6.pdf?productCode=C113974 (LCSC's copy of the MDD sheet; the same bytes for C364296)
 power/panjit-ss2020fl-series.pdf   # https://www.panjit.com.tw/upload/datasheet/SS2020FL_SERIES.pdf
 techpublic/techpublic-74lvc1g08gv-c19829591.pdf   # https://datasheet.lcsc.com/datasheet/pdf/e335bb6567581dcd835345d1662386ee.pdf?productCode=C19829591 (LCSC's copy)
+ti/ti-sn74aup1g08.pdf   # https://www.ti.com/lit/ds/symlink/sn74aup1g08.pdf
 ti/ti-sn74lvc1g00.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc1g00.pdf
 ti/ti-sn74lvc1g04.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc1g04.pdf
 ti/ti-sn74lvc1g06.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc1g06.pdf

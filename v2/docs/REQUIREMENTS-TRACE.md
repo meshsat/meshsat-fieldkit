@@ -3,7 +3,7 @@
 
 # Requirements trace
 
-Generated from the requirements registry `v2/ecad/tools/pcb_requirements.yaml`. Prototype design: nothing described here has been built, powered or field deployed, and every statement below is a requirement, what the design is intended to do, never a report of what hardware has done. A record that needs hardware reads NOT_YET_TESTED, and a record reads PASS or FAIL only where its evidence names the file it was read from. The needs are quoted from `v2/docs/CONOPS.md` section 2 (pinned by sha256 `b9080983ccc03a84`); every record traces to one need; the rules of the PCB rule registry and the owner decisions of `pcb_decisions.yaml` judge or settle parts of the records; and every record says how and at which phase it is intended to be verified.
+Generated from the requirements registry `v2/ecad/tools/pcb_requirements.yaml`. Prototype design: nothing described here has been built, powered or field deployed, and every statement below is a requirement, what the design is intended to do, never a report of what hardware has done. A record that needs hardware reads NOT_YET_TESTED, and a record reads PASS or FAIL only where its evidence names the file it was read from. The needs are quoted from `v2/docs/CONOPS.md` section 2 (pinned by sha256 `49119f89f2d98920`); every record traces to one need; the rules of the PCB rule registry and the owner decisions of `pcb_decisions.yaml` judge or settle parts of the records; and every record says how and at which phase it is intended to be verified.
 
 Every reading carries its evidence class, in the six classes of `v2/docs/CURRENT-EVIDENCE.md`: a record reads PASS only on a class that counts, never on evidence awaiting revalidation, and a desk review (the session's own reading of named files, each bound by its sha256) is never a physical test. The prototype-core functions whose feasibility is not closed are listed first, as explicit architecture feasibility blockers (review of 26 September 2026, section 3 and checkpoint item 1): a merged document is configuration control, not proof that the architecture is feasible.
 
@@ -441,7 +441,9 @@ Prototype 1: in the core D-01 names. 18 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/CONOPS.md and v2/docs/V2-SPEC.md re-read at the S-07 correction of 26 September 2026 (stream s07, read against 45bde541): it changed CONOPS's status header and sections 3 (M2 and M4), 4, 4a (the PS-EMCON row and its mapping sentence), 4b and 5, and V2-SPEC.md lines 11, 22, 24, 34, 41, 43, 73 and 76 with its corrections 2, 4, 7, 9, 12 and 13 and a new correction 19; CONOPS section 2a and V2-SPEC.md:32 (correction 6), which this reading cites, are byte-identical, so it stands on the files at b9080983ccc03a84 and df8ac22603440bc5
 
-*Bound to:* `v2/docs/CONOPS.md@b9080983ccc03a84`, `v2/docs/ARCH-PCB-B-IOHA.md@6c3c93b7f32f953a`, `v2/docs/V2-SPEC.md@df8ac22603440bc5`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/CONOPS.md re-read at board A's round 8 of 26 September 2026 (stream r8a) with the stream's draft applied (drafts/a/CONOPS-4b-board-a-round8.patch): only section 4b's SA868-with-PA and QMX rows change, each gaining board A's round 8 gates (U35 to U38) beside the 45bde541 text; section 2a, which this reading cites, is byte-identical, so it stands on the file at 49119f89f2d98920
+
+*Bound to:* `v2/docs/CONOPS.md@49119f89f2d98920`, `v2/docs/ARCH-PCB-B-IOHA.md@6c3c93b7f32f953a`, `v2/docs/V2-SPEC.md@df8ac22603440bc5`
 
 *Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md:17`; `v2/docs/ARCH-PCB-B-IOHA.md section 15a`; `session choice SC-02`; `v2/docs/CONOPS.md section 2a`
 
@@ -533,7 +535,9 @@ Prototype 1: in the core D-01 names. 18 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/DECOUPLING.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the file at 15915adb18843695
 
-*Bound to:* `v2/docs/feasibility/DECOUPLING.md@15915adb18843695`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/DECOUPLING.md re-read at board A's round 8 of 26 September 2026 (stream r8a) with the stream's draft applied (drafts/a/DECOUPLING-G1-G3-board-a-round8.patch): section 8.3's G1 to G3 rows and section 10's G1 to G3 row record that board A's round 8 candidate draws and declares them; sections 1 and 10 otherwise, which this reading cites, are byte-identical, and T1 to T10 are not laid, so the record stays INCONCLUSIVE
+
+*Bound to:* `v2/docs/feasibility/DECOUPLING.md@814be6d324c4995c`
 
 *Feasibility page:* `v2/docs/feasibility/DECOUPLING.md`, blocker ids T1, T10, G1, G14; *owner:* The integrating writer of v2/ecad/tools/ (T1 to T10); each board's writer (G1 to G14); the integrator for the placements; the session for the Diodes question.; *holds:* layout entry of A, B, C, D, E, P.
 
@@ -629,7 +633,9 @@ Prototype 1: in the core D-01 names. 18 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/ecad/tools/gen_sch_b.py re-read at the clamp-symbol merge of 26 September 2026 (stream ts-tvs): it changed only at lines 441, 671, 832 and 876 (board B's one-way clamps D1, D2, D101, D201, D301 and D520 now drawn through kisch.tvs()); every line number is kept and this reading cites none of those lines, so it stands on the file at dedaf34ce285e5ff
 
-*Bound to:* `v2/docs/ARCH-PCB-B-IOHA.md@6c3c93b7f32f953a`, `v2/docs/PANEL.md@b1cde9f7ff1ada7b`, `v2/ecad/tools/gen_sch_b.py@dedaf34ce285e5ff`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read at board A's round 8 of 26 September 2026 (stream r8a) with the stream's draft applied (drafts/a/PANEL-section-6-board-a-round8.patch): only section 6's TX_INHIBIT_n and EMCON_HW rows change, each gaining board A's round 8 sentence (R102 10k 1%, U35 and U37 reading both lines); the bank 1 failover host (line 5 and the ribbon table's pin 15 row), which this reading cites, is byte-identical, so it stands on the file at ee908df9e59b6349
+
+*Bound to:* `v2/docs/ARCH-PCB-B-IOHA.md@6c3c93b7f32f953a`, `v2/docs/PANEL.md@ee908df9e59b6349`, `v2/ecad/tools/gen_sch_b.py@dedaf34ce285e5ff`
 
 *Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md section 4`; `v2/docs/ARCH-PCB-B-IOHA.md section 15`; `v2/ecad/tools/gen_sch_b.py:788`
 
@@ -663,7 +669,7 @@ Prototype 1: in the core D-01 names. 18 record(s).
 
 *allocated to a, b, fw_panel.*
 
-*Source (inferred):* `v2/ecad/tools/gen_sch_a.py:887`; `v2/ecad/tools/gen_sch_a.py:1112`; `v2/vendor/ti/ti-pca9555.pdf (SCPS131J 6.5 and 8.1)`; `v2/vendor/diodes/diodes-ap64500.pdf (DS41979)`
+*Source (inferred):* `v2/ecad/tools/gen_sch_a.py:965`; `v2/ecad/tools/gen_sch_a.py:1253`; `v2/vendor/ti/ti-pca9555.pdf (SCPS131J 6.5 and 8.1)`; `v2/vendor/diodes/diodes-ap64500.pdf (DS41979)`
 
 *Notes:* Adjudication A01: DEV_EN sat at about 1.71 V nominally against a 1.25 V turn-on maximum; PA_SW_EN, HF_SW_EN and CHG_INHIBIT sat in undefined bands; POE_EN and PD_EN were held OFF over the whole datasheet range.
 
@@ -747,7 +753,9 @@ Prototype 1: not in the core. 7 record(s).
 
 *Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read after pass 3 of stream r8docs (27 September 2026): three corrections from the independent check, section 4.4's ENABLE input now about 1.98 V with R6 in series (inside the buffer's undefined band, the row still OPEN), section 5a's RM520N-GL reaction time now about 2.0 s less 0.9 times the rail decay, and section 8 naming REQ-071 a sibling of REQ-030; none moves this reading, so it stands on the file at e57a54d1767bcd59
 
-*Bound to:* `v2/docs/feasibility/EMCON.md@e57a54d1767bcd59`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@2834f0d8c4071d56`
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read at board A's round 8 of 26 September 2026 (stream r8a), integrated on the sixth revision (e57a54d1767bcd59) on 27 September 2026: board A's draft (drafts/a/EMCON-section-4a-board-a-round8.patch of fnd/r8a) was re-derived on that text. It adds section 4a (board A's PA and HF gates, local and end to end, their latency against section 5a) and a revision paragraph, a bullet to section 0, the round 8 text to rows 2 and 3 of section 0a (local CLOSED with the LM5176's unstated gate drive in shutdown as the residual; end to end still OPEN), sentences to section 2, rows 2 and 3 of the section 4 table, section 7's L2 and L4 rows and a new +3V3 overvoltage row, and section 8's board A bullet; sections 0a's counts, 1, 3, 4.1 to 4.18, 5, 5a, 6 and 9 are byte-identical; section 0's TX-lamp sentence, which this reading cites, is byte-identical, so the record stays FAIL
+
+*Bound to:* `v2/docs/feasibility/EMCON.md@284d160801877192`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@2834f0d8c4071d56`
 
 *Source (verified):* `v2/docs/PANEL.md:113`; `v2/docs/PANEL.md:158`
 
@@ -960,9 +968,11 @@ Prototype 1: in the core D-01 names. 14 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at the clamp-symbol merge of 26 September 2026: compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent checker, it differs only in D1 to D4's symbol (Device:D_TVS to Device:D_Zener) and pin names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 7b08510106687b3d
 
-*Bound to:* `v2/docs/PANEL.md@b1cde9f7ff1ada7b`, `v2/docs/CONOPS.md@b9080983ccc03a84`, `v2/docs/OPERATING-ENVELOPE.md@89de81a11c52f34a`, `v2/ecad/tools/gen_sch_a.py@7f6c34697753bac1`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@7b08510106687b3d`, `v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md@df84d98b9e47160c`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read at board A's round 8 of 26 September 2026 (stream r8a) with the stream's draft applied (drafts/a/PANEL-section-6-board-a-round8.patch): only section 6's TX_INHIBIT_n and EMCON_HW rows change, each gaining board A's round 8 sentence (R102 10k 1%, U35 and U37 reading both lines); section 10, which this reading cites, is byte-identical. v2/docs/CONOPS.md re-read at board A's round 8 of 26 September 2026 (stream r8a) with the stream's draft applied (drafts/a/CONOPS-4b-board-a-round8.patch): only section 4b's SA868-with-PA and QMX rows change, each gaining board A's round 8 gates (U35 to U38) beside the 45bde541 text; section 4's Charging row and section 5's case S4, which this reading cites, are byte-identical. v2/ecad/tools/gen_sch_a.py re-read at board A's round 8 of 26 September 2026 (stream r8a): it adds the PA and HF rails' EMCON gates U35 to U38 with their pulls, capacitors and the stages' EN/UVLO dividers, decision 42's classes with four VIN-pin capacitors and U12's 0.1 uF, R102 10 k 1%, U1's and J_HEAT's and J_MAINSW's codes, and comments; the lines it inserts move every later line; the charger lines this reading cites are byte-identical and moved (765-771 to 839-845 and 764-771 to 838-845; 18-48 unchanged). And v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at board A's round 8 of 26 September 2026 (stream r8a) on the KiCad box with main's chain (main's own regeneration equal to main's committed file but for its header): compared component by component and net by net (pin, pinfunction, pintype) with an independent reader, it differs from 7b08510106687b3d only in U35 to U38 (SN74AUP1G08), R207, R208 and C215 to C223 added; U26's sections 1 and 2 moved to GND; the nets PA_TXOK, HF_TXOK, PA_UVLO and HF_UVLO added, with U13 and U15 pin 1 moved onto the last two; the values and codes of R58, R59, R124, R125 and R102; U1's code (C2657885), J_HEAT's and J_MAINSW's (C158012); and U26's value text; R26, R27, R17 and F1 are unchanged. So the reading stands on the files at ee908df9e59b6349, 5a97fed72c42b79d, 3a786cf31614fe63 and 49119f89f2d98920
 
-*Source (verified):* `v2/docs/PANEL.md section 10`; `v2/docs/CONOPS.md section 4 (Charging row)`; `v2/docs/OPERATING-ENVELOPE.md section 3`; `v2/ecad/tools/gen_sch_a.py:765-771`; `v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md`; `v2/vendor/ti/bq25731-datasheet.pdf (SLUSE66A)`
+*Bound to:* `v2/docs/PANEL.md@ee908df9e59b6349`, `v2/docs/CONOPS.md@49119f89f2d98920`, `v2/docs/OPERATING-ENVELOPE.md@89de81a11c52f34a`, `v2/ecad/tools/gen_sch_a.py@5a97fed72c42b79d`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md@df84d98b9e47160c`
+
+*Source (verified):* `v2/docs/PANEL.md section 10`; `v2/docs/CONOPS.md section 4 (Charging row)`; `v2/docs/OPERATING-ENVELOPE.md section 3`; `v2/ecad/tools/gen_sch_a.py:839-845`; `v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md`; `v2/vendor/ti/bq25731-datasheet.pdf (SLUSE66A)`
 
 *Notes:* Adjudication A02: the 256 mA hostless default rests on SLUSE66A 9.3.21.1 and TI E2E 1316778 (23 Jan 2024), with bench confirmation owed.
 
@@ -1298,7 +1308,9 @@ Prototype 1: in the core D-01 names. 9 record(s).
 
 *Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read after pass 3 of stream r8docs (27 September 2026): three corrections from the independent check, section 4.4's ENABLE input now about 1.98 V with R6 in series (inside the buffer's undefined band, the row still OPEN), section 5a's RM520N-GL reaction time now about 2.0 s less 0.9 times the rail decay, and section 8 naming REQ-071 a sibling of REQ-030; none moves this reading, so it stands on the file at e57a54d1767bcd59
 
-*Bound to:* `v2/docs/feasibility/EMCON.md@e57a54d1767bcd59`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b`
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read at board A's round 8 of 26 September 2026 (stream r8a), integrated on the sixth revision (e57a54d1767bcd59) on 27 September 2026: board A's draft (drafts/a/EMCON-section-4a-board-a-round8.patch of fnd/r8a) was re-derived on that text. It adds section 4a (board A's PA and HF gates, local and end to end, their latency against section 5a) and a revision paragraph, a bullet to section 0, the round 8 text to rows 2 and 3 of section 0a (local CLOSED with the LM5176's unstated gate drive in shutdown as the residual; end to end still OPEN), sentences to section 2, rows 2 and 3 of the section 4 table, section 7's L2 and L4 rows and a new +3V3 overvoltage row, and section 8's board A bullet; sections 0a's counts, 1, 3, 4.1 to 4.18, 5, 5a, 6 and 9 are byte-identical; board A's PA and HF rails now read both lines and have a dominant path through TX_INHIBIT_n (section 4a), but end to end they stay OPEN (section 0a) and every row on board B still depends on EMCON_HW's L1 to L3 while the SA868's and the 5G module's rows stay open; so the record stays FAIL
+
+*Bound to:* `v2/docs/feasibility/EMCON.md@284d160801877192`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b`
 
 *Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2787 (item 3)`; `v2/docs/PANEL.md section 6`; `v2/docs/TEST-PLAN.md:46`; `v2/docs/feasibility/EMCON.md`; `v2/ecad/tools/pcb_rules_coverage.yaml:636-644`
 
@@ -1316,7 +1328,9 @@ Prototype 1: in the core D-01 names. 9 record(s).
 
 *Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read after pass 3 of stream r8docs (27 September 2026): three corrections from the independent check, section 4.4's ENABLE input now about 1.98 V with R6 in series (inside the buffer's undefined band, the row still OPEN), section 5a's RM520N-GL reaction time now about 2.0 s less 0.9 times the rail decay, and section 8 naming REQ-071 a sibling of REQ-030; none moves this reading, so it stands on the file at e57a54d1767bcd59
 
-*Bound to:* `v2/docs/feasibility/EMCON.md@e57a54d1767bcd59`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b`, `v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568`
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read at board A's round 8 of 26 September 2026 (stream r8a), integrated on the sixth revision (e57a54d1767bcd59) on 27 September 2026: board A's draft (drafts/a/EMCON-section-4a-board-a-round8.patch of fnd/r8a) was re-derived on that text. It adds section 4a (board A's PA and HF gates, local and end to end, their latency against section 5a) and a revision paragraph, a bullet to section 0, the round 8 text to rows 2 and 3 of section 0a (local CLOSED with the LM5176's unstated gate drive in shutdown as the residual; end to end still OPEN), sentences to section 2, rows 2 and 3 of the section 4 table, section 7's L2 and L4 rows and a new +3V3 overvoltage row, and section 8's board A bullet; sections 0a's counts, 1, 3, 4.1 to 4.18, 5, 5a, 6 and 9 are byte-identical; section 0a gains round 8's local text on rows 2 and 3 and no row changes its end-to-end status (0 of 17), sections 4.4 and 5a are byte-identical, and section 4a bounds board A's two rows inside the 1 s L_max only where its terms are not INFERRED or TBD (the QMX's input capacitance and its behaviour below 6.0 V are TBD); no row meets the requirement at desk, so the record stays FAIL
+
+*Bound to:* `v2/docs/feasibility/EMCON.md@284d160801877192`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b`, `v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568`
 
 *Source (verified):* `v2/docs/feasibility/EMCON.md section 5a`; `v2/docs/reviews/2026-09-26-second-checkpoint-review.md section 2C`
 
@@ -1374,7 +1388,9 @@ Prototype 1: in the core D-01 names. 9 record(s).
 
 *Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read after pass 3 of stream r8docs (27 September 2026): three corrections from the independent check, section 4.4's ENABLE input now about 1.98 V with R6 in series (inside the buffer's undefined band, the row still OPEN), section 5a's RM520N-GL reaction time now about 2.0 s less 0.9 times the rail decay, and section 8 naming REQ-071 a sibling of REQ-030; none moves this reading, so it stands on the file at e57a54d1767bcd59
 
-*Bound to:* `v2/docs/feasibility/EMCON.md@e57a54d1767bcd59`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b`
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read at board A's round 8 of 26 September 2026 (stream r8a), integrated on the sixth revision (e57a54d1767bcd59) on 27 September 2026: board A's draft (drafts/a/EMCON-section-4a-board-a-round8.patch of fnd/r8a) was re-derived on that text. It adds section 4a (board A's PA and HF gates, local and end to end, their latency against section 5a) and a revision paragraph, a bullet to section 0, the round 8 text to rows 2 and 3 of section 0a (local CLOSED with the LM5176's unstated gate drive in shutdown as the residual; end to end still OPEN), sentences to section 2, rows 2 and 3 of the section 4 table, section 7's L2 and L4 rows and a new +3V3 overvoltage row, and section 8's board A bullet; sections 0a's counts, 1, 3, 4.1 to 4.18, 5, 5a, 6 and 9 are byte-identical; the rows this reading rests on (board B's radios, the 5G module's SD-EMC-1 circuit, the SA868) are unchanged, so the record stays FAIL
+
+*Bound to:* `v2/docs/feasibility/EMCON.md@284d160801877192`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b`
 
 *Source (verified):* `v2/ecad/tools/gen_sch_b.py:716-741`; `v2/ecad/tools/gen_sch_b.py:449-456`; `v2/docs/feasibility/EMCON.md section 4`; `v2/docs/MESHSAT-709-geometry-appendix.md:2930`; `owner ruling D-05`
 
@@ -1398,9 +1414,11 @@ Prototype 1: in the core D-01 names. 9 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at the clamp-symbol merge of 26 September 2026: compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent checker, it differs only in D1 to D4's symbol (Device:D_TVS to Device:D_Zener) and pin names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 7b08510106687b3d
 
-*Bound to:* `v2/docs/PANEL.md@b1cde9f7ff1ada7b`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@7b08510106687b3d`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read at board A's round 8 of 26 September 2026 (stream r8a) with the stream's draft applied (drafts/a/PANEL-section-6-board-a-round8.patch): only section 6's TX_INHIBIT_n and EMCON_HW rows change, each gaining board A's round 8 sentence (R102 10k 1%, U35 and U37 reading both lines); section 7's panel-absent paragraph, which this reading cites, is byte-identical. And v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at board A's round 8 of 26 September 2026 (stream r8a) on the KiCad box with main's chain (main's own regeneration equal to main's committed file but for its header): compared component by component and net by net (pin, pinfunction, pintype) with an independent reader, it differs from 7b08510106687b3d only in U35 to U38 (SN74AUP1G08), R207, R208 and C215 to C223 added; U26's sections 1 and 2 moved to GND; the nets PA_TXOK, HF_TXOK, PA_UVLO and HF_UVLO added, with U13 and U15 pin 1 moved onto the last two; the values and codes of R58, R59, R124, R125 and R102; U1's code (C2657885), J_HEAT's and J_MAINSW's (C158012); and U26's value text. R102 is 10 k 1% now (v2/ecad/tools/gen_sch_a.py:1253) and still pulls EMCON_HW LOW, R145 still holds TX_INHIBIT_n, and the slot enable pull-downs are unchanged, so the conflict stays resolved on the files at ee908df9e59b6349 and 3a786cf31614fe63
 
-*Source (verified):* `v2/docs/PANEL.md section 7`; `v2/ecad/tools/gen_sch_a.py:1112`; `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net (R102 pin 2 on GND)`
+*Bound to:* `v2/docs/PANEL.md@ee908df9e59b6349`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`
+
+*Source (verified):* `v2/docs/PANEL.md section 7`; `v2/ecad/tools/gen_sch_a.py:1253`; `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net (R102 pin 2 on GND)`
 
 **CON-010** (constraint). The PA's VGG is the EMCON gate of the APRS transmitter; D's KEY = PTT_ANY AND TX_INHIBIT_n.
 
@@ -1430,7 +1448,9 @@ Prototype 1: in the core D-01 names. 9 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read after pass 3 of stream r8docs (27 September 2026): three corrections from the independent check, section 4.4's ENABLE input now about 1.98 V with R6 in series (inside the buffer's undefined band, the row still OPEN), section 5a's RM520N-GL reaction time now about 2.0 s less 0.9 times the rail decay, and section 8 naming REQ-071 a sibling of REQ-030; none moves this reading, so it stands on the file at e57a54d1767bcd59
 
-*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@f13d8b70099ab03e`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@7b08510106687b3d`, `v2/docs/feasibility/EMCON.md@e57a54d1767bcd59`, `v2/docs/CURRENT-EVIDENCE.md@9c9bba12790d645a`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at board A's round 8 of 26 September 2026 (stream r8a) on the KiCad box with main's chain (main's own regeneration equal to main's committed file but for its header): compared component by component and net by net (pin, pinfunction, pintype) with an independent reader, it differs from 7b08510106687b3d only in U35 to U38 (SN74AUP1G08), R207, R208 and C215 to C223 added; U26's sections 1 and 2 moved to GND; the nets PA_TXOK, HF_TXOK, PA_UVLO and HF_UVLO added, with U13 and U15 pin 1 moved onto the last two; the values and codes of R58, R59, R124, R125 and R102; U1's code (C2657885), J_HEAT's and J_MAINSW's (C158012); and U26's value text: board A's PA_EN is now TX_INHIBIT_n AND EMCON_HW AND PA_SW_EN (U35 and U36, v2/ecad/tools/gen_sch_a.py:1240-1241), where the first reading cited U26 (EMCON_HW AND PA_SW_EN); board D's trace (U12, U14, U15, U13) is unchanged. v2/docs/feasibility/EMCON.md re-read at board A's round 8 of 26 September 2026 (stream r8a), integrated on the sixth revision (e57a54d1767bcd59) on 27 September 2026: board A's draft (drafts/a/EMCON-section-4a-board-a-round8.patch of fnd/r8a) was re-derived on that text. It adds section 4a (board A's PA and HF gates, local and end to end, their latency against section 5a) and a revision paragraph, a bullet to section 0, the round 8 text to rows 2 and 3 of section 0a (local CLOSED with the LM5176's unstated gate drive in shutdown as the residual; end to end still OPEN), sentences to section 2, rows 2 and 3 of the section 4 table, section 7's L2 and L4 rows and a new +3V3 overvoltage row, and section 8's board A bullet; sections 0a's counts, 1, 3, 4.1 to 4.18, 5, 5a, 6 and 9 are byte-identical; sections 4.1 and 4.2, which this reading cites for the SA868's open row and the PA's path (b), are byte-identical. The record's own reasons (the SA868's maker states no PTT threshold; RF-002's reading) are unchanged, so it stays INCONCLUSIVE
+
+*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@f13d8b70099ab03e`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/docs/feasibility/EMCON.md@284d160801877192`, `v2/docs/CURRENT-EVIDENCE.md@9c9bba12790d645a`
 
 *Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2825`; `v2/docs/PANEL.md section 6`; `v2/docs/feasibility/EMCON.md sections 4.1 and 4.2`
 
@@ -1448,7 +1468,9 @@ Prototype 1: in the core D-01 names. 9 record(s).
 
 *Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read after pass 3 of stream r8docs (27 September 2026): three corrections from the independent check, section 4.4's ENABLE input now about 1.98 V with R6 in series (inside the buffer's undefined band, the row still OPEN), section 5a's RM520N-GL reaction time now about 2.0 s less 0.9 times the rail decay, and section 8 naming REQ-071 a sibling of REQ-030; none moves this reading, so it stands on the file at e57a54d1767bcd59
 
-*Bound to:* `v2/docs/feasibility/EMCON.md@e57a54d1767bcd59`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@2834f0d8c4071d56`
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read at board A's round 8 of 26 September 2026 (stream r8a), integrated on the sixth revision (e57a54d1767bcd59) on 27 September 2026: board A's draft (drafts/a/EMCON-section-4a-board-a-round8.patch of fnd/r8a) was re-derived on that text. It adds section 4a (board A's PA and HF gates, local and end to end, their latency against section 5a) and a revision paragraph, a bullet to section 0, the round 8 text to rows 2 and 3 of section 0a (local CLOSED with the LM5176's unstated gate drive in shutdown as the residual; end to end still OPEN), sentences to section 2, rows 2 and 3 of the section 4 table, section 7's L2 and L4 rows and a new +3V3 overvoltage row, and section 8's board A bullet; sections 0a's counts, 1, 3, 4.1 to 4.18, 5, 5a, 6 and 9 are byte-identical; no EMCON lamp is drawn on board C and SD-EMC-6 is unchanged, so the record stays FAIL
+
+*Bound to:* `v2/docs/feasibility/EMCON.md@284d160801877192`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@2834f0d8c4071d56`
 
 *Source (verified):* `v2/docs/feasibility/EMCON.md section 7 (the common element)`; `session choice SC-11`
 
@@ -1468,7 +1490,9 @@ Prototype 1: in the core D-01 names. 9 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read after pass 3 of stream r8docs (27 September 2026): three corrections from the independent check, section 4.4's ENABLE input now about 1.98 V with R6 in series (inside the buffer's undefined band, the row still OPEN), section 5a's RM520N-GL reaction time now about 2.0 s less 0.9 times the rail decay, and section 8 naming REQ-071 a sibling of REQ-030; none moves this reading, so it stands on the file at e57a54d1767bcd59
 
-*Bound to:* `v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b`, `v2/docs/feasibility/EMCON.md@e57a54d1767bcd59`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read at board A's round 8 of 26 September 2026 (stream r8a), integrated on the sixth revision (e57a54d1767bcd59) on 27 September 2026: board A's draft (drafts/a/EMCON-section-4a-board-a-round8.patch of fnd/r8a) was re-derived on that text. It adds section 4a (board A's PA and HF gates, local and end to end, their latency against section 5a) and a revision paragraph, a bullet to section 0, the round 8 text to rows 2 and 3 of section 0a (local CLOSED with the LM5176's unstated gate drive in shutdown as the residual; end to end still OPEN), sentences to section 2, rows 2 and 3 of the section 4 table, section 7's L2 and L4 rows and a new +3V3 overvoltage row, and section 8's board A bullet; sections 0a's counts, 1, 3, 4.1 to 4.18, 5, 5a, 6 and 9 are byte-identical; the verdict of sections 0 and 7 (feasible with two conditions and the sixth revision's third question, no row closed end to end or on the bench) is unchanged; board A's two rows close at desk locally with the LM5176's unstated shutdown gate drive as their residual and read UNDECIDED end to end in RF-002's walk, so the record stays INCONCLUSIVE
+
+*Bound to:* `v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b`, `v2/docs/feasibility/EMCON.md@284d160801877192`
 
 *Feasibility page:* `v2/docs/feasibility/EMCON.md`, blocker ids SD-EMC-1, SD-EMC-2, SD-EMC-6, SD-EMC-7, E-04, E-05, E-07, E-12; *owner:* Board B's author (SD-EMC-1, L2, L3, L4, L7), boards A, C and D's authors for their gates, the tools author for RF-002's instrument (L6), and the TEST-PLAN owner for the bench rows and the silence latency.; *holds:* REQ-030, REQ-032, REQ-071, CON-021; layout entry of A, B, C, D.
 
@@ -1762,9 +1786,11 @@ Prototype 1: in the core D-01 names. 10 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at the clamp-symbol merge of 26 September 2026: compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent checker, it differs only in D1 to D4's symbol (Device:D_TVS to Device:D_Zener) and pin names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 7b08510106687b3d
 
-*Bound to:* `v2/ecad/tools/gen_sch_a.py@7f6c34697753bac1`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@7b08510106687b3d`, `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@f13d8b70099ab03e`
+*Evidence (PASS, DESK_REVIEW):* v2/ecad/tools/gen_sch_a.py re-read at board A's round 8 of 26 September 2026 (stream r8a): it adds the PA and HF rails' EMCON gates U35 to U38 with their pulls, capacitors and the stages' EN/UVLO dividers, decision 42's classes with four VIN-pin capacitors and U12's 0.1 uF, R102 10 k 1%, U1's and J_HEAT's and J_MAINSW's codes, and comments; the lines it inserts move every later line; and v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at board A's round 8 of 26 September 2026 (stream r8a) on the KiCad box with main's chain (main's own regeneration equal to main's committed file but for its header): compared component by component and net by net (pin, pinfunction, pintype) with an independent reader, it differs from 7b08510106687b3d only in U35 to U38 (SN74AUP1G08), R207, R208 and C215 to C223 added; U26's sections 1 and 2 moved to GND; the nets PA_TXOK, HF_TXOK, PA_UVLO and HF_UVLO added, with U13 and U15 pin 1 moved onto the last two; the values and codes of R58, R59, R124, R125 and R102; U1's code (C2657885), J_HEAT's and J_MAINSW's (C158012); and U26's value text. The interlock this reading cites is unchanged pin for pin: U30 gives OUTLET_OK = NOT (TR_APRS AND PA_EN) and U26's sections 3 and 4 give POE_EN and PD_EN (now v2/ecad/tools/gen_sch_a.py:1237-1245); PA_EN is now U36's output (TX_INHIBIT_n AND EMCON_HW AND PA_SW_EN, :1240-1241) and still reaches U30 pin 2 and board D's U14, so the outlets still drop whenever PTT and PA_EN are both high, with no processor in the path, and the reading stands on the files at 5a97fed72c42b79d and 3a786cf31614fe63
 
-*Source (verified):* `owner ruling D-11`; `v2/docs/MESHSAT-709-geometry-appendix.md:2932`; `v2/ecad/tools/gen_sch_a.py:1088-1104`
+*Bound to:* `v2/ecad/tools/gen_sch_a.py@5a97fed72c42b79d`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@f13d8b70099ab03e`
+
+*Source (verified):* `owner ruling D-11`; `v2/docs/MESHSAT-709-geometry-appendix.md:2932`; `v2/ecad/tools/gen_sch_a.py:1177-1190, 1237-1245`
 
 *Notes:* Created by the integrator from D-11. Its parent is NEED-13 because the interlock is what keeps the all-transmit peak inside the fuse and gauge limits D-11 bounds it by; appendix 32.55 already asked for the drop. The interlock acts on OUTLET_OK whenever PTT and PA_EN are both high, a superset of the PA keying: it drops the outlets for every PA key-down.
 
@@ -1882,7 +1908,9 @@ Prototype 1: in the core D-01 names. 10 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/ecad/tools/check_contracts.py re-read at the tools stream's recording merge of 26 September 2026: the change records each board's netlist it reads by sha (the artefact binding) and touches no line of the J_SMB contract, its W_N return or its clamp check, so this reading stands on the file at 304cad5fa2886a73
 
-*Bound to:* `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d910e49c5f5f50b2`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@4342c4cbe1b43dc4`, `v2/docs/ASSEMBLY.md@e4a0b78616c69779`, `v2/docs/PANEL.md@b1cde9f7ff1ada7b`, `v2/ecad/tools/check_contracts.py@304cad5fa2886a73`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read at board A's round 8 of 26 September 2026 (stream r8a) with the stream's draft applied (drafts/a/PANEL-section-6-board-a-round8.patch): only section 6's TX_INHIBIT_n and EMCON_HW rows change, each gaining board A's round 8 sentence (R102 10k 1%, U35 and U37 reading both lines); section 10's SMBus sentences are byte-identical. v2/ecad/tools/check_contracts.py re-read with the stream's draft (drafts/a/check_contracts-inhibit-readers.patch): only contract 13 changes (a gate input on TX_INHIBIT_n or EMCON_HW is read by its maker's pin table); the J_SMB contract, its W_N return and its clamp check are byte-identical. So the reading stands on the files at ee908df9e59b6349 and 308fdefb90335da4
+
+*Bound to:* `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d910e49c5f5f50b2`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@4342c4cbe1b43dc4`, `v2/docs/ASSEMBLY.md@e4a0b78616c69779`, `v2/docs/PANEL.md@ee908df9e59b6349`, `v2/ecad/tools/check_contracts.py@308fdefb90335da4`
 
 *Source (verified):* `v2/ecad/tools/gen_sch_e.py:218`; `v2/docs/ASSEMBLY.md section 4`; `v2/docs/PANEL.md section 10`
 
@@ -1904,7 +1932,9 @@ Prototype 1: in the core D-01 names. 10 record(s).
 
 *Evidence (FAIL, DESK_REVIEW):* v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at the clamp-symbol merge of 26 September 2026: compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent checker, it differs only in D1, D2, D101, D201, D301 and D520's symbol (Device:D_TVS to Device:D_Zener) and pin names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 669d02d07aeaae4b
 
-*Bound to:* `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@7b08510106687b3d`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@2834f0d8c4071d56`, `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@f13d8b70099ab03e`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d910e49c5f5f50b2`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@4342c4cbe1b43dc4`
+*Evidence (FAIL, DESK_REVIEW):* v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at board A's round 8 of 26 September 2026 (stream r8a) on the KiCad box with main's chain (main's own regeneration equal to main's committed file but for its header): compared component by component and net by net (pin, pinfunction, pintype) with an independent reader, it differs from 7b08510106687b3d only in U35 to U38 (SN74AUP1G08), R207, R208 and C215 to C223 added; U26's sections 1 and 2 moved to GND; the nets PA_TXOK, HF_TXOK, PA_UVLO and HF_UVLO added, with U13 and U15 pin 1 moved onto the last two; the values and codes of R58, R59, R124, R125 and R102; U1's code (C2657885), J_HEAT's and J_MAINSW's (C158012); and U26's value text: board A's four one-way clamps D1 to D4 are unchanged in part, symbol, pins and nets, and no rectifier was added, so the clamp clauses hold as before and the record stays FAIL on the rectifier clause
+
+*Bound to:* `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@2834f0d8c4071d56`, `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@f13d8b70099ab03e`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d910e49c5f5f50b2`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@4342c4cbe1b43dc4`
 
 *Source (verified):* `v2/ecad/tools/gen_sch_e.py:303`; `v2/ecad/tools/gen_sch_p.py:344`; `v2/ecad/tools/gen_sch_d.py:261-263`; `v2/ecad/tools/gen_sch_c.py:258-264`
 
@@ -1949,7 +1979,7 @@ Prototype 1: in the core D-01 names. 4 record(s).
 
 *allocated to a, b, sw; rulings D-12.*
 
-*Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2786 (item 2)`; `owner ruling D-12`; `v2/ecad/tools/gen_sch_a.py:1151-1167`
+*Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2786 (item 2)`; `owner ruling D-12`; `v2/ecad/tools/gen_sch_a.py:1293-1309`
 
 *Notes:* Round-3 fix-up: the record said the USB-C doubles as the console; D-12 moves the console and key fill to the Glenair.
 
@@ -2019,7 +2049,9 @@ Prototype 1: not in the core. 7 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/ecad/tools/pcb_decisions.yaml re-read at the clamp-symbol merge of 26 September 2026: the only change is an `executed:` record added to decision 31 (28 lines after line 309); decisions 28 and 40, which this reading cites, are byte-identical, so it stands on the file at 1367edbf54a842d3
 
-*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@f13d8b70099ab03e`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d910e49c5f5f50b2`, `v2/docs/PANEL.md@b1cde9f7ff1ada7b`, `v2/docs/CONOPS.md@b9080983ccc03a84`, `v2/docs/V2-SPEC.md@df8ac22603440bc5`, `v2/docs/OPERATING-ENVELOPE.md@89de81a11c52f34a`, `v2/docs/TEST-PLAN.md@e7a90ba054150bb7`, `v2/ecad/tools/pcb_decisions.yaml@1367edbf54a842d3`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@7b08510106687b3d`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@2834f0d8c4071d56`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@4342c4cbe1b43dc4`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read at board A's round 8 of 26 September 2026 (stream r8a) with the stream's draft applied (drafts/a/PANEL-section-6-board-a-round8.patch): only section 6's TX_INHIBIT_n and EMCON_HW rows change, each gaining board A's round 8 sentence (R102 10k 1%, U35 and U37 reading both lines); they describe board A's round 8 gates as generated, which is this record's acceptance, and every other sentence the record rests on is byte-identical. v2/docs/CONOPS.md re-read at board A's round 8 of 26 September 2026 (stream r8a) with the stream's draft applied (drafts/a/CONOPS-4b-board-a-round8.patch): only section 4b's SA868-with-PA and QMX rows change, each gaining board A's round 8 gates (U35 to U38) beside the 45bde541 text; they too describe the round 8 gates, and sections 4 and 5 are byte-identical. v2/ecad/tools/pcb_decisions.yaml re-read with the stream's draft (drafts/a/pcb_decisions-31-executed-round8.patch): decision 31's executed record gains five lines on J_USBC_OUT's CC pins answered by U31; decisions 28 and 40 are byte-identical. And v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at board A's round 8 of 26 September 2026 (stream r8a) on the KiCad box with main's chain (main's own regeneration equal to main's committed file but for its header): compared component by component and net by net (pin, pinfunction, pintype) with an independent reader, it differs from 7b08510106687b3d only in U35 to U38 (SN74AUP1G08), R207, R208 and C215 to C223 added; U26's sections 1 and 2 moved to GND; the nets PA_TXOK, HF_TXOK, PA_UVLO and HF_UVLO added, with U13 and U15 pin 1 moved onto the last two; the values and codes of R58, R59, R124, R125 and R102; U1's code (C2657885), J_HEAT's and J_MAINSW's (C158012); and U26's value text. So the reading stands on the files at ee908df9e59b6349, b5f7162443d5ad91, 3a786cf31614fe63 and 49119f89f2d98920
+
+*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@f13d8b70099ab03e`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d910e49c5f5f50b2`, `v2/docs/PANEL.md@ee908df9e59b6349`, `v2/docs/CONOPS.md@49119f89f2d98920`, `v2/docs/V2-SPEC.md@df8ac22603440bc5`, `v2/docs/OPERATING-ENVELOPE.md@89de81a11c52f34a`, `v2/docs/TEST-PLAN.md@e7a90ba054150bb7`, `v2/ecad/tools/pcb_decisions.yaml@b5f7162443d5ad91`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@2834f0d8c4071d56`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@4342c4cbe1b43dc4`
 
 *Source (verified):* `v2/docs/PANEL.md section 6`; `v2/docs/CONOPS.md section 4b`; `v2/docs/V2-SPEC.md:76`; `v2/docs/OPERATING-ENVELOPE.md section 4`; `v2/docs/TEST-PLAN.md:46`; `v2/ecad/tools/pcb_decisions.yaml:863-915`
 
@@ -2242,9 +2274,11 @@ Prototype 1: not in the core. 3 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at the clamp-symbol merge of 26 September 2026: compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent checker, it differs only in D1 to D4's symbol (Device:D_TVS to Device:D_Zener) and pin names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 7b08510106687b3d
 
-*Bound to:* `v2/ecad/tools/gen_sch_a.py@7f6c34697753bac1`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@7b08510106687b3d`, `v2/docs/TEST-PLAN.md@e7a90ba054150bb7`
+*Evidence (PASS, DESK_REVIEW):* v2/ecad/tools/gen_sch_a.py re-read at board A's round 8 of 26 September 2026 (stream r8a): it adds the PA and HF rails' EMCON gates U35 to U38 with their pulls, capacitors and the stages' EN/UVLO dividers, decision 42's classes with four VIN-pin capacitors and U12's 0.1 uF, R102 10 k 1%, U1's and J_HEAT's and J_MAINSW's codes, and comments; the lines it inserts move every later line; and v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated at board A's round 8 of 26 September 2026 (stream r8a) on the KiCad box with main's chain (main's own regeneration equal to main's committed file but for its header): compared component by component and net by net (pin, pinfunction, pintype) with an independent reader, it differs from 7b08510106687b3d only in U35 to U38 (SN74AUP1G08), R207, R208 and C215 to C223 added; U26's sections 1 and 2 moved to GND; the nets PA_TXOK, HF_TXOK, PA_UVLO and HF_UVLO added, with U13 and U15 pin 1 moved onto the last two; the values and codes of R58, R59, R124, R125 and R102; U1's code (C2657885), J_HEAT's and J_MAINSW's (C158012); and U26's value text. U31 and its lines are unchanged (now v2/ecad/tools/gen_sch_a.py:1104-1114), and since round 8 port_protect judges it: boards/a.json no longer declares J_USBC_OUT's CC pins protected inside U18, so the reading of TRN-001 answers PD_CC1 and PD_CC2 by U31 (PASS of 26, 0 answered in part); the reading stands on the files at 5a97fed72c42b79d and 3a786cf31614fe63
 
-*Source (verified):* `owner ruling D-17`; `v2/ecad/tools/gen_sch_a.py:1016-1026`; `v2/ecad/tools/pcb_decisions.yaml:256-396 (decision 31)`
+*Bound to:* `v2/ecad/tools/gen_sch_a.py@5a97fed72c42b79d`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/docs/TEST-PLAN.md@e7a90ba054150bb7`
+
+*Source (verified):* `owner ruling D-17`; `v2/ecad/tools/gen_sch_a.py:1104-1114`; `v2/ecad/tools/pcb_decisions.yaml:256-429 (decision 31)`
 
 *Notes:* Created by the integrator from D-17. Deferred because NEED-18 is outside prototype 1's core; the array is fitted all the same (D-01: designed and fitted where copper exists).
 

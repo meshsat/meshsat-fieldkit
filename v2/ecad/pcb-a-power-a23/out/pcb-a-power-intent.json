@@ -1,336 +1,470 @@
 {
  "board": "pcb-a-power",
- "written": "2026-09-26 18:58",
+ "written": "2026-09-26 21:59",
  "bypass": [
   {
    "cap": "C8",
    "part": "U2",
    "pin": "23",
-   "net": "FE_VCC"
+   "net": "FE_VCC",
+   "class": "L",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the VCC bypass capacitor close to the controller IC, between the VCC and PGND pins'; 7.3.2 p.15: 'A ceramic capacitor of 16 V or higher voltage rating and a value between 1 uF and 4.7 uF is required'",
+   "value_floor": "1u",
+   "value_ceiling": "4.7u",
+   "esr_bound": null
   },
   {
    "cap": "C192",
    "part": "U2",
    "pin": "24",
-   "net": "VBUS20"
+   "net": "VBUS20",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the BIAS bypass capacitor close to the controller IC, between the BIAS and PGND pins. A 0.1-uF ceramic capacitor is typically used'"
   },
   {
    "cap": "C123",
    "part": "U2",
    "pin": "16",
-   "net": "FE_CSF"
+   "net": "FE_CSF",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the filter capacitor for the current sense signal as close to the IC pins as possible'"
   },
   {
    "cap": "C128",
    "part": "U2",
    "pin": "14",
-   "net": "FE_ISNS_P"
+   "net": "FE_ISNS_P",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the average current loop filter capacitor close to the IC between the ISNS(+) and ISNS(-) pins'"
   },
   {
    "cap": "C207",
    "part": "U2",
    "pin": "2",
-   "net": "FE_VINP"
+   "net": "FE_VINP",
+   "class": "D",
+   "basis": "TI SNVSAI1D (LM5176) 10.1 p.30: 'Bypass the VIN pin to AGND with a low ESR ceramic capacitor located close to the controller IC. A 0.1-uF ceramic capacitor is typically used'"
   },
   {
    "cap": "C210",
    "part": "U34",
    "pin": "1",
-   "net": "FE_GVDD"
+   "net": "FE_GVDD",
+   "class": "D",
+   "basis": "TI SNVSBJ1E (TPS37A) pin table: VDD 'Input Supply Voltage: Bypass with a 0.1 uF capacitor to GND' (the sheet is r4a's drafts/datasheets/ti-tps37.pdf, sha256 d6aed9d9, not yet filed under v2/vendor); the fitted 1 uF behind R196 is also VDD's filter"
   },
   {
    "cap": "C29",
    "part": "U4",
    "pin": "2",
-   "net": "VBAT"
+   "net": "VBAT",
+   "class": "R",
+   "basis": "Diodes DS41979 Rev 5-2 (AP64500), Layout item 2 p.23: 'Place the input capacitors as closely across VIN and GND as possible'"
   },
   {
    "cap": "C30",
    "part": "U4",
    "pin": "2",
-   "net": "VBAT"
+   "net": "VBAT",
+   "class": "R",
+   "basis": "Diodes DS41979 Rev 5-2 (AP64500), Layout item 2 p.23: 'Place the input capacitors as closely across VIN and GND as possible'"
   },
   {
    "cap": "C41",
    "part": "U6",
    "pin": "2",
-   "net": "VBAT"
+   "net": "VBAT",
+   "class": "R",
+   "basis": "Diodes DS41979 Rev 5-2 (AP64500), Layout item 2 p.23: 'Place the input capacitors as closely across VIN and GND as possible'"
   },
   {
    "cap": "C42",
    "part": "U6",
    "pin": "2",
-   "net": "VBAT"
+   "net": "VBAT",
+   "class": "R",
+   "basis": "Diodes DS41979 Rev 5-2 (AP64500), Layout item 2 p.23: 'Place the input capacitors as closely across VIN and GND as possible'"
   },
   {
    "cap": "C136",
    "part": "U5",
    "pin": "23",
-   "net": "S2_VCC"
+   "net": "S2_VCC",
+   "class": "L",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the VCC bypass capacitor close to the controller IC, between the VCC and PGND pins'; 7.3.2 p.15: 'A ceramic capacitor of 16 V or higher voltage rating and a value between 1 uF and 4.7 uF is required'",
+   "value_floor": "1u",
+   "value_ceiling": "4.7u",
+   "esr_bound": null
   },
   {
    "cap": "C193",
    "part": "U5",
    "pin": "24",
-   "net": "VBAT"
+   "net": "VBAT",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the BIAS bypass capacitor close to the controller IC, between the BIAS and PGND pins. A 0.1-uF ceramic capacitor is typically used'"
   },
   {
    "cap": "C138",
    "part": "U5",
    "pin": "16",
-   "net": "S2_CSF"
+   "net": "S2_CSF",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the filter capacitor for the current sense signal as close to the IC pins as possible'"
   },
   {
    "cap": "C139",
    "part": "U5",
    "pin": "14",
-   "net": "S2_ISNS_P"
+   "net": "S2_ISNS_P",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the average current loop filter capacitor close to the IC between the ISNS(+) and ISNS(-) pins'"
   },
   {
-   "cap": "C35",
+   "cap": "C219",
    "part": "U5",
    "pin": "2",
-   "net": "VBAT"
-  },
-  {
-   "cap": "C36",
-   "part": "U5",
-   "pin": "3",
-   "net": "VBAT"
+   "net": "VBAT",
+   "class": "D",
+   "basis": "TI SNVSAI1D (LM5176) 10.1 p.30: 'Bypass the VIN pin to AGND with a low ESR ceramic capacitor located close to the controller IC. A 0.1-uF ceramic capacitor is typically used'"
   },
   {
    "cap": "C143",
    "part": "U7",
    "pin": "23",
-   "net": "SD_VCC"
+   "net": "SD_VCC",
+   "class": "L",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the VCC bypass capacitor close to the controller IC, between the VCC and PGND pins'; 7.3.2 p.15: 'A ceramic capacitor of 16 V or higher voltage rating and a value between 1 uF and 4.7 uF is required'",
+   "value_floor": "1u",
+   "value_ceiling": "4.7u",
+   "esr_bound": null
   },
   {
    "cap": "C194",
    "part": "U7",
    "pin": "24",
-   "net": "VBAT"
+   "net": "VBAT",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the BIAS bypass capacitor close to the controller IC, between the BIAS and PGND pins. A 0.1-uF ceramic capacitor is typically used'"
   },
   {
    "cap": "C145",
    "part": "U7",
    "pin": "16",
-   "net": "SD_CSF"
+   "net": "SD_CSF",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the filter capacitor for the current sense signal as close to the IC pins as possible'"
   },
   {
    "cap": "C146",
    "part": "U7",
    "pin": "14",
-   "net": "SD_ISNS_P"
+   "net": "SD_ISNS_P",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the average current loop filter capacitor close to the IC between the ISNS(+) and ISNS(-) pins'"
   },
   {
-   "cap": "C47",
+   "cap": "C220",
    "part": "U7",
    "pin": "2",
-   "net": "VBAT"
-  },
-  {
-   "cap": "C48",
-   "part": "U7",
-   "pin": "3",
-   "net": "VBAT"
+   "net": "VBAT",
+   "class": "D",
+   "basis": "TI SNVSAI1D (LM5176) 10.1 p.30: 'Bypass the VIN pin to AGND with a low ESR ceramic capacitor located close to the controller IC. A 0.1-uF ceramic capacitor is typically used'"
   },
   {
    "cap": "C60",
    "part": "U13",
    "pin": "23",
-   "net": "PA_VCC"
+   "net": "PA_VCC",
+   "class": "L",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the VCC bypass capacitor close to the controller IC, between the VCC and PGND pins'; 7.3.2 p.15: 'A ceramic capacitor of 16 V or higher voltage rating and a value between 1 uF and 4.7 uF is required'",
+   "value_floor": "1u",
+   "value_ceiling": "4.7u",
+   "esr_bound": null
   },
   {
    "cap": "C195",
    "part": "U13",
    "pin": "24",
-   "net": "+13V8_PA"
+   "net": "+13V8_PA",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the BIAS bypass capacitor close to the controller IC, between the BIAS and PGND pins. A 0.1-uF ceramic capacitor is typically used'"
   },
   {
    "cap": "C124",
    "part": "U13",
    "pin": "16",
-   "net": "PA_CSF"
+   "net": "PA_CSF",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the filter capacitor for the current sense signal as close to the IC pins as possible'"
   },
   {
    "cap": "C129",
    "part": "U13",
    "pin": "14",
-   "net": "PA_ISNS_P"
+   "net": "PA_ISNS_P",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the average current loop filter capacitor close to the IC between the ISNS(+) and ISNS(-) pins'"
   },
   {
    "cap": "C208",
    "part": "U13",
    "pin": "2",
-   "net": "PA_VINP"
-  },
-  {
-   "cap": "C64",
-   "part": "U13",
-   "pin": "3",
-   "net": "VBAT"
+   "net": "PA_VINP",
+   "class": "D",
+   "basis": "TI SNVSAI1D (LM5176) 10.1 p.30: 'Bypass the VIN pin to AGND with a low ESR ceramic capacitor located close to the controller IC. A 0.1-uF ceramic capacitor is typically used'"
   },
   {
    "cap": "C71",
    "part": "U15",
    "pin": "23",
-   "net": "HF_VCC"
+   "net": "HF_VCC",
+   "class": "L",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the VCC bypass capacitor close to the controller IC, between the VCC and PGND pins'; 7.3.2 p.15: 'A ceramic capacitor of 16 V or higher voltage rating and a value between 1 uF and 4.7 uF is required'",
+   "value_floor": "1u",
+   "value_ceiling": "4.7u",
+   "esr_bound": null
   },
   {
    "cap": "C196",
    "part": "U15",
    "pin": "24",
-   "net": "+12V_HF"
+   "net": "+12V_HF",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the BIAS bypass capacitor close to the controller IC, between the BIAS and PGND pins. A 0.1-uF ceramic capacitor is typically used'"
   },
   {
    "cap": "C125",
    "part": "U15",
    "pin": "16",
-   "net": "HF_CSF"
+   "net": "HF_CSF",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the filter capacitor for the current sense signal as close to the IC pins as possible'"
   },
   {
    "cap": "C130",
    "part": "U15",
    "pin": "14",
-   "net": "HF_ISNS_P"
+   "net": "HF_ISNS_P",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the average current loop filter capacitor close to the IC between the ISNS(+) and ISNS(-) pins'"
   },
   {
    "cap": "C209",
    "part": "U15",
    "pin": "2",
-   "net": "HF_VINP"
-  },
-  {
-   "cap": "C108",
-   "part": "U15",
-   "pin": "3",
-   "net": "VBAT"
+   "net": "HF_VINP",
+   "class": "D",
+   "basis": "TI SNVSAI1D (LM5176) 10.1 p.30: 'Bypass the VIN pin to AGND with a low ESR ceramic capacitor located close to the controller IC. A 0.1-uF ceramic capacitor is typically used'"
   },
   {
    "cap": "C78",
    "part": "U16",
    "pin": "23",
-   "net": "POE_VCC"
+   "net": "POE_VCC",
+   "class": "L",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the VCC bypass capacitor close to the controller IC, between the VCC and PGND pins'; 7.3.2 p.15: 'A ceramic capacitor of 16 V or higher voltage rating and a value between 1 uF and 4.7 uF is required'",
+   "value_floor": "1u",
+   "value_ceiling": "4.7u",
+   "esr_bound": null
   },
   {
    "cap": "C197",
    "part": "U16",
    "pin": "24",
-   "net": "VBAT"
+   "net": "VBAT",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the BIAS bypass capacitor close to the controller IC, between the BIAS and PGND pins. A 0.1-uF ceramic capacitor is typically used'"
   },
   {
    "cap": "C126",
    "part": "U16",
    "pin": "16",
-   "net": "POE_CSF"
+   "net": "POE_CSF",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the filter capacitor for the current sense signal as close to the IC pins as possible'"
   },
   {
    "cap": "C131",
    "part": "U16",
    "pin": "14",
-   "net": "POE_ISNS_P"
+   "net": "POE_ISNS_P",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the average current loop filter capacitor close to the IC between the ISNS(+) and ISNS(-) pins'"
   },
   {
-   "cap": "C81",
+   "cap": "C221",
    "part": "U16",
    "pin": "2",
-   "net": "VBAT"
-  },
-  {
-   "cap": "C82",
-   "part": "U16",
-   "pin": "3",
-   "net": "VBAT"
+   "net": "VBAT",
+   "class": "D",
+   "basis": "TI SNVSAI1D (LM5176) 10.1 p.30: 'Bypass the VIN pin to AGND with a low ESR ceramic capacitor located close to the controller IC. A 0.1-uF ceramic capacitor is typically used'"
   },
   {
    "cap": "C89",
    "part": "U19",
    "pin": "23",
-   "net": "PD_VCC"
+   "net": "PD_VCC",
+   "class": "L",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the VCC bypass capacitor close to the controller IC, between the VCC and PGND pins'; 7.3.2 p.15: 'A ceramic capacitor of 16 V or higher voltage rating and a value between 1 uF and 4.7 uF is required'",
+   "value_floor": "1u",
+   "value_ceiling": "4.7u",
+   "esr_bound": null
   },
   {
    "cap": "C198",
    "part": "U19",
    "pin": "24",
-   "net": "VBAT"
+   "net": "VBAT",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the BIAS bypass capacitor close to the controller IC, between the BIAS and PGND pins. A 0.1-uF ceramic capacitor is typically used'"
   },
   {
    "cap": "C127",
    "part": "U19",
    "pin": "16",
-   "net": "PD_CSF"
+   "net": "PD_CSF",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the filter capacitor for the current sense signal as close to the IC pins as possible'"
   },
   {
    "cap": "C132",
    "part": "U19",
    "pin": "14",
-   "net": "PD_ISNS_P"
+   "net": "PD_ISNS_P",
+   "class": "D",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the average current loop filter capacitor close to the IC between the ISNS(+) and ISNS(-) pins'"
   },
   {
-   "cap": "C92",
+   "cap": "C222",
    "part": "U19",
    "pin": "2",
-   "net": "VBAT"
-  },
-  {
-   "cap": "C116",
-   "part": "U19",
-   "pin": "3",
-   "net": "VBAT"
+   "net": "VBAT",
+   "class": "D",
+   "basis": "TI SNVSAI1D (LM5176) 10.1 p.30: 'Bypass the VIN pin to AGND with a low ESR ceramic capacitor located close to the controller IC. A 0.1-uF ceramic capacitor is typically used'"
   },
   {
    "cap": "C159",
    "part": "U33",
    "pin": "3",
-   "net": "VHEAT_IN"
+   "net": "VHEAT_IN",
+   "class": "R",
+   "basis": "TI SLUSEA4D (TPS62933) 12.1 p.40: 'the most critical PCB feature is the loop formed by the input capacitors and power ground'; 'Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins'"
+  },
+  {
+   "cap": "C160",
+   "part": "U33",
+   "pin": "3",
+   "net": "VHEAT_IN",
+   "class": "R",
+   "basis": "TI SLUSEA4D (TPS62933) 12.1 p.40: 'the most critical PCB feature is the loop formed by the input capacitors and power ground'; 'Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins'"
   },
   {
    "cap": "C4",
    "part": "U1",
    "pin": "1",
-   "net": "VBAT"
+   "net": "VBAT",
+   "class": "D",
+   "basis": "ADI 2954fb (LTC2954) pin functions p.6: 'VIN: Power Supply Input: 2.7V to 26.4V'; the sheet states no capacitor, class D by role, the generator's own 1 uF (decision 42 D1)"
   },
   {
    "cap": "C19",
    "part": "U3",
    "pin": "7",
-   "net": "CH_VDDA"
+   "net": "CH_VDDA",
+   "class": "A",
+   "basis": "TI SLUSE66A (BQ25731) pin table p.7: VDDA 'Internal reference bias pin. Connect a 10-Ohm resistor from REGN to VDDA and a 1-uF ceramic capacitor from VDDA to power ground' (R18 and C19: the RC the maker draws)"
   },
   {
    "cap": "C54",
    "part": "U12",
    "pin": "3",
-   "net": "VBAT"
+   "net": "VBAT",
+   "class": "R",
+   "basis": "TI SLUSEA4D (TPS62933) 12.1 p.40: 'the most critical PCB feature is the loop formed by the input capacitors and power ground'; 'Place the inductor, input and output capacitors, and the IC on the same layer'"
   },
   {
    "cap": "C94",
    "part": "U18",
-   "pin": "5",
-   "net": "PD_DVDD"
+   "pin": "13",
+   "net": "PD_DVDD",
+   "class": "L",
+   "basis": "TI SLVSDG8B (TPS25740A) pin table p.5: DVDD 'Internally regulated 1.85 V rail ... Connect this pin to GND via the recommended bypass capacitor'; p.7: C(DVDD) 0.198 / 0.22 / 0.242 uF",
+   "value_floor": "198n",
+   "value_ceiling": "242n",
+   "esr_bound": null
   },
   {
    "cap": "C104",
    "part": "U26",
    "pin": "14",
-   "net": "+3V3"
+   "net": "+3V3",
+   "class": "D",
+   "basis": "TI SCAS283W (SN74LVC08A): the maker's sheet ties no value or distance to VCC; class D by role (a supply pin's own decoupling), the generator's own 100 nF (decision 42 D1)"
   },
   {
    "cap": "C106",
    "part": "U27",
    "pin": "24",
-   "net": "+3V3"
+   "net": "+3V3",
+   "class": "D",
+   "basis": "TI SCPS131J (PCA9555): the maker's sheet ties no value or distance to VCC; class D by role (a supply pin's own decoupling), the generator's own 100 nF (decision 42 D1)"
   },
   {
    "cap": "C107",
    "part": "U28",
    "pin": "24",
-   "net": "+3V3"
+   "net": "+3V3",
+   "class": "D",
+   "basis": "TI SCPS131J (PCA9555): the maker's sheet ties no value or distance to VCC; class D by role (a supply pin's own decoupling), the generator's own 100 nF (decision 42 D1)"
   },
   {
    "cap": "C153",
    "part": "U30",
    "pin": "5",
-   "net": "+3V3"
+   "net": "+3V3",
+   "class": "D",
+   "basis": "TI SCES212AC (SN74LVC1G00): the maker's sheet ties no value or distance to VCC; class D by role (a supply pin's own decoupling), the generator's own 100 nF (decision 42 D1)"
+  },
+  {
+   "cap": "C215",
+   "part": "U35",
+   "pin": "5",
+   "net": "+3V3",
+   "class": "D",
+   "basis": "TI SCES502Q (SN74AUP1G08) 9 p.14: 'For devices with a single supply, 0.1 uF is recommended ... The bypass capacitor should be installed as close to the power terminal as possible'"
+  },
+  {
+   "cap": "C216",
+   "part": "U36",
+   "pin": "5",
+   "net": "+3V3",
+   "class": "D",
+   "basis": "TI SCES502Q (SN74AUP1G08) 9 p.14: 'For devices with a single supply, 0.1 uF is recommended ... The bypass capacitor should be installed as close to the power terminal as possible'"
+  },
+  {
+   "cap": "C217",
+   "part": "U37",
+   "pin": "5",
+   "net": "+3V3",
+   "class": "D",
+   "basis": "TI SCES502Q (SN74AUP1G08) 9 p.14: 'For devices with a single supply, 0.1 uF is recommended ... The bypass capacitor should be installed as close to the power terminal as possible'"
+  },
+  {
+   "cap": "C218",
+   "part": "U38",
+   "pin": "5",
+   "net": "+3V3",
+   "class": "D",
+   "basis": "TI SCES502Q (SN74AUP1G08) 9 p.14: 'For devices with a single supply, 0.1 uF is recommended ... The bypass capacitor should be installed as close to the power terminal as possible'"
+  },
+  {
+   "cap": "C223",
+   "part": "U12",
+   "pin": "3",
+   "net": "VBAT",
+   "class": "R",
+   "basis": "TI SLUSEA4D (TPS62933) 12.1 p.40: 'Place a 0.1-uF ceramic decoupling capacitor or capacitors as close as possible to VIN and GND pins, which is key to EMI reduction' (round 8, G2)"
   }
  ],
  "rails": {
@@ -509,8 +643,9 @@
    "loads": {
     "J_PA": 6.0
    },
-   "note": "the RA30H1317M1 on the face plate",
+   "note": "the RA30H1317M1 on the face plate; U13's EN/UVLO is PA_UVLO, 0.6 of the EMCON gate's output PA_EN since round 8 (26 September 2026)",
    "switch": "U13",
+   "enable_net": "PA_UVLO",
    "efficiency": 0.93,
    "fed_from": "VBAT"
   },
@@ -522,9 +657,10 @@
    "loads": {
     "J_HF": 1.0
    },
-   "note": "the QMX",
+   "note": "the QMX; U15's EN/UVLO is HF_UVLO, 0.6 of the EMCON gate's output HF_EN since round 8 (26 September 2026)",
    "budget": 0.03,
    "switch": "U15",
+   "enable_net": "HF_UVLO",
    "efficiency": 0.93,
    "fed_from": "VBAT"
   },
@@ -1255,5 +1391,292 @@
    "return": "GND",
    "symbol": "Device:D_Zener"
   }
- }
+ },
+ "power_loops": [
+  {
+   "converter": "U2",
+   "loop": "input",
+   "caps": [
+    "C11",
+    "C12"
+   ],
+   "parts": [
+    "Q2",
+    "Q3",
+    "R12"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the input filter capacitor CIN, the power MOSFETs QL1 and QH1, and the sense resistor RSENSE close together to minimize the loop area for input switching current in buck operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U2",
+   "loop": "output",
+   "caps": [
+    "C13",
+    "C14",
+    "C15",
+    "C181",
+    "C182",
+    "C183",
+    "C184",
+    "C185",
+    "C186",
+    "C187",
+    "C188",
+    "C189",
+    "C201",
+    "C202",
+    "C203",
+    "C204",
+    "C205",
+    "C206",
+    "C163",
+    "C178",
+    "C179",
+    "C180",
+    "C199",
+    "C200"
+   ],
+   "parts": [
+    "Q4",
+    "Q5",
+    "R12"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the output filter capacitor COUT, the power MOSFETs QL2 and QH2, and the sense resistor RSENSE close together to minimize the loop area for output switching current in boost operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U5",
+   "loop": "input",
+   "caps": [
+    "C35",
+    "C36"
+   ],
+   "parts": [
+    "Q28",
+    "Q29",
+    "R170"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the input filter capacitor CIN, the power MOSFETs QL1 and QH1, and the sense resistor RSENSE close together to minimize the loop area for input switching current in buck operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U5",
+   "loop": "output",
+   "caps": [
+    "C37",
+    "C38",
+    "C39",
+    "C164",
+    "C165",
+    "C166"
+   ],
+   "parts": [
+    "Q30",
+    "Q31",
+    "R170"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the output filter capacitor COUT, the power MOSFETs QL2 and QH2, and the sense resistor RSENSE close together to minimize the loop area for output switching current in boost operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U7",
+   "loop": "input",
+   "caps": [
+    "C47",
+    "C48"
+   ],
+   "parts": [
+    "Q32",
+    "Q33",
+    "R177"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the input filter capacitor CIN, the power MOSFETs QL1 and QH1, and the sense resistor RSENSE close together to minimize the loop area for input switching current in buck operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U7",
+   "loop": "output",
+   "caps": [
+    "C49",
+    "C50",
+    "C51",
+    "C167",
+    "C168",
+    "C169"
+   ],
+   "parts": [
+    "Q34",
+    "Q35",
+    "R177"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the output filter capacitor COUT, the power MOSFETs QL2 and QH2, and the sense resistor RSENSE close together to minimize the loop area for output switching current in boost operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U13",
+   "loop": "input",
+   "caps": [
+    "C63",
+    "C64"
+   ],
+   "parts": [
+    "Q11",
+    "Q12",
+    "R56"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the input filter capacitor CIN, the power MOSFETs QL1 and QH1, and the sense resistor RSENSE close together to minimize the loop area for input switching current in buck operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U13",
+   "loop": "output",
+   "caps": [
+    "C65",
+    "C66",
+    "C67",
+    "C170",
+    "C171"
+   ],
+   "parts": [
+    "Q13",
+    "Q14",
+    "R56"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the output filter capacitor COUT, the power MOSFETs QL2 and QH2, and the sense resistor RSENSE close together to minimize the loop area for output switching current in boost operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U15",
+   "loop": "input",
+   "caps": [
+    "C74",
+    "C108"
+   ],
+   "parts": [
+    "Q15",
+    "Q16",
+    "R122"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the input filter capacitor CIN, the power MOSFETs QL1 and QH1, and the sense resistor RSENSE close together to minimize the loop area for input switching current in buck operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U15",
+   "loop": "output",
+   "caps": [
+    "C109",
+    "C110",
+    "C111",
+    "C172",
+    "C173"
+   ],
+   "parts": [
+    "Q23",
+    "Q24",
+    "R122"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the output filter capacitor COUT, the power MOSFETs QL2 and QH2, and the sense resistor RSENSE close together to minimize the loop area for output switching current in boost operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U16",
+   "loop": "input",
+   "caps": [
+    "C81",
+    "C82"
+   ],
+   "parts": [
+    "Q17",
+    "Q18",
+    "R72"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the input filter capacitor CIN, the power MOSFETs QL1 and QH1, and the sense resistor RSENSE close together to minimize the loop area for input switching current in buck operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U16",
+   "loop": "output",
+   "caps": [
+    "C83",
+    "C84",
+    "C85",
+    "C176",
+    "C177"
+   ],
+   "parts": [
+    "Q19",
+    "Q20",
+    "R72"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the output filter capacitor COUT, the power MOSFETs QL2 and QH2, and the sense resistor RSENSE close together to minimize the loop area for output switching current in boost operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U19",
+   "loop": "input",
+   "caps": [
+    "C92",
+    "C116"
+   ],
+   "parts": [
+    "Q21",
+    "Q22",
+    "R127"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the input filter capacitor CIN, the power MOSFETs QL1 and QH1, and the sense resistor RSENSE close together to minimize the loop area for input switching current in buck operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U19",
+   "loop": "output",
+   "caps": [
+    "C117",
+    "C118",
+    "C119",
+    "C174",
+    "C175"
+   ],
+   "parts": [
+    "Q25",
+    "Q26",
+    "R127"
+   ],
+   "class": "R",
+   "basis": "TI SNVSAI1D 10.1 p.30: 'Place the power components including the output filter capacitor COUT, the power MOSFETs QL2 and QH2, and the sense resistor RSENSE close together to minimize the loop area for output switching current in boost operation'",
+   "same_side": true
+  },
+  {
+   "converter": "U3",
+   "loop": "input",
+   "caps": [
+    "C20",
+    "C21",
+    "C22",
+    "C190",
+    "C191"
+   ],
+   "parts": [
+    "R16",
+    "Q7",
+    "Q8"
+   ],
+   "class": "R",
+   "basis": "TI SLUSE66A (BQ25731) Table 12-1 rule 2 p.93: 'VBUS capacitors, RAC, Q1 and Q2 form a small loop 1. It is best to put them on the same side ... After RAC before Q1 and Q2 power stage recommend to put 10 nF + 1 nF (0402 package) decoupling capacitors as close as possible to IC'",
+   "same_side": true
+  }
+ ]
 }

@@ -888,9 +888,9 @@ The `intel-an574.pdf` path assumes the integrator moves the session copy `drafts
 
 | item | board | change | source |
 |---|---|---|---|
-| G1 | A | remove the VISNS declarations (`fnd/r4a` `gen_sch_a.py:456`, `:458`); give S2, SD, POE and PD a 0.1 uF VIN-pin capacitor to AGND at pin 2, declared class D; declare CIN against the power loop (T5); declare VCC class L | SNVSAI1D 10.1, p.30; pin table p.3; p.15 |
-| G2 | A | U12: add the 0.1 uF at VIN and GND, class R; U33: declare C160 class R | SLUSEA4D 12.1, p.40 |
-| G3 | A | declare C190/C191 class R against the BQ25731 input loop | SLUSE66A Table 12-1 rule 2 |
+| G1 | A | remove the VISNS declarations (`fnd/r4a` `gen_sch_a.py:456`, `:458`); give S2, SD, POE and PD a 0.1 uF VIN-pin capacitor to AGND at pin 2, declared class D; declare CIN against the power loop (T5); declare VCC class L | SNVSAI1D 10.1, p.30; pin table p.3; p.15. **Drawn in board A's round 8 candidate** (`fnd/r8a`, 26 September 2026): C219 to C222 (100 nF 50 V, C14663) at the VIN pins of S2, SD, POE and PD; no CIN is declared against VIN or VISNS; each stage's CIN and COUT are declared against its input and output loops (`power_loops` in the intent, until T5 gives `intent.bypass` a class); VCC class L with 1 to 4.7 uF (`gen_sch_a.py:293-320`, `:519-550`) |
+| G2 | A | U12: add the 0.1 uF at VIN and GND, class R; U33: declare C160 class R | SLUSEA4D 12.1, p.40. **Drawn in board A's round 8 candidate:** C223 (100 nF 50 V) at U12 pin 3, C54 and C223 class R; C159 and C160 declared at U33 pin 3, class R |
+| G3 | A | declare C190/C191 class R against the BQ25731 input loop | SLUSE66A Table 12-1 rule 2. **Declared in board A's round 8 candidate:** U3's input loop, C20 to C22 and C190, C191 with R16, Q7 and Q8, class R (`gen_sch_a.py:1390-1391`) |
 | G4 | B | `buck_small` (`gen_sch_b.py:350`): add the 0.1 uF at VIN and GND on all seven TPS62933, class R | SLUSEA4D 12.1 |
 | G5 | B | re-declare C37 and C38 against U3 and U4 pin 1 (TS3DV642 VCC) instead of U5 pin 1 (`:990-991`) | SCDS343F pp.18, 23 |
 | G6 | B | declare the capacitors of the STM32H743, PI7C9X2G404SL, TUSB8041, KSZ9897R, TMUXHS4212, TS3USB221A and CP2102N with their classes (section 6a); none is declared today, so DEC-001 has never judged them | section 4 |
@@ -917,7 +917,7 @@ The `intel-an574.pdf` path assumes the integrator moves the session copy `drafts
 | item | bound | owner |
 |---|---|---|
 | T1 to T10, the tool, registry and page changes, and the re-render of `PCB-OPEN-PAIRS.md` in the merge commit (T8) | until they land, no DEC-001 reading on any board is current evidence | the integrating writer of `v2/ecad/tools/` |
-| G1 to G3 | board A's DEC-001 cannot be judged against the candidate | board A's writer (round 6) |
+| G1 to G3 | drawn and declared in board A's round 8 candidate (every one of its 55 entries carries a class and its maker clause; the generator refuses an unclassed one); DEC-001 on A still awaits T1 to T10 and a placement | the integrator (T1 to T10), then board A's next placement |
 | G4 to G7, G10 | board B's fine-pitch parts carry no declared decoupling; five circuit gaps (the TPS62933 0.1 uF, STM32 VDDA, TUSB8041 core, KSZ9897R, CP2102N VREGIN) and three mis-declared pins | board B's writer (round 6) |
 | G8 and F-DC-03 | board P's four entries unclassified; FET bypass INFERRED | board P's writer |
 | G9, G13, G14 on C | board C's two RP2040 pins undecoupled; the regulator output declared at DVDD | board C's writer |
