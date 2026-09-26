@@ -932,15 +932,6 @@ open_items:
       Board B's fabric findings FAB-01 to FAB-04 fixed in the generator, each with check_pcb_b.py's assertion and its
       mutation: the TEST2 strap, the back-power gating of FAB-02 (b) and (c), a true break-before-make sequence, and 10
       kohm on the 23 safe-low lines (FAILOVER-FABRIC.md sections 9 and 10).
-  - id: S-43
-    class: SESSION
-    status: OPEN
-    title: >-
-      TEST-PLAN.md written for SC-12 (THERMAL-COORDINATION.md sections 9 and 9a, option C): section 1's states, marked
-      as session text; E3 and E4 as the kit's margins in their states (E3-S, E3-O, E4-S, E4-O), with E3-O and E5 written
-      as stated test deviations (the pack outside the chamber; CFL-017); section 6's pack-fitted exposures and the pack's
-      own soaks (E3-A, E3-L, E5-A, E3-T, E3-P, E4-T, E4-P); and section 7's thermal protection tests (P10 to P14).
-      Written by stream r8bat in round 8; closed by the commit that merges it.
   - id: S-44
     class: SESSION
     status: OPEN
@@ -1079,6 +1070,21 @@ closed_items:
     title: >-
       The J_SMB contract in check_contracts.py (the connector half closed in faf8c981: both ends JST-XH 1x4 in board
       P's pin order).
+  - id: S-43
+    closed_by: commit dd39fb15
+    closing_evidence: >-
+      v2/docs/TEST-PLAN.md sections 1, 2, 6 and 7 read at commit dd39fb15 (round 8, stream r8bat, integrated on 27 September
+      2026): section 1's states are marked as session text; E3 and E4 run the kit's margins in their states (E3-S,
+      E3-O, E4-S, E4-O), with E3-O and E5 written as stated test deviations with the pack outside the chamber
+      (CFL-017, which stays open); section 6 holds the pack-fitted exposures and the pack's own soaks (E3-A, E3-L, E5-A,
+      E3-T, E3-P, E4-T, E4-P) and section 7 the thermal protection tests P10 to P14, as SC-12 and
+      v2/docs/review-packets/battery/THERMAL-COORDINATION.md sections 9 and 9a require.
+    title: >-
+      TEST-PLAN.md written for SC-12 (THERMAL-COORDINATION.md sections 9 and 9a, option C): section 1's states, marked
+      as session text; E3 and E4 as the kit's margins in their states (E3-S, E3-O, E4-S, E4-O), with E3-O and E5 written
+      as stated test deviations (the pack outside the chamber; CFL-017); section 6's pack-fitted exposures and the pack's
+      own soaks (E3-A, E3-L, E5-A, E3-T, E3-P, E4-T, E4-P); and section 7's thermal protection tests (P10 to P14).
+      Written by stream r8bat in round 8; closed by the commit that merges it.
   - id: S-07
     closed_by: commit 9a151c78
     closing_evidence: >-
@@ -5904,7 +5910,6 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-02a]
     choices: [SC-03, SC-12]
-    waits_on: [S-43]
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
@@ -5947,7 +5952,6 @@ records:
       decisions: []
     rule_coverage: NONE
     choices: [SC-12]
-    waits_on: [S-43]
     status: CONFLICT_OPEN
     evidence_result: FAIL
     evidence_phase: SCHEMATIC
