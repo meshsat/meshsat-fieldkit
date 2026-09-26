@@ -2,19 +2,21 @@
  "advisory": false,
  "applicable": true,
  "counts": {
-  "ledgers": 0,
-  "rows": 0
+  "ledgers": 4,
+  "problems": 0,
+  "rows": 224,
+  "witnessed": 0
  },
- "denominator": 0,
+ "denominator": 224,
  "evidence": [],
  "inputs": {
   "ecad": {
-   "path": "/root/sweep38/v2/ecad",
+   "path": "/home/claude-runner/gitlab/products/meshsat/meshsat-fieldkit/v2/ecad",
    "sha256_16": null
   }
  },
  "missing_input": null,
- "note": "no ledger under /root/sweep38/v2/ecad: an empty tree and a sound one look alike to a checker that reports no problems",
+ "note": "every chain re-walked, every row re-hashed, every witness beside one checked",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
@@ -27,12 +29,12 @@
  ],
  "tool": "ledger_verify",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "git_head": "26b809006d62",
+  "tools_tree_sha": "a6f6dfb33a7f902f"
  },
- "ts": "2026-09-21T12:53:15Z",
- "verdict": "INCONCLUSIVE",
- "version": "unknown",
+ "ts": "2026-09-26T07:31:35Z",
+ "verdict": "PASS",
+ "version": "26b809006d62+dirty",
  "writer": {
   "file": "ledger_verify.py",
   "sha16": "8a1fec2b2b28703e"

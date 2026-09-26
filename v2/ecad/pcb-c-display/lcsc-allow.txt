@@ -5,7 +5,7 @@
 
 (IDC 2x          # the panel ribbon from B16
 solder land      # MAIN and PI button leads land on bare copper, wired at build
-BOOTSEL          # a solder jumper, copper on our own board
+BOOTSEL:         # the BOOTSEL solder jumper, copper on our own board ("BOOTSEL:" with its colon: the bare word also covered the 1k BOOTSEL resistor, a real part JLCPCB places, 26 Sep 2026)
 PANEL_ID strap   # a solder jumper, copper on our own board
 Hirose FH34SRJ   # hand-fit ZIF, JLCPCB stock 0, route in tools/jlc-handfit.txt
 C&K ATP          # panel-mount button bodies, wired to the board, route in tools/jlc-handfit.txt

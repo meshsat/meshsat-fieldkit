@@ -77,6 +77,24 @@ def _read(d, letter):
     return _j.load(open(p, encoding="utf-8")) if os.path.exists(p) else None
 
 
+def _per_board_on(rel, boards):
+    """doc_provenance.per_board over a fixture release, with the board table replaced for the call."""
+    import tempfile as _t
+    rows, fails, _n = doc_provenance.judge(rel)
+    keep = doc_provenance._boards
+    d = _t.mkdtemp(prefix="prov-per-board-")
+    old = os.environ.get("VERDICT_DIR")
+    os.environ["VERDICT_DIR"] = d
+    try:
+        doc_provenance._boards = lambda: boards
+        doc_provenance.per_board(rel, rows, fails)
+    finally:
+        doc_provenance._boards = keep
+        if old is None: os.environ.pop("VERDICT_DIR", None)
+        else: os.environ["VERDICT_DIR"] = old
+    return d
+
+
 def t_the_rule_is_judged_per_board_and_a_folder_at_another_phase_is_an_absent_input():
     """DOC-002 asks about the document that describes THIS board (18 September 2026).
 
@@ -86,33 +104,41 @@ def t_the_rule_is_judged_per_board_and_a_folder_at_another_phase_is_an_absent_in
     not a pass, so it is INCONCLUSIVE and names the phase it wanted and the phase it found. DOC-001, CMP-002,
     SUP-001 and DFM-001 were each split for the same reason on 16 and 17 September.
 
-    THE ACCEPTABLE FIXTURE is board E5, whose order folder IS at its declared phase: it is judged, and on this
-    tree it FAILS, which is the one real failure the set-level reading was hiding among six it did not own.
-    THE DEFECTIVE FIXTURE is every other board, whose folder is a phase the board has left."""
-    import tempfile, json as _j
+    ON FIXTURES SINCE 26 SEPTEMBER 2026. This rule read the tree: board C stale at C7 and board E5 failing at its
+    own phase. Decision 41 rebuilt the order set, C24 and E5 now carry notes that name their zips, and a rule that
+    fails when its subject is fixed is a rule about history. The same three states, built:
+    THE DEFECTIVE FIXTURE, a board whose only order folder is a phase it has left: INCONCLUSIVE, naming both.
+    A board whose folder is at its declared phase and whose note names no artefact: FAIL.
+    THE ACCEPTABLE FIXTURE, a board whose folder is at its declared phase and names the zip beside it: PASS."""
+    import tempfile
+    rel = tempfile.mkdtemp(prefix="prov-phases-")
+    _folder(rel, "PCB-X-KIT-X7", "MeshSat order notes\n- Size 10 x 10 mm\n")                    # x declares X9
+    _folder(rel, "PCB-Y-KIT-Y3", "MeshSat order notes\n- Size 10 x 10 mm\n")                    # y declares Y3, no provenance
+    body = b"the zip of z"
+    _folder(rel, "PCB-Z-KIT-Z2", "MeshSat order notes\nPROVENANCE\n- The gerber zip in this folder is sha256 %s\n"
+            % hashlib.sha256(body).hexdigest()[:16], zip_bytes=body)
+    d = _per_board_on(rel, [("x", "pcb-x-kit", "X9"), ("y", "pcb-y-kit", "Y3"), ("z", "pcb-z-kit", "Z2")])
+    stale = _read(d, "x")
+    assert stale and stale["verdict"] == "INCONCLUSIVE", stale and stale["verdict"]
+    assert "declares X9" in (stale.get("missing_input") or ""), stale.get("missing_input")
+    assert "X7" in (stale.get("missing_input") or ""), "the reading does not name the phase the set holds"
+    own_bad = _read(d, "y")
+    assert own_bad and own_bad["verdict"] == "FAIL" and own_bad["counts"]["untraceable"] == 1, own_bad
+    own_ok = _read(d, "z")
+    assert own_ok and own_ok["verdict"] == "PASS", own_ok
+
+
+def t_every_board_whose_declared_phase_has_an_order_folder_reads_its_own_note():
+    """THE PROPERTY ON THE TREE (26 September 2026, owner decision 41): wherever the order set holds a folder at
+    the phase its board declares, the note in it names the gerber zip beside it, so DOC-002 is a PASS there and
+    never a FAIL. A board whose folder is at another phase is an absent input and is not this rule's business."""
     rel = os.path.join(os.path.dirname(TOOLS), "..", "release", "revA")
     if not os.path.isdir(os.path.join(rel, "order")): return
     rows, fails, _n = doc_provenance.judge(rel)
-    with tempfile.TemporaryDirectory() as d:
-        old = os.environ.get("VERDICT_DIR")
-        os.environ["VERDICT_DIR"] = d
-        try: doc_provenance.per_board(rel, rows, fails)
-        finally:
-            if old is None: os.environ.pop("VERDICT_DIR", None)
-            else: os.environ["VERDICT_DIR"] = old
-
-        seen = [f for f in os.listdir(d) if f.startswith("doc_provenance_")]
-        assert len(seen) >= 6, "a per-board reading was not written for every board: %s" % sorted(seen)
-
-        stale = _read(d, "c")
-        assert stale and stale["verdict"] == "INCONCLUSIVE", stale and stale["verdict"]
-        assert "declares C24" in (stale.get("missing_input") or ""), stale.get("missing_input")
-        assert "C7" in (stale.get("missing_input") or ""), "the reading does not name the phase the set holds"
-
-        own = _read(d, "e5")
-        assert own and own["verdict"] in ("PASS", "FAIL"), "board E5's own folder was not judged: %s" % own
-        assert own["verdict"] == "FAIL" and own["counts"]["untraceable"] == 1, (
-            "board E5's note names an artefact now, so this fixture needs its number re-read: %s" % own["counts"])
+    d = _per_board_on(rel, doc_provenance._boards())
+    judged = [l for l, _s, _p in doc_provenance._boards() if (_read(d, l) or {}).get("verdict") in ("PASS", "FAIL")]
+    bad = ["%s: %s" % (l, _read(d, l)["evidence"]) for l in judged if _read(d, l)["verdict"] != "PASS"]
+    assert not bad, "a note at its board's declared phase does not name its own zip: %s" % bad
 
 
 def t_a_board_never_reads_clean_from_another_board_s_folder():

@@ -568,7 +568,7 @@ def all_boms(only=None, boards_dir=None):
     return out
 
 
-def rows_to_check(only=None, declared_only=False):
+def rows_to_check(only=None, declared_only=False, boards_dir=None, tools=HERE):
     """Every distinct (value, footprint) that is a component, with the boards and quantity it carries.
 
     `declared_only` restricts the scan to the folder each board DECLARES, which is what the verdicts are taken
@@ -579,12 +579,20 @@ def rows_to_check(only=None, declared_only=False):
     # Measured on board P, 17 September 2026: with the folders in alphabetical order the pack's two charge and
     # discharge FETs lost the code its own P4 folder carries and came back WRONG_MODEL against a search by
     # model name. The table may be built over every folder; what a row IS comes from the board's own.
-    _decl_first = newest_boms(only)
+    _decl_first = newest_boms(only, boards_dir=boards_dir, tools=tools)
     _src = (sorted(_decl_first.items()) if declared_only else
             ([(l, _decl_first[l]) for l in sorted(_decl_first)]
-             + [(l, bf) for l, lst in sorted(all_boms(only).items()) for bf in lst
+             + [(l, bf) for l, lst in sorted(all_boms(only, boards_dir=boards_dir).items()) for bf in lst
                 if bf != _decl_first.get(l)]))
+    _decl_pairs = set(_decl_first.items())
     for letter, (bom, folder) in _src:
+        # A DECLARED FOLDER'S BLANK IS AN ANSWER TOO (26 September 2026, the decision 41 re-take). Going first was
+        # not enough: the first non-empty code won, so a row the declared folder carries WITHOUT a code took the
+        # code of an older folder of the same board. Board C's sixteen 3 mm panel lamps carry no code in C24, where
+        # they are bench-fitted and allow-listed, and C2089 (an 8550SS in TO-92-3) in C17, where lcsc_fill had put
+        # it from the certified table; the per-board verdict then failed C24 NOT_IDENTIFIED sixteen times for a code
+        # C24 does not order. A key a declared folder carries takes its code from declared folders only.
+        _is_decl = (letter, (bom, folder)) in _decl_pairs
         for r in csv.DictReader(open(bom, newline="", encoding="utf-8", errors="replace")):
             comment = " ".join((r.get("Comment") or "").split())
             fp = (r.get("Footprint") or "").strip()
@@ -609,10 +617,10 @@ def rows_to_check(only=None, declared_only=False):
                 continue
             key = (comment, fp)
             rec = out.setdefault(key, {"comment": comment, "fp": fp, "code": code,
-                                       "boards": set(), "qty": 0})
+                                       "boards": set(), "qty": 0, "declared": _is_decl})
             rec["boards"].add(letter.upper())
             rec["qty"] += max(1, len(refs))
-            if code and not rec["code"]:
+            if code and not rec["code"] and (_is_decl or not rec["declared"]):
                 rec["code"] = code
     return out
 

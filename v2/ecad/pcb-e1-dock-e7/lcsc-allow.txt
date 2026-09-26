@@ -5,7 +5,7 @@
 
 (JST-VH          # solar and vehicle input leads
 (XH or pin header)              # the pack SMBus lead
-BOOTSEL          # a solder jumper, copper on our own board
+BOOTSEL:         # the BOOTSEL solder jumper, copper on our own board ("BOOTSEL:" with its colon: the bare word also covered the 1k BOOTSEL resistor, a real part JLCPCB places, 26 Sep 2026)
 solder lands     # the twelve signal wires to the block board, soldered at build
 solder pad       # 12 AWG pack wires, soldered at build
 bare copper      # the two water electrodes: copper on our own board, nothing is placed on them

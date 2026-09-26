@@ -1,3 +1,21 @@
+READINESS OF THIS FOLDER: QUARANTINED, NOT_FOR_FAB
+This folder is not an approved fabrication package and nothing may be ordered from it (owner decision 41,
+25 September 2026: the order set is rebuilt and quarantined; promotion, publication and money are the owner's).
+
+ROUTING_STATUS = OPEN
+ELECTRICAL_PROTECTION_STATUS = BLOCKED_DECISION_31
+FAB_READINESS = NOT_READY
+PUBLICATION_STATUS = HELD
+
+- This folder holds A22 and board A declares A32. Its gerbers, BOM and CPL are an older phase than the board this project is building, it was not rebuilt because no deliverable folder exists at A32, and the readiness above is board A at A32, not a judgement of the files in this folder.
+- Board A is held by decision 31 (board A's exposed-port protection). Forbidden while it holds: any orderable fabrication package, any promotion of the board or its folder. Lifts when: decision 31 is ruled and this entry is deleted; the decision register records decision 31 as ruled on 2026-09-21 by SESSION, and this hold entry has not been lifted.
+- ROUTING_STATUS: the hold's value; the registry today: the board's routing rules read RTE-001 PASS, RTE-002 PASS (2 PASS).
+- ELECTRICAL_PROTECTION_STATUS: the hold's value; the registry today: the board's protection rules read TRN-001 PASS, BAT-002 PASS (2 PASS).
+- FAB_READINESS: the hold's value; the registry today: the readiness gate reads NOT_READY over 54 required rule-board pairs: 30 PASS, 13 FAIL, 11 INCONCLUSIVE, 0 WAIVED; blockers failing: ISO-001, MEC-001, OUT-001, PI-001, PI-002, PLC-001, RET-003, RF-001, SCH-002.
+- PUBLICATION_STATUS: the hold's value; the registry today: board promotion has been frozen by the owner since 2026-09-16 (readiness manifest), so no folder here is released; this set was rebuilt under owner decision 41 of 25 September 2026 as a quarantined record. Nothing is ordered from it and no cart line was touched.
+- Computed 2026-09-26 by tools/order_readiness.py under rule set ff8151db3576437b (manifest 2026-09-16.1). The full reading is v2/docs/PCB-RULE-STATUS-A.md.
+END OF READINESS
+
 MeshSat field-kit carrier PCB-A POWER + I/O Rev A, phase A22: JLCPCB order notes
 
 PCB
