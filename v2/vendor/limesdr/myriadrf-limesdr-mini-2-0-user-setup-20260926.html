@@ -1,0 +1,784 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hardware Setup &mdash; LimeSDR Mini v2 v2.4 documentation</title>
+      <link rel="stylesheet" type="text/css" href="/projects/limesdr-mini-2-0/_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="/projects/limesdr-mini-2-0/_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="/projects/limesdr-mini-2-0/_static/code-tabs.css?v=1bc26e2f" />
+      <link rel="stylesheet" type="text/css" href="https://assets.myriadrf.net/sphinx/mr-custom.css" />
+
+  
+      <script src="/projects/limesdr-mini-2-0/_static/jquery.js?v=5d32c60e"></script>
+      <script src="/projects/limesdr-mini-2-0/_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="/projects/limesdr-mini-2-0/_static/documentation_options.js?v=8f6e7d72"></script>
+      <script src="/projects/limesdr-mini-2-0/_static/doctools.js?v=9bcbadda"></script>
+      <script src="/projects/limesdr-mini-2-0/_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="/projects/limesdr-mini-2-0/_static/code-tabs.js?v=c983d12e"></script>
+    <script src="/projects/limesdr-mini-2-0/_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="/projects/limesdr-mini-2-0/genindex.html" />
+    <link rel="search" title="Search" href="/projects/limesdr-mini-2-0/search.html" />
+    <link rel="next" title="Reference Clock" href="/projects/limesdr-mini-2-0/user/clock.html" />
+    <link rel="prev" title="Board Versions" href="/projects/limesdr-mini-2-0/user/versions.html" /> 
+</head>
+
+<body class="wy-body-for-nav">   <header
+    class="text-ink font-sans bg-white border-b-gray-mid border-b-1 fixed z-999 w-full top-0"
+>
+    <nav aria-label="Main navigation">
+        <div
+            class="relative py-16 px-(--fluid-24-80) el-cluster gap-16 !justify-between"
+        >
+            <a
+                class="inline-block text-indigo!"
+                title="Go to the homepage"
+                href="https://myriadrf.org/"
+                ><span class="sr-only">Go to the homepage</span
+                ><svg
+                    width="100%"
+                    height="64"
+                    viewBox="0 0 706 172"
+                    xml:space="preserve"
+                    xmlns:serif="http://www.serif.com/"
+                    style="
+                        fill-rule: evenodd;
+                        clip-rule: evenodd;
+                        stroke-linejoin: round;
+                        stroke-miterlimit: 2;
+                    "
+                    role="img"
+                    aria-label="Myriad RF logo"
+                    class="h-[60px] md:h-[4rem]"
+                >
+                    <g id="myriad-logo">
+                        <path
+                            d="M228.178,65.912l-11.705,63.981l-16.381,0l16.073,-82.798l21.649,-0l10.34,53.408l1.065,10.466l5.177,-10.466l31.021,-53.408l21.672,-0l-16.073,82.798l-16.38,0l13.164,-64.125l-9.814,18.972l-26.592,45.153l-11.754,0l-9.037,-45.411l-2.425,-18.57Zm103.898,45.044l4.146,-8.436l21.135,-37.838l16.683,-0l-43.161,72.881c-2.415,4.112 -4.684,7.534 -6.808,10.267c-2.124,2.732 -4.25,4.866 -6.379,6.4c-2.129,1.534 -4.38,2.631 -6.752,3.291c-2.373,0.66 -5.057,0.99 -8.053,0.99c-1.71,0 -3.295,-0.175 -4.755,-0.527c-1.461,-0.351 -2.562,-0.669 -3.304,-0.955l2.399,-11.932l3.611,-0c1.794,-0 3.352,-0.14 4.677,-0.418c1.324,-0.278 2.567,-0.851 3.729,-1.717c1.161,-0.866 2.403,-2.171 3.726,-3.913c1.322,-1.742 2.869,-4.102 4.641,-7.08l3.122,-5.141l-13.019,-62.146l16.409,-0l7.036,37.838l0.917,8.436Zm54.529,-15.794l-6.754,34.731l-15.616,0l12.681,-65.211l15.616,-0l-1.458,7.497c2.091,-2.443 4.345,-4.399 6.762,-5.867c3.83,-2.326 7.816,-3.489 11.956,-3.489c3.594,0 5.919,0.62 6.974,1.859l-2.614,13.458c-0.935,-0.294 -1.978,-0.502 -3.129,-0.624c-1.152,-0.121 -2.439,-0.182 -3.861,-0.182c-3.031,-0 -5.712,0.397 -8.044,1.192c-2.331,0.794 -4.333,1.969 -6.005,3.524c-1.672,1.555 -3.036,3.43 -4.09,5.624c-1.054,2.194 -1.849,4.69 -2.387,7.488l-0.031,0Zm20.813,34.731l12.68,-65.211l15.616,-0l-12.68,65.211l-15.616,0Zm14.107,-72.515l2.94,-15.154l15.616,0l-2.94,15.154l-15.616,-0Zm50.406,64.846c-2.792,2.797 -5.804,4.947 -9.036,6.45c-4.307,2.003 -8.59,3.004 -12.849,3.004c-5.892,-0 -10.696,-1.464 -14.41,-4.392c-3.715,-2.928 -5.572,-7.169 -5.572,-12.723c-0,-4.535 1.439,-8.606 4.317,-12.214c2.878,-3.608 7.082,-6.335 12.614,-8.183c3.49,-1.218 6.837,-2.111 10.04,-2.679c3.204,-0.568 6.633,-0.934 10.288,-1.096c3.121,-0.139 6.681,-0.218 10.68,-0.238l0.294,-1.512c0.132,-0.708 0.231,-1.404 0.297,-2.087c0.066,-0.683 0.099,-1.312 0.099,-1.888c-0,-2.944 -0.896,-5.169 -2.687,-6.676c-1.792,-1.507 -4.548,-2.26 -8.27,-2.26c-3.814,-0 -6.955,0.943 -9.423,2.829c-2.468,1.886 -4.279,4.406 -5.432,7.559l-15.616,-0c2.041,-7.544 5.93,-13.313 11.667,-17.306c5.738,-3.993 12.674,-5.989 20.808,-5.989c5.725,0 10.408,0.891 14.048,2.672c3.64,1.782 6.324,4.215 8.052,7.301c1.727,3.086 2.591,6.564 2.591,10.434c-0,0.942 -0.061,1.905 -0.183,2.89c-0.122,0.984 -0.264,1.988 -0.426,3.011l-4.779,24.76c-0.529,2.797 -0.907,5.16 -1.135,7.091c-0.228,1.93 -0.342,3.617 -0.342,5.059c0,0.707 0.038,1.375 0.114,2.001c0.075,0.627 0.163,1.244 0.263,1.851l-16.225,0c-0.051,-0.364 -0.101,-0.745 -0.151,-1.143c-0.05,-0.398 -0.075,-0.814 -0.075,-1.248c-0,-1.523 0.145,-3.273 0.435,-5.249l0.004,-0.029Zm4.185,-22.363c-5.281,0.063 -9.749,0.373 -13.404,0.93c-4.125,0.629 -7.397,1.523 -9.817,2.683c-2.419,1.16 -4.137,2.529 -5.155,4.109c-1.017,1.58 -1.525,3.346 -1.525,5.3c-0,2.44 0.789,4.263 2.366,5.468c1.578,1.205 3.723,1.807 6.435,1.807c3.268,0 6.344,-0.779 9.228,-2.338c2.884,-1.559 5.335,-3.67 7.354,-6.333c1.952,-2.574 3.258,-5.423 3.92,-8.547l0.598,-3.079Zm59.081,23.206c-2.057,2.042 -4.264,3.76 -6.622,5.156c-3.89,2.303 -7.981,3.455 -12.272,3.455c-4.534,-0 -8.433,-1.041 -11.695,-3.122c-3.262,-2.081 -5.774,-5.03 -7.535,-8.847c-1.761,-3.816 -2.642,-8.297 -2.642,-13.441c0,-5.624 0.848,-11.032 2.543,-16.223c1.695,-5.192 4.113,-9.837 7.254,-13.937c3.14,-4.099 6.854,-7.338 11.141,-9.717c4.287,-2.379 9.038,-3.568 14.252,-3.568c6.22,0 10.993,2.166 14.32,6.497c0.476,0.619 0.917,1.273 1.325,1.963l5.65,-29.059l15.616,0l-17.047,87.669l-15.616,0l1.328,-6.826Zm-13.73,-4.296c3.087,0 5.84,-0.922 8.258,-2.766c2.419,-1.844 4.469,-4.256 6.149,-7.236c1.681,-2.979 2.952,-6.201 3.812,-9.666c0.861,-3.466 1.291,-6.803 1.291,-10.012c0,-4.313 -0.933,-7.619 -2.8,-9.916c-1.866,-2.297 -4.581,-3.445 -8.143,-3.445c-2.722,-0 -5.26,0.828 -7.614,2.485c-2.354,1.656 -4.417,3.88 -6.188,6.672c-1.772,2.791 -3.146,5.965 -4.122,9.521c-0.977,3.556 -1.465,7.233 -1.465,11.032c-0,4.312 0.921,7.612 2.762,9.9c1.842,2.287 4.528,3.431 8.06,3.431Zm59.979,-21.084l-6.252,32.206l-16.383,0l16.073,-82.798l32.052,-0c8.217,-0 14.65,1.878 19.301,5.635c4.651,3.757 6.977,9.108 6.977,16.052c-0,4.978 -1.36,9.426 -4.081,13.343c-2.62,3.772 -6.328,6.765 -11.127,8.978c1.207,0.892 2.201,1.967 2.983,3.224c1.575,2.532 2.469,6.05 2.682,10.554l1.413,25.012l-17.069,0l-0.529,-21.942c-0.05,-2.874 -0.459,-5.045 -1.227,-6.512c-0.769,-1.468 -1.952,-2.46 -3.549,-2.977c-1.598,-0.516 -3.768,-0.775 -6.51,-0.775l-14.754,0Zm7.285,-37.529l-4.794,24.698l15.24,0c3.482,0 6.472,-0.645 8.971,-1.934c2.499,-1.29 4.431,-3.092 5.796,-5.405c1.365,-2.313 2.048,-4.968 2.048,-7.965c0,-2.894 -0.981,-5.183 -2.942,-6.868c-1.962,-1.684 -4.849,-2.526 -8.663,-2.526l-15.656,-0Zm65.79,36.393l-6.473,33.342l-16.382,0l16.072,-82.798l58.169,-0l-2.491,13.063l-41.831,-0l-4.529,23.33l37.131,0l-2.491,13.063l-37.175,0Z"
+                            style="fill: url(#_Linear1)"
+                        />
+                        <path
+                            d="M55.697,126.392c5.585,3.099 9.12,8.968 9.282,15.32c-0.015,0.053 -0.029,0.107 -0.044,0.161c-0.46,1.718 -0.656,3.444 -0.613,5.136c-2.647,9.523 -12.493,15.162 -22.061,12.598c-4.907,-1.314 -8.799,-4.535 -11.092,-8.651c1.264,0.701 2.633,1.261 4.092,1.651c9.622,2.579 19.527,-3.14 22.105,-12.762c1.264,-4.715 0.535,-9.498 -1.669,-13.453Zm42.471,11.361c7.078,3.929 10.864,12.303 8.674,20.473c-2.581,9.633 -12.497,15.359 -22.13,12.777c-4.91,-1.315 -8.806,-4.537 -11.103,-8.656c1.268,0.703 2.64,1.265 4.103,1.656c9.633,2.582 19.549,-3.144 22.13,-12.777c1.266,-4.722 0.535,-9.512 -1.674,-13.473Zm-73.64,-64.863c5.586,3.099 9.12,8.968 9.283,15.32c-0.015,0.054 -0.03,0.108 -0.044,0.161c-0.461,1.718 -0.657,3.444 -0.614,5.137c-2.646,9.522 -12.493,15.161 -22.06,12.598c-4.907,-1.315 -8.799,-4.535 -11.093,-8.652c1.264,0.701 2.634,1.261 4.093,1.652c9.622,2.578 19.527,-3.141 22.105,-12.763c1.263,-4.714 0.534,-9.497 -1.67,-13.453Zm42.472,11.361c5.589,3.104 9.126,8.98 9.287,15.338c-0.015,0.054 -0.03,0.109 -0.044,0.164c-0.46,1.716 -0.656,3.442 -0.613,5.133c-2.648,9.536 -12.507,15.183 -22.086,12.616c-4.911,-1.316 -8.806,-4.538 -11.103,-8.657c1.267,0.704 2.64,1.265 4.103,1.657c9.632,2.581 19.549,-3.144 22.13,-12.777c1.265,-4.722 0.534,-9.513 -1.674,-13.474Zm42.44,11.391c5.586,3.099 9.12,8.969 9.283,15.32c-0.015,0.054 -0.03,0.108 -0.044,0.162c-0.46,1.717 -0.657,3.443 -0.614,5.136c-2.646,9.522 -12.493,15.162 -22.06,12.598c-4.907,-1.315 -8.799,-4.535 -11.093,-8.652c1.264,0.702 2.634,1.261 4.093,1.652c9.622,2.578 19.527,-3.14 22.105,-12.762c1.263,-4.715 0.535,-9.498 -1.67,-13.454Zm42.472,11.361c7.077,3.93 10.863,12.304 8.674,20.474c-2.581,9.633 -12.497,15.358 -22.13,12.777c-4.911,-1.316 -8.806,-4.538 -11.103,-8.657c1.267,0.704 2.64,1.265 4.103,1.657c9.633,2.581 19.549,-3.144 22.13,-12.777c1.265,-4.722 0.535,-9.513 -1.674,-13.474Zm-116.081,-76.254c5.59,3.104 9.126,8.98 9.288,15.338c-0.015,0.055 -0.03,0.109 -0.045,0.164c-0.46,1.717 -0.656,3.442 -0.613,5.134c-2.648,9.535 -12.507,15.182 -22.086,12.615c-4.911,-1.316 -8.806,-4.537 -11.103,-8.656c1.268,0.703 2.64,1.264 4.103,1.656c9.633,2.581 19.549,-3.144 22.13,-12.777c1.266,-4.722 0.535,-9.513 -1.674,-13.474Zm42.441,11.392c5.585,3.099 9.12,8.968 9.282,15.32c-0.015,0.053 -0.029,0.107 -0.044,0.161c-0.46,1.717 -0.656,3.444 -0.613,5.136c-2.647,9.523 -12.493,15.162 -22.061,12.598c-4.907,-1.314 -8.799,-4.535 -11.092,-8.651c1.264,0.701 2.633,1.26 4.092,1.651c9.622,2.579 19.527,-3.14 22.106,-12.762c1.263,-4.715 0.534,-9.498 -1.67,-13.453Zm42.471,11.361c5.59,3.103 9.127,8.979 9.288,15.337c-0.015,0.055 -0.03,0.11 -0.045,0.164c-0.46,1.717 -0.656,3.442 -0.613,5.134c-2.648,9.535 -12.507,15.182 -22.086,12.615c-4.91,-1.315 -8.806,-4.537 -11.102,-8.656c1.267,0.703 2.639,1.264 4.102,1.656c9.633,2.582 19.549,-3.144 22.13,-12.777c1.266,-4.722 0.535,-9.512 -1.674,-13.473Zm42.441,11.391c7.073,3.924 10.857,12.29 8.67,20.453c-2.579,9.622 -12.484,15.341 -22.105,12.763c-4.908,-1.315 -8.799,-4.536 -11.093,-8.652c1.264,0.701 2.633,1.261 4.093,1.652c9.621,2.578 19.526,-3.141 22.105,-12.763c1.263,-4.715 0.534,-9.498 -1.67,-13.453Zm-73.609,-64.893c5.589,3.104 9.126,8.979 9.287,15.338c-0.015,0.054 -0.03,0.109 -0.044,0.164c-0.46,1.716 -0.656,3.442 -0.613,5.133c-2.648,9.536 -12.507,15.182 -22.086,12.616c-4.911,-1.316 -8.806,-4.538 -11.103,-8.657c1.267,0.704 2.64,1.265 4.103,1.657c9.632,2.581 19.549,-3.144 22.13,-12.777c1.265,-4.723 0.534,-9.513 -1.674,-13.474Zm42.44,11.391c7.073,3.924 10.857,12.291 8.67,20.454c-2.578,9.621 -12.483,15.34 -22.105,12.762c-4.907,-1.315 -8.799,-4.535 -11.093,-8.652c1.264,0.701 2.634,1.261 4.093,1.652c9.622,2.578 19.527,-3.141 22.105,-12.762c1.263,-4.715 0.535,-9.498 -1.67,-13.454Z"
+                            style="fill: #1b3dfe"
+                        />
+                    </g>
+                    <defs>
+                        <linearGradient
+                            id="_Linear1"
+                            x1="0"
+                            y1="0"
+                            x2="1"
+                            y2="0"
+                            gradientUnits="userSpaceOnUse"
+                            gradientTransform="matrix(408.01,-156.787,35.5323,92.4663,296.907,158.511)"
+                        >
+                            <stop
+                                offset="0"
+                                style="stop-color: #1b3dfe; stop-opacity: 1"
+                            />
+                            <stop
+                                offset="0.16"
+                                style="stop-color: #0696ff; stop-opacity: 1"
+                            />
+                            <stop
+                                offset="0.34"
+                                style="stop-color: #00b0ff; stop-opacity: 1"
+                            />
+                            <stop
+                                offset="0.67"
+                                style="stop-color: #00d5be; stop-opacity: 1"
+                            />
+                            <stop
+                                offset="0.72"
+                                style="stop-color: #02da99; stop-opacity: 1"
+                            />
+                            <stop
+                                offset="0.78"
+                                style="stop-color: #04de7c; stop-opacity: 1"
+                            />
+                            <stop
+                                offset="1"
+                                style="stop-color: #05df72; stop-opacity: 1"
+                            />
+                        </linearGradient>
+                    </defs></svg></a
+            ><button
+                aria-expanded="false"
+                aria-controls="main-nav"
+                class="md:hidden text-indigo hover:cursor-pointer"
+                type="button"
+            >
+                <span
+                    class="bg-white text-ink p-16 sr-only"
+                    id="menu-button-text"
+                    >Open menu</span
+                ><svg
+                    width="48"
+                    height="48"
+                    viewBox="0 0 25 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width=".5"
+                    class="menu-icon"
+                >
+                    <path
+                        d="M4.5 17.27V16.27H20.5V17.27H4.5ZM4.5 12.5V11.5H20.5V12.5H4.5ZM4.5 7.72998V6.72998H20.5V7.72998H4.5Z"
+                        fill="currentColor"
+                    />
+                </svg>
+                <svg
+                    width="48"
+                    height="48"
+                    viewBox="0 0 25 24"
+                    fill="none"
+                    class="close-icon hidden"
+                >
+                    <path
+                        d="M13.5605 12L20 5.5605L18.9395 4.5L12.5 10.9395L6.0605 4.5L5 5.5605L11.4395 12L5 18.4395L6.0605 19.5L12.5 13.0605L18.9395 19.5L20 18.4395L13.5605 12Z"
+                        fill="currentColor"
+                    />
+                </svg>
+            </button>
+            <ul
+                id="main-nav"
+                class="w-full md:w-auto el-cluster gap-16 !hidden md:!flex"
+            >
+                <li>
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li>
+                    <a
+                        class="nav-link active"
+                        href="/projects"
+                        >Projects</a
+                    >
+                </li>
+                <li>
+                    <a class="nav-link" href="/about"
+                        >About</a
+                    >
+                </li>
+                <li>
+                    <a class="nav-link" href="/stories"
+                        >Stories</a
+                    >
+                </li>
+                <li>
+                    <a class="nav-link" href="https://discourse.myriadrf.org/"
+                        >Forum</a
+                    >
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let t = document.querySelector('[aria-controls="main-nav"]'),
+            n = document.getElementById("main-nav"),
+            o = document.getElementById("menu-button-text"),
+            i = document.querySelector(".menu-icon"),
+            d = document.querySelector(".close-icon"),
+            s = document.querySelector("header"),
+            r = [
+                document.querySelector(".wy-nav-side"),
+                document.querySelector(".wy-nav-content-wrap"),
+            ].filter(Boolean);
+        function a() {
+            return 768 <= window.innerWidth;
+        }
+        let c = a();
+        function l() {
+            return s ? s.offsetHeight : 90;
+        }
+        (window.addEventListener("resize", function () {
+            var e = a();
+            c !== e &&
+                (e
+                    ? (r.forEach((e) => {
+                          e && e.style.removeProperty("margin-top");
+                      }),
+                      t && t.setAttribute("aria-expanded", "false"),
+                      o && (o.textContent = "Open menu"),
+                      i && i.classList.remove("hidden"),
+                      d && d.classList.add("hidden"))
+                    : n &&
+                      t &&
+                      (n.classList.add("!hidden"),
+                      n.classList.remove("!flex"),
+                      t.setAttribute("aria-expanded", "false"),
+                      o && (o.textContent = "Open menu"),
+                      i && i.classList.remove("hidden"),
+                      d && d.classList.add("hidden"),
+                      r.forEach((e) => {
+                          e && e.style.removeProperty("margin-top");
+                      })),
+                (c = e));
+        }),
+            t &&
+                n &&
+                t.addEventListener("click", function () {
+                    var e = "true" === t.getAttribute("aria-expanded");
+                    (t.setAttribute("aria-expanded", String(!e)),
+                        e
+                            ? (n.classList.add("!hidden"),
+                              n.classList.remove("!flex"),
+                              o && (o.textContent = "Open menu"),
+                              i && i.classList.remove("hidden"),
+                              d && d.classList.add("hidden"),
+                              r.forEach((e) => {
+                                  e && e.style.removeProperty("margin-top");
+                              }))
+                            : (n.classList.remove("!hidden"),
+                              n.classList.add("!flex"),
+                              o && (o.textContent = "Close menu"),
+                              i && i.classList.add("hidden"),
+                              d && d.classList.remove("hidden"),
+                              s &&
+                                  0 < r.length &&
+                                  setTimeout(function () {
+                                      let t = s.offsetHeight;
+                                      r.forEach((e) => {
+                                          e &&
+                                              e.style.setProperty(
+                                                  "margin-top",
+                                                  t + "px",
+                                                  "important",
+                                              );
+                                      });
+                                  }, 0)));
+                }),
+            document.addEventListener("click", function (e) {
+                var t,
+                    n = e.target.closest("a");
+                n &&
+                    (n = n.getAttribute("href")) &&
+                    n.startsWith("#") &&
+                    (t = n.substring(1)) &&
+                    (t = document.getElementById(t)) &&
+                    (e.preventDefault(),
+                    (e = l()),
+                    (t =
+                        t.getBoundingClientRect().top + window.pageYOffset - e),
+                    window.scrollTo(0, t),
+                    history.pushState(null, null, n));
+            }),
+            window.location.hash &&
+                setTimeout(function () {
+                    var e,
+                        t = window.location.hash.substring(1),
+                        t = document.getElementById(t);
+                    t &&
+                        ((e = l()),
+                        (t =
+                            t.getBoundingClientRect().top +
+                            window.pageYOffset -
+                            e),
+                        window.scrollTo(0, t));
+                }, 100));
+    });
+</script>
+ 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="/projects/limesdr-mini-2-0/" class="icon icon-home">
+            LimeSDR Mini v2
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="/projects/limesdr-mini-2-0/search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="/projects/limesdr-mini-2-0/index.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="/projects/limesdr-mini-2-0/user/index.html">User Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="/projects/limesdr-mini-2-0/user/versions.html">Board Versions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Hardware Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#host-interface">Host Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cooling">Cooling</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fan-mounting">Fan Mounting</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#rf-connections">RF Connections</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="/projects/limesdr-mini-2-0/user/clock.html">Reference Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="/projects/limesdr-mini-2-0/user/software.html">Software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="/projects/limesdr-mini-2-0/user/flashing.html">Flashing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/user/flashing.html#software-programming">Software Programming</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="/projects/limesdr-mini-2-0/user/flashing.html#software">Software</a></li>
+<li class="toctree-l4"><a class="reference internal" href="/projects/limesdr-mini-2-0/user/flashing.html#programming-via-the-gui">Programming via the GUI</a></li>
+<li class="toctree-l4"><a class="reference internal" href="/projects/limesdr-mini-2-0/user/flashing.html#programming-via-the-cli">Programming via the CLI</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/index.html">Hardware Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.4/index.html">v2.4</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.4/overview.html">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.4/digital.html">RF Transceiver Digital</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.4/digital.html#digital-interface">Digital Interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.4/digital.html#control">Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.4/digital.html#lms7002m-pins">LMS7002M Pins</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.4/rfcontrol.html">RF Network Control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.4/clock.html">Clock Distribution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.4/usb.html">USB 3.0 Controller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.4/leds.html">LEDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.4/peripheralinterfaces.html">Peripheral Interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.4/jtag.html">JTAG</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.4/gpio.html">GPIO Connector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.4/tempsensor.html">Board temperature control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.4/power.html">Power Distribution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.3/index.html">v2.3</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.3/overview.html">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.3/digital.html">RF Transceiver Digital</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.3/digital.html#digital-interface">Digital Interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.3/digital.html#control">Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.3/digital.html#lms7002m-pins">LMS7002M Pins</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.3/rfcontrol.html">RF Network Control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.3/clock.html">Clock Distribution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.3/usb.html">USB 3.0 Controller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.3/leds.html">LEDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.3/peripheralinterfaces.html">Peripheral Interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.3/jtag.html">JTAG</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.3/gpio.html">GPIO Connector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.3/tempsensor.html">Board temperature control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.3/power.html">Power Distribution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.2/index.html">v2.2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.2/overview.html">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.2/digital.html">RF Transceiver Digital</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.2/digital.html#digital-interface">Digital Interface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.2/digital.html#control">Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.2/digital.html#lms7002m-pins">LMS7002M Pins</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.2/rfcontrol.html">RF Network Control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.2/clock.html">Clock Distribution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.2/usb.html">USB 3.0 Controller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.2/leds.html">LEDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.2/peripheralinterfaces.html">Peripheral Interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.2/jtag.html">JTAG</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.2/gpio.html">GPIO Connector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.2/tempsensor.html">Board temperature control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/v2.2/power.html">Power Distribution</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/changelog.html">Changelog</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="/projects/limesdr-mini-2-0/reference/changelog.html#rf-loopback">RF loopback</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="/projects/limesdr-mini-2-0/developer.html">Developer Resources</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="/projects/limesdr-mini-2-0/index.html">LimeSDR Mini v2</a>
+      </nav>
+
+      <div class="wy-nav-content">  
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="/projects/limesdr-mini-2-0/" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="/projects/limesdr-mini-2-0/user/index.html">User Guide</a></li>
+      <li class="breadcrumb-item active">Hardware Setup</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/myriadrf/LimeSDR-Mini-v2/blob/docs/docs/user/setup.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="hardware-setup">
+<h1>Hardware Setup<a class="headerlink" href="#hardware-setup" title="Link to this heading"></a></h1>
+<section id="host-interface">
+<h2>Host Interface<a class="headerlink" href="#host-interface" title="Link to this heading"></a></h2>
+<p>LimeSDR Mini should be plugged into a USB type-A socket slot on the host device.</p>
+<p>The host must provide a USB 2.0 or higher interface, and supply power (5V, 900 mA) via the USB type-A connector.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A USB 3.0 interface is required to achieve the maximum supported data transfer rate.</p>
+</div>
+</section>
+<section id="cooling">
+<h2>Cooling<a class="headerlink" href="#cooling" title="Link to this heading"></a></h2>
+<p>Depending on the application, host system and ambient temperature, additional cooling may be required to ensure reliable operation of the LimeSDR Mini board. This may be in the form of airflow through the host system, or a dedicated heatsink fitted to the board.</p>
+<p>The LimeFEA mPCIe adapter boards provide an integrated heatsink in the form of a large copper ground plane plus thermal pad.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the event of errors, instability or reduced performance, check the board temperature to ensure that it is within the specified operating range.</p>
+</div>
+<section id="fan-mounting">
+<h3>Fan Mounting<a class="headerlink" href="#fan-mounting" title="Link to this heading"></a></h3>
+<p>LimeSDR Mini board features three holes which may be used to secure the board into the case or fan mounting for instance as shown in Figure 4. Two holes are placed at the sides of USB connector and one more hole is between SMA connectors.</p>
+<figure class="align-default" id="id2">
+<a class="reference internal image-reference" href="/projects/limesdr-mini-2-0/_images/LimeSDR-Mini_v2.2_fan_mounting_1.png"><img alt="../_images/LimeSDR-Mini_v2.2_fan_mounting_1.png" src="/projects/limesdr-mini-2-0/_images/LimeSDR-Mini_v2.2_fan_mounting_1.png" style="width: 600px;" />
+</a>
+<figcaption>
+<p><span class="caption-text">Figure 4: LimeSDR Mini v2.x fan mounting</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>You have to be careful when using mounting holes not to damage R72 resistor and C186 capacitor while there is no much clearence as you may see in Figure 5.</p>
+</div>
+<figure class="align-default" id="id3">
+<a class="reference internal image-reference" href="/projects/limesdr-mini-2-0/_images/LimeSDR-Mini_v2.2_fan_mounting_2.png"><img alt="../_images/LimeSDR-Mini_v2.2_fan_mounting_2.png" src="/projects/limesdr-mini-2-0/_images/LimeSDR-Mini_v2.2_fan_mounting_2.png" style="width: 600px;" />
+</a>
+<figcaption>
+<p><span class="caption-text">Figure 5: LimeSDR Mini v2.x mounting hole clearence</span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Recommended fan mounting solution is shown in Figure 6.</p>
+<figure class="align-default" id="id4">
+<a class="reference internal image-reference" href="/projects/limesdr-mini-2-0/_images/LimeSDR-Mini_v2.2_fan_mounting_3.png"><img alt="../_images/LimeSDR-Mini_v2.2_fan_mounting_3.png" src="/projects/limesdr-mini-2-0/_images/LimeSDR-Mini_v2.2_fan_mounting_3.png" style="width: 600px;" />
+</a>
+<figcaption>
+<p><span class="caption-text">Figure 6: FIX-TP2-5 fan mounting components</span><a class="headerlink" href="#id4" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-default" id="id5">
+<a class="reference internal image-reference" href="/projects/limesdr-mini-2-0/_images/LimeSDR-Mini_v2.2_fan_mounting_4.png"><img alt="../_images/LimeSDR-Mini_v2.2_fan_mounting_4.png" src="/projects/limesdr-mini-2-0/_images/LimeSDR-Mini_v2.2_fan_mounting_4.png" style="width: 600px;" />
+</a>
+<figcaption>
+<p><span class="caption-text">Figure 7: FIX-HP2-5 fan mounting components</span><a class="headerlink" href="#id5" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Use two FIX-TP2-5 stands with internal and external thread (4mm width, M2 thread) as a spacers to mount the fan on top of LimeSDR Mini v2.x. Put FIX-TP2-5 stands from the top through LimeSDR Mini v2.x slot mounting holes around USB connector as shown in Figure 6. Secure the stands to the fan using two M2 thread screws (ex. P/N 1219480, Phillips head screw, M2x10). Secure two FIX-TP2-5 stands using two FIX-HP2-5 spacers as nuts from the bottom of the PCB as shown in Figure 7. This is enough to hold the fan but one may use additional FIX-HP2-5 (4mm width, M2 thread) stand with internal thread as an additional fan rest point which rests on PCB over unmounted J3 connector as shown in Figures 6 and 7. Secure FIX-HP2-5 spacer to the fan using the same screw (P/N 1219480).</p>
+<p>Total required mechanical components per LimeSDR Mini v2.x:</p>
+<ul class="simple">
+<li><p>2x <a class="reference external" href="https://www.tme.eu/en/details/fix-tp2-5/plastic-standoffs/fix-fasten/">FIX-TP2-5</a> stands with internal and external M2 thread;</p></li>
+<li><p>3x <a class="reference external" href="https://www.tme.eu/en/details/fix-hp2-5/plastic-standoffs/fix-fasten/">FIX-HP2-5</a> stands with internal M2 threads;</p></li>
+<li><p>3x <a class="reference external" href="https://www.tme.eu/en/details/b2x10_bn1435/bolts/bossard/1219480/">1219480</a> screws; M2x10 10mm length;</p></li>
+<li><p>1x <a class="reference external" href="https://www.digikey.com/en/products/detail/sunon-fans/4127-MF30060V1-1000U-A99/9838567">4127/MF30060V1-1000U-A99</a> 30mm fan.</p></li>
+</ul>
+</section>
+</section>
+<section id="rf-connections">
+<h2>RF Connections<a class="headerlink" href="#rf-connections" title="Link to this heading"></a></h2>
+<figure class="align-default" id="id6">
+<a class="reference internal image-reference" href="/projects/limesdr-mini-2-0/_images/LimeSDR-Mini_v2.4_RFCON.png"><img alt="../_images/LimeSDR-Mini_v2.4_RFCON.png" src="/projects/limesdr-mini-2-0/_images/LimeSDR-Mini_v2.4_RFCON.png" style="width: 600px;" />
+</a>
+<figcaption>
+<p><span class="caption-text">Figure 8: LimeSDR Mini v2.x board top with RF connector positions</span><a class="headerlink" href="#id6" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<table class="docutils align-default" id="id7">
+<caption><span class="caption-text">Table 1. RF Connectors</span><a class="headerlink" href="#id7" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Connector ID</strong></p></th>
+<th class="head"><p><strong>Connector type</strong></p></th>
+<th class="head"><p><strong>RF band</strong></p></th>
+<th class="head"><p><strong>Frequency range</strong></p></th>
+<th class="head"><p><strong>Note</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td rowspan="2"><p>J1</p></td>
+<td rowspan="2"><p>SMA</p></td>
+<td><p>TX low</p></td>
+<td><p>30 MHz - 1.9 GHz</p></td>
+<td><p>transmit low frequency range</p></td>
+</tr>
+<tr class="row-odd"><td><p>TX high</p></td>
+<td><p>2 GHz - 2.6 GHz</p></td>
+<td><p>transmit high frequency range</p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><p>J2</p></td>
+<td rowspan="2"><p>SMA</p></td>
+<td><p>RX wide</p></td>
+<td><p>700 MHz - 900 MHz</p></td>
+<td><p>receive wide frequency range</p></td>
+</tr>
+<tr class="row-odd"><td><p>RX high</p></td>
+<td><p>2 GHz - 2.6 GHz</p></td>
+<td><p>receive high frequency range</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Care should be taken when connecting external RF signals to the RX inputs, to ensure that the maximum safe input power of +10 dBm is not exceeded, as this may cause permanent damage to the device.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="/projects/limesdr-mini-2-0/user/versions.html" class="btn btn-neutral float-left" title="Board Versions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="/projects/limesdr-mini-2-0/user/clock.html" class="btn btn-neutral float-right" title="Reference Clock" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024-2026 Lime Microsystems.
+      <span class="lastupdated">Last updated on Jun 08, 2026.
+      </span></p>
+  </div>
+
+    <footer
+    role="contentinfo"
+    class="myriad-footer text-ink-lighter py-24 bg-white border-t-gray-mid border-t-1"
+>
+    <div class="flex flex-wrap flex-row items-start justify-between gap-24">
+        <div class="shrink-0 basis-full lg:basis-auto">
+            <a class="inline-block footerLogo" title="Go to the homepage" href="/projects/limesdr-mini-2-0/"><span class="sr-only">Go to the homepage</span
+                ><svg
+                    width="100%"
+                    height="54"
+                    viewBox="0 0 706 172"
+                    xml:space="preserve"
+                    xmlns:serif="http://www.serif.com/"
+                    style="
+                        fill-rule: evenodd;
+                        clip-rule: evenodd;
+                        stroke-linejoin: round;
+                        stroke-miterlimit: 2;
+                    "
+                    role="img"
+                    aria-label="Myriad RF logo"
+                    fill="#202127"
+                    class="height[48px] lg:h-[3.5rem]"
+                >
+                    <g id="myriad-logo">
+                        <path
+                            d="M228.178,65.912l-11.705,63.981l-16.381,0l16.073,-82.798l21.649,0l10.34,53.408l1.065,10.466l5.177,-10.466l31.021,-53.408l21.672,0l-16.073,82.798l-16.38,0l13.164,-64.125l-9.814,18.972l-26.592,45.153l-11.754,0l-9.037,-45.411l-2.425,-18.57Zm103.898,45.044l4.146,-8.436l21.135,-37.838l16.683,0l-43.161,72.881c-2.415,4.112 -4.684,7.534 -6.808,10.267c-2.124,2.732 -4.25,4.866 -6.379,6.4c-2.129,1.534 -4.38,2.631 -6.752,3.291c-2.373,0.66 -5.057,0.99 -8.053,0.99c-1.71,0 -3.295,-0.175 -4.755,-0.527c-1.461,-0.351 -2.562,-0.669 -3.304,-0.955l2.399,-11.932l3.611,0c1.794,0 3.352,-0.14 4.677,-0.418c1.324,-0.278 2.567,-0.851 3.729,-1.717c1.161,-0.866 2.403,-2.171 3.726,-3.913c1.322,-1.742 2.869,-4.102 4.641,-7.08l3.122,-5.141l-13.019,-62.146l16.409,0l7.036,37.838l0.917,8.436Zm54.529,-15.794l-6.754,34.731l-15.616,0l12.681,-65.211l15.616,0l-1.458,7.497c2.091,-2.443 4.345,-4.399 6.762,-5.867c3.83,-2.326 7.816,-3.489 11.956,-3.489c3.594,0 5.919,0.62 6.974,1.859l-2.614,13.458c-0.935,-0.294 -1.978,-0.502 -3.129,-0.624c-1.152,-0.121 -2.439,-0.182 -3.861,-0.182c-3.031,0 -5.712,0.397 -8.044,1.192c-2.331,0.794 -4.333,1.969 -6.005,3.524c-1.672,1.555 -3.036,3.43 -4.09,5.624c-1.054,2.194 -1.849,4.69 -2.387,7.488l-0.031,0Zm20.813,34.731l12.68,-65.211l15.616,0l-12.68,65.211l-15.616,0Zm14.107,-72.515l2.94,-15.154l15.616,0l-2.94,15.154l-15.616,0Zm50.406,64.846c-2.792,2.797 -5.804,4.947 -9.036,6.45c-4.307,2.003 -8.59,3.004 -12.849,3.004c-5.892,0 -10.696,-1.464 -14.41,-4.392c-3.715,-2.928 -5.572,-7.169 -5.572,-12.723c0,-4.535 1.439,-8.606 4.317,-12.214c2.878,-3.608 7.082,-6.335 12.614,-8.183c3.49,-1.218 6.837,-2.111 10.04,-2.679c3.204,-0.568 6.633,-0.934 10.288,-1.096c3.121,-0.139 6.681,-0.218 10.68,-0.238l0.294,-1.512c0.132,-0.708 0.231,-1.404 0.297,-2.087c0.066,-0.683 0.099,-1.312 0.099,-1.888c0,-2.944 -0.896,-5.169 -2.687,-6.676c-1.792,-1.507 -4.548,-2.26 -8.27,-2.26c-3.814,0 -6.955,0.943 -9.423,2.829c-2.468,1.886 -4.279,4.406 -5.432,7.559l-15.616,0c2.041,-7.544 5.93,-13.313 11.667,-17.306c5.738,-3.993 12.674,-5.989 20.808,-5.989c5.725,0 10.408,0.891 14.048,2.672c3.64,1.782 6.324,4.215 8.052,7.301c1.727,3.086 2.591,6.564 2.591,10.434c0,0.942 -0.061,1.905 -0.183,2.89c-0.122,0.984 -0.264,1.988 -0.426,3.011l-4.779,24.76c-0.529,2.797 -0.907,5.16 -1.135,7.091c-0.228,1.93 -0.342,3.617 -0.342,5.059c0,0.707 0.038,1.375 0.114,2.001c0.075,0.627 0.163,1.244 0.263,1.851l-16.225,0c-0.051,-0.364 -0.101,-0.745 -0.151,-1.143c-0.05,-0.398 -0.075,-0.814 -0.075,-1.248c0,-1.523 0.145,-3.273 0.435,-5.249l0.004,-0.029Zm4.185,-22.363c-5.281,0.063 -9.749,0.373 -13.404,0.93c-4.125,0.629 -7.397,1.523 -9.817,2.683c-2.419,1.16 -4.137,2.529 -5.155,4.109c-1.017,1.58 -1.525,3.346 -1.525,5.3c0,2.44 0.789,4.263 2.366,5.468c1.578,1.205 3.723,1.807 6.435,1.807c3.268,0 6.344,-0.779 9.228,-2.338c2.884,-1.559 5.335,-3.67 7.354,-6.333c1.952,-2.574 3.258,-5.423 3.92,-8.547l0.598,-3.079Zm59.081,23.206c-2.057,2.042 -4.264,3.76 -6.622,5.156c-3.89,2.303 -7.981,3.455 -12.272,3.455c-4.534,0 -8.433,-1.041 -11.695,-3.122c-3.262,-2.081 -5.774,-5.03 -7.535,-8.847c-1.761,-3.816 -2.642,-8.297 -2.642,-13.441c0,-5.624 0.848,-11.032 2.543,-16.223c1.695,-5.192 4.113,-9.837 7.254,-13.937c3.14,-4.099 6.854,-7.338 11.141,-9.717c4.287,-2.379 9.038,-3.568 14.252,-3.568c6.22,0 10.993,2.166 14.32,6.497c0.476,0.619 0.917,1.273 1.325,1.963l5.65,-29.059l15.616,0l-17.047,87.669l-15.616,0l1.328,-6.826Zm-13.73,-4.296c3.087,0 5.84,-0.922 8.258,-2.766c2.419,-1.844 4.469,-4.256 6.149,-7.236c1.681,-2.979 2.952,-6.201 3.812,-9.666c0.861,-3.466 1.291,-6.803 1.291,-10.012c0,-4.313 -0.933,-7.619 -2.8,-9.916c-1.866,-2.297 -4.581,-3.445 -8.143,-3.445c-2.722,0 -5.26,0.828 -7.614,2.485c-2.354,1.656 -4.417,3.88 -6.188,6.672c-1.772,2.791 -3.146,5.965 -4.122,9.521c-0.977,3.556 -1.465,7.233 -1.465,11.032c0,4.312 0.921,7.612 2.762,9.9c1.842,2.287 4.528,3.431 8.06,3.431Zm59.979,-21.084l-6.252,32.206l-16.383,0l16.073,-82.798l32.052,0c8.217,0 14.65,1.878 19.301,5.635c4.651,3.757 6.977,9.108 6.977,16.052c-0,4.978 -1.36,9.426 -4.081,13.343c-2.62,3.772 -6.328,6.765 -11.127,8.978c1.207,0.892 2.201,1.967 2.983,3.224c1.575,2.532 2.469,6.05 2.682,10.554l1.413,25.012l-17.069,0l-0.529,-21.942c-0.05,-2.874 -0.459,-5.045 -1.227,-6.512c-0.769,-1.468 -1.952,-2.46 -3.549,-2.977c-1.598,-0.516 -3.768,-0.775 -6.51,-0.775l-14.754,0Zm7.285,-37.529l-4.794,24.698l15.24,0c3.482,0 6.472,-0.645 8.971,-1.934c2.499,-1.29 4.431,-3.092 5.796,-5.405c1.365,-2.313 2.048,-4.968 2.048,-7.965c-0,-2.894 -0.981,-5.183 -2.942,-6.868c-1.962,-1.684 -4.849,-2.526 -8.663,-2.526l-15.656,0Zm65.79,36.393l-6.473,33.342l-16.382,0l16.072,-82.798l58.169,0l-2.491,13.063l-41.831,0l-4.529,23.33l37.131,0l-2.491,13.063l-37.175,0Z"
+                        />
+                        <path
+                            d="M55.697,126.392c5.585,3.099 9.12,8.968 9.282,15.32c-0.015,0.053 -0.029,0.107 -0.044,0.161c-0.46,1.718 -0.656,3.444 -0.613,5.136c-2.647,9.523 -12.493,15.162 -22.061,12.598c-4.907,-1.314 -8.799,-4.535 -11.092,-8.651c1.264,0.701 2.633,1.261 4.092,1.651c9.622,2.579 19.527,-3.14 22.105,-12.762c1.264,-4.715 0.535,-9.498 -1.669,-13.453Zm42.471,11.361c7.078,3.929 10.864,12.303 8.674,20.473c-2.581,9.633 -12.497,15.359 -22.13,12.777c-4.91,-1.315 -8.806,-4.537 -11.103,-8.656c1.268,0.703 2.64,1.265 4.103,1.656c9.633,2.582 19.549,-3.144 22.13,-12.777c1.266,-4.722 0.535,-9.512 -1.674,-13.473Zm-73.64,-64.863c5.586,3.099 9.12,8.968 9.283,15.32c-0.015,0.054 -0.03,0.108 -0.044,0.161c-0.461,1.718 -0.657,3.444 -0.614,5.137c-2.646,9.522 -12.493,15.161 -22.06,12.598c-4.907,-1.315 -8.799,-4.535 -11.093,-8.652c1.264,0.701 2.634,1.261 4.093,1.652c9.622,2.578 19.527,-3.141 22.105,-12.763c1.263,-4.714 0.534,-9.497 -1.67,-13.453Zm42.472,11.361c5.589,3.104 9.126,8.98 9.287,15.338c-0.015,0.054 -0.03,0.109 -0.044,0.164c-0.46,1.716 -0.656,3.442 -0.613,5.133c-2.648,9.536 -12.507,15.183 -22.086,12.616c-4.911,-1.316 -8.806,-4.538 -11.103,-8.657c1.267,0.704 2.64,1.265 4.103,1.657c9.632,2.581 19.549,-3.144 22.13,-12.777c1.265,-4.722 0.534,-9.513 -1.674,-13.474Zm42.44,11.391c5.586,3.099 9.12,8.969 9.283,15.32c-0.015,0.054 -0.03,0.108 -0.044,0.162c-0.46,1.717 -0.657,3.443 -0.614,5.136c-2.646,9.522 -12.493,15.162 -22.06,12.598c-4.907,-1.315 -8.799,-4.535 -11.093,-8.652c1.264,0.702 2.634,1.261 4.093,1.652c9.622,2.578 19.527,-3.14 22.105,-12.762c1.263,-4.715 0.535,-9.498 -1.67,-13.454Zm42.472,11.361c7.077,3.93 10.863,12.304 8.674,20.474c-2.581,9.633 -12.497,15.358 -22.13,12.777c-4.911,-1.316 -8.806,-4.538 -11.103,-8.657c1.267,0.704 2.64,1.265 4.103,1.657c9.633,2.581 19.549,-3.144 22.13,-12.777c1.265,-4.722 0.535,-9.513 -1.674,-13.474Zm-116.081,-76.254c5.59,3.104 9.126,8.98 9.288,15.338c-0.015,0.055 -0.03,0.109 -0.045,0.164c-0.46,1.717 -0.656,3.442 -0.613,5.134c-2.648,9.535 -12.507,15.182 -22.086,12.615c-4.911,-1.316 -8.806,-4.537 -11.103,-8.656c1.268,0.703 2.64,1.264 4.103,1.656c9.633,2.581 19.549,-3.144 22.13,-12.777c1.266,-4.722 0.535,-9.513 -1.674,-13.474Zm42.441,11.392c5.585,3.099 9.12,8.968 9.282,15.32c-0.015,0.053 -0.029,0.107 -0.044,0.161c-0.46,1.717 -0.656,3.444 -0.613,5.136c-2.647,9.523 -12.493,15.162 -22.061,12.598c-4.907,-1.314 -8.799,-4.535 -11.092,-8.651c1.264,0.701 2.633,1.26 4.092,1.651c9.622,2.579 19.527,-3.14 22.106,-12.762c1.263,-4.715 0.534,-9.498 -1.67,-13.453Zm42.471,11.361c5.59,3.103 9.127,8.979 9.288,15.337c-0.015,0.055 -0.03,0.11 -0.045,0.164c-0.46,1.717 -0.656,3.442 -0.613,5.134c-2.648,9.535 -12.507,15.182 -22.086,12.615c-4.91,-1.315 -8.806,-4.537 -11.102,-8.656c1.267,0.703 2.639,1.264 4.102,1.656c9.633,2.582 19.549,-3.144 22.13,-12.777c1.266,-4.722 0.535,-9.512 -1.674,-13.473Zm42.441,11.391c7.073,3.924 10.857,12.29 8.67,20.453c-2.579,9.622 -12.484,15.341 -22.105,12.763c-4.908,-1.315 -8.799,-4.536 -11.093,-8.652c1.264,0.701 2.633,1.261 4.093,1.652c9.621,2.578 19.526,-3.141 22.105,-12.763c1.263,-4.715 0.534,-9.498 -1.67,-13.453Zm-73.609,-64.893c5.589,3.104 9.126,8.979 9.287,15.338c-0.015,0.054 -0.03,0.109 -0.044,0.164c-0.46,1.716 -0.656,3.442 -0.613,5.133c-2.648,9.536 -12.507,15.182 -22.086,12.616c-4.911,-1.316 -8.806,-4.538 -11.103,-8.657c1.267,0.704 2.64,1.265 4.103,1.657c9.632,2.581 19.549,-3.144 22.13,-12.777c1.265,-4.723 0.534,-9.513 -1.674,-13.474Zm42.44,11.391c7.073,3.924 10.857,12.291 8.67,20.454c-2.578,9.621 -12.483,15.34 -22.105,12.762c-4.907,-1.315 -8.799,-4.535 -11.093,-8.652c1.264,0.701 2.634,1.261 4.093,1.652c9.622,2.578 19.527,-3.141 22.105,-12.762c1.263,-4.715 0.535,-9.498 -1.67,-13.454Z"
+                        />
+                    </g></svg
+            ></a>
+        </div>
+        <div role="navigation" aria-label="website sections">
+            <h2 class="text-h-xl !mb-8">Projects</h2>
+            <ul class="el-stack gap-8">
+                <li>
+                    <a class="footer-link" href="https://myriadrf.org/projects">
+                        All
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="footer-link"
+                        href="https://myriadrf.org/projects/?type=Hardware#projects-grid-container"
+                    >
+                        Hardware
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="footer-link"
+                        href="https://myriadrf.org/projects/?type=Software#projects-grid-container"
+                    >
+                        Software
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div role="navigation" aria-label="website sections">
+            <h2 class="text-h-xl !mb-8">Stories</h2>
+            <ul class="el-stack gap-8">
+                <li>
+                    <a class="footer-link" href="https://myriadrf.org/stories">
+                        All
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="footer-link"
+                        href="https://myriadrf.org/stories?category=Over%20The%20Air#stories-grid-container"
+                    >
+                        Over the Air
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="footer-link"
+                        href="https://myriadrf.org/stories?tags=Hardware#stories-grid-container"
+                    >
+                        Hardware
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="footer-link"
+                        href="https://myriadrf.org/stories?tags=Software#stories-grid-container"
+                    >
+                        Software
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div role="navigation" aria-label="website sections">
+            <h2 class="text-h-xl !mb-8">MyriadRF</h2>
+            <ul class="el-stack gap-8">
+                <li>
+                    <a class="footer-link" href="https://myriadrf.org/about">
+                        About
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="footer-link"
+                        href="https://myriadrf.org/privacy-policy"
+                    >
+                        Privacy Policy
+                    </a>
+                </li>
+                <li>
+                    <a class="footer-link" href="https://myriadrf.org/terms">
+                        Terms
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="basis-full">
+            <p class="text-p-base max-w-prose">
+                MyriadRF is a family of open source hardware and software
+                projects for wireless communications, and a community that is
+                working to make wireless innovation accessible to as many people
+                as possible.
+            </p>
+            <ul class="mt-16 el-cluster gap-16">
+                <li>
+                    <a class="social-link" href="https://github.com/myriadrf">
+                        <svg
+                            width="32"
+                            height="32"
+                            viewBox="0 0 32 33"
+                            fill="currentColor"
+                            role="img"
+                            aria-label="Our projects on GitHub"
+                        >
+                            <path
+                                d="M15.9875 3.35791C8.25937 3.35479 2 9.61104 2 17.3329C2 23.4392 5.91562 28.6298 11.3687 30.536C12.1031 30.7204 11.9906 30.1985 11.9906 29.8423V27.4204C7.75 27.9173 7.57812 25.111 7.29375 24.6423C6.71875 23.661 5.35937 23.411 5.76562 22.9423C6.73125 22.4454 7.71562 23.0673 8.85625 24.7517C9.68125 25.9735 11.2906 25.7673 12.1062 25.5642C12.2844 24.8298 12.6656 24.1735 13.1906 23.6642C8.79687 22.8767 6.96562 20.1954 6.96562 17.0079C6.96562 15.461 7.475 14.0392 8.475 12.8923C7.8375 11.0017 8.53437 9.38291 8.62812 9.14229C10.4437 8.97979 12.3312 10.4423 12.4781 10.5579C13.5094 10.2798 14.6875 10.1329 16.0062 10.1329C17.3312 10.1329 18.5125 10.286 19.5531 10.5673C19.9062 10.2985 21.6562 9.04229 23.3437 9.19541C23.4344 9.43604 24.1156 11.0173 23.5156 12.8829C24.5281 14.0329 25.0437 15.4673 25.0437 17.0173C25.0437 20.211 23.2 22.8954 18.7937 23.6704C19.1712 24.0416 19.4708 24.4842 19.6752 24.9725C19.8797 25.4607 19.9848 25.9848 19.9844 26.5142V30.0298C20.0094 30.311 19.9844 30.5892 20.4531 30.5892C25.9875 28.7235 29.9719 23.4954 29.9719 17.336C29.9719 9.61104 23.7094 3.35791 15.9875 3.35791Z"
+                                fill="currentColor"
+                            />
+                        </svg>
+                        <span class="sr-only"> Our projects on GitHub </span>
+                    </a>
+                </li>
+                <li>
+                    <a class="social-link" href="https://x.com/MyriadRF">
+                        <svg
+                            width="32"
+                            height="32"
+                            viewBox="0 0 32 33"
+                            fill="currentColor"
+                            role="img"
+                            aria-label="Follow Myriad RF on X"
+                        >
+                            <path
+                                d="M25.2 2.47363H30.108L19.388 14.7576L32 31.4736H22.126L14.392 21.3336L5.542 31.4736H0.632L12.098 18.3336L0 2.47363H10.126L17.116 11.7396L25.2 2.47363ZM23.48 28.5296H26.2L8.646 5.26363H5.73L23.48 28.5296Z"
+                                fill="currentColor"
+                            />
+                        </svg>
+                        <span class="sr-only"> Follow Myriad RF on X </span>
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="social-link"
+                        href="http://www.linkedin.com/company/myriad-rf"
+                    >
+                        <svg
+                            width="32"
+                            height="32"
+                            viewBox="0 0 32 33"
+                            fill="currentColor"
+                            role="img"
+                            aria-label="Follow Myriad RF on LinkedIn"
+                        >
+                            <path
+                                d="M6.88 10.7537C8.48 10.7537 9.76 9.45365 9.76 7.87365C9.76 6.29365 8.46 4.99365 6.88 4.99365C5.3 4.99365 4 6.29365 4 7.87365C4 9.45365 5.3 10.7537 6.88 10.7537ZM12.5 12.9337V28.9737H17.46V21.0537C17.46 18.9537 17.86 16.9337 20.44 16.9337C23.02 16.9337 23.02 19.3337 23.02 21.1737V28.9737H28V20.1737C28 15.8537 27.08 12.5337 22.04 12.5337C19.62 12.5337 18 13.8537 17.34 15.1137H17.28V12.9137H12.52L12.5 12.9337ZM4.4 12.9337H9.38V28.9737H4.4V12.9337Z"
+                                fill="currentColor"
+                            />
+                        </svg>
+                        <span class="sr-only">
+                            Follow Myriad RF on LinkedIn
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a
+                        class="social-link"
+                        href="https://www.youtube.com/c/MyriadRF"
+                    >
+                        <svg
+                            width="32"
+                            height="32"
+                            viewBox="0 0 32 33"
+                            fill="currentColor"
+                            role="img"
+                            aria-label="Watch Myriad RF on YouTube"
+                        >
+                            <path
+                                d="M29.4156 10.2268C29.2562 9.63313 28.9437 9.09177 28.5094 8.65687C28.075 8.22197 27.5341 7.90877 26.9406 7.74863C24.7562 7.16113 16 7.16113 16 7.16113C16 7.16113 7.24375 7.16113 5.05937 7.74551C4.46569 7.90513 3.92445 8.21815 3.49002 8.65313C3.05558 9.08811 2.74325 9.62975 2.58437 10.2236C2 12.4111 2 16.9736 2 16.9736C2 16.9736 2 21.5361 2.58437 23.7205C2.90625 24.9268 3.85625 25.8768 5.05937 26.1986C7.24375 26.7861 16 26.7861 16 26.7861C16 26.7861 24.7562 26.7861 26.9406 26.1986C28.1469 25.8768 29.0938 24.9268 29.4156 23.7205C30 21.5361 30 16.9736 30 16.9736C30 16.9736 30 12.4111 29.4156 10.2268ZM13.2188 21.1611V12.7861L20.4688 16.9424L13.2188 21.1611Z"
+                                fill="currentColor"
+                            />
+                        </svg>
+                        <span class="sr-only">
+                            Watch Myriad RF on YouTube
+                        </span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- <div class="mt-24">
+        <span class="text-p-sm"
+            >Copyright © <span id="copyright-year"></span> Myriad RF
+            <script>
+                document.getElementById("copyright-year").textContent =
+                    new Date().getFullYear();
+            </script></span
+        >
+    </div> -->
+</footer>
+
+
+</footer>
+        </div> 
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

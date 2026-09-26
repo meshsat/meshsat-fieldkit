@@ -7,24 +7,24 @@ Generated from the requirements registry `v2/ecad/tools/pcb_requirements.yaml`. 
 
 Every reading carries its evidence class, in the six classes of `v2/docs/CURRENT-EVIDENCE.md`: a record reads PASS only on a class that counts, never on evidence awaiting revalidation, and a desk review (the session's own reading of named files, each bound by its sha256) is never a physical test. The prototype-core functions whose feasibility is not closed are listed first, as explicit architecture feasibility blockers (review of 26 September 2026, section 3 and checkpoint item 1): a merged document is configuration control, not proof that the architecture is feasible.
 
-Registry state **DRAFT_FOR_REVIEW_C**. Sources read at commit `eadbe571` unless an entry says otherwise. 131 records trace to 19 needs; 28 owner rulings are applied, 11 choices were taken by the session under the owner's standing rule of 26 September 2026, 35 items are open and 38 are closed.
+Registry state **DRAFT_FOR_REVIEW_C**. Sources read at commit `eadbe571` unless an entry says otherwise. 132 records trace to 19 needs; 28 owner rulings are applied, 11 choices were taken by the session under the owner's standing rule of 26 September 2026, 35 items are open and 38 are closed.
 
 ## Summary
 
 | kind | records | prototype 1 core | deferred |
 |---|---:|---:|---:|
-| requirement (REQ) | 70 | 32 | 38 |
+| requirement (REQ) | 71 | 33 | 38 |
 | constraint (CON) | 22 | 16 | 6 |
 | assumption (ASM) | 7 | 4 | 3 |
 | choice (CHO) | 3 | 2 | 1 |
 | superseded (SPD) | 6 | 0 | 0 |
 | conflict (CFL) | 17 | 9 | 8 |
 | feasibility (FEA) | 6 | 6 | 0 |
-| **all** | **131** | **69** | **56** |
+| **all** | **132** | **70** | **56** |
 
 | status | records |
 |---|---:|
-| DEFINED | 75 |
+| DEFINED | 76 |
 | TBD | 27 |
 | SUPERSEDED | 6 |
 | CONFLICT_OPEN | 5 |
@@ -34,7 +34,7 @@ Registry state **DRAFT_FOR_REVIEW_C**. Sources read at commit `eadbe571` unless 
 | evidence result | records | what it means |
 |---|---:|---|
 | PASS | 12 | the record's own reading passed, at the phase named, with the file it was read from |
-| FAIL | 15 | the record's own reading failed, at the phase named; an open conflict reads FAIL on its own sources |
+| FAIL | 16 | the record's own reading failed, at the phase named; an open conflict reads FAIL on its own sources |
 | INCONCLUSIVE | 12 | a reading was taken and cannot decide |
 | NOT_JUDGED | 79 | judgeable before hardware and not yet read at requirement level (rule verdicts live in rules_status) |
 | NOT_YET_TESTED | 7 | needs the built prototype, which does not exist |
@@ -43,7 +43,7 @@ Registry state **DRAFT_FOR_REVIEW_C**. Sources read at commit `eadbe571` unless 
 | reading | evidence class | records |
 |---|---|---:|
 | PASS | DESK_REVIEW | 12 |
-| FAIL | DESK_REVIEW | 11 |
+| FAIL | DESK_REVIEW | 12 |
 | FAIL | none: an open conflict read on its own cited sources | 4 |
 | INCONCLUSIVE | DESK_REVIEW | 12 |
 
@@ -51,7 +51,7 @@ No record reads PASS on evidence awaiting revalidation (the validator refuses it
 
 | release effect | records |
 |---|---:|
-| BLOCKER | 58 |
+| BLOCKER | 59 |
 | MUST_JUSTIFY | 54 |
 | ADVISORY | 13 |
 | NONE | 6 |
@@ -65,7 +65,7 @@ Each prototype-core function whose feasibility is not closed, with its feasibili
 | blocker | function | state | reading | page and its ids | holds | owner |
 |---|---|---|---|---|---|---|
 | **FEA-001** | ZEROIZE on the fitted ATECC608B | FEASIBILITY_OPEN | INCONCLUSIVE, DESK_REVIEW | `v2/docs/feasibility/ZEROIZE.md` (FB-ZER-1, Z-EXP-A, Z-EXP-B, Z-EXP-C) | REQ-035, ASM-005, REQ-038; layout entry of B | The session runs the experiments once the parts exist; the spend for the bench parts is the owner's under D-09 (L-06); residuals R2 and R7 go to the D-09 sec... |
-| **FEA-002** | EMCON guarantees per transmitter (the 5G module and the WiFi cards among them) | FEASIBILITY_OPEN | INCONCLUSIVE, DESK_REVIEW | `v2/docs/feasibility/EMCON.md` (SD-EMC-1, SD-EMC-2, SD-EMC-6, E-05, E-07, E-12) | REQ-030, REQ-032, CON-021; layout entry of A, B, C, D | Board B's author (SD-EMC-1, L2, L3, L4, L7), boards A, C and D's authors for their gates, the tools author for RF-002's instrument (L6), and the TEST-PLAN ow... |
+| **FEA-002** | EMCON guarantees per transmitter (the 5G module and the WiFi cards among them) | FEASIBILITY_OPEN | INCONCLUSIVE, DESK_REVIEW | `v2/docs/feasibility/EMCON.md` (SD-EMC-1, SD-EMC-2, SD-EMC-6, SD-EMC-7, E-04, E-05, E-07, E-12) | REQ-030, REQ-032, REQ-071, CON-021; layout entry of A, B, C, D | Board B's author (SD-EMC-1, L2, L3, L4, L7), boards A, C and D's authors for their gates, the tools author for RF-002's instrument (L6), and the TEST-PLAN ow... |
 | **FEA-003** | the three-slot failover fabric: its escape strategy and signal integrity | FEASIBILITY_OPEN | INCONCLUSIVE, DESK_REVIEW | `v2/docs/feasibility/FAILOVER-FABRIC.md` (FB-FAB-1, FB-FAB-2, FB-FAB-3, FB-FAB-4, FB-FAB-5, FB-FAB-6, FB-FAB-7, FB-FAB-8) | REQ-004, REQ-006, CON-003, CON-022; layout entry of B | Board B's author (FB-FAB-2 to FB-FAB-7), the integrator (FB-FAB-1, the run order of FB-FAB-6), an outside high-speed reviewer once the owner approves R-HSD (... |
 | **FEA-004** | the power and thermal bounds | FEASIBILITY_OPEN | INCONCLUSIVE, DESK_REVIEW | `v2/docs/feasibility/POWER-THERMAL.md` (PWR-F12, PWR-F13, PWR-F15) | REQ-014, REQ-018; layout entry of A, D | The session (loads, duty cycles, 'aged'); the battery-protection stream (PWR-F12, the gauge's two over-current levels); board A's owner (the pack-node copper... |
 | **FEA-005** | battery protection, awaiting the qualified review | FEASIBILITY_OPEN | INCONCLUSIVE, DESK_REVIEW | `v2/docs/review-packets/battery/REVIEW-REQUEST.md` (BAT-F01, BAT-F14, Q-TI-1, Q-TI-7) | REQ-044; layout entry of P | The owner engages the reviewer from a quote (D-09, L-03); the battery-protection stream prepares and answers; the reviewer, not yet engaged, is an electronic... |
@@ -102,9 +102,9 @@ A development-board test may gate an architecture decision; a test that needs th
 
 *Stages:* Staged on 26 September 2026 (review of the 22:35 progress report, finding A) by the session under the owner's standing rule of that day: which part of the closing evidence gates layout entry, which fabrication release and which prototype verification; a stage never needs what only a later stage produces (rules_lib.STAGE_CANNOT_NEED).
 
-**FEA-002**. Radios dark (D-05) requires, for every one of the kit's 17 transmitters, a hardware inhibit that holds with every processor dead, in every state of the lines' own supplies, without depending on the radio's firmware. At desk the radio-specific chains are complete for 16 rows; the RM520N-GL's only drawn inhibit is a firmware-mediated airplane mode, the shared lines have open items, and no row is shown on the bench.
+**FEA-002**. Radios dark (D-05) requires, for every one of the kit's 17 transmitters, a hardware inhibit that holds with every processor dead, in every state of the lines' own supplies, without depending on the radio's firmware. At desk the radio-specific (local) chains are complete for 14 rows and no row is complete end to end; the RM520N-GL's only drawn inhibit is a firmware-mediated airplane mode, the RockBLOCK 9704 keeps running on its own supercapacitors with its ENABLE held by firmware, the shared lines have open items, and no row is shown on the bench.
 
-*Closing evidence:* A board B revision carrying SD-EMC-1's supply removal and backstop for slot 2, the single-gate and pull-down remedies of L1 to L4 and L7 on boards A, B, C and D, and the EMCON lamp (CON-021), each read back on its committed netlist; then bench tests E-01 to E-12 of EMCON.md section 6 on the built kit, E-05 and E-12 first because they decide SD-EMC-1's fallback.
+*Closing evidence:* A board B revision carrying SD-EMC-1's supply removal and backstop for slot 2, the single-gate and pull-down remedies of L1 to L4 and L7 on boards A, B, C and D, the RockBLOCK's ENABLE forced low by hardware (EMCON.md 4.4) with the Iridium 9704 module's ENABLE behaviour read from its maker, and the EMCON lamp (CON-021), each read back on its committed netlist against REQ-071's latency and fault conditions; then bench tests E-01 to E-12 of EMCON.md section 6 on the built kit, E-05 and E-12 first because they decide SD-EMC-1's fallback.
 
 *Stages:* Staged on 26 September 2026 (review of the 22:35 progress report, finding A) by the session under the owner's standing rule of that day: which part of the closing evidence gates layout entry, which fabrication release and which prototype verification; a stage never needs what only a later stage produces (rules_lib.STAGE_CANNOT_NEED).
 
@@ -144,7 +144,7 @@ A development-board test may gate an architecture decision; a test that needs th
 | **D-02e** | 2026-09-26 | direct sun | - | REQ-024, ASM-006 |
 | **D-03** | 2026-09-26 | ZEROIZE | decision 30 | ASM-002, REQ-035, ASM-005, CON-020, REQ-036, REQ-038, FEA-001 |
 | **D-04** | 2026-09-26 | markets and obligations | - | REQ-069, CON-008, REQ-050, REQ-053, REQ-054, REQ-055, REQ-067, REQ-056, CON-011, REQ-063 |
-| **D-05** | 2026-09-26 | EMCON meaning | - | REQ-030, CFL-004, REQ-032, FEA-002 |
+| **D-05** | 2026-09-26 | EMCON meaning | - | REQ-030, REQ-071, CFL-004, REQ-032, FEA-002 |
 | **D-06** | 2026-09-26 | pack size and runtime | - | REQ-014, FEA-004, CON-006, CFL-006, CFL-012 |
 | **D-07** | 2026-09-26 | 5G antenna jacks | - | CON-015 |
 | **D-08** | 2026-09-26 | case measurement and mock-up (REVERSED by D-08-reversal) | - | none |
@@ -743,7 +743,11 @@ Prototype 1: not in the core. 7 record(s).
 
 *Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the file at fa355479df681ed8
 
-*Bound to:* `v2/docs/feasibility/EMCON.md@fa355479df681ed8`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@2834f0d8c4071d56`
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read at its sixth revision (stream r8docs, MESHSAT-1357 round 8, late on 26 September 2026): the TX lamp's statement and E-02 are unchanged; the revision split local from end-to-end conclusions (section 0a), reopened the RockBLOCK's local chain (4.4) and set each row's latency (5a, REQ-071), none of which moves this reading, so it stands on the file at c92df899e459c476
+
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read after pass 3 of stream r8docs (27 September 2026): three corrections from the independent check, section 4.4's ENABLE input now about 1.98 V with R6 in series (inside the buffer's undefined band, the row still OPEN), section 5a's RM520N-GL reaction time now about 2.0 s less 0.9 times the rail decay, and section 8 naming REQ-071 a sibling of REQ-030; none moves this reading, so it stands on the file at e57a54d1767bcd59
+
+*Bound to:* `v2/docs/feasibility/EMCON.md@e57a54d1767bcd59`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@2834f0d8c4071d56`
 
 *Source (verified):* `v2/docs/PANEL.md:113`; `v2/docs/PANEL.md:158`
 
@@ -866,15 +870,17 @@ Prototype 1: in the core D-01 names. 14 record(s).
 
 **CON-006** (constraint). The pack of D-06 (one shrink-wrapped 4S3P 18650 block), its board P, the heater mat and their mounting fit the east pocket (X +120 to +178, Y -120 to +120) under board B's underside at Z 47.9.
 
-*Accept when:* A named pack build (cells, wrap, board P position, mat, pads) is held with a stated minimum in every axis against the committed board B underside and the worst of Peli's own figures for the current moulding (D-08a), every margin MET, none OPEN or NOT MET, and the fit is shown on hardware at the build (a targeted unpowered mock-up in a new case of that moulding).
+*Accept when:* A named pack build (cells, wrap, board P position, mat, pads) is held with a stated minimum in every axis against the committed board B underside and the worst of Peli's own figures for the current moulding (D-08a), every margin MET, none OPEN or NOT MET, and the fit is shown on hardware in a new case of that moulding: on a targeted unpowered mock-up before board A's east edge and board P's place are frozen for routing or, if it has not run by then, at the affected boards' fabrication release, which carries the rows it would have closed (CASE-MARGINS.md section 7).
 
-*What an earlier reading said:* Round 3 waited on the owner's measurement of his case (M-01, D-08). The owner reversed D-08 on 26 September 2026 and M-01 is closed by the reversal: the fit is held against Peli's figures (CASE-MARGINS.md) and shown on hardware at the build. The underside height is cited from ASSEMBLY.md:72 (Z 47.9, read on the committed B21 board).
+*What an earlier reading said:* Round 3 waited on the owner's measurement of his case (M-01, D-08). The owner reversed D-08 on 26 September 2026 and M-01 is closed by the reversal: the fit is held against Peli's figures (CASE-MARGINS.md) and shown on hardware in a new case of that moulding, which round 3 placed at the build and round 8 (CASE-MARGINS.md's seventh revision, section 7) moved to a targeted unpowered mock-up before board A's east edge and board P's place freeze for routing or, if it has not run by then, to the affected boards' fabrication release. The underside height is cited from ASSEMBLY.md:72 (Z 47.9, read on the committed B21 board).
 
 *allocated to p, case, b; rulings D-06, D-08-reversal, D-08a; session choices SC-07; waits on S-27.*
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CASE-MARGINS.md section 3.2 read at eadbe571: of the pack's four margins, M4b (east face to the east wall) and M6 (pack top under B16's underside) are MET and M4a (the east corner to Peli's R 15.88 fillet) and M5 (the pack group in Y between the east legs) are OPEN until the pack's hold-down fixes its place (section 7)
 
-*Bound to:* `v2/docs/CASE-MARGINS.md@cc641b483b6d8d2e`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CASE-MARGINS.md re-read at its seventh revision (stream r8docs, MESHSAT-1357 round 8, late on 26 September 2026): no computed figure changed; every MET is now qualified as a sensitivity reading that bounds no unstated tolerance (section 1, Verdicts), and the targeted mock-up is recommended before the outlines and connector placements of boards A, B, C, E and P freeze (section 7). The pack's rows read as before (M4b and M6 MET on the design basis, M4a and M5 OPEN), so this reading stands on the file at 275a3083db30a7bf
+
+*Bound to:* `v2/docs/CASE-MARGINS.md@275a3083db30a7bf`
 
 *Source (inferred):* `v2/docs/MESHSAT-709-geometry-appendix.md:3060-3062`; `v2/docs/ASSEMBLY.md:72`; `v2/docs/CASE-MARGINS.md section 3.2 (M4a to M6)`; `owner ruling D-06`
 
@@ -978,7 +984,7 @@ Prototype 1: not in the core. 7 record(s).
 
 **REQ-019** (requirement). The case is the Peli 1450 of the current moulding (Peli 1451-931, 15 January 2025, D-08a) with the 1450PF panel frame, and it never changes; the design is held against the worst of Peli's own figures (D-08-reversal).
 
-*Accept when:* Every board outline, the plate and the pack are held against the worst of Peli's own figures for the current moulding with a stated minimum, every case-dependent margin MET and none OPEN or NOT MET in CASE-MARGINS.md, and the OPEN rows shown on hardware at the build in a new case of that moulding.
+*Accept when:* Every board outline, the plate and the pack are held against the worst of Peli's own figures for the current moulding with a stated minimum, every case-dependent margin MET and none OPEN or NOT MET in CASE-MARGINS.md, and the OPEN rows shown on hardware in a new case of that moulding: the targeted checks of CASE-MARGINS.md section 7 before the affected board outlines and connector placements freeze or, if they have not run by then, at the affected boards' fabrication release (CASE-MARGINS.md section 7), the rest at the build.
 
 *What an earlier reading said:* Round 3's pass line included the owner's measurement of his case (M-01, D-08); the owner reversed D-08 on 26 September 2026 and the design is held against Peli's own figures instead.
 
@@ -986,7 +992,9 @@ Prototype 1: not in the core. 7 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CASE-MARGINS.md sections 0 and 3 read at eadbe571: of 70 computed margins 35 are MET and 35 OPEN, none NOT MET; the OPEN rows rest on the case's unpublished tolerance, the build's allowances or a pick, and section 7 names what closes each (nominal CAD establishes no fit, blind-mate alignment or seal)
 
-*Bound to:* `v2/docs/CASE-MARGINS.md@cc641b483b6d8d2e`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CASE-MARGINS.md re-read at its seventh revision (stream r8docs, MESHSAT-1357 round 8, late on 26 September 2026): of 70 computed margins 35 are MET on the design basis, each a sensitivity reading that bounds no unstated tolerance, and 35 OPEN, none NOT MET; two OPEN rows, M17g and M17x, fail with the geometry as currently assumed and wait on the jumper plug's selection (OPEN, FAILS AS ASSUMED); the targeted checks T1, T2, T4, T5, T6, T10 and T11 are recommended before the outlines and connector placements of boards A, B, C, E and P freeze, the rest at the build. The record stays INCONCLUSIVE on the file at 275a3083db30a7bf
+
+*Bound to:* `v2/docs/CASE-MARGINS.md@275a3083db30a7bf`
 
 *Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:3054-3056`; `v2/docs/V2-SPEC.md:8`; `v2/docs/CASE-MARGINS.md`; `owner ruling D-08a`
 
@@ -1254,11 +1262,12 @@ Prototype 1: not in the core. 17 record(s).
 
 Silence every transmitter with one operator action that does not depend on software.
 
-Prototype 1: in the core D-01 names. 8 record(s).
+Prototype 1: in the core D-01 names. 9 record(s).
 
 | record | kind | prototype 1 | status | verified by | earliest, final phase | rules | decisions | result | effect |
 |---|---|---|---|---|---|---|---|---|---|
 | REQ-030 | requirement | core | TBD | SCRIPT, PROTOTYPE_MEASUREMENT | SCHEMATIC, PROTOTYPE | RF-002, SCH-004, SCH-003 | - | FAIL at SCHEMATIC; PROTOTYPE not yet judged, DESK_REVIEW | BLOCKER |
+| REQ-071 | requirement | core | DEFINED | CALCULATION, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT | SCHEMATIC, PROTOTYPE | RF-002 | - | FAIL at SCHEMATIC; PROTOTYPE not yet judged, DESK_REVIEW | BLOCKER |
 | CFL-004 | conflict | core | CONFLICT_RESOLVED | SCRIPT, MANUAL_REVIEW | SCHEMATIC | RF-002, PWR-002 | - | PASS at SCHEMATIC, DESK_REVIEW | ADVISORY |
 | REQ-031 | requirement | core | DEFINED | MANUAL_REVIEW, PROTOTYPE_MEASUREMENT | SCHEMATIC, PROTOTYPE | RF-002 | - | NOT_JUDGED | BLOCKER |
 | REQ-032 | requirement | core | DEFINED | MANUAL_REVIEW, PROTOTYPE_MEASUREMENT | SCHEMATIC, PROTOTYPE | RF-002 | - | FAIL at SCHEMATIC; PROTOTYPE not yet judged, DESK_REVIEW | BLOCKER |
@@ -1285,11 +1294,33 @@ Prototype 1: in the core D-01 names. 8 record(s).
 
 *Evidence (FAIL, DESK_REVIEW):* v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at the clamp-symbol merge of 26 September 2026: compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent checker, it differs only in D1, D2, D101, D201, D301 and D520's symbol (Device:D_TVS to Device:D_Zener) and pin names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 669d02d07aeaae4b
 
-*Bound to:* `v2/docs/feasibility/EMCON.md@fa355479df681ed8`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b`
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read at its sixth revision (stream r8docs, MESHSAT-1357 round 8, late on 26 September 2026): the PA's closure at desk is LOCAL; end to end none of the 17 rows closes at desk (section 0a); the RockBLOCK's local chain is reopened, because the module runs on its own two 10 F supercapacitors after its supply gate opens, with its ENABLE held by board B's U6 alone (4.4); section 5a sets each row's maximum latency and the fault conditions (REQ-071). The record still reads FAIL, now on the file at c92df899e459c476
+
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read after pass 3 of stream r8docs (27 September 2026): three corrections from the independent check, section 4.4's ENABLE input now about 1.98 V with R6 in series (inside the buffer's undefined band, the row still OPEN), section 5a's RM520N-GL reaction time now about 2.0 s less 0.9 times the rail decay, and section 8 naming REQ-071 a sibling of REQ-030; none moves this reading, so it stands on the file at e57a54d1767bcd59
+
+*Bound to:* `v2/docs/feasibility/EMCON.md@e57a54d1767bcd59`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b`
 
 *Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2787 (item 3)`; `v2/docs/PANEL.md section 6`; `v2/docs/TEST-PLAN.md:46`; `v2/docs/feasibility/EMCON.md`; `v2/ecad/tools/pcb_rules_coverage.yaml:636-644`
 
 *Notes:* The bench cannot use the kit's own SDR: EMCON removes its supply (EMCON.md section 6). FEA-002 holds this record while EMCON's per-transmitter inhibits are not shown.
+
+**REQ-071** (requirement). Every transmitter's EMCON inhibit silences it within a stated maximum time of the EMCON toggle's contact closing, through a path in which every element that bounds the time is hardware, and keeps it silent while EMCON is asserted, in each fault condition of v2/docs/feasibility/EMCON.md section 5a: every processor in reset, every processor unpowered, a firmware error on any pin, the radio's own firmware booting, hung, restarting or reconfigured, a ribbon unplugged, a logic rail lost or in its unspecified band, back-feed from the lines that stay live, the energy stored on the radio's side of its gate, and EMCON asserted at power-up, during a transmission, during a boot and through the contact's bounce.
+
+*Accept when:* (1) Desk: for every row of EMCON.md section 4 the committed netlist shows a hardware path in each fault condition, and every time term of the row in section 5a is bounded from a held document within the row's maximum: 1 s for every transmitter but the RM520N-GL; for the RM520N-GL 20 s from EMCON on a module that has been turned on, with T_off, T_cut and the rail's decay taken at their parts' worst tolerance, 0 s at a power-up under EMCON (the rail never rises), and W_DISABLE1# low within 1 s. (2) Bench: EMCON.md section 6's rows E-01 to E-12 record, with an external receiver, the time from the contact's closing (TX_INHIBIT_n below 0.8 V at board C's TP10) to no emission above the instrument's noise floor at each antenna port, each within its maximum, in the fault conditions each row names, and no emission after it for as long as EMCON is held.
+
+*allocated to a, b, c, d, kit; rulings D-05; waits on S-01, S-02; prototype 1 core, named by an owner ruling: D-01 names hardware EMCON as core and D-05 rules what it means; this record is its time bound..*
+
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md sections 0a, 4.4 and 5a read at its sixth revision (stream r8docs, 26 September 2026): no row meets the bound as drawn. Locally the SA868 (no maker threshold), the RockBLOCK 9704 (its module runs on two 10 F supercapacitors of its own after its supply gate opens, with its ENABLE held by board B's U6 alone, about 16 J) and the RM520N-GL (SD-EMC-1's stages not drawn) are open, and every row inherits the shared line items L1 to L4 and L7 and SD-EMC-6's missing lamp
+
+*Evidence (FAIL, DESK_REVIEW):* v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net at fc144600: RB_IEN joins J_RB9704 pin 3 and U6 pin 19 (IO1_6) and nothing else; U6 is powered from +3V3_DEV
+
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read after pass 3 of stream r8docs (27 September 2026): three corrections from the independent check, section 4.4's ENABLE input now about 1.98 V with R6 in series (inside the buffer's undefined band, the row still OPEN), section 5a's RM520N-GL reaction time now about 2.0 s less 0.9 times the rail decay, and section 8 naming REQ-071 a sibling of REQ-030; none moves this reading, so it stands on the file at e57a54d1767bcd59
+
+*Bound to:* `v2/docs/feasibility/EMCON.md@e57a54d1767bcd59`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b`, `v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568`
+
+*Source (verified):* `v2/docs/feasibility/EMCON.md section 5a`; `v2/docs/reviews/2026-09-26-second-checkpoint-review.md section 2C`
+
+*Notes:* The maximum per row is the session's decision SD-EMC-7 (EMCON.md section 5a), taken under the owner's standing rule of 26 September 2026 and reversible: 1 s everywhere but the 5G module, whose 20 s keeps SD-EMC-1's choice of the maker's turn-off order; the second review asked that the latency and fault conditions be defined before the circuit is chosen. FEA-002 holds this record.
 
 **CFL-004** (conflict). The three CM5 modules' own WiFi and Bluetooth radios were disabled only through the PCA9555 expander U6 on the kit I2C bus (software), not by EMCON_HW; and U6 drove pins the CM5 datasheet allows only to be driven low, from an always-on rail, so it could back-feed an unpowered module.
 
@@ -1339,7 +1370,11 @@ Prototype 1: in the core D-01 names. 8 record(s).
 
 *Evidence (FAIL, DESK_REVIEW):* v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at the clamp-symbol merge of 26 September 2026: compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent checker, it differs only in D1, D2, D101, D201, D301 and D520's symbol (Device:D_TVS to Device:D_Zener) and pin names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 669d02d07aeaae4b
 
-*Bound to:* `v2/docs/feasibility/EMCON.md@fa355479df681ed8`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b`
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read at its sixth revision (stream r8docs, MESHSAT-1357 round 8, late on 26 September 2026): the reading above is unchanged (W_DISABLE1# is the only inhibit drawn; SD-EMC-1's supply removal is not drawn); section 5a now bounds the row at 20 s for a running module by hardware timers at their worst tolerance (REQ-071), so it stands on the file at c92df899e459c476
+
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read after pass 3 of stream r8docs (27 September 2026): three corrections from the independent check, section 4.4's ENABLE input now about 1.98 V with R6 in series (inside the buffer's undefined band, the row still OPEN), section 5a's RM520N-GL reaction time now about 2.0 s less 0.9 times the rail decay, and section 8 naming REQ-071 a sibling of REQ-030; none moves this reading, so it stands on the file at e57a54d1767bcd59
+
+*Bound to:* `v2/docs/feasibility/EMCON.md@e57a54d1767bcd59`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b`
 
 *Source (verified):* `v2/ecad/tools/gen_sch_b.py:716-741`; `v2/ecad/tools/gen_sch_b.py:449-456`; `v2/docs/feasibility/EMCON.md section 4`; `v2/docs/MESHSAT-709-geometry-appendix.md:2930`; `owner ruling D-05`
 
@@ -1391,7 +1426,11 @@ Prototype 1: in the core D-01 names. 8 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CURRENT-EVIDENCE.md re-read at the code-bundle provenance merge of 27 September 2026: RF-002 and SCH-004 on board D now read AWAITING_REVALIDATION (TOOL_CHANGED: helper modules of their writers changed after the readings), so neither decides until the consolidated re-take; the record's own reasons are unchanged and it stays INCONCLUSIVE
 
-*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@f13d8b70099ab03e`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@7b08510106687b3d`, `v2/docs/feasibility/EMCON.md@fa355479df681ed8`, `v2/docs/CURRENT-EVIDENCE.md@9c9bba12790d645a`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read at its sixth revision (stream r8docs, MESHSAT-1357 round 8, late on 26 September 2026): the page now says that its closure of the PA's row at desk is local and that the row is OPEN end to end (section 0a); the SA868's row stays open. This record stays INCONCLUSIVE on the file at c92df899e459c476
+
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read after pass 3 of stream r8docs (27 September 2026): three corrections from the independent check, section 4.4's ENABLE input now about 1.98 V with R6 in series (inside the buffer's undefined band, the row still OPEN), section 5a's RM520N-GL reaction time now about 2.0 s less 0.9 times the rail decay, and section 8 naming REQ-071 a sibling of REQ-030; none moves this reading, so it stands on the file at e57a54d1767bcd59
+
+*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@f13d8b70099ab03e`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@7b08510106687b3d`, `v2/docs/feasibility/EMCON.md@e57a54d1767bcd59`, `v2/docs/CURRENT-EVIDENCE.md@9c9bba12790d645a`
 
 *Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2825`; `v2/docs/PANEL.md section 6`; `v2/docs/feasibility/EMCON.md sections 4.1 and 4.2`
 
@@ -1405,15 +1444,19 @@ Prototype 1: in the core D-01 names. 8 record(s).
 
 *Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the file at fa355479df681ed8
 
-*Bound to:* `v2/docs/feasibility/EMCON.md@fa355479df681ed8`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@2834f0d8c4071d56`
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read at its sixth revision (stream r8docs, MESHSAT-1357 round 8, late on 26 September 2026): unchanged, board C carries no EMCON lamp; the page now lists that missing condition of SD-EMC-6 as holding every row end to end (section 0a), so this reading stands on the file at c92df899e459c476
+
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read after pass 3 of stream r8docs (27 September 2026): three corrections from the independent check, section 4.4's ENABLE input now about 1.98 V with R6 in series (inside the buffer's undefined band, the row still OPEN), section 5a's RM520N-GL reaction time now about 2.0 s less 0.9 times the rail decay, and section 8 naming REQ-071 a sibling of REQ-030; none moves this reading, so it stands on the file at e57a54d1767bcd59
+
+*Bound to:* `v2/docs/feasibility/EMCON.md@e57a54d1767bcd59`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@2834f0d8c4071d56`
 
 *Source (verified):* `v2/docs/feasibility/EMCON.md section 7 (the common element)`; `session choice SC-11`
 
 *Notes:* Created from EMCON.md's SD-EMC-6 (26 September 2026), the condition on which the shared element is accepted.
 
-**FEA-002** (feasibility). Radios dark (D-05) requires, for every one of the kit's 17 transmitters, a hardware inhibit that holds with every processor dead, in every state of the lines' own supplies, without depending on the radio's firmware. At desk the radio-specific chains are complete for 16 rows; the RM520N-GL's only drawn inhibit is a firmware-mediated airplane mode, the shared lines have open items, and no row is shown on the bench.
+**FEA-002** (feasibility). Radios dark (D-05) requires, for every one of the kit's 17 transmitters, a hardware inhibit that holds with every processor dead, in every state of the lines' own supplies, without depending on the radio's firmware. At desk the radio-specific (local) chains are complete for 14 rows and no row is complete end to end; the RM520N-GL's only drawn inhibit is a firmware-mediated airplane mode, the RockBLOCK 9704 keeps running on its own supercapacitors with its ENABLE held by firmware, the shared lines have open items, and no row is shown on the bench.
 
-*Accept when:* Every row of EMCON.md section 4 closed at desk on the committed netlists (SD-EMC-1's two stages drawn for the 5G module; L1 to L4 and L7 remedied; the back-feed of SD-EMC-2 bounded) and bench tests E-01 to E-12 passed on the prototype with an external receiver.
+*Accept when:* Every row of EMCON.md section 4 closed at desk on the committed netlists (SD-EMC-1's two stages drawn for the 5G module; L1 to L4 and L7 remedied; the back-feed of SD-EMC-2 bounded; the RockBLOCK's ENABLE forced low by hardware and its stored energy bounded), each row end to end within its latency under REQ-071, and bench tests E-01 to E-12 passed on the prototype with an external receiver.
 
 *allocated to a, b, c, d, kit; rulings D-05; session choices SC-11; waits on S-01, S-02, S-44; prototype 1 core, named by an owner ruling: D-01 names hardware EMCON as core; D-05 rules what it means..*
 
@@ -1421,9 +1464,13 @@ Prototype 1: in the core D-01 names. 8 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read at the records filing of 26 September 2026 (428c697c): only citation text changed, the drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the file at fa355479df681ed8
 
-*Bound to:* `v2/docs/feasibility/EMCON.md@fa355479df681ed8`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read at its sixth revision (stream r8docs, MESHSAT-1357 round 8, late on 26 September 2026): the PA's closure at desk is LOCAL, and end to end none of the 17 rows closes at desk (section 0a); local chains close at desk on 14 rows, with the RockBLOCK 9704 reopened: on Ground Control's schematic rev 2B (v2/vendor/rockblock/rb9704-sch-2B1.pdf, pages 2 to 5) the module's supply is two 10 F supercapacitors charged to 4.25 V from J3 pin 15, and J3 pin 3, its ENABLE, joins board B's U6 (a PCA9555 on +3V3_DEV) and nothing else on the committed netlist, so cutting +5V_RB leaves the module enabled on about 16 J (4.4); section 5a (SD-EMC-7) sets each row's maximum latency and the fault conditions F1 to F9 (REQ-071)
 
-*Feasibility page:* `v2/docs/feasibility/EMCON.md`, blocker ids SD-EMC-1, SD-EMC-2, SD-EMC-6, E-05, E-07, E-12; *owner:* Board B's author (SD-EMC-1, L2, L3, L4, L7), boards A, C and D's authors for their gates, the tools author for RF-002's instrument (L6), and the TEST-PLAN owner for the bench rows and the silence latency.; *holds:* REQ-030, REQ-032, CON-021; layout entry of A, B, C, D.
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read after pass 3 of stream r8docs (27 September 2026): three corrections from the independent check, section 4.4's ENABLE input now about 1.98 V with R6 in series (inside the buffer's undefined band, the row still OPEN), section 5a's RM520N-GL reaction time now about 2.0 s less 0.9 times the rail decay, and section 8 naming REQ-071 a sibling of REQ-030; none moves this reading, so it stands on the file at e57a54d1767bcd59
+
+*Bound to:* `v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b`, `v2/docs/feasibility/EMCON.md@e57a54d1767bcd59`
+
+*Feasibility page:* `v2/docs/feasibility/EMCON.md`, blocker ids SD-EMC-1, SD-EMC-2, SD-EMC-6, SD-EMC-7, E-04, E-05, E-07, E-12; *owner:* Board B's author (SD-EMC-1, L2, L3, L4, L7), boards A, C and D's authors for their gates, the tools author for RF-002's instrument (L6), and the TEST-PLAN owner for the bench rows and the silence latency.; *holds:* REQ-030, REQ-032, REQ-071, CON-021; layout entry of A, B, C, D.
 
 *Source (verified):* `v2/docs/feasibility/EMCON.md section 7`; `v2/docs/reviews/2026-09-26-foundation-progress-review.md section 3`
 
@@ -2261,7 +2308,7 @@ Every rule of the PCB rule registry a record names, and the records that name it
 | SI-001 | transmission-line classification | MUST_JUSTIFY | FEA-003 |
 | CLK-001 | oscillators, straps and boot pins | BLOCKER | CON-004, REQ-040 |
 | RF-001 | RF paths are designed as RF | BLOCKER | CHO-002, REQ-039, CON-011, REQ-057, REQ-068, CON-015 |
-| RF-002 | transmit inhibit is hardware | BLOCKER | REQ-030, CFL-004, REQ-031, REQ-032, CON-010, FEA-002 |
+| RF-002 | transmit inhibit is hardware | BLOCKER | REQ-030, REQ-071, CFL-004, REQ-031, REQ-032, CON-010, FEA-002 |
 | INT-001 | each interface is designed to its own specification | BLOCKER | CFL-015 |
 | INT-002 | a transformerless Ethernet link has a pre-layout assessment on its current nets | BLOCKER | CON-005 |
 | INT-003 | a transformerless Ethernet link is verified up at 1000M on the built board | BLOCKER | CON-005 |
@@ -2311,7 +2358,7 @@ D-01: full design, staged acceptance. Every ruled function stays designed and fi
 | NEED-05 | yes (D-01) | REQ-014, FEA-004, REQ-015, REQ-016, CON-006, REQ-018, ASM-003, CFL-012, CFL-014 | REQ-017, CON-007, CON-013 |
 | NEED-06 | no | REQ-019, REQ-020, CON-008 | REQ-021, REQ-022, REQ-023, REQ-064 |
 | NEED-07 | no | - | REQ-024, REQ-025, REQ-026, ASM-004, REQ-027, REQ-028, REQ-029, CHO-003, CON-009, CFL-002, CFL-003, REQ-051, REQ-052, REQ-059, CFL-011, ASM-006 |
-| NEED-08 | yes (D-01) | REQ-030, CFL-004, REQ-031, REQ-032, CFL-005, CON-010, CON-021, FEA-002 | - |
+| NEED-08 | yes (D-01) | REQ-030, REQ-071, CFL-004, REQ-031, REQ-032, CFL-005, CON-010, CON-021, FEA-002 | - |
 | NEED-09 | no | - | REQ-033, REQ-034 |
 | NEED-10 | yes (D-01) | REQ-035, ASM-005, CON-020, REQ-038, FEA-001 | REQ-036, REQ-037, REQ-065 |
 | NEED-11 | no | - | REQ-039, REQ-040, CFL-013 |
@@ -2324,7 +2371,7 @@ D-01: full design, staged acceptance. Every ruled function stays designed and fi
 | NEED-18 | no | - | CON-018, REQ-061, REQ-063 |
 | NEED-19 | yes (SC-01, taken by the session) | REQ-060 | - |
 
-### What prototype 1 is accepted on: every core BLOCKER (58)
+### What prototype 1 is accepted on: every core BLOCKER (59)
 
 Each of these stops prototype 1's acceptance while it is unmet. The scope column says whether the record is core because its need is (NEED_DEFAULT), because an owner ruling names it (NAMED), or because the session took it under the owner's standing rule (SESSION, with the choice).
 
@@ -2356,6 +2403,7 @@ Each of these stops prototype 1's acceptance while it is unmet. The scope column
 | REQ-020 | NEED-06 | requirement | SESSION SC-04 | DEFINED | NOT_JUDGED |
 | CON-008 | NEED-06 | constraint | SESSION SC-04 | DEFINED | NOT_JUDGED |
 | REQ-030 | NEED-08 | requirement | NEED_DEFAULT | TBD | FAIL at SCHEMATIC; PROTOTYPE not yet judged |
+| REQ-071 | NEED-08 | requirement | NAMED | DEFINED | FAIL at SCHEMATIC; PROTOTYPE not yet judged |
 | REQ-031 | NEED-08 | requirement | NEED_DEFAULT | DEFINED | NOT_JUDGED |
 | REQ-032 | NEED-08 | requirement | NEED_DEFAULT | DEFINED | FAIL at SCHEMATIC; PROTOTYPE not yet judged |
 | CON-010 | NEED-08 | constraint | NEED_DEFAULT | DEFINED | INCONCLUSIVE at SCHEMATIC |
@@ -2415,7 +2463,7 @@ Each of these stops prototype 1's acceptance while it is unmet. The scope column
 | ASM-007 | NEED-13 | deferred | SC-04 | It concerns the pack's environmental qualification, which D-01 leaves outside the core; pack safety itself is core under NEED-13. |
 | REQ-065 | NEED-10 | deferred | SC-04 | D-01 names only ZEROIZE of the secure element under NEED-10; D-13 sets the design floor, which is built into prototype 1 and reported NOT_YET_TESTED until it runs. |
 
-### Named by an owner ruling (19)
+### Named by an owner ruling (20)
 
 | record | need | prototype 1 | choice | why |
 |---|---|---|---|---|
@@ -2426,6 +2474,7 @@ Each of these stops prototype 1's acceptance while it is unmet. The scope column
 | REQ-011 | NEED-04 | deferred | - | D-01 names the tablet bracket among the deferred functions. |
 | FEA-004 | NEED-05 | core | - | D-01 names pack, vehicle and solar charging and pack safety as core; D-06 and D-11 bound them. |
 | REQ-028 | NEED-07 | deferred | - | D-02c leaves service life TBD for prototype 1. |
+| REQ-071 | NEED-08 | core | - | D-01 names hardware EMCON as core and D-05 rules what it means; this record is its time bound. |
 | FEA-002 | NEED-08 | core | - | D-01 names hardware EMCON as core; D-05 rules what it means. |
 | REQ-034 | NEED-09 | deferred | - | D-01 names the NVG claim among the deferred functions. |
 | REQ-035 | NEED-10 | core | - | D-01 names ZEROIZE of the secure element as core; D-03 defines what it is. |
@@ -2508,8 +2557,8 @@ SESSION items are engineering the session decides and records with authority SES
 | L-04 | LATER | Review route R-PWR, a qualified review of the corrected complex power design (board A, board E's input stage, board B's PoE PSE): not approved by D-09; it needs the owner's spending approval before board A enters layout. | FEA-004 |
 | L-05 | LATER | Review route R-HSD, a qualified review of board B's PCIe and USB 3 fabric: not approved by D-09; it needs the owner's spending approval before a board B layout is committed or any board B order. | FEA-003 |
 | L-06 | LATER | The bench parts for ZEROIZE experiments Z-EXP-A and Z-EXP-B (ZEROIZE.md section 5: a development board, a SOIC adapter, ten ATECC608B-SSHDA-T, a Raspberry Pi Pico, a load switch): nothing is spent beyond the voucher without a quote and the owner's approval (D-09). | ASM-005, FEA-001 |
-| S-01 | SESSION | EMCON reaches every transmitter (D-05), what is left after 458b2873 gated the compute modules' radios and the WiFi card supplies: SD-EMC-1's two stages for the 5G module drawn on board B; the shared-line items L1 to L4 and L7 of EMCON.md section 7 remedied (firmware pins on EMCON_HW, the line's hold with its source gone, the +3V3_DEV loss that releases nine radios, gate supplies outside their range, the 2N7002 drive); the back-feed paths of SD-EMC-2. | REQ-030, REQ-032, FEA-002 |
-| S-02 | SESSION | RF-002 enumerates every transmitter from the netlists and fails any without a hardware gate. | REQ-030, FEA-002 |
+| S-01 | SESSION | EMCON reaches every transmitter (D-05), what is left after 458b2873 gated the compute modules' radios and the WiFi card supplies: SD-EMC-1's two stages for the 5G module drawn on board B; the shared-line items L1 to L4 and L7 of EMCON.md section 7 remedied (firmware pins on EMCON_HW, the line's hold with its source gone, the +3V3_DEV loss that releases nine radios, gate supplies outside their range, the 2N7002 drive); the back-feed paths of SD-EMC-2. | REQ-030, REQ-071, REQ-032, FEA-002 |
+| S-02 | SESSION | RF-002 enumerates every transmitter from the netlists and fails any without a hardware gate. | REQ-030, REQ-071, FEA-002 |
 | S-12 | SESSION | The key-B socket's land carries TE's two locating holes (drawing C-2199119 rev F, sheet 3; gen_footprints_b16.py draws neither), and D-07's third jack is confirmed by the board E clamp fit (its case half is laid out, CASE-MARGINS.md section 3.4). The key-B part is fitted since 458b2873. | CHO-001, CON-015 |
 | S-13 | SESSION | One SIM description: V2-SPEC line 41 says eSIM plus nano-SIM, the generator fits two nano-SIM holders with an eSIM build option (the 0 ohm links of Quectel HD v1.1 Figure 19); and the SIM TVS array the HD asks for (at most 10 pF) fitted. SIM 2 is on the module's own pins since 458b2873. | CFL-010 |
 | S-14 | SESSION | D-11's thresholds taken from PROVISIONAL to pass lines (SC-10): POWER-THERMAL.md section 7.2's floors and key-down rules once PWR-F12 and PWR-F15 close. The outlet interlock is in hardware since 458b2873. | FEA-004, REQ-017, REQ-018 |
@@ -2584,7 +2633,7 @@ Every item that has left the open list, and what closed it: an owner ruling, a s
 
 ## Readings
 
-### FAIL (15)
+### FAIL (16)
 
 | record | prototype 1 | effect | at | class | evidence |
 |---|---|---|---|---|---|
@@ -2595,6 +2644,7 @@ Every item that has left the open list, and what closed it: an owner ruling, a s
 | CON-009 | deferred | MUST_JUSTIFY | SCHEMATIC | DESK_REVIEW | v2/docs/MESHSAT-709-geometry-appendix.md:18532-18533 (32.360): board B's T1, the Pulse H5007NL, is rated 0 to +70 C against the envelope's -20 C floor; v2/docs/feasibility/POWER-THERMAL.md section 9.4 read at eadbe571: two bought parts are outside the adopted envelope and not in pcb_part_temps.yaml, the AW7915-AED WiFi card (0 to +70 C, or -10 to +70 C on the maker's current page) and the LimeS... |
 | CFL-003 | deferred | MUST_JUSTIFY | SCHEMATIC | - | its own sources disagree: v2/ecad/tools/pcb_board_facts.yaml:281-282; v2/ecad/tools/pcb_envelope.yaml:15-19 |
 | REQ-030 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/EMCON.md sections 0 and 7 read at eadbe571, on the round-6 netlists main carries since 458b2873: of 17 transmitters no row is closed on the bench and one (the 30 W PA) closes at desk; the line's fail-safe hold with its source gone is UNDECIDED (L2), and a loss of +3V3_DEV on board B releases the gates of nine radios (L3: six CM5 radios, two AW7915 cards, the RM520N-GL), so t... |
+| REQ-071 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/EMCON.md sections 0a, 4.4 and 5a read at its sixth revision (stream r8docs, 26 September 2026): no row meets the bound as drawn. Locally the SA868 (no maker threshold), the RockBLOCK 9704 (its module runs on two 10 F supercapacitors of its own after its supply gate opens, with its ENABLE held by board B's U6 alone, about 16 J) and the RM520N-GL (SD-EMC-1's stages not drawn)... |
 | REQ-032 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/EMCON.md sections 0, 4.5 and 7 read at eadbe571: the RM520N-GL's only inhibit as drawn is W_DISABLE1#, a firmware-mediated airplane mode whose timing, boot behaviour and configurability Quectel does not state; SD-EMC-1's supply removal is not drawn on board B; v2/docs/feasibility/EMCON.md section 7, L3: with +3V3_DEV lost on board B the gates of the six CM5 radios, the two A... |
 | CON-021 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/EMCON.md section 0 read at eadbe571: as drawn no indication of the EMCON lines is independent of firmware (the TX lamp's supply exists only while the panel controller drives PANEL_PWM); board C's committed netlist v2/ecad/pcb-c-display-c8/out/pcb-c-display.net carries no EMCON lamp; v2/docs/feasibility/EMCON.md re-read at the records filing of 26 September 2026 (428c697c): o... |
 | CFL-017 | deferred | ADVISORY | SCHEMATIC | - | its own sources disagree: v2/docs/TEST-PLAN.md:18-19; v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 2; v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 5 |
@@ -2612,8 +2662,8 @@ Every item that has left the open list, and what closed it: an owner ruling, a s
 | FEA-006 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/DECOUPLING.md sections 1 and 10 read at eadbe571: the 3 mm number is a project heuristic for every part it is applied to and the rule is per class; "Nothing is laid for this ruling yet"; DEC-001's PASS readings on boards B and P are 33 blanket allowances, not evidence; the TPA6132A2 on board D is fitted with 1 uF where its maker asks 2.2 uF; v2/docs/feasibility/DECOUPLING.md... |
 | CON-017 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | (1) and (2) hold: v2/ecad/tools/gen_sch_b.py:281-289 and :1145-1146 read at eadbe571 name STM32H743VIT6 (JLCPCB C114409) with the pin table checked again for both parts, the committed netlist v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net carries U41, U51 and U61 as STM32H743VIT6, and 458b2873's parity run traced every difference to a finding; (3) and (4) cannot be decided: no supervisor firmw... |
 | FEA-004 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/POWER-THERMAL.md sections 0 and 11 read at eadbe571 (Status: PROVISIONAL): runtime 2.5 h and 1.7 h aged on bounds of 1.3 to 3.3 h and 0.9 to 2.3 h; D-11's thresholds set PROVISIONAL; F2's margin during a key-down unknown; the hot end undecided until the enclosure conductance is measured; v2/docs/feasibility/POWER-THERMAL.md re-read at the records filing of 26 September 2026... |
-| CON-006 | core | BLOCKER | PLACED_BOARD | DESK_REVIEW | v2/docs/CASE-MARGINS.md section 3.2 read at eadbe571: of the pack's four margins, M4b (east face to the east wall) and M6 (pack top under B16's underside) are MET and M4a (the east corner to Peli's R 15.88 fillet) and M5 (the pack group in Y between the east legs) are OPEN until the pack's hold-down fixes its place (section 7) |
-| REQ-019 | core | BLOCKER | PLACED_BOARD | DESK_REVIEW | v2/docs/CASE-MARGINS.md sections 0 and 3 read at eadbe571: of 70 computed margins 35 are MET and 35 OPEN, none NOT MET; the OPEN rows rest on the case's unpublished tolerance, the build's allowances or a pick, and section 7 names what closes each (nominal CAD establishes no fit, blind-mate alignment or seal) |
+| CON-006 | core | BLOCKER | PLACED_BOARD | DESK_REVIEW | v2/docs/CASE-MARGINS.md section 3.2 read at eadbe571: of the pack's four margins, M4b (east face to the east wall) and M6 (pack top under B16's underside) are MET and M4a (the east corner to Peli's R 15.88 fillet) and M5 (the pack group in Y between the east legs) are OPEN until the pack's hold-down fixes its place (section 7); v2/docs/CASE-MARGINS.md re-read at its seventh revision (stream r8d... |
+| REQ-019 | core | BLOCKER | PLACED_BOARD | DESK_REVIEW | v2/docs/CASE-MARGINS.md sections 0 and 3 read at eadbe571: of 70 computed margins 35 are MET and 35 OPEN, none NOT MET; the OPEN rows rest on the case's unpublished tolerance, the build's allowances or a pick, and section 7 names what closes each (nominal CAD establishes no fit, blind-mate alignment or seal); v2/docs/CASE-MARGINS.md re-read at its seventh revision (stream r8docs, MESHSAT-1357 r... |
 | CON-010 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | the trace holds on the committed netlist v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net at eadbe571: U12 KEY = PTT_ANY AND TX_INHIBIT_n, U14 PA_KEY = KEY AND PA_EN, U15 (the VGG regulator) enabled by PA_KEY, U13 an open drain from KEY to the SA868's PTT (v2/ecad/tools/gen_sch_d.py:532-534 and :672); board A's U26 gives PA_EN = EMCON_HW AND PA_SW_EN (v2/ecad/tools/gen_sch_a.py:1102-1103); it cannot de... |
 | FEA-002 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/EMCON.md sections 0 and 7 read at eadbe571: "Radios dark" is feasible with the ruled architecture with two conditions (the 5G row only at the cost SD-EMC-1 accepts, the shared element only with a hardware EMCON lamp); no transmitter's EMCON is closed on the bench, one row (the 30 W PA) closes at desk; v2/docs/feasibility/EMCON.md re-read at the records filing of 26 September... |
 | ASM-005 | core | MUST_JUSTIFY | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/ZEROIZE.md sections 1, 4 and 7 read at eadbe571: documentary feasibility CLOSED (the documents say GenKey mode 0x04 replaces a key in an updatable, non-lockable slot after every zone lock; VERIFIED that they say it, SUPPORTED for the fitted part); physical demonstration OPEN (Z-EXP-A, Z-EXP-B); what GenKey does on an interrupted EEPROM write (U1) and the SSHDA part's factory... |

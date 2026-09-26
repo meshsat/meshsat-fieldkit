@@ -10,6 +10,26 @@ with a copied file without changing its bytes. Boards D and E are held by decisi
 whose hold permits exactly "a review package clearly quarantined as NOT_FOR_FAB"; their packets quote the hold's four
 status fields and its permitted and forbidden lines verbatim.
 
+## Which packet a review uses (26 September 2026, 23:30 CEST, main at `fc144600`)
+
+**Two of the four folders below are SUPERSEDED and must not be sent: `D-D12-1f614233/` and `P-P4-1f614233/`.** The
+review of 26 September 2026 22:35 (`v2/docs/reviews/2026-09-26-second-checkpoint-review.md`, section 3) asked that
+obsolete packets be labelled and that each review use the packet of its actual candidate. The folders themselves are
+left byte for byte, because `review_packet.py verify` fails on any changed or added file; this table is where they are
+labelled. Read on main `fc144600` by stream r8docs (MESHSAT-1357 round 8): each board's generator and committed netlist
+compared by sha256 with the revision its packet was built from.
+
+| Folder | Board | State | The candidate on main at `fc144600` | What a review of this board uses |
+|---|---|---|---|---|
+| `D-D12-1f614233/` | D | **SUPERSEDED by `458b2873`** (round 4 and round 6 corrections for board D, among them the keying remedy of the RF-002 path, `v2/docs/records/r6d/r6-decisions.md`) | `gen_sch_d.py` sha256 `39c5713b947d253f...` and `out/pcb-d-aprs.net` `f13d8b70099ab03e...`, both byte-identical to `458b2873`'s (`3a1f6576` changed only board D's sidecars) | a packet built by `review_packet.py` at `458b2873` or later and compared with `1f614233`. **None is built yet**: until one is, there is no current board D packet, and this folder is the record of `1f614233` only |
+| `P-P4-1f614233/` | P | **SUPERSEDED by `d90f30e4`** (the battery review stream: the second level's over-temperature restored on its own thermistor, J_TS2, R34 270R, R33 18k, TP15) | `gen_sch_p.py` sha256 `e111e10a047f587e...` and `out/pcb-p-pack.net` `4342c4cbe1b43dc4...` | **the battery review packet, `v2/docs/review-packets/battery/`** (route R-BAT, `v2/docs/reviews/REVIEW-ROUTES.md`): its `candidate/` generator and netlist carry the same two sha256 values as main's board P, so it is the current P input. A board P packet in this folder's format, built at `d90f30e4` or later, is owed for the reviewer's schematic PDF and part map; this folder is not sent |
+| `C-C24-1f614233/` | C | current circuit | `gen_sch_c.py` and `out/pcb-c-display.net` byte-identical to `1f614233`'s | this folder, **rebuilt before it is sent**: its part map joined `v2/vendor/SOURCES.yaml` at `2b192f2b...`, and the file has changed in four commits since (`d90f30e4`, `7808734f`, `2aaa7b7f`, `31ce3840`) and again in round 8; the entry `io-expander-pca9555`, which names board C, did not exist then |
+| `E-E17-1f614233/` | E1 | current circuit | `gen_sch_e.py` and `out/pcb-e1-dock.net` byte-identical to `1f614233`'s | this folder, **rebuilt before it is sent**, for the same reason: `ideal-diode-lm74700` and `hot-swap-lm5069` name board E and did not exist, and `pack-and-lid-leads-jst-xh` now records board E's J_SMB code as a component mismatch (condition 1) |
+
+Six board circuit streams of round 8 are changing boards A to P in parallel on 26 and 27 September 2026. When one merges,
+its board's current candidate moves to that revision, the packet above for that board is superseded in turn, and a
+packet is built at the merge. Boards A and B have had no packet at any revision (below).
+
 The review of 26 September 2026 (`v2/docs/reviews/2026-09-26-foundation-progress-review.md`, section 5) asked for a
 compact packet from the exact candidate revision of each corrected board, so that a reviewer can check the corrections
 without KiCad and without the project's history. Each folder here is one board at one revision, built by
@@ -41,9 +61,9 @@ rebuilds of that afternoon showed it on board P.
 | Folder | Board | Components | Changes against 82dd1e4d | With a finding ID | Only a ruling, decision or rule | No ID of any kind | Contracts naming the board |
 |---|---|---|---|---|---|---|---|
 | `C-C24-1f614233/` | C, panel backer | 194 to 204 | 10 added, 10 changed | 9 | 8 (TP41, TP42, TP43, TP44, TP45, TP46, TP47, TP48) | 3 (C31, Q6, U9) | 7: 7 PASS, 0 FAIL, 0 UNJUDGED |
-| `D-D12-1f614233/` | D, VHF APRS mezzanine | 213 to 221 | 8 added, 15 changed | 22 | 0 | 1 (TP25) | 11: 11 PASS, 0 FAIL, 0 UNJUDGED |
+| `D-D12-1f614233/` (**SUPERSEDED** by `458b2873`) | D, VHF APRS mezzanine | 213 to 221 | 8 added, 15 changed | 22 | 0 | 1 (TP25) | 11: 11 PASS, 0 FAIL, 0 UNJUDGED |
 | `E-E17-1f614233/` | E1, dock strip | 163 to 179 | 16 added, 11 changed | 27 | 0 | 0 | 9: 9 PASS, 0 FAIL, 0 UNJUDGED |
-| `P-P4-1f614233/` | P, pack BMS | 56 to 82 | 30 added, 4 removed, 9 changed | 17 | 24 (C13, C14, C15, C16, C17, C18, C19, F2, JP1, Q1, Q3, R17, R23, R24, R25, R26, R27, R29, R30, R31, R32, RT1, TP14, U2) | 2 (TP12, TP13) | 4: 4 PASS, 0 FAIL, 0 UNJUDGED |
+| `P-P4-1f614233/` (**SUPERSEDED** by `d90f30e4`) | P, pack BMS | 56 to 82 | 30 added, 4 removed, 9 changed | 17 | 24 (C13, C14, C15, C16, C17, C18, C19, F2, JP1, Q1, Q3, R17, R23, R24, R25, R26, R27, R29, R30, R31, R32, RT1, TP14, U2) | 2 (TP12, TP13) | 4: 4 PASS, 0 FAIL, 0 UNJUDGED |
 
 "Finding ID" means an ID the change answers: a review finding (S-09, F-IN-01, W6-F5), an adjudication (A01 to A11) or a
 round record's own item ID (R4E-02, RP-17). A change that carries only an owner ruling (D-15), a decision number or a
@@ -116,11 +136,16 @@ What each packet shows about itself (its `README.md` and `MANIFEST.json`):
 - **A and B**: their circuit corrections are round 6 candidates and are not on main at `1f614233`. Their packets are
   built with the same tool at the revision that merges them, compared with `1f614233`, each with its own hand-read
   `attribution/<letter>-<revision>.yaml`.
+  **Update, 26 September 2026 (stream r8docs):** the round 6 candidates merged at `458b2873`, and `3a1f6576` regenerated
+  both boards (the ten one-way clamps drawn with a cathode pin). No packet was built for either; one is owed at the
+  revision that carries round 8's corrections for A and B.
 - **D's keying remedy** is also in round 6; when it merges, board D gets a new packet at that revision and this one
-  stays as the record of `1f614233`.
+  stays as the record of `1f614233`. **Update, 26 September 2026:** it merged at `458b2873`; `D-D12-1f614233` is superseded (table above),
+  and the new packet is not built yet.
 - **P after the battery review stream merges**: that stream's candidate changes U2's TS network (and adds its socket and
   test point). Board P gets a new packet at the revision that merges it, compared with `1f614233`, and that packet, with
-  the battery packet, is what route R-BAT sends. `P-P4-1f614233` stays as the record of `1f614233` and is not sent.
+  the battery packet, is what route R-BAT sends. `P-P4-1f614233` stays as the record of `1f614233` and is not sent. **Update, 26 September 2026:** it merged at `d90f30e4`; until the board P packet is built, route R-BAT
+  sends the battery packet, whose `candidate/` is main's board P (table above).
 - **E5** has no schematic by construction: its targets are generated from board A's board file, and its contract is
   judged between the two boards by `block_contract.py`.
 

@@ -23,12 +23,21 @@
 # the held documents, were added on 26 September 2026 by the parts stream. What is still owed is in `owed`.
 #
 # WHAT IT IS NOT. It is not a second parts registry: buyability stays in release/revA/order/JLC-CERTIFIED.tsv,
-# written by tools/jlc_certify.py. That tool's "CERTIFIED" label means only "JLCPCB's catalogue answered with a
-# part whose model string passed the tool's comparison". The comparison accepts two part numbers that share
-# six leading characters, retries without trailing grade letters, and compares packages without body size or
-# pitch, so a CERTIFIED row is not evidence of part identity, grade or land (three rows below prove it: the
-# supervisor MCU, the board D hub and the 5G socket). Generated inventory stays in PARTS.md. Folder-level
-# provenance stays in sources.txt.
+# written by tools/jlc_certify.py. That tool's "CERTIFIED" label means only "a dated reading of JLCPCB's catalogue
+# that the tool's comparison accepted". Since 6104cb81 (26 September 2026, finding W6-F3) the comparison requires
+# the answer to carry every letter and digit of the part the row names (`same_part`, in three ordering shapes),
+# a land drawn from one maker's drawing to be answered by that maker's part (`land_part`), the package family to
+# agree and, where both sides state them, the body size and pitch (`pkg_geometry`), and stock to cover the order
+# on the date. When this header was first written (tree 82dd1e4d) it accepted two part numbers that shared six
+# leading characters and compared packages without body size or pitch; three rows below were found that way (the
+# supervisor MCU, the board D hub and the 5G socket). Even the current comparison makes a CERTIFIED row a
+# catalogue reading and not evidence of grade, suitability or land: a row that names only a base part leaves its
+# grade open, a code-carrying row that names no part on a class land is identified by its code alone, no pad of the
+# land is compared, and the rows marked WRONG_MODEL by hand over the tool's CERTIFIED (14 at fc144600, each note
+# opening "MISMATCH under owner condition 1"; block jlc_retake_45bde541; a fifteenth row, board P's J_TS2, carries
+# the same reason appended to the tool's own WRONG_MODEL and is listed there as annotated) are not an input the tool reads, so a
+# re-run could certify them again (the second checkpoint review of 26 September 2026, section 2D item 1).
+# Generated inventory stays in PARTS.md. Folder-level provenance stays in sources.txt.
 #
 # FIELD MEANINGS
 #   schematic_name   the part number as the generator writes it, with file:line
@@ -123,6 +132,22 @@
 # no row for it, so no row of the table moves), and `lcsc_fill_after_the_merge` is re-read on the corrected BOMs
 # against the marked table. (3) Board P's J_SMB takes its code from lcsc_fill's MAP (lcsc_fill.py:158), not from the
 # table, and the entries now say so.
+
+# Stream r8docs (26 September 2026, after 23:00 CEST; MESHSAT-1357 round 8, main at fc144600; review of 26 September 2026
+# 22:35, section 3, "Part sources"). Filed the maker documents the committed pages cited from the review streams' drafts/
+# folders (v2/docs/records/README.md), each fetched again from its maker or the URL its stream recorded and compared by
+# sha256 with the stream's copy (sources.txt gives each result). Added: (1) `update_fc144600` blocks on secure-element (the
+# ZEROIZE study's documents and the maker's current summary revision B), cellular-module (the four Quectel AT manuals) and
+# pcie-switch (the held DS40068 now has a source, byte-identical to diodes.com); (2) the block `documents_filed_fc144600`
+# for documents that belong to no fitted part: the ZEROIZE fallbacks, the TCG specification, and the fuse and protector
+# alternatives the battery review weighed; (3) the owed list brought up to date; (4) the header's account of what
+# jlc_certify.py's CERTIFIED means, which still described the comparison of 82dd1e4d, brought up to the one of
+# 6104cb81 (second pass, after an independent check). No code, board, where, identity or fitted field of any entry
+# changed, so no BOM line joins differently.
+# WHAT THIS FILE DOES NOT DO, stated because the review asked for it: an entry here, a MATCH, a VERIFIED status or a filed
+# document does not validate a part. It records which document describes which order code and where the document came
+# from. Whether the part suits this design (ratings against the envelope and the qualification margins, behaviour in the
+# circuit, the land) is decided by the circuit and rating reviews, which cite these documents.
 
 schema_version: 2
 read_on: "2026-09-25"
@@ -230,6 +255,122 @@ battery_review_documents:
     status: VERIFIED
     matches_fitted: "partial: the thread is about the BQ77207 family, not the 00700 variant. The TI engineer's answer reads 'At the moment no current released versions of this device have that capability' (an active-low COUT/DOUT) and 'This protector is most commonly used as a secondary protector meant to flow up a FUSE' (sic; read as 'blow')"
 
+# ADDED 26 SEPTEMBER 2026 (stream r8docs). Outside `parts:` on purpose, as battery_review_documents above: these documents
+# describe parts that are not fitted (named fallbacks and alternatives weighed and not taken) or no part at all (a
+# specification), so they must join no BOM line. `for_entry` names the entry whose decision they record.
+documents_filed_fc144600:
+  - for_entry: secure-element
+    role: "ZEROIZE fallback 1 (owner ruling D-03.1: 'a TPM 2.0 is the fallback'; ZEROIZE.md section 5, switch conditions S1 and S2): NOT FITTED"
+    path: "v2/vendor/infineon/infineon-slb9673-fw26-datasheet-rev1.4.pdf"
+    doc_id: "Infineon OPTIGA TPM SLB 9673 TPM 2.0 FW26.xx Datasheet"
+    revision: "Revision 1.4, 2024-11-13, 49 pages"
+    url: "https://www.infineon.com/dgdl/Infineon-SLB9673-TPM20-I2C_FW26xx_DS_Rev1-4-2024-11-13-DataSheet-v01_00-EN.pdf?fileId=8ac78c8c93dda25b01944055dd2c5d11"
+    fetched: "2026-09-26T21:15:52Z, HTTP 200, byte-identical to the ZEROIZE stream's copy"
+    sha256: "0750aaaba4f59ef5208c97af10b89bc616dd69a075ebda0225b57109b9d24001"
+    status: VERIFIED
+    matches_fitted: "no, by design: not fitted; ZEROIZE.md keeps board B's U8 site for it under switch conditions"
+  - for_entry: secure-element
+    role: "ZEROIZE fallback 2 (behind the SLB 9673, ZEROIZE.md): NOT FITTED"
+    path: "v2/vendor/nxp/nxp-se050-datasheet.pdf"
+    doc_id: "NXP SE050 Plug & Trust Secure Element, product data sheet"
+    revision: "Rev. 3.8, 18 October 2023, 30 pages"
+    url: "https://www.nxp.com/docs/en/data-sheet/SE050-DATASHEET.pdf (HTTP 404 to this host on 2026-09-26; the file is the Internet Archive's capture 20260313115240, byte-identical at 21:15:52Z)"
+    sha256: "b47c8a5d40191f31b78e48f6c60c6ba17c3eac56bf97976212ade786ee3ee83c"
+    status: VERIFIED
+    matches_fitted: "no, by design: not fitted"
+  - for_entry: secure-element
+    role: "how the SE050's delete is specified (ZEROIZE.md: a free, not an overwrite)"
+    path: "v2/vendor/nxp/nxp-an12413-se050-apdu.pdf"
+    doc_id: "NXP AN12413, SE050 APDU Specification"
+    revision: "Rev. 2.12, 24 March 2021, 138 pages"
+    url: "https://www.nxp.com/docs/en/application-note/AN12413.pdf (HTTP 404 to this host; the Internet Archive's capture 20260916110513, byte-identical at 2026-09-26T21:15:54Z)"
+    sha256: "e98a72e4215ba2886d777509f066ff620925ae65999d9c28cbcf24b7f2cf5622"
+    status: VERIFIED
+    matches_fitted: "no, by design: not fitted"
+  - for_entry: secure-element
+    role: "the normative text of TPM2_Clear, which the fallback's key destruction rests on (ZEROIZE.md)"
+    path: "v2/vendor/standards/tcg-tpm2-library-r1p59-2019-11-08.md"
+    doc_id: "Trusted Computing Group, TPM Library Family 2.0, Level 00 Revision 01.59 (8 November 2019), Part 1: Architecture and Part 3: Commands; a TRANSCRIPTION of the clauses cited (TPM2_Clear, the SPS, NV power interruption, TPM2_EvictControl)"
+    revision: "Revision 01.59, 8 November 2019"
+    url: "https://trustedcomputinggroup.org/wp-content/uploads/TCG_TPM2_r1p59_Part1_Architecture_pub.pdf and ..._Part3_Commands_pub.pdf (HTTP 403 to this host on 2026-09-26; the Internet Archive's captures 20260904023834 and 20260428182655 returned the ZEROIZE stream's bytes at 21:15:57Z and 21:15:59Z)"
+    sha256_of_the_files_read: {part_1: "18e393ef8f61d4c5deebb578cc4220b025fdaff2c28a7e3264f16e37796c3d9b", part_3: "d2e5e7187574d383b00ff966c33b30a96e3f5165cbfae20a4d094e5794f3b9bb"}
+    filing_note: "the PDFs are fetched, not redistributed, as for every standard in v2/vendor/standards/ (the session's choice under the owner's standing rule of 26 September 2026; TCG's licence grants distribution 'solely for the purpose of developing products based on such documents'); the transcription's printed page numbers were read against both files"
+    status: VERIFIED
+    matches_fitted: "not a part document: the specification the SLB 9673 implements"
+  - for_entry: secure-element
+    role: "the development device of ZEROIZE.md's bounded experiment Z-EXP-A (a bench item, not a board part; buying it is the owner's)"
+    path: "v2/vendor/microchip/microchip-dm320118-users-guide-DS50002921A.pdf"
+    doc_id: "Microchip DM320118 CryptoAuth Trust Platform User's Guide"
+    revision: "DS50002921A (2019)"
+    url: "http://ww1.microchip.com/downloads/en/DeviceDoc/CryptoAuth-Trust-Platform-Users-Guide-DS50002921A.pdf (byte-identical at 2026-09-26T21:15:52Z)"
+    sha256: "6951ca754fad1f9e78c9f63a5f788fe183e21ca01b5358f10ee4cfa6001df3b1"
+    status: VERIFIED
+    matches_fitted: "no: a development board"
+  - for_entry: secure-element
+    role: "to establish that the full ATECC608A data sheet was never published at this number (ZEROIZE.md)"
+    path: "v2/vendor/microchip/microchip-atecc608a-40001977A.pdf"
+    doc_id: "Microchip DS40001977 (ATECC608A Data Sheet Summary)"
+    revision: "A (2017), 28 pages"
+    url: "http://ww1.microchip.com/downloads/en/DeviceDoc/40001977A.pdf (byte-identical at 2026-09-26T21:15:49Z)"
+    sha256: "3e971d6d284ebc64fc81d168788b9abd32da81a90ce1e0bb56037b0ca16a4a26"
+    status: VERIFIED
+    matches_fitted: "no: the predecessor's summary"
+  - for_entry: pack-secondary-protector
+    role: "the OV-only second level TI names beside the BQ4050, weighed for D-15 and decision 40 and not taken (gen_sch_p.py): NOT FITTED"
+    path: "v2/vendor/battery/ti-bq2947.pdf"
+    doc_id: "TI BQ2947 data sheet"
+    revision: "SLUSB15K, September 2012, revised June 2026"
+    url: "https://www.ti.com/lit/ds/symlink/bq2947.pdf (byte-identical at 2026-09-26T21:16:33Z)"
+    sha256: "5ce408285737a207b8deee0bc9b6f1c167fccf56f382dbf93d740bcde42ee98e"
+    status: VERIFIED
+    matches_fitted: "no, by design: not fitted"
+  - for_entry: pack-chemical-fuse
+    role: "the chemical fuse of the first round 4 pass, replaced by the Eaton SCF9550 because Dexerials publishes neither an operating temperature range nor a land (gen_sch_p.py; FUSE-INTERPRETATION.md): NOT FITTED"
+    path: "v2/vendor/battery/dexerials-sfk-series-datasheet.pdf"
+    doc_id: "Dexerials Self Control Protector (SCP), SFK series Datasheet"
+    revision: "dated 2025/10/8"
+    url: "https://6197088.fs1.hubspotusercontent-na1.net/hubfs/6197088/TDS/SCP/SFK%20series_Datasheet.pdf, linked from dexerials.jp's SFK page (byte-identical at 2026-09-26T21:16:33Z)"
+    sha256: "8e58c68254fb833570e3fa01323b5bc4231d70096f62eafc1d3175f14d3ab773"
+    status: VERIFIED
+    matches_fitted: "no, by design: not fitted"
+  - for_entry: pack-chemical-fuse
+    role: "refused in round 4: 15 A and a -10 C floor (FUSE-INTERPRETATION.md): NOT FITTED"
+    path: "v2/vendor/battery/littelfuse-itv4030-c1869305.pdf"
+    doc_id: "Littelfuse ITV4030 series (15 A)"
+    revision: "Revised 01/22/20"
+    url: "LCSC's copy of the Littelfuse sheet (sources.txt gives the URL; littelfuse.com refuses this host); byte-identical at 2026-09-26T21:16:34Z"
+    sha256: "f19f1bca636dcb235a4f1e1348f3eaeb9082b270cb83547eb4f7fa10ef0c0c23"
+    status: VERIFIED
+    matches_fitted: "no, by design: not fitted"
+  - for_entry: pack-chemical-fuse
+    role: "refused in round 4: a two-terminal part, not a self-control protector (FUSE-INTERPRETATION.md): NOT FITTED"
+    path: "v2/vendor/battery/prosemi-dhc45-c2937382.pdf"
+    doc_id: "Prosemi DHC45 series"
+    revision: "P0F0510130217001A"
+    url: "LCSC's copy of the Prosemi sheet (sources.txt gives the URL); byte-identical at 2026-09-26T21:16:34Z"
+    sha256: "7888f3b48e46d52eaee937bc30454cf5304609ab380be1dd9e94cfea14cca51a"
+    status: VERIFIED
+    matches_fitted: "no, by design: not fitted"
+  - for_entry: esd-headset-clamps
+    role: "TI's reference zener for the BQ4050's SMBus lines, not taken for board P's SMBus clamps D2 and D3 because of its 200 pF (gen_sch_p.py): NOT FITTED"
+    path: "v2/vendor/battery/onsemi-mm3z-c82071.pdf"
+    doc_id: "onsemi MM3Z2V4T1 series (MM3Z2V4T1/D)"
+    revision: "Rev. 11, September 2014"
+    url: "LCSC's copy of onsemi's sheet (sources.txt gives the URL; onsemi.com answered 403 to the round 4 author); byte-identical at 2026-09-26T21:16:34Z"
+    sha256: "be0d734edc03a774996b107f2f92f3b2d909c5da931b7e964f7a3bf7602ce2a4"
+    status: VERIFIED
+    matches_fitted: "no, by design: not fitted"
+  - for_entry: null
+    role: "board E's J_TAMP lead goes to this reed sensor (R4E-06; the lid and tamper switch, which only logs under D-03.2). Not a placed part and not in the critical set; listed because the owed list named it"
+    path: "v2/vendor/switches/littelfuse-59140-reed-sensor-2022-03-25.pdf"
+    doc_id: "Littelfuse 59140 reed sensor data sheet"
+    revision: "revised 03/25/22"
+    url: TBD
+    url_effect: "the round 4 author recorded no source; littelfuse.com answered this host HTTP 403 again at 2026-09-26T21:16:33Z and the Internet Archive holds no capture of the sheet, so the file is the author's copy, filed so the reading can be reproduced, and its source stays owed"
+    sha256: "c54b8c66982b3ebd90d52a74f005a06815c80ba9b0561f67f13d6dede3e0d27b"
+    status: INFERRED
+    matches_fitted: "partial: the 59140 series; the -1-S-05-A variant row was not re-read here"
+
 parts:
 
   - id: cm5-receptacle
@@ -281,6 +422,9 @@ parts:
         url_effect: "sources.txt line 25 records the folder, not the file URL"
         sha256: "675fa7ee40c91ad64db5e25abd75da2bc4c8e8e42f1569079d3b9cf1f2114687"
         matches_fitted: "yes: the ordering table lists PI7C9X2G404SLBFDEX"
+    update_fc144600:
+      read_on: "2026-09-26"
+      what_moved: "no circuit change. The held DS40068 Rev 5-2 has a source now: https://www.diodes.com/assets/Datasheets/PI7C9X2G404SL.pdf returned the same bytes at 2026-09-26T21:16:44Z (sha256 675fa7ee40c91ad6...), which replaces the document's url TBD above. The sibling PI7C9X2G304SL sheet in the same folder is likewise byte-identical to diodes.com at 21:16:47Z (not fitted). The data sheet still gives no decoupling recommendation (DECOUPLING.md section 10; the request to Diodes is prepared, not sent)."
 
   - id: usb3-hub
     function: "four-port USB 3.0 hub per slot"
@@ -1080,6 +1224,34 @@ parts:
         url: "https://forums.quectel.com/uploads/short-url/1zkjPRnxF5BZ2woox386baCZx4g.pdf"
         sha256: "139583b38ce1fd47be76d73d47e44902bfd152510dd486956fc54022be0ec179"
         matches_fitted: "yes for the GL variant; superseded by the series V1.1 (its antenna Table 29 is identical)"
+    update_fc144600:
+      read_on: "2026-09-26"
+      what_moved: "no circuit change. Stream r8docs filed the four Quectel AT command manuals v2/docs/feasibility/EMCON.md section 4.5 reads for W_DISABLE1#, AT+CFUN and AT+QCFG, each fetched again from the URL its stream recorded and byte-identical (2026-09-26T21:16:05Z to 21:16:07Z). Two are about this module's series; two are Quectel LTE and Q-series manuals read only as precedent. None states the time to RF off, the behaviour in boot or hang, or that no configuration overrides the pin (EMCON.md 4.5)."
+      documents_added:
+        - path: "v2/vendor/quectel/quectel-rm5x0n-at-commands-manual-v1.0-digikey.pdf"
+          doc_id: "Quectel RG520N&RG525F&RG5x0F&RM5x0N&RM521F Series AT Commands Manual"
+          revision: "Version 1.0, 2024-02-07, Released"
+          url: "https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/6382/Quectel_RG520NRG525FRG5x0FRM5x0NRM521F_Series_AT_Commands_Manual_V1.0.pdf (Digi-Key's copy of Quectel's manual)"
+          sha256: "6ed74e7e61da55211002cacc7075bc0a6051e81eeb7bb12848926fbc69f96c8c"
+          matches_fitted: "yes for the series: RM5x0N covers the RM520N; the firmware revision it describes is not pinned, as the module's order code is not (fitted_mpn TBD). AT+CFUN's 15 s maximum response time (section 2.22) is the figure SD-EMC-1's T_off rests on"
+        - path: "v2/vendor/quectel/quectel-rm520n-at-commands-manual-v1.0.0-prelim-20220812-waveshare.pdf"
+          doc_id: "Quectel RG520N&RG52xF&RG530F&RM520N&RM530N Series AT Commands Manual"
+          revision: "Version 1.0.0, 2022-08-12, Preliminary"
+          url: "https://files.waveshare.com/upload/8/8a/Quectel_RG520N&RG52xF&RG530F&RM520N&RM530N_Series_AT_Commands_Manual_V1.0.0_Preliminary_20220812.pdf (Waveshare's copy)"
+          sha256: "0e940dbc5957dbda2cafd30c1306e5b2b8f6534610f5b08d1c271d9538f017dd"
+          matches_fitted: "partial: names the RM520N; preliminary, superseded by the released manual above"
+        - path: "v2/vendor/quectel/quectel-ec2x-eg2x-eg9x-em05-qcfg-at-commands-manual-v1.1-sixfab.pdf"
+          doc_id: "Quectel EC2x&EG2x&EG9x&EM05 Series QCFG AT Commands Manual"
+          revision: "Version 1.1, 2023-06-27, Released"
+          url: "https://sixfab.com/wp-content/uploads/2023/11/Quectel_EC2xEG2xEG9xEM05_Series_QCFG_AT_Commands_Manual_V1.1.pdf (Sixfab's copy)"
+          sha256: "0280b1af1cfa627e232014c7d12c6544115014cb24143b91bd63ae290e03be8e"
+          matches_fitted: "no: LTE modules; read only as precedent that in Quectel's LTE firmware the W_DISABLE# function is a stored, host-writable setting (sections 5.12 and 5.27)"
+        - path: "v2/vendor/quectel/quectel-rg50xq-rm5xxq-at-commands-manual-v1.1.1-quectelforums.pdf"
+          doc_id: "Quectel RG50xQ&RM5xxQ Series AT Commands Manual"
+          revision: "Version 1.1.1, 2020-10-09, Preliminary"
+          url: "https://forums.quectel.com/uploads/short-url/avUSxfJeKqWJzAie8wEZCshlXjm.pdf (Quectel's forum host)"
+          sha256: "ef90013314f828b82e1e6f7b024590b2f77a3dc617ff7dd2fd0f15a01410abf7"
+          matches_fitted: "no: the Q-series predecessor; precedent only"
 
   - id: gnss
     function: "GNSS RTK receiver"
@@ -1150,6 +1322,36 @@ parts:
       ruling needs, which only the full (NDA) datasheet settles; TPM 2.0 is the fallback the ruling names (effect:
       if the precondition fails, the fallback part replaces this one and this entry changes). Residual risk
       accepted by the owner: drive unlock at boot depends on this part, the panel and the kit I2C bus.
+    update_fc144600:
+      read_on: "2026-09-26"
+      what_moved: "no circuit change. Stream r8docs (MESHSAT-1357, review of 26 September 2026 22:35, section 3) filed the documents the ZEROIZE study read from its drafts/ folder and fetched the maker's current summary revision. The held summary above is revision A: its text layer is identical to the file Microchip serves at the revision A URL today (2026-09-26T21:17Z; the bytes differ, a later render), and the maker's current revision is B (October 2021: ISLEEP for the extended range, the SMBus tTIMEOUT, the Trust Platform variants). Nothing in revision B touches the slot map; the NDA precondition of decision 30 stands (owed list)."
+      documents_added:
+        - path: "v2/vendor/microchip/microchip-atecc608b-summary-DS40002239B.pdf"
+          doc_id: "Microchip DS40002239 (ATECC608B Summary Datasheet)"
+          revision: "B, October 2021 (revision history, page 25)"
+          url: "https://ww1.microchip.com/downloads/aemDocuments/documents/SCBU/ProductDocuments/DataSheets/ATECC608B-CryptoAuthentication-Device-Summary-Data-Sheet-DS40002239B.pdf"
+          fetched: "2026-09-26T21:17:24Z, HTTP 200 application/pdf, 837,633 bytes"
+          sha256: "1b21d7b0d5c6265fcca2bbd28e88174e9d3a3d05c57be30712e8951c75503acc"
+          currency: "the maker's file on 2026-09-26; the Internet Archive's captures of this URL run from 2021 to 2026"
+          matches_fitted: "partial: the Product Identification System lists ATECC608B-SSHDA-T (SOIC 8, I2C, tape and reel), but this is the SUMMARY sheet; the slot erase behaviour decision 30 depends on is not in it (the full sheet is under NDA)"
+        - path: "v2/vendor/microchip/microchip-atecc508a-complete-20005927A.pdf"
+          doc_id: "Microchip DS20005927A (ATECC508A Complete Data Sheet)"
+          revision: "A (2017; PDF ModDate 2017-12-18), 109 pages"
+          url: "http://ww1.microchip.com/downloads/en/DeviceDoc/20005927A.pdf (HTTP 403 to this host on 2026-09-26; the file is the Internet Archive's capture 20190618060547, byte-identical at 21:15:47Z)"
+          sha256: "3e79484ff38cde1980159af097487ea336774016d4e64965b0ba666bb8d66bc0"
+          matches_fitted: "no: the predecessor part. ZEROIZE.md reads its public configuration tables because the ATECC608B summary states the configuration is compatible with the ATECC508A except a listed set (E8, SUPPORTED, not VERIFIED on the fitted part)"
+        - path: "v2/vendor/microchip/microchip-atecc608b-tngtls-DS40002250.pdf"
+          doc_id: "Microchip DS40002250 (ATECC608B-TNGTLS CryptoAuthentication Data Sheet)"
+          revision: "B (PDF ModDate 2023-04-11), 56 pages"
+          url: "https://ww1.microchip.com/downloads/aemDocuments/documents/SCBU/ProductDocuments/DataSheets/ATECC608B-TNGTLS-CryptoAuthentication-Data-Sheet-DS40002250.pdf (byte-identical at 2026-09-26T21:15:50Z)"
+          sha256: "db25050e016b887c578795e79c0ece0532dc176c5ef3ef4fb2f46b3eae0127b5"
+          matches_fitted: "no: a pre-provisioned sibling of the fitted blank ATECC608B-SSHDA-T; ZEROIZE.md E3 reads GenKey mode 0x04 from its factory configuration, VERIFIED for that configuration only"
+        - path: "v2/vendor/microchip/microchip-atecc608b-tflxtls-DS40002249.pdf"
+          doc_id: "Microchip DS40002249 (ATECC608B-TFLXTLS CryptoAuthentication Data Sheet)"
+          revision: "B (PDF ModDate 2023-04-12), 63 pages"
+          url: "https://ww1.microchip.com/downloads/aemDocuments/documents/SCBU/ProductDocuments/DataSheets/ATECC608B-TFLXTLS-CryptoAuthentication-Data-DS40002249.pdf (byte-identical at 2026-09-26T21:15:50Z)"
+          sha256: "b4601f1c2dc395af532d556010ace8b19ca792368d4cda8bfc960a6d3018646d"
+          matches_fitted: "no: a pre-provisioned sibling, as the TNGTLS sheet (ZEROIZE.md E3)"
 
 
   # ---------------------------------------------------------------------------------------------------------------
@@ -2110,16 +2312,17 @@ parts:
 owed:
   - "DONE 26 September 2026 (integration I6): sources.txt file lines for the six documents added on 25 and 26 September and for this file, a vendor-status.txt line for each, a vendor-noindex.txt line for the text-less TE drawing, and the correction of sources.txt's m2 folder line and the same sentence in README.md ('key to be read from the drawing': the drawing says key M)"
   - "the appendix entry recording that the conditional pick at appendix line 2884 resolved to its else-branch (the drawing says key M); the appendix is not a vendor file"
-  - "the full ATECC608B datasheet (under NDA) for owner ruling D-03's precondition that the slot map is erasable"
+  - "the full ATECC608B datasheet (under NDA) for owner ruling D-03's precondition that the slot map is erasable. 26 September 2026 (stream r8docs): the maker's current SUMMARY revision B and the ZEROIZE study's public documents are filed (secure-element update_fc144600, documents_filed_fc144600); none of them settles the slot map, so this item is unchanged; the bounded development-device experiment Z-EXP-A (ZEROIZE.md) is the other route"
   - "DONE 26 September 2026 (parts stream, at 45bde541): entries for board A's power tree regulators and eFuses and the PCA9555 expanders (buck-ap64500, buck-tps62933, buck-boost-lm5176, ideal-diode-lm74700, hot-swap-lm5069, io-expander-pca9555; board-a-efuses on main), each order code audited against its held document (suffix, package, grade). STILL OWED from them: the exposed-pad lands of the AP64500 and LM5176 against the makers' suggested pads (land_note on each), for the layout entry"
   - "a re-fetch of the Amphenol 10164227 drawing with a readable variant table, or a visual read of the raster, before any receptacle land is re-derived"
   - "st.com currency of DS12110, DS12117 and AN4938 from a host st.com answers"
   - "the SA868 and RM520N-GL order codes (owner-side purchases): TBD with the effects stated above"
   - "DONE 26 September 2026 (stream PKT): the MDD SMBJ (C113974, C364296) and Diodes SMBJ58A-13-F (C135085) datasheets are filed (tvs-surge-clamps, update_1f614233). STILL OWED: the land drawing of whichever key-B socket replaces C574849. At 45bde541 board B's socket line reads 'TE 2199119-3' with C590866, which the re-take CERTIFIED as 2199119-3 (TE) and which jlc_certify's M2_KEYS gives as key B from the held C-2199119 rev F sheet 2 table; whether that drawing's land applies to the -3 part unchanged is not read here"
   - "DONE 26 September 2026 (parts stream, at 45bde541): the TPS259631 eFuses are on main since 458b2873 on boards A and B (board-a-efuses, update_45bde541), and the entries for AP64500, TPS62933, LM5176, LM74700-Q1 (board E), LM5069 (board E) and the PCA9555 expanders are written"
-  - "the Littelfuse 59140-1-S-05-A reed sensor sheet behind board E's J_TAMP (round 4, R4E-06): the author's copy (sha256 c54b8c66982b..., revised 03/25/22) has no recorded source URL and littelfuse.com answered this host HTTP 403 on 2026-09-26, so it is not filed; effect: the lid and tamper switch rests on an unsourced document until re-fetched"
+  - "the Littelfuse 59140-1-S-05-A reed sensor sheet behind board E's J_TAMP (round 4, R4E-06): the author's copy (sha256 c54b8c66982b..., revised 03/25/22) has no recorded source URL and littelfuse.com answered this host HTTP 403 on 2026-09-26, so it is not filed; effect: the lid and tamper switch rests on an unsourced document until re-fetched. PARTLY DONE 26 September 2026 (stream r8docs): the author's copy is filed at v2/vendor/switches/littelfuse-59140-reed-sensor-2022-03-25.pdf (documents_filed_fc144600) so the reading can be reproduced; littelfuse.com refused this host again at 21:16Z and the Internet Archive has no capture, so its SOURCE is still owed"
   - "a currency re-read of ELX1135 (Eaton) and 2954fb (ADI) from their makers or the Internet Archive: both makers refused this host and the build box on 2026-09-26 and the Archive was offline (retried from this host at 13:54 and 14:51 UTC: no answer from any of the three)"
   - "re-reads of every LCSC and JLCPCB stock figure quoted in the entries added on 26 September 2026 (they are the round authors' readings, not re-read here), before any order. PARTLY DONE 26 September 2026 (parts stream): the lines of jlc_retake_45bde541 were re-read live at 18:50 to 18:51 UTC; stock is a reading of its moment and the rest stand as the round authors' readings"
   - "the condition 1 mismatches of jlc_retake_45bde541 (C594232 and C265283 gold-plated XH variants, C5251182 -GW PH variant, the amber rows on C2287) and its parser-refused rows: the fixes live in the generators and lcsc_fill.py's MAP (codes) and in jlc_certify.py (its part-token reading), none a vendor file; the table is re-taken after they land. Until then the table records the mismatch rows WRONG_MODEL (table_marks, second pass), and jlc_certify.py needs a declared-mismatch input so that a full run does not write CERTIFIED over them (drafted for the tools stream)"
   - "the three 10 A and 25 A Keystone 3568 blade-holder lines of board E and board P's F1 need a purchase route their own board declares (an lcsc-allow line or a code); E F1 and F2 are WRONG_MODEL in the table"
   - "a currency re-read of the Peli 1451-931 drawing, DXF and STEP bodies from Peli (no source URL recorded; peli.com and pelican.com refused this host on 26 September 2026)"
+  - "26 September 2026 (stream r8docs): every maker document v2/docs/records/README.md listed as not yet in v2/vendor is filed or, for the six pdftotext extractions, stated as derived and not filed (that README gives each row). STILL OWED from that list: the source of the Littelfuse 59140 sheet (above). Not owed by that list but found while filing: the battery review packet's alternatives are filed (documents_filed_fc144600), and v2/vendor/PARTS.md's legend reads CERTIFIED as 'JLCPCB returns this exact part, in our package, in stock', which this file's header refutes; PARTS.md is generated by v2/ecad/tools/kb/kb_inventory.py, so the correction is a tools change (drafted for the integrator)"

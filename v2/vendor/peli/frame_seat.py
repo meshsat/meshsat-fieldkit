@@ -39,7 +39,14 @@ Allowances marked INFERRED are the session's, not a source's; the document CASE-
 (a class a part is bought to, the kit's own drawing tolerances) and which unstated (below: UNSTATED). Each row's verdict is MET, NOT MET
 or OPEN: OPEN when a named dependency decides it, or when it falls below its minimum with every allowance no source states taken twice
 (the review of 26 Sep 2026, v2/docs/reviews/2026-09-26-foundation-progress-review.md section 4: a margin whose tolerances are not specified
-is unknown). No verdict here says that a part fits, seals or aligns: nominal CAD establishes none of that."""
+is unknown). No verdict here says that a part fits, seals or aligns: nominal CAD establishes none of that.
+
+Two qualifications, added 26 Sep 2026 late (MESHSAT-1357 stream r8docs, the review of 26 Sep 2026 22:35, section 3):
+  - MET is a sensitivity reading. Taking each unstated allowance twice shows that a row does not hinge on the number assumed
+    for it; it does not show that the unspecified tolerance (Peli's case, the build) is bounded by twice that number.
+  - An OPEN row that is already below its minimum at the worst case with the geometry as laid out prints
+    "OPEN, FAILS AS ASSUMED": the part still to be picked could lift it, which is why it is not NOT MET, but the geometry the
+    rows assume fails it. Only the row's label changes; every figure is computed as before."""
 import math
 
 # ------------------------------------------------------------------ Peli base (STEP 1451-931-bottom)
@@ -149,7 +156,7 @@ def row(key, label, minimum, nominal, tols, note="", worst=None, rss=None, wc2=N
     if worst is None: worst = nominal - sum(t for _, t in tols)
     if rss is None: rss = math.sqrt(sum(t * t for _, t in tols))
     if wc2 is None: wc2 = worst - sum(unstated(l, t) for l, t in tols)
-    if open_: ok = "OPEN"
+    if open_: ok = "OPEN, FAILS AS ASSUMED" if worst < minimum - 1e-9 else "OPEN"
     elif worst < minimum - 1e-9: ok = "NOT MET"
     elif wc2 < minimum - 1e-9: ok = "OPEN"
     else: ok = "MET"
@@ -787,4 +794,7 @@ if __name__ == "__main__":
               ("  (" + r["note"] + ")") if r["note"] else ""))
     print("\n  %d rows: %d MET, %d OPEN, %d NOT MET. 'worst x2' is the worst case with every allowance no source states (the case's, and the build's) taken"
           " twice; a row below its minimum there is OPEN (the review's rule of 26 Sep 2026, section 4, read by the session as a sensitivity test)" % (
-          len(ROWS), sum(r["ok"] == "MET" for r in ROWS), sum(r["ok"] == "OPEN" for r in ROWS), sum(r["ok"] == "NOT MET" for r in ROWS)))
+          len(ROWS), sum(r["ok"] == "MET" for r in ROWS), sum(r["ok"].startswith("OPEN") for r in ROWS), sum(r["ok"] == "NOT MET" for r in ROWS)))
+    print("  MET is that sensitivity test passed, not a bound on a tolerance no source states. %d of the OPEN rows fail with the geometry as"
+          " assumed (OPEN, FAILS AS ASSUMED): %s; each waits on a pick that could lift it" % (
+          sum(r["ok"] == "OPEN, FAILS AS ASSUMED" for r in ROWS), ", ".join(r["key"] for r in ROWS if r["ok"] == "OPEN, FAILS AS ASSUMED")))

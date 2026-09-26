@@ -2302,8 +2302,19 @@ records:
           drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
           files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
           file at fa355479df681ed8
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at its sixth revision (stream r8docs, MESHSAT-1357 round 8, late on 26
+          September 2026): the TX lamp's statement and E-02 are unchanged; the revision split local from end-to-end
+          conclusions (section 0a), reopened the RockBLOCK's local chain (4.4) and set each row's latency (5a, REQ-071),
+          none of which moves this reading, so it stands on the file at c92df899e459c476
+      - >-
+          v2/docs/feasibility/EMCON.md re-read after pass 3 of stream r8docs (27 September 2026): three corrections
+          from the independent check, section 4.4's ENABLE input now about 1.98 V with R6 in series (inside the
+          buffer's undefined band, the row still OPEN), section 5a's RM520N-GL reaction time now about 2.0 s less 0.9
+          times the rail decay, and section 8 naming REQ-071 a sibling of REQ-030; none moves this reading, so it
+          stands on the file at e57a54d1767bcd59
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@fa355479df681ed8"
+      - "v2/docs/feasibility/EMCON.md@e57a54d1767bcd59"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@2834f0d8c4071d56"
     release_effect: MUST_JUSTIFY
     source: ["v2/docs/PANEL.md:113", "v2/docs/PANEL.md:158"]
@@ -2653,8 +2664,10 @@ records:
     acceptance: >-
       A named pack build (cells, wrap, board P position, mat, pads) is held with a stated minimum in every axis against
       the committed board B underside and the worst of Peli's own figures for the current moulding (D-08a), every
-      margin MET, none OPEN or NOT MET, and the fit is shown on hardware at the build (a targeted unpowered mock-up in a
-      new case of that moulding).
+      margin MET, none OPEN or NOT MET, and the fit is shown on hardware in a new case of that moulding: on a targeted
+      unpowered mock-up before board A's east edge and board P's place are frozen for routing or, if it has not run by
+      then, at the affected boards' fabrication release, which carries the rows it would have closed (CASE-MARGINS.md
+      section 7).
     allocated_to: [p, case, b]
     verification_method: [CALCULATION, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
     verification_phase: PLACED_BOARD
@@ -2677,8 +2690,14 @@ records:
           v2/docs/CASE-MARGINS.md section 3.2 read at eadbe571: of the pack's four margins, M4b (east face to the east
           wall) and M6 (pack top under B16's underside) are MET and M4a (the east corner to Peli's R 15.88 fillet) and M5
           (the pack group in Y between the east legs) are OPEN until the pack's hold-down fixes its place (section 7)
+      - >-
+          v2/docs/CASE-MARGINS.md re-read at its seventh revision (stream r8docs, MESHSAT-1357 round 8, late on 26
+          September 2026): no computed figure changed; every MET is now qualified as a sensitivity reading that bounds no
+          unstated tolerance (section 1, Verdicts), and the targeted mock-up is recommended before the outlines and
+          connector placements of boards A, B, C, E and P freeze (section 7). The pack's rows read as before (M4b and M6
+          MET on the design basis, M4a and M5 OPEN), so this reading stands on the file at 275a3083db30a7bf
     evidence_bound_to:
-      - "v2/docs/CASE-MARGINS.md@cc641b483b6d8d2e"
+      - "v2/docs/CASE-MARGINS.md@275a3083db30a7bf"
     release_effect: BLOCKER
     source:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:3060-3062"
@@ -2690,7 +2709,10 @@ records:
     history: >-
       Round 3 waited on the owner's measurement of his case (M-01, D-08). The owner reversed D-08 on 26 September 2026
       and M-01 is closed by the reversal: the fit is held against Peli's figures (CASE-MARGINS.md) and shown on hardware
-      at the build. The underside height is cited from ASSEMBLY.md:72 (Z 47.9, read on the committed B21 board).
+      in a new case of that moulding, which round 3 placed at the build and round 8 (CASE-MARGINS.md's seventh revision,
+      section 7) moved to a targeted unpowered mock-up before board A's east edge and board P's place freeze for routing
+      or, if it has not run by then, to the affected boards' fabrication release. The underside height is cited from
+      ASSEMBLY.md:72 (Z 47.9, read on the committed B21 board).
     notes: >-
       Adjudication A06 (box reading of B21's underside): the 4S3P 18650 block fits east, shrink-wrapped; no 4S4P fits
       either pocket with board P beside the cells; pack_4s.py's walled box does not fit (S-27); nothing fits the west
@@ -2918,7 +2940,9 @@ records:
     acceptance: >-
       Every board outline, the plate and the pack are held against the worst of Peli's own figures for the current
       moulding with a stated minimum, every case-dependent margin MET and none OPEN or NOT MET in CASE-MARGINS.md, and
-      the OPEN rows shown on hardware at the build in a new case of that moulding.
+      the OPEN rows shown on hardware in a new case of that moulding: the targeted checks of CASE-MARGINS.md section 7
+      before the affected board outlines and connector placements freeze or, if they have not run by then, at the
+      affected boards' fabrication release (CASE-MARGINS.md section 7), the rest at the build.
     allocated_to: [case, kit]
     verification_method: [CALCULATION, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
     verification_phase: PLACED_BOARD
@@ -2944,8 +2968,15 @@ records:
           v2/docs/CASE-MARGINS.md sections 0 and 3 read at eadbe571: of 70 computed margins 35 are MET and 35 OPEN, none
           NOT MET; the OPEN rows rest on the case's unpublished tolerance, the build's allowances or a pick, and section
           7 names what closes each (nominal CAD establishes no fit, blind-mate alignment or seal)
+      - >-
+          v2/docs/CASE-MARGINS.md re-read at its seventh revision (stream r8docs, MESHSAT-1357 round 8, late on 26
+          September 2026): of 70 computed margins 35 are MET on the design basis, each a sensitivity reading that bounds no
+          unstated tolerance, and 35 OPEN, none NOT MET; two OPEN rows, M17g and M17x, fail with the geometry as
+          currently assumed and wait on the jumper plug's selection (OPEN, FAILS AS ASSUMED); the targeted checks T1, T2,
+          T4, T5, T6, T10 and T11 are recommended before the outlines and connector placements of boards A, B, C, E and
+          P freeze, the rest at the build. The record stays INCONCLUSIVE on the file at 275a3083db30a7bf
     evidence_bound_to:
-      - "v2/docs/CASE-MARGINS.md@cc641b483b6d8d2e"
+      - "v2/docs/CASE-MARGINS.md@275a3083db30a7bf"
     release_effect: BLOCKER
     source:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:3054-3056"
@@ -3585,8 +3616,20 @@ records:
           compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent
           checker, it differs only in D1, D2, D101, D201, D301 and D520's symbol (Device:D_TVS to Device:D_Zener) and pin
           names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 669d02d07aeaae4b
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at its sixth revision (stream r8docs, MESHSAT-1357 round 8, late on 26
+          September 2026): the PA's closure at desk is LOCAL; end to end none of the 17 rows closes at desk (section 0a);
+          the RockBLOCK's local chain is reopened, because the module runs on its own two 10 F supercapacitors after its
+          supply gate opens, with its ENABLE held by board B's U6 alone (4.4); section 5a sets each row's maximum latency
+          and the fault conditions (REQ-071). The record still reads FAIL, now on the file at c92df899e459c476
+      - >-
+          v2/docs/feasibility/EMCON.md re-read after pass 3 of stream r8docs (27 September 2026): three corrections
+          from the independent check, section 4.4's ENABLE input now about 1.98 V with R6 in series (inside the
+          buffer's undefined band, the row still OPEN), section 5a's RM520N-GL reaction time now about 2.0 s less 0.9
+          times the rail decay, and section 8 naming REQ-071 a sibling of REQ-030; none moves this reading, so it
+          stands on the file at e57a54d1767bcd59
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@fa355479df681ed8"
+      - "v2/docs/feasibility/EMCON.md@e57a54d1767bcd59"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
     release_effect: BLOCKER
     source:
@@ -3606,6 +3649,73 @@ records:
       The bench cannot use the kit's own SDR: EMCON removes its supply (EMCON.md section 6). FEA-002 holds this
       record while EMCON's per-transmitter inhibits are not shown.
 
+  - id: REQ-071
+    kind: requirement
+    parent: NEED-08
+    statement: >-
+      Every transmitter's EMCON inhibit silences it within a stated maximum time of the EMCON toggle's contact closing,
+      through a path in which every element that bounds the time is hardware, and keeps it silent while EMCON is
+      asserted, in each fault condition of v2/docs/feasibility/EMCON.md section 5a: every processor in reset, every
+      processor unpowered, a firmware error on any pin, the radio's own firmware booting, hung, restarting or
+      reconfigured, a ribbon unplugged, a logic rail lost or in its unspecified band, back-feed from the lines that stay
+      live, the energy stored on the radio's side of its gate, and EMCON asserted at power-up, during a transmission,
+      during a boot and through the contact's bounce.
+    acceptance: >-
+      (1) Desk: for every row of EMCON.md section 4 the committed netlist shows a hardware path in each fault condition,
+      and every time term of the row in section 5a is bounded from a held document within the row's maximum: 1 s for
+      every transmitter but the RM520N-GL; for the RM520N-GL 20 s from EMCON on a module that has been turned on, with
+      T_off, T_cut and the rail's decay taken at their parts' worst tolerance, 0 s at a power-up under EMCON (the rail
+      never rises), and W_DISABLE1# low within 1 s. (2) Bench: EMCON.md section 6's rows E-01 to E-12 record, with an
+      external receiver, the time from the contact's closing (TX_INHIBIT_n below 0.8 V at board C's TP10) to no
+      emission above the instrument's noise floor at each antenna port, each within its maximum, in the fault
+      conditions each row names, and no emission after it for as long as EMCON is held.
+    allocated_to: [a, b, c, d, kit]
+    verification_method: [CALCULATION, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT]
+    verification_phase: SCHEMATIC
+    final_phase: PROTOTYPE
+    prototype_1: core
+    prototype_1_basis: NAMED
+    prototype_1_why: "D-01 names hardware EMCON as core and D-05 rules what it means; this record is its time bound."
+    satisfied_by:
+      rules: [RF-002]
+      decisions: []
+    rule_coverage: PARTIAL
+    rulings: [D-05]
+    waits_on: [S-01, S-02]
+    status: DEFINED
+    evidence_result: FAIL
+    evidence_phase: SCHEMATIC
+    evidence_class: DESK_REVIEW
+    evidence:
+      - >-
+          v2/docs/feasibility/EMCON.md sections 0a, 4.4 and 5a read at its sixth revision (stream r8docs, 26 September
+          2026): no row meets the bound as drawn. Locally the SA868 (no maker threshold), the RockBLOCK 9704 (its module
+          runs on two 10 F supercapacitors of its own after its supply gate opens, with its ENABLE held by board B's U6
+          alone, about 16 J) and the RM520N-GL (SD-EMC-1's stages not drawn) are open, and every row inherits the shared
+          line items L1 to L4 and L7 and SD-EMC-6's missing lamp
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net at fc144600: RB_IEN joins J_RB9704 pin 3 and U6 pin 19
+          (IO1_6) and nothing else; U6 is powered from +3V3_DEV
+      - >-
+          v2/docs/feasibility/EMCON.md re-read after pass 3 of stream r8docs (27 September 2026): three corrections
+          from the independent check, section 4.4's ENABLE input now about 1.98 V with R6 in series (inside the
+          buffer's undefined band, the row still OPEN), section 5a's RM520N-GL reaction time now about 2.0 s less 0.9
+          times the rail decay, and section 8 naming REQ-071 a sibling of REQ-030; none moves this reading, so it
+          stands on the file at e57a54d1767bcd59
+    evidence_bound_to:
+      - "v2/docs/feasibility/EMCON.md@e57a54d1767bcd59"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
+      - "v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568"
+    release_effect: BLOCKER
+    source:
+      - "v2/docs/feasibility/EMCON.md section 5a"
+      - "v2/docs/reviews/2026-09-26-second-checkpoint-review.md section 2C"
+    source_check: VERIFIED
+    notes: >-
+      The maximum per row is the session's decision SD-EMC-7 (EMCON.md section 5a), taken under the owner's standing
+      rule of 26 September 2026 and reversible: 1 s everywhere but the 5G module, whose 20 s keeps SD-EMC-1's choice of
+      the maker's turn-off order; the second review asked that the latency and fault conditions be defined before the
+      circuit is chosen. FEA-002 holds this record.
   - id: CFL-004
     kind: conflict
     candidate: CAND-052
@@ -3748,8 +3858,19 @@ records:
           compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent
           checker, it differs only in D1, D2, D101, D201, D301 and D520's symbol (Device:D_TVS to Device:D_Zener) and pin
           names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 669d02d07aeaae4b
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at its sixth revision (stream r8docs, MESHSAT-1357 round 8, late on 26
+          September 2026): the reading above is unchanged (W_DISABLE1# is the only inhibit drawn; SD-EMC-1's supply
+          removal is not drawn); section 5a now bounds the row at 20 s for a running module by hardware timers at their
+          worst tolerance (REQ-071), so it stands on the file at c92df899e459c476
+      - >-
+          v2/docs/feasibility/EMCON.md re-read after pass 3 of stream r8docs (27 September 2026): three corrections
+          from the independent check, section 4.4's ENABLE input now about 1.98 V with R6 in series (inside the
+          buffer's undefined band, the row still OPEN), section 5a's RM520N-GL reaction time now about 2.0 s less 0.9
+          times the rail decay, and section 8 naming REQ-071 a sibling of REQ-030; none moves this reading, so it
+          stands on the file at e57a54d1767bcd59
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@fa355479df681ed8"
+      - "v2/docs/feasibility/EMCON.md@e57a54d1767bcd59"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
     release_effect: BLOCKER
     source:
@@ -3894,10 +4015,21 @@ records:
           SCH-004 on board D now read AWAITING_REVALIDATION (TOOL_CHANGED: helper modules of their writers changed after
           the readings), so neither decides until the consolidated re-take; the record's own reasons are unchanged and it
           stays INCONCLUSIVE
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at its sixth revision (stream r8docs, MESHSAT-1357 round 8, late on 26
+          September 2026): the page now says that its closure of the PA's row at desk is local and that the row is OPEN
+          end to end (section 0a); the SA868's row stays open. This record stays INCONCLUSIVE on the file at
+          c92df899e459c476
+      - >-
+          v2/docs/feasibility/EMCON.md re-read after pass 3 of stream r8docs (27 September 2026): three corrections
+          from the independent check, section 4.4's ENABLE input now about 1.98 V with R6 in series (inside the
+          buffer's undefined band, the row still OPEN), section 5a's RM520N-GL reaction time now about 2.0 s less 0.9
+          times the rail decay, and section 8 naming REQ-071 a sibling of REQ-030; none moves this reading, so it
+          stands on the file at e57a54d1767bcd59
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@f13d8b70099ab03e"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@7b08510106687b3d"
-      - "v2/docs/feasibility/EMCON.md@fa355479df681ed8"
+      - "v2/docs/feasibility/EMCON.md@e57a54d1767bcd59"
       - "v2/docs/CURRENT-EVIDENCE.md@9c9bba12790d645a"
     release_effect: BLOCKER
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2825", "v2/docs/PANEL.md section 6", "v2/docs/feasibility/EMCON.md sections 4.1 and 4.2"]
@@ -3944,8 +4076,18 @@ records:
           drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
           files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
           file at fa355479df681ed8
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at its sixth revision (stream r8docs, MESHSAT-1357 round 8, late on 26
+          September 2026): unchanged, board C carries no EMCON lamp; the page now lists that missing condition of
+          SD-EMC-6 as holding every row end to end (section 0a), so this reading stands on the file at c92df899e459c476
+      - >-
+          v2/docs/feasibility/EMCON.md re-read after pass 3 of stream r8docs (27 September 2026): three corrections
+          from the independent check, section 4.4's ENABLE input now about 1.98 V with R6 in series (inside the
+          buffer's undefined band, the row still OPEN), section 5a's RM520N-GL reaction time now about 2.0 s less 0.9
+          times the rail decay, and section 8 naming REQ-071 a sibling of REQ-030; none moves this reading, so it
+          stands on the file at e57a54d1767bcd59
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@fa355479df681ed8"
+      - "v2/docs/feasibility/EMCON.md@e57a54d1767bcd59"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@2834f0d8c4071d56"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/EMCON.md section 7 (the common element)", "session choice SC-11"]
@@ -3959,23 +4101,26 @@ records:
     statement: >-
       Radios dark (D-05) requires, for every one of the kit's 17 transmitters, a hardware inhibit that holds with every
       processor dead, in every state of the lines' own supplies, without depending on the radio's firmware. At desk the
-      radio-specific chains are complete for 16 rows; the RM520N-GL's only drawn inhibit is a firmware-mediated airplane
-      mode, the shared lines have open items, and no row is shown on the bench.
+      radio-specific (local) chains are complete for 14 rows and no row is complete end to end; the RM520N-GL's only
+      drawn inhibit is a firmware-mediated airplane mode, the RockBLOCK 9704 keeps running on its own supercapacitors
+      with its ENABLE held by firmware, the shared lines have open items, and no row is shown on the bench.
     acceptance: >-
       Every row of EMCON.md section 4 closed at desk on the committed netlists (SD-EMC-1's two stages drawn for the
-      5G module; L1 to L4 and L7 remedied; the back-feed of SD-EMC-2 bounded) and bench tests E-01 to E-12 passed on
-      the prototype with an external receiver.
+      5G module; L1 to L4 and L7 remedied; the back-feed of SD-EMC-2 bounded; the RockBLOCK's ENABLE forced low by
+      hardware and its stored energy bounded), each row end to end within its latency under REQ-071, and bench tests
+      E-01 to E-12 passed on the prototype with an external receiver.
     feasibility_page: "v2/docs/feasibility/EMCON.md"
-    blocker_ids: [SD-EMC-1, SD-EMC-2, SD-EMC-6, E-05, E-07, E-12]
+    blocker_ids: [SD-EMC-1, SD-EMC-2, SD-EMC-6, SD-EMC-7, E-04, E-05, E-07, E-12]
     closing_evidence: >-
       A board B revision carrying SD-EMC-1's supply removal and backstop for slot 2, the single-gate and pull-down
-      remedies of L1 to L4 and L7 on boards A, B, C and D, and the EMCON lamp (CON-021), each read back on its committed
-      netlist; then bench tests E-01 to E-12 of EMCON.md section 6 on the built kit, E-05 and E-12 first because they
-      decide SD-EMC-1's fallback.
+      remedies of L1 to L4 and L7 on boards A, B, C and D, the RockBLOCK's ENABLE forced low by hardware (EMCON.md
+      4.4) with the Iridium 9704 module's ENABLE behaviour read from its maker, and the EMCON lamp (CON-021), each read
+      back on its committed netlist against REQ-071's latency and fault conditions; then bench tests E-01 to E-12 of
+      EMCON.md section 6 on the built kit, E-05 and E-12 first because they decide SD-EMC-1's fallback.
     owner: >-
       Board B's author (SD-EMC-1, L2, L3, L4, L7), boards A, C and D's authors for their gates, the tools author for
       RF-002's instrument (L6), and the TEST-PLAN owner for the bench rows and the silence latency.
-    blocks: [REQ-030, REQ-032, CON-021]
+    blocks: [REQ-030, REQ-032, REQ-071, CON-021]
     holds_layout_entry: [a, b, c, d]
     stages:
       - stage: LAYOUT_ENTRY
@@ -4042,8 +4187,24 @@ records:
           drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
           files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
           file at fa355479df681ed8
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at its sixth revision (stream r8docs, MESHSAT-1357 round 8, late on 26
+          September 2026): the PA's closure at desk is LOCAL, and end to end none of the 17 rows closes at desk (section
+          0a); local chains close at desk on 14 rows, with the RockBLOCK 9704 reopened: on Ground Control's schematic rev
+          2B (v2/vendor/rockblock/rb9704-sch-2B1.pdf, pages 2 to 5) the module's supply is two 10 F supercapacitors
+          charged to 4.25 V from J3 pin 15, and J3 pin 3, its ENABLE, joins board B's U6 (a PCA9555 on +3V3_DEV) and
+          nothing else on the committed netlist, so cutting +5V_RB leaves the module enabled on about 16 J (4.4); section
+          5a (SD-EMC-7) sets each row's maximum latency and the fault conditions F1 to F9 (REQ-071)
+      - >-
+          v2/docs/feasibility/EMCON.md re-read after pass 3 of stream r8docs (27 September 2026): three corrections
+          from the independent check, section 4.4's ENABLE input now about 1.98 V with R6 in series (inside the
+          buffer's undefined band, the row still OPEN), section 5a's RM520N-GL reaction time now about 2.0 s less 0.9
+          times the rail decay, and section 8 naming REQ-071 a sibling of REQ-030; none moves this reading, so it
+          stands on the file at e57a54d1767bcd59
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@fa355479df681ed8"
+      - "v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
+      - "v2/docs/feasibility/EMCON.md@e57a54d1767bcd59"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/EMCON.md section 7", "v2/docs/reviews/2026-09-26-foundation-progress-review.md section 3"]
     source_check: VERIFIED

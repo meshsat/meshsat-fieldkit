@@ -2,7 +2,11 @@
 
 MESHSAT-1357, written 26 September 2026 and revised six times the same day after independent checks, the fifth to
 apply the review of that day (section 1, Verdicts) and the sixth to correct two chains the last check found short
-(finding 25). Prototype design: nothing in this kit has been built, fitted to a
+(finding 25). A seventh revision, late the same day (stream r8docs), applies section 3 of the second review of that
+day (`v2/docs/reviews/2026-09-26-second-checkpoint-review.md`): a MET row is a sensitivity reading, not a bound on a
+tolerance no source states; the two rows below their minimum fail with the geometry as currently assumed; and the
+targeted mock-up moves ahead of the point where the affected board outlines and connector placements freeze
+(findings 26 to 28; no computed figure changed). Prototype design: nothing in this kit has been built, fitted to a
 case or field deployed, and no V2 board has been made. Every number
 here is read from a Peli file or page named in section 1, from a maker's sheet in `v2/vendor/`, from a file in this
 tree (file:line, at main `29f00554`), or derived from those by the arithmetic shown. A number that rests on an
@@ -17,8 +21,9 @@ therefore takes Peli's own figures and the tolerances a source states as its bas
 case-dependent margin against the worst of them, plus a stated minimum. Where a margin rests on a tolerance no source
 states, on a TBD or on a part still to be picked, it is OPEN, not met: nominal CAD establishes no physical fit, no
 blind-mate alignment and no seal (section 1, Verdicts). Section 7 lists what closes each OPEN item; most of it is a
-targeted, unpowered mock-up that the session recommends for the build stage, on the new case of the current moulding
-bought for the prototype. Nothing here asks the owner to measure or build anything. Every change below is **the
+targeted, unpowered mock-up that the session recommends before the outlines and connector placements of boards A,
+B, C, E and P are frozen for routing, on the new case of the current moulding bought for the prototype, whose purchase
+stays the owner's decision (section 7). Nothing here asks the owner to measure or build anything. Every change below is **the
 session's choice under the owner's standing rule of 26 September 2026** (never ask the owner; take the recommended
 option; record it as taken and reversible).
 
@@ -38,9 +43,14 @@ for it, inside the part of the wall Peli's drawing shows free (section 3.3, C3).
 gas-discharge arrestors as the antenna bulkheads themselves, bodies outside, on one aluminium RF entry plate per wall,
 five on the east wall and seven on the west so that every jumper inside has a planned route past the pack and the
 setting legs (section 3.4, C2 and C4); the tree's Amphenol couplers retire. Of the 70 margins `frame_seat.py`
-computes for this arrangement, 35 are MET and 35 OPEN, and none is NOT MET. Two of the OPEN rows fall below their
-minimum at the limit of the jumper plug's class: how the east jumpers lie under the plugs (M17g, M17x). They stay
-OPEN until the plug is picked (sections 3.2 and 3.4).
+computes for this arrangement, 35 are MET and 35 OPEN, and none is NOT MET. **MET is a sensitivity reading, not a
+bound:** a MET row still meets its minimum with every allowance no source states taken twice, which shows it does not
+hinge on the number assumed for that allowance; it does not show that Peli's unpublished tolerance or the build's is
+within twice that number (section 1, Verdicts). **Two of the OPEN rows fail with the geometry as currently assumed:**
+how the east jumpers lie under the plugs, M17g (-1.21 nominal, -2.43 at the worst, against 0) and M17x (+3.89
+nominal, -0.38 at the worst, against 1.0), with the jumper plug laid out at the limit of its class. They are held
+OPEN, not NOT MET, only because the final plug is still to be picked and a pick inside the class can meet them;
+until it is picked, the layout under the east plugs does not close (sections 3.2 and 3.4).
 
 ## 0. Findings and decisions at a glance
 
@@ -68,9 +78,12 @@ OPEN until the plug is picked (sections 3.2 and 3.4).
 | 20 | The leg column's outer-back corner lies in the skirt's R 17.53 corner arc, and the locator places a leg in X and Y at once: at the previous issue's column the Euclidean worst was 0.95. | INFERRED from VERIFIED geometry | C6: the column 0.20 inboard (X 175.40 to 180.17): 1.14 at the worst (M21d, OPEN) |
 | 21 | The previous issue's jumper plug sent every east cable down from Z 54.0 onto the pack (top Z 44.58, X 122 to 178.65, under every east site), where RG-316 cannot turn at R 12.5; the C6 legs close the corridors at the pack group's ends (1.77 at the worst against a 2.49 cable); its M17 measured a clearance at Z 50, not a route. Round the pack's ends, a cable from an east site at \|Y\| 93 meets a leg's column before it can move inboard of it (22.32 short at nominal). | INFERRED from VERIFIED geometry | C2: each east plug's cable leaves along the wall, the plug turned 30 degrees down, into a bundle over the pack's outer strip under the plugs, inboard of the legs' columns and down beyond the legs; the two WIFI P2P bulkheads move to the west wall, whose cables fall straight to the floor; each jumper cut to its route, 232 to 412 mm. This is a planned route, not a closed one: every jumper row is OPEN, and how the east cables lie under the plugs turns on the plug still to be picked (M17g, M17x; finding 24) |
 | 22 | The RF entry plate's M4 screws in 4.5 wall holes, into threads tapped in the plate, floated 0.26 against 0.40 of hole marking and thread position, so not all eight were sure to start; the previous M11d left out the plate's own +-0.20 and the screw's length tolerance, and at the worst the tips stood outside, where an arrestor body lies over the screws at \|Y\| 100. | INFERRED from the stated allowances and classes | C4: 5.0 wall holes (0.11 to spare, M11e) under sealing washers whose rubber face covers them (M11f), the screw rows 0.25 further in (M11b, M11c), and a 6.0 plate on which an M4 x 12 stays inside (0.43, M11d) and engages 1.95 at the least (M11g). M11d, M11e and M11g are OPEN: they rest on the wall's thickness, the gasket's compression and the hole marking, which T5 and T6 measure |
-| 23 | The review of 26 September 2026 (`v2/docs/reviews/2026-09-26-foundation-progress-review.md:79`): Peli geometry and stated tolerances are the design basis; a margin whose tolerances or frame seating are not specified is unknown; nominal CAD establishes no physical fit, blind-mate alignment or sealing; a targeted unpowered mock-up can resolve expensive mechanical uncertainties earlier than a populated build. Peli states no tolerance for the case, and the kit's build allowances are assumptions. | VERIFIED (the review's text) | Every margin carries MET, NOT MET or OPEN (section 1, Verdicts). A row is MET only if it still meets its minimum with every unstated allowance taken twice; 35 of the 70 computed rows are OPEN, and section 7 names what closes each, chiefly a targeted unpowered mock-up recommended for the build stage |
-| 24 | The last independent check found that the east bundle's layering under the plugs does not close as laid out. Under 5G MAIN, which three cables pass, MAIN's own cable at the class's 16.0 reach lands 1.21 into the passing cable below its place. With the plug's cable axis at its inner end, which the class allows, the bundle's inboard column comes to -0.38 from B16's edge at the worst. | INFERRED from the plug class | No simple change closes either on held evidence: both turn on the plug's reach, its ferrule's diameter and the offset of its cable axis, which no held sheet gives. Both are OPEN rows with their bounds (M17g, M17x) and named levers, and the claim that the bundle closes is withdrawn (section 3.4) |
+| 23 | The review of 26 September 2026 (`v2/docs/reviews/2026-09-26-foundation-progress-review.md:79`): Peli geometry and stated tolerances are the design basis; a margin whose tolerances or frame seating are not specified is unknown; nominal CAD establishes no physical fit, blind-mate alignment or sealing; a targeted unpowered mock-up can resolve expensive mechanical uncertainties earlier than a populated build. Peli states no tolerance for the case, and the kit's build allowances are assumptions. | VERIFIED (the review's text) | Every margin carries MET, NOT MET or OPEN (section 1, Verdicts). A row is MET only if it still meets its minimum with every unstated allowance taken twice, a sensitivity test and not a bound on those allowances (finding 26); 35 of the 70 computed rows are OPEN, and section 7 names what closes each, chiefly a targeted unpowered mock-up, now recommended before the affected outlines and connector placements freeze (finding 28) |
+| 24 | The last independent check found that the east bundle's layering under the plugs does not close as laid out. Under 5G MAIN, which three cables pass, MAIN's own cable at the class's 16.0 reach lands 1.21 into the passing cable below its place. With the plug's cable axis at its inner end, which the class allows, the bundle's inboard column comes to -0.38 from B16's edge at the worst. | INFERRED from the plug class | No simple change closes either on held evidence: both turn on the plug's reach, its ferrule's diameter and the offset of its cable axis, which no held sheet gives. Both are OPEN rows with their bounds (M17g, M17x) and named levers, and the claim that the bundle closes is withdrawn (section 3.4). As laid out, both fail (finding 27) |
 | 25 | The next independent check found two rows stated MET that fail at the worst. M13 left out the arrestor's O-ring, which the held drawing (page 3, rendered and read) shows on the thread's root, about 0.63 proud of the body's face, inside the .47 the chain counted as free thread; with it the thread on the full 6.0 plate leaves 0.62 nominal and -0.40 at the worst, and the drawing's note that every dimension on it is for reference only makes its +-0.51 an unstated allowance besides. M14j left out each part's float on its fixings, A's flange 0.24 on its M3 screws and a bonded washer 0.33 on its M4 (the term M14p carries), and counted one machined place for a pair: at the previous layout that pair came to 0.39 at the worst, A's and D's flanges to 0.83, and C's and B's mated plugs to 0.63 (M14k). The same float was missing wherever an arrestor's place enters a chain (each floats 0.32 in its 16.3 hole), and the floats that were carried had been taken at a screw's largest or nominal major, not at its smallest. | VERIFIED (the drawings and the classes); margins INFERRED | C4: each arrestor hole spot-faced 26.0 x 1.5 on the entry plate's back, so the nut sits 1.5 lower on its thread: M13 keeps 1.20 at the worst and 0.38 with the unstated allowances doubled, OPEN only on the O-ring's height; the nut and washer class narrowed to 24.0 x 5.0 from the drawing's 3/4 in hex (M13b to M13d). C3: A, C, B, D and F moved 0.8 to 1.7 mm east, so that every pair on the plate's face and every mated pair keeps 1.0 with each part at its float and at its machined place (M14j 1.13, M14k 1.11). C1: the face plate 0.2 narrower, 377.2 (M8x). Every row that carries the O-ring (M18, M17c, M17w, M17x) or a float (M2b, M8, M8h, M11f, M13c, M14e, M14g, M14n, M14p, M17a, M17b, M17g, M18b, M18c, M21h) now carries it at its worst; M17a falls to OPEN (1.90 with the unstated allowances doubled, against its 2.0) |
+| 26 | The second review of 26 September 2026 (`v2/docs/reviews/2026-09-26-second-checkpoint-review.md`, section 3): "doubling an assumed allowance is a sensitivity test, not proof that an unspecified manufacturing tolerance is bounded. Keep that qualification attached to the 35 MET rows." | VERIFIED (the review's text) | Section 1, Verdicts, says what MET establishes and what it does not; every count of MET rows in this document carries the qualification; `frame_seat.py` prints it under its table. No verdict moved: MET is still computed the same way, and it is still the design basis only |
+| 27 | The same review: "The two negative margins should explicitly say that the currently assumed geometry fails, with final plug selection pending." M17g is below its minimum at nominal (-1.21) and at the worst (-2.43); M17x at the worst (-0.38 against 1.0). | VERIFIED (the review's text; the figures are `frame_seat.py`'s) | Both rows now read **OPEN, FAILS AS ASSUMED** in section 3.2 and in `frame_seat.py`'s output: the geometry as laid out fails them, and they are held OPEN, not NOT MET, only because the jumper plug is still to be picked. Until it is, neither the layering under the east plugs nor the bundle's column beside B16's east edge (X 165) is a closed design; board B's east edge and its east-end tall parts are among the placements the mock-up of finding 28 must see before they freeze |
+| 28 | The same review: "Perform the targeted mock-up before affected PCB outlines and connector placements become expensive to change, rather than waiting until boards are ready for population." This document had placed it at the build stage, before population | VERIFIED (the review's text) | Section 7: the targeted checks (T1, T2, T4, T5, T6, T10, T11) are recommended before the outlines and connector placements of boards A, B, C, E and P are frozen for routing; the rest (T3, T7, T8, T9) stays at the build. If the case and the mock-up's parts are not bought by then, those boards enter layout on the design basis and every OPEN row the mock-up would close becomes an item of their fabrication release, not of their layout entry (the review's section 2A: a hold belongs to the stage whose evidence it needs). Buying the case and the parts stays the owner's decision; the session's choice under the owner's standing rule of 26 September 2026 |
 
 ## 1. Sources and method
 
@@ -191,11 +204,16 @@ Each row of section 3.2 carries one verdict, which `frame_seat.py` prints for ev
 statements, judged in the table):
 - **MET**: at or above its minimum at the linear worst case, and still there with every unstated allowance in its
   chain taken twice (the column "Worst, unstated x2"). The factor is the session's sensitivity test, not a tolerance:
-  a row that survives it does not hinge on the number assumed for what no source states.
+  a row that survives it does not hinge on the number assumed for what no source states. **It is not a bound on those
+  allowances** (the second review of 26 September 2026, section 3): doubling an assumed number does not show that the
+  unspecified tolerance it stands for, Peli's moulding or the build's, is within twice that number. A MET row is MET
+  on the design basis under that test, and every MET in this document, counted or cited, carries this qualification.
 - **OPEN**: one of two cases.
   - It meets its minimum at the worst case but not with the unstated allowances doubled.
   - Something no held source gives decides it: a TBD contributor, or a pick whose class admits parts on both sides
-    of the minimum.
+    of the minimum. Where the row is already below its minimum at the worst case with the geometry as laid out, it
+    reads **OPEN, FAILS AS ASSUMED**: the assumed geometry fails it, and only the pick still to be made keeps it from
+    NOT MET (M17g and M17x).
 
   An OPEN row gives its computed bound and what closes it (section 7).
 - **NOT MET**: below its minimum at the worst case, with nothing still to be picked that could lift it.
@@ -397,7 +415,9 @@ prints, and the PA flange over the fans goes from 9.0 to 13.0 mm.
 "As designed" is the tree at main `29f00554` (for M1, M10 and M14a with the frame where Peli puts it); "chosen" is
 C1 on the C6 legs with C2 to C5. Every chosen figure is printed by `frame_seat.py` (parts D to G and the table), and
 so are the column "Worst, unstated x2" and each verdict (section 1, Verdicts). For an OPEN row the last cell says
-what the row rests on and which check of sections 5 and 7 closes it.
+what the row rests on and which check of sections 5 and 7 closes it. A MET in the last column is MET on the design
+basis under the sensitivity test of section 1 (the unstated allowances doubled); it is not a bound on those
+allowances, and it says nothing of fit, seal or alignment.
 
 | # | Margin | Min | As designed: nominal / worst | As designed | Chosen: nominal | Worst | RSS low | Worst, unstated x2 | Chosen |
 |---|---|---|---|---|---|---|---|---|---|
@@ -452,8 +472,8 @@ what the row rests on and which check of sections 5 and 7 closes it.
 | M16 | Rods (+-110.5, +-73) to the long-wall fillet tangents (61.14 to the end walls) | 1.0 | +41.49 / +41.11 | MET | +41.49 | +40.11 | +40.42 | +38.73 | MET |
 | M17a | East jumpers' bundle, two RG-316 wide and two high (4.98), in the slot between the pack's top (Z 44.58) and the plugs' undersides (Z 54.0): free height, each plug's arrestor anywhere in its 0.32 float | 2.0 | not checked: the previous issues' M17 measured the band between B's edge and the east wall at Z 50 (23.72, 23.34 at the worst), a clearance, not a route; it is retired | OPEN | +4.44 | +2.96 | +3.56 | +1.90 | OPEN: the floor under the pack, the plate's marking; T6, T8, T10 |
 | M17b | East cables under the next plug's body: a cable in the band's upper layer (its centre Z 50.535) to the body's underside (Z 54.0); the drop from the plug itself (ferrule to 16.0 from the axis at 30 degrees down, then R 12.5 to level) keeps 8.32 | 1.0 | n/a | n/a | +2.22 | +1.00 | +1.55 | +0.20 | OPEN: the ties, the marking; T10 |
-| M17g | East layering under 5G MAIN, which three cables pass (IRIDIUM, ANT3, DIV), as laid out: the passing cables in the band's lower layer and its inner upper place, MAIN's own cable in the outer upper place (Z 50.535); at the class's 16.0 reach and 30 degrees it lands at Z 49.33, onto the passing cable in the outer lower place: centre distance less one cable | 0 | n/a | n/a | -1.21 | -2.43 | -1.88 | -3.23 | OPEN: best +0.00 for a reach of 13.58 or less, or 5G MAIN turned 26.5 degrees; the plug's reach and ferrule; T10 |
-| M17x | East bundle's inboard column under the plugs (one cable, 2.49, inboard of the plug's cable axis; B16's underside, Z 48.57 at the worst, lies inside the band) to B16's edge (X 165), with the plug's cable axis at its inner end (X 172.63), which the class allows | 1.0 | n/a | n/a | +3.89 | -0.38 | +2.12 | -4.35 | OPEN: best +7.89 nominal, +3.62 worst with the cable axis 4.0 from the plug's inner end, met for 1.38 or more with a ferrule 2.58 across or less; the plug's axis and ferrule; T10 |
+| M17g | East layering under 5G MAIN, which three cables pass (IRIDIUM, ANT3, DIV), as laid out: the passing cables in the band's lower layer and its inner upper place, MAIN's own cable in the outer upper place (Z 50.535); at the class's 16.0 reach and 30 degrees it lands at Z 49.33, onto the passing cable in the outer lower place: centre distance less one cable | 0 | n/a | n/a | -1.21 | -2.43 | -1.88 | -3.23 | **OPEN, FAILS AS ASSUMED**: below its minimum at nominal and at the worst with the plug laid out at its class's 16.0 reach; final plug selection pending. Best +0.00 for a reach of 13.58 or less, or 5G MAIN turned 26.5 degrees; the plug's reach and ferrule; T10 |
+| M17x | East bundle's inboard column under the plugs (one cable, 2.49, inboard of the plug's cable axis; B16's underside, Z 48.57 at the worst, lies inside the band) to B16's edge (X 165), with the plug's cable axis at its inner end (X 172.63), which the class allows | 1.0 | n/a | n/a | +3.89 | -0.38 | +2.12 | -4.35 | **OPEN, FAILS AS ASSUMED**: below its minimum at the worst with the plug's cable axis at its inner end, which the class allows; final plug selection pending. Best +7.89 nominal, +3.62 worst with the cable axis 4.0 from the plug's inner end, met for 1.38 or more with a ferrule 2.58 across or less; the plug's axis and ferrule; T10 |
 | M17c | The outermost east cable (\|Y\| 62) inboard of the legs' columns before it reaches them: from its plug's cable axis (X 176.63 at the class's limit, 179.80 at the worst) by an S-bend of the two-wide bundle, its centreline at R 13.745 so that its inner cable bends at R 12.5, into the lane, against the leg's inner face (\|Y\| 106.4) less 1.0 and the cable's radius, in Y | 0 | n/a (from \|Y\| 93: 22.32 short at nominal) | n/a | +8.68 | +1.56 | +5.23 | -2.34 | OPEN: the wall, the gasket, the O-ring, the marking, the locator; T5, T10, T11 |
 | M17d | East bundle (4.98 wide) in the lane between B16's edge (X 165) and the legs' columns (X 175.40): free width | 2.0 | n/a | n/a | +5.42 | +3.44 | +4.08 | +1.94 | OPEN: the stack's placement, the locator; T10 |
 | M17e | East bundle going down beyond the leg: its inner face (\|Y\| 115.25) to the leg's outer face (\|Y\| 112.4) | 1.0 | n/a | n/a | +2.85 | +1.47 | +1.84 | +0.47 | OPEN: the locator, the ties; T10 |
@@ -480,10 +500,14 @@ the connector plate have no place either. The jumpers' route, the entry plates' 
 spot-face are new rows (M11e to M11g, M13d, M17a to M17x).
 
 With the chosen arrangement, `frame_seat.py` computes 70 rows: 35 are MET, 35 are OPEN and none is NOT MET. Here M8x
-and M8y are one row, M8; M9 is added as MET (a condition) and M20, the seat, as OPEN.
+and M8y are one row, M8; M9 is added as MET (a condition) and M20, the seat, as OPEN. The 35 MET rows are MET on the
+design basis under the sensitivity test of section 1 (every unstated allowance taken twice); none of them bounds
+Peli's unpublished tolerance or the build's.
 - At the stated allowances, only two rows fall below their minimum: M17g and M17x, how the east jumpers lie under the
-  plugs. Both sit at the limit of the jumper plug's class, where a pick inside the class meets them, so both are OPEN
-  until the plug is picked.
+  plugs. **With the geometry as currently assumed, both fail** (M17g at nominal and at the worst, M17x at the worst):
+  the jumper plug is laid out at the limit of its class, and that layout does not close. Both are held OPEN, not NOT
+  MET, only because a pick inside the class meets them; final plug selection is pending (sections 3.4 and 6), and
+  `frame_seat.py` prints them as OPEN, FAILS AS ASSUMED.
 - M1, M3 and M13 are OPEN on their TBD contributors (M13: the height of the arrestor's O-ring, which its drawing shows
   but does not dimension).
 - The other 30 OPEN rows meet their minimum at the stated allowances but not with every unstated allowance taken
@@ -669,7 +693,9 @@ its crimp ferrule ending within 16.0 of its mating axis.
   carries: two wide in the lane, and two high under the plugs. Every one of these rows is OPEN (section 3.2). Each
   rests on an allowance no source states: the bundles' ties, the hand placement of the stack and the dock strip, the
   marking, the floor under the pack, the case's wall or the legs' locator.
-- **Under the east plugs: OPEN, and the previous issue's claim that the bundle closes there is withdrawn.** The previous
+- **Under the east plugs: OPEN, FAILS AS ASSUMED, and the previous issue's claim that the bundle closes there is
+  withdrawn.** With the plug laid out at the limit of its class, M17g and M17x are below their minimums; they wait on
+  the final plug selection. The previous
   issue laid it out like this: the cables passing a plug in the band's lower layer and in its inner upper place, one
   cable (2.49) inboard of the plug's cable axis, and the plug's own cable in the outer upper place. That layout does not
   close at the limits of the plug's class, and no held source says where in the class the pick will fall.
@@ -860,7 +886,8 @@ as the part `open-picks.txt:20` recommends, and constrain its nut, the jumpers' 
   front bundle and LORA in a back one, each over the pack's outer strip under the plugs, in the lane inboard of the
   legs' columns, and down beyond the legs to the floor. On the west wall each cable goes straight down to the floor.
   Every bend is planned at R 12.5 or more, and each jumper is cut to its route of section 3.4 plus 20 mm. How the east
-  cables lie under the plugs is OPEN until the plug is picked (M17g, M17x), and so is every other jumper row.
+  cables lie under the plugs fails with the plug as laid out (M17g, M17x, OPEN, FAILS AS ASSUMED) and waits on the
+  plug's selection; every other jumper row is OPEN.
 - **Why.** Section 3.4. The 31 pitch keeps 4.00 of wall between the 27 mm holes (3.40 at the worst, M11a), 8.14
   between the bodies outside (M18b) and room for a socket on each nut on the bench. Z 59 puts the plate's top
   screw heads 1.73 under the frame skirt at the worst (M10, OPEN) and the plate's top 3.42 under the end-wall features
@@ -993,7 +1020,7 @@ as the part `open-picks.txt:20` recommends, and constrain its nut, the jumpers' 
 ### No change needed, but the records are wrong
 
 At the stated allowances the pack pocket (M4a to M6), the lift-out (M7) and the floor items (M15a to M16) meet their
-minimums at the worst case. M4b, M6, M7, M15a and M16 are MET; M4a, M5 and M15b are OPEN, resting on the pack's and
+minimums at the worst case. M4b, M6, M7, M15a and M16 are MET (on the design basis, the sensitivity test of section 1); M4a, M5 and M15b are OPEN, resting on the pack's and
 the dock strip's placement by hand; the east lead band of the previous issues (M17) is retired for the jumpers' own
 rows (M17a to M17x). The pack text (`ASSEMBLY.md:48`, "X +120 to +178") and `pack_4s.py`'s redesign (a session item of
 D-06) should take the pocket as bounded by board A's edge at X 120 and by Peli's R 15.88 fillet and wall, with the
@@ -1005,8 +1032,9 @@ reversal and D-08a in the other documents are listed for their writer; this docu
 ## 5. What only hardware can show (the checks)
 
 Each runs on the new case of the current moulding bought for the prototype (D-08a), done by the assembler as
-`ASSEMBLY.md` section 8 is. Section 7 recommends running them first on a targeted, unpowered mock-up, before any
-board is populated. A check either confirms the OPEN rows it names, or sends them back to this document with a
+`ASSEMBLY.md` section 8 is. Section 7 recommends running the targeted ones (T1, T2, T4, T5, T6, T10 and T11) first on
+an unpowered mock-up, before the outlines and connector placements of boards A, B, C, E and P are frozen for routing,
+and the rest at the build. A check either confirms the OPEN rows it names, or sends them back to this document with a
 measured number; a check that fails stops the build. No row of section 3 stands in for any of these checks.
 
 | # | Check | Why no drawing settles it | Pass |
@@ -1070,16 +1098,46 @@ of evidence close them:
 - a maker's drawing or a pick, which the session looks up before the part is made or bought;
 - measurement on hardware: the checks T1 to T10 of section 5.
 
-For the second, the session recommends a **targeted, unpowered mock-up** for the build stage. It would be built when
-the new 1450 of the current moulding is bought for the prototype (D-08a), before any board is populated. The review
-of 26 September 2026 notes that such a mock-up "can resolve expensive mechanical uncertainties earlier than a fully
-populated seven-board build" (`v2/docs/reviews/2026-09-26-foundation-progress-review.md:79`).
+For the second, the session recommends a **targeted, unpowered mock-up**, run **before the outlines and connector
+placements of boards A, B, C, E and P are frozen for routing** (their layout entry), not at the build stage as the
+previous issue had it. The review of 26 September 2026 notes that such a mock-up "can resolve expensive mechanical
+uncertainties earlier than a fully populated seven-board build" (`v2/docs/reviews/2026-09-26-foundation-progress-review.md:79`),
+and the second review of that day asks for it "before affected PCB outlines and connector placements become expensive
+to change, rather than waiting until boards are ready for population"
+(`v2/docs/reviews/2026-09-26-second-checkpoint-review.md`, section 3). A board outline or a connector moved before
+routing costs a regeneration; moved after routing it costs the route; moved after fabrication it costs a respin.
 
-This is the session's recommendation for the build stage, not a request. The owner withdrew the earlier request that
-he measure his old case (D-08, reversed on 26 September 2026), and nothing in this document asks him to measure or
-build anything now. Buying the case and the mock-up's parts stays his decision at the build.
+**When each check runs (the session's choice under the owner's standing rule of 26 September 2026).** Options: (a)
+keep the whole mock-up at the build stage; (b) make the mock-up a hold on layout entry, which would put every
+affected board's layout behind a purchase only the owner can authorize; (c) recommend the targeted checks before
+layout entry and, if they have not run by then, carry the rows they close to the boards' fabrication release. Taken:
+(c), because it moves the evidence ahead of the expensive change without creating a hold that engineering cannot
+lift (the second review's section 2A: a hold belongs to the stage whose evidence it needs).
 
-**What the mock-up holds.** Nothing in it is powered, so a check that fails costs no board.
+| Check | Before the affected outlines and placements freeze | Which board outline or placement it decides |
+|---|---|---|
+| T1 | yes, at purchase | none directly: it confirms the moulding every row assumes (D-08a) |
+| T2 | yes | the face height (M1, M20, M21a to M21e): board C's backer under the plate and board B's stack height under the monitor |
+| T4 | yes, with the stand-ins below | M1 (board B's stack and spacers), M4a and M5 (board A's east edge at X 120 and board P's place in the pocket), M15b (board E's corner pads), M18 (board B's east-end tall parts: the RockBLOCK, the LimeSDR, the radio modules, J_ETH, T1) |
+| T5 | yes | the inner jacks' place on the end walls, which enters M17x, M18, M17c and M17w (board B's east edge and east-end parts) |
+| T6 | yes | the connector plate's and the RF entry plates' footprints, which fix where the wall connectors and the arrestors enter, and so board B's and board A's parts under them (M14c to M14h) |
+| T10 | yes, with the picked jumper plug | M17g and M17x (board B's east edge at X 165, the east plug layout), M17b to M17f (board E's south edge and the clamps' places, board A's RF sites) |
+| T11 | yes, one arrestor on a coupon | M13, and the inner jack's place that M18, M17c, M17w and M17x carry |
+| T3, T7, T8, T9 | no: at the build, as before | the face plate, the seals, the pads' bonds and the lid's closure; none moves a board outline or a connector placement |
+
+If the case and the parts are not bought before a board's layout entry, that board enters layout on the design basis
+of this document, and the OPEN rows the targeted checks would have closed for it are carried as items of its
+fabrication release. A result that later moves an outline or a connector is then a layout change on that board.
+
+This is the session's recommendation, not a request. The owner withdrew the earlier request that he measure his old
+case (D-08, reversed on 26 September 2026), and nothing in this document asks him to measure or build anything. Buying
+the new case, the frame and the mock-up's parts is spending, so it stays his decision; the session prepares the
+purchase list with its costs for the bench and external packet (the second review's section 5, item 5), and records
+here only when the checks are worth running.
+
+**What the mock-up holds.** Nothing in it is powered, so a check that fails costs no board. For the targeted checks
+the case, the frame, the legs, one arrestor, the jumper plugs with RG-316, the Xenarc and a heatsink, and the stand-ins
+below are enough; the plates, the tray and the connector plate's items can follow for the build-stage checks.
 - The case itself (T1 at purchase), its 1450PF frame and o-ring, with the holes drilled from the 1:1 templates.
 - The parts this document specifies, made to their drawings: the four setting legs with their locator and wedge set
   (C6), the face plate (C1), the connector plate and the two RF entry plates with their gaskets (C3, C4), and the lid

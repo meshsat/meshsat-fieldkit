@@ -14,6 +14,16 @@ CEST; revised 15:20 CEST after the first checker's four blocking items, 16:55 CE
 in each). Written by the EMCON stream of the review's execution (worktree branch `fnd/rv-emc` at `1f614233`; main has
 since moved to `01469100`, section 1.1).
 
+**Sixth revision, late on 26 September 2026 (stream r8docs, MESHSAT-1357 round 8, main at `fc144600`).** It executes
+section 2C of the second review of that day (`v2/docs/reviews/2026-09-26-second-checkpoint-review.md`): local and
+end-to-end conclusions are reported apart (section 0a); the maximum latency and the fault conditions each transmitter's
+inhibit must meet are set as the requirement the circuit round designs to (section 5a, SD-EMC-7); and reading Ground
+Control's RockBLOCK 9704 schematic for the energy left on the radio's side of its gate reopened row 4 (section 4.4).
+The netlists read are unchanged in substance: since `458b2873` the only commit that touched boards A to D's netlists is
+`3a1f6576`, which redrew the one-way clamps of A and B with a cathode pin on the same nets and changed C's and D's
+sidecars only. The maker documents section 1.2 lists from the stream's `drafts/` are filed in `v2/vendor/` since this
+revision (section 9).
+
 What EMCON has to do is ruled: owner ruling D-05 (26 September 2026), "radios dark": every radio with an emission path
 is powered off or RF-disabled in hardware; the VHF path keeps listening behind a transmit-only gate; GNSS, DCF77 and the
 lightning sensor continue (`v2/docs/CONOPS.md:307` at main `b69f20db`, unchanged at `01469100`). The rule that judges it
@@ -29,10 +39,14 @@ Both are part of prototype 1's core (owner ruling D-01).
   the RM520N-GL 5G module, two AW7915-AED WiFi link cards, the three Compute Module 5 WiFi radios and their three
   Bluetooth radios, the E22-900M30S LoRa module, two E72 (CC2652P) Zigbee/Thread radios and the LimeSDR Mini 2.4. A
   census of every radio part name on the six candidate netlists finds no other (section 4.18).
-- **No transmitter's EMCON is closed on the bench, and one row closes at desk: the 30 W PA**, on path (b) alone
-  (gate bias and keying on board D) in the states RF-002 names. Its two paths share one element, the `SW_EMCON`
-  toggle and the `TX_INHIBIT_n` conductor, so the PA is single-fault tolerant only for faults downstream of that
-  conductor. A fault at the shared element releases both paths. SD-EMC-6 accepts it, on condition that board C gets
+- **No transmitter's EMCON is closed end to end, at desk or on the bench (section 0a).** One row's LOCAL chain closes
+  at desk: the 30 W PA, on path (b) alone (gate bias and keying on board D) in the states RF-002 names. That is a local
+  conclusion about the PA's own circuit. End to end the row is OPEN: path (b) starts at the shared element, the
+  `SW_EMCON` toggle and the `TX_INHIBIT_n` conductor, which SD-EMC-6 accepts only on condition of a hardware EMCON lamp
+  on board C that is not drawn; path (a) hangs on the shared `EMCON_HW` line, which is defective as drawn (L1: four
+  firmware pins can drive it; L2: its hold with the source gone is UNDECIDED; L4); and until section 5a no latency was
+  required of any row. Its two paths share one element, so the PA is single-fault tolerant only for faults downstream
+  of that conductor. A fault at the shared element releases both paths. SD-EMC-6 accepts it, on condition that board C gets
   an EMCON lamp that is driven from the line state with no processor in its path. As drawn, no indication of the
   lines is independent of firmware: the TX lamp's supply exists only while the panel controller drives `PANEL_PWM`.
 - **Shared items on the EMCON lines** (section 3: L1 to L4 and L7 open in the circuit, L6 open in the instrument, L5
@@ -41,8 +55,10 @@ Both are part of prototype 1's core (owner ruling D-01).
   because its quad gates state no Ioff, and the remedy needs 4.7 k on board B, not 10 k (L2). The FETs board B uses
   on `EMCON_ON` are driven at about 3.3 V, and their sheet states RDS(on) only at 5 V and 10 V (L7).
 - **Radio by radio, on the round-6 netlists (merged on main in `458b2873`, section 1.1):** the radio-specific chain is
-  complete at desk for the PA, the QMX, the LimeSDR, the six CM5 radios, and the power gates of the RockBLOCK, the
-  E22, the two E72 and the two AW7915 cards. It stays open for the SA868 (the maker publishes no "receive" threshold for its PTT pin) and for the
+  complete at desk for the PA, the QMX, the LimeSDR, the six CM5 radios, and the power gates of the E22, the two E72
+  and the two AW7915 cards. These are local conclusions (section 0a). The RockBLOCK's power gate is drawn, but the
+  sixth revision found that the module keeps running on two 10 F supercapacitors of its own after that gate opens,
+  with its ENABLE input held by a firmware-driven expander, so its local chain is OPEN (section 4.4). It stays open for the SA868 (the maker publishes no "receive" threshold for its PTT pin) and for the
   RM520N-GL: as drawn, its only inhibit is a firmware-mediated mode, and SD-EMC-1 now requires a circuit change on
   board B. The back-feed into the power-gated radios (RockBLOCK, E22, both E72, both AW7915, and the RM520N-GL once its
   supply is removable) from parts that stay powered is also open.
@@ -59,10 +75,13 @@ Both are part of prototype 1's core (owner ruling D-01).
   - AW7915-AED: AsiaRF's datasheet does not mention W_DISABLE1# at all, and the mainline Linux mt7915 driver has no
     rfkill code. Nothing is guaranteed, so the pin is not counted. The candidate board B removes the card's supply
     instead (section 4.6).
-- **Feasibility verdict.** "Radios dark" is feasible with the ruled architecture, with two conditions. For 16 of the
-  17 rows, each open item has a named circuit remedy on the board that owns it: a few passive parts, a single gate or
-  buffer, or a FET per line (section 7). None of those changes a board-to-board interface, the stackup or a radio's
-  part.
+- **Feasibility verdict.** "Radios dark" is feasible with the ruled architecture, with two conditions, and a third
+  question the sixth revision opened. For 15 of the 17 rows, each open item has a named circuit remedy on the board
+  that owns it: a few passive parts, a single gate or buffer, or a FET per line (section 7). None of those changes a
+  board-to-board interface, the stackup or a radio's part. The RockBLOCK row has a named remedy for its control path
+  (the module's ENABLE forced low by the EMCON hardware); whether that meets section 5a's latency depends on what the
+  Iridium 9704 module does when ENABLE falls, which no held document states, and on the about 16 J its supercapacitors
+  hold (section 4.4).
   - **The 5G row is feasible only at a cost.** Its firmware-independent inhibit is SD-EMC-1's supply removal. Both
     stages it adds hang on `EMCON_ON`, so what follows holds subject to L3 (a loss of +3V3_DEV releases them).
     - If EMCON asserts before the module has been turned on, both hardware stages act at once and hold. The module is
@@ -81,7 +100,9 @@ Both are part of prototype 1's core (owner ruling D-01).
     least as routine as a reversal. In either case:
     - the backstop turns the module off without the handshake, and the supply removal can corrupt its flash;
     - a module that does not honour W_DISABLE1# can emit until T_off + T_cut after EMCON. That is at least 15.9 s
-      plus the software's reaction time, from the maker's 15 s AT+CFUN bound and its 900 ms Tpd. The delays run to
+      plus the software's reaction time, from the maker's 15 s AT+CFUN bound and its 900 ms Tpd. Section 5a (sixth
+      revision) turns this lower bound into a requirement: at most 20 s, set by hardware timers at their worst
+      tolerance, whatever any software does. The delays run to
       the end whatever the module does, so the bound holds for every cause. In the fault case this needs a second
       failure. In the booting case it needs only one: the module misses a pin that falls while it boots, or one
       that is already low when it restarts. No document rules that out.
@@ -97,6 +118,38 @@ Both are part of prototype 1's core (owner ruling D-01).
 
   The physical proof is twelve bench tests (section 6). None of them can use the kit's own SDR, because EMCON removes
   the SDR's supply.
+
+## 0a. Local and end-to-end conclusions, row by row (sixth revision)
+
+The second review of 26 September 2026 (section 2C): "a local PA circuit can be correct while its upstream shared
+enable line remains defective. Report local and end-to-end conclusions separately." The two are reported apart here and
+in every status below.
+
+- **Local** is the radio-specific chain: from the gate or pin that acts on the radio (its supply switch, its disable pin,
+  its keying gate) to the radio, with what the radio itself does and the energy left on its side of the gate.
+- **End to end** is the whole path from the operator's contact to silence at the antenna port: the `SW_EMCON` toggle,
+  the `TX_INHIBIT_n` conductor and, for the rows that use it, the `EMCON_HW` line and `EMCON_ON` (the shared items of
+  section 3), then the local chain, in every fault condition of section 5a, within that row's maximum latency.
+
+No row is closed on the bench, because nothing is built. At desk, on the netlists of section 1.1:
+
+| # | Transmitter | Local, at desk | End to end, at desk | What holds end to end |
+|---|---|---|---|---|
+| 1 | SA868 VHF exciter | OPEN: pin 5's "receive" threshold is unpublished (4.1) | OPEN | the local item; L4 on board D; the shared element's lamp condition (SD-EMC-6) |
+| 2 | RA30H1317M1 30 W PA | **CLOSED** on path (b), in RF-002's named states (4.2) | OPEN | the shared element's lamp condition (SD-EMC-6, not drawn); path (a) on `EMCON_HW` inherits L1, L2 and L4 (board A); the latency of section 5a not yet shown |
+| 3 | QMX HF | CLOSED (4.3) | OPEN | L1, L2, L4 (board A); SD-EMC-6 |
+| 4 | RockBLOCK 9704 | **OPEN since this revision**: the supply gate is drawn, but the module runs on its own supercapacitors with ENABLE held by U6 (4.4) | OPEN | the local item; back-feed (SD-EMC-2); L1 to L4; SD-EMC-6 |
+| 5 | RM520N-GL 5G | OPEN: SD-EMC-1's circuit is not drawn (4.5) | OPEN | the local item; L1, L2, L3, L7; back-feed once removable; SD-EMC-6 |
+| 6, 7 | AW7915-AED x2 | CLOSED (4.6) | OPEN | L1, L2, L3, L7; back-feed (SD-EMC-2); SD-EMC-6 |
+| 8 to 13 | CM5 WiFi and Bluetooth x6 | CLOSED (4.8) | OPEN | L1, L2, L3, L4, L7; SD-EMC-6 |
+| 14 | E22-900M30S LoRa | CLOSED (4.14) | OPEN | L1 to L4; back-feed (SD-EMC-2); SD-EMC-6 |
+| 15, 16 | E72 CC2652P x2 | CLOSED (4.15) | OPEN | L1, L2; back-feed (SD-EMC-2); SD-EMC-6 |
+| 17 | LimeSDR Mini 2.4 | CLOSED (4.17) | OPEN | L1 to L4; SD-EMC-6 |
+
+**Counts: local 14 of 17 closed at desk, 3 open (rows 1, 4 and 5); end to end 0 of 17.** Every end-to-end row waits on
+the circuit round's remedies for the shared items (section 7) and on section 5a's latency, and then on its bench test
+(section 6). "CLOSED" in section 4 and in `v2/ecad/tools/pcb_requirements.yaml` readings of this page means LOCAL
+unless it says end to end.
 
 ## 1. Evidence base
 
@@ -238,8 +291,10 @@ Held in `v2/vendor/` (sha256 first 16; full values in `v2/docs/records/rv-emc/da
 | Raspberry Pi RP2040 datasheet | `v2/vendor/rp2040/rpi-rp2040-datasheet.pdf` | as held | `be56fbb75ba0ae9e` |
 | JSCJ 2N7002 (LCSC C8545) | `v2/vendor/power/jscj-2n7002-c8545.pdf` on main since `ccf5808e` (SOURCES.yaml `logic-nfet-2n7002`); first read as r4b `drafts/datasheets/cj-2N7002_C8545.pdf`, the same bytes | as held | `7941fb423af7c6c6` |
 
-Fetched by this stream on 26 September 2026 and kept in `drafts/datasheets/` of `fnd/rv-emc`, listed for `v2/vendor/` in `v2/docs/records/README.md` (full sha256 in `v2/docs/records/rv-emc/datasheets/SHA256SUMS`, URLs
-and fetch dates in `v2/docs/records/rv-emc/datasheets/SOURCES.txt`):
+Fetched by this stream on 26 September 2026 and kept in `drafts/datasheets/` of `fnd/rv-emc`; **filed in `v2/vendor/`
+since the sixth revision**, byte for byte, each fetched again from the URL below and byte-identical (`v2/vendor/sources.txt`):
+the four Quectel manuals in `v2/vendor/quectel/`, the QMX schematics in `v2/vendor/qrp-labs/` (full sha256 in
+`v2/docs/records/rv-emc/datasheets/SHA256SUMS`, URLs and fetch dates in `v2/docs/records/rv-emc/datasheets/SOURCES.txt`):
 
 | Document | URL | Revision | sha256 (first 16) |
 |---|---|---|---|
@@ -254,10 +309,12 @@ and fetch dates in `v2/docs/records/rv-emc/datasheets/SOURCES.txt`):
 | QMX Rev 1 searchable schematic (G4GIR, hosted by QRP Labs) | https://qrp-labs.com/images/qmx/manuals/QMX_Rev1_Searchable_Schematic_1b.pdf | 1b, 2025-02-17 | `dd7c32c85ffc2586` |
 
 The QMX schematics are image-only PDFs; they were read from renders, and the crops that carry the reading are kept in
-`drafts/datasheets/qmx-crops/` of `fnd/rv-emc` (listed for `v2/vendor/` in `v2/docs/records/README.md`). Re-read from adjudication A11's fetch of 25 September 2026 and re-fetched here with
+`drafts/datasheets/qmx-crops/` of `fnd/rv-emc`, filed since the sixth revision at `v2/vendor/qrp-labs/qmx-crops/`. Re-read from adjudication A11's fetch of 25 September 2026 and re-fetched here with
 identical sha256: Linux `torvalds/linux` at `f14572c203d57492e1d4e5d7851a3b143e083b82`,
 `drivers/net/wireless/mediatek/mt76/mt7915/mcu.c` (`e3cc6c75c355e7e2`) and `mt7915/mt7915.h` (`b11e1fc5910e4a70`),
-and the MyriadRF LimeSDR Mini 2.0 page (https://myriadrf.org/projects/limesdr-mini-2-0, A11's copy `f1146105a3c09ebc`).
+and the MyriadRF LimeSDR Mini 2.0 page (https://myriadrf.org/projects/limesdr-mini-2-0, A11's copy `f1146105a3c09ebc`),
+filed since the sixth revision at `v2/vendor/wifi/linux-mt7915-f14572c2/` (with the GitHub API record `head.json`) and
+`v2/vendor/limesdr/myriadrf-limesdr-mini-2-0-page-20260925.html`.
 The two LTE and RM5xxQ manuals are Quectel documents served from a distributor's and from Quectel's forum host; they are
 used here only as precedent for how Quectel firmware treats W_DISABLE#, never as a statement about the RM520N-GL.
 
@@ -331,9 +388,9 @@ supply while its gate is off. "Shared" lists the section 3 items the row inherit
 | # | Transmitter (board, ref) | Hardware inhibit | Gate | Back-feed | Shared | Status |
 |---|---|---|---|---|---|---|
 | 1 | SA868 VHF exciter (D, U2) | PTT forced to "receive" by `TX_INHIBIT_n`; supply kept (D-05) | OPEN: no maker "1" level (tool UNDECIDED) | not applicable | L4 (D) | OPEN |
-| 2 | RA30H1317M1 30 W PA (plate; A `J_PA`, D `J_VGG`) | (a) drain rail off (A); (b) gate bias off, relay at rest (D) | CLOSED at desk on (b) in RF-002's states; (a) a second path | not applicable (see 4.2) | common element `SW_EMCON` and `TX_INHIBIT_n` (SD-EMC-6: accepted on condition of a hardware EMCON lamp on C, not yet drawn); (a) also L1, L2, L4 (A) | CLOSED at desk; single-fault tolerant only downstream of `TX_INHIBIT_n` |
+| 2 | RA30H1317M1 30 W PA (plate; A `J_PA`, D `J_VGG`) | (a) drain rail off (A); (b) gate bias off, relay at rest (D) | CLOSED at desk on (b) in RF-002's states; (a) a second path | not applicable (see 4.2) | common element `SW_EMCON` and `TX_INHIBIT_n` (SD-EMC-6: accepted on condition of a hardware EMCON lamp on C, not yet drawn); (a) also L1, L2, L4 (A) | local: CLOSED at desk on (b); end to end: OPEN (0a); single-fault tolerant only downstream of `TX_INHIBIT_n` |
 | 3 | QMX HF (lid; A `J_HF`, B `J_QMX`) | DC input rail off | CLOSED at desk | CLOSED: USB VBUS not connected inside the QMX | L1, L2, L4 (A) | OPEN on L1, L2, L4 |
-| 4 | RockBLOCK 9704 (B, `J_RB9704`) | eFuse off | CLOSED at desk | OPEN | L1, L2, L3, L4 | OPEN |
+| 4 | RockBLOCK 9704 (B, `J_RB9704`) | eFuse off; required since the sixth revision: the module's ENABLE (J3 pin 3) forced low by hardware too | OPEN (sixth revision): the supply gate is drawn, but the module keeps 5 F of supercapacitors and ENABLE is held by U6 (4.4) | OPEN | L1, L2, L3, L4 | OPEN |
 | 5 | RM520N-GL 5G (B, `J_M2C2`, M.2 key B) | as drawn: W_DISABLE1# low (firmware-mediated airplane mode), supply kept. Required by SD-EMC-1: if EMCON asserts before the module has been turned on (every power-up under EMCON), FULL_CARD_POWER_OFF# low and supply removed at once, so the module is never powered under EMCON; on a module that has been turned on, in the maker's order: W_DISABLE1# at once, FULL_CARD_POWER_OFF# by hardware after T_off (sized for the host's AT+CFUN=0 handshake), supply removed after a further T_cut, whether or not the module is booting or restarts meanwhile (the booting case) | OPEN: circuit owed on B | OPEN once the supply is removable | L1, L2, L3, L7 | OPEN |
 | 6 | AW7915-AED, slot 1 (B, `J_M2C1`) | card buck off (and W_DISABLE1# low, not counted) | CLOSED at desk | OPEN (small, one term TBD) | L1, L2, L3, L7 | OPEN |
 | 7 | AW7915-AED, slot 3 (B, `J_M2C3`) | as row 6 | CLOSED at desk | OPEN (as row 6) | L1, L2, L3, L7 | OPEN |
@@ -413,8 +470,12 @@ supply while its gate is off. "Shared" lists the section 3 items the row inherit
   four-switch stage passes any VBAT to `+13V8_PA` in shutdown is not stated by the LM5176 sheet (INFERRED no, from the
   topology). It does not matter here, because path (b) alone leaves the PA with no bias and no drive.
 - **Proof required.** Bench E-02, which now includes the shared-element cases.
-- **Status: CLOSED at desk** on the candidates A and D, on RF-002's terms: path (b) is a hardware path with no firmware
-  driver on `TX_INHIBIT_n` or KEY, asserted in the unpowered and unplugged states. Path (a) is a second path subject to
+- **Status, local: CLOSED at desk** on the candidates A and D, on RF-002's terms: path (b) is a hardware path with no
+  firmware driver on `TX_INHIBIT_n` or KEY, asserted in the unpowered and unplugged states. **End to end: OPEN**
+  (section 0a): the shared element's condition (the hardware EMCON lamp of SD-EMC-6) is not drawn, path (a)'s
+  `EMCON_HW` line is defective as drawn (L1, L2, L4), and the row's latency under section 5a is not yet shown. On
+  assert with PTT held, the contact's bounce can re-key KEY for the bounce's duration (r6d R6D-N1); that transient
+  falls inside the row's latency and E-02 records it. Path (a) is a second path subject to
   L1, L2 and L4 (A). The row is single-fault tolerant only for faults downstream of the `TX_INHIBIT_n` node; `SW_EMCON`
   and that conductor are its common element. The physical proof E-02 is owed.
 
@@ -472,8 +533,44 @@ supply while its gate is off. "Shared" lists the section 3 items the row inherit
   the modem's internal 3.3 V domain is unknown.
 - **What the maker states.** Power "4.0-5.3 V DC; 3.6-4.5 V battery; 5 V USB-C" (RB9704-001-JUN26); nothing about
   back-feed.
+- **Energy left on the module's side, and who holds its ENABLE (sixth revision).** Read on Ground Control's schematic
+  rev 2B (`v2/vendor/rockblock/rb9704-sch-2B1.pdf`, pages 2 to 5, rendered and read on 26 September 2026):
+  - J3 pin 15 (V_EXT_RAW, the kit's `+5V_RB`) feeds, through F1 and Q1, a TPS2116 power mux and a BQ25173 charger
+    that charges V_CAPS: two 10 F supercapacitors in series, C26 and C27, with an MCP6041 balancing their midpoint,
+    charged to 4.25 V (the sheet's own note: VFB 0.8 V, 750k/174k). The top sheet joins V_CAPS to V_IRID, the 9704
+    module's V_BAT_MAIN and V_BAT_PA (page 3), and a TCR3UF33A makes the module's 3.3 V I/O rail from it, held off
+    by an APX803 below its threshold (the sheet: "3.4V supervisor").
+  - J3 pin 3 (EN_IRID, the kit's `RB_IEN`) is the module's ENABLE, through R6 and a 74AUP1G125 powered from the
+    module's own 3.3 V. Ground Control's note on page 3: "Buffer is POWERED from Iridium 3V3 so it doesn't drive unless
+    9704 IO is powered, but pulled to pre-cap supply so that when power is pulled, enable is DE-ASSERTED to ensure time
+    for graceful shutdown on power loss", and "When 'IRID_ENABLE' is connected at main connector J3, it must be
+    driven by the host application."
+  - On board B (`pcb-b-compute.net` at `fc144600`, sha256 `669d02d07aeaae4b`), `RB_IEN` joins `J_RB9704` pin 3 to
+    U6 pin 19 (IO1_6) and nothing else. U6 is a PCA9555 on +3V3_DEV, which EMCON does not remove; its outputs are set
+    by firmware, and in reset every I/O is an input with the part's internal 100 kOhm pull-up to VCC (SCPS131J). So
+    the kit overrides the maker's power-loss de-assertion: with `RB_IEN` driven high the module stays enabled when
+    `+5V_RB` is cut, and with U6 in reset its 100 kOhm pull-up reaches the buffer's input through R6 (10 kOhm in
+    series, page 3) against the maker's 270k/430k divider to a collapsed rail, which puts about 1.98 V on the input
+    (3.3 x 166 / (100 + 10 + 166)), just under the 2.0 V the maker's note gives as its VIH minimum: the input sits in
+    the buffer's undefined band, neither a defined high nor a defined low (INFERRED arithmetic, the divider's
+    resistance taken as its parallel 166 kOhm; corrected in pass 3 after the independent check, which read R6 on
+    page 3 of `rb9704-sch-2B1.pdf`). The row stays OPEN either way, because U6 driving `RB_IEN` high already holds
+    the module enabled.
+  - **The bound this leaves.** With ENABLE held and V_EXT removed, the module runs from V_CAPS until the supervisor's
+    threshold: at the capacitors' nominal 5 F from 4.25 V to 3.4 V that is about 16 J, about 4.5 minutes at the
+    datasheet's 60 mW idle and about 12 s at its 1.4 W maximum (INFERRED: the capacitors' tolerance, the module's
+    minimum operating voltage and whether the SMA variant fits both capacitors are not stated; C26 and C27 are drawn
+    fitted and J2 beside them is drawn not fitted). Whether the module transmits in that time without a host command
+    is not stated by any held document. ENABLE low starts what the maker calls a graceful shutdown, whose duration and
+    whose emissions are not stated either, and the Iridium 9704 module's own documentation, which would say whether
+    ENABLE is a hardware power control or a firmware input, is not held.
+  - **What the circuit round must add** (the board B author, SD-EMC-7): `RB_IEN` forced low by the EMCON hardware
+    whatever U6 does, for example `EN_IRID = EMCON_HW AND` the firmware bit in a single gate that states Ioff, or an
+    open drain from `EMCON_ON` with a pull-down that holds with +3V3_DEV lost (L3); and the Iridium 9704 module's
+    document on ENABLE (a lookup) before the row can be judged against section 5a.
 - **Proof required.** Bench E-04, or the hardware bound of SD-EMC-2.
-- **Status.** The gate is CLOSED at desk. The back-feed is OPEN.
+- **Status.** The supply gate (the eFuse) is CLOSED at desk. The row's local chain is **OPEN** since the sixth
+  revision, on the module's stored energy and on its ENABLE, which firmware holds. The back-feed is OPEN.
 
 ### 4.5 RM520N-GL 5G module (board B, `J_M2C2`, M.2 key B)
 
@@ -1004,7 +1101,8 @@ be; SD-EMC-1 and SD-EMC-6 each accept a residual risk, stated with its bound.
 
     In either, the module can emit until T_off + T_cut after EMCON. That is at least 15.9 s plus the software's
     reaction time, against at least 0.9 s under (e). The EMCON latency limit is the TEST-PLAN owner's, and none is
-    fixed. If one is fixed below T_off + T_cut, this row meets it only while the module honours W_DISABLE1# while it
+    fixed. (Sixth revision: section 5a fixes it, SD-EMC-7, at 20 s for a module that has been turned on; T_off + T_cut
+    and the rail's decay must meet it at the timers' worst tolerance, so the bound no longer depends on software.) If one is fixed below T_off + T_cut, this row meets it only while the module honours W_DISABLE1# while it
     runs, while it boots and when it restarts, and the row says so. At a power-up under EMCON, and whenever EMCON
     asserts before the module has been turned on, the bound does not arise, because the rail never rises.
   - The residual risks, accepted, in the fault case and in the booting case:
@@ -1176,6 +1274,71 @@ be; SD-EMC-1 and SD-EMC-6 each accept a residual risk, stated with its bound.
   - Bench E-02 adds the shared-element cases and the lamp's independence from the controller (section 6).
   - Taken by the session under the owner's standing rule of 26 Sep 2026.
 
+## 5a. The requirement each inhibit must meet: maximum latency and fault conditions (SD-EMC-7, sixth revision)
+
+The second review of 26 September 2026, section 2C: "Define the required maximum latency and fault conditions, then
+establish a dominant hardware inhibit path for each transmitter. Verify reset, unpowered-controller and back-powering
+states. If the proposed shutdown mechanism still requires functioning firmware in the failure case, it does not satisfy
+the stated hardware-only requirement." Until this revision the page left the latency to the TEST-PLAN owner (section 5,
+SD-EMC-1: "The EMCON latency limit is the TEST-PLAN owner's, and none is fixed"), and SD-EMC-1's 5G bound was written
+as "at least 15.9 s plus the software's reaction time": a lower bound with an unbounded term, which is no maximum.
+
+- **SD-EMC-7 (the session's, under the owner's standing rule of 26 September 2026).** Options: (a) leave the limit to
+  the TEST-PLAN owner, as before (the review rejects it: the circuit must be chosen from the requirement); (b) one
+  kit-wide limit of 1 s with no exception, which forces SD-EMC-1's option (e) on the 5G module and so exposes its flash
+  at every EMCON on a running module, the cost SD-EMC-1 was taken to avoid; (c) 1 s for every row but the 5G module,
+  and for the 5G module a maximum set by hardware timers at their worst tolerance, independent of every processor;
+  (d) a longer uniform limit. **Taken: (c).** It gives every row a maximum that no firmware can lengthen, keeps
+  SD-EMC-1's choice of the maker's turn-off order, and turns SD-EMC-1's open-ended bound into a number the timers must
+  meet. Reversible: the owner, or evidence from E-05 and E-12, can move the 5G row to (b).
+
+**The requirement (draft registry text for the integrator is in section 8).** For every transmitter of section 4, from
+the instant the EMCON toggle's contact closes (`TX_INHIBIT_n` below 0.8 V at board C's TP10) to the instant the
+transmitter's conducted output at its antenna port falls below the pass line of section 6, the time is at most the
+row's **L_max**, and the output stays below that line for as long as EMCON is asserted, in every fault condition F1 to
+F9 below, by a path in which every element that bounds the time is hardware: no processor of the kit and no firmware
+of the radio.
+
+| Rows | Dominant hardware path required | L_max | What the bound must account for (control authority, remaining energy, alternate supplies, shutdown behaviour) |
+|---|---|---|---|
+| 1 SA868 | PTT forced to "receive" by `TX_INHIBIT_n` (U12, U13; supply kept, D-05) | 1 s | the SA868's own time from PTT release to carrier off (the maker states none); the contact's bounce (R6D-N1) |
+| 2 PA | path (b): VGG regulator U15 off and relay K1 at rest, from `TX_INHIBIT_n`; path (a) a second path | 1 s | the VGG node's discharge after U15 disables and K1's release time (the sheets' figures, read by the board D author); the bounce |
+| 3 QMX | +12V_HF removed at board A's converter | 1 s | the QMX's input capacitance at its receive and transmit currents; USB VBUS not connected inside the QMX (4.3) |
+| 4 RockBLOCK 9704 | `+5V_RB` removed AND the module's ENABLE (J3 pin 3) forced low, both by hardware | 1 s | the module's 5 F of supercapacitors (about 16 J, 4.4); what the 9704 does when ENABLE falls; `RB_RXD`, `RB_CTRL` and the pull-ups that stay live (back-feed) |
+| 5 RM520N-GL | supply removal by SD-EMC-1's stages: at power-up under EMCON the rail never rises; on a running module FULL_CARD_POWER_OFF# at T_off and the supply at T_off + T_cut, by hardware timers; W_DISABLE1# at once (it is firmware-mediated and not counted) | **20 s** for a module that has been turned on, the timers taken at their worst tolerance; 0 at power-up under EMCON; W_DISABLE1# low within 1 s | T_off must still exceed the host's orderly sequence (AT+CFUN's 15 s maximum, PERST# and RESET# about 0.2 s, and the bridge's reaction), so T_off,max + T_cut,max + the rail's decay within 20 s with T_cut at least 900 ms leaves the bridge software about 2.0 s of reaction time with 5 percent timers and no rail decay, less 0.9 times the rail's decay time (INFERRED arithmetic: T_cut,min 0.9 s gives T_cut,max about 1.0 s, so T_off,max at most about 19.0 s and T_off,min about 17.2 s, against 15.2 s plus the reaction time; corrected in pass 3 from 0.75 s; the timer's parts are the board B author's); the SIM, USB, PCIe and PEWAKE lines that stay live (SD-EMC-2) |
+| 6, 7 AW7915-AED | the card's buck off (W_DISABLE1# not counted) | 1 s | the card's own capacitance; PEWAKE, PERST#, REFCLK (SD-EMC-2) |
+| 8 to 13 CM5 radios | `WL_nDisable`, `BT_nDisable` pulled low by open drains from `EMCON_ON` | 1 s | the low level each pin reaches (L7); +3V3_DEV lost (L3) |
+| 14 E22-900M30S | load switch off | 1 s | the module's rail capacitance; the SPI and TXEN lines that stay live (SD-EMC-2) |
+| 15, 16 E72 | load switch off | 1 s | as row 14, with the CP2102N lines |
+| 17 LimeSDR | eFuse on its USB VBUS off | 1 s | the board's VBUS capacitance; USB D+ and D- |
+
+**Fault conditions.** The bound holds in each of these, one at a time, and in F1 and F2 together:
+- **F1, reset:** every processor that can reach the row held in reset (the three STM32H743 supervisors, both RP2040s,
+  the three CM5 modules, the CP2102N bridges, the PCA9555 expanders at their power-on state).
+- **F2, unpowered controller:** each of those processors' rails at 0 V while the radio's own supply source is up.
+- **F3, firmware error:** each running processor with an image that drives every pin it controls to the level that
+  would keep the radio on (the L1 pins, U6's and U27's outputs, the radio's enable bits).
+- **F4, the radio's own firmware:** booting, hung, restarting, or configured by any stored setting (the RM520N-GL's
+  AT+QCFG precedent, section 4.5; the RockBLOCK's handling of ENABLE, 4.4).
+- **F5, disconnected:** the panel ribbon, `J_AB1` and `J_MEZZ1` each unplugged (RF-002's disconnected states).
+- **F6, a logic rail lost or in its unspecified band:** +3V3_DEV on B, board A's +3V3, +3V3_D8 and board C's +3V3
+  each at 0 V and anywhere from 0 to 1.65 V while the others are up (L3, L4).
+- **F7, back-feed:** every signal that stays live into a gated radio at its worst level (the lines SD-EMC-2 lists).
+- **F8, stored energy:** every capacitor and energy store on the radio's side of its gate at full charge (4.4 for the
+  RockBLOCK's supercapacitors).
+- **F9, timing:** EMCON asserted at power-up with the toggle already locked at EMCON, during a transmission, during
+  the radio's boot and during its restart, and through the contact's bounce.
+
+**Excluded, and why.** A fault of the shared element itself (the toggle's contact failing to close, the
+`TX_INHIBIT_n` conductor held above VIL) releases every row; SD-EMC-6 accepts it on condition of the hardware EMCON
+lamp, which is how an operator sees it. That condition is not met until the lamp is drawn (0a).
+
+**How it is judged.** At desk, each row's L_max is met when its circuit shows a hardware path in every fault condition
+and the time terms of its column are bounded from held documents; a term no held document bounds is TBD and the row
+stays OPEN. On the bench, section 6's rows record the time from the contact to silence and pass only within L_max.
+No row meets this requirement at `fc144600`: rows 1, 4 and 5 are open locally (0a), and every row inherits the shared
+items of section 3. This is a requirement on the design, not a result.
+
 ## 6. Bench tests owed (for TEST-PLAN; none has run, nothing is built)
 
 The functional check in `TEST-PLAN.md:46` reads "EMCON silences every transmitter (measured with the SDR)". EMCON as
@@ -1183,7 +1346,8 @@ ruled removes the SDR's supply (section 4.17), so that line cannot be met with t
 
 Every row below uses an external spectrum analyser or RF power meter. Each antenna port connects through an attenuator
 or to a dummy load, where the band plan requires it. The pass line in every row is "no emission above the instrument's
-noise floor in any band the radio supports", at a resolution bandwidth the TEST-PLAN owner fixes. Record the module
+noise floor in any band the radio supports", at a resolution bandwidth the TEST-PLAN owner fixes, reached within the
+row's L_max of section 5a from the contact's closing and held for as long as EMCON is asserted. Record the module
 firmware revisions, the RM520N-GL's recorded configuration and the fitted QMX PCB revision.
 
 | Id | Radio | Procedure | Pass |
@@ -1191,7 +1355,7 @@ firmware revisions, the RM520N-GL's recorded configuration and the fitted QMX PC
 | E-01 | SA868 | r6d's bench rows (`v2/docs/records/r6d/r6-decisions.md` section 5): U1 fitted, unfitted and shorted; U16 bits forced high under EMCON; pin 5's "1" threshold and input current measured | no carrier in any state; the threshold is at or below 2.677 V |
 | E-02 | 30 W PA and the common element | EMCON asserted with PTT held, then each downstream single fault: A's `J_AB1` unplugged; D's U1 unfitted; a firmware image that drives A's `PA_SW_EN` high. Then the shared-element cases of SD-EMC-6, into a dummy load, each with LIGHTING at DAY and at NIGHT: (1) the toggle at EMCON with its lug 1 lead open, PTT held; (2) the toggle at EMCON with U9's output forced high; (3) EMCON correctly asserted with the panel RP2040 held in reset (`C_RUN` low) and then with it unflashed; (4) EMCON released with the controller in reset. Then (1) with LIGHTING at BLACKOUT | downstream faults: no RF at the PA output; `+13V8_PA`, VGG and K1 recorded. (1): both paths release, as the design predicts, and the EMCON lamp stays dark; the e-paper shows EMCON not asserted when the controller and the display owner run. (2): the EMCON lamp dark. (3): the EMCON lamp lit, with the controller not running. (4): the lamp dark. BLACKOUT: every lamp dark, as the design intends; recorded, not a failure. The TX lamp's behaviour is recorded in each case; it is not a pass condition, because its feed needs `PANEL_PWM` |
 | E-03 | QMX | EMCON asserted: +12V_HF off, VBUS_QMX live, USB enumeration attempted from the host; current into VBUS | no RF at the BNC; VBUS current under 1 mA |
-| E-04 | RockBLOCK 9704 | EMCON asserted with `RB_IEN`, `RB_CTRL` and `RB_RXD` driven high by U6 and U18; V_EXT_RAW and every reachable module rail read; a 10 min watch covering a ring-alert slot | no RF at the SMA; the module rails stay below the level SD-EMC-2 sets |
+| E-04 | RockBLOCK 9704 | EMCON asserted with `RB_IEN`, `RB_CTRL` and `RB_RXD` driven high by U6 and U18; V_EXT_RAW and every reachable module rail read; a 10 min watch covering a ring-alert slot. Added in the sixth revision (4.4): EMCON asserted during a transmission and while idle, first as drawn (`RB_IEN` high from U6, then U6 in reset), recording V_CAPS, the module's 3.3 V I/O rail and RF until the module stops; then with the ENABLE remedy, recording the time from ENABLE low to RF off and to V_CAPS falling below the supervisor's threshold | no RF at the SMA after the row's L_max (section 5a); the module rails stay below the level SD-EMC-2 sets; the as-drawn runs are recorded, not a pass |
 | E-05 | RM520N-GL, W_DISABLE1# stage | (a) registered, full uplink, then W_DISABLE1# low: time to silence; (b) power-up with the pin already low, watched from rail-up to 120 s (the LTE precedent describes the pin's effect as an edge, section 4.5; under SD-EMC-1 a power-up with the pin low arises only when a stage has failed); then the pin driven low at instants during boot, each watched to 120 s, in boots started four ways: FULL_CARD_POWER_OFF# rising (a turn-on), the end of a warm reset (RESET# pulsed for TRST#, HD v1.1 Figure 14), the end of a hard reset (Figure 15), and AT+CFUN=1,1; the instants run from the boot's start to the module's first AT answer (at least 0.5 s, 2 s, 5 s and 10 s after the start, and at the first answer). This is SD-EMC-1's booting case, which decides its fallback; (c) AT+CFUN=1 and AT+CFUN=1,1 sent with the pin low; (d) a warm reset and a hard reset with the pin low. (c)'s AT+CFUN=1,1 and (d) are the booting case's restart with the pin already low, each watched to 120 s from the restart; (e) a host request to go online over QMI and over MBIM, as a connection manager issues it, with the pin low, from slot 2's host over PCIe and from bank 3's host over USB; (f) AT+QCFG=? recorded on the fitted firmware; for `airplanecontrol`, `airplane` and any other listed parameter that names airplane mode, W_DISABLE or RF, the value read, then each documented value set in turn, with (a) to (e) repeated under each and the original values restored; (g) each case per firmware revision fitted. Run with both of SD-EMC-1's hardware stages disabled (the FULL_CARD_POWER_OFF# backstop and the supply removal, in their at-once and delayed forms), or with W_DISABLE1# driven directly, so the pin alone is measured | no emission in (b) to (e) under the configuration the kit will ship with, and in (b)'s boot instants none after the time to silence that TEST-PLAN sets for (a); a boot instant or a restart in (b) to (d) that fails takes SD-EMC-1's fallback (iii); in (a) silence within the time TEST-PLAN sets; AT+CFUN? and `+QIND` reports recorded; the configuration values that pass are written into the provisioning record |
 | E-06 | LimeSDR | EMCON while streaming TX; `+5V_LIME` and USB D+ transient recorded | no RF at either port |
 | E-07 | AW7915-AED (x2) | EMCON while the kit-to-kit link carries traffic; `+3V3_M2C{1,3}` recorded with PERST0#, PEWAKE0# and REFCLK live; S{1,3}A_EN's low level recorded (L7); release, then re-enumeration | no RF on either IPEX; the rail below the SD-EMC-2 level; the card re-enumerates |
@@ -1213,7 +1377,7 @@ firmware revisions, the RM520N-GL's recorded configuration and the fitted QMX PC
 | L7 2N7002 on `EMCON_ON` driven at about 3.3 V | RDS(on) limits stated only at VGS 5 V and 10 V, all at 25 C (the 3 V and 4 V output curves are typical, 25 C); channel resistance at 3.1 to 3.5 V TBD | board B author; bench E-07, E-08, E-11 |
 | SA868 pin 5 "1" threshold | the design gives 2.677 V or more; the maker states nothing | bench E-01 |
 | RM520N-GL: SD-EMC-1's circuit | not drawn; subject to L3 once drawn (both stages hang on `EMCON_ON`). EMCON before the module has been turned on (every power-up under EMCON, slot 2 off or `PCIE_PWR_EN2` low, a re-assertion inside the Tpr hold): both stages at once and latched, the rail never rises. EMCON on a module that has been turned on: T_off at least the software's reaction time plus 15 s (AT+CFUN's maximum) until E-12 (c) measures the handshake; T_cut at least 0.9 s, no maker maximum (Tpd has none); once started the delays run to the end whatever the module does. On release, the pin at least Tpr (100 ms) after the rail | board B author; bridge software (reaction time, section 8); bench E-12 (h) and (i) for the power-up rule |
-| RM520N-GL: emission in the fault case (firmware ignores W_DISABLE1# and the host's sequence fails) and in the booting case (the module booting when EMCON asserts, or restarting while the delays run, whatever started the boot: an EMCON release, a power-up with EMCON released, slot 2's CM5 cycling `PCIE_PWR_EN2`, a warm or hard reset through U6, AT+CFUN=1,1 from either host, a restart the firmware starts itself; and the module misses the pin while booting) | up to T_off + T_cut after EMCON, at least 15.9 s plus the software's reaction time, for every cause; two conditions in the fault case, one in the booting case; none at a power-up under EMCON; accepted in SD-EMC-1, with fallback (iii) named in advance if E-05 (b) to (d) fail | TEST-PLAN owner (the latency limit); bench E-05 (b) to (d), E-12 (i) |
+| RM520N-GL: emission in the fault case (firmware ignores W_DISABLE1# and the host's sequence fails) and in the booting case (the module booting when EMCON asserts, or restarting while the delays run, whatever started the boot: an EMCON release, a power-up with EMCON released, slot 2's CM5 cycling `PCIE_PWR_EN2`, a warm or hard reset through U6, AT+CFUN=1,1 from either host, a restart the firmware starts itself; and the module misses the pin while booting) | up to T_off + T_cut after EMCON, at least 15.9 s plus the software's reaction time as drawn, and at most 20 s once the timers meet section 5a, for every cause; two conditions in the fault case, one in the booting case; none at a power-up under EMCON; accepted in SD-EMC-1, with fallback (iii) named in advance if E-05 (b) to (d) fail | section 5a now sets the limit (20 s for a running module); bench E-05 (b) to (d), E-12 (i) |
 | RM520N-GL: flash integrity | TBD in the fault case, and in the booting case whenever the boot and the host's sequence exceed T_off (Quectel warns of corruption), accepted in SD-EMC-1; certain at every EMCON inside T_boot if the fallback is taken; none owed at a power-up under EMCON; the cooperating case on a running module follows the maker's order, checked by E-12 (e) over the same cycle count; VCC removed from the OFF state inside the Tpr hold is unstated, recorded by E-12 (i) | bench E-12 |
 | RM520N-GL: boot time | the maker states none after a turn-on or a reset (Figures 9, 14 and 15 draw a Booting phase with no duration); it sets how often the booting case costs a handshake, and T_boot if the fallback is taken | bench E-12 (i), over every cause |
 | RM520N-GL: restarts board B cannot see (only if fallback (iii) is taken) | AT+CFUN=1,1 from either host, a restart after a firmware upgrade, a crash or watchdog restart: no held document says a socket pin marks them, so the fallback's window cannot restart on them; bound T_off + T_cut after EMCON, on one event (such a restart within T_boot before EMCON or before T_off after it); narrowed by the bridge's hardware-restart rule to restarts the firmware starts itself; closed if E-12 (i) finds a socket pin that marks them | bench E-12 (i); bridge software (section 8); if E-12 sees the module restart with no host command, option (e) is the named next step |
@@ -1222,11 +1386,17 @@ firmware revisions, the RM520N-GL's recorded configuration and the fitted QMX PC
 | PA and every row: the common element | accepted on condition of a hardware EMCON lamp on board C (SD-EMC-6). As drawn, no indication is independent of the panel controller. With the lamp, no indication in BLACKOUT or with board C unpowered | board C author (the lamp); face plate owner (one light-guide hole); PANEL.md writer (its current against NVG); procedure owner; bench E-02 |
 | Back-feed: RockBLOCK, E22, E72 x2 | TBD; module minimum operating voltages 2.5 V (E22) and 1.9 V (E72) inside a 3.3 V line's reach | board B author (SD-EMC-2); bench E-04, E-09, E-10 |
 | Back-feed: AW7915 x2, and the RM520N-GL once removable | PEWAKE 0.33 mA; PERST# drive TBD (DS40068 states none); REFCLK HCSL; for the RM520N-GL also USB from slot 3's hub and the PCIe TX pair, against its 3.135 V minimum | board B author (SD-EMC-2); bench E-07, E-12 |
+| The latency and fault conditions each row must meet | set by SD-EMC-7 (section 5a): 1 s for every row but the 5G module, 20 s for a running 5G module by hardware timers at their worst tolerance; no row meets it at `fc144600` | every board author, against section 5a; bench rows E-01 to E-12 |
+| RockBLOCK: energy left on the module's side and its ENABLE (sixth revision) | as drawn the module can run about 4.5 minutes idle, about 12 s at its maximum, from 5 F of its own supercapacitors after `+5V_RB` is cut, with ENABLE held by U6 (INFERRED from Ground Control's schematic rev 2B and datasheet, 4.4) | board B author (ENABLE forced low by hardware); the session (a lookup of the Iridium 9704 module's ENABLE behaviour); bench E-04 |
 | Candidate merge | closed: main `458b2873` merged A, B and D; B and D equal the copies read here in every net and part, and A differs only in its front end (section 1.1) | none |
 
 ## 8. Hand-offs to other writers (this stream writes only this file and `drafts/`)
 
 - **Board B author.**
+  - Sixth revision: every row on board B is designed to section 5a's latency and fault conditions. For the 5G module,
+    size T_off and T_cut with parts whose worst tolerance keeps T_off + T_cut + the rail's decay within 20 s while
+    T_off stays above the host's sequence; for the RockBLOCK, force `RB_IEN` (J_RB9704 pin 3) low by hardware under
+    EMCON whatever U6 does, with a hold that stays low when +3V3_DEV is lost (4.4).
   - SD-EMC-1's stages for slot 2:
     - the power-up rule: if EMCON asserts before the module has been turned on (`PCIE_PWR_EN2` low, the rail not up,
       or the release's Tpr hold still on), both stages act at once and latch until EMCON is released, so the rail
@@ -1290,9 +1460,14 @@ firmware revisions, the RM520N-GL's recorded configuration and the fitted QMX PC
   - Add the EMCON lamp's semantics: lit in hardware while both lines are LOW, at a fixed current set against the NVG
     mode, dark in BLACKOUT.
   - Correct the TX lamp text above once the board C author has chosen.
-- **TEST-PLAN writer.** Take in E-01 to E-12. Correct `TEST-PLAN.md:46`'s "measured with the SDR". Fix the EMCON
-  latency limits E-05, E-08 and E-12 refer to, E-12's cycle count, T_off from E-12 (c), and the boot instants of E-05 (b)
+- **TEST-PLAN writer.** Take in E-01 to E-12. Correct `TEST-PLAN.md:46`'s "measured with the SDR". The EMCON latency
+  limits are set by section 5a (SD-EMC-7) since the sixth revision; take them in with the resolution bandwidth of the
+  pass line, and fix E-12's cycle count, T_off from E-12 (c), and the boot instants of E-05 (b)
   and E-12 (i), which are run for every boot cause SD-EMC-1 names.
+- **Requirements registry (integrator, sixth revision).** A record for section 5a's requirement, a sibling of REQ-030 under NEED-08,
+  drafted as REQ-071 in stream r8docs' registry patch for the integrator (`drafts/r8docs/registry-r8docs.patch` of
+  worktree `fnd/r8docs`, not in the tree); FEA-002's first reading to say that the PA's closure at desk is local and its end-to-end state is OPEN
+  (section 0a).
 - **Requirements registry (i1).** S-01 closes on the candidate B for the CM5 radios and the card supplies, subject to
   L1, L2, L3 and L7. S-02 is the tools item L6. REQ-030 and REQ-032 are not met for the 5G module until SD-EMC-1 is
   drawn. Cite this file from NEED-08's verification.
@@ -1304,11 +1479,29 @@ firmware revisions, the RM520N-GL's recorded configuration and the fitted QMX PC
     `gen_sch_b.py:645`, so that the two records agree after the merge.
   - The round-6 candidates are merged (`458b2873`). Section 1.1 records that main's B, C and D equal the copies read
     here and that its A differs in the front end only, so no row waits on a merge.
-- **SOURCES.yaml writer.** File the four Quectel AT and QCFG manuals and the four QMX schematic PDFs from
+- **SOURCES.yaml writer.** DONE in the sixth revision (stream r8docs): the four Quectel manuals, the QMX schematics and
+  their crops, the mt7915 driver files and the LimeSDR page are filed in `v2/vendor/` (section 1.2). The original
+  hand-off read: File the four Quectel AT and QCFG manuals and the four QMX schematic PDFs from
   `drafts/datasheets/` of `fnd/rv-emc` (listed in `v2/docs/records/README.md`), with their URLs and sha256. The JSCJ 2N7002 sheet is filed since `ccf5808e`
   (`logic-nfet-2n7002`), so that part of this hand-off is done.
 
-## 9. What changed in the fifth cycle (the fourth checker's one blocking item and seven minor ones)
+## 9. What changed in the sixth revision (stream r8docs, late on 26 September 2026)
+
+- Section 0a (new): local and end-to-end conclusions row by row, as the second review's section 2C asks. The PA's
+  closure at desk is local; end to end no row is closed.
+- Section 0: the PA bullet, the radio-by-radio bullet and the feasibility verdict say which conclusions are local.
+- Section 4.4: the RockBLOCK 9704's own supercapacitors (two 10 F in series, charged to 4.25 V) and its ENABLE input,
+  which U6's firmware holds, read from Ground Control's schematic rev 2B: the row's local chain is reopened. Table row 4
+  and row 2's status follow.
+- Section 5a (new, SD-EMC-7): the maximum latency per transmitter (1 s; 20 s for a running 5G module, by hardware
+  timers at their worst tolerance) and the fault conditions F1 to F9 the circuit round designs to.
+- Sections 6 to 8: the pass line carries the latency; E-04 records the supercapacitors; section 7 lists both new items;
+  the hand-offs to board B, the TEST-PLAN writer and the registry are updated, and the SOURCES.yaml hand-off is done.
+- Section 1.2: the documents this stream fetched are filed in `v2/vendor/`.
+- No netlist reading changed; since `458b2873` the only change to boards A to D's netlists is `3a1f6576`'s clamp symbols
+  on A and B.
+
+## 9a. What changed in the fifth cycle (the fourth checker's one blocking item and seven minor ones)
 
 1. **The exposure of a booting module was bounded to a reversal (blocking 1).** The checker was right on the defect.
    Section 0 and SD-EMC-1 named only EMCON re-asserted while the module boots after a release. Under option (ii),
