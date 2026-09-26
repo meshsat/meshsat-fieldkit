@@ -5,12 +5,24 @@ instruction of that evening that an agentic system takes informed engineering de
 than queueing them to a non-engineer. What is adopted is **section 4 as the design envelope** and **section
 6's first row, IEC 61000-4-2 level 4 (8 kV contact, 15 kV air), as the transient level**; the electrical fast
 transient row is recorded as NOT A REQUIREMENT of this project, because nothing in this tree is a source for
-one. The altitude, the vibration and shock severities and the service life stay OPEN, for the rules that
-genuinely need them, and are not invented here. Reverse by reopening decision 34, which returns this document
-to a draft.
+one. The altitude, the vibration and shock severities and the service life stayed OPEN that day, for the rules
+that genuinely need them, and were not invented here; since 25 and 26 September 2026 the altitude, the
+severities, the cold start and direct sun are the owner's rulings and the service life is TBD for prototype 1
+(section 8). Reverse by reopening decision 34, which returns this document to a draft.
 
 **What is NOT taken here and stays the owner's:** ADVERTISING the kit to this envelope. That is a claim about
 the product and belongs with the public copy, not with the engineering.
+
+**Owner rulings of 25 and 26 September 2026 (section 8).** Seven questions of the foundation re-baseline
+(MESHSAT-1357) that bear on this envelope were asked one at a time, each with its options and a
+recommendation, and the owner ruled each at the recommendation: `TEST-PLAN.md`'s +55 C operation, +71 C storage
+and -33 C storage are QUALIFICATION MARGINS over this envelope, not limits of it (D-02a, 25 September); the kit
+operates with its lid closed in a defined REDUCED MODE (D-02b, 25 September); the shock and vibration severities
+are `TEST-PLAN.md` E1 and E2, and the altitude is 0 to 3000 m in use and 0 to 4500 m in transport (D-02c, 26
+September); a cold start from the pack below about -10 C cell temperature is OUT OF SCOPE (D-02d); the kit is
+operated SHADED (D-02e); the vehicle entry is NOT QUALIFIED for vehicle surge (D-16); and the prototype makes no
+EMC claim, so its planned MIL-STD-461 runs are characterisation (D-04). No envelope question is open any more; the
+service life is TBD for prototype 1, and the pollution degree and the duty cycle are still owed (section 5).
 
 The sentences below were written while it was a draft and stand as they were, because the numbers are the
 parts' own and the ruling changed none of them.
@@ -40,8 +52,8 @@ that replaces it. No number in this document was chosen to make a limit come out
 |---|---|---|---:|
 | Pervasive Displays E2370KS0C1 e-paper | behind the plate lens, outside face | **-15 to +60 C** | `pdi/pdi-e2370ks0c1-flyer.pdf` |
 | Sensirion SGP41 VOC sensor | battery bay, inside air | **-20 to +55 C** | `sensirion/sgp41-datasheet.pdf` |
-| 4S pack cells, charge | east pocket, inside | **0 to +45 C cell surface** | Li-ion class limit; the 4S pack's own sheet is owed |
-| 4S pack cells, discharge | east pocket, inside | **-10 to +60 C cell surface** | as above |
+| 4S pack cells, charge | east pocket, inside | **0 to +45 C cell surface** | `battery/samsung-35e-orbtronic.pdf`, Samsung INR18650-35E Ver. 1.1, 3.12 (source corrected 26 September 2026) |
+| 4S pack cells, discharge | east pocket, inside | **-10 to +60 C cell surface** | as above, 3.12 |
 | Xenarc 709GNK monitor | in the plate | -20 to +70 C | `xenarc/xenarc-709gnk-product-manual-v2.pdf` |
 | TRACO TEN 40-2412WIN | dock strip, inside | -40 to +75 C | `traco/ten40win_datasheet-3049699.pdf` |
 | Quectel RM520N-GL 5G | M.2 slot, inside | -30 to +75 C, extended -40 to +85 | `quectel/quectel-rm520n-gl-5g-specification-brief.pdf` |
@@ -59,11 +71,18 @@ needed a measurement or a letter. **The pack's CELLS are still owed a sheet** an
 range is not theirs: the cell limits in this table are the Li-ion class ones and stay until that sheet
 exists.
 
+**Corrected 26 September 2026: the cell sheet was in the tree as well.** Samsung's INR18650-35E specification
+Ver. 1.1 (`battery/samsung-35e-orbtronic.pdf`, sha256 5ec577b952b9...) states charge 0 to 45 C and discharge -10
+to 60 C at the cell surface (its 3.12), and storage of -20 to 45 C for three months and -20 to 25 C for a year
+at the ex-factory 30 percent charge (its 3.13). Those are the numbers this table and section 4 already carry,
+so no bound moves. The 35E is the pack's cell of record (`pcb_pack_protection.yaml`, its `cell` entry), and the
+owner's pack ruling of 26 September 2026 keeps it (D-06: one 4S3P pack of Samsung 35E cells, section 4).
+
 **Still owed, and now named as documents this tree does NOT hold rather than as open questions:** the
 LimeSDR Mini 2.4 (the tree holds its drawings and STEP, not a datasheet), the RockBLOCK 9704 (its datasheet
 here is three and a half thousand characters and states no temperature at all), the QMX HF unit (the tree
-holds its operating and CAT manuals, neither of which states one), the 30 W PA stage, the five fans and the
-4S pack's cell sheet. Each is a document to fetch, not a measurement to take, and they can only NARROW this
+holds its operating and CAT manuals, neither of which states one), the 30 W PA stage and the five fans (the
+4S pack's cell sheet was on this list until 26 September 2026, see above). Each is a document to fetch, not a measurement to take, and they can only NARROW this
 table.
 
 ## 3. The inside is not the outside
@@ -85,20 +104,39 @@ The consequence, stated as arithmetic rather than as a conclusion:
 
 The third row is the sharp one and it is not a fault: a lithium pack may not be charged with its cells
 above +45 C, and a sealed case with three loaded modules puts the pack in warm air. It means the kit
-charges freely in temperate conditions and the charger has to hold off in a hot one, which the pack
-thermistor on the charger's JEITA input already does in hardware. It is written here so that it is a
-declared behaviour and not a surprise on a bench.
+charges freely in temperate conditions and charging has to hold off in a hot one. It is written here so that
+it is a declared behaviour and not a surprise on a bench, and the owner accepted it on 25 September 2026
+(D-02b, section 8).
+
+**Shade is a stated operating condition (D-02e, owner ruling of 26 September 2026).** Every row of this table
+assumes the kit is shaded, which is what appendix 32.53 designed it for; the kit is operated shaded, with a
+shade accessory (a lid sun shield or a tarp), and a design for full sun is a later qualification item. Nothing
+here says what a sunlit plate does.
+
+**Corrected 26 September 2026.** This paragraph said the hold-off was done "in hardware" by "the pack
+thermistor on the charger's JEITA input". The charger has no such input: TI's BQ25731 datasheet (SLUSE66A,
+Table 7-1, pin functions, `ti/bq25731-datasheet.pdf`) lists no thermistor, TS or JEITA pin. The hold-off is
+the pack gauge's own: the BQ4050 on board P opens its charge FET outside 0 to 45 C read at the cell surface
+(`pcb_pack_protection.yaml`, CHARGE_TEMPERATURE_WINDOW), a threshold held in the gauge's data flash rather than
+fixed in hardware, with the panel's cold-charge inhibit below 0 C on top (`PANEL.md` section 10). Decision 40,
+ruled by the owner on 26 September 2026, adds hardware beside the gauge (a 4S secondary over-voltage protector, a
+chemical fuse and the gauge's PTC input); none of it is laid yet, and the temperature window stays the gauge's. As generated even that host path is not yet wired end to end: the lead between the pack board and the
+dock strip does not mate (`PANEL.md` section 10).
 
 ## 4. The envelope this proposes
 
 **Ambient temperature, in use: -20 to +40 C**, with three declared carve-outs, each traceable to a part:
 
 - **below -10 C:** the pack is warmed by its heater mat before charge (the mat is RS PRO 245-556, ruled
-  4 September); discharge continues to the cells' own -10 C surface limit.
+  4 September); discharge continues to the cells' own -10 C surface limit. **A cold start from the pack is out
+  of scope (D-02d, owner ruling of 26 September 2026):** a kit cold-soaked below about -10 C cell temperature
+  needs shore or vehicle power, or warming, before it starts from its pack; once warm, use down to -20 C
+  ambient holds. No hardware is added for it.
 - **below -15 C:** the e-paper is outside its operating range and is expected to update slowly or not at
   all. It carries identity and status with the power off, so this is a degraded display, not a dead kit.
 - **above +35 C:** the kit runs the reduced mode (one module) so the inside air stays under the +55 C
-  that the battery-bay sensor and the pack need, and the charger holds off on the pack thermistor.
+  that the battery-bay sensor and the pack need, and charging holds off on the pack gauge's own thermistor
+  window (section 3, corrected 26 September 2026).
 
 **Ambient temperature, in storage: -20 to +45 C for up to three months, -20 to +25 C for a year**, at the
 pack's ex-factory 30 percent charge. The pack is the only part that makes storage narrower than use.
@@ -108,43 +146,59 @@ Peli's IP67; the face is designed to an IP67-class construction and is never lab
 not been tested and no rating is claimed until the bench procedure of appendix 32.34 has run. The inside
 climate sensor plus the outside pressure sensor are the seal check.
 
-**Altitude: proposed 0 to 3000 m in use, 0 to 4500 m in transport.** This number has no source yet and it
-is not free: IEC 60664-1 derates clearance above 2000 m, so the PoE 54 V rail and the isolated converter's
+**Altitude: 0 to 3000 m in use, 0 to 4500 m in transport, ruled by the owner on 26 September 2026 (D-02c,
+section 8).** It was proposed here without a source, and it is not free: IEC 60664-1 derates clearance above 2000 m, so the PoE 54 V rail and the isolated converter's
 barrier both depend on it, which is why ISO-001 cannot close without it. The case keeps Peli's pressure
 equalisation valve, so the enclosure itself does not care.
 
 **Vibration and shock:** a whole-kit test plan to MIL-STD-810 is planned and not one of its tests has been
 run, so nothing here is qualified to that standard. The plan (transit drop, vibration, temperature operation
-and storage, humidity, immersion) was approved on 6 September 2026 and is the declaration. No
-severity is chosen yet; choosing one is part of decision 34.
+and storage, humidity, immersion) was approved on 6 September 2026 and is the declaration. The severities
+were ruled by the owner on 26 September 2026 (D-02c, section 8): shock is `TEST-PLAN.md` E1, 26 transit drops
+from 1.22 m, and vibration is `TEST-PLAN.md` E2, the composite wheeled vehicle profile for 1 hour per axis.
+Neither test has been run, so nothing is qualified to them.
 
 **Input voltage ranges**, from the design as built in the generators:
 
 | input | range | notes |
 |---|---|---|
-| vehicle and shore DC | **9 to 36 V** | MIL-STD-461 class line filter, NATO 2-pin cable, the 38999 receptacle |
+| vehicle and shore DC | **9 to 36 V** | MIL-STD-461 class line filter, NATO 2-pin cable, the 38999 receptacle. **Not qualified for vehicle surge** (D-16, owner ruling of 26 September 2026): no surge claim is made, the entry is not for 24 V military vehicle buses, and MIL-STD-1275 is revisited only if military vehicles become a market |
 | solar | tracker input, LT8705A | the tracker's own window, board E |
-| pack | 4S, about 14.4 V nominal | 4S4P 18650 or 4S3P 21700, about 200 Wh |
+| pack | 4S, about 14.4 V nominal | **one 4S3P pack of Samsung 35E 18650 cells, about 145 Wh, shrink-wrapped in the east pocket** (D-06, owner ruling of 26 September 2026), subject to the owner's case measurement (D-08). Missions longer than the pack rely on vehicle or solar input. The runtime requirement is battery-only hours in the idle and typical modes at +20 C for an aged pack; that number is not computed yet and no runtime is claimed here. Corrected 26 September 2026: the 4S4P 18650 and 4S3P 21700 packs this row named are not expected to fit beside board P under board B, and the 4S3P 18650 fits only without a rigid enclosure (A06, INFERRED from the committed board heights until the case is measured) |
 | Power over Ethernet out | 54 V | the rail that makes ISO-001 and the altitude question real |
 | USB-C Power Delivery out | 45 W | TPS25740 and TPS55288 |
 
 **Operating modes**, each already in the design: full (three modules, lid open), reduced (lid closed, or
 above +35 C ambient), blackout (LEDs and sounder muted), NVG (panel lighting), EMCON (a hardware line
 gates every transmitter rail and the PA bias), and charge (mains, vehicle or solar, gated by the pack
-thermistor and by the cold-charge inhibit).
+thermistor and by the cold-charge inhibit). **Corrected 26 September 2026, as generated:** EMCON removes the
+supply of the SDR, the Iridium modem, the LoRa, Zigbee and Thread radios and the HF unit and the PA rail, so
+those stop receiving too; it puts the 5G module in airplane mode, has an unproven effect on the two WiFi link
+cards and none on the compute modules' own WiFi and Bluetooth (`PANEL.md` section 6). **D-05, owner ruling of
+26 September 2026: under EMCON the radios go DARK.** Every radio with an emission path is powered off or
+RF-disabled in hardware; the VHF path keeps listening, because its gate is on transmit only; GNSS, DCF77 and
+the lightning detector continue. The two gaps just named (the compute modules' own radios, and the WiFi cards'
+W_DISABLE) are session engineering items under that ruling and are not in the generators yet. The charge gate
+is the pack gauge's thermistor window (section 3). The closed-lid reduced mode is the owner's ruling of 25
+September 2026 (D-02b, section 8).
 
 **Single-fault conditions the design is expected to survive**, written as the design's own protections so
 that PWR-003 and BAT-002 have something to be judged against: a short on any downstream rail (eFuses), a
 reversed or over-voltage input (the ideal diode and the 9 to 36 V front end), a shorted pack lead (the
 25 A blade and the pack's own protector), a failed module (the voted I/O fabric and the per-bank USB
 ring), loss of the panel controller (the hardware EMCON line is independent of any module), and water on
-the floor of the case (the floor water sensor with pack shutdown). **No fault tree has been drawn and no
+the floor of the case (the floor water sensor with pack shutdown). **Corrected 26 September 2026:** the loss
+of the panel controller leaves the transmitters safe but, as generated, no compute module powers without it
+(`ARCH-PCB-B-IOHA.md` section 10), so it is survived for EMCON and not for compute. **No fault tree has been drawn and no
 coordination study exists**: PWR-003 says so and is open.
 
 ## 5. What this document does NOT settle
 
 The altitude number, the vibration and shock severities, the pollution degree that ISO-001 needs, and the
-expected service life and duty cycle that REL-001 needs. All four are in decision 34. The transient levels
+expected service life and duty cycle that REL-001 needs. All four are in decision 34. **Since 26 September
+2026** the altitude and the severities are the owner's rulings (section 8), and so are the cold start from the
+pack (out of scope) and direct sun (operate shaded); the service life is TBD for prototype 1 by the same
+rulings; the pollution degree and the duty cycle stay open. The transient levels
 were in this list until 17 September and are section 6 now, because owner decision 31 cannot be ruled without
 them: a clamp is chosen against a level.
 
@@ -168,12 +222,22 @@ specified nor planned for.
 describes the design rather than constraining it, and the third has no source. A ruling that takes the first
 row alone is worth having on its own.
 
+**What the owner's rulings of 26 September 2026 add (section 8):** the first row is the DESIGN level every
+clamp is chosen against and the level of the test below; it is not a compliance claim, because the prototype
+makes no EMC claim (D-04). The second row describes what is fitted; no surge rating is claimed for the vehicle
+entry, which is recorded as not qualified for vehicle surge (D-16, section 8).
+
 **The test the plan is missing**, written so the ruling has something to point at: the kit powered from its
 pack, every bearer up, discharges applied to the plate, the toggles, the display bezel, every antenna
 bulkhead's shell and every exposed conductor of the two headset jacks, the USB-C outlet, the Ethernet jack and
 the pod lead; pass is no upset, no reset, no loss of a bearer, no lost secure-element key and no damage.
 
-## 7. Decision 34, open: the envelope, and whether to buy a wider one
+## 7. Decision 34 as it was asked on 16 September 2026 (ruled by the session on 21 September 2026)
+
+**Kept as the record of the question, not as an open item.** Decision 34 was ruled by the session on 21
+September 2026 with option 1 below, which is the status at the top of this document; the altitude question at
+the end of this section was answered by the owner on 26 September 2026 (section 8). Until 26 September this
+heading still read "Decision 34, open".
 
 **Options, costed, the recommendation first.**
 
@@ -195,3 +259,63 @@ the pod lead; pass is no upset, no reset, no loss of a bearer, no lost secure-el
 because it is the common industrial number and because the kit is carried rather than flown; if the kit
 is ever expected in an unpressurised aircraft, say so now, because it changes the PoE rail's spacing and
 the isolated barrier and both of those are copper.
+
+## 8. Owner rulings of 25 and 26 September 2026: margins, the closed lid, severities, altitude, cold start, sun, surge and EMC
+
+Asked as questions D-02a to D-02e, D-04 and D-16 of the foundation re-baseline (MESHSAT-1357), one at a time,
+each with its options, the reasoning behind each and a recommendation, and each ruled at the recommendation.
+D-02a and D-02b were ruled on 25 September 2026 between about 23:27 and 23:40 CEST, the others on 26 September
+2026 between about 00:05 and 00:55 CEST. These are the owner's rulings, not the session's, and they sit beside
+decision 34's adoption rather than replacing it. Nothing has been built, so every line below is a requirement,
+a test limit or a stated condition, not a result.
+
+**D-02a (25 September): the test levels above and below this envelope are qualification margins, not limits.**
+
+| `TEST-PLAN.md` level | the envelope limit it goes past | what it is | pass line |
+|---|---|---|---|
+| E3, operation for 4 hours at +55 C | in use, +40 C | a qualification margin | survive and recover |
+| E3, storage for 24 hours at +71 C | storage, +45 C (three months) | a qualification margin | survive and recover |
+| E4, storage for 24 hours at -33 C | storage, -20 C | a qualification margin | survive and recover |
+| everything inside section 4's envelope, E4's operation at -20 C included | none | acceptance | operate to specification |
+
+The two pass lines are different questions and a result is reported against the one it was run for: inside
+the envelope the pass line is operation to specification; at a margin it is survival of the exposure and
+recovery to specification once back inside. By this document's own arithmetic (section 3, a 10 to 16 K inside-air rise) an
+ambient of +55 C puts the inside air at +65 to +71 C, above the cells' +60 C discharge limit, which is why
+operation at that level is a margin and not a specification. No test level is lowered to the envelope.
+
+**D-02b (25 September): the kit operates with its lid closed, in a defined reduced mode.** The example the owner ruled on is
+GNSS, the LoRa mesh, Iridium and APRS beacons, the monitor off and one compute module; the exact bearer set and
+power state are engineering, fixed against the thermal bound of section 3. A closed-lid state and a closed-lid
+thermal test join `TEST-PLAN.md`. A lid sensor is an engineering item, and the case-open tamper switch can serve
+as both; under decision 30 it logs and never wipes. **Two consequences the owner accepted with it:** above +35 C
+ambient the kit runs one compute module, so there is no compute redundancy in the heat; and with three loaded
+modules, charging holds off above about +25 C ambient (section 3).
+
+**D-02c (26 September): severities, altitude and service life.** Shock is `TEST-PLAN.md` E1 (26 transit drops from 1.22 m) and
+vibration is `TEST-PLAN.md` E2 (the composite wheeled vehicle profile, 1 hour per axis). The altitude is 0 to
+3000 m in use and 0 to 4500 m in transport. The service life is TBD for prototype 1, and until it is set REL-001
+has no life to judge against.
+
+**D-02d (26 September): a cold start from the pack is OUT OF SCOPE, and stated.** The cells may not be
+discharged below -10 C at their surface (section 2), while the in-use floor is -20 C ambient. A kit cold-soaked
+below about -10 C cell temperature needs shore or vehicle power, or warming, before it starts from its pack; once
+warm, use down to -20 C ambient holds. No hardware is added. The statement belongs in the ConOps as well as here.
+
+**D-02e (26 September): the kit is operated SHADED, and that is stated.** Shade is the condition appendix 32.53
+designed for and section 3's arithmetic assumes; a shade accessory (a lid sun shield or a tarp) goes with the
+kit, and a design for full sun is a later qualification item. No board change.
+
+**D-16 (26 September): no vehicle surge claim.** No surge rating is claimed: the vehicle and shore entry is recorded as
+NOT QUALIFIED for vehicle surge, with a warning against 24 V military vehicle buses, and MIL-STD-1275 would be
+revisited only if military vehicles become a market. What is fitted (section 6, second row) is described and not claimed.
+
+**D-04 (26 September), the part that bears on this envelope:** prototype 1 is a non-commercial prototype in
+the Netherlands and the EU, operated by a licensed radio amateur. No CE or RED marking and no EMC claim is made,
+so the MIL-STD-461 runs of `TEST-PLAN.md` are characterisation, not qualification, and section 6's first row is
+a design level, not a claim; the design keeps an EU route open. Every transmitter is configured to the
+operator's licence and the EU limits, and the VHF path gets a band lock. The pack's UN 38.3 status is unknown,
+so how it is transported is stated rather than assumed.
+
+**What these rulings leave open:** the service life (TBD for prototype 1), the pollution degree ISO-001 needs
+and the duty cycle REL-001 needs.
