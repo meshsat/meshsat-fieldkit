@@ -266,6 +266,10 @@ boards:
        filter: "the AC coupling capacitor and the bias resistor at the jack", kelvin_with: null, keep_mm: 1.0}
     - {net: HS2_MIC, what: "headset 2's microphone input", filter: "the AC coupling capacitor and the bias
         resistor at the jack", kelvin_with: null, keep_mm: 1.0}
+    - {net: FLANGE_AIN0, what: "the flange NTC's divider at the ADC input, about 22 mV per kelvin at +85 C (round 8,
+        PWR-F15)", filter: "R93 1k and C73 100 nF at U22's AIN0", kelvin_with: null, keep_mm: 1.0}
+    - {net: FLANGE_REF, what: "the ratiometric reference input, the harness +3V3 the divider runs from",
+       filter: "R94 1k and C74 100 nF at U22's AIN1", kelvin_with: null, keep_mm: 1.0}
 
  e:
    switch_nets: ["TRK_SW1", "TRK_SW2", "E6_SW", "FAN1_SW", "FAN2_SW", "TRK_LSENSE"]   # TRK_LSENSE is the inductor's second terminal, 5 mOhm from TRK_SW2: a switching conductor (18 September 2026)

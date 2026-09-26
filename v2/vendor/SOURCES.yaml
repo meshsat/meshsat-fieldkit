@@ -253,6 +253,20 @@ jlc_retake_r8cert:
   not_merged: "two readings the run moved for reasons outside this round, left as the table had them: 'A22 1.2 A (ILM)' (a superseded folder whose value names a current; the search on '1.2R 0603' answered C137771 RC0603FR-071R2L before and C21389 0603WAF120KT5E, a 12 ohm part, today: the tool compares no resistance, a limit named in its docstring) and D12's '1.0k' (its blank line is filled from the table's C21190; the run records bom_code C21190, the table ''). After the merge every verdict of the table equals the run's (864 of 864). Counted at integration key by key (comment, land) between the table and the run's table: qty and need differ on 412 rows (the tool sums a key over every folder carrying it, and the staged netlists sit beside the superseded folders), and the note on 5 rows that quote a need or a purchase line; stock differs on 362 rows and price on 7, and on 152 rows the stock or the price differs while qty is equal; beside them the two readings named here (the A22 code and D12's bom_code) and the boards list of the USBLC6-2SC6 row. None of those was merged"
   not_decided_here: "no tree verdict was written: the per-board readings above are scratch, A32, B21, D12 and E17 have no folder, and CMP-002 and SUP-001 need a re-take over the folder each board declares once it is cut. The generator lines of draft 02 (E J_SMB, A J_MAINSW and J_HEAT, P J_TS2, D J_VGG, the amber text, U80's value) are the board authors'"
 
+# ADDED 26 SEPTEMBER 2026, ROUND 8 (MESHSAT-1357, stream d; placed here at integration, outside `parts:` like the records
+# above it): board D's parts resolutions, its new mismatch R8D-P1 and the maker documents filed for them.
+round8_board_d_parts:
+  note: "round 8 of MESHSAT-1357, stream d (26 September 2026): the parts re-take's two board D rows resolved in board D's generator, a condition 1 mismatch found while choosing the round's RF bypasses, and the documents of the round's passives (not critical parts under (a) to (c), so they have no parts entry; their files are listed here and in sources.txt)"
+  resolved_on_d:
+    - {row: "D LED2 'amber record' and LED5 'amber PA keyed', C2287", now: "'yellow record' and 'yellow PA keyed', C2287 kept", basis: "Hubei KENTO specification CITAYL (0603-0.6, yellow), revision A.0, 2018-12-06, 'Color: Yellow light', dominant wavelength 584 to 594 nm at 20 mA; the recommendation of jlc_retake_45bde541.condition_1_mismatches taken (the LEDs are board-local indicators, not panel semantics)", document: "v2/vendor/kento/kento-kt-0603y-citayl-0603.pdf (sha256 86f7efb743b271c3cc9d63a09ae3c2fd457c8ea8513dae81b350436317520574)"}
+    - {row: "D J_VGG, C5251182", now: "C131337, B2B-PH-K-S(LF)(SN)", basis: "parts entry jst-ph-headers, update_round8"}
+  new_mismatch:
+    - {id: R8D-P1, refs: "D C44 and C45, '1n NP0' on C_0402_1005Metric (and every blank '1n NP0' 0402 line lcsc_fill fills from the certified table)", code: C1523, ordered: "FH 0402B102K500NT, JLCPCB's description '1nF 50V X7R +-10% 0402' (API 2026-09-26T21:18Z)", why: "an X7R part under an NP0 value, a component mismatch under owner condition 1; JLC-CERTIFIED.tsv's '1n NP0' row reads CERTIFIED with it", taken_on_d: "C113780, YAGEO CC0402JRNPO9BN102 (JLCPCB: '1nF 50V NP0 +-5% 0402', stock 160,278; YAGEO's CC general purpose NP0 specification V.21 decodes CC 0402 J R NPO 9 BN 102 as 0402, +-5 percent, NP0, 50 V, 1 nF), pinned in gen_sch_d.py on C44, C45, C69 and C72; lcsc_fill.py's MAP line is in stream d's draft", owed: "the certified row re-taken, C1523 marked WRONG_MODEL for '1n NP0' under condition 1"}
+  documents:
+    - {path: "v2/vendor/samsung/samsung-cl05a225ko5nqn-spec.html", for: "D C31 and C32 (G12), C170151 CL05A225KO5NQNC", doc: "Samsung Electro-Mechanics MLCC specification page for CL05A225KO5NQN: 2.2 uF, +-10 percent, 16.0 Vdc, X5R, 0402; 'Graphs for the item are not supported'", url: "https://weblib.samsungsem.com/mlcc/mlcc-ec-data-sheet.do?partNumber=CL05A225KO5NQN", fetched: "2026-09-26T21:20Z", sha256: "95ae829954e4a5a5a36fbb318487b3c4668f4ed0488a23ce53bf3bc019cb3edc"}
+    - {path: "v2/vendor/yageo/yageo-cc-general-purpose-np0-16v-250v.pdf", for: "D C44, C45, C69, C72, C113780 CC0402JRNPO9BN102", doc: "YAGEO surface-mount ceramic multilayer capacitors, general purpose, Class 1, NP0, 16 V to 250 V, product specification V.21, 14 March 2025", url: "https://datasheet.lcsc.com/datasheet/pdf/4eca2bb4b507f1633db47e922d632b95.pdf?productCode=C113780 (LCSC's copy; yageo.com's path answered 404 that evening)", fetched: "2026-09-26T21:21Z", sha256: "495287fc811dc714366f2edd3bc974d98d2d80133266a0a73bb01ac01237e3eb"}
+    - {path: "v2/vendor/kento/kento-kt-0603y-citayl-0603.pdf", for: "D LED2 and LED5 (and B's rows on C2287), KT-0603Y", doc: "Hubei KENTO specification for approval CITAYL (0603-0.6, yellow), revision A.0, 2018-12-06", url: "https://datasheet.lcsc.com/datasheet/pdf/ba7b73648918210433b88ee1f2fd7ebf.pdf?productCode=C2287 (LCSC's copy, the part's pdfUrl in LCSC's product detail)", fetched: "2026-09-26T21:20Z", sha256: "86f7efb743b271c3cc9d63a09ae3c2fd457c8ea8513dae81b350436317520574"}
+
 # ADDED 26 SEPTEMBER 2026 (MESHSAT-1357, review stream BAT, third cycle). Two TI E2E answers that the battery review packet
 # (v2/docs/review-packets/battery/) cites, filed as HTML snapshots saved from the runner with curl on 26 September 2026.
 # They belong to the `charger` entry below and to `pack-secondary-protector` (an entry stream PKT adds in the same review);
@@ -1751,6 +1765,11 @@ parts:
       identity_r8a: MATCH
       identity_note_r8a: "the held catalogue's header table (printed page -4-, Top entry type) lists B2B-XH-A with 'Post: Brass, copper-undercoated, tin-plated'; LCSC's record for C158012 gives tin plating, and (LF)(SN) is read as that standard lead-free tin finish (INFERRED from the record's plating field; the catalogue prints no suffix), the same reading this entry already takes for board E's J_TAMP"
 
+    update_round8:
+      read_on: "2026-09-26"
+      what_moved: "round 8 of MESHSAT-1357, stream d: board D's J_FLANGE, the PA flange NTC lead's socket, is a B2B-XH-A with C158012 (B2B-XH-A(LF)(SN), JST, JLC API 2026-09-26T21:18Z: stock 363,732), the code board E's J_TAMP carries; the held catalogue's header table lists B2B-XH-A. XH rather than PH so the NTC lead and the PA's VGG lead (J_VGG, PH) are not interchangeable"
+      boards: [D, E, P]
+      identity_d: MATCH
   - id: jst-ph-headers
     function: "JST PH 1x5 sockets: the four cell thermistors on board P (J_TS, new in round 4) and the two headset leads on board D (J_HS1, J_HS2, already fitted)"
     boards: [D, P]
@@ -1782,6 +1801,10 @@ parts:
       candidate_match_45bde541: "no: a component mismatch under owner condition 1 until JST's own document lists B2B-PH-K-S-GW. Recommended under the owner's standing rule (the session's): C131337, B2B-PH-K-S(LF)(SN) (JST, stock 86,610 at 2026-09-26T19:00Z), which the held catalogue lists, for P J_TS2 and D J_VGG, and for lcsc_fill.py:159's MAP line, which fills a blank cell-thermistor PH2 line with C5251182"
       table_45bde541: "every JLC-CERTIFIED.tsv row carrying C5251182 (D J_VGG, P4's J_TS, P J_TS2) is WRONG_MODEL with the condition 1 reason since the parts stream's second pass (jlc_retake_45bde541.table_marks)"
 
+    update_round8:
+      read_on: "2026-09-26"
+      what_moved: "round 8 of MESHSAT-1357, stream d: board D's J_VGG carries C131337, B2B-PH-K-S(LF)(SN) (JLC API 2026-09-26T21:05Z: JST, stock 86,615), the code the reconciliation above recommends; the held catalogue lists B2B-PH-K-S. Board P's J_TS2 still carries C5251182 (board P's writer), and lcsc_fill.py's cell-thermistor MAP line moves to C131337 in stream d's draft"
+      identity_d_j_vgg: MATCH
   - id: load-switch-tps22810
     function: "TI TPS22810 load switch (2.7 to 18 V, 79 mohm, thermal shutdown): board E's U16 takes the Geiger module's 5 V off the always-on domain (round 4, F-BP-02); board B's U21 (+5V_LORA, the 1 W LoRa module) and U22 (+3V3_ZB, the two E72 radios)"
     boards: [B, E]
@@ -1813,6 +1836,11 @@ parts:
       where: "v2/ecad/tools/gen_sch_b.py:925 (U21), :938 (U22); gen_sch_e.py:577 (U16); the helper at kisch.py:479"
       where_rev: "45bde541"
 
+    update_round8:
+      read_on: "2026-09-26"
+      what_moved: "round 8 of MESHSAT-1357, stream d: board D places a TPS22810 again, U21, which feeds the exciter, the VGG regulator U15 and the T/R relay coil (+5V_TX) only while +3V3_D8, the supply of board D's PTT and EMCON gates, is in the 74LVC1G range (EMCON L4). Unlike B's and E's, D's line pins its code in the generator, C527679 (TPS22810DRVR, JLC API 2026-09-26T21:17Z: TI, WSON-6-EP 2x2, stock 29,287), and its QOD reaches VOUT through R95 (100 Ohm), the second of 9.3.2's three ways; the EN/UVLO divider R90 11k over R91 10k is read against 7.5's VENR 1.13 to 1.30 V, VENF 1.08 to 1.18 V and VUVR 2.00 to 2.62 V"
+      boards: [B, D, E]
+      where: "gen_sch_d.py, the EMCON L4 block (U21)"
   # --- round 6 candidates for board A (NOT on main at 1f614233; on main since 458b2873, see each update_45bde541) ---
 
   - id: usbc-cc-esd
@@ -2373,6 +2401,59 @@ parts:
         sha256: "bc353c794cafec7a6108fa6e8abdca3bc64d5e3f550d53c4741640e098365dea"
         currency: "byte-identical to bulgin.com on 2026-09-26"
         matches_fitted: "yes for the series: lists PXP4043/C, 'IP-sealed C type USB, rear panel mounted', IP66, IP68 and IP69K"
+
+  # --- round 8, stream d (MESHSAT-1357, 26 September 2026): board D's EMCON L4 load switch, the PA flange sensor (PWR-F15),
+  # --- and the parts re-take's codes on board D. Read against main fc144600 and board D's round 8 netlist. Documents not
+  # --- held were fetched that evening and are filed by the integrator from the stream's drafts (drafts/d/datasheets/).
+
+  - id: board-d-flange-adc
+    function: "the power amplifier's flange temperature reader on the kit bus: U22 at 0x48, the key-down rules K2 and C4 of POWER-THERMAL.md read it (PWR-F15)"
+    boards: [D]
+    on_main: false
+    adopted_in: "round 8 of MESHSAT-1357, stream d (gen_sch_d.py, the PWR-F15 block)"
+    schematic_name: {text: "ADS1115IDGSR 16-bit ADC at 0x48", where: "gen_sch_d.py, the PWR-F15 block (U22)"}
+    fitted_mpn: "ADS1115IDGSR"
+    package: "VSSOP-10 (DGS), land Package_SO:VSSOP-10_3x3mm_P0.5mm"
+    lcsc: "C37593"
+    lcsc_reading: {model: "ADS1115IDGSR", maker: "Texas Instruments", pkg: "VSSOP-10", stock: 33624, read: "2026-09-26T21:05Z", source: "JLCPCB parts API"}
+    identity: MATCH
+    pin_map_check: "ic() map 1 ADDR (GND), 2 ALERT/RDY (NC), 3 GND, 4 AIN0 (FLANGE_AIN0), 5 AIN1 (FLANGE_REF), 6 AIN2 and 7 AIN3 (GND), 8 VDD (+3V3), 9 SDA, 10 SCL; SBAS444E Table 4-1 (DGS) gives the same numbers, and 9.1.4 allows AIN2 and AIN3 to GND and ALERT/RDY unconnected"
+    grade_vs_envelope: INSIDE
+    grade_note: "TA -40 to +125 C (SBAS444E 5.3)"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/ti-ads1115-sbas444e.pdf"
+        doc_id: "TI SBAS444"
+        revision: "SBAS444E, May 2009, revised December 2024"
+        url: "https://www.ti.com/lit/ds/symlink/ads1115.pdf"
+        fetched: "2026-09-26T21:04Z, HTTP 200 application/pdf, 2,654,255 bytes (stream d; filed from drafts/d/datasheets/)"
+        sha256: "eefff4d412ce2dcd7e659f47238edc9b2fa02e5971f2625af730502033701834"
+        currency: "ti.com's copy on 2026-09-26"
+        matches_fitted: "yes: package information lists ADS111x in DGS (VSSOP, 10); Table 7-2 ADDR to GND = 1001000b; VDD 2.0 to 5.5 V"
+
+  - id: flange-ntc-103at2
+    function: "the NTC on the power amplifier's flange, on a two-wire lead to board D's J_FLANGE (PWR-F15); the same part board P uses for its cells"
+    boards: [D]
+    on_main: false
+    placed_part: false
+    adopted_in: "round 8 of MESHSAT-1357, stream d (gen_sch_d.py, the PWR-F15 block; J_FLANGE's value names it)"
+    schematic_name: {text: "Semitec 103AT-2 on the flange, bench-fitted", where: "gen_sch_d.py, the PWR-F15 block (J_FLANGE value)"}
+    fitted_mpn: "103AT-2"
+    package: "epoxy bead on leads, bonded to the flange; not a board land"
+    lcsc: null
+    identity: NOT_PINNED
+    identity_note: "bench-fitted on the lead, bought with the kit's other thermistors; no LCSC code by design (the socket J_FLANGE is the board's line)"
+    grade_vs_envelope: INSIDE
+    grade_note: "-50 to +110 C (catalogue 129M, AT series); it sits at the flange, whose own case rating is -30 to +100 C (RA30H1317M1 sheet, Maximum ratings)"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/battery/semitec-catalog-129M.pdf"
+        doc_id: "Semitec thermistor catalogue 129M"
+        revision: "as held"
+        url: "held in the tree (filed for board P)"
+        fetched: "held"
+        sha256: "0914f59f843e367f55e9887d3ffc748296ea63d67e1696d7a145af7429df5bdb"
+        matches_fitted: "yes: AT thermistor table, 103AT-2: R25 10.0 kOhm +-1 percent, B25/85 3435 K +-1 percent, dissipation factor about 2.0 mW/C, thermal time constant about 15 s, rated power 10 mW at 25 C; the accuracy graph gives 103AT-2 an operating range of -50 to 110 C"
 
 owed:
   - "DONE 26 September 2026 (integration I6): sources.txt file lines for the six documents added on 25 and 26 September and for this file, a vendor-status.txt line for each, a vendor-noindex.txt line for the text-less TE drawing, and the correction of sources.txt's m2 folder line and the same sentence in README.md ('key to be read from the drawing': the drawing says key M)"

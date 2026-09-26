@@ -759,9 +759,9 @@ CONFIG_INPUTS = {
     "jlc_certify.py": ("tools/jlc-handfit.txt", "tools/package-aliases.txt", "tools/jlc-mismatch.yaml",
                        "tools/boards/{letter}.json", "tools/pcb_board_facts.yaml", "pcb-*/lcsc-allow.txt",
                        "tools/readiness_manifest.json"),
-    # lcsc_fill.py: its MAP is code in the tool itself. :245 and :322 the certified table (the fills it takes and the
-    # codes it refuses); :273 the project's lcsc-allow.txt (LCSC_ALLOW overrides it); :299 tools/lcsc-blocked.txt; :352
-    # and :355 tools/jlc-mismatch.yaml, read with jlc_certify's loader (so jlc_certify.py is a helper of this writer too).
+    # lcsc_fill.py: its MAP is code in the tool itself. :251 and :328 the certified table (the fills it takes and the
+    # codes it refuses); :279 the project's lcsc-allow.txt (LCSC_ALLOW overrides it); :305 tools/lcsc-blocked.txt; :358
+    # and :361 tools/jlc-mismatch.yaml, read with jlc_certify's loader (so jlc_certify.py is a helper of this writer too).
     "lcsc_fill.py": ("../release/revA/order/JLC-CERTIFIED.tsv", "{phase}/lcsc-allow.txt", "tools/lcsc-blocked.txt",
                      "tools/jlc-mismatch.yaml"),
     # stackup_gate.py:36 stackup_write.STACKS (a data table in an imported module, which the writer instrument does

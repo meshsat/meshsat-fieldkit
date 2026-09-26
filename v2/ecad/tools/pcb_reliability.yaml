@@ -111,6 +111,14 @@ boards:
        basis: "the JST-VH and IDC families' own figures",
        load: "service access",
        measure: "through-hole with the leads tied"}
+    - {name: "the power amplifier's flange NTC lead", refs: ["J_FLANGE"], cycles: null,
+       basis: "the held JST XH catalogue (v2/vendor/connectors/jst-xh-catalogue.pdf, read 26 September 2026) gives the
+         series' current rating and its -25 to +85 C range and publishes no mating-cycle figure, so there is none to
+         carry",
+       load: "a two-wire lead from the Semitec 103AT-2 bonded to the PA's flange on the face plate (round 8, PWR-F15),
+         mated at build and at service when the plate comes off",
+       measure: "through-hole B2B-XH-A with the XH friction lock; the lead is tied to the plate beside the PA's VGG lead
+         so a pull on the plate does not reach the joint"}
 
  e:
    classes:

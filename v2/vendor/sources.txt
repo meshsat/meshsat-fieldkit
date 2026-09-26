@@ -282,3 +282,9 @@ battery/prosemi-dhc45-c2937382.pdf   # https://datasheet.lcsc.com/datasheet/pdf/
 battery/onsemi-mm3z-c82071.pdf   # https://datasheet.lcsc.com/datasheet/pdf/d230120ac088f212a72f52868a6ffd7b.pdf?productCode=C82071 (LCSC's copy of onsemi's MM3Z2V4T1/D), identical at 2026-09-26T21:16:34Z
 diodes/diodes-pi7c9x2g404sl.pdf   # https://www.diodes.com/assets/Datasheets/PI7C9X2G404SL.pdf, identical at 2026-09-26T21:16:44Z (DS40068 Rev 5-2; the folder line above had been its only record)
 diodes/diodes-pi7c9x2g304sl.pdf   # https://www.diodes.com/assets/Datasheets/PI7C9X2G304SL.pdf, identical at 2026-09-26T21:16:47Z
+
+# --- added 26 September 2026 (MESHSAT-1357, round 8, stream d) ---
+ti/ti-ads1115-sbas444e.pdf   # https://www.ti.com/lit/ds/symlink/ads1115.pdf (round 8, stream d: board D's U22, PWR-F15)
+kento/kento-kt-0603y-citayl-0603.pdf   # https://datasheet.lcsc.com/datasheet/pdf/ba7b73648918210433b88ee1f2fd7ebf.pdf?productCode=C2287 (LCSC's copy of KENTO's sheet; round 8, stream d)
+yageo/yageo-cc-general-purpose-np0-16v-250v.pdf   # https://datasheet.lcsc.com/datasheet/pdf/4eca2bb4b507f1633db47e922d632b95.pdf?productCode=C113780 (LCSC's copy of YAGEO's V.21; round 8, stream d)
+samsung/samsung-cl05a225ko5nqn-spec.html   # https://weblib.samsungsem.com/mlcc/mlcc-ec-data-sheet.do?partNumber=CL05A225KO5NQN (Samsung's own page, stamped 2026/09/27 06:20 KST; round 8, stream d)
