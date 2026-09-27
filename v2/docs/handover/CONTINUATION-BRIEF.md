@@ -6,13 +6,19 @@ line at `e3aedb25`, which the public repository serves at
 `https://raw.githubusercontent.com/meshsat/meshsat-fieldkit/e3aedb25/<path>`. Internal names are defined in
 `v2/docs/handover/GLOSSARY.md`. Read `v2/docs/handover/START-HERE.md` first; the per-layer detail behind
 every line below is in `v2/docs/handover/LAYER-STATUS.md`, and each blocked question is written out in
-`v2/docs/handover/ENGINEERING-QUESTIONS.md` (EQ-01 to EQ-30 in H2).
+`v2/docs/handover/ENGINEERING-QUESTIONS.md` (EQ-01 to EQ-30 in H2 and in H3).
 
 **Handover H2.** The snapshot carries this brief as written at `e3aedb25` plus section 0 (what changed from H1.1 to
 H2, the newest) and section 0a (what changed from `e3aedb25` to H1: main `84e52461`, circuit round 8 sets 1 and 2, and
 the handover branch, last design change `99cde56b`). Where section 0 or 0a and a later section disagree, section 0 is
 the newest; the sentences of later sections they supersede carry an inline **Superseded in H1** or **Superseded in
 H2** mark.
+
+**Handover H3.** H3 carries this brief as H2's, with the marks added after H2 and one correction, marked **H3** or
+**Superseded in H3** where it stands: layer 3 is COMPLETE since commit `24e7bf5a`: the registry's `baseline_state` reads BASELINED at `a54b793b`, written in `2c12be91`, and the re-check `v2/docs/reviews/TARGETED-RECHECK-LAYER-3-2026-09-27.md` (an AI check) finds B-1 CLOSED at `2c12be91`. H3's design content is
+H2's (no schematic, netlist, generator or checking tool changed), so every circuit statement of section 0 holds in H3.
+A circuit candidate, set 6, exists outside H3 and is not evidence until it is promoted; `START-HERE.md` section 1a
+says what it holds and lists H3's errata.
 
 ## 0. What changed between H1.1 and H2
 
@@ -26,9 +32,12 @@ commit; `LAYER-STATUS.md`, section "Status at handover H2", gives each layer's e
   release check (`v2/docs/reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md`). H2 is their versioned package. What they
   carry without being held by it (M-02 and S-53, BAT-F19, HOT-R1, S-58, FEA-004, BANK-R1, S-55, the minors) is listed
   in LAYER-STATUS.
-- **Layer 3 is IN_PROGRESS**: the registry validates (144 records, 0 errors) but its baseline was reversed by the
+- **In H2 layer 3 was IN_PROGRESS**: the registry validates (144 records, 0 errors) but its baseline was reversed by the
   narrow verification on one unstated registry difference (S-80, EQ-30), a wording fix and a re-check away from the
   re-baseline; a snapshot cut from the pushed commit that carries it closes S-79. Layers 4 to 9 are IN_PROGRESS.
+  **H3:** the wording fix, the re-check and the re-baseline are done, and layer 3 is COMPLETE since commit `24e7bf5a`: the registry's `baseline_state` reads BASELINED at `a54b793b`, written in `2c12be91`, and the re-check `v2/docs/reviews/TARGETED-RECHECK-LAYER-3-2026-09-27.md` (an AI check) finds B-1 CLOSED at `2c12be91`; S-51, S-78
+  and S-80 are closed and nothing of layer 3 waits on S-80. H3 is the snapshot S-79 waits for; the registry H3 carries
+  still lists S-79 as open, because it is closed in the commit that files the snapshot, after the build.
 - **Circuits.** Board B's round 8 is merged (`b76c18cb`): the fabric's locked break-before-make, per-slot EMCON and
   the 5G supply removed in hardware; its residual is EQ-20. Set 5 (wave 3) regenerated A (the EMCON gates behind their
   own eFuse, EQ-17 closed at desk with a bound; PoE and USB-C enable nodes), B (every supply declared, W3B-F1 and
@@ -123,6 +132,8 @@ If you are taking over the design, in this order:
    The earliest open decisions with hardware consequences are the reduced-mode host set, the SIM description, the
    storage and transport configuration of the pack, and the core requirement limits. **Superseded in H2:** layers 1
    and 2 are COMPLETE; layer 3 needs S-80's wording fix, its re-check and the re-baseline (EQ-30, EQ-28).
+   **Superseded in H3:** those three are done and layer 3 is COMPLETE since commit `24e7bf5a` (registry BASELINED at
+   `a54b793b`, written in `2c12be91`; re-check B-1 CLOSED), so this step is done.
 3. Integrate the circuit corrections that were in flight at `e3aedb25` (round 8, on every board), one board at a time,
    with regeneration parity, then take one consolidated re-take of every schematic-phase reading on a KiCad 9.0.9 host
    (layer 8 actions 1 to 3; the procedure is REGENERATE.md section 9). **Superseded in H1:** round 8 is merged for A,
@@ -273,7 +284,8 @@ parallel with isolated owners.
 
 **At H2 (superseding parts of the table above):** step 1 is done (round 8 on all six boards, board B at `b76c18cb`,
 and set 5 on A, B, D and E, each with parity) and step 2 is done (`8ea7867e`, reasons 101 to 40). In step 0, layers 1
-and 2 are COMPLETE and layer 3 waits on S-80 (EQ-30); the case geometry's C1 to C6 are in the generators and the case
+and 2 are COMPLETE and layer 3 waited on S-80 (EQ-30) in H2 (**H3:** layer 3 is COMPLETE since commit `24e7bf5a`,
+registry BASELINED at `a54b793b`, written in `2c12be91`; re-check B-1 CLOSED); the case geometry's C1 to C6 are in the generators and the case
 release (`c351115d`), the jumper plug, the RJ45 and the pack hold-down still open. In step 3 the contracts for the
 uncovered interfaces exist (`0da2778b`, 30 contracts and `HW-FW-CONTRACT.md`); Review C is not held. The next work
 per board is its layout-entry reasons (LAYER-STATUS, section "Status at handover H2"): first the desk items that need

@@ -12,7 +12,9 @@ never searched as text). It asserts the statement and exits 1 where it does not 
   2. under v2/ecad/tools/ the only programs that differ are the packer and its test (no generator, no checking tool);
   3. in the requirements registry no record differs in a field outside its readings and notes;
   4. in the interfaces registry nothing differs but the `read_at` text of `board_to_board` and free-text labels;
-  5. each tracked reading that differs gives the same verdict on the same inputs by content.
+  5. each tracked reading that differs gives the same verdict on the same inputs by content;
+  6. the requirements registry at the commit differs from the registry at the commit its own `baseline_state` names
+     (layer 3's baseline) in no record field outside the readings and notes, and in no need, ruling or choice.
 
 It reads git only (`git diff --name-status`, `git show <commit>:<path>`), so it needs a checkout that holds both
 commits; it does not run from an extracted snapshot, which has no history. It writes nothing but standard output.
@@ -106,6 +108,40 @@ def diff_paths(a, b, path=""):
     return [] if a == b else [path or "."]
 
 
+def registry(P, old, new, what):
+    """The registry at two commits, entry by entry; returns what differs that may not."""
+    bad = []
+    ta, tb = show(old, P), show(new, P)
+    a, b = yaml.safe_load(ta), yaml.safe_load(tb)
+    print("\n[%s: %s (%s, sha256/16 %s) to %s (sha256/16 %s)]" % (P, old[:8], what, s16(ta), new[:8], s16(tb)))
+    for k in sorted(set(a) | set(b)):
+        if k in ("needs", "owner_rulings", "session_choices", "open_items", "closed_items", "records"):
+            continue
+        if a.get(k) != b.get(k):
+            print("  top-level %s: %r -> %r" % (k, a.get(k), b.get(k)))
+    for sec in ("needs", "owner_rulings", "session_choices", "open_items", "closed_items", "records"):
+        A = {x["id"]: x for x in a.get(sec) or []}
+        B = {x["id"]: x for x in b.get(sec) or []}
+        added = [k for k in B if k not in A]
+        removed = [k for k in A if k not in B]
+        changed = [k for k in A if k in B and A[k] != B[k]]
+        print("  %s: %d to %d; added %s; removed %s; changed %s" % (
+            sec, len(A), len(B), " ".join(added) or "none", " ".join(removed) or "none", len(changed) or "none"))
+        for k in changed:
+            fields = sorted(f for f in set(A[k]) | set(B[k]) if A[k].get(f) != B[k].get(f))
+            print("      %s: %s" % (k, ", ".join(fields)))
+            if sec == "records":
+                bad += ["registry %s.%s" % (k, f) for f in fields if f in KEEP]
+            if sec in ("needs", "owner_rulings", "session_choices"):
+                bad.append("registry %s %s changed" % (sec, k))
+        if sec in ("needs", "owner_rulings", "session_choices", "records") and (added or removed):
+            bad.append("registry %s added or removed" % sec)
+    print("  record fields outside the readings and notes, and needs, rulings and choices, that differ: %s" %
+          (", ".join(bad) or "none"))
+    return bad
+
+
+
 def main():
     bad = []
     head = git("rev-parse", AT).decode().strip()
@@ -150,34 +186,13 @@ def main():
 
     # ------------------------------------------------------------ the requirements registry
     P = "v2/ecad/tools/pcb_requirements.yaml"
-    ta, tb = show(H2_SOURCE, P), show(head, P)
-    a, b = yaml.safe_load(ta), yaml.safe_load(tb)
-    print("\n[%s: sha256/16 %s to %s]" % (P, s16(ta), s16(tb)))
-    for k in sorted(set(a) | set(b)):
-        if k in ("needs", "owner_rulings", "session_choices", "open_items", "closed_items", "records"):
-            continue
-        if a.get(k) != b.get(k):
-            print("  top-level %s: %r -> %r" % (k, a.get(k), b.get(k)))
-    for sec in ("needs", "owner_rulings", "session_choices", "open_items", "closed_items", "records"):
-        A = {x["id"]: x for x in a.get(sec) or []}
-        B = {x["id"]: x for x in b.get(sec) or []}
-        added = [k for k in B if k not in A]
-        removed = [k for k in A if k not in B]
-        changed = [k for k in A if k in B and A[k] != B[k]]
-        print("  %s: %d to %d; added %s; removed %s; changed %s" % (
-            sec, len(A), len(B), " ".join(added) or "none", " ".join(removed) or "none", len(changed) or "none"))
-        for k in changed:
-            fields = sorted(f for f in set(A[k]) | set(B[k]) if A[k].get(f) != B[k].get(f))
-            print("      %s: %s" % (k, ", ".join(fields)))
-            if sec == "records":
-                bad += ["registry %s.%s" % (k, f) for f in fields if f in KEEP]
-            if sec in ("needs", "owner_rulings", "session_choices"):
-                bad.append("registry %s %s changed" % (sec, k))
-        if sec in ("needs", "owner_rulings", "session_choices", "records") and (added or removed):
-            bad.append("registry %s added or removed" % sec)
-    print("  record fields outside the readings and notes that differ: %s" %
-          (", ".join(x for x in bad if x.startswith("registry ")) or "none"))
-
+    bad += registry(P, H2_SOURCE, head, "H2's source commit")
+    base = (yaml.safe_load(show(head, P)).get("baseline_state") or "").split()
+    if len(base) == 3 and base[:2] == ["BASELINED", "at"]:
+        bad += registry(P, git("rev-parse", base[2]).decode().strip(), head, "the commit its baseline_state names")
+    else:
+        print("\n[%s: baseline_state is %r, no baseline commit to compare with]" % (P, " ".join(base)))
+        bad.append("registry baseline_state")
     # ------------------------------------------------------------ the interfaces registry
     P = "v2/ecad/tools/pcb_interfaces.yaml"
     ta, tb = show(H2_SOURCE, P), show(head, P)
