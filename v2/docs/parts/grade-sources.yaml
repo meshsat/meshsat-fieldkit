@@ -1245,11 +1245,20 @@ coded:
     quote: ' Operation Temperature Range: -40°C to +85°C'
 - code: C51897884
   part: SS14 (Zhengxin, SMB)
-  maker: ''
+  maker: Zhengxin
+  min_c: -55
+  max_c: 125
+  kind: TJ
   where: inside
   source:
-    class: none read
-  note: 'no range read in any sheet or record this session: TBD'
+    class: maker sheet as JLCPCB serves it
+    document: v2/vendor/zhengxin/zhengxin-ss12-ss120-c51897884.pdf
+    url: https://jlcpcb.com/api/file/downloadByFileSystemAccessId/8756866952981819392
+    sha256: a9f62a305c3afb750242a3d33eb66272dcdbff9ff8bf13ab00d8a7dda3edece2
+    fetched_utc: '2026-09-27T14:05:57Z'
+    clause: p.1
+    quote: 'Junction temperature Tj -55~+125 (the SS12 to SS14 column; SS15 to SS120 read -55 ~+150)'
+  note: 'filed by stream w4ae (SC-71); storage -55 ~+150'
 - code: C5251182
   part: B2B-PH-K-S-GW
   maker: JST

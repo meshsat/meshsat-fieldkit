@@ -1,0 +1,145 @@
+{
+ "kind": "schematic",
+ "phase_labels": [
+  [
+   "E42P"
+  ],
+  [
+   "E42P"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N1_title_date": 1,
+   "N2_page_frame_date": 4,
+   "L1_comment1_phase": 1,
+   "L2_frame_phase": 4
+  },
+  {
+   "N1_title_date": 1,
+   "N2_page_frame_date": 4,
+   "L1_comment1_phase": 1,
+   "L2_frame_phase": 4
+  }
+ ],
+ "result": "DIFFERENT",
+ "parts_only_committed": [],
+ "parts_only_other": [
+  "Q11",
+  "R58"
+ ],
+ "parts_changed": [
+  [
+   "D7",
+   [
+    "SS14 flyback across fan 1",
+    "D_SMB",
+    ""
+   ],
+   [
+    "SS14 flyback across fan 1",
+    "D_SMB",
+    "C51897884"
+   ]
+  ],
+  [
+   "D8",
+   [
+    "SS14 flyback across fan 2",
+    "D_SMB",
+    ""
+   ],
+   [
+    "SS14 flyback across fan 2",
+    "D_SMB",
+    "C51897884"
+   ]
+  ],
+  [
+   "J_BLK",
+   [
+    "solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 1-7 GND, 8 SHORE_INHIBIT, 9 USB D+, 10 USB D-, 11 GND, 12 spare (VIN_RAW crosses on P_VR since EQ-16)",
+    "PogoTargets_2x6",
+    ""
+   ],
+   [
+    "solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 1-7 GND, 8 SHORE_INHIBIT, 9 USB D+, 10 USB D-, 11 GND, 12 HOT-R1 hot stop line, open drain Q11 (SC-50; VIN_RAW crosses on P_VR since EQ-16)",
+    "PogoTargets_2x6",
+    ""
+   ]
+  ]
+ ],
+ "lib_symbols_only_committed": [],
+ "lib_symbols_only_other": [],
+ "lib_symbols_changed": [
+  "meshsat_ic:U10"
+ ],
+ "line_counts": [
+  17411,
+  17473
+ ],
+ "changed_lines": 3220,
+ "changed_lines_sample": [
+  "-\t\t\t\t\t\t(at 0 38.10 0)",
+  "+\t\t\t\t\t\t(at 0 36.83 0)",
+  "-\t\t\t\t\t\t(at 0 -38.10 0)",
+  "+\t\t\t\t\t\t(at 0 -36.83 0)",
+  "-\t\t\t\t\t\t\t(start -22.86 36.83)",
+  "-\t\t\t\t\t\t\t(end 22.86 -36.83)",
+  "+\t\t\t\t\t\t\t(start -22.86 35.56)",
+  "+\t\t\t\t\t\t\t(end 22.86 -35.56)",
+  "-\t\t\t\t\t\t\t(at -25.40 34.29 0)",
+  "+\t\t\t\t\t\t\t(at -25.40 33.02 0)",
+  "-\t\t\t\t\t\t\t(at -25.40 31.75 0)",
+  "+\t\t\t\t\t\t\t(at -25.40 30.48 0)",
+  "-\t\t\t\t\t\t\t(at -25.40 29.21 0)",
+  "+\t\t\t\t\t\t\t(at -25.40 27.94 0)",
+  "-\t\t\t\t\t\t\t(at -25.40 26.67 0)",
+  "+\t\t\t\t\t\t\t(at -25.40 25.40 0)",
+  "-\t\t\t\t\t\t\t(at -25.40 24.13 0)",
+  "+\t\t\t\t\t\t\t(at -25.40 22.86 0)",
+  "-\t\t\t\t\t\t\t(at -25.40 21.59 0)",
+  "+\t\t\t\t\t\t\t(at -25.40 20.32 0)",
+  "-\t\t\t\t\t\t\t(at -25.40 19.05 0)",
+  "+\t\t\t\t\t\t\t(at -25.40 17.78 0)",
+  "-\t\t\t\t\t\t\t(at -25.40 16.51 0)",
+  "+\t\t\t\t\t\t\t(at -25.40 15.24 0)",
+  "-\t\t\t\t\t\t\t(at -25.40 13.97 0)",
+  "+\t\t\t\t\t\t\t(at -25.40 12.70 0)",
+  "-\t\t\t\t\t\t\t(at -25.40 11.43 0)",
+  "+\t\t\t\t\t\t\t(at -25.40 10.16 0)",
+  "-\t\t\t\t\t\t\t(at -25.40 8.89 0)",
+  "+\t\t\t\t\t\t\t(at -25.40 7.62 0)",
+  "-\t\t\t\t\t\t\t(at -25.40 6.35 0)",
+  "+\t\t\t\t\t\t\t(at -25.40 5.08 0)",
+  "-\t\t\t\t\t\t\t(at -25.40 3.81 0)",
+  "+\t\t\t\t\t\t\t(at -25.40 2.54 0)",
+  "-\t\t\t\t\t\t\t(at -25.40 1.27 0)",
+  "+\t\t\t\t\t\t\t(at -25.40 0.00 0)",
+  "-\t\t\t\t\t\t\t(at -25.40 -1.27 0)",
+  "+\t\t\t\t\t\t\t(at -25.40 -2.54 0)",
+  "-\t\t\t\t\t\t\t(at -25.40 -3.81 0)",
+  "+\t\t\t\t\t\t\t(at -25.40 -5.08 0)",
+  "-\t\t\t\t\t\t\t(at -25.40 -6.35 0)",
+  "+\t\t\t\t\t\t\t(at -25.40 -7.62 0)",
+  "-\t\t\t\t\t\t\t(at -25.40 -8.89 0)",
+  "+\t\t\t\t\t\t\t(at -25.40 -10.16 0)",
+  "-\t\t\t\t\t\t\t(at 25.40 34.29 180)",
+  "+\t\t\t\t\t\t\t(at -25.40 -12.70 0)",
+  "-\t\t\t\t\t\t\t(at 25.40 31.75 180)",
+  "+\t\t\t\t\t\t\t(at 25.40 33.02 180)",
+  "-\t\t\t\t\t\t\t(at 25.40 29.21 180)",
+  "+\t\t\t\t\t\t\t(at 25.40 30.48 180)",
+  "-\t\t\t\t\t\t\t(at 25.40 26.67 180)",
+  "+\t\t\t\t\t\t\t(at 25.40 27.94 180)",
+  "-\t\t\t\t\t\t\t(at 25.40 24.13 180)",
+  "+\t\t\t\t\t\t\t(at 25.40 25.40 180)",
+  "-\t\t\t\t\t\t\t(at 25.40 21.59 180)",
+  "+\t\t\t\t\t\t\t(at 25.40 22.86 180)",
+  "+\t\t\t\t\t\t\t(length 2.54)",
+  "+\t\t\t\t\t\t\t(name \"HOT_R1_G\"",
+  "+\t\t\t\t\t\t\t\t(effects",
+  "+\t\t\t\t\t\t\t\t\t(font"
+ ],
+ "bucket_hint": "PARTS"
+}

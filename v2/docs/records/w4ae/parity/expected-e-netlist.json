@@ -1,0 +1,8 @@
+{"components_added": ["Q11", "R58"],
+ "components_removed": [],
+ "components_changed": {"D7": ["field:LCSC", "property:LCSC"], "D8": ["field:LCSC", "property:LCSC"], "J_BLK": ["value"]},
+ "nets_added": ["HOT_R1_G"],
+ "nets_removed": ["unconnected-(U10-NC-Pad30)"],
+ "pins_moved": {"U10.30": ["unconnected-(U10-NC-Pad30)", "HOT_R1_G"]},
+ "pins_added": {"Q11.1": "HOT_R1_G", "Q11.2": "GND", "Q11.3": "BLK_SPARE", "R58.1": "HOT_R1_G", "R58.2": "GND"},
+ "pins_removed": {}}

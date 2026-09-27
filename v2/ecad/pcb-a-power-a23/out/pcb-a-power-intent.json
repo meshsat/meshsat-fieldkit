@@ -1,6 +1,6 @@
 {
  "board": "pcb-a-power",
- "written": "2026-09-27 12:33",
+ "written": "2026-09-27 14:51",
  "bypass": [
   {
    "cap": "C8",

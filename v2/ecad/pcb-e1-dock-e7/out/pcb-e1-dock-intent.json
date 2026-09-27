@@ -1,6 +1,6 @@
 {
  "board": "pcb-e1-dock",
- "written": "2026-09-27 10:43",
+ "written": "2026-09-27 14:51",
  "bypass": [
   {
    "cap": "C16",
@@ -565,6 +565,16 @@
    "v_max": 3.3,
    "v_min": 0.0,
    "basis": "the water electrodes' ADC input (U10 GPIO26/ADC0): electrode A is +3V3_E6 through R38 (1M), and water between the pads lifts electrode B against R39 (1M) to ground, so at most +3V3_E6's 3.3 V; a sense input, no supply"
+  },
+  "FAN1_SW": {
+   "v_max": 17.35,
+   "v_min": 0.0,
+   "basis": "mixer fan 1's switched low side (J_FAN1 pin 2, Q9's drain): 0 V with the FET on, and at turn-off CELL_F's 16.8 V plus D7's forward drop, at most 0.55 V at 2.0 A (Zhengxin SS14, SS12 THRU SS120 Electrical Characteristics, p.1; LCSC C51897884; v2/vendor/zhengxin/zhengxin-ss12-ss120-c51897884.pdf), twenty times the fan's declared 0.1 A"
+  },
+  "FAN2_SW": {
+   "v_max": 17.35,
+   "v_min": 0.0,
+   "basis": "mixer fan 2's switched low side (J_FAN2 pin 2, Q10's drain): 0 V with the FET on, and at turn-off CELL_F's 16.8 V plus D8's forward drop, at most 0.55 V at 2.0 A (Zhengxin SS14, SS12 THRU SS120 Electrical Characteristics, p.1; LCSC C51897884; v2/vendor/zhengxin/zhengxin-ss12-ss120-c51897884.pdf), twenty times the fan's declared 0.1 A"
   }
  },
  "pair_classes": {

@@ -262,7 +262,7 @@ part("F1", "Device", "Fuse", "25 A mini blade (Keystone 3568 holder): pack node 
 # were, on the old VBAT. They are about 25 uF effective at 16.8 V. The VSYS side keeps its own 50 uF effective (the
 # same section): C23 to C25 at Q10 and the input capacitors of every converter on VBAT. D1 stays on VBAT.
 c("C1", "47u 25V", "CELL_FUSED", "GND", "C100u"); c("C2", "47u 25V", "CELL_FUSED", "GND", "C100u"); c("C3", "10u 25V 1210", "CELL_FUSED", "GND", "C1210"); kisch.tvs("D1", "SMCJ18A (VBAT clamp)", "VBAT", "GND", "TVSC", "C374030")   # TRN-001 / S-09 (ts-tvs, 26 Sep 2026): a one-way part, drawn K/A by kisch.tvs() (Device:D_Zener, K pin 1 on VBAT, A pin 2 on GND; direction from the part number, recorded in the intent under "clamps"); nets, value, land and code as before (Littelfuse C374030, v2/vendor/power/littelfuse-smcj-series-tvs.pdf)
-part("J_DOCK", "Connector_Generic", "Conn_01x12", "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare (VIN_RAW crosses on J_VR1-4 since EQ-16)", "POGO12",
+part("J_DOCK", "Connector_Generic", "Conn_01x12", "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 HOT-R1 hot stop line from E's open drain, pulled up by R216 (SC-50; VIN_RAW crosses on J_VR1-4 since EQ-16)", "POGO12",
      {"1": "GND", "2": "GND", "3": "GND", "4": "GND", "5": "GND", "6": "GND", "7": "GND", "8": "SHORE_INHIBIT", "9": "USB_E6_P", "10": "USB_E6_N", "11": "GND", "12": "DOCK_SPARE"})
 # --- main power control LTC2954-1 (ltc2954.pdf): the panel MAIN button, EN to every converter's enable (RAIL_EN), INT = shutdown request, KILL from the panel controller through Q1
 # S-08, 26 September 2026 (MESHSAT-1357; W2 F-SQ-02 and F-SQ-03, W5-F2, F5, F6, F15, F16, W6-F15). Six changes to
@@ -1474,6 +1474,25 @@ part("U28", "Interface_Expansion", "PCA9555PW", "PCA9555PW (0x24): power-good li
  "4": "USBX_EN", "5": "USBX_FLT", "6": "EXP2_SPC", "7": "EXP2_SPD", "8": "PA_PGOOD", "9": "POE_PGOOD", "10": "HF_PGOOD", "11": "PD_PGOOD",
  "13": "PD_SW_EN", "14": "PD_UFP", "15": "EMCON_EF_FLT", "16": "EXP2_SP4", "17": "EXP2_SP5", "18": "EXP2_SP6", "19": "EXP2_SP7", "20": "EXP2_SP8"}, "C2864778")
 c("C106", "100n", "+3V3", "GND"); c("C107", "100n", "+3V3", "GND"); r("R110", "10k", "EXP_INT", "+3V3"); r("R111", "4.7k", "MON_EN", "GND"); r("R112", "4.7k", "HEAT_EN", "GND"); r("R113", "4.7k", "D8_EN", "GND"); r("R114", "4.7k", "POE_SW_EN", "GND")   # S-08 and S-14, 26 Sep 2026
+# HOT-R1, THE HOT STOP'S LINE, THIS BOARD'S HALF (S-57, SC-50, REQ-077; board A and E stream w4ae, 27 September 2026,
+# MESHSAT-1357). The dock's spare contact J_DOCK pin 12 (DOCK_SPARE) already landed on U27 P15 (pin 18, an input: the TI
+# PCA9555's configuration registers reset to 1111 1111, every I/O an input, SCPS131J 8.3.1 and 8.5.2) and on TP21; board E now drives it from its sensor
+# controller's GPIO19 through the open drain Q11 (gen_sch_e.py, HOT-R1), and R216 is its pull-up, 10 k to this board's
+# +3V3, the rail U27 runs on, so the line's high is U27's own VCC (VIH 0.7 x VCC, VIL 0.3 x VCC, SCPS131J 6.3) and never
+# above it. With board E absent, unpowered or its controller lost, R216 holds the line high, which SC-50 reads as "the
+# sensor controller lost" and the panel controller answers with SC-49's fallback on board B's TMP117; with this board off,
+# +3V3 is down and the open drain can drive nothing into it. Q11 sinks R216's 0.33 mA plus U27's own pull-up (IIL at most
+# 100 uA, SCPS131J 6.5). HOW H2 REACHES PI_KILL, from the netlists (v2/docs/records/w4ae/hot_r1_trace.py prints the chain): every
+# edge on P15 sets U27's INT (SCPS131J 8.4.1), which is EXP_INT (R110 10 k to +3V3, shared with U28), out on J_AB1 pin 13 to
+# board B and J_PANEL pin 6 to the panel controller's GPIO24 (board C U3); the panel controller reads U27 over SDA and SCL
+# (J_AB1 pins 11 and 12) and, on the held-low state, writes the e-paper and raises PI_KILL (C U3 GPIO19, J_PANEL pin 25,
+# B, J_AB1 pin 10), which is Q1's gate here: Q1 pulls KILL, the LTC2954 U1 drops RAIL_EN, and every converter this board
+# enables stops. It is FIRMWARE in two controllers (SC-49: a control, not a protection); whether a firmware-free stage is
+# needed behind it is S-58 (EQ-23), which this line leaves open and can serve (a decode of its held-low state). R216 is the
+# 10 k 0603 of R110 beside it, written as R110 is (lcsc_fill.py fills "10k" on an 0603 with C25804), so the two stay one
+# BOM line. Session decision under the owner's standing rule of 26 September 2026 (SC-50 as taken); reverse with board
+# E's half.
+r("R216", "10k", "DOCK_SPARE", "+3V3")   # HOT-R1: the dock line's pull-up (SC-50)
 for k in range(3, 9): tp("TP%d" % k, "EMCON_EF_FLT" if k == 3 else "EXP2_SP%d" % k)   # 27 Sep 2026 (EQ-17): U28 P1.2 reads U39's FLT, TP3 kept on it
 for k, nm in enumerate(("USBX_EN", "USBX_FLT", "EXP2_SPC", "EXP2_SPD"), 1): tp("TP%d" % (22 + k), nm)   # D-12, 26 Sep 2026: U28's first two spares now switch and watch the wall host port's VBUS, and keep their test points
 # --- the A to B ribbon J_AB1 (2x13, top side, at (-90, 76)) and the D8 mezzanine harness J_MEZZ1 (2x8)
@@ -1552,7 +1571,7 @@ SECTIONS = [("PACK NODE OVER THE DOCK BLOCK (32.56): 9 A PINS, PRE-CHARGE, 25 A 
             ("POE RAIL: LM5176 BOOST 54 V 0.6 A, INA226 0x47", ["U16", "Q17", "Q18", "Q19", "Q20", "L10", "R66", "R67", "R68", "C150", "R70", "C75", "C76", "C77", "C78", "C79", "C80", "R71", "R72", "R73", "R74", "R75", "C81", "C82", "C83", "C84", "C85", "C176", "C177", "C197", "C221", "R121", "D15", "D16", "U17", "J_54V"]),
             ("USB-C PD OUTLET: TPS25740A + LM5176 5/9/15 V STAGE", ["U19", "Q21", "Q22", "Q25", "Q26", "L11", "R76", "R77", "R78", "C151", "R80", "C86", "C87", "C88", "C89", "C90", "C91", "R81", "R127", "R128", "R133", "R134", "C92", "C116", "C117", "C118", "C119", "C174", "C175", "C198", "C222", "R135", "R136", "R137", "U18", "Q27", "R138", "R139", "R140", "R141", "R142", "R143", "C93", "C94", "C95", "C96", "C97", "C120", "D4", "D17", "D18", "J_USBC_OUT", "U31"]),
             ("EFUSES: MONITOR, HEATER (12.0 V BUCK), D8 5 V", ["U21", "C98", "R90", "R91", "R92", "R93", "C99", "J_MON", "U22", "C100", "R94", "R95", "R96", "R97", "C101", "U33", "L12", "C157", "C158", "C159", "C160", "C161", "C162", "R191", "R192", "R193", "R194", "J_HEAT", "U23", "C102", "R98", "R99", "R100", "R101", "C103", "J_MEZZ_PWR1"]),
-            ("EMCON GATES 74AUP1G08 (BOTH LINES) ON THEIR OWN SUPPLY (U39 EFUSE, U40), OUTLET INTERLOCK 74LVC08, EXPANDERS 0x21 0x24", ["U39", "C224", "R209", "R210", "R211", "R212", "C225", "R213", "U40", "C226", "R214", "R215", "U35", "C215", "U36", "C216", "U37", "C217", "U38", "C218", "R207", "R208", "U26", "U30", "C153", "R102", "C104", "R103", "R104", "U27", "U28", "C106", "C107", "R110", "R111", "R112", "R113", "R114"] + ["TP%d" % k for k in range(3, 9)] + ["TP23", "TP24", "TP25", "TP26"]),
+            ("EMCON GATES 74AUP1G08 (BOTH LINES) ON THEIR OWN SUPPLY (U39 EFUSE, U40), OUTLET INTERLOCK 74LVC08, EXPANDERS 0x21 0x24", ["U39", "C224", "R209", "R210", "R211", "R212", "C225", "R213", "U40", "C226", "R214", "R215", "U35", "C215", "U36", "C216", "U37", "C217", "U38", "C218", "R207", "R208", "U26", "U30", "C153", "R102", "C104", "R103", "R104", "U27", "U28", "C106", "C107", "R110", "R216", "R111", "R112", "R113", "R114"] + ["TP%d" % k for k in range(3, 9)] + ["TP23", "TP24", "TP25", "TP26"]),
             ("RIBBON J_AB1 2x13, WALL-PORT RIBBON J_AB2 2x5, MEZZANINE HARNESS J_MEZZ1 2x8, GLENAIR WALL USB HOST PORT", ["J_AB1", "J_AB2", "J_MEZZ1", "R116", "R117", "R118", "J_USBW", "U29", "U32", "C154", "R186", "R187", "R188", "R189", "C155", "R190", "C156"] + [p["ref"] for p in P if p["ref"] == "R145"]),
             ("ELEVEN BLIND-MATE RF SITES: SMA JACK (TOP) + SMP-MAX RECEPTACLE (UNDERSIDE)", ["J_RF%d" % k for k in range(1, 12)] + ["J_BM%d" % k for k in range(1, 12)]),
             ("TEST POINTS, FLAGS", ["TP%d" % k for k in range(9, 23)] + ["TP27"] + [p["ref"] for p in P if p["ref"].startswith("#FLG")])]

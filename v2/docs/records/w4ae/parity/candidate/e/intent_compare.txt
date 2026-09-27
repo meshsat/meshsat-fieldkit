@@ -1,0 +1,2 @@
+nodes added: FAN1_SW
+nodes added: FAN2_SW

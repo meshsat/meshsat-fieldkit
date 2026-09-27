@@ -1,0 +1,75 @@
+{
+ "kind": "bom",
+ "rows": [
+  107,
+  108
+ ],
+ "rows_only_committed": [
+  [
+   "D7",
+   "SS14 flyback across fan 1",
+   "Diode_SMD:D_SMB",
+   "",
+   "1"
+  ],
+  [
+   "D8",
+   "SS14 flyback across fan 2",
+   "Diode_SMD:D_SMB",
+   "",
+   "1"
+  ],
+  [
+   "J_BLK?",
+   "solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 1-7 GND, 8 SHORE_INHIBIT, 9 USB D+, 10 USB D-, 11 GND, 12 spare (VIN_RAW crosses on P_VR since EQ-16)",
+   "meshsat:PogoTargets_2x6",
+   "",
+   "1"
+  ],
+  [
+   "R1,R18,R26,R52,R56",
+   "100k",
+   "Resistor_SMD:R_0603_1608Metric",
+   "C25803",
+   "5"
+  ]
+ ],
+ "rows_only_other": [
+  [
+   "D7",
+   "SS14 flyback across fan 1",
+   "Diode_SMD:D_SMB",
+   "C51897884",
+   "1"
+  ],
+  [
+   "D8",
+   "SS14 flyback across fan 2",
+   "Diode_SMD:D_SMB",
+   "C51897884",
+   "1"
+  ],
+  [
+   "J_BLK?",
+   "solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 1-7 GND, 8 SHORE_INHIBIT, 9 USB D+, 10 USB D-, 11 GND, 12 HOT-R1 hot stop line, open drain Q11 (SC-50; VIN_RAW crosses on P_VR since EQ-16)",
+   "meshsat:PogoTargets_2x6",
+   "",
+   "1"
+  ],
+  [
+   "Q11",
+   "2N7002 HOT-R1 open drain: GPIO19 high pulls the dock line BLK_SPARE low (1 G, 2 S, 3 D)",
+   "Package_TO_SOT_SMD:SOT-23",
+   "",
+   "1"
+  ],
+  [
+   "R1,R18,R26,R52,R56,R58",
+   "100k",
+   "Resistor_SMD:R_0603_1608Metric",
+   "C25803",
+   "6"
+  ]
+ ],
+ "result": "DIFFERENT"
+}

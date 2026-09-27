@@ -1,0 +1,116 @@
+{
+ "kind": "schematic",
+ "phase_labels": [
+  [
+   "A65"
+  ],
+  [
+   "A65"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N1_title_date": 1,
+   "N2_page_frame_date": 16,
+   "L1_comment1_phase": 1,
+   "L2_frame_phase": 16
+  },
+  {
+   "N1_title_date": 1,
+   "N2_page_frame_date": 16,
+   "L1_comment1_phase": 1,
+   "L2_frame_phase": 16
+  }
+ ],
+ "result": "DIFFERENT",
+ "parts_only_committed": [],
+ "parts_only_other": [
+  "R216"
+ ],
+ "parts_changed": [
+  [
+   "J_DOCK",
+   [
+    "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare (VIN_RAW crosses on J_VR1-4 since EQ-16)",
+    "PogoPins_2x6",
+    ""
+   ],
+   [
+    "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 HOT-R1 hot stop line from E's open drain, pulled up by R216 (SC-50; VIN_RAW crosses on J_VR1-4 since EQ-16)",
+    "PogoPins_2x6",
+    ""
+   ]
+  ]
+ ],
+ "lib_symbols_only_committed": [],
+ "lib_symbols_only_other": [],
+ "lib_symbols_changed": [],
+ "line_counts": [
+  41481,
+  41502
+ ],
+ "changed_lines": 3073,
+ "changed_lines_sample": [
+  "-\t\t(property \"Value\" \"spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare (VIN_RAW crosses on J_VR1-4 since EQ-16)\" (at 40.64 27.94 0",
+  "+\t\t(property \"Value\" \"spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 HOT-R1 hot stop line from E's open drain, pulled up by R216 (SC-5",
+  "-\t(label \"DOCK_SPARE\" (at 473.71 966.47 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"2fb2cd7e-6ac2-5dcb-b509-6feff2b462a1\"))",
+  "+\t(label \"DOCK_SPARE\" (at 472.44 966.47 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"2fb2cd7e-6ac2-5dcb-b509-6feff2b462a1\"))",
+  "-\t(symbol (lib_id \"power:+3V3\") (at 458.47 923.29 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (fields_autoplaced yes) (uuid \"baaa460f-54ef-5b06-b71f-2191280db21d\")",
+  "-\t\t(property \"Reference\" \"#PWR251\" (at 459.74 922.02 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t(symbol (lib_id \"Device:R\") (at 490.22 952.50 180) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid \"baaa460f-54ef-5b06-b71f-2191280db21d\")",
+  "+\t\t(property \"Reference\" \"R216\" (at 491.64 953.36 0) (effects (font (size 1.27 1.27)) (justify left bottom)))",
+  "+\t\t(property \"Value\" \"10k\" (at 498.66 953.36 0) (effects (font (size 1.27 1.27)) (justify left bottom)))",
+  "+\t\t(property \"Footprint\" \"Resistor_SMD:R_0603_1608Metric\" (at 490.22 952.50 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t\t(property \"Datasheet\" \"\" (at 490.22 952.50 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t\t(property \"Description\" \"\" (at 490.22 952.50 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t\t(pin \"1\" (uuid \"44bf4bf3-90dc-5915-b7f1-235847531ca6\"))",
+  "+\t\t(pin \"2\" (uuid \"de92a116-2fc6-5901-97d5-8df082761d10\"))",
+  "+\t\t(instances (project \"pcb-a-power\" (path \"/5663fbcf-143d-5acc-8e65-3ad892df2ec3\" (reference \"R216\") (unit 1))))",
+  "+\t)",
+  "+\t(symbol (lib_id \"power:+3V3\") (at 490.22 946.15 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (fields_autoplaced yes) (uuid \"ac551662-f240-5ef0-ab9d-f6f4b0804765\")",
+  "+\t\t(property \"Reference\" \"#PWR251\" (at 491.49 944.88 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t\t(property \"Value\" \"+3V3\" (at 491.49 947.42 0) (effects (font (size 1.27 1.27)) (justify left bottom)))",
+  "+\t\t(property \"Footprint\" \"\" (at 490.22 946.15 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t\t(property \"Datasheet\" \"\" (at 490.22 946.15 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t\t(property \"Description\" \"\" (at 490.22 946.15 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t\t(pin \"1\" (uuid \"ed579f0b-b715-53be-89fc-df7b8a6f8779\"))",
+  "+\t\t(instances (project \"pcb-a-power\" (path \"/5663fbcf-143d-5acc-8e65-3ad892df2ec3\" (reference \"#PWR251\") (unit 1))))",
+  "+\t)",
+  "+\t(symbol (lib_id \"power:+3V3\") (at 458.47 923.29 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (fields_autoplaced yes) (uuid \"1b7e9622-98d9-5910-8f61-f62e2cbd1bf8\")",
+  "+\t\t(property \"Reference\" \"#PWR252\" (at 459.74 922.02 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "-\t\t(pin \"1\" (uuid \"44bf4bf3-90dc-5915-b7f1-235847531ca6\"))",
+  "-\t\t(instances (project \"pcb-a-power\" (path \"/5663fbcf-143d-5acc-8e65-3ad892df2ec3\" (reference \"#PWR251\") (unit 1))))",
+  "-\t)",
+  "-\t(symbol (lib_id \"power:GND\") (at 458.47 979.17 180) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (fields_autoplaced yes) (uuid \"de92a116-2fc6-5901-97d5-8df082761d10\")",
+  "-\t\t(property \"Reference\" \"#PWR252\" (at 459.74 977.90 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t\t(pin \"1\" (uuid \"134be7d8-b4b2-5f77-8294-a0b8e3c3e09e\"))",
+  "+\t\t(instances (project \"pcb-a-power\" (path \"/5663fbcf-143d-5acc-8e65-3ad892df2ec3\" (reference \"#PWR252\") (unit 1))))",
+  "+\t)",
+  "+\t(symbol (lib_id \"power:GND\") (at 458.47 979.17 180) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (fields_autoplaced yes) (uuid \"0b5cd981-941f-5776-92f5-29df93ff83a9\")",
+  "+\t\t(property \"Reference\" \"#PWR253\" (at 459.74 977.90 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "-\t\t(pin \"1\" (uuid \"ac551662-f240-5ef0-ab9d-f6f4b0804765\"))",
+  "-\t\t(instances (project \"pcb-a-power\" (path \"/5663fbcf-143d-5acc-8e65-3ad892df2ec3\" (reference \"#PWR252\") (unit 1))))",
+  "-\t)",
+  "-\t(symbol (lib_id \"power:+3V3\") (at 515.62 928.37 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (fields_autoplaced yes) (uuid \"ed579f0b-b715-53be-89fc-df7b8a6f8779\")",
+  "-\t\t(property \"Reference\" \"#PWR253\" (at 516.89 927.10 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "+\t\t(pin \"1\" (uuid \"836a5a53-c71b-5d62-b67e-e716bce0b8a7\"))",
+  "+\t\t(instances (project \"pcb-a-power\" (path \"/5663fbcf-143d-5acc-8e65-3ad892df2ec3\" (reference \"#PWR253\") (unit 1))))",
+  "+\t)",
+  "+\t(symbol (lib_id \"power:+3V3\") (at 515.62 928.37 0) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (fields_autoplaced yes) (uuid \"65027141-12b8-5568-a338-97fc2cc60764\")",
+  "+\t\t(property \"Reference\" \"#PWR254\" (at 516.89 927.10 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))",
+  "-\t\t(pin \"1\" (uuid \"1b7e9622-98d9-5910-8f61-f62e2cbd1bf8\"))",
+  "-\t\t(instances (project \"pcb-a-power\" (path \"/5663fbcf-143d-5acc-8e65-3ad892df2ec3\" (reference \"#PWR253\") (unit 1))))",
+  "-\t)",
+  "-\t(symbol (lib_id \"Device:C\") (at 515.62 937.26 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid \"134be7d8-b4b2-5f77-8294-a0b8e3c3e09e\")",
+  "+\t\t(pin \"1\" (uuid \"ebb85e36-67ae-56a2-8854-e8d617ed2877\"))",
+  "+\t\t(instances (project \"pcb-a-power\" (path \"/5663fbcf-143d-5acc-8e65-3ad892df2ec3\" (reference \"#PWR254\") (unit 1))))",
+  "+\t)",
+  "+\t(symbol (lib_id \"Device:C\") (at 515.62 937.26 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid \"ebc48b78-c182-5b9e-a0b6-d57ab7f27857\")",
+  "-\t\t(pin \"1\" (uuid \"0b5cd981-941f-5776-92f5-29df93ff83a9\"))",
+  "-\t\t(pin \"2\" (uuid \"836a5a53-c71b-5d62-b67e-e716bce0b8a7\"))",
+  "+\t\t(pin \"1\" (uuid \"8ab2f277-6f6c-595e-8db7-aa146297a7c7\"))",
+  "+\t\t(pin \"2\" (uuid \"f0d95a65-86a8-5072-946f-22460734cee7\"))",
+  "-\t(symbol (lib_id \"power:GND\") (at 515.62 943.61 180) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (fields_autoplaced yes) (uuid \"65027141-12b8-5568-a338-97fc2cc60764\")"
+ ],
+ "bucket_hint": "PARTS"
+}

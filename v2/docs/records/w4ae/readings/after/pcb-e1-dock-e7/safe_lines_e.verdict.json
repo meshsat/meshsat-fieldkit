@@ -1,0 +1,72 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "safe_lines.py",
+  "files": {
+   "boardtable.py": "41bd92e61f12c374",
+   "intent.py": "f1ac033e0f3c10f1",
+   "kisch.py": "3e28374d15be25e0",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "port_protect.py": "2d69facd3c25c8a4",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "safe_lines.py": "8529487f405ec55d",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "7e3540d47e33f75e",
+  "unresolved": []
+ },
+ "counts": {
+  "floating": 0,
+  "lines": 2,
+  "listened": 1,
+  "on_netlist": 2
+ },
+ "denominator": 2,
+ "evidence": [
+  "SHORE_INHIBIT: safe low, pull down [R26 (100k)], pull up [none], drivers [none], reads [Q8.1 (2N7002: SHORE_INHIBIT high p), U10.18 (RP2040 sensor controller (US)], leaves on [J_BLK.8]",
+  "BLK_SPARE: safe high, pull down [none], pull up [none], drivers [none], reads [Q11.3 (2N7002 HOT-R1 open drain: GP)], leaves on [J_BLK.12]"
+ ],
+ "inputs": {
+  "board": "e",
+  "intent": {
+   "path": "out/pcb-e1-dock-intent.json",
+   "sha256_16": "dad1163afd720b5e"
+  },
+  "netlist": {
+   "content16": "dc06b84a39724641",
+   "path": "out/pcb-e1-dock.net",
+   "sha256_16": "56adc9746d61c4e0"
+  }
+ },
+ "missing_input": null,
+ "note": "1 line(s) this board reads hold the safe state with its own copper; the rest are driven here or only cross it",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "SCH-004": "0d3209a18476cc88"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "SCH-004"
+ ],
+ "runtime": {
+  "python": "3.12.3"
+ },
+ "tool": "safe_lines_e",
+ "tools": {
+  "git_head": "f6ce8d3f3daf",
+  "tools_tree_sha": "4d1f2ef5eb283d82"
+ },
+ "ts": "2026-09-27T14:54:01Z",
+ "verdict": "PASS",
+ "version": "f6ce8d3f3daf",
+ "writer": {
+  "file": "safe_lines.py",
+  "sha16": "8529487f405ec55d"
+ }
+}

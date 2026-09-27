@@ -303,7 +303,12 @@
   {
    "pattern": "BLK_SPARE",
    "class": "LOW_SPEED_OR_DC",
-   "basis": "a spare contact on the dock block, unconnected to any driver"
+   "basis": "the hot stop line HOT-R1 (SC-50, S-57): Q11's open drain toggles it at 1 or 5 Hz or holds it low, board A pulls it up; a slow logic level"
+  },
+  {
+   "pattern": "HOT_R1_G",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "Q11's gate from the sensor controller's GPIO19 with R58 (100 k) to ground: the hot stop line's 1 or 5 Hz drive or a held level"
   },
   {
    "pattern": "GND_V",
@@ -400,9 +405,16 @@
    "safe_state": "low",
    "role": "listens",
    "why": "Q8's gate is on it and its drain holds the hot-swap controller's undervoltage pin, so a high inhibits the input; R26 holds it down, which admits shore power with the panel absent. That is deliberate and it is not the cold-charge protection: the protection that matters is the pack thermistor on the charger's own JEITA input on board A, in hardware, and this line is the panel's convenience over it"
+  },
+  {
+   "net": "BLK_SPARE",
+   "hazard": "held low it reads on board A as the hot stop's H2, and the panel controller stops the kit",
+   "safe_state": "high",
+   "role": "source",
+   "why": "HOT-R1 (SC-50, S-57, 27 September 2026): this board drives the line and only pulls it down, through Q11's open drain from the sensor controller's GPIO19; R58 (100 k) holds Q11's gate off while the controller is unpowered, in reset or booting, so a lost controller releases the line, and board A's R216 then reads it high, the detector-lost state (SC-49's TMP117 fallback). The pull that holds the safe state is board A's, where the line is read"
   }
  ],
- "_safety_lines_why": "Board E reads one line of this kind, the shore inhibit, and holds it down itself. The declaration says in as many words why the de-asserted state is the safe one here: this line is a convenience and the cold-charge protection is the charger's own thermistor input on board A.",
+ "_safety_lines_why": "Board E reads one line of this kind, the shore inhibit, and holds it down itself. The declaration says in as many words why the de-asserted state is the safe one here: this line is a convenience and the cold-charge protection is the charger's own thermistor input on board A. Since 27 September 2026 it also drives one: BLK_SPARE, the hot stop line HOT-R1 (SC-50), as its source through an open drain, whose released state board A holds high.",
  "_e12_route_why": "E12 (18 September 2026, /root/erf on the hub): the regenerated E design with Q7 corrected, SENSE and SW classes and FR_CLASS_CLEAR=SENSE:SW:1.0, 200 passes: routed 0 hard by the router and 4 unrouted of 94, 282 vias; the import then read annular_width 10 because pcbnew.ImportSpecctraSES leaves every via drill undefined and the class's drill took the ring off ten pre-laid 0.6/0.3 CELL_F vias (fixed at every import, ses_via_drill.py). Re-imported with the restore: hard 0, unrouted 6, the closers 3, the CELL_F widen trial kept, dc_density 4 of 4 before via_parallel, netlist_board PASS 818 (Q7 answered), check_pcb_e PASS; refused at the routed-board gate for the three opens, so E11 stays the board and E12 is the measurement. via_parallel's first form laid 39 barrels and made VIN_RAW worse (a barrel at 4.86 A against 1.05); the fixer judges its rounds by the worst barrel now. The instrument reading (ANA-001) was not taken: the finish stopped at the gate.",
  "_e13_route_why": "E13 (18 September 2026, /root/erf): E12's design with the SENSE via at 0.7/0.3, the drill restore at the import and the round-judging fixer. Round 1: 0 hard, 2 open of 94 in 11 minutes, 198 vias; closers to 1 open, /DC_HS (the LM5069 hot-swap output from the Q7/U6 cluster to the L2/C6 filter, 55 mm); round 2 (via_costs) 3 open, not finished; round 3 (260 passes) ran. The board-wide stub router fails DC_HS at 0.8 mm: the run from Q7's drain tab to the filter is the generator's to lay as locked copper, or the filter goes beside the FET. Landed 04:58 UTC: round 3 (260 passes) worse, round 1 restored, hard 0 and 2 open at the gate; not adopted.",
  "_e14_route_why": "E14 (18 September 2026, /root/erf14): E13 plus DC_HS in one locked B.Cu zone from Q7's source pads to L2 pin 1 (a 5.5 mm band east along y -97, north at x -60, 4.5 mm east into the pad; vias in Q7's pads and inside L2 pin 1). Placed board hard 0; route 0 hard, 3 open of 94, 208 vias, DC_HS closed by the band; the closers to ONE open, /USB_E6_N from J_BLK pin 10 to R30 across 173 mm of the strip, which is E7's hard net again; refused at the gate; round 2 (via_costs) running. If the rounds do not land it, E15 pre-lays the USB_E6 pair with the board-wide stub router before the route (prelay_nets), one variable.",
