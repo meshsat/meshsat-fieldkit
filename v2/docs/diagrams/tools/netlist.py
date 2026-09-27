@@ -36,7 +36,18 @@ GATES = {
     "74LVC1G06": ([((2,), 4)], "v2/vendor/ti/ti-sn74lvc1g06.pdf, Table 4-1 (DBV: 2 A, 4 Y)"),
     "74LVC1G34": ([((2,), 4)], "v2/vendor/diodes/diodes-74lvc1g34.pdf, pin assignments (SOT25: 2 A, 4 Y)"),
     "SN74LVC1G00DBVR": ([((1, 2), 4)], "v2/vendor/ti/ti-sn74lvc1g00.pdf, pin functions (DBV: 1 A, 2 B, 4 Y)"),
+    # round 8 (26 and 27 September 2026): the single gates boards A, B and C put on the EMCON lines
+    "SN74LVC1G04DBVR": ([((2,), 4)], "v2/vendor/ti/ti-sn74lvc1g04.pdf (SCES214AF), Pin Functions (DBV: 1 NC, 2 A, 4 Y)"),
+    "SN74LVC1G08DBVR": ([((1, 2), 4)], "v2/vendor/ti/ti-sn74lvc1g08.pdf (SCES217AA), Pin Functions (DBV: 1 A, 2 B, 4 Y)"),
+    "SN74AUP1G08DBVR": ([((1, 2), 4)], "v2/vendor/ti/ti-sn74aup1g08.pdf (SCES502Q), Table 4-1 (DBV: 1 A, 2 B, 4 Y)"),
+    "SN74LVC2G06DBVR": ([((1,), 6), ((3,), 4)], "v2/vendor/ti/ti-sn74lvc2g06.pdf (SCES307J), Pin Functions and the DBV "
+                        "top view (1 1A, 3 2A, 4 2Y, 6 1Y; open-drain outputs)"),
+    "SN74LVC1G57DBVR": ([((1, 3, 6), 4)], "v2/vendor/ti/ti-sn74lvc1g57.pdf (SCES414P), Pin Functions (DBV: 1 In1, 3 In0, "
+                        "6 In2, 4 Y; a configurable gate, so the map says only which inputs reach Y)"),
 }
+# Logic families whose part must have a map above before a line is followed through it: a value starting with one of
+# these and matching no GATES key is refused by control_lines.py rather than drawn as a plain IC (review of 27 Sep 2026).
+LOGIC_PREFIXES = ("SN74", "74LVC", "74AUP", "74AHC", "74HC")
 
 
 def sha16(relpath):
@@ -136,7 +147,10 @@ class Netlist:
         self.parts = {}
         for c in _find(_find(t, "components")[0], "comp"):
             props = {_val(p, "name"): _val(p, "value") for p in _find(c, "property")}
-            self.parts[_val(c, "ref")] = dict(value=_val(c, "value") or "", footprint=_val(c, "footprint") or "", props=props)
+            ls = (_find(c, "libsource") or [[]])[0]
+            lib = "%s:%s" % (_val(ls, "lib") or "", _val(ls, "part") or "")
+            self.parts[_val(c, "ref")] = dict(value=_val(c, "value") or "", footprint=_val(c, "footprint") or "", props=props,
+                                              lib=lib, lib_description=_val(ls, "description") or "")
         self.nets, self.pins, self.fn = {}, {}, {}
         for n in _find(_find(t, "nets")[0], "net"):
             name = _val(n, "name")
@@ -161,6 +175,16 @@ class Netlist:
         """The part's identity as the value text leads with it (the generators write the MPN or the part class first)."""
         v = self.value(ref)
         return re.split(r"[ :,(]", v, 1)[0] if v else ""
+
+    def fet_pin(self, ref, fn):
+        """The one pin of a FET whose symbol names it `fn` (G, S or D), or None when the symbol names none or several."""
+        ps = [p for p in self.pins.get(ref, {}) if self.fn.get((ref, p)) == fn]
+        return ps[0] if len(ps) == 1 else None
+
+    def n_channel(self, ref):
+        """True when the part's library symbol calls it an N-channel FET (its libsource description or ki_keywords)."""
+        p = self.parts.get(ref, {})
+        return "N-Channel" in (p.get("lib_description", "") + " " + (p.get("props", {}).get("ki_keywords") or ""))
 
     def other_pin_nets(self, ref, pin):
         return {p: n for p, n in self.pins.get(ref, {}).items() if p != pin}

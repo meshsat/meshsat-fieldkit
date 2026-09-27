@@ -125,11 +125,11 @@ z
 " clip-path="url(#p7a952f39df)" style="fill: none; stroke-dasharray: 4.8,2.4; stroke-dashoffset: 0; stroke: #455a64; stroke-width: 0.8; stroke-linejoin: miter"/>
    </g>
    <g id="patch_10">
-    <path d="M 246.600103 657.210812 
-L 1009.800904 657.210812 
-L 1009.800904 136.229691 
-L 246.600103 136.229691 
-L 246.600103 657.210812 
+    <path d="M 234.384714 671.305492 
+L 1022.016293 671.305492 
+L 1022.016293 122.135011 
+L 234.384714 122.135011 
+L 234.384714 671.305492 
 z
 " clip-path="url(#p7a952f39df)" style="fill: none; stroke-dasharray: 0.6,0.99; stroke-dashoffset: 0; stroke: #9e9e9e; stroke-width: 0.6; stroke-linejoin: miter"/>
    </g>
@@ -647,57 +647,62 @@ L 2.5 2.5
 " style="stroke: #9e9e9e"/>
     </defs>
     <g clip-path="url(#p7a952f39df)">
-     <use xlink:href="#m45e26aafc0" x="233.612117" y="547.063501" style="fill: #9e9e9e; stroke: #9e9e9e"/>
+     <use xlink:href="#m45e26aafc0" x="233.612117" y="590.913616" style="fill: #9e9e9e; stroke: #9e9e9e"/>
     </g>
    </g>
    <g id="line2d_39">
     <g clip-path="url(#p7a952f39df)">
-     <use xlink:href="#m45e26aafc0" x="233.612117" y="496.949085" style="fill: #9e9e9e; stroke: #9e9e9e"/>
+     <use xlink:href="#m45e26aafc0" x="233.612117" y="526.182494" style="fill: #9e9e9e; stroke: #9e9e9e"/>
     </g>
    </g>
    <g id="line2d_40">
     <g clip-path="url(#p7a952f39df)">
-     <use xlink:href="#m45e26aafc0" x="233.612117" y="446.834668" style="fill: #9e9e9e; stroke: #9e9e9e"/>
+     <use xlink:href="#m45e26aafc0" x="233.612117" y="461.451373" style="fill: #9e9e9e; stroke: #9e9e9e"/>
     </g>
    </g>
    <g id="line2d_41">
     <g clip-path="url(#p7a952f39df)">
-     <use xlink:href="#m45e26aafc0" x="233.612117" y="346.605835" style="fill: #9e9e9e; stroke: #9e9e9e"/>
+     <use xlink:href="#m45e26aafc0" x="233.612117" y="396.720252" style="fill: #9e9e9e; stroke: #9e9e9e"/>
     </g>
    </g>
    <g id="line2d_42">
     <g clip-path="url(#p7a952f39df)">
-     <use xlink:href="#m45e26aafc0" x="233.612117" y="246.377002" style="fill: #9e9e9e; stroke: #9e9e9e"/>
+     <use xlink:href="#m45e26aafc0" x="233.612117" y="331.98913" style="fill: #9e9e9e; stroke: #9e9e9e"/>
     </g>
    </g>
    <g id="line2d_43">
     <g clip-path="url(#p7a952f39df)">
-     <use xlink:href="#m45e26aafc0" x="1022.78889" y="597.177918" style="fill: #9e9e9e; stroke: #9e9e9e"/>
+     <use xlink:href="#m45e26aafc0" x="233.612117" y="267.258009" style="fill: #9e9e9e; stroke: #9e9e9e"/>
     </g>
    </g>
    <g id="line2d_44">
     <g clip-path="url(#p7a952f39df)">
-     <use xlink:href="#m45e26aafc0" x="1022.78889" y="547.063501" style="fill: #9e9e9e; stroke: #9e9e9e"/>
+     <use xlink:href="#m45e26aafc0" x="233.612117" y="202.526888" style="fill: #9e9e9e; stroke: #9e9e9e"/>
     </g>
    </g>
    <g id="line2d_45">
     <g clip-path="url(#p7a952f39df)">
-     <use xlink:href="#m45e26aafc0" x="1022.78889" y="496.949085" style="fill: #9e9e9e; stroke: #9e9e9e"/>
+     <use xlink:href="#m45e26aafc0" x="1022.78889" y="526.182494" style="fill: #9e9e9e; stroke: #9e9e9e"/>
     </g>
    </g>
    <g id="line2d_46">
     <g clip-path="url(#p7a952f39df)">
-     <use xlink:href="#m45e26aafc0" x="1022.78889" y="446.834668" style="fill: #9e9e9e; stroke: #9e9e9e"/>
+     <use xlink:href="#m45e26aafc0" x="1022.78889" y="461.451373" style="fill: #9e9e9e; stroke: #9e9e9e"/>
     </g>
    </g>
    <g id="line2d_47">
     <g clip-path="url(#p7a952f39df)">
-     <use xlink:href="#m45e26aafc0" x="1022.78889" y="296.491419" style="fill: #9e9e9e; stroke: #9e9e9e"/>
+     <use xlink:href="#m45e26aafc0" x="1022.78889" y="396.720252" style="fill: #9e9e9e; stroke: #9e9e9e"/>
     </g>
    </g>
    <g id="line2d_48">
     <g clip-path="url(#p7a952f39df)">
-     <use xlink:href="#m45e26aafc0" x="1022.78889" y="196.262586" style="fill: #9e9e9e; stroke: #9e9e9e"/>
+     <use xlink:href="#m45e26aafc0" x="1022.78889" y="331.98913" style="fill: #9e9e9e; stroke: #9e9e9e"/>
+    </g>
+   </g>
+   <g id="line2d_49">
+    <g clip-path="url(#p7a952f39df)">
+     <use xlink:href="#m45e26aafc0" x="1022.78889" y="267.258009" style="fill: #9e9e9e; stroke: #9e9e9e"/>
     </g>
    </g>
    <g id="patch_35">
@@ -736,6 +741,14 @@ L 1164.779737 63
     <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #8d6e00" x="289.928192" y="206.703089" transform="rotate(-0 289.928192 206.703089)">B compute 330 x 200 (above A; drawn as its outline)</text>
    </g>
    <g id="text_20">
+    <g id="patch_39">
+     <path d="M 272.623387 156.660338 
+L 474.482371 156.660338 
+L 474.482371 148.201744 
+L 272.623387 148.201744 
+z
+" style="fill: #ffffff"/>
+    </g>
     <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #37474f" x="273.223387" y="154.500572" transform="rotate(-0 273.223387 154.500572)">C panel backer ring (four strips, under the face plate)</text>
    </g>
    <g id="text_21">
@@ -789,7 +802,7 @@ L 1164.779737 63
    <g id="text_36">
     <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: middle; fill: #0d47a1" x="628.200503" y="97.787757" transform="rotate(-0 628.200503 97.787757)">C3 connector plate 114.0 x 68.3 (back wall, outside)</text>
    </g>
-   <g id="patch_39">
+   <g id="patch_40">
     <path d="M 1015.831419 684.502288 
 Q 628.200916 684.502288 240.570414 684.502288 
 " style="fill: none; stroke: #37474f; stroke-width: 0.7; stroke-linecap: round"/>
@@ -803,7 +816,7 @@ L 244.570414 682.502288
 " style="fill: none; stroke: #37474f; stroke-width: 0.7; stroke-linecap: round"/>
    </g>
    <g id="text_37">
-    <g id="patch_40">
+    <g id="patch_41">
      <path d="M 508.018277 700.458988 
 L 748.38273 700.458988 
 L 748.38273 685.250394 
@@ -813,7 +826,7 @@ z
     </g>
     <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: middle" x="628.200503" y="694.924222" transform="rotate(-0 628.200503 694.924222)">cavity at the floor 373.94 (drafted 2 deg to 381.55 at the rim)</text>
    </g>
-   <g id="patch_41">
+   <g id="patch_42">
     <path d="M 108.326076 128.423482 
 Q 108.326076 396.719812 108.326076 665.016141 
 " style="fill: none; stroke: #37474f; stroke-width: 0.7; stroke-linecap: round"/>
@@ -827,7 +840,7 @@ L 106.326076 661.016141
 " style="fill: none; stroke: #37474f; stroke-width: 0.7; stroke-linecap: round"/>
    </g>
    <g id="text_38">
-    <g id="patch_42">
+    <g id="patch_43">
      <path d="M 105.489869 448.309705 
 L 105.489869 345.130799 
 L 90.281275 345.130799 
@@ -837,7 +850,7 @@ z
     </g>
     <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(99.955103 444.334705) rotate(-90)">cavity at the floor 259.64</text>
    </g>
-   <g id="patch_43">
+   <g id="patch_44">
     <path d="M 969.954124 179.55778 
 Q 628.200221 179.55778 286.446318 179.55778 
 " style="fill: none; stroke: #37474f; stroke-width: 0.7; stroke-linecap: round"/>
@@ -851,7 +864,7 @@ L 290.446318 177.55778
 " style="fill: none; stroke: #37474f; stroke-width: 0.7; stroke-linecap: round"/>
    </g>
    <g id="text_39">
-    <g id="patch_44">
+    <g id="patch_45">
      <path d="M 613.303042 180.897775 
 L 643.097964 180.897775 
 L 643.097964 165.689181 
@@ -861,7 +874,7 @@ z
     </g>
     <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: middle" x="628.200503" y="175.36301" transform="rotate(-0 628.200503 175.36301)">B 330</text>
    </g>
-   <g id="patch_45">
+   <g id="patch_46">
     <path d="M 875.99031 263.081808 
 Q 628.200322 263.081808 380.410334 263.081808 
 " style="fill: none; stroke: #37474f; stroke-width: 0.7; stroke-linecap: round"/>
@@ -875,7 +888,7 @@ L 384.410334 261.081808
 " style="fill: none; stroke: #37474f; stroke-width: 0.7; stroke-linecap: round"/>
    </g>
    <g id="text_40">
-    <g id="patch_46">
+    <g id="patch_47">
      <path d="M 613.31066 264.421803 
 L 643.090347 264.421803 
 L 643.090347 249.213209 
@@ -885,7 +898,7 @@ z
     </g>
     <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: middle" x="628.200503" y="258.887037" transform="rotate(-0 628.200503 258.887037)">A 240</text>
    </g>
-   <g id="patch_47">
+   <g id="patch_48">
     <path d="M 998.453544 621.713101 
 Q 942.091467 621.713101 885.729391 621.713101 
 " style="fill: none; stroke: #37474f; stroke-width: 0.7; stroke-linecap: round"/>
@@ -899,7 +912,7 @@ L 889.729391 619.713101
 " style="fill: none; stroke: #37474f; stroke-width: 0.7; stroke-linecap: round"/>
    </g>
    <g id="text_41">
-    <g id="patch_48">
+    <g id="patch_49">
      <path d="M 927.383692 635.5817 
 L 956.804786 635.5817 
 L 956.804786 620.373106 
@@ -914,12 +927,14 @@ z
    </g>
   </g>
   <g id="text_43">
-   <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(11.88 838.632891)">Orange solid: cavity wall at the floor (Peli STEP); orange dashed: at the rim Z 108.97; orange dotted: flat floor to the R 15.88 fillet.</text>
-   <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(11.88 847.03125)">Brown dash-dot: 1450PF frame window; brown dotted: the frame skirt's inner face (M21d); brown thin: the frame's outer face at the skirt bottom (Z 86.00; 0.30 wider per side at its widest). Grey dashed: face plate C1 377.2 x 263.0 (chosen); grey dotted: panel1450.py's plate 365.5 x 249.5 (as coded, superseded).</text>
-   <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(11.88 855.429609)">Brown solid: C6 setting legs (column; the dashed box is the foot on the flat floor). Black dots: the four M3 rods. Blue ticks: C2 arrestors at Z 59 on the RF entry plates; grey x: panel1450.py's wall jacks at Z 88 (as coded, superseded).</text>
-   <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(11.88 863.827969)">NOT SHOWN: parts on the boards (only board B's outline), cables and jumpers, the pack's hold-down (not designed, S-27), the lid and the QMX tray, the Xenarc and e-paper on the face, fasteners, and any tolerance band: CASE-MARGINS.md section 3 holds the margins, 35 of 70 OPEN.</text>
+   <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(11.88 821.836172)">Orange solid: cavity wall at the floor (Peli STEP); orange dashed: at the rim Z 108.97; orange dotted: flat floor to the R 15.88 fillet.</text>
+   <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(11.88 830.234531)">Brown dash-dot: 1450PF frame window; brown dotted: the frame skirt's inner face (M21d); brown thin: the frame's outer face at the skirt bottom (Z 86.00; 0.30 wider per side at its widest). Grey dashed: face plate C1 377.2 x 263.0 (chosen);</text>
+   <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(11.88 838.632891)">grey dotted: panel1450.py's plate 377.2 x 263.0 (as coded, superseded).</text>
+   <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(11.88 847.03125)">Brown solid: C6 setting legs (column; the dashed box is the foot on the flat floor). Black dots: the four M3 rods. Blue ticks: C2 arrestors at Z 59 on the RF entry plates; grey x: panel1450.py's wall jacks at Z 59 (as coded, superseded).</text>
+   <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(11.88 855.429609)">NOT SHOWN: parts on the boards (only board B's outline), cables and jumpers, the pack's hold-down (not designed, S-27), the lid and the QMX tray, the Xenarc and e-paper on the face, fasteners, and any tolerance band: CASE-MARGINS.md section</text>
+   <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(11.88 863.827969)">3 holds the margins, 35 of 70 OPEN.</text>
    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(11.88 872.226328)">Board P's place at the block's south end is INFERRED (ASSEMBLY.md section 3, CASE-MARGINS.md M5); its hold-down and the block's are owed. Nominal geometry establishes no fit (CASE-MARGINS.md section 1).</text>
-   <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(11.88 880.624687)">Sources by sha256/16: CASE-MARGINS.md 275a3083db30a7bf, frame_seat.py 93049a16bf89ed30, frame_seat.out 214e915b985518cb, panel1450.py df4959c6b4b81825, pcb_board_facts.yaml 4a0474ddac0b1404.</text>
+   <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(11.88 880.624687)">Sources by sha256/16: CASE-MARGINS.md 0fc449b72532ba7c, frame_seat.py 959b9326f614f72a, frame_seat.out a65c0792a7a08c08, panel1450.py 3bdb88df98260244, pcb_board_facts.yaml 07af4d0f2b166694.</text>
    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'" transform="translate(11.88 889.231641)">Every other input is in v2/docs/diagrams/case-drawings.md. Generated by v2/docs/diagrams/tools/case_drawings.py. Design drawing of an unbuilt prototype: nothing has been built, fitted to a case or measured.</text>
   </g>
  </g>

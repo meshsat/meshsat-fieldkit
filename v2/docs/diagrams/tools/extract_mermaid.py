@@ -3,8 +3,9 @@
 
 The Markdown documents stay the editable originals: each ```mermaid block is written unchanged to
 v2/docs/diagrams/src/<name>.mmd, preceded only by a Mermaid front-matter title that names the document, the section, the
-line range, the commit and the document's sha256/16, and says it is a design diagram of an unbuilt prototype. The
-rendered SVG and PDF (tools/render.sh) therefore carry their own source revision.
+line range and the document's sha256/16, and says it is a design diagram of an unbuilt prototype. The rendered SVG and
+PDF (tools/render.sh) therefore carry their source document's identity; the tree revision they were drawn at is in
+MANIFEST.json (a commit cannot be named inside a file it contains).
 
 A block is named after its document and the section heading above it; the names are listed in SOURCES so that a new
 block or a moved one is reported instead of silently renamed.

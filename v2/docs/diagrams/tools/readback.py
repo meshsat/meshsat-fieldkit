@@ -4,10 +4,14 @@
 For each SVG in v2/docs/diagrams/svg/: it must parse as XML, carry no <foreignObject> (so any SVG viewer, not only a
 browser, shows its text), and state in its own text that it is a design diagram of an unbuilt prototype. Each SVG is then
 rasterised in a headless Chromium (Playwright) to <out>/<name>.png, the image a reader's browser shows, for a person or
-an agent to look at. Each PDF in pdf/ is rasterised with pdftoppm to <out>/<name>-pdf-1.png when pdftoppm exists.
+an agent to look at. Each PDF in pdf/ is rasterised with pdftoppm to <out>/<name>-pdf-1.png, READBACK_MAX_PX on its long
+side like the SVGs, and its page is measured with pdfinfo against the SVG's natural size: a PDF printed smaller than
+0.9 of the drawing's natural size is a problem (the review of 27 September 2026 found the Mermaid PDFs fitted to a
+600 pt page, their text at 1 to 2 pt). Each check's figures are printed, so the output is the record of the readback.
 
 Usage: python3 v2/docs/diagrams/tools/readback.py [out_dir]   (default: a new temporary directory, printed)
-Needs: python3 with playwright and a Chromium it can launch (CHROME_BIN to name one); pdftoppm (poppler) optional."""
+Needs: python3 with playwright and a Chromium it can launch (CHROME_BIN to name one); pdftoppm and pdfinfo (poppler) for
+the PDF checks, which are reported as not run when poppler is missing."""
 import glob, os, re, shutil, subprocess, sys, tempfile
 import xml.etree.ElementTree as ET
 
@@ -15,6 +19,23 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 D = os.path.dirname(HERE)
 PHRASE = "unbuilt prototype"
 MAX_PX = int(os.environ.get("READBACK_MAX_PX", "2400"))
+
+
+def natural_pt(root):
+    """The drawing's natural width and height in points: Mermaid writes width="100%" over a viewBox in CSS pixels
+    (0.75 pt each); matplotlib writes width and height in pt over a viewBox in pt."""
+    vb = [float(x) for x in (root.get("viewBox") or "0 0 0 0").replace(",", " ").split()]
+    w = root.get("width") or ""
+    if w.endswith("pt"):
+        return float(w[:-2]), float((root.get("height") or "0pt")[:-2])
+    return vb[2] * 0.75, vb[3] * 0.75
+
+
+def pdf_page_pt(pdf):
+    r = subprocess.run(["pdfinfo", pdf], capture_output=True, text=True, check=True).stdout
+    m = re.search(r"Page size:\s+([0-9.]+) x ([0-9.]+) pts", r)
+    pages = re.search(r"Pages:\s+(\d+)", r)
+    return float(m.group(1)), float(m.group(2)), int(pages.group(1)) if pages else 0
 
 
 def text_of(svg_path):
@@ -59,10 +80,24 @@ def main():
             pg.screenshot(path=os.path.join(out, n + ".png"), timeout=120000)
             print("%-34s drawing %6.0f x %-6.0f  raster %5d x %-5d  %s" % (n, w, h, W, H, os.path.join(out, n + ".png")))
         br.close()
-    if shutil.which("pdftoppm"):
+    if shutil.which("pdftoppm") and shutil.which("pdfinfo"):
         for p in sorted(glob.glob(os.path.join(D, "pdf", "*.pdf"))):
             n = os.path.basename(p)[:-4]
-            subprocess.run(["pdftoppm", "-r", "60", "-f", "1", "-l", "1", "-png", p, os.path.join(out, n + "-pdf")], check=True)
+            pw, ph, pages = pdf_page_pt(p)
+            svg = os.path.join(D, "svg", n + ".svg")
+            if os.path.exists(svg):
+                nw, nh = natural_pt(ET.parse(svg).getroot())
+                k = pw / nw if nw else 0
+                print("%-34s pdf %8.1f x %-7.1f pt, %d page(s); drawing %8.1f x %-7.1f pt natural; scale %.2f" % (n, pw, ph, pages, nw, nh, k))
+                if k < 0.9:
+                    bad.append("%s: the PDF prints the drawing at %.2f of its natural size" % (n, k))
+            else:
+                bad.append("%s: a PDF with no SVG beside it" % n)
+            if pages != 1:
+                bad.append("%s: the PDF has %d pages, 1 expected" % (n, pages))
+            subprocess.run(["pdftoppm", "-scale-to", str(MAX_PX), "-f", "1", "-l", "1", "-png", p, os.path.join(out, n + "-pdf")], check=True)
+    else:
+        print("PDF checks not run: pdftoppm or pdfinfo (poppler) not found")
     print("problems: %s" % ("none" if not bad else ""))
     for b in bad:
         print("  " + b)

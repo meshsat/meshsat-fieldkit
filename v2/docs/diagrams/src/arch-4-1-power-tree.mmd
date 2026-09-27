@@ -1,5 +1,5 @@
 ---
-title: "ARCHITECTURE.md, 4.1 The power tree as generated (lines 270 to 302 of the document with sha256/16 4ad3ba63938e8d85): design diagram of an unbuilt prototype"
+title: "ARCHITECTURE.md, 4.1 The power tree as generated (lines 270 to 302 of the document with sha256/16 5cf45b4783dbe092): design diagram of an unbuilt prototype"
 ---
 flowchart LR
   subgraph PB["board P"]
@@ -13,7 +13,7 @@ flowchart LR
     SOL["solar"] --> TRK["F2 10 A, LT8705A tracker (bench-fitted), 6.16 A, ORed"] --> VR
   end
   CF -->|"dock block, 4 x 9 A pins"| CELLP
-  VR -->|"dock pins 1 to 4, 12.31 A declared"| FE
+  VR -->|"4 x 9 A dock pins J_VR1 to J_VR4, 14.10 A declared"| FE
   subgraph AB["board A"]
     FE["U2 LM5176 front end, 20 V; U34 restart guard"] --> CHG["U3 BQ25731 charger, 4S, no BATFET"] --> VBAT
     CELLP["CELL+"] --> AF1["F1 25 A"] --> RSR["R17 5 mOhm charge shunt"] --> VBAT["VBAT = VSYS 10.0 to 16.8 V"]

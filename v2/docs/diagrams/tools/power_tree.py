@@ -12,17 +12,27 @@ How an edge is established. TREE below names each stage: the board, the net it s
 parts it runs through (the controller or converter, the fuse, the series shunt). Which parts make a stage is typed in
 TREE; the tool checks that typing against the netlist and refuses the build (exit status 1, nothing written) unless:
   1. a walk from the first net reaches the second through the stage's parts only, never through another rail of TREE
-     or a ground: a named FET source to drain; a named controller (a part driving the gate of a power FET, directly or
-     through one series resistor on a private net) is not crossed itself, only the FETs whose gates it drives are; any
-     other named part between any of its pins; an unnamed inductor only on a switching node of those parts;
+     or a ground: a named FET source to drain; a named controller (an IC, a U reference, driving the gate of a power FET,
+     directly or through one series resistor on a private net; a resistor on a gate is never a controller) is not
+     crossed itself, only the FETs whose gates it drives are; any other named part between any of its pins; an unnamed
+     inductor (a two-pin L reference, LEDs excluded) only on a switching node of those parts;
   2. every named part is required: with it left out (a controller together with the FETs it drives) the walk no longer
      arrives, so a controller is attributed by the gates it drives on the path, not by touching the stage's nets;
   3. a named part whose value text names rails of TREE names the stage's end net among them;
-  4. every negative control is refused: the five wrong entries of the review of 27 September 2026; for every two stages
+  4. a stage whose description names an enable net in parentheses, "(SLOT_EN1)", has a named IC with a pin on that net
+     or on a net joined to it by one series resistor (an enable divider's top leg); the page says which pin;
+  5. every negative control is refused: the five wrong entries of the review of 27 September 2026; for every two stages
      of a board, each with its ICs swapped for the other's, its shunts and fuses swapped, and the other's shunts and fuses
      or ICs added; and every stage built on a controller with the controller replaced by each other stage's IC while the
-     FETs it drove are named outright (the path still exists, only the attribution is wrong). The count is on the page.
-What stays typed: the stage's name and description, and which parts make it (checked, never found by the tool); a named
+     FETs it drove are named outright (the path still exists, only the attribution is wrong); and every stage with an
+     enable label with that label replaced by each other stage's enable net on the board. The count is on the page.
+Measured, not refused: every single-part substitution and cut-down of each stage (the method of the second review of 27
+September 2026): the ones the check accepts are listed on the page, split into those that still name parts of the
+typed stage's own path (a FET or an inductor in place of its controller: fewer parts named, not a different path) and
+those that name a part off it (a wrong attribution the check cannot see: a monitor, a feedback resistor or a load
+bridging the stage's two nets). The typed attributions are therefore also read by hand at each rebuild.
+What stays typed: the stage's name and description (only its enable net is checked), and which parts make it (checked,
+never found by the tool); a named
 IC is crossed between any of its pins (the walk does not know which pins of an integrated converter, eFuse or LDO carry
 the current); a stage may name fewer parts than it crosses (a controller's FETs need not be named: the page lists every
 part the walk used). Between boards, each lead is checked by the connector pin on each end.
@@ -56,7 +66,8 @@ TREE = [
     ("E", "DC_P", "DC_HS", ("U6", "R19"), "hot swap, 9 V on, 40 V off"),
     ("E", "DC_HS", "VIN_RAW", ("L2",), "common-mode choke"),
     ("E", "PV_IN", "PV_P", ("F2",), "solar fuse"),
-    ("E", "PV_P", "TRK_OUT", ("Q3", "U5", "R5", "Q6"), "solar tracker (bench-fitted)"),
+    # set 5 (S-47, stream w3de): R5 senses in the bottom switches' leg (TRK_CS to GND), off the PV_P to TRK_OUT path
+    ("E", "PV_P", "TRK_OUT", ("Q3", "U5", "Q6"), "solar tracker (bench-fitted)"),
     ("E", "TRK_OUT", "VIN_RAW", ("Q2", "U4"), "ideal diode OR"),
     ("A", "CELL+", "CELL_FUSED", ("F1",), "power board pack fuse"),
     ("A", "CELL_FUSED", "VBAT", ("R17",), "charge current shunt (loads on the VSYS side)"),
@@ -77,15 +88,15 @@ TREE = [
     ("A", "VHEAT_IN", "VHEAT", ("U33",), "heater 12.0 V"),
     ("A", "+5V_DEV", "+5V_D8", ("U23",), "board D feed eFuse (D8_EN)"),
     ("A", "+5V_DEV", "VBUS_WALL", ("U32",), "Glenair port VBUS eFuse"),
-    ("B", "+5V_S1", "+3V3_S1A", ("U103",), "slot 1 card 3.3 V"),
+    ("B", "+5V_S1", "+3V3_S1A", ("U103",), "slot 1 card 3.3 V, WiFi card 1 (S1A_EN, which EMCON_ON1 pulls low)"),
     ("B", "+5V_S1", "+3V3_S1B", ("U104",), "slot 1 NVMe 3.3 V"),
     ("B", "+5V_S1", "+1V0_S1", ("U105",), "slot 1 PCIe switch core"),
     ("B", "+3V3_S1A", "+3V3_M2C1", ("R165",), "card socket shunt"),
-    ("B", "+5V_S2", "+3V3_S2A", ("U203",), "slot 2 card 3.3 V"),
+    ("B", "+5V_S2", "+3V3_S2A", ("U203",), "slot 2 card 3.3 V, the 5G module (S2A_EN, which EMCON_ON2 pulls low)"),
     ("B", "+5V_S2", "+3V3_S2B", ("U204",), "slot 2 NVMe 3.3 V"),
     ("B", "+5V_S2", "+1V0_S2", ("U205",), "slot 2 PCIe switch core"),
     ("B", "+3V3_S2A", "+3V3_M2C2", ("R265",), "card socket shunt"),
-    ("B", "+5V_S3", "+3V3_S3A", ("U303",), "slot 3 card 3.3 V"),
+    ("B", "+5V_S3", "+3V3_S3A", ("U303",), "slot 3 card 3.3 V, WiFi card 2 (S3A_EN, which EMCON_ON3 pulls low)"),
     ("B", "+5V_S3", "+3V3_S3B", ("U304",), "slot 3 NVMe 3.3 V"),
     ("B", "+5V_S3", "+1V0_S3", ("U305",), "slot 3 PCIe switch core"),
     ("B", "+3V3_S3A", "+3V3_M2C3", ("R365",), "card socket shunt"),
@@ -109,14 +120,18 @@ TREE = [
     ("C", "+5V", "+3V3", ("U5",), "panel 3.3 V"),
     ("D", "+5V_D8", "+3V3_D8", ("U1",), "board D 3.3 V"),
     ("D", "+5V_D8", "+3V4_HUB", ("U17",), "hub 3.44 V"),
-    ("D", "+5V_D8", "+5V_SA", ("FB1",), "exciter supply ferrite"),
-    ("D", "+5V_D8", "VGG_SW", ("U15",), "PA gate bias (PA_KEY)"),
+    # round 8 (EMCON L4 on board D, 26 September 2026): the transmit chain draws through U21, on only while +3V3_D8, the
+    # supply of the KEY and PA_KEY gates, is above U21's UVLO (R90 and R91 set TXSUP_EN); FB1 and U15 moved onto +5V_TX
+    ("D", "+5V_D8", "+5V_TX", ("U21",), "transmit chain 5 V (TXSUP_EN: on while the EMCON gates' +3V3_D8 is in range)"),
+    ("D", "+5V_TX", "+5V_SA", ("FB1",), "exciter supply ferrite"),
+    ("D", "+5V_TX", "VGG_SW", ("U15",), "PA gate bias (PA_KEY)"),
 ]
 # leads between boards: (board, net, connector ref, board, net, connector ref, what)
 LEADS = [
     ("P", "PACK_P", "W_P", "E", "CELL+", "J_BATT", "pack lead, 12 AWG, XT60"),
     ("E", "CELL_F", "P_CP", "A", "CELL+", "J_CP1", "12 AWG to E5, four 9 A spring pins J_CP1..4"),
-    ("E", "VIN_RAW", "J_BLK", "A", "VIN_RAW", "J_DOCK", "E5 targets 1 to 4, spring pins J_DOCK 1 to 4"),
+    # set 5 (EQ-16, stream w3de): VIN_RAW crosses on board E's 12 AWG pad P_VR to E5 and board A's four 9 A pins
+    ("E", "VIN_RAW", "P_VR", "A", "VIN_RAW", "J_VR1", "12 AWG to E5, four 9 A spring pins J_VR1..4 (EQ-16)"),
     ("A", "+5V_S1", "J_5V_S1", "B", "+5V_S1", "J_5V_S1", "JST-VH lead, 16 AWG"),
     ("A", "+5V_S2", "J_5V_S2", "B", "+5V_S2", "J_5V_S2", "JST-VH lead, 16 AWG"),
     ("A", "+5V_S3", "J_5V_S3", "B", "+5V_S3", "J_5V_S3", "JST-VH lead, 16 AWG"),
@@ -170,7 +185,12 @@ def is_pass_fet(nl, ref):
 
 
 def is_inductor(nl, ref):
-    return ref.startswith("L") and len(nl.pins.get(ref, {})) == 2
+    return ref.startswith("L") and not ref.startswith("LED") and len(nl.pins.get(ref, {})) == 2
+
+
+def is_ic(ref):
+    """A controller must be an integrated circuit: a U reference. A resistor or capacitor on a FET's gate drives nothing."""
+    return ref.startswith("U")
 
 
 def drivers(nl, fet, rails):
@@ -196,7 +216,7 @@ def drivers(nl, fet, rails):
 def stage_graph(nl, via, rails, blocked):
     """The parts a stage may pass current through, as {ref: the pins it may be crossed between}.
     - a named FET: source to drain, never its gate;
-    - a named controller (a part that drives the gate of a power-package FET, directly or through one series resistor):
+    - a named controller (an IC that drives the gate of a power-package FET, directly or through one series resistor):
       never crossed itself; the FETs it drives are crossed source to drain;
     - any other named part (a fuse, a shunt, an integrated converter, eFuse, load switch or LDO): between any of its pins;
     - an unnamed two-pin inductor: only when one of its nets is a switching node, i.e. not a rail of the table and not a
@@ -204,7 +224,7 @@ def stage_graph(nl, via, rails, blocked):
     Parts in `blocked` are left out, and a blocked controller takes the FETs it drives with it."""
     fets = [q for q in nl.pins if is_pass_fet(nl, q)]
     drv = {q: drivers(nl, q, rails) for q in fets}
-    ctrl = {r for r in via if gate_pin(nl, r) is None and any(r in drv[q] for q in fets)}
+    ctrl = {r for r in via if gate_pin(nl, r) is None and is_ic(r) and any(r in drv[q] for q in fets)}
     live = [r for r in via if r not in blocked]
     cross = {}
     for r in live:
@@ -257,11 +277,42 @@ def named_rails(nl, ref, rails):
     return {r.lstrip("/") for r in rails if re.search(r"(?<![\w+])%s(?![\w])" % re.escape(r.lstrip("/")), v)}
 
 
-def prove(nl, frm, to, via):
+def enable_label(nl, what):
+    """The enable net a stage's description names in parentheses, as the netlist spells it, or None."""
+    m = re.search(r"\(([A-Z][A-Z0-9_+]*)[:;,)]", what or "")
+    return nl.net(m.group(1))[0] if m else None
+
+
+def enable_pin(nl, via, en):
+    """Where a named IC of the stage meets the enable net: 'U4 pin 3' on the net itself, or 'U13 pin 1 through R58' on a
+    net joined to it by one two-pin resistor whose pins sit on two nets. None when no named IC meets it."""
+    for r in via:
+        if not is_ic(r):
+            continue
+        for p, n in sorted(nl.pins.get(r, {}).items()):
+            if n == en:
+                return "%s pin %s (%s)" % (r, p, nl.fn.get((r, p)) or "")
+    for d in nl.nets.get(en, []):
+        rr = d["ref"]
+        if rr.startswith("R") and len(nl.pins.get(rr, {})) == 2:
+            far = [n for p, n in nl.pins[rr].items() if p != d["pin"]][0]
+            if far == en or is_ground(far):
+                continue
+            for r in via:
+                if not is_ic(r):
+                    continue
+                for p, n in sorted(nl.pins.get(r, {}).items()):
+                    if n == far:
+                        return "%s pin %s (%s) through %s" % (r, p, nl.fn.get((r, p)) or "", rr)
+    return None
+
+
+def prove(nl, frm, to, via, what=None, en_override=None):
     """Accept a stage only when (1) the walk from `frm` reaches `to` through the stage's parts as stage_graph() allows them,
     never through another rail of the table; (2) every named part is required: with it left out (a controller together
     with the FETs it drives) `to` is no longer reached; and (3) a named part whose value text names rails of the table
-    names `to` among them. Returns (ok, detail dict, why)."""
+    names `to` among them; (4) an enable net named in the description (or `en_override`, for the negative controls) is met
+    by a named IC, directly or through one series resistor. Returns (ok, detail dict, why)."""
     rails = {"/" + n.lstrip("/") for (b, f, t, _, _) in TREE if b == nl.board for n in (f, t)}
     rails = {nl.net(r)[0] or r for r in rails}
     f, t = nl.net(frm)[0], nl.net(to)[0]
@@ -294,11 +345,17 @@ def prove(nl, frm, to, via):
     for r, qs in det["ctrl"].items():
         if not qs:
             return False, det, "controller %s drives no FET on the path" % r
+    en = en_override or enable_label(nl, what)
+    if en:
+        pin = enable_pin(nl, via, en)
+        det["enable"] = "%s: %s" % (N.short(en), pin or "no named IC")
+        if not pin:
+            return False, det, "the description names enable %s, which no named IC of the stage meets" % N.short(en)
     return True, det, "reached through %s" % ", ".join(det["used"])
 
 
 NEG_CLASSES = ("the review's five", "ICs swapped", "shunts and fuses swapped", "shunts and fuses added", "ICs added",
-               "controller replaced, its FETs named")
+               "controller replaced, its FETs named", "enable label swapped")
 
 
 def negative_controls(nls):
@@ -307,7 +364,7 @@ def negative_controls(nls):
     the other's shunts or fuses added and with the other's ICs added (parts the path does not need); and every stage
     built on a controller with that controller replaced by each other stage's IC while the FETs it drove are named
     outright, so the path is still there and only the attribution is wrong."""
-    out = [(b, f, t, v, NEG_CLASSES[0], "review of 27 Sep 2026") for b, f, t, v in REVIEW_WRONG]
+    out = [(b, f, t, v, NEG_CLASSES[0], "review of 27 Sep 2026", None) for b, f, t, v in REVIEW_WRONG]
     for i, (b, f, t, v, _) in enumerate(TREE):
         for j, (b2, f2, t2, v2, _) in enumerate(TREE):
             if i == j or b != b2:
@@ -315,13 +372,13 @@ def negative_controls(nls):
             for cls, key in (("U", NEG_CLASSES[1]), ("RF", NEG_CLASSES[2])):
                 mine = [r for r in v if r[0] in cls]; theirs = [r for r in v2 if r[0] in cls]
                 if mine and theirs and set(mine) != set(theirs):
-                    out.append((b, f, t, tuple([r for r in v if r[0] not in cls] + theirs), key, "from the %s to %s stage" % (f2, t2)))
+                    out.append((b, f, t, tuple([r for r in v if r[0] not in cls] + theirs), key, "from the %s to %s stage" % (f2, t2), None))
             for cls, key in (("RF", NEG_CLASSES[3]), ("U", NEG_CLASSES[4])):
                 extra = [r for r in v2 if r[0] in cls and r not in v]
                 if extra:
-                    out.append((b, f, t, tuple(list(v) + extra), key, "from the %s to %s stage" % (f2, t2)))
-    for b, f, t, v, _ in TREE:
-        ok, det, _ = prove(nls[b], f, t, v)
+                    out.append((b, f, t, tuple(list(v) + extra), key, "from the %s to %s stage" % (f2, t2), None))
+    for b, f, t, v, what in TREE:
+        ok, det, _ = prove(nls[b], f, t, v, what)
         if not ok or not det["ctrl"]:
             continue
         fets = sorted({q for qs in det["ctrl"].values() for q in qs} - set(v))
@@ -331,8 +388,170 @@ def negative_controls(nls):
                 continue
             for r2 in v2:
                 if r2[0] == "U" and r2 not in v:
-                    out.append((b, f, t, tuple(base + [r2]), NEG_CLASSES[5], "%s of the %s to %s stage" % (r2, f2, t2)))
+                    out.append((b, f, t, tuple(base + [r2]), NEG_CLASSES[5], "%s of the %s to %s stage" % (r2, f2, t2), None))
+    for b, f, t, v, what in TREE:                  # the enable label check must tell one stage's enable from another's
+        en = enable_label(nls[b], what)
+        if not en:
+            continue
+        for b2, f2, t2, v2, what2 in TREE:
+            en2 = enable_label(nls[b2], what2) if b2 == b else None
+            if en2 and en2 != en and not enable_pin(nls[b], v, en2):
+                out.append((b, f, t, v, NEG_CLASSES[6], "the enable of the %s to %s stage, %s" % (f2, t2, N.short(en2)), en2))
     return out
+
+
+SWEEP_SKIP = ("TP", "C", "J", "H", "MH")      # never a stage's part: test points, capacitors, connectors, holes
+
+
+def substitution_sweep(nls):
+    """The second review's sweep of 27 September 2026, run on every build: each stage with one named part replaced by a
+    part on the nets its walk touched, and each stage cut down to one such part. Nothing is refused; the accepted ones are
+    returned as (board, from, to, typed parts, tried parts, walk, 'same path' or 'off the path'), where 'same path' means
+    every part put in was already crossed by the typed stage's own walk (fewer or other parts of the same path named)
+    and 'off the path' means a part the typed walk does not cross made the stage pass (a wrong attribution)."""
+    tried, acc = 0, []
+    for b, f, t, v, what in TREE:
+        nl = nls[b]
+        ok, det, _ = prove(nl, f, t, v, what)
+        fN, tN = nl.net(f)[0], nl.net(t)[0]
+        used = set(det.get("used", []))
+        nets = {x for x in ({fN, tN} | {nl.pins[r][p] for r in used for p in nl.pins[r]}) if x and not is_ground(x)}
+        cands = [c for c in sorted({d["ref"] for x in nets for d in nl.nets.get(x, [])} - set(v)) if not c.startswith(SWEEP_SKIP)]
+        tries = {(c,) for c in cands} | {tuple(v[:i]) + (c,) + tuple(v[i + 1:]) for i in range(len(v)) for c in cands}
+        for via in sorted(tries):
+            tried += 1
+            ok2, det2, _ = prove(nl, f, t, via, what)
+            if ok2:
+                new = [x for x in via if x not in v]
+                acc.append((b, f, t, v, via, det2.get("used", []), "same path" if set(new) <= used else "off the path"))
+    return tried, acc
+
+
+def netlist_findings(nls):
+    """Two-pin parts whose two pins sit on one net, on every board read: a part that does nothing as drawn."""
+    out = []
+    for b in BOARD_ORDER:
+        nl = nls[b]
+        for r, ps in sorted(nl.pins.items()):
+            if len(ps) == 2 and len(set(ps.values())) == 1 and not r.startswith(("TP", "J")):
+                out.append("board %s: %s (%s) has both pins on %s" % (b, r, nl.value(r)[:40], N.short(list(ps.values())[0])))
+    return out
+
+
+# Which edges are drawn orange ("a fuse or polyfuse"): decided by what the netlist says each named part is, never by its
+# designator. The earlier rule, a reference starting with F, drew board D's FB1 (a 600R ferrite bead) as a fuse and so
+# claimed overcurrent protection on the exciter supply that board D does not have (independent check of 27 September
+# 2026, pass 2). KiCad's two fuse symbols, plus the one fuse the netlists draw on a generic symbol, checked by its value
+# text: board P's F2, the Eaton SCF9550 self-control fuse on a three-pin connector symbol.
+FUSE_LIBS = ("Device:Fuse", "Device:Polyfuse")
+FUSE_BY_VALUE = {("P", "F2"): "self-control fuse"}
+FUSE_WORD = re.compile(r"\b(poly)?fuse\b", re.I)   # an "eFuse" is not a fuse: no word boundary before its F
+
+
+def is_fuse(nl, b, ref):
+    p = nl.parts[ref]
+    if p["lib"] in FUSE_LIBS:
+        return True
+    need = FUSE_BY_VALUE.get((b, ref))
+    return need is not None and need in p["value"]
+
+
+def fuse_problem(nls, b, via, what):
+    """None when the edge's colour and its typed description agree: every named part a fuse by the netlist exactly when
+    the description calls the stage a fuse or polyfuse. A typed fuse whose value text moved is a refusal too."""
+    for (fb, r), need in FUSE_BY_VALUE.items():
+        if fb == b and r in via and need not in nls[b].parts[r]["value"]:
+            return "%s %s is typed a fuse by its value text '%s'; the netlist's value reads '%s'" % (b, r, need, nls[b].value(r))
+    fuse = all(is_fuse(nls[b], b, r) for r in via)
+    if fuse != bool(FUSE_WORD.search(what)):
+        return "%s %s ('%s'): the description %s a fuse and the netlist's parts (%s) %s" % (
+            b, "+".join(via), what, "names" if FUSE_WORD.search(what) else "does not name",
+            ", ".join("%s %s" % (r, nls[b].parts[r]["lib"]) for r in via), "are all fuses" if fuse else "are not all fuses")
+    return None
+
+
+def ohms(v):
+    m = re.match(r"\s*([0-9.]+)\s*([kKM]?)", v or "")
+    return float(m.group(1)) * {"": 1.0, "k": 1e3, "K": 1e3, "M": 1e6}[m.group(2)] if m else None
+
+
+def enable_census(nl, b, family="LM5176"):
+    """How each `family` converter's EN/UVLO pin (pin 1 of the LM5176, SNVSAI1D pin table) is driven, read from the
+    netlist: [(ref, rail it makes, kind, text, details)]. 'divider' when the pin's net carries only resistors and capacitors, one
+    resistor to another net X and resistors to GND: the pin takes Rb/(Rt+Rb) of X. 'direct' otherwise: the pin sits on
+    the enable net itself, which other parts drive."""
+    out = []
+    refs = [r for r in nl.parts if (nl.value(r) or "").startswith(family)]
+    for u in sorted(refs, key=lambda r: int(re.sub(r"\D", "", r) or 0)):
+        en = nl.pins[u].get("1")
+        rail = [t for tb, _, t, via, _ in TREE if tb == b and u in via]
+        members = sorted((r, p) for r, ps in nl.pins.items() if r != u for p, n in ps.items() if n == en)
+        rc = sorted({r for r, _ in members if r[0] in "RC" and not r.startswith("CON")})
+        drivers_ = ["%s.%s" % (r, p) for r, p in members if r not in rc]
+        legs = []
+        for r in rc:
+            nets = list(nl.pins[r].values())
+            other = [n for n in nets if n != en]
+            legs.append((r, N.short(other[0]) if other else None))
+        tops = [(r, o) for r, o in legs if r.startswith("R") and o not in (None, "GND")]
+        bots = [(r, o) for r, o in legs if r.startswith("R") and o == "GND"]
+        caps = ["%s %s to %s" % (r, nl.value(r), o) for r, o in legs if r.startswith("C") and o]
+        selfs = [r for r, o in legs if o is None]
+        if not drivers_ and len(tops) == 1 and len(bots) == 1 and not selfs:
+            (rt, x), (rb, _) = tops[0], bots[0]
+            k = ohms(nl.value(rb)) / (ohms(nl.value(rt)) + ohms(nl.value(rb)))
+            text = "takes %s of %s: %s %s from %s to %s over %s %s to GND%s" % (
+                ("%.2f" % k).rstrip("0"), x, rt, nl.value(rt), x, N.short(en), rb, nl.value(rb),
+                (", " + ", ".join(caps)) if caps else "")
+            out.append((u, rail[0] if rail else "?", "divider", text, dict(top=rt, bottom=rb, of=x, k=("%.2f" % k).rstrip("0"))))
+        else:
+            res = ["%s %s to %s" % (r, nl.value(r), o) for r, o in legs if r.startswith("R") and o] + caps
+            res += ["%s %s with both pins on %s" % (r, nl.value(r), N.short(en)) for r in selfs]
+            text = "sits on %s directly (the net's other pins: %s)%s" % (
+                N.short(en), ", ".join(drivers_) or "none", (": " + "; ".join(res)) if res else "")
+            out.append((u, rail[0] if rail else "?", "direct", text, dict(net=N.short(en), selfs=selfs,
+                                                                          res=[r for r, o in legs if o],
+                                                                          pulls=[(r, o) for r, o in legs if o and r.startswith("R")])))
+    return out
+
+
+def board_a_enable_note(nl):
+    """Board A's R4T-F3 paragraph. The census lines are read from the netlist on every build; the comparison sentence
+    typed at the rebuild of 27 September 2026 is printed only while the census still says what it says."""
+    cen = {u: (rail, kind, text, d) for u, rail, kind, text, d in enable_census(nl, "A")}
+    def both(x, y): return x if x == y else "%s and %s" % (x, y)
+    def is_div(u, top): return u in cen and cen[u][1] == "divider" and cen[u][3]["top"] == top
+    def is_dir(u, dead, pull):
+        """direct on its enable net, `dead` the only part with both pins there, one resistor to GND ('down') or elsewhere ('up')"""
+        if u not in cen or cen[u][1] != "direct" or cen[u][3]["selfs"] != ([dead] if dead else []) or len(cen[u][3]["pulls"]) != 1:
+            return False
+        return (cen[u][3]["pulls"][0][1] == "GND") == (pull == "down")
+    L = []
+    if is_div("U13", "R58") and is_div("U15", "R124") and is_dir("U16", "R74", "down") and is_dir("U19", "R133", "down") \
+            and is_dir("U5", None, "down") and is_dir("U7", None, "up") and "U2" in cen:
+        L.append("Board A's R74 (on POE_EN) and R133 (on PD_EN) are the half of R4T-F3 (`v2/docs/records/r4t/r4-decisions.md`) "
+                 "that round 8 did not close. Round 8 closed the other half on the PA and HF converters (EMCON L4): R58 and "
+                 "R124 (%s) are now the top legs of U13's and U15's enable dividers over R59 and R125 (%s) to GND, %s of "
+                 "PA_EN and HF_EN. R74 and R133 each "
+                 "have both pins on one net and do nothing, so the PoE and USB-C PD converters U16 and U19 sit on POE_EN and "
+                 "PD_EN directly, with %s and %s (%s) as their pull-downs: the way U5 and U7 are driven by design "
+                 "(`en_div=False` in `gen_sch_a.py`, read at this rebuild), U5 with a pull-down and U7 with a pull-up (S-08). "
+                 "U2's enable is its own supervisor network (`gen_sch_a.py`, the front end). R4T-F3 records that the 62k over "
+                 "10k divider, had it been formed as drawn, would have held U16 and U19 in standby. For the board A author; "
+                 "nothing here changes it." % (
+                     both(nl.value("R58"), nl.value("R124")), both(nl.value("R59"), nl.value("R125")),
+                     both(cen["U13"][3]["k"], cen["U15"][3]["k"]),
+                     cen["U16"][3]["res"][0], cen["U19"][3]["res"][0],
+                     both(nl.value(cen["U16"][3]["res"][0]), nl.value(cen["U19"][3]["res"][0]))))
+    else:
+        L.append("Board A's R74 (on POE_EN) and R133 (on PD_EN) are the half of R4T-F3 (`v2/docs/records/r4t/r4-decisions.md`) "
+                 "that round 8 did not close. The comparison with the other LM5176 stages typed at the rebuild of 27 September "
+                 "2026 no longer matches this netlist, so it is not printed; the lines below are read from the netlist. For "
+                 "the board A author; nothing here changes it.")
+    L += ["", "How each LM5176 on board A has its EN/UVLO pin (pin 1, SNVSAI1D) driven, read from netlist `%s` on this "
+          "build:" % nl.sha, ""]
+    L += ["- %s (%s) %s" % (u, rail, text) for u, (rail, kind, text, d) in cen.items()]
+    return L
 
 
 def part_text(nl, ref):
@@ -353,16 +572,20 @@ def build():
     chain = yaml.safe_load(open(os.path.join(N.REPO, CHAIN), encoding="utf-8"))
     rows, problems, notes = [], [], []
     for b, frm, to, via, what in TREE:
-        ok, det, why = prove(nls[b], frm, to, via)
+        ok, det, why = prove(nls[b], frm, to, via, what)
         ctrl = "; ".join("%s drives %s" % (r, ", ".join(q)) for r, q in sorted(det.get("ctrl", {}).items())) or "-"
         text = "; ".join("%s: %s" % (r, ", ".join(n)) for r, n in sorted(det.get("text", {}).items())) or "names no rail"
         rows.append((b, frm, to, ", ".join(part_text(nls[b], r) for r in via), what, ", ".join(det.get("used", [])) or "-",
-                     ctrl, ", ".join(det.get("required", [])) or "-", text, "yes" if ok else "NO: " + why))
+                     ctrl, ", ".join(det.get("required", [])) or "-", text, det.get("enable", "-"), "yes" if ok else "NO: " + why))
         if not ok:
             problems.append("%s %s to %s through %s: %s" % (b, frm, to, via, why))
+        fp = fuse_problem(nls, b, via, what)
+        if fp:
+            problems.append("edge colour: " + fp)
     negs = []
-    for b, frm, to, via, key, what in negative_controls(nls):
-        ok, _, why = prove(nls[b], frm, to, via)
+    whats = {(b, f, t): w for b, f, t, _, w in TREE}
+    for b, frm, to, via, key, what, en in negative_controls(nls):
+        ok, _, why = prove(nls[b], frm, to, via, whats.get((b, frm, to)), en)
         negs.append((b, frm, to, via, key, what, ok, why))
         if ok:
             problems.append("negative control ACCEPTED, the check does not discriminate: %s %s to %s through %s (%s, %s)" % (
@@ -417,14 +640,15 @@ def build():
     if "/VBAT" in b.nets:
         notes.append("board B's net VBAT is the CR2032 backup (BT1) for the modules' RTCs, the LG290P and the DS3231, "
                      "not board A's VBAT: the same name on two boards, never joined")
-    return nls, chain, rows, lead_rows, stage_rows, problems, notes, negs
+    sweep = substitution_sweep(nls)
+    return nls, chain, rows, lead_rows, stage_rows, problems, notes, negs, sweep, netlist_findings(nls)
 
 
 def nid(b, net):
     return "%s_%s" % (b, re.sub(r"[^A-Za-z0-9]", "_", net))
 
 
-def mermaid(nls, chain, head, n_neg):
+def mermaid(nls, chain, head, n_neg, n_off, n_tried):
     stage_of = {}
     for s in chain.get("stages", []):
         ref = (s.get("protection") or {}).get("ref")
@@ -458,9 +682,9 @@ def mermaid(nls, chain, head, n_neg):
         st = [s for r in via for s in stage_of.get((b, r), [])]
         tag = (" [chain %s: %s A cont., %s A peak]" % ("/".join(s["id"] for s in st), st[0].get("continuous_a"), st[0].get("peak_a"))) if st else ""
         L.append("  %s -->|\"%s: %s%s\"| %s" % (nid(b, frm), what, parts.replace('"', "'"), tag, nid(b, to)))
-        styles.append("chain" if st else ("fuse" if via[0].startswith("F") else "conv"))
+        styles.append("chain" if st else ("fuse" if all(is_fuse(nl, b, r) for r in via) else "conv"))
     for ba, na, ra, bb, nb, rb, what in LEADS:
-        if ra in ("P_CP", "J_BLK"):
+        if ra in ("P_CP", "P_VR", "J_BLK"):
             L.append("  %s ---|\"%s %s\"| E5" % (nid(ba, na), ra, what)); L.append("  E5 --> %s" % nid(bb, nb))
             styles += ["lead", "lead"]
         else:
@@ -475,21 +699,25 @@ def mermaid(nls, chain, head, n_neg):
           "  classDef load fill:#efebe9,stroke:#6d4c41,color:#000",
           "  classDef lead fill:#e3f2fd,stroke:#1565c0,color:#000",
           "  classDef note fill:#f5f5f5,stroke:#9e9e9e,color:#333,stroke-dasharray:3 3",
-          "  NOTE[\"Rounded nodes are nets as the netlists name them (each board's own names: board B's VBAT is its CR2032 net). "
-          "Red edges are stages of pcb_energy_chain.yaml with its declared continuous and peak current; orange, a fuse or polyfuse; "
-          "grey, a converter, load switch or eFuse; blue, a lead between boards. Which parts make each stage (the part names on "
+          "  NOTE[\"Rounded nodes are nets as the netlists name them (each board's own names: board B's VBAT_RTC is its CR2032 net, VBAT until W3B-R1). "
+          "Red edges are stages of pcb_energy_chain.yaml with its declared continuous and peak current; orange, a fuse or "
+          "polyfuse (as the netlist gives the part, never by its designator); grey, any other series stage: a converter, load "
+          "switch, eFuse, ideal diode, hot swap, current shunt, ferrite bead or choke; blue, a lead between boards. Which parts make each stage (the part names on "
           "each edge) is typed in tools/power_tree.py, not found by it; every build checks that typing against the netlist: "
-          "the path runs only through the named parts, the FETs a named controller drives and the inductors on their "
+          "the path runs only through the named parts, the FETs a named controller IC drives and the inductors on their "
           "switching nodes, each named part is required, a controller counts only through the FET gates it drives on the "
-          "path, and %d wrong entries (swapped controllers and shunts among them) are refused. It does not check that a "
+          "path, an enable named in brackets is met by a named IC, and %d wrong entries (swapped controllers, shunts and "
+          "enables among them) are refused. The attribution check is not complete: a part bridging a stage's two nets "
+          "(a monitor, a feedback resistor, a load) passes in place of the stage's own part (%d of %d substitutions tried "
+          "at this build), so the parts named were also read by hand. It does not check that a "
           "stage works; power-tree.md has the method and its limits. NOT SHOWN: "
           "currents drawn, losses and heat (POWER-THERMAL.md), which rail is on in which power state, "
-          "grounds and returns, the CM5 modules' internal rails, clamps and bulk capacitors. The chain file predates owner ruling "
-          "D-06 and PWR-F12: see power-tree.md. Nothing here is built, powered or measured.\"]:::note" % n_neg]
+          "grounds and returns, the CM5 modules' internal rails, clamps and bulk capacitors. The chain file does not yet carry "
+          "PWR-F12's F2 stage (its pack follows D-06 since r8int4): see power-tree.md. Nothing here is built, powered or measured.\"]:::note" % (n_neg, n_off, n_tried)]
     return "\n".join(L) + "\n"
 
 
-def markdown(nls, rows, lead_rows, stage_rows, problems, notes, negs, head, dirty):
+def markdown(nls, rows, lead_rows, stage_rows, problems, notes, negs, sweep, findings, head, dirty):
     L = ["# Power tree: the netlist reading behind the diagram", "",
          "Generated by `v2/docs/diagrams/tools/power_tree.py`; do not edit by hand. Design diagram of an unbuilt prototype: no V2 "
          "board has been fabricated, ordered or powered, and no current or voltage below is measured. The diagram is "
@@ -500,23 +728,34 @@ def markdown(nls, rows, lead_rows, stage_rows, problems, notes, negs, head, dirt
         nl = nls[b]; L.append("| %s | `%s` | `%s` | `%s` |" % (b, nl.path, nl.sha, nl.commit))
     L += ["", "## Disagreements between the energy chain and the netlists", ""]
     L += ["- %s" % n for n in notes] or ["- none"]
+    L += ["", "## Netlist findings on the boards read (not disagreements with the chain)", ""]
+    L += ["- %s" % n for n in findings] or ["- none"]
+    if any(" R74 " in n or " R133 " in n for n in findings):
+        L += [""] + board_a_enable_note(nls["A"])
     L += ["", "## Stages, typed in the tool and checked against the netlists", "",
           "Which parts make each stage is typed in `TREE` in `tools/power_tree.py`. The build accepts a stage only when all of these "
           "hold in the netlist, and refuses to write anything otherwise:", "",
           "1. **Path.** A walk from the first net reaches the second through the stage's parts only, never through another rail "
           "of the table or a ground. A named FET is crossed source to drain, never through its gate (gate pins as each symbol "
-          "names them, or pin 4 of a TI CSD part in PowerPAK SO-8 per %s). A named controller, a part that drives the gate of a "
-          "power FET directly or through one series resistor on a private net, is never crossed itself; only the FETs it "
-          "drives are. Any other named part is crossed between any of its pins. An unnamed inductor is crossed only when one "
+          "names them, or pin 4 of a TI CSD part in PowerPAK SO-8 per %s). A named controller, an IC (a U reference) that drives "
+          "the gate of a power FET directly or through one series resistor on a private net, is never crossed itself; only "
+          "the FETs it drives are; a resistor or capacitor on a gate is never a controller. Any other named part is crossed between any of its pins. An unnamed inductor is crossed only when one "
           "of its nets is a switching node (not a rail, not a ground) carrying a pin of those parts." % CSD_SHEETS,
+          "   Two rules came in with the rebuild of 27 September 2026 at round 8, closing the second review's classes (1) "
+          "and (3): the controller must be an IC, and a two-pin reference starting with LED is never taken as an inductor.",
           "2. **Each named part required.** With the part left out, and a controller together with the FETs it drives, the walk "
           "no longer arrives. So a controller is attributed by the FET gates it drives on the path, not by touching the stage's nets.",
           "3. **Value text.** A named part whose value text names rails of the table must name the stage's end net among them.",
-          "4. **Negative controls.** %d wrong entries are refused on every build (listed below by class): the five entries the "
+          "4. **Enable label.** A stage whose description names an enable net in parentheses must have a named IC with a pin "
+          "on that net, or on a net joined to it by one series resistor (an enable divider's top leg); the 'Enable' column "
+          "names the pin. The pin's name there is the generator's; that each such pin is the part's enable pin was read "
+          "against the maker's pin table by hand at the rebuild (`v2/docs/diagrams/README.md`).",
+          "5. **Negative controls.** %d wrong entries are refused on every build (listed below by class): the five entries the "
           "review of 27 September 2026 found the earlier walk accepted; for every two stages of one board, each with its "
           "ICs swapped for the other's, its shunts and fuses swapped, and the other's shunts and fuses or ICs added; and "
           "every stage built on a controller with that controller replaced by each other stage's IC while the FETs it drove "
-          "are named outright, so the path is still there and only the attribution is wrong." % len(negs), "",
+          "are named outright, so the path is still there and only the attribution is wrong; and every stage with an enable "
+          "label with it replaced by each other stage's enable net on the board." % len(negs), "",
           "**Limits, stated plainly.** The stage names and descriptions are typed, and so is which parts make each stage: the "
           "tool checks that typing, it does not find the parts itself. A named IC (an integrated converter, eFuse, load switch "
           "or LDO) is crossed between any of its pins: the walk does not know which of its pins carry the current, only that "
@@ -524,14 +763,19 @@ def markdown(nls, rows, lead_rows, stage_rows, problems, notes, negs, head, dirt
           "the 'Walk crossed' and 'Controller drives' columns below list every part the walk used. The check says nothing about "
           "whether a stage works, its ratings or its components' values; that is the circuit reviews' and "
           "`v2/docs/feasibility/POWER-THERMAL.md`'s work."
-          " Its attribution check is not complete. The listed negative-control classes are refused, but a part that bridges "
-          "the stage's two nets (a current monitor, a feedback resistor, a load's supply pins) is accepted in place of the "
-          "stage's own part, and so is a passive on a FET gate named as the controller; two-pin references starting with L "
-          "are taken as inductors, LEDs included. The second review of 27 September 2026 (an AI review) tried 3822 "
-          "single-part substitutions and cut-downs at `e3aedb25` and 27 were accepted, 18 of them distinct wrong "
-          "attributions; the attributions drawn at `e3aedb25` were therefore also checked by hand.", "",
-          "| Board | From | To | Named parts | Stage | Walk crossed | Controller drives | Required | Value text names | Accepted |",
-          "|---|---|---|---|---|---|---|---|---|---|"]
+          " **Its attribution check is not complete.** The listed negative-control classes are refused, but a part that "
+          "bridges the stage's two nets (a current monitor, a feedback resistor, a load's supply pins) is accepted in place of "
+          "the stage's own part, because a named IC is crossed between any of its pins. The sweep below measures that on "
+          "every build: %d single-part substitutions and cut-downs tried, %d accepted, %d of them naming a part off the typed "
+          "stage's path (wrong attributions the check cannot see) and %d naming only parts of the typed stage's own path. "
+          "(The second review of 27 September 2026, an AI review, ran the same sweep at `e3aedb25`: 3822 tried, 27 accepted, "
+          "18 distinct wrong attributions; the controller and LED rules above closed its classes (1) and (3).) Which parts "
+          "make each stage therefore also rests on a reading by hand of every named part's value text against the stage, "
+          "redone at each rebuild (`v2/docs/diagrams/README.md` names the last one)." % (
+              sweep[0], len(sweep[1]), len([a for a in sweep[1] if a[6] == "off the path"]),
+              len([a for a in sweep[1] if a[6] == "same path"])), "",
+          "| Board | From | To | Named parts | Stage | Walk crossed | Controller drives | Required | Value text names | Enable | Accepted |",
+          "|---|---|---|---|---|---|---|---|---|---|---|"]
     for r in rows:
         L.append("| %s |" % " | ".join(x.replace("|", "/") for x in r))
     from collections import Counter
@@ -551,6 +795,16 @@ def markdown(nls, rows, lead_rows, stage_rows, problems, notes, negs, head, dirt
         if ex:
             b, f, t, v, key, what, ok, w = ex[0]
             L.append("- %s: %s %s to %s through %s (%s): %s" % (cls, b, f, t, " + ".join(v), what, "ACCEPTED" if ok else "refused, " + w))
+    L += ["", "### The substitution sweep: what the check accepts that is not the typed stage", "",
+          "Each stage with one named part replaced by a part on a net its walk touched (test points, capacitors, connectors "
+          "and holes left out), and each stage cut down to one such part: %d entries, %d accepted. 'Same path' names only "
+          "parts the typed stage's own walk crosses (a FET or an inductor in place of the controller that drives it: fewer "
+          "parts named, the same conductor); 'off the path' makes the stage pass through a part the typed walk does not "
+          "cross, a wrong attribution." % (sweep[0], len(sweep[1])), "",
+          "| Board | From | To | Typed parts | Accepted in their place | Walk | Kind |", "|---|---|---|---|---|---|---|"]
+    for b, f, t, v, via, used, kind in sweep[1]:
+        L.append("| %s | %s | %s | %s | %s | %s | %s |" % (b, f, t, " + ".join(v), " + ".join(
+            part_text(nls[b], x).replace("|", "/") if x not in v else x for x in via), ", ".join(used), kind))
     L += ["", "## Leads between boards", "", "| Board | Net | Connector.pins | Board | Net | Connector.pins | Lead | Both ends on the net |",
           "|---|---|---|---|---|---|---|---|"]
     for r in lead_rows:
@@ -570,16 +824,20 @@ def markdown(nls, rows, lead_rows, stage_rows, problems, notes, negs, head, dirt
 
 def main():
     head, dirty = N.git_rev([N.BOARDS[b] for b in BOARD_ORDER] + [CHAIN])
-    nls, chain, rows, lead_rows, stage_rows, problems, notes, negs = build()
+    nls, chain, rows, lead_rows, stage_rows, problems, notes, negs, sweep, findings = build()
     if problems:
         print("power-tree: REFUSED, the netlists do not support:"); [print("  " + p) for p in problems]
         return 1
-    open(OUT_MMD, "w", encoding="utf-8").write(mermaid(nls, chain, head, len(negs)))
-    open(OUT_MD, "w", encoding="utf-8").write(markdown(nls, rows, lead_rows, stage_rows, problems, notes, negs, head, dirty))
+    n_off = len([a for a in sweep[1] if a[6] == "off the path"])
+    open(OUT_MMD, "w", encoding="utf-8").write(mermaid(nls, chain, head, len(negs), n_off, sweep[0]))
+    open(OUT_MD, "w", encoding="utf-8").write(markdown(nls, rows, lead_rows, stage_rows, problems, notes, negs, sweep, findings, head, dirty))
     print("power-tree: %d stages and %d leads checked against the netlists, %d negative controls refused; %d disagreements "
-          "with the energy chain" % (len(rows), len(lead_rows), len(negs), len(notes)))
-    for n in notes:
+          "with the energy chain; substitution sweep %d tried, %d accepted (%d off the path); %d netlist findings" % (
+              len(rows), len(lead_rows), len(negs), len(notes), sweep[0], len(sweep[1]), n_off, len(findings)))
+    for n in notes + findings:
         print("  " + n)
+    for a in sweep[1]:
+        print("  sweep accepted (%s): %s %s to %s, %s in place of %s" % (a[6], a[0], a[1], a[2], " + ".join(a[4]), " + ".join(a[3])))
     return 0
 
 

@@ -1,10 +1,10 @@
 ---
-title: "ARCHITECTURE.md, 3.2 Inputs, outputs and failure boundaries (lines 243 to 257 of the document with sha256/16 4ad3ba63938e8d85): design diagram of an unbuilt prototype"
+title: "ARCHITECTURE.md, 3.2 Inputs, outputs and failure boundaries (lines 243 to 257 of the document with sha256/16 5cf45b4783dbe092): design diagram of an unbuilt prototype"
 ---
 flowchart TB
   P["P pack BMS: BQ4050, BQ7720700, FETs, 25 A blade, SCF9550 chemical fuse"] -->|"IF-PE-PACK: XT60 12 AWG; SMBus and PRES on JST-XH 1x4, both ends"| E
   E["E dock strip: pack entry, vehicle and solar inputs, sensor RP2040, float clamps"] --> E5["E5 dock block"]
-  E5 -->|"IF-AE-DOCK: 4 x VIN_RAW (12.31 A declared), 4 x CELL+, pre-charge, USB, SHORE_INHIBIT"| A
+  E5 -->|"IF-AE-DOCK: 4 x VIN_RAW 9 A pins (14.10 A declared, EQ-16), 4 x CELL+, pre-charge, USB, SHORE_INHIBIT"| A
   E -.->|"IF-AE-RF: 11 blind-mate joints as generated, 12 under D-07"| A
   A["A power and I/O: charger on VSYS, converters, eFuses, LTC2954, outlet interlock, RF row"] -->|"IF-AB-POWER: +5V_S1..3, +5V_DEV, 54 V"| B
   A <-->|"IF-AB-RIBBON: control lines, USB to D and E"| B

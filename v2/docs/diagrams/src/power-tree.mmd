@@ -1,15 +1,15 @@
 ---
-title: "Power tree read from the netlists named in each board's box and pcb_energy_chain.yaml sha256/16 935e524eed0ee4d1 (design diagram of an unbuilt prototype)"
+title: "Power tree read from the netlists named in each board's box and pcb_energy_chain.yaml sha256/16 a09ca0293afd1f7c (design diagram of an unbuilt prototype)"
 ---
 flowchart LR
-  subgraph brdP["P pack BMS, netlist 4342c4cbe1b43dc4 at d90f30e4"]
+  subgraph brdP["P pack BMS, netlist 085f833362fbbda8 at 7bef62bd"]
     P_CELL4(["CELL4"]):::rail
     P_FUSED(["FUSED"]):::rail
     P_SCP_OUT(["SCP_OUT"]):::rail
     P_PACK_P(["PACK_P"]):::rail
     src_P_W_BP["W_BP: 4S cell block (D-06: 4S3P Samsung 35E)"]:::source
   end
-  subgraph brdE["E dock strip, netlist d910e49c5f5f50b2 at faf8c981"]
+  subgraph brdE["E dock strip, netlist d6137f50059e5cbc at b7f96784"]
     E_CELL_(["CELL+"]):::rail
     E_CELL_F(["CELL_F"]):::rail
     E__5V_E6(["+5V_E6"]):::rail
@@ -27,7 +27,7 @@ flowchart LR
     src_E_J_SOLAR["J_SOLAR: solar panel"]:::source
     load_E_J_FAN1["J_FAN1: mixer fans J_FAN1, J_FAN2"]:::load
   end
-  subgraph brdA["A power and I/O, netlist 7b08510106687b3d at 3a1f6576"]
+  subgraph brdA["A power and I/O, netlist da05dc02bc1e612f at b7f96784"]
     A_CELL_(["CELL+"]):::rail
     A_CELL_FUSED(["CELL_FUSED"]):::rail
     A_VBAT(["VBAT"]):::rail
@@ -55,7 +55,7 @@ flowchart LR
     load_A_J_USBC_OUT["J_USBC_OUT: wall USB-C outlet"]:::load
     load_A_J_USBW["J_USBW: Glenair USB host port"]:::load
   end
-  subgraph brdB["B compute, netlist 669d02d07aeaae4b at 3a1f6576"]
+  subgraph brdB["B compute, netlist 8b78c59754a6a0c7 at caba1876"]
     B__5V_S1(["+5V_S1"]):::rail
     B__3V3_S1A(["+3V3_S1A"]):::rail
     B__3V3_S1B(["+3V3_S1B"]):::rail
@@ -92,14 +92,15 @@ flowchart LR
     B__54V_POE(["+54V_POE"]):::rail
     load_B_U5["U5: wall RJ45 PoE (TPS23861)"]:::load
   end
-  subgraph brdC["C panel backer, netlist 2834f0d8c4071d56 at faf8c981"]
+  subgraph brdC["C panel backer, netlist 11eabc2dddca5161 at 9f28c238"]
     C__5V(["+5V"]):::rail
     C__3V3(["+3V3"]):::rail
   end
-  subgraph brdD["D VHF APRS, netlist f13d8b70099ab03e at 458b2873"]
+  subgraph brdD["D VHF APRS, netlist 76700a687eb6187f at b7f96784"]
     D__5V_D8(["+5V_D8"]):::rail
     D__3V3_D8(["+3V3_D8"]):::rail
     D__3V4_HUB(["+3V4_HUB"]):::rail
+    D__5V_TX(["+5V_TX"]):::rail
     D__5V_SA(["+5V_SA"]):::rail
     D_VGG_SW(["VGG_SW"]):::rail
     D__3V3(["+3V3"]):::rail
@@ -115,12 +116,12 @@ flowchart LR
   E_CELL_F -->|"always-on 5 V: U12 AP63205WU-7"| E__5V_E6
   E__5V_E6 -->|"sensor 3.3 V: U13 TLV75533PDBVR"| E__3V3_E6
   E__5V_E6 -->|"Geiger load switch: U16 TPS22810DRV"| E__5V_GEIGER
-  E_DC_IN -->|"vehicle and shore fuse: F1 10 A mini blade [chain SHORE_INPUT: 8.0 A cont., 10.0 A peak]"| E_DC_F
+  E_DC_IN -->|"vehicle and shore fuse: F1 10 A mini blade [chain SHORE_INPUT: 6.15 A cont., 6.15 A peak]"| E_DC_F
   E_DC_F -->|"ideal diode: Q1 BSC039N06NS + U3 LM74700-Q1"| E_DC_P
   E_DC_P -->|"hot swap, 9 V on, 40 V off: U6 LM5069MM-2 + R19 10mOhm"| E_DC_HS
   E_DC_HS -->|"common-mode choke: L2 Bourns SRF1260-1R5Y"| E_VIN_RAW
   E_PV_IN -->|"solar fuse: F2 10 A mini blade"| E_PV_P
-  E_PV_P -->|"solar tracker (bench-fitted): Q3 BSC028N06NS + U5 LT8705A + R5 5 mOhm + Q6 BSC039N06NS"| E_TRK_OUT
+  E_PV_P -->|"solar tracker (bench-fitted): Q3 BSC028N06NS + U5 LT8705A + Q6 BSC039N06NS"| E_TRK_OUT
   E_TRK_OUT -->|"ideal diode OR: Q2 BSC039N06NS + U4 LM74700-Q1"| E_VIN_RAW
   A_CELL_ -->|"power board pack fuse: F1 25 A mini blade [chain BOARD_A_NODE/BOARD_A_CONVERTERS: 10.0 A cont., 18.0 A peak]"| A_CELL_FUSED
   A_CELL_FUSED -->|"charge current shunt (loads on the VSYS side): R17 5mOhm"| A_VBAT
@@ -141,15 +142,15 @@ flowchart LR
   A_VHEAT_IN -->|"heater 12.0 V: U33 TPS62933DRLR"| A_VHEAT
   A__5V_DEV -->|"board D feed eFuse (D8_EN): U23 TPS259631DDAR [chain A_EFUSED_BRANCHES: 1.0 A cont., 2.0 A peak]"| A__5V_D8
   A__5V_DEV -->|"Glenair port VBUS eFuse: U32 TPS259631DDAR"| A_VBUS_WALL
-  B__5V_S1 -->|"slot 1 card 3.3 V: U103 AP64500SP-13"| B__3V3_S1A
+  B__5V_S1 -->|"slot 1 card 3.3 V, WiFi card 1 (S1A_EN, which EMCON_ON1 pulls low): U103 AP64500SP-13"| B__3V3_S1A
   B__5V_S1 -->|"slot 1 NVMe 3.3 V: U104 AP64500SP-13"| B__3V3_S1B
   B__5V_S1 -->|"slot 1 PCIe switch core: U105 TPS62933DRLR"| B__1V0_S1
   B__3V3_S1A -->|"card socket shunt: R165 5mOhm"| B__3V3_M2C1
-  B__5V_S2 -->|"slot 2 card 3.3 V: U203 AP64500SP-13"| B__3V3_S2A
+  B__5V_S2 -->|"slot 2 card 3.3 V, the 5G module (S2A_EN, which EMCON_ON2 pulls low): U203 AP64500SP-13"| B__3V3_S2A
   B__5V_S2 -->|"slot 2 NVMe 3.3 V: U204 AP64500SP-13"| B__3V3_S2B
   B__5V_S2 -->|"slot 2 PCIe switch core: U205 TPS62933DRLR"| B__1V0_S2
   B__3V3_S2A -->|"card socket shunt: R265 5mOhm"| B__3V3_M2C2
-  B__5V_S3 -->|"slot 3 card 3.3 V: U303 AP64500SP-13"| B__3V3_S3A
+  B__5V_S3 -->|"slot 3 card 3.3 V, WiFi card 2 (S3A_EN, which EMCON_ON3 pulls low): U303 AP64500SP-13"| B__3V3_S3A
   B__5V_S3 -->|"slot 3 NVMe 3.3 V: U304 AP64500SP-13"| B__3V3_S3B
   B__5V_S3 -->|"slot 3 PCIe switch core: U305 TPS62933DRLR"| B__1V0_S3
   B__3V3_S3A -->|"card socket shunt: R365 5mOhm"| B__3V3_M2C3
@@ -167,18 +168,19 @@ flowchart LR
   B__5V_DEV -->|"LoRa load switch: U21 TPS22810DRV"| B__5V_LORA
   B__3V3_DEV -->|"E72 load switch: U22 TPS22810DRV"| B__3V3_ZB
   B__5V_DEV -->|"camera switch: U28 TPS2065CDBV"| B__5V_CAM
-  B__5V_DEV -->|"panel feed polyfuse: F1 2A hold 1812 [chain B_PANEL_5V: 0.6 A cont., 1.0 A peak]"| B_PANEL_5V
+  B__5V_DEV -->|"panel feed polyfuse: F1 1.1A hold 1812 [chain B_PANEL_5V: 0.6 A cont., 1.0 A peak]"| B_PANEL_5V
   B__5V_DEV -->|"HDMI 5 V polyfuse: F2 0.5A hold 1812 [chain B_HDMI_5V: 0.2 A cont., 0.3 A peak]"| B__5V_HDMI
   B__5V_DEV -->|"QMX USB polyfuse: F3 0.5A hold 1812 [chain B_QMX_5V: 0.3 A cont., 0.5 A peak]"| B_VBUS_QMX
   C__5V -->|"panel 3.3 V: U5 TLV75533PDBV"| C__3V3
   D__5V_D8 -->|"board D 3.3 V: U1 TLV75533PDBV"| D__3V3_D8
   D__5V_D8 -->|"hub 3.44 V: U17 TLV75801PDBVR"| D__3V4_HUB
-  D__5V_D8 -->|"exciter supply ferrite: FB1 600R 2A ferrite"| D__5V_SA
-  D__5V_D8 -->|"PA gate bias (PA_KEY): U15 TLV75801PDRVR"| D_VGG_SW
+  D__5V_D8 -->|"transmit chain 5 V (TXSUP_EN: on while the EMCON gates' +3V3_D8 is in range): U21 TPS22810DRV"| D__5V_TX
+  D__5V_TX -->|"exciter supply ferrite: FB1 600R 2A ferrite"| D__5V_SA
+  D__5V_TX -->|"PA gate bias (PA_KEY): U15 TLV75801PDRVR"| D_VGG_SW
   P_PACK_P ==>|"W_P to J_BATT: pack lead, 12 AWG, XT60"| E_CELL_
   E_CELL_F ---|"P_CP 12 AWG to E5, four 9 A spring pins J_CP1..4"| E5
   E5 --> A_CELL_
-  E_VIN_RAW ---|"J_BLK E5 targets 1 to 4, spring pins J_DOCK 1 to 4"| E5
+  E_VIN_RAW ---|"P_VR 12 AWG to E5, four 9 A spring pins J_VR1..4 (EQ-16)"| E5
   E5 --> A_VIN_RAW
   A__5V_S1 ==>|"J_5V_S1 to J_5V_S1: JST-VH lead, 16 AWG"| B__5V_S1
   A__5V_S2 ==>|"J_5V_S2 to J_5V_S2: JST-VH lead, 16 AWG"| B__5V_S2
@@ -264,9 +266,9 @@ flowchart LR
   linkStyle 65 stroke:#37474f,stroke-width:1.5px
   linkStyle 66 stroke:#37474f,stroke-width:1.5px
   linkStyle 67 stroke:#37474f,stroke-width:1.5px
-  linkStyle 68 stroke:#e65100,stroke-width:1.5px
+  linkStyle 68 stroke:#37474f,stroke-width:1.5px
   linkStyle 69 stroke:#37474f,stroke-width:1.5px
-  linkStyle 70 stroke:#1565c0,stroke-width:3px
+  linkStyle 70 stroke:#37474f,stroke-width:1.5px
   linkStyle 71 stroke:#1565c0,stroke-width:3px
   linkStyle 72 stroke:#1565c0,stroke-width:3px
   linkStyle 73 stroke:#1565c0,stroke-width:3px
@@ -279,7 +281,7 @@ flowchart LR
   linkStyle 80 stroke:#1565c0,stroke-width:3px
   linkStyle 81 stroke:#1565c0,stroke-width:3px
   linkStyle 82 stroke:#1565c0,stroke-width:3px
-  linkStyle 83 stroke:#6d4c41,stroke-width:1.5px
+  linkStyle 83 stroke:#1565c0,stroke-width:3px
   linkStyle 84 stroke:#6d4c41,stroke-width:1.5px
   linkStyle 85 stroke:#6d4c41,stroke-width:1.5px
   linkStyle 86 stroke:#6d4c41,stroke-width:1.5px
@@ -287,9 +289,10 @@ flowchart LR
   linkStyle 88 stroke:#6d4c41,stroke-width:1.5px
   linkStyle 89 stroke:#6d4c41,stroke-width:1.5px
   linkStyle 90 stroke:#6d4c41,stroke-width:1.5px
+  linkStyle 91 stroke:#6d4c41,stroke-width:1.5px
   classDef rail fill:#fffde7,stroke:#827717,color:#000
   classDef source fill:#e8f5e9,stroke:#2e7d32,color:#000
   classDef load fill:#efebe9,stroke:#6d4c41,color:#000
   classDef lead fill:#e3f2fd,stroke:#1565c0,color:#000
   classDef note fill:#f5f5f5,stroke:#9e9e9e,color:#333,stroke-dasharray:3 3
-  NOTE["Rounded nodes are nets as the netlists name them (each board's own names: board B's VBAT is its CR2032 net). Red edges are stages of pcb_energy_chain.yaml with its declared continuous and peak current; orange, a fuse or polyfuse; grey, a converter, load switch or eFuse; blue, a lead between boards. Which parts make each stage (the part names on each edge) is typed in tools/power_tree.py, not found by it; every build checks that typing against the netlist: the path runs only through the named parts, the FETs a named controller drives and the inductors on their switching nodes, each named part is required, a controller counts only through the FET gates it drives on the path, and 2697 wrong entries (swapped controllers and shunts among them) are refused. It does not check that a stage works; power-tree.md has the method and its limits. NOT SHOWN: currents drawn, losses and heat (POWER-THERMAL.md), which rail is on in which power state, grounds and returns, the CM5 modules' internal rails, clamps and bulk capacitors. The chain file predates owner ruling D-06 and PWR-F12: see power-tree.md. Nothing here is built, powered or measured."]:::note
+  NOTE["Rounded nodes are nets as the netlists name them (each board's own names: board B's VBAT_RTC is its CR2032 net, VBAT until W3B-R1). Red edges are stages of pcb_energy_chain.yaml with its declared continuous and peak current; orange, a fuse or polyfuse (as the netlist gives the part, never by its designator); grey, any other series stage: a converter, load switch, eFuse, ideal diode, hot swap, current shunt, ferrite bead or choke; blue, a lead between boards. Which parts make each stage (the part names on each edge) is typed in tools/power_tree.py, not found by it; every build checks that typing against the netlist: the path runs only through the named parts, the FETs a named controller IC drives and the inductors on their switching nodes, each named part is required, a controller counts only through the FET gates it drives on the path, an enable named in brackets is met by a named IC, and 2823 wrong entries (swapped controllers, shunts and enables among them) are refused. The attribution check is not complete: a part bridging a stage's two nets (a monitor, a feedback resistor, a load) passes in place of the stage's own part (10 of 2656 substitutions tried at this build), so the parts named were also read by hand. It does not check that a stage works; power-tree.md has the method and its limits. NOT SHOWN: currents drawn, losses and heat (POWER-THERMAL.md), which rail is on in which power state, grounds and returns, the CM5 modules' internal rails, clamps and bulk capacitors. The chain file does not yet carry PWR-F12's F2 stage (its pack follows D-06 since r8int4): see power-tree.md. Nothing here is built, powered or measured."]:::note

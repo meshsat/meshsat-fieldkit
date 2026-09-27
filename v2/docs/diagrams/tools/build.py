@@ -9,7 +9,7 @@
 MANIFEST.json ties each diagram to the sha256/16 of every file it was made from and of every file it produced, the tree
 revision, and the tool versions. Rendering needs Node with npx and a Chromium (CHROME_BIN, see render.sh); the Python
 steps need only matplotlib and PyYAML. The readback (tools/readback.py) is a separate step, run after a build."""
-import json, os, subprocess, sys
+import hashlib, json, os, subprocess, sys
 sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import netlist as N
@@ -51,6 +51,19 @@ def version(cmd):
         return "not found"
 
 
+def npx_package_version(mmdc, package):
+    """The version of `package` that npx installed for @mermaid-js/mermaid-cli@<mmdc>: mermaid-cli pins Mermaid only as
+    ^11 and loads it from node_modules at render time, so the Mermaid that drew the diagrams is this one, not a version
+    the pin names. npx keeps each spec in <npm cache>/_npx/<first 16 hex of sha512(spec)>."""
+    try:
+        cache = subprocess.run(["npm", "config", "get", "cache"], capture_output=True, text=True, timeout=120).stdout.strip()
+        key = hashlib.sha512(("@mermaid-js/mermaid-cli@%s" % mmdc).encode()).hexdigest()[:16]
+        with open(os.path.join(cache, "_npx", key, "node_modules", package, "package.json"), encoding="utf-8") as f:
+            return json.load(f)["version"]
+    except (OSError, ValueError, KeyError, subprocess.SubprocessError):
+        return "not found"
+
+
 def check():
     man = json.load(open(os.path.join(D, "MANIFEST.json"), encoding="utf-8"))
     stale = []
@@ -81,7 +94,9 @@ def build():
             matplotlib=version([sys.executable, "-c", "import matplotlib; print(matplotlib.__version__)"]),
             pyyaml=version([sys.executable, "-c", "import yaml; print(yaml.__version__)"]),
             node=version(["node", "--version"]),
-            mermaid_cli="@mermaid-js/mermaid-cli@%s (npx; bundles Mermaid and the ELK layout)" % mmdc,
+            mermaid_cli="@mermaid-js/mermaid-cli@%s (npx; its bundle carries the ELK layout)" % mmdc,
+            mermaid="%s (resolved by npx for that mermaid-cli, loaded from its node_modules)" % npx_package_version(mmdc, "mermaid"),
+            puppeteer=npx_package_version(mmdc, "puppeteer"),
             chromium=version([os.environ["CHROME_BIN"], "--version"]) if os.environ.get("CHROME_BIN") else "Puppeteer's own download"),
         diagrams={})
     for name, rec in DIAGRAMS.items():
