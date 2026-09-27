@@ -68,10 +68,10 @@ From `calc/rail_widths.py` (decision 35, 10 K). Where a maker's figure exceeds t
 F03, F05), the maker's figure is the one to size to: the first table is the declaration's, its row says so in its note,
 and the second table sizes the same rail at the maker's figure.
 
-The table is `calc/rail_widths.py`'s output on the inputs this sheet's `bound` block names, row for row and cell for
-cell in the intent file's own order, and `v2/ecad/tools/constraints_bound.py` fails when the two differ; the `note`
-column is this sheet's and is not compared (README, "The bound block"). A width of 0.00 is a current under 5 mA at two
-decimals: the fabricator's floor governs there, not the current.
+The table is `calc/rail_widths.py`'s output on the inputs this sheet's `bound` block names, row for row in the tool's
+own order and cell for cell, and `v2/ecad/tools/constraints_bound.py` fails when the two differ; the `note` column is
+this sheet's and is not compared (README, "The bound block"). A width printed 0.00 is under 0.005 mm, a current of a few
+milliamperes: the fabricator's floor governs there, not the current.
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill | note |
 |---|---|---|---|---:|---:|---:|---|---|
@@ -134,19 +134,21 @@ decimals: the fabricator's floor governs there, not the current.
 | VBUS_QMX | 5.00 | 0.30 / 0.30 | 0.30, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |  |
 | PANEL_5V | 5.00 | 0.60 / 0.60 | 0.60, typical (PI-001) | 0.15 | 0.06 | 0.89 | 1 / 1 / 1 | behind F1, an MF-MSMF110 (1.1 A hold, 2.2 A trip) since round 8, `b76c18cb` (`boards/b.json` `_panel_5v_fuse_r8_why`): the copper must clear the fuse's hold, which the width of this row does not say. The record's answer is the PANEL class at 0.8 mm in `gen_pcb_b3.py` for the next cut (`pcb_energy_chain.yaml` stage B_PANEL_5V); board C declares 1.0 A peak on the same conductor |
 
-Sized at the maker's figure, above the declaration (`calc/rail_widths.py` SIZED_TO; `v2/docs/feasibility/POWER-THERMAL.md` section 10). The declaration is unchanged and is board B's owner's to correct; until it is, these are the widths and barrel counts to follow:
+Sized at the maker's figure, above the declaration (`calc/rail_widths.py` SIZED_TO;
+`v2/docs/feasibility/POWER-THERMAL.md` section 10). The declaration is unchanged and is board B's owner's to correct;
+until it is, these are the widths and barrel counts to follow:
 
-| rail | declared typ / peak A | sized at, A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of the declared peak and the sized current, 0.3 / 0.4 / 0.5 mm drill | the maker's figure and its finding | note |
-|---|---|---|---:|---:|---:|---|---|---|
-| +3V3_S1A | 0.50 / 1.50 | 3.000 | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 | PWR-F01: AsiaRF asks a 3.3 V supply of 3 A (2.5 A minimum) for the AW7915-AED |  |
-| +3V3_M2C1 | 0.50 / 1.50 | 3.000 | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 | PWR-F01, the same conductor past its Kelvin shunt |  |
-| +3V3_S3A | 0.50 / 1.50 | 3.000 | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 | PWR-F01 |  |
-| +3V3_M2C3 | 0.50 / 1.50 | 3.000 | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 | PWR-F01, the same conductor past its Kelvin shunt |  |
-| +1V2_KSZ | 0.50 / 0.80 | 1.210 | 0.39 | 0.15 | 2.34 | 2 / 2 / 2 | PWR-F03: KSZ9897R at 1000 Mb/s draws 1.21 A typical on its 1.2 V rails |  |
-| +2V5_KSZ | 0.15 / 0.25 | 0.330 | 0.07 | 0.03 | 0.39 | 1 / 1 / 1 | PWR-F03: 330 mA on AVDDH |  |
-| +1V1_S1 | 0.40 / 0.70 | 0.778 | 0.21 | 0.08 | 1.27 | 2 / 1 / 1 | PWR-F05: TUSB8041's four-SS-devices row, 778 mA on VDD; the kit's mix uses the 395 mA row |  |
-| +1V1_S2 | 0.40 / 0.70 | 0.778 | 0.21 | 0.08 | 1.27 | 2 / 1 / 1 | PWR-F05 |  |
-| +1V1_S3 | 0.40 / 0.70 | 0.778 | 0.21 | 0.08 | 1.27 | 2 / 1 / 1 | PWR-F05 |  |
+| rail | declared typ / peak A | sized at, A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of the declared peak and the sized current, 0.3 / 0.4 / 0.5 mm drill | the maker's figure and its finding |
+|---|---|---|---:|---:|---:|---|---|
+| +3V3_S1A | 0.50 / 1.50 | 3.000 | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 | PWR-F01: AsiaRF asks a 3.3 V supply of 3 A (2.5 A minimum) for the AW7915-AED |
+| +3V3_M2C1 | 0.50 / 1.50 | 3.000 | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 | PWR-F01, the same conductor past its Kelvin shunt |
+| +3V3_S3A | 0.50 / 1.50 | 3.000 | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 | PWR-F01 |
+| +3V3_M2C3 | 0.50 / 1.50 | 3.000 | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 | PWR-F01, the same conductor past its Kelvin shunt |
+| +1V2_KSZ | 0.50 / 0.80 | 1.210 | 0.39 | 0.15 | 2.34 | 2 / 2 / 2 | PWR-F03: KSZ9897R at 1000 Mb/s draws 1.21 A typical on its 1.2 V rails |
+| +2V5_KSZ | 0.15 / 0.25 | 0.330 | 0.07 | 0.03 | 0.39 | 1 / 1 / 1 | PWR-F03: 330 mA on AVDDH |
+| +1V1_S1 | 0.40 / 0.70 | 0.778 | 0.21 | 0.08 | 1.27 | 2 / 1 / 1 | PWR-F05: TUSB8041's four-SS-devices row, 778 mA on VDD; the kit's mix uses the 395 mA row |
+| +1V1_S2 | 0.40 / 0.70 | 0.778 | 0.21 | 0.08 | 1.27 | 2 / 1 / 1 | PWR-F05 |
+| +1V1_S3 | 0.40 / 0.70 | 0.778 | 0.21 | 0.08 | 1.27 | 2 / 1 / 1 | PWR-F05 |
 
 ## 3. Pairs: targets, geometry, budgets
 
