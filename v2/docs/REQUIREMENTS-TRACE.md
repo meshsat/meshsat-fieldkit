@@ -1596,7 +1596,9 @@ Prototype 1: in the core D-01 names. 9 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/feasibility/EMCON.md re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3, branch fnd/r8int3): section 4b is new (board B's round 8: L1, L2, L3 and L7 closed at desk on B, L2's hold re-taken on main's boards A and C at 0.36 V, the 5G module's supply removed at once by hardware as SD-EMC-1r8 with a bound of 1.16 ms plus 1.84 ms per mF of the module's unpublished input capacitance, SD-EMC-2 bounded for the 5G module, RF-002's walk reading board B FAIL on its missing SN74LVC2G06 model); the header, section 0's board B bullet, section 0a's rows 4 to 17 and counts (local 15 of 17 closed at desk, end to end 0 of 17), section 2's readers, section 3's status cells for L1 to L4 and L7, section 4's row 5 and sections 7 and 8 follow it; sections 4.1 and 4.2, which this reading cites, are byte-identical, so it stays INCONCLUSIVE on the file at 421a291f7ce4cda2
 
-*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/docs/feasibility/EMCON.md@421a291f7ce4cda2`, `v2/docs/CURRENT-EVIDENCE.md@685e4c7e49f1f383`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CURRENT-EVIDENCE.md re-read at the round 8 set 3 integration of 27 September 2026 (branch fnd/r8int3, rendered after board B's round 8): only board B's rows move (its netlist adcc3c6736c90e9f in the ready-for-layout table; PWR-001 and SI-001 on B now AWAITING_REVALIDATION, NETLIST_MISMATCH) with the counts that follow them; RF-002 and SCH-004 on board D keep their class and cause and decide nothing until the consolidated re-take, so the record's own reasons are unchanged and it stays INCONCLUSIVE on the file at 6e7936497971f484
+
+*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/docs/feasibility/EMCON.md@421a291f7ce4cda2`, `v2/docs/CURRENT-EVIDENCE.md@6e7936497971f484`
 
 *Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2825`; `v2/docs/PANEL.md section 6`; `v2/docs/feasibility/EMCON.md sections 4.1 and 4.2`
 
@@ -2006,7 +2008,9 @@ Prototype 1: in the core D-01 names. 10 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CURRENT-EVIDENCE.md re-read at the round 8 set 2 integration of 27 September 2026 (branch fnd/r8int2): board P's row carries its round 8 netlist (085f833362fbbda8, two order codes changed) and one more reason: PWR-001, now judged on the netlist, reads FAIL and SI-001 INCONCLUSIVE, both awaiting the re- take on that netlist (NETLIST_MISMATCH), and RF-002, which applies to board P since this integration, has no verdict yet. BAT-001 on board P still reads FAIL on AWAITING_REVALIDATION evidence (TOOL_CHANGED) until the consolidated re-take, which reads pcb_pack_protection.yaml's round 8 temperature windows; so the reasons given above are unchanged and this reading stands on the file at 685e4c7e49f1f383
 
-*Bound to:* `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`, `v2/ecad/tools/gen_sch_p.py@91ccbb922c427d43`, `v2/docs/CURRENT-EVIDENCE.md@685e4c7e49f1f383`, `v2/docs/review-packets/battery/REVIEW-REQUEST.md@91a257430cbeb53a`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CURRENT-EVIDENCE.md re-read at the round 8 set 3 integration of 27 September 2026 (branch fnd/r8int3): only board B's rows and the counts move; board P's row, its netlist 085f833362fbbda8 and every reason given above (PWR-001 FAIL and SI-001 INCONCLUSIVE awaiting the re-take on that netlist, RF-002 with no verdict yet, BAT-001 FAIL on AWAITING_REVALIDATION evidence) are unchanged, so this reading stands on the file at 6e7936497971f484
+
+*Bound to:* `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`, `v2/ecad/tools/gen_sch_p.py@91ccbb922c427d43`, `v2/docs/CURRENT-EVIDENCE.md@6e7936497971f484`, `v2/docs/review-packets/battery/REVIEW-REQUEST.md@91a257430cbeb53a`
 
 *Source (verified):* `v2/docs/TEST-PLAN.md:48-77`; `v2/ecad/tools/pcb_pack_protection.yaml:17-40`; `owner ruling D-15`; `v2/docs/review-packets/battery/PROTECTION-ARCHITECTURE.md`; `v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md`; `v2/ecad/tools/gen_sch_p.py:355-430`
 

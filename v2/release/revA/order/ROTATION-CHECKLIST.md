@@ -49,7 +49,7 @@ zero is a real answer and is recorded the same way; what the rule refuses is the
 | `LQFP-128_14x14mm_P0.4mm_EP6.0` | B | U101 |  |  |
 | `LQFP-32_7x7mm_P0.8mm` | D | U4 |  |  |
 | `L_CommonModeChoke_Bourns_SRF1260` | E | L2 |  |  |
-| `M2_B-Key_Socket_3052` | B | J_M2C2 |  |  |
+| `M2_B-Key_Socket_3052_TE2199119` | B | J_M2C2 |  |  |
 | `M2_E-Key_Socket_2230` | B | J_M2C1 |  |  |
 | `M2_M-Key_Socket_2242` | B | J_M2N1 |  |  |
 | `PinHeader_1x02_P2.54mm_Vertical` | B | J_RPIBOOT1 |  |  |
@@ -72,6 +72,8 @@ zero is a real answer and is recorded the same way; what the rule refuses is the
 | `Relay_DPDT_Omron_G6K-2F-Y` | D | K1 |  |  |
 | `SMA_Amphenol_132134-11_Vertical` | A | J_RF1 |  |  |
 | `SMA_Amphenol_132134_Vertical` | D | J_ANT |  |  |
+| `SOIC-16W_7.5x10.3mm_P1.27mm` | B | U9 |  |  |
+| `SOT-363_SC-70-6` | B | U513 |  |  |
 | `SOT-583-8` | A, B | U12 |  |  |
 | `Sensirion_DFN-6-1EP_2.44x2.44mm_P0.8mm_EP1.25x1.7mm` | E | U17 |  |  |
 | `Skyworks_SKY13351_MLPD-6_1x1mm` | B | U82 |  |  |
@@ -96,4 +98,4 @@ zero is a real answer and is recorded the same way; what the rule refuses is the
 | `Winbond_USON-8-1EP_3x2mm_P0.5mm_EP0.2x1.6mm` | C, E | U4 |  |  |
 | `nanoSIM_GCT_SIM8060-6-0-14-00` | B | J_SIM1 |  |  |
 
-82 footprint(s) to compare, over 7 board(s).
+84 footprint(s) to compare, over 7 board(s).
