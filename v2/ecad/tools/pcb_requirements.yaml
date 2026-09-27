@@ -2553,24 +2553,6 @@ open_items:
       order code in gen_sch_d.py or lcsc_fill.py, D7 and D8 are SS14 filled as C51897884 by lcsc_fill.py with no
       sheet in v2/vendor. Open until the sheets are filed (and D2 has an order code, EQ-21's class) and the
       three nets are declared nodes at the rail plus the maker's forward drop.
-  - id: S-79
-    class: SESSION
-    status: OPEN
-    title: >-
-      (Layer 3, the second release check of 27 September 2026 at eb9f9030,
-      v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2-2026-09-27.md, finding B-2, acceptance item 3.18; ENGINEERING-QUESTIONS
-      EQ-29) No versioned package carries the reviewed registry: the reviewed commit was on no remote branch (GitLab and
-      GitHub main were at 953f5658 when it was read) and no handover snapshot has been cut from a commit carrying its
-      content. The anchor 08f3665a is already on the public main, so LAYER-STATUS layer 3's earlier remaining item on it
-      is met. Open until the integrating session pushes the baseline commit of S-78 to main and cuts the next handover
-      snapshot from it, its manifest naming that commit; the same snapshot carries layer 1's item 14 and layer 2's
-      baselined CONOPS. The targeted fix of 27 September 2026 wrote that baseline (branch fnd/h2, 3e4799eb:
-      baseline_state BASELINED at cecfd0f1) and its narrow verification reversed it (S-80), so the H2 handover snapshot
-      the handover workflow cuts next carries layers 1 and 2 baselined and layer 3 IN_PROGRESS (ENGINEERING-QUESTIONS
-      EQ-29, option (b)); this item closes with a snapshot cut from the pushed commit that carries the re-baseline. H2
-      was cut as option (b), carrying layer 3 IN_PROGRESS. The re-baseline (a54b793b, baselined in 2c12be91) and its
-      re-check (v2/docs/reviews/TARGETED-RECHECK-LAYER-3-2026-09-27.md, B-1 CLOSED) are on branch fnd/l3rb; the package
-      is the next snapshot, H3, cut from the pushed commit that carries them, and this item closes with it.
   - id: S-81
     class: SESSION
     status: OPEN
@@ -3026,6 +3008,35 @@ closed_items:
       standing rule of 26 September 2026 the session set 72 hours, recorded as the session's, and the owner's own
       setting replaces it whenever he gives one (stated once on 27 September 2026, layer 3's release check, R2). What
       only the owner can decide about M1's failing balance is M-02.
+  - id: S-79
+    closed_by: commit 75ad6ee5
+    closing_evidence: >-
+      Handover snapshot H3 (v2/release/handover/H3.zip, sha256 6922a96d732442e99a65d8db3f0734378bd7ea636894fca283a4b3ca424dd07a, 52187825 bytes, 2275 entries, with H3.zip.sha256 and
+      H3.MANIFEST.tsv beside it) is cut from commit 75ad6ee5, which is on the public main of GitLab and of GitHub (both
+      read 27 September 2026 21:18 UTC, before the build, so its SOURCE.txt marks the commit public) and carries
+      the re-baseline of this registry (baseline_state BASELINED at a54b793b, written in 2c12be91) and its re-check
+      (v2/docs/reviews/TARGETED-RECHECK-LAYER-3-2026-09-27.md, filed in 24e7bf5a). Its manifest names every file
+      with its git blob sha and its sha256, and handover_pack.py verify reads OK on the ZIP. The test suite on that
+      exact commit reads 1998 passed, 0 failed, 2 skipped on the KiCad host and 1937 passed, 0 failed, 63 skipped
+      on the runner, which has no KiCad (a skip is not a pass). The package carries layers 1, 2 and 3 as COMPLETE,
+      each on its AI review records, never a qualified review; it proves no requirement met. The registry inside
+      the ZIP still lists this item as open, because a snapshot cannot carry the record of its own filing; the two
+      fresh checks of H3 are recorded in v2/docs/handover/RELEASE-H3.md.
+    title: >-
+      (Layer 3, the second release check of 27 September 2026 at eb9f9030,
+      v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2-2026-09-27.md, finding B-2, acceptance item 3.18; ENGINEERING-QUESTIONS
+      EQ-29) No versioned package carries the reviewed registry: the reviewed commit was on no remote branch (GitLab and
+      GitHub main were at 953f5658 when it was read) and no handover snapshot has been cut from a commit carrying its
+      content. The anchor 08f3665a is already on the public main, so LAYER-STATUS layer 3's earlier remaining item on it
+      is met. Open until the integrating session pushes the baseline commit of S-78 to main and cuts the next handover
+      snapshot from it, its manifest naming that commit; the same snapshot carries layer 1's item 14 and layer 2's
+      baselined CONOPS. The targeted fix of 27 September 2026 wrote that baseline (branch fnd/h2, 3e4799eb:
+      baseline_state BASELINED at cecfd0f1) and its narrow verification reversed it (S-80), so the H2 handover snapshot
+      the handover workflow cuts next carries layers 1 and 2 baselined and layer 3 IN_PROGRESS (ENGINEERING-QUESTIONS
+      EQ-29, option (b)); this item closes with a snapshot cut from the pushed commit that carries the re-baseline. H2
+      was cut as option (b), carrying layer 3 IN_PROGRESS. The re-baseline (a54b793b, baselined in 2c12be91) and its
+      re-check (v2/docs/reviews/TARGETED-RECHECK-LAYER-3-2026-09-27.md, B-1 CLOSED) are on branch fnd/l3rb; the package
+      is the next snapshot, H3, cut from the pushed commit that carries them, and this item closes with it.
 
 records:
   - id: REQ-001
