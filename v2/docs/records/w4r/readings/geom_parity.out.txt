@@ -1,0 +1,6 @@
+geom_parity.py on the KiCad box (vast.ai 52646493, KiCad 9.0.9), clone of main 91894cd7 with stream w4r's files, 27 September 2026 14:23 UTC:
+J_DOCK on board A: flipped True orientation 0.0 fpid PogoPins_2x6
+land-derived offsets == board-file offsets: True 12 12
+target -> pin (land): [(1, 7), (2, 8), (3, 9), (4, 10), (5, 11), (6, 12), (7, 1), (8, 2), (9, 3), (10, 4), (11, 5), (12, 6)]
+same map from board file: True
+(board A's board file pcb-a-power-a23/pcb-a-power.kicad_pcb 58e26c67987b1daa; E5 pcb-e5-block/pcb-e5-block.kicad_pcb 686b29a734c55b9a)

@@ -1,0 +1,319 @@
+{
+ "how": "rules_status.py (full run, --out-dir scratch) in two throwaway clones of main 91894cd7 holding main's evidence folders: 'before' as main is; 'after' with stream w4r's four files, all six drafts applied and committed in the clone, and the box re-take's check_contracts_e5 in pcb-e5-block/out/. 'files_only' is a scoped E5 run with w4r's four files and the re-take but no draft.",
+ "changed_rows": [
+  {
+   "board": "A",
+   "rule": "SGN-001",
+   "before": {
+    "result": "PASS",
+    "why": "rules_complete PASS of 339",
+    "evidence_class": "CURRENT_CANDIDATE",
+    "evidence_cause": "BOUND",
+    "evidence_why": "rules_complete: the rule judges the registry itself and the reading is taken under the current one",
+    "retake_class": "CURRENT_CANDIDATE",
+    "retake_cause": "BOUND"
+   },
+   "after": {
+    "result": "PASS",
+    "why": "rules_complete PASS of 339",
+    "evidence_class": "AWAITING_REVALIDATION",
+    "evidence_cause": "TOOL_CHANGED",
+    "evidence_why": "rules_complete: the code bundle of rules_render.py has changed since this reading (wrote 74cf8be220c05091, now 41b5ce50c9bf3983): rules_render.py (changed), rules_status.py (changed)",
+    "retake_class": "CURRENT_CANDIDATE",
+    "retake_cause": "BOUND"
+   }
+  },
+  {
+   "board": "B",
+   "rule": "SGN-001",
+   "before": {
+    "result": "PASS",
+    "why": "rules_complete PASS of 339",
+    "evidence_class": "CURRENT_CANDIDATE",
+    "evidence_cause": "BOUND",
+    "evidence_why": "rules_complete: the rule judges the registry itself and the reading is taken under the current one",
+    "retake_class": "CURRENT_CANDIDATE",
+    "retake_cause": "BOUND"
+   },
+   "after": {
+    "result": "PASS",
+    "why": "rules_complete PASS of 339",
+    "evidence_class": "AWAITING_REVALIDATION",
+    "evidence_cause": "TOOL_CHANGED",
+    "evidence_why": "rules_complete: the code bundle of rules_render.py has changed since this reading (wrote 74cf8be220c05091, now 41b5ce50c9bf3983): rules_render.py (changed), rules_status.py (changed)",
+    "retake_class": "CURRENT_CANDIDATE",
+    "retake_cause": "BOUND"
+   }
+  },
+  {
+   "board": "C",
+   "rule": "SGN-001",
+   "before": {
+    "result": "PASS",
+    "why": "rules_complete PASS of 339",
+    "evidence_class": "CURRENT_CANDIDATE",
+    "evidence_cause": "BOUND",
+    "evidence_why": "rules_complete: the rule judges the registry itself and the reading is taken under the current one",
+    "retake_class": "CURRENT_CANDIDATE",
+    "retake_cause": "BOUND"
+   },
+   "after": {
+    "result": "PASS",
+    "why": "rules_complete PASS of 339",
+    "evidence_class": "AWAITING_REVALIDATION",
+    "evidence_cause": "TOOL_CHANGED",
+    "evidence_why": "rules_complete: the code bundle of rules_render.py has changed since this reading (wrote 74cf8be220c05091, now 41b5ce50c9bf3983): rules_render.py (changed), rules_status.py (changed)",
+    "retake_class": "CURRENT_CANDIDATE",
+    "retake_cause": "BOUND"
+   }
+  },
+  {
+   "board": "D",
+   "rule": "SGN-001",
+   "before": {
+    "result": "PASS",
+    "why": "rules_complete PASS of 339",
+    "evidence_class": "CURRENT_CANDIDATE",
+    "evidence_cause": "BOUND",
+    "evidence_why": "rules_complete: the rule judges the registry itself and the reading is taken under the current one",
+    "retake_class": "CURRENT_CANDIDATE",
+    "retake_cause": "BOUND"
+   },
+   "after": {
+    "result": "PASS",
+    "why": "rules_complete PASS of 339",
+    "evidence_class": "AWAITING_REVALIDATION",
+    "evidence_cause": "TOOL_CHANGED",
+    "evidence_why": "rules_complete: the code bundle of rules_render.py has changed since this reading (wrote 74cf8be220c05091, now 41b5ce50c9bf3983): rules_render.py (changed), rules_status.py (changed)",
+    "retake_class": "CURRENT_CANDIDATE",
+    "retake_cause": "BOUND"
+   }
+  },
+  {
+   "board": "E",
+   "rule": "SGN-001",
+   "before": {
+    "result": "PASS",
+    "why": "rules_complete PASS of 339",
+    "evidence_class": "CURRENT_CANDIDATE",
+    "evidence_cause": "BOUND",
+    "evidence_why": "rules_complete: the rule judges the registry itself and the reading is taken under the current one",
+    "retake_class": "CURRENT_CANDIDATE",
+    "retake_cause": "BOUND"
+   },
+   "after": {
+    "result": "PASS",
+    "why": "rules_complete PASS of 339",
+    "evidence_class": "AWAITING_REVALIDATION",
+    "evidence_cause": "TOOL_CHANGED",
+    "evidence_why": "rules_complete: the code bundle of rules_render.py has changed since this reading (wrote 74cf8be220c05091, now 41b5ce50c9bf3983): rules_render.py (changed), rules_status.py (changed)",
+    "retake_class": "CURRENT_CANDIDATE",
+    "retake_cause": "BOUND"
+   }
+  },
+  {
+   "board": "P",
+   "rule": "SGN-001",
+   "before": {
+    "result": "PASS",
+    "why": "rules_complete PASS of 339",
+    "evidence_class": "CURRENT_CANDIDATE",
+    "evidence_cause": "BOUND",
+    "evidence_why": "rules_complete: the rule judges the registry itself and the reading is taken under the current one",
+    "retake_class": "CURRENT_CANDIDATE",
+    "retake_cause": "BOUND"
+   },
+   "after": {
+    "result": "PASS",
+    "why": "rules_complete PASS of 339",
+    "evidence_class": "AWAITING_REVALIDATION",
+    "evidence_cause": "TOOL_CHANGED",
+    "evidence_why": "rules_complete: the code bundle of rules_render.py has changed since this reading (wrote 74cf8be220c05091, now 41b5ce50c9bf3983): rules_render.py (changed), rules_status.py (changed)",
+    "retake_class": "CURRENT_CANDIDATE",
+    "retake_cause": "BOUND"
+   }
+  },
+  {
+   "board": "E5",
+   "rule": "INT-001",
+   "before": {
+    "result": "PASS",
+    "why": "interfaces_e5 PASS of 0",
+    "evidence_class": "AWAITING_REVALIDATION",
+    "evidence_cause": "UNBOUND",
+    "evidence_why": "check_contracts: check_contracts records no board by content, so it cannot be shown to be about the current candidate; re-take it with the artefact's sha recorded",
+    "retake_class": "AWAITING_REVALIDATION",
+    "retake_cause": "UNBOUND"
+   },
+   "after": {
+    "result": "FAIL",
+    "why": "check_contracts_e5 FAIL: {'fail': 10, 'pass': 28}",
+    "evidence_class": "CURRENT_CANDIDATE",
+    "evidence_cause": "BOUND",
+    "evidence_why": "interfaces_e5: board 686b29a734c55b9a is the current design (no schematic)",
+    "retake_class": "CURRENT_CANDIDATE",
+    "retake_cause": "BOUND"
+   }
+  },
+  {
+   "board": "E5",
+   "rule": "SCH-003",
+   "before": {
+    "result": "PASS",
+    "why": "check_contracts_e5 PASS of 33",
+    "evidence_class": "AWAITING_REVALIDATION",
+    "evidence_cause": "TOOL_CHANGED",
+    "evidence_why": "check_contracts_e5: BY PROXY FOR ITS HELPERS: block_contract.py is byte for byte the file that wrote it, and 1 module(s) it imports cannot be shown to predate the reading (2026-09-21T12:53:13Z): verdict.py last committed 2026-09-26T22:14:38Z; whether a change touched what it measures is not said",
+    "retake_class": "AWAITING_REVALIDATION",
+    "retake_cause": "OTHER_BOARD"
+   },
+   "after": {
+    "result": "FAIL",
+    "why": "check_contracts_e5 FAIL: {'fail': 10, 'pass': 28}",
+    "evidence_class": "CURRENT_CANDIDATE",
+    "evidence_cause": "BOUND",
+    "evidence_why": "check_contracts_e5: board 686b29a734c55b9a is the declared phase's and is the design itself (no schematic)",
+    "retake_class": "CURRENT_CANDIDATE",
+    "retake_cause": "BOUND"
+   }
+  },
+  {
+   "board": "E5",
+   "rule": "SGN-001",
+   "before": {
+    "result": "PASS",
+    "why": "rules_complete PASS of 339",
+    "evidence_class": "CURRENT_CANDIDATE",
+    "evidence_cause": "BOUND",
+    "evidence_why": "rules_complete: the rule judges the registry itself and the reading is taken under the current one",
+    "retake_class": "CURRENT_CANDIDATE",
+    "retake_cause": "BOUND"
+   },
+   "after": {
+    "result": "PASS",
+    "why": "rules_complete PASS of 339",
+    "evidence_class": "AWAITING_REVALIDATION",
+    "evidence_cause": "TOOL_CHANGED",
+    "evidence_why": "rules_complete: the code bundle of rules_render.py has changed since this reading (wrote 74cf8be220c05091, now 41b5ce50c9bf3983): rules_render.py (changed), rules_status.py (changed)",
+    "retake_class": "CURRENT_CANDIDATE",
+    "retake_cause": "BOUND"
+   }
+  }
+ ],
+ "summary_before": {
+  "evidence": {
+   "CURRENT_CANDIDATE": 81,
+   "VALID_HISTORICAL": 0,
+   "AWAITING_REVALIDATION": 215,
+   "DESK_REVIEW": 21,
+   "PHYSICAL_TEST": 0,
+   "NO_EVIDENCE": 21,
+   "current_pass": 66,
+   "rows": 338
+  },
+  "layout_entry": {
+   "a": {
+    "ready": false,
+    "reasons": 7
+   },
+   "b": {
+    "ready": false,
+    "reasons": 7
+   },
+   "c": {
+    "ready": false,
+    "reasons": 5
+   },
+   "d": {
+    "ready": false,
+    "reasons": 8
+   },
+   "e": {
+    "ready": false,
+    "reasons": 5
+   },
+   "e5": {
+    "ready": false,
+    "reasons": 2
+   },
+   "p": {
+    "ready": false,
+    "reasons": 6
+   }
+  }
+ },
+ "summary_after": {
+  "evidence": {
+   "CURRENT_CANDIDATE": 76,
+   "VALID_HISTORICAL": 0,
+   "AWAITING_REVALIDATION": 220,
+   "DESK_REVIEW": 21,
+   "PHYSICAL_TEST": 0,
+   "NO_EVIDENCE": 21,
+   "current_pass": 59,
+   "rows": 338
+  },
+  "layout_entry": {
+   "a": {
+    "ready": false,
+    "reasons": 7
+   },
+   "b": {
+    "ready": false,
+    "reasons": 7
+   },
+   "c": {
+    "ready": false,
+    "reasons": 5
+   },
+   "d": {
+    "ready": false,
+    "reasons": 8
+   },
+   "e": {
+    "ready": false,
+    "reasons": 5
+   },
+   "e5": {
+    "ready": false,
+    "reasons": 2
+   },
+   "p": {
+    "ready": false,
+    "reasons": 6
+   }
+  }
+ },
+ "e5_layout_entry": {
+  "before": [
+   "INT-001 PASS on AWAITING_REVALIDATION evidence (UNBOUND)",
+   "FEA-007 holds layout entry: Per board, the desk items of CASE-FIT-UNCERTAINTIES.md section 2: board B, the jumper plug picked from a maker's drawing with M17g and M17x MET on the design ba"
+  ],
+  "after": [
+   "INT-001 FAIL on CURRENT_CANDIDATE evidence (BOUND)",
+   "FEA-007 holds layout entry: Per board, the desk items of CASE-FIT-UNCERTAINTIES.md section 2: board B, the jumper plug picked from a maker's drawing with M17g and M17x MET on the design ba"
+  ]
+ },
+ "files_only": [
+  {
+   "rule": "SCH-003",
+   "result": "FAIL",
+   "why": "check_contracts_e5 FAIL: {'fail': 10, 'pass': 28}",
+   "evidence_class": "AWAITING_REVALIDATION",
+   "evidence_cause": "CONFIG_UNDECLARED",
+   "evidence_why": "check_contracts_e5: block_contract.py is not declared in rules_status.CONFIG_INPUTS, so what configuration the reading depended on is unknown",
+   "retake_class": "AWAITING_REVALIDATION",
+   "retake_cause": "CONFIG_UNDECLARED"
+  },
+  {
+   "rule": "INT-001",
+   "result": "PASS",
+   "why": "interfaces_e5 PASS of 0",
+   "evidence_class": "AWAITING_REVALIDATION",
+   "evidence_cause": "UNBOUND",
+   "evidence_why": "check_contracts: check_contracts records no board by content, so it cannot be shown to be about the current candidate; re-take it with the artefact's sha recorded",
+   "retake_class": "AWAITING_REVALIDATION",
+   "retake_cause": "UNBOUND"
+  }
+ ]
+}

@@ -111,7 +111,8 @@ def coverage_doc(reg, cov):
         r = by.get(rid, {}); c = cov[rid]; v = c.get("verification") or {}
         L.append("| %s | %s | %s | %s | %s | %s | **%s** |"
                  % (rid, r.get("domain", ""), r.get("release_effect", ""), c.get("implementation", ""),
-                    v.get("tool", "none") + ((" -> " + v["verdict"]) if v.get("verdict") else ""),
+                    v.get("tool", "none") + ((" -> " + v["verdict"]) if v.get("verdict") else "")
+                    + "".join("; on %s -> %s" % (str(k).upper(), x) for k, x in sorted((v.get("verdict_by_board") or {}).items())),
                     v.get("fixtures", ""), c.get("maturity", "")))
     counts = {}
     for c in cov.values(): counts[c.get("maturity")] = counts.get(c.get("maturity"), 0) + 1

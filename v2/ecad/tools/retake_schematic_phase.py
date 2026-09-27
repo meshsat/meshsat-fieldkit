@@ -71,7 +71,8 @@ NETLIST = "out/{N}.net"
 E5_DERATE_WHY = "this board has no schematic and no BOM: it is copper, plated targets, wire lands and mounting holes"
 
 # verdict name (with <letter> for the board) -> (writer file, argv after the interpreter, what it needs).
-# `needs`: "netlist" = the board's committed out/<stem>.net; "kicad" = the netlist, the schematic and kicad-cli.
+# `needs`: "netlist" = the board's committed out/<stem>.net; "kicad" = the netlist, the schematic and kicad-cli;
+# "pcbnew" = KiCad's Python module (block_contract.py on board E5, which has no netlist).
 # Sources: gate_sweep.sh (the judging re-take) for every line, full.sh:83 for erc_gate --run, and the tools' own
 # --netlist modes for intent_rails (intent_checks.py:1355) and edge_length (edge_length.py:655).
 WRITERS = {
@@ -98,6 +99,11 @@ WRITERS_NO_NETLIST = {
     "safe_lines_<letter>":   ("safe_lines.py", ["{T}/safe_lines.py", "--board", "{L}"], None),
     "port_protect_<letter>": ("port_protect.py", ["{T}/port_protect.py", "--board", "{L}"], None),
     "derate":                ("derate.py", ["{T}/derate.py", "{N}.kicad_pcb", "--no-components", E5_DERATE_WHY], None),
+    # BOARD E5's CONTRACT READING (27 September 2026, stream w4r): block_contract.py writes check_contracts_e5 (SCH-003,
+    # and INT-001 on E5 by the coverage map's verdict_by_board); check_contracts.py writes nothing for E5. As
+    # gate_sweep.sh:226 runs it, without board A's board file: the tool reads board A's declared phase netlist and the
+    # J_DOCK land from the tree, read-only. It loads E5's board file and the land with pcbnew ("pcbnew" below).
+    "check_contracts_<letter>": ("block_contract.py", ["{T}/block_contract.py", "{N}.kicad_pcb"], "pcbnew"),
 }
 NETWORK_WRITERS = ("jlc_certify.py",)
 # Files a writer leaves beside its verdict that the verdict names, copied with it by --routed as gate_sweep.sh copies
@@ -112,6 +118,13 @@ STAGE_FILES = ("{N}.kicad_sch", "{N}.kicad_pro", "{N}.kicad_pcb", "fp-lib-table"
 
 class PlanError(Exception):
     pass
+
+
+def have_pcbnew():
+    """Can this interpreter import KiCad's pcbnew? Asked without importing it (the driver itself never needs it)."""
+    import importlib.util
+    try: return importlib.util.find_spec("pcbnew") is not None
+    except (ImportError, ValueError): return False
 
 
 def _canon(name, letter):
@@ -329,6 +342,9 @@ def run(p, routed=False, log=print):
             if st["needs"] == "kicad" and not have_kicad:
                 sr["skipped"] = "kicad-cli is not on this host; a skip is not a pass, run it on the box"
                 res["ok"] = False; continue
+            if st["needs"] == "pcbnew" and not have_pcbnew():
+                sr["skipped"] = "KiCad's pcbnew is not importable on this host; a skip is not a pass, run it on the box"
+                res["ok"] = False; continue
             env = dict(os.environ, **st["env"])
             env.pop("VERDICT_ADVISORY", None)          # a re-take is a judging reading, never advisory
             t0 = sr["t0"] = time.time()
@@ -408,6 +424,7 @@ def render_plan(p, have_kicad):
         for st in bp["steps"]:
             note = ""
             if st["needs"] == "kicad" and not have_kicad: note = "   [kicad-cli absent here: SKIPPED on --run]"
+            elif st["needs"] == "pcbnew" and not have_pcbnew(): note = "   [pcbnew absent here: SKIPPED on --run]"
             lines.append("    $ " + " ".join(_q(_short(a)) for a in st["argv"]) + "   # " + ", ".join(st["rules"]) + note)
         for e in bp["errors"]:
             lines.append("  ERROR " + e)

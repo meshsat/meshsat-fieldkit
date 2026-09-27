@@ -7,7 +7,7 @@ Every pair that is not a current PASS, classified. Generated from tools/pcb_deci
 map's maturity and each deciding verdict: a decision that claims a pair wins over everything else, because
 the ruling is the action that moves it, and the measurement is reported beside it rather than lost.
 
-**132 open pair(s)** over 7 board(s). **44 are measured failures** (a tool looked and the board failed), which are **36 distinct readings**, and **0 of those are claimed by an open owner decision**.
+**133 open pair(s)** over 7 board(s). **44 are measured failures** (a tool looked and the board failed), which are **36 distinct readings**, and **0 of those are claimed by an open owner decision**.
 
 | waiting on | pairs | what it means |
 |---|---:|---|
@@ -18,7 +18,7 @@ the ruling is the action that moves it, and the measurement is reported beside i
 | `MEASURED_FAILURE` | 44 | the tool looked and the board failed |
 | `VENDOR_WAIT` | 2 | a fabricator or a standards body, and nobody here |
 | `OWNER_WORK` | 7 | work only the owner or the ordering session can do |
-| `NOT_JUDGED` | 41 | not judged, for the reason the reading gives |
+| `NOT_JUDGED` | 42 | not judged, for the reason the reading gives |
 
 A pair is what a BOARD has to satisfy, so the table counts pairs; these rules are decided by a verdict
 written ONCE for the whole set, so their rows are one reading seen on every board and not that many separate
@@ -35,12 +35,12 @@ things to fix.
 | C | 15 | 6 | 1 | 0 | 0 | 7 |
 | D | 16 | 3 | 1 | 1 | 4 | 6 |
 | E | 19 | 6 | 1 | 0 | 4 | 7 |
-| E5 | 5 | 2 | 1 | 0 | 0 | 2 |
+| E5 | 6 | 2 | 1 | 0 | 0 | 3 |
 | P | 16 | 8 | 1 | 0 | 0 | 5 |
 
 ## Readings owed
 
-Of the 107 open pairs with a reading beside them, **102 are decided by a reading taken under a tool that has
+Of the 108 open pairs with a reading beside them, **103 are decided by a reading taken under a tool that has
 CHANGED since**. A tool change moves no rule-set fingerprint and no per-rule digest, so nothing else on these
 pages can say it. It is an upper bound, because a tool file moves for a comment as readily as for a
 criterion, and it decides nothing: it says the reading is owed. Re-take with retake_gate.sh or a sweep.
@@ -56,6 +56,7 @@ criterion, and it decides nothing: it says the reading is owed. Re-take with ret
 | `DOC-002` | A, B, D, E |
 | `EMC-001` | B |
 | `GND-001` | B |
+| `INT-001` | E5 |
 | `ISO-001` | A, B, E |
 | `MEC-001` | A |
 | `OUT-001` | A, B, C, D, E, E5, P |
@@ -222,7 +223,7 @@ What closes these is a re-cut and a route, not a drawing.
 | `DFA-001` | E | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 | `DFA-001` | P | INCONCLUSIVE | assembly_set INCONCLUSIVE: every polarised footprint the boards place, against the rotation table the ordering session keeps and the date each row was compared with the assembler's own pr |
 
-## NOT_JUDGED (41): not judged, for the reason the reading gives
+## NOT_JUDGED (42): not judged, for the reason the reading gives
 
 | rule | board | reading | what it waits on |
 |---|---|---|---|
@@ -263,6 +264,7 @@ What closes these is a re-cut and a route, not a drawing.
 | `DOC-001` | E | INCONCLUSIVE | final_gate_e INCONCLUSIVE: this board is HELD by an open owner decision, so its paperwork is not current and cannot be made current while the hold stands |
 | `CMP-002` | E5 | INCONCLUSIVE | jlc_certify_e5 was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
 | `SUP-001` | E5 | INCONCLUSIVE | jlc_certify_e5 was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
+| `INT-001` | E5 | INCONCLUSIVE | taken under rule set ff8151db3576437b, current is 635ff031f210f48c |
 | `SCH-002` | P | INCONCLUSIVE | no netlist_parts verdict for this board |
 | `CMP-002` | P | INCONCLUSIVE | jlc_certify_p was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
 | `SUP-001` | P | INCONCLUSIVE | jlc_certify_p was taken 2026-09-26T07:53:39, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
