@@ -136,8 +136,10 @@ to 3.
 **What exists outside H3.** A circuit candidate called set 6 stands on branch `fnd/r8int6`, not promoted and not in
 this snapshot: remedies for EQ-25 on board C, HOT-R1 on boards A and E, the undeclared supplies and flyback diodes
 behind PWR-001 on boards C, D, E and P, board P's protection table, the RockBLOCK's ENABLE under EMCON on board B and
-E5's INT-001. The integrating session reports its suite on the KiCad host at 2010 passed, 1 failed, 3 skipped, the
-failure a checker's false positive under repair; that record is not in H3. Five desk streams called wave 5a (branches
+E5's INT-001. Its suite on the KiCad host read 2010 passed, 1 failed, 3 skipped at `a76a246e`, the failure a checker's false
+positive (`reliability.py` read the word "socket" in the description of three logic gates of board B); with the
+checker corrected it reads 2015 passed, 0 failed, 3 skipped at `760d7f41` on that branch, where those records are
+filed. They are not in H3, and the candidate's readings were being re-taken when this was written. Five desk streams called wave 5a (branches
 `fnd/w5tray`, `fnd/w5stack`, `fnd/w5si`, `fnd/w5ident` and `fnd/w5i2c`: the lid tray, the stackups, the signal rules,
 the parts and the I2C work of layer 5) are being recovered from their transcripts, as unchecked checkpoints on four
 of the five branches when this was written. None of
