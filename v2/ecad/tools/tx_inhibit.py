@@ -32,8 +32,9 @@ PCA9555 pin through a level-shifter FET, and board B's and C's paths passed whil
 STM32 pins and an RP2040 pin. Now every net of an accepted path is taken as a CONDUCTOR: from the net, across the
 mated board-to-board connectors (the four ribbons whose maps check_contracts proves identical) and through series
 resistors, beads, level-shifter channels and any diode that can pull it away from the level EMCON forces, every pin
-found must be known to only READ it (a logic input on the land its pin map is for, a FET gate, a switch enable, a
-pin a maker document calls an input, or a tap declared in READER_TAPS with the resistor that makes the gate win).
+found must be known to only READ it (a logic input on the land its pin map is for, wired as its row holds where the
+part's function is set by its wiring (EQ-18), a FET gate, a switch enable, a pin a maker document calls an input, or
+a tap declared in READER_TAPS with the resistor that makes the gate win).
 A pin whose direction firmware sets (a controller, an expander) FAILS the path; any other pin nobody has shown to be
 an input leaves it UNDECIDED, named, which check_contracts counts as INCONCLUSIVE and never as a pass. The two
 asserted lines are judged once each as a set-wide conductor ("line" results), and a path inherits its line's answer.
@@ -199,6 +200,23 @@ PCA9555's SCL is read as its SDA is (SCPS131J 6.3 note (1)). No verdict moves on
 this touches (board B's J_LIME, U13 and U14, board A's J_PA) read FAIL on their lines or UNDECIDED already, and their texts
 now name U33, the E72 modules, J_ZBDBG1, J_ZBDBG2 and the INA226.
 
+AND A CONFIGURABLE GATE IS READ ONLY IN THE WIRING ITS ROW HOLDS (EQ-18, stream w3t, 27 September 2026; taken by the session
+under the owner's standing rule of 26 Sep 2026). Board C's round 8 put its hardware EMCON lamp's gate U14, a TI SN74LVC1G57,
+on both asserted lines (In0 pin 3 on TX_INHIBIT_n, In2 pin 6 on EMCON_HW), and with no row for it the walk read both lines
+UNDECIDED at U14 ("an active pin no held document shows to be an input"). Its function is set by how its inputs are wired
+(SCES414P 8.1), so its row carries its maker's pin map (Pin Functions, DBV and DCK), its II, Ioff and input clamp rows (6.5,
+6.1) and one configuration, Figure 7's: In1 (pin 1) tied to the part's own GND pin on a ground net, where Table 1 gives Y =
+NOR(In0, In2). logic_of() gives the part that NOR only where its netlist carries that wiring; any other wiring reads
+`unwired`, and every reader of LOGIC then takes it as a gate on a land its map is not for: the walk stops there, and a pin of
+it on a conductor, a line or a gated rail is UNDECIDED, named with the wiring found (limit 13). Its Schmitt inputs are read at
+VIL_LOW, VT- being 0.84 V minimum at VCC 3 V, and it and the 74LVC1G17 never pass a HIGH, VT+ being stated at VCC 3 V and 4.5 V
+only (`vih_gap`, limit 14). On main 38dcd764's six netlists U14 is wired as Figure 7 draws: the EMCON_HW line reads PASS (was
+UNDECIDED at U14 pin 6), and the TX_INHIBIT_n line reads FAIL (was UNDECIDED at U14 pin 3): with board C unpowered, its three
+100 kOhm pull-downs (A R145, B R59, D R2) against 31 uA of stated pin current (C U9's and U14's Ioff, 10 uA each, D U12's 10
+uA, A U35's and U37's 0.5 uA each) reach 1.09 V over the gates' 0.8 V VIL; without U14 the same state read 0.74 V. That is a
+circuit finding (the line's pull-downs against the input round 8 added), not the tool's; board D's SA868 inherits it, and
+board B's RockBLOCK 9704 and E22-900M30S, which rode only the EMCON_HW line, read PASS.
+
 WHAT THE WALK DOES NOT READ (named; RF-002's coverage row carries the same list with gap SOURCE_OR_APPLICABILITY_UNRESOLVED.
 Since the twelfth pass no pin on a gated conductor is a load without a word: each item is a clearance that rests on something
 other than a maker's row, named here so that none is silent, a size or a state the walk does not judge, or a false UNDECIDED,
@@ -244,7 +262,8 @@ seen):
   (7) A charger's current and a feed's size (an Ioff, an II, an enable's leakage, an off-state leakage, a clamp current) are
       not judged; a tied pin is judged by where its partner is drawn, not by whether the partner's net is live while the rail
       is off; a firmware pin behind a resistor is UNDECIDED whatever its row; the second-feed check follows resistors, not FET
-      channels or diodes, past the first part; a gate on a land its map is not for is UNDECIDED by any pin; the census takes
+      channels or diodes, past the first part; a gate on a land its map is not for, or a configurable gate wired as its row
+      does not hold (13), is UNDECIDED by any pin; the census takes
       a '+' rail as always up; the second-feed check reads this file's ACCESSORIES, not the list a caller passes judge()
       (every accessory on a gated rail reads UNDECIDED either way since the twelfth pass).
   NAMED AT INTEGRATION (27 September 2026, the final independent check of the twelfth pass; its blocking item and four of
@@ -277,6 +296,20 @@ seen):
   (12) A SWITCH WITH NO ENABLE ROW (no _EN_ROWS entry): its enable held up beside its input on the falling net reads
       UNDECIDED, named, as _class_pin reads it; before the integration this raised KeyError and stopped the walk. All five
       SWITCHES rows carry an enable row today.
+  NAMED WITH EQ-18 (stream w3t, 27 September 2026):
+  (13) A CONFIGURABLE GATE IS READ IN ONE WIRING. The SN74LVC1G57 row holds Figure 7's NOR alone: In1 on the same net as the
+      part's own GND pin, that net a ground. In1 to ground through a resistor or a link, on a ground net other than its GND pin's,
+      on VCC, on a signal or floating, and every other configuration its maker's Table 2 lists (AND, NAND and OR with an
+      inverted input, XNOR), read UNDECIDED by any pin, which is a false UNDECIDED where that wiring would have held. The part's
+      VCC pin is still read from its pin map in any wiring (_supply_nets). The condition is read from the netlist's nets, not
+      from the pin names the symbol carries (board C's symbol names its pins after their nets). On the six committed netlists
+      the only configurable gate is board C's U14, wired as Figure 7 draws.
+  (14) A HIGH AT A SCHMITT INPUT NEVER PASSES. The 74LVC1G17 (DS35124) and the SN74LVC1G57 (SCES414P) state VT+ at VCC 3 V and
+      4.5 V and at no VCC between, and their 4.5 V rows (2.74 V maximum) are above VIH_HIGH, so a net EMCON holds HIGH at such an
+      input is UNDECIDED at any level at or above 2.0 V and FAILS under it (_threshold, `vih_gap`): a false UNDECIDED for a net
+      driven to the reader's own rail. Their VT- is read at the 3 V row over the whole band (0.80 V and 0.84 V minimum, at or
+      above VIL_LOW, as every row either sheet states at 3 V and above is), an inference from rows that rise with VCC, not a
+      stated band. No held net on the six committed netlists is read HIGH at either family.
 
 AND IT WALKS WHAT MAIN 458b2873's BOARD B DRAWS (round 6 fourth pass, R4T-D46 and R4T-D47). S-01 inverts EMCON_HW once with a
 2N7002 switch to ground (Q11, EMCON_ON pulled up by R513) and gates each module radio with an SN74LVC32A OR; the WiFi cards'
@@ -389,7 +422,37 @@ LOGIC = [
          cite="Diodes Incorporated 74LVC1G17, DS35124 Rev. 8-2 (April 2021), Pin Assignments and Pin Descriptions, "
               "SOT25/SOT353: NC 1, A 2, GND 3, Y 4, VCC 5",
          vcc=("5",), ii=5e-6, ioff=10e-6, vil_ceiling=1.45, leak_cite="DS35124 Rev. 8-2, Electrical Characteristics, -40 to +85 C: II +-5 uA, IOFF +-10 uA "
-                                        "(VCC 0); VT- 0.80 V minimum and VT+ 2.00 V maximum at VCC 3 V"),
+                                        "(VCC 0); VT- 0.80 V minimum and VT+ 2.00 V maximum at VCC 3 V",
+         vih_gap="DS35124 Rev. 8-2, Electrical Characteristics (both temperature columns), states VT+ at VCC 3 V (2.00 V "
+                 "maximum) and 4.5 V (2.74 V maximum) and at no VCC between, so VIH_HIGH's 2.0 V is not a stated maximum over "
+                 "3 V to 3.6 V"),
+    # BOARD C's U14 SINCE ITS ROUND 8 (EQ-18; stream w3t, 27 September 2026): the hardware EMCON lamp's gate is a TI
+    # SN74LVC1G57, a configurable gate whose FUNCTION is chosen by how its inputs are wired (SCES414P 8.1: "The output state
+    # is determined by eight patterns of 3-bit input"). Its pin map holds for any wiring, its function for one: `configs`
+    # lists the wirings this row reads and the gates each selects, and logic_of() gives the part those gates only where its
+    # netlist carries that wiring. Any other wiring reads `unwired` (_unmapped()): no pin of it is walked or cleared, as a
+    # gate on a land its map is not for. The one wiring held is Figure 7's, In1 (pin 1) tied to the part's own GND (pin 2)
+    # on a ground net: Table 1's four rows with In1 L give Y = H only for In2 L and In0 L, which is NOR(In0, In2). With In1
+    # H the same table gives Y = In2 OR NOT In0 (the rows In2 H, In1 H, In0 L -> H), which no row here reads.
+    dict(name="74LVC1G57 configurable gate", value=r"74LVC1G57", fp=r"SOT-23-6|SC-70-6|SOT-363",
+         gates=[], gnd="2",
+         configs=[dict(low=("1",), gates=[(("3", "6"), "4", "NOR")],
+                       words="SCES414P Table 1 (page 8): with In1 L, Y is H for In2 L and In0 L and L in the other three "
+                             "rows, Y = NOR(In0, In2); Figure 7 (page 9), '2-Input NOR Gate', ties In1 (pin 1) to GND "
+                             "(pin 2) with A on In0 (pin 3) and B on In2 (pin 6)")],
+         cite="TI SN74LVC1G57, SCES414P (November 2016), Pin Functions (DBV, DCK, DRL): In1 1 'Logic input 1' (I), GND 2, "
+              "In0 3 'Logic input 0' (I), Y 4 'Logic output' (O), VCC 5, In2 6 'Logic input 2' (I) "
+              "(v2/vendor/ti/ti-sn74lvc1g57.pdf)",
+         vcc=("5",), ii=1e-6, ioff=10e-6, vil_ceiling=1.87,
+         leak_cite="SCES414P 6.5 (page 5), over the recommended operating free-air range (6.3: -40 to +125 C for every "
+                   "package but BGA): II +-1 uA (VCC 0 V to 5.5 V, VI 5.5 V or GND), Ioff +-10 uA (VCC 0 V, VI or VO 5.5 V; "
+                   "page 1: 'The Ioff circuitry disables the outputs, preventing damaging current backflow through the "
+                   "device when it is powered down'); 6.1 (page 4): input clamp current IIK -50 mA for VI < 0 only, "
+                   "and the input voltage rated to 6.5 V with no condition on VCC ('Inputs are over-voltage tolerant up "
+                   "to 5.5 V', 8.3.2); Schmitt inputs, VT- 0.84 V minimum and VT+ 1.87 V maximum at VCC 3 V",
+         vih_gap="SCES414P 6.5 (page 5) states VT+ at VCC 3 V (1.87 V maximum) and 4.5 V (2.74 V maximum) and at no VCC "
+                 "between, so VIH_HIGH's 2.0 V is not a stated maximum over 3 V to 3.6 V (gen_sch_c.py's U14 note, linear "
+                 "between the two rows, reads about 2.04 V at 3.3 V)"),
     # BOARD B's U111, U211 AND U311 SINCE MAIN 458b2873 (round 6 fourth pass): S-01's module WiFi and Bluetooth kill gates,
     # KILL = OFF OR EMCON_ON, are SN74LVC32APWR on TSSOP-14. A walk that does not know the OR stops at EMCON_ON and reads
     # every Compute Module radio "EMCON does not reach it".
@@ -450,7 +513,13 @@ LOGIC = [
 # SCAS595W, Recommended Operating Conditions): 1.65 V. The SN74LVC08A and SN74LVC00A run from 1.65 V to 3.6 V and state
 # VIL 0.35 x VCC, 0.7 V and 0.8 V over their three bands (SCAS283W, SCAS279U): 0.8 V. The Diodes 74LVC1G17 is a Schmitt
 # input, which reads LOW once it falls below VT-, and its VT- minimum is highest at VCC 5.5 V, 1.45 V (DS35124 Rev. 8-2,
-# Electrical Characteristics, both temperature columns): 1.45 V.
+# Electrical Characteristics, both temperature columns): 1.45 V. The TI SN74LVC1G57 has Schmitt inputs too, and its VT-
+# minimum is highest at VCC 5.5 V, 1.87 V (SCES414P 6.5, page 5): 1.87 V (EQ-18, stream w3t, 27 September 2026).
+# `vih_gap` (EQ-18, stream w3t, 27 September 2026) is set on a family whose sheet does not state VIH_HIGH as a maximum over
+# VCC_RANGE: the two Schmitt families state VT+ at VCC 3 V and 4.5 V and at no VCC between, and their 4.5 V row (2.74 V
+# maximum for both) is above 2.0 V. A net held HIGH at such an input is then never read as passing (_threshold). Their VT-
+# at 3 V (0.80 V and 0.84 V minimum) is still read as VIL_LOW over the band, as it was for the 74LVC1G17 since round 6:
+# every row either sheet states at 3 V and above is at or above 0.8 V.
 # `in_clamp` and `od_words` (round 6 twelfth pass, R4T-D71): the maker's words for the inputs of a family with no Ioff row (the
 # SN74LVC08A's and SN74LVC00A's inputs have negative clamping diodes only; the SN74LVC32A's sheet has no clamp-diode section,
 # R4T-F43, so it has none), which decide that an input held up passes nothing into VCC; and for an open-drain output, the
@@ -588,8 +657,35 @@ def logic_of(nl, ref):
     c = nl["comps"].get(ref) or {}
     for fam in LOGIC:
         if re.search(fam["value"], c.get("value", ""), re.I):
-            return fam if re.search(fam["fp"], c.get("fp", "") or "", re.I) else dict(fam, wrong_land=True)
+            if not re.search(fam["fp"], c.get("fp", "") or "", re.I): return dict(fam, wrong_land=True)
+            return _wired(nl, ref, fam) if fam.get("configs") else fam
     return None
+
+
+def _wired(nl, ref, fam):
+    """A configurable family (`configs`) as this part is wired (EQ-18, stream w3t, 27 September 2026): the family with the gates
+    of the first configuration whose `low` pins sit on the same net as the part's own GND pin (`gnd`), that net being a ground;
+    otherwise the family with no gates and `unwired` saying why, which every reader of LOGIC takes as it takes a wrong land
+    (_unmapped): no pin of the part is walked through or cleared."""
+    g = nl["pin"].get((ref, fam["gnd"]), "")
+    for cfg in fam["configs"]:
+        if is_ground(g) and all(nl["pin"].get((ref, p), "") == g for p in cfg["low"]):
+            return dict(fam, gates=cfg["gates"], config=cfg["words"])
+    at = "; ".join("pin %s on %s" % (p, nl["pin"].get((ref, p)) or "no net")
+                   for p in sorted({p for cfg in fam["configs"] for p in cfg["low"]}, key=lambda x: (len(x), x)))
+    return dict(fam, gates=[], unwired="a %s whose function is set by its wiring, and this one is wired %s with its GND pin %s "
+                "on %s, which is not a configuration its row holds (the row reads only %s), so which pin decides its output "
+                "is not known" % (fam["name"], at, fam["gnd"], g or "no net",
+                                  "; ".join(c["words"].split(";")[0] for c in fam["configs"])))
+
+
+def _unmapped(fam):
+    """Why no pin of a logic part is read through its family's map, or None when the map and the gates hold for it: a land
+    the map is not for (`wrong_land`), or a configurable part wired in a configuration its row does not hold (`unwired`)."""
+    if not fam: return None
+    if fam.get("wrong_land"):
+        return "a %s on a land its pin map is not for, so which pin is an output is not known" % fam["name"]
+    return fam.get("unwired")
 
 
 def switch_of(nl, ref):
@@ -650,6 +746,7 @@ def _supply_nets(nl, ref):
     sw = switch_of(nl, ref)
     if sw and sw.get("vin"): return _pin_nets(nl, ref, sw["vin"])
     fam = logic_of(nl, ref)
+    # an `unwired` configurable part keeps its VCC pin: its maker's pin table holds whatever its inputs are wired to (EQ-18)
     if fam and not fam.get("wrong_land") and fam.get("vcc"): return _pin_nets(nl, ref, fam["vcc"])
     return _part_rails(nl, ref)
 
@@ -734,6 +831,8 @@ def reach(nl, only=None):
                 if fam.get("wrong_land"):
                     stopped.append("%s (%s): its land %s is not the package %s's pin map is for"
                                    % (ref, value(nl, ref)[:40], nl["comps"][ref].get("fp"), fam["name"])); continue
+                if fam.get("unwired"):
+                    stopped.append("%s (%s): %s" % (ref, value(nl, ref)[:40], fam["unwired"])); continue
                 for ins, outp, kind in fam["gates"]:
                     if pin in ins:
                         l2 = FORCE[kind].get(lvl)
@@ -981,7 +1080,9 @@ def rail_volts(n):
 PULL_MA_MAX = 4.0
 # THE LEVEL EVERY GATE ON THE ASSERTED LINES READS AS LOW: VIL 0.8 V. TI SN74LVC08A, SCAS283W, Recommended Operating
 # Conditions, VCC 2.7 V to 3.6 V (board A's U26, board B's U19 and U20, v2/vendor/ti); TI SN74LVC1G08, SCES217AA,
-# VCC 3 V to 3.6 V (board D's U12). A line has to stay under it in its fail-safe states (fail_safe() below).
+# VCC 3 V to 3.6 V (board D's U12). Board C's Schmitt readers are read at their VCC 3 V rows, the only rows their sheets
+# state in the band: Diodes 74LVC1G17 VT- 0.80 V minimum (DS35124 Rev. 8-2; U9, U13) and TI SN74LVC1G57 VT- 0.84 V minimum
+# (SCES414P 6.5; U14, EQ-18). A line has to stay under it in its fail-safe states (fail_safe() below).
 VIL_LOW = 0.8
 # A pin whose direction firmware sets is taken at its part's own supply when it drives high, and at this when no rail
 # on the part names its voltage.
@@ -1060,6 +1161,8 @@ def census(boards, walks, k0, n0, level, allowed, target=None, fet_forced=None, 
             if fam is not None:
                 if fam.get("wrong_land"):
                     unk("a %s on a land its pin map is not for, so which pin is an output is not known" % fam["name"]); continue
+                if fam.get("unwired"):
+                    unk(fam["unwired"]); continue
                 if any(pin in ins for ins, _o, _k in fam["gates"]): continue          # a logic input only reads
                 outs = [(ins, kind) for ins, o, kind in fam["gates"] if o == pin]
                 if outs:
@@ -1290,14 +1393,17 @@ def line_census(boards, walks):
 # bound where the sheet states it at or across the threshold the net is judged against: a pin that cannot push the
 # net past the threshold with the current it passes AT the threshold cannot push it there at all.
 _FS_INERT = re.compile(r"^(#|TP|FID|MH|H\d|C\d)")
-VIH_HIGH = 2.0          # the gates' VIH at VCC 3 V to 3.6 V (every LVC sheet in LOGIC; Diodes DS35124 VT+ max at 3 V)
+VIH_HIGH = 2.0          # the gates' VIH at VCC 3 V to 3.6 V (every LVC sheet in LOGIC but the two Schmitt families,
+# which state VT+ at VCC 3 V and 4.5 V only, Diodes DS35124 2.00 V and TI SCES414P 1.87 V maximum at 3 V, 2.74 V at 4.5 V:
+# a HIGH at their inputs is not read as passing, `vih_gap`, EQ-18)
 # VIL_LOW AND VIH_HIGH HOLD ONLY AT VCC 3 V TO 3.6 V (round 6 second pass, review minor 3): the same LVC sheets give VIL
 # 0.35 VCC at 1.65 V to 1.95 V (about 0.63 V) and 0.3 VCC at 4.5 V to 5.5 V. A reader whose supply's name states a
 # voltage outside this range, or none, is not judged at 0.8 V or 2.0 V: it leaves the state UNDECIDED and is named. Its
 # supply is its VCC pin's net, and a name with no '+' (VCC_X, 3V3_DEV) states none (R4T-D41). A line that FLOATS at such
 # a reader still FAILS: nothing holds it at any VCC. One that reads at or above its family's vil_ceiling FAILS too, since
 # no VCC the sheet allows reads it as low (R4T-D45, round 6 fourth pass: 1.65 V for the single and dual gates, 0.3 x
-# 5.5 V; 0.8 V for the quads, which stop at 3.6 V; 1.45 V for the 74LVC1G17's VT-). Between 0.8 V and that ceiling it is
+# 5.5 V; 0.8 V for the quads, which stop at 3.6 V; 1.45 V for the 74LVC1G17's VT-; 1.87 V for the SN74LVC1G57's VT-,
+# EQ-18). Between 0.8 V and that ceiling it is
 # UNDECIDED, because some VCC reads it as low and the name does not say which.
 VCC_RANGE = (3.0, 3.6)
 LEAK_COLUMN = "-40 to +85 C"
@@ -1350,7 +1456,7 @@ def _line_sources(nl, s):
         if re.match(r"^SW\w*", ref):
             out.append((ref, "the toggle")); continue
         fam = logic_of(nl, ref)
-        if fam and not fam.get("wrong_land"):
+        if fam and not _unmapped(fam):
             for ins, o, kind in fam["gates"]:
                 if o == pin and any(nl["pin"].get((ref, i)) in SOURCES and nl["pin"].get((ref, i)) != s for i in ins):
                     out.append((ref, "the %s from %s" % (fam["name"], "/".join(nl["pin"].get((ref, i)) for i in ins))))
@@ -1693,6 +1799,8 @@ def _network(boards, start, level, st, anchors=None):
             if fam is not None:
                 if fam.get("wrong_land"):
                     unknown(k, "%s: a %s on a land its pin map is not for" % (ref, fam["name"])); continue
+                if fam.get("unwired"):
+                    unknown(k, "%s pin %s: %s" % (ref, pin, fam["unwired"])); continue
                 is_in = any(pin in ins for ins, _o, _k in fam["gates"])
                 outs = [kind for ins, o, kind in fam["gates"] if o == pin]
                 if not (is_in or outs): continue                                  # NC, VCC or GND pin
@@ -2120,6 +2228,13 @@ def _threshold(nl, k, reader, level, anchor_opt):
                         "state VIL 0.8 V and VIH 2.0 V%s" % (x, ("%g V" % vc) if vc is not None else "a rail whose name "
                                                             "states no voltage", VCC_RANGE[0], VCC_RANGE[1],
                                                             (", and no supply voltage reads %g V or more as low" % ceil) if ceil else ""))
+        gap = (logic_of(nl, x) or {}).get("vih_gap") if level == 1 else None
+        if gap:
+            # A SCHMITT FAMILY WHOSE SHEET STATES VT+ AT VCC 3 V AND 4.5 V ONLY (EQ-18, stream w3t, 27 September 2026): the
+            # 74LVC1G17 and the SN74LVC1G57. Their 4.5 V row is above VIH_HIGH, so a net held HIGH at their input is not
+            # shown to read high anywhere in VCC_RANGE: it never passes, and it still fails under VIH_HIGH as any gate's does
+            return dict(pass_v=None, fail_v=VIH_HIGH, why="the VIH of %s, which its sheet does not state over VCC %g V to %g V: "
+                        "%s" % (x, VCC_RANGE[0], VCC_RANGE[1], gap))
         v = VIL_LOW if level == 0 else VIH_HIGH
         return dict(pass_v=v, fail_v=v, why="the %s of %s (TI's LVC sheets, VCC 3 V to 3.6 V)" % ("VIL" if level == 0 else "VIH", x))
     if kind == "fet":
@@ -3054,6 +3169,8 @@ def _class_pin(nl, ref, pin, fn, falling, _depth=0, _seen=(), notes=None):
         what = "%s (%s)" % (ref, fam["name"])
         if fam.get("wrong_land"):
             return "undecided", "is a pin of %s on a land its pin map is not for, so which pin is an output is not known" % what
+        if fam.get("unwired"):
+            return "undecided", "is a pin of %s: %s" % (what, fam["unwired"])
         gate = next((g for g in fam["gates"] if g[1] == pin), None)
         if gate and gate[2] not in OPEN_DRAIN:
             return "feed", "is the push-pull output of %s" % what
@@ -3107,7 +3224,7 @@ def _feeds_back(nl, ref, pin, falling, _depth=0, _seen=(), notes=None):
     fam, sw = logic_of(nl, ref), switch_of(nl, ref)
     if sw and pin in (sw.get("vin") or ()) and sw.get("reverse"):
         outs, words, what = list(sw.get("out") or ()) + list(sw.get("sw") or ()), sw["reverse"], sw["name"]
-    elif not sw and fam and not fam.get("wrong_land") and pin in (fam.get("vcc") or ()) and fam.get("vcc_path"):
+    elif not sw and fam and not _unmapped(fam) and pin in (fam.get("vcc") or ()) and fam.get("vcc_path"):
         outs, words, what = [o for _i, o, _k in fam["gates"]], fam["vcc_path"], fam["name"]
     else:
         return []
@@ -3206,6 +3323,8 @@ def _net_sources(nl, ref, net, on=None, _depth=0, _seen=None, notes=None):
         fam = None if sw else logic_of(nl, r2)
         if fam and fam.get("wrong_land"):
             out.append("%s, a gate on a land its pin map is not for" % what); continue
+        if fam and fam.get("unwired"):
+            out.append("%s, %s" % (what, fam["unwired"])); continue
         gate = next((g for g in fam["gates"] if g[1] == p2), None) if fam else None
         if gate and gate[2] not in OPEN_DRAIN:
             out.append("%s, the push-pull output of %s" % (what, fam["name"])); continue
@@ -3766,6 +3885,9 @@ def _second_sources(nl, k, rail, sref, anchor, accessories, path_refs=None):
             if fam and fam.get("wrong_land"):
                 und.append("%s: %s pin %s (%s, %r) is a pin of a %s on a land its pin map is not for, so which pin is an "
                            "output is not known" % (where, ref, pin, value(nl, ref)[:30], fn, fam["name"])); continue
+            if fam and fam.get("unwired"):
+                und.append("%s: %s pin %s (%s, %r) is a pin of %s" % (where, ref, pin, value(nl, ref)[:30], fn, fam["unwired"]))
+                continue
             gate = next((g for g in fam["gates"] if g[1] == pin), None) if fam else None
             if gate and gate[2] not in OPEN_DRAIN:
                 txt = "%s pin %s (%s, %r) is the push-pull output of %s %s gate (%s)" % (
@@ -3883,7 +4005,7 @@ def _released_why(nl, got, net):
             out.append("EMCON holds the switch to ground %s off and leaves %s to its pulls: %s" % (ref, net, _released_level(nl, net)[1]))
             continue
         fam = logic_of(nl, ref)
-        if not fam or fam.get("wrong_land"): continue
+        if not fam or _unmapped(fam): continue
         for ins, o, kind in fam["gates"]:
             if o != pin or kind not in RELEASE: continue
             if any((got.get(nl["pin"].get((ref, i), "")) or {}).get("level") == RELEASE[kind] for i in ins):

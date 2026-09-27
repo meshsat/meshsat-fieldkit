@@ -5,7 +5,7 @@ are repository paths; file:line citations are lines at `e3aedb25` (including the
 line), which the public repository serves at `https://raw.githubusercontent.com/meshsat/meshsat-fieldkit/e3aedb25/<path>`.
 **Handover H1 adds EQ-15 to EQ-21**, the questions circuit round 8 (main `84e52461`) and the handover closers raised;
 their citations are at the H1 source commit named in the snapshot's `SOURCE.txt` (`8a19fe29` for H1; H1.1 changes no
-design file those questions cite). **After H1.1 (set 4, branch `fnd/r8int4`, 27 September 2026)** EQ-22 to EQ-24 are added, EQ-05 carries the hot stop's firing inside the envelope and EQ-20 its merge; their citations are at that branch's commits. Internal names are defined in `v2/docs/handover/GLOSSARY.md`. Every blocked question the audit found in the nine
+design file those questions cite). **After H1.1 (set 4, branch `fnd/r8int4`, 27 September 2026)** EQ-22 to EQ-24 are added, EQ-05 carries the hot stop's firing inside the envelope and EQ-20 its merge; their citations are at that branch's commits. **Set 5 (branch `fnd/r8int5`, 27 September 2026)** answers EQ-16 (board E's and board A's dock halves), EQ-17 (board A), EQ-18 (the tool) and EQ-19 (boards A, B, D and E) in their attempts rows and adds EQ-25, the fail-safe level EQ-18's re-take found on TX_INHIBIT_n; their citations are at that branch's commits. Internal names are defined in `v2/docs/handover/GLOSSARY.md`. Every blocked question the audit found in the nine
 pre-PCB layers is here once, deduplicated across layers, in the form the owner asked for
 (`v2/docs/reviews/2026-09-27-handover-execution-prompt.md` section 6): the exact issue, what it affects, the evidence,
 what was tried, the viable options, the recommended next action, the expertise or equipment needed, and cost and lead
@@ -49,6 +49,7 @@ holds the prepared request texts (not sent).
 | EQ-22 | The hot stop's signal path HOT-R1 is in neither board A's nor board E's generator | A. design work | 2, 3, 5, 8 | A, E | REQ-077 (FAIL until drawn); the layout entry of A and E |
 | EQ-23 | Does a non-destructive, firmware-free hardware stage stand behind the hot stop (S-58)? | C. external authorisation | 2, 3, 4, 8 | A, E, P | the layout entry of A, E and P; REQ-044, REQ-046, REQ-077 |
 | EQ-24 | The QMX lid tray does not fit the unit's connector layout (jacks on both end panels) | A. design work | 7 | none (a made part) | printing the tray (S-63) |
+| EQ-25 | TX_INHIBIT_n's fail-safe level with board C unpowered, 1.09 V against a 0.8 V VIL (W3T-F1) | A. design work | 4, 8, 9 | C (A, B, D) | RF-002 on boards A to D and board D's SA868 keying (S-64) |
 
 Group A items can be answered under existing authority; group B needs hardware and so a purchase; group C needs the
 owner's money, outside contact or a value only he can set.
@@ -157,7 +158,7 @@ owner's money, outside contact or a value only he can set.
 | **Exact issue** | Board C's hardware EMCON lamp (round 8, SD-EMC-6) put U14, a TI SN74LVC1G57 configurable gate, on TX_INHIBIT_n and EMCON_HW. The RF-002 walk (`v2/ecad/tools/tx_inhibit.py`) has no row for that family, whose function depends on how its In1 pin is wired, so it reads the TX_INHIBIT_n line UNDECIDED ("an active pin no held document shows to be an input") and every option riding that line inherits it: inhibit_chain A FAIL (1 fail, 5 pass, 3 undecided), B FAIL, C FAIL, D INCONCLUSIVE, E and P PASS. |
 | **Affected** | RF-002 on every board whose transmitter inhibit rides TX_INHIBIT_n; FEA-002; board C's U14. |
 | **Evidence** | Commit `9f28c238`'s body; `v2/docs/feasibility/EMCON.md` section 8 (the pin map, II and Ioff handed to the tools author). |
-| **Attempts and results** | The session chose not to add an unchecked LOGIC row (a tool change without its independent check); the walk fails closed meanwhile. |
+| **Attempts and results** | The session chose not to add an unchecked LOGIC row (a tool change without its independent check); the walk fails closed meanwhile. **Set 5 (stream w3t, integrated in `fnd/r8int5`):** option (a) is taken. `tx_inhibit.py` has a row for the SN74LVC1G57 (SCES414P: the pin map, II 1 uA, Ioff 10 uA, the input clamp row and the 6.5 V rating) read only in Figure 7's wiring, In1 on the part's own GND pin, where Table 1 gives Y = NOR(In0, In2); any other wiring reads UNDECIDED by any pin, and a HIGH at a Schmitt input never passes (limits 13 and 14). Five fixtures both ways, SCES414P Table 1 transcribed as the independent check, three mutations caught; an independent AI check reproduced the readings (not a qualified review). On main `38dcd764`'s netlists the `EMCON_HW` line now reads PASS and board B's RockBLOCK 9704 and E22 with it; `TX_INHIBIT_n` reads FAIL on its fail-safe state (EQ-25). Record: `v2/docs/records/w3t/`. **Status:** the tool question is closed; the circuit question moves to EQ-25. |
 | **Viable options** | (a) A LOGIC row conditioned on In1's wiring, with its fixture and an independent check; (b) a fixed-function gate on board C instead of the SN74LVC1G57. |
 | **Recommended next action** | (a) by the tools stream, then the RF-002 re-take on all six boards. |
 | **Expertise or equipment** | None. |
@@ -214,6 +215,19 @@ owner's money, outside contact or a value only he can set.
 | **Recommended next action** | (a) at the next regeneration of boards A and E, before their layout entry; then E3-H on the bench. |
 | **Expertise or equipment** | The board A and E authors; the E3-H bench check. |
 | **Cost and lead time** | One transistor and two resistors per kit; desk work at the next regeneration. |
+
+### EQ-25. TX_INHIBIT_n's fail-safe level with board C unpowered (W3T-F1)
+
+| | |
+|---|---|
+| **Exact issue** | With board C unpowered, `TX_INHIBIT_n` is held low only by its three 100 kOhm pull-downs (board A R145, board B R59, board D R2; 35 kOhm together at 5 percent) against 31 uA of stated pin current: board C's U9 (74LVC1G17, Ioff 10 uA, DS35124) and U14 (SN74LVC1G57, Ioff 10 uA, SCES414P 6.5), board D's U12 (10 uA) and board A's U35 and U37 (0.5 uA each). That is 1.09 V, over the 0.8 V VIL the RF-002 walk applies to its readers (TI states 0.9 V for A's SN74AUP1G08s and 0.8 V for D's U12, which reads the line when only board C is off), so RF-002's fail-safe state FAILS on boards A to D and board D's SA868 keying inherits it. Before round 8's lamp gate U14 the same state read 0.74 V. |
+| **Affected** | RF-002 (`inhibit_chain_a` to `_d`), board D's SA868 keying row in `v2/docs/feasibility/EMCON.md`, FEA-002; the open item S-64 in `v2/ecad/tools/pcb_requirements.yaml`. |
+| **Evidence** | `v2/docs/records/w3t/w3t-decisions.md` section 5 and `HANDOFF.md` section 2 (the arithmetic of every option); `readings/inhibit-chain-before-after.txt` there; board C's `gen_sch_c.py` (R14, U9, U14). |
+| **Attempts and results** | Found by stream w3t's re-take after EQ-18's row (27 September 2026, integrated in `fnd/r8int5`). The FAIL rests on the walk's worst-case leakage convention (round 6: an unpowered part passes its Ioff, a part that may be either the larger of II and Ioff). The three sheets also state II at VCC 0 V (SCES414P 1 uA, DS35124 5 uA, SCES217AA 5 uA): with only U14 at II the line reads about 0.77 V, with U9, U14 and D's U12 at II about 0.42 V. So it is a FAIL under the tree's convention, not a demonstrated defect; the remedy is margin. Each option below was checked with the walk on an in-memory copy of the netlists and reads the line PASS; board D's SA868 then returns to its own UNDECIDED (its maker states no PTT threshold). |
+| **Viable options** | (a) Board C: R14 10 k to 2.2 k 1 percent and a new 10 k 1 percent pull-down on `TX_INHIBIT_n`: about 0.24 V failed safe, idle HIGH 2.57 V nominal and 2.37 V at the adverse ends (above U14's about 2.04 V and U9's about 2.15 V VT+ at 3.3 V), the toggle sinking 1.6 mA; one board. (b) Board B's R59 to 10 k 1 percent with R14 2.2 k: 0.26 V, idle 2.41 V adverse; two boards. (c) All three pull-downs to 47 k with R14 4.7 k: 0.51 V, idle 2.27 V adverse; four boards. Main's idle HIGH is 2.54 V nominal and 2.11 V adverse: every option widens it. |
+| **Recommended next action** | (a) at board C's next circuit round, regenerated with parity, then the RF-002 re-take on boards A to D. |
+| **Expertise or equipment** | None beyond the board C stream; bench E-01 and E-11 for the lines' real levels. |
+| **Cost and lead time** | One resistor changed and one added on board C; desk work. |
 
 ### EQ-24. The QMX lid tray does not fit the unit's connector layout (S-63)
 

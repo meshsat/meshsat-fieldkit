@@ -49,7 +49,12 @@ as classes): on a gated conductor a pin is a load only where a row of its maker'
 every other pin reads UNDECIDED, named. The four fixtures at the end of the file are its three classes both ways (a part in
 no class or a protection part, a switch's or a logic part's pin other than its outputs, a pin of the second part that
 carries a split module) and the own-output path's maker's sentence; four earlier fixtures changed with it, each marked
-where it did (board A's INA226, 'XCM5 filter', the PCA9555's SCL, board B's R111)."""
+where it did (board A's INA226, 'XCM5 filter', the PCA9555's SCL, board B's R111).
+
+EQ-18 (stream w3t, 27 September 2026): board C's U14, a TI SN74LVC1G57 configurable gate, is read by its maker's row only in
+the wiring that row holds (Figure 7: In1 on its own GND pin, Y = NOR(In0, In2) by Table 1), and any other wiring is UNDECIDED
+by any pin; the five fixtures at the end of the file, each both ways, with SCES414P's Table 1 transcribed as the independent
+check of the NOR it selects, and a HIGH at a Schmitt input (this part's and the 74LVC1G17's) never read as passing."""
 import os, sys, tempfile
 
 TOOLS = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -3270,3 +3275,155 @@ def t_a_switch_with_no_enable_row_reads_its_enable_undecided_and_does_not_crash(
         for s, v in saved: s["en_clear"] = v
     assert tx2["ok"] is None and "no held page of its maker's says what current that enable pin passes" in tx2["detail"], \
         (tx2["ok"], tx2["detail"][:600])
+
+
+# ---------------------------------------------------------------------------------------------------- EQ-18 (stream w3t)
+# BOARD C's U14 SINCE ITS ROUND 8: a TI SN74LVC1G57 configurable gate wired as a NOR (In1 on GND), the hardware EMCON lamp's
+# gate, reading TX_INHIBIT_n on In0 (pin 3) and EMCON_HW on In2 (pin 6). The walk had no row for it and read both lines
+# UNDECIDED ("an active pin no held document shows to be an input"). The row reads its function only in the wiring its
+# maker's Figure 7 draws, In1 tied to its own GND pin on a ground net, and every other wiring UNDECIDED.
+G57 = ("SN74LVC1G57DBVR configurable gate wired as a 2-input NOR", "Package_TO_SOT_SMD:SOT-23-6", "meshsat_ic:U14")
+# SCES414P Table 1 (page 8), transcribed row by row: (In2, In1, In0) -> Y
+_G57_TABLE = [((0, 0, 0), 1), ((0, 0, 1), 0), ((0, 1, 0), 1), ((0, 1, 1), 0),
+              ((1, 0, 0), 0), ((1, 0, 1), 0), ((1, 1, 0), 1), ((1, 1, 1), 1)]
+
+
+def _g57(in1="GND", gnd="GND", land=None):
+    """One SN74LVC1G57 U14 with In0 on A_IN, In2 on B_IN, Y on Y_OUT, VCC on +3V3; In1 on `in1` and its GND pin on `gnd`."""
+    nets = {"A_IN": [("U14", "3", "")], "B_IN": [("U14", "6", "")], "Y_OUT": [("U14", "4", "")], "+3V3": [("U14", "5", "")]}
+    nets.setdefault(gnd, []).append(("U14", "2", ""))
+    nets.setdefault(in1, []).append(("U14", "1", ""))
+    c = G57 if land is None else (G57[0], land, G57[2])
+    return _nl({"U14": c}, nets)
+
+
+def t_a_configurable_gate_is_read_only_in_the_wiring_its_row_holds():
+    """ACCEPTABLE: In1 (pin 1) on the part's own GND pin, on a ground net: the gate is NOR(In0, In2) on pins 3 and 6 into pin 4,
+    and the row carries SCES414P's figures (II 1 uA, Ioff 10 uA, VT- 1.87 V minimum at 5.5 V as its vil_ceiling). DEFECTIVE,
+    each read UNDECIDED (no gates, `unwired` saying why): In1 on +3V3 (the table's other half, Y = In2 OR NOT In0), In1 on a
+    signal, In1 on a ground net that is not its own GND pin's, and In1 floating. On a five-pin land it is a wrong land."""
+    f = T.logic_of(_g57(), "U14")
+    assert f["gates"] == [(("3", "6"), "4", "NOR")] and not T._unmapped(f) and "Table 1" in f["config"] \
+        and "Figure 7" in f["config"], f
+    assert f["ii"] == 1e-6 and f["ioff"] == 10e-6 and f["vil_ceiling"] == 1.87 and f["vcc"] == ("5",), f
+    assert "SCES414P" in f["cite"] and "Ioff +-10 uA" in f["leak_cite"] and "IIK" in f["leak_cite"] and f["vih_gap"], f
+    assert T._supply_nets(_g57(), "U14") == ["+3V3"]
+    for kw, needle in ((dict(in1="+3V3"), "pin 1 on +3V3"), (dict(in1="LAMP_TEST"), "pin 1 on LAMP_TEST"),
+                       (dict(in1="GND", gnd="AGND"), "pin 1 on GND with its GND pin 2 on AGND"),
+                       (dict(in1="unconnected-(U14-In1-Pad1)"), "pin 1 on unconnected-")):
+        g = T.logic_of(_g57(**kw), "U14")
+        assert g["gates"] == [] and needle in (T._unmapped(g) or "") and "whose function is set by its wiring" in g["unwired"], (kw, g)
+        # its VCC pin is its maker's whatever the wiring: the supply is still read from pin 5
+        assert T._supply_nets(_g57(**kw), "U14") == ["+3V3"], kw
+    w = T.logic_of(_g57(land="Package_TO_SOT_SMD:SOT-23-5"), "U14")
+    assert w.get("wrong_land") and "land its pin map is not for" in T._unmapped(w), w
+
+
+def t_the_nor_the_row_reads_is_the_makers_function_table_with_in1_low_and_only_then():
+    """An independent check of the row against SCES414P Table 1 as transcribed above: with In1 L every row's Y is NOR(In0, In2),
+    and FORCE's NOR (a HIGH input forces Y LOW, a LOW input decides nothing alone) agrees with every row; with In1 H the NOR
+    disagrees with the table (In2 H, In0 L gives H), which is why that wiring is not read as a NOR."""
+    nor = lambda a, b: int(not (a or b))
+    (ins, out, kind), = T.logic_of(_g57(), "U14")["gates"]
+    assert (ins, out, kind) == (("3", "6"), "4", "NOR")
+    low = [(r, y) for r, y in _G57_TABLE if r[1] == 0]
+    assert len(low) == 4 and all(nor(r[2], r[0]) == y for r, y in low), low
+    for (in2, _in1, in0), y in low:
+        for v in (in0, in2):
+            f = T.FORCE[kind].get(v)
+            assert f is None or f == y, ((in2, in0), y)
+        if y == 1: assert T.FORCE[kind].get(0) is None                # both LOW: neither input alone decides it
+    high = [(r, y) for r, y in _G57_TABLE if r[1] == 1]
+    assert any(nor(r[2], r[0]) != y for r, y in high), high
+    assert all(y == int(r[0] or not r[2]) for r, y in high), high     # In1 H: Y = In2 OR NOT In0
+
+
+def _panel_lamp(in1="GND", third=False):
+    """The panel fixture with board C's round 8 lamp gate U14 (SN74LVC1G57) on both lines: TX_INHIBIT_n on In0 (pin 3),
+    EMCON_HW on In2 (pin 6), Y on EMCLAMP_Y, VCC on the panel's +3V3, In1 on `in1`. `third` puts one more 74LVC1G08 input
+    (U20, on board B's +3V3_DEV) on TX_INHIBIT_n, as board D's U12 and board A's U35 and U37 are on the kit's line."""
+    b = _panel({"U20": AND1} if third else {}, {"TX_INHIBIT_n": [("U20", "1", "")], "+3V3_DEV": [("U20", "5", "")],
+                                                "GND": [("U20", "3", "")], "SW_EN2": [("U20", "2", "")]} if third else {})
+    n = {"TX_INHIBIT_n": [("U14", "3", "")], "EMCON_HW": [("U14", "6", "")], "EMCLAMP_Y": [("U14", "4", "")],
+         "+3V3": [("U14", "5", "")], "GND": [("U14", "2", "")]}
+    n.setdefault(in1, []).append(("U14", "1", ""))
+    b["C"] = _edit(b["C"], comps={"U14": G57}, nets=n)
+    return b
+
+
+def t_the_panel_lamp_gate_is_an_input_on_both_lines_only_in_its_nor_wiring():
+    """ACCEPTABLE (board C's U14 as round 8 draws it): both lines PASS with U14 on them, its inputs counted at SCES414P's Ioff
+    with the panel unpowered: TX_INHIBIT_n carries U9's and U14's 10 uA each, 20 uA on R59 33 kOhm (34.65 kOhm at 5 percent),
+    0.69 V under the 0.8 V VIL. DEFECTIVE, the current: one more input on TX_INHIBIT_n (a powered 74LVC1G08, II 5 uA) lifts it
+    to 0.87 V and the line FAILS naming U14's Ioff, the shape of main's finding on the kit's line (three 100 kOhm, 31 uA,
+    1.09 V). DEFECTIVE, the wiring:
+    with In1 on +3V3 or on a signal the part's function is not the row's, and each line reads UNDECIDED naming U14 and why."""
+    b = _panel_lamp()
+    assert _line_of(b)["ok"] is True, _line_of(b)
+    assert _line_of(b, "TX_INHIBIT_n")["ok"] is True, _line_of(b, "TX_INHIBIT_n")
+    line = _line_of(_panel_lamp(third=True), "TX_INHIBIT_n")
+    assert line["ok"] is False and "rises to 0.87" in line["detail"] \
+        and "C U14 pin 3 unpowered (Ioff, 74LVC1G57 configurable gate) 10.0 uA" in line["detail"], line
+    heavy = _panel({}, {}, pull_down="100k")
+    heavy["C"] = _panel_lamp()["C"]
+    line = _line_of(heavy)
+    assert line["ok"] is False and "C U14 pin 6 unpowered (Ioff, 74LVC1G57 configurable gate)" in line["detail"], line
+    for in1 in ("+3V3", "LAMP_TEST"):
+        for name, pin in (("EMCON_HW", "6"), ("TX_INHIBIT_n", "3")):
+            line = _line_of(_panel_lamp(in1=in1), name)
+            assert line["ok"] is None and ("C U14 pin %s" % pin) in line["detail"] \
+                and "whose function is set by its wiring" in line["detail"] and ("pin 1 on %s" % in1) in line["detail"], \
+                (in1, name, line["detail"][:600])
+
+
+def _nor_board(in1="GND", second="nor", u4_rail="+3V3", pull_up=None):
+    """The power board with EMCON_ON = NOT EMCON_HW made by a 74LVC1G04 U4 on `u4_rail`, and the load switch's enable LORA_EN
+    made from EMCON_ON by U5: an SN74LVC1G57 NOR (In0 EMCON_ON, In2 SW_EN, In1 on `in1`) when `second` is "nor", a 74LVC1G04
+    when it is "inv". `pull_up` puts R72 10 kOhm from EMCON_ON to that rail."""
+    nl = _power_board({"expander_sw"})
+    c = {"U4": INV1}
+    n = {"EMCON_HW": [("U4", "2", "")], "EMCON_ON": [("U4", "4", "")], "GND": [("U4", "3", "")], u4_rail: [("U4", "5", "")]}
+    if second == "nor":
+        c["U5"] = G57
+        n["EMCON_ON"].append(("U5", "3", "")); n["SW_EN"] = [("U5", "6", "")]; n["LORA_EN"] = [("U5", "4", "")]
+        n["+3V3"] = n.get("+3V3", []) + [("U5", "5", "")]; n["GND"].append(("U5", "2", "")); n.setdefault(in1, []).append(("U5", "1", ""))
+    else:
+        c["U5"] = INV1
+        n["EMCON_ON"].append(("U5", "2", "")); n["LORA_EN"] = [("U5", "4", "")]
+        n["+3V3"] = n.get("+3V3", []) + [("U5", "5", "")]; n["GND"].append(("U5", "3", ""))
+    if pull_up:
+        c["R72"] = _R10K; n["EMCON_ON"].append(("R72", "1", "")); n.setdefault(pull_up, []).append(("R72", "2", ""))
+    return _edit(nl, comps=c, nets=n)
+
+
+def t_a_nor_the_line_forces_is_walked_only_in_the_wiring_its_row_holds():
+    """ACCEPTABLE: EMCON_ON (HIGH under EMCON) on In0 of a NOR-wired SN74LVC1G57 forces its output, the switch's enable,
+    LOW (SCES414P Table 1, In1 L, In0 H: Y L) and the transmitter PASSes through 'U5 NOR 3->4'. DEFECTIVE: the same part with
+    In1 on +3V3 (Y = In2 OR NOT In0 there, so a HIGH In0 no longer forces Y) is not walked through; the walk stops at U5 naming
+    its wiring and the transmitter is not reached."""
+    nl = _nor_board()
+    got, _stopped = T.reach(nl)
+    assert got.get("LORA_EN", {}).get("level") == 0 and "U5 NOR 3->4" in got["LORA_EN"]["path"], (sorted(got), _stopped)
+    tx = _lora(nl)
+    assert tx["ok"] is True and "U5 NOR 3->4" in tx["detail"], tx
+    nl2 = _nor_board(in1="+3V3")
+    got2, stopped2 = T.reach(nl2)
+    assert "LORA_EN" not in got2 and any(s.startswith("U5 (") and "whose function is set by its wiring" in s for s in stopped2), \
+        (sorted(got2), stopped2)
+    tx2 = _lora(nl2)
+    assert tx2["ok"] is not True, tx2
+
+
+def t_a_high_held_at_a_schmitt_input_is_not_read_as_passing():
+    """EQ-18's threshold (`vih_gap`): with U4's supply +3V3_A down, EMCON_ON is held HIGH only by R72 10 kOhm to +3V3.
+    ACCEPTABLE, the reader a 74LVC1G04 (VIH 2.0 V over VCC 3 V to 3.6 V, SCES214AF): the hold is judged at 2.0 V and PASSES.
+    UNDECIDED, the reader the NOR-wired SN74LVC1G57: SCES414P states VT+ at VCC 3 V (1.87 V) and 4.5 V (2.74 V) only, so no
+    level is read as a guaranteed HIGH there, and the result names the gap. The 74LVC1G17 carries the same gap (DS35124)."""
+    tx = _lora(_nor_board(second="inv", u4_rail="+3V3_A", pull_up="+3V3"))
+    assert tx["ok"] is True and "U5 INV 2->4" in tx["detail"], (tx["ok"], tx["detail"][:800])
+    tx = _lora(_nor_board(u4_rail="+3V3_A", pull_up="+3V3"))
+    assert tx["ok"] is None and "which its sheet does not state over VCC 3 V to 3.6 V" in tx["detail"] \
+        and "SCES414P 6.5" in tx["detail"], (tx["ok"], tx["detail"][:800])
+    row17 = [f for f in T.LOGIC if f["name"] == "74LVC1G17 Schmitt buffer"][0]
+    assert "DS35124" in row17["vih_gap"] and all(not f.get("vih_gap") for f in T.LOGIC
+                                                 if f["name"] not in ("74LVC1G17 Schmitt buffer", "74LVC1G57 configurable gate"))
