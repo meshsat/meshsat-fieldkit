@@ -1,0 +1,50 @@
+retake_schematic_phase: IN PLACE (each board's phase directory out/); verdicts to <phase>/out
+  T=/root/h2m/rtk/v2/ecad/tools  E=/root/h2m/rtk/v2/ecad  (every command: cd <cwd>; VERDICT_DIR=<cwd>/out python3 ...)
+
+board P  pcb-p-pack-p2  declared phase P4  netlist pcb-p-pack-p2/out/pcb-p-pack.net
+  ENV-001  BLOCKER                                               desk review of a pinned document: re-reviewed, not re-taken
+  SCH-001  BLOCKER      erc_gate                                 re-take
+  SCH-004  BLOCKER      safe_lines_p                             re-take
+  SCH-005  BLOCKER      pin_map_lands_p                          re-take
+  CMP-001  BLOCKER      derate                                   re-take
+  PWR-001  BLOCKER      intent_rails                             re-take
+  PWR-002  MUST_JUSTIFY power_sequence                           re-take
+  PWR-003  BLOCKER      energy_chain_p                           re-take
+  SI-001   MUST_JUSTIFY edge_length                              re-take
+  RF-002   BLOCKER      inhibit_chain_p                          re-take
+  INT-001  BLOCKER      interfaces_p,check_contracts             re-take
+  TRN-001  BLOCKER      port_protect_p                           re-take
+  TST-001  MUST_JUSTIFY                                          desk review of a pinned document: re-reviewed, not re-taken
+  BAT-001  BLOCKER      pack_protection                          re-take
+  BAT-002  BLOCKER      energy_chain                             re-take
+  12 command(s), cwd /root/h2m/rtk/v2/ecad/pcb-p-pack-p2
+    $ python3 $T/erc_gate.py . pcb-p-pack --run   # SCH-001
+    $ python3 $T/safe_lines.py out/pcb-p-pack.net   # SCH-004
+    $ python3 $T/pin_map_lands.py out/pcb-p-pack.net p   # SCH-005
+    $ python3 $T/derate.py out/pcb-p-pack.net   # CMP-001
+    $ python3 $T/intent_checks.py --netlist out/pcb-p-pack.net   # PWR-001
+    $ python3 $T/power_sequence.py out/pcb-p-pack.net   # PWR-002
+    $ python3 $T/energy_chain.py --ecad $E   # PWR-003, BAT-002
+    $ python3 $T/edge_length.py --netlist out/pcb-p-pack.net   # SI-001
+    $ python3 $T/check_contracts.py $E   # RF-002, INT-001
+    $ python3 $T/interfaces.py   # INT-001
+    $ python3 $T/port_protect.py out/pcb-p-pack.net   # TRN-001
+    $ python3 $T/pack_protection.py --netlist out/pcb-p-pack.net --check   # BAT-001
+
+plan: 12 command(s) over 1 board(s): P 12; 0 error(s)
+
+  P   erc_gate.py        rc 0       1.5s  erc_gate PASS
+  P   safe_lines.py      rc 0       0.7s  safe_lines_p PASS
+  P   pin_map_lands.py   rc 0       0.6s  pin_map_lands_p PASS
+  P   derate.py          rc 0       0.8s  derate PASS
+  P   intent_checks.py   rc 1       1.0s  intent_rails FAIL
+  P   power_sequence.py  rc 0       0.7s  power_sequence PASS
+  P   energy_chain.py    rc 0       1.2s  energy_chain_p PASS, energy_chain PASS
+  P   edge_length.py     rc 3       0.8s  edge_length INCONCLUSIVE
+  P   check_contracts.py rc 0       4.8s  inhibit_chain_p PASS, check_contracts PASS
+  P   interfaces.py      rc 0       1.9s  interfaces_p PASS
+  P   port_protect.py    rc 0       0.9s  port_protect_p PASS
+  P   pack_protection.py rc 1       0.9s  pack_protection FAIL
+
+board P   pcb-p-pack-p2 14 reading(s) in 15.9s: check_contracts PASS, derate PASS, edge_length INCONCLUSIVE, energy_chain PASS, energy_chain_p PASS, erc_gate PASS, inhibit_chain_p PASS, intent_rails FAIL, interfaces_p PASS, pack_protection FAIL, pin_map_lands_p PASS, port_protect_p PASS, power_sequence PASS, safe_lines_p PASS; 15 file(s) copied to routed/
+retake_schematic_phase: done in 16.0s

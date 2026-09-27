@@ -1,9 +1,19 @@
 # Board A (power and I/O): layout constraints
 
-A view over the records at `main` `e3aedb25` (conventions and shared rules: [README.md](README.md)). Candidate: phase
-A32, netlist `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net` sha256/16 `7b08510106687b3d`, intent
-`pcb-a-power-intent.json` `83ba5e43a6fbcccb`; the committed board file `58e26c67987b1daa` predates the netlist (SCH-002
-FAIL, `CURRENT-EVIDENCE.md`). Board A is not at layout entry: 16 blocker lines (`CURRENT-EVIDENCE.md` lines 66 to 81).
+**Bound to the H2 line (after H2, 27 September 2026).** Candidate re-read at `ef144760`: phase A32, netlist
+`v2/ecad/pcb-a-power-a23/out/pcb-a-power.net` sha256/16 `da05dc02bc1e612f` (last changed at `b7f96784`, set 5), intent
+`pcb-a-power-intent.json` `92dd3b1cda9046b8`; the committed board file `58e26c67987b1daa` predates the netlist (SCH-002
+FAIL). Section 2's power table is regenerated from `calc/rail_widths.py` on that intent; its moved and new rows are
+marked **H2**. Board A is not at layout entry: **7 reasons at H2** (`CURRENT-EVIDENCE.md`): SI-001 INCONCLUSIVE,
+RF-002 FAIL (EQ-25), decision 31's protection review, FEA-002, FEA-004, FEA-006, FEA-007. What the H2 line changes in
+the rest of this sheet, known and marked where it stands: the PA and HF rails gated on both EMCON lines (round 8,
+`c0133147`), the EMCON gates behind their own eFuse U39 and the PoE and USB-C enables on their own EN/UVLO node
+(`ffca0771`), VIN_RAW onto four 9 A dock power pins J_VR1 to J_VR4 with J_VN1 to J_VN4 (SC-55, `b7f96784`), TRN-001
+PASS on current evidence (section 7). Every other line below is the reading at `e3aedb25`, not re-read against the
+H2 netlist; where it and a record disagree, the record governs (README).
+
+As first written: a view over the records at `main` `e3aedb25` (conventions and shared rules: [README.md](README.md)).
+Candidate then: phase A32, netlist sha256/16 `7b08510106687b3d`, intent `83ba5e43a6fbcccb`; 16 blocker lines then.
 Round 8 (`fnd/r8int1`, on `main` as `53a98a71` since this sheet was first written) changes board A's netlist but
 declares the same rails at the same currents (its intent file compared rail by rail for this sheet), so section 2
 stands through that merge unless the merge itself says otherwise.
@@ -33,7 +43,7 @@ share of the rail's current (PI-001's own wording, `pcb_rules.yaml`).
 | CELL+ | 14.4 (16.8) | 10.00 / 18.00 | 18.0, PWR-F12 | 23.91 | 6.72 | 195.8, not a practical conductor | 25 / 21 / 18 |
 | CELL_FUSED | 14.4 (16.8) | 10.00 / 18.00 | 18.0, PWR-F12 | 23.91 | 6.72 | 195.8 | 25 / 21 / 18 |
 | VBAT | 14.4 (16.8) | 10.00 / 18.00 | 18.0, PWR-F12 | 23.91 | 6.72 | 195.8 | 25 / 21 / 18 |
-| VIN_RAW | 12.0 (36.0) | 12.31 / 12.31 | 12.3 | 11.92 | 3.68 | 97.7 | 17 / 14 / 12 |
+| VIN_RAW (**H2**: 14.10 A, was 12.31) | 12.0 (36.0) | 14.10 / 14.10 | 14.1 | 15.29 | 4.43 | 125.2, not a practical conductor | 20 / 16 / 14 |
 | VBUS20, FE_OUT, CH_ACN | 20.0 | 6.00 / 8.00 | 6.0 | 3.55 | 1.37 | 26.2 | 11 / 9 / 8 |
 | +13V8_PA, PA_OUT | 13.8 | 5.00 / 6.00 | 5.0 | 2.76 | 1.06 | 18.8 | 9 / 7 / 6 |
 | +5V_DEV, SD_OUT | 5.0 | 4.00 / 6.90 | 4.0 | 2.03 | 0.78 | 12.5 | 10 / 8 / 7 |
@@ -42,6 +52,9 @@ share of the rail's current (PI-001's own wording, `pcb_rules.yaml`).
 | +12V_HF, HF_OUT, +5V_D8 | 12.0 / 5.0 | 1.00 / 2.00 | 1.0 | 0.30 | 0.12 | 1.8 | 3 / 3 / 2 |
 | VHEAT_IN, VHEAT, VBUS_WALL | 14.4 / 12.0 / 5.0 | 0.5 to 0.63 / 0.63 to 0.9 | 0.5 to 0.6 | 0.12 to 0.16 | under 0.1 | under 1 | 2 / 2 / 1 |
 | +3V3, +54V_POE, POE_OUT | 3.3 / 54.0 | 0.30 / 0.60 | 0.3 | 0.06 | | 0.3 | 1 / 1 / 1 |
+| VMON (**H2**, new: the monitor's supply behind the eFuse U21) | 14.4 (16.8) | 0.69 / 1.00 | 0.7 | 0.18 | 0.07 | 1.1 | 2 / 2 / 1 |
+| PRECHG (**H2**, new: the pack's pre-charge pin J_PRE1 into R1 and CELL+) | 14.4 (16.8) | 0.00 / 1.68 | 0.0 (barrels at the 1.68 A peak) | 0.00 | | 0.0 | 3 / 2 / 2 |
+| +3V3_EMCON_EF, +3V3_EMCON (**H2**, new: the EMCON gates' supply behind U39) | 3.3 | under 0.01 | under 0.01 | 0.00 | | 0.0 | 1 / 1 / 1 |
 
 What the table asks of the layout, each line with its source:
 
@@ -58,7 +71,8 @@ What the table asks of the layout, each line with its source:
    runs from the charger block through R17 into VBAT) get islands and bands of their own: on A32 a 0.500 mm In3
    conductor carried 6.26 A against 0.40 A for its cross-section (`boards/a.json`
    `_ch_srp_carries_ten_amps_through_a_conductor_rated_under_one`).
-4. **VIN_RAW at 12.31 A is the second-widest band on the board** (11.92 mm on one face at 1 oz); it dives under the
+4. **VIN_RAW at 14.10 A is the second-widest band on the board** (15.29 mm on one face at 1 oz; **H2**: it was 12.31 A
+   and 11.92 mm at `e3aedb25`, and since SC-55, `b7f96784`, it reaches the dock on four 9 A power pins); it dives under the
    VBAT trunk on an inner layer only as a crossing, never as a run (the rule of appendix 32.39, `LAYER-DECISIONS`).
 5. **Slot 1's 5 V rail runs at 4.65 A in PS-ALLTX PLAN against the AP64500's 5 A** (PWR-F02, 7 percent margin); its
    band and barrels are sized at the 5.0 A peak for the barrels (7 of 0.3 mm) and 2.5 A typical for the band (1.06 mm)
@@ -136,7 +150,7 @@ What the table asks of the layout, each line with its source:
    (`v2/docs/layout-constraints/E5.md`); outline and connector positions are frozen for routing only after the
    targeted checks of `CASE-MARGINS.md` finding 28, or with the OPEN rows named.
 6. **Test access:** 25 test points on the committed netlist; no in-circuit programmable device on board A. Bring-up
-   order and measurement points: `PCB-BRING-UP.md` board A (VIN_RAW applied first at 12 V, 12.31 A limit; CELL+ and
+   order and measurement points: `PCB-BRING-UP.md` board A (VIN_RAW applied first at 12 V, 14.10 A limit at H2, 12.31 A at `e3aedb25`; CELL+ and
    CELL_FUSED at 14.4 V, 10 A; then 23 derived rails measured in order). The W5 per-board access list REQ-048 names
    is not in the tree (README).
 
@@ -153,6 +167,8 @@ What the table asks of the layout, each line with its source:
 - **TRN-001 reads FAIL on board A** on the clamp symbol only (`PCB-RULE-STATUS-A.md` TRN-001 row; the clamps drawn
   one-way through `kisch.tvs()` since 26 September); the decision 31 hold gates fabrication release, and its review
   record `v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md` is owed at layout entry (`CURRENT-EVIDENCE.md` line 77).
+  **H2:** TRN-001 reads PASS on current evidence (the consolidated re-take, `8ea7867e`); decision 31's review record is
+  still owed and is one of board A's seven layout-entry reasons.
 
 ## 8. Spacing (ISO-001)
 

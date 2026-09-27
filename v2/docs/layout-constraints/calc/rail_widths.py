@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Power band widths and barrel counts per declared rail, per board: the numbers the layout constraint sheets quote.
 
-MESHSAT-1357, 27 September 2026 (handover layer 9). A VIEW, never an authority: every current comes from the board's
-committed intent file (`v2/ecad/<project>/out/<board>-intent.json`, the declaration dc_drop and via_current read),
+MESHSAT-1357, 27 September 2026 (handover layer 9; re-run and bound to the H2 line after H2, the same day). A VIEW,
+never an authority: every current comes from the board's committed intent file
+(`v2/ecad/<project>/out/<board>-intent.json`, the declaration dc_drop and via_current read), and each table names that
+file's sha256/16 and the sha256/16 of the committed netlist beside it, so a table says which candidate it was read on;
 every width from `v2/ecad/tools/track_current.width_for_current` (decision 35's ruled model, the most conservative of
 the three ECSS-Q-ST-70-12C Annex D fits, at a 10 K rise), and every barrel count from
 `v2/ecad/tools/via_current.barrels_for` (the fabricator's 18 um hole plating, the same model). This script adds no
@@ -16,7 +18,8 @@ WHICH CURRENT GOVERNS, as the rules in the tree state it:
   * the PACK PATH (the session's ruling PWR-F12 of 26 September 2026, v2/docs/feasibility/POWER-THERMAL.md section 10,
     draft v2/docs/records/rv-pwr/pwr-chain-redeclaration.yaml): 18 A for 60 s is a SERVICE current for every PA
     key-down, so its conductors are judged at 18 A, "unless a transient thermal analysis of that copper at 60 s shows
-    otherwise". No such analysis exists at e3aedb25, so the steady-state width at 18 A is the constraint. The ruling
+    otherwise". No such analysis exists at e3aedb25 or at the H2 line, so the steady-state width at 18 A is the
+    constraint. The ruling
     names board A's pack path; the same chain stages cross boards E, E5 and P (pcb_energy_chain.yaml DOCK_ENTRY,
     DOCK_BLOCK, PACK_CELLS, PACK_FETS), so the sheets carry it there too and say so.
 
@@ -80,14 +83,17 @@ def rows(letter):
             "w_out_split2": w(gov_a / 2.0, cu_out, False),
             "barrels": {d: vc.barrels_for(max(peak, gov_a), d) for d in DRILLS},
         })
+    net = os.path.join(ROOT, ipath.replace("-intent.json", ".net"))
     return {"letter": letter, "intent": ipath, "intent_sha16": sha16(full), "written": it.get("written"),
+            "netlist": ipath.replace("-intent.json", ".net"), "netlist_sha16": sha16(net) if os.path.exists(net) else None,
             "stack": stack, "cu_out": cu_out, "cu_in": cu_in, "stack_why": why, "rows": out}
 
 
 def markdown(t):
     L = []
-    L.append("Intent `%s` sha256/16 %s (written %s); stack %s, outer %.4f mm, inner %.4f mm (%s)."
-             % (t["intent"], t["intent_sha16"], t["written"], t["stack"], t["cu_out"], t["cu_in"], t["stack_why"]))
+    L.append("Netlist `%s` sha256/16 %s; intent `%s` sha256/16 %s (written %s); stack %s, outer %.4f mm, inner %.4f mm (%s)."
+             % (t["netlist"], t["netlist_sha16"] or "absent", t["intent"], t["intent_sha16"], t["written"], t["stack"],
+                t["cu_out"], t["cu_in"], t["stack_why"]))
     L.append("")
     L.append("| rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |")
     L.append("|---|---|---|---|---:|---:|---:|---|")

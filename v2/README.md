@@ -30,7 +30,7 @@ The previous generation (A21, B15, C6, D7, E4, E5 with a single Compute Module, 
 | `release/revA/boards/` | the Rev A deliverables: KiCad project snapshot, Gerber zip, BOM, CPL, DRC report, schematic PDF, renders, 1:1 print |
 | `release/revA/order/` | the JLCPCB order set: per-board upload folder with `ORDER-NOTES.txt`, `ORDER-LOG.md` (what was uploaded and what JLCPCB answered), `jlc-rotations.csv` and `jlc_final.py` (the rotation fixes applied to the CPL) |
 | `release/revA/review/` | the review prints: 1:1 sheets, assembly drawings, copper layers, schematics, renders at A4 |
-| `images/` | downscaled top renders for the README |
+| `images/` | downscaled top renders for the README (left out of the engineering handover snapshots under `release/handover/`, as presentation, so the README's image links do not resolve inside a snapshot; they do in this repository) |
 
 ## State of the MESHSAT-830 generation
 

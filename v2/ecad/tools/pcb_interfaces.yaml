@@ -227,27 +227,34 @@ boards:
 # by all three. check_contracts.py holds the map-identity checks it names in `judged_by`, as code; moving those checks
 # onto this data is a later tool change with its own fixtures. So a line here is a CONTRACT, not a verdict. (This file
 # is a declared configuration input of interfaces.py in rules_status.CONFIG_INPUTS, so an edit here dates every
-# interfaces.py reading; those readings are already AWAITING_REVALIDATION for TOOL_CHANGED, which rules_status decides
-# first.)
+# interfaces.py reading: since the consolidated re-take of 8ea7867e those readings are current, so an edit is followed
+# by a re-take of interfaces.py on every board, as the one of `read_at` below was after H2.)
 #
-# EVIDENCE WORDS. VERIFIED = read in the generator line or document cited, at eadbe571; RECORDED = a box result written
-# into a commit, not re-run here; INFERRED = reasoned from verified facts, not measured; TBD = no source in this tree,
-# effect stated. Prototype design: nothing here has been built, mated or powered. The generator lines are the corrected
-# design; the committed board files (A32, B21, C24, D12, E17, P4) predate it and carry the older netlists. Finding IDs
+# EVIDENCE WORDS. VERIFIED = read in the generator line or document cited, at eadbe571 (a `src` line number is a line
+# at eadbe571 unless the contract names its own commit; `read_at` below says what was re-read after H2); RECORDED = a
+# box result written into a commit, not re-run here; INFERRED = reasoned from verified facts, not measured; TBD = no
+# source in this tree, effect stated. Prototype design: nothing here has been built, mated or powered. The generator
+# lines are the corrected design; the committed board files (A32, B21, C24, D12, E17, P4) predate it and carry the older netlists. Finding IDs
 # are defined in v2/docs/ARCHITECTURE.md sections 13 and 14; a contract that lists one is NOT met by the design until it
 # closes. Pin maps are given from the FIRST end named; `aliases` lists nets that are one conductor under two names.
 board_to_board:
   schema: 1
-  read_at: {commit: eadbe571, date: "2026-09-26", phases: {a: A32, b: B21, c: C24, d: D12, e: E17, e5: E5, p: P4},
-            netlists_sha256_16: {a: 2e8923d6853ee4e1, b: 6048ee56c48a028b, c: 2834f0d8c4071d56, d: f13d8b70099ab03e,
-                                 e: d910e49c5f5f50b2, p: 4342c4cbe1b43dc4},
-            note: "generator and netlist lines are read at eadbe571; the phases are the committed LAYOUTS, which predate
-              these netlists (SCH-002 reads FAIL on A and B and INCONCLUSIVE on C, D, E and P, v2/docs/CURRENT-EVIDENCE.md).
-              check_contracts.py read PASS 91 of 91 across the corrected set in the integration tree of 458b2873
-              (RECORDED). The committed INT-001 readings on main are PASS on all seven boards (interfaces_<letter>, and
-              check_contracts at PASS 73 of 73 in every board's committed evidence of 21 September 2026);
-              CURRENT-EVIDENCE.md classes each AWAITING_REVALIDATION (TOOL_CHANGED) until check_contracts.py and
-              interfaces.py record by sha the netlists they read"}
+  read_at: {commit: ef144760, date: "2026-09-27", phases: {a: A32, b: B21, c: C24, d: D12, e: E17, e5: E5, p: P4},
+            netlists_sha256_16: {a: da05dc02bc1e612f, b: 8b78c59754a6a0c7, c: 11eabc2dddca5161, d: 76700a687eb6187f,
+                                 e: d6137f50059e5cbc, p: 085f833362fbbda8},
+            note: "re-anchored after handover H2 (27 September 2026) to the H2 line, the netlists committed at
+              ef144760: A, D and E last changed at b7f96784 (set 5), B at caba1876, C at 9f28c238, P at 7bef62bd, and
+              E5's board file 686b29a734c55b9a (no schematic). On them check_contracts.py reads PASS 99 of 99 (run with
+              VERDICT_DIR outside the tree at ef144760, as START-HERE section 6 says; it judges pin-map identity and
+              presence, not levels, timing or mating), and INT-001 reads PASS on current-candidate evidence on the six
+              boards with a schematic and AWAITING_REVALIDATION (UNBOUND) on E5 (v2/docs/CURRENT-EVIDENCE.md; the
+              interfaces.py readings re-taken after this edit, because this file is their configuration input). The
+              phases are the declared phases; the committed LAYOUTS predate these netlists (SCH-002 FAIL on A and B,
+              INCONCLUSIVE on C, D, E and P). HISTORICAL, NOT RE-READ HERE: each contract's `src` generator line numbers
+              and the readings in its own text are as that contract states them (the first twelve read at eadbe571,
+              the eighteen merged with hc5 at 0da2778b at the commits their text names); this block read eadbe571
+              before, with its netlists 2e8923d6853ee4e1, 6048ee56c48a028b, 2834f0d8c4071d56, f13d8b70099ab03e,
+              d910e49c5f5f50b2 and 4342c4cbe1b43dc4 and check_contracts PASS 91 of 91 at 458b2873"}
   rulings: "the owner's D-01 to D-17 of 25 and 26 September 2026, D-08a and the reversal of D-08 (v2/docs/CONOPS.md
     section 7, appendix 32.367) apply to these contracts where named; which of their engineering is in a generator is
     v2/docs/ARCHITECTURE.md section 1.3"
