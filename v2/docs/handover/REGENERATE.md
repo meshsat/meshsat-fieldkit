@@ -21,7 +21,19 @@ the same results. A content hash or a count quoted below is what those runs prin
 PARITY_AFTER_NOISE, the causes of the failures) are what to expect on another day. Commands outside the ZIP route
 (section 7's repository route, section 8) say how far they were re-run.
 
+**Edition H1.1.** The commands below name `H1`; for H1.1 read `H1.1` wherever a command names the ZIP or its folder.
+H1.1's design files, tools and exports are H1's; it adds the candidate patches, the glossary, three filed records,
+the case scripts' reference outputs and the packer's new `SOURCE.txt` lines. Sections 1a and 9 are new in H1.1.
+
 ## 1. Prerequisites (the versions the commands were run with)
+
+**Where the repository is.** The public repository is `https://github.com/meshsat/meshsat-fieldkit` (clone with
+`git clone https://github.com/meshsat/meshsat-fieldkit.git`); one file at one commit is
+`https://raw.githubusercontent.com/meshsat/meshsat-fieldkit/<commit>/<path>`. The snapshot's `SOURCE.txt` names its
+build commit on its `commit:` line and carries a commit timeline: every commit id the handover pages name, with its
+date and subject, whether it is in the snapshot's history and whether it was on the public repository when the
+snapshot was built. The H1 snapshot was filed by commit `a8652172` (its message, with the suite results of that day,
+is filed as `v2/docs/records/handover/a8652172-commit-message.txt`).
 
 | Tool | Version used | Needed for |
 |---|---|---|
@@ -38,6 +50,39 @@ PARITY_AFTER_NOISE, the causes of the failures) are what to expect on another da
 Installing these is not covered by the verified commands. The versions of the host used are recorded, as
 `dpkg-query` and the tools themselves reported them, in each `v2/release/handover/_generated/<board>/provenance.json`
 under `versions`.
+
+## 1a. Restore referenced maker documents (for the checks that need them)
+
+A snapshot bundles the maker documents only where a rule of `pack.yaml` says so; the rest are listed in
+`REFERENCED-SOURCES.tsv` with their git blob sha (column 2) and sha256. Three checks need some of them: the
+requirements validator and `rules_render.py --requirements --check` need `v2/vendor/st/`'s documents (CON-017), and
+the battery packet's `check_manifest.py` needs the 18 vendor documents its manifest cites. From the snapshot's root,
+with network access (`REF` is the build commit when the timeline in `SOURCE.txt` marks it public, else the newest
+public commit of the timeline; the blob check proves the bytes whichever commit served them):
+
+```
+REF=$(sed -n 's/^commit: //p' SOURCE.txt)
+fetch() { for p in "$@"; do
+  b=$(awk -F'\t' -v p="$p" '$1==p{print $2}' REFERENCED-SOURCES.tsv)
+  [ -n "$b" ] || { echo "NOT LISTED $p"; continue; }
+  mkdir -p "$(dirname "$p")"
+  curl -fsSL -o "$p" "https://raw.githubusercontent.com/meshsat/meshsat-fieldkit/$REF/$p" || { echo "FETCH FAILED $p"; continue; }
+  got=$( (printf 'blob %s\0' "$(stat -c%s "$p")"; cat "$p") | sha1sum | cut -d' ' -f1)
+  [ "$got" = "$b" ] && echo "OK $p" || echo "DIFFERS $p"
+done; }
+fetch $(awk -F'\t' 'NR>1 && $1 ~ /^v2\/vendor\/st\//{print $1}' REFERENCED-SOURCES.tsv)
+fetch $(python3 v2/docs/review-packets/battery/evidence/check_manifest.py | awk '$1=="MISSING"{print $2}')
+python3 v2/docs/review-packets/battery/evidence/check_manifest.py
+(cd v2/ecad && python3 tools/rules_lib.py requirements)
+python3 v2/ecad/tools/rules_render.py --requirements --check
+```
+
+Every fetched line must read `OK`. Expected afterwards: `RELEASE CHECK PASS` from the packet check, `132 requirement
+record(s), 0 error(s)` (the 16 warnings stay: closed-by-commit checks and the gitignored readings, section 7) and
+`REQUIREMENTS-TRACE.md is current`. The usability check of H1 restored the three ST documents this way (each sha256
+matched) and read exactly that from the validator and the renderer; the packet route was not run as one script. The
+eight ST files are about 83 MB (RM0433 alone 40.7 MB); fetch only what a check needs. A restored file makes the
+snapshot folder differ from its manifest, so run `handover_pack.py verify` before restoring, or on a second copy.
 
 ## 2. Check the snapshot
 
@@ -258,7 +303,8 @@ Expected, as run on `e3aedb25` with the handover files unpacked over it (this ro
 `tests: 1666 passed, 1 failed, 17 skipped`, the one failure `test_netlist_provenance` (it lists committed netlists
 through the git index, and an archive extraction has none). H1 adds tests (the packer's among them), so its counts
 are higher; the result of the full suite in a git worktree of the repository at the H1 branch is recorded in the
-message of the commit that files the H1 snapshot.
+message of the commit that files the H1 snapshot, `a8652172` (1889 passed, 0 failed, 63 skipped, every skip a missing
+`pcbnew` or `kicad-cli`), filed as `v2/docs/records/handover/a8652172-commit-message.txt`.
 
 **In a git checkout two further conditions hold.**
 `test_netlist_provenance` reads the index; and `pcb_requirements.yaml` names, for each closed item, the commit that
@@ -284,4 +330,40 @@ python3 v2/ecad/tools/handover_pack.py verify <dir>/<name>.zip
 `build` writes `<dir>/<name>/`, `<dir>/<name>.zip` and `<dir>/<name>.zip.sha256`, and refuses a name that exists. Two
 builds of one commit on one host write the same MANIFEST.tsv and the same ZIP bytes (tested in
 `tests/test_handover_pack.py`); on another host the ZIP's compressed bytes and `SOURCE.txt`'s host lines can differ, so
-compare `MANIFEST.tsv` rows other than `SOURCE.txt`'s, not the ZIP's sha256.
+compare `MANIFEST.tsv` rows other than `SOURCE.txt`'s, not the ZIP's sha256. `SOURCE.txt`'s commit timeline marks a
+commit public when it is an ancestor of the building clone's `refs/remotes/origin/main` (`pack.yaml` `public`), so it
+says what that clone knew when it built, and "unknown" in a clone with no such ref.
+
+## 9. Re-take the schematic-phase readings and re-render CURRENT-EVIDENCE
+
+**Status in H1.1: the procedure is stated, its driver lands in the next snapshot.** The layout-entry status (0 boards
+ready; reasons A 17, B 16, C 11, D 15, E 16, P 15, E5 5) and every `PCB-RULE-STATUS-<x>.md` verdict are rendered from
+readings (`*.verdict.json`) in gitignored `out/` folders that no snapshot carries (START-HERE section 3a, known gap 1).
+A driver that runs exactly the writers the layout-entry test reads, `v2/ecad/tools/retake_schematic_phase.py`, was being
+written when H1.1 was cut and is not in it; until it lands, the order below is the procedure, and it is the order that
+driver follows. None of it was run for H1.1.
+
+1. **Work in a throwaway git clone outside `/tmp`, on a KiCad 9.0.9 host** (section 1). A reading taken on files under
+   `/tmp` is classed TEMP_INPUT and never counts; a reading of an uncommitted netlist is evidence about nothing anyone
+   can check out, so every input (netlist, provenance sidecar, intent file, schematic, project, allow-lists) must be
+   tracked and unmodified (`git status --short` empty).
+2. **List what to run per board from the registries, never by hand.** For board `<x>`: every rule
+   `rules_lib.rules_for("<x>")` returns with `verification_phase: SCHEMATIC`, plus every rule a hold of
+   `pcb_board_holds.yaml` names under `layout_entry_requires` as `rule_pass`; for each, `pcb_rules_coverage.yaml` names
+   the verifying tool and the verdict names it writes. A rule verified by a desk review has no writer and is not run.
+   Each writer must be declared in `rules_status.CONFIG_INPUTS`, or its reading can never bind.
+3. **Run every writer on the committed netlist, in the board's declared phase directory, with `VERDICT_DIR` set to
+   that directory's `out/`** (the place `full.sh`'s writers write, which `rules_status.py` reads), with the arguments
+   `v2/ecad/tools/gate_sweep.sh` gives them: `erc_gate.py . <stem> --run` (with the schematic and `kicad-cli`),
+   `safe_lines.py`, `pin_map_lands.py`, `derate.py`, `intent_checks.py --netlist`, `power_sequence.py`,
+   `edge_length.py --netlist`, `clock_check.py`, `port_protect.py`, `pack_protection.py --netlist ... --check`,
+   `energy_chain.py --ecad ..`, and the rest the coverage map names for that board. Never run a writer in a working
+   checkout you keep: that writes the tree's own evidence (START-HERE section 6).
+4. **Classify and render.** From `v2/ecad`: `python3 tools/rules_status.py` three times, the integrating session's practice
+   (the last run must leave its outputs unchanged; if it does not, run it again and say so), then
+   `python3 tools/rules_render.py` to write `CURRENT-EVIDENCE.md` and the per-board status pages, and
+   `python3 tools/rules_render.py --check` to confirm they are current. Commit any configuration input
+   (`pcb_rules_coverage.yaml` and the like) BEFORE running `rules_status.py`: an uncommitted configuration input
+   reads CONFIG_CHANGED.
+5. **Compare** the new layout-entry reasons per board with the figures above; a row that moved names the reading that
+   moved it (`CURRENT-EVIDENCE.md`, "Layout entry, per board: the exact remaining blockers").

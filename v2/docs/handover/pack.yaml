@@ -21,12 +21,18 @@ title: MeshSat field kit V2 engineering handover
 max_zip_bytes: 52428800
 sources_yaml: v2/vendor/SOURCES.yaml
 
+public:             # named in SOURCE.txt so a recipient can fetch what the snapshot references (H1.1, checker finding M5)
+  repository: https://github.com/meshsat/meshsat-fieldkit
+  raw_file_url: "https://raw.githubusercontent.com/meshsat/meshsat-fieldkit/<commit>/<path>"
+  public_ref: refs/remotes/origin/main   # the building clone's remote-tracking branch of main, pushed to GitHub by GitLab's push mirror
+
 pages:              # copied to the snapshot root when the commit holds them (the integrator writes them)
   - v2/docs/handover/START-HERE.md
   - v2/docs/handover/LAYER-STATUS.md
   - v2/docs/handover/CONTINUATION-BRIEF.md
   - v2/docs/handover/ENGINEERING-QUESTIONS.md
   - v2/docs/handover/REGENERATE.md
+  - v2/docs/handover/GLOSSARY.md
 
 boards:
   manifest: v2/ecad/tools/readiness_manifest.json
@@ -54,6 +60,8 @@ rules:
      reason: "an earlier handover snapshot: snapshots are immutable copies, never inputs of the next one"}
   - {action: include, group: L8, glob: "v2/release/handover/_generated/**",
      role: "exports of the committed schematic of the declared phase (paged PDF, sheet PDF, BOMs, ERC, netlist parity) with provenance.json naming the schematic sha256 and the kicad-cli that made them"}
+  - {action: include, group: EV, glob: "v2/docs/handover/candidates/**",
+     role: "UNACCEPTED candidate: a worktree's full change against its base commit, exported as a git patch because the branch was never pushed (candidates/README.md gives the base, the sha256, the layer and the last review with its blocking findings); not design"}
   - {action: include, group: H0, glob: "v2/docs/handover/**",
      role: "handover page, pack specification or regeneration instructions"}
 
@@ -104,6 +112,8 @@ rules:
      role: "case margins and fit study (CASE-MARGINS) and assembly, fasteners and coatings (ASSEMBLY, written for the MESHSAT-830 board phases)"}
   - {action: include, group: L7, glob: ["v2/vendor/peli/**/*.py", "v2/vendor/peli/**/*.txt", "v2/vendor/probes/*.py"],
      role: "case geometry read from Peli's CAD (text extractions and the scripts that read them)"}
+  - {action: include, group: L7, glob: "v2/vendor/peli/**/*.out",
+     role: "reference output of a case script (case_margins.py, frame_seat.py, the back-wall DXF reader): the text a re-run is compared with byte for byte; a script output, not a maker document (H1.1, checker finding M3)"}
 
   # ---------------------------------------------------------------- historical order sets and layout deliverables
   - {action: include, group: L6, glob: "v2/release/revA/order/JLC-CERTIFIED.tsv",

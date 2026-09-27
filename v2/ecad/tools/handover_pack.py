@@ -75,6 +75,11 @@ class Git:
     def commit(self, rev):
         return self.run("rev-parse", "--verify", "%s^{commit}" % rev).decode().strip()
 
+    def ask(self, *args):
+        """(exit code, stdout) of a read-only git call whose non-zero exit is an answer (not an ancestor, no such ref)."""
+        r = subprocess.run(["git", "-C", self.repo] + list(args), capture_output=True, timeout=300)
+        return r.returncode, r.stdout.decode("utf-8", "replace").strip()
+
     def tree(self, commit):
         """{path: (mode, blob sha, size)} for every blob of the commit (paths as git stores them, -z so no quoting)."""
         out = {}
@@ -330,6 +335,55 @@ def kicad_cli_version():
         return "not runnable here (%s)" % type(e).__name__
 
 
+# ------------------------------------------------------------------------------------------------ SOURCE.txt additions
+COMMIT_ID = re.compile(r"(?<![0-9A-Za-z_/.-])([0-9a-f]{8}|[0-9a-f]{40})(?![0-9A-Za-z_])")
+
+
+def commit_timeline(git, commit, texts, public_ref):
+    """[(short id, date, public, in the snapshot's history, subject)] for every commit id the handover pages name
+    (an 8- or 40-hex token with at least one letter that resolves to a commit of this repository), plus the snapshot's
+    own commit. `public` is whether the commit is an ancestor of `public_ref` in the building clone (the remote-tracking
+    branch of the public repository), or "unknown" when the clone has no such ref."""
+    ids = {commit}
+    for t in texts:
+        for m in COMMIT_ID.finditer(t):
+            tok = m.group(1)
+            if not re.search(r"[a-f]", tok) or not re.search(r"[0-9]", tok): continue
+            rc, full = git.ask("rev-parse", "--verify", "--quiet", "%s^{commit}" % tok)
+            if rc == 0 and full: ids.add(full)
+    rc, _ = git.ask("rev-parse", "--verify", "--quiet", public_ref) if public_ref else (1, "")
+    have_pub = rc == 0
+    rows = []
+    for c in ids:
+        rc, info = git.ask("log", "-1", "--format=%cI%x09%s", c)
+        date, _, subj = info.partition("\t")
+        pub = ("yes" if git.ask("merge-base", "--is-ancestor", c, public_ref)[0] == 0 else "no") if have_pub else "unknown"
+        mine = "yes" if git.ask("merge-base", "--is-ancestor", c, commit)[0] == 0 else "no"
+        rows.append((date, c[:8], pub, mine, re.sub(r"\s*\[MESHSAT-\d+\]\s*$", "", subj)))
+    rows.sort()
+    return [(c, d[:16].replace("T", " "), pub, mine, subj[:120] + ("..." if len(subj) > 120 else ""))
+            for d, c, pub, mine, subj in rows]
+
+
+def registry_counts(git, tree, path="v2/ecad/tools/pcb_requirements.yaml"):
+    """Counts of the requirements registry at the commit, so the pages' figures can be checked against the build."""
+    if path not in tree: return []
+    try:
+        reg = load_yaml(git.blob(tree[path][1]).decode("utf-8"), path) or {}
+    except SpecError:
+        return ["  %s does not parse at this commit" % path]
+    out = []
+    for key, label in (("needs", "needs"), ("records", "records (REQ, CON, ASM, CHO, SPD, CFL, FEA)"),
+                       ("owner_rulings", "owner rulings"), ("session_choices", "session choices"),
+                       ("open_items", "open items"), ("closed_items", "closed items")):
+        v = reg.get(key)
+        if not isinstance(v, list): continue
+        ids = [str(x.get("id")) for x in v if isinstance(x, dict) and x.get("id")]
+        span = " (%s to %s)" % (ids[0], ids[-1]) if key == "session_choices" and ids else ""
+        out.append("  %s: %d%s" % (label, len(v), span))
+    return out
+
+
 # ------------------------------------------------------------------------------------------------ build
 def tsv(rows):
     def cell(v):
@@ -418,6 +472,32 @@ def build(git, commit, version, out_root):
 
     # SOURCE.txt
     log = git.run("log", "-1", "--format=%H%n%cI%n%T%n%s", commit).decode("utf-8", "replace").splitlines()
+    pub = spec.get("public") or {}
+    public_block = []
+    if pub.get("repository"):
+        public_block += [
+            "public repository: %s (clone: git clone %s.git)" % (pub["repository"], pub["repository"]),
+            "raw file at a commit: %s" % (pub.get("raw_file_url") or "-"),
+            "  a file this snapshot references but does not bundle (REFERENCED-SOURCES.tsv) is fetched from that URL with",
+            "  <commit> = the snapshot commit when the timeline below says it is public, else any public commit in the",
+            "  timeline that holds the same blob; check it by its git blob sha (column git_blob_sha of the TSV)",
+            "",
+        ]
+    texts = [git.blob(tree[p][1]).decode("utf-8", "replace") for p in sorted(tree)
+             if p.startswith("v2/docs/handover/") and p.endswith(".md")]
+    tl = commit_timeline(git, commit, texts, pub.get("public_ref"))
+    public_block += [
+        "commit timeline: every commit the handover pages name, and this snapshot's own (id, committed, on the public",
+        "repository when this snapshot was built (ancestor of %s in the building clone), in this snapshot's history, "
+        "subject):" % (pub.get("public_ref") or "no public ref configured"),
+    ] + ["  %s  %s  public %-7s  in history %-3s  %s" % r for r in tl] + [""]
+    rc = registry_counts(git, tree)
+    if rc: public_block += ["requirements registry at this commit (v2/ecad/tools/pcb_requirements.yaml):"] + rc + [""]
+    cands = sorted(p for p in tree if re.fullmatch(r"v2/docs/handover/candidates/[^/]+\.patch", p))
+    if cands:
+        public_block += ["candidate patches (UNACCEPTED work exported from unpushed worktrees; v2/docs/handover/candidates/README.md):"]
+        public_block += ["  %s: %d bytes, sha256 %s" % (p, tree[p][2], hashlib.sha256(git.blob(tree[p][1])).hexdigest())
+                         for p in cands] + [""]
     runner = os.path.abspath(__file__)
     here_sha = hashlib.sha256(open(runner, "rb").read()).hexdigest()
     me = "v2/ecad/tools/handover_pack.py"
@@ -455,6 +535,7 @@ def build(git, commit, version, out_root):
         "SOURCES.yaml documents: %d cited paths, %d of them bundled because a rule includes them, %d cited but absent "
         "from the commit" % (len(sources), len(bundled_cited), len(missing)),
         "",
+    ] + public_block + [
         "boards (letter, stem, declared phase directory read from readiness_manifest.json and the routeflow profile):",
     ] + ["  %s %s -> v2/ecad/%s%s" % (l, s, ph, " (no schematic chain: the board file is the design)" if nc else "")
          for l, s, ph, nc in pl["boards"]] + [
