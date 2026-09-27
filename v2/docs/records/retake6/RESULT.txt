@@ -168,3 +168,17 @@ folder or the tree holds; the file is named beside it.
    in the path prefix (293 paths) and in the writer named on SGN-001's row (worktree/audit-compare.txt); no page
    prints either. Re-judged at the pages' own commit 5df41dd5: no page written, every check current
    (worktree/after-commit/run.txt).
+
+11. THE FULL SUITE ON THE BOX AT THE BRANCH'S COMMIT (box/retake6_suite.sh, box/suite/, box/suite-attempt1/)
+   Commit c3bf31d1 (the readings 50e3b60b, the pages 5df41dd5 and records; the commits after it add records only), in
+   a fresh clone under /root/retake6/suite with the candidate's evidence and the re-take's 258 ignored readings.
+   Second run, 21:53:21 to 22:03:42 UTC: the audit converged first (rules_status three times, the same last line as
+   everywhere above; rules_render --check 16 documents, 0 out of date; git status empty), then
+   "tests: 2015 passed, 0 failed, 3 skipped", exit 0, git status empty after it. The three skips are the candidate's
+   own (test_finish_order's routeflow validate, test_pairsearch without numba, test_per_board_contract_verdict with
+   pcbnew importable). The candidate read 2015 passed, 0 failed, 3 skipped at 760d7f41.
+   First run, 21:38:46 to 21:49:07 UTC: 2015 passed, 1 failed, 3 skipped, and the one failure is the suite's guard,
+   "THIS RUN CHANGED THIS TREE'S OWN EVIDENCE: out/rule-audit/rules_status.verdict.json". The cause was this worker's
+   set-up and not the commit: the clone held the candidate's audit from before the re-take, because the tar of
+   ignored readings leaves the audit's outputs out, and the suite's own render re-took it (the integration recipe's
+   item 6 says to converge first). Both logs are filed.
