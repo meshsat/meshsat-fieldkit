@@ -1,0 +1,15 @@
+r8b2: suite start 2026-09-27T00:08:29Z head fc144600544c005c280d6614d26a94dfd3f88511
+ 6 files changed, 56471 insertions(+), 38518 deletions(-)
+r8b2: suite exit 1
+tests: 1646 passed, 7 failed, 4 skipped; failed: test_requirements.t_check_refuses_a_hand_edited_trace_page, test_requirements.t_no_real_record_reads_pass_on_evidence_that_does_not_count, test_requirements.t_the_page_does_not_change_with_the_decision_index_for_what_an_owner_ruling_names, test_requirements.t_the_real_registry_validates, test_requirements.t_the_trace_page_is_generated_not_hand_kept, test_rule_gate_mapping.t_one_render_converges_when_a_rule_judges_a_page_the_same_run_writes, test_rule_gate_mapping.t_the_documents_are_generated_and_not_hand_maintained
+r8b2: tree status changed:
+0a1,8
+>  M v2/docs/CURRENT-EVIDENCE.md
+>  M v2/docs/PCB-OPEN-PAIRS.md
+>  M v2/docs/PCB-RULE-STATUS-A.md
+>  M v2/docs/PCB-RULE-STATUS-B.md
+>  M v2/docs/PCB-RULE-STATUS-C.md
+>  M v2/docs/PCB-RULE-STATUS-D.md
+>  M v2/docs/PCB-RULE-STATUS-E.md
+>  M v2/docs/PCB-RULE-STATUS-P.md
+r8b2: suite done 2026-09-27T00:16:27Z

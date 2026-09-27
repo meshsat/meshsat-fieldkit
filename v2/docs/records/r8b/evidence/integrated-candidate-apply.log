@@ -1,0 +1,38 @@
+r8b2: apply start 2026-09-27T00:26:44Z
+overlay          80G   23G   58G  28% /
+r8b2: applied ARCH-PCB-B-IOHA-r8.patch
+r8b2: applied CONOPS-r8.patch
+r8b2: applied DECOUPLING-r8.patch
+r8b2: applied EMCON-r8.patch
+r8b2: applied FAILOVER-FABRIC-r8.patch
+r8b2: applied PANEL-r8.patch
+r8b2: applied V2-SPEC-r8.patch
+r8b2: applied check_pcb_b-r8.patch
+r8b2: applied energy-chain-B_PANEL_5V.patch
+r8b2: applied erc-allow-b-r8.patch
+r8b2: applied other-boards-sidecars-r8.patch
+r8b2: applied sources-yaml-additions.patch
+r8b2: filed ti-sn74lvc2g06.pdf -> v2/vendor/ti/ti-sn74lvc2g06.pdf sha256 b5533064ff102afc matches SHA256SUMS
+r8b2: filed nexperia-74lvc1g157.pdf -> v2/vendor/nexperia/nexperia-74lvc1g157.pdf sha256 62f9b85c44785ca1 matches SHA256SUMS
+r8b2: filed ti-tpd4e001.pdf -> v2/vendor/ti/ti-tpd4e001.pdf sha256 e10f97586a1aa314 matches SHA256SUMS
+r8b2: filed ti-tps3808.pdf -> v2/vendor/ti/ti-tps3808.pdf sha256 74d889c0f68af880 matches SHA256SUMS
+r8b2: filed adi-ds3231-19-5170.pdf -> v2/vendor/adi/adi-ds3231sn.pdf sha256 dc81cd89bee82d0c matches SHA256SUMS
+rebound: ['CFL-001', 'CFL-004', 'CFL-005', 'CFL-013', 'CFL-014', 'CFL-015', 'CFL-016', 'REQ-005'] {'v2/docs/ARCH-PCB-B-IOHA.md': 'f843eb9745d7525d', 'v2/docs/PANEL.md': '83ce950438c04c28', 'v2/docs/CONOPS.md': '022279945ecccde8', 'v2/docs/V2-SPEC.md': '5e8a10d55f0f9907', 'v2/ecad/tools/gen_sch_b.py': 'ae8f25d66ea299c8', 'v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net': '3b30b3cc5e75a478'}
+r8b2: requirements patch 247 lines
+r8b2: rules_lib requirements exit 0 rules_lib: 131 requirement record(s), 0 error(s), 23 warning(s)
+r8b2: inputs committed b634f3f3
+r8b2: rules_status pass 1 exit 1
+r8b2: rules_render pass 1 exit 0
+r8b2: rules_render --requirements pass 1 exit 0
+r8b2: rules_render --check exit 0 after pass 1
+r8b2: rules_render --requirements --check exit 0
+r8b2: decisions_render --check exit 0
+r8b2: generated pages diff 571 lines: v2/docs/CURRENT-EVIDENCE.md v2/docs/PCB-OPEN-PAIRS.md v2/docs/PCB-RULE-STATUS-A.md v2/docs/PCB-RULE-STATUS-B.md v2/docs/PCB-RULE-STATUS-C.md v2/docs/PCB-RULE-STATUS-D.md v2/docs/PCB-RULE-STATUS-E.md v2/docs/PCB-RULE-STATUS-P.md v2/docs/REQUIREMENTS-TRACE.md 
+r8b2: pages committed 0e32ad35
+r8b2: candidate against main:  40 files changed, 57266 insertions(+), 38692 deletions(-)
+r8b2: check_contracts exit 0  verdict: check_contracts        PASS         of 96 {"boards_without_intent": 0, "fail": 0, "missing_boards": 0, "pass": 96, "rails_unsplit": 0, "undecided": 0, "unjudged": 0} 
+r8b2: energy_chain exit 0  verdict: energy_chain           PASS         of 98 {"checks": 98, "citations_unjudged": 0, "coordination_findings": 0, "fail": 0, "selection_findings": 0, "stages": 12} | THE CHAIN END TO END, which is BAT-002's question; a selection finding against ECSS 6.17 belongs to the stage that has it and is in energy_chain_<letter>, rule PWR-003. Every rating against its own source document, every protective element against the board's netlist, and the four coordination tests (the element is below what it protects, above the path's peak, able to interrupt what is available, and followed by the stage it protects) 
+r8b2: suite exit 0
+tests: 1654 passed, 0 failed, 3 skipped
+r8b2: the suite left the tree status unchanged
+r8b2: apply done 2026-09-27T00:35:47Z

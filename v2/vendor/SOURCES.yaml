@@ -3247,6 +3247,123 @@ parts:
       - {path: "v2/vendor/crystals/yxc-ysx321sl-x322525mob4si.pdf", doc_id: "YXC YSX321SL crystal unit", revision: "not printed; PDF of 8 May 2025", url: "https://datasheet.lcsc.com/datasheet/pdf/a84bd8d530dd46e4b0f6d0ee59d8a89c.pdf?productCode=C9006 (LCSC's copy)", fetched: "2026-09-27T00:05:27Z", sha256: "7bc18549e407d8e381075b0f5fc696e48cf0fa060aeee67971925f43cfdfbb8b", matches_fitted: "no: the replacement candidate (a raster sheet, read visually)"}
       - {path: "v2/vendor/crystals/epson-tsx-3225-x1e0000210139.pdf", doc_id: "Seiko Epson FA-238V, FA-238, TSX-3225", revision: "not printed; PDF of 3 December 2015", url: "https://datasheet.lcsc.com/datasheet/pdf/0d18bdcfc6729dd0d95eefcfc4755fee.pdf?productCode=C91750 (LCSC's copy)", fetched: "2026-09-27T00:05:27Z", sha256: "4e9c0baa33e30d2d40d6cf3baf5a46e43ac2d3d5ed5b27246829c28469d475e6", matches_fitted: "no: the alternate"}
 
+  # ADDED 27 SEPTEMBER 2026 (MESHSAT-1357 round 8, board B author, stream b). The parts board B adopts in round 8 for the
+  # failover fabric (FAB-02, FAB-03), EMCON (L1 to L3, L7, SD-EMC-1, SD-EMC-2), S-13, B_PANEL_5V and the parts re-take.
+  # The five fetched documents were filed at the paths named here at the round's integration of 27 September 2026 (round 8
+  # set 3, branch fnd/r8int3), byte for byte at the sha256 each entry states, with their sources.txt and vendor-status.txt lines.
+  - id: logic-od-inverter-dual-lvc2g06
+    function: "board B's EMCON open drains (round 8, L3 and L7): U113 to U115, U213 to U215, U220, U313 to U315, run from each module's own 3.3 V"
+    boards: [B]
+    on_main: false
+    adopted_in: "board B round 8 (fnd/r8b), integrated 27 September 2026 (round 8 set 3)"
+    schematic_name: {text: "SN74LVC2G06DBVR dual open-drain inverter", where: "v2/ecad/tools/gen_sch_b.py, helper lvc2g06()"}
+    fitted_mpn: "SN74LVC2G06DBVR (Texas Instruments)"
+    package: "SOT-23-6 (DBV)"
+    lcsc: "C402162"
+    identity: MATCH
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/ti-sn74lvc2g06.pdf"
+        doc_id: "TI SN74LVC2G06"
+        revision: "SCES307J, revised July 2015"
+        url: "https://www.ti.com/lit/ds/symlink/sn74lvc2g06.pdf"
+        fetched: "2026-09-26T21:17Z, HTTP 200 application/pdf"
+        sha256: "b5533064ff102afca29c87df4ce5b6b1771dd5eb5f869ed787c07ef66ece5910"
+        matches_fitted: "yes: DBV pinout, VOL, II and Ioff read (5 Pin Configuration, 6.5)"
+  - id: logic-mux-lvc1g157
+    function: "board B's fabric qualifiers and select locks (round 8, FAB-02 (b) and (c), FAB-03): U513 to U518 (each bank's dark-host select and its enable), U519, U520 (display switch enables), U524 to U529 (each bank's select lock); every input a logic edge, since Table 6 limits the input transition rate to 10 ns/V"
+    boards: [B]
+    on_main: false
+    adopted_in: "board B round 8 (fnd/r8b), integrated 27 September 2026 (round 8 set 3)"
+    schematic_name: {text: "74LVC1G157GW 2:1 mux (Nexperia)", where: "v2/ecad/tools/gen_sch_b.py, helper lvc1g157()"}
+    fitted_mpn: "74LVC1G157GW,125 (Nexperia)"
+    package: "SOT363-2 (TSSOP6, SC-88)"
+    lcsc: "C135822"
+    identity: MATCH
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/nexperia/nexperia-74lvc1g157.pdf"
+        doc_id: "Nexperia 74LVC1G157"
+        revision: "Rev. 12, 15 August 2023"
+        url: "https://assets.nexperia.com/documents/data-sheet/74LVC1G157.pdf"
+        fetched: "2026-09-26T21:21Z, HTTP 200 application/pdf (TI's SN74LVC1G157 answered 404 the same minute)"
+        sha256: "62f9b85c44785ca14f681958a44df1a1106f0006d050e93b20c56d738d15e789"
+        matches_fitted: "yes: Table 3 pinout, Table 4 function, Tables 7 and 8"
+  - id: sim-esd-array-tpd4e001
+    function: "board B's SIM ESD arrays (S-13): U222 (SIM 1), U223 (SIM 2), the TVS array Quectel HD v1.1 4.1.7 asks for (at most 10 pF)"
+    boards: [B]
+    on_main: false
+    adopted_in: "board B round 8 (fnd/r8b), integrated 27 September 2026 (round 8 set 3)"
+    schematic_name: {text: "TPD4E001DBVR SIM ESD array", where: "v2/ecad/tools/gen_sch_b.py (the SIM loop of slot 2)"}
+    fitted_mpn: "TPD4E001DBVR (Texas Instruments)"
+    package: "SOT-23-6 (DBV)"
+    lcsc: "C465736"
+    identity: MATCH
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/ti-tpd4e001.pdf"
+        doc_id: "TI TPD4E001"
+        revision: "SLLS682P, revised January 2025"
+        url: "https://www.ti.com/lit/ds/symlink/tpd4e001.pdf"
+        fetched: "2026-09-26T21:17Z, HTTP 200 application/pdf"
+        sha256: "e10f97586a1aa314c9e379a2afa0e8ce2c00e3428f53497b81164d52e121b677"
+        matches_fitted: "yes: DBV pin functions, CI/O 1.5 pF, VRWM 5.5 V, 8.1 layout"
+  - id: supervisor-tps3808g30
+    function: "board B's 5G release hold (round 8, SD-EMC-1): U221 holds FULL_CARD_POWER_OFF# low 180 to 420 ms after +3V3_S2A (Quectel Tpr >= 100 ms)"
+    boards: [B]
+    on_main: false
+    adopted_in: "board B round 8 (fnd/r8b), integrated 27 September 2026 (round 8 set 3)"
+    schematic_name: {text: "TPS3808G30DBVR supervisor on +3V3_S2A", where: "v2/ecad/tools/gen_sch_b.py (slot 2)"}
+    fitted_mpn: "TPS3808G30DBVR (Texas Instruments)"
+    package: "SOT-23-6 (DBV)"
+    lcsc: "C189211"
+    identity: MATCH
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/ti-tps3808.pdf"
+        doc_id: "TI TPS3808"
+        revision: "SBVS050N, revised August 2026"
+        url: "https://www.ti.com/lit/ds/symlink/tps3808.pdf"
+        fetched: "2026-09-26T21:17Z, HTTP 200 application/pdf"
+        sha256: "74d889c0f68af88032f1633c26381817cc03e10d9fd3b4c177a044ad3ed86eed"
+        matches_fitted: "yes: G30 VIT 2.79 V, td with CT to VDD (6.6), MR (7.3.3), Table 5-1"
+  - id: rtc-ds3231sn
+    function: "board B's holdover clock U9 (parts re-take, WRONG-MODEL-RECONCILIATION row 1): the part the code C9866 has always bought, now drawn on its own SOIC-16W land"
+    boards: [B]
+    on_main: false
+    adopted_in: "board B round 8 (fnd/r8b), integrated 27 September 2026 (round 8 set 3)"
+    schematic_name: {text: "DS3231SN# holdover clock (I2C 0x68, TCXO and crystal)", where: "v2/ecad/tools/gen_sch_b.py (U9)"}
+    fitted_mpn: "DS3231SN#T&R (Analog Devices / Maxim Integrated)"
+    package: "16 SO, 300 mil (W16#H2)"
+    lcsc: "C9866"
+    identity: MATCH
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/adi/adi-ds3231sn.pdf"
+        doc_id: "Maxim Integrated DS3231"
+        revision: "19-5170 Rev 10, 3/15"
+        url: "https://www.analog.com/media/en/technical-documentation/data-sheets/DS3231.pdf (the maker's server stalled from the runner; filed from https://web.archive.org/web/2025id_/ of the same URL, served gzip-compressed, decompressed)"
+        fetched: "2026-09-26T21:30Z"
+        sha256: "dc81cd89bee82d0c57b654d6315e03dec913fb8fe753cc80b2a3f1cca71cbb34"
+        matches_fitted: "yes: Pin Description p.8, Ordering Information (DS3231SN#), Package Information (W16#H2). The tree's adi-ds3231.pdf is the DS3231M (19-5312), not this part"
+  - id: logic-held-sheets-round-8
+    function: "board B's round-8 single gates on held sheets: SN74LVC1G08DBVR U501 to U505 (C7666), SN74LVC1G04DBVR U112, U212, U312, U533 to U535 (C7827), 74LVC1G17W5-7 U507 to U512, U521 to U523, U530 to U532 (C151394), 74LVC1G34W5-7 U506 (C526347), SN74LVC86APWR U81 (C350562), SN74LVC32APWR U84, U85 (C352974); AO3400A Q212 (C20917); MF-MSMF110-2 F1 (C89647)"
+    boards: [B]
+    on_main: false
+    adopted_in: "board B round 8 (fnd/r8b), integrated 27 September 2026 (round 8 set 3)"
+    identity: MATCH
+    status: VERIFIED
+    documents:
+      - {path: "v2/vendor/ti/ti-sn74lvc1g08.pdf", doc_id: "TI SN74LVC1G08", revision: "SCES217AA", sha256: "30b963cc44233cf3ca35c891ff987c8323a2244ecc765e23296ec96ca4b42666"}
+      - {path: "v2/vendor/ti/ti-sn74lvc1g04.pdf", doc_id: "TI SN74LVC1G04", revision: "SCES214AF", sha256: "ac04a53de979125799e57ea5a6dff4138fe53e0eceebe45c31f57523669887d5"}
+      - {path: "v2/vendor/diodes/diodes-74lvc1g17.pdf", doc_id: "Diodes 74LVC1G17", revision: "DS35124 Rev 8-2", sha256: "029f345a1e7be917fee46d47c49a61963938e0aab1631b019fe7eddb014fb548"}
+      - {path: "v2/vendor/diodes/diodes-74lvc1g34.pdf", doc_id: "Diodes 74LVC1G34", revision: "DS36108 Rev 10-2", sha256: "efd2d7978bb880b7e07e05dee034b87701f12b834aa8132b6f61ce3705187a98"}
+      - {path: "v2/vendor/power/aos-ao3400a-n-mosfet.pdf", doc_id: "AOS AO3400A", revision: "Rev 3.1, July 2023", sha256: "9c60d0b6c1ddc7609a4b788a91181468d8ffe6c3e9ba425c3d8ffc5ba88c5033"}
+      - {path: "v2/vendor/power/bourns-mf-msmf-pptc.pdf", doc_id: "Bourns MF-MSMF series", revision: "as held", sha256: "a84b990157dd1d755b5c7a413156ddf8792a3a95cff56f09a95d10754e9e49ed"}
+    open_items:
+      - "F1 (independent check 2 of 27 September 2026, condition 1): C89647 is Bourns MF-MSMF110-2, which LCSC lists at 1.1 A, 6 V and 100 A; the held sheet's MF-MSMF110 rows are /8X, /16X, /16, /24X and /33X, not the plain part, so the 1.10 A hold and 2.20 A trip rest on the How-to-Order code and the Vmax, Imax and Thermal Derating rows (0.85, 0.77, 0.71 A at 50, 60, 70 C) are the siblings'. Closed by filing a Bourns sheet that lists the plain MF-MSMF110 or by ordering MF-MSMF110/8X-2. The siblings' table also gives 0.95 A of hold at 40 C, under board C's declared 1.0 A peak inside the sealed case, so the 'must stay a peak' contract of pcb_energy_chain.yaml B_PANEL_5V owes board C and PANEL.md a duration"
+      - "Q212 (independent checks 1 and 2): the AO3400A sheet (Rev 3.1) states VGS(th) 0.65 to 1.45 V and RDS(on) 48 mOhm at VGS 2.5 V at TJ 25 C only; SD-EMC-1r8's discharge bound rests on Q212 conducting at about 3.1 V of gate drive into 15 Ohm, a large margin that no held row states over -40 to +85 C (EMCON.md section 4b, L7)"
+
 owed:
   - "DONE 26 September 2026 (integration I6): sources.txt file lines for the six documents added on 25 and 26 September and for this file, a vendor-status.txt line for each, a vendor-noindex.txt line for the text-less TE drawing, and the correction of sources.txt's m2 folder line and the same sentence in README.md ('key to be read from the drawing': the drawing says key M)"
   - "the appendix entry recording that the conditional pick at appendix line 2884 resolved to its else-branch (the drawing says key M); the appendix is not a vendor file"

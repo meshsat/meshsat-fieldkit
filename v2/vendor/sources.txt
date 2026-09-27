@@ -331,3 +331,8 @@ pulse/pulse-hx6096nl-datasheet-rev-a.pdf   # https://productfinder.pulseeng.com/
 wifi/asiarf-AW7915-AED-datasheet.pdf   # https://asiarf.com/wp-content/uploads/2026/05/260505_Datasheet_AW7915-AED-1P.pdf (linked from the held product page), byte-identical at 2026-09-27T03:56:57Z
 cm5/cm5-datasheet.pdf   # https://datasheets.raspberrypi.com/cm5/cm5-datasheet.pdf, byte-identical at 2026-09-27T03:56:58Z
 rf/radiall-smp-max-series-R222M-D1C004XEe.pdf   # https://www.radiall.com/media/files/SMP-MAX%20D1C004XEe.pdf, byte-identical at 2026-09-27T03:57:30Z
+ti/ti-sn74lvc2g06.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc2g06.pdf, fetched 26 September 2026 21:17 UTC by board B's round 8 stream (SCES307J)
+nexperia/nexperia-74lvc1g157.pdf   # https://assets.nexperia.com/documents/data-sheet/74LVC1G157.pdf, fetched 26 September 2026 21:21 UTC by board B's round 8 stream (Rev. 12; TI's SN74LVC1G157 answered 404 the same minute)
+ti/ti-tpd4e001.pdf   # https://www.ti.com/lit/ds/symlink/tpd4e001.pdf, fetched 26 September 2026 21:17 UTC by board B's round 8 stream (SLLS682P)
+ti/ti-tps3808.pdf   # https://www.ti.com/lit/ds/symlink/tps3808.pdf, fetched 26 September 2026 21:17 UTC by board B's round 8 stream (SBVS050N)
+adi/adi-ds3231sn.pdf   # https://www.analog.com/media/en/technical-documentation/data-sheets/DS3231.pdf (19-5170 Rev 10; the maker's server stalled from the runner, so it was taken from https://web.archive.org/web/2025id_/ of the same URL on 26 September 2026 21:30 UTC by board B's round 8 stream, served gzip-compressed and decompressed; adi/adi-ds3231.pdf beside it is the DS3231M, 19-5312)

@@ -117,7 +117,7 @@ written: "2026-09-26"
 baseline_state: DRAFT_FOR_REVIEW_C
 sources_read_at: eadbe571
 needs_document: "v2/docs/CONOPS.md"
-needs_document_sha256: 122c921af6e3de40dcd9fedafb49e7f8c8147cf5a5abb0ed28dba01f2532e6e7
+needs_document_sha256: cedb60bf2ca8882235ed0a0cc37c333947e9e874133ac88f520352989a0038de
 companion_documents: []
 
 # The needs of CONOPS section 2, quoted. The validator compares each statement with the needs table of the
@@ -1435,9 +1435,30 @@ records:
           compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent
           checker, it differs only in D1, D2, D101, D201, D301 and D520's symbol (Device:D_TVS to Device:D_Zener) and pin
           names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 669d02d07aeaae4b
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3,
+          branch fnd/r8int3): board B's round 8 generator (FAB-01 to FAB-04, EMCON L1 to L3 and L7, SD-EMC-1r8 and
+          SD-EMC-2, I3-F01's address contract, S-12, S-13, B_PANEL_5V, decoupling G4 to G7 and G10, U9 as DS3231SN#,
+          the U.FL codes), with U115, U215 and U315's value text reworded at integration (no net, pin, land or code
+          moved): J_M2C2 is on M2_B-Key_Socket_3052_TE2199119, the B16 land plus the two NPTH locating holes of TE
+          C-2199119 rev F sheet 3 (S-12; written by gen_footprints_b16.py since this integration), so the land half of
+          this reading's FAIL is closed at desk; U9 is drawn as the DS3231SN# that C9866 buys and the six U.FL lines
+          carry C88373 (the parts re-take's rows 1 and 6). The certification half stands: the WRONG_MODEL rows of
+          WRONG-MODEL-RECONCILIATION.md and the jlc_certify re-take of round 8's new codes are not done, so the record
+          stays FAIL on that half, on the file at af6e5821e21b70ef
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at board B's round 8 integration of 27 September
+          2026 (round 8 set 3, branch fnd/r8int3) on the KiCad box with main's chain from main 84e52461 (main's own
+          generator reproduces main's committed file, PARITY_AFTER_NOISE): the integration's own comparison
+          (v2/docs/records/r8b/integration/indep_cmp.py, not the author's tool) reads it against main's record by
+          record (value, footprint, fields, libsource) and net by net (ref, pin, pinfunction, pintype): 187 parts
+          added, 25 removed, 36 changed, 93 nets added, 20 removed and 85 changed, every one explained by the author's
+          per-finding list (v2/docs/records/r8b/expected_r8b.json; 0 unexplained, 56 with two findings' entries
+          dropped); against the author's own netlist it differs only in U115, U215 and U315's value text, so this
+          reading stands on the file at adcc3c6736c90e9f
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@dedaf34ce285e5ff"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
+      - "v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
       - "v2/docs/evidence/WRONG-MODEL-RECONCILIATION.md@97b1f63aa6ea11f1"
     release_effect: MUST_JUSTIFY
     source:
@@ -1652,10 +1673,26 @@ records:
           v2/docs/ARCH-PCB-B-IOHA.md re-read when the layer 6 closer's reconciliation was applied (27 September
           2026, drafts/hc6/apply_registry.py): sections 10a, 6 differ from e3aedb25's; sections 4, 15 and 15a and line 17
           are byte-identical, so this reading stands on the file at 26fed4e40e0da078
+      - >-
+          v2/docs/CONOPS.md re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3, branch
+          fnd/r8int3): section 3's M4 paragraph (the 5G module's supply removed by hardware) and section 4b's
+          introduction, its LimeSDR, RockBLOCK, E22, E72, 5G, WiFi-card and module-radio rows and its closing
+          paragraph change; the SA868 and QMX rows keep board A's round 8 text; section 2a is byte-identical, so this
+          reading stands on the file at cedb60bf2ca88822
+      - >-
+          v2/docs/ARCH-PCB-B-IOHA.md re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3,
+          branch fnd/r8int3): section 5 items 2, 3 and 4 each gain a 'Drawn in board B's round 8' paragraph, section
+          6's status addresses read 0x34 to 0x36 (I3-F01), and section 10a's break-before-make paragraph is extended;
+          sections 4, 15 and 15a and line 17 are byte-identical, so it stands on the file at 08d44b37fa8e2717
+      - >-
+          v2/docs/V2-SPEC.md re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3, branch
+          fnd/r8int3): lines 24, 41 and 76 and a new correction 28 describe board B's round 8 (the 5G supply removed
+          by hardware, board B's EMCON stages, the key-B land's locating holes, the SIM TVS arrays); line 32
+          (correction 6) is byte-identical, so it stands PASS on the file at 41edfc2e2e3f1961
     evidence_bound_to:
-      - "v2/docs/CONOPS.md@122c921af6e3de40"
-      - "v2/docs/ARCH-PCB-B-IOHA.md@26fed4e40e0da078"
-      - "v2/docs/V2-SPEC.md@dd9a92946a8d186f"
+      - "v2/docs/CONOPS.md@cedb60bf2ca88822"
+      - "v2/docs/ARCH-PCB-B-IOHA.md@08d44b37fa8e2717"
+      - "v2/docs/V2-SPEC.md@41edfc2e2e3f1961"
     release_effect: BLOCKER
     source:
       - "v2/docs/ARCH-PCB-B-IOHA.md:17"
@@ -1739,7 +1776,7 @@ records:
     rule_coverage: PARTIAL
     waits_on: [S-42]
     status: DEFINED
-    evidence_result: FAIL
+    evidence_result: INCONCLUSIVE
     evidence_phase: SCHEMATIC
     evidence_class: DESK_REVIEW
     evidence:
@@ -1768,9 +1805,33 @@ records:
           compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent
           checker, it differs only in D1, D2, D101, D201, D301 and D520's symbol (Device:D_TVS to Device:D_Zener) and pin
           names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 669d02d07aeaae4b
+      - >-
+          v2/docs/feasibility/FAILOVER-FABRIC.md re-read at board B's round 8 integration of 27 September 2026 (round
+          8 set 3, branch fnd/r8int3): section 9a is new (FAB-01 to FAB-04 as drawn on board B's round 8 netlist, with
+          the break-before-make bounds, the netlist-driven simulation and the residuals: an enable pulse under 13 ns
+          in one asynchronous threshold race, a few ns of the previous host's dark flag at a move's end, the
+          TMUXHS4212's unpublished OEn time, no test pad on BSEL{b}_S) and section 10's FB-FAB-2 to FB-FAB-5 rows read
+          DRAWN at desk, the bench owed; sections 1, 5.2, 8 and 9 and FB-FAB-1, FB-FAB-6 to FB-FAB-8 are
+          byte-identical. The desk FAIL this record carried on FAB-03 (the select moving before the enable drops) and
+          FAB-04 (100 k pull-downs above VIL) is closed at desk: a locked break-before-make holds the enable off at
+          least 29 us before and 105 us after every select move for any vote waveform, and the 23 safe-low lines are
+          10 k (0.20 V and 0.11 V). A10 and A12 have not run and check_pcb_b.py's new assertions judge the board file,
+          which waits for B's next placement, so the record reads INCONCLUSIVE on the file at a0ad3d7436cd126d (the
+          result moved by the session under the owner's standing rule of 26 September 2026)
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at board B's round 8 integration of 27 September
+          2026 (round 8 set 3, branch fnd/r8int3) on the KiCad box with main's chain from main 84e52461 (main's own
+          generator reproduces main's committed file, PARITY_AFTER_NOISE): the integration's own comparison
+          (v2/docs/records/r8b/integration/indep_cmp.py, not the author's tool) reads it against main's record by
+          record (value, footprint, fields, libsource) and net by net (ref, pin, pinfunction, pintype): 187 parts
+          added, 25 removed, 36 changed, 93 nets added, 20 removed and 85 changed, every one explained by the author's
+          per-finding list (v2/docs/records/r8b/expected_r8b.json; 0 unexplained, 56 with two findings' entries
+          dropped); against the author's own netlist it differs only in U115, U215 and U315's value text; R480 to
+          R500, R15 and R16 are 10 k on it and the lock, arm and motion parts sit where section 9a says, so this
+          reading stands on the file at adcc3c6736c90e9f
     evidence_bound_to:
-      - "v2/docs/feasibility/FAILOVER-FABRIC.md@4646ad528ec4b3c6"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
+      - "v2/docs/feasibility/FAILOVER-FABRIC.md@a0ad3d7436cd126d"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
     release_effect: BLOCKER
     source:
       - "v2/docs/ARCH-PCB-B-IOHA.md:87-89"
@@ -1803,7 +1864,7 @@ records:
     rule_coverage: PARTIAL
     waits_on: [S-42]
     status: DEFINED
-    evidence_result: FAIL
+    evidence_result: INCONCLUSIVE
     evidence_phase: SCHEMATIC
     evidence_class: DESK_REVIEW
     evidence:
@@ -1827,9 +1888,33 @@ records:
           compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent
           checker, it differs only in D1, D2, D101, D201, D301 and D520's symbol (Device:D_TVS to Device:D_Zener) and pin
           names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 669d02d07aeaae4b
+      - >-
+          v2/docs/feasibility/FAILOVER-FABRIC.md re-read at board B's round 8 integration of 27 September 2026 (round
+          8 set 3, branch fnd/r8int3): section 9a is new (FAB-01 to FAB-04 as drawn on board B's round 8 netlist, with
+          the break-before-make bounds, the netlist-driven simulation and the residuals: an enable pulse under 13 ns
+          in one asynchronous threshold race, a few ns of the previous host's dark flag at a move's end, the
+          TMUXHS4212's unpublished OEn time, no test pad on BSEL{b}_S) and section 10's FB-FAB-2 to FB-FAB-5 rows read
+          DRAWN at desk, the bench owed; sections 1, 5.2, 8 and 9 and FB-FAB-1, FB-FAB-6 to FB-FAB-8 are
+          byte-identical. FAB-02 (b) and (c) are drawn: each bank's enable is forced off while the host the delayed
+          select passes is dark, the display switches pass a slot only while its module's 3.3 V is up, and the
+          power-good reaches logic only through a Schmitt buffer, so the finding this record's FAIL rested on ('its
+          remedy (b) and (c) is not drawn') no longer holds. The acceptance's power-state check over the netlist has
+          not been run as a script, Raspberry Pi has stated nothing, and the bench has not run, so the record reads
+          INCONCLUSIVE on the file at a0ad3d7436cd126d (the result moved by the session under the owner's standing
+          rule of 26 September 2026)
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at board B's round 8 integration of 27 September
+          2026 (round 8 set 3, branch fnd/r8int3) on the KiCad box with main's chain from main 84e52461 (main's own
+          generator reproduces main's committed file, PARITY_AFTER_NOISE): the integration's own comparison
+          (v2/docs/records/r8b/integration/indep_cmp.py, not the author's tool) reads it against main's record by
+          record (value, footprint, fields, libsource) and net by net (ref, pin, pinfunction, pintype): 187 parts
+          added, 25 removed, 36 changed, 93 nets added, 20 removed and 85 changed, every one explained by the author's
+          per-finding list (v2/docs/records/r8b/expected_r8b.json; 0 unexplained, 56 with two findings' entries
+          dropped); against the author's own netlist it differs only in U115, U215 and U315's value text; PG1 to PG3,
+          their buffers and the qualifier muxes are on it, so this reading stands on the file at adcc3c6736c90e9f
     evidence_bound_to:
-      - "v2/docs/feasibility/FAILOVER-FABRIC.md@4646ad528ec4b3c6"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
+      - "v2/docs/feasibility/FAILOVER-FABRIC.md@a0ad3d7436cd126d"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/FAILOVER-FABRIC.md section 5.2", "v2/docs/feasibility/FAILOVER-FABRIC.md section 10"]
     source_check: VERIFIED
@@ -1932,8 +2017,18 @@ records:
           drafts/ paths now naming the filed copies under v2/docs/records/ and the sentences saying where those
           files are, with the line count unchanged; no statement this reading rests on changed, so it stands on the
           file at 4646ad528ec4b3c6
+      - >-
+          v2/docs/feasibility/FAILOVER-FABRIC.md re-read at board B's round 8 integration of 27 September 2026 (round
+          8 set 3, branch fnd/r8int3): section 9a is new (FAB-01 to FAB-04 as drawn on board B's round 8 netlist, with
+          the break-before-make bounds, the netlist-driven simulation and the residuals: an enable pulse under 13 ns
+          in one asynchronous threshold race, a few ns of the previous host's dark flag at a move's end, the
+          TMUXHS4212's unpublished OEn time, no test pad on BSEL{b}_S) and section 10's FB-FAB-2 to FB-FAB-5 rows read
+          DRAWN at desk, the bench owed; sections 1, 5.2, 8 and 9 and FB-FAB-1, FB-FAB-6 to FB-FAB-8 are
+          byte-identical; none of FB-FAB-1 to FB-FAB-8 is closed (the drawn items owe their bench tests and
+          check_pcb_b.py reads the board file at B's next placement), so the record stays INCONCLUSIVE on the file at
+          a0ad3d7436cd126d
     evidence_bound_to:
-      - "v2/docs/feasibility/FAILOVER-FABRIC.md@4646ad528ec4b3c6"
+      - "v2/docs/feasibility/FAILOVER-FABRIC.md@a0ad3d7436cd126d"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/FAILOVER-FABRIC.md section 10", "v2/docs/reviews/2026-09-26-foundation-progress-review.md section 3", "v2/docs/STACKUP-DECISIONS.md section 4", "v2/docs/layout-constraints/B.md"]
     source_check: VERIFIED
@@ -2056,8 +2151,17 @@ records:
           LT8705A sense filter); the ruling, the classes, T1 to T10, every other board's G items (board C's and board
           P's round 8 rows among them) and the placement re-read are unchanged and still unlaid, so the record stays
           INCONCLUSIVE on the file at eb39cbaedf0e4f3b
+      - >-
+          v2/docs/feasibility/DECOUPLING.md re-read at board B's round 8 integration of 27 September 2026 (round 8 set
+          3, branch fnd/r8int3): only section 10's row 'G4 to G7, G10' changes, recording them drawn in board B's
+          round 8 (the TPS62933s' VIN 0.1 uF, the TS3DV642 VCC declarations, every capacitor of the fine-pitch parts
+          declared, 274 declarations, VDDA 100 nF + 1 uF, the hub cores, the KSZ9897R, the CP2102N VREGIN, C4 to C6
+          and C71), with B's classes held in v2/docs/records/r8b/decoupling-classes-b.json until board B's generator
+          writes them and the seats owed with B's next cut; the ruling, the classes, T1 to T10, every other board's
+          rows and the placement re-read are byte-identical and still unlaid, so the record stays INCONCLUSIVE on the
+          file at c918952e6de4eff4
     evidence_bound_to:
-      - "v2/docs/feasibility/DECOUPLING.md@eb39cbaedf0e4f3b"
+      - "v2/docs/feasibility/DECOUPLING.md@c918952e6de4eff4"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/DECOUPLING.md section 10", "v2/ecad/tools/pcb_decisions.yaml:959-1076 (decision 42)"]
     source_check: VERIFIED
@@ -2168,9 +2272,28 @@ records:
           compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent
           checker, it differs only in D1, D2, D101, D201, D301 and D520's symbol (Device:D_TVS to Device:D_Zener) and pin
           names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 669d02d07aeaae4b
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3,
+          branch fnd/r8int3): board B's round 8 generator (FAB-01 to FAB-04, EMCON L1 to L3 and L7, SD-EMC-1r8 and
+          SD-EMC-2, I3-F01's address contract, S-12, S-13, B_PANEL_5V, decoupling G4 to G7 and G10, U9 as DS3231SN#,
+          the U.FL codes), with U115, U215 and U315's value text reworded at integration (no net, pin, land or code
+          moved): U41, U51 and U61 are still STM32H743VIT6 (C114409) with the same pin table; round 8 moves only their
+          PC5 (pin 33) from EMCON_HW to EMCON_SUP (L1) and fixes their kit-bus status addresses at 0x34 to 0x36 as a
+          firmware contract (I3-F01), so clauses (1) and (2) hold and (3) and (4) still cannot be decided, on the file
+          at af6e5821e21b70ef
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at board B's round 8 integration of 27 September
+          2026 (round 8 set 3, branch fnd/r8int3) on the KiCad box with main's chain from main 84e52461 (main's own
+          generator reproduces main's committed file, PARITY_AFTER_NOISE): the integration's own comparison
+          (v2/docs/records/r8b/integration/indep_cmp.py, not the author's tool) reads it against main's record by
+          record (value, footprint, fields, libsource) and net by net (ref, pin, pinfunction, pintype): 187 parts
+          added, 25 removed, 36 changed, 93 nets added, 20 removed and 85 changed, every one explained by the author's
+          per-finding list (v2/docs/records/r8b/expected_r8b.json; 0 unexplained, 56 with two findings' entries
+          dropped); against the author's own netlist it differs only in U115, U215 and U315's value text, so this
+          reading stands INCONCLUSIVE on the file at adcc3c6736c90e9f
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@dedaf34ce285e5ff"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
+      - "v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
       - "v2/docs/parts/STM32H743-COMPATIBILITY.md@67335ea42747e22f"
       - "v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf@f6e620179006c8c4"
       - "v2/vendor/st/st-rm0433-rev8.pdf@9ba54135736a47a3"
@@ -2374,15 +2497,35 @@ records:
           v2/docs/ARCH-PCB-B-IOHA.md re-read when the layer 6 closer's reconciliation was applied (27 September
           2026, drafts/hc6/apply_registry.py): sections 10a, 6 differ from e3aedb25's; sections 4, 15 and 15a and line 17
           are byte-identical, so this reading stands on the file at 26fed4e40e0da078
+      - >-
+          v2/docs/ARCH-PCB-B-IOHA.md re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3,
+          branch fnd/r8int3): section 5 items 2, 3 and 4 each gain a 'Drawn in board B's round 8' paragraph, section
+          6's status addresses read 0x34 to 0x36 (I3-F01), and section 10a's break-before-make paragraph is extended;
+          sections 4 and 15 are byte-identical, so this reading stands on the file at 08d44b37fa8e2717
+      - >-
+          v2/docs/PANEL.md re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3, branch
+          fnd/r8int3): a corrections block (14 to 16) follows item 13; section 5's display-select rule gains the
+          power-good qualifier; section 6's EMCON_HW row carries board B's round 8 circuit beside board A's round 8
+          text; section 7's U6 row, the supervisors' row (0x34 to 0x36), the 0x68 row (DS3231SN) and the closing
+          paragraph (I3-F01 closed as a firmware contract) change; section 1 and the ribbon table's pin 15 row are
+          byte-identical, so it stands on the file at 5479d727037c7b3e
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3,
+          branch fnd/r8int3): board B's round 8 generator (FAB-01 to FAB-04, EMCON L1 to L3 and L7, SD-EMC-1r8 and
+          SD-EMC-2, I3-F01's address contract, S-12, S-13, B_PANEL_5V, decoupling G4 to G7 and G10, U9 as DS3231SN#,
+          the U.FL codes), with U115, U215 and U315's value text reworded at integration (no net, pin, land or code
+          moved): the ring is still f = s % 3 + 1, now at line 936; the round moves the bank muxes' select to its
+          locked, Schmitt-delayed copy and qualifies their enable with the selected module's power-good, neither of
+          which changes which neighbour adopts a bank, so it stands PASS on the file at af6e5821e21b70ef
     evidence_bound_to:
-      - "v2/docs/ARCH-PCB-B-IOHA.md@26fed4e40e0da078"
-      - "v2/docs/PANEL.md@8eeb152e4d82080c"
-      - "v2/ecad/tools/gen_sch_b.py@dedaf34ce285e5ff"
+      - "v2/docs/ARCH-PCB-B-IOHA.md@08d44b37fa8e2717"
+      - "v2/docs/PANEL.md@5479d727037c7b3e"
+      - "v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef"
     release_effect: ADVISORY
     source:
       - "v2/docs/ARCH-PCB-B-IOHA.md section 4"
       - "v2/docs/ARCH-PCB-B-IOHA.md section 15"
-      - "v2/ecad/tools/gen_sch_b.py:788"
+      - "v2/ecad/tools/gen_sch_b.py:936"
     source_check: VERIFIED
     conflict_ref: C-02
     notes: >-
@@ -2619,8 +2762,18 @@ records:
           4a, 4.1, 4.3 to 4.18, 5, 5a, 6 and 9 to 9d are byte-identical, and section 0a's end-to-end column is
           unchanged (no row is closed end to end); section 8's TX lamp item is byte-identical (round 8 did not move
           its feed), so it stands on the file at ced77f66063dfdea
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3,
+          branch fnd/r8int3): section 4b is new (board B's round 8: L1, L2, L3 and L7 closed at desk on B, L2's hold
+          re-taken on main's boards A and C at 0.36 V, the 5G module's supply removed at once by hardware as
+          SD-EMC-1r8 with a bound of 1.16 ms plus 1.84 ms per mF of the module's unpublished input capacitance,
+          SD-EMC-2 bounded for the 5G module, RF-002's walk reading board B FAIL on its missing SN74LVC2G06 model);
+          the header, section 0's board B bullet, section 0a's rows 4 to 17 and counts (local 15 of 17 closed at desk,
+          end to end 0 of 17), section 2's readers, section 3's status cells for L1 to L4 and L7, section 4's row 5
+          and sections 7 and 8 follow it; section 0's TX-lamp sentence and E-02 are byte-identical and no board C part
+          moved, so the record stays FAIL on the file at 421a291f7ce4cda2
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@ced77f66063dfdea"
+      - "v2/docs/feasibility/EMCON.md@421a291f7ce4cda2"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161"
     release_effect: MUST_JUSTIFY
     source: ["v2/docs/PANEL.md:113", "v2/docs/PANEL.md:158"]
@@ -4055,9 +4208,32 @@ records:
           section 0a's end-to-end column is unchanged (no row is closed end to end); the 17 transmitters, the one row
           closed at desk, L2 (UNDECIDED) and L3 (nine radios fail open with +3V3_DEV lost), on which this reading
           rests, are unchanged, so it stands FAIL on the file at ced77f66063dfdea
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3,
+          branch fnd/r8int3): section 4b is new (board B's round 8: L1, L2, L3 and L7 closed at desk on B, L2's hold
+          re-taken on main's boards A and C at 0.36 V, the 5G module's supply removed at once by hardware as
+          SD-EMC-1r8 with a bound of 1.16 ms plus 1.84 ms per mF of the module's unpublished input capacitance,
+          SD-EMC-2 bounded for the 5G module, RF-002's walk reading board B FAIL on its missing SN74LVC2G06 model);
+          the header, section 0's board B bullet, section 0a's rows 4 to 17 and counts (local 15 of 17 closed at desk,
+          end to end 0 of 17), section 2's readers, section 3's status cells for L1 to L4 and L7, section 4's row 5
+          and sections 7 and 8 follow it. What the FAIL rests on moves: on board B the line's hold (L2) and the
+          +3V3_DEV loss (L3) are closed at desk and the 5G module loses its supply by hardware; the RockBLOCK's local
+          chain (its own supercapacitors, ENABLE held by U6) and the SA868's missing receive threshold stay open, and
+          RF-002, the instrument clause (1) names, reads board B FAIL on its own model gap, so the record stays FAIL
+          on the file at 421a291f7ce4cda2
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at board B's round 8 integration of 27 September
+          2026 (round 8 set 3, branch fnd/r8int3) on the KiCad box with main's chain from main 84e52461 (main's own
+          generator reproduces main's committed file, PARITY_AFTER_NOISE): the integration's own comparison
+          (v2/docs/records/r8b/integration/indep_cmp.py, not the author's tool) reads it against main's record by
+          record (value, footprint, fields, libsource) and net by net (ref, pin, pinfunction, pintype): 187 parts
+          added, 25 removed, 36 changed, 93 nets added, 20 removed and 85 changed, every one explained by the author's
+          per-finding list (v2/docs/records/r8b/expected_r8b.json; 0 unexplained, 56 with two findings' entries
+          dropped); against the author's own netlist it differs only in U115, U215 and U315's value text, so this
+          reading stands on the file at adcc3c6736c90e9f
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@ced77f66063dfdea"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
+      - "v2/docs/feasibility/EMCON.md@421a291f7ce4cda2"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
     release_effect: BLOCKER
     source:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2787 (item 3)"
@@ -4159,9 +4335,31 @@ records:
           section 0a's end-to-end column is unchanged (no row is closed end to end); section 5a (every time term and
           fault condition) and section 4.4 are byte-identical, and section 0a's end-to-end column still closes no row,
           so no row meets the requirement at desk and the record stays as it reads, on the file at ced77f66063dfdea
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3,
+          branch fnd/r8int3): section 4b is new (board B's round 8: L1, L2, L3 and L7 closed at desk on B, L2's hold
+          re-taken on main's boards A and C at 0.36 V, the 5G module's supply removed at once by hardware as
+          SD-EMC-1r8 with a bound of 1.16 ms plus 1.84 ms per mF of the module's unpublished input capacitance,
+          SD-EMC-2 bounded for the 5G module, RF-002's walk reading board B FAIL on its missing SN74LVC2G06 model);
+          the header, section 0's board B bullet, section 0a's rows 4 to 17 and counts (local 15 of 17 closed at desk,
+          end to end 0 of 17), section 2's readers, section 3's status cells for L1 to L4 and L7, section 4's row 5
+          and sections 7 and 8 follow it. Row 5 now closes locally inside section 5a's maximum (about 1.2 ms plus 1.8
+          ms per mF of the module's own capacitance, against 20 s), but the RockBLOCK's and the SA868's rows and every
+          row end to end stay open, so no row meets the requirement at desk and the record stays FAIL on the file at
+          421a291f7ce4cda2
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at board B's round 8 integration of 27 September
+          2026 (round 8 set 3, branch fnd/r8int3) on the KiCad box with main's chain from main 84e52461 (main's own
+          generator reproduces main's committed file, PARITY_AFTER_NOISE): the integration's own comparison
+          (v2/docs/records/r8b/integration/indep_cmp.py, not the author's tool) reads it against main's record by
+          record (value, footprint, fields, libsource) and net by net (ref, pin, pinfunction, pintype): 187 parts
+          added, 25 removed, 36 changed, 93 nets added, 20 removed and 85 changed, every one explained by the author's
+          per-finding list (v2/docs/records/r8b/expected_r8b.json; 0 unexplained, 56 with two findings' entries
+          dropped); against the author's own netlist it differs only in U115, U215 and U315's value text; RB_IEN still
+          joins J_RB9704 pin 3 and U6 pin 19 only, so this reading stands on the file at adcc3c6736c90e9f
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@ced77f66063dfdea"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
+      - "v2/docs/feasibility/EMCON.md@421a291f7ce4cda2"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
       - "v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568"
     release_effect: BLOCKER
     source:
@@ -4219,12 +4417,34 @@ records:
           compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent
           checker, it differs only in D1, D2, D101, D201, D301 and D520's symbol (Device:D_TVS to Device:D_Zener) and pin
           names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 669d02d07aeaae4b
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3,
+          branch fnd/r8int3): board B's round 8 generator (FAB-01 to FAB-04, EMCON L1 to L3 and L7, SD-EMC-1r8 and
+          SD-EMC-2, I3-F01's address contract, S-12, S-13, B_PANEL_5V, decoupling G4 to G7 and G10, U9 as DS3231SN#,
+          the U.FL codes), with U115, U215 and U315's value text reworded at integration (no net, pin, land or code
+          moved): gen_sch_b.py:820-866 draws WL_nDIS1 reaching only the module's pin 89 (U30A) and two open-drain
+          outputs, U113 pin 6 (input EMCON_ON1, which U112 inverts from EMCON_HW) and U114 pin 6 (input WL_nDIS1_OFF,
+          U6's request with R162 10 k to +3V3_DEV); U112 to U115 are an SN74LVC1G04 and SN74LVC2G06s run from
+          +3V3_CM1; the same for BT_nDIS (pin 91, the parts' pin 4) and slots 2 and 3; U6's pins 13 to 18 drive only
+          the requests. Each pin is pulled low only, through open-drain outputs, and released only when the request
+          and EMCON_HW both release it while its gate is powered, which is now the module's own 3.3 V, so the
+          acceptance holds on the file at af6e5821e21b70ef
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at board B's round 8 integration of 27 September
+          2026 (round 8 set 3, branch fnd/r8int3) on the KiCad box with main's chain from main 84e52461 (main's own
+          generator reproduces main's committed file, PARITY_AFTER_NOISE): the integration's own comparison
+          (v2/docs/records/r8b/integration/indep_cmp.py, not the author's tool) reads it against main's record by
+          record (value, footprint, fields, libsource) and net by net (ref, pin, pinfunction, pintype): 187 parts
+          added, 25 removed, 36 changed, 93 nets added, 20 removed and 85 changed, every one explained by the author's
+          per-finding list (v2/docs/records/r8b/expected_r8b.json; 0 unexplained, 56 with two findings' entries
+          dropped); against the author's own netlist it differs only in U115, U215 and U315's value text; the nodes
+          above are on it, so this reading stands PASS on the file at adcc3c6736c90e9f
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@dedaf34ce285e5ff"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
+      - "v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
     release_effect: ADVISORY
     source:
-      - "v2/ecad/tools/gen_sch_b.py:716-741"
+      - "v2/ecad/tools/gen_sch_b.py:820-866"
       - "v2/vendor/cm5/cm5-datasheet.pdf (release 3, sections 2.1.1, 2.1.2 and 3.1)"
       - "v2/vendor/ti/ti-pca9555.pdf (SCPS131J section 8.1, Fig 8-2: internal pull-up on every I/O)"
     source_check: VERIFIED
@@ -4353,9 +4573,32 @@ records:
           the lamp was not drawn; sections 1, 4a, 4.1, 4.3 to 4.18, 5, 5a, 6 and 9 to 9d are byte-identical, and
           section 0a's end-to-end column is unchanged (no row is closed end to end); sections 4.5 and L3, on which
           this reading rests, are unchanged, so it stands FAIL on the file at ced77f66063dfdea
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3,
+          branch fnd/r8int3): section 4b is new (board B's round 8: L1, L2, L3 and L7 closed at desk on B, L2's hold
+          re-taken on main's boards A and C at 0.36 V, the 5G module's supply removed at once by hardware as
+          SD-EMC-1r8 with a bound of 1.16 ms plus 1.84 ms per mF of the module's unpublished input capacitance,
+          SD-EMC-2 bounded for the 5G module, RF-002's walk reading board B FAIL on its missing SN74LVC2G06 model);
+          the header, section 0's board B bullet, section 0a's rows 4 to 17 and counts (local 15 of 17 closed at desk,
+          end to end 0 of 17), section 2's readers, section 3's status cells for L1 to L4 and L7, section 4's row 5
+          and sections 7 and 8 follow it. The 5G module is now powered off by hardware and the gates of each module's
+          radios and cards run from that module's own 3.3 V (L3); the RockBLOCK keeps running on its own
+          supercapacitors with ENABLE held by U6 (4.4) and U501 to U505's unspecified band is INFERRED (L4), so 'in
+          every state of the gates' own supplies' is not shown and the record stays FAIL on the file at
+          421a291f7ce4cda2
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at board B's round 8 integration of 27 September
+          2026 (round 8 set 3, branch fnd/r8int3) on the KiCad box with main's chain from main 84e52461 (main's own
+          generator reproduces main's committed file, PARITY_AFTER_NOISE): the integration's own comparison
+          (v2/docs/records/r8b/integration/indep_cmp.py, not the author's tool) reads it against main's record by
+          record (value, footprint, fields, libsource) and net by net (ref, pin, pinfunction, pintype): 187 parts
+          added, 25 removed, 36 changed, 93 nets added, 20 removed and 85 changed, every one explained by the author's
+          per-finding list (v2/docs/records/r8b/expected_r8b.json; 0 unexplained, 56 with two findings' entries
+          dropped); against the author's own netlist it differs only in U115, U215 and U315's value text, so this
+          reading stands on the file at adcc3c6736c90e9f
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@ced77f66063dfdea"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
+      - "v2/docs/feasibility/EMCON.md@421a291f7ce4cda2"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
     release_effect: BLOCKER
     source:
       - "v2/ecad/tools/gen_sch_b.py:716-741"
@@ -4449,8 +4692,16 @@ records:
           paragraph and section 11's report sentence; sections 2, 5, 7, 9 and 10 and the paragraphs before section 1
           are byte-identical; section 7, which this reading cites, is byte-identical, so it stands on the file at
           8eeb152e4d82080c
+      - >-
+          v2/docs/PANEL.md re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3, branch
+          fnd/r8int3): a corrections block (14 to 16) follows item 13; section 5's display-select rule gains the
+          power-good qualifier; section 6's EMCON_HW row carries board B's round 8 circuit beside board A's round 8
+          text; section 7's U6 row, the supervisors' row (0x34 to 0x36), the 0x68 row (DS3231SN) and the closing
+          paragraph (I3-F01 closed as a firmware contract) change; section 7's panel-absent paragraph (R102 and R58 on
+          EMCON_HW, R145, R59 and R2 on TX_INHIBIT_n, R117, R118, the slot enables pulled low on A22) is
+          byte-identical and names no value of R58, so this reading stands PASS on the file at 5479d727037c7b3e
     evidence_bound_to:
-      - "v2/docs/PANEL.md@8eeb152e4d82080c"
+      - "v2/docs/PANEL.md@5479d727037c7b3e"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63"
     release_effect: ADVISORY
     source:
@@ -4599,10 +4850,20 @@ records:
           yet on E and P; SCH-004 on board D keeps its class and cause. RF-002 and SCH-004 on D decide nothing until
           the consolidated re-take, so the record's own reasons are unchanged and it stays INCONCLUSIVE on the file at
           685e4c7e49f1f383
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3,
+          branch fnd/r8int3): section 4b is new (board B's round 8: L1, L2, L3 and L7 closed at desk on B, L2's hold
+          re-taken on main's boards A and C at 0.36 V, the 5G module's supply removed at once by hardware as
+          SD-EMC-1r8 with a bound of 1.16 ms plus 1.84 ms per mF of the module's unpublished input capacitance,
+          SD-EMC-2 bounded for the 5G module, RF-002's walk reading board B FAIL on its missing SN74LVC2G06 model);
+          the header, section 0's board B bullet, section 0a's rows 4 to 17 and counts (local 15 of 17 closed at desk,
+          end to end 0 of 17), section 2's readers, section 3's status cells for L1 to L4 and L7, section 4's row 5
+          and sections 7 and 8 follow it; sections 4.1 and 4.2, which this reading cites, are byte-identical, so it
+          stays INCONCLUSIVE on the file at 421a291f7ce4cda2
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63"
-      - "v2/docs/feasibility/EMCON.md@ced77f66063dfdea"
+      - "v2/docs/feasibility/EMCON.md@421a291f7ce4cda2"
       - "v2/docs/CURRENT-EVIDENCE.md@685e4c7e49f1f383"
     release_effect: BLOCKER
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2825", "v2/docs/PANEL.md section 6", "v2/docs/feasibility/EMCON.md sections 4.1 and 4.2"]
@@ -4698,8 +4959,18 @@ records:
           4a, 4.1, 4.3 to 4.18, 5, 5a, 6 and 9 to 9d are byte-identical, and section 0a's end-to-end column is
           unchanged (no row is closed end to end), and says the same; so this reading stands on the files at
           11eabc2dddca5161 and ced77f66063dfdea
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3,
+          branch fnd/r8int3): section 4b is new (board B's round 8: L1, L2, L3 and L7 closed at desk on B, L2's hold
+          re-taken on main's boards A and C at 0.36 V, the 5G module's supply removed at once by hardware as
+          SD-EMC-1r8 with a bound of 1.16 ms plus 1.84 ms per mF of the module's unpublished input capacitance,
+          SD-EMC-2 bounded for the 5G module, RF-002's walk reading board B FAIL on its missing SN74LVC2G06 model);
+          the header, section 0's board B bullet, section 0a's rows 4 to 17 and counts (local 15 of 17 closed at desk,
+          end to end 0 of 17), section 2's readers, section 3's status cells for L1 to L4 and L7, section 4's row 5
+          and sections 7 and 8 follow it; board C's lamp (D22, U14, Q7) and its plate light guide, still owed, read as
+          before, so the record stays FAIL on the light-guide clause, on the file at 421a291f7ce4cda2
     evidence_bound_to:
-      - "v2/docs/feasibility/EMCON.md@ced77f66063dfdea"
+      - "v2/docs/feasibility/EMCON.md@421a291f7ce4cda2"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/EMCON.md section 7 (the common element)", "session choice SC-11"]
@@ -4843,10 +5114,32 @@ records:
           met on board C's half only (the lamp drawn, its plate guide owed), the 5G row's supply removal is still not
           drawn on board B and no row is shown on the bench, so this reading stands INCONCLUSIVE on the file at
           ced77f66063dfdea
+      - >-
+          v2/docs/feasibility/EMCON.md re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3,
+          branch fnd/r8int3): section 4b is new (board B's round 8: L1, L2, L3 and L7 closed at desk on B, L2's hold
+          re-taken on main's boards A and C at 0.36 V, the 5G module's supply removed at once by hardware as
+          SD-EMC-1r8 with a bound of 1.16 ms plus 1.84 ms per mF of the module's unpublished input capacitance,
+          SD-EMC-2 bounded for the 5G module, RF-002's walk reading board B FAIL on its missing SN74LVC2G06 model);
+          the header, section 0's board B bullet, section 0a's rows 4 to 17 and counts (local 15 of 17 closed at desk,
+          end to end 0 of 17), section 2's readers, section 3's status cells for L1 to L4 and L7, section 4's row 5
+          and sections 7 and 8 follow it. SD-EMC-1's supply removal is drawn on board B (re-decided as SD-EMC-1r8, at
+          once) and L1 to L3 and L7 are remedied on B; the RockBLOCK's ENABLE, the SA868's threshold, L4 on U501 to
+          U505, the back-feed into the RockBLOCK, E22 and E72, the plate's light guide, RF-002's model gap on board B
+          and every bench test remain, so the record stays INCONCLUSIVE on the file at 421a291f7ce4cda2
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at board B's round 8 integration of 27 September
+          2026 (round 8 set 3, branch fnd/r8int3) on the KiCad box with main's chain from main 84e52461 (main's own
+          generator reproduces main's committed file, PARITY_AFTER_NOISE): the integration's own comparison
+          (v2/docs/records/r8b/integration/indep_cmp.py, not the author's tool) reads it against main's record by
+          record (value, footprint, fields, libsource) and net by net (ref, pin, pinfunction, pintype): 187 parts
+          added, 25 removed, 36 changed, 93 nets added, 20 removed and 85 changed, every one explained by the author's
+          per-finding list (v2/docs/records/r8b/expected_r8b.json; 0 unexplained, 56 with two findings' entries
+          dropped); against the author's own netlist it differs only in U115, U215 and U315's value text, so this
+          reading stands on the file at adcc3c6736c90e9f
     evidence_bound_to:
       - "v2/vendor/rockblock/rb9704-sch-2B1.pdf@8151ea31acd15568"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
-      - "v2/docs/feasibility/EMCON.md@ced77f66063dfdea"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
+      - "v2/docs/feasibility/EMCON.md@421a291f7ce4cda2"
     release_effect: BLOCKER
     source: ["v2/docs/feasibility/EMCON.md section 7", "v2/docs/reviews/2026-09-26-foundation-progress-review.md section 3"]
     source_check: VERIFIED
@@ -6224,17 +6517,49 @@ records:
           Review A, layer 1); line 41 changed only in its dual-SIM clause (session choice SC-13, correction 22); line 76
           only in its owed list (the SIM TVS array, and the EMCON items of correction 26); none of these describes a
           circuit that faf8c981, 458b2873 or d90f30e4 replaced, so the reading stands on the file at dd9a92946a8d186f
+      - >-
+          v2/docs/PANEL.md re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3, branch
+          fnd/r8int3): a corrections block (14 to 16) follows item 13; section 5's display-select rule gains the
+          power-good qualifier; section 6's EMCON_HW row carries board B's round 8 circuit beside board A's round 8
+          text; section 7's U6 row, the supervisors' row (0x34 to 0x36), the 0x68 row (DS3231SN) and the closing
+          paragraph (I3-F01 closed as a firmware contract) change; sections 6 and 7 describe the circuit as generated
+          on board B's round 8 netlist (EMCON_ON1..3 from U112, U212, U312 on each module's own 3.3 V, the SN74LVC2G06
+          open drains, U501 to U505, U506 on EMCON_SUP, the 5G supply removed by U215 with Q212 and R295, the
+          supervisors' firmware addresses 0x34 to 0x36), so it stands PASS on the file at 5479d727037c7b3e
+      - >-
+          v2/docs/CONOPS.md re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3, branch
+          fnd/r8int3): section 3's M4 paragraph (the 5G module's supply removed by hardware) and section 4b's
+          introduction, its LimeSDR, RockBLOCK, E22, E72, 5G, WiFi-card and module-radio rows and its closing
+          paragraph change; the SA868 and QMX rows keep board A's round 8 text; section 4b describes board B's round 8
+          circuit radio by radio against that netlist, and sections 4 and 5 are byte-identical, so it stands on the
+          file at cedb60bf2ca88822
+      - >-
+          v2/docs/V2-SPEC.md re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3, branch
+          fnd/r8int3): lines 24, 41 and 76 and a new correction 28 describe board B's round 8 (the 5G supply removed
+          by hardware, board B's EMCON stages, the key-B land's locating holes, the SIM TVS arrays); lines 24, 41 and
+          76 and correction 20 describe the round 8 circuit and lines 34 and 43 are byte-identical, so it stands on
+          the file at 41edfc2e2e3f1961
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at board B's round 8 integration of 27 September
+          2026 (round 8 set 3, branch fnd/r8int3) on the KiCad box with main's chain from main 84e52461 (main's own
+          generator reproduces main's committed file, PARITY_AFTER_NOISE): the integration's own comparison
+          (v2/docs/records/r8b/integration/indep_cmp.py, not the author's tool) reads it against main's record by
+          record (value, footprint, fields, libsource) and net by net (ref, pin, pinfunction, pintype): 187 parts
+          added, 25 removed, 36 changed, 93 nets added, 20 removed and 85 changed, every one explained by the author's
+          per-finding list (v2/docs/records/r8b/expected_r8b.json; 0 unexplained, 56 with two findings' entries
+          dropped); against the author's own netlist it differs only in U115, U215 and U315's value text; the
+          documents above were re-read against it, so this reading stands on the file at adcc3c6736c90e9f
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976"
-      - "v2/docs/PANEL.md@8eeb152e4d82080c"
-      - "v2/docs/CONOPS.md@122c921af6e3de40"
-      - "v2/docs/V2-SPEC.md@dd9a92946a8d186f"
+      - "v2/docs/PANEL.md@5479d727037c7b3e"
+      - "v2/docs/CONOPS.md@cedb60bf2ca88822"
+      - "v2/docs/V2-SPEC.md@41edfc2e2e3f1961"
       - "v2/docs/OPERATING-ENVELOPE.md@89de81a11c52f34a"
       - "v2/docs/TEST-PLAN.md@86742b72d44adce6"
       - "v2/ecad/tools/pcb_decisions.yaml@b5f7162443d5ad91"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161"
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
     release_effect: BLOCKER
@@ -6770,9 +7095,24 @@ records:
           the rest of its acceptance: the SIM TVS array of at most 10 pF (HD section 4.1.7) is not in the generator
           (S-13), and the order code of an eSIM-fitted variant is not named (v2/vendor/SOURCES.yaml, the RM520N-GL
           entry)
+      - >-
+          v2/docs/V2-SPEC.md re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3, branch
+          fnd/r8int3): lines 24, 41 and 76 and a new correction 28 describe board B's round 8 (the 5G supply removed
+          by hardware, board B's EMCON stages, the key-B land's locating holes, the SIM TVS arrays); line 41 keeps
+          SC-13's one description (two nano-SIM holders with an eSIM build option, prototype 1 on two nano-SIMs) and
+          now says the SIM TVS array is fitted; the order code of an eSIM-fitted module variant is still not named, so
+          the conflict stands on the file at 41edfc2e2e3f1961
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3,
+          branch fnd/r8int3): board B's round 8 generator (FAB-01 to FAB-04, EMCON L1 to L3 and L7, SD-EMC-1r8 and
+          SD-EMC-2, I3-F01's address contract, S-12, S-13, B_PANEL_5V, decoupling G4 to G7 and G10, U9 as DS3231SN#,
+          the U.FL codes), with U115, U215 and U315's value text reworded at integration (no net, pin, land or code
+          moved): the SIM TVS arrays U222 and U223 (TPD4E001, 1.5 pF, HD v1.1 section 4.1.7's at most 10 pF) are
+          fitted on the holder side, the TVS half of S-13; the holders and the four 0 ohm links are unchanged, so the
+          conflict stays FAIL on the eSIM variant's order code alone, on the file at af6e5821e21b70ef
     evidence_bound_to:
-      - "v2/docs/V2-SPEC.md@dd9a92946a8d186f"
-      - "v2/ecad/tools/gen_sch_b.py@dedaf34ce285e5ff"
+      - "v2/docs/V2-SPEC.md@41edfc2e2e3f1961"
+      - "v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef"
     release_effect: BLOCKER
     source:
       - "v2/docs/V2-SPEC.md:41"
@@ -7359,8 +7699,13 @@ records:
           v2/docs/V2-SPEC.md re-read at the layer 1 closing of 27 September 2026 (worktree fnd/hc1, from e3aedb25): it
           changed lines 3, 9, 10, 11, 13, 23, 24, 34, 41, 42, 51, 70, 73, 76 and 90 and added corrections 20 to 27; line
           35 and correction 8 are byte-identical, so this reading stands on the file at dd9a92946a8d186f
+      - >-
+          v2/docs/V2-SPEC.md re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3, branch
+          fnd/r8int3): lines 24, 41 and 76 and a new correction 28 describe board B's round 8 (the 5G supply removed
+          by hardware, board B's EMCON stages, the key-B land's locating holes, the SIM TVS arrays); line 35 and
+          correction 8 are byte-identical, so this reading stands PASS on the file at 41edfc2e2e3f1961
     evidence_bound_to:
-      - "v2/docs/V2-SPEC.md@dd9a92946a8d186f"
+      - "v2/docs/V2-SPEC.md@41edfc2e2e3f1961"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976"
     release_effect: ADVISORY
     source: ["v2/docs/V2-SPEC.md:35", "v2/ecad/tools/gen_sch_e.py:581"]
@@ -7471,9 +7816,22 @@ records:
           paragraph and section 11's report sentence; sections 2, 5, 7, 9 and 10 and the paragraphs before section 1
           are byte-identical; section 10, which this reading cites, is byte-identical, so it stands on the file at
           8eeb152e4d82080c
+      - >-
+          v2/docs/PANEL.md re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3, branch
+          fnd/r8int3): a corrections block (14 to 16) follows item 13; section 5's display-select rule gains the
+          power-good qualifier; section 6's EMCON_HW row carries board B's round 8 circuit beside board A's round 8
+          text; section 7's U6 row, the supervisors' row (0x34 to 0x36), the 0x68 row (DS3231SN) and the closing
+          paragraph (I3-F01 closed as a firmware contract) change; section 10 is byte-identical, so this reading
+          stands on the file at 5479d727037c7b3e
+      - >-
+          v2/docs/CONOPS.md re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3, branch
+          fnd/r8int3): section 3's M4 paragraph (the 5G module's supply removed by hardware) and section 4b's
+          introduction, its LimeSDR, RockBLOCK, E22, E72, 5G, WiFi-card and module-radio rows and its closing
+          paragraph change; the SA868 and QMX rows keep board A's round 8 text; section 4's Charging row and section
+          5's case S4 are byte-identical, so it stands PASS on the file at cedb60bf2ca88822
     evidence_bound_to:
-      - "v2/docs/PANEL.md@8eeb152e4d82080c"
-      - "v2/docs/CONOPS.md@122c921af6e3de40"
+      - "v2/docs/PANEL.md@5479d727037c7b3e"
+      - "v2/docs/CONOPS.md@cedb60bf2ca88822"
       - "v2/docs/OPERATING-ENVELOPE.md@89de81a11c52f34a"
       - "v2/ecad/tools/gen_sch_a.py@5a97fed72c42b79d"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63"
@@ -7603,11 +7961,18 @@ records:
           clamps; section 4's Pack SMBus row (C144395 at both ends since board P's round 8, integrated before it),
           build step 7 and board C's light-guide row, which this reading cites or rests on, are byte-identical, so it
           stands on the file at 30db27eee509212c
+      - >-
+          v2/docs/PANEL.md re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3, branch
+          fnd/r8int3): a corrections block (14 to 16) follows item 13; section 5's display-select rule gains the
+          power-good qualifier; section 6's EMCON_HW row carries board B's round 8 circuit beside board A's round 8
+          text; section 7's U6 row, the supervisors' row (0x34 to 0x36), the 0x68 row (DS3231SN) and the closing
+          paragraph (I3-F01 closed as a firmware contract) change; section 10 is byte-identical, so this reading
+          stands PASS on the file at 5479d727037c7b3e
     evidence_bound_to:
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976"
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
       - "v2/docs/ASSEMBLY.md@30db27eee509212c"
-      - "v2/docs/PANEL.md@8eeb152e4d82080c"
+      - "v2/docs/PANEL.md@5479d727037c7b3e"
       - "v2/ecad/tools/check_contracts.py@308fdefb90335da4"
     release_effect: BLOCKER
     source: ["v2/ecad/tools/gen_sch_e.py:218", "v2/docs/ASSEMBLY.md section 4", "v2/docs/PANEL.md section 10"]
@@ -7719,7 +8084,7 @@ records:
     choices: [SC-07]
     waits_on: [S-12]
     status: DEFINED
-    evidence_result: FAIL
+    evidence_result: INCONCLUSIVE
     evidence_phase: SCHEMATIC
     evidence_class: DESK_REVIEW
     evidence:
@@ -7737,9 +8102,30 @@ records:
           compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent
           checker, it differs only in D1, D2, D101, D201, D301 and D520's symbol (Device:D_TVS to Device:D_Zener) and pin
           names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 669d02d07aeaae4b
+      - >-
+          v2/ecad/tools/gen_sch_b.py re-read at board B's round 8 integration of 27 September 2026 (round 8 set 3,
+          branch fnd/r8int3): board B's round 8 generator (FAB-01 to FAB-04, EMCON L1 to L3 and L7, SD-EMC-1r8 and
+          SD-EMC-2, I3-F01's address contract, S-12, S-13, B_PANEL_5V, decoupling G4 to G7 and G10, U9 as DS3231SN#,
+          the U.FL codes), with U115, U215 and U315's value text reworded at integration (no net, pin, land or code
+          moved): J_M2C2's land now carries TE C-2199119 rev F sheet 3's two locating holes (1.1 mm at X -10 and 1.6
+          mm at X +10 on the line 4.5 mm inside the odd row; read against the sheet by the second independent check),
+          so the land clause holds at desk and the FAIL this record rested on is closed. D-07's third jack still waits
+          on board A's site at X +46, in no generator, and board E's clamp bar, drawn in round 8 set 2 and not placed,
+          and the acceptance allows two jacks until then, so the record reads INCONCLUSIVE on the file at
+          af6e5821e21b70ef (the result moved by the session under the owner's standing rule of 26 September 2026)
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at board B's round 8 integration of 27 September
+          2026 (round 8 set 3, branch fnd/r8int3) on the KiCad box with main's chain from main 84e52461 (main's own
+          generator reproduces main's committed file, PARITY_AFTER_NOISE): the integration's own comparison
+          (v2/docs/records/r8b/integration/indep_cmp.py, not the author's tool) reads it against main's record by
+          record (value, footprint, fields, libsource) and net by net (ref, pin, pinfunction, pintype): 187 parts
+          added, 25 removed, 36 changed, 93 nets added, 20 removed and 85 changed, every one explained by the author's
+          per-finding list (v2/docs/records/r8b/expected_r8b.json; 0 unexplained, 56 with two findings' entries
+          dropped); against the author's own netlist it differs only in U115, U215 and U315's value text, so this
+          reading stands on the file at adcc3c6736c90e9f
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_b.py@dedaf34ce285e5ff"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
+      - "v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
     release_effect: BLOCKER
     source:
       - "v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf (key B p.15 and p.20; Table 32)"
@@ -7850,9 +8236,21 @@ records:
           C144395, R8P-02) and J_TS2's (C5251182 to C131337, R8P-03): no net, node, pin, value, footprint or part is
           added, removed or moved; board P's D1 (gen_sch_p.py:344) keeps its cathode on PACK_P, so this reading stands
           on the file at 085f833362fbbda8
+      - >-
+          v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at board B's round 8 integration of 27 September
+          2026 (round 8 set 3, branch fnd/r8int3) on the KiCad box with main's chain from main 84e52461 (main's own
+          generator reproduces main's committed file, PARITY_AFTER_NOISE): the integration's own comparison
+          (v2/docs/records/r8b/integration/indep_cmp.py, not the author's tool) reads it against main's record by
+          record (value, footprint, fields, libsource) and net by net (ref, pin, pinfunction, pintype): 187 parts
+          added, 25 removed, 36 changed, 93 nets added, 20 removed and 85 changed, every one explained by the author's
+          per-finding list (v2/docs/records/r8b/expected_r8b.json; 0 unexplained, 56 with two findings' entries
+          dropped); against the author's own netlist it differs only in U115, U215 and U315's value text; board B's
+          six one-way clamps (D1, D2, D101, D201, D301, D520) are unchanged and port_protect reads 0 reversed on it,
+          and round 8 adds no rectifier, so the record stays FAIL on the rectifier clause, on the file at
+          adcc3c6736c90e9f
     evidence_bound_to:
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63"
-      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b"
+      - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161"
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976"

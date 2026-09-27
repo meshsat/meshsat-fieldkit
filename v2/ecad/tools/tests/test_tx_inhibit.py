@@ -2541,7 +2541,13 @@ def t_a_compute_modules_5v_is_a_load_only_with_gpio_vref_on_its_own_outputs():
         assert v == "undecided" and ("its GPIO_VREF is on +3V3_CM%s (besides its CM5_3.3V, " % slot) in why \
             and ("a pull to FAN_PWM%s, behind which J_FAN%s pin 4" % (slot, slot)) in why, (ref, v, why[:600])
     src = T._net_sources(nl, "U30A", "+3V3_CM1")
-    assert sorted(x.split(" pin ")[0] for x in src) == ["R111", "R151", "R154", "R155", "R156", "R157"], src
+    # *changed at board B's round 8 integration (27 September 2026, MESHSAT-1357 round 8 set 3): the round's netlist runs
+    # slot 1's EMCON open drains U113 to U115 (SN74LVC2G06, TI SCES307J) from the module's own +3V3_CM1 (EMCON.md L3), and
+    # the walk holds no pin map for that part, so each supply pin is named as a part no class reads (EMCON.md section 4b,
+    # handed to the tools author); the six pulls of the eleventh and twelfth passes read as before*
+    assert sorted(x.split(" pin ")[0] for x in src) == ["R111", "R151", "R154", "R155", "R156", "R157",
+                                                        "U113", "U114", "U115"], src
+    assert all(x.endswith("'+3V3_CM1'), a part no class here reads") for x in src if x.startswith("U11")), src
     # *changed in the twelfth pass (R4T-D71): behind R111 the AP64500's enable U104 pin 3 is named first now, a current
     # source its maker states (DS41979 3 Enable), which the eleventh pass skipped; the TPS62933 U105 is still named*
     assert "behind which U104 pin 3 (AP64500SP-13 5 A buck" in src[0] and "its maker states a current sourced out of the pin" \

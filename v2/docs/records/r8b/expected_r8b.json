@@ -1,0 +1,1188 @@
+{
+ "parts_added": [
+  "R[123]90",
+  "R[123]91",
+  "R[123]92",
+  "U519",
+  "U520",
+  "C564",
+  "C565",
+  "U51[345]",
+  "C518",
+  "C519",
+  "C560",
+  "U53[0-5]",
+  "C58[5-9]",
+  "C590",
+  "U81",
+  "U84",
+  "U85",
+  "C566",
+  "C567",
+  "C572",
+  "U50[789]",
+  "U51[012]",
+  "C51[2-7]",
+  "R519",
+  "R520",
+  "R521",
+  "C56[89]",
+  "C570",
+  "U51[678]",
+  "C56[123]",
+  "R52[234]",
+  "C57[3-9]",
+  "C58[0-4]",
+  "U52[1-9]",
+  "U506",
+  "C511",
+  "R518",
+  "U50[1-5]",
+  "C508",
+  "C509",
+  "C510",
+  "U[123]1[2-5]",
+  "C[123]8[345]",
+  "C261",
+  "C262",
+  "C285",
+  "TP[123]04",
+  "R264",
+  "U220",
+  "C299",
+  "U221",
+  "R297",
+  "C200",
+  "Q212",
+  "R295",
+  "R296",
+  "R[123]94",
+  "U222",
+  "U223",
+  "C60[56]",
+  "C63[56]",
+  "C66[56]",
+  "C571",
+  "C60[1-4]",
+  "C63[1-4]",
+  "C66[1-4]",
+  "C53\\d",
+  "C54\\d",
+  "C550",
+  "C55[1-8]",
+  "C4[135][23]"
+ ],
+ "parts_removed": [
+  "R14",
+  "U19",
+  "U20",
+  "Q11",
+  "R513",
+  "U[123]11",
+  "Q[123]09",
+  "Q[123]10",
+  "R[123]7[34]",
+  "Q[123]06",
+  "Q111",
+  "Q311"
+ ],
+ "parts_changed": {
+  "U80": [
+   "value"
+  ],
+  "R4[89]\\d|R500": [
+   "value"
+  ],
+  "R15": [
+   "value"
+  ],
+  "R16": [
+   "value"
+  ],
+  "R58": [
+   "value"
+  ],
+  "J_M2C2": [
+   "field:Footprint",
+   "footprint"
+  ],
+  "F1": [
+   "field:LCSC",
+   "value"
+  ],
+  "C27": [
+   "value"
+  ],
+  "C28": [
+   "value"
+  ],
+  "U9": [
+   "field:Description",
+   "field:Footprint",
+   "footprint",
+   "lib",
+   "part",
+   "value"
+  ],
+  "J_W(1A|1B|3A|3B|OA|OB)": [
+   "field:LCSC"
+  ]
+ },
+ "nets_added": [
+  "/S[123]_TEST2",
+  "unconnected-\\(U[123]01-(TCK-Pad89|TDI-Pad93)\\)",
+  "/PG[123]",
+  "/PG[123]_S",
+  "/PG[123]_n",
+  "/PGSEL[123]_n",
+  "/HDMI_EN1",
+  "/HDMI_EN2",
+  "unconnected-\\(U53[0-5]-NC-Pad1\\)",
+  "/BBM[123]",
+  "/BBM[123]_(REQ|ARM|ARMR|MOV|RA)",
+  "/BSEL[123]_S",
+  "/BSEL[123]_D2",
+  "/BSEL[123]_D2R",
+  "/BSEL[123]_H1?",
+  "unconnected-\\(U81-NC-Pad(8|11)\\)",
+  "unconnected-\\(U8[45]-NC-Pad11\\)",
+  "unconnected-\\(U5(0[789]|1[012]|2[123])-NC-Pad1\\)",
+  "/EMCON_SUP",
+  "unconnected-\\(U506-NC-Pad1\\)",
+  "/EMCON_ON[123]",
+  "unconnected-\\(U[123]12-NC-Pad1\\)",
+  "/S2A_EN",
+  "/5G_DCHG",
+  "/5G_TPR_CT",
+  "unconnected-\\(U22[01]-NC-Pad(3|4)\\)",
+  "/CARD[123]_PERST_n",
+  "unconnected-\\(U22[23]-NC-Pad6\\)"
+ ],
+ "nets_removed": [
+  "/HDMI_SW_EN",
+  "unconnected-\\(U80-NC-Pad11\\)",
+  "unconnected-\\(U20-NC-Pad(6|8|11)\\)",
+  "/EMCON_ON",
+  "/(WL|BT)_nDIS[123]_KILL",
+  "unconnected-\\(U[123]11-NC-Pad(8|11)\\)",
+  "unconnected-\\(U2[12]-QOD-Pad2\\)"
+ ],
+ "nets_changed": {
+  "/S[123]_TESTL": [
+   "R[123]90",
+   "U[123]01"
+  ],
+  "/S[123]_JTAGL": [
+   "R[123]90",
+   "U[123]01"
+  ],
+  "/\\+3V3_S[123]B": [
+   "R[123]90",
+   "U[123]01"
+  ],
+  "/HDMI_SEL1": [
+   "U519",
+   "U520"
+  ],
+  "/HDMI_SEL2": [
+   "U519",
+   "U520"
+  ],
+  "/BSEL[123]": [
+   "R47[456]",
+   "U50[789]",
+   "U51[678]",
+   "U52[456]",
+   "U80",
+   "U[123]09",
+   "U[123]10"
+  ],
+  "/BSEL[123]_D": [
+   "R47[456]",
+   "U50[789]",
+   "U51[678]",
+   "U52[456]",
+   "U80",
+   "U[123]09",
+   "U[123]10"
+  ],
+  "/BOE[123]_n": [
+   "R47[456]",
+   "U50[789]",
+   "U51[678]",
+   "U52[456]",
+   "U80",
+   "U[123]09",
+   "U[123]10"
+  ],
+  "/E22_EN": [
+   "U19",
+   "U20",
+   "U50[1-5]"
+  ],
+  "/E72_EN": [
+   "U19",
+   "U20",
+   "U50[1-5]"
+  ],
+  "/LIME_EN": [
+   "U19",
+   "U20",
+   "U50[1-5]"
+  ],
+  "/LIME_EN_A": [
+   "U19",
+   "U20",
+   "U50[1-5]"
+  ],
+  "/LIME_HW_EN": [
+   "U19",
+   "U20",
+   "U50[1-5]"
+  ],
+  "/LIME_SW_EN": [
+   "U19",
+   "U20",
+   "U50[1-5]"
+  ],
+  "/LORA_ON": [
+   "U19",
+   "U20",
+   "U50[1-5]"
+  ],
+  "/RB_EN": [
+   "U19",
+   "U20",
+   "U50[1-5]"
+  ],
+  "/RB_SW_EN": [
+   "U19",
+   "U20",
+   "U50[1-5]"
+  ],
+  "/ZB_ON": [
+   "U19",
+   "U20",
+   "U50[1-5]"
+  ],
+  "/(WL|BT)_nDIS[123]": [
+   "C261",
+   "C262",
+   "C285",
+   "C299",
+   "C[123]8[345]",
+   "C[123]97",
+   "Q11",
+   "Q[123](09|10)",
+   "R[123]91",
+   "U(19|20)",
+   "U220",
+   "U50[1-6]",
+   "U[123]1[1-5]",
+   "U[456]1"
+  ],
+  "/(WL|BT)_nDIS[123]_OFF": [
+   "C261",
+   "C262",
+   "C285",
+   "C299",
+   "C[123]8[345]",
+   "C[123]97",
+   "Q11",
+   "Q[123](09|10)",
+   "R[123]91",
+   "U(19|20)",
+   "U220",
+   "U50[1-6]",
+   "U[123]1[1-5]",
+   "U[456]1"
+  ],
+  "/\\+3V3_CM[123]": [
+   "C261",
+   "C262",
+   "C285",
+   "C299",
+   "C[123]8[345]",
+   "C[123]97",
+   "Q11",
+   "Q[123](09|10)",
+   "R[123]91",
+   "U(19|20)",
+   "U220",
+   "U50[1-6]",
+   "U[123]1[1-5]",
+   "U[456]1"
+  ],
+  "/EMCON_HW": [
+   "C261",
+   "C262",
+   "C285",
+   "C299",
+   "C[123]8[345]",
+   "C[123]97",
+   "Q11",
+   "Q[123](09|10)",
+   "R[123]91",
+   "U(19|20)",
+   "U220",
+   "U50[1-6]",
+   "U[123]1[1-5]",
+   "U[456]1"
+  ],
+  "/WIFI_W_DIS_n": [
+   "Q[123](06|11)",
+   "U[123]15"
+  ],
+  "/5G_W_DIS_n": [
+   "Q[123](06|11)",
+   "U[123]15"
+  ],
+  "/WIFI2_W_DIS_n": [
+   "Q[123](06|11)",
+   "U[123]15"
+  ],
+  "/S1A_EN": [
+   "Q[123](06|11)",
+   "U[123]15"
+  ],
+  "/S3A_EN": [
+   "Q[123](06|11)",
+   "U[123]15"
+  ],
+  "/PCIE_PWR_EN2": [
+   "C200",
+   "R264",
+   "R295",
+   "R297",
+   "U203",
+   "U220",
+   "U221"
+  ],
+  "/5G_PWROFF_n": [
+   "C200",
+   "R264",
+   "R295",
+   "R297",
+   "U203",
+   "U220",
+   "U221"
+  ],
+  "/\\+3V3_M2C2": [
+   "C200",
+   "R264",
+   "R295",
+   "R297",
+   "U203",
+   "U220",
+   "U221"
+  ],
+  "/\\+3V3_S2A": [
+   "C200",
+   "R264",
+   "R295",
+   "R297",
+   "U203",
+   "U220",
+   "U221"
+  ],
+  "/PCIE[123]_RST2_n": [
+   "J_M2C[123]",
+   "R[123]94",
+   "U21",
+   "U22"
+  ],
+  "/\\+5V_LORA": [
+   "J_M2C[123]",
+   "R[123]94",
+   "U21",
+   "U22"
+  ],
+  "/\\+3V3_ZB": [
+   "J_M2C[123]",
+   "R[123]94",
+   "U21",
+   "U22"
+  ],
+  "/SIM1_VCC": [
+   "U222",
+   "U223"
+  ],
+  "/SIMC2_VCC": [
+   "U222",
+   "U223"
+  ],
+  "/SIMC[12]_(CLK|IO|RST)": [
+   "U222",
+   "U223"
+  ],
+  "/\\+5V_S[123]": [
+   "C571",
+   "C6[036][56]"
+  ],
+  "/\\+5V_DEV": [
+   "C4[135][23]",
+   "C571",
+   "C5[345]\\d",
+   "C6[036][1-4]",
+   "C6[036][56]"
+  ],
+  "/\\+1V1_S[123]": [
+   "C4[135][23]",
+   "C5[345]\\d",
+   "C6[036][1-4]"
+  ],
+  "/\\+1V2_KSZ": [
+   "C4[135][23]",
+   "C5[345]\\d",
+   "C6[036][1-4]"
+  ],
+  "/\\+2V5_KSZ": [
+   "C4[135][23]",
+   "C5[345]\\d",
+   "C6[036][1-4]"
+  ],
+  "/\\+3V3_IOC[ABC]": [
+   "C4[135][23]",
+   "C5[345]\\d",
+   "C6[036][1-4]"
+  ],
+  "/\\+3V3_DEV": [
+   "C(19|29|39)7",
+   "C200",
+   "C261",
+   "C262",
+   "C285",
+   "C299",
+   "C4[135][23]",
+   "C5(0[89]|1\\d|6\\d|7\\d|8\\d|90)",
+   "C5[345]\\d",
+   "C6[036][1-4]",
+   "C6[036][1-6]",
+   "C[123]8[345]",
+   "Q11",
+   "Q212",
+   "Q[123](06|09|10|11)",
+   "R14",
+   "R296",
+   "R513",
+   "R518",
+   "R[123]7[34]",
+   "R[123]92",
+   "U(19|20)",
+   "U220",
+   "U221",
+   "U222",
+   "U223",
+   "U5(0\\d|1\\d|2\\d|3[0-5])",
+   "U80",
+   "U81",
+   "U84",
+   "U85",
+   "U9",
+   "U[123]11",
+   "U[123]1[2-5]"
+  ],
+  "/SCL": [
+   "U9"
+  ],
+  "/SDA": [
+   "U9"
+  ],
+  "/VBAT": [
+   "U9"
+  ],
+  "GND": [
+   "C(19|29|39)7",
+   "C200",
+   "C261",
+   "C262",
+   "C285",
+   "C299",
+   "C4[135][23]",
+   "C5(0[89]|1\\d|6\\d|7\\d|8\\d|90)",
+   "C5[345]\\d",
+   "C6[036][1-6]",
+   "C[123]8[345]",
+   "Q11",
+   "Q212",
+   "Q[123](06|09|10|11)",
+   "R14",
+   "R296",
+   "R513",
+   "R518",
+   "R[123]7[34]",
+   "R[123]92",
+   "U(19|20)",
+   "U220",
+   "U221",
+   "U222",
+   "U223",
+   "U5(0\\d|1\\d|2\\d|3[0-5])",
+   "U80",
+   "U81",
+   "U84",
+   "U85",
+   "U9",
+   "U[123]11",
+   "U[123]1[2-5]"
+  ]
+ },
+ "_findings": [
+  {
+   "finding": "FAB-01",
+   "kind": "parts_added",
+   "patterns": [
+    "R[123]90"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "FAB-01",
+   "kind": "nets_added",
+   "patterns": [
+    "/S[123]_TEST2",
+    "unconnected-\\(U[123]01-(TCK-Pad89|TDI-Pad93)\\)"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "FAB-01",
+   "kind": "nets_changed",
+   "patterns": [
+    "/S[123]_TESTL",
+    "/S[123]_JTAGL",
+    "/\\+3V3_S[123]B"
+   ],
+   "allowed": [
+    "U[123]01",
+    "R[123]90"
+   ]
+  },
+  {
+   "finding": "FAB-02",
+   "kind": "parts_added",
+   "patterns": [
+    "R[123]91",
+    "R[123]92",
+    "U519",
+    "U520",
+    "C564",
+    "C565",
+    "U51[345]",
+    "C518",
+    "C519",
+    "C560",
+    "U53[0-5]",
+    "C58[5-9]",
+    "C590"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "FAB-02",
+   "kind": "parts_removed",
+   "patterns": [
+    "R14"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "FAB-02",
+   "kind": "nets_added",
+   "patterns": [
+    "/PG[123]",
+    "/PG[123]_S",
+    "/PG[123]_n",
+    "/PGSEL[123]_n",
+    "/HDMI_EN1",
+    "/HDMI_EN2",
+    "unconnected-\\(U53[0-5]-NC-Pad1\\)"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "FAB-02",
+   "kind": "nets_removed",
+   "patterns": [
+    "/HDMI_SW_EN"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "FAB-02",
+   "kind": "nets_changed",
+   "patterns": [
+    "/HDMI_SEL1",
+    "/HDMI_SEL2"
+   ],
+   "allowed": [
+    "U519",
+    "U520"
+   ]
+  },
+  {
+   "finding": "FAB-03",
+   "kind": "parts_added",
+   "patterns": [
+    "U81",
+    "U84",
+    "U85",
+    "C566",
+    "C567",
+    "C572",
+    "U50[789]",
+    "U51[012]",
+    "C51[2-7]",
+    "R519",
+    "R520",
+    "R521",
+    "C56[89]",
+    "C570",
+    "U51[678]",
+    "C56[123]",
+    "R52[234]",
+    "C57[3-9]",
+    "C58[0-4]",
+    "U52[1-9]"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "FAB-03",
+   "kind": "parts_changed",
+   "patterns": [
+    "U80"
+   ],
+   "allowed": [
+    "value"
+   ]
+  },
+  {
+   "finding": "FAB-03",
+   "kind": "nets_added",
+   "patterns": [
+    "/BBM[123]",
+    "/BBM[123]_(REQ|ARM|ARMR|MOV|RA)",
+    "/BSEL[123]_S",
+    "/BSEL[123]_D2",
+    "/BSEL[123]_D2R",
+    "/BSEL[123]_H1?",
+    "unconnected-\\(U81-NC-Pad(8|11)\\)",
+    "unconnected-\\(U8[45]-NC-Pad11\\)",
+    "unconnected-\\(U5(0[789]|1[012]|2[123])-NC-Pad1\\)"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "FAB-03",
+   "kind": "nets_removed",
+   "patterns": [
+    "unconnected-\\(U80-NC-Pad11\\)"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "FAB-03",
+   "kind": "nets_changed",
+   "patterns": [
+    "/BSEL[123]",
+    "/BSEL[123]_D",
+    "/BOE[123]_n"
+   ],
+   "allowed": [
+    "U80",
+    "U[123]09",
+    "U[123]10",
+    "U50[789]",
+    "U51[678]",
+    "R47[456]",
+    "U52[456]"
+   ]
+  },
+  {
+   "finding": "FAB-04",
+   "kind": "parts_changed",
+   "patterns": [
+    "R4[89]\\d|R500",
+    "R15",
+    "R16"
+   ],
+   "allowed": [
+    "value"
+   ]
+  },
+  {
+   "finding": "L1",
+   "kind": "parts_added",
+   "patterns": [
+    "U506",
+    "C511",
+    "R518"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "L1",
+   "kind": "nets_added",
+   "patterns": [
+    "/EMCON_SUP",
+    "unconnected-\\(U506-NC-Pad1\\)"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "L2",
+   "kind": "parts_added",
+   "patterns": [
+    "U50[1-5]",
+    "C508",
+    "C509",
+    "C510"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "L2",
+   "kind": "parts_removed",
+   "patterns": [
+    "U19",
+    "U20"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "L2",
+   "kind": "parts_changed",
+   "patterns": [
+    "R58"
+   ],
+   "allowed": [
+    "value"
+   ]
+  },
+  {
+   "finding": "L2",
+   "kind": "nets_removed",
+   "patterns": [
+    "unconnected-\\(U20-NC-Pad(6|8|11)\\)"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "L2",
+   "kind": "nets_changed",
+   "patterns": [
+    "/E22_EN",
+    "/E72_EN",
+    "/LIME_EN",
+    "/LIME_EN_A",
+    "/LIME_HW_EN",
+    "/LIME_SW_EN",
+    "/LORA_ON",
+    "/RB_EN",
+    "/RB_SW_EN",
+    "/ZB_ON"
+   ],
+   "allowed": [
+    "U19",
+    "U20",
+    "U50[1-5]"
+   ]
+  },
+  {
+   "finding": "L3",
+   "kind": "parts_added",
+   "patterns": [
+    "U[123]1[2-5]",
+    "C[123]8[345]",
+    "C261",
+    "C262",
+    "C285",
+    "TP[123]04"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "L3",
+   "kind": "parts_removed",
+   "patterns": [
+    "Q11",
+    "R513",
+    "U[123]11",
+    "Q[123]09",
+    "Q[123]10",
+    "R[123]7[34]"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "L3",
+   "kind": "nets_added",
+   "patterns": [
+    "/EMCON_ON[123]",
+    "unconnected-\\(U[123]12-NC-Pad1\\)"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "L3",
+   "kind": "nets_removed",
+   "patterns": [
+    "/EMCON_ON",
+    "/(WL|BT)_nDIS[123]_KILL",
+    "unconnected-\\(U[123]11-NC-Pad(8|11)\\)"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "L3",
+   "kind": "nets_changed",
+   "patterns": [
+    "/(WL|BT)_nDIS[123]",
+    "/(WL|BT)_nDIS[123]_OFF",
+    "/\\+3V3_CM[123]",
+    "/EMCON_HW"
+   ],
+   "allowed": [
+    "U[123]1[1-5]",
+    "Q[123](09|10)",
+    "C[123]97",
+    "C[123]8[345]",
+    "C261",
+    "C262",
+    "C285",
+    "C299",
+    "R[123]91",
+    "U220",
+    "Q11",
+    "U(19|20)",
+    "U[456]1",
+    "U50[1-6]"
+   ]
+  },
+  {
+   "finding": "L7",
+   "kind": "parts_removed",
+   "patterns": [
+    "Q[123]06",
+    "Q111",
+    "Q311"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "L7",
+   "kind": "nets_changed",
+   "patterns": [
+    "/WIFI_W_DIS_n",
+    "/5G_W_DIS_n",
+    "/WIFI2_W_DIS_n",
+    "/S1A_EN",
+    "/S3A_EN"
+   ],
+   "allowed": [
+    "Q[123](06|11)",
+    "U[123]15"
+   ]
+  },
+  {
+   "finding": "SD-EMC-1",
+   "kind": "parts_added",
+   "patterns": [
+    "R264",
+    "U220",
+    "C299",
+    "U221",
+    "R297",
+    "C200",
+    "Q212",
+    "R295",
+    "R296"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "SD-EMC-1",
+   "kind": "nets_added",
+   "patterns": [
+    "/S2A_EN",
+    "/5G_DCHG",
+    "/5G_TPR_CT",
+    "unconnected-\\(U22[01]-NC-Pad(3|4)\\)"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "SD-EMC-1",
+   "kind": "nets_changed",
+   "patterns": [
+    "/PCIE_PWR_EN2",
+    "/5G_PWROFF_n",
+    "/\\+3V3_M2C2",
+    "/\\+3V3_S2A"
+   ],
+   "allowed": [
+    "U203",
+    "R264",
+    "U220",
+    "U221",
+    "R295",
+    "R297",
+    "C200"
+   ]
+  },
+  {
+   "finding": "SD-EMC-2",
+   "kind": "parts_added",
+   "patterns": [
+    "R[123]94"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "SD-EMC-2",
+   "kind": "nets_added",
+   "patterns": [
+    "/CARD[123]_PERST_n"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "SD-EMC-2",
+   "kind": "nets_removed",
+   "patterns": [
+    "unconnected-\\(U2[12]-QOD-Pad2\\)"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "SD-EMC-2",
+   "kind": "nets_changed",
+   "patterns": [
+    "/PCIE[123]_RST2_n",
+    "/\\+5V_LORA",
+    "/\\+3V3_ZB"
+   ],
+   "allowed": [
+    "J_M2C[123]",
+    "R[123]94",
+    "U21",
+    "U22"
+   ]
+  },
+  {
+   "finding": "I3-F01",
+   "kind": "nets_changed",
+   "patterns": [
+    "/EMCON_HW"
+   ],
+   "allowed": [
+    "U[456]1"
+   ]
+  },
+  {
+   "finding": "S-12",
+   "kind": "parts_changed",
+   "patterns": [
+    "J_M2C2"
+   ],
+   "allowed": [
+    "footprint",
+    "field:Footprint"
+   ]
+  },
+  {
+   "finding": "S-13",
+   "kind": "parts_added",
+   "patterns": [
+    "U222",
+    "U223"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "S-13",
+   "kind": "nets_added",
+   "patterns": [
+    "unconnected-\\(U22[23]-NC-Pad6\\)"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "S-13",
+   "kind": "nets_changed",
+   "patterns": [
+    "/SIM1_VCC",
+    "/SIMC2_VCC",
+    "/SIMC[12]_(CLK|IO|RST)"
+   ],
+   "allowed": [
+    "U222",
+    "U223"
+   ]
+  },
+  {
+   "finding": "B_PANEL_5V",
+   "kind": "parts_changed",
+   "patterns": [
+    "F1"
+   ],
+   "allowed": [
+    "value",
+    "field:LCSC"
+   ]
+  },
+  {
+   "finding": "G4",
+   "kind": "parts_added",
+   "patterns": [
+    "C60[56]",
+    "C63[56]",
+    "C66[56]",
+    "C571"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "G4",
+   "kind": "nets_changed",
+   "patterns": [
+    "/\\+5V_S[123]",
+    "/\\+5V_DEV"
+   ],
+   "allowed": [
+    "C6[036][56]",
+    "C571"
+   ]
+  },
+  {
+   "finding": "G6",
+   "kind": "parts_added",
+   "patterns": [],
+   "allowed": null
+  },
+  {
+   "finding": "G7",
+   "kind": "parts_added",
+   "patterns": [
+    "C60[1-4]",
+    "C63[1-4]",
+    "C66[1-4]",
+    "C53\\d",
+    "C54\\d",
+    "C550",
+    "C55[1-8]",
+    "C4[135][23]"
+   ],
+   "allowed": null
+  },
+  {
+   "finding": "G7",
+   "kind": "parts_changed",
+   "patterns": [
+    "C27",
+    "C28"
+   ],
+   "allowed": [
+    "value"
+   ]
+  },
+  {
+   "finding": "G7",
+   "kind": "nets_changed",
+   "patterns": [
+    "/\\+1V1_S[123]",
+    "/\\+1V2_KSZ",
+    "/\\+2V5_KSZ",
+    "/\\+3V3_IOC[ABC]",
+    "/\\+5V_DEV",
+    "/\\+3V3_DEV"
+   ],
+   "allowed": [
+    "C6[036][1-4]",
+    "C5[345]\\d",
+    "C4[135][23]"
+   ]
+  },
+  {
+   "finding": "PARTS-RETAKE row 1 (DS3231SN)",
+   "kind": "parts_changed",
+   "patterns": [
+    "U9"
+   ],
+   "allowed": [
+    "footprint",
+    "field:Footprint",
+    "value",
+    "lib",
+    "part",
+    "field:Description"
+   ]
+  },
+  {
+   "finding": "PARTS-RETAKE row 1 (DS3231SN)",
+   "kind": "nets_changed",
+   "patterns": [
+    "/SCL",
+    "/SDA",
+    "/VBAT"
+   ],
+   "allowed": [
+    "U9"
+   ]
+  },
+  {
+   "finding": "PARTS-RETAKE row 6 (U.FL C88373)",
+   "kind": "parts_changed",
+   "patterns": [
+    "J_W(1A|1B|3A|3B|OA|OB)"
+   ],
+   "allowed": [
+    "field:LCSC"
+   ]
+  },
+  {
+   "finding": "(the parts above: their supply and ground pins)",
+   "kind": "nets_changed",
+   "patterns": [
+    "/\\+3V3_DEV",
+    "GND"
+   ],
+   "allowed": [
+    "C(19|29|39)7",
+    "R14",
+    "R513",
+    "U[123]11",
+    "U(19|20)",
+    "C5(0[89]|1\\d|6\\d|7\\d|8\\d|90)",
+    "C5[345]\\d",
+    "C6[036][1-6]",
+    "U5(0\\d|1\\d|2\\d|3[0-5])",
+    "U81",
+    "U84",
+    "U85",
+    "Q[123](06|09|10|11)",
+    "Q11",
+    "R[123]7[34]",
+    "U80",
+    "C[123]8[345]",
+    "C200",
+    "C261",
+    "C262",
+    "C285",
+    "C299",
+    "C4[135][23]",
+    "Q212",
+    "R[123]92",
+    "R296",
+    "R518",
+    "U[123]1[2-5]",
+    "U220",
+    "U221",
+    "U222",
+    "U223",
+    "U9"
+   ]
+  }
+ ]
+}

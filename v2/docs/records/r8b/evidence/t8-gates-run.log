@@ -1,0 +1,49 @@
+r8b2: t8 start 2026-09-27T00:05:40Z in BOX/t8
+r8b2: t8 meshsat.pretty after the generators: ?? v2/ecad/meshsat.pretty/M2_B-Key_Socket_3052_TE2199119.kicad_mod 
+r8b2: t8 compiles
+r8b2: t8 swallowed-calls exit 0 
+r8b2: t8 gen_sch exit 0
+layout: 43 A3 pages on a 6 x 8 sheet -> paper "User" 2514.60 2377.44
+wrote pcb-b-compute.kicad_sch parts: 1313 lib symbols: 158
+nets: 967 single-pin nets (should be empty or intentional): []
+intent: BOX/t8/v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json (274 bypass, 41 rails, 114 nodes, 5 pair classes)
+r8b2: t8 build_sch exit 0
+ERC: violations (out/pcb-b-compute-erc.json, out/pcb-b-compute-erc.rpt; erc_gate.py decides)
+netlist: out/pcb-b-compute.net
+sch_prov: pcb-b-compute.net written by generator 9ce909ba882fc223 (boards/b.json#gen_env, gen_footprints_b16.py, gen_footprints_e.py, gen_footprints_idc.py, gen_footprints_panel.py, gen_sch_b.py, idc_pads.py, intent.py, kisch.py, schlayout.py, and 60 land(s) in meshsat.pretty)
+sheet pdf: out/pcb-b-compute-schematic-sheet.pdf
+sch_pages: 6 x 8 cells, 43 pages kept of 48 tiles
+pdf: out/pcb-b-compute-schematic.pdf
+bom: out/pcb-b-compute-bom.csv
+r8b2: t8 paged schematic Pages: 43
+r8b2: t8 SCH-001 erc_gate exit 0
+erc_gate: netlist NOT tied: the ERC report carries no provenance sidecar (erc_gate.py --run writes one), so which schematic it was taken on is not known
+erc_gate: no blocking error (2869 violations, 7 error(s) allow-listed with a reason, warnings 2862)
+verdict: erc_gate               PASS         of 2869 {"allowed": 7, "blocking": 0, "violations": 2869} | 7 error(s) allow-listed with a reason
+r8b2: t8 safe_lines exit 0  verdict: safe_lines             PASS         of 5 {"floating": 0, "lines": 5, "listened": 1, "on_netlist": 5} | 1 line(s) this board reads hold the safe state with its own copper; the rest are driven here or only cross it
+r8b2: t8 pin_map_lands exit 0  verdict: pin_map_lands_b        PASS         of 1264 {"failures": 0, "judged": 1264, "merged_pad_pins": 0, "unreadable": 0} | every part's map names every pad of its land
+r8b2: t8 derate exit 0  verdict: derate                 PASS         of 240 {"by_vendor_reference": 0, "judged": 240, "undeclared_nets": 0, "under_rated": 0, "unrated_parts": 422} | a part's rating against the declared voltage of the rail it is soldered to; DC-bias capacitance derating is NOT checked here and is an open gap
+r8b2: t8 power_sequence exit 0  verdict: power_sequence         PASS         of 41 {"always_on": 22, "deadlocks": 0, "rails": 41, "segments": 5, "unresolved": 0} | each rail's enable derived from the netlist and the part that drives it named; a rail whose enable is driven only by a device powered from that same rail cannot start and is a failure. The ORDER between rails is reported as the graph and not decided here, because which order is correct is a property of the modules' own datasheets
+r8b2: t8 power_path exit 0  verdict: power_path             PASS         {"feeds": 5, "feeds_short": 0, "nodes": 114, "rails": 41, "segments": 0, "undeclared": 0} | every declared node that carries a declared rail's current through one of that rail's own load parts: a candidate segment of a power path that no power rule is looking at. It REPORTS: some of these are genuinely nodes and the declaration is where that is written down, with its reason.
+r8b2: t8 port_protect exit 0  verdict: port_protect           PASS         of 17 {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 6, "clamps_one_way": 6, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjudged": 0, "declared": 2, "not_on_netlist": 0, "ports": 2, "unprotected": 0} | every declared external conductor meets a protection part before a chip, and every clamp is drawn and placed the right way round
+r8b2: t8 clock_check exit 0  verdict: clock_check            PASS         of 7 {"bad": 0, "crystals": 7, "undeclared": 0} | every crystal has two matched load capacitors to ground, its own IC alone on its nets, and a network that presents what the part's own datasheet asks for within 20 percent
+r8b2: t8 review_nets exit 0  issues: 27
+r8b2: t8 check_contracts exit 3  verdict: check_contracts        INCONCLUSIVE of 89 {"boards_without_intent": 0, "fail": 0, "missing_boards": 5, "pass": 39, "rails_unsplit": 0, "undecided": 0, "unjudged": 50} | A, C, D, E, P absent from this tree, so nothing that names them was judged
+r8b2: t8 energy_chain exit 0  verdict: energy_chain           PASS         of 98 {"checks": 98, "citations_unjudged": 0, "coordination_findings": 1, "fail": 0, "selection_findings": 0, "stages": 12} | THE CHAIN END TO END, which is BAT-002's question; a selection finding against ECSS 6.17 belongs to the stage that has it and is in energy_chain_<letter>, rule PWR-003. Every rating against its own source document, every protective element against the board's netlist, and the four coordination tests (the element is below what it protects, above the path's peak, able to interrupt what is available, and followed by the stage it protects)
+r8b2: t8 netlist_board exit 1  netlist_board: FAIL (this gate, exit 1); netlist_parts: FAIL (values and lands); rule SCH-002 reads both
+r8b2: t8 netlist_parts exit 1  verdict: netlist_parts          FAIL         of 1848 {"agree": 1792, "footprint_differs": 5, "lcsc_differs_reported": 0, "only_board": 33, "only_netlist": 341, "shared_refs": 924, "value_differs": 51} | value and footprint name per shared reference, board against the netlist it was placed from
+r8b2: committed vs t8 parts 1103 -> 1265 (+187 -25 ~36); nets 1929 -> 2002 (+93 -20 ~85, renamed 0)
+r8b2: clean vs t8 parts 1103 -> 1265 (+187 -25 ~36); nets 1929 -> 2002 (+93 -20 ~85, renamed 0)
+r8b2: pass-1 vs t8 parts 1227 -> 1265 (+38 -0 ~18); nets 1971 -> 2002 (+40 -9 ~17, renamed 0)
+r8b2: expected-set comparison exit 0
+parts 1103 -> 1265 (+187 -25 ~36); nets 1929 -> 2002 (+93 -20 ~85, renamed 0)
+unexplained: 0
+r8b2: t8 tree status: 7 entries
+ M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json
+ M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net
+ M v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net.prov.json
+ M v2/ecad/pcb-b-compute-b19/pcb-b-compute.kicad_sch
+ M v2/ecad/tools/boards/b.json
+ M v2/ecad/tools/gen_sch_b.py
+?? v2/ecad/meshsat.pretty/M2_B-Key_Socket_3052_TE2199119.kicad_mod
+r8b2: t8 done 2026-09-27T00:08:21Z

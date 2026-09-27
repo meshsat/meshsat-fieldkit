@@ -161,9 +161,9 @@ power/panjit-ss2020fl-series.pdf   current   # PANJIT SS2040FL, board C's e-pape
 techpublic/techpublic-74lvc1g08gv-c19829591.pdf   current   # the AND gates of board D's keying chain in the round 6 candidate
 ti/ti-sn74aup1g08.pdf   current   # SN74AUP1G08, board A's PA and HF rails' EMCON gates U35 to U38 in the round 8 candidate (EMCON.md section 4a)
 ti/ti-sn74lvc1g00.pdf   current   # SN74LVC1G00, board A's outlet interlock U30 in the round 6 candidate (D-11)
-ti/ti-sn74lvc1g04.pdf   current   # SN74LVC1G04, board D's PTT inverter U11 in the round 6 candidate
+ti/ti-sn74lvc1g04.pdf   current   # SN74LVC1G04, board D's PTT inverter U11 in the round 6 candidate; board B's per-slot EMCON_ON inverters U112, U212, U312 and power-good inverters U533 to U535 since its round 8
 ti/ti-sn74lvc1g06.pdf   current   # SN74LVC1G06, board D's open-drain PTT driver U13 in the round 6 candidate
-ti/ti-sn74lvc1g08.pdf   current   # SN74LVC1G08, the Ioff reference of board B's round 6 candidate (no part fitted from it)
+ti/ti-sn74lvc1g08.pdf   current   # SN74LVC1G08, the Ioff reference of board B's round 6 candidate, fitted since board B's round 8 as U501 to U505 (the EMCON_HW gates)
 ti/ti-sn74lvc1g57.pdf   current   # SN74LVC1G57DBVR, board C's EMCON lamp gate U14 (round 8, SD-EMC-6)
 ti/ti-tlv758p.pdf   current   # TLV75801P, board D's hub rail U17 and PA gate bias U15
 ti/ti-tpd2e2u06-q1.pdf   current   # TPD2E2U06-Q1, board A's USB-C CC ESD array in the round 6 candidate (D-17)
@@ -255,3 +255,8 @@ connectors/millmax-rugged-power-spring-pins-page28.pdf   current   # the 085X po
 rockblock/groundcontrol-rockblock-9704-product-page-20260927.html   current   # the RockBLOCK 9704 operating range (-40 to +70 C)
 rockblock/groundcontrol-docs-rockblock-9704-specification-20260927.html   current   # the RockBLOCK 9704 specification page
 pulse/pulse-hx6096nl-datasheet-rev-a.pdf   current   # HX6096NL, the -40 to +85 C PoE-rated replacement recommended for board B's T1 (HC6-SC-6, ethernet-magnetics update_53a98a71)
+ti/ti-sn74lvc2g06.pdf   current   # SN74LVC2G06DBVR, board B's EMCON open drains U113 to U115, U213 to U215, U220, U313 to U315 (round 8, L3 and L7; SOURCES.yaml logic-od-inverter-dual-lvc2g06)
+nexperia/nexperia-74lvc1g157.pdf   current   # 74LVC1G157GW, board B's fabric qualifiers and select locks U513 to U520, U524 to U529 (round 8, FAB-02 and FAB-03)
+ti/ti-tpd4e001.pdf   current   # TPD4E001DBVR, board B's SIM ESD arrays U222 and U223 (round 8, S-13)
+ti/ti-tps3808.pdf   current   # TPS3808G30DBVR, board B's 5G release hold U221 (round 8, SD-EMC-1r8)
+adi/adi-ds3231sn.pdf   current   # DS3231SN, board B's holdover clock U9, the part C9866 buys (round 8, parts re-take row 1)

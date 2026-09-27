@@ -322,14 +322,23 @@ def t_a_branch_declares_what_feeds_it_rather_than_being_known_by_name():
 
 def t_the_panel_branch_is_the_finding_it_should_be():
     """The reading this stage was added for, kept as a rule so a later change cannot make it quietly disappear:
-    board B's panel 5 V carries a 2.0 A hold polyfuse on a 0.4 mm class track, and IPC-2221 gives that track
+    board B's panel 5 V carried a 2.0 A hold polyfuse on a 0.4 mm class track, and IPC-2221 gives that track
     1.23 A at 10 K. Either the copper widens or the part changes; what may not happen is the pair going
-    unremarked."""
-    import yaml
+    unremarked. MESHSAT-1357 round 8 (26 September 2026): THE PART CHANGED. F1 is a Bourns MF-MSMF110 (1.1 A
+    hold) in board B's generator and in this chain, so the stage now sits under its copper; the rule keeps the
+    two in step, so a return to a larger part, or a chain line that no longer names the part the board carries,
+    fails here. The part is read from board B's generator by parsing it (the call part("F1", ...)), never by a text
+    search, as the tree's rule for detectors asks (the round's independent check, 27 September 2026)."""
+    import yaml, ast
     chain = yaml.safe_load(open(os.path.join(TOOLS, "pcb_energy_chain.yaml"), encoding="utf-8"))
     st = [s for s in chain["stages"] if s["id"] == "B_PANEL_5V"]
     assert st, "board B's panel branch is not in the chain at all"
     s = st[0]
-    assert float(s["protection"]["rating_a"]) > float(s["conductor"]["rating_a"]), \
-        "the stage no longer carries the finding: check whether the copper was widened or the part changed, " \
-        "and say which in the note here"
+    assert float(s["protection"]["rating_a"]) < float(s["conductor"]["rating_a"]), \
+        "the panel fuse is above its track again: the copper or the part changed; say which in the note here"
+    assert "MF-MSMF110" in s["protection"]["what"], s["protection"]["what"]
+    tree = ast.parse(open(os.path.join(TOOLS, "gen_sch_b.py"), encoding="utf-8").read())
+    f1 = [c.args[3].value for c in ast.walk(tree)
+          if isinstance(c, ast.Call) and getattr(c.func, "id", "") == "part" and len(c.args) > 3
+          and all(isinstance(a, ast.Constant) for a in c.args[:4]) and c.args[0].value == "F1"]
+    assert len(f1) == 1 and "MF-MSMF110" in f1[0], "board B's F1 no longer names the part the chain declares: %r" % f1

@@ -182,9 +182,10 @@ in hardware; the VHF path keeps listening because its gate is on the transmit si
 lightning sensor continue. The kit therefore stops RECEIVING on every other radio while EMCON is closed. As
 generated since `458b2873` the two gaps this mission first named are closed in the schematic: the compute modules'
 own WiFi and Bluetooth are pulled off through open drains, and the WiFi link cards lose their supply. What remains is
-session work under the ruling (S-01): the 5G module, whose only path is still its disable pin, a firmware-mediated
-airplane mode, and the items every row of the EMCON line shares (section 4b). NEED-08 is not met for the 5G module
-until the design closes it, and no row has been shown on a bench.
+session work under the ruling (S-01): the 5G module, whose only path was its disable pin, a firmware-mediated
+airplane mode, and the items every row of the EMCON line shares (section 4b). **Since board B's round 8 (27 September
+2026) the 5G module's supply is removed by hardware at once and board B's shared items are drawn (section 4b)**; no row
+has been shown on a bench.
 
 ### M5. Degraded operation during a mission
 
@@ -296,29 +297,36 @@ Read from the generators and the committed netlists of boards A, B, C and D at `
 corrections of `faf8c981` and `458b2873`; the transmitter-by-transmitter record, with each state, fault and proof
 owed, is `feasibility/EMCON.md` section 4. "Asserted" means `SW_EMCON` closed: `TX_INHIBIT_n` goes low, `EMCON_HW`
 follows it low through the buffer on board C, and board B inverts it once into `EMCON_ON` (high = asserted).
+**Board B as generated in its round 8 (27 September 2026, MESHSAT-1357; `feasibility/EMCON.md` section 4b):** each
+slot inverts `EMCON_HW` into its own `EMCON_ON1..3` from that module's own 3.3 V (`U112`, `U212`, `U312`), every stage
+on it is an open-drain logic output (SN74LVC2G06) but `Q212`, the 5G socket rail's discharge FET, and the single gates `U501` to `U505` replace `U19` and `U20`; the
+rows below that name `U19`, `U20`, `Q206`, `Q111`, `Q311`, `Q106`, `Q306` or `U{s}11` read with those parts.
 
 | Radio | What the line drives | What EMCON removes | Receive under EMCON |
 |---|---|---|---|
-| LimeSDR Mini 2.4 | the enable of the eFuse that feeds its USB VBUS, its only supply: the hub's port power AND `EMCON_HW` AND the software enable (`U19`, `gen_sch_b.py` line 974) | power | lost |
-| RockBLOCK 9704 | the enable of the eFuse that feeds its external supply pin, the only supply wired (`U19`) | power | lost |
-| E22-900M30S LoRa | the enable of the load switch that feeds its VCC pins (`U19`); its TXEN pin is driven by slot 3 and is not on the line | power | lost |
-| Two E72 CC2652P (Zigbee, Thread) | the enable of the load switch that feeds both (`U20`) | power | lost |
-| RM520N-GL 5G | its W_DISABLE1# pin, pulled low through the open drain `Q206` from `EMCON_ON`; the card's supply follows the module's own PCIe power enable only | RF (airplane mode, "the RF function will be disabled", Quectel hardware design section 4.4.1, a mode the module's firmware carries out); the module stays powered, and the supply removal of SD-EMC-1 is owed (S-01) | lost, while the module's firmware honours the pin |
-| Two AW7915-AED WiFi link cards | the enable of each card's 3.3 V buck, pulled low through `Q111` and `Q311` from `EMCON_ON` (`gen_sch_b.py` line 478), and each card's W_DISABLE1#, pulled low through `Q106` and `Q306` | power (the disable pin is not counted: the maker's datasheet does not mention it and the mainline Linux driver has no code for it) | lost |
+| LimeSDR Mini 2.4 | the enable of the eFuse that feeds its USB VBUS, its only supply: the hub's port power AND `EMCON_HW` AND the software enable (`U501`, `U502`, single gates since round 8) | power | lost |
+| RockBLOCK 9704 | the enable of the eFuse that feeds its external supply pin, the only supply wired (`U503`) | power | lost |
+| E22-900M30S LoRa | the enable of the load switch that feeds its VCC pins (`U504`); its TXEN pin is driven by slot 3 and is not on the line | power | lost |
+| Two E72 CC2652P (Zigbee, Thread) | the enable of the load switch that feeds both (`U505`) | power | lost |
+| RM520N-GL 5G | since round 8: the enable of its 3.3 V buck, pulled low by `U215` from `EMCON_ON2`; its FULL_CARD_POWER_OFF# (`U220`) and W_DISABLE1# (`U215`) pulled low at the same moment; its socket rail discharged through 15 Ohm (`Q212`, `R295`) | power, with no firmware in the path: RF off within about 1.2 ms plus 1.8 ms per mF of the module's own input capacitance, which no held document states (`feasibility/EMCON.md` section 4b, SD-EMC-1r8); Quectel warns that cutting the supply of a working module can corrupt its flash, a residual accepted | lost |
+| Two AW7915-AED WiFi link cards | the enable of each card's 3.3 V buck, pulled low by `U115` and `U315` from `EMCON_ON1` and `EMCON_ON3`, and each card's W_DISABLE1#, pulled low by the same parts | power (the disable pin is not counted: the maker's datasheet does not mention it and the mainline Linux driver has no code for it) | lost |
 | SA868 VHF with the 30 W PA | the KEY gate on board D (`KEY = PTT_ANY AND TX_INHIBIT_n`) and the PA rail and keying on board A (`PA_EN = EMCON_HW AND PA_SW_EN`, `U26`; in board A's round 8 candidate `PA_EN = TX_INHIBIT_n AND EMCON_HW AND PA_SW_EN`, `U35` and `U36`, `feasibility/EMCON.md` section 4a); the exciter's supply is not gated and the resting relay joins antenna to exciter | transmit only | continues |
 | QMX HF | the enable of the converter that feeds its DC input (`HF_EN = EMCON_HW AND HF_SW_EN`, `U26`, `gen_sch_a.py` line 1102 at `45bde541`; in board A's round 8 candidate `HF_EN = TX_INHIBIT_n AND EMCON_HW AND HF_SW_EN`, `U37` and `U38`, `gen_sch_a.py` lines 1240 to 1243); its USB supply is not gated | power (its receiver runs from the DC input per its manual) | lost |
-| The three compute modules' own WiFi and Bluetooth | each module's WL_nDisable and BT_nDisable, only ever pulled low, through open drains driven by the slot's `U{s}11` (kill = the software request OR `EMCON_ON`, `gen_sch_b.py` lines 716 to 741) | RF (the module's radio disabled in hardware, Compute Module 5 datasheet sections 2.1.1 and 2.1.2) | lost |
+| The three compute modules' own WiFi and Bluetooth | each module's WL_nDisable and BT_nDisable, only ever pulled low, by open-drain outputs run from the module's own 3.3 V: `U{s}13` from `EMCON_ON{s}` and `U{s}14` from the software request (round 8) | RF (the module's radio disabled in hardware, Compute Module 5 datasheet sections 2.1.1 and 2.1.2) | lost |
 | LG290P GNSS, DCF77, lightning sensor | nothing | receive-only; nothing to remove | continues |
 
 **Owner ruling D-05 (26 September 2026): EMCON means radios dark, as generated and completed.** Every radio with an
 emission path is powered off or RF-disabled in hardware; the VHF path keeps listening because its gate is on the
-transmit side only; GNSS, DCF77 and the lightning sensor continue. Since `458b2873` the table meets that meaning at
-desk in every row but one, the 5G module: its only EMCON path is its disable pin, which Quectel documents as a
-firmware-mediated airplane mode with no stated time to RF off, and the session's SD-EMC-1, which removes its supply
-in the maker's turn-off order, is not drawn yet (S-01; `feasibility/EMCON.md` sections 4.5 and 5). What every row
-shares is open as well (EMCON.md section 7: the line's hold with its source gone, a loss of board B's `+3V3_DEV`
-that releases every gate hung on `EMCON_ON` or on `U{s}11`, gate supplies outside their range, the drive of the
-2N7002s, and the back-feed paths of SD-EMC-2), and no row has been shown on a bench (EMCON.md section 6, twelve
+transmit side only; GNSS, DCF77 and the lightning sensor continue. Since `458b2873` the table met that meaning at
+desk in every row but one, the 5G module, whose only EMCON path was its disable pin; since board B's round 8 (27
+September 2026) its supply is removed by hardware at once with a bounded time to RF off (`feasibility/EMCON.md`
+section 4b, SD-EMC-1r8), so the 5G row meets it at desk as well; the RockBLOCK's own supercapacitors, which keep the
+module running after its supply gate opens, stay EMCON.md section 4.4's open item. What every row
+shares was open as well (EMCON.md section 7: the line's hold with its source gone, a loss of board B's `+3V3_DEV`
+that released every gate hung on `EMCON_ON` or on `U{s}11`, gate supplies outside their range, the drive of the
+2N7002s, and the back-feed paths of SD-EMC-2); on board B round 8 closes the hold, the `+3V3_DEV` loss and the drive at
+desk, and the 5G module's back-feed, and leaves open the gate supplies of `U501` to `U505` and the back-feed into the
+RockBLOCK, the E22 and the E72 (EMCON.md section 4b); and no row has been shown on a bench (EMCON.md section 6, twelve
 tests, none of which can use the kit's own SDR, whose supply EMCON removes).
 The 5G module's own GNSS receiver is not counted in the last row: the kit's position source is the LG290P, the module's GNSS ports (L5 on ANT1, L1 on ANT3, Quectel hardware design v1.1
 Table 32) are fitted only in part under D-07, and whether W_DISABLE1# stops it is not established.

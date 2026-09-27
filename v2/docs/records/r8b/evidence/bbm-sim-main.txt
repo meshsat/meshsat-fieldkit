@@ -1,0 +1,23 @@
+requirement: lead >= 1.000 us, hold >= 40.000 us
+netlist BOX/out/committed-pcb-b-compute.net: 23 gates, 0 Schmitt buffers, 0 RC nodes; hazard model off
+  1 single vote change (corners)                   runs   162  select moves    162  min lead - us  min hold - us  violations 324
+      e.g. select BSEL1 moved at 0.000000000 s with enable BOE1_n LOW (last edge None)
+      e.g. select BSEL1 moved at 0.000000000 s with enable BOE1_n LOW (last edge None)
+      e.g. select BSEL1 moved at 0.000000000 s with enable BOE1_n LOW (last edge None)
+  2 vote returns after r (checker's case)          runs  8478  select moves  33912  min lead 0.000 us  min hold 0.001 us  violations 33912
+      e.g. select BSEL1 moved at 0.000000000 s with enable BOE1_n LOW (last edge None)
+      e.g. select BSEL1 moved at 0.000000000 s with enable BOE1_n LOW (last edge None)
+      e.g. select BSEL1 moved at 0.000000000 s with enable BOE1_n LOW (last edge None)
+  3 adversary aimed at the circuit's instants      runs   450  select moves   1800  min lead 0.000 us  min hold 0.000 us  violations 2400
+      e.g. select BSEL1 moved at 0.000000000 s with enable BOE1_n LOW (last edge None)
+      e.g. select BSEL1 moved at 0.000000000 s with enable BOE1_n LOW (last edge None)
+      e.g. select BSEL1 moved at 0.000000000 s with enable BOE1_n LOW (last edge None)
+  4 random vote waveforms                          runs  3156  select moves  95620  min lead 0.000 us  min hold 0.000 us  violations 98712
+      e.g. select BSEL1 moved at 0.000210747 s with enable BOE1_n LOW (last edge None)
+      e.g. select BSEL1 moved at 0.000000007 s with enable BOE1_n LOW (last edge None)
+      e.g. select BSEL1 moved at 0.000046611 s with enable BOE1_n LOW (last edge None)
+  4 random vote waveforms with power-good toggles  runs  1344  select moves  40980  min lead 0.000 us  min hold 0.000 us  violations 40980
+      e.g. select BSEL1 moved at 0.000000389 s with enable BOE1_n LOW (last edge None)
+      e.g. select BSEL1 moved at 0.000000396 s with enable BOE1_n LOW (last edge None)
+      e.g. select BSEL1 moved at 0.000000017 s with enable BOE1_n LOW (last edge None)
+TOTAL runs 13590, select moves 172474, violations 176328
