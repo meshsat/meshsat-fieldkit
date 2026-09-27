@@ -1,49 +1,80 @@
 {
  "advisory": false,
  "applicable": true,
- "counts": {
-  "fail": 0,
-  "pass": 33
+ "code_bundle": {
+  "entry": "block_contract.py",
+  "files": {
+   "block_contract.py": "f6f01899199a66a3",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "d9c6cc5ac1107f31",
+  "unresolved": []
  },
- "denominator": 33,
- "evidence": [],
+ "counts": {
+  "fail": 10,
+  "pass": 28
+ },
+ "denominator": 38,
+ "evidence": [
+  "target 7 carries 'VIN_RAW_P1' and the pin above it is J_DOCK pin 1, on GND in board A's netlist, so it must carry 'GND_P1'",
+  "target 8 carries 'VIN_RAW_P2' and the pin above it is J_DOCK pin 2, on GND in board A's netlist, so it must carry 'GND_P2'",
+  "target 9 carries 'VIN_RAW_P3' and the pin above it is J_DOCK pin 3, on GND in board A's netlist, so it must carry 'GND_P3'",
+  "target 10 carries 'VIN_RAW_P4' and the pin above it is J_DOCK pin 4, on GND in board A's netlist, so it must carry 'GND_P4'",
+  "wire land 7 carries 'VIN_RAW_P1' and must carry 'GND_P1', the net of the pin above target 7: the wire would leave on another net",
+  "wire land 8 carries 'VIN_RAW_P2' and must carry 'GND_P2', the net of the pin above target 8: the wire would leave on another net",
+  "wire land 9 carries 'VIN_RAW_P3' and must carry 'GND_P3', the net of the pin above target 9: the wire would leave on another net",
+  "wire land 10 carries 'VIN_RAW_P4' and must carry 'GND_P4', the net of the pin above target 10: the wire would leave on another net",
+  "board A's netlist carries 4 J_VR pin(s) (J_VR1, J_VR2, J_VR3, J_VR4) and E5 carries 0 T_VR target(s): a pin the stack lowers onto nothing",
+  "board A's netlist carries 4 J_VN pin(s) (J_VN1, J_VN2, J_VN3, J_VN4) and E5 carries 0 T_VN target(s): a pin the stack lowers onto nothing"
+ ],
  "inputs": {
-  "block": {
-   "path": "pcb-e5-block.kicad_pcb",
-   "sha256_16": "686b29a734c55b9a"
-  },
   "board": {
-   "from": "argv",
-   "path": "pcb-e5-block.kicad_pcb",
+   "path": "pcb-e5-block/pcb-e5-block.kicad_pcb",
    "sha256_16": "686b29a734c55b9a"
   },
-  "board_a": {
-   "path": "/root/sweep38/v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_pcb",
-   "sha256_16": "58e26c67987b1daa"
+  "board_a_netlist": {
+   "content16": "d464d30a17fb30f7",
+   "path": "pcb-a-power-a23/out/pcb-a-power.net",
+   "sha256_16": "0a2b59087bcc2678"
+  },
+  "dock_land": {
+   "path": "meshsat.pretty/PogoPins_2x6.kicad_mod",
+   "sha256_16": "171fa629c58b8f1e"
   }
  },
  "missing_input": null,
- "note": "the dock block against the board whose spring pins land on it, matched by position; board E5 has no netlist and this contract is between two BOARDS",
+ "note": "the dock block against board A's current netlist: the signal targets matched by position under the J_DOCK land mounted as board A mounts it, the power targets by kind; board E5 has no netlist, its board file is its design, and board A's board file is not read",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
+   "INT-001": "6c054dd67edd4099",
    "SCH-003": "ddf200a8e65c127b"
   },
-  "rule_set_fingerprint": "ff8151db3576437b"
+  "rule_set_fingerprint": "635ff031f210f48c"
  },
  "rules": [
+  "INT-001",
   "SCH-003"
  ],
+ "runtime": {
+  "kicad": "9.0.9-9.0.9~ubuntu24.04.1",
+  "python": "3.12.3"
+ },
  "tool": "check_contracts_e5",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "git_head": "73ae2f2104c9",
+  "tools_tree_sha": "83ef0a1b203cfb46"
  },
- "ts": "2026-09-21T12:53:13Z",
- "verdict": "PASS",
- "version": "unknown",
+ "ts": "2026-09-27T21:00:46Z",
+ "verdict": "FAIL",
+ "version": "73ae2f2104c9",
  "writer": {
   "file": "block_contract.py",
-  "sha16": "b8533c8fde76ee32"
+  "sha16": "f6f01899199a66a3"
  }
 }

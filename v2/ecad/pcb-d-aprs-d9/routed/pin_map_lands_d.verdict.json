@@ -27,7 +27,7 @@
   "board": "d",
   "netlist": {
    "path": "out/pcb-d-aprs.net",
-   "sha256_16": "76700a687eb6187f"
+   "sha256_16": "7a2c0ac2190b141a"
   }
  },
  "missing_input": null,
@@ -47,12 +47,12 @@
  },
  "tool": "pin_map_lands_d",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "73ae2f2104c9",
+  "tools_tree_sha": "83ef0a1b203cfb46"
  },
- "ts": "2026-09-27T13:22:46Z",
+ "ts": "2026-09-27T21:00:11Z",
  "verdict": "PASS",
- "version": "391d857966d6",
+ "version": "73ae2f2104c9",
  "writer": {
   "file": "pin_map_lands.py",
   "sha16": "89d2ad7c2bab8ba0"

@@ -17,19 +17,19 @@
    "netlist_parts.py": "41cf192223d822c2",
    "regen_compare.py": "341d7f129a1e6f24",
    "return_via.py": "b61d138e54955dd4",
-   "rules_lib.py": "c0458c53923d7925",
+   "rules_lib.py": "6154bd6c15bdfa6b",
    "signal_class.py": "60b8647301428da4",
    "signalnets.py": "688be12d8e42e7a4",
    "stackup_write.py": "b55a3c0f58c805c2",
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "9882ad1bc5620724",
+  "sha16": "5b817048ed7bc29f",
   "unresolved": []
  },
  "counts": {
   "answered_nets": 6,
-  "classes": 63,
+  "classes": 64,
   "contradicted_nets": 0,
   "decided_nets": 6,
   "layout_bound_nets": 0,
@@ -70,7 +70,7 @@
   },
   "board_table": {
    "path": "tools/boards/a.json",
-   "sha256_16": "b9411f2403e03da7"
+   "sha256_16": "b249b5d06f8d83d2"
   },
   "critical_k": 6,
   "document_1": {
@@ -80,12 +80,12 @@
   "extent_mm": 400.0,
   "intent": {
    "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
-   "sha256_16": "92dd3b1cda9046b8"
+   "sha256_16": "3422910a15c4d145"
   },
   "netlist": {
-   "content16": "2c5c1d5a388cc95f",
+   "content16": "d464d30a17fb30f7",
    "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256_16": "da05dc02bc1e612f"
+   "sha256_16": "0a2b59087bcc2678"
   },
   "project": {
    "path": "pcb-a-power-a23/pcb-a-power.kicad_pro",
@@ -118,12 +118,12 @@
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "73ae2f2104c9",
+  "tools_tree_sha": "83ef0a1b203cfb46"
  },
- "ts": "2026-09-27T13:21:59Z",
+ "ts": "2026-09-27T20:59:22Z",
  "verdict": "INCONCLUSIVE",
- "version": "391d857966d6",
+ "version": "73ae2f2104c9",
  "writer": {
   "file": "edge_length.py",
   "sha16": "fd66cbd9bce2fa7b"

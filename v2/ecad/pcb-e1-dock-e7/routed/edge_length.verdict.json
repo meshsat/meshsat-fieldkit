@@ -17,28 +17,28 @@
    "netlist_parts.py": "41cf192223d822c2",
    "regen_compare.py": "341d7f129a1e6f24",
    "return_via.py": "b61d138e54955dd4",
-   "rules_lib.py": "c0458c53923d7925",
+   "rules_lib.py": "6154bd6c15bdfa6b",
    "signal_class.py": "60b8647301428da4",
    "signalnets.py": "688be12d8e42e7a4",
    "stackup_write.py": "b55a3c0f58c805c2",
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "9882ad1bc5620724",
+  "sha16": "5b817048ed7bc29f",
   "unresolved": []
  },
  "counts": {
   "answered_nets": 4,
-  "classes": 49,
+  "classes": 50,
   "contradicted_nets": 0,
   "decided_nets": 4,
   "layout_bound_nets": 0,
-  "low_speed_nets": 41,
+  "low_speed_nets": 42,
   "may_be_long_nets": 4,
-  "signal_nets": 82,
+  "signal_nets": 83,
   "undecided_nets": 37
  },
- "denominator": 82,
+ "denominator": 83,
  "evidence": [
   "UNDECIDED *_BST (HIGH_SPEED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: AP63205WU-7 5 V 2 A buck for the controller, the Geiger module and the fans' logic U12",
   "UNDECIDED *_PULSE (CLOCKED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: RP2040 sensor controller (USB to B16 through the dock) U10",
@@ -69,7 +69,7 @@
   },
   "board_table": {
    "path": "tools/boards/e.json",
-   "sha256_16": "b83f77baaec09080"
+   "sha256_16": "d20c8b15549f11ee"
   },
   "critical_k": 6,
   "document_1": {
@@ -79,12 +79,12 @@
   "extent_mm": 335.0,
   "intent": {
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock-intent.json",
-   "sha256_16": "5913e38b20333d35"
+   "sha256_16": "dad1163afd720b5e"
   },
   "netlist": {
-   "content16": "b8d237f0b8d759f5",
+   "content16": "dc06b84a39724641",
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
-   "sha256_16": "d6137f50059e5cbc"
+   "sha256_16": "56adc9746d61c4e0"
   },
   "project": {
    "path": "pcb-e1-dock-e7/pcb-e1-dock.kicad_pro",
@@ -117,12 +117,12 @@
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "73ae2f2104c9",
+  "tools_tree_sha": "83ef0a1b203cfb46"
  },
- "ts": "2026-09-27T13:23:04Z",
+ "ts": "2026-09-27T21:00:31Z",
  "verdict": "INCONCLUSIVE",
- "version": "391d857966d6",
+ "version": "73ae2f2104c9",
  "writer": {
   "file": "edge_length.py",
   "sha16": "fd66cbd9bce2fa7b"

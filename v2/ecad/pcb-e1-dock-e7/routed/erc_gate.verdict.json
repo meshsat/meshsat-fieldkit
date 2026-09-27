@@ -21,24 +21,24 @@
  "counts": {
   "allowed": 0,
   "blocking": 0,
-  "violations": 367
+  "violations": 370
  },
- "denominator": 367,
+ "denominator": 370,
  "evidence": [],
  "inputs": {
   "board": "e",
   "erc_report": {
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock-erc.json",
-   "sha256_16": "280b602a43c38794"
+   "sha256_16": "fbc6bd8f0780b847"
   },
   "netlist": {
-   "content16": "b8d237f0b8d759f5",
+   "content16": "dc06b84a39724641",
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
-   "sha256_16": "d6137f50059e5cbc"
+   "sha256_16": "56adc9746d61c4e0"
   },
   "netlist_tie": {
    "proved": true,
-   "why": "the report, the schematic and the netlist's own provenance agree on schematic bd50de114865"
+   "why": "the report, the schematic and the netlist's own provenance agree on schematic b2948384e5ea"
   },
   "project": {
    "path": ".",
@@ -46,7 +46,7 @@
   },
   "schematic": {
    "path": "pcb-e1-dock-e7/pcb-e1-dock.kicad_sch",
-   "sha256_16": "bd50de114865448b"
+   "sha256_16": "b2948384e5ea78b4"
   }
  },
  "missing_input": null,
@@ -66,12 +66,12 @@
  },
  "tool": "erc_gate",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "73ae2f2104c9",
+  "tools_tree_sha": "83ef0a1b203cfb46"
  },
- "ts": "2026-09-27T13:22:58Z",
+ "ts": "2026-09-27T21:00:24Z",
  "verdict": "PASS",
- "version": "391d857966d6",
+ "version": "73ae2f2104c9",
  "writer": {
   "file": "erc_gate.py",
   "sha16": "bb4bf868c515f37a"

@@ -1,13 +1,24 @@
 {
  "advisory": false,
  "applicable": true,
+ "code_bundle": {
+  "entry": "reliability.py",
+  "files": {
+   "reliability.py": "71d0872195905c9d",
+   "rules_lib.py": "6154bd6c15bdfa6b",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "ee8cd7e02a042732",
+  "unresolved": []
+ },
  "counts": {
   "boards": 1,
   "classes": 3,
-  "covered": 7,
+  "covered": 8,
   "fail": 0
  },
- "denominator": 10,
+ "denominator": 11,
  "evidence": [],
  "inputs": {
   "board": "e",
@@ -20,21 +31,24 @@
   "rule_fingerprints": {
    "REL-001": "d94df1c6a3ff6010"
   },
-  "rule_set_fingerprint": "ff8151db3576437b"
+  "rule_set_fingerprint": "635ff031f210f48c"
  },
  "rules": [
   "REL-001"
  ],
+ "runtime": {
+  "python": "3.12.3"
+ },
  "tool": "reliability",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "git_head": "73ae2f2104c9",
+  "tools_tree_sha": "83ef0a1b203cfb46"
  },
- "ts": "2026-09-21T12:52:10Z",
+ "ts": "2026-09-27T21:05:04Z",
  "verdict": "PASS",
- "version": "unknown",
+ "version": "73ae2f2104c9",
  "writer": {
   "file": "reliability.py",
-  "sha16": "149a48e5f2419955"
+  "sha16": "71d0872195905c9d"
  }
 }

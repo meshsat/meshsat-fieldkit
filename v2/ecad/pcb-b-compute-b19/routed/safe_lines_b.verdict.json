@@ -27,7 +27,7 @@
  },
  "denominator": 5,
  "evidence": [
-  "EMCON_HW: safe low, pull down [R58 (4.7k 1%)], pull up [none], drivers [none], reads [U112.2 (SN74LVC1G04DBVR inverter (2 ), U212.2 (SN74LVC1G04DBVR inverter (2 ), U312.2 (SN74LVC1G04DBVR inverter (2 ), U501.1 (SN74LVC1G08DBVR AND (1 A 2 B)], leaves on [J_AB1.15, J_PANEL.8]",
+  "EMCON_HW: safe low, pull down [R58 (4.7k 1%)], pull up [none], drivers [none], reads [U112.2 (SN74LVC1G04DBVR inverter (2 ), U116.1 (SN74LV1T08DBVR AND, 5 V supp), U212.2 (SN74LVC1G04DBVR inverter (2 ), U216.1 (SN74LV1T08DBVR AND, 5 V supp)], leaves on [J_AB1.15, J_PANEL.8]",
   "TX_INHIBIT_n: safe low, pull down [R59 (100k)], pull up [none], drivers [none], reads [none], leaves on [J_AB1.16, J_PANEL.11]",
   "PI_KILL: safe low, pull down [none], pull up [none], drivers [none], reads [Q103.3 (2N7002), Q203.3 (2N7002), Q303.3 (2N7002)], leaves on [J_AB1.10, J_PANEL.25]",
   "ZEROIZE_HW: safe high, pull down [none], pull up [none], drivers [none], reads [none], leaves on [J_AB1.20, J_PANEL.10]",
@@ -37,12 +37,12 @@
   "board": "b",
   "intent": {
    "path": "pcb-b-compute-b19/out/pcb-b-compute-intent.json",
-   "sha256_16": "162fcb9b95f680a7"
+   "sha256_16": "96ee391b3e3f638d"
   },
   "netlist": {
-   "content16": "39d83d25efcd75a6",
+   "content16": "b9dbb9c4a430d108",
    "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
-   "sha256_16": "8b78c59754a6a0c7"
+   "sha256_16": "028997a6c5e8810f"
   }
  },
  "missing_input": null,
@@ -62,12 +62,12 @@
  },
  "tool": "safe_lines_b",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "73ae2f2104c9",
+  "tools_tree_sha": "83ef0a1b203cfb46"
  },
- "ts": "2026-09-27T13:22:14Z",
+ "ts": "2026-09-27T20:59:37Z",
  "verdict": "PASS",
- "version": "391d857966d6",
+ "version": "73ae2f2104c9",
  "writer": {
   "file": "safe_lines.py",
   "sha16": "8529487f405ec55d"

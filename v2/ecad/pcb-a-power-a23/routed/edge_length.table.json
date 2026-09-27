@@ -2,7 +2,7 @@
  "board": "a",
  "counts": {
   "answered_nets": 6,
-  "classes": 63,
+  "classes": 64,
   "contradicted_nets": 0,
   "decided_nets": 6,
   "layout_bound_nets": 0,
@@ -19,7 +19,7 @@
   },
   "board_table": {
    "path": "tools/boards/a.json",
-   "sha256_16": "b9411f2403e03da7"
+   "sha256_16": "b249b5d06f8d83d2"
   },
   "critical_k": 6,
   "document_1": {
@@ -29,12 +29,12 @@
   "extent_mm": 400.0,
   "intent": {
    "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
-   "sha256_16": "92dd3b1cda9046b8"
+   "sha256_16": "3422910a15c4d145"
   },
   "netlist": {
-   "content16": "2c5c1d5a388cc95f",
+   "content16": "d464d30a17fb30f7",
    "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256_16": "da05dc02bc1e612f"
+   "sha256_16": "0a2b59087bcc2678"
   },
   "project": {
    "path": "pcb-a-power-a23/pcb-a-power.kicad_pro",
@@ -980,14 +980,9 @@
   {
    "basis": "a spare conductor with no driver, landing on a test point",
    "class": "LOW_SPEED_OR_DC",
-   "drivers": {
-    "PCA9555PW (0x21): enables and status": [
-     "U27"
-    ]
-   },
+   "drivers": {},
    "nets": [
-    "AB_SPARE",
-    "DOCK_SPARE"
+    "AB_SPARE"
    ],
    "pattern": "*_SPARE",
    "rise_ns": null,
@@ -1288,6 +1283,22 @@
     "CH_SRP_F"
    ],
    "pattern": "CH_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the hot stop line HOT-R1 (SC-50, S-57): board E's open drain Q11 toggles it at 1 or 5 Hz or holds it, R216 (10 k to +3V3) holds it up, U27 P15 reads it; a slow ",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "PCA9555PW (0x21): enables and status": [
+     "U27"
+    ]
+   },
+   "nets": [
+    "DOCK_SPARE"
+   ],
+   "pattern": "DOCK_SPARE",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
    "why": "declared slow or DC with its basis; no edge is asked of it"

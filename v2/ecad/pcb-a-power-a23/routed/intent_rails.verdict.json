@@ -15,13 +15,13 @@
    "netlist_parts.py": "41cf192223d822c2",
    "regen_compare.py": "341d7f129a1e6f24",
    "return_via.py": "b61d138e54955dd4",
-   "rules_lib.py": "c0458c53923d7925",
+   "rules_lib.py": "6154bd6c15bdfa6b",
    "signal_class.py": "60b8647301428da4",
    "signalnets.py": "688be12d8e42e7a4",
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "5aa3d5157698ae2a",
+  "sha16": "3261e823102e587f",
   "unresolved": []
  },
  "counts": {
@@ -134,12 +134,12 @@
   },
   "intent": {
    "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
-   "sha256_16": "92dd3b1cda9046b8"
+   "sha256_16": "3422910a15c4d145"
   },
   "netlist": {
-   "content16": "2c5c1d5a388cc95f",
+   "content16": "d464d30a17fb30f7",
    "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256_16": "da05dc02bc1e612f"
+   "sha256_16": "0a2b59087bcc2678"
   },
   "threshold_a": 0.0
  },
@@ -161,12 +161,12 @@
  },
  "tool": "intent_rails",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "73ae2f2104c9",
+  "tools_tree_sha": "83ef0a1b203cfb46"
  },
- "ts": "2026-09-27T13:21:56Z",
+ "ts": "2026-09-27T20:59:19Z",
  "verdict": "PASS",
- "version": "391d857966d6",
+ "version": "73ae2f2104c9",
  "writer": {
   "file": "intent_checks.py",
   "sha16": "1ad7af0c718ba940"

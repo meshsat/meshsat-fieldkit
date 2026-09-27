@@ -1,0 +1,7 @@
+a pcb-a-power-a23
+b pcb-b-compute-b19
+c pcb-c-display-c8
+d pcb-d-aprs-d9
+e pcb-e1-dock-e7
+e5 pcb-e5-block
+p pcb-p-pack-p2

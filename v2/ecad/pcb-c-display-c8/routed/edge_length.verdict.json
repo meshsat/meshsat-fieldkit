@@ -17,14 +17,14 @@
    "netlist_parts.py": "41cf192223d822c2",
    "regen_compare.py": "341d7f129a1e6f24",
    "return_via.py": "b61d138e54955dd4",
-   "rules_lib.py": "c0458c53923d7925",
+   "rules_lib.py": "6154bd6c15bdfa6b",
    "signal_class.py": "60b8647301428da4",
    "signalnets.py": "688be12d8e42e7a4",
    "stackup_write.py": "b55a3c0f58c805c2",
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "9882ad1bc5620724",
+  "sha16": "5b817048ed7bc29f",
   "unresolved": []
  },
  "counts": {
@@ -67,7 +67,7 @@
   },
   "board_table": {
    "path": "tools/boards/c.json",
-   "sha256_16": "11801af8a4c11b42"
+   "sha256_16": "e350024a1cc6fcd3"
   },
   "critical_k": 6,
   "document_1": {
@@ -77,12 +77,12 @@
   "extent_mm": 572.0,
   "intent": {
    "path": "pcb-c-display-c8/out/pcb-c-display-intent.json",
-   "sha256_16": "854436c729322993"
+   "sha256_16": "270ebb4ccf1d0e8e"
   },
   "netlist": {
-   "content16": "96c2678f4a3303b8",
+   "content16": "ebde053efc0a3906",
    "path": "pcb-c-display-c8/out/pcb-c-display.net",
-   "sha256_16": "11eabc2dddca5161"
+   "sha256_16": "3fddbb3edcd4248a"
   },
   "project": {
    "path": "pcb-c-display-c8/pcb-c-display.kicad_pro",
@@ -116,12 +116,12 @@
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "73ae2f2104c9",
+  "tools_tree_sha": "83ef0a1b203cfb46"
  },
- "ts": "2026-09-27T13:22:34Z",
+ "ts": "2026-09-27T20:59:59Z",
  "verdict": "INCONCLUSIVE",
- "version": "391d857966d6",
+ "version": "73ae2f2104c9",
  "writer": {
   "file": "edge_length.py",
   "sha16": "fd66cbd9bce2fa7b"

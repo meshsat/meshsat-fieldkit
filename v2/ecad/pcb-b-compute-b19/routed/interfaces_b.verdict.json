@@ -25,16 +25,16 @@
   "board": "b",
   "intent": {
    "path": "pcb-b-compute-b19/out/pcb-b-compute-intent.json",
-   "sha256_16": "162fcb9b95f680a7"
+   "sha256_16": "96ee391b3e3f638d"
   },
   "netlist": {
-   "content16": "39d83d25efcd75a6",
+   "content16": "b9dbb9c4a430d108",
    "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
-   "sha256_16": "8b78c59754a6a0c7"
+   "sha256_16": "028997a6c5e8810f"
   },
   "spec": {
    "path": "tools/pcb_interfaces.yaml",
-   "sha256_16": "ee6b6b840adddba2"
+   "sha256_16": "4b59132b2a0ecfa1"
   }
  },
  "missing_input": null,
@@ -50,16 +50,16 @@
   "INT-001"
  ],
  "runtime": {
-  "python": "3.11.2"
+  "python": "3.12.3"
  },
  "tool": "interfaces_b",
  "tools": {
-  "git_head": "248b951d750e",
-  "tools_tree_sha": "516c955c71b9e714"
+  "git_head": "73ae2f2104c9",
+  "tools_tree_sha": "83ef0a1b203cfb46"
  },
- "ts": "2026-09-27T16:44:31Z",
+ "ts": "2026-09-27T20:59:52Z",
  "verdict": "PASS",
- "version": "248b951d750e",
+ "version": "73ae2f2104c9",
  "writer": {
   "file": "interfaces.py",
   "sha16": "7b7e4f3a0241cf35"

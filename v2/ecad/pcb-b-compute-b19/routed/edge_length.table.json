@@ -2,13 +2,13 @@
  "board": "b",
  "counts": {
   "answered_nets": 30,
-  "classes": 153,
+  "classes": 154,
   "contradicted_nets": 0,
   "decided_nets": 30,
   "layout_bound_nets": 0,
-  "low_speed_nets": 320,
+  "low_speed_nets": 324,
   "may_be_long_nets": 30,
-  "signal_nets": 882,
+  "signal_nets": 886,
   "undecided_nets": 532
  },
  "inputs": {
@@ -19,7 +19,7 @@
   },
   "board_table": {
    "path": "tools/boards/b.json",
-   "sha256_16": "0c62cc5c65324e23"
+   "sha256_16": "2cedcd91cb6198df"
   },
   "critical_k": 6,
   "document_1": {
@@ -29,12 +29,12 @@
   "extent_mm": 530.0,
   "intent": {
    "path": "pcb-b-compute-b19/out/pcb-b-compute-intent.json",
-   "sha256_16": "162fcb9b95f680a7"
+   "sha256_16": "96ee391b3e3f638d"
   },
   "netlist": {
-   "content16": "39d83d25efcd75a6",
+   "content16": "b9dbb9c4a430d108",
    "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
-   "sha256_16": "8b78c59754a6a0c7"
+   "sha256_16": "028997a6c5e8810f"
   },
   "project": {
    "path": "pcb-b-compute-b19/pcb-b-compute.kicad_pro",
@@ -72,19 +72,19 @@
     "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's WL_nDisable and BT_nDisable low (L3, L7)": [
      "U113"
     ],
-    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's card W_DISABLE1# and the card supply's enable S1A_EN low (L7; SD-EMC-1 on slot 2)": [
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's card W_DISABLE1# low (L7); channel 2 spare since W4B-D3": [
      "U115"
     ],
     "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's WL_nDisable and BT_nDisable low (L3, L7)": [
      "U213"
     ],
-    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's card W_DISABLE1# and the card supply's enable S2A_EN low (L7; SD-EMC-1 on slot 2)": [
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's card W_DISABLE1# low (L7); channel 2 spare since W4B-D3": [
      "U215"
     ],
     "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's WL_nDisable and BT_nDisable low (L3, L7)": [
      "U313"
     ],
-    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's card W_DISABLE1# and the card supply's enable S3A_EN low (L7; SD-EMC-1 on slot 2)": [
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's card W_DISABLE1# low (L7); channel 2 spare since W4B-D3": [
      "U315"
     ],
     "TPS3808G30DBVR supervisor on +3V3_S2A: holds FULL_CARD_POWER_OFF# low for 180 to 420 ms after the rail (RM520N Tpr >= 100 ms)": [
@@ -588,6 +588,15 @@
     "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)": [
      "U6"
     ],
+    "SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's card-socket supply enable = EMCON AND PCIE_PWR_EN1, run from +5V_S1, that supply's own input (W4B-D3)": [
+     "U116"
+    ],
+    "SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's card-socket supply enable = EMCON AND PCIE_PWR_EN2, run from +5V_S2, that supply's own input (W4B-D3)": [
+     "U216"
+    ],
+    "SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's card-socket supply enable = EMCON AND PCIE_PWR_EN3, run from +5V_S3, that supply's own input (W4B-D3)": [
+     "U316"
+    ],
     "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)": [
      "U505"
     ],
@@ -603,15 +612,6 @@
     "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)": [
      "U503"
     ],
-    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's card W_DISABLE1# and the card supply's enable S1A_EN low (L7; SD-EMC-1 on slot 2)": [
-     "U115"
-    ],
-    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's card W_DISABLE1# and the card supply's enable S2A_EN low (L7; SD-EMC-1 on slot 2)": [
-     "U215"
-    ],
-    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's card W_DISABLE1# and the card supply's enable S3A_EN low (L7; SD-EMC-1 on slot 2)": [
-     "U315"
-    ],
     "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port)": [
      "U102"
     ],
@@ -619,14 +619,7 @@
      "U28"
     ],
     "TPS22810DRV": [
-     "U21",
      "U22"
-    ],
-    "TPS259631DDAR eFuse +5V_DEV -> +5V_LIME (301R 1% (ILM: 3.0 A))": [
-     "U23"
-    ],
-    "TPS259631DDAR eFuse +5V_DEV -> +5V_RB (301R 1% (ILM: 3.0 A))": [
-     "U24"
     ]
    },
    "nets": [
@@ -668,6 +661,15 @@
     ],
     "Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side)": [
      "U32B"
+    ],
+    "SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's card-socket supply enable = EMCON AND PCIE_PWR_EN1, run from +5V_S1, that supply's own input (W4B-D3)": [
+     "U116"
+    ],
+    "SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's card-socket supply enable = EMCON AND PCIE_PWR_EN2, run from +5V_S2, that supply's own input (W4B-D3)": [
+     "U216"
+    ],
+    "SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's card-socket supply enable = EMCON AND PCIE_PWR_EN3, run from +5V_S3, that supply's own input (W4B-D3)": [
+     "U316"
     ],
     "TI TS3DV642A0RUAR HDMI 2:1 switch (HDMI1 / HDMI2 -> HDMIM)": [
      "U3"
@@ -835,10 +837,14 @@
    "drivers": {
     "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)": [
      "U6"
+    ],
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), EMCON AND software (EMCON.md 4.4, W4B-D1)": [
+     "U536"
     ]
    },
    "nets": [
-    "RB_IEN"
+    "RB_IEN",
+    "RB_SW_IEN"
    ],
    "pattern": "*_IEN",
    "rise_ns": null,
@@ -1896,6 +1902,30 @@
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
+   "basis": "a TPS259631 or TPS22810 EN/UVLO pin behind its 10 k over 15 k divider from an EMCON gate output (LIME_UVLO, RB_UVLO and E22_UVLO since stream w4b, 27 September ",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TPS22810DRV": [
+     "U21"
+    ],
+    "TPS259631DDAR eFuse +5V_DEV -> +5V_LIME (301R 1% (ILM: 3.0 A))": [
+     "U23"
+    ],
+    "TPS259631DDAR eFuse +5V_DEV -> +5V_RB (301R 1% (ILM: 3.0 A))": [
+     "U24"
+    ]
+   },
+   "nets": [
+    "E22_UVLO",
+    "LIME_UVLO",
+    "RB_UVLO"
+   ],
+   "pattern": "*_UVLO",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
    "basis": "a USB bus supply node, a DC rail",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {
@@ -1947,13 +1977,13 @@
    "basis": "a wireless-disable pin, a static level",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {
-    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's card W_DISABLE1# and the card supply's enable S1A_EN low (L7; SD-EMC-1 on slot 2)": [
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's card W_DISABLE1# low (L7); channel 2 spare since W4B-D3": [
      "U115"
     ],
-    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's card W_DISABLE1# and the card supply's enable S2A_EN low (L7; SD-EMC-1 on slot 2)": [
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's card W_DISABLE1# low (L7); channel 2 spare since W4B-D3": [
      "U215"
     ],
-    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's card W_DISABLE1# and the card supply's enable S3A_EN low (L7; SD-EMC-1 on slot 2)": [
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's card W_DISABLE1# low (L7); channel 2 spare since W4B-D3": [
      "U315"
     ]
    },
@@ -2703,6 +2733,15 @@
     "74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the supervisors' read of EMCON_HW, so no firmware pin sits on the line (EMCON L1)": [
      "U506"
     ],
+    "SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's card-socket supply enable = EMCON AND PCIE_PWR_EN1, run from +5V_S1, that supply's own input (W4B-D3)": [
+     "U116"
+    ],
+    "SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's card-socket supply enable = EMCON AND PCIE_PWR_EN2, run from +5V_S2, that supply's own input (W4B-D3)": [
+     "U216"
+    ],
+    "SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's card-socket supply enable = EMCON AND PCIE_PWR_EN3, run from +5V_S3, that supply's own input (W4B-D3)": [
+     "U316"
+    ],
     "SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 V (EMCON L3)": [
      "U112"
     ],
@@ -2720,6 +2759,9 @@
     ],
     "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)": [
      "U504"
+    ],
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK ENABLE (J_RB9704 pin 3, I_EN), EMCON AND software (EMCON.md 4.4, W4B-D1)": [
+     "U536"
     ],
     "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)": [
      "U503"
