@@ -7,7 +7,7 @@ Generated from the requirements registry `v2/ecad/tools/pcb_requirements.yaml`. 
 
 Every reading carries its evidence class, in the six classes of `v2/docs/CURRENT-EVIDENCE.md`: a record reads PASS only on a class that counts, never on evidence awaiting revalidation, and a desk review (the session's own reading of named files, each bound by its sha256) is never a physical test. The prototype-core functions whose feasibility is not closed are listed first, as explicit architecture feasibility blockers (review of 26 September 2026, section 3 and checkpoint item 1): a merged document is configuration control, not proof that the architecture is feasible.
 
-Registry state **READY_FOR_REVIEW_B**. Sources read at commit `eadbe571` unless an entry says otherwise. 142 records trace to 19 needs; 29 owner rulings are applied, 50 choices were taken by the session under the owner's standing rule of 26 September 2026, 37 items are open and 49 are closed.
+Registry state **READY_FOR_REVIEW_B**. Sources read at commit `95e078a1` unless an entry says otherwise. 142 records trace to 19 needs; 29 owner rulings are applied, 50 choices were taken by the session under the owner's standing rule of 26 September 2026, 37 items are open and 49 are closed.
 
 ## Summary
 
@@ -400,7 +400,7 @@ Prototype 1: in the core D-01 names. 1 record(s).
 
 *allocated to kit, sw; session choices SC-25.*
 
-*Source (verified):* `v2/docs/TEST-PLAN.md:46`; `v2/docs/PRODUCT-BRIEF.md (problem statement)`; `session choice SC-25`
+*Source (verified):* `v2/docs/TEST-PLAN.md:54`; `v2/docs/PRODUCT-BRIEF.md (problem statement)`; `session choice SC-25`
 
 ### NEED-02
 
@@ -426,7 +426,7 @@ Prototype 1: in the core D-01 names. 7 record(s).
 
 *allocated to kit, b, d, a; rulings D-01; prototype 1 core, named by an owner ruling: D-01 names messaging over Iridium, 5G, LoRa and APRS as core. The kit-to-kit WiFi link is not a core messaging bearer: D-01 exercises it through the fabric's changeover test (IOHA A11, CHO-002), and its use as a bearer is REQ-002 (CONOPS section 2a)..*
 
-*Source (verified):* `v2/docs/V2-SPEC.md:37-51`; `v2/docs/TEST-PLAN.md:46`; `owner ruling D-01`
+*Source (verified):* `v2/docs/V2-SPEC.md:37-51`; `v2/docs/TEST-PLAN.md:54`; `owner ruling D-01`
 
 *Notes:* Split from W1's CAND-001 by D-01: the core bearers here; HF, VHF voice and the WiFi link as a bearer in REQ-002. Round-3 fix-up: the WiFi link moved to REQ-002, to agree with CONOPS section 2a.
 
@@ -436,7 +436,7 @@ Prototype 1: in the core D-01 names. 7 record(s).
 
 *allocated to kit, a, b, d; rulings D-01; prototype 1 deferred, taken by the session under the owner's standing rule (SC-04): D-01 names HF among the deferred functions and names neither VHF voice nor the WiFi link as a messaging bearer; the WiFi link's changeover is accepted in the core through IOHA A11 (CHO-002)..*
 
-*Source (verified):* `v2/docs/V2-SPEC.md:37-51`; `v2/docs/TEST-PLAN.md:46`; `owner ruling D-01`; `v2/docs/CONOPS.md section 2a`
+*Source (verified):* `v2/docs/V2-SPEC.md:37-51`; `v2/docs/TEST-PLAN.md:54`; `owner ruling D-01`; `v2/docs/CONOPS.md section 2a`
 
 *Notes:* Split from W1's CAND-001 by D-01.
 
@@ -484,7 +484,7 @@ Prototype 1: in the core D-01 names. 7 record(s).
 
 *allocated to b.*
 
-*Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md:131`; `v2/ecad/tools/check_pcb_b.py:424-431`
+*Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md:140`; `v2/ecad/tools/check_pcb_b.py:560-567`
 
 *Notes:* Judged by the board B gate, not by a registry rule; the registry has no rule for bearer distribution.
 
@@ -520,7 +520,7 @@ Prototype 1: in the core D-01 names. 7 record(s).
 
 *Bound to:* `v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f`
 
-*Source (verified):* `v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf (key B p.15 and p.20; Table 32)`; `v2/ecad/tools/gen_sch_b.py:635-643`; `v2/docs/CASE-MARGINS.md section 3.4`; `owner ruling D-07`
+*Source (verified):* `v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf (key B p.15 and p.20; Table 32)`; `v2/ecad/tools/gen_sch_b.py:722-730`; `v2/docs/CASE-MARGINS.md section 3.4`; `owner ruling D-07`
 
 *Notes:* Adjudication A08: ANT0+ANT2 keeps both n77/n78 transmit paths, ANT0+ANT1 leaves n78's primary path unconnected.
 
@@ -558,7 +558,7 @@ Prototype 1: in the core D-01 names. 19 record(s).
 
 *allocated to b, fw_ioctrl, sw; session choices SC-02, SC-25.*
 
-*Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md:17`; `v2/docs/ARCH-PCB-B-IOHA.md:127`; `v2/docs/ARCH-PCB-B-IOHA.md:250-261`; `v2/docs/MESHSAT-709-geometry-appendix.md:2829`; `v2/docs/feasibility/FAILOVER-FABRIC.md section 7`; `session choice SC-25`
+*Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md:17`; `v2/docs/ARCH-PCB-B-IOHA.md:136`; `v2/docs/ARCH-PCB-B-IOHA.md:266-277`; `v2/docs/MESHSAT-709-geometry-appendix.md:2829`; `v2/docs/feasibility/FAILOVER-FABRIC.md section 7`; `session choice SC-25`
 
 *Notes:* D-01 names the IOHA tests A1 to A14 as core. A7 is traced by CON-004, A9 by CON-002, A10 by CON-003, A11 by CHO-002 and A14 by REQ-031. The critical peripherals are every USB peripheral IOHA section 15 traces and the kit-to-kit WiFi link; LoRa and cellular data are the named exceptions of SC-02 (ASM-001). FAILOVER-FABRIC.md (26 September 2026) validates connectivity, direction, polarity, coupling and straps on a netlist, and nothing that needs copper or silicon; its FAB-04 bears on A6 and A12 (CON-003) and FAB-02 on every module that is off (CON-022). FEA-003 holds this record. The bound is SC-25's (27 September 2026): until then the acceptance took its pass line from the per-device timeouts it would measure, which cannot fail. FEA-003 closing in failure would reopen this record's statement, not its bound.
 
@@ -612,7 +612,7 @@ Prototype 1: in the core D-01 names. 19 record(s).
 
 *allocated to b, a.*
 
-*Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md:81`; `v2/docs/ARCH-PCB-B-IOHA.md:231`; `v2/docs/ARCH-PCB-B-IOHA.md:258`
+*Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md:81`; `v2/docs/ARCH-PCB-B-IOHA.md:247`; `v2/docs/ARCH-PCB-B-IOHA.md:274`
 
 **CON-003** (constraint). The voted fabric is fail-safe: every voted select rests on the home module and every OE on disconnected when the control plane is dark; break before make is a hardware delay; every controller output has a pull-down; hub reset is driven through a FET so a dark plane leaves hubs out of reset.
 
@@ -636,7 +636,7 @@ Prototype 1: in the core D-01 names. 19 record(s).
 
 *Bound to:* `v2/docs/feasibility/FAILOVER-FABRIC.md@a0ad3d7436cd126d`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f`
 
-*Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md:87-89`; `v2/docs/ARCH-PCB-B-IOHA.md:178-189`; `v2/docs/ARCH-PCB-B-IOHA.md section 13 (A10, A12)`; `v2/docs/feasibility/FAILOVER-FABRIC.md section 9`
+*Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md:87-93`; `v2/docs/ARCH-PCB-B-IOHA.md:185-205`; `v2/docs/ARCH-PCB-B-IOHA.md section 13 (A10, A12)`; `v2/docs/feasibility/FAILOVER-FABRIC.md section 9`
 
 *Notes:* FEA-003 holds this record while the fabric's feasibility is open.
 
@@ -712,7 +712,7 @@ Prototype 1: in the core D-01 names. 19 record(s).
 
 *Feasibility page:* `v2/docs/feasibility/DECOUPLING.md`, blocker ids T1, T10, G1, G14; *owner:* The integrating writer of v2/ecad/tools/ (T1 to T10); each board's writer (G1 to G14); the integrator for the placements; the session for the Diodes question.; *holds:* layout entry of A, B, C, D, E, P.
 
-*Source (verified):* `v2/docs/feasibility/DECOUPLING.md section 10`; `v2/ecad/tools/pcb_decisions.yaml:959-1076 (decision 42)`
+*Source (verified):* `v2/docs/feasibility/DECOUPLING.md section 10`; `v2/ecad/tools/pcb_decisions.yaml:1001-1118 (decision 42)`
 
 *Notes:* Decision 42 was ruled by the session on 26 September 2026 under the owner's standing rule (pcb_decisions.yaml, authority SESSION). No requirement record carries decoupling; this blocker holds layout entry of every board until its class seats are read on the next placement. It is parented at NEED-03 because board B, which carries the fabric and the supervisors, holds most of decision 42's residue and the gaps with no seat.
 
@@ -722,7 +722,7 @@ Prototype 1: in the core D-01 names. 19 record(s).
 
 *allocated to b, fw_ioctrl; rulings D-13.*
 
-*Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md:96`; `v2/docs/ARCH-PCB-B-IOHA.md:108`; `v2/docs/ARCH-PCB-B-IOHA.md:160-164`; `v2/docs/ARCH-PCB-B-IOHA.md:256`
+*Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md:102`; `v2/docs/ARCH-PCB-B-IOHA.md:117`; `v2/docs/ARCH-PCB-B-IOHA.md:169-173`; `v2/docs/ARCH-PCB-B-IOHA.md:272`
 
 *Notes:* The supervisor part is CON-017's: D-13 accepts the STM32H743, the schematic text, value and order line name it since 458b2873 (S-30, closed), and its compatibility matrix and firmware build are S-41. FAILOVER-FABRIC.md's FAB-05: the fitted TCAN334DR is specified to 1 Mbps while the design text claims 5 Mbps, so FDCAN runs at or below 1 Mbps (a contract item, not a blocker of the fabric).
 
@@ -750,7 +750,7 @@ Prototype 1: in the core D-01 names. 19 record(s).
 
 *Bound to:* `v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f`, `v2/docs/parts/STM32H743-COMPATIBILITY.md@67335ea42747e22f`, `v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf@f6e620179006c8c4`, `v2/vendor/st/st-rm0433-rev8.pdf@9ba54135736a47a3`, `v2/vendor/st/st-es0392-rev15.pdf@effe23b2b79ec4ee`
 
-*Source (verified):* `owner ruling D-13`; `v2/ecad/tools/gen_sch_b.py:1145-1146`; `v2/docs/reviews/2026-09-26-foundation-progress-review.md`; `v2/docs/parts/STM32H743-COMPATIBILITY.md`; `v2/vendor/st/st-es0392-rev15.pdf section 2.24.2`
+*Source (verified):* `owner ruling D-13`; `v2/ecad/tools/gen_sch_b.py:1392-1393`; `v2/docs/reviews/2026-09-26-foundation-progress-review.md`; `v2/docs/parts/STM32H743-COMPATIBILITY.md`; `v2/vendor/st/st-es0392-rev15.pdf section 2.24.2`
 
 *Notes:* Created by the integrator from D-13. No rule of pcb_rules.yaml judges a symbol value against the part bought, so the reading is the record's own.
 
@@ -768,7 +768,7 @@ Prototype 1: in the core D-01 names. 19 record(s).
 
 *allocated to b, fw_ioctrl.*
 
-*Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md:209`; `v2/docs/ARCH-PCB-B-IOHA.md:260`; `v2/docs/V2-SPEC.md:42`
+*Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md:225`; `v2/docs/ARCH-PCB-B-IOHA.md:276`; `v2/docs/V2-SPEC.md:42`
 
 **ASM-002** (assumption). NEED-03's failure set is the loss of one compute module or one I/O supervisor (SC-39). Four shared elements are outside it and are single points of failure of the kit, knowingly unmitigated in the design as generated: +5V_DEV and +3V3_DEV (one converter each on A), the J_PANEL ribbon, the KSZ9897R switch, and the kit I2C bus with its one master.
 
@@ -894,7 +894,7 @@ Prototype 1: not in the core. 7 record(s).
 
 *allocated to c, fw_panel, sw; session choices SC-30.*
 
-*Source (verified):* `v2/docs/PANEL.md section 1`; `v2/docs/PANEL.md sections 5 to 9`; `v2/docs/V2-SPEC.md:53-62`; `v2/ecad/tools/gen_sch_c.py:190-197`
+*Source (verified):* `v2/docs/PANEL.md section 1`; `v2/docs/PANEL.md sections 5 to 9`; `v2/docs/V2-SPEC.md:53-62`; `v2/ecad/tools/gen_sch_c.py:225-232`
 
 *Notes:* The SOS and ZEROIZE cover part is still owed (V2-SPEC.md line 58). The EMCON and ZEROIZE toggles are accepted in the core through their own records under NEED-08 and NEED-10.
 
@@ -958,7 +958,7 @@ Prototype 1: not in the core. 7 record(s).
 
 *Bound to:* `v2/docs/feasibility/EMCON.md@421a291f7ce4cda2`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161`
 
-*Source (verified):* `v2/docs/PANEL.md:113`; `v2/docs/PANEL.md:158`
+*Source (verified):* `v2/docs/PANEL.md:135`; `v2/docs/PANEL.md:187`
 
 **REQ-013** (requirement). A flasher that fails fails to steady on: the panel controller holds the last written indicator state when the USB link drops.
 
@@ -966,7 +966,7 @@ Prototype 1: not in the core. 7 record(s).
 
 *allocated to fw_panel.*
 
-*Source (verified):* `v2/docs/PANEL.md:162`
+*Source (verified):* `v2/docs/PANEL.md:191`
 
 ### NEED-05
 
@@ -1032,7 +1032,7 @@ Prototype 1: in the core D-01 names. 15 record(s).
 
 *allocated to e, a, case; rulings D-16.*
 
-*Source (verified):* `v2/docs/V2-SPEC.md:21`; `v2/docs/OPERATING-ENVELOPE.md section 4 (input voltage ranges)`; `v2/docs/MESHSAT-709-geometry-appendix.md:2915`; `v2/docs/MESHSAT-709-geometry-appendix.md:2802 (16b)`; `v2/docs/TEST-PLAN.md:31`
+*Source (verified):* `v2/docs/V2-SPEC.md:21`; `v2/docs/OPERATING-ENVELOPE.md section 4 (input voltage ranges)`; `v2/docs/MESHSAT-709-geometry-appendix.md:2915`; `v2/docs/MESHSAT-709-geometry-appendix.md:2802 (16b)`; `v2/docs/TEST-PLAN.md:39`
 
 *Notes:* 32.55 places the front end on A22; V2-SPEC and 32.57 fold it into the dock strip E; allocation follows the later record. Board A's front end has a restart guard (U34) and bulk sized for its ripple since 458b2873; R-PWR (L-04) is the outside review route for it.
 
@@ -1094,7 +1094,7 @@ Prototype 1: in the core D-01 names. 15 record(s).
 
 *allocated to p, a.*
 
-*Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2771`; `v2/docs/MESHSAT-709-geometry-appendix.md:2775`; `v2/docs/V2-SPEC.md:23`
+*Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2771`; `v2/docs/MESHSAT-709-geometry-appendix.md:2775`; `v2/docs/V2-SPEC.md:23 (as read at eadbe571)`
 
 **CON-006** (constraint). The pack of D-06 (one shrink-wrapped 4S3P 18650 block), its board P, the heater mat and their mounting fit the east pocket (X +120 to +178, Y -120 to +120) under board B's underside at Z 47.9.
 
@@ -1110,7 +1110,7 @@ Prototype 1: in the core D-01 names. 15 record(s).
 
 *Bound to:* `v2/docs/CASE-MARGINS.md@275a3083db30a7bf`
 
-*Source (inferred):* `v2/docs/MESHSAT-709-geometry-appendix.md:3060-3062`; `v2/docs/ASSEMBLY.md:72`; `v2/docs/CASE-MARGINS.md section 3.2 (M4a to M6)`; `owner ruling D-06`
+*Source (inferred):* `v2/docs/MESHSAT-709-geometry-appendix.md:3060-3062`; `v2/docs/ASSEMBLY.md:81`; `v2/docs/CASE-MARGINS.md section 3.2 (M4a to M6)`; `owner ruling D-06`
 
 *Notes:* Adjudication A06 (box reading of B21's underside): the 4S3P 18650 block fits east, shrink-wrapped; no 4S4P fits either pocket with board P beside the cells; pack_4s.py's walled box does not fit (S-27); nothing fits the west pocket.
 
@@ -1122,7 +1122,7 @@ Prototype 1: in the core D-01 names. 15 record(s).
 
 *allocated to a, p, e, e5; rulings D-11; session choices SC-10, SC-35, SC-24.*
 
-*Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2337`; `v2/docs/MESHSAT-709-geometry-appendix.md:2465`; `v2/docs/MESHSAT-709-geometry-appendix.md:2846`; `v2/ecad/tools/pcb_energy_chain.yaml:48-49`; `v2/docs/TEST-PLAN.md:64-66`; `v2/docs/feasibility/POWER-THERMAL.md section 7.2`; `owner ruling D-11`; `session choice SC-35`
+*Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2337`; `v2/docs/MESHSAT-709-geometry-appendix.md:2465`; `v2/docs/MESHSAT-709-geometry-appendix.md:2846`; `v2/ecad/tools/pcb_energy_chain.yaml:48-49`; `v2/docs/TEST-PLAN.md:74-76`; `v2/docs/feasibility/POWER-THERMAL.md section 7.2`; `owner ruling D-11`; `session choice SC-35`
 
 *Notes:* D-11 (26 September 2026) bounds the owner's ruling of 4 September (no serialisation), made for the old 1S node, for the 4S pack of D-06. The outlet interlock is CON-019; FEA-004 holds this record while the power and thermal bounds are open. Since 27 September 2026 the declared values are pass lines (SC-35) and the chain's ability to meet them is FEA-004's (the layer audit: a feasibility bound is layer 4, the value a requirement states is layer 3). PI-001 is named because board A's pack-node copper at 18 A is part of this record's supply.
 
@@ -1166,7 +1166,7 @@ Prototype 1: in the core D-01 names. 15 record(s).
 
 *allocated to kit; rulings D-06, D-11.*
 
-*Source (verified):* `v2/docs/V2-SPEC.md:23`; `v2/docs/MESHSAT-709-geometry-appendix.md:2775`; `v2/docs/MESHSAT-709-geometry-appendix.md:2846`
+*Source (verified):* `v2/docs/V2-SPEC.md:23 (as read at eadbe571)`; `v2/docs/MESHSAT-709-geometry-appendix.md:2775`; `v2/docs/MESHSAT-709-geometry-appendix.md:2846`
 
 **CFL-014** (conflict). The documents describe the charger circuit 458b2873 replaced: PANEL.md section 10 and CONOPS section 4's Charging row say the cell-count strap selects 2S and the kit's loads sit on the pack side of the charge shunt, where the generator now sets 4S and puts the loads on VSYS; OPERATING-ENVELOPE.md section 3 says the pack lead does not mate and nothing of decision 40 is laid. What a hostless kit charges stays a bench question.
 
@@ -1260,7 +1260,7 @@ Prototype 1: not in the core. 7 record(s).
 
 *allocated to kit; rulings D-04; prototype 1 core, taken by the session under the owner's standing rule (SC-04): A constraint on what any document says about prototype 1, whatever is accepted; D-04 also rules that no conformity or EMC claim is made..*
 
-*Source (verified):* `v2/docs/OPERATING-ENVELOPE.md:144-147`; `v2/docs/V2-SPEC.md:8`; `v2/ecad/tools/claims_check.py:1-14`
+*Source (verified):* `v2/docs/OPERATING-ENVELOPE.md:258-261`; `v2/docs/V2-SPEC.md:8`; `v2/ecad/tools/claims_check.py:1-14`
 
 *Notes:* Split from W1's CAND-036: the claims half here, the construction half in the next record.
 
@@ -1270,7 +1270,7 @@ Prototype 1: not in the core. 7 record(s).
 
 *allocated to case, c, kit.*
 
-*Source (verified):* `v2/docs/OPERATING-ENVELOPE.md:144-147`; `v2/docs/TEST-PLAN.md:21-22`; `v2/docs/V2-SPEC.md:8`
+*Source (verified):* `v2/docs/OPERATING-ENVELOPE.md:258-261`; `v2/docs/TEST-PLAN.md:29-30`; `v2/docs/V2-SPEC.md:8`
 
 *Notes:* Split from W1's CAND-036.
 
@@ -1280,7 +1280,7 @@ Prototype 1: not in the core. 7 record(s).
 
 *allocated to kit, case; rulings D-02c.*
 
-*Source (verified):* `v2/docs/TEST-PLAN.md:16-17`; `v2/docs/OPERATING-ENVELOPE.md:154`; `v2/ecad/tools/pcb_envelope.yaml:80-85`; `owner ruling D-02c`
+*Source (verified):* `v2/docs/TEST-PLAN.md:24-25`; `v2/docs/OPERATING-ENVELOPE.md:268`; `v2/ecad/tools/pcb_envelope.yaml:134-139`; `owner ruling D-02c`
 
 *Notes:* D-02c sets the severities decision 34 left open. OPERATING-ENVELOPE.md (sections 4 and 8) and pcb_envelope.yaml (owner_rulings.severities) record them by name since 4ec785d8, read at eadbe571.
 
@@ -1300,7 +1300,7 @@ Prototype 1: not in the core. 7 record(s).
 
 *allocated to case, kit.*
 
-*Source (verified):* `v2/docs/TEST-PLAN.md:23`
+*Source (verified):* `v2/docs/TEST-PLAN.md:31`
 
 *Notes:* E8's 'vent' is read as Peli's pressure valve, which 32.53 keeps (challenger); W5 settles the wording.
 
@@ -1337,7 +1337,7 @@ Prototype 1: not in the core. 18 record(s).
 
 *allocated to kit, a, b, c, d, e, p; rulings D-02a, D-02b, D-02d, D-02e; session choices SC-18, SC-27, SC-49; waits on S-55.*
 
-*Source (verified):* `v2/docs/OPERATING-ENVELOPE.md:128-139`; `v2/ecad/tools/pcb_envelope.yaml:27-34`; `v2/ecad/tools/pcb_decisions.yaml:492-560 (decision 34)`; `v2/docs/CONOPS.md section 4c`
+*Source (verified):* `v2/docs/OPERATING-ENVELOPE.md:205-247`; `v2/ecad/tools/pcb_envelope.yaml:27-35`; `v2/ecad/tools/pcb_decisions.yaml:525-593 (decision 34)`; `v2/docs/CONOPS.md section 4c`
 
 *Notes:* Under D-02a this is the 'operate to specification inside the envelope' pass line; D-02b accepts the one-module consequence above +35 C (CON-012). D-02d and D-02e are stated in CONOPS and, since 4ec785d8, in the envelope (OPERATING-ENVELOPE.md sections 3, 4 and 8; S-25 closed). POWER-THERMAL.md section 9.3 records the +35 C row as a proposed control. Since 27 September 2026 the hot carve-out follows measured temperatures (SC-18) and the two parts rated only from 0 C are a warmed carve-out (SC-27); the '+35 C' this statement carried was a proposed control, not an established limit (POWER-THERMAL.md section 9.3).
 
@@ -1349,7 +1349,7 @@ Prototype 1: not in the core. 18 record(s).
 
 *allocated to p, procedure; session choices SC-19.*
 
-*Source (verified):* `v2/docs/OPERATING-ENVELOPE.md:141-142`; `v2/docs/MESHSAT-709-geometry-appendix.md:3058`; `v2/docs/CONOPS.md section 4`; `v2/vendor/battery/samsung-35e-orbtronic.pdf`; `session choice SC-19`
+*Source (verified):* `v2/docs/OPERATING-ENVELOPE.md:249-256`; `v2/docs/MESHSAT-709-geometry-appendix.md:3058`; `v2/docs/CONOPS.md section 4`; `v2/vendor/battery/samsung-35e-orbtronic.pdf`; `session choice SC-19`
 
 **REQ-074** (requirement). With its pack fitted, in transport or anywhere else, the kit is never left where its cells may pass their own storage limits: above +60 C, or below the lowest storage temperature of the governing cell specification (-20 C in Samsung INR18650-35E Ver. 1.1); for such exposure the pack comes out and is stored apart (REQ-025).
 
@@ -1367,7 +1367,7 @@ Prototype 1: not in the core. 18 record(s).
 
 *allocated to kit; rulings D-02a; session choices SC-03, SC-12.*
 
-*Source (verified):* `v2/docs/OPERATING-ENVELOPE.md:144`; `v2/docs/TEST-PLAN.md:20`; `v2/docs/TEST-PLAN.md section 6`
+*Source (verified):* `v2/docs/OPERATING-ENVELOPE.md:258`; `v2/docs/TEST-PLAN.md:28`; `v2/docs/TEST-PLAN.md section 6`
 
 **ASM-004** (assumption). The inside air rises about 10 K over ambient with one module and about 16 K with three loaded modules, lid open, fans on; lid closed the walls and lid shed about 1.5 to 2 W/K.
 
@@ -1375,7 +1375,7 @@ Prototype 1: not in the core. 18 record(s).
 
 *allocated to kit.*
 
-*Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2860`; `v2/docs/OPERATING-ENVELOPE.md:90-95`; `v2/ecad/tools/pcb_envelope.yaml:36-41`
+*Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2860`; `v2/docs/OPERATING-ENVELOPE.md:122-124`; `v2/ecad/tools/pcb_envelope.yaml:37-95`
 
 *Notes:* Superseded in substance on 27 September 2026: the inside-air rise per state is bounded, not measured (POWER-THERMAL.md section 9.1, OPERATING-ENVELOPE.md section 3 as restated by the layer-2 closer), and the kit sheds on measured temperatures (SC-18); the record is kept so that the measurement it asks for (TEST-PLAN E3, and the heat-balance test) still has a parent.
 
@@ -1385,7 +1385,7 @@ Prototype 1: not in the core. 18 record(s).
 
 *allocated to kit; rulings D-02c.*
 
-*Source (verified):* `v2/docs/OPERATING-ENVELOPE.md:149-150`; `v2/docs/OPERATING-ENVELOPE.md:258-261`; `v2/ecad/tools/pcb_envelope.yaml:86-90`; `v2/docs/TEST-PLAN.md:24`; `owner ruling D-02c`
+*Source (verified):* `v2/docs/OPERATING-ENVELOPE.md:263-264`; `v2/docs/OPERATING-ENVELOPE.md:382-385`; `v2/ecad/tools/pcb_envelope.yaml:140-144`; `v2/docs/TEST-PLAN.md:32`; `owner ruling D-02c`
 
 *Notes:* OPERATING-ENVELOPE section 4 proposed the same values and decision 34 left them OPEN; the envelope document and pcb_envelope.yaml record D-02c since 4ec785d8 (read at eadbe571). ISO-001 no longer waits on it (decision 34 judges it on ECSS-Q-ST-70-12C Table 13-3).
 
@@ -1395,7 +1395,7 @@ Prototype 1: not in the core. 18 record(s).
 
 *allocated to kit; rulings D-02c; session choices SC-45, SC-29; prototype 1 deferred, named by an owner ruling: D-02c leaves service life TBD for prototype 1..*
 
-*Source (verified):* `v2/docs/OPERATING-ENVELOPE.md:197-201`; `v2/ecad/tools/pcb_envelope.yaml:126`; `owner ruling D-02c`
+*Source (verified):* `v2/docs/OPERATING-ENVELOPE.md:315-325`; `v2/ecad/tools/pcb_envelope.yaml:197`; `owner ruling D-02c`
 
 **REQ-029** (requirement). Every surface and conductor a person can touch is designed to withstand IEC 61000-4-2 level 4 (8 kV contact, 15 kV air) with no upset, reset, lost bearer, lost secure-element key or damage.
 
@@ -1403,7 +1403,7 @@ Prototype 1: not in the core. 18 record(s).
 
 *allocated to a, b, c, d, e, p, case.*
 
-*Source (verified):* `v2/docs/OPERATING-ENVELOPE.md:217`; `v2/docs/OPERATING-ENVELOPE.md:230-233`; `v2/docs/TEST-PLAN.md:36`; `v2/ecad/tools/pcb_envelope.yaml:44-45`
+*Source (verified):* `v2/docs/OPERATING-ENVELOPE.md:341`; `v2/docs/OPERATING-ENVELOPE.md:354-357`; `v2/docs/TEST-PLAN.md:44`; `v2/ecad/tools/pcb_envelope.yaml:98-99`
 
 *Notes:* Board A's USB-C CC pins get an external array under D-17 (CON-018).
 
@@ -1413,7 +1413,7 @@ Prototype 1: not in the core. 18 record(s).
 
 *allocated to e; rulings D-16.*
 
-*Source (verified):* `v2/docs/OPERATING-ENVELOPE.md:218`; `v2/ecad/tools/pcb_envelope.yaml:46-47`
+*Source (verified):* `v2/docs/OPERATING-ENVELOPE.md:342`; `v2/ecad/tools/pcb_envelope.yaml:100-101`
 
 **SPD-004** (superseded). Electrical fast transient 2 kV on the power leads.
 
@@ -1423,7 +1423,7 @@ Prototype 1: not in the core. 18 record(s).
 
 *allocated to e, a.*
 
-*Source (verified):* `v2/docs/OPERATING-ENVELOPE.md:219`; `v2/ecad/tools/pcb_envelope.yaml:48-49`
+*Source (verified):* `v2/docs/OPERATING-ENVELOPE.md:343`; `v2/ecad/tools/pcb_envelope.yaml:102-103`
 
 **CON-009** (constraint). Every part's published operating range covers the envelope at its location: the ambient floor of -20 C, and inside air up to 51 C (the larger of 40 + 10 and 35 + 16).
 
@@ -1459,7 +1459,7 @@ Prototype 1: not in the core. 18 record(s).
 
 *Bound to:* `v2/ecad/tools/gen_sch_e.py@f275102965fafa10`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`
 
-*Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2896 (32.54)`; `v2/docs/OPERATING-ENVELOPE.md section 2`; `v2/docs/OPERATING-ENVELOPE.md section 3`; `v2/ecad/tools/gen_sch_e.py:563`; `v2/docs/V2-SPEC.md:86`
+*Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2896 (32.54)`; `v2/docs/OPERATING-ENVELOPE.md section 2`; `v2/docs/OPERATING-ENVELOPE.md section 3`; `v2/ecad/tools/gen_sch_e.py:660`; `v2/docs/V2-SPEC.md:86`
 
 *Notes:* Round 2 (challenger): round 1 treated the omission as the design and proposed recomputing the hot end from the BME688; withdrawn. Whether the SGP41 senses hydrogen at the relevant levels stays REQ-042's TBD.
 
@@ -1475,7 +1475,7 @@ Prototype 1: not in the core. 18 record(s).
 
 *Bound to:* `v2/ecad/tools/pcb_board_facts.yaml@07af4d0f2b166694`
 
-*Source (verified):* `v2/ecad/tools/pcb_board_facts.yaml:281-282`; `v2/ecad/tools/pcb_envelope.yaml:15-19`
+*Source (verified):* `v2/ecad/tools/pcb_board_facts.yaml:281-282 (as read at eadbe571)`; `v2/ecad/tools/pcb_envelope.yaml:15-19 (as read at eadbe571)`
 
 **REQ-051** (requirement). TEST-PLAN's +55 C operation and +71 C storage (E3) and -33 C storage (E4) are qualification margins over the adopted envelope (-20 to +40 C in use, -20 to +45 C storage), each judged on two pass lines: inside the envelope the kit is to operate to specification; at the margin it is to show no damage and recover. E5's humidity cycle is judged the same way (SC-03, REQ-026). The margins are the kit's: E3-S and E4-S run on the kit less its pack and E3-O and E5 with the cells kept out of the heat, each a stated test deviation, since the stored kit keeps its pack (SC-19); the exposures with the pack fitted run at the cells' own limits; and the kit with its own pack does not meet the +55 C, the +60 C humid and the storage levels (CFL-017, finding BAT-F19).
 
@@ -1483,7 +1483,7 @@ Prototype 1: not in the core. 18 record(s).
 
 *allocated to kit, procedure; rulings D-02a; session choices SC-03, SC-12, SC-19.*
 
-*Source (verified):* `owner ruling D-02a`; `v2/docs/TEST-PLAN.md:18-19`; `v2/docs/OPERATING-ENVELOPE.md section 8`; `v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 5`; `v2/docs/review-packets/battery/THERMAL-COORDINATION.md sections 9 and 9a`; `v2/docs/TEST-PLAN.md section 6`
+*Source (verified):* `owner ruling D-02a`; `v2/docs/TEST-PLAN.md:26-27`; `v2/docs/OPERATING-ENVELOPE.md section 8`; `v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 5`; `v2/docs/review-packets/battery/THERMAL-COORDINATION.md sections 9 and 9a`; `v2/docs/TEST-PLAN.md section 6`
 
 *Notes:* Created by the integrator from D-02a; E5 joined by SC-03; the pack's margins by SC-09, withdrawn in round 8 for SC-12; the levels the kit cannot take with its pack are CFL-017.
 
@@ -1501,7 +1501,7 @@ Prototype 1: not in the core. 18 record(s).
 
 *Bound to:* `v2/docs/ARCH-PCB-B-IOHA.md@08d44b37fa8e2717`, `v2/ecad/tools/gen_sch_b.py@af6e5821e21b70ef`
 
-*Source (verified):* `owner ruling D-02b`; `v2/docs/OPERATING-ENVELOPE.md section 8 (D-02b)`; `v2/docs/OPERATING-ENVELOPE.md:171-172`; `v2/docs/MESHSAT-709-geometry-appendix.md:2860`; `v2/docs/CONOPS.md section 4c`
+*Source (verified):* `owner ruling D-02b`; `v2/docs/OPERATING-ENVELOPE.md section 8 (D-02b)`; `v2/docs/OPERATING-ENVELOPE.md:285-287`; `v2/docs/MESHSAT-709-geometry-appendix.md:2860`; `v2/docs/CONOPS.md section 4c`
 
 *Notes:* Created by the integrator from D-02b. Its accepted consequences are CON-012 and CON-013. Since 27 September 2026 the reduced mode is two modules and its heat stage one; the heat stage keeps the owner's example set, which is not restated to fit the generated board (Review A of layer 2, finding B5): as board B is generated no single slot carries it, so this record reads FAIL until BANK-R1 is in board B's generator (SC-34), and whether the enclosure lets the set run at the hot edge is FEA-004's. Since the second pass of the layer-3 closer (Review B, finding B1) the heat stage has the hot stop past it (REQ-077), which leaves no module running: whether it acts inside the envelope is FEA-004's, OPEN until the heat-balance test (at the independent bound's worst corner it acts from +33.2 C lid closed, on appendix 32.53's conductance not below +40.3 C; CONOPS section 4c), and where it acts at +40 C this record reads FAIL there on any supply, recorded and not waived.
 
@@ -1521,7 +1521,7 @@ Prototype 1: not in the core. 18 record(s).
 
 *allocated to sw, fw_panel, e; rulings D-02b; session choices SC-17.*
 
-*Source (verified):* `v2/docs/OPERATING-ENVELOPE.md section 8 (D-02b)`; `v2/docs/OPERATING-ENVELOPE.md:171-172`; `v2/ecad/tools/pcb_envelope.yaml:34`; `v2/docs/MESHSAT-709-geometry-appendix.md:2860`
+*Source (verified):* `v2/docs/OPERATING-ENVELOPE.md section 8 (D-02b)`; `v2/docs/OPERATING-ENVELOPE.md:171-172 (as read at eadbe571)`; `v2/ecad/tools/pcb_envelope.yaml:34 (as read at eadbe571)`; `v2/docs/MESHSAT-709-geometry-appendix.md:2860`
 
 *Notes:* D-02b (25 September 2026) rules closed-lid operation in a reduced mode and makes the lid sense an engineering item; the lid sense is fitted since faf8c981 (the reed on board E's TAMPER_IO, REQ-036), so the trigger source exists; the one definition is the session's (S-24). Resolved on 27 September 2026 by SC-17; it reads NOT_JUDGED until OPERATING-ENVELOPE.md and pcb_envelope.yaml are read again with that definition.
 
@@ -1583,7 +1583,7 @@ Prototype 1: in the core D-01 names. 9 record(s).
 
 *Bound to:* `v2/docs/feasibility/EMCON.md@421a291f7ce4cda2`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f`
 
-*Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2787 (item 3)`; `v2/docs/PANEL.md section 6`; `v2/docs/TEST-PLAN.md:46`; `v2/docs/feasibility/EMCON.md`; `v2/ecad/tools/pcb_rules_coverage.yaml:636-644`
+*Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2787 (item 3)`; `v2/docs/PANEL.md section 6`; `v2/docs/TEST-PLAN.md:54`; `v2/docs/feasibility/EMCON.md`; `v2/ecad/tools/pcb_rules_coverage.yaml:776-952`
 
 *Notes:* The bench cannot use the kit's own SDR: EMCON removes its supply (EMCON.md section 6). FEA-002 holds this record while EMCON's per-transmitter inhibits are not shown. The bench line is SC-38's (27 September 2026): EMCON.md section 6's 'no emission above the instrument's noise floor' made a fixed line in the published reference bandwidths, 10 dB under the published receiver line, with the ports of the receivers D-05 keeps listening judged against that receiver line itself. S-02 stays a verification dependency, not a limit.
 
@@ -1647,7 +1647,7 @@ Prototype 1: in the core D-01 names. 9 record(s).
 
 *allocated to sw, fw_panel, b.*
 
-*Source (verified):* `v2/docs/PANEL.md section 9`; `v2/docs/ARCH-PCB-B-IOHA.md:263`; `v2/docs/TEST-PLAN.md:46`
+*Source (verified):* `v2/docs/PANEL.md section 9`; `v2/docs/ARCH-PCB-B-IOHA.md:279`; `v2/docs/TEST-PLAN.md:54`
 
 *Notes:* ARCH-PCB-B-IOHA A14 names an external receiver or spectrum analyser since 4ec785d8 (line 263 at eadbe571), because EMCON switches the LimeSDR off (v2/ecad/tools/gen_sch_b.py:975). TEST-PLAN.md:46's functional check said "measured with the SDR", which EMCON as ruled cannot meet (EMCON.md section 6); since the S-07 correction of 26 September 2026 it names a receiver or spectrum analyser outside the kit (CFL-016, resolved).
 
@@ -1683,7 +1683,7 @@ Prototype 1: in the core D-01 names. 9 record(s).
 
 *Bound to:* `v2/docs/feasibility/EMCON.md@421a291f7ce4cda2`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f`
 
-*Source (verified):* `v2/ecad/tools/gen_sch_b.py:716-741`; `v2/ecad/tools/gen_sch_b.py:449-456`; `v2/docs/feasibility/EMCON.md section 4`; `v2/docs/MESHSAT-709-geometry-appendix.md:2930`; `owner ruling D-05`
+*Source (verified):* `v2/ecad/tools/gen_sch_b.py:813-880`; `v2/ecad/tools/gen_sch_b.py:511-531`; `v2/docs/feasibility/EMCON.md section 4`; `v2/docs/MESHSAT-709-geometry-appendix.md:2930`; `owner ruling D-05`
 
 *Notes:* The acceptance names "in every state of the gates' own supplies" since 26 September 2026, when CFL-004's unpowered state moved here. FEA-002 holds this record.
 
@@ -1842,7 +1842,7 @@ Prototype 1: not in the core. 2 record(s).
 
 *allocated to c, fw_panel, sw, a; session choices SC-45.*
 
-*Source (verified):* `v2/docs/PANEL.md:156`; `v2/docs/PANEL.md:158`; `v2/docs/MESHSAT-709-geometry-appendix.md:2866`; `v2/docs/MESHSAT-709-geometry-appendix.md:2926`
+*Source (verified):* `v2/docs/PANEL.md:185`; `v2/docs/PANEL.md:187`; `v2/docs/MESHSAT-709-geometry-appendix.md:2866`; `v2/docs/MESHSAT-709-geometry-appendix.md:2926`
 
 **REQ-034** (requirement). NVG mode sets the panel to its lowest PWM step (2 %), the backlight to 5 % and shows red and amber indicators only.
 
@@ -1850,7 +1850,7 @@ Prototype 1: not in the core. 2 record(s).
 
 *allocated to c, fw_panel, sw; session choices SC-45, SC-48; prototype 1 deferred, named by an owner ruling: D-01 names the NVG claim among the deferred functions..*
 
-*Source (verified):* `v2/docs/PANEL.md:155`; `v2/docs/MESHSAT-709-geometry-appendix.md:2802 (16c)`; `v2/vendor/standards/mil-std-3009-nvis-2001-02-02.md`
+*Source (verified):* `v2/docs/PANEL.md:184`; `v2/docs/MESHSAT-709-geometry-appendix.md:2802 (16c)`; `v2/vendor/standards/mil-std-3009-nvis-2001-02-02.md`
 
 *Notes:* The compatibility target is restored on 27 September 2026 (second pass, Review B finding B3): the first pass's 'no claim' removed the only statement that the panel is to be compatible, which D-01 does not do (it defers the claim; every ruled function stays designed and fitted). Whether red and amber indicators at the 2 % step and the monitor at 5 % pass the examination is not assessed: board C's LEDs and light guide filters and the monitor are judged against it when their parts are reviewed (layer 6), and a design change it forces is recorded there.
 
@@ -1881,7 +1881,7 @@ Prototype 1: in the core D-01 names. 8 record(s).
 
 *allocated to c, b, fw_panel, sw; rulings D-03; session choices SC-08, SC-30; waits on S-35; prototype 1 core, named by an owner ruling: D-01 names ZEROIZE of the secure element as core; D-03 defines what it is..*
 
-*Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2789 (item 5)`; `v2/docs/V2-SPEC.md:33-34`; `v2/docs/PANEL.md section 6`; `v2/docs/PANEL.md section 9`; `v2/ecad/tools/pcb_decisions.yaml:207-255 (decision 30)`; `v2/docs/TEST-PLAN.md:46`; `v2/docs/feasibility/ZEROIZE.md section 3.4`; `owner ruling D-03`; `v2/ecad/tools/gen_sch_b.py:1046`
+*Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2789 (item 5)`; `v2/docs/V2-SPEC.md:33-34`; `v2/docs/PANEL.md section 6`; `v2/docs/PANEL.md section 9`; `v2/ecad/tools/pcb_decisions.yaml:207-255 (decision 30)`; `v2/docs/TEST-PLAN.md:54`; `v2/docs/feasibility/ZEROIZE.md section 3.4`; `owner ruling D-03`; `v2/ecad/tools/gen_sch_b.py:1264`
 
 *Notes:* Pass lines (6) and (7) are the session's under SC-08, from the worst case of ZEROIZE.md section 3.4 and not the nominal: the timed phase allows at most 6 GenKey commands, CryptoAuthLib is bounded to one bus retry and a 200 ms polling cap at 100 kHz, every bus operation ends within 10 ms, and the phase ends at a 1.5 s deadline whatever the secure element or the bus does, so the modules are told to drop their keys before the cut. Enrolment uses one LUKS keyslot per drive, derived by ECDH with both key-encryption keys, and no recovery keyslot (ZEROIZE.md section 3.3). Residual R7 (ZEROIZE.md section 8), for the D-09 security-review packet: the three STM32H743 I/O supervisors share SDA and SCL with the secure element, so "only the panel controller commands the part" (P8) holds for them only through firmware rule Z-C3 under the owner's D-13 floor of software-verified boot; a supervisor whose firmware breaks it can hold the bus, so the wipe ends ZEROIZE INCOMPLETE with both keys intact (the slots are still cut at 3.0 s), or run ECDH on slots 0 and 1 (ReqAuth is clear) and so obtain every drive's unlock secret, or answer in the secure element's place so that the panel records a verified wipe that did not happen. Z-C3 is CON-020. D-03 needs no board change: the hardware path from the switch to the secure element exists through the panel controller and the kit I2C bus, and since faf8c981 the toggle drives the panel's local ZEROIZE_SW (v2/ecad/tools/gen_sch_c.py:175-178). FEA-001 holds this record.
 
@@ -1899,7 +1899,7 @@ Prototype 1: in the core D-01 names. 8 record(s).
 
 *Bound to:* `v2/docs/feasibility/ZEROIZE.md@e7a7b9d05a0560ed`
 
-*Source (verified):* `owner ruling D-03`; `v2/docs/feasibility/ZEROIZE.md`; `v2/vendor/microchip/microchip-atecc608b-datasheet.pdf (summary sheet: 'A complete document is available under NDA')`; `v2/ecad/tools/gen_sch_b.py:1046`; `v2/docs/MESHSAT-709-geometry-appendix.md:2789`
+*Source (verified):* `owner ruling D-03`; `v2/docs/feasibility/ZEROIZE.md`; `v2/vendor/microchip/microchip-atecc608b-datasheet.pdf (summary sheet: 'A complete document is available under NDA')`; `v2/ecad/tools/gen_sch_b.py:1264`; `v2/docs/MESHSAT-709-geometry-appendix.md:2789`
 
 *Notes:* Created by the integrator from D-03. v2/vendor/PARTS.md:118-119 records the JLC certification row for this part as WRONG_MODEL (C2836813); that is the part-identity question, not this assumption's. FEA-001 holds it. Retyped on 27 September 2026 by the layer-3 closer so that TBD marks only unsettled limits: the pass line (Z-EXP-A and Z-EXP-B pass on the fitted part) is settled, and what its failure would change stays stated: until the bench records exist the mechanism is supported, not shown, on the fitted part; board B's layout entry is held for the U8 site only (FEA-001), and the panel firmware's wipe for Z-EXP-C; if the bench fails, board B's U8 site changes to the SLB 9673 (ZEROIZE.md section 6).
 
@@ -1909,7 +1909,7 @@ Prototype 1: in the core D-01 names. 8 record(s).
 
 *allocated to fw_ioctrl, b; rulings D-03, D-13; session choices SC-08; waits on S-40; prototype 1 core, named by an owner ruling: A condition of ZEROIZE of the secure element, which D-01 names as core: the supervisors share the secure element's SDA and SCL (ZEROIZE.md section 8, R7)..*
 
-*Source (verified):* `v2/docs/feasibility/ZEROIZE.md section 8 (R7)`; `v2/docs/feasibility/ZEROIZE.md section 9 (item 8)`; `v2/ecad/tools/gen_sch_b.py:1140`; `v2/docs/ARCH-PCB-B-IOHA.md:96`
+*Source (verified):* `v2/docs/feasibility/ZEROIZE.md section 8 (R7)`; `v2/docs/feasibility/ZEROIZE.md section 9 (item 8)`; `v2/ecad/tools/gen_sch_b.py:1381`; `v2/docs/ARCH-PCB-B-IOHA.md:102`
 
 *Notes:* Created from ZEROIZE.md's firmware rule Z-C3 (26 September 2026). The supervisors sit on I2C1 (PB6 and PB7, pins 92 and 93) with the secure element at 0x60 on the same bus (committed netlist v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net at eadbe571: U41, U51 and U61 pins 92 and 93 on SCL and SDA, U8 pins 5 and 6). PANEL.md section 7's bus table lists them since the S-07 correction of 26 September 2026 (CFL-016, resolved), and it records an open finding that bears on this record: board B's TPS23861 PoE controller (U5) answers the broadcast address 0x30 whatever its A3 pin says (TI SLUSBX9I, sections 7.3.13 and 8.3.3.1), and 0x30 is supervisor 1's status address; the broadcast address is fixed in the part, so it is the supervisors' address that has to move, in their firmware.
 
@@ -1927,7 +1927,7 @@ Prototype 1: in the core D-01 names. 8 record(s).
 
 *Bound to:* `v2/ecad/tools/gen_sch_e.py@f275102965fafa10`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`
 
-*Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2790 (item 6)`; `v2/docs/MESHSAT-709-geometry-appendix.md:2848 (E6: the tamper switch input)`; `v2/docs/V2-SPEC.md:34`; `v2/docs/TEST-PLAN.md:46`; `owner ruling D-03`; `owner ruling D-02b`
+*Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2790 (item 6)`; `v2/docs/MESHSAT-709-geometry-appendix.md:2848 (E6: the tamper switch input)`; `v2/docs/V2-SPEC.md:34`; `v2/docs/TEST-PLAN.md:54`; `owner ruling D-03`; `owner ruling D-02b`
 
 **REQ-037** (requirement). Key fill is a signed procedure to the secure element over the console on the sealed Glenair 233-370 port (D-12), with scheduled rotation and an audit log; there is no separate fill port.
 
@@ -1971,7 +1971,7 @@ Prototype 1: in the core D-01 names. 8 record(s).
 
 *allocated to b, sw, fw_ioctrl, fw_panel, fw_sensor; rulings D-13; waits on S-40; prototype 1 deferred, taken by the session under the owner's standing rule (SC-04): D-01 names only ZEROIZE of the secure element under NEED-10; D-13 sets the design floor, which is built into prototype 1 and reported NOT_YET_TESTED until it runs..*
 
-*Source (verified):* `v2/docs/RED-TEAM-2026-09-09.md:363 (S2)`; `v2/ecad/tools/gen_sch_b.py:812-816 (J_FLASH, J_RPIBOOT, J_DBG per slot)`; `owner ruling D-13`
+*Source (verified):* `v2/docs/RED-TEAM-2026-09-09.md:363 (S2)`; `v2/ecad/tools/gen_sch_b.py:968-972 (J_FLASH, J_RPIBOOT, J_DBG per slot)`; `owner ruling D-13`
 
 *Notes:* The H753 against H743 component mismatch is CON-017's: it closes only when the schematic text and the BOM are aligned to the H743 and regeneration parity is shown again (D-13, plan condition 1), never by this record.
 
@@ -1993,7 +1993,7 @@ Prototype 1: not in the core. 3 record(s).
 
 *allocated to b, sw.*
 
-*Source (verified):* `v2/docs/V2-SPEC.md:35`; `v2/docs/V2-SPEC.md:50`; `v2/docs/MESHSAT-709-geometry-appendix.md:2839`; `v2/docs/TEST-PLAN.md:37`
+*Source (verified):* `v2/docs/V2-SPEC.md:35`; `v2/docs/V2-SPEC.md:50`; `v2/docs/MESHSAT-709-geometry-appendix.md:2839`; `v2/docs/TEST-PLAN.md:45`
 
 **REQ-040** (requirement). A second time source (DCF77, 77.5 kHz) and a holdover clock keep time when GNSS is lost.
 
@@ -2001,7 +2001,7 @@ Prototype 1: not in the core. 3 record(s).
 
 *allocated to b, e, sw; session choices SC-44; prototype 1 deferred, named by an owner ruling: D-01 names DCF77 among the deferred functions..*
 
-*Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2795-2797 (items 11 and 13)`; `v2/docs/PANEL.md:144`; `v2/docs/V2-SPEC.md:35`; `v2/ecad/tools/gen_sch_e.py:581`
+*Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2795-2797 (items 11 and 13)`; `v2/docs/PANEL.md:170`; `v2/docs/V2-SPEC.md:35`; `v2/ecad/tools/gen_sch_e.py:678`
 
 *Notes:* Round 2 (challenger): round 1 adopted the generator's routing silently; the conflict was recorded (CFL-013) and is resolved by V2-SPEC's correction 8 (68bc9e8f), S-17 closed. The holdover target is SC-44's (27 September 2026). DCF77 is receivable only within its transmitter's range (INFERRED), which bounds where the second time source helps and not the holdover.
 
@@ -2027,7 +2027,7 @@ Prototype 1: not in the core. 3 record(s).
 
 *Bound to:* `v2/docs/V2-SPEC.md@a02ea1b6801f8916`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`
 
-*Source (verified):* `v2/docs/V2-SPEC.md:35`; `v2/ecad/tools/gen_sch_e.py:581`
+*Source (verified):* `v2/docs/V2-SPEC.md:35`; `v2/ecad/tools/gen_sch_e.py:678`
 
 ### NEED-12
 
@@ -2078,7 +2078,7 @@ Prototype 1: not in the core. 4 record(s).
 
 *allocated to b, e, fw_sensor; session choices SC-45; waits on D-18.*
 
-*Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2865`; `v2/docs/OPERATING-ENVELOPE.md:81-86`
+*Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2865`; `v2/docs/OPERATING-ENVELOPE.md:110-115`
 
 ### NEED-13
 
@@ -2169,7 +2169,7 @@ Prototype 1: in the core D-01 names. 12 record(s).
 
 *Bound to:* `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`, `v2/ecad/tools/gen_sch_p.py@91ccbb922c427d43`, `v2/docs/CURRENT-EVIDENCE.md@6e7936497971f484`, `v2/docs/review-packets/battery/REVIEW-REQUEST.md@91a257430cbeb53a`
 
-*Source (verified):* `v2/docs/TEST-PLAN.md:48-77`; `v2/ecad/tools/pcb_pack_protection.yaml:17-40`; `owner ruling D-15`; `v2/docs/review-packets/battery/PROTECTION-ARCHITECTURE.md`; `v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md`; `v2/ecad/tools/gen_sch_p.py:355-430`
+*Source (verified):* `v2/docs/TEST-PLAN.md:58-94`; `v2/ecad/tools/pcb_pack_protection.yaml:17-40`; `owner ruling D-15`; `v2/docs/review-packets/battery/PROTECTION-ARCHITECTURE.md`; `v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md`; `v2/ecad/tools/gen_sch_p.py:355-430`
 
 *Notes:* The acceptance names the qualified review since 26 September 2026 (review of that day, section 2: a documented protection architecture and a qualified human review of the actual schematic and BOM before pack PCB release). FEA-005 holds this record.
 
@@ -2209,7 +2209,7 @@ Prototype 1: in the core D-01 names. 12 record(s).
 
 *allocated to p, a, e, fw_panel; rulings D-02d.*
 
-*Source (verified):* `v2/docs/OPERATING-ENVELOPE.md:55-56`; `v2/docs/TEST-PLAN.md:69-70`; `v2/docs/PANEL.md section 10`; `v2/ecad/tools/pcb_pack_protection.yaml:142-157 (CHARGE_ and DISCHARGE_TEMPERATURE_WINDOW)`; `v2/docs/review-packets/battery/THERMAL-COORDINATION.md section 4 (the ladder)`
+*Source (verified):* `v2/docs/OPERATING-ENVELOPE.md:74-75`; `v2/docs/TEST-PLAN.md:79-80`; `v2/docs/PANEL.md section 10`; `v2/ecad/tools/pcb_pack_protection.yaml:142-157 (CHARGE_ and DISCHARGE_TEMPERATURE_WINDOW)`; `v2/docs/review-packets/battery/THERMAL-COORDINATION.md section 4 (the ladder)`
 
 *Notes:* Round 2: the charger BQ25731 has no thermistor input (SLUSE66A pin table, adjudication A02), so the charge window is the gauge's alone. A start from a pack cold-soaked below the discharge window is out of scope for the prototype (D-02d). Since 27 September 2026 (Review B of layer 3, finding B1): these windows act on a charge or a discharge, and the gauge acts only through the pack's FETs; an idle pack on an input, which neither charges nor discharges, is kept inside +60 C against the kit's own heat by REQ-077 (the hot stop), with the pack's permanent protections behind it (THERMAL-COORDINATION.md section 4).
 
@@ -2257,7 +2257,7 @@ Prototype 1: in the core D-01 names. 12 record(s).
 
 *Bound to:* `v2/ecad/tools/pcb_pack_protection.yaml@1cd670d6c7685645`, `v2/ecad/tools/pcb_energy_chain.yaml@b566a7a041aeb165`, `v2/ecad/tools/pcb_board_facts.yaml@07af4d0f2b166694`, `v2/cad/pack_4s.py@cfa8fed3affab289`
 
-*Source (verified):* `v2/docs/V2-SPEC.md:20`; `v2/docs/MESHSAT-709-geometry-appendix.md:3062`; `v2/ecad/tools/pcb_pack_protection.yaml:17-27`; `v2/ecad/tools/pcb_energy_chain.yaml:46`; `v2/ecad/tools/gen_sch_p.py:6`
+*Source (verified):* `v2/docs/V2-SPEC.md:20`; `v2/docs/MESHSAT-709-geometry-appendix.md:3062`; `v2/ecad/tools/pcb_pack_protection.yaml:17-27 (as read at eadbe571)`; `v2/ecad/tools/pcb_energy_chain.yaml:46 (as read at eadbe571)`; `v2/ecad/tools/gen_sch_p.py:6`
 
 *Notes:* Round 2 (challenger): 3P is the protection table's declared worst case (pcb_pack_protection.yaml:17-18). Board P's generator header names the 4S3P block since faf8c981 (v2/ecad/tools/gen_sch_p.py:6 at eadbe571); pcb_pack_protection.yaml and pcb_energy_chain.yaml still say 'about 200 Wh', and S-27 brings them into line. On 27 September 2026 the layer-3 closer brought the three pack documents to D-06 (checker inputs: BAT-001's and PWR-003's readings of pack_protection.py and energy_chain.py read CONFIG_CHANGED until they are re-taken; the prospective fault range is kept, and it brackets the 4S3P case).
 
@@ -2309,7 +2309,7 @@ Prototype 1: in the core D-01 names. 12 record(s).
 
 *Bound to:* `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`, `v2/docs/ASSEMBLY.md@3ba4f3fd0f794f10`, `v2/docs/PANEL.md@4b03b1c89cf68cef`, `v2/ecad/tools/check_contracts.py@308fdefb90335da4`
 
-*Source (verified):* `v2/ecad/tools/gen_sch_e.py:218`; `v2/docs/ASSEMBLY.md section 4`; `v2/docs/PANEL.md section 10`
+*Source (verified):* `v2/ecad/tools/gen_sch_e.py:264`; `v2/docs/ASSEMBLY.md section 4`; `v2/docs/PANEL.md section 10`
 
 **CON-016** (constraint). Every one-way surge clamp has its cathode on the positive conductor it protects, and every rectifier its cathode toward the node it feeds, drawn on a symbol that carries a cathode pin, so no clamp conducts forward at its rail's normal polarity.
 
@@ -2343,7 +2343,7 @@ Prototype 1: in the core D-01 names. 12 record(s).
 
 *Bound to:* `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161`, `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`
 
-*Source (verified):* `v2/ecad/tools/gen_sch_e.py:303`; `v2/ecad/tools/gen_sch_p.py:344`; `v2/ecad/tools/gen_sch_d.py:261-263`; `v2/ecad/tools/gen_sch_c.py:258-264`
+*Source (verified):* `v2/ecad/tools/gen_sch_e.py:351`; `v2/ecad/tools/gen_sch_p.py:344`; `v2/ecad/tools/gen_sch_d.py:300-302`; `v2/ecad/tools/gen_sch_c.py:325-331`
 
 *Notes:* Created by the integrator from adjudication A03. Its parent is NEED-13 because two of the clamps sit across the energy store (E D3, P D1). TRN-001 and SCH-002 cannot see a cathode today, so no rule judges it.
 
@@ -2378,7 +2378,7 @@ Prototype 1: in the core D-01 names. 4 record(s).
 
 *allocated to a, b, c, d, e, p.*
 
-*Source (verified):* `v2/ecad/tools/pcb_rules.yaml (TST-001)`; `v2/docs/ARCH-PCB-B-IOHA.md:31`; `v2/docs/PANEL.md:27`; `v2/docs/MESHSAT-709-geometry-appendix.md:3064 (gauge golden image over SMBus)`
+*Source (verified):* `v2/ecad/tools/pcb_rules.yaml (TST-001)`; `v2/docs/ARCH-PCB-B-IOHA.md:31`; `v2/docs/PANEL.md:49`; `v2/docs/MESHSAT-709-geometry-appendix.md:3064 (gauge golden image over SMBus)`
 
 *Notes:* 27 September 2026 (handover layer 9): the per-board test access list (W5) this acceptance names is not in the tree. Each v2/docs/layout-constraints/<board>.md lists what the committed netlist carries (test points, programming interfaces, boot and arming jumpers) and PCB-BRING-UP.md gives the rail order; that is an input to the list, not the list.
 
@@ -2402,7 +2402,7 @@ Prototype 1: in the core D-01 names. 4 record(s).
 
 *allocated to procedure, e, e5, a; rulings D-14; waits on S-22.*
 
-*Source (verified):* `v2/docs/ASSEMBLY.md:148`; `v2/docs/ASSEMBLY.md:162`; `owner ruling D-14`
+*Source (verified):* `v2/docs/ASSEMBLY.md:159`; `v2/docs/ASSEMBLY.md:173`; `owner ruling D-14`
 
 ### NEED-15
 
@@ -2513,7 +2513,7 @@ Prototype 1: not in the core. 8 record(s).
 
 *Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290`, `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@f3c1ad6153002976`, `v2/docs/PANEL.md@4b03b1c89cf68cef`, `v2/docs/CONOPS.md@eb0eda7cacfe7156`, `v2/docs/V2-SPEC.md@a02ea1b6801f8916`, `v2/docs/OPERATING-ENVELOPE.md@9f16f5b7d634764a`, `v2/docs/TEST-PLAN.md@a0de0b12ff06ba4e`, `v2/ecad/tools/pcb_decisions.yaml@b5f7162443d5ad91`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@adcc3c6736c90e9f`, `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161`, `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`
 
-*Source (verified):* `v2/docs/PANEL.md section 6`; `v2/docs/CONOPS.md section 4b`; `v2/docs/V2-SPEC.md:76`; `v2/docs/OPERATING-ENVELOPE.md section 4`; `v2/docs/TEST-PLAN.md:46`; `v2/ecad/tools/pcb_decisions.yaml:863-915`
+*Source (verified):* `v2/docs/PANEL.md section 6`; `v2/docs/CONOPS.md section 4b`; `v2/docs/V2-SPEC.md:76 (as read at eadbe571)`; `v2/docs/OPERATING-ENVELOPE.md section 4`; `v2/docs/TEST-PLAN.md:46 (as read at eadbe571)`; `v2/ecad/tools/pcb_decisions.yaml:863-915 (as read at eadbe571)`
 
 *Notes:* Created on 26 September 2026 when the registry was re-read at main: the documents were corrected in 4ec785d8 and 68bc9e8f against the generators of 82dd1e4d, and the circuit corrections merged after them. The charger's share is CFL-014 and the SMBus lead's CFL-015. A document merge is configuration control, not proof of the design (review of 26 September 2026, checkpoint item 1). Read FAIL at eadbe571 and at the round 7b integration; resolved by the S-07 correction, which also made true the sentences of the same documents that described replaced circuits outside the statement's list (PANEL.md sections 2, 3 and 5; CONOPS M2; ASSEMBLY.md section 4, build steps 1 and 6 and sections 8 and 9; OPERATING-ENVELOPE.md section 2's protection-board row; TEST-PLAN.md section 5's closing paragraph). It found one open item for its owner: every TPS23861 answers the broadcast address 0x30, which is supervisor 1's status address (PANEL.md section 7).
 
@@ -2531,7 +2531,7 @@ Prototype 1: not in the core. 8 record(s).
 
 *Bound to:* `v2/docs/TEST-PLAN.md@a0de0b12ff06ba4e`
 
-*Source (verified):* `v2/docs/TEST-PLAN.md:18-19`; `v2/docs/OPERATING-ENVELOPE.md:128`; `v2/docs/OPERATING-ENVELOPE.md:141`
+*Source (verified):* `v2/docs/TEST-PLAN.md:18-19 (as read at eadbe571)`; `v2/docs/OPERATING-ENVELOPE.md:205`; `v2/docs/OPERATING-ENVELOPE.md:249`
 
 *Notes:* Resolved for E3 and E4 by D-02a (REQ-051), and for E5 by SC-03 (REQ-026).
 
@@ -2541,7 +2541,7 @@ Prototype 1: not in the core. 8 record(s).
 
 *allocated to procedure, p; session choices SC-12, SC-19.*
 
-*Source (verified):* `v2/docs/TEST-PLAN.md:18-19`; `v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 2`; `v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 5`; `v2/docs/review-packets/battery/THERMAL-COORDINATION.md sections 9 and 9a`; `v2/docs/OPERATING-ENVELOPE.md section 8`
+*Source (verified):* `v2/docs/TEST-PLAN.md:18-19 (as read at eadbe571)`; `v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 2`; `v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 5`; `v2/docs/review-packets/battery/THERMAL-COORDINATION.md sections 9 and 9a`; `v2/docs/OPERATING-ENVELOPE.md section 8`
 
 *Notes:* Created on 26 September 2026 from the battery review packet. Deferred with the qualification tests (SC-04); the pack's safety at its limits is REQ-044 and REQ-046, in the core. Restated on 27 September 2026 (round 8, stream r8bat, after its independent check) as the product-level conflict: it stays open when S-43 closes. Layer 3 closes with this record open (Review B, finding m12): it is a qualification finding, and a qualification margin is not an error (the owner's condition of 25 September 2026); its effect is REQ-051's text and TEST-PLAN's deviations, not a board or an interface; and none of its three exits is the session's at desk: a measured pack arrangement needs hardware, cells rated beyond +60 C reopen D-06, and D-02a's scope is the owner's to read.
 
@@ -2559,7 +2559,7 @@ Prototype 1: not in the core. 8 record(s).
 
 *Bound to:* `v2/docs/TEST-PLAN.md@a0de0b12ff06ba4e`
 
-*Source (verified):* `v2/docs/TEST-PLAN.md:20`; `v2/docs/TEST-PLAN.md:23`; `v2/docs/MESHSAT-709-geometry-appendix.md:2864`
+*Source (verified):* `v2/docs/TEST-PLAN.md:20 (as read at eadbe571)`; `v2/docs/TEST-PLAN.md:23 (as read at eadbe571)`; `v2/docs/MESHSAT-709-geometry-appendix.md:2864`
 
 *Notes:* W5's TEST-PLAN revision (MESHSAT-1357) drops the vent from E5 and names the Peli valve in E8 (its section 0, item A.1); it is not on main: TEST-PLAN.md is unchanged at eadbe571, so the record stays open. The S-07 correction of 26 September 2026 changed TEST-PLAN.md lines 7 and 46 and section 5's closing paragraph only; E5 and E8 still read as before.
 
@@ -2577,7 +2577,7 @@ Prototype 1: not in the core. 8 record(s).
 
 *Bound to:* `v2/docs/TEST-PLAN.md@a0de0b12ff06ba4e`
 
-*Source (verified):* `v2/docs/TEST-PLAN.md:8`; `v2/docs/MESHSAT-709-geometry-appendix.md:2860`; `v2/docs/OPERATING-ENVELOPE.md:171`
+*Source (verified):* `v2/docs/TEST-PLAN.md:8 (as read at eadbe571)`; `v2/docs/MESHSAT-709-geometry-appendix.md:2860`; `v2/docs/OPERATING-ENVELOPE.md:171 (as read at eadbe571)`
 
 *Notes:* D-02b adds a closed-lid state and thermal test to TEST-PLAN; the requirement follows this record.
 
@@ -2662,7 +2662,7 @@ Prototype 1: not in the core. 8 record(s).
 
 *allocated to b, case.*
 
-*Source (verified):* `v2/docs/V2-SPEC.md:41`; `v2/docs/V2-SPEC.md:76`; `v2/docs/ARCH-PCB-B-IOHA.md:210`; `v2/docs/MESHSAT-709-geometry-appendix.md:2818`
+*Source (verified):* `v2/docs/V2-SPEC.md:41 (as read at eadbe571)`; `v2/docs/V2-SPEC.md:76 (as read at eadbe571)`; `v2/docs/ARCH-PCB-B-IOHA.md:226`; `v2/docs/MESHSAT-709-geometry-appendix.md:2818`
 
 **CFL-010** (conflict). Dual SIM is 'eSIM plus nano-SIM' in V2-SPEC and 32.50 item 12; the B generator fits two nano-SIM holders with an eSIM build option (Quectel HD v1.1 Figure 19's 0 ohm links at the module).
 
@@ -2690,7 +2690,7 @@ Prototype 1: not in the core. 8 record(s).
 
 *Bound to:* `v2/docs/V2-SPEC.md@a02ea1b6801f8916`
 
-*Source (verified):* `v2/docs/V2-SPEC.md:41`; `v2/docs/MESHSAT-709-geometry-appendix.md:2796`; `v2/ecad/tools/gen_sch_b.py:672-697`
+*Source (verified):* `v2/docs/V2-SPEC.md:41 (as read at eadbe571)`; `v2/docs/MESHSAT-709-geometry-appendix.md:2796`; `v2/ecad/tools/gen_sch_b.py:672-697 (as read at eadbe571)`
 
 *Notes:* Restated on 27 September 2026 (the registry writer's second pass, Review B finding B6): the record is the conflict between V2-SPEC's description and the generator's fit. The two items its acceptance also carried are not contradictions between sources: the TVS array is board B's constraint CON-025 (layer 8, read FAIL until it is drawn) and the order code is on the components layer's list (S-13, layer 6), so layer 3 is not held on a later board's work (the owner's prompt of 27 September 2026, section 1). Nothing is lowered: the TVS array stays required.
 
@@ -2712,7 +2712,7 @@ Prototype 1: not in the core. 3 record(s).
 
 *allocated to kit, b, d; prototype 1 core, taken by the session under the owner's standing rule (SC-04): A core transmitter that damages or blinds a core receiver fails the core (CONOPS section 2a); the transmitters D-01 defers are REQ-068..*
 
-*Source (verified):* `v2/docs/TEST-PLAN.md:37`
+*Source (verified):* `v2/docs/TEST-PLAN.md:45`
 
 *Notes:* Split in the round-3 fix-up: the transmitters D-01 leaves outside the core are REQ-068.
 
@@ -2722,7 +2722,7 @@ Prototype 1: not in the core. 3 record(s).
 
 *allocated to kit, a, b; prototype 1 deferred, taken by the session under the owner's standing rule (SC-04): D-01 defers HF and does not name the SDR, Zigbee, Thread or the modules' own radios; M6 for them is reported NOT_YET_TESTED until it runs..*
 
-*Source (verified):* `v2/docs/TEST-PLAN.md:37`
+*Source (verified):* `v2/docs/TEST-PLAN.md:45`
 
 *Notes:* Split from REQ-057 in the round-3 fix-up.
 
@@ -2732,7 +2732,7 @@ Prototype 1: not in the core. 3 record(s).
 
 *allocated to case, b, d; session choices SC-45.*
 
-*Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2788 (item 4)`; `v2/docs/V2-SPEC.md:51`; `v2/docs/OPERATING-ENVELOPE.md:81-83`; `v2/vendor/limesdr/myriadrf-limesdr-mini-2-0-page-20260925.html`
+*Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2788 (item 4)`; `v2/docs/V2-SPEC.md:51`; `v2/docs/OPERATING-ENVELOPE.md:87-87`; `v2/vendor/limesdr/myriadrf-limesdr-mini-2-0-page-20260925.html`
 
 ### NEED-18
 
@@ -2853,7 +2853,7 @@ Prototype 1: in the core by SC-01, taken by the session under the owner's standi
 
 *allocated to c, fw_panel, sw; rulings D-10; session choices SC-01; waits on S-32.*
 
-*Source (verified):* `v2/docs/PANEL.md:30`; `v2/docs/PANEL.md:78`; `v2/docs/PANEL.md:162`; `v2/docs/PANEL.md section 9`; `v2/docs/PANEL.md:168`; `v2/docs/V2-SPEC.md:58`; `owner ruling D-10`
+*Source (verified):* `v2/docs/PANEL.md:52`; `v2/docs/PANEL.md:100`; `v2/docs/PANEL.md:191`; `v2/docs/PANEL.md section 9`; `v2/docs/PANEL.md:197`; `v2/docs/V2-SPEC.md:58`; `owner ruling D-10`
 
 ## Rules to requirements
 
@@ -3240,7 +3240,7 @@ Every item that has left the open list, and what closed it: an owner ruling, a s
 | CON-021 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/EMCON.md section 0 read at eadbe571: as drawn no indication of the EMCON lines is independent of firmware (the TX lamp's supply exists only while the panel controller drives PANEL_PWM); board C's committed netlist v2/ecad/pcb-c-display-c8/out/pcb-c-display.net carries no EMCON lamp; v2/docs/feasibility/EMCON.md re-read at the records filing of 26 September 2026 (428c697c): o... |
 | REQ-077 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/ecad/tools/gen_sch_e.py read at e3aedb25 (27 September 2026, c23): board E's spare dock contact BLK_SPARE (J_BLK pin 12) reaches only the test point TP7, and the sensor controller U10, the pack gauge's only SMBus host (J_SMB), has its GPIO19 (pin 30) not connected, so its only link to anything that removes the kit's load is its USB (R29, R30, J_BLK pins 9 and 10) to board B's bank 3 hub and... |
 | CFL-006 | core | ADVISORY | SCHEMATIC | DESK_REVIEW | v2/ecad/tools/pcb_pack_protection.yaml, v2/ecad/tools/pcb_energy_chain.yaml and v2/ecad/tools/pcb_board_facts.yaml read after the layer-3 closer's correction (27 September 2026): each names the one 4S3P block of Samsung INR18650-35E, about 145 Wh, and the protection table carries one parallel count, 3, as D-06 rules; the enclosure does not: v2/cad/pack_4s.py still draws the wrapped 4S4P block (... |
-| CFL-017 | deferred | ADVISORY | SCHEMATIC | - | its own sources disagree: v2/docs/TEST-PLAN.md:18-19; v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 2; v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 5; v2/docs/review-packets/battery/THERMAL-COORDINATION.md sections 9 and 9a; v2/docs/OPERATING-ENVELOPE.md section 8 |
+| CFL-017 | deferred | ADVISORY | SCHEMATIC | - | its own sources disagree: v2/docs/TEST-PLAN.md:18-19 (as read at eadbe571); v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 2; v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md section 5; v2/docs/review-packets/battery/THERMAL-COORDINATION.md sections 9 and 9a; v2/docs/OPERATING-ENVELOPE.md section 8 |
 | REQ-052 | deferred | MUST_JUSTIFY | SCHEMATIC | DESK_REVIEW | v2/docs/ARCH-PCB-B-IOHA.md sections 4 and 15 and v2/ecad/tools/gen_sch_b.py (the bank ring f = s % 3 + 1 and the hub ports) read at e3aedb25 (27 September 2026, layer-3 closer): Iridium and the panel controller, which carries the SOS path, hang on bank 1, hosted by slot 1 or slot 2; GNSS on bank 2 (slot 2 or 3); the APRS board on bank 3 (slot 3 or 1); the LoRa module on slot 3's SPI. Slot 3 alo... |
 | CON-016 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | orientation holds on every committed netlist at eadbe571 (pad 1 the cathode, adjudication A03): board E's D1, D2, D3 and D4 and board P's D1 on their positive conductors and board E's D10 now bidirectional, board D's D1 on +5V_D8, board C's D19 to D21 toward VGH and from VGL, boards A's and B's clamps on their rails (v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net, v2/ecad/pcb-p-pack-p2/out/pcb-p-pa... |
 
