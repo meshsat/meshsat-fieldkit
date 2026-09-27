@@ -3,7 +3,8 @@
 **Engineering handover, first and partial edition.** Written 27 September 2026 from the repository at commit
 `e3aedb25` (`e3aedb25c849dbda931888b27093ac6c444621cb`, 27 September 2026 01:17 CEST), under tracker issue
 MESHSAT-1357. Every path below is a path in this repository at that commit, written from the repository root. When
-you read this page inside a handover snapshot (`v2/release/handover/<version>/`), the snapshot keeps every file under
+you read this page inside a handover snapshot (the `<version>/` folder of `v2/release/handover/<version>.zip`; H1 was
+also committed unzipped, H1.1 onward only as the ZIP with its manifest beside it), the snapshot keeps every file under
 the same path and its manifest names the commit, each file's revision and each file's sha256.
 
 **Prototype framing.** The MeshSat field kit V2 is an unbuilt prototype design. No V2 board has been fabricated,

@@ -25,6 +25,8 @@ WHAT IT WRITES, under --out (default v2/release/handover in the repository worki
   <version>.zip              the same directory, deterministic: sorted entries, fixed timestamps (1980-01-01), fixed
                              permissions (0644, 0755 where git records an executable), deflate level 9
   <version>.zip.sha256       the ZIP's sha256 in sha256sum's format
+  With --zip-only (since H1.1) the <version>/ directory is not written; <version>.MANIFEST.tsv, a byte copy of the
+  ZIP's MANIFEST.tsv, is written beside the ZIP instead, so the repository keeps one copy of a snapshot, not two.
 Every file of the commit is accounted for exactly once: in MANIFEST.tsv, EXCLUDED.tsv or REFERENCED-SOURCES.tsv. A file
 no rule classifies refuses the build (exit 2), because an unaccounted file is exactly a handover gap.
 
@@ -40,7 +42,7 @@ layer status is the hand-written LAYER-STATUS.md's. It does not export schematic
 handover_exports.py) and it never writes into the repository outside --out.
 
 Usage:
-  handover_pack.py build --commit <rev> --version <name> [--out <dir>] [--repo <path>]
+  handover_pack.py build --commit <rev> --version <name> [--out <dir>] [--repo <path>] [--zip-only]
   handover_pack.py plan --commit <rev> [--repo <path>] [--spec-file <working-copy pack.yaml>]
   handover_pack.py verify <snapshot dir or .zip>
 exit 0 on success; 2 when a file is unclassified or the spec is invalid; 3 when the ZIP is over the spec's size cap
@@ -405,7 +407,7 @@ def plan(git, commit, spec_text=None):
     return {"tree": tree, "spec": spec, "boards": boards, "rules": rules, "got": got, "loose": loose}
 
 
-def build(git, commit, version, out_root):
+def build(git, commit, version, out_root, zip_only=False):
     if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}", version or ""):
         raise SpecError("--version must be a plain name (letters, digits, . _ -), not %r" % version)
     pl = plan(git, commit)
@@ -415,7 +417,7 @@ def build(git, commit, version, out_root):
                         (len(pl["loose"]), commit[:12], SPEC_PATH, ", ".join(pl["loose"][:8])))
     snap = os.path.join(out_root, version)
     zpath = snap + ".zip"
-    for p in (snap, zpath, zpath + ".sha256"):
+    for p in (snap, zpath, zpath + ".sha256", snap + ".MANIFEST.tsv"):
         if os.path.exists(p): raise SpecError("%s exists: a snapshot is immutable, pick a new --version" % p)
 
     files = {}          # snapshot path -> (bytes, blob sha, mode, group, role)
@@ -566,13 +568,17 @@ def build(git, commit, version, out_root):
         man.append((p, sha, hashlib.sha256(data).hexdigest(), len(data), "%s %s" % (grp, label) if label != grp else grp, role))
     files["MANIFEST.tsv"] = (tsv(man), "-", "100644", "meta", "generated")
 
-    os.makedirs(snap)
-    for p in sorted(files):
-        data, _, mode, _, _ = files[p]
-        dst = os.path.join(snap, *p.split("/"))
-        os.makedirs(os.path.dirname(dst), exist_ok=True)
-        with open(dst, "wb") as fh: fh.write(data)
-        os.chmod(dst, 0o755 if mode == "100755" else 0o644)
+    if zip_only:
+        os.makedirs(out_root, exist_ok=True)
+        with open(snap + ".MANIFEST.tsv", "wb") as fh: fh.write(files["MANIFEST.tsv"][0])
+    else:
+        os.makedirs(snap)
+        for p in sorted(files):
+            data, _, mode, _, _ = files[p]
+            dst = os.path.join(snap, *p.split("/"))
+            os.makedirs(os.path.dirname(dst), exist_ok=True)
+            with open(dst, "wb") as fh: fh.write(data)
+            os.chmod(dst, 0o755 if mode == "100755" else 0o644)
     with zipfile.ZipFile(zpath, "w") as z:
         for p in sorted(files):
             data, _, mode, _, _ = files[p]
@@ -584,7 +590,8 @@ def build(git, commit, version, out_root):
     zsha = hashlib.sha256(open(zpath, "rb").read()).hexdigest()
     with open(zpath + ".sha256", "w", encoding="utf-8") as fh: fh.write("%s  %s\n" % (zsha, os.path.basename(zpath)))
     zbytes = os.path.getsize(zpath)
-    return {"snapshot": snap, "zip": zpath, "zip_sha256": zsha, "zip_bytes": zbytes, "files": len(files),
+    return {"snapshot": None if zip_only else snap, "manifest": snap + ".MANIFEST.tsv" if zip_only else
+            os.path.join(snap, "MANIFEST.tsv"), "zip": zpath, "zip_sha256": zsha, "zip_bytes": zbytes, "files": len(files),
             "included": counts["include"], "excluded": counts["exclude"], "referenced": counts["reference"],
             "commit": commit, "cap": int(spec.get("max_zip_bytes") or 0)}
 
@@ -606,6 +613,9 @@ def verify(target):
             if len(top) != 1: return ["the zip holds %d top-level folders, not one" % len(top)]
             root = top.pop()
             content = {n.split("/", 1)[1]: z.read(n) for n in names if not n.endswith("/")}
+        side_man = target[:-len(".zip")] + ".MANIFEST.tsv"
+        if os.path.exists(side_man) and open(side_man, "rb").read() != content.get("MANIFEST.tsv"):
+            probs.append("%s differs from the MANIFEST.tsv inside the zip" % os.path.basename(side_man))
     else:
         root = os.path.basename(os.path.normpath(target)); content = {}
         for dp, dn, fn in os.walk(target):
@@ -631,6 +641,8 @@ def main(argv):
     sub = ap.add_subparsers(dest="cmd", required=True)
     b = sub.add_parser("build"); b.add_argument("--commit", required=True); b.add_argument("--version", required=True)
     b.add_argument("--out", default=None); b.add_argument("--repo", default=None)
+    b.add_argument("--zip-only", action="store_true",
+                   help="write the ZIP, its .sha256 and <version>.MANIFEST.tsv, not the expanded directory")
     p = sub.add_parser("plan"); p.add_argument("--commit", required=True); p.add_argument("--repo", default=None)
     p.add_argument("--spec-file", default=None)
     v = sub.add_parser("verify"); v.add_argument("target")
@@ -657,7 +669,7 @@ def main(argv):
             print("handover_pack: plan of %s: %d unclassified" % (commit[:12], len(pl["loose"])))
             return 2 if pl["loose"] else 0
         out = a.out or os.path.join(repo, "v2", "release", "handover")
-        r = build(git, commit, a.version, out)
+        r = build(git, commit, a.version, out, zip_only=a.zip_only)
     except SpecError as e:
         print("handover_pack: REFUSED: %s" % e); return 2
     finally:
@@ -665,7 +677,7 @@ def main(argv):
     print("handover_pack: %s from %s: %d files (%d included, %d excluded, %d referenced), zip %d bytes sha256 %s" %
           (a.version, r["commit"][:12], r["files"], r["included"], r["excluded"], r["referenced"], r["zip_bytes"],
            r["zip_sha256"]))
-    print("handover_pack: wrote %s and %s" % (r["snapshot"], r["zip"]))
+    print("handover_pack: wrote %s and %s" % (r["snapshot"] or r["manifest"], r["zip"]))
     if r["cap"] and r["zip_bytes"] > r["cap"]:
         print("handover_pack: OVER THE CAP: the zip is %d bytes, the spec allows %d" % (r["zip_bytes"], r["cap"]))
         return 3

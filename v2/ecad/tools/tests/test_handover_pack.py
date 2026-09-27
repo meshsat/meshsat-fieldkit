@@ -277,3 +277,21 @@ def t_source_names_the_public_repository_the_commits_the_pages_cite_and_the_cand
     assert "public unknown" in text, "a clone with no public ref must say unknown, not guess"
     assert "second\n" in text or "second " in text, "the tracker trailer should be dropped, the subject kept"
     assert "v2/docs/handover/candidates/c1.patch: %d bytes, sha256 %s" % (len(patch), hashlib.sha256(patch).hexdigest()) in text
+
+
+def t_zip_only_writes_the_zip_and_its_manifest_and_verify_reads_both():
+    """--zip-only (H1.1): the expanded directory is not written, the ZIP is the same bytes as a full build's, the
+    manifest beside it is the ZIP's own, and verify refuses a sidecar manifest that differs from the ZIP's."""
+    d, c = _repo()
+    hp = _hp()
+    full = _build(d, c)
+    out = _tmp("hpack-zo-")
+    g = hp.Git(d)
+    try: r = hp.build(g, c, "V1", out, zip_only=True)
+    finally: g.close()
+    assert r["snapshot"] is None and not os.path.exists(os.path.join(out, "V1")), "the directory was written"
+    assert open(r["zip"], "rb").read() == open(full["zip"], "rb").read(), "zip-only changed the ZIP's bytes"
+    assert open(r["manifest"], "rb").read() == open(os.path.join(full["snapshot"], "MANIFEST.tsv"), "rb").read()
+    assert hp.verify(r["zip"]) == [], hp.verify(r["zip"])
+    with open(r["manifest"], "ab") as fh: fh.write(b"extra\\tline\\n")
+    assert any("differs from the MANIFEST.tsv" in x for x in hp.verify(r["zip"])), "a changed sidecar manifest passed"
