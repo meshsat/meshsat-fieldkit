@@ -565,7 +565,14 @@ be no evidence. Replays: declaring exactly what the second pass named on D and E
 named on A and P, does not pass and names AMP_HPVSS, TRK_LDO33, VMON and CELL1; declaring every net the
 reading names closes all six, and taking away any one named supply's or tap's declaration (PD_VTX, PD_VAUX,
 VMON, AMP_HPVSS, AMP_CPP, AMP_CPN, TRK_LDO33, CELL1 to CELL3) reopens exactly that net. The session decisions
-TSN-D1 to TSN-D29 are filed as v2/docs/records/ts-net/ts-net-decisions.md.
+TSN-D1 to TSN-D29 are filed as v2/docs/records/ts-net/ts-net-decisions.md. BOARDS D AND P (stream w4dp, 27
+September 2026): board D's D2 carries its order code and its maker's sheet (LCSC C81598, SEMTECH ELECTRONICS
+1N4148W, v2/vendor/power/st-semtech-1n4148w-c81598.pdf) and RLY_K is a declared node at 6.5 V (+5V_TX plus
+the sheet's 1.25 V at 150 mA); board P declares BAT_F, VCC_F, SEC_VDD, SW and SCP_HTR as rails and PBI, CELL1
+to CELL3, FUSE_G and FUSE_GQ as nodes, each from the BQ4050, BQ7720700, SCF9550 and its own parts' figures,
+with no net, pin or part moved. PWR-001 read in scratch on the regenerated netlists: board D PASS of 7 checks
+(0 undecided), board P PASS of 11 (10 declared rails, 7 declared nodes, 0 undecided). Board E's FAN1_SW and
+FAN2_SW are declared by stream w4ae in the same integration, which closes S-76.
 
 ### PWR-002  sequencing and inrush
 
@@ -2559,7 +2566,18 @@ September 2026, the tools stream's recording round: pack_protection.py reads boa
 (phase_artefacts.netlist) where it named pcb-p-pack-p2 in its own source, and records it by sha and content
 with the protection table and the cell specification by sha (it recorded the netlist relative to the
 repository root, which verdict.write hashed only when run from there). Reading unchanged: FAIL, 1 of 45
-checks (no protection independent of software).
+checks (no protection independent of software). 27 September 2026 (stream w4dp, S-45 closed): THE TABLE
+DESCRIBES THE DRAWN CIRCUIT. Decision 40 was ruled on 26 September 2026 and board P carries its floor since
+faf8c981 (the BQ7720700 second level, the SCF9550 chemical fuse driven by its COUT and the gauge's FUSE
+through JP1 and Q3, the under-voltage hold Q5 on the discharge FET, the PTC element RT1 with PTCEN on BAT),
+and pcb_pack_protection.yaml now declares it present with its parts, each on the netlist, while
+tests/test_pack_protection.py holds the declaration to the netlist's connections both ways. The five
+functions are also judged on the parts that act without firmware (`level: hardware` rows) against the same
+cell limits, which keeps the requirement's words literal: over-voltage (U2, 4.325 V against 4.20 V with a
+0.175 V allowance) and short circuit (F1, 150 A against 240 A) pass; under-voltage (U2, 2.25 V against 2.30
+V: W4DP-F1), over-temperature (U2, 70 C and no cold trip against -10 to 60 C: BAT-F16) and over-current (F1,
+33.75 A against 24 A at 3P: W4DP-F2) fail. Reading on board P as regenerated, in scratch: FAIL, 3 of 63
+checks, each a hardware row naming its open finding.
 
 ### BAT-002  the energy chain is bounded end to end
 

@@ -1,7 +1,7 @@
 (export (version "E")
   (design
-    (source "/root/w3de/final/v2/ecad/pcb-d-aprs-d9/pcb-d-aprs.kicad_sch")
-    (date "2026-09-27T10:33:24+0000")
+    (source "/root/w4dp/cand/v2/ecad/pcb-d-aprs-d9/pcb-d-aprs.kicad_sch")
+    (date "2026-09-27T14:28:03+0000")
     (tool "Eeschema 9.0.9-9.0.9~ubuntu24.04.1")
     (sheet (number "1") (name "/") (tstamps "/")
       (title_block
@@ -1120,10 +1120,12 @@
       (value "1N4148W coil flyback")
       (footprint "Diode_SMD:D_SOD-123")
       (fields
+        (field (name "LCSC") "C81598")
         (field (name "Footprint") "Diode_SMD:D_SOD-123")
         (field (name "Datasheet"))
         (field (name "Description")))
       (libsource (lib "Diode") (part "1N4148W") (description "75V 0.15A Fast Switching Diode, SOD-123"))
+      (property (name "LCSC") (value "C81598"))
       (property (name "Sheetname") (value ""))
       (property (name "Sheetfile") (value "pcb-d-aprs.kicad_sch"))
       (property (name "ki_keywords") (value "diode"))

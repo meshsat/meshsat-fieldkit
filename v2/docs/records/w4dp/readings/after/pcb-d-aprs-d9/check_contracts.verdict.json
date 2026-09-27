@@ -1,0 +1,118 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "check_contracts.py",
+  "files": {
+   "boardtable.py": "41bd92e61f12c374",
+   "check_contracts.py": "5e14f456a0791c35",
+   "intent.py": "f1ac033e0f3c10f1",
+   "kisch.py": "3e28374d15be25e0",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "sch_prov.py": "a98e5a71ac74ccee",
+   "tx_inhibit.py": "67cba7a55beebc1d",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "86f82710cd723e3c",
+  "unresolved": []
+ },
+ "counts": {
+  "boards_without_intent": 0,
+  "fail": 0,
+  "missing_boards": 0,
+  "pass": 99,
+  "rails_unsplit": 0,
+  "undecided": 0,
+  "unjudged": 0
+ },
+ "denominator": 99,
+ "evidence": [],
+ "inputs": {
+  "boards": "A,B,C,D,E,P",
+  "intent_a": {
+   "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
+   "sha256_16": "92dd3b1cda9046b8"
+  },
+  "intent_b": {
+   "path": "pcb-b-compute-b19/out/pcb-b-compute-intent.json",
+   "sha256_16": "162fcb9b95f680a7"
+  },
+  "intent_c": {
+   "path": "pcb-c-display-c8/out/pcb-c-display-intent.json",
+   "sha256_16": "854436c729322993"
+  },
+  "intent_d": {
+   "path": "pcb-d-aprs-d9/out/pcb-d-aprs-intent.json",
+   "sha256_16": "8d9f3b2256521b0d"
+  },
+  "intent_e": {
+   "path": "pcb-e1-dock-e7/out/pcb-e1-dock-intent.json",
+   "sha256_16": "5913e38b20333d35"
+  },
+  "intent_p": {
+   "path": "pcb-p-pack-p2/out/pcb-p-pack-intent.json",
+   "sha256_16": "42407cb81a79fecb"
+  },
+  "netlist_a": {
+   "content16": "2c5c1d5a388cc95f",
+   "path": "pcb-a-power-a23/out/pcb-a-power.net",
+   "sha256_16": "da05dc02bc1e612f"
+  },
+  "netlist_b": {
+   "content16": "39d83d25efcd75a6",
+   "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
+   "sha256_16": "8b78c59754a6a0c7"
+  },
+  "netlist_c": {
+   "content16": "96c2678f4a3303b8",
+   "path": "pcb-c-display-c8/out/pcb-c-display.net",
+   "sha256_16": "11eabc2dddca5161"
+  },
+  "netlist_d": {
+   "content16": "be4194ed867c8406",
+   "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
+   "sha256_16": "7a2c0ac2190b141a"
+  },
+  "netlist_e": {
+   "content16": "b8d237f0b8d759f5",
+   "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
+   "sha256_16": "d6137f50059e5cbc"
+  },
+  "netlist_p": {
+   "content16": "efe60479293f0004",
+   "path": "pcb-p-pack-p2/out/pcb-p-pack.net",
+   "sha256_16": "e0889e59db3a9e63"
+  }
+ },
+ "missing_input": null,
+ "note": "",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "INT-001": "6c054dd67edd4099"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "INT-001"
+ ],
+ "runtime": {
+  "python": "3.12.3"
+ },
+ "tool": "check_contracts",
+ "tools": {
+  "git_head": "9490b0952437",
+  "tools_tree_sha": "43bf3db652f99a8a"
+ },
+ "ts": "2026-09-27T14:47:02Z",
+ "verdict": "PASS",
+ "version": "9490b0952437",
+ "writer": {
+  "file": "check_contracts.py",
+  "sha16": "5e14f456a0791c35"
+ }
+}

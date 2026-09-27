@@ -201,6 +201,7 @@ diodes/diodes-smbj-ds19002.pdf   # https://www.diodes.com/assets/Datasheets/ds19
 nexperia/nexperia-pesd12vl1ba.pdf   # https://assets.nexperia.com/documents/data-sheet/PESD12VL1BA.pdf
 power/aos-ao3400a-n-mosfet.pdf   # https://www.aosmd.com/res/datasheets/AO3400A.pdf
 power/jscj-2n7002-c8545.pdf   # https://datasheet.lcsc.com/datasheet/pdf/a141b8bd86b14475955ac8c4d3eea0a8.pdf?productCode=C8545 (LCSC's copy of the JSCJ sheet attached to the fitted code)
+power/st-semtech-1n4148w-c81598.pdf   # https://datasheet.lcsc.com/datasheet/pdf/8abd7fc00ebe41ffb03ad1383c10753b.pdf?productCode=C81598 (LCSC's copy of the SEMTECH ELECTRONICS LTD. 1N4148W sheet, Rev 05, 20/09/2016, attached to the fitted code; fetched 27 September 2026, sha256 54de8e40)
 power/littelfuse-smbj-series-tvs.pdf   # https://datasheet.lcsc.com/datasheet/pdf/4ab84a227fae39f9eac85241b8264ead.pdf?productCode=C83270 (LCSC's copy of Littelfuse's SMBJ sheet; the same bytes for C151256; littelfuse.com answered HTTP 403)
 power/mdd-smbj-series-tvs.pdf   # https://datasheet.lcsc.com/datasheet/pdf/2fdb55289569ebfc0bc21eab3853afe6.pdf?productCode=C113974 (LCSC's copy of the MDD sheet; the same bytes for C364296)
 power/panjit-ss2020fl-series.pdf   # https://www.panjit.com.tw/upload/datasheet/SS2020FL_SERIES.pdf

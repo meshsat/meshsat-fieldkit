@@ -1,0 +1,9 @@
+{
+ "what": "the schematic this ERC report was taken on, by content (erc_gate.py --run)",
+ "report": "pcb-p-pack-erc.json",
+ "report_sha256_16": "bcb8bb3c43b443f9",
+ "schematic": "pcb-p-pack.kicad_sch",
+ "schematic_sha256": "a58d0eecc7abe7684e52cfa0a727186e",
+ "kicad_version": "9.0.9",
+ "taken": "2026-09-27T15:28:04+00:00"
+}

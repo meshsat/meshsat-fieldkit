@@ -1,0 +1,89 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "energy_chain.py",
+  "files": {
+   "energy_chain.py": "2eb665d0e50ee781",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "4fd063ddc5515429",
+  "unresolved": []
+ },
+ "counts": {
+  "checks": 98,
+  "citations_unjudged": 0,
+  "coordination_findings": 0,
+  "fail": 0,
+  "selection_findings": 0,
+  "stages": 12
+ },
+ "denominator": 98,
+ "evidence": [],
+ "inputs": {
+  "board_file_e5": {
+   "path": "pcb-e5-block/pcb-e5-block.kicad_pcb",
+   "sha256_16": "686b29a734c55b9a"
+  },
+  "chain": {
+   "path": "tools/pcb_energy_chain.yaml",
+   "sha256_16": "a09ca0293afd1f7c"
+  },
+  "derating": {
+   "path": "tools/pcb_fuse_derating.yaml",
+   "sha256_16": "5d1f81e183dcad49"
+  },
+  "netlist_a": {
+   "content16": "2c5c1d5a388cc95f",
+   "path": "pcb-a-power-a23/out/pcb-a-power.net",
+   "sha256_16": "da05dc02bc1e612f"
+  },
+  "netlist_b": {
+   "content16": "39d83d25efcd75a6",
+   "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
+   "sha256_16": "8b78c59754a6a0c7"
+  },
+  "netlist_e": {
+   "content16": "b8d237f0b8d759f5",
+   "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
+   "sha256_16": "d6137f50059e5cbc"
+  },
+  "netlist_p": {
+   "content16": "efe60479293f0004",
+   "path": "pcb-p-pack-p2/out/pcb-p-pack.net",
+   "sha256_16": "e0889e59db3a9e63"
+  }
+ },
+ "missing_input": null,
+ "note": "THE CHAIN END TO END, which is BAT-002's question; a selection finding against ECSS 6.17 belongs to the stage that has it and is in energy_chain_<letter>, rule PWR-003. Every rating against its own source document, every protective element against the board's netlist, and the four coordination tests (the element is below what it protects, above the path's peak, able to interrupt what is available, and followed by the stage it protects)",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "BAT-002": "fbf06a73485c1f88"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "BAT-002"
+ ],
+ "runtime": {
+  "python": "3.12.3"
+ },
+ "tool": "energy_chain",
+ "tools": {
+  "git_head": "9490b0952437",
+  "tools_tree_sha": "43bf3db652f99a8a"
+ },
+ "ts": "2026-09-27T14:47:12Z",
+ "verdict": "PASS",
+ "version": "9490b0952437",
+ "writer": {
+  "file": "energy_chain.py",
+  "sha16": "2eb665d0e50ee781"
+ }
+}

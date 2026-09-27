@@ -1,0 +1,10 @@
+w4dp readings: main 91894cd7 (before) against the final candidate (after), schematic-phase re-take driver with --verdict-dir on the KiCad box
+== pcb-d-aprs-d9
+  intent_rails       INCONCLUSIVE (0 failing) of 7      -> PASS (0 failing) of 7
+== pcb-p-pack-p2
+  edge_length        INCONCLUSIVE of 44                 -> INCONCLUSIVE of 40
+  intent_rails       FAIL (6 failing) of 11             -> PASS (0 failing) of 11
+  pack_protection    FAIL (1 failing) of 45             -> FAIL (3 failing) of 63
+  power_sequence     PASS of 5                          -> PASS of 10
+every other reading of the two boards is unchanged
+pass 2 (27 September 2026, board P only, FUSE_G 7.7 V and FUSE_GQ 7.6 V): every P reading re-taken, the same verdicts and counts as above

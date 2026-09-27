@@ -1,0 +1,8 @@
+rt d rc=0
+rt p rc=0
+status 1 rc=1
+status 2 rc=1
+status 3 rc=1
+render rc=0
+check rc=0
+ALLDONE

@@ -1,0 +1,995 @@
+{
+ "board": "d",
+ "counts": {
+  "answered_nets": 18,
+  "classes": 45,
+  "contradicted_nets": 0,
+  "decided_nets": 20,
+  "layout_bound_nets": 2,
+  "low_speed_nets": 88,
+  "may_be_long_nets": 20,
+  "signal_nets": 135,
+  "undecided_nets": 27
+ },
+ "inputs": {
+  "board": "d",
+  "board_facts": {
+   "path": "tools/pcb_board_facts.yaml",
+   "sha256_16": "07af4d0f2b166694"
+  },
+  "board_table": {
+   "path": "tools/boards/d.json",
+   "sha256_16": "e0f787a8bfe117a1"
+  },
+  "critical_k": 6,
+  "document_1": {
+   "path": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
+   "sha256_16": "2ecb40606d4b84fe"
+  },
+  "extent_mm": 180.0,
+  "intent": {
+   "path": "out/pcb-d-aprs-intent.json",
+   "sha256_16": "8d9f3b2256521b0d"
+  },
+  "netlist": {
+   "content16": "be4194ed867c8406",
+   "path": "out/pcb-d-aprs.net",
+   "sha256_16": "7a2c0ac2190b141a"
+  },
+  "project": {
+   "path": "pcb-d-aprs-d9/pcb-d-aprs.kicad_pro",
+   "sha256_16": "a820c200f1b4a542"
+  },
+  "slowest_layer": "JLC04161H-7628 F.Cu",
+  "stack_table": {
+   "path": "tools/stackup_write.py",
+   "sha256_16": "b55a3c0f58c805c2"
+  },
+  "stacks": [
+   "JLC04161H-7628"
+  ],
+  "t_pd_ps_per_mm": 5.521
+ },
+ "notes": [],
+ "rows": [
+  {
+   "basis": "",
+   "class": "UNKNOWN",
+   "drivers": {
+    "ADS1115IDGSR 16-bit ADC at 0x48 (1 ADDR 2 ALERT/RDY 3 GND 4 AIN0 5 AIN1 6 AIN2 7 AIN3 8 VDD 9 SDA 10 SCL): the flange NTC over +3V3, ratiometric": [
+     "U22"
+    ],
+    "TLV75801PDBVR adjustable LDO, +3V4_HUB 3.44 V for the hub (1 IN 2 GND 3 EN 4 FB 5 OUT)": [
+     "U17"
+    ],
+    "TLV75801PDRVR adjustable LDO, PA gate bias VGG 4.48 V while PA_KEY is high (1 OUT 2 FB 3 GND 4 EN 5 DNC 6 IN 7 pad)": [
+     "U15"
+    ],
+    "TPS22810DRV load switch, +5V_TX on while +3V3_D8 is above 2.23 to 2.78 V (EN/UVLO divider R90 R91, QOD through R95)": [
+     "U21"
+    ]
+   },
+   "nets": [
+    "FLANGE_AIN0",
+    "FLANGE_NTC",
+    "FLANGE_REF",
+    "HUB_FB",
+    "TXSUP_CT",
+    "TXSUP_EN",
+    "TXSUP_QOD",
+    "VGG_FB"
+   ],
+   "pattern": "(no declaration)",
+   "rise_ns": null,
+   "status": "UNDECIDED",
+   "why": "no signal-class declaration names these nets, so neither their class nor their edge is known"
+  },
+  {
+   "basis": "a spare conductor on the A-to-B ribbon, connected to a test point and no driver",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "AB_SPARE"
+   ],
+   "pattern": "AB_SPARE",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "audio-frequency paths from the radio module, 300 Hz to 3 kHz",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)": [
+     "U2"
+    ]
+   },
+   "nets": [
+    "AF_DIV",
+    "AF_OUT"
+   ],
+   "pattern": "AF_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the amplifier's charge-pump flying-capacitor nodes, switched in the tens of kilohertz",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TI TPA6132A2 headphone amplifier (QFN-16), receive audio to the two headset leads": [
+     "U7"
+    ]
+   },
+   "nets": [
+    "AMP_CPN",
+    "AMP_CPP"
+   ],
+   "pattern": "AMP_CP*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the amplifier's enable, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TI TPA6132A2 headphone amplifier (QFN-16), receive audio to the two headset leads": [
+     "U7"
+    ]
+   },
+   "nets": [
+    "AMP_EN"
+   ],
+   "pattern": "AMP_EN",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the amplifier's own generated supply rails, decoupled locally",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TI TPA6132A2 headphone amplifier (QFN-16), receive audio to the two headset leads": [
+     "U7"
+    ]
+   },
+   "nets": [
+    "AMP_HPVDD",
+    "AMP_HPVSS"
+   ],
+   "pattern": "AMP_HPV*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a headphone amplifier's audio input, a 20 Hz to 20 kHz analogue level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TI TPA6132A2 headphone amplifier (QFN-16), receive audio to the two headset leads": [
+     "U7"
+    ]
+   },
+   "nets": [
+    "AMP_INL_N",
+    "AMP_INL_P",
+    "AMP_INR_N",
+    "AMP_INR_P"
+   ],
+   "pattern": "AMP_IN*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the expander's interrupt, an edge into a GPIO",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "PCA9555PW 0x26: COS, PTT states, KEY, PA_KEY in; exciter PD, amplifier EN, codec mute out; eight spares": [
+     "U16"
+    ]
+   },
+   "nets": [
+    "EXP_INT"
+   ],
+   "pattern": "EXP_INT",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "an unused expander pin, driven by nothing",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "PCA9555PW 0x26: COS, PTT states, KEY, PA_KEY in; exciter PD, amplifier EN, codec mute out; eight spares": [
+     "U16"
+    ]
+   },
+   "nets": [
+    "EXP_SPARE1",
+    "EXP_SPARE2",
+    "EXP_SPARE3",
+    "EXP_SPARE4",
+    "EXP_SPARE5",
+    "EXP_SPARE6",
+    "EXP_SPARE7",
+    "EXP_SPARE8"
+   ],
+   "pattern": "EXP_SPARE*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a headset jack's microphone, speaker and bias lines, audio band",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TI TPA6132A2 headphone amplifier (QFN-16), receive audio to the two headset leads": [
+     "U7"
+    ]
+   },
+   "nets": [
+    "HS1_BIAS_R",
+    "HS1_MIC",
+    "HS1_MIC_AC",
+    "HS1_SPK",
+    "HS2_BIAS_R",
+    "HS2_MIC",
+    "HS2_MIC_AC",
+    "HS2_SPK"
+   ],
+   "pattern": "HS?_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "answered": {
+    "HUB_DM0": "series resistor R7 22 to USB_D8_N (a screen)",
+    "HUB_DM1": "series resistor R13 22 to USB1_N (a screen)",
+    "HUB_DM2": "series resistor R17 22 to USB2_N (a screen)",
+    "HUB_DM3": "series resistor R21 22 to USB3_N (a screen)"
+   },
+   "basis": "the other half of the same hub port",
+   "class": "HIGH_SPEED_DIGITAL",
+   "critical_mm": 15.1,
+   "document": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
+   "drivers": {
+    "TUSB2046IBVFR four-port USB 2.0 full-speed hub (TI, LQFP-32 VF, -40 to 85 C, VCC 3.3 to 3.6 from +3V4_HUB; BUSPWR low = self-powered, EXTMEM high, GANGED high, TSTMODE low)": [
+     "U4"
+    ]
+   },
+   "layout_bound": [
+    "HUB_DM4"
+   ],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 15.1 mm",
+   "nets": [
+    "HUB_DM0",
+    "HUB_DM1",
+    "HUB_DM2",
+    "HUB_DM3",
+    "HUB_DM4"
+   ],
+   "pattern": "HUB_DM*",
+   "rise_ns": 0.5,
+   "source": "USB2-HS",
+   "status": "DECIDED",
+   "why": "USB 2.0 section 7.1.2.2, THSR and THSF, 10 to 90 percent, a minimum: v2/vendor/standards/usb-2-0-specification-2024-09-27.md"
+  },
+  {
+   "answered": {
+    "HUB_DP0": "series resistor R6 22 to USB_D8_P (a screen)",
+    "HUB_DP1": "series resistor R12 22 to USB1_P (a screen)",
+    "HUB_DP2": "series resistor R16 22 to USB2_P (a screen)",
+    "HUB_DP3": "series resistor R20 22 to USB3_P (a screen)"
+   },
+   "basis": "a hub downstream USB data line, same signalling as above",
+   "class": "HIGH_SPEED_DIGITAL",
+   "critical_mm": 15.1,
+   "document": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
+   "drivers": {
+    "TUSB2046IBVFR four-port USB 2.0 full-speed hub (TI, LQFP-32 VF, -40 to 85 C, VCC 3.3 to 3.6 from +3V4_HUB; BUSPWR low = self-powered, EXTMEM high, GANGED high, TSTMODE low)": [
+     "U4"
+    ]
+   },
+   "layout_bound": [
+    "HUB_DP4"
+   ],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 15.1 mm",
+   "nets": [
+    "HUB_DP0",
+    "HUB_DP1",
+    "HUB_DP2",
+    "HUB_DP3",
+    "HUB_DP4"
+   ],
+   "pattern": "HUB_DP*",
+   "rise_ns": 0.5,
+   "source": "USB2-HS",
+   "status": "DECIDED",
+   "why": "USB 2.0 section 7.1.2.2, THSR and THSF, 10 to 90 percent, a minimum: v2/vendor/standards/usb-2-0-specification-2024-09-27.md"
+  },
+  {
+   "basis": "the hub's overcurrent flag, an open-drain static level with a pull-up",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TUSB2046IBVFR four-port USB 2.0 full-speed hub (TI, LQFP-32 VF, -40 to 85 C, VCC 3.3 to 3.6 from +3V4_HUB; BUSPWR low = self-powered, EXTMEM high, GANGED high, TSTMODE low)": [
+     "U4"
+    ]
+   },
+   "nets": [
+    "HUB_OVRCUR_n"
+   ],
+   "pattern": "HUB_OVRCUR_n",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the hub's reset, a logic edge with an RC on it",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "TUSB2046IBVFR four-port USB 2.0 full-speed hub (TI, LQFP-32 VF, -40 to 85 C, VCC 3.3 to 3.6 from +3V4_HUB; BUSPWR low = self-powered, EXTMEM high, GANGED high, TSTMODE low)": [
+     "U4"
+    ]
+   },
+   "nets": [
+    "HUB_RST_n"
+   ],
+   "pattern": "HUB_RST_n",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the hub's 24 MHz crystal loop, a continuous periodic source",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "TUSB2046IBVFR four-port USB 2.0 full-speed hub (TI, LQFP-32 VF, -40 to 85 C, VCC 3.3 to 3.6 from +3V4_HUB; BUSPWR low = self-powered, EXTMEM high, GANGED high, TSTMODE low)": [
+     "U4"
+    ]
+   },
+   "nets": [
+    "HUB_XTAL1",
+    "HUB_XTAL2",
+    "HUB_XTAL2R"
+   ],
+   "pattern": "HUB_XTAL*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the transmit key line, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "74LVC1G06 open-drain inverter (2 A 4 Y): KEY -> SA868 PTT (low = transmit; released = receive, held by R88 and R89)": [
+     "U13"
+    ],
+    "74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)": [
+     "U12"
+    ],
+    "74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state)": [
+     "U14"
+    ],
+    "74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): KEY -> PTT_MIR, the one-way driver of the PTT mirror TR_APRS": [
+     "U18"
+    ],
+    "74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): KEY read back into U16 IO0_3, one way (VCC the harness +3V3)": [
+     "U19"
+    ]
+   },
+   "nets": [
+    "KEY"
+   ],
+   "pattern": "KEY",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an indicator LED anode or cathode",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TI PCM2912A USB audio codec (TQFP-32): mono input from the exciter, stereo output to the headphone amplifier and the transmit sum": [
+     "U6"
+    ]
+   },
+   "nets": [
+    "LED_PA_A",
+    "LED_PLAY_A",
+    "LED_PLAY_K",
+    "LED_PWR_A",
+    "LED_REC_A",
+    "LED_REC_K",
+    "LED_RX_A",
+    "LED_TX_A"
+   ],
+   "pattern": "LED_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "microphone paths, audio band into a preamplifier",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)": [
+     "U2"
+    ],
+    "TLV9062IDGK dual op amp (1 OUT1 2 IN1- 3 IN1+ 4 V- 5 IN2+ 6 IN2- 7 OUT2 8 V+): A the mic sum, B unused as a follower": [
+     "U8"
+    ]
+   },
+   "nets": [
+    "MICAMP_AC",
+    "MICAMP_IN_N",
+    "MICAMP_OUT",
+    "MIC_IN",
+    "MIC_SUM"
+   ],
+   "pattern": "MIC*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the mute control, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TI PCM2912A USB audio codec (TQFP-32): mono input from the exciter, stereo output to the headphone amplifier and the transmit sum": [
+     "U6"
+    ]
+   },
+   "nets": [
+    "MMUTE"
+   ],
+   "pattern": "MMUTE",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the power amplifier's enable and key lines, static levels",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "74LVC1G08 AND: PA_KEY = KEY AND PA_EN (A22's PA rail state)": [
+     "U14"
+    ],
+    "74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): PA_KEY read back into U16 IO0_4, one way (VCC the harness +3V3)": [
+     "U20"
+    ],
+    "TLV75801PDRVR adjustable LDO, PA gate bias VGG 4.48 V while PA_KEY is high (1 OUT 2 FB 3 GND 4 EN 5 DNC 6 IN 7 pad)": [
+     "U15"
+    ]
+   },
+   "nets": [
+    "PA_EN",
+    "PA_KEY"
+   ],
+   "pattern": "PA_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an audio output through its coupling capacitor, audio band",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "PCM_L_AC",
+    "PCM_R_AC"
+   ],
+   "pattern": "PCM_?_AC",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a WM8960 supply pin with its own decoupling: analogue, digital, charge-pump and reference rails",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TI PCM2912A USB audio codec (TQFP-32): mono input from the exciter, stereo output to the headphone amplifier and the transmit sum": [
+     "U6"
+    ]
+   },
+   "nets": [
+    "PCM_VCCA",
+    "PCM_VCCL",
+    "PCM_VCCP",
+    "PCM_VCCR"
+   ],
+   "pattern": "PCM_VCC*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the codec's mid-rail reference, a DC bias held by a capacitor and the quietest node on the part",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TI PCM2912A USB audio codec (TQFP-32): mono input from the exciter, stereo output to the headphone amplifier and the transmit sum": [
+     "U6"
+    ]
+   },
+   "nets": [
+    "PCM_VCOM1",
+    "PCM_VCOM2"
+   ],
+   "pattern": "PCM_VCOM*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the codec's digital supply pin node with its decoupling, a local rail",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TI PCM2912A USB audio codec (TQFP-32): mono input from the exciter, stereo output to the headphone amplifier and the transmit sum": [
+     "U6"
+    ]
+   },
+   "nets": [
+    "PCM_VDD"
+   ],
+   "pattern": "PCM_VDD",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the codec's supply input node",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TI PCM2912A USB audio codec (TQFP-32): mono input from the exciter, stereo output to the headphone amplifier and the transmit sum": [
+     "U6"
+    ]
+   },
+   "nets": [
+    "PCM_VIN"
+   ],
+   "pattern": "PCM_VIN",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the codec's analogue line output, 20 Hz to 20 kHz",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TI PCM2912A USB audio codec (TQFP-32): mono input from the exciter, stereo output to the headphone amplifier and the transmit sum": [
+     "U6"
+    ]
+   },
+   "nets": [
+    "PCM_VOUTL",
+    "PCM_VOUTR"
+   ],
+   "pattern": "PCM_VOUT*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the codec's crystal loop",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "TI PCM2912A USB audio codec (TQFP-32): mono input from the exciter, stereo output to the headphone amplifier and the transmit sum": [
+     "U6"
+    ]
+   },
+   "nets": [
+    "PCM_XTI",
+    "PCM_XTO"
+   ],
+   "pattern": "PCM_XT*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "a push-to-talk line: a static level that changes when a person presses a switch",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "74LVC1G04 inverter (2 A 4 Y): PTT_ANY": [
+     "U11"
+    ],
+    "74LVC1G08 AND (1 A 2 B 3 GND 4 Y 5 VCC): both headset PTT lines idle high": [
+     "U9"
+    ],
+    "74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)": [
+     "U12"
+    ],
+    "74LVC1G08 AND: headsets AND software PTT (RTS)": [
+     "U10"
+    ],
+    "74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): KEY -> PTT_MIR, the one-way driver of the PTT mirror TR_APRS": [
+     "U18"
+    ],
+    "CP2102N-A02-GQFN28 USB-UART bridge (SAU)": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "PTT_ANY",
+    "PTT_ANY_n",
+    "PTT_HS1_n",
+    "PTT_HS2_n",
+    "PTT_HS_n",
+    "PTT_MIR",
+    "PTT_SW_n"
+   ],
+   "pattern": "PTT_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the VHF transmit chain at 144 MHz and its 30 W stage: the only true radio-frequency nets on this board",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)": [
+     "U2"
+    ]
+   },
+   "nets": [
+    "RF_ANT",
+    "RF_DRV",
+    "RF_LPF_M",
+    "RF_LPF_OUT",
+    "RF_PAD_IN",
+    "RF_PAD_M",
+    "RF_PAOUT",
+    "RF_SA"
+   ],
+   "pattern": "RF_*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the antenna relay's drive and coil, switched at most once per transmission",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "RLY_DRV",
+    "RLY_K"
+   ],
+   "pattern": "RLY_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the receive audio mix node, audio band",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "RX_MIX"
+   ],
+   "pattern": "RX_MIX",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the module's supply and reset nodes",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "CP2102N-A02-GQFN28 USB-UART bridge (SAU)": [
+     "U3"
+    ]
+   },
+   "nets": [
+    "SAU_3V3",
+    "SAU_RST"
+   ],
+   "pattern": "SAU_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the radio module's power-down, high-low power and audio-enable controls, static levels",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "74LVC1G06 open-drain inverter (2 A 4 Y): KEY -> SA868 PTT (low = transmit; released = receive, held by R88 and R89)": [
+     "U13"
+    ],
+    "NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)": [
+     "U2"
+    ]
+   },
+   "nets": [
+    "SA_AUDIO_ON_n",
+    "SA_HL",
+    "SA_PD",
+    "SA_PTT_n"
+   ],
+   "pattern": "SA_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the radio module's control UART, 9600 to 115200 baud through a bridge",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "CP2102N-A02-GQFN28 USB-UART bridge (SAU)": [
+     "U3"
+    ],
+    "NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)": [
+     "U2"
+    ]
+   },
+   "nets": [
+    "SA_RXD"
+   ],
+   "pattern": "SA_RXD",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the other direction of the same UART",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "CP2102N-A02-GQFN28 USB-UART bridge (SAU)": [
+     "U3"
+    ],
+    "NiceRF SA868 VHF 2 W exciter, bench-fitted (castellated; VBAT 3.3 to 5.5 V, TX 1 A)": [
+     "U2"
+    ]
+   },
+   "nets": [
+    "SA_TXD"
+   ],
+   "pattern": "SA_TXD",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "I2C at 100 or 400 kHz, open drain, the edge set by the pull-up",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "ADS1115IDGSR 16-bit ADC at 0x48 (1 ADDR 2 ALERT/RDY 3 GND 4 AIN0 5 AIN1 6 AIN2 7 AIN3 8 VDD 9 SDA 10 SCL): the flange NTC over +3V3, ratiometric": [
+     "U22"
+    ],
+    "PCA9555PW 0x26: COS, PTT states, KEY, PA_KEY in; exciter PD, amplifier EN, codec mute out; eight spares": [
+     "U16"
+    ]
+   },
+   "nets": [
+    "SCL"
+   ],
+   "pattern": "SCL",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the data half of the same I2C bus",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "ADS1115IDGSR 16-bit ADC at 0x48 (1 ADDR 2 ALERT/RDY 3 GND 4 AIN0 5 AIN1 6 AIN2 7 AIN3 8 VDD 9 SDA 10 SCL): the flange NTC over +3V3, ratiometric": [
+     "U22"
+    ],
+    "PCA9555PW 0x26: COS, PTT states, KEY, PA_KEY in; exciter PD, amplifier EN, codec mute out; eight spares": [
+     "U16"
+    ]
+   },
+   "nets": [
+    "SDA"
+   ],
+   "pattern": "SDA",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the transmit-indication line to the panel, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "TR_APRS"
+   ],
+   "pattern": "TR_APRS",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the hardware transmit inhibit from the panel toggle, a static level with a pull-down",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "74LVC1G08 AND: KEY = PTT_ANY AND TX_INHIBIT_n (the panel's hardware EMCON)": [
+     "U12"
+    ]
+   },
+   "nets": [
+    "TX_INHIBIT_n"
+   ],
+   "pattern": "TX_INHIBIT_n",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "answered": {
+    "USB1_N": "series resistor R13 22 to HUB_DM1; R27 33 to USB1_NR (a screen)",
+    "USB2_N": "series resistor R17 22 to HUB_DM2 (a screen)",
+    "USB3_N": "series resistor R21 22 to HUB_DM3 (a screen)",
+    "USB_D8_N": "series resistor R7 22 to HUB_DM0 (a screen)"
+   },
+   "basis": "the other half of the same USB 2.0 pair",
+   "class": "HIGH_SPEED_DIGITAL",
+   "critical_mm": 15.1,
+   "document": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
+   "drivers": {
+    "CP2102N-A02-GQFN28 USB-UART bridge (SAU)": [
+     "U3"
+    ],
+    "USBLC6-2SC6": [
+     "U5"
+    ]
+   },
+   "layout_bound": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 15.1 mm",
+   "nets": [
+    "USB1_N",
+    "USB2_N",
+    "USB3_N",
+    "USB_D8_N"
+   ],
+   "pattern": "USB*_N",
+   "rise_ns": 0.5,
+   "source": "USB2-HS",
+   "status": "DECIDED",
+   "why": "USB 2.0 section 7.1.2.2, THSR and THSF, 10 to 90 percent, a minimum: v2/vendor/standards/usb-2-0-specification-2024-09-27.md"
+  },
+  {
+   "answered": {
+    "USB1_P": "series resistor R12 22 to HUB_DP1; R26 33 to USB1_PR (a screen)",
+    "USB2_P": "series resistor R16 22 to HUB_DP2 (a screen)",
+    "USB3_P": "series resistor R20 22 to HUB_DP3 (a screen)",
+    "USB_D8_P": "series resistor R6 22 to HUB_DP0 (a screen)"
+   },
+   "basis": "a USB 2.0 high-speed pair into the TUSB hub: 480 Mbit/s with sub-nanosecond edges",
+   "class": "HIGH_SPEED_DIGITAL",
+   "critical_mm": 15.1,
+   "document": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
+   "drivers": {
+    "CP2102N-A02-GQFN28 USB-UART bridge (SAU)": [
+     "U3"
+    ],
+    "USBLC6-2SC6": [
+     "U5"
+    ]
+   },
+   "layout_bound": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 15.1 mm",
+   "nets": [
+    "USB1_P",
+    "USB2_P",
+    "USB3_P",
+    "USB_D8_P"
+   ],
+   "pattern": "USB*_P",
+   "rise_ns": 0.5,
+   "source": "USB2-HS",
+   "status": "DECIDED",
+   "why": "USB 2.0 section 7.1.2.2, THSR and THSF, 10 to 90 percent, a minimum: v2/vendor/standards/usb-2-0-specification-2024-09-27.md"
+  },
+  {
+   "answered": {
+    "USB1_NR": "series resistor R27 33 to USB1_N (a screen)",
+    "USB1_PR": "series resistor R26 33 to USB1_P (a screen)"
+   },
+   "basis": "the upstream USB pair after its series resistors: the same 480 Mbit/s signalling as before them",
+   "class": "HIGH_SPEED_DIGITAL",
+   "critical_mm": 15.1,
+   "document": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
+   "drivers": {
+    "TI PCM2912A USB audio codec (TQFP-32): mono input from the exciter, stereo output to the headphone amplifier and the transmit sum": [
+     "U6"
+    ]
+   },
+   "layout_bound": [],
+   "may_be_long": true,
+   "needs": "an impedance target, a series termination or a declaration, or every net under 15.1 mm",
+   "nets": [
+    "USB1_NR",
+    "USB1_PR"
+   ],
+   "pattern": "USB1_?R",
+   "rise_ns": 0.5,
+   "source": "USB2-HS",
+   "status": "DECIDED",
+   "why": "USB 2.0 section 7.1.2.2, THSR and THSF, 10 to 90 percent, a minimum: v2/vendor/standards/usb-2-0-specification-2024-09-27.md"
+  },
+  {
+   "basis": "an analogue reference, a DC level with its own capacitor",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "TLV9062IDGK dual op amp (1 OUT1 2 IN1- 3 IN1+ 4 V- 5 IN2+ 6 IN2- 7 OUT2 8 V+): A the mic sum, B unused as a follower": [
+     "U8"
+    ]
+   },
+   "nets": [
+    "VREF"
+   ],
+   "pattern": "VREF",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an expander output or input: a static level written or read over I2C",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): KEY read back into U16 IO0_3, one way (VCC the harness +3V3)": [
+     "U19"
+    ],
+    "74LVC1G34 buffer (1 NC 2 A 3 GND 4 Y 5 VCC): PA_KEY read back into U16 IO0_4, one way (VCC the harness +3V3)": [
+     "U20"
+    ],
+    "PCA9555PW 0x26: COS, PTT states, KEY, PA_KEY in; exciter PD, amplifier EN, codec mute out; eight spares": [
+     "U16"
+    ]
+   },
+   "nets": [
+    "X_AMP_EN",
+    "X_COS_n",
+    "X_KEY",
+    "X_KEY_B",
+    "X_MMUTE",
+    "X_PA_KEY",
+    "X_PA_KEY_B",
+    "X_PTT_HS1_n",
+    "X_PTT_HS2_n",
+    "X_SA_PD"
+   ],
+   "pattern": "X_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the zeroize line from the panel, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {},
+   "nets": [
+    "ZEROIZE_HW"
+   ],
+   "pattern": "ZEROIZE_HW",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  }
+ ],
+ "rule": "SI-001"
+}

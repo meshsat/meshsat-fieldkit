@@ -12121,6 +12121,7 @@
 		(property "Footprint" "Diode_SMD:D_SOD-123" (at 434.34 95.25 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))
 		(property "Datasheet" "" (at 434.34 95.25 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))
 		(property "Description" "" (at 434.34 95.25 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))
+		(property "LCSC" "C81598" (at 434.34 95.25 0) (effects (font (size 1.27 1.27)) (justify left bottom) (hide yes)))
 		(pin "1" (uuid "5c5953a1-4fc0-599f-a89d-0cb7fe19a562"))
 		(pin "2" (uuid "d290e724-6bd0-5440-a909-a8bf92f149d8"))
 		(instances (project "pcb-d-aprs" (path "/ba66a0ce-d686-5e81-bc86-e09a2b8c9d8d" (reference "D2") (unit 1))))

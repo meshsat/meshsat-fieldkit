@@ -2272,6 +2272,116 @@ session_choices:
       - "v2/ecad/tools/gen_sch_e.py (D7, D8 and the FAN1_SW and FAN2_SW node declarations after the fan loop)"
       - "v2/ecad/tools/intent_checks.py (PWR-001 on the netlist)"
 
+  - id: SC-72
+    authority: SESSION
+    under: standing-rule
+    taken_on: "2026-09-27"
+    question: >-
+      Which part is board D's relay flyback diode D2, whose schematic line named the class '1N4148W' with no
+      order code and no maker (S-76; EQ-21's class)?
+    taken: >-
+      LCSC C81598: the 1N4148W of SEMTECH ELECTRONICS LTD. (LCSC's brand 'ST(Semtech)', not Semtech
+      Corporation), SOD-123, a JLC basic part (JLC API 2026-09-27: stock 5,220,610), the code lcsc_fill.py
+      already filled and jlc_certify.py's order table lists for the same (Comment, Footprint) row, a dated
+      reading of JLC's catalogue of 26 September 2026. gen_sch_d.py carries the code on D2's line; the maker's
+      sheet as LCSC serves it (Rev 05, 20/09/2016, sha256 54de8e40, the file v2/docs/parts/grade-sources.yaml
+      read) is filed as v2/vendor/power/st-semtech-1n4148w-c81598.pdf. The value text is unchanged, so no pin,
+      net or land moves.
+    why: >-
+      A class name orders whatever a fill decides; the code that fill already chose is in JLC's catalogue
+      reading, in stock and on the land the schematic draws (the sheet's pinning table: pin 1 cathode, pin 2
+      anode, SOD-123, which is KiCad's Diode:1N4148W and D_SOD-123), and its ratings (VR 75 V, IF(AV) 150 mA,
+      IFSM 1 A for 1 ms, VF 1.0 V at 50 mA and 1.25 V at 150 mA) cover a 5 V relay coil's release at about 30 mA
+      with room. Reverse by a Diodes Incorporated or other maker's part whose sheet this tree already holds, if
+      the ordering session prefers one.
+    source:
+      - "v2/ecad/tools/gen_sch_d.py (D2's line and its comment)"
+      - "v2/vendor/power/st-semtech-1n4148w-c81598.pdf"
+      - "v2/release/revA/order/JLC-CERTIFIED.tsv (row '1N4148W coil flyback', D_SOD-123, C81598)"
+      - "v2/docs/parts/grade-sources.yaml (C81598)"
+  - id: SC-73
+    authority: SESSION
+    under: standing-rule
+    taken_on: "2026-09-27"
+    question: >-
+      Which kind does each supply PWR-001 left on board D (RLY_K, UNDECIDED) and board P (BAT_F, PBI, SEC_VDD,
+      SW and VCC_F undeclared; CELL1 to CELL3, FUSE_G, FUSE_GQ and SCP_HTR undecided) take (EQ-19)?
+    taken: >-
+      Board D: RLY_K, the relay coil's switched low end, a node at 6.5 V (+5V_TX's 5.23 V plus D2's 1.25 V
+      maximum forward drop at 150 mA, SC-72's sheet; v_work 5.23 V). Board P: rails for the supply branches fed
+      through board parts, BAT_F (the gauge's primary supply behind R5 from CELL4, 336 uA, always on), VCC_F
+      (its secondary supply behind R7 from PACK_P, 0 A typical and 336 uA peak, switched with PACK_P by the
+      gauge's DSG drive), SEC_VDD (the second level's VDD behind R23 from CELL4, 3.5 uA typical and 0.18 mA peak
+      with its outputs driving, always on), SW (the protection FETs' common drain, 10 A and 18 A, a series
+      segment of SCP_OUT) and SCP_HTR (the chemical fuse's heater return, 3.5 A declared typical and peak
+      because the event lasts up to 60 s, switched by Q3 on FUSE_GQ); nodes for the gauge's own backup reservoir
+      PBI (16.8 V), the cell taps CELL1 to CELL3 (4.375 V a cell, 4.20 V in service) and the fuse gate drive
+      FUSE_G and FUSE_GQ (7.7 and 7.6 V bounds, set by the gauge's FUSE output at its 8.65 V maximum through its
+      2 kohm minimum impedance and R30 into R31, or R31 || R32 once JP1 is closed, 7.61 and 7.56 V with 1
+      percent resistors at their worst; 4.25 V with COUT driving). Nothing electrical changes on board P.
+    why: >-
+      The rule's text: a rail where a part is fed through a board part (as SC-57 took board E's SGP_VDD), a node
+      where it is a part's own supply, a tap or a switch's current path; every figure is the maker's (TI
+      SLUSC67B pin table, 6.3, 6.5, 6.6, 6.20, 8.2.2.2.2; TI SLUSEG7D 12-Pin Functions, Device Comparison Table,
+      6.5; Eaton ELX1135; Omron G6K 5 VDC coil row; SEMTECH 1N4148W; SLUSEG7D 7.3.6 and 8.2 for the fuse gate).
+      SCP_HTR is a rail rather than a node so that PI-001 and PI-003 judge the heater path's copper at its 3.5
+      A: a path that must stay intact until F2 opens is the one current on board P whose loss defeats a
+      protection. The fuse gate's bound takes COUT as what TI names it, the Active High 6V option's 'active HIGH
+      with drive to 6V' (SLUSEG7D 7.3.6; 8.2 drives FET gates with it directly; 6.5 gives 6 V minimum at 100 uA
+      and no maximum), not its VDD, which is the separate Active High VDD option: the node is a weighted mean of
+      the gauge's branch and COUT's, so it stays under 7.7 and 7.6 V for any COUT high level up to 7.6 V, and
+      Q3's gate under the AO3400A's +-12 V VGS with 4.4 V to spare. A VDD basis would have been wrong in the
+      state that drives COUT: an over-voltage holds a cell above 4.325 V, the stack at about 17.3 to 17.5 V, and
+      COUT at that VDD would put FUSE_GQ at 12.25 to 12.4 V, past Q3's rating. Reverse the fuse gate's bound by
+      a TI maximum for the 6V drive above 7.6 V, or a bench reading of that output above it (TP11 with COUT
+      driving, or TP12, DOUT's identical stage); Q3's gate rating would then need a clamp, a circuit change for
+      the qualified battery review. Board P's protection circuit is frozen in front of the qualified battery
+      review, so the intent file is the only file that moves. Reverse any node by a load on it that is another
+      part's supply, and SCP_HTR's typical by a tool that judges an event current as such.
+    source:
+      - "v2/ecad/tools/gen_sch_d.py (RLY_K)"
+      - "v2/ecad/tools/gen_sch_p.py (the PWR-001 block before the bypass entries)"
+      - "v2/ecad/tools/intent_checks.py (PWR-001 on the netlist)"
+      - "v2/docs/handover/ENGINEERING-QUESTIONS.md EQ-19"
+      - "v2/vendor/battery/ti-bq77207.pdf (SLUSEG7D Device Comparison Table, 6.5 VOUT_AH, 7.3.6, 8.2)"
+      - "v2/vendor/battery/ti-bq4050.pdf (SLUSC67B 6.20, FUSE drive)"
+  - id: SC-74
+    authority: SESSION
+    under: standing-rule
+    taken_on: "2026-09-27"
+    question: >-
+      How does BAT-001's table describe board P as generated (S-45), and against what are the parts that act
+      without firmware judged?
+    taken: >-
+      pcb_pack_protection.yaml declares decision 40's floor present and names its parts (U2, F2, Q3, JP1, Q5,
+      RT1, J_TS2, F1), each in `devices` and on board P's netlist, and tests/test_pack_protection.py holds the
+      declaration to the netlist's connections both ways. The F1 row is the 25 A MINI blade (Littelfuse 297) the
+      Keystone 3568 holds, not the ATOF (BAT-F04), and R10's row is the shunt it is, the thermistors moving to
+      J_TS. BAT-001's five functions are judged a second time on those parts, as rows with `level: hardware`,
+      against the same cell limits as the gauge's rows: over-voltage (U2, 4.325 V against 4.20 V with a 0.175 V
+      allowance that keeps it above the gauge's 4.25 V) and short circuit (F1, 150 A against a 240 A lowest
+      prospective fault) pass; under-voltage (U2, 2.25 V against the guideline's 2.30 V), over-temperature (U2,
+      70 C and no cold trip against -10 to 60 C) and over-current (F1, 33.75 A against 24 A at 3P) fail, each
+      naming its finding (S-85). The gauge's nine rows are byte-identical. BAT-F20 stays open on Q1's row.
+    why: >-
+      The requirement asks for all five in hardware, independent of any software, with the trip points set from
+      the cell maker's own limits; it does not relax the limit for a second level, and reading it as 'a
+      protector independent of the gauge exists' would lower it (the handover prompt's section 2).
+      THERMAL-COORDINATION.md section 8 already names BAT-001's words as the reversal of the session's choice
+      not to add a hold now (S-45), so the table keeps them literal and the gate reads FAIL for what the circuit
+      does not do, where it read FAIL for what the table no longer said. Reverse by an owner ruling that
+      restates BAT-001 for a second level (the rule is the owner's, pcb_rules.yaml), or by the circuit changes
+      of S-85.
+    source:
+      - "v2/ecad/tools/pcb_pack_protection.yaml"
+      - "v2/ecad/tools/tests/test_pack_protection.py"
+      - "v2/docs/review-packets/battery/PROTECTION-ARCHITECTURE.md sections 2, 3, 6 and 8"
+      - "v2/docs/review-packets/battery/THERMAL-COORDINATION.md section 8"
+      - "v2/docs/review-packets/battery/FUSE-INTERPRETATION.md section 3 (BAT-F04)"
+      - "v2/vendor/battery/ti-bq77207.pdf (SLUSEG7D Device Comparison Table, 6.5, 6.6)"
+      - "v2/vendor/keystone/littelfuse-297-ficcorp.pdf (time-current table)"
+      - "v2/vendor/battery/samsung-35e-orbtronic.pdf (3.8, 3.12, Pack Design Guideline)"
+
 # What is still open. SESSION items are engineering the session decides and records with authority SESSION;
 # OWNER_ACTION is something the owner has ruled that he does or sets himself, or that only he can do because it reopens
 # his own ruling or accepts a residual risk (reported to him, never asked, under his standing rule of 26 September
@@ -2451,13 +2561,6 @@ open_items:
       The hardware EMCON lamp's light-guide hole in the face plate beside SW_EMCON (SD-EMC-6, EMCON.md section 7). The
       lamp itself, driven from the line state with no processor in its path, is drawn on board C since its round 8 (D22
       through U14 and Q7). Restated 27 September 2026 at the release check of layer 2 (finding B4 (b)).
-  - id: S-45
-    class: SESSION
-    status: OPEN
-    title: >-
-      BAT-001's instrument brought to board P as generated: pack_protection still reads FAIL on the regenerated board
-      P ("no second protector and no chemical fuse", battery packet evidence gates-new/pack_protection.log), because
-      its inputs describe the old pack.
   - id: S-46
     class: SESSION
     status: OPEN
@@ -2776,18 +2879,6 @@ open_items:
       among the eight 813 ground contacts (the independent check) the lowest carries 2.44 A, 2.58 A with one
       open, 80.3 and 83.6 C at the 51 C inside air and 94 to 98 C at the +55 C margin. Owed to TEST-PLAN.md:
       each contact group's resistance and one 813 ground contact's temperature at the declared currents.
-  - id: S-76
-    class: SESSION
-    status: OPEN
-    title: >-
-      PWR-001 reads INCONCLUSIVE on board D (RLY_K, the T/R relay coil's switched return) and board E (FAN1_SW
-      and FAN2_SW, the mixer fans' switched returns) after SC-57: each net's peak is one flyback diode drop
-      above its rail (+5V_TX, CELL_F), and no maker's sheet for the diodes is held: D2 is a 1N4148W with no
-      order code in gen_sch_d.py or lcsc_fill.py, D7 and D8 are SS14 filled as C51897884 by lcsc_fill.py with no
-      sheet in v2/vendor. Open until the sheets are filed (and D2 has an order code, EQ-21's class) and the three nets
-      are declared nodes at the rail plus the maker's forward drop. Board E's half answered by SC-71 (27 September 2026,
-      stream w4ae): D7 and D8's maker's sheet filed with their code C51897884, FAN1_SW and FAN2_SW declared nodes at
-      17.35 V, PWR-001 on board E PASS with 0 undecided; board D's RLY_K and its D2 stay open.
   - id: S-79
     class: SESSION
     status: OPEN
@@ -2890,6 +2981,40 @@ open_items:
       the independent check of stream w4ae (27 September 2026, an AI check) while it traced HOT-R1's H2 path (SC-70);
       not new with that stream and outside its scope. For board B's author and the module firmware contract: GPIO17
       held an input on every module (HW-FW-CONTRACT.md), or a one-way stage from the panel's PI_KILL to the modules.
+
+  - id: S-85
+    class: SESSION
+    status: OPEN
+    title: >-
+      BAT-001's hardware level misses the cell maker's limits on three of its five functions (SC-74;
+      pack_protection on board P as generated reads FAIL, 3 of 63 checks, each a `level: hardware` row): (1)
+      W4DP-F1, the BQ7720700's under-voltage, 2.25 V +-50 mV, is up to 100 mV below the Samsung Pack Design
+      Guideline's 2.30 V 'min. voltage of over-discharging protection' (the only released variant whose
+      over-voltage clears the gauge's 4.25 V); (2) BAT-F16, its fixed 70 C over-temperature (62.7 to 77.5 C at
+      its network, no cold trip) acts only above the cells' 60 C and 45 C limits (THERMAL-COORDINATION.md
+      section 8; S-58 and Q-P15 carry the hold that would meet it); (3) W4DP-F2, no element that acts without
+      firmware opens at or below the cells' 24 A at 3P (the gauge's AFE comparators take their thresholds from
+      data flash; F1 opens from 33.75 A in up to 600 s, F2 is 30 A). Options: a custom BQ77207xy at 4.325 V and
+      2.35 V (TI, 'contact TI': an outside contact, the owner's); a 4S protector with fixed under-voltage at or
+      above 2.30 V and a fixed discharge over-current on the shunt; the comparator hold of
+      THERMAL-COORDINATION.md section 8 at 57.5 C and 44.0 C; or the owner restating BAT-001 for a second level.
+      Recommendation: put (1) and (3) to the qualified battery reviewer beside Q-P15, since the circuit is
+      frozen in front of that review, and specify the chosen circuit at board P's four-layer regeneration
+      (O-11). BAT-001 on board P reads FAIL until each is answered.
+  - id: S-86
+    class: SESSION
+    status: OPEN
+    title: >-
+      Documents that cite pcb_pack_protection.yaml by line, or describe the rows SC-74 corrected, now point at
+      other text: the battery packet (SECONDARY-OT-DECISION.md ':142-158', PRIMARY-CONFIGURATION.md ':51-65',
+      ':54' and ':55', PROTECTION-ARCHITECTURE.md ':51-65' and ':125-132', FUSE-INTERPRETATION.md ':74' and its
+      BAT-F04 paragraph, THERMAL-COORDINATION.md's 'R10 row') and its manifest if those files are edited. At
+      w4dp the old lines map to: 51-65 (the limits) to 78-92, 54 to 81, 55 to 82, 74 (F1) to 109-117, 125-132
+      (PACK_SHORT_CIRCUIT_DISCHARGE) to 198-205, 142-158 (CHARGE_ and DISCHARGE_TEMPERATURE_WINDOW) to 215-231,
+      and the R10 row's thermistors to the J_TS row. BAT-F04's other half is open too: pcb_energy_chain.yaml
+      (stages PACK_CELLS, PACK_LEAD, DOCK_ENTRY and board A's fuse) still gives F1 the Littelfuse 287 ATOF
+      figures (I2t 1000 A2s) where the Keystone 3568 holds the 297 MINI (625 A2s typical). For the packet's
+      owner and the energy chain's owner.
 
 # Items that left the open list, and what closed each: an owner ruling, a session choice, or a commit whose effect
 # was read in the file `closing_evidence` names. A record never waits on a closed item; it cites what closed it.
@@ -3338,6 +3463,36 @@ closed_items:
       session's recommendation; (b) board B's R59 to 10 k 1 percent with R14 to 2.2 k; (c) all three pull-downs to
       47 k with R14 to 4.7 k. The arithmetic is in v2/docs/records/w3t/HANDOFF.md section 2 and
       v2/docs/records/w3t/w3t-decisions.md section 5; engineering question EQ-25.
+  - id: S-45
+    closed_by: SC-74
+    closing_evidence: >-
+      v2/ecad/tools/pcb_pack_protection.yaml at w4dp (27 September 2026) declares decision 40's floor present
+      with its parts, each on board P's netlist, and tests/test_pack_protection.py holds the declaration to the
+      netlist's connections both ways (the second level on the taps, COUT and FUSE at the fuse gate, JP1, Q3 on
+      F2's heater, F2 in the cell path, Q5 on Q2's gate, RT1 with PTCEN on BAT). pack_protection re-taken in
+      scratch on board P as regenerated reads FAIL, 3 of 63 checks, and every failure is a hardware row's
+      (S-85); no failure says the floor is absent.
+    title: >-
+      BAT-001's instrument brought to board P as generated: pack_protection still reads FAIL on the regenerated board
+      P ("no second protector and no chemical fuse", battery packet evidence gates-new/pack_protection.log), because
+      its inputs describe the old pack.
+  - id: S-76
+    closed_by: SC-72
+    closing_evidence: >-
+      Both halves answered on 27 September 2026, integrated together at r8int6. Board E: stream w4ae (SC-71)
+      filed D7 and D8's sheet with their code C51897884 and declared FAN1_SW and FAN2_SW nodes at 17.35 V. Board
+      D: stream w4dp: D2 carries LCSC C81598, SEMTECH ELECTRONICS' 1N4148W, with its sheet filed as
+      v2/vendor/power/st-semtech-1n4148w-c81598.pdf (SC-72), and RLY_K is a declared node at 6.5 V (SC-73);
+      PWR-001 on board D as regenerated reads PASS in scratch.
+    title: >-
+      PWR-001 reads INCONCLUSIVE on board D (RLY_K, the T/R relay coil's switched return) and board E (FAN1_SW
+      and FAN2_SW, the mixer fans' switched returns) after SC-57: each net's peak is one flyback diode drop
+      above its rail (+5V_TX, CELL_F), and no maker's sheet for the diodes is held: D2 is a 1N4148W with no
+      order code in gen_sch_d.py or lcsc_fill.py, D7 and D8 are SS14 filled as C51897884 by lcsc_fill.py with no
+      sheet in v2/vendor. Open until the sheets are filed (and D2 has an order code, EQ-21's class) and the three nets
+      are declared nodes at the rail plus the maker's forward drop. Board E's half answered by SC-71 (27 September 2026,
+      stream w4ae): D7 and D8's maker's sheet filed with their code C51897884, FAN1_SW and FAN2_SW declared nodes at
+      17.35 V, PWR-001 on board E PASS with 0 undecided; board D's RLY_K and its D2 stay open.
 
 records:
   - id: REQ-001
@@ -6018,10 +6173,19 @@ records:
           v2/docs/records/w4ae/parity/expected-a-netlist.json, 'ONLY THE EXPECTED CHANGES'), it differs only in R216
           added (10 k, DOCK_SPARE to +3V3) and J_DOCK's value; U30, U26, OUTLET_OK, POE_EN, PD_EN, U16, U19 and PA_EN
           are unchanged, so it stands PASS on the file at 0a2b59087bcc2678
+      - >-
+          v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net re-read at the w4dp regeneration of 27 September 2026
+          (boards D and P and the pack-protection table, MESHSAT-1357): board D's netlist, regenerated by
+          w4dp on 27 September 2026 on the KiCad box with main's chain (handover_exports.py regen, PHASE
+          D37P, whose run on main's own clone reproduced main's files), differs from the file at
+          76700a687eb6187f only in D2's LCSC field and property (C81598, SC-72), every component and every
+          net's pins compared (v2/docs/records/w4dp/parity: w3de's net_compare.py against expected-d-netlist.json,
+          'ONLY THE EXPECTED CHANGES'); U14, U18, R48, TR_APRS, KEY and PA_EN on board D are unchanged, so
+          this reading stands on v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@7a2c0ac2190b141a
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_a.py@9684e7a9606aede6"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
-      - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
+      - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@7a2c0ac2190b141a"
     release_effect: BLOCKER
     source: ["owner ruling D-11", "v2/docs/MESHSAT-709-geometry-appendix.md:2932", "v2/ecad/tools/gen_sch_a.py:1177-1190, 1237-1245"]
     source_check: VERIFIED
@@ -6766,10 +6930,19 @@ records:
           v2/docs/records/w4ae/parity/expected-a-netlist.json, 'ONLY THE EXPECTED CHANGES'), it differs only in R216
           added (10 k, DOCK_SPARE to +3V3) and J_DOCK's value; U31 on PD_CC1 and PD_CC2 at J_USBC_OUT, and C96 and C97,
           are unchanged, so it stands PASS on the file at 0a2b59087bcc2678
+      - >-
+          v2/docs/TEST-PLAN.md re-read at the w4dp regeneration of 27 September 2026 (boards D and P and the
+          pack-protection table, MESHSAT-1357): TEST-PLAN.md changed by
+          v2/docs/records/w4dp/patch_test_plan_r8int6.py only in section 5: rows 10 to 14 after row 9 and
+          its closing paragraph's first two sentences and one clause restated; lines 1 to 81 are
+          byte-identical and every line after the file's line 92 moves down by 10 with its text unchanged;
+          the rows and sections this record cites (sections 1 to 4, rows E3 to E8, M7) are among the
+          unchanged text, and every added row states its Purpose and the requirement it Verifies, so this
+          reading stands on v2/docs/TEST-PLAN.md@ae57da0b57e214f7
     evidence_bound_to:
       - "v2/ecad/tools/gen_sch_a.py@9684e7a9606aede6"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
-      - "v2/docs/TEST-PLAN.md@4f15bd02a6a8be46"
+      - "v2/docs/TEST-PLAN.md@ae57da0b57e214f7"
     release_effect: MUST_JUSTIFY
     source: ["owner ruling D-17", "v2/ecad/tools/gen_sch_a.py:1104-1114", "v2/ecad/tools/pcb_decisions.yaml:256-429 (decision 31)"]
     source_check: VERIFIED
@@ -8281,8 +8454,17 @@ records:
           v2/docs/records/w4ae/parity/expected-a-netlist.json, 'ONLY THE EXPECTED CHANGES'), it differs only in R216
           added (10 k, DOCK_SPARE to +3V3) and J_DOCK's value; board A's PA_EN (U35, U36) and its gates are unchanged,
           so it stands FAIL on the file at 0a2b59087bcc2678
+      - >-
+          v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net re-read at the w4dp regeneration of 27 September 2026
+          (boards D and P and the pack-protection table, MESHSAT-1357): board D's netlist, regenerated by
+          w4dp on 27 September 2026 on the KiCad box with main's chain (handover_exports.py regen, PHASE
+          D37P, whose run on main's own clone reproduced main's files), differs from the file at
+          76700a687eb6187f only in D2's LCSC field and property (C81598, SC-72), every component and every
+          net's pins compared (v2/docs/records/w4dp/parity: w3de's net_compare.py against expected-d-netlist.json,
+          'ONLY THE EXPECTED CHANGES'); U12, U13, U14, U15 and their nets are unchanged, so this reading
+          stands on v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@7a2c0ac2190b141a
     evidence_bound_to:
-      - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
+      - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@7a2c0ac2190b141a"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
       - "v2/docs/feasibility/EMCON.md@367c52bcba7eb2a1"
       - "v2/docs/CURRENT-EVIDENCE.md@7a834fe55aea6ccd"
@@ -9535,7 +9717,7 @@ records:
     rule_coverage: FULL
     rulings: [D-15, D-09]
     choices: [SC-12]
-    waits_on: [S-45, L-03]
+    waits_on: [S-85, L-03]
     status: DEFINED
     evidence_result: INCONCLUSIVE
     evidence_phase: SCHEMATIC
@@ -9674,15 +9856,32 @@ records:
           counts, the reuse table and the register's entry count follow; board P's BAT-001 row, which this reading rests
           on, its netlist 085f833362fbbda8 and every reason given above are unchanged (the board P rows that moved are
           named above and none is BAT-001), so it stays INCONCLUSIVE, on the file at 7a834fe55aea6ccd
+      - >-
+          v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net and v2/ecad/tools/gen_sch_p.py re-read at the w4dp
+          regeneration of 27 September 2026 (boards D and P and the pack-protection table, MESHSAT-1357):
+          board P's netlist, regenerated by w4dp on 27 September 2026 the same way (PHASE P4; gen_sch_p.py
+          changed in its intent declarations and comments only), is identical to the file at
+          085f833362fbbda8 in every component and every net's pins (content16 efe60479293f0004 on both;
+          net_compare.py 'ONLY THE EXPECTED CHANGES' against an empty list); and gen_sch_p.py changed by
+          w4dp only after the section list: a block of intent declarations (PWR-001, SC-73) before the bypass
+          entries; every line up to 551, the part lines and the U2 section this reading cites among them, is
+          byte-identical; the netlist clause holds as before; pack_protection re-taken in scratch on board P
+          as regenerated reads FAIL, 3 of 63 checks, on the hardware level's under-voltage, over-temperature
+          and over-current rows (S-85), and no longer on the floor's absence (S-45 closed by SC-74); the
+          qualified review of D-09 is still not engaged, so this reading stands on
+          v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@760ac6f74d62d194,
+          v2/ecad/tools/gen_sch_p.py@740817ada5c8e14a
     evidence_bound_to:
-      - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
-      - "v2/ecad/tools/gen_sch_p.py@91ccbb922c427d43"
+      - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@760ac6f74d62d194"
+      - "v2/ecad/tools/gen_sch_p.py@740817ada5c8e14a"
       - "v2/docs/CURRENT-EVIDENCE.md@7a834fe55aea6ccd"
       - "v2/docs/review-packets/battery/REVIEW-REQUEST.md@91a257430cbeb53a"
     release_effect: BLOCKER
     source:
       - "v2/docs/TEST-PLAN.md:58-94"
+      - "v2/docs/TEST-PLAN.md:58-104 (section 5 with rows 10 to 14 as stream w4dp added them, not at sources_read_at)"
       - "v2/ecad/tools/pcb_pack_protection.yaml:17-40"
+      - "v2/ecad/tools/pcb_pack_protection.yaml:17-67 (the table as stream w4dp wrote it, 27 September 2026, not at sources_read_at)"
       - "owner ruling D-15"
       - "v2/docs/review-packets/battery/PROTECTION-ARCHITECTURE.md"
       - "v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md"
@@ -9772,7 +9971,7 @@ records:
     rule_coverage: PARTIAL
     rulings: [D-09, D-15]
     choices: [SC-12]
-    waits_on: [L-03, S-34, S-45, S-46]
+    waits_on: [L-03, S-34, S-46, S-85]
     status: FEASIBILITY_OPEN
     evidence_result: INCONCLUSIVE
     evidence_phase: SCHEMATIC
@@ -9888,6 +10087,7 @@ records:
       - "v2/docs/TEST-PLAN.md:79-80"
       - "v2/docs/PANEL.md section 10"
       - "v2/ecad/tools/pcb_pack_protection.yaml:142-157 (CHARGE_ and DISCHARGE_TEMPERATURE_WINDOW)"
+      - "v2/ecad/tools/pcb_pack_protection.yaml:215-231 (CHARGE_ and DISCHARGE_TEMPERATURE_WINDOW, the table as stream w4dp wrote it, not at sources_read_at)"
       - "v2/docs/review-packets/battery/THERMAL-COORDINATION.md section 4 (the ladder)"
     source_check: VERIFIED
     notes: >-
@@ -10132,8 +10332,17 @@ records:
           currents (6.15 A, F-IN-02) and note, and the DOCK_BLOCK stage's Mill-Max citation, change; the header and the
           pack source are byte-identical; the pack's configuration this reading rests on is the same text, so it stands
           FAIL on the file at a09ca0293afd1f7c
+      - >-
+          v2/ecad/tools/pcb_pack_protection.yaml re-read at the w4dp regeneration of 27 September 2026
+          (boards D and P and the pack-protection table, MESHSAT-1357): pcb_pack_protection.yaml changed by
+          w4dp (SC-74): the header gains a paragraph, secondary_protection declares the floor, the devices
+          F1, R10 and Q1 to Q2 are corrected or annotated and eight are added, and five `level: hardware`
+          rows follow the gauge's; the pack block (topology, series, parallel counts, currents, lines 40 to
+          47), the cell block and the gauge's nine rows are byte-identical; the 4S3P block of Samsung
+          INR18650-35E, about 145 Wh, and the one parallel count 3 are the same text, so this reading stands
+          on v2/ecad/tools/pcb_pack_protection.yaml@ab1dbc3f3f69aa46
     evidence_bound_to:
-      - "v2/ecad/tools/pcb_pack_protection.yaml@1cd670d6c7685645"
+      - "v2/ecad/tools/pcb_pack_protection.yaml@ab1dbc3f3f69aa46"
       - "v2/ecad/tools/pcb_energy_chain.yaml@a09ca0293afd1f7c"
       - "v2/ecad/tools/pcb_board_facts.yaml@07af4d0f2b166694"
       - "v2/cad/pack_4s.py@fab2cc216f7ba460"
@@ -10332,8 +10541,17 @@ records:
           out of scope), E3-H's purpose and trace gain its stepped run and P15 and no other row's purpose or trace
           changed, and section 4 still states its purpose and the requirements it verifies, so it stands on the file at
           4f15bd02a6a8be46
+      - >-
+          v2/docs/TEST-PLAN.md re-read at the w4dp regeneration of 27 September 2026 (boards D and P and the
+          pack-protection table, MESHSAT-1357): TEST-PLAN.md changed by
+          v2/docs/records/w4dp/patch_test_plan_r8int6.py only in section 5: rows 10 to 14 after row 9 and
+          its closing paragraph's first two sentences and one clause restated; lines 1 to 81 are
+          byte-identical and every line after the file's line 92 moves down by 10 with its text unchanged;
+          the rows and sections this record cites (sections 1 to 4, rows E3 to E8, M7) are among the
+          unchanged text, and every added row states its Purpose and the requirement it Verifies, so this
+          reading stands on v2/docs/TEST-PLAN.md@ae57da0b57e214f7
     evidence_bound_to:
-      - "v2/docs/TEST-PLAN.md@4f15bd02a6a8be46"
+      - "v2/docs/TEST-PLAN.md@ae57da0b57e214f7"
     release_effect: BLOCKER
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2804 (16e)", "v2/docs/TEST-PLAN.md:1-3"]
     source_check: VERIFIED
@@ -10924,19 +11142,37 @@ records:
           section 7's 0x21 and 0x24 row (U27's P1.5 reads HOT-R1), with the line count kept; every other line is
           byte-identical to the file at 57a56726f9db723a; sections 1 and 6 are unchanged, and section 7's bus table
           still carries the supervisors at 0x34 to 0x36, so it stands PASS on the file at 4647782f5aca7c13
+      - >-
+          v2/docs/TEST-PLAN.md and v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net and
+          v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net re-read at the w4dp regeneration of 27 September 2026
+          (boards D and P and the pack-protection table, MESHSAT-1357): board D's netlist, regenerated by
+          w4dp on 27 September 2026 on the KiCad box with main's chain (handover_exports.py regen, PHASE
+          D37P, whose run on main's own clone reproduced main's files), differs from the file at
+          76700a687eb6187f only in D2's LCSC field and property (C81598, SC-72), every component and every
+          net's pins compared (v2/docs/records/w4dp/parity: w3de's net_compare.py against expected-d-netlist.json,
+          'ONLY THE EXPECTED CHANGES'); and board P's netlist, regenerated by w4dp on 27 September 2026 the
+          same way (PHASE P4; gen_sch_p.py changed in its intent declarations and comments only), is
+          identical to the file at 085f833362fbbda8 in every component and every net's pins (content16
+          efe60479293f0004 on both; net_compare.py 'ONLY THE EXPECTED CHANGES' against an empty list); and
+          TEST-PLAN.md changed by v2/docs/records/w4dp/patch_test_plan_r8int6.py only in section 5: rows 10
+          to 14 after row 9 and its closing paragraph's first two sentences and one clause restated; lines 1
+          to 81 are byte-identical and every line after the file's line 92 moves down by 10 with its text
+          unchanged; none of the parts, nets or test-plan lines this record cites on boards D and P is among
+          the changes, so this reading stands on v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@7a2c0ac2190b141a,
+          v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@760ac6f74d62d194, v2/docs/TEST-PLAN.md@ae57da0b57e214f7
     evidence_bound_to:
-      - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
+      - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@7a2c0ac2190b141a"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
       - "v2/docs/PANEL.md@4647782f5aca7c13"
       - "v2/docs/CONOPS.md@6ebe6760c4312bca"
       - "v2/docs/V2-SPEC.md@a92ea2ef3793a3c9"
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
-      - "v2/docs/TEST-PLAN.md@4f15bd02a6a8be46"
+      - "v2/docs/TEST-PLAN.md@ae57da0b57e214f7"
       - "v2/ecad/tools/pcb_decisions.yaml@b5f7162443d5ad91"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@3fddbb3edcd4248a"
-      - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
+      - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@760ac6f74d62d194"
     release_effect: BLOCKER
     source:
       - "v2/docs/PANEL.md section 6"
@@ -11011,8 +11247,17 @@ records:
           forced at room temperature); E3-L is unchanged; every test row still states its purpose and the requirements
           it verifies (47 rows now, P15 added; E3-H's purpose and trace gain its stepped run and P15), which is this
           record's acceptance, so it stands on the file at 4f15bd02a6a8be46
+      - >-
+          v2/docs/TEST-PLAN.md re-read at the w4dp regeneration of 27 September 2026 (boards D and P and the
+          pack-protection table, MESHSAT-1357): TEST-PLAN.md changed by
+          v2/docs/records/w4dp/patch_test_plan_r8int6.py only in section 5: rows 10 to 14 after row 9 and
+          its closing paragraph's first two sentences and one clause restated; lines 1 to 81 are
+          byte-identical and every line after the file's line 92 moves down by 10 with its text unchanged;
+          the rows and sections this record cites (sections 1 to 4, rows E3 to E8, M7) are among the
+          unchanged text, and every added row states its Purpose and the requirement it Verifies, so this
+          reading stands on v2/docs/TEST-PLAN.md@ae57da0b57e214f7
     evidence_bound_to:
-      - "v2/docs/TEST-PLAN.md@4f15bd02a6a8be46"
+      - "v2/docs/TEST-PLAN.md@ae57da0b57e214f7"
     release_effect: ADVISORY
     source: ["v2/docs/TEST-PLAN.md:18-19 (as read at eadbe571)", "v2/docs/OPERATING-ENVELOPE.md:205", "v2/docs/OPERATING-ENVELOPE.md:249"]
     source_check: VERIFIED
@@ -11164,8 +11409,17 @@ records:
           forced at room temperature); E3-L is unchanged; rows E5 (the sealed kit) and E8 (Peli's pressure valve), which
           this reading rests on, are byte-identical to the file at 701c1020053e7903, so it stands on the file at
           4f15bd02a6a8be46
+      - >-
+          v2/docs/TEST-PLAN.md re-read at the w4dp regeneration of 27 September 2026 (boards D and P and the
+          pack-protection table, MESHSAT-1357): TEST-PLAN.md changed by
+          v2/docs/records/w4dp/patch_test_plan_r8int6.py only in section 5: rows 10 to 14 after row 9 and
+          its closing paragraph's first two sentences and one clause restated; lines 1 to 81 are
+          byte-identical and every line after the file's line 92 moves down by 10 with its text unchanged;
+          the rows and sections this record cites (sections 1 to 4, rows E3 to E8, M7) are among the
+          unchanged text, and every added row states its Purpose and the requirement it Verifies, so this
+          reading stands on v2/docs/TEST-PLAN.md@ae57da0b57e214f7
     evidence_bound_to:
-      - "v2/docs/TEST-PLAN.md@4f15bd02a6a8be46"
+      - "v2/docs/TEST-PLAN.md@ae57da0b57e214f7"
     release_effect: ADVISORY
     source: ["v2/docs/TEST-PLAN.md:20 (as read at eadbe571)", "v2/docs/TEST-PLAN.md:23 (as read at eadbe571)", "v2/docs/MESHSAT-709-geometry-appendix.md:2864"]
     source_check: VERIFIED
@@ -11228,8 +11482,17 @@ records:
           forced at room temperature); E3-L is unchanged; section 1's deployed closed-lid state and section 6's
           closed-lid thermal test E3-L, which this reading rests on, are byte-identical to the file at 701c1020053e7903,
           so it stands on the file at 4f15bd02a6a8be46
+      - >-
+          v2/docs/TEST-PLAN.md re-read at the w4dp regeneration of 27 September 2026 (boards D and P and the
+          pack-protection table, MESHSAT-1357): TEST-PLAN.md changed by
+          v2/docs/records/w4dp/patch_test_plan_r8int6.py only in section 5: rows 10 to 14 after row 9 and
+          its closing paragraph's first two sentences and one clause restated; lines 1 to 81 are
+          byte-identical and every line after the file's line 92 moves down by 10 with its text unchanged;
+          the rows and sections this record cites (sections 1 to 4, rows E3 to E8, M7) are among the
+          unchanged text, and every added row states its Purpose and the requirement it Verifies, so this
+          reading stands on v2/docs/TEST-PLAN.md@ae57da0b57e214f7
     evidence_bound_to:
-      - "v2/docs/TEST-PLAN.md@4f15bd02a6a8be46"
+      - "v2/docs/TEST-PLAN.md@ae57da0b57e214f7"
     release_effect: ADVISORY
     source:
       - "v2/docs/TEST-PLAN.md:8 (as read at eadbe571)"
@@ -13031,9 +13294,17 @@ records:
           section 7's 0x21 and 0x24 row (U27's P1.5 reads HOT-R1), with the line count kept; every other line is
           byte-identical to the file at 57a56726f9db723a; section 10 is unchanged, so it stands PASS on the file at
           4647782f5aca7c13
+      - >-
+          v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net re-read at the w4dp regeneration of 27 September 2026
+          (boards D and P and the pack-protection table, MESHSAT-1357): board P's netlist, regenerated by
+          w4dp on 27 September 2026 the same way (PHASE P4; gen_sch_p.py changed in its intent declarations
+          and comments only), is identical to the file at 085f833362fbbda8 in every component and every
+          net's pins (content16 efe60479293f0004 on both; net_compare.py 'ONLY THE EXPECTED CHANGES' against
+          an empty list); J_SMB and its four nets are unchanged, so this reading stands on
+          v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@760ac6f74d62d194
     evidence_bound_to:
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
-      - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
+      - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@760ac6f74d62d194"
       - "v2/docs/ASSEMBLY.md@b49f853f450d49ee"
       - "v2/docs/PANEL.md@4647782f5aca7c13"
       - "v2/ecad/tools/check_contracts.py@5e14f456a0791c35"
@@ -13451,13 +13722,28 @@ records:
           HOT_R1_G, D7 and D8 carrying their order code C51897884, and J_BLK's value; board E's D1 to D10 keep their
           symbols, pins and nets (D7 and D8 gain their order code only, K on CELL_F), so it stands FAIL on the file at
           56adc9746d61c4e0
+      - >-
+          v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net and v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net re-read at
+          the w4dp regeneration of 27 September 2026 (boards D and P and the pack-protection table,
+          MESHSAT-1357): board D's netlist, regenerated by w4dp on 27 September 2026 on the KiCad box with
+          main's chain (handover_exports.py regen, PHASE D37P, whose run on main's own clone reproduced
+          main's files), differs from the file at 76700a687eb6187f only in D2's LCSC field and property
+          (C81598, SC-72), every component and every net's pins compared (v2/docs/records/w4dp/parity: w3de's
+          net_compare.py against expected-d-netlist.json, 'ONLY THE EXPECTED CHANGES'); and board P's
+          netlist, regenerated by w4dp on 27 September 2026 the same way (PHASE P4; gen_sch_p.py changed in
+          its intent declarations and comments only), is identical to the file at 085f833362fbbda8 in every
+          component and every net's pins (content16 efe60479293f0004 on both; net_compare.py 'ONLY THE
+          EXPECTED CHANGES' against an empty list); board D's D1 and board P's D1 are unchanged, and D2's
+          pin 1, its cathode by the sheet SC-72 files, stays on +5V_TX, so this reading stands on
+          v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@7a2c0ac2190b141a,
+          v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@760ac6f74d62d194
     evidence_bound_to:
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@3fddbb3edcd4248a"
-      - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
+      - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@7a2c0ac2190b141a"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
-      - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
+      - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@760ac6f74d62d194"
     release_effect: BLOCKER
     source:
       - "v2/ecad/tools/gen_sch_e.py:351"

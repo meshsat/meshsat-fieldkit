@@ -1,0 +1,6 @@
+counts (committed, candidate): {'components': [85, 85], 'nets': [55, 55], 'pins': [210, 210]}
+components_added: []
+components_removed: []
+nets_added: []
+nets_removed: []
+RESULT: ONLY THE EXPECTED CHANGES

@@ -62,7 +62,7 @@ time and are listed separately below.
 
 | rule | what it needs | owner |
 |---|---|---|
-| BAT-001 | DONE 18 September 2026 for the derivation half: the cell's specification is in the tree, t | OWNER |
+| BAT-001 | 27 September 2026: decision 40 is ruled and in the schematic, and the table judges the par | OWNER |
 | DFA-001 | the assembler's own preview of each polarised footprint, which is the artefact the accepta | OWNER |
 | IMP-001 | solve every geometry, pin the standard, and get the fabricator's written confirmation with | OWNER |
 | PI-001 | put the crossover to the owner as a decision: keep the IPC-2221A bar, take the most conser | OWNER |
