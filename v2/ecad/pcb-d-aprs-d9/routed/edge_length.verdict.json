@@ -57,7 +57,7 @@
   "board": "d",
   "board_facts": {
    "path": "tools/pcb_board_facts.yaml",
-   "sha256_16": "4a0474ddac0b1404"
+   "sha256_16": "07af4d0f2b166694"
   },
   "board_table": {
    "path": "tools/boards/d.json",
@@ -71,12 +71,12 @@
   "extent_mm": 180.0,
   "intent": {
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs-intent.json",
-   "sha256_16": "865d8514f1d5b7f8"
+   "sha256_16": "443fd745879d3022"
   },
   "netlist": {
    "content16": "ecc07f382c735835",
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
-   "sha256_16": "0dad82b4b6a79290"
+   "sha256_16": "76700a687eb6187f"
   },
   "project": {
    "path": "pcb-d-aprs-d9/pcb-d-aprs.kicad_pro",
@@ -99,22 +99,22 @@
   "rule_fingerprints": {
    "SI-001": "e67c393563c5d8ce"
   },
-  "rule_set_fingerprint": "950539a66227908b"
+  "rule_set_fingerprint": "635ff031f210f48c"
  },
  "rules": [
   "SI-001"
  ],
  "runtime": {
-  "python": "3.11.2"
+  "python": "3.12.3"
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "53a98a71b53c",
-  "tools_tree_sha": "6f6b28e777c8262b"
+  "git_head": "391d857966d6",
+  "tools_tree_sha": "784492a16eb43399"
  },
- "ts": "2026-09-27T00:26:20Z",
+ "ts": "2026-09-27T13:22:48Z",
  "verdict": "INCONCLUSIVE",
- "version": "53a98a71b53c+dirty",
+ "version": "391d857966d6",
  "writer": {
   "file": "edge_length.py",
   "sha16": "fd66cbd9bce2fa7b"

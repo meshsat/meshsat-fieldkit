@@ -1,6 +1,17 @@
 {
  "advisory": false,
  "applicable": true,
+ "code_bundle": {
+  "entry": "clock_check.py",
+  "files": {
+   "boardtable.py": "41bd92e61f12c374",
+   "clock_check.py": "8da2b82cac511dd0",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "5e8295c907935c43",
+  "unresolved": []
+ },
  "counts": {
   "bad": 0,
   "crystals": 1,
@@ -12,7 +23,7 @@
   "board": "e",
   "netlist": {
    "path": "out/pcb-e1-dock.net",
-   "sha256_16": "7fb0f4714657251a"
+   "sha256_16": "d6137f50059e5cbc"
   }
  },
  "missing_input": null,
@@ -22,21 +33,24 @@
   "rule_fingerprints": {
    "CLK-001": "87aa8102f151ef26"
   },
-  "rule_set_fingerprint": "ff8151db3576437b"
+  "rule_set_fingerprint": "635ff031f210f48c"
  },
  "rules": [
   "CLK-001"
  ],
+ "runtime": {
+  "python": "3.12.3"
+ },
  "tool": "clock_check",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "git_head": "391d857966d6",
+  "tools_tree_sha": "784492a16eb43399"
  },
- "ts": "2026-09-21T12:52:04Z",
+ "ts": "2026-09-27T13:23:05Z",
  "verdict": "PASS",
- "version": "unknown",
+ "version": "391d857966d6",
  "writer": {
   "file": "clock_check.py",
-  "sha16": "cb891bbd50472f07"
+  "sha16": "8da2b82cac511dd0"
  }
 }

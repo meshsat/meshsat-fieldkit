@@ -1,42 +1,83 @@
 {
  "advisory": false,
  "applicable": true,
- "counts": {
-  "allowed": 6,
-  "blocking": 0,
-  "violations": 2077
+ "code_bundle": {
+  "entry": "erc_gate.py",
+  "files": {
+   "erc_gate.py": "bb4bf868c515f37a",
+   "intent.py": "f1ac033e0f3c10f1",
+   "kisch.py": "3e28374d15be25e0",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "sch_prov.py": "a98e5a71ac74ccee",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "0d2dedd042c32274",
+  "unresolved": []
  },
- "denominator": 2077,
+ "counts": {
+  "allowed": 7,
+  "blocking": 0,
+  "violations": 2879
+ },
+ "denominator": 2879,
  "evidence": [],
  "inputs": {
+  "allow_list": {
+   "path": "pcb-b-compute-b19/erc-allow.txt",
+   "sha256_16": "99c78bb72fa358b5"
+  },
   "board": "b",
+  "erc_report": {
+   "path": "pcb-b-compute-b19/out/pcb-b-compute-erc.json",
+   "sha256_16": "ea0e743ec4b3cf8c"
+  },
+  "netlist": {
+   "content16": "39d83d25efcd75a6",
+   "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
+   "sha256_16": "8b78c59754a6a0c7"
+  },
+  "netlist_tie": {
+   "proved": true,
+   "why": "the report, the schematic and the netlist's own provenance agree on schematic 76c29fa7f88a"
+  },
   "project": {
    "path": ".",
    "sha256_16": null
+  },
+  "schematic": {
+   "path": "pcb-b-compute-b19/pcb-b-compute.kicad_sch",
+   "sha256_16": "76c29fa7f88a39e0"
   }
  },
  "missing_input": null,
- "note": "6 error(s) allow-listed with a reason",
+ "note": "7 error(s) allow-listed with a reason",
  "policy": {
   "hard_types": 15,
   "rule_fingerprints": {
    "SCH-001": "64784cfeedc67195"
   },
-  "rule_set_fingerprint": "ff8151db3576437b"
+  "rule_set_fingerprint": "635ff031f210f48c"
  },
  "rules": [
   "SCH-001"
  ],
+ "runtime": {
+  "python": "3.12.3"
+ },
  "tool": "erc_gate",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "git_head": "391d857966d6",
+  "tools_tree_sha": "784492a16eb43399"
  },
- "ts": "2026-09-21T12:43:38Z",
+ "ts": "2026-09-27T13:22:13Z",
  "verdict": "PASS",
- "version": "unknown",
+ "version": "391d857966d6",
  "writer": {
   "file": "erc_gate.py",
-  "sha16": "e7a0ae08368bb403"
+  "sha16": "bb4bf868c515f37a"
  }
 }

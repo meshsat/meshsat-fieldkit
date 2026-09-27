@@ -87,12 +87,12 @@
   },
   "intent": {
    "path": "pcb-p-pack-p2/out/pcb-p-pack-intent.json",
-   "sha256_16": "59d679f0859fc203"
+   "sha256_16": "6ff1b8129a5c5aff"
   },
   "netlist": {
-   "content16": "c8a3d456e5d2936b",
+   "content16": "efe60479293f0004",
    "path": "pcb-p-pack-p2/out/pcb-p-pack.net",
-   "sha256_16": "4342c4cbe1b43dc4"
+   "sha256_16": "085f833362fbbda8"
   },
   "threshold_a": 0.0
  },
@@ -103,22 +103,23 @@
   "rule_fingerprints": {
    "PWR-001": "6e91133d2ef9dee3"
   },
-  "rule_set_fingerprint": "950539a66227908b"
+  "rule_set_fingerprint": "635ff031f210f48c"
  },
  "rules": [
   "PWR-001"
  ],
  "runtime": {
-  "python": "3.11.2"
+  "kicad": "9.0.9-9.0.9~ubuntu24.04.1",
+  "python": "3.12.3"
  },
  "tool": "intent_rails",
  "tools": {
-  "git_head": "53a98a71b53c",
-  "tools_tree_sha": "6f6b28e777c8262b"
+  "git_head": "391d857966d6",
+  "tools_tree_sha": "784492a16eb43399"
  },
- "ts": "2026-09-27T00:26:21Z",
+ "ts": "2026-09-27T13:23:27Z",
  "verdict": "FAIL",
- "version": "53a98a71b53c+dirty",
+ "version": "391d857966d6",
  "writer": {
   "file": "intent_checks.py",
   "sha16": "1ad7af0c718ba940"

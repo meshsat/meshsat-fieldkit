@@ -6793,7 +6793,7 @@ records:
       decisions: []
     rule_coverage: FULL
     status: DEFINED
-    evidence_result: INCONCLUSIVE
+    evidence_result: FAIL
     evidence_phase: SCHEMATIC
     evidence_class: DESK_REVIEW
     evidence:
@@ -7019,18 +7019,35 @@ records:
           D's RF-002 and SCH-004 rows, which this constraint reads, keep their class and cause, and its own reasons (the
           line contracts only, the SA868's open row) are unchanged, so it stands INCONCLUSIVE on the file at
           0cf3947848784ced
+      - >-
+          v2/docs/CURRENT-EVIDENCE.md re-read at the consolidated re-take of 27 September 2026 (retake_schematic_phase.py
+          --run --in-place --routed in a clean clone of main at 391d8579 on the KiCad box, then rules_status three times
+          and rules_render): both rules this constraint rests on now read on current-candidate evidence on both boards it
+          is allocated to. SCH-004 reads PASS on board D (safe_lines_d) and on board A (safe_lines_a). RF-002 reads FAIL
+          on board D (inhibit_chain_d, 2 of 8 checks, netlist 76700a687eb6187f) and on board A (inhibit_chain_a, 1 failed
+          and 2 undecided of 9, netlist da05dc02bc1e612f). The failing check is the line itself: with board C unpowered,
+          TX_INHIBIT_n is held only by the pull-downs A R145, B R59 and D R2 (100 k each) against the stated Ioff of C's
+          U9 and U14 and D's U12 (10 uA each) and A's U35 and U37 (0.5 uA each), and the walk bounds it at 1.09 V, above
+          the 0.8 V VIL it applies to the gates that read it (W3T-F1, EQ-25 in v2/docs/handover/ENGINEERING-QUESTIONS.md);
+          board D's SA868 row fails through that line (U13 released, SA_PTT_n held at 3.12 V by R88 and R89). An element
+          of D's transmit gate therefore does not hold its inhibiting state in a fault state the acceptance covers, so
+          this reading moves from INCONCLUSIVE to FAIL on the file at ffa585abf6c0a5c7. Taken by the session under the
+          owner's standing rule of 26 September 2026, not by the owner; reversed by setting evidence_result back to
+          INCONCLUSIVE with the reason. The remedy is EQ-25's design work, under FEA-002
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
       - "v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3"
-      - "v2/docs/CURRENT-EVIDENCE.md@0cf3947848784ced"
+      - "v2/docs/CURRENT-EVIDENCE.md@ffa585abf6c0a5c7"
     release_effect: BLOCKER
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2825", "v2/docs/PANEL.md section 6", "v2/docs/feasibility/EMCON.md sections 4.1 and 4.2"]
     source_check: VERIFIED
     history: >-
       Read PASS at d468613e on the generator lines alone, before evidence was classed. Its rules read AWAITING_REVALIDATION
       and the EMCON page leaves the exciter's row open, so it reads INCONCLUSIVE; the acceptance now names what the trace
-      has to show. Board D's KEY chain was rebuilt in 458b2873 (three 74LVC1G34 buffers, U13 open drain).
+      has to show. Board D's KEY chain was rebuilt in 458b2873 (three 74LVC1G34 buffers, U13 open drain). From the
+      consolidated re-take of 27 September 2026 RF-002 reads FAIL on current-candidate evidence on boards D and A
+      (TX_INHIBIT_n's fail-safe level, W3T-F1), so it reads FAIL.
 
   - id: CON-021
     kind: constraint
@@ -8291,10 +8308,23 @@ records:
           from CONFIG_CHANGED to NETLIST_MISMATCH, and the counts follow (current-candidate rows 11 to 8 of 338); board
           P's rows, its netlist 085f833362fbbda8 and every reason given against it are unchanged, so it stands
           INCONCLUSIVE on the file at 0cf3947848784ced
+      - >-
+          v2/docs/CURRENT-EVIDENCE.md re-read at the consolidated re-take of 27 September 2026 (retake_schematic_phase.py
+          --run --in-place --routed in a clean clone of main at 391d8579 on the KiCad box, then rules_status three times
+          and rules_render): BAT-001 on board P now reads FAIL on current-candidate evidence (pack_protection on netlist
+          085f833362fbbda8, 1 of 45 checks: 9 of 9 functions with firmware thresholds, no second protector and no chemical
+          fuse). That FAIL is taken from the gate's table v2/ecad/tools/pcb_pack_protection.yaml at 1cd670d6c7685645,
+          whose line 33 still quotes the old generator ('no chemical fuse (the 25 A mini blade is the fuse)', PTC and
+          PTCEN tied off, no second protector IC), while the committed netlist carries the BQ7720700 second level (U2,
+          SEC_VDD, SEC_V1 to SEC_V4) and the fuse drive (FUSE_G, FUSE_GQ): the table, not the board, is what it judges, so
+          it does not judge the second level this reading describes. The qualified review of D-09 is still not engaged.
+          Board P's other reasons move to current evidence too (PWR-001 FAIL, SI-001 INCONCLUSIVE, RF-002 PASS on
+          inhibit_chain_p), and none of them is a reason this reading rests on, so it stands INCONCLUSIVE on the file at
+          ffa585abf6c0a5c7
     evidence_bound_to:
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
       - "v2/ecad/tools/gen_sch_p.py@91ccbb922c427d43"
-      - "v2/docs/CURRENT-EVIDENCE.md@0cf3947848784ced"
+      - "v2/docs/CURRENT-EVIDENCE.md@ffa585abf6c0a5c7"
       - "v2/docs/review-packets/battery/REVIEW-REQUEST.md@91a257430cbeb53a"
     release_effect: BLOCKER
     source:

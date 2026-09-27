@@ -29,18 +29,18 @@
  },
  "counts": {
   "answered_nets": 6,
-  "classes": 60,
+  "classes": 63,
   "contradicted_nets": 0,
   "decided_nets": 6,
   "layout_bound_nets": 0,
-  "low_speed_nets": 159,
+  "low_speed_nets": 170,
   "may_be_long_nets": 6,
-  "signal_nets": 283,
-  "undecided_nets": 118
+  "signal_nets": 290,
+  "undecided_nets": 114
  },
- "denominator": 283,
+ "denominator": 290,
  "evidence": [
-  "UNDECIDED (no declaration) (UNKNOWN, 42 net(s)): no signal-class declaration names these nets, so neither their class nor their edge is kno; ICs on them: LM5176PWPR buck-boost controller, +12V_HF from VBAT U15, LM5176PWPR buck-boost controller, +13V8_PA from VBAT U13, LM5176PWPR buck-boost controller, +54V_POE from VBAT U16, LM5176PWPR buck-boost controller, +5V_DEV from VBAT U7, LM5176PWPR buck-boost controller, +5V_S2 from VBAT U5",
+  "UNDECIDED (no declaration) (UNKNOWN, 38 net(s)): no signal-class declaration names these nets, so neither their class nor their edge is kno; ICs on them: LM5176PWPR buck-boost controller, +12V_HF from VBAT U15, LM5176PWPR buck-boost controller, +13V8_PA from VBAT U13, LM5176PWPR buck-boost controller, +54V_POE from VBAT U16, LM5176PWPR buck-boost controller, +5V_DEV from VBAT U7, LM5176PWPR buck-boost controller, +5V_S2 from VBAT U5",
   "UNDECIDED *_BOOT (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: AP64500SP-13 5 A buck, 5.1 V rail +5V_S1 U4, AP64500SP-13 5 A buck, 5.1 V rail +5V_S3 U6",
   "UNDECIDED *_BOOT1 (HIGH_SPEED_DIGITAL, 7 net(s)): no edge is declared and no held document states one; ICs on them: LM5176PWPR buck-boost controller, +12V_HF from VBAT U15, LM5176PWPR buck-boost controller, +13V8_PA from VBAT U13, LM5176PWPR buck-boost controller, +54V_POE from VBAT U16, LM5176PWPR buck-boost controller, +5V_DEV from VBAT U7, LM5176PWPR buck-boost controller, +5V_S2 from VBAT U5",
   "UNDECIDED *_BOOT2 (HIGH_SPEED_DIGITAL, 7 net(s)): no edge is declared and no held document states one; ICs on them: LM5176PWPR buck-boost controller, +12V_HF from VBAT U15, LM5176PWPR buck-boost controller, +13V8_PA from VBAT U13, LM5176PWPR buck-boost controller, +54V_POE from VBAT U16, LM5176PWPR buck-boost controller, +5V_DEV from VBAT U7, LM5176PWPR buck-boost controller, +5V_S2 from VBAT U5",
@@ -66,11 +66,11 @@
   "board": "a",
   "board_facts": {
    "path": "tools/pcb_board_facts.yaml",
-   "sha256_16": "4a0474ddac0b1404"
+   "sha256_16": "07af4d0f2b166694"
   },
   "board_table": {
    "path": "tools/boards/a.json",
-   "sha256_16": "4e680bed9e8fd268"
+   "sha256_16": "b9411f2403e03da7"
   },
   "critical_k": 6,
   "document_1": {
@@ -80,12 +80,12 @@
   "extent_mm": 400.0,
   "intent": {
    "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
-   "sha256_16": "98f0100b1023700e"
+   "sha256_16": "92dd3b1cda9046b8"
   },
   "netlist": {
-   "content16": "66797255f4591a23",
+   "content16": "2c5c1d5a388cc95f",
    "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256_16": "3a786cf31614fe63"
+   "sha256_16": "da05dc02bc1e612f"
   },
   "project": {
    "path": "pcb-a-power-a23/pcb-a-power.kicad_pro",
@@ -108,22 +108,22 @@
   "rule_fingerprints": {
    "SI-001": "e67c393563c5d8ce"
   },
-  "rule_set_fingerprint": "950539a66227908b"
+  "rule_set_fingerprint": "635ff031f210f48c"
  },
  "rules": [
   "SI-001"
  ],
  "runtime": {
-  "python": "3.11.2"
+  "python": "3.12.3"
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "53a98a71b53c",
-  "tools_tree_sha": "6f6b28e777c8262b"
+  "git_head": "391d857966d6",
+  "tools_tree_sha": "784492a16eb43399"
  },
- "ts": "2026-09-27T00:26:17Z",
+ "ts": "2026-09-27T13:21:59Z",
  "verdict": "INCONCLUSIVE",
- "version": "53a98a71b53c+dirty",
+ "version": "391d857966d6",
  "writer": {
   "file": "edge_length.py",
   "sha16": "fd66cbd9bce2fa7b"

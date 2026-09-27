@@ -1,6 +1,24 @@
 {
  "advisory": false,
  "applicable": true,
+ "code_bundle": {
+  "entry": "safe_lines.py",
+  "files": {
+   "boardtable.py": "41bd92e61f12c374",
+   "intent.py": "f1ac033e0f3c10f1",
+   "kisch.py": "3e28374d15be25e0",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "port_protect.py": "2d69facd3c25c8a4",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "safe_lines.py": "8529487f405ec55d",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "7e3540d47e33f75e",
+  "unresolved": []
+ },
  "counts": {
   "declared": 0
  },
@@ -9,7 +27,11 @@
   "This board carries no active part of any kind: it is copper targets, plated wire lands and mounting holes. Nothing on it can assert or read a line, so no line whose assertion inhibits a hazard lives here; SHORE_INHIBIT crosses the dock as a conductor of boards A and E and is judged on those two."
  ],
  "inputs": {
-  "board": "e5"
+  "board": "e5",
+  "board_file": {
+   "path": "pcb-e5-block/pcb-e5-block.kicad_pcb",
+   "sha256_16": "686b29a734c55b9a"
+  }
  },
  "missing_input": null,
  "note": "this board declares that it has none, with its reason, and it has no netlist",
@@ -18,21 +40,24 @@
   "rule_fingerprints": {
    "SCH-004": "0d3209a18476cc88"
   },
-  "rule_set_fingerprint": "ff8151db3576437b"
+  "rule_set_fingerprint": "635ff031f210f48c"
  },
  "rules": [
   "SCH-004"
  ],
+ "runtime": {
+  "python": "3.12.3"
+ },
  "tool": "safe_lines_e5",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "git_head": "391d857966d6",
+  "tools_tree_sha": "784492a16eb43399"
  },
- "ts": "2026-09-21T12:53:10Z",
+ "ts": "2026-09-27T13:23:13Z",
  "verdict": "PASS",
- "version": "unknown",
+ "version": "391d857966d6",
  "writer": {
   "file": "safe_lines.py",
-  "sha16": "a2c964efb94a892f"
+  "sha16": "8529487f405ec55d"
  }
 }

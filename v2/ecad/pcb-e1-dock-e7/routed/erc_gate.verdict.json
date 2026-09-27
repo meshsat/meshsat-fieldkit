@@ -1,18 +1,52 @@
 {
  "advisory": false,
  "applicable": true,
+ "code_bundle": {
+  "entry": "erc_gate.py",
+  "files": {
+   "erc_gate.py": "bb4bf868c515f37a",
+   "intent.py": "f1ac033e0f3c10f1",
+   "kisch.py": "3e28374d15be25e0",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "sch_prov.py": "a98e5a71ac74ccee",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "0d2dedd042c32274",
+  "unresolved": []
+ },
  "counts": {
   "allowed": 0,
   "blocking": 0,
-  "violations": 337
+  "violations": 367
  },
- "denominator": 337,
+ "denominator": 367,
  "evidence": [],
  "inputs": {
   "board": "e",
+  "erc_report": {
+   "path": "pcb-e1-dock-e7/out/pcb-e1-dock-erc.json",
+   "sha256_16": "280b602a43c38794"
+  },
+  "netlist": {
+   "content16": "b8d237f0b8d759f5",
+   "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
+   "sha256_16": "d6137f50059e5cbc"
+  },
+  "netlist_tie": {
+   "proved": true,
+   "why": "the report, the schematic and the netlist's own provenance agree on schematic bd50de114865"
+  },
   "project": {
    "path": ".",
    "sha256_16": null
+  },
+  "schematic": {
+   "path": "pcb-e1-dock-e7/pcb-e1-dock.kicad_sch",
+   "sha256_16": "bd50de114865448b"
   }
  },
  "missing_input": null,
@@ -22,21 +56,24 @@
   "rule_fingerprints": {
    "SCH-001": "64784cfeedc67195"
   },
-  "rule_set_fingerprint": "ff8151db3576437b"
+  "rule_set_fingerprint": "635ff031f210f48c"
  },
  "rules": [
   "SCH-001"
  ],
+ "runtime": {
+  "python": "3.12.3"
+ },
  "tool": "erc_gate",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "git_head": "391d857966d6",
+  "tools_tree_sha": "784492a16eb43399"
  },
- "ts": "2026-09-21T12:51:46Z",
+ "ts": "2026-09-27T13:22:58Z",
  "verdict": "PASS",
- "version": "unknown",
+ "version": "391d857966d6",
  "writer": {
   "file": "erc_gate.py",
-  "sha16": "e7a0ae08368bb403"
+  "sha16": "bb4bf868c515f37a"
  }
 }

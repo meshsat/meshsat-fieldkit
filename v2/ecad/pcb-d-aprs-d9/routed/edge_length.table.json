@@ -15,7 +15,7 @@
   "board": "d",
   "board_facts": {
    "path": "tools/pcb_board_facts.yaml",
-   "sha256_16": "4a0474ddac0b1404"
+   "sha256_16": "07af4d0f2b166694"
   },
   "board_table": {
    "path": "tools/boards/d.json",
@@ -29,12 +29,12 @@
   "extent_mm": 180.0,
   "intent": {
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs-intent.json",
-   "sha256_16": "865d8514f1d5b7f8"
+   "sha256_16": "443fd745879d3022"
   },
   "netlist": {
    "content16": "ecc07f382c735835",
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
-   "sha256_16": "0dad82b4b6a79290"
+   "sha256_16": "76700a687eb6187f"
   },
   "project": {
    "path": "pcb-d-aprs-d9/pcb-d-aprs.kicad_pro",
