@@ -1,0 +1,2106 @@
+{
+ "boards": [
+  {
+   "letter": "a",
+   "phase_dir": "pcb-a-power-a23",
+   "refused": null,
+   "steps": [
+    {
+     "writer": "erc_gate.py",
+     "rules": [
+      "SCH-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/erc_gate.py",
+      ".",
+      "pcb-a-power",
+      "--run"
+     ],
+     "rc": 0,
+     "seconds": 2.5,
+     "readings": {
+      "erc_gate": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:15Z",
+       "written": true,
+       "denominator": 1524,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "erc_gate: warning  unconnected_wire_endpoint                133\nerc_gate: netlist tied: the report, the schematic and the netlist's own provenance agree on schematic dbf2926a3a0f\nerc_gate: no blocking error (1524 violations, 0 error(s) allow-listed with a reason, warnings 1524)\nverdict: erc_gate               PASS         of 1524 {\"allowed\": 0, \"blocking\": 0, \"violations\": 1524}",
+     "t0": 1790542754.1674259
+    },
+    {
+     "writer": "safe_lines.py",
+     "rules": [
+      "SCH-004"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/safe_lines.py",
+      "out/pcb-a-power.net"
+     ],
+     "rc": 0,
+     "seconds": 0.8,
+     "readings": {
+      "safe_lines_a": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:16Z",
+       "written": true,
+       "denominator": 7,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  ZEROIZE_HW       safe high carries   pull down [-] pull up [R117 (10k to +3V3)] drivers [-] reads [-] leaves on [J_AB1.20, J_MEZZ1.15]\n  SHORE_INHIBIT    safe low  carries   pull down [R118 (100k)] pull up [-] drivers [-] reads [-] leaves on [J_AB1.21, J_DOCK.8]\n  DOCK_SPARE       safe high listens   pull down [-] pull up [R216 (10k to +3V3)] drivers [-] reads [U27.18 (PCA9555PW (0x21): enables an)] leaves on [J_DOCK.12]\nverdict: safe_lines             PASS         of 7 {\"floating\": 0, \"lines\": 7, \"listened\": 5, \"on_netlist\": 7} | 5 line(s) this board reads hold the safe state with its own copper; the rest are driven here or only cross it",
+     "t0": 1790542756.6259217
+    },
+    {
+     "writer": "pin_map_lands.py",
+     "rules": [
+      "SCH-005"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/pin_map_lands.py",
+      "out/pcb-a-power.net",
+      "a"
+     ],
+     "rc": 0,
+     "seconds": 0.7,
+     "readings": {
+      "pin_map_lands_a": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:17Z",
+       "written": true,
+       "denominator": 612,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "pin_map_lands: board A: 612 part(s) judged against their land, 0 failure(s), 0 pin(s) on a merged pad, 0 land(s) unreadable\nverdict: pin_map_lands_a        PASS         of 612 {\"failures\": 0, \"judged\": 612, \"merged_pad_pins\": 0, \"unreadable\": 0} | every part's map names every pad of its land",
+     "t0": 1790542757.4554582
+    },
+    {
+     "writer": "derate.py",
+     "rules": [
+      "CMP-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/derate.py",
+      "out/pcb-a-power.net"
+     ],
+     "rc": 0,
+     "seconds": 0.8,
+     "readings": {
+      "derate": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:18Z",
+       "written": true,
+       "denominator": 268,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "derate: 268 rated part-on-net pair(s) judged at a 20% margin over 34 declared rail(s) and 89 declared node(s), 0 of them against the part maker's own reference circuit; 128 part(s) carry no rating in their value and were not judged; 0 net(s) carry a rated part and no declared voltage\nverdict: derate                 PASS         of 268 {\"by_vendor_reference\": 0, \"judged\": 268, \"undeclared_nets\": 0, \"under_rated\": 0, \"unrated_parts\": 128} | a part's rating against the declared voltage of the rail it is soldered to; DC-bias capacitance derating is NOT checked here and is an open gap",
+     "t0": 1790542758.1825237
+    },
+    {
+     "writer": "intent_checks.py",
+     "rules": [
+      "PWR-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/intent_checks.py",
+      "--netlist",
+      "out/pcb-a-power.net"
+     ],
+     "rc": 0,
+     "seconds": 1.1,
+     "readings": {
+      "intent_rails": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:19Z",
+       "written": true,
+       "denominator": 35,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "SETTLED  U32_DVDT: nothing on it supplies: U32.2 dVdt (timing, tps2596.pdf)\nSETTLED  U39_DVDT: nothing on it supplies: U39.2 dVdt (timing, tps2596.pdf)\nCENSUS  34 counted, 88 declared node, 1 ground, 59 settled, 11 unconnected, 0 undecided, 163 unmarked\nverdict: intent_rails           PASS         of 35 {\"census_nets\": 356, \"checks\": 35, \"declared_nodes\": 56, \"declared_not_in_netlist\": 0, \"declared_rails\": 34, \"fail\": 0, \"held_pin_roles\": 436, \"nodes_supplying_parts\": 0, \"power_nets\": 34, \"rails_without_destination\": 0, \"settled\": 59, \"switches_unresolved\": 0, \"undecided\": 0, \"undeclared\": 0, \"unmarked\": 163} | PWR-001 on the committed netlist and the intent file beside it: every power net is a declared rail, and every declared rail is a net of the netlist whose source and loads are on it. A power net is a power-symbol net, a net carrying a pin typed power_in or power_out, a net of a power class in the netlist, a net carrying a supply-named pin that a bypass entry, a capacitor to ground or a second supply pin corroborates, a net carrying a pin its held datasheet makes a supply, or a ground off a ground net (intent_checks.PIN_ROLES, each row carrying every power and ground pin of its table, each document recorded by sha), or a net a declared rail's current reaches through a two-terminal part or a transistor's channel, at a threshold of 0.00 A. FAIL CLOSED: every other net carrying the mark of a supply (a capacitor to ground, a capacitor to a power net or across one part's pins, a fuse, inductor, ferrite, diode, jumper, switch or link resistor to a power net, a transistor channel shared with one, the switched low side of a load, a lead whose other pins are all ground, a sense class) is settled only by what is read (a crystal, a held non-supply pin role, a gate, a sink to ground, a declared clamp, a switch to ground; on a lead or a sense net the connector carries what the read pins carry) and is otherwise undecided; an undecided net holds the reading at INCONCLUSIVE when nothing fails, and the census names every net's disposition. A power net declared as a node is reported, and refused when it carries the supply pins of two or more parts. Session decisions of 26 September 2026 under the owner's standing rule: the kinds of power net, the fail-closed marks and the undecided class, the 0 A threshold, the node rule",
+     "t0": 1790542759.0169747
+    },
+    {
+     "writer": "power_sequence.py",
+     "rules": [
+      "PWR-002"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/power_sequence.py",
+      "out/pcb-a-power.net"
+     ],
+     "rc": 0,
+     "seconds": 0.8,
+     "readings": {
+      "power_sequence": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:20Z",
+       "written": true,
+       "denominator": 34,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  S2_OUT       source Q31            enable SLOT_EN2       driven by nothing on this board\n  S3_OUT       source L5             enable SLOT_EN3       driven by nothing on this board\n  SD_OUT       source Q35            enable DEV_EN         driven by nothing on this board\nverdict: power_sequence         PASS         of 34 {\"always_on\": 4, \"deadlocks\": 0, \"rails\": 34, \"segments\": 14, \"unresolved\": 0} | each rail's enable derived from the netlist and the part that drives it named; a rail whose enable is driven only by a device powered from that same rail cannot start and is a failure. The ORDER between rails is reported as the graph and not decided here, because which order is correct is a property of the modules' own datasheets",
+     "t0": 1790542760.1144235
+    },
+    {
+     "writer": "energy_chain.py",
+     "rules": [
+      "PWR-003",
+      "BAT-002"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/energy_chain.py",
+      "--ecad",
+      "/root/retake6/rtk/v2/ecad"
+     ],
+     "rc": 0,
+     "seconds": 1.2,
+     "readings": {
+      "energy_chain_a": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:21Z",
+       "written": true,
+       "denominator": 4,
+       "missing_input": null
+      },
+      "energy_chain": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:22Z",
+       "written": true,
+       "denominator": 98,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  note SHORE_INPUT: F1 carries 6.2 A where atof287 allows 8.0 A at its 65 C column (the stage is judged at 56 C, datasheet revised 18 August 2022, page 3, Temperature Table: max. allo)\n  note SHORE_INPUT: the fault current available at F1 is not established, so ECSS 6.17.3c (the source delivers three times the fuse rating) cannot be judged here; it is part of the operating envelope, owner decision 34\n  note SHORE_INPUT: F1 melts in about 2.9 ms at 200 A (I2t 115 A2s)\nverdict: energy_chain           PASS         of 98 {\"checks\": 98, \"citations_unjudged\": 0, \"coordination_findings\": 0, \"fail\": 0, \"selection_findings\": 0, \"stages\": 12} | THE CHAIN END TO END, which is BAT-002's question; a selection finding against ECSS 6.17 belongs to the stage that has it and is in energy_chain_<letter>, rule PWR-003. Every rating against its own source document, every protective element against the board's netlist, and the four coordination tests (the element is below what it protects, above the path's peak, able to interrupt what is available, and followed by the stage it protects)",
+     "t0": 1790542760.8793745
+    },
+    {
+     "writer": "edge_length.py",
+     "rules": [
+      "SI-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/edge_length.py",
+      "--netlist",
+      "out/pcb-a-power.net"
+     ],
+     "rc": 3,
+     "seconds": 1.0,
+     "readings": {
+      "edge_length": {
+       "result": "INCONCLUSIVE",
+       "ts": "2026-09-27T20:59:22Z",
+       "written": true,
+       "denominator": 290,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  DECIDED      USB_*_P                HIGH_SPEED_DIGITAL     3 net(s), 0.5 ns, critical 11.6 mm, 3 answered, 0 layout-bound\n  LOW_SPEED_OR_DC ZEROIZE_HW             LOW_SPEED_OR_DC        1 net(s)\n  note: 67 net(s) whose netlist class differs from the project file's assignment: +12V_HF (netlist Default, project RAIL), +13V8_PA (netlist Default, project RAIL), +54V_POE (netlist Default, project HV), +5V_D8 (netlist Default, project RAIL), +5V_DEV (netlist Default, project RAIL), +5V_S1 (netlist Default, project RAIL), +5V_S2 (netlist Default, project RAIL), +5V_S3 (netlist Default, project RAIL) ...\nverdict: edge_length            INCONCLUSIVE of 290 {\"answered_nets\": 6, \"classes\": 64, \"contradicted_nets\": 0, \"decided_nets\": 6, \"layout_bound_nets\": 0, \"low_speed_nets\": 170, \"may_be_long_nets\": 6, \"signal_nets\": 290, \"undecided_nets\": 114} | SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (UNDECIDED where none does), the critical length l = t_r / (k t_pd) on the slowest layer of every stack the board may be drawn on, and whether the netlist carries an impedance target, a series termination or a declaration where a net may be electrically long. The routed lengths are the layout gate's (edge_length_routed). The table is edge_length.table.json beside this verdict. Session decisions of 26 September 2026: LOW_SPEED_OR_DC asked no edge, the first matching entry decides, the slowest layer of the declared and ruled stacks, the stripline bound, the corner-to-corner extent, the project file's class where the netlist says Default",
+     "t0": 1790542762.1244178
+    },
+    {
+     "writer": "clock_check.py",
+     "rules": [
+      "CLK-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/clock_check.py",
+      "out/pcb-a-power.net"
+     ],
+     "rc": 3,
+     "seconds": 0.8,
+     "readings": {
+      "clock_check": {
+       "result": "INCONCLUSIVE",
+       "ts": "2026-09-27T20:59:23Z",
+       "written": true,
+       "denominator": 0,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "clock_check: 0 crystal(s) on board A\nverdict: clock_check            INCONCLUSIVE of 0 (this rule does not apply to this board) | this board carries no crystal, so CLK-001 has nothing on it to judge",
+     "t0": 1790542763.082034
+    },
+    {
+     "writer": "check_contracts.py",
+     "rules": [
+      "RF-002",
+      "INT-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/check_contracts.py",
+      "/root/retake6/rtk/v2/ecad"
+     ],
+     "rc": 0,
+     "seconds": 5.2,
+     "readings": {
+      "inhibit_chain_a": {
+       "result": "INCONCLUSIVE",
+       "ts": "2026-09-27T20:59:27Z",
+       "written": true,
+       "denominator": 9,
+       "missing_input": null
+      },
+      "check_contracts": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:29Z",
+       "written": true,
+       "denominator": 99,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "\nALL CONTRACTS PASS\nRF-002's transmitter walk (section 15a, decides inhibit_chain_<letter> only): 7 UNDECIDED, 18 PASS\nverdict: check_contracts        PASS         of 99 {\"boards_without_intent\": 0, \"fail\": 0, \"missing_boards\": 0, \"pass\": 99, \"rails_unsplit\": 0, \"undecided\": 0, \"unjudged\": 0}",
+     "t0": 1790542763.8780901
+    },
+    {
+     "writer": "interfaces.py",
+     "rules": [
+      "INT-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/interfaces.py"
+     ],
+     "rc": 0,
+     "seconds": 2.0,
+     "readings": {
+      "interfaces_a": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:29Z",
+       "written": true,
+       "denominator": 1,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  note D USB_FULL_SPEED: no impedance target, which is what its parts' datasheets say\n  note E USB_FULL_SPEED: no impedance target, which is what its parts' datasheets say\n  note P SMBUS_GAUGE: no impedance target, which is what its parts' datasheets say\nverdict: interfaces             PASS         of 12 {\"assignments\": 12, \"boards\": 7, \"disagreements\": 0} | every interface's impedance target and matching tolerance against the specification of the part that defines it, from pcb_interfaces.yaml; the sources are the hosts' and the modules' own datasheets; each board also carries its own interfaces_<letter> verdict, because a set-level result deciding every board's own is a defect this project has already met once",
+     "t0": 1790542769.0983655
+    },
+    {
+     "writer": "port_protect.py",
+     "rules": [
+      "TRN-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/port_protect.py",
+      "out/pcb-a-power.net"
+     ],
+     "rc": 0,
+     "seconds": 1.1,
+     "readings": {
+      "port_protect_a": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:31Z",
+       "written": true,
+       "denominator": 26,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  J_DOCK       12 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [shore and vehicle DC arriving over the dock from the wall recept]\n  J_USBW       4 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [the wall USB host port through the MIL-DTL-38999 receptacle: a p]\n  J_USBC_OUT   5 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [the USB-C outlet on the connector plate, out of the case: VBUS m]\nverdict: port_protect           PASS         of 26 {\"answered_in_part\": 0, \"behind_an_active_part\": 0, \"clamps\": 5, \"clamps_one_way\": 5, \"clamps_reversed\": 0, \"clamps_symbol_mismatch\": 0, \"clamps_unjudged\": 0, \"declared\": 3, \"not_on_netlist\": 0, \"ports\": 3, \"unprotected\": 0} | every declared external conductor meets a protection part before a chip, and every clamp is drawn and placed the right way round",
+     "t0": 1790542771.0748804
+    }
+   ],
+   "seconds": 18.0,
+   "routed": [
+    "erc_gate.verdict.json",
+    "safe_lines_a.verdict.json",
+    "pin_map_lands_a.verdict.json",
+    "derate.verdict.json",
+    "intent_rails.verdict.json",
+    "power_sequence.verdict.json",
+    "energy_chain_a.verdict.json",
+    "energy_chain.verdict.json",
+    "edge_length.verdict.json",
+    "edge_length.table.json",
+    "clock_check.verdict.json",
+    "inhibit_chain_a.verdict.json",
+    "check_contracts.verdict.json",
+    "interfaces_a.verdict.json",
+    "port_protect_a.verdict.json"
+   ]
+  },
+  {
+   "letter": "b",
+   "phase_dir": "pcb-b-compute-b19",
+   "refused": null,
+   "steps": [
+    {
+     "writer": "erc_gate.py",
+     "rules": [
+      "SCH-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/erc_gate.py",
+      ".",
+      "pcb-b-compute",
+      "--run"
+     ],
+     "rc": 0,
+     "seconds": 5.1,
+     "readings": {
+      "erc_gate": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:36Z",
+       "written": true,
+       "denominator": 2912,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "erc_gate: warning  unconnected_wire_endpoint                293\nerc_gate: netlist tied: the report, the schematic and the netlist's own provenance agree on schematic 447dc56525eb\nerc_gate: no blocking error (2912 violations, 7 error(s) allow-listed with a reason, warnings 2905)\nverdict: erc_gate               PASS         of 2912 {\"allowed\": 7, \"blocking\": 0, \"violations\": 2912} | 7 error(s) allow-listed with a reason",
+     "t0": 1790542772.3153682
+    },
+    {
+     "writer": "safe_lines.py",
+     "rules": [
+      "SCH-004"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/safe_lines.py",
+      "out/pcb-b-compute.net"
+     ],
+     "rc": 0,
+     "seconds": 1.0,
+     "readings": {
+      "safe_lines_b": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:37Z",
+       "written": true,
+       "denominator": 5,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  PI_KILL          safe low  source    pull down [-] pull up [-] drivers [-] reads [Q103.3 (2N7002), Q203.3 (2N7002), Q303.3 (2N7002)] leaves on [J_AB1.10, J_PANEL.25]\n  ZEROIZE_HW       safe high carries   pull down [-] pull up [-] drivers [-] reads [-] leaves on [J_AB1.20, J_PANEL.10]\n  SHORE_INHIBIT    safe low  carries   pull down [-] pull up [-] drivers [-] reads [-] leaves on [J_AB1.21, J_PANEL.26]\nverdict: safe_lines             PASS         of 5 {\"floating\": 0, \"lines\": 5, \"listened\": 1, \"on_netlist\": 5} | 1 line(s) this board reads hold the safe state with its own copper; the rest are driven here or only cross it",
+     "t0": 1790542777.4430094
+    },
+    {
+     "writer": "pin_map_lands.py",
+     "rules": [
+      "SCH-005"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/pin_map_lands.py",
+      "out/pcb-b-compute.net",
+      "b"
+     ],
+     "rc": 0,
+     "seconds": 0.9,
+     "readings": {
+      "pin_map_lands_b": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:38Z",
+       "written": true,
+       "denominator": 1280,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "pin_map_lands: board B: 1280 part(s) judged against their land, 0 failure(s), 0 pin(s) on a merged pad, 0 land(s) unreadable\nverdict: pin_map_lands_b        PASS         of 1280 {\"failures\": 0, \"judged\": 1280, \"merged_pad_pins\": 0, \"unreadable\": 0} | every part's map names every pad of its land",
+     "t0": 1790542778.4855978
+    },
+    {
+     "writer": "derate.py",
+     "rules": [
+      "CMP-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/derate.py",
+      "out/pcb-b-compute.net"
+     ],
+     "rc": 0,
+     "seconds": 0.9,
+     "readings": {
+      "derate": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:39Z",
+       "written": true,
+       "denominator": 240,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "derate: 240 rated part-on-net pair(s) judged at a 20% margin over 58 declared rail(s) and 154 declared node(s), 0 of them against the part maker's own reference circuit; 429 part(s) carry no rating in their value and were not judged; 0 net(s) carry a rated part and no declared voltage\nverdict: derate                 PASS         of 240 {\"by_vendor_reference\": 0, \"judged\": 240, \"undeclared_nets\": 0, \"under_rated\": 0, \"unrated_parts\": 429} | a part's rating against the declared voltage of the rail it is soldered to; DC-bias capacitance derating is NOT checked here and is an open gap",
+     "t0": 1790542779.3361444
+    },
+    {
+     "writer": "intent_checks.py",
+     "rules": [
+      "PWR-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/intent_checks.py",
+      "--netlist",
+      "out/pcb-b-compute.net"
+     ],
+     "rc": 0,
+     "seconds": 1.4,
+     "readings": {
+      "intent_rails": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:40Z",
+       "written": true,
+       "denominator": 59,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "SETTLED  U23_DVDT: nothing on it supplies: U23.2 dVdt (timing, tps2596.pdf)\nSETTLED  U24_DVDT: nothing on it supplies: U24.2 dVdt (timing, tps2596.pdf)\nCENSUS  58 counted, 154 declared node, 0 ground, 50 settled, 1038 unconnected, 0 undecided, 711 unmarked\nverdict: intent_rails           PASS         of 59 {\"census_nets\": 2011, \"checks\": 59, \"declared_nodes\": 35, \"declared_not_in_netlist\": 0, \"declared_rails\": 58, \"fail\": 0, \"held_pin_roles\": 260, \"nodes_supplying_parts\": 0, \"power_nets\": 58, \"rails_without_destination\": 0, \"settled\": 50, \"switches_unresolved\": 0, \"undecided\": 0, \"undeclared\": 0, \"unmarked\": 711} | PWR-001 on the committed netlist and the intent file beside it: every power net is a declared rail, and every declared rail is a net of the netlist whose source and loads are on it. A power net is a power-symbol net, a net carrying a pin typed power_in or power_out, a net of a power class in the netlist, a net carrying a supply-named pin that a bypass entry, a capacitor to ground or a second supply pin corroborates, a net carrying a pin its held datasheet makes a supply, or a ground off a ground net (intent_checks.PIN_ROLES, each row carrying every power and ground pin of its table, each document recorded by sha), or a net a declared rail's current reaches through a two-terminal part or a transistor's channel, at a threshold of 0.00 A. FAIL CLOSED: every other net carrying the mark of a supply (a capacitor to ground, a capacitor to a power net or across one part's pins, a fuse, inductor, ferrite, diode, jumper, switch or link resistor to a power net, a transistor channel shared with one, the switched low side of a load, a lead whose other pins are all ground, a sense class) is settled only by what is read (a crystal, a held non-supply pin role, a gate, a sink to ground, a declared clamp, a switch to ground; on a lead or a sense net the connector carries what the read pins carry) and is otherwise undecided; an undecided net holds the reading at INCONCLUSIVE when nothing fails, and the census names every net's disposition. A power net declared as a node is reported, and refused when it carries the supply pins of two or more parts. Session decisions of 26 September 2026 under the owner's standing rule: the kinds of power net, the fail-closed marks and the undecided class, the 0 A threshold, the node rule",
+     "t0": 1790542780.2148418
+    },
+    {
+     "writer": "power_sequence.py",
+     "rules": [
+      "PWR-002"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/power_sequence.py",
+      "out/pcb-b-compute.net"
+     ],
+     "rc": 0,
+     "seconds": 1.0,
+     "readings": {
+      "power_sequence": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:42Z",
+       "written": true,
+       "denominator": 58,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  POE_P        source R13            ALWAYS ON\n  SIMC2_VCC    source R272           ALWAYS ON\n  VBUS_QMX     source F3             ALWAYS ON\nverdict: power_sequence         PASS         of 58 {\"always_on\": 29, \"deadlocks\": 0, \"rails\": 58, \"segments\": 11, \"unresolved\": 0} | each rail's enable derived from the netlist and the part that drives it named; a rail whose enable is driven only by a device powered from that same rail cannot start and is a failure. The ORDER between rails is reported as the graph and not decided here, because which order is correct is a property of the modules' own datasheets",
+     "t0": 1790542781.5910656
+    },
+    {
+     "writer": "energy_chain.py",
+     "rules": [
+      "PWR-003"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/energy_chain.py",
+      "--ecad",
+      "/root/retake6/rtk/v2/ecad"
+     ],
+     "rc": 0,
+     "seconds": 1.3,
+     "readings": {
+      "energy_chain_b": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:43Z",
+       "written": true,
+       "denominator": 3,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  note SHORE_INPUT: F1 carries 6.2 A where atof287 allows 8.0 A at its 65 C column (the stage is judged at 56 C, datasheet revised 18 August 2022, page 3, Temperature Table: max. allo)\n  note SHORE_INPUT: the fault current available at F1 is not established, so ECSS 6.17.3c (the source delivers three times the fuse rating) cannot be judged here; it is part of the operating envelope, owner decision 34\n  note SHORE_INPUT: F1 melts in about 2.9 ms at 200 A (I2t 115 A2s)\nverdict: energy_chain           PASS         of 98 {\"checks\": 98, \"citations_unjudged\": 0, \"coordination_findings\": 0, \"fail\": 0, \"selection_findings\": 0, \"stages\": 12} | THE CHAIN END TO END, which is BAT-002's question; a selection finding against ECSS 6.17 belongs to the stage that has it and is in energy_chain_<letter>, rule PWR-003. Every rating against its own source document, every protective element against the board's netlist, and the four coordination tests (the element is below what it protects, above the path's peak, able to interrupt what is available, and followed by the stage it protects)",
+     "t0": 1790542782.5836675
+    },
+    {
+     "writer": "edge_length.py",
+     "rules": [
+      "SI-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/edge_length.py",
+      "--netlist",
+      "out/pcb-b-compute.net"
+     ],
+     "rc": 3,
+     "seconds": 1.2,
+     "readings": {
+      "edge_length": {
+       "result": "INCONCLUSIVE",
+       "ts": "2026-09-27T20:59:44Z",
+       "written": true,
+       "denominator": 886,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  LOW_SPEED_OR_DC ZB?_?V?                LOW_SPEED_OR_DC        2 net(s)\n  LOW_SPEED_OR_DC ZEROIZE_HW             LOW_SPEED_OR_DC        1 net(s)\n  LOW_SPEED_OR_DC nRPIBOOT*              LOW_SPEED_OR_DC        3 net(s)\nverdict: edge_length            INCONCLUSIVE of 886 {\"answered_nets\": 30, \"classes\": 154, \"contradicted_nets\": 0, \"decided_nets\": 30, \"layout_bound_nets\": 0, \"low_speed_nets\": 324, \"may_be_long_nets\": 30, \"signal_nets\": 886, \"undecided_nets\": 532} | SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (UNDECIDED where none does), the critical length l = t_r / (k t_pd) on the slowest layer of every stack the board may be drawn on, and whether the netlist carries an impedance target, a series termination or a declaration where a net may be electrically long. The routed lengths are the layout gate's (edge_length_routed). The table is edge_length.table.json beside this verdict. Session decisions of 26 September 2026: LOW_SPEED_OR_DC asked no edge, the first matching entry decides, the slowest layer of the declared and ruled stacks, the stripline bound, the corner-to-corner extent, the project file's class where the netlist says Default",
+     "t0": 1790542783.8344038
+    },
+    {
+     "writer": "clock_check.py",
+     "rules": [
+      "CLK-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/clock_check.py",
+      "out/pcb-b-compute.net"
+     ],
+     "rc": 0,
+     "seconds": 0.9,
+     "readings": {
+      "clock_check": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:45Z",
+       "written": true,
+       "denominator": 7,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  Y3 25 MHz 3225 (CAN-FD bit timing needs a crystal, not the HSI): nets IOCB_XI, IOCB_XO, load capacitors 18p -> presents 12.0 pF against the part's 12.0 (+0 percent, about +0 ppm)\n  Y301 24 MHz 3225: nets HUB3_XI, HUB3_XO, load capacitors 18p -> presents 12.0 pF against the part's 12.0 (+0 percent, about +0 ppm)\n  Y4 25 MHz 3225 (CAN-FD bit timing needs a crystal, not the HSI): nets IOCC_XI, IOCC_XO, load capacitors 18p -> presents 12.0 pF against the part's 12.0 (+0 percent, about +0 ppm)\nverdict: clock_check            PASS         of 7 {\"bad\": 0, \"crystals\": 7, \"undeclared\": 0} | every crystal has two matched load capacitors to ground, its own IC alone on its nets, and a network that presents what the part's own datasheet asks for within 20 percent",
+     "t0": 1790542785.0611205
+    },
+    {
+     "writer": "check_contracts.py",
+     "rules": [
+      "RF-002",
+      "INT-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/check_contracts.py",
+      "/root/retake6/rtk/v2/ecad"
+     ],
+     "rc": 0,
+     "seconds": 5.3,
+     "readings": {
+      "inhibit_chain_b": {
+       "result": "INCONCLUSIVE",
+       "ts": "2026-09-27T20:59:51Z",
+       "written": true,
+       "denominator": 20,
+       "missing_input": null
+      },
+      "check_contracts": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:51Z",
+       "written": true,
+       "denominator": 99,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "\nALL CONTRACTS PASS\nRF-002's transmitter walk (section 15a, decides inhibit_chain_<letter> only): 7 UNDECIDED, 18 PASS\nverdict: check_contracts        PASS         of 99 {\"boards_without_intent\": 0, \"fail\": 0, \"missing_boards\": 0, \"pass\": 99, \"rails_unsplit\": 0, \"undecided\": 0, \"unjudged\": 0}",
+     "t0": 1790542785.9375324
+    },
+    {
+     "writer": "interfaces.py",
+     "rules": [
+      "INT-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/interfaces.py"
+     ],
+     "rc": 0,
+     "seconds": 2.0,
+     "readings": {
+      "interfaces_b": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:52Z",
+       "written": true,
+       "denominator": 7,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  note D USB_FULL_SPEED: no impedance target, which is what its parts' datasheets say\n  note E USB_FULL_SPEED: no impedance target, which is what its parts' datasheets say\n  note P SMBUS_GAUGE: no impedance target, which is what its parts' datasheets say\nverdict: interfaces             PASS         of 12 {\"assignments\": 12, \"boards\": 7, \"disagreements\": 0} | every interface's impedance target and matching tolerance against the specification of the part that defines it, from pcb_interfaces.yaml; the sources are the hosts' and the modules' own datasheets; each board also carries its own interfaces_<letter> verdict, because a set-level result deciding every board's own is a defect this project has already met once",
+     "t0": 1790542791.2536013
+    },
+    {
+     "writer": "port_protect.py",
+     "rules": [
+      "TRN-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/port_protect.py",
+      "out/pcb-b-compute.net"
+     ],
+     "rc": 0,
+     "seconds": 1.3,
+     "readings": {
+      "port_protect_b": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:53Z",
+       "written": true,
+       "denominator": 17,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  CLAMP D520   OK       K/A       uni    cathode (its K pin) on +3V3_M2C2, anode on the return GND\n  J_ETH        9 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [the internal RJ45 whose patch lead reaches the sealed wall RJ45:]\n  J_54V        2 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [the Power over Ethernet feed, which leaves the case on that same]\nverdict: port_protect           PASS         of 17 {\"answered_in_part\": 0, \"behind_an_active_part\": 0, \"clamps\": 6, \"clamps_one_way\": 6, \"clamps_reversed\": 0, \"clamps_symbol_mismatch\": 0, \"clamps_unjudged\": 0, \"declared\": 2, \"not_on_netlist\": 0, \"ports\": 2, \"unprotected\": 0} | every declared external conductor meets a protection part before a chip, and every clamp is drawn and placed the right way round",
+     "t0": 1790542793.2309122
+    }
+   ],
+   "seconds": 22.2,
+   "routed": [
+    "erc_gate.verdict.json",
+    "safe_lines_b.verdict.json",
+    "pin_map_lands_b.verdict.json",
+    "derate.verdict.json",
+    "intent_rails.verdict.json",
+    "power_sequence.verdict.json",
+    "energy_chain_b.verdict.json",
+    "edge_length.verdict.json",
+    "edge_length.table.json",
+    "clock_check.verdict.json",
+    "inhibit_chain_b.verdict.json",
+    "check_contracts.verdict.json",
+    "interfaces_b.verdict.json",
+    "port_protect_b.verdict.json"
+   ]
+  },
+  {
+   "letter": "c",
+   "phase_dir": "pcb-c-display-c8",
+   "refused": null,
+   "steps": [
+    {
+     "writer": "erc_gate.py",
+     "rules": [
+      "SCH-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/erc_gate.py",
+      ".",
+      "pcb-c-display",
+      "--run"
+     ],
+     "rc": 0,
+     "seconds": 1.7,
+     "readings": {
+      "erc_gate": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:55Z",
+       "written": true,
+       "denominator": 330,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "erc_gate: warning  unconnected_wire_endpoint                26\nerc_gate: netlist tied: the report, the schematic and the netlist's own provenance agree on schematic 9dfeeff5d8d6\nerc_gate: no blocking error (330 violations, 0 error(s) allow-listed with a reason, warnings 330)\nverdict: erc_gate               PASS         of 330 {\"allowed\": 0, \"blocking\": 0, \"violations\": 330}",
+     "t0": 1790542794.6987216
+    },
+    {
+     "writer": "pin_map_lands.py",
+     "rules": [
+      "SCH-005"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/pin_map_lands.py",
+      "out/pcb-c-display.net",
+      "c"
+     ],
+     "rc": 0,
+     "seconds": 0.7,
+     "readings": {
+      "pin_map_lands_c": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:56Z",
+       "written": true,
+       "denominator": 219,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "pin_map_lands: board C: 219 part(s) judged against their land, 0 failure(s), 0 pin(s) on a merged pad, 0 land(s) unreadable\nverdict: pin_map_lands_c        PASS         of 219 {\"failures\": 0, \"judged\": 219, \"merged_pad_pins\": 0, \"unreadable\": 0} | every part's map names every pad of its land",
+     "t0": 1790542796.3907888
+    },
+    {
+     "writer": "derate.py",
+     "rules": [
+      "CMP-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/derate.py",
+      "out/pcb-c-display.net"
+     ],
+     "rc": 0,
+     "seconds": 0.9,
+     "readings": {
+      "derate": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:57Z",
+       "written": true,
+       "denominator": 16,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  BY THE PART MAKER C34 (1u 25V) on EPD_VDDD: PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603', 'CAP 1uF 25V 0603' and 'CAP 4.7uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 25 V 0603 part the panel maker specifies there: 1 uF on the stabilising pins and 4.7 uF for the pump capacitor from the switch node to the pump node, as the page 3 figure labels it\n  BY THE PART MAKER C35 (1u 25V) on EPD_VDH: PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603', 'CAP 1uF 25V 0603' and 'CAP 4.7uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 25 V 0603 part the panel maker specifies there: 1 uF on the stabilising pins and 4.7 uF for the pump capacitor from the switch node to the pump node, as the page 3 figure labels it\n  BY THE PART MAKER C36 (1u 25V) on EPD_VDL: PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603', 'CAP 1uF 25V 0603' and 'CAP 4.7uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 25 V 0603 part the panel maker specifies there: 1 uF on the stabilising pins and 4.7 uF for the pump capacitor from the switch node to the pump node, as the page 3 figure labels it\nverdict: derate                 PASS         of 16 {\"by_vendor_reference\": 9, \"judged\": 16, \"undeclared_nets\": 0, \"under_rated\": 0, \"unrated_parts\": 59} | a part's rating against the declared voltage of the rail it is soldered to; DC-bias capacitance derating is NOT checked here and is an open gap",
+     "t0": 1790542797.0534525
+    },
+    {
+     "writer": "intent_checks.py",
+     "rules": [
+      "PWR-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/intent_checks.py",
+      "--netlist",
+      "out/pcb-c-display.net"
+     ],
+     "rc": 0,
+     "seconds": 1.0,
+     "readings": {
+      "intent_rails": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:58Z",
+       "written": true,
+       "denominator": 6,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "SETTLED  XIN: an oscillator net: Y1 is a crystal or resonator\nSETTLED  XOUT: an oscillator net: Y1 is a crystal or resonator\nCENSUS  5 counted, 57 declared node, 1 ground, 3 settled, 13 unconnected, 0 undecided, 74 unmarked\nverdict: intent_rails           PASS         of 6 {\"census_nets\": 153, \"checks\": 6, \"declared_nodes\": 25, \"declared_not_in_netlist\": 0, \"declared_rails\": 5, \"fail\": 0, \"held_pin_roles\": 22, \"nodes_supplying_parts\": 0, \"power_nets\": 5, \"rails_without_destination\": 0, \"settled\": 3, \"switches_unresolved\": 0, \"undecided\": 0, \"undeclared\": 0, \"unmarked\": 74} | PWR-001 on the committed netlist and the intent file beside it: every power net is a declared rail, and every declared rail is a net of the netlist whose source and loads are on it. A power net is a power-symbol net, a net carrying a pin typed power_in or power_out, a net of a power class in the netlist, a net carrying a supply-named pin that a bypass entry, a capacitor to ground or a second supply pin corroborates, a net carrying a pin its held datasheet makes a supply, or a ground off a ground net (intent_checks.PIN_ROLES, each row carrying every power and ground pin of its table, each document recorded by sha), or a net a declared rail's current reaches through a two-terminal part or a transistor's channel, at a threshold of 0.00 A. FAIL CLOSED: every other net carrying the mark of a supply (a capacitor to ground, a capacitor to a power net or across one part's pins, a fuse, inductor, ferrite, diode, jumper, switch or link resistor to a power net, a transistor channel shared with one, the switched low side of a load, a lead whose other pins are all ground, a sense class) is settled only by what is read (a crystal, a held non-supply pin role, a gate, a sink to ground, a declared clamp, a switch to ground; on a lead or a sense net the connector carries what the read pins carry) and is otherwise undecided; an undecided net holds the reading at INCONCLUSIVE when nothing fails, and the census names every net's disposition. A power net declared as a node is reported, and refused when it carries the supply pins of two or more parts. Session decisions of 26 September 2026 under the owner's standing rule: the kinds of power net, the fail-closed marks and the undecided class, the 0 A threshold, the node rule",
+     "t0": 1790542797.909783
+    },
+    {
+     "writer": "edge_length.py",
+     "rules": [
+      "SI-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/edge_length.py",
+      "--netlist",
+      "out/pcb-c-display.net"
+     ],
+     "rc": 3,
+     "seconds": 0.9,
+     "readings": {
+      "edge_length": {
+       "result": "INCONCLUSIVE",
+       "ts": "2026-09-27T20:59:59Z",
+       "written": true,
+       "denominator": 134,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  UNDECIDED    XIN                    HIGH_SPEED_DIGITAL     1 net(s)\n  UNDECIDED    XOUT*                  HIGH_SPEED_DIGITAL     2 net(s)\n  LOW_SPEED_OR_DC ZEROIZE_HW             LOW_SPEED_OR_DC        1 net(s)\nverdict: edge_length            INCONCLUSIVE of 134 {\"answered_nets\": 4, \"classes\": 44, \"contradicted_nets\": 0, \"decided_nets\": 4, \"layout_bound_nets\": 0, \"low_speed_nets\": 97, \"may_be_long_nets\": 4, \"signal_nets\": 134, \"undecided_nets\": 33} | SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (UNDECIDED where none does), the critical length l = t_r / (k t_pd) on the slowest layer of every stack the board may be drawn on, and whether the netlist carries an impedance target, a series termination or a declaration where a net may be electrically long. The routed lengths are the layout gate's (edge_length_routed). The table is edge_length.table.json beside this verdict. Session decisions of 26 September 2026: LOW_SPEED_OR_DC asked no edge, the first matching entry decides, the slowest layer of the declared and ruled stacks, the stripline bound, the corner-to-corner extent, the project file's class where the netlist says Default",
+     "t0": 1790542798.9006813
+    },
+    {
+     "writer": "clock_check.py",
+     "rules": [
+      "CLK-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/clock_check.py",
+      "out/pcb-c-display.net"
+     ],
+     "rc": 0,
+     "seconds": 0.8,
+     "readings": {
+      "clock_check": {
+       "result": "PASS",
+       "ts": "2026-09-27T20:59:59Z",
+       "written": true,
+       "denominator": 1,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "clock_check: 1 crystal(s) on board C\n  Y1 12 MHz ABM8-272-T3 (3225): 1 XIN, 3 XOUT, 2 and 4 GND: nets XIN, XOUT, load capacitors 15p NP0 -> presents 10.5 pF against the part's 10.0 (+5 percent, about -8 ppm)\nverdict: clock_check            PASS         of 1 {\"bad\": 0, \"crystals\": 1, \"undeclared\": 0} | every crystal has two matched load capacitors to ground, its own IC alone on its nets, and a network that presents what the part's own datasheet asks for within 20 percent",
+     "t0": 1790542799.7598302
+    },
+    {
+     "writer": "check_contracts.py",
+     "rules": [
+      "RF-002",
+      "INT-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/check_contracts.py",
+      "/root/retake6/rtk/v2/ecad"
+     ],
+     "rc": 0,
+     "seconds": 5.3,
+     "readings": {
+      "inhibit_chain_c": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:05Z",
+       "written": true,
+       "denominator": 6,
+       "missing_input": null
+      },
+      "check_contracts": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:05Z",
+       "written": true,
+       "denominator": 99,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "\nALL CONTRACTS PASS\nRF-002's transmitter walk (section 15a, decides inhibit_chain_<letter> only): 7 UNDECIDED, 18 PASS\nverdict: check_contracts        PASS         of 99 {\"boards_without_intent\": 0, \"fail\": 0, \"missing_boards\": 0, \"pass\": 99, \"rails_unsplit\": 0, \"undecided\": 0, \"unjudged\": 0}",
+     "t0": 1790542800.567909
+    },
+    {
+     "writer": "interfaces.py",
+     "rules": [
+      "INT-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/interfaces.py"
+     ],
+     "rc": 0,
+     "seconds": 2.0,
+     "readings": {
+      "interfaces_c": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:07Z",
+       "written": true,
+       "denominator": 1,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  note D USB_FULL_SPEED: no impedance target, which is what its parts' datasheets say\n  note E USB_FULL_SPEED: no impedance target, which is what its parts' datasheets say\n  note P SMBUS_GAUGE: no impedance target, which is what its parts' datasheets say\nverdict: interfaces             PASS         of 12 {\"assignments\": 12, \"boards\": 7, \"disagreements\": 0} | every interface's impedance target and matching tolerance against the specification of the part that defines it, from pcb_interfaces.yaml; the sources are the hosts' and the modules' own datasheets; each board also carries its own interfaces_<letter> verdict, because a set-level result deciding every board's own is a defect this project has already met once",
+     "t0": 1790542805.864616
+    },
+    {
+     "writer": "port_protect.py",
+     "rules": [
+      "TRN-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/port_protect.py",
+      "out/pcb-c-display.net"
+     ],
+     "rc": 0,
+     "seconds": 1.0,
+     "readings": {
+      "port_protect_c": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:07Z",
+       "written": true,
+       "denominator": 4,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "port_protect: 0 clamp(s) judged for polarity: 0 reversed, 0 drawn with a symbol that does not match the part's direction, 0 unjudged\n  J_PIJ2       2 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [the panel's exposed jack on the face]\n  J_MAINSW     2 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [the main switch on the face, which a person touches]\nverdict: port_protect           PASS         of 4 {\"answered_in_part\": 0, \"behind_an_active_part\": 0, \"clamps\": 0, \"clamps_one_way\": 0, \"clamps_reversed\": 0, \"clamps_symbol_mismatch\": 0, \"clamps_unjudged\": 0, \"declared\": 2, \"not_on_netlist\": 0, \"ports\": 2, \"unprotected\": 0} | every declared external conductor meets a protection part before a chip, and every clamp is drawn and placed the right way round",
+     "t0": 1790542807.8345075
+    }
+   ],
+   "seconds": 14.1,
+   "routed": [
+    "erc_gate.verdict.json",
+    "pin_map_lands_c.verdict.json",
+    "derate.verdict.json",
+    "intent_rails.verdict.json",
+    "edge_length.verdict.json",
+    "edge_length.table.json",
+    "clock_check.verdict.json",
+    "inhibit_chain_c.verdict.json",
+    "check_contracts.verdict.json",
+    "interfaces_c.verdict.json",
+    "port_protect_c.verdict.json"
+   ]
+  },
+  {
+   "letter": "d",
+   "phase_dir": "pcb-d-aprs-d9",
+   "refused": null,
+   "steps": [
+    {
+     "writer": "erc_gate.py",
+     "rules": [
+      "SCH-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/erc_gate.py",
+      ".",
+      "pcb-d-aprs",
+      "--run"
+     ],
+     "rc": 0,
+     "seconds": 1.8,
+     "readings": {
+      "erc_gate": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:09Z",
+       "written": true,
+       "denominator": 445,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "erc_gate: warning  unconnected_wire_endpoint                52\nerc_gate: netlist tied: the report, the schematic and the netlist's own provenance agree on schematic 823b03952b37\nerc_gate: no blocking error (445 violations, 0 error(s) allow-listed with a reason, warnings 445)\nverdict: erc_gate               PASS         of 445 {\"allowed\": 0, \"blocking\": 0, \"violations\": 445}",
+     "t0": 1790542808.9343383
+    },
+    {
+     "writer": "safe_lines.py",
+     "rules": [
+      "SCH-004"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/safe_lines.py",
+      "out/pcb-d-aprs.net"
+     ],
+     "rc": 0,
+     "seconds": 0.8,
+     "readings": {
+      "safe_lines_d": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:10Z",
+       "written": true,
+       "denominator": 2,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "safe_lines: board D declares 2 safety line(s)\n  TX_INHIBIT_n     safe low  listens   pull down [R2 (100k)] pull up [-] drivers [-] reads [U12.2 (74LVC1G08 AND: KEY = PTT_ANY)] leaves on [J_HARN1.8]\n  ZEROIZE_HW       safe high carries   pull down [-] pull up [-] drivers [-] reads [-] leaves on [J_HARN1.15]\nverdict: safe_lines             PASS         of 2 {\"floating\": 0, \"lines\": 2, \"listened\": 1, \"on_netlist\": 2} | 1 line(s) this board reads hold the safe state with its own copper; the rest are driven here or only cross it",
+     "t0": 1790542810.6931086
+    },
+    {
+     "writer": "pin_map_lands.py",
+     "rules": [
+      "SCH-005"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/pin_map_lands.py",
+      "out/pcb-d-aprs.net",
+      "d"
+     ],
+     "rc": 0,
+     "seconds": 0.7,
+     "readings": {
+      "pin_map_lands_d": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:11Z",
+       "written": true,
+       "denominator": 245,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "pin_map_lands: board D: 245 part(s) judged against their land, 0 failure(s), 0 pin(s) on a merged pad, 0 land(s) unreadable\nverdict: pin_map_lands_d        PASS         of 245 {\"failures\": 0, \"judged\": 245, \"merged_pad_pins\": 0, \"unreadable\": 0} | every part's map names every pad of its land",
+     "t0": 1790542811.4495654
+    },
+    {
+     "writer": "derate.py",
+     "rules": [
+      "CMP-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/derate.py",
+      "out/pcb-d-aprs.net"
+     ],
+     "rc": 0,
+     "seconds": 0.8,
+     "readings": {
+      "derate": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:12Z",
+       "written": true,
+       "denominator": 19,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "derate: 19 rated part-on-net pair(s) judged at a 20% margin over 6 declared rail(s) and 29 declared node(s), 0 of them against the part maker's own reference circuit; 76 part(s) carry no rating in their value and were not judged; 0 net(s) carry a rated part and no declared voltage\nverdict: derate                 PASS         of 19 {\"by_vendor_reference\": 0, \"judged\": 19, \"undeclared_nets\": 0, \"under_rated\": 0, \"unrated_parts\": 76} | a part's rating against the declared voltage of the rail it is soldered to; DC-bias capacitance derating is NOT checked here and is an open gap",
+     "t0": 1790542812.132861
+    },
+    {
+     "writer": "intent_checks.py",
+     "rules": [
+      "PWR-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/intent_checks.py",
+      "--netlist",
+      "out/pcb-d-aprs.net"
+     ],
+     "rc": 0,
+     "seconds": 1.0,
+     "readings": {
+      "intent_rails": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:13Z",
+       "written": true,
+       "denominator": 7,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "SETTLED  TXSUP_CT: nothing on it supplies: U21.3 CT (timing, ti-tps22810-load-switch.pdf)\nSETTLED  VREF: nothing on it supplies: U8.3 IN1+ (signal, ti-tlv9062-op-amp.pdf); U8.5 IN2+ (signal, ti-tlv9062-op-amp.pdf)\nCENSUS  6 counted, 28 declared node, 1 ground, 16 settled, 43 unconnected, 0 undecided, 94 unmarked\nverdict: intent_rails           PASS         of 7 {\"census_nets\": 188, \"checks\": 7, \"declared_nodes\": 13, \"declared_not_in_netlist\": 0, \"declared_rails\": 6, \"fail\": 0, \"held_pin_roles\": 55, \"nodes_supplying_parts\": 0, \"power_nets\": 6, \"rails_without_destination\": 0, \"settled\": 16, \"switches_unresolved\": 0, \"undecided\": 0, \"undeclared\": 0, \"unmarked\": 94} | PWR-001 on the committed netlist and the intent file beside it: every power net is a declared rail, and every declared rail is a net of the netlist whose source and loads are on it. A power net is a power-symbol net, a net carrying a pin typed power_in or power_out, a net of a power class in the netlist, a net carrying a supply-named pin that a bypass entry, a capacitor to ground or a second supply pin corroborates, a net carrying a pin its held datasheet makes a supply, or a ground off a ground net (intent_checks.PIN_ROLES, each row carrying every power and ground pin of its table, each document recorded by sha), or a net a declared rail's current reaches through a two-terminal part or a transistor's channel, at a threshold of 0.00 A. FAIL CLOSED: every other net carrying the mark of a supply (a capacitor to ground, a capacitor to a power net or across one part's pins, a fuse, inductor, ferrite, diode, jumper, switch or link resistor to a power net, a transistor channel shared with one, the switched low side of a load, a lead whose other pins are all ground, a sense class) is settled only by what is read (a crystal, a held non-supply pin role, a gate, a sink to ground, a declared clamp, a switch to ground; on a lead or a sense net the connector carries what the read pins carry) and is otherwise undecided; an undecided net holds the reading at INCONCLUSIVE when nothing fails, and the census names every net's disposition. A power net declared as a node is reported, and refused when it carries the supply pins of two or more parts. Session decisions of 26 September 2026 under the owner's standing rule: the kinds of power net, the fail-closed marks and the undecided class, the 0 A threshold, the node rule",
+     "t0": 1790542812.9693851
+    },
+    {
+     "writer": "edge_length.py",
+     "rules": [
+      "SI-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/edge_length.py",
+      "--netlist",
+      "out/pcb-d-aprs.net"
+     ],
+     "rc": 3,
+     "seconds": 0.9,
+     "readings": {
+      "edge_length": {
+       "result": "INCONCLUSIVE",
+       "ts": "2026-09-27T21:00:14Z",
+       "written": true,
+       "denominator": 135,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  LOW_SPEED_OR_DC VREF                   LOW_SPEED_OR_DC        1 net(s)\n  LOW_SPEED_OR_DC X_*                    LOW_SPEED_OR_DC       10 net(s)\n  LOW_SPEED_OR_DC ZEROIZE_HW             LOW_SPEED_OR_DC        1 net(s)\nverdict: edge_length            INCONCLUSIVE of 135 {\"answered_nets\": 18, \"classes\": 45, \"contradicted_nets\": 0, \"decided_nets\": 20, \"layout_bound_nets\": 2, \"low_speed_nets\": 88, \"may_be_long_nets\": 20, \"signal_nets\": 135, \"undecided_nets\": 27} | SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (UNDECIDED where none does), the critical length l = t_r / (k t_pd) on the slowest layer of every stack the board may be drawn on, and whether the netlist carries an impedance target, a series termination or a declaration where a net may be electrically long. The routed lengths are the layout gate's (edge_length_routed). The table is edge_length.table.json beside this verdict. Session decisions of 26 September 2026: LOW_SPEED_OR_DC asked no edge, the first matching entry decides, the slowest layer of the declared and ruled stacks, the stripline bound, the corner-to-corner extent, the project file's class where the netlist says Default",
+     "t0": 1790542813.9805813
+    },
+    {
+     "writer": "clock_check.py",
+     "rules": [
+      "CLK-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/clock_check.py",
+      "out/pcb-d-aprs.net"
+     ],
+     "rc": 0,
+     "seconds": 0.8,
+     "readings": {
+      "clock_check": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:14Z",
+       "written": true,
+       "denominator": 2,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "clock_check: 2 crystal(s) on board D\n  Y1 6 MHz HC-49S-SMD passive (CL 20 pF, 80 Ohm; C1 = C2 = 27 pF and Rd 1.0k, SLLS413 figure 6 re-chosen for this part's ESR): nets HUB_XTAL1, HUB_XTAL2R, load capacitors 27p NP0 -> presents 16.5 pF against the part's 20.0 (-18 percent, about +22 ppm)\n  Y2 6 MHz HC-49S-SMD passive (codec clock, CL 20 pF; C1 = C2 = 27 pF): nets PCM_XTI, PCM_XTO, load capacitors 27p NP0 -> presents 16.5 pF against the part's 20.0 (-18 percent, about +22 ppm)\nverdict: clock_check            PASS         of 2 {\"bad\": 0, \"crystals\": 2, \"undeclared\": 0} | every crystal has two matched load capacitors to ground, its own IC alone on its nets, and a network that presents what the part's own datasheet asks for within 20 percent",
+     "t0": 1790542814.8382986
+    },
+    {
+     "writer": "check_contracts.py",
+     "rules": [
+      "RF-002",
+      "INT-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/check_contracts.py",
+      "/root/retake6/rtk/v2/ecad"
+     ],
+     "rc": 0,
+     "seconds": 5.2,
+     "readings": {
+      "inhibit_chain_d": {
+       "result": "INCONCLUSIVE",
+       "ts": "2026-09-27T21:00:20Z",
+       "written": true,
+       "denominator": 8,
+       "missing_input": null
+      },
+      "check_contracts": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:20Z",
+       "written": true,
+       "denominator": 99,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "\nALL CONTRACTS PASS\nRF-002's transmitter walk (section 15a, decides inhibit_chain_<letter> only): 7 UNDECIDED, 18 PASS\nverdict: check_contracts        PASS         of 99 {\"boards_without_intent\": 0, \"fail\": 0, \"missing_boards\": 0, \"pass\": 99, \"rails_unsplit\": 0, \"undecided\": 0, \"unjudged\": 0}",
+     "t0": 1790542815.638086
+    },
+    {
+     "writer": "interfaces.py",
+     "rules": [
+      "INT-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/interfaces.py"
+     ],
+     "rc": 0,
+     "seconds": 2.0,
+     "readings": {
+      "interfaces_d": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:22Z",
+       "written": true,
+       "denominator": 1,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  note D USB_FULL_SPEED: no impedance target, which is what its parts' datasheets say\n  note E USB_FULL_SPEED: no impedance target, which is what its parts' datasheets say\n  note P SMBUS_GAUGE: no impedance target, which is what its parts' datasheets say\nverdict: interfaces             PASS         of 12 {\"assignments\": 12, \"boards\": 7, \"disagreements\": 0} | every interface's impedance target and matching tolerance against the specification of the part that defines it, from pcb_interfaces.yaml; the sources are the hosts' and the modules' own datasheets; each board also carries its own interfaces_<letter> verdict, because a set-level result deciding every board's own is a defect this project has already met once",
+     "t0": 1790542820.8719437
+    },
+    {
+     "writer": "port_protect.py",
+     "rules": [
+      "TRN-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/port_protect.py",
+      "out/pcb-d-aprs.net"
+     ],
+     "rc": 0,
+     "seconds": 1.0,
+     "readings": {
+      "port_protect_d": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:23Z",
+       "written": true,
+       "denominator": 21,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  J_PAOUT      2 pin(s), protected off board by the same PolyPhaser GTH-SFF-AL SMA surge arrestor at the antenna bulkhead that J_ANT declares (v2/vendor/polyphaser). Owner decision 31, ruled 21 September 2026: J_PAOUT's coax goes to the RA30H1317M1 on the plate INSIDE the case, so no conductor of it leaves the enclosure, and every path from outside reaches it through that arrestor and then A22's J_RF1, this board's J_ANT, the T/R relay K1 and the two-section low-pass filter. Read off this board's own netlist: RF_PAOUT - L1 - RF_LPF_M - L2 - RF_LPF_OUT - K1.5 - K1.6 - RF_ANT - J_ANT.  [the power amplifier output to the antenna path, which reaches th]\n  J_HS1        5 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [a headset jack on the face, which a person plugs a headset into]\n  J_HS2        5 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [the second headset jack]\nverdict: port_protect           PASS         of 21 {\"answered_in_part\": 0, \"behind_an_active_part\": 0, \"clamps\": 7, \"clamps_one_way\": 1, \"clamps_reversed\": 0, \"clamps_symbol_mismatch\": 0, \"clamps_unjudged\": 0, \"declared\": 4, \"not_on_netlist\": 0, \"ports\": 4, \"unprotected\": 0} | every declared external conductor meets a protection part before a chip, and every clamp is drawn and placed the right way round",
+     "t0": 1790542822.8619914
+    }
+   ],
+   "seconds": 14.9,
+   "routed": [
+    "erc_gate.verdict.json",
+    "safe_lines_d.verdict.json",
+    "pin_map_lands_d.verdict.json",
+    "derate.verdict.json",
+    "intent_rails.verdict.json",
+    "edge_length.verdict.json",
+    "edge_length.table.json",
+    "clock_check.verdict.json",
+    "inhibit_chain_d.verdict.json",
+    "check_contracts.verdict.json",
+    "interfaces_d.verdict.json",
+    "port_protect_d.verdict.json"
+   ]
+  },
+  {
+   "letter": "e",
+   "phase_dir": "pcb-e1-dock-e7",
+   "refused": null,
+   "steps": [
+    {
+     "writer": "erc_gate.py",
+     "rules": [
+      "SCH-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/erc_gate.py",
+      ".",
+      "pcb-e1-dock",
+      "--run"
+     ],
+     "rc": 0,
+     "seconds": 1.7,
+     "readings": {
+      "erc_gate": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:24Z",
+       "written": true,
+       "denominator": 370,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "erc_gate: warning  unconnected_wire_endpoint                36\nerc_gate: netlist tied: the report, the schematic and the netlist's own provenance agree on schematic b2948384e5ea\nerc_gate: no blocking error (370 violations, 0 error(s) allow-listed with a reason, warnings 370)\nverdict: erc_gate               PASS         of 370 {\"allowed\": 0, \"blocking\": 0, \"violations\": 370}",
+     "t0": 1790542823.972489
+    },
+    {
+     "writer": "safe_lines.py",
+     "rules": [
+      "SCH-004"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/safe_lines.py",
+      "out/pcb-e1-dock.net"
+     ],
+     "rc": 0,
+     "seconds": 0.7,
+     "readings": {
+      "safe_lines_e": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:25Z",
+       "written": true,
+       "denominator": 2,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "safe_lines: board E declares 2 safety line(s)\n  SHORE_INHIBIT    safe low  listens   pull down [R26 (100k)] pull up [-] drivers [-] reads [Q8.1 (2N7002: SHORE_INHIBIT high p), U10.18 (RP2040 sensor controller (US)] leaves on [J_BLK.8]\n  BLK_SPARE        safe high source    pull down [-] pull up [-] drivers [-] reads [Q11.3 (2N7002 HOT-R1 open drain: GP)] leaves on [J_BLK.12]\nverdict: safe_lines             PASS         of 2 {\"floating\": 0, \"lines\": 2, \"listened\": 1, \"on_netlist\": 2} | 1 line(s) this board reads hold the safe state with its own copper; the rest are driven here or only cross it",
+     "t0": 1790542825.6614048
+    },
+    {
+     "writer": "pin_map_lands.py",
+     "rules": [
+      "SCH-005"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/pin_map_lands.py",
+      "out/pcb-e1-dock.net",
+      "e"
+     ],
+     "rc": 0,
+     "seconds": 0.7,
+     "readings": {
+      "pin_map_lands_e": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:26Z",
+       "written": true,
+       "denominator": 189,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "pin_map_lands: board E: 189 part(s) judged against their land, 0 failure(s), 18 pin(s) on a merged pad, 0 land(s) unreadable\nverdict: pin_map_lands_e        PASS         of 189 {\"failures\": 0, \"judged\": 189, \"merged_pad_pins\": 18, \"unreadable\": 0} | every part's map names every pad of its land",
+     "t0": 1790542826.3994715
+    },
+    {
+     "writer": "derate.py",
+     "rules": [
+      "CMP-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/derate.py",
+      "out/pcb-e1-dock.net"
+     ],
+     "rc": 0,
+     "seconds": 0.8,
+     "readings": {
+      "derate": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:27Z",
+       "written": true,
+       "denominator": 53,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "derate: 53 rated part-on-net pair(s) judged at a 20% margin over 15 declared rail(s) and 17 declared node(s), 0 of them against the part maker's own reference circuit; 52 part(s) carry no rating in their value and were not judged; 0 net(s) carry a rated part and no declared voltage\nverdict: derate                 PASS         of 53 {\"by_vendor_reference\": 0, \"judged\": 53, \"undeclared_nets\": 0, \"under_rated\": 0, \"unrated_parts\": 52} | a part's rating against the declared voltage of the rail it is soldered to; DC-bias capacitance derating is NOT checked here and is an open gap",
+     "t0": 1790542827.058301
+    },
+    {
+     "writer": "intent_checks.py",
+     "rules": [
+      "PWR-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/intent_checks.py",
+      "--netlist",
+      "out/pcb-e1-dock.net"
+     ],
+     "rc": 0,
+     "seconds": 1.0,
+     "readings": {
+      "intent_rails": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:28Z",
+       "written": true,
+       "denominator": 16,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "SETTLED  XIN: an oscillator net: Y1 is a crystal or resonator\nSETTLED  XOUT: an oscillator net: Y1 is a crystal or resonator\nCENSUS  15 counted, 15 declared node, 2 ground, 11 settled, 21 unconnected, 0 undecided, 60 unmarked\nverdict: intent_rails           PASS         of 16 {\"census_nets\": 124, \"checks\": 16, \"declared_nodes\": 11, \"declared_not_in_netlist\": 0, \"declared_rails\": 15, \"fail\": 0, \"held_pin_roles\": 71, \"nodes_supplying_parts\": 0, \"power_nets\": 15, \"rails_without_destination\": 0, \"settled\": 11, \"switches_unresolved\": 0, \"undecided\": 0, \"undeclared\": 0, \"unmarked\": 60} | PWR-001 on the committed netlist and the intent file beside it: every power net is a declared rail, and every declared rail is a net of the netlist whose source and loads are on it. A power net is a power-symbol net, a net carrying a pin typed power_in or power_out, a net of a power class in the netlist, a net carrying a supply-named pin that a bypass entry, a capacitor to ground or a second supply pin corroborates, a net carrying a pin its held datasheet makes a supply, or a ground off a ground net (intent_checks.PIN_ROLES, each row carrying every power and ground pin of its table, each document recorded by sha), or a net a declared rail's current reaches through a two-terminal part or a transistor's channel, at a threshold of 0.00 A. FAIL CLOSED: every other net carrying the mark of a supply (a capacitor to ground, a capacitor to a power net or across one part's pins, a fuse, inductor, ferrite, diode, jumper, switch or link resistor to a power net, a transistor channel shared with one, the switched low side of a load, a lead whose other pins are all ground, a sense class) is settled only by what is read (a crystal, a held non-supply pin role, a gate, a sink to ground, a declared clamp, a switch to ground; on a lead or a sense net the connector carries what the read pins carry) and is otherwise undecided; an undecided net holds the reading at INCONCLUSIVE when nothing fails, and the census names every net's disposition. A power net declared as a node is reported, and refused when it carries the supply pins of two or more parts. Session decisions of 26 September 2026 under the owner's standing rule: the kinds of power net, the fail-closed marks and the undecided class, the 0 A threshold, the node rule",
+     "t0": 1790542827.8980248
+    },
+    {
+     "writer": "power_sequence.py",
+     "rules": [
+      "PWR-002"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/power_sequence.py",
+      "out/pcb-e1-dock.net"
+     ],
+     "rc": 0,
+     "seconds": 0.7,
+     "readings": {
+      "power_sequence": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:29Z",
+       "written": true,
+       "denominator": 15,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  DC_P         source Q1             enable HS_UVLO        driven by nothing on this board\n  HS_S         source R19            enable HS_UVLO        driven by nothing on this board\n  PV_IN        source J_SOLAR        ALWAYS ON\nverdict: power_sequence         PASS         of 15 {\"always_on\": 5, \"deadlocks\": 0, \"rails\": 15, \"segments\": 7, \"unresolved\": 0} | each rail's enable derived from the netlist and the part that drives it named; a rail whose enable is driven only by a device powered from that same rail cannot start and is a failure. The ORDER between rails is reported as the graph and not decided here, because which order is correct is a property of the modules' own datasheets",
+     "t0": 1790542828.8901875
+    },
+    {
+     "writer": "energy_chain.py",
+     "rules": [
+      "PWR-003",
+      "BAT-002"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/energy_chain.py",
+      "--ecad",
+      "/root/retake6/rtk/v2/ecad"
+     ],
+     "rc": 0,
+     "seconds": 1.3,
+     "readings": {
+      "energy_chain_e": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:30Z",
+       "written": true,
+       "denominator": 3,
+       "missing_input": null
+      },
+      "energy_chain": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:30Z",
+       "written": true,
+       "denominator": 98,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  note SHORE_INPUT: F1 carries 6.2 A where atof287 allows 8.0 A at its 65 C column (the stage is judged at 56 C, datasheet revised 18 August 2022, page 3, Temperature Table: max. allo)\n  note SHORE_INPUT: the fault current available at F1 is not established, so ECSS 6.17.3c (the source delivers three times the fuse rating) cannot be judged here; it is part of the operating envelope, owner decision 34\n  note SHORE_INPUT: F1 melts in about 2.9 ms at 200 A (I2t 115 A2s)\nverdict: energy_chain           PASS         of 98 {\"checks\": 98, \"citations_unjudged\": 0, \"coordination_findings\": 0, \"fail\": 0, \"selection_findings\": 0, \"stages\": 12} | THE CHAIN END TO END, which is BAT-002's question; a selection finding against ECSS 6.17 belongs to the stage that has it and is in energy_chain_<letter>, rule PWR-003. Every rating against its own source document, every protective element against the board's netlist, and the four coordination tests (the element is below what it protects, above the path's peak, able to interrupt what is available, and followed by the stage it protects)",
+     "t0": 1790542829.5657618
+    },
+    {
+     "writer": "edge_length.py",
+     "rules": [
+      "SI-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/edge_length.py",
+      "--netlist",
+      "out/pcb-e1-dock.net"
+     ],
+     "rc": 3,
+     "seconds": 0.9,
+     "readings": {
+      "edge_length": {
+       "result": "INCONCLUSIVE",
+       "ts": "2026-09-27T21:00:31Z",
+       "written": true,
+       "denominator": 83,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  LOW_SPEED_OR_DC WATER_A                LOW_SPEED_OR_DC        1 net(s)\n  UNDECIDED    XIN                    HIGH_SPEED_DIGITAL     1 net(s)\n  UNDECIDED    XOUT*                  HIGH_SPEED_DIGITAL     2 net(s)\nverdict: edge_length            INCONCLUSIVE of 83 {\"answered_nets\": 4, \"classes\": 50, \"contradicted_nets\": 0, \"decided_nets\": 4, \"layout_bound_nets\": 0, \"low_speed_nets\": 42, \"may_be_long_nets\": 4, \"signal_nets\": 83, \"undecided_nets\": 37} | SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (UNDECIDED where none does), the critical length l = t_r / (k t_pd) on the slowest layer of every stack the board may be drawn on, and whether the netlist carries an impedance target, a series termination or a declaration where a net may be electrically long. The routed lengths are the layout gate's (edge_length_routed). The table is edge_length.table.json beside this verdict. Session decisions of 26 September 2026: LOW_SPEED_OR_DC asked no edge, the first matching entry decides, the slowest layer of the declared and ruled stacks, the stripline bound, the corner-to-corner extent, the project file's class where the netlist says Default",
+     "t0": 1790542830.8275433
+    },
+    {
+     "writer": "clock_check.py",
+     "rules": [
+      "CLK-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/clock_check.py",
+      "out/pcb-e1-dock.net"
+     ],
+     "rc": 0,
+     "seconds": 0.8,
+     "readings": {
+      "clock_check": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:31Z",
+       "written": true,
+       "denominator": 1,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "clock_check: 1 crystal(s) on board E\n  Y1 12 MHz ABM8-272-T3 (3225): 1 XIN, 3 XOUT, 2 and 4 GND: nets XIN, XOUT, load capacitors 15p -> presents 10.5 pF against the part's 10.0 (+5 percent, about -8 ppm)\nverdict: clock_check            PASS         of 1 {\"bad\": 0, \"crystals\": 1, \"undeclared\": 0} | every crystal has two matched load capacitors to ground, its own IC alone on its nets, and a network that presents what the part's own datasheet asks for within 20 percent",
+     "t0": 1790542831.68503
+    },
+    {
+     "writer": "check_contracts.py",
+     "rules": [
+      "RF-002",
+      "INT-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/check_contracts.py",
+      "/root/retake6/rtk/v2/ecad"
+     ],
+     "rc": 0,
+     "seconds": 5.2,
+     "readings": {
+      "inhibit_chain_e": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:37Z",
+       "written": true,
+       "denominator": 1,
+       "missing_input": null
+      },
+      "check_contracts": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:37Z",
+       "written": true,
+       "denominator": 99,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "\nALL CONTRACTS PASS\nRF-002's transmitter walk (section 15a, decides inhibit_chain_<letter> only): 7 UNDECIDED, 18 PASS\nverdict: check_contracts        PASS         of 99 {\"boards_without_intent\": 0, \"fail\": 0, \"missing_boards\": 0, \"pass\": 99, \"rails_unsplit\": 0, \"undecided\": 0, \"unjudged\": 0}",
+     "t0": 1790542832.4897788
+    },
+    {
+     "writer": "interfaces.py",
+     "rules": [
+      "INT-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/interfaces.py"
+     ],
+     "rc": 0,
+     "seconds": 2.0,
+     "readings": {
+      "interfaces_e": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:39Z",
+       "written": true,
+       "denominator": 1,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  note D USB_FULL_SPEED: no impedance target, which is what its parts' datasheets say\n  note E USB_FULL_SPEED: no impedance target, which is what its parts' datasheets say\n  note P SMBUS_GAUGE: no impedance target, which is what its parts' datasheets say\nverdict: interfaces             PASS         of 12 {\"assignments\": 12, \"boards\": 7, \"disagreements\": 0} | every interface's impedance target and matching tolerance against the specification of the part that defines it, from pcb_interfaces.yaml; the sources are the hosts' and the modules' own datasheets; each board also carries its own interfaces_<letter> verdict, because a set-level result deciding every board's own is a defect this project has already met once",
+     "t0": 1790542837.727138
+    },
+    {
+     "writer": "port_protect.py",
+     "rules": [
+      "TRN-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/port_protect.py",
+      "out/pcb-e1-dock.net"
+     ],
+     "rc": 0,
+     "seconds": 1.0,
+     "readings": {
+      "port_protect_e": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:39Z",
+       "written": true,
+       "denominator": 13,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  J_DCIN       2 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [shore and vehicle DC entry from the MIL-DTL-38999 wall receptacl]\n  J_SOLAR      2 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [the solar input, a long outdoor lead by definition]\n  J_POD        4 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [the outside climate and ultraviolet sensor pod, through an M8 se]\nverdict: port_protect           PASS         of 13 {\"answered_in_part\": 0, \"behind_an_active_part\": 0, \"clamps\": 5, \"clamps_one_way\": 4, \"clamps_reversed\": 0, \"clamps_symbol_mismatch\": 0, \"clamps_unjudged\": 0, \"declared\": 3, \"not_on_netlist\": 0, \"ports\": 3, \"unprotected\": 0} | every declared external conductor meets a protection part before a chip, and every clamp is drawn and placed the right way round",
+     "t0": 1790542839.7160754
+    }
+   ],
+   "seconds": 16.7,
+   "routed": [
+    "erc_gate.verdict.json",
+    "safe_lines_e.verdict.json",
+    "pin_map_lands_e.verdict.json",
+    "derate.verdict.json",
+    "intent_rails.verdict.json",
+    "power_sequence.verdict.json",
+    "energy_chain_e.verdict.json",
+    "energy_chain.verdict.json",
+    "edge_length.verdict.json",
+    "edge_length.table.json",
+    "clock_check.verdict.json",
+    "inhibit_chain_e.verdict.json",
+    "check_contracts.verdict.json",
+    "interfaces_e.verdict.json",
+    "port_protect_e.verdict.json"
+   ]
+  },
+  {
+   "letter": "e5",
+   "phase_dir": "pcb-e5-block",
+   "refused": null,
+   "steps": [
+    {
+     "writer": "safe_lines.py",
+     "rules": [
+      "SCH-004"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/safe_lines.py",
+      "--board",
+      "e5"
+     ],
+     "rc": 0,
+     "seconds": 0.7,
+     "readings": {
+      "safe_lines_e5": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:40Z",
+       "written": true,
+       "denominator": 0,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "safe_lines: board E5 declares none, with its reason\nverdict: safe_lines             PASS         of 0 {\"declared\": 0} | this board declares that it has none, with its reason, and it has no netlist",
+     "t0": 1790542840.730685
+    },
+    {
+     "writer": "derate.py",
+     "rules": [
+      "CMP-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/derate.py",
+      "pcb-e5-block.kicad_pcb",
+      "--no-components",
+      "this board has no schematic and no BOM: it is copper, plated targets, wire lands and mounting holes"
+     ],
+     "rc": 0,
+     "seconds": 0.8,
+     "readings": {
+      "derate": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:41Z",
+       "written": true,
+       "denominator": 0,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "derate: this board carries no part with a rating: this board has no schematic and no BOM: it is copper, plated targets, wire lands and mounting holes\nverdict: derate                 PASS         of 0 {\"judged\": 0, \"rated_parts\": 0} | this board carries no rated part to judge: this board has no schematic and no BOM: it is copper, plated targets, wire lands and mounting holes. A declared zero, not an absence",
+     "t0": 1790542841.409563
+    },
+    {
+     "writer": "energy_chain.py",
+     "rules": [
+      "PWR-003",
+      "BAT-002"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/energy_chain.py",
+      "--ecad",
+      "/root/retake6/rtk/v2/ecad"
+     ],
+     "rc": 0,
+     "seconds": 1.3,
+     "readings": {
+      "energy_chain_e5": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:43Z",
+       "written": true,
+       "denominator": 1,
+       "missing_input": null
+      },
+      "energy_chain": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:43Z",
+       "written": true,
+       "denominator": 98,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  note SHORE_INPUT: F1 carries 6.2 A where atof287 allows 8.0 A at its 65 C column (the stage is judged at 56 C, datasheet revised 18 August 2022, page 3, Temperature Table: max. allo)\n  note SHORE_INPUT: the fault current available at F1 is not established, so ECSS 6.17.3c (the source delivers three times the fuse rating) cannot be judged here; it is part of the operating envelope, owner decision 34\n  note SHORE_INPUT: F1 melts in about 2.9 ms at 200 A (I2t 115 A2s)\nverdict: energy_chain           PASS         of 98 {\"checks\": 98, \"citations_unjudged\": 0, \"coordination_findings\": 0, \"fail\": 0, \"selection_findings\": 0, \"stages\": 12} | THE CHAIN END TO END, which is BAT-002's question; a selection finding against ECSS 6.17 belongs to the stage that has it and is in energy_chain_<letter>, rule PWR-003. Every rating against its own source document, every protective element against the board's netlist, and the four coordination tests (the element is below what it protects, above the path's peak, able to interrupt what is available, and followed by the stage it protects)",
+     "t0": 1790542842.2419858
+    },
+    {
+     "writer": "interfaces.py",
+     "rules": [
+      "INT-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/interfaces.py"
+     ],
+     "rc": 0,
+     "seconds": 2.0,
+     "readings": {
+      "interfaces_e5": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:45Z",
+       "written": true,
+       "denominator": 0,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  note D USB_FULL_SPEED: no impedance target, which is what its parts' datasheets say\n  note E USB_FULL_SPEED: no impedance target, which is what its parts' datasheets say\n  note P SMBUS_GAUGE: no impedance target, which is what its parts' datasheets say\nverdict: interfaces             PASS         of 12 {\"assignments\": 12, \"boards\": 7, \"disagreements\": 0} | every interface's impedance target and matching tolerance against the specification of the part that defines it, from pcb_interfaces.yaml; the sources are the hosts' and the modules' own datasheets; each board also carries its own interfaces_<letter> verdict, because a set-level result deciding every board's own is a defect this project has already met once",
+     "t0": 1790542843.4970815
+    },
+    {
+     "writer": "block_contract.py",
+     "rules": [
+      "INT-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/block_contract.py",
+      "pcb-e5-block.kicad_pcb"
+     ],
+     "rc": 1,
+     "seconds": 1.5,
+     "readings": {
+      "check_contracts_e5": {
+       "result": "FAIL",
+       "ts": "2026-09-27T21:00:46Z",
+       "written": true,
+       "denominator": 38,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "FAIL  board A's netlist carries 4 J_VR pin(s) (J_VR1, J_VR2, J_VR3, J_VR4) and E5 carries 0 T_VR target(s): a pin the stack lowers onto nothing\nFAIL  board A's netlist carries 4 J_VN pin(s) (J_VN1, J_VN2, J_VN3, J_VN4) and E5 carries 0 T_VN target(s): a pin the stack lowers onto nothing\nblock_contract: 28 of 38 checks pass against board A's netlist pcb-a-power-a23/out/pcb-a-power.net\nverdict: check_contracts_e5     FAIL         of 38 {\"fail\": 10, \"pass\": 28} | the dock block against board A's current netlist: the signal targets matched by position under the J_DOCK land mounted as board A mounts it, the power targets by kind; board E5 has no netlist, its board file is its design, and board A's board file is not read",
+     "t0": 1790542845.4751318
+    },
+    {
+     "writer": "port_protect.py",
+     "rules": [
+      "TRN-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/port_protect.py",
+      "--board",
+      "e5"
+     ],
+     "rc": 0,
+     "seconds": 0.7,
+     "readings": {
+      "port_protect_e5": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:46Z",
+       "written": true,
+       "denominator": 0,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "port_protect: board E5 declares none, with its reason\nverdict: port_protect           PASS         of 0 {\"declared\": 0} | this board declares that it has none, with its reason, and it has no netlist",
+     "t0": 1790542846.9334943
+    }
+   ],
+   "seconds": 6.9,
+   "routed": [
+    "safe_lines_e5.verdict.json",
+    "derate.verdict.json",
+    "energy_chain_e5.verdict.json",
+    "energy_chain.verdict.json",
+    "interfaces_e5.verdict.json",
+    "check_contracts_e5.verdict.json",
+    "port_protect_e5.verdict.json"
+   ]
+  },
+  {
+   "letter": "p",
+   "phase_dir": "pcb-p-pack-p2",
+   "refused": null,
+   "steps": [
+    {
+     "writer": "erc_gate.py",
+     "rules": [
+      "SCH-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/erc_gate.py",
+      ".",
+      "pcb-p-pack",
+      "--run"
+     ],
+     "rc": 0,
+     "seconds": 1.5,
+     "readings": {
+      "erc_gate": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:48Z",
+       "written": true,
+       "denominator": 123,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "erc_gate: warning  unconnected_wire_endpoint                17\nerc_gate: netlist tied: the report, the schematic and the netlist's own provenance agree on schematic a58d0eecc7ab\nerc_gate: no blocking error (123 violations, 0 error(s) allow-listed with a reason, warnings 123)\nverdict: erc_gate               PASS         of 123 {\"allowed\": 0, \"blocking\": 0, \"violations\": 123}",
+     "t0": 1790542847.7269423
+    },
+    {
+     "writer": "safe_lines.py",
+     "rules": [
+      "SCH-004"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/safe_lines.py",
+      "out/pcb-p-pack.net"
+     ],
+     "rc": 0,
+     "seconds": 0.7,
+     "readings": {
+      "safe_lines_p": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:49Z",
+       "written": true,
+       "denominator": 0,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "safe_lines: board P declares 0 safety line(s)\nverdict: safe_lines             PASS         of 0 {\"floating\": 0, \"lines\": 0, \"listened\": 0, \"on_netlist\": 0} | this board declares that no line of its own inhibits a hazard, with its reason",
+     "t0": 1790542849.22231
+    },
+    {
+     "writer": "pin_map_lands.py",
+     "rules": [
+      "SCH-005"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/pin_map_lands.py",
+      "out/pcb-p-pack.net",
+      "p"
+     ],
+     "rc": 0,
+     "seconds": 0.6,
+     "readings": {
+      "pin_map_lands_p": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:50Z",
+       "written": true,
+       "denominator": 85,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "pin_map_lands: board P: 85 part(s) judged against their land, 0 failure(s), 0 pin(s) on a merged pad, 0 land(s) unreadable\nverdict: pin_map_lands_p        PASS         of 85 {\"failures\": 0, \"judged\": 85, \"merged_pad_pins\": 0, \"unreadable\": 0} | every part's map names every pad of its land",
+     "t0": 1790542849.9475164
+    },
+    {
+     "writer": "derate.py",
+     "rules": [
+      "CMP-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/derate.py",
+      "out/pcb-p-pack.net"
+     ],
+     "rc": 0,
+     "seconds": 0.9,
+     "readings": {
+      "derate": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:50Z",
+       "written": true,
+       "denominator": 6,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "derate: 6 rated part-on-net pair(s) judged at a 20% margin over 10 declared rail(s) and 8 declared node(s), 0 of them against the part maker's own reference circuit; 20 part(s) carry no rating in their value and were not judged; 0 net(s) carry a rated part and no declared voltage\nverdict: derate                 PASS         of 6 {\"by_vendor_reference\": 0, \"judged\": 6, \"undeclared_nets\": 0, \"under_rated\": 0, \"unrated_parts\": 20} | a part's rating against the declared voltage of the rail it is soldered to; DC-bias capacitance derating is NOT checked here and is an open gap",
+     "t0": 1790542850.594059
+    },
+    {
+     "writer": "intent_checks.py",
+     "rules": [
+      "PWR-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/intent_checks.py",
+      "--netlist",
+      "out/pcb-p-pack.net"
+     ],
+     "rc": 0,
+     "seconds": 0.9,
+     "readings": {
+      "intent_rails": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:51Z",
+       "written": true,
+       "denominator": 11,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "SETTLED  VC3_F: nothing on it supplies: U1.3 VC3 (sense, ti-bq4050.pdf)\nSETTLED  VC4_F: nothing on it supplies: U1.2 VC4 (sense, ti-bq4050.pdf)\nCENSUS  10 counted, 7 declared node, 1 ground, 12 settled, 4 unconnected, 0 undecided, 21 unmarked\nverdict: intent_rails           PASS         of 11 {\"census_nets\": 55, \"checks\": 11, \"declared_nodes\": 1, \"declared_not_in_netlist\": 0, \"declared_rails\": 10, \"fail\": 0, \"held_pin_roles\": 41, \"nodes_supplying_parts\": 0, \"power_nets\": 10, \"rails_without_destination\": 0, \"settled\": 12, \"switches_unresolved\": 0, \"undecided\": 0, \"undeclared\": 0, \"unmarked\": 21} | PWR-001 on the committed netlist and the intent file beside it: every power net is a declared rail, and every declared rail is a net of the netlist whose source and loads are on it. A power net is a power-symbol net, a net carrying a pin typed power_in or power_out, a net of a power class in the netlist, a net carrying a supply-named pin that a bypass entry, a capacitor to ground or a second supply pin corroborates, a net carrying a pin its held datasheet makes a supply, or a ground off a ground net (intent_checks.PIN_ROLES, each row carrying every power and ground pin of its table, each document recorded by sha), or a net a declared rail's current reaches through a two-terminal part or a transistor's channel, at a threshold of 0.00 A. FAIL CLOSED: every other net carrying the mark of a supply (a capacitor to ground, a capacitor to a power net or across one part's pins, a fuse, inductor, ferrite, diode, jumper, switch or link resistor to a power net, a transistor channel shared with one, the switched low side of a load, a lead whose other pins are all ground, a sense class) is settled only by what is read (a crystal, a held non-supply pin role, a gate, a sink to ground, a declared clamp, a switch to ground; on a lead or a sense net the connector carries what the read pins carry) and is otherwise undecided; an undecided net holds the reading at INCONCLUSIVE when nothing fails, and the census names every net's disposition. A power net declared as a node is reported, and refused when it carries the supply pins of two or more parts. Session decisions of 26 September 2026 under the owner's standing rule: the kinds of power net, the fail-closed marks and the undecided class, the 0 A threshold, the node rule",
+     "t0": 1790542851.4522874
+    },
+    {
+     "writer": "power_sequence.py",
+     "rules": [
+      "PWR-002"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/power_sequence.py",
+      "out/pcb-p-pack.net"
+     ],
+     "rc": 0,
+     "seconds": 0.7,
+     "readings": {
+      "power_sequence": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:52Z",
+       "written": true,
+       "denominator": 10,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  SEC_VDD      source R23            ALWAYS ON\n  VCC_F        source R7,U1          enable DSG_R          driven by R18 on ?, TP4 on ?\n  SW           source Q1             ALWAYS ON\nverdict: power_sequence         PASS         of 10 {\"always_on\": 6, \"deadlocks\": 0, \"rails\": 10, \"segments\": 1, \"unresolved\": 0} | each rail's enable derived from the netlist and the part that drives it named; a rail whose enable is driven only by a device powered from that same rail cannot start and is a failure. The ORDER between rails is reported as the graph and not decided here, because which order is correct is a property of the modules' own datasheets",
+     "t0": 1790542852.393387
+    },
+    {
+     "writer": "energy_chain.py",
+     "rules": [
+      "PWR-003",
+      "BAT-002"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/energy_chain.py",
+      "--ecad",
+      "/root/retake6/rtk/v2/ecad"
+     ],
+     "rc": 0,
+     "seconds": 1.2,
+     "readings": {
+      "energy_chain_p": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:54Z",
+       "written": true,
+       "denominator": 3,
+       "missing_input": null
+      },
+      "energy_chain": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:00:54Z",
+       "written": true,
+       "denominator": 98,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  note SHORE_INPUT: F1 carries 6.2 A where atof287 allows 8.0 A at its 65 C column (the stage is judged at 56 C, datasheet revised 18 August 2022, page 3, Temperature Table: max. allo)\n  note SHORE_INPUT: the fault current available at F1 is not established, so ECSS 6.17.3c (the source delivers three times the fuse rating) cannot be judged here; it is part of the operating envelope, owner decision 34\n  note SHORE_INPUT: F1 melts in about 2.9 ms at 200 A (I2t 115 A2s)\nverdict: energy_chain           PASS         of 98 {\"checks\": 98, \"citations_unjudged\": 0, \"coordination_findings\": 0, \"fail\": 0, \"selection_findings\": 0, \"stages\": 12} | THE CHAIN END TO END, which is BAT-002's question; a selection finding against ECSS 6.17 belongs to the stage that has it and is in energy_chain_<letter>, rule PWR-003. Every rating against its own source document, every protective element against the board's netlist, and the four coordination tests (the element is below what it protects, above the path's peak, able to interrupt what is available, and followed by the stage it protects)",
+     "t0": 1790542853.049865
+    },
+    {
+     "writer": "edge_length.py",
+     "rules": [
+      "SI-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/edge_length.py",
+      "--netlist",
+      "out/pcb-p-pack.net"
+     ],
+     "rc": 3,
+     "seconds": 0.8,
+     "readings": {
+      "edge_length": {
+       "result": "INCONCLUSIVE",
+       "ts": "2026-09-27T21:00:54Z",
+       "written": true,
+       "denominator": 40,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  LOW_SPEED_OR_DC SR?_F                  LOW_SPEED_OR_DC        2 net(s)\n  LOW_SPEED_OR_DC TS?                    LOW_SPEED_OR_DC        4 net(s)\n  LOW_SPEED_OR_DC VC?_F                  LOW_SPEED_OR_DC        4 net(s)\nverdict: edge_length            INCONCLUSIVE of 40 {\"answered_nets\": 0, \"classes\": 12, \"contradicted_nets\": 0, \"decided_nets\": 0, \"layout_bound_nets\": 0, \"low_speed_nets\": 20, \"may_be_long_nets\": 0, \"signal_nets\": 40, \"undecided_nets\": 20} | SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (UNDECIDED where none does), the critical length l = t_r / (k t_pd) on the slowest layer of every stack the board may be drawn on, and whether the netlist carries an impedance target, a series termination or a declaration where a net may be electrically long. The routed lengths are the layout gate's (edge_length_routed). The table is edge_length.table.json beside this verdict. Session decisions of 26 September 2026: LOW_SPEED_OR_DC asked no edge, the first matching entry decides, the slowest layer of the declared and ruled stacks, the stripline bound, the corner-to-corner extent, the project file's class where the netlist says Default",
+     "t0": 1790542854.293455
+    },
+    {
+     "writer": "check_contracts.py",
+     "rules": [
+      "RF-002",
+      "INT-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/check_contracts.py",
+      "/root/retake6/rtk/v2/ecad"
+     ],
+     "rc": 0,
+     "seconds": 5.2,
+     "readings": {
+      "inhibit_chain_p": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:01:00Z",
+       "written": true,
+       "denominator": 1,
+       "missing_input": null
+      },
+      "check_contracts": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:01:00Z",
+       "written": true,
+       "denominator": 99,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "\nALL CONTRACTS PASS\nRF-002's transmitter walk (section 15a, decides inhibit_chain_<letter> only): 7 UNDECIDED, 18 PASS\nverdict: check_contracts        PASS         of 99 {\"boards_without_intent\": 0, \"fail\": 0, \"missing_boards\": 0, \"pass\": 99, \"rails_unsplit\": 0, \"undecided\": 0, \"unjudged\": 0}",
+     "t0": 1790542855.110337
+    },
+    {
+     "writer": "interfaces.py",
+     "rules": [
+      "INT-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/interfaces.py"
+     ],
+     "rc": 0,
+     "seconds": 2.0,
+     "readings": {
+      "interfaces_p": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:01:02Z",
+       "written": true,
+       "denominator": 1,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  note D USB_FULL_SPEED: no impedance target, which is what its parts' datasheets say\n  note E USB_FULL_SPEED: no impedance target, which is what its parts' datasheets say\n  note P SMBUS_GAUGE: no impedance target, which is what its parts' datasheets say\nverdict: interfaces             PASS         of 12 {\"assignments\": 12, \"boards\": 7, \"disagreements\": 0} | every interface's impedance target and matching tolerance against the specification of the part that defines it, from pcb_interfaces.yaml; the sources are the hosts' and the modules' own datasheets; each board also carries its own interfaces_<letter> verdict, because a set-level result deciding every board's own is a defect this project has already met once",
+     "t0": 1790542860.3522007
+    },
+    {
+     "writer": "port_protect.py",
+     "rules": [
+      "TRN-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/port_protect.py",
+      "out/pcb-p-pack.net"
+     ],
+     "rc": 0,
+     "seconds": 0.9,
+     "readings": {
+      "port_protect_p": {
+       "result": "PASS",
+       "ts": "2026-09-27T21:01:02Z",
+       "written": true,
+       "denominator": 3,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  CLAMP D1     OK       K/A       uni    cathode (its K pin) on PACK_P, anode on the return PACK_N\n  CLAMP D2     N/A      A1/A2     bi     a two-way part (PESD5V0S1BA: Nexperia's S1B type, 'Bidirectional ESD protection diode'): either way round is correct\n  CLAMP D3     N/A      A1/A2     bi     a two-way part (PESD5V0S1BA: Nexperia's S1B type, 'Bidirectional ESD protection diode'): either way round is correct\nverdict: port_protect           PASS         of 3 {\"clamps\": 3, \"clamps_one_way\": 1, \"clamps_reversed\": 0, \"clamps_symbol_mismatch\": 0, \"clamps_unjudged\": 0, \"ports\": 0, \"unprotected\": 0} | this board declares that no conductor of its own leaves the enclosure, so the rule is true of it with nothing to check: Rule TRN-001, 16 September 2026. NOTHING ON BOARD P LEAVES THE ENCLOSURE, and this is the sentence that says so rather than a file nobody wrote. P is the pack's own protection and",
+     "t0": 1790542862.3365357
+    },
+    {
+     "writer": "pack_protection.py",
+     "rules": [
+      "BAT-001"
+     ],
+     "argv": [
+      "python3",
+      "/root/retake6/rtk/v2/ecad/tools/pack_protection.py",
+      "--netlist",
+      "out/pcb-p-pack.net",
+      "--check"
+     ],
+     "rc": 1,
+     "seconds": 1.0,
+     "readings": {
+      "pack_protection": {
+       "result": "FAIL",
+       "ts": "2026-09-27T21:01:03Z",
+       "written": true,
+       "denominator": 63,
+       "missing_input": null
+      }
+     },
+     "skipped": null,
+     "tail": "  FAIL FUSE_OVER_CURRENT_DISCHARGE trips at 33.8 A and 3 cells in parallel are rated 24.0 A (max_continuous_discharge_ma)\n  FAIL SECOND_LEVEL_CELL_UNDER_VOLTAGE trips at 2.25, BELOW the cell maker's own overdischarge_protect_v of 2.3\n  FAIL SECOND_LEVEL_OVER_TEMPERATURE allows -inf to 70.0 and the cell maker allows -10.0 to 60.0\nverdict: pack_protection        FAIL         of 63 {\"checks\": 63, \"devices\": 13, \"fail\": 3, \"functions\": 14, \"limits\": 14, \"software_only\": 9} | every protection this requirement names, with the device that implements it, its configured threshold, the cell limit it is derived from (quoted and re-read from the cell maker's own specification) and the test that will demonstrate it on the prototype; the currents are judged at the pack's worst parallel count",
+     "t0": 1790542863.245131
+    }
+   ],
+   "seconds": 16.5,
+   "routed": [
+    "erc_gate.verdict.json",
+    "safe_lines_p.verdict.json",
+    "pin_map_lands_p.verdict.json",
+    "derate.verdict.json",
+    "intent_rails.verdict.json",
+    "power_sequence.verdict.json",
+    "energy_chain_p.verdict.json",
+    "energy_chain.verdict.json",
+    "edge_length.verdict.json",
+    "edge_length.table.json",
+    "inhibit_chain_p.verdict.json",
+    "check_contracts.verdict.json",
+    "interfaces_p.verdict.json",
+    "port_protect_p.verdict.json",
+    "pack_protection.verdict.json"
+   ]
+  }
+ ],
+ "ok": true,
+ "kicad_cli": "/usr/bin/kicad-cli",
+ "started": "2026-09-27T20:59:14+00:00",
+ "seconds": 110.2
+}
