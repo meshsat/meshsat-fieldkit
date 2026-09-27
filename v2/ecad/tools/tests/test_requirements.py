@@ -547,6 +547,85 @@ def t_a_withdrawn_choice_is_rested_on_by_nothing():
     _refused(req, kw, ("SC-01", "withdrawn and still closes"))
 
 
+# ------------------------------------------------------------------------------------------ session choice ids cited
+def _pages(**texts):
+    """A temporary docs tree (v2/docs/<name>.md; a name `handover__X` is v2/docs/handover/X.md) and the list of its
+    pages, the form `citing` takes. The fixture keeps the tree's root, so its sources still resolve; a page outside
+    the root is named by its path relative to it."""
+    d = tempfile.mkdtemp(prefix="req-sc-pages-")
+    out = []
+    for name, text in texts.items():
+        p = os.path.join(d, "v2", "docs", *(name.split("__")))
+        os.makedirs(os.path.dirname(p), exist_ok=True)
+        open(p + ".md", "w", encoding="utf-8").write(text); out.append(p + ".md")
+    return d, out
+
+
+def t_a_session_choice_id_no_entry_defines_is_refused_where_it_is_cited():
+    """27 September 2026 (the second release attempt of layers 1 to 3, layer 3's finding R5): six session choices
+    lived only in HW-FW-CONTRACT.md section 8 as SC-HF-01 to 06, and two open items cited them. A page of v2/docs/ or
+    v2/docs/handover/, or the registry itself, that cites an SC- id no entry defines is refused; the same citation is
+    accepted once an entry defines it, by its own id or by the draft name it records as `drafted_as`."""
+    req, kw = _fixture()
+    root, pages = _pages(CONTRACT="Taken as SC-HF-02 and SC-01.\n",
+                         handover__NOTES="| x | the session's SC-07 |\n")
+    errs = R.validate_requirements(req, citing=pages, **kw)[0]
+    assert any("v2/docs/CONTRACT.md:1 cites SC-HF-02" in e for e in errs), errs
+    assert any("v2/docs/handover/NOTES.md:1 cites SC-07" in e for e in errs), errs
+    assert not any("cites SC-01," in e for e in errs), errs            # SC-01 is the fixture's own entry
+    # the same pages are accepted once the registry defines what they cite, by id and by draft name
+    req["session_choices"][0]["drafted_as"] = "SC-HF-02"
+    req["session_choices"].append({"id": "SC-07", "authority": "SESSION", "under": "standing-rule",
+                                   "taken_on": "2026-09-27", "question": "Which?", "taken": "This one.",
+                                   "why": "The netlist settles it, and the page that drafted it says so."})
+    errs = R.validate_requirements(req, citing=pages, **kw)[0]
+    assert not errs, errs
+    # the registry's own values are read even when no page is named
+    req, kw = _fixture()
+    _rec(req, "REQ-002")["notes"] = "Follows SC-31 of the closer's draft."
+    _refused(req, kw, ("records REQ-002 cites SC-31", "no session choice here defines"))
+
+
+def t_the_forms_of_an_id_that_are_not_ids_are_not_read_as_citations():
+    """`SC-nn`, `SC-HF-nn` name the form; `HC6-SC-1` is another page's numbering; `SC-C-179495` is a connector's part
+    number (the BB-2590/U's, in the design record). None of them is a session choice id, so none is refused."""
+    req, kw = _fixture()
+    root, pages = _pages(FORMS="Recorded in SC-nn form; drafts SC-HF-nn and SC-L2-nn; HC6-SC-1 and HC6-SC-9; the "
+                               "Army SC-C-179495 connector; SC-1 and SC-100.\n")
+    errs = R.validate_requirements(req, citing=pages, **kw)[0]
+    assert not errs, errs
+
+
+def t_a_draft_name_is_well_formed_and_names_one_entry():
+    for bad, words in (("SC-01", "never another entry's draft"), ("HF-02", "is not a draft name"),
+                       ("SC-HF-2", "is not a draft name")):
+        req, kw = _fixture(); req["session_choices"][0]["drafted_as"] = bad
+        _refused(req, kw, ("session choice SC-01", "drafted_as", words))
+    req, kw = _fixture()
+    req["session_choices"][0]["drafted_as"] = "SC-HF-02"
+    req["session_choices"].append({"id": "SC-02", "authority": "SESSION", "under": "standing-rule",
+                                   "taken_on": "2026-09-27", "question": "Which?", "taken": "That one.",
+                                   "why": "Another reason written long enough to count as a reason.",
+                                   "drafted_as": ["SC-HF-02"]})
+    _refused(req, kw, ("session choice SC-02", "drafted_as SC-HF-02 is already SC-01's draft name"))
+
+
+def t_the_real_pages_cite_only_session_choices_the_registry_defines():
+    """The tree's own check, not vacuous: the pages it reads include the contract whose drafts started this, those
+    drafts are cited there, and every cited id resolves to a registry entry."""
+    req = R.load_requirements()
+    files = R.session_choice_citing_files()
+    names = {os.path.relpath(f, R.REPO_ROOT) for f in files}
+    assert "v2/docs/HW-FW-CONTRACT.md" in names and "v2/docs/handover/LAYER-STATUS.md" in names, sorted(names)[:5]
+    assert "SC-HF-02" in open(os.path.join(R.REPO_ROOT, "v2/docs/HW-FW-CONTRACT.md"), encoding="utf-8").read()
+    ch = req.get("session_choices") or []
+    defined = {c["id"] for c in ch} | {d for c in ch for d in ([c["drafted_as"]] if isinstance(c.get("drafted_as"), str)
+                                                                else (c.get("drafted_as") or []))}
+    assert "SC-HF-02" in defined and "SC-HF-06" in defined, "the contract's drafts are not entered in the registry"
+    bad = R.undefined_session_choice_citations(req, defined, files)
+    assert not bad, "SC- ids cited that no session choice defines: %s" % bad[:8]
+
+
 def t_a_commit_closes_an_item_only_with_its_evidence_and_only_if_the_tree_holds_it():
     """The round-4 challenge: S-06, S-17 and S-25 were answered on main by commits, and a registry that could close
     an item only by a ruling kept them open."""

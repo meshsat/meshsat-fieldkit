@@ -35,7 +35,7 @@ nothing named here has been built or measured.
 | NEED-nn | a need of `v2/docs/CONOPS.md` (NEED-01 to NEED-19), mirrored in `pcb_requirements.yaml` `needs` |
 | REQ, CON, ASM, CHO, SPD, CFL, FEA-nnn | requirement, constraint, assumption, choice, specification detail, conflict and feasibility records of `pcb_requirements.yaml` (view: `v2/docs/REQUIREMENTS-TRACE.md`) |
 | D-nn (D-01 to D-18, D-02a to D-02e) | an owner ruling of 25 and 26 September 2026 (`pcb_requirements.yaml` `owner_rulings`, `CONOPS.md` section 7) |
-| SC-nn | a session choice under the owner's standing rule (`pcb_requirements.yaml` `session_choices`); SC-L2-nn, SC-HF-nn are a closer's own drafts of such choices |
+| SC-nn | a session choice under the owner's standing rule (`pcb_requirements.yaml` `session_choices`); SC-L2-nn, SC-HF-nn are a closer's own drafts of such choices, and a draft a page still cites is entered in the registry under its own SC-nn with the draft's name as `drafted_as` (SC-HF-01 to SC-HF-06 are SC-58 to SC-63 since 27 September 2026); `rules_lib.py requirements` refuses an SC- id cited in the registry or a page of `v2/docs/` or `v2/docs/handover/` that no entry defines |
 | S-nn, L-nn | open items of the registry (`open_items`); closed ones move to `closed_items` |
 | decision nn | an entry of `v2/ecad/tools/pcb_decisions.yaml` (page: `v2/docs/OWNER-DECISIONS-OPEN.md`) |
 | EQ-nn | a blocked engineering question of `ENGINEERING-QUESTIONS.md` (EQ-01 to EQ-21) |

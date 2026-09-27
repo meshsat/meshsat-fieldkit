@@ -122,6 +122,27 @@ Method, reproducible from this tree: for a verdict's `writer`, `git log --format
 `ast.dump` of both versions with each module, class and function docstring removed. The instrument is the writer
 file only; a change in a module it imports is not seen (stated on `v2/docs/CURRENT-EVIDENCE.md`).
 
+## Tool entries of 27 September 2026: two, and why
+
+MESHSAT-1357, the second release attempt of layers 1 to 3 (branch `fnd/rel2` from `953f5658`). Layer 3's release check
+(`v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2026-09-27.md`, finding R5) asked the requirements validator in
+`v2/ecad/tools/rules_lib.py` to refuse any SC- id that no session choice of the registry defines. `rules_lib.py` is in
+the code bundle of two writers whose readings are current on `953f5658`: `intent_checks.py` (PWR-001 on boards A, D and
+E, the `intent_rails` readings of 27 September 2026 00:26 UTC, bundle 5aa3d5157698ae2a) and `derate.py` (CMP-001 on E5,
+bundle 4c4fc2aca3d8e542). Any edit of the file changes both bundles, so without an entry `rules_status.py` reads the
+four TOOL_CHANGED. The edit cannot reach either writer, and `v2/docs/records/rel2/tool_compat.py` shows it from the
+files (output `v2/docs/records/rel2/tool_compat.out`):
+
+| writer | then | now | files of the bundle that moved | what moved in it | reached by the bundle |
+|---|---|---|---|---|---|
+| `intent_checks.py` | 5aa3d5157698ae2a | 3261e823102e587f | `rules_lib.py` only (c0458c53923d7925, the file at `953f5658`, to 6154bd6c15bdfa6b) | the syntax trees with docstrings removed differ in `validate_requirements` and `main` (its `requirements` command) and in six added names: `SC_CITING_GLOBS`, `_SC_CITED`, `_SC_DRAFT`, `_strings_of`, `session_choice_citing_files`, `undefined_session_choice_citations`; nothing removed | none: no file of the bundle takes any of those names from the module (`intent_checks.py:881` and `:937` import it for the reference prefix, `verdict.py` for the rules' fingerprints, both unchanged) |
+| `derate.py` | 4c4fc2aca3d8e542 | 1e03e805d1e67712 | `rules_lib.py` only (the same change) | the same | none (`derate.py:68` imports it for the reference prefix) |
+
+This is a dependency rationale, not the documentation-only one the section above asks of an older tool: the moved file's
+change is code, and what makes it harmless to these readings is that nothing the two writers run reaches it. The entries
+pin both bundles by content, so any later edit of any file of either bundle stops them applying by themselves. Taken by
+the session under the owner's standing rule of 26 September 2026.
+
 <!-- evidence-register: compatibility -->
 ```yaml
 compatibility:
@@ -188,5 +209,25 @@ compatibility:
     method: "git diff 4b90ba4b d468613e of the document (the version in a783ab33 is 4b90ba4b's), and the constants of fab_limits.py read"
     ruled_by: session
     ruled_on: 2026-09-26
+    authority: "taken by the session under the owner's standing rule of 26 Sep 2026"
+  - kind: tool
+    tool: intent_checks.py
+    then: 5aa3d5157698ae2a
+    now: 3261e823102e587f
+    summary: "rules_lib.py gained the requirements validator's SC- id check; nothing intent_checks.py's bundle reaches moved"
+    rationale: "The only file of the bundle that moved is rules_lib.py (c0458c53923d7925 at 953f5658 to 6154bd6c15bdfa6b). With docstrings removed its syntax tree differs in validate_requirements and main and in six added names (SC_CITING_GLOBS, _SC_CITED, _SC_DRAFT, _strings_of, session_choice_citing_files, undefined_session_choice_citations), none removed; no file of the bundle takes any of them from the module (intent_checks.py:881 and :937 use it for the reference prefix, verdict.py for the rules' fingerprints, which are unchanged)."
+    method: "v2/docs/records/rel2/tool_compat.py 953f5658 with the intent_rails verdicts of boards A, D and E and E5's derate verdict; output v2/docs/records/rel2/tool_compat.out"
+    ruled_by: session
+    ruled_on: 2026-09-27
+    authority: "taken by the session under the owner's standing rule of 26 Sep 2026"
+  - kind: tool
+    tool: derate.py
+    then: 4c4fc2aca3d8e542
+    now: 1e03e805d1e67712
+    summary: "rules_lib.py gained the requirements validator's SC- id check; nothing derate.py's bundle reaches moved"
+    rationale: "The only file of the bundle that moved is rules_lib.py (the same change as intent_checks.py's entry: validate_requirements and main changed, six names added, none removed). derate.py:68 uses the module for the reference prefix and verdict.py for the rules' fingerprints, neither of which changed, and no file of the bundle takes a changed or added name from it."
+    method: "v2/docs/records/rel2/tool_compat.py 953f5658 with E5's derate verdict; output v2/docs/records/rel2/tool_compat.out"
+    ruled_by: session
+    ruled_on: 2026-09-27
     authority: "taken by the session under the owner's standing rule of 26 Sep 2026"
 ```

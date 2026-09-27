@@ -33,7 +33,7 @@ bought parts are added to section 2 (the AW7915-AED, the LimeSDR Mini 2.4 and th
 two rated only from 0 C get a carve-out warmed by the kit (section 4), storage keeps the pack fitted at its cells'
 ex-factory state (section 4), and the pollution degree and the duty cycle are set (section 5). No limit of the envelope
 moved: -20 to +40 C in use and -20 to +45 C for three months in storage stand as adopted. **Revised again later on 27
-September 2026 (pass 2, answering Review A's first pass, `reviews/REVIEW-A-LAYER-2-2026-09-27.md`):** the heat stage is
+September 2026 (pass 2, answering Review A's first pass, `reviews/REVIEW-A-LAYER-2-2026-09-27-pass1.md`):** the heat stage is
 given in both of its configurations, the one-module stage that carries the owner's example after board B's hub ports
 are exchanged (BANK-R1, `CONOPS.md` section 4c) and the stage board B gives as generated (section 3); and the cold
 carve-out names the warm-up that brings the inside air to 0 C and the conductance above which it does not (section 4,

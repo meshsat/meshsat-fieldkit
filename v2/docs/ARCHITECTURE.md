@@ -863,7 +863,7 @@ Heat inside is battery watts plus the cells' own I2R, less what the outlets deli
 
 | State | Enclosure | Battery W, PLAN (LOW to HIGH) | Heat inside, PLAN (HIGH) W |
 |---|---|---|---|
-| PS-RED, slot 3 only, monitor off (the closed-lid reduced mode of D-02b) | lid closed, fans | 22.2 (12.7 to 45.9) | 22.4 (46.7) |
+| PS-RED2, slots 2 and 3, monitor off (the closed-lid reduced mode of D-02b, `CONOPS.md` section 4c; `records/hc2/pwr_red2.out`) | lid closed, fans | 31.4 (17.6 to 55.6) | 31.7 (HIGH not computed) |
 | PS-RED-b, three idle, monitor off | lid closed, fans | 35.7 (26.9 to 71.5) | 36.1 (73.5) |
 | PS-IDLE / PS-IDLE-SPEC | lid open, fans | 39.7 / 42.8 (30.9 to 82.8) | 43.4 (85.4) for PS-IDLE-SPEC |
 | PS-EMCON (the dark meaning of D-05) | lid open, fans | 53.1 (37.3 to 103.3) | 54.0 (107.4) |
@@ -873,7 +873,7 @@ Heat inside is battery watts plus the cells' own I2R, less what the outlets deli
 
 The undocumented share of PS-TYP is now about a fifth (11.7 of 63.0 W), down from about half (PWR-F07). The two idle
 figures of the earlier records, 29.4 W and about 32 W, are two scenarios at the same boundary, not a defect
-(`POWER-THERMAL.md` section 5). Sun on the open face (84.8 to 93.9 W absorbed, INFERRED, W4) and on a closed lid is outside the
+(`POWER-THERMAL.md` section 5). The heat stage past the reduced mode is one module (C1's second step, `CONOPS.md` section 4c): PS-SURV-R, slot 3 alone after BANK-R1, 23.3 W (12.8 to 46.9) with 23.4 W of heat inside, and PS-SURV, slot 2 alone as board B is generated, 21.7 W (12.4 to 42.0) with 21.9 W; `POWER-THERMAL.md`'s PS-RED (slot 3 alone in its own model, 22.2 W, 12.7 to 45.9, heat 22.4 W) is that one-module case, not the reduced mode (`records/hc2/pwr_red2.out`; corrected 27 September 2026, the second release attempt of layers 1 to 3). Sun on the open face (84.8 to 93.9 W absorbed, INFERRED, W4) and on a closed lid is outside the
 operating condition: the kit is operated shaded (D-02e).
 
 ### 8.2 Conductance and rise
@@ -886,7 +886,7 @@ operating condition: the kit is operated shaded (D-02e).
 
 | State, enclosure | Rise on W4's bound (K) | Rise on 32.53's conductance (K) |
 |---|---|---|
-| PS-RED, lid closed, fans | 9.0 to 21.1 | 11.2 to 14.9 |
+| PS-RED2 (the reduced mode), lid closed, fans | 12.7 to 29.9 | 15.8 to 21.1 |
 | PS-IDLE-SPEC, lid open, fans | 15.2 to 35.6 | 13.2 to 14.5 |
 | PS-TYP, lid open, fans | 22.5 to 52.7 | 19.5 to 21.4 |
 | PS-TYP, lid open, fans off | 40.9 to 83.4 | 30.6 |
@@ -905,7 +905,7 @@ no part number yet (W4-F9; D-18 conditional).
 
 - **Envelope** (`OPERATING-ENVELOPE.md` section 4, pinned by ENV-001; the owner's rulings in its section 8): -20 to +40 C
   in use, -20 to +45 C storage for three months, with carve-outs below -10 C (pack warmed before charge), below -15 C
-  (e-paper degraded) and above +35 C (reduced mode, one module).
+  (e-paper degraded) and above +35 C (one module: the heat stage past the reduced mode, `CONOPS.md` section 4c).
 - **Qualification margins (D-02a, ruled):** +55 C operating, +71 C storage and -33 C storage are margins over that
   envelope. Pass line inside the envelope: operate to specification. Pass line at the margin: survive and recover.
 - **Closed lid (D-02b, ruled):** operation in a defined reduced mode; a closed-lid state and thermal test are to join

@@ -95,8 +95,8 @@ in section 12. Both are drafts for the integrator to file (proposal in section 1
   three rules from the architecture that the W2 model did not:
   - **Only one WiFi link card is live** (`ARCH-PCB-B-IOHA.md` line 209, and line 324: card 2 is "standby, radio
     disabled").
-  - **The reduced mode's one module is slot 3**, because the LoRa mesh the owner named for it (D-02b) is on slot 3's
-    SPI (`V2-SPEC.md` line 32).
+  - **The reduced mode is slots 2 and 3, and the heat stage past it is one module** (`CONOPS.md` section 4c; corrected 27 September 2026, the second release attempt of layers 1 to 3, layer 2's finding B4: the first version took the reduced mode as slot 3 alone, because the LoRa mesh the owner named for it, D-02b, is on slot 3's SPI, `V2-SPEC.md` line 32). C1 and C3 shed to the reduced mode first and, reached again there, to the heat stage (section 9.3).
+    The heat stage is slot 3 alone once board B's hub ports are exchanged (BANK-R1), which is this page's PS-RED with the APRS beacons (PS-SURV-R, 23.3 W), and slot 2 alone as board B is generated (PS-SURV, 21.7 W), because there slot 3 alone has no host for Iridium or the SOS path; the reduced mode is PS-RED2, 31.4 W (17.6 to 55.6); all three are in `v2/docs/records/hc2/pwr_red2.out`, on this page's model. Where this page says PS-RED, read the one-module stage.
   - **The two mixer fans run in every powered state**, lid open or closed, because the fans-on conductance of appendix
     32.53 assumes them.
     The W2 model had them off in PS-IDLE. This choice was taken by the session under the owner's standing rule of 26
@@ -732,7 +732,7 @@ Heat inside is battery W plus the cells' own I2R, less what the outlets deliver 
 by what the antennas radiate and what the monitor glass sheds outward. Each state is applied only to the enclosure
 state it runs in:
 - lid open with fans for the normal states;
-- lid closed with fans for the reduced mode (D-02b) and for PS-RED-b in transport;
+- lid closed with fans for PS-RED, the one-module stage (section 1; the reduced mode of D-02b is PS-RED2), and for PS-RED-b in transport;
 - lid open for PS-RED above +35 C.
 
 PS-ALLTX, and the PA keyed on its own, are bursts (section 7.2), never steady states.
@@ -819,7 +819,7 @@ section 7.1.
   of C1's triggers, and 7.1 K inside the 60 C window, so C1 need not act.
 
 On W4's still-air bound the cells reach 63.8 to 112.0 C, less 2 to 4 K for the fans' own power (INFERRED, the
-fans-off rows of 9.1 and above), and C1 sheds to slot 3. So on the design record's own conductance PS-TYP at +20 C
+fans-off rows of 9.1 and above), and C1 sheds (to the reduced mode, then the heat stage, section 9.3). So on the design record's own conductance PS-TYP at +20 C
 keeps about 5 to 7 K to the discharge window once the fans stop, and sits at C1's triggers; on the independent
 bound it does not hold.
 
@@ -855,8 +855,8 @@ per state:
   to +21.6 C, and PS-BUSY's is +9 to +12 C. On the independent bound it is anywhere from -18 to +19 C.
 - **+35 C** is supported for the discharge window only at the optimistic end. PS-TYP reaches the cells' 60 C at
   ambients from about -1 C to +35 C on the bound, and +34 to +36 C on 32.53's conductance.
-- **In the reduced mode** (lid closed), charging holds off above +15 to +33 C on the bound, and +25 to +29 C on 32.53's
-  conductance. The envelope does not say so today.
+- **In the one-module stage** (PS-RED, lid closed), charging holds off above +15 to +33 C on the bound, and +25 to +29 C on 32.53's
+  conductance; in the reduced mode (PS-RED2, slots 2 and 3) above +5.3 to +29.2 C and +18.4 to +24.5 C, which `OPERATING-ENVELOPE.md` section 3 carries since 27 September 2026 (`v2/docs/records/hc2/pwr_red2.out`).
 
 Both stay **proposed controls until analysis and measurement support them**. That means TEST-PLAN E3 plus the owed
 inside-air rise test per state, lid open and closed (`ARCHITECTURE.md` section 8.2).
@@ -873,8 +873,8 @@ The sensors exist on `main`:
 The controls:
 - **Charging (existing, in the gauge):** the gauge's own 0 to 45 C cell window (`pcb_pack_protection.yaml` line 145)
   holds the charge whatever the ambient. It is a data-flash setting in the gauge, independent of the host.
-- **C1, module shedding (firmware, panel and bridge):** shed to one module (slot 3) when the inside air reaches +50 C
-  (the SGP41's recommended maximum) or any cell thermistor reaches +55 C. Restore 5 K below.
+- **C1, module shedding (firmware, panel and bridge):** shed to the reduced mode (slots 2 and 3) when the inside air reaches +50 C
+  (the SGP41's recommended maximum) or any cell thermistor reaches +55 C, and, if the triggers are reached again there, to the heat stage (one module: slot 3 after BANK-R1, slot 2 as board B is generated; `CONOPS.md` section 4c). Restore 5 K below.
 - **C2, the outlet budget (new, firmware, panel and bridge):**
   - The triggers: the gauge's pack discharge current, averaged over 10 s, above 9.0 A; or any cell thermistor at
     +50 C.
@@ -896,8 +896,8 @@ The controls:
     bring-up.
   - The temperature trigger sits 5 K under C1's, so the outlets, which serve no core function, go before any module.
 - **C3, a current trigger for C1 (new, firmware):**
-  - The trigger: with both outlets already off, a 10 s average pack current above 9.0 A for 30 s sheds to one
-    module, as C1 does. It bounds the HIGH corners of PS-TYP, PS-EMCON, PS-BUSY and the heater overlay at the end of
+  - The trigger: with both outlets already off, a 10 s average pack current above 9.0 A for 30 s sheds as C1
+    does (to the reduced mode, then the heat stage). It bounds the HIGH corners of PS-TYP, PS-EMCON, PS-BUSY and the heater overlay at the end of
     discharge.
   - The restore: the shed modules come back when the predicted current has stayed under 8.0 A for 60 s and C1's
     triggers are clear. The prediction is the measured 10 s average plus 8.7 W per module at the pack (board B's
@@ -1160,7 +1160,7 @@ which D-09 and the house rules keep with the owner: prepared here, not decided.
    - section 11: runtime and power rows.
 3. **`OPERATING-ENVELOPE.md` section 3:**
    - mark the +35 C and +25 C rows as proposed controls;
-   - add "in the reduced mode, lid closed, charging holds off above about +15 to +33 C" (INFERRED; +25 to +29 C on
+   - add "in the one-module stage (PS-RED), lid closed, charging holds off above about +15 to +33 C" (INFERRED; +25 to +29 C on
      32.53's own conductance);
    - cite this page.
 

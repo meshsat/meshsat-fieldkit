@@ -488,9 +488,69 @@ PROTOTYPE_1 = ("core", "deferred")
 P1_BASIS = ("NEED_DEFAULT", "NAMED", "SESSION")
 SOURCE_CHECK = ("VERIFIED", "INFERRED")
 RULE_COVERAGE = ("FULL", "PARTIAL", "NONE")
-# OWNER_ACTION: something the owner has ruled that he will do or set himself (D-06's mission duration), which records
-# wait on. The case measurement D-08 first asked of him was withdrawn by his own reversal of 26 September 2026.
+# OWNER_ACTION: something only the owner does or sets himself, which records wait on; it is reported to him, never
+# asked (his standing rule of 26 September 2026). The case measurement D-08 first asked of him (M-01) was withdrawn by
+# his own reversal of 26 September 2026; D-06's mission duration (L-02) is governed by the session's SC-21 under the
+# standing rule, and what only he can decide about M1's failing balance is an owner action of its own.
 ITEM_CLASSES = ("OWNER", "OWNER_ACTION", "SESSION", "CONDITIONAL", "LATER")
+# A SESSION CHOICE IS CITED ONLY BY AN ID THIS REGISTRY DEFINES (27 September 2026, the second release attempt of
+# layers 1 to 3, finding R5 of layer 3's release check). The layer 5 closer drafted six choices as SC-HF-01 to SC-HF-06
+# in v2/docs/HW-FW-CONTRACT.md section 8, and two open items of the registry cited them while no entry defined them: a
+# second place where session choices lived. An entry defines its own SC-nn and, under `drafted_as`, the draft name it
+# was first written under; every SC- id cited in the registry (its values and its comments) or in a page of v2/docs/ or
+# v2/docs/handover/ must be one of those. `SC-nn` or `SC-HF-nn`, with letters where the number goes, names the form and
+# is not an id; `HC6-SC-1` is another page's own numbering and is not read (an id is never preceded by a letter, a
+# digit or a hyphen); an id carries exactly two digits, so a part number such as `SC-C-179495` is not one.
+_SC_CITED = _re.compile(r"(?<![A-Za-z0-9-])SC-(?:[A-Z][A-Z0-9]{0,3}-)?\d{2}(?![0-9A-Za-z])")
+_SC_DRAFT = _re.compile(r"^SC-[A-Z][A-Z0-9]{0,3}-\d{2}$")
+SC_CITING_GLOBS = ("v2/docs/*.md", "v2/docs/handover/*.md")
+
+
+def session_choice_citing_files(root=None, registry=None):
+    """The files whose SC- citations must resolve to a session choice of the registry: the registry file itself (whose
+    comments are read; its values are read from the loaded registry) and every page of v2/docs/ and v2/docs/handover/
+    under `root`."""
+    import glob as _glob
+    root = root or REPO_ROOT
+    out = [registry or REQUIREMENTS]
+    for g in SC_CITING_GLOBS: out += sorted(_glob.glob(os.path.join(root, g)))
+    return out
+
+
+def _strings_of(x, where):
+    """(where, text) for every string inside `x`, `where` naming the entry it sits in."""
+    if isinstance(x, str): yield where, x
+    elif isinstance(x, dict):
+        for v in x.values(): yield from _strings_of(v, where)
+    elif isinstance(x, (list, tuple)):
+        for v in x: yield from _strings_of(v, where)
+
+
+def undefined_session_choice_citations(req, defined, files=(), registry=None, root=None):
+    """[(where, id)] for every SC- id the loaded registry or `files` cite that is not in `defined`. The registry's
+    values are read from `req` (each named by its section and entry id); a file that is the registry itself is read for
+    its comment lines only, so nothing is reported twice; any other file is read whole, each hit named file:line."""
+    out = []
+    for sec in ("owner_rulings", "session_choices", "open_items", "closed_items", "records", "needs"):
+        for e in req.get(sec) or []:
+            where = "%s %s" % (sec, (e or {}).get("id") if isinstance(e, dict) else "?")
+            for w, s in _strings_of(e, where):
+                for m in _SC_CITED.finditer(s):
+                    if m.group(0) not in defined: out.append((w, m.group(0)))
+    root = root or REPO_ROOT
+    reg = os.path.abspath(registry or REQUIREMENTS)
+    for f in files:
+        p = os.path.abspath(f)
+        if not os.path.isfile(p): continue
+        rel = os.path.relpath(p, root)
+        comments_only = p == reg
+        for n, line in enumerate(open(p, encoding="utf-8", errors="replace").read().split("\n"), 1):
+            if comments_only and not line.lstrip().startswith("#"): continue
+            for m in _SC_CITED.finditer(line):
+                if m.group(0) not in defined: out.append(("%s:%d" % (rel, n), m.group(0)))
+    return out
+
+
 # THE EVIDENCE CLASS of a record's own reading, in the six classes `rules_status.evidence_class` gives every rule-board
 # reading (v2/docs/CURRENT-EVIDENCE.md; the suite holds the two lists equal). The review of 26 September 2026, section 1:
 # a reading awaiting revalidation never decides, desk reviews and physical tests are kept apart, and acceptance binds to
@@ -648,13 +708,19 @@ def _commit_exists(root, sha):
 
 
 def validate_requirements(req=None, path=None, root=None, rules=None, decisions=None, interfaces=None, needs_doc=None,
-                          rule_classes=None):
+                          rule_classes=None, citing=None):
     """(errors, warnings) for the requirements registry. Every argument has the tree's own default, and a fixture
     passes its own so a defective registry can be shown to FAIL without touching the tree.
 
     `needs_doc` is the CONOPS the needs are quoted from. When it is absent the needs cannot be compared, which is a
     WARNING and not a pass: a worker tree holds the registry before the document is published beside it, and the
-    test that compares them says so by skipping rather than by reading green."""
+    test that compares them says so by skipping rather than by reading green.
+
+    `citing` is the files whose SC- ids must resolve to a session choice here (`session_choice_citing_files`). When
+    the tree's own registry is loaded here (`req` not given) it defaults to the registry file and the pages of v2/docs/
+    and v2/docs/handover/; a registry passed in is checked on its own values unless the caller names files, so a fixture
+    never reads the tree's pages."""
+    own = req is None
     req = req if req is not None else load_requirements(path)
     root = root or REPO_ROOT
     rule_ids = set(rules) if rules is not None else {r["id"] for r in load()["rules"]}
@@ -752,6 +818,25 @@ def validate_requirements(req=None, path=None, root=None, rules=None, decisions=
             if len(str(c.get("withdrawn_why") or "").strip()) < 20: errs.append("session choice %s is withdrawn with no reason" % cid)
             if c.get("closes"): errs.append("session choice %s is withdrawn and still closes %s" % (cid, ", ".join(c["closes"])))
     withdrawn = {cid for cid, c in choices.items() if c.get("withdrawn_on")}
+    # --- the draft names an entry records, and every SC- id cited anywhere the registry answers for
+    drafts = {}
+    for cid, c in choices.items():
+        da = c.get("drafted_as")
+        for d in (da if isinstance(da, list) else ([da] if da is not None else [])):
+            if not _SC_DRAFT.match(str(d)):
+                errs.append("session choice %s: drafted_as %r is not a draft name of the form SC-XX-nn (an SC-nn id is "
+                            "an entry of its own, never another entry's draft)" % (cid, d))
+            elif d in drafts:
+                errs.append("session choice %s: drafted_as %s is already %s's draft name" % (cid, d, drafts[d]))
+            else:
+                drafts[d] = cid
+    if citing is None and own:
+        citing = session_choice_citing_files(root, path)
+    for where, sid in undefined_session_choice_citations(req, set(choices) | set(drafts), citing or (),
+                                                         registry=path, root=root):
+        errs.append("%s cites %s, which no session choice here defines: a session choice is recorded in "
+                    "pcb_requirements.yaml's session_choices, under its SC-nn or the draft name it records as "
+                    "drafted_as, and nowhere else" % (where, sid))
     core = set(core_needs(req))
 
     # --- open items
@@ -1089,7 +1174,9 @@ def main(argv):
         needs = argv[argv.index("--needs") + 1] if "--needs" in argv and argv.index("--needs") + 1 < len(argv) else None
         rpath = path if path and path != needs else None
         req = load_requirements(rpath); rc = rule_classes_from_audit()
-        errs, warns = validate_requirements(req, needs_doc=needs, rule_classes=rc)
+        # the SC- ids the registry file and the pages of v2/docs/ and v2/docs/handover/ cite (27 September 2026)
+        errs, warns = validate_requirements(req, path=rpath, needs_doc=needs, rule_classes=rc,
+                                            citing=session_choice_citing_files(None, rpath))
         if rc is None: print("warn  out/rule-audit is not in this tree: a PASS is not checked against its rules' classes")
         for w in warns: print("warn  %s" % w)
         for e in errs: print("ERROR %s" % e)
