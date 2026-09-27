@@ -1,0 +1,74 @@
+KIT I2C BUS BUDGET (desk calculation, prototype design, nothing built)
+netlists: a=v2/ecad/pcb-a-power-a23/out/pcb-a-power.net, b=v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net, c=v2/ecad/pcb-c-display-c8/out/pcb-c-display.net, d=v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net
+
+== SDA: 36 pins on the line
+   board A: bound 104.0 pF, nominal 39.5 pF: J_AB1.11 conn, J_MEZZ1.10 conn, TP17.1 tp, U10.4 INA226, U11.4 INA226, U14.2 INA226, U14.4 INA226, U17.4 INA226, U27.23 PCA9555, U28.23 PCA9555, U3.12 BQ25731, U8.4 INA226, U9.4 INA226
+   board B: bound 106.0 pF, nominal 69.5 pF: J_AB1.11 conn, J_PANEL.4 conn, TP10.1 tp, U1.98 KSZ9897, U10.6 TMP117, U41.93 STM32H743, U5.4 TPS23861, U5.5 TPS23861, U51.93 STM32H743, U6.23 PCA9555, U61.93 STM32H743, U7.23 PCA9555, U8.5 ATECC608B, U9.7 DS3231
+   board C: bound 45.5 pF, nominal 30.0 pF: J_PANEL.4 conn, TP42.1 tp, U1.23 PCA9555, U2.23 PCA9555, U3.2 RP2040, U7.1 USBLC6, U_LIGHT.4 VEML7700
+   board D: bound 11.5 pF, nominal 4.0 pF: J_HARN1.10 conn, U16.23 PCA9555
+   pins total: bound 267.0 pF, nominal 143.0 pF; ribbons 490 mm at 47.5 pF/m = 23.3 pF
+   pull-ups: B R54 2.2k to +3V3_DEV, C R7 2.2k to +3V3; plus the KSZ9897R's internal 58 k +-30 %
+== SCL: 35 pins on the line
+   board A: bound 101.0 pF, nominal 39.5 pF: J_AB1.12 conn, J_MEZZ1.11 conn, TP18.1 tp, U10.5 INA226, U11.5 INA226, U14.5 INA226, U17.2 INA226, U17.5 INA226, U27.22 PCA9555, U28.22 PCA9555, U3.13 BQ25731, U8.5 INA226, U9.5 INA226
+   board B: bound 101.0 pF, nominal 67.5 pF: J_AB1.12 conn, J_PANEL.5 conn, TP11.1 tp, U1.101 KSZ9897, U10.1 TMP117, U41.92 STM32H743, U5.3 TPS23861, U51.92 STM32H743, U6.22 PCA9555, U61.92 STM32H743, U7.22 PCA9555, U8.6 ATECC608B, U9.8 DS3231
+   board C: bound 42.5 pF, nominal 30.0 pF: J_PANEL.5 conn, TP43.1 tp, U1.22 PCA9555, U2.22 PCA9555, U3.3 RP2040, U7.3 USBLC6, U_LIGHT.1 VEML7700
+   board D: bound 10.0 pF, nominal 4.0 pF: J_HARN1.11 conn, U16.22 PCA9555
+   pins total: bound 254.5 pF, nominal 141.0 pF; ribbons 490 mm at 47.5 pF/m = 23.3 pF
+   pull-ups: B R55 2.2k to +3V3_DEV, C R8 2.2k to +3V3; plus the KSZ9897R's internal 58 k +-30 %
+
+== Pull-up window (SDA; SCL identical)
+   effective Rp: 1019 ohm at -5 % (sink check), 1080 nominal, 1138 at +5 % (rise check)
+   Rp minimum for a 3 mA sink at VOL 0.4 V from 3.40 V: 1000 ohm (UM10204 7.1); the drawn 1019 ohm meets it
+   pull-up current at 0.4 V: 2.94 mA worst (3.40 V over 1019 ohm), 2.69 mA nominal
+   largest Cb for tr <= 300 ns: 311 pF (30-70 %, BQ25731, ATECC608B, ADS1115) and 269 pF (TPS23861's 0.8-2.3 V at 3.20 V) at the rise-check Rp; 328 and 303 pF at nominal
+   Standard-mode alone (tr 1000 ns, 30-70 %) would allow 1037 pF; UM10204's Cb limit is 400 pF
+
+== Copper already laid on SDA and SCL in the committed board files (INDICATOR: A32, B21, C24, D12 predate the
+   corrected netlists; B21 is not fully routed, so board B's figure is a floor)
+   board A: SDA 418 mm (9 vias), SCL 503 mm (9 vias)
+   board B: SDA 667 mm (16 vias), SCL 436 mm (11 vias)
+   board C: SDA 464 mm (8 vias), SCL 478 mm (9 vias)
+   board D: SDA 20 mm (1 vias), SCL 34 mm (3 vias)
+
+== ONE SEGMENT, as drawn (trunk = the whole bus): fixed part and the copper it leaves
+   SDA: fixed 290 pF bound / 166 pF nominal against 269 / 303 pF allowed: copper allowance -21 / 137 pF
+       the committed layouts carry 1568 mm: 157 to 345 pF at 1.0 to 2.2 pF/cm; total 323 to 417 pF (nominal pins, low copper) up to 635 pF (bound pins, high copper)
+   SCL: fixed 278 pF bound / 164 pF nominal against 269 / 303 pF allowed: copper allowance -9 / 139 pF
+       the committed layouts carry 1452 mm: 145 to 319 pF at 1.0 to 2.2 pF/cm; total 309 to 397 pF (nominal pins, low copper) up to 597 pF (bound pins, high copper)
+   RESULT: the fixed part alone uses 55 to 108 % of the rise-limited capacitance, and the laid copper exceeds what
+   is left at every per-length figure in the range; the bus as one segment cannot meet the 300 ns rise its own
+   targets require, and the drawn pull-ups cannot be made stronger (3 mA sinks). The bound includes failure.
+
+== THREE SEGMENTS (session choice SC-HF-02): the trunk (the master, board C, and on board B the expanders, the
+   secure element, the clock and the temperature sensor); SEG-A, boards A and D behind a TCA9517A on A (its A side
+   local, its B side on the trunk, enabled always); SEG-S, board B's three supervisors, PoE controller and Ethernet
+   switch behind a TCA9517A on B (its A side on the trunk, its B side theirs, enabled only while the panel opens it)
+   TRUNK SDA: 12 pins; fixed 148 pF bound / 100 nominal; limit 307 / 322 pF (Rp 1155 / 1100 ohm, 30-70 %); copper allowance 159 pF bound, 222 nominal = 721 mm at 2.2 pF/cm (bound) to 1387 mm at 1.6 pF/cm (nominal)
+   SEG-A SDA: 12 pins; fixed 129 pF bound / 53 nominal; limit 281 / 295 pF (Rp 1260 / 1200 ohm, 30-70 %); copper allowance 152 pF bound, 242 nominal = 689 mm at 2.2 pF/cm (bound) to 1511 mm at 1.6 pF/cm (nominal)
+   SEG-S SDA: 6 pins; fixed 65 pF bound / 45 nominal; limit 198 / 224 pF (Rp 1543 / 1462 ohm, TPS23861 0.8-2.3 V); copper allowance 133 pF bound, 179 nominal = 606 mm at 2.2 pF/cm (bound) to 1118 mm at 1.6 pF/cm (nominal)
+   TRUNK SCL: 12 pins; fixed 142 pF bound / 100 nominal; limit 307 / 322 pF (Rp 1155 / 1100 ohm, 30-70 %); copper allowance 165 pF bound, 222 nominal = 748 mm at 2.2 pF/cm (bound) to 1387 mm at 1.6 pF/cm (nominal)
+   SEG-A SCL: 12 pins; fixed 125 pF bound / 53 nominal; limit 281 / 295 pF (Rp 1260 / 1200 ohm, 30-70 %); copper allowance 156 pF bound, 242 nominal = 710 mm at 2.2 pF/cm (bound) to 1511 mm at 1.6 pF/cm (nominal)
+   SEG-S SCL: 5 pins; fixed 63 pF bound / 43 nominal; limit 198 / 224 pF (Rp 1543 / 1462 ohm, TPS23861 0.8-2.3 V); copper allowance 135 pF bound, 181 nominal = 615 mm at 2.2 pF/cm (bound) to 1131 mm at 1.6 pF/cm (nominal)
+   Sink check: trunk 2.2 k || 2.2 k from 3.40 V at -5 % draws 2.87 mA; SEG-A 1.2 k 2.63 mA; SEG-S 1.5 k || 58 k 2.18 mA; all under the 3 mA of the weakest sink on each segment
+   Levels across the buffers (SCPS245E): SEG-A's BQ25731 (VIN_LO 0.4 V) sits on U_A's A side and sees hard lows;
+   SEG-S's parts all read 0.9 V or more as low (TPS23861 0.9 V, KSZ9897R 0.9 V, STM32 0.3 VDD), above U_S's buffered
+   0.6 V; on the trunk the ATECC608B (VIL 0.5 V) and the VEML7700 (0.4 V) see U_A's buffered low only in bits another
+   target drives, never in a START, STOP or their own address (INFERRED, bench V-K03)
+
+SOURCES
+   UM10204: NXP UM10204 Rev. 6 (4 April 2014), I2C-bus specification: Table 9 p.47 (Ci 10 pF max per I/O pin), Table 10 p.48 (tr 1000 ns Standard-mode, 300 ns Fast-mode; Cb 400 pF), section 7.1 p.55 (T = 0.8473 RC), section 7.2 (buffers divide bus capacitance); fetched via web.archive.org id_ of nxp.com, sha256 b7619700e8bb9dd4
+   PCA9555: TI SCPS131J, 6.5: CI SCL 3 typ 8 max pF, Cio SDA 3 typ 9.5 max pF; IOL SDA 3 mA at VOL 0.4 V; standard-mode tr 1000 ns
+   INA226: TI SBOS547 (v2/vendor/ti/ti-ina226.pdf): input capacitance 3 pF (typ only); VOL 0.4 V at 3 mA; tR 1000 ns for SCLK <= 100 kHz
+   BQ25731: TI SLUSE66A 8.5 and 8.6 (v2/vendor/ti/bq25731-datasheet.pdf): no pin capacitance; VIN_LO 0.4 V max, VIN_HI 1.3 V min; SDA 0.4 V at 5 mA; timing requirements tr 300 ns, tf 300 ns, fSCL 10 to 400 kHz (one column, any clock); bus timeout 25 to 35 ms
+   KSZ9897: Microchip DS00002330E (v2/vendor/cluster/ksz9897.pdf): SCL IPU, SDA IPU/O8, internal pull-up 58 k +-30 %; external 1.0 to 4.7 k required; address fixed 0x5F; no pin capacitance published
+   TMP117: TI (v2/vendor/ti/ti-tmp117-temperature.pdf): input capacitance 4 pF (typ only); VOL 0.4 V at 3 mA; tR 1000 ns for SCL <= 100 kHz
+   STM32H743: ST DS12110 (v2/vendor/st/st-stm32h743xi-datasheet.pdf): CIO I/O pin capacitance 5 pF (typ only)
+   TPS23861: TI SLUSBX9I (v2/vendor/ti/tps23861-datasheet.pdf): CI2C SCL 10 pF, CI2C_SDA SDAI and SDAO 6 pF (max column); input rise time 0.8 to 2.3 V at most 300 ns (SDAI and SCL); fSCL 10 to 400 kHz
+   ATECC608B: Microchip DS40002239B summary (v2/vendor/microchip/microchip-atecc608b-summary-DS40002239B.pdf) Table 2-4: input rise time 300 ns, input fall time 100 ns (characterised), fSCL 0 to 1 MHz; IOL 4 mA at VOL 0.4 V; no pin capacitance
+   DS3231: ADI 19-5170 Rev 10 (v2/vendor/adi/adi-ds3231.pdf): CBIN 10 pF (max); VOL 0.4 V at 3 mA; its timing table is fast mode and it is backward-compatible with standard mode (note 6)
+   RP2040: Raspberry Pi RP2040 datasheet (v2/vendor/rp2040/rpi-rp2040-datasheet.pdf): no pin capacitance published
+   USBLC6: ST USBLC6-2 (v2/vendor/st/st-usblc6-2-esd-protection.pdf): Ci/o-GND 2.5 typ 3.5 max pF at VR 1.65 V (per line)
+   VEML7700: Vishay VEML7700 (v2/vendor/vishay/veml7700-datasheet.pdf): no pin capacitance; Vil 0.4 V max at VDD 3.3 V; IOL 3 mA; standard-mode t(R) 1000 ns
+   ADS1115: TI SBAS444E (round 8, v2/vendor/ti/ti-ads1115-sbas444e.pdf on fnd/r8int1): no pin capacitance; VOL 0.4 V at 3 mA; tR 300 ns in its 0.01 to 0.4 MHz column
+   TCA9517A: TI SCPS245E (v2/vendor/ti/ti-tca9517a-i2c-buffer.pdf): CI and CIO 8 typ 13 max pF at 3.3 V; each side up to 400 pF; B side buffered low 0.45 to 0.6 V, VILc 0.45 V; A side hard low 0.1 to 0.2 V at 6 mA; A sides may join; never B side to B side; I/Os high impedance unpowered
+   3M3365: 3M TS-0080-B (7 May 2009), 3365 series 0.050 in round-conductor flat cable, 28 AWG: 47.5 pF/m unbalanced (G-S-G), 26.7 pF/m balanced; fetched from multimedia.3m.com, sha256 1dc900fe684bd6c2

@@ -1,0 +1,42 @@
+# python3 v2/docs/records/hc5/check_contract_fields.py --all, run 27 September 2026 on a scratch copy of main a8652172 after
+# the five drafts/hc5 scripts (the layer 5 closer's fixes after its second review); exit status 0. The body below is
+# byte-identical to the pass 2 run on 84e52461 (the D-07 and touch-lead corrections change no field's kind).
+check_contract_fields: v2/ecad/tools/pcb_interfaces.yaml, 30 contracts in the file
+
+contract       harness     levels      current     default_st  sequencing  mating      hot_plug    judged_by 
+IF-EXT-DC      value       value       value+TBD   value       value       value       value       value     
+IF-EXT-ETH     value       value       value       value       value       value+TBD   value       value     
+IF-MON         value       value       value+TBD   value       value       value+TBD   value       value     
+IF-BA-RF       value       value       n/a         value       value       value       value       value     
+IF-DA-VHF      value       value       n/a         value       value       value       value       value     
+IF-HS          value       value       value       value       value       value       value       value     
+IF-CAM         value       value       value+TBD   value       value       value+TBD   value       value     
+IF-E-POD       value       value       value+TBD   value       value       value+TBD   value       value     
+IF-E-SENSORS   value       value+TBD   value+TBD   value       value       value+TBD   value       value     
+IF-E-TAMP      value       value       value       value       n/a         value       value       value     
+IF-E-WATER     value       value       value       value       n/a         n/a         n/a         value     
+IF-E-FANS      value       value       TBD         value       value       TBD         value       value     
+IF-A-HEAT      value       value       value       value       value       value       value       value     
+IF-P-CELLS     value       value       value       value       value+TBD   value       value       value     
+IF-B-FANS      value       value       TBD         value       value       value       value       value     
+IF-B-LIME      n/a         value       value       value       value       value       value       value     
+IF-B-RB9704    value+TBD   value       value       value       value       value       value       value     
+IF-D-FLANGE    value       value       value       value       value       value+TBD   value       value     
+
+NEW contracts: 18 of 18 pass the field contract
+
+INFORMATION, the first 12 contracts (26 September 2026, written before this field contract). 'no key for' lists
+the field names they lack; some of that content sits under their older keys (cable, power, cable_out_states,
+map_identity.judged_by), which this does not read as the field:
+  IF-BC-PANEL    no key for current, default_state, harness, judged_by, levels, mating, sequencing, tbd
+  IF-AB-RIBBON   no key for current, default_state, harness, judged_by, levels, mating, sequencing, tbd
+  IF-AB-WALL     no key for current, default_state, harness, hot_plug, judged_by, levels, mating, sequencing, tbd
+  IF-AB-POWER    no key for current, default_state, harness, judged_by, levels, mating, sequencing, tbd; board a end has no `part`; board b end has no `part`
+  IF-AD-HARNESS  no key for current, default_state, harness, hot_plug, judged_by, levels, mating, sequencing, tbd; board a end has no `part`; board d end has no `part`
+  IF-AE-DOCK     no key for current, default_state, harness, judged_by, levels, mating, sequencing, tbd; board a end has no `part`; board e5 end has no `part`; board e5 end has no `src`; board e5 end names no ref; board e end has no `part`
+  IF-PE-PACK     no key for current, default_state, harness, judged_by, levels, mating, sequencing, tbd; board p end has no `part`; board e end has no `part`
+  IF-AC-MAINSW   no key for current, default_state, harness, hot_plug, levels, mating, sequencing, tbd; board c end has no `part`; board a end has no `part`
+  IF-AE-RF       no key for current, default_state, harness, hot_plug, levels, mating, sequencing, tbd; board a end has no `part`; board e end has no `part`; board e end names no ref
+  IF-A-PA        no key for default_state, harness, levels, mating, sequencing, tbd; board d end has no `part`
+  IF-LID-HF      no key for default_state, harness, levels, mating, sequencing, tbd; board a end has no `part`
+  IF-EXT-USB     no key for current, default_state, ends, harness, hot_plug, levels, mating, sequencing, tbd; no board end

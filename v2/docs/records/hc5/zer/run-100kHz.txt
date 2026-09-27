@@ -1,0 +1,13 @@
+one GenKey command at 100 kHz (ms): nominal 127.85, worst in spec 135.19, NACK to the 200 ms polling cap 234.74,
+  bus held throughout 117.00, bus held after the send 1227.00, any bus behaviour 1330.00 (HAL timeout 10 ms)
+longest single transfer: 6.05 ms
+nominal sequence (C0 C1 V0 V1, no retry):                  0.517 s
+worst case in spec (6 commands, every retry taken):         0.817 s
+the part not answering (NACK), bus free, 6 commands:        1.414 s
+the bus held for every command, 6 commands:                 0.708 s
+the bus held after each send, 6 commands (untruncated):     7.368 s
+any bus behaviour, 6 commands (untruncated):                7.986 s
+step 5 starts, whatever the part or the bus does, by:       1.504 s (deadline 1.5 s + unwind + DONE write)
+previous policy (10 creates per slot in the sequence):      2.819 s  (for the record)
+pass lines: KEKs destroyed and verified <= 1.5 s; slots cut <= 3.0 s (hardware alarm); modules told at least 1.0 s before the cut
+PASS: 10 planted defects caught, each by its own check; 0 checks failed

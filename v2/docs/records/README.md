@@ -42,6 +42,8 @@ Worktrees:
 | `w2/` | foundation workstream 2 (power and runtime), 25 September |
 | `w4/` | foundation workstream 4 (mechanical, thermal and RF), 25 September |
 | `w6/` | foundation workstream 6 (findings review), 25 September |
+| `hc5/` | the layer 5 closer (27 September): the kit I2C bus budget, its script and two outputs, the interface contracts' field check with its output, and the USB 2.0 clauses it cites; authored in the tree, not filed from drafts |
+| `w5/` | foundation workstream 5 (the hardware and firmware contract, round 2), 26 September |
 
 ## Filed files
 
@@ -64,6 +66,11 @@ Paths are relative to this folder; the source is the same path below `drafts/` i
 | `hc3/reviewed-citations.json` | `4b4e4031bf44ef9770c147286150d4f7358a2daa42b7ed9ec276b19c5dce93e4` | 7826 | `fnd/hc3` `drafts/hc3/reviewed-citations.json` | the apply script's citation guard (`citations-reread.md`) |
 | `hc3/reviewed-pairs.json` | `6275e1cdc16a026eec30e39992dbcfafc45343a197973fc1d77f9740adf65769` | 6453 | `fnd/hc3` `drafts/hc3/reviewed-pairs.json` | the apply script's citation guard (`citations-reread.md`, last section) |
 | `hc3/sc.md` | `b94932ed0253247254ed8e1d45ffd7421665221ec0002780c3a08351298e9fba` | 22259 | `fnd/hc3` `drafts/sc.md` | the layer 3 closer's session choices, numbered in `v2/ecad/tools/pcb_requirements.yaml` |
+| `hc5/c5-response.md` | `f9bfc527e93eb732d078b00e4565baf1d33457aa0c2a333139d9f540bd5fc0f3` | 12430 | `fnd/hc5` `drafts/c5-response.md` | `v2/docs/HW-FW-CONTRACT.md` (section 10); the targeted fixer c5's answer to each finding |
+| `hc5/drafts-README.md` | `5a192c631d126e94e85460211e624d730895f948fa92bb2151fbe432f40fa898` | 13726 | `fnd/hc5` `drafts/hc5/README.md` | the layer 5 closer's integration kit and hand-offs |
+| `hc5/zer/run-100kHz.txt` | `78d55deca484b504a0382af29f1af1891599b2354594672c665157a4f153aeed` | 1057 | `fnd/hc5` `drafts/hc5/zer/run-100kHz.txt` | the same budget at 100 kHz, for comparison |
+| `hc5/zer/run-90kHz.txt` | `2c907bc91dc19c0d42e78dfedc9819bcb292931990e78cc275616e488cd7283c` | 1056 | `fnd/hc5` `drafts/hc5/zer/run-90kHz.txt` | `v2/docs/feasibility/ZEROIZE.md` (section 3.4)<br>`v2/docs/HW-FW-CONTRACT.md` (section 6.4) |
+| `hc5/zer/zer_budget.py` | `462660aeb39442cc2f7669fb4d3c6334601a5864643ebcd49260d49898ea6b6f` | 20300 | `fnd/hc5` `drafts/hc5/zer/zer_budget.py` (records/rv-zer's budget with F_I2C = 90 kHz; its header's 'not declared anywhere' sentence predates FW-K01 and is kept as filed) | `v2/docs/feasibility/ZEROIZE.md` (section 3.4, the budget at 90 kHz)<br>`v2/docs/HW-FW-CONTRACT.md` (section 6.4) |
 | `r4a/r4-decisions.md` | `2e5a0c20fc9d4f25d70d3defda2aaee056ed6b340584447fddc711898377bee2` | 101439 | `fnd/r4a` `drafts/r4-decisions.md` | `v2/docs/feasibility/EMCON.md`<br>`v2/docs/feasibility/POWER-THERMAL.md` |
 | `r4a/r4-open-items.md` | `0c58f8a3574801b15b39ae06e377710e4c41646fe71d2dd81c8257733d259c91` | 27963 | `fnd/r4a` `drafts/r4-open-items.md` | `v2/docs/feasibility/POWER-THERMAL.md` |
 | `r4b/box/r6-run6/README.txt` | `3977a8c3646ec82921c9bb2be1103f2c3ad55b192178ed2ac849e1d999ecbfae` | 1877 | `fnd/r4b` `drafts/box/r6-run6/README.txt` | `v2/docs/feasibility/FAILOVER-FABRIC.md` |
@@ -170,11 +177,22 @@ Paths are relative to this folder; the source is the same path below `drafts/` i
 | `r8int4/c23-apply-registry.log` | `58ba20cf0bc76a485419303b4c4809b715f93f0cd98f868b0d712239f01b562c` | 26515 | `fnd/r8int4` (the integrator's scratch, filed at integration), the apply script's output | the registry change of this integration |
 | `r8int4/citations-reread-r8int4.md` | `d04ab7bdc144337fdf1034dad2bed98aa510c0949b941de207daec3650a13fce` | 4400 | `fnd/r8int4` (the integrator's scratch, filed at integration) | `v2/ecad/tools/pcb_requirements.yaml` (CFL-016, REQ-052, CFL-006 evidence) |
 | `r8int4/edit_c23_contradictions.py` | `148842e6c512fb93d9c4862965b3224796961ff5ec4e4be9e1ad67d3404de782` | 5678 | `fnd/r8int4` (the integrator's scratch, filed at integration) | `v2/docs/CONOPS.md`<br>`v2/docs/OPERATING-ENVELOPE.md`<br>`v2/ecad/tools/pcb_envelope.yaml` |
+| `r8int4/edit_c5_handover.py` | `5de611c6e872d989bc98662069e8464ff21e1e54a9dc6fb73a26e59fa8238ad3` | 2781 | `fnd/r8int4` (the integrator's scratch, filed at integration) | the layer 5 merge of this integration (verify c5's contradictions and review 2's wording items) |
+| `r8int4/edit_c5_wording.py` | `aa8e273b44d0f6fbb36a19ada033108bc4621f14f67994545ca2e2ab315e9712` | 6212 | `fnd/r8int4` (the integrator's scratch, filed at integration) | the layer 5 merge of this integration (verify c5's contradictions and review 2's wording items) |
 | `r8int4/edit_cfl010_reconcile.py` | `fd575e8ac00bd3a9e078b0df1496959c3fdf0b4bc9ffe62211357a570693d459` | 2280 | `fnd/r8int4` (the integrator's scratch, filed at integration) | `v2/docs/V2-SPEC.md`<br>`v2/docs/PRODUCT-BRIEF.md` |
 | `r8int4/edit_layer2_emcon_face.py` | `fba349a250a52a651bd65b306a47c66a4431d238891619530d1ff55e5cd298f0` | 7547 | `fnd/r8int4` (the integrator's scratch, filed at integration) | `v2/docs/CONOPS.md`<br>`v2/docs/PANEL.md` (fnd/hc1's held patch re-derived) |
 | `r8int4/file_records.py` | `2eb2b099e40427d8be8665b08f12d40288b2fc3e04c47126a277aa2ace240ad3` | 1883 | `fnd/r8int4` (the integrator's scratch, filed at integration) | this README's rows for `hc2/`, `hc3/` and `r8int4/` |
+| `r8int4/hc5/ARCHITECTURE-section-12.r8int4.md` | `0f7f6d132ba220749fd725931138f7a9b38f538afd55d6082c055738e20959c4` | 12032 | `fnd/r8int4` (the integrator's scratch, filed at integration): fnd/hc5's section 12 three-way merged with board B's round 8 IF-BC-PANEL row | `v2/docs/ARCHITECTURE.md` (section 12) |
+| `r8int4/hc5/apply_architecture.py` | `98271ff6d858c4fe824633e60590a80b04ef918b5effe73bd6890955d8dc0b13` | 4967 | `fnd/r8int4` (the integrator's scratch, filed at integration), from `fnd/hc5` `drafts/hc5/apply_architecture.py`, re-anchored for `38dcd764` | the layer 5 merge of this integration |
+| `r8int4/hc5/apply_docs.py` | `1bb7ba1bf8a5fbc82e552475eaaf7627bb3a71f3adb5ad6c413c452d097b8f58` | 22680 | `fnd/r8int4` (the integrator's scratch, filed at integration), from `fnd/hc5` `drafts/hc5/apply_docs.py`, re-anchored for `38dcd764` | the layer 5 merge of this integration |
+| `r8int4/hc5/apply_index.py` | `0f410c7282375d67dee109751a10a308a70951ec2bc914418ada89d1d9c0a65d` | 4457 | `fnd/r8int4` (the integrator's scratch, filed at integration), from `fnd/hc5` `drafts/hc5/apply_index.py` | the layer 5 merge of this integration |
+| `r8int4/hc5/apply_interfaces.py` | `b1101e8734307b6de3f25f0d38dfa4d49b98ae1c3a66151704c08c320d054456` | 6653 | `fnd/r8int4` (the integrator's scratch, filed at integration), from `fnd/hc5` `drafts/hc5/apply_interfaces.py` | the layer 5 merge of this integration |
+| `r8int4/hc5/apply_registry.py` | `9b9782280d7092fda704f12681ba8ab5ee99ec969081cf122d5b77a3b4863fd2` | 13222 | `fnd/r8int4` (the integrator's scratch, filed at integration), from `fnd/hc5` `drafts/hc5/apply_registry.py`, re-anchored for `38dcd764` | the layer 5 merge of this integration |
+| `r8int4/hc5/pcb_interfaces-new-contracts.yaml` | `996fa8d5e94dc18d51ae3510879e4662a149e2623fc495186b33171603829cd6` | 45049 | `fnd/r8int4` (the integrator's scratch, filed at integration), from `fnd/hc5` `drafts/hc5/pcb_interfaces-new-contracts.yaml` | the layer 5 merge of this integration |
 | `r8int4/post_c23_registry.py` | `fb45b9a3d81169ad9741ec130058d135be725778e7d1a4a0591868584fb43621` | 5177 | `fnd/r8int4` (the integrator's scratch, filed at integration) | `v2/ecad/tools/pcb_requirements.yaml` (CFL-016, REQ-024, FEA-004) |
 | `r8int4/post_c23_registry2.py` | `63266ee51d8741cf5e8054b6f6b2486bc6c59577d57ca0ed7e4f72f42bac96a8` | 2724 | `fnd/r8int4` (the integrator's scratch, filed at integration) | `v2/ecad/tools/pcb_requirements.yaml` (REQ-052, CFL-006) |
+| `r8int4/post_c5_registry.py` | `1495de2ec9fd2e2052fc7993e1c940ea65e6470442becf9ec838e7d9d4e9607d` | 2876 | `fnd/r8int4` (the integrator's scratch, filed at integration) | the layer 5 merge of this integration (verify c5's contradictions and review 2's wording items) |
+| `r8int4/post_c5_registry2.py` | `3694e7bfbbf6b173b75aacd0812c2a2443dd609cc5bbec408454a84d111278df` | 2075 | `fnd/r8int4` (the integrator's scratch, filed at integration) | the layer 5 merge of this integration (verify c5's contradictions and review 2's wording items) |
 | `r8int4/reanchor.log` | `29b51f294297da3e390409378be32c1b7353e0f58f8af0a354270b105867591e` | 1868 | `fnd/r8int4` (the integrator's scratch, filed at integration), the re-anchoring's output | `v2/ecad/tools/pcb_requirements.yaml` |
 | `r8int4/reanchor_only.py` | `c358c1e3fdb05da316f409f18fdb48cf2c297e93f4a4274c96451ea2d32b06a7` | 1305 | `fnd/r8int4` (the integrator's scratch, filed at integration) | `v2/ecad/tools/pcb_requirements.yaml` (sources_read_at and the carried citations) |
 | `r8p/box/p1p2.txt` | `646d9a381f5eb076fa9b6012cdf7864c5f4f224ea2bc6b950b35c334b09f6b4f` | 2293 | `fnd/r8p` `drafts/p/box/p1p2.txt` | `v2/ecad/tools/pcb_requirements.yaml` (REQ-044) |
@@ -288,6 +306,14 @@ Paths are relative to this folder; the source is the same path below `drafts/` i
 | `w4/w4-mech-thermal-rf.md` | `ba590c405b672995eee2094ec302eb08ddfed9ca49a7411d71041ffd459bd42e` | 52637 | `fnd/w4` `drafts/w4-mech-thermal-rf.md` | `v2/docs/feasibility/POWER-THERMAL.md` |
 | `w4/w4-scratch-thermal.py` | `6c83da5f7e3e4f0f5393bfe0f609ba02c423adbadfa3661a245d0a9b778e65c3` | 9871 | `fnd/w4` `drafts/w4-scratch-thermal.py` | `v2/docs/feasibility/POWER-THERMAL.md` |
 | `w6/w6-findings.md` | `4cde4801efe8aeb2c0a1942240553d2da8bd623a012486dee0730a41ffb04bf8` | 40483 | `fnd/w6` `drafts/w6-findings.md` | `v2/docs/feasibility/DECOUPLING.md` |
+| `hc5/kit_i2c_budget.py` | `879154d32d95f41c9d5d14078df537f3fe34412b58859dc222d082dc6f9460ff` | 20894 | authored by `fnd/hc5` | `v2/docs/HW-FW-CONTRACT.md` section 6 |
+| `hc5/kit_i2c_budget.out.txt` | `e06fc107ae4951732dbc56feb8a9eb50028203123391d4a0517df56e73e2df5e` | 9410 | its output on the netlists at `e3aedb25` | `v2/docs/HW-FW-CONTRACT.md` section 6 |
+| `hc5/kit_i2c_budget.round8-d.out.txt` | `7967404c281d4e126e5f835a7f86bcdcabcdc39070865fe984b159d488b7429d` | 9455 | its output with board D's netlist of `fnd/r8int1` | `v2/docs/HW-FW-CONTRACT.md` section 6 |
+| `hc5/check_contract_fields.py` | `cb4f69e6f9e3afa95691047f74b15baa4a77092f1a85c790f10b69787bdadf4b` | 7244 | authored by `fnd/hc5` | `v2/docs/ARCHITECTURE.md` section 12; `pcb_interfaces.yaml` board_to_board header |
+| `hc5/check_contract_fields.out.txt` | `95418fd8148445da587108f569a354fffe9ddbc80c529571dd376dca5f450624` | 4591 | its output on `pcb_interfaces.yaml` after the five `drafts/hc5` scripts, on `a8652172` (the body is the same on `84e52461`) | `v2/docs/ARCHITECTURE.md` section 12 |
+| `hc5/usb-2-0-clauses-cited.md` | `b8feb114faa80744b54a55574b0dd735349bc3cb209d4ed59478840db73a5b96` | 2577 | authored by `fnd/hc5` from `usb_20.pdf` (sha256 d39698a3...) | `v2/docs/HW-FW-CONTRACT.md` SC-HF-06, HF-F06; `pcb_interfaces.yaml` IF-MON |
+| `r4a/r4-hwfw-contract.md` | `0e473299dac0e4a5eb6e8d2f22b06d1dcd7df1b6e67d93038dd837e0ce7e849e` | 11353 | `fnd/r4a` `drafts/r4-hwfw-contract.md` | `v2/docs/HW-FW-CONTRACT.md` section 3.1 |
+| `w5/w5-hw-fw-contract.md` | `e122ba9bb27352f3ecaf75f06a4f355ae6e59ab92124c1172393f43eccf9f36b` | 49362 | `fnd/w5` `drafts/w5-hw-fw-contract.md` | `v2/docs/HW-FW-CONTRACT.md` sections 0 and 3 |
 
 ### Rewritten on filing
 

@@ -691,7 +691,8 @@ protection (4958), FEA-006 decoupling (1756).
 agree on the `e3aedb25` netlists (`check_contracts.py` PASS 96 of 96, re-run by the audit outside the tree). The
 layer's acceptance is not met. About a dozen board-to-device and board-to-outside interfaces have no contract. Power
 capacity is unshown or failing on IF-AB-POWER, IF-AE-DOCK and IF-BC-PANEL. The SLOT_EN hold, the chassis bond, D-07's
-third RF site and the monitor's touch USB port are missing decisions or circuits that change interfaces. Supervisor
+third RF site and the monitor's touch USB port are missing decisions or circuits that change interfaces (the touch port
+is decided since the layer 5 merge of 27 September 2026: SC-HF-06, board D's spare hub port `J_USB3`, `HW-FW-CONTRACT.md` section 8). Supervisor
 addresses contradict across six records, the firmware contract items exist only in drafts, and board B's outline
 can still move under FB-FAB-6. Most closing actions are desk and generator work; R-HSD needs the owner's spend.
 
@@ -716,7 +717,7 @@ to C4, rows M14 and M17); layer 8 netlists.
 | `v2/docs/ARCHITECTURE.md` | `4cd20d54`, cdb009f522d14a6b | no | anchored at `eadbe571`; section 12's IF-PE-PACK row (line 1115) contradicted by `check_contracts.py` 15c |
 | `v2/docs/PANEL.md` | `9a151c78`, b1cde9f7ff1ada7b | no | line 157 supervisors at 0x30 to 0x32; line 79 heartbeat "while its supervisor runs" against ARCHITECTURE line 1009 (CM5 bridge on GPIO16); line 162 names a DS3231M; retired board phases; section 11 defers the wire format to MESHSAT-837 |
 | `v2/docs/GROUNDING-AND-SHIELDS.md` | `daca8888`, 8f305cc23551084f | no | "nine SMA bulkhead jacks" (line 15), SMA bodies on plastic (line 39), board changes "wait on" decision 29 (line 73), which is ruled; lacks C4's entry-plate bonds; its four board changes are in no generator |
-| `v2/docs/ASSEMBLY.md` | `9a151c78`, e4a0b78616c69779 | no | line 145 RF jumpers (132170 couplers at Z 88, 150 to 250 mm) against C2 and C4 (arrestors at Z 59, 232 to 412 mm); line 146 connector plate 54 x 82 x 3 against C3 (114.0 x 68.3 x 5.0); line 125 monitor touch USB with no board end |
+| `v2/docs/ASSEMBLY.md` | `9a151c78`, e4a0b78616c69779 | no | line 145 RF jumpers (132170 couplers at Z 88, 150 to 250 mm) against C2 and C4 (arrestors at Z 59, 232 to 412 mm); line 146 connector plate 54 x 82 x 3 against C3 (114.0 x 68.3 x 5.0); line 125 monitor touch USB with no board end (D8 `J_USB3` since the layer 5 merge, SC-HF-06) |
 | `v2/docs/ARCH-PCB-B-IOHA.md` | `7808734f`, 6c3c93b7f32f953a | no | H753 baseline (line 97), addresses 0x30 to 0x32 (line 99) |
 | `v2/docs/feasibility/FAILOVER-FABRIC.md` | `428c697c`, 4646ad528ec4b3c6 | yes | AI desk review; FAB-02 and FAB-04 bear on IF-AB-POWER and IF-BC-PANEL |
 | `v2/docs/feasibility/EMCON.md` | `a6f87e9d`, e57a54d1767bcd59 | yes | AI desk review; no row closed end to end |
@@ -732,14 +733,14 @@ to C4, rows M14 and M17); layer 8 netlists.
 | # | Item | Met | Evidence |
 |---|---|---|---|
 | 5.1 | Board responsibilities and partition settled | no | written (ARCHITECTURE 3.1, 3.2), but board B's outline and floor plan are not settled (B has never routed; FB-FAB-6 open; A6 larger outline and A4 floor-plan study live options) |
-| 5.2 | Every interface owned at both ends with its connector | no | twelve contracts exist (`pcb_interfaces.yaml` lines 257 to 579); none for external DC and solar, Ethernet with PoE out (54 V), the monitor (power, HDMI, touch USB), the B-to-A RF pigtails, D's J_ANT to A's J_RF1 (30 W VHF), headsets, camera, E's pod, DCF77, Geiger, lightning, tamper, water and fan leads, A's J_HEAT, P's cell and thermistor leads, B's cooler fans. Board-to-board connectors J_PANEL, J_AB1, J_AB2, J_MEZZ1, J_HARN1 are "IDC 2xN" classes with no MPN or LCSC code |
+| 5.2 | Every interface owned at both ends with its connector | no | twelve contracts exist (`pcb_interfaces.yaml` lines 257 to 579); none for external DC and solar, Ethernet with PoE out (54 V), the monitor (power, HDMI, touch USB; IF-MON and seventeen more contracts added at the layer 5 merge, `pcb_interfaces.yaml`), the B-to-A RF pigtails, D's J_ANT to A's J_RF1 (30 W VHF), headsets, camera, E's pod, DCF77, Geiger, lightning, tamper, water and fan leads, A's J_HEAT, P's cell and thermistor leads, B's cooler fans. Board-to-board connectors J_PANEL, J_AB1, J_AB2, J_MEZZ1, J_HARN1 are "IDC 2xN" classes with no MPN or LCSC code |
 | 5.3 | Pinouts identical at both ends | yes | `check_contracts.py` PASS 96 of 96 on the `e3aedb25` netlists (scratch re-run). Committed evidence still AWAITING_REVALIDATION; E5 is a PASS over 0 checks; the RF blind-mate row is judged only by `check_pcb_e.py`. Map identity only; it does not establish circuit correctness |
 | 5.4 | Electrical levels stated per interface | no | stated only for the EMCON and inhibit lines; no speed, pull-up or capacitance budget for the kit I2C bus across A, B, C, D over the 350, 80 and 60 mm ribbons; the USB 2.0 high-speed wall path has no assessment; back-power into unpowered pins INFERRED only |
 | 5.5 | Power capacity of each power interface shown with margin | no | IF-AB-POWER ends disagree (I-03: +5V_S2 A 2.5 A typical against B 4.2 A typical and 5.63 A coincident; +5V_DEV 3.2 A against 3.8 A typical and 6.0 A peak), JST-VH rating unsourced; IF-AE-DOCK 12.31 A over four 3.5 A Preci-Dip 813 contacts (3.08 A each, 4.10 A with one open), board E declares 6.15 A, the round 8 E draft derives 14.10 A (3.53 A per contact, over the rating); IF-BC-PANEL PWR-003 FAIL (F1 2.0 A hold over a 1.23 A track), ribbon rating TBD; pack pins 9 A per Mill-Max pin from a description; SMP-MAX and RG-316 at 30 W on 144 MHz TBD |
 | 5.6 | Sequencing across interfaces | no | power-up and boot order written (ARCHITECTURE 4.3, 10.2; PANEL section 5); the SLOT_EN hold across a panel reset is in no generator |
 | 5.7 | Reset, default and cable-out states for every control line | no | cable-out states exist for three contracts; EMCON_HW's hold with its source gone UNDECIDED; HDMI_SEL1/2 not a guaranteed low at 100 k (FAB-04); SLOT_EN, ZEROIZE_HW, SHORE_INHIBIT pull states listed as not judged |
 | 5.8 | Communications and addressing consistent | no | supervisor addresses 0x34 to 0x36 in ARCHITECTURE line 572 and IF-BC-PANEL, 0x30 to 0x32 in CON-020, S-41, PANEL line 157, IOHA line 99, ZEROIZE lines 106, 192, 660; 0x30 is the TPS23861 broadcast; the panel USB wire format lives outside the repository (MESHSAT-837) |
-| 5.9 | Harnesses defined and consistent | no | ASSEMBLY section 4 lists leads, but its RF jumper and connector plate rows contradict C2 to C4; J_AB2's lead length TBD; the touch USB row has no board end; the east jumper plug unpicked, M17g and M17x fail as assumed |
+| 5.9 | Harnesses defined and consistent | no | ASSEMBLY section 4 lists leads, but its RF jumper and connector plate rows contradict C2 to C4; J_AB2's lead length TBD; the touch USB row had no board end (D8 `J_USB3` since the layer 5 merge, SC-HF-06); the east jumper plug unpicked, M17g and M17x fail as assumed |
 | 5.10 | Mechanical mating of every interface | no | A's J_AB2 header stands about 3.1 mm into board D (W4-F17); the float-clamp nests overlap at the 14 mm pitch; D-07's third 5G site and its clamp in no generator; blind-mate alignment judged by nothing; E5 generated from A32's board file |
 | 5.11 | Firmware obligations affecting hardware explicit | no | ARCHITECTURE section 10 and PANEL summarise, but the itemised contract FW-A01 to FW-A16 that ARCHITECTURE line 397, `records/r4a/r4-decisions.md` and CHARGER-STATE-SEQUENCE cite exists only in worktree drafts; the heartbeat source is stated two ways |
 | 5.12 | GND-002: chassis and shield strategy implemented everywhere | no | none of GROUNDING-AND-SHIELDS' four board changes is in a generator; C4's entry-plate bond not carried |
@@ -751,7 +752,7 @@ to C4, rows M14 and M17); layer 8 netlists.
 
 | Decision | Downstream impact | Waits on later evidence |
 |---|---|---|
-| Where the Xenarc 709GNK touchscreen's USB connects, and how it follows the display owner on failover | B hub allocation (all twelve ports used), a new contract, possibly a hub or mux on B; the touch UI that CONOPS Blackout, PANEL section 9 and V2-SPEC line 56 rely on | no; unrecorded anywhere today |
+| Where the Xenarc 709GNK touchscreen's USB connects, and how it follows the display owner on failover | B hub allocation (all twelve ports used), a new contract, possibly a hub or mux on B; the touch UI that CONOPS Blackout, PANEL section 9 and V2-SPEC line 56 rely on | no; decided at the layer 5 merge as the session's choice (SC-HF-06, board D's spare hub port `J_USB3`, `HW-FW-CONTRACT.md` section 8, no board B change), its costs owed on board D (HF-F06, open item S-61) |
 | The SLOT_EN hold across a panel reset: board, part, reset and power-loss behaviour | IF-BC-PANEL and IF-AB-RIBBON, boot order, panel in-system update | no |
 | Dock VIN_RAW contact capacity and remedy (more contacts, a hardware limit, or a higher-rated contact), including one open contact and hot-end derating | A's J_DOCK map, E's J_BLK, E5 targets, IF-AE-DOCK, FW-A16 | no |
 | IF-AB-POWER current contract per lead (I-03), JST-VH and 16 AWG ratings | lead gauge, connector, A's stage limits, B's +5V_S2 peak | no |
@@ -782,6 +783,8 @@ to C4, rows M14 and M17); layer 8 netlists.
    ends, parts, pins, levels, current, hot-plug and judge. Interfaces stream, integrator; after round 8.
 3. Rule and draw the monitor touch USB path (port reallocation or added capacity on B, its failover behaviour with
    HDMI_SEL); record as a SESSION decision. Board B author; after r8b (`candidates/r8b.patch`) and before Q-B-ESC-2 fixes B's netlist.
+   **Ruled at the layer 5 merge** (SC-HF-06, board D's spare hub port `J_USB3`, `HW-FW-CONTRACT.md` section 8): no port reallocation on B, the HAL shares the touch to the display owner
+   (FW-B19); board D's current limit on `J_USB3` and its budget line remain (HF-F06, S-61), before D's layout entry.
 4. Design and draw the SLOT_EN hold on C or A with its power-loss and ZEROIZE interplay; update IF-BC-PANEL,
    IF-AB-RIBBON, PANEL section 5, ARCHITECTURE 4.3. Board C (or A) author; after r8c or r8a.
 5. Propagate 0x34 to 0x36 (CON-020, S-41, PANEL 7, IOHA 6 and 10a, ZEROIZE Z-C3); state the kit I2C speed, pull-ups
@@ -806,7 +809,7 @@ to C4, rows M14 and M17); layer 8 netlists.
   IF-LID-HF, IF-EXT-USB. Open: I-03, R4A-N13 (r8e draft: 3.53 A per contact), W4-F17, the site at X +46, GND-002,
   EMCON L2 (R102), J_MON and J_HEAT without contracts, the SLOT_EN hold if on A.
 - B: B end of IF-BC-PANEL, IF-AB-RIBBON, IF-AB-WALL, IF-AB-POWER, IF-LID-HF. Open: PWR-003 on B_PANEL_5V, FAB-02,
-  FAB-04, addresses, EMCON L2, L3, L7, SD-EMC-1 and 2, touch USB with no port, GND-002, RF pigtail and Ethernet
+  FAB-04, addresses, EMCON L2, L3, L7, SD-EMC-1 and 2, touch USB with no port (on board D since the layer 5 merge, SC-HF-06), GND-002, RF pigtail and Ethernet
   contracts missing, outline under FB-FAB-6, R-HSD. INT-002 desk PASS (AI), INT-003 at prototype.
 - C: C end of IF-BC-PANEL and IF-AC-MAINSW. Open: SLOT_EN hold, EMCON L1, the SD-EMC-6 lamp, PANEL address and
   heartbeat text; the face-plate bond is defined (eight ground rings).

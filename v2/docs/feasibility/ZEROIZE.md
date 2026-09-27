@@ -103,7 +103,8 @@ pins 35 and 36 (PB1 and PB2, `gen_sch_b.py:261`) are on SDA and SCL in the gener
 still bit-bang the bus or hold a line low. The round-6 board B circuit moves the supervisors to PB6 and PB7, the
 I2C1 pins (`gen_sch_b.py:1137-1140` at `458b2873`, committed during this cycle; the same lines in worktree `r4b`
 before it), which gives them a hardware I2C controller that can
-be set to master. The architecture makes the supervisors targets at 0x30, 0x31 and 0x32 on a bus "which the panel
+be set to master. The architecture makes the supervisors targets at 0x34, 0x35 and 0x36 (0x30 to 0x32 until 27 September
+2026: 0x30 is the TPS23861's broadcast address, I3-F01) on a bus "which the panel
 controller masters" (`ARCH-PCB-B-IOHA.md:96`; "one bus with one master", `:147`). That is a property of their
 firmware, not of the netlist. Physical access to the bus (test points on SDA and SCL, `gen_sch_a.py:581`,
 `gen_sch_b.py:786`, `gen_sch_c.py:310`) is the capture case of residual R1.
@@ -189,7 +190,8 @@ Constraints on the slots ZEROIZE does not use, whatever key fill puts there:
   `1f614233`, on PB1 and PB2, which have no I2C alternate function, `v2/vendor/SOURCES.yaml:310`; on PB6 and PB7, the
   I2C1 pins, in the round-6 circuit, `gen_sch_b.py:1137-1140` at `458b2873`). **This is a firmware rule, not a
   hardware property, and it is the whole of P8's basis for the supervisors:** their firmware answers only as I2C
-  targets at 0x30 to 0x32 (`ARCH-PCB-B-IOHA.md:96`), never sets its I2C controller to master mode, never drives SCL,
+  targets at 0x34 to 0x36 (`ARCH-PCB-B-IOHA.md` section 6; `HW-FW-CONTRACT.md` FW-B08; never at 0x30 to 0x32, where the
+  TPS23861's broadcast address sits, I3-F01), never sets its I2C controller to master mode, never drives SCL,
   never drives SDA except to acknowledge or return data as an addressed target, and never addresses 0x60. Its bound
   is the owner's D-13 floor: software-verified boot on the supervisors (`ARCH-PCB-B-IOHA.md:166-172`; `CONOPS.md:404`),
   their images written over the bench SWD pads (`gen_sch_b.py:840`) with BOOT0 held low (`gen_sch_b.py:832`). What a
@@ -305,7 +307,9 @@ the secure element, the bus or a module (step 0); **I5**, step 5 never waits on 
 the deadline D (step 3), so the modules are told before their power goes whatever the bus does.
 
 **Time budget** (computed by `v2/docs/records/rv-zer/zeroize/zer_budget.py`, which carries the source of every number in its header
-and refuses a pass line that does not cover the worst case). The kit bus clock is not declared anywhere (TBD); the
+and refuses a pass line that does not cover the worst case). The kit bus clock is declared since 27 September 2026: 100 kHz
+programmed, at least 90 kHz achieved (`HW-FW-CONTRACT.md` FW-K01), and this budget re-run at 90 kHz holds every pass line (worst case in
+specification 0.825 s, step 5 by 1.504 s, longest transfer 6.72 ms; ibid. section 6.4). As first written, the
 budget assumes 100 kHz, the top of I2C standard mode and the lowest clock CryptoAuthLib itself uses (it wakes the part
 at 100 kHz, `calib_basic.c:54-63`, and defaults to 400 kHz off Linux, `lib/atca_cfgs.c:52-56`), so it holds for any
 clock of 100 kHz or more; a slower clock is a new input to the script, and the panel firmware runs the bus at 100 kHz
@@ -428,7 +432,7 @@ then the KEKs exist; see residual R1.
 | E14 | The default I2C address byte is 0xC0 (7-bit 0x60); the library's default ATECC608 interface uses 0xC0; Microchip's kit guide lists the generic ATECC608A-MAHDA at 7-bit 0x60 | DS20005927A Table 2-5 p. 13; CryptoAuthLib `lib/atca_cfgs.c:42-50`; DS50002921A p. 4 | SUPPORTED for the ATECC608B-SSHDA-T (U4 closes it on the part) |
 | E15 | The full ATECC608B and ATECC608A data sheets are under NDA; DS40001977A, the number sometimes cited as the full ATECC608A sheet, is itself a summary | DS40002239A p. 1; `microchip-atecc608a-40001977A.pdf` footer "Datasheet Summary" | VERIFIED; no third-party copy of an NDA document was used |
 | E16 | The KSZ9897R's management interface "is always a slave", whether SPI, I2C or MIIM | Microchip DS00002330E section 4.6.3 p. 50 (`v2/vendor/cluster/ksz9897.pdf`, sha256 `02aab4c6a8065c497946191af10bc41f7299d9bbd98c8b3b1db5a51407c21bf0`, as `v2/vendor/SOURCES.yaml:233-238` records it) | VERIFIED |
-| E17 | The three STM32H743 supervisors are on the kit bus: pins 35 and 36 (PB1, PB2) on SDA and SCL at `1f614233`; PB6 and PB7 (I2C1) in the round-6 circuit; the architecture makes them I2C targets at 0x30 to 0x32 on a bus the panel masters | `gen_sch_b.py:261`, `:824`; `gen_sch_b.py:1137-1140` at `458b2873` (committed during this cycle; worktree `r4b` before it); `v2/vendor/SOURCES.yaml:310`; `ARCH-PCB-B-IOHA.md:96`, `:147` | VERIFIED from the generators (netlist not regenerated here) |
+| E17 | The three STM32H743 supervisors are on the kit bus: pins 35 and 36 (PB1, PB2) on SDA and SCL at `1f614233`; PB6 and PB7 (I2C1) in the round-6 circuit; the architecture makes them I2C targets at 0x34 to 0x36 (0x30 to 0x32 until 27 September 2026, I3-F01) on a bus the panel masters | `gen_sch_b.py:261`, `:824`; `gen_sch_b.py:1137-1140` at `458b2873` (committed during this cycle; worktree `r4b` before it); `v2/vendor/SOURCES.yaml:310`; `ARCH-PCB-B-IOHA.md:96`, `:147` | VERIFIED from the generators (netlist not regenerated here) |
 | E18 | CryptoAuthLib's own loops: the wake retries and the send retries both take `rx_retries` (default 20 in the I2C configuration); the wake ignores the result of its wake write and still reads; the send loop repeats only while the send reports `ATCA_RX_NO_RESPONSE`, and the vendor's ESP32 HAL reports `ATCA_COMM_FAIL` and gives its own transfers a 200 ms limit; polling waits 1 ms, then retries every 2 ms up to a cap of 2500 ms, each value overridable at build time; the timer functions are the platform's; a busy part does not acknowledge its address; the I2C framing of a command and of a response | `lib/calib/calib_basic.c:45`, `:79`, `:87-90`, `:102`; `lib/calib/calib_execution.c:548-559`; `lib/hal/hal_esp32_i2c.c:249`, `:256-258`; `lib/hal/atca_hal.h:209-216`; `lib/calib/calib_execution.c:506-507`, `:521`, `:563`, `:571-590`; `lib/atca_cfgs.c:58-59`; `lib/atca_iface.h:177-178`; `lib/hal/atca_hal.h:176-187`; DS20005927A Table 6-1 p. 42, Table 6-2 p. 43, section 6.5 p. 44, Table 9-1 p. 55, Tables 9-20 and 9-21 p. 70 | VERIFIED (source and data sheet read; not run) |
 | E19 | The RP2040 system timer has four alarms, each raising an interrupt on a match | RP2040 datasheet section 4.6.1 p. 534 (build-version 3184e62) | VERIFIED |
 | E20 | The Pico SDK's `i2c_write_blocking` takes no timeout and waits for each byte to leave with no limit; `i2c_write_blocking_until` and `i2c_read_blocking_until` return `PICO_ERROR_TIMEOUT` at a given absolute time; `i2c_init` puts the controller block through reset | pico-sdk 2.3.1 (`079c6f39`) `src/rp2_common/hardware_i2c/i2c.c:32-34`, `:170-176`, `:222-224`, `:245-247`, `:249-253`; `include/hardware/i2c.h:266-295`, `:338-349` | VERIFIED (source read; not run) |
@@ -657,5 +661,7 @@ the kit bus, which needs no H753-only unit. That reopen condition does not fire.
    if the TPM stays unobtainable.
 7. Put sections 3, 5 and 8 in the D-09 security-review packet, R7 (a supervisor driving the kit bus) with its two
    board mitigations and the configuration-only attested verification for its impersonation case (d) among them.
-8. Write firmware rule Z-C3 into the supervisor firmware's requirements: I2C target at 0x30 to 0x32 only, never a
-   master, never address 0x60, under D-13's verified boot.
+8. Write firmware rule Z-C3 into the supervisor firmware's requirements: I2C target at 0x34 to 0x36 only (never 0x30 to
+   0x32, I3-F01), never a master, never address 0x60, under D-13's verified boot; written as `HW-FW-CONTRACT.md` FW-B08. Once
+   the session's three bus segments are drawn (SC-HF-02, `HW-FW-CONTRACT.md` section 6.5), the panel keeps the supervisors'
+   segment closed during every secure-element transaction (FW-K05), which narrows R7 and does not replace Z-C3.
