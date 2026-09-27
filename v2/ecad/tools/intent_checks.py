@@ -8,9 +8,13 @@
      GAP_MM or 5 percent of the net's length (via anti-pads and connector ends). A board with tracks and no signal net at all is a FAIL (the
      scope filter swallowed everything); a board with no tracks passes with "0 of 0";
   4. return via: every signal via has a ground via within return_via.RETURN_MM, fine-pitch escape fans exempt (return_via.judge);
-  2. decoupling: every bypass entry (capacitor, part, pin) has its capacitor's rail pad within LOOP_MM of the pin's pad centre (3.0 mm for 100 nF
-     and smaller, 6.0 mm for bulk), and both the capacitor's rail pad and its ground pad reach a via or a pour within 1.5 mm (the loop closes
-     through the planes, not across the board); reported per entry, FAIL on distance;
+  2. decoupling (decision 42, DECOUPLING.md section 6; since 27 September 2026): every bypass entry (capacitor, part, pin) is judged by its
+     CLASS, never by its value string (decoupling_rules.limit): its rail pad within the class's screen of the pin's pad (3.0 mm for classes
+     R, D and L, 6.0 mm for B2, no distance for A and B1), a maker's own distance as a limit no allowance passes, a capacitor on the side
+     opposite its part at its in-plane distance plus the stackup's via allowance and refused inside any escape fan, over a through-hole
+     part, on a board assembled on one side and for a part whose maker names the same side; an allowance in bypass-allow.txt names its
+     capacitor (`C36: reason`) and makes a JUSTIFIED DEVIATION, which is counted as one and never as a pass; the rail pad reaches a via or
+     a pour within 1.5 mm, and a class D or L capacitor's ground pad is asked for a via of its OWN; an entry with no ruled class FAILS;
   3. every rail of the intent file exists on the board with pads on it (a renamed rail is a FAIL, not a silent skip).
 A board without an intent file is a FAIL (fail closed). Denominators print on every summary line.
 Used as a module by the check_pcb_*.py gates: intent_checks.run(board, check)  or standalone: intent_checks.py <board.kicad_pcb>.
@@ -25,6 +29,7 @@ import sys, os, math, json, re, hashlib
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import netclass
 import intent, signalnets, signal_class
+import decoupling_rules as _dr
 # THE BOARD HALF NEEDS KiCad AND THE NETLIST HALF DOES NOT (26 September 2026). PWR-001 is a schematic-phase rule and
 # its reading is taken on the runner, which has no pcbnew; the board checks below still need it and say so when it is
 # missing (run() refuses), rather than failing at import for a caller that never asks for them. Only the absence of
@@ -32,9 +37,10 @@ import intent, signalnets, signal_class
 try:
     import pcbnew
     import kicad_compat as _kc, return_via
+    import fan_select, bypass_search
 except ModuleNotFoundError as _e:
     if getattr(_e, "name", "") != "pcbnew": raise
-    pcbnew = _kc = return_via = None
+    pcbnew = _kc = return_via = fan_select = bypass_search = None
 
 SAMPLE = 1.0; GAP_MM = 10.0; NEAR_VIA = 1.5
 
@@ -52,6 +58,9 @@ RULE_VERDICTS = ("intent_return_path", "intent_return_via", "intent_decoupling",
 # process's output on a pipe the two disagreed hard enough to segfault. A measurement worth asserting on is
 # worth returning.
 LAST = {}
+# The decoupling rule's own tally, for the verdict: a justified deviation and a distance that is only recorded
+# are neither a pass nor a failure, and `check()` has two answers (decision 42, T6 and T10).
+LAST_DECOUPLING = {}
 
 def run(b, check, path=None):
     if pcbnew is None:
@@ -258,31 +267,106 @@ def run(b, check, path=None):
         # track rails on that board and no via of theirs happened to land within 1.5 mm; the ground pads all lay in
         # the pour. A net with no pour anywhere on the board is not asked a question that does not apply to it.
         return not any(planes_net.get((L, p.GetNetname())) for L in cu)
-    # the same recorded-exception idiom as erc-allow.txt: a decoupling distance may stand only if the board's own
-    # bypass-allow.txt gives a reason, and the report still names every entry and its distance (8 Sep 2026 18:25)
+    # AN ALLOWANCE NAMES ITS CAPACITOR (decision 42, T6; 27 September 2026). The file was read as "any line allows every
+    # far capacitor", and the line of 8 September that five boards carried passed 33 capacitors on boards B and P as
+    # 33 passes (DECOUPLING.md 3.2(f)). A line is `C36: reason` and allows that one; a line that names none allows
+    # nothing and is named here; an allowed capacitor is a JUSTIFIED DEVIATION, counted as one, never as a pass.
     allow_p = os.path.join(os.path.dirname(os.path.abspath(path)) if path else ".", "bypass-allow.txt")
-    allowed = [l.strip() for l in open(allow_p).read().splitlines() if l.strip() and not l.startswith("#")] if os.path.exists(allow_p) else []
-    n_by = 0; n_far = 0
+    allowed, allow_refused = _dr.parse_allow(open(allow_p, encoding="utf-8", errors="replace").read()) if os.path.exists(allow_p) else ({}, [])
+    for _ln, _line, _why in allow_refused:
+        print("intent_checks: bypass-allow.txt line %d %s and allows nothing: %s" % (_ln, _why, _line[:70]))
+    # the other side (D5, T9): the board's sides are counted WITHOUT the declared capacitors that sit opposite their
+    # part, or the first far-side seat on a one-sided board would make the board two-sided and allow itself
+    fps = {f.GetReference(): f for f in b.GetFootprints()}
+    _far_caps = {e.get("cap") for e in it.get("bypass", []) if e.get("cap") in fps and e.get("part") in fps
+                 and fps[e["cap"]].GetLayer() != fps[e["part"]].GetLayer()}
+    _f = _bk = 0
+    for _g in b.GetFootprints():
+        if _g.GetReference() in _far_caps: continue
+        _pp = list(_g.Pads())
+        if any(q.GetAttribute() == pcbnew.PAD_ATTRIB_PTH for q in _pp): continue
+        if not any(q.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and q.IsOnCopperLayer() for q in _pp): continue
+        if _g.GetLayer() == pcbnew.F_Cu: _f += 1
+        else: _bk += 1
+    two_sided = _dr.two_sided(_f, _bk)
+    allow_mm, allow_src = bypass_search.allowance(b, path)
+    _skip = fan_select.escape_skip(path)
+    fan_boxes = fan_select.fan_boxes(b, _skip); tht_boxes = fan_select.tht_boxes(b)
+    def _pad(q, ref=None):
+        return {"ref": ref, "num": q.GetNumber(), "xy": (q.GetPosition().x / 1e6, q.GetPosition().y / 1e6), "net": q.GetNetname(),
+                "half": (q.GetBoundingBox().GetWidth() / 2e6, q.GetBoundingBox().GetHeight() / 2e6)}
+    _vias = [{"xy": (v.GetPosition().x / 1e6, v.GetPosition().y / 1e6), "net": v.GetNetname(), "r": v.GetWidth(pcbnew.F_Cu) / 2e6} for v in vias]
+    n_by = 0; tally = {"pass": 0, "justified": 0, "recorded": 0, "fail": 0, "no_own_via": 0, "far_side": 0, "unclassed": 0,
+                       "allow_lines_refused": len(allow_refused)}
+    RANK = {"pass": 0, "recorded": 1, "justified": 2, "fail": 3}
     for e in it.get("bypass", []):
         n_by += 1
         cap = [p for (ref, num), p in pads.items() if ref == e["cap"]]; pin = pads.get((e["part"], e["pin"]))
-        if not cap or pin is None: check(False, "bypass %s -> %s.%s: pads found on the board" % (e["cap"], e["part"], e["pin"])); continue
+        if not cap or pin is None: check(False, "bypass %s -> %s.%s: pads found on the board" % (e["cap"], e["part"], e["pin"])); tally["fail"] += 1; continue
         rail = [p for p in cap if p.GetNetname() == pin.GetNetname()]; gnd = [p for p in cap if p.GetNetname() != pin.GetNetname()]
-        if not rail: check(False, "bypass %s -> %s.%s: the capacitor shares the pin's net %s" % (e["cap"], e["part"], e["pin"], pin.GetNetname())); continue
-        d = math.hypot(rail[0].GetPosition().x - pin.GetPosition().x, rail[0].GetPosition().y - pin.GetPosition().y) / 1e6
+        if not rail: check(False, "bypass %s -> %s.%s: the capacitor shares the pin's net %s" % (e["cap"], e["part"], e["pin"], pin.GetNetname())); tally["fail"] += 1; continue
         val = next((f.GetValue() for f in b.GetFootprints() if f.GetReference() == e["cap"]), "")
-        loop = 6.0 if any(u in val.lower() for u in ("u ", "uf", "u,", "µ")) and not val.lower().startswith(("0.1u", "0.01u")) else 3.0
-        if d > loop and allowed:
-            n_far += 1
-            check(True, "bypass %s (%s) to %s.%s: %.2f mm pad to pin, allowed by bypass-allow.txt [%s]" % (e["cap"], val, e["part"], e["pin"], d, allowed[0][:56]))
-        else:
-            check(d <= loop, "bypass %s (%s) to %s.%s: %.2f mm pad to pin (limit %.1f)" % (e["cap"], val, e["part"], e["pin"], d, loop))
-        if d > loop and allowed: continue                  # a capacitor that far away has no loop worth measuring
-        check(closes(rail[0]) and (not gnd or closes(gnd[0])), "bypass %s: rail and ground pads reach a via or pour within %.1f mm" % (e["cap"], NEAR_VIA))
+        # THE LIMIT IS THE CLASS'S (T2). It was read off the value string: "10u 25V 1210" got 6.0 mm and a bare
+        # "10u" 3.0 (DECOUPLING.md 3.2(c)). An entry with no ruled class has no limit and is refused, never defaulted.
+        if e.get("class") not in _dr.CLASSES:
+            tally["fail"] += 1; tally["unclassed"] += 1
+            check(False, "bypass %s (%s) to %s.%s: %s" % (e["cap"], val, e["part"], e["pin"],
+                                                         (_dr.form_problems(e) or ["no ruled class"])[0].split(": ", 1)[-1]))
+            continue
+        d = math.hypot(rail[0].GetPosition().x - pin.GetPosition().x, rail[0].GetPosition().y - pin.GetPosition().y) / 1e6
+        cf, pf = fps[e["cap"]], fps[e["part"]]
+        far = cf.GetLayer() != pf.GetLayer(); loop = d; refused = None
+        if far:
+            tally["far_side"] += 1
+            ok_far, why_far = _dr.far_side(e, two_sided, fan_select.courtyard_box(cf), fan_boxes, tht_boxes)
+            if ok_far and allow_mm is None: ok_far, why_far = False, "%s: %s" % (e["cap"], allow_src)
+            if not ok_far: refused = why_far
+            else: loop = _dr.loop_equivalent_mm(d, True, allow_mm)
+        if refused:
+            # a seat the ruling refuses is refused whatever the allow file says (T9: "refused, never allowed")
+            tally["fail"] += 1
+            check(False, "bypass %s (%s) to %s.%s: on the side opposite its part and refused, %s" % (e["cap"], val, e["part"], e["pin"], refused.split(": ", 1)[-1]))
+            continue
+        st, why = _dr.judge(e, loop, allowed.get(e["cap"]))
+        side_txt = (" (the other side: %.2f mm in plane plus the %.1f mm via allowance of %s)" % (d, allow_mm, allow_src)) if far else ""
+        line = "bypass %s (%s) to %s.%s, class %s: %s%s" % (e["cap"], val, e["part"], e["pin"], e["class"], why.split(": ", 1)[-1], side_txt)
+        if st == "fail": tally["fail"] += 1; check(False, line); continue
+        # the loop closes through the planes: the rail pad reaches a via or a pour, as before
+        if not closes(rail[0]):
+            tally["fail"] += 1; check(False, line + "; its rail pad reaches no via or pour within %.1f mm" % NEAR_VIA); continue
+        if gnd and e["class"] in ("D", "L"):
+            # THE GROUND PAD'S OWN VIA (D2, T10). The reach test accepts any via of the net within 1.5 mm, another
+            # part's among them; SCAA082A 2.4 asks the pad "directly with a via to the ground plane". The via is
+            # named, whose it is said, and its distance printed; no millimetre is judged, because no maker gives one.
+            g = gnd[0]
+            others = [_pad(q, ref) for (ref, num), q in pads.items() if q is not g and q.GetNetname() == g.GetNetname()
+                      and abs(q.GetPosition().x - g.GetPosition().x) < 4e6 and abs(q.GetPosition().y - g.GetPosition().y) < 4e6]
+            ov = _dr.own_via(_pad(g, e["cap"]), _vias, others, NEAR_VIA)
+            if ov["via"] is None:
+                if not closes(g):
+                    tally["fail"] += 1; check(False, line + "; its ground pad reaches no via or pour within %.1f mm" % NEAR_VIA); continue
+                st = max(st, "justified", key=lambda k: RANK[k]); tally["no_own_via"] += 1
+                line += "; DEVIATION: its ground pad has no via within %.1f mm and returns through a pour" % NEAR_VIA
+            elif not ov["own"]:
+                st = max(st, "justified", key=lambda k: RANK[k]); tally["no_own_via"] += 1
+                line += "; DEVIATION: its ground via, %.2f mm from the pad, is also the landing of %s" % (ov["length_mm"], ", ".join(ov["shared_with"][:3]))
+            else:
+                line += "; its own ground via %.2f mm from the pad" % ov["length_mm"]
+        elif gnd and not closes(gnd[0]):
+            tally["fail"] += 1; check(False, line + "; its other pad reaches no via or pour within %.1f mm" % NEAR_VIA); continue
+        tally[st] += 1
+        check(True, line + ("" if st == "pass" else "; counted as %s, not as a pass" % st.upper()))
+    LAST_DECOUPLING.clear(); LAST_DECOUPLING.update(tally, declared=n_by, two_sided=two_sided, allowance_mm=allow_mm, allowance_source=allow_src)
+    n_far = tally["justified"]
     # 3. rails exist
     names = {b.GetNetInfo().GetNetItem(k).GetNetname().lstrip("/") for k in range(1, b.GetNetInfo().GetNetCount())}
     for net in it.get("rails", {}): check(net.lstrip("/") in names, "intent rail %s is a net of the board" % net)
-    if n_far: print("intent_checks: %d of %d bypass entries are past their limit and allowed by bypass-allow.txt" % (n_far, n_by))
+    if n_by:
+        print("intent_checks: decoupling, %d declared: %d pass, %d justified deviation(s), %d recorded with no distance to judge, %d fail "
+              "(%d with no ruled class); %d with no ground via of their own; %d on the side opposite their part (SMD parts %d front, %d "
+              "back without them, so the other side is %s)"
+              % (n_by, tally["pass"], tally["justified"], tally["recorded"], tally["fail"], tally["unclassed"], tally["no_own_via"],
+                 tally["far_side"], _f, _bk, "a seat" if two_sided else "no seat"))
     return "intent_checks: return path on %d nets, return via on %d signal vias, %d bypass entries, %d rails checked" % (n_nets, rv["judged"], n_by, len(it.get("rails", {})))
 
 
@@ -1425,8 +1509,16 @@ if __name__ == "__main__":
         for t in mine: multi.setdefault(t, []).append(name)
         claimed.update(mine)
         bad = [t for t in mine if t in fails]
+        counts = {"fail": len(bad), "pass": len(mine) - len(bad)}
+        if name == "intent_decoupling" and LAST_DECOUPLING:
+            # a justified deviation and a recorded distance are lines that did not fail, and they are not passes
+            # (decision 42, T6): the verdict carries them as what they are
+            _t = LAST_DECOUPLING
+            counts = {"fail": len(bad), "pass": len(mine) - len(bad) - _t["justified"] - _t["recorded"],
+                      "justified": _t["justified"], "recorded": _t["recorded"], "no_own_via": _t["no_own_via"],
+                      "far_side": _t["far_side"], "unclassed": _t["unclassed"], "allow_lines_refused": _t["allow_lines_refused"]}
         _v.write(name, _v.INCONCLUSIVE if not mine else (_v.FAIL if bad else _v.PASS),
-                 counts={"fail": len(bad), "pass": len(mine) - len(bad)}, denominator=len(mine),
+                 counts=counts, denominator=len(mine),
                  evidence=bad[:20], inputs={"board": sys.argv[1]}, quiet=True,
                  note=note if mine else "nothing of this kind was checked on this board")
     # anything this file checks that no bucket claims still has to decide something, or a rule could be added

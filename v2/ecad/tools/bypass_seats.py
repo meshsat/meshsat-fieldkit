@@ -11,7 +11,7 @@ THIS IS A REPORT AND IT MOVES NOTHING. It prints the seat line a generator's FIX
 every declared capacitor further from its pin than the limit, measured on the board the generator makes:
 
   * outside every other footprint's courtyard on that side,
-  * outside every escape fan (the same `_needs_fan` and `_fan_box` the reservation uses),
+  * outside every escape fan (the same fan set the reservation and the escape pass use, `fan_select`),
   * outside every rule area that forbids a part,
   * outside every packer REGION rectangle, read from `out/<stem>-regions.json`, which `regionfit` already
     writes beside the board, because a seat INSIDE a rectangle leaves the shelf packer a hole it cannot pack
@@ -30,7 +30,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import verdict as _v
 import pcbnew
-import bypass_slots as _bs
+import fan_select
 
 MM = 1e6
 COPPER = "copper already laid"
@@ -121,11 +121,8 @@ def seats(board_path, letter, limit=LIMIT, reach=REACH, frame=None):
     fps = {f.GetReference(): f for f in b.GetFootprints()}
     moving = {e.get("cap") for e in entries}
     boxes = [(f.GetReference(), *_cbox(f), f.GetLayer()) for f in b.GetFootprints()]
-    fans = []
-    for g in b.GetFootprints():
-        if _bs._needs_fan(g):
-            fb = _bs._fan_box(g, 2.2)
-            fans.append((fb.GetLeft() / MM, fb.GetTop() / MM, fb.GetRight() / MM, fb.GetBottom() / MM))
+    # the fan set is the escape pass's own since 27 September 2026 (decision 42, T1): fan_select, as both placers
+    fans = [fb for _ref, fb in fan_select.fan_boxes(b, fan_select.escape_skip(board_path), 2.2)]
     ras = []
     for z in b.Zones():
         if not z.GetIsRuleArea(): continue
