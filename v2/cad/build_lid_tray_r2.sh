@@ -17,4 +17,4 @@ cmp "$OUT/.lid-tray-qmx-r2-readback/qmx-figures.out" v2/vendor/qrp-labs/qmx-figu
 "$PY" v2/cad/lid_tray_qmx_r2_check.py --solids "$OUT/lid-tray-qmx-r2/lid-tray-qmx-r2-check.out" > /dev/null   # exit 1 on a clearance under its minimum, a row NOT MET, a control that passes or a failed solid check
 "$PY" v2/cad/lid_tray_qmx_r2_drawing.py "$OUT/.lid-tray-qmx-r2-readback"
 mv "$OUT/.lid-tray-qmx-r2-readback/lid-tray-qmx-r2-drawing.pdf" "$OUT/lid-tray-qmx-r2/"
-echo "LID-TRAY-R2-BUILT $OUT/lid-tray-qmx-r2 (read the two PNGs in .lid-tray-qmx-r2-readback/ before releasing; case_manifest.py skips that dot folder)"
+echo "LID-TRAY-R2-BUILT $OUT/lid-tray-qmx-r2 (read the three PNGs in .lid-tray-qmx-r2-readback/ before releasing; then the README.md and case_manifest.py)"
