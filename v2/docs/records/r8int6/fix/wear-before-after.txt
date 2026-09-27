@@ -1,0 +1,416 @@
+WEAR BEFORE AND AFTER: what reliability.py asks for on the six netlists of the set 6 candidate
+Worker set6fix, MESHSAT-1357, measured 27 September 2026 on branch fnd/r8int6 above a76a246e.
+Written by v2/docs/records/r8int6/fix/measure_wear.py (the table) and by hand (the reading at the end).
+Nothing here was built or measured on hardware: these are readings of netlists, and no board exists.
+
+HOW IT WAS RUN (from the worktree root; the unfixed tool is written outside the tree, no verdict is written)
+  git show a76a246e:v2/ecad/tools/reliability.py > <dir outside the tree>/reliability.py
+  PYTHONDONTWRITEBYTECODE=1 python3 v2/docs/records/r8int6/fix/measure_wear.py v2/ecad/tools --old <that dir>
+
+COLUMNS: whole = the word list matches somewhere in the value (the unfixed tool's reading); first = it matches
+before the first colon followed by white space; ident = it matches in reliability.identity(value), which ends at
+the first such colon OUTSIDE every bracket. Only parts whose value carries a wear word anywhere are listed.
+
+WEAR pattern    : socket|receptacle|holder|SMA|XT60|JST|IDC|header|standoff|U\.FL|M\.2|blade
+NOT_WEAR_PREFIX : ('C', 'R', 'L', 'D', 'Q', 'FB', 'TP', 'FID', 'LOGO') (unchanged)
+tool before     : reliability.py sha16 149a48e5f2419955 (git show a76a246e:v2/ecad/tools/reliability.py)
+tool after      : reliability.py sha16 71d0872195905c9d
+declared list   : pcb_reliability.yaml sha16 fbf56eb06df1d007 (not changed by this work)
+
+== board A  pcb-a-power-a23/out/pcb-a-power.net  sha16 0a2b59087bcc2678
+   parts 612; values with a colon and white space 54, of which the first stands inside a bracket 23
+   wear set: whole value 39, before the first colon 39, identity 39; wear word in the description only 0; excluded by prefix 1
+   ref          prefix       whole first ident class, then the value
+   D2           D            yes   -     yes   excluded by its prefix, before and after
+                value: SMCJ40A (VIN_RAW clamp behind E6's filter: 40 V standoff on a line specified to 36)
+   F1           F            yes   yes   yes   class: the blade fuse holder
+                value: 25 A mini blade (Keystone 3568 holder): pack node to the RSR shunt
+   J_54V        J            yes   yes   yes   class: JST-VH power headers
+                value: 54 V to the PoE injector on B16 (JST-VH): + -
+   J_5V_DEV     J            yes   yes   yes   class: JST-VH power headers
+                value: USB device rail to B16 (JST-VH): + -
+   J_5V_S1      J            yes   yes   yes   class: JST-VH power headers
+                value: slot 1 5.1 V rail to B16 (JST-VH, 16 AWG): + -
+   J_5V_S2      J            yes   yes   yes   class: JST-VH power headers
+                value: slot 2 5.1 V rail to B16 (JST-VH, 16 AWG): + -
+   J_5V_S3      J            yes   yes   yes   class: JST-VH power headers
+                value: slot 3 5.1 V rail to B16 (JST-VH, 16 AWG): + -
+   J_AB1        J_AB         yes   yes   yes   class: IDC ribbon headers
+                value: A-B interconnect (IDC 2x13, top side) to B16's underside header
+   J_AB2        J_AB         yes   yes   yes   class: IDC ribbon headers
+                value: A-B wall-port ribbon (IDC 2x5): the wall USB pair on the END row with eight grounds behind it
+   J_BM1        J_BM         yes   yes   yes   class: blind-mate dock contacts
+                value: SMP-MAX slide-on receptacle R222M00720 (underside), VHF to the dock plug
+   J_BM10       J_BM         yes   yes   yes   class: blind-mate dock contacts
+                value: SMP-MAX slide-on receptacle R222M00720 (underside), IRID to the dock plug
+   J_BM11       J_BM         yes   yes   yes   class: blind-mate dock contacts
+                value: SMP-MAX slide-on receptacle R222M00720 (underside), LORA to the dock plug
+   J_BM2        J_BM         yes   yes   yes   class: blind-mate dock contacts
+                value: SMP-MAX slide-on receptacle R222M00720 (underside), HF to the dock plug
+   J_BM3        J_BM         yes   yes   yes   class: blind-mate dock contacts
+                value: SMP-MAX slide-on receptacle R222M00720 (underside), WIFI24 to the dock plug
+   J_BM4        J_BM         yes   yes   yes   class: blind-mate dock contacts
+                value: SMP-MAX slide-on receptacle R222M00720 (underside), GNSS to the dock plug
+   J_BM5        J_BM         yes   yes   yes   class: blind-mate dock contacts
+                value: SMP-MAX slide-on receptacle R222M00720 (underside), SDR to the dock plug
+   J_BM6        J_BM         yes   yes   yes   class: blind-mate dock contacts
+                value: SMP-MAX slide-on receptacle R222M00720 (underside), P2P-A to the dock plug
+   J_BM7        J_BM         yes   yes   yes   class: blind-mate dock contacts
+                value: SMP-MAX slide-on receptacle R222M00720 (underside), P2P-B to the dock plug
+   J_BM8        J_BM         yes   yes   yes   class: blind-mate dock contacts
+                value: SMP-MAX slide-on receptacle R222M00720 (underside), 5G-MAIN to the dock plug
+   J_BM9        J_BM         yes   yes   yes   class: blind-mate dock contacts
+                value: SMP-MAX slide-on receptacle R222M00720 (underside), 5G-DIV to the dock plug
+   J_HEAT       J_HEAT       yes   yes   yes   class: JST-VH power headers
+                value: JST-XH 1x2 socket: the pack heater mat (12 V, 7.5 W), fed a regulated 12.0 V: + and -
+   J_HF         J_HF         yes   yes   yes   class: JST-VH power headers
+                value: 12.0 V to the QMX HF unit in its lid tray (JST-VH, in the lid harness): + -
+   J_MAINSW     J_MAINSW     yes   yes   yes   class: the main switch and USB-C wall leads
+                value: JST-XH 1x2 socket: the MAIN button lead from the panel, PB and GND
+   J_MEZZ1      J_MEZZ       yes   yes   yes   class: IDC ribbon headers
+                value: D8 mezzanine harness (IDC 2x8): its USB pair, the PTT mirror, the inhibit, the PA rail state, I2C
+   J_MEZZ_PWR1  J_MEZZ_PWR   yes   yes   yes   class: JST-VH power headers
+                value: D8 mezzanine 5 V (JST-VH): + -
+   J_MON        J_MON        yes   yes   yes   class: JST-VH power headers
+                value: monitor supply lead to the Xenarc (JST-VH): + -
+   J_PA         J_PA         yes   yes   yes   class: JST-VH power headers
+                value: 13.8 V to the PA module on the face plate (JST-VH, 16 AWG): + -
+   J_RF1        J_RF         yes   yes   yes   class: SMA bulkhead jacks
+                value: SMA jack, Amphenol 132134-11 vertical (pigtail to the VHF device)
+   J_RF10       J_RF         yes   yes   yes   class: SMA bulkhead jacks
+                value: SMA jack, Amphenol 132134-11 vertical (pigtail to the IRID device)
+   J_RF11       J_RF         yes   yes   yes   class: SMA bulkhead jacks
+                value: SMA jack, Amphenol 132134-11 vertical (pigtail to the LORA device)
+   J_RF2        J_RF         yes   yes   yes   class: SMA bulkhead jacks
+                value: SMA jack, Amphenol 132134-11 vertical (pigtail to the HF device)
+   J_RF3        J_RF         yes   yes   yes   class: SMA bulkhead jacks
+                value: SMA jack, Amphenol 132134-11 vertical (pigtail to the WIFI24 device)
+   J_RF4        J_RF         yes   yes   yes   class: SMA bulkhead jacks
+                value: SMA jack, Amphenol 132134-11 vertical (pigtail to the GNSS device)
+   J_RF5        J_RF         yes   yes   yes   class: SMA bulkhead jacks
+                value: SMA jack, Amphenol 132134-11 vertical (pigtail to the SDR device)
+   J_RF6        J_RF         yes   yes   yes   class: SMA bulkhead jacks
+                value: SMA jack, Amphenol 132134-11 vertical (pigtail to the P2P-A device)
+   J_RF7        J_RF         yes   yes   yes   class: SMA bulkhead jacks
+                value: SMA jack, Amphenol 132134-11 vertical (pigtail to the P2P-B device)
+   J_RF8        J_RF         yes   yes   yes   class: SMA bulkhead jacks
+                value: SMA jack, Amphenol 132134-11 vertical (pigtail to the 5G-MAIN device)
+   J_RF9        J_RF         yes   yes   yes   class: SMA bulkhead jacks
+                value: SMA jack, Amphenol 132134-11 vertical (pigtail to the 5G-DIV device)
+   J_USBC_OUT   J_USBC_OUT   yes   yes   yes   class: the main switch and USB-C wall leads
+                value: wall USB-C outlet, power only (pigtail header): VBUS CC1 CC2 GND GND
+   J_USBW       J_USBW       yes   yes   yes   class: the main switch and USB-C wall leads
+                value: JST-PH 1x4 socket: the Glenair 233-370 USB host feed-through lead (VBUS D- D+ GND), B16 bank 3 hub port 3
+   tool before: covered 39, fails 0
+   tool after : covered 39, fails 0, set aside as description only: none
+
+== board B  pcb-b-compute-b19/out/pcb-b-compute.net  sha16 028997a6c5e8810f
+   parts 1280; values with a colon and white space 173, of which the first stands inside a bracket 37
+   wear set: whole value 44, before the first colon 38, identity 38; wear word in the description only 6; excluded by prefix 6
+   ref          prefix       whole first ident class, then the value
+   BT1          BT           yes   yes   yes   class: the coin cell holder
+                value: CR2032 holder Keystone 3034: VBAT for the three modules' RTCs, the LG290P backup and the DS3231
+   D101         D            yes   yes   yes   excluded by its prefix, before and after
+                value: SMBJ6.0A (6.0 V standoff on the 5.1 V slot rail)
+   D201         D            yes   yes   yes   excluded by its prefix, before and after
+                value: SMBJ6.0A (6.0 V standoff on the 5.1 V slot rail)
+   D301         D            yes   yes   yes   excluded by its prefix, before and after
+                value: SMBJ6.0A (6.0 V standoff on the 5.1 V slot rail)
+   J_54V        J            yes   yes   yes   class: fan and flash headers, the panel ribbon, the HDMI and USB receptacles
+                value: JST-VH socket, 10 A: 54 V PoE feed from A22 J_54V: + -
+   J_5V_DEV     J            yes   yes   yes   class: fan and flash headers, the panel ribbon, the HDMI and USB receptacles
+                value: JST-VH socket, 10 A: USB device rail from A22 J_5V_DEV: + -
+   J_5V_S1      J            yes   yes   yes   class: fan and flash headers, the panel ribbon, the HDMI and USB receptacles
+                value: JST-VH socket, 10 A: 5 V slot rail S1 from A22 J_5V_S1, 16 AWG lead: + -
+   J_5V_S2      J            yes   yes   yes   class: fan and flash headers, the panel ribbon, the HDMI and USB receptacles
+                value: JST-VH socket, 10 A: 5 V slot rail S2 from A22 J_5V_S2, 16 AWG lead: + -
+   J_5V_S3      J            yes   yes   yes   class: fan and flash headers, the panel ribbon, the HDMI and USB receptacles
+                value: JST-VH socket, 10 A: 5 V slot rail S3 from A22 J_5V_S3, 16 AWG lead: + -
+   J_AB1        J_AB         yes   yes   yes   class: fan and flash headers, the panel ribbon, the HDMI and USB receptacles
+                value: A-B interconnect (IDC 2x13, underside, mates A22's J_AB1 at the same case XY)
+   J_AB2        J_AB         yes   yes   yes   class: fan and flash headers, the panel ribbon, the HDMI and USB receptacles
+                value: A-B wall-port ribbon (IDC 2x5): the wall USB pair (bank 3 hub port 3) on the END row with eight grounds behind it, to board A's pigtail for the sealed Glenair 233-370 (D-12)
+   J_FAN1       J_FAN        yes   yes   yes   class: fan and flash headers, the panel ribbon, the HDMI and USB receptacles
+                value: IP68 cooler fan of S1 (JST-SH 1.0): 5V GND TACHO PWM
+   J_FAN2       J_FAN        yes   yes   yes   class: fan and flash headers, the panel ribbon, the HDMI and USB receptacles
+                value: IP68 cooler fan of S2 (JST-SH 1.0): 5V GND TACHO PWM
+   J_FAN3       J_FAN        yes   yes   yes   class: fan and flash headers, the panel ribbon, the HDMI and USB receptacles
+                value: IP68 cooler fan of S3 (JST-SH 1.0): 5V GND TACHO PWM
+   J_FLASH1     J_FLASH      yes   yes   yes   class: fan and flash headers, the panel ribbon, the HDMI and USB receptacles
+                value: USB-C 2.0 receptacle
+   J_FLASH2     J_FLASH      yes   yes   yes   class: fan and flash headers, the panel ribbon, the HDMI and USB receptacles
+                value: USB-C 2.0 receptacle
+   J_FLASH3     J_FLASH      yes   yes   yes   class: fan and flash headers, the panel ribbon, the HDMI and USB receptacles
+                value: USB-C 2.0 receptacle
+   J_GNSS1      J_GNSS       yes   yes   yes   class: U.FL antenna sockets
+                value: U.FL socket: pigtail to A22's GNSS jack J_RF4
+   J_HDMI       J_HDMI       yes   yes   yes   class: fan and flash headers, the panel ribbon, the HDMI and USB receptacles
+                value: HDMI type A receptacle (Molex 208658-1001): cable to the monitor pass-through on the face plate
+   J_LIME       J_LIME       yes   yes   yes   class: fan and flash headers, the panel ribbon, the HDMI and USB receptacles
+                value: USB 3.0 type A receptacle (Wuerth 692122030100 land): the LimeSDR Mini 2.4 in its bay
+   J_LORA1      J_LORA       yes   yes   yes   class: U.FL antenna sockets
+                value: U.FL socket: pigtail to A22's LoRa jack J_RF11
+   J_M2C1       J_M          yes   yes   yes   class: M.2 sockets
+                value: M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card (two MHF4 leads to A22's P2P jacks)
+   J_M2C2       J_M          yes   yes   yes   class: M.2 sockets
+                value: M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff: Quectel RM520N-GL 5G module (PCIe or USB 2.0; pigtails from the module's ANT0, ANT2 and, subject to D-08, ANT3 to board A's 5G jacks)
+   J_M2C3       J_M          yes   yes   yes   class: M.2 sockets
+                value: M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: the second AsiaRF AW7915-AED (two MHF4 leads to the antenna changeover U82 and U83)
+   J_M2N1       J_M          yes   yes   yes   class: M.2 sockets
+                value: M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S1 (k3s replicated storage)
+   J_M2N2       J_M          yes   yes   yes   class: M.2 sockets
+                value: M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S2 (k3s replicated storage)
+   J_M2N3       J_M          yes   yes   yes   class: M.2 sockets
+                value: M.2 M-key 2242 socket, Amphenol MDT420M02001, M2.5 standoff: NVMe drive of slot S3 (k3s replicated storage)
+   J_PANEL      J_PANEL      yes   yes   yes   class: fan and flash headers, the panel ribbon, the HDMI and USB receptacles
+                value: panel ribbon to PCB-C C7 (IDC 2x13): the RP2040 panel controller's USB, the kit I2C, EMCON/ZEROIZE/TX_INHIBIT, HDMI selects, heartbeats, slot enables, power control lines
+   J_RB9704     J_RB         yes   yes   yes   class: fan and flash headers, the panel ribbon, the HDMI and USB receptacles
+                value: RockBLOCK 9704 16-pin (IDC 2x8) on the Ground Control bracket
+   J_W1A        J_W          yes   yes   yes   class: U.FL antenna sockets
+                value: U.FL: MHF4 pigtail from the slot 1 WiFi card, chain A
+   J_W1B        J_W          yes   yes   yes   class: U.FL antenna sockets
+                value: U.FL: MHF4 pigtail from the slot 1 WiFi card, chain B
+   J_W3A        J_W          yes   yes   yes   class: U.FL antenna sockets
+                value: U.FL: MHF4 pigtail from the slot 3 WiFi card, chain A
+   J_W3B        J_W          yes   yes   yes   class: U.FL antenna sockets
+                value: U.FL: MHF4 pigtail from the slot 3 WiFi card, chain B
+   J_WOA        J_WOA        yes   yes   yes   class: U.FL antenna sockets
+                value: U.FL: pigtail to A22's P2P jack, chain A
+   J_WOB        J_WOB        yes   yes   yes   class: U.FL antenna sockets
+                value: U.FL: pigtail to A22's P2P jack, chain B
+   R165         R            yes   -     yes   excluded by its prefix, before and after
+                value: 5mOhm 1% 2512 (Kelvin shunt: card socket current, W5 TESTACCESS-B)
+   R265         R            yes   -     yes   excluded by its prefix, before and after
+                value: 5mOhm 1% 2512 (Kelvin shunt: card socket current, W5 TESTACCESS-B)
+   R365         R            yes   -     yes   excluded by its prefix, before and after
+                value: 5mOhm 1% 2512 (Kelvin shunt: card socket current, W5 TESTACCESS-B)
+   U101         U            yes   -     -     class: the PCIe switches' own sockets on the carrier
+                value: Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket
+   U116         U            yes   -     -     class: NONE
+                value: SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's card-socket supply enable = EMCON AND PCIE_PWR_EN1, run from +5V_S1, that supply's own input (W4B-D3)
+   U201         U            yes   -     -     class: the PCIe switches' own sockets on the carrier
+                value: Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket
+   U216         U            yes   -     -     class: NONE
+                value: SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's card-socket supply enable = EMCON AND PCIE_PWR_EN2, run from +5V_S2, that supply's own input (W4B-D3)
+   U301         U            yes   -     -     class: the PCIe switches' own sockets on the carrier
+                value: Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket
+   U30A         U            yes   yes   yes   class: CM5 module receptacles
+                value: Amphenol 10164227-1004A1RLF receptacle A, slot S1 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted
+   U30B         U            yes   yes   yes   class: CM5 module receptacles
+                value: Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side)
+   U316         U            yes   -     -     class: NONE
+                value: SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's card-socket supply enable = EMCON AND PCIE_PWR_EN3, run from +5V_S3, that supply's own input (W4B-D3)
+   U31A         U            yes   yes   yes   class: CM5 module receptacles
+                value: Amphenol 10164227-1004A1RLF receptacle A, slot S2 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted
+   U31B         U            yes   yes   yes   class: CM5 module receptacles
+                value: Amphenol 10164227-1004A1RLF receptacle B, slot S2 (CM5 pins 101-200, high-speed side)
+   U32A         U            yes   yes   yes   class: CM5 module receptacles
+                value: Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted
+   U32B         U            yes   yes   yes   class: CM5 module receptacles
+                value: Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side)
+   tool before: covered 41, fails 3
+     before FAIL B: U116 (SN74LV1T08DBVR AND, 5 V supply, TTL-level inp) carries load or sees cycling and is in no declared class
+     before FAIL B: U216 (SN74LV1T08DBVR AND, 5 V supply, TTL-level inp) carries load or sees cycling and is in no declared class
+     before FAIL B: U316 (SN74LV1T08DBVR AND, 5 V supply, TTL-level inp) carries load or sees cycling and is in no declared class
+   tool after : covered 38, fails 0, set aside as description only: U101, U116, U201, U216, U301, U316
+     after  note B: 6 part(s) carry a wear word only in the description of what they do and are not asked for: U101, U116, U201, U216, U301, U316
+
+== board C  pcb-c-display-c8/out/pcb-c-display.net  sha16 3fddbb3edcd4248a
+   parts 219; values with a colon and white space 31, of which the first stands inside a bracket 7
+   wear set: whole value 9, before the first colon 9, identity 9; wear word in the description only 0; excluded by prefix 0
+   ref          prefix       whole first ident class, then the value
+   H1           H            yes   yes   yes   class: the face plate's mounting holes
+                value: M3 x 6 into the face plate's self-clinching standoff: GND bond to the plate
+   H2           H            yes   yes   yes   class: the face plate's mounting holes
+                value: M3 x 6 into the face plate's self-clinching standoff: GND bond to the plate
+   H3           H            yes   yes   yes   class: the face plate's mounting holes
+                value: M3 x 6 into the face plate's self-clinching standoff: GND bond to the plate
+   H4           H            yes   yes   yes   class: the face plate's mounting holes
+                value: M3 x 6 into the face plate's self-clinching standoff: GND bond to the plate
+   H5           H            yes   yes   yes   class: the face plate's mounting holes
+                value: M3 x 6 into the face plate's self-clinching standoff: GND bond to the plate
+   H6           H            yes   yes   yes   class: the face plate's mounting holes
+                value: M3 x 6 into the face plate's self-clinching standoff: GND bond to the plate
+   H7           H            yes   yes   yes   class: the face plate's mounting holes
+                value: M3 x 6 into the face plate's self-clinching standoff: GND bond to the plate
+   H8           H            yes   yes   yes   class: the face plate's mounting holes
+                value: M3 x 6 into the face plate's self-clinching standoff: GND bond to the plate
+   J_PANEL      J_PANEL      yes   yes   yes   class: the panel ribbon header
+                value: panel ribbon from B16 J_PANEL (IDC 2x13 SMD, underside): 5 V, kit I2C, EMCON/ZEROIZE/inhibit, HDMI selects, USB, heartbeats, slot enables, power control
+   tool before: covered 9, fails 0
+   tool after : covered 9, fails 0, set aside as description only: none
+
+== board D  pcb-d-aprs-d9/out/pcb-d-aprs.net  sha16 7a2c0ac2190b141a
+   parts 245; values with a colon and white space 29, of which the first stands inside a bracket 0
+   wear set: whole value 10, before the first colon 10, identity 10; wear word in the description only 0; excluded by prefix 1
+   ref          prefix       whole first ident class, then the value
+   D1           D            yes   yes   yes   excluded by its prefix, before and after
+                value: SMBJ6.0A (6.0 V standoff on the 5.09 V mezzanine rail)
+   J_ANT        J_ANT        yes   yes   yes   class: the antenna jack and the PA ports
+                value: SMA jack: antenna pigtail to A22's VHF jack J_RF1
+   J_FLANGE     J_FLANGE     yes   yes   yes   class: the power amplifier's flange NTC lead
+                value: JST-XH 1x2 socket: power amplifier flange NTC lead (Semitec 103AT-2 on the flange, bench-fitted): NTC GND
+   J_HARN1      J_HARN       yes   yes   yes   class: the power and harness headers
+                value: A22 mezzanine harness J_MEZZ1 (IDC 2x8): USB pair, PTT mirror, inhibit, PA rail state, I2C, 3.3 V
+   J_HS1        J_HS         yes   yes   yes   class: the radio module's sockets
+                value: JST-PH 1x5 socket: headset 1, SPK GND MIC GND PTT (the lead runs to the face plate U-174/U jack)
+   J_HS2        J_HS         yes   yes   yes   class: the radio module's sockets
+                value: JST-PH 1x5 socket: headset 2, SPK GND MIC GND PTT (the lead runs to the face plate U-174/U jack)
+   J_PAIN       J_PAIN       yes   yes   yes   class: the antenna jack and the PA ports
+                value: U.FL socket: PA drive (coax to the RA30H1317M1 input on the plate)
+   J_PAOUT      J_PAOUT      yes   yes   yes   class: the antenna jack and the PA ports
+                value: SMA jack: PA output (coax from the RA30H1317M1 output on the plate)
+   J_PWR1       J_PWR        yes   yes   yes   class: the power and harness headers
+                value: JST-VH socket, 10 A: 5 V from A22 J_MEZZ_PWR1 (behind A22's 2 A eFuse U23): + -
+   J_USB3       J_USB        yes   yes   yes   class: the power and harness headers
+                value: JST-PH 1x4 socket: spare hub port 3, 5V D- D+ GND (the lead is made up at build)
+   J_VGG        J_VGG        yes   yes   yes   class: the antenna jack and the PA ports
+                value: JST-PH 1x2 socket: PA gate bias, VGG GND (the lead runs to the RA30H1317M1 VGG pin)
+   tool before: covered 10, fails 0
+   tool after : covered 10, fails 0, set aside as description only: none
+
+== board E  pcb-e1-dock-e7/out/pcb-e1-dock.net  sha16 56adc9746d61c4e0
+   parts 189; values with a colon and white space 44, of which the first stands inside a bracket 21
+   wear set: whole value 8, before the first colon 8, identity 8; wear word in the description only 0; excluded by prefix 4
+   ref          prefix       whole first ident class, then the value
+   D1           D            yes   -     yes   excluded by its prefix, before and after
+                value: SMCJ40A (input surge: 40 V standoff on a line specified to 36 V, clamping 64.5 V; unidirectional, cathode on DC_P)
+   D10          D            yes   -     yes   excluded by its prefix, before and after
+                value: SMCJ40CA (bidirectional, Littelfuse SMCJ40 row: 40 V standoff and 44.4 V minimum breakdown each way, clamping 64.5 V at 23.3 A; shore inlet clamp at the entry, in front of the ideal-diode FET, so a reversed input stays blocked)
+   D2           D            yes   -     yes   excluded by its prefix, before and after
+                value: SMCJ40A (bus clamp: 40 V standoff on the 9 to 36 V bus; unidirectional, cathode on VIN_RAW)
+   D4           D            yes   -     yes   excluded by its prefix, before and after
+                value: SMCJ28A (panel surge: 28 V standoff, conducting from 31.1 V, below the 35 V bulk capacitors; unidirectional, cathode on PV_P)
+   F1           F            yes   yes   yes   class: the blade fuse holders
+                value: 10 A mini blade (Keystone 3568 holder): vehicle input
+   F2           F            yes   yes   yes   class: the blade fuse holders
+                value: 10 A mini blade (Keystone 3568 holder): panel input
+   F3           F            yes   yes   yes   class: the blade fuse holders
+                value: 25 A mini blade (Keystone 3568 holder): pack to the block
+   J_BATT       J_BATT       yes   yes   yes   class: the pack lead connector
+                value: Amass XT60-M: the 4S pack power lead from board P, 12 AWG (pin 2, the pad nearer the fuse F3, is + from P's W_P; pin 1 is the return from P's W_N; the pack's protection is on board P. E6 run 11: a 3 mm CELL+ track could not pass the return pad to reach pin 1)
+   J_DCIN       J_DCIN       yes   yes   yes   class: the DC inlet, the solar input, the SMBus header and the lid sensor lead
+                value: JST-VH socket, 10 A: vehicle and shore DC in 9 to 36 V (lead from the D38999 wall receptacle DC pair): + -
+   J_SMB        J_SMB        yes   yes   yes   class: the DC inlet, the solar input, the SMBus header and the lid sensor lead
+                value: SMBus lead to board P, JST-XH 1x4 (B4B-XH-A), P's pin order: 1 SMBC, 2 SMBD, 3 GND, 4 PRES
+   J_SOLAR      J_SOLAR      yes   yes   yes   class: the DC inlet, the solar input, the SMBus header and the lid sensor lead
+                value: JST-VH socket, 10 A: bare panel in (lead from the D38999 spare pair; a 36-cell 12 V class panel, up to about 22 V open circuit, 100 W): + -
+   J_TAMP       J_TAMP       yes   yes   yes   class: the DC inlet, the solar input, the SMBus header and the lid sensor lead
+                value: JST-XH 1x2 (B2B-XH-A): lid and tamper reed sensor lead, Littelfuse 59140-1-S-05-A normally open under the frame, 57140-000 magnet in the lid: 1 lead, 2 GND
+   tool before: covered 8, fails 0
+   tool after : covered 8, fails 0, set aside as description only: none
+
+== board E5: no netlist in this tree (pcb-e5-block), so neither tool compares anything
+
+== board P  pcb-p-pack-p2/out/pcb-p-pack.net  sha16 760ac6f74d62d194
+   parts 85; values with a colon and white space 12, of which the first stands inside a bracket 1
+   wear set: whole value 7, before the first colon 7, identity 7; wear word in the description only 0; excluded by prefix 0
+   ref          prefix       whole first ident class, then the value
+   F1           F            yes   yes   yes   class: the pack fuse holder
+                value: 25 A mini blade (Keystone 3568 holder): the pack's fuse
+   J_CELL       J_CELL       yes   yes   yes   class: the cell tap and thermistor headers
+                value: cell tap sense wires from the 4S block (JST-XH 1x5): B- C1 C2 C3 B+; the current leaves through W_BP and W_BN
+   J_SMB        J_SMB        yes   yes   yes   class: the cell tap and thermistor headers
+                value: SMBus lead to E6 J_SMB (JST-XH 1x4): SMBC SMBD GND(pack side of the shunt) PRES
+   J_TS         J_TS         yes   yes   yes   class: the cell tap and thermistor headers
+                value: JST-PH 1x5 socket for the four cell thermistors (Semitec 103AT-2, one per series group of the 4S3P block): TS1 TS2 TS3 TS4 VSS
+   J_TS2        J_TS         yes   yes   yes   class: the cell tap and thermistor headers
+                value: second-level cell thermistor socket, JST-PH 1x2 (Semitec 103AT-2 on the hottest cell): 1 TS_SEC_J, 2 VSS
+   W_N          W_N          yes   yes   yes   class: the pack terminals
+                value: pack lead - (12 AWG to the XT60 on E6 J_BATT pin 1)
+   W_P          W_P          yes   yes   yes   class: the pack terminals
+                value: pack lead + (12 AWG to the XT60 on E6 J_BATT pin 2)
+   tool before: covered 7, fails 0
+   tool after : covered 7, fails 0, set aside as description only: none
+
+== SUMMARY
+   board wear before wear after  covered before  fails before  covered after  fails after  first-colon and identity readings differ on
+   A     39          39          39              0             39             0            none
+   B     44          38          41              3             38             0            none
+   C     9           9           9               0             9              0            none
+   D     10          10          10              0             10             0            none
+   E     8           8           8               0             8              0            none
+   P     7           7           7               0             7              0            none
+   set: parts 2630; values with a colon 343, first colon inside a bracket 89; wear set whole value 117, identity 111; excluded by prefix 12
+   covered, summed over the boards (the committed test asks for at least 100): before 114 with 3 refusal(s), after 111 with 0 refusal(s)
+
+== PARTS WHOSE MEMBERSHIP CHANGES: 6
+   B U101   leaves the wear set
+      value: Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane, port 1 NVMe, port 2 card socket
+   B U116   leaves the wear set
+      value: SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 1's card-socket supply enable = EMCON AND PCIE_PWR_EN1, run from +5V_S1, that supply's own input (W4B-D3)
+   B U201   leaves the wear set
+      value: Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S2: up = CM5 lane, port 1 NVMe, port 2 card socket
+   B U216   leaves the wear set
+      value: SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 2's card-socket supply enable = EMCON AND PCIE_PWR_EN2, run from +5V_S2, that supply's own input (W4B-D3)
+   B U301   leaves the wear set
+      value: Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S3: up = CM5 lane, port 1 NVMe, port 2 card socket
+   B U316   leaves the wear set
+      value: SN74LV1T08DBVR AND, 5 V supply, TTL-level inputs (1 A 2 B 3 GND 4 Y 5 VCC): slot 3's card-socket supply enable = EMCON AND PCIE_PWR_EN3, run from +5V_S3, that supply's own input (W4B-D3)
+
+== THE READING (by hand, each part that moved read against its netlist entry)
+
+ACCEPTANCE ASKED: the wear set of every board unchanged, except that U116, U216 and U316 of board B leave it.
+MEASURED: boards A, C, D, E and P are unchanged part for part (39, 9, 10, 8, 7). Board B goes from 44 to 38.
+Six parts leave, no part enters. Three are the ones asked for; three more leave and are read below.
+
+THE THREE THE TASK NAMES
+  B U116, U216, U316   SN74LV1T08DBVR, a single two-input AND gate. Netlist footprint
+                       Package_TO_SOT_SMD:SOT-23-5, five pins on nets. The wear word is "socket" in
+                       "slot N's card-socket supply enable = EMCON AND PCIE_PWR_ENn": it names what the gate's
+                       output switches. A soldered SOT-23-5 has no mating cycle and carries no mechanical load.
+                       They were the three refusals of the box suite at a76a246e. No class is declared for them.
+
+THE THREE THE TASK DOES NOT NAME
+  B U101, U201, U301   Diodes PI7C9X2G404SL, a PCIe 2.0 packet switch. Netlist footprint
+                       meshsat:LQFP-128_14x14mm_P0.4mm_EP6.0, 129 pins on nets (128 leads and the exposed pad);
+                       v2/vendor/SOURCES.yaml gives the fitted part as PI7C9X2G404SLBFDEX, LQFP-128-EP 14x14.
+                       Full value text, slot 1: "Diodes PI7C9X2G404SL PCIe 2.0 switch, slot S1: up = CM5 lane,
+                       port 1 NVMe, port 2 card socket". The wear word is "socket" in the list of what the
+                       switch's ports lead to. The part is a soldered integrated circuit.
+                       WHY THEY MAY LEAVE: they were in the set only because of prose, the same defect as the
+                       gates, met on 16 September and answered then by declaring a class for them. That class
+                       says so itself (pcb_reliability.yaml, board b, "the PCIe switches' own sockets on the
+                       carrier"): "these are soldered ICs and not connectors: they appear in this list because
+                       the search finds their package names, and they carry no mating load at all", load "none".
+                       The sockets those ports lead to are J_M2C1..3 and J_M2N1..3, which are in the wear set
+                       before and after under the class "M.2 sockets" (count_expected 6, met).
+                       WHAT IT LEAVES BEHIND: that class now covers no wear part. It raises no refusal (it has
+                       no count_expected and its basis says why it has no cycle figure), but its basis sentence
+                       "they appear in this list because the search finds their package names" is no longer
+                       true of the tool. The list is not edited here; apply_drop_pcie_switch_class.py beside
+                       this file makes the change for the integrator (tested on a copy outside the tree:
+                       board B 6 to 5 classes, the set 26 to 25, a second run refused, the fixed tool on
+                       the patched copy still 111 covered and 0 refusals). The integrator also owns the
+                       pages that say "declares 25 classes" (pcb_rules_coverage.yaml REL-001 note,
+                       PCB-GAP-REGISTER.md, PCB-GOLDEN-RULES.md), a figure of 16 September; the list holds
+                       26 today. One correction to carry if the class is kept: its load says "a soldered
+                       QFN" and the netlist and the fitted part say LQFP-128.
+
+NO REAL CONNECTOR IS LOST. No part with a connector, fuse-holder, battery-holder or mounting-hole reference
+(J*, F*, BT*, H*, W*) names its wear word only after the colon on any of the six boards, so the rule needed no
+second form by prefix. The rule is one attempt, not two.
+
+WHY THE SEPARATOR IS THE FIRST COLON OUTSIDE EVERY BRACKET, and not the first colon (decision, authority
+SESSION): 343 of the 2630 values carry a colon followed by white space, and in 89 of them the first one stands
+inside a bracket, for example board E D2 "SMCJ40A (bus clamp: 40 V standoff on the 9 to 36 V bus; ...)". Such a
+colon belongs to a remark on the part. The two readings give the SAME wear set on all six boards today (column
+"first" equals column "ident" on every row that is not excluded by its prefix), so the choice changes no
+reading; it is taken because the identity it returns is never shorter than the plain split's, so where the two
+ever differ the part is asked for rather than dropped, and a completeness gate must fail in that direction.
+To reverse: replace the body of reliability.identity with a split at the first colon followed by white space;
+t_a_colon_inside_a_bracket_does_not_end_the_identity is the test that then fails.
+
+THE COVERED SUM the committed test asks to be at least 100: 114 before (with 3 refusals, so the test failed on
+its first assertion and never reached the sum), 111 after with 0 refusals.
+
+NOT PART OF THIS CHANGE, FOUND WHILE MEASURING (open, for the integrator): the word list does not find every
+connector. 61 parts whose reference begins J, BT, H, MP, W, SW, X or P are neither in the wear set nor in any
+declared class, the same before and after this change: board A 18 (the dock spring pins J_CN1..4, J_CP1..4, J_VN1..4, J_VR1..4,
+J_DOCK, J_PRE1), board B 18 (among them J_ETH "RJ45 jack (Amphenol RJHSE5380)", J_SIM1, J_SIM2, J_CAM, J_QMX and
+the bench headers), board C 12 (J_EPD the e-paper ZIF, J_HSJ1 and J_HSJ2 the headset jacks, J_MAINSW, J_PIJ2 and
+seven panel switches SW_*), board E 11 (J_FAN1, J_FAN2, J_POD, J_GEIGER, J_LTG, J_DCF, J_BLK and four solder
+pads P_*), board P 2 (W_BN, W_BP). Some are solder lands with no mating cycle; an RJ45 jack, a push-push SIM socket
+(GCT SIM8060), a ZIF and a headset jack are mated in the field. REL-001's completeness is complete for the twelve words only. This
+change does not widen the word list, because that would add parts to the wear set and the list would need
+classes with figures from datasheets, which is its own piece of work.
