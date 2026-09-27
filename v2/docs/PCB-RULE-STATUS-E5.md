@@ -21,7 +21,7 @@ Measured on board E5 (pcb-e5-block, 686b29a734c55b9a), declares E5.
 
 | rule | effect | phase | result | why |
 |---|---|---|---|---|
-| ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **PASS** | OPERATING-ENVELOPE.md is the record that was verified (sha 44a031caee47ff9a) |
+| ENV-001 operating envelope declared | BLOCKER | SCHEMATIC | **PASS** | OPERATING-ENVELOPE.md is the record that was verified (sha 43361b02743cf3af) |
 | ENV-002 no claim without a test | BLOCKER | RELEASE_PACKAGE | **PASS** | claims_check PASS of 86 |
 | SCH-003 cross-board contracts | BLOCKER | ROUTED_BOARD | **PASS** | check_contracts_e5 PASS of 33 |
 | SCH-004 a safety line fails safe | BLOCKER | SCHEMATIC | **PASS** | safe_lines_e5 PASS of 0 |

@@ -25,12 +25,12 @@ that owns it.
 
 | board | declared phase | netlist, sha256/16 | board file of the phase, sha256/16 | layout carries the netlist | ready for layout |
 |---|---|---|---|---|---|
-| A | A32 | `pcb-a-power-a23/out/pcb-a-power.net` da05dc02bc1e612f | 58e26c67987b1daa | no: SCH-002 (netlist against board) reads FAIL on it | no: 7 reason(s), first SI-001 INCONCLUSIVE on CURRENT_CANDIDATE evidence (BOUND) |
-| B | B21 | `pcb-b-compute-b19/out/pcb-b-compute.net` 8b78c59754a6a0c7 | 2e64b5bf2d9cd3bc | no: SCH-002 (netlist against board) reads FAIL on it | no: 7 reason(s), first SI-001 INCONCLUSIVE on CURRENT_CANDIDATE evidence (BOUND) |
-| C | C24 | `pcb-c-display-c8/out/pcb-c-display.net` 11eabc2dddca5161 | 2a273803757c68fb | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 5 reason(s), first PWR-001 FAIL on CURRENT_CANDIDATE evidence (BOUND) |
-| D | D12 | `pcb-d-aprs-d9/out/pcb-d-aprs.net` 76700a687eb6187f | 929bf82d2bf6eed4 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 8 reason(s), first PWR-001 INCONCLUSIVE on CURRENT_CANDIDATE evidence (BOUND) |
-| E | E17 | `pcb-e1-dock-e7/out/pcb-e1-dock.net` d6137f50059e5cbc | a462ac2620b9b8d3 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 5 reason(s), first PWR-001 INCONCLUSIVE on CURRENT_CANDIDATE evidence (BOUND) |
-| P | P4 | `pcb-p-pack-p2/out/pcb-p-pack.net` 085f833362fbbda8 | d79865e7b1aceb95 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 6 reason(s), first PWR-001 FAIL on CURRENT_CANDIDATE evidence (BOUND) |
+| A | A32 | `pcb-a-power-a23/out/pcb-a-power.net` da05dc02bc1e612f | 58e26c67987b1daa | no: SCH-002 (netlist against board) reads FAIL on it | no: 7 reason(s), first SI-001 INCONCLUSIVE on VALID_HISTORICAL evidence (RATIONALE) |
+| B | B21 | `pcb-b-compute-b19/out/pcb-b-compute.net` 8b78c59754a6a0c7 | 2e64b5bf2d9cd3bc | no: SCH-002 (netlist against board) reads FAIL on it | no: 7 reason(s), first SI-001 INCONCLUSIVE on VALID_HISTORICAL evidence (RATIONALE) |
+| C | C24 | `pcb-c-display-c8/out/pcb-c-display.net` 11eabc2dddca5161 | 2a273803757c68fb | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 5 reason(s), first PWR-001 FAIL on VALID_HISTORICAL evidence (RATIONALE) |
+| D | D12 | `pcb-d-aprs-d9/out/pcb-d-aprs.net` 76700a687eb6187f | 929bf82d2bf6eed4 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 8 reason(s), first PWR-001 INCONCLUSIVE on VALID_HISTORICAL evidence (RATIONALE) |
+| E | E17 | `pcb-e1-dock-e7/out/pcb-e1-dock.net` d6137f50059e5cbc | a462ac2620b9b8d3 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 5 reason(s), first PWR-001 INCONCLUSIVE on VALID_HISTORICAL evidence (RATIONALE) |
+| P | P4 | `pcb-p-pack-p2/out/pcb-p-pack.net` 085f833362fbbda8 | d79865e7b1aceb95 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 6 reason(s), first PWR-001 FAIL on VALID_HISTORICAL evidence (RATIONALE) |
 | E5 | E5 | none (no schematic) | 686b29a734c55b9a | yes: a bare contact board with no schematic (manifest no_chain): its board file is its design | no: 2 reason(s), first INT-001 PASS on AWAITING_REVALIDATION evidence (UNBOUND) |
 
 ## Layout entry, per board: the exact remaining blockers
@@ -54,40 +54,40 @@ the row current, and the owner is the stream that takes that step.
 
 | board | rule | reading now | a re-take alone would read | what closes it first | owner |
 |---|---|---|---|---|---|
-| A | SI-001 INCONCLUSIVE | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads INCONCLUSIVE | board stream A |
+| A | SI-001 INCONCLUSIVE | VALID_HISTORICAL (RATIONALE) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads INCONCLUSIVE | board stream A |
 | A | RF-002 FAIL | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads FAIL | board stream A |
 | A | decision 31 | review: not met |  | decision 31's protection topology reviewed on this board's current netlist: every exposed conductor, the part it meets first, the clamp's rating against decision 34's level, and the placement and return-path constraints the layout must keep (the clamp at the entry, its ground return short and on the plane) (no review record on file (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md)) | board stream A, with the holds writer for the record |
 | A | FEA-006 | layout-entry stage open |  | The per-class requirement of DECOUPLING.md written from each maker's own words (capacitance, dielectric, count per pin or rail, loop and return geometry), with its source per class; T1 to T10 merged with DEC-001's registry text; G1 to G14 in each board's generator and the five circuit gaps closed (the STM32H743's VDDA capacitor among them, the TPA6132A2 at its maker's 2.2 uF), each read back on the board's committed netlist; the PI7C9X2G404SL question asked of Diodes, with the class's requirement taken until it answers. | the blocker's owner (tools/pcb_requirements.yaml) |
 | A | FEA-004 | layout-entry stage open |  | PWR-F12's chain re-declared (10 A continuous held by C2 and C3, 18 A for 60 s for every PA key-down, 20 A for 2 s as the trip) in pcb_energy_chain.yaml and pcb_pack_protection.yaml with F2 carried as a stage, and board A's pack-path copper requirement at 18 A derived from it as a layout constraint (width and copper weight; the 2 oz price is the owner's only if it is the answer); PWR-F15's flange sensor drawn on board D's netlist with its lead and bus address; C1 to C4 and K1 to K5 written into the W5 firmware contract as PROVISIONAL. | the blocker's owner (tools/pcb_requirements.yaml) |
 | A | FEA-002 | layout-entry stage open |  | EMCON.md section 4 closed at desk on the committed netlists, transmitter by transmitter, each row stating its required maximum latency and the fault states it holds in (every processor dead, in reset or unflashed, the line's own supply lost, back-power from parts that stay powered): SD-EMC-1's two stages for the RM520N-GL drawn on board B with the supervisor that sets Tpr, and either fallback (iii) provided for in that circuit or bench test E-05 (b) to (d) run first on a development adapter carrying the fitted RM520N-GL firmware, so the fallback decision does not wait for a built board; L1 to L4 and L7 remedied on boards A, B, C and D; SD-EMC-2's back-feed bounded; the hardware EMCON lamp of SD-EMC-6 (CON-021) on board C; each read back on its board's committed netlist. A path that needs working firmware in its failure case closes no row (the review of the 22:35 progress report, finding C). | the blocker's owner (tools/pcb_requirements.yaml) |
 | A | FEA-007 | layout-entry stage open |  | Per board, the desk items of CASE-FIT-UNCERTAINTIES.md section 2: board B, the jumper plug picked from a maker's drawing with M17g and M17x MET on the design basis, M13 bounded by PolyPhaser's O-ring dimension and the M1 lookups (Xenarc rear frame, CM5 Cooler drawing, named spacers); boards A and P, the pack hold-down (S-27) with M4a and M5; boards A and D, W4-F17 resolved; boards A, E and E5, the dock and blind-mate tolerance stack with board E's clamp bar (R4E-07) and an ANT3 clamp at X +46; board E, the clamp lanes (M17f) and the VHB pad places (M15b). Then, for boards A, B, E and P, the mock-up's checks of their YES rows on a new case of the current moulding (D-08a) with the made parts of v2/release/case-2026-09-27/, the picked jumper plugs on RG-316, one arrestor and stand-ins: A, T4 (M4a); B, T2 and T4 (M1, M18), T5 and T11 (M18, M17w, M17x through M13), T10 (M17d, M17g, M17w, M17x); E, T10 (M17f); P, T4 and T2 (M4a, M5); T1 at purchase. Each YES row read at or above its minimum, or the board's outline or placement changed before its layout entry. BLOCKED on the owner's purchase decision (L-07, D-09). Boards D and E5 need the desk items only. | the blocker's owner (tools/pcb_requirements.yaml) |
-| B | SI-001 INCONCLUSIVE | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads INCONCLUSIVE | board stream B |
+| B | SI-001 INCONCLUSIVE | VALID_HISTORICAL (RATIONALE) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads INCONCLUSIVE | board stream B |
 | B | RF-002 FAIL | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads FAIL | board stream B |
 | B | FEA-003 | layout-entry stage open |  | FB-FAB-1 to FB-FAB-5 closed on the committed netlist: fabmap.py and check_pcb_b.py at 0 MISMATCH and 0 FAIL; the TEST2 strap; the back-power gate network with a power-state check over the netlist, or Raspberry Pi's written tolerance for the currents of section 5.2; the break-before-make sequence with its timing budget against [U2M] 5.8 and [MUX] 6.7; the 23 safe-low pull-downs with their assertion and mutations. FB-FAB-6's escape strategy decided from Q-B-ESC-1's reading on the corrected inputs and the stack decision 43 selects, with the floor-plan study of A4, A2 and A7 (EXPERIMENTAL evidence, which permits the layout to start and never authorises a candidate). FB-FAB-7's channel budget per link from a primary document, with the lengths of the floor-plan screen and a field-solver impedance on the chosen stack. | the blocker's owner (tools/pcb_requirements.yaml) |
 | B | FEA-006 | layout-entry stage open |  | The per-class requirement of DECOUPLING.md written from each maker's own words (capacitance, dielectric, count per pin or rail, loop and return geometry), with its source per class; T1 to T10 merged with DEC-001's registry text; G1 to G14 in each board's generator and the five circuit gaps closed (the STM32H743's VDDA capacitor among them, the TPA6132A2 at its maker's 2.2 uF), each read back on the board's committed netlist; the PI7C9X2G404SL question asked of Diodes, with the class's requirement taken until it answers. | the blocker's owner (tools/pcb_requirements.yaml) |
 | B | FEA-002 | layout-entry stage open |  | EMCON.md section 4 closed at desk on the committed netlists, transmitter by transmitter, each row stating its required maximum latency and the fault states it holds in (every processor dead, in reset or unflashed, the line's own supply lost, back-power from parts that stay powered): SD-EMC-1's two stages for the RM520N-GL drawn on board B with the supervisor that sets Tpr, and either fallback (iii) provided for in that circuit or bench test E-05 (b) to (d) run first on a development adapter carrying the fitted RM520N-GL firmware, so the fallback decision does not wait for a built board; L1 to L4 and L7 remedied on boards A, B, C and D; SD-EMC-2's back-feed bounded; the hardware EMCON lamp of SD-EMC-6 (CON-021) on board C; each read back on its board's committed netlist. A path that needs working firmware in its failure case closes no row (the review of the 22:35 progress report, finding C). | the blocker's owner (tools/pcb_requirements.yaml) |
 | B | FEA-001 | layout-entry stage open |  | FB-ZER-1's part rows decided before board B's U8 site is laid out: the Z-EXP-A and Z-EXP-B pass records (script, log, part lot, configuration read-back, and the OLD, NEW and ERROR counts) from ATECC608B-SSHDA-T parts on the development rig of ZEROIZE.md section 5, filed under v2/docs/feasibility/evidence/; or switch condition S1 or S2 taken with the SLB 9673 (or the SE050E2HQ1 under its own bench run) drawn on the U8 site of the committed netlist. A development-device test gates this legitimately: it decides which part and land U8 carries, and nothing else on board B depends on it (ZEROIZE.md section 7). | the blocker's owner (tools/pcb_requirements.yaml) |
 | B | FEA-007 | layout-entry stage open |  | Per board, the desk items of CASE-FIT-UNCERTAINTIES.md section 2: board B, the jumper plug picked from a maker's drawing with M17g and M17x MET on the design basis, M13 bounded by PolyPhaser's O-ring dimension and the M1 lookups (Xenarc rear frame, CM5 Cooler drawing, named spacers); boards A and P, the pack hold-down (S-27) with M4a and M5; boards A and D, W4-F17 resolved; boards A, E and E5, the dock and blind-mate tolerance stack with board E's clamp bar (R4E-07) and an ANT3 clamp at X +46; board E, the clamp lanes (M17f) and the VHB pad places (M15b). Then, for boards A, B, E and P, the mock-up's checks of their YES rows on a new case of the current moulding (D-08a) with the made parts of v2/release/case-2026-09-27/, the picked jumper plugs on RG-316, one arrestor and stand-ins: A, T4 (M4a); B, T2 and T4 (M1, M18), T5 and T11 (M18, M17w, M17x through M13), T10 (M17d, M17g, M17w, M17x); E, T10 (M17f); P, T4 and T2 (M4a, M5); T1 at purchase. Each YES row read at or above its minimum, or the board's outline or placement changed before its layout entry. BLOCKED on the owner's purchase decision (L-07, D-09). Boards D and E5 need the desk items only. | the blocker's owner (tools/pcb_requirements.yaml) |
-| C | PWR-001 FAIL | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads FAIL | board stream C |
-| C | SI-001 INCONCLUSIVE | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads INCONCLUSIVE | board stream C |
+| C | PWR-001 FAIL | VALID_HISTORICAL (RATIONALE) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads FAIL | board stream C |
+| C | SI-001 INCONCLUSIVE | VALID_HISTORICAL (RATIONALE) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads INCONCLUSIVE | board stream C |
 | C | RF-002 FAIL | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads FAIL | board stream C |
 | C | FEA-006 | layout-entry stage open |  | The per-class requirement of DECOUPLING.md written from each maker's own words (capacitance, dielectric, count per pin or rail, loop and return geometry), with its source per class; T1 to T10 merged with DEC-001's registry text; G1 to G14 in each board's generator and the five circuit gaps closed (the STM32H743's VDDA capacitor among them, the TPA6132A2 at its maker's 2.2 uF), each read back on the board's committed netlist; the PI7C9X2G404SL question asked of Diodes, with the class's requirement taken until it answers. | the blocker's owner (tools/pcb_requirements.yaml) |
 | C | FEA-002 | layout-entry stage open |  | EMCON.md section 4 closed at desk on the committed netlists, transmitter by transmitter, each row stating its required maximum latency and the fault states it holds in (every processor dead, in reset or unflashed, the line's own supply lost, back-power from parts that stay powered): SD-EMC-1's two stages for the RM520N-GL drawn on board B with the supervisor that sets Tpr, and either fallback (iii) provided for in that circuit or bench test E-05 (b) to (d) run first on a development adapter carrying the fitted RM520N-GL firmware, so the fallback decision does not wait for a built board; L1 to L4 and L7 remedied on boards A, B, C and D; SD-EMC-2's back-feed bounded; the hardware EMCON lamp of SD-EMC-6 (CON-021) on board C; each read back on its board's committed netlist. A path that needs working firmware in its failure case closes no row (the review of the 22:35 progress report, finding C). | the blocker's owner (tools/pcb_requirements.yaml) |
-| D | PWR-001 INCONCLUSIVE | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads INCONCLUSIVE | board stream D |
-| D | SI-001 INCONCLUSIVE | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads INCONCLUSIVE | board stream D |
+| D | PWR-001 INCONCLUSIVE | VALID_HISTORICAL (RATIONALE) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads INCONCLUSIVE | board stream D |
+| D | SI-001 INCONCLUSIVE | VALID_HISTORICAL (RATIONALE) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads INCONCLUSIVE | board stream D |
 | D | RF-002 FAIL | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads FAIL | board stream D |
 | D | decision 31 | review: not met |  | decision 31's protection topology reviewed on this board's current netlist: every exposed conductor, the part it meets first, the clamp's rating against decision 34's level, and the placement and return-path constraints the layout must keep (the clamp at the entry, its ground return short and on the plane) (no review record on file (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md)) | board stream D, with the holds writer for the record |
 | D | FEA-006 | layout-entry stage open |  | The per-class requirement of DECOUPLING.md written from each maker's own words (capacitance, dielectric, count per pin or rail, loop and return geometry), with its source per class; T1 to T10 merged with DEC-001's registry text; G1 to G14 in each board's generator and the five circuit gaps closed (the STM32H743's VDDA capacitor among them, the TPA6132A2 at its maker's 2.2 uF), each read back on the board's committed netlist; the PI7C9X2G404SL question asked of Diodes, with the class's requirement taken until it answers. | the blocker's owner (tools/pcb_requirements.yaml) |
 | D | FEA-004 | layout-entry stage open |  | PWR-F12's chain re-declared (10 A continuous held by C2 and C3, 18 A for 60 s for every PA key-down, 20 A for 2 s as the trip) in pcb_energy_chain.yaml and pcb_pack_protection.yaml with F2 carried as a stage, and board A's pack-path copper requirement at 18 A derived from it as a layout constraint (width and copper weight; the 2 oz price is the owner's only if it is the answer); PWR-F15's flange sensor drawn on board D's netlist with its lead and bus address; C1 to C4 and K1 to K5 written into the W5 firmware contract as PROVISIONAL. | the blocker's owner (tools/pcb_requirements.yaml) |
 | D | FEA-002 | layout-entry stage open |  | EMCON.md section 4 closed at desk on the committed netlists, transmitter by transmitter, each row stating its required maximum latency and the fault states it holds in (every processor dead, in reset or unflashed, the line's own supply lost, back-power from parts that stay powered): SD-EMC-1's two stages for the RM520N-GL drawn on board B with the supervisor that sets Tpr, and either fallback (iii) provided for in that circuit or bench test E-05 (b) to (d) run first on a development adapter carrying the fitted RM520N-GL firmware, so the fallback decision does not wait for a built board; L1 to L4 and L7 remedied on boards A, B, C and D; SD-EMC-2's back-feed bounded; the hardware EMCON lamp of SD-EMC-6 (CON-021) on board C; each read back on its board's committed netlist. A path that needs working firmware in its failure case closes no row (the review of the 22:35 progress report, finding C). | the blocker's owner (tools/pcb_requirements.yaml) |
 | D | FEA-007 | layout-entry stage open |  | Per board, the desk items of CASE-FIT-UNCERTAINTIES.md section 2: board B, the jumper plug picked from a maker's drawing with M17g and M17x MET on the design basis, M13 bounded by PolyPhaser's O-ring dimension and the M1 lookups (Xenarc rear frame, CM5 Cooler drawing, named spacers); boards A and P, the pack hold-down (S-27) with M4a and M5; boards A and D, W4-F17 resolved; boards A, E and E5, the dock and blind-mate tolerance stack with board E's clamp bar (R4E-07) and an ANT3 clamp at X +46; board E, the clamp lanes (M17f) and the VHB pad places (M15b). Then, for boards A, B, E and P, the mock-up's checks of their YES rows on a new case of the current moulding (D-08a) with the made parts of v2/release/case-2026-09-27/, the picked jumper plugs on RG-316, one arrestor and stand-ins: A, T4 (M4a); B, T2 and T4 (M1, M18), T5 and T11 (M18, M17w, M17x through M13), T10 (M17d, M17g, M17w, M17x); E, T10 (M17f); P, T4 and T2 (M4a, M5); T1 at purchase. Each YES row read at or above its minimum, or the board's outline or placement changed before its layout entry. BLOCKED on the owner's purchase decision (L-07, D-09). Boards D and E5 need the desk items only. | the blocker's owner (tools/pcb_requirements.yaml) |
-| E | PWR-001 INCONCLUSIVE | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads INCONCLUSIVE | board stream E |
-| E | SI-001 INCONCLUSIVE | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads INCONCLUSIVE | board stream E |
+| E | PWR-001 INCONCLUSIVE | VALID_HISTORICAL (RATIONALE) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads INCONCLUSIVE | board stream E |
+| E | SI-001 INCONCLUSIVE | VALID_HISTORICAL (RATIONALE) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads INCONCLUSIVE | board stream E |
 | E | decision 31 | review: not met |  | decision 31's protection topology reviewed on this board's current netlist: every exposed conductor, the part it meets first, the clamp's rating against decision 34's level, and the placement and return-path constraints the layout must keep (the clamp at the entry, its ground return short and on the plane) (no review record on file (v2/docs/reviews/DECISION-31-PROTECTION-TOPOLOGY.md)) | board stream E, with the holds writer for the record |
 | E | FEA-006 | layout-entry stage open |  | The per-class requirement of DECOUPLING.md written from each maker's own words (capacitance, dielectric, count per pin or rail, loop and return geometry), with its source per class; T1 to T10 merged with DEC-001's registry text; G1 to G14 in each board's generator and the five circuit gaps closed (the STM32H743's VDDA capacitor among them, the TPA6132A2 at its maker's 2.2 uF), each read back on the board's committed netlist; the PI7C9X2G404SL question asked of Diodes, with the class's requirement taken until it answers. | the blocker's owner (tools/pcb_requirements.yaml) |
 | E | FEA-007 | layout-entry stage open |  | Per board, the desk items of CASE-FIT-UNCERTAINTIES.md section 2: board B, the jumper plug picked from a maker's drawing with M17g and M17x MET on the design basis, M13 bounded by PolyPhaser's O-ring dimension and the M1 lookups (Xenarc rear frame, CM5 Cooler drawing, named spacers); boards A and P, the pack hold-down (S-27) with M4a and M5; boards A and D, W4-F17 resolved; boards A, E and E5, the dock and blind-mate tolerance stack with board E's clamp bar (R4E-07) and an ANT3 clamp at X +46; board E, the clamp lanes (M17f) and the VHB pad places (M15b). Then, for boards A, B, E and P, the mock-up's checks of their YES rows on a new case of the current moulding (D-08a) with the made parts of v2/release/case-2026-09-27/, the picked jumper plugs on RG-316, one arrestor and stand-ins: A, T4 (M4a); B, T2 and T4 (M1, M18), T5 and T11 (M18, M17w, M17x through M13), T10 (M17d, M17g, M17w, M17x); E, T10 (M17f); P, T4 and T2 (M4a, M5); T1 at purchase. Each YES row read at or above its minimum, or the board's outline or placement changed before its layout entry. BLOCKED on the owner's purchase decision (L-07, D-09). Boards D and E5 need the desk items only. | the blocker's owner (tools/pcb_requirements.yaml) |
-| P | PWR-001 FAIL | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads FAIL | board stream P |
-| P | SI-001 INCONCLUSIVE | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads INCONCLUSIVE | board stream P |
+| P | PWR-001 FAIL | VALID_HISTORICAL (RATIONALE) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads FAIL | board stream P |
+| P | SI-001 INCONCLUSIVE | VALID_HISTORICAL (RATIONALE) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads INCONCLUSIVE | board stream P |
 | P | BAT-001 FAIL | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads FAIL | board stream P |
 | P | FEA-006 | layout-entry stage open |  | The per-class requirement of DECOUPLING.md written from each maker's own words (capacitance, dielectric, count per pin or rail, loop and return geometry), with its source per class; T1 to T10 merged with DEC-001's registry text; G1 to G14 in each board's generator and the five circuit gaps closed (the STM32H743's VDDA capacitor among them, the TPA6132A2 at its maker's 2.2 uF), each read back on the board's committed netlist; the PI7C9X2G404SL question asked of Diodes, with the class's requirement taken until it answers. | the blocker's owner (tools/pcb_requirements.yaml) |
 | P | FEA-005 | layout-entry stage open |  | The battery review packet complete and current on the candidate (its evidence/check_manifest.py printing RELEASE CHECK PASS at the commit whose netlist is laid out); the secondary protection's coordination with the primary and the cell limit stated at desk (thresholds with their tolerances, sensor placement and lag, operating mode, behaviour with the primary failed; the review of the 22:35 progress report, finding B) with the thermistor and sense placement constraints the layout must keep; the charger's state sequence with a crashed controller documented (CHARGER-STATE-SEQUENCE.md). | the blocker's owner (tools/pcb_requirements.yaml) |
@@ -145,10 +145,29 @@ whose evidence class differs from what the entry-script instrument of 20 Septemb
 evidence; a row whose class stayed the same and whose first failing cause moved (most often to TOOL_CHANGED
 from a cause checked after it) is counted but not listed.
 
-**2 of 338 required rows changed class; 116 more changed only their first failing cause.**
+**21 of 338 required rows changed class; 116 more changed only their first failing cause.**
 
 | board | rule | result | entry script alone | code bundle | files that moved |
 |---|---|---|---|---|---|
+| A | CMP-001 absolute maximum never reached | PASS | CURRENT_CANDIDATE (BOUND) | VALID_HISTORICAL (RATIONALE) | `rules_lib.py` |
+| A | PWR-001 every rail is declared with its loads | PASS | CURRENT_CANDIDATE (BOUND) | VALID_HISTORICAL (RATIONALE) | `rules_lib.py` |
+| A | SI-001 transmission-line classification | INCONCLUSIVE | CURRENT_CANDIDATE (BOUND) | VALID_HISTORICAL (RATIONALE) | `rules_lib.py` |
+| B | CMP-001 absolute maximum never reached | PASS | CURRENT_CANDIDATE (BOUND) | VALID_HISTORICAL (RATIONALE) | `rules_lib.py` |
+| B | PWR-001 every rail is declared with its loads | PASS | CURRENT_CANDIDATE (BOUND) | VALID_HISTORICAL (RATIONALE) | `rules_lib.py` |
+| B | SI-001 transmission-line classification | INCONCLUSIVE | CURRENT_CANDIDATE (BOUND) | VALID_HISTORICAL (RATIONALE) | `rules_lib.py` |
+| C | CMP-001 absolute maximum never reached | PASS | CURRENT_CANDIDATE (BOUND) | VALID_HISTORICAL (RATIONALE) | `rules_lib.py` |
+| C | PWR-001 every rail is declared with its loads | FAIL | CURRENT_CANDIDATE (BOUND) | VALID_HISTORICAL (RATIONALE) | `rules_lib.py` |
+| C | SI-001 transmission-line classification | INCONCLUSIVE | CURRENT_CANDIDATE (BOUND) | VALID_HISTORICAL (RATIONALE) | `rules_lib.py` |
+| D | CMP-001 absolute maximum never reached | PASS | CURRENT_CANDIDATE (BOUND) | VALID_HISTORICAL (RATIONALE) | `rules_lib.py` |
+| D | PWR-001 every rail is declared with its loads | INCONCLUSIVE | CURRENT_CANDIDATE (BOUND) | VALID_HISTORICAL (RATIONALE) | `rules_lib.py` |
+| D | SI-001 transmission-line classification | INCONCLUSIVE | CURRENT_CANDIDATE (BOUND) | VALID_HISTORICAL (RATIONALE) | `rules_lib.py` |
+| E | CMP-001 absolute maximum never reached | PASS | CURRENT_CANDIDATE (BOUND) | VALID_HISTORICAL (RATIONALE) | `rules_lib.py` |
+| E | PWR-001 every rail is declared with its loads | INCONCLUSIVE | CURRENT_CANDIDATE (BOUND) | VALID_HISTORICAL (RATIONALE) | `rules_lib.py` |
+| E | SI-001 transmission-line classification | INCONCLUSIVE | CURRENT_CANDIDATE (BOUND) | VALID_HISTORICAL (RATIONALE) | `rules_lib.py` |
+| P | CMP-001 absolute maximum never reached | PASS | CURRENT_CANDIDATE (BOUND) | VALID_HISTORICAL (RATIONALE) | `rules_lib.py` |
+| P | PWR-001 every rail is declared with its loads | FAIL | CURRENT_CANDIDATE (BOUND) | VALID_HISTORICAL (RATIONALE) | `rules_lib.py` |
+| P | SI-001 transmission-line classification | INCONCLUSIVE | CURRENT_CANDIDATE (BOUND) | VALID_HISTORICAL (RATIONALE) | `rules_lib.py` |
+| E5 | CMP-001 absolute maximum never reached | PASS | CURRENT_CANDIDATE (BOUND) | VALID_HISTORICAL (RATIONALE) | `rules_lib.py` |
 | E5 | RTE-001 geometry a fabricator will build | PASS | VALID_HISTORICAL (RATIONALE) | AWAITING_REVALIDATION (TOOL_CHANGED) | `verdict.py` |
 | E5 | MEC-001 the board fits what it is fitted to | PASS | VALID_HISTORICAL (RATIONALE) | AWAITING_REVALIDATION (TOOL_CHANGED) | `verdict.py` |
 
@@ -165,14 +184,14 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 
 | board | CURRENT_CANDIDATE | VALID_HISTORICAL | PASS on either | AWAITING_REVALIDATION | DESK_REVIEW | PHYSICAL_TEST | NO_EVIDENCE | pairs |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| A | 13 | 0 | 11 | 35 | 3 | 0 | 4 | 55 |
-| B | 13 | 0 | 11 | 34 | 4 | 0 | 5 | 56 |
-| C | 10 | 0 | 7 | 32 | 3 | 0 | 3 | 48 |
-| D | 11 | 0 | 8 | 34 | 3 | 0 | 3 | 51 |
-| E | 14 | 0 | 12 | 35 | 3 | 0 | 3 | 55 |
-| P | 14 | 0 | 11 | 29 | 3 | 0 | 2 | 48 |
-| E5 | 6 | 0 | 6 | 16 | 2 | 0 | 1 | 25 |
-| **set** | **81** | **0** | **66** | **215** | **21** | **0** | **21** | **338** |
+| A | 10 | 3 | 11 | 35 | 3 | 0 | 4 | 55 |
+| B | 10 | 3 | 11 | 34 | 4 | 0 | 5 | 56 |
+| C | 7 | 3 | 7 | 32 | 3 | 0 | 3 | 48 |
+| D | 8 | 3 | 8 | 34 | 3 | 0 | 3 | 51 |
+| E | 11 | 3 | 12 | 35 | 3 | 0 | 3 | 55 |
+| P | 11 | 3 | 11 | 29 | 3 | 0 | 2 | 48 |
+| E5 | 5 | 1 | 6 | 16 | 2 | 0 | 1 | 25 |
+| **set** | **62** | **19** | **66** | **215** | **21** | **0** | **21** | **338** |
 
 ## Rules with a PASS on the current candidate
 
@@ -181,8 +200,6 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 | A | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist da05dc02bc1e612f is the current candidate's |
 | A | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_a: netlist da05dc02bc1e612f is the current candidate's |
 | A | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_a: netlist da05dc02bc1e612f is the current candidate's |
-| A | CMP-001 absolute maximum never reached | SCHEMATIC | derate: netlist da05dc02bc1e612f is the current candidate's |
-| A | PWR-001 every rail is declared with its loads | SCHEMATIC | intent_rails: netlist da05dc02bc1e612f is the current candidate's |
 | A | PWR-002 sequencing and inrush | SCHEMATIC | power_sequence: netlist da05dc02bc1e612f is the current candidate's |
 | A | PWR-003 protection coordination | SCHEMATIC | energy_chain_a: netlist da05dc02bc1e612f is the current candidate's |
 | A | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_a: netlist da05dc02bc1e612f is the current candidate's |
@@ -192,8 +209,6 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 | B | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist 8b78c59754a6a0c7 is the current candidate's |
 | B | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_b: netlist 8b78c59754a6a0c7 is the current candidate's |
 | B | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_b: netlist 8b78c59754a6a0c7 is the current candidate's |
-| B | CMP-001 absolute maximum never reached | SCHEMATIC | derate: netlist 8b78c59754a6a0c7 is the current candidate's |
-| B | PWR-001 every rail is declared with its loads | SCHEMATIC | intent_rails: netlist 8b78c59754a6a0c7 is the current candidate's |
 | B | PWR-002 sequencing and inrush | SCHEMATIC | power_sequence: netlist 8b78c59754a6a0c7 is the current candidate's |
 | B | PWR-003 protection coordination | SCHEMATIC | energy_chain_b: netlist 8b78c59754a6a0c7 is the current candidate's |
 | B | CLK-001 oscillators, straps and boot pins | SCHEMATIC | clock_check: netlist 8b78c59754a6a0c7 is the current candidate's |
@@ -202,7 +217,6 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 | B | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 | C | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist 11eabc2dddca5161 is the current candidate's |
 | C | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_c: netlist 11eabc2dddca5161 is the current candidate's |
-| C | CMP-001 absolute maximum never reached | SCHEMATIC | derate: netlist 11eabc2dddca5161 is the current candidate's |
 | C | CLK-001 oscillators, straps and boot pins | SCHEMATIC | clock_check: netlist 11eabc2dddca5161 is the current candidate's |
 | C | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_c: netlist 11eabc2dddca5161 is the current candidate's |
 | C | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_c: netlist 11eabc2dddca5161 is the current candidate's |
@@ -210,7 +224,6 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 | D | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist 76700a687eb6187f is the current candidate's |
 | D | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_d: netlist 76700a687eb6187f is the current candidate's |
 | D | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_d: netlist 76700a687eb6187f is the current candidate's |
-| D | CMP-001 absolute maximum never reached | SCHEMATIC | derate: netlist 76700a687eb6187f is the current candidate's |
 | D | CLK-001 oscillators, straps and boot pins | SCHEMATIC | clock_check: netlist 76700a687eb6187f is the current candidate's |
 | D | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_d: netlist 76700a687eb6187f is the current candidate's |
 | D | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_d: netlist 76700a687eb6187f is the current candidate's |
@@ -218,7 +231,6 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 | E | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist d6137f50059e5cbc is the current candidate's |
 | E | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_e: netlist d6137f50059e5cbc is the current candidate's |
 | E | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_e: netlist d6137f50059e5cbc is the current candidate's |
-| E | CMP-001 absolute maximum never reached | SCHEMATIC | derate: netlist d6137f50059e5cbc is the current candidate's |
 | E | PWR-002 sequencing and inrush | SCHEMATIC | power_sequence: netlist d6137f50059e5cbc is the current candidate's |
 | E | PWR-003 protection coordination | SCHEMATIC | energy_chain_e: netlist d6137f50059e5cbc is the current candidate's |
 | E | CLK-001 oscillators, straps and boot pins | SCHEMATIC | clock_check: netlist d6137f50059e5cbc is the current candidate's |
@@ -230,7 +242,6 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 | P | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist 085f833362fbbda8 is the current candidate's |
 | P | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_p: netlist 085f833362fbbda8 is the current candidate's |
 | P | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_p: netlist 085f833362fbbda8 is the current candidate's |
-| P | CMP-001 absolute maximum never reached | SCHEMATIC | derate: netlist 085f833362fbbda8 is the current candidate's |
 | P | PWR-002 sequencing and inrush | SCHEMATIC | power_sequence: netlist 085f833362fbbda8 is the current candidate's |
 | P | PWR-003 protection coordination | SCHEMATIC | energy_chain_p: netlist 085f833362fbbda8 is the current candidate's |
 | P | RF-002 transmit inhibit is hardware | SCHEMATIC | inhibit_chain_p: netlist 085f833362fbbda8 is the current candidate's |
@@ -239,7 +250,6 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 | P | BAT-002 the energy chain is bounded end to end | SCHEMATIC | energy_chain: netlist 085f833362fbbda8 is the current candidate's |
 | P | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 | E5 | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_e5: board 686b29a734c55b9a is the current design (no schematic) |
-| E5 | CMP-001 absolute maximum never reached | SCHEMATIC | derate: board 686b29a734c55b9a is the current design (no schematic) |
 | E5 | PWR-003 protection coordination | SCHEMATIC | energy_chain_e5: board 686b29a734c55b9a is the current design (no schematic) |
 | E5 | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_e5: board 686b29a734c55b9a is the current design (no schematic) |
 | E5 | BAT-002 the energy chain is bounded end to end | SCHEMATIC | energy_chain: board 686b29a734c55b9a is the current design (no schematic) |
@@ -247,8 +257,27 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 
 ## Reused under a recorded rationale
 
-None. The compatibility register holds 4 entries; no reading is reused on an older artefact or under an older
-tool without one.
+| board | rule | result | rationale |
+|---|---|---|---|
+| A | CMP-001 absolute maximum never reached | PASS | derate reused under a recorded rationale (rules_lib.py gained the requirements validator's SC- id check; nothing derate.py's bundle reaches moved); netlist da05dc02bc1e612f is the current candidate's |
+| A | PWR-001 every rail is declared with its loads | PASS | intent_rails reused under a recorded rationale (rules_lib.py gained the requirements validator's SC- id check; nothing intent_checks.py's bundle reaches moved); netlist da05dc02bc1e612f is the current candidate's |
+| A | SI-001 transmission-line classification | INCONCLUSIVE | edge_length reused under a recorded rationale (rules_lib.py gained the requirements validator's SC- id check; nothing edge_length.py's bundle reaches moved); netlist da05dc02bc1e612f is the current candidate's |
+| B | CMP-001 absolute maximum never reached | PASS | derate reused under a recorded rationale (rules_lib.py gained the requirements validator's SC- id check; nothing derate.py's bundle reaches moved); netlist 8b78c59754a6a0c7 is the current candidate's |
+| B | PWR-001 every rail is declared with its loads | PASS | intent_rails reused under a recorded rationale (rules_lib.py gained the requirements validator's SC- id check; nothing intent_checks.py's bundle reaches moved); netlist 8b78c59754a6a0c7 is the current candidate's |
+| B | SI-001 transmission-line classification | INCONCLUSIVE | edge_length reused under a recorded rationale (rules_lib.py gained the requirements validator's SC- id check; nothing edge_length.py's bundle reaches moved); netlist 8b78c59754a6a0c7 is the current candidate's |
+| C | CMP-001 absolute maximum never reached | PASS | derate reused under a recorded rationale (rules_lib.py gained the requirements validator's SC- id check; nothing derate.py's bundle reaches moved); netlist 11eabc2dddca5161 is the current candidate's |
+| C | PWR-001 every rail is declared with its loads | FAIL | intent_rails reused under a recorded rationale (rules_lib.py gained the requirements validator's SC- id check; nothing intent_checks.py's bundle reaches moved); netlist 11eabc2dddca5161 is the current candidate's |
+| C | SI-001 transmission-line classification | INCONCLUSIVE | edge_length reused under a recorded rationale (rules_lib.py gained the requirements validator's SC- id check; nothing edge_length.py's bundle reaches moved); netlist 11eabc2dddca5161 is the current candidate's |
+| D | CMP-001 absolute maximum never reached | PASS | derate reused under a recorded rationale (rules_lib.py gained the requirements validator's SC- id check; nothing derate.py's bundle reaches moved); netlist 76700a687eb6187f is the current candidate's |
+| D | PWR-001 every rail is declared with its loads | INCONCLUSIVE | intent_rails reused under a recorded rationale (rules_lib.py gained the requirements validator's SC- id check; nothing intent_checks.py's bundle reaches moved); netlist 76700a687eb6187f is the current candidate's |
+| D | SI-001 transmission-line classification | INCONCLUSIVE | edge_length reused under a recorded rationale (rules_lib.py gained the requirements validator's SC- id check; nothing edge_length.py's bundle reaches moved); netlist 76700a687eb6187f is the current candidate's |
+| E | CMP-001 absolute maximum never reached | PASS | derate reused under a recorded rationale (rules_lib.py gained the requirements validator's SC- id check; nothing derate.py's bundle reaches moved); netlist d6137f50059e5cbc is the current candidate's |
+| E | PWR-001 every rail is declared with its loads | INCONCLUSIVE | intent_rails reused under a recorded rationale (rules_lib.py gained the requirements validator's SC- id check; nothing intent_checks.py's bundle reaches moved); netlist d6137f50059e5cbc is the current candidate's |
+| E | SI-001 transmission-line classification | INCONCLUSIVE | edge_length reused under a recorded rationale (rules_lib.py gained the requirements validator's SC- id check; nothing edge_length.py's bundle reaches moved); netlist d6137f50059e5cbc is the current candidate's |
+| P | CMP-001 absolute maximum never reached | PASS | derate reused under a recorded rationale (rules_lib.py gained the requirements validator's SC- id check; nothing derate.py's bundle reaches moved); netlist 085f833362fbbda8 is the current candidate's |
+| P | PWR-001 every rail is declared with its loads | FAIL | intent_rails reused under a recorded rationale (rules_lib.py gained the requirements validator's SC- id check; nothing intent_checks.py's bundle reaches moved); netlist 085f833362fbbda8 is the current candidate's |
+| P | SI-001 transmission-line classification | INCONCLUSIVE | edge_length reused under a recorded rationale (rules_lib.py gained the requirements validator's SC- id check; nothing edge_length.py's bundle reaches moved); netlist 085f833362fbbda8 is the current candidate's |
+| E5 | CMP-001 absolute maximum never reached | PASS | derate reused under a recorded rationale (rules_lib.py gained the requirements validator's SC- id check; nothing derate.py's bundle reaches moved); board 686b29a734c55b9a is the current design (no schematic) |
 
 ## Why the rest awaits revalidation
 
@@ -360,6 +389,6 @@ tools that have changed since, across every board's revisions.
   - "a re-take alone would read" assumes the re-take records the same kinds of input its reading records, except for the writers `rules_status.RECORDS_ARTEFACT` names, which record the artefact of the board they file under whatever their older readings show (the suite runs each of them and holds the table to what it writes); any other tool changed since may record more;
   - a reading that records another board's netlist, or the board file of a board with no schematic, is current only while that artefact is the other board's candidate (cause OTHER_DESIGN);
   - a file's last commit dates the version in this checkout; an edit made and reverted between two commits cannot be seen.
-- `v2/docs/evidence/INVALIDATED-*.md`: verdict files refused by content hash (8 listed); `v2/docs/evidence/COMPATIBILITY.md`: recorded rationales (4).
+- `v2/docs/evidence/INVALIDATED-*.md`: verdict files refused by content hash (8 listed); `v2/docs/evidence/COMPATIBILITY.md`: recorded rationales (7).
 - Holds from `tools/pcb_board_holds.yaml` via `rules_lib.board_holds`.
 

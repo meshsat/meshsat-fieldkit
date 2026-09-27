@@ -122,7 +122,7 @@ Method, reproducible from this tree: for a verdict's `writer`, `git log --format
 `ast.dump` of both versions with each module, class and function docstring removed. The instrument is the writer
 file only; a change in a module it imports is not seen (stated on `v2/docs/CURRENT-EVIDENCE.md`).
 
-## Tool entries of 27 September 2026: two, and why
+## Tool entries of 27 September 2026: three, and why
 
 MESHSAT-1357, the second release attempt of layers 1 to 3 (branch `fnd/rel2` from `953f5658`). Layer 3's release check
 (`v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2026-09-27.md`, finding R5) asked the requirements validator in
@@ -142,6 +142,17 @@ This is a dependency rationale, not the documentation-only one the section above
 change is code, and what makes it harmless to these readings is that nothing the two writers run reaches it. The entries
 pin both bundles by content, so any later edit of any file of either bundle stops them applying by themselves. Taken by
 the session under the owner's standing rule of 26 September 2026.
+
+**A third entry, for `edge_length.py` (the release finalizer of layers 1 to 3, the same day).** The change was rebased
+onto main `91894cd7`, where the consolidated re-take (`8ea7867e`, `5ca81eea`) had made the SI-001 readings of boards A,
+B, C, D, E and P current (`edge_length.py`, bundle 9882ad1bc5620724, with `rules_lib.py` at c0458c53923d7925); a render
+of the rebased branch read all six TOOL_CHANGED. `v2/docs/records/rel2/tool_compat.py 91894cd7` over those twelve
+verdict files (`out/` and `routed/` of each board; output `v2/docs/records/rel2f/tool_compat_edge_length.out`) shows the
+same: `rules_lib.py` is the only file of the bundle that moved (c0458c53923d7925 to 6154bd6c15bdfa6b, the same change as
+above), and no file of the bundle reaches a changed or added name (`edge_length.py:384` and `:440` call only
+`board_facts()`, unchanged). With it, every reading the rules_lib.py change reaches on `91894cd7` reads VALID_HISTORICAL
+and counts as current: SI-001 on boards A, B, C, D, E and P through this entry, PWR-001 on the same six and CMP-001 on
+all seven through the two above (81 current rows before the rebase, 81 after: 62 CURRENT_CANDIDATE and 19 VALID_HISTORICAL).
 
 <!-- evidence-register: compatibility -->
 ```yaml
@@ -227,6 +238,16 @@ compatibility:
     summary: "rules_lib.py gained the requirements validator's SC- id check; nothing derate.py's bundle reaches moved"
     rationale: "The only file of the bundle that moved is rules_lib.py (the same change as intent_checks.py's entry: validate_requirements and main changed, six names added, none removed). derate.py:68 uses the module for the reference prefix and verdict.py for the rules' fingerprints, neither of which changed, and no file of the bundle takes a changed or added name from it."
     method: "v2/docs/records/rel2/tool_compat.py 953f5658 with E5's derate verdict; output v2/docs/records/rel2/tool_compat.out"
+    ruled_by: session
+    ruled_on: 2026-09-27
+    authority: "taken by the session under the owner's standing rule of 26 Sep 2026"
+  - kind: tool
+    tool: edge_length.py
+    then: 9882ad1bc5620724
+    now: 5b817048ed7bc29f
+    summary: "rules_lib.py gained the requirements validator's SC- id check; nothing edge_length.py's bundle reaches moved"
+    rationale: "The only file of the bundle that moved is rules_lib.py (c0458c53923d7925, the file at 91894cd7, to 6154bd6c15bdfa6b: validate_requirements and main changed, six names added, none removed, as in the two entries above). edge_length.py:384 and :440 call the module's board_facts() only, which did not change, and no file of the bundle takes a changed or added name from it."
+    method: "v2/docs/records/rel2/tool_compat.py 91894cd7 with the edge_length verdicts of boards A, B, C, D, E and P (out and routed); output v2/docs/records/rel2f/tool_compat_edge_length.out; script v2/docs/records/rel2f/apply_compat.py"
     ruled_by: session
     ruled_on: 2026-09-27
     authority: "taken by the session under the owner's standing rule of 26 Sep 2026"

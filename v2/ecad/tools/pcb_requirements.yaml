@@ -7245,11 +7245,22 @@ records:
           rows differ, because main also holds older release and layout readings the clean clone did not (NO_EVIDENCE 35
           there, 21 here; current-candidate 81 and PASS on the current candidate 66 in both), so this reading stands on
           the file at 3835e2850bae6aea
+      - >-
+          v2/docs/CURRENT-EVIDENCE.md re-read at the rebase of the second release attempt of layers 1 to 3 onto main
+          91894cd7 (27 September 2026, the release finalizer, fnd/rel2), rendered after rules_status ran three times on
+          the committed tree 7dfbfb16: the requirements validator's change in rules_lib.py moves the code bundles of
+          edge_length.py, intent_checks.py and derate.py, and under the three kind: tool entries of
+          v2/docs/evidence/COMPATIBILITY.md (edge_length.py's added by v2/docs/records/rel2f/apply_compat.py) SI-001 and
+          PWR-001 on boards A, B, C, D, E and P and CMP-001 on all seven boards move from CURRENT_CANDIDATE to
+          VALID_HISTORICAL, which counts as current (81 current rows before and after), and the class-change note, the
+          counts, the reuse table and the register's entry count follow; board D's RF-002 and SCH-004 rows keep the
+          class and cause read above, so this constraint's own reasons are unchanged and it stays INCONCLUSIVE, on the
+          file at 7a834fe55aea6ccd
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
       - "v2/docs/feasibility/EMCON.md@1d4a491d9718e6d3"
-      - "v2/docs/CURRENT-EVIDENCE.md@3835e2850bae6aea"
+      - "v2/docs/CURRENT-EVIDENCE.md@7a834fe55aea6ccd"
     release_effect: BLOCKER
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:2825", "v2/docs/PANEL.md section 6", "v2/docs/feasibility/EMCON.md sections 4.1 and 4.2"]
     source_check: VERIFIED
@@ -8540,10 +8551,21 @@ records:
           rows differ, because main also holds older release and layout readings the clean clone did not (NO_EVIDENCE 35
           there, 21 here; current-candidate 81 and PASS on the current candidate 66 in both), so this reading stands on
           the file at 3835e2850bae6aea
+      - >-
+          v2/docs/CURRENT-EVIDENCE.md re-read at the rebase of the second release attempt of layers 1 to 3 onto main
+          91894cd7 (27 September 2026, the release finalizer, fnd/rel2), rendered after rules_status ran three times on
+          the committed tree 7dfbfb16: the requirements validator's change in rules_lib.py moves the code bundles of
+          edge_length.py, intent_checks.py and derate.py, and under the three kind: tool entries of
+          v2/docs/evidence/COMPATIBILITY.md (edge_length.py's added by v2/docs/records/rel2f/apply_compat.py) SI-001 and
+          PWR-001 on boards A, B, C, D, E and P and CMP-001 on all seven boards move from CURRENT_CANDIDATE to
+          VALID_HISTORICAL, which counts as current (81 current rows before and after), and the class-change note, the
+          counts, the reuse table and the register's entry count follow; board P's BAT-001 row, which this reading rests
+          on, its netlist 085f833362fbbda8 and every reason given above are unchanged (the board P rows that moved are
+          named above and none is BAT-001), so it stays INCONCLUSIVE, on the file at 7a834fe55aea6ccd
     evidence_bound_to:
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
       - "v2/ecad/tools/gen_sch_p.py@91ccbb922c427d43"
-      - "v2/docs/CURRENT-EVIDENCE.md@3835e2850bae6aea"
+      - "v2/docs/CURRENT-EVIDENCE.md@7a834fe55aea6ccd"
       - "v2/docs/review-packets/battery/REVIEW-REQUEST.md@91a257430cbeb53a"
     release_effect: BLOCKER
     source:
