@@ -16,7 +16,7 @@ schema_version: 1
 adopted: "2026-09-21"
 adopted_by: SESSION
 document: "v2/docs/OPERATING-ENVELOPE.md"
-document_sha256: "89de81a11c52f34afab349adc74d948e824583a15544218cd7b91b83c19f76ca"   # re-read and re-pinned 26 September 2026 after the owner rulings of section 8, again the same day after the D-08 reversal and the transport correction (appendix 32.367), and a third time after the S-07 correction of sections 2, 3 and 4, which changes no number quoted here
+document_sha256: "9f16f5b7d634764a7f4cc28f58bc9a76de93c6762da57b8ea7cd419e5790fa20"   # re-read and re-pinned 27 September 2026 by the integrator after section 4's hot-stop paragraph was made to state CONOPS 4c's release (H1 by itself, H2 only by MAIN) and what REQ-077 requires rather than a present-tense guarantee (verify c23; no number changed), before it after pass 3 (Review A pass 2, P2-B2: the hot stop past the heat stage), before it after pass 2 of the layer-2 revision (Review A: the heat stage in both configurations, the cold warm-up and its bound), and before it after the layer-2 revision (the hot end per state as bounds, three parts added to section 2, the carve-outs restated, storage with the pack fitted, pollution degree and duty cycle taken); earlier pins 26 September 2026 after the owner rulings of section 8, the D-08 reversal and transport correction (appendix 32.367) and the S-07 correction
 what_is_adopted: >-
   section 4 as the design envelope and section 6's first row as the transient level. The altitude, the
   vibration and shock severities and the service life stayed OPEN in the document's own words on 21 September
@@ -31,14 +31,68 @@ ambient_c:
   carve_outs:
     - {below_c: -10, what: "the pack is warmed by its heater mat before charge; discharge continues to the cells' own -10 C surface limit"}
     - {below_c: -15, what: "the e-paper is outside its operating range and updates slowly or not at all, which is a degraded display and not a dead kit"}
-    - {above_c: 35, what: "the kit runs the reduced mode, one module, so the inside air stays under the +55 C the battery-bay sensor and the pack need"}
+    - {above_c: 35, what: "SUPERSEDED AS A TRIGGER on 27 September 2026: the ambient the owner's D-02b consequence for the reduced mode (one module) was argued at, on the 7 September estimate below. The kit now enters the reduced mode and its heat stage on measured inside-air and cell temperatures (hot_end below), and the ambient at which it does is a bound (the document's section 3). Kept, with inside_air_rise_k, only because part_temps.py still computes its hot bar from these two entries; its owner is to move it to worst_inside_air_c (hand-off drafts/part_temps.patch of fnd/hc2)"}
+    - {below_c: 0, what: "inside air, not ambient: the two AW7915-AED WiFi link cards and the LimeSDR are powered only once the inside air reads 0 C or more, which the kit's cold warm-up (the pack heater with the three modules loaded) brings about at the in-use minimum only while the enclosure conductance, lid open with the fans, is at most about 3.6 W/K (cold_end below); above it the link is lost at the cold end and TEST-PLAN.md E4-O fails, an OPEN bound whose route is an extended-grade card and SDR. The rest of the kit is designed to operate from the in-use minimum (PWR-F09, taken by the session on 27 September 2026, restated the same day after Review A, B7)"}
 
 inside_air_rise_k:
   one_module_lid_open: 10
   three_modules_loaded_lid_open: 16
+  status: "SUPERSEDED on 27 September 2026 by inside_air_bounds_k and worst_inside_air_c; kept for part_temps.py until its owner moves it (see the carve-out above)"
   note: >-
     an ESTIMATE from the no-vent ruling of 7 September, not a measurement: nothing has been built or powered.
-    THM-001 resolves against it and must carry that caveat with any number it reports.
+    THM-001 resolves against it and must carry that caveat with any number it reports. The power and thermal
+    analysis of 26 September 2026 (feasibility/POWER-THERMAL.md section 9.1, finding PWR-F08) puts every state's
+    rise above it even on the same conductance.
+
+# THE RISE PER STATE, AS BOUNDS (27 September 2026, the document's section 3). Each pair is the independent lumped
+# bound, worst to best (lowest conductance first), then appendix 32.53's own conductance. PLAN heat at the pack
+# terminals plus the cells' own I2R; neither conductance is a measurement. Source: feasibility/POWER-THERMAL.md
+# section 9.1 and records/hc2/pwr_red2.out (the reduced mode and the heat stage, on the same model).
+inside_air_bounds_k:
+  ps_idle_spec_lid_open:        {independent: [35.58, 15.23], design_record: [14.47, 13.16]}
+  ps_typ_lid_open:              {independent: [52.65, 22.54], design_record: [21.41, 19.46]}
+  ps_typ_lid_open_fans_stopped: {independent: [83.42, 40.91], design_record: [30.59, 30.59]}
+  ps_busy_lid_open:             {independent: [77.65, 33.24], design_record: [31.58, 28.71]}
+  reduced_mode_lid_closed:      {independent: [29.90, 12.73], design_record: [21.13, 15.85]}
+  reduced_mode_lid_open:        {independent: [25.98, 11.12], design_record: [10.57, 9.61]}
+  heat_stage_bank_r1_lid_closed: {independent: [22.12, 9.42], design_record: [15.63, 11.72]}   # slot 3 alone, PS-SURV-R (pass 2)
+  heat_stage_bank_r1_lid_open:   {independent: [19.22, 8.23], design_record: [7.82, 7.11]}
+  heat_stage_as_generated_lid_closed: {independent: [20.65, 8.79], design_record: [14.59, 10.94]}   # slot 2 alone, PS-SURV
+  heat_stage_as_generated_lid_open:   {independent: [17.94, 7.68], design_record: [7.30, 6.63]}
+# The worst inside air in use: the in-use maximum with the kit shed to its heat stage (past it, the hot stop runs no module), at the
+# independent bound's lowest conductance; what a part inside is to be judged against until the conductance is
+# measured (T-H1). The higher of the stage's two configurations (pass 2, 27 September 2026): the required stage after
+# BANK-R1 (slot 3). INFERRED arithmetic: 40 + 19.22 and 40 + 22.12, rounded down to one decimal; as generated
+# (slot 2) 40 + 17.94 and 40 + 20.65.
+worst_inside_air_c: {lid_open: 59.2, lid_closed: 62.1, on_the_design_record_conductance: {lid_open: 47.8, lid_closed: 55.6},
+                     as_generated: {lid_open: 57.9, lid_closed: 60.6, on_the_design_record_conductance: {lid_open: 47.3, lid_closed: 54.6}}}
+
+# THE HOT END AS BEHAVIOUR (27 September 2026): controls on measured temperatures and current, not an ambient
+# carve-out (the kit has no ambient sensor in prototype 1's core). feasibility/POWER-THERMAL.md section 9.3; CONOPS.md
+# section 4c. The thresholds are the session's, PROVISIONAL.
+hot_end:
+  shed_to_reduced_mode_then_heat_stage: {inside_air_c: 50, any_cell_c: 55, restore_below_k: 5}
+  charge_hold: "the pack gauge's own window at the cells, whatever the ambient"
+  reduced_mode: "slots 2 and 3, monitor off; a kit started with its lid closed starts all three and enters it once the lid is read"
+  heat_stage: "one module carrying the owner's D-02b example with the SOS path (REQ-052): slot 3 alone once board B carries BANK-R1 (CONOPS.md section 4c); slot 2 alone as board B is generated, which lacks the LoRa mesh and APRS (a finding against the generated board)"
+  hot_stop:   # pass 3, 27 September 2026 (Review A pass 2, P2-B2): past the heat stage, on the cells' measured temperature (the hottest of TS1 to TS4 as the pack gauge reads it), in every mode and on every input state; not a carve-out, and no limit moves
+    shed_to_minimum_load_any_cell_c: 56.5
+    controlled_shutdown_any_cell_c: 57.0
+    released_any_cell_c: 46.5
+    release: "H1 ends by itself once the hottest cell reads the release value or less and at least 30 minutes have passed since the stop, the kit then raising the heat stage's one module; H2 ends only by the operator's MAIN, after which no module is raised until the hottest cell reads the release value or less (CONOPS.md section 4c)"
+    status: "OPEN whether it acts inside the envelope: at the independent bound's worst corner it acts from +33.2 C, on appendix 32.53's conductance not below +40.3 C (records/hc2/hotstop_bounds.out, INFERRED); decided by T-H1 under FEA-004; the thresholds PROVISIONAL, CONOPS.md section 4c"
+
+# THE COLD END OF THE INSIDE AIR (pass 2, 27 September 2026, Review A finding B7; the document's section 4, CONOPS.md
+# section 4c; records/hc2/pwr_red2.out, its COLD block). Lid open, fans on. The ambient from which the inside air
+# reaches 0 C, on appendix 32.53's conductance (the highest in the record, so the coldest), worst to best. INFERRED.
+cold_end:
+  link_cards_and_sdr_powered_from_inside_air_c: 0
+  warm_up: "the pack heater (the regulated mat, 8.5 W at the pack) with the three modules loaded, while the inside air is under 0 C and the link cards or the SDR are wanted; the modules' load released at +5 C with the parts running and taken up again at +1 C; PROVISIONAL"
+  air_reaches_0c_from_ambient_c_design_record:
+    idle_and_typical_states_parts_held_off_with_or_without_heater: [-11.3, -20.3]   # the worst of them to the best
+    warm_up: [-22.0, -24.2]
+  warm_up_fails_above_w_per_k: 3.6
+  status: "OPEN: a feasibility bound that includes failure (the link lost at -20 C above about 3.6 W/K, which no measurement has excluded); decided by T-H1 and by an extended-grade card and SDR (layer 6), before board B's layout entry where a socket or supply changes"
 
 transient:
   esd: {standard: "IEC 61000-4-2", level: 4, contact_kv: 8, air_kv: 15,
@@ -119,8 +173,25 @@ owner_rulings:
       EMC claim, so the MIL-STD-461 runs are characterisation and the transient level above is a design level,
       not a claim; the design keeps an EU route open
 
+# STORAGE (27 September 2026, the document's section 4; CONOPS.md section 4, Storage row): the kit is stored with its
+# pack fitted, at the cells' ex-factory state, the pack in its gauge's shutdown. The numbers are the cell maker's
+# (Samsung INR18650-35E Ver. 1.1 7.11 and 3.13).
+storage_configuration:
+  pack: fitted
+  cell_state_v_per_cell: {min: 3.49, max: 3.69}
+  one_month_max_c: 60
+  humidity: "non-condensing and dry; no number in any held source"
+  exception: "the LimeSDR Mini 2.4 stores only from 0 to +70 C (the document's section 2)"
+
+# TAKEN BY THE SESSION on 27 September 2026 under the owner's standing rule of 26 September 2026 (the document's
+# section 5; CONOPS.md section 7a). Reversible, never the owner's.
+session_taken:
+  pollution_degree: {inside_the_case: 2, why: "sealed but opened in the field, with brief condensation possible (E5); IEC 60664-1 is not in this tree"}
+  duty_cycle: "CONOPS.md section 5's planning duty profile, with M1's 72 hours as the reference use"
+
 # What the document still leaves open. The altitude and the vibration and shock severities were on this list
 # until 26 September 2026, and the cold start and direct sun were added and ruled the same night; all four are
-# the owner's rulings above now. Nothing in this file assumes a service life.
+# the owner's rulings above now. The pollution degree and the duty cycle were taken by the session on 27
+# September 2026 (session_taken). Nothing in this file assumes a service life.
 open_in_the_document:
   - "service life"

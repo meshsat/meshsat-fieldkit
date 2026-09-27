@@ -70,6 +70,16 @@ section of `PRODUCT-BRIEF.md` (the session's choice under the owner's standing r
 SC-16). No record in this tree requires a qualified review of layers 1 or 2; the qualified reviews named elsewhere
 (D-09 and `reviews/REVIEW-ROUTES.md`) are not replaced by it.
 
+**How Review A is held (defined 27 September 2026; the handover audit found it undefined).** For layer 2: one fresh reviewer who wrote none of the layer's documents checks `CONOPS.md`, `OPERATING-ENVELOPE.md`, `v2/ecad/tools/pcb_envelope.yaml`, the operator sections of `PANEL.md` and the state and envelope rows of `TEST-PLAN.md` at one pinned commit, against the owner's execution prompt section 3 (the layer-2 items) and against `ARCH-PCB-B-IOHA.md` section 15, `feasibility/EMCON.md` section 5a and `feasibility/POWER-THERMAL.md` section 9. The record goes under `v2/docs/reviews/` with the commit read, **labelled AI review**: it is never a qualified review and replaces none the records require (D-09). Findings are answered in the documents; the layer is then marked baselined at that commit in `v2/docs/handover/LAYER-STATUS.md`. `CONOPS.md` carries the same definition at its top.
+
+Review B, layer 3, is an AI review by one fresh reviewer who wrote none of the requirements registry, its trace page or
+the test plan's requirement trace, labelled as an AI review and never a qualified review, against the layer 3 row of
+section 3 and the tests of section 2 of the owner's handover prompt, recorded at
+`v2/docs/reviews/REVIEW-B-LAYER-3-<date>.md`; its findings are answered before the registry's `baseline_state`
+names the commit it baselines (the session's choice under the owner's standing rule of 26 September 2026, recorded in
+the requirements registry with the open item "Review B held"). No record in this tree requires a qualified review of
+layer 3; the qualified reviews named elsewhere (D-09 and `reviews/REVIEW-ROUTES.md`) are not replaced by it.
+
 Milestones, each reported separately:
 - FOUNDATIONS_BASELINED
 - DESIGN_READY_FOR_LAYOUT (per board)

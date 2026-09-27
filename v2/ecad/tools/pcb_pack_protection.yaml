@@ -21,10 +21,10 @@ generated: "2026-09-18"
 board: p
 
 pack:
-  topology: "4S3P or 4S4P, about 200 Wh"        # gen_sch_p.py header
+  topology: "4S3P Samsung INR18650-35E, about 145 Wh"   # owner ruling D-06; gen_sch_p.py header
   series: 4
   parallel_min: 3
-  parallel_max: 4
+  parallel_max: 3                                # D-06: one parallel count
   declared_continuous_a: 10.0                    # pcb_energy_chain.yaml, stage PACK_CELLS
   declared_peak_a: 18.0
   prospective_fault_a: {low: 240.0, high: 480.0} # the same file, from the cells' own impedance

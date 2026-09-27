@@ -1,0 +1,827 @@
+{
+ "model": "v2/docs/records/rv-pwr/pwr_budget.py",
+ "model_sha256": "469d0820b046ef6ff5aceadf422b4166de3d6a02bc50fa5b0c3644704f0f9556",
+ "states": {
+  "PS-RED2 (slots 2 and 3)": {
+   "battery_W_lo": 17.62,
+   "battery_W_plan": 31.38,
+   "battery_W_hi": 55.56,
+   "runtime_h_20C": {
+    "lo": {
+     "new_h": 7.76,
+     "aged80_h": 6.21,
+     "aged60_h": 4.66,
+     "cold_new_h_low_end": 3.18
+    },
+    "plan": {
+     "new_h": 4.33,
+     "aged80_h": 3.47,
+     "aged60_h": 2.6,
+     "cold_new_h_low_end": 1.78
+    },
+    "hi": {
+     "new_h": 2.41,
+     "aged80_h": 1.93,
+     "aged60_h": 1.45,
+     "cold_new_h_low_end": 0.99
+    }
+   },
+   "closed_fans": {
+    "heat_plan_W": 31.7,
+    "rise_W4_K": [
+     12.7,
+     29.9
+    ],
+    "rise_3253_K": [
+     15.8,
+     21.1
+    ],
+    "rise_worst_K": 53.4,
+    "cells_at_20C_W4": [
+     33.4,
+     52.0
+    ],
+    "cells_at_20C_3253": [
+     36.9,
+     42.2
+    ],
+    "ambient_ceilings_C": {
+     "SGP41 +55 C": {
+      "W4_worst_to_best": [
+       25.1,
+       42.3
+      ],
+      "3253": [
+       33.9,
+       39.2
+      ]
+     },
+     "cells charge 45 C": {
+      "W4_worst_to_best": [
+       5.3,
+       29.2
+      ],
+      "3253": [
+       18.4,
+       24.5
+      ]
+     },
+     "cells discharge 60 C": {
+      "W4_worst_to_best": [
+       28.0,
+       46.6
+      ],
+      "3253": [
+       37.8,
+       43.1
+      ]
+     },
+     "C1 cell trigger +55 C": {
+      "W4_worst_to_best": [
+       23.0,
+       41.6
+      ],
+      "3253": [
+       32.8,
+       38.1
+      ]
+     },
+     "C1 air trigger +50 C": {
+      "W4_worst_to_best": [
+       20.1,
+       37.3
+      ],
+      "3253": [
+       28.9,
+       34.2
+      ]
+     }
+    }
+   },
+   "open_fans": {
+    "heat_plan_W": 31.7,
+    "rise_W4_K": [
+     11.1,
+     26.0
+    ],
+    "rise_3253_K": [
+     9.6,
+     10.6
+    ],
+    "rise_worst_K": 46.4,
+    "cells_at_20C_W4": [
+     31.8,
+     48.1
+    ],
+    "cells_at_20C_3253": [
+     30.7,
+     31.6
+    ],
+    "ambient_ceilings_C": {
+     "SGP41 +55 C": {
+      "W4_worst_to_best": [
+       29.0,
+       43.9
+      ],
+      "3253": [
+       44.4,
+       45.4
+      ]
+     },
+     "cells charge 45 C": {
+      "W4_worst_to_best": [
+       10.0,
+       31.0
+      ],
+      "3253": [
+       30.7,
+       31.8
+      ]
+     },
+     "cells discharge 60 C": {
+      "W4_worst_to_best": [
+       31.9,
+       48.2
+      ],
+      "3253": [
+       48.4,
+       49.3
+      ]
+     },
+     "C1 cell trigger +55 C": {
+      "W4_worst_to_best": [
+       26.9,
+       43.2
+      ],
+      "3253": [
+       43.4,
+       44.3
+      ]
+     },
+     "C1 air trigger +50 C": {
+      "W4_worst_to_best": [
+       24.0,
+       38.9
+      ],
+      "3253": [
+       39.4,
+       40.4
+      ]
+     }
+    }
+   }
+  },
+  "PS-SURV (slot 2 alone)": {
+   "battery_W_lo": 12.45,
+   "battery_W_plan": 21.73,
+   "battery_W_hi": 42.0,
+   "runtime_h_20C": {
+    "lo": {
+     "new_h": 11.0,
+     "aged80_h": 8.8,
+     "aged60_h": 6.6,
+     "cold_new_h_low_end": 4.51
+    },
+    "plan": {
+     "new_h": 6.28,
+     "aged80_h": 5.03,
+     "aged60_h": 3.77,
+     "cold_new_h_low_end": 2.58
+    },
+    "hi": {
+     "new_h": 3.22,
+     "aged80_h": 2.58,
+     "aged60_h": 1.93,
+     "cold_new_h_low_end": 1.32
+    }
+   },
+   "closed_fans": {
+    "heat_plan_W": 21.9,
+    "rise_W4_K": [
+     8.8,
+     20.6
+    ],
+    "rise_3253_K": [
+     10.9,
+     14.6
+    ],
+    "rise_worst_K": 40.2,
+    "cells_at_20C_W4": [
+     29.1,
+     41.7
+    ],
+    "cells_at_20C_3253": [
+     31.5,
+     35.1
+    ],
+    "ambient_ceilings_C": {
+     "SGP41 +55 C": {
+      "W4_worst_to_best": [
+       34.4,
+       46.2
+      ],
+      "3253": [
+       40.4,
+       44.1
+      ]
+     },
+     "cells charge 45 C": {
+      "W4_worst_to_best": [
+       15.1,
+       33.3
+      ],
+      "3253": [
+       25.2,
+       29.7
+      ]
+     },
+     "cells discharge 60 C": {
+      "W4_worst_to_best": [
+       38.3,
+       50.9
+      ],
+      "3253": [
+       44.9,
+       48.5
+      ]
+     },
+     "C1 cell trigger +55 C": {
+      "W4_worst_to_best": [
+       33.3,
+       45.9
+      ],
+      "3253": [
+       39.9,
+       43.5
+      ]
+     },
+     "C1 air trigger +50 C": {
+      "W4_worst_to_best": [
+       29.4,
+       41.2
+      ],
+      "3253": [
+       35.4,
+       39.1
+      ]
+     }
+    }
+   },
+   "open_fans": {
+    "heat_plan_W": 21.9,
+    "rise_W4_K": [
+     7.7,
+     17.9
+    ],
+    "rise_3253_K": [
+     6.6,
+     7.3
+    ],
+    "rise_worst_K": 34.9,
+    "cells_at_20C_W4": [
+     28.0,
+     39.0
+    ],
+    "cells_at_20C_3253": [
+     27.1,
+     27.8
+    ],
+    "ambient_ceilings_C": {
+     "SGP41 +55 C": {
+      "W4_worst_to_best": [
+       37.1,
+       47.3
+      ],
+      "3253": [
+       47.7,
+       48.4
+      ]
+     },
+     "cells charge 45 C": {
+      "W4_worst_to_best": [
+       18.5,
+       34.6
+      ],
+      "3253": [
+       34.1,
+       34.9
+      ]
+     },
+     "cells discharge 60 C": {
+      "W4_worst_to_best": [
+       41.0,
+       52.0
+      ],
+      "3253": [
+       52.2,
+       52.9
+      ]
+     },
+     "C1 cell trigger +55 C": {
+      "W4_worst_to_best": [
+       36.0,
+       47.0
+      ],
+      "3253": [
+       47.2,
+       47.9
+      ]
+     },
+     "C1 air trigger +50 C": {
+      "W4_worst_to_best": [
+       32.1,
+       42.3
+      ],
+      "3253": [
+       42.7,
+       43.4
+      ]
+     }
+    }
+   }
+  },
+  "PS-RED (slot 3 alone, pwr_budget)": {
+   "battery_W_lo": 12.66,
+   "battery_W_plan": 22.21,
+   "battery_W_hi": 45.86,
+   "runtime_h_20C": {
+    "lo": {
+     "new_h": 10.82,
+     "aged80_h": 8.65,
+     "aged60_h": 6.49,
+     "cold_new_h_low_end": 4.43
+    },
+    "plan": {
+     "new_h": 6.15,
+     "aged80_h": 4.92,
+     "aged60_h": 3.69,
+     "cold_new_h_low_end": 2.52
+    },
+    "hi": {
+     "new_h": 2.94,
+     "aged80_h": 2.35,
+     "aged60_h": 1.76,
+     "cold_new_h_low_end": 1.21
+    }
+   },
+   "closed_fans": {
+    "heat_plan_W": 22.4,
+    "rise_W4_K": [
+     9.0,
+     21.1
+    ],
+    "rise_3253_K": [
+     11.2,
+     14.9
+    ],
+    "rise_worst_K": 43.9,
+    "cells_at_20C_W4": [
+     29.3,
+     42.2
+    ],
+    "cells_at_20C_3253": [
+     31.7,
+     35.4
+    ],
+    "ambient_ceilings_C": {
+     "SGP41 +55 C": {
+      "W4_worst_to_best": [
+       33.9,
+       46.0
+      ],
+      "3253": [
+       40.1,
+       43.8
+      ]
+     },
+     "cells charge 45 C": {
+      "W4_worst_to_best": [
+       14.6,
+       33.1
+      ],
+      "3253": [
+       24.9,
+       29.4
+      ]
+     },
+     "cells discharge 60 C": {
+      "W4_worst_to_best": [
+       37.8,
+       50.7
+      ],
+      "3253": [
+       44.6,
+       48.3
+      ]
+     },
+     "C1 cell trigger +55 C": {
+      "W4_worst_to_best": [
+       32.8,
+       45.7
+      ],
+      "3253": [
+       39.6,
+       43.3
+      ]
+     },
+     "C1 air trigger +50 C": {
+      "W4_worst_to_best": [
+       28.9,
+       41.0
+      ],
+      "3253": [
+       35.1,
+       38.8
+      ]
+     }
+    }
+   },
+   "open_fans": {
+    "heat_plan_W": 22.4,
+    "rise_W4_K": [
+     7.8,
+     18.3
+    ],
+    "rise_3253_K": [
+     6.8,
+     7.5
+    ],
+    "rise_worst_K": 38.1,
+    "cells_at_20C_W4": [
+     28.2,
+     39.4
+    ],
+    "cells_at_20C_3253": [
+     27.3,
+     28.0
+    ],
+    "ambient_ceilings_C": {
+     "SGP41 +55 C": {
+      "W4_worst_to_best": [
+       36.7,
+       47.2
+      ],
+      "3253": [
+       47.5,
+       48.2
+      ]
+     },
+     "cells charge 45 C": {
+      "W4_worst_to_best": [
+       18.1,
+       34.4
+      ],
+      "3253": [
+       33.9,
+       34.8
+      ]
+     },
+     "cells discharge 60 C": {
+      "W4_worst_to_best": [
+       40.6,
+       51.8
+      ],
+      "3253": [
+       52.0,
+       52.7
+      ]
+     },
+     "C1 cell trigger +55 C": {
+      "W4_worst_to_best": [
+       35.6,
+       46.8
+      ],
+      "3253": [
+       47.0,
+       47.7
+      ]
+     },
+     "C1 air trigger +50 C": {
+      "W4_worst_to_best": [
+       31.7,
+       42.2
+      ],
+      "3253": [
+       42.5,
+       43.2
+      ]
+     }
+    }
+   }
+  },
+  "PS-SURV-R (slot 3 alone after BANK-R1)": {
+   "battery_W_lo": 12.78,
+   "battery_W_plan": 23.27,
+   "battery_W_hi": 46.94,
+   "runtime_h_20C": {
+    "lo": {
+     "new_h": 10.71,
+     "aged80_h": 8.57,
+     "aged60_h": 6.43,
+     "cold_new_h_low_end": 4.39
+    },
+    "plan": {
+     "new_h": 5.86,
+     "aged80_h": 4.69,
+     "aged60_h": 3.52,
+     "cold_new_h_low_end": 2.4
+    },
+    "hi": {
+     "new_h": 2.87,
+     "aged80_h": 2.3,
+     "aged60_h": 1.72,
+     "cold_new_h_low_end": 1.18
+    }
+   },
+   "closed_fans": {
+    "heat_plan_W": 23.4,
+    "rise_W4_K": [
+     9.4,
+     22.1
+    ],
+    "rise_3253_K": [
+     11.7,
+     15.6
+    ],
+    "rise_worst_K": 45.0,
+    "cells_at_20C_W4": [
+     29.8,
+     43.3
+    ],
+    "cells_at_20C_3253": [
+     32.3,
+     36.2
+    ],
+    "ambient_ceilings_C": {
+     "SGP41 +55 C": {
+      "W4_worst_to_best": [
+       32.9,
+       45.6
+      ],
+      "3253": [
+       39.4,
+       43.3
+      ]
+     },
+     "cells charge 45 C": {
+      "W4_worst_to_best": [
+       13.5,
+       32.6
+      ],
+      "3253": [
+       24.1,
+       28.8
+      ]
+     },
+     "cells discharge 60 C": {
+      "W4_worst_to_best": [
+       36.7,
+       50.2
+      ],
+      "3253": [
+       43.8,
+       47.7
+      ]
+     },
+     "C1 cell trigger +55 C": {
+      "W4_worst_to_best": [
+       31.7,
+       45.2
+      ],
+      "3253": [
+       38.8,
+       42.7
+      ]
+     },
+     "C1 air trigger +50 C": {
+      "W4_worst_to_best": [
+       27.9,
+       40.6
+      ],
+      "3253": [
+       34.4,
+       38.3
+      ]
+     }
+    }
+   },
+   "open_fans": {
+    "heat_plan_W": 23.4,
+    "rise_W4_K": [
+     8.2,
+     19.2
+    ],
+    "rise_3253_K": [
+     7.1,
+     7.8
+    ],
+    "rise_worst_K": 39.1,
+    "cells_at_20C_W4": [
+     28.6,
+     40.4
+    ],
+    "cells_at_20C_3253": [
+     27.7,
+     28.4
+    ],
+    "ambient_ceilings_C": {
+     "SGP41 +55 C": {
+      "W4_worst_to_best": [
+       35.8,
+       46.8
+      ],
+      "3253": [
+       47.2,
+       47.9
+      ]
+     },
+     "cells charge 45 C": {
+      "W4_worst_to_best": [
+       17.1,
+       34.0
+      ],
+      "3253": [
+       33.6,
+       34.4
+      ]
+     },
+     "cells discharge 60 C": {
+      "W4_worst_to_best": [
+       39.6,
+       51.4
+      ],
+      "3253": [
+       51.6,
+       52.3
+      ]
+     },
+     "C1 cell trigger +55 C": {
+      "W4_worst_to_best": [
+       34.6,
+       46.4
+      ],
+      "3253": [
+       46.6,
+       47.3
+      ]
+     },
+     "C1 air trigger +50 C": {
+      "W4_worst_to_best": [
+       30.8,
+       41.8
+      ],
+      "3253": [
+       42.2,
+       42.9
+      ]
+     }
+    }
+   }
+  }
+ },
+ "PS-EMCON": {
+  "battery_W_lo_pwr_budget": 37.33,
+  "battery_W_lo_since_458b2873": 37.33,
+  "battery_W_plan_pwr_budget": 53.06,
+  "battery_W_plan_since_458b2873": 47.08,
+  "battery_W_hi_pwr_budget": 103.27,
+  "battery_W_hi_since_458b2873": 80.57,
+  "runtime_h_20C_since_458b2873": {
+   "new_h": 2.86,
+   "aged80_h": 2.29,
+   "aged60_h": 1.72
+  }
+ },
+ "COLD": {
+  "enclosure": "lid open, fans on",
+  "G_3253_W_per_K": [
+   3.0,
+   3.3
+  ],
+  "G_W4_W_per_K": [
+   1.22,
+   2.85
+  ],
+  "rows": {
+   "PS-IDLE-SPEC, link cards held off": {
+    "battery_W_plan": 36.88,
+    "heat_inside_W": 37.3,
+    "air_reaches_0C_from_ambient_3253_worst_to_best": [
+     -11.3,
+     -12.4
+    ],
+    "air_reaches_0C_from_ambient_W4_worst_to_best": [
+     -13.1,
+     -30.6
+    ],
+    "air_at_minus20C_ambient_3253_worst_to_best": [
+     -8.7,
+     -7.6
+    ],
+    "aged80_runtime_h_20C": 2.94
+   },
+   "PS-IDLE-SPEC, link cards held off, heater on": {
+    "battery_W_plan": 45.46,
+    "heat_inside_W": 46.1,
+    "air_reaches_0C_from_ambient_3253_worst_to_best": [
+     -14.0,
+     -15.4
+    ],
+    "air_reaches_0C_from_ambient_W4_worst_to_best": [
+     -16.2,
+     -37.8
+    ],
+    "air_at_minus20C_ambient_3253_worst_to_best": [
+     -6.0,
+     -4.6
+    ],
+    "aged80_runtime_h_20C": 2.37
+   },
+   "PS-TYP, link cards and SDR held off": {
+    "battery_W_plan": 51.22,
+    "heat_inside_W": 52.1,
+    "air_reaches_0C_from_ambient_3253_worst_to_best": [
+     -15.8,
+     -17.4
+    ],
+    "air_reaches_0C_from_ambient_W4_worst_to_best": [
+     -18.3,
+     -42.7
+    ],
+    "air_at_minus20C_ambient_3253_worst_to_best": [
+     -4.2,
+     -2.6
+    ],
+    "aged80_runtime_h_20C": 2.1
+   },
+   "PS-TYP, link cards and SDR held off, heater on": {
+    "battery_W_plan": 59.83,
+    "heat_inside_W": 61.0,
+    "air_reaches_0C_from_ambient_3253_worst_to_best": [
+     -18.5,
+     -20.3
+    ],
+    "air_reaches_0C_from_ambient_W4_worst_to_best": [
+     -21.4,
+     -50.0
+    ],
+    "air_at_minus20C_ambient_3253_worst_to_best": [
+     -1.5,
+     0.3
+    ],
+    "aged80_runtime_h_20C": 1.79
+   },
+   "warm-up: PS-TYP, link cards and SDR held off, heater on, three modules loaded": {
+    "battery_W_plan": 71.06,
+    "heat_inside_W": 72.7,
+    "air_reaches_0C_from_ambient_3253_worst_to_best": [
+     -22.0,
+     -24.2
+    ],
+    "air_reaches_0C_from_ambient_W4_worst_to_best": [
+     -25.5,
+     -59.6
+    ],
+    "air_at_minus20C_ambient_3253_worst_to_best": [
+     2.0,
+     4.2
+    ],
+    "aged80_runtime_h_20C": 1.5
+   },
+   "PS-TYP, every load on, heater on (after the carve-out lifts)": {
+    "battery_W_plan": 71.58,
+    "heat_inside_W": 73.2,
+    "air_reaches_0C_from_ambient_3253_worst_to_best": [
+     -22.2,
+     -24.4
+    ],
+    "air_reaches_0C_from_ambient_W4_worst_to_best": [
+     -25.7,
+     -60.0
+    ],
+    "air_at_minus20C_ambient_3253_worst_to_best": [
+     2.2,
+     4.4
+    ],
+    "aged80_runtime_h_20C": 1.49
+   },
+   "reference: PS-TYP plus the unregulated mat, POWER-THERMAL.md 7.1's cold row": {
+    "battery_W_plan": 73.92,
+    "heat_inside_W": 75.7,
+    "air_reaches_0C_from_ambient_3253_worst_to_best": [
+     -22.9,
+     -25.2
+    ],
+    "air_reaches_0C_from_ambient_W4_worst_to_best": [
+     -26.6,
+     -62.0
+    ],
+    "air_at_minus20C_ambient_3253_worst_to_best": [
+     2.9,
+     5.2
+    ],
+    "aged80_runtime_h_20C": 1.44
+   }
+  }
+ }
+}

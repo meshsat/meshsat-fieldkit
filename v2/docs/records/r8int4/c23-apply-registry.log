@@ -1,0 +1,434 @@
+applied  file document          endor/standards/erc-rec-74-01-2022-05.md 8d4d5d554bcc8ac8
+applied  file document          dards/mil-std-461g-requirement-matrix.md 0f95e97083d7f16c
+skip     file document          r/standards/mil-std-810h-method-516-8.md 
+applied  file document          olar/pvgis-leiden-monthly-2015-2020.json bb2f165c642a36f0
+applied  file document          tandards/mil-std-3009-nvis-2001-02-02.md e74d552faac46a8e
+skip     sources block          documents_filed_hc1: 
+applied  sources block          documents_filed_hc3: v2/vendor/SOURCES.yaml
+applied  file                   v2/ecad/tools/pcb_board_facts.yaml   operating_modes: "the modes of v2/docs/CONOPS.md
+applied  file                   v2/ecad/tools/pcb_board_facts.yaml   energy_source: true           # THE battery boar
+applied  file                   v2/ecad/tools/pcb_board_facts.yaml   pack_energy_wh: 145
+
+applied  file                   v2/ecad/tools/pcb_pack_protection.yaml   topology: "4S3P Samsung INR18650-35E, about 145 
+applied  file                   v2/ecad/tools/pcb_pack_protection.yaml   parallel_max: 3                                #
+applied  file                   v2/ecad/tools/pcb_energy_chain.yaml # WHAT IS NOT KNOWN IS WRITTEN AS NOT KNOWN. The p
+applied  file                   v2/ecad/tools/pcb_energy_chain.yaml    from: "the 4S3P block (Samsung INR18650-35E, ab
+applied  file                   v2/ecad/tools/pcb_energy_chain.yaml                          basis: "4 series stages o
+applied  header                 None           
+applied  header                 None           
+applied  top                    baseline_state 
+applied  header                 None           
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              open_items     
+applied  add_block              open_items     
+applied  add_block              session_choices 
+applied  add_block              open_items     
+applied  add_block              open_items     
+applied  add_block              open_items     
+applied  add_block              open_items     
+applied  set                    S-36           title
+applied  set                    S-27           title
+applied  remove_block           S-14           
+applied  add_block              closed_items   
+applied  remove_block           S-20           
+applied  add_block              closed_items   
+applied  remove_block           S-16           
+applied  add_block              closed_items   
+applied  remove_block           S-18           
+applied  add_block              closed_items   
+applied  set                    REQ-018        acceptance
+applied  set                    REQ-018        tbd_effect
+applied  set                    REQ-018        provisional
+applied  list_remove            REQ-018        waits_on
+applied  list_add               REQ-018        choices
+applied  rules_add              REQ-018        
+applied  set                    REQ-018        status
+applied  list_add               REQ-018        source
+applied  set                    REQ-018        source_check
+applied  append_text            REQ-018        notes
+applied  set                    REQ-017        acceptance
+applied  list_remove            REQ-017        waits_on
+applied  list_add               REQ-017        choices
+applied  set                    REQ-017        notes
+applied  set                    CON-019        acceptance
+applied  list_add               CON-019        choices
+applied  set                    REQ-059        acceptance
+applied  set                    REQ-059        tbd_effect
+applied  list_add               REQ-059        choices
+applied  set                    REQ-059        status
+applied  list_add               REQ-059        source
+applied  list_remove            FEA-004        waits_on
+applied  list_remove            FEA-004        waits_on
+applied  list_add               FEA-004        choices
+applied  append_text            FEA-004        notes
+applied  append_text            FEA-003        notes
+applied  set                    REQ-016        statement
+applied  set                    REQ-016        acceptance
+applied  set                    REQ-016        tbd_effect
+applied  list_remove            REQ-016        waits_on
+applied  list_add               REQ-016        choices
+applied  set                    REQ-016        status
+applied  list_add               REQ-016        source
+applied  list_add               REQ-016        source
+applied  list_add               REQ-016        waits_on
+applied  set                    REQ-016        notes
+applied  add_block              records        
+applied  set                    REQ-030        acceptance
+applied  set                    REQ-030        tbd_effect
+applied  list_add               REQ-030        choices
+applied  set                    REQ-030        status
+applied  append_text            REQ-030        notes
+applied  replace_in_field       REQ-071        acceptance
+applied  list_add               REQ-071        choices
+applied  set                    ASM-002        statement
+applied  set                    ASM-002        acceptance
+applied  set                    ASM-002        tbd_effect
+applied  list_add               ASM-002        choices
+applied  set                    ASM-002        status
+applied  list_add               ASM-002        source
+applied  append_text            ASM-002        notes
+applied  add_block              records        
+applied  add_block              records        
+applied  link_choice_if_present REQ-074        
+applied  add_block              records        
+applied  add_block              records        
+applied  reading_if             REQ-077        v2/ecad/tools/gen_sch_e.py
+applied  list_add               FEA-004        blocks
+applied  list_add               FEA-004        choices
+applied  append_text            REQ-046        notes
+applied  list_add               REQ-046        source
+applied  set                    REQ-040        acceptance
+applied  set                    REQ-040        tbd_effect
+applied  list_add               REQ-040        choices
+applied  set                    REQ-040        status
+applied  append_text            REQ-040        notes
+applied  set                    REQ-041        statement
+applied  set                    REQ-041        acceptance
+applied  set                    REQ-041        tbd_effect
+applied  list_add               REQ-041        choices
+applied  list_add               REQ-041        choices
+applied  set                    REQ-041        status
+applied  list_add               REQ-041        source
+applied  append_text            REQ-041        notes
+applied  set                    REQ-042        acceptance
+applied  set                    REQ-042        tbd_effect
+applied  list_add               REQ-042        choices
+applied  list_add               REQ-042        waits_on
+applied  set                    REQ-042        status
+applied  list_add               REQ-042        source
+applied  list_add               REQ-042        source
+applied  set                    REQ-042        notes
+applied  set                    REQ-043        acceptance
+applied  set                    REQ-043        tbd_effect
+applied  list_add               REQ-043        choices
+applied  set                    REQ-043        status
+applied  set                    REQ-058        acceptance
+applied  set                    REQ-058        tbd_effect
+applied  list_add               REQ-058        choices
+applied  set                    REQ-058        status
+applied  list_add               REQ-058        source
+applied  set                    REQ-061        acceptance
+applied  set                    REQ-061        tbd_effect
+applied  rules_add              REQ-061        
+applied  list_add               REQ-061        waits_on
+applied  set                    REQ-061        status
+applied  set                    REQ-061        notes
+applied  set                    REQ-063        acceptance
+applied  set                    REQ-063        tbd_effect
+applied  list_remove            REQ-063        waits_on
+applied  list_add               REQ-063        choices
+applied  set                    REQ-063        status
+applied  list_add               REQ-063        source
+applied  set                    CON-011        statement
+applied  set                    CON-011        acceptance
+applied  set                    CON-011        tbd_effect
+applied  list_remove            CON-011        waits_on
+applied  list_add               CON-011        choices
+applied  list_add               CON-011        waits_on
+applied  set                    CON-011        status
+skip     list_add               CON-011        source
+applied  append_text            CON-011        notes
+applied  set                    REQ-010        acceptance
+applied  set                    REQ-010        tbd_effect
+applied  list_add               REQ-010        choices
+applied  set                    REQ-010        status
+applied  list_add               REQ-010        source
+applied  set                    REQ-011        acceptance
+applied  set                    REQ-011        tbd_effect
+applied  list_add               REQ-011        choices
+applied  set                    REQ-011        status
+applied  list_add               REQ-011        source
+applied  set                    REQ-011        notes
+applied  set                    REQ-028        tbd_effect
+applied  list_add               REQ-028        choices
+applied  set                    REQ-028        status
+applied  set                    REQ-033        acceptance
+applied  set                    REQ-033        tbd_effect
+applied  list_add               REQ-033        choices
+applied  set                    REQ-033        status
+applied  set                    REQ-034        acceptance
+applied  set                    REQ-034        tbd_effect
+applied  list_add               REQ-034        choices
+applied  list_add               REQ-034        choices
+applied  set                    REQ-034        status
+applied  list_add               REQ-034        source
+applied  append_text            REQ-034        notes
+applied  set                    CON-013        acceptance
+applied  set                    CON-013        tbd_effect
+applied  set                    CON-013        provisional
+applied  list_add               CON-013        choices
+applied  set                    CON-013        status
+applied  append_text            CON-013        history
+applied  set                    REQ-048        acceptance
+applied  set                    REQ-048        final_phase
+applied  set                    REQ-048        history
+applied  set                    REQ-050        evidence_result
+applied  set                    REQ-050        evidence_phase
+applied  set                    REQ-050        evidence_class
+applied  set                    REQ-050        evidence
+applied  set                    REQ-050        evidence_bound_to
+applied  set                    CFL-007        evidence_result
+applied  set                    CFL-007        evidence_phase
+applied  set                    CFL-007        evidence_class
+applied  set                    CFL-007        evidence
+applied  set                    CFL-007        evidence_bound_to
+applied  set                    CFL-009        evidence_result
+applied  set                    CFL-009        evidence_phase
+applied  set                    CFL-009        evidence_class
+applied  set                    CFL-009        evidence
+applied  set                    CFL-009        evidence_bound_to
+applied  set                    CFL-003        status
+applied  set                    CFL-003        resolved_by
+applied  set                    CFL-003        evidence_result
+applied  set                    CFL-003        evidence_class
+applied  set                    CFL-003        evidence
+applied  set                    CFL-003        evidence_bound_to
+applied  set                    CFL-003        release_effect
+applied  set                    CFL-006        evidence_result
+applied  set                    CFL-006        evidence_phase
+applied  set                    CFL-006        evidence_class
+applied  set                    CFL-006        evidence
+applied  set                    CFL-006        evidence_bound_to
+applied  set                    CFL-006        source_check
+applied  append_text            CFL-006        notes
+applied  add_block              records        
+applied  rules_add              REQ-045        
+applied  rules_add              REQ-045        
+applied  rules_add              FEA-003        
+applied  rules_add              FEA-003        
+applied  rules_add              FEA-003        
+applied  rules_add              FEA-003        
+applied  add_block              records        
+applied  add_block              records        
+applied  set                    D-06           note
+applied  set                    REQ-069        acceptance
+applied  set                    REQ-069        tbd_effect
+applied  list_add               REQ-069        waits_on
+applied  set                    REQ-069        status
+applied  append_text            REQ-069        notes
+applied  add_block              open_items     
+applied  replace_in_field       ASM-005        acceptance
+applied  set                    ASM-005        tbd_effect
+applied  set                    ASM-005        status
+applied  append_text            ASM-005        notes
+applied  reading_if             CFL-018        v2/docs/GROUNDING-AND-SHIELDS.md
+skip     swap_placeholders      files          README.md, v2/README.md, v2/BUILD.md, v2
+skip     add_block              owner_rulings  
+skip     add_block              session_choices 
+skip     add_block              session_choices 
+skip     add_block              session_choices 
+skip     add_block              session_choices 
+skip     set                    REQ-023        statement
+skip     set                    REQ-023        acceptance
+skip     set                    REQ-023        tbd_effect
+skip     list_add               REQ-023        choices
+skip     set                    REQ-023        status
+skip     set                    REQ-023        source
+skip     set                    REQ-023        history
+applied  replace_in_field       SC-07          why
+applied  set_any                S-13           title
+skip     list_add               CFL-010        choices
+applied  set                    CFL-010        acceptance
+applied  list_remove            CFL-010        waits_on
+applied  append_text            CFL-010        notes
+applied  add_block              records        
+HAND RE-READ (v2/ecad/tools/gen_sch_b.py is af6e5821e21b70ef; the hand reading was of dedaf34ce285e5ff) reading_if             CON-025        v2/ecad/tools/gen_sch_b.py
+applied  reading_if             CON-025        v2/ecad/tools/gen_sch_b.py
+bound elsewhere (v2/docs/V2-SPEC.md is neither df8ac22603440bc5 nor this tree's a02ea1b6801f8916; left to rebind_if_same) rebind_if_unchanged    REQ-005        v2/docs/V2-SPEC.md
+bound elsewhere (v2/docs/V2-SPEC.md is neither df8ac22603440bc5 nor this tree's a02ea1b6801f8916; left to rebind_if_same) rebind_if_unchanged    CFL-013        v2/docs/V2-SPEC.md
+bound elsewhere (v2/docs/V2-SPEC.md is neither df8ac22603440bc5 nor this tree's a02ea1b6801f8916; left to rebind_if_same) rebind_if_unchanged    CFL-016        v2/docs/V2-SPEC.md
+applied  reading_if             CFL-010        v2/docs/V2-SPEC.md
+applied  set                    CFL-010        release_effect
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  add_block              session_choices 
+applied  remove_block           S-24           
+applied  add_block              closed_items   
+applied  remove_block           S-26           
+applied  add_block              closed_items   
+applied  remove_block           S-37           
+applied  add_block              closed_items   
+applied  remove_block           S-19           
+applied  add_block              closed_items   
+applied  remove_block           S-39           
+applied  add_block              closed_items   
+applied  remove_block           L-02           
+applied  add_block              closed_items   
+applied  set                    S-32           title
+applied  add_block              open_items     
+applied  add_block              open_items     
+applied  add_block              open_items     
+applied  add_block              open_items     
+skip     remove_block           S-43           
+skip     add_block              closed_items   
+applied  replace_in_block       closed_items   closing_evidence
+skip     list_remove            REQ-051        waits_on
+skip     list_remove            CFL-017        waits_on
+applied  set                    REQ-003        acceptance
+applied  set                    REQ-003        tbd_effect
+applied  list_remove            REQ-003        waits_on
+applied  list_add               REQ-003        choices
+applied  set                    REQ-003        status
+applied  list_add               REQ-003        source
+applied  set                    REQ-004        acceptance
+applied  set                    REQ-004        tbd_effect
+applied  list_add               REQ-004        choices
+applied  set                    REQ-004        status
+applied  list_add               REQ-004        source
+applied  append_text            REQ-004        notes
+applied  add_block              records        
+applied  set                    REQ-014        acceptance
+applied  set                    REQ-014        tbd_effect
+applied  set                    REQ-014        provisional
+applied  list_remove            REQ-014        waits_on
+applied  list_add               REQ-014        choices
+applied  set                    REQ-014        status
+applied  list_add               REQ-014        source
+applied  list_add               REQ-014        source
+applied  set                    REQ-014        source_check
+applied  append_text            REQ-014        notes
+applied  list_add               FEA-004        choices
+applied  list_add               REQ-018        choices
+applied  set                    REQ-025        acceptance
+applied  set                    REQ-025        tbd_effect
+applied  list_add               REQ-025        choices
+applied  set                    REQ-025        status
+applied  list_add               REQ-025        source
+applied  list_add               REQ-025        source
+applied  list_add               REQ-025        source
+applied  set                    REQ-025        history
+applied  list_add               REQ-074        choices
+applied  set                    REQ-052        statement
+applied  set                    REQ-052        acceptance
+applied  set                    REQ-052        tbd_effect
+applied  list_remove            REQ-052        waits_on
+applied  list_add               REQ-052        choices
+applied  list_add               REQ-052        choices
+applied  list_add               REQ-052        choices
+applied  list_add               REQ-052        waits_on
+applied  list_add               FEA-004        blocks
+applied  set                    REQ-052        evidence_result
+applied  set                    REQ-052        evidence_phase
+applied  set                    REQ-052        evidence_class
+applied  set                    REQ-052        evidence
+applied  set                    REQ-052        evidence_bound_to
+applied  set                    REQ-052        status
+applied  list_add               REQ-052        source
+applied  set                    REQ-052        notes
+applied  set                    CFL-011        status
+applied  set                    CFL-011        resolved_by
+applied  set                    CFL-011        evidence_result
+applied  set                    CFL-011        evidence_phase
+applied  list_remove            CFL-011        waits_on
+applied  list_add               CFL-011        choices
+applied  set                    CFL-011        release_effect
+applied  append_text            CFL-011        notes
+applied  set                    CON-012        statement
+applied  set                    CON-012        acceptance
+applied  list_add               CON-012        choices
+applied  list_add               CON-012        choices
+applied  append_text            CON-012        notes
+applied  list_add               CON-012        source
+applied  set                    REQ-024        statement
+applied  list_add               REQ-024        choices
+applied  list_add               REQ-024        choices
+applied  list_add               REQ-024        choices
+applied  list_add               REQ-024        waits_on
+applied  list_add               REQ-024        source
+applied  append_text            REQ-024        notes
+applied  set_any                REQ-051        statement
+applied  list_add               REQ-051        choices
+applied  set_any                CFL-017        statement
+applied  set_any                CFL-017        acceptance
+applied  list_add               CFL-017        choices
+applied  set_any                CFL-017        notes
+applied  replace_in_block       session_choices taken
+applied  set                    REQ-028        acceptance
+applied  list_add               REQ-028        choices
+applied  replace_in_field       REQ-035        acceptance
+applied  list_remove            REQ-035        waits_on
+applied  list_add               REQ-035        choices
+applied  replace_in_field       REQ-007        acceptance
+applied  list_remove            REQ-007        waits_on
+applied  list_add               REQ-007        choices
+applied  list_add               REQ-042        choices
+applied  append_text            ASM-004        notes
+applied  file_swap              v2/docs/TEST-PLAN.md (NEED-02, REQ-076)
+applied  file_swap              v2/docs/TEST-PLAN.md REQ-077 (the hot stop)
+applied  reading_if             REQ-050        v2/docs/TEST-PLAN.md
+applied  reading_if             CFL-007        v2/docs/TEST-PLAN.md
+applied  reading_if             CFL-009        v2/docs/TEST-PLAN.md
+applied  reading_if             CFL-008        v2/docs/TEST-PLAN.md
+applied  rebind_if_same         REQ-005        v2/docs/CONOPS.md
+applied  rebind_if_same         CFL-001        v2/docs/PANEL.md
+applied  rebind_if_same         CFL-005        v2/docs/PANEL.md
+applied  rebind_if_same         CFL-015        v2/docs/PANEL.md
+applied  rebind_if_same         CFL-014        v2/docs/PANEL.md
+applied  rebind_if_same         CFL-014        v2/docs/CONOPS.md
+applied  rebind_if_same         CFL-014        v2/docs/OPERATING-ENVELOPE.md
+applied  rebind_if_same         CON-018        v2/docs/TEST-PLAN.md
+applied  rebind_if_same         CFL-016        v2/docs/PANEL.md
+HAND RE-READ ('power removed from the SDR, th' absent) rebind_if_same         CFL-016        v2/docs/CONOPS.md
+applied  rebind_if_same         CFL-016        v2/docs/OPERATING-ENVELOPE.md
+applied  rebind_if_same         CFL-016        v2/docs/TEST-PLAN.md
+applied  rebind_if_same         REQ-072        v2/ecad/tools/gen_sch_e.py
+applied  rebind_if_same         REQ-072        v2/docs/feasibility/POWER-THERMAL.md
+applied  rebind_if_same         CFL-015        v2/docs/ASSEMBLY.md
+applied  rebind_if_same         REQ-005        v2/docs/V2-SPEC.md
+applied  rebind_if_same         CFL-013        v2/docs/V2-SPEC.md
+HAND RE-READ (line '| Cellular |' changed) rebind_if_same         CFL-016        v2/docs/V2-SPEC.md
+applied  rebind_if_same         CFL-006        v2/ecad/tools/pcb_pack_protection.yaml
+applied  rebind_if_same         REQ-052        v2/docs/ARCH-PCB-B-IOHA.md
+applied  companions             6 filed        0 still listed
+applied  conops pin             cedb60bf2ca88822 -> eb0eda7cacfe7156 needs table unchanged
+apply_registry: ids CFL:gnddoc=CFL-018, CON:build=CON-023, CON:signal=CON-024, CON:p2-simtvs=CON-025, REQ:m1balance=REQ-072, REQ:contain=REQ-073, REQ:carry=REQ-074, REQ:charge=REQ-075, REQ:failover=REQ-076, REQ:p2-hotstop=REQ-077, S:cm5cert=S-48, S:h2=S-49, S:gnd=S-50, S:reviewb=S-51, S:adr=S-52, S:solar=S-53, S:bank=S-54, S:coldbound=S-55, S:sgp41=S-56, S:p2-hotr1=S-57, S:p2-hwstage=S-58, SC:hc1-sim=SC-13, SC:hc1-mass=SC-14, SC:hc1-build=SC-15, SC:hc1-reva=SC-16, SC:l2-reduced=SC-17, SC:l2-heat=SC-18, SC:l2-storage=SC-19, SC:l2-transport=SC-20, SC:l2-m1=SC-21, SC:l2-duty=SC-22, SC:l2-aged=SC-23, SC:l2-outlets=SC-24, SC:l2-delivery=SC-25, SC:l2-shutdown=SC-26, SC:l2-cold=SC-27, SC:l2-pollution=SC-28, SC:l2-rel=SC-29, SC:l2-indications=SC-30, SC:l2-hazard=SC-31, SC:l2-reva=SC-32, SC:l2-lidstart=SC-33, SC:l2-bank=SC-34, SC:d11=SC-35, SC:solar=SC-36, SC:solarday=SC-37, SC:emcon=SC-38, SC:scope03=SC-39, SC:charge=SC-40, SC:hazard=SC-41, SC:cm5ant=SC-42, SC:mil461=SC-43, SC:holdover=SC-44, SC:deferred=SC-45, SC:reviewb=SC-46, SC:p2-mastdown=SC-47, SC:p2-nvg=SC-48, SC:p2-hotstop=SC-49, SC:p2-hotr1=SC-50
+apply_registry: 404 change(s) written to v2/ecad/tools/pcb_requirements.yaml. Next: (cd v2/ecad/tools && python3 rules_lib.py requirements && python3 rules_render.py --requirements)

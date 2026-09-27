@@ -1,0 +1,253 @@
+{
+ "owner_rulings D-02a v2/docs/TEST-PLAN.md:18-19": [
+  "4209bb7cdb1f34c1"
+ ],
+ "owner_rulings D-02c v2/docs/TEST-PLAN.md:16-17": [
+  "0096f1a1a4759b11"
+ ],
+ "owner_rulings D-15 v2/ecad/tools/pcb_decisions.yaml:863-915": [
+  "77a2853d7760f388"
+ ],
+ "owner_rulings decision-28 v2/ecad/tools/pcb_decisions.yaml:52-92": [
+  "f2ba8f92f4d67d1a"
+ ],
+ "records ASM-004 v2/docs/OPERATING-ENVELOPE.md:90-95": [
+  "9feb674f396a7e1e"
+ ],
+ "records ASM-004 v2/ecad/tools/pcb_envelope.yaml:36-41": [
+  "aa18aa7bc625e2c3",
+  "bc4547f123ba4135"
+ ],
+ "records ASM-006 v2/docs/V2-SPEC.md:73-73": [
+  "ebc9fb8e0913bea8"
+ ],
+ "records CFL-003 v2/ecad/tools/pcb_board_facts.yaml:281-282": [
+  "6afeaa1449c7aed9"
+ ],
+ "records CFL-003 v2/ecad/tools/pcb_envelope.yaml:15-19": [
+  "2e33030a0a835c7f",
+  "27863e9146d48dbb"
+ ],
+ "records CFL-006 v2/ecad/tools/pcb_energy_chain.yaml:46-46": [
+  "9a1234bbce88a837"
+ ],
+ "records CFL-006 v2/ecad/tools/pcb_pack_protection.yaml:17-27": [
+  "48da33746d8441d8"
+ ],
+ "records CFL-007 v2/docs/TEST-PLAN.md:18-19": [
+  "4209bb7cdb1f34c1"
+ ],
+ "records CFL-008 v2/docs/TEST-PLAN.md:20-20": [
+  "33c37aef0ee859d7"
+ ],
+ "records CFL-008 v2/docs/TEST-PLAN.md:23-23": [
+  "858dae31b2e04a32"
+ ],
+ "records CFL-009 v2/docs/OPERATING-ENVELOPE.md:171-171": [
+  "cc7b74b48e0154fa"
+ ],
+ "records CFL-009 v2/docs/TEST-PLAN.md:8-8": [
+  "c929c11f3b73b471"
+ ],
+ "records CFL-010 v2/docs/V2-SPEC.md:41-41": [
+  "da2b0f12a55ab336"
+ ],
+ "records CFL-011 v2/docs/OPERATING-ENVELOPE.md:171-172": [
+  "5e893d0e7f52602f",
+  "ba8c126fa4adec76"
+ ],
+ "records CFL-011 v2/ecad/tools/pcb_envelope.yaml:34-34": [
+  "8e179521a559d2b9"
+ ],
+ "records CFL-012 v2/docs/V2-SPEC.md:23-23": [
+  "e77d963b27b8c362"
+ ],
+ "records CFL-016 v2/docs/TEST-PLAN.md:46-46": [
+  "2da4b77378042bca"
+ ],
+ "records CFL-016 v2/docs/V2-SPEC.md:76-76": [
+  "1f07d14493a3b0dd"
+ ],
+ "records CFL-016 v2/ecad/tools/pcb_decisions.yaml:863-915": [
+  "77a2853d7760f388"
+ ],
+ "records CFL-017 v2/docs/TEST-PLAN.md:18-19": [
+  "4209bb7cdb1f34c1"
+ ],
+ "records CHO-001 v2/docs/V2-SPEC.md:37-51": [
+  "17478dcd137cbd94"
+ ],
+ "records CHO-002 v2/docs/V2-SPEC.md:42-42": [
+  "b771bebce1159019"
+ ],
+ "records CON-003 v2/docs/ARCH-PCB-B-IOHA.md:178-189": [
+  "9c926b2564cc4c79"
+ ],
+ "records CON-003 v2/docs/ARCH-PCB-B-IOHA.md:87-89": [
+  "95859620e01d58eb"
+ ],
+ "records CON-004 v2/docs/ARCH-PCB-B-IOHA.md:160-164": [
+  "d7b52cd3d2f5ccd8"
+ ],
+ "records REQ-001 v2/docs/TEST-PLAN.md:46-46": [
+  "2da4b77378042bca"
+ ],
+ "records REQ-001 v2/docs/V2-SPEC.md:37-51": [
+  "17478dcd137cbd94"
+ ],
+ "records REQ-002 v2/docs/TEST-PLAN.md:46-46": [
+  "2da4b77378042bca"
+ ],
+ "records REQ-002 v2/docs/V2-SPEC.md:37-51": [
+  "17478dcd137cbd94"
+ ],
+ "records REQ-003 v2/docs/TEST-PLAN.md:46-46": [
+  "2da4b77378042bca"
+ ],
+ "records REQ-006 v2/docs/V2-SPEC.md:29-29": [
+  "d2a8f53257c67f14",
+  "b898166373b1c611"
+ ],
+ "records REQ-012 v2/docs/PANEL.md:113-113": [
+  "7ab672806f645267"
+ ],
+ "records REQ-012 v2/docs/PANEL.md:158-158": [
+  "4cbbe664162e4567"
+ ],
+ "records REQ-015 v2/docs/TEST-PLAN.md:31-31": [
+  "36932347ef609fdb"
+ ],
+ "records REQ-018 v2/docs/TEST-PLAN.md:64-66": [
+  "c0a98cdd825dfeed"
+ ],
+ "records REQ-020 v2/docs/V2-SPEC.md:73-73": [
+  "ebc9fb8e0913bea8"
+ ],
+ "records REQ-021 v2/docs/TEST-PLAN.md:21-22": [
+  "cd2930e48692642a"
+ ],
+ "records REQ-022 v2/docs/TEST-PLAN.md:16-17": [
+  "0096f1a1a4759b11"
+ ],
+ "records REQ-024 v2/docs/OPERATING-ENVELOPE.md:128-139": [
+  "a20584b8303074cf",
+  "bbd720e7a7eac3b0"
+ ],
+ "records REQ-024 v2/ecad/tools/pcb_envelope.yaml:27-34": [
+  "afce2d810a5a5f75"
+ ],
+ "records REQ-025 v2/docs/OPERATING-ENVELOPE.md:141-142": [
+  "77fba534cac221e4"
+ ],
+ "records REQ-026 v2/docs/TEST-PLAN.md:20-20": [
+  "33c37aef0ee859d7"
+ ],
+ "records REQ-027 v2/docs/TEST-PLAN.md:24-24": [
+  "367faeaadddeefc1"
+ ],
+ "records REQ-028 v2/docs/OPERATING-ENVELOPE.md:197-201": [
+  "696ac13ac24e1969"
+ ],
+ "records REQ-029 v2/docs/TEST-PLAN.md:36-36": [
+  "5856a38f470e5403"
+ ],
+ "records REQ-030 v2/docs/TEST-PLAN.md:46-46": [
+  "2da4b77378042bca"
+ ],
+ "records REQ-030 v2/ecad/tools/pcb_rules_coverage.yaml:636-644": [
+  "d55c5e6e5955a742",
+  "8a7933387a289c89"
+ ],
+ "records REQ-031 v2/docs/TEST-PLAN.md:46-46": [
+  "2da4b77378042bca"
+ ],
+ "records REQ-033 v2/docs/PANEL.md:158-158": [
+  "4cbbe664162e4567"
+ ],
+ "records REQ-035 v2/docs/TEST-PLAN.md:46-46": [
+  "2da4b77378042bca"
+ ],
+ "records REQ-035 v2/docs/V2-SPEC.md:33-34": [
+  "f44076395e04e835",
+  "b1b45db216582b07"
+ ],
+ "records REQ-036 v2/docs/TEST-PLAN.md:46-46": [
+  "2da4b77378042bca"
+ ],
+ "records REQ-036 v2/docs/V2-SPEC.md:34-34": [
+  "d6a60e8e154b67cb",
+  "52f4a3f6b6922d52"
+ ],
+ "records REQ-037 v2/docs/V2-SPEC.md:34-34": [
+  "d6a60e8e154b67cb",
+  "52f4a3f6b6922d52"
+ ],
+ "records REQ-038 v2/docs/V2-SPEC.md:34-34": [
+  "d6a60e8e154b67cb",
+  "52f4a3f6b6922d52"
+ ],
+ "records REQ-039 v2/docs/TEST-PLAN.md:37-37": [
+  "1be4964c04446c55"
+ ],
+ "records REQ-044 v2/docs/TEST-PLAN.md:48-77": [
+  "ab4c69dda4df41be"
+ ],
+ "records REQ-044 v2/ecad/tools/gen_sch_p.py:355-430": [
+  "516176eaa2358f3c"
+ ],
+ "records REQ-044 v2/ecad/tools/pcb_pack_protection.yaml:17-40": [
+  "98e5dd3daa54c201"
+ ],
+ "records REQ-045 v2/ecad/tools/pcb_energy_chain.yaml:13-22": [
+  "ea9a5df0c07482cb"
+ ],
+ "records REQ-046 v2/docs/TEST-PLAN.md:69-70": [
+  "8df540c216078bab"
+ ],
+ "records REQ-046 v2/ecad/tools/pcb_pack_protection.yaml:142-157": [
+  "9b366de7e4209e0c"
+ ],
+ "records REQ-047 v2/docs/V2-SPEC.md:13-13": [
+  "efb861ba5442335c"
+ ],
+ "records REQ-051 v2/docs/TEST-PLAN.md:18-19": [
+  "4209bb7cdb1f34c1"
+ ],
+ "records REQ-052 v2/docs/OPERATING-ENVELOPE.md:171-172": [
+  "5e893d0e7f52602f",
+  "ba8c126fa4adec76"
+ ],
+ "records REQ-057 v2/docs/TEST-PLAN.md:37-37": [
+  "1be4964c04446c55"
+ ],
+ "records REQ-058 v2/docs/V2-SPEC.md:51-51": [
+  "6d96d49ae35cd5fd"
+ ],
+ "records REQ-059 v2/docs/V2-SPEC.md:73-73": [
+  "ebc9fb8e0913bea8"
+ ],
+ "records REQ-060 v2/docs/PANEL.md:168-168": [
+  "1ce34548b8a2f1ac"
+ ],
+ "records REQ-064 v2/docs/TEST-PLAN.md:23-23": [
+  "858dae31b2e04a32"
+ ],
+ "records REQ-066 v2/docs/ASSEMBLY.md:148-148": [
+  "a529c60846d98bce"
+ ],
+ "records REQ-068 v2/docs/TEST-PLAN.md:37-37": [
+  "1be4964c04446c55"
+ ],
+ "records SPD-003 v2/docs/V2-SPEC.md:23-23": [
+  "e77d963b27b8c362"
+ ],
+ "records SPD-006 v2/docs/V2-SPEC.md:41-41": [
+  "da2b0f12a55ab336"
+ ],
+ "records SPD-006 v2/docs/V2-SPEC.md:76-76": [
+  "1f07d14493a3b0dd"
+ ],
+ "session_choices SC-03 v2/docs/TEST-PLAN.md:20-20": [
+  "33c37aef0ee859d7"
+ ]
+}
