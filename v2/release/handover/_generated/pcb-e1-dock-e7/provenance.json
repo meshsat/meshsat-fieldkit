@@ -1,0 +1,212 @@
+{
+ "board": "e",
+ "board_table_phase": "E17",
+ "bom_rows_per_reference": 170,
+ "commands": [
+  {
+   "argv": [
+    "kicad-cli",
+    "sch",
+    "export",
+    "pdf",
+    "--exclude-drawing-sheet",
+    "--exclude-pdf-property-popups",
+    "-o",
+    "/root/h1/ex-out/.pcb-e1-dock-schematic-sheet.pdf",
+    "pcb-e1-dock.kicad_sch"
+   ],
+   "cwd": "v2/ecad/pcb-e1-dock-e7",
+   "exit": 0,
+   "output_tail": "Plotted to '/root/h1/ex-out/.pcb-e1-dock-schematic-sheet.pdf'.\nDone.\n",
+   "started_utc": "2026-09-27T04:43:36Z"
+  },
+  {
+   "argv": [
+    "/usr/bin/python3",
+    "/root/h1/ex/src/v2/ecad/tools/sch_pages.py",
+    "pcb-e1-dock.kicad_sch",
+    "/root/h1/ex-out/.pcb-e1-dock-schematic-sheet.pdf",
+    "/root/h1/ex-out/pcb-e1-dock-e7/pcb-e1-dock-schematic.pdf"
+   ],
+   "cwd": "v2/ecad/pcb-e1-dock-e7",
+   "exit": 0,
+   "output_tail": "sch_pages: 2 x 2 cells, 4 pages kept of 4 tiles\n",
+   "started_utc": "2026-09-27T04:43:37Z"
+  },
+  {
+   "argv": [
+    "kicad-cli",
+    "sch",
+    "export",
+    "bom",
+    "--fields",
+    "Reference,Value,Footprint,LCSC,${QUANTITY}",
+    "--group-by",
+    "Value,Footprint",
+    "--sort-field",
+    "Reference",
+    "-o",
+    "/root/h1/ex-out/pcb-e1-dock-e7/NOT_FOR_FAB-pcb-e1-dock-bom.csv",
+    "pcb-e1-dock.kicad_sch"
+   ],
+   "cwd": "v2/ecad/pcb-e1-dock-e7",
+   "exit": 0,
+   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/root/h1/ex-out/pcb-e1-dock-e7/NOT_FOR_FAB-pcb-e1-dock-bom.csv'.\n",
+   "started_utc": "2026-09-27T04:43:38Z"
+  },
+  {
+   "argv": [
+    "kicad-cli",
+    "sch",
+    "export",
+    "bom",
+    "--fields",
+    "Reference,Value,Footprint,LCSC,Description,Datasheet,${DNP}",
+    "--labels",
+    "Reference,Value,Footprint,LCSC,Description,Datasheet,DNP",
+    "--group-by",
+    "",
+    "--ref-range-delimiter",
+    "",
+    "--sort-field",
+    "Reference",
+    "-o",
+    "/root/h1/ex-out/pcb-e1-dock-e7/NOT_FOR_FAB-pcb-e1-dock-bom-per-reference.csv",
+    "pcb-e1-dock.kicad_sch"
+   ],
+   "cwd": "v2/ecad/pcb-e1-dock-e7",
+   "exit": 0,
+   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/root/h1/ex-out/pcb-e1-dock-e7/NOT_FOR_FAB-pcb-e1-dock-bom-per-reference.csv'.\n",
+   "started_utc": "2026-09-27T04:43:38Z"
+  },
+  {
+   "argv": [
+    "kicad-cli",
+    "sch",
+    "erc",
+    "--severity-all",
+    "--format",
+    "json",
+    "-o",
+    "/root/h1/ex-out/pcb-e1-dock-e7/pcb-e1-dock-erc.json",
+    "pcb-e1-dock.kicad_sch"
+   ],
+   "cwd": "v2/ecad/pcb-e1-dock-e7",
+   "exit": 0,
+   "output_tail": "Found 365 violations\nSaved ERC Report to /root/h1/ex-out/pcb-e1-dock-e7/pcb-e1-dock-erc.json\n",
+   "started_utc": "2026-09-27T04:43:39Z"
+  },
+  {
+   "argv": [
+    "kicad-cli",
+    "sch",
+    "erc",
+    "--severity-all",
+    "--format",
+    "report",
+    "-o",
+    "/root/h1/ex-out/pcb-e1-dock-e7/pcb-e1-dock-erc.rpt",
+    "pcb-e1-dock.kicad_sch"
+   ],
+   "cwd": "v2/ecad/pcb-e1-dock-e7",
+   "exit": 0,
+   "output_tail": "Found 365 violations\nSaved ERC Report to /root/h1/ex-out/pcb-e1-dock-e7/pcb-e1-dock-erc.rpt\n",
+   "started_utc": "2026-09-27T04:43:40Z"
+  },
+  {
+   "argv": [
+    "kicad-cli",
+    "sch",
+    "export",
+    "netlist",
+    "--format",
+    "kicadsexpr",
+    "-o",
+    "/root/h1/ex-out/.pcb-e1-dock.export.net",
+    "pcb-e1-dock.kicad_sch"
+   ],
+   "cwd": "v2/ecad/pcb-e1-dock-e7",
+   "exit": 0,
+   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\n",
+   "started_utc": "2026-09-27T04:43:40Z"
+  },
+  {
+   "argv": [
+    "regen_compare.py",
+    "pair",
+    "netlist",
+    "<committed out/pcb-e1-dock.net>",
+    "<export of the committed schematic>"
+   ],
+   "exit": 0
+  }
+ ],
+ "commit": "99cde56b60f7a40a1b0826acf85ae7e064a976b9",
+ "committed_netlist_sha256": "f3c1ad6153002976407f48bf1c4d6890c9832f2cbc9986d37d9b74776b146c9b",
+ "driver": {
+  "path": "v2/ecad/tools/handover_exports.py",
+  "sha256": "dc212f1b06ae34149b643425819dea6d4d85bbb078545b16e4f7c0534f98d69b"
+ },
+ "erc_violations_by_severity": {
+  "warning": 365
+ },
+ "host": "Linux-6.8.0-134-generic-x86_64-with-glibc2.39",
+ "kicad_cli": "9.0.9",
+ "netlist_parity_with_the_schematic": "PARITY_AFTER_NOISE",
+ "outputs": {
+  "NOT_FOR_FAB-pcb-e1-dock-bom-per-reference.csv": {
+   "bytes": 15579,
+   "sha256": "8eca4c7a9842b9cf831eb32942efea971914c5f5a21b408fad916b1eaa6d0003"
+  },
+  "NOT_FOR_FAB-pcb-e1-dock-bom.csv": {
+   "bytes": 11055,
+   "sha256": "25d494921d2b803021700420a655089d0b85c7d59bb9794b50c729c7e451c32c"
+  },
+  "pcb-e1-dock-erc.json": {
+   "bytes": 232662,
+   "sha256": "0c7604e3edd7cb444e09e5c1d21e048a70edd6b17a2173882039343cfd1f7550"
+  },
+  "pcb-e1-dock-erc.rpt": {
+   "bytes": 54724,
+   "sha256": "397a6067d09f2a640f3036a50fc66bfee48e6753dc250bb93b08c283886768cc"
+  },
+  "pcb-e1-dock-net-parity.json": {
+   "bytes": 708,
+   "sha256": "2ced26c5c70ab2e37592acf4f4b0e3b24b227d90acca16492a0c0ea6dc0742fb"
+  },
+  "pcb-e1-dock-schematic.pdf": {
+   "bytes": 636718,
+   "sha256": "56297a5b05ea12e7dbb9a51ded8acbb25c54acd23db79b76519735e254b039f9"
+  }
+ },
+ "paged_pdf_page1_text_chars": 2104,
+ "paged_pdf_pages": 4,
+ "phase_directory": "v2/ecad/pcb-e1-dock-e7",
+ "python": "3.12.3",
+ "result": "OK",
+ "schematic": "v2/ecad/pcb-e1-dock-e7/pcb-e1-dock.kicad_sch",
+ "schematic_phase_label": "E42P",
+ "schematic_sha256": "e6137ea442932e4d55e6be3381881af6b7e12caef17c1b168c400093707f8a02",
+ "sheet_pdf_page1_text_chars": 10061,
+ "sheet_pdf_pages": 1,
+ "sheet_pdf_sha256_not_kept": "409d16c0535199018a7ed7ef9e8116c2e777d8fac7ff60b1638145841632e9ce",
+ "stem": "pcb-e1-dock",
+ "taken_utc": "2026-09-27T04:43:41Z",
+ "versions": {
+  "kicad_cli": "9.0.9",
+  "mutool": "mutool version 1.23.10",
+  "packages": {
+   "kicad": "9.0.9~ubuntu24.04.1",
+   "kicad-footprints": "9.0.9~ubuntu24.04.1",
+   "kicad-symbols": "9.0.9~ubuntu24.04.1",
+   "mupdf-tools": "1.23.10+ds1-1build3",
+   "poppler-utils": "24.02.0-1ubuntu9.9"
+  },
+  "pdfinfo": "pdfinfo version 24.02.0",
+  "platform": "Linux-6.8.0-134-generic-x86_64-with-glibc2.39",
+  "py_PIL": "10.2.0",
+  "py_yaml": "6.0.1",
+  "python": "3.12.3"
+ },
+ "what": "exports of the committed schematic of one board, for the engineering handover"
+}
