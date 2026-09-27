@@ -1,0 +1,1 @@
+edge_length.py then 9882ad1bc5620724 now 5b817048ed7bc29f; moved: rules_lib.py (c0458c53923d7925 -> 6154bd6c15bdfa6b); changed: main, validate_requirements; added: SC_CITING_GLOBS, _SC_CITED, _SC_DRAFT, _strings_of, session_choice_citing_files, undefined_session_choice_citations; reached by the bundle: none
