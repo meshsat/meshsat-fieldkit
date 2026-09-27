@@ -1,0 +1,18 @@
+retake6: the audit in the worktree (after rules_status three times, rules_render, the rebind and rules_render) against the
+audit of the box clone as packed after its last render (audit-box.tar). The audit names every verdict by absolute path.
+a        byte-identical: False; identical once the box clone's path prefix (49 occurrences) is replaced by the worktree's: False
+         the one other difference: row A SGN-001, field writers: box 'rules_render.py', worktree 'rules_status.py'
+b        byte-identical: False; identical once the box clone's path prefix (47 occurrences) is replaced by the worktree's: False
+         the one other difference: row B SGN-001, field writers: box 'rules_render.py', worktree 'rules_status.py'
+c        byte-identical: False; identical once the box clone's path prefix (41 occurrences) is replaced by the worktree's: False
+         the one other difference: row C SGN-001, field writers: box 'rules_render.py', worktree 'rules_status.py'
+d        byte-identical: False; identical once the box clone's path prefix (44 occurrences) is replaced by the worktree's: False
+         the one other difference: row D SGN-001, field writers: box 'rules_render.py', worktree 'rules_status.py'
+e        byte-identical: False; identical once the box clone's path prefix (48 occurrences) is replaced by the worktree's: False
+         the one other difference: row E SGN-001, field writers: box 'rules_render.py', worktree 'rules_status.py'
+e5       byte-identical: False; identical once the box clone's path prefix (22 occurrences) is replaced by the worktree's: False
+         the one other difference: row E5 SGN-001, field writers: box 'rules_render.py', worktree 'rules_status.py'
+p        byte-identical: False; identical once the box clone's path prefix (42 occurrences) is replaced by the worktree's: False
+         the one other difference: row P SGN-001, field writers: box 'rules_render.py', worktree 'rules_status.py'
+summary  byte-identical: True; identical once the box clone's path prefix (0 occurrences) is replaced by the worktree's: True
+absolute paths of the box clone in its audit: 293; differences that are not the path prefix: 7

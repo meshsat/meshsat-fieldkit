@@ -1,0 +1,129 @@
+PASS  J_PANEL 2x13 map identical on B and C
+PASS  transmit inhibit present on C (SW_EMCON)
+PASS  transmit inhibit present on B (J_PANEL)
+PASS  transmit inhibit present on A (J_AB1)
+PASS  transmit inhibit present on D (J_HARN1)
+PASS  D: TX_INHIBIT_n reaches the KEY gate U12 (D8: KEY = PTT_ANY AND TX_INHIBIT_n)
+PASS  D: nothing but the harness, its pull-down, a test point and the KEY gate touches TX_INHIBIT_n
+PASS  rail +5V_S1 leaves A on J_5V_S1 and enters B on J_5V_S1
+PASS  rail +5V_S2 leaves A on J_5V_S2 and enters B on J_5V_S2
+PASS  rail +5V_S3 leaves A on J_5V_S3 and enters B on J_5V_S3
+PASS  rail +5V_DEV leaves A on J_5V_DEV and enters B on J_5V_DEV
+PASS  dock 2x6 contact map identical on A (J_DOCK) and E (J_BLK)
+PASS  A J_DOCK pin 8 is SHORE_INHIBIT
+PASS  E6: SHORE_INHIBIT reaches the sensor controller U10 (directly or through its series resistor)
+PASS  A22: four CELL+ pins and four return pins (GND, the In1 plane, 32.56) on the dock block
+PASS  A: the pre-charge pin lands on a cell node net
+PASS  E: the 12 AWG lands P_CP and P_CN exist
+PASS  E6: the pack return lands on GND (the 14.4 V node's return is the ground plane, 32.56)
+PASS  A: four VIN_RAW power pins and four return pins on the dock block (EQ-16)
+PASS  E: the 12 AWG lands P_VR on VIN_RAW and P_VN on GND to the block's VIN_RAW pins (EQ-16)
+PASS  no Preci-Dip 813 signal contact of the dock carries VIN_RAW (EQ-16)
+PASS  ribbon net PI_SHDN_REQ exists on A and B
+PASS  ribbon net PI_KILL exists on A and B
+PASS  J_AB1 2x13 map identical on A and B
+PASS  J_AB2 2x5 map identical on A and B
+PASS  J_AB2 carries the wall pair on its END row (pins 1 and 2)
+PASS  J_MEZZ1 (A) and J_HARN1 (D) 2x8 maps identical
+PASS  D8 USB pair USB_D8_P: B16 J_AB1 -> A22 J_AB1/J_MEZZ1 -> D8 J_HARN1
+PASS  D8 USB pair USB_D8_N: B16 J_AB1 -> A22 J_AB1/J_MEZZ1 -> D8 J_HARN1
+PASS  wall-port pair USB_WALL_P: B16 slot hub -> J_AB2 -> A22 J_USBW
+PASS  wall-port pair USB_WALL_N: B16 slot hub -> J_AB2 -> A22 J_USBW
+PASS  +3V3 on A J_MEZZ1
+PASS  +3V3 on D J_HARN1
+PASS  panel controller USB pair USB_PNL_P on B16 and C7 J_PANEL
+PASS  panel controller USB pair USB_PNL_N on B16 and C7 J_PANEL
+PASS  C7: SW_EMCON drives TX_INHIBIT_n, EMCON_HW leaves on J_PANEL
+PASS  D8: TX_INHIBIT_n from J_HARN1 into the KEY gate
+PASS  B: PCIE1_RX_P has exactly one series AC coupling capacitor (CM5 datasheet 2.3.1)
+PASS  B: PCIE1_RX_P enters one IC only, so the capacitor is in series and not a stub
+PASS  B: C151 on PCIE1_RX_P is the 220 nF the module's datasheet asks for
+PASS  B: PCIE1_RX_N has exactly one series AC coupling capacitor (CM5 datasheet 2.3.1)
+PASS  B: PCIE1_RX_N enters one IC only, so the capacitor is in series and not a stub
+PASS  B: C152 on PCIE1_RX_N is the 220 nF the module's datasheet asks for
+PASS  B: PCIE2_RX_P has exactly one series AC coupling capacitor (CM5 datasheet 2.3.1)
+PASS  B: PCIE2_RX_P enters one IC only, so the capacitor is in series and not a stub
+PASS  B: C251 on PCIE2_RX_P is the 220 nF the module's datasheet asks for
+PASS  B: PCIE2_RX_N has exactly one series AC coupling capacitor (CM5 datasheet 2.3.1)
+PASS  B: PCIE2_RX_N enters one IC only, so the capacitor is in series and not a stub
+PASS  B: C252 on PCIE2_RX_N is the 220 nF the module's datasheet asks for
+PASS  B: PCIE3_RX_P has exactly one series AC coupling capacitor (CM5 datasheet 2.3.1)
+PASS  B: PCIE3_RX_P enters one IC only, so the capacitor is in series and not a stub
+PASS  B: C351 on PCIE3_RX_P is the 220 nF the module's datasheet asks for
+PASS  B: PCIE3_RX_N has exactly one series AC coupling capacitor (CM5 datasheet 2.3.1)
+PASS  B: PCIE3_RX_N enters one IC only, so the capacitor is in series and not a stub
+PASS  B: C352 on PCIE3_RX_N is the 220 nF the module's datasheet asks for
+PASS  A: no device drives TX_INHIBIT_n, the panel toggle is its only source (a device on it is a gate input by its maker's pin table)
+PASS  B: no device drives TX_INHIBIT_n, the panel toggle is its only source (a device on it is a gate input by its maker's pin table)
+PASS  A: EMCON_HW reaches only gate inputs on this board, never an output
+PASS  A: TX_INHIBIT_n is pulled DOWN on this board, so a missing panel inhibits
+PASS  B: TX_INHIBIT_n is pulled DOWN on this board, so a missing panel inhibits
+PASS  D: TX_INHIBIT_n is pulled DOWN on this board, so a missing panel inhibits
+PASS  C7: U9 buffers TX_INHIBIT_n into EMCON_HW rather than inverting it
+UNDECIDED  RF-002 the asserted line EMCON_HW: nothing on any board but its own source can drive it, and with that source unpowered or unplugged its own pull-downs hold it under 0.8 V against every pin's stated current, every other part powered or not   UNDECIDED B U116 pin 1 (SN74LV1T08DBVR AND, 5 V supply, TTL-leve) on EMCON_HW, reached through A J_AB1 pin 15 = B J_AB1 pin 15: an active pin no held document shows to be an input | UNDECIDED B U216 pin 1 (SN74LV1T08DBVR AND, 5 V supply, TTL-leve) on EMCON_HW, reached through A J_AB1 pin 15 = B J_AB1 pin 15: an active pin no held document shows to be an input | UNDECIDED B U316 pin 1 (SN74LV1T08DBVR AND, 5 V supply, TTL-leve) on EMCON_HW, reached through A J_AB1 pin 15 = B J_AB1 pin 15: an active pin no held document shows to be an input | UNDECIDED with board C unpowered (the line's source there is off), boards A, B, C: EMCON_HW reads 0.39 V from the currents that are known (with A's +3V3_EMCON up and every other part at the worse of its powered and unpowered current), and B U116 pin 1 (SN74LV1T08DBVR AND, 5 V supply): an active pin no held document bounds; B U216 pin 1 (SN74LV1T08DBVR AND, 5 V supply): an active pin no held document bounds; B U316 pin 1 (SN74LV1T08DBVR AND, 5 V supply): an active pin no held document bounds | UNDECIDED with the B-C ribbon J_PANEL unplugged, boards A, B: EMCON_HW reads 0.29 V from the currents that are known (with A's +3V3_EMCON up and every other part at the worse of its powered and unpowered current), and B U116 pin 1 (SN74LV1T08DBVR AND, 5 V supply): an active pin no held document bounds; B U216 pin 1 (SN74LV1T08DBVR AND, 5 V supply): an active pin no held document bounds; B U316 pin 1 (SN74LV1T08DBVR AND, 5 V supply): an active pin no he   [inhibit only]
+PASS  RF-002 the asserted line TX_INHIBIT_n: nothing on any board but its own source can drive it, and with that source unpowered or unplugged its own pull-downs hold it under 0.8 V against every pin's stated current, every other part powered or not   [inhibit only]
+UNDECIDED  RF-002 LimeSDR Mini 2.4 in its USB 3 bay: EMCON reaches it in hardware (B power on J_LIME)   board B, power: +5V_LIME off: U23 enable pin 3 through EMCON_HW (asserted LOW) > U501 AND 1->4 > U502 AND 1->4 > R529 series; UNDECIDED: +5V_LIME: +5V_LIME: U33 pin 5 (USBLC6-2SC6, 'VBUS') sits on the rail's conductor and is the VBUS of U33 (USBLC6-2 ESD protection), and its I/O pin 1 is on LIME_DP, where J_LIME pin 3 (USB 3.0 type A receptacle (Wue, 'D+'), which leaves the board; U102 pin 1 (TI TUSB8041IRGCR four-port USB, 'USB_DP_DN1'), a pin of a part whose pins firmware sets are not shown to be unable to hold it up; its I/O pin 3 is on LIME_DM, where J_LIME pin 2 (USB 3.0 type A receptacle (Wue, 'D-'), which leaves the board; U102 pin 2 (TI TUSB8041IRGCR four-port USB, 'USB_DM_DN1'), a pin of a part whose pins firmware sets are not shown to be unable to hold it up; its I/O pin 4 is on LIME_DM, where J_LIME pin 2 (USB 3.0 type A receptacle (Wue, 'D-'), which leaves the board; U102 pin 2 (TI TUSB8041IRGCR four-port USB, 'USB_DM_DN1'), a pin of a part whose pins firmware sets are not shown to be unable to hold it up; its I/O pin 6 is on LIME_DP, where J_LIME pin 3 (USB 3.0 type A receptacle (Wue, 'D+'), which leaves the board; U102 pin 1 (TI TUSB8041IRGCR four-port USB, 'USB_DP_DN1'), a pin of a part whose pins firmware sets are not shown to be unable to hold it up; and ST DS4260 Rev 7 (v2/vendor/st/st-usblc6-2-esd-protection.pdf), page 1 pinout: I/O1 1 and 6, GND 2, I/O2 3 and 4, VBUS 5; 2.1 Surge protection (page 10): 'optimized to perform surge protection based on the rai   [inhibit only]
+UNDECIDED  RF-002 RockBLOCK 9704 (Iridium): EMCON reaches it in hardware (B power on J_RB9704)   board B, power: +5V_RB off: U24 enable pin 3 through EMCON_HW (asserted LOW) > U503 AND 1->4 > R530 series; UNDECIDED: +5V_RB: its line EMCON_HW is undecided (the line result names why)   [inhibit only]
+UNDECIDED  RF-002 E22-900M30S LoRa: EMCON reaches it in hardware (B power on U12)   board B, power: +5V_LORA off: U21 enable pin 5 through EMCON_HW (asserted LOW) > U504 AND 1->4 > R531 series; UNDECIDED: +5V_LORA: its line EMCON_HW is undecided (the line result names why)   [inhibit only]
+UNDECIDED  RF-002 E72 CC2652P Zigbee coordinator: EMCON reaches it in hardware (B power on U13)   board B, power: +3V3_ZB off: U22 enable pin 5 through EMCON_HW (asserted LOW) > U505 AND 1->4; UNDECIDED: +3V3_ZB: +3V3_ZB: leaves the board through J_ZBDBG1 pin 1, declared an accessory (a cJTAG bench header of an E72, on the gated +3V3_ZB): the declaration says what the far end is for, not that nothing plugged there feeds the rail, and the far end is not on this netlist; +3V3_ZB: leaves the board through J_ZBDBG2 pin 1, declared an accessory (a cJTAG bench header of an E72, on the gated +3V3_ZB): the declaration says what the far end is for, not that nothing plugged there feeds the rail, and the far end is not on this netlist; +3V3_ZB: U14 pin 20 (Ebyte E72-2G4M20S1E CC2652P (O, '+3V3_ZB') sits on the rail's conductor, and it is a pin of a part no class here reads (no pin map, switch entry, protection row or firmware table of its maker's is held here for it), so whether it can feed the rail is not known; +3V3_ZB through R28 (10k) to ZBA_RST_n: leaves the board through J_ZBDBG1 pin 5, declared an accessory (a cJTAG bench header of an E72, on the gated +3V3_ZB): the declaration says what the far end is for, not that nothing plugged there feeds the rail, and the far end is not on this netlist; +3V3_ZB through R28 (10k) to ZBA_RST_n: U16 pin 24 (CP2102N-A02-GQFN28 USB-UART br, 'RTS') is a pin of a part whose pins firmware sets; driven high it feeds the rail through the resistor, and nothing here judges what that current can do; +3V3_ZB through R29 (10k) to ZBB_RST_n: leaves the   [inhibit only]
+UNDECIDED  RF-002 E72 CC2652P OpenThread RCP: EMCON reaches it in hardware (B power on U14)   board B, power: +3V3_ZB off: U22 enable pin 5 through EMCON_HW (asserted LOW) > U505 AND 1->4; UNDECIDED: +3V3_ZB: +3V3_ZB: leaves the board through J_ZBDBG1 pin 1, declared an accessory (a cJTAG bench header of an E72, on the gated +3V3_ZB): the declaration says what the far end is for, not that nothing plugged there feeds the rail, and the far end is not on this netlist; +3V3_ZB: leaves the board through J_ZBDBG2 pin 1, declared an accessory (a cJTAG bench header of an E72, on the gated +3V3_ZB): the declaration says what the far end is for, not that nothing plugged there feeds the rail, and the far end is not on this netlist; +3V3_ZB: U13 pin 20 (Ebyte E72-2G4M20S1E CC2652P (Z, '+3V3_ZB') sits on the rail's conductor, and it is a pin of a part no class here reads (no pin map, switch entry, protection row or firmware table of its maker's is held here for it), so whether it can feed the rail is not known; +3V3_ZB through R28 (10k) to ZBA_RST_n: leaves the board through J_ZBDBG1 pin 5, declared an accessory (a cJTAG bench header of an E72, on the gated +3V3_ZB): the declaration says what the far end is for, not that nothing plugged there feeds the rail, and the far end is not on this netlist; +3V3_ZB through R28 (10k) to ZBA_RST_n: U13 pin 24 (Ebyte E72-2G4M20S1E CC2652P (Z, 'ZBA_RST_n') sits behind a resistor from it, and it is a pin of a part no class here reads (no pin map, switch entry, protection row or firmware table of its maker's is held here for it), so whether it ca   [inhibit only]
+FAIL  RF-002 RM520N-GL 5G module: EMCON reaches it in hardware (B rf_disable on J_M2C2 or B power on J_M2C2)   board B, J_M2C2 pin 8 (5G_W_DIS_n): EMCON does not reach it, it is driven by U215 (SN74LVC2G06DBVR dual open-drain inverter) | board B, power: +3V3_M2C2 comes from U203 (AP64500SP-13 5 A buck, 3.3 V rail +3V3_S, U203 pin 8 switches it through L201, then through the shunt R265 (5mOhm 1% 2512 (K)), whose enable S2A_EN (pin 3) EMCON does not force off   [inhibit only]
+FAIL  RF-002 AW7915-AED WiFi link card, slot 1: EMCON reaches it in hardware (B rf_disable on J_M2C1 or B power on J_M2C1)   board B, J_M2C1 pin 56 (WIFI_W_DIS_n): no maker document states what W_DISABLE1# does on this card: AsiaRF's AW7915-AED datasheet (v2/vendor/wifi/asiarf-AW7915-AED-datasheet.pdf) does not mention the pin, and the mainline mt7915 driver has no code for it (adjudication A11). It counts once the card's supply is gated or the pin is proved on the bench (owner ruling D-05, 26 September 2026) | board B, power: +3V3_M2C1 comes from U103 (AP64500SP-13 5 A buck, 3.3 V rail +3V3_S, U103 pin 8 switches it through L101, then through the shunt R165 (5mOhm 1% 2512 (K)), whose enable S1A_EN (pin 3) EMCON does not force off   [inhibit only]
+FAIL  RF-002 AW7915-AED WiFi link card, slot 3: EMCON reaches it in hardware (B rf_disable on J_M2C3 or B power on J_M2C3)   board B, J_M2C3 pin 56 (WIFI2_W_DIS_n): no maker document states what W_DISABLE1# does on this card: AsiaRF's AW7915-AED datasheet (v2/vendor/wifi/asiarf-AW7915-AED-datasheet.pdf) does not mention the pin, and the mainline mt7915 driver has no code for it (adjudication A11). It counts once the card's supply is gated or the pin is proved on the bench (owner ruling D-05, 26 September 2026) | board B, power: +3V3_M2C3 comes from U303 (AP64500SP-13 5 A buck, 3.3 V rail +3V3_S, U303 pin 8 switches it through L301, then through the shunt R365 (5mOhm 1% 2512 (K)), whose enable S3A_EN (pin 3) EMCON does not force off   [inhibit only]
+FAIL  RF-002 Compute Module 5 slot S1 on-module WiFi: EMCON reaches it in hardware (B rf_disable on U30A)   board B, U30A pin 89 (WL_nDIS1): EMCON does not reach it, it is driven by U113 (SN74LVC2G06DBVR dual open-drain inverter), U114 (SN74LVC2G06DBVR dual open-drain inverter)   [inhibit only]
+FAIL  RF-002 Compute Module 5 slot S1 on-module Bluetooth: EMCON reaches it in hardware (B rf_disable on U30A)   board B, U30A pin 91 (BT_nDIS1): EMCON does not reach it, it is driven by U113 (SN74LVC2G06DBVR dual open-drain inverter), U114 (SN74LVC2G06DBVR dual open-drain inverter)   [inhibit only]
+FAIL  RF-002 Compute Module 5 slot S2 on-module WiFi: EMCON reaches it in hardware (B rf_disable on U31A)   board B, U31A pin 89 (WL_nDIS2): EMCON does not reach it, it is driven by U213 (SN74LVC2G06DBVR dual open-drain inverter), U214 (SN74LVC2G06DBVR dual open-drain inverter)   [inhibit only]
+FAIL  RF-002 Compute Module 5 slot S2 on-module Bluetooth: EMCON reaches it in hardware (B rf_disable on U31A)   board B, U31A pin 91 (BT_nDIS2): EMCON does not reach it, it is driven by U213 (SN74LVC2G06DBVR dual open-drain inverter), U214 (SN74LVC2G06DBVR dual open-drain inverter)   [inhibit only]
+FAIL  RF-002 Compute Module 5 slot S3 on-module WiFi: EMCON reaches it in hardware (B rf_disable on U32A)   board B, U32A pin 89 (WL_nDIS3): EMCON does not reach it, it is driven by U313 (SN74LVC2G06DBVR dual open-drain inverter), U314 (SN74LVC2G06DBVR dual open-drain inverter)   [inhibit only]
+FAIL  RF-002 Compute Module 5 slot S3 on-module Bluetooth: EMCON reaches it in hardware (B rf_disable on U32A)   board B, U32A pin 91 (BT_nDIS3): EMCON does not reach it, it is driven by U313 (SN74LVC2G06DBVR dual open-drain inverter), U314 (SN74LVC2G06DBVR dual open-drain inverter)   [inhibit only]
+UNDECIDED  RF-002 SA868 VHF exciter: EMCON reaches it in hardware (D key on U2)   board D, key: U2 pin 5 through TX_INHIBIT_n (asserted LOW) > U12 AND 2->4 > U13 INV_OD 2->4 released, held at 3.12 V by R88 1.2k to +5V_SA, R89 2k to GND; UNDECIDED: with U13's supply +3V3_D8 down (and every rail it feeds through a bead or a link), U13 no longer drives SA_PTT_n: SA_PTT_n sits at 2.85 V from the currents that are known, and its maker states no input threshold for this pin; D U2 pin 5 (NiceRF SA868 VHF 2 W exciter, ): its maker states no input current for it; with EMCON on, the open-drain U13 is released and SA_PTT_n is held only by what else is on it: SA_PTT_n sits at 2.86 V from the currents that are known, and its maker states no input threshold for this pin; D U13 pin 4: an open-drain output EMCON releases, whose off-state current while powered its sheet does not state; D U2 pin 5 (NiceRF SA868 VHF 2 W exciter, ): its maker states no input current for it   [inhibit only]
+UNDECIDED  RF-002 30 W VHF power amplifier (RA30H1317M1 on the plate): EMCON reaches it in hardware (A power on J_PA)   board A, power: +13V8_PA off: U13 enable pin 1 through EMCON_HW (asserted LOW) > U35 AND 2->4 > U36 AND 1->4 > R58 series; UNDECIDED: +13V8_PA: +13V8_PA: U14 pin 8 (INA226 PA rail monitor (0x46), '+13V8_PA') sits on the rail's conductor, and it is a pin of a part no class here reads (no pin map, switch entry, protection row or firmware table of its maker's is held here for it), so whether it can feed the rail is not known; +13V8_PA: U14 pin 9 (INA226 PA rail monitor (0x46), '+13V8_PA') sits on the rail's conductor, and it is a pin of a part no class here reads (no pin map, switch entry, protection row or firmware table of its maker's is held here for it), so whether it can feed the rail is not known; PA_OUT, joined to +13V8_PA through R55 (6mOhm 1% 2512 (I): Q14 pin 5 (CSD18510Q5B 40 V N-FET, 'PA_OUT') is a transistor whose type or pin map this file cannot read, so whether it can feed the rail is not known; its other pins sit on PA_HDRV2, PA_SW2, where U13, the gated switch itself, has its pins 19, 18, and no table here states that its drive is off with its enable; PA_OUT, joined to +13V8_PA through R55 (6mOhm 1% 2512 (I): U14 pin 10 (INA226 PA rail monitor (0x46), 'PA_OUT') sits on the rail's conductor, and it is a pin of a part no class here reads (no pin map, switch entry, protection row or firmware table of its maker's is held here for it), so whether it can feed the rail is not known; its line EMCON_HW is undecided (the line result names why); with U36's supply +3V3_EMCO   [inhibit only]
+UNDECIDED  RF-002 QMX HF transceiver: EMCON reaches it in hardware (A power on J_HF)   board A, power: +12V_HF off: U15 enable pin 1 through EMCON_HW (asserted LOW) > U37 AND 2->4 > U38 AND 1->4 > R124 series; UNDECIDED: +12V_HF: HF_OUT, joined to +12V_HF through R65 (10mOhm 1% 2512 (): Q24 pin 5 (CSD18510Q5B 40 V N-FET, 'HF_OUT') is a transistor whose type or pin map this file cannot read, so whether it can feed the rail is not known; its other pins sit on HF_HDRV2, HF_SW2, where U15, the gated switch itself, has its pins 19, 18, and no table here states that its drive is off with its enable; its line EMCON_HW is undecided (the line result names why)   [inhibit only]
+PASS  RF-002 A: every part that names a radio is a listed transmitter, an accessory or a receiver   [inhibit only]
+FAIL  RF-002 B: every part that names a radio is a listed transmitter, an accessory or a receiver   unclassified: U221 (TPS3808G30DBVR supervisor on +3V3_S2A: holds FULL_CARD_POWER); UNDECIDED J_QMX (QMX USB lead (bank 2 hub, port 4): VBUS ) is declared the QMX's USB data lead, and what that rests on is owed: a QRP Labs statement that USB VBUS does not power the QMX's transmitter, or VBUS_QMX switched off by EMCON on board B; until then the QMX's hardware gate (board A's J_HF) covers only its DC input   [inhibit only]
+PASS  RF-002 C: every part that names a radio is a listed transmitter, an accessory or a receiver   [inhibit only]
+PASS  RF-002 D: every part that names a radio is a listed transmitter, an accessory or a receiver   [inhibit only]
+PASS  RF-002 E: every part that names a radio is a listed transmitter, an accessory or a receiver   [inhibit only]
+PASS  RF-002 P: every part that names a radio is a listed transmitter, an accessory or a receiver   [inhibit only]
+PASS  P: the pack leads are the pack's own two nets, W_P on the positive and W_N on the return
+PASS  E: the XT60 carries the pack on pin 2 and the return on pin 1, which is what P's leads land on
+PASS  the pack pair is not crossed between board P's leads and board E's XT60
+PASS  P: the pack's blade fuse is on the netlist and carries a net
+PASS  P and E: the pack SMBus lead has a J_SMB at both ends
+PASS  P and E: J_SMB is the same connector family, pitch and pin count at both ends of the pack SMBus lead
+PASS  P and E: J_SMB pin n carries the same role at both ends (clock, data, return; E may leave P's PRES open or ground it)
+PASS  P: the SMBus lead's return is the pack's own negative lead W_N (the load side of the shunt), not the cell side
+PASS  P: every clamp on the SMBus lead's clock and data lines returns to W_N, the net the lead's return pin carries
+PASS  B: R175 (33.2R 1% (HCSL series Rs, DS40068 Table 8-1, W3-F03)) is in series with a real pin on both sides
+PASS  B: R176 (33.2R 1% (HCSL series Rs, DS40068 Table 8-1, W3-F03)) is in series with a real pin on both sides
+PASS  B: R179 (33.2R 1% (HCSL series Rs, DS40068 Table 8-1, W3-F03)) is in series with a real pin on both sides
+PASS  B: R180 (33.2R 1% (HCSL series Rs, DS40068 Table 8-1, W3-F03)) is in series with a real pin on both sides
+PASS  B: R183 (33.2R 1% (HCSL series Rs, DS40068 Table 8-1, W3-F03)) is in series with a real pin on both sides
+PASS  B: R184 (33.2R 1% (HCSL series Rs, DS40068 Table 8-1, W3-F03)) is in series with a real pin on both sides
+PASS  B: R275 (33.2R 1% (HCSL series Rs, DS40068 Table 8-1, W3-F03)) is in series with a real pin on both sides
+PASS  B: R276 (33.2R 1% (HCSL series Rs, DS40068 Table 8-1, W3-F03)) is in series with a real pin on both sides
+PASS  B: R279 (33.2R 1% (HCSL series Rs, DS40068 Table 8-1, W3-F03)) is in series with a real pin on both sides
+PASS  B: R280 (33.2R 1% (HCSL series Rs, DS40068 Table 8-1, W3-F03)) is in series with a real pin on both sides
+PASS  B: R283 (33.2R 1% (HCSL series Rs, DS40068 Table 8-1, W3-F03)) is in series with a real pin on both sides
+PASS  B: R284 (33.2R 1% (HCSL series Rs, DS40068 Table 8-1, W3-F03)) is in series with a real pin on both sides
+PASS  B: R375 (33.2R 1% (HCSL series Rs, DS40068 Table 8-1, W3-F03)) is in series with a real pin on both sides
+PASS  B: R376 (33.2R 1% (HCSL series Rs, DS40068 Table 8-1, W3-F03)) is in series with a real pin on both sides
+PASS  B: R379 (33.2R 1% (HCSL series Rs, DS40068 Table 8-1, W3-F03)) is in series with a real pin on both sides
+PASS  B: R380 (33.2R 1% (HCSL series Rs, DS40068 Table 8-1, W3-F03)) is in series with a real pin on both sides
+PASS  B: R383 (33.2R 1% (HCSL series Rs, DS40068 Table 8-1, W3-F03)) is in series with a real pin on both sides
+PASS  B: R384 (33.2R 1% (HCSL series Rs, DS40068 Table 8-1, W3-F03)) is in series with a real pin on both sides
+PASS  E: R48 (22R (pulse input series)) is in series with a real pin on both sides
+PASS  rail +3V3: the shares sum to 3.0% within the 3.0% the rail declares
+PASS  rail +54V_POE: the shares sum to 2.0% within the 2.0% the rail declares
+PASS  rail +5V_D8: the shares sum to 6.0% within the 6.0% the rail declares
+PASS  rail +5V_DEV: the shares sum to 2.0% within the 2.0% the rail declares
+PASS  rail +5V_S1: the shares sum to 2.0% within the 2.0% the rail declares
+PASS  rail +5V_S2: the shares sum to 2.0% within the 2.0% the rail declares
+PASS  rail +5V_S3: the shares sum to 2.0% within the 2.0% the rail declares
+PASS  rail CELL+: the shares sum to 1.0% within the 2.0% the rail declares
+PASS  rail VIN_RAW: the shares sum to 2.0% within the 2.0% the rail declares
+
+ALL CONTRACTS PASS
+RF-002's transmitter walk (section 15a, decides inhibit_chain_<letter> only): 10 FAIL, 9 UNDECIDED, 6 PASS
+verdict: check_contracts        PASS         of 99 {"boards_without_intent": 0, "fail": 0, "missing_boards": 0, "pass": 99, "rails_unsplit": 0, "undecided": 0, "unjudged": 0}
+exit 0

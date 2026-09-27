@@ -1,0 +1,364 @@
+pcb-a-power-a23    check_contracts        same result, same counts, same evidence
+     before: PASS         of 99    {"boards_without_intent": 0, "fail": 0, "missing_boards": 0, "pass": 99, "rails_unsplit": 0, "undecided": 0, "unjudged": 0}  (taken 2026-09-27T13:22:05Z, writer 5e14f456a0791c35)
+     after:  PASS         of 99    {"boards_without_intent": 0, "fail": 0, "missing_boards": 0, "pass": 99, "rails_unsplit": 0, "undecided": 0, "unjudged": 0}  (taken 2026-09-27T20:59:29Z, writer 5e14f456a0791c35)
+pcb-a-power-a23    clock_check            same result, same counts, same evidence
+     before: INCONCLUSIVE of 0     {}  (taken 2026-09-27T13:22:00Z, writer 8da2b82cac511dd0)
+     after:  INCONCLUSIVE of 0     {}  (taken 2026-09-27T20:59:23Z, writer 8da2b82cac511dd0)
+pcb-a-power-a23    derate                 same result, same counts, same evidence
+     before: PASS         of 268   {"by_vendor_reference": 0, "judged": 268, "undeclared_nets": 0, "under_rated": 0, "unrated_parts": 128}  (taken 2026-09-27T13:21:55Z, writer 6c29d1b9a523d385)
+     after:  PASS         of 268   {"by_vendor_reference": 0, "judged": 268, "undeclared_nets": 0, "under_rated": 0, "unrated_parts": 128}  (taken 2026-09-27T20:59:18Z, writer 6c29d1b9a523d385)
+pcb-a-power-a23    edge_length            content moved
+     before: INCONCLUSIVE of 290   {"answered_nets": 6, "classes": 63, "contradicted_nets": 0, "decided_nets": 6, "layout_bound_nets": 0, "low_speed_nets": 170, "may_be_long_nets": 6, "signal_nets": 290, "undecided_nets": 114}  (taken 2026-09-27T13:21:59Z, writer fd66cbd9bce2fa7b)
+     after:  INCONCLUSIVE of 290   {"answered_nets": 6, "classes": 64, "contradicted_nets": 0, "decided_nets": 6, "layout_bound_nets": 0, "low_speed_nets": 170, "may_be_long_nets": 6, "signal_nets": 290, "undecided_nets": 114}  (taken 2026-09-27T20:59:22Z, writer fd66cbd9bce2fa7b)
+pcb-a-power-a23    energy_chain           same result, same counts, same evidence
+     before: PASS         of 98    {"checks": 98, "citations_unjudged": 0, "coordination_findings": 0, "fail": 0, "selection_findings": 0, "stages": 12}  (taken 2026-09-27T13:21:59Z, writer 2eb665d0e50ee781)
+     after:  PASS         of 98    {"checks": 98, "citations_unjudged": 0, "coordination_findings": 0, "fail": 0, "selection_findings": 0, "stages": 12}  (taken 2026-09-27T20:59:22Z, writer 2eb665d0e50ee781)
+pcb-a-power-a23    energy_chain_a         same result, same counts, same evidence
+     before: PASS         of 4     {"fail": 0, "stages": 4}  (taken 2026-09-27T13:21:58Z, writer 2eb665d0e50ee781)
+     after:  PASS         of 4     {"fail": 0, "stages": 4}  (taken 2026-09-27T20:59:21Z, writer 2eb665d0e50ee781)
+pcb-a-power-a23    erc_gate               content moved
+     before: PASS         of 1522  {"allowed": 0, "blocking": 0, "violations": 1522}  (taken 2026-09-27T13:21:53Z, writer bb4bf868c515f37a)
+     after:  PASS         of 1524  {"allowed": 0, "blocking": 0, "violations": 1524}  (taken 2026-09-27T20:59:15Z, writer bb4bf868c515f37a)
+pcb-a-power-a23    inhibit_chain_a        RESULT MOVED
+     before: FAIL         of 9     {"fail": 1, "pass": 6, "undecided": 2, "unjudged": 0}  (taken 2026-09-27T13:22:04Z, writer 5e14f456a0791c35)
+     after:  INCONCLUSIVE of 9     {"fail": 0, "pass": 7, "undecided": 2, "unjudged": 0}  (taken 2026-09-27T20:59:27Z, writer 5e14f456a0791c35)
+       - gone: RF-002 the asserted line TX_INHIBIT_n: nothing on any board but its own source can drive it, and with that source unpowered or unplugged its own pull-downs hold it under 0.8 V against every pin's stated current, every other part powered or not
+pcb-a-power-a23    intent_rails           same result, same counts, same evidence
+     before: PASS         of 35    {"census_nets": 356, "checks": 35, "declared_nodes": 56, "declared_not_in_netlist": 0, "declared_rails": 34, "fail": 0, "held_pin_roles": 436, "nodes_supplying_parts": 0, "power_nets": 34, "rails_without_destination": 0, "settled": 59, "switches_unresolved": 0, "undecided": 0, "undeclared": 0, "unmarked": 163}  (taken 2026-09-27T13:21:56Z, writer 1ad7af0c718ba940)
+     after:  PASS         of 35    {"census_nets": 356, "checks": 35, "declared_nodes": 56, "declared_not_in_netlist": 0, "declared_rails": 34, "fail": 0, "held_pin_roles": 436, "nodes_supplying_parts": 0, "power_nets": 34, "rails_without_destination": 0, "settled": 59, "switches_unresolved": 0, "undecided": 0, "undeclared": 0, "unmarked": 163}  (taken 2026-09-27T20:59:19Z, writer 1ad7af0c718ba940)
+pcb-a-power-a23    interfaces_a           same result, same counts, same evidence
+     before: PASS         of 1     {"assignments": 1, "disagreements": 0}  (taken 2026-09-27T16:44:29Z, writer 7b7e4f3a0241cf35)
+     after:  PASS         of 1     {"assignments": 1, "disagreements": 0}  (taken 2026-09-27T20:59:29Z, writer 7b7e4f3a0241cf35)
+pcb-a-power-a23    pin_map_lands_a        content moved
+     before: PASS         of 611   {"failures": 0, "judged": 611, "merged_pad_pins": 0, "unreadable": 0}  (taken 2026-09-27T13:21:55Z, writer 89d2ad7c2bab8ba0)
+     after:  PASS         of 612   {"failures": 0, "judged": 612, "merged_pad_pins": 0, "unreadable": 0}  (taken 2026-09-27T20:59:17Z, writer 89d2ad7c2bab8ba0)
+pcb-a-power-a23    port_protect_a         same result, same counts, same evidence
+     before: PASS         of 26    {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 5, "clamps_one_way": 5, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjudged": 0, "declared": 3, "not_on_netlist": 0, "ports": 3, "unprotected": 0}  (taken 2026-09-27T13:22:07Z, writer 2d69facd3c25c8a4)
+     after:  PASS         of 26    {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 5, "clamps_one_way": 5, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjudged": 0, "declared": 3, "not_on_netlist": 0, "ports": 3, "unprotected": 0}  (taken 2026-09-27T20:59:31Z, writer 2d69facd3c25c8a4)
+pcb-a-power-a23    power_sequence         same result, same counts, same evidence
+     before: PASS         of 34    {"always_on": 4, "deadlocks": 0, "rails": 34, "segments": 14, "unresolved": 0}  (taken 2026-09-27T13:21:57Z, writer 2ba1e2e1a719c9d1)
+     after:  PASS         of 34    {"always_on": 4, "deadlocks": 0, "rails": 34, "segments": 14, "unresolved": 0}  (taken 2026-09-27T20:59:20Z, writer 2ba1e2e1a719c9d1)
+pcb-a-power-a23    reliability            same result, same counts, same evidence
+     before: PASS         of 45    {"boards": 1, "classes": 6, "covered": 39, "fail": 0}  (taken 2026-09-21T12:42:03Z, writer 149a48e5f2419955)
+     after:  PASS         of 45    {"boards": 1, "classes": 6, "covered": 39, "fail": 0}  (taken 2026-09-27T21:05:02Z, writer 71d0872195905c9d)
+pcb-a-power-a23    safe_lines_a           content moved
+     before: PASS         of 6     {"floating": 0, "lines": 6, "listened": 4, "on_netlist": 6}  (taken 2026-09-27T13:21:54Z, writer 8529487f405ec55d)
+     after:  PASS         of 7     {"floating": 0, "lines": 7, "listened": 5, "on_netlist": 7}  (taken 2026-09-27T20:59:16Z, writer 8529487f405ec55d)
+       + new:  DOCK_SPARE: safe high, pull down [none], pull up [R216 (10k to +3V3)], drivers [none], reads [U27.18 (PCA9555PW (0x21): enables an)], leaves on [J_DOCK.12]
+pcb-b-compute-b19  check_contracts        same result, same counts, same evidence
+     before: PASS         of 99    {"boards_without_intent": 0, "fail": 0, "missing_boards": 0, "pass": 99, "rails_unsplit": 0, "undecided": 0, "unjudged": 0}  (taken 2026-09-27T13:22:27Z, writer 5e14f456a0791c35)
+     after:  PASS         of 99    {"boards_without_intent": 0, "fail": 0, "missing_boards": 0, "pass": 99, "rails_unsplit": 0, "undecided": 0, "unjudged": 0}  (taken 2026-09-27T20:59:51Z, writer 5e14f456a0791c35)
+pcb-b-compute-b19  clock_check            same result, same counts, same evidence
+     before: PASS         of 7     {"bad": 0, "crystals": 7, "undeclared": 0}  (taken 2026-09-27T13:22:21Z, writer 8da2b82cac511dd0)
+     after:  PASS         of 7     {"bad": 0, "crystals": 7, "undeclared": 0}  (taken 2026-09-27T20:59:45Z, writer 8da2b82cac511dd0)
+pcb-b-compute-b19  derate                 content moved
+     before: PASS         of 240   {"by_vendor_reference": 0, "judged": 240, "undeclared_nets": 0, "under_rated": 0, "unrated_parts": 425}  (taken 2026-09-27T13:22:16Z, writer 6c29d1b9a523d385)
+     after:  PASS         of 240   {"by_vendor_reference": 0, "judged": 240, "undeclared_nets": 0, "under_rated": 0, "unrated_parts": 429}  (taken 2026-09-27T20:59:39Z, writer 6c29d1b9a523d385)
+pcb-b-compute-b19  edge_length            content moved
+     before: INCONCLUSIVE of 882   {"answered_nets": 30, "classes": 153, "contradicted_nets": 0, "decided_nets": 30, "layout_bound_nets": 0, "low_speed_nets": 320, "may_be_long_nets": 30, "signal_nets": 882, "undecided_nets": 532}  (taken 2026-09-27T13:22:20Z, writer fd66cbd9bce2fa7b)
+     after:  INCONCLUSIVE of 886   {"answered_nets": 30, "classes": 154, "contradicted_nets": 0, "decided_nets": 30, "layout_bound_nets": 0, "low_speed_nets": 324, "may_be_long_nets": 30, "signal_nets": 886, "undecided_nets": 532}  (taken 2026-09-27T20:59:44Z, writer fd66cbd9bce2fa7b)
+pcb-b-compute-b19  energy_chain_b         same result, same counts, same evidence
+     before: PASS         of 3     {"fail": 0, "stages": 3}  (taken 2026-09-27T13:22:20Z, writer 2eb665d0e50ee781)
+     after:  PASS         of 3     {"fail": 0, "stages": 3}  (taken 2026-09-27T20:59:43Z, writer 2eb665d0e50ee781)
+pcb-b-compute-b19  erc_gate               content moved
+     before: PASS         of 2879  {"allowed": 7, "blocking": 0, "violations": 2879}  (taken 2026-09-27T13:22:13Z, writer bb4bf868c515f37a)
+     after:  PASS         of 2912  {"allowed": 7, "blocking": 0, "violations": 2912}  (taken 2026-09-27T20:59:36Z, writer bb4bf868c515f37a)
+pcb-b-compute-b19  inhibit_chain_b        RESULT MOVED
+     before: FAIL         of 20    {"fail": 11, "pass": 6, "undecided": 3, "unjudged": 0}  (taken 2026-09-27T13:22:26Z, writer 5e14f456a0791c35)
+     after:  INCONCLUSIVE of 20    {"fail": 0, "pass": 16, "undecided": 4, "unjudged": 0}  (taken 2026-09-27T20:59:51Z, writer 5e14f456a0791c35)
+       - gone: RF-002 the asserted line TX_INHIBIT_n: nothing on any board but its own source can drive it, and with that source unpowered or unplugged its own pull-downs hold it under 0.8 V against every pin's stated current, every other part powered or not
+       - gone: RF-002 RM520N-GL 5G module: EMCON reaches it in hardware (B rf_disable on J_M2C2 or B power on J_M2C2)
+       - gone: RF-002 AW7915-AED WiFi link card, slot 1: EMCON reaches it in hardware (B rf_disable on J_M2C1 or B power on J_M2C1)
+       - gone: RF-002 AW7915-AED WiFi link card, slot 3: EMCON reaches it in hardware (B rf_disable on J_M2C3 or B power on J_M2C3)
+       - gone: RF-002 Compute Module 5 slot S1 on-module WiFi: EMCON reaches it in hardware (B rf_disable on U30A)
+       - gone: RF-002 Compute Module 5 slot S1 on-module Bluetooth: EMCON reaches it in hardware (B rf_disable on U30A)
+       - gone: RF-002 Compute Module 5 slot S2 on-module WiFi: EMCON reaches it in hardware (B rf_disable on U31A)
+       - gone: RF-002 Compute Module 5 slot S2 on-module Bluetooth: EMCON reaches it in hardware (B rf_disable on U31A)
+       - gone: RF-002 Compute Module 5 slot S3 on-module WiFi: EMCON reaches it in hardware (B rf_disable on U32A)
+       - gone: RF-002 Compute Module 5 slot S3 on-module Bluetooth: EMCON reaches it in hardware (B rf_disable on U32A)
+       - gone: RF-002 B: every part that names a radio is a listed transmitter, an accessory or a receiver
+       + new:  undecided: RF-002 RM520N-GL 5G module: EMCON reaches it in hardware (B rf_disable on J_M2C2 or B power on J_M2C2)
+pcb-b-compute-b19  intent_rails           content moved
+     before: PASS         of 59    {"census_nets": 2004, "checks": 59, "declared_nodes": 35, "declared_not_in_netlist": 0, "declared_rails": 58, "fail": 0, "held_pin_roles": 260, "nodes_supplying_parts": 0, "power_nets": 58, "rails_without_destination": 0, "settled": 50, "switches_unresolved": 0, "undecided": 0, "undeclared": 0, "unmarked": 707}  (taken 2026-09-27T13:22:17Z, writer 1ad7af0c718ba940)
+     after:  PASS         of 59    {"census_nets": 2011, "checks": 59, "declared_nodes": 35, "declared_not_in_netlist": 0, "declared_rails": 58, "fail": 0, "held_pin_roles": 260, "nodes_supplying_parts": 0, "power_nets": 58, "rails_without_destination": 0, "settled": 50, "switches_unresolved": 0, "undecided": 0, "undeclared": 0, "unmarked": 711}  (taken 2026-09-27T20:59:40Z, writer 1ad7af0c718ba940)
+       - gone: census of the 2004 nets: 58 counted, 154 declared node, 0 ground, 50 settled, 1035 unconnected, 0 undecided, 707 unmarked
+       + new:  census of the 2011 nets: 58 counted, 154 declared node, 0 ground, 50 settled, 1038 unconnected, 0 undecided, 711 unmarked
+pcb-b-compute-b19  interfaces_b           same result, same counts, same evidence
+     before: PASS         of 7     {"assignments": 7, "disagreements": 0}  (taken 2026-09-27T16:44:31Z, writer 7b7e4f3a0241cf35)
+     after:  PASS         of 7     {"assignments": 7, "disagreements": 0}  (taken 2026-09-27T20:59:52Z, writer 7b7e4f3a0241cf35)
+pcb-b-compute-b19  pin_map_lands_b        content moved
+     before: PASS         of 1270  {"failures": 0, "judged": 1270, "merged_pad_pins": 0, "unreadable": 0}  (taken 2026-09-27T13:22:15Z, writer 89d2ad7c2bab8ba0)
+     after:  PASS         of 1280  {"failures": 0, "judged": 1280, "merged_pad_pins": 0, "unreadable": 0}  (taken 2026-09-27T20:59:38Z, writer 89d2ad7c2bab8ba0)
+pcb-b-compute-b19  port_protect_b         same result, same counts, same evidence
+     before: PASS         of 17    {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 6, "clamps_one_way": 6, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjudged": 0, "declared": 2, "not_on_netlist": 0, "ports": 2, "unprotected": 0}  (taken 2026-09-27T13:22:29Z, writer 2d69facd3c25c8a4)
+     after:  PASS         of 17    {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 6, "clamps_one_way": 6, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjudged": 0, "declared": 2, "not_on_netlist": 0, "ports": 2, "unprotected": 0}  (taken 2026-09-27T20:59:53Z, writer 2d69facd3c25c8a4)
+pcb-b-compute-b19  power_sequence         same result, same counts, same evidence
+     before: PASS         of 58    {"always_on": 29, "deadlocks": 0, "rails": 58, "segments": 11, "unresolved": 0}  (taken 2026-09-27T13:22:18Z, writer 2ba1e2e1a719c9d1)
+     after:  PASS         of 58    {"always_on": 29, "deadlocks": 0, "rails": 58, "segments": 11, "unresolved": 0}  (taken 2026-09-27T20:59:42Z, writer 2ba1e2e1a719c9d1)
+pcb-b-compute-b19  reliability            content moved
+     before: PASS         of 47    {"boards": 1, "classes": 6, "covered": 41, "fail": 0}  (taken 2026-09-21T12:47:45Z, writer 149a48e5f2419955)
+     after:  PASS         of 44    {"boards": 1, "classes": 6, "covered": 38, "fail": 0}  (taken 2026-09-27T21:05:02Z, writer 71d0872195905c9d)
+pcb-b-compute-b19  safe_lines_b           content moved
+     before: PASS         of 5     {"floating": 0, "lines": 5, "listened": 1, "on_netlist": 5}  (taken 2026-09-27T13:22:14Z, writer 8529487f405ec55d)
+     after:  PASS         of 5     {"floating": 0, "lines": 5, "listened": 1, "on_netlist": 5}  (taken 2026-09-27T20:59:37Z, writer 8529487f405ec55d)
+       - gone: EMCON_HW: safe low, pull down [R58 (4.7k 1%)], pull up [none], drivers [none], reads [U112.2 (SN74LVC1G04DBVR inverter (2 ), U212.2 (SN74LVC1G04DBVR inverter (2 ), U312.2 (SN74LVC1G04DBVR inverter (2 ), U501.1 (SN74LVC1G08DBVR AND (1 A 2 B)], leaves on [J_AB1.15, J_PANEL.8]
+       + new:  EMCON_HW: safe low, pull down [R58 (4.7k 1%)], pull up [none], drivers [none], reads [U112.2 (SN74LVC1G04DBVR inverter (2 ), U116.1 (SN74LV1T08DBVR AND, 5 V supp), U212.2 (SN74LVC1G04DBVR inverter (2 ), U216.1 (SN74LV1T08DBVR AND, 5 V supp)], leaves on [J_AB1.15, J_PANEL.8]
+pcb-c-display-c8   check_contracts        same result, same counts, same evidence
+     before: PASS         of 99    {"boards_without_intent": 0, "fail": 0, "missing_boards": 0, "pass": 99, "rails_unsplit": 0, "undecided": 0, "unjudged": 0}  (taken 2026-09-27T13:22:40Z, writer 5e14f456a0791c35)
+     after:  PASS         of 99    {"boards_without_intent": 0, "fail": 0, "missing_boards": 0, "pass": 99, "rails_unsplit": 0, "undecided": 0, "unjudged": 0}  (taken 2026-09-27T21:00:05Z, writer 5e14f456a0791c35)
+pcb-c-display-c8   clock_check            same result, same counts, same evidence
+     before: PASS         of 1     {"bad": 0, "crystals": 1, "undeclared": 0}  (taken 2026-09-27T13:22:35Z, writer 8da2b82cac511dd0)
+     after:  PASS         of 1     {"bad": 0, "crystals": 1, "undeclared": 0}  (taken 2026-09-27T20:59:59Z, writer 8da2b82cac511dd0)
+pcb-c-display-c8   derate                 same result, same counts, same evidence
+     before: PASS         of 16    {"by_vendor_reference": 9, "judged": 16, "undeclared_nets": 0, "under_rated": 0, "unrated_parts": 59}  (taken 2026-09-27T13:22:32Z, writer 6c29d1b9a523d385)
+     after:  PASS         of 16    {"by_vendor_reference": 9, "judged": 16, "undeclared_nets": 0, "under_rated": 0, "unrated_parts": 59}  (taken 2026-09-27T20:59:57Z, writer 6c29d1b9a523d385)
+pcb-c-display-c8   edge_length            same result, same counts, same evidence
+     before: INCONCLUSIVE of 134   {"answered_nets": 4, "classes": 44, "contradicted_nets": 0, "decided_nets": 4, "layout_bound_nets": 0, "low_speed_nets": 97, "may_be_long_nets": 4, "signal_nets": 134, "undecided_nets": 33}  (taken 2026-09-27T13:22:34Z, writer fd66cbd9bce2fa7b)
+     after:  INCONCLUSIVE of 134   {"answered_nets": 4, "classes": 44, "contradicted_nets": 0, "decided_nets": 4, "layout_bound_nets": 0, "low_speed_nets": 97, "may_be_long_nets": 4, "signal_nets": 134, "undecided_nets": 33}  (taken 2026-09-27T20:59:59Z, writer fd66cbd9bce2fa7b)
+pcb-c-display-c8   erc_gate               content moved
+     before: PASS         of 328   {"allowed": 0, "blocking": 0, "violations": 328}  (taken 2026-09-27T13:22:31Z, writer bb4bf868c515f37a)
+     after:  PASS         of 330   {"allowed": 0, "blocking": 0, "violations": 330}  (taken 2026-09-27T20:59:55Z, writer bb4bf868c515f37a)
+pcb-c-display-c8   inhibit_chain_c        RESULT MOVED
+     before: FAIL         of 6     {"fail": 1, "pass": 5, "undecided": 0, "unjudged": 0}  (taken 2026-09-27T13:22:40Z, writer 5e14f456a0791c35)
+     after:  PASS         of 6     {"fail": 0, "pass": 6, "undecided": 0, "unjudged": 0}  (taken 2026-09-27T21:00:05Z, writer 5e14f456a0791c35)
+       - gone: RF-002 the asserted line TX_INHIBIT_n: nothing on any board but its own source can drive it, and with that source unpowered or unplugged its own pull-downs hold it under 0.8 V against every pin's stated current, every other part powered or not
+pcb-c-display-c8   intent_rails           RESULT MOVED
+     before: FAIL         of 7     {"census_nets": 153, "checks": 7, "declared_nodes": 1, "declared_not_in_netlist": 0, "declared_rails": 2, "fail": 5, "held_pin_roles": 22, "nodes_supplying_parts": 0, "power_nets": 6, "rails_without_destination": 0, "settled": 3, "switches_unresolved": 0, "undecided": 11, "undeclared": 4, "unmarked": 109}  (taken 2026-09-27T13:22:33Z, writer 1ad7af0c718ba940)
+     after:  PASS         of 6     {"census_nets": 153, "checks": 6, "declared_nodes": 25, "declared_not_in_netlist": 0, "declared_rails": 5, "fail": 0, "held_pin_roles": 22, "nodes_supplying_parts": 0, "power_nets": 5, "rails_without_destination": 0, "settled": 3, "switches_unresolved": 0, "undecided": 0, "undeclared": 0, "unmarked": 74}  (taken 2026-09-27T20:59:58Z, writer 1ad7af0c718ba940)
+       - gone: census of the 153 nets: 6 counted, 10 declared node, 1 ground, 3 settled, 13 unconnected, 11 undecided, 109 unmarked
+       - gone: undecided, named and not counted (11): EMCLAMP_A, EMCLAMP_K, EPD_RESE, LIGHT_DAY_n, LIGHT_NIGHT_n, TEST_SW, TX_A, TX_INHIBIT_n, TX_K, TX_LAMPTEST, ZEROIZE_SW
+       - gone: power net C_DVDD is a declared rail (it is not: supply pin by name (U3.23 DVDD, U3.45 VREG_VOUT, U3.50 DVDD), and the intent's bypass list decouples it (C14:U3.45, C15:U3.50); supply pin by its held datasheet)
+       - gone: power net EPD_VCC is a declared rail (it is not: power class PWR in the netlist; supply pin by name (J_EPD.15 VDDIO, J_EPD.16 VDD), and the intent's bypass list decouples it (C29:J_EPD.15, C28:J_EPD.16); switc)
+       - gone: power net LED_RAIL is a declared rail (it is not: power class PWR in the netlist)
+       - gone: power net LED_RAIL_SW is a declared rail (it is not: power class PWR in the netlist)
+       - gone: the count of declared rails equals the count of power nets carrying more than 0.00 A: 2 declared (2 of them nets of the netlist), 6 power nets not declared as nodes (by kind, a net counted under each that applies: 2 power-symbol, 1 supply-pin by type, 5 power-class, 5 supply-pin by name, 3 supply-pin by its held datasheet, 1 reached by a rail's current, 2 declared rails), 1 declared as nodes; unde
+       - gone: undecided, named and not counted: EMCLAMP_A: it carries the mark of a supply (M3 D22 joins it to the undecided net EMCLAMP_K) and nothing read settles it: D22.2
+       - gone: undecided, named and not counted: EMCLAMP_K: it carries the mark of a supply (M4 the switched return of D22: the channel of Q7 sinks it to ground) and nothing read settles it: D22.1, Q7.3
+       - gone: undecided, named and not counted: EPD_RESE: it carries the mark of a supply (M4 the channel of Q6 with the net EPD_SW) and nothing read settles it: J_EPD.3, Q6.2
+       - gone: undecided, named and not counted: LIGHT_DAY_n: it carries the mark of a supply (M1 capacitor C22 to ground) and nothing read settles it: SW_LIGHT.5, U1.13
+       - gone: undecided, named and not counted: LIGHT_NIGHT_n: it carries the mark of a supply (M1 capacitor C23 to ground) and nothing read settles it: SW_LIGHT.6, U1.14
+       - gone: undecided, named and not counted: TEST_SW: it carries the mark of a supply (M1 capacitor C21 to ground) and nothing read settles it: SW_TEST.1, U3.39
+       - gone: undecided, named and not counted: TX_A: it carries the mark of a supply (M3 D3 joins it to the undecided net TX_K) and nothing read settles it: D3.2
+       - gone: undecided, named and not counted: TX_INHIBIT_n: it carries the mark of a supply (M1 capacitor C24 to ground) and nothing read settles it: J_PANEL.11, SW_EMCON.1, U14.3, U9.2
+       - gone: undecided, named and not counted: TX_K: it carries the mark of a supply (M4 the switched return of D17, D3: the channel of Q3 sinks it to ground) and nothing read settles it: D17.2, D3.1, Q3.3
+       - gone: undecided, named and not counted: TX_LAMPTEST: it carries the mark of a supply (M3 D17 joins it to the undecided net TX_K) and nothing read settles it: D17.1, U2.13
+       - gone: undecided, named and not counted: ZEROIZE_SW: it carries the mark of a supply (M1 capacitor C20 to ground) and nothing read settles it: SW_ZERO.1, U12.2, U3.34
+       + new:  census of the 153 nets: 5 counted, 57 declared node, 1 ground, 3 settled, 13 unconnected, 0 undecided, 74 unmarked
+       + new:  declared as a node, not a rail: BAT1_A (series conductor: the load R31 of rail LED_RAIL at 0.02 A)
+       + new:  declared as a node, not a rail: BAT2_A (series conductor: the load R32 of rail LED_RAIL at 0.03 A)
+       + new:  declared as a node, not a rail: BAT3_A (series conductor: the load R33 of rail LED_RAIL at 0.03 A)
+       + new:  declared as a node, not a rail: BAT4_A (series conductor: the load R34 of rail LED_RAIL at 0.03 A)
+       + new:  declared as a node, not a rail: BAT5_A (series conductor: the load R35 of rail LED_RAIL at 0.03 A)
+       + new:  declared as a node, not a rail: CHG_A (series conductor: the load R29 of rail LED_RAIL at 0.03 A)
+       + new:  declared as a node, not a rail: C_DVDD (supply pin by name (U3.23 DVDD, U3.45 VREG_VOUT, U3.50 DVDD), and the intent's bypass list decouples it (C14:U3.45, C15:)
+       + new:  declared as a node, not a rail: EMCLAMP_A (series conductor: the load R47 of rail LED_RAIL_SW at 0.01 A)
+       + new:  declared as a node, not a rail: EPD_SW (series conductor: the load L1 of rail EPD_VCC at 0.50 A)
+pcb-c-display-c8   interfaces_c           same result, same counts, same evidence
+     before: PASS         of 1     {"assignments": 1, "disagreements": 0}  (taken 2026-09-27T16:44:32Z, writer 7b7e4f3a0241cf35)
+     after:  PASS         of 1     {"assignments": 1, "disagreements": 0}  (taken 2026-09-27T21:00:07Z, writer 7b7e4f3a0241cf35)
+pcb-c-display-c8   pin_map_lands_c        content moved
+     before: PASS         of 217   {"failures": 0, "judged": 217, "merged_pad_pins": 0, "unreadable": 0}  (taken 2026-09-27T13:22:32Z, writer 89d2ad7c2bab8ba0)
+     after:  PASS         of 219   {"failures": 0, "judged": 219, "merged_pad_pins": 0, "unreadable": 0}  (taken 2026-09-27T20:59:56Z, writer 89d2ad7c2bab8ba0)
+pcb-c-display-c8   port_protect_c         same result, same counts, same evidence
+     before: PASS         of 4     {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 0, "clamps_one_way": 0, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjudged": 0, "declared": 2, "not_on_netlist": 0, "ports": 2, "unprotected": 0}  (taken 2026-09-27T13:22:42Z, writer 2d69facd3c25c8a4)
+     after:  PASS         of 4     {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 0, "clamps_one_way": 0, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjudged": 0, "declared": 2, "not_on_netlist": 0, "ports": 2, "unprotected": 0}  (taken 2026-09-27T21:00:07Z, writer 2d69facd3c25c8a4)
+pcb-c-display-c8   reliability            same result, same counts, same evidence
+     before: PASS         of 11    {"boards": 1, "classes": 2, "covered": 9, "fail": 0}  (taken 2026-09-21T12:50:27Z, writer 149a48e5f2419955)
+     after:  PASS         of 11    {"boards": 1, "classes": 2, "covered": 9, "fail": 0}  (taken 2026-09-27T21:05:03Z, writer 71d0872195905c9d)
+pcb-d-aprs-d9      check_contracts        same result, same counts, same evidence
+     before: PASS         of 99    {"boards_without_intent": 0, "fail": 0, "missing_boards": 0, "pass": 99, "rails_unsplit": 0, "undecided": 0, "unjudged": 0}  (taken 2026-09-27T13:22:54Z, writer 5e14f456a0791c35)
+     after:  PASS         of 99    {"boards_without_intent": 0, "fail": 0, "missing_boards": 0, "pass": 99, "rails_unsplit": 0, "undecided": 0, "unjudged": 0}  (taken 2026-09-27T21:00:20Z, writer 5e14f456a0791c35)
+pcb-d-aprs-d9      clock_check            same result, same counts, same evidence
+     before: PASS         of 2     {"bad": 0, "crystals": 2, "undeclared": 0}  (taken 2026-09-27T13:22:49Z, writer 8da2b82cac511dd0)
+     after:  PASS         of 2     {"bad": 0, "crystals": 2, "undeclared": 0}  (taken 2026-09-27T21:00:14Z, writer 8da2b82cac511dd0)
+pcb-d-aprs-d9      derate                 same result, same counts, same evidence
+     before: PASS         of 19    {"by_vendor_reference": 0, "judged": 19, "undeclared_nets": 0, "under_rated": 0, "unrated_parts": 76}  (taken 2026-09-27T13:22:46Z, writer 6c29d1b9a523d385)
+     after:  PASS         of 19    {"by_vendor_reference": 0, "judged": 19, "undeclared_nets": 0, "under_rated": 0, "unrated_parts": 76}  (taken 2026-09-27T21:00:12Z, writer 6c29d1b9a523d385)
+pcb-d-aprs-d9      edge_length            same result, same counts, same evidence
+     before: INCONCLUSIVE of 135   {"answered_nets": 18, "classes": 45, "contradicted_nets": 0, "decided_nets": 20, "layout_bound_nets": 2, "low_speed_nets": 88, "may_be_long_nets": 20, "signal_nets": 135, "undecided_nets": 27}  (taken 2026-09-27T13:22:48Z, writer fd66cbd9bce2fa7b)
+     after:  INCONCLUSIVE of 135   {"answered_nets": 18, "classes": 45, "contradicted_nets": 0, "decided_nets": 20, "layout_bound_nets": 2, "low_speed_nets": 88, "may_be_long_nets": 20, "signal_nets": 135, "undecided_nets": 27}  (taken 2026-09-27T21:00:14Z, writer fd66cbd9bce2fa7b)
+pcb-d-aprs-d9      erc_gate               same result, same counts, same evidence
+     before: PASS         of 445   {"allowed": 0, "blocking": 0, "violations": 445}  (taken 2026-09-27T13:22:44Z, writer bb4bf868c515f37a)
+     after:  PASS         of 445   {"allowed": 0, "blocking": 0, "violations": 445}  (taken 2026-09-27T21:00:09Z, writer bb4bf868c515f37a)
+pcb-d-aprs-d9      inhibit_chain_d        RESULT MOVED
+     before: FAIL         of 8     {"fail": 2, "pass": 6, "undecided": 0, "unjudged": 0}  (taken 2026-09-27T13:22:54Z, writer 5e14f456a0791c35)
+     after:  INCONCLUSIVE of 8     {"fail": 0, "pass": 7, "undecided": 1, "unjudged": 0}  (taken 2026-09-27T21:00:20Z, writer 5e14f456a0791c35)
+       - gone: RF-002 the asserted line TX_INHIBIT_n: nothing on any board but its own source can drive it, and with that source unpowered or unplugged its own pull-downs hold it under 0.8 V against every pin's stated current, every other part powered or not
+       - gone: RF-002 SA868 VHF exciter: EMCON reaches it in hardware (D key on U2)
+       + new:  undecided: RF-002 SA868 VHF exciter: EMCON reaches it in hardware (D key on U2)
+pcb-d-aprs-d9      intent_rails           RESULT MOVED
+     before: INCONCLUSIVE of 7     {"census_nets": 188, "checks": 7, "declared_nodes": 13, "declared_not_in_netlist": 0, "declared_rails": 6, "fail": 0, "held_pin_roles": 55, "nodes_supplying_parts": 0, "power_nets": 6, "rails_without_destination": 0, "settled": 16, "switches_unresolved": 0, "undecided": 1, "undeclared": 0, "unmarked": 94}  (taken 2026-09-27T13:22:47Z, writer 1ad7af0c718ba940)
+     after:  PASS         of 7     {"census_nets": 188, "checks": 7, "declared_nodes": 13, "declared_not_in_netlist": 0, "declared_rails": 6, "fail": 0, "held_pin_roles": 55, "nodes_supplying_parts": 0, "power_nets": 6, "rails_without_destination": 0, "settled": 16, "switches_unresolved": 0, "undecided": 0, "undeclared": 0, "unmarked": 94}  (taken 2026-09-27T21:00:13Z, writer 1ad7af0c718ba940)
+       - gone: census of the 188 nets: 6 counted, 27 declared node, 1 ground, 16 settled, 43 unconnected, 1 undecided, 94 unmarked
+       - gone: undecided, named and not counted (1): RLY_K
+       - gone: undecided, named and not counted: RLY_K: it carries the mark of a supply (M3 D2 joins it to the power net +5V_TX; M4 the switched return of D2, K1: the channel of Q2 sinks it to ground) and nothing read settles it: D2.2, K1.8, Q2.3
+       + new:  census of the 188 nets: 6 counted, 28 declared node, 1 ground, 16 settled, 43 unconnected, 0 undecided, 94 unmarked
+pcb-d-aprs-d9      interfaces_d           same result, same counts, same evidence
+     before: PASS         of 1     {"assignments": 1, "disagreements": 0}  (taken 2026-09-27T16:44:33Z, writer 7b7e4f3a0241cf35)
+     after:  PASS         of 1     {"assignments": 1, "disagreements": 0}  (taken 2026-09-27T21:00:22Z, writer 7b7e4f3a0241cf35)
+pcb-d-aprs-d9      pin_map_lands_d        same result, same counts, same evidence
+     before: PASS         of 245   {"failures": 0, "judged": 245, "merged_pad_pins": 0, "unreadable": 0}  (taken 2026-09-27T13:22:46Z, writer 89d2ad7c2bab8ba0)
+     after:  PASS         of 245   {"failures": 0, "judged": 245, "merged_pad_pins": 0, "unreadable": 0}  (taken 2026-09-27T21:00:11Z, writer 89d2ad7c2bab8ba0)
+pcb-d-aprs-d9      port_protect_d         same result, same counts, same evidence
+     before: PASS         of 21    {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 7, "clamps_one_way": 1, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjudged": 0, "declared": 4, "not_on_netlist": 0, "ports": 4, "unprotected": 0}  (taken 2026-09-27T13:22:56Z, writer 2d69facd3c25c8a4)
+     after:  PASS         of 21    {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 7, "clamps_one_way": 1, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjudged": 0, "declared": 4, "not_on_netlist": 0, "ports": 4, "unprotected": 0}  (taken 2026-09-27T21:00:23Z, writer 2d69facd3c25c8a4)
+pcb-d-aprs-d9      reliability            content moved
+     before: PASS         of 12    {"boards": 1, "classes": 3, "covered": 9, "fail": 0}  (taken 2026-09-21T12:51:26Z, writer 149a48e5f2419955)
+     after:  PASS         of 14    {"boards": 1, "classes": 4, "covered": 10, "fail": 0}  (taken 2026-09-27T21:05:04Z, writer 71d0872195905c9d)
+pcb-d-aprs-d9      safe_lines_d           same result, same counts, same evidence
+     before: PASS         of 2     {"floating": 0, "lines": 2, "listened": 1, "on_netlist": 2}  (taken 2026-09-27T13:22:45Z, writer 8529487f405ec55d)
+     after:  PASS         of 2     {"floating": 0, "lines": 2, "listened": 1, "on_netlist": 2}  (taken 2026-09-27T21:00:10Z, writer 8529487f405ec55d)
+pcb-e1-dock-e7     check_contracts        same result, same counts, same evidence
+     before: PASS         of 99    {"boards_without_intent": 0, "fail": 0, "missing_boards": 0, "pass": 99, "rails_unsplit": 0, "undecided": 0, "unjudged": 0}  (taken 2026-09-27T13:23:10Z, writer 5e14f456a0791c35)
+     after:  PASS         of 99    {"boards_without_intent": 0, "fail": 0, "missing_boards": 0, "pass": 99, "rails_unsplit": 0, "undecided": 0, "unjudged": 0}  (taken 2026-09-27T21:00:37Z, writer 5e14f456a0791c35)
+pcb-e1-dock-e7     clock_check            same result, same counts, same evidence
+     before: PASS         of 1     {"bad": 0, "crystals": 1, "undeclared": 0}  (taken 2026-09-27T13:23:05Z, writer 8da2b82cac511dd0)
+     after:  PASS         of 1     {"bad": 0, "crystals": 1, "undeclared": 0}  (taken 2026-09-27T21:00:31Z, writer 8da2b82cac511dd0)
+pcb-e1-dock-e7     derate                 same result, same counts, same evidence
+     before: PASS         of 53    {"by_vendor_reference": 0, "judged": 53, "undeclared_nets": 0, "under_rated": 0, "unrated_parts": 52}  (taken 2026-09-27T13:23:00Z, writer 6c29d1b9a523d385)
+     after:  PASS         of 53    {"by_vendor_reference": 0, "judged": 53, "undeclared_nets": 0, "under_rated": 0, "unrated_parts": 52}  (taken 2026-09-27T21:00:27Z, writer 6c29d1b9a523d385)
+pcb-e1-dock-e7     edge_length            content moved
+     before: INCONCLUSIVE of 82    {"answered_nets": 4, "classes": 49, "contradicted_nets": 0, "decided_nets": 4, "layout_bound_nets": 0, "low_speed_nets": 41, "may_be_long_nets": 4, "signal_nets": 82, "undecided_nets": 37}  (taken 2026-09-27T13:23:04Z, writer fd66cbd9bce2fa7b)
+     after:  INCONCLUSIVE of 83    {"answered_nets": 4, "classes": 50, "contradicted_nets": 0, "decided_nets": 4, "layout_bound_nets": 0, "low_speed_nets": 42, "may_be_long_nets": 4, "signal_nets": 83, "undecided_nets": 37}  (taken 2026-09-27T21:00:31Z, writer fd66cbd9bce2fa7b)
+pcb-e1-dock-e7     energy_chain           same result, same counts, same evidence
+     before: PASS         of 98    {"checks": 98, "citations_unjudged": 0, "coordination_findings": 0, "fail": 0, "selection_findings": 0, "stages": 12}  (taken 2026-09-27T13:23:04Z, writer 2eb665d0e50ee781)
+     after:  PASS         of 98    {"checks": 98, "citations_unjudged": 0, "coordination_findings": 0, "fail": 0, "selection_findings": 0, "stages": 12}  (taken 2026-09-27T21:00:30Z, writer 2eb665d0e50ee781)
+pcb-e1-dock-e7     energy_chain_e         same result, same counts, same evidence
+     before: PASS         of 3     {"fail": 0, "stages": 3}  (taken 2026-09-27T13:23:04Z, writer 2eb665d0e50ee781)
+     after:  PASS         of 3     {"fail": 0, "stages": 3}  (taken 2026-09-27T21:00:30Z, writer 2eb665d0e50ee781)
+pcb-e1-dock-e7     erc_gate               content moved
+     before: PASS         of 367   {"allowed": 0, "blocking": 0, "violations": 367}  (taken 2026-09-27T13:22:58Z, writer bb4bf868c515f37a)
+     after:  PASS         of 370   {"allowed": 0, "blocking": 0, "violations": 370}  (taken 2026-09-27T21:00:24Z, writer bb4bf868c515f37a)
+pcb-e1-dock-e7     inhibit_chain_e        same result, same counts, same evidence
+     before: PASS         of 1     {"fail": 0, "pass": 1, "undecided": 0, "unjudged": 0}  (taken 2026-09-27T13:23:10Z, writer 5e14f456a0791c35)
+     after:  PASS         of 1     {"fail": 0, "pass": 1, "undecided": 0, "unjudged": 0}  (taken 2026-09-27T21:00:37Z, writer 5e14f456a0791c35)
+pcb-e1-dock-e7     intent_rails           RESULT MOVED
+     before: INCONCLUSIVE of 16    {"census_nets": 124, "checks": 16, "declared_nodes": 11, "declared_not_in_netlist": 0, "declared_rails": 15, "fail": 0, "held_pin_roles": 71, "nodes_supplying_parts": 0, "power_nets": 15, "rails_without_destination": 0, "settled": 11, "switches_unresolved": 0, "undecided": 2, "undeclared": 0, "unmarked": 59}  (taken 2026-09-27T13:23:01Z, writer 1ad7af0c718ba940)
+     after:  PASS         of 16    {"census_nets": 124, "checks": 16, "declared_nodes": 11, "declared_not_in_netlist": 0, "declared_rails": 15, "fail": 0, "held_pin_roles": 71, "nodes_supplying_parts": 0, "power_nets": 15, "rails_without_destination": 0, "settled": 11, "switches_unresolved": 0, "undecided": 0, "undeclared": 0, "unmarked": 60}  (taken 2026-09-27T21:00:28Z, writer 1ad7af0c718ba940)
+       - gone: census of the 124 nets: 15 counted, 13 declared node, 2 ground, 11 settled, 22 unconnected, 2 undecided, 59 unmarked
+       - gone: undecided, named and not counted (2): FAN1_SW, FAN2_SW
+       - gone: undecided, named and not counted: FAN1_SW: it carries the mark of a supply (M3 D7 joins it to the power net CELL_F; M4 the switched return of D7: the channel of Q9 sinks it to ground) and nothing read settles it: D7.2, J_FAN1.2, Q9.3
+       - gone: undecided, named and not counted: FAN2_SW: it carries the mark of a supply (M3 D8 joins it to the power net CELL_F; M4 the switched return of D8: the channel of Q10 sinks it to ground) and nothing read settles it: D8.2, J_FAN2.2, Q10.3
+       + new:  census of the 124 nets: 15 counted, 15 declared node, 2 ground, 11 settled, 21 unconnected, 0 undecided, 60 unmarked
+pcb-e1-dock-e7     interfaces_e           same result, same counts, same evidence
+     before: PASS         of 1     {"assignments": 1, "disagreements": 0}  (taken 2026-09-27T16:44:34Z, writer 7b7e4f3a0241cf35)
+     after:  PASS         of 1     {"assignments": 1, "disagreements": 0}  (taken 2026-09-27T21:00:39Z, writer 7b7e4f3a0241cf35)
+pcb-e1-dock-e7     pin_map_lands_e        content moved
+     before: PASS         of 187   {"failures": 0, "judged": 187, "merged_pad_pins": 18, "unreadable": 0}  (taken 2026-09-27T13:23:00Z, writer 89d2ad7c2bab8ba0)
+     after:  PASS         of 189   {"failures": 0, "judged": 189, "merged_pad_pins": 18, "unreadable": 0}  (taken 2026-09-27T21:00:26Z, writer 89d2ad7c2bab8ba0)
+pcb-e1-dock-e7     port_protect_e         same result, same counts, same evidence
+     before: PASS         of 13    {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 5, "clamps_one_way": 4, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjudged": 0, "declared": 3, "not_on_netlist": 0, "ports": 3, "unprotected": 0}  (taken 2026-09-27T13:23:12Z, writer 2d69facd3c25c8a4)
+     after:  PASS         of 13    {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 5, "clamps_one_way": 4, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjudged": 0, "declared": 3, "not_on_netlist": 0, "ports": 3, "unprotected": 0}  (taken 2026-09-27T21:00:39Z, writer 2d69facd3c25c8a4)
+pcb-e1-dock-e7     power_sequence         same result, same counts, same evidence
+     before: PASS         of 15    {"always_on": 5, "deadlocks": 0, "rails": 15, "segments": 7, "unresolved": 0}  (taken 2026-09-27T13:23:02Z, writer 2ba1e2e1a719c9d1)
+     after:  PASS         of 15    {"always_on": 5, "deadlocks": 0, "rails": 15, "segments": 7, "unresolved": 0}  (taken 2026-09-27T21:00:29Z, writer 2ba1e2e1a719c9d1)
+pcb-e1-dock-e7     reliability            content moved
+     before: PASS         of 10    {"boards": 1, "classes": 3, "covered": 7, "fail": 0}  (taken 2026-09-21T12:52:10Z, writer 149a48e5f2419955)
+     after:  PASS         of 11    {"boards": 1, "classes": 3, "covered": 8, "fail": 0}  (taken 2026-09-27T21:05:04Z, writer 71d0872195905c9d)
+pcb-e1-dock-e7     safe_lines_e           content moved
+     before: PASS         of 1     {"floating": 0, "lines": 1, "listened": 1, "on_netlist": 1}  (taken 2026-09-27T13:22:59Z, writer 8529487f405ec55d)
+     after:  PASS         of 2     {"floating": 0, "lines": 2, "listened": 1, "on_netlist": 2}  (taken 2026-09-27T21:00:25Z, writer 8529487f405ec55d)
+       + new:  BLK_SPARE: safe high, pull down [none], pull up [none], drivers [none], reads [Q11.3 (2N7002 HOT-R1 open drain: GP)], leaves on [J_BLK.12]
+pcb-e5-block       check_contracts_e5     RESULT MOVED
+     before: PASS         of 33    {"fail": 0, "pass": 33}  (taken 2026-09-21T12:53:13Z, writer b8533c8fde76ee32)
+     after:  FAIL         of 38    {"fail": 10, "pass": 28}  (taken 2026-09-27T21:00:46Z, writer f6f01899199a66a3)
+       + new:  target 7 carries 'VIN_RAW_P1' and the pin above it is J_DOCK pin 1, on GND in board A's netlist, so it must carry 'GND_P1'
+       + new:  target 8 carries 'VIN_RAW_P2' and the pin above it is J_DOCK pin 2, on GND in board A's netlist, so it must carry 'GND_P2'
+       + new:  target 9 carries 'VIN_RAW_P3' and the pin above it is J_DOCK pin 3, on GND in board A's netlist, so it must carry 'GND_P3'
+       + new:  target 10 carries 'VIN_RAW_P4' and the pin above it is J_DOCK pin 4, on GND in board A's netlist, so it must carry 'GND_P4'
+       + new:  wire land 7 carries 'VIN_RAW_P1' and must carry 'GND_P1', the net of the pin above target 7: the wire would leave on another net
+       + new:  wire land 8 carries 'VIN_RAW_P2' and must carry 'GND_P2', the net of the pin above target 8: the wire would leave on another net
+       + new:  wire land 9 carries 'VIN_RAW_P3' and must carry 'GND_P3', the net of the pin above target 9: the wire would leave on another net
+       + new:  wire land 10 carries 'VIN_RAW_P4' and must carry 'GND_P4', the net of the pin above target 10: the wire would leave on another net
+       + new:  board A's netlist carries 4 J_VR pin(s) (J_VR1, J_VR2, J_VR3, J_VR4) and E5 carries 0 T_VR target(s): a pin the stack lowers onto nothing
+       + new:  board A's netlist carries 4 J_VN pin(s) (J_VN1, J_VN2, J_VN3, J_VN4) and E5 carries 0 T_VN target(s): a pin the stack lowers onto nothing
+pcb-e5-block       derate                 same result, same counts, same evidence
+     before: PASS         of 0     {"judged": 0, "rated_parts": 0}  (taken 2026-09-27T13:23:14Z, writer 6c29d1b9a523d385)
+     after:  PASS         of 0     {"judged": 0, "rated_parts": 0}  (taken 2026-09-27T21:00:41Z, writer 6c29d1b9a523d385)
+pcb-e5-block       energy_chain           same result, same counts, same evidence
+     before: PASS         of 98    {"checks": 98, "citations_unjudged": 0, "coordination_findings": 0, "fail": 0, "selection_findings": 0, "stages": 12}  (taken 2026-09-27T13:23:16Z, writer 2eb665d0e50ee781)
+     after:  PASS         of 98    {"checks": 98, "citations_unjudged": 0, "coordination_findings": 0, "fail": 0, "selection_findings": 0, "stages": 12}  (taken 2026-09-27T21:00:43Z, writer 2eb665d0e50ee781)
+pcb-e5-block       energy_chain_e5        same result, same counts, same evidence
+     before: PASS         of 1     {"fail": 0, "stages": 1}  (taken 2026-09-27T13:23:16Z, writer 2eb665d0e50ee781)
+     after:  PASS         of 1     {"fail": 0, "stages": 1}  (taken 2026-09-27T21:00:43Z, writer 2eb665d0e50ee781)
+pcb-e5-block       interfaces_e5          same result, same counts, same evidence
+     before: PASS         of 0     {"assignments": 0, "disagreements": 0}  (taken 2026-09-27T16:44:35Z, writer 7b7e4f3a0241cf35)
+     after:  PASS         of 0     {"assignments": 0, "disagreements": 0}  (taken 2026-09-27T21:00:45Z, writer 7b7e4f3a0241cf35)
+pcb-e5-block       port_protect_e5        same result, same counts, same evidence
+     before: PASS         of 0     {"declared": 0}  (taken 2026-09-27T13:23:23Z, writer 2d69facd3c25c8a4)
+     after:  PASS         of 0     {"declared": 0}  (taken 2026-09-27T21:00:46Z, writer 2d69facd3c25c8a4)
+pcb-e5-block       reliability            same result, same counts, same evidence
+     before: PASS         of 2     {"boards": 1, "classes": 2, "covered": 0, "fail": 0}  (taken 2026-09-21T12:53:08Z, writer 149a48e5f2419955)
+     after:  PASS         of 2     {"boards": 1, "classes": 2, "covered": 0, "fail": 0}  (taken 2026-09-27T21:05:05Z, writer 71d0872195905c9d)
+pcb-e5-block       safe_lines_e5          same result, same counts, same evidence
+     before: PASS         of 0     {"declared": 0}  (taken 2026-09-27T13:23:13Z, writer 8529487f405ec55d)
+     after:  PASS         of 0     {"declared": 0}  (taken 2026-09-27T21:00:40Z, writer 8529487f405ec55d)
+pcb-p-pack-p2      check_contracts        same result, same counts, same evidence
+     before: PASS         of 99    {"boards_without_intent": 0, "fail": 0, "missing_boards": 0, "pass": 99, "rails_unsplit": 0, "undecided": 0, "unjudged": 0}  (taken 2026-09-27T13:23:35Z, writer 5e14f456a0791c35)
+     after:  PASS         of 99    {"boards_without_intent": 0, "fail": 0, "missing_boards": 0, "pass": 99, "rails_unsplit": 0, "undecided": 0, "unjudged": 0}  (taken 2026-09-27T21:01:00Z, writer 5e14f456a0791c35)
+pcb-p-pack-p2      derate                 same result, same counts, same evidence
+     before: PASS         of 6     {"by_vendor_reference": 0, "judged": 6, "undeclared_nets": 0, "under_rated": 0, "unrated_parts": 20}  (taken 2026-09-27T13:23:26Z, writer 6c29d1b9a523d385)
+     after:  PASS         of 6     {"by_vendor_reference": 0, "judged": 6, "undeclared_nets": 0, "under_rated": 0, "unrated_parts": 20}  (taken 2026-09-27T21:00:50Z, writer 6c29d1b9a523d385)
+pcb-p-pack-p2      edge_length            content moved
+     before: INCONCLUSIVE of 44    {"answered_nets": 0, "classes": 13, "contradicted_nets": 0, "decided_nets": 0, "layout_bound_nets": 0, "low_speed_nets": 22, "may_be_long_nets": 0, "signal_nets": 44, "undecided_nets": 22}  (taken 2026-09-27T13:23:30Z, writer fd66cbd9bce2fa7b)
+     after:  INCONCLUSIVE of 40    {"answered_nets": 0, "classes": 12, "contradicted_nets": 0, "decided_nets": 0, "layout_bound_nets": 0, "low_speed_nets": 20, "may_be_long_nets": 0, "signal_nets": 40, "undecided_nets": 20}  (taken 2026-09-27T21:00:54Z, writer fd66cbd9bce2fa7b)
+       - gone: UNDECIDED (no declaration) (UNKNOWN, 17 net(s)): no signal-class declaration names these nets, so neither their class nor their edge is kno; ICs on them: BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm U1, BQ7720700DSSR: second-level cell OV 4.325 V / UV 2.25 V / open wire / OT 70 C on its own 103AT-2 (J_TS2), 3S-7S (SLUSEG7D) U2
+       + new:  UNDECIDED (no declaration) (UNKNOWN, 15 net(s)): no signal-class declaration names these nets, so neither their class nor their edge is kno; ICs on them: BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm U1, BQ7720700DSSR: second-level cell OV 4.325 V / UV 2.25 V / open wire / OT 70 C on its own 103AT-2 (J_TS2), 3S-7S (SLUSEG7D) U2
+pcb-p-pack-p2      energy_chain           same result, same counts, same evidence
+     before: PASS         of 98    {"checks": 98, "citations_unjudged": 0, "coordination_findings": 0, "fail": 0, "selection_findings": 0, "stages": 12}  (taken 2026-09-27T13:23:30Z, writer 2eb665d0e50ee781)
+     after:  PASS         of 98    {"checks": 98, "citations_unjudged": 0, "coordination_findings": 0, "fail": 0, "selection_findings": 0, "stages": 12}  (taken 2026-09-27T21:00:54Z, writer 2eb665d0e50ee781)
+pcb-p-pack-p2      energy_chain_p         same result, same counts, same evidence
+     before: PASS         of 3     {"fail": 0, "stages": 3}  (taken 2026-09-27T13:23:30Z, writer 2eb665d0e50ee781)
+     after:  PASS         of 3     {"fail": 0, "stages": 3}  (taken 2026-09-27T21:00:54Z, writer 2eb665d0e50ee781)
+pcb-p-pack-p2      erc_gate               same result, same counts, same evidence
+     before: PASS         of 123   {"allowed": 0, "blocking": 0, "violations": 123}  (taken 2026-09-27T13:23:24Z, writer bb4bf868c515f37a)
+     after:  PASS         of 123   {"allowed": 0, "blocking": 0, "violations": 123}  (taken 2026-09-27T21:00:48Z, writer bb4bf868c515f37a)
+pcb-p-pack-p2      inhibit_chain_p        same result, same counts, same evidence
+     before: PASS         of 1     {"fail": 0, "pass": 1, "undecided": 0, "unjudged": 0}  (taken 2026-09-27T13:23:35Z, writer 5e14f456a0791c35)
+     after:  PASS         of 1     {"fail": 0, "pass": 1, "undecided": 0, "unjudged": 0}  (taken 2026-09-27T21:01:00Z, writer 5e14f456a0791c35)
+pcb-p-pack-p2      intent_rails           RESULT MOVED
+     before: FAIL         of 11    {"census_nets": 55, "checks": 11, "declared_nodes": 0, "declared_not_in_netlist": 0, "declared_rails": 5, "fail": 6, "held_pin_roles": 41, "nodes_supplying_parts": 0, "power_nets": 10, "rails_without_destination": 0, "settled": 12, "switches_unresolved": 0, "undecided": 6, "undeclared": 5, "unmarked": 21}  (taken 2026-09-27T13:23:27Z, writer 1ad7af0c718ba940)
+     after:  PASS         of 11    {"census_nets": 55, "checks": 11, "declared_nodes": 1, "declared_not_in_netlist": 0, "declared_rails": 10, "fail": 0, "held_pin_roles": 41, "nodes_supplying_parts": 0, "power_nets": 10, "rails_without_destination": 0, "settled": 12, "switches_unresolved": 0, "undecided": 0, "undeclared": 0, "unmarked": 21}  (taken 2026-09-27T21:00:51Z, writer 1ad7af0c718ba940)
+       - gone: census of the 55 nets: 10 counted, 1 declared node, 1 ground, 12 settled, 4 unconnected, 6 undecided, 21 unmarked
+       - gone: undecided, named and not counted (6): CELL1, CELL2, CELL3, FUSE_G, FUSE_GQ, SCP_HTR
+       - gone: power net BAT_F is a declared rail (it is not: supply pin by name (U1.32 BAT), and the intent's bypass list decouples it (C6:U1.32); supply pin by its held datasheet (U1.32 BAT: v2/vendor/battery/ti-bq4050.p)
+       - gone: power net PBI is a declared rail (it is not: supply pin by its held datasheet (U1.1 PBI: v2/vendor/battery/ti-bq4050.pdf))
+       - gone: power net SEC_VDD is a declared rail (it is not: supply pin by name (U2.1 VDD), and the intent's bypass list decouples it (C14:U2.1); supply pin by its held datasheet (U2.1 VDD: v2/vendor/battery/ti-bq77207.pd)
+       - gone: power net SW is a declared rail (it is not: power class PWR in the netlist; switch output: the load Q2 of rail PACK_P at 10.00 A; switch output: the load Q1 of rail SCP_OUT at 10.00 A)
+       - gone: power net VCC_F is a declared rail (it is not: supply pin by name (U1.26 VCC), and the intent's bypass list decouples it (C8:U1.26); supply pin by its held datasheet (U1.26 VCC: v2/vendor/battery/ti-bq4050.p)
+       - gone: the count of declared rails equals the count of power nets carrying more than 0.00 A: 5 declared (5 of them nets of the netlist), 10 power nets not declared as nodes (by kind, a net counted under each that applies: 0 power-symbol, 0 supply-pin by type, 5 power-class, 3 supply-pin by name, 4 supply-pin by its held datasheet, 1 reached by a rail's current, 5 declared rails), 0 declared as nodes; und
+       - gone: undecided, named and not counted: CELL1: it carries the mark of a supply (M6 class SENSE in the netlist: the conductor senses a supply) and nothing read settles it: J_CELL.2
+       - gone: undecided, named and not counted: CELL2: it carries the mark of a supply (M6 class SENSE in the netlist: the conductor senses a supply) and nothing read settles it: J_CELL.3
+       - gone: undecided, named and not counted: CELL3: it carries the mark of a supply (M6 class SENSE in the netlist: the conductor senses a supply) and nothing read settles it: J_CELL.4
+       - gone: undecided, named and not counted: FUSE_G: it carries the mark of a supply (M1 capacitor C19 to ground) and nothing read settles it: JP1.1
+       - gone: undecided, named and not counted: FUSE_GQ: it carries the mark of a supply (M3 JP1 joins it to the undecided net FUSE_G) and nothing read settles it: JP1.2, Q3.1
+       - gone: undecided, named and not counted: SCP_HTR: it carries the mark of a supply (M4 the switched return of F2: the channel of Q3 sinks it to ground) and nothing read settles it: F2.3, Q3.3
+       + new:  census of the 55 nets: 10 counted, 7 declared node, 1 ground, 12 settled, 4 unconnected, 0 undecided, 21 unmarked
+       + new:  declared as a node, not a rail: PBI (supply pin by its held datasheet (U1.1 PBI: v2/vendor/battery/ti-bq4050.pdf))
+pcb-p-pack-p2      interfaces_p           same result, same counts, same evidence
+     before: PASS         of 1     {"assignments": 1, "disagreements": 0}  (taken 2026-09-27T16:44:36Z, writer 7b7e4f3a0241cf35)
+     after:  PASS         of 1     {"assignments": 1, "disagreements": 0}  (taken 2026-09-27T21:01:02Z, writer 7b7e4f3a0241cf35)
+pcb-p-pack-p2      pack_protection        content moved
+     before: FAIL         of 45    {"checks": 45, "devices": 5, "fail": 1, "functions": 9, "limits": 14, "software_only": 9}  (taken 2026-09-27T13:23:38Z, writer bcd644b9822c724d)
+     after:  FAIL         of 63    {"checks": 63, "devices": 13, "fail": 3, "functions": 14, "limits": 14, "software_only": 9}  (taken 2026-09-27T21:01:03Z, writer bcd644b9822c724d)
+       - gone: BAT-001 asks for protection IN HARDWARE, INDEPENDENT OF ANY SOFTWARE, and 9 of 9 functions are implemented by a device whose thresholds live in firmware, with no second protector and no chemical fuse on this board: gen_sch_p.py: `no chemical fuse (the 25 A mini blade is the fuse)`, PTC and PTCEN tied off, and no second protector IC. Every CELL-LEVEL protection below is the
+       + new:  FUSE_OVER_CURRENT_DISCHARGE trips at 33.8 A and 3 cells in parallel are rated 24.0 A (max_continuous_discharge_ma)
+       + new:  SECOND_LEVEL_CELL_UNDER_VOLTAGE trips at 2.25, BELOW the cell maker's own overdischarge_protect_v of 2.3
+       + new:  SECOND_LEVEL_OVER_TEMPERATURE allows -inf to 70.0 and the cell maker allows -10.0 to 60.0
+pcb-p-pack-p2      pin_map_lands_p        same result, same counts, same evidence
+     before: PASS         of 85    {"failures": 0, "judged": 85, "merged_pad_pins": 0, "unreadable": 0}  (taken 2026-09-27T13:23:26Z, writer 89d2ad7c2bab8ba0)
+     after:  PASS         of 85    {"failures": 0, "judged": 85, "merged_pad_pins": 0, "unreadable": 0}  (taken 2026-09-27T21:00:50Z, writer 89d2ad7c2bab8ba0)
+pcb-p-pack-p2      port_protect_p         same result, same counts, same evidence
+     before: PASS         of 3     {"clamps": 3, "clamps_one_way": 1, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjudged": 0, "ports": 0, "unprotected": 0}  (taken 2026-09-27T13:23:37Z, writer 2d69facd3c25c8a4)
+     after:  PASS         of 3     {"clamps": 3, "clamps_one_way": 1, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjudged": 0, "ports": 0, "unprotected": 0}  (taken 2026-09-27T21:01:02Z, writer 2d69facd3c25c8a4)
+pcb-p-pack-p2      power_sequence         content moved
+     before: PASS         of 5     {"always_on": 4, "deadlocks": 0, "rails": 5, "segments": 0, "unresolved": 0}  (taken 2026-09-27T13:23:28Z, writer 2ba1e2e1a719c9d1)
+     after:  PASS         of 10    {"always_on": 6, "deadlocks": 0, "rails": 10, "segments": 1, "unresolved": 0}  (taken 2026-09-27T21:00:52Z, writer 2ba1e2e1a719c9d1)
+pcb-p-pack-p2      reliability            content moved
+     before: PASS         of 9     {"boards": 1, "classes": 3, "covered": 6, "fail": 0}  (taken 2026-09-21T12:52:46Z, writer 149a48e5f2419955)
+     after:  PASS         of 10    {"boards": 1, "classes": 3, "covered": 7, "fail": 0}  (taken 2026-09-27T21:05:06Z, writer 71d0872195905c9d)
+pcb-p-pack-p2      safe_lines_p           same result, same counts, same evidence
+     before: PASS         of 0     {"floating": 0, "lines": 0, "listened": 0, "on_netlist": 0}  (taken 2026-09-27T13:23:25Z, writer 8529487f405ec55d)
+     after:  PASS         of 0     {"floating": 0, "lines": 0, "listened": 0, "on_netlist": 0}  (taken 2026-09-27T21:00:49Z, writer 8529487f405ec55d)
+
+90 readings; result moved 9; same result with other counts or evidence 23; unchanged in result, counts and evidence 58

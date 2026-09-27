@@ -1,0 +1,10 @@
+retake6: every tracked file the box clone changed against 73ae2f21, compared byte for byte with the worktree after its own rules_status (three times), rules_render, rebind and render (2026-09-27T21:26:17Z)
+files compared 107, differing 0
+files changed in the worktree against 73ae2f21: 107
+the two lists of changed files are the same
+2d36f9b4d0cfa4878f638b16b55507d099c6383d416a5bdb5b05a0a952ab8160  v2/docs/CURRENT-EVIDENCE.md
+a0f671d8e2f3b754c26c54c3fc9c593ecd62d23eeb634b5bb1002103572f546f  v2/docs/REQUIREMENTS-TRACE.md
+c8fa0b0f9ce77812c48253f2a08ff08f02d9c9ed712e165e42e961996ba7fa26  v2/ecad/tools/pcb_requirements.yaml
+2d36f9b4d0cfa4878f638b16b55507d099c6383d416a5bdb5b05a0a952ab8160  v2/docs/CURRENT-EVIDENCE.md
+a0f671d8e2f3b754c26c54c3fc9c593ecd62d23eeb634b5bb1002103572f546f  v2/docs/REQUIREMENTS-TRACE.md
+c8fa0b0f9ce77812c48253f2a08ff08f02d9c9ed712e165e42e961996ba7fa26  v2/ecad/tools/pcb_requirements.yaml
