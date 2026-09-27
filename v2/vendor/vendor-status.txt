@@ -265,3 +265,10 @@ materials/prusament-petg-tds-v1.1-2022-02-16.pdf   retired   # the r1 QMX lid tr
 qrp-labs/measure_qmx_figures.py   tooling   # scales the maker's QMX figures for the lid tray r2 (qmx-figures.out)
 qrp-labs/qmx-assembly-1_04r-pages-1-3-20-21-75-78.pdf   current   # the QMX's enclosure, parts list and fitting (pages 3, 20, 21, 75 to 78), read for the lid tray r2
 qrp-labs/qmx-product-page-2026-09-27.txt   current   # the maker's 95 x 63 x 25 mm and 220 g, read for the lid tray r2
+materials/prusament-pc-blend-tds-v1.1-2022-02-16.pdf   current   # the QMX lid tray r2's and its frame's material: heat deflection, interlayer adhesion and printed-specimen strengths (the r2 record, section D)
+qrp-labs/qmx-product-photo-qmx4-right-panel.jpg   current   # the maker's photograph of the QMX's right panel: cross-checks the scaled jack places and shows the BNC jack's nut (the lid tray r2)
+qrp-labs/qmx-crops/opman-1_04_004-p7-left-panel.png   current   # the operating manual's left panel figure, the raster measure_qmx_figures.py scales (the lid tray r2)
+qrp-labs/qmx-crops/opman-1_04_004-p8-right-panel.png   current   # the operating manual's right panel figure, the same
+qrp-labs/qmx-crops/opman-1_04_004-p13-top-face.png   current   # the operating manual's top face figure, the same
+qrp-labs/qmx-figures.out   current   # the scaled jack, knob, button and LCD places the lid tray r2 is built on; derived by measure_qmx_figures.py
+standards/mil-std-810h-method-514-8.md   current   # a TRANSCRIPTION of the composite wheeled vehicle schedule TEST-PLAN E2 names (the lid tray r2's record, section D)
