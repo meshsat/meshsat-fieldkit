@@ -5,7 +5,7 @@ are repository paths; file:line citations are lines at `e3aedb25` (including the
 line), which the public repository serves at `https://raw.githubusercontent.com/meshsat/meshsat-fieldkit/e3aedb25/<path>`.
 **Handover H1 adds EQ-15 to EQ-21**, the questions circuit round 8 (main `84e52461`) and the handover closers raised;
 their citations are at the H1 source commit named in the snapshot's `SOURCE.txt` (`8a19fe29` for H1; H1.1 changes no
-design file those questions cite). **After H1.1 (set 4, branch `fnd/r8int4`, 27 September 2026)** EQ-22 to EQ-24 are added, EQ-05 carries the hot stop's firing inside the envelope and EQ-20 its merge; their citations are at that branch's commits. **Set 5 (branch `fnd/r8int5`, 27 September 2026)** answers EQ-16 (board E's and board A's dock halves), EQ-17 (board A), EQ-18 (the tool) and EQ-19 (boards A, B, D and E) in their attempts rows and adds EQ-25, the fail-safe level EQ-18's re-take found on TX_INHIBIT_n; their citations are at that branch's commits. **The second release attempt of layers 1 to 3 (27 September 2026, branch `fnd/rel2`)** rewrites EQ-13 as what the session took under the standing rule (SC-21) and what only the owner may reverse or decide (M-02), and adds EQ-26 (BAT-F19); their citations are at that branch's commits. Internal names are defined in `v2/docs/handover/GLOSSARY.md`. Every blocked question the audit found in the nine
+design file those questions cite). **After H1.1 (set 4, branch `fnd/r8int4`, 27 September 2026)** EQ-22 to EQ-24 are added, EQ-05 carries the hot stop's firing inside the envelope and EQ-20 its merge; their citations are at that branch's commits. **Set 5 (branch `fnd/r8int5`, 27 September 2026)** answers EQ-16 (board E's and board A's dock halves), EQ-17 (board A), EQ-18 (the tool) and EQ-19 (boards A, B, D and E) in their attempts rows and adds EQ-25, the fail-safe level EQ-18's re-take found on TX_INHIBIT_n; their citations are at that branch's commits. **The second release attempt of layers 1 to 3 (27 September 2026, branch `fnd/rel2`)** rewrites EQ-13 as what the session took under the standing rule (SC-21) and what only the owner may reverse or decide (M-02), and adds EQ-26 (BAT-F19); their citations are at that branch's commits. **The release finalizer of layers 1 to 3 (27 September 2026, branch `fnd/rel2` rebased onto `91894cd7`)** adds EQ-27 to EQ-29, the items the second release check left on layers 1 and 3 and did not see fixed a third time; their citations are at that branch's commits. Internal names are defined in `v2/docs/handover/GLOSSARY.md`. Every blocked question the audit found in the nine
 pre-PCB layers is here once, deduplicated across layers, in the form the owner asked for
 (`v2/docs/reviews/2026-09-27-handover-execution-prompt.md` section 6): the exact issue, what it affects, the evidence,
 what was tried, the viable options, the recommended next action, the expertise or equipment needed, and cost and lead
@@ -51,6 +51,9 @@ holds the prepared request texts (not sent).
 | EQ-24 | The QMX lid tray does not fit the unit's connector layout (jacks on both end panels) | A. design work | 7 | none (a made part) | printing the tray (S-63) |
 | EQ-25 | TX_INHIBIT_n's fail-safe level with board C unpowered, 1.09 V against a 0.8 V VIL (W3T-F1) | A. design work | 4, 8, 9 | C (A, B, D) | RF-002 on boards A to D and board D's SA868 keying (S-64) |
 | EQ-26 | The kit with its own pack cannot take the +55 C operating, +60 C humid or storage margins (BAT-F19, CFL-017) | C. external authorisation | 2, 3, 4 | P (the pack pocket) | nothing before layout; REQ-051's margins with the pack, and how the qualification report states them |
+| EQ-27 | The product brief counts six core feasibility blockers where the registry holds seven (FEA-007, the kit's fit in the Peli 1450, is missing) | A. design work | 1 | none (the brief) | the brief's BASELINED state and layer 1 (S-77) |
+| EQ-28 | The requirements registry's baseline is not recorded, and the rebase onto set 5 added registry content its reviewer did not read | A. design work | 3 | none | `baseline_state`, S-51 and layer 3 (S-78) |
+| EQ-29 | No versioned package carries layers 1 to 3 as released | A. design work | 1, 2, 3 | none | layer 3's item 3.18 and layer 1's item 14; the same snapshot carries layer 2's baselined CONOPS (S-79) |
 
 Group A items can be answered under existing authority; group B needs hardware and so a purchase; group C needs the
 owner's money, outside contact or a value only he can set.
@@ -242,6 +245,51 @@ owner's money, outside contact or a value only he can set.
 | **Recommended next action** | (a): desk work on a made part, no board moves and no money. |
 | **Expertise or equipment** | The case writer; the maker's enclosure drawing (to be filed in `v2/vendor/`). |
 | **Cost and lead time** | Desk work; a reprint of the tray when the prototype's printed parts are made. |
+
+### EQ-27. The product brief counts six core feasibility blockers where the registry holds seven (S-77)
+
+Added on 27 September 2026 by the release finalizer of layers 1 to 3 (layer 1's second release check, R2-B1).
+
+| | |
+|---|---|
+| **Exact issue** | `v2/docs/PRODUCT-BRIEF.md` lines 256 to 258 say six feasibility blockers on the core are not closed (FEA-001 to FEA-006). The requirements registry holds seven `kind: feasibility` records, every one `prototype_1: core` and `release_effect: BLOCKER`. FEA-007, the kit's fit in the Peli 1450 on the case choices C1 to C6 (core under SC-04, which makes fitting the boards and the pack into the 1450 core), is missing from that sentence and from the brief's open items, which say they list every item bearing on the brief. It holds the layout entry of boards A, B, D, E, E5 and P and is BLOCKED on the owner's purchase L-07 or his acceptance of the residual; its bounds include failure (35 of 70 case margins OPEN; M17g and M17x fail as laid out until the jumper plug is picked; the pack's M4a and M5 OPEN on the undesigned hold-down S-27). The brief's pack line (D-06) and its D-07 row (line 289, which names only the board E clamp fit, not the east plug layout M17g) depend on it. |
+| **Affected** | Layer 1: the brief's acceptance items 5, 7 and 15 of the record, and its BASELINED state. No board, interface, part or requirement: the fix is wording. FEA-007 itself belongs to layer 7 and to the boards' layout entry. |
+| **Evidence** | `v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2-2026-09-27.md` sections 4 (R2-B1) and 7; registry FEA-007, SC-04, L-07 and S-27; `v2/docs/CURRENT-EVIDENCE.md`, the feasibility blockers; `v2/docs/CASE-FIT-UNCERTAINTIES.md` sections 2, 6 and 7; `v2/docs/CASE-MARGINS.md` rows M4a, M5, M17g and M17x. |
+| **Attempts and results** | The first release check (`REVIEW-LAYER-1-RELEASE-2026-09-27.md`, m2) classed the omission as minor because FEA-007's parent NEED-06 is not a core need; FEA-007's own `prototype_1: core` under SC-04 contradicts that ground, and the second release check (at `eb9f9030`) re-judged it blocking. The two attempts before it closed B1 to B3 (EMCON, the case set, REQ-072's night). This is the third finding of one cause: the brief restates design state (counts, lists, stages) that moves with every circuit or case round, and the change of method both checks asked for (LAYER-STATUS layer 1) was not adopted. Under the owner's section 4 the finalizer did not apply a third fix. |
+| **Viable options** | (a) Apply the reviewer's exact fix: the sentence names seven blockers with FEA-007 as core under SC-04; an open-items row for FEA-007 with its failing rows, its allocation to layer 7 and the boards' layout entry, the owner's purchase or residual, and the reissue rule if the pack rows cannot be met by a board move and the hold-down (D-06 reopened); the east plug layout (M17g, FEA-007) named in the D-07 row; with R2-m1 to R2-m5 on the same pages. (b) (a) with the method change: the brief states the feasibility blockers, EMCON's count and the case state by reference to the registry (`kind: feasibility`), `feasibility/EMCON.md` section 0a and the case release, not as restated counts. (c) (a), and the five layer 1 pages re-read at every integration that touches EMCON, the case, CONOPS or a feasibility record. |
+| **Recommended next action** | (b), the session's under the owner's standing rule of 26 September 2026: the wording closes R2-B1 and the by-reference statement removes the cause. Then a reviewer who wrote none of the changed lines checks the difference from the record's sha256 values at one pinned commit, the brief is set BASELINED in the commit that files that check, and a snapshot is cut from a pushed branch (item 14; EQ-29). |
+| **Expertise or equipment** | The docs integrator; one fresh AI reviewer (no qualified review is required for layer 1, SC-16). |
+| **Cost and lead time** | Desk work: the edits and one review pass; no money. |
+
+### EQ-28. The requirements registry's baseline is not recorded (S-78)
+
+Added on 27 September 2026 by the release finalizer of layers 1 to 3 (layer 3's second release check, B-1).
+
+| | |
+|---|---|
+| **Exact issue** | `baseline_state` reads READY_FOR_REVIEW_B and S-51 is open, although layer 3's second release check (at `eb9f9030`) confirms R2 to R5 of the first release check answered and finds no blocking finding of substance; it leaves the baseline commit itself as blocking item B-1 (acceptance item 3.14). Since then the branch was rebased onto main `391d8579` and then `91894cd7`: the registry at its head also carries set 5's records (SC-51 to SC-57, S-64 to S-76 and their readings) and the consolidated re-take's re-read notes (`8ea7867e` to `91894cd7`), the reviewed SC-51 to SC-56 are SC-58 to SC-63 and EQ-25 is EQ-26, and S-77 to S-79 are added, so it is no longer the registry the reviewer read (sha256/16 `fb819e939f2895da`). The record says a registry change beyond its B-1 fix needs a review of its own. |
+| **Affected** | Layer 3 (item 3.14 and its status); the requirements part of FOUNDATIONS_BASELINED. No board, interface or part. |
+| **Evidence** | `v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2-2026-09-27.md` sections 2, 4 (3.14), 5 (B-1, n1) and 7; registry `baseline_state` and S-51; `v2/docs/records/rel2f/resolve_rebase.py` and `check_rebase.py` (what the rebase changed); `git diff 953f5658 91894cd7 -- v2/ecad/tools/pcb_requirements.yaml` (set 5's and the re-take's registry changes). |
+| **Attempts and results** | First release check at `f2b7fa66`: NOT COMPLETE on R1 to R5. Second release attempt: R2 to R5 answered at desk. Second release check at `eb9f9030`: R2 to R5 ANSWERED, B-1 and B-2 procedural. The finalizer made neither change (the second attempt; the owner's section 4), and the rebase added registry content the reviewer did not read. |
+| **Viable options** | (a) A reviewer who wrote none of it confirms the registry difference between the reviewed content and the branch head (set 5's and the consolidated re-take's registry changes, the renumbering, S-77 to S-79); then one commit that makes only B-1's changes: `baseline_state` baselined naming the content commit, S-51 closed on the two layer 3 release records, the three `gen_sch_b.py` pointers in SC-58 and SC-63 (:257, :822, :764-766) marked "(as read at e3aedb25)" or renumbered to 267 and 464, 978 and 903 to 905, the trace page re-rendered and the layer 3 integrator line updated. (b) Baseline the reviewed content alone, a registry state before set 5 that main no longer carries, so the baseline would name a registry that is not current. (c) Wait for the next circuit round and review once for both, which lets the registry move again under the review. |
+| **Recommended next action** | (a), the session's under the standing rule: the review is limited to the difference, and the baseline commit carries nothing else, as the record asks. |
+| **Expertise or equipment** | The registry writer; one fresh AI reviewer (Review B's definition, SC-46; no qualified review is required for layer 3). |
+| **Cost and lead time** | Desk work: one review pass and one commit; no money. |
+
+### EQ-29. No versioned package carries layers 1 to 3 as released (S-79)
+
+Added on 27 September 2026 by the release finalizer of layers 1 to 3 (layer 3's second release check, B-2).
+
+| | |
+|---|---|
+| **Exact issue** | Layer 3's acceptance item 3.18 (a versioned, portable layer package) is not met: the reviewed commit was on no remote branch (GitLab and GitHub main were at `953f5658` when it was read; main is `91894cd7` now) and no handover snapshot has been cut from a commit carrying its content. The anchor `08f3665a` is already on the public main, so LAYER-STATUS layer 3's earlier remaining item on it is met. |
+| **Affected** | Layer 3 (3.18) and layer 1 (item 14); the same snapshot carries layer 2's baselined CONOPS. No design file. |
+| **Evidence** | `v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2-2026-09-27.md` sections 1, 4 (3.18) and 5 (B-2, n5); `v2/release/handover/` (H1 and H1.1 predate the release attempts). |
+| **Attempts and results** | None: pushing to main and cutting a snapshot belong to the integrating session, the only committer to main, not to a worktree finalizer. |
+| **Viable options** | (a) Push the baseline commit of EQ-28 to main and cut the next handover snapshot from it, its manifest and `SOURCE.txt` naming that commit, carrying layers 1 to 3 with their status lines. (b) Cut a snapshot now from the branch head with layers 1 and 3 as candidates and layer 2 baselined, and a later one for the layer 3 baseline (two snapshots, nothing lost). |
+| **Recommended next action** | (a) once EQ-28 is done; if EQ-28 waits, (b), so that layer 2's COMPLETE content is packaged without delay. Then the owner's section 7 usability check of the snapshot. |
+| **Expertise or equipment** | The integrating session (push rights and the handover packer), and a fresh usability checker (owner's section 7). |
+| **Cost and lead time** | Desk work; no money. |
 
 ## B. Physical evidence
 

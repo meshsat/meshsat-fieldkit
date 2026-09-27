@@ -99,7 +99,7 @@ reversing it reopens board B's floor plan.
 **Operating conditions** (`v2/docs/OPERATING-ENVELOPE.md`, decision 34 and owner rulings D-02a to D-02e):
 -20 to +40 C in use, -20 to +45 C in storage, with TEST-PLAN's +55 C operation, +71 C and -33 C storage as
 qualification margins judged "survive and recover"; operated shaded; no cold start from a pack below about -10 C at
-the cells; a closed-lid reduced mode (still to be defined, LAYER-STATUS layer 2). The hot end is not established: the
+the cells; a closed-lid reduced mode (defined in `CONOPS.md` section 4c since the layer 2 closer, and baselined with layer 2 after its second release check, LAYER-STATUS layer 2). The hot end is not established: the
 sealed case's heat path is known only as a bound that includes failure (ENGINEERING-QUESTIONS EQ-05).
 
 **What it is not, today** (`v2/docs/PRODUCT-BRIEF.md`, "What it is not, today"): not built, powered or measured; not

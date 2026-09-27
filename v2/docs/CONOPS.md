@@ -1,6 +1,6 @@
 # MeshSat field kit V2: concept of operations
 
-**Status: DRAFT for Review A of the foundation baseline (MESHSAT-1357), written 25 September 2026, revised the
+**Status: BASELINED as layer 2 of the foundation baseline (MESHSAT-1357) at `79963b3b`, the commit that carries on main `91894cd7` the content the second release check of layer 2 read at `eb9f9030` and found no blocking item in (`reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md`, an AI review; this document byte-identical, sha256/16 `3ff59edc96a3f8f4`, before this status line and the Review A paragraph's last sentence were written). Written 25 September 2026, revised the
 same day after an independent challenge, and revised on 26 September 2026 to carry the owner's rulings D-01 to
 D-17 of 25 and 26 September 2026 and the choices the session took under the owner's standing rule of 26
 September 2026; section 7 lists every question with its ruling, and D-18, the one still open and
@@ -45,8 +45,8 @@ it replaces no qualified review a record requires (D-09), and it establishes no 
 in the documents; the layer is then marked baselined at that commit. The first pass was recorded (FAIL, seven blocking
 findings, read on `e3aedb25` with this revision's first draft; filed at `reviews/REVIEW-A-LAYER-2-2026-09-27-pass1.md`, sha256 `e854c2a46ea3d542`, with the reviewers' brief at `reviews/2026-09-27-review-A-layer2-brief.md`)
 and pass 2 answered it; the second pass (`reviews/REVIEW-A-LAYER-2-2026-09-27.md`, FAIL, two blocking findings, P2-B1 and P2-B2) is answered by pass 3; the pass at the integrating
-commit `f2b7fa66` (`reviews/REVIEW-LAYER-2-RELEASE-2026-09-27.md`, FAIL, four blocking findings, B1 to B4) is answered at desk in two steps (`handover/LAYER-STATUS.md`, layer 2: the wording and citations in `08f3665a`; then, in the second release attempt of the same day, B2's forced trigger of the hot stop, `TEST-PLAN.md` P15, and B4's one definition of C1 in the documents that follow section 4c), and a later pass decides the baseline. Until a pass
-finds no blocking item this document is a DRAFT for Review A. Prototype design.
+commit `f2b7fa66` (`reviews/REVIEW-LAYER-2-RELEASE-2026-09-27.md`, FAIL, four blocking findings, B1 to B4) is answered at desk in two steps (`handover/LAYER-STATUS.md`, layer 2: the wording and citations in `08f3665a`; then, in the second release attempt of the same day, B2's forced trigger of the hot stop, `TEST-PLAN.md` P15, and B4's one definition of C1 in the documents that follow section 4c), and the second release check (`reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md`, at `eb9f9030`, AI review) found no blocking item, so the layer is baselined at `79963b3b` (`handover/LAYER-STATUS.md`, layer 2, names the record and its evidence). Until that pass
+this document was a DRAFT for Review A. Prototype design.
 Nothing described here has been built, powered or field deployed. This document says how the kit is meant to be
 used, so that requirements, budgets and tests have something to trace to. The needs of section 2 carry stable
 identifiers (NEED-nn); requirements trace to them, and an identifier is never reused for a different need.
