@@ -1,57 +1,37 @@
 # MeshSat field kit V2: product brief
 
-**Status: BASELINED as layer 1 of the foundation baseline (MESHSAT-1357) in the commit that files
-`reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md`, the narrow verification of the targeted fix of 27 September 2026 (an
-AI check of named items by a session that wrote none of the lines, not a qualified review), which found R2-B1 and R2-m1
-CLOSED at `3e4799eb` with no new contradiction in the lines touched (this document then sha256/16 `c1bb3fe5e082b57e`,
-before this status line and the last three sentences of this paragraph were written). Before that it was a CANDIDATE
-for Review A, layer 1 (defined in the last section of this brief), revised on 27 September 2026 by the layer 1 closer
-of the engineering handover against the engineering baseline at `e3aedb25`, to become BASELINED only at the commit
-that files a record with no open blocking finding.** The first pass of
-that review (`reviews/REVIEW-A-LAYER-1-2026-09-27.md`, an AI review) found two blocking items, B1 (the EMCON
-statements overstated how far the design has come against `feasibility/EMCON.md` section 0a) and B2 (two lines
-contradicting the face rulings), and eleven minor ones; this revision answers each. The second pass of the same record (27 September 2026, an AI
-review by a session that wrote none of the pages) closed B1 and B2 and left no blocking finding; its minor findings N1
-(`V2-SPEC.md` line 34, correction 27) and N2 (`BUILD.md`, a CAD file that does not exist) are corrected. Its finding I5
-(layer 2's EMCON and face text in `CONOPS.md` and `PANEL.md`) is answered there since `95e078a1`. The release check
-at `f2b7fa66` (`reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md`, an AI review by a reviewer who wrote none of the
-pages) found three blocking items that later merges had caused: B1 (the EMCON count, the 5G module's supply removal,
-the EMCON lamp and the 5G socket's land stated as before board B's and board C's round 8), B2 (the case generators
-and templates stated as not carrying C1 to C6) and B3 (the night finding of mission M1, requirement REQ-072, missing
-from the exclusions and the open items). This revision answers the three at desk; the brief stays a CANDIDATE until a
-reviewer who wrote none of the changed lines re-checks them at one pinned commit. The second release attempt of the same day (branch `fnd/rel2`) compared the three fixes with the reviewer's exact fixes and completed B3 (this is not the re-check a fresh reviewer owes), states M1's duration as governed by the session's SC-21 with the owner's part as the requirements registry's M-02, and takes the release check's minors m1, m4, m5, m7 and m8. The second release check at `eb9f9030` (`reviews/REVIEW-LAYER-1-RELEASE-2-2026-09-27.md`, an AI review) closed B1 to B3 and found one blocking item, R2-B1 (the core feasibility blockers counted as six where the requirements registry holds seven, FEA-007 missing); the targeted fix of 27 September 2026 (branch `fnd/h2`) applies that record's wording (the count of seven below, FEA-007's row among the open items and the east plug layout in the D-07 row), and the brief stays a CANDIDATE until a reviewer who wrote none of those lines re-checks them. That re-check is the narrow verification named in the status line: R2-B1 and R2-m1 CLOSED and no new contradiction, so the brief is BASELINED in the commit that files it. With it the session took, under the owner's standing rule of 26 September 2026, the second of the two method remedies both release checks asked for (`handover/ENGINEERING-QUESTIONS.md` EQ-27, option (c)): the five layer 1 pages (this brief, `README.md`, `v2/README.md`, `v2/BUILD.md` and `V2-SPEC.md`) are re-read at every integration that touches EMCON, the case, CONOPS or a feasibility record, the integration records the re-read on `handover/LAYER-STATUS.md` layer 1, and a line found stale is corrected by issuing this brief again (the rule of the open-items section). The first such re-read, for set 5's finding W3T-F1 on `TX_INHIBIT_n`, is recorded there. History: written
-25 September 2026 as a draft for Review A of the foundation baseline; revised on 26 September 2026 with the owner's
-rulings of 25 and 26 September 2026 (D-01 to D-17, listed in `CONOPS.md` section 7) and later that day for the owner's
-reversal of D-08 with D-08a and the session's SC-02 (appendix 32.367); revised on 27 September 2026 for the circuit as
-generated at `45bde541` (the 5G socket, EMCON), the case choices C1 to C6 of `CASE-MARGINS.md` section 4, the power
-and thermal findings of `feasibility/POWER-THERMAL.md`, the dual SIM and the carried-mass limit, and the exclusions
-the handover audit found missing.
+**Status: layer 1 of the foundation baseline (MESHSAT-1357), BASELINED at `6b2a9965`.** How it was reviewed and
+baselined is recorded in the appendix at the end of this file; how this file's present text relates to the text
+baselined at that commit, and the current state of everything this brief depends on, is `handover/DEFINITION-STATUS.md`.
+
+**When this brief is reopened (the rule of the independent review of handover H2, `reviews/2026-09-27-h2-independent-review.md` section 4).** This definition is reopened only when a requirement, the scope,
+the operating concept or a product decision changes. A changed count or a circuit correction updates the status page,
+`handover/DEFINITION-STATUS.md`, and the records it names, not this baseline. A figure, a commit or an "as generated"
+remark that stands inside a sentence or a table row of the definition below is its value when this brief was
+baselined; its current value is kept where the list below says, and a change to it alone does not reopen this brief.
+
+**Where the current state of each dependency lives.**
+
+- What the design has and has not shown, board by board, and whether any board is ready for layout, is kept on
+  `CURRENT-EVIDENCE.md`.
+- Every requirement with its reading, and every feasibility blocker on the core with the evidence that closes it, is
+  kept in the requirements registry `v2/ecad/tools/pcb_requirements.yaml` and its generated page `REQUIREMENTS-TRACE.md`.
+- Where each transmitter stands against EMCON as the owner ruled it (D-05) and the latency the session set (REQ-071) is
+  kept in `feasibility/EMCON.md` section 0a, under feasibility blocker FEA-002.
+- The power, thermal and runtime figures, the hot end and the energy balance of mission M1 are kept in
+  `feasibility/POWER-THERMAL.md`, under feasibility blocker FEA-004 and requirement REQ-072.
+- The kit's fit in the Peli 1450, and which case set the generators carry, is kept in `CASE-MARGINS.md` and
+  `CASE-FIT-UNCERTAINTIES.md`, under feasibility blocker FEA-007.
+- Whether the fitted secure element allows ZEROIZE as ruled is kept in `feasibility/ZEROIZE.md`, under feasibility
+  blocker FEA-001.
+- The state of each layer of the handover, with its review records, is kept on `handover/LAYER-STATUS.md`.
+
 Prototype design. No V2 board has been fabricated, ordered or powered, and no kit has been field
 deployed. Nothing in this brief is a claim about a built product; every line states what the design is
 meant to do. The concept of operations with the numbered needs is `CONOPS.md`; the requirements are the registry
 `v2/ecad/tools/pcb_requirements.yaml` and its generated page `REQUIREMENTS-TRACE.md`; the parts and rulings behind
 each line are in `V2-SPEC.md`, `OPERATING-ENVELOPE.md`, `PANEL.md`, `ARCH-PCB-B-IOHA.md`, `TEST-PLAN.md` and the
-design record `MESHSAT-709-geometry-appendix.md` (sections 32.49 to 32.62). What the design has and has not shown
-today is `CURRENT-EVIDENCE.md`, whose headline reads **"Foundations incomplete; 0 boards ready for layout; 0
-physically verified."**
-
-## How this brief answers layer 1
-
-The owner's handover prompt of 27 September 2026 (`reviews/2026-09-27-handover-execution-prompt.md`, section 3) asks
-layer 1 for a clear product purpose, users, prototype scope, exclusions and intended outcome, claims that agree with the
-engineering baseline, and report and deck commitments tracked apart from the technical work.
-
-| Layer 1 item | Where it is answered |
-|---|---|
-| Purpose | "The problem" below; `CONOPS.md` NEED-01 |
-| Users | "Who it is for" below; `CONOPS.md` section 1 |
-| Prototype scope | "What the first prototype has to show" below; `CONOPS.md` section 2a (owner ruling D-01) |
-| Exclusions | "What it is not, today" below |
-| Intended outcome | "What the first prototype has to show" below |
-| Claims against the baseline | this brief, `README.md`, `v2/README.md`, `v2/BUILD.md` and `V2-SPEC.md`, each read against `CURRENT-EVIDENCE.md`, `CONOPS.md` sections 2a and 7, `CASE-MARGINS.md` section 4 and the pages of `feasibility/` at `e3aedb25` |
-| Commitments outside the technical work | "What this brief relies on outside this repository" below |
-| Open items and why the layer can close with them | the section of that name below |
-| The review | "Review A, layer 1" below |
+design record `MESHSAT-709-geometry-appendix.md` (sections 32.49 to 32.62).
 
 ## The problem
 
@@ -113,33 +93,11 @@ Peli's own figures, `CASE-MARGINS.md`, since the owner reversed D-08). Its main 
 - **Emission and light discipline, as intended:** one locking EMCON toggle is to silence every transmitter through a
   hardware line that needs no software (appendix 32.50 item 3). The owner ruled what that means on 26 September 2026
   (D-05): the radios go dark, except that the VHF receiver keeps listening behind its transmit-only gate, and GNSS,
-  DCF77 and the lightning sensor continue. As generated at `45bde541` the line is drawn to remove the supply of the
-  SDR, the RockBLOCK, the LoRa module, both Zigbee and Thread radios, the HF unit and both WiFi link cards, to turn off
-  the PA's rail and keying while the VHF exciter keeps receiving, to pull the compute modules' own WiFi and Bluetooth
-  disables low, and to put the 5G module in airplane mode through its disable pin, a mode its own firmware carries out;
-  since board B's round 8 (27 September 2026) it also removes the 5G module's supply by hardware at once (SD-EMC-1r8,
-  `feasibility/EMCON.md` section 4b; `CONOPS.md` section 4b). The session set the latency every inhibit must meet: at
+  DCF77 and the lightning sensor continue. The session set the latency every inhibit must meet: at
   most 1 s from the toggle for every transmitter, and 20 s for a 5G module that is running, by paths no processor or
-  radio firmware can lengthen (SD-EMC-7, requirement REQ-071, `feasibility/EMCON.md` section 5a). Read transmitter by
-  transmitter against that (`feasibility/EMCON.md` section 0a, sixth revision, with board B's round 8), the kit has 17
-  transmitters and **none is dark end to end, at desk or on a bench**:
-  - Locally, the radio's own chain closes at desk for 15 of the 17 and is open for two. The SA868 VHF exciter: its
-    maker publishes no receive threshold for the PTT pin the design holds at 2.677 V or more (bench E-01). The RockBLOCK
-    9704: once its supply is cut it keeps running on its own supercapacitors, about 16 J, with its ENABLE held by a
-    firmware-driven expander, so the ENABLE forced low by the EMCON hardware is owed, and what the Iridium module does
-    when ENABLE falls is stated in no held document (section 4.4). The 5G module's chain closes at desk since board B's
-    round 8: its supply is removed at once, with RF off within about 1.2 ms plus 1.8 ms per mF of the module's own input
-    capacitance, which no held document states (bench E-12), and the maker's warning that cutting a working module's
-    supply can corrupt its flash accepted as a residual (section 4b).
-  - End to end, 0 of 17 rows is closed: every row also waits on the items the rows share, the toggle and its conductor
-    (accepted by SD-EMC-6 only with a hardware EMCON lamp on board C, drawn since board C's round 8 as `D22` with no
-    processor in its path, and not yet visible, because its light-guide hole in the face plate is owed, open item
-    S-44) and the EMCON line's own open items (sections 3 and 7), and no row is shown to meet the latency.
+  radio firmware can lengthen (SD-EMC-7, requirement REQ-071, `feasibility/EMCON.md` section 5a).
 
-  No row has been shown on a bench; EMCON is feasibility blocker FEA-002 of the requirements registry. The one panel
-  indication of EMCON that is independent of firmware is that lamp, lit while both EMCON lines read low, fed ahead of
-  the panel's dimmer and dark in BLACKOUT (`PANEL.md` sections 1 and 4); the TX lamp's supply exists only while the
-  panel controller drives its LED dimmer (`feasibility/EMCON.md` section 0; `PANEL.md` section 3, GPIO 8). Blackout and
+  Blackout and
   NVG panel modes darken the kit.
 - **Distress, as intended:** closing the covered SOS toggle for 2 s sends a distress message with the kit's
   position over the bearers that are up, Iridium first when nothing else is, to a configured recipient list. SOS
@@ -161,10 +119,7 @@ Peli's own figures, `CASE-MARGINS.md`, since the owner reversed D-08). Its main 
   the west at 59 mm above the floor, on one aluminium RF entry plate per end wall; the connector plate between the
   hinge fairings carries the shore and solar input, the USB console and host port, the Ethernet, the USB-C outlet,
   the sensor pod and the ground stud (`CASE-MARGINS.md` C2 to C4, the session's choices under the owner's standing
-  rule of 26 September 2026). The twelfth bulkhead is the third 5G jack of D-07, which also waits on the board E clamp fit. The case generators carry C1 to C6
-  since `c351115d`, and the current case set (CAD, drawings and 1:1 templates) is `v2/release/case-2026-09-27/`; the
-  committed board files and the deliverable folders of `v2/release/revA/` predate it and still carry the earlier
-  eleven coupler sites at 88 mm, which is history.
+  rule of 26 September 2026). The twelfth bulkhead is the third 5G jack of D-07, which also waits on the board E clamp fit.
 - **Carried as one closed case:** the design target, the session's choice SC-14 for requirement REQ-023, is a kit
   that weighs under 45.4 kg (100 lb) closed and latched with the pack and the lid's carried items fitted, with its
   largest dimension under 91 cm (36 in), the man-packed or man-portable row of MIL-STD-810H Method 516.8 Table
@@ -178,10 +133,7 @@ Peli's own figures, `CASE-MARGINS.md`, since the owner reversed D-08). Its main 
 
 - Not built, not powered, not measured. Every runtime, temperature and power number is a design estimate
   or a datasheet figure until the prototype test plan (`TEST-PLAN.md`) has run.
-- Not ready for layout and not ordered. No board of the set is ready for layout, and no layout of boards A, B, C, D, E
-  or P carries its board's corrected schematic (board E5 has no schematic; its board file is its design): the
-  deliverable folders of `v2/release/revA/boards/` predate the circuit corrections of `faf8c981`, `458b2873` and
-  `d90f30e4` and every later one (`CURRENT-EVIDENCE.md`, the candidate table). The order folder is rebuilt and
+- Not ready for layout and not ordered. The order folder is rebuilt and
   quarantined and nothing is ordered from it (owner decision 41 of 25 September 2026).
 - Not accepted on every function it carries. Prototype 1 is accepted on the core D-01 names (below); the Geiger
   counter, the lightning detector, DCF77, the outside sensor pod, the camera, net audio recording, the tablet
@@ -211,10 +163,7 @@ Peli's own figures, `CASE-MARGINS.md`, since the owner reversed D-08). Its main 
   sessions.
 - Not a finished runtime figure. The published 8 to 9.5 hours came from a pack that no longer fits the
   case and is withdrawn. The runtime requirement is stated as battery-only hours in an idle and a typical mode
-  at +20 C for an aged pack (D-06); its values are TBD and measured on the prototype. The current PROVISIONAL model
-  gives an aged pack 2.5 h in the idle mode and 1.7 h in the typical mode, within bounds of 1.3 to 3.3 h and 0.9 to
-  2.3 h (`feasibility/POWER-THERMAL.md` section 6, PWR-F07); `CONOPS.md` sections 4a and 6 carry the same
-  PWR-F07 figures since the layer 2 merge (`95e078a1`). None of these is a claim.
+  at +20 C for an aged pack (D-06); its values are TBD and measured on the prototype. None of these is a claim.
 - Not able to run through a night on its own pack and solar input. On the one pack of D-06 and the solar input alone
   the kit does not run through a night at 52 N in any state: the aged pack holds about 108 Wh usable, which carries
   the idle state of the runtime requirement (42.8 W) for about 2.5 h against nights of about 7 hours at midsummer and
@@ -258,11 +207,7 @@ fans, which is open and conditional: it does not arise unless no 40 mm fan of th
 and if it arises the session settles it under the owner's standing rule. Where a ruling sets a threshold or names
 engineering work (the D-11 key-down bound, the D-05 gap fixes, the D-07 jack count after the board E clamp fit),
 the requirements that depend on it carry TBD with their effect stated until the work is done, rather than an
-assumed value. Seven feasibility blockers on the core are not closed (FEA-001 ZEROIZE, FEA-002 EMCON, FEA-003 the
-failover fabric, FEA-004 power and thermal, FEA-005 pack protection, FEA-006 decoupling, and FEA-007 the kit's fit in
-the Peli 1450 on the case choices C1 to C6, core as a condition of every core function under the session's SC-04;
-requirements registry, kind feasibility); each names the evidence that closes it and the stage at which that evidence can exist
-(`EXECUTION-PLAN.md`, stage gates).
+assumed value.
 
 ## What this brief relies on outside this repository
 
@@ -277,7 +222,68 @@ requirements registry, kind feasibility); each names the evidence that closes it
 - **The approved foundation plan** is a file outside the repository; `EXECUTION-PLAN.md` summarises it and carries the
   owner's seven standing conditions.
 
-## Open items that bear on this brief, and why layer 1 can close with them open
+## Appendix: review and status history (not part of the baseline)
+
+Not part of the baseline. Moved here word for word on 27 September 2026 (branch `fnd/defstab`, MESHSAT-1357) from the brief above, as it stood at `31cd29b9`: the record of how the brief was reviewed and baselined, and the notes that recorded its own revisions. The changing implementation results that stood in its running text moved to `handover/DEFINITION-STATUS.md`. Each entry names where it stood and its lines at `31cd29b9`; a moved section's own heading is one level lower here. Nothing below is maintained: the current state is where the head of this file says.
+
+### A1. From the head (the status paragraph)
+
+*Lines 3 to 28 at `31cd29b9`: the status line and the history of the baseline attempts (Review A passes, release checks, the targeted fix, the narrow verification, EQ-27's re-read rule).*
+
+**Status: BASELINED as layer 1 of the foundation baseline (MESHSAT-1357) in the commit that files
+`reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md`, the narrow verification of the targeted fix of 27 September 2026 (an
+AI check of named items by a session that wrote none of the lines, not a qualified review), which found R2-B1 and R2-m1
+CLOSED at `3e4799eb` with no new contradiction in the lines touched (this document then sha256/16 `c1bb3fe5e082b57e`,
+before this status line and the last three sentences of this paragraph were written). Before that it was a CANDIDATE
+for Review A, layer 1 (defined in the last section of this brief), revised on 27 September 2026 by the layer 1 closer
+of the engineering handover against the engineering baseline at `e3aedb25`, to become BASELINED only at the commit
+that files a record with no open blocking finding.** The first pass of
+that review (`reviews/REVIEW-A-LAYER-1-2026-09-27.md`, an AI review) found two blocking items, B1 (the EMCON
+statements overstated how far the design has come against `feasibility/EMCON.md` section 0a) and B2 (two lines
+contradicting the face rulings), and eleven minor ones; this revision answers each. The second pass of the same record (27 September 2026, an AI
+review by a session that wrote none of the pages) closed B1 and B2 and left no blocking finding; its minor findings N1
+(`V2-SPEC.md` line 34, correction 27) and N2 (`BUILD.md`, a CAD file that does not exist) are corrected. Its finding I5
+(layer 2's EMCON and face text in `CONOPS.md` and `PANEL.md`) is answered there since `95e078a1`. The release check
+at `f2b7fa66` (`reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md`, an AI review by a reviewer who wrote none of the
+pages) found three blocking items that later merges had caused: B1 (the EMCON count, the 5G module's supply removal,
+the EMCON lamp and the 5G socket's land stated as before board B's and board C's round 8), B2 (the case generators
+and templates stated as not carrying C1 to C6) and B3 (the night finding of mission M1, requirement REQ-072, missing
+from the exclusions and the open items). This revision answers the three at desk; the brief stays a CANDIDATE until a
+reviewer who wrote none of the changed lines re-checks them at one pinned commit. The second release attempt of the same day (branch `fnd/rel2`) compared the three fixes with the reviewer's exact fixes and completed B3 (this is not the re-check a fresh reviewer owes), states M1's duration as governed by the session's SC-21 with the owner's part as the requirements registry's M-02, and takes the release check's minors m1, m4, m5, m7 and m8. The second release check at `eb9f9030` (`reviews/REVIEW-LAYER-1-RELEASE-2-2026-09-27.md`, an AI review) closed B1 to B3 and found one blocking item, R2-B1 (the core feasibility blockers counted as six where the requirements registry holds seven, FEA-007 missing); the targeted fix of 27 September 2026 (branch `fnd/h2`) applies that record's wording (the count of seven below, FEA-007's row among the open items and the east plug layout in the D-07 row), and the brief stays a CANDIDATE until a reviewer who wrote none of those lines re-checks them. That re-check is the narrow verification named in the status line: R2-B1 and R2-m1 CLOSED and no new contradiction, so the brief is BASELINED in the commit that files it. With it the session took, under the owner's standing rule of 26 September 2026, the second of the two method remedies both release checks asked for (`handover/ENGINEERING-QUESTIONS.md` EQ-27, option (c)): the five layer 1 pages (this brief, `README.md`, `v2/README.md`, `v2/BUILD.md` and `V2-SPEC.md`) are re-read at every integration that touches EMCON, the case, CONOPS or a feasibility record, the integration records the re-read on `handover/LAYER-STATUS.md` layer 1, and a line found stale is corrected by issuing this brief again (the rule of the open-items section). The first such re-read, for set 5's finding W3T-F1 on `TX_INHIBIT_n`, is recorded there. History: written
+25 September 2026 as a draft for Review A of the foundation baseline; revised on 26 September 2026 with the owner's
+rulings of 25 and 26 September 2026 (D-01 to D-17, listed in `CONOPS.md` section 7) and later that day for the owner's
+reversal of D-08 with D-08a and the session's SC-02 (appendix 32.367); revised on 27 September 2026 for the circuit as
+generated at `45bde541` (the 5G socket, EMCON), the case choices C1 to C6 of `CASE-MARGINS.md` section 4, the power
+and thermal findings of `feasibility/POWER-THERMAL.md`, the dual SIM and the carried-mass limit, and the exclusions
+the handover audit found missing.
+
+### A2. From the section "How this brief answers layer 1"
+
+*Lines 38 to 54 at `31cd29b9`: the map of the layer 1 review criteria to this brief.*
+
+#### How this brief answers layer 1
+
+The owner's handover prompt of 27 September 2026 (`reviews/2026-09-27-handover-execution-prompt.md`, section 3) asks
+layer 1 for a clear product purpose, users, prototype scope, exclusions and intended outcome, claims that agree with the
+engineering baseline, and report and deck commitments tracked apart from the technical work.
+
+| Layer 1 item | Where it is answered |
+|---|---|
+| Purpose | "The problem" below; `CONOPS.md` NEED-01 |
+| Users | "Who it is for" below; `CONOPS.md` section 1 |
+| Prototype scope | "What the first prototype has to show" below; `CONOPS.md` section 2a (owner ruling D-01) |
+| Exclusions | "What it is not, today" below |
+| Intended outcome | "What the first prototype has to show" below |
+| Claims against the baseline | this brief, `README.md`, `v2/README.md`, `v2/BUILD.md` and `V2-SPEC.md`, each read against `CURRENT-EVIDENCE.md`, `CONOPS.md` sections 2a and 7, `CASE-MARGINS.md` section 4 and the pages of `feasibility/` at `e3aedb25` |
+| Commitments outside the technical work | "What this brief relies on outside this repository" below |
+| Open items and why the layer can close with them | the section of that name below |
+| The review | "Review A, layer 1" below |
+
+### A3. From the section "Open items that bear on this brief, and why layer 1 can close with them open"
+
+*Lines 280 to 302 at `31cd29b9`: the closing argument of layer 1 at its baseline, with each open item's state at that time.*
+
+#### Open items that bear on this brief, and why layer 1 can close with them open
 
 Layer 1 decides what the kit is for, for whom, the prototype's scope and exclusions and the intended outcome. Each item
 below is stated where it lives, with the reason the layer can close while it is open. This brief states every such
@@ -301,7 +307,11 @@ silently.
 | D-18, the fans' rating | "What the first prototype has to show" | Conditional; settled by the session if it arises; no product change. |
 | The pack's transport route (REQ-069) | "What it is not, today" | No route is claimed; establishing one is a bounded item before any carriage. |
 
-## Review A, layer 1
+### A4. From the section "Review A, layer 1"
+
+*Lines 304 to 328 at `31cd29b9`: the definition of the review gate layer 1 closed through.*
+
+#### Review A, layer 1
 
 **Definition, taken by the session under the owner's standing rule of 26 September 2026 (SC-16).**
 `EXECUTION-PLAN.md` names Review A's content (product brief, concept of operations, modes, runtime, environment,

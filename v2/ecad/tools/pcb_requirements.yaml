@@ -209,7 +209,7 @@ baseline_reviews:
   - "v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2-2026-09-27.md@cf8c73fb288be2fb"
 sources_read_at: 08f3665a
 needs_document: "v2/docs/CONOPS.md"
-needs_document_sha256: 4483209659dc391c9677ae8d5351ccad4805d44906f8b142fd3029e4192c96bc
+needs_document_sha256: bbcab7c9876f7993cb6aa7a742c2a871caedf255b7a10e332adf1c81780a7b38
 companion_documents: []
 
 # The needs of CONOPS section 2, quoted. The validator compares each statement with the needs table of the
@@ -3397,8 +3397,25 @@ records:
           lines 48 to 49 (the Review A paragraph's last sentence), with the line count kept; every section from section
           1 on, which this reading rests on, is byte-identical to the file at 3ff59edc96a3f8f4, so it stands on the file
           at 4483209659dc391c
+      - >-
+          v2/docs/CONOPS.md re-read at the definition-baseline restructure of 27 September 2026 (branch fnd/defstab from
+          31cd29b9, the independent review of handover H2, v2/docs/reviews/2026-09-27-h2-independent-review.md section
+          4; its map drafts/defstab/moves.json, every move word for word, no sentence reworded): a head is added (the
+          status line, the rule that reopens the definition and one sentence per dependency naming where its current
+          state lives); the head's status and Review A paragraphs, the paragraph under the needs table, section 4's
+          sentence on when its rows were added, section 4a's two model-history passages, section 4c's hand-off sentence,
+          section 6's replaced-figures paragraph, section 7a's Review A row and the dated correction notes of section
+          2a, of section 4's Transport, Startup, Charging, EMCON and Storage rows, of section 4b's closing paragraph and
+          of section 5's opening paragraph and APRS row moved to the file's new appendix, headed 'Appendix: review and
+          status history (not part of the baseline)'; the status sentences of section 3's M4, section 4b's D-05 and
+          closing paragraphs, section 4b.1 and section 4c's HOT-R1, BANK-R1 and targets paragraphs moved to
+          v2/docs/handover/DEFINITION-STATUS.md; the needs table is byte-identical; in section 2a only the correction
+          note of 26 September 2026 moved, and the paragraph 'Which peripherals NEED-03 protects' keeps every statement
+          this reading rests on (every USB peripheral of IOHA section 15 and the kit-to-kit WiFi link critical, the LoRa
+          module and cellular data the named exceptions for prototype 1) unchanged word for word, so it stands on the
+          file at bbcab7c9876f7993
     evidence_bound_to:
-      - "v2/docs/CONOPS.md@4483209659dc391c"
+      - "v2/docs/CONOPS.md@bbcab7c9876f7993"
       - "v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8"
       - "v2/docs/V2-SPEC.md@a92ea2ef3793a3c9"
     release_effect: BLOCKER
@@ -9843,11 +9860,31 @@ records:
           lines 48 to 49 (the Review A paragraph's last sentence), with the line count kept; every section from section
           1 on, which this reading rests on, is byte-identical to the file at 3ff59edc96a3f8f4, so it stands on the file
           at 4483209659dc391c
+      - >-
+          v2/docs/CONOPS.md re-read at the definition-baseline restructure of 27 September 2026 (branch fnd/defstab from
+          31cd29b9, the independent review of handover H2, v2/docs/reviews/2026-09-27-h2-independent-review.md section
+          4; its map drafts/defstab/moves.json, every move word for word, no sentence reworded): a head is added (the
+          status line, the rule that reopens the definition and one sentence per dependency naming where its current
+          state lives); the head's status and Review A paragraphs, the paragraph under the needs table, section 4's
+          sentence on when its rows were added, section 4a's two model-history passages, section 4c's hand-off sentence,
+          section 6's replaced-figures paragraph, section 7a's Review A row and the dated correction notes of section
+          2a, of section 4's Transport, Startup, Charging, EMCON and Storage rows, of section 4b's closing paragraph and
+          of section 5's opening paragraph and APRS row moved to the file's new appendix, headed 'Appendix: review and
+          status history (not part of the baseline)'; the status sentences of section 3's M4, section 4b's D-05 and
+          closing paragraphs, section 4b.1 and section 4c's HOT-R1, BANK-R1 and targets paragraphs moved to
+          v2/docs/handover/DEFINITION-STATUS.md; the needs table is byte-identical; the statements this reading rests on
+          are unchanged word for word: section 4's ZEROIZE and Service rows, its Startup and EMCON rows less their
+          correction notes (the EMCON row's is the S-07 record; both now stand in the appendix), section 4a's PS-EMCON
+          row, section 4b's key and table, section 4b.1's table, section 4f and section 5's hardware interlock sentence;
+          M4 keeps its setting, sequence, must-hold and D-05 ruling, and its four sentences on the gaps as generated and
+          the transmitter counts stand word for word on DEFINITION-STATUS.md (entry C-S1), still describing the circuit
+          of 458b2873 and board B's round 8; no kept sentence describes a circuit that faf8c981, 458b2873 or d90f30e4
+          replaced, so it stands on the file at bbcab7c9876f7993
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc"
       - "v2/docs/PANEL.md@7bb905740ddaebb9"
-      - "v2/docs/CONOPS.md@4483209659dc391c"
+      - "v2/docs/CONOPS.md@bbcab7c9876f7993"
       - "v2/docs/V2-SPEC.md@a92ea2ef3793a3c9"
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
       - "v2/docs/TEST-PLAN.md@4f15bd02a6a8be46"
@@ -11635,9 +11672,26 @@ records:
           lines 48 to 49 (the Review A paragraph's last sentence), with the line count kept; every section from section
           1 on, which this reading rests on, is byte-identical to the file at 3ff59edc96a3f8f4, so it stands on the file
           at 4483209659dc391c
+      - >-
+          v2/docs/CONOPS.md re-read at the definition-baseline restructure of 27 September 2026 (branch fnd/defstab from
+          31cd29b9, the independent review of handover H2, v2/docs/reviews/2026-09-27-h2-independent-review.md section
+          4; its map drafts/defstab/moves.json, every move word for word, no sentence reworded): a head is added (the
+          status line, the rule that reopens the definition and one sentence per dependency naming where its current
+          state lives); the head's status and Review A paragraphs, the paragraph under the needs table, section 4's
+          sentence on when its rows were added, section 4a's two model-history passages, section 4c's hand-off sentence,
+          section 6's replaced-figures paragraph, section 7a's Review A row and the dated correction notes of section
+          2a, of section 4's Transport, Startup, Charging, EMCON and Storage rows, of section 4b's closing paragraph and
+          of section 5's opening paragraph and APRS row moved to the file's new appendix, headed 'Appendix: review and
+          status history (not part of the baseline)'; the status sentences of section 3's M4, section 4b's D-05 and
+          closing paragraphs, section 4b.1 and section 4c's HOT-R1, BANK-R1 and targets paragraphs moved to
+          v2/docs/handover/DEFINITION-STATUS.md; the needs table is byte-identical; section 4's Charging row loses only
+          its correction note of 26 September 2026 (the S-07 record, now in the appendix), and its statements this
+          reading rests on (the cell-count strap at 4S, the kit's loads on the charger's system node, the net VBAT, and
+          a hostless kit's pack held rather than charged at the charger's 256 mA) and section 5's case S4 are unchanged
+          word for word, so it stands on the file at bbcab7c9876f7993
     evidence_bound_to:
       - "v2/docs/PANEL.md@7bb905740ddaebb9"
-      - "v2/docs/CONOPS.md@4483209659dc391c"
+      - "v2/docs/CONOPS.md@bbcab7c9876f7993"
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
       - "v2/ecad/tools/gen_sch_a.py@5af29bbcf27bb91a"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
