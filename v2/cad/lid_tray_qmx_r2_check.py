@@ -68,7 +68,7 @@ E2_GRMS = 2.24                        # MIL-STD-810H 514.8 Annex C, composite wh
                                       # (page 514.8C-13; v2/vendor/standards/mil-std-810h-method-514-8.md), "drive limiting to 3 sigma"
 E3S_STORAGE = 71.0                    # C, TEST-PLAN E3-S
 G0 = 9.80665
-MASSES = dict(tray=0.0747, frame=0.0083, plate=0.0522)   # kg, from the solids (lid_tray_qmx_r2.py prints them; --solids re-checks)
+MASSES = dict(tray=0.0681, frame=0.0122, plate=0.0522)   # kg, from the solids (lid_tray_qmx_r2.py prints them; --solids re-checks)
 
 # the face plate's parts: height above the plate's top face, and where that height is read. A seal under a head is taken as if it did
 # not compress at all, which is a bound; no sheet states a tolerance on a head, so none is subtracted twice.
@@ -322,15 +322,10 @@ def wall_section():
 
 def retention():
     """The links of each load path: (direction, link, capacity N, note). The capacity is the whole load the path holds when this link
-    is the one that gives."""
+    is the one that gives. per_screw() gives what one frame screw holds, part by part."""
     links = []
     n_side = len(Q.FRAME_SCREWS) // 2
-    head = math.pi / 4 * (Q.BH["d_head"] ** 2 - Q.BH["hole"] ** 2) * PC["tensile"]
-    nut = (Q.NUT["s"] ** 2 - math.pi / 4 * Q.BH["hole"] ** 2) * PC["tensile"]
-    slot_area = Q.NUT["slot_w"] * (Q.BASE_Y - (Q.POST_Y - Q.NUT["slot_w"] / 2))
-    post = (Q.POST["w"] * (Q.POST["depth"] + Q.WALL) - slot_area) * PC["interlayer"]
-    screw = M3_STRESS_AREA * A2_70_RP02
-    per_screw = min(head, nut, post, screw)
+    per_screw = min(f for _, f in globals()["per_screw"]())
     for side, ov, length in (("back", Q.LEDGE_BACK, Q.UNIT[0] - 2 * EDGE_R),
                              ("knob-edge", Q.LEDGE_FRONT, sum(min(b, Q.U0 - EDGE_R) - max(a, -Q.U0 + EDGE_R) for a, b in Q.FRONT_SEGMENTS))):
         lever = (Q.CLR + EDGE_R + ov) / 2
@@ -341,20 +336,20 @@ def retention():
         w_eff = min(2 * arm + Q.BH["d_head"], Q.POST["x"][2] - Q.POST["x"][0])
         links.append(("out", "frame, %s rail bending between its screws and its ledge (arm %.1f, %.1f wide at each of %d screws)" % (side, arm, w_eff, n_side),
                       2 * n_side * PC["flexural"] * w_eff * Q.FRAME_T ** 2 / 6 / arm, "half the load on each side"))
-        links.append(("out", "%s frame screws, %d, prised by %.2f: the least of head through the frame %.0f, nut on its slot's roof %.0f, post at the slot %.0f, screw %.0f N" % (
-            side, n_side, pry, head, nut, post, screw), 2 * n_side * per_screw / pry, "half the load on each side"))
+        links.append(("out", "%s frame screws, %d, each holding %.0f N and prised by %.2f on the post's outer edge" % (side, n_side, per_screw, pry),
+                      2 * n_side * per_screw / pry, "half the load on each side"))
     engage = 5.0 - Q.Z_SILL                                             # M3 x 5 flush at the boss top: its tip 5.0 below it
     strip = math.pi * 3.0 * engage * 0.75 * AL5052_SHEAR
-    links.append(("out", "M3 threads in the 2.0 lid plate, the four screws between the posts (engagement %.1f, tip %.1f short of the bond)" % (engage, Q.PLATE_T - engage),
+    links.append(("out", "M3 threads in the lid plate, the four screws between the posts (in %.1f, tip %.1f short of the bond)" % (engage, Q.PLATE_T - engage),
                   4 * strip, "INFERRED shear; the six end screws not counted"))
     pull = math.pi / 4 * (Q.CSK["d_head"] ** 2 - Q.CSK["hole"] ** 2) * PC["tensile"]
     links.append(("out", "countersunk heads pulling through the %.1f flange, the same four" % Q.Z_SILL, 4 * pull, ""))
     fl_arm = (Q.POST["x"][1] - Q.POST["x"][0]) / 2 - Q.POST["w"] / 2    # from a post's side to the screw between two posts
     fl = PC["flexural"] * Q.POST["depth"] * Q.Z_SILL ** 2 / 6 / fl_arm
     links.append(("out", "tray flange bending between a post and the screw beside it (%.1f x %.1f, arm %.2f), eight places" % (Q.POST["depth"], Q.Z_SILL, fl_arm), 8 * fl,
-                  "the floor under the unit not counted"))
+                  "the floor not counted"))
     perim = 2 * (2 * Q.BASE_X + 2 * Q.BASE_Y) - (8 - 2 * math.pi) * 6.0
-    links.append(("out*", "the lid plate's DP8005 bond on the lid's polypropylene: SCOPING ONLY (T-peel of 0.5 mm HDPE x perimeter %.0f)" % perim,
+    links.append(("out*", "the lid plate's DP8005 bond on polypropylene: SCOPING ONLY (T-peel of 0.5 mm HDPE x perimeter %.0f)" % perim,
                   DP8005_TPEEL * perim, "no held figure bounds it"))
     band = Q.SILL_H - 2 * PRINT_TOL
     n0, n1 = Q.rf_notch()
@@ -362,13 +357,23 @@ def retention():
         links.append(("x", "the %s panel's bottom band bearing on its sill (%.1f x %.1f at the loose corner)" % (end, band, length), band * length * PC["tensile"],
                       "the sill cut away under the RF jack" if end == "right" else ""))
     links.append(("x", "the hinge-end sill sheared off the floor (%.1f x %.1f)" % (Q.END_L, Q.BASE_Y - n1), Q.END_L * (Q.BASE_Y - n1) * INTERLAYER_SHEAR, "INFERRED shear"))
-    links.append(("x", "ten M3 through the flange and both sills, bearing on the printed holes over %.1f" % Q.Z_SILL, 10 * 3.0 * Q.Z_SILL * PC["tensile"], "friction not counted"))
+    links.append(("x", "ten M3 through the flanges and both sills, bearing on the printed holes over %.1f" % Q.Z_SILL, 10 * 3.0 * Q.Z_SILL * PC["tensile"], "friction not counted"))
     A, c, I, pitch = wall_section()
     n_pitch = 2 * Q.WALL_X / pitch
     lever_y = Q.Z_UB + Q.UNIT[2] / 2 - Q.FLOOR
-    links.append(("y", "one wall pushed outward, bending across the layers at its root (resultant %.1f above it, %.1f post pitches)" % (lever_y, n_pitch),
-                  PC["interlayer"] * I / (c * lever_y) * n_pitch, "the frame's tie to the other wall not counted"))
+    links.append(("y", "one wall pushed outward, bending across the layers at its root (load %.1f above it, %.1f post pitches)" % (lever_y, n_pitch),
+                  PC["interlayer"] * I / (c * lever_y) * n_pitch, "the frame's tie not counted"))
     return links
+
+
+def per_screw():
+    """What one frame screw holds, part by part (N): the head through the frame, the nut on its slot's roof, the post at the slot, the screw."""
+    head = math.pi / 4 * (Q.BH["d_head"] ** 2 - Q.BH["hole"] ** 2) * PC["tensile"]
+    nut = (Q.NUT["s"] ** 2 - math.pi / 4 * Q.BH["hole"] ** 2) * PC["tensile"]
+    slot_area = Q.NUT["slot_w"] * (Q.BASE_Y - (Q.POST_Y - Q.NUT["slot_w"] / 2))
+    post = (Q.POST["w"] * (Q.POST["depth"] + Q.WALL) - slot_area) * PC["interlayer"]
+    return [("the button head bearing on the %.1f frame" % Q.FRAME_T, head), ("the square nut bearing on its slot's %.1f roof" % Q.NUT["roof"], nut),
+            ("the post and wall at the slot, in tension across the layers (%.0f mm2)" % (post / PC["interlayer"]), post), ("the screw, A2-70 (INFERRED class)", M3_STRESS_AREA * A2_70_RP02)]
 
 
 # ---------------------------------------------------------------- the record
@@ -481,16 +486,19 @@ def report():
     L_.append("   crosses the layers, and the frame's bending lies in its layers. Heat deflection %.0f C at 0.45 MPa and %.0f C at 1.80 MPa, over E3-S's +%.0f C." % (
         PC["hdt045"], PC["hdt180"], E3S_STORAGE))
     links = retention()
-    L_.append("   %-4s %-150s %8s %7s %7s" % ("dir", "link", "N", "g", "factor"))
+    L_.append("   %-4s %-112s %8s %7s %7s" % ("dir", "link", "N", "g", "factor"))
     known = []
     for d, label, F, note in links:
         g = F / (m_all * G0) if d == "out*" else F / w
         if d != "out*":
             known.append((g, d, label))
-        L_.append("   %-4s %-150s %8.0f %7.0f %7s  %s" % (d, label[:150], F, g, "" if d == "out*" else "%.1f" % (F / load), note))
+        assert len(label) <= 112, label
+        L_.append("   %-4s %-112s %8.0f %7.0f %7s  %s" % (d, label, F, g, "" if d == "out*" else "%.1f" % (F / load), note))
     gmin = min(known)
     perim = 2 * (2 * Q.BASE_X + 2 * Q.BASE_Y) - (8 - 2 * math.pi) * 6.0
-    L_.append("   Governing link on the makers' typical figures: %.0f g, %.1f times the load case (direction %s: %s)." % (gmin[0], gmin[0] / DESIGN_G, gmin[1], gmin[2].split(" (")[0]))
+    L_.append("   one frame screw holds the least of:")
+    for l, f in per_screw(): L_.append("      %5.0f N  %s" % (f, l))
+    L_.append("   Governing link on the makers' typical figures: %.0f g, %.1f times the load case (direction %s: %s)." % (gmin[0], gmin[0] / DESIGN_G, gmin[1], gmin[2].split(",")[0]))
     L_.append("   The bond is not bounded by any held figure: its T-peel scoping number (%.0f g) is for a flexible strip, not a rigid 2 mm plate, and is" % (
         DP8005_TPEEL * perim / (m_all * G0)))
     L_.append("   no bound; it goes to CASE-MARGINS T8 as a pull test on the case's polypropylene, after a thermal cycle (the plate and the lid expand")

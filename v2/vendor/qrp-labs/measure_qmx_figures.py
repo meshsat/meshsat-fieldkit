@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Scale the QRP Labs QMX's end panels and top face from the maker's own figures (MESHSAT-1357, 27 Sep 2026, the QMX lid tray r2, S-63).
 
-The maker states the enclosure as "95 x 63 x 25mm without protrusions" (qmx-product-page-2026-09-27.txt; assembly manual 1.04r page 2,
+The maker states the enclosure as "95 x 63 x 25mm without protrusions" (qmx-product-page-2026-09-27.txt; assembly manual 1.04r page 3,
 qmx-assembly-1_04r-pages-1-3-20-21-75-78.pdf) and draws its two end panels and its top face, undimensioned, in the operating manual 1_04_004
 (qmx-operating-manual-1_04_004.pdf pages 7, 8 and 13). The three figures are the manual's embedded rasters, extracted pixel for pixel
 (`pdfimages -png`, poppler) into qmx-crops/opman-1_04_004-p7-left-panel.png, -p8-right-panel.png and -p13-top-face.png. This script:
