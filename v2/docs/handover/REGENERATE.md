@@ -22,8 +22,10 @@ PARITY_AFTER_NOISE, the causes of the failures) are what to expect on another da
 (section 7's repository route, section 8) say how far they were re-run.
 
 **Edition H1.1.** The commands below name `H1`; for H1.1 read `H1.1` wherever a command names the ZIP or its folder.
-H1.1's design files, tools and exports are H1's; it adds the candidate patches, the glossary, three filed records,
-the case scripts' reference outputs and the packer's new `SOURCE.txt` lines. Sections 1a and 9 are new in H1.1.
+H1.1's design files, tools and exports are H1's; it adds the candidate patches, the glossary, four filed records,
+the case scripts' reference outputs and the packer's new `SOURCE.txt` lines. Sections 1a and 9 are new in H1.1. The
+repository holds H1.1 as `v2/release/handover/H1.1.zip` with `H1.1.zip.sha256` and `H1.1.MANIFEST.tsv` beside it (the
+packer's `--zip-only` mode), not as an unzipped folder; `unzip` creates the `H1.1/` folder the commands expect.
 
 ## 1. Prerequisites (the versions the commands were run with)
 
@@ -327,7 +329,9 @@ python3 v2/ecad/tools/handover_pack.py verify <dir>/<name>.zip
 ```
 
 `plan` must end `0 unclassified` (a file of the commit that no rule of `pack.yaml` classifies refuses the build).
-`build` writes `<dir>/<name>/`, `<dir>/<name>.zip` and `<dir>/<name>.zip.sha256`, and refuses a name that exists. Two
+`build` writes `<dir>/<name>/`, `<dir>/<name>.zip` and `<dir>/<name>.zip.sha256`, and refuses a name that exists;
+with `--zip-only` it writes `<dir>/<name>.MANIFEST.tsv` (a byte copy of the ZIP's manifest) instead of the folder,
+and `verify <dir>/<name>.zip` then also checks that copy against the ZIP's own. Two
 builds of one commit on one host write the same MANIFEST.tsv and the same ZIP bytes (tested in
 `tests/test_handover_pack.py`); on another host the ZIP's compressed bytes and `SOURCE.txt`'s host lines can differ, so
 compare `MANIFEST.tsv` rows other than `SOURCE.txt`'s, not the ZIP's sha256. `SOURCE.txt`'s commit timeline marks a

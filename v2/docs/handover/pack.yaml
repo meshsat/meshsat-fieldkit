@@ -56,7 +56,7 @@ groups:
 
 rules:
   # ---------------------------------------------------------------- snapshots never contain snapshots
-  - {action: exclude, kind: earlier-snapshot, glob: ["v2/release/handover/[!_]*/**", "v2/release/handover/*.zip", "v2/release/handover/*.zip.sha256"],
+  - {action: exclude, kind: earlier-snapshot, glob: ["v2/release/handover/[!_]*/**", "v2/release/handover/*.zip", "v2/release/handover/*.zip.sha256", "v2/release/handover/*.MANIFEST.tsv"],
      reason: "an earlier handover snapshot: snapshots are immutable copies, never inputs of the next one"}
   - {action: include, group: L8, glob: "v2/release/handover/_generated/**",
      role: "exports of the committed schematic of the declared phase (paged PDF, sheet PDF, BOMs, ERC, netlist parity) with provenance.json naming the schematic sha256 and the kicad-cli that made them"}
