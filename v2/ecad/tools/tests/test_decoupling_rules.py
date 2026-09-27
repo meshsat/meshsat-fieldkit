@@ -195,16 +195,19 @@ def t_a_reason_nobody_could_check_and_a_second_line_for_one_capacitor_are_refuse
     assert len(refused) == 3, refused
 
 
-def t_no_live_allow_file_carries_a_line_that_names_no_capacitor():
-    """The data rule: the blanket lines are gone from the live project folders (the phase snapshots keep theirs as
-    history, and no gate reads a snapshot's allow file for a new board)."""
-    ecad = os.path.dirname(TOOLS); bad = []
+def t_no_allow_file_carries_a_line_that_names_no_capacitor():
+    """The data rule, and the one that failed on the tree this file was written against: twelve files, each with
+    the line of 8 September. DECOUPLING.md T6 would have kept the phase copies as history; the repository's own
+    rule of 12 September (tests/test_driver_hygiene.py, a phase copy declares what its board declares) holds a
+    copy to its board's file, and a gate re-run on a phase folder reads the copy, so both are cleared."""
+    ecad = os.path.dirname(TOOLS); bad = []; seen = 0
     for d in sorted(os.listdir(ecad)):
         p = os.path.join(ecad, d, "bypass-allow.txt")
         if not d.startswith("pcb-") or not os.path.exists(p): continue
-        if len(d.split("-")) > 3: continue          # pcb-a-power-a23 and its like: a phase snapshot
+        seen += 1
         allow, refused = dr.parse_allow(open(p, encoding="utf-8").read())
         if refused: bad.append("%s: %d line(s) refused, the first: %s" % (d, len(refused), refused[0][1][:60]))
+    assert seen, "no allow file was found under %s, so nothing was checked" % ecad
     assert not bad, "; ".join(bad)
 
 
