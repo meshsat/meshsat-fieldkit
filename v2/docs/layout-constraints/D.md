@@ -1,9 +1,18 @@
 # Board D (APRS): layout constraints
 
-A view over the records at `main` `e3aedb25` (conventions and shared rules: [README.md](README.md)). Candidate: phase
-D12, netlist `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net` sha256/16 `f13d8b70099ab03e`, intent `pcb-d-aprs-intent.json`
-`59591c54eb29ab64`; the committed board file `929bf82d2bf6eed4` is D12. Board D is not at layout entry: 15 blocker
-lines (`CURRENT-EVIDENCE.md` lines 108 to 122), among them the decision 31 review record, FEA-002, FEA-004 and FEA-006.
+**Bound to the H2 line (after H2, 27 September 2026).** Candidate re-read at `ef144760`: phase D12, netlist
+`v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net` sha256/16 `76700a687eb6187f` (round 8 at `76235aad`, set 5 at `b7f96784`),
+intent `pcb-d-aprs-intent.json` `443fd745879d3022`; the committed board file `929bf82d2bf6eed4` is D12. Section 2's
+table is regenerated from `calc/rail_widths.py` on that intent: the `+5V_TX` rail the paragraph below announced is
+in it (marked **H2**), the other rails read the same. Board D is not at layout entry: **8 reasons at H2**
+(`CURRENT-EVIDENCE.md`): PWR-001 INCONCLUSIVE (RLY_K, S-76), SI-001 INCONCLUSIVE, RF-002 FAIL (EQ-25), decision 31's
+protection review, FEA-002, FEA-004, FEA-006, FEA-007 (its desk item W4-F17, board A's J_AB2 in board D's rectangle,
+alone; no mock-up check holds board D). Known changes of the H2 line: round 8 (`76235aad`: the transmit chain powered
+only while its EMCON gates are in range, the PA flange temperature read) and set 5 (`b7f96784`: every supply PWR-001
+refused declared, the transmit supply behind U21). Every other line below is the reading at `e3aedb25`, not re-read against the H2 netlist; where it and a record disagree, the record governs (README).
+
+As first written: a view over the records at `main` `e3aedb25` (conventions and shared rules: [README.md](README.md)),
+candidate then netlist `f13d8b70099ab03e`, intent `59591c54eb29ab64`, 15 blocker lines.
 **Round 8** (`fnd/r8int1`, on `main` as `53a98a71` since this sheet was first written) changes board D: it adds a
 `+5V_TX` rail (0.37 A typical, 1.15 A peak: 0.08 mm on one outer face, two 0.3 mm barrels) and draws PWR-F15's flange
 sensor (a Semitec 103AT-2 NTC on a two-wire lead to `J_FLANGE`, read by U22, a TI ADS1115 at 0x48 on the kit bus;
@@ -24,6 +33,7 @@ sensor (a Semitec 103AT-2 NTC on a two-wire lead to `J_FLANGE`, read by U22, a T
 |---|---|---:|---:|---|
 | +5V_D8 (from board A over J_PWR1) | 1.00 / 2.00 | 0.30 | 1.80 | 3 / 3 / 2 |
 | +5V_SA (the exciter, behind FB1) | 0.35 / 1.10 | 0.07 | 0.42 | 2 / 2 / 2 |
+| +5V_TX (**H2**: the transmit supply, round 8 and set 5) | 0.37 / 1.15 | 0.08 | 0.46 | 2 / 2 / 2 |
 | +3V3_D8, +3V4_HUB, +3V3 | 0.04 to 0.06 / up to 0.17 | under 0.02 | | 1 / 1 / 1 |
 
 - **+5V_SA's layer transition needs two barrels** (D12's single barrel at (71.4, 74.2) carries 1.10 A of the solved

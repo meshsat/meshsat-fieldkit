@@ -2,19 +2,22 @@
 
 MESHSAT-1357, pre-PCB layer 9 of the handover (`v2/docs/reviews/2026-09-27-handover-execution-prompt.md`, sections 3
 and 5: "Layout entry requires the reviewed schematic, parts, interfaces, geometry, stackup and electrical
-constraints"). Written 27 September 2026 against `main` at `e3aedb25`. **Prototype design: no V2 board has been
-fabricated, ordered, assembled or powered. No board is ready for layout: 0 of 7 pass the staged layout-entry test
-(`v2/docs/CURRENT-EVIDENCE.md`).** A sheet here is an input a layout needs, never an admission to layout.
+constraints"). Written 27 September 2026 against `main` at `e3aedb25`, and **re-bound to the H2 line after H2 (the
+same day, at `ef144760`)**: the table below names the candidate each sheet is now read against, `calc/rail_widths.py`
+was re-run on those intent files (its output names each netlist and intent by sha256/16), and each sheet's opening
+lines say what was re-read at the H2 line and what stays as read at `e3aedb25`. **Prototype design: no V2 board has
+been fabricated, ordered, assembled or powered. No board is ready for layout: 0 of 7 pass the staged layout-entry
+test (`v2/docs/CURRENT-EVIDENCE.md`).** A sheet here is an input a layout needs, never an admission to layout.
 
-| Board | Sheet | Candidate it is read against (`CURRENT-EVIDENCE.md`) |
+| Board | Sheet | Candidate it is read against at the H2 line (`CURRENT-EVIDENCE.md`); at `e3aedb25` (history) |
 |---|---|---|
-| A power | [A.md](A.md) | phase A32; netlist `pcb-a-power-a23/out/pcb-a-power.net` 7b08510106687b3d |
-| B compute | [B.md](B.md) | phase B21; netlist 669d02d07aeaae4b |
-| C panel backer | [C.md](C.md) | phase C24; netlist 2834f0d8c4071d56 |
-| D APRS | [D.md](D.md) | phase D12; netlist f13d8b70099ab03e |
-| E1 dock | [E.md](E.md) | phase E17; netlist d910e49c5f5f50b2 |
-| P pack BMS | [P.md](P.md) | phase P4; netlist 4342c4cbe1b43dc4 |
-| E5 dock block | [E5.md](E5.md) | board file 686b29a734c55b9a (no schematic) |
+| A power | [A.md](A.md) | phase A32; netlist `pcb-a-power-a23/out/pcb-a-power.net` da05dc02bc1e612f, intent 92dd3b1cda9046b8; was netlist 7b08510106687b3d |
+| B compute | [B.md](B.md) | phase B21; netlist 8b78c59754a6a0c7, intent 162fcb9b95f680a7; was 669d02d07aeaae4b |
+| C panel backer | [C.md](C.md) | phase C24; netlist 11eabc2dddca5161, intent 854436c729322993; was 2834f0d8c4071d56 |
+| D APRS | [D.md](D.md) | phase D12; netlist 76700a687eb6187f, intent 443fd745879d3022; was f13d8b70099ab03e |
+| E1 dock | [E.md](E.md) | phase E17; netlist d6137f50059e5cbc, intent 5913e38b20333d35; was d910e49c5f5f50b2 |
+| P pack BMS | [P.md](P.md) | phase P4; netlist 085f833362fbbda8, intent 6ff1b8129a5c5aff; was 4342c4cbe1b43dc4 |
+| E5 dock block | [E5.md](E5.md) | board file 686b29a734c55b9a (no schematic), unchanged |
 
 ## What a sheet is, and what it is not
 
@@ -26,7 +29,12 @@ fabricated, ordered, assembled or powered. No board is ready for layout: 0 of 7 
 - **A sheet adds no rule.** Where the record has a gap, the sheet says so and names who closes it. The one kind of
   line a sheet writes on its own authority is an INFERRED reading of the record (marked so) or a recommendation of the
   session (marked so, with its reason and reversal), under the owner's standing rule of 26 September 2026.
-- **Bound to the committed candidates at `e3aedb25`.** Round 8's circuit streams change boards A, B, C, D, E and P.
+- **Bound to the H2 line since after H2** (the table above), and before that to the committed candidates at
+  `e3aedb25`, which the text below describes. At the H2 line `calc/rail_widths.py` changed 41 lines of its output
+  against the `e3aedb25` one: board A's VIN_RAW from 12.31 A and 11.92 mm to 14.10 A and 15.29 mm on one outer face,
+  rails new on A (PRECHG, VMON, +3V3_EMCON_EF, +3V3_EMCON), B (seventeen, each at most 0.3 A), D (+5V_TX) and E
+  (SGP_VDD), board E's VIN_RAW and TRK_OUT at 14.10 A and 10.33 A, and every intent's sha. As first written: Round 8's
+  circuit streams change boards A, B, C, D, E and P.
   At the time of writing `fnd/r8int1` (commit `53a98a71`) integrates A, D and E and changes their intent files; its
   rail deltas that move a width are quoted in the sheets as "round 8". That branch reached `main` as `53a98a71` before
   this layer was integrated. **Every sheet is re-read against the netlist and intent file of the merge commit before a
@@ -136,7 +144,10 @@ the default on six layers and up. The class table in each project file is on the
 mock-up's checks of the rows that can move a board are **required before the layout entry of boards A, B, E and P**,
 and that layout entry is **BLOCKED** on the purchase (FEA-007; `CASE-FIT-UNCERTAINTIES.md` sections 1, 2 and 7;
 `CASE-MARGINS.md` section 7 and finding 28). No board of the four enters layout on the nominal geometry in their
-place; boards C, D and E5 are not held by it. The sheets name the rows that bear on each board.
+place; boards C, D and E5 are not held by it. **Restated at H2:** FEA-007's layout-entry stage holds A, B, D, E, E5 and
+P: D and E5 on its desk items alone (D: W4-F17; E5: the dock and blind-mate tolerance stack), A, B, E and P on their
+desk items and the mock-up's checks; C is not held by it at layout entry, only at fabrication release. The sheets name
+the rows that bear on each board.
 
 ### Test access (REQ-048, TST-001)
 
@@ -161,7 +172,9 @@ Each sheet's last section lists the ones that apply to its board, with what each
 
 ## Files
 
-- `calc/rail_widths.py` and `calc/rail_widths.out`: the power tables (stdlib, any host, under a second).
+- `calc/rail_widths.py` and `calc/rail_widths.out`: the power tables (stdlib, any host, under a second); the output is
+  the run at the H2 line (after H2), each table headed by the netlist and intent it read.
 - `calc/stack_solves.py` and `calc/stack_solves.out`: the pair and RF line solves (atlc 4.6.1; run on the rented box,
-  30 s on 12 workers).
+  30 s on 12 workers). They depend on the stacks' geometry and the pair classes' widths, not on a netlist, so they
+  were not re-run at the H2 line.
 - `v2/docs/STACKUP-DECISIONS.md`: the per-board stackup record the sheets' section 1 summarises.
