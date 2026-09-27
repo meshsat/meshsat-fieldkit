@@ -279,6 +279,28 @@ def t_source_names_the_public_repository_the_commits_the_pages_cite_and_the_cand
     assert "v2/docs/handover/candidates/c1.patch: %d bytes, sha256 %s" % (len(patch), hashlib.sha256(patch).hexdigest()) in text
 
 
+def t_a_cited_commit_whose_short_id_is_all_digits_is_listed():
+    """A commit id is decided by git, not by what its letters look like. The first version skipped any 8-hex token
+    without both a letter and a digit, so a page citing a commit whose short id happens to be all digits (about 2 in
+    100 commits) left it out of SOURCE.txt's timeline, and the fixture test above failed at that rate. A stand-in git
+    resolves one all-digit id and refuses every other token, so the case is fixed, not left to chance."""
+    full = "12345678" + "9" * 32
+
+    class G:
+        def ask(self, *a):
+            if a[:3] == ("rev-parse", "--verify", "--quiet"):
+                return (0, full) if a[3] == "12345678^{commit}" else (1, "")
+            if a[0] == "log":
+                return (0, "2026-09-27T10:00:00+02:00\tdigits only [MESHSAT-1]")
+            return (0, "")
+
+    rows = _hp().commit_timeline(G(), "abcdef0123456789abcdef0123456789abcdef01",
+                              ["cited `12345678` and `deadbeef` and `87654321`"], None)
+    ids = [r[0] for r in rows]
+    assert "12345678" in ids, "an all-digit commit id the pages cite was skipped: %r" % rows
+    assert "deadbeef" not in ids and "87654321" not in ids, "a token git does not resolve was listed: %r" % rows
+
+
 def t_zip_only_writes_the_zip_and_its_manifest_and_verify_reads_both():
     """--zip-only (H1.1): the expanded directory is not written, the ZIP is the same bytes as a full build's, the
     manifest beside it is the ZIP's own, and verify refuses a sidecar manifest that differs from the ZIP's."""

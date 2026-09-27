@@ -343,14 +343,14 @@ COMMIT_ID = re.compile(r"(?<![0-9A-Za-z_/.-])([0-9a-f]{8}|[0-9a-f]{40})(?![0-9A-
 
 def commit_timeline(git, commit, texts, public_ref):
     """[(short id, date, public, in the snapshot's history, subject)] for every commit id the handover pages name
-    (an 8- or 40-hex token with at least one letter that resolves to a commit of this repository), plus the snapshot's
+    (an 8- or 40-hex token that resolves to a commit of this repository; git decides, so a commit whose short id is
+    all digits or all letters is listed too), plus the snapshot's
     own commit. `public` is whether the commit is an ancestor of `public_ref` in the building clone (the remote-tracking
     branch of the public repository), or "unknown" when the clone has no such ref."""
     ids = {commit}
     for t in texts:
         for m in COMMIT_ID.finditer(t):
             tok = m.group(1)
-            if not re.search(r"[a-f]", tok) or not re.search(r"[0-9]", tok): continue
             rc, full = git.ask("rev-parse", "--verify", "--quiet", "%s^{commit}" % tok)
             if rc == 0 and full: ids.add(full)
     rc, _ = git.ask("rev-parse", "--verify", "--quiet", public_ref) if public_ref else (1, "")
