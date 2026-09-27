@@ -139,8 +139,10 @@ COVERAGE = '''
      and a stale output fail, and a consistent tree passes; one test judges the real tree. It records the netlist by sha and by
      content, the intent file, the sheet, the output and the calculation by sha, so a re-take binds to the candidate
      (rules_status._bound) and goes stale when any of them moves (CONFIG_INPUTS). On the set 6 candidate at the binding of
-     27 September it reads PASS on seven boards, 1397 checks. WHAT IT DOES NOT DO, named rather than implied: a table's note
-     column is not compared; sections 1 and 3 onward of a sheet are bound by nothing and each sheet's `older` line says so;
+     27 September it reads PASS on the seven boards. A sheet re-bound by machine (--emit --sheet) carries a mark on every row
+     that moved or is new and fails on the mark until the row is explained. WHAT IT DOES NOT DO, named rather than implied: a
+     table's note column is not compared beyond that mark; sections 1 and 3 onward of a sheet are bound by nothing and each
+     sheet's `older` line says so;
      calc/stack_solves.out (the pair and RF line solves, atlc) has no check of this kind; and it says nothing about whether the
      model is right, which is PI-001 and decision 35. The set verdict constraints_bound (the output file byte for byte) is written
      beside the boards' and decides no rule."}
