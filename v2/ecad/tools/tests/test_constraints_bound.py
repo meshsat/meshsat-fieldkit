@@ -380,6 +380,31 @@ def t_an_input_with_no_commit_a_misspelt_key_and_a_malformed_line_fail():
             shutil.rmtree(root)
 
 
+def t_an_input_that_is_gone_is_a_failure_and_a_calculation_that_cannot_run_alone_is_inconclusive():
+    """A declared intent file that is no longer in the tree has been judged: the sheet is bound to nothing. A host
+    that cannot run the calculation (no PyYAML for board E5's chain) has judged nothing, and says so."""
+    root = _tree()
+    try:
+        os.remove(os.path.join(root, *(A_DIR + ("pcb-a-power-intent.json",))))
+        r = _judge(root)
+        assert r["missing_input"] is None, r["missing_input"]
+        assert any("is not in this tree" in x and "intent" in x for x in r["fails"]), r["fails"]
+        assert any("could not be run" in x for x in r["fails"]), r["fails"]
+    finally:
+        shutil.rmtree(root)
+    root = _tree()
+    keep = RW.rows
+    try:
+        def refuse(letter, root=None): raise SystemExit("reading the chain needs PyYAML on this host")
+        RW.rows = refuse
+        r = _judge(root)
+        assert r["missing_input"] and "PyYAML" in r["missing_input"], r
+        assert len(r["fails"]) == 1 and "could not be run" in r["fails"][0], r["fails"]
+    finally:
+        RW.rows = keep
+        shutil.rmtree(root)
+
+
 def t_a_pack_root_the_intent_file_no_longer_declares_fails():
     """A typed list that has outlived its subject: board A's pack path names CELL_FUSED; a generator that renames
     the rail would leave nothing judged at the pack's service current in its place, and the table would still agree

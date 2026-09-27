@@ -346,7 +346,7 @@ class Checks:
         self.notes.append("%s: %s" % (self.sheet, text))
 
 
-def compare_table(c, kind, want, got, what):
+def compare_table(c, want, got, what):
     """One of the tool's tables against the sheet's (or the output file's): header, order and every cell."""
     head = list(got["head"])
     if head and head[-1] == NOTE and len(head) == len(want["head"]) + 1: head = head[:-1]
@@ -494,8 +494,12 @@ def judge(letter, root=None, calc=None, git=None):
                     "on which candidate the sheet was bound")
 
     if fresh is None:
+        # A sheet that has already failed on what COULD be compared has been judged, and reads FAIL (its declared
+        # intent file is gone: the hash check above said so). Only where nothing failed is this the whole answer, and
+        # then the tool has not judged: INCONCLUSIVE, with the reason as the input that was absent.
+        decided = bool(c.fails)
         c.ok(False, "the calculation could not be run on this tree, so no table was compared (%s)" % why)
-        res["missing_input"] = why
+        res["missing_input"] = None if decided else why
         return done()
 
     # ---- 3. the model and the stack
@@ -592,7 +596,7 @@ def judge(letter, root=None, calc=None, git=None):
                     "is %r); a table of widths in a sheet is the tool's or it is not there" % (t["line"], t["head"])):
             continue
         used.add(head)
-        compare_table(c, head, kinds[head], t, "section 2's table `%s`" % head[1])
+        compare_table(c, kinds[head], t, "section 2's table `%s`" % head[1])
     for head, t in kinds.items():
         c.ok(head in used, "section 2 does not carry the table rail_widths.py prints for this board (%d row(s), "
              "columns %s)" % (len(t["rows"]), ", ".join(head)))
