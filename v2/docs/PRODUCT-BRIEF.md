@@ -7,9 +7,14 @@ that review (`reviews/REVIEW-A-LAYER-1-2026-09-27.md`, an AI review) found two b
 statements overstated how far the design has come against `feasibility/EMCON.md` section 0a) and B2 (two lines
 contradicting the face rulings), and eleven minor ones; this revision answers each. The second pass of the same record (27 September 2026, an AI
 review by a session that wrote none of the pages) closed B1 and B2 and left no blocking finding; its minor findings N1
-(`V2-SPEC.md` line 34, correction 27) and N2 (`BUILD.md`, a CAD file that does not exist) are corrected. The brief is
-still a CANDIDATE: that record's finding I5 makes BASELINED wait for a commit that also corrects the EMCON and face
-text of `CONOPS.md` and `PANEL.md` (layer 2's part), which is not in this tree yet. History: written
+(`V2-SPEC.md` line 34, correction 27) and N2 (`BUILD.md`, a CAD file that does not exist) are corrected. Its finding I5
+(layer 2's EMCON and face text in `CONOPS.md` and `PANEL.md`) is answered there since `95e078a1`. The release check
+at `f2b7fa66` (`reviews/REVIEW-LAYER-1-RELEASE-2026-09-27.md`, an AI review by a reviewer who wrote none of the
+pages) found three blocking items that later merges had caused: B1 (the EMCON count, the 5G module's supply removal,
+the EMCON lamp and the 5G socket's land stated as before board B's and board C's round 8), B2 (the case generators
+and templates stated as not carrying C1 to C6) and B3 (the night finding of mission M1, requirement REQ-072, missing
+from the exclusions and the open items). This revision answers the three at desk; the brief stays a CANDIDATE until a
+reviewer who wrote none of the changed lines re-checks them at one pinned commit. History: written
 25 September 2026 as a draft for Review A of the foundation baseline; revised on 26 September 2026 with the owner's
 rulings of 25 and 26 September 2026 (D-01 to D-17, listed in `CONOPS.md` section 7) and later that day for the owner's
 reversal of D-08 with D-08a and the session's SC-02 (appendix 32.367); revised on 27 September 2026 for the circuit as
@@ -75,8 +80,8 @@ I/O, B compute and radios, C panel backer, D VHF APRS, E dock strip, E5 dock blo
 Peli's own figures, `CASE-MARGINS.md`, since the owner reversed D-08). Its main properties, as designed:
 
 - **Several independent long-range bearers:** Iridium (RockBLOCK 9704), 5G cellular (Quectel RM520N-GL, the
-  module the generator carries, on an M.2 key-B socket, TE 2199119-3, since `458b2873`, whose land still lacks the
-  maker's two locating holes, open item S-12; dual SIM as two nano-SIM holders, the second behind four 0 ohm links at
+  module the generator carries, on an M.2 key-B socket, TE 2199119-3, since `458b2873`, whose land carries the
+  maker's two locating holes since board B's round 8 (`V2-SPEC.md` correction 28); dual SIM as two nano-SIM holders, the second behind four 0 ohm links at
   the module so that the same board also builds the eSIM-plus-nano-SIM configuration of appendix 32.50 item 12 with an
   eSIM-fitted module variant, the session's choice SC-13, under which prototype 1 is to be built with two nano-SIMs,
   a departure from the approved eSIM plus nano-SIM until that variant's order code is named; three antenna jacks,
@@ -106,26 +111,31 @@ Peli's own figures, `CASE-MARGINS.md`, since the owner reversed D-08). Its main 
   DCF77 and the lightning sensor continue. As generated at `45bde541` the line is drawn to remove the supply of the
   SDR, the RockBLOCK, the LoRa module, both Zigbee and Thread radios, the HF unit and both WiFi link cards, to turn off
   the PA's rail and keying while the VHF exciter keeps receiving, to pull the compute modules' own WiFi and Bluetooth
-  disables low, and to put the 5G module in airplane mode through its disable pin, a mode its own firmware carries out
-  (`CONOPS.md` section 4b). The session set the latency every inhibit must meet: at most 1 s from the toggle for every
-  transmitter, and 20 s for a 5G module that is running, by paths no processor or radio firmware can lengthen
-  (SD-EMC-7, requirement REQ-071, `feasibility/EMCON.md` section 5a). Read transmitter by transmitter against that
-  (`feasibility/EMCON.md` section 0a, sixth revision), the kit has 17 transmitters and **none is dark end to end, at
-  desk or on a bench**:
-  - Locally, the radio's own chain closes at desk for 14 of the 17 and is open for three. The SA868 VHF exciter: its
+  disables low, and to put the 5G module in airplane mode through its disable pin, a mode its own firmware carries out;
+  since board B's round 8 (27 September 2026) it also removes the 5G module's supply by hardware at once (SD-EMC-1r8,
+  `feasibility/EMCON.md` section 4b; `CONOPS.md` section 4b). The session set the latency every inhibit must meet: at
+  most 1 s from the toggle for every transmitter, and 20 s for a 5G module that is running, by paths no processor or
+  radio firmware can lengthen (SD-EMC-7, requirement REQ-071, `feasibility/EMCON.md` section 5a). Read transmitter by
+  transmitter against that (`feasibility/EMCON.md` section 0a, sixth revision, with board B's round 8), the kit has 17
+  transmitters and **none is dark end to end, at desk or on a bench**:
+  - Locally, the radio's own chain closes at desk for 15 of the 17 and is open for two. The SA868 VHF exciter: its
     maker publishes no receive threshold for the PTT pin the design holds at 2.677 V or more (bench E-01). The RockBLOCK
     9704: once its supply is cut it keeps running on its own supercapacitors, about 16 J, with its ENABLE held by a
     firmware-driven expander, so the ENABLE forced low by the EMCON hardware is owed, and what the Iridium module does
-    when ENABLE falls is stated in no held document (section 4.4). The 5G module: its staged supply removal (SD-EMC-1,
-    open item S-01) is not drawn.
+    when ENABLE falls is stated in no held document (section 4.4). The 5G module's chain closes at desk since board B's
+    round 8: its supply is removed at once, with RF off within about 1.2 ms plus 1.8 ms per mF of the module's own input
+    capacitance, which no held document states (bench E-12), and the maker's warning that cutting a working module's
+    supply can corrupt its flash accepted as a residual (section 4b).
   - End to end, 0 of 17 rows is closed: every row also waits on the items the rows share, the toggle and its conductor
-    (accepted by SD-EMC-6 only with a hardware EMCON lamp on board C, which is not drawn) and the EMCON line's own open
-    items (sections 3 and 7), and no row is shown to meet the latency.
+    (accepted by SD-EMC-6 only with a hardware EMCON lamp on board C, drawn since board C's round 8 as `D22` with no
+    processor in its path, and not yet visible, because its light-guide hole in the face plate is owed, open item
+    S-44) and the EMCON line's own open items (sections 3 and 7), and no row is shown to meet the latency.
 
-  No row has been shown on a bench; EMCON is feasibility blocker FEA-002 of the requirements registry. As drawn, no
-  panel indication of EMCON is independent of firmware: the TX lamp's supply exists only while the panel controller
-  drives its LED dimmer (`feasibility/EMCON.md` section 0; `PANEL.md` section 3, GPIO 8). Blackout and NVG panel modes
-  darken the kit.
+  No row has been shown on a bench; EMCON is feasibility blocker FEA-002 of the requirements registry. The one panel
+  indication of EMCON that is independent of firmware is that lamp, lit while both EMCON lines read low, fed ahead of
+  the panel's dimmer and dark in BLACKOUT (`PANEL.md` sections 1 and 4); the TX lamp's supply exists only while the
+  panel controller drives its LED dimmer (`feasibility/EMCON.md` section 0; `PANEL.md` section 3, GPIO 8). Blackout and
+  NVG panel modes darken the kit.
 - **Distress, as intended:** closing the covered SOS toggle for 2 s sends a distress message with the kit's
   position over the bearers that are up, Iridium first when nothing else is, to a configured recipient list. SOS
   never transmits through EMCON: under EMCON the message is queued and the operator is told (owner ruling D-10,
@@ -146,8 +156,10 @@ Peli's own figures, `CASE-MARGINS.md`, since the owner reversed D-08). Its main 
   the west at 59 mm above the floor, on one aluminium RF entry plate per end wall; the connector plate between the
   hinge fairings carries the shore and solar input, the USB console and host port, the Ethernet, the USB-C outlet,
   the sensor pod and the ground stud (`CASE-MARGINS.md` C2 to C4, the session's choices under the owner's standing
-  rule of 26 September 2026). The twelfth bulkhead is the third 5G jack of D-07, which also waits on the board E clamp fit. The generators and the committed
-  boards still carry the earlier eleven couplers at 88 mm, which is history.
+  rule of 26 September 2026). The twelfth bulkhead is the third 5G jack of D-07, which also waits on the board E clamp fit. The case generators carry C1 to C6
+  since `c351115d`, and the current case set (CAD, drawings and 1:1 templates) is `v2/release/case-2026-09-27/`; the
+  committed board files and the deliverable folders of `v2/release/revA/` predate it and still carry the earlier
+  eleven coupler sites at 88 mm, which is history.
 - **Carried as one closed case:** the design target, the session's choice SC-14 for requirement REQ-023, is a kit
   that weighs under 45.4 kg (100 lb) closed and latched with the pack and the lid's carried items fitted, with its
   largest dimension under 91 cm (36 in), the man-packed or man-portable row of MIL-STD-810H Method 516.8 Table
@@ -196,8 +208,17 @@ Peli's own figures, `CASE-MARGINS.md`, since the owner reversed D-08). Its main 
   case and is withdrawn. The runtime requirement is stated as battery-only hours in an idle and a typical mode
   at +20 C for an aged pack (D-06); its values are TBD and measured on the prototype. The current PROVISIONAL model
   gives an aged pack 2.5 h in the idle mode and 1.7 h in the typical mode, within bounds of 1.3 to 3.3 h and 0.9 to
-  2.3 h (`feasibility/POWER-THERMAL.md` section 6, PWR-F07); `CONOPS.md` sections 4a and 6 still carry the earlier
-  model's 3.4 h and 1.8 h, which PWR-F07 supersedes. None of these is a claim.
+  2.3 h (`feasibility/POWER-THERMAL.md` section 6, PWR-F07); `CONOPS.md` sections 4a and 6 carry the same
+  PWR-F07 figures since the layer 2 merge (`95e078a1`). None of these is a claim.
+- Not able to run through a night on its own pack and solar input. On the one pack of D-06 and the solar input alone
+  the kit does not run through a night at 52 N in any state: the aged pack holds about 108 Wh usable, which carries
+  the idle state of the runtime requirement (42.8 W) for about 2.5 h against nights of about 7 hours at midsummer and
+  about 16 at midwinter, and the shortest night in the lightest state asks about 150 Wh; and the 72 hours of mission
+  M1 ask for a panel of about 266 W on the design day, where the solar input takes at most about 100 W (`CONOPS.md`
+  M1; requirement REQ-072, part of prototype 1's core, reads FAIL at desk; the figures are PROVISIONAL or INFERRED
+  there). The routes that carry the night are an overnight input on the 9 to 36 V vehicle and shore entry, D-01's
+  deferred second pack, or a larger pack, which reopens D-06; until the owner rules on the last two, running through
+  a night needs that overnight input.
 - No transport route is claimed for the pack: its classification, the conditions that apply to it or an applicable
   exception are to be established first (`CONOPS.md` section 7a, requirement REQ-069).
 - Not advertised to its envelope. Publication, money, promotion and advertising the kit to its envelope stay with
@@ -255,20 +276,21 @@ feasibility); each names the evidence that closes it and the stage at which that
 Layer 1 decides what the kit is for, for whom, the prototype's scope and exclusions and the intended outcome. Each item
 below is stated where it lives, with the reason the layer can close while it is open. This brief states every such
 function or figure as a requirement or an intention and claims nothing about whether it is met, so none of the items
-changes the kit's purpose, its users or the prototype's scope under either outcome; two could change a stated line,
-FEA-004 an envelope line and FEA-002 the latency the session set, and their rows say how that is handled. If an item closes against the design, the affected requirement is
+changes the kit's purpose, its users or the prototype's scope under either outcome; three could change a stated line,
+FEA-004 an envelope line, FEA-002 the latency the session set and REQ-072 the pack line, and their rows say how that is handled. If an item closes against the design, the affected requirement is
 reopened as a product question in its own layer and this brief is issued again with the change; nothing is narrowed
 silently.
 
 | Item | Where it is stated | Why layer 1 can close with it open |
 |---|---|---|
 | FEA-004, the hot end: the enclosure conductance is not measured, and on its independent bound the cells leave their window at +20 C with three typical modules | "What it is not, today"; `feasibility/POWER-THERMAL.md` sections 0 and 9 | The bound includes failure, so the envelope's upper limit is not claimed here, only stated as the requirement. The decision that depends on the evidence is layer 2's envelope and layer 4's thermal architecture, and the proposed heat-balance test informs them. **This is the item most likely to reopen this brief:** if the test shows that the sealed case cannot keep the cells inside their window at the envelope's top with the ruled functions, the envelope line or the thermal design changes, which is an owner-level product question under the ruling of 21 September 2026. |
-| FEA-002 EMCON: 0 of 17 transmitters dark end to end; locally 14 of 17 closed at desk and three open, the SA868 (PTT threshold unpublished), the RockBLOCK 9704 (its own stored energy, about 16 J, and an ENABLE firmware holds) and the 5G module (SD-EMC-1 not drawn); the shared items; no panel indication independent of firmware; no bench row | "What the V2 kit is" (emission discipline); `feasibility/EMCON.md` sections 0a, 4.4, 5a and 7; registry FEA-002, REQ-030, REQ-071 | The brief states EMCON as the owner ruled it (D-05) and the latency the session set (REQ-071), and claims neither met. Every open row has a remedy named on the board that owns it (EMCON.md section 7), and none of them changes a ruled radio, the case or a board-to-board interface. One bound includes failure: whether the RockBLOCK 9704 goes silent within 1 s when its ENABLE falls, with about 16 J stored on its side, is stated by no held document (section 4.4). The decision that depends on it is layer 4's feasibility and board B's circuit (layers 8 and 9), not this layer's: the kit's purpose, its users and the core (hardware EMCON in it) stand under either outcome. If no hardware path can meet a row's limit, the requirement is not lowered here: it is reopened as a product question in its own layer and this brief is issued again with the change. |
+| FEA-002 EMCON: 0 of 17 transmitters dark end to end; locally 15 of 17 closed at desk and two open, the SA868 (PTT threshold unpublished) and the RockBLOCK 9704 (its own stored energy, about 16 J, and an ENABLE firmware holds); the 5G module's supply removed by hardware at once since board B's round 8 (SD-EMC-1r8); the shared items, with the hardware EMCON lamp `D22` drawn on board C and its light guide in the face plate owed (S-44); no bench row | "What the V2 kit is" (emission discipline); `feasibility/EMCON.md` sections 0a, 4.4, 5a and 7; registry FEA-002, REQ-030, REQ-071 | The brief states EMCON as the owner ruled it (D-05) and the latency the session set (REQ-071), and claims neither met. Every open row has a remedy named on the board that owns it (EMCON.md section 7), and none of them changes a ruled radio, the case or a board-to-board interface. One bound includes failure: whether the RockBLOCK 9704 goes silent within 1 s when its ENABLE falls, with about 16 J stored on its side, is stated by no held document (section 4.4). The decision that depends on it is layer 4's feasibility and board B's circuit (layers 8 and 9), not this layer's: the kit's purpose, its users and the core (hardware EMCON in it) stand under either outcome. If no hardware path can meet a row's limit, the requirement is not lowered here: it is reopened as a product question in its own layer and this brief is issued again with the change. |
 | FEA-001 ZEROIZE, FEA-003 failover fabric, FEA-005 pack protection, FEA-006 decoupling | the bullets above; registry, kind feasibility | Each is an architecture or circuit feasibility question with a design path named on its page (for ZEROIZE the SLB 9673 fallback on the same site). The functions stay defined as ruled; their feasibility is layer 4's and the circuits are layers 8 and 9's. |
 | D-07's third 5G jack, waiting on the board E clamp fit (S-12) | "What the V2 kit is" | Both branches (three or two jacks on ANT0, ANT2 and ANT3 or ANT0 and ANT2) are ruled; the case half is laid out. It changes a jack count, not the product. |
 | SIM protection and the eSIM variant's order code (CFL-010, S-13) | "What the V2 kit is"; `V2-SPEC.md` correction 22 | The description is settled (SC-13) and CFL-010 is resolved on it; the TVS array is drawn on board B since its round 8 (`V2-SPEC.md` correction 28), and the variant's code is a procurement item for an eSIM build only (S-13). |
 | The two parts not rated to -20 C (PWR-F09) | "What it is not, today" | A parts decision (layer 6): carve-out with warming or replacement. It does not change what the kit is for. |
-| REQ-014's runtime values, measured on the prototype; L-02, the mission duration for the solar balance, which the owner sets later (D-06) | "What it is not, today"; `CONOPS.md` section 6 | The requirement's form is ruled; the values are prototype measurements, and missions longer than the pack are stated to rely on vehicle or solar input. |
+| REQ-014's runtime values, measured on the prototype; L-02, the mission duration for the solar balance, which D-06 left for the owner to set later and for which the session took 72 hours as a planning value under the owner's standing rule (SC-21, which the requirements registry records as closing L-02 and which the owner's own setting replaces; whether the standing rule reaches a value D-06 kept for the owner is recorded as open in `handover/LAYER-STATUS.md`, layer 3) | "What it is not, today"; `CONOPS.md` sections 3 (M1) and 6 | The requirement's form is ruled; the values are prototype measurements, and missions longer than the pack are stated to rely on vehicle or solar input, with the night finding in the next row. |
+| REQ-072, M1's energy balance (core, FAIL at desk): on the D-06 pack and the solar input alone the kit does not run through a night at 52 N in any state, and M1's 72 hours ask about 266 W of panel where the solar input takes at most about 100 W | "What it is not, today"; `CONOPS.md` section 3 (M1); registry REQ-072, SC-21 and S-53 | The finding is allocated to layer 4 (the energy architecture: whether the input path is re-rated, S-53, before boards A, E and P enter layout) and to the owner (a larger pack reopens D-06; the second pack is D-01's deferred item). The kit's purpose, its users and the core list stand under either outcome, nothing is claimed, and this brief states the overnight input a night needs today. If the owner reopens D-06 or D-01's second pack, the pack line of "What the V2 kit is" changes and this brief is issued again. |
 | D-18, the fans' rating | "What the first prototype has to show" | Conditional; settled by the session if it arises; no product change. |
 | The pack's transport route (REQ-069) | "What it is not, today" | No route is claimed; establishing one is a bounded item before any carriage. |
 
