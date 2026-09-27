@@ -166,20 +166,21 @@ hex socket screws (ISO 7380-1 class, A2), six M3 square nuts (DIN 562 class, A2)
   polycarbonate: none is named.
 - **`panel1450.QMX_TRAY_X` and `v2/cad/render/scene.py` still carry the r1 tray** (X 102.0 to 171.0): the r2 place lives in
   `lid_tray_qmx_r2.py`. `v2/vendor/peli/frame_seat.py` still subtracts the r1 tray's 28.0 in M3; the change that makes it read the r2
-  stack is drafted (`v2/docs/records/w5tray/drafts/apply_frame_seat_r2.py`) and changes `frame_seat.out`, after which this record's
-  first line and one sentence of section B read differently when regenerated.
+  stack is drafted (`v2/docs/records/w5tray/drafts/apply_frame_seat_r2.py`) and changes `frame_seat.out`. This set's record prints
+  the room between the face and the lid ceiling, which is the same before and after that change, so the record stays what the check
+  prints; the table of inputs below names the `frame_seat.out` the set was built with.
 
 ## Source revision
 
-Generated from commit `1f26c1f2` of branch `fnd/w5tray` (from main `c23c5e76`), on 27 September 2026 (21:45:52 to 21:46:18 UTC), by
+Generated from commit `b92a678b` of branch `fnd/w5tray` (from main `c23c5e76`), on 27 September 2026 (21:57:16 to 21:57:43 UTC), by
 `v2/cad/build_lid_tray_r2.sh` on the rented CAD box (Ubuntu 24.04.5 LTS, Python 3.12.3, x86_64), in a fresh venv whose `pip freeze`
 equals `v2/cad/requirements-cad.lock` line for line (build123d 0.13.0). Inputs, sha256 first 16:
 
 | File | sha256 (16) |
 |---|---|
 | `v2/cad/lid_tray_qmx_r2.py` | `f424d76a363fbf9a` |
-| `v2/cad/lid_tray_qmx_r2_check.py` | `210d43d126fa1461` |
-| `v2/cad/lid_tray_qmx_r2_drawing.py` | `61ee03392ae32a19` |
+| `v2/cad/lid_tray_qmx_r2_check.py` | `04799c45f46cf0d5` |
+| `v2/cad/lid_tray_qmx_r2_drawing.py` | `aceb2aaccff5a56c` |
 | `v2/cad/build_lid_tray_r2.sh` | `b7dc30eb5dd19349` |
 | `v2/cad/drawing_kit.py` | `49e7f00d7d57893f` |
 | `v2/ecad/tools/panel1450.py` | `3bdb88df98260244` |

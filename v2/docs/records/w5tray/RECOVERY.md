@@ -11,7 +11,8 @@ fitted; B2, the face-room limits are wrong); a second author pass had run seven 
 is the agents' transcripts: every file written with the editor, every shell command with its output, and the two result records.
 
 This file says what was recovered, what was regenerated and what was lost. The state recovered here is pass 1 as the checker saw it:
-**unchecked, and known NOT to be mergeable**. The answers to B1 and B2 are later commits on this branch.
+**unchecked, and known NOT to be mergeable**; it is commit `fb4a52eb` of this branch. The answers to B1 and B2 are later commits on
+this branch (`README.md` beside this file), which rewrite the three CAD scripts, the test, the set's README and both drafts.
 
 ## Recovered (byte for byte, proved by sha256)
 
@@ -37,7 +38,7 @@ command's patch asserted to have changed the file:
 | `v2/ecad/tools/tests/test_lid_tray_qmx_r2.py` | written, then two patches |
 | `v2/release/case-2026-09-27/lid-tray-qmx-r2/README.md` | written and edited once; its last refresh of the input hashes is NOT replayed, because the generated files it names are regenerated below and the folder's README is rewritten for the answered design |
 | `v2/vendor/materials/README.md` | written, unchanged |
-| `drafts/apply_w5tray.py`, `drafts/apply_frame_seat_r2.py`, `drafts/README.md` | written under `drafts/w5tray/` of the lost worktree, then seven patches; moved here because a worker keeps no `drafts/` folder outside its records |
+| `drafts/apply_w5tray.py`, `drafts/apply_frame_seat_r2.py`, `drafts/README.md` | written under `drafts/w5tray/` of the lost worktree, then seven patches; moved here because a worker keeps no `drafts/` folder outside its records. As recovered they are in commit `fb4a52eb`; the files here now are corrected to the second pass |
 | `pass1/RESULT-w5tray-author-1.json`, `pass1/RESULT-w5tray-check-1.json` | the first author's and the checker's result records, as the transcripts hold them |
 
 ## Fetched again (makers' documents)
@@ -76,6 +77,9 @@ same holds for `v2/vendor/adhesives/3m-scotch-weld-dp8005.pdf` (`90fdb06a6289827
   minor item 6 found the addendum contradicting itself. The r2 set carries its own `MANIFEST.sha256` and its own README; the release's
   two files keep their bytes (session decision, reason: a release folder is an immutable copy, `test_case_geometry.py`; reverse by the
   integrator cutting a new dated case release that lists r2 in its manifest).
+
+- **The first pass's one line in `v2/cad/build_case_release.sh`** (it chains the r2 build into the case release build) and its rows in
+  `v2/cad/README.md` ARE re-applied, the rows rewritten for the second pass: neither file is part of a release.
 
 ## Lost
 

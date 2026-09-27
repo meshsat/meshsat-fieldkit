@@ -1,4 +1,4 @@
-QMX lid tray r2: the fit, the face room, the retention and the fitting, from v2/cad/lid_tray_qmx_r2.py, panel1450.py and frame_seat.out (M3 nominal +19.92, worst +16.39 for a tray 28.00 from the ceiling).
+QMX lid tray r2: the fit, the face room, the retention and the fitting, from v2/cad/lid_tray_qmx_r2.py, panel1450.py and frame_seat.out (the room between the face top and the lid ceiling, 47.92 nominal and 44.39 at the worst).
 Prototype design: nothing made, printed or fitted. SCALED and INFERRED inputs are marked; the makers' figures are named.
 
 A. JACKS AND PLUGS (the set open across both end panels above the sills; sill top 1.5 above the unit's bottom face; under the RF jack the
@@ -30,7 +30,8 @@ B. FACE ROOM with the lid closed, each row from the solid above the part (frame_
       0.13  lid plate 2.0 thickness (INFERRED, EN 485-4 class as frame_seat.py's plate)
       0.20  printed height of the tray (INFERRED)
       0.20  printed thickness of the frame (INFERRED), on the frame and its screw heads only
-   (the r1 tray's 28.0 counted no lid plate; its ASSEMBLY.md row names a 2 mm nut plate the M3 row left out)
+   (the room is frame_seat.out's M3 with the tray depth that row subtracted added back: the r1 tray's 28.0, which counted no lid plate, or the
+   depth the row's label states once frame_seat.py reads the r2 stack; the room is the same either way)
    row and part        footprint, case X and Y          height  the deepest solid over it (of how many)       depth  nominal   worst   twice  verdict, min 1.00
    M3r2.XENARC_WINDOW  X -102.9.. 102.9 Y  -94.0..  46.0   0.80  TUNE knob (22)                                40.90    +6.22   +2.26   -0.45  OPEN, on an INFERRED height of the unit's
    M3r2.XFRAME_2       X  105.6.. 116.1 Y   10.8..  21.2   4.00  button actuator 2 (3)                         31.30   +12.62   +8.66   +5.95  MET, on an INFERRED height of the unit's
