@@ -1,13 +1,13 @@
 ### Board A
 
-Intent `v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json` sha256/16 83ba5e43a6fbcccb (written 2026-09-26 18:58); stack JLC06161H-3313, outer 0.0350 mm, inner 0.0152 mm (six layers, measured (LAYER-DECISIONS-2026-09-11.md, A arm 345 open at four); copper weight OPEN).
+Netlist `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net` sha256/16 da05dc02bc1e612f; intent `v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json` sha256/16 92dd3b1cda9046b8 (written 2026-09-27 12:33); stack JLC06161H-3313, outer 0.0350 mm, inner 0.0152 mm (six layers, measured (LAYER-DECISIONS-2026-09-11.md, A arm 345 open at four); copper weight OPEN).
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
 |---|---|---|---|---:|---:|---:|---|
 | CELL+ | 14.4 (16.8) | 10.00 / 18.00 | 18.0, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 |
 | CELL_FUSED | 14.4 (16.8) | 10.00 / 18.00 | 18.0, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 |
 | VBAT | 14.4 (16.8) | 10.00 / 18.00 | 18.0, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 |
-| VIN_RAW | 12.0 (36.0) | 12.31 / 12.31 | 12.3, typical (PI-001) | 11.92 | 3.68 | 97.66 (over 40 mm) | 17 / 14 / 12 |
+| VIN_RAW | 12.0 (36.0) | 14.10 / 14.10 | 14.1, typical (PI-001) | 15.29 | 4.43 | 125.22 (over 40 mm) | 20 / 16 / 14 |
 | VBUS20 | 20.00 | 6.00 / 8.00 | 6.0, typical (PI-001) | 3.55 | 1.37 | 26.20 | 11 / 9 / 8 |
 | +5V_S1 | 5.10 | 2.50 / 5.00 | 2.5, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
 | +5V_S2 | 5.10 | 2.50 / 5.00 | 2.5, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
@@ -18,6 +18,7 @@ Intent `v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json` sha256/16 83ba5e43a
 | +12V_HF | 12.00 | 1.00 / 2.00 | 1.0, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |
 | +54V_POE | 54.00 | 0.30 / 0.60 | 0.3, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
 | +5V_D8 | 5.00 | 1.00 / 2.00 | 1.0, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |
+| PRECHG | 14.4 (16.8) | 0.00 / 1.68 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.00 | 3 / 2 / 2 |
 | FE_OUT | 20.0 (20.0) | 6.00 / 8.00 | 6.0, typical (PI-001) | 3.55 | 1.37 | 26.20 | 11 / 9 / 8 |
 | CH_ACN | 20.0 (20.0) | 6.00 / 8.00 | 6.0, typical (PI-001) | 3.55 | 1.37 | 26.20 | 11 / 9 / 8 |
 | S1_OUT | 5.1 (5.1) | 2.50 / 5.00 | 2.5, typical (PI-001) | 1.06 | 0.41 | 6.36 | 7 / 6 / 5 |
@@ -31,13 +32,16 @@ Intent `v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json` sha256/16 83ba5e43a
 | PD_SW | 15.0 (15.0) | 3.00 / 3.00 | 3.0, typical (PI-001) | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 |
 | PD_VBUS | 15.0 (15.0) | 3.00 / 3.00 | 3.0, typical (PI-001) | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 |
 | PD_OUT | 15.0 (15.0) | 3.00 / 3.00 | 3.0, typical (PI-001) | 1.37 | 0.53 | 8.18 | 5 / 4 / 3 |
+| VMON | 14.4 (16.8) | 0.69 / 1.00 | 0.7, typical (PI-001) | 0.18 | 0.07 | 1.08 | 2 / 2 / 1 |
 | VHEAT_IN | 14.4 (16.8) | 0.58 / 0.90 | 0.6, typical (PI-001) | 0.14 | 0.05 | 0.85 | 2 / 2 / 1 |
 | VHEAT | 12.00 | 0.63 / 0.63 | 0.6, typical (PI-001) | 0.16 | 0.06 | 0.95 | 1 / 1 / 1 |
+| +3V3_EMCON_EF | 3.30 | 0.00 / 0.00 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
+| +3V3_EMCON | 3.30 | 0.00 / 0.00 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
 | VBUS_WALL | 5.00 | 0.50 / 0.90 | 0.5, typical (PI-001) | 0.12 | 0.04 | 0.69 | 2 / 2 / 1 |
 
 ### Board B
 
-Intent `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json` sha256/16 cf461c0b75ce368b (written 2026-09-26 18:59); stack JLC06161H-3313, outer 0.0350 mm, inner 0.0152 mm (six layers as built; eight (JLC08161H-2116, the same copper) under decision 43's measurement).
+Netlist `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net` sha256/16 8b78c59754a6a0c7; intent `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json` sha256/16 162fcb9b95f680a7 (written 2026-09-27 10:30); stack JLC06161H-3313, outer 0.0350 mm, inner 0.0152 mm (six layers as built; eight (JLC08161H-2116, the same copper) under decision 43's measurement).
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
 |---|---|---|---|---:|---:|---:|---|
@@ -80,12 +84,29 @@ Intent `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute-intent.json` sha256/16 cf461
 | +5V_HDMI | 5.00 | 0.10 / 0.50 | 0.1, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |
 | +54V_POE | 54.00 | 0.30 / 0.60 | 0.3, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
 | GND | 0.00 | 10.00 / 21.00 | 10.0, typical (PI-001) | 8.15 | 2.76 | 66.76 (over 40 mm) | 29 / 24 / 20 |
+| VBUS_FLASH1 | 5.00 | 0.00 / 0.00 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
+| SIM1_VCC | 3.00 | 0.01 / 0.05 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
+| SIM2_VCC | 3.00 | 0.01 / 0.05 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
+| SIMC2_VCC | 3.00 | 0.01 / 0.05 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
+| VBUS_FLASH2 | 5.00 | 0.00 / 0.00 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
+| VBUS_FLASH3 | 5.00 | 0.00 / 0.00 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
+| VBAT_RTC | 3.00 | 0.00 / 0.00 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
+| POE_P | 54.00 | 0.30 / 0.60 | 0.3, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
+| MDI_A_P | 54.00 | 0.15 / 0.30 | 0.1, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 |
+| MDI_A_N | 54.00 | 0.15 / 0.30 | 0.1, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 |
+| MDI_B_P (return of +54V_POE) | 0.15 | 0.15 / 0.30 | 0.1, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 |
+| MDI_B_N (return of +54V_POE) | 0.15 | 0.15 / 0.30 | 0.1, typical (PI-001) | 0.02 | 0.01 | 0.13 | 1 / 1 / 1 |
+| POE_DRAIN (return of +54V_POE) | 0.15 | 0.30 / 0.60 | 0.3, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
+| POE_SEN (return of +54V_POE) | 0.15 | 0.30 / 0.60 | 0.3, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
+| GNSS_VDD_RF | 3.30 | 0.02 / 0.03 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 |
+| GNSS_BIAS | 3.30 | 0.02 / 0.03 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 |
+| GNSS_ANT | 3.30 | 0.02 / 0.03 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.01 | 1 / 1 / 1 |
 | VBUS_QMX | 5.00 | 0.30 / 0.30 | 0.3, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
 | PANEL_5V | 5.00 | 0.60 / 0.60 | 0.6, typical (PI-001) | 0.15 | 0.06 | 0.89 | 1 / 1 / 1 |
 
 ### Board C
 
-Intent `v2/ecad/pcb-c-display-c8/out/pcb-c-display-intent.json` sha256/16 5c8d991e3805016a (written 2026-09-26 10:00); stack JLC06161H-3313, outer 0.0350 mm, inner 0.0152 mm (six layers, owner decision 27 (board file still four, JLC04161H-7628, the same copper)).
+Netlist `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net` sha256/16 11eabc2dddca5161; intent `v2/ecad/pcb-c-display-c8/out/pcb-c-display-intent.json` sha256/16 854436c729322993 (written 2026-09-26 23:18); stack JLC06161H-3313, outer 0.0350 mm, inner 0.0152 mm (six layers, owner decision 27 (board file still four, JLC04161H-7628, the same copper)).
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
 |---|---|---|---|---:|---:|---:|---|
@@ -94,25 +115,26 @@ Intent `v2/ecad/pcb-c-display-c8/out/pcb-c-display-intent.json` sha256/16 5c8d99
 
 ### Board D
 
-Intent `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs-intent.json` sha256/16 59591c54eb29ab64 (written 2026-09-26 17:52); stack JLC04161H-7628, outer 0.0350 mm, inner 0.0152 mm (four layers, the RF ground-plane reason (LAYER-DECISIONS-2026-09-11.md)).
+Netlist `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net` sha256/16 76700a687eb6187f; intent `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs-intent.json` sha256/16 443fd745879d3022 (written 2026-09-27 10:33); stack JLC04161H-7628, outer 0.0350 mm, inner 0.0152 mm (four layers, the RF ground-plane reason (LAYER-DECISIONS-2026-09-11.md)).
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
 |---|---|---|---|---:|---:|---:|---|
 | +5V_D8 | 5.0 (5.2) | 1.00 / 2.00 | 1.0, typical (PI-001) | 0.30 | 0.12 | 1.80 | 3 / 3 / 2 |
 | +3V3_D8 | 3.30 | 0.04 / 0.17 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.02 | 1 / 1 / 1 |
 | +3V4_HUB | 3.4 (3.5) | 0.04 / 0.04 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.02 | 1 / 1 / 1 |
+| +5V_TX | 5.0 (5.2) | 0.37 / 1.15 | 0.4, typical (PI-001) | 0.08 | 0.03 | 0.46 | 2 / 2 / 2 |
 | +5V_SA | 5.00 | 0.35 / 1.10 | 0.3, typical (PI-001) | 0.07 | 0.03 | 0.42 | 2 / 2 / 2 |
 | +3V3 | 3.30 | 0.06 / 0.10 | 0.1, typical (PI-001) | 0.01 | 0.00 | 0.04 | 1 / 1 / 1 |
 
 ### Board E
 
-Intent `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock-intent.json` sha256/16 9ae33eb17d04670e (written 2026-09-26 10:01); stack JLC04161H-7628, outer 0.0350 mm, inner 0.0152 mm (four layers, the routing half and In1 (LAYER-DECISIONS-2026-09-11.md)).
+Netlist `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net` sha256/16 d6137f50059e5cbc; intent `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock-intent.json` sha256/16 5913e38b20333d35 (written 2026-09-27 10:43); stack JLC04161H-7628, outer 0.0350 mm, inner 0.0152 mm (four layers, the routing half and In1 (LAYER-DECISIONS-2026-09-11.md)).
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
 |---|---|---|---|---:|---:|---:|---|
 | CELL_F | 14.4 (16.8) | 10.00 / 18.00 | 18.0, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 |
 | CELL+ | 14.4 (16.8) | 10.00 / 18.00 | 18.0, PWR-F12 18 A / 60 s | 23.91 | 6.72 | 195.80 (over 40 mm) | 25 / 21 / 18 |
-| VIN_RAW | 12.0 (36.0) | 6.15 / 6.15 | 6.2, typical (PI-001) | 3.67 | 1.41 | 27.42 | 9 / 7 / 6 |
+| VIN_RAW | 12.0 (36.0) | 14.10 / 14.10 | 14.1, typical (PI-001) | 15.29 | 4.43 | 125.22 (over 40 mm) | 20 / 16 / 14 |
 | +3V3_E6 | 3.30 | 0.35 / 0.60 | 0.3, typical (PI-001) | 0.07 | 0.03 | 0.42 | 1 / 1 / 1 |
 | +5V_E6 | 5.00 | 0.30 / 0.50 | 0.3, typical (PI-001) | 0.06 | 0.02 | 0.34 | 1 / 1 / 1 |
 | +5V_GEIGER | 5.00 | 0.10 / 0.10 | 0.1, typical (PI-001) | 0.01 | 0.00 | 0.08 | 1 / 1 / 1 |
@@ -123,11 +145,12 @@ Intent `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock-intent.json` sha256/16 9ae33eb17d
 | DC_HS | 12.0 (36.0) | 6.15 / 6.15 | 6.2, typical (PI-001) | 3.67 | 1.41 | 27.42 | 9 / 7 / 6 |
 | PV_P | 17.6 (25.0) | 5.68 / 6.25 | 5.7, typical (PI-001) | 3.29 | 1.27 | 23.70 | 9 / 7 / 6 |
 | PV_IN | 17.6 (25.0) | 5.68 / 6.25 | 5.7, typical (PI-001) | 3.29 | 1.27 | 23.70 | 9 / 7 / 6 |
-| TRK_OUT | 15.10 | 6.16 / 6.16 | 6.2, typical (PI-001) | 3.68 | 1.42 | 27.50 | 9 / 7 / 6 |
+| TRK_OUT | 15.10 | 10.33 / 10.33 | 10.3, typical (PI-001) | 8.65 | 2.89 | 70.84 (over 40 mm) | 14 / 12 / 10 |
+| SGP_VDD | 3.30 | 0.00 / 0.00 | 0.0, typical (PI-001) | 0.00 | 0.00 | 0.00 | 1 / 1 / 1 |
 
 ### Board P
 
-Intent `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-intent.json` sha256/16 59d679f0859fc203 (written 2026-09-26 17:52); stack JLC04162H-7628, outer 0.0700 mm, inner 0.0152 mm (four layers 2 oz outer, owner decision 28; inner weight OPEN (0.5 oz default shown)).
+Netlist `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net` sha256/16 085f833362fbbda8; intent `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack-intent.json` sha256/16 6ff1b8129a5c5aff (written 2026-09-26 22:39); stack JLC04162H-7628, outer 0.0700 mm, inner 0.0152 mm (four layers 2 oz outer, owner decision 28; inner weight OPEN (0.5 oz default shown)).
 
 | rail | V (working) | typ / peak A | governing A | outer mm | two outer faces, each mm | inner mm | barrels at the larger of peak and governing, 0.3 / 0.4 / 0.5 mm drill |
 |---|---|---|---|---:|---:|---:|---|

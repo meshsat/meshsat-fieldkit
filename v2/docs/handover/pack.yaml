@@ -116,6 +116,13 @@ rules:
      reason: "an STL tessellation of the STEP beside it (built by v2/cad/build_case_release.sh; the release's MANIFEST.sha256 names it)"}
   - {action: include, group: L7, glob: "v2/release/case-2026-09-27/**",
      role: "the case release of 27 September 2026 for the chosen arrangement C1 to C6 (the layer 7 closer): the made parts' STEP and DXF, the dimensioned drawings (sheets 1 to 14, the QMX lid tray on sheet 14), templates, the stack report and the margins record, built by v2/cad/build_case_release.sh, with MANIFEST.sha256"}
+  # After H2 (27 September 2026, the H2 usability check's minor finding 6): the case plan and Z-stack drawings of
+  # v2/docs/diagrams/ read the boards' Z from scene.py (diagrams/tools/case_drawings.py, its SRC["scene"]), and layer 7
+  # names its typed QY as an open item, so this one file is an engineering input; without it the diagrams' manifest
+  # check read 4 of 11 current from the H2 ZIP where the repository read 6. The rest of v2/cad/render/ stays out.
+  # Session choice under the owner's standing rule of 26 September 2026; reversed by deleting this rule.
+  - {action: include, group: L7, glob: "v2/cad/render/scene.py",
+     role: "the render scene's stack heights, which the case drawings (case-plan, case-zstack) read the boards' Z from; presentation otherwise"}
   - {action: exclude, kind: presentation, glob: "v2/cad/render/**",
      reason: "presentation renders (GLB board models, Blender scene, render STLs): not an engineering input"}
   - {action: include, group: L7, glob: ["v2/cad/*.py", "v2/cad/*.json", "v2/cad/*.sh", "v2/cad/README.md", "v2/cad/requirements-cad.txt", "v2/cad/requirements-cad.lock"],

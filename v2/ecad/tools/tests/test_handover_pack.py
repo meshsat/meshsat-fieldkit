@@ -317,3 +317,43 @@ def t_zip_only_writes_the_zip_and_its_manifest_and_verify_reads_both():
     assert hp.verify(r["zip"]) == [], hp.verify(r["zip"])
     with open(r["manifest"], "ab") as fh: fh.write(b"extra\\tline\\n")
     assert any("differs from the MANIFEST.tsv" in x for x in hp.verify(r["zip"])), "a changed sidecar manifest passed"
+
+
+def t_repo_builds_one_commit_from_the_snapshot_with_its_ignored_files_tracked():
+    """`repo` (after H2, the H2 usability check's findings 1 and 2): a repository built from a snapshot holds every file
+    of it tracked, including files the snapshot's own ignore rules would leave untracked (the committed netlists sit in
+    gitignored `out/` folders in this tree), with a clean working tree, and two builds of one snapshot give one commit
+    id. A snapshot that does not verify, a destination that is not empty and a destination under a temporary directory
+    without --allow-temp are refused."""
+    hp = _hp()
+    d, _ = _repo({"v2/docs/handover/.gitignore": b"*.md\n"})
+    _git(d, "add", "-A", "-f"); _git(d, "commit", "-q", "-m", "the ignored pages force-added, as this tree's netlists are")
+    c = _git(d, "rev-parse", "HEAD")
+    r = _build(d, c)
+    a, b = os.path.join(_tmp("hpack-repo-"), "a"), os.path.join(_tmp("hpack-repo-"), "b")
+    ra = hp.repo_from_snapshot(r["zip"], a, allow_temp=True)
+    rb = hp.repo_from_snapshot(r["snapshot"], b, allow_temp=True)
+    assert ra["status"] == "" and rb["status"] == "", "the built repository is not clean: %r %r" % (ra["status"], rb["status"])
+    assert ra["commit"] == rb["commit"], "two builds of one snapshot gave two commits (%s, %s)" % (ra["commit"], rb["commit"])
+    assert ra["source_commit"] == c, (ra["source_commit"], c)
+    tracked = set(_git(a, "ls-files").splitlines())
+    for p in ("v2/docs/handover/START-HERE.md", "v2/ecad/pcb-q-q2/out/pcb-q.net", "MANIFEST.tsv", "SOURCE.txt",
+              "START-HERE.md"):
+        assert p in tracked, "%s is not tracked in the built repository" % p
+    assert os.access(os.path.join(a, "run.sh"), os.X_OK), "the executable bit git recorded was lost"
+    assert _git(a, "rev-list", "--count", "HEAD") == "1", "the built repository has more than one commit"
+    for bad, allow, words in ((a, True, "not an empty directory"), (os.path.join(tempfile.gettempdir(), "hpack-no"),
+                                                                       False, "TEMP_INPUT")):
+        try:
+            hp.repo_from_snapshot(r["zip"], bad, allow_temp=allow)
+        except hp.SpecError as e:
+            assert words in str(e), str(e)
+        else:
+            raise AssertionError("repo accepted %s" % bad)
+    open(os.path.join(r["snapshot"], "README.md"), "wb").write(b"changed after the build\n")
+    try:
+        hp.repo_from_snapshot(r["snapshot"], os.path.join(_tmp("hpack-repo-"), "c"), allow_temp=True)
+    except hp.SpecError as e:
+        assert "does not verify" in str(e), str(e)
+    else:
+        raise AssertionError("repo accepted a snapshot that does not verify")

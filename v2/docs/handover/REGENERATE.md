@@ -36,6 +36,15 @@ stated the re-take in words only in H1.1; from the commit after H1.1 on it carri
 `retake_schematic_phase.py`, and is run by it. The repository holds H1.1 as `v2/release/handover/H1.1.zip` with `H1.1.zip.sha256` and `H1.1.MANIFEST.tsv` beside it (the
 packer's `--zip-only` mode), not as an unzipped folder; `unzip` creates the `H1.1/` folder the commands expect.
 
+**After H2 (27 September 2026, the H2 usability check's minor findings, `H2-RESPONSE.md`).** This page is the one H2
+carries plus these changes, which H2's own copy does not have: section 1a's code block computes `REF` from the
+timeline instead of taking the unpublished build commit; section 3 names the generator's `nets:` line; section 7
+states under which conditions the requirements validator reads which counts, and which closing commits a public clone
+lacks; section 9 gives the three routes to a checkout the re-take can run in, among them a repository built from the
+snapshot with `handover_pack.py repo` (added after H2), with that route's run on board P and its expected refusals,
+and reads the headline on line 6. The commands of sections 2 to 7 are H2's and were not re-run for this change, except
+section 1a's fetch, run from a repository built from the H2 ZIP (section 9).
+
 ## 1. Prerequisites (the versions the commands were run with)
 
 **Where the repository is.** The public repository is `https://github.com/meshsat/meshsat-fieldkit` (clone with
@@ -72,12 +81,16 @@ requirements validator and `rules_render.py --requirements --check` need the doc
 snapshot does not bundle (in H2 eleven: `v2/vendor/st/`'s three for CON-017 and eight cited since H1, among them
 TI's BQ4050 technical reference manual for REQ-042 and REQ-077); the battery packet's `check_manifest.py` needs the
 vendor documents its manifest cites; and the energy chain of section 6 needs Mill-Max's catalogue page 28. From the
-snapshot's root, with network access (`REF` is the build commit when the timeline in `SOURCE.txt` marks it public,
-else the newest public commit of the timeline; the blob check proves the bytes whichever commit served them; the H2
-run used `REF=62f26a44`, the newest public commit its timeline listed):
+snapshot's root, with network access. `REF` is the newest commit the timeline in `SOURCE.txt` marks `public yes`
+(the build commit itself when it is public, since it is the newest line); the first line of the block computes it
+from the timeline's columns (id, date, time, `public`, yes or no), so it never names an unpublished commit. The blob
+check proves the bytes whichever commit served them. For H2 it gives `62f26a44`; H2's own copy of this block took the
+`commit:` line, `b89b50b4`, which is not public, so every fetch read `FETCH FAILED` as written (the H2 usability
+check), and the H2 run set `REF=62f26a44` by hand:
 
 ```
-REF=$(sed -n 's/^commit: //p' SOURCE.txt)
+REF=$(awk '/^commit timeline:/{t=1} t && /^$/{exit} t && $4=="public" && $5=="yes" && ($2" "$3)>=d {d=$2" "$3; r=$1} END{print r}' SOURCE.txt)
+echo "REF=$REF"
 fetch() { for p in "$@"; do
   b=$(awk -F'\t' -v p="$p" '$1==p{print $2}' REFERENCED-SOURCES.tsv)
   [ -n "$b" ] || { echo "NOT LISTED $p"; continue; }
@@ -94,7 +107,9 @@ python3 v2/docs/review-packets/battery/evidence/check_manifest.py
 python3 v2/ecad/tools/rules_render.py --requirements --check
 ```
 
-Every fetched line must read `OK`. Expected afterwards (the H2 run, 29 files fetched, every one `OK`): `checked 139
+`REF=62f26a44` for H2 (the computed line was run after H2 on an extraction of H2, section 9's repository run,
+`v2/docs/records/h2m/box/repo_route.log`). Every fetched line must read `OK`. Expected afterwards (the H2 run, 29
+files fetched, every one `OK`; the same 29 in the run after H2): `checked 139
 rows of MANIFEST.md` and `RELEASE CHECK PASS` from the packet check, `144 requirement record(s), 0 error(s), 17
 warning(s)` from the validator (the warnings stay: closed-by-commit checks that need git history, section 7) and
 `v2/docs/REQUIREMENTS-TRACE.md is current`. A candidate patch is fetched the same way by its path, for example `fetch
@@ -154,7 +169,13 @@ Expected, line by line:
 
 - `gen_footprints_idc: 7 footprint(s)` (it rewrites the seven IDC lands in `meshsat.pretty` byte for byte).
 - The generator prints `wrote pcb-p-pack.kicad_sch parts: 95 lib symbols: 21`, `lands: 21 footprint(s) judged, 0 pin(s)
-  on a pad the land does not carry, 0 land(s) unreadable` and `layout: 2 A3 pages`.
+  on a pad the land does not carry, 0 land(s) unreadable` and `layout: 2 A3 pages`, then
+  `nets: 51 single-pin nets (should be empty or intentional): []`. That line carries two answers, not a count of
+  single-pin nets: 51 is the number of named nets in the generator's part table (`gen_sch_p.py`, the `nets` dictionary
+  over every part's pins but `NC`), and `[]` is the list of those with a single pin, empty. It is printed the same way
+  by every board's generator; the generators are not changed to reword it, because a generator is a recorded input of
+  its board's netlist provenance and an edit would re-date every reading on that board (the session's choice after H2,
+  `H2-RESPONSE.md`).
 - `build_sch.sh` prints `ERC: violations (...; erc_gate.py decides)`, `netlist: out/pcb-p-pack.net`, the provenance line
   `sch_prov: pcb-p-pack.net written by generator ee62fdb195a9f217 (...)`, `sch_pages: 2 x 1 cells, 2 pages kept of 2
   tiles` and `bom: out/pcb-p-pack-bom.csv`.
@@ -342,6 +363,17 @@ are closed items whose closing commits git cannot look up in an extraction, besi
 not in the tree (the readings are gitignored). Section 1a fetches the eleven documents and the validator then reads 0
 errors. The route below, from the repository itself, clears every failure but the git one.
 
+**The requirements validator's counts, and the condition under which each holds** (`python3 tools/rules_lib.py
+requirements` from `v2/ecad`; H2's registry, 144 records):
+
+| Where it runs | Errors | Warnings | Why |
+|---|---:|---:|---|
+| a git checkout holding every closing commit the registry names and the gitignored readings (`out/rule-audit`): the integrator's tree | 0 | 0 | every closed item's commit is found and the audit is present (the counts LAYER-STATUS's layer 3 row gives) |
+| an extraction of the ZIP alone (no `.git`) | 13 | 17 | 13 errors naming the 11 cited maker documents the snapshot references, not bundles; 17 closed-by-commit checks git cannot run without a repository, reported as warnings |
+| the same extraction after section 1a's fetch | 0 | 17 | as above, the documents restored |
+| a one-commit repository built from the ZIP (section 9's third route, run after H2) | 30 | 0 | the 13 document errors, and the 17 closed-by-commit checks as errors, because git runs and the closing commits are not in that history (`closed item S-03 is closed by commit 458b2873, which this tree does not hold`); `rules_render.py --requirements --check` then REFUSES the trace page |
+| that repository after section 1a's fetch, committed | 17 | 0 | the closed-by-commit errors alone |
+
 **From the repository at the snapshot's commit** (where the maker documents, the earlier layouts and the order sets
 are present), on a machine holding the repository and then on the KiCad host, with `<commit>` the `commit:` line of
 `SOURCE.txt`:
@@ -368,8 +400,12 @@ closed it, which the validator looks up in the repository's history. A scratch r
 a single commit, with no history, read `1666 passed, 5 failed, 13 skipped`: the five are the registry refusing fifteen
 closed items whose commits (`458b2873`, `93138ac1`, `9a151c78`, `3a1f6576`, `4ec785d8`, `faf8c981`, `68bc9e8f`) it
 could not find (at `e3aedb25`; H1 adds S-43, closed on `dd39fb15`, and H2 S-77, closed on `cecfd0f1`). All are
-ancestors of the snapshot's source commit, so a full clone has them; a shallow clone or
-a repository re-created from the files does not.
+ancestors of the snapshot's source commit, so a clone holding that commit has them; a shallow clone or a repository
+re-created from the files does not. **Corrected after H2:** a clone of the public repository holds only the commits
+the timeline marks `public yes`. For H2 that is every closing commit but `cecfd0f1` (S-77's, on the unpublished
+branch `fnd/h2`, with the snapshot commit itself), so H2's registry validates with no closed-by-commit finding only in a
+clone holding `fnd/h2`; a public clone serves `62f26a44`, whose registry predates S-77's closure (section 9, the
+public route).
 
 ## 8. Build and check a snapshot
 
@@ -417,6 +453,36 @@ files under a temporary directory as TEMP_INPUT, which never counts) and `kicad-
 (without it that step is reported SKIPPED and the run INCOMPLETE: a skip is not a pass). `--in-place` writes into the tree's own evidence folders, which nobody does by
 hand in a working checkout, so it is run in a THROWAWAY CLONE and the clone is deleted afterwards. It opens no socket.
 
+**Three routes to that checkout (added after H2).** Read `SOURCE.txt`'s commit timeline first: its `public` column
+says whether each commit was on the public repository when the snapshot was built.
+
+1. **The snapshot's own commit, in a clone that holds it.** The commands below as written, `<commit>` the `commit:`
+   line of `SOURCE.txt`. For H2 this needs a clone holding branch `fnd/h2`: H2's source commit `b89b50b4` and the
+   `fnd/h2` commits before it (`cecfd0f1`, `3e4799eb`, `6b2a9965`, `763bccdf`, `c5d09c78`) are marked `public no`, so
+   `git checkout` of them fails in a clone of the public repository.
+2. **The public repository at the newest public commit of the timeline** (section 1a's `REF`; `62f26a44` for H2). The
+   commands below with `<commit>` that commit. Between `62f26a44` and H2's source commit nothing under `v2/ecad/`
+   changed but the requirements registry, and in it only the open and closed items (S-77 closed, S-80 opened, the
+   baseline written and reversed); its 144 records, and so every feasibility blocker's stages, are the same. So this
+   route runs the same writers on the same netlists, intents, tools and configuration and gives the same readings and
+   the same layout-entry reasons; what differs is the trace page's open items and the pages H2 added (the review
+   record of the narrow verification, the H2 exports and handover pages), which the re-take does not read.
+3. **A repository built from the snapshot**, when neither clone is at hand. `handover_pack.py repo <snapshot zip or
+   folder> <dest>` (in the packer since after H2; H2's own copy of the packer predates it, so take the file from the
+   repository at a commit that has it, or do the same by hand: unpack the ZIP outside `/tmp`, `git init`, `git add -A
+   -f`, commit). It verifies the snapshot, writes its files and commits them as one commit with a fixed identity and the
+   snapshot commit's date, so two builds give one commit id. **`-f` is required:** the snapshot carries the
+   repository's `.gitignore`, which ignores the `out/` folders the committed netlists sit in, so a plain `git add -A`
+   leaves them untracked and the driver refuses every board (`out/<board>.net not tracked`, the H2 usability check).
+   The referenced files a writer cites (section 1a; for board P the energy chain's Mill-Max page 28) are fetched into
+   the repository and committed as a second commit, because the driver refuses a tree whose `git status` is not
+   empty. **What such a repository cannot do, expected and not a finding:** it has no history, so the requirements
+   validator's 17 closed-by-commit checks read as errors (30 errors with the 13 document errors, 17 once section 1a's
+   files are committed; section 7's table) and `rules_render.py --check` and `--requirements --check` REFUSE
+   `REQUIREMENTS-TRACE.md` for that reason; and it holds no gitignored reading and no `routed/` folder (both left out
+   of the snapshot, START-HERE section 3), so re-taking one board re-renders every other board's page from no reading
+   (NO_EVIDENCE): compare only the re-taken board's rows.
+
 ```
 git clone <repository> ~/rtk
 cd ~/rtk
@@ -428,8 +494,53 @@ echo "retake exit $?"
 for i in 1 2 3; do python3 tools/rules_status.py > ../../../status-$i.log 2>&1; tail -n 1 ../../../status-$i.log; done
 python3 tools/rules_render.py
 python3 tools/rules_render.py --check
-sed -n 5p ../docs/CURRENT-EVIDENCE.md
+sed -n 6p ../docs/CURRENT-EVIDENCE.md
 ```
+
+The third route, for board P, as run after H2 (the script and its log are `v2/docs/records/h2m/box/repo_route.sh` and
+`repo_route.log`, the driver's result `retake-p.json`; section 1a's `fetch` function defined in the repository's root):
+
+```
+python3 handover_pack.py repo H2.zip ~/rtk-h2
+cd ~/rtk-h2
+REF=$(awk '/^commit timeline:/{t=1} t && /^$/{exit} t && $4=="public" && $5=="yes" && ($2" "$3)>=d {d=$2" "$3; r=$1} END{print r}' SOURCE.txt)
+fetch v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf
+git add -A -f && git commit -q -m "referenced files of section 1a restored"
+cd v2/ecad
+python3 tools/retake_schematic_phase.py --plan --in-place --board p
+python3 tools/retake_schematic_phase.py --run --in-place --routed --board p --json > ../../../retake-p.json 2> ../../../retake-p.log
+echo "retake exit $?"
+for i in 1 2 3; do python3 tools/rules_status.py > ../../../status-$i.log 2>&1; tail -n 1 ../../../status-$i.log; done
+python3 tools/rules_render.py
+python3 tools/rules_render.py --check
+sed -n 6p ../docs/CURRENT-EVIDENCE.md
+grep -E '^\| P \| P4 \|' ../docs/CURRENT-EVIDENCE.md
+```
+
+Expected, as run between 16:39 and 16:41 UTC on 27 September 2026 on the rented Ubuntu 24.04 host with KiCad 9.0.9 and
+Python 3.12.3, under `/root/h2m` (outside `/tmp`), with the packer as committed in `992f2bc2` (the run also fetched
+the other 28 files section 1a names, all `OK`; the folder was deleted afterwards):
+
+- `handover_pack: repo /root/h2m/rtk: 2234 files of snapshot H2 (commit b89b50b4421f) committed as f4367c0b087b,
+  working tree clean`; a second build of the same ZIP gives the same commit id; a destination under `/tmp` is
+  REFUSED (exit 2).
+- Before the fetch: `144 requirement record(s), 30 error(s), 0 warning(s)` and the trace check REFUSED. `REF=62f26a44`;
+  every fetch `OK`; after the second commit, `17 error(s)`, `RELEASE CHECK PASS` from the battery packet's manifest
+  check, and the trace check still REFUSED (the closed-by-commit errors).
+- `plan: 12 command(s) over 1 board(s): P 12; 0 error(s)`; the run exits 0 with 14 readings in 16 s and 15 files
+  copied to `routed/`: `erc_gate` PASS of 123, `safe_lines_p` PASS of 0, `pin_map_lands_p` PASS of 85, `derate` PASS of
+  6, `power_sequence` PASS of 5, `energy_chain_p` PASS of 3, `energy_chain` PASS of 98, `inhibit_chain_p` PASS of 1,
+  `check_contracts` PASS of 99, `interfaces_p` PASS of 1, `port_protect_p` PASS of 3, `intent_rails` FAIL (of 11),
+  `pack_protection` FAIL (of 45), `edge_length` INCONCLUSIVE (of 44): the consolidated re-take's row for P.
+- `rules_status.py`: the second and third runs print the same line; `rules_render.py` writes
+  `PCB-RULE-STATUS-P.md` and refuses the trace page, and its `--check` then reads 15 documents current and 1 refused;
+  line 6 is the headline,
+  "**Foundations incomplete; 0 boards ready for layout; 0 physically verified.**"; board P's row ends `no: 6
+  reason(s), first PWR-001 FAIL on CURRENT_CANDIDATE evidence (BOUND)`, and its six reasons are the page's: PWR-001
+  FAIL, SI-001 INCONCLUSIVE, BAT-001 FAIL, FEA-005, FEA-006, FEA-007. (The committed page reads PWR-001 there on
+  VALID_HISTORICAL evidence, reused under a rationale; the re-take's reading is current by itself.) Without the Mill-Max
+  page, as in the H2 usability check's run, `energy_chain` reads FAIL on that citation and P reads 7 reasons, BAT-002
+  the seventh.
 
 If you changed a configuration input (`pcb_rules_coverage.yaml` and the like), commit it BEFORE the first
 `rules_status.py` run: an input no commit dates reads CONFIG_CHANGED. The last of the three runs must leave its

@@ -13,7 +13,7 @@ candidate table (board, phase, netlist sha256/16, ready):
 layout-entry reasons by what closes them first (A B C D E P E5 set):
   the design or its declarations (the reading is current and is not a PASS): 2 2 3 3 2 3 0 15
   a deciding verification for the rule: 0 0 0 0 0 0 1 1
-  a layout-entry requirement of a hold that gates a later stage (the hold itself stays until: 1 0 0 1 1 0 0 3
+  a layout-entry requirement of a hold that gates a later stage (the hold itself stays until that stage): 1 0 0 1 1 0 0 3
   the layout-entry stage of a feasibility blocker closed on its named evidence: 4 5 2 4 2 3 1 21
   total: A 7, B 7, C 5, D 8, E 5, P 6, E5 2, set 40
 layout-entry blocker rows per board (40 rows):
