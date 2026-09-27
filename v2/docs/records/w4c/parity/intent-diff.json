@@ -1,0 +1,195 @@
+{
+ "candidate_vs_main_91894cd7": {
+  "nodes": {
+   "added": [
+    "BAT1_A",
+    "BAT1_K",
+    "BAT2_A",
+    "BAT2_K",
+    "BAT3_A",
+    "BAT3_K",
+    "BAT4_A",
+    "BAT4_K",
+    "BAT5_A",
+    "BAT5_K",
+    "CHG_A",
+    "CHG_K",
+    "C_DVDD",
+    "EMCLAMP_A",
+    "EMCLAMP_K",
+    "EPD_RESE",
+    "GPS_A",
+    "GPS_K",
+    "LIGHT_DAY_n",
+    "LIGHT_NIGHT_n",
+    "LTE_A",
+    "LTE_K",
+    "MAINRING_A",
+    "MCAUT_A",
+    "MCAUT_K",
+    "MESH_A",
+    "MESH_K",
+    "MSG_A",
+    "MSG_K",
+    "MWARN_A",
+    "MWARN_K",
+    "PIRING_A",
+    "Q1_G",
+    "RAIL_SENSE",
+    "SAT_A",
+    "SAT_K",
+    "SHORE_A",
+    "SHORE_K",
+    "SOSACT_A",
+    "SOSACT_K",
+    "TESTRING_A",
+    "TEST_SW",
+    "TX_A",
+    "TX_INHIBIT_n",
+    "TX_K",
+    "TX_LAMPTEST",
+    "ZEROIZE_SW"
+   ],
+   "removed": [],
+   "changed": {}
+  },
+  "rails": {
+   "added": [
+    "EPD_VCC",
+    "LED_RAIL",
+    "LED_RAIL_SW"
+   ],
+   "removed": [],
+   "changed": {
+    "+3V3": [
+     {
+      "volts": 3.3,
+      "amps_typ": 0.12,
+      "amps_peak": 0.2,
+      "source": "U5",
+      "loads": {
+       "U1": 0.04,
+       "U2": 0.01,
+       "U3": 0.01,
+       "U4": 0.015,
+       "U6": 0.005,
+       "U7": 0.005,
+       "U8": 0.005,
+       "U10": 0.005,
+       "U11": 0.005,
+       "U9": 0.002,
+       "U12": 0.002,
+       "U_LIGHT": 0.02,
+       "Q5": 0.001,
+       "U13": 0.002,
+       "U14": 0.002
+      },
+      "note": "the panel's logic 3.3 V from the LDO U5: the RP2040 controller, its QSPI flash, the two expanders, the buffers, the EMCON lamp's gate, the light sensor and the e-paper's supply switch. Budget 3 percent, because every load is a logic part with a wide supply range",
+      "budget": 0.03,
+      "share": 0.0075,
+      "always_on": true,
+      "always_on_why": "U5 is a TLV75533 whose EN pin is tied to its own input, so this rail follows the 5 V that arrives on the ribbon and has no switch of its own",
+      "fed_from": "+5V"
+     },
+     {
+      "volts": 3.3,
+      "amps_typ": 0.149,
+      "amps_peak": 0.72,
+      "source": "U5",
+      "loads": {
+       "U1": 0.04,
+       "U2": 0.01,
+       "U3": 0.01,
+       "U4": 0.015,
+       "U6": 0.005,
+       "U7": 0.005,
+       "U8": 0.005,
+       "U10": 0.005,
+       "U11": 0.005,
+       "U9": 0.002,
+       "U12": 0.002,
+       "U_LIGHT": 0.02,
+       "Q5": 0.03,
+       "U13": 0.002,
+       "U14": 0.002
+      },
+      "note": "the panel's logic 3.3 V from the LDO U5: the RP2040 controller, its QSPI flash, the two expanders, the buffers, the EMCON lamp's gate, the light sensor and the e-paper's supply switch. Budget 3 percent, because every load is a logic part with a wide supply range. Since 27 September 2026 (W4C-F5) the figures cover the child EPD_VCC: its own loads' 0.119 A typical and 0.199 A peak plus EPD_VCC's 0.030 and 0.521 A, because within each boost on-phase (about 1.6 us) Q5 carries most of the inductor's current (C28 behind Q5 is a 0.40 us time constant). U5 is rated 500 mA (TI SBVS320D): the excess at the peak is 0.35 uC per on-phase, 24 mV on C2, C28 and C29 at most; U5's average through a refresh is an open item read at bring-up",
+      "budget": 0.03,
+      "share": 0.0075,
+      "always_on": true,
+      "always_on_why": "U5 is a TLV75533 whose EN pin is tied to its own input, so this rail follows the 5 V that arrives on the ribbon and has no switch of its own",
+      "fed_from": "+5V"
+     }
+    ]
+   }
+  }
+ },
+ "candidate_vs_pass1_candidate": {
+  "rails": {
+   "added": [],
+   "removed": [],
+   "changed": {
+    "+3V3": [
+     {
+      "volts": 3.3,
+      "amps_typ": 0.12,
+      "amps_peak": 0.2,
+      "source": "U5",
+      "loads": {
+       "U1": 0.04,
+       "U2": 0.01,
+       "U3": 0.01,
+       "U4": 0.015,
+       "U6": 0.005,
+       "U7": 0.005,
+       "U8": 0.005,
+       "U10": 0.005,
+       "U11": 0.005,
+       "U9": 0.002,
+       "U12": 0.002,
+       "U_LIGHT": 0.02,
+       "Q5": 0.03,
+       "U13": 0.002,
+       "U14": 0.002
+      },
+      "note": "the panel's logic 3.3 V from the LDO U5: the RP2040 controller, its QSPI flash, the two expanders, the buffers, the EMCON lamp's gate, the light sensor and the e-paper's supply switch. Budget 3 percent, because every load is a logic part with a wide supply range",
+      "budget": 0.03,
+      "share": 0.0075,
+      "always_on": true,
+      "always_on_why": "U5 is a TLV75533 whose EN pin is tied to its own input, so this rail follows the 5 V that arrives on the ribbon and has no switch of its own",
+      "fed_from": "+5V"
+     },
+     {
+      "volts": 3.3,
+      "amps_typ": 0.149,
+      "amps_peak": 0.72,
+      "source": "U5",
+      "loads": {
+       "U1": 0.04,
+       "U2": 0.01,
+       "U3": 0.01,
+       "U4": 0.015,
+       "U6": 0.005,
+       "U7": 0.005,
+       "U8": 0.005,
+       "U10": 0.005,
+       "U11": 0.005,
+       "U9": 0.002,
+       "U12": 0.002,
+       "U_LIGHT": 0.02,
+       "Q5": 0.03,
+       "U13": 0.002,
+       "U14": 0.002
+      },
+      "note": "the panel's logic 3.3 V from the LDO U5: the RP2040 controller, its QSPI flash, the two expanders, the buffers, the EMCON lamp's gate, the light sensor and the e-paper's supply switch. Budget 3 percent, because every load is a logic part with a wide supply range. Since 27 September 2026 (W4C-F5) the figures cover the child EPD_VCC: its own loads' 0.119 A typical and 0.199 A peak plus EPD_VCC's 0.030 and 0.521 A, because within each boost on-phase (about 1.6 us) Q5 carries most of the inductor's current (C28 behind Q5 is a 0.40 us time constant). U5 is rated 500 mA (TI SBVS320D): the excess at the peak is 0.35 uC per on-phase, 24 mV on C2, C28 and C29 at most; U5's average through a refresh is an open item read at bring-up",
+      "budget": 0.03,
+      "share": 0.0075,
+      "always_on": true,
+      "always_on_why": "U5 is a TLV75533 whose EN pin is tied to its own input, so this rail follows the 5 V that arrives on the ribbon and has no switch of its own",
+      "fed_from": "+5V"
+     }
+    ]
+   }
+  }
+ }
+}

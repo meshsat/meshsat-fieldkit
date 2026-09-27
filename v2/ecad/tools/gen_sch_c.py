@@ -37,15 +37,34 @@ _intent.rail("+5V", 5.0, 0.6, 1.0, "J_PANEL", budget=0.05, loads={"SW_LIGHT": 0.
 # WHAT FEEDS THIS RAIL (20 September 2026, appendix 32.246): `power_path` adds up what a rail's
 # converters draw and refuses to let a feeder declare less than its children take. Board A's VBAT
 # declared 10 A and its nine converters drew 15.18, and nothing checked it on any board until now.
-_intent.rail("+3V3", 3.3, 0.12, 0.20, "U5", budget=0.03, share=0.0075, always_on=True, fed_from="+5V",
+# THIS RAIL COVERS ITS CHILD EPD_VCC (27 September 2026, stream w4c, finding W4C-F5 of the independent check; taken by the
+# session under the owner's standing rule of 26 September 2026). EPD_VCC, declared at the end of the design, takes 0.521 A at
+# its peak from this rail through Q5 (the boost's 0.5 A switch-current class into L1), and this rail declared 0.20 A: the
+# +3V3 copper from U5 and C2 to Q5 would have been judged for less than it carries. Q5 is a switch, not a filter: C28 (4.7 uF)
+# behind Q5's at most 85 mOhm (AOS AO3401A, RDS(ON) at VGS -2.5 V, v2/vendor/power/aos-ao3401a-p-mosfet.pdf) is a 0.40 us time
+# constant against an on-phase of about 1.6 us (10 uH to 0.5 A from 3.135 V), so by the end of each on-phase about three
+# quarters of the inductor's current or more comes through Q5 and the bound that needs no layout is all of it. So this rail
+# declares its own loads (0.119 A typical and 0.199 A peak: the 0.12 and 0.20 A it declared before, less Q5's former 1 mA)
+# plus EPD_VCC's figures. U5's own share is W4C-F5's open item: the TLV75533 is rated 500 mA (IOUT, TI SBVS320D 5.3; ICL
+# 560 mA minimum), and the 0.22 A by which the peak exceeds it, held for no longer than one on-phase, is at most 0.35 uC, 24 mV
+# on C2, C28 and C29 (14.8 uF nominal) against this rail's 99 mV budget; what U5 carries on average through a refresh no held document states (the
+# boost's output power; EPD_VCC's 10 mA is INFERRED), so it is read at bring-up. The check after EPD_VCC's declaration
+# refuses a file where this rail no longer covers its child.
+_P3V3_OWN = (0.119, 0.199)   # the panel's logic loads without the e-paper supply (typical, peak)
+_EPD = (0.030, 0.521)        # EPD_VCC (typical, peak), declared at the end of the design with its basis
+_intent.rail("+3V3", 3.3, round(_P3V3_OWN[0] + _EPD[0], 3), round(_P3V3_OWN[1] + _EPD[1], 3), "U5", budget=0.03, share=0.0075, always_on=True, fed_from="+5V",
              always_on_why="U5 is a TLV75533 whose EN pin is tied to its own input, so this rail follows the 5 V that arrives on the ribbon and has no switch of its own",
              source_ic="U5 is a TLV75533 LDO in SOT-23-5: pin 5 IS its output power pin",
              loads={"U1": 0.040, "U2": 0.010, "U3": 0.010, "U4": 0.015, "U6": 0.005, "U7": 0.005,
-                    "U8": 0.005, "U10": 0.005, "U11": 0.005, "U9": 0.002, "U12": 0.002, "U_LIGHT": 0.020, "Q5": 0.001,   # U12: the ZEROIZE buffer (D-03, 26 September 2026)
+                    "U8": 0.005, "U10": 0.005, "U11": 0.005, "U9": 0.002, "U12": 0.002, "U_LIGHT": 0.020, "Q5": 0.030,   # U12: the ZEROIZE buffer (D-03, 26 September 2026); Q5: the switched e-paper supply EPD_VCC at its declared 30 mA (PWR-001, 27 September 2026; was 1 mA)
                     "U13": 0.002, "U14": 0.002},   # round 8: the controller's one-way EMCON copy and the EMCON lamp's gate, at the 2 mA allowance U9 and U12 carry (ICC 10 uA max each, DS35124 p.4, SCES414P p.5)
              note="the panel's logic 3.3 V from the LDO U5: the RP2040 controller, its QSPI flash, the two "
                   "expanders, the buffers, the EMCON lamp's gate, the light sensor and the e-paper's supply switch. Budget 3 percent, "
-                  "because every load is a logic part with a wide supply range")
+                  "because every load is a logic part with a wide supply range. Since 27 September 2026 (W4C-F5) the figures cover "
+                  "the child EPD_VCC: its own loads' 0.119 A typical and 0.199 A peak plus EPD_VCC's 0.030 and 0.521 A, because "
+                  "within each boost on-phase (about 1.6 us) Q5 carries most of the inductor's current (C28 behind Q5 is a 0.40 us "
+                  "time constant). U5 is rated 500 mA (TI SBVS320D): the excess at the peak is 0.35 uC per on-phase, 24 mV on C2, "
+                  "C28 and C29 at most; U5's average through a refresh is an open item read at bring-up")
 SYMDIR = "/usr/share/kicad/symbols/"
 
 # ----------------------------------------------------------------- s-expression helpers (as B13/B15)
@@ -164,22 +183,22 @@ part("U2", "Interface_Expansion", "PCA9555PW", "PCA9555PW 0x23: LED sinks, the b
 c("C17", "100n", "+3V3", "GND", "C", "C14663"); c("C18", "100n", "+3V3", "GND", "C", "C14663")
 for i, net in enumerate(("SOS_SW", "ZEROIZE_SW", "TEST_SW", "LIGHT_DAY_n", "LIGHT_NIGHT_n"), 9):   # R10/C20 now on the local ZEROIZE_SW (D-03, 26 September 2026)
     r("R%d" % i, "10k", net, "+3V3", "R", "C25804"); c("C%d" % (i + 10), "10n", net, "GND", "C", "C57112")
-r("R14", "10k", "TX_INHIBIT_n", "+3V3", "R", "C25804"); c("C24", "10n", "TX_INHIBIT_n", "GND", "C", "C57112")   # 10k, not 100k: A22, B16 and D9
-# each hold TX_INHIBIT_n down with 100k so a cut ribbon inhibits at every consumer; 10k against those three in parallel still reads 2.5 V, a solid high
+r("R14", "2.2k 1%", "TX_INHIBIT_n", "+3V3", "R", "C4190"); c("C24", "10n", "TX_INHIBIT_n", "GND", "C", "C57112"); r("R50", "10k 1%", "TX_INHIBIT_n", "GND", "R", "C25804")   # A22, B16 and D9 each hold TX_INHIBIT_n
+# down with 100k so a cut ribbon inhibits at every consumer; since EQ-25 (27 September 2026, W3T-F1) R14 is 2.2k 1% and R50 holds it down on this board too: the arithmetic is in the note at the end of the design
 # EMCON_HW is a BUFFERED COPY of TX_INHIBIT_n, not its inverse (9 September 2026, red team C1). Both consumer boards were already built on
 # "low silences": A22 computes PA_EN = EMCON_HW AND PA_SW_EN and B16 computes every transmitter enable the same way, while this board
 # inverted the toggle into them. Asserting EMCON therefore ENABLED the PA and released both M.2 radios' W_DISABLE1#. A 74LVC1G34
 # non-inverting buffer in the same SOT-23-5 land (2 A, 4 Y) fixes the sense at its source. The toggle stays the only driver of
 # TX_INHIBIT_n: A22's gate that drove it back from EMCON_HW is deleted, which also removes a one-inversion feedback loop.
-# A SCHMITT INPUT, NOT A PLAIN ONE (26 September 2026, MESHSAT-1357 round 4). TX_INHIBIT_n is a switch node with R14 10k up, C24 10n down
-# and three 100k pull-downs off board (A R145, B R59, D R2), so releasing the EMCON toggle gives a rising edge with a 77 us time constant
-# (7.7k Thevenin into 10n) toward 2.54 V, about 74 us/V at a 1.5 V threshold. The 74LVC1G34's recommended operating conditions allow an
+# A SCHMITT INPUT, NOT A PLAIN ONE (26 September 2026, MESHSAT-1357 round 4). TX_INHIBIT_n is a switch node with R14 up, C24 10n down
+# and three 100k pull-downs off board (A R145, B R59, D R2), so releasing the EMCON toggle gives a slow rising edge: with R14 10k, a 77 us time constant
+# (7.7k Thevenin into 10n) toward 2.54 V, about 74 us/V at a 1.5 V threshold; since EQ-25 (R14 2.2k, R50 10k) 17 us toward 2.57 V, still microseconds per volt. The 74LVC1G34's recommended operating conditions allow an
 # input transition of 10 ns/V at 3.3 V (Diodes DS36108 Rev. 10-2, Delta t/Delta V), so the plain buffer ran several thousand times
 # outside its input-slew limit on the kit's EMCON line. The
 # 74LVC1G17 is the same function with a Schmitt-trigger input and no slew limit, in the same SOT-25 land with the same pins (Diodes
 # DS35124 Rev. 8-2: 1 NC, 2 A, 3 GND, 4 Y, 5 VCC; IOFF partial power down; -40 to +125 C; VT+ 1.50 to 2.00 V at 3.0 V and 2.16 to 2.74 V
 # at 4.5 V; the sheet has no 3.3 V row, and interpolating linearly between those two gives about 2.15 V worst case at 3.3 V, against
-# the 2.54 V this line rests at). Diodes 74LVC1G17W5-7, LCSC C151394.
+# the 2.57 V this line rests at since EQ-25, 2.37 V at the adverse ends; 2.54 V and 2.11 V with R14 10k). Diodes 74LVC1G17W5-7, LCSC C151394.
 ic("U9", 5, "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3)", "SOT235", {"1": "NC", "2": "TX_INHIBIT_n", "3": "GND", "4": "EMCON_HW", "5": "+3V3"}, "C151394")
 c("C25", "100n", "+3V3", "GND")
 # NO FIRMWARE PIN SITS ON EMCON_HW (MESHSAT-1357 round 8, EMCON.md section 3 item L1; the second checkpoint review of 26 September 2026,
@@ -212,7 +231,7 @@ c("C40", "100n", "+3V3", "GND", "C", "C14663"); r("R46", "1k", "EMCON_RD", "EMCO
 # Same part as U9 for the same reason (a 10k/10n switch node): Diodes 74LVC1G17W5-7, LCSC C151394, pins as above.
 ic("U12", 5, "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): ZEROIZE_HW follows the local ZEROIZE_SW (owner D-03)", "SOT235", {"1": "NC", "2": "ZEROIZE_SW", "3": "GND", "4": "ZEROIZE_HW", "5": "+3V3"}, "C151394")
 c("C39", "100n", "+3V3", "GND", "C", "C14663")
-r("R15", "10k", "LED_RAIL_SW", "RAIL_SENSE", "R", "C25804"); r("R16", "10k", "PANEL_ID", "+3V3", "R", "C25804")
+r("R15", "10k", "LED_RAIL_SW", "RAIL_SENSE", "R", "C25804"); r("R16", "10k", "PANEL_ID", "+3V3", "R", "C25804"); r("R51", "10k", "RAIL_SENSE", "GND", "R", "C25804")   # R51: the divider's bottom leg (W4C-F1, note at the end of the design)
 part("JP2", "Jumper", "SolderJumper_2_Open", "PANEL_ID strap (closed = variant B)", "JP2", {"1": "PANEL_ID", "2": "GND"})
 # --- LED rail: +5V -> LIGHTING toggle (open in BLACKOUT) -> LED_RAIL_SW -> Q1 P-FET (PWM from PANEL_PWM through Q2) -> LED_RAIL; NVG mode is the lowest PWM level in firmware (16c)
 part("SW_LIGHT", "Connector_Generic", "Conn_01x06", "LIGHTING DAY/NIGHT/BLACKOUT toggle DPDT ON-ON-ON (pole 1: rail, pole 2: sense); NKK M2044SD3A01 on the D3 splashproof bushing, its O-ring (spare AT516) under the nut on the face, AT428H boot; D hole, flat toward +X", "TGL6",
@@ -241,9 +260,9 @@ part("D17", "Device", "D_Schottky", "BAT54 lamp-test tie", "SOD123", {"2": "TX_K
 # from drafts/c/datasheets): pins 1 In1, 2 GND, 3 In0, 4 Y, 5 VCC, 6 In2 (DBV, page 3); Table 1 (page 8) gives Y = H for In2 L, In1 L,
 # In0 L and Y = L in the other three rows with In1 L, so In1 on GND makes Y = NOR(In0, In2), the configuration of its Figure 7. Its inputs
 # are Schmitt triggers ("allows for noisy or slow inputs", 8.3.1, page 8), which TX_INHIBIT_n needs: it rises through R14 and C24 with a
-# 77 us time constant, the reason U9 is a 74LVC1G17. VT+ is 1.5 to 1.87 V at VCC 3 V and 2.16 to 2.74 V at 4.5 V, VT- 0.84 to 1.19 V at
+# 77 us time constant (17 us since EQ-25), the reason U9 is a 74LVC1G17. VT+ is 1.5 to 1.87 V at VCC 3 V and 2.16 to 2.74 V at 4.5 V, VT- 0.84 to 1.19 V at
 # 3 V (6.5, page 5); the sheet has no 3.3 V row, and interpolating linearly, as R14's note does for U9, puts VT+ at about 2.04 V at
-# most, against the 2.54 V TX_INHIBIT_n rests at and U9's rail-to-rail EMCON_HW. II +-1 uA, Ioff +-10 uA at VCC 0 ("Ioff supports partial-
+# most, against the 2.57 V TX_INHIBIT_n rests at since EQ-25 and U9's rail-to-rail EMCON_HW. II +-1 uA, Ioff +-10 uA at VCC 0 ("Ioff supports partial-
 # power-down mode", page 1; 6.5, page 5), so what it adds to each line with this board unpowered is a bounded current for R4T-D37's sums.
 # Its output drives Q7 through R48 (100R, as Q2 and Q4 are driven), and R49 (10k) holds the gate low while U14 is unpowered: 10 uA of Ioff
 # into 10k is 0.10 V against the FET's VGS(th) minimum of 0.6 V. Q7 is the Vishay Si2300DS-T1-GE3 already fitted as Q6 (document 65701,
@@ -375,6 +394,138 @@ for i, net in enumerate(("+5V", "+3V3", "GND", "EXP_INT", "TX_INHIBIT_n", "EMCON
 # TEST_SW and TR_APRS are the lines W5 names; C_DVDD is the RP2040 core; BOOT_J is the BOOTSEL node beside JP1, which a probe grounds through
 # R5's 1k exactly as the solder jumper does (a pad on QSPI_SS itself would let a probe short the flash select without that 1k).
 for i, net in enumerate(("ZEROIZE_SW", "SDA", "SCL", "SOS_SW", "TEST_SW", "TR_APRS", "C_DVDD", "BOOT_J"), 41): tp("TP%d" % i, net)
+# ================================================================= EQ-25 AND PWR-001 (MESHSAT-1357, stream w4c, 27 September 2026)
+# TX_INHIBIT_n FAILS SAFE WITH THIS BOARD UNPOWERED (EQ-25, open item S-64, finding W3T-F1 of the RF-002 walk). With this board unpowered
+# the line was held only by the three consumer pull-downs, A R145, B R59 and D R2, 100k each and taken at 5 percent because their values
+# state none (3 x 105k in parallel, 35.0k), against 31 uA of stated pin current: this board's U9 (74LVC1G17, IOFF 10 uA at VCC 0, Diodes
+# DS35124 Rev. 8-2 page 4) and U14 (SN74LVC1G57, Ioff 10 uA, TI SCES414P 6.5), board D's U12 (10 uA) and board A's U35 and U37
+# (SN74AUP1G08, 0.5 uA each). 31 uA x 35.0k = 1.09 V, over the 0.8 V VIL the walk (tx_inhibit.py, VIL_LOW) applies to every gate that
+# reads it; the walk takes an unpowered part at its Ioff (round 6), so this is a FAIL under the tree's worst-case convention, and the
+# remedy is margin. Taken by the session under the owner's standing rule of 26 September 2026: option (a) of S-64, R50 (10k 1 percent,
+# UNI-ROYAL 0603WAF1002T5E, C25804) from the line to GND on this board and R14 10k to 2.2k 1 percent (0603WAF2201T5E, C4190), both 0603
+# 100 mW. The figures, resistors at the adverse end of their stated tolerance and +3V3 5 percent low as the walk takes them:
+#   failed safe, this board unpowered: R50 at 10.1k in parallel with 35.0k is 7.84k, x 31 uA = 0.24 V, 0.56 V under VIL. The panel ribbon
+#     out: boards B, A and D keep their own 35.0k against 11 uA, 0.39 V, as before. The A-B ribbon out: this board and B, 10.1k with 105k,
+#     9.21k x 20 uA = 0.18 V; A and D, 52.5k x 11 uA = 0.58 V, as before. The A-D mezzanine out: A, B and this board 0.18 V (1.10 V
+#     before). The walk itself reads 0.243 V and 0.178 V for the two states that failed at 1.085 V and 1.103 V (stream w4c's records);
+#   released (toggle open, this board powered): nominal 3.3 V x 7.69k / (2.2k + 7.69k) = 2.57 V; at the adverse ends (3.135 V, R14
+#     2.222k, R50 9.9k, the three at 95k, the 31 uA sunk through the 1.72k Thevenin) 2.37 V: over VIH 2.0 V and over the VT+ this file
+#     reads at 3.3 V for U9 (about 2.15 V) and U14 (about 2.04 V). With R14 10k the same ends read 2.11 V, under U9's 2.15 V, so the
+#     change widens the released margin too;
+#   asserted (toggle closed, this board powered): the contact holds the line at ground, 1.6 mA x its 10 mOhm (APEM 5000 series, page
+#     2, 'Initial contact resistance : 10 mOhm max'), about 16 uV. R14 then draws 3.465 V / 2.178k = 1.59 mA, inside the 5636ADKB's
+#     gold-plated contacts' range (AD, page 2: 10 uA at 5 V to 100 mA at 30 VDC) and under the walk's 4 mA pull limit (PULL_MA_MAX);
+#     R14 dissipates 5.5 mW, R50 0.7 mW released;
+#   latency: asserting is the contact itself; C24 discharges through it, so the line is at ground from the first touch and settled
+#     within the contact bounce (2 ms max, APEM page 2), and U9's EMCON_HW follows in nanoseconds; release rises with 1.71k x 10 nF =
+#     17 us toward 2.57 V and crosses U9's 2.15 V after about 31 us (144 us with R14 10k); with this board's supply gone the line
+#     falls with +3V3 and R50 with the three pull-downs then hold it, 7.84k x 10 nF = 78 us. Each is far inside REQ-071's 1 s.
+# Options not taken: (b) board B's R59 to 10k 1 percent with R14 2.2k (0.26 V; two boards) and (c) the three pull-downs to 47k with R14
+# 4.7k (0.51 V; four boards): (a) is one board, the board whose round 8 lamp gate added the current, and reads the lowest level. Reverse by
+# (b) or (c) if a measured Ioff on the bench (E-01, E-11) or a later reader changes the sums; the arithmetic is in the w3t records.
+_intent.node("TX_INHIBIT_n", 3.333, "the hardware EMCON line at its source: R14 (2.2k 1 percent) to +3V3 and SW_EMCON to GND, R50 (10k) and the "
+             "three consumer pull-downs to GND; at most +3V3 at the TLV75533's 1 percent (TI SBVS320D, 'Output accuracy: 1%'), and no "
+             "part takes its supply from it (U9, U14 and the far gates read it)", v_work=3.333)
+# THE LED RAIL SENSE IS A DIVIDER (finding W4C-F1, read while declaring LED_RAIL_SW for PWR-001; taken by the session under the owner's
+# standing rule of 26 September 2026). R15 alone joined the 5 V LED_RAIL_SW to GPIO26 (ADC0, U3 pin 38). The RP2040 datasheet
+# (v2/vendor/rp2040/rpi-rp2040-datasheet.pdf, build-version 3184e62-clean): 'the voltage on the ADC analogue inputs must not exceed IOVDD
+# ... Voltages greater than IOVDD will result in leakage currents through the ESD protection diodes' (2.9.5 note and 4.9 note), and the
+# absolute maximum VPIN is IOVDD + 0.5 V (Table 622). Through 10k the pin sat on its diode above IOVDD with about 0.15 mA into +3V3
+# whenever the lights were on. PANEL.md's LED-rail row already calls it a divider. R51 (10k, C25804) to GND makes it one: at most
+# 5.25 V x 10.1k / (9.9k + 10.1k) = 2.65 V, under the rail's 3.135 V floor, and the pad's own 50 to 80k pull-down (Table 625) only
+# lowers it; 0 V at BLACKOUT, where pole 1 is open and R15 and R51 hold it down. The firmware threshold for 'present' is the PANEL.md
+# writer's (about 2.5 V present, 0 V absent). Reverse by a measured reason the pin must see the rail undivided (none is known).
+# PWR-001 ON THIS BOARD: EVERY POWER NET DECLARED, AND THE ELEVEN UNDECIDED NETS SETTLED (EQ-19 for board C; the kinds follow board D's
+# and E's SC-57 and board B's stream w3b: a rail where a net carries a current to more than one place or through a switch to a load, a
+# node where it is one part's own supply, a lamp's feed or a signal). Session decisions under the owner's standing rule of 26 September
+# 2026; reverse any node by a load on it that is another part's supply, and any current by a measurement at bring-up.
+#   C_DVDD: a NODE, the RP2040's own core regulator output. It carries U3's VREG_VOUT (pin 45) and DVDD (pins 23 and 50) with C14, C15,
+#     C44 and TP47 and nothing else. The regulator is set to 1.10 V at power-on and firmware may select 0.80 to 1.30 V in 50 mV steps
+#     (datasheet 2.10.3; Table 189, VSEL 1111 = 1.30 V); DVDD's operating range is 1.05 / 1.1 / 1.16 V (Table 634).
+_intent.node("C_DVDD", 1.30, "the RP2040's own core regulator output VREG_VOUT (U3 pin 45) to its DVDD pins 23 and 50: 1.10 V at power-on, "
+             "at most 1.30 V by VSEL (RP2040 datasheet 2.10.3, Table 189), 1.16 V the operating maximum (Table 634); one part's own "
+             "supply, as board D's PCM2912A outputs are declared", v_work=1.16)
+#   EPD_VCC: a RAIL, the e-paper's switched supply from +3V3 through Q5 to the panel's VDDIO and VDD (J_EPD 15 and 16) and to the boost
+#     inductor L1. No held document states the panel's own current; the driver it carries (UC8253c, PDi flyer E2370KS0C1) states 0.1 mA
+#     IVDD, 0.1 mA IVDDIO and 20.0 mA IVDDA operating maximum at VDD 3.0 V and 25 C (UltraChip UC8253c A0.6, DC characteristics, page 59; filed as a
+#     draft for v2/vendor/pdi/ by stream w4c), so the typical 30 mA is those 20.2 mA plus an INFERRED 10 mA for the boost's own inductor
+#     current, whose output power no held document states (to be read at bring-up). The peak is the boost's switch-current class the
+#     panel maker states for Q6 ('VGS<2.5V@Id=0.5A or less', PDi driving-circuit note Rev.02 page 4 note (1)): during the on-phase the
+#     inductor's current is this rail's. Q5 turns it on (EPD_PWR_n low, GPIO29).
+_intent.rail("EPD_VCC", 3.3, _EPD[0], _EPD[1], "Q5", loads={"J_EPD": 0.0202, "L1": 0.500}, converted=False, fed_from="+3V3", switch="Q5",
+             enable_net="EPD_PWR_n", budget=0.03,
+             note="the e-paper's switched supply: Q5 (AO3401A) from +3V3 to the panel's VDDIO and VDD and to the boost inductor L1. 30 mA "
+                  "typical = the UC8253c's 20.2 mA operating maximum (IVDD 0.1, IVDDIO 0.1, IVDDA 20.0 mA at 3.0 V and 25 C, UltraChip UC8253c A0.6 page 59) "
+                  "plus 10 mA INFERRED for the boost, read at bring-up; 0.5 A peak into L1 = the boost switch's current class (PDi "
+                  "Rev.02 page 4 note 1). Budget 3 percent as +3V3's: the driver's supply range is 2.3 to 3.6 V (UC8253c page 59)")
+# THE FEEDER COVERS THE CHILD (W4C-F5): power_path's feed sum judges typical currents only, so the peak is held here, where both
+# figures are written. A change to either rail that leaves +3V3 under its own loads plus EPD_VCC stops the generator.
+_f3, _fe = _intent.rail_amps("+3V3"), _intent.rail_amps("EPD_VCC")
+if _f3[0] + 1e-9 < _P3V3_OWN[0] + _fe[0] or _f3[1] + 1e-9 < _P3V3_OWN[1] + _fe[1]:
+    raise SystemExit("gen_sch_c: +3V3 declares %.3f / %.3f A and its own loads plus EPD_VCC take %.3f / %.3f A (W4C-F5): raise "
+                     "+3V3 with its child" % (_f3[0], _f3[1], _P3V3_OWN[0] + _fe[0], _P3V3_OWN[1] + _fe[1]))
+#   LED_RAIL_SW and LED_RAIL: RAILS, the lighting supply. +5V through the LIGHTING toggle's pole 1 (SW_LIGHT, open at BLACKOUT) is
+#     LED_RAIL_SW; Q1 (AO3401A), gated by Q2 from PANEL_PWM through Q1_G, makes LED_RAIL. Their current leaves through the lamps' series
+#     resistors, so those are the loads. The 3 mm lamps are hand-fitted panel parts with no part number (lcsc-allow.txt), so no maker
+#     states their forward voltage: the typical is the 8 mA per lamp the series resistors were chosen for (the LED table above) and
+#     6.4 mA for the two 470R lamps on LED_RAIL_SW (the EMCON lamp's note), and the peak takes every lamp lit with its forward drop
+#     at zero on +5V 5 percent high (5.25 V / R), the bound that needs no lamp sheet. The +5V rail's own SW_LIGHT load (0.35 A) lies
+#     between the two and is not moved here. The cathode side of each lamp is a node below (the expander's sink or a FET's drain).
+_V5HI = 5.25   # +5V at 5 percent high
+def _ohm_of(v):
+    m = re.match(r"^\s*(\d+(?:\.\d+)?)\s*([kR]?)", v)
+    return float(m.group(1)) * (1e3 if m.group(2) == "k" else 1.0)
+_on = lambda net: [p for p in P if p["lib"] == "Device" and p["sym"] == "R" and net in p["nets"].values()]
+_lamp_r = {p["ref"]: round(_V5HI / _ohm_of(p["value"]), 5) for p in _on("LED_RAIL")}
+_led_peak = round(sum(_lamp_r.values()), 4)
+_led_typ = round(0.008 * len(_lamp_r), 4)
+_sw_loads = {"Q1": _led_peak, "R47": round(_V5HI / 470.0, 5), "R39": round(_V5HI / 470.0, 5),
+             "R17": round(_V5HI / (2200.0 + 47.0), 5), "R15": round(_V5HI / 20000.0, 5)}   # R17 and R18 to Q2 while it conducts; R15 and R51
+if sorted(r_["ref"] for r_ in _on("LED_RAIL_SW")) != sorted(k for k in _sw_loads if k.startswith("R")):
+    raise SystemExit("gen_sch_c: LED_RAIL_SW's resistors changed; redeclare its loads: %s" % sorted(r_["ref"] for r_ in _on("LED_RAIL_SW")))
+_intent.rail("LED_RAIL_SW", 5.0, round(_led_typ + 2 * 0.0064 + 5.0 / 2247.0 + 5.0 / 20000.0, 4), round(sum(_sw_loads.values()), 4), "SW_LIGHT",
+             loads=_sw_loads, converted=False, fed_from="+5V", budget=0.05, always_on=True,
+             always_on_why="no enable line: the LIGHTING toggle SW_LIGHT (pole 1) switches it by hand, open at BLACKOUT, and nothing on any "
+                           "board drives it, so it can neither deadlock nor be sequenced; it follows +5V whenever the toggle is at DAY or NIGHT",
+             note="the lighting supply behind the LIGHTING toggle: Q1 to LED_RAIL, the EMCON lamp D22 through R47, the MAIN ring through R39, "
+                  "Q1's gate pull-up R17 and the sense divider R15 and R51. Typical: the lamps at their design currents; peak: every lamp "
+                  "with no forward drop at 5.25 V. Budget 5 percent as +5V's: every load is a lamp behind its own resistor")
+_intent.rail("LED_RAIL", 5.0, _led_typ, _led_peak, "Q1", loads=_lamp_r, converted=False, fed_from="LED_RAIL_SW", switch="Q1",
+             enable_net="Q1_G", budget=0.05,
+             note="the PWM'd lamp rail: Q1 (AO3401A) from LED_RAIL_SW, its gate Q1_G pulled down through R18 by Q2 from PANEL_PWM; %d "
+                  "lamps behind their series resistors, 8 mA each by design, %.3f A with every lamp's forward drop at zero at 5.25 V"
+                  % (len(_lamp_r), _led_peak))
+#   The lamps' feed and return nets and the pull-up lines: NODES at the voltage the circuit states. A lamp's anode sits behind its
+#     series resistor and can reach no more than its rail's 5.0 V; its cathode sits on an expander's open-drain sink (PCA9555, 5 V
+#     tolerant I/O, TI SCPS131J) or a FET's drain (Q3 2N7002, Q7 Si2300DS) and can reach no more than the anode; the lamp-test tie
+#     TX_LAMPTEST sits below TX_K through D17. Q1_G swings between LED_RAIL_SW and Q2's drain; RAIL_SENSE is the divider's middle.
+#     The switch lines idle at +3V3 through their 10k pull-ups (R10 to R13) and their toggles short them to ground.
+for _ref, _name, _col, _val in LEDS:
+    _intent.node(_name + "_A", 5.0, "lamp %s's anode (%s), behind its %s series resistor from LED_RAIL: it can only reach that rail" % (_ref, _name, _val))
+    _intent.node(_name + "_K", 5.0, "lamp %s's cathode on its expander's open-drain sink (PCA9555, 5 V tolerant I/O, SCPS131J): no higher than "
+                 "its anode, which can only reach LED_RAIL" % _ref)
+for _n, _why in (("TX_A", "the TX lamp D3's anode behind its 300R from LED_RAIL"),
+                 ("TX_K", "the TX lamp D3's cathode on Q3's drain (2N7002), with the lamp-test tie D17: no higher than D3's anode"),
+                 ("TX_LAMPTEST", "U2's P1.0 (PCA9555, 5 V tolerant I/O) below TX_K through the BAT54 D17: no higher than TX_K"),
+                 ("PIRING_A", "the PI button ring's anode behind its 300R from LED_RAIL"),
+                 ("TESTRING_A", "the TEST button ring's anode behind its 470R from LED_RAIL"),
+                 ("MAINRING_A", "the MAIN button ring's anode behind its 470R from LED_RAIL_SW"),
+                 ("EMCLAMP_A", "the hardware EMCON lamp D22's anode behind R47 470R from LED_RAIL_SW"),
+                 ("EMCLAMP_K", "the EMCON lamp D22's cathode on Q7's drain (Si2300DS, 30 V): no higher than D22's anode"),
+                 ("Q1_G", "Q1's gate between R17 from LED_RAIL_SW and R18 to Q2's drain: at most LED_RAIL_SW")):
+    _intent.node(_n, 5.0, _why + "; no part takes its supply from it")
+_intent.node("RAIL_SENSE", 2.65, "the LED rail sense divider's middle (R15 from LED_RAIL_SW, R51 to GND, 10k each): 5.25 V x 10.1 / 20 at "
+             "most, read by GPIO26 (ADC0); W4C-F1", v_work=2.65)
+for _n, _pu in (("ZEROIZE_SW", "R10"), ("TEST_SW", "R11"), ("LIGHT_DAY_n", "R12"), ("LIGHT_NIGHT_n", "R13")):
+    _intent.node(_n, 3.333, "a switch line idling at +3V3 through %s (10k), shorted to GND by its toggle or button: at most +3V3 at the "
+                 "TLV75533's 1 percent (TI SBVS320D); its readers take no supply from it" % _pu, v_work=3.333)
+#   EPD_RESE: a NODE, the boost's current-sense node between Q6's source and R43 (0.47 ohm) to GND, read by the panel's RESE input
+#     ('Current Sense Input for the Control Loop', PDi Rev.02 pin table). Its current is chopped, the switch's each on-phase. The panel
+#     maker states the parts on it: the 0.47 ohm 0603 1 percent 1/10 W resistor (BOM item 9) and the Si2300DS (component table), so it is
+#     declared the way the pump nodes above are, by the maker's reference, and no DC figure is invented for a chopped current.
+_intent.node("EPD_RESE", None, "the e-paper boost's current-sense node: Q6's source, R43 (0.47 ohm) to GND and the panel's RESE input; "
+             "a chopped switch current each on-phase, whose parts the panel maker states", vendor_reference=_PDI + "; and BOM item 9, "
+             "'RES 0.47 ohm 0603 1% 1/10W', for the sense resistor on this node (page 10)")
 # ----------------------------------------------------------------- emit (as B15)
 POWER = {"GND": ("power", "GND")}
 libsyms = kisch.libsyms; out = kisch.out; pf_n = kisch.pf_n   # the engine's objects, by reference
@@ -386,7 +537,7 @@ byref = {p["ref"]: p for p in P}
 def refs_matching(pred): return [p["ref"] for p in P if pred(p["ref"])]
 SECTIONS = [("RIBBON FROM B16, 5 V, 3.3 V LDO, USB AND BUS ESD, FLAGS", ["J_PANEL", "C1", "C2", "U5", "C3", "C4", "U6", "U7", "U8", "#FLG01", "#FLG02", "#FLG03", "#FLG04", "#FLG05"]),
             ("RP2040 PANEL CONTROLLER, FLASH, CRYSTAL, BOOTSEL, BUS PULL-UPS", ["U3", "U4", "Y1", "C5", "C6", "R1", "R2", "R3", "R4", "R5", "JP1"] + ["C%d" % k for k in range(7, 17)] + ["C42", "C43", "C44"] + ["TP1", "TP2", "TP3", "R6", "D18", "R7", "R8"]),
-            ("EXPANDERS 0x22 / 0x23, MODE INPUTS, EMCON AND ZEROIZE BUFFERS, STRAPS", ["U1", "U2", "C17", "C18"] + ["R%d" % k for k in range(9, 17)] + ["C%d" % k for k in range(19, 26)] + ["U9", "U12", "C39", "U13", "C40", "R46", "JP2"]),   # U9 is a buffer since 9 Sep 2026, "INVERTER" was stale; U12 and C39 added 26 Sep 2026; U13, C40 and R46 in round 8
+            ("EXPANDERS 0x22 / 0x23, MODE INPUTS, EMCON AND ZEROIZE BUFFERS, STRAPS", ["U1", "U2", "C17", "C18"] + ["R%d" % k for k in range(9, 17)] + ["C%d" % k for k in range(19, 26)] + ["U9", "U12", "C39", "U13", "C40", "R46", "R50", "R51", "JP2"]),   # U9 is a buffer since 9 Sep 2026, "INVERTER" was stale; U12 and C39 added 26 Sep 2026; U13, C40 and R46 in round 8; R50 (EQ-25) and R51 (W4C-F1) 27 Sep 2026
             ("LED RAIL, INDICATORS, TX LAMP, SWITCHES AND LEADS", ["SW_LIGHT", "Q1", "R17", "R18", "Q2", "R19", "R20", "TP4", "TP5"] + [p["ref"] for p in P if p["ref"].startswith("D") and p["ref"][1:].isdigit() and int(p["ref"][1:]) <= 17] + ["R%d" % k for k in range(21, 43)] + ["Q3", "U14", "C41", "R48", "R49", "Q7", "R47", "D22", "SW_MAIN", "SW_PI", "SW_TEST", "SW_SOS", "SW_EMCON", "SW_ZERO", "FB1", "FB2", "C26", "U10", "J_MAINSW", "FB3", "FB4", "C27", "U11", "J_PIJ2"]),
             ("E-PAPER ZIF AND THE PDi BOOST, SOUNDER, LIGHT SENSOR, CAMERA MOUNT", ["J_EPD", "Q5", "C28", "C29", "L1", "Q6", "D19", "C30", "C31", "D20", "D21", "C32", "C33", "C34", "C35", "C36", "C37", "BZ1", "Q4", "U_LIGHT", "C38", "CAM_H1", "CAM_H2", "J_HSJ1", "J_HSJ2"])]
 placed_refs = {r_ for _, rs in SECTIONS for r_ in rs}

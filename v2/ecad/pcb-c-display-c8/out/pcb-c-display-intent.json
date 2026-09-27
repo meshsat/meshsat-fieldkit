@@ -1,6 +1,6 @@
 {
  "board": "pcb-c-display",
- "written": "2026-09-26 23:18",
+ "written": "2026-09-27 15:35",
  "bypass": [
   {
    "cap": "C7",
@@ -217,8 +217,8 @@
   },
   "+3V3": {
    "volts": 3.3,
-   "amps_typ": 0.12,
-   "amps_peak": 0.2,
+   "amps_typ": 0.149,
+   "amps_peak": 0.72,
    "source": "U5",
    "loads": {
     "U1": 0.04,
@@ -233,16 +233,83 @@
     "U9": 0.002,
     "U12": 0.002,
     "U_LIGHT": 0.02,
-    "Q5": 0.001,
+    "Q5": 0.03,
     "U13": 0.002,
     "U14": 0.002
    },
-   "note": "the panel's logic 3.3 V from the LDO U5: the RP2040 controller, its QSPI flash, the two expanders, the buffers, the EMCON lamp's gate, the light sensor and the e-paper's supply switch. Budget 3 percent, because every load is a logic part with a wide supply range",
+   "note": "the panel's logic 3.3 V from the LDO U5: the RP2040 controller, its QSPI flash, the two expanders, the buffers, the EMCON lamp's gate, the light sensor and the e-paper's supply switch. Budget 3 percent, because every load is a logic part with a wide supply range. Since 27 September 2026 (W4C-F5) the figures cover the child EPD_VCC: its own loads' 0.119 A typical and 0.199 A peak plus EPD_VCC's 0.030 and 0.521 A, because within each boost on-phase (about 1.6 us) Q5 carries most of the inductor's current (C28 behind Q5 is a 0.40 us time constant). U5 is rated 500 mA (TI SBVS320D): the excess at the peak is 0.35 uC per on-phase, 24 mV on C2, C28 and C29 at most; U5's average through a refresh is an open item read at bring-up",
    "budget": 0.03,
    "share": 0.0075,
    "always_on": true,
    "always_on_why": "U5 is a TLV75533 whose EN pin is tied to its own input, so this rail follows the 5 V that arrives on the ribbon and has no switch of its own",
    "fed_from": "+5V"
+  },
+  "EPD_VCC": {
+   "volts": 3.3,
+   "amps_typ": 0.03,
+   "amps_peak": 0.521,
+   "source": "Q5",
+   "loads": {
+    "J_EPD": 0.0202,
+    "L1": 0.5
+   },
+   "note": "the e-paper's switched supply: Q5 (AO3401A) from +3V3 to the panel's VDDIO and VDD and to the boost inductor L1. 30 mA typical = the UC8253c's 20.2 mA operating maximum (IVDD 0.1, IVDDIO 0.1, IVDDA 20.0 mA at 3.0 V and 25 C, UltraChip UC8253c A0.6 page 59) plus 10 mA INFERRED for the boost, read at bring-up; 0.5 A peak into L1 = the boost switch's current class (PDi Rev.02 page 4 note 1). Budget 3 percent as +3V3's: the driver's supply range is 2.3 to 3.6 V (UC8253c page 59)",
+   "budget": 0.03,
+   "switch": "Q5",
+   "enable_net": "EPD_PWR_n",
+   "converted": false,
+   "fed_from": "+3V3"
+  },
+  "LED_RAIL_SW": {
+   "volts": 5.0,
+   "amps_typ": 0.1593,
+   "amps_peak": 0.4619,
+   "source": "SW_LIGHT",
+   "loads": {
+    "Q1": 0.437,
+    "R47": 0.01117,
+    "R39": 0.01117,
+    "R17": 0.00234,
+    "R15": 0.00026
+   },
+   "note": "the lighting supply behind the LIGHTING toggle: Q1 to LED_RAIL, the EMCON lamp D22 through R47, the MAIN ring through R39, Q1's gate pull-up R17 and the sense divider R15 and R51. Typical: the lamps at their design currents; peak: every lamp with no forward drop at 5.25 V. Budget 5 percent as +5V's: every load is a lamp behind its own resistor",
+   "budget": 0.05,
+   "always_on": true,
+   "always_on_why": "no enable line: the LIGHTING toggle SW_LIGHT (pole 1) switches it by hand, open at BLACKOUT, and nothing on any board drives it, so it can neither deadlock nor be sequenced; it follows +5V whenever the toggle is at DAY or NIGHT",
+   "converted": false,
+   "fed_from": "+5V"
+  },
+  "LED_RAIL": {
+   "volts": 5.0,
+   "amps_typ": 0.144,
+   "amps_peak": 0.437,
+   "source": "Q1",
+   "loads": {
+    "R21": 0.0175,
+    "R22": 0.0175,
+    "R23": 0.0175,
+    "R24": 0.02917,
+    "R25": 0.02917,
+    "R26": 0.02917,
+    "R27": 0.02917,
+    "R28": 0.02917,
+    "R29": 0.02917,
+    "R30": 0.02917,
+    "R31": 0.0175,
+    "R32": 0.02917,
+    "R33": 0.02917,
+    "R34": 0.02917,
+    "R35": 0.02917,
+    "R36": 0.0175,
+    "R40": 0.0175,
+    "R41": 0.01117
+   },
+   "note": "the PWM'd lamp rail: Q1 (AO3401A) from LED_RAIL_SW, its gate Q1_G pulled down through R18 by Q2 from PANEL_PWM; 18 lamps behind their series resistors, 8 mA each by design, 0.437 A with every lamp's forward drop at zero at 5.25 V",
+   "budget": 0.05,
+   "switch": "Q1",
+   "enable_net": "Q1_G",
+   "converted": false,
+   "fed_from": "LED_RAIL_SW"
   }
  },
  "nodes": {
@@ -309,6 +376,249 @@
    "v_max": 5.0,
    "v_min": 0.0,
    "basis": "the sounder's low side between BZ1 and Q4's drain: it sits at the +5V rail while the FET is off and at its on-state drop while it conducts"
+  },
+  "TX_INHIBIT_n": {
+   "v_max": 3.333,
+   "v_min": 0.0,
+   "basis": "the hardware EMCON line at its source: R14 (2.2k 1 percent) to +3V3 and SW_EMCON to GND, R50 (10k) and the three consumer pull-downs to GND; at most +3V3 at the TLV75533's 1 percent (TI SBVS320D, 'Output accuracy: 1%'), and no part takes its supply from it (U9, U14 and the far gates read it)",
+   "v_work": 3.333
+  },
+  "C_DVDD": {
+   "v_max": 1.3,
+   "v_min": 0.0,
+   "basis": "the RP2040's own core regulator output VREG_VOUT (U3 pin 45) to its DVDD pins 23 and 50: 1.10 V at power-on, at most 1.30 V by VSEL (RP2040 datasheet 2.10.3, Table 189), 1.16 V the operating maximum (Table 634); one part's own supply, as board D's PCM2912A outputs are declared",
+   "v_work": 1.16
+  },
+  "MWARN_A": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D1's anode (MWARN), behind its 300R series resistor from LED_RAIL: it can only reach that rail"
+  },
+  "MWARN_K": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D1's cathode on its expander's open-drain sink (PCA9555, 5 V tolerant I/O, SCPS131J): no higher than its anode, which can only reach LED_RAIL"
+  },
+  "MCAUT_A": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D2's anode (MCAUT), behind its 300R series resistor from LED_RAIL: it can only reach that rail"
+  },
+  "MCAUT_K": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D2's cathode on its expander's open-drain sink (PCA9555, 5 V tolerant I/O, SCPS131J): no higher than its anode, which can only reach LED_RAIL"
+  },
+  "SOSACT_A": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D4's anode (SOSACT), behind its 300R series resistor from LED_RAIL: it can only reach that rail"
+  },
+  "SOSACT_K": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D4's cathode on its expander's open-drain sink (PCA9555, 5 V tolerant I/O, SCPS131J): no higher than its anode, which can only reach LED_RAIL"
+  },
+  "SAT_A": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D5's anode (SAT), behind its 180R series resistor from LED_RAIL: it can only reach that rail"
+  },
+  "SAT_K": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D5's cathode on its expander's open-drain sink (PCA9555, 5 V tolerant I/O, SCPS131J): no higher than its anode, which can only reach LED_RAIL"
+  },
+  "MESH_A": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D6's anode (MESH), behind its 180R series resistor from LED_RAIL: it can only reach that rail"
+  },
+  "MESH_K": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D6's cathode on its expander's open-drain sink (PCA9555, 5 V tolerant I/O, SCPS131J): no higher than its anode, which can only reach LED_RAIL"
+  },
+  "LTE_A": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D7's anode (LTE), behind its 180R series resistor from LED_RAIL: it can only reach that rail"
+  },
+  "LTE_K": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D7's cathode on its expander's open-drain sink (PCA9555, 5 V tolerant I/O, SCPS131J): no higher than its anode, which can only reach LED_RAIL"
+  },
+  "GPS_A": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D8's anode (GPS), behind its 180R series resistor from LED_RAIL: it can only reach that rail"
+  },
+  "GPS_K": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D8's cathode on its expander's open-drain sink (PCA9555, 5 V tolerant I/O, SCPS131J): no higher than its anode, which can only reach LED_RAIL"
+  },
+  "SHORE_A": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D9's anode (SHORE), behind its 180R series resistor from LED_RAIL: it can only reach that rail"
+  },
+  "SHORE_K": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D9's cathode on its expander's open-drain sink (PCA9555, 5 V tolerant I/O, SCPS131J): no higher than its anode, which can only reach LED_RAIL"
+  },
+  "CHG_A": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D10's anode (CHG), behind its 180R series resistor from LED_RAIL: it can only reach that rail"
+  },
+  "CHG_K": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D10's cathode on its expander's open-drain sink (PCA9555, 5 V tolerant I/O, SCPS131J): no higher than its anode, which can only reach LED_RAIL"
+  },
+  "MSG_A": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D11's anode (MSG), behind its 180R series resistor from LED_RAIL: it can only reach that rail"
+  },
+  "MSG_K": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D11's cathode on its expander's open-drain sink (PCA9555, 5 V tolerant I/O, SCPS131J): no higher than its anode, which can only reach LED_RAIL"
+  },
+  "BAT1_A": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D12's anode (BAT1), behind its 300R series resistor from LED_RAIL: it can only reach that rail"
+  },
+  "BAT1_K": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D12's cathode on its expander's open-drain sink (PCA9555, 5 V tolerant I/O, SCPS131J): no higher than its anode, which can only reach LED_RAIL"
+  },
+  "BAT2_A": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D13's anode (BAT2), behind its 180R series resistor from LED_RAIL: it can only reach that rail"
+  },
+  "BAT2_K": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D13's cathode on its expander's open-drain sink (PCA9555, 5 V tolerant I/O, SCPS131J): no higher than its anode, which can only reach LED_RAIL"
+  },
+  "BAT3_A": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D14's anode (BAT3), behind its 180R series resistor from LED_RAIL: it can only reach that rail"
+  },
+  "BAT3_K": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D14's cathode on its expander's open-drain sink (PCA9555, 5 V tolerant I/O, SCPS131J): no higher than its anode, which can only reach LED_RAIL"
+  },
+  "BAT4_A": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D15's anode (BAT4), behind its 180R series resistor from LED_RAIL: it can only reach that rail"
+  },
+  "BAT4_K": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D15's cathode on its expander's open-drain sink (PCA9555, 5 V tolerant I/O, SCPS131J): no higher than its anode, which can only reach LED_RAIL"
+  },
+  "BAT5_A": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D16's anode (BAT5), behind its 180R series resistor from LED_RAIL: it can only reach that rail"
+  },
+  "BAT5_K": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "lamp D16's cathode on its expander's open-drain sink (PCA9555, 5 V tolerant I/O, SCPS131J): no higher than its anode, which can only reach LED_RAIL"
+  },
+  "TX_A": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "the TX lamp D3's anode behind its 300R from LED_RAIL; no part takes its supply from it"
+  },
+  "TX_K": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "the TX lamp D3's cathode on Q3's drain (2N7002), with the lamp-test tie D17: no higher than D3's anode; no part takes its supply from it"
+  },
+  "TX_LAMPTEST": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "U2's P1.0 (PCA9555, 5 V tolerant I/O) below TX_K through the BAT54 D17: no higher than TX_K; no part takes its supply from it"
+  },
+  "PIRING_A": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "the PI button ring's anode behind its 300R from LED_RAIL; no part takes its supply from it"
+  },
+  "TESTRING_A": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "the TEST button ring's anode behind its 470R from LED_RAIL; no part takes its supply from it"
+  },
+  "MAINRING_A": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "the MAIN button ring's anode behind its 470R from LED_RAIL_SW; no part takes its supply from it"
+  },
+  "EMCLAMP_A": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "the hardware EMCON lamp D22's anode behind R47 470R from LED_RAIL_SW; no part takes its supply from it"
+  },
+  "EMCLAMP_K": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "the EMCON lamp D22's cathode on Q7's drain (Si2300DS, 30 V): no higher than D22's anode; no part takes its supply from it"
+  },
+  "Q1_G": {
+   "v_max": 5.0,
+   "v_min": 0.0,
+   "basis": "Q1's gate between R17 from LED_RAIL_SW and R18 to Q2's drain: at most LED_RAIL_SW; no part takes its supply from it"
+  },
+  "RAIL_SENSE": {
+   "v_max": 2.65,
+   "v_min": 0.0,
+   "basis": "the LED rail sense divider's middle (R15 from LED_RAIL_SW, R51 to GND, 10k each): 5.25 V x 10.1 / 20 at most, read by GPIO26 (ADC0); W4C-F1",
+   "v_work": 2.65
+  },
+  "ZEROIZE_SW": {
+   "v_max": 3.333,
+   "v_min": 0.0,
+   "basis": "a switch line idling at +3V3 through R10 (10k), shorted to GND by its toggle or button: at most +3V3 at the TLV75533's 1 percent (TI SBVS320D); its readers take no supply from it",
+   "v_work": 3.333
+  },
+  "TEST_SW": {
+   "v_max": 3.333,
+   "v_min": 0.0,
+   "basis": "a switch line idling at +3V3 through R11 (10k), shorted to GND by its toggle or button: at most +3V3 at the TLV75533's 1 percent (TI SBVS320D); its readers take no supply from it",
+   "v_work": 3.333
+  },
+  "LIGHT_DAY_n": {
+   "v_max": 3.333,
+   "v_min": 0.0,
+   "basis": "a switch line idling at +3V3 through R12 (10k), shorted to GND by its toggle or button: at most +3V3 at the TLV75533's 1 percent (TI SBVS320D); its readers take no supply from it",
+   "v_work": 3.333
+  },
+  "LIGHT_NIGHT_n": {
+   "v_max": 3.333,
+   "v_min": 0.0,
+   "basis": "a switch line idling at +3V3 through R13 (10k), shorted to GND by its toggle or button: at most +3V3 at the TLV75533's 1 percent (TI SBVS320D); its readers take no supply from it",
+   "v_work": 3.333
+  },
+  "EPD_RESE": {
+   "v_max": null,
+   "v_min": 0.0,
+   "basis": "the e-paper boost's current-sense node: Q6's source, R43 (0.47 ohm) to GND and the panel's RESE input; a chopped switch current each on-phase, whose parts the panel maker states",
+   "vendor_reference": "PDI driving-circuit note rev 02, the components table and its bill of materials: 'Capacitors 25V 0603', 'CAP 1uF 25V 0603' and 'CAP 4.7uF 25V 0603' for this exact pump and stabilising network (v2/vendor/pdi/pdi-epd-driving-circuit-rev02.pdf). Every capacitor this board puts on that net is the 25 V 0603 part the panel maker specifies there: 1 uF on the stabilising pins and 4.7 uF for the pump capacitor from the switch node to the pump node, as the page 3 figure labels it; and BOM item 9, 'RES 0.47 ohm 0603 1% 1/10W', for the sense resistor on this node (page 10)"
   }
  },
  "pair_classes": {

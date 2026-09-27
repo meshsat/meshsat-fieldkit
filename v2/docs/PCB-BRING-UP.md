@@ -155,6 +155,9 @@ fault from one that reads low.
 | step | rail | expect | at | what it feeds |
 |---|---|---|---|---|
 | 1 | +3V3 | 3.30 V (3.13 to 3.46) | U5 | Q5, U1, U10, U11, U12, U13 |
+| 2 | EPD_VCC | 3.30 V (3.13 to 3.46) | Q5 | J_EPD, L1 |
+| 3 | LED_RAIL_SW | 5.00 V (4.75 to 5.25) | SW_LIGHT | Q1, R15, R17, R39, R47 |
+| 4 | LED_RAIL | 5.00 V (4.75 to 5.25) | Q1 | R21, R22, R23, R24, R25, R26 |
 
 ## Board D
 

@@ -1,0 +1,155 @@
+    pcb-a-power-a23    check_contracts          main PASS of 99 {"fail": 0, "pass": 99, "undecided": 0}
+    pcb-a-power-a23    check_contracts_a        main PASS of 34 {"fail": 0, "pass": 34, "undecided": 0}
+    pcb-a-power-a23    check_contracts_b        main PASS of 60 {"fail": 0, "pass": 60, "undecided": 0}
+    pcb-a-power-a23    check_contracts_c        main PASS of 7 {"fail": 0, "pass": 7, "undecided": 0}
+    pcb-a-power-a23    check_contracts_d        main PASS of 11 {"fail": 0, "pass": 11, "undecided": 0}
+    pcb-a-power-a23    check_contracts_e        main PASS of 14 {"fail": 0, "pass": 14, "undecided": 0}
+    pcb-a-power-a23    check_contracts_p        main PASS of 9 {"fail": 0, "pass": 9, "undecided": 0}
+    pcb-a-power-a23    clock_check              main INCONCLUSIVE of 0 {}
+    pcb-a-power-a23    derate                   main PASS of 268 {"judged": 268, "unrated_parts": 128}
+    pcb-a-power-a23    edge_length              main INCONCLUSIVE of 290 {"undecided_nets": 114}
+    pcb-a-power-a23    energy_chain             main PASS of 98 {"fail": 0}
+    pcb-a-power-a23    energy_chain_a           main PASS of 4 {"fail": 0}
+    pcb-a-power-a23    energy_chain_b           main PASS of 3 {"fail": 0}
+    pcb-a-power-a23    energy_chain_e           main PASS of 3 {"fail": 0}
+    pcb-a-power-a23    energy_chain_e5          main PASS of 1 {"fail": 0}
+    pcb-a-power-a23    energy_chain_p           main PASS of 3 {"fail": 0}
+    pcb-a-power-a23    erc_gate                 main PASS of 1554 {"blocking": 0, "violations": 1554}
+*   pcb-a-power-a23    inhibit_chain_a          main FAIL of 9 {"fail": 1, "pass": 6, "undecided": 2}
+                                                cand INCONCLUSIVE of 9 {"fail": 0, "pass": 7, "undecided": 2}
+*   pcb-a-power-a23    inhibit_chain_b          main FAIL of 20 {"fail": 11, "pass": 6, "undecided": 3}
+                                                cand FAIL of 20 {"fail": 10, "pass": 7, "undecided": 3}
+*   pcb-a-power-a23    inhibit_chain_c          main FAIL of 6 {"fail": 1, "pass": 5, "undecided": 0}
+                                                cand PASS of 6 {"fail": 0, "pass": 6, "undecided": 0}
+*   pcb-a-power-a23    inhibit_chain_d          main FAIL of 8 {"fail": 2, "pass": 6, "undecided": 0}
+                                                cand INCONCLUSIVE of 8 {"fail": 0, "pass": 7, "undecided": 1}
+    pcb-a-power-a23    inhibit_chain_e          main PASS of 1 {"fail": 0, "pass": 1, "undecided": 0}
+    pcb-a-power-a23    inhibit_chain_p          main PASS of 1 {"fail": 0, "pass": 1, "undecided": 0}
+    pcb-a-power-a23    intent_rails             main PASS of 35 {"declared_nodes": 56, "declared_rails": 34, "fail": 0, "undecided": 0, "undeclared": 0}
+    pcb-a-power-a23    interfaces               main PASS of 12 {}
+    pcb-a-power-a23    interfaces_a             main PASS of 1 {}
+    pcb-a-power-a23    interfaces_b             main PASS of 7 {}
+    pcb-a-power-a23    interfaces_c             main PASS of 1 {}
+    pcb-a-power-a23    interfaces_d             main PASS of 1 {}
+    pcb-a-power-a23    interfaces_e             main PASS of 1 {}
+    pcb-a-power-a23    interfaces_e5            main PASS of 0 {}
+    pcb-a-power-a23    interfaces_p             main PASS of 1 {}
+    pcb-a-power-a23    pin_map_lands_a          main PASS of 611 {"judged": 611}
+    pcb-a-power-a23    port_protect             main PASS of 26 {}
+    pcb-a-power-a23    port_protect_a           main PASS of 26 {}
+    pcb-a-power-a23    power_sequence           main PASS of 34 {"always_on": 4, "rails": 34}
+    pcb-a-power-a23    safe_lines               main PASS of 6 {}
+    pcb-a-power-a23    safe_lines_a             main PASS of 6 {}
+    pcb-b-compute-b19  check_contracts          main PASS of 99 {"fail": 0, "pass": 99, "undecided": 0}
+    pcb-b-compute-b19  check_contracts_a        main PASS of 34 {"fail": 0, "pass": 34, "undecided": 0}
+    pcb-b-compute-b19  check_contracts_b        main PASS of 60 {"fail": 0, "pass": 60, "undecided": 0}
+    pcb-b-compute-b19  check_contracts_c        main PASS of 7 {"fail": 0, "pass": 7, "undecided": 0}
+    pcb-b-compute-b19  check_contracts_d        main PASS of 11 {"fail": 0, "pass": 11, "undecided": 0}
+    pcb-b-compute-b19  check_contracts_e        main PASS of 14 {"fail": 0, "pass": 14, "undecided": 0}
+    pcb-b-compute-b19  check_contracts_p        main PASS of 9 {"fail": 0, "pass": 9, "undecided": 0}
+    pcb-b-compute-b19  clock_check              main PASS of 7 {"undeclared": 0}
+    pcb-b-compute-b19  derate                   main PASS of 240 {"judged": 240, "unrated_parts": 425}
+    pcb-b-compute-b19  edge_length              main INCONCLUSIVE of 882 {"undecided_nets": 532}
+    pcb-b-compute-b19  energy_chain             main PASS of 98 {"fail": 0}
+    pcb-b-compute-b19  energy_chain_a           main PASS of 4 {"fail": 0}
+    pcb-b-compute-b19  energy_chain_b           main PASS of 3 {"fail": 0}
+    pcb-b-compute-b19  energy_chain_e           main PASS of 3 {"fail": 0}
+    pcb-b-compute-b19  energy_chain_e5          main PASS of 1 {"fail": 0}
+    pcb-b-compute-b19  energy_chain_p           main PASS of 3 {"fail": 0}
+    pcb-b-compute-b19  erc_gate                 main PASS of 2912 {"blocking": 0, "violations": 2912}
+*   pcb-b-compute-b19  inhibit_chain_a          main FAIL of 9 {"fail": 1, "pass": 6, "undecided": 2}
+                                                cand INCONCLUSIVE of 9 {"fail": 0, "pass": 7, "undecided": 2}
+*   pcb-b-compute-b19  inhibit_chain_b          main FAIL of 20 {"fail": 11, "pass": 6, "undecided": 3}
+                                                cand FAIL of 20 {"fail": 10, "pass": 7, "undecided": 3}
+*   pcb-b-compute-b19  inhibit_chain_c          main FAIL of 6 {"fail": 1, "pass": 5, "undecided": 0}
+                                                cand PASS of 6 {"fail": 0, "pass": 6, "undecided": 0}
+*   pcb-b-compute-b19  inhibit_chain_d          main FAIL of 8 {"fail": 2, "pass": 6, "undecided": 0}
+                                                cand INCONCLUSIVE of 8 {"fail": 0, "pass": 7, "undecided": 1}
+    pcb-b-compute-b19  inhibit_chain_e          main PASS of 1 {"fail": 0, "pass": 1, "undecided": 0}
+    pcb-b-compute-b19  inhibit_chain_p          main PASS of 1 {"fail": 0, "pass": 1, "undecided": 0}
+    pcb-b-compute-b19  intent_rails             main PASS of 59 {"declared_nodes": 35, "declared_rails": 58, "fail": 0, "undecided": 0, "undeclared": 0}
+    pcb-b-compute-b19  interfaces               main PASS of 12 {}
+    pcb-b-compute-b19  interfaces_a             main PASS of 1 {}
+    pcb-b-compute-b19  interfaces_b             main PASS of 7 {}
+    pcb-b-compute-b19  interfaces_c             main PASS of 1 {}
+    pcb-b-compute-b19  interfaces_d             main PASS of 1 {}
+    pcb-b-compute-b19  interfaces_e             main PASS of 1 {}
+    pcb-b-compute-b19  interfaces_e5            main PASS of 0 {}
+    pcb-b-compute-b19  interfaces_p             main PASS of 1 {}
+    pcb-b-compute-b19  pin_map_lands_b          main PASS of 1270 {"judged": 1270}
+    pcb-b-compute-b19  port_protect             main PASS of 17 {}
+    pcb-b-compute-b19  port_protect_b           main PASS of 17 {}
+    pcb-b-compute-b19  power_sequence           main PASS of 58 {"always_on": 29, "rails": 58}
+    pcb-b-compute-b19  safe_lines               main PASS of 5 {}
+    pcb-b-compute-b19  safe_lines_b             main PASS of 5 {}
+    pcb-c-display-c8   check_contracts          main PASS of 99 {"fail": 0, "pass": 99, "undecided": 0}
+    pcb-c-display-c8   check_contracts_a        main PASS of 34 {"fail": 0, "pass": 34, "undecided": 0}
+    pcb-c-display-c8   check_contracts_b        main PASS of 60 {"fail": 0, "pass": 60, "undecided": 0}
+    pcb-c-display-c8   check_contracts_c        main PASS of 7 {"fail": 0, "pass": 7, "undecided": 0}
+    pcb-c-display-c8   check_contracts_d        main PASS of 11 {"fail": 0, "pass": 11, "undecided": 0}
+    pcb-c-display-c8   check_contracts_e        main PASS of 14 {"fail": 0, "pass": 14, "undecided": 0}
+    pcb-c-display-c8   check_contracts_p        main PASS of 9 {"fail": 0, "pass": 9, "undecided": 0}
+    pcb-c-display-c8   clock_check              main PASS of 1 {"undeclared": 0}
+    pcb-c-display-c8   derate                   main PASS of 16 {"judged": 16, "unrated_parts": 59}
+    pcb-c-display-c8   edge_length              main INCONCLUSIVE of 134 {"undecided_nets": 33}
+*   pcb-c-display-c8   erc_gate                 main PASS of 350 {"blocking": 0, "violations": 350}
+                                                cand PASS of 352 {"blocking": 0, "violations": 352}
+*   pcb-c-display-c8   inhibit_chain_a          main FAIL of 9 {"fail": 1, "pass": 6, "undecided": 2}
+                                                cand INCONCLUSIVE of 9 {"fail": 0, "pass": 7, "undecided": 2}
+*   pcb-c-display-c8   inhibit_chain_b          main FAIL of 20 {"fail": 11, "pass": 6, "undecided": 3}
+                                                cand FAIL of 20 {"fail": 10, "pass": 7, "undecided": 3}
+*   pcb-c-display-c8   inhibit_chain_c          main FAIL of 6 {"fail": 1, "pass": 5, "undecided": 0}
+                                                cand PASS of 6 {"fail": 0, "pass": 6, "undecided": 0}
+*   pcb-c-display-c8   inhibit_chain_d          main FAIL of 8 {"fail": 2, "pass": 6, "undecided": 0}
+                                                cand INCONCLUSIVE of 8 {"fail": 0, "pass": 7, "undecided": 1}
+    pcb-c-display-c8   inhibit_chain_e          main PASS of 1 {"fail": 0, "pass": 1, "undecided": 0}
+    pcb-c-display-c8   inhibit_chain_p          main PASS of 1 {"fail": 0, "pass": 1, "undecided": 0}
+*   pcb-c-display-c8   intent_rails             main FAIL of 7 {"declared_nodes": 1, "declared_rails": 2, "fail": 5, "undecided": 11, "undeclared": 4}
+                                                cand PASS of 6 {"declared_nodes": 25, "declared_rails": 5, "fail": 0, "undecided": 0, "undeclared": 0}
+    pcb-c-display-c8   interfaces               main PASS of 12 {}
+    pcb-c-display-c8   interfaces_a             main PASS of 1 {}
+    pcb-c-display-c8   interfaces_b             main PASS of 7 {}
+    pcb-c-display-c8   interfaces_c             main PASS of 1 {}
+    pcb-c-display-c8   interfaces_d             main PASS of 1 {}
+    pcb-c-display-c8   interfaces_e             main PASS of 1 {}
+    pcb-c-display-c8   interfaces_e5            main PASS of 0 {}
+    pcb-c-display-c8   interfaces_p             main PASS of 1 {}
+*   pcb-c-display-c8   pin_map_lands_c          main PASS of 217 {"judged": 217}
+                                                cand PASS of 219 {"judged": 219}
+    pcb-c-display-c8   port_protect             main PASS of 4 {}
+    pcb-c-display-c8   port_protect_c           main PASS of 4 {}
+    pcb-d-aprs-d9      check_contracts          main PASS of 99 {"fail": 0, "pass": 99, "undecided": 0}
+    pcb-d-aprs-d9      check_contracts_a        main PASS of 34 {"fail": 0, "pass": 34, "undecided": 0}
+    pcb-d-aprs-d9      check_contracts_b        main PASS of 60 {"fail": 0, "pass": 60, "undecided": 0}
+    pcb-d-aprs-d9      check_contracts_c        main PASS of 7 {"fail": 0, "pass": 7, "undecided": 0}
+    pcb-d-aprs-d9      check_contracts_d        main PASS of 11 {"fail": 0, "pass": 11, "undecided": 0}
+    pcb-d-aprs-d9      check_contracts_e        main PASS of 14 {"fail": 0, "pass": 14, "undecided": 0}
+    pcb-d-aprs-d9      check_contracts_p        main PASS of 9 {"fail": 0, "pass": 9, "undecided": 0}
+    pcb-d-aprs-d9      clock_check              main PASS of 2 {"undeclared": 0}
+    pcb-d-aprs-d9      derate                   main PASS of 19 {"judged": 19, "unrated_parts": 76}
+    pcb-d-aprs-d9      edge_length              main INCONCLUSIVE of 135 {"undecided_nets": 27}
+    pcb-d-aprs-d9      erc_gate                 main PASS of 447 {"blocking": 0, "violations": 447}
+*   pcb-d-aprs-d9      inhibit_chain_a          main FAIL of 9 {"fail": 1, "pass": 6, "undecided": 2}
+                                                cand INCONCLUSIVE of 9 {"fail": 0, "pass": 7, "undecided": 2}
+*   pcb-d-aprs-d9      inhibit_chain_b          main FAIL of 20 {"fail": 11, "pass": 6, "undecided": 3}
+                                                cand FAIL of 20 {"fail": 10, "pass": 7, "undecided": 3}
+*   pcb-d-aprs-d9      inhibit_chain_c          main FAIL of 6 {"fail": 1, "pass": 5, "undecided": 0}
+                                                cand PASS of 6 {"fail": 0, "pass": 6, "undecided": 0}
+*   pcb-d-aprs-d9      inhibit_chain_d          main FAIL of 8 {"fail": 2, "pass": 6, "undecided": 0}
+                                                cand INCONCLUSIVE of 8 {"fail": 0, "pass": 7, "undecided": 1}
+    pcb-d-aprs-d9      inhibit_chain_e          main PASS of 1 {"fail": 0, "pass": 1, "undecided": 0}
+    pcb-d-aprs-d9      inhibit_chain_p          main PASS of 1 {"fail": 0, "pass": 1, "undecided": 0}
+    pcb-d-aprs-d9      intent_rails             main INCONCLUSIVE of 7 {"declared_nodes": 13, "declared_rails": 6, "fail": 0, "undecided": 1, "undeclared": 0}
+    pcb-d-aprs-d9      interfaces               main PASS of 12 {}
+    pcb-d-aprs-d9      interfaces_a             main PASS of 1 {}
+    pcb-d-aprs-d9      interfaces_b             main PASS of 7 {}
+    pcb-d-aprs-d9      interfaces_c             main PASS of 1 {}
+    pcb-d-aprs-d9      interfaces_d             main PASS of 1 {}
+    pcb-d-aprs-d9      interfaces_e             main PASS of 1 {}
+    pcb-d-aprs-d9      interfaces_e5            main PASS of 0 {}
+    pcb-d-aprs-d9      interfaces_p             main PASS of 1 {}
+    pcb-d-aprs-d9      pin_map_lands_d          main PASS of 245 {"judged": 245}
+    pcb-d-aprs-d9      port_protect             main PASS of 21 {}
+    pcb-d-aprs-d9      port_protect_d           main PASS of 21 {}
+    pcb-d-aprs-d9      safe_lines               main PASS of 2 {}
+    pcb-d-aprs-d9      safe_lines_d             main PASS of 2 {}

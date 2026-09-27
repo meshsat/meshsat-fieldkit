@@ -1,0 +1,89 @@
+Stream w4c pass 2 (27 September 2026): integration steps 1 to 5 of README.md applied in throwaway clones of main 91894cd7 and of main 62f26a44 on the KiCad box (KiCad 9.0.9, pcbnew importable), then the tests that read the touched files. Box driver: w4c-box2/t_run.sh (copied to parity/ as t_run.sh); diagrams check: d_check.sh.
+Test modules (70, every test_*.py that names a touched file or reads v2/docs): test_agent_contract test_artefact_recording test_board_gates test_board_hold test_carry_placed test_certify_identity test_certify_mismatch test_conductor_current test_contract_attribution test_decision_register test_driver_hygiene test_energy_chain test_envelope_data test_erc_gate test_evidence_class test_final_gate test_gate_crash_guard test_gate_fixtures test_handover_pack test_hardset test_interfaces test_kb_isolation test_kelvin_check test_kisch_tvs test_last_net test_layer_change_clear test_layout_entry_stages test_netclass test_netlist_parts test_netlist_provenance test_open_pairs test_order_codes test_order_readiness test_owner_decisions test_pack_protection test_pack_secondary_ts test_pair_class_clear test_pair_gate test_pair_legality test_port_protect test_power_path test_provenance_bundle test_rail_barrels test_rail_crossings test_rail_loads test_rails_census test_rails_netlist test_region_fit test_requirements test_reserved test_retake_schematic_phase test_retired_boards test_return_rules test_review_packet test_rule_gate_mapping test_rules_registry test_rules_status test_rule_windows test_sch_prov test_sense_reach test_sensitive_nodes test_series_segment test_signal_class test_stackup_gate test_swallowed_code test_track_current test_tx_inhibit test_tx_inhibit_split_guard test_verdict_channel test_via_current 
+Command: v2/ecad/tools/tests/run.py <those names>
+
+== main 91894cd7
+tests: 1258 passed, 0 failed, 10 skipped
+Skipped (for want of gitignored or box-absent evidence):
+  test_decision_register.t_a_decision_the_register_calls_open_is_not_one_the_rule_already_passes_everywhere SKIP no rule audit in this tree
+  test_decision_register.t_the_page_is_generated_and_not_hand_maintained SKIP this tree carries no assembly_set or final_gate, so the page's 'what it holds' half is computed from less evidence than th
+  test_open_pairs.t_every_open_pair_of_the_tree_gets_exactly_one_category SKIP this tree holds no rule audit to classify
+  test_open_pairs.t_one_set_level_reading_is_not_seven_failures SKIP this tree holds no rule audit to classify
+  test_order_codes.t_the_per_board_certification_was_written_for_every_board_of_the_manifest SKIP the certification has not run in this tree
+  test_requirements.t_no_real_record_reads_pass_on_evidence_that_does_not_count SKIP out/rule-audit is not in this tree (gitignored): the rule classes cannot be read
+  test_rule_gate_mapping.t_a_reading_that_answers_for_every_board_says_why_it_is_the_sets SKIP this tree holds no rule audit to classify
+  test_rule_gate_mapping.t_one_render_converges_when_a_rule_judges_a_page_the_same_run_writes SKIP no routeflow journal in this tree, so the ETA page cannot render as committed
+  test_rule_gate_mapping.t_the_documents_are_generated_and_not_hand_maintained SKIP no routeflow journal in this tree, so the ETA page cannot render as committed
+  test_rules_status.t_a_run_told_where_to_write_leaves_the_tree_exactly_as_it_found_it SKIP this tree holds no set-level readiness evidence to protect
+Failed: 0
+
+== main 62f26a44
+tests: 1262 passed, 0 failed, 10 skipped
+Skipped (for want of gitignored or box-absent evidence):
+  test_decision_register.t_a_decision_the_register_calls_open_is_not_one_the_rule_already_passes_everywhere SKIP no rule audit in this tree
+  test_decision_register.t_the_page_is_generated_and_not_hand_maintained SKIP this tree carries no assembly_set or final_gate, so the page's 'what it holds' half is computed from less evidence than th
+  test_open_pairs.t_every_open_pair_of_the_tree_gets_exactly_one_category SKIP this tree holds no rule audit to classify
+  test_open_pairs.t_one_set_level_reading_is_not_seven_failures SKIP this tree holds no rule audit to classify
+  test_order_codes.t_the_per_board_certification_was_written_for_every_board_of_the_manifest SKIP the certification has not run in this tree
+  test_requirements.t_no_real_record_reads_pass_on_evidence_that_does_not_count SKIP out/rule-audit is not in this tree (gitignored): the rule classes cannot be read
+  test_rule_gate_mapping.t_a_reading_that_answers_for_every_board_says_why_it_is_the_sets SKIP this tree holds no rule audit to classify
+  test_rule_gate_mapping.t_one_render_converges_when_a_rule_judges_a_page_the_same_run_writes SKIP no routeflow journal in this tree, so the ETA page cannot render as committed
+  test_rule_gate_mapping.t_the_documents_are_generated_and_not_hand_maintained SKIP no routeflow journal in this tree, so the ETA page cannot render as committed
+  test_rules_status.t_a_run_told_where_to_write_leaves_the_tree_exactly_as_it_found_it SKIP this tree holds no set-level readiness evidence to protect
+Failed: 0
+
+== Registry validation, trace page and idempotency (t_run.log)
+=== 91894cd7: 91894cd7 fix(requirements): REQ-044's re-take note cites its evidence for R-BAT 
+SOURCES.yaml: epd-driver-uc8253c filed
+second run: no change
+rules_lib: 144 requirement record(s), 0 error(s), 0 warning(s)
+rules_render: wrote ../../docs/REQUIREMENTS-TRACE.md (3690 lines)
+=== 62f26a44: 62f26a44 docs(layers): the second release check of layers 1 to 3 filed, layer 2 
+SOURCES.yaml: epd-driver-uc8253c filed
+second run: no change
+rules_lib: 144 requirement record(s), 0 error(s), 0 warning(s)
+rules_render: wrote ../../docs/REQUIREMENTS-TRACE.md (3750 lines)
+
+== Draft application logs
+apply_registry (w4c): step 1a: S-77 (W4C-F5) added; step 1: SC-58 (EQ-25), SC-59 (PWR-001 on board C), SC-60 (W4C-F1) added; step 2: S-64 closed by SC-58; step 3: REQ-012 rebound from 11eabc2dddca5161; step 3: CON-021 rebound from 11eabc2dddca5161; step 3: CFL-016 rebound from 11eabc2dddca5161; step
+apply_registry (w4c): step 1a: S-77 (W4C-F5) added; step 1: SC-58 (EQ-25), SC-59 (PWR-001 on board C), SC-60 (W4C-F1) added; step 2: S-64 closed by SC-58; step 3: REQ-012 rebound from 11eabc2dddca5161; step 3: CON-021 rebound from 11eabc2dddca5161; step 3: CFL-016 rebound from 11eabc2dddca5161; step 3: CON-016 rebound from 11eabc2dddca5161; step 4: RF-002 row, reading with board C's fix added
+apply_registry (w4c): step 1a: already applied (S-77); step 1: already applied (SC-58); step 2: already applied; step 3: REQ-012 already current; step 3: CON-02
+apply_registry (w4c): step 1a: S-80 (W4C-F5) added; step 1: SC-64 (EQ-25), SC-65 (PWR-001 on board C), SC-66 (W4C-F1) added; step 2: S-64 closed by SC-64; step 3: REQ-012 rebound from 11eabc2dddca5161; step 3: CON-021 rebound from 11eabc2dddca5161; step 3: CFL-016 rebound from 11eabc2dddca5161; step
+apply_registry (w4c): step 1a: S-80 (W4C-F5) added; step 1: SC-64 (EQ-25), SC-65 (PWR-001 on board C), SC-66 (W4C-F1) added; step 2: S-64 closed by SC-64; step 3: REQ-012 rebound from 11eabc2dddca5161; step 3: CON-021 rebound from 11eabc2dddca5161; step 3: CFL-016 rebound from 11eabc2dddca5161; step 3: CON-016 rebound from 11eabc2dddca5161; step 4: RF-002 row, reading with board C's fix added
+apply_registry (w4c): step 1a: already applied (S-80); step 1: already applied (SC-64); step 2: already applied; step 3: REQ-012 already current; step 3: CON-02
+patch_docs (w4c, SC-58, SC-59, S-77): v2/docs/PANEL.md: 'Since EQ-25 (stream w4c'; v2/docs/PANEL.md: 'the `R15`/`R51` 10k/10k divide'; v2/docs/PANEL.md: 'and `R50` (10k 1 %, since EQ-2'; v2/docs/feasibility/EMCON.md: "where R14 was 10 k to C's +3V3"; v2/docs/feasibility/EMCON.md: "U9's input, and R50"; v2/docs/feasibility/EMCON.md: '1 percent on C (R50)'; v2/docs/feasibility/EMCON.md: "and board C's R50 (10 k 1 perc"; v2/docs/feasibility/EMCON.md: '**Since stream w4c (EQ-25'; v2/docs/ARCHITECTURE.md: 'R50 (C), 10 k 1 % since EQ-25'; v2/docs/handover/ENGINEERING-QUESTIONS.md: 'answered on board C by stream '; v2/docs/handover/ENGINEERING-QUESTIONS.md: '**Stream w4c (27 September 202'; v2/docs/handover/ENGINEERING-QUESTIONS.md: '(a) drawn by stream w4c'; v2/docs/handover/ENGINEERING-QUESTIONS.md: '**Board C (stream w4c, 27 Sept'; v2/docs/HW-FW-CONTRACT.md: '| `fnd/w4c` |'; ARCHITECTURE.md: bound by no record; HW-FW-CONTRACT.md: bound by no record; CFL-001:PANEL.md rebound; CFL-005:PANEL.md rebound; CFL-016:PANEL.md rebound; CFL-014:PANEL.md rebound; CFL-015:PANEL.md rebound; REQ-012:EMCON.md rebound; REQ-030:EMCON.md rebound; REQ-071:EMCON.md rebound; REQ-032:EMCON.md rebound; CON-010:EMCON.md rebound; CON-021:EMCON.md rebound; FEA-002:EMCON.md rebound; ENGINEERING-QUESTIONS.md: bound by no record; diagrams: 5 read ARCHITECTURE.md (arch-2-context, arch-3-2-board-interconnect, arch-4-1-power-tree, arch-4-3-power-up, arch-5-5-lanes-and-fabric), 5 of them against another sha than the file's 692c6a4c1d5677e9; their Mermaid blocks (sections 2, 3.2, 4.1, 4.3, 5.5) are not touched by this edit; the rebuild (build.py) is the diagrams writer's
+patch_docs (w4c, SC-64, SC-65, S-80): v2/docs/PANEL.md: 'Since EQ-25 (stream w4c'; v2/docs/PANEL.md: 'the `R15`/`R51` 10k/10k divide'; v2/docs/PANEL.md: 'and `R50` (10k 1 %, since EQ-2'; v2/docs/feasibility/EMCON.md: "where R14 was 10 k to C's +3V3"; v2/docs/feasibility/EMCON.md: "U9's input, and R50"; v2/docs/feasibility/EMCON.md: '1 percent on C (R50)'; v2/docs/feasibility/EMCON.md: "and board C's R50 (10 k 1 perc"; v2/docs/feasibility/EMCON.md: '**Since stream w4c (EQ-25'; v2/docs/ARCHITECTURE.md: 'R50 (C), 10 k 1 % since EQ-25'; v2/docs/handover/ENGINEERING-QUESTIONS.md: 'answered on board C by stream '; v2/docs/handover/ENGINEERING-QUESTIONS.md: '**Stream w4c (27 September 202'; v2/docs/handover/ENGINEERING-QUESTIONS.md: '(a) drawn by stream w4c'; v2/docs/handover/ENGINEERING-QUESTIONS.md: '**Board C (stream w4c, 27 Sept'; v2/docs/HW-FW-CONTRACT.md: '| `fnd/w4c` |'; ARCHITECTURE.md: bound by no record; HW-FW-CONTRACT.md: bound by no record; CFL-001:PANEL.md rebound; CFL-005:PANEL.md rebound; CFL-016:PANEL.md rebound; CFL-014:PANEL.md rebound; CFL-015:PANEL.md rebound; REQ-012:EMCON.md rebound; REQ-030:EMCON.md rebound; REQ-071:EMCON.md rebound; REQ-032:EMCON.md rebound; CON-010:EMCON.md rebound; CON-021:EMCON.md rebound; FEA-002:EMCON.md rebound; ENGINEERING-QUESTIONS.md: bound by no record; diagrams: 5 read ARCHITECTURE.md (arch-2-context, arch-3-2-board-interconnect, arch-4-1-power-tree, arch-4-3-power-up, arch-5-5-lanes-and-fabric), 5 of them against another sha than the file's 35d5cdef8034e27c; their Mermaid blocks (sections 2, 3.2, 4.1, 4.3, 5.5) are not touched by this edit; the rebuild (build.py) is the diagrams writer's
+
+== Diagrams (d_check.sh: extract_mermaid.py --check and build.py --check, read-only)
+=== 91894cd7, applied (HEAD 8a33b6d4 scratch: w4c applied (throwaway)
+mermaid sources: current
+STALE arch-2-context               inputs changed: v2/docs/ARCHITECTURE.md
+STALE arch-3-2-board-interconnect  inputs changed: v2/docs/ARCHITECTURE.md
+STALE arch-4-1-power-tree          inputs changed: v2/docs/ARCHITECTURE.md
+STALE arch-4-3-power-up            inputs changed: v2/docs/ARCHITECTURE.md
+STALE arch-5-5-lanes-and-fabric    inputs changed: v2/docs/ARCHITECTURE.md
+STALE control-lines                inputs changed: v2/ecad/pcb-c-display-c8/out/pcb-c-display.net
+STALE power-tree                   inputs changed: v2/ecad/pcb-c-display-c8/out/pcb-c-display.net
+diagrams: 4 of 11 current against MANIFEST.json (written at b7f96784)
+=== 91894cd7, as committed
+mermaid sources: current
+diagrams: 11 of 11 current against MANIFEST.json (written at b7f96784)
+=== 62f26a44, applied (HEAD 380eb2c8 scratch: w4c applied (throwaway)
+mermaid sources: current
+STALE arch-2-context               inputs changed: v2/docs/ARCHITECTURE.md
+STALE arch-3-2-board-interconnect  inputs changed: v2/docs/ARCHITECTURE.md
+STALE arch-4-1-power-tree          inputs changed: v2/docs/ARCHITECTURE.md
+STALE arch-4-3-power-up            inputs changed: v2/docs/ARCHITECTURE.md
+STALE arch-5-5-lanes-and-fabric    inputs changed: v2/docs/ARCHITECTURE.md
+STALE control-lines                inputs changed: v2/ecad/pcb-c-display-c8/out/pcb-c-display.net
+STALE power-tree                   inputs changed: v2/ecad/pcb-c-display-c8/out/pcb-c-display.net
+diagrams: 4 of 11 current against MANIFEST.json (written at b7f96784)
+=== 62f26a44, as committed
+mermaid sources: current
+STALE arch-2-context               inputs changed: v2/docs/ARCHITECTURE.md
+STALE arch-3-2-board-interconnect  inputs changed: v2/docs/ARCHITECTURE.md
+STALE arch-4-1-power-tree          inputs changed: v2/docs/ARCHITECTURE.md
+STALE arch-4-3-power-up            inputs changed: v2/docs/ARCHITECTURE.md
+STALE arch-5-5-lanes-and-fabric    inputs changed: v2/docs/ARCHITECTURE.md
+diagrams: 6 of 11 current against MANIFEST.json (written at b7f96784)
+D-CHECK-DONE

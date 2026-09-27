@@ -1,0 +1,40 @@
+{
+ "kind": "bom",
+ "rows": [
+  79,
+  81
+ ],
+ "rows_only_committed": [
+  [
+   "R4,R9-R16,R42,R49",
+   "10k",
+   "Resistor_SMD:R_0603_1608Metric",
+   "C25804",
+   "11"
+  ]
+ ],
+ "rows_only_other": [
+  [
+   "R14",
+   "2.2k 1%",
+   "Resistor_SMD:R_0603_1608Metric",
+   "C4190",
+   "1"
+  ],
+  [
+   "R4,R9-R13,R15,R16,R42,R49,R51",
+   "10k",
+   "Resistor_SMD:R_0603_1608Metric",
+   "C25804",
+   "11"
+  ],
+  [
+   "R50",
+   "10k 1%",
+   "Resistor_SMD:R_0603_1608Metric",
+   "C25804",
+   "1"
+  ]
+ ],
+ "result": "DIFFERENT"
+}

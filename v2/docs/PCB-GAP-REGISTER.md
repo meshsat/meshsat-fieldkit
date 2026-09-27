@@ -382,10 +382,19 @@ state read 0.74 V. The FAIL rests on the walk's worst-case leakage convention (a
 Ioff; the three sheets also state II at VCC 0 V, and with U9, U14 and D's U12 at II the line reads about 0.42
 V), and the walk applies VIL 0.8 V to every reader (TI states 0.9 V for A's SN74AUP1G08, 0.8 V for D's U12,
 which reads the line when only board C is off): a FAIL under that convention, not a demonstrated defect (open
-item W3T-F1 in pcb_requirements.yaml, corrected at the r8int5 integration from the independent check). The
-instrument's declared tables (TRANSMITTERS, MATES, PIN_READERS, READER_TAPS, ACCESSORIES, RECEIVE_ONLY, OWED,
-FW_PIN_TABLES, LOGIC, SWITCHES and PROTECTION_ROWS with their stated paths and rows) each carry their basis
-and are held to it by tests/test_tx_inhibit.py  
+item W3T-F1 in pcb_requirements.yaml, corrected at the r8int5 integration from the independent check). FIXED
+ON BOARD C BY STREAM w4c (EQ-25, 27 September 2026, SC-67, which closes S-64; verdicts in the stream's
+scratch on the KiCad box): R14 2.2k 1 percent and R50 10k 1 percent on board C's candidate netlist
+3fddbb3edcd4248a, the other five at main 91894cd7: the TX_INHIBIT_n line PASS (0.243 V with board C
+unpowered, which read 1.085 V; 0.178 V with the A-D mezzanine out as well, which read 1.103 V), inhibit_chain
+A INCONCLUSIVE (0 fail, 7 pass, 2 undecided), B FAIL (10 fail, 7 pass, 3 undecided), C PASS (6 of 6), D
+INCONCLUSIVE (0 fail, 7 pass, 1 undecided: the SA868 keying back to its own UNDECIDED, the SA_PTT_n threshold
+its maker does not state), E PASS, P PASS; main's own re-take in the same scratch read the committed A FAIL
+(1, 6, 2), B FAIL (11, 6, 3), C FAIL (1, 5, 0), D FAIL (2, 6, 0) (v2/docs/records/w4c/readings/); board B's
+own failures on that walk are stream w4b's, whose rows and circuit landed ahead of this change in the same
+integration (EMCON.md section 4c). The instrument's declared tables (TRANSMITTERS, MATES, PIN_READERS,
+READER_TAPS, ACCESSORIES, RECEIVE_ONLY, OWED, FW_PIN_TABLES, LOGIC, SWITCHES and PROTECTION_ROWS with their
+stated paths and rows) each carry their basis and are held to it by tests/test_tx_inhibit.py  
 *Close it by* each UNDECIDED the inverted default names closes where a held maker document gives the part a row (a statement for board B's E72 modules on +3V3_ZB, board A's INA226 across R55, a bench header's far end) or where the boards keep the part off every gated rail and every module's own output (board B's USBLC6 U33 on +5V_LIME with its I/O held by the hub); each limit of the note closes where a held maker document decides it; no limit and no named UNDECIDED decides a board's reading on main a6f87e9d's six netlists today; limits (8) to (11) close where the walk reads every split form by the part's own family (or a board draws none, which test_tx_inhibit_split_guard.py holds), reads a part's kind from its symbol rather than its designator, quotes a FW_PIN_TABLES row in the PASS it gives, and counts a supply net itself as a source; limit (13) closes where a board's other wiring of a configurable gate gets its own configuration row from its maker's table and figure, and (14) where a held sheet states VT+ over VCC 3 V to 3.6 V. Owner **SESSION**. Effort P50 4h, P80 12h.
 
 **STK-002 a layer count is decided and costed** (BLOCKER, OWNER_DECISION_REQUIRED)  

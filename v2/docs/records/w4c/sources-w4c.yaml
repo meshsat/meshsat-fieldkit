@@ -1,0 +1,26 @@
+# Stream w4c's draft for v2/vendor/SOURCES.yaml (the vendor tree's owner applies it; MESHSAT-1357, 27 September 2026).
+# It files the e-paper driver's sheet that board C's PWR-001 declaration cites (EPD_VCC's typical current). The panel
+# itself (Pervasive Displays E2370KS0C1) has no public product specification: pervasivedisplays.com's 3.70 inch page and
+# docs.pervasivedisplays.com's Wide Small page, read 27 September 2026, carry the flyer (held as
+# v2/vendor/pdi/pdi-e2370ks0c1-flyer.pdf, which names the driver CHIP-UC8253c) and no electrical table. UltraChip
+# publishes no public copy of its sheet; the file below is UltraChip's own document as Elecrow serves it for its display
+# module DIE01237S. Prototype framing: this is a document check, not a certification.
+
+  - id: epd-driver-uc8253c
+    function: "the driver inside board C's e-paper panel (Pervasive Displays E2370KS0C1, on J_EPD): its supply currents bound EPD_VCC's declared typical (PWR-001, stream w4c)"
+    boards: [C]
+    on_main: false
+    adopted_in: "fnd/w4c (27 September 2026), pending merge"
+    schematic_name: {text: "the panel on J_EPD (EPD_VCC to J_EPD pins 15 and 16)", where: "v2/ecad/tools/gen_sch_c.py (J_EPD; the EPD_VCC rail declaration)"}
+    fitted_mpn: "E2370KS0C1 (Pervasive Displays), driver UC8253c inside the panel"
+    identity: MATCH
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/pdi/ultrachip-uc8253c-a0.6.pdf"
+        doc_id: "UltraChip 03-DTS-1891 UC8253c_A0.6 (for TFT_module_Use_Only)"
+        revision: "ES Specifications, IC version c_A, datasheet revision 0.6, 13 October 2020 (PDF created 21 October 2020, 75 pages)"
+        url: "https://www.elecrow.com/download/product/DIE01237S/UC8253_Datasheet.pdf"
+        fetched: "2026-09-27T14:12Z, HTTP 200 application/pdf"
+        sha256: "bee25538177b8cc6f67c1ffe696d8fd09bda7842b42e021fb9bd41a3da91c125"
+        currency: "UltraChip publishes no public copy; this is the maker's document as a module maker serves it"
+        matches_fitted: "yes for the driver: the PDi flyer names CHIP-UC8253c for the E2370KS0C1; DC characteristics (page 59): VDD, VDDIO and VDDA 2.3 / 3.3 / 3.6 V; IVDD digital operating current 0.1 mA max, IVDDIO IO operating current 0.1 mA max, IVDDA DCDC operating current 20.0 mA max at VDD = VDDA = VDDIO = 3.0 V, 25 C; absolute maximum VDD, VDDIO, VDDA -0.3 to +6.0 V (page 58). The panel's own current (the boost's inductor current) is not in this sheet"

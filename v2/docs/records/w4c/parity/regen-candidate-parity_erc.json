@@ -1,0 +1,56 @@
+{
+ "kind": "erc",
+ "violations": [
+  328,
+  330
+ ],
+ "by_type": [
+  {
+   "warning:endpoint_off_grid": 15,
+   "warning:lib_symbol_issues": 287,
+   "warning:unconnected_wire_endpoint": 26
+  },
+  {
+   "warning:endpoint_off_grid": 15,
+   "warning:lib_symbol_issues": 289,
+   "warning:unconnected_wire_endpoint": 26
+  }
+ ],
+ "only_committed": [
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR030 [GND]"
+   ]
+  ]
+ ],
+ "only_other": [
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'Device'",
+   [
+    "Symbol R50 [R]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'Device'",
+   [
+    "Symbol R51 [R]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR066 [GND]"
+   ]
+  ]
+ ],
+ "result": "DIFFERENT"
+}

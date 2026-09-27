@@ -1,0 +1,52 @@
+{
+ "advisory": false,
+ "applicable": false,
+ "code_bundle": {
+  "entry": "clock_check.py",
+  "files": {
+   "boardtable.py": "41bd92e61f12c374",
+   "clock_check.py": "8da2b82cac511dd0",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "5e8295c907935c43",
+  "unresolved": []
+ },
+ "counts": {},
+ "denominator": 0,
+ "evidence": [],
+ "inputs": {
+  "board": "a",
+  "netlist": {
+   "path": "out/pcb-a-power.net",
+   "sha256_16": "da05dc02bc1e612f"
+  }
+ },
+ "missing_input": null,
+ "note": "this board carries no crystal, so CLK-001 has nothing on it to judge",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "CLK-001": "87aa8102f151ef26"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "CLK-001"
+ ],
+ "runtime": {
+  "python": "3.12.3"
+ },
+ "tool": "clock_check",
+ "tools": {
+  "git_head": "91894cd7f196",
+  "tools_tree_sha": "784492a16eb43399"
+ },
+ "ts": "2026-09-27T15:35:48Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "91894cd7f196",
+ "writer": {
+  "file": "clock_check.py",
+  "sha16": "8da2b82cac511dd0"
+ }
+}

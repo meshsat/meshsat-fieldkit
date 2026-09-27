@@ -1,0 +1,55 @@
+/root/w4c/cand/v2/ecad/tools/power_path.py:51: SyntaxWarning: invalid escape sequence '\d'
+  """{net: [(ref, pin), ...]} and the set of references, from KiCad's s-expression netlist.
+/root/w4c/cand/v2/ecad/tools/power_path.py:51: SyntaxWarning: invalid escape sequence '\d'
+  """{net: [(ref, pin), ...]} and the set of references, from KiCad's s-expression netlist.
+power_path: BZ_K           carries +5V's 0.03 A through BZ1 (pins 2 on the rail, 1 on it), declared a NODE at 5.0 V
+              its basis: the sounder's low side between BZ1 and Q4's drain: it sits at the +5V rail while the FET is off and at its on-state drop
+power_path: MWARN_A        carries LED_RAIL's 0.02 A through R21 (pins 1 on the rail, 2 on it), declared a NODE at 5.0 V
+              its basis: lamp D1's anode (MWARN), behind its 300R series resistor from LED_RAIL: it can only reach that rail
+power_path: MCAUT_A        carries LED_RAIL's 0.02 A through R22 (pins 1 on the rail, 2 on it), declared a NODE at 5.0 V
+              its basis: lamp D2's anode (MCAUT), behind its 300R series resistor from LED_RAIL: it can only reach that rail
+power_path: SOSACT_A       carries LED_RAIL's 0.02 A through R23 (pins 1 on the rail, 2 on it), declared a NODE at 5.0 V
+              its basis: lamp D4's anode (SOSACT), behind its 300R series resistor from LED_RAIL: it can only reach that rail
+power_path: SAT_A          carries LED_RAIL's 0.03 A through R24 (pins 1 on the rail, 2 on it), declared a NODE at 5.0 V
+              its basis: lamp D5's anode (SAT), behind its 180R series resistor from LED_RAIL: it can only reach that rail
+power_path: MESH_A         carries LED_RAIL's 0.03 A through R25 (pins 1 on the rail, 2 on it), declared a NODE at 5.0 V
+              its basis: lamp D6's anode (MESH), behind its 180R series resistor from LED_RAIL: it can only reach that rail
+power_path: LTE_A          carries LED_RAIL's 0.03 A through R26 (pins 1 on the rail, 2 on it), declared a NODE at 5.0 V
+              its basis: lamp D7's anode (LTE), behind its 180R series resistor from LED_RAIL: it can only reach that rail
+power_path: GPS_A          carries LED_RAIL's 0.03 A through R27 (pins 1 on the rail, 2 on it), declared a NODE at 5.0 V
+              its basis: lamp D8's anode (GPS), behind its 180R series resistor from LED_RAIL: it can only reach that rail
+power_path: SHORE_A        carries LED_RAIL's 0.03 A through R28 (pins 1 on the rail, 2 on it), declared a NODE at 5.0 V
+              its basis: lamp D9's anode (SHORE), behind its 180R series resistor from LED_RAIL: it can only reach that rail
+power_path: CHG_A          carries LED_RAIL's 0.03 A through R29 (pins 1 on the rail, 2 on it), declared a NODE at 5.0 V
+              its basis: lamp D10's anode (CHG), behind its 180R series resistor from LED_RAIL: it can only reach that rail
+power_path: MSG_A          carries LED_RAIL's 0.03 A through R30 (pins 1 on the rail, 2 on it), declared a NODE at 5.0 V
+              its basis: lamp D11's anode (MSG), behind its 180R series resistor from LED_RAIL: it can only reach that rail
+power_path: BAT1_A         carries LED_RAIL's 0.02 A through R31 (pins 1 on the rail, 2 on it), declared a NODE at 5.0 V
+              its basis: lamp D12's anode (BAT1), behind its 300R series resistor from LED_RAIL: it can only reach that rail
+power_path: BAT2_A         carries LED_RAIL's 0.03 A through R32 (pins 1 on the rail, 2 on it), declared a NODE at 5.0 V
+              its basis: lamp D13's anode (BAT2), behind its 180R series resistor from LED_RAIL: it can only reach that rail
+power_path: BAT3_A         carries LED_RAIL's 0.03 A through R33 (pins 1 on the rail, 2 on it), declared a NODE at 5.0 V
+              its basis: lamp D14's anode (BAT3), behind its 180R series resistor from LED_RAIL: it can only reach that rail
+power_path: BAT4_A         carries LED_RAIL's 0.03 A through R34 (pins 1 on the rail, 2 on it), declared a NODE at 5.0 V
+              its basis: lamp D15's anode (BAT4), behind its 180R series resistor from LED_RAIL: it can only reach that rail
+power_path: BAT5_A         carries LED_RAIL's 0.03 A through R35 (pins 1 on the rail, 2 on it), declared a NODE at 5.0 V
+              its basis: lamp D16's anode (BAT5), behind its 180R series resistor from LED_RAIL: it can only reach that rail
+power_path: TX_A           carries LED_RAIL's 0.02 A through R36 (pins 1 on the rail, 2 on it), declared a NODE at 5.0 V
+              its basis: the TX lamp D3's anode behind its 300R from LED_RAIL; no part takes its supply from it
+power_path: PIRING_A       carries LED_RAIL's 0.02 A through R40 (pins 1 on the rail, 2 on it), declared a NODE at 5.0 V
+              its basis: the PI button ring's anode behind its 300R from LED_RAIL; no part takes its supply from it
+power_path: TESTRING_A     carries LED_RAIL's 0.01 A through R41 (pins 1 on the rail, 2 on it), declared a NODE at 5.0 V
+              its basis: the TEST button ring's anode behind its 470R from LED_RAIL; no part takes its supply from it
+power_path: RAIL_SENSE     carries LED_RAIL_SW's 0.00 A through R15 (pins 1 on the rail, 2 on it), declared a NODE at 2.6 V
+              its basis: the LED rail sense divider's middle (R15 from LED_RAIL_SW, R51 to GND, 10k each): 5.25 V x 10.1 / 20 at most, read by GP
+power_path: Q1_G           carries LED_RAIL_SW's 0.00 A through R17 (pins 1 on the rail, 2 on it), declared a NODE at 5.0 V
+              its basis: Q1's gate between R17 from LED_RAIL_SW and R18 to Q2's drain: at most LED_RAIL_SW; no part takes its supply from it
+power_path: MAINRING_A     carries LED_RAIL_SW's 0.01 A through R39 (pins 1 on the rail, 2 on it), declared a NODE at 5.0 V
+              its basis: the MAIN button ring's anode behind its 470R from LED_RAIL_SW; no part takes its supply from it
+power_path: EMCLAMP_A      carries LED_RAIL_SW's 0.01 A through R47 (pins 1 on the rail, 2 on it), declared a NODE at 5.0 V
+              its basis: the hardware EMCON lamp D22's anode behind R47 470R from LED_RAIL_SW; no part takes its supply from it
+power_path: +3V3         declares  0.15 A typ /  0.72 peak and feeds 1 converter(s) drawing  0.03 /  0.52
+power_path: +5V          declares  0.60 A typ /  1.00 peak and feeds 2 converter(s) drawing  0.26 /  0.94
+power_path: LED_RAIL_SW  declares  0.16 A typ /  0.46 peak and feeds 1 converter(s) drawing  0.14 /  0.44
+power_path: 23 net(s) carry a declared rail's current through one of its own source or load parts without being a rail: 23 declared a node and 0 NOT DECLARED AT ALL, of 5 rail(s) and 58 node(s)
+verdict: power_path             PASS         {"feeds": 3, "feeds_short": 0, "nodes": 58, "rails": 5, "segments": 23, "undeclared": 0} | every declared node that carries a declared rail's current through one of that rail's own load parts: a candidate segment of a power path that no power rule is looking at. It REPORTS: some of these are genuinely nodes and the declaration is where that is written down, with its reason.

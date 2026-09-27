@@ -1,0 +1,4 @@
+{"components_only_a": [], "components_only_b": ["R50", "R51"],
+ "components_changed": {"R14": ["field:LCSC", "value"]},
+ "nets_only_a": [], "nets_only_b": [],
+ "nets_changed": {"/TX_INHIBIT_n": ["R50.1"], "/RAIL_SENSE": ["R51.1"], "GND": ["R50.2", "R51.2"]}}

@@ -1,0 +1,110 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "check_contracts.py",
+  "files": {
+   "boardtable.py": "41bd92e61f12c374",
+   "check_contracts.py": "5e14f456a0791c35",
+   "intent.py": "f1ac033e0f3c10f1",
+   "kisch.py": "3e28374d15be25e0",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "sch_prov.py": "a98e5a71ac74ccee",
+   "tx_inhibit.py": "67cba7a55beebc1d",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "86f82710cd723e3c",
+  "unresolved": []
+ },
+ "counts": {
+  "fail": 1,
+  "pass": 6,
+  "undecided": 2,
+  "unjudged": 0
+ },
+ "denominator": 9,
+ "evidence": [
+  "RF-002 the asserted line TX_INHIBIT_n: nothing on any board but its own source can drive it, and with that source unpowered or unplugged its own pull-downs hold it under 0.8 V against every pin's stated current, every other part powered or not",
+  "undecided: RF-002 30 W VHF power amplifier (RA30H1317M1 on the plate): EMCON reaches it in hardware (A power on J_PA)",
+  "undecided: RF-002 QMX HF transceiver: EMCON reaches it in hardware (A power on J_HF)"
+ ],
+ "inputs": {
+  "boards": "A,B,C,D,E,P",
+  "intent_a": {
+   "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
+   "sha256_16": "92dd3b1cda9046b8"
+  },
+  "intent_b": {
+   "path": "pcb-b-compute-b19/out/pcb-b-compute-intent.json",
+   "sha256_16": "162fcb9b95f680a7"
+  },
+  "intent_c": {
+   "path": "pcb-c-display-c8/out/pcb-c-display-intent.json",
+   "sha256_16": "854436c729322993"
+  },
+  "intent_d": {
+   "path": "pcb-d-aprs-d9/out/pcb-d-aprs-intent.json",
+   "sha256_16": "443fd745879d3022"
+  },
+  "intent_e": {
+   "path": "pcb-e1-dock-e7/out/pcb-e1-dock-intent.json",
+   "sha256_16": "5913e38b20333d35"
+  },
+  "netlist_a": {
+   "content16": "2c5c1d5a388cc95f",
+   "path": "pcb-a-power-a23/out/pcb-a-power.net",
+   "sha256_16": "da05dc02bc1e612f"
+  },
+  "netlist_b": {
+   "content16": "39d83d25efcd75a6",
+   "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
+   "sha256_16": "8b78c59754a6a0c7"
+  },
+  "netlist_c": {
+   "content16": "96c2678f4a3303b8",
+   "path": "pcb-c-display-c8/out/pcb-c-display.net",
+   "sha256_16": "11eabc2dddca5161"
+  },
+  "netlist_d": {
+   "content16": "ecc07f382c735835",
+   "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
+   "sha256_16": "76700a687eb6187f"
+  },
+  "netlist_e": {
+   "content16": "b8d237f0b8d759f5",
+   "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
+   "sha256_16": "d6137f50059e5cbc"
+  }
+ },
+ "missing_input": null,
+ "note": "RF-002 on this board: where the transmit inhibit line runs, it is present, reaches the gate it keys, has the panel toggle as its only source, is buffered and not inverted, and is pulled down so a missing panel inhibits, and with the panel unplugged or unpowered its own pull-downs hold it under the gates' 0.8 V against everything on it that can source current, every pin's stated leakage included (II, Ioff) with every other part powered or not, whichever is worse; every transmitter this board carries is reached from EMCON in hardware (tx_inhibit.py), with every net on the way driven by nothing else on any board, and with each gate on the way unpowered its enable or keying pin is still held at EMCON's level by a passive pull; and every part that names a radio is a listed transmitter, an accessory or a receiver. 2 result(s) are undecided: judged on every input, and a pin or a declaration on the way is not proved",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "RF-002": "2394810b0afd0d73"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "RF-002"
+ ],
+ "runtime": {
+  "python": "3.12.3"
+ },
+ "tool": "inhibit_chain_a",
+ "tools": {
+  "git_head": "91894cd7f196",
+  "tools_tree_sha": "784492a16eb43399"
+ },
+ "ts": "2026-09-27T15:38:39Z",
+ "verdict": "FAIL",
+ "version": "91894cd7f196",
+ "writer": {
+  "file": "check_contracts.py",
+  "sha16": "5e14f456a0791c35"
+ }
+}

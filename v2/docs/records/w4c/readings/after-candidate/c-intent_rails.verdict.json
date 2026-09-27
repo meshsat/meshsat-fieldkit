@@ -1,0 +1,111 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "intent_checks.py",
+  "files": {
+   "boardorder.py": "298e46edcc028954",
+   "boardtable.py": "41bd92e61f12c374",
+   "hardset.py": "be29a44c4a592876",
+   "intent.py": "f1ac033e0f3c10f1",
+   "intent_checks.py": "1ad7af0c718ba940",
+   "kicad_compat.py": "6b8f77490466e939",
+   "netclass.py": "4cc1adf0ddae0390",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "return_via.py": "b61d138e54955dd4",
+   "rules_lib.py": "c0458c53923d7925",
+   "signal_class.py": "60b8647301428da4",
+   "signalnets.py": "688be12d8e42e7a4",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "5aa3d5157698ae2a",
+  "unresolved": []
+ },
+ "counts": {
+  "census_nets": 153,
+  "checks": 6,
+  "declared_nodes": 25,
+  "declared_not_in_netlist": 0,
+  "declared_rails": 5,
+  "fail": 0,
+  "held_pin_roles": 22,
+  "nodes_supplying_parts": 0,
+  "power_nets": 5,
+  "rails_without_destination": 0,
+  "settled": 3,
+  "switches_unresolved": 0,
+  "undecided": 0,
+  "undeclared": 0,
+  "unmarked": 74
+ },
+ "denominator": 6,
+ "evidence": [
+  "census of the 153 nets: 5 counted, 57 declared node, 1 ground, 3 settled, 13 unconnected, 0 undecided, 74 unmarked",
+  "settled, they supply nothing (3): SOS_SW, XIN, XOUT",
+  "declared as a node, not a rail: BAT1_A (series conductor: the load R31 of rail LED_RAIL at 0.02 A)",
+  "declared as a node, not a rail: BAT2_A (series conductor: the load R32 of rail LED_RAIL at 0.03 A)",
+  "declared as a node, not a rail: BAT3_A (series conductor: the load R33 of rail LED_RAIL at 0.03 A)",
+  "declared as a node, not a rail: BAT4_A (series conductor: the load R34 of rail LED_RAIL at 0.03 A)",
+  "declared as a node, not a rail: BAT5_A (series conductor: the load R35 of rail LED_RAIL at 0.03 A)",
+  "declared as a node, not a rail: CHG_A (series conductor: the load R29 of rail LED_RAIL at 0.03 A)",
+  "declared as a node, not a rail: C_DVDD (supply pin by name (U3.23 DVDD, U3.45 VREG_VOUT, U3.50 DVDD), and the intent's bypass list decouples it (C14:U3.45, C15:)",
+  "declared as a node, not a rail: EMCLAMP_A (series conductor: the load R47 of rail LED_RAIL_SW at 0.01 A)",
+  "declared as a node, not a rail: EPD_SW (series conductor: the load L1 of rail EPD_VCC at 0.50 A)",
+  "declared as a node, not a rail: EPD_VDDD (supply pin by name (J_EPD.18 VDDD), and capacitor C34 joins it to ground)",
+  "settled, it supplies nothing: SOS_SW: nothing on it supplies: SW_SOS.1 a switch to ground; U3.40 GPIO28 / ADC2 (signal, rpi-rp2040-datasheet.pdf)",
+  "settled, it supplies nothing: XIN: an oscillator net: Y1 is a crystal or resonator",
+  "settled, it supplies nothing: XOUT: an oscillator net: Y1 is a crystal or resonator"
+ ],
+ "inputs": {
+  "board": "c",
+  "document_1": {
+   "path": "v2/vendor/power/ti-tlv755p-ldo.pdf",
+   "sha256_16": "7eb7bc6935bf6c1d"
+  },
+  "document_2": {
+   "path": "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf",
+   "sha256_16": "be56fbb75ba0ae9e"
+  },
+  "intent": {
+   "path": "out/pcb-c-display-intent.json",
+   "sha256_16": "270ebb4ccf1d0e8e"
+  },
+  "netlist": {
+   "content16": "ebde053efc0a3906",
+   "path": "out/pcb-c-display.net",
+   "sha256_16": "3fddbb3edcd4248a"
+  },
+  "threshold_a": 0.0
+ },
+ "missing_input": null,
+ "note": "PWR-001 on the committed netlist and the intent file beside it: every power net is a declared rail, and every declared rail is a net of the netlist whose source and loads are on it. A power net is a power-symbol net, a net carrying a pin typed power_in or power_out, a net of a power class in the netlist, a net carrying a supply-named pin that a bypass entry, a capacitor to ground or a second supply pin corroborates, a net carrying a pin its held datasheet makes a supply, or a ground off a ground net (intent_checks.PIN_ROLES, each row carrying every power and ground pin of its table, each document recorded by sha), or a net a declared rail's current reaches through a two-terminal part or a transistor's channel, at a threshold of 0.00 A. FAIL CLOSED: every other net carrying the mark of a supply (a capacitor to ground, a capacitor to a power net or across one part's pins, a fuse, inductor, ferrite, diode, jumper, switch or link resistor to a power net, a transistor channel shared with one, the switched low side of a load, a lead whose other pins are all ground, a sense class) is settled only by what is read (a crystal, a held non-supply pin role, a gate, a sink to ground, a declared clamp, a switch to ground; on a lead or a sense net the connector carries what the read pins carry) and is otherwise undecided; an undecided net holds the reading at INCONCLUSIVE when nothing fails, and the census names every net's disposition. A power net declared as a node is reported, and refused when it carries the supply pins of two or more parts. Session decisions of 26 September 2026 under the owner's standing rule: the kinds of power net, the fail-closed marks and the undecided class, the 0 A threshold, the node rule",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "PWR-001": "6e91133d2ef9dee3"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "PWR-001"
+ ],
+ "runtime": {
+  "kicad": "9.0.9-9.0.9~ubuntu24.04.1",
+  "python": "3.12.3"
+ },
+ "tool": "intent_rails",
+ "tools": {
+  "git_head": "a21eae092a53",
+  "tools_tree_sha": "d73b97b4332e9c6f"
+ },
+ "ts": "2026-09-27T15:36:37Z",
+ "verdict": "PASS",
+ "version": "a21eae092a53",
+ "writer": {
+  "file": "intent_checks.py",
+  "sha16": "1ad7af0c718ba940"
+ }
+}

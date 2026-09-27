@@ -1,0 +1,97 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "check_contracts.py",
+  "files": {
+   "boardtable.py": "41bd92e61f12c374",
+   "check_contracts.py": "5e14f456a0791c35",
+   "intent.py": "f1ac033e0f3c10f1",
+   "kisch.py": "3e28374d15be25e0",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "sch_prov.py": "a98e5a71ac74ccee",
+   "tx_inhibit.py": "67cba7a55beebc1d",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "86f82710cd723e3c",
+  "unresolved": []
+ },
+ "counts": {
+  "fail": 0,
+  "pass": 6,
+  "undecided": 0,
+  "unjudged": 0
+ },
+ "denominator": 6,
+ "evidence": [],
+ "inputs": {
+  "boards": "A,B,C,D,E,P",
+  "intent_a": {
+   "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
+   "sha256_16": "92dd3b1cda9046b8"
+  },
+  "intent_b": {
+   "path": "pcb-b-compute-b19/out/pcb-b-compute-intent.json",
+   "sha256_16": "162fcb9b95f680a7"
+  },
+  "intent_c": {
+   "path": "pcb-c-display-c8/out/pcb-c-display-intent.json",
+   "sha256_16": "270ebb4ccf1d0e8e"
+  },
+  "intent_d": {
+   "path": "pcb-d-aprs-d9/out/pcb-d-aprs-intent.json",
+   "sha256_16": "443fd745879d3022"
+  },
+  "netlist_a": {
+   "content16": "2c5c1d5a388cc95f",
+   "path": "pcb-a-power-a23/out/pcb-a-power.net",
+   "sha256_16": "da05dc02bc1e612f"
+  },
+  "netlist_b": {
+   "content16": "39d83d25efcd75a6",
+   "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
+   "sha256_16": "8b78c59754a6a0c7"
+  },
+  "netlist_c": {
+   "content16": "ebde053efc0a3906",
+   "path": "pcb-c-display-c8/out/pcb-c-display.net",
+   "sha256_16": "3fddbb3edcd4248a"
+  },
+  "netlist_d": {
+   "content16": "ecc07f382c735835",
+   "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
+   "sha256_16": "76700a687eb6187f"
+  }
+ },
+ "missing_input": null,
+ "note": "RF-002 on this board: where the transmit inhibit line runs, it is present, reaches the gate it keys, has the panel toggle as its only source, is buffered and not inverted, and is pulled down so a missing panel inhibits, and with the panel unplugged or unpowered its own pull-downs hold it under the gates' 0.8 V against everything on it that can source current, every pin's stated leakage included (II, Ioff) with every other part powered or not, whichever is worse; every transmitter this board carries is reached from EMCON in hardware (tx_inhibit.py), with every net on the way driven by nothing else on any board, and with each gate on the way unpowered its enable or keying pin is still held at EMCON's level by a passive pull; and every part that names a radio is a listed transmitter, an accessory or a receiver",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "RF-002": "2394810b0afd0d73"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "RF-002"
+ ],
+ "runtime": {
+  "python": "3.12.3"
+ },
+ "tool": "inhibit_chain_c",
+ "tools": {
+  "git_head": "a21eae092a53",
+  "tools_tree_sha": "d73b97b4332e9c6f"
+ },
+ "ts": "2026-09-27T15:37:23Z",
+ "verdict": "PASS",
+ "version": "a21eae092a53",
+ "writer": {
+  "file": "check_contracts.py",
+  "sha16": "5e14f456a0791c35"
+ }
+}

@@ -1,0 +1,117 @@
+{
+ "kind": "schematic",
+ "phase_labels": [
+  [
+   "C24"
+  ],
+  [
+   "C24"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N1_title_date": 1,
+   "N2_page_frame_date": 5,
+   "L1_comment1_phase": 1,
+   "L2_frame_phase": 5
+  },
+  {
+   "N1_title_date": 1,
+   "N2_page_frame_date": 5,
+   "L1_comment1_phase": 1,
+   "L2_frame_phase": 5
+  }
+ ],
+ "result": "DIFFERENT",
+ "parts_only_committed": [],
+ "parts_only_other": [
+  "R50",
+  "R51"
+ ],
+ "parts_changed": [
+  [
+   "R14",
+   [
+    "10k",
+    "R_0603_1608Metric",
+    "C25804"
+   ],
+   [
+    "2.2k 1%",
+    "R_0603_1608Metric",
+    "C4190"
+   ]
+  ]
+ ],
+ "lib_symbols_only_committed": [],
+ "lib_symbols_only_other": [],
+ "lib_symbols_changed": [],
+ "line_counts": [
+  13172,
+  13211
+ ],
+ "changed_lines": 4817,
+ "changed_lines_sample": [
+  "-\t(text \"RP2040 PANEL CONTROLLER, FLASH, CRYSTAL, BOOTSEL, BUS PULL-UPS  |  EXPANDERS 0x22 / 0x23, MODE INPUTS, EMCON AND ZEROIZE BUFFERS, STRAPS  |  LED RAIL, INDICATORS, TX LAMP\" (exclude_from_sim no) (at 424.18 12.06 0) (effects (font (s",
+  "+\t(text \"RP2040 PANEL CONTROLLER, FLASH, CRYSTAL, BOOTSEL, BUS PULL-UPS  |  EXPANDERS 0x22 / 0x23, MODE INPUTS, EMCON AND ZEROIZE BUFFERS, STRAPS\" (exclude_from_sim no) (at 424.18 12.06 0) (effects (font (size 1.50 1.50)) (justify left bott",
+  "-\t(text \"LED RAIL, INDICATORS, TX LAMP, SWITCHES AND LEADS\" (exclude_from_sim no) (at 429.26 252.73 0) (effects (font (size 1.80 1.80) bold) (justify left bottom)) (uuid \"aee7ee6c-99dd-5b80-af7f-6f4d4f2fb9b7\"))",
+  "-\t(text \"page 2 of 5   MeshSat field kit V2, CERN-OHL-S-2.0   PROTOTYPE, nothing built   NOISE\" (exclude_from_sim no) (at 677.87 7.62 0) (effects (font (size 1.50 1.50)) (justify left bottom)) (uuid \"886e8060-6862-5add-8836-4479b2c16abb\"))",
+  "-\t(symbol (lib_id \"meshsat_ic:U4\") (at 463.55 43.18 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid \"734d4aee-5a28-56b2-ab74-2bed83afe1be\")",
+  "+\t(text \"page 2 of 5   MeshSat field kit V2, CERN-OHL-S-2.0   PROTOTYPE, nothing built   NOISE\" (exclude_from_sim no) (at 677.87 7.62 0) (effects (font (size 1.50 1.50)) (justify left bottom)) (uuid \"aee7ee6c-99dd-5b80-af7f-6f4d4f2fb9b7\"))",
+  "+\t(symbol (lib_id \"meshsat_ic:U4\") (at 463.55 43.18 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid \"886e8060-6862-5add-8836-4479b2c16abb\")",
+  "-\t\t(pin \"1\" (uuid \"15562e90-5f64-5926-8dcc-43935430061c\"))",
+  "-\t\t(pin \"2\" (uuid \"a17cb238-412d-5e05-8f93-1e960fc6d25a\"))",
+  "-\t\t(pin \"3\" (uuid \"c5cdadad-d6a0-5c52-9936-1d7f6cb27c6d\"))",
+  "-\t\t(pin \"5\" (uuid \"445e4ead-30b2-5ba8-b3f2-fbccd267da9e\"))",
+  "-\t\t(pin \"6\" (uuid \"5e909b56-c67a-553e-b628-5321d961f7d4\"))",
+  "-\t\t(pin \"7\" (uuid \"265aad88-6682-57ec-8cde-3f806ca69147\"))",
+  "-\t\t(pin \"8\" (uuid \"d86054c8-4e81-5972-9024-7c468cbcc5e4\"))",
+  "-\t\t(pin \"4\" (uuid \"afdd0853-54c4-5a44-8d9e-0e91b2ba3796\"))",
+  "-\t\t(pin \"9\" (uuid \"2b437142-84b3-51b7-95ae-86f9fe4ffd1a\"))",
+  "+\t\t(pin \"1\" (uuid \"734d4aee-5a28-56b2-ab74-2bed83afe1be\"))",
+  "+\t\t(pin \"2\" (uuid \"15562e90-5f64-5926-8dcc-43935430061c\"))",
+  "+\t\t(pin \"3\" (uuid \"a17cb238-412d-5e05-8f93-1e960fc6d25a\"))",
+  "+\t\t(pin \"5\" (uuid \"c5cdadad-d6a0-5c52-9936-1d7f6cb27c6d\"))",
+  "+\t\t(pin \"6\" (uuid \"445e4ead-30b2-5ba8-b3f2-fbccd267da9e\"))",
+  "+\t\t(pin \"7\" (uuid \"5e909b56-c67a-553e-b628-5321d961f7d4\"))",
+  "+\t\t(pin \"8\" (uuid \"265aad88-6682-57ec-8cde-3f806ca69147\"))",
+  "+\t\t(pin \"4\" (uuid \"d86054c8-4e81-5972-9024-7c468cbcc5e4\"))",
+  "+\t\t(pin \"9\" (uuid \"afdd0853-54c4-5a44-8d9e-0e91b2ba3796\"))",
+  "-\t(text \"W25Q16JVUXIQ 16 Mbit QSPI flash\" (exclude_from_sim no) (at 484.50 33.02 0) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"7a39c655-7423-5ac7-8e41-5be74859b899\"))",
+  "-\t(label \"QSPI_SS\" (at 441.33 39.37 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"05ac0689-9ba4-5fbc-900a-fad544e10896\"))",
+  "-\t(label \"QSPI_D1\" (at 441.33 41.91 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"525831b4-f721-54fd-853b-83d182c38f0d\"))",
+  "-\t(label \"QSPI_D2\" (at 441.33 44.45 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"9b308059-57b3-5c24-9684-f84e158bc5b2\"))",
+  "-\t(label \"QSPI_D0\" (at 485.77 39.37 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"8719a50f-8df9-56b0-bf9e-87b3f7468db3\"))",
+  "-\t(label \"QSPI_SCLK\" (at 485.77 41.91 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"5e04cb1d-6b4e-5fe3-9e7e-5589a4d6924f\"))",
+  "-\t(label \"QSPI_D3\" (at 485.77 44.45 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"a5e4875b-44c7-5c88-a850-7ee29db79dc8\"))",
+  "-\t(label \"+3V3\" (at 463.55 31.75 90) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"bcb17a3e-c435-5956-bd68-2888ef2bdcd5\"))",
+  "-\t(symbol (lib_id \"power:GND\") (at 463.55 57.15 180) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (fields_autoplaced yes) (uuid \"e74855ee-af4d-5f74-a8d0-6271b2efdee7\")",
+  "+\t(text \"W25Q16JVUXIQ 16 Mbit QSPI flash\" (exclude_from_sim no) (at 484.50 33.02 0) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"2b437142-84b3-51b7-95ae-86f9fe4ffd1a\"))",
+  "+\t(label \"QSPI_SS\" (at 441.33 39.37 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"7a39c655-7423-5ac7-8e41-5be74859b899\"))",
+  "+\t(label \"QSPI_D1\" (at 441.33 41.91 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"05ac0689-9ba4-5fbc-900a-fad544e10896\"))",
+  "+\t(label \"QSPI_D2\" (at 441.33 44.45 180) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify right bottom)) (uuid \"525831b4-f721-54fd-853b-83d182c38f0d\"))",
+  "+\t(label \"QSPI_D0\" (at 485.77 39.37 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"9b308059-57b3-5c24-9684-f84e158bc5b2\"))",
+  "+\t(label \"QSPI_SCLK\" (at 485.77 41.91 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"8719a50f-8df9-56b0-bf9e-87b3f7468db3\"))",
+  "+\t(label \"QSPI_D3\" (at 485.77 44.45 0) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"5e04cb1d-6b4e-5fe3-9e7e-5589a4d6924f\"))",
+  "+\t(label \"+3V3\" (at 463.55 31.75 90) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"a5e4875b-44c7-5c88-a850-7ee29db79dc8\"))",
+  "+\t(symbol (lib_id \"power:GND\") (at 463.55 57.15 180) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (fields_autoplaced yes) (uuid \"bcb17a3e-c435-5956-bd68-2888ef2bdcd5\")",
+  "-\t\t(pin \"1\" (uuid \"9fd63bc4-6603-5fe7-bd39-cda339c07aa6\"))",
+  "+\t\t(pin \"1\" (uuid \"e74855ee-af4d-5f74-a8d0-6271b2efdee7\"))",
+  "-\t(label \"+3V3\" (at 538.48 36.83 90) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"2887d2b6-c999-59de-be96-b46fc9f0a9ab\"))",
+  "-\t(symbol (lib_id \"Device:C\") (at 538.48 45.72 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid \"a7ecaef2-3ef2-50ea-937f-d4d74abd74ea\")",
+  "+\t(label \"+3V3\" (at 538.48 36.83 90) (fields_autoplaced yes) (effects (font (size 1.27 1.27)) (justify left bottom)) (uuid \"9fd63bc4-6603-5fe7-bd39-cda339c07aa6\"))",
+  "+\t(symbol (lib_id \"Device:C\") (at 538.48 45.72 0) (unit 1) (exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no) (uuid \"2887d2b6-c999-59de-be96-b46fc9f0a9ab\")",
+  "-\t\t(pin \"1\" (uuid \"48dc8261-1765-5b40-9609-7d20a703289d\"))",
+  "-\t\t(pin \"2\" (uuid \"9559df58-ba46-5007-837b-966ff0e239a9\"))",
+  "+\t\t(pin \"1\" (uuid \"a7ecaef2-3ef2-50ea-937f-d4d74abd74ea\"))",
+  "+\t\t(pin \"2\" (uuid \"48dc8261-1765-5b40-9609-7d20a703289d\"))",
+  "-\t(symbol (lib_id \"power:GND\") (at 538.48 52.07 180) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (fields_autoplaced yes) (uuid \"80639b69-8dbf-587a-b48d-da99e7cf8cf7\")",
+  "+\t(symbol (lib_id \"power:GND\") (at 538.48 52.07 180) (unit 1) (exclude_from_sim no) (in_bom no) (on_board no) (dnp no) (fields_autoplaced yes) (uuid \"9559df58-ba46-5007-837b-966ff0e239a9\")",
+  "-\t\t(pin \"1\" (uuid \"c86b1386-373d-50f0-bb2e-46f0366660e8\"))",
+  "+\t\t(pin \"1\" (uuid \"80639b69-8dbf-587a-b48d-da99e7cf8cf7\"))",
+  "-\t(junction (at 463.55 54.61) (diameter 0) (color 0 0 0 0) (uuid \"c9b1553e-f87a-5c3c-8bc3-9373075a8a86\"))",
+  "-\t(junction (at 538.48 39.37) (diameter 0) (color 0 0 0 0) (uuid \"ed32c86d-853f-5c96-939b-7b0aa152bbe1\"))",
+  "-\t(wire (pts (xy 443.87 39.37) (xy 441.33 39.37)) (stroke (width 0) (type default)) (uuid \"11cc3be8-f0ad-5da8-bb5c-bf2e7193c9c7\"))"
+ ],
+ "bucket_hint": "PARTS"
+}

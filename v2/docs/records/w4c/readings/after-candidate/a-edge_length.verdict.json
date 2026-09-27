@@ -1,0 +1,131 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "edge_length.py",
+  "files": {
+   "boardorder.py": "298e46edcc028954",
+   "boardtable.py": "41bd92e61f12c374",
+   "edge_length.py": "fd66cbd9bce2fa7b",
+   "hardset.py": "be29a44c4a592876",
+   "impedance_check.py": "e2495a04e16fc600",
+   "intent.py": "f1ac033e0f3c10f1",
+   "intent_checks.py": "1ad7af0c718ba940",
+   "kicad_compat.py": "6b8f77490466e939",
+   "netclass.py": "4cc1adf0ddae0390",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "return_via.py": "b61d138e54955dd4",
+   "rules_lib.py": "c0458c53923d7925",
+   "signal_class.py": "60b8647301428da4",
+   "signalnets.py": "688be12d8e42e7a4",
+   "stackup_write.py": "b55a3c0f58c805c2",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "9882ad1bc5620724",
+  "unresolved": []
+ },
+ "counts": {
+  "answered_nets": 6,
+  "classes": 63,
+  "contradicted_nets": 0,
+  "decided_nets": 6,
+  "layout_bound_nets": 0,
+  "low_speed_nets": 170,
+  "may_be_long_nets": 6,
+  "signal_nets": 290,
+  "undecided_nets": 114
+ },
+ "denominator": 290,
+ "evidence": [
+  "UNDECIDED (no declaration) (UNKNOWN, 38 net(s)): no signal-class declaration names these nets, so neither their class nor their edge is kno; ICs on them: LM5176PWPR buck-boost controller, +12V_HF from VBAT U15, LM5176PWPR buck-boost controller, +13V8_PA from VBAT U13, LM5176PWPR buck-boost controller, +54V_POE from VBAT U16, LM5176PWPR buck-boost controller, +5V_DEV from VBAT U7, LM5176PWPR buck-boost controller, +5V_S2 from VBAT U5",
+  "UNDECIDED *_BOOT (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: AP64500SP-13 5 A buck, 5.1 V rail +5V_S1 U4, AP64500SP-13 5 A buck, 5.1 V rail +5V_S3 U6",
+  "UNDECIDED *_BOOT1 (HIGH_SPEED_DIGITAL, 7 net(s)): no edge is declared and no held document states one; ICs on them: LM5176PWPR buck-boost controller, +12V_HF from VBAT U15, LM5176PWPR buck-boost controller, +13V8_PA from VBAT U13, LM5176PWPR buck-boost controller, +54V_POE from VBAT U16, LM5176PWPR buck-boost controller, +5V_DEV from VBAT U7, LM5176PWPR buck-boost controller, +5V_S2 from VBAT U5",
+  "UNDECIDED *_BOOT2 (HIGH_SPEED_DIGITAL, 7 net(s)): no edge is declared and no held document states one; ICs on them: LM5176PWPR buck-boost controller, +12V_HF from VBAT U15, LM5176PWPR buck-boost controller, +13V8_PA from VBAT U13, LM5176PWPR buck-boost controller, +54V_POE from VBAT U16, LM5176PWPR buck-boost controller, +5V_DEV from VBAT U7, LM5176PWPR buck-boost controller, +5V_S2 from VBAT U5",
+  "UNDECIDED *_BST (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: TPS62933DRLR 3 A buck, 12.0 V heater rail U33, TPS62933DRLR 3 A buck, 3.3 V logic U12",
+  "UNDECIDED *_BTST? (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B U3",
+  "UNDECIDED *_HDRV? (HIGH_SPEED_DIGITAL, 14 net(s)): no edge is declared and no held document states one; ICs on them: LM5176PWPR buck-boost controller, +12V_HF from VBAT U15, LM5176PWPR buck-boost controller, +13V8_PA from VBAT U13, LM5176PWPR buck-boost controller, +54V_POE from VBAT U16, LM5176PWPR buck-boost controller, +5V_DEV from VBAT U7, LM5176PWPR buck-boost controller, +5V_S2 from VBAT U5",
+  "UNDECIDED *_HIDRV? (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B U3",
+  "UNDECIDED *_LDRV? (HIGH_SPEED_DIGITAL, 14 net(s)): no edge is declared and no held document states one; ICs on them: LM5176PWPR buck-boost controller, +12V_HF from VBAT U15, LM5176PWPR buck-boost controller, +13V8_PA from VBAT U13, LM5176PWPR buck-boost controller, +54V_POE from VBAT U16, LM5176PWPR buck-boost controller, +5V_DEV from VBAT U7, LM5176PWPR buck-boost controller, +5V_S2 from VBAT U5",
+  "UNDECIDED *_LODRV? (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B U3",
+  "UNDECIDED *_SW (HIGH_SPEED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: TPS62933DRLR 3 A buck, 12.0 V heater rail U33",
+  "UNDECIDED *_SW1 (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: LM5176PWPR buck-boost controller, +5V_DEV from VBAT U7, LM5176PWPR buck-boost controller, +5V_S2 from VBAT U5",
+  "UNDECIDED *_SW2 (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: LM5176PWPR buck-boost controller, +5V_DEV from VBAT U7, LM5176PWPR buck-boost controller, +5V_S2 from VBAT U5",
+  "UNDECIDED EXP_INT (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: PCA9555PW (0x21): enables and status U27, PCA9555PW (0x24): power-good lines, spares U28",
+  "UNDECIDED INA_ALERT (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: INA226 PA rail monitor (0x46) U14, INA226 PoE rail monitor (0x47) U17, INA226 rail monitor +5V_DEV U11, INA226 rail monitor +5V_S1 U8, INA226 rail monitor +5V_S2 U9",
+  "UNDECIDED PD_CC? (CLOCKED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: TPD2E2U06QDBZRQ1 low-capacitance ESD array, USB-C CC1 and CC2 at the connector U31, TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A) U18",
+  "UNDECIDED PD_VTX (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: TPS25740ARGER USB-C PD source controller, 45 W outlet (5, 9, 15 V at 3 A) U18",
+  "UNDECIDED PROCHOT (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B U3, PCA9555PW (0x21): enables and status U27",
+  "UNDECIDED RF_* (HIGH_SPEED_DIGITAL, 11 net(s)): no edge is declared and no held document states one; ICs on them: none",
+  "UNDECIDED SCL (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B U3, INA226 PA rail monitor (0x46) U14, INA226 PoE rail monitor (0x47) U17, INA226 rail monitor +5V_DEV U11, INA226 rail monitor +5V_S1 U8",
+  "UNDECIDED SDA (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: BQ25731RSNR 1 to 5 cell buck-boost charger, 4S from the 20 V bus, I2C 0x6B U3, INA226 PA rail monitor (0x46) U14, INA226 PoE rail monitor (0x47) U17, INA226 rail monitor +5V_DEV U11, INA226 rail monitor +5V_S1 U8"
+ ],
+ "inputs": {
+  "board": "a",
+  "board_facts": {
+   "path": "tools/pcb_board_facts.yaml",
+   "sha256_16": "07af4d0f2b166694"
+  },
+  "board_table": {
+   "path": "tools/boards/a.json",
+   "sha256_16": "b9411f2403e03da7"
+  },
+  "critical_k": 6,
+  "document_1": {
+   "path": "v2/vendor/standards/usb-2-0-specification-2024-09-27.md",
+   "sha256_16": "2ecb40606d4b84fe"
+  },
+  "extent_mm": 400.0,
+  "intent": {
+   "path": "out/pcb-a-power-intent.json",
+   "sha256_16": "92dd3b1cda9046b8"
+  },
+  "netlist": {
+   "content16": "2c5c1d5a388cc95f",
+   "path": "out/pcb-a-power.net",
+   "sha256_16": "da05dc02bc1e612f"
+  },
+  "project": {
+   "path": "pcb-a-power-a23/pcb-a-power.kicad_pro",
+   "sha256_16": "a5f669ecb899545f"
+  },
+  "slowest_layer": "JLC06161H-3313 In2.Cu",
+  "stack_table": {
+   "path": "tools/stackup_write.py",
+   "sha256_16": "b55a3c0f58c805c2"
+  },
+  "stacks": [
+   "JLC06161H-3313"
+  ],
+  "t_pd_ps_per_mm": 7.154
+ },
+ "missing_input": null,
+ "note": "SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rate and the document that states it (UNDECIDED where none does), the critical length l = t_r / (k t_pd) on the slowest layer of every stack the board may be drawn on, and whether the netlist carries an impedance target, a series termination or a declaration where a net may be electrically long. The routed lengths are the layout gate's (edge_length_routed). The table is edge_length.table.json beside this verdict. Session decisions of 26 September 2026: LOW_SPEED_OR_DC asked no edge, the first matching entry decides, the slowest layer of the declared and ruled stacks, the stripline bound, the corner-to-corner extent, the project file's class where the netlist says Default",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "SI-001": "e67c393563c5d8ce"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "SI-001"
+ ],
+ "runtime": {
+  "python": "3.12.3"
+ },
+ "tool": "edge_length",
+ "tools": {
+  "git_head": "a21eae092a53",
+  "tools_tree_sha": "d73b97b4332e9c6f"
+ },
+ "ts": "2026-09-27T15:36:55Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "a21eae092a53",
+ "writer": {
+  "file": "edge_length.py",
+  "sha16": "fd66cbd9bce2fa7b"
+ }
+}

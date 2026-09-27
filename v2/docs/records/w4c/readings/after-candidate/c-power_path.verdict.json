@@ -1,0 +1,73 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "power_path.py",
+  "files": {
+   "power_path.py": "d587cd5843213f62",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "58a3e65f7da43262",
+  "unresolved": []
+ },
+ "counts": {
+  "feeds": 3,
+  "feeds_short": 0,
+  "nodes": 58,
+  "rails": 5,
+  "segments": 23,
+  "undeclared": 0
+ },
+ "denominator": null,
+ "evidence": [
+  "BZ_K (node) carries +5V's 0.03 A through BZ1",
+  "MWARN_A (node) carries LED_RAIL's 0.02 A through R21",
+  "MCAUT_A (node) carries LED_RAIL's 0.02 A through R22",
+  "SOSACT_A (node) carries LED_RAIL's 0.02 A through R23",
+  "SAT_A (node) carries LED_RAIL's 0.03 A through R24",
+  "MESH_A (node) carries LED_RAIL's 0.03 A through R25",
+  "LTE_A (node) carries LED_RAIL's 0.03 A through R26",
+  "GPS_A (node) carries LED_RAIL's 0.03 A through R27",
+  "SHORE_A (node) carries LED_RAIL's 0.03 A through R28",
+  "CHG_A (node) carries LED_RAIL's 0.03 A through R29",
+  "MSG_A (node) carries LED_RAIL's 0.03 A through R30",
+  "BAT1_A (node) carries LED_RAIL's 0.02 A through R31",
+  "BAT2_A (node) carries LED_RAIL's 0.03 A through R32",
+  "BAT3_A (node) carries LED_RAIL's 0.03 A through R33",
+  "BAT4_A (node) carries LED_RAIL's 0.03 A through R34",
+  "BAT5_A (node) carries LED_RAIL's 0.03 A through R35",
+  "TX_A (node) carries LED_RAIL's 0.02 A through R36",
+  "PIRING_A (node) carries LED_RAIL's 0.02 A through R40",
+  "TESTRING_A (node) carries LED_RAIL's 0.01 A through R41",
+  "RAIL_SENSE (node) carries LED_RAIL_SW's 0.00 A through R15",
+  "Q1_G (node) carries LED_RAIL_SW's 0.00 A through R17",
+  "MAINRING_A (node) carries LED_RAIL_SW's 0.01 A through R39",
+  "EMCLAMP_A (node) carries LED_RAIL_SW's 0.01 A through R47"
+ ],
+ "inputs": {
+  "board": "c"
+ },
+ "missing_input": null,
+ "note": "every declared node that carries a declared rail's current through one of that rail's own load parts: a candidate segment of a power path that no power rule is looking at. It REPORTS: some of these are genuinely nodes and the declaration is where that is written down, with its reason.",
+ "policy": {
+  "hard_types": 15,
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [],
+ "runtime": {
+  "python": "3.12.3"
+ },
+ "tool": "power_path",
+ "tools": {
+  "git_head": "a21eae092a53",
+  "tools_tree_sha": "d73b97b4332e9c6f"
+ },
+ "ts": "2026-09-27T15:37:43Z",
+ "verdict": "PASS",
+ "version": "a21eae092a53",
+ "writer": {
+  "file": "power_path.py",
+  "sha16": "d587cd5843213f62"
+ }
+}

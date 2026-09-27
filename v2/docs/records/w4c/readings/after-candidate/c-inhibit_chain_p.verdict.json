@@ -1,0 +1,79 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "check_contracts.py",
+  "files": {
+   "boardtable.py": "41bd92e61f12c374",
+   "check_contracts.py": "5e14f456a0791c35",
+   "intent.py": "f1ac033e0f3c10f1",
+   "kisch.py": "3e28374d15be25e0",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "sch_prov.py": "a98e5a71ac74ccee",
+   "tx_inhibit.py": "67cba7a55beebc1d",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "86f82710cd723e3c",
+  "unresolved": []
+ },
+ "counts": {
+  "fail": 0,
+  "pass": 1,
+  "undecided": 0,
+  "unjudged": 0
+ },
+ "denominator": 1,
+ "evidence": [],
+ "inputs": {
+  "boards": "A,B,C,D,E,P",
+  "intent_e": {
+   "path": "pcb-e1-dock-e7/out/pcb-e1-dock-intent.json",
+   "sha256_16": "5913e38b20333d35"
+  },
+  "intent_p": {
+   "path": "pcb-p-pack-p2/out/pcb-p-pack-intent.json",
+   "sha256_16": "6ff1b8129a5c5aff"
+  },
+  "netlist_e": {
+   "content16": "b8d237f0b8d759f5",
+   "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
+   "sha256_16": "d6137f50059e5cbc"
+  },
+  "netlist_p": {
+   "content16": "efe60479293f0004",
+   "path": "pcb-p-pack-p2/out/pcb-p-pack.net",
+   "sha256_16": "085f833362fbbda8"
+  }
+ },
+ "missing_input": null,
+ "note": "RF-002 on this board: where the transmit inhibit line runs, it is present, reaches the gate it keys, has the panel toggle as its only source, is buffered and not inverted, and is pulled down so a missing panel inhibits, and with the panel unplugged or unpowered its own pull-downs hold it under the gates' 0.8 V against everything on it that can source current, every pin's stated leakage included (II, Ioff) with every other part powered or not, whichever is worse; every transmitter this board carries is reached from EMCON in hardware (tx_inhibit.py), with every net on the way driven by nothing else on any board, and with each gate on the way unpowered its enable or keying pin is still held at EMCON's level by a passive pull; and every part that names a radio is a listed transmitter, an accessory or a receiver",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "RF-002": "2394810b0afd0d73"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "RF-002"
+ ],
+ "runtime": {
+  "python": "3.12.3"
+ },
+ "tool": "inhibit_chain_p",
+ "tools": {
+  "git_head": "a21eae092a53",
+  "tools_tree_sha": "d73b97b4332e9c6f"
+ },
+ "ts": "2026-09-27T15:36:44Z",
+ "verdict": "PASS",
+ "version": "a21eae092a53",
+ "writer": {
+  "file": "check_contracts.py",
+  "sha16": "5e14f456a0791c35"
+ }
+}

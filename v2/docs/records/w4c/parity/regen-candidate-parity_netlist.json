@@ -1,0 +1,202 @@
+{
+ "kind": "netlist",
+ "phase_labels": [
+  [
+   "C24"
+  ],
+  [
+   "C24"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  },
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  }
+ ],
+ "design_header": [
+  [
+   "/root/r8-c/new/v2/ecad/pcb-c-display-c8/pcb-c-display.kicad_sch",
+   "2026-09-26T21:59:19+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ],
+  [
+   "/root/w4c/cand/v2/ecad/pcb-c-display-c8/pcb-c-display.kicad_sch",
+   "2026-09-27T15:35:32+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ]
+ ],
+ "content_hash": [
+  "96c2678f4a3303b8",
+  "ebde053efc0a3906"
+ ],
+ "counts": {
+  "comps": [
+   217,
+   219
+  ],
+  "nets": [
+   153,
+   153
+  ]
+ },
+ "comps_only_committed": [],
+ "comps_only_other": [
+  "R50",
+  "R51"
+ ],
+ "comps_changed": [
+  [
+   "R14",
+   {
+    "value": [
+     "10k",
+     "2.2k 1%"
+    ],
+    "fields": [
+     {
+      "LCSC": "C25804",
+      "Footprint": "Resistor_SMD:R_0603_1608Metric"
+     },
+     {
+      "LCSC": "C4190",
+      "Footprint": "Resistor_SMD:R_0603_1608Metric"
+     }
+    ],
+    "properties": [
+     {
+      "LCSC": "C25804",
+      "Sheetname": "",
+      "Sheetfile": "pcb-c-display.kicad_sch",
+      "ki_keywords": "R res resistor",
+      "ki_fp_filters": "R_*"
+     },
+     {
+      "LCSC": "C4190",
+      "Sheetname": "",
+      "Sheetfile": "pcb-c-display.kicad_sch",
+      "ki_keywords": "R res resistor",
+      "ki_fp_filters": "R_*"
+     }
+    ]
+   }
+  ]
+ ],
+ "comps_uuid_shifted": 184,
+ "nets_only_committed": [],
+ "nets_only_other": [],
+ "nets_changed": [
+  [
+   "/RAIL_SENSE",
+   [],
+   [
+    [
+     "R51",
+     "1",
+     "",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "/TX_INHIBIT_n",
+   [],
+   [
+    [
+     "R50",
+     "1",
+     "",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "GND",
+   [],
+   [
+    [
+     "R50",
+     "2",
+     "",
+     "passive"
+    ],
+    [
+     "R51",
+     "2",
+     "",
+     "passive"
+    ]
+   ]
+  ]
+ ],
+ "changed_lines": 432,
+ "changed_lines_sample": [
+  "-      (tstamps \"f6567201-a716-5bbf-ad5f-2da902a6801d\"))",
+  "+      (tstamps \"ce426be8-d91c-5492-9f9d-e9e9b6e929ed\"))",
+  "-      (tstamps \"13c92cad-0e4d-5d41-bd7f-790cd28a5f9a\"))",
+  "+      (tstamps \"485b8bd7-2120-5768-8e6d-b72dbd8d60d6\"))",
+  "-      (tstamps \"a7ecaef2-3ef2-50ea-937f-d4d74abd74ea\"))",
+  "+      (tstamps \"2887d2b6-c999-59de-be96-b46fc9f0a9ab\"))",
+  "-      (tstamps \"9f248e6e-4116-54f9-991d-21597e9eec91\"))",
+  "+      (tstamps \"3f3f0835-9caf-5840-861c-78d2b279e408\"))",
+  "-      (tstamps \"5bdf5a4f-687e-5ef9-8f39-ba57e425719f\"))",
+  "+      (tstamps \"79285797-5dac-5e48-9c83-6daedcf5bdc7\"))",
+  "-      (tstamps \"d35f1115-8965-5308-8256-d907df16d19d\"))",
+  "+      (tstamps \"8947f144-022c-5cb2-8407-9e3f266a17dc\"))",
+  "-      (tstamps \"a306f340-5bf0-5d7e-aa7b-292d00b6be47\"))",
+  "+      (tstamps \"96c713d7-c892-5de6-85a4-d10455e2987c\"))",
+  "-      (tstamps \"c6e6b123-f69a-54dc-abea-947559417199\"))",
+  "+      (tstamps \"d30a2a93-88c9-5cd6-a075-e377967c867b\"))",
+  "-      (tstamps \"67349aaa-410d-5d37-88f8-2feae3e443c0\"))",
+  "+      (tstamps \"d83d8b28-b461-53d2-a241-d0e64bb4456f\"))",
+  "-      (tstamps \"129476de-ba3a-5c80-a0b9-29a239ef67c9\"))",
+  "+      (tstamps \"7d76dd63-e469-5251-9c33-2fffa6d62605\"))",
+  "-      (tstamps \"871d57c3-399c-586e-a4e0-43b82a4db384\"))",
+  "+      (tstamps \"0f883848-64c4-50af-8234-88d77d08311f\"))",
+  "-      (tstamps \"0bcb4a56-c0f7-5597-b4cd-b65eca61e539\"))",
+  "+      (tstamps \"d0b54cc6-5f6d-5b02-9d18-a0c51ab72ca6\"))",
+  "-      (tstamps \"1ae93322-e203-5815-b15c-790353a0bd06\"))",
+  "+      (tstamps \"352ff035-edec-592d-8b72-3662c3a7f9b8\"))",
+  "-      (tstamps \"dfe4c6bc-ecbf-5964-8843-b5ce4f619048\"))",
+  "+      (tstamps \"c607839a-d7bb-581c-a6dd-b90cf46c91aa\"))",
+  "-      (tstamps \"69ef28a4-265c-51b6-8d0c-7a370601f3e7\"))",
+  "+      (tstamps \"6d5de879-8434-5482-b190-0530ffd4533c\"))",
+  "-      (tstamps \"b6e05ad5-157e-59eb-ba3a-9b1d48c4732a\"))",
+  "+      (tstamps \"58987d5c-abbd-57a4-a5e3-1aa44e4a892a\"))",
+  "-      (tstamps \"ee5003d1-f53b-5bb9-a48e-4e6b892dd2d6\"))",
+  "+      (tstamps \"46f6bf19-298b-501c-8f4b-b862a042f006\"))",
+  "-      (tstamps \"1e4573b3-bc49-5d7c-b2c7-f2da93fa47e7\"))",
+  "+      (tstamps \"085f9390-799b-5c5c-a4aa-5356f0812246\"))",
+  "-      (tstamps \"65d6e6f2-3e5b-5d9d-88e6-606b518df3f5\"))",
+  "+      (tstamps \"f74bc96e-2660-5c05-820b-663f92336e9e\"))",
+  "-      (tstamps \"95d63a25-b517-5e2f-8d90-3c330a3deb95\"))",
+  "+      (tstamps \"cc1e8a79-7700-5f13-928d-22795ab90100\"))",
+  "-      (tstamps \"4b68aa1e-d23f-5a99-8dce-c1109952c026\"))",
+  "+      (tstamps \"3ad74f50-864c-51da-8b49-6a49e3a79760\"))",
+  "-      (tstamps \"8a4a44aa-ddca-5e43-bf36-80a07e3efe7a\"))",
+  "+      (tstamps \"ee76d4a0-fd63-5501-a720-b97413f344f0\"))",
+  "-      (tstamps \"2b6f32d6-1b72-5e3a-9028-191c23eed17b\"))",
+  "+      (tstamps \"e21a09d9-2061-5cbd-8342-53d541ffbc45\"))",
+  "-      (tstamps \"cd1a3741-1a42-539f-b631-e9df1f72f3a6\"))",
+  "+      (tstamps \"5d38a62b-a310-5a99-b9a6-93db74b5b989\"))",
+  "-      (tstamps \"16572f49-6d9f-57ac-beb1-baaa30cf0841\"))",
+  "+      (tstamps \"d6cb7d16-64c6-5714-a46c-c01a673f3c88\"))",
+  "-      (tstamps \"d4312a16-ae49-52e7-9fd7-443a15e9ef13\"))",
+  "+      (tstamps \"9206293d-a90b-503d-a968-32ba7c3e9b66\"))",
+  "-      (tstamps \"f81af8be-ca6f-590a-b163-07d82d1852f0\"))",
+  "+      (tstamps \"83807b5f-3497-5c4f-a02e-bc07720583c3\"))",
+  "-      (tstamps \"1f4baaa0-6e77-5a7f-90f7-e736654f87f0\"))",
+  "+      (tstamps \"4c783e55-a1ed-581e-987b-f60d2cfaf805\"))",
+  "-      (tstamps \"d6cb7d16-64c6-5714-a46c-c01a673f3c88\"))",
+  "+      (tstamps \"86f17a84-50e7-5907-b77f-1695be89c6a5\"))",
+  "-      (tstamps \"4352e23b-65d2-5b2e-af5b-ebfd33d25c51\"))",
+  "+      (tstamps \"4ba33815-0caf-5ee0-abd5-daeb977b5a1b\"))"
+ ],
+ "result": "DIFFERENT"
+}
