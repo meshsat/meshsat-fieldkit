@@ -1,8 +1,11 @@
 # MeshSat field kit V2: engineering questions for the blocked items
 
 Written 27 September 2026 (MESHSAT-1357) from the layer-by-layer audit of the repository at commit `e3aedb25`. Paths
-are repository paths; file:line citations are lines at `e3aedb25`. **Handover H1 adds EQ-15 to EQ-21**, the questions circuit round 8
-(main `84e52461`) and the handover closers raised; their citations are at the H1 source commit. Every blocked question the audit found in the nine
+are repository paths; file:line citations are lines at `e3aedb25` (including the few that cite a Markdown page by
+line), which the public repository serves at `https://raw.githubusercontent.com/meshsat/meshsat-fieldkit/e3aedb25/<path>`.
+**Handover H1 adds EQ-15 to EQ-21**, the questions circuit round 8 (main `84e52461`) and the handover closers raised;
+their citations are at the H1 source commit named in the snapshot's `SOURCE.txt` (`8a19fe29` for H1; H1.1 changes no
+design file those questions cite). Internal names are defined in `v2/docs/handover/GLOSSARY.md`. Every blocked question the audit found in the nine
 pre-PCB layers is here once, deduplicated across layers, in the form the owner asked for
 (`v2/docs/reviews/2026-09-27-handover-execution-prompt.md` section 6): the exact issue, what it affects, the evidence,
 what was tried, the viable options, the recommended next action, the expertise or equipment needed, and cost and lead

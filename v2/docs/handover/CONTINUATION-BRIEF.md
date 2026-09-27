@@ -46,7 +46,8 @@ later sections that section 0 supersedes also carry an inline **Superseded in H1
   `hc7.patch`, `r8b.patch`), each with its base, sha256 and last review's blocking findings in the folder's README.
 - **Known gaps of H1.** The readings behind `CURRENT-EVIDENCE.md` and `PCB-RULE-STATUS-*.md` live in the gitignored
   `v2/ecad/out/` and each board's `out/` folder and are not in the snapshot; the rendered pages are. REGENERATE.md
-  section 9 gives the re-take procedure that reproduces and updates them. The test suite
+  section 9 states the re-take procedure that reproduces and updates them, in words: its driver arrives in the next
+  snapshot (H2) and is not in H1.1. The test suite
   needs a git checkout for `test_netlist_provenance` and for the registry's closed-by-commit checks (REGENERATE.md
   section 7). The ZIP's bytes are deterministic per host only: compare `MANIFEST.tsv`, not the ZIP's sha256, across
   hosts.
