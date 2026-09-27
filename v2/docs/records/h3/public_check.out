@@ -1,0 +1,28 @@
+public_check: asked at 2026-09-27 20:38 UTC
+this clone's refs/remotes/origin/main: 6ec37197651e40d314e8898c3060c46efb1a20d0
+the public repository's main (https://api.github.com/repos/meshsat/meshsat-fieldkit/commits/main): HTTP 200, head 6ec37197651e40d314e8898c3060c46efb1a20d0, committed 2026-09-27T17:38:55Z
+commit    ancestor of origin/main    github.com commit page what it is
+b89b50b4  yes                        HTTP 200               H2's source commit
+174d8466  yes                        HTTP 200               H2's snapshot commit
+62f26a44  yes                        HTTP 200               the newest commit H2's timeline marks public yes
+cecfd0f1  yes                        HTTP 200               fnd/h2: the targeted fix (S-77's closing commit)
+3e4799eb  yes                        HTTP 200               fnd/h2: the registry baselined at the targeted fix
+6b2a9965  yes                        HTTP 200               fnd/h2: the narrow verification, layer 1 baselined
+763bccdf  yes                        HTTP 200               fnd/h2: the claims screen re-taken, the H2 exports' commit
+c5d09c78  yes                        HTTP 200               fnd/h2: the H2 exports filed
+a54b793b  yes                        HTTP 200               layer 3: S-80's wording fix, the commit the registry is baselined at
+2c12be91  yes                        HTTP 200               layer 3: the baseline written
+24e7bf5a  yes                        HTTP 200               layer 3: the re-check filed, layer 3 COMPLETE
+a9f212c7  yes                        HTTP 200               layers 1 and 2: the check of the definition restructure filed, the re-stamp's commit
+a54b1f4d  yes                        HTTP 200               after H2, on main: the packer's repo subcommand
+90314d99  yes                        HTTP 200               after H2, on main: pcb_interfaces.yaml read_at re-anchored
+ed988ba8  yes                        HTTP 200               after H2, on main: INT-001's readings re-taken
+ecfe5414  yes                        HTTP 200               after H2, on main: the layout constraint sheets re-bound
+5d568a66  yes                        HTTP 200               after H2, on main: the H2 minor findings answered in the pages
+9d2f8dce  yes                        HTTP 200               after H2, on main: H2-RESPONSE.md
+992f2bc2  no                         HTTP 404               branch h2m-backup: the same patch as a54b1f4d
+248b951d  no                         HTTP 404               branch h2m-backup: the same patch as 90314d99
+2a3a1451  no                         HTTP 404               branch h2m-backup: the same patch as ed988ba8
+1221262e  no                         HTTP 404               branch h2m-backup: the same patch as ecfe5414
+44b87208  no                         HTTP 404               branch h2m-backup: the same patch as 5d568a66
+6ec37197  yes                        HTTP 200               main when the H3 pages were written
