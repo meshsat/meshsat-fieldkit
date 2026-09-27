@@ -47,8 +47,8 @@ the row current, and the owner is the stream that takes that step.
 
 | what closes it first | owner | A | B | C | D | E | P | E5 | set |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| a re-take alone (the reading would be current) | board stream of that board | 10 | 12 | 9 | 8 | 10 | 12 | 4 | 65 |
-| the design or its declarations (the reading is current and is not a PASS) | board stream of that board | 2 | 0 | 0 | 2 | 2 | 0 | 0 | 6 |
+| a re-take alone (the reading would be current) | board stream of that board | 11 | 12 | 9 | 9 | 11 | 12 | 4 | 68 |
+| the design or its declarations (the reading is current and is not a PASS) | board stream of that board | 1 | 0 | 0 | 1 | 1 | 0 | 0 | 3 |
 | a deciding verification for the rule | registry writer (pcb_rules_coverage.yaml) | 0 | 0 | 0 | 0 | 1 | 1 | 1 | 3 |
 | a layout-entry requirement of a hold that gates a later stage (the hold itself stays until that stage) | board stream of that board, with the holds writer for the record | 2 | 0 | 0 | 2 | 2 | 0 | 0 | 6 |
 | the layout-entry stage of a feasibility blocker closed on its named evidence | the blocker's owner (tools/pcb_requirements.yaml) | 4 | 5 | 2 | 4 | 2 | 3 | 1 | 21 |
@@ -62,7 +62,7 @@ the row current, and the owner is the stream that takes that step.
 | A | PWR-001 FAIL | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads FAIL | board stream A |
 | A | PWR-002 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | power_sequence.py re-taken on the committed netlist | board stream A |
 | A | PWR-003 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | energy_chain.py re-taken on the committed netlist | board stream A |
-| A | SI-001 INCONCLUSIVE | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads INCONCLUSIVE | board stream A |
+| A | SI-001 INCONCLUSIVE | AWAITING_REVALIDATION (CONFIG_CHANGED) | CURRENT_CANDIDATE (BOUND) | edge_length.py re-taken on the committed netlist; today's reading is INCONCLUSIVE, which the re-take may repeat | board stream A |
 | A | RF-002 INCONCLUSIVE | AWAITING_REVALIDATION (NOT_CURRENT_EVIDENCE) | CURRENT_CANDIDATE (BOUND) | check_contracts.py re-taken on the committed netlist; today's reading is INCONCLUSIVE, which the re-take may repeat | board stream A |
 | A | INT-001 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | check_contracts.py, interfaces.py re-taken on the committed netlist | board stream A |
 | A | TRN-001 FAIL | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | port_protect.py re-taken on the committed netlist; today's reading is FAIL, which the re-take may repeat | board stream A |
@@ -106,7 +106,7 @@ the row current, and the owner is the stream that takes that step.
 | D | SCH-005 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | pin_map_lands.py re-taken on the committed netlist | board stream D |
 | D | CMP-001 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | derate.py re-taken on the committed netlist | board stream D |
 | D | PWR-001 FAIL | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads FAIL | board stream D |
-| D | SI-001 INCONCLUSIVE | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads INCONCLUSIVE | board stream D |
+| D | SI-001 INCONCLUSIVE | AWAITING_REVALIDATION (CONFIG_CHANGED) | CURRENT_CANDIDATE (BOUND) | edge_length.py re-taken on the committed netlist; today's reading is INCONCLUSIVE, which the re-take may repeat | board stream D |
 | D | CLK-001 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | clock_check.py re-taken on the committed netlist | board stream D |
 | D | RF-002 INCONCLUSIVE | AWAITING_REVALIDATION (NOT_CURRENT_EVIDENCE) | CURRENT_CANDIDATE (BOUND) | check_contracts.py re-taken on the committed netlist; today's reading is INCONCLUSIVE, which the re-take may repeat | board stream D |
 | D | INT-001 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | check_contracts.py, interfaces.py re-taken on the committed netlist | board stream D |
@@ -124,7 +124,7 @@ the row current, and the owner is the stream that takes that step.
 | E | PWR-001 FAIL | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads FAIL | board stream E |
 | E | PWR-002 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | power_sequence.py re-taken on the committed netlist | board stream E |
 | E | PWR-003 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | energy_chain.py re-taken on the committed netlist | board stream E |
-| E | SI-001 INCONCLUSIVE | CURRENT_CANDIDATE (BOUND) | CURRENT_CANDIDATE (BOUND) | the reading is current and reads INCONCLUSIVE | board stream E |
+| E | SI-001 INCONCLUSIVE | AWAITING_REVALIDATION (CONFIG_CHANGED) | CURRENT_CANDIDATE (BOUND) | edge_length.py re-taken on the committed netlist; today's reading is INCONCLUSIVE, which the re-take may repeat | board stream E |
 | E | CLK-001 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | clock_check.py re-taken on the committed netlist | board stream E |
 | E | RF-002 INCONCLUSIVE | NO_EVIDENCE (NO_VERDICT) | NO_EVIDENCE (NO_VERDICT) | the coverage map gives it no deciding verification (NO_VERDICT) | registry writer (pcb_rules_coverage.yaml) |
 | E | INT-001 PASS | AWAITING_REVALIDATION (TOOL_CHANGED) | CURRENT_CANDIDATE (BOUND) | check_contracts.py, interfaces.py re-taken on the committed netlist | board stream E |
@@ -207,7 +207,7 @@ whose evidence class differs from what the entry-script instrument of 20 Septemb
 evidence; a row whose class stayed the same and whose first failing cause moved (most often to TOOL_CHANGED
 from a cause checked after it) is counted but not listed.
 
-**4 of 338 required rows changed class; 162 more changed only their first failing cause.**
+**4 of 338 required rows changed class; 161 more changed only their first failing cause.**
 
 | board | rule | result | entry script alone | code bundle | files that moved |
 |---|---|---|---|---|---|
@@ -229,14 +229,14 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 
 | board | CURRENT_CANDIDATE | VALID_HISTORICAL | PASS on either | AWAITING_REVALIDATION | DESK_REVIEW | PHYSICAL_TEST | NO_EVIDENCE | pairs |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| A | 3 | 0 | 1 | 45 | 3 | 0 | 4 | 55 |
+| A | 2 | 0 | 1 | 46 | 3 | 0 | 4 | 55 |
 | B | 1 | 0 | 1 | 46 | 4 | 0 | 5 | 56 |
 | C | 1 | 0 | 1 | 41 | 3 | 0 | 3 | 48 |
-| D | 3 | 0 | 1 | 42 | 3 | 0 | 3 | 51 |
-| E | 3 | 0 | 1 | 45 | 3 | 0 | 4 | 55 |
+| D | 2 | 0 | 1 | 43 | 3 | 0 | 3 | 51 |
+| E | 2 | 0 | 1 | 46 | 3 | 0 | 4 | 55 |
 | P | 1 | 0 | 1 | 41 | 3 | 0 | 3 | 48 |
 | E5 | 2 | 0 | 2 | 20 | 2 | 0 | 1 | 25 |
-| **set** | **14** | **0** | **8** | **280** | **21** | **0** | **23** | **338** |
+| **set** | **11** | **0** | **8** | **283** | **21** | **0** | **23** | **338** |
 
 ## Rules with a PASS on the current candidate
 
@@ -268,6 +268,7 @@ tool.
 | TOOL_CHANGED | the code that wrote it has changed since: its entry script or a local module it imports (exact by the reading's code bundle; for an older reading by its writer's hash and its imports' commit dates) | re-taken under the current tool (current only when the re-take also binds its artefact and configuration), or a compatibility entry proving the change is not semantic | 42 | 41 | 35 | 39 | 43 | 36 | 17 | 253 | 64 |
 | NOT_CURRENT_EVIDENCE | the reading itself is stale (epoch, rule digest, another board, or a tool meaning change) | re-taken | 3 | 3 | 3 | 3 | 2 | 2 | 2 | 18 | 4 |
 | TEMP_INPUT | it judged files in a temporary directory, not this tree | re-taken in this tree | 0 | 0 | 1 | 0 | 0 | 1 | 1 | 3 | 0 |
+| CONFIG_CHANGED | a configuration input its writer reads (rules_status.CONFIG_INPUTS) changed after the reading | re-taken, or a `kind: config` compatibility entry showing the change does not reach what the tool reads | 1 | 0 | 0 | 1 | 1 | 0 | 0 | 3 | 3 |
 
 ## Writers whose configuration is not declared yet
 
