@@ -1,10 +1,18 @@
 # Board E1 (dock strip): layout constraints
 
-A view over the records at `main` `e3aedb25` (conventions and shared rules: [README.md](README.md)). Candidate: phase
-E17, netlist `v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net` sha256/16 `d910e49c5f5f50b2`, intent
-`pcb-e1-dock-intent.json` `9ae33eb17d04670e`; the committed board file `a462ac2620b9b8d3` is E17. Board E is not at
-layout entry: 15 blocker lines (`CURRENT-EVIDENCE.md` lines 123 to 137), among them the decision 31 review record and
-FEA-006 (G11, G13, G14). **Round 8** (`fnd/r8int1`, which reached `main` as `53a98a71` after this sheet was first
+**Bound to the H2 line (after H2, 27 September 2026).** Candidate re-read at `ef144760`: phase E17, netlist
+`v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net` sha256/16 `d6137f50059e5cbc` (round 8 at `bc0f562f`, set 5 at `b7f96784`),
+intent `pcb-e1-dock-intent.json` `5913e38b20333d35`; the committed board file `a462ac2620b9b8d3` is E17. Section 2's
+table is regenerated from `calc/rail_widths.py` on that intent: VIN_RAW at 14.10 A and TRK_OUT at 10.33 A are now the
+committed figures, not a round 8 note, and SGP_VDD is declared (marked **H2**). Board E is not at layout entry: **5
+reasons at H2** (`CURRENT-EVIDENCE.md`): PWR-001 INCONCLUSIVE (FAN1_SW and FAN2_SW, S-76), SI-001 INCONCLUSIVE,
+decision 31's protection review, FEA-006, FEA-007. Known changes of the H2 line: **section 6.1 item 1's defect is
+corrected in the generator** (set 5, `b7f96784`: the tracker senses its current on its bottom leg, HC9-E1, S-47's
+core; the item stays below as the reading that found it), and VIN_RAW crosses the dock on four 9 A power pins with
+board A's half (SC-55, `b7f96784`). Every other line below is the reading at `e3aedb25`, not re-read against the H2 netlist; where it and a record disagree, the record governs (README).
+
+As first written: a view over the records at `main` `e3aedb25` (conventions and shared rules: [README.md](README.md)),
+candidate then netlist `d910e49c5f5f50b2`, intent `9ae33eb17d04670e`, 15 blocker lines. **Round 8** (`fnd/r8int1`, which reached `main` as `53a98a71` after this sheet was first
 written; board E's part is `bc0f562f`, netlist sha256/16 `f3c1ad6153002976`) raises two of board E's declared
 currents: **VIN_RAW from 6.15 A to 14.1 A and TRK_OUT from 6.16 A to 10.33 A** (its intent file compared rail by rail
 for this sheet); section 2 gives both, and sections 5 and 6.1 cite `gen_sch_e.py` by its line numbers at `53a98a71`.
@@ -62,11 +70,12 @@ From `calc/rail_widths.py` (decision 35, 10 K; 1 oz outer, 0.0152 mm inner).
 | rail | V (working) | typ / peak A | governing A | one outer face, mm | two outer faces, each mm | inner, mm | barrels 0.3 / 0.4 / 0.5 mm |
 |---|---|---|---|---:|---:|---:|---|
 | CELL+ (J_BATT to F3), CELL_F (F3 to the dock block) | 14.4 (16.8) | 10 / 18 | 18.0, PWR-F12 | **23.91** | 6.72 | 195.8, not a conductor | 25 / 21 / 18 |
-| VIN_RAW (the input filter's output to J_BLK) | 12.0 (36.0) | 6.15 / 6.15; **round 8: 14.1** | 6.15; **14.1** | 3.67; **15.29** | 1.41; **4.43** | 27.4; 125.2 | 9 / 7 / 6; **20 / 16 / 14** |
-| TRK_OUT (the tracker's output) | 15.1 | 6.16 / 6.16; **round 8: 10.33** | 6.16; **10.33** | 3.68; **8.65** | 1.42; **2.89** | 27.5; 70.8 | 9 / 7 / 6; **14 / 12 / 10** |
+| VIN_RAW (the input filter's output to J_BLK; **H2**: 14.10 A committed) | 12.0 (36.0) | 6.15 / 6.15; **round 8: 14.1** | 6.15; **14.1** | 3.67; **15.29** | 1.41; **4.43** | 27.4; 125.2 | 9 / 7 / 6; **20 / 16 / 14** |
+| TRK_OUT (the tracker's output; **H2**: 10.33 A committed) | 15.1 | 6.16 / 6.16; **round 8: 10.33** | 6.16; **10.33** | 3.68; **8.65** | 1.42; **2.89** | 27.5; 70.8 | 9 / 7 / 6; **14 / 12 / 10** |
 | DC_IN, DC_F, DC_P, HS_S, DC_HS (the shore and vehicle inlet) | 12.0 (36.0) | 6.15 / 6.15 | 6.15 | 3.67 | 1.41 | 27.4 | 9 / 7 / 6 |
 | PV_IN, PV_P (the solar input) | 17.6 (25.0) | 5.68 / 6.25 | 5.68 | 3.29 | 1.27 | 23.7 | 9 / 7 / 6 |
 | +3V3_E6, +5V_E6, +5V_GEIGER | 3.3 / 5.0 | 0.1 to 0.35 / up to 0.6 | | under 0.1 | | under 0.5 | 1 / 1 / 1 |
+| SGP_VDD (**H2**, declared in the H2 intent) | 3.3 | under 0.01 | | 0.00 | | 0.0 | 1 / 1 / 1 |
 
 What the table asks of the layout:
 

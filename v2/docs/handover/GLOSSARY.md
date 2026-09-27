@@ -1,8 +1,10 @@
 # MeshSat field kit V2 handover: glossary
 
 MESHSAT-1357, added in handover H1.1 (27 September 2026) because the usability check of H1 found these names used
-without definition. One line per term; the page named after a term is where it is defined in full. Prototype framing:
-nothing named here has been built or measured.
+without definition, and extended after H2 (the same day) with the overloaded families, the evidence classes and their
+causes, the power states and the design items the H2 usability check found unglossed (`H2-RESPONSE.md`). One line per
+term; the page named after a term is where it is defined in full. Prototype framing: nothing named here has been built
+or measured.
 
 ## Process and people
 
@@ -17,7 +19,7 @@ nothing named here has been built or measured.
 | PASS, FAIL, PASS_WITH_FIXES | a review's verdict: no blocking finding; at least one blocking finding; acceptable once the listed blocking fixes are made (the work is not accepted until they are) |
 | blocking, minor | a finding that stops acceptance of the reviewed work, and one that does not |
 | candidate | work in a branch or patch that is not merged: not design until the integrator merges it with its evidence (`candidates/README.md`) |
-| worktree, `fnd/<name>` | a git worktree of the session and its branch; never pushed, so the handover carries them as patches under `v2/docs/handover/candidates/` |
+| worktree, `fnd/<name>` | a git worktree of the session and its branch, never pushed by the session. At H2 no candidate is left in one: the H1.1 patches under `v2/docs/handover/candidates/` are superseded, each merged from a later state (`candidates/README.md` names the commit), and H2 references them rather than bundling them. H2's own commits on `fnd/h2` after `62f26a44` are not on the public repository (the `public` column of `SOURCE.txt`'s timeline); REGENERATE.md section 9 gives the routes that work without them |
 | round 4, 5, 6, 7, 8 | the numbered rounds of circuit and tool corrections of 25 to 27 September 2026, in order; round 8 is the latest, merged for all six boards with a schematic (board B at `b76c18cb`, after H1.1) |
 | set 1 to set 5, wave 3 | the integration batches of 26 and 27 September 2026: sets 1 and 2 round 8 on A, C, D, E and P (H1); set 3 board B's round 8; set 4 the layer 2, 3, 5 and 7 closers, the re-take driver and the case release (`f2b7fa66`); set 5, called wave 3, the streams w3a, w3b, w3de, w3t and w3g on boards A, B, D and E, the RF-002 tool row and the diagrams (`a7b5872e`) |
 | consolidated re-take | one run of `retake_schematic_phase.py` that re-took every schematic-phase reading on the committed netlists (`8ea7867e`, 27 September 2026; REGENERATE.md section 9) |
@@ -50,6 +52,12 @@ nothing named here has been built or measured.
 | Reviews A, B, C, D | the stage reviews of the foundation plan: A layers 1 and 2, B requirements, C architecture and interfaces, D parts and circuits (`EXECUTION-PLAN.md`) |
 | Q-B-ESC-1, Q-B-ESC-2 | board B's bounded escape-routing trials: the first ran on 26 September 2026 (INCONCLUSIVE), the second is specified (`v2/docs/B-FEASIBILITY.md` sections 7.8 and 7.9) |
 | Z-EXP-A, Z-EXP-B; E-01 to E-12; T1 to T11 | the ZEROIZE bench experiments (`feasibility/ZEROIZE.md`); the EMCON bench rows (`feasibility/EMCON.md`); the case mock-up checks (`CASE-MARGINS.md` section 5) |
+| PS-IDLE, PS-IDLE-SPEC, PS-TYP, PS-RED2, PS-RED-b, PS-SURV, PS-SURV-R, PS-HOLD, PS-OFF, PS-ALLTX | the power states the power model computes (`feasibility/POWER-THERMAL.md` sections 4 to 6; `ARCHITECTURE.md` section 8.1; `v2/docs/records/rv-pwr/pwr_budget.py`): PS-IDLE-SPEC three modules idle with the monitor on (the first runtime mode of SC-05) and PS-TYP three typical modules with the monitor on (the second); PS-RED2 the closed-lid reduced mode (`CONOPS.md` section 4c, slots 2 and 3) and PS-RED-b its three-idle variant; PS-SURV and PS-SURV-R the heat stage's one module (as generated, and after BANK-R1); PS-HOLD the hot stop's first step (not computed) and PS-OFF its second; PS-ALLTX every transmitter at once. `POWER-THERMAL.md`'s own PS-RED is its one-module case, not the reduced mode (`ARCHITECTURE.md` section 8.1 says so) |
+| HOT-R1 | the hot stop's signal path independent of the compute modules: the sensor controller on board E (which reads the pack's cell temperatures) drives the dock's spare contact (IF-AE-DOCK pin 12) into an input of board A's expander U27, whose interrupt reaches the panel controller on board C (`CONOPS.md` section 4c). A design item of boards A and E, in neither generator at H2 (S-57, EQ-22), so REQ-077 reads FAIL on the generated boards |
+| BANK-R1 | board B's bank reallocation that lets one compute module carry the owner's D-02b set with the SOS path in the heat stage (slot 3 alone with banks 3 and 2 and the LoRa module); a board B design item, not in its generator at H2 (S-54; `CONOPS.md` sections 4 and 4c) |
+| SD-EMC-1, SD-EMC-2, SD-EMC-6 | EMCON's supply-disconnect items (`feasibility/EMCON.md` section 5): SD-EMC-1 the 5G module's firmware-independent inhibit by removing its supply (SC-11; drawn on board B in round 8 as SD-EMC-1r8, `b76c18cb`), SD-EMC-2 back-feed through lines that stay live, SD-EMC-6 the hardware EMCON lamp's light guide in the face plate |
+| IF-XX-NAME (IF-BC-PANEL, IF-AE-DOCK, IF-PE-PACK, ...) | a board-to-board or board-to-device contract of `v2/ecad/tools/pcb_interfaces.yaml` `board_to_board` (30 at H2): `IF-` then the two boards' letters in the order the pin map is written (B to C for IF-BC-PANEL), or one letter and the device for a contract with a device (IF-A-PA, IF-D-FLANGE, IF-B-RB9704), or `EXT` for a wall port (IF-EXT-USB, IF-EXT-DC, IF-EXT-ETH), then the cable or function. Each names both ends, the pin map, the idle state of every control line, the power carried, whether it may be mated live and which tool judges which part (`ARCHITECTURE.md` section 12; `HW-FW-CONTRACT.md` for the firmware side) |
+| FW-A01 to FW-A16, FW-B01 to FW-B19, FW-C01 to FW-C14, FW-D01 to FW-D03, FW-E01 to FW-E10, FW-P01 to FW-P03, FW-K01 to FW-K05; V-nn; HF-Fnn | the firmware obligations that affect hardware, of `v2/docs/HW-FW-CONTRACT.md` section 3 (the letter is the board or controller: A, B, C the panel controller, D, E the sensor controller, P the pack, K the kit I2C bus); V-nn its verification items (section 5); HF-Fnn its findings |
 
 **Finding ids.** A finding is named `<source>-<letter><number>`: the source is the stream, review or page that found it
 and the letter its kind (F finding, N note or open item, E error, D decision, B blocking). Examples used in the pages:
@@ -66,6 +74,47 @@ and T1 to T10 the numbered checks of the decoupling test that judges them (T10 i
 to T11 are the case mock-up checks and T1, T3, T4 the charger's temperature thresholds (`TEST-PLAN.md`); the page
 says which.
 
+## The same letters in different families (read each by the page that uses it)
+
+| Name | Family 1 | Family 2 (and more) |
+|---|---|---|
+| C1 to C6, C1 to C4 | **case choices** C1 to C6 of `CASE-MARGINS.md` section 4, taken as SC-07: C1 the face plate on the 1450PF frame over Peli's o-ring, C2 the twelve arrestor bulkheads at Z 59, C3 the connector plate, C4 one RF entry plate per end wall, C5 the QMX tray moved 1.5 mm west, C6 the four setting legs | **power and thermal controls** C1 to C4 of `feasibility/POWER-THERMAL.md` section 9.3 (firmware, PROVISIONAL): C1 module shedding to the reduced mode on inside air +50 C or any cell +55 C, C2 the outlet budget, C3 a current trigger for C1, C4 the in-key guard (with K1 to K5, the key-down rules of its section 7.2). "C1 defined one way" (`7dfbfb16`, the second release attempt) is the thermal control C1; "C1 to C6" and "case choice C2" are always the case |
+| M1 to M5, M1 to M18, M-02 | **missions** M1 to M5 of `CONOPS.md` section 3 (M1 the 72-hour remote relay on pack and solar, M2 the vehicle move, M3 two kits linked, M4 the emission-controlled posture, M5 degraded operation); "M1's energy balance" is REQ-072 | **case margins** M1 to M18 of `CASE-MARGINS.md` section 3.2, some with a letter (M1 the monitor body over the heatsinks, M4a the pack block's east corner, M5 the pack group in Y, M13 the bulkhead clamp, M17g and M17x the east jumpers under their plugs), the rows FEA-007 names; and **M-02**, with a hyphen and two digits, an owner action of the registry (`open_items`, class OWNER_ACTION: accepting or not M1's failing energy balance, EQ-13) |
+| E1 to E8, E3-H, E3-L, E4-S | **environmental test rows** of `TEST-PLAN.md` section 2 (MIL-STD-810 methods: E1 the 26-drop transit shock, E2 vibration, E3 high temperature with E3-S storage, E3-A operation, E3-L lid closed and E3-H the stepped run beyond the envelope, E4 low temperature, E5 humidity, E6 immersion, E7 rain, E8 sand and dust); "SC-03 E5 humidity cycle" is this E5 | **boards**: board E is E1, the dock strip (project `pcb-e1-dock-e7`, declared phase E17), and E5 is the dock block (project `pcb-e5-block`); "board E5", "E5's INT-001" and FEA-007's "boards D and E5" are the board. **E-01 to E-12** (hyphen, two digits) are EMCON's bench rows (`feasibility/EMCON.md` section 6) |
+| T1 to T11, T1 to T10, T1, T3, T4 | the case mock-up checks (`CASE-MARGINS.md` sections 5 and 7; FEA-007's YES rows) | the decoupling test's checks (`feasibility/DECOUPLING.md` section 8) and the charger's temperature thresholds (`TEST-PLAN.md`); the section "Decoupling G1 to G14 and T1 to T10" above |
+| A01 to A11, A32, A65 | the adjudications of 25 September 2026 (`records/adj/`) | board A's declared phase (A32) and its schematic's title-block label (A65) |
+
+## Evidence classes and their causes (`v2/docs/CURRENT-EVIDENCE.md`, generated by `v2/ecad/tools/rules_status.py`)
+
+Every rule-board reading is put in one **class**, and a class that does not count names its **cause** in brackets:
+"SI-001 INCONCLUSIVE on VALID_HISTORICAL evidence (RATIONALE)" reads: the newest SI-001 reading says INCONCLUSIVE, the
+reading counts as current, and it counts through a recorded rationale. Two classes count as current evidence,
+CURRENT_CANDIDATE and VALID_HISTORICAL, so a page calling SI-001 "a current reading" and CURRENT-EVIDENCE calling it
+VALID_HISTORICAL agree: the result is current, it rests on a rationale for a tool change that does not touch it.
+
+| Class | Meaning |
+|---|---|
+| CURRENT_CANDIDATE | taken on the board's current candidate by content (its netlist and board file by sha; for a release-package rule the declared phase's folder with its BOM), under the current rule digest and the byte-identical tool code, with every configuration input its writer reads unchanged since. Counts as current |
+| VALID_HISTORICAL | an older artefact, tool or configuration, reused only through a recorded compatibility rationale that pins both versions (`v2/docs/evidence/COMPATIBILITY.md`). Counts as current |
+| AWAITING_REVALIDATION | any other reading; it does not count, whatever its result says |
+| DESK_REVIEW | a document check bound like any reading (a manually verified record, or a PROTOTYPE-phase rule's reading, which can only be a desk check while nothing is built); never a physical test |
+| PHYSICAL_TEST | a measurement on built hardware bound to the candidate; none exists |
+| NO_EVIDENCE | no reading at all (no verdict, no implementation, a waiver), and the rows that do not apply |
+
+| Cause | Meaning |
+|---|---|
+| BOUND | the reading is tied to the current candidate and its configuration (the cause of a CURRENT_CANDIDATE row) |
+| RATIONALE | reused under a recorded compatibility entry (the cause of a VALID_HISTORICAL row) |
+| UNBOUND | the reading records no artefact by content, so it cannot be tied to the candidate (E5's INT-001: the set verdict it is read from records no file of E5) |
+| TOOL_CHANGED, TOOL_UNKNOWN | the code that wrote it (its entry script or a local module it imports) changed since, or cannot be identified |
+| NOT_CURRENT_EVIDENCE | the reading itself is stale: an older rule digest or rule set, another board, or a tool meaning change |
+| NETLIST_MISMATCH, BOARD_MISMATCH, LAYOUT_NOT_CURRENT, PREDATES_ARTEFACT | taken on another netlist or board file than the candidate's, on a layout that does not carry the candidate's netlist, or before the current netlist was committed |
+| OTHER_DESIGN, OTHER_BOARD | a cross-board reading that also judged another board's netlist or board file which is no longer that board's candidate |
+| CONFIG_CHANGED, CONFIG_UNDECLARED | a configuration input its writer reads (`rules_status.CONFIG_INPUTS`) changed since the reading, or the writer has no audited list of inputs |
+| TEMP_INPUT | it judged files in a temporary directory (`/tmp`), not this tree: a fixture's world or another checkout. Why the re-take runs in a clone outside `/tmp` |
+| PROTOTYPE_DESK_CHECK | a current reading of a PROTOTYPE-phase rule, classed DESK_REVIEW because nothing is built |
+| NO_VERDICT | no reading on this board (a NO_EVIDENCE row) |
+
 ## Boards, phases and labels
 
 | Term | Meaning |
@@ -81,3 +130,4 @@ says which.
 | VERIFIED, RECORDED, INFERRED, TBD, PROVISIONAL | the evidence labels (START-HERE section 4) |
 | NOT_YET_TESTED | a fitted function outside prototype 1's accepted core, reported as untested, never as a pass (D-01) |
 | layout entry | the stage gate a board must pass before layout starts (`CONTINUATION-BRIEF.md` section 5.1) |
+| layout-entry reason | one line of `CURRENT-EVIDENCE.md`'s section "Layout entry, per board": a required schematic-phase rule not a PASS on evidence that counts, a hold's unmet layout-entry requirement, or a feasibility blocker's open layout-entry stage (40 at H2) |

@@ -41,14 +41,31 @@ WHAT IT DOES NOT DO. It judges nothing: a file in the snapshot is not thereby cu
 layer status is the hand-written LAYER-STATUS.md's. It does not export schematics (that needs KiCad; see
 handover_exports.py) and it never writes into the repository outside --out.
 
+A REPOSITORY FROM A SNAPSHOT (`repo`, added after H2, 27 September 2026, the H2 usability check's findings 1 and 2).
+The re-take of the schematic-phase readings (retake_schematic_phase.py, REGENERATE.md section 9) runs only in a git
+checkout, because it refuses a board whose inputs are not tracked and unmodified. When the snapshot's own commit is not
+on the public repository (H2's was not), the one route that runs is a repository built from the snapshot's files.
+`repo` verifies the snapshot against its manifest, writes every file of it under `<dest>` (the root pages and the four
+generated files included), and commits them as ONE commit with `git add -A -f`: the snapshot carries the repository's
+`.gitignore`, which ignores the `out/` folders where the committed netlists live, so a plain `git add -A` would leave
+the netlists untracked and the driver would refuse every board. The commit's author and committer are fixed and its
+date is the snapshot commit's (`SOURCE.txt`), so two builds of one snapshot give the same commit id. It refuses a
+destination under a temporary directory (rules_status.py classes a reading of files there TEMP_INPUT, which never
+counts) unless `--allow-temp` says the repository is only for reading, and it refuses a destination that is not empty.
+Such a repository has no history: the requirements validator's closed-by-commit checks then read as errors (the closing
+commits are not in it), `rules_render.py --check` refuses REQUIREMENTS-TRACE.md for that reason, and a re-take of one
+board re-renders every other board's page from the readings the repository holds, which are none (NO_EVIDENCE):
+compare only the re-taken board's rows. REGENERATE.md section 9 gives the commands and the expected output.
+
 Usage:
   handover_pack.py build --commit <rev> --version <name> [--out <dir>] [--repo <path>] [--zip-only]
   handover_pack.py plan --commit <rev> [--repo <path>] [--spec-file <working-copy pack.yaml>]
   handover_pack.py verify <snapshot dir or .zip>
-exit 0 on success; 2 when a file is unclassified or the spec is invalid; 3 when the ZIP is over the spec's size cap
-(the snapshot is still written, so it can be read); 4 when verify finds a difference.
+  handover_pack.py repo <snapshot dir or .zip> <dest> [--allow-temp]
+exit 0 on success; 2 when a file is unclassified or the spec is invalid, or `repo` refuses; 3 when the ZIP is over the
+spec's size cap (the snapshot is still written, so it can be read); 4 when verify finds a difference.
 """
-import argparse, ast, hashlib, io, json, os, platform, re, shutil, stat, subprocess, sys, zipfile
+import argparse, ast, hashlib, io, json, os, platform, re, shutil, stat, subprocess, sys, tempfile, zipfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SPEC_PATH = "v2/docs/handover/pack.yaml"
@@ -635,6 +652,81 @@ def verify(target):
     return probs
 
 
+# ------------------------------------------------------------------------------------------------ repo
+REPO_IDENTITY = ("handover snapshot", "handover-snapshot@meshsat.invalid")
+
+
+def _temp_roots():
+    return ("/tmp/", "/var/tmp/", tempfile.gettempdir().rstrip("/") + "/")
+
+
+def snapshot_files(target):
+    """(root folder name, {path: (bytes, executable)}) of a snapshot directory or ZIP, paths as the manifest names them."""
+    files = {}
+    if target.endswith(".zip"):
+        with zipfile.ZipFile(target) as z:
+            names = [n for n in z.namelist() if not n.endswith("/")]
+            top = {n.split("/", 1)[0] for n in names}
+            if len(top) != 1: raise SpecError("the zip holds %d top-level folders, not one" % len(top))
+            root = top.pop()
+            for n in names:
+                info = z.getinfo(n)
+                files[n.split("/", 1)[1]] = (z.read(n), bool((info.external_attr >> 16) & 0o111))
+    else:
+        root = os.path.basename(os.path.normpath(target))
+        for dp, dn, fn in os.walk(target):
+            for f in fn:
+                full = os.path.join(dp, f)
+                files[os.path.relpath(full, target).replace(os.sep, "/")] = (
+                    open(full, "rb").read(), bool(os.stat(full).st_mode & 0o111))
+    return root, files
+
+
+def repo_from_snapshot(target, dest, allow_temp=False):
+    """Write the snapshot's files under `dest` and commit them as one commit (see the module docstring, `repo`).
+    Returns {commit, files, version, source_commit, dest}; raises SpecError when it refuses."""
+    probs = verify(target)
+    if probs:
+        raise SpecError("%s does not verify against its manifest (%d problem(s), first: %s); build the repository "
+                        "from an unmodified snapshot" % (target, len(probs), probs[0]))
+    dest = os.path.abspath(dest)
+    under = [r for r in _temp_roots() if (dest.rstrip("/") + "/").startswith(r)]
+    if under and not allow_temp:
+        raise SpecError("%s is under %s: rules_status.py classes a reading of files there TEMP_INPUT, which never "
+                        "counts; choose a directory outside it (or give --allow-temp for a repository only read)"
+                        % (dest, under[0]))
+    if os.path.exists(dest) and (not os.path.isdir(dest) or os.listdir(dest)):
+        raise SpecError("%s exists and is not an empty directory; a repository is built only into a new one" % dest)
+    if not shutil.which("git"): raise SpecError("git is not on this host")
+    version, files = snapshot_files(target)
+    src = files.get("SOURCE.txt", (b"", False))[0].decode("utf-8", "replace")
+    m_commit = re.search(r"^commit: ([0-9a-f]{40})$", src, re.M)
+    m_date = re.search(r"^commit_date: (\S+)$", src, re.M)
+    if not (m_commit and m_date): raise SpecError("SOURCE.txt names no commit and commit_date")
+    os.makedirs(dest, exist_ok=True)
+    for pth, (data, exe) in sorted(files.items()):
+        full = os.path.join(dest, *pth.split("/"))
+        os.makedirs(os.path.dirname(full), exist_ok=True)
+        with open(full, "wb") as fh: fh.write(data)
+        os.chmod(full, 0o755 if exe else 0o644)
+    env = dict(os.environ, GIT_AUTHOR_DATE=m_date.group(1), GIT_COMMITTER_DATE=m_date.group(1),
+               GIT_AUTHOR_NAME=REPO_IDENTITY[0], GIT_AUTHOR_EMAIL=REPO_IDENTITY[1],
+               GIT_COMMITTER_NAME=REPO_IDENTITY[0], GIT_COMMITTER_EMAIL=REPO_IDENTITY[1])
+    cfg = ["-c", "commit.gpgsign=false", "-c", "core.hooksPath=/dev/null", "-c", "init.defaultBranch=main",
+           "-c", "core.autocrlf=false", "-c", "user.name=%s" % REPO_IDENTITY[0], "-c", "user.email=%s" % REPO_IDENTITY[1]]
+
+    def g(*a):
+        r = subprocess.run(["git", "-C", dest] + cfg + list(a), capture_output=True, text=True, timeout=600, env=env)
+        if r.returncode != 0: raise SpecError("git %s: %s" % (" ".join(a), r.stderr.strip()[:300]))
+        return r.stdout.strip()
+    g("init", "-q")
+    g("add", "-A", "-f")
+    g("commit", "-q", "-m", "handover snapshot %s, the files of commit %s as one commit (handover_pack.py repo; "
+      "no history)" % (version, m_commit.group(1)))
+    return {"commit": g("rev-parse", "HEAD"), "files": len(files), "version": version,
+            "source_commit": m_commit.group(1), "dest": dest, "status": g("status", "--short")}
+
+
 # ------------------------------------------------------------------------------------------------ main
 def main(argv):
     ap = argparse.ArgumentParser(prog="handover_pack.py", description=__doc__.split("\n")[0])
@@ -646,7 +738,22 @@ def main(argv):
     p = sub.add_parser("plan"); p.add_argument("--commit", required=True); p.add_argument("--repo", default=None)
     p.add_argument("--spec-file", default=None)
     v = sub.add_parser("verify"); v.add_argument("target")
+    rp = sub.add_parser("repo"); rp.add_argument("target"); rp.add_argument("dest")
+    rp.add_argument("--allow-temp", action="store_true",
+                    help="allow a destination under a temporary directory (its readings are TEMP_INPUT and never count)")
     a = ap.parse_args(argv)
+    if a.cmd == "repo":
+        try:
+            r = repo_from_snapshot(a.target, a.dest, allow_temp=a.allow_temp)
+        except SpecError as e:
+            print("handover_pack: repo REFUSED: %s" % e); return 2
+        print("handover_pack: repo %s: %d files of snapshot %s (commit %s) committed as %s, working tree %s" % (
+            r["dest"], r["files"], r["version"], r["source_commit"][:12], r["commit"][:12],
+            "clean" if not r["status"] else "NOT clean"))
+        print("handover_pack: repo: one commit, no history: the validator's closed-by-commit checks read as errors, "
+              "rules_render.py --check refuses REQUIREMENTS-TRACE.md, and a re-take re-renders the other boards' pages "
+              "from no reading (REGENERATE.md section 9)")
+        return 0 if not r["status"] else 2
     if a.cmd == "verify":
         probs = verify(a.target)
         for x in probs: print("handover_pack: verify: %s" % x)

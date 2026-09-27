@@ -1,11 +1,17 @@
 # Board C (control panel backer): layout constraints
 
-A view over the records at `main` `e3aedb25` (conventions and shared rules: [README.md](README.md)). Candidate: phase
-C24, netlist `v2/ecad/pcb-c-display-c8/out/pcb-c-display.net` sha256/16 `2834f0d8c4071d56`, intent
-`pcb-c-display-intent.json` `5c8d991e3805016a`; the committed board file `2a273803757c68fb` is the four-layer C24.
-Board C is not at layout entry: 10 blocker lines (`CURRENT-EVIDENCE.md` lines 98 to 107), among them FEA-002 (the
-hardware EMCON lamp) and FEA-006 (G9, G13, G14). Round 8's board C stream is in its own worktree; re-read this sheet
-on the netlist that merge commits.
+**Bound to the H2 line (after H2, 27 September 2026).** Candidate re-read at `ef144760`: phase C24, netlist
+`v2/ecad/pcb-c-display-c8/out/pcb-c-display.net` sha256/16 `11eabc2dddca5161` (round 8, `9f28c238`), intent
+`pcb-c-display-intent.json` `854436c729322993`; the committed board file `2a273803757c68fb` is the four-layer C24.
+The power figures of this sheet are checked against `calc/rail_widths.py` on that intent: +5V and +3V3 read the same.
+Board C is not at layout entry: **5 reasons at H2** (`CURRENT-EVIDENCE.md`): PWR-001 FAIL (C_DVDD, EPD_VCC, LED_RAIL
+and LED_RAIL_SW declared by no rail), SI-001 INCONCLUSIVE, RF-002 FAIL (EQ-25: TX_INHIBIT_n's fail-safe level with board
+C unpowered, whose recommended remedy is on this board), FEA-002, FEA-006; FEA-007 does not hold board C at layout
+entry. Known changes of the H2 line: round 8 is merged (`9f28c238`: EMCON read one way, the hardware EMCON lamp D22,
+per-pin decoupling with the maker's clause on every entry). Every other line below is the reading at `e3aedb25`, not re-read against the H2 netlist; where it and a record disagree, the record governs (README).
+
+As first written: a view over the records at `main` `e3aedb25` (conventions and shared rules: [README.md](README.md)),
+candidate then netlist `2834f0d8c4071d56`, intent `5c8d991e3805016a`, 10 blocker lines, round 8 not yet merged.
 
 ## 1. Stackup and layer use: DECIDED, six layers
 

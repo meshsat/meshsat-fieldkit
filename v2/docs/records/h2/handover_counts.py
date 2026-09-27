@@ -13,6 +13,9 @@ What it reads, all by repository path:
   v2/ecad/tools/boards/<x>.json                 each board's declared phase
   v2/docs/reviews/*.md                          the review records of layers 1 to 3, by sha256/16
 Usage: python3 v2/docs/records/h2/handover_counts.py [repository root]
+
+After H2 (27 September 2026, the H2 minor-findings editor): the layout-entry category labels are printed whole; no
+count changed. H2's snapshot carries the version before this change and its output.
 """
 import csv, glob, hashlib, json, os, re, sys
 
@@ -64,7 +67,8 @@ def main():
     for r in cats:
         nums = [int(x) for x in r[2:10]]
         tot = [a + b for a, b in zip(tot, nums)]
-        print("  %s: %s" % (r[0][:90], " ".join(str(n) for n in nums)))
+        print("  %s: %s" % (r[0], " ".join(str(n) for n in nums)))   # the whole label (it was cut at 90 characters
+        # until after H2, which cut "(the hold itself stays until that stage)" short: the H2 usability check)
     print("  total: A %d, B %d, C %d, D %d, E %d, P %d, E5 %d, set %d" % tuple(tot))
     rows = table_after(lines, "| board | rule | reading now |")
     per = {}
