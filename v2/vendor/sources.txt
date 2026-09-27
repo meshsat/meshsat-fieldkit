@@ -209,6 +209,7 @@ ti/ti-sn74lvc1g00.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc1g00.pdf
 ti/ti-sn74lvc1g04.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc1g04.pdf
 ti/ti-sn74lvc1g06.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc1g06.pdf
 ti/ti-sn74lvc1g08.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc1g08.pdf
+ti/ti-sn74lvc1g57.pdf   # https://www.ti.com/lit/ds/symlink/sn74lvc1g57.pdf, fetched 26 September 2026 21:10 UTC by board C's round 8 stream (SCES414P)
 ti/ti-tlv758p.pdf   # https://www.ti.com/lit/ds/symlink/tlv758p.pdf
 ti/ti-tpd2e2u06-q1.pdf   # https://www.ti.com/lit/ds/symlink/tpd2e2u06-q1.pdf
 ti/ti-tusb2046b-slls413l-addendum-2025.pdf   # https://www.ti.com/lit/ds/symlink/tusb2046b.pdf (the same revision L as ti/ti-tusb2046b.pdf, with the orderable addendum of 31-Oct-2025)

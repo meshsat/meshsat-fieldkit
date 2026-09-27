@@ -55,19 +55,22 @@ Both are part of prototype 1's core (owner ruling D-01).
   at desk: the 30 W PA, on path (b) alone (gate bias and keying on board D) in the states RF-002 names. That is a local
   conclusion about the PA's own circuit. End to end the row is OPEN: path (b) starts at the shared element, the
   `SW_EMCON` toggle and the `TX_INHIBIT_n` conductor, which SD-EMC-6 accepts only on condition of a hardware EMCON lamp
-  on board C that is not drawn; path (a) hangs on the shared `EMCON_HW` line, which is defective as drawn (L1: four
+  on board C, which board C's round 8 draws (`D22` through `U14` and `Q7`, section 8) with its face-plate light guide
+  still owed; path (a) hangs on the shared `EMCON_HW` line, which is defective as drawn (L1: four
   firmware pins can drive it; L2: its hold with the source gone is UNDECIDED; L4); and until section 5a no latency was
   required of any row. Its two paths share one element, so the PA is single-fault tolerant only for faults downstream
   of that conductor. A fault at the shared element releases both paths. SD-EMC-6 accepts it, on condition that board C gets
-  an EMCON lamp that is driven from the line state with no processor in its path. As drawn, no indication of the
-  lines is independent of firmware: the TX lamp's supply exists only while the panel controller drives `PANEL_PWM`.
+  an EMCON lamp that is driven from the line state with no processor in its path. As drawn until round 8, no
+  indication of the lines was independent of firmware: the TX lamp's supply exists only while the panel controller
+  drives `PANEL_PWM`. Board C's round 8 (26 September 2026) draws the lamp (`D22` through `U14` and `Q7`, section 8);
+  its light-guide hole in the face plate is still owed, so the condition is not yet met.
 - **Round 8, board A (section 4a).** The PA's drain-supply path (a) and the QMX's only path now read BOTH lines on board
   A (`TX_INHIBIT_n AND EMCON_HW`, SN74AUP1G08 gates, the enable at 0.6 of the gate's output), so each has a dominant
   path through `TX_INHIBIT_n` alone, which no firmware pin reaches, and L1, L2 and L4 no longer hold them on board A.
   Locally both are CLOSED at desk on the round 8 netlist, with one residual on board A named: TI states no LM5176
   gate-drive level in shutdown. End to end both stay OPEN (section 0a): RF-002's walk reads them UNDECIDED on that
-  residual (and, for the PA, on board D's Q1), SD-EMC-6's lamp is not drawn, section 5a's latency has TBD terms, and
-  both still owe their bench tests.
+  residual (and, for the PA, on board D's Q1), SD-EMC-6's lamp is drawn on board C but its plate light guide is
+  owed, section 5a's latency has TBD terms, and both still owe their bench tests.
 - **Shared items on the EMCON lines** (section 3: L1 to L4 and L7 open in the circuit, L6 open in the instrument, L5
   closed for the inhibit) hold every row that depends on `EMCON_HW`. They are read against the tools author's final
   record (r4t: R4T-D40, R4T-F8 third statement, R4T-F9). The line's own fail-safe hold is UNDECIDED on the candidates,
@@ -133,7 +136,8 @@ Both are part of prototype 1's core (owner ruling D-01).
     have run.
   - **Every row shares one element**, the toggle and the `TX_INHIBIT_n` conductor. SD-EMC-6 accepts it, on condition
     of a hardware EMCON lamp on board C. That adds a lamp, a gate and a FET to board C and one light-guide hole to the
-    face plate. In BLACKOUT the lamp is dark, as every emissive indicator is.
+    face plate; board C's half is drawn since round 8, the plate's hole is owed. In BLACKOUT the lamp is dark, as
+    every emissive indicator is.
 
   The physical proof is twelve bench tests (section 6). None of them can use the kit's own SDR, because EMCON removes
   the SDR's supply.
@@ -155,7 +159,7 @@ No row is closed on the bench, because nothing is built. At desk, on the netlist
 | # | Transmitter | Local, at desk | End to end, at desk | What holds end to end |
 |---|---|---|---|---|
 | 1 | SA868 VHF exciter | OPEN: pin 5's "receive" threshold is unpublished (4.1) | OPEN | the local item; L4 on board D (closed at desk in round 8 by U21 on +5V_TX, except a fall of +3V3_D8 through the band faster than +5V_TX decays, bench E-11; section 3); the shared element's lamp condition (SD-EMC-6) |
-| 2 | RA30H1317M1 30 W PA | **CLOSED** on path (b), in RF-002's named states (4.2); path (a) CLOSED on board A's round 8 netlist, with the LM5176's unstated gate drive in shutdown as its named residual (4a) | OPEN | the shared element's lamp condition (SD-EMC-6, not drawn); path (a) reads both lines on board A since round 8, so L1, L2 and L4 no longer hold it there, and RF-002's walk reads it UNDECIDED on the LM5176's gate drive in shutdown and on board D's Q1 (4a); the latency of section 5a not yet shown |
+| 2 | RA30H1317M1 30 W PA | **CLOSED** on path (b), in RF-002's named states (4.2); path (a) CLOSED on board A's round 8 netlist, with the LM5176's unstated gate drive in shutdown as its named residual (4a) | OPEN | the shared element's lamp condition (SD-EMC-6: drawn on board C in round 8, its plate light guide owed); path (a) reads both lines on board A since round 8, so L1, L2 and L4 no longer hold it there, and RF-002's walk reads it UNDECIDED on the LM5176's gate drive in shutdown and on board D's Q1 (4a); the latency of section 5a not yet shown |
 | 3 | QMX HF | CLOSED (4.3); on board A's round 8 netlist CLOSED with the LM5176's unstated gate drive in shutdown as its named residual (4a) | OPEN | SD-EMC-6; L1, L2 and L4 no longer hold it on board A since round 8 (4a); RF-002's walk UNDECIDED on the LM5176's gate drive in shutdown; section 5a's latency has TBD terms (the QMX's input capacitance and its behaviour below 6.0 V, 4a) |
 | 4 | RockBLOCK 9704 | **OPEN since this revision**: the supply gate is drawn, but the module runs on its own supercapacitors with ENABLE held by U6 (4.4) | OPEN | the local item; back-feed (SD-EMC-2); L1 to L4; SD-EMC-6 |
 | 5 | RM520N-GL 5G | OPEN: SD-EMC-1's circuit is not drawn (4.5) | OPEN | the local item; L1, L2, L3, L7; back-feed once removable; SD-EMC-6 |
@@ -373,8 +377,10 @@ Both lines are LOW when EMCON is asserted.
   - B's U19 pins 1, 9, 12 and U20 pin 1 (SN74LVC08A);
   - B's Q11 gate, a JSCJ 2N7002 that inverts it into `EMCON_ON` with R513 (10 k to +3V3_DEV) (`gen_sch_b.py:1029`;
     `B-r6cand-pcb-b-compute.net:19957`).
-- **Firmware readers of `EMCON_HW`:** B's U41, U51, U61 pin 33 (PC5 of the three STM32H743 supervisors) and C's U3 pin
-  32 (RP2040 GPIO21). See L1.
+- **Firmware readers of `EMCON_HW`:** B's U41, U51, U61 pin 33 (PC5 of the three STM32H743 supervisors). See L1. C's U3
+  pin 32 (RP2040 GPIO21) was one until board C's round 8 (26 September 2026); it now reads a one-way copy, `EMCON_RD`,
+  through U13 (74LVC1G17) and R46 (1k). On C the line is driven by U9 pin 4 and read by U13 pin 2 and U14 pin 6, and
+  U14 pin 3 reads `TX_INHIBIT_n` (U14 is the EMCON lamp's gate, SD-EMC-6); all three state Ioff.
 - **Readers of `EMCON_ON`:** Q106, Q206, Q306 (open drains onto the three M.2 W_DISABLE1# pins); Q111 and Q311 (pull
   the two WiFi card buck enables low); U111, U211, U311 pins 2 and 5 (the CM5 radio kill ORs, SN74LVC32A).
 - **Reader of `TX_INHIBIT_n`:** D's U12 pin 2, the KEY gate; and on board A's round 8 netlist U35 and U37 pin 1, the
@@ -392,7 +398,7 @@ candidate, which carries Q11 on `EMCON_HW` in place of main's three level shifte
 
 | Id | Item | Status | Bound and evidence | Owner and remedy |
 |---|---|---|---|---|
-| L1 | Four firmware-direction pins sit on `EMCON_HW`: B's U41, U51, U61 pin 33 (PC5) and C's U3 pin 32 (GPIO21). A pin set as an output by a firmware error fights U9 while EMCON is asserted, and with the panel unpowered it lifts the line against the pull-downs. | OPEN | The tool bounds the panel-unpowered state at 3.46 V against the gates' 0.8 V VIL (tool output line 2). In reset both parts are benign: the STM32 pin is analog with no pull (r4b O-06, DS12110). The RP2040 pad resets with its input and pull-down enabled (RP2040 datasheet, section 2.19.6.3, Table 341: IE 0x1, PDE 0x1), and no function drives its output: GPIOx_CTRL's FUNCSEL resets to 0x1f, "31 == NULL" (section 2.19.6.1, Table 285); the processors drive a pin only through the SIO function (section 2.19.2, Table 280), whose output enable resets to input (section 2.3.1.7, Table 24, GPIO_OE reset 0). Table 341's OD bit resets to 0x0, which leaves the output enable to the selected function; it does not disable the output. The failure is a running firmware that sets the pin as an output. | Buffers only. The series-resistor tap the first version of this file offered is withdrawn by R4T-D40: an unpowered supervisor or RP2040 pin passes a current no held sheet states, so any tap leaves the line UNDECIDED. Board B author: one 74LVC1G34 for the three PC5 pins (R4T-F8 third statement, R4T-D40). Board C author: U3's GPIO21 behind a 74LVC1G34 on the panel's +3V3 (R4T-F5, R4T-D40). |
+| L1 | Four firmware-direction pins sat on `EMCON_HW`: B's U41, U51, U61 pin 33 (PC5) and C's U3 pin 32 (GPIO21); C's left the line in board C's round 8 (U13 and R46, section 8), B's three remain. A pin set as an output by a firmware error fights U9 while EMCON is asserted, and with the panel unpowered it lifts the line against the pull-downs. | OPEN | The tool bounds the panel-unpowered state at 3.46 V against the gates' 0.8 V VIL (tool output line 2). In reset both parts are benign: the STM32 pin is analog with no pull (r4b O-06, DS12110). The RP2040 pad resets with its input and pull-down enabled (RP2040 datasheet, section 2.19.6.3, Table 341: IE 0x1, PDE 0x1), and no function drives its output: GPIOx_CTRL's FUNCSEL resets to 0x1f, "31 == NULL" (section 2.19.6.1, Table 285); the processors drive a pin only through the SIO function (section 2.19.2, Table 280), whose output enable resets to input (section 2.3.1.7, Table 24, GPIO_OE reset 0). Table 341's OD bit resets to 0x0, which leaves the output enable to the selected function; it does not disable the output. The failure is a running firmware that sets the pin as an output. | Buffers only. The series-resistor tap the first version of this file offered is withdrawn by R4T-D40: an unpowered supervisor or RP2040 pin passes a current no held sheet states, so any tap leaves the line UNDECIDED. Board B author: one 74LVC1G34 for the three PC5 pins (R4T-F8 third statement, R4T-D40). Board C author: U3's GPIO21 behind a 74LVC1G34 on the panel's +3V3 (R4T-F5, R4T-D40). |
 | L2 | The line's hold when its source is gone (panel unpowered or unplugged, `J_AB1` unplugged, one board's rail down while another board's gate reads the line). | OPEN | **As drawn: UNDECIDED.** A's U26 and B's U19 and U20 are SN74LVC08A, whose sheet has no Ioff row (SCAS283W; R4T-D29), and B's Q11 gate is the JSCJ 2N7002, whose IGSS is stated at 25 C only (sha `7941fb42`; R4T-D29). Board A alone with `J_AB1` unplugged holds the line with R102 (100 k) alone: 10 uA into 100 k is 1.0 V, above 0.8 V (r4b O-08). **The r4t arithmetic with the remedies** (R4T-F8, third statement, by R4T-D36 and R4T-D37): with one SN74LVC1G08 per `EMCON_HW` input, 10 k on both boards FAILS at 1.00 V (`J_AB1` unplugged, panel unpowered, one slot rail up) and at 0.96 V with 1 percent parts; R102 10 k 1% with R58 4.7 k 1% PASSES, worst 0.45 V. The round-6 statement "10 kOhm on BOTH boards, every state passes", which the first version of this file cited, is withdrawn by that third statement and by R4T-F12. The candidate B's own sum (Q11's gate instead of the in-memory 74LVC1G07s) is not yet taken. | Board A author: R102 10 k 1%, and two SN74LVC1G08 in place of U26's two `EMCON_HW` sections (R4T-F8 third statement). Board B author: R58 4.7 k 1%, one SN74LVC1G08 per `EMCON_HW` input in place of U19's three sections and U20's one (R4T-F8 third statement); Q11's gate bounded by a sheet that states IGSS over the envelope, or Q11 replaced by a part whose input current is stated; the candidate's own sum by R4T-D37's method. |
 | L3 | Loss of +3V3_DEV on B while a slot runs. | OPEN | Two consequences. (1) **Fail-open, by construction:** R513 no longer holds `EMCON_ON` high, so the six CM5 kills, the three W_DISABLE1# open drains, the two card-supply pull-downs, and SD-EMC-1's two new stages once built, all release (r4b O-14 and SD-B-14; R4T-F9's CM5 bullet: an open-drain element fed from a carrier rail FAILS with that rail down). (2) **The eFuse and load-switch enables** `LIME_EN`, `RB_EN`, `E22_EN`, held by R514 to R516 (10 k) while their gate U19, an SN74LVC08A, is unpowered: UNDECIDED, 0.00 V from the known currents but no Ioff row (R4T-F9, R4T-D29); PASS once each gate is an SN74LVC1G08 (0.10 V against the 1.08 V off level, R4T-F9). The first version of this file called state (2) safe; that is withdrawn. `E72_EN` PASSES: U22's input is +3V3_DEV itself (R4T-D30, R4T-F9). | Board B author: O-14's remedy, an `EMCON_ON` source that does not share +3V3_DEV, or per-slot elements run from each module's own 3.3 V output (R4T-F9's CM5 bullet); the single-gate SN74LVC1G08s of L2 also close (2). |
 | L4 | Gate supplies outside the LVC families' specified range, where the outputs are unspecified. | OPEN | Two cases. (1) **Parts with no Ioff row**, unspecified from 0 V up to 1.65 V because nothing specifies them for partial power down (R4T-D29): A's U26 and B's U19 and U20 (SN74LVC08A, SCAS283W), and B's U111, U211, U311 (SN74LVC32A, SCAS286U: no Ioff row either). This is why state (2) of L3, +3V3_DEV at 0 V, is UNDECIDED. (2) **Parts that state Ioff**, specified at 0 V (output high-impedance) and unspecified above 0 V and below 1.65 V: D's U9, U10, U12, U14 (TECH PUBLIC C19829591, IOFF 10 uA, r6d R6D-6), U13 (TI SN74LVC1G06, SCES295AB Ioff, R6D-5), U18 to U20 (Diodes 74LVC1G34, DS36108 IOFF, R6D-1), C's U9 (Diodes 74LVC1G17, DS35124 IOFF, R4T-D33), and D's U11 (TI SN74LVC1G04, SCES214AF section 5.5: Ioff ±10 uA at VCC 0, VI or VO 5.5 V; r6d R6D-5, "NOT PROVEN: above 0 and below 1.65 V"). These sheets are filed on main since `ccf5808e` (`v2/vendor/techpublic/`, `v2/vendor/ti/ti-sn74lvc1g04.pdf`, `ti-sn74lvc1g06.pdf`, `v2/vendor/diodes/diodes-74lvc1g17.pdf`, `diodes-74lvc1g34.pdf`, and `v2/vendor/SOURCES.yaml`); U11's row was read there for this version. An output in the band at up to its own 1.65 V supply would sit above the LM5176's 1.17 V minimum operating threshold (SNVSAI1D, VEN(OP)) and the eFuses' 1.22 V maximum rising threshold (SLVSET8A, VUVLO(R)). **Board D, round 8 (stream d, 26 September 2026):** case (2) for D's U9 to U14 and U18 is closed at desk for a +3V3_D8 that stays anywhere under 2.23 V, and for any +5V_D8 under 2.00 V: U21, a TI TPS22810 load switch whose EN/UVLO divider watches +3V3_D8 (VENF 1.08 to 1.18 V, VUVR 2.00 to 2.62 V, SLVSDH0C 7.5), keeps the exciter, the VGG regulator U15 and the relay coil unpowered there, and turns on only above 2.33 to 2.78 V (`gen_sch_d.py`, the EMCON L4 block at U21). Still open on D: a fall of +3V3_D8 through the band faster than +5V_TX decays (a race no held sheet bounds; bench E-11), and U19 and U20 on the harness +3V3, which only read KEY and PA_KEY back into U16. | Board B author (O-24, with O-14; the SN74LVC1G08s of L2 move U19 and U20's sections into case (2)); board D author and bench rows E-01, E-11; board A author for U26 (the same SN74LVC1G08s); board D: done at desk in round 8 (U21), its residual on E-11 |
@@ -408,7 +414,7 @@ supply while its gate is off. "Shared" lists the section 3 items the row inherit
 | # | Transmitter (board, ref) | Hardware inhibit | Gate | Back-feed | Shared | Status |
 |---|---|---|---|---|---|---|
 | 1 | SA868 VHF exciter (D, U2) | PTT forced to "receive" by `TX_INHIBIT_n`; supply kept (D-05) | OPEN: no maker "1" level (tool UNDECIDED) | not applicable | L4 (D) | OPEN |
-| 2 | RA30H1317M1 30 W PA (plate; A `J_PA`, D `J_VGG`) | (a) drain rail off (A); (b) gate bias off, relay at rest (D) | CLOSED at desk on (b) in RF-002's states; (a) a second path | not applicable (see 4.2) | common element `SW_EMCON` and `TX_INHIBIT_n` (SD-EMC-6: accepted on condition of a hardware EMCON lamp on C, not yet drawn); (a) also L1, L2, L4 (A) | local: CLOSED at desk on (b); end to end: OPEN (0a); single-fault tolerant only downstream of `TX_INHIBIT_n`. Round 8 (section 4a): (a) reads both lines on A, local CLOSED at desk with the LM5176's unstated gate drive in shutdown as its residual, on which RF-002's walk reads UNDECIDED; a dominant path through `TX_INHIBIT_n` |
+| 2 | RA30H1317M1 30 W PA (plate; A `J_PA`, D `J_VGG`) | (a) drain rail off (A); (b) gate bias off, relay at rest (D) | CLOSED at desk on (b) in RF-002's states; (a) a second path | not applicable (see 4.2) | common element `SW_EMCON` and `TX_INHIBIT_n` (SD-EMC-6: accepted on condition of a hardware EMCON lamp on C, drawn on C in round 8, its plate light guide owed); (a) also L1, L2, L4 (A) | local: CLOSED at desk on (b); end to end: OPEN (0a); single-fault tolerant only downstream of `TX_INHIBIT_n`. Round 8 (section 4a): (a) reads both lines on A, local CLOSED at desk with the LM5176's unstated gate drive in shutdown as its residual, on which RF-002's walk reads UNDECIDED; a dominant path through `TX_INHIBIT_n` |
 | 3 | QMX HF (lid; A `J_HF`, B `J_QMX`) | DC input rail off | CLOSED at desk | CLOSED: USB VBUS not connected inside the QMX | L1, L2, L4 (A) | end to end OPEN (0a): SD-EMC-6. L1, L2 and L4 held it until round 8, whose board A reads both lines (section 4a); local CLOSED at desk with the LM5176's unstated gate drive in shutdown as its residual, on which RF-002's walk reads UNDECIDED |
 | 4 | RockBLOCK 9704 (B, `J_RB9704`) | eFuse off; required since the sixth revision: the module's ENABLE (J3 pin 3) forced low by hardware too | OPEN (sixth revision): the supply gate is drawn, but the module keeps 5 F of supercapacitors and ENABLE is held by U6 (4.4) | OPEN | L1, L2, L3, L4 | OPEN |
 | 5 | RM520N-GL 5G (B, `J_M2C2`, M.2 key B) | as drawn: W_DISABLE1# low (firmware-mediated airplane mode), supply kept. Required by SD-EMC-1: if EMCON asserts before the module has been turned on (every power-up under EMCON), FULL_CARD_POWER_OFF# low and supply removed at once, so the module is never powered under EMCON; on a module that has been turned on, in the maker's order: W_DISABLE1# at once, FULL_CARD_POWER_OFF# by hardware after T_off (sized for the host's AT+CFUN=0 handshake), supply removed after a further T_cut, whether or not the module is booting or restarts meanwhile (the booting case) | OPEN: circuit owed on B | OPEN once the supply is removable | L1, L2, L3, L7 | OPEN |
@@ -477,8 +483,9 @@ supply while its gate is off. "Shared" lists the section 3 items the row inherit
   is at EMCON, by a short to a supply or a driven neighbour that the contact's path does not overcome (the ribbon
   neighbours are listed in section 2). RF-002's named states are not among these: unpowered and disconnected, the
   pull-downs assert both lines. SD-EMC-6 accepts this element, on condition that board C gets an EMCON lamp driven
-  from the lines' state with no processor in its path. As drawn, nothing indicates such a fault without firmware
-  (SD-EMC-6).
+  from the lines' state with no processor in its path. Until board C's round 8 nothing indicated such a fault
+  without firmware; the lamp drawn there (`D22`, lit only while both lines read LOW at board C) does, in DAY and
+  NIGHT, once its light guide is in the plate (SD-EMC-6).
 - **Controller failure and single faults downstream of the `TX_INHIBIT_n` node.** Each leaves one path:
   - A's expander U27 dead: `PA_SW_EN` low, rail off (path (a) holds).
   - A's U26 unpowered: `PA_EN` sits at 0.07 V from the known currents but is UNDECIDED, because U26 states no Ioff and
@@ -492,7 +499,8 @@ supply while its gate is off. "Shared" lists the section 3 items the row inherit
 - **Proof required.** Bench E-02, which now includes the shared-element cases.
 - **Status, local: CLOSED at desk** on the candidates A and D, on RF-002's terms: path (b) is a hardware path with no
   firmware driver on `TX_INHIBIT_n` or KEY, asserted in the unpowered and unplugged states. **End to end: OPEN**
-  (section 0a): the shared element's condition (the hardware EMCON lamp of SD-EMC-6) is not drawn, path (a)'s
+  (section 0a): the shared element's condition (the hardware EMCON lamp of SD-EMC-6) is drawn on board C in round 8
+  with its plate light guide owed, path (a)'s
   `EMCON_HW` line is defective as drawn (L1, L2, L4), and the row's latency under section 5a is not yet shown. On
   assert with PTT held, the contact's bounce can re-key KEY for the bounce's duration (r6d R6D-N1); that transient
   falls inside the row's latency and E-02 records it. Path (a) is a second path subject to
@@ -1533,7 +1541,7 @@ firmware revisions, the RM520N-GL's recorded configuration and the fitted QMX PC
 
 | Item | Bound | Owner |
 |---|---|---|
-| L1 firmware pins on `EMCON_HW` | 3.46 V worst case against 0.8 V VIL (tool `5aece264`) | board B author (one 74LVC1G34 for U41, U51, U61's taps); board C author (U3's GPIO21 behind a 74LVC1G34); R4T-D40 |
+| L1 firmware pins on `EMCON_HW` | 3.46 V worst case against 0.8 V VIL (tool `5aece264`) | board B author (one 74LVC1G34 for U41, U51, U61's taps); board C: done in round 8 (U3's GPIO21 behind U13, a 74LVC1G17, and R46); R4T-D40 |
 | L2 the line's hold with its source gone | UNDECIDED as drawn (no Ioff rows; Q11's IGSS at 25 C only); A alone 1.0 V against 0.8 V; with single-gate remedies, 10 k on both boards fails at 1.00 V and R102 10 k 1% with R58 4.7 k 1% passes at 0.45 V (R4T-F8 third statement) | board A author (R102, two SN74LVC1G08): done differently in board A's round 8 netlist, R102 10 k 1% with SN74AUP1G08 readers (section 4a, SD-A8-2); board B author (R58, four SN74LVC1G08, Q11, the candidate's own sum) |
 | L3 +3V3_DEV loss on B | fail-open for 9 radios (6 CM5, 2 AW7915, 1 RM520N-GL); `LIME_EN`, `RB_EN`, `E22_EN` UNDECIDED (0.00 V, no Ioff row) until single gates; `E72_EN` PASS | board B author (O-14; R4T-F9) |
 | L4 gate supplies outside the specified range | quads: 0 to 1.65 V unspecified; single gates: above 0 and below 1.65 V unspecified | board B author (O-24); board D: done at desk in round 8 (U21), residual on E-01 and E-11; board A author (U26): closed on A in its round 8 netlist by the enable divider (section 4a, SD-A8-3) |
@@ -1548,7 +1556,7 @@ firmware revisions, the RM520N-GL's recorded configuration and the fitted QMX PC
 | RM520N-GL: restarts board B cannot see (only if fallback (iii) is taken) | AT+CFUN=1,1 from either host, a restart after a firmware upgrade, a crash or watchdog restart: no held document says a socket pin marks them, so the fallback's window cannot restart on them; bound T_off + T_cut after EMCON, on one event (such a restart within T_boot before EMCON or before T_off after it); narrowed by the bridge's hardware-restart rule to restarts the firmware starts itself; closed if E-12 (i) finds a socket pin that marks them | bench E-12 (i); bridge software (section 8); if E-12 sees the module restart with no host command, option (e) is the named next step |
 | RM520N-GL: W_DISABLE1# behaviour and configuration | maker-documented firmware mode; untimed; unstated in boot and hang; a stored setting may disable it (LTE precedent), writable from slot 2's host over PCIe or bank 3's over USB | bench E-05; provisioning owner (section 8) |
 | RM520N-GL: FULL_CARD_POWER_OFF# rises with VCC as drawn (R238 to `+3V3_S2A`) | Tpr near 0 against the maker's 100 ms minimum, at every cold power-up and every `PCIE_PWR_EN2` cycle, and, under SD-EMC-1, at every EMCON release | board B author (one supervisor on `+3V3_S2A` with its manual reset on `PCIE_PWR_EN2`, SD-EMC-1); bench E-12 (f) |
-| PA and every row: the common element | accepted on condition of a hardware EMCON lamp on board C (SD-EMC-6). As drawn, no indication is independent of the panel controller. With the lamp, no indication in BLACKOUT or with board C unpowered | board C author (the lamp); face plate owner (one light-guide hole); PANEL.md writer (its current against NVG); procedure owner; bench E-02 |
+| PA and every row: the common element | accepted on condition of a hardware EMCON lamp on board C (SD-EMC-6). Board C draws it since round 8 (`D22`, `U14`, `Q7`); until its light guide is in the plate it cannot be seen. With the lamp, no indication in BLACKOUT or with board C unpowered | board C: done in round 8; face plate owner (one light-guide hole); PANEL.md writer (its current against NVG); procedure owner; bench E-02 |
 | Back-feed: RockBLOCK, E22, E72 x2 | TBD; module minimum operating voltages 2.5 V (E22) and 1.9 V (E72) inside a 3.3 V line's reach | board B author (SD-EMC-2); bench E-04, E-09, E-10 |
 | Back-feed: AW7915 x2, and the RM520N-GL once removable | PEWAKE 0.33 mA; PERST# drive TBD (DS40068 states none); REFCLK HCSL; for the RM520N-GL also USB from slot 3's hub and the PCIe TX pair, against its 3.135 V minimum | board B author (SD-EMC-2); bench E-07, E-12 |
 | The latency and fault conditions each row must meet | set by SD-EMC-7 (section 5a): 1 s for every row but the 5G module, 20 s for a running 5G module by hardware timers at their worst tolerance; no row meets it at `fc144600` | every board author, against section 5a; bench rows E-01 to E-12 |
@@ -1589,10 +1597,16 @@ firmware revisions, the RM520N-GL's recorded configuration and the fitted QMX PC
 - **Board A author.** L2's R102 10 k 1% and two SN74LVC1G08 in place of U26's `EMCON_HW` sections (R4T-F8 third
   statement). Round 8: R102 10 k 1%, and per rail two SN74AUP1G08 reading both lines, with the enable at 0.6 of the
   gate's output (section 4a). Owed: the +3V3 overvoltage item of section 7.
-- **Board C author.**
-  - L1's 74LVC1G34 in front of U3's GPIO21 (R4T-F5, R4T-D40).
-  - SD-EMC-6's EMCON lamp: lit only while both `TX_INHIBIT_n` and `EMCON_HW` read LOW, no processor in its path, fed
-    from `LED_RAIL_SW`, with inputs that state Ioff.
+- **Board C author.** Both items below are drawn in board C's round 8 (26 September 2026, `gen_sch_c.py`, the
+  regenerated netlist, each change tied to its finding by an independent netlist comparison).
+  - L1: U3's GPIO21 reads `EMCON_HW` through U13 and R46 (1k). U13 is a 74LVC1G17 (Diodes DS35124 Rev. 8-2), not
+    the 74LVC1G34 named here: the same function on the same land with a Schmitt input, IOFF stated, and the reel
+    U9 and U12 already use (taken by the session under the owner's standing rule of 26 September 2026).
+  - SD-EMC-6's EMCON lamp: U14, a TI SN74LVC1G57 (SCES414P) wired as a NOR (Table 1, In1 on GND), Schmitt inputs, Ioff
+    stated, reads `TX_INHIBIT_n` (In0) and `EMCON_HW` (In2); its output drives Q7, a Vishay Si2300DS (RDS(on) stated
+    at VGS 2.5 V), through R48 (100R), with R49 (10k) holding the gate low while U14 is unpowered; Q7 sinks D22, a
+    3 mm amber lamp, fed from `LED_RAIL_SW` through R47 (470R, about 6.4 mA). Amber, as NVG mode allows and red being
+    the TX lamp's. Its NVG level is the PANEL.md writer's (only R47 moves).
   - Found while doing this, and not decided here, because the TX lamp is the RF hazard lamp and not an EMCON
     inhibit: `PANEL.md:5` reads "The lines that act without any software are MAIN PWR, EMCON and the TX lamp", and
     `:113` lists the TX lamp under "Hardware LEDs, no software". Its sink is hardware, but its feed is `LED_RAIL`,
@@ -1641,7 +1655,10 @@ firmware revisions, the RM520N-GL's recorded configuration and the fitted QMX PC
   L1, L2, L3 and L7. S-02 is the tools item L6. REQ-030 and REQ-032 are not met for the 5G module until SD-EMC-1 is
   drawn. Cite this file from NEED-08's verification.
 - **Tools (r4t).** Model the Q11 to `EMCON_ON` inverter and open drains, the shunt-fed socket rail, the LVC32A OR, the
-  TLV75801P enable and path (b) of the PA. Move `J_QMX` from OWED to ACCESSORIES, citing QRP Labs' schematics for PCB
+  TLV75801P enable and path (b) of the PA. Count board C's round-8 inputs in R4T-D37's sums, with U3's GPIO21 no longer
+  on `EMCON_HW`: on `EMCON_HW`, U13 pin 2 (II +-5 uA, IOFF +-10 uA at VCC 0, DS35124 Rev. 8-2 page 4) and U14 pin 6
+  (II +-1 uA, Ioff +-10 uA at VCC 0, SCES414P page 5); on `TX_INHIBIT_n`, U14 pin 3 (the same); and model U14's
+  SN74LVC1G57 pin map (1 In1, 2 GND, 3 In0, 4 Y, 5 VCC, 6 In2). Move `J_QMX` from OWED to ACCESSORIES, citing QRP Labs' schematics for PCB
   Rev 1, 2, 3/4 and 5.
 - **Integrator.**
   - Carry SD-EMC-1's supersession of r4b's SD-B-03 into r4b's record and into the board B generator's comment at

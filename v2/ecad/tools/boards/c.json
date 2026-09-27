@@ -329,14 +329,14 @@
    "hazard": "every transmitter in the kit is released",
    "safe_state": "low",
    "role": "source",
-   "why": "the panel's locking toggle SW_EMCON shorts it to ground and R14 holds it up, so the switch asserts by pulling low and the consumer boards each hold their own pull-down"
+   "why": "the panel's locking toggle SW_EMCON shorts it to ground and R14 holds it up, so the switch asserts by pulling low and the consumer boards each hold their own pull-down. On this board it is read only by logic inputs: U9 (the Schmitt buffer into EMCON_HW) and, since round 8 of MESHSAT-1357 (26 September 2026), U14, the EMCON lamp's NOR gate (SD-EMC-6); both state Ioff"
   },
   {
    "net": "EMCON_HW",
    "hazard": "every transmitter in the kit is released",
    "safe_state": "low",
    "role": "source",
-   "why": "U9 buffers the toggle into it without inverting, so both consumer boards silence on low"
+   "why": "U9 buffers the toggle into it without inverting, so both consumer boards silence on low. Since round 8 of MESHSAT-1357 (26 September 2026) no firmware pin sits on it on this board: the panel controller reads a one-way copy through U13 and R46 (EMCON.md L1), and its other reader here is U14, the EMCON lamp's gate (SD-EMC-6); U9's output and both inputs state Ioff"
   },
   {
    "net": "ZEROIZE_HW",
