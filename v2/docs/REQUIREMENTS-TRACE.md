@@ -1814,7 +1814,9 @@ Prototype 1: in the core D-01 names. 9 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CURRENT-EVIDENCE.md re-read at the r8int4 integration of 27 September 2026: rendered after the layer 7 closer's registry change, FEA-007's layout-entry stage joins boards A, B, D, E, E5 and P (their reason counts rise by one) and board C's check_pcb_c.py becomes a declared writer (its CONFIG_INPUTS row); board D's row keeps RF-002 and SCH-004 in the class and cause read above, with FEA-007's desk items as its new reason, which this constraint does not rest on, so its own reasons are unchanged and it stays INCONCLUSIVE, so it stands on the file at f4681daa81312b95
 
-*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/docs/feasibility/EMCON.md@421a291f7ce4cda2`, `v2/docs/CURRENT-EVIDENCE.md@f4681daa81312b95`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CURRENT-EVIDENCE.md re-read at the r8int4 integration of 27 September 2026: rendered after rules_status ran three times on the committed integration, only SI-001 on boards A, D and E moves from CURRENT_CANDIDATE to AWAITING_REVALIDATION (CONFIG_CHANGED: pcb_board_facts.yaml, an input of edge_length.py, took the layer 3 closer's CFL-003 correction), with the counts that follow it; board D's RF-002 and SCH-004 keep the class and cause read above, so this constraint's own reasons are unchanged and it stays INCONCLUSIVE, so it stands on the file at 23ec56778cee856e
+
+*Bound to:* `v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@0dad82b4b6a79290`, `v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@3a786cf31614fe63`, `v2/docs/feasibility/EMCON.md@421a291f7ce4cda2`, `v2/docs/CURRENT-EVIDENCE.md@23ec56778cee856e`
 
 *Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:2825`; `v2/docs/PANEL.md section 6`; `v2/docs/feasibility/EMCON.md sections 4.1 and 4.2`
 
@@ -2243,7 +2245,9 @@ Prototype 1: in the core D-01 names. 12 record(s).
 
 *Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CURRENT-EVIDENCE.md re-read at the r8int4 integration of 27 September 2026: rendered after the layer 7 closer's registry change, FEA-007's layout-entry stage joins boards A, B, D, E, E5 and P (their reason counts rise by one) and board C's check_pcb_c.py becomes a declared writer (its CONFIG_INPUTS row); board P's row, its netlist 085f833362fbbda8 and every reason given above are unchanged, FEA-007 (the pack's place under the mock-up) joining them, which this record does not rest on, so it stands on the file at f4681daa81312b95
 
-*Bound to:* `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`, `v2/ecad/tools/gen_sch_p.py@91ccbb922c427d43`, `v2/docs/CURRENT-EVIDENCE.md@f4681daa81312b95`, `v2/docs/review-packets/battery/REVIEW-REQUEST.md@91a257430cbeb53a`
+*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/docs/CURRENT-EVIDENCE.md re-read at the r8int4 integration of 27 September 2026: rendered after rules_status ran three times on the committed integration, only SI-001 on boards A, D and E moves from CURRENT_CANDIDATE to AWAITING_REVALIDATION (CONFIG_CHANGED: pcb_board_facts.yaml, an input of edge_length.py, took the layer 3 closer's CFL-003 correction), with the counts that follow it; board P's row, its netlist 085f833362fbbda8 and every reason given above are unchanged, so it stands on the file at 23ec56778cee856e
+
+*Bound to:* `v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8`, `v2/ecad/tools/gen_sch_p.py@91ccbb922c427d43`, `v2/docs/CURRENT-EVIDENCE.md@23ec56778cee856e`, `v2/docs/review-packets/battery/REVIEW-REQUEST.md@91a257430cbeb53a`
 
 *Source (verified):* `v2/docs/TEST-PLAN.md:58-94`; `v2/ecad/tools/pcb_pack_protection.yaml:17-40`; `owner ruling D-15`; `v2/docs/review-packets/battery/PROTECTION-ARCHITECTURE.md`; `v2/docs/review-packets/battery/SECONDARY-OT-DECISION.md`; `v2/ecad/tools/gen_sch_p.py:355-430`
 
