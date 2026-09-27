@@ -135,7 +135,7 @@ registry: "MeshSat field kit V2 requirements"
 issue: MESHSAT-1357
 written: "2026-09-26"
 baseline_state: READY_FOR_REVIEW_B
-sources_read_at: 95e078a1
+sources_read_at: 08f3665a
 needs_document: "v2/docs/CONOPS.md"
 needs_document_sha256: 370aca33cb44da97b5488653ebe10fa13e7371e5321f8feebd6fe9cc98d092db
 companion_documents: []
@@ -3860,7 +3860,7 @@ records:
       - "v2/docs/feasibility/EMCON.md@421a291f7ce4cda2"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@11eabc2dddca5161"
     release_effect: MUST_JUSTIFY
-    source: ["v2/docs/PANEL.md:135", "v2/docs/PANEL.md:187"]
+    source: ["v2/docs/PANEL.md:135", "v2/docs/PANEL.md:189"]
     source_check: VERIFIED
 
   - id: REQ-013
@@ -3885,7 +3885,7 @@ records:
     status: DEFINED
     evidence_result: NOT_JUDGED
     release_effect: ADVISORY
-    source: ["v2/docs/PANEL.md:191"]
+    source: ["v2/docs/PANEL.md:193"]
     source_check: VERIFIED
 
   - id: REQ-014
@@ -4365,7 +4365,7 @@ records:
     release_effect: BLOCKER
     source:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:3060-3062"
-      - "v2/docs/ASSEMBLY.md:81"
+      - "v2/docs/ASSEMBLY.md:102"
       - "v2/docs/CASE-MARGINS.md section 3.2 (M4a to M6)"
       - "owner ruling D-06"
     source_check: INFERRED
@@ -6511,8 +6511,8 @@ records:
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
     source:
-      - "v2/docs/PANEL.md:185"
       - "v2/docs/PANEL.md:187"
+      - "v2/docs/PANEL.md:189"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2866"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2926"
     source_check: VERIFIED
@@ -6549,7 +6549,7 @@ records:
     evidence_result: NOT_JUDGED
     release_effect: MUST_JUSTIFY
     source:
-      - "v2/docs/PANEL.md:184"
+      - "v2/docs/PANEL.md:186"
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2802 (16c)"
       - "v2/vendor/standards/mil-std-3009-nvis-2001-02-02.md"
     source_check: VERIFIED
@@ -9493,9 +9493,9 @@ records:
     source:
       - "v2/docs/PANEL.md:52"
       - "v2/docs/PANEL.md:100"
-      - "v2/docs/PANEL.md:191"
+      - "v2/docs/PANEL.md:193"
       - "v2/docs/PANEL.md section 9"
-      - "v2/docs/PANEL.md:197"
+      - "v2/docs/PANEL.md:199"
       - "v2/docs/V2-SPEC.md:58"
       - "owner ruling D-10"
     source_check: VERIFIED
@@ -10273,7 +10273,7 @@ records:
       what: >-
         Lifting the stack live, against the procedure, leaves a person able to touch the spring-contact targets that
         carry VIN_RAW and the pack current (ASSEMBLY.md:117, :171).
-    source: ["v2/docs/ASSEMBLY.md:159", "v2/docs/ASSEMBLY.md:173", "owner ruling D-14"]
+    source: ["v2/docs/ASSEMBLY.md:180", "v2/docs/ASSEMBLY.md:194", "owner ruling D-14"]
     source_check: VERIFIED
 
   - id: CON-015
