@@ -29,7 +29,16 @@ below stand.
   (targeted experiment, qualified review or a justified alternative) or recorded as a blocker with its engineering
   question. The RF-002 transmitter walk, past its second pass long ago, gets one final method change (every pin not
   cleared by a held document reads UNDECIDED); whatever it yields is merged with its limits named or recorded as a
-  blocker with a manual-review route.
+  blocker with a manual-review route. Corrected after the external review of 27 September 18:10
+  (`v2/docs/reviews/2026-09-27-third-checkpoint-review.md`, section 7): changing the method never ends the review
+  while the defect remains; a narrow re-check is used only where the affected scope is understood, and the broader
+  acceptance criteria it touches stay covered.
+- **Promote only a checked candidate** (same review, section 7). The validators and the tests that read the changed
+  files run on the exact integrated candidate before `main` is fast-forwarded to it, and a result from one revision is
+  never reported for another; the full suite runs at every snapshot.
+- **Design closures are counted apart from evidence refreshes** (same review, section 6). A re-take that moves readings
+  to current evidence, or a stage correction, closes no electrical defect; the checkpoints list the circuit changes
+  that closed a finding separately.
 
 ## Baseline, 25 September 2026 22:33 CEST
 
