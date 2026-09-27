@@ -202,7 +202,13 @@ across the set, the five new rows the lead's. A contract judged on every input a
 ...)) makes the board and set verdicts INCONCLUSIVE when nothing failed. RF-002's transmitter walk
 (tx_inhibit.py, held for its own commit) is NOT one of this rule's contracts: its results go to the `inhibit`
 group alone, so they decide inhibit_chain_<letter> and move neither check_contracts_<letter> nor the set
-verdict.
+verdict. 27 September 2026 (stream w4r): block_contract.py reads board A's CURRENT netlist and the J_DOCK
+land it names, mounted as gen_pcb_a3.py mounts it, and no longer board A's board file, whose committed layout
+predates EQ-16; it also judges every blind-mate power pin of board A's netlist against a target of its kind.
+On main 91894cd7's files the reading went from PASS 33 of 33 (against the board file) to FAIL, 28 of 38
+(against the netlist): E5's targets under J_DOCK pins 1 to 4 and their wire lands still carry VIN_RAW and no
+target takes J_VR1 to J_VR4 or J_VN1 to J_VN4 (S-74). The same reading decides INT-001 on E5 (its row's
+verdict_by_board and _verdict_by_board_why).
 
 ### SCH-004  a safety line fails safe
 
@@ -1773,7 +1779,20 @@ to interfaces_<letter> with check_contracts_<letter> (per board, so E5 is decide
 check_contracts_e5) is deferred by the session under the owner's standing rule of 26 September 2026: it needs
 check_contracts.py to declare its verdict names (RULE_VERDICTS) so the set verdict keeps a rule, and a
 _shared_verdict_why beside SCH-003, and changing check_contracts.py at this merge would stale the re-take it
-carries. Until then E5's INT-001 is routed to the registry writer.
+carries. Until then E5's INT-001 is routed to the registry writer. 27 September 2026 (stream w4r): E5 alone
+is moved, by `verification.verdict_by_board` (see _verdict_by_board_why), without touching check_contracts.py
+or what the six other boards read; block_contract.py was taught the same day to read board A's CURRENT
+netlist instead of its board file, because board A's committed layout predates EQ-16 and E5 was generated
+from that same layout, so the old reading's PASS 33 of 33 compared two stale files with each other. The land
+mounted as the tool mounts it gives the same twelve pad offsets as J_DOCK on board A's committed board file
+(58e26c67987b1daa, KiCad 9.0.9 on the box), so the geometry is unchanged and only the source of the nets
+moved. Re-taken in scratch on the box with the re-take driver on main 91894cd7's files (E5 686b29a734c55b9a,
+board A's netlist da05dc02bc1e612f): check_contracts_e5 FAIL, 28 of 38 checks passing, where main's tool on
+the same files read PASS 33 of 33 against board A's board file. The ten failures: the four targets under
+J_DOCK pins 1 to 4 and their four wire lands carry VIN_RAW where board A's netlist has GND, and board A's
+J_VR1 to J_VR4 and J_VN1 to J_VN4 land on no E5 target (S-74: E5's eight targets and two 12 AWG holes are
+still in flight). E5's INT-001 then reads FAIL on CURRENT_CANDIDATE evidence, the design's answer until E5 is
+regenerated for EQ-16.
 
 ### INT-002  a transformerless Ethernet link has a pre-layout assessment on its current nets
 

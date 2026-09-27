@@ -500,14 +500,14 @@ def result_for(rule, letter, cov, vs, m, fingerprint, phase=None, identities=Non
                 else dict(result=INCONCLUSIVE, why=why, evidence=doc))
     if c.get("maturity") == "GENERATED_ONLY":
         return dict(result=INCONCLUSIVE, why="generation intends to comply and nothing verifies it: %s" % c.get("note", "")[:140], evidence=None)
-    raw = (c.get("verification") or {}).get("verdict")
-    if not raw:
+    names = _names(c, letter)
+    if not names:
         return dict(result=INCONCLUSIVE, why="the coverage map names no verdict for an enforced rule", evidence=None)
     # A RULE MAY BE VERIFIED BY MORE THAN ONE TOOL, and several are: a placement is judged both by the DRC on
     # the placed board and by the escape-fan predictor, and a part is judged both by the code the BOM carries
     # and by asking the fabricator whether that code is the part. Where a rule names several, the WORST result
     # decides, because a rule is satisfied only when every tool that verifies it says so.
-    names = [n.strip().replace("<letter>", letter) for n in str(raw).split(",") if n.strip()]
+    # `names` above: _names, which reads a board's own readings where the row names them (verdict_by_board).
     if rule["verification_phase"] == "ROUTED_BOARD" and ROUTE_GATE not in names:
         n_un, why_un = _unrouted(vs, m, fingerprint, identities)
         if n_un: return dict(result=INCONCLUSIVE, why=why_un, evidence=(vs.get(ROUTE_GATE) or {}).get("_path"))
@@ -881,6 +881,16 @@ CONFIG_INPUTS = {
     # netlist's bare name, and TOOL_CHANGED once the R4T-F1 fix of the same day lands; GND-001 is a ROUTED_BOARD rule,
     # so a netlist it records would not bind it either, and it is no layout-entry blocker).
     "ground_system.py": ("tools/boards/{letter}.json",),
+    # block_contract.py (27 September 2026, MESHSAT-1357 stream w4r; functions of that stream's file): board E5's
+    # contract reading check_contracts_e5, which decides SCH-003 and, on E5, INT-001. `judge` reads E5's board file and
+    # board A's declared phase netlist (`a_netlist_for`, phase_artefacts.netlist, which finds it through the manifest and
+    # the routeflow profile: finding an artefact, not configuration), both recorded by sha by `inputs_for`, the netlist by
+    # content16 too; `land_file` and `dock_offsets` read the land that netlist names for J_DOCK, recorded by sha as
+    # dock_land (a meshsat land; a land of the host's KiCad library would not be in this tree, an instrument limit, as for
+    # pin_map_lands). The glob is conservative. DOCK_MOUNT and POWER_KINDS are code in the tool; `decides` reads the
+    # coverage map to name the rules the reading answers, as verdict.py does for every writer, which says which rules a
+    # reading decides and not what it measures.
+    "block_contract.py": ("meshsat.pretty/*.kicad_mod",),
 }
 # check_pcb_c.py (27 September 2026, MESHSAT-1357 layer 7; the second review of the case release). Board C's gate was not declared, so
 # every reading of it read CONFIG_UNDECLARED, and the case release made it read a file at run time that its code bundle does not see.
@@ -1067,7 +1077,17 @@ def candidate(letter, m, vs=None, ident=None, reg=None, cov=None, fingerprint=No
 
 
 def _names(c, letter):
-    raw = (c.get("verification") or {}).get("verdict")
+    """The verdict names a coverage row reads on one board, `<letter>` expanded.
+
+    A ROW MAY NAME, FOR ONE BOARD, THE READINGS THAT DECIDE IT THERE (27 September 2026, MESHSAT-1357, stream w4r):
+    `verification.verdict_by_board: {<letter>: "<names>"}`. Board E5 has no netlist, so the set verdict check_contracts,
+    which judges the contracts between the six boards that have one, reads nothing of it and can never be bound to E5's
+    design; E5's INT-001 is decided by its own contract reading, check_contracts_e5 (block_contract.py). Every reader of
+    the map asks here (result_for, evidence_class, retake_projection, retake_schematic_phase.py), so a rule on a board is
+    never decided from one list of readings and bound from another. A row without the field reads `verdict` as before."""
+    v = c.get("verification") or {}
+    per = v.get("verdict_by_board")
+    raw = per[letter] if isinstance(per, dict) and letter in per else v.get("verdict")
     return [n.strip().replace("<letter>", letter) for n in str(raw or "").split(",") if n.strip()]
 
 

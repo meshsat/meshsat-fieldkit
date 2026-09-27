@@ -2528,7 +2528,16 @@ open_items:
       targets (gen_pcb_a3.py), board E's placement of P_VR and P_VN (patch_gen_pcb_e3.py leaves a marker that
       stops it until they are chosen), ASSEMBLY.md's block lead rows and build step 2 (patch_assembly_dock.py,
       with E5's holes); v2/docs/ARCHITECTURE.md's IF-AE-DOCK lines were brought to 14.10 A on the power pins in
-      the same integration.
+      the same integration. Since stream w4r (27 September 2026) the dock block's contract reading
+      check_contracts_e5 (block_contract.py) judges E5 against board A's current netlist instead of board A's
+      board file, and reads FAIL on current evidence until E5 is regenerated for EQ-16: the targets under J_DOCK
+      pins 1 to 4 and their wire lands still carry VIN_RAW where board A's netlist has GND, and no E5 target
+      takes J_VR1 to J_VR4 or J_VN1 to J_VN4. It decides SCH-003 and, on E5, INT-001, which is how the E5 half
+      of this item shows on the layout-entry page. The reading's check 5 judges a T_VR target's net against
+      board A's J_VR net name (VIN_RAW), counts the targets of each power kind (CP, CN, PRE, VR, VN) and judges
+      neither a T_VN target's net nor any power target's position (r8int6, from the independent check of w4r),
+      so E5's regeneration names its T_VR targets VIN_RAW, and a T_VN target on a wrong net would still pass
+      until a declared return net is judged.
   - id: S-75
     class: SESSION
     status: OPEN

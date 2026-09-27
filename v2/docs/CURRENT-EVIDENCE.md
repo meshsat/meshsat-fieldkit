@@ -31,7 +31,7 @@ that owns it.
 | D | D12 | `pcb-d-aprs-d9/out/pcb-d-aprs.net` 76700a687eb6187f | 929bf82d2bf6eed4 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 8 reason(s), first PWR-001 INCONCLUSIVE on VALID_HISTORICAL evidence (RATIONALE) |
 | E | E17 | `pcb-e1-dock-e7/out/pcb-e1-dock.net` d6137f50059e5cbc | a462ac2620b9b8d3 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 5 reason(s), first PWR-001 INCONCLUSIVE on VALID_HISTORICAL evidence (RATIONALE) |
 | P | P4 | `pcb-p-pack-p2/out/pcb-p-pack.net` 085f833362fbbda8 | d79865e7b1aceb95 | no: SCH-002 (netlist against board) reads INCONCLUSIVE on it | no: 6 reason(s), first PWR-001 FAIL on VALID_HISTORICAL evidence (RATIONALE) |
-| E5 | E5 | none (no schematic) | 686b29a734c55b9a | yes: a bare contact board with no schematic (manifest no_chain): its board file is its design | no: 2 reason(s), first INT-001 PASS on AWAITING_REVALIDATION evidence (UNBOUND) |
+| E5 | E5 | none (no schematic) | 686b29a734c55b9a | yes: a bare contact board with no schematic (manifest no_chain): its board file is its design | no: 2 reason(s), first INT-001 INCONCLUSIVE on AWAITING_REVALIDATION evidence (NOT_CURRENT_EVIDENCE) |
 
 ## Layout entry, per board: the exact remaining blockers
 
@@ -48,9 +48,9 @@ the row current, and the owner is the stream that takes that step.
 | what closes it first | owner | A | B | C | D | E | P | E5 | set |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | the design or its declarations (the reading is current and is not a PASS) | board stream of that board | 2 | 2 | 3 | 3 | 2 | 3 | 0 | 15 |
-| a deciding verification for the rule | registry writer (pcb_rules_coverage.yaml) | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 1 |
 | a layout-entry requirement of a hold that gates a later stage (the hold itself stays until that stage) | board stream of that board, with the holds writer for the record | 1 | 0 | 0 | 1 | 1 | 0 | 0 | 3 |
 | the layout-entry stage of a feasibility blocker closed on its named evidence | the blocker's owner (tools/pcb_requirements.yaml) | 4 | 5 | 2 | 4 | 2 | 3 | 1 | 21 |
+| see the row | board stream of that board | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 1 |
 
 | board | rule | reading now | a re-take alone would read | what closes it first | owner |
 |---|---|---|---|---|---|
@@ -92,7 +92,7 @@ the row current, and the owner is the stream that takes that step.
 | P | FEA-006 | layout-entry stage open |  | The per-class requirement of DECOUPLING.md written from each maker's own words (capacitance, dielectric, count per pin or rail, loop and return geometry), with its source per class; T1 to T10 merged with DEC-001's registry text; G1 to G14 in each board's generator and the five circuit gaps closed (the STM32H743's VDDA capacitor among them, the TPA6132A2 at its maker's 2.2 uF), each read back on the board's committed netlist; the PI7C9X2G404SL question asked of Diodes, with the class's requirement taken until it answers. | the blocker's owner (tools/pcb_requirements.yaml) |
 | P | FEA-005 | layout-entry stage open |  | The battery review packet complete and current on the candidate (its evidence/check_manifest.py printing RELEASE CHECK PASS at the commit whose netlist is laid out); the secondary protection's coordination with the primary and the cell limit stated at desk (thresholds with their tolerances, sensor placement and lag, operating mode, behaviour with the primary failed; the review of the 22:35 progress report, finding B) with the thermistor and sense placement constraints the layout must keep; the charger's state sequence with a crashed controller documented (CHARGER-STATE-SEQUENCE.md). | the blocker's owner (tools/pcb_requirements.yaml) |
 | P | FEA-007 | layout-entry stage open |  | Per board, the desk items of CASE-FIT-UNCERTAINTIES.md section 2: board B, the jumper plug picked from a maker's drawing with M17g and M17x MET on the design basis, M13 bounded by PolyPhaser's O-ring dimension and the M1 lookups (Xenarc rear frame, CM5 Cooler drawing, named spacers); boards A and P, the pack hold-down (S-27) with M4a and M5; boards A and D, W4-F17 resolved; boards A, E and E5, the dock and blind-mate tolerance stack with board E's clamp bar (R4E-07) and an ANT3 clamp at X +46; board E, the clamp lanes (M17f) and the VHB pad places (M15b). Then, for boards A, B, E and P, the mock-up's checks of their YES rows on a new case of the current moulding (D-08a) with the made parts of v2/release/case-2026-09-27/, the picked jumper plugs on RG-316, one arrestor and stand-ins: A, T4 (M4a); B, T2 and T4 (M1, M18), T5 and T11 (M18, M17w, M17x through M13), T10 (M17d, M17g, M17w, M17x); E, T10 (M17f); P, T4 and T2 (M4a, M5); T1 at purchase. Each YES row read at or above its minimum, or the board's outline or placement changed before its layout entry. BLOCKED on the owner's purchase decision (L-07, D-09). Boards D and E5 need the desk items only. | the blocker's owner (tools/pcb_requirements.yaml) |
-| E5 | INT-001 PASS | AWAITING_REVALIDATION (UNBOUND) | AWAITING_REVALIDATION (UNBOUND) | the coverage map reads check_contracts's set verdict here, which judges the contracts between the six boards that have a netlist and reads nothing of this board: it records every netlist it read by sha since the tools stream's recording round and none of this board's, and it will not be tied to a board file it never opened. block_contract.py judges the dock block and writes check_contracts_<letter> from its board file and board A's, so the rule can bind here once the coverage map names that per-board verdict (a draft for the registry writer), and then only while board A's layout carries its netlist (OTHER_BOARD) | registry writer (pcb_rules_coverage.yaml) |
+| E5 | INT-001 INCONCLUSIVE | AWAITING_REVALIDATION (NOT_CURRENT_EVIDENCE) | AWAITING_REVALIDATION (OTHER_BOARD) | every board it reads made current, then re-taken; today's reading is INCONCLUSIVE, which the re-take may repeat | board stream E5 |
 | E5 | FEA-007 | layout-entry stage open |  | Per board, the desk items of CASE-FIT-UNCERTAINTIES.md section 2: board B, the jumper plug picked from a maker's drawing with M17g and M17x MET on the design basis, M13 bounded by PolyPhaser's O-ring dimension and the M1 lookups (Xenarc rear frame, CM5 Cooler drawing, named spacers); boards A and P, the pack hold-down (S-27) with M4a and M5; boards A and D, W4-F17 resolved; boards A, E and E5, the dock and blind-mate tolerance stack with board E's clamp bar (R4E-07) and an ANT3 clamp at X +46; board E, the clamp lanes (M17f) and the VHB pad places (M15b). Then, for boards A, B, E and P, the mock-up's checks of their YES rows on a new case of the current moulding (D-08a) with the made parts of v2/release/case-2026-09-27/, the picked jumper plugs on RG-316, one arrestor and stand-ins: A, T4 (M4a); B, T2 and T4 (M1, M18), T5 and T11 (M18, M17w, M17x through M13), T10 (M17d, M17g, M17w, M17x); E, T10 (M17f); P, T4 and T2 (M4a, M5); T1 at purchase. Each YES row read at or above its minimum, or the board's outline or placement changed before its layout entry. BLOCKED on the owner's purchase decision (L-07, D-09). Boards D and E5 need the desk items only. | the blocker's owner (tools/pcb_requirements.yaml) |
 
 ## Held at later stages: fabrication release and prototype verification
@@ -145,7 +145,7 @@ whose evidence class differs from what the entry-script instrument of 20 Septemb
 evidence; a row whose class stayed the same and whose first failing cause moved (most often to TOOL_CHANGED
 from a cause checked after it) is counted but not listed.
 
-**21 of 338 required rows changed class; 116 more changed only their first failing cause.**
+**21 of 338 required rows changed class; 115 more changed only their first failing cause.**
 
 | board | rule | result | entry script alone | code bundle | files that moved |
 |---|---|---|---|---|---|
@@ -184,14 +184,14 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 
 | board | CURRENT_CANDIDATE | VALID_HISTORICAL | PASS on either | AWAITING_REVALIDATION | DESK_REVIEW | PHYSICAL_TEST | NO_EVIDENCE | pairs |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| A | 10 | 3 | 11 | 35 | 3 | 0 | 4 | 55 |
-| B | 10 | 3 | 11 | 34 | 4 | 0 | 5 | 56 |
-| C | 7 | 3 | 7 | 32 | 3 | 0 | 3 | 48 |
-| D | 8 | 3 | 8 | 34 | 3 | 0 | 3 | 51 |
-| E | 11 | 3 | 12 | 35 | 3 | 0 | 3 | 55 |
-| P | 11 | 3 | 11 | 29 | 3 | 0 | 2 | 48 |
-| E5 | 5 | 1 | 6 | 16 | 2 | 0 | 1 | 25 |
-| **set** | **62** | **19** | **66** | **215** | **21** | **0** | **21** | **338** |
+| A | 9 | 3 | 10 | 36 | 3 | 0 | 4 | 55 |
+| B | 9 | 3 | 10 | 35 | 4 | 0 | 5 | 56 |
+| C | 6 | 3 | 6 | 33 | 3 | 0 | 3 | 48 |
+| D | 7 | 3 | 7 | 35 | 3 | 0 | 3 | 51 |
+| E | 10 | 3 | 11 | 36 | 3 | 0 | 3 | 55 |
+| P | 10 | 3 | 10 | 30 | 3 | 0 | 2 | 48 |
+| E5 | 4 | 1 | 5 | 17 | 2 | 0 | 1 | 25 |
+| **set** | **55** | **19** | **59** | **222** | **21** | **0** | **21** | **338** |
 
 ## Rules with a PASS on the current candidate
 
@@ -205,7 +205,6 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 | A | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_a: netlist da05dc02bc1e612f is the current candidate's |
 | A | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_a: netlist da05dc02bc1e612f is the current candidate's |
 | A | BAT-002 the energy chain is bounded end to end | SCHEMATIC | energy_chain: netlist da05dc02bc1e612f is the current candidate's |
-| A | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 | B | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist 8b78c59754a6a0c7 is the current candidate's |
 | B | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_b: netlist 8b78c59754a6a0c7 is the current candidate's |
 | B | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_b: netlist 8b78c59754a6a0c7 is the current candidate's |
@@ -214,20 +213,17 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 | B | CLK-001 oscillators, straps and boot pins | SCHEMATIC | clock_check: netlist 8b78c59754a6a0c7 is the current candidate's |
 | B | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_b: netlist 8b78c59754a6a0c7 is the current candidate's |
 | B | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_b: netlist 8b78c59754a6a0c7 is the current candidate's |
-| B | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 | C | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist 11eabc2dddca5161 is the current candidate's |
 | C | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_c: netlist 11eabc2dddca5161 is the current candidate's |
 | C | CLK-001 oscillators, straps and boot pins | SCHEMATIC | clock_check: netlist 11eabc2dddca5161 is the current candidate's |
 | C | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_c: netlist 11eabc2dddca5161 is the current candidate's |
 | C | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_c: netlist 11eabc2dddca5161 is the current candidate's |
-| C | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 | D | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist 76700a687eb6187f is the current candidate's |
 | D | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_d: netlist 76700a687eb6187f is the current candidate's |
 | D | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_d: netlist 76700a687eb6187f is the current candidate's |
 | D | CLK-001 oscillators, straps and boot pins | SCHEMATIC | clock_check: netlist 76700a687eb6187f is the current candidate's |
 | D | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_d: netlist 76700a687eb6187f is the current candidate's |
 | D | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_d: netlist 76700a687eb6187f is the current candidate's |
-| D | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 | E | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist d6137f50059e5cbc is the current candidate's |
 | E | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_e: netlist d6137f50059e5cbc is the current candidate's |
 | E | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_e: netlist d6137f50059e5cbc is the current candidate's |
@@ -238,7 +234,6 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 | E | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_e: netlist d6137f50059e5cbc is the current candidate's |
 | E | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_e: netlist d6137f50059e5cbc is the current candidate's |
 | E | BAT-002 the energy chain is bounded end to end | SCHEMATIC | energy_chain: netlist d6137f50059e5cbc is the current candidate's |
-| E | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 | P | SCH-001 ERC clean or explained | SCHEMATIC | erc_gate: netlist 085f833362fbbda8 is the current candidate's |
 | P | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_p: netlist 085f833362fbbda8 is the current candidate's |
 | P | SCH-005 every pad of a part's land carries a net or a declared no-connect | SCHEMATIC | pin_map_lands_p: netlist 085f833362fbbda8 is the current candidate's |
@@ -248,12 +243,10 @@ on built hardware. NO_EVIDENCE: nothing that decides.
 | P | INT-001 each interface is designed to its own specification | SCHEMATIC | interfaces_p: netlist 085f833362fbbda8 is the current candidate's |
 | P | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_p: netlist 085f833362fbbda8 is the current candidate's |
 | P | BAT-002 the energy chain is bounded end to end | SCHEMATIC | energy_chain: netlist 085f833362fbbda8 is the current candidate's |
-| P | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 | E5 | SCH-004 a safety line fails safe | SCHEMATIC | safe_lines_e5: board 686b29a734c55b9a is the current design (no schematic) |
 | E5 | PWR-003 protection coordination | SCHEMATIC | energy_chain_e5: board 686b29a734c55b9a is the current design (no schematic) |
 | E5 | TRN-001 every exposed port is protected | SCHEMATIC | port_protect_e5: board 686b29a734c55b9a is the current design (no schematic) |
 | E5 | BAT-002 the energy chain is bounded end to end | SCHEMATIC | energy_chain: board 686b29a734c55b9a is the current design (no schematic) |
-| E5 | SGN-001 every applicable rule has a result | RELEASE_PACKAGE | rules_complete: the rule judges the registry itself and the reading is taken under the current one |
 
 ## Reused under a recorded rationale
 
@@ -287,10 +280,11 @@ tool.
 
 | cause | what it means | what re-validates it | A | B | C | D | E | P | E5 | set | of which a re-take alone makes current |
 |---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| UNBOUND | it records no artefact by content (a release-package reading: no file of the declared phase's folder by sha), so it cannot be tied to the candidate | the gate taught to record the netlist, board or package file sha it read, then re-taken | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 14 | 0 |
+| UNBOUND | it records no artefact by content (a release-package reading: no file of the declared phase's folder by sha), so it cannot be tied to the candidate | the gate taught to record the netlist, board or package file sha it read, then re-taken | 2 | 2 | 2 | 2 | 2 | 2 | 1 | 13 | 0 |
 | TOOL_CHANGED | the code that wrote it has changed since: its entry script or a local module it imports (exact by the reading's code bundle; for an older reading by its writer's hash and its imports' commit dates) | re-taken under the current tool (current only when the re-take also binds its artefact and configuration), or a compatibility entry proving the change is not semantic | 31 | 30 | 27 | 30 | 31 | 24 | 11 | 184 | 9 |
-| NOT_CURRENT_EVIDENCE | the reading itself is stale (epoch, rule digest, another board, or a tool meaning change) | re-taken | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 14 | 0 |
+| NOT_CURRENT_EVIDENCE | the reading itself is stale (epoch, rule digest, another board, or a tool meaning change) | re-taken | 2 | 2 | 2 | 2 | 2 | 2 | 3 | 15 | 0 |
 | TEMP_INPUT | it judged files in a temporary directory, not this tree | re-taken in this tree | 0 | 0 | 1 | 0 | 0 | 1 | 1 | 3 | 0 |
+| CONFIG_CHANGED | a configuration input its writer reads (rules_status.CONFIG_INPUTS) changed after the reading | re-taken, or a `kind: config` compatibility entry showing the change does not reach what the tool reads | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 7 | 0 |
 
 ## Writers whose configuration is not declared yet
 
@@ -302,7 +296,6 @@ stream, which audits each writer by reading it, file and line.
 | writer | rules it decides |
 |---|---|
 | `assembly_set.py` | DFA-001 |
-| `block_contract.py` | SCH-003 |
 | `check_pcb_a.py` | MEC-001 |
 | `check_pcb_b.py` | MEC-001 |
 | `check_pcb_d.py` | MEC-001 |
@@ -366,7 +359,7 @@ tools that have changed since, across every board's revisions.
 
 | historical aggregate, mixed revisions | PASS | FAIL | INCONCLUSIVE | WAIVED | pairs |
 |---|---:|---:|---:|---:|---:|
-| rule-board pairs | 206 (60.9 percent, mixed revisions) | 44 | 88 | 0 | 338 |
+| rule-board pairs | 205 (60.7 percent, mixed revisions) | 44 | 89 | 0 | 338 |
 
 ## How this page is computed
 
@@ -377,7 +370,7 @@ tools that have changed since, across every board's revisions.
   - schematic and netlist: the netlist sha the reading records (or its content identity, `content16`), against the netlist in the declared phase directory's `out/`;
   - PCB and stackup: the board file sha the reading records; the stackup is a block inside that file, so the sha binds it;
   - BOM: for a schematic-phase rule the netlist carries every part's value, land and fields, so the netlist sha binds it; for a release-package rule the files of the declared phase's deliverable folder that the reading records, each at the sha this tree holds, with the folder's BOM among them where it has one (a gerber zip or CPL alone does not bind a folder with a BOM). A reading that names the folder only by its name is UNBOUND. The order set and `JLC-CERTIFIED.tsv` are bound only through the readings that record them;
-  - configuration: every file its writer is declared to read in `rules_status.CONFIG_INPUTS`, unchanged since the reading by the sha it recorded or by the file's last commit (uncommitted edits count as changed). Declared writers: `check_contracts.py`, `check_pcb_c.py`, `check_pcb_e5.py`, `clock_check.py`, `derate.py`, `edge_length.py`, `energy_chain.py`, `erc_gate.py`, `fab_limits.py`, `ground_system.py`, `intent_checks.py`, `interfaces.py`, `jlc_certify.py`, `lcsc_fill.py`, `netlist_board.py`, `netlist_parts.py`, `pack_protection.py`, `pin_map_lands.py`, `port_protect.py`, `power_sequence.py`, `reliability.py`, `rules_render.py`, `rules_status.py`, `safe_lines.py`, `stackup_gate.py`. A reading from any other writer is AWAITING_REVALIDATION with cause CONFIG_UNDECLARED;
+  - configuration: every file its writer is declared to read in `rules_status.CONFIG_INPUTS`, unchanged since the reading by the sha it recorded or by the file's last commit (uncommitted edits count as changed). Declared writers: `block_contract.py`, `check_contracts.py`, `check_pcb_c.py`, `check_pcb_e5.py`, `clock_check.py`, `derate.py`, `edge_length.py`, `energy_chain.py`, `erc_gate.py`, `fab_limits.py`, `ground_system.py`, `intent_checks.py`, `interfaces.py`, `jlc_certify.py`, `lcsc_fill.py`, `netlist_board.py`, `netlist_parts.py`, `pack_protection.py`, `pin_map_lands.py`, `port_protect.py`, `power_sequence.py`, `reliability.py`, `rules_render.py`, `rules_status.py`, `safe_lines.py`, `stackup_gate.py`. A reading from any other writer is AWAITING_REVALIDATION with cause CONFIG_UNDECLARED;
   - rule semantics: the rule's digest and the rule-set fingerprint (`_fresh`, `_after_meaning_changed`);
   - tool semantics: the reading's code bundle (the entry script and every local module it imports, each by sha256/16) against the bundle of the same entry here; for a reading older than the bundle, the writer's own sha256/16 and its imports' commit dates.
 - Instrument limits, which a reading shown current here can still fall foul of:
