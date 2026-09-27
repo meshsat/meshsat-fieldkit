@@ -209,7 +209,7 @@ baseline_reviews:
   - "v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2-2026-09-27.md@cf8c73fb288be2fb"
 sources_read_at: 08f3665a
 needs_document: "v2/docs/CONOPS.md"
-needs_document_sha256: bbcab7c9876f7993cb6aa7a742c2a871caedf255b7a10e332adf1c81780a7b38
+needs_document_sha256: 6ebe6760c4312bcadab789da80d103d6e40da0a7657dfe636315eef66930fa54
 companion_documents: []
 
 # The needs of CONOPS section 2, quoted. The validator compares each statement with the needs table of the
@@ -3414,8 +3414,17 @@ records:
           this reading rests on (every USB peripheral of IOHA section 15 and the kit-to-kit WiFi link critical, the LoRa
           module and cellular data the named exceptions for prototype 1) unchanged word for word, so it stands on the
           file at bbcab7c9876f7993
+      - >-
+          v2/docs/CONOPS.md re-read at the re-stamp of the definition baseline of 27 September 2026 (branch fnd/defstab,
+          after the check of the restructure v2/docs/reviews/DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md,
+          CONTENT_PRESERVED, filed in a9f212c7 with the map at v2/docs/records/defstab/moves.json): only the head's
+          status paragraph changes (lines 3 to 9: layer 2 BASELINED at a9f212c7, an editorial restructure with no
+          definition change of the text baselined at 79963b3b, citing the check and the release record); every line from
+          the head's rule paragraph to the end of the file, the needs table included, is byte-identical to the file at
+          bbcab7c9876f7993, so section 2a's paragraph 'Which peripherals NEED-03 protects', which this reading rests on,
+          is unchanged word for word and it stands on the file at 6ebe6760c4312bca
     evidence_bound_to:
-      - "v2/docs/CONOPS.md@bbcab7c9876f7993"
+      - "v2/docs/CONOPS.md@6ebe6760c4312bca"
       - "v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8"
       - "v2/docs/V2-SPEC.md@a92ea2ef3793a3c9"
     release_effect: BLOCKER
@@ -9880,11 +9889,22 @@ records:
           the transmitter counts stand word for word on DEFINITION-STATUS.md (entry C-S1), still describing the circuit
           of 458b2873 and board B's round 8; no kept sentence describes a circuit that faf8c981, 458b2873 or d90f30e4
           replaced, so it stands on the file at bbcab7c9876f7993
+      - >-
+          v2/docs/CONOPS.md re-read at the re-stamp of the definition baseline of 27 September 2026 (branch fnd/defstab,
+          after the check of the restructure v2/docs/reviews/DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md,
+          CONTENT_PRESERVED, filed in a9f212c7 with the map at v2/docs/records/defstab/moves.json): only the head's
+          status paragraph changes (lines 3 to 9: layer 2 BASELINED at a9f212c7, an editorial restructure with no
+          definition change of the text baselined at 79963b3b, citing the check and the release record); every line from
+          the head's rule paragraph to the end of the file, the needs table included, is byte-identical to the file at
+          bbcab7c9876f7993, so the statements this reading rests on (section 4's ZEROIZE, Service, Startup and EMCON
+          rows, section 4a's PS-EMCON row, section 4b's key and table, section 4b.1's table, section 4f, section 5's
+          hardware interlock sentence and M4's setting, sequence, must-hold and D-05 ruling) are unchanged word for word
+          and it stands on the file at 6ebe6760c4312bca
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
       - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc"
       - "v2/docs/PANEL.md@7bb905740ddaebb9"
-      - "v2/docs/CONOPS.md@bbcab7c9876f7993"
+      - "v2/docs/CONOPS.md@6ebe6760c4312bca"
       - "v2/docs/V2-SPEC.md@a92ea2ef3793a3c9"
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
       - "v2/docs/TEST-PLAN.md@4f15bd02a6a8be46"
@@ -11689,9 +11709,18 @@ records:
           reading rests on (the cell-count strap at 4S, the kit's loads on the charger's system node, the net VBAT, and
           a hostless kit's pack held rather than charged at the charger's 256 mA) and section 5's case S4 are unchanged
           word for word, so it stands on the file at bbcab7c9876f7993
+      - >-
+          v2/docs/CONOPS.md re-read at the re-stamp of the definition baseline of 27 September 2026 (branch fnd/defstab,
+          after the check of the restructure v2/docs/reviews/DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md,
+          CONTENT_PRESERVED, filed in a9f212c7 with the map at v2/docs/records/defstab/moves.json): only the head's
+          status paragraph changes (lines 3 to 9: layer 2 BASELINED at a9f212c7, an editorial restructure with no
+          definition change of the text baselined at 79963b3b, citing the check and the release record); every line from
+          the head's rule paragraph to the end of the file, the needs table included, is byte-identical to the file at
+          bbcab7c9876f7993, so section 4's Charging row and section 5's case S4, which this reading rests on, are
+          unchanged word for word and it stands on the file at 6ebe6760c4312bca
     evidence_bound_to:
       - "v2/docs/PANEL.md@7bb905740ddaebb9"
-      - "v2/docs/CONOPS.md@bbcab7c9876f7993"
+      - "v2/docs/CONOPS.md@6ebe6760c4312bca"
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
       - "v2/ecad/tools/gen_sch_a.py@5af29bbcf27bb91a"
       - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"

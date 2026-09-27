@@ -18,8 +18,8 @@ where the two differ the review's words govern (finding m6 of the check of the r
 
 | Layer | Document | BASELINED at | sha256/16 of the file baselined | Release record (AI reviews and checks, none a qualified engineering review) |
 |---|---|---|---|---|
-| 1, product definition | `v2/docs/PRODUCT-BRIEF.md` | `6b2a9965` | `d36bf76b3dea8b30` (unchanged through `31cd29b9`) | `v2/docs/reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md`, the narrow verification of the targeted fix, after `v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2-2026-09-27.md` |
-| 2, concept of operations | `v2/docs/CONOPS.md` | `79963b3b` | `3ff59edc96a3f8f4` as the release check read it at `eb9f9030`; `4483209659dc391c` with its status line written (`62f26a44`, unchanged through `31cd29b9`), the file handover H2 carries | `v2/docs/reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md` |
+| 1, product definition | `v2/docs/PRODUCT-BRIEF.md` | `a9f212c7`, re-stamped: an editorial restructure with no definition change of the text first baselined at `6b2a9965` | `026d9ab493d35ed8` at `a9f212c7`, the file the check of the restructure read at `fa89c7c6`; `85513b92ed0daf55` with the re-stamped status paragraph, its only difference; `d36bf76b3dea8b30` at `6b2a9965` (unchanged through `31cd29b9`) | `v2/docs/reviews/DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md`, the check of the restructure (CONTENT_PRESERVED), on `v2/docs/reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md`, the narrow verification of the targeted fix, after `v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2-2026-09-27.md` |
+| 2, concept of operations | `v2/docs/CONOPS.md` | `a9f212c7`, re-stamped: an editorial restructure with no definition change of the text first baselined at `79963b3b` | `bbcab7c9876f7993` at `a9f212c7`, the file the check of the restructure read at `fa89c7c6`; `6ebe6760c4312bca` with the re-stamped status paragraph, its only difference, the needs table byte-identical; `3ff59edc96a3f8f4` as the release check read it at `eb9f9030`; `4483209659dc391c` with its status line written (`62f26a44`, unchanged through `31cd29b9`), the file handover H2 carries | `v2/docs/reviews/DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md`, the check of the restructure (CONTENT_PRESERVED), on `v2/docs/reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md` |
 
 `v2/docs/handover/LAYER-STATUS.md`, layers 1 and 2, names every review record of both layers with its evidence.
 
@@ -76,6 +76,18 @@ rule of 26 September 2026:
   cross-document states in the unmaintained appendix; the current state is in those documents. m4: the brief's "None
   of these is a claim." now follows the TBD runtime values rather than the model figures of entry B-S7; it still
   claims nothing. m6: answered for this page in "The rule", above.
+- **Observation O3** (which rule governs the re-read of the layer 1 pages from now on) is answered on
+  `v2/docs/handover/LAYER-STATUS.md`, layer 1's integrator line.
+
+**Re-stamped at `a9f212c7`.** `a9f212c7` is the commit that files the check and these answers, and carries both
+documents byte-identical to the files the check read at `fa89c7c6`. The commit after it sets each document's status
+paragraph to BASELINED at `a9f212c7`, an editorial restructure with no definition change, citing the check and the
+release records the baseline rests on (the table above); nothing else in either file changes, so the brief is
+`85513b92ed0daf55` and CONOPS `6ebe6760c4312bca` with that paragraph. A re-stamp is not a new review: the
+definition is the one baselined at `6b2a9965` and `79963b3b` on the release records in the table, and the check
+establishes only that the restructured text carries it. The requirements registry's pin on CONOPS (`needs_document_sha256`) is re-taken on the status paragraph
+alone, with the needs table byte-identical, and the three readings bound to CONOPS (REQ-005, CFL-014 and CFL-016)
+are rebound with an entry each naming that change. No reading is bound to the brief.
 
 ## Where the current state lives
 

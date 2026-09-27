@@ -1,8 +1,11 @@
 # MeshSat field kit V2: concept of operations
 
-**Status: layer 2 of the foundation baseline (MESHSAT-1357), BASELINED at `79963b3b`.** How it was reviewed and
-baselined is recorded in the appendix at the end of this file; how this file's present text relates to the text
-baselined at that commit, and the current state of everything this document depends on, is
+**Status: layer 2 of the foundation baseline (MESHSAT-1357), BASELINED at `a9f212c7`,** an editorial restructure with
+no definition change of the text baselined at `79963b3b`: the check of the restructure, `reviews/DEFINITION-RESTRUCTURE-CHECK-2026-09-27.md`
+(an AI check, CONTENT_PRESERVED), found every definition statement of that text here word for word, the needs table
+byte-identical, and the baseline rests on the release record `reviews/REVIEW-LAYER-2-RELEASE-2-2026-09-27.md`. How it
+was reviewed and baselined is recorded in the appendix at the end of this file; how this file's text relates to the
+text baselined at `79963b3b`, and the current state of everything this document depends on, is
 `handover/DEFINITION-STATUS.md`.
 
 **When this document is reopened (the rule of the independent review of handover H2, `reviews/2026-09-27-h2-independent-review.md` section 4).** This definition is reopened only when a requirement, the scope,
