@@ -45,6 +45,35 @@ snapshot with `handover_pack.py repo` (added after H2), with that route's run on
 and reads the headline on line 6. The commands of sections 2 to 7 are H2's and were not re-run for this change, except
 section 1a's fetch, run from a repository built from the H2 ZIP (section 9).
 
+**Edition H3 (prepared 27 September 2026).** H3 delivers layers 1, 2 and 3 as COMPLETE; its design content is H2's.
+Between H2's source commit `b89b50b4` and H3's no schematic, netlist, intent, land, generator, board table, checking
+tool, export, CAD file or maker document changed; under `v2/ecad/` eleven files did: the packer and its test
+(`a54b1f4d`, the `repo` subcommand), the requirements registry (its baseline, its open and closed items and four
+records' readings and notes), the interfaces registry (its `read_at` block) and INT-001's seven tracked readings, each
+PASS as before (`v2/docs/records/h3/design_difference.py` and its output, which assert it). **The commands below still
+name `H2` and their expected values are those of the H2 run; none was re-run on an H3 build when this page was
+written.** For H3 read `H3` wherever a command names the ZIP or its folder. What is expected to read as in H2, because
+its inputs are byte for byte H2's: sections 2 to 6 (the generator hash `ee62fdb195a9f217`, every content hash and
+RESULT class, the exports' counts, the energy chain). What is expected to differ in H3, by construction: the file count
+and the ZIP's size and sha256 (`RELEASE-H3.md` and the files beside the ZIP give them); `REF` of section 1a, computed
+from H3's own timeline; the requirements validator's warnings, 20 where H2 read 17, because the registry closes three
+more items by a commit (S-51, S-78 and S-80, by `a54b793b`; a `git archive` export of `2c12be91` read 20,
+`v2/docs/reviews/TARGETED-RECHECK-LAYER-3-2026-09-27.md` section 1), so the counts of section 7's table that contain
+17 become 20, and 30 becomes 33 (inferred from that record and the unchanged citations, not run); and the suite's
+totals, which H3 raises by the packer's new test. The two fresh checks of H3 that `RELEASE-H3.md` names report what
+they read.
+
+**Three ways to use this handover, and what each needs.** They are separate; the first needs nothing but the ZIP.
+
+| Route | What you do | What you need | Where |
+|---|---|---|---|
+| A. Read and continue | read the handover pages, the design documents, the schematic PDFs and BOMs, and continue the design from them | the ZIP, and a reader for Markdown and PDF. No Python, no KiCad, no git, no network | `START-HERE.md`, then its reading order; section 2 below only to check the ZIP (`sha256sum`, `unzip`) |
+| B. Reproduce a calculation or a schematic | run the representative calculation, the stored-energy chain (section 6), and regenerate one board and compare it with the committed design (section 3; section 4 for all six) | for the calculation: Python 3 with PyYAML (the H2 run used Python 3.12.3 and PyYAML 6.0.1, section 1; no other version was tried), and one maker document restored first, Mill-Max's catalogue page 28 (`v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf`, 3.8 MB, referenced and not bundled), which section 1a fetches from the public repository and checks by its git blob sha (it needs `curl` and network access); without it the chain reads FAIL of 98 on that one citation, with it PASS of 98. For the regeneration: also KiCad 9.0.9 (`kicad-cli` with the `kicad-symbols` and `kicad-footprints` packages of that release; parity is promised for 9.0.9 only), and for the paged PDFs `build_sch.sh` writes, Pillow 10.2.0, mupdf-tools and poppler-utils. The generators themselves use the standard library only | sections 1, 1a, 3, 4 and 6 |
+| C. Run the suite and the re-take | run the test suite (section 7) and re-take the schematic-phase readings and re-render the evidence pages (section 9) | a git checkout WITH HISTORY at the snapshot's commit, outside `/tmp`, and for the re-take and the board-file fixtures KiCad 9.0.9 (`kicad-cli`, and `pcbnew` importable from Python). **From the ZIP alone the suite is not expected to pass:** the H2 run read 1956 passed, 20 failed, 23 skipped, every failure caused by an input the snapshot leaves out (section 7's table). Tests that need git history or a git index: `test_netlist_provenance`, and in `test_requirements` the registry's closed-by-commit checks. Tests that need KiCad: the board-file fixtures, which skip where `pcbnew` does not import, and they are counted as skips, never as passes. Tests that need files the snapshot references or excludes: the rest of section 7's table. The packer's own tests need the `git` binary. In a git worktree of the repository at H2's snapshot commit, on a host without KiCad, the suite read 1936 passed, 0 failed, 63 skipped (`RELEASE-H2.md`); H3's own result is in `RELEASE-H3.md` | sections 7 and 9; section 9 gives three ways to get the checkout |
+
+Route C's expected counts are section 7's and section 9's, as run on H2 and on earlier commits; each says which.
+No page of this handover claims that the full suite passes from the ZIP.
+
 ## 1. Prerequisites (the versions the commands were run with)
 
 **Where the repository is.** The public repository is `https://github.com/meshsat/meshsat-fieldkit` (clone with
@@ -85,8 +114,10 @@ snapshot's root, with network access. `REF` is the newest commit the timeline in
 (the build commit itself when it is public, since it is the newest line); the first line of the block computes it
 from the timeline's columns (id, date, time, `public`, yes or no), so it never names an unpublished commit. The blob
 check proves the bytes whichever commit served them. For H2 it gives `62f26a44`; H2's own copy of this block took the
-`commit:` line, `b89b50b4`, which is not public, so every fetch read `FETCH FAILED` as written (the H2 usability
-check), and the H2 run set `REF=62f26a44` by hand:
+`commit:` line, `b89b50b4`, which was not public when H2 was built and checked, so every fetch read `FETCH FAILED` as
+written (the H2 usability check), and the H2 run set `REF=62f26a44` by hand. (Since 27 September 2026 `b89b50b4` is on
+the public repository, section 7; H2's timeline is part of H2 and still computes `62f26a44`, which serves the same
+blobs.)
 
 ```
 REF=$(awk '/^commit timeline:/{t=1} t && /^$/{exit} t && $4=="public" && $5=="yes" && ($2" "$3)>=d {d=$2" "$3; r=$1} END{print r}' SOURCE.txt)
@@ -405,7 +436,13 @@ re-created from the files does not. **Corrected after H2:** a clone of the publi
 the timeline marks `public yes`. For H2 that is every closing commit but `cecfd0f1` (S-77's, on the unpublished
 branch `fnd/h2`, with the snapshot commit itself), so H2's registry validates with no closed-by-commit finding only in a
 clone holding `fnd/h2`; a public clone serves `62f26a44`, whose registry predates S-77's closure (section 9, the
-public route).
+public route). **Corrected for H3, as of 27 September 2026 at 20:38 UTC:** that was true when H2 was built, and H2's
+`SOURCE.txt` records it (`public no`); it is no longer true of the repository. `b89b50b4`, `cecfd0f1` and the other
+`fnd/h2` commits, and H2's snapshot commit `174d8466`, are ancestors of `main` and are served by the public
+repository (each commit page answers HTTP 200, and the public `main` was `6ec37197`: `v2/docs/records/h3/public_check.py`
+and its output, which a reader can run again). So a clone of the public repository made today holds every closing
+commit H2's registry names, and `git checkout 174d8466` gives H2's snapshot commit, as `RELEASE-H2.md` says. Whether
+H3's own commits are public is said by H3's timeline for the time H3 was built, and by the same script for today.
 
 ## 8. Build and check a snapshot
 
@@ -459,7 +496,11 @@ says whether each commit was on the public repository when the snapshot was buil
 1. **The snapshot's own commit, in a clone that holds it.** The commands below as written, `<commit>` the `commit:`
    line of `SOURCE.txt`. For H2 this needs a clone holding branch `fnd/h2`: H2's source commit `b89b50b4` and the
    `fnd/h2` commits before it (`cecfd0f1`, `3e4799eb`, `6b2a9965`, `763bccdf`, `c5d09c78`) are marked `public no`, so
-   `git checkout` of them fails in a clone of the public repository.
+   `git checkout` of them fails in a clone of the public repository. **Corrected for H3:** they are marked `public no`
+   in H2's timeline because they were not public when H2 was built; since 27 September 2026 they are on the public
+   repository's `main` (section 7), so this route runs today in a clone of the public repository. For any snapshot,
+   a commit its timeline marks `public no` may have been published since: `git cat-file -t <commit>` in a fresh clone
+   answers it.
 2. **The public repository at the newest public commit of the timeline** (section 1a's `REF`; `62f26a44` for H2). The
    commands below with `<commit>` that commit. Between `62f26a44` and H2's source commit nothing under `v2/ecad/`
    changed but the requirements registry, and in it only the open and closed items (S-77 closed, S-80 opened, the
@@ -518,8 +559,9 @@ grep -E '^\| P \| P4 \|' ../docs/CURRENT-EVIDENCE.md
 ```
 
 Expected, as run between 16:39 and 16:41 UTC on 27 September 2026 on the rented Ubuntu 24.04 host with KiCad 9.0.9 and
-Python 3.12.3, under `/root/h2m` (outside `/tmp`), with the packer as committed in `992f2bc2` (the run also fetched
-the other 28 files section 1a names, all `OK`; the folder was deleted afterwards):
+Python 3.12.3, under `/root/h2m` (outside `/tmp`), with the packer as committed on `main` in `a54b1f4d` (the run used
+that same patch from the branch it was written on, where its id was another: `H2-RESPONSE.md`, the correction for H3;
+the run also fetched the other 28 files section 1a names, all `OK`; the folder was deleted afterwards):
 
 - `handover_pack: repo /root/h2m/rtk: 2234 files of snapshot H2 (commit b89b50b4421f) committed as f4367c0b087b,
   working tree clean`; a second build of the same ZIP gives the same commit id; a destination under `/tmp` is

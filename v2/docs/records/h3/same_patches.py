@@ -6,8 +6,11 @@ section 9 cited five commits of branch `fnd/h2m` as it stood when they were writ
 never pushed). The branch was re-integrated on main, where the same changes have other ids. `git patch-id --stable`
 hashes a commit's diff without its id, date or parent, so two commits with one patch id carry the same change. This
 script prints both ids of every pair with their patch ids and subjects, asserts that each pair agrees, and says
-whether each commit is an ancestor of main. It reads only. It needs a clone that holds branch `h2m-backup`; where the
-old commits are absent it says so and checks nothing for that pair.
+whether each commit is an ancestor of main. It then lists the files in which the two trees of each pair differ (the
+two lines started from different commits, ef144760 and 31cd29b9) and asserts that none is under v2/ecad, so a result
+the pages quote as run "at" a cited commit was run on the same tools, registries and netlists as main's commit holds.
+It reads only. It needs a clone that holds branch `h2m-backup`; where the old commits are absent it says so and checks
+nothing for that pair.
 
 Usage (from the repository root): python3 v2/docs/records/h3/same_patches.py [main's ref, default HEAD]
 """
@@ -40,6 +43,15 @@ for old, new in PAIRS:
     print("%-10s %-10s %-18s %-18s %-9s %-9s %s" % (old, new, po or "-", pn or "-", ao, an, subj[:90]))
     if po is not None and po != pn: bad += 1
     if an != "main": bad += 1
-print("result: %s" % ("every pair carries one patch, and main holds the second id of each" if not bad
-                      else "%d DISAGREEMENT(S)" % bad))
+print("files in which the trees of a pair differ:")
+for old, new in PAIRS:
+    rc, names = git("diff", "--name-only", old, new)
+    if rc != 0:
+        print("  %s against %s: not compared (a commit is absent)" % (old, new)); continue
+    names = names.decode().split()
+    ecad = [n for n in names if n.startswith("v2/ecad/")]
+    print("  %s against %s: %d file(s), %d under v2/ecad: %s" % (old, new, len(names), len(ecad), " ".join(names)))
+    if ecad: bad += 1
+print("result: %s" % ("every pair carries one patch, main holds the second id of each, and no pair's trees differ "
+                      "under v2/ecad" if not bad else "%d DISAGREEMENT(S)" % bad))
 sys.exit(1 if bad else 0)

@@ -1,4 +1,4 @@
-same_patches: against HEAD (6ec37197)
+same_patches: against HEAD (d6e5bd5f)
 cited      on main    patch id (cited)   patch id (main)    cited in  main's in subject
 992f2bc2   a54b1f4d   d7894403403046a2   d7894403403046a2   not main  main      feat(handover): handover_pack.py repo builds a one-commit repository from a snapshot, its 
 248b951d   90314d99   8c39eff1c0425b5c   8c39eff1c0425b5c   not main  main      docs(interfaces): board_to_board.read_at re-anchored to the H2 line's netlists, the contra
@@ -6,4 +6,11 @@ cited      on main    patch id (cited)   patch id (main)    cited in  main's in 
 1221262e   ecfe5414   1d773dc740957d2b   1d773dc740957d2b   not main  main      docs(layout): the layout constraint sheets re-bound to the H2 line's netlists and intents,
 44b87208   5d568a66   0d0faf771777c8d4   0d0faf771777c8d4   not main  main      docs(handover): the H2 usability check's minor findings answered in the pages: the re-take
 0ca85df3   9d2f8dce   4fbd51c824df379c   4fbd51c824df379c   not main  main      docs(handover): H2-RESPONSE.md, the fourteen minor findings of the H2 usability check with
-result: every pair carries one patch, and main holds the second id of each
+files in which the trees of a pair differ:
+  992f2bc2 against a54b1f4d: 6 file(s), 0 under v2/ecad: v2/docs/EXECUTION-PLAN.md v2/docs/handover/RELEASE-H2.md v2/docs/records/README.md v2/docs/records/handover/H2-USABILITY-CHECK.md v2/docs/reviews/2026-09-27-h2-independent-review.md v2/docs/reviews/2026-09-27-third-checkpoint-review.md
+  248b951d against 90314d99: 6 file(s), 0 under v2/ecad: v2/docs/EXECUTION-PLAN.md v2/docs/handover/RELEASE-H2.md v2/docs/records/README.md v2/docs/records/handover/H2-USABILITY-CHECK.md v2/docs/reviews/2026-09-27-h2-independent-review.md v2/docs/reviews/2026-09-27-third-checkpoint-review.md
+  2a3a1451 against ed988ba8: 6 file(s), 0 under v2/ecad: v2/docs/EXECUTION-PLAN.md v2/docs/handover/RELEASE-H2.md v2/docs/records/README.md v2/docs/records/handover/H2-USABILITY-CHECK.md v2/docs/reviews/2026-09-27-h2-independent-review.md v2/docs/reviews/2026-09-27-third-checkpoint-review.md
+  1221262e against ecfe5414: 6 file(s), 0 under v2/ecad: v2/docs/EXECUTION-PLAN.md v2/docs/handover/RELEASE-H2.md v2/docs/records/README.md v2/docs/records/handover/H2-USABILITY-CHECK.md v2/docs/reviews/2026-09-27-h2-independent-review.md v2/docs/reviews/2026-09-27-third-checkpoint-review.md
+  44b87208 against 5d568a66: 6 file(s), 0 under v2/ecad: v2/docs/EXECUTION-PLAN.md v2/docs/handover/RELEASE-H2.md v2/docs/records/README.md v2/docs/records/handover/H2-USABILITY-CHECK.md v2/docs/reviews/2026-09-27-h2-independent-review.md v2/docs/reviews/2026-09-27-third-checkpoint-review.md
+  0ca85df3 against 9d2f8dce: 6 file(s), 0 under v2/ecad: v2/docs/EXECUTION-PLAN.md v2/docs/handover/RELEASE-H2.md v2/docs/records/README.md v2/docs/records/handover/H2-USABILITY-CHECK.md v2/docs/reviews/2026-09-27-h2-independent-review.md v2/docs/reviews/2026-09-27-third-checkpoint-review.md
+result: every pair carries one patch, main holds the second id of each, and no pair's trees differ under v2/ecad
