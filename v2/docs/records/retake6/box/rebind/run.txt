@@ -1,0 +1,14 @@
+HEAD 73ae2f2104c98bc39e5194f82a31e8862e12dbb5  start 2026-09-27T21:17:31Z
+rebind exit 0
+rebind second run exit 1 (1 expected: refused)
+render-1 exit 0: 1 page(s) written
+decisions_render-1 exit 0
+render-2 exit 0: 0 page(s) written
+decisions_render-2 exit 0
+rules_render --check exit 0: rules_render: 16 document(s), 0 out of date
+rules_render --requirements --check exit 0: rules_render: ../docs/REQUIREMENTS-TRACE.md is current
+decisions_render --check exit 0
+rules_lib exit 0: rules_lib: 59 rule(s), 0 error(s), 0 warning(s), fingerprint 635ff031f210f48c
+rules_lib requirements exit 0: rules_lib: 144 requirement record(s), 0 error(s), 0 warning(s)
+claims_check (scratch verdict dir, final documents) exit 0: claims_check: 91 claim sentence(s) in 12 document(s), 0 without a qualifier, an evidence reference or a declared reason
+end 2026-09-27T21:19:16Z

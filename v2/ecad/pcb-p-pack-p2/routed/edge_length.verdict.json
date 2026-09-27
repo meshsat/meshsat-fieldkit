@@ -17,30 +17,30 @@
    "netlist_parts.py": "41cf192223d822c2",
    "regen_compare.py": "341d7f129a1e6f24",
    "return_via.py": "b61d138e54955dd4",
-   "rules_lib.py": "c0458c53923d7925",
+   "rules_lib.py": "6154bd6c15bdfa6b",
    "signal_class.py": "60b8647301428da4",
    "signalnets.py": "688be12d8e42e7a4",
    "stackup_write.py": "b55a3c0f58c805c2",
    "verdict.py": "e7d66c930b2c4357"
   },
   "method": "ast-local-imports-v1",
-  "sha16": "9882ad1bc5620724",
+  "sha16": "5b817048ed7bc29f",
   "unresolved": []
  },
  "counts": {
   "answered_nets": 0,
-  "classes": 13,
+  "classes": 12,
   "contradicted_nets": 0,
   "decided_nets": 0,
   "layout_bound_nets": 0,
-  "low_speed_nets": 22,
+  "low_speed_nets": 20,
   "may_be_long_nets": 0,
-  "signal_nets": 44,
-  "undecided_nets": 22
+  "signal_nets": 40,
+  "undecided_nets": 20
  },
- "denominator": 44,
+ "denominator": 40,
  "evidence": [
-  "UNDECIDED (no declaration) (UNKNOWN, 17 net(s)): no signal-class declaration names these nets, so neither their class nor their edge is kno; ICs on them: BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm U1, BQ7720700DSSR: second-level cell OV 4.325 V / UV 2.25 V / open wire / OT 70 C on its own 103AT-2 (J_TS2), 3S-7S (SLUSEG7D) U2",
+  "UNDECIDED (no declaration) (UNKNOWN, 15 net(s)): no signal-class declaration names these nets, so neither their class nor their edge is kno; ICs on them: BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm U1, BQ7720700DSSR: second-level cell OV 4.325 V / UV 2.25 V / open wire / OT 70 C on its own 103AT-2 (J_TS2), 3S-7S (SLUSEG7D) U2",
   "UNDECIDED BTP_INT (CLOCKED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm U1",
   "UNDECIDED SMB* (CLOCKED_DIGITAL, 4 net(s)): no edge is declared and no held document states one; ICs on them: BQ4050RSMR: SMBus 1.1 gas gauge, primary protection, 4S balancing (SLUSC67B), RSM0032A VQFN 4x4 0.4 mm U1"
  ],
@@ -58,12 +58,12 @@
   "extent_mm": 114.0,
   "intent": {
    "path": "pcb-p-pack-p2/out/pcb-p-pack-intent.json",
-   "sha256_16": "6ff1b8129a5c5aff"
+   "sha256_16": "12f92bd3ce7a8264"
   },
   "netlist": {
    "content16": "efe60479293f0004",
    "path": "pcb-p-pack-p2/out/pcb-p-pack.net",
-   "sha256_16": "085f833362fbbda8"
+   "sha256_16": "760ac6f74d62d194"
   },
   "project": {
    "path": "pcb-p-pack-p2/pcb-p-pack.kicad_pro",
@@ -97,12 +97,12 @@
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "73ae2f2104c9",
+  "tools_tree_sha": "83ef0a1b203cfb46"
  },
- "ts": "2026-09-27T13:23:30Z",
+ "ts": "2026-09-27T21:00:54Z",
  "verdict": "INCONCLUSIVE",
- "version": "391d857966d6",
+ "version": "73ae2f2104c9",
  "writer": {
   "file": "edge_length.py",
   "sha16": "fd66cbd9bce2fa7b"

@@ -2,13 +2,13 @@
  "board": "e",
  "counts": {
   "answered_nets": 4,
-  "classes": 49,
+  "classes": 50,
   "contradicted_nets": 0,
   "decided_nets": 4,
   "layout_bound_nets": 0,
-  "low_speed_nets": 41,
+  "low_speed_nets": 42,
   "may_be_long_nets": 4,
-  "signal_nets": 82,
+  "signal_nets": 83,
   "undecided_nets": 37
  },
  "inputs": {
@@ -19,7 +19,7 @@
   },
   "board_table": {
    "path": "tools/boards/e.json",
-   "sha256_16": "b83f77baaec09080"
+   "sha256_16": "d20c8b15549f11ee"
   },
   "critical_k": 6,
   "document_1": {
@@ -29,12 +29,12 @@
   "extent_mm": 335.0,
   "intent": {
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock-intent.json",
-   "sha256_16": "5913e38b20333d35"
+   "sha256_16": "dad1163afd720b5e"
   },
   "netlist": {
-   "content16": "b8d237f0b8d759f5",
+   "content16": "dc06b84a39724641",
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
-   "sha256_16": "d6137f50059e5cbc"
+   "sha256_16": "56adc9746d61c4e0"
   },
   "project": {
    "path": "pcb-e1-dock-e7/pcb-e1-dock.kicad_pro",
@@ -223,7 +223,7 @@
    "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
-   "basis": "a spare contact on the dock block, unconnected to any driver",
+   "basis": "the hot stop line HOT-R1 (SC-50, S-57): Q11's open drain toggles it at 1 or 5 Hz or holds it low, board A pulls it up; a slow logic level",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {},
    "nets": [
@@ -344,6 +344,22 @@
     "GEIGER_IN"
    ],
    "pattern": "GEIGER_IN",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "Q11's gate from the sensor controller's GPIO19 with R58 (100 k) to ground: the hot stop line's 1 or 5 Hz drive or a held level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "RP2040 sensor controller (USB to B16 through the dock)": [
+     "U10"
+    ]
+   },
+   "nets": [
+    "HOT_R1_G"
+   ],
+   "pattern": "HOT_R1_G",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
    "why": "declared slow or DC with its basis; no edge is asked of it"

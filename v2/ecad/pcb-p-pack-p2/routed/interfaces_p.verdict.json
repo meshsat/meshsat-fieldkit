@@ -25,16 +25,16 @@
   "board": "p",
   "intent": {
    "path": "pcb-p-pack-p2/out/pcb-p-pack-intent.json",
-   "sha256_16": "6ff1b8129a5c5aff"
+   "sha256_16": "12f92bd3ce7a8264"
   },
   "netlist": {
    "content16": "efe60479293f0004",
    "path": "pcb-p-pack-p2/out/pcb-p-pack.net",
-   "sha256_16": "085f833362fbbda8"
+   "sha256_16": "760ac6f74d62d194"
   },
   "spec": {
    "path": "tools/pcb_interfaces.yaml",
-   "sha256_16": "ee6b6b840adddba2"
+   "sha256_16": "4b59132b2a0ecfa1"
   }
  },
  "missing_input": null,
@@ -50,16 +50,16 @@
   "INT-001"
  ],
  "runtime": {
-  "python": "3.11.2"
+  "python": "3.12.3"
  },
  "tool": "interfaces_p",
  "tools": {
-  "git_head": "248b951d750e",
-  "tools_tree_sha": "516c955c71b9e714"
+  "git_head": "73ae2f2104c9",
+  "tools_tree_sha": "83ef0a1b203cfb46"
  },
- "ts": "2026-09-27T16:44:36Z",
+ "ts": "2026-09-27T21:01:02Z",
  "verdict": "PASS",
- "version": "248b951d750e",
+ "version": "73ae2f2104c9",
  "writer": {
   "file": "interfaces.py",
   "sha16": "7b7e4f3a0241cf35"

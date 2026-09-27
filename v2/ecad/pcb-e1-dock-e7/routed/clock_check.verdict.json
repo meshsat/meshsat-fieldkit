@@ -23,7 +23,7 @@
   "board": "e",
   "netlist": {
    "path": "out/pcb-e1-dock.net",
-   "sha256_16": "d6137f50059e5cbc"
+   "sha256_16": "56adc9746d61c4e0"
   }
  },
  "missing_input": null,
@@ -43,12 +43,12 @@
  },
  "tool": "clock_check",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "73ae2f2104c9",
+  "tools_tree_sha": "83ef0a1b203cfb46"
  },
- "ts": "2026-09-27T13:23:05Z",
+ "ts": "2026-09-27T21:00:31Z",
  "verdict": "PASS",
- "version": "391d857966d6",
+ "version": "73ae2f2104c9",
  "writer": {
   "file": "clock_check.py",
   "sha16": "8da2b82cac511dd0"

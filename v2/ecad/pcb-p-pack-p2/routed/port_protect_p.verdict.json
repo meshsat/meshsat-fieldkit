@@ -33,12 +33,12 @@
   "board": "p",
   "intent": {
    "path": "pcb-p-pack-p2/out/pcb-p-pack-intent.json",
-   "sha256_16": "6ff1b8129a5c5aff"
+   "sha256_16": "12f92bd3ce7a8264"
   },
   "netlist": {
    "content16": "efe60479293f0004",
    "path": "pcb-p-pack-p2/out/pcb-p-pack.net",
-   "sha256_16": "085f833362fbbda8"
+   "sha256_16": "760ac6f74d62d194"
   }
  },
  "missing_input": null,
@@ -58,12 +58,12 @@
  },
  "tool": "port_protect_p",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "73ae2f2104c9",
+  "tools_tree_sha": "83ef0a1b203cfb46"
  },
- "ts": "2026-09-27T13:23:37Z",
+ "ts": "2026-09-27T21:01:02Z",
  "verdict": "PASS",
- "version": "391d857966d6",
+ "version": "73ae2f2104c9",
  "writer": {
   "file": "port_protect.py",
   "sha16": "2d69facd3c25c8a4"

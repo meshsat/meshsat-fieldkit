@@ -53,12 +53,12 @@
  },
  "tool": "energy_chain_e5",
  "tools": {
-  "git_head": "391d857966d6",
-  "tools_tree_sha": "784492a16eb43399"
+  "git_head": "73ae2f2104c9",
+  "tools_tree_sha": "83ef0a1b203cfb46"
  },
- "ts": "2026-09-27T13:23:16Z",
+ "ts": "2026-09-27T21:00:43Z",
  "verdict": "PASS",
- "version": "391d857966d6",
+ "version": "73ae2f2104c9",
  "writer": {
   "file": "energy_chain.py",
   "sha16": "2eb665d0e50ee781"
