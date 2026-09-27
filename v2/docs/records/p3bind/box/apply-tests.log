@@ -1,0 +1,10 @@
+tests: THIS RUN CHANGED THIS TREE'S OWN EVIDENCE: out/rule-audit/rules_status.verdict.json. A fixture wrote a verdict where the readiness reads one; give it its own directory (out_dir or VERDICT_DIR)
+tests: THIS RUN CHANGED THIS TREE'S OWN EVIDENCE: out/rules_complete.verdict.json. A fixture wrote a verdict where the readiness reads one; give it its own directory (out_dir or VERDICT_DIR)
+tests: 18 passed, 2 failed, 0 skipped; failed: evidence:rule-audit/rules_status.verdict.json, evidence:rules_complete.verdict.json
+tests: 14 passed, 0 failed, 0 skipped
+tests: 27 passed, 0 failed, 0 skipped
+tests: 44 passed, 0 failed, 0 skipped
+tests: 36 passed, 0 failed, 0 skipped
+tests: 32 passed, 0 failed, 0 skipped
+tests: 10 passed, 0 failed, 0 skipped
+tests: 78 passed, 0 failed, 0 skipped
