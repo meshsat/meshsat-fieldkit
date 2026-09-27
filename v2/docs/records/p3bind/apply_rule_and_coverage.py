@@ -30,15 +30,22 @@ refused, file by file, before anything is written), that the file changed, and r
   5. tools/gate_sweep.sh              the same command in the sweep, and its verdict in the list the sweep clears
                                       (left out with --no-sweep).
 
-WHAT THE INTEGRATOR DOES AFTER IT (this script does none of it; each writes the tree's evidence or pages):
-  * `python3 v2/ecad/tools/rules_lib.py validate`: 0 errors;
+WHAT THE INTEGRATOR DOES AFTER IT (this script does none of it; each writes the tree's evidence or pages). TRIED IN
+THIS ORDER in a throwaway clone on the box at 91f4bab6 (box/trial.sh, box/trial-91f4bab6.log):
+  * `python3 v2/ecad/tools/rules_lib.py validate`: 60 rules, 0 errors, 0 warnings;
   * the re-take on the box in a throwaway clone (retake_schematic_phase.py --run --in-place --routed), which now runs
-    `constraints_bound.py --board <letter>` on every board and leaves constraints_bound_<letter>.verdict.json in each
-    phase directory's routed/;
-  * `rules_render.py`: PCB-GOLDEN-RULES.md, the per-board status pages, CURRENT-EVIDENCE.md and the pages that count
-    rules change (60 rules where there were 59; DOC-003 is a new required SCHEMATIC-phase row on all seven boards,
-    and until the re-take lands it reads as a rule with no reading, which is one more layout-entry line per board);
-  * v2/docs/handover/LAYER-STATUS.md row 9.8 and known gap 8 name the check.
+    `constraints_bound.py --board <letter>` on every board (80 commands where there were 73) and leaves
+    constraints_bound_<letter>.verdict.json in each phase directory's routed/. In the trial DOC-003 then read PASS,
+    CURRENT_CANDIDATE, BOUND on all seven boards;
+  * `rules_render.py`: fourteen pages change (CURRENT-EVIDENCE.md, PCB-GAP-REGISTER.md, PCB-GOLDEN-RULES.md,
+    PCB-OPEN-PAIRS.md, PCB-PROTOTYPE-UNKNOWNS.md, PCB-RULE-COVERAGE.md, the seven PCB-RULE-STATUS pages and
+    REQUIREMENTS-TRACE.md): 60 rules where there were 59, 345 rule-board pairs where there were 338. Until the
+    re-take lands DOC-003 is a rule with no reading, one more layout-entry line per board;
+  * `decisions_render.py`: OWNER-DECISIONS-OPEN.md states the number of pairs (338 to 345). WITHOUT IT THE SUITE FAILS
+    on test_decision_register.t_the_page_is_generated_and_not_hand_maintained, and on nothing else: the trial's suite
+    read 2049 passed, 1 failed, 3 skipped before it and that test's file 5 passed, 0 failed after it
+    (box/trial-91f4bab6-decisions-render.txt);
+  * v2/docs/handover/LAYER-STATUS.md row 9.8 and known gap 8 name the check (records/p3bind/README.md, O6).
 
 Usage: apply_rule_and_coverage.py [--root <repository>] [--check] [--no-sweep]
   --check   reads, asserts every anchor and prints what would change; writes nothing
