@@ -100,6 +100,22 @@
 # applicability, allocation, verification or release effect is a change to the baseline and needs its own review;
 # readings, notes and open items move without one.
 #
+# THE NARROW VERIFICATION AND THE REVERSAL (27 September 2026, MESHSAT-1357, the finalizer of the targeted fix, branch
+# fnd/h2). v2/docs/reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md (sha256/16 ae70b1a7811ecea1; an AI check of named
+# items by a session that wrote none of the lines, not a qualified review) read this file at 3e4799eb (sha256/16
+# 58b77b5d15b2fc7d). It confirms the renumbering above as mechanical and complete and every other difference as typed
+# correctly but one, which the paragraph on the targeted fix does not state: when the reviewed attempt landed on main at
+# 79963b3b (the rebased eb9f9030), its own re-read of v2/docs/CURRENT-EVIDENCE.md on CON-010 and REQ-044 (bound to
+# CURRENT-EVIDENCE.md@6351a72c7966c4b9) was replaced by a note of the rebase bound to @7a834fe55aea6ccd, and on CON-010
+# that note, the record's newest evidence entry, ends 'it stays INCONCLUSIVE' where the consolidated re-take moved the
+# reading to FAIL (W3T-F1) and the record's evidence_result and history read FAIL. Under the reversal above,
+# baseline_state returns to READY_FOR_REVIEW_B and S-51 and S-78 reopen; baseline_reviews is kept as the records the
+# re-baseline names. The finding is open item S-80 (ENGINEERING-QUESTIONS EQ-30); its wording fix is not applied in this
+# pass (the owner's execution prompt, section 4: no unbounded author and check loop). This commit also restates S-79's
+# last sentence and adds one sentence to S-77's closing evidence (the verification closed layer 1's R2-B1 and R2-m1). No
+# record's reading, statement, acceptance, applicability, allocation, verification or release effect changes, and no
+# session choice or owner ruling. Taken by the session under the owner's standing rule of 26 September 2026.
+#
 # PART NAMES IN STATEMENTS. A part a statement names was ruled by the owner (the device set of 6 September 2026,
 # appendix 32.49 and 32.50; the LT8705A tracker, ruling F of 4 September 2026; the BQ4050 gauge and the second level,
 # D-15; the 4S3P Samsung INR18650-35E pack, D-06) unless the record's choices or notes name a session choice or a
@@ -184,7 +200,9 @@ schema_version: 1
 registry: "MeshSat field kit V2 requirements"
 issue: MESHSAT-1357
 written: "2026-09-26"
-baseline_state: "BASELINED at cecfd0f1"
+baseline_state: READY_FOR_REVIEW_B
+# baseline_reviews is kept after the reversal of 27 September 2026 (the header's paragraph on the narrow
+# verification): the Review B records the re-baseline names, with the record of S-80's re-check.
 baseline_reviews:
   - "v2/docs/reviews/REVIEW-B-LAYER-3-2026-09-27.md@7a6c679f446b1baa"
   - "v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2026-09-27.md@1c3bc2d99f9efb51"
@@ -2214,6 +2232,17 @@ open_items:
       capacitor and the RJ45 shell), after GROUNDING-AND-SHIELDS.md is corrected for the arrestor bulkheads on two RF
       entry plates (SC-07) and the shrink-wrapped pack without a rigid enclosure (D-06); boards A, B and E and the case
       (REQ-061, CFL-018).
+  - id: S-51
+    class: SESSION
+    status: OPEN
+    title: >-
+      Review B held as SC-46 defines it (an AI review by one fresh reviewer, never a qualified review), recorded as
+      v2/docs/reviews/REVIEW-B-LAYER-3-<date>.md, its findings answered, and baseline_state set to name the commit it
+      baselines. Reopened on 27 September 2026 by the narrow verification of the targeted fix
+      (v2/docs/reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md, section 3), under the reversal the registry header
+      states: commit 3e4799eb had closed this item by commit cecfd0f1 on Review B's three records and set baseline_state
+      to BASELINED at cecfd0f1, and the verification found a registry difference the header does not state (S-80). Open
+      until S-80 closes; then the re-baseline commit, which files S-80's re-check, closes it again.
   - id: S-52
     class: SESSION
     status: OPEN
@@ -2476,6 +2505,30 @@ open_items:
       order code in gen_sch_d.py or lcsc_fill.py, D7 and D8 are SS14 filled as C51897884 by lcsc_fill.py with no
       sheet in v2/vendor. Open until the sheets are filed (and D2 has an order code, EQ-21's class) and the
       three nets are declared nodes at the rail plus the maker's forward drop.
+  - id: S-78
+    class: SESSION
+    status: OPEN
+    title: >-
+      (Layer 3, the second release check of 27 September 2026 at eb9f9030,
+      v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2-2026-09-27.md, finding B-1, acceptance item 3.14; left open by the
+      release finalizer, the second attempt; ENGINEERING-QUESTIONS EQ-28) baseline_state still reads READY_FOR_REVIEW_B
+      and S-51 is open, although that record confirms R2 to R5 of the first release check answered with no finding of
+      substance left, on the registry at sha256/16 fb819e939f2895da. Its fix is one commit that sets baseline_state to a
+      baselined value naming the commit that carries the reviewed content, closes S-51 on that record, marks the three
+      gen_sch_b.py pointers of the choices it read as SC-51 and SC-56 (SC-58 and SC-63 here: :257, :822 and :764-766)
+      '(as read at e3aedb25)' or renumbers them to 267 and 464, 978 and 903 to 905, re-renders the trace page and
+      updates the layer 3 integrator line, with no other registry change. Since the review the branch was rebased onto
+      main 391d8579 and then 91894cd7: the registry at its head also carries set 5's records (SC-51 to SC-57, S-64 to
+      S-76 and their readings) and the consolidated re-take's re-read notes (8ea7867e to 91894cd7), the reviewed SC-51
+      to SC-56 are SC-58 to SC-63 and EQ-25 is EQ-26, and S-77, S-78 and S-79 are added, which the record says need a
+      review of their own. Reopened on 27 September 2026 by the narrow verification of the targeted fix
+      (v2/docs/reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md, section 3), under the reversal the registry header
+      states: commit 3e4799eb had closed this item on the header's statement of the difference from the reviewed file,
+      and the verification found one difference that statement misses, the reviewed attempt's own CURRENT-EVIDENCE
+      re-read on CON-010 and REQ-044 replaced at 79963b3b, with CON-010's newest entry contradicting its FAIL (S-80,
+      ENGINEERING-QUESTIONS EQ-30). Everything else B-1 asks for is in place (the verification's five other conditions
+      PASS). Open until S-80 closes and baseline_state names the content commit again, in the commit that files S-80's
+      re-check. Layer 3 stays IN_PROGRESS.
   - id: S-79
     class: SESSION
     status: OPEN
@@ -2487,9 +2540,33 @@ open_items:
       content. The anchor 08f3665a is already on the public main, so LAYER-STATUS layer 3's earlier remaining item on it
       is met. Open until the integrating session pushes the baseline commit of S-78 to main and cuts the next handover
       snapshot from it, its manifest naming that commit; the same snapshot carries layer 1's item 14 and layer 2's
-      baselined CONOPS. The baseline commit of S-78 exists since the targeted fix of 27 September 2026 (branch fnd/h2:
-      baseline_state names cecfd0f1); the package is the H2 handover snapshot the handover workflow cuts next from the
-      pushed commit that carries it.
+      baselined CONOPS. The targeted fix of 27 September 2026 wrote that baseline (branch fnd/h2, 3e4799eb:
+      baseline_state BASELINED at cecfd0f1) and its narrow verification reversed it (S-80), so the H2 handover snapshot
+      the handover workflow cuts next carries layers 1 and 2 baselined and layer 3 IN_PROGRESS (ENGINEERING-QUESTIONS
+      EQ-29, option (b)); this item closes with a snapshot cut from the pushed commit that carries the re-baseline.
+  - id: S-80
+    class: SESSION
+    status: OPEN
+    title: >-
+      (Layer 3, the narrow verification of the targeted fix of 27 September 2026 at 3e4799eb,
+      v2/docs/reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md, section 3: B-1 NOT_CLOSED; an AI check, not a qualified
+      review; ENGINEERING-QUESTIONS EQ-30) The registry header's statement of the difference from the file layer 3's
+      second release check read misses one: when the reviewed attempt landed on main at 79963b3b (the rebased eb9f9030),
+      its own re-read of v2/docs/CURRENT-EVIDENCE.md on CON-010 and REQ-044, bound to
+      CURRENT-EVIDENCE.md@6351a72c7966c4b9, was replaced by a note of the rebase bound to @7a834fe55aea6ccd. On REQ-044
+      the note is consistent (it stays INCONCLUSIVE). On CON-010 it is not: the note, the record's newest evidence
+      entry, ends 'this constraint's own reasons are unchanged and it stays INCONCLUSIVE', while the entry of the
+      consolidated re-take moved the reading from INCONCLUSIVE to FAIL on W3T-F1 (S-64, EQ-25) and the record's
+      evidence_result and history read FAIL; v2/docs/REQUIREMENTS-TRACE.md shows the contradiction under CON-010. S-78's
+      closure rested on the header stating the whole difference, so under the header's reversal baseline_state is
+      READY_FOR_REVIEW_B again and S-51 and S-78 are open. Not fixed by the finalizer that recorded it (the owner's
+      execution prompt, section 4: no unbounded author and check loop). Open until four steps, wording only, none
+      changing a statement, acceptance, verification or reading: (1) CON-010's newest entry ends with the record's
+      actual state, its reasons unchanged and the reading FAIL on W3T-F1, on the file at 7a834fe55aea6ccd; (2) the
+      header's difference paragraph names 79963b3b's re-take of the reviewed attempt's own CURRENT-EVIDENCE re-read on
+      CON-010 and REQ-044; (3) the trace page re-rendered; (4) a reviewer who wrote neither edit re-checks the two at
+      one pinned commit, and baseline_state names the content commit again in the commit that files that re-check (S-51,
+      S-78).
   - id: M-02
     class: OWNER_ACTION
     status: OPEN
@@ -2785,21 +2862,6 @@ closed_items:
     title: >-
       PANEL.md's LED count reconciled: section 1 and the generator carry 16 panel indicators (D1 to D16), and section
       9's lamp test says 17.
-  - id: S-51
-    closed_by: commit cecfd0f1
-    closing_evidence: >-
-      v2/docs/reviews/REVIEW-B-LAYER-3-2026-09-27.md (sha256/16 7a6c679f446b1baa, Review B's first pass as SC-46 defines
-      it; its B1 to B6 answered by the targeted fixer c23 and closed),
-      v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2026-09-27.md (1c3bc2d99f9efb51, its re-check on the merged registry: B1 to
-      B6 closed in substance, R1 to R5 raised) and v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2-2026-09-27.md
-      (cf8c73fb288be2fb, the fresh confirmation R1 asks for: R2 to R5 answered at eb9f9030, no finding of substance
-      left, B-1 and B-2 procedural); the registry at commit cecfd0f1 (sha256/16 f25e17d7d698ecf8) differs from the one
-      that record read only as its header states and v2/docs/records/h2/registry_difference.out lists. baseline_state
-      names cecfd0f1 and baseline_reviews the three records since the commit that closes this item.
-    title: >-
-      Review B held as SC-46 defines it (an AI review by one fresh reviewer, never a qualified review), recorded as
-      v2/docs/reviews/REVIEW-B-LAYER-3-<date>.md, its findings answered, and baseline_state set to name the commit it
-      baselines.
   - id: S-77
     closed_by: commit cecfd0f1
     closing_evidence: >-
@@ -2813,7 +2875,9 @@ closed_items:
       verification); the narrow verification of those lines by a reviewer who wrote none of them, and the brief's
       BASELINED state in the commit that files it, are layer 1's remaining release steps
       (v2/docs/handover/LAYER-STATUS.md layer 1, ENGINEERING-QUESTIONS EQ-27). If that verification finds the fix
-      incomplete, this item reopens.
+      incomplete, this item reopens. The narrow verification (v2/docs/reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md,
+      sha256/16 ae70b1a7811ecea1, an AI check) found R2-B1 and R2-m1 CLOSED at 3e4799eb with no new contradiction in the
+      lines touched, and the brief is BASELINED in the commit that files it.
     title: >-
       (Layer 1, the second release check of 27 September 2026 at eb9f9030,
       v2/docs/reviews/REVIEW-LAYER-1-RELEASE-2-2026-09-27.md, finding R2-B1; left open by the release finalizer because
@@ -2825,36 +2889,6 @@ closed_items:
       bounds that include failure (35 of 70 case margins OPEN; M17g and M17x fail as laid out until the jumper plug is
       picked; the pack's M4a and M5 OPEN on the undesigned hold-down S-27), is absent from the brief's open items, and
       the brief's D-07 row (line 289) names the board E clamp fit but not the east plug layout (M17g).
-  - id: S-78
-    closed_by: commit cecfd0f1
-    closing_evidence: >-
-      v2/ecad/tools/pcb_requirements.yaml at commit cecfd0f1 (sha256/16 f25e17d7d698ecf8): its header states the
-      difference from the file v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2-2026-09-27.md read (SC-51 to SC-56 of eb9f9030
-      are SC-58 to SC-63 here and EQ-25 is EQ-26, renumbered by the rebase because set 5 had taken those ids; set 5's
-      entries; the consolidated re-take's re-read notes; S-77 to S-79 and the CONOPS rebinds) and marks n1's three
-      gen_sch_b.py pointers in SC-58 and SC-63 '(as read at e3aedb25)'; v2/docs/records/h2/registry_difference.py
-      computes that difference entry by entry and its output registry_difference.out (sha256/16 a7424cf46db5e00e) finds
-      no record's statement, acceptance, applicability, allocation, verification or release effect changed and the six
-      renumbered choices identical to the reviewed ones; baseline_state names cecfd0f1 and S-51 is closed on the three
-      Review B records since the commit that closes this item, which re-renders v2/docs/REQUIREMENTS-TRACE.md and
-      updates the layer 3 integrator line, and changes nothing else in the registry but baseline_reviews, the header's
-      paragraph on the baseline, S-77's closing and S-79's title. The difference is confirmed by the narrow verification
-      of the targeted fix (the owner's execution prompt, section 4); if it finds a difference the header does not state,
-      baseline_state returns to READY_FOR_REVIEW_B and this item and S-51 reopen.
-    title: >-
-      (Layer 3, the second release check of 27 September 2026 at eb9f9030,
-      v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2-2026-09-27.md, finding B-1, acceptance item 3.14; left open by the
-      release finalizer, the second attempt; ENGINEERING-QUESTIONS EQ-28) baseline_state still reads READY_FOR_REVIEW_B
-      and S-51 is open, although that record confirms R2 to R5 of the first release check answered with no finding of
-      substance left, on the registry at sha256/16 fb819e939f2895da. Its fix is one commit that sets baseline_state to a
-      baselined value naming the commit that carries the reviewed content, closes S-51 on that record, marks the three
-      gen_sch_b.py pointers of the choices it read as SC-51 and SC-56 (SC-58 and SC-63 here: :257, :822 and :764-766)
-      '(as read at e3aedb25)' or renumbers them to 267 and 464, 978 and 903 to 905, re-renders the trace page and
-      updates the layer 3 integrator line, with no other registry change. Since the review the branch was rebased onto
-      main 391d8579 and then 91894cd7: the registry at its head also carries set 5's records (SC-51 to SC-57, S-64 to
-      S-76 and their readings) and the consolidated re-take's re-read notes (8ea7867e to 91894cd7), the reviewed SC-51
-      to SC-56 are SC-58 to SC-63 and EQ-25 is EQ-26, and S-77, S-78 and S-79 are added, which the record says need a
-      review of their own.
   - id: L-02
     closed_by: SC-21
     title: >-
