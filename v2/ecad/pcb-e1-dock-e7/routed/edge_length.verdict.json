@@ -33,10 +33,10 @@
   "contradicted_nets": 0,
   "decided_nets": 4,
   "layout_bound_nets": 0,
-  "low_speed_nets": 42,
+  "low_speed_nets": 41,
   "may_be_long_nets": 4,
   "signal_nets": 82,
-  "undecided_nets": 36
+  "undecided_nets": 37
  },
  "denominator": 82,
  "evidence": [
@@ -56,6 +56,7 @@
   "UNDECIDED SW* (CLOCKED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: RP2040 sensor controller (USB to B16 through the dock) U10",
   "UNDECIDED TRK_BG* (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted U5",
   "UNDECIDED TRK_BOOST* (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted U5",
+  "UNDECIDED TRK_CS (HIGH_SPEED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: none",
   "UNDECIDED TRK_TG* (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: LT8705A buck-boost controller, 38-lead QFN 5x7 (pin 39 = exposed pad GND, pin 40 unused); bench-fitted U5",
   "UNDECIDED XIN (HIGH_SPEED_DIGITAL, 1 net(s)): no edge is declared and no held document states one; ICs on them: RP2040 sensor controller (USB to B16 through the dock) U10",
   "UNDECIDED XOUT* (HIGH_SPEED_DIGITAL, 2 net(s)): no edge is declared and no held document states one; ICs on them: RP2040 sensor controller (USB to B16 through the dock) U10"
@@ -64,11 +65,11 @@
   "board": "e",
   "board_facts": {
    "path": "tools/pcb_board_facts.yaml",
-   "sha256_16": "4a0474ddac0b1404"
+   "sha256_16": "07af4d0f2b166694"
   },
   "board_table": {
    "path": "tools/boards/e.json",
-   "sha256_16": "72adb2e89b490449"
+   "sha256_16": "b83f77baaec09080"
   },
   "critical_k": 6,
   "document_1": {
@@ -78,12 +79,12 @@
   "extent_mm": 335.0,
   "intent": {
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock-intent.json",
-   "sha256_16": "b4c90bb84593638b"
+   "sha256_16": "5913e38b20333d35"
   },
   "netlist": {
-   "content16": "256cc3f96d41dcab",
+   "content16": "b8d237f0b8d759f5",
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
-   "sha256_16": "f3c1ad6153002976"
+   "sha256_16": "d6137f50059e5cbc"
   },
   "project": {
    "path": "pcb-e1-dock-e7/pcb-e1-dock.kicad_pro",
@@ -106,22 +107,22 @@
   "rule_fingerprints": {
    "SI-001": "e67c393563c5d8ce"
   },
-  "rule_set_fingerprint": "950539a66227908b"
+  "rule_set_fingerprint": "635ff031f210f48c"
  },
  "rules": [
   "SI-001"
  ],
  "runtime": {
-  "python": "3.11.2"
+  "python": "3.12.3"
  },
  "tool": "edge_length",
  "tools": {
-  "git_head": "53a98a71b53c",
-  "tools_tree_sha": "6f6b28e777c8262b"
+  "git_head": "391d857966d6",
+  "tools_tree_sha": "784492a16eb43399"
  },
- "ts": "2026-09-27T00:26:21Z",
+ "ts": "2026-09-27T13:23:04Z",
  "verdict": "INCONCLUSIVE",
- "version": "53a98a71b53c+dirty",
+ "version": "391d857966d6",
  "writer": {
   "file": "edge_length.py",
   "sha16": "fd66cbd9bce2fa7b"

@@ -6,20 +6,20 @@
   "contradicted_nets": 0,
   "decided_nets": 4,
   "layout_bound_nets": 0,
-  "low_speed_nets": 42,
+  "low_speed_nets": 41,
   "may_be_long_nets": 4,
   "signal_nets": 82,
-  "undecided_nets": 36
+  "undecided_nets": 37
  },
  "inputs": {
   "board": "e",
   "board_facts": {
    "path": "tools/pcb_board_facts.yaml",
-   "sha256_16": "4a0474ddac0b1404"
+   "sha256_16": "07af4d0f2b166694"
   },
   "board_table": {
    "path": "tools/boards/e.json",
-   "sha256_16": "72adb2e89b490449"
+   "sha256_16": "b83f77baaec09080"
   },
   "critical_k": 6,
   "document_1": {
@@ -29,12 +29,12 @@
   "extent_mm": 335.0,
   "intent": {
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock-intent.json",
-   "sha256_16": "b4c90bb84593638b"
+   "sha256_16": "5913e38b20333d35"
   },
   "netlist": {
-   "content16": "256cc3f96d41dcab",
+   "content16": "b8d237f0b8d759f5",
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
-   "sha256_16": "f3c1ad6153002976"
+   "sha256_16": "d6137f50059e5cbc"
   },
   "project": {
    "path": "pcb-e1-dock-e7/pcb-e1-dock.kicad_pro",
@@ -50,9 +50,7 @@
   ],
   "t_pd_ps_per_mm": 7.154
  },
- "notes": [
-  "1 net(s) whose netlist class differs from the project file's assignment: TRK_LSENSE (netlist PWR,SENSE, project SENSE)"
- ],
+ "notes": [],
  "rows": [
   {
    "basis": "a bootstrap node riding on a switch node",
@@ -563,22 +561,6 @@
    "why": "no edge is declared and no held document states one"
   },
   {
-   "basis": "the SGP41's VDD behind its 4.7 Ohm and 1 uF filter (datasheet Figure 6): a local supply decoupled at the pin (S-10, 26 September 2026)",
-   "class": "LOW_SPEED_OR_DC",
-   "drivers": {
-    "SGP41-D-R4 VOC and NOx gas sensor, battery-bay air (I2C 0x59; DFN-6: 1 VDD 2 VSS 3 SDA 4 n/a to GND 5 VDDH 6 SCL, 7 die pad GND)": [
-     "U17"
-    ]
-   },
-   "nets": [
-    "SGP_VDD"
-   ],
-   "pattern": "SGP_VDD",
-   "rise_ns": null,
-   "status": "LOW_SPEED_OR_DC",
-   "why": "declared slow or DC with its basis; no edge is asked of it"
-  },
-  {
    "basis": "the cold-charge and shore inhibit, a static level through an optocoupler that changes state at most a few times a day",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {
@@ -682,6 +664,20 @@
     "TRK_BOOST2"
    ],
    "pattern": "TRK_BOOST*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
+   "basis": "the tracker's current-sense node, the joined sources of its two bottom switches above the 5 mOhm shunt R5 (S-47, 27 September 2026, board E stream w3de): its po",
+   "class": "HIGH_SPEED_DIGITAL",
+   "document": null,
+   "drivers": {},
+   "nets": [
+    "TRK_CS"
+   ],
+   "pattern": "TRK_CS",
    "rise_ns": null,
    "source": null,
    "status": "UNDECIDED",

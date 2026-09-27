@@ -15,7 +15,7 @@
   "board": "p",
   "board_facts": {
    "path": "tools/pcb_board_facts.yaml",
-   "sha256_16": "4a0474ddac0b1404"
+   "sha256_16": "07af4d0f2b166694"
   },
   "board_table": {
    "path": "tools/boards/p.json",
@@ -25,12 +25,12 @@
   "extent_mm": 114.0,
   "intent": {
    "path": "pcb-p-pack-p2/out/pcb-p-pack-intent.json",
-   "sha256_16": "59d679f0859fc203"
+   "sha256_16": "6ff1b8129a5c5aff"
   },
   "netlist": {
-   "content16": "c8a3d456e5d2936b",
+   "content16": "efe60479293f0004",
    "path": "pcb-p-pack-p2/out/pcb-p-pack.net",
-   "sha256_16": "4342c4cbe1b43dc4"
+   "sha256_16": "085f833362fbbda8"
   },
   "project": {
    "path": "pcb-p-pack-p2/pcb-p-pack.kicad_pro",

@@ -2,24 +2,24 @@
  "board": "a",
  "counts": {
   "answered_nets": 6,
-  "classes": 60,
+  "classes": 63,
   "contradicted_nets": 0,
   "decided_nets": 6,
   "layout_bound_nets": 0,
-  "low_speed_nets": 159,
+  "low_speed_nets": 170,
   "may_be_long_nets": 6,
-  "signal_nets": 283,
-  "undecided_nets": 118
+  "signal_nets": 290,
+  "undecided_nets": 114
  },
  "inputs": {
   "board": "a",
   "board_facts": {
    "path": "tools/pcb_board_facts.yaml",
-   "sha256_16": "4a0474ddac0b1404"
+   "sha256_16": "07af4d0f2b166694"
   },
   "board_table": {
    "path": "tools/boards/a.json",
-   "sha256_16": "4e680bed9e8fd268"
+   "sha256_16": "b9411f2403e03da7"
   },
   "critical_k": 6,
   "document_1": {
@@ -29,12 +29,12 @@
   "extent_mm": 400.0,
   "intent": {
    "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
-   "sha256_16": "98f0100b1023700e"
+   "sha256_16": "92dd3b1cda9046b8"
   },
   "netlist": {
-   "content16": "66797255f4591a23",
+   "content16": "2c5c1d5a388cc95f",
    "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256_16": "3a786cf31614fe63"
+   "sha256_16": "da05dc02bc1e612f"
   },
   "project": {
    "path": "pcb-a-power-a23/pcb-a-power.kicad_pro",
@@ -79,18 +79,6 @@
     "LTC2954ITS8-1 push-button on/off controller, -40 to 85 C": [
      "U1"
     ],
-    "SN74AUP1G08DBVR AND: HF_EN = HF_TXOK AND HF_SW_EN (the software hold)": [
-     "U38"
-    ],
-    "SN74AUP1G08DBVR AND: HF_TXOK = TX_INHIBIT_n AND EMCON_HW (the HF rail's EMCON gate)": [
-     "U37"
-    ],
-    "SN74AUP1G08DBVR AND: PA_EN = PA_TXOK AND PA_SW_EN (the software hold)": [
-     "U36"
-    ],
-    "SN74AUP1G08DBVR AND: PA_TXOK = TX_INHIBIT_n AND EMCON_HW (the PA rail's EMCON gate)": [
-     "U35"
-    ],
     "SN74LVC08APWR quad AND: the outlet interlock for PoE and USB-C (sections 3 and 4; 1 and 2 unused)": [
      "U26"
     ],
@@ -120,8 +108,6 @@
     "HF_CSGF",
     "HF_ISNS_N",
     "HF_ISNS_P",
-    "HF_TXOK",
-    "HF_UVLO",
     "HF_VINP",
     "MAIN_PDT",
     "OUTLET_OK",
@@ -129,8 +115,6 @@
     "PA_CSGF",
     "PA_ISNS_N",
     "PA_ISNS_P",
-    "PA_TXOK",
-    "PA_UVLO",
     "PA_VINP",
     "POE_CSF",
     "POE_CSGF",
@@ -400,6 +384,9 @@
    "basis": "an eFuse slew-rate capacitor node, deliberately slow",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {
+    "TPS259631DDAR eFuse +3V3 -> +3V3_EMCON_EF (4.7k 1% (ILM: 0.18 A))": [
+     "U39"
+    ],
     "TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (453R 1% (ILM: 2.0 A))": [
      "U23"
     ],
@@ -417,7 +404,8 @@
     "U21_DVDT",
     "U22_DVDT",
     "U23_DVDT",
-    "U32_DVDT"
+    "U32_DVDT",
+    "U39_DVDT"
    ],
    "pattern": "*_DVDT",
    "rise_ns": null,
@@ -428,14 +416,8 @@
    "basis": "an enable, a static level with an RC on it",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {
-    "LM5176PWPR buck-boost controller, +54V_POE from VBAT": [
-     "U16"
-    ],
     "LM5176PWPR buck-boost controller, +5V_DEV from VBAT": [
      "U7"
-    ],
-    "LM5176PWPR buck-boost controller, PD_VPWR from VBAT": [
-     "U19"
     ],
     "LM5176PWPR buck-boost controller, VBUS20 from VIN_RAW": [
      "U2"
@@ -449,10 +431,10 @@
     "PCA9555PW (0x24): power-good lines, spares": [
      "U28"
     ],
-    "SN74AUP1G08DBVR AND: HF_EN = HF_TXOK AND HF_SW_EN (the software hold)": [
+    "SN74AUP1G08DBVR AND: HF_EN = HF_TXOK AND HF_HOLD (the software hold, through U40)": [
      "U38"
     ],
-    "SN74AUP1G08DBVR AND: PA_EN = PA_TXOK AND PA_SW_EN (the software hold)": [
+    "SN74AUP1G08DBVR AND: PA_EN = PA_TXOK AND PA_HOLD (the software hold, through U40)": [
      "U36"
     ],
     "SN74LVC08APWR quad AND: the outlet interlock for PoE and USB-C (sections 3 and 4; 1 and 2 unused)": [
@@ -460,6 +442,9 @@
     ],
     "SN74LVC1G00DBVR NAND: OUTLET_OK = NOT (TR_APRS AND PA_EN), the outlet interlock": [
      "U30"
+    ],
+    "TPS259631DDAR eFuse +3V3 -> +3V3_EMCON_EF (4.7k 1% (ILM: 0.18 A))": [
+     "U39"
     ],
     "TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (453R 1% (ILM: 2.0 A))": [
      "U23"
@@ -567,6 +552,9 @@
     "PCA9555PW (0x24): power-good lines, spares": [
      "U28"
     ],
+    "TPS259631DDAR eFuse +3V3 -> +3V3_EMCON_EF (4.7k 1% (ILM: 0.18 A))": [
+     "U39"
+    ],
     "TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (453R 1% (ILM: 2.0 A))": [
      "U23"
     ],
@@ -582,6 +570,7 @@
    },
    "nets": [
     "D8_FLT",
+    "EMCON_EF_FLT",
     "HEAT_FLT",
     "MON_FLT",
     "USBX_FLT"
@@ -660,9 +649,35 @@
    "why": "no edge is declared and no held document states one"
   },
   {
+   "basis": "a software hold re-driven by U40's open-drain output into the EMCON gates' protected supply domain, 10 k up to +3V3_EMCON: a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "SN74AUP1G08DBVR AND: HF_EN = HF_TXOK AND HF_HOLD (the software hold, through U40)": [
+     "U38"
+    ],
+    "SN74AUP1G08DBVR AND: PA_EN = PA_TXOK AND PA_HOLD (the software hold, through U40)": [
+     "U36"
+    ],
+    "SN74LVC2G07DBVR dual open-drain buffer: the software holds into the EMCON gates' supply domain": [
+     "U40"
+    ]
+   },
+   "nets": [
+    "HF_HOLD",
+    "PA_HOLD"
+   ],
+   "pattern": "*_HOLD",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
    "basis": "an eFuse current-limit resistor node, a DC bias",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {
+    "TPS259631DDAR eFuse +3V3 -> +3V3_EMCON_EF (4.7k 1% (ILM: 0.18 A))": [
+     "U39"
+    ],
     "TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (453R 1% (ILM: 2.0 A))": [
      "U23"
     ],
@@ -680,7 +695,8 @@
     "U21_ILM",
     "U22_ILM",
     "U23_ILM",
-    "U32_ILM"
+    "U32_ILM",
+    "U39_ILM"
    ],
    "pattern": "*_ILM",
    "rise_ns": null,
@@ -799,6 +815,9 @@
    "basis": "an overvoltage-lockout divider tap, a DC level",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {
+    "TPS259631DDAR eFuse +3V3 -> +3V3_EMCON_EF (4.7k 1% (ILM: 0.18 A))": [
+     "U39"
+    ],
     "TPS259631DDAR eFuse +5V_DEV -> +5V_D8 (453R 1% (ILM: 2.0 A))": [
      "U23"
     ],
@@ -816,7 +835,8 @@
     "U21_OVLO",
     "U22_OVLO",
     "U23_OVLO",
-    "U32_OVLO"
+    "U32_OVLO",
+    "U39_OVLO"
    ],
    "pattern": "*_OVLO",
    "rise_ns": null,
@@ -1085,6 +1105,60 @@
    "why": "no edge is declared and no held document states one"
   },
   {
+   "basis": "an EMCON gate's intermediate (U35 or U37, TX_INHIBIT_n AND EMCON_HW), held down by 100 k: a static level that follows the panel toggle",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "SN74AUP1G08DBVR AND: HF_EN = HF_TXOK AND HF_HOLD (the software hold, through U40)": [
+     "U38"
+    ],
+    "SN74AUP1G08DBVR AND: HF_TXOK = TX_INHIBIT_n AND EMCON_HW (the HF rail's EMCON gate)": [
+     "U37"
+    ],
+    "SN74AUP1G08DBVR AND: PA_EN = PA_TXOK AND PA_HOLD (the software hold, through U40)": [
+     "U36"
+    ],
+    "SN74AUP1G08DBVR AND: PA_TXOK = TX_INHIBIT_n AND EMCON_HW (the PA rail's EMCON gate)": [
+     "U35"
+    ]
+   },
+   "nets": [
+    "HF_TXOK",
+    "PA_TXOK"
+   ],
+   "pattern": "*_TXOK",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "an LM5176 EN/UVLO pin behind its 10 k over 15 k divider from a gate output (PA, HF since round 8, PoE and PD since 27 September 2026): a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "LM5176PWPR buck-boost controller, +12V_HF from VBAT": [
+     "U15"
+    ],
+    "LM5176PWPR buck-boost controller, +13V8_PA from VBAT": [
+     "U13"
+    ],
+    "LM5176PWPR buck-boost controller, +54V_POE from VBAT": [
+     "U16"
+    ],
+    "LM5176PWPR buck-boost controller, PD_VPWR from VBAT": [
+     "U19"
+    ]
+   },
+   "nets": [
+    "HF_UVLO",
+    "PA_UVLO",
+    "PD_UVLO",
+    "POE_UVLO"
+   ],
+   "pattern": "*_UVLO",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
    "basis": "an auxiliary supply node, decoupled locally",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {
@@ -1246,7 +1320,6 @@
     ]
    },
    "nets": [
-    "EXP2_SP3",
     "EXP2_SP4",
     "EXP2_SP5",
     "EXP2_SP6",

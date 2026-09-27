@@ -1,18 +1,40 @@
 {
  "advisory": false,
  "applicable": true,
+ "code_bundle": {
+  "entry": "power_sequence.py",
+  "files": {
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "power_sequence.py": "2ba1e2e1a719c9d1",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "05304516ac07bc7d",
+  "unresolved": []
+ },
  "counts": {
-  "always_on": 3,
+  "always_on": 4,
   "deadlocks": 0,
-  "rails": 27,
-  "segments": 13,
+  "rails": 34,
+  "segments": 14,
   "unresolved": 0
  },
- "denominator": 27,
+ "denominator": 34,
  "evidence": [],
  "inputs": {
   "board": "a",
-  "netlist": "pcb-a-power.net"
+  "intent": {
+   "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
+   "sha256_16": "92dd3b1cda9046b8"
+  },
+  "netlist": {
+   "content16": "2c5c1d5a388cc95f",
+   "path": "pcb-a-power-a23/out/pcb-a-power.net",
+   "sha256_16": "da05dc02bc1e612f"
+  }
  },
  "missing_input": null,
  "note": "each rail's enable derived from the netlist and the part that drives it named; a rail whose enable is driven only by a device powered from that same rail cannot start and is a failure. The ORDER between rails is reported as the graph and not decided here, because which order is correct is a property of the modules' own datasheets",
@@ -21,21 +43,24 @@
   "rule_fingerprints": {
    "PWR-002": "e3e7bbe7d6246a13"
   },
-  "rule_set_fingerprint": "ff8151db3576437b"
+  "rule_set_fingerprint": "635ff031f210f48c"
  },
  "rules": [
   "PWR-002"
  ],
+ "runtime": {
+  "python": "3.12.3"
+ },
  "tool": "power_sequence",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "git_head": "391d857966d6",
+  "tools_tree_sha": "784492a16eb43399"
  },
- "ts": "2026-09-21T12:41:57Z",
+ "ts": "2026-09-27T13:21:57Z",
  "verdict": "PASS",
- "version": "unknown",
+ "version": "391d857966d6",
  "writer": {
   "file": "power_sequence.py",
-  "sha16": "58920d0bf59c3fbb"
+  "sha16": "2ba1e2e1a719c9d1"
  }
 }

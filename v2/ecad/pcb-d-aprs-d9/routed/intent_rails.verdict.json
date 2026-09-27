@@ -26,52 +26,41 @@
  },
  "counts": {
   "census_nets": 188,
-  "checks": 16,
-  "declared_nodes": 4,
+  "checks": 7,
+  "declared_nodes": 13,
   "declared_not_in_netlist": 0,
   "declared_rails": 6,
-  "fail": 10,
+  "fail": 0,
   "held_pin_roles": 55,
   "nodes_supplying_parts": 0,
-  "power_nets": 15,
+  "power_nets": 6,
   "rails_without_destination": 0,
-  "settled": 14,
+  "settled": 16,
   "switches_unresolved": 0,
-  "undecided": 10,
-  "undeclared": 9,
-  "unmarked": 98
+  "undecided": 1,
+  "undeclared": 0,
+  "unmarked": 94
  },
- "denominator": 16,
+ "denominator": 7,
  "evidence": [
-  "census of the 188 nets: 15 counted, 7 declared node, 1 ground, 14 settled, 43 unconnected, 10 undecided, 98 unmarked",
-  "undecided, named and not counted (10): FLANGE_AIN0, FLANGE_REF, HS1_BIAS_R, HS1_MIC, HS2_BIAS_R, HS2_MIC, PTT_HS1_n, PTT_HS2_n, RF_ANT, RLY_K",
-  "settled, they supply nothing (14): AMP_INL_N, AMP_INR_N, HUB_RST_n, HUB_XTAL1, HUB_XTAL2R, MICAMP_IN_N, MICAMP_OUT, PCM_VCOM1, PCM_VCOM2, PCM_VIN, PCM_XTI, PCM_XTO, TXSUP_CT, VREF",
-  "power net AMP_CPN is a declared rail (it is not: supply pin by its held datasheet (U7.9 CPN: v2/vendor/ti/ti-tpa6132a2.pdf))",
-  "power net AMP_CPP is a declared rail (it is not: supply pin by its held datasheet (U7.11 CPP: v2/vendor/ti/ti-tpa6132a2.pdf))",
-  "power net AMP_HPVSS is a declared rail (it is not: supply pin by name (U7.8 HPVSS), and capacitor C29 joins it to ground; supply pin by its held datasheet (U7.8 HPVSS: v2/vendor/ti/ti-tpa6132a2.pdf))",
-  "power net PCM_VCCA is a declared rail (it is not: supply pin by name (U6.15 VCCA), and the intent's bypass list decouples it (C20:U6.15); supply pin by its held datasheet (U6.15 VCCA: v2/vendor/ti/ti-pcm2912a.p)",
-  "power net PCM_VCCL is a declared rail (it is not: supply pin by name (U6.19 VCCL), and the intent's bypass list decouples it (C21:U6.19); supply pin by its held datasheet (U6.19 VCCL: v2/vendor/ti/ti-pcm2912a.p)",
-  "power net PCM_VCCP is a declared rail (it is not: supply pin by name (U6.26 VCCP), and the intent's bypass list decouples it (C23:U6.26); supply pin by its held datasheet (U6.26 VCCP: v2/vendor/ti/ti-pcm2912a.p)",
-  "power net PCM_VCCR is a declared rail (it is not: supply pin by name (U6.21 VCCR), and the intent's bypass list decouples it (C22:U6.21); supply pin by its held datasheet (U6.21 VCCR: v2/vendor/ti/ti-pcm2912a.p)",
-  "power net PCM_VDD is a declared rail (it is not: supply pin by name (U6.5 VDD), and the intent's bypass list decouples it (C19:U6.5); supply pin by its held datasheet (U6.5 VDD: v2/vendor/ti/ti-pcm2912a.pdf))",
-  "power net SAU_3V3 is a declared rail (it is not: supply pin by name (U3.6 VDD), and capacitor C10 joins it to ground)",
-  "the count of declared rails equals the count of power nets carrying more than 0.00 A: 6 declared (6 of them nets of the netlist), 15 power nets not declared as nodes (by kind, a net counted under each that applies: 6 power-symbol, 3 supply-pin by type, 6 power-class, 14 supply-pin by name, 14 supply-pin by its held datasheet, 2 reached by a rail's current, 6 declared rails), 4 declared as nodes; undeclared: AMP_CPN, AMP_CPP, AMP_HPVSS, PCM_VCCA, PCM_VCCL, PCM_VCCP, PCM_VCCR, PCM_VDD, SAU_3V3",
-  "undecided, named and not counted: FLANGE_AIN0: it carries the mark of a supply (M1 capacitor C73 to ground) and nothing read settles it: U22.4",
-  "undecided, named and not counted: FLANGE_REF: it carries the mark of a supply (M1 capacitor C74 to ground) and nothing read settles it: U22.5",
-  "undecided, named and not counted: HS1_BIAS_R: it carries the mark of a supply (M3 JP1 joins it to the undecided net HS1_MIC) and nothing read settles it: JP1.2",
-  "undecided, named and not counted: HS1_MIC: it carries the mark of a supply (M1 capacitor C44 to ground) and nothing read settles it: D10.2, JP1.1, J_HS1.3",
-  "undecided, named and not counted: HS2_BIAS_R: it carries the mark of a supply (M3 JP2 joins it to the undecided net HS2_MIC) and nothing read settles it: JP2.2",
-  "undecided, named and not counted: HS2_MIC: it carries the mark of a supply (M1 capacitor C45 to ground) and nothing read settles it: D13.2, JP2.1, J_HS2.3",
-  "undecided, named and not counted: PTT_HS1_n: it carries the mark of a supply (M1 capacitor C49 to ground) and nothing read settles it: D11.2, J_HS1.5, Q4.2, U9.1",
-  "undecided, named and not counted: PTT_HS2_n: it carries the mark of a supply (M1 capacitor C50 to ground) and nothing read settles it: D14.2, J_HS2.5, Q5.2, U9.2",
-  "undecided, named and not counted: RF_ANT: it carries the mark of a supply (M5 a lead: J_ANT carries it with only ground beside it, from K1) and nothing read settles it: J_ANT.1, K1.6",
+  "census of the 188 nets: 6 counted, 27 declared node, 1 ground, 16 settled, 43 unconnected, 1 undecided, 94 unmarked",
+  "undecided, named and not counted (1): RLY_K",
+  "settled, they supply nothing (16): AMP_INL_N, AMP_INR_N, HS1_MIC_AC, HS2_MIC_AC, HUB_RST_n, HUB_XTAL1, HUB_XTAL2R, MICAMP_IN_N, MICAMP_OUT, PCM_VCOM1, PCM_VCOM2, PCM_VIN, PCM_XTI, PCM_XTO, TXSUP_CT, VREF",
   "undecided, named and not counted: RLY_K: it carries the mark of a supply (M3 D2 joins it to the power net +5V_TX; M4 the switched return of D2, K1: the channel of Q2 sinks it to ground) and nothing read settles it: D2.2, K1.8, Q2.3",
+  "declared as a node, not a rail: AMP_CPN (supply pin by its held datasheet (U7.9 CPN: v2/vendor/ti/ti-tpa6132a2.pdf))",
+  "declared as a node, not a rail: AMP_CPP (supply pin by its held datasheet (U7.11 CPP: v2/vendor/ti/ti-tpa6132a2.pdf))",
   "declared as a node, not a rail: AMP_HPVDD (supply pin by name (U7.12 HPVDD), and the intent's bypass list decouples it (C31:U7.12); supply pin by its held datashee)",
+  "declared as a node, not a rail: AMP_HPVSS (supply pin by name (U7.8 HPVSS), and capacitor C29 joins it to ground; supply pin by its held datasheet (U7.8 HPVSS: v2/)",
   "declared as a node, not a rail: FLANGE_NTC (series conductor: the load R92 of rail +3V3 at 0.00 A)",
-  "declared as a node, not a rail: TXSUP_EN (series conductor: the load R90 of rail +3V3_D8 at 0.00 A)",
-  "declared as a node, not a rail: VGG_SW (power class PWR in the netlist; supply pin by its held datasheet (U15.1 OUT: v2/vendor/ti/ti-tlv758p.pdf))",
+  "declared as a node, not a rail: PCM_VCCA (supply pin by name (U6.15 VCCA), and the intent's bypass list decouples it (C20:U6.15); supply pin by its held datasheet)",
+  "declared as a node, not a rail: PCM_VCCL (supply pin by name (U6.19 VCCL), and the intent's bypass list decouples it (C21:U6.19); supply pin by its held datasheet)",
+  "declared as a node, not a rail: PCM_VCCP (supply pin by name (U6.26 VCCP), and the intent's bypass list decouples it (C23:U6.26); supply pin by its held datasheet)",
+  "declared as a node, not a rail: PCM_VCCR (supply pin by name (U6.21 VCCR), and the intent's bypass list decouples it (C22:U6.21); supply pin by its held datasheet)",
+  "declared as a node, not a rail: PCM_VDD (supply pin by name (U6.5 VDD), and the intent's bypass list decouples it (C19:U6.5); supply pin by its held datasheet (U)",
   "settled, it supplies nothing: AMP_INL_N: nothing on it supplies: U7.1 INL- (signal, ti-tpa6132a2.pdf)",
   "settled, it supplies nothing: AMP_INR_N: nothing on it supplies: U7.4 INR- (signal, ti-tpa6132a2.pdf)",
+  "settled, it supplies nothing: HS1_MIC_AC: only resistors, capacitors and test points",
+  "settled, it supplies nothing: HS2_MIC_AC: only resistors, capacitors and test points",
   "settled, it supplies nothing: HUB_RST_n: nothing on it supplies: U4.4 RESET (reset, ti-tusb2046b.pdf)",
   "settled, it supplies nothing: HUB_XTAL1: an oscillator net: Y1 is a crystal or resonator",
   "settled, it supplies nothing: HUB_XTAL2R: an oscillator net: Y1 is a crystal or resonator",
@@ -117,12 +106,12 @@
   },
   "intent": {
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs-intent.json",
-   "sha256_16": "865d8514f1d5b7f8"
+   "sha256_16": "443fd745879d3022"
   },
   "netlist": {
    "content16": "ecc07f382c735835",
    "path": "pcb-d-aprs-d9/out/pcb-d-aprs.net",
-   "sha256_16": "0dad82b4b6a79290"
+   "sha256_16": "76700a687eb6187f"
   },
   "threshold_a": 0.0
  },
@@ -133,22 +122,23 @@
   "rule_fingerprints": {
    "PWR-001": "6e91133d2ef9dee3"
   },
-  "rule_set_fingerprint": "950539a66227908b"
+  "rule_set_fingerprint": "635ff031f210f48c"
  },
  "rules": [
   "PWR-001"
  ],
  "runtime": {
-  "python": "3.11.2"
+  "kicad": "9.0.9-9.0.9~ubuntu24.04.1",
+  "python": "3.12.3"
  },
  "tool": "intent_rails",
  "tools": {
-  "git_head": "53a98a71b53c",
-  "tools_tree_sha": "6f6b28e777c8262b"
+  "git_head": "391d857966d6",
+  "tools_tree_sha": "784492a16eb43399"
  },
- "ts": "2026-09-27T00:26:19Z",
- "verdict": "FAIL",
- "version": "53a98a71b53c+dirty",
+ "ts": "2026-09-27T13:22:47Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "391d857966d6",
  "writer": {
   "file": "intent_checks.py",
   "sha16": "1ad7af0c718ba940"

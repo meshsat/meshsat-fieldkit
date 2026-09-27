@@ -26,43 +26,38 @@
  },
  "counts": {
   "census_nets": 124,
-  "checks": 20,
-  "declared_nodes": 8,
+  "checks": 16,
+  "declared_nodes": 11,
   "declared_not_in_netlist": 0,
-  "declared_rails": 14,
-  "fail": 6,
+  "declared_rails": 15,
+  "fail": 0,
   "held_pin_roles": 71,
   "nodes_supplying_parts": 0,
-  "power_nets": 19,
+  "power_nets": 15,
   "rails_without_destination": 0,
   "settled": 11,
   "switches_unresolved": 0,
-  "undecided": 3,
-  "undeclared": 5,
+  "undecided": 2,
+  "undeclared": 0,
   "unmarked": 59
  },
- "denominator": 20,
+ "denominator": 16,
  "evidence": [
-  "census of the 124 nets: 19 counted, 8 declared node, 2 ground, 11 settled, 22 unconnected, 3 undecided, 59 unmarked",
-  "undecided, named and not counted (3): FAN1_SW, FAN2_SW, WATER_SENSE",
+  "census of the 124 nets: 15 counted, 13 declared node, 2 ground, 11 settled, 22 unconnected, 2 undecided, 59 unmarked",
+  "undecided, named and not counted (2): FAN1_SW, FAN2_SW",
   "settled, they supply nothing (11): GEIGER_CT, HS_TIMER, TAMPER_IO, TRK_CSN, TRK_CSP, TRK_SS, TRK_VC, TRK_VCC1, VIN_MON, XIN, XOUT",
-  "power net E6_BST is a declared rail (it is not: supply pin by its held datasheet (U12.6 BST: v2/vendor/diodes/diodes-ap63200-series-buck.pdf))",
-  "power net E6_DVDD is a declared rail (it is not: supply pin by name (U10.23 E6_DVDD, U10.45 E6_DVDD, U10.50 E6_DVDD), and the intent's bypass list decouples it (C45:U10.45, C46:U10.50); supply pin by its held )",
-  "power net SGP_VDD is a declared rail (it is not: supply pin by name (U17.1 SGP_VDD), and the intent's bypass list decouples it (C57:U17.1))",
-  "power net TRK_LDO33 is a declared rail (it is not: supply pin by its held datasheet (U5.4 LDO33: v2/vendor/power/lt8705a.pdf))",
-  "power net TRK_LSENSE is a declared rail (it is not: power class PWR in the netlist)",
-  "the count of declared rails equals the count of power nets carrying more than 0.00 A: 14 declared (14 of them nets of the netlist), 19 power nets not declared as nodes (by kind, a net counted under each that applies: 3 power-symbol, 2 supply-pin by type, 16 power-class, 5 supply-pin by name, 19 supply-pin by its held datasheet, 2 reached by a rail's current, 14 declared rails), 8 declared as nodes; undeclared: E6_BST, E6_DVDD, SGP_VDD, TRK_LDO33, TRK_LSENSE",
   "undecided, named and not counted: FAN1_SW: it carries the mark of a supply (M3 D7 joins it to the power net CELL_F; M4 the switched return of D7: the channel of Q9 sinks it to ground) and nothing read settles it: D7.2, J_FAN1.2, Q9.3",
   "undecided, named and not counted: FAN2_SW: it carries the mark of a supply (M3 D8 joins it to the power net CELL_F; M4 the switched return of D8: the channel of Q10 sinks it to ground) and nothing read settles it: D8.2, J_FAN2.2, Q10.3",
-  "undecided, named and not counted: WATER_SENSE: it carries the mark of a supply (M1 capacitor C51 to ground; M6 class SENSE in the netlist: the conductor senses a supply) and nothing read settles it: PAD_W2.1, U10.38",
+  "declared as a node, not a rail: E6_BST (supply pin by its held datasheet (U12.6 BST: v2/vendor/diodes/diodes-ap63200-series-buck.pdf))",
+  "declared as a node, not a rail: E6_DVDD (supply pin by name (U10.23 E6_DVDD, U10.45 E6_DVDD, U10.50 E6_DVDD), and the intent's bypass list decouples it (C45:U10.)",
   "declared as a node, not a rail: E6_SW (power class SW in the netlist; supply pin by its held datasheet (U12.5 SW: v2/vendor/diodes/diodes-ap63200-series-buck.p)",
   "declared as a node, not a rail: TRK_BOOST1 (supply pin by its held datasheet (U5.23 BOOST1: v2/vendor/power/lt8705a.pdf))",
   "declared as a node, not a rail: TRK_BOOST2 (supply pin by its held datasheet (U5.17 BOOST2: v2/vendor/power/lt8705a.pdf))",
   "declared as a node, not a rail: TRK_INTVCC (supply pin by its held datasheet (U5.15 GATEVCC, U5.35 INTVCC: v2/vendor/power/lt8705a.pdf))",
+  "declared as a node, not a rail: TRK_LDO33 (supply pin by its held datasheet (U5.4 LDO33: v2/vendor/power/lt8705a.pdf))",
   "declared as a node, not a rail: TRK_SW1 (power class SW in the netlist; supply pin by its held datasheet (U5.21 SW1: v2/vendor/power/lt8705a.pdf))",
   "declared as a node, not a rail: TRK_SW2 (power class SW in the netlist; supply pin by its held datasheet (U5.19 SW2: v2/vendor/power/lt8705a.pdf); switch output:)",
   "declared as a node, not a rail: U3_VCAP (supply pin by its held datasheet (U3.1 VCAP: v2/vendor/ti/ti-lm74700-q1.pdf))",
-  "declared as a node, not a rail: U4_VCAP (supply pin by its held datasheet (U4.1 VCAP: v2/vendor/ti/ti-lm74700-q1.pdf))",
   "settled, it supplies nothing: GEIGER_CT: nothing on it supplies: U16.3 CT (timing, ti-tps22810-load-switch.pdf)",
   "settled, it supplies nothing: HS_TIMER: nothing on it supplies: U6.6 TIMER (timing, ti-lm5069.pdf)",
   "settled, it supplies nothing: TAMPER_IO: nothing on it supplies: U10.27 GPIO16 (signal, rpi-rp2040-datasheet.pdf)",
@@ -111,12 +106,12 @@
   },
   "intent": {
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock-intent.json",
-   "sha256_16": "b4c90bb84593638b"
+   "sha256_16": "5913e38b20333d35"
   },
   "netlist": {
-   "content16": "256cc3f96d41dcab",
+   "content16": "b8d237f0b8d759f5",
    "path": "pcb-e1-dock-e7/out/pcb-e1-dock.net",
-   "sha256_16": "f3c1ad6153002976"
+   "sha256_16": "d6137f50059e5cbc"
   },
   "threshold_a": 0.0
  },
@@ -127,22 +122,23 @@
   "rule_fingerprints": {
    "PWR-001": "6e91133d2ef9dee3"
   },
-  "rule_set_fingerprint": "950539a66227908b"
+  "rule_set_fingerprint": "635ff031f210f48c"
  },
  "rules": [
   "PWR-001"
  ],
  "runtime": {
-  "python": "3.11.2"
+  "kicad": "9.0.9-9.0.9~ubuntu24.04.1",
+  "python": "3.12.3"
  },
  "tool": "intent_rails",
  "tools": {
-  "git_head": "53a98a71b53c",
-  "tools_tree_sha": "6f6b28e777c8262b"
+  "git_head": "391d857966d6",
+  "tools_tree_sha": "784492a16eb43399"
  },
- "ts": "2026-09-27T00:26:20Z",
- "verdict": "FAIL",
- "version": "53a98a71b53c+dirty",
+ "ts": "2026-09-27T13:23:01Z",
+ "verdict": "INCONCLUSIVE",
+ "version": "391d857966d6",
  "writer": {
   "file": "intent_checks.py",
   "sha16": "1ad7af0c718ba940"

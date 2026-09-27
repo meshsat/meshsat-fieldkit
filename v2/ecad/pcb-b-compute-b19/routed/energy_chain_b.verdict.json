@@ -1,16 +1,40 @@
 {
  "advisory": false,
  "applicable": true,
+ "code_bundle": {
+  "entry": "energy_chain.py",
+  "files": {
+   "energy_chain.py": "2eb665d0e50ee781",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "4fd063ddc5515429",
+  "unresolved": []
+ },
  "counts": {
-  "fail": 1,
+  "fail": 0,
   "stages": 3
  },
  "denominator": 3,
- "evidence": [
-  "B_PANEL_5V: the protection is rated 2.0 A and the conductor only 1.2 A, so the conductor is the fuse"
- ],
+ "evidence": [],
  "inputs": {
-  "chain": "pcb_energy_chain.yaml",
+  "chain": {
+   "path": "tools/pcb_energy_chain.yaml",
+   "sha256_16": "a09ca0293afd1f7c"
+  },
+  "derating": {
+   "path": "tools/pcb_fuse_derating.yaml",
+   "sha256_16": "5d1f81e183dcad49"
+  },
+  "netlist_b": {
+   "content16": "39d83d25efcd75a6",
+   "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
+   "sha256_16": "8b78c59754a6a0c7"
+  },
   "stages": "B_PANEL_5V,B_HDMI_5V,B_QMX_5V"
  },
  "missing_input": null,
@@ -20,21 +44,24 @@
   "rule_fingerprints": {
    "PWR-003": "797d38a9e68a76ac"
   },
-  "rule_set_fingerprint": "ff8151db3576437b"
+  "rule_set_fingerprint": "635ff031f210f48c"
  },
  "rules": [
   "PWR-003"
  ],
+ "runtime": {
+  "python": "3.12.3"
+ },
  "tool": "energy_chain_b",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "git_head": "391d857966d6",
+  "tools_tree_sha": "784492a16eb43399"
  },
- "ts": "2026-09-21T12:48:23Z",
- "verdict": "FAIL",
- "version": "unknown",
+ "ts": "2026-09-27T13:22:20Z",
+ "verdict": "PASS",
+ "version": "391d857966d6",
  "writer": {
   "file": "energy_chain.py",
-  "sha16": "73b908eb6b002690"
+  "sha16": "2eb665d0e50ee781"
  }
 }

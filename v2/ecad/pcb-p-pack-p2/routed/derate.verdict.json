@@ -1,12 +1,23 @@
 {
  "advisory": false,
  "applicable": true,
+ "code_bundle": {
+  "entry": "derate.py",
+  "files": {
+   "derate.py": "6c29d1b9a523d385",
+   "rules_lib.py": "c0458c53923d7925",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "4c4fc2aca3d8e542",
+  "unresolved": []
+ },
  "counts": {
   "by_vendor_reference": 0,
   "judged": 6,
   "undeclared_nets": 0,
   "under_rated": 0,
-  "unrated_parts": 12
+  "unrated_parts": 20
  },
  "denominator": 6,
  "evidence": [],
@@ -15,7 +26,7 @@
   "margin": 0.2,
   "netlist": {
    "path": "out/pcb-p-pack.net",
-   "sha256_16": "98b7ca3616305d88"
+   "sha256_16": "085f833362fbbda8"
   }
  },
  "missing_input": null,
@@ -25,21 +36,24 @@
   "rule_fingerprints": {
    "CMP-001": "117de3adbf51c9c8"
   },
-  "rule_set_fingerprint": "ff8151db3576437b"
+  "rule_set_fingerprint": "635ff031f210f48c"
  },
  "rules": [
   "CMP-001"
  ],
+ "runtime": {
+  "python": "3.12.3"
+ },
  "tool": "derate",
  "tools": {
-  "git_head": "",
-  "tools_tree_sha": "994b3d2315bb9859"
+  "git_head": "391d857966d6",
+  "tools_tree_sha": "784492a16eb43399"
  },
- "ts": "2026-09-21T12:52:40Z",
+ "ts": "2026-09-27T13:23:26Z",
  "verdict": "PASS",
- "version": "unknown",
+ "version": "391d857966d6",
  "writer": {
   "file": "derate.py",
-  "sha16": "129c189f7c7860df"
+  "sha16": "6c29d1b9a523d385"
  }
 }

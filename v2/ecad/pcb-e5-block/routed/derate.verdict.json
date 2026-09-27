@@ -31,22 +31,22 @@
   "rule_fingerprints": {
    "CMP-001": "117de3adbf51c9c8"
   },
-  "rule_set_fingerprint": "950539a66227908b"
+  "rule_set_fingerprint": "635ff031f210f48c"
  },
  "rules": [
   "CMP-001"
  ],
  "runtime": {
-  "python": "3.11.2"
+  "python": "3.12.3"
  },
  "tool": "derate",
  "tools": {
-  "git_head": "53a98a71b53c",
-  "tools_tree_sha": "6f6b28e777c8262b"
+  "git_head": "391d857966d6",
+  "tools_tree_sha": "784492a16eb43399"
  },
- "ts": "2026-09-27T00:26:22Z",
+ "ts": "2026-09-27T13:23:14Z",
  "verdict": "PASS",
- "version": "53a98a71b53c+dirty",
+ "version": "391d857966d6",
  "writer": {
   "file": "derate.py",
   "sha16": "6c29d1b9a523d385"

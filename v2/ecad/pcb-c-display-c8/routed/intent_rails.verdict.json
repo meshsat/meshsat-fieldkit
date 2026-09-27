@@ -25,7 +25,7 @@
   "unresolved": []
  },
  "counts": {
-  "census_nets": 146,
+  "census_nets": 153,
   "checks": 7,
   "declared_nodes": 1,
   "declared_not_in_netlist": 0,
@@ -37,26 +37,28 @@
   "rails_without_destination": 0,
   "settled": 3,
   "switches_unresolved": 0,
-  "undecided": 9,
+  "undecided": 11,
   "undeclared": 4,
-  "unmarked": 105
+  "unmarked": 109
  },
  "denominator": 7,
  "evidence": [
-  "census of the 146 nets: 6 counted, 10 declared node, 1 ground, 3 settled, 12 unconnected, 9 undecided, 105 unmarked",
-  "undecided, named and not counted (9): EPD_RESE, LIGHT_DAY_n, LIGHT_NIGHT_n, TEST_SW, TX_A, TX_INHIBIT_n, TX_K, TX_LAMPTEST, ZEROIZE_SW",
+  "census of the 153 nets: 6 counted, 10 declared node, 1 ground, 3 settled, 13 unconnected, 11 undecided, 109 unmarked",
+  "undecided, named and not counted (11): EMCLAMP_A, EMCLAMP_K, EPD_RESE, LIGHT_DAY_n, LIGHT_NIGHT_n, TEST_SW, TX_A, TX_INHIBIT_n, TX_K, TX_LAMPTEST, ZEROIZE_SW",
   "settled, they supply nothing (3): SOS_SW, XIN, XOUT",
-  "power net C_DVDD is a declared rail (it is not: supply pin by name (U3.23 DVDD, U3.45 VREG_VOUT, U3.50 DVDD), and the intent's bypass list decouples it (C14:U3.23, C15:U3.50); supply pin by its held datasheet)",
+  "power net C_DVDD is a declared rail (it is not: supply pin by name (U3.23 DVDD, U3.45 VREG_VOUT, U3.50 DVDD), and the intent's bypass list decouples it (C14:U3.45, C15:U3.50); supply pin by its held datasheet)",
   "power net EPD_VCC is a declared rail (it is not: power class PWR in the netlist; supply pin by name (J_EPD.15 VDDIO, J_EPD.16 VDD), and the intent's bypass list decouples it (C29:J_EPD.15, C28:J_EPD.16); switc)",
   "power net LED_RAIL is a declared rail (it is not: power class PWR in the netlist)",
   "power net LED_RAIL_SW is a declared rail (it is not: power class PWR in the netlist)",
   "the count of declared rails equals the count of power nets carrying more than 0.00 A: 2 declared (2 of them nets of the netlist), 6 power nets not declared as nodes (by kind, a net counted under each that applies: 2 power-symbol, 1 supply-pin by type, 5 power-class, 5 supply-pin by name, 3 supply-pin by its held datasheet, 1 reached by a rail's current, 2 declared rails), 1 declared as nodes; undeclared: C_DVDD, EPD_VCC, LED_RAIL, LED_RAIL_SW",
+  "undecided, named and not counted: EMCLAMP_A: it carries the mark of a supply (M3 D22 joins it to the undecided net EMCLAMP_K) and nothing read settles it: D22.2",
+  "undecided, named and not counted: EMCLAMP_K: it carries the mark of a supply (M4 the switched return of D22: the channel of Q7 sinks it to ground) and nothing read settles it: D22.1, Q7.3",
   "undecided, named and not counted: EPD_RESE: it carries the mark of a supply (M4 the channel of Q6 with the net EPD_SW) and nothing read settles it: J_EPD.3, Q6.2",
   "undecided, named and not counted: LIGHT_DAY_n: it carries the mark of a supply (M1 capacitor C22 to ground) and nothing read settles it: SW_LIGHT.5, U1.13",
   "undecided, named and not counted: LIGHT_NIGHT_n: it carries the mark of a supply (M1 capacitor C23 to ground) and nothing read settles it: SW_LIGHT.6, U1.14",
   "undecided, named and not counted: TEST_SW: it carries the mark of a supply (M1 capacitor C21 to ground) and nothing read settles it: SW_TEST.1, U3.39",
   "undecided, named and not counted: TX_A: it carries the mark of a supply (M3 D3 joins it to the undecided net TX_K) and nothing read settles it: D3.2",
-  "undecided, named and not counted: TX_INHIBIT_n: it carries the mark of a supply (M1 capacitor C24 to ground) and nothing read settles it: J_PANEL.11, SW_EMCON.1, U9.2",
+  "undecided, named and not counted: TX_INHIBIT_n: it carries the mark of a supply (M1 capacitor C24 to ground) and nothing read settles it: J_PANEL.11, SW_EMCON.1, U14.3, U9.2",
   "undecided, named and not counted: TX_K: it carries the mark of a supply (M4 the switched return of D17, D3: the channel of Q3 sinks it to ground) and nothing read settles it: D17.2, D3.1, Q3.3",
   "undecided, named and not counted: TX_LAMPTEST: it carries the mark of a supply (M3 D17 joins it to the undecided net TX_K) and nothing read settles it: D17.1, U2.13",
   "undecided, named and not counted: ZEROIZE_SW: it carries the mark of a supply (M1 capacitor C20 to ground) and nothing read settles it: SW_ZERO.1, U12.2, U3.34",
@@ -77,12 +79,12 @@
   },
   "intent": {
    "path": "pcb-c-display-c8/out/pcb-c-display-intent.json",
-   "sha256_16": "5c8d991e3805016a"
+   "sha256_16": "854436c729322993"
   },
   "netlist": {
-   "content16": "89f0c572416af87a",
+   "content16": "96c2678f4a3303b8",
    "path": "pcb-c-display-c8/out/pcb-c-display.net",
-   "sha256_16": "2834f0d8c4071d56"
+   "sha256_16": "11eabc2dddca5161"
   },
   "threshold_a": 0.0
  },
@@ -93,22 +95,23 @@
   "rule_fingerprints": {
    "PWR-001": "6e91133d2ef9dee3"
   },
-  "rule_set_fingerprint": "950539a66227908b"
+  "rule_set_fingerprint": "635ff031f210f48c"
  },
  "rules": [
   "PWR-001"
  ],
  "runtime": {
-  "python": "3.11.2"
+  "kicad": "9.0.9-9.0.9~ubuntu24.04.1",
+  "python": "3.12.3"
  },
  "tool": "intent_rails",
  "tools": {
-  "git_head": "53a98a71b53c",
-  "tools_tree_sha": "6f6b28e777c8262b"
+  "git_head": "391d857966d6",
+  "tools_tree_sha": "784492a16eb43399"
  },
- "ts": "2026-09-27T00:26:18Z",
+ "ts": "2026-09-27T13:22:33Z",
  "verdict": "FAIL",
- "version": "53a98a71b53c+dirty",
+ "version": "391d857966d6",
  "writer": {
   "file": "intent_checks.py",
   "sha16": "1ad7af0c718ba940"

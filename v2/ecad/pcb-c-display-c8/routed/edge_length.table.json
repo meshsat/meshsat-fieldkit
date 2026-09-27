@@ -2,24 +2,24 @@
  "board": "c",
  "counts": {
   "answered_nets": 4,
-  "classes": 43,
+  "classes": 44,
   "contradicted_nets": 0,
   "decided_nets": 4,
   "layout_bound_nets": 0,
-  "low_speed_nets": 95,
+  "low_speed_nets": 97,
   "may_be_long_nets": 4,
-  "signal_nets": 128,
-  "undecided_nets": 29
+  "signal_nets": 134,
+  "undecided_nets": 33
  },
  "inputs": {
   "board": "c",
   "board_facts": {
    "path": "tools/pcb_board_facts.yaml",
-   "sha256_16": "4a0474ddac0b1404"
+   "sha256_16": "07af4d0f2b166694"
   },
   "board_table": {
    "path": "tools/boards/c.json",
-   "sha256_16": "f0d20727dd563eac"
+   "sha256_16": "11801af8a4c11b42"
   },
   "critical_k": 6,
   "document_1": {
@@ -29,12 +29,12 @@
   "extent_mm": 572.0,
   "intent": {
    "path": "pcb-c-display-c8/out/pcb-c-display-intent.json",
-   "sha256_16": "5c8d991e3805016a"
+   "sha256_16": "854436c729322993"
   },
   "netlist": {
-   "content16": "89f0c572416af87a",
+   "content16": "96c2678f4a3303b8",
    "path": "pcb-c-display-c8/out/pcb-c-display.net",
-   "sha256_16": "2834f0d8c4071d56"
+   "sha256_16": "11eabc2dddca5161"
   },
   "project": {
    "path": "pcb-c-display-c8/pcb-c-display.kicad_pro",
@@ -54,6 +54,31 @@
  "notes": [],
  "rows": [
   {
+   "basis": "",
+   "class": "UNKNOWN",
+   "drivers": {
+    "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): the panel controller's one-way copy of EMCON_HW (EMCON_RD, to GPIO21 through R46)": [
+     "U13"
+    ],
+    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
+     "U3"
+    ],
+    "SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 1 In1 on GND, 2 GND, 3 In0 TX_INHIBIT_n, 4 Y, 5 VCC, 6 In2 EMCON_HW): the EMCON lamp's gate, high only while both EMCON lines read low": [
+     "U14"
+    ]
+   },
+   "nets": [
+    "EMCLAMP_G",
+    "EMCLAMP_Y",
+    "EMCON_RD",
+    "EMCON_RD_R"
+   ],
+   "pattern": "(no declaration)",
+   "rise_ns": null,
+   "status": "UNDECIDED",
+   "why": "no signal-class declaration names these nets, so neither their class nor their edge is known"
+  },
+  {
    "basis": "an indicator LED anode: a static level or a blink of a few hertz",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {},
@@ -64,6 +89,7 @@
     "BAT4_A",
     "BAT5_A",
     "CHG_A",
+    "EMCLAMP_A",
     "GPS_A",
     "LED_STAT_A",
     "LTE_A",
@@ -154,6 +180,7 @@
     "BAT5_K",
     "BZ_K",
     "CHG_K",
+    "EMCLAMP_K",
     "GPS_K",
     "LTE_K",
     "MCAUT_K",
@@ -259,8 +286,11 @@
     "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3)": [
      "U9"
     ],
-    "RP2040 panel controller (USB device on B16's slot-1 hub, the kit I2C master)": [
-     "U3"
+    "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): the panel controller's one-way copy of EMCON_HW (EMCON_RD, to GPIO21 through R46)": [
+     "U13"
+    ],
+    "SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 1 In1 on GND, 2 GND, 3 In0 TX_INHIBIT_n, 4 Y, 5 VCC, 6 In2 EMCON_HW): the EMCON lamp's gate, high only while both EMCON lines read low": [
+     "U14"
     ]
    },
    "nets": [
@@ -776,6 +806,9 @@
    "drivers": {
     "74LVC1G17 Schmitt-trigger non-inverting buffer (Diodes 74LVC1G17W5-7, SOT-25: 2 A 4 Y): EMCON_HW follows TX_INHIBIT_n; low = every transmitter inhibited (32.50 item 3)": [
      "U9"
+    ],
+    "SN74LVC1G57DBVR configurable gate wired as a 2-input NOR, Schmitt inputs (TI, SOT-23-6: 1 In1 on GND, 2 GND, 3 In0 TX_INHIBIT_n, 4 Y, 5 VCC, 6 In2 EMCON_HW): the EMCON lamp's gate, high only while both EMCON lines read low": [
+     "U14"
     ]
    },
    "nets": [

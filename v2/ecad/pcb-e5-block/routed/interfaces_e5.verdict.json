@@ -1,6 +1,20 @@
 {
  "advisory": false,
  "applicable": true,
+ "code_bundle": {
+  "entry": "interfaces.py",
+  "files": {
+   "interfaces.py": "7b7e4f3a0241cf35",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "phase_artefacts.py": "96642ce767188c73",
+   "regen_compare.py": "341d7f129a1e6f24",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "4194f0262a1a8566",
+  "unresolved": []
+ },
  "counts": {
   "assignments": 0,
   "disagreements": 0
@@ -11,7 +25,14 @@
  ],
  "inputs": {
   "board": "e5",
-  "spec": "pcb_interfaces.yaml"
+  "board_file": {
+   "path": "pcb-e5-block/pcb-e5-block.kicad_pcb",
+   "sha256_16": "686b29a734c55b9a"
+  },
+  "spec": {
+   "path": "tools/pcb_interfaces.yaml",
+   "sha256_16": "a30b5d408a3dab93"
+  }
  },
  "missing_input": null,
  "note": "board E5 declares that no interface of its own carries a target, with its reason",
@@ -20,21 +41,24 @@
   "rule_fingerprints": {
    "INT-001": "6c054dd67edd4099"
   },
-  "rule_set_fingerprint": "ff8151db3576437b"
+  "rule_set_fingerprint": "635ff031f210f48c"
  },
  "rules": [
   "INT-001"
  ],
+ "runtime": {
+  "python": "3.12.3"
+ },
  "tool": "interfaces_e5",
  "tools": {
-  "git_head": "14a43af795eb",
-  "tools_tree_sha": "66ea9068e975c684"
+  "git_head": "391d857966d6",
+  "tools_tree_sha": "784492a16eb43399"
  },
- "ts": "2026-09-21T20:17:17Z",
+ "ts": "2026-09-27T13:23:18Z",
  "verdict": "PASS",
- "version": "14a43af795eb+dirty",
+ "version": "391d857966d6",
  "writer": {
   "file": "interfaces.py",
-  "sha16": "462f21176406879c"
+  "sha16": "7b7e4f3a0241cf35"
  }
 }

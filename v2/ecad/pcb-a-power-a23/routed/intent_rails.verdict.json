@@ -25,39 +25,27 @@
   "unresolved": []
  },
  "counts": {
-  "census_nets": 347,
-  "checks": 39,
-  "declared_nodes": 49,
+  "census_nets": 356,
+  "checks": 35,
+  "declared_nodes": 56,
   "declared_not_in_netlist": 0,
-  "declared_rails": 30,
-  "fail": 9,
-  "held_pin_roles": 432,
+  "declared_rails": 34,
+  "fail": 0,
+  "held_pin_roles": 436,
   "nodes_supplying_parts": 0,
-  "power_nets": 38,
+  "power_nets": 34,
   "rails_without_destination": 0,
-  "settled": 58,
+  "settled": 59,
   "switches_unresolved": 0,
-  "undecided": 3,
-  "undeclared": 8,
-  "unmarked": 157
+  "undecided": 0,
+  "undeclared": 0,
+  "unmarked": 163
  },
- "denominator": 39,
+ "denominator": 35,
  "evidence": [
-  "census of the 347 nets: 38 counted, 79 declared node, 1 ground, 58 settled, 11 unconnected, 3 undecided, 157 unmarked",
-  "undecided, named and not counted (3): PD_CC1, PD_CC2, PRECHG",
-  "settled, they supply nothing (58): B33_SS, CH_ACN_F, CH_ACP_F, CH_COMP1C, CH_COMP2, CH_SRN_F, CH_SRP_F, FE_COMP, FE_COMPC, FE_ISNS_N, FE_ISNS_P, FE_SLOPE, FE_SS, HF_COMP, HF_COMPC, HF_ISNS_N, HF_ISNS_P, HF_SLOPE, HF_SS, HT_SS, MAIN_PB, MAIN_PDT, PA_COMP, PA_COMPC, PA_ISNS_N, PA_ISNS_P, PA_SLOPE, PA_SS, PD_COMP, PD_COMPC, PD_ISNS_N, PD_ISNS_P, PD_SLOPE, PD_SS, POE_COMP, POE_COMPC, POE_ISNS_N, POE_ISNS_P, POE_SLOPE, POE_SS, S1_COMPC, S2_COMP, S2_COMPC, S2_ISNS_N, S2_ISNS_P, S2_SLOPE, S2_SS, S3_COMPC, SD_COMP, SD_COMPC, SD_ISNS_N, SD_ISNS_P, SD_SLOPE, SD_SS, U21_DVDT, U22_DVDT, U23_DVDT, U32_DVDT",
-  "power net B33_BST is a declared rail (it is not: supply pin by its held datasheet (U12.6 BST: v2/vendor/ti/ti-tps62933.pdf))",
-  "power net HT_BST is a declared rail (it is not: supply pin by its held datasheet (U33.6 BST: v2/vendor/ti/ti-tps62933.pdf))",
-  "power net PD_DVDD is a declared rail (it is not: supply pin by name (U18.12 PD_DVDD, U18.13 PD_DVDD, U18.5 PD_DVDD, U18.8 PD_DVDD), and the intent's bypass list decouples it (C94:U18.13); supply pin by its hel)",
-  "power net PD_VAUX is a declared rail (it is not: supply pin by its held datasheet (U18.16 VAUX: v2/vendor/ti/ti-tps25740.pdf))",
-  "power net PD_VTX is a declared rail (it is not: supply pin by its held datasheet (U18.1 VTX: v2/vendor/ti/ti-tps25740.pdf))",
-  "power net S1_BOOT is a declared rail (it is not: supply pin by its held datasheet (U4.1 BST: v2/vendor/diodes/diodes-ap64500.pdf))",
-  "power net S3_BOOT is a declared rail (it is not: supply pin by its held datasheet (U6.1 BST: v2/vendor/diodes/diodes-ap64500.pdf))",
-  "power net VMON is a declared rail (it is not: supply pin by its held datasheet (U21.5 OUT: v2/vendor/power/tps2596.pdf))",
-  "the count of declared rails equals the count of power nets carrying more than 0.00 A: 30 declared (30 of them nets of the netlist), 38 power nets not declared as nodes (by kind, a net counted under each that applies: 9 power-symbol, 1 supply-pin by type, 1 power-class, 22 supply-pin by name, 65 supply-pin by its held datasheet, 16 reached by a rail's current, 30 declared rails), 49 declared as nodes; undeclared: B33_BST, HT_BST, PD_DVDD, PD_VAUX, PD_VTX, S1_BOOT, S3_BOOT, VMON",
-  "undecided, named and not counted: PD_CC1: it carries the mark of a supply (M1 capacitor C96 to ground) and nothing read settles it: J_USBC_OUT.2, U18.2, U31.1",
-  "undecided, named and not counted: PD_CC2: it carries the mark of a supply (M1 capacitor C97 to ground) and nothing read settles it: J_USBC_OUT.3, U18.3, U31.2",
-  "undecided, named and not counted: PRECHG: it carries the mark of a supply (M3 resistor R1 (10R 2W 2512) joins it to the power net CELL+, and no integrated circuit is on it) and nothing read settles it: J_PRE1.1",
+  "census of the 356 nets: 34 counted, 88 declared node, 1 ground, 59 settled, 11 unconnected, 0 undecided, 163 unmarked",
+  "settled, they supply nothing (59): B33_SS, CH_ACN_F, CH_ACP_F, CH_COMP1C, CH_COMP2, CH_SRN_F, CH_SRP_F, FE_COMP, FE_COMPC, FE_ISNS_N, FE_ISNS_P, FE_SLOPE, FE_SS, HF_COMP, HF_COMPC, HF_ISNS_N, HF_ISNS_P, HF_SLOPE, HF_SS, HT_SS, MAIN_PB, MAIN_PDT, PA_COMP, PA_COMPC, PA_ISNS_N, PA_ISNS_P, PA_SLOPE, PA_SS, PD_COMP, PD_COMPC, PD_ISNS_N, PD_ISNS_P, PD_SLOPE, PD_SS, POE_COMP, POE_COMPC, POE_ISNS_N, POE_ISNS_P, POE_SLOPE, POE_SS, S1_COMPC, S2_COMP, S2_COMPC, S2_ISNS_N, S2_ISNS_P, S2_SLOPE, S2_SS, S3_COMPC, SD_COMP, SD_COMPC, SD_ISNS_N, SD_ISNS_P, SD_SLOPE, SD_SS, U21_DVDT, U22_DVDT, U23_DVDT, U32_DVDT, U39_DVDT",
+  "declared as a node, not a rail: B33_BST (supply pin by its held datasheet (U12.6 BST: v2/vendor/ti/ti-tps62933.pdf))",
   "declared as a node, not a rail: B33_SW (supply pin by its held datasheet (U12.5 SW: v2/vendor/ti/ti-tps62933.pdf); series conductor: the source L7 of rail +3V3 )",
   "declared as a node, not a rail: CH_BTST1 (supply pin by its held datasheet (U3.30 BTST1: v2/vendor/ti/bq25731-datasheet.pdf))",
   "declared as a node, not a rail: CH_BTST2 (supply pin by its held datasheet (U3.25 BTST2: v2/vendor/ti/bq25731-datasheet.pdf))",
@@ -67,7 +55,6 @@
   "declared as a node, not a rail: FE_BOOT1 (supply pin by its held datasheet (U2.26 BOOT1: v2/vendor/ti/lm5176-datasheet.pdf))",
   "declared as a node, not a rail: FE_BOOT2 (supply pin by its held datasheet (U2.20 BOOT2: v2/vendor/ti/lm5176-datasheet.pdf))",
   "declared as a node, not a rail: FE_GVDD (supply pin by name (U34.1 FE_GVDD), and the intent's bypass list decouples it (C210:U34.1))",
-  "declared as a node, not a rail: FE_SW1 (supply pin by its held datasheet (U2.28 SW1: v2/vendor/ti/lm5176-datasheet.pdf); switch output: the load Q2 of rail VIN_)",
   "settled, it supplies nothing: B33_SS: nothing on it supplies: U12.7 SS/PG (timing, ti-tps62933.pdf)",
   "settled, it supplies nothing: CH_ACN_F: nothing on it supplies: U3.2 ACN (sense, bq25731-datasheet.pdf)",
   "settled, it supplies nothing: CH_ACP_F: nothing on it supplies: U3.3 ACP (sense, bq25731-datasheet.pdf)",
@@ -92,7 +79,20 @@
   "settled, it supplies nothing: MAIN_PDT: nothing on it supplies: U1.7 PDT (timing, ltc2954.pdf)",
   "settled, it supplies nothing: PA_COMP: nothing on it supplies: U13.9 COMP (compensation, lm5176-datasheet.pdf)",
   "settled, it supplies nothing: PA_COMPC: only resistors, capacitors and test points",
-  "settled, it supplies nothing: PA_ISNS_N: nothing on it supplies: U13.13 ISNS(\u2013) (sense, lm5176-datasheet.pdf)"
+  "settled, it supplies nothing: PA_ISNS_N: nothing on it supplies: U13.13 ISNS(\u2013) (sense, lm5176-datasheet.pdf)",
+  "settled, it supplies nothing: PA_ISNS_P: nothing on it supplies: U13.14 ISNS(+) (sense, lm5176-datasheet.pdf)",
+  "settled, it supplies nothing: PA_SLOPE: nothing on it supplies: U13.7 SLOPE (compensation, lm5176-datasheet.pdf)",
+  "settled, it supplies nothing: PA_SS: nothing on it supplies: U13.8 SS (timing, lm5176-datasheet.pdf)",
+  "settled, it supplies nothing: PD_COMP: nothing on it supplies: U19.9 COMP (compensation, lm5176-datasheet.pdf)",
+  "settled, it supplies nothing: PD_COMPC: only resistors, capacitors and test points",
+  "settled, it supplies nothing: PD_ISNS_N: nothing on it supplies: U19.13 ISNS(\u2013) (sense, lm5176-datasheet.pdf)",
+  "settled, it supplies nothing: PD_ISNS_P: nothing on it supplies: U19.14 ISNS(+) (sense, lm5176-datasheet.pdf)",
+  "settled, it supplies nothing: PD_SLOPE: nothing on it supplies: U19.7 SLOPE (compensation, lm5176-datasheet.pdf)",
+  "settled, it supplies nothing: PD_SS: nothing on it supplies: U19.8 SS (timing, lm5176-datasheet.pdf)",
+  "settled, it supplies nothing: POE_COMP: nothing on it supplies: U16.9 COMP (compensation, lm5176-datasheet.pdf)",
+  "settled, it supplies nothing: POE_COMPC: only resistors, capacitors and test points",
+  "settled, it supplies nothing: POE_ISNS_N: nothing on it supplies: U16.13 ISNS(\u2013) (sense, lm5176-datasheet.pdf)",
+  "settled, it supplies nothing: POE_ISNS_P: nothing on it supplies: U16.14 ISNS(+) (sense, lm5176-datasheet.pdf)"
  ],
  "inputs": {
   "board": "a",
@@ -134,12 +134,12 @@
   },
   "intent": {
    "path": "pcb-a-power-a23/out/pcb-a-power-intent.json",
-   "sha256_16": "98f0100b1023700e"
+   "sha256_16": "92dd3b1cda9046b8"
   },
   "netlist": {
-   "content16": "66797255f4591a23",
+   "content16": "2c5c1d5a388cc95f",
    "path": "pcb-a-power-a23/out/pcb-a-power.net",
-   "sha256_16": "3a786cf31614fe63"
+   "sha256_16": "da05dc02bc1e612f"
   },
   "threshold_a": 0.0
  },
@@ -150,22 +150,23 @@
   "rule_fingerprints": {
    "PWR-001": "6e91133d2ef9dee3"
   },
-  "rule_set_fingerprint": "950539a66227908b"
+  "rule_set_fingerprint": "635ff031f210f48c"
  },
  "rules": [
   "PWR-001"
  ],
  "runtime": {
-  "python": "3.11.2"
+  "kicad": "9.0.9-9.0.9~ubuntu24.04.1",
+  "python": "3.12.3"
  },
  "tool": "intent_rails",
  "tools": {
-  "git_head": "53a98a71b53c",
-  "tools_tree_sha": "6f6b28e777c8262b"
+  "git_head": "391d857966d6",
+  "tools_tree_sha": "784492a16eb43399"
  },
- "ts": "2026-09-27T00:26:16Z",
- "verdict": "FAIL",
- "version": "53a98a71b53c+dirty",
+ "ts": "2026-09-27T13:21:56Z",
+ "verdict": "PASS",
+ "version": "391d857966d6",
  "writer": {
   "file": "intent_checks.py",
   "sha16": "1ad7af0c718ba940"

@@ -2,24 +2,24 @@
  "board": "b",
  "counts": {
   "answered_nets": 30,
-  "classes": 147,
+  "classes": 153,
   "contradicted_nets": 0,
   "decided_nets": 30,
   "layout_bound_nets": 0,
-  "low_speed_nets": 313,
+  "low_speed_nets": 320,
   "may_be_long_nets": 30,
-  "signal_nets": 835,
-  "undecided_nets": 492
+  "signal_nets": 882,
+  "undecided_nets": 532
  },
  "inputs": {
   "board": "b",
   "board_facts": {
    "path": "tools/pcb_board_facts.yaml",
-   "sha256_16": "4a0474ddac0b1404"
+   "sha256_16": "07af4d0f2b166694"
   },
   "board_table": {
    "path": "tools/boards/b.json",
-   "sha256_16": "1a4c6b0ce47d5d42"
+   "sha256_16": "0c62cc5c65324e23"
   },
   "critical_k": 6,
   "document_1": {
@@ -29,12 +29,12 @@
   "extent_mm": 530.0,
   "intent": {
    "path": "pcb-b-compute-b19/out/pcb-b-compute-intent.json",
-   "sha256_16": "cf461c0b75ce368b"
+   "sha256_16": "162fcb9b95f680a7"
   },
   "netlist": {
-   "content16": "70be33b07a339d6e",
+   "content16": "39d83d25efcd75a6",
    "path": "pcb-b-compute-b19/out/pcb-b-compute.net",
-   "sha256_16": "669d02d07aeaae4b"
+   "sha256_16": "8b78c59754a6a0c7"
   },
   "project": {
    "path": "pcb-b-compute-b19/pcb-b-compute.kicad_pro",
@@ -54,6 +54,59 @@
  "notes": [],
  "rows": [
   {
+   "basis": "",
+   "class": "UNKNOWN",
+   "drivers": {
+    "SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 V (EMCON L3)": [
+     "U112"
+    ],
+    "SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 V (EMCON L3)": [
+     "U212"
+    ],
+    "SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 V (EMCON L3)": [
+     "U312"
+    ],
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls FULL_CARD_POWER_OFF# low at once (SD-EMC-1); channel 2 spare": [
+     "U220"
+    ],
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's WL_nDisable and BT_nDisable low (L3, L7)": [
+     "U113"
+    ],
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's card W_DISABLE1# and the card supply's enable S1A_EN low (L7; SD-EMC-1 on slot 2)": [
+     "U115"
+    ],
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's WL_nDisable and BT_nDisable low (L3, L7)": [
+     "U213"
+    ],
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's card W_DISABLE1# and the card supply's enable S2A_EN low (L7; SD-EMC-1 on slot 2)": [
+     "U215"
+    ],
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's WL_nDisable and BT_nDisable low (L3, L7)": [
+     "U313"
+    ],
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's card W_DISABLE1# and the card supply's enable S3A_EN low (L7; SD-EMC-1 on slot 2)": [
+     "U315"
+    ],
+    "TPS3808G30DBVR supervisor on +3V3_S2A: holds FULL_CARD_POWER_OFF# low for 180 to 420 ms after the rail (RM520N Tpr >= 100 ms)": [
+     "U221"
+    ]
+   },
+   "nets": [
+    "5G_DCHG",
+    "5G_TPR_CT",
+    "CARD1_PERST_n",
+    "CARD2_PERST_n",
+    "CARD3_PERST_n",
+    "EMCON_ON1",
+    "EMCON_ON2",
+    "EMCON_ON3"
+   ],
+   "pattern": "(no declaration)",
+   "rise_ns": null,
+   "status": "UNDECIDED",
+   "why": "no signal-class declaration names these nets, so neither their class nor their edge is known"
+  },
+  {
    "basis": "an antenna feed, radio frequency by definition",
    "class": "HIGH_SPEED_DIGITAL",
    "document": null,
@@ -63,7 +116,6 @@
     ]
    },
    "nets": [
-    "GNSS_ANT",
     "LORA_ANT",
     "WA_ANT",
     "WB_ANT"
@@ -73,18 +125,6 @@
    "source": null,
    "status": "UNDECIDED",
    "why": "no edge is declared and no held document states one"
-  },
-  {
-   "basis": "an antenna bias feed, DC through a choke",
-   "class": "LOW_SPEED_OR_DC",
-   "drivers": {},
-   "nets": [
-    "GNSS_BIAS"
-   ],
-   "pattern": "*_BIAS",
-   "rise_ns": null,
-   "status": "LOW_SPEED_OR_DC",
-   "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
    "basis": "a bootstrap node riding on a switch node",
@@ -539,23 +579,38 @@
     "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S1A": [
      "U103"
     ],
+    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S2A": [
+     "U203"
+    ],
     "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S3A": [
      "U303"
     ],
     "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)": [
      "U6"
     ],
-    "SN74LVC08APWR quad AND: E72 radios (EMCON AND software); spare gates grounded": [
-     "U20"
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)": [
+     "U505"
     ],
-    "SN74LVC08APWR quad AND: LimeSDR (hub port power AND EMCON AND software), RockBLOCK (EMCON AND software), LoRa (EMCON AND software)": [
-     "U19"
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 1, EMCON AND hub port power (L2)": [
+     "U501"
     ],
-    "TI TS3DV642A0RUAR HDMI 2:1 switch (HDMI1 / HDMI2 -> HDMIM)": [
-     "U3"
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 2, AND software": [
+     "U502"
     ],
-    "TI TS3DV642A0RUAR HDMI 2:1 switch (HDMIM / HDMI3 -> HDMIO)": [
-     "U4"
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)": [
+     "U504"
+    ],
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)": [
+     "U503"
+    ],
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's card W_DISABLE1# and the card supply's enable S1A_EN low (L7; SD-EMC-1 on slot 2)": [
+     "U115"
+    ],
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's card W_DISABLE1# and the card supply's enable S2A_EN low (L7; SD-EMC-1 on slot 2)": [
+     "U215"
+    ],
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's card W_DISABLE1# and the card supply's enable S3A_EN low (L7; SD-EMC-1 on slot 2)": [
+     "U315"
     ],
     "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port)": [
      "U102"
@@ -578,7 +633,6 @@
     "CAM_EN",
     "E22_EN",
     "E72_EN",
-    "HDMI_SW_EN",
     "IOCA_LDO_EN",
     "IOCB_LDO_EN",
     "IOCC_LDO_EN",
@@ -588,6 +642,7 @@
     "RB_EN",
     "RB_SW_EN",
     "S1A_EN",
+    "S2A_EN",
     "S3A_EN"
    ],
    "pattern": "*_EN",
@@ -599,8 +654,11 @@
    "basis": "an enable of a numbered channel, a static level",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {
-    "AP64500SP-13 5 A buck, 3.3 V rail +3V3_S2A": [
-     "U203"
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): U3's enable = the power-good of the slot it passes (FAB-02 (c))": [
+     "U519"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): U4's enable = the power-good of the displayed slot (FAB-02 (c))": [
+     "U520"
     ],
     "Amphenol 10164227-1004A1RLF receptacle B, slot S1 (CM5 pins 101-200, high-speed side)": [
      "U30B"
@@ -610,9 +668,17 @@
     ],
     "Amphenol 10164227-1004A1RLF receptacle B, slot S3 (CM5 pins 101-200, high-speed side)": [
      "U32B"
+    ],
+    "TI TS3DV642A0RUAR HDMI 2:1 switch (HDMI1 / HDMI2 -> HDMIM)": [
+     "U3"
+    ],
+    "TI TS3DV642A0RUAR HDMI 2:1 switch (HDMIM / HDMI3 -> HDMIO)": [
+     "U4"
     ]
    },
    "nets": [
+    "HDMI_EN1",
+    "HDMI_EN2",
     "PCIE_PWR_EN1",
     "PCIE_PWR_EN2",
     "PCIE_PWR_EN3",
@@ -923,24 +989,14 @@
     "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)": [
      "U6"
     ],
-    "SN74LVC08APWR quad AND: E72 radios (EMCON AND software); spare gates grounded": [
-     "U20"
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)": [
+     "U505"
     ],
-    "SN74LVC08APWR quad AND: LimeSDR (hub port power AND EMCON AND software), RockBLOCK (EMCON AND software), LoRa (EMCON AND software)": [
-     "U19"
-    ],
-    "SN74LVC32APWR quad OR, slot S1: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare": [
-     "U111"
-    ],
-    "SN74LVC32APWR quad OR, slot S2: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare": [
-     "U211"
-    ],
-    "SN74LVC32APWR quad OR, slot S3: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare": [
-     "U311"
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)": [
+     "U504"
     ]
    },
    "nets": [
-    "EMCON_ON",
     "LORA_ON",
     "ZB_ON"
    ],
@@ -1023,7 +1079,14 @@
   {
    "basis": "a module power-off line, a static level",
    "class": "LOW_SPEED_OR_DC",
-   "drivers": {},
+   "drivers": {
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls FULL_CARD_POWER_OFF# low at once (SD-EMC-1); channel 2 spare": [
+     "U220"
+    ],
+    "TPS3808G30DBVR supervisor on +3V3_S2A: holds FULL_CARD_POWER_OFF# low for 180 to 420 ms after the rail (RM520N Tpr >= 100 ms)": [
+     "U221"
+    ]
+   },
    "nets": [
     "5G_PWROFF_n"
    ],
@@ -1084,9 +1147,6 @@
    "basis": "a hub's reference-resistor node, DC",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {
-    "Quectel LG290P03AAMD GNSS RTK module: UART1 to the bridge, 1PPS to every slot, active antenna on the west-wall GNSS jack": [
-     "U11"
-    ],
     "TI TUSB8041IRGCR four-port USB 3.0 hub, slot S1 (upstream the CM5 USB3-0 port)": [
      "U102"
     ],
@@ -1098,7 +1158,6 @@
     ]
    },
    "nets": [
-    "GNSS_VDD_RF",
     "HUB1_R1",
     "HUB2_R1",
     "HUB3_R1"
@@ -1185,6 +1244,12 @@
     ],
     "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)": [
      "U6"
+    ],
+    "TPD4E001DBVR SIM 1 ESD array (IO1 RST, IO2 CLK, IO3 IO, VCC the SIM supply; 1.5 pF): Quectel HD v1.1 4.1.7": [
+     "U222"
+    ],
+    "TPD4E001DBVR SIM 2 ESD array (IO1 RST, IO2 CLK, IO3 IO, VCC the SIM supply; 1.5 pF): Quectel HD v1.1 4.1.7": [
+     "U223"
     ]
    },
    "nets": [
@@ -1718,10 +1783,13 @@
    },
    "nets": [
     "S1_TEST1",
+    "S1_TEST2",
     "S1_TESTL",
     "S2_TEST1",
+    "S2_TEST2",
     "S2_TESTL",
     "S3_TEST1",
+    "S3_TEST2",
     "S3_TESTL"
    ],
    "pattern": "*_TEST*",
@@ -1878,7 +1946,17 @@
   {
    "basis": "a wireless-disable pin, a static level",
    "class": "LOW_SPEED_OR_DC",
-   "drivers": {},
+   "drivers": {
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's card W_DISABLE1# and the card supply's enable S1A_EN low (L7; SD-EMC-1 on slot 2)": [
+     "U115"
+    ],
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's card W_DISABLE1# and the card supply's enable S2A_EN low (L7; SD-EMC-1 on slot 2)": [
+     "U215"
+    ],
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's card W_DISABLE1# and the card supply's enable S3A_EN low (L7; SD-EMC-1 on slot 2)": [
+     "U315"
+    ]
+   },
    "nets": [
     "5G_W_DIS_n",
     "WIFI2_W_DIS2_n",
@@ -2125,6 +2203,86 @@
    "why": "no edge is declared and no held document states one"
   },
   {
+   "basis": "a bank's break-before-make logic (round 8, FAB-03): the request, its armed copy and RC node, the motion term and their ORs; its edge order is the sequence",
+   "class": "CLOCKED_DIGITAL",
+   "document": null,
+   "drivers": {
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 1 enable: BOE_n = BBM ? 1 : PGSEL_n (FAB-02 (b), FAB-03)": [
+     "U516"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 1 lock, first half: the vote only while armed (FAB-03)": [
+     "U524"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 1 lock, second half: the select holds itself while it moves (FAB-03)": [
+     "U527"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 2 enable: BOE_n = BBM ? 1 : PGSEL_n (FAB-02 (b), FAB-03)": [
+     "U517"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 2 lock, first half: the vote only while armed (FAB-03)": [
+     "U525"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 2 lock, second half: the select holds itself while it moves (FAB-03)": [
+     "U528"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 3 enable: BOE_n = BBM ? 1 : PGSEL_n (FAB-02 (b), FAB-03)": [
+     "U518"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 3 lock, first half: the vote only while armed (FAB-03)": [
+     "U526"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 3 lock, second half: the select holds itself while it moves (FAB-03)": [
+     "U529"
+    ],
+    "74LVC1G17 Schmitt-trigger buffer (Diodes 74LVC1G17W5-7, 2 A 4 Y): bank 1 armed: the request has held (FAB-03)": [
+     "U521"
+    ],
+    "74LVC1G17 Schmitt-trigger buffer (Diodes 74LVC1G17W5-7, 2 A 4 Y): bank 2 armed: the request has held (FAB-03)": [
+     "U522"
+    ],
+    "74LVC1G17 Schmitt-trigger buffer (Diodes 74LVC1G17W5-7, 2 A 4 Y): bank 3 armed: the request has held (FAB-03)": [
+     "U523"
+    ],
+    "SN74LVC32APWR quad OR: BBM1..3 = (request or armed) or motion (FAB-03); gate 4 spare, inputs grounded": [
+     "U85"
+    ],
+    "SN74LVC32APWR quad OR: BBM1..3_RA = request or armed, each on its own gate (FAB-03); gate 4 spare, inputs grounded": [
+     "U84"
+    ],
+    "SN74LVC86APWR quad exclusive-or: banks 2 and 3 motion (select xor its delayed copy) (FAB-03); gates 3 and 4 spare, inputs grounded": [
+     "U81"
+    ],
+    "SN74LVC86APWR quad exclusive-or: each bank's request (vote xor select) and bank 1's motion (FAB-03)": [
+     "U80"
+    ]
+   },
+   "nets": [
+    "BBM1",
+    "BBM1_ARM",
+    "BBM1_ARMR",
+    "BBM1_MOV",
+    "BBM1_RA",
+    "BBM1_REQ",
+    "BBM2",
+    "BBM2_ARM",
+    "BBM2_ARMR",
+    "BBM2_MOV",
+    "BBM2_RA",
+    "BBM2_REQ",
+    "BBM3",
+    "BBM3_ARM",
+    "BBM3_ARMR",
+    "BBM3_MOV",
+    "BBM3_RA",
+    "BBM3_REQ"
+   ],
+   "pattern": "BBM*",
+   "rise_ns": null,
+   "source": null,
+   "status": "UNDECIDED",
+   "why": "no edge is declared and no held document states one"
+  },
+  {
    "basis": "the break-before-make timing node of the same logic",
    "class": "CLOCKED_DIGITAL",
    "document": null,
@@ -2143,8 +2301,14 @@
    "class": "CLOCKED_DIGITAL",
    "document": null,
    "drivers": {
-    "74LVC86APW quad exclusive-or: break-before-make on each bank's select": [
-     "U80"
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 1 enable: BOE_n = BBM ? 1 : PGSEL_n (FAB-02 (b), FAB-03)": [
+     "U516"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 2 enable: BOE_n = BBM ? 1 : PGSEL_n (FAB-02 (b), FAB-03)": [
+     "U517"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 3 enable: BOE_n = BBM ? 1 : PGSEL_n (FAB-02 (b), FAB-03)": [
+     "U518"
     ],
     "TI TMUXHS4212 SuperSpeed 2:1 host select, bank 1: B = slot 1 USB3-0 (home), C = slot 2 USB3-1 (failover)": [
      "U109"
@@ -2181,12 +2345,60 @@
    "class": "CLOCKED_DIGITAL",
    "document": null,
    "drivers": {
-    "74LVC86APW quad exclusive-or: break-before-make on each bank's select": [
-     "U80"
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 1 lock, first half: the vote only while armed (FAB-03)": [
+     "U524"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 1 lock, second half: the select holds itself while it moves (FAB-03)": [
+     "U527"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 1: the host the delayed select passes is dark, slot 1 or slot 2 (FAB-02 (b))": [
+     "U513"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 2 lock, first half: the vote only while armed (FAB-03)": [
+     "U525"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 2 lock, second half: the select holds itself while it moves (FAB-03)": [
+     "U528"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 2: the host the delayed select passes is dark, slot 2 or slot 3 (FAB-02 (b))": [
+     "U514"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 3 lock, first half: the vote only while armed (FAB-03)": [
+     "U526"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 3 lock, second half: the select holds itself while it moves (FAB-03)": [
+     "U529"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 3: the host the delayed select passes is dark, slot 3 or slot 1 (FAB-02 (b))": [
+     "U515"
+    ],
+    "74LVC1G17 Schmitt-trigger buffer (Diodes 74LVC1G17W5-7, 2 A 4 Y): bank 1 select, delayed copy (FAB-03)": [
+     "U510"
+    ],
+    "74LVC1G17 Schmitt-trigger buffer (Diodes 74LVC1G17W5-7, 2 A 4 Y): bank 1 select, the muxes' SEL (FAB-03)": [
+     "U507"
+    ],
+    "74LVC1G17 Schmitt-trigger buffer (Diodes 74LVC1G17W5-7, 2 A 4 Y): bank 2 select, delayed copy (FAB-03)": [
+     "U511"
+    ],
+    "74LVC1G17 Schmitt-trigger buffer (Diodes 74LVC1G17W5-7, 2 A 4 Y): bank 2 select, the muxes' SEL (FAB-03)": [
+     "U508"
+    ],
+    "74LVC1G17 Schmitt-trigger buffer (Diodes 74LVC1G17W5-7, 2 A 4 Y): bank 3 select, delayed copy (FAB-03)": [
+     "U512"
+    ],
+    "74LVC1G17 Schmitt-trigger buffer (Diodes 74LVC1G17W5-7, 2 A 4 Y): bank 3 select, the muxes' SEL (FAB-03)": [
+     "U509"
     ],
     "SN74LVC32APWR quad 2-input OR: the 2-of-3 majority voters of the I/O control plane": [
      "U76",
      "U77"
+    ],
+    "SN74LVC86APWR quad exclusive-or: banks 2 and 3 motion (select xor its delayed copy) (FAB-03); gates 3 and 4 spare, inputs grounded": [
+     "U81"
+    ],
+    "SN74LVC86APWR quad exclusive-or: each bank's request (vote xor select) and bank 1's motion (FAB-03)": [
+     "U80"
     ],
     "STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
      "U41"
@@ -2219,10 +2431,25 @@
    "nets": [
     "BSEL1",
     "BSEL1_D",
+    "BSEL1_D2",
+    "BSEL1_D2R",
+    "BSEL1_H",
+    "BSEL1_H1",
+    "BSEL1_S",
     "BSEL2",
     "BSEL2_D",
+    "BSEL2_D2",
+    "BSEL2_D2R",
+    "BSEL2_H",
+    "BSEL2_H1",
+    "BSEL2_S",
     "BSEL3",
-    "BSEL3_D"
+    "BSEL3_D",
+    "BSEL3_D2",
+    "BSEL3_D2R",
+    "BSEL3_H",
+    "BSEL3_H1",
+    "BSEL3_S"
    ],
    "pattern": "BSEL*",
    "rise_ns": null,
@@ -2246,25 +2473,31 @@
     "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)": [
      "U6"
     ],
-    "SN74LVC32APWR quad OR, slot S1: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare": [
-     "U111"
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's WL_nDisable and BT_nDisable low (L3, L7)": [
+     "U113"
     ],
-    "SN74LVC32APWR quad OR, slot S2: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare": [
-     "U211"
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's WL_nDisable and BT_nDisable low (L3, L7)": [
+     "U213"
     ],
-    "SN74LVC32APWR quad OR, slot S3: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare": [
-     "U311"
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's WL_nDisable and BT_nDisable low (L3, L7)": [
+     "U313"
+    ],
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): the panel's off requests pull slot 1's WL_nDisable and BT_nDisable low": [
+     "U114"
+    ],
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): the panel's off requests pull slot 2's WL_nDisable and BT_nDisable low": [
+     "U214"
+    ],
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): the panel's off requests pull slot 3's WL_nDisable and BT_nDisable low": [
+     "U314"
     ]
    },
    "nets": [
     "BT_nDIS1",
-    "BT_nDIS1_KILL",
     "BT_nDIS1_OFF",
     "BT_nDIS2",
-    "BT_nDIS2_KILL",
     "BT_nDIS2_OFF",
     "BT_nDIS3",
-    "BT_nDIS3_KILL",
     "BT_nDIS3_OFF"
    ],
    "pattern": "BT_nDIS*",
@@ -2467,11 +2700,45 @@
    "basis": "the emission-control line, a static level",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {
-    "SN74LVC08APWR quad AND: E72 radios (EMCON AND software); spare gates grounded": [
-     "U20"
+    "74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the supervisors' read of EMCON_HW, so no firmware pin sits on the line (EMCON L1)": [
+     "U506"
     ],
-    "SN74LVC08APWR quad AND: LimeSDR (hub port power AND EMCON AND software), RockBLOCK (EMCON AND software), LoRa (EMCON AND software)": [
-     "U19"
+    "SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON1 = NOT EMCON_HW, run from slot 1's own 3.3 V (EMCON L3)": [
+     "U112"
+    ],
+    "SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON2 = NOT EMCON_HW, run from slot 2's own 3.3 V (EMCON L3)": [
+     "U212"
+    ],
+    "SN74LVC1G04DBVR inverter (2 A 4 Y): EMCON_ON3 = NOT EMCON_HW, run from slot 3's own 3.3 V (EMCON L3)": [
+     "U312"
+    ],
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): E72 radios, EMCON AND software (L2)": [
+     "U505"
+    ],
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 1, EMCON AND hub port power (L2)": [
+     "U501"
+    ],
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LoRa, EMCON AND software (L2)": [
+     "U504"
+    ],
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): RockBLOCK, EMCON AND software (L2)": [
+     "U503"
+    ]
+   },
+   "nets": [
+    "EMCON_HW"
+   ],
+   "pattern": "EMCON_HW",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the supervisors' buffered copy of EMCON_HW (round 8, L1), a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "74LVC1G34 buffer (Diodes 74LVC1G34W5-7, 2 A 4 Y): the supervisors' read of EMCON_HW, so no firmware pin sits on the line (EMCON L1)": [
+     "U506"
     ],
     "STM32H743VIT6 I/O supervisor A: 2-of-3 quorum on two CAN-FD fabrics, bank ownership and hub reset": [
      "U41"
@@ -2484,9 +2751,9 @@
     ]
    },
    "nets": [
-    "EMCON_HW"
+    "EMCON_SUP"
    ],
-   "pattern": "EMCON_HW",
+   "pattern": "EMCON_SUP",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
    "why": "declared slow or DC with its basis; no edge is asked of it"
@@ -2576,7 +2843,7 @@
    "class": "CLOCKED_DIGITAL",
    "document": null,
    "drivers": {
-    "DS3231MZ+ holdover clock (I2C 0x68), CR2032 backed": [
+    "DS3231SN# holdover clock (I2C 0x68, TCXO and crystal), CR2032 backed": [
      "U9"
     ],
     "Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to PHY), port 4 the wall RJ45; I2C management on the kit bus": [
@@ -2936,6 +3203,12 @@
    "basis": "the display switch's select lines, static levels changed by a person or by the panel",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): U3's enable = the power-good of the slot it passes (FAB-02 (c))": [
+     "U519"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): U4's enable = the power-good of the displayed slot (FAB-02 (c))": [
+     "U520"
+    ],
     "TI TS3DV642A0RUAR HDMI 2:1 switch (HDMI1 / HDMI2 -> HDMIM)": [
      "U3"
     ],
@@ -3225,6 +3498,25 @@
     "LED_nPWR3"
    ],
    "pattern": "LED_*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "the software-defined radio's enable indicator anode, a static level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 1, EMCON AND hub port power (L2)": [
+     "U501"
+    ],
+    "SN74LVC1G08DBVR AND (1 A 2 B 3 GND 4 Y 5 VCC): LimeSDR stage 2, AND software": [
+     "U502"
+    ]
+   },
+   "nets": [
+    "LIME_EN_A"
+   ],
+   "pattern": "LIME_EN_A",
    "rise_ns": null,
    "status": "LOW_SPEED_OR_DC",
    "why": "declared slow or DC with its basis; no edge is asked of it"
@@ -3567,6 +3859,135 @@
    "why": "no edge is declared and no held document states one"
   },
   {
+   "basis": "a slot's power-good node (round 8, FAB-02): the module's own 3.3 V through 1 k with 100 k to ground, a level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "74LVC1G17 Schmitt-trigger buffer (Diodes 74LVC1G17W5-7, 2 A 4 Y): slot 1 power-good, Schmitt-buffered (FAB-02)": [
+     "U530"
+    ],
+    "74LVC1G17 Schmitt-trigger buffer (Diodes 74LVC1G17W5-7, 2 A 4 Y): slot 2 power-good, Schmitt-buffered (FAB-02)": [
+     "U531"
+    ],
+    "74LVC1G17 Schmitt-trigger buffer (Diodes 74LVC1G17W5-7, 2 A 4 Y): slot 3 power-good, Schmitt-buffered (FAB-02)": [
+     "U532"
+    ]
+   },
+   "nets": [
+    "PG1",
+    "PG2",
+    "PG3"
+   ],
+   "pattern": "PG?",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a slot's power-good after its Schmitt buffer (round 8, FAB-02), a level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): U3's enable = the power-good of the slot it passes (FAB-02 (c))": [
+     "U519"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): U4's enable = the power-good of the displayed slot (FAB-02 (c))": [
+     "U520"
+    ],
+    "74LVC1G17 Schmitt-trigger buffer (Diodes 74LVC1G17W5-7, 2 A 4 Y): slot 1 power-good, Schmitt-buffered (FAB-02)": [
+     "U530"
+    ],
+    "74LVC1G17 Schmitt-trigger buffer (Diodes 74LVC1G17W5-7, 2 A 4 Y): slot 2 power-good, Schmitt-buffered (FAB-02)": [
+     "U531"
+    ],
+    "74LVC1G17 Schmitt-trigger buffer (Diodes 74LVC1G17W5-7, 2 A 4 Y): slot 3 power-good, Schmitt-buffered (FAB-02)": [
+     "U532"
+    ],
+    "SN74LVC1G04DBVR inverter (2 A 4 Y): slot 1 is dark (FAB-02)": [
+     "U533"
+    ],
+    "SN74LVC1G04DBVR inverter (2 A 4 Y): slot 2 is dark (FAB-02)": [
+     "U534"
+    ],
+    "SN74LVC1G04DBVR inverter (2 A 4 Y): slot 3 is dark (FAB-02)": [
+     "U535"
+    ]
+   },
+   "nets": [
+    "PG1_S",
+    "PG2_S",
+    "PG3_S"
+   ],
+   "pattern": "PG?_S",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a slot's dark flag, the inverse of its buffered power-good (round 8, FAB-02), a level",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 1: the host the delayed select passes is dark, slot 1 or slot 2 (FAB-02 (b))": [
+     "U513"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 2: the host the delayed select passes is dark, slot 2 or slot 3 (FAB-02 (b))": [
+     "U514"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 3: the host the delayed select passes is dark, slot 3 or slot 1 (FAB-02 (b))": [
+     "U515"
+    ],
+    "SN74LVC1G04DBVR inverter (2 A 4 Y): slot 1 is dark (FAB-02)": [
+     "U533"
+    ],
+    "SN74LVC1G04DBVR inverter (2 A 4 Y): slot 2 is dark (FAB-02)": [
+     "U534"
+    ],
+    "SN74LVC1G04DBVR inverter (2 A 4 Y): slot 3 is dark (FAB-02)": [
+     "U535"
+    ]
+   },
+   "nets": [
+    "PG1_n",
+    "PG2_n",
+    "PG3_n"
+   ],
+   "pattern": "PG?_n",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
+   "basis": "a bank's selected-host power-good (round 8, FAB-02): a level that changes when a module powers up or down, or T2 after the select moves",
+   "class": "LOW_SPEED_OR_DC",
+   "drivers": {
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 1 enable: BOE_n = BBM ? 1 : PGSEL_n (FAB-02 (b), FAB-03)": [
+     "U516"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 1: the host the delayed select passes is dark, slot 1 or slot 2 (FAB-02 (b))": [
+     "U513"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 2 enable: BOE_n = BBM ? 1 : PGSEL_n (FAB-02 (b), FAB-03)": [
+     "U517"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 2: the host the delayed select passes is dark, slot 2 or slot 3 (FAB-02 (b))": [
+     "U514"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 3 enable: BOE_n = BBM ? 1 : PGSEL_n (FAB-02 (b), FAB-03)": [
+     "U518"
+    ],
+    "74LVC1G157GW 2:1 mux (Nexperia; 6 S, 3 I0, 1 I1, 4 Y; Y = S ? I1 : I0): bank 3: the host the delayed select passes is dark, slot 3 or slot 1 (FAB-02 (b))": [
+     "U515"
+    ]
+   },
+   "nets": [
+    "PGSEL1_n",
+    "PGSEL2_n",
+    "PGSEL3_n"
+   ],
+   "pattern": "PGSEL*",
+   "rise_ns": null,
+   "status": "LOW_SPEED_OR_DC",
+   "why": "declared slow or DC with its basis; no edge is asked of it"
+  },
+  {
    "basis": "a shutdown-request or kill line to a module, a static level",
    "class": "LOW_SPEED_OR_DC",
    "drivers": {
@@ -3656,7 +4077,7 @@
     "Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
      "U32A"
     ],
-    "DS3231MZ+ holdover clock (I2C 0x68), CR2032 backed": [
+    "DS3231SN# holdover clock (I2C 0x68, TCXO and crystal), CR2032 backed": [
      "U9"
     ],
     "Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to PHY), port 4 the wall RJ45; I2C management on the kit bus": [
@@ -3713,7 +4134,7 @@
     "Amphenol 10164227-1004A1RLF receptacle A, slot S3 (CM5 pins 1-100, GPIO side); module CM5108064 bench-fitted": [
      "U32A"
     ],
-    "DS3231MZ+ holdover clock (I2C 0x68), CR2032 backed": [
+    "DS3231SN# holdover clock (I2C 0x68, TCXO and crystal), CR2032 backed": [
      "U9"
     ],
     "Microchip KSZ9897RTXI seven-port Gigabit switch: ports 1-3 the CM5 slots (PHY to PHY), port 4 the wall RJ45; I2C management on the kit bus": [
@@ -3819,7 +4240,14 @@
    "basis": "a SIM card clock, a few megahertz",
    "class": "CLOCKED_DIGITAL",
    "document": null,
-   "drivers": {},
+   "drivers": {
+    "TPD4E001DBVR SIM 1 ESD array (IO1 RST, IO2 CLK, IO3 IO, VCC the SIM supply; 1.5 pF): Quectel HD v1.1 4.1.7": [
+     "U222"
+    ],
+    "TPD4E001DBVR SIM 2 ESD array (IO1 RST, IO2 CLK, IO3 IO, VCC the SIM supply; 1.5 pF): Quectel HD v1.1 4.1.7": [
+     "U223"
+    ]
+   },
    "nets": [
     "SIM1_CLK",
     "SIM2_CLK",
@@ -3837,7 +4265,14 @@
    "basis": "a SIM card data line at the same rate",
    "class": "CLOCKED_DIGITAL",
    "document": null,
-   "drivers": {},
+   "drivers": {
+    "TPD4E001DBVR SIM 1 ESD array (IO1 RST, IO2 CLK, IO3 IO, VCC the SIM supply; 1.5 pF): Quectel HD v1.1 4.1.7": [
+     "U222"
+    ],
+    "TPD4E001DBVR SIM 2 ESD array (IO1 RST, IO2 CLK, IO3 IO, VCC the SIM supply; 1.5 pF): Quectel HD v1.1 4.1.7": [
+     "U223"
+    ]
+   },
    "nets": [
     "SIM1_IO",
     "SIM2_IO",
@@ -3850,20 +4285,6 @@
    "source": null,
    "status": "UNDECIDED",
    "why": "no edge is declared and no held document states one"
-  },
-  {
-   "basis": "a SIM card supply",
-   "class": "LOW_SPEED_OR_DC",
-   "drivers": {},
-   "nets": [
-    "SIM1_VCC",
-    "SIM2_VCC",
-    "SIMC2_VCC"
-   ],
-   "pattern": "SIM*_VCC",
-   "rise_ns": null,
-   "status": "LOW_SPEED_OR_DC",
-   "why": "declared slow or DC with its basis; no edge is asked of it"
   },
   {
    "basis": "an SPI bus to a radio module, a few megahertz",
@@ -4278,25 +4699,31 @@
     "PCA9555PW 0x20: outputs (switch reset, rail enables, module radio off requests into the EMCON gates, 5G control)": [
      "U6"
     ],
-    "SN74LVC32APWR quad OR, slot S1: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare": [
-     "U111"
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 1's WL_nDisable and BT_nDisable low (L3, L7)": [
+     "U113"
     ],
-    "SN74LVC32APWR quad OR, slot S2: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare": [
-     "U211"
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 2's WL_nDisable and BT_nDisable low (L3, L7)": [
+     "U213"
     ],
-    "SN74LVC32APWR quad OR, slot S3: module WiFi and BT kill (request OR EMCON); gates 3 and 4 spare": [
-     "U311"
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): EMCON pulls slot 3's WL_nDisable and BT_nDisable low (L3, L7)": [
+     "U313"
+    ],
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): the panel's off requests pull slot 1's WL_nDisable and BT_nDisable low": [
+     "U114"
+    ],
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): the panel's off requests pull slot 2's WL_nDisable and BT_nDisable low": [
+     "U214"
+    ],
+    "SN74LVC2G06DBVR dual open-drain inverter (1 1A 6 1Y, 3 2A 4 2Y): the panel's off requests pull slot 3's WL_nDisable and BT_nDisable low": [
+     "U314"
     ]
    },
    "nets": [
     "WL_nDIS1",
-    "WL_nDIS1_KILL",
     "WL_nDIS1_OFF",
     "WL_nDIS2",
-    "WL_nDIS2_KILL",
     "WL_nDIS2_OFF",
     "WL_nDIS3",
-    "WL_nDIS3_KILL",
     "WL_nDIS3_OFF"
    ],
    "pattern": "WL_nDIS*",
