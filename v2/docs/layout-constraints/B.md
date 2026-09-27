@@ -1,13 +1,21 @@
 # Board B (compute): layout constraints
 
-A view over the records at `main` `e3aedb25` (conventions and shared rules: [README.md](README.md)). Candidate: phase
-B21, netlist `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net` sha256/16 `669d02d07aeaae4b`, intent
-`pcb-b-compute-intent.json` `cf461c0b75ce368b`; the committed board file `2e64b5bf2d9cd3bc` carries B21's older netlist
-(SCH-002 FAIL) and 416 unrouted connections. Board B is not at layout entry: 16 blocker lines (`CURRENT-EVIDENCE.md`
-lines 82 to 97), among them FEA-001 (the U8 part), FEA-002 (EMCON), FEA-003 (the failover fabric) and FEA-006.
-Round 8's board B stream is in its own worktree and not integrated at the time of writing; **every line below is
-re-read on the netlist that merge commits**, and FB-FAB-1 to FB-FAB-5 of `v2/docs/feasibility/FAILOVER-FABRIC.md`
-must be closed on it first.
+**Bound to the H2 line (after H2, 27 September 2026).** Candidate re-read at `ef144760`: phase B21, netlist
+`v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net` sha256/16 `8b78c59754a6a0c7` (board B's round 8 at `b76c18cb`, last
+changed by set 5 at `caba1876`), intent `pcb-b-compute-intent.json` `162fcb9b95f680a7`; the committed board file
+`2e64b5bf2d9cd3bc` carries B21's older netlist (SCH-002 FAIL) and 416 unrouted connections. Section 2's table is
+checked against `calc/rail_widths.py` on that intent: every rail it lists reads the same; the H2 intent declares seventeen
+more supplies, each at most 0.3 A typical (the added row, marked **H2**). Board B is not at layout entry: **7 reasons at H2**
+(`CURRENT-EVIDENCE.md`): SI-001 INCONCLUSIVE, RF-002 FAIL (EQ-25), FEA-001, FEA-002, FEA-003, FEA-006, FEA-007. Known
+changes of the H2 line to the rest of this sheet: round 8 is merged (`b76c18cb`: the fabric's locked break-before-make,
+FAB-01 to FAB-04, EMCON on each module's own rail, the 5G module's supply removed in hardware, the M.2 socket's
+locating holes, F1 the MF-MSMF110), and set 5 declared every supply from its maker's sheet with decision 42's class on
+every decoupling entry (`caba1876`); PANEL_5V's row is corrected below. Every other line below is the reading at `e3aedb25`, not re-read against the H2 netlist; where it and a record disagree, the record governs (README).
+
+As first written: a view over the records at `main` `e3aedb25` (conventions and shared rules: [README.md](README.md)),
+candidate then netlist `669d02d07aeaae4b`, intent `cf461c0b75ce368b`, 16 blocker lines, round 8 not yet integrated
+(the lines below were to be re-read on its merge; FB-FAB-1 to FB-FAB-5 of `v2/docs/feasibility/FAILOVER-FABRIC.md`
+closed on it first).
 
 **Board B has no layout candidate yet and no layout should start from this sheet alone**: its stackup is undecided
 (section 1) and its escape and placement strategy is FB-FAB-6, owed by Q-B-ESC-2 and decision 43's whole-board run.
@@ -45,10 +53,11 @@ F03, F05), the maker's figure is the one to size to, and the row says so.
 | +3V3_DEV | 1.2 / 2.0 | 0.39 | 2.31 | 3 / 3 / 2 | |
 | +5V_LIME | 1.2 / 3.0 | 0.39 | 2.31 | 5 / 4 / 3 | the SDR bay's eFuse; peak with +5V_RB is the fabric question of `_b_feeders_declared...` |
 | +5V_RB | 0.15 / 2.0 | 0.02 | 0.13 | 3 / 3 / 2 | the satellite modem's transmit burst sets the barrels |
-| **PANEL_5V** | 0.6 / 0.6 (board C declares 1.0 A peak) | **0.80 mm** | 0.89 | 1 / 1 / 1 | behind F1, a 2.0 A hold, 3.5 A trip polyfuse: the copper must clear the hold (0.78 mm at 2.0 A on 1 oz outer); **0.8 mm is the recorded answer** (`boards/b.json` `_panel_5v_fuse_why`; `pcb_energy_chain.yaml` known finding B_PANEL_5V; PWR-003 FAIL on B) |
+| **PANEL_5V** | 0.6 / 0.6 (board C declares 1.0 A peak) | **0.80 mm** | 0.89 | 1 / 1 / 1 | **H2:** F1 is the MF-MSMF110 (1.1 A hold) since round 8, `b76c18cb`, so the 1.23 A track clears the hold and PWR-003 reads PASS; as first written: behind F1, a 2.0 A hold, 3.5 A trip polyfuse: the copper must clear the hold (0.78 mm at 2.0 A on 1 oz outer); **0.8 mm is the recorded answer** (`boards/b.json` `_panel_5v_fuse_why`; `pcb_energy_chain.yaml` known finding B_PANEL_5V; PWR-003 FAIL on B) |
 | +54V_POE | 0.3 / 0.6 | 0.06 | 0.34 | 1 / 1 / 1 | spacing governs, section 8 |
 | GND | 10 / 21 | a plane | a plane | 29 / 24 / 20 per transition at 21 A | the return of the four input rails; carried by the In1 plane and outer pours |
 | the rest (CM, IOC, ZB, LORA, CAM, HDMI, QMX) | under 0.3 typical | under 0.1 | | 1 to 3 | |
+| **H2**, declared in the H2 intent: VBUS_FLASH1 to 3, SIM1_VCC, SIM2_VCC, SIMC2_VCC, VBAT_RTC, POE_P, MDI_A_P, MDI_A_N, and the +54V_POE returns MDI_B_P, MDI_B_N, POE_DRAIN, POE_SEN; GNSS_VDD_RF, GNSS_BIAS, GNSS_ANT | 0.30 / 0.60 at most | 0.06 at most | 0.34 at most | 1 / 1 / 1 | spacing governs the 54 V ones (section 8); `calc/rail_widths.out` board B |
 
 ## 3. Pairs: targets, geometry, budgets
 
