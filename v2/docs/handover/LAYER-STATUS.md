@@ -44,7 +44,43 @@ referred to here by id.
 `v2/ecad/tools/boards/<x>.json`). "Board B" means the three-module compute board of the current generation (B16
 onward); the single-module B12 to B15 folders under `v2/release/revA/boards/` belong to an earlier generation.
 
-## Summary
+## Status at handover H1 (27 September 2026)
+
+**This section is the current status; the rest of the page is the audit at `e3aedb25` it builds on.** H1 is the first
+handover snapshot (`v2/release/handover/H1/`, its `SOURCE.txt` names the commit it was built from). The design as it
+stands in H1 is main `84e52461` (circuit round 8, sets 1 and 2: boards A, C, D, E and P regenerated; the netlist
+tools PWR-001, SI-001 and RF-002; the pack's temperature ladder) plus the handover branch `fnd/h1`, whose last design
+change is `99cde56b` (the layer 6 records); after it come only the schematic exports of every board at `99cde56b`
+(`v2/release/handover/_generated/`, regeneration PARITY on all six) and these pages. Each layer's `INTEGRATOR LINE`
+below says what moved since `e3aedb25` and what remains. **H1 is a partial handover: no layer is COMPLETE.**
+
+| Layer | Status in H1 | Merged since `e3aedb25` | What remains (the layer's own section and its integrator line give each item) |
+|---|---|---|---|
+| 1. Product definition | IN_PROGRESS | closer hc1 (`2ef6aa2a`); Review A, layer 1 (AI review) second pass with no blocking finding | layer 2's EMCON and face text in `CONOPS.md` and `PANEL.md` (Review A finding I5), then the brief BASELINED; the fresh usability check of the snapshot |
+| 2. Concept of operations | IN_PROGRESS | round 8's pack temperature ladder (`dd39fb15`, `73d5df1e`) | the closer hc2 is a candidate in its worktree: Review A, layer 2, second pass FAIL on P2-B1 and P2-B2 |
+| 3. Requirements | IN_PROGRESS | registry entries of hc1, hc9 and hc6 and of round 8 (S-43 closed, S-46 BAT-F20, S-47 HC9-E1) | the closer hc3 is a candidate, its first review running when H1 was cut; Review B |
+| 4. System architecture | IN_PROGRESS | diagrams of hc4 (drawn at `e3aedb25`, stale against round 8); hc6's supervisor reconciliation; round 8's EMCON gating on A, C and D | FEA-001 to FEA-006; BAT-F20; the diagrams rebuilt on round 8; Review C |
+| 5. Partitioning and interfaces | IN_PROGRESS | R8E-N01 recorded in `pcb_interfaces.yaml` (round 8) | the closer hc5 is a candidate: its first review had three blocking items, a second review running when H1 was cut |
+| 6. Components | IN_PROGRESS | closer hc6 (`99cde56b`), review with no blocking item | no MPN field in any generator (1497 of 2205 BOM rows without an LCSC code); the recommended part changes; U8; R-PWR; two OUTSIDE grades |
+| 7. Mechanical and enclosure | IN_PROGRESS | board E's blind-mate clamp bar (`45f6d83f`) | the closer hc7 is a candidate: first review with three blocking items, its second pass running when H1 was cut |
+| 8. Schematics | IN_PROGRESS on every board | round 8 on A, C, D, E and P; exports and regeneration parity of all six at `99cde56b` | board B's round 8 is not merged; PWR-001 FAIL on A, B, D and E; the consolidated re-take; functional reviews; HC9-E1 on E; BAT-F20 on P |
+| 9. Pre-layout design analysis | IN_PROGRESS | per-board layout constraint sheets and the stackup record (hc9) | HC9-E1; the drafts hc9 left for other owners; the heat test, F2 and prices; channel budgets |
+
+**Layout entry at H1** (`CURRENT-EVIDENCE.md`, generated): 0 boards ready; reasons A 17, B 16, C 11, D 15, E 16, P 15,
+E5 5. **Round 8 findings that are new since `e3aedb25`** are ENGINEERING-QUESTIONS EQ-15 to EQ-21.
+
+**Candidates left in worktrees** (branches `fnd/<name>` from `e3aedb25`, never pushed, so a recipient of H1 does not
+hold them; the integrating session merges each once its last review has no blocking item):
+
+| Closer | Layer | Files | Review state when H1 was cut |
+|---|---|---|---|
+| hc2 | 2 | `CONOPS.md`, `OPERATING-ENVELOPE.md`, `PANEL.md`, `TEST-PLAN.md`, `pcb_envelope.yaml`, Review A layer 2 record | first pass FAIL (B1 to B7), second pass FAIL on P2-B1 (CONOPS section 7 row D-02b carries session choices as an owner ruling) and P2-B2 (nothing protects the pack once the heat stage fails on an input) |
+| hc3 | 3 | `pcb_requirements.yaml`, `REQUIREMENTS-TRACE.md`, `pcb_board_facts.yaml`, `pcb_energy_chain.yaml`, `pcb_pack_protection.yaml`, drafts | first review running; its drafts number new open items from S-47, which hc9 now holds on this branch, so they renumber at merge |
+| hc5 | 5 | `HW-FW-CONTRACT.md`, new interface contracts, records `hc5/`, `w5/` | first review PASS_WITH_FIXES with three blocking items (ARCHITECTURE section 12's claim that every interface is owned at both ends; IF-EXT-ETH judged by INT-001 on the MDI pairs; HW-FW-CONTRACT FW-A02's reason); second review running |
+| hc7 | 7 | `v2/cad/` generators and drawings, `zstack`, `CASE-FIT-UNCERTAINTIES.md`, `release/case-2026-09-27/`, `test_case_geometry.py` | first review PASS_WITH_FIXES with three blocking items (`panel1450.py` falls back silently when `zstack.json` is missing; the `frame_seat.py` draft changes U51's height; outline-deciding rows deferred to fabrication release); second pass running |
+| r8b | 8 (board B) | board B's round 8 circuit, `FAILOVER-FABRIC` and IOHA patches | not merged; residual stated (EQ-20); its IOHA patch must be re-derived on hc6's reconciled text |
+
+## Summary at `e3aedb25` (the audit)
 
 | Layer | Status at `e3aedb25` | Acceptance items not met | Blocked questions | Closable with desk work under existing authority | First closing actions |
 |---|---|---|---|---|---|
@@ -152,7 +188,7 @@ section 7; `pcb_requirements.yaml` `owner_rulings`; `pcb_decisions.yaml`; append
 public revision rows must say the deliverable folders predate the corrected schematics (declared phases A32, B21,
 C24, D12, E17, E5, P4).
 
-> **INTEGRATOR LINE, layer 1:** status at `e3aedb25` IN_PROGRESS; status now: IN_PROGRESS; as of commit: `e3aedb25`; items closed since `e3aedb25`: none; review record: none
+> **INTEGRATOR LINE, layer 1:** status at `e3aedb25` IN_PROGRESS; status now: IN_PROGRESS; as of commit: `2ef6aa2a` (H1); items closed since `e3aedb25`: acceptance items 1 to 13 of `v2/docs/reviews/REVIEW-A-LAYER-1-2026-09-27.md` section 6 (purpose, users, scope, exclusions, outcome, commitments, claims against the baseline, rulings recorded, stale texts, the SIM description by SC-13, the mass limit REQ-023 by SC-14, records filed, the review held); its minors N1 (V2-SPEC line 34, correction 27) and N2 (BUILD.md's missing CAD file) fixed at merge; the registry half applied (`public-docs`, SC-13 to SC-16, REQ-023, CFL-010, S-13); item 14 (a versioned package) met in part by H1, a partial handover; review record: `v2/docs/reviews/REVIEW-A-LAYER-1-2026-09-27.md` (AI review; first pass FAIL on B1 and B2, second pass no blocking finding). Remaining: (1) finding I5, layer 2's EMCON and face text in `CONOPS.md` and `PANEL.md` (`drafts/layer2-emcon-face.patch` of `fnd/hc1`, or the layer 2 closer's equivalent) and I2 (`drafts/conops.patch`), each with the re-pins and re-reads the record names, then the brief's status set to BASELINED in that commit; (2) the fresh usability check of the snapshot (owner's prompt section 7); (3) minors N3 (the EMCON toggle's cover: `BUILD.md`, `V2-SPEC.md` against `gen_sch_c.py`, `PANEL.md`), N4, N5 and I7. Owner: the integrator with the layer 2 closer.
 
 ---
 
@@ -296,7 +332,7 @@ PD_SW_EN and POE_SW_EN; the graceful shutdown threshold. D: the 60 s key-down de
 E: the lid reed on J_TAMP as trigger; the water and gas shutdown behaviour. C: panel indications (S-19, S-39, SOS)
 and the hardware EMCON lamp (S-44).
 
-> **INTEGRATOR LINE, layer 2:** status at `e3aedb25` IN_PROGRESS; status now: IN_PROGRESS; as of commit: `e3aedb25`; items closed since `e3aedb25`: none; review record: none
+> **INTEGRATOR LINE, layer 2:** status at `e3aedb25` IN_PROGRESS; status now: IN_PROGRESS; as of commit: H1; items closed since `e3aedb25`: none by the layer's closer; round 8 set out the pack's temperature ladder in `TEST-PLAN.md` (T3 at 42 C, `dd39fb15`) and carried the thresholds into the pack's charge and discharge windows (`73d5df1e`); review record: none merged. Candidate: closer hc2 in `fnd/hc2` (CONOPS, OPERATING-ENVELOPE, PANEL, TEST-PLAN, `pcb_envelope.yaml`, its Review A layer 2 record), second pass FAIL on P2-B1 (CONOPS section 7 row D-02b carries the session's choices inside an owner ruling without saying so) and P2-B2 (nothing protects the pack once the heat stage fails on an input: CONOPS 4c, 4e, TEST-PLAN E3-L); not in H1. Remaining: the acceptance items of this section, as at `e3aedb25`, until hc2 merges with no blocking finding; layer 1's I5 is this layer's text.
 
 ---
 
@@ -450,7 +486,7 @@ REQ-059 for the PA thermal path; REQ-058. E: REQ-016 window, REQ-042 path and th
 REQ-040, REQ-041. P: REQ-042 shutdown input, the pack documents still at 200 Wh, S-20, REQ-025, REQ-018 floor,
 REQ-069. E5: no layer 3 item of its own.
 
-> **INTEGRATOR LINE, layer 3:** status at `e3aedb25` IN_PROGRESS; status now: IN_PROGRESS; as of commit: `e3aedb25`; items closed since `e3aedb25`: none; review record: none
+> **INTEGRATOR LINE, layer 3:** status at `e3aedb25` IN_PROGRESS; status now: IN_PROGRESS; as of commit: H1; items closed since `e3aedb25`: S-43 (closed on `dd39fb15`, round 8); new open items S-46 (finding BAT-F20, EQ-15) and S-47 (finding HC9-E1, board E's sense resistor, layout blocking); from the merged closers: owner ruling `public-docs`, session choices SC-13 to SC-16, REQ-023's carried-mass limit, CFL-010 re-read, S-13 narrowed (hc1); FEA-003, FEA-004 and FEA-005 sources and REQ-048's note (hc9); CON-017 split by stage, S-41 narrowed, CON-009 evidence from GRADE-CHECK.md, REQ-005 and CFL-001 rebound (hc6); `rules_lib.py requirements` 132 records, 0 errors, 0 warnings; review record: none. Candidate: closer hc3 in `fnd/hc3`, first review running when H1 was cut; its drafts number from S-47, which this branch gave to HC9-E1. Remaining: the acceptance items of this section; Review B.
 
 ---
 
@@ -631,7 +667,7 @@ protection (4958), FEA-006 decoupling (1756).
   staged only at P's fabrication release. R-BAT not engaged. Four-layer 2 oz regeneration owed (decision 28).
 - E5: no feasibility blocker names it; the D-14 insulating cap not drawn or sourced (S-22).
 
-> **INTEGRATOR LINE, layer 4:** status at `e3aedb25` IN_PROGRESS; status now: IN_PROGRESS; as of commit: `e3aedb25`; items closed since `e3aedb25`: none; review record: none
+> **INTEGRATOR LINE, layer 4:** status at `e3aedb25` IN_PROGRESS; status now: IN_PROGRESS; as of commit: H1; items closed since `e3aedb25`: readable diagrams of the context, board interconnect, power tree, power-up, lanes and fabric, control lines, battery states and the case (`v2/docs/diagrams/`, hc4; drawn at `e3aedb25`, before round 8, and not rebuilt: `build.py --check` reads 0 of 11 current, and `power_tree.py`'s attribution check is not complete, as its README says); `ARCHITECTURE.md` 5.5, 6.1, 13.3, 15 and `ARCH-PCB-B-IOHA.md` 6 and 10a reconciled with the STM32H743 compatibility page (hc6); round 8 gated board A's PA and HF rails on both EMCON lines (`c0133147`), powered board D's transmit chain only while its EMCON gates are in range (`76235aad`) and gave board C a hardware EMCON lamp (`9f28c238`); review record: hc4's two AI reviews (not filed as a record; the second FAILed only on the power-tree claim, fixed at merge). New since `e3aedb25`: BAT-F20 (EQ-15), board A's +3V3 overvoltage window (EQ-17), RF-002's undecided TX_INHIBIT_n line (EQ-18), board B's round 8 residual (EQ-20). Remaining: FEA-001 to FEA-006 as in this section; the diagrams rebuilt on the round 8 netlists after `power_tree.py`'s TREE follows board D; Review C.
 
 ---
 
@@ -767,7 +803,7 @@ to C4, rows M14 and M17); layer 8 netlists.
 - P: P end of IF-PE-PACK; SMBus lead passes. Open: PWR-F12 at 18 A for 60 s, cell and thermistor leads.
 - E5: pass-through of IF-AE-DOCK from A32's board file; INT-001 UNBOUND; the D-14 insulating cap (S-22).
 
-> **INTEGRATOR LINE, layer 5:** status at `e3aedb25` IN_PROGRESS; status now: IN_PROGRESS; as of commit: `e3aedb25`; items closed since `e3aedb25`: none; review record: none
+> **INTEGRATOR LINE, layer 5:** status at `e3aedb25` IN_PROGRESS; status now: IN_PROGRESS; as of commit: H1; items closed since `e3aedb25`: none by the layer's closer; round 8 recorded R8E-N01 in `pcb_interfaces.yaml` (the dock's VIN_RAW contacts at 3.53 A each against the Preci-Dip 813's 3.5 A, EQ-16) and board E declares its raw bus from both feeds (`bc0f562f`); review record: none merged. Candidate: closer hc5 in `fnd/hc5` (`HW-FW-CONTRACT.md`, new interface contracts, records `hc5/` and `w5/`), first review PASS_WITH_FIXES with three blocking items (ARCHITECTURE section 12's claim that every interface is owned at both ends against the drafted contracts; IF-EXT-ETH judged by INT-001 on the MDI pairs; FW-A02's reason in HW-FW-CONTRACT), second review running when H1 was cut; not in H1. Remaining: the acceptance items of this section; EQ-12.
 
 ---
 
@@ -895,7 +931,7 @@ parts; the FB-ZER-1 bench result for U8; owner authority for purchases and R-PWR
   candidate; R-BAT pending.
 - E5: no placed parts (17 footprints: targets, holes, wire lands); the D-14 insulating cap neither drawn nor sourced.
 
-> **INTEGRATOR LINE, layer 6:** status at `e3aedb25` IN_PROGRESS; status now: IN_PROGRESS; as of commit: `e3aedb25`; items closed since `e3aedb25`: none; review record: none
+> **INTEGRATOR LINE, layer 6:** status at `e3aedb25` IN_PROGRESS; status now: IN_PROGRESS; as of commit: `99cde56b` (H1); items closed since `e3aedb25`: the STM32H743 compatibility matrix against the H753 and the errata (`v2/docs/parts/STM32H743-COMPATIBILITY.md`), procurement constraints and alternatives with dated public readings (`PROCUREMENT.md`), the grade of every fitted active part and connector against the envelope (`GRADE-CHECK.md`, regenerated at H1 for round 8's boards C and P), fourteen new SOURCES entries and the maker documents behind them (hc6; its review, an AI review, has no blocking item); `jlc_certify.py` reads the declared mismatches (`661ca3a4`); review record: hc6's review (not filed as a record). Remaining: the generators write no MPN field, and 1497 of the 2205 per-reference rows of the six schematic BOMs carry no LCSC code, 1322 of them resistors, capacitors and inductors (EQ-21); the generator changes hc6 recommends (HC6-SC-3, HC6-SC-6 to HC6-SC-9: board B's T1 to the Pulse HX6096NL, the crystals, the IDC headers, the Mill-Max pins, consigned lines); `pcb_part_temps.patch` of `fnd/hc6` with its part_temps re-take; PROCUREMENT.md's readings for HX6096NL and four alternatives, not filed; U8 (EQ-06); R-PWR (EQ-11); LimeSDR Mini 2.4 and AW7915-AED OUTSIDE the envelope; the INFERRED order codes of the SA868 and the RM520N-GL; `PARTS.md` regeneration.
 
 ---
 
@@ -1059,7 +1095,7 @@ placements from `gen_pcb_{a,b,c,d,e,e5,p}.py` and `gen_pcb_{a,b}3.py`.
 - Case parts (face plate, legs, connector plate, two entry plates, lid tray): on paper in CASE-MARGINS C1 to C6; no
   current CAD or drawing; the revA case files are historical.
 
-> **INTEGRATOR LINE, layer 7:** status at `e3aedb25` IN_PROGRESS; status now: IN_PROGRESS; as of commit: `e3aedb25`; items closed since `e3aedb25`: none; review record: none
+> **INTEGRATOR LINE, layer 7:** status at `e3aedb25` IN_PROGRESS; status now: IN_PROGRESS; as of commit: H1; items closed since `e3aedb25`: none by the layer's closer; round 8 made board E's blind-mate float clamps one bar with twelve cavities (`45f6d83f`); the case plan and Z stack drawings of hc4 (`v2/docs/diagrams/`, drawn at `e3aedb25`); review record: none merged. Candidate: closer hc7 in `fnd/hc7` (the case choices C1 to C6 in the CAD generators, dimensioned drawings, the Z stack, `CASE-FIT-UNCERTAINTIES.md`, `v2/release/case-2026-09-27/`, pinned CAD requirements, `test_case_geometry.py`), first review PASS_WITH_FIXES with three blocking items (`panel1450.py` falls back silently when `zstack.json` is missing and the file is outside the gate's evidence identity; the `frame_seat.py` draft changes U51's height; outline-deciding rows deferred to fabrication release), second pass running when H1 was cut; not in H1. Remaining: the acceptance items of this section; EQ-05, EQ-08.
 
 ---
 
@@ -1237,7 +1273,7 @@ wrote these pages has no `pcbnew`).
 - E5 (`pcb-e5-block`): NOT APPLICABLE to layer 8 (no schematic by construction); its contract binds once A's layout
   carries A's netlist.
 
-> **INTEGRATOR LINE, layer 8:** status at `e3aedb25` IN_PROGRESS; status now: IN_PROGRESS; as of commit: `e3aedb25`; per board: A open, B open, C open, D open, E open, P open, E5 not applicable; items closed since `e3aedb25`: none
+> **INTEGRATOR LINE, layer 8:** status at `e3aedb25` IN_PROGRESS; status now: IN_PROGRESS; as of commit: H1; per board: A open (round 8 regenerated, `c0133147`; PWR-001 FAIL on current evidence, EQ-19; +3V3 window, EQ-17), B open (round 8 NOT merged, in `fnd/r8b`, EQ-20; PWR-001 FAIL on current evidence, 28 supplies undeclared), C open (round 8 regenerated, `9f28c238`, netlist `11eabc2d`; PWR-001 and SI-001 read on the older netlist; RF-002 undecided on U14, EQ-18), D open (round 8, `76235aad`; PWR-001 FAIL on current evidence), E open (round 8, `bc0f562f`; PWR-001 FAIL on current evidence; HC9-E1, S-47, the LT8705A sense resistor in the inductor leg, blocks layout entry), P open (round 8, `7bef62bd`, netlist `085f8333`; BAT-F20, EQ-15; PWR-001 and SI-001 awaiting the re-take), E5 not applicable; items closed since `e3aedb25`: readable paged PDFs, two NOT_FOR_FAB BOMs, ERC and netlist parity of all six boards at `99cde56b` with provenance, and regeneration PARITY of all six from a clean extraction (`v2/release/handover/_generated/`, REGENERATE.md sections 4 and 5). Remaining: board B's round 8 merged with parity; the consolidated re-take of every schematic-phase reading on the committed netlists; PWR-001's supply declarations on A, B, D and E; the per-board functional circuit reviews; HC9-E1 on E; BAT-F20 on P; the qualified reviews (EQ-10 to EQ-12).
 
 ---
 
@@ -1428,4 +1464,4 @@ layer 2 envelope and modes; decisions 7, 27, 28, 35, 42, 43, 46 and the PWR-F12,
   against the record's 4.5. It carries the pack current through its contacts, so the 18 A for 60 s re-declaration
   applies; the mate test of its contact targets at prototype.
 
-> **INTEGRATOR LINE, layer 9:** status at `e3aedb25` IN_PROGRESS; status now: IN_PROGRESS; as of commit: `e3aedb25`; items closed since `e3aedb25`: none; per-board constraint sheets: none
+> **INTEGRATOR LINE, layer 9:** status at `e3aedb25` IN_PROGRESS; status now: IN_PROGRESS; as of commit: H1; items closed since `e3aedb25`: per-board layout constraint sheets A, B, C, D, E, E5 and P with their calculations (`v2/docs/layout-constraints/`) and the stackup decision record (`v2/docs/STACKUP-DECISIONS.md`) (hc9; second review, an AI review, PASS_WITH_FIXES, its two blocking wording items fixed at merge); PWR-001 and SI-001 read on the netlists and RF-002 on every board (round 8 set 2); per-board constraint sheets: A, B, C, D, E, E5, P. Remaining: HC9-E1 (S-47) on board E before its layout entry; the drafts hc9 left for other owners in `fnd/hc9` (`apply_power_thermal.py`, `apply_boards_rationales.py`, `apply_coverage_stk002.py`, `apply_pcb_emc_u5_basis.py`, the draft rules STK-003 and IMP-003), each with its re-take; board E's pack-path bands declared 2 oz in the energy chain while board E is 1 oz; PWR-F12 at 18 A for 60 s on boards E, E5 and P; the heat test (EQ-05), F2 (EQ-07), prices (EQ-14) and channel budgets (EQ-12).

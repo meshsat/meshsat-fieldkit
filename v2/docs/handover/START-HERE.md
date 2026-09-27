@@ -13,9 +13,13 @@ far was done by AI agent sessions (an author and a separate refuting checker), a
 AI review; none of it is electrical sign-off (`v2/docs/reviews/REVIEW-ROUTES.md`, opening paragraphs).
 
 **What this edition is.** The owner asked for the pre-PCB work to be transferable to an outside engineer or company
-even if PCB layout stalls (`v2/docs/reviews/2026-09-27-handover-execution-prompt.md`). This edition is partial: **no
-layer is COMPLETE at `e3aedb25`**, and the pages say exactly what each layer still lacks. It is a usable map of an
-unfinished design, not a claim that the engineering is done.
+even if PCB layout stalls (`v2/docs/reviews/2026-09-27-handover-execution-prompt.md`). **This is handover H1, the first
+snapshot, and it is partial: no layer is COMPLETE**, and the pages say exactly what each layer still lacks. It is a
+usable map of an unfinished design, not a claim that the engineering is done. The four pages were written from the
+audit at `e3aedb25` and brought to the H1 source commit by the handover's integrator: section 3a below, LAYER-STATUS's
+"Status at handover H1" and each layer's `INTEGRATOR LINE`, CONTINUATION-BRIEF section 0 and ENGINEERING-QUESTIONS
+EQ-15 to EQ-21 carry what changed; the rest of each page is the `e3aedb25` record they build on. The snapshot's
+`SOURCE.txt` names the one commit every file of it comes from.
 
 ## 1. The five handover pages
 
@@ -105,6 +109,32 @@ and no certification claimed; no vehicle surge claim (D-16); no finished runtime
   board is judged against": SCH-002 FAIL on A and B, INCONCLUSIVE on C, D, E and P). The three-module board B has
   never been routed to completion (B12 to B15 were an earlier single-module generation). The order folder is rebuilt and quarantined (decision 41): nothing is to be ordered from it.
 
+## 3a. Where the design stands in H1
+
+- **Source.** Main `84e52461` (circuit round 8, sets 1 and 2: boards A, C, D, E and P regenerated with parity; the
+  netlist checks PWR-001, SI-001 and RF-002; the pack's temperature ladder) plus the handover branch: the layer 1, 4,
+  6 and 9 closers' work (product brief through Review A's second pass, readable diagrams, part records, layout
+  constraint sheets and the stackup record), the packer, the exports, these pages. Last design change `99cde56b`.
+- **Headline** (`v2/docs/CURRENT-EVIDENCE.md`, generated): foundations incomplete; 0 boards ready for layout; 0
+  physically verified. Layout-entry reasons A 17, B 16, C 11, D 15, E 16, P 15, E5 5.
+- **Layers.** All nine are IN_PROGRESS; none is COMPLETE and none is BLOCKED as a whole. Layer 1 is the nearest: its
+  review (an AI review) has no blocking finding and it waits on layer 2's EMCON and face text. LAYER-STATUS says what
+  remains per layer, and which closers' work is a candidate in a worktree rather than in H1.
+- **Board B's round 8 is not in H1** (EQ-20); every other board carries its round 8 netlist.
+- **Readable exports.** `v2/release/handover/_generated/<board>/`: an A3-paged schematic PDF, two BOMs named
+  NOT_FOR_FAB, the ERC report, the netlist's parity with its schematic and `provenance.json`, for all six boards with a
+  schematic, made at `99cde56b` on KiCad 9.0.9; regeneration from a clean extraction read PARITY on all six.
+- **Diagrams** (`v2/docs/diagrams/`) were drawn at `e3aedb25`, before round 8; their README says what that means.
+- **Known gaps of H1.** (1) The readings behind `CURRENT-EVIDENCE.md` and `PCB-RULE-STATUS-*.md` live in the
+  gitignored `v2/ecad/out/` and each board's `out/` folder and are not in the snapshot; the rendered pages are, so a
+  recipient re-takes a reading rather than reading it back. (2) The test suite needs a git checkout of the repository
+  for `test_netlist_provenance` and for the registry's closed-by-commit checks; from the ZIP alone those fail
+  (REGENERATE.md section 7). (3) The ZIP is deterministic per host: two builds of one commit on one host are byte for
+  byte equal, on another host compare `MANIFEST.tsv`, not the ZIP's sha256. (4) Maker documents are referenced by
+  sha256, not bundled, except the eight the energy chain cites and seven the requirements registry cites (`pack.yaml`);
+  CON-017's three ST documents (about 21 MB compressed) stay referenced under the 50 MB cap, so the registry validates
+  from the ZIP only once `v2/vendor/st/` is restored from the repository.
+
 ## 4. How the repository is organised (only what a newcomer needs)
 
 | Path | What it holds | Authority |
@@ -171,9 +201,10 @@ costed external and bench work).
 The full instructions are `v2/docs/handover/REGENERATE.md`. In short:
 
 - **Runs anywhere with Python 3.11 and PyYAML 6, no KiCad** (each re-run on a plain export of `e3aedb25` by the layer
-  audit behind these pages): `python3 v2/ecad/tools/rules_lib.py requirements` (the requirements validator: 132
-  records, 0 errors in a checkout; in a git-less export 0 errors and 15 warnings, because its closed-by-commit checks
-  need git history); `python3 v2/ecad/tools/rules_render.py --requirements --check` (the trace is current); the case
+  audit behind these pages; the validator's figures are H1's): `python3 v2/ecad/tools/rules_lib.py requirements` (the requirements validator: 132
+  records, 0 errors in a checkout; from the H1 ZIP alone 4 errors and 16 warnings: the errors are CON-017's three ST
+  documents, referenced rather than bundled for size, and the warnings are closed-by-commit checks that need git
+  history and the gitignored readings; REGENERATE.md section 7); `python3 v2/ecad/tools/rules_render.py --requirements --check` (the trace is current); the case
   margin scripts `v2/vendor/peli/frame_seat.py` and `v2/vendor/peli/case_margins.py` (outputs byte-identical to
   `v2/vendor/peli/1450/*.out`); the power model `v2/docs/records/rv-pwr/pwr_budget.py` (output byte-identical to
   `pwr_budget.json`); `v2/docs/review-packets/battery/evidence/check_manifest.py` (RELEASE CHECK PASS);
@@ -202,7 +233,7 @@ leaves out. What a reader will not find, or should not use:
 | Concept renders and board images | presentation, not engineering input; the renders show the 7 September arrangement | `v2/docs/CASE-MARGINS.md` for the current arrangement |
 | Schematic-phase readings that the status pages render | they sit in gitignored `out/` folders on the build host (`.gitignore`); the committed `routed/*.verdict.json` are 21 September readings of older netlists | CURRENT-EVIDENCE.md classes every reading; a consolidated re-take is a closing action |
 | Q-B-ESC-1's final boards, DRC reports and 26 per-pass sessions | kept on the rented build host and in a session record outside the tree, named only by sha256 | `v2/ecad/tools/routeflow/experiments/b_esc1/results/2026-09-26/README.md`, `v2/docs/B-FEASIBILITY.md` section 7.8 |
-| Round 8 circuit drafts, W1, W3, W5 and W7 workstream drafts, adjudications A01 to A11, board A's converter calculation scripts, the RF-002 walk tool `tx_inhibit.py`, the mismatch input `jlc-mismatch.yaml` | uncommitted session worktree drafts at `e3aedb25`; committed pages cite some of them (LAYER-STATUS lists each gap) | filing them is a closing action; until then, the citing page's own summary |
+| Round 8 circuit drafts, W1, W3, W5 and W7 workstream drafts, adjudications A01 to A11, board A's converter calculation scripts, the RF-002 walk tool `tx_inhibit.py`, the mismatch input `jlc-mismatch.yaml` | uncommitted session worktree drafts at `e3aedb25`; committed pages cite some of them (LAYER-STATUS lists each gap). In H1: round 8 of boards A, C, D, E and P, `tx_inhibit.py`, `jlc-mismatch.yaml`, W1's records (`v2/docs/records/w1/`) and the adjudications (`v2/docs/records/adj/`) are committed; board B's round 8 and the W3, W5 and W7 drafts are not | filing the rest is a closing action; until then, the citing page's own summary |
 | The session's chat, memory and local instruction files | never part of the design record by rule | the rulings they carried are in the registries; gaps are named in LAYER-STATUS |
 | The issue tracker (MESHSAT-nnn ids) and the MeshSat Bridge software | outside this repository; `v2/docs/PANEL.md` is the only software contract held here, and the panel's wire format is deferred to MESHSAT-837 | `github.com/meshsat/meshsat` for the Bridge |
 | Maker documents in a snapshot | cited by path and sha256, not bundled for size | `v2/vendor/SOURCES.yaml` and the repository at the snapshot commit |
@@ -220,7 +251,7 @@ leaves out. What a reader will not find, or should not use:
 | JLCPCB's public parts API (`https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList`, `v2/ecad/tools/jlc_certify.py` line 66) | part identity and stock readings (`jlc_certify.py`, `lcsc_fill.py`) | network access, no login; every reading is dated and true only at its time; the certify cache is not in the repository |
 | A fabricator quote per board and layer count | the stackup price decision (STK-002, decisions 27 and 43) | JLCPCB publishes no PCB price endpoint; a quote needs an account session (EQ-14) |
 | Makers' documents | part identity, ratings, lands | held under `v2/vendor/` with sha256 in `SOURCES.yaml`, `sources.txt` and `vendor-status.txt`; several vendor sites refuse automated clients, so some copies are Internet Archive captures, which `sources.txt` says |
-| Documents the repository does not hold | named where they are needed | Microchip's full ATECC608B data sheet (NDA); ST RM0433; Broadcom BCM54210PE (not published); JST-VH catalogue; Mill-Max 0858 sheet; IDC header and ribbon sheets; binder M8 sheet; RG-316 sheet; MIL-STD-810 and MIL-STD-461; the ADR text for the pack's classification; USB 3, PCIe CEM and HDMI channel specifications; the Xenarc 709GNK body drawing; a Raspberry Pi CM5 cooler drawing; Delta's 40 mm IP68 fan drawing |
+| Documents the repository does not hold | named where they are needed | Microchip's full ATECC608B data sheet (NDA); Broadcom BCM54210PE (not published); the Mill-Max 0858 data sheet (only its product page and catalogue page 28 are held); binder M8 sheet; RG-316 sheet; MIL-STD-810 (only a transcription of Method 516.8, Table 516.8-IX, is held) and MIL-STD-461; the ADR text for the pack's classification; USB 3, PCIe CEM and HDMI channel specifications; the Xenarc 709GNK body drawing; a Raspberry Pi CM5 cooler drawing; Delta's 40 mm IP68 fan drawing |
 
 ## 9. Conventions of these pages
 
@@ -228,7 +259,8 @@ leaves out. What a reader will not find, or should not use:
   remaining items are listed.
 - A desk review, an AI review, clean ERC or passing software fixtures do not establish that a circuit is correct, and
   a desk review is never a physical test.
-- Where the records disagree at `e3aedb25`, CONTINUATION-BRIEF section 8 says which one to follow.
+- Where the records disagree at `e3aedb25`, CONTINUATION-BRIEF section 8 says which one to follow; for what changed
+  since, section 0 of the same brief is the newer.
 - Where these pages recommend an option, it is a recommendation. A closer who takes an engineering choice records it
   in `pcb_requirements.yaml` `session_choices` in the SC-nn form (the question, what was taken, why, and "Reverse by
   ..."), never as the owner's.

@@ -3,7 +3,41 @@
 Written 27 September 2026 (MESHSAT-1357) from the repository at commit `e3aedb25`. Paths are repository paths;
 file:line citations are lines at `e3aedb25`. Read `v2/docs/handover/START-HERE.md` first; the per-layer detail behind
 every line below is in `v2/docs/handover/LAYER-STATUS.md`, and each blocked question is written out in
-`v2/docs/handover/ENGINEERING-QUESTIONS.md` (EQ-01 to EQ-14).
+`v2/docs/handover/ENGINEERING-QUESTIONS.md` (EQ-01 to EQ-21).
+
+**Handover H1.** The snapshot carries this brief as written at `e3aedb25` plus section 0 below, which states what
+changed up to the H1 source commit (main `84e52461`, circuit round 8 sets 1 and 2, and the handover branch, last design
+change `99cde56b`). Where section 0 and a later section disagree, section 0 is the newer.
+
+## 0. What changed between `e3aedb25` and H1
+
+- **Circuits (round 8).** Boards A, C, D, E and P were regenerated with parity: A gates its PA and HF rails on both
+  EMCON lines; C reads EMCON one way and has a hardware EMCON lamp; D powers its transmit chain only while its EMCON
+  gates are in range and reads the PA flange temperature; E declares its raw bus from both feeds and fits the
+  decoupling its makers ask for; P orders the JST headers the catalogues list. **Board B's round 8 is not merged**
+  (worktree `fnd/r8b`, EQ-20): H1's board B is still B21's pre-round-8 netlist. Step 3 of section 1 therefore
+  remains for board B only.
+- **Checks.** PWR-001 and SI-001 are judged on the committed netlists and PWR-001 fails closed on every undeclared
+  supply (EQ-19); RF-002 walks every transmitter's hardware inhibit path and cannot yet decide TX_INHIBIT_n through
+  board C's SN74LVC1G57 (EQ-18). No board is ready for layout: reasons A 17, B 16, C 11, D 15, E 16, P 15, E5 5.
+- **New open findings:** BAT-F20 (EQ-15), R8E-N01 (EQ-16), board A's +3V3 window (EQ-17), and HC9-E1 (S-47): board E's
+  LT8705A current-sense resistor sits in the inductor's leg, so CSP and CSN would see up to the 15.1 V output against
+  a 3 V rating; the maker places it between the joined sources of the bottom FETs and GND. It blocks board E's layout
+  entry (`v2/docs/layout-constraints/E.md` section 6.1).
+- **Delivered by the handover closers:** the product brief and public overviews through Review A layer 1 (layer 1,
+  still a candidate for BASELINED), readable diagrams (`v2/docs/diagrams/`, drawn before round 8), the layer 6 part
+  records (`v2/docs/parts/`), and one layout constraint sheet per board with the stackup record
+  (`v2/docs/layout-constraints/`, `v2/docs/STACKUP-DECISIONS.md`): step 4's constraint sheets exist; the stackup
+  decisions they record still carry the cost half owed (EQ-14).
+- **Exports.** Paged schematic PDFs, NOT_FOR_FAB BOMs, ERC and netlist parity of every board at `99cde56b`, with
+  regeneration PARITY on all six (`v2/release/handover/_generated/`, REGENERATE.md).
+- **Not in H1:** the layer 2, 3, 5 and 7 closers' work (candidates in worktrees, LAYER-STATUS "Candidates left in
+  worktrees"), board B's round 8, and hc9's and hc6's drafts for other owners.
+- **Known gaps of H1.** The readings behind `CURRENT-EVIDENCE.md` and `PCB-RULE-STATUS-*.md` live in the gitignored
+  `v2/ecad/out/` and each board's `out/` folder and are not in the snapshot; the rendered pages are. The test suite
+  needs a git checkout for `test_netlist_provenance` and for the registry's closed-by-commit checks (REGENERATE.md
+  section 7). The ZIP's bytes are deterministic per host only: compare `MANIFEST.tsv`, not the ZIP's sha256, across
+  hosts.
 
 **Prototype framing.** Nothing of the V2 kit has been built, ordered, powered or measured. All reviews of the current
 design are AI reviews, labelled as such; the qualified human reviews the records require (R-BAT, R-PWR, R-HSD, and
