@@ -1,0 +1,109 @@
+{
+ "board": "a",
+ "board_table_phase": "A32",
+ "commands": [
+  {
+   "argv": [
+    "kicad-cli",
+    "sch",
+    "export",
+    "bom",
+    "--fields",
+    "Reference,Value,Footprint,LCSC,${QUANTITY}",
+    "--group-by",
+    "Value,Footprint",
+    "--sort-field",
+    "Reference",
+    "-o",
+    "/root/w4ae/out-cand-repro/a/committed/pcb-a-power-bom.csv",
+    "pcb-a-power.kicad_sch"
+   ],
+   "cwd": "v2/ecad/pcb-a-power-a23",
+   "exit": 0,
+   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/root/w4ae/out-cand-repro/a/committed/pcb-a-power-bom.csv'.\n",
+   "started_utc": "2026-09-27T14:51:48Z"
+  },
+  {
+   "argv": [
+    "kicad-cli",
+    "sch",
+    "erc",
+    "--severity-all",
+    "--format",
+    "json",
+    "-o",
+    "/root/w4ae/out-cand-repro/a/committed/pcb-a-power-erc.json",
+    "pcb-a-power.kicad_sch"
+   ],
+   "cwd": "v2/ecad/pcb-a-power-a23",
+   "exit": 0,
+   "output_tail": "Found 1524 violations\nSaved ERC Report to /root/w4ae/out-cand-repro/a/committed/pcb-a-power-erc.json\n",
+   "started_utc": "2026-09-27T14:51:49Z"
+  },
+  {
+   "argv": [
+    "/usr/bin/python3",
+    "../tools/gen_footprints_idc.py",
+    "../meshsat.pretty"
+   ],
+   "cwd": "v2/ecad/pcb-a-power-a23",
+   "exit": 0,
+   "output_tail": "gen_footprints_idc: wrote IDC-Header_2x05_P2.54mm_Vertical_NarrowPad, 10 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)\ngen_footprints_idc: wrote IDC-Header_2x07_P2.54mm_Vertical_NarrowPad, 14 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)\ngen_footprints_idc: wrote IDC-Header_2x08_P2.54mm_Vertical_NarrowPad, 16 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)\ngen_footprints_idc: wrote IDC-Header_2x09_P2.54mm_Vertical_NarrowPad, 18 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)\ngen_footprints_idc: wrote IDC-Header_2x10_P2.54mm_Vertical_NarrowPad, 20 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)\ngen_footprints_idc: wrote IDC-Header_2x13_P2.54mm_Vertical_NarrowPad, 26 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)\ngen_footprints_idc: wrote IDC-Header_2x20_P2.54mm_Vertical_NarrowPad, 40 pads narrowed to 1.40 x 1.70 (channel 1.14 mm)\ngen_footprints_idc: 7 footprint(s)\n",
+   "started_utc": "2026-09-27T14:51:50Z"
+  },
+  {
+   "argv": [
+    "/usr/bin/python3",
+    "../tools/gen_sch_a.py",
+    "pcb-a-power.kicad_sch",
+    "pcb-a-power"
+   ],
+   "cwd": "v2/ecad/pcb-a-power-a23",
+   "exit": 0,
+   "output_tail": "lands: 42 footprint(s) judged, 0 pin(s) on a pad the land does not carry, 0 land(s) unreadable\nschlayout verify: 1813 pins in 1431 nets, every component one name\nlayout: 16 A3 pages on a 4 x 4 sheet -> paper \"User\" 1676.40 1188.72\nwrote pcb-a-power.kicad_sch parts: 640 lib symbols: 101\nnets: 345 single-pin nets (should be empty or intentional): []\nintent: /root/w4ae/cand/v2/ecad/pcb-a-power-a23/out/pcb-a-power-intent.json (56 bypass, 34 rails, 89 nodes, 5 pair classes)\n",
+   "started_utc": "2026-09-27T14:51:50Z"
+  },
+  {
+   "argv": [
+    "bash",
+    "../tools/build_sch.sh",
+    ".",
+    "pcb-a-power"
+   ],
+   "cwd": "v2/ecad/pcb-a-power-a23",
+   "exit": 0,
+   "output_tail": "ERC: violations (out/pcb-a-power-erc.json, out/pcb-a-power-erc.rpt; erc_gate.py decides)\nnetlist: out/pcb-a-power.net\nsch_prov: pcb-a-power.net written by generator b3ba8f977ea264e2 (boards/a.json#gen_env, gen_footprints_b16.py, gen_footprints_e.py, gen_footprints_idc.py, gen_footprints_panel.py, gen_sch_a.py, idc_pads.py, intent.py, kisch.py, schlayout.py, and 60 land(s) in meshsat.pretty)\nsheet pdf: out/pcb-a-power-schematic-sheet.pdf\nsch_pages: 4 x 4 cells, 16 pages kept of 16 tiles\npdf: out/pcb-a-power-schematic.pdf\nbom: out/pcb-a-power-bom.csv\n",
+   "started_utc": "2026-09-27T14:51:59Z"
+  }
+ ],
+ "comparisons": {
+  "bom": "PARITY",
+  "erc": "PARITY_AFTER_NOISE",
+  "intent": "PARITY",
+  "netlist": "PARITY_AFTER_NOISE",
+  "schematic": "PARITY"
+ },
+ "gen_env": null,
+ "lands_changed_by_the_footprint_generators": [],
+ "phase_directory": "pcb-a-power-a23",
+ "phase_label_used": "A65",
+ "result": "PARITY",
+ "stem": "pcb-a-power",
+ "taken_utc": "2026-09-27T14:52:19Z",
+ "versions": {
+  "kicad_cli": "9.0.9",
+  "mutool": "mutool version 1.23.10",
+  "packages": {
+   "kicad": "9.0.9~ubuntu24.04.1",
+   "kicad-footprints": "9.0.9~ubuntu24.04.1",
+   "kicad-symbols": "9.0.9~ubuntu24.04.1",
+   "mupdf-tools": "1.23.10+ds1-1build3",
+   "poppler-utils": "24.02.0-1ubuntu9.9"
+  },
+  "pdfinfo": "pdfinfo version 24.02.0",
+  "platform": "Linux-6.8.0-134-generic-x86_64-with-glibc2.39",
+  "py_PIL": "10.2.0",
+  "py_yaml": "6.0.1",
+  "python": "3.12.3"
+ }
+}

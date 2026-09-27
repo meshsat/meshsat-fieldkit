@@ -1,0 +1,60 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "pin_map_lands.py",
+  "files": {
+   "intent.py": "f1ac033e0f3c10f1",
+   "kisch.py": "3e28374d15be25e0",
+   "netlist_board.py": "655bc402d36b0fa5",
+   "netlist_parts.py": "41cf192223d822c2",
+   "pin_map_lands.py": "89d2ad7c2bab8ba0",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "0625f00ed67334af",
+  "unresolved": []
+ },
+ "counts": {
+  "failures": 0,
+  "judged": 611,
+  "merged_pad_pins": 0,
+  "unreadable": 0
+ },
+ "denominator": 611,
+ "evidence": [],
+ "inputs": {
+  "board": "a",
+  "netlist": {
+   "path": "out/pcb-a-power.net",
+   "sha256_16": "da05dc02bc1e612f"
+  }
+ },
+ "missing_input": null,
+ "note": "every part's map names every pad of its land",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "SCH-005": "9993ce195b935d6d"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "SCH-005"
+ ],
+ "runtime": {
+  "python": "3.12.3"
+ },
+ "tool": "pin_map_lands_a",
+ "tools": {
+  "git_head": "91894cd7f196",
+  "tools_tree_sha": "784492a16eb43399"
+ },
+ "ts": "2026-09-27T14:21:41Z",
+ "verdict": "PASS",
+ "version": "91894cd7f196",
+ "writer": {
+  "file": "pin_map_lands.py",
+  "sha16": "89d2ad7c2bab8ba0"
+ }
+}

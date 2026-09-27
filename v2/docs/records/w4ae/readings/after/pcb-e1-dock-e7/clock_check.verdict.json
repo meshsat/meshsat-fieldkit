@@ -1,0 +1,56 @@
+{
+ "advisory": false,
+ "applicable": true,
+ "code_bundle": {
+  "entry": "clock_check.py",
+  "files": {
+   "boardtable.py": "41bd92e61f12c374",
+   "clock_check.py": "8da2b82cac511dd0",
+   "verdict.py": "e7d66c930b2c4357"
+  },
+  "method": "ast-local-imports-v1",
+  "sha16": "5e8295c907935c43",
+  "unresolved": []
+ },
+ "counts": {
+  "bad": 0,
+  "crystals": 1,
+  "undeclared": 0
+ },
+ "denominator": 1,
+ "evidence": [],
+ "inputs": {
+  "board": "e",
+  "netlist": {
+   "path": "out/pcb-e1-dock.net",
+   "sha256_16": "56adc9746d61c4e0"
+  }
+ },
+ "missing_input": null,
+ "note": "every crystal has two matched load capacitors to ground, its own IC alone on its nets, and a network that presents what the part's own datasheet asks for within 20 percent",
+ "policy": {
+  "hard_types": 15,
+  "rule_fingerprints": {
+   "CLK-001": "87aa8102f151ef26"
+  },
+  "rule_set_fingerprint": "635ff031f210f48c"
+ },
+ "rules": [
+  "CLK-001"
+ ],
+ "runtime": {
+  "python": "3.12.3"
+ },
+ "tool": "clock_check",
+ "tools": {
+  "git_head": "f6ce8d3f3daf",
+  "tools_tree_sha": "4d1f2ef5eb283d82"
+ },
+ "ts": "2026-09-27T14:54:07Z",
+ "verdict": "PASS",
+ "version": "f6ce8d3f3daf",
+ "writer": {
+  "file": "clock_check.py",
+  "sha16": "8da2b82cac511dd0"
+ }
+}

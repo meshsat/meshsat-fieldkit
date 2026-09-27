@@ -1,0 +1,128 @@
+{
+ "kind": "erc",
+ "violations": [
+  367,
+  370
+ ],
+ "by_type": [
+  {
+   "warning:endpoint_off_grid": 64,
+   "warning:lib_symbol_issues": 266,
+   "warning:unconnected_wire_endpoint": 37
+  },
+  {
+   "warning:endpoint_off_grid": 61,
+   "warning:lib_symbol_issues": 273,
+   "warning:unconnected_wire_endpoint": 36
+  }
+ ],
+ "only_committed": [
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Horizontal Wire, length 0.1524 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Horizontal Wire, length 0.2096 mm"
+   ]
+  ],
+  [
+   "warning",
+   "endpoint_off_grid",
+   "Symbol pin or wire end off connection grid",
+   [
+    "Vertical Wire, length 0.6985 mm"
+   ]
+  ],
+  [
+   "warning",
+   "unconnected_wire_endpoint",
+   "Unconnected wire endpoint",
+   [
+    "Horizontal Wire, length 0.0889 mm"
+   ]
+  ],
+  [
+   "warning",
+   "unconnected_wire_endpoint",
+   "Unconnected wire endpoint",
+   [
+    "Horizontal Wire, length 0.1016 mm"
+   ]
+  ]
+ ],
+ "only_other": [
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'Device'",
+   [
+    "Symbol R58 [R]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'Transistor_FET'",
+   [
+    "Symbol Q11 [2N7002]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR062 [GND]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR063 [GND]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR064 [GND]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR065 [GND]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR066 [GND]"
+   ]
+  ],
+  [
+   "warning",
+   "unconnected_wire_endpoint",
+   "Unconnected wire endpoint",
+   [
+    "Horizontal Wire, length 0.1143 mm"
+   ]
+  ]
+ ],
+ "result": "DIFFERENT"
+}

@@ -433,6 +433,14 @@ board_to_board:
              10: USB_E6_N, 11: GND, 12: DOCK_SPARE}
       pins_history: "1 to 4 carried VIN_RAW until EQ-16 (27 September 2026); they are ground returns for the USB pair and
         the control line since, beside 5 to 7 and 11"
+      hot_r1: "pin 12 (DOCK_SPARE on A, BLK_SPARE on E) carries the hot stop line HOT-R1 since 27 September 2026 (SC-70,
+        stream w4ae): E's sensor controller GPIO19 (U10 pin 30) drives Q11 (2N7002, R58 100 k gate pull-down), an open
+        drain onto BLK_SPARE; A's R216 10 k pulls DOCK_SPARE up to A's +3V3 and U27 pin 18 (P1.5) reads it, its INT on
+        EXP_INT. Four states: 1 Hz below H1, 5 Hz H1, held low H2 (a shorted line stops the kit), held high the detector
+        lost (E absent, unpowered, in reset or the contact open). Only E pulls down and only A pulls up, so neither
+        board back-powers the other; a slow logic level (LOW_SPEED_OR_DC in both board tables) and a declared safety
+        line on both (SCH-004: A listens, safe high by R216; E is its source). Firmware: v2/docs/HW-FW-CONTRACT.md
+        FW-C13, FW-C14 and FW-E10; the path read by v2/docs/records/w4ae/hot_r1_trace.py"
       vin_raw: {voltage: "9 to 36 V (v_work 36 V)",
                 a_declares: "14.10 A typical and peak since R8E-N01 (EQ-16, set 5, fnd/r8int5, 27 September 2026): board
                   E's figure, this board's own front end at its ISNS limit drawing from a 9.0 V bus (R4A-N12), with J_VR1 to

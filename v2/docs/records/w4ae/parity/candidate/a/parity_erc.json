@@ -1,0 +1,216 @@
+{
+ "kind": "erc",
+ "violations": [
+  1522,
+  1524
+ ],
+ "by_type": [
+  {
+   "warning:endpoint_off_grid": 458,
+   "warning:lib_symbol_issues": 931,
+   "warning:unconnected_wire_endpoint": 133
+  },
+  {
+   "warning:endpoint_off_grid": 458,
+   "warning:lib_symbol_issues": 933,
+   "warning:unconnected_wire_endpoint": 133
+  }
+ ],
+ "only_committed": [
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR252 [GND]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR253 [+3V3]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR254 [GND]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR255 [+3V3]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR256 [GND]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR257 [+3V3]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR258 [GND]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR273 [GND]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR293 [+3V3]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR294 [GND]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR295 [+3V3]"
+   ]
+  ]
+ ],
+ "only_other": [
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'Device'",
+   [
+    "Symbol R216 [R]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR252 [+3V3]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR253 [GND]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR254 [+3V3]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR255 [GND]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR256 [+3V3]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR257 [GND]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR258 [+3V3]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR272 [GND]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR293 [GND]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR294 [+3V3]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR295 [GND]"
+   ]
+  ],
+  [
+   "warning",
+   "lib_symbol_issues",
+   "The current configuration does not include the symbol library 'power'",
+   [
+    "Symbol #PWR296 [+3V3]"
+   ]
+  ]
+ ],
+ "result": "DIFFERENT"
+}

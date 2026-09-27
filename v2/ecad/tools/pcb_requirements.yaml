@@ -2195,6 +2195,82 @@ session_choices:
       - "v2/ecad/tools/gen_sch_c.py (R51, the W4C-F1 note at the end of the design)"
       - "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf 2.9.5, 4.9, Tables 622 and 625"
       - "v2/docs/PANEL.md section 1 (LED rail row) and section 3 (GPIO 26)"
+  - id: SC-70
+    authority: SESSION
+    under: standing-rule
+    taken_on: "2026-09-27"
+    closes: [S-57]
+    question: >-
+      How HOT-R1 (SC-50) is drawn on boards A and E (S-57), and how its held-low state (H2) reaches PI_KILL on board A.
+      HOT-R1 as drawn on boards A and E (stream w4ae).
+    taken: >-
+      Board E: the sensor controller's GPIO19 (U10 pin 30) drives HOT_R1_G, the gate of Q11, a 2N7002 (the JSCJ part
+      lcsc_fill.py fills as C8545 for Q8 to Q10), source on GND, drain on BLK_SPARE (J_BLK pin 12, TP7); R58, 100 k
+      (C25803), holds the gate to ground. Board A: R216, 10 k 0603 (filled as C25804 like R110 beside it), pulls
+      DOCK_SPARE (J_DOCK pin 12, U27 pin 18 = P15, TP21) up to +3V3, U27's own VCC. No series resistor, no part number
+      new to either board, no contact added; the net names BLK_SPARE and DOCK_SPARE kept, the part values and both board
+      tables naming the function. The line is a declared safety line on both boards (SCH-004): board A listens, safe
+      state high by R216 (the detector-lost state); board E is its source. H2 reaches PI_KILL through the panel
+      controller: an edge on P15 sets U27's INT (EXP_INT: A J_AB1 pin 13, board B, J_PANEL pin 6) at the panel
+      controller's GPIO24 (board C U3 pin 36); it reads U27 on the kit bus (J_AB1 pins 11 and 12, J_PANEL pins 4 and 5,
+      U3 GPIO0 and GPIO1) and, on a held low that has lasted longer than the sensor controller's watchdog, writes the
+      e-paper and raises PI_KILL (U3 pin 30 = GPIO19, J_PANEL pin 25, board B, J_AB1 pin 10) into Q1's gate on board A,
+      whose drain takes the LTC2954 U1's KILL low, which drops RAIL_EN and every converter it enables. No compute module
+      is in the path: U27 is on board A's +3V3 (U12, enabled by RAIL_EN), the panel controller on C's +3V3 from +5V_DEV
+      through board B's F1 (U7, enabled by DEV_EN with R42's pull-up), the sensor controller always on from CELL_F; read
+      hop by hop on the committed netlists and the contracts IF-AE-DOCK, IF-AB-RIBBON, IF-BC-PANEL and IF-AB-POWER by
+      v2/docs/records/w4ae/hot_r1_trace.py, which stops at U10 pin 30 on main's netlists at 91894cd7.
+    why: >-
+      SC-50's line needed a driver on E and a pull-up on A and nothing else, and these are parts each board already
+      buys. An open drain cannot back-power board A while A is off, and it fails released (held high, SC-49's fallback
+      on board B's TMP117) whenever E's controller is unpowered, in reset or booting (R58 and the RP2040's reset pad
+      pull-down, PADS_BANK0 PDE reset 0x1). 10 k gives 0.33 mA, three times the expander's own pull-up (IIL at most 100
+      uA, SCPS131J 6.5) and far inside the 2N7002's typical capability at a 3.3 V gate (about 150 mA at VGS 3 V, JSCJ
+      p.3); the sheet states RDS(on) only at 5 and 10 V, so the low at a 3.3 V gate is INFERRED from its typical curves
+      shifted to the 2.5 V worst threshold and is measured at E3-H. A controller that hangs with GPIO19 high holds the
+      line low until its watchdog resets it, hence the panel's persistence rule. Renaming the nets would touch
+      IF-AE-DOCK's alias, check_contracts.py and gen_pcb_e5.py, which other streams own, for no electrical change.
+      Readings: PWR-001, PWR-002, SCH-004 and the contracts on A and E unchanged or PASS on the regenerated netlists
+      (v2/docs/records/w4ae/readings/). Reverse by S-58's hardware stage (a decode of the held-low state on board A, or
+      a comparator over a second contact), which would add to this line, not remove it, or by a USB-only path (SC-50's
+      reversal).
+    source:
+      - "v2/ecad/tools/gen_sch_e.py (U10 pin 30, Q11, R58, J_BLK, TP7; the HOT-R1 comment after the PRES pair)"
+      - "v2/ecad/tools/gen_sch_a.py (R216 after the expanders, J_DOCK, U27, R110, Q1, U1)"
+      - "v2/ecad/tools/boards/a.json and boards/e.json (signal classes and safety lines DOCK_SPARE, BLK_SPARE, HOT_R1_G)"
+      - "v2/vendor/power/jscj-2n7002-c8545.pdf (Vth(GS), IDSS, typical curves p.3)"
+      - "v2/vendor/ti/ti-pca9555.pdf (SCPS131J 6.3, 6.5, 8.3.2, 8.4.1)"
+      - "v2/vendor/rp2040/rpi-rp2040-datasheet.pdf (1.4.1 Figure 3, 2.19.6.3, 5.5.3 Table 625)"
+      - "v2/docs/records/w4ae/hot_r1_trace.py and readings/hot_r1_trace-candidate.txt"
+  - id: SC-71
+    authority: SESSION
+    under: standing-rule
+    taken_on: "2026-09-27"
+    question: >-
+      Which part D7 and D8 are (board E's fan flyback diodes), and the kind and peak of FAN1_SW and FAN2_SW, which
+      PWR-001 left UNDECIDED for want of their sheet (S-76, board E's half; SC-57).
+    taken: >-
+      D7 and D8 keep the part lcsc_fill.py already filled, LCSC C51897884, which JLCPCB's parts API resolves to 'SS14 |
+      Zhengxin | SMB(DO-214AA)' (read 27 September 2026; LCSC's own product API holds no record of the code). The code
+      is written into gen_sch_e.py and the maker's sheet, as JLCPCB serves it (the record's data manual, no official
+      link), is filed at v2/vendor/zhengxin/zhengxin-ss12-ss120-c51897884.pdf. FAN1_SW and FAN2_SW are declared nodes at
+      17.35 V: CELL_F's 16.8 V plus the sheet's maximum forward drop, 0.55 V at IFM 2.0 A and 25 C, twenty times each
+      fan's declared 0.1 A.
+    why: >-
+      The code resolves to an SS14 in the land the generator already names (DO-214AA, pp.1 and 3; the cathode line; K on
+      CELL_F), VRRM 40 V, IO 1.0 A, IFSM 50 A, Tj -55 to +125 C, so nothing is substituted. A switched low side's peak
+      is its rail plus one forward drop (S-76's recipe, SC-57's kind); the sheet publishes no cold forward curve, FIG3
+      reads about 0.37 V typical at the fan's 0.1 A, and every part on the nets is rated far above the figure (D7, D8 40
+      V; Q9, Q10 60 V). PWR-001 on board E reads PASS with 0 undecided on the regenerated netlist (it read INCONCLUSIVE
+      on these two nets). Reverse by a fan above 2.0 A, a cold forward curve beyond the margin, or the part by onsemi's
+      MBRS140T3G (LCSC C133091, whose record gives SMB, 40 V, 1 A, VF 600 mV at 1 A and Tj -65 to +125 C; no onsemi
+      sheet is filed, so its forward curve is owed before it is used; corrected at integration from the independent
+      check), the documented alternative on the same land.
+    source:
+      - "v2/vendor/zhengxin/zhengxin-ss12-ss120-c51897884.pdf (SS12 THRU SS120, Maximum Ratings and Electrical Characteristics p.1, FIG3 p.2, Outline Dimensions p.3)"
+      - "v2/docs/records/w4ae/jlc/q-SS14_SMB.json and lcsc-api-C51897884.json (the code's identity, 27 September 2026)"
+      - "v2/ecad/tools/gen_sch_e.py (D7, D8 and the FAN1_SW and FAN2_SW node declarations after the fan loop)"
+      - "v2/ecad/tools/intent_checks.py (PWR-001 on the netlist)"
 
 # What is still open. SESSION items are engineering the session decides and records with authority SESSION;
 # OWNER_ACTION is something the owner has ruled that he does or sets himself, or that only he can do because it reopens
@@ -2417,15 +2493,6 @@ open_items:
       TRK_CSP and TRK_CSN) and gen_pcb_e3.py (PATTERNS, C63 and C64 in the TRKS region, a marker that stops the
       placement until P_VR and P_VN are placed). Still open: item 10, the boost diodes (a silicon part with its
       sheet and order code, or the BAT54's own sheet read against 8705af p.29), and board E's next placement.
-  - id: S-57
-    class: SESSION
-    status: OPEN
-    title: >-
-      HOT-R1 in the generators of boards A and E (SC-50): board E drives BLK_SPARE (J_BLK pin 12) from the
-      sensor controller's GPIO19 through an open-drain 2N7002 with a gate pull-down; board A pulls DOCK_SPARE (J_DOCK
-      pin 12, U27 pin 18) up with 10 k; IF-AE-DOCK names pin 12; the four line states go into the sensor controller's
-      and the panel controller's firmware contracts (PANEL.md). Owed by the owners of boards A and E before their layout
-      entry, with regeneration parity; until then the hot stop's requirement reads FAIL on the generated boards.
   - id: S-58
     class: SESSION
     status: OPEN
@@ -2717,8 +2784,10 @@ open_items:
       and FAN2_SW, the mixer fans' switched returns) after SC-57: each net's peak is one flyback diode drop
       above its rail (+5V_TX, CELL_F), and no maker's sheet for the diodes is held: D2 is a 1N4148W with no
       order code in gen_sch_d.py or lcsc_fill.py, D7 and D8 are SS14 filled as C51897884 by lcsc_fill.py with no
-      sheet in v2/vendor. Open until the sheets are filed (and D2 has an order code, EQ-21's class) and the
-      three nets are declared nodes at the rail plus the maker's forward drop.
+      sheet in v2/vendor. Open until the sheets are filed (and D2 has an order code, EQ-21's class) and the three nets
+      are declared nodes at the rail plus the maker's forward drop. Board E's half answered by SC-71 (27 September 2026,
+      stream w4ae): D7 and D8's maker's sheet filed with their code C51897884, FAN1_SW and FAN2_SW declared nodes at
+      17.35 V, PWR-001 on board E PASS with 0 undecided; board D's RLY_K and its D2 stay open.
   - id: S-79
     class: SESSION
     status: OPEN
@@ -2810,10 +2879,29 @@ open_items:
       U5's average at or under 500 mA; otherwise board C's next circuit round sizes a local bulk on EPD_VCC from the
       measured on-phase or feeds the e-paper from a supply with the headroom, and +5V's peak and B_PANEL_5V's follow the
       reading. v2/ecad/tools/gen_sch_c.py (the +3V3 declaration and the check after EPD_VCC's).
+  - id: S-84
+    class: SESSION
+    status: OPEN
+    title: >-
+      Board B's PI_KILL conductor carries the drains of the three bidirectional 2N7002 level shifters Q103, Q203 and
+      Q303 (gates on +3V3_CM1 to +3V3_CM3, sources on PI_KILL_CM1 to PI_KILL_CM3, each compute module's GPIO17;
+      gen_sch_b.py level()), so a powered module that drives GPIO17 low can hold PI_KILL low against the panel
+      controller's kill; H1 normally drops SLOT_EN first, but H2 can come inside H1's 60 s shutdown window. Found by
+      the independent check of stream w4ae (27 September 2026, an AI check) while it traced HOT-R1's H2 path (SC-70);
+      not new with that stream and outside its scope. For board B's author and the module firmware contract: GPIO17
+      held an input on every module (HW-FW-CONTRACT.md), or a one-way stage from the panel's PI_KILL to the modules.
 
 # Items that left the open list, and what closed each: an owner ruling, a session choice, or a commit whose effect
 # was read in the file `closing_evidence` names. A record never waits on a closed item; it cites what closed it.
 closed_items:
+  - id: S-57
+    closed_by: SC-70
+    title: >-
+      HOT-R1 in the generators of boards A and E (SC-50): board E drives BLK_SPARE (J_BLK pin 12) from the
+      sensor controller's GPIO19 through an open-drain 2N7002 with a gate pull-down; board A pulls DOCK_SPARE (J_DOCK
+      pin 12, U27 pin 18) up with 10 k; IF-AE-DOCK names pin 12; the four line states go into the sensor controller's
+      and the panel controller's firmware contracts (PANEL.md). Owed by the owners of boards A and E before their layout
+      entry, with regeneration parity; until then the hot stop's requirement reads FAIL on the generated boards.
   - id: D-01-R1
     closed_by: SC-02
     title: >-
@@ -4862,9 +4950,15 @@ records:
           the rest of section 1 and section 2's ribbon table with its pin 15 row, which this reading rests on, are
           unchanged: none of the three changed rows names a bank or a host, so it stands PASS on the file at
           57a56726f9db723a
+      - >-
+          v2/docs/PANEL.md re-read by stream w4ae on 27 September 2026 (HOT-R1 drawn on boards A and E, SC-70; board E's
+          flyback sheet, SC-71): two table rows change, section 3's GPIO24 (EXP_INT also carries HOT-R1's edges) and
+          section 7's 0x21 and 0x24 row (U27's P1.5 reads HOT-R1), with the line count kept; every other line is
+          byte-identical to the file at 57a56726f9db723a; no line this record reads is among the two, so it stands PASS
+          on the file at 4647782f5aca7c13
     evidence_bound_to:
       - "v2/docs/ARCH-PCB-B-IOHA.md@55620cf51446bfc8"
-      - "v2/docs/PANEL.md@57a56726f9db723a"
+      - "v2/docs/PANEL.md@4647782f5aca7c13"
       - "v2/ecad/tools/gen_sch_b.py@25fa2401d71691b9"
     release_effect: ADVISORY
     source:
@@ -5557,8 +5651,14 @@ records:
           stage; PS-RED named the one-module stage) and one hand-off line of section 11 change, with the line count and
           every figure unchanged; section 4's PS-IDLE-SPEC row (42.8 W PLAN, 33.1 to 82.8), which this reading rests on,
           is byte-identical to the file at 465abd3bb9c97416, so the FAIL stands on the file at ad3ba27cef9e0f68
+      - >-
+          v2/ecad/tools/gen_sch_e.py re-read by stream w4ae on 27 September 2026 (HOT-R1, SC-70; board E's half of S-76,
+          SC-71): U10 pin 30 on HOT_R1_G, Q11 and R58 with their comment after the PRES pair, D7 and D8's order code and
+          the FAN1_SW and FAN2_SW node declarations after the fan loop, J_BLK's value, the GPIO list comment and the
+          section list, and nothing else; the solar stage this reading rests on (J_SOLAR, F2, D4, U5 and the FBIN point)
+          is unchanged, so it stands FAIL on the file at f846e138cb53a8c6
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_e.py@59abd6365b94c2d6"
+      - "v2/ecad/tools/gen_sch_e.py@f846e138cb53a8c6"
       - "v2/docs/feasibility/POWER-THERMAL.md@ad3ba27cef9e0f68"
     release_effect: BLOCKER
     source:
@@ -5904,9 +6004,23 @@ records:
           pins 1 to 4, and the section list; lines after 66 move down by 5 and lines after the pre-charge pin by 23; the
           interlock's lines are unchanged in content (S-14's comment, U26 and U30 moved down by 23), so it stands PASS
           on the file at 5af29bbcf27bb91a
+      - >-
+          v2/ecad/tools/gen_sch_a.py re-read by stream w4ae on 27 September 2026 (HOT-R1, SC-70; board E's half of S-76,
+          SC-71): R216 and its comment after the expanders' line, J_DOCK's value and R216 in the section list, and
+          nothing else; the lines after R110's line move down by 19 (corrected at integration from the independent
+          check, the stream's note said 18); the interlock's lines (U26, U30, OUTLET_OK) are unchanged in content, so it
+          stands PASS on the file at 9684e7a9606aede6
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated by stream w4ae on 27 September 2026 (HOT-R1, SC-70;
+          board E's half of S-76, SC-71) on the KiCad box with main's chain (handover_exports.py regen, PHASE A65;
+          main's generator reproduced main's file, PARITY): compared with the file at da05dc02bc1e612f component by
+          component and net by net (v2/docs/records/w3de/net_compare.py against
+          v2/docs/records/w4ae/parity/expected-a-netlist.json, 'ONLY THE EXPECTED CHANGES'), it differs only in R216
+          added (10 k, DOCK_SPARE to +3V3) and J_DOCK's value; U30, U26, OUTLET_OK, POE_EN, PD_EN, U16, U19 and PA_EN
+          are unchanged, so it stands PASS on the file at 0a2b59087bcc2678
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_a.py@5af29bbcf27bb91a"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
+      - "v2/ecad/tools/gen_sch_a.py@9684e7a9606aede6"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
     release_effect: BLOCKER
     source: ["owner ruling D-11", "v2/docs/MESHSAT-709-geometry-appendix.md:2932", "v2/ecad/tools/gen_sch_a.py:1177-1190, 1237-1245"]
@@ -6638,9 +6752,23 @@ records:
           envelope and the NOT_VERIFIED rule) and section 7's opening change, and section 7 gains row P15 (the hot stop
           forced at room temperature); E3-L is unchanged; the M7 row, which this reading rests on, is byte-identical to
           the file at 701c1020053e7903, so it stands on the file at 4f15bd02a6a8be46
+      - >-
+          v2/ecad/tools/gen_sch_a.py re-read by stream w4ae on 27 September 2026 (HOT-R1, SC-70; board E's half of S-76,
+          SC-71): R216 and its comment after the expanders' line, J_DOCK's value and R216 in the section list, and
+          nothing else; the lines after R110's line move down by 19 (corrected at integration from the independent
+          check, the stream's note said 18); U31's lines are unchanged in content, so it stands PASS on the file at
+          9684e7a9606aede6
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated by stream w4ae on 27 September 2026 (HOT-R1, SC-70;
+          board E's half of S-76, SC-71) on the KiCad box with main's chain (handover_exports.py regen, PHASE A65;
+          main's generator reproduced main's file, PARITY): compared with the file at da05dc02bc1e612f component by
+          component and net by net (v2/docs/records/w3de/net_compare.py against
+          v2/docs/records/w4ae/parity/expected-a-netlist.json, 'ONLY THE EXPECTED CHANGES'), it differs only in R216
+          added (10 k, DOCK_SPARE to +3V3) and J_DOCK's value; U31 on PD_CC1 and PD_CC2 at J_USBC_OUT, and C96 and C97,
+          are unchanged, so it stands PASS on the file at 0a2b59087bcc2678
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_a.py@5af29bbcf27bb91a"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
+      - "v2/ecad/tools/gen_sch_a.py@9684e7a9606aede6"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
       - "v2/docs/TEST-PLAN.md@4f15bd02a6a8be46"
     release_effect: MUST_JUSTIFY
     source: ["owner ruling D-17", "v2/ecad/tools/gen_sch_a.py:1104-1114", "v2/ecad/tools/pcb_decisions.yaml:256-429 (decision 31)"]
@@ -6758,10 +6886,16 @@ records:
           stage; PS-RED named the one-module stage) and one hand-off line of section 11 change, with the line count and
           every figure unchanged; section 9.4, which this reading cites, is byte-identical to the file at
           465abd3bb9c97416, so the record stays FAIL on the file at ad3ba27cef9e0f68
+      - >-
+          v2/docs/parts/grade-sources.yaml re-read by stream w4ae on 27 September 2026 (HOT-R1 drawn on boards A and E,
+          SC-70; board E's flyback sheet, SC-71): C51897884's entry (SS14, Zhengxin) gains its maker, its Tj range of
+          -55 to +125 C and the filed sheet; every other entry is unchanged from the file at 436f6616df519760;
+          C51897884's -55 to +125 C Tj covers the envelope's -20 C floor and the 51 C inside air, and no other row
+          moved, so it stands FAIL on the file at d9329f0c451aab09
     evidence_bound_to:
       - "v2/docs/feasibility/POWER-THERMAL.md@ad3ba27cef9e0f68"
       - "v2/docs/parts/GRADE-CHECK.md@e68bd0bbd89272aa"
-      - "v2/docs/parts/grade-sources.yaml@436f6616df519760"
+      - "v2/docs/parts/grade-sources.yaml@d9329f0c451aab09"
     release_effect: MUST_JUSTIFY
     source: ["v2/docs/MESHSAT-709-geometry-appendix.md:18527-18540 (32.360)", "v2/ecad/tools/pcb_part_temps.yaml", "v2/docs/feasibility/POWER-THERMAL.md section 9.4"]
     source_check: VERIFIED
@@ -6820,9 +6954,23 @@ records:
           from TRK_SW1 to TRK_SW2), MODE on LDO33, C63 and C64 with four declared bypasses (SC-56), EQ-16's board E half
           (J_BLK pins 1 to 4 to GND, P_VR, P_VN) and the PWR-001 declarations (SC-57); U17's statement is unchanged and
           the intent now declares SGP_VDD a rail (SC-57), so it stands PASS on the file at 59abd6365b94c2d6
+      - >-
+          v2/ecad/tools/gen_sch_e.py re-read by stream w4ae on 27 September 2026 (HOT-R1, SC-70; board E's half of S-76,
+          SC-71): U10 pin 30 on HOT_R1_G, Q11 and R58 with their comment after the PRES pair, D7 and D8's order code and
+          the FAN1_SW and FAN2_SW node declarations after the fan loop, J_BLK's value, the GPIO list comment and the
+          section list, and nothing else; U17 (the SGP41) and its supply network are unchanged, so it stands PASS on the
+          file at f846e138cb53a8c6
+      - >-
+          v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net regenerated by stream w4ae on 27 September 2026 (HOT-R1, SC-70;
+          board E's half of S-76, SC-71) on the KiCad box with main's chain (PHASE E42P; main's generator reproduced
+          main's file, PARITY): compared with the file at d6137f50059e5cbc component by component and net by net
+          (v2/docs/records/w3de/net_compare.py against v2/docs/records/w4ae/parity/expected-e-netlist.json, 'ONLY THE
+          EXPECTED CHANGES'), it differs only in Q11 and R58 added, U10 pin 30 moved from no connection to the new net
+          HOT_R1_G, D7 and D8 carrying their order code C51897884, and J_BLK's value; U17, R57, C57, C58, SDA1 and SCL1
+          are unchanged, so it stands PASS on the file at 56adc9746d61c4e0
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_e.py@59abd6365b94c2d6"
-      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc"
+      - "v2/ecad/tools/gen_sch_e.py@f846e138cb53a8c6"
+      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
     release_effect: ADVISORY
     source:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2896 (32.54)"
@@ -7795,9 +7943,23 @@ records:
           this reading cites, is byte-identical; section 6's EMCON_HW row is unchanged and its TX_INHIBIT_n row still
           names R145 on board A, and with the panel's ribbon out board C's R50 is not on the conductor that paragraph
           describes, so it stands PASS on the file at 57a56726f9db723a
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated by stream w4ae on 27 September 2026 (HOT-R1, SC-70;
+          board E's half of S-76, SC-71) on the KiCad box with main's chain (handover_exports.py regen, PHASE A65;
+          main's generator reproduced main's file, PARITY): compared with the file at da05dc02bc1e612f component by
+          component and net by net (v2/docs/records/w3de/net_compare.py against
+          v2/docs/records/w4ae/parity/expected-a-netlist.json, 'ONLY THE EXPECTED CHANGES'), it differs only in R216
+          added (10 k, DOCK_SPARE to +3V3) and J_DOCK's value; R102 (EMCON_HW to GND), R145 on TX_INHIBIT_n and the slot
+          enable pull-downs are unchanged, so it stands PASS on the file at 0a2b59087bcc2678
+      - >-
+          v2/docs/PANEL.md re-read by stream w4ae on 27 September 2026 (HOT-R1 drawn on boards A and E, SC-70; board E's
+          flyback sheet, SC-71): two table rows change, section 3's GPIO24 (EXP_INT also carries HOT-R1's edges) and
+          section 7's 0x21 and 0x24 row (U27's P1.5 reads HOT-R1), with the line count kept; every other line is
+          byte-identical to the file at 57a56726f9db723a; section 7's pull statements and the panel-less kit's text are
+          unchanged; only the U27 row names P1.5, so it stands PASS on the file at 4647782f5aca7c13
     evidence_bound_to:
-      - "v2/docs/PANEL.md@57a56726f9db723a"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
+      - "v2/docs/PANEL.md@4647782f5aca7c13"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
     release_effect: ADVISORY
     source:
       - "v2/docs/PANEL.md section 7"
@@ -8111,9 +8273,17 @@ records:
           V, W3T-F1), where it read PASS with no figure; the gate's trace this reading cites (KEY = PTT_ANY AND
           TX_INHIBIT_n, U14, U15, U13), the rest of 4.1 and section 4.2 are byte-identical, and the SA868's row stays
           open on its maker's missing threshold (bench E-01), so it stands FAIL on the file at 367c52bcba7eb2a1
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated by stream w4ae on 27 September 2026 (HOT-R1, SC-70;
+          board E's half of S-76, SC-71) on the KiCad box with main's chain (handover_exports.py regen, PHASE A65;
+          main's generator reproduced main's file, PARITY): compared with the file at da05dc02bc1e612f component by
+          component and net by net (v2/docs/records/w3de/net_compare.py against
+          v2/docs/records/w4ae/parity/expected-a-netlist.json, 'ONLY THE EXPECTED CHANGES'), it differs only in R216
+          added (10 k, DOCK_SPARE to +3V3) and J_DOCK's value; board A's PA_EN (U35, U36) and its gates are unchanged,
+          so it stands FAIL on the file at 0a2b59087bcc2678
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
       - "v2/docs/feasibility/EMCON.md@367c52bcba7eb2a1"
       - "v2/docs/CURRENT-EVIDENCE.md@7a834fe55aea6ccd"
     release_effect: BLOCKER
@@ -8923,9 +9093,24 @@ records:
           from TRK_SW1 to TRK_SW2), MODE on LDO33, C63 and C64 with four declared bypasses (SC-56), EQ-16's board E half
           (J_BLK pins 1 to 4 to GND, P_VR, P_VN) and the PWR-001 declarations (SC-57); the tamper block's lines are
           unchanged in content, so it stands PASS on the file at 59abd6365b94c2d6
+      - >-
+          v2/ecad/tools/gen_sch_e.py re-read by stream w4ae on 27 September 2026 (HOT-R1, SC-70; board E's half of S-76,
+          SC-71): U10 pin 30 on HOT_R1_G, Q11 and R58 with their comment after the PRES pair, D7 and D8's order code and
+          the FAN1_SW and FAN2_SW node declarations after the fan loop, J_BLK's value, the GPIO list comment and the
+          section list, and nothing else; the tamper block's lines are unchanged in content, and HOT-R1 does not touch
+          the lid switch, so it stands PASS on the file at f846e138cb53a8c6
+      - >-
+          v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net regenerated by stream w4ae on 27 September 2026 (HOT-R1, SC-70;
+          board E's half of S-76, SC-71) on the KiCad box with main's chain (PHASE E42P; main's generator reproduced
+          main's file, PARITY): compared with the file at d6137f50059e5cbc component by component and net by net
+          (v2/docs/records/w3de/net_compare.py against v2/docs/records/w4ae/parity/expected-e-netlist.json, 'ONLY THE
+          EXPECTED CHANGES'), it differs only in Q11 and R58 added, U10 pin 30 moved from no connection to the new net
+          HOT_R1_G, D7 and D8 carrying their order code C51897884, and J_BLK's value; J_TAMP, R52, R53, C52,
+          TAMPER_LEAD, TAMPER_IO and U12's CELL_F pins are unchanged, and no board routes the lead to ZEROIZE_HW or the
+          panel controller, so it stands PASS on the file at 56adc9746d61c4e0
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_e.py@59abd6365b94c2d6"
-      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc"
+      - "v2/ecad/tools/gen_sch_e.py@f846e138cb53a8c6"
+      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
     release_effect: MUST_JUSTIFY
     source:
       - "v2/docs/MESHSAT-709-geometry-appendix.md:2790 (item 6)"
@@ -9796,10 +9981,10 @@ records:
       decisions: []
     rule_coverage: NONE
     rulings: [D-02b, D-15]
-    choices: [SC-49, SC-50, SC-18]
-    waits_on: [S-57, S-58]
+    choices: [SC-49, SC-50, SC-18, SC-70]
+    waits_on: [S-58]
     status: DEFINED
-    evidence_result: FAIL
+    evidence_result: INCONCLUSIVE
     evidence_phase: SCHEMATIC
     evidence_class: DESK_REVIEW
     evidence:
@@ -9827,8 +10012,39 @@ records:
           (J_BLK pins 1 to 4 to GND, P_VR, P_VN) and the PWR-001 declarations (SC-57); J_BLK pin 12 is still BLK_SPARE
           with TP7 its only other node and U10's GPIO19 (pin 30) is still not connected: HOT-R1 (S-57) is drawn on
           neither board, so it stands FAIL on the file at 59abd6365b94c2d6
+      - >-
+          v2/ecad/tools/gen_sch_e.py re-read with v2/ecad/tools/gen_sch_a.py, v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net
+          and v2/ecad/pcb-a-power-a23/out/pcb-a-power.net after stream w4ae drew HOT-R1 (SC-70, 27 September 2026; the
+          netlists regenerated on the KiCad box with main's chain and compared with main's component by component and
+          net by net, v2/docs/records/w4ae/parity/): the desk acceptance's two parts hold on the committed netlists. (1)
+          The path, read hop by hop by v2/docs/records/w4ae/hot_r1_trace.py on the netlists of boards A, B, C and E and
+          the contracts IF-AE-DOCK, IF-AB-RIBBON, IF-BC-PANEL and IF-AB-POWER (every hop found; on main's netlists at
+          91894cd7 it stops at U10 pin 30, a negative control; v2/docs/records/w4ae/readings/): E U10 pin 30 (GPIO19),
+          the pack gauge's SMBus host, on HOT_R1_G to Q11's gate with R58 to GND; Q11's drain on BLK_SPARE, J_BLK pin
+          12; IF-AE-DOCK pin 12 to A J_DOCK pin 12, DOCK_SPARE, on U27 pin 18 (P15) with R216 to U27's own +3V3; U27 pin
+          1 EXP_INT to J_AB1 pin 13, B J_PANEL pin 6 and C U3 pin 36 (GPIO24), U27's SDA and SCL to C U3 GPIO0 and
+          GPIO1; C U3 pin 30 (GPIO19) PI_KILL through J_PANEL pin 25 and B to A J_AB1 pin 10, Q1's gate (R5 to GND),
+          Q1's drain KILL on the LTC2954 U1 pin 8 (R4 to +3V3), U1 pin 6 RAIL_EN on U12's EN; no compute module part on
+          any board B conductor of the path, U27 on +3V3 (U12, RAIL_EN), the panel controller on +5V_DEV through B's F1
+          (U7, DEV_EN with R42), the sensor controller on CELL_F. (2) The thresholds: 56.5 and 57.0 C in the gauge's
+          reading under its OTD of 57.5 C, and the hottest cell at most 58.57 and 59.07 C (0.06 K more with the stop's
+          own detection as hotstop_bounds.py counts it, 1.2 s; with FW-C14's 3 s held-line rule the detection is about
+          4.2 s, 0.22 K at 3.2 K/min, so the worst H2 cell is 59.29 C with 0.71 K left for the TBD terms, still inside
+          +60 C and still ahead of OTD, and a re-run of hotstop_bounds.py with the 3 s rule is owed to its owner;
+          corrected at integration from the independent check) inside +60 C on the published terms of 2.07 K
+          (v2/docs/records/hc2/hotstop_bounds.out; THERMAL-COORDINATION.md section 3). The FAIL this record read on the
+          generated boards (no path that needs no compute module) is answered; it reads INCONCLUSIVE, not PASS, because
+          FEA-004 holds it (whether the stop acts inside the envelope, open until the heat-balance test), a desk review
+          of the committed netlists (an AI desk review, not a qualified one). The path is firmware in two controllers
+          (the panel's and the sensor controller's HOT-R1 rows of HW-FW-CONTRACT.md as stream w4ae drafts them); whether
+          a firmware-free stage must stand behind it stays S-58, and the prototype acceptance (TEST-PLAN P15 and E3-H)
+          is untouched. It stands INCONCLUSIVE on the file at f846e138cb53a8c6
     evidence_bound_to:
-      - "v2/ecad/tools/gen_sch_e.py@59abd6365b94c2d6"
+      - "v2/ecad/tools/gen_sch_e.py@f846e138cb53a8c6"
+      - "v2/ecad/tools/gen_sch_a.py@9684e7a9606aede6"
+      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
+      - "v2/docs/records/w4ae/hot_r1_trace.py@2350c321fa744293"
     release_effect: BLOCKER
     source:
       - "v2/vendor/battery/samsung-35e-orbtronic.pdf"
@@ -10686,16 +10902,38 @@ records:
           and R50 as the regenerated netlist carries them; section 3's GPIO 26 row names the divider the same netlist
           carries; section 6's other rows and section 7 are byte-identical, so it stands PASS on the file at
           57a56726f9db723a
+      - >-
+          v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net regenerated by stream w4ae on 27 September 2026 (HOT-R1, SC-70;
+          board E's half of S-76, SC-71) on the KiCad box with main's chain (PHASE E42P; main's generator reproduced
+          main's file, PARITY): compared with the file at d6137f50059e5cbc component by component and net by net
+          (v2/docs/records/w3de/net_compare.py against v2/docs/records/w4ae/parity/expected-e-netlist.json, 'ONLY THE
+          EXPECTED CHANGES'), it differs only in Q11 and R58 added, U10 pin 30 moved from no connection to the new net
+          HOT_R1_G, D7 and D8 carrying their order code C51897884, and J_BLK's value; none of the parts or nets this
+          record cites on board E is among the changes, so it stands PASS on the file at 56adc9746d61c4e0
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated by stream w4ae on 27 September 2026 (HOT-R1, SC-70;
+          board E's half of S-76, SC-71) on the KiCad box with main's chain (handover_exports.py regen, PHASE A65;
+          main's generator reproduced main's file, PARITY): compared with the file at da05dc02bc1e612f component by
+          component and net by net (v2/docs/records/w3de/net_compare.py against
+          v2/docs/records/w4ae/parity/expected-a-netlist.json, 'ONLY THE EXPECTED CHANGES'), it differs only in R216
+          added (10 k, DOCK_SPARE to +3V3) and J_DOCK's value; on board A the startup enables, the outlet interlock U30
+          and U26 and the wall data path J_USBW are unchanged, so it stands PASS on the file at 0a2b59087bcc2678
+      - >-
+          v2/docs/PANEL.md re-read by stream w4ae on 27 September 2026 (HOT-R1 drawn on boards A and E, SC-70; board E's
+          flyback sheet, SC-71): two table rows change, section 3's GPIO24 (EXP_INT also carries HOT-R1's edges) and
+          section 7's 0x21 and 0x24 row (U27's P1.5 reads HOT-R1), with the line count kept; every other line is
+          byte-identical to the file at 57a56726f9db723a; sections 1 and 6 are unchanged, and section 7's bus table
+          still carries the supervisors at 0x34 to 0x36, so it stands PASS on the file at 4647782f5aca7c13
     evidence_bound_to:
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
-      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc"
-      - "v2/docs/PANEL.md@57a56726f9db723a"
+      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
+      - "v2/docs/PANEL.md@4647782f5aca7c13"
       - "v2/docs/CONOPS.md@6ebe6760c4312bca"
       - "v2/docs/V2-SPEC.md@a92ea2ef3793a3c9"
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
       - "v2/docs/TEST-PLAN.md@4f15bd02a6a8be46"
       - "v2/ecad/tools/pcb_decisions.yaml@b5f7162443d5ad91"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@3fddbb3edcd4248a"
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
@@ -12260,9 +12498,17 @@ records:
           gone) and U5 pin 37 (GND to TRK_LDO33), every component and every net's pins compared
           (v2/docs/records/w3de/net_compare.py against parity/expected-e-netlist.json); DCF_PULSE still runs from J_DCF
           pin 3 to U10 and nowhere else, so it stands PASS on the file at d6137f50059e5cbc
+      - >-
+          v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net regenerated by stream w4ae on 27 September 2026 (HOT-R1, SC-70;
+          board E's half of S-76, SC-71) on the KiCad box with main's chain (PHASE E42P; main's generator reproduced
+          main's file, PARITY): compared with the file at d6137f50059e5cbc component by component and net by net
+          (v2/docs/records/w3de/net_compare.py against v2/docs/records/w4ae/parity/expected-e-netlist.json, 'ONLY THE
+          EXPECTED CHANGES'), it differs only in Q11 and R58 added, U10 pin 30 moved from no connection to the new net
+          HOT_R1_G, D7 and D8 carrying their order code C51897884, and J_BLK's value; DCF_PULSE still runs from J_DCF
+          pin 3 to U10 and nowhere else, so it stands PASS on the file at 56adc9746d61c4e0
     evidence_bound_to:
       - "v2/docs/V2-SPEC.md@a92ea2ef3793a3c9"
-      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc"
+      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
     release_effect: ADVISORY
     source: ["v2/docs/V2-SPEC.md:35", "v2/ecad/tools/gen_sch_e.py:678"]
     source_check: VERIFIED
@@ -12545,12 +12791,32 @@ records:
           pull-downs (it named a 10k pull-up and the three 100k only), as board C's regenerated netlist at
           3fddbb3edcd4248a carries them; every other line is byte-identical; section 10, which this reading cites, is
           byte-identical, so it stands PASS on the file at 57a56726f9db723a
+      - >-
+          v2/ecad/tools/gen_sch_a.py re-read by stream w4ae on 27 September 2026 (HOT-R1, SC-70; board E's half of S-76,
+          SC-71): R216 and its comment after the expanders' line, J_DOCK's value and R216 in the section list, and
+          nothing else; the lines after R110's line move down by 19 (corrected at integration from the independent
+          check, the stream's note said 18); the generator's charger lines and the strap's lines are unchanged in
+          content, so it stands PASS on the file at 9684e7a9606aede6
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated by stream w4ae on 27 September 2026 (HOT-R1, SC-70;
+          board E's half of S-76, SC-71) on the KiCad box with main's chain (handover_exports.py regen, PHASE A65;
+          main's generator reproduced main's file, PARITY): compared with the file at da05dc02bc1e612f component by
+          component and net by net (v2/docs/records/w3de/net_compare.py against
+          v2/docs/records/w4ae/parity/expected-a-netlist.json, 'ONLY THE EXPECTED CHANGES'), it differs only in R216
+          added (10 k, DOCK_SPARE to +3V3) and J_DOCK's value; the strap R26 and R27 from CH_VDDA, R17 from VBAT to
+          CELL_FUSED and F1 from CELL_FUSED to CELL+ are unchanged, so it stands PASS on the file at 0a2b59087bcc2678
+      - >-
+          v2/docs/PANEL.md re-read by stream w4ae on 27 September 2026 (HOT-R1 drawn on boards A and E, SC-70; board E's
+          flyback sheet, SC-71): two table rows change, section 3's GPIO24 (EXP_INT also carries HOT-R1's edges) and
+          section 7's 0x21 and 0x24 row (U27's P1.5 reads HOT-R1), with the line count kept; every other line is
+          byte-identical to the file at 57a56726f9db723a; section 10 is unchanged, so it stands PASS on the file at
+          4647782f5aca7c13
     evidence_bound_to:
-      - "v2/docs/PANEL.md@57a56726f9db723a"
+      - "v2/docs/PANEL.md@4647782f5aca7c13"
       - "v2/docs/CONOPS.md@6ebe6760c4312bca"
       - "v2/docs/OPERATING-ENVELOPE.md@43361b02743cf3af"
-      - "v2/ecad/tools/gen_sch_a.py@5af29bbcf27bb91a"
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
+      - "v2/ecad/tools/gen_sch_a.py@9684e7a9606aede6"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
       - "v2/docs/review-packets/battery/CHARGER-STATE-SEQUENCE.md@44fdf9a022c49337"
     release_effect: BLOCKER
     source:
@@ -12751,11 +13017,25 @@ records:
           pull-downs (it named a 10k pull-up and the three 100k only), as board C's regenerated netlist at
           3fddbb3edcd4248a carries them; every other line is byte-identical; section 10's SMBus sentences, which this
           reading cites, are byte-identical, so it stands PASS on the file at 57a56726f9db723a
+      - >-
+          v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net regenerated by stream w4ae on 27 September 2026 (HOT-R1, SC-70;
+          board E's half of S-76, SC-71) on the KiCad box with main's chain (PHASE E42P; main's generator reproduced
+          main's file, PARITY): compared with the file at d6137f50059e5cbc component by component and net by net
+          (v2/docs/records/w3de/net_compare.py against v2/docs/records/w4ae/parity/expected-e-netlist.json, 'ONLY THE
+          EXPECTED CHANGES'), it differs only in Q11 and R58 added, U10 pin 30 moved from no connection to the new net
+          HOT_R1_G, D7 and D8 carrying their order code C51897884, and J_BLK's value; J_SMB and its four nets are
+          unchanged, so it stands PASS on the file at 56adc9746d61c4e0
+      - >-
+          v2/docs/PANEL.md re-read by stream w4ae on 27 September 2026 (HOT-R1 drawn on boards A and E, SC-70; board E's
+          flyback sheet, SC-71): two table rows change, section 3's GPIO24 (EXP_INT also carries HOT-R1's edges) and
+          section 7's 0x21 and 0x24 row (U27's P1.5 reads HOT-R1), with the line count kept; every other line is
+          byte-identical to the file at 57a56726f9db723a; section 10 is unchanged, so it stands PASS on the file at
+          4647782f5aca7c13
     evidence_bound_to:
-      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc"
+      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
       - "v2/docs/ASSEMBLY.md@b49f853f450d49ee"
-      - "v2/docs/PANEL.md@57a56726f9db723a"
+      - "v2/docs/PANEL.md@4647782f5aca7c13"
       - "v2/ecad/tools/check_contracts.py@5e14f456a0791c35"
     release_effect: BLOCKER
     source: ["v2/ecad/tools/gen_sch_e.py:264", "v2/docs/ASSEMBLY.md section 4", "v2/docs/PANEL.md section 10"]
@@ -13154,12 +13434,29 @@ records:
           GND; the intent beside it declares three more rails and forty-seven nodes and raises +3V3 to cover EPD_VCC,
           which moves no part (SC-68, S-83); D19 to D21 keep every node and record, and the two parts added are
           resistors, no clamp and no rectifier, so it stands FAIL on the file at 3fddbb3edcd4248a
+      - >-
+          v2/ecad/pcb-a-power-a23/out/pcb-a-power.net regenerated by stream w4ae on 27 September 2026 (HOT-R1, SC-70;
+          board E's half of S-76, SC-71) on the KiCad box with main's chain (handover_exports.py regen, PHASE A65;
+          main's generator reproduced main's file, PARITY): compared with the file at da05dc02bc1e612f component by
+          component and net by net (v2/docs/records/w3de/net_compare.py against
+          v2/docs/records/w4ae/parity/expected-a-netlist.json, 'ONLY THE EXPECTED CHANGES'), it differs only in R216
+          added (10 k, DOCK_SPARE to +3V3) and J_DOCK's value; board A's D1 to D4 are unchanged, so it stands FAIL on
+          the file at 0a2b59087bcc2678
+      - >-
+          v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net regenerated by stream w4ae on 27 September 2026 (HOT-R1, SC-70;
+          board E's half of S-76, SC-71) on the KiCad box with main's chain (PHASE E42P; main's generator reproduced
+          main's file, PARITY): compared with the file at d6137f50059e5cbc component by component and net by net
+          (v2/docs/records/w3de/net_compare.py against v2/docs/records/w4ae/parity/expected-e-netlist.json, 'ONLY THE
+          EXPECTED CHANGES'), it differs only in Q11 and R58 added, U10 pin 30 moved from no connection to the new net
+          HOT_R1_G, D7 and D8 carrying their order code C51897884, and J_BLK's value; board E's D1 to D10 keep their
+          symbols, pins and nets (D7 and D8 gain their order code only, K on CELL_F), so it stands FAIL on the file at
+          56adc9746d61c4e0
     evidence_bound_to:
-      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@da05dc02bc1e612f"
+      - "v2/ecad/pcb-a-power-a23/out/pcb-a-power.net@0a2b59087bcc2678"
       - "v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@028997a6c5e8810f"
       - "v2/ecad/pcb-c-display-c8/out/pcb-c-display.net@3fddbb3edcd4248a"
       - "v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net@76700a687eb6187f"
-      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@d6137f50059e5cbc"
+      - "v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net@56adc9746d61c4e0"
       - "v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net@085f833362fbbda8"
     release_effect: BLOCKER
     source:

@@ -1,0 +1,8 @@
+{"components_added": ["R216"],
+ "components_removed": [],
+ "components_changed": {"J_DOCK": ["value"]},
+ "nets_added": [],
+ "nets_removed": [],
+ "pins_moved": {},
+ "pins_added": {"R216.1": "DOCK_SPARE", "R216.2": "+3V3"},
+ "pins_removed": {}}

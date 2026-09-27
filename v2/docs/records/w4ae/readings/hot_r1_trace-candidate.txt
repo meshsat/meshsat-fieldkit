@@ -1,0 +1,77 @@
+detect (board E)
+  ok   E U10.30 is on HOT_R1_G; the conductor carries Q11.1, R58.1, U10.30
+  ok   U10 pin 30 (GPIO19) drives a net, not a no-connect
+  ok   a transistor's gate (pin 1) on HOT_R1_G: Q11
+  ok   Q11 is a 2N7002 (2N7002 HOT-R1 open drain: GPIO19 high pulls the dock line BLK_SPARE low (1 G, 2 S, 3 D))
+  ok   E Q11.2 is on GND too (the source on ground: an open drain)
+  ok   the gate held off by a resistor to GND: R58 (100k, to GND)
+  ok   E Q11.3 is on BLK_SPARE; the conductor carries J_BLK.12, Q11.3, TP7.1
+  ok   E J_BLK.12 is on BLK_SPARE too (the drain is on the dock's contact 12)
+  ok   board E puts no pull-up on the line (open drain only): none
+dock
+  ok   IF-AE-DOCK pin 12: E J_BLK.12 (BLK_SPARE) mates A J_DOCK.12 (DOCK_SPARE); the contract names DOCK_SPARE
+read (board A)
+  ok   A J_DOCK.12 is on DOCK_SPARE; the conductor carries J_DOCK.12, R216.1, TP21.1, U27.18
+  ok   A U27.18 is on DOCK_SPARE too (U27 P15, an input)
+  ok   U27 is a PCA9555 (PCA9555PW (0x21): enables and status)
+  ok   the line's pull-up goes to U27's own VCC (+3V3): R216 (10k, to +3V3)
+alert: U27's INT to the panel controller
+  ok   A U27.1 is on EXP_INT; the conductor carries J_AB1.13, J_MEZZ1.12, R110.1, U27.1, U28.1
+  ok   A J_AB1.13 is on EXP_INT too (out on the A to B ribbon)
+  ok   IF-AB-RIBBON pin 13: A J_AB1.13 (EXP_INT) mates B J_AB1.13 (EXP_INT); the contract names EXP_INT
+  ok   B J_AB1.13 is on EXP_INT; the conductor carries J_AB1.13, J_PANEL.6, R56.1, U1.94, U10.3, U5.6, U6.1, U7.1, U9.3
+  ok   B J_PANEL.6 is on EXP_INT too (on to the panel ribbon)
+  ok   IF-BC-PANEL pin 6: B J_PANEL.6 (EXP_INT) mates C J_PANEL.6 (EXP_INT); the contract names EXP_INT
+  ok   C J_PANEL.6 is on EXP_INT; the conductor carries J_PANEL.6, TP9.1, U1.1, U2.1, U3.36, U8.3, U8.4
+  ok   C U3.36 is on EXP_INT too (the panel controller's GPIO24)
+bus: the panel controller reads U27
+  ok   A U27.23 is on SDA; the conductor carries J_AB1.11, J_MEZZ1.10, TP17.1, U10.4, U11.4, U14.2, U14.4, U17.4, U27.23, U28.23, U3.12, U8.4, U9.4
+  ok   A J_AB1.11 is on SDA too (U27's SDA on the ribbon)
+  ok   IF-AB-RIBBON pin 11: A J_AB1.11 (SDA) mates B J_AB1.11 (SDA); the contract names SDA
+  ok   B J_PANEL.4 is on SDA too (the same conductor on board B)
+  ok   IF-BC-PANEL pin 4: B J_PANEL.4 (SDA) mates C J_PANEL.4 (SDA); the contract names SDA
+  ok   C U3.2 is on SDA too (the panel controller's GPIO0)
+  ok   A U27.22 is on SCL; the conductor carries J_AB1.12, J_MEZZ1.11, TP18.1, U10.5, U11.5, U14.5, U17.2, U17.5, U27.22, U28.22, U3.13, U8.5, U9.5
+  ok   A J_AB1.12 is on SCL too (U27's SCL on the ribbon)
+  ok   IF-AB-RIBBON pin 12: A J_AB1.12 (SCL) mates B J_AB1.12 (SCL); the contract names SCL
+  ok   B J_PANEL.5 is on SCL too (the same conductor on board B)
+  ok   IF-BC-PANEL pin 5: B J_PANEL.5 (SCL) mates C J_PANEL.5 (SCL); the contract names SCL
+  ok   C U3.3 is on SCL too (the panel controller's GPIO1)
+act: PI_KILL back to board A
+  ok   C U3.30 is on PI_KILL; the conductor carries J_PANEL.25, TP37.1, U3.30
+  ok   the panel controller's GPIO19 is PI_KILL (PI_KILL)
+  ok   C J_PANEL.25 is on PI_KILL too (out on the panel ribbon)
+  ok   IF-BC-PANEL pin 25: C J_PANEL.25 (PI_KILL) mates B J_PANEL.25 (PI_KILL); the contract names PI_KILL
+  ok   B J_PANEL.25 is on PI_KILL; the conductor carries J_AB1.10, J_PANEL.25, Q103.3, Q203.3, Q303.3
+  ok   B J_AB1.10 is on PI_KILL too (on to the A to B ribbon)
+  ok   IF-AB-RIBBON pin 10: B J_AB1.10 (PI_KILL) mates A J_AB1.10 (PI_KILL); the contract names PI_KILL
+  ok   A J_AB1.10 is on PI_KILL; the conductor carries J_AB1.10, Q1.1, R5.1
+  ok   A Q1.1 is on PI_KILL too (Q1's gate)
+  ok   PI_KILL held low on board A: R5 (1k, to GND)
+  ok   A Q1.2 is on GND too (Q1's source)
+  ok   A Q1.3 is on KILL; the conductor carries Q1.3, R4.1, U1.8
+  ok   A U1.8 is on KILL too (the LTC2954's KILL (LTC2954ITS8-1 push-button on))
+  ok   KILL held high: R4 (100k, to +3V3)
+  ok   A U1.6 is on RAIL_EN; the conductor carries R184.1, R2.1, TP16.1, U1.6, U12.2, U39.3
+  ok   A U12.2 is on RAIL_EN too (the +3V3 buck's EN (TPS62933DRLR 3 A buck, 3.3 V l))
+power: no compute module in the path
+  ok   E U10.1 is on +3V3_E6 too (the sensor controller's IOVDD)
+  ok   E U13.5 is on +3V3_E6 too (its LDO's output)
+  ok   E U13.1 is on +5V_E6 too (the LDO's input)
+  ok   E U12.1 is on +5V_E6 too (the AP63205's output (FB))
+  ok   E U12.2 is on CELL_F too (the AP63205's EN on the pack node: on whenever a pack is fitted)
+  ok   A U27.24 is on +3V3 too (U27's VCC)
+  ok   A U12 (the +3V3 buck whose EN is RAIL_EN) is TPS62933DRLR 3 A buck, 3.3 V logic
+  ok   C U3.1 is on +3V3 too (the panel controller's IOVDD)
+  ok   C U5.5 is on +3V3 too (C's LDO output)
+  ok   C J_PANEL.1 is on +5V too (C's LDO input is the panel ribbon's supply)
+  ok   IF-BC-PANEL pin 1: C J_PANEL.1 (+5V) mates B J_PANEL.1 (PANEL_5V); the contract names PANEL_5V
+  ok   B's panel supply PANEL_5V is behind F1 (1.1A hold 1812 (Bourns MF-MSMF110-)
+  ok   B J_5V_DEV.1 is on +5V_DEV too (F1 is fed from B's J_5V_DEV)
+  ok   IF-AB-POWER J_5V_DEV pin 1 (1 = the rail on both ends): A +5V_DEV, B +5V_DEV
+  ok   A U7.12 is on +5V_DEV too (the LM5176 stage U7 makes +5V_DEV)
+  ok   A U7.1 is on DEV_EN; the conductor carries R42.1, U27.11, U7.1
+  ok   A U27.11 is on DEV_EN too (U7's EN is U27 P07)
+  ok   DEV_EN pulled up, so +5V_DEV starts with +3V3: R42 (100k, to +3V3)
+  ok   no compute module part (U30A, U30B, U31A, U31B, U32A, U32B) is on any board B conductor of the path
+RESULT: EVERY HOP FOUND

@@ -629,7 +629,7 @@ r("R16", "10k", "TRK_IMONI", "GND"); r("R17", "10k", "TRK_IMONO", "GND")
 for k in range(1, 3): part("C%d" % (23 + k), "Device", "C_Polarized", "39u 35V Panasonic 35SVPF39M polymer (6.9 mm)", "CPOL8", {"1": "TRK_OUT", "2": "GND"}, "C189474")
 c("C26", "10u 25V", "TRK_OUT", "GND", "C10u50"); c("C27", "10u 25V", "TRK_OUT", "GND", "C10u50")
 ideal_diode("U4", "Q2", "C28", "R18", "TRK_OUT", "VIN_RAW", "GND")   # tracker output ORed into the raw bus that A22's front end regulates
-# --- the block lands (mirror of A22's J_DOCK, 32.57): 1-7 GND (1-4 since EQ-16, below), 8 SHORE_INHIBIT (from A22, into the hot-swap UVLO), 9-10 the controller's USB, 11 GND, 12 spare
+# --- the block lands (mirror of A22's J_DOCK, 32.57): 1-7 GND (1-4 since EQ-16, below), 8 SHORE_INHIBIT (from A22, into the hot-swap UVLO), 9-10 the controller's USB, 11 GND, 12 HOT-R1 (the hot stop line, SC-50, S-57: net BLK_SPARE, driven by Q11 below)
 # EQ-16 / R8E-N01 (board E stream w3de, 27 September 2026, MESHSAT-1357): VIN_RAW LEAVES THE PRECI-DIP 813 SIGNAL BLOCK
 # AND CROSSES THE DOCK ON THE DOCK'S POWER-PIN CLASS, WITH ITS OWN RETURN, AS THE PACK DOES. At the 14.10 A this board
 # declares on VIN_RAW (derived at the rail above) the four 813 contacts carried 3.53 A each with even sharing against the
@@ -657,7 +657,7 @@ ideal_diode("U4", "Q2", "C28", "R18", "TRK_OUT", "VIN_RAW", "GND")   # tracker o
 # IF-AE-DOCK contract, check_contracts.py's dock checks, E5's targets (gen_pcb_e5.py) and this board's placement of the
 # two pads (gen_pcb_e3.py FIXED) are drafted for their owners; until board A's half lands, check_contracts reads the dock
 # map DIFFERENT on pins 1 to 4 (A VIN_RAW, E GND), which is the change in flight and not a defect of either board.
-part("J_BLK", "Connector_Generic", "Conn_01x12", "solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 1-7 GND, 8 SHORE_INHIBIT, 9 USB D+, 10 USB D-, 11 GND, 12 spare (VIN_RAW crosses on P_VR since EQ-16)", "POGO_T6",
+part("J_BLK", "Connector_Generic", "Conn_01x12", "solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 1-7 GND, 8 SHORE_INHIBIT, 9 USB D+, 10 USB D-, 11 GND, 12 HOT-R1 hot stop line, open drain Q11 (SC-50; VIN_RAW crosses on P_VR since EQ-16)", "POGO_T6",
      {"1": "GND", "2": "GND", "3": "GND", "4": "GND", "5": "GND", "6": "GND", "7": "GND", "8": "SHORE_INHIBIT", "9": "USB_E6_P", "10": "USB_E6_N", "11": "GND", "12": "BLK_SPARE"})
 part("P_VR", "Connector", "Conn_01x01_Pin", "solder pad, 12 AWG wire to the block board VIN_RAW targets (board A's four 9 A power pins J_VR1-4, EQ-16)", "PAD86", {"1": "VIN_RAW"})
 part("P_VN", "Connector", "Conn_01x01_Pin", "solder pad, 12 AWG wire to the block board VIN_RAW return targets (board A's four 9 A power pins J_VN1-4, EQ-16)", "PAD86", {"1": "GND"})
@@ -687,13 +687,14 @@ ic("U13", 5, "TLV75533PDBVR 3.3 V LDO", "SOT235", {"1": "+5V_E6", "2": "GND", "3
 #     RUN pull-up, BOOTSEL by a solder jumper on QSPI_SS). GPIO: 2 SMBD 3 SMBC (the pack gauge's SMBus, the RP2040's I2C1), 4 SDA1 5 SCL1 (the sensor bus, the RP2040's
 #     I2C0: BME688, BMI270, SGP41, pod, lightning module), 6 DCF77 pulse, 7 Geiger pulse,
 #     8 and 9 fan PWM, 10 and 11 fan tachometers, 12 input power good, 13 IMU interrupt, 14 lightning interrupt, 15 SHORE_INHIBIT read-back, 16 lid and tamper switch (S-11),
-#     17 pack PRES (S-05), 18 Geiger supply enable (F-BP-02), 25 status LED, 26 water electrodes (ADC0), 27 bus voltage (ADC1), 28 pack voltage (ADC2).
+#     17 pack PRES (S-05), 18 Geiger supply enable (F-BP-02), 19 HOT-R1, the hot stop line to board A (SC-50, S-57; Q11 below), 25 status LED,
+#     26 water electrodes (ADC0), 27 bus voltage (ADC1), 28 pack voltage (ADC2). GPIO19 is QFN-56 pin 30 (RP2040 datasheet 1.4.1, Figure 3, printed p.11).
 #     26 September 2026 (MESHSAT-1357 round 4): the pack pair was written "2 SDA0 3 SCL0 (pack section A)" and "section B" on the sensor bus, the BB-2590/U's two
 #     SMBus sections; the RP2040's own peripheral map (datasheet Table 279) puts GPIO2/3 on I2C1 and GPIO4/5 on I2C0, and the status LED is GPIO25 (pin 37), not 21.
 ic("U10", 57, "RP2040 sensor controller (USB to B16 through the dock)", "QFN56", {
  "1": "+3V3_E6", "2": "NC", "3": "NC", "4": "SMBD", "5": "SMBC", "6": "SDA1", "7": "SCL1", "8": "DCF_PULSE", "9": "GEIGER_IN", "10": "+3V3_E6", "11": "FAN1_PWM", "12": "FAN2_PWM", "13": "FAN1_TACH", "14": "FAN2_TACH",
  "15": "DCIN_PGD", "16": "IMU_INT1", "17": "LTG_IRQ", "18": "SHORE_INHIBIT", "19": "GND", "20": "XIN", "21": "XOUT_R", "22": "+3V3_E6", "23": "E6_DVDD", "24": "SWCLK", "25": "SWDIO", "26": "E6_RUN",
- "27": "TAMPER_IO", "28": "PRES_IO", "29": "GEIGER_EN", "30": "NC", "31": "NC", "32": "NC", "33": "+3V3_E6", "34": "NC", "35": "NC", "36": "NC", "37": "LED_STAT", "38": "WATER_SENSE", "39": "VIN_MON", "40": "CELL_MON", "41": "NC",
+ "27": "TAMPER_IO", "28": "PRES_IO", "29": "GEIGER_EN", "30": "HOT_R1_G", "31": "NC", "32": "NC", "33": "+3V3_E6", "34": "NC", "35": "NC", "36": "NC", "37": "LED_STAT", "38": "WATER_SENSE", "39": "VIN_MON", "40": "CELL_MON", "41": "NC",
  "42": "+3V3_E6", "43": "+3V3_E6", "44": "+3V3_E6", "45": "E6_DVDD", "46": "USB_DM_R", "47": "USB_DP_R", "48": "+3V3_E6", "49": "+3V3_E6", "50": "E6_DVDD", "51": "QSPI_D3", "52": "QSPI_SCLK", "53": "QSPI_D0",
  "54": "QSPI_D2", "55": "QSPI_D1", "56": "QSPI_SS", "57": "GND"}, "C2040")
 ic("U11", 9, "W25Q16JVUXIQ 16 Mbit QSPI flash (USON-8: 1 CS 2 DO/IO1 3 WP/IO2 4 GND 5 DI/IO0 6 CLK 7 HOLD/IO3 8 VCC, pad)", "USON8", {"1": "QSPI_SS", "2": "QSPI_D1", "3": "QSPI_D2", "4": "GND", "5": "QSPI_D0", "6": "QSPI_SCLK", "7": "QSPI_D3", "8": "+3V3_E6", "9": "GND"}, "C2843335")
@@ -739,6 +740,43 @@ r("R33", "1k", "LED_STAT", "LED_STAT_A"); part("LED2", "Device", "LED", "status 
 r("R34", "4.7k", "SMBD", "+3V3_E6"); r("R35", "4.7k", "SMBC", "+3V3_E6"); r("R36", "4.7k", "SDA1", "+3V3_E6"); r("R37", "4.7k", "SCL1", "+3V3_E6")
 # S-05, 26 September 2026: the pack's PRES pin from J_SMB.4 to GPIO17 (the reasoning and the thresholds are at J_SMB above)
 r("R54", "1k", "PRES_LEAD", "PRES_IO", "R", "C21190"); r("R55", "1M", "PRES_IO", "+3V3_E6", "R", "C22935")
+# HOT-R1, THE HOT STOP'S LINE (S-57, SC-50, REQ-077; board A and E stream w4ae, 27 September 2026, MESHSAT-1357). This
+# controller is the pack gauge's only SMBus host (J_SMB, GPIO2/3), so it is the only part that reads the cells' own
+# temperature, and the part that acts on it (the panel controller on board C: the slot enables, the switched loads and
+# PI_KILL) reached it only over USB through a running compute module's hub, which the heat stage as generated does not
+# have and which the stop's own first step removes (SC-50's why). The line is the dock's spare contact, which already ran
+# from J_BLK pin 12 through the block board E5 to board A's J_DOCK pin 12 and on to the expander input U27 P15 (pin 18),
+# whose INT is the panel controller's EXP_INT; only its driver was missing. GPIO19 (pin 30, free until now) drives Q11's
+# gate, and Q11 pulls BLK_SPARE low: an open drain, so this board never drives the line high and never back-powers board A
+# (board A holds it up with R216, 10 k to its own +3V3). R58 holds the gate low while this controller is unpowered, in
+# reset or booting (its pads also reset with the pull-down enabled, PADS_BANK0 GPIOx register bit 2 PDE, reset 0x1, RP2040
+# datasheet 2.19.6.3), so a lost controller reads as the released line. THE FOUR LINE STATES (SC-50; the firmware contracts are the
+# sensor controller's and the panel controller's): toggled at 1 Hz after each fresh reading of all four cells, below H1;
+# toggled at 5 Hz, H1 (+56.5 C in two readings); held low, H2 (+57.0 C in two readings with H1 acting), and so is a line
+# shorted to ground, which stops the kit; held high, the sensor controller lost, and the panel controller applies SC-49's
+# fallback on board B's TMP117. Every edge sets U27's interrupt ("An interrupt is generated by any rising or falling edge of the port inputs
+# in the input mode", TI PCA9555 SCPS131J 8.4.1), so a live line is two EXP_INT edges a second and a dead one none.
+# THE PARTS AND THEIR MARGINS, from the held sheets. Q11 is the 2N7002 this board already fits three times (Q8 to Q10;
+# JSCJ 2N7002, LCSC C8545 through lcsc_fill.py, v2/vendor/power/jscj-2n7002-c8545.pdf): VDS 60 V, VGS +-20 V, Vth(GS) 1.0 /
+# 1.6 / 2.5 V at 250 uA (VDS = VGS), IDSS 80 nA maximum at 60 V; the sheet states RDS(on) only at 5 and 10 V. The gate sees
+# +3V3_E6 through the pad: VOH is at least 2.62 V at the pad's rated 2 to 12 mA (RP2040 datasheet 5.5.3, Table 625, IOVDD
+# 3.3 V), and here the pad sources only R58's 33 uA, so the gate sits at about IOVDD, more than 0.7 V above the sheet's
+# worst threshold. Q11 must sink board A's R216 (3.3 V over 10 k, 0.33 mA) plus the expander's own pull-up (IIL at most
+# 100 uA, SCPS131J 6.5), 0.43 mA, and hold the line under the expander's VIL of 0.3 x VCC, 0.99 V (SCPS131J 6.3). The
+# sheet's typical output curve at VGS 3 V (p.3) passes about 150 mA and is a few ohms near the origin, so the low is a
+# few millivolts; a part at the worst threshold (0.9 V above typical) sees the drive a typical part sees at about 2.4 V,
+# where the typical transfer curve (p.3) still passes tens of milliamps. No sheet states the low at a 3.3 V gate, so it is
+# INFERRED from the typical curves shifted to the worst threshold, and E3-H measures it. Released, IDSS 80 nA
+# through 10 k moves the line by under 1 mV against VIH 0.7 x VCC, 2.31 V. A controller that hangs with GPIO19 high holds
+# the line low until its hardware watchdog resets it (FW-E09) and the pads release it, so the panel controller reads held
+# low as H2 only once it has lasted longer than that watchdog (the firmware contracts). R58 is the 100 k this board
+# already buys (C25803). No part number is new to this board and no contact is added.
+# Session decision under the owner's standing rule of 26 September 2026 (SC-50 as taken; the drawing choices, R58 and R216's
+# values and keeping the net names, are in v2/docs/records/w4ae); reverse by a hardware stage that makes a step redundant
+# (S-58) or by a USB-only path, which leaves the heat stage without the stop (SC-50's reversal).
+part("Q11", "Transistor_FET", "2N7002", "2N7002 HOT-R1 open drain: GPIO19 high pulls the dock line BLK_SPARE low (1 G, 2 S, 3 D)", "SOT23",
+     {"1": "HOT_R1_G", "2": "GND", "3": "BLK_SPARE"})
+r("R58", "100k", "HOT_R1_G", "GND", "R", "C25803")   # HOT-R1: Q11's gate held off while the controller is unpowered, in reset or booting
 # S-11 / D-02b / D-03.2, 26 September 2026 (MESHSAT-1357 round 4): THE LID AND TAMPER SWITCH. Appendix 32.50 item 6
 # approved "one sealed switch under the frame" and the E6 floor plan (32.51 item 4) put its input on this board; no
 # generator ever drew it (W1-F04, W5-F11). The owner's D-02b makes the lid state the reduced mode's trigger and
@@ -822,7 +860,33 @@ for n in ("1", "2"):
     ph("J_FAN%s" % n, 3, "mixer fan %s under the plate (12 V class fan on the pack node, low-side PWM, tachometer)" % n, {"1": "CELL_F", "2": "FAN%s_SW" % n, "3": "FAN%s_TACH" % n})
     part("Q%s" % ("9" if n == "1" else "10"), "Transistor_FET", "2N7002", "2N7002 fan %s low-side switch (1 G, 2 S, 3 D)" % n, "SOT23", {"1": "FAN%s_G" % n, "2": "GND", "3": "FAN%s_SW" % n})
     r("R%s" % ("44" if n == "1" else "45"), "100R", "FAN%s_PWM" % n, "FAN%s_G" % n); r("R%s" % ("46" if n == "1" else "47"), "10k", "FAN%s_TACH" % n, "+3V3_E6")
-    part("D%s" % ("7" if n == "1" else "8"), "Device", "D_Schottky", "SS14 flyback across fan %s" % n, "SMB", {"1": "CELL_F", "2": "FAN%s_SW" % n})
+    part("D%s" % ("7" if n == "1" else "8"), "Device", "D_Schottky", "SS14 flyback across fan %s" % n, "SMB", {"1": "CELL_F", "2": "FAN%s_SW" % n}, "C51897884")
+# S-76, PWR-001 ON THIS BOARD (stream w4ae, 27 September 2026, MESHSAT-1357): THE FLYBACK DIODES' SHEET IS FILED AND THE TWO
+# SWITCHED RETURNS ARE NODES. PWR-001 left FAN1_SW and FAN2_SW UNDECIDED (each carries the mark of a supply: D7 or D8 joins it
+# to CELL_F and Q9 or Q10 sinks it to ground) because no sheet for D7 and D8 was held (SC-57). Their order code, which
+# lcsc_fill.py already filled, is now in the part call above: LCSC C51897884 resolves to "SS14 | Zhengxin | SMB(DO-214AA)"
+# (JLCPCB parts API, 27 September 2026; LCSC's own product API holds no record of it), and the maker's sheet as JLCPCB
+# serves it is filed at v2/vendor/zhengxin/zhengxin-ss12-ss120-c51897884.pdf ("SS12 THRU SS120 Surface Mount Schottky
+# Rectifier", footer ZHENGXINSEMICONDUCTORS): package DO-214AA (SMB), the land this generator already names; "Polarity:
+# Cathode line denotes the cathode end" (p.1), and pin 1 of Device:D_Schottky is K, on CELL_F; SS14 VRRM 40 V, IO 1.0 A,
+# IFSM 50 A, Tj -55 to +125 C (Maximum Ratings, p.1); VF at most 0.55 V at IFM 2.0 A, Ta 25 C (Electrical
+# Characteristics, p.1); FIG3 (p.2) reads about 0.37 V typical at 0.1 A. Each net is the fan's switched low side: 0 V with
+# its FET on, and at turn-off the fan's own inductance drives it up until D7 or D8 conducts the fan's current back into
+# CELL_F, so its peak is CELL_F's 16.8 V (4S termination) plus one forward drop. Declared at 16.8 + 0.55 V: the maker's
+# maximum at 2.0 A, twenty times the 0.1 A each fan is declared at (CELL_F's loads above). The sheet publishes no cold
+# forward curve; a Schottky's drop rises as it cools, and the 0.18 V between FIG3's typical 0.37 V at the fan's current and
+# the 0.55 V maximum at twenty times it is what is left for that; no conclusion rests on it, because every part on either
+# net is rated far above it (D7 and D8 VRRM 40 V; Q9 and Q10 VDS 60 V, JSCJ 2N7002; the fan header). A node and not a rail:
+# the net supplies no part's supply pin, it is a load's return. Session decision under the owner's standing rule of 26
+# September 2026 (S-76's recipe, SC-57's kind); reverse by a fan whose current exceeds 2.0 A (none of the 40 mm class
+# does) or by a diode with a cold forward curve that exceeds the margin, and the part by the onsemi MBRS140T3G (SMB,
+# 40 V, 1 A, 0.6 V at 1.0 A, a maximum curve from -55 to +125 C; LCSC C133091), the documented alternative on the same land.
+for n in ("1", "2"):
+    _intent.node("FAN%s_SW" % n, 16.8 + 0.55, "mixer fan %s's switched low side (J_FAN%s pin 2, Q%s's drain): 0 V with the FET "
+                 "on, and at turn-off CELL_F's 16.8 V plus D%s's forward drop, at most 0.55 V at 2.0 A (Zhengxin SS14, "
+                 "SS12 THRU SS120 Electrical Characteristics, p.1; LCSC C51897884; v2/vendor/zhengxin/"
+                 "zhengxin-ss12-ss120-c51897884.pdf), twenty times the fan's declared 0.1 A"
+                 % (n, n, "9" if n == "1" else "10", "7" if n == "1" else "8"))
 # F-BP-02, 26 September 2026: the Geiger header takes its 5 V from the load switch U16 (declared at +5V_GEIGER above).
 # kisch.tps22810 is the same pin map boards B and D use (6 VIN, 5 EN, 1 VOUT, 2 QOD open, 3 CT, 4 GND, 7 pad GND).
 kisch.tps22810("U16", "+5V_E6", "GEIGER_EN", "+5V_GEIGER", "GEIGER_CT")
@@ -861,7 +925,7 @@ SECTIONS = [("PACK ENTRY: PACK CABLE ON XT60, 25 A BLADE, PADS TO THE BLOCK, PAC
             ("VEHICLE AND SHORE ENTRY 9-36 V: F1, LM74700 IDEAL DIODE, LM5069 HOT-SWAP, SRF1260 FILTER, CLAMPS", ["J_DCIN", "F1", "U3", "Q1", "C4", "R1", "D1", "C2", "U6", "R19", "Q7", "R20", "R21", "R22", "R23", "C5", "R24", "R25", "Q8", "R26", "L2", "D10", "C6", "C7", "C8", "D2", "R27", "LED1"]),
             ("PANEL TRACKER: J_SOLAR, F2, LT8705A BUCK-BOOST (FBIN 17.6 V, FBOUT 15.1 V, 202 kHz), ORed INTO THE RAW BUS", ["J_SOLAR", "F2", "D4", "C11", "C12", "C13", "C14", "C15", "U5", "Q3", "Q4", "Q5", "Q6", "L1", "R5", "R6", "R7", "C16", "C17", "C18", "D5", "D6", "C19", "C20", "C63", "C64", "R8", "R9", "R10", "R11", "R12", "R13", "C21", "C22", "C23", "R14", "R15", "R16", "R17", "C24", "C25", "C26", "C27", "U4", "Q2", "C28", "R18"]),
             ("BLOCK LANDS (MIRROR OF A22 J_DOCK) AND THE VIN_RAW POWER PADS (EQ-16)", ["J_BLK", "P_VR", "P_VN"]),
-            ("SENSOR CONTROLLER: 5 V BUCK, 3.3 V LDO, RP2040, QSPI FLASH, CRYSTAL, USB, BOOTSEL, PULL-UPS", ["U12", "L3", "C30", "C31", "C32", "C33", "U13", "C34", "C35", "U10", "U11", "Y1", "C36", "C37", "R28", "R29", "R30", "R31", "R32", "JP1"] + ["C%d" % k for k in range(38, 48)] + ["C59", "C60", "C61"] + ["TP10", "TP11", "TP12", "R33", "LED2", "R34", "R35", "R36", "R37", "R54", "R55"]),
+            ("SENSOR CONTROLLER: 5 V BUCK, 3.3 V LDO, RP2040, QSPI FLASH, CRYSTAL, USB, BOOTSEL, PULL-UPS, HOT-R1 OPEN DRAIN", ["U12", "L3", "C30", "C31", "C32", "C33", "U13", "C34", "C35", "U10", "U11", "Y1", "C36", "C37", "R28", "R29", "R30", "R31", "R32", "JP1"] + ["C%d" % k for k in range(38, 48)] + ["C59", "C60", "C61"] + ["TP10", "TP11", "TP12", "R33", "LED2", "R34", "R35", "R36", "R37", "R54", "R55", "Q11", "R58"]),
             ("SENSORS, WATER ELECTRODES, MONITORS, FANS, HEADERS, LID SWITCH, GEIGER SUPPLY", ["U14", "C48", "C62", "U15", "R51", "C49", "C50", "U17", "R57", "C57", "C58", "J_TAMP", "R52", "R53", "C52", "PAD_W1", "R38", "PAD_W2", "R39", "C51", "R40", "R41", "R42", "R43", "D9", "J_FAN1", "Q9", "R44", "R46", "D7", "J_FAN2", "Q10", "R45", "R47", "D8", "U16", "R56", "C53", "C54", "C55", "C56", "J_GEIGER", "J_DCF", "J_LTG", "J_POD", "R48", "TP13", "R49", "R50"]),
             ("TEST POINTS, FLAGS", ["TP%d" % k for k in range(1, 10)] + ["#FLG%02d" % k for k in range(1, 18)])]
 _listed = {r for _, refs in SECTIONS for r in refs}

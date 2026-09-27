@@ -1,0 +1,40 @@
+{
+ "kind": "bom",
+ "rows": [
+  195,
+  195
+ ],
+ "rows_only_committed": [
+  [
+   "J_DOCK?",
+   "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare (VIN_RAW crosses on J_VR1-4 since EQ-16)",
+   "meshsat:PogoPins_2x6",
+   "",
+   "1"
+  ],
+  [
+   "R3,R22,R23,R25,R44,R91,R95,R99,R110,R117,R142,R187,R210",
+   "10k",
+   "Resistor_SMD:R_0603_1608Metric",
+   "",
+   "13"
+  ]
+ ],
+ "rows_only_other": [
+  [
+   "J_DOCK?",
+   "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 HOT-R1 hot stop line from E's open drain, pulled up by R216 (SC-50; VIN_RAW crosses on J_VR1-4 since EQ-16)",
+   "meshsat:PogoPins_2x6",
+   "",
+   "1"
+  ],
+  [
+   "R3,R22,R23,R25,R44,R91,R95,R99,R110,R117,R142,R187,R210,R216",
+   "10k",
+   "Resistor_SMD:R_0603_1608Metric",
+   "",
+   "14"
+  ]
+ ],
+ "result": "DIFFERENT"
+}

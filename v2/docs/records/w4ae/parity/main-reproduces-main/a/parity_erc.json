@@ -1,0 +1,20 @@
+{
+ "kind": "erc",
+ "violations": [
+  1522,
+  1522
+ ],
+ "by_type": [
+  {
+   "warning:endpoint_off_grid": 458,
+   "warning:lib_symbol_issues": 931,
+   "warning:unconnected_wire_endpoint": 133
+  },
+  {
+   "warning:endpoint_off_grid": 458,
+   "warning:lib_symbol_issues": 931,
+   "warning:unconnected_wire_endpoint": 133
+  }
+ ],
+ "result": "PARITY_AFTER_NOISE"
+}

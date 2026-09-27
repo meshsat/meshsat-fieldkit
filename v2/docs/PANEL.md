@@ -99,7 +99,7 @@ Hardware record: `MESHSAT-709-geometry-appendix.md` sections 32.52 (fabric), 32.
 | 21 | EMCON_RD_R | read back of the hardware EMCON line, one way: `U13` buffers `EMCON_HW` and `R46` (1k) joins its output to the pin, so setting the pin as an output cannot reach the line (since round 8 of MESHSAT-1357) |
 | 22 | ZEROIZE_SW | the ZEROIZE toggle, local to this board (10k pull-up, 10 nF); `U12` copies it onto `ZEROIZE_HW` for the other boards (since `faf8c981`) |
 | 23 | TR_APRS | read back of D8's KEY line (the TX lamp state) |
-| 24 | EXP_INT | the expanders' interrupt, active low |
+| 24 | EXP_INT | the expanders' interrupt, active low; it also carries the edges of the hot stop line HOT-R1, which A22's `U27` reads on P1.5 (`HW-FW-CONTRACT.md` FW-C14; SC-70, stream w4ae) |
 | 25 | LED_STAT | the controller's own status LED `D18` (on the board, not on the face) |
 | 26 (ADC0) | RAIL_SENSE | `LED_RAIL_SW` through the `R15`/`R51` 10k/10k divider (W4C-F1, 27 September 2026: through `R15` alone the pin sat above IOVDD, RP2040 datasheet 2.9.5): about 2.5 V (2.65 V at most) while the LED rail is present, 0 V at BLACKOUT; the pin is an ADC input (IE low, OD high); the rail is present above 1.25 V |
 | 27 | TEST_SW | TEST / ACK button, pressed = low (10k pull-up, 10 nF) |
@@ -164,7 +164,7 @@ The controller owns three lines per slot: `HBn` in, `SLOT_ENn` out, and the disp
 |---|---|---|
 | 0x10 | VEML7700 ambient light | C7 |
 | 0x20, 0x25 | PCA9555 `U6` (outputs: switch reset, rail enables, the module radio off requests into the open drains `U{s}14`, 5G control) and `U7` (inputs: faults, RockBLOCK status) | B16 |
-| 0x21, 0x24 | PCA9555 `U27` (outputs: the charge inhibit, the monitor, heater, D8 and device-rail enables, the PoE, PA and HF software enables; inputs: faults and status) and `U28` (power-good lines, the USB-C outlet's software enable, the Glenair host port's VBUS switch and its fault, the EMCON gates' supply fault `EMCON_EF_FLT` on P1.2, low when U39 has cut it on a +3V3 overvoltage, spares) | A22 |
+| 0x21, 0x24 | PCA9555 `U27` (outputs: the charge inhibit, the monitor, heater, D8 and device-rail enables, the PoE, PA and HF software enables; inputs: faults and status, and on P1.5 the hot stop line HOT-R1 from board E, pulled up by `R216`) and `U28` (power-good lines, the USB-C outlet's software enable, the Glenair host port's VBUS switch and its fault, the EMCON gates' supply fault `EMCON_EF_FLT` on P1.2, low when U39 has cut it on a +3V3 overvoltage, spares) | A22 |
 | 0x22, 0x23 | PCA9555 panel expanders (section 4) | C7 |
 | 0x26 | PCA9555 (relay, PA and PTT status, mode inputs) | D8 |
 | 0x28 | TPS23861 PoE PSE controller `U5`, at its factory address with its A3 pin open (pulled up inside the part); every TPS23861 also answers the broadcast address 0x30 (TI SLUSBX9I, sections 7.3.13 and 8.3.3.1) | B16 |

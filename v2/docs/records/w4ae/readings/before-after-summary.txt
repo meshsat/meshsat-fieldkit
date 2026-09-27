@@ -1,0 +1,76 @@
+pcb-a-power-a23 check_contracts.verdict.json       PASS         -> PASS         den 99 -> 99 
+pcb-a-power-a23 check_contracts_a.verdict.json     PASS         -> PASS         den 34 -> 34 
+pcb-a-power-a23 check_contracts_b.verdict.json     PASS         -> PASS         den 60 -> 60 
+pcb-a-power-a23 check_contracts_c.verdict.json     PASS         -> PASS         den 7 -> 7 
+pcb-a-power-a23 check_contracts_d.verdict.json     PASS         -> PASS         den 11 -> 11 
+pcb-a-power-a23 check_contracts_e.verdict.json     PASS         -> PASS         den 14 -> 14 
+pcb-a-power-a23 check_contracts_p.verdict.json     PASS         -> PASS         den 9 -> 9 
+pcb-a-power-a23 clock_check.verdict.json           INCONCLUSIVE -> INCONCLUSIVE den 0 -> 0 
+pcb-a-power-a23 derate.verdict.json                PASS         -> PASS         den 268 -> 268 
+pcb-a-power-a23 edge_length.verdict.json           INCONCLUSIVE -> INCONCLUSIVE den 290 -> 290 {'classes': (63, 64)}
+pcb-a-power-a23 energy_chain.verdict.json          PASS         -> PASS         den 98 -> 98 
+pcb-a-power-a23 energy_chain_a.verdict.json        PASS         -> PASS         den 4 -> 4 
+pcb-a-power-a23 energy_chain_b.verdict.json        PASS         -> PASS         den 3 -> 3 
+pcb-a-power-a23 energy_chain_e.verdict.json        PASS         -> PASS         den 3 -> 3 
+pcb-a-power-a23 energy_chain_e5.verdict.json       PASS         -> PASS         den 1 -> 1 
+pcb-a-power-a23 energy_chain_p.verdict.json        PASS         -> PASS         den 3 -> 3 
+pcb-a-power-a23 erc_gate.verdict.json              PASS         -> PASS         den 1554 -> 1556 {'violations': (1554, 1556)}
+pcb-a-power-a23 inhibit_chain_a.verdict.json       FAIL         -> FAIL         den 9 -> 9 
+pcb-a-power-a23 inhibit_chain_b.verdict.json       FAIL         -> FAIL         den 20 -> 20 
+pcb-a-power-a23 inhibit_chain_c.verdict.json       FAIL         -> FAIL         den 6 -> 6 
+pcb-a-power-a23 inhibit_chain_d.verdict.json       FAIL         -> FAIL         den 8 -> 8 
+pcb-a-power-a23 inhibit_chain_e.verdict.json       PASS         -> PASS         den 1 -> 1 
+pcb-a-power-a23 inhibit_chain_p.verdict.json       PASS         -> PASS         den 1 -> 1 
+pcb-a-power-a23 intent_rails.verdict.json          PASS         -> PASS         den 35 -> 35 
+pcb-a-power-a23 interfaces.verdict.json            PASS         -> PASS         den 12 -> 12 
+pcb-a-power-a23 interfaces_a.verdict.json          PASS         -> PASS         den 1 -> 1 
+pcb-a-power-a23 interfaces_b.verdict.json          PASS         -> PASS         den 7 -> 7 
+pcb-a-power-a23 interfaces_c.verdict.json          PASS         -> PASS         den 1 -> 1 
+pcb-a-power-a23 interfaces_d.verdict.json          PASS         -> PASS         den 1 -> 1 
+pcb-a-power-a23 interfaces_e.verdict.json          PASS         -> PASS         den 1 -> 1 
+pcb-a-power-a23 interfaces_e5.verdict.json         PASS         -> PASS         den 0 -> 0 
+pcb-a-power-a23 interfaces_p.verdict.json          PASS         -> PASS         den 1 -> 1 
+pcb-a-power-a23 pin_map_lands_a.verdict.json       PASS         -> PASS         den 611 -> 612 {'judged': (611, 612)}
+pcb-a-power-a23 port_protect.verdict.json          PASS         -> PASS         den 26 -> 26 
+pcb-a-power-a23 port_protect_a.verdict.json        PASS         -> PASS         den 26 -> 26 
+pcb-a-power-a23 power_sequence.verdict.json        PASS         -> PASS         den 34 -> 34 
+pcb-a-power-a23 safe_lines.verdict.json            PASS         -> PASS         den 6 -> 7 {'on_netlist': (6, 7), 'listened': (4, 5), 'lines': (6, 7)}
+pcb-a-power-a23 safe_lines_a.verdict.json          PASS         -> PASS         den 6 -> 7 {'on_netlist': (6, 7), 'listened': (4, 5), 'lines': (6, 7)}
+pcb-e1-dock-e7 check_contracts.verdict.json       PASS         -> PASS         den 99 -> 99 
+pcb-e1-dock-e7 check_contracts_a.verdict.json     PASS         -> PASS         den 34 -> 34 
+pcb-e1-dock-e7 check_contracts_b.verdict.json     PASS         -> PASS         den 60 -> 60 
+pcb-e1-dock-e7 check_contracts_c.verdict.json     PASS         -> PASS         den 7 -> 7 
+pcb-e1-dock-e7 check_contracts_d.verdict.json     PASS         -> PASS         den 11 -> 11 
+pcb-e1-dock-e7 check_contracts_e.verdict.json     PASS         -> PASS         den 14 -> 14 
+pcb-e1-dock-e7 check_contracts_p.verdict.json     PASS         -> PASS         den 9 -> 9 
+pcb-e1-dock-e7 clock_check.verdict.json           PASS         -> PASS         den 1 -> 1 
+pcb-e1-dock-e7 derate.verdict.json                PASS         -> PASS         den 53 -> 53 
+pcb-e1-dock-e7 edge_length.verdict.json           INCONCLUSIVE -> INCONCLUSIVE den 82 -> 83 {'signal_nets': (82, 83), 'low_speed_nets': (41, 42), 'classes': (49, 50)}
+pcb-e1-dock-e7 energy_chain.verdict.json          PASS         -> PASS         den 98 -> 98 
+pcb-e1-dock-e7 energy_chain_a.verdict.json        PASS         -> PASS         den 4 -> 4 
+pcb-e1-dock-e7 energy_chain_b.verdict.json        PASS         -> PASS         den 3 -> 3 
+pcb-e1-dock-e7 energy_chain_e.verdict.json        PASS         -> PASS         den 3 -> 3 
+pcb-e1-dock-e7 energy_chain_e5.verdict.json       PASS         -> PASS         den 1 -> 1 
+pcb-e1-dock-e7 energy_chain_p.verdict.json        PASS         -> PASS         den 3 -> 3 
+pcb-e1-dock-e7 erc_gate.verdict.json              PASS         -> PASS         den 375 -> 378 {'violations': (375, 378)}
+pcb-e1-dock-e7 inhibit_chain_a.verdict.json       FAIL         -> FAIL         den 9 -> 9 
+pcb-e1-dock-e7 inhibit_chain_b.verdict.json       FAIL         -> FAIL         den 20 -> 20 
+pcb-e1-dock-e7 inhibit_chain_c.verdict.json       FAIL         -> FAIL         den 6 -> 6 
+pcb-e1-dock-e7 inhibit_chain_d.verdict.json       FAIL         -> FAIL         den 8 -> 8 
+pcb-e1-dock-e7 inhibit_chain_e.verdict.json       PASS         -> PASS         den 1 -> 1 
+pcb-e1-dock-e7 inhibit_chain_p.verdict.json       PASS         -> PASS         den 1 -> 1 
+pcb-e1-dock-e7 intent_rails.verdict.json          INCONCLUSIVE -> PASS         den 16 -> 16 {'undecided': (2, 0), 'unmarked': (59, 60)}
+pcb-e1-dock-e7 interfaces.verdict.json            PASS         -> PASS         den 12 -> 12 
+pcb-e1-dock-e7 interfaces_a.verdict.json          PASS         -> PASS         den 1 -> 1 
+pcb-e1-dock-e7 interfaces_b.verdict.json          PASS         -> PASS         den 7 -> 7 
+pcb-e1-dock-e7 interfaces_c.verdict.json          PASS         -> PASS         den 1 -> 1 
+pcb-e1-dock-e7 interfaces_d.verdict.json          PASS         -> PASS         den 1 -> 1 
+pcb-e1-dock-e7 interfaces_e.verdict.json          PASS         -> PASS         den 1 -> 1 
+pcb-e1-dock-e7 interfaces_e5.verdict.json         PASS         -> PASS         den 0 -> 0 
+pcb-e1-dock-e7 interfaces_p.verdict.json          PASS         -> PASS         den 1 -> 1 
+pcb-e1-dock-e7 pin_map_lands_e.verdict.json       PASS         -> PASS         den 187 -> 189 {'judged': (187, 189)}
+pcb-e1-dock-e7 port_protect.verdict.json          PASS         -> PASS         den 13 -> 13 
+pcb-e1-dock-e7 port_protect_e.verdict.json        PASS         -> PASS         den 13 -> 13 
+pcb-e1-dock-e7 power_sequence.verdict.json        PASS         -> PASS         den 15 -> 15 
+pcb-e1-dock-e7 safe_lines.verdict.json            PASS         -> PASS         den 1 -> 2 {'on_netlist': (1, 2), 'lines': (1, 2)}
+pcb-e1-dock-e7 safe_lines_e.verdict.json          PASS         -> PASS         den 1 -> 2 {'on_netlist': (1, 2), 'lines': (1, 2)}

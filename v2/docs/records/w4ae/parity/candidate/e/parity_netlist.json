@@ -1,0 +1,226 @@
+{
+ "kind": "netlist",
+ "phase_labels": [
+  [
+   "E42P"
+  ],
+  [
+   "E42P"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  },
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  }
+ ],
+ "design_header": [
+  [
+   "/root/w3de/final/v2/ecad/pcb-e1-dock-e7/pcb-e1-dock.kicad_sch",
+   "2026-09-27T10:43:17+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ],
+  [
+   "/root/w4ae/cand/v2/ecad/pcb-e1-dock-e7/pcb-e1-dock.kicad_sch",
+   "2026-09-27T14:51:44+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ]
+ ],
+ "content_hash": [
+  "b8d237f0b8d759f5",
+  "dc06b84a39724641"
+ ],
+ "counts": {
+  "comps": [
+   187,
+   189
+  ],
+  "nets": [
+   124,
+   124
+  ]
+ },
+ "comps_only_committed": [],
+ "comps_only_other": [
+  "Q11",
+  "R58"
+ ],
+ "comps_changed": [
+  [
+   "D7",
+   {
+    "fields": [
+     {
+      "Footprint": "Diode_SMD:D_SMB"
+     },
+     {
+      "LCSC": "C51897884",
+      "Footprint": "Diode_SMD:D_SMB"
+     }
+    ],
+    "properties": [
+     {
+      "Sheetname": "",
+      "Sheetfile": "pcb-e1-dock.kicad_sch",
+      "ki_keywords": "diode Schottky",
+      "ki_fp_filters": "TO-???* *_Diode_* *SingleDiode* D_*"
+     },
+     {
+      "LCSC": "C51897884",
+      "Sheetname": "",
+      "Sheetfile": "pcb-e1-dock.kicad_sch",
+      "ki_keywords": "diode Schottky",
+      "ki_fp_filters": "TO-???* *_Diode_* *SingleDiode* D_*"
+     }
+    ]
+   }
+  ],
+  [
+   "D8",
+   {
+    "fields": [
+     {
+      "Footprint": "Diode_SMD:D_SMB"
+     },
+     {
+      "LCSC": "C51897884",
+      "Footprint": "Diode_SMD:D_SMB"
+     }
+    ],
+    "properties": [
+     {
+      "Sheetname": "",
+      "Sheetfile": "pcb-e1-dock.kicad_sch",
+      "ki_keywords": "diode Schottky",
+      "ki_fp_filters": "TO-???* *_Diode_* *SingleDiode* D_*"
+     },
+     {
+      "LCSC": "C51897884",
+      "Sheetname": "",
+      "Sheetfile": "pcb-e1-dock.kicad_sch",
+      "ki_keywords": "diode Schottky",
+      "ki_fp_filters": "TO-???* *_Diode_* *SingleDiode* D_*"
+     }
+    ]
+   }
+  ],
+  [
+   "J_BLK",
+   {
+    "value": [
+     "solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 1-7 GND, 8 SHORE_INHIBIT, 9 USB D+, 10 USB D-, 11 GND, 12 spare (VIN_RAW crosses on P_VR since EQ-16)",
+     "solder lands for the 12 signal wires to the block board underside (mirror of A22 J_DOCK): 1-7 GND, 8 SHORE_INHIBIT, 9 USB D+, 10 USB D-, 11 GND, 12 HOT-R1 hot stop line, open drain Q11 (SC-50; VIN_RAW crosses on P_VR since EQ-16)"
+    ]
+   }
+  ]
+ ],
+ "comps_uuid_shifted": 86,
+ "nets_only_committed": [
+  "unconnected-(U10-NC-Pad30)"
+ ],
+ "nets_only_other": [
+  "/HOT_R1_G"
+ ],
+ "nets_changed": [
+  [
+   "/BLK_SPARE",
+   [],
+   [
+    [
+     "Q11",
+     "3",
+     "D",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "GND",
+   [],
+   [
+    [
+     "Q11",
+     "2",
+     "S",
+     "passive"
+    ],
+    [
+     "R58",
+     "2",
+     "",
+     "passive"
+    ]
+   ]
+  ]
+ ],
+ "changed_lines": 381,
+ "changed_lines_sample": [
+  "-      (tstamps \"cdcb096d-fc92-53a0-b8f3-baf98d478606\"))",
+  "+      (tstamps \"787f57fe-881f-568c-ab71-8408a7829acc\"))",
+  "-      (tstamps \"d47fc896-7116-5cbb-930d-8da996d6a30c\"))",
+  "+      (tstamps \"2942a9c3-0fea-5616-bfaa-d7cac37df07a\"))",
+  "-      (tstamps \"7ee69587-ba3e-51b7-83cf-ea759b78d400\"))",
+  "+      (tstamps \"a0b536dc-1d3b-52a2-8e9e-eb8e6a79e0f3\"))",
+  "-      (tstamps \"d2fe670c-571c-5e35-ba79-b0c13f643d38\"))",
+  "+      (tstamps \"829054e3-9642-5b44-a3a3-13c701626f90\"))",
+  "-      (tstamps \"b1c67843-6498-5d9b-9c78-7563ef1b6c4d\"))",
+  "+      (tstamps \"943b3dd7-fb86-54f1-b95a-3c7a00821c8f\"))",
+  "-      (tstamps \"0ffad0eb-56f6-5701-b5f2-beebc2586f65\"))",
+  "+      (tstamps \"662752d2-4549-599a-98ad-faf6cd4c0032\"))",
+  "-      (tstamps \"fd29e601-b7e6-521a-bb85-cf219f76ec1c\"))",
+  "+      (tstamps \"eaa10847-44af-5efe-9ae3-d650f7bc31ac\"))",
+  "-      (tstamps \"471e3034-6179-5398-9fff-8320d8f4b6a2\"))",
+  "+      (tstamps \"626b2111-14c0-5b5a-9848-a37976a78b4e\"))",
+  "-      (tstamps \"15d01f4f-4d0c-5761-9d0b-502888bd06d6\"))",
+  "+      (tstamps \"de406cc4-aa37-56fb-b3c0-71fe5bb4a79a\"))",
+  "-      (tstamps \"818265e4-6ca5-5f89-b2ac-f7790257a6ce\"))",
+  "+      (tstamps \"22a14d4f-77f7-5458-9863-93d0c5587f20\"))",
+  "-      (tstamps \"38bef95b-1600-5c98-bacb-85b5843a8a6c\"))",
+  "+      (tstamps \"51f7e4e6-85fa-59d9-a8c2-0525af05d2e0\"))",
+  "-      (tstamps \"14feea7f-6615-5b74-8c0b-d47138647818\"))",
+  "+      (tstamps \"893ad445-ac7a-5bc0-9c60-74cb94a52da1\"))",
+  "-      (tstamps \"9b6ad788-8744-556f-ab7c-26b488d94aa2\"))",
+  "+      (tstamps \"817480b2-de28-5d2e-88a2-3f8a7dd88d52\"))",
+  "-      (tstamps \"6aa6a242-8d02-538d-b980-23394669c96a\"))",
+  "+      (tstamps \"0da826b8-f35c-5ac4-b014-018e82e02264\"))",
+  "-      (tstamps \"e22e1f14-52ba-55c9-946e-70d7f65b8ef8\"))",
+  "+      (tstamps \"7fe30c81-8d75-53e6-8710-fd84767af147\"))",
+  "-      (tstamps \"71db4c23-3095-54ef-9131-2fea54bd576c\"))",
+  "+      (tstamps \"bd610c23-bf29-54e2-82ce-419e362e6a31\"))",
+  "-      (tstamps \"4b76c952-14ee-5596-a5c7-0005abfe77dd\"))",
+  "+      (tstamps \"772aeb9e-32a0-5181-952e-22c2ef2ec46c\"))",
+  "-      (tstamps \"f1f87840-fc61-5576-aa9c-f35c141ff21c\"))",
+  "+      (tstamps \"8fe49620-3cc4-5271-b793-6ae98ba6ce0d\"))",
+  "-      (tstamps \"593eaf63-b1eb-58e0-934e-71c955bcfa09\"))",
+  "+      (tstamps \"fe4bde81-6783-5083-86a1-8c8860631e25\"))",
+  "-      (tstamps \"2802418c-ca6b-5169-9290-f041f1a5672e\"))",
+  "+      (tstamps \"16dbfab2-0f86-5da2-ae9b-4ecb7cffa824\"))",
+  "-      (tstamps \"419565a2-4e50-5864-bcec-5b3c78cf5a6b\"))",
+  "+      (tstamps \"a6f41d6a-ae98-5a55-8c3e-50b6ac77248b\"))",
+  "-      (tstamps \"b99636d7-b19b-5106-afef-c4b59f0bcfed\"))",
+  "+      (tstamps \"780baf34-de6f-57e1-83f6-7216a41454f4\"))",
+  "-      (tstamps \"2d0e06d8-df40-5804-8c2e-d13258a2ce51\"))",
+  "+      (tstamps \"fdaea8e6-088f-54a6-873f-7fdcb9b9ce0a\"))",
+  "-      (tstamps \"ead9b209-9c0d-56ce-8516-358e3e218f7a\"))",
+  "+      (tstamps \"3ed1ade0-8ab7-59eb-b363-7ba8f6c6feea\"))",
+  "-      (tstamps \"0328a79f-5ea8-5168-a124-869b2fe17cf6\"))",
+  "+      (tstamps \"c40ed010-5b54-5cd7-8fcd-772bff0cb4cc\"))",
+  "-      (tstamps \"643776c7-18ae-5e04-a787-ce41820e1d6e\"))",
+  "+      (tstamps \"6c59b7c9-dd64-57ee-b911-880f4514d6d9\"))",
+  "+        (field (name \"LCSC\") \"C51897884\")",
+  "+      (property (name \"LCSC\") (value \"C51897884\"))",
+  "-      (tstamps \"3a107584-a5f7-56e5-8d64-8500f5e0ae55\"))",
+  "+      (tstamps \"3f659c09-6cba-585e-822b-0ef2ddb99b79\"))",
+  "+        (field (name \"LCSC\") \"C51897884\")",
+  "+      (property (name \"LCSC\") (value \"C51897884\"))",
+  "-      (tstamps \"2d8e93d4-0dbd-5373-8c1d-eaf9e7e80039\"))",
+  "+      (tstamps \"41f30d63-8252-5212-a4aa-700c4f3a2a2f\"))"
+ ],
+ "result": "DIFFERENT"
+}

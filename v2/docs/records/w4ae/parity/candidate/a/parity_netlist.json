@@ -1,0 +1,157 @@
+{
+ "kind": "netlist",
+ "phase_labels": [
+  [
+   "A65"
+  ],
+  [
+   "A65"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  },
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  }
+ ],
+ "design_header": [
+  [
+   "/root/r8int5/xa/v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_sch",
+   "2026-09-27T12:33:53+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ],
+  [
+   "/root/w4ae/cand/v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_sch",
+   "2026-09-27T14:51:18+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ]
+ ],
+ "content_hash": [
+  "2c5c1d5a388cc95f",
+  "d464d30a17fb30f7"
+ ],
+ "counts": {
+  "comps": [
+   611,
+   612
+  ],
+  "nets": [
+   356,
+   356
+  ]
+ },
+ "comps_only_committed": [],
+ "comps_only_other": [
+  "R216"
+ ],
+ "comps_changed": [
+  [
+   "J_DOCK",
+   {
+    "value": [
+     "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 spare (VIN_RAW crosses on J_VR1-4 since EQ-16)",
+     "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside): 1-7 GND, 8 SHORE_INHIBIT, 9-10 USB of E6's sensor controller, 11 GND, 12 HOT-R1 hot stop line from E's open drain, pulled up by R216 (SC-50; VIN_RAW crosses on J_VR1-4 since EQ-16)"
+    ]
+   }
+  ]
+ ],
+ "comps_uuid_shifted": 104,
+ "nets_only_committed": [],
+ "nets_only_other": [],
+ "nets_changed": [
+  [
+   "+3V3",
+   [],
+   [
+    [
+     "R216",
+     "2",
+     "",
+     "passive"
+    ]
+   ]
+  ],
+  [
+   "/DOCK_SPARE",
+   [],
+   [
+    [
+     "R216",
+     "1",
+     "",
+     "passive"
+    ]
+   ]
+  ]
+ ],
+ "changed_lines": 226,
+ "changed_lines_sample": [
+  "-      (tstamps \"134be7d8-b4b2-5f77-8294-a0b8e3c3e09e\"))",
+  "+      (tstamps \"ebc48b78-c182-5b9e-a0b6-d57ab7f27857\"))",
+  "-      (tstamps \"773830c0-40f4-538d-bbcf-db846522c572\"))",
+  "+      (tstamps \"dbbcbf17-c497-5053-a507-1b23c6983523\"))",
+  "-      (tstamps \"01dbb9b2-98fb-575f-9aca-ccf10d08c4de\"))",
+  "+      (tstamps \"b0d462a1-a502-5bda-8a3a-c2b5fab1adf3\"))",
+  "-      (tstamps \"5a9d3c8c-08b1-579c-b736-6656e60f2537\"))",
+  "+      (tstamps \"22d4cc9f-854e-5f4c-afd1-d494e90a0bf6\"))",
+  "-      (tstamps \"734c1c05-95ab-5837-81fd-1ce3ab5ddc3e\"))",
+  "+      (tstamps \"ea5141d5-c235-51db-a278-40289f39be0e\"))",
+  "-      (tstamps \"7e17b4c4-276e-5fd3-be07-8128dfbfd423\"))",
+  "+      (tstamps \"f13d34d3-7c5e-5d83-bd17-4ea4f2b4a447\"))",
+  "-      (tstamps \"c0e2859b-d372-5f68-b564-d7d6b8e779e1\"))",
+  "+      (tstamps \"20755c19-a430-56ab-bf7e-aed274862991\"))",
+  "-      (tstamps \"c632ea1b-fd1e-5762-9117-9fead8112775\"))",
+  "+      (tstamps \"027f8261-ec9e-5cf4-b5db-efe2b4fdacea\"))",
+  "-      (tstamps \"2c276e9a-dab2-538d-ba3a-731cbd4a1bc3\"))",
+  "+      (tstamps \"6b0f0c30-a20a-50b7-9da3-b069f70fb15e\"))",
+  "-      (tstamps \"232d5a28-7640-5377-8370-281f0a95a695\"))",
+  "+      (tstamps \"fa0a03ce-79f0-5de9-9ea0-1d6ca099988d\"))",
+  "-      (tstamps \"1f2f5af1-7be2-5844-aea1-67f0da9c6e6a\"))",
+  "+      (tstamps \"6e8cb614-c817-58b5-a749-51a794515aa2\"))",
+  "-      (tstamps \"08c852f2-a9fe-5799-8012-59bec57868c5\"))",
+  "+      (tstamps \"8cb5b3f5-efba-52bb-b9f2-be4b1bc43508\"))",
+  "-      (tstamps \"82751395-dfa1-576c-bf37-2902b0304d8a\"))",
+  "+      (tstamps \"32b2c0a7-33ef-5410-abbf-a747e04734d2\"))",
+  "-      (tstamps \"4887e8ae-ade9-54df-8867-a0ae9beb491d\"))",
+  "+      (tstamps \"9ddbfbc1-2f71-5ada-9923-9409c8ec361e\"))",
+  "-      (tstamps \"19008851-ad91-5ee8-8060-5d37156d1758\"))",
+  "+      (tstamps \"a2807629-6a15-52d2-8794-d26ce1852c89\"))",
+  "-      (tstamps \"0e1bf996-57ab-5130-9139-f0a8783e4fd5\"))",
+  "+      (tstamps \"8c77f238-6a40-5692-b546-b1880efce1f2\"))",
+  "-      (tstamps \"30e9d78e-66db-5edb-b43d-31ac69817d19\"))",
+  "+      (tstamps \"600cdda3-de7b-5443-8153-97b3291585c8\"))",
+  "-      (tstamps \"2157e669-a613-5303-9b28-6242f66a88c5\"))",
+  "+      (tstamps \"bc6df60e-eb76-51ee-a764-5a5e578ff161\"))",
+  "-      (tstamps \"4ac98035-bd11-53ab-b432-51bf84720ab4\"))",
+  "+      (tstamps \"272305fc-51e7-5275-ba01-cda5fd2666e8\"))",
+  "-      (tstamps \"4c47d226-ea5d-56cb-8335-f01f4be21d19\"))",
+  "+      (tstamps \"39ac32d7-b238-50d7-9859-6314f4655511\"))",
+  "-      (tstamps \"72ba346d-090e-5cf6-888a-4f8ec85c310d\"))",
+  "+      (tstamps \"4c86b5bc-7b79-553f-ad6e-50335364fdcc\"))",
+  "-      (tstamps \"56fdc4b0-1588-559a-998b-079e068dc5b3\"))",
+  "+      (tstamps \"c4b80b19-6d44-5a8e-a436-17bbe1a3f393\"))",
+  "-      (tstamps \"be708bb0-556e-57a7-9f49-a840b37ff8ff\"))",
+  "+      (tstamps \"d4291750-1b04-562b-b361-33d3cfb20dac\"))",
+  "-      (tstamps \"b604dd48-6179-5953-adc9-ed501bcf04a6\"))",
+  "+      (tstamps \"837687c6-08f9-592f-b62f-815df7815368\"))",
+  "-      (tstamps \"1ae0aa1d-e38a-53cd-872c-448d8453fa1a\"))",
+  "+      (tstamps \"97becaba-583c-5b96-8933-58f528405b31\"))",
+  "-      (tstamps \"fa599553-25d8-5ce6-8ac1-2eeef82a94f5\"))",
+  "+      (tstamps \"1161658f-c939-507a-9ce9-c927bdafcc61\"))",
+  "-      (tstamps \"acbd104f-2c9d-53b7-9a3d-b9747cb2a677\"))",
+  "+      (tstamps \"c28aac3a-610e-50b2-b98f-8e835c41317d\"))",
+  "-      (tstamps \"32f23fa5-6204-59af-a52e-0944ebfced1c\"))",
+  "+      (tstamps \"a188c7a6-a9a2-5aba-a3e2-ce7f33dcb7a3\"))",
+  "-      (tstamps \"b7ce374e-783c-5bd6-b1b5-4fd278409021\"))",
+  "+      (tstamps \"db7e6ba2-07a2-5662-8ef3-5228515bc8df\"))",
+  "-      (tstamps \"52802940-d8fc-57f9-9010-83cac0ad41b4\"))",
+  "+      (tstamps \"392c82d2-b674-5d9b-a4c2-f2e091080e73\"))"
+ ],
+ "result": "DIFFERENT"
+}

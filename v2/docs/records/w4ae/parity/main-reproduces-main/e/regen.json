@@ -1,0 +1,109 @@
+{
+ "board": "e",
+ "board_table_phase": "E17",
+ "commands": [
+  {
+   "argv": [
+    "kicad-cli",
+    "sch",
+    "export",
+    "bom",
+    "--fields",
+    "Reference,Value,Footprint,LCSC,${QUANTITY}",
+    "--group-by",
+    "Value,Footprint",
+    "--sort-field",
+    "Reference",
+    "-o",
+    "/root/w4ae/out-base/e/committed/pcb-e1-dock-bom.csv",
+    "pcb-e1-dock.kicad_sch"
+   ],
+   "cwd": "v2/ecad/pcb-e1-dock-e7",
+   "exit": 0,
+   "output_tail": "Warning: schematic has annotation errors, please use the schematic editor to fix them\nWrote bill of materials to '/root/w4ae/out-base/e/committed/pcb-e1-dock-bom.csv'.\n",
+   "started_utc": "2026-09-27T14:17:21Z"
+  },
+  {
+   "argv": [
+    "kicad-cli",
+    "sch",
+    "erc",
+    "--severity-all",
+    "--format",
+    "json",
+    "-o",
+    "/root/w4ae/out-base/e/committed/pcb-e1-dock-erc.json",
+    "pcb-e1-dock.kicad_sch"
+   ],
+   "cwd": "v2/ecad/pcb-e1-dock-e7",
+   "exit": 0,
+   "output_tail": "Found 367 violations\nSaved ERC Report to /root/w4ae/out-base/e/committed/pcb-e1-dock-erc.json\n",
+   "started_utc": "2026-09-27T14:17:21Z"
+  },
+  {
+   "argv": [
+    "/usr/bin/python3",
+    "../tools/gen_footprints_e.py",
+    "../meshsat.pretty"
+   ],
+   "cwd": "v2/ecad/pcb-e1-dock-e7",
+   "exit": 0,
+   "output_tail": "wrote ../meshsat.pretty/Sensirion_DFN-6-1EP_2.44x2.44mm_P0.8mm_EP1.25x1.7mm.kicad_mod\n",
+   "started_utc": "2026-09-27T14:17:22Z"
+  },
+  {
+   "argv": [
+    "/usr/bin/python3",
+    "../tools/gen_sch_e.py",
+    "pcb-e1-dock.kicad_sch",
+    "pcb-e1-dock"
+   ],
+   "cwd": "v2/ecad/pcb-e1-dock-e7",
+   "exit": 0,
+   "output_tail": "SOT_SMD:TDSON-8-1; the same net sits on a pad this land does have\nlands: Q3 pin 6 (PV_P) has no pad 6 on Package_TO_SOT_SMD:TDSON-8-1; the same net sits on a pad this land does have\nlands: Q3 pin 7 (PV_P) has no pad 7 on Package_TO_SOT_SMD:TDSON-8-1; the same net sits on a pad this land does have\nlands: Q3 pin 8 (PV_P) has no pad 8 on Package_TO_SOT_SMD:TDSON-8-1; the same net sits on a pad this land does have\nlands: Q4 pin 6 (TRK_SW1) has no pad 6 on Package_TO_SOT_SMD:TDSON-8-1; the same net sits on a pad this land does have\nlands: Q4 pin 7 (TRK_SW1) has no pad 7 on Package_TO_SOT_SMD:TDSON-8-1; the same net sits on a pad this land does have\nlands: Q4 pin 8 (TRK_SW1) has no pad 8 on Package_TO_SOT_SMD:TDSON-8-1; the same net sits on a pad this land does have\nlands: Q5 pin 6 (TRK_SW2) has no pad 6 on Package_TO_SOT_SMD:TDSON-8-1; the same net sits on a pad this land does have\nlands: Q5 pin 7 (TRK_SW2) has no pad 7 on Package_TO_SOT_SMD:TDSON-8-1; the same net sits on a pad this land does have\nlands: Q5 pin 8 (TRK_SW2) has no pad 8 on Package_TO_SOT_SMD:TDSON-8-1; the same net sits on a pad this land does have\nschlayout verify: 572 pins in 440 nets, every component one name\nlayout: 4 A3 pages on a 2 x 2 sheet -> paper \"User\" 838.20 594.36\nwrote pcb-e1-dock.kicad_sch parts: 204 lib symbols: 43\nnets: 102 single-pin nets (should be empty or intentional): []\nintent: /root/w4ae/base/v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock-intent.json (29 bypass, 15 rails, 15 nodes, 5 pair classes)\n",
+   "started_utc": "2026-09-27T14:17:22Z"
+  },
+  {
+   "argv": [
+    "bash",
+    "../tools/build_sch.sh",
+    ".",
+    "pcb-e1-dock"
+   ],
+   "cwd": "v2/ecad/pcb-e1-dock-e7",
+   "exit": 0,
+   "output_tail": "ERC: violations (out/pcb-e1-dock-erc.json, out/pcb-e1-dock-erc.rpt; erc_gate.py decides)\nnetlist: out/pcb-e1-dock.net\nsch_prov: pcb-e1-dock.net written by generator b43c5351edb2f98e (boards/e.json#gen_env, gen_footprints_b16.py, gen_footprints_e.py, gen_footprints_idc.py, gen_footprints_panel.py, gen_sch_e.py, intent.py, kisch.py, schlayout.py, and 60 land(s) in meshsat.pretty)\nsheet pdf: out/pcb-e1-dock-schematic-sheet.pdf\nsch_pages: 2 x 2 cells, 4 pages kept of 4 tiles\npdf: out/pcb-e1-dock-schematic.pdf\nbom: out/pcb-e1-dock-bom.csv\n",
+   "started_utc": "2026-09-27T14:17:26Z"
+  }
+ ],
+ "comparisons": {
+  "bom": "PARITY",
+  "erc": "PARITY_AFTER_NOISE",
+  "intent": "PARITY_AFTER_NOISE",
+  "netlist": "PARITY_AFTER_NOISE",
+  "schematic": "PARITY"
+ },
+ "gen_env": null,
+ "lands_changed_by_the_footprint_generators": [],
+ "phase_directory": "pcb-e1-dock-e7",
+ "phase_label_used": "E42P",
+ "result": "PARITY",
+ "stem": "pcb-e1-dock",
+ "taken_utc": "2026-09-27T14:17:31Z",
+ "versions": {
+  "kicad_cli": "9.0.9",
+  "mutool": "mutool version 1.23.10",
+  "packages": {
+   "kicad": "9.0.9~ubuntu24.04.1",
+   "kicad-footprints": "9.0.9~ubuntu24.04.1",
+   "kicad-symbols": "9.0.9~ubuntu24.04.1",
+   "mupdf-tools": "1.23.10+ds1-1build3",
+   "poppler-utils": "24.02.0-1ubuntu9.9"
+  },
+  "pdfinfo": "pdfinfo version 24.02.0",
+  "platform": "Linux-6.8.0-134-generic-x86_64-with-glibc2.39",
+  "py_PIL": "10.2.0",
+  "py_yaml": "6.0.1",
+  "python": "3.12.3"
+ }
+}

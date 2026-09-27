@@ -1,0 +1,40 @@
+{
+ "kind": "netlist",
+ "phase_labels": [
+  [
+   "E42P"
+  ],
+  [
+   "E42P"
+  ]
+ ],
+ "noise_removed": [
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  },
+  {
+   "N3_design_source_date_tool": 1,
+   "N4_title_date": 1,
+   "L1_comment1_phase": 1
+  }
+ ],
+ "design_header": [
+  [
+   "/root/w4ae/cand/v2/ecad/pcb-e1-dock-e7/pcb-e1-dock.kicad_sch",
+   "2026-09-27T14:51:44+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ],
+  [
+   "/root/w4ae/cand/v2/ecad/pcb-e1-dock-e7/pcb-e1-dock.kicad_sch",
+   "2026-09-27T14:52:26+0000",
+   "Eeschema 9.0.9-9.0.9~ubuntu24.04.1"
+  ]
+ ],
+ "content_hash": [
+  "dc06b84a39724641",
+  "dc06b84a39724641"
+ ],
+ "result": "PARITY_AFTER_NOISE"
+}
