@@ -31,7 +31,8 @@ WHAT IT CHECKS:
     a class with no figure says which of three things is true: the maker's document states none
     (`none_published`, with the documents that were read), nothing is mated (`not_mated`: a solder land, a screw
     joint), or the figure is OWED because the part or its document is not identified, which carries an open
-    item and keeps the board's reading INCONCLUSIVE until it is closed;
+    item and keeps the board's reading INCONCLUSIVE until it is closed; a measure that is not designed yet is
+    owed the same way (`measure_owed`);
   * a declared count matches the board.
 
 WHAT IT CANNOT DO is test anything: REL-001 is verified at the PROTOTYPE and no board has been built. This is the
@@ -109,13 +110,16 @@ def _figure(L, c, open_items, vdir, have_vendor, fails, unjudged):
             fails.append("%s gives a cycle figure that is not a positive whole number (%r)" % (who, cyc)); return None
         if nof is not None:
             fails.append("%s gives a cycle figure and a reason it has none" % who); return None
-        if not isinstance(src, dict):
+        # One document, or one per part number where a class holds several parts of one rating.
+        srcs = src if isinstance(src, list) else [src]
+        if not srcs or not all(isinstance(x, dict) for x in srcs):
             fails.append("%s gives %d cycles and cites no document for them" % (who, cyc)); return None
         n = len(fails)
-        for k in ("page", "words"):
-            if not str(src.get(k) or "").strip():
-                fails.append("%s cites its figure without the %s" % (who, k))
-        _cited(src, vdir, have_vendor, who, fails, unjudged)
+        for x in srcs:
+            for k in ("page", "words"):
+                if not str(x.get(k) or "").strip():
+                    fails.append("%s cites its figure without the %s" % (who, k))
+            _cited(x, vdir, have_vendor, who, fails, unjudged)
         return "cited" if len(fails) == n else None
     if not isinstance(nof, dict) or nof.get("kind") not in NO_FIGURE:
         fails.append("%s gives no cycle figure and does not say why it has none (%s)" % (who, ", ".join(NO_FIGURE)))
@@ -130,13 +134,19 @@ def _figure(L, c, open_items, vdir, have_vendor, fails, unjudged):
         else:
             for d in looked: _cited(d, vdir, have_vendor, who, fails, unjudged)
     elif kind == "owed":
-        it = (open_items or {}).get(nof.get("open_item"))
-        if not isinstance(it, dict):
-            fails.append("%s owes its figure and names no open item of this list (%r)" % (who, nof.get("open_item")))
-        elif not (str(it.get("what") or "").strip() and str(it.get("next_action") or "").strip()):
-            fails.append("%s owes its figure under open item %s, which does not say what is owed and the next action"
-                         % (who, nof.get("open_item")))
+        _open_item(who, "its figure", nof.get("open_item"), open_items, fails)
     return kind if len(fails) == n else None
+
+
+def _open_item(who, what, key, open_items, fails):
+    """An owed thing names an open item of the list, which says what is owed and the next action."""
+    it = (open_items or {}).get(key)
+    if not isinstance(it, dict):
+        fails.append("%s owes %s and names no open item of this list (%r)" % (who, what, key)); return False
+    if not (str(it.get("what") or "").strip() and str(it.get("next_action") or "").strip()):
+        fails.append("%s owes %s under open item %s, which does not say what is owed and the next action"
+                     % (who, what, key)); return False
+    return True
 
 
 def _refs(decl):
@@ -165,7 +175,8 @@ def judge_board(letter, b, inv, open_items, ecad=None, vendor=None, rel_dir=None
     excl = [x for x in ((b or {}).get("exclusions") or []) if isinstance(x, dict)]
     out = dict(classes=len(classes), exclusions=len(excl), candidates=0, covered=0, excluded=0, refused=0,
                fails=fails, notes=notes, inconclusive=why_not, netlist=False, artefact=None, artefact_kind=None,
-               prose_only=[], by_words=[], inventory=[], excluded_by=[], figures={}, owed=[], how={})
+               prose_only=[], by_words=[], inventory=[], excluded_by=[], figures={}, owed=[], how={},
+               measures_owed=0)
     # ---- the declarations themselves, judged whether or not the board can be read
     fig = {}
     for c in classes:
@@ -180,6 +191,14 @@ def judge_board(letter, b, inv, open_items, ecad=None, vendor=None, rel_dir=None
             out["owed"].append("%s: class %s owes its cycle figure (open item %s: %s)"
                                % (L, c.get("name"), c["no_figure"].get("open_item"),
                                   " ".join(str(open_items[c["no_figure"]["open_item"]].get("what")).split())))
+        # A MEASURE THAT IS NOT TAKEN YET IS OWED LIKE A FIGURE: the class says what is there today and names
+        # the open item, and the board does not read PASS on a measure nobody has designed.
+        if c.get("measure_owed") is not None:
+            if _open_item("%s: class %s" % (L, c.get("name")), "its measure", c.get("measure_owed"), open_items, fails):
+                out["measures_owed"] += 1
+                out["owed"].append("%s: class %s owes its measure (open item %s: %s)"
+                                   % (L, c.get("name"), c["measure_owed"],
+                                      " ".join(str(open_items[c["measure_owed"]].get("what")).split())))
     for x in excl:
         who = "%s: the exclusion of %s" % (L, _short(_refs(x)) or "no reference")
         if not _refs(x): fails.append("%s: an exclusion names no reference" % L)
@@ -373,9 +392,10 @@ def main(argv):
         if v["netlist"]:
             f = v["figures"]
             print("             %d candidate(s): %d classed in %d class(es), %d excluded by %d exclusion(s), %d refused; "
-                  "figures: %d cited, %d none published, %d not mated, %d owed"
+                  "figures: %d cited, %d none published, %d not mated, %d owed; measures owed: %d"
                   % (v["candidates"], v["covered"], v["classes"], v["excluded"], v["exclusions"], v["refused"],
-                     f.get("cited", 0), f.get("none_published", 0), f.get("not_mated", 0), f.get("owed", 0)))
+                     f.get("cited", 0), f.get("none_published", 0), f.get("not_mated", 0), f.get("owed", 0),
+                     v["measures_owed"]))
         for x in v["excluded_by"]:
             print("  excluded %s: %d part(s), %s: %s" % (letter.upper(), len(x["parts"]), _short(x["parts"], 8), x["reason"]))
     for n in [n for v in r.values() for n in v["notes"]][:12]: print("  note %s" % n)
@@ -392,6 +412,7 @@ def main(argv):
                             "classes": tot("classes"), "exclusions": tot("exclusions"),
                             "figures_cited": figs("cited"), "figures_none_published": figs("none_published"),
                             "figures_not_mated": figs("not_mated"), "figures_owed": figs("owed"),
+                            "measures_owed": tot("measures_owed"),
                             "fail": len(fails), "inconclusive": len(open_),
                             "per_board": {k: {"result": v["result"], "candidates": v["candidates"],
                                               "classed": v["covered"], "excluded": v["excluded"],
