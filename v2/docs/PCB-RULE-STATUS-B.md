@@ -3,7 +3,7 @@
 
 # Rule status: board B
 
-Manifest **2026-09-16.1**, rule set **950539a66227908b**, evidence epoch **2026-09-16T00:35:00+02:00**.
+Manifest **2026-09-16.1**, rule set **635ff031f210f48c**, evidence epoch **2026-09-16T00:35:00+02:00**.
 
 **Readiness: NOT_READY**
 
@@ -13,9 +13,9 @@ Measured on board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21.
 
 | historical aggregate, mixed revisions | rules | percent of this board's required rules |
 |---|---|---|
-| PASS | 19 | 33.9 |
-| FAIL | 6 | 10.7 |
-| INCONCLUSIVE | 31 | 55.4 |
+| PASS | 17 | 30.4 |
+| FAIL | 7 | 12.5 |
+| INCONCLUSIVE | 32 | 57.1 |
 | WAIVED | 0 | 0.0 |
 | **denominator** | **56** | 100.0 |
 
@@ -31,7 +31,7 @@ Measured on board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21.
 | CMP-001 absolute maximum never reached | BLOCKER | SCHEMATIC | **PASS** | derate PASS of 162 |
 | CMP-002 the package on the land is the package ordered | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_b was taken 2026-09-20T14:11:40, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
 | SUP-001 every placed part is buyable | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | jlc_certify_b was taken 2026-09-20T14:11:40, before 2026-09-27T01:27:45+02:00, when its tool changed what the verdict means; re-take it |
-| PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **PASS** | intent_rails PASS of 39 |
+| PWR-001 every rail is declared with its loads | BLOCKER | SCHEMATIC | **FAIL** | intent_rails FAIL: {'census_nets': 1929, 'checks': 70, 'declared_nodes': 14, 'declared_not_in_netlist': 0, 'declared_rails': 41, 'fail': 29 |
 | PWR-002 sequencing and inrush | MUST_JUSTIFY | SCHEMATIC | **PASS** | power_sequence PASS of 41 |
 | PWR-003 protection coordination | BLOCKER | SCHEMATIC | **FAIL** | energy_chain_b FAIL: {'fail': 1, 'stages': 3} |
 | DEC-001 decoupling loop area | MUST_JUSTIFY | PLACED_BOARD | **PASS** | intent_decoupling PASS of 30 |
@@ -49,10 +49,10 @@ Measured on board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21.
 | IMP-001 an impedance target is feasible and asked for | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the authority behind this rule's limit is not established: closed forms from a standard not in the tree; no fabricator confirmation and no coupon. 19  |
 | IMP-002 a class clearance is never below the board minimum | BLOCKER | PLACED_BOARD | **PASS** | class_floor PASS of 20 |
 | PAIR-001 a pair is coupled and matched | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed  |
-| SI-001 transmission-line classification | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | edge_length INCONCLUSIVE: every signal net's routed length against the critical length its own class implies, and a net past it is asked whether it is |
+| SI-001 transmission-line classification | MUST_JUSTIFY | SCHEMATIC | **INCONCLUSIVE** | edge_length INCONCLUSIVE: SI-001 at the schematic phase, from the committed netlist, the held documents and the declared stack: per class the edge rat |
 | CLK-001 oscillators, straps and boot pins | BLOCKER | SCHEMATIC | **PASS** | clock_check PASS of 7 |
 | RF-001 RF paths are designed as RF | BLOCKER | ROUTED_BOARD | **INCONCLUSIVE** | the board this tree holds for this phase is not routed (hardset-routed-board-gate reports 416 unrouted connection(s)), so a rule verified on a routed  |
-| RF-002 transmit inhibit is hardware | BLOCKER | SCHEMATIC | **PASS** | inhibit_chain_b PASS of 3 |
+| RF-002 transmit inhibit is hardware | BLOCKER | SCHEMATIC | **INCONCLUSIVE** | taken under a different version of RF-002 (b4c62839dd113ee3, current is 2394810b0afd0d73) |
 | INT-001 each interface is designed to its own specification | BLOCKER | SCHEMATIC | **PASS** | interfaces_b PASS of 7 |
 | INT-002 a transformerless Ethernet link has a pre-layout assessment on its current nets | BLOCKER | SCHEMATIC | **PASS** | INT-002-PRE-LAYOUT-ASSESSMENT.md is the record that was verified (sha cad907b73c7ed8ea), and the 48 net(s) it read are unchanged on the current netlis |
 | INT-003 a transformerless Ethernet link is verified up at 1000M on the built board | BLOCKER | PROTOTYPE | **INCONCLUSIVE** | no verification: the PROTOTYPE half of INT-002 (split 26 September 2026). Nothing is built, so nothing verifies it and it reads INCONCLUSIVE until the |
@@ -75,5 +75,5 @@ Measured on board B21 (pcb-b-compute-b19, 2e64b5bf2d9cd3bc), declares B21.
 | DOC-001 the folder is the board | BLOCKER | RELEASE_PACKAGE | **INCONCLUSIVE** | final_gate_b INCONCLUSIVE: a deliverable folder at the declared phase B21: the only folder is meshsat-pcb-b-revA-B19-quote, a quote, and a folder is j |
 | DOC-002 provenance for every claim | MUST_JUSTIFY | RELEASE_PACKAGE | **INCONCLUSIVE** | doc_provenance_b INCONCLUSIVE: board B declares B21 and the order set holds B16: the note beside those folders describes a board this project is not b |
 | OUT-001 the order set is the current set | BLOCKER | RELEASE_PACKAGE | **FAIL** | final_gate FAIL: {'certify_rc': 3, 'claims_rc': 0, 'contracts_rc': 0, 'fail': 0, 'held': 3, 'missing': 0, 'pass': 3, 'quote': 4} |
-| SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 335 |
+| SGN-001 every applicable rule has a result | BLOCKER | RELEASE_PACKAGE | **PASS** | rules_complete PASS of 339 |
 | SGN-002 a prototype-only unknown is named | MUST_JUSTIFY | RELEASE_PACKAGE | **PASS** | PCB-PROTOTYPE-UNKNOWNS.md is current with the registry |

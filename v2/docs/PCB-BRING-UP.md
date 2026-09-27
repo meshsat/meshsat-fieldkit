@@ -133,7 +133,7 @@ fault from one that reads low.
 
 | step | rail | expect | at | what it feeds |
 |---|---|---|---|---|
-| 1 | +3V3 | 3.30 V (3.13 to 3.46) | U5 | Q5, U1, U10, U11, U12, U2 |
+| 1 | +3V3 | 3.30 V (3.13 to 3.46) | U5 | Q5, U1, U10, U11, U12, U13 |
 
 ## Board D
 
