@@ -44,7 +44,7 @@ def sheet(title, label):
     tb.text(0.005, 0.92, "MeshSat field kit V2, Peli 1450 case set", fontsize=7.5, fontweight="bold", va="top")
     tb.text(0.005, 0.60, "\n".join(textwrap.wrap(title, 64)), fontsize=8.6, fontweight="bold", va="top", linespacing=1.05)
     tb.text(0.005, 0.04, "MESHSAT-1357, S-63, EQ-24. PROTOTYPE DESIGN: nothing made, printed, bought or fitted.\nSession choices under the owner's standing rule of 26 Sep 2026. AI review only.", fontsize=5.6, va="bottom")
-    src = ["Source: tree %s plus the QMX tray r2 (fnd/w5tray); inputs by sha256 (first 12):" % K.base_commit()]
+    src = ["Source: tree %s (branch fnd/w5tray, from c23c5e76); inputs by sha256 (first 12):" % K.base_commit()]
     src += ["  %s  %s" % (K.sha12(os.path.join(K.REPO, p)), p) for p in INPUTS]
     tb.text(0.305, 0.97, "\n".join(src), fontsize=5.0, va="top", family="monospace")
     tb.text(0.625, 0.95, "\n".join(textwrap.wrap("Generated %s by v2/cad/lid_tray_qmx_r2_drawing.py from the files named left; regenerate with "
