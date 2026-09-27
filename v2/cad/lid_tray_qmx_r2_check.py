@@ -60,6 +60,8 @@ INTERLAYER_SHEAR = 0.5 * PC["interlayer"]   # MPa: the sheet states no shear fig
 AL5052_SHEAR = 100.0                  # MPa, the lid plate's thread shear used for stripping (INFERRED class figure; no 5052 sheet is held)
 A2_70_RP02 = 450.0                    # MPa, an A2-70 screw's 0.2 percent proof stress (ISO 3506-1 class; standard not held, INFERRED)
 M3_STRESS_AREA = 5.03                 # mm2 (ISO 898-1 class; INFERRED)
+TORQUE = 0.25                         # N m on all sixteen M3 (INFERRED): under the 0.4 the r1 row named, for 1.4 mm of thread in 5052 and printed seats
+NUT_FACTOR = 0.2                      # torque = factor x diameter x preload (dry steel on steel class; INFERRED)
 DP8005_TPEEL = 9 * 4.448 / 25.4       # N/mm: 9 lb/in T-peel on 0.5 mm HDPE (3m-scotch-weld-dp8005.pdf page 2); the only strength the sheet gives
 DROP_H = 1.22                         # m, TEST-PLAN E1 (MIL-STD-810H 516.8 Procedure IV, Table 516.8-IX first row)
 DESIGN_G = 100.0                      # the load case: the peak CASE-MARGINS.md section 3 already assumes for E1 on the face ("an assumed 100 g
@@ -502,7 +504,14 @@ def report():
     L_.append("   The bond is not bounded by any held figure: its T-peel scoping number (%.0f g) is for a flexible strip, not a rigid 2 mm plate, and is" % (
         DP8005_TPEEL * perim / (m_all * G0)))
     L_.append("   no bound; it goes to CASE-MARGINS T8 as a pull test on the case's polypropylene, after a thermal cycle (the plate and the lid expand")
-    L_.append("   differently between -33 and +71 C, and no expansion figure of Peli's polypropylene is held).")
+    L_.append("   differently between -33 and +71 C, and no expansion figure of Peli's polypropylene is held). Nor does PC Blend's sheet state one, so")
+    L_.append("   the printed tray on its aluminium plate is looked at after E3-S and E4-S as well (cracks at the ten screws, the frame flat).")
+    pre = TORQUE / (NUT_FACTOR * 0.003)
+    strip1 = math.pi * 3.0 * (5.0 - Q.Z_SILL) * 0.75 * AL5052_SHEAR
+    L_.append("   TIGHTENING: %.2f N m on all sixteen M3 (INFERRED; nut factor %.1f): %.0f N in a screw, %.0f %% of what %.1f mm of thread in the plate strips at" % (
+        TORQUE, NUT_FACTOR, pre, 100 * pre / strip1, 5.0 - Q.Z_SILL))
+    L_.append("   (%.0f N, INFERRED shear) and %.0f %% of what a button head bears on the frame; the r1 row's 0.4 N m would put %.0f N, %.0f %% of the thread." % (
+        strip1, 100 * pre / per_screw()[0][1], 0.4 / (NUT_FACTOR * 0.003), 100 * 0.4 / (NUT_FACTOR * 0.003) / strip1))
     lev_b = (Q.CLR + EDGE_R + Q.LEDGE_BACK) / 2; lev_f = (Q.CLR + EDGE_R + Q.LEDGE_FRONT) / 2
     len_b = Q.UNIT[0] - 2 * EDGE_R; len_f = sum(min(b, Q.U0 - EDGE_R) - max(a, -Q.U0 + EDGE_R) for a, b in Q.FRONT_SEGMENTS)
     s_per_n = max(0.5 * lev_b * 6 / (len_b * Q.FRAME_T ** 2), 0.5 * lev_f * 6 / (len_f * Q.FRAME_T ** 2))

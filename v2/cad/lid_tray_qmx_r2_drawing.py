@@ -372,13 +372,14 @@ def page3(pdf):
     l1, l2 = C.judge(one[1])[1], C.judge(two[1])[1]
     notes = [
         "1. FITTING, in this order. (a) Bond the lid plate to the lid's unribbed inner face at the place of sheet 14r2-1 with DP8005 (clean, dry; the sheet asks no "
-        "primer on polypropylene; fixture 2 h). (b) Screw the tray on with its ten M3 x 5. (c) Lay the two pads in the floor windows, on the plate. (d) Slide a "
-        "square nut into each of the six slots from outside. (e) Do NOT fit the unit's four self-adhesive feet (the maker calls them optional). With the lid open "
-        "and the knobs on, lower the unit into the pocket from above, top face out, knob edge west, right panel (RF, PTT, USB) toward the hinge: it stands on the "
-        "pads, %.2f above its place. (f) Lay the frame over it on the wall tops and drive the six M3 x 10 evenly until the frame sits on the wall tops all round; "
-        "the pads are compressed by %.2f (%.2f to %.2f over the tolerances). (g) Plug the DC, RF and USB leads and tie each within 60 mm of its plug to a tie "
+        "primer on polypropylene; fixture 2 h). (b) Screw the tray on with its ten M3 x 5, to the same torque as (f). (c) Lay the two pads in the floor windows, on the plate. (d) Slide a "
+        "square nut into each of the six slots from outside, to the slot's end, and tape over the slot's mouth until its screw is in. (e) Do NOT fit the unit's four "
+        "self-adhesive feet (the maker calls them optional). With the lid open and held level, and the knobs on, lower the unit into the pocket from above, top face "
+        "out, knob edge west, right panel (RF, PTT, USB) toward the hinge: it stands on the pads, %.2f above its place. (f) Lay the frame over it on the wall tops "
+        "and drive the six M3 x 10 evenly, to %.2f N m, until the frame sits on the wall tops all round; the pads are compressed by %.2f (%.2f to %.2f over the "
+        "tolerances). (g) Plug the DC, RF and USB leads and tie each within 60 mm of its plug to a tie "
         "mount bonded to the lid, so no lead pulls on a jack. To take the unit out: the three plugs, the six frame screws, the frame, the unit." % (
-            Q.PAD["t"] - Q.Z_UB, Q.PAD["t"] - Q.Z_UB, Q.PAD["t"] * (1 - Q.PAD["t_tol"]) - (Q.Z_UB + C.PRINT_TOL + Q.UNIT_TOL), Q.PAD["t"] * (1 + Q.PAD["t_tol"]) - (Q.Z_UB - C.PRINT_TOL - Q.UNIT_TOL)),
+            Q.PAD["t"] - Q.Z_UB, C.TORQUE, Q.PAD["t"] - Q.Z_UB, Q.PAD["t"] * (1 - Q.PAD["t_tol"]) - (Q.Z_UB + C.PRINT_TOL + Q.UNIT_TOL), Q.PAD["t"] * (1 + Q.PAD["t_tol"]) - (Q.Z_UB - C.PRINT_TOL - Q.UNIT_TOL)),
         "2. THE WAY IN IS CHECKED (the record, section E): the unit at its largest, with its knobs, button actuators and jacks, keeps %.2f to every solid of the "
         "tray on its way down (the least: %s to the %s), and the frame keeps %.2f to everything that stands proud of the unit (the least: %s to the %s); the "
         "stated minimum is %.2f. The first pass's tray, whose ledges and lintels were part of the tray, fails the same check, as it must." % (
