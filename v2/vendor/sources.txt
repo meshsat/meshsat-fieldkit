@@ -301,3 +301,33 @@ cm5/doc-rtc.adoc   # https://raw.githubusercontent.com/raspberrypi/documentation
 cm5/rpi-firmware-overlays-README.txt   # https://raw.githubusercontent.com/raspberrypi/firmware/master/boot/overlays/README (last commit to the file f72c4f42, 2026-09-11; curl from the runner, 2026-09-26)
 cm5/linux-bcm2712-rpi.dtsi   # https://raw.githubusercontent.com/raspberrypi/linux/rpi-6.18.y/arch/arm64/boot/dts/broadcom/bcm2712-rpi.dtsi (last commit to the file 00365ac0, 2026-09-03; curl from the runner, 2026-09-26)
 cm5/linux-bcm2712-rpi-cm5.dtsi   # https://raw.githubusercontent.com/raspberrypi/linux/rpi-6.18.y/arch/arm64/boot/dts/broadcom/bcm2712-rpi-cm5.dtsi (last commit to the file 6855d494, 2026-04-20; curl from the runner, 2026-09-26)
+
+# Closer hc6 (pre-PCB layer 6, MESHSAT-1357), fetched 27 September 2026 (UTC); v2/docs/parts/PROCUREMENT.md section 7 gives each sha256.
+crystals       # 25 MHz crystal specifications: the fitted Yajingxin TAXM25M4RFBCCT2T and two replacement candidates (YXC, Seiko Epson), each LCSC's copy of the maker's sheet
+st/st-stm32h743xi-datasheet-rev11.pdf   # https://web.archive.org/web/20260827112637id_/https://www.st.com/resource/en/datasheet/stm32h743vi.pdf (DS12110 Rev 11), fetched 2026-09-26T23:51Z, served gzip-encoded and filed decompressed; capture 20260318060051 byte-identical; st.com refused this host
+st/st-rm0433-rev8.pdf   # https://web.archive.org/web/20251014013150id_/https://www.st.com/resource/en/reference_manual/rm0433-stm32h742-stm32h743753-and-stm32h750-value-line-advanced-armbased-32bit-mcus-stmicroelectronics.pdf (RM0433 Rev 8), fetched 2026-09-26T23:50Z
+st/st-es0392-rev15.pdf   # https://web.archive.org/web/20260526205148id_/https://www.st.com/resource/en/errata_sheet/es0392-stm32h742xig-stm32h743xig-and-stm32h753xi-device-errata-stmicroelectronics.pdf (ES0392 Rev 15), fetched 2026-09-26T23:52Z, served gzip-encoded and filed decompressed
+connectors/jst-vh-catalogue.pdf   # https://www.jst-mfg.com/product/pdf/eng/eVH.pdf, fetched 2026-09-27T00:21:04Z
+connectors/wurth-wr-bhd-box-header-61202621621.pdf   # https://www.we-online.com/components/products/datasheet/61202621621.pdf, fetched 2026-09-27T00:20Z
+connectors/wurth-wr-bhd-box-header-61201621621.pdf   # https://www.we-online.com/components/products/datasheet/61201621621.pdf, fetched 2026-09-27T00:20Z
+connectors/wurth-wr-bhd-box-header-61201021621.pdf   # https://www.we-online.com/components/products/datasheet/61201021621.pdf, fetched 2026-09-27T00:20Z
+connectors/wurth-wr-bhd-idc-socket-61202623021.pdf   # https://www.we-online.com/components/products/datasheet/61202623021.pdf, fetched 2026-09-27T00:20Z
+connectors/wurth-wr-bhd-idc-socket-61201623021.pdf   # https://www.we-online.com/components/products/datasheet/61201623021.pdf, fetched 2026-09-27T00:20Z
+connectors/wurth-wr-bhd-idc-socket-61201023021.pdf   # https://www.we-online.com/components/products/datasheet/61201023021.pdf, fetched 2026-09-27T00:20Z
+connectors/wurth-wr-cab-ribbon-63912615521cab.pdf   # https://www.we-online.com/components/products/datasheet/63912615521CAB.pdf, fetched 2026-09-27T00:21Z
+connectors/wurth-wr-cab-ribbon-63911615521cab.pdf   # https://www.we-online.com/components/products/datasheet/63911615521CAB.pdf, fetched 2026-09-27T00:21Z
+connectors/wurth-wr-cab-ribbon-63911015521cab.pdf   # https://www.we-online.com/components/products/datasheet/63911015521CAB.pdf, fetched 2026-09-27T00:21Z
+connectors/wurth-wr-com-usb3-a-692122030100.pdf   # https://www.we-online.com/components/products/datasheet/692122030100.pdf, fetched 2026-09-27T00:30Z
+connectors/millmax-0858-product-page-20260927.html   # https://www.mill-max.com/products/discrete-spring-loaded-pins/spring-loaded-pin-with-standard-tail/0858, saved 2026-09-27T00:12:15Z
+connectors/millmax-rugged-power-spring-pins-page28.pdf   # https://www.mill-max.com/sites/default/files/external/assets/2017-12/Rugged%20Spring%20Pins.pdf, fetched 2026-09-27T00:13Z
+rockblock/groundcontrol-rockblock-9704-product-page-20260927.html   # https://www.groundcontrol.com/product/rockblock-9704/, saved 2026-09-27T00:08:20Z
+rockblock/groundcontrol-docs-rockblock-9704-specification-20260927.html   # https://docs.groundcontrol.com/iot/rockblock-9704/specification, saved 2026-09-27T00:08:20Z
+rockblock/rb9704-datasheet-RB9704-001-JUN26.pdf   # https://www.groundcontrol.com/wp-content/uploads/2026/07/RockBLOCK-9704-Data-Sheet.pdf, byte-identical at 2026-09-27T00:26Z (its URL was not recorded before)
+ti/tps23861-datasheet.pdf   # https://www.ti.com/lit/ds/symlink/tps23861.pdf, byte-identical at 2026-09-27T00:42:45Z (SLUSBX9I)
+crystals/yajingxin-taxm25m4rfbcct2t-spec-2026-08-26.pdf   # https://datasheet.lcsc.com/datasheet/pdf/3086cc872f6c9505eebaf3751fb73fcd.pdf?productCode=C164047 (LCSC's copy of the maker's specification), fetched 2026-09-27T00:04:33Z
+crystals/yxc-ysx321sl-x322525mob4si.pdf   # https://datasheet.lcsc.com/datasheet/pdf/a84bd8d530dd46e4b0f6d0ee59d8a89c.pdf?productCode=C9006 (LCSC's copy of the YXC sheet), fetched 2026-09-27T00:05:27Z
+crystals/epson-tsx-3225-x1e0000210139.pdf   # https://datasheet.lcsc.com/datasheet/pdf/0d18bdcfc6729dd0d95eefcfc4755fee.pdf?productCode=C91750 (LCSC's copy of the Seiko Epson sheet), fetched 2026-09-27T00:05:27Z
+pulse/pulse-hx6096nl-datasheet-rev-a.pdf   # https://productfinder.pulseeng.com/doc_type/WEB301/doc_num/HX6096NL/doc_part/HX6096NL.pdf (linked from Pulse's product finder page for HX6096NL), fetched 2026-09-27T04:05:06Z
+wifi/asiarf-AW7915-AED-datasheet.pdf   # https://asiarf.com/wp-content/uploads/2026/05/260505_Datasheet_AW7915-AED-1P.pdf (linked from the held product page), byte-identical at 2026-09-27T03:56:57Z
+cm5/cm5-datasheet.pdf   # https://datasheets.raspberrypi.com/cm5/cm5-datasheet.pdf, byte-identical at 2026-09-27T03:56:58Z
+rf/radiall-smp-max-series-R222M-D1C004XEe.pdf   # https://www.radiall.com/media/files/SMP-MAX%20D1C004XEe.pdf, byte-identical at 2026-09-27T03:57:30Z

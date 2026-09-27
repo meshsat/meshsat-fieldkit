@@ -33,19 +33,19 @@ Registry state **DRAFT_FOR_REVIEW_C**. Sources read at commit `eadbe571` unless 
 
 | evidence result | records | what it means |
 |---|---:|---|
-| PASS | 13 | the record's own reading passed, at the phase named, with the file it was read from |
+| PASS | 14 | the record's own reading passed, at the phase named, with the file it was read from |
 | FAIL | 15 | the record's own reading failed, at the phase named; an open conflict reads FAIL on its own sources |
-| INCONCLUSIVE | 12 | a reading was taken and cannot decide |
+| INCONCLUSIVE | 11 | a reading was taken and cannot decide |
 | NOT_JUDGED | 79 | judgeable before hardware and not yet read at requirement level (rule verdicts live in rules_status) |
 | NOT_YET_TESTED | 7 | needs the built prototype, which does not exist |
 | NOT_APPLICABLE | 6 | superseded; kept so nobody re-opens it |
 
 | reading | evidence class | records |
 |---|---|---:|
-| PASS | DESK_REVIEW | 13 |
+| PASS | DESK_REVIEW | 14 |
 | FAIL | DESK_REVIEW | 12 |
 | FAIL | none: an open conflict read on its own cited sources | 3 |
-| INCONCLUSIVE | DESK_REVIEW | 12 |
+| INCONCLUSIVE | DESK_REVIEW | 11 |
 
 No record reads PASS on evidence awaiting revalidation (the validator refuses it). DESK_REVIEW: the session's own reading of named files, bound to each by content; not a qualified engineer's, and never a physical test.
 
@@ -423,7 +423,7 @@ Prototype 1: in the core D-01 names. 18 record(s).
 | FEA-003 | feasibility | core | FEASIBILITY_OPEN | SCRIPT, MANUAL_REVIEW, PROTOTYPE_MEASUREMENT | SCHEMATIC, PROTOTYPE | SI-001, PLC-001 | 43 | INCONCLUSIVE at SCHEMATIC; PROTOTYPE not yet judged, DESK_REVIEW | BLOCKER |
 | FEA-006 | feasibility | core | FEASIBILITY_OPEN | SCRIPT, MANUAL_REVIEW | SCHEMATIC, PLACED_BOARD | DEC-001 | 42 | INCONCLUSIVE at SCHEMATIC; PLACED_BOARD not yet judged, DESK_REVIEW | BLOCKER |
 | CON-004 | constraint | core | DEFINED | SCRIPT, PROTOTYPE_MEASUREMENT | SCHEMATIC, PROTOTYPE | CLK-001 | - | NOT_JUDGED | BLOCKER |
-| CON-017 | constraint | core | DEFINED | SCRIPT, MANUAL_REVIEW | SCHEMATIC | none | - | INCONCLUSIVE at SCHEMATIC, DESK_REVIEW | BLOCKER |
+| CON-017 | constraint | core | DEFINED | SCRIPT, MANUAL_REVIEW | SCHEMATIC, PROTOTYPE | none | - | PASS at SCHEMATIC; PROTOTYPE not yet judged, DESK_REVIEW | BLOCKER |
 | CON-005 | constraint | core | DEFINED | MANUAL_REVIEW, PROTOTYPE_MEASUREMENT | SCHEMATIC, PROTOTYPE | INT-002, INT-003 | 29 | NOT_JUDGED | BLOCKER |
 | CHO-002 | choice | core | DEFINED | SCRIPT, PROTOTYPE_MEASUREMENT | SCHEMATIC, PROTOTYPE | RF-001 | - | NOT_JUDGED | MUST_JUSTIFY |
 | ASM-002 | assumption | core | TBD | MANUAL_REVIEW | SCHEMATIC | none | - | NOT_JUDGED | MUST_JUSTIFY |
@@ -465,7 +465,9 @@ Prototype 1: in the core D-01 names. 18 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/V2-SPEC.md re-read at the layer 1 closing of 27 September 2026 (worktree fnd/hc1, from e3aedb25): it changed lines 3, 9, 10, 11, 13, 23, 24, 34, 41, 42, 51, 70, 73, 76 and 90 and added corrections 20 to 27; line 32 and correction 6, which this reading cites, are byte-identical, so it stands on the file at dd9a92946a8d186f
 
-*Bound to:* `v2/docs/CONOPS.md@122c921af6e3de40`, `v2/docs/ARCH-PCB-B-IOHA.md@6c3c93b7f32f953a`, `v2/docs/V2-SPEC.md@dd9a92946a8d186f`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/ARCH-PCB-B-IOHA.md re-read when the layer 6 closer's reconciliation was applied (27 September 2026, drafts/hc6/apply_registry.py): sections 10a, 6 differ from e3aedb25's; sections 4, 15 and 15a and line 17 are byte-identical, so this reading stands on the file at 26fed4e40e0da078
+
+*Bound to:* `v2/docs/CONOPS.md@122c921af6e3de40`, `v2/docs/ARCH-PCB-B-IOHA.md@26fed4e40e0da078`, `v2/docs/V2-SPEC.md@dd9a92946a8d186f`
 
 *Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md:17`; `v2/docs/ARCH-PCB-B-IOHA.md section 15a`; `session choice SC-02`; `v2/docs/CONOPS.md section 2a`
 
@@ -587,23 +589,25 @@ Prototype 1: in the core D-01 names. 18 record(s).
 
 **CON-017** (constraint). The three I/O supervisors are the STM32H743VIT6 the project buys, in the schematic text, the symbol value and the BOM, and the regenerated board B netlist matches the committed one apart from that text (D-13, plan condition 1); what the design needs of the part is shown compatible, not only named.
 
-*Accept when:* (1) gen_sch_b.py and board B's BOM name the STM32H743VIT6 for all three supervisors and the pin map is unchanged; (2) regeneration parity traces every other netlist difference to a finding; (3) the compatibility matrix of every peripheral the supervisor firmware uses is retained with its DS12110 sources; (4) the supervisor firmware builds for the STM32H743.
+*Accept when:* At SCHEMATIC: (1) gen_sch_b.py and board B's BOM name the STM32H743VIT6 for all three supervisors and the pin map is unchanged; (2) regeneration parity traces every other netlist difference to a finding; (3) the compatibility matrix of every pin, peripheral and feature the schematic and the supervisor firmware use is retained with its DS12110 sources, and no requirement depends on an STM32H753-only unit. At ASSEMBLY: (5) the fitted supervisors are silicon revision V or X (marking V or X; DBGMCU_IDC REV_ID 0x2003 or 0x2001; ES0392 Rev 15 section 2.24.2). At the firmware stage (final_phase): (4) the supervisor firmware builds for the STM32H743 and refuses to run both FDCAN fabrics on revision Y or W.
 
-*What an earlier reading said:* Read FAIL at d468613e (the symbol read STM32H753VI); the text, value and order line are aligned in 458b2873 (S-30, closed). Clauses (3) and (4) follow the review of 26 September 2026 and owner condition 1.
+*What an earlier reading said:* Read FAIL at d468613e (the symbol read STM32H753VI); the text, value and order line are aligned in 458b2873 (S-30, closed). Clauses (3) and (4) follow the review of 26 September 2026 and owner condition 1. INCONCLUSIVE until 27 September 2026, when the layer 6 closer wrote the matrix of clause (3), moved clause (4) to the firmware stage (final_phase PROTOTYPE: the build cannot change a pin, land, net or part, and held at SCHEMATIC it blocked the schematic record on a deliverable the layout does not need) and added clause (5) from ES0392 Rev 15 section 2.24.2 (with two FDCANs, revision Y or W CPU reads of the message RAM may be wrong, no workaround); both taken by the session under the owner's standing rule of 26 September 2026 (STM32H743-COMPATIBILITY.md section 9, HC6-SC-1).
 
-*allocated to b, fw_ioctrl; rulings D-13; waits on S-41.*
+*allocated to b, fw_ioctrl, procedure; rulings D-13; waits on S-41.*
 
-*Evidence (INCONCLUSIVE, DESK_REVIEW):* (1) and (2) hold: v2/ecad/tools/gen_sch_b.py:281-289 and :1145-1146 read at eadbe571 name STM32H743VIT6 (JLCPCB C114409) with the pin table checked again for both parts, the committed netlist v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net carries U41, U51 and U61 as STM32H743VIT6, and 458b2873's parity run traced every difference to a finding
+*Evidence (PASS, DESK_REVIEW):* (3) holds (layer 6 closer hc6, 27 September 2026): v2/docs/parts/STM32H743-COMPATIBILITY.md reads every pin the three supervisors use (30 of 100; 14 supplies, 56 unconnected) in DS12110 Rev 10 and Rev 11 (Table 9 I/O structure, Table 10 alternate functions: FDCAN1 PD0/PD1 AF9, FDCAN2 PB12/PB13 AF9, I2C1 PB6/PB7 AF4, SWD PA13/PA14 AF0), the electrical features the design relies on in the revision V tables (Rev 11 Tables 109, 110, 112, 114, 116, 131, 147), the peripherals in RM0433 Rev 8 (FDCAN chapter 56, I2C chapter 47, IWDG option bit IWDG1_SW, GPIO reset state p.533) and the errata in ES0392 Rev 15; RM0433 Table 2 (p.103) lists CRYP, HASH, secure access mode, RSS and the secure-only flash area as not available on the STM32H743 and no requirement, generator line or feasibility page uses one. The pin map was checked against the committed netlist when this reading was bound (U41, U51 and U61, pin numbers and functions). Clause (5) is ASSEMBLY's and clause (4) the firmware stage's (final_phase), so they do not decide this SCHEMATIC reading
 
-*Evidence (INCONCLUSIVE, DESK_REVIEW):* (3) and (4) cannot be decided: no supervisor firmware exists, and the peripherals it uses are named across ARCH-PCB-B-IOHA.md section 6, v2/docs/feasibility/FAILOVER-FABRIC.md (FAB-05, FDCAN at 1 Mbps) and v2/docs/feasibility/ZEROIZE.md section 7 (no H753-only unit needed) without one matrix (review of 26 September 2026: "Partly met")
+*Evidence (PASS, DESK_REVIEW):* (1) and (2) hold: v2/ecad/tools/gen_sch_b.py:281-289 and :1145-1146 read at eadbe571 name STM32H743VIT6 (JLCPCB C114409) with the pin table checked again for both parts, the committed netlist v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net carries U41, U51 and U61 as STM32H743VIT6, and 458b2873's parity run traced every difference to a finding
 
-*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/ecad/tools/gen_sch_b.py re-read at the clamp-symbol merge of 26 September 2026 (stream ts-tvs): it changed only at lines 441, 671, 832 and 876 (board B's one-way clamps D1, D2, D101, D201, D301 and D520 now drawn through kisch.tvs()); every line number is kept and this reading cites none of those lines, so it stands on the file at dedaf34ce285e5ff
+*Evidence (PASS, DESK_REVIEW):* Earlier reading (INCONCLUSIVE, 26 September 2026), superseded on 27 September 2026 for (3) by the first item above and for (4) by final_phase: (3) and (4) cannot be decided: no supervisor firmware exists, and the peripherals it uses are named across ARCH-PCB-B-IOHA.md section 6, v2/docs/feasibility/FAILOVER-FABRIC.md (FAB-05, FDCAN at 1 Mbps) and v2/docs/feasibility/ZEROIZE.md section 7 (no H753-only unit needed) without one matrix (review of 26 September 2026: "Partly met")
 
-*Evidence (INCONCLUSIVE, DESK_REVIEW):* v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at the clamp-symbol merge of 26 September 2026: compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent checker, it differs only in D1, D2, D101, D201, D301 and D520's symbol (Device:D_TVS to Device:D_Zener) and pin names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 669d02d07aeaae4b
+*Evidence (PASS, DESK_REVIEW):* v2/ecad/tools/gen_sch_b.py re-read at the clamp-symbol merge of 26 September 2026 (stream ts-tvs): it changed only at lines 441, 671, 832 and 876 (board B's one-way clamps D1, D2, D101, D201, D301 and D520 now drawn through kisch.tvs()); every line number is kept and this reading cites none of those lines, so it stands on the file at dedaf34ce285e5ff
 
-*Bound to:* `v2/ecad/tools/gen_sch_b.py@dedaf34ce285e5ff`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b`
+*Evidence (PASS, DESK_REVIEW):* v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net regenerated at the clamp-symbol merge of 26 September 2026: compared component by component and net by net (pin, pinfunction, pintype) by the stream and its independent checker, it differs only in D1, D2, D101, D201, D301 and D520's symbol (Device:D_TVS to Device:D_Zener) and pin names (A1/A2 to K/A) on the same nets, so this reading stands on the file at 669d02d07aeaae4b
 
-*Source (verified):* `owner ruling D-13`; `v2/ecad/tools/gen_sch_b.py:1145-1146`; `v2/docs/reviews/2026-09-26-foundation-progress-review.md`
+*Bound to:* `v2/ecad/tools/gen_sch_b.py@dedaf34ce285e5ff`, `v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net@669d02d07aeaae4b`, `v2/docs/parts/STM32H743-COMPATIBILITY.md@67335ea42747e22f`, `v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf@f6e620179006c8c4`, `v2/vendor/st/st-rm0433-rev8.pdf@9ba54135736a47a3`, `v2/vendor/st/st-es0392-rev15.pdf@effe23b2b79ec4ee`
+
+*Source (verified):* `owner ruling D-13`; `v2/ecad/tools/gen_sch_b.py:1145-1146`; `v2/docs/reviews/2026-09-26-foundation-progress-review.md`; `v2/docs/parts/STM32H743-COMPATIBILITY.md`; `v2/vendor/st/st-es0392-rev15.pdf section 2.24.2`
 
 *Notes:* Created by the integrator from D-13. No rule of pcb_rules.yaml judges a symbol value against the part bought, so the reading is the record's own.
 
@@ -669,7 +673,9 @@ Prototype 1: in the core D-01 names. 18 record(s).
 
 *Evidence (PASS, DESK_REVIEW):* v2/docs/PANEL.md re-read: board C's round 8 draft of 26 September 2026, integrated on 27 September 2026 onto the PANEL.md of boards A and D's round 8 (f1adb6681df74902, its section 6 conflict resolved by keeping board A's rows and adding board C's lamp clause), changes section 1's Indicators and EMCON logic rows, section 3's GPIO 21 row, section 4's hardware-LED paragraph, section 6's TX_INHIBIT_n row, section 8's lighting paragraph and section 11's report sentence; sections 2, 5, 7, 9 and 10 and the paragraphs before section 1 are byte-identical; line 5 (bank 1's home and failover hosts) and section 2's ribbon table, which this reading rests on, are byte-identical, and section 1 changes only in its Indicators and EMCON logic rows, so it stands on the file at 8eeb152e4d82080c
 
-*Bound to:* `v2/docs/ARCH-PCB-B-IOHA.md@6c3c93b7f32f953a`, `v2/docs/PANEL.md@8eeb152e4d82080c`, `v2/ecad/tools/gen_sch_b.py@dedaf34ce285e5ff`
+*Evidence (PASS, DESK_REVIEW):* v2/docs/ARCH-PCB-B-IOHA.md re-read when the layer 6 closer's reconciliation was applied (27 September 2026, drafts/hc6/apply_registry.py): sections 10a, 6 differ from e3aedb25's; sections 4, 15 and 15a and line 17 are byte-identical, so this reading stands on the file at 26fed4e40e0da078
+
+*Bound to:* `v2/docs/ARCH-PCB-B-IOHA.md@26fed4e40e0da078`, `v2/docs/PANEL.md@8eeb152e4d82080c`, `v2/ecad/tools/gen_sch_b.py@dedaf34ce285e5ff`
 
 *Source (verified):* `v2/docs/ARCH-PCB-B-IOHA.md section 4`; `v2/docs/ARCH-PCB-B-IOHA.md section 15`; `v2/ecad/tools/gen_sch_b.py:788`
 
@@ -1240,7 +1246,9 @@ Prototype 1: not in the core. 17 record(s).
 
 *Evidence (FAIL, DESK_REVIEW):* v2/docs/feasibility/POWER-THERMAL.md re-read at round 8 of 26 September 2026 (stream d), integrated on 27 September 2026 onto board A's round 8 text (bb9c861c9920c8d6): board D's draft changes one sentence of section 0 (the flange reading PWR-F15 is drawn on board D's round 8 netlist, an NTC read by an ADS1115 at 0x48, read by firmware), the PWR-F15 row of section 10, and adds finding PWR-F16 (a hung controller with a PTT held is bounded by nothing; its PA_EN formula brought to board A's round 8 at integration); section 9.4, which this reading cites, is byte-identical, so the record stays FAIL
 
-*Bound to:* `v2/docs/feasibility/POWER-THERMAL.md@465abd3bb9c97416`
+*Evidence (FAIL, DESK_REVIEW):* v2/docs/parts/GRADE-CHECK.md (layer 6 closer hc6, 27 September 2026; generated by v2/docs/parts/grade_check.py from the committed netlists, lcsc_fill.py's MAP, the JLCPCB certification table, pcb_envelope.yaml and v2/docs/parts/grade-sources.yaml) judges every fitted active part and connector of the six schematic boards and the modules, cells and wall parts no netlist carries. Board lines: OUTSIDE 1, AT_LIMIT 8, INSIDE_HOT_ONLY 3, TBD 8, INSIDE 123, NOT_A_COMPONENT 3; modules, cells and wall parts: OUTSIDE 2, CARVE_OUT 1, AT_LIMIT 3, TBD 5, INSIDE 8; lines no row covers: 0. OUTSIDE: board B's T1 (Pulse H5007NL, 0 to +70 C), the LimeSDR Mini v2.4 and the AW7915-AED cards, the three parts this record already names, so it stays FAIL. A desk record beside the rule, not the rule's input: pcb_part_temps.yaml still carries the rule's rows
+
+*Bound to:* `v2/docs/feasibility/POWER-THERMAL.md@465abd3bb9c97416`, `v2/docs/parts/GRADE-CHECK.md@e68bd0bbd89272aa`, `v2/docs/parts/grade-sources.yaml@436f6616df519760`
 
 *Source (verified):* `v2/docs/MESHSAT-709-geometry-appendix.md:18527-18540 (32.360)`; `v2/ecad/tools/pcb_part_temps.yaml`; `v2/docs/feasibility/POWER-THERMAL.md section 9.4`
 
@@ -2573,7 +2581,7 @@ Each of these stops prototype 1's acceptance while it is unmet. The scope column
 | FEA-003 | NEED-03 | feasibility | NAMED | FEASIBILITY_OPEN | INCONCLUSIVE at SCHEMATIC; PROTOTYPE not yet judged |
 | FEA-006 | NEED-03 | feasibility | NEED_DEFAULT | FEASIBILITY_OPEN | INCONCLUSIVE at SCHEMATIC; PLACED_BOARD not yet judged |
 | CON-004 | NEED-03 | constraint | NEED_DEFAULT | DEFINED | NOT_JUDGED |
-| CON-017 | NEED-03 | constraint | NEED_DEFAULT | DEFINED | INCONCLUSIVE at SCHEMATIC |
+| CON-017 | NEED-03 | constraint | NEED_DEFAULT | DEFINED | PASS at SCHEMATIC; PROTOTYPE not yet judged |
 | CON-005 | NEED-03 | constraint | NEED_DEFAULT | DEFINED | NOT_JUDGED |
 | REQ-014 | NEED-05 | requirement | NEED_DEFAULT | TBD | NOT_JUDGED |
 | FEA-004 | NEED-05 | feasibility | NAMED | FEASIBILITY_OPEN | INCONCLUSIVE at SCHEMATIC; PROTOTYPE not yet judged |
@@ -2763,7 +2771,7 @@ SESSION items are engineering the session decides and records with authority SES
 | S-37 | SESSION | A delivery and latency target per bearer for the MeshSat Bridge's acceptance on the kit. | REQ-003 |
 | S-39 | SESSION | PANEL.md's LED count reconciled: section 1 and the generator carry 16 panel indicators (D1 to D16), and section 9's lamp test says 17. | REQ-007 |
 | S-40 | SESSION | Software-verified boot on the STM32H743 supervisors, and on the compute modules if Raspberry Pi documents it (D-13's prototype floor). | CON-020, REQ-065 |
-| S-41 | SESSION | The STM32H743 compatibility matrix of every peripheral the supervisor firmware uses (FDCAN at or below 1 Mbps, I2C1 as a target at 0x30 to 0x32, GPIO, the independent watchdog, SWD) retained with its DS12110 sources, and the supervisor firmware built for the H743 (review of 26 September 2026: text agreement alone is "partly met"). | CON-017 |
+| S-41 | SESSION | The supervisor firmware built for the STM32H743 (CON-017 clause 4, the firmware stage) with the obligations v2/docs/parts/STM32H743-COMPATIBILITY.md sections 5, 6 and 9 name: FDCAN at or below 1 Mbps with edge filtering off, I2C1 a target only at 0x34 to 0x36 (ARCHITECTURE.md 5.5, I3-F01) with the kernel clock at 10 MHz or more and the first byte preloaded (ES0392 2.19.3, 2.19.9), the IWDG started by option byte, BOR level 3, PC5 an input, and a REV_ID read at boot. The matrix itself was delivered on 27 September 2026 (layer 6 closer hc6). | CON-017 |
 | S-42 | SESSION | Board B's fabric findings FAB-01 to FAB-04 fixed in the generator, each with check_pcb_b.py's assertion and its mutation: the TEST2 strap, the back-power gating of FAB-02 (b) and (c), a true break-before-make sequence, and 10 kohm on the 23 safe-low lines (FAILOVER-FABRIC.md sections 9 and 10). | CON-003, CON-022, FEA-003 |
 | S-44 | SESSION | The hardware EMCON lamp on board C, driven from the line state with no processor in its path, and its light-guide hole in the face plate (SD-EMC-6, EMCON.md section 7). | CON-021, FEA-002 |
 | S-45 | SESSION | BAT-001's instrument brought to board P as generated: pack_protection still reads FAIL on the regenerated board P ("no second protector and no chemical fuse", battery packet evidence gates-new/pack_protection.log), because its inputs describe the old pack. | REQ-044, FEA-005 |
@@ -2838,13 +2846,12 @@ Every item that has left the open list, and what closed it: an owner ruling, a s
 | CON-015 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/ecad/tools/gen_sch_b.py:635-643 read at eadbe571: J_M2C2 is TE 2199119-3, key ID B on TE drawing C-2199119 rev F (458b2873), and its land lacks the drawing's two locating holes (1.1 and 1.6 mm), which the generator's footprint does not draw; v2/ecad/tools/gen_sch_b.py re-read at the clamp-symbol merge of 26 September 2026 (stream ts-tvs): it changed only at lines 441, 671, 832 and 876 (board... |
 | CON-016 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | orientation holds on every committed netlist at eadbe571 (pad 1 the cathode, adjudication A03): board E's D1, D2, D3 and D4 and board P's D1 on their positive conductors and board E's D10 now bidirectional, board D's D1 on +5V_D8, board C's D19 to D21 toward VGH and from VGL, boards A's and B's clamps on their rails (v2/ecad/pcb-e1-dock-e7/out/pcb-e1-dock.net, v2/ecad/pcb-p-pack-p2/out/pcb-p-pa... |
 
-### INCONCLUSIVE (12)
+### INCONCLUSIVE (11)
 
 | record | prototype 1 | effect | at | class | evidence |
 |---|---|---|---|---|---|
 | FEA-003 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/FAILOVER-FABRIC.md sections 1, 8 and 10 read at eadbe571: 202 of 202 rows with an expected far end read OK on the round-6 netlist; FAB-01 to FAB-04 stand on main and on the candidate; the escape trial Q-B-ESC-1 is specified and not run, and the eight-layer whole-board run of decision 43 has not been run; none of FB-FAB-1 to FB-FAB-8 is closed; v2/docs/feasibility/FAILOVER-FA... |
 | FEA-006 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/DECOUPLING.md sections 1 and 10 read at eadbe571: the 3 mm number is a project heuristic for every part it is applied to and the rule is per class; "Nothing is laid for this ruling yet"; DEC-001's PASS readings on boards B and P are 33 blanket allowances, not evidence; the TPA6132A2 on board D is fitted with 1 uF where its maker asks 2.2 uF; v2/docs/feasibility/DECOUPLING.md... |
-| CON-017 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | (1) and (2) hold: v2/ecad/tools/gen_sch_b.py:281-289 and :1145-1146 read at eadbe571 name STM32H743VIT6 (JLCPCB C114409) with the pin table checked again for both parts, the committed netlist v2/ecad/pcb-b-compute-b19/out/pcb-b-compute.net carries U41, U51 and U61 as STM32H743VIT6, and 458b2873's parity run traced every difference to a finding; (3) and (4) cannot be decided: no supervisor firmw... |
 | FEA-004 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/feasibility/POWER-THERMAL.md sections 0 and 11 read at eadbe571 (Status: PROVISIONAL): runtime 2.5 h and 1.7 h aged on bounds of 1.3 to 3.3 h and 0.9 to 2.3 h; D-11's thresholds set PROVISIONAL; F2's margin during a key-down unknown; the hot end undecided until the enclosure conductance is measured; v2/docs/feasibility/POWER-THERMAL.md re-read at the records filing of 26 September 2026... |
 | CON-006 | core | BLOCKER | PLACED_BOARD | DESK_REVIEW | v2/docs/CASE-MARGINS.md section 3.2 read at eadbe571: of the pack's four margins, M4b (east face to the east wall) and M6 (pack top under B16's underside) are MET and M4a (the east corner to Peli's R 15.88 fillet) and M5 (the pack group in Y between the east legs) are OPEN until the pack's hold-down fixes its place (section 7); v2/docs/CASE-MARGINS.md re-read at its seventh revision (stream r8d... |
 | REQ-019 | core | BLOCKER | PLACED_BOARD | DESK_REVIEW | v2/docs/CASE-MARGINS.md sections 0 and 3 read at eadbe571: of 70 computed margins 35 are MET and 35 OPEN, none NOT MET; the OPEN rows rest on the case's unpublished tolerance, the build's allowances or a pick, and section 7 names what closes each (nominal CAD establishes no fit, blind-mate alignment or seal); v2/docs/CASE-MARGINS.md re-read at its seventh revision (stream r8docs, MESHSAT-1357 r... |
@@ -2855,11 +2862,12 @@ Every item that has left the open list, and what closed it: an owner ruling, a s
 | REQ-044 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | the netlist clause holds on the committed netlist v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net at eadbe571 (v2/ecad/tools/gen_sch_p.py:243, :288 and :355-430): the BQ7720700 second level (cell OV 4.325 V and UV 2.25 V, open wire, OT on its own thermistor J_TS2) and the BQ4050's FUSE output both drive FUSE_G through R29 and R30, which closes Q3 on the Eaton SCF9550 F2's heater once the arming jumper... |
 | FEA-005 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/review-packets/battery/REVIEW-REQUEST.md read at eadbe571: "All reviews to date are by AI agent sessions; no qualified human engineer has reviewed this revision" and "Nothing in this file has been sent to anyone"; PROTECTION-ARCHITECTURE.md names what is not covered with the primary failed and its FETs held on (over-current between the cells' 24 A and F1's 25 A, charge over-current, cha... |
 
-### PASS (13)
+### PASS (14)
 
 | record | prototype 1 | effect | at | class | evidence |
 |---|---|---|---|---|---|
 | REQ-005 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/docs/CONOPS.md section 2a ("Which peripherals NEED-03 protects"), v2/docs/ARCH-PCB-B-IOHA.md section 15a ("The critical peripherals of prototype 1, named") and v2/docs/V2-SPEC.md:32 (correction 6) read at eadbe571: all three name every USB peripheral of IOHA section 15 and the kit-to-kit WiFi link as critical, and the LoRa module and cellular data as the named exceptions for prototype 1; v2/... |
+| CON-017 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | (3) holds (layer 6 closer hc6, 27 September 2026): v2/docs/parts/STM32H743-COMPATIBILITY.md reads every pin the three supervisors use (30 of 100; 14 supplies, 56 unconnected) in DS12110 Rev 10 and Rev 11 (Table 9 I/O structure, Table 10 alternate functions: FDCAN1 PD0/PD1 AF9, FDCAN2 PB12/PB13 AF9, I2C1 PB6/PB7 AF4, SWD PA13/PA14 AF0), the electrical features the design relies on in the revisio... |
 | CFL-001 | core | ADVISORY | SCHEMATIC | DESK_REVIEW | v2/docs/ARCH-PCB-B-IOHA.md sections 4 and 15 read at eadbe571 give bank 1 to slot 2, bank 2 to slot 3 and bank 3 to slot 1; v2/docs/PANEL.md section 1 and its pin table give bank 1's failover host as slot 2; the generator sets f = s % 3 + 1 at v2/ecad/tools/gen_sch_b.py:788; v2/docs/ARCH-PCB-B-IOHA.md re-read at the integration of 26 September 2026: the architecture merge corrected it in sectio... |
 | CON-019 | core | BLOCKER | SCHEMATIC | DESK_REVIEW | v2/ecad/tools/gen_sch_a.py:1088-1104 read at eadbe571, on the committed netlists v2/ecad/pcb-a-power-a23/out/pcb-a-power.net and v2/ecad/pcb-d-aprs-d9/out/pcb-d-aprs.net: U30 (SN74LVC1G00) gives OUTLET_OK = NOT (TR_APRS AND PA_EN), and U26's spare gates give POE_EN = POE_SW_EN AND OUTLET_OK and PD_EN = PD_SW_EN AND OUTLET_OK, the enables of the PoE stage U16 and the USB-C stage U19. TR_APRS is... |
 | CON-018 | deferred | MUST_JUSTIFY | SCHEMATIC | DESK_REVIEW | v2/ecad/tools/gen_sch_a.py:1016-1026 read at eadbe571 and the committed netlist v2/ecad/pcb-a-power-a23/out/pcb-a-power.net: U31, a TPD2E2U06QDBZRQ1, sits on PD_CC1 and PD_CC2 with the pigtail header J_USBC_OUT; its 1.9 pF maximum leaves C96 and C97 (330 pF) inside the TPS25740A's 200 to 600 pF C(RX) window, as the generator's note records from SLLSEJ9E and SLVSDG8B; TEST-PLAN M7 covers every e... |

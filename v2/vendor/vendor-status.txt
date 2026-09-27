@@ -233,3 +233,25 @@ cm5/doc-rtc.adoc   current   # the RTC's 3 mA constant-current, constant-voltage
 cm5/rpi-firmware-overlays-README.txt   current   # the rtc_bbat_vchg parameter that switches the RTC battery charger on, '2712 only' (tx_inhibit, R4T-D51)
 cm5/linux-bcm2712-rpi.dtsi   current   # the rpi_rtc node with trickle-charge-microvolt and the rtc_bbat_vchg parameter (tx_inhibit, R4T-D51)
 cm5/linux-bcm2712-rpi-cm5.dtsi   current   # the Compute Module 5's own device tree, which includes bcm2712-rpi.dtsi (tx_inhibit, R4T-D51)
+
+# Closer hc6 (pre-PCB layer 6, MESHSAT-1357), 27 September 2026.
+crystals     current   # board B's 25 MHz crystals Y1 to Y4: the fitted part and the replacement candidates of v2/docs/parts/STM32H743-COMPATIBILITY.md section 7
+st/st-stm32h743xi-datasheet-rev11.pdf   current   # DS12110 Rev 11, the current revision for board B's supervisors (supersedes the held Rev 10 as the reading of record)
+st/st-rm0433-rev8.pdf   current   # RM0433 Rev 8, the STM32H743 reference manual (option bytes, FDCAN, I2C, GPIO reset state, security features)
+st/st-es0392-rev15.pdf   current   # ES0392 Rev 15, the STM32H743 errata (silicon revision constraint of the supervisors)
+connectors/jst-vh-catalogue.pdf   current   # JST VH, the 10 A board-to-board power leads (A, B, D, E)
+connectors/wurth-wr-bhd-box-header-61202621621.pdf   current   # the 2x13 IDC box header picked for J_AB1 and J_PANEL (HC6-SC-7)
+connectors/wurth-wr-bhd-box-header-61201621621.pdf   current   # the 2x8 IDC box header picked for J_MEZZ1, J_HARN1 and J_RB9704 (HC6-SC-7)
+connectors/wurth-wr-bhd-box-header-61201021621.pdf   current   # the 2x5 IDC box header picked for J_AB2 (HC6-SC-7)
+connectors/wurth-wr-bhd-idc-socket-61202623021.pdf   current   # the 26-way IDC socket of the ribbons (HC6-SC-7)
+connectors/wurth-wr-bhd-idc-socket-61201623021.pdf   current   # the 16-way IDC socket of the ribbons (HC6-SC-7)
+connectors/wurth-wr-bhd-idc-socket-61201023021.pdf   current   # the 10-way IDC socket of the ribbons (HC6-SC-7)
+connectors/wurth-wr-cab-ribbon-63912615521cab.pdf   current   # the 26-conductor flat cable (HC6-SC-7)
+connectors/wurth-wr-cab-ribbon-63911615521cab.pdf   current   # the 16-conductor flat cable (HC6-SC-7)
+connectors/wurth-wr-cab-ribbon-63911015521cab.pdf   current   # the 10-conductor flat cable (HC6-SC-7)
+connectors/wurth-wr-com-usb3-a-692122030100.pdf   current   # the USB 3.0 A receptacle of board B's J_LIME
+connectors/millmax-0858-product-page-20260927.html   current   # the 9 A spring pins J_CP and J_CN of board A (HC6-SC-8)
+connectors/millmax-rugged-power-spring-pins-page28.pdf   current   # the 085X power spring pin family page (ratings and order code scheme)
+rockblock/groundcontrol-rockblock-9704-product-page-20260927.html   current   # the RockBLOCK 9704 operating range (-40 to +70 C)
+rockblock/groundcontrol-docs-rockblock-9704-specification-20260927.html   current   # the RockBLOCK 9704 specification page
+pulse/pulse-hx6096nl-datasheet-rev-a.pdf   current   # HX6096NL, the -40 to +85 C PoE-rated replacement recommended for board B's T1 (HC6-SC-6, ethernet-magnetics update_53a98a71)

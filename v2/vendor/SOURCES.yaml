@@ -144,6 +144,21 @@
 # jlc_certify.py's CERTIFIED means, which still described the comparison of 82dd1e4d, brought up to the one of
 # 6104cb81 (second pass, after an independent check). No code, board, where, identity or fitted field of any entry
 # changed, so no BOM line joins differently.
+# Pre-PCB layer 6, closer hc6 (27 September 2026, MESHSAT-1357; judged at main 53a98a71, round 8's A, D and E
+# integrated; board B's generator and netlist are byte-identical to e3aedb25's, where the layer 6 audit was taken). Added: (1) the entries the layer 6 audit
+# listed as missing (iridium-modem-rockblock-9704, sdr-limesdr-mini-v2, wifi-card-aw7915-aed, poe-pse-tps23861,
+# dock-spring-connector-precidip-813, pack-spring-pins-millmax-0858, blind-mate-smp-max-radiall, power-leads-jst-vh,
+# ribbon-headers-idc, wall-d38999-and-usb-feedthrough, rf-arrestor-polyphaser, monitor-xenarc-709gnk, compute-module-cm5,
+# board-b-25mhz-crystals); the DS3231 is round 8's (r8b's rtc-ds3231sn), not added twice; (2) `update_53a98a71` blocks on
+# io-supervisor-mcu (the compatibility matrix v2/docs/parts/STM32H743-COMPATIBILITY.md, DS12110 Rev 11, RM0433 Rev 8 and
+# ES0392 Rev 15 filed), ethernet-magnetics (the grade finding, a PoE rating finding and the supported replacement HX6096NL), cellular-socket (the fitted
+# TE 2199119-3) and power-button-controller (distributor readings: the purchase route for round 8's #TRPBF, which JLCPCB holds none of); (3) the owed list brought up to
+# date. HOW TO READ AN ENTRY: its top-level identity, grade and schematic_name fields describe the state it was first
+# written against; the newest update block states the current one, which is how tools/review_packet.py reads it
+# (`_identity_of`, `_where_of`). io-supervisor-mcu, power-button-controller and cellular-socket are the three entries
+# whose top-level fields no longer describe main. Grades are judged against pcb_envelope.yaml as
+# v2/docs/parts/GRADE-CHECK.md judges them. Stock figures are readings of 27 September 2026 (v2/docs/parts/readings/).
+
 # WHAT THIS FILE DOES NOT DO, stated because the review asked for it: an entry here, a MATCH, a VERIFIED status or a filed
 # document does not validate a part. It records which document describes which order code and where the document came
 # from. Whether the part suits this design (ratings against the envelope and the qualification margins, behaviour in the
@@ -787,6 +802,36 @@ parts:
         url: TBD
         sha256: "76b85b47d0bd9f46cfca2281b5e5e31eba1e82f148ffda680472e5a1995c8d65"
         matches_fitted: "yes: H5007NL row of the electrical table, H5004/H5007 mechanical drawing, H5007 schematic group"
+    update_53a98a71:
+      read_on: "2026-09-27"
+      what_moved: "nothing on main; T1 is gen_sch_b.py:869 at 53a98a71 (the file is unchanged since e3aedb25)"
+      where: "v2/ecad/tools/gen_sch_b.py:869 (T1)"
+      where_rev: "53a98a71"
+      grade_vs_envelope_53a98a71: "OUTSIDE, unchanged (0 to 70 C; v2/docs/parts/GRADE-CHECK.md)"
+      poe_finding: "T1 carries the 802.3at feed: POE_P on pin 24 (MCT1) and POE_DRAIN on pin 21 (MCT2) are its media-side centre taps (gen_sch_b.py:866-869, the TPS23861 port at about 600 mA). HC500.O states no DC current or voltage rating for any part it lists, and Microchip's Table 7-2 lists H5007NL for data only. So beside the grade finding the fitted part is a mismatch against the PoE function until a Pulse document rates it, under owner condition 1; the same holds for HX5008NL, the replacement this closer first proposed from Table 7-2, which is withdrawn for that reason"
+      compatibility_53a98a71: "MISMATCH under owner condition 1 until a Pulse document rates the fitted part for the PoE feed (poe_finding); identity stays MATCH, because the code buys the part the schematic names"
+      supported_replacement: "HX6096NL (Pulse; HX6096NLT on tape and reel), session recommendation HC6-SC-6 (v2/docs/parts/PROCUREMENT.md section 4) for board B's author. Its sheet (filed below) states 'OPERATING TEMPERATURE -40 C - +85 C', 'DC CURRENT/VOLTAGE RATING 720 mA, @ 57 V (CONTINUOUS)', 'MEETS IEEE 802.3 SPECIFICATION', turns ratio 1.00 +-2 %, OCL '350 uH MIN @ +25 C, 300 uH MIN CROSS -40 C~85 C (MEASURED AT 100 kHz, 100 mVRMS WITH 24 mA DC BIAS)' and isolation 1500 VRMS; its pin numbering is T1's own (chip side TCT1 1, TD1 2/3 ... TCT4 10, TD4 11/12; media side MCT1 24, MX1 23/22 ... MCT4 15, MX4 14/13), and its suggested land (24 x 0.76 mm on 1.27 mm pitch, rows 12.70 mm inner and 16.51 mm outer) is the one meshsat:Pulse_H5007NL already draws, so no pad moves. The body is 18.16 x 12.2 x 6.60 mm against H5007NL's 17.53 x 12.20 x 5.51 mm, a placement and stack-height input, not a land change. Residual for the qualified review (R-PWR, the PoE PSE): Microchip's Table 7-1 asks 350 uH minimum at 100 mV, 100 kHz and 8 mA; Pulse guarantees 350 uH at +25 C with 24 mA of bias and 300 uH across -40 to +85 C"
+      alternative_readings:
+        - {lcsc: "C5339289", model: "HX6096NL", brand: "Pulse Elec", stock: 146, read: "2026-09-27T04:05:50Z", source: "JLCPCB parts API"}
+        - {lcsc: "C5359044", model: "HX6096NLT", brand: "Pulse Elec", stock: 323, read: "2026-09-27T04:05:50Z", source: "JLCPCB parts API"}
+        - {lcsc: "C47575006", model: "HX6096NLTP-CND", brand: "CND-tek", stock: 417, read: "2026-09-27T04:05:50Z", note: "another maker's part under a Pulse-like name: not the recommendation (HC6-SC-12)"}
+        - {lcsc: "C3019596", model: "HX5008NL", stock: 54, read: "2026-09-27T00:23:45Z", note: "withdrawn: no PoE rating in HC500.O, and a different land"}
+        - {lcsc: "C581367", model: "HX5004NLT", stock: 743, read: "2026-09-27T00:23:45Z", note: "not a fallback: no PoE rating and no OCL figure in HC500.O"}
+      documents_added:
+        - path: "v2/vendor/cluster/ksz9897.pdf"
+          doc_id: "Microchip KSZ9897R data sheet"
+          revision: "DS00002330E (2022)"
+          url: "not recorded (folder line of sources.txt, cluster)"
+          sha256: "02aab4c6a8065c497946191af10bc41f7299d9bbd98c8b3b1db5a51407c21bf0"
+          matches_fitted: "yes: section 7.2 and Tables 7-1 and 7-2 (pp.183-184) list H5007NL (0 to 70 C) and HX5008NL (-40 to 85 C)"
+        - path: "v2/vendor/pulse/pulse-hx6096nl-datasheet-rev-a.pdf"
+          doc_id: "Pulse HX6096NL data sheet (TLA drawing HX6096NL-13, PS-2473.001-A)"
+          revision: "datasheet rev. A (07/30/15), 3 sheets"
+          url: "https://productfinder.pulseeng.com/doc_type/WEB301/doc_num/HX6096NL/doc_part/HX6096NL.pdf (linked from https://productfinder.pulseeng.com/productSearch/HX6096NL)"
+          fetched: "2026-09-27T04:05:06Z, HTTP 200 application/pdf; a raster sheet (13 characters of text), read visually and declared in vendor-noindex.txt"
+          sha256: "76b47ba60ec8775295c617b69967021700e9924e75c5efd450730657f20fc015"
+          matches_fitted: "no: the recommended replacement (sheet 2 electrical table and schematic, sheet 3 outline and suggested land)"
+      currency_note: "the Pulse sheet LCSC serves for HX5004NLT (C581367) is byte-identical to the held pulse-h5007nl.pdf (2026-09-27T00:24Z)"
 
   - id: io-supervisor-mcu
     function: "three I/O high-availability supervisors (IOCTRL A, B, C)"
@@ -856,6 +901,39 @@ parts:
         sha256: "217b5dcbfdd27cec4f6013cf1f51930bf81c338ccbaf7bf8dce3fa69592bb8b3"
         currency: "newest archived capture is 2025-07-26; whether ST has published a Rev 8 since is UNCONFIRMED"
         matches_fitted: "yes: covers both the STM32H743 and the STM32H753 lines"
+    update_53a98a71:
+      read_on: "2026-09-27"
+      what_moved: "no pin of U41, U51 or U61 moved since 45bde541 (the committed netlist read pin by pin at e3aedb25 and byte-identical at 53a98a71: 30 pins used, 14 supplies, 56 unconnected); the round 8 candidate (fnd/r8b) changes only pin 33's net, PC5 reading EMCON_SUP. The related_defect above (I2C on PB1/PB2) was corrected at 458b2873: SCL and SDA are PB6 and PB7, I2C1 AF4 (gen_sch_b.py:1138-1139)"
+      schematic_name: {text: "STM32H743VIT6", where: "v2/ecad/tools/gen_sch_b.py:1146", where_rev: "53a98a71"}
+      where: "v2/ecad/tools/gen_sch_b.py:1146 (U41, U51, U61 in the supervisor loop)"
+      where_rev: "53a98a71"
+      identity_53a98a71: MATCH
+      identity_note: "owner condition 1 is closed at the schematic stage by v2/docs/parts/STM32H743-COMPATIBILITY.md: every pin, alternate function and electrical feature the schematic uses read in DS12110 Rev 10 and Rev 11, RM0433 Rev 8 and ES0392 Rev 15, set against DS12117 Rev 9; the H753-only units (CRYP, HASH, secure access mode, RSS, secure-only flash; RM0433 Table 2 p.103) are used by no requirement, generator or feasibility page. It carries one procurement constraint (silicon revision V or X only, ES0392 2.24.2: with two FDCANs, revision Y or W CPU reads of message RAM may be wrong, no workaround) and firmware obligations (FDCAN at or below 1 Mbps, I2C target errata 2.19.3/2.19.6/2.19.9/2.19.10, IWDG hardware start). The firmware build (CON-017 clause 4) belongs to the firmware stage. Taken by the session under the owner's standing rule of 26 September 2026 (HC6-SC-1 to HC6-SC-5 on that page)"
+      grade_vs_envelope_53a98a71: "INSIDE: TA -40 to +85 C for suffix 6 (DS12110 Rev 11 Table 112 p.210)"
+      lcsc_reading: {model: "STM32H743VIT6", stock: 4265, read: "2026-09-27T00:18:25Z", source: "JLCPCB parts API"}
+      currency: "DS12110 Rev 10 (the held file above) is superseded by Rev 11 of 13 January 2026 (filed below); DS12117 Rev 9 is the newest the Internet Archive holds (capture 2023-06-08); AN4938 Rev 7 is the newest capture (2025-07-26); st.com still refuses this host (2026-09-26T23:49Z)"
+      documents_added:
+        - path: "v2/vendor/st/st-stm32h743xi-datasheet-rev11.pdf"
+          doc_id: "ST DS12110"
+          revision: "Rev 11, 13 January 2026"
+          url: "https://web.archive.org/web/20260827112637id_/https://www.st.com/resource/en/datasheet/stm32h743vi.pdf (Internet Archive copy; st.com refuses this host)"
+          fetched: "2026-09-26T23:51Z; served gzip-encoded, the filed file is the decompressed body; the capture 20260318060051 of the same URL is byte-identical"
+          sha256: "f6e620179006c8c4d497b477ba065edc89c6dd9ac24d9debb3362910651f42ee"
+          matches_fitted: "yes: ordering scheme p.346, Table 9 pin definitions, Table 10 alternate functions, section 7 (revision V) electrical characteristics"
+        - path: "v2/vendor/st/st-rm0433-rev8.pdf"
+          doc_id: "ST RM0433, STM32H742, STM32H743/753 and STM32H750 reference manual"
+          revision: "Rev 8, January 2023 (3353 pages, 40.7 MB)"
+          url: "https://web.archive.org/web/20251014013150id_/https://www.st.com/resource/en/reference_manual/rm0433-stm32h742-stm32h743753-and-stm32h750-value-line-advanced-armbased-32bit-mcus-stmicroelectronics.pdf"
+          fetched: "2026-09-26T23:50Z, HTTP 200 application/pdf"
+          sha256: "9ba54135736a47a302cdc28fdc7ca8f23c6eed5a646fa0a639af6ed2ad71336e"
+          matches_fitted: "yes: Table 2 availability of security features (p.103), option bytes IWDG1_SW and BOR_LEV (pp.179, 214), boot (Table 9 p.138), FDCAN (chapter 56), I2C (chapter 47), GPIO reset state (p.533), DBGMCU_IDC REV_ID (p.3208)"
+        - path: "v2/vendor/st/st-es0392-rev15.pdf"
+          doc_id: "ST ES0392, STM32H742xI/G, STM32H743xI/G, STM32H750xB, STM32H753xI device errata"
+          revision: "Rev 15, September 2025"
+          url: "https://web.archive.org/web/20260526205148id_/https://www.st.com/resource/en/errata_sheet/es0392-stm32h742xig-stm32h743xig-and-stm32h753xi-device-errata-stmicroelectronics.pdf"
+          fetched: "2026-09-26T23:52Z; served gzip-encoded, the filed file is the decompressed body"
+          sha256: "effe23b2b79ec4ee33a8ab42b1b934cdd34100775cd6ca6b8dc8f3f2f01a1f9e"
+          matches_fitted: "yes: Table 2 device variants (Y, W, X, V and REV_ID), Table 3 limitations by revision"
 
   - id: can-transceiver
     function: "six CAN FD transceivers, two heartbeat fabrics for the three supervisors"
@@ -1050,6 +1128,16 @@ parts:
       identity_r8a: MATCH
       identity_note_r8a: "LTC2954ITS8-1#TRPBF is a line of 2954fb's ORDER INFORMATION (p.2: TAPE AND REEL column, marking LTCJH, 8-Lead Plastic TSOT-23, -40 C to 85 C). #TRMPBF stays a mismatch: the maker's current table does not list it"
       stock_r8a: "0 at JLCPCB and 0 at LCSC on 2026-09-26 at 21:18 UTC (C107801, #PBF, also 0; C580654, #TRMPBF, 197): a procurement item (NO_STOCK), not a mismatch; the only exact codes are out of stock today"
+    update_53a98a71:
+      read_on: "2026-09-27"
+      what_moved: "update_r8a above is on main since 53a98a71: U1 is C2657885, LTC2954ITS8-1#TRPBF (gen_sch_a.py:269), the suffix the held 2954fb lists, and its identity is MATCH there. This block adds only the purchase route for that code, which JLCPCB and LCSC hold none of"
+      where: "v2/ecad/tools/gen_sch_a.py:269 (U1)"
+      where_rev: "53a98a71"
+      where_note: "restated because update_r8a names :269 without a where_rev, so a reader of the newest where (tools/review_packet.py _where_of) fell back to update_45bde541's :259"
+      distributor_readings: "DigiKey lists LTC2954ITS8-1#TRMPBF as an Analog Devices part with 4,836 in stock, and #TRPBF with 4,807; Farnell lists both (FindChips 2026-09-27T00:14:38Z). So the fitted #TRPBF can be bought from an authorised distributor and consigned (v2/docs/parts/PROCUREMENT.md section 3); #TRMPBF, which DigiKey also lists as an ADI part, stays a mismatch because the maker's table does not list it (update_r8a)"
+      lcsc_readings:
+        - {lcsc: "C580654", model: "LTC2954ITS8-1#TRMPBF", stock: 197, read: "2026-09-27T00:18:47Z"}
+        - {lcsc: "C2657885", model: "LTC2954ITS8-1#TRPBF", stock: 0, read: "2026-09-27T00:18:48Z", note: "the fitted code reads 0 at JLCPCB; again 0 at 03:59:54Z (v2/docs/parts/readings/jlc-r8-main-2026-09-27.json): a consigned line from an authorised distributor (HC6-SC-9)"}
 
   - id: tvs-surge-clamps
     function: "unidirectional surge clamps on the power conductors of A, B, D, E and P"
@@ -1419,6 +1507,19 @@ parts:
         revision: "not stated"
         sha256: "7be3f397b1aa52d18384f29f4b61d928c75bef480c04d1aebc2e6e954f692e55"
         matches_fitted: "no: family brochure for the fallback candidate; it does not print MDT420B01001 or a land pattern"
+    update_53a98a71:
+      read_on: "2026-09-27"
+      what_moved: "458b2873 fitted the recommended TE 2199119-3 (C590866) on J_M2C2; this entry's top-level fields still describe the retired key M part"
+      boards: [B]
+      schematic_name: {text: "M.2 B-key 3052 socket, TE 2199119-3, M2.5 standoff", where: "v2/ecad/tools/gen_sch_b.py:643 (J_M2C2)", where_rev: "53a98a71"}
+      where: "v2/ecad/tools/gen_sch_b.py:643 (J_M2C2)"
+      where_rev: "53a98a71"
+      code: "C590866"
+      fitted_mpn_53a98a71: "2199119-3 (TE Connectivity)"
+      identity_53a98a71: MATCH
+      identity_note: "the held customer drawing C-2199119 rev F, sheet 2 part-number table, gives 2199119-3 as key B with 15 u in. gold, the key the RM520N-GL needs. The land at 53a98a71 still lacks the two locating holes of sheet 3 (open item S-12); the round 8 candidate (fnd/r8b) draws them in M2_B-Key_Socket_3052_TE2199119. The SIM 2 pin defect of related_defect above is not re-read here"
+      grade_vs_envelope_53a98a71: "INSIDE: 'Service Temperature -40 ~ +80 C' for the M.2 connector family (TE Quick Reference Guide 1-1773702-1 p.6, v2/vendor/m2/te-2199119-m2-b-key.pdf; LCSC's parametric agrees; GRADE-CHECK.md)"
+      lcsc_reading: {model: "2199119-3", stock: 1427, read: "2026-09-27T00:18:54Z", source: "JLCPCB parts API"}
 
   - id: cellular-module
     function: "5G module on the M.2 3052 socket (owner-side purchase, bought as a card)"
@@ -2772,6 +2873,380 @@ parts:
         sha256: "0914f59f843e367f55e9887d3ffc748296ea63d67e1696d7a145af7429df5bdb"
         matches_fitted: "yes: AT thermistor table, 103AT-2: R25 10.0 kOhm +-1 percent, B25/85 3435 K +-1 percent, dissipation factor about 2.0 mW/C, thermal time constant about 15 s, rated power 10 mW at 25 C; the accuracy graph gives 103AT-2 an operating range of -50 to 110 C"
 
+  # ADDED 27 SEPTEMBER 2026 (MESHSAT-1357, pre-PCB layer 6, closer hc6; judged at main 53a98a71, round 8's boards A, D
+  # and E integrated; board B's and C's generators and netlists are byte-identical to e3aedb25's, where the layer 6 audit
+  # was taken). The entries the audit listed as missing. Every document was hashed as it sits in the tree; a document fetched tonight names its URL and
+  # time, and a held document re-fetched tonight says whether it came back byte-identical. Grades are judged against
+  # pcb_envelope.yaml as v2/docs/parts/GRADE-CHECK.md judges them (51 C inside air). The DS3231 of board B's U9 is not
+  # here: round 8's board B stream drafts the entry rtc-ds3231sn with the 19-5170 sheet (worktree r8b,
+  # drafts/b/sources-yaml-additions.patch), and a second entry for C9866 would double its join. Nothing here has been
+  # built, bought or measured.
+  - id: iridium-modem-rockblock-9704
+    function: "Iridium IMT modem, bench-fitted on the Ground Control bracket, wired to board B's J_RB9704 (IDC 2x8)"
+    boards: [B]
+    placed_part: false
+    on_main: true
+    schematic_name: {text: "RockBLOCK 9704 16-pin (IDC 2x8) on the Ground Control bracket", where: "v2/ecad/tools/gen_sch_b.py:947 (J_RB9704, the header only)"}
+    where_rev: "53a98a71"
+    fitted_mpn: "RockBLOCK 9704 SMA (Ground Control); the maker's product page publishes no order code"
+    identity: MATCH
+    identity_note: "the V2 device set names the SMA variant with the Maxtena helical (appendix 32.49); the data sheet's two columns are the SMA and the ANT (patch) variants"
+    grade_vs_envelope: INSIDE
+    grade_note: "'Operating Temperature -40C to +70C, <95% RH' (Ground Control specification page, 2026-09-27); the held data sheet RB9704-001-JUN26 states no temperature range"
+    procurement: "maker only; not listed by any distributor FindChips reads (2026-09-27T00:14:54Z); owner-side purchase"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/rockblock/rb9704-datasheet-RB9704-001-JUN26.pdf"
+        doc_id: "Ground Control RockBLOCK 9704 data sheet"
+        revision: "Version RB9704-001-JUN26"
+        url: "https://www.groundcontrol.com/wp-content/uploads/2026/07/RockBLOCK-9704-Data-Sheet.pdf"
+        fetched: "re-fetched 2026-09-27T00:26Z, HTTP 200, byte-identical to the held file"
+        sha256: "d48acbea28ee2a7db300203cde8833293d8542d7d683de256d47e932c425edb7"
+        matches_fitted: "yes: RockBLOCK 9704 SMA column (48 x 52 x 16 mm, 4.0 to 5.3 V DC, 1.4 W max)"
+      - path: "v2/vendor/rockblock/groundcontrol-docs-rockblock-9704-specification-20260927.html"
+        doc_id: "Ground Control documentation, RockBLOCK 9704 specification"
+        revision: "as served 2026-09-27T00:08Z"
+        url: "https://docs.groundcontrol.com/iot/rockblock-9704/specification"
+        fetched: "2026-09-27T00:08Z"
+        sha256: "30bad6e0074bea49bad4023b541c7d48c70e5d73e58281e7a9e3ab4d7bddcf84"
+        matches_fitted: "yes: 'Operating Temperature -40C to +70C, <95% RH' for the SMA and ANT variants"
+      - path: "v2/vendor/rockblock/groundcontrol-rockblock-9704-product-page-20260927.html"
+        doc_id: "Ground Control product page, RockBLOCK 9704"
+        revision: "as served 2026-09-27T00:08Z"
+        url: "https://www.groundcontrol.com/product/rockblock-9704/"
+        fetched: "2026-09-27T00:08Z"
+        sha256: "3ee56a034ace33a7e184787eede7ee3cafe39bdd7c37a8d72d52fe93e892a501"
+        matches_fitted: "yes: 'Operating Temperature -40C to +70C'; links the data sheet above"
+      - path: "v2/vendor/rockblock/rb9704-sma-dims.pdf"
+        doc_id: "Ground Control ACC-RB9704SMA-MOUNT, rev A"
+        revision: "REV A (PDF of 19 June 2025)"
+        url: "not recorded (folder line of sources.txt)"
+        sha256: "968d7d5205517335db7ac8bd39f1852639b4683c01079573b93dd23a5184f343"
+        matches_fitted: "partial: the plastic mount's drawing"
+      - path: "v2/vendor/rockblock/rb9704-sch-2B1.pdf"
+        doc_id: "Ground Control RockBLOCK 9704 schematic"
+        revision: "2B1 (PDF of 21 May 2025)"
+        url: "not recorded (folder line of sources.txt)"
+        sha256: "8151ea31acd1556855a3886c57fae759d34b5dd83b254b80dc1b03cf49b6f7c3"
+        matches_fitted: "yes: the module the 16-way header wires to"
+
+  - id: sdr-limesdr-mini-v2
+    function: "SDR receiver in its bay on board B's J_LIME (USB 3.0 A), bench-fitted"
+    boards: [B]
+    placed_part: false
+    on_main: true
+    schematic_name: {text: "USB 3.0 type A receptacle (Wuerth 692122030100 land): the LimeSDR Mini 2.4 in its bay", where: "v2/ecad/tools/gen_sch_b.py:943 (J_LIME, the receptacle only)"}
+    where_rev: "53a98a71"
+    fitted_mpn: "LimeSDR Mini v2, board version v2.4 (Lime Microsystems); no order code held"
+    identity: NOT_PINNED
+    identity_note: "the documentation names board versions, not an order code; the design's 'LimeSDR Mini 2.4' is the v2.4 board of the LimeSDR Mini v2"
+    grade_vs_envelope: OUTSIDE
+    grade_note: "'Operating Temperature 0 C to +70 C, Commercial-grade; Storage Temperature 0 C to +70 C' (myriadrf page): outside the -20 C in-use floor and the -20 C storage floor. v2/docs/parts/PROCUREMENT.md section 4 lists the options; none is taken here"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/limesdr/myriadrf-limesdr-mini-2-0-page-20260925.html"
+        doc_id: "LimeSDR Mini v2 v2.4 documentation, Introduction"
+        revision: "page as saved 2026-09-25"
+        url: "https://myriadrf.org/projects/limesdr-mini-2-0"
+        fetched: "identical at 2026-09-26T21:16:17Z (sources.txt:270)"
+        sha256: "f1146105a3c09ebcf786d217fbf0053f8e6df3c5192efcf666e731281be4c4f1"
+        matches_fitted: "yes: board version v2.4, USB 3.0 type A plug, 5 V at 4.5 W maximum, the Environmental table"
+      - path: "v2/vendor/limesdr/myriadrf-limesdr-mini-2-0-user-setup-20260926.html"
+        doc_id: "LimeSDR Mini v2 v2.4 documentation, Hardware Setup"
+        revision: "page as saved 2026-09-26"
+        url: "https://myriadrf.org/projects/limesdr-mini-2-0/user/setup.html"
+        sha256: "87b2e5605196b5c5f48e9175991c63143152dbb694d6f4faeba85d6cdaeca3b3"
+        matches_fitted: "yes: 'supply power (5V, 900 mA) via the USB type-A connector'"
+      - path: "v2/vendor/limesdr/limesdr-mini-2v4-drawings.pdf"
+        doc_id: "LimeSDR Mini 2.4 PCB drawings"
+        revision: "PDF of 24 April 2023"
+        url: "not recorded (folder line of sources.txt)"
+        sha256: "dc3cac0ecb61c1abae363a87b64b60086c8853b7c879aa2d184762496c18e1d7"
+        matches_fitted: "partial: board outline and fiducials"
+
+  - id: wifi-card-aw7915-aed
+    function: "kit-to-kit WiFi 6 cards (802.11s, IBSS or P2P) in board B's M.2 E-key sockets J_M2C1 and J_M2C3, bench-fitted"
+    boards: [B]
+    placed_part: false
+    on_main: true
+    schematic_name: {text: "M.2 E-key 2230 socket, TE 2199230-4, M2.5 standoff: AsiaRF AW7915-AED WiFi 6 link card", where: "v2/ecad/tools/gen_sch_b.py (J_M2C1, J_M2C3; the sockets only)"}
+    where_rev: "53a98a71"
+    fitted_mpn: "AW7915-AED (AsiaRF)"
+    identity: MATCH
+    grade_vs_envelope: OUTSIDE
+    grade_note: "'Temperature Operating: 0 C ~ +70 C' (AW7915-AED_V1 sheet); the maker's product page of 26 September 2026 reads 'Operating: -10 C ~ +70 C'; either is outside the -20 C floor. The socket and its land do not change with the card, so a replacement can be chosen before purchase without touching layout (PROCUREMENT.md section 4)"
+    procurement: "maker only; FindChips lists no distributor (2026-09-27T00:14:56Z)"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/wifi/asiarf-AW7915-AED_V1.pdf"
+        doc_id: "AsiaRF AW7915-AED data sheet"
+        revision: "AW7915-AED_0721R (PDF of 17 August 2023)"
+        url: "https://asiarf.com/wp-content/uploads/2023/09/AW7915-AED_V1.pdf"
+        fetched: "identical at 2026-09-26T21:16:17Z (sources.txt:268)"
+        sha256: "af1a93ef3b484a3da4354779f0b2a8a2537c94d71025eb68b82a4d4879f8e8db"
+        matches_fitted: "yes: 'Temperature Operating: 0 C ~ +70 C'"
+      - path: "v2/vendor/wifi/asiarf-AW7915-AED-datasheet.pdf"
+        doc_id: "AsiaRF AW7915-AED data sheet, one page"
+        revision: "260505 (PDF of 5 May 2026)"
+        url: "https://asiarf.com/wp-content/uploads/2026/05/260505_Datasheet_AW7915-AED-1P.pdf (linked from the held product page)"
+        fetched: "re-fetched 2026-09-27T03:56:57Z, HTTP 200, byte-identical to the held file"
+        sha256: "babcddfd36fe36559b7ed4ffdbff5a5c4281cdcf39a4c6a9863f68bcdb4c4177"
+        matches_fitted: "yes: MT7915D, 2T2R 2.4 GHz and 5 GHz, PCIe 2.1; its text layer states no temperature"
+      - path: "v2/vendor/wifi/asiarf-aw7915-aed-product-page-20260926.html"
+        doc_id: "AsiaRF product page"
+        revision: "page as saved 2026-09-26"
+        url: "https://asiarf.com/product/wifi-6-11ax-m-2-ae-key-module-aw7915-aed/"
+        sha256: "b153fe713673d0f6df7936038333096e8fc14842609d90e8d8b1e7694c120846"
+        matches_fitted: "yes: 'Operating: -10 C ~ +70 C'"
+
+  - id: poe-pse-tps23861
+    function: "PoE PSE controller for the wall RJ45 (802.3at), I2C on the kit bus (0x28 and broadcast 0x30)"
+    boards: [B]
+    schematic_name: {text: "TI TPS23861PWR PoE PSE controller", where: "v2/ecad/tools/gen_sch_b.py:883 (U5)"}
+    where_rev: "53a98a71"
+    fitted_mpn: "TPS23861PWR"
+    package: "TSSOP-28 (PW)"
+    lcsc: "C93245"
+    lcsc_reading: {model: "TPS23861PWR", stock: 26, read: "2026-09-27T00:18:37Z", source: "JLCPCB parts API"}
+    identity: MATCH
+    grade_vs_envelope: INSIDE
+    grade_note: "'TA Operating free-air temperature -40 85 C', 'TJ Operating junction temperature -40 125 C' (Recommended Operating Conditions)"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/ti/tps23861-datasheet.pdf"
+        doc_id: "TI SLUSBX9"
+        revision: "SLUSBX9I, March 2014, revised July 2019"
+        url: "https://www.ti.com/lit/ds/symlink/tps23861.pdf"
+        fetched: "re-fetched 2026-09-27T00:42:45Z, HTTP 200, byte-identical to the held file"
+        sha256: "65262ce4766a5f8e3b9f580ac02782ad7d5e35b39045fa5346288c21e240c093"
+        matches_fitted: "yes: PW package, pin functions, address pins and broadcast address (7.3.13), recommended operating conditions"
+
+  - id: dock-spring-connector-precidip-813
+    function: "board A's 2x6 spring-loaded contacts to the dock block (VIN_RAW, GND, SHORE_INHIBIT, USB)"
+    boards: [A]
+    schematic_name: {text: "spring pins to the dock block (2x6, Preci-Dip 813-S1-012-10-016101, underside)", where: "v2/ecad/tools/gen_sch_a.py:226 (J_DOCK)"}
+    where_rev: "53a98a71"
+    fitted_mpn: "813-S1-012-10-016101 (Preci-Dip)"
+    package: "813 series straight SLC connector, low profile, solder tail, double row, 12 contacts, initial height 7 mm (XXX code 016), plastic body 4 mm"
+    lcsc: null
+    identity: MATCH
+    identity_note: "decoded from the held catalogue page 34: 813-S1-NNN-10-XXX101, NNN = 012 contacts, XXX = 016 = initial height 7 mm"
+    grade_vs_envelope: INSIDE
+    grade_note: "'OPERATING TEMPERATURE RANGE -55 ... +125 C (-55 ... +85 C with music wire spring)' (page 31); either figure covers the envelope"
+    procurement: "not in JLCPCB's catalogue; DigiKey 18 (a JRH Electronics listing) and 0 (the Preci-Dip listing), FindChips 2026-09-27T00:15:04Z: a thin single source (PROCUREMENT.md section 3)"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/precidip/precidip-813-spring-loaded-connector-pages-31-34.pdf"
+        doc_id: "Preci-Dip spring-loaded connector catalogue, pages 31 and 34"
+        revision: "not printed"
+        url: "not recorded (folder line of sources.txt)"
+        sha256: "d630c8a92e7f65fc63a51fed5bebfe974ecacfc81b64265c4c262d0d01b3d194"
+        matches_fitted: "yes: 813-S1-NNN-10-XXX101 and the height table; the contact current rating is not on these two pages (owed with the dock interface capacity rows, layer 5)"
+
+  - id: pack-spring-pins-millmax-0858
+    function: "board A's nine 9 A spring pins to the dock block: CELL+ (J_CP1-4), pack return (J_CN1-4) and the mate-first pre-charge pin (J_PRE1)"
+    boards: [A]
+    schematic_name: {text: "9 A spring pin (Mill-Max 0858 class, dock block); pre-charge pin, longer, mates first (32.24 AX)", where: "v2/ecad/tools/gen_sch_a.py:207-210 (J_CP1-4, J_CN1-4, J_PRE1)"}
+    where_rev: "53a98a71"
+    fitted_mpn: "0858-0-15-20-82-14-11-0 (Mill-Max) for J_CP1-4 and J_CN1-4, session pick HC6-SC-8 (v2/docs/parts/PROCUREMENT.md section 5); J_PRE1 has no order code"
+    package: "discrete spring-loaded pin with standard tail, through-hole solder mount, mounting hole .044 in (1.118 mm), tail .040 in (1.016 mm)"
+    lcsc: null
+    identity: NOT_PINNED
+    identity_note: "the generator names a class; the pick is the part the land was drawn for (v2/docs/respin-footprints-2026-09-04.md section 5). J_PRE1 must be longer than the pins beside it, and no Mill-Max part is named for it"
+    grade_vs_envelope: INSIDE
+    grade_note: "'Operating Temperature Range: -55/+125 C' (Mill-Max product page); 'Continuous 9 amps @ 10 C temperature rise' for the 085X power pins (catalogue page 28)"
+    land_note: "the product page gives a .044 in (1.118 mm) mounting hole for the .040 in tail; the land drills 1.3 mm, taken from the strip page's 1.32 mm. A solder mount accepts it, but the pin's squareness then rests on the assembly fixture (PROCUREMENT.md section 5)"
+    procurement: "not in JLCPCB's catalogue; DigiKey 18,646 (ED10088-ND), Farnell 1,401 (FindChips 2026-09-27T00:11:42Z)"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/connectors/millmax-0858-product-page-20260927.html"
+        doc_id: "Mill-Max 0858 Spring-Loaded Pin with a Standard Tail, product page"
+        revision: "as served 2026-09-27T00:12:15Z"
+        url: "https://www.mill-max.com/products/discrete-spring-loaded-pins/spring-loaded-pin-with-standard-tail/0858"
+        fetched: "2026-09-27T00:12:15Z, HTTP 200"
+        sha256: "7a11ec390b01e69fd2fca595260d60a5aca2bd1f5b83a20670b30ad11ccc4883"
+        matches_fitted: "yes for the series: mounting hole, tail, -55/+125 C, springs 62 (low force) and 82 ('12 Amp High Force'); the per-spring table loads by script and is not in the saved page"
+      - path: "v2/vendor/connectors/millmax-rugged-power-spring-pins-page28.pdf"
+        doc_id: "Mill-Max 'Rugged, High Current Spring Pins', catalogue page 28"
+        revision: "PDF of 1 April 2014"
+        url: "https://www.mill-max.com/sites/default/files/external/assets/2017-12/Rugged%20Spring%20Pins.pdf"
+        fetched: "2026-09-27T00:13Z, HTTP 200"
+        sha256: "8ef40cd98d95c653ce506a1af457656b287a475342684ac110cf594f923782d6"
+        matches_fitted: "partial: the 085X family (0850 to 0856, 0861, 0871) and its order code 08XX-X-15-20-8X-14-11-0; the 0858 itself is not on this 2014 page"
+
+  - id: blind-mate-smp-max-radiall
+    function: "the eleven RF blind-mate pairs between board A's underside and the dock block"
+    boards: [A]
+    schematic_name: {text: "SMP-MAX slide-on receptacle R222M00720 (underside)", where: "v2/ecad/tools/gen_sch_a.py:1314 (J_BM1 to J_BM11)"}
+    where_rev: "53a98a71"
+    fitted_mpn: "R222M00720 (Radiall) on board A; R222M80500 (Radiall, right-angle female crimp plug for 2.6/50S cable) on the dock side"
+    package: "R222.M00.720: straight male receptacle for PCB, slide type, solder legs"
+    lcsc: null
+    identity: MATCH
+    identity_note: "R222M80500W, the only code with distributor stock tonight, is the same plug in unit packaging: Radiall's TDS p.2 'Packaging: Standard 100, Unit W option'"
+    grade_vs_envelope: INSIDE
+    grade_note: "'Operating temperature -55/+165 C' on both TDS"
+    procurement: "not in JLCPCB's catalogue; DigiKey 1,335 (R222M00720) and 349 (R222M80500W), 0 for R222M80500 (FindChips 2026-09-27T00:15Z); need 55 of each for five kits"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/rf/radiall-R222M00720-tds.pdf"
+        doc_id: "Radiall R222.M00.720 technical data sheet"
+        revision: "issue 1107 B (PDF of 3 August 2011)"
+        url: "not recorded: Radiall's per-part data sheet path (radiall-files.s3.amazonaws.com/tds/coaxialconnectors/) answered HTTP 403 on 2026-09-27T03:57Z and the Internet Archive was offline, so this issue's currency is unconfirmed"
+        sha256: "849a5fd1a4084b6b21ec621243953a08c5cff8be1e65f57b777b50f153f7d3e4"
+        matches_fitted: "yes"
+      - path: "v2/vendor/rf/radiall-R222M80500-tds.pdf"
+        doc_id: "Radiall R222.M80.500 technical data sheet"
+        revision: "issue 1115 A (PDF of 26 April 2011)"
+        url: "not recorded: Radiall's per-part data sheet path (radiall-files.s3.amazonaws.com/tds/coaxialconnectors/) answered HTTP 403 on 2026-09-27T03:57Z and the Internet Archive was offline, so this issue's currency is unconfirmed"
+        sha256: "62f00eee402db99e94f59f50d93d753e2c1967e0a826ba85d9746cd0e9f70cf5"
+        matches_fitted: "yes, and the W packaging option"
+      - path: "v2/vendor/rf/radiall-smp-max-series-R222M-D1C004XEe.pdf"
+        doc_id: "Radiall SMP-MAX series catalogue D1C004XE"
+        revision: "PDF of 25 April 2011"
+        url: "https://www.radiall.com/media/files/SMP-MAX%20D1C004XEe.pdf"
+        fetched: "re-fetched 2026-09-27T03:57:30Z, HTTP 200, byte-identical to the held file (Radiall's current series page; a later SMP/SMP-MAX combined edition sits at .../SMP_SMP-MAX%20D1C004XEe.pdf, sha256/16 bd49ad51411ff177, not filed)"
+        sha256: "75da1e0d00dbcff400e22e61ba3a9585402fc339f3d58c5f348ac23f77c69358"
+        matches_fitted: "partial: the series (mating, misalignment)"
+
+  - id: power-leads-jst-vh
+    function: "the 10 A two-way power leads between boards (A to B, A to D, board E's DC and solar inputs, A's PA, HF and monitor leads)"
+    boards: [A, B, D, E]
+    schematic_name: {text: "JST-VH socket, 10 A (vh2() on board A)", where: "v2/ecad/tools/gen_sch_a.py:204 (vh2), gen_sch_b.py:831 (J_5V_DEV and its siblings), gen_sch_d.py:261 (J_PWR1), gen_sch_e.py:278 (J_DCIN), :427 (J_SOLAR)"}
+    where_rev: "53a98a71"
+    fitted_mpn: "B2P-VH-BL(LF)(SN) (JST)"
+    package: "VH 3.96 mm, 2 circuits, standard top-entry header"
+    lcsc: "C274411"
+    lcsc_reading: {model: "B2P-VH-BL(LF)(SN)", stock: 45436, read: "2026-09-27T00:19:00Z", source: "JLCPCB parts API"}
+    identity: MATCH
+    identity_note: "the catalogue's model number allocation for the standard header is B 2P - VH - [colour], with 'BL...Blue' among the colours (p.5), so -BL is a listed colour of the named header, unlike the gold XH and GW PH suffixes of condition_1_mismatches"
+    grade_vs_envelope: INSIDE
+    grade_note: "'Temperature range: -40 C to +105 C (including temperature rise in applying electrical current)'; 'Current rating: 10 A AC/DC, when using AWG #16 with the standard type header' (p.1). LCSC serves an older JST sheet reading -25 to +85 C"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/connectors/jst-vh-catalogue.pdf"
+        doc_id: "JST VH connector catalogue"
+        revision: "not printed; PDF of 9 January 2026"
+        url: "https://www.jst-mfg.com/product/pdf/eng/eVH.pdf"
+        fetched: "2026-09-27T00:21:04Z, HTTP 200"
+        sha256: "d51e669c597988b20c0963daf5bef7356cbd2104c1f867e9107c6fa6cd2b899c"
+        matches_fitted: "yes: B2P-VH in the header table, the colour allocation, 10 A with AWG 16, 250 V, -40 to +105 C; mating housing VHR-2N and contacts SVH-41T-P1.1 for AWG 20 to 16"
+
+  - id: ribbon-headers-idc
+    function: "the IDC box headers of the board ribbons (A-B J_AB1 2x13 and J_AB2 2x5, the panel ribbon J_PANEL 2x13 on B and C, the D8 harness J_MEZZ1/J_HARN1 2x8, the RockBLOCK lead J_RB9704 2x8), their IDC sockets and the flat cable"
+    boards: [A, B, C, D]
+    schematic_name: {text: "IDC 2x13, 2x8 and 2x5 headers (no part named)", where: "v2/ecad/tools/gen_sch_a.py:1285-1290, gen_sch_b.py:947, :1061, :1077, :1083, gen_sch_c.py:99, gen_sch_d.py:259"}
+    where_rev: "53a98a71"
+    fitted_mpn: "session pick HC6-SC-7 (v2/docs/parts/PROCUREMENT.md section 5): Wurth WR-BHD 61202621621 (2x13), 61201621621 (2x8), 61201021621 (2x5) through-hole box headers; XFCN BH254VS-26P for board C's SMD 2x13; sockets WR-BHD 61202623021, 61201623021, 61201023021; cable WR-CAB 63912615521CAB, 63911615521CAB, 63911015521CAB"
+    recommended_codes: "JLCPCB C17586777 (61202621621), C5364137 (61201621621), C4355000 (61201021621), C48687640 (BH254VS-26P); the lines carry no code at 53a98a71"
+    identity: NOT_PINNED
+    identity_note: "a recommendation until a generator carries it; the land comparison against each maker's hole pattern is owed at layout entry (CMP-002)"
+    grade_vs_envelope: INSIDE
+    grade_note: "headers and sockets -40 to +105 C; flat cable -25 to +105 C (Wurth sheets); SMD header -40 to +105 C (LCSC parametric only)"
+    ratings_note: "header 3 A per contact, IDC socket 1 A per contact, cable 1 A per conductor at 28 AWG: the interface capacity rows (layer 5) take the lowest, 1 A"
+    status: VERIFIED
+    documents:
+      - {path: "v2/vendor/connectors/wurth-wr-bhd-box-header-61202621621.pdf", doc_id: "Wurth WR-BHD 61202621621", revision: "2026-08-30", url: "https://www.we-online.com/components/products/datasheet/61202621621.pdf", fetched: "2026-09-27T00:20Z", sha256: "38509e478ba394d0c87d25b3d16442d8f77d0eb3ccb90357a5a4639010fcc248", matches_fitted: "yes for the pick"}
+      - {path: "v2/vendor/connectors/wurth-wr-bhd-box-header-61201621621.pdf", doc_id: "Wurth WR-BHD 61201621621", revision: "2026-08-30", url: "https://www.we-online.com/components/products/datasheet/61201621621.pdf", fetched: "2026-09-27T00:20Z", sha256: "0df87add7e40d43c6154ff4d0b47710515a4fd9972b4fbe13c5d55295497b364", matches_fitted: "yes for the pick"}
+      - {path: "v2/vendor/connectors/wurth-wr-bhd-box-header-61201021621.pdf", doc_id: "Wurth WR-BHD 61201021621", revision: "2026-08-30", url: "https://www.we-online.com/components/products/datasheet/61201021621.pdf", fetched: "2026-09-27T00:20Z", sha256: "dbaa4765e57457ac68cc667d33da6128b63651ee25a5938b713a91b21c58a929", matches_fitted: "yes for the pick"}
+      - {path: "v2/vendor/connectors/wurth-wr-bhd-idc-socket-61202623021.pdf", doc_id: "Wurth WR-BHD 61202623021 female IDC", revision: "2022-08-30", url: "https://www.we-online.com/components/products/datasheet/61202623021.pdf", fetched: "2026-09-27T00:20Z", sha256: "6f7254b5bcf6f837ddd0540a002071371b19e2586fca48979b00ebf3f2dff623", matches_fitted: "yes for the pick"}
+      - {path: "v2/vendor/connectors/wurth-wr-bhd-idc-socket-61201623021.pdf", doc_id: "Wurth WR-BHD 61201623021 female IDC", revision: "2022-08-30", url: "https://www.we-online.com/components/products/datasheet/61201623021.pdf", fetched: "2026-09-27T00:20Z", sha256: "9477ffdc02af63552cbb1919ff84abc44abbc6446fa3ab00c1573d0f11b97913", matches_fitted: "yes for the pick"}
+      - {path: "v2/vendor/connectors/wurth-wr-bhd-idc-socket-61201023021.pdf", doc_id: "Wurth WR-BHD 61201023021 female IDC", revision: "2022-08-30", url: "https://www.we-online.com/components/products/datasheet/61201023021.pdf", fetched: "2026-09-27T00:20Z", sha256: "259dc513fa09e9114529f274e15f532adb71c43fed911ee871a8821c7d318bf7", matches_fitted: "yes for the pick"}
+      - {path: "v2/vendor/connectors/wurth-wr-cab-ribbon-63912615521cab.pdf", doc_id: "Wurth WR-CAB 63912615521CAB", revision: "2026-08-21", url: "https://www.we-online.com/components/products/datasheet/63912615521CAB.pdf", fetched: "2026-09-27T00:21Z", sha256: "fdee657377aed9acce6d325d6dc53828fe7236be132a2f6c3b74641dc67ded8a", matches_fitted: "yes for the pick (26 conductors)"}
+      - {path: "v2/vendor/connectors/wurth-wr-cab-ribbon-63911615521cab.pdf", doc_id: "Wurth WR-CAB 63911615521CAB", revision: "2026-08-21", url: "https://www.we-online.com/components/products/datasheet/63911615521CAB.pdf", fetched: "2026-09-27T00:21Z", sha256: "b076f824f67b9ee7bf5fe475cba663448b2d7d214abc43ddb22bac28a80e8d98", matches_fitted: "yes for the pick (16 conductors)"}
+      - {path: "v2/vendor/connectors/wurth-wr-cab-ribbon-63911015521cab.pdf", doc_id: "Wurth WR-CAB 63911015521CAB", revision: "2026-08-21", url: "https://www.we-online.com/components/products/datasheet/63911015521CAB.pdf", fetched: "2026-09-27T00:21Z", sha256: "4b4b78e0c17b7f1d4be739c1f9d4e17230c0b14eca8188ef0b12b9ce9156c68b", matches_fitted: "yes for the pick (10 conductors)"}
+
+  - id: wall-d38999-and-usb-feedthrough
+    function: "the sealed wall receptacles: MIL-DTL-38999 Series III for the vehicle/shore DC pair and the spare pair, and the Glenair 233-370 USB 2.0 feed-through (D-12)"
+    boards: []
+    placed_part: false
+    on_main: true
+    fitted_mpn: "Glenair 233-370 (USB feed-through; the dash numbers for shell, finish and insert are not pinned); D38999/20 wall-mount receptacles (shell and insert arrangement not pinned)"
+    identity: NOT_PINNED
+    identity_note: "the exact order codes are wall and plate picks of layers 5 and 7 (v2/docs/CASE-MARGINS.md section 6 sizes them from these documents); this entry records the documents and the class grade"
+    grade_vs_envelope: INSIDE
+    grade_note: "'Temperature: -65 C to +175 C' for Series III (Amphenol catalogue p.60); the held Glenair 233-370 sheet states no range"
+    status: VERIFIED
+    documents:
+      - {path: "v2/vendor/d38999/glenair-233-370.pdf", doc_id: "Glenair 233-370 Superseal USB feed-through", revision: "PDF of 6 April 2018", url: "https://www.glenair.com/superseal/38999-type/usb-2.0/pdf/233-370.pdf (the maker's path; glenair.com and cdn.glenair.com answered HTTP 403 on 2026-09-27T03:57Z and the Internet Archive was offline, so currency is unconfirmed)", sha256: "c150602684aa1fa0fb445b0861dd7c2d031d6e443fac934795c739ec13555a28", matches_fitted: "yes for the series (USB 2.0 Type A female front and rear, note 4)"}
+      - {path: "v2/vendor/d38999/glenair-d38999-20.pdf", doc_id: "Glenair D38999/20 and 233-105-20", revision: "PDF of 17 July 2026", url: "not recorded (folder line of sources.txt)", sha256: "33feff93dd3f41f6645f4a46a30dcf47d9430f0002e8a0f6f02a1eb81a79c9ef", matches_fitted: "yes for the series"}
+      - {path: "v2/vendor/d38999/glenair-d38999-26.pdf", doc_id: "Glenair D38999/26 and 233-105-26", revision: "PDF of 17 July 2026", url: "not recorded (folder line of sources.txt)", sha256: "5b47e66949e5a0ce5772e415c9d3f32dfa4f33087f578aa9ebe6c14472767f51", matches_fitted: "the mating plug"}
+      - {path: "v2/vendor/d38999/amphenol-d38999-iii-federal.pdf", doc_id: "Amphenol MIL-DTL-38999 Series III catalogue", revision: "PDF of 1 September 2017", url: "not recorded (folder line of sources.txt)", sha256: "13a19268ba5939d9e4df5a20f9db84bb72e86525b82f0586c85696e42c126a2b", matches_fitted: "yes for the series: insert charts, contact ratings, temperature class"}
+
+  - id: rf-arrestor-polyphaser
+    function: "RF surge arrestors at the wall jacks (tactical gap list, appendix 32.50)"
+    boards: []
+    placed_part: false
+    on_main: true
+    fitted_mpn: "GTH-SFF-AL (Amphenol PolyPhaser)"
+    identity: MATCH
+    grade_vs_envelope: INSIDE
+    grade_note: "'Operating Range -40 to +85 deg C'"
+    procurement: "Pasternack 0 (FindChips 2026-09-27T00:15:06Z); the maker's own channels are not read"
+    status: VERIFIED
+    documents:
+      - path: "v2/vendor/polyphaser/polyphaser-gth-sff-al-sma-surge-protector.pdf"
+        doc_id: "PolyPhaser GTH-SFF-AL data sheet"
+        revision: "PDF of 10 July 2026"
+        url: "https://www.polyphaser.com/Images/Downloadables/Datasheets/GTH-SFF-AL_datasheets_US.pdf"
+        fetched: "re-fetched 2026-09-27T00:43Z, byte-identical to the held file"
+        sha256: "ae3f031d7ecb8783bacd3cb57e3de76a70953645c5bf39a8b537e566e71516b0"
+        matches_fitted: "yes: SMA F/F, DC to 6 GHz, 150 W, 60 V max, 10 kA, gas discharge tube"
+
+  - id: monitor-xenarc-709gnk
+    function: "the IP67 7 in monitor on the face plate"
+    boards: []
+    placed_part: false
+    on_main: true
+    fitted_mpn: "709GNK (Xenarc)"
+    identity: MATCH
+    grade_vs_envelope: INSIDE
+    grade_note: "'Operating Temperature: -4 F ~ 158 F (-20 C ~ 70 C)', storage -30 C to 80 C: at the -20 C floor with no margin (AT_LIMIT in GRADE-CHECK.md)"
+    procurement: "DigiKey 6 (FindChips 2026-09-27T00:15:11Z)"
+    status: VERIFIED
+    documents:
+      - {path: "v2/vendor/xenarc/xenarc-709gnk-product-manual-v2.pdf", doc_id: "Xenarc 709GNK product manual", revision: "V2 (PDF of 19 September 2023)", url: "served by the maker's download page https://www.xenarc.com/product_downloads.php?productid=17782 through a script, no direct link (read 2026-09-27T03:57Z)", sha256: "ba3b1474406fdaf5c7cfc87f80f691cf983f44b0e19f8757511df13f5d6241be", matches_fitted: "yes"}
+      - {path: "v2/vendor/xenarc/xenarc-709gnk-dimensional-drawing-v3.pdf", doc_id: "Xenarc 709GNK dimensional drawing", revision: "V3", url: "served by the maker's download page https://www.xenarc.com/product_downloads.php?productid=17782 through a script, no direct link (read 2026-09-27T03:57Z)", sha256: "3949bd9f618bbda8522c6df19cdfefc5effcd6d37666e14818466927e7f47f73", matches_fitted: "yes"}
+      - {path: "v2/vendor/xenarc/xenarc-709gnk-product-page-20260926.html", doc_id: "Xenarc product page", revision: "page as saved 2026-09-26", url: "https://www.xenarc.com/709GNK.html", fetched: "re-fetched 2026-09-27T00:43Z, byte-identical", sha256: "dc32f6556d6ddc398064e3a15eec0c600937b2235138cbd10e0ed344d708bf93", matches_fitted: "yes"}
+
+  - id: compute-module-cm5
+    function: "the three Compute Module 5 modules on board B's receptacles (bench-fitted)"
+    boards: [B]
+    placed_part: false
+    on_main: true
+    fitted_mpn: "CM5108064 (Raspberry Pi): wireless, 8 GB RAM, 64 GB eMMC"
+    identity: MATCH
+    identity_note: "cm5-datasheet.pdf section 6.2 part-number table (read by the cm5-receptacle entry); Farnell also lists a CM5108064B whose suffix no held document decodes"
+    grade_vs_envelope: INSIDE
+    grade_note: "-20 to +85 C non-condensing (pcb_part_temps.yaml row, datasheet 4.4): at the -20 C floor with no margin"
+    procurement: "owner-side purchase; Farnell 0 and TME 0 (FindChips 2026-09-27T00:14:51Z)"
+    status: VERIFIED
+    documents:
+      - {path: "v2/vendor/cm5/cm5-datasheet.pdf", doc_id: "Raspberry Pi Compute Module 5 datasheet", revision: "build date 08/06/2026", url: "https://datasheets.raspberrypi.com/cm5/cm5-datasheet.pdf", fetched: "re-fetched 2026-09-27T03:56:58Z, HTTP 200, byte-identical to the held file", sha256: "80070fefd8db6e8abc6e146c8b7b5fb318ba129cc1e28826936d547fde79c863", matches_fitted: "yes: part-number table 6.2 and environmental 4.4"}
+
+  - id: board-b-25mhz-crystals
+    function: "the 25 MHz crystals of board B: Y1 for the KSZ9897R, Y2 to Y4 for the three STM32H743 supervisors' HSE"
+    boards: [B]
+    schematic_name: {text: "25 MHz 3225", where: "v2/ecad/tools/gen_sch_b.py:860 (Y1), :1150 (Y2 to Y4)"}
+    where_rev: "53a98a71"
+    fitted_mpn: "TAXM25M4RFBCCT2T (Yajingxin)"
+    package: "SMD 3225, 4 pads"
+    lcsc: "C164047"
+    lcsc_reading: {model: "TAXM25M4RFBCCT2T", stock: 3, read: "2026-09-27T00:18:28Z", source: "JLCPCB parts API; need 20 for five kits"}
+    identity: MATCH
+    identity_note: "the value names only a frequency and a size; the code buys a 25 MHz, 12 pF crystal. LCSC's parametric for it reads ESR 80 Ohm and +-50 ppm, where the maker's sheet reads 30 Ohm and +-20 ppm"
+    grade_vs_envelope: INSIDE
+    grade_note: "'Operating Temperature Range -40 C ~ +85 C' (maker's specification item 5)"
+    compatibility: "meets the KSZ9897R's Table 6-12 and the STM32H743's HSE criterion (gm_crit 0.67 mA/V against Gmcritmax 1.5 mA/V): v2/docs/parts/STM32H743-COMPATIBILITY.md section 7"
+    replacement_candidates:
+      - {part: "YXC X322525MOB4SI", code_at_jlcpcb: "C9006 (basic library)", stock: 165557, read: "2026-09-27T00:18:29Z", note: "session pick HC6-SC-3: ESR 50 Ohm, C0 3 pF, CL 12 pF, gm_crit 1.11 mA/V, meets both criteria on its maker's sheet"}
+      - {part: "Seiko Epson X1E0000210139 (TSX-3225)", code_at_jlcpcb: "C91750", stock: 6098, read: "2026-09-27T00:18:30Z", note: "alternate: ESR 40 Ohm; C0 not stated on the held sheet"}
+    status: VERIFIED
+    documents:
+      - {path: "v2/vendor/crystals/yajingxin-taxm25m4rfbcct2t-spec-2026-08-26.pdf", doc_id: "Yajingxin SMD crystal unit specification, TAXM25M4RFBCCT2T", revision: "issue date 2026-08-26, version YJX/06", url: "https://datasheet.lcsc.com/datasheet/pdf/3086cc872f6c9505eebaf3751fb73fcd.pdf?productCode=C164047 (LCSC's copy)", fetched: "2026-09-27T00:04:33Z", sha256: "cf02a0872e39ea73aafe2589609f263899165c8daaf7fbb55f808a89d23dbbc2", matches_fitted: "yes: 25.000 MHz, CL 12 pF, ESR 30 Ohm max, C0 3 pF max, -40 to +85 C"}
+      - {path: "v2/vendor/crystals/yxc-ysx321sl-x322525mob4si.pdf", doc_id: "YXC YSX321SL crystal unit", revision: "not printed; PDF of 8 May 2025", url: "https://datasheet.lcsc.com/datasheet/pdf/a84bd8d530dd46e4b0f6d0ee59d8a89c.pdf?productCode=C9006 (LCSC's copy)", fetched: "2026-09-27T00:05:27Z", sha256: "7bc18549e407d8e381075b0f5fc696e48cf0fa060aeee67971925f43cfdfbb8b", matches_fitted: "no: the replacement candidate (a raster sheet, read visually)"}
+      - {path: "v2/vendor/crystals/epson-tsx-3225-x1e0000210139.pdf", doc_id: "Seiko Epson FA-238V, FA-238, TSX-3225", revision: "not printed; PDF of 3 December 2015", url: "https://datasheet.lcsc.com/datasheet/pdf/0d18bdcfc6729dd0d95eefcfc4755fee.pdf?productCode=C91750 (LCSC's copy)", fetched: "2026-09-27T00:05:27Z", sha256: "4e9c0baa33e30d2d40d6cf3baf5a46e43ac2d3d5ed5b27246829c28469d475e6", matches_fitted: "no: the alternate"}
+
 owed:
   - "DONE 26 September 2026 (integration I6): sources.txt file lines for the six documents added on 25 and 26 September and for this file, a vendor-status.txt line for each, a vendor-noindex.txt line for the text-less TE drawing, and the correction of sources.txt's m2 folder line and the same sentence in README.md ('key to be read from the drawing': the drawing says key M)"
   - "the appendix entry recording that the conditional pick at appendix line 2884 resolved to its else-branch (the drawing says key M); the appendix is not a vendor file"
@@ -2804,3 +3279,6 @@ documents_filed_hc1:
     filing_note: "fetched, not redistributed, as for every standard in v2/vendor/standards/; the transcription's printed page numbers were read against the file"
     status: VERIFIED
     matches_fitted: "not a part document: the test method TEST-PLAN E1 applies"
+  - "27 September 2026 (closer hc6): DONE: RM0433 (Rev 8), DS12110's newest revision (Rev 11) and ES0392 (Rev 15) are filed and read (io-supervisor-mcu, update_53a98a71); entries for the RockBLOCK 9704, LimeSDR Mini v2, AW7915-AED, TPS23861, Preci-Dip 813, Mill-Max 0858 (its product page and catalogue page 28 filed), Radiall SMP-MAX, JST VH (its catalogue filed), the IDC headers, sockets and cable (Wurth sheets filed), the wall D38999 and 233-370, PolyPhaser GTH-SFF-AL, Xenarc 709GNK, CM5108064 and board B's 25 MHz crystals; cellular-socket's fitted TE 2199119-3 recorded (update_53a98a71). The DS3231 is round 8's (r8b rtc-ds3231sn)"
+  - "27 September 2026 (closer hc6): STILL OWED from that pass: a NiceRF document naming the SA868's VHF order code (session pick SA868-V, INFERRED from NiceRF's band suffixes) and its V1.4 sheet (the file host did not resolve from this host); a Quectel ordering document decoding RM520NGLAA-M20-SGASA (session pick, INFERRED from distributors' descriptions); a Pulse document rating the fitted H5007NL for PoE current, or board B's author taking HX6096NL (ethernet-magnetics, update_53a98a71, poe_finding); Eaton's answer on whether the SCF9550's 'Storage temperature: -10 C to +40 C' binds the mounted fuse; the Molex 208658 HDMI receptacle sheet (molex.com and LCSC's copy did not answer); the Keystone 3568 and 3034 ranges; order codes for J_PRE1's longer pin, the panel LEDs, the headset jacks, the sounder and the header modules (NOT_PINNED); the exact D38999 and 233-370 dash numbers (layers 5 and 7); the Preci-Dip 813 contact current rating; the land comparisons the IDC and Mill-Max picks create (CMP-002, at layout entry)"
+  - "27 September 2026 (closer hc6): new grade findings (v2/docs/parts/GRADE-CHECK.md): the LimeSDR Mini v2 (0 to +70 C, storage 0 to +70 C) and the AW7915-AED (0 or -10 to +70 C) are OUTSIDE the envelope, beside the known H5007NL; each needs a decision recorded in PROCUREMENT.md section 4. JLCPCB short against five kits at 2026-09-27T00:18Z and again at 03:59Z: E72-2G4M20S1E (0 of 10), LT8705AEUHF#TRPBF (3 of 5), BQ7720700DSSR (3 of 5), SCF9550-30-05 (0 of 5), the 25 MHz C164047 (3 of 20), and round 8's LTC2954ITS8-1#TRPBF (0 of 5)"
