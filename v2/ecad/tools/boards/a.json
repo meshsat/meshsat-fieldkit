@@ -320,6 +320,21 @@
    "basis": "an enable, a static level with an RC on it"
   },
   {
+   "pattern": "*_UVLO",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an LM5176 EN/UVLO pin behind its 10 k over 15 k divider from a gate output (PA, HF since round 8, PoE and PD since 27 September 2026): a static level"
+  },
+  {
+   "pattern": "*_TXOK",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "an EMCON gate's intermediate (U35 or U37, TX_INHIBIT_n AND EMCON_HW), held down by 100 k: a static level that follows the panel toggle"
+  },
+  {
+   "pattern": "*_HOLD",
+   "class": "LOW_SPEED_OR_DC",
+   "basis": "a software hold re-driven by U40's open-drain output into the EMCON gates' protected supply domain, 10 k up to +3V3_EMCON: a static level"
+  },
+  {
    "pattern": "*_FLT",
    "class": "LOW_SPEED_OR_DC",
    "basis": "a fault flag, an open-drain static level"
@@ -437,7 +452,7 @@
   {
    "pattern": "VMON",
    "class": "LOW_SPEED_OR_DC",
-   "basis": "a voltage monitor divider tap into an ADC"
+   "basis": "the Xenarc 709GNK monitor's supply: the eFuse U21's output (TPS2596 pin 5 OUT), out on the two-pin lead J_MON, a DC rail switched by MON_EN (corrected 27 September 2026: it was described as a monitor divider tap, which it never was; PWR-001 counts it as a rail and gen_sch_a.py declares it)"
   },
   {
    "pattern": "MON_*",

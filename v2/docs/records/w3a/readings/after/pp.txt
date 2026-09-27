@@ -1,0 +1,11 @@
+port_protect: board A declares 3 external port(s); 3 found on this netlist
+port_protect: 5 clamp(s) judged for polarity: 0 reversed, 0 drawn with a symbol that does not match the part's direction, 0 unjudged
+  CLAMP D1     OK       K/A       uni    cathode (its K pin) on VBAT, anode on the return GND
+  CLAMP D2     OK       K/A       uni    cathode (its K pin) on VIN_RAW, anode on the return GND
+  CLAMP D22    OK       K/A       uni    cathode (its K pin) on FE_VZ, anode on the return GND
+  CLAMP D3     OK       K/A       uni    cathode (its K pin) on +3V3, anode on the return GND
+  CLAMP D4     OK       K/A       uni    cathode (its K pin) on PD_VBUS, anode on the return GND
+  J_DOCK       12 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [shore and vehicle DC arriving over the dock from the wall recept]
+  J_USBW       4 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [the wall USB host port through the MIL-DTL-38999 receptacle: a p]
+  J_USBC_OUT   5 pin(s), 0 unprotected, 0 behind an active part, 0 answered in the part it reaches  [the USB-C outlet on the connector plate, out of the case: VBUS m]
+verdict: port_protect           PASS         of 26 {"answered_in_part": 0, "behind_an_active_part": 0, "clamps": 5, "clamps_one_way": 5, "clamps_reversed": 0, "clamps_symbol_mismatch": 0, "clamps_unjudged": 0, "declared": 3, "not_on_netlist": 0, "ports": 3, "unprotected": 0} | every declared external conductor meets a protection part before a chip, and every clamp is drawn and placed the right way round

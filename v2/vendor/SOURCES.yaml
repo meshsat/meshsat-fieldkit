@@ -463,7 +463,7 @@ rf002_walk_documents:
     sha256: 71bbb2fc452e2949b332c030b004b094ba679ac8cce27123f806a0a6b1fde660
     status: VERIFIED
     relied_on: 'Pin Functions: 1A 1, GND 2, 2A 3, 2Y 4, VCC 5, 1Y 6; page 1: ''SN74LVC2G07 Dual Buffer and Driver With Open-Drain Outputs'' and ''SN74LVC2G07 device is open drain'' (round 6 twelfth pass, R4T-D71)'
-    matches_fitted: 'no part fitted from it: a LOGIC row of tools/tx_inhibit.py'
+    matches_fitted: 'board A U40 (stream w3a); and a LOGIC row of tools/tx_inhibit.py'
   - path: v2/vendor/ti/ti-sn74lvc07a.pdf
     doc_id: TI SN74LVC07A
     revision: SCAS595W, October 2016
@@ -2348,7 +2348,7 @@ parts:
     boards: [A]
     on_main: false
     adopted_in: "board A's round 8 candidate (worktree fnd/r8a on main fc144600, 26 September 2026)"
-    schematic_name: {text: "SN74AUP1G08DBVR AND", where: "v2/ecad/tools/gen_sch_a.py:1240-1243 (U35 to U38) in the candidate"}
+    schematic_name: {text: "SN74AUP1G08DBVR AND", where: "v2/ecad/tools/gen_sch_a.py:1414-1417 (U35 to U38) in the w3a candidate (1240-1243 at round 8)"}
     fitted_mpn: "SN74AUP1G08DBVR"
     package: "SOT-23 (DBV) 5"
     lcsc: "C139409 (Texas Instruments SN74AUP1G08DBVR, SOT-23-5, stock 12,485: JLCPCB parts API and LCSC's detail record, 2026-09-26T21:18Z)"
@@ -2364,7 +2364,37 @@ parts:
         sha256: "6d3ebde01544528256297fbf38fcbc9b0c09f1d28147a3b911a6aa684c962256"
         currency: "fetched from ti.com on 2026-09-26"
         matches_fitted: "yes: the orderable addendum lists SN74AUP1G08DBVR, SOT-23 (DBV) 5, 3000 LARGE T&R, -40 to 85 C; Table 4-1 (p.4) DBV pin 1 A, 2 B, 3 GND, 4 Y, 5 VCC"
-    rows_read: "5.1 (p.5): VCC and VI absolute maximum 4.6 V, the lowest rating on board A's +3V3 and under the 6.40 to 7.00 V at which D3, that rail's SMBJ5.0A clamp, starts to conduct (a +3V3 overvoltage between the two is recorded OPEN in EMCON.md section 7, integration of 27 September 2026, from the independent check); 5.3 (p.5): VCC 0.8 to 3.6 V, VIL 0 at 0.8 V, 0.35 x VCC at 1.1 to 1.95 V, 0.7 V at 2.3 to 2.7 V, 0.9 V at 3 to 3.6 V, input transition 200 ns/V; 5.5 (p.7): VOH VCC - 0.1 V at -20 uA, 2.67 V at 3 V and -2.7 mA, VOL 0.1 V at 20 uA, II 0.5 uA and Ioff 0.6 uA over -40 to +85 C; 5.6 to 5.9 (pp.7-8): tpd 4.3 ns at CL 5 pF and 7.5 ns at CL 30 pF (3.3 V +- 0.3 V); 9 (p.14): 0.1 uF per VCC pin; Features (p.1): Ioff for partial power down and back drive protection, Schmitt-trigger action, Vhys 250 mV typical"
+    rows_read: "5.1 (p.5): VCC and VI absolute maximum 4.6 V, the lowest rating on board A's +3V3 and under the 6.40 to 7.00 V at which D3, that rail's SMBJ5.0A clamp, starts to conduct (EQ-17, taken by board A stream w3a on 27 September 2026, integrated in fnd/r8int5: the gates run from +3V3_EMCON behind U39's overvoltage lockout at 3.83 to 4.11 V and U40 keeps the +3V3 domain off their inputs, bounded by U39's tOVLO; EMCON.md section 4a); 5.3 (p.5): VCC 0.8 to 3.6 V, VIL 0 at 0.8 V, 0.35 x VCC at 1.1 to 1.95 V, 0.7 V at 2.3 to 2.7 V, 0.9 V at 3 to 3.6 V, input transition 200 ns/V; 5.5 (p.7): VOH VCC - 0.1 V at -20 uA, 2.67 V at 3 V and -2.7 mA, VOL 0.1 V at 20 uA, II 0.5 uA and Ioff 0.6 uA over -40 to +85 C; 5.6 to 5.9 (pp.7-8): tpd 4.3 ns at CL 5 pF and 7.5 ns at CL 30 pF (3.3 V +- 0.3 V); 9 (p.14): 0.1 uF per VCC pin; Features (p.1): Ioff for partial power down and back drive protection, Schmitt-trigger action, Vhys 250 mV typical"
+
+  - id: emcon-holds-buffer-board-a
+    function: "board A's U40: re-drives the PA and HF software holds (PA_SW_EN, HF_SW_EN from U27) as open-drain outputs PA_HOLD and HF_HOLD into U36 and U38, pulled up to +3V3_EMCON, so no pin of the EMCON gates is driven from the +3V3 domain (EQ-17, stream w3a)"
+    boards: [A]
+    on_main: false
+    adopted_in: "board A stream w3a (worktree fnd/w3a on main 38dcd764, 27 September 2026; integrated in fnd/r8int5)"
+    schematic_name: {text: "SN74LVC2G07DBVR dual open-drain buffer", where: "v2/ecad/tools/gen_sch_a.py:1409 (U40) in the w3a candidate"}
+    fitted_mpn: "SN74LVC2G07DBVR"
+    package: "SOT-23 (DBV) 6"
+    lcsc: "C37708 (Texas Instruments SN74LVC2G07DBVR, SOT-23-6, stock 156,572: JLCPCB parts API, 2026-09-27T10:06Z)"
+    identity: MATCH
+    status: VERIFIED
+    grade_vs_envelope: "INSIDE: -40 to +125 C (SCES308L 6.3, TA)"
+    documents:
+      - path: "v2/vendor/ti/ti-sn74lvc2g07.pdf"
+        doc_id: "TI SCES308"
+        revision: "Rev. L, August 2001, revised May 2015"
+        sha256: "71bbb2fc452e2949b332c030b004b094ba679ac8cce27123f806a0a6b1fde660"
+        matches_fitted: "yes: the orderable addendum lists SN74LVC2G07DBVR, SOT-23 (DBV) 6, 3000 LARGE T&R, -40 to 125 C; Pin Functions 1A 1, GND 2, 2A 3, 2Y 4, VCC 5, 1Y 6"
+    rows_read: "6.1: VCC, VI and VO (high-impedance or power-off) absolute maximum 6.5 V; 6.3: VCC 1.65 to 5.5 V, VIH 2 V and VIL 0.8 V at VCC 3 to 3.6 V, input transition 10 ns/V at 3.3 V; 6.5: VOL 0.1 V at 100 uA and 0.4 V at 16 mA (3 V), II 5 uA, Ioff 10 uA, ICC 10 uA; 10 (p.10): 0.1 uF per VCC pin; page 1: open-drain outputs, Ioff for partial power down"
+  # Board A stream w3a's other readings (27 September 2026, merged at r8int5 from drafts/w3a/sources-w3a.yaml items 4 to 6;
+  # they join no entry of this file):
+  # - the resistor codes of the change (JLCPCB parts API, 2026-09-27T09:51Z to 10:06Z, all UNI-ROYAL 0603 1 percent):
+  #   C23346 0603WAF2322T5E 23.2 kOhm (R211, stock 150,748); C23162 0603WAF4701T5E 4.7 kOhm (R209); C22775 0603WAF1000T5E
+  #   100 Ohm (R213); C25804 0603WAF1002T5E 10 kOhm (R74, R133, R214, R215); C22809 0603WAF1502T5E 15 kOhm (R75, R134).
+  # - the TPS25740A (v2/vendor/ti/ti-tps25740.pdf, SLVSDG8B), rows newly relied on: the pin table p.4 (EN9V: 'If it is
+  #   pulled low, then the 9 V PDO may be transmitted'), 7.3 (EN9V VIH 1.4 V; CC1 and CC2 0 to 5.5 V; C(RX) 200 to 600 pF),
+  #   7.5 (V(VTX), V(VAUX), V(DVDD)), Table 2 p.28 (TPS25740A voltage programming), 8.3.1 (Rp current source).
+  # - the Xenarc 709GNK (entry monitor-xenarc-709gnk): the manual's 'Operating Voltage Range : DC 10V ~ 35V' and 'Power
+  #   Consumption: <= 10W' are now read for board A's VMON rail declaration (0.69 A typical, 1.0 A peak).
 
   - id: stage-current-shunts
     function: "2512 current shunts of board A's LM5176 stages (R35, R43, R55 in the candidate)"
@@ -2422,6 +2452,10 @@ parts:
       where: "v2/ecad/tools/gen_sch_a.py:1031 (the efuse helper; U21 at :1046, U22 at :1064, U23 at :1082, U32 at :1163); gen_sch_b.py:343 (its helper; U23 at :946, U24 at :951)"
       where_rev: "45bde541"
       boards: [A, B]
+    update_w3a:
+      read_on: "2026-09-27"
+      what_moved: "board A stream w3a adds U39 (TPS259631DDAR, C2155778, stock 4,423 at 2026-09-27T09:51Z) from +3V3 to +3V3_EMCON_EF, EN on RAIL_EN, OVLO 23.2 k over 10 k (3.83 to 4.11 V), ILM 4.7 k (0.18 A, equation 7), dVdt 10 nF, FLT to U28 P1.2; rows read for it: 7.1 (IN 21 V, EN and OVLO 7 V absolute), 7.3 (EN 6 V, OVLO 0.5 to 2 V recommended, note 2), 7.5 (VOVLO(R) 1.17 / 1.20 / 1.22 V, VOVLO(F) 1.08 / 1.10 / 1.13 V, VUVP(R) 2.46 to 2.58 V, IQ 193 / 259 uA, IDVDT and GDVDT), 7.6 (tOVLO 1.3 us typical, no maximum stated), 8.3.6 Table 3 (OVLO cut-off asserts FLT)"
+      where: "v2/ecad/tools/gen_sch_a.py:1406 (U39) in the w3a candidate"
 
   # --- round 6 candidates for board D's keying and EMCON chain, and board B's Ioff reference (on main since 458b2873) --
 

@@ -480,6 +480,13 @@ def _replay(named, missed):
         if missed[letter] not in nets: continue
         seen += 1
         p, ip, it = _copy(letter, net)
+        # THE REPLAY IS OF THE STATE THAT PASS SAW (27 September 2026, board A stream w3a): the committed intent may
+        # declare the missed net by now (board A declares VMON as a rail since EQ-19), and a replay that starts from it
+        # would test the fix, not the instrument. The missed net's own declaration is taken out first, so the fixture
+        # still asks whether the reading names it when nobody has declared it.
+        for sec in ("rails", "nodes"):
+            for k in [k for k in (it.get(sec) or {}) if k.lstrip("/") == missed[letter]]:
+                it[sec].pop(k)
         for n in named[letter]:
             if n in nets: _declare(it, n)
         json.dump(it, open(ip, "w"))

@@ -25,34 +25,38 @@ fault from one that reads low.
 | 1 | VIN_RAW | 12.00 V | 12.31 A | J_DOCK | C11, C12, Q2 |
 | 2 | CELL+ | 14.40 V | 10.00 A | J_CP1 | F1 |
 | 3 | CELL_FUSED | 14.40 V | 10.00 A | F1 | R17 |
+| 4 | PRECHG | 14.40 V | 0.00 A | J_PRE1 | R1 |
 
 **Measured, in this order, after the inputs are up.**
 
 | step | rail | expect | at | what it feeds |
 |---|---|---|---|---|
-| 1 | +5V_DEV | 5.00 V (4.75 to 5.25) | R43 | J_5V_DEV, U23, U32 |
-| 2 | +5V_D8 | 5.00 V (4.75 to 5.25) | U23 | J_MEZZ_PWR1 |
-| 3 | SD_OUT | 5.00 V (4.75 to 5.25) | Q35 | R43 |
-| 4 | VBUS_WALL | 5.00 V (4.75 to 5.25) | U32 | J_USBW |
-| 5 | +5V_S1 | 5.10 V (4.84 to 5.35) | R31 | J_5V_S1 |
-| 6 | +5V_S2 | 5.10 V (4.84 to 5.35) | R35 | J_5V_S2 |
-| 7 | +5V_S3 | 5.10 V (4.84 to 5.35) | R39 | J_5V_S3 |
-| 8 | S2_OUT | 5.10 V (4.84 to 5.35) | Q31 | R35 |
-| 9 | +12V_HF | 12.00 V (11.40 to 12.60) | R65 | J_HF |
-| 10 | HF_OUT | 12.00 V (11.40 to 12.60) | Q24 | R65 |
-| 11 | +13V8_PA | 13.80 V (13.11 to 14.49) | R55 | J_PA |
-| 12 | PA_OUT | 13.80 V (13.11 to 14.49) | Q14 | R55 |
-| 13 | VBAT | 14.40 V (13.68 to 15.12) | R17 | Q11, Q28, Q32, U12, U15, U22 |
-| 14 | VHEAT_IN | 14.40 V (13.68 to 15.12) | U22 | U33 |
-| 15 | PD_VPWR | 15.00 V (14.25 to 15.75) | R81 | Q27 |
-| 16 | PD_SW | 15.00 V (14.25 to 15.75) | Q27 | R138 |
-| 17 | PD_VBUS | 15.00 V (14.25 to 15.75) | R138 | J_USBC_OUT |
-| 18 | PD_OUT | 15.00 V (14.25 to 15.75) | Q26 | R81 |
-| 19 | VBUS20 | 20.00 V (19.00 to 21.00) | R11 | R16 |
-| 20 | FE_OUT | 20.00 V (19.00 to 21.00) | Q5 | R11 |
-| 21 | CH_ACN | 20.00 V (19.00 to 21.00) | R16 | Q7 |
-| 22 | +54V_POE | 54.00 V (51.30 to 56.70) | R71 | J_54V |
-| 23 | POE_OUT | 54.00 V (51.30 to 56.70) | Q20 | R71 |
+| 1 | +3V3_EMCON_EF | 3.30 V (3.13 to 3.46) | U39 | R213 |
+| 2 | +3V3_EMCON | 3.30 V (3.13 to 3.46) | R213 | U35, U36, U37, U38 |
+| 3 | +5V_DEV | 5.00 V (4.75 to 5.25) | R43 | J_5V_DEV, U23, U32 |
+| 4 | +5V_D8 | 5.00 V (4.75 to 5.25) | U23 | J_MEZZ_PWR1 |
+| 5 | SD_OUT | 5.00 V (4.75 to 5.25) | Q35 | R43 |
+| 6 | VBUS_WALL | 5.00 V (4.75 to 5.25) | U32 | J_USBW |
+| 7 | +5V_S1 | 5.10 V (4.84 to 5.35) | R31 | J_5V_S1 |
+| 8 | +5V_S2 | 5.10 V (4.84 to 5.35) | R35 | J_5V_S2 |
+| 9 | +5V_S3 | 5.10 V (4.84 to 5.35) | R39 | J_5V_S3 |
+| 10 | S2_OUT | 5.10 V (4.84 to 5.35) | Q31 | R35 |
+| 11 | +12V_HF | 12.00 V (11.40 to 12.60) | R65 | J_HF |
+| 12 | HF_OUT | 12.00 V (11.40 to 12.60) | Q24 | R65 |
+| 13 | +13V8_PA | 13.80 V (13.11 to 14.49) | R55 | J_PA |
+| 14 | PA_OUT | 13.80 V (13.11 to 14.49) | Q14 | R55 |
+| 15 | VBAT | 14.40 V (13.68 to 15.12) | R17 | Q11, Q28, Q32, U12, U15, U21 |
+| 16 | VMON | 14.40 V (13.68 to 15.12) | U21 | J_MON |
+| 17 | VHEAT_IN | 14.40 V (13.68 to 15.12) | U22 | U33 |
+| 18 | PD_VPWR | 15.00 V (14.25 to 15.75) | R81 | Q27 |
+| 19 | PD_SW | 15.00 V (14.25 to 15.75) | Q27 | R138 |
+| 20 | PD_VBUS | 15.00 V (14.25 to 15.75) | R138 | J_USBC_OUT |
+| 21 | PD_OUT | 15.00 V (14.25 to 15.75) | Q26 | R81 |
+| 22 | VBUS20 | 20.00 V (19.00 to 21.00) | R11 | R16 |
+| 23 | FE_OUT | 20.00 V (19.00 to 21.00) | Q5 | R11 |
+| 24 | CH_ACN | 20.00 V (19.00 to 21.00) | R16 | Q7 |
+| 25 | +54V_POE | 54.00 V (51.30 to 56.70) | R71 | J_54V |
+| 26 | POE_OUT | 54.00 V (51.30 to 56.70) | Q20 | R71 |
 
 **Decide before powering: the declared source is an inductor or a ferrite, which is a filter on an incoming feed on some boards and a converter's output on others.**
 

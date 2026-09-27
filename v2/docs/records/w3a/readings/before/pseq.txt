@@ -1,0 +1,32 @@
+power_sequence: 30 rail(s); 3 always on
+  +12V_HF      source R65,U15        enable HF_UVLO        driven by R124 on ?, R125 on ?
+  +13V8_PA     source R55,U13        enable PA_UVLO        driven by R58 on ?, R59 on ?
+  +3V3         source L7,U12         enable RAIL_EN        driven by R184 on ?, R2 on VBAT, TP16 on ?, U1 on VBAT
+  +54V_POE     source R71,U16        enable POE_EN         driven by R74 on ?, R74 on ?, R75 on ?, U26 on +3V3
+  +5V_D8       source U23            enable D8_EN          driven by R113 on ?, U27 on +3V3
+  +5V_DEV      source R43,U7         enable DEV_EN         driven by R42 on +3V3, U27 on +3V3
+  +5V_S1       source R31,U4         enable SLOT_EN1       driven by J_AB1 on ?, R30 on ?
+  +5V_S2       source R35,U5         enable SLOT_EN2       driven by J_AB1 on ?, R34 on ?
+  +5V_S3       source R39,U6         enable SLOT_EN3       driven by J_AB1 on ?, R38 on ?
+  CELL+        source J_CP1          ALWAYS ON
+  PD_VPWR      source R81,U19        enable PD_EN          driven by R133 on ?, R133 on ?, R134 on ?, U26 on +3V3
+  VBAT         source R17            ALWAYS ON
+  VBUS20       source R11,U2         enable FE_EN          driven by C213 on ?, R199 on ?, R206 on ?
+  VBUS_WALL    source U32            enable USBX_EN        driven by R190 on ?, TP23 on ?, U28 on +3V3
+  VHEAT        source L12,U33        enable HT_EN          driven by R193 on VHEAT_IN, R194 on ?
+  VHEAT_IN     source U22            enable HEAT_EN        driven by R112 on ?, U27 on +3V3
+  VIN_RAW      source J_DOCK         ALWAYS ON
+  CELL_FUSED   source F1             ALWAYS ON
+  CH_ACN       source R16            enable FE_EN          driven by nothing on this board
+  FE_OUT       source Q5             enable FE_EN          driven by nothing on this board
+  HF_OUT       source Q24            enable HF_UVLO        driven by nothing on this board
+  PA_OUT       source Q14            enable PA_UVLO        driven by nothing on this board
+  PD_OUT       source Q26            enable PD_EN          driven by nothing on this board
+  PD_SW        source Q27            enable PD_EN          driven by nothing on this board
+  PD_VBUS      source R138           enable PD_EN          driven by nothing on this board
+  POE_OUT      source Q20            enable POE_EN         driven by nothing on this board
+  S1_OUT       source L3             enable SLOT_EN1       driven by nothing on this board
+  S2_OUT       source Q31            enable SLOT_EN2       driven by nothing on this board
+  S3_OUT       source L5             enable SLOT_EN3       driven by nothing on this board
+  SD_OUT       source Q35            enable DEV_EN         driven by nothing on this board
+verdict: power_sequence         PASS         of 30 {"always_on": 3, "deadlocks": 0, "rails": 30, "segments": 13, "unresolved": 0} | each rail's enable derived from the netlist and the part that drives it named; a rail whose enable is driven only by a device powered from that same rail cannot start and is a failure. The ORDER between rails is reported as the graph and not decided here, because which order is correct is a property of the modules' own datasheets

@@ -1,0 +1,16 @@
+pcb-a-power.kicad_sch box_rerun=3c34f26af02efbb2 kept=3c34f26af02efbb2
+pcb-a-power-intent.json box_rerun=a5685c0d9fe13af6 kept=2e686478fb0edeef
+pcb-a-power.net box_rerun=0a0654553b9f0859 kept=c57d119d21f45fe9
+netlist content16 (regen_compare.content_hash): box_rerun=40192e30cb11c749 kept=40192e30cb11c749
+--- netlist diff (box rerun vs kept):
+3,4c3,4
+<     (source "/root/w3a/cand2/v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_sch")
+<     (date "2026-09-27T11:05:29+0000")
+---
+>     (source "/root/w3a/cand/v2/ecad/pcb-a-power-a23/pcb-a-power.kicad_sch")
+>     (date "2026-09-27T10:26:59+0000")
+--- intent diff:
+3c3
+<  "written": "2026-09-27 11:05",
+---
+>  "written": "2026-09-27 10:26",
