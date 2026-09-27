@@ -1,0 +1,30 @@
+== S-80's wording fix: ef144760 -> a54b793b
+top-level keys changed: none
+entries added: open_items/S-81
+entries removed: none
+entry changed: records/CON-010 fields evidence
+comment lines removed 3, added 18
+CON-010: only the newest evidence entry changed, and only after 'so this constraint's own reasons are unchanged and it stays'
+  was: ...INCONCLUSIVE, on the file at 7a834fe55aea6ccd
+  now: ...FAIL on W3T-F1 (S-64, EQ-25), on the file at 7a834fe55aea6ccd (corrected at the re-baseline of layer 3 on 27 September 2026, S-80: this entry had ended 'it stays INCONCLUSIVE', against the consolidated re-take's FAIL above)
+header: the paragraph on the targeted fix names 79963b3b's re-take (present at a54b793b)
+
+== the baseline: a54b793b -> WORKING
+top-level keys changed: baseline_reviews, baseline_state
+entries added: closed_items/S-51, closed_items/S-78, closed_items/S-80
+entries removed: open_items/S-51, open_items/S-78, open_items/S-80
+entries changed: none
+comment lines removed 2, added 25
+baseline_state: BASELINED at a54b793b
+baseline_reviews: v2/docs/reviews/REVIEW-B-LAYER-3-2026-09-27.md@7a6c679f446b1baa
+baseline_reviews: v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2026-09-27.md@1c3bc2d99f9efb51
+baseline_reviews: v2/docs/reviews/REVIEW-LAYER-3-RELEASE-2-2026-09-27.md@cf8c73fb288be2fb
+baseline_reviews: v2/docs/reviews/TARGETED-CHECK-LAYERS-1-3-2026-09-27.md@ae70b1a7811ecea1
+closed: S-51 by commit a54b793b
+closed: S-78 by commit a54b793b
+closed: S-80 by commit a54b793b
+
+== protected fields: 3e4799eb -> WORKING
+records compared 144, records added 0, protected fields differing 0
+session_choices equal: True; owner_rulings equal: True; needs equal: True
+ALL ASSERTIONS HOLD
