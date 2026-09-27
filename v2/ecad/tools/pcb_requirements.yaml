@@ -8324,7 +8324,8 @@ records:
           whose line 33 still quotes the old generator ('no chemical fuse (the 25 A mini blade is the fuse)', PTC and
           PTCEN tied off, no second protector IC), while the committed netlist carries the BQ7720700 second level (U2,
           SEC_VDD, SEC_V1 to SEC_V4) and the fuse drive (FUSE_G, FUSE_GQ): the table, not the board, is what it judges, so
-          it does not judge the second level this reading describes. The qualified review of D-09 is still not engaged.
+          it does not judge the second level this reading describes. D-09's battery review by an outside specialist
+          (R-BAT) has not been engaged: v2/docs/handover/ENGINEERING-QUESTIONS.md EQ-10.
           Board P's other reasons move to current evidence too (PWR-001 FAIL, SI-001 INCONCLUSIVE, RF-002 PASS on
           inhibit_chain_p), and none of them is a reason this reading rests on, so it stands INCONCLUSIVE on the file at
           ffa585abf6c0a5c7
