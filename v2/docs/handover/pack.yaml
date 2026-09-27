@@ -174,7 +174,9 @@ rules:
   # A second exception to "datasheets are referenced, not bundled", taken by the H1 assembler on 27 September 2026 on the
   # integrating session's instruction: `rules_lib.py requirements` checks that every source a requirement cites exists,
   # and these seven files (about 20.7 MB) are the ones pcb_requirements.yaml cites that no other include rule carries
-  # (diodes-ap64500.pdf rides with the energy chain above). With them the registry validates from the ZIP alone.
+  # (diodes-ap64500.pdf rides with the energy chain above). With them the registry's citations of 26 September resolve
+  # from the ZIP; CON-017's three ST documents (merged later the same day, about 21 MB compressed, RM0433 alone 40.7 MB)
+  # are left referenced so the ZIP stays under max_zip_bytes, and the validator reports those four citations.
   # Deleting this rule returns them to REFERENCED-SOURCES.tsv and the validator then reports each citation as missing.
   - {action: include, group: L3, glob: ["v2/vendor/rockblock/rb9704-sch-2B1.pdf", "v2/vendor/cm5/cm5-datasheet.pdf", "v2/vendor/ti/ti-pca9555.pdf", "v2/vendor/microchip/microchip-atecc608b-datasheet.pdf", "v2/vendor/nicerf/nicerf-sa868-datasheet-v1.3.pdf", "v2/vendor/ti/bq25731-datasheet.pdf", "v2/vendor/quectel/quectel-rm520n-series-hardware-design-v1.1.pdf"],
      role: "a maker document pcb_requirements.yaml cites as a requirement's source; bundled so rules_lib.py requirements validates from the snapshot"}

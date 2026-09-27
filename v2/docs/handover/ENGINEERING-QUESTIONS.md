@@ -1,7 +1,8 @@
 # MeshSat field kit V2: engineering questions for the blocked items
 
 Written 27 September 2026 (MESHSAT-1357) from the layer-by-layer audit of the repository at commit `e3aedb25`. Paths
-are repository paths; file:line citations are lines at `e3aedb25`. Every blocked question the audit found in the nine
+are repository paths; file:line citations are lines at `e3aedb25`. **Handover H1 adds EQ-15 to EQ-21**, the questions circuit round 8
+(main `84e52461`) and the handover closers raised; their citations are at the H1 source commit. Every blocked question the audit found in the nine
 pre-PCB layers is here once, deduplicated across layers, in the form the owner asked for
 (`v2/docs/reviews/2026-09-27-handover-execution-prompt.md` section 6): the exact issue, what it affects, the evidence,
 what was tried, the viable options, the recommended next action, the expertise or equipment needed, and cost and lead
@@ -35,6 +36,13 @@ holds the prepared request texts (not sent).
 | EQ-12 | Qualified high-speed review R-HSD | C. external authorisation | 5, 8, 9 | B | B's layout commitment; layer 8 COMPLETE for B |
 | EQ-13 | The M1 mission duration (L-02), reserved to the owner | C. external authorisation | 2, 3 | none once REQ-016 is split | nothing, once REQ-016 is split |
 | EQ-14 | Fabricator prices per board at each layer count and copper weight | C. external authorisation | 9 | all | the cost half of every stackup decision (STK-002) |
+| EQ-15 | Board P's discharge current through Q1's body diode with CHGIN = 1 (BAT-F20) | A. design work | 2, 4, 8 | P | S-46; the pack ladder, mode table, F2 analysis and the E3-A, E4-O and P12 pass lines |
+| EQ-16 | The dock's VIN_RAW contacts at 3.53 A each against a 3.5 A rating (R8E-N01) | A. design work | 5, 8 | A, E, E5 | the A to E interface's power capacity |
+| EQ-17 | Board A's +3V3 overvoltage window between the SN74AUP1G08's 4.6 V maximum and D3's 6.4 V clamp | A. design work | 4, 8 | A | the EMCON gating on A's PA and HF rails |
+| EQ-18 | RF-002 cannot decide TX_INHIBIT_n through board C's U14 (SN74LVC1G57) | A. design work | 4, 8, 9 | C (A, B, D) | RF-002 on every board whose transmitter rides TX_INHIBIT_n |
+| EQ-19 | PWR-001's undeclared supplies on boards A, B, D and E | A. design work | 8, 9 | A, B, D, E (C, P) | PWR-001 on four boards on current evidence; their layout entry |
+| EQ-20 | Board B's round 8 circuit is unmerged, with a sub-13 ns enable pulse window left | A. design work | 4, 8 | B | B's netlist, every B reading, FEA-003's fabric half |
+| EQ-21 | The generators write no MPN; 1497 of 2205 BOM rows carry no order code | A. design work | 6, 8 | all six | layer 6's exact identity per BOM line |
 
 Group A items can be answered under existing authority; group B needs hardware and so a purchase; group C needs the
 owner's money, outside contact or a value only he can set.
@@ -96,6 +104,97 @@ owner's money, outside contact or a value only he can set.
 | **Cost and lead time** | (a): none beyond the antenna kit already in the device set. (b): unknown lead time. |
 
 ---
+
+### EQ-15. Board P's discharge current through Q1's body diode (BAT-F20)
+
+| | |
+|---|---|
+| **Exact issue** | With the BQ4050's FET Options bit CHGIN = 1, the charge inhibit above T3 and the T1 range below it hold board P's charge FET Q1 off whenever the pack is not charging, discharge included, so the kit's discharge current runs through Q1's body diode: about 2 to 3 W at the reduced load and about 7 W at 10 A on board P. |
+| **Affected** | S-46 in `v2/ecad/tools/pcb_requirements.yaml`; board P's thermal design; the pack's temperature ladder (`v2/docs/review-packets/battery/THERMAL-COORDINATION.md`), the mode table, F2's analysis and the E3-A, E4-O and P12 pass lines of `TEST-PLAN.md`; R-BAT (EQ-10). |
+| **Evidence** | S-46's title (TI SLUUAQ3A sections 4.12, 4.13 and 14.2.1.1); the battery packet's REVIEW-REQUEST.md question Q-P18 and the TI question Q-TI-10. |
+| **Attempts and results** | Found by the battery stream's second independent check in round 8 (27 September 2026); not yet answered. |
+| **Viable options** | (a) A FET Options setting that keeps discharge on, with the charge-start protection kept another way; (b) a separate charge-path FET; (c) a thermal budget for the diode. |
+| **Recommended next action** | Ask the qualified battery reviewer Q-P18 and TI Q-TI-10 in the prepared texts (the owner's contact); meanwhile carry option (c)'s budget on board P as a bound, not as the answer, and keep S-46 open. |
+| **Expertise or equipment** | A battery protection engineer familiar with the BQ4050 (R-BAT). |
+| **Cost and lead time** | Inside R-BAT's cost (EQ-10); TI's answer time unknown. |
+
+### EQ-16. The dock's VIN_RAW contacts over their rating (R8E-N01)
+
+| | |
+|---|---|
+| **Exact issue** | Since round 8 board E declares 14.10 A on its own VIN_RAW (the vehicle entry at most 6.15 A plus the panel tracker 10.33 A, limited by what board A's front end draws). Across the four Preci-Dip 813 VIN_RAW contacts that is 3.53 A each with even sharing, 101 percent of the 3.5 A rating, so the contract is NOT MET at nominal; board A still declares 12.31 A. |
+| **Affected** | The A to E interface's `power_capacity` in `v2/ecad/tools/pcb_interfaces.yaml` (findings R8E-N01, R4A-N13); boards A, E and E5; the contact count of the dock block. |
+| **Evidence** | `pcb_interfaces.yaml`, the A to E contract's `e_declares` and `margin` (Preci-Dip 813, "OPERATING CURRENT Max. 3.5 A", `v2/vendor/precidip/`). |
+| **Attempts and results** | Recorded by round 8's board E stream; no remedy drawn. |
+| **Viable options** | (a) A fifth VIN_RAW contact; (b) a front-end input current bound in hardware on board A; (c) the host's IIN_HOST limit extended to the panel, a firmware bound only. |
+| **Recommended next action** | (a) or (b), decided by board A's stream with the dock block's outline (layer 7); (c) alone does not meet the rule because it is not hardware. |
+| **Expertise or equipment** | None beyond the design streams. |
+| **Cost and lead time** | Desk work. |
+
+### EQ-17. Board A's +3V3 overvoltage window
+
+| | |
+|---|---|
+| **Exact issue** | Round 8 put SN74AUP1G08 gates on board A's +3V3 to read both EMCON lines for the PA and HF rails. The SN74AUP1G08's absolute maximum supply is 4.6 V (TI SCES502Q section 5.1), but the rail's clamp D3, an SMBJ5.0A, starts at 6.40 V minimum breakdown, so a fault between 4.6 V and 6.4 V on +3V3 can destroy the gates that hold the transmit rails off. |
+| **Affected** | Board A's EMCON gating (`c0133147`); `v2/docs/feasibility/EMCON.md` sections 4a and 7 (an OPEN item there); the SOURCES entry of the part. |
+| **Evidence** | Commit `c0133147`'s body; EMCON.md sections 4a and 7. |
+| **Attempts and results** | Recorded OPEN in round 8; no change drawn. |
+| **Viable options** | (a) A lower-voltage clamp on +3V3 whose clamping voltage sits below 4.6 V at the fault current; (b) a gate family rated above the clamp; (c) a series element and a local clamp at the gates only. |
+| **Recommended next action** | Board A's stream picks one with the maker's clamping curve read, and the RF-002 walk is re-taken on A. |
+| **Expertise or equipment** | None beyond the design streams; R-PWR (EQ-11) reviews it. |
+| **Cost and lead time** | Desk work. |
+
+### EQ-18. RF-002 cannot decide TX_INHIBIT_n through board C's U14
+
+| | |
+|---|---|
+| **Exact issue** | Board C's hardware EMCON lamp (round 8, SD-EMC-6) put U14, a TI SN74LVC1G57 configurable gate, on TX_INHIBIT_n and EMCON_HW. The RF-002 walk (`v2/ecad/tools/tx_inhibit.py`) has no row for that family, whose function depends on how its In1 pin is wired, so it reads the TX_INHIBIT_n line UNDECIDED ("an active pin no held document shows to be an input") and every option riding that line inherits it: inhibit_chain A FAIL (1 fail, 5 pass, 3 undecided), B FAIL, C FAIL, D INCONCLUSIVE, E and P PASS. |
+| **Affected** | RF-002 on every board whose transmitter inhibit rides TX_INHIBIT_n; FEA-002; board C's U14. |
+| **Evidence** | Commit `9f28c238`'s body; `v2/docs/feasibility/EMCON.md` section 8 (the pin map, II and Ioff handed to the tools author). |
+| **Attempts and results** | The session chose not to add an unchecked LOGIC row (a tool change without its independent check); the walk fails closed meanwhile. |
+| **Viable options** | (a) A LOGIC row conditioned on In1's wiring, with its fixture and an independent check; (b) a fixed-function gate on board C instead of the SN74LVC1G57. |
+| **Recommended next action** | (a) by the tools stream, then the RF-002 re-take on all six boards. |
+| **Expertise or equipment** | None. |
+| **Cost and lead time** | Desk work. |
+
+### EQ-19. PWR-001's undeclared supplies on boards A, B, D and E
+
+| | |
+|---|---|
+| **Exact issue** | Since round 8 set 2, PWR-001 is judged on the committed netlist and fails closed on every supply. It reads FAIL on current evidence on A (VMON, the bootstraps, PD_VTX, PD_VAUX, PD_DVDD), B (28 supplies undeclared, 26 undecided), D (AMP_CPN, AMP_CPP, AMP_HPVSS, the PCM2912A's regulator outputs, SAU_3V3) and E (E6_BST, E6_DVDD, SGP_VDD, TRK_LDO33, TRK_LSENSE); on C and P the FAIL was read on an older netlist and awaits the re-take. |
+| **Affected** | PWR-001 and the layout entry of every board; each generator's intent declarations. |
+| **Evidence** | Commit `84e52461`'s body; `v2/docs/CURRENT-EVIDENCE.md`; `v2/docs/records/ts-net/ts-net-decisions.md` (TSN-D1, what counts as a power net). |
+| **Attempts and results** | The rule's instrument changed in `940cbcdf`; no board's intent has been extended yet. |
+| **Viable options** | Declare each supply in the board's intent (rail or node, with its source and limits), or show it is not a supply by the rule's own definition. |
+| **Recommended next action** | Each board stream declares its list, then the consolidated re-take. |
+| **Expertise or equipment** | None. |
+| **Cost and lead time** | Desk work. |
+
+### EQ-20. Board B's round 8 circuit, not merged
+
+| | |
+|---|---|
+| **Exact issue** | Board B's round 8 circuit (the failover fabric's lock and re-arm timing, among others) exists only in the worktree `fnd/r8b`, so H1's board B is the pre-round-8 B21 netlist. Its own record states one residual: a vote returning within about 13 ns of the select buffer's threshold decision (its 7.0 ns delay plus an XOR's 5.8 ns) while a flapping vote has parked ARM's node within about 30 uV of ARM's lower threshold could make an enable pulse under 13 ns; no single change and no single return reaches it, and the simulation's aimed adversary did not. |
+| **Affected** | Board B's netlist and every reading on it; FEA-003's fabric half; `ARCH-PCB-B-IOHA.md` (r8b's patch must be re-derived on the text hc6 reconciled); FAILOVER-FABRIC. |
+| **Evidence** | `fnd/r8b` `drafts/r8-decisions.md` (not in H1). |
+| **Attempts and results** | The record's break-before-make simulation on the regenerated netlist (seed 27, 1,500 random waveforms per bank): 19,976 runs, 56,342 select moves, 0 violations, least lead 61.5 us, least hold 198 us; with the static-1 hazard in every 74LVC1G157, 22,121 runs, 0 violations. A simulation, not a bench result. |
+| **Viable options** | Merge with the residual stated as a bounded risk, or add a minimum-pulse filter on the enable and re-simulate. |
+| **Recommended next action** | Merge r8b with parity and the residual written into FAILOVER-FABRIC; R-HSD (EQ-12) judges whether a sub-13 ns enable pulse matters to the switches it drives. |
+| **Expertise or equipment** | A high-speed or logic-timing reviewer. |
+| **Cost and lead time** | Desk work; R-HSD's cost. |
+
+### EQ-21. No MPN in the generators, no order code on most BOM rows
+
+| | |
+|---|---|
+| **Exact issue** | The schematic generators write Reference, Value, Footprint, Description, Datasheet and, where one is chosen, an LCSC order code; they write no manufacturer part number. At H1, 1497 of the 2205 per-reference rows of the six schematic BOMs carry no LCSC code, 1322 of them resistors, capacitors and inductors named by value and land; `lcsc_fill.py` assigns codes at the JLC BOM stage. The schematic BOM alone therefore does not give the exact manufacturer, MPN, package and grade layer 6 asks for. |
+| **Affected** | Layer 6 on every board; the NOT_FOR_FAB BOMs in `v2/release/handover/_generated/`. |
+| **Evidence** | Those BOMs; `v2/docs/handover/REGENERATE.md` section 5; decided identities live in `v2/vendor/SOURCES.yaml`. |
+| **Attempts and results** | Found by the handover packer; counts re-read at H1. |
+| **Viable options** | (a) An MPN field written by each generator from SOURCES.yaml, with a check that every fitted line carries one; (b) a per-board identity BOM generated from the netlist and SOURCES.yaml, passives resolved by rule (series, tolerance, voltage, dielectric); (c) accept LCSC codes as identity for passives, stated as such. |
+| **Recommended next action** | (b) first, since it changes no generator; then (a). |
+| **Expertise or equipment** | None. |
+| **Cost and lead time** | Desk work. |
 
 ## B. Physical evidence
 

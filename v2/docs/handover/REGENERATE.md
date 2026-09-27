@@ -11,15 +11,15 @@ committed files are what their generators write; it says nothing about whether t
 passing fixture or a PASS from a checking tool is not a circuit review (the owner's prompt of 27 September 2026,
 section 2). The layer status is `LAYER-STATUS.md`'s statement, not this page's.
 
-**How it was verified.** Every command in a grey block below was run exactly as written, the blocks of sections 2 to
-7 as one script cut from this page, between 23:30 UTC on 26 September and 01:00 UTC on 27 September 2026, on a rented
-Ubuntu 24.04.5 host with 64 cores, from a fresh extraction of the trial snapshot `H1`; the page was then
-rebuilt into the snapshot and the script run once more on it. Runs on both sides of midnight UTC are why section 3
-gives two expected readings where the date matters. That trial was built from a scratch commit whose design files are those of main `e3aedb25` (the
-handover files were not yet committed), so the outputs quoted here are those of the `e3aedb25` design. When the
-snapshot you hold comes from a later commit, `SOURCE.txt` names it; the RESULT classes below (PARITY,
-PARITY_AFTER_NOISE, the pass and fail counts' causes) are what to expect, and a content hash or a count can differ
-where that commit changed the design.
+**How it was verified.** Every command in a grey block of sections 2 to 7 (the ZIP route) was run exactly as written,
+as one script cut from this page, between 04:50 and 05:04 UTC on 27 September 2026, on a rented Ubuntu 24.04 host
+with 64 cores and KiCad 9.0.9, from a fresh extraction of a build of `H1` at commit `0778e1ab` of the handover branch.
+That build's design files, tools and exports are byte for byte those of the H1 source commit named in `SOURCE.txt`:
+the commits between them change only the four handover pages and this page. The exports and the six-board
+regeneration had also been run once before, on a clean `git archive` of `99cde56b` (the last design change), with
+the same results. A content hash or a count quoted below is what those runs printed; the RESULT classes (PARITY,
+PARITY_AFTER_NOISE, the causes of the failures) are what to expect on another day. Commands outside the ZIP route
+(section 7's repository route, section 8) say how far they were re-run.
 
 ## 1. Prerequisites (the versions the commands were run with)
 
@@ -55,7 +55,7 @@ python3 v2/ecad/tools/sch_prov.py read v2/ecad/pcb-p-pack-p2/out/pcb-p-pack.net 
 
 Expected: `H1.zip: OK`; `handover_pack: verify .: OK` (every file's bytes and sha256 against `MANIFEST.tsv`,
 and no file the manifest does not name); `sch_prov: pcb-p-pack.net was written by this tree's own generator
-(8cd200a5e8c4b82a)`, which says the netlist's recorded generator inputs (the generator, its imports, the board
+(21640b801014107a)`, which says the netlist's recorded generator inputs (the generator, its imports, the board
 table's `gen_env` and 59 land files) are byte-identical to the ones in this snapshot. `PYTHONDONTWRITEBYTECODE=1`
 keeps Python's cache files out of the tree, so the second `verify` in section 3 lists only what regeneration wrote.
 
@@ -91,12 +91,12 @@ Expected, line by line:
 - The generator prints `wrote pcb-p-pack.kicad_sch parts: 95 lib symbols: 21`, `lands: 21 footprint(s) judged, 0 pin(s)
   on a pad the land does not carry, 0 land(s) unreadable` and `layout: 2 A3 pages`.
 - `build_sch.sh` prints `ERC: violations (...; erc_gate.py decides)`, `netlist: out/pcb-p-pack.net`, the provenance line
-  `sch_prov: pcb-p-pack.net written by generator 8cd200a5e8c4b82a (...)`, `sch_pages: 2 x 1 cells, 2 pages kept of 2
+  `sch_prov: pcb-p-pack.net written by generator 21640b801014107a (...)`, `sch_pages: 2 x 1 cells, 2 pages kept of 2
   tiles` and `bom: out/pcb-p-pack-bom.csv`.
 - `erc_gate`: `no blocking error (123 violations, 0 error(s) allow-listed with a reason, warnings 123)`, 106 of them
   `lib_symbol_issues` and 17 `unconnected_wire_endpoint`, and `verdict: erc_gate PASS of 123`. It writes its verdict
   under `../verdicts`, outside the snapshot.
-- netlist `PARITY_AFTER_NOISE` with `content_hash` `c8a3d456e5d2936b` on both sides; intent and ERC
+- netlist `PARITY_AFTER_NOISE` with `content_hash` `efe60479293f0004` on both sides; intent and ERC
   `PARITY_AFTER_NOISE`; BOM `PARITY` (38 grouped rows each side, against the handover's own BOM export of the
   committed schematic).
 - The schematic and the provenance depend on the DATE of the run, because the generator writes today's date into the
@@ -105,8 +105,8 @@ Expected, line by line:
   reads `PARITY_AFTER_NOISE` (N1 once, N2 twice) and the provenance reads `DIFFERENT` with `keys_changed:
   ["schematic_sha256"]` and nothing else: the sidecar names the schematic beside it by the first 32 hex digits of its
   sha256, and that schematic's date changed. The `sha256sum` and `grep` lines show it: each sidecar's
-  `schematic_sha256` is the start of its own schematic's sha256 (`2dba8588613db426...` committed; the regenerated
-  one's on 27 September was `986b17267c057098...`). That, with the schematics at `PARITY_AFTER_NOISE`, is the
+  `schematic_sha256` is the start of its own schematic's sha256 (`47e0bc19e8e18cf0...` committed; the regenerated
+  one's on 27 September was `a58d0eecc7abe768...`). That, with the schematics at `PARITY_AFTER_NOISE`, is the
   condition `regen_compare.py`'s docstring sets for the difference to be the date and nothing else.
 - The second `verify` reports the regeneration's own writes and nothing else: `out/pcb-p-pack.net` (a few bytes
   longer: the export's own path and time), `out/pcb-p-pack-intent.json` and `out/pcb-p-pack.net.prov.json` (their
@@ -223,20 +223,23 @@ echo "suite exit $?"
 tail -n 1 "$HO/../suite.log"
 ```
 
-Expected: `suite exit 1` and `tests: 1649 passed, 13 failed, 22 skipped` (a skip is not a pass: the 22 name what
-they could not run). **Every one of the 13 failures is caused by what the snapshot leaves out, none by a design
+Expected: `suite exit 1` and `tests: 1913 passed, 17 failed, 22 skipped` (a skip is not a pass: the 22 name what
+they could not run). **Every one of the 17 failures is caused by what the snapshot leaves out, none by a design
 finding**, and each names its missing input:
 
 | Failures | Tests | The input the snapshot does not carry |
 |---|---|---|
-| 7 | `test_requirements` (4: the registry validates, the trace page is generated, `--check`, the decision index), `test_layout_entry_stages`, `test_interfaces`, `test_emc_sheet` | maker documents the registries cite, referenced and not bundled: `pcb_requirements.yaml` refuses to validate while `rockblock/rb9704-sch-2B1.pdf`, `cm5/cm5-datasheet.pdf`, `ti/ti-pca9555.pdf`, `microchip/microchip-atecc608b-datasheet.pdf`, `nicerf/nicerf-sa868-datasheet-v1.3.pdf`, `ti/bq25731-datasheet.pdf` and `quectel/quectel-rm520n-series-hardware-design-v1.1.pdf` are absent; `pcb_interfaces.yaml` cites `cm5/cm5-datasheet.pdf` among others; the EMC sheet cites `ti/lm5176-datasheet.pdf`, `ti/ti-tps62933.pdf` and `diodes/diodes-ap63200-series-buck.pdf`. A tree that holds part of `v2/vendor/` is judged as holding the library, so an absent citation is a failure there, not a skip |
+| 11 | `test_requirements` (4: the registry validates, the trace page is generated, `--check`, the decision index), `test_layout_entry_stages`, `test_interfaces`, `test_emc_sheet`, `test_rails_census` (3), `test_evidence_class` (every declared writer's fixed input exists) | maker documents cited and referenced, not bundled. The seven the requirements registry cited at `e3aedb25` are bundled (`pack.yaml`, layer 3 rule), but since the layer 6 closer's merge CON-017 also binds ST's `st/st-rm0433-rev8.pdf` (40.7 MB), `st/st-stm32h743xi-datasheet-rev11.pdf` and `st/st-es0392-rev15.pdf`, about 21 MB compressed together, which the 50 MB cap of `pack.yaml` leaves out; so the registry reports 4 errors, all on CON-017. `pcb_interfaces.yaml` cites `quectel/quectel-rm520n-gl-hardware-design-v1.0.pdf`; the EMC sheet cites `ti/lm5176-datasheet.pdf` and others; the rails census reads `ti/ti-tpa6132a2.pdf` and `power/tps2596.pdf`; `intent_checks.py` declares `battery/ti-bq77207.pdf`. A tree that holds part of `v2/vendor/` is judged as holding the library, so an absent citation is a failure there, not a skip |
 | 3 | `test_block_contract` | board A's board file `pcb-a-power-a23/pcb-a-power.kicad_pcb`, excluded as a stale layout: board E5's pin map is compared with it, so from the snapshot its contract reads INCONCLUSIVE |
 | 2 | `test_doc_provenance.t_the_tree_today_is_reported_rather_than_assumed`, `test_order_readiness` | the historical order folders under `v2/release/revA/order/`, excluded |
 | 1 | `test_netlist_provenance` | the git index: it lists committed netlists with git, and an extraction has no `.git` |
 
-Copying `v2/vendor/` from the repository at the snapshot's commit into the extraction (every file's sha256 is in
-`REFERENCED-SOURCES.tsv`) makes those seven pass: with it, `python3 run.py test_requirements test_layout_entry_stages
-test_interfaces test_emc_sheet` read `86 passed, 0 failed, 2 skipped` on the host above. The route below, from the
+The requirements validator on its own, from the extraction (`cd v2/ecad; python3 tools/rules_lib.py requirements`),
+reads `132 requirement record(s), 4 error(s), 16 warning(s)`: the four errors are CON-017's ST documents, fifteen
+warnings are closed items whose closing commits git cannot look up in an extraction, and one says `out/rule-audit` is
+not in the tree (the readings are gitignored). Copying `v2/vendor/` from the repository at the snapshot's commit into
+the extraction (every file's sha256 is in `REFERENCED-SOURCES.tsv`) supplies every cited document; that was run for
+the `e3aedb25` design (its seven such failures then passed) and not repeated for H1. The route below, from the
 repository itself, clears all but the git one.
 
 **From the repository at the snapshot's commit** (where the maker documents, the earlier layouts and the order sets
@@ -251,16 +254,19 @@ python3 run.py > suite.log 2>&1
 tail -n 1 suite.log
 ```
 
-Expected: `tests: 1666 passed, 1 failed, 17 skipped`, the one failure `test_netlist_provenance` (it lists committed
-netlists through the git index, and an archive extraction has none). This was run on `e3aedb25` with this snapshot's
-handover files unpacked over it, because they were not yet committed.
+Expected, as run on `e3aedb25` with the handover files unpacked over it (this route was not re-run for H1):
+`tests: 1666 passed, 1 failed, 17 skipped`, the one failure `test_netlist_provenance` (it lists committed netlists
+through the git index, and an archive extraction has none). H1 adds tests (the packer's among them), so its counts
+are higher; the result of the full suite in a git worktree of the repository at the H1 branch is recorded in the
+message of the commit that files the H1 snapshot.
 
-**In a git checkout two further conditions hold, and they were not verified here with a real clone.**
+**In a git checkout two further conditions hold.**
 `test_netlist_provenance` reads the index; and `pcb_requirements.yaml` names, for each closed item, the commit that
 closed it, which the validator looks up in the repository's history. A scratch repository holding the same files as
 a single commit, with no history, read `1666 passed, 5 failed, 13 skipped`: the five are the registry refusing fifteen
 closed items whose commits (`458b2873`, `93138ac1`, `9a151c78`, `3a1f6576`, `4ec785d8`, `faf8c981`, `68bc9e8f`) it
-could not find. All seven are ancestors of `e3aedb25` on `origin/main`, so a full clone has them; a shallow clone or
+could not find (at `e3aedb25`; H1 adds S-43, closed on `dd39fb15`). All are ancestors of the H1 source commit, so a
+full clone has them; a shallow clone or
 a repository re-created from the files does not.
 
 ## 8. Build and check a snapshot
